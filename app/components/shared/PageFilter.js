@@ -53,9 +53,10 @@ class PageFilter extends React.Component {
     });
 
     handleInputChange(event, field) {
+        const { name, onChange } = this.props;
         this.setState({ pageId: field.value }, () => {
-            this.props.onChange(event, {
-                name: this.props.name,
+            onChange(event, {
+                name,
                 value: this.state.pageId
             });
         });
@@ -70,9 +71,8 @@ class PageFilter extends React.Component {
     }
 
     render() {
-        const pages = this.props.allowDrillDownPages
-            ? this.props.pages
-            : _.filter(this.props.pages, page => !page.isDrillDown);
+        const { allowDrillDownPages } = this.props;
+        const pages = allowDrillDownPages ? pages : _.filter(pages, page => !page.isDrillDown);
         const pagesOptions = _.map(pages, page => ({
             text: this.getPageName(pages, page.id),
             value: page.id,

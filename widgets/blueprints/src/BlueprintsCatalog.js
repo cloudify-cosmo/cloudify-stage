@@ -27,10 +27,21 @@ export default class BlueprintsCatalog extends React.Component {
     };
 
     render() {
+        const {
+            allowedSettingTo,
+            data,
+            fetchData,
+            noDataMessage,
+            onCreateDeployment,
+            onDeleteBlueprint,
+            onSelectBlueprint,
+            onSetVisibility,
+            widget
+        } = this.props;
         const { DataSegment, Grid, Image, Button, Label, ResourceVisibility, Header } = Stage.Basic;
 
         const index = 0;
-        const blueprintsItems = this.props.data.items.map(item => {
+        const blueprintsItems = data.items.map(item => {
             return (
                 <Grid.Column key={item.id}>
                     <DataSegment.Item
@@ -38,7 +49,7 @@ export default class BlueprintsCatalog extends React.Component {
                         className={`fullHeight ${item.id}`}
                         onClick={event => {
                             event.stopPropagation();
-                            this.props.onSelectBlueprint(item);
+                            onSelectBlueprint(item);
                         }}
                     >
                         <Grid>
@@ -52,8 +63,8 @@ export default class BlueprintsCatalog extends React.Component {
                                     </Header>
                                     <ResourceVisibility
                                         visibility={item.visibility}
-                                        onSetVisibility={visibility => this.props.onSetVisibility(item.id, visibility)}
-                                        allowedSettingTo={this.props.allowedSettingTo}
+                                        onSetVisibility={visibility => onSetVisibility(item.id, visibility)}
+                                        allowedSettingTo={allowedSettingTo}
                                         className="rightFloated"
                                     />
                                 </Grid.Column>
@@ -114,7 +125,7 @@ export default class BlueprintsCatalog extends React.Component {
                             basic
                             onClick={event => {
                                 event.stopPropagation();
-                                this.props.onDeleteBlueprint(item);
+                                onDeleteBlueprint(item);
                             }}
                         />
 
@@ -124,7 +135,7 @@ export default class BlueprintsCatalog extends React.Component {
                             className="labeled icon"
                             onClick={event => {
                                 event.stopPropagation();
-                                this.props.onCreateDeployment(item);
+                                onCreateDeployment(item);
                             }}
                         />
                     </div>
@@ -156,12 +167,12 @@ export default class BlueprintsCatalog extends React.Component {
         return (
             <div>
                 <DataSegment
-                    totalSize={this.props.data.total}
-                    pageSize={this.props.widget.configuration.pageSize}
-                    fetchData={this.props.fetchData}
+                    totalSize={data.total}
+                    pageSize={widget.configuration.pageSize}
+                    fetchData={fetchData}
                     className="blueprintCatalog"
                     searchable
-                    noDataMessage={this.props.noDataMessage}
+                    noDataMessage={noDataMessage}
                 >
                     <Grid>{blueprintsRows}</Grid>
                 </DataSegment>

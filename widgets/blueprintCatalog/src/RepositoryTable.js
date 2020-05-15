@@ -21,17 +21,18 @@ export default class extends React.Component {
     };
 
     render() {
+        const { data, fetchData, noDataMessage, onReadme, onSelect, onUpload, readmeLoading, widget } = this.props;
         const { DataTable, Image, Icon } = Stage.Basic;
 
         return (
             <DataTable
-                fetchData={this.props.fetchData}
-                pageSize={this.props.widget.configuration.pageSize}
-                sortColumn={this.props.widget.configuration.sortColumn}
-                sortAscending={this.props.widget.configuration.sortAscending}
-                totalSize={this.props.data.total}
+                fetchData={fetchData}
+                pageSize={widget.configuration.pageSize}
+                sortColumn={widget.configuration.sortColumn}
+                sortAscending={widget.configuration.sortAscending}
+                totalSize={data.total}
                 selectable
-                noDataMessage={this.props.noDataMessage}
+                noDataMessage={noDataMessage}
             >
                 <DataTable.Column label="Name" width="25%" />
                 <DataTable.Column label="Description" width="40%" />
@@ -39,14 +40,10 @@ export default class extends React.Component {
                 <DataTable.Column label="Updated" width="12%" />
                 <DataTable.Column width="11%" />
 
-                {this.props.data.items.map(item => {
-                    const isLoading = this.props.readmeLoading === item.name;
+                {data.items.map(item => {
+                    const isLoading = readmeLoading === item.name;
                     return (
-                        <DataTable.Row
-                            key={item.id}
-                            selected={item.isSelected}
-                            onClick={() => this.props.onSelect(item)}
-                        >
+                        <DataTable.Row key={item.id} selected={item.isSelected} onClick={() => onSelect(item)}>
                             <DataTable.Data>
                                 <Image src={Stage.Utils.Url.url(item.image_url)} width="30px" height="auto" inline />{' '}
                                 <a href={item.html_url} target="_blank">
@@ -65,7 +62,7 @@ export default class extends React.Component {
                                     bordered={!isLoading}
                                     onClick={event => {
                                         event.stopPropagation();
-                                        this.props.onReadme(item.name, item.readme_url);
+                                        onReadme(item.name, item.readme_url);
                                     }}
                                 />
                                 <Icon
@@ -75,7 +72,7 @@ export default class extends React.Component {
                                     bordered
                                     onClick={event => {
                                         event.stopPropagation();
-                                        this.props.onUpload(item.name, item.zip_url, item.image_url);
+                                        onUpload(item.name, item.zip_url, item.image_url);
                                     }}
                                 />
                             </DataTable.Data>

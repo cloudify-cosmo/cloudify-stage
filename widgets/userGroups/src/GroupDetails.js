@@ -24,48 +24,51 @@ export default class UserDetails extends React.Component {
     };
 
     removeTenant(tenant) {
+        const { data, onError, toolbox } = this.props;
         this.setState({ processItem: tenant, processing: true });
 
-        const actions = new Actions(this.props.toolbox);
+        const actions = new Actions(toolbox);
         actions
-            .doRemoveTenantFromGroup(tenant, this.props.data.name)
+            .doRemoveTenantFromGroup(tenant, data.name)
             .then(() => {
-                this.props.toolbox.refresh();
-                this.props.toolbox.getEventBus().trigger('users:refresh');
-                this.props.toolbox.getEventBus().trigger('tenants:refresh');
+                toolbox.refresh();
+                toolbox.getEventBus().trigger('users:refresh');
+                toolbox.getEventBus().trigger('tenants:refresh');
                 this.setState({ processItem: '', processing: false });
             })
             .catch(err => {
-                this.props.onError(err.message);
+                onError(err.message);
                 this.setState({ processItem: '', processing: false });
             });
     }
 
     removeUser(username) {
+        const { data, onError, toolbox } = this.props;
         this.setState({ processItem: username, processing: true });
 
-        const actions = new Actions(this.props.toolbox);
+        const actions = new Actions(toolbox);
         actions
-            .doRemoveUserFromGroup(username, this.props.data.name)
+            .doRemoveUserFromGroup(username, data.name)
             .then(() => {
                 if (this.state.showModal) {
-                    this.props.toolbox.getEventBus().trigger('menu.users:logout');
+                    toolbox.getEventBus().trigger('menu.users:logout');
                 }
                 this.setState({ processItem: '', processing: false });
-                this.props.toolbox.refresh();
-                this.props.toolbox.getEventBus().trigger('users:refresh');
-                this.props.toolbox.getEventBus().trigger('tenants:refresh');
+                toolbox.refresh();
+                toolbox.getEventBus().trigger('users:refresh');
+                toolbox.getEventBus().trigger('tenants:refresh');
             })
             .catch(err => {
-                this.props.onError(err.message);
+                onError(err.message);
                 this.setState({ processItem: '', processing: false });
             });
     }
 
     removeUserOrShowModal(username) {
-        const actions = new Actions(this.props.toolbox);
+        const { data, groups, toolbox } = this.props;
+        const actions = new Actions(toolbox);
 
-        if (actions.isLogoutToBePerformed(this.props.data, this.props.groups, [username])) {
+        if (actions.isLogoutToBePerformed(data, groups, [username])) {
             this.setState({ user: username, showModal: true });
         } else {
             this.removeUser(username);
@@ -77,6 +80,8 @@ export default class UserDetails extends React.Component {
     }
 
     render() {
+        const { processItem, showModal, user } = this.state;
+        const { data } = this.props;
         const { Confirm, Divider, Icon, List, Message, Segment } = Stage.Basic;
 
         return (
@@ -85,8 +90,8 @@ export default class UserDetails extends React.Component {
                     <Icon name="users" /> Users
                     <Divider />
                     <List divided relaxed verticalAlign="middle" className="light">
-                        {this.props.data.users.map(item => {
-                            const processing = this.state.processing && this.state.processItem === item;
+                        {data.users.map(item => {
+                            const processing = processing && processItem === item;
 
                             return (
                                 <List.Item key={item}>
@@ -102,15 +107,15 @@ export default class UserDetails extends React.Component {
                             );
                         })}
 
-                        {_.isEmpty(this.props.data.users) && <Message content="No users available" />}
+                        {_.isEmpty(data.users) && <Message content="No users available" />}
                     </List>
                 </Segment>
                 <Segment>
                     <Icon name="users" /> Tenants
                     <Divider />
                     <List divided relaxed verticalAlign="middle" className="light">
-                        {_.map(this.props.data.tenants, (role, item) => {
-                            const processing = this.state.processing && this.state.processItem === item;
+                        {_.map(data.tenants, (role, item) => {
+                            const processing = processing && processItem === item;
 
                             return (
                                 <List.Item key={item}>
@@ -126,18 +131,18 @@ export default class UserDetails extends React.Component {
                             );
                         })}
 
-                        {_.isEmpty(this.props.data.tenants) && <Message content="No tenants available" />}
+                        {_.isEmpty(data.tenants) && <Message content="No tenants available" />}
                     </List>
                 </Segment>
 
                 <Confirm
                     content={
-                        `You have administrator privileges from the '${this.props.data.name}' group.` +
+                        `You have administrator privileges from the '${data.name}' group.` +
                         'Are you sure you want to remove yourself from this group? ' +
                         'You will be logged out of the system so the changes take effect.'
                     }
-                    open={this.state.showModal}
-                    onConfirm={this.removeUser.bind(this, this.state.user)}
+                    open={showModal}
+                    onConfirm={this.removeUser.bind(this, user)}
                     onCancel={this.hideModal.bind(this)}
                 />
             </Segment.Group>

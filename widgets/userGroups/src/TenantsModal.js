@@ -37,16 +37,18 @@ export default class TenantsModal extends React.Component {
     }
 
     componentDidUpdate(prevProps) {
-        if (!prevProps.open && this.props.open) {
-            this.setState({ ...TenantsModal.initialState, tenants: this.props.group.tenants });
+        const { group, open } = this.props;
+        if (!prevProps.open && open) {
+            this.setState({ ...TenantsModal.initialState, tenants: group.tenants });
         }
     }
 
     submitTenants() {
+        const { group, onHide, toolbox } = this.props;
         // Disable the form
         this.setState({ loading: true });
 
-        const { tenants } = this.props.group;
+        const { tenants } = group;
         const tenantsList = Object.keys(tenants);
         const submitTenants = this.state.tenants;
         const submitTenantsList = Object.keys(submitTenants);
@@ -57,15 +59,15 @@ export default class TenantsModal extends React.Component {
             return tenants[tenant] && !_.isEqual(tenants[tenant], role);
         });
 
-        const actions = new Actions(this.props.toolbox);
+        const actions = new Actions(toolbox);
         actions
-            .doHandleTenants(this.props.group.name, tenantsToAdd, tenantsToRemove, tenantsToUpdate)
+            .doHandleTenants(group.name, tenantsToAdd, tenantsToRemove, tenantsToUpdate)
             .then(() => {
                 this.setState({ errors: {}, loading: false });
-                this.props.toolbox.refresh();
-                this.props.toolbox.getEventBus().trigger('tenants:refresh');
-                this.props.toolbox.getEventBus().trigger('users:refresh');
-                this.props.onHide();
+                toolbox.refresh();
+                toolbox.getEventBus().trigger('tenants:refresh');
+                toolbox.getEventBus().trigger('users:refresh');
+                onHide();
             })
             .catch(err => {
                 this.setState({ errors: { error: err.message }, loading: false });
@@ -82,27 +84,25 @@ export default class TenantsModal extends React.Component {
     }
 
     render() {
+        const { errors, loading } = this.state;
+        const { onHide, open, toolbox } = this.props;
         const { Modal, Icon, Form, ApproveButton, CancelButton } = Stage.Basic;
 
-        const group = { name: '', ...this.props.group };
-        const tenants = { items: [], ...this.props.tenants };
+        const group = { name: '', ...group };
+        const tenants = { items: [], ...tenants };
 
         const options = _.map(tenants.items, item => {
             return { text: item.name, value: item.name, key: item.name };
         });
 
         return (
-            <Modal open={this.props.open} onClose={() => this.props.onHide()}>
+            <Modal open={open} onClose={() => onHide()}>
                 <Modal.Header>
                     <Icon name="user" /> Edit tenants for {group.name}
                 </Modal.Header>
 
                 <Modal.Content>
-                    <Form
-                        loading={this.state.loading}
-                        errors={this.state.errors}
-                        onErrorsDismiss={() => this.setState({ errors: {} })}
-                    >
+                    <Form loading={loading} errors={errors} onErrorsDismiss={() => this.setState({ errors: {} })}>
                         <Form.Field>
                             <Form.Dropdown
                                 placeholder="Tenants"
@@ -110,27 +110,22 @@ export default class TenantsModal extends React.Component {
                                 selection
                                 options={options}
                                 name="tenants"
-                                value={Object.keys(this.state.tenants)}
+                                value={Object.keys(tenants)}
                                 onChange={this.handleInputChange.bind(this)}
                             />
                         </Form.Field>
                         <RolesPicker
                             onUpdate={this.onRoleChange.bind(this)}
-                            resources={this.state.tenants}
+                            resources={tenants}
                             resourceName="tenant"
-                            toolbox={this.props.toolbox}
+                            toolbox={toolbox}
                         />
                     </Form>
                 </Modal.Content>
 
                 <Modal.Actions>
-                    <CancelButton onClick={this.onCancel.bind(this)} disabled={this.state.loading} />
-                    <ApproveButton
-                        onClick={this.onApprove.bind(this)}
-                        disabled={this.state.loading}
-                        icon="user"
-                        color="green"
-                    />
+                    <CancelButton onClick={this.onCancel.bind(this)} disabled={loading} />
+                    <ApproveButton onClick={this.onApprove.bind(this)} disabled={loading} icon="user" color="green" />
                 </Modal.Actions>
             </Modal>
         );

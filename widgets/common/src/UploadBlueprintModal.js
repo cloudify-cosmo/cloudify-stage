@@ -40,12 +40,14 @@ class UploadBlueprintModal extends React.Component {
     }
 
     uploadBlueprint() {
-        const blueprintUrl = this.state.blueprintFile ? '' : this.state.blueprintUrl;
-        const imageUrl = this.state.imageFile ? '' : this.state.imageUrl;
+        const { blueprintFile, blueprintFileName, blueprintName, imageFile, visibility } = this.state;
+        const { onHide, toolbox } = this.props;
+        const blueprintUrl = blueprintFile ? '' : blueprintUrl;
+        const imageUrl = imageFile ? '' : imageUrl;
 
         const errors = {};
 
-        if (!this.state.blueprintFile) {
+        if (!blueprintFile) {
             if (_.isEmpty(blueprintUrl)) {
                 errors.blueprintUrl = 'Please select blueprint package';
             } else if (!Stage.Utils.Url.isUrl(blueprintUrl)) {
@@ -53,11 +55,11 @@ class UploadBlueprintModal extends React.Component {
             }
         }
 
-        if (_.isEmpty(this.state.blueprintName)) {
+        if (_.isEmpty(blueprintName)) {
             errors.blueprintName = 'Please provide blueprint name';
         }
 
-        if (_.isEmpty(this.state.blueprintFileName)) {
+        if (_.isEmpty(blueprintFileName)) {
             errors.blueprintFileName = 'Please provide blueprint YAML file';
         }
 
@@ -74,18 +76,10 @@ class UploadBlueprintModal extends React.Component {
         this.setState({ loading: true });
 
         this.actions
-            .doUpload(
-                this.state.blueprintName,
-                this.state.blueprintFileName,
-                blueprintUrl,
-                this.state.blueprintFile,
-                imageUrl,
-                this.state.imageFile,
-                this.state.visibility
-            )
+            .doUpload(blueprintName, blueprintFileName, blueprintUrl, blueprintFile, imageUrl, imageFile, visibility)
             .then(() => {
-                this.setState({ errors: {}, loading: false }, this.props.onHide);
-                this.props.toolbox.refresh();
+                this.setState({ errors: {}, loading: false }, onHide);
+                toolbox.refresh();
             })
             .catch(err => {
                 this.setState({ errors: { error: err.message }, loading: false });
@@ -97,16 +91,28 @@ class UploadBlueprintModal extends React.Component {
     }
 
     render() {
+        const {
+            blueprintFile,
+            blueprintFileName,
+            blueprintName,
+            blueprintUrl,
+            errors,
+            imageFile,
+            imageUrl,
+            loading,
+            visibility
+        } = this.state;
+        const { onHide, open, toolbox } = this.props;
         const { ApproveButton, CancelButton, Icon, Modal, VisibilityField } = Stage.Basic;
         const { UploadBlueprintForm } = Stage.Common;
 
         return (
             <div>
-                <Modal open={this.props.open} onClose={this.props.onHide} className="uploadBlueprintModal">
+                <Modal open={open} onClose={onHide} className="uploadBlueprintModal">
                     <Modal.Header>
                         <Icon name="upload" /> Upload blueprint
                         <VisibilityField
-                            visibility={this.state.visibility}
+                            visibility={visibility}
                             className="rightFloated"
                             onVisibilityChange={visibility => this.setState({ visibility })}
                         />
@@ -114,24 +120,24 @@ class UploadBlueprintModal extends React.Component {
 
                     <Modal.Content>
                         <UploadBlueprintForm
-                            blueprintUrl={this.state.blueprintUrl}
-                            blueprintFile={this.state.blueprintFile}
-                            blueprintName={this.state.blueprintName}
-                            blueprintFileName={this.state.blueprintFileName}
-                            imageUrl={this.state.imageUrl}
-                            imageFile={this.state.imageFile}
-                            errors={this.state.errors}
-                            loading={this.state.loading}
+                            blueprintUrl={blueprintUrl}
+                            blueprintFile={blueprintFile}
+                            blueprintName={blueprintName}
+                            blueprintFileName={blueprintFileName}
+                            imageUrl={imageUrl}
+                            imageFile={imageFile}
+                            errors={errors}
+                            loading={loading}
                             onChange={this.onFormFieldChange.bind(this)}
-                            toolbox={this.props.toolbox}
+                            toolbox={toolbox}
                         />
                     </Modal.Content>
 
                     <Modal.Actions>
-                        <CancelButton onClick={this.props.onHide} disabled={this.state.loading} />
+                        <CancelButton onClick={onHide} disabled={loading} />
                         <ApproveButton
                             onClick={this.uploadBlueprint.bind(this)}
-                            disabled={this.state.loading}
+                            disabled={loading}
                             content="Upload"
                             icon="upload"
                             color="green"

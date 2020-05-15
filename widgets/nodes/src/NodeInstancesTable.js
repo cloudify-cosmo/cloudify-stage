@@ -32,9 +32,10 @@ export default class NodeInstancesTable extends React.Component {
     }
 
     selectNodeInstance(item) {
-        const selectedNodeInstanceId = this.props.toolbox.getContext().getValue('nodeInstanceId');
+        const { toolbox } = this.props;
+        const selectedNodeInstanceId = toolbox.getContext().getValue('nodeInstanceId');
         const clickedNodeInstanceId = item.id;
-        this.props.toolbox
+        toolbox
             .getContext()
             .setValue(
                 'nodeInstanceId',
@@ -43,6 +44,8 @@ export default class NodeInstancesTable extends React.Component {
     }
 
     render() {
+        const { instance, showModal } = this.state;
+        const { instances, widget } = this.props;
         const NO_DATA_MESSAGE = 'There are no Node Instances of selected Node available.';
         const { CopyToClipboardButton, DataTable, Icon } = Stage.Basic;
 
@@ -53,7 +56,7 @@ export default class NodeInstancesTable extends React.Component {
                     <DataTable.Column label="Status" name="state" width="30%" />
                     <DataTable.Column label="Details" name="details" width="30%" />
 
-                    {this.props.instances.map(instance => {
+                    {instances.map(instance => {
                         return (
                             <DataTable.Row
                                 key={instance.id}
@@ -82,10 +85,10 @@ export default class NodeInstancesTable extends React.Component {
                 </DataTable>
 
                 <InstanceModal
-                    open={this.state.showModal}
+                    open={showModal}
                     onClose={this.closeInstanceModal.bind(this)}
-                    widget={this.props.widget}
-                    instance={this.state.instance}
+                    widget={widget}
+                    instance={instance}
                 />
             </div>
         );

@@ -17,16 +17,13 @@ export default class SideBar extends Component {
     };
 
     render() {
-        const isOpen = this.props.isOpen ? 'open' : '';
+        const { homePageId, isEditMode, pageId } = this.props;
+        const isOpen = isOpen ? 'open' : '';
 
         return (
             <div className="sidebarContainer">
                 <div className={`ui visible left vertical sidebar menu small basic  ${isOpen}`}>
-                    <Pages
-                        pageId={this.props.pageId}
-                        isEditMode={this.props.isEditMode}
-                        homePageId={this.props.homePageId}
-                    />
+                    <Pages pageId={pageId} isEditMode={isEditMode} homePageId={homePageId} />
                 </div>
             </div>
         );

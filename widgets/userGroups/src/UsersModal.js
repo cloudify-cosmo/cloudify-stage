@@ -29,21 +29,20 @@ export default class UsersModal extends React.Component {
     }
 
     componentDidUpdate(prevProps) {
-        if (!prevProps.open && this.props.open) {
-            this.setState({ ...UsersModal.initialState, users: this.props.group.users });
+        const { group, open } = this.props;
+        if (!prevProps.open && open) {
+            this.setState({ ...UsersModal.initialState, users: group.users });
         }
     }
 
     submitUsers() {
-        const actions = new Actions(this.props.toolbox);
-        const usersToAdd = _.difference(this.state.users, this.props.group.users);
-        const usersToRemove = _.difference(this.props.group.users, this.state.users);
-        const { waitingForConfirmation } = this.state;
+        const { group, groups, onHide, toolbox } = this.props;
+        const actions = new Actions(toolbox);
+        const usersToAdd = _.difference(users, group.users);
+        const usersToRemove = _.difference(group.users, users);
+        const { waitingForConfirmation, users } = this.state;
 
-        if (
-            !waitingForConfirmation &&
-            actions.isLogoutToBePerformed(this.props.group, this.props.groups, usersToRemove)
-        ) {
+        if (!waitingForConfirmation && actions.isLogoutToBePerformed(group, groups, usersToRemove)) {
             this.setState({ waitingForConfirmation: true });
             return;
         }
@@ -52,16 +51,16 @@ export default class UsersModal extends React.Component {
         this.setState({ loading: true });
 
         actions
-            .doHandleUsers(this.props.group.name, usersToAdd, usersToRemove)
+            .doHandleUsers(group.name, usersToAdd, usersToRemove)
             .then(() => {
                 if (waitingForConfirmation) {
-                    this.props.toolbox.getEventBus().trigger('menu.users:logout');
+                    toolbox.getEventBus().trigger('menu.users:logout');
                 }
                 this.setState({ errors: {}, loading: false });
-                this.props.toolbox.refresh();
-                this.props.toolbox.getEventBus().trigger('users:refresh');
-                this.props.toolbox.getEventBus().trigger('tenants:refresh');
-                this.props.onHide();
+                toolbox.refresh();
+                toolbox.getEventBus().trigger('users:refresh');
+                toolbox.getEventBus().trigger('tenants:refresh');
+                onHide();
             })
             .catch(err => {
                 this.setState({ errors: { error: err.message }, loading: false });
@@ -73,23 +72,25 @@ export default class UsersModal extends React.Component {
     }
 
     render() {
+        const { errors, loading, waitingForConfirmation } = this.state;
+        const { onHide, open } = this.props;
         const { ApproveButton, CancelButton, Form, Icon, Message, Modal } = Stage.Basic;
 
-        const group = { name: '', ...this.props.group };
-        const users = { items: [], ...this.props.users };
+        const group = { name: '', ...group };
+        const users = { items: [], ...users };
 
         const options = _.map(users.items, item => {
             return { text: item.username, value: item.username, key: item.username };
         });
 
         return (
-            <Modal open={this.props.open} onClose={() => this.props.onHide()}>
+            <Modal open={open} onClose={() => onHide()}>
                 <Modal.Header>
                     <Icon name="user" /> Edit users for {group.name}
                 </Modal.Header>
 
                 <Modal.Content>
-                    {this.state.waitingForConfirmation && (
+                    {waitingForConfirmation && (
                         <Message warning onDismiss={() => this.setState({ waitingForConfirmation: false })}>
                             <Message.Header>Confirmation request</Message.Header>
                             You are about to remove yourself from this group. Your administrative privileges will be
@@ -97,11 +98,7 @@ export default class UsersModal extends React.Component {
                             you want to continue?
                         </Message>
                     )}
-                    <Form
-                        loading={this.state.loading}
-                        errors={this.state.errors}
-                        onErrorsDismiss={() => this.setState({ errors: {} })}
-                    >
+                    <Form loading={loading} errors={errors} onErrorsDismiss={() => this.setState({ errors: {} })}>
                         <Form.Field>
                             <Form.Dropdown
                                 placeholder="Users"
@@ -109,7 +106,7 @@ export default class UsersModal extends React.Component {
                                 selection
                                 options={options}
                                 name="users"
-                                value={this.state.users}
+                                value={users}
                                 onChange={this.handleInputChange.bind(this)}
                             />
                         </Form.Field>
@@ -119,15 +116,15 @@ export default class UsersModal extends React.Component {
                 <Modal.Actions>
                     <CancelButton
                         onClick={this.onCancel.bind(this)}
-                        disabled={this.state.loading}
-                        content={this.state.waitingForConfirmation ? 'No' : undefined}
+                        disabled={loading}
+                        content={waitingForConfirmation ? 'No' : undefined}
                     />
                     <ApproveButton
                         onClick={this.onApprove.bind(this)}
-                        disabled={this.state.loading}
+                        disabled={loading}
                         icon="user"
                         color="green"
-                        content={this.state.waitingForConfirmation ? 'Yes' : undefined}
+                        content={waitingForConfirmation ? 'Yes' : undefined}
                     />
                 </Modal.Actions>
             </Modal>

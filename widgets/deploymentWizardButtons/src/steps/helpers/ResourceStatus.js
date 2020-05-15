@@ -22,7 +22,8 @@ export default class ResourceStatus extends React.Component {
     };
 
     shouldComponentUpdate(nextProps) {
-        return this.props.status !== nextProps.status || this.props.text !== nextProps.text;
+        const { status, text } = this.props;
+        return status !== nextProps.status || text !== nextProps.text;
     }
 
     render() {

@@ -5,27 +5,27 @@
 import PropTypes from 'prop-types';
 
 import React, { Component } from 'react';
-import {
-    Input,
-    Segment,
-    Divider,
-    Item,
-    Image,
-    Button,
-    DataTable,
-    Modal,
-    Confirm,
-    ErrorMessage,
-    Icon,
-    Checkbox,
-    Grid,
-    Menu,
-    Label
-} from './basic/index';
-import InstallWidgetModal from './InstallWidgetModal';
 import GenericConfig from '../utils/GenericConfig';
 import LoaderUtils from '../utils/LoaderUtils';
 import StageUtils from '../utils/stageUtils';
+import {
+    Button,
+    Checkbox,
+    Confirm,
+    DataTable,
+    Divider,
+    ErrorMessage,
+    Grid,
+    Icon,
+    Image,
+    Input,
+    Item,
+    Label,
+    Menu,
+    Modal,
+    Segment
+} from './basic/index';
+import InstallWidgetModal from './InstallWidgetModal';
 
 export default class AddWidgetModal extends Component {
     constructor(props, context) {
@@ -85,10 +85,11 @@ export default class AddWidgetModal extends Component {
     }
 
     addWidgets() {
+        const { onWidgetAdded, widgetDefinitions } = this.props;
         _.forEach(this.state.widgetsToAdd, widgetId => {
-            const widget = _.find(this.props.widgetDefinitions, widgetDefinition => widgetId === widgetDefinition.id);
+            const widget = _.find(widgetDefinitions, widgetDefinition => widgetId === widgetDefinition.id);
             if (widget) {
-                this.props.onWidgetAdded(widget);
+                onWidgetAdded(widget);
             }
         });
         this.setState({ ...this.state, widgetsToAdd: [] });
@@ -96,17 +97,18 @@ export default class AddWidgetModal extends Component {
     }
 
     toggleWidgetInstall(widgetId) {
+        const { widgetsToAdd } = this.state;
         this.setState({
-            widgetsToAdd: _.includes(this.state.widgetsToAdd, widgetId)
-                ? _.without(this.state.widgetsToAdd, widgetId)
-                : [...this.state.widgetsToAdd, widgetId]
+            widgetsToAdd: _.includes(widgetsToAdd, widgetId)
+                ? _.without(widgetsToAdd, widgetId)
+                : [...widgetsToAdd, widgetId]
         });
     }
 
     confirmRemove(event, widget) {
         event.stopPropagation();
-        this.props
-            .onWidgetUsed(widget.id)
+        const { onWidgetUsed } = this.props;
+        onWidgetUsed(widget.id)
             .then(usedByList => {
                 this.setState({ widget, usedByList, showConfirm: true });
             })
@@ -172,8 +174,9 @@ export default class AddWidgetModal extends Component {
     }
 
     doFilterWidgets(field, isCategoryChange = false) {
-        const search = isCategoryChange ? this.state.search : field.value;
-        const category = isCategoryChange ? field.name : this.state.selectedCategory;
+        const { selectedCategory } = this.state;
+        const search = isCategoryChange ? search : field.value;
+        const category = isCategoryChange ? field.name : selectedCategory;
 
         let filtered = this.getWidgetsBySearch(this.props.widgetDefinitions, search);
         filtered = this.getWidgetsByCategory(filtered, category);
@@ -186,6 +189,21 @@ export default class AddWidgetModal extends Component {
     filterByCategory = (proxy, field) => this.doFilterWidgets(field, true);
 
     render() {
+        const {
+            categories,
+            error,
+            filteredWidgetDefinitions,
+            open,
+            search,
+            selectedCategory,
+            showConfirm,
+            showThumbnail,
+            thumbnailWidget,
+            usedByList,
+            widget,
+            widgetsToAdd
+        } = this.state;
+        const { canInstallWidgets, className, onWidgetInstalled } = this.props;
         const addWidgetBtn = (
             <Button icon="bar chart" labelPosition="left" basic content="Add Widget" className="addWidgetBtn" />
         );
@@ -210,7 +228,7 @@ export default class AddWidgetModal extends Component {
             />
         );
 
-        const confirmContent = !_.isEmpty(this.state.usedByList) ? (
+        const confirmContent = !_.isEmpty(usedByList) ? (
             <Segment basic>
                 <h5>Widget is currently used by:</h5>
 
@@ -218,7 +236,7 @@ export default class AddWidgetModal extends Component {
                     <DataTable.Column label="Username" />
                     <DataTable.Column label="Manager IP" />
 
-                    {this.state.usedByList.map(item => {
+                    {usedByList.map(item => {
                         return (
                             <DataTable.Row key={item.username + item.managerIp}>
                                 <DataTable.Data>{item.username}</DataTable.Data>
@@ -236,16 +254,16 @@ export default class AddWidgetModal extends Component {
             <Menu fluid vertical tabular>
                 <Menu.Item
                     name={GenericConfig.CATEGORY.ALL}
-                    active={this.state.selectedCategory === GenericConfig.CATEGORY.ALL}
+                    active={selectedCategory === GenericConfig.CATEGORY.ALL}
                     onClick={this.filterByCategory.bind(this)}
                 />
 
-                {this.state.categories.map(category => {
+                {categories.map(category => {
                     return (
                         <Menu.Item
                             key={category.name}
                             name={category.name}
-                            active={this.state.selectedCategory === category.name}
+                            active={selectedCategory === category.name}
                             onClick={this.filterByCategory.bind(this)}
                         >
                             {category.name}
@@ -260,18 +278,18 @@ export default class AddWidgetModal extends Component {
             StageUtils.Url.url(LoaderUtils.getResourceUrl(`widgets/${widget.id}/widget.png`, widget.isCustom));
 
         return (
-            <div className={this.props.className}>
+            <div className={className}>
                 <Modal
                     trigger={addWidgetBtn}
                     className="addWidgetModal"
-                    open={this.state.open}
+                    open={open}
                     closeIcon
                     onOpen={this.openModal.bind(this)}
                     onClose={this.closeModal.bind(this)}
                     size="large"
                 >
                     <Segment basic size="large">
-                        <ErrorMessage error={this.state.error} />
+                        <ErrorMessage error={error} />
 
                         <Input
                             icon="search"
@@ -279,7 +297,7 @@ export default class AddWidgetModal extends Component {
                             size="mini"
                             placeholder="Search widgets ..."
                             onChange={this.filterWidgets.bind(this)}
-                            value={this.state.search}
+                            value={search}
                         />
 
                         <Divider />
@@ -289,7 +307,7 @@ export default class AddWidgetModal extends Component {
                                 <Grid.Column width={4}>{menuContent}</Grid.Column>
                                 <Grid.Column width={12}>
                                     <Item.Group divided className="widgetsList">
-                                        {this.state.filteredWidgetDefinitions.map(
+                                        {filteredWidgetDefinitions.map(
                                             widget => (
                                                 <Item
                                                     key={widget.id}
@@ -302,7 +320,7 @@ export default class AddWidgetModal extends Component {
                                                         className="addWidgetCheckbox"
                                                         readOnly
                                                         title="Add widget to page"
-                                                        checked={this.state.widgetsToAdd.includes(widget.id)}
+                                                        checked={widgetsToAdd.includes(widget.id)}
                                                     />
                                                     <Item.Image
                                                         as="div"
@@ -316,7 +334,7 @@ export default class AddWidgetModal extends Component {
                                                         <Item.Meta>{widget.description}</Item.Meta>
                                                         <Item.Description />
                                                         <Item.Extra>
-                                                            {widget.isCustom && this.props.canInstallWidgets && (
+                                                            {widget.isCustom && canInstallWidgets && (
                                                                 <div>
                                                                     <InstallWidgetModal
                                                                         onWidgetInstalled={this.updateWidget.bind(
@@ -347,7 +365,7 @@ export default class AddWidgetModal extends Component {
                                             this
                                         )}
 
-                                        {_.isEmpty(this.state.filteredWidgetDefinitions) && (
+                                        {_.isEmpty(filteredWidgetDefinitions) && (
                                             <Item className="alignCenter" content="No widgets available" />
                                         )}
                                     </Item.Group>
@@ -360,19 +378,19 @@ export default class AddWidgetModal extends Component {
                                                 this.addWidgets();
                                             }}
                                             color="green"
-                                            disabled={this.state.widgetsToAdd.length === 0}
+                                            disabled={widgetsToAdd.length === 0}
                                         >
                                             <Button.Content visible>
-                                                Add selected widgets ({this.state.widgetsToAdd.length})
+                                                Add selected widgets ({widgetsToAdd.length})
                                             </Button.Content>
                                             <Button.Content hidden>
                                                 <Icon name="check" />
                                             </Button.Content>
                                         </Button>
 
-                                        {this.props.canInstallWidgets && (
+                                        {canInstallWidgets && (
                                             <InstallWidgetModal
-                                                onWidgetInstalled={this.props.onWidgetInstalled}
+                                                onWidgetInstalled={onWidgetInstalled}
                                                 trigger={installWidgetBtn}
                                                 header="Install new widget"
                                                 buttonLabel="Install Widget"
@@ -386,23 +404,23 @@ export default class AddWidgetModal extends Component {
                 </Modal>
 
                 <Confirm
-                    open={this.state.showConfirm}
+                    open={showConfirm}
                     onCancel={() => this.setState({ showConfirm: false })}
                     onConfirm={this.uninstallWidget.bind(this)}
-                    header={`Are you sure to remove widget ${this.state.widget.name}?`}
+                    header={`Are you sure to remove widget ${widget.name}?`}
                     content={confirmContent}
                     className="removeWidgetConfirm"
                 />
 
                 <Modal
-                    open={this.state.showThumbnail}
+                    open={showThumbnail}
                     basic
                     closeOnDimmerClick
                     closeOnDocumentClick
                     onClose={this.closeThumbnailModal.bind(this)}
                 >
                     <div>
-                        <Image centered src={imageSrc(this.state.thumbnailWidget)} />
+                        <Image centered src={imageSrc(thumbnailWidget)} />
                     </div>
                 </Modal>
             </div>

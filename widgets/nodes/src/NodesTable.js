@@ -15,10 +15,11 @@ export default class NodesTable extends React.Component {
     }
 
     shouldComponentUpdate(nextProps, nextState) {
+        const { data, widget } = this.props;
         return (
-            !_.isEqual(this.props.widget, nextProps.widget) ||
+            !_.isEqual(widget, nextProps.widget) ||
             !_.isEqual(this.state, nextState) ||
-            !_.isEqual(this.props.data, nextProps.data)
+            !_.isEqual(data, nextProps.data)
         );
     }
 
@@ -27,13 +28,14 @@ export default class NodesTable extends React.Component {
     }
 
     selectNode(item) {
-        const selectedDepNodeId = this.props.toolbox.getContext().getValue('depNodeId');
+        const { toolbox } = this.props;
+        const selectedDepNodeId = toolbox.getContext().getValue('depNodeId');
         const clickedDepNodeId = item.id + item.deployment_id;
         const clickedAlreadySelectedNode = clickedDepNodeId === selectedDepNodeId;
-        this.props.toolbox.getContext().setValue('depNodeId', clickedAlreadySelectedNode ? null : clickedDepNodeId);
-        this.props.toolbox.getContext().setValue('nodeId', clickedAlreadySelectedNode ? null : item.id);
-        this.props.toolbox.getContext().setValue('nodeInstanceId', null);
-        this.props.toolbox.getEventBus().trigger('topology:selectNode', clickedAlreadySelectedNode ? null : item.id);
+        toolbox.getContext().setValue('depNodeId', clickedAlreadySelectedNode ? null : clickedDepNodeId);
+        toolbox.getContext().setValue('nodeId', clickedAlreadySelectedNode ? null : item.id);
+        toolbox.getContext().setValue('nodeInstanceId', null);
+        toolbox.getEventBus().trigger('topology:selectNode', clickedAlreadySelectedNode ? null : item.id);
     }
 
     componentDidMount() {
@@ -49,10 +51,11 @@ export default class NodesTable extends React.Component {
     }
 
     render() {
+        const { data, toolbox, widget } = this.props;
         const NO_DATA_MESSAGE = "There are no Nodes available. Probably there's no deployment created, yet.";
         const { CopyToClipboardButton, DataTable, ErrorMessage, Icon, Popup } = Stage.Basic;
 
-        const { fieldsToShow } = this.props.widget.configuration;
+        const { fieldsToShow } = widget.configuration;
 
         return (
             <div>
@@ -60,10 +63,10 @@ export default class NodesTable extends React.Component {
 
                 <DataTable
                     fetchData={this.fetchGridData.bind(this)}
-                    totalSize={this.props.data.total}
-                    pageSize={this.props.widget.configuration.pageSize}
-                    sortColumn={this.props.widget.configuration.sortColumn}
-                    sortAscending={this.props.widget.configuration.sortAscending}
+                    totalSize={data.total}
+                    pageSize={widget.configuration.pageSize}
+                    sortColumn={widget.configuration.sortColumn}
+                    sortAscending={widget.configuration.sortAscending}
                     searchable
                     selectable
                     className="nodesTable"
@@ -76,13 +79,13 @@ export default class NodesTable extends React.Component {
                         label="Blueprint"
                         name="blueprint_id"
                         width="10%"
-                        show={fieldsToShow.indexOf('Blueprint') >= 0 && _.isEmpty(this.props.data.blueprintId)}
+                        show={fieldsToShow.indexOf('Blueprint') >= 0 && _.isEmpty(data.blueprintId)}
                     />
                     <DataTable.Column
                         label="Deployment"
                         name="deployment_id"
                         width="10%"
-                        show={fieldsToShow.indexOf('Deployment') >= 0 && _.isEmpty(this.props.data.deploymentId)}
+                        show={fieldsToShow.indexOf('Deployment') >= 0 && _.isEmpty(data.deploymentId)}
                     />
                     <DataTable.Column
                         label="Contained in"
@@ -113,11 +116,11 @@ export default class NodesTable extends React.Component {
                         width="10%"
                         show={
                             fieldsToShow.indexOf('Groups') >= 0 &&
-                            (!_.isEmpty(this.props.data.blueprintId) || !_.isEmpty(this.props.data.deploymentId))
+                            (!_.isEmpty(data.blueprintId) || !_.isEmpty(data.deploymentId))
                         }
                     />
 
-                    {this.props.data.items.map(node => {
+                    {data.items.map(node => {
                         return (
                             <DataTable.RowExpandable key={node.id + node.deployment_id} expanded={node.isSelected}>
                                 <DataTable.Row
@@ -172,11 +175,7 @@ export default class NodesTable extends React.Component {
                                 </DataTable.Row>
 
                                 <DataTable.DataExpandable key={`${node.id + node.deployment_id}_Expanded`}>
-                                    <NodeInstancesTable
-                                        instances={node.instances}
-                                        widget={this.props.widget}
-                                        toolbox={this.props.toolbox}
-                                    />
+                                    <NodeInstancesTable instances={node.instances} widget={widget} toolbox={toolbox} />
                                 </DataTable.DataExpandable>
                             </DataTable.RowExpandable>
                         );

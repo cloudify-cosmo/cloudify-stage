@@ -89,21 +89,22 @@ export default class CreateTemplateModal extends Component {
     }
 
     submitCreate() {
+        const { pages, roles, templateName, tenants } = this.state;
         const errors = {};
 
-        if (_.isEmpty(_.trim(this.state.templateName))) {
+        if (_.isEmpty(_.trim(templateName))) {
             errors.templateName = 'Please provide correct template name';
         }
 
-        if (_.isEmpty(this.state.roles)) {
+        if (_.isEmpty(roles)) {
             errors.roles = 'Please select role';
         }
 
-        if (_.isEmpty(this.state.tenants)) {
+        if (_.isEmpty(tenants)) {
             errors.tenants = 'Please select tenant';
         }
 
-        if (_.isEmpty(this.state.pages)) {
+        if (_.isEmpty(pages)) {
             errors.pages = 'Please select page';
         }
 
@@ -116,7 +117,7 @@ export default class CreateTemplateModal extends Component {
         this.setState({ loading: true });
 
         this.props
-            .onCreateTemplate(_.trim(this.state.templateName), this.state.roles, this.state.tenants, this.state.pages)
+            .onCreateTemplate(_.trim(templateName), roles, tenants, pages)
             .then(() => {
                 this.setState({ errors: {}, loading: false, open: false });
             })
@@ -141,8 +142,8 @@ export default class CreateTemplateModal extends Component {
     }
 
     addPage(item) {
-        const availablePages = _.without(this.state.availablePages, item);
-        const pages = [...this.state.pages, item];
+        const availablePages = _.without(availablePages, item);
+        const pages = [...pages, item];
 
         this.setState({ pages, availablePages }, () => {
             $('#reorderList').sortable('refresh');
@@ -150,8 +151,8 @@ export default class CreateTemplateModal extends Component {
     }
 
     removePage(item) {
-        const availablePages = [...this.state.availablePages, item];
-        const pages = _.without(this.state.pages, item);
+        const availablePages = [...availablePages, item];
+        const pages = _.without(pages, item);
 
         this.setState({ pages, availablePages }, () => {
             $('#reorderList').sortable('refresh');
@@ -159,14 +160,16 @@ export default class CreateTemplateModal extends Component {
     }
 
     render() {
-        const tenantOptions = _.map(this.props.availableTenants.items, item => {
+        const { availablePages, errors, loading, open, pages, roles, tenants } = this.state;
+        const { availableRoles, availableTenants, templateName } = this.props;
+        const tenantOptions = _.map(availableTenants.items, item => {
             return { text: item.name, value: item.name };
         });
         tenantOptions.push({ text: 'All tenants', value: Consts.DEFAULT_ALL });
 
-        const rolesOptions = this.props.availableRoles;
+        const rolesOptions = availableRoles;
 
-        const editMode = !_.isEmpty(this.props.templateName);
+        const editMode = !_.isEmpty(templateName);
 
         const trigger = editMode ? (
             <Icon name="edit" link className="updateTemplateIcon" onClick={e => e.stopPropagation()} />
@@ -182,51 +185,47 @@ export default class CreateTemplateModal extends Component {
         return (
             <Modal
                 trigger={trigger}
-                open={this.state.open}
+                open={open}
                 onOpen={this.openModal.bind(this)}
                 onClose={() => this.setState({ open: false })}
                 className="createTemplateModal"
             >
                 <Modal.Header>
                     <Icon name="list layout" />{' '}
-                    {editMode ? <span>Update template {this.props.templateName}</span> : <span>Create template</span>}
+                    {editMode ? <span>Update template {templateName}</span> : <span>Create template</span>}
                 </Modal.Header>
 
                 <Modal.Content>
-                    <Form
-                        loading={this.state.loading}
-                        errors={this.state.errors}
-                        onErrorsDismiss={() => this.setState({ errors: {} })}
-                    >
-                        <Form.Field error={this.state.errors.templateName}>
+                    <Form loading={loading} errors={errors} onErrorsDismiss={() => this.setState({ errors: {} })}>
+                        <Form.Field error={errors.templateName}>
                             <Form.Input
                                 name="templateName"
                                 placeholder="Template name"
-                                value={this.state.templateName}
+                                value={templateName}
                                 onChange={this.handleInputChange.bind(this)}
                             />
                         </Form.Field>
 
-                        <Form.Field error={this.state.errors.roles}>
+                        <Form.Field error={errors.roles}>
                             <Form.Dropdown
                                 placeholder="Roles"
                                 multiple
                                 selection
                                 options={rolesOptions}
                                 name="roles"
-                                value={this.state.roles}
+                                value={roles}
                                 onChange={this.handleInputChange.bind(this)}
                             />
                         </Form.Field>
 
-                        <Form.Field error={this.state.errors.tenants}>
+                        <Form.Field error={errors.tenants}>
                             <Form.Dropdown
                                 placeholder="Tenants"
                                 multiple
                                 selection
                                 options={tenantOptions}
                                 name="tenants"
-                                value={this.state.tenants}
+                                value={tenants}
                                 onChange={this.handleInputChange.bind(this)}
                             />
                         </Form.Field>
@@ -236,7 +235,7 @@ export default class CreateTemplateModal extends Component {
                                 <Icon name="plus" /> Available pages
                                 <Divider />
                                 <List divided relaxed verticalAlign="middle" className="light">
-                                    {this.state.availablePages.map(item => {
+                                    {availablePages.map(item => {
                                         return (
                                             <List.Item key={item}>
                                                 {item}
@@ -252,7 +251,7 @@ export default class CreateTemplateModal extends Component {
                                         );
                                     })}
 
-                                    {_.isEmpty(this.state.availablePages) && <Message content="No pages available" />}
+                                    {_.isEmpty(availablePages) && <Message content="No pages available" />}
                                 </List>
                             </Segment>
 
@@ -260,7 +259,7 @@ export default class CreateTemplateModal extends Component {
                                 <Icon name="block layout" /> Selected pages
                                 <Divider />
                                 <List divided relaxed verticalAlign="middle" className="light" id="reorderList">
-                                    {this.state.pages.map(item => {
+                                    {pages.map(item => {
                                         return (
                                             <List.Item key={item}>
                                                 {item}
@@ -278,7 +277,7 @@ export default class CreateTemplateModal extends Component {
                                         );
                                     })}
 
-                                    {_.isEmpty(this.state.pages) && <Message content="No pages selected" />}
+                                    {_.isEmpty(pages) && <Message content="No pages selected" />}
                                 </List>
                             </Segment>
                         </Segment.Group>
@@ -286,10 +285,10 @@ export default class CreateTemplateModal extends Component {
                 </Modal.Content>
 
                 <Modal.Actions>
-                    <CancelButton onClick={() => this.setState({ open: false })} disabled={this.state.loading} />
+                    <CancelButton onClick={() => this.setState({ open: false })} disabled={loading} />
                     <ApproveButton
                         onClick={this.submitCreate.bind(this)}
-                        disabled={this.state.loading}
+                        disabled={loading}
                         content={editMode ? 'Update' : 'Create'}
                         icon={editMode ? 'edit' : 'checkmark'}
                         color="green"

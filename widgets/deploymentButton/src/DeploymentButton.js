@@ -20,6 +20,7 @@ export default class extends React.Component {
     }
 
     render() {
+        const { loading, open } = this.state;
         const { Button } = Stage.Basic;
         const { DeployBlueprintModal } = Stage.Common;
 
@@ -31,15 +32,11 @@ export default class extends React.Component {
                     content="Create Deployment"
                     labelPosition="left"
                     className="widgetButton"
-                    loading={this.state.loading}
+                    loading={loading}
                     onClick={this.createDeployment.bind(this)}
                 />
 
-                <DeployBlueprintModal
-                    open={this.state.open}
-                    onHide={this.hideModal.bind(this)}
-                    toolbox={this.props.toolbox}
-                />
+                <DeployBlueprintModal open={open} onHide={this.hideModal.bind(this)} toolbox={this.props.toolbox} />
             </div>
         );
     }

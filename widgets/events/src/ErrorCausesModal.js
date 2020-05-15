@@ -20,6 +20,7 @@ export default class ErrorCausesModal extends React.Component {
     };
 
     render() {
+        const { errorCauses, onClose, open } = this.props;
         const { Json } = Stage.Utils;
         const {
             CancelButton,
@@ -31,13 +32,13 @@ export default class ErrorCausesModal extends React.Component {
             Modal,
             Segment
         } = Stage.Basic;
-        const numberOfErrorCauses = _.size(this.props.errorCauses);
+        const numberOfErrorCauses = _.size(errorCauses);
 
         return numberOfErrorCauses > 0 ? (
-            <Modal open={this.props.open} onClose={this.props.onClose}>
+            <Modal open={open} onClose={onClose}>
                 <Modal.Header>Error Causes</Modal.Header>
                 <Modal.Content scrolling>
-                    {_.map(this.props.errorCauses, ({ message, traceback, type }, index) => (
+                    {_.map(errorCauses, ({ message, traceback, type }, index) => (
                         <Segment key={`errorCause_${index}`} basic>
                             {numberOfErrorCauses > 1 && (
                                 <>
@@ -55,14 +56,11 @@ export default class ErrorCausesModal extends React.Component {
                     ))}
                 </Modal.Content>
                 <Modal.Actions>
-                    <CopyToClipboardButton
-                        content="Copy Error Causes"
-                        text={Json.stringify(this.props.errorCauses, true)}
-                    />
+                    <CopyToClipboardButton content="Copy Error Causes" text={Json.stringify(errorCauses, true)} />
                     <CancelButton
                         onClick={e => {
                             e.stopPropagation();
-                            this.props.onClose();
+                            onClose();
                         }}
                         content="Close"
                     />

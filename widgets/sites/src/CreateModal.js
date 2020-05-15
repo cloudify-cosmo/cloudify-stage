@@ -42,9 +42,11 @@ export default class CreateModal extends React.Component {
     }
 
     createSite() {
+        const { siteLocation, siteName, siteVisibility } = this.state;
+        const { toolbox } = this.props;
         const errors = {};
 
-        if (_.isEmpty(this.state.siteName)) {
+        if (_.isEmpty(siteName)) {
             errors.siteName = 'Please provide site name';
         }
 
@@ -56,12 +58,12 @@ export default class CreateModal extends React.Component {
         // Disable the form
         this.setState({ loading: true });
 
-        const actions = new SiteActions(this.props.toolbox);
+        const actions = new SiteActions(toolbox);
         actions
-            .doCreate(this.state.siteName, this.state.siteVisibility, this.state.siteLocation)
+            .doCreate(siteName, siteVisibility, siteLocation)
             .then(() => {
                 this.setState({ errors: {}, loading: false, open: false });
-                this.props.toolbox.refresh();
+                toolbox.refresh();
             })
             .catch(err => {
                 this.setState({ errors: { error: err.message }, loading: false });
@@ -73,6 +75,7 @@ export default class CreateModal extends React.Component {
     }
 
     render() {
+        const { errors, loading, open, siteName, siteVisibility } = this.state;
         const { ApproveButton, Button, CancelButton, Icon, Form, Modal, VisibilityField } = Stage.Basic;
         const createButton = <Button content="Create" icon="add" labelPosition="left" />;
         const { toolbox } = this.props;
@@ -80,43 +83,35 @@ export default class CreateModal extends React.Component {
         return (
             <Modal
                 trigger={createButton}
-                open={this.state.open}
+                open={open}
                 onOpen={() => this.setState({ open: true })}
                 onClose={() => this.setState({ open: false })}
             >
                 <Modal.Header>
                     <Icon name="add" /> Create site
                     <VisibilityField
-                        visibility={this.state.siteVisibility}
+                        visibility={siteVisibility}
                         className="rightFloated"
                         onVisibilityChange={visibility => this.setState({ siteVisibility: visibility })}
                     />
                 </Modal.Header>
 
                 <Modal.Content>
-                    <Form
-                        loading={this.state.loading}
-                        errors={this.state.errors}
-                        onErrorsDismiss={() => this.setState({ errors: {} })}
-                    >
-                        <Form.Field label="Name" error={this.state.errors.siteName} required>
-                            <Form.Input
-                                name="siteName"
-                                value={this.state.siteName}
-                                onChange={this.handleInputChange.bind(this)}
-                            />
+                    <Form loading={loading} errors={errors} onErrorsDismiss={() => this.setState({ errors: {} })}>
+                        <Form.Field label="Name" error={errors.siteName} required>
+                            <Form.Input name="siteName" value={siteName} onChange={this.handleInputChange.bind(this)} />
                         </Form.Field>
-                        <Form.Field error={this.state.errors.siteLocation}>
+                        <Form.Field error={errors.siteLocation}>
                             <SiteLocationInput onChange={this.handleInputChange.bind(this)} toolbox={toolbox} />
                         </Form.Field>
                     </Form>
                 </Modal.Content>
 
                 <Modal.Actions>
-                    <CancelButton onClick={this.onCancel.bind(this)} disabled={this.state.loading} />
+                    <CancelButton onClick={this.onCancel.bind(this)} disabled={loading} />
                     <ApproveButton
                         onClick={this.onApprove.bind(this)}
-                        disabled={this.state.loading}
+                        disabled={loading}
                         content="Create"
                         icon="add"
                         color="green"

@@ -58,16 +58,17 @@ export default class InstallAgentsModal extends React.Component {
     };
 
     componentDidUpdate(prevProps) {
-        if (this.props.open && !prevProps.open) {
-            const allowedDeployments = _.chain(this.props.agents)
+        const { agents, open } = this.props;
+        if (open && !prevProps.open) {
+            const allowedDeployments = _.chain(agents)
                 .map(agent => agent.deployment)
                 .uniq()
                 .value();
-            const allowedNodes = _.chain(this.props.agents)
+            const allowedNodes = _.chain(agents)
                 .map(agent => agent.node)
                 .uniq()
                 .value();
-            const allowedNodeInstances = _.chain(this.props.agents)
+            const allowedNodeInstances = _.chain(agents)
                 .map(agent => agent.id)
                 .uniq()
                 .value();
@@ -91,19 +92,15 @@ export default class InstallAgentsModal extends React.Component {
     }
 
     onShowExecutionStatus() {
+        const { onHide, toolbox, widget } = this.props;
         const { deploymentId } = this.state.nodeFilter;
         const { executionId } = this.state;
-        this.props.onHide();
-        this.props.toolbox.drillDown(
-            this.props.widget,
-            'execution',
-            { deploymentId, executionId },
-            `Install New Agents on ${deploymentId}`
-        );
+        onHide();
+        toolbox.drillDown(widget, 'execution', { deploymentId, executionId }, `Install New Agents on ${deploymentId}`);
     }
 
     submitExecute() {
-        const { nodeFilter } = this.state;
+        const { nodeFilter, installMethods, managerCertificate, managerIp, stopOldAgent } = this.state;
         if (!nodeFilter.deploymentId) {
             this.setState({ errors: { error: 'Provide deployment in Nodes filter' } });
             return false;
@@ -113,10 +110,10 @@ export default class InstallAgentsModal extends React.Component {
         const params = {
             node_ids: !_.isEmpty(nodeFilter.nodeId) ? nodeFilter.nodeId : undefined,
             node_instance_ids: !_.isEmpty(nodeFilter.nodeInstanceId) ? nodeFilter.nodeInstanceId : undefined,
-            install_methods: !_.isEmpty(this.state.installMethods) ? this.state.installMethods : undefined,
-            stop_old_agent: this.state.stopOldAgent,
-            manager_ip: !_.isEmpty(this.state.managerIp) ? this.state.managerIp : undefined,
-            manager_certificate: !_.isEmpty(this.state.managerCertificate) ? this.state.managerCertificate : undefined
+            install_methods: !_.isEmpty(installMethods) ? installMethods : undefined,
+            stop_old_agent: stopOldAgent,
+            manager_ip: !_.isEmpty(managerIp) ? managerIp : undefined,
+            manager_certificate: !_.isEmpty(managerCertificate) ? managerCertificate : undefined
         };
         const actions = new Stage.Common.DeploymentActions(this.props.toolbox);
         actions
@@ -134,23 +131,37 @@ export default class InstallAgentsModal extends React.Component {
     }
 
     render() {
+        const {
+            allowedDeployments,
+            allowedNodeInstances,
+            allowedNodes,
+            errors,
+            executionStarted,
+            installMethods,
+            loading,
+            managerCertificate,
+            managerIp,
+            nodeFilter,
+            stopOldAgent
+        } = this.state;
+        const { onHide, open, toolbox } = this.props;
         const { ApproveButton, Button, CancelButton, Form, Icon, Message, Modal } = Stage.Basic;
         const { NodeFilter } = Stage.Common;
 
         return (
-            <Modal open={this.props.open} onClose={() => this.props.onHide()}>
+            <Modal open={open} onClose={() => onHide()}>
                 <Modal.Header>
                     <Icon name="download" /> Install new agents
                 </Modal.Header>
 
                 <Modal.Content>
                     <Form
-                        loading={this.state.loading}
-                        errors={this.state.errors}
-                        success={this.state.executionStarted}
+                        loading={loading}
+                        errors={errors}
+                        success={executionStarted}
                         onErrorsDismiss={() => this.setState({ errors: {} })}
                     >
-                        {!this.state.executionStarted && (
+                        {!executionStarted && (
                             <>
                                 <Form.Field
                                     label="Nodes filter"
@@ -159,15 +170,15 @@ export default class InstallAgentsModal extends React.Component {
                                 >
                                     <NodeFilter
                                         name="nodeFilter"
-                                        value={this.state.nodeFilter}
+                                        value={nodeFilter}
                                         showBlueprints={false}
                                         allowMultipleNodes
                                         allowMultipleNodeInstances
-                                        allowedDeployments={this.state.allowedDeployments}
-                                        allowedNodes={this.state.allowedNodes}
-                                        allowedNodeInstances={this.state.allowedNodeInstances}
+                                        allowedDeployments={allowedDeployments}
+                                        allowedNodes={allowedNodes}
+                                        allowedNodeInstances={allowedNodeInstances}
                                         onChange={this.handleInputChange.bind(this)}
-                                        toolbox={this.props.toolbox}
+                                        toolbox={toolbox}
                                     />
                                 </Form.Field>
 
@@ -180,7 +191,7 @@ export default class InstallAgentsModal extends React.Component {
                                         multiple
                                         selection
                                         options={Consts.installMethodsOptions}
-                                        value={this.state.installMethods}
+                                        value={installMethods}
                                         onChange={this.handleInputChange.bind(this)}
                                     />
                                 </Form.Field>
@@ -193,7 +204,7 @@ export default class InstallAgentsModal extends React.Component {
                                 >
                                     <Form.Input
                                         name="managerIp"
-                                        value={this.state.managerIp}
+                                        value={managerIp}
                                         onChange={this.handleInputChange.bind(this)}
                                     />
                                 </Form.Field>
@@ -207,7 +218,7 @@ export default class InstallAgentsModal extends React.Component {
                                 >
                                     <Form.Input
                                         name="managerCertificate"
-                                        value={this.state.managerCertificate}
+                                        value={managerCertificate}
                                         onChange={this.handleInputChange.bind(this)}
                                     />
                                 </Form.Field>
@@ -222,7 +233,7 @@ export default class InstallAgentsModal extends React.Component {
                                         label="Stop old agent"
                                         toggle
                                         name="stopOldAgent"
-                                        checked={this.state.stopOldAgent}
+                                        checked={stopOldAgent}
                                         onChange={this.handleInputChange.bind(this)}
                                     />
                                 </Form.Field>
@@ -239,20 +250,20 @@ export default class InstallAgentsModal extends React.Component {
 
                 <Modal.Actions>
                     <CancelButton
-                        content={this.state.executionStarted ? 'Close' : undefined}
+                        content={executionStarted ? 'Close' : undefined}
                         onClick={this.onCancel.bind(this)}
-                        disabled={this.state.loading}
+                        disabled={loading}
                     />
-                    {!this.state.executionStarted && (
+                    {!executionStarted && (
                         <ApproveButton
                             onClick={this.onApprove.bind(this)}
-                            disabled={this.state.loading}
+                            disabled={loading}
                             content="Install"
                             icon="download"
                             color="green"
                         />
                     )}
-                    {this.state.executionStarted && (
+                    {executionStarted && (
                         <Button
                             content="Show Status and Logs"
                             icon="file text"

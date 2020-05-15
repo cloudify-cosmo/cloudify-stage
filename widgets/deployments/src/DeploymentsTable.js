@@ -34,43 +34,52 @@ export default class extends React.Component {
     };
 
     render() {
+        const {
+            allowedSettingTo,
+            data,
+            fetchData,
+            noDataMessage,
+            onActOnExecution,
+            onMenuAction,
+            onSelectDeployment,
+            onSetVisibility,
+            onShowLogs,
+            onShowUpdateDetails,
+            showExecutionStatusLabel,
+            widget
+        } = this.props;
         const { DataTable, ResourceVisibility } = Stage.Basic;
         const { LastExecutionStatusIcon } = Stage.Common;
         const tableName = 'deploymentsTable';
 
         return (
             <DataTable
-                fetchData={this.props.fetchData}
-                totalSize={this.props.data.total}
-                pageSize={this.props.widget.configuration.pageSize}
-                sortColumn={this.props.widget.configuration.sortColumn}
-                sortAscending={this.props.widget.configuration.sortAscending}
+                fetchData={fetchData}
+                totalSize={data.total}
+                pageSize={widget.configuration.pageSize}
+                sortColumn={widget.configuration.sortColumn}
+                sortAscending={widget.configuration.sortAscending}
                 selectable
                 searchable
                 className={tableName}
-                noDataMessage={this.props.noDataMessage}
+                noDataMessage={noDataMessage}
             >
                 <DataTable.Column label="Name" name="id" width="20%" />
                 <DataTable.Column label="Last Execution" width="5%" />
-                <DataTable.Column
-                    label="Blueprint"
-                    name="blueprint_id"
-                    width="15%"
-                    show={!this.props.data.blueprintId}
-                />
+                <DataTable.Column label="Blueprint" name="blueprint_id" width="15%" show={!data.blueprintId} />
                 <DataTable.Column label="Site Name" name="site_name" width="15%" />
                 <DataTable.Column label="Created" name="created_at" width="15%" />
                 <DataTable.Column label="Updated" name="updated_at" width="15%" />
                 <DataTable.Column label="Creator" name="created_by" width="10%" />
                 <DataTable.Column width="5%" />
 
-                {this.props.data.items.map(item => {
+                {data.items.map(item => {
                     return (
                         <DataTable.Row
                             id={`${tableName}_${item.id}`}
                             key={item.id}
                             selected={item.isSelected}
-                            onClick={() => this.props.onSelectDeployment(item)}
+                            onClick={() => onSelectDeployment(item)}
                         >
                             <DataTable.Data>
                                 <a className="deploymentName" href="#!">
@@ -78,18 +87,18 @@ export default class extends React.Component {
                                 </a>
                                 <ResourceVisibility
                                     visibility={item.visibility}
-                                    onSetVisibility={visibility => this.props.onSetVisibility(item.id, visibility)}
-                                    allowedSettingTo={this.props.allowedSettingTo}
+                                    onSetVisibility={visibility => onSetVisibility(item.id, visibility)}
+                                    allowedSettingTo={allowedSettingTo}
                                     className="rightFloated"
                                 />
                             </DataTable.Data>
                             <DataTable.Data>
                                 <LastExecutionStatusIcon
                                     execution={item.lastExecution}
-                                    onShowLogs={() => this.props.onShowLogs(item.id, item.lastExecution.id)}
-                                    onShowUpdateDetails={this.props.onShowUpdateDetails}
-                                    onActOnExecution={this.props.onActOnExecution}
-                                    showLabel={this.props.showExecutionStatusLabel}
+                                    onShowLogs={() => onShowLogs(item.id, item.lastExecution.id)}
+                                    onShowUpdateDetails={onShowUpdateDetails}
+                                    onActOnExecution={onActOnExecution}
+                                    showLabel={showExecutionStatusLabel}
                                     labelAttached={false}
                                 />
                             </DataTable.Data>
@@ -102,7 +111,7 @@ export default class extends React.Component {
                             <DataTable.Data>{item.updated_at}</DataTable.Data>
                             <DataTable.Data>{item.created_by}</DataTable.Data>
                             <DataTable.Data className="center aligned rowActions">
-                                <MenuAction item={item} onSelectAction={this.props.onMenuAction} />
+                                <MenuAction item={item} onSelectAction={onMenuAction} />
                             </DataTable.Data>
                         </DataTable.Row>
                     );

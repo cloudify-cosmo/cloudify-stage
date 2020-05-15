@@ -28,14 +28,27 @@ export default class Users extends Component {
     }
 
     onEditModeClick() {
-        this.props.onEditModeChange(!this.props.isEditMode);
+        const { isEditMode, onEditModeChange } = this.props;
+        onEditModeChange(!isEditMode);
     }
 
     render() {
+        const {
+            canEditMode,
+            canLicenseManagement,
+            canTemplateManagement,
+            isEditMode,
+            manager,
+            onLicense,
+            onLogout,
+            onReset,
+            onTemplates,
+            showAllOptions
+        } = this.props;
         const userMenuTrigger = (
             <span>
                 <Icon name="user" />
-                <span>{this.props.manager.username}</span>
+                <span>{manager.username}</span>
             </span>
         );
 
@@ -47,25 +60,25 @@ export default class Users extends Component {
         return (
             <Dropdown item pointing="top right" trigger={userMenuTrigger} className="usersMenu">
                 <Dropdown.Menu>
-                    {this.props.showAllOptions && this.props.canEditMode && (
+                    {showAllOptions && canEditMode && (
                         <Dropdown.Item
                             icon="configure"
-                            selected={this.props.isEditMode}
-                            active={this.props.isEditMode}
-                            text={this.props.isEditMode ? 'Exit Edit Mode' : 'Edit Mode'}
+                            selected={isEditMode}
+                            active={isEditMode}
+                            text={isEditMode ? 'Exit Edit Mode' : 'Edit Mode'}
                             id="editModeMenuItem"
                             value="editMode"
                             onClick={this.onEditModeClick.bind(this)}
                         />
                     )}
 
-                    {this.props.showAllOptions && this.props.canTemplateManagement && (
+                    {showAllOptions && canTemplateManagement && (
                         <Dropdown.Item
                             icon="list layout"
                             text="Template Management"
                             value="templates"
                             title="Template management"
-                            onClick={this.props.onTemplates}
+                            onClick={onTemplates}
                             id="templatesMenuItem"
                         />
                     )}
@@ -77,17 +90,17 @@ export default class Users extends Component {
                         text="Reset Templates"
                         value="reset"
                         title="Reset application screens"
-                        onClick={this.props.onReset}
+                        onClick={onReset}
                     />
 
-                    {this.props.showAllOptions && this.props.canLicenseManagement && (
+                    {showAllOptions && canLicenseManagement && (
                         <Dropdown.Item
                             key="license"
                             id="licenseMenuItem"
                             icon="key"
                             text="License Management"
                             value="license"
-                            onClick={this.props.onLicense}
+                            onClick={onLicense}
                         />
                     )}
 
@@ -99,7 +112,7 @@ export default class Users extends Component {
                         icon="log out"
                         text="Logout"
                         value="logout"
-                        onClick={this.props.onLogout}
+                        onClick={onLogout}
                     />
                 </Dropdown.Menu>
             </Dropdown>

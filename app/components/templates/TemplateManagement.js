@@ -122,9 +122,10 @@ export default class TemplateManagement extends Component {
     }
 
     render() {
+        const { error, isLoading, manager, onClose, onPageCreate, pages, roles, templates } = this.props;
         return (
             <div className="main">
-                <Segment basic loading={this.props.isLoading}>
+                <Segment basic loading={isLoading}>
                     <div style={{ position: 'relative' }}>
                         <Breadcrumb className="breadcrumbLineHeight">
                             <Breadcrumb.Section active>Template management</Breadcrumb.Section>
@@ -135,19 +136,19 @@ export default class TemplateManagement extends Component {
                             compact
                             floated="right"
                             icon="sign out"
-                            onClick={this.props.onClose}
+                            onClick={onClose}
                             style={{ position: 'absolute', right: 0 }}
                         />
                     </div>
                     <Divider />
 
-                    <ErrorMessage error={this.props.error} />
+                    <ErrorMessage error={error} />
 
                     <Templates
-                        templates={this.props.templates}
-                        pages={this.props.pages}
-                        roles={this.props.roles}
-                        tenants={this.props.manager.tenants}
+                        templates={templates}
+                        pages={pages}
+                        roles={roles}
+                        tenants={manager.tenants}
                         onSelectTemplate={this.selectTemplate.bind(this)}
                         onRemoveTemplatePage={this.removeTemplatePage.bind(this)}
                         onRemoveTemplateRole={this.removeTemplateRole.bind(this)}
@@ -158,9 +159,9 @@ export default class TemplateManagement extends Component {
                     />
 
                     <Pages
-                        pages={this.props.pages}
+                        pages={pages}
                         onSelectPage={this.selectPage.bind(this)}
-                        onCreatePage={this.props.onPageCreate}
+                        onCreatePage={onPageCreate}
                         onDeletePage={this.deletePage.bind(this)}
                         onEditPage={this.editPage.bind(this)}
                         onPreviewPage={this.previewPage.bind(this)}

@@ -36,9 +36,10 @@ export default class CreatePageModal extends Component {
     }
 
     submitCreate() {
+        const { pageName } = this.state;
         const errors = {};
 
-        if (_.isEmpty(_.trim(this.state.pageName))) {
+        if (_.isEmpty(_.trim(pageName))) {
             errors.pageName = 'Please provide correct page name';
         }
 
@@ -50,7 +51,7 @@ export default class CreatePageModal extends Component {
         // Disable the form
         this.setState({ loading: true });
 
-        this.props.onCreatePage(_.trim(this.state.pageName)).catch(err => {
+        this.props.onCreatePage(_.trim(pageName)).catch(err => {
             this.setState({ errors: { error: err.message }, loading: false });
         });
     }
@@ -60,6 +61,7 @@ export default class CreatePageModal extends Component {
     }
 
     render() {
+        const { errors, loading, open, pageName } = this.state;
         const trigger = (
             <Button content="Create page" icon="block layout" labelPosition="left" className="createPageButton" />
         );
@@ -67,7 +69,7 @@ export default class CreatePageModal extends Component {
         return (
             <Modal
                 trigger={trigger}
-                open={this.state.open}
+                open={open}
                 onOpen={this.openModal.bind(this)}
                 onClose={() => this.setState({ open: false })}
                 className="createPageModal"
@@ -78,16 +80,12 @@ export default class CreatePageModal extends Component {
                 </Modal.Header>
 
                 <Modal.Content>
-                    <Form
-                        loading={this.state.loading}
-                        errors={this.state.errors}
-                        onErrorsDismiss={() => this.setState({ errors: {} })}
-                    >
-                        <Form.Field error={this.state.errors.pageName}>
+                    <Form loading={loading} errors={errors} onErrorsDismiss={() => this.setState({ errors: {} })}>
+                        <Form.Field error={errors.pageName}>
                             <Form.Input
                                 name="pageName"
                                 placeholder="Page name"
-                                value={this.state.pageName}
+                                value={pageName}
                                 onChange={this.handleInputChange.bind(this)}
                             />
                         </Form.Field>
@@ -95,10 +93,10 @@ export default class CreatePageModal extends Component {
                 </Modal.Content>
 
                 <Modal.Actions>
-                    <CancelButton onClick={() => this.setState({ open: false })} disabled={this.state.loading} />
+                    <CancelButton onClick={() => this.setState({ open: false })} disabled={loading} />
                     <ApproveButton
                         onClick={this.submitCreate.bind(this)}
-                        disabled={this.state.loading}
+                        disabled={loading}
                         content="Create"
                         icon="checkmark"
                         color="green"

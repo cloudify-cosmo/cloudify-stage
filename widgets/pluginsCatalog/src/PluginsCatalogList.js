@@ -25,10 +25,11 @@ export default class PluginsCatalogList extends React.Component {
     }
 
     shouldComponentUpdate(nextProps, nextState) {
+        const { data, widget } = this.props;
         return (
-            !_.isEqual(this.props.widget, nextProps.widget) ||
+            !_.isEqual(widget, nextProps.widget) ||
             !_.isEqual(this.state, nextState) ||
-            !_.isEqual(this.props.data, nextProps.data)
+            !_.isEqual(data, nextProps.data)
         );
     }
 
@@ -73,33 +74,35 @@ export default class PluginsCatalogList extends React.Component {
   |--------------------------------------------------------------------------
   */
     render() {
+        const { plugin, selected, showModal, success } = this.state;
+        const { actions, toolbox } = this.props;
         const NO_DATA_MESSAGE = "There are no Plugins available in catalog. Check widget's configuration.";
         const { DataTable, Message, Button } = Stage.Basic;
         const { PluginIcon } = Stage.Common;
 
-        const distro = `${this.props.toolbox
+        const distro = `${toolbox
             .getManager()
             .getDistributionName()
-            .toLowerCase()} ${this.props.toolbox
+            .toLowerCase()} ${toolbox
             .getManager()
             .getDistributionRelease()
             .toLowerCase()}`;
-        let items = _.map(this.props.items, item => {
+        let items = _.map(items, item => {
             const wagon = _.find(item.wagons, wagon => {
                 return wagon.name.toLowerCase() === distro || wagon.name.toLowerCase() === 'any';
             });
 
             if (wagon) {
-                return { ...item, isSelected: item.title === this.state.selected, wagon };
+                return { ...item, isSelected: item.title === selected, wagon };
             }
         });
         items = _.compact(items);
 
         return (
             <div>
-                {this.state.success && (
+                {success && (
                     <Message color="green" onDismiss={() => this.setState({ success: null })}>
-                        {this.state.success}
+                        {success}
                     </Message>
                 )}
 
@@ -138,12 +141,12 @@ export default class PluginsCatalogList extends React.Component {
                 </DataTable>
 
                 <PluginsCatalogModal
-                    open={this.state.showModal}
-                    plugin={this.state.plugin}
+                    open={showModal}
+                    plugin={plugin}
                     onSuccess={this.onSuccess.bind(this)}
                     onHide={this.hideModal.bind(this)}
-                    toolbox={this.props.toolbox}
-                    actions={this.props.actions}
+                    toolbox={toolbox}
+                    actions={actions}
                 />
             </div>
         );

@@ -162,13 +162,14 @@ export default class LicensePage extends Component {
     static defaultProps = {};
 
     componentDidMount() {
+        const { manager, onLicenseChange } = this.props;
         this.setState({ isLoading: true });
-        return this.props.manager
+        return manager
             .doGet('/license')
             .then(data => {
                 const license = _.get(data, 'items[0]', {});
                 this.setState({ isLoading: false, error: null, isEditLicenseActive: _.isEmpty(license) });
-                this.props.onLicenseChange(license);
+                onLicenseChange(license);
             })
             .catch(error => this.setState({ isLoading: false, error: error.message }));
     }
@@ -182,13 +183,14 @@ export default class LicensePage extends Component {
     }
 
     onLicenseUpload() {
+        const { manager, onLicenseChange } = this.props;
         this.setState({ isLoading: true });
 
-        return this.props.manager
+        return manager
             .doPut('/license', null, this.state.license)
             .then(data => {
                 this.setState({ isLoading: false, error: null, isEditLicenseActive: false });
-                this.props.onLicenseChange(data);
+                onLicenseChange(data);
             })
             .catch(error => this.setState({ isLoading: false, error: error.message }));
     }

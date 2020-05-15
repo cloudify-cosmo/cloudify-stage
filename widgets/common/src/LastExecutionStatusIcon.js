@@ -30,10 +30,12 @@ export default class LastExecutionStatusIcon extends React.Component {
     };
 
     render() {
+        const { errorModalOpen, open } = this.state;
+        const { labelAttached, onActOnExecution, onShowLogs, onShowUpdateDetails, showLabel } = this.props;
         const { CancelButton, Button, CopyToClipboardButton, HighlightText, Icon, Table, Modal, Popup } = Stage.Basic;
         const { ExecutionStatus } = Stage.Shared;
         const { Utils } = Stage;
-        const execution = { workflow_id: '', status: '', ...this.props.execution };
+        const execution = { workflow_id: '', status: '', ...execution };
 
         const showScheduledColumn = !!execution.scheduled_for;
         const colSpan = showScheduledColumn ? 5 : 4;
@@ -44,7 +46,7 @@ export default class LastExecutionStatusIcon extends React.Component {
                     wide="very"
                     on="hover"
                     hoverable
-                    open={this.state.open}
+                    open={open}
                     onOpen={() => this.setState({ open: true })}
                     onClose={() => this.setState({ open: false })}
                     onClick={e => {
@@ -57,10 +59,10 @@ export default class LastExecutionStatusIcon extends React.Component {
                             <ExecutionStatus
                                 execution={execution}
                                 allowShowingPopup={false}
-                                showLabel={this.props.showLabel}
-                                showWorkflowId={this.props.showLabel}
-                                labelProps={{ attached: this.props.labelAttached ? 'top left' : undefined }}
-                                iconProps={{ attached: this.props.showLabel ? undefined : 'top left', size: 'large' }}
+                                showLabel={showLabel}
+                                showWorkflowId={showLabel}
+                                labelProps={{ attached: labelAttached ? 'top left' : undefined }}
+                                iconProps={{ attached: showLabel ? undefined : 'top left', size: 'large' }}
                             />
                         </div>
                     </Popup.Trigger>
@@ -107,7 +109,7 @@ export default class LastExecutionStatusIcon extends React.Component {
                                                 Show Error
                                             </Button>
                                         )}
-                                        <Button icon labelPosition="left" color="grey" onClick={this.props.onShowLogs}>
+                                        <Button icon labelPosition="left" color="grey" onClick={onShowLogs}>
                                             <Icon name="file text" />
                                             Show Logs
                                         </Button>
@@ -117,9 +119,7 @@ export default class LastExecutionStatusIcon extends React.Component {
                                                 labelPosition="left"
                                                 color="blue"
                                                 onClick={() =>
-                                                    this.props.onShowUpdateDetails(
-                                                        _.get(execution, 'parameters.update_id')
-                                                    )
+                                                    onShowUpdateDetails(_.get(execution, 'parameters.update_id'))
                                                 }
                                             >
                                                 <Icon name="magnify" />
@@ -137,10 +137,7 @@ export default class LastExecutionStatusIcon extends React.Component {
                                                 labelPosition="left"
                                                 color="green"
                                                 onClick={() =>
-                                                    this.props.onActOnExecution(
-                                                        execution,
-                                                        Utils.Execution.FORCE_RESUME_ACTION
-                                                    )
+                                                    onActOnExecution(execution, Utils.Execution.FORCE_RESUME_ACTION)
                                                 }
                                             >
                                                 <Icon name="play" />
@@ -154,10 +151,7 @@ export default class LastExecutionStatusIcon extends React.Component {
                                                 labelPosition="left"
                                                 color="yellow"
                                                 onClick={() =>
-                                                    this.props.onActOnExecution(
-                                                        execution,
-                                                        Utils.Execution.CANCEL_ACTION
-                                                    )
+                                                    onActOnExecution(execution, Utils.Execution.CANCEL_ACTION)
                                                 }
                                             >
                                                 <Icon name="cancel" />
@@ -171,10 +165,7 @@ export default class LastExecutionStatusIcon extends React.Component {
                                                 labelPosition="left"
                                                 color="orange"
                                                 onClick={() =>
-                                                    this.props.onActOnExecution(
-                                                        execution,
-                                                        Utils.Execution.FORCE_CANCEL_ACTION
-                                                    )
+                                                    onActOnExecution(execution, Utils.Execution.FORCE_CANCEL_ACTION)
                                                 }
                                             >
                                                 <Icon name="cancel" />
@@ -186,10 +177,7 @@ export default class LastExecutionStatusIcon extends React.Component {
                                             labelPosition="left"
                                             color="red"
                                             onClick={() =>
-                                                this.props.onActOnExecution(
-                                                    execution,
-                                                    Utils.Execution.KILL_CANCEL_ACTION
-                                                )
+                                                onActOnExecution(execution, Utils.Execution.KILL_CANCEL_ACTION)
                                             }
                                         >
                                             <Icon name="stop" />
@@ -202,7 +190,7 @@ export default class LastExecutionStatusIcon extends React.Component {
                     </Popup.Content>
                 </Popup>
                 {Utils.Execution.isFailedExecution(execution) && (
-                    <Modal open={this.state.errorModalOpen} onClose={() => this.setState({ errorModalOpen: false })}>
+                    <Modal open={errorModalOpen} onClose={() => this.setState({ errorModalOpen: false })}>
                         <Modal.Header>
                             Error message from '{execution.workflow_id}' worfklow execution on '
                             {execution.deployment_id}' deployment

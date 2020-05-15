@@ -11,10 +11,11 @@ export default class extends React.Component {
     }
 
     shouldComponentUpdate(nextProps, nextState) {
+        const { data, widget } = this.props;
         return (
-            !_.isEqual(this.props.widget, nextProps.widget) ||
+            !_.isEqual(widget, nextProps.widget) ||
             !_.isEqual(this.state, nextState) ||
-            !_.isEqual(this.props.data, nextProps.data)
+            !_.isEqual(data, nextProps.data)
         );
     }
 
@@ -31,10 +32,8 @@ export default class extends React.Component {
     }
 
     componentDidUpdate(prevProps, prevState) {
-        if (
-            this.props.data.deploymentId !== prevProps.data.deploymentId ||
-            this.props.data.blueprintId !== prevProps.data.blueprintId
-        ) {
+        const { data } = this.props;
+        if (data.deploymentId !== prevProps.data.deploymentId || data.blueprintId !== prevProps.data.blueprintId) {
             this.refreshData();
         }
     }

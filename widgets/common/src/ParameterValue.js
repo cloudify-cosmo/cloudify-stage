@@ -74,14 +74,13 @@ export default class ParameterValue extends React.Component {
     }
 
     render() {
+        const { showCopyButton, value } = this.props;
         const { CopyToClipboardButton } = Stage.Basic;
         const { Json } = Stage.Utils;
 
-        const stringValue = _.isObject(this.props.value)
-            ? Json.stringify(this.props.value, true)
-            : Json.getStringValue(this.props.value);
+        const stringValue = _.isObject(value) ? Json.stringify(value, true) : Json.getStringValue(value);
 
-        return this.props.showCopyButton ? (
+        return showCopyButton ? (
             <div>
                 <CopyToClipboardButton text={stringValue} className="rightFloated" />
                 {this.getValueElement(stringValue)}

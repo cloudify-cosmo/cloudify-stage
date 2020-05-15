@@ -14,7 +14,8 @@ export default class MenuAction extends React.Component {
     static SET_ADMIN_GROUP_ROLE_ACTION = 'set-admin-role';
 
     actionClick(proxy, { name }) {
-        this.props.onSelectAction(name, this.props.item);
+        const { item, onSelectAction } = this.props;
+        onSelectAction(name, item);
     }
 
     render() {

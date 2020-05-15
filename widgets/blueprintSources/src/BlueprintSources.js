@@ -19,10 +19,11 @@ export default class BlueprintSources extends React.Component {
     };
 
     shouldComponentUpdate(nextProps, nextState) {
+        const { data, widget } = this.props;
         return (
-            !_.isEqual(this.props.widget, nextProps.widget) ||
+            !_.isEqual(widget, nextProps.widget) ||
             !_.isEqual(this.state, nextState) ||
-            !_.isEqual(this.props.data, nextProps.data)
+            !_.isEqual(data, nextProps.data)
         );
     }
 
@@ -33,6 +34,7 @@ export default class BlueprintSources extends React.Component {
     }
 
     selectFile(selectedKeys, info) {
+        const { toolbox } = this.props;
         if (_.isEmpty(selectedKeys) || !_.isEmpty(info.node.props.children)) {
             this.setState({ content: '', filename: '' });
             return;
@@ -40,9 +42,9 @@ export default class BlueprintSources extends React.Component {
 
         const path = selectedKeys[0];
 
-        this.props.toolbox.loading(true);
+        toolbox.loading(true);
 
-        const actions = new Actions(this.props.toolbox);
+        const actions = new Actions(toolbox);
         actions
             .doGetFileContent(path)
             .then(data => {
@@ -55,17 +57,18 @@ export default class BlueprintSources extends React.Component {
                     type = 'bash';
                 }
 
-                this.props.toolbox.loading(false);
+                toolbox.loading(false);
 
                 this.setState({ content: data, filename: info.node.props.title.props.children[1], type, error: '' });
             })
             .catch(err => {
                 this.setState({ error: err.message, content: '', filename: '' });
-                this.props.toolbox.loading(false);
+                toolbox.loading(false);
             });
     }
 
     render() {
+        const { content, error, filename, maximized, type } = this.state;
         const { NodesTree, Message, Label, Modal, HighlightText, ErrorMessage, Icon } = Stage.Basic;
 
         const { data } = this.props;
@@ -168,19 +171,19 @@ export default class BlueprintSources extends React.Component {
                                 )}
                             </NodesTree>
                         </div>
-                        {this.state.content ? (
+                        {content ? (
                             <div className="alignHighlight">
-                                <HighlightText language={this.state.type}>{this.state.content}</HighlightText>
+                                <HighlightText language={type}>{content}</HighlightText>
                                 <Label
                                     attached="top right"
                                     size="small"
                                     onClick={() => this.setState({ maximized: true })}
                                 >
                                     <Icon name="expand" link />
-                                    {this.state.filename}
+                                    {filename}
                                 </Label>
-                                <Modal open={this.state.maximized} onClose={() => this.setState({ maximized: false })}>
-                                    <HighlightText language={this.state.type}>{this.state.content}</HighlightText>
+                                <Modal open={maximized} onClose={() => this.setState({ maximized: false })}>
+                                    <HighlightText language={type}>{content}</HighlightText>
                                 </Modal>
                             </div>
                         ) : (
@@ -195,7 +198,7 @@ export default class BlueprintSources extends React.Component {
                     </div>
                 )}
 
-                <ErrorMessage error={this.state.error} onDismiss={() => this.setState({ error: null })} autoHide />
+                <ErrorMessage error={error} onDismiss={() => this.setState({ error: null })} autoHide />
             </div>
         );
     }

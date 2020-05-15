@@ -34,8 +34,9 @@ export default class MaintenanceModePageMessage extends Component {
     }
 
     componentDidUpdate() {
-        if (this.props.maintenanceStatus !== Consts.MAINTENANCE_ACTIVATED) {
-            this.props.navigateToHome();
+        const { maintenanceStatus, navigateToHome } = this.props;
+        if (maintenanceStatus !== Consts.MAINTENANCE_ACTIVATED) {
+            navigateToHome();
         }
     }
 

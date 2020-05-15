@@ -71,14 +71,15 @@ class EditWidgetComponent extends React.Component {
     }
 
     render() {
+        const { configDef, configuration, onWidgetEdited, widget } = this.props;
         return (
             <span>
-                <EditWidgetIcon widgetId={this.props.widget.id} onShowConfig={this.showConfig.bind(this)} />
+                <EditWidgetIcon widgetId={widget.id} onShowConfig={this.showConfig.bind(this)} />
                 <EditWidgetModal
-                    widget={this.props.widget}
-                    configDef={this.props.configDef}
-                    configuration={this.props.configuration}
-                    onWidgetEdited={this.props.onWidgetEdited}
+                    widget={widget}
+                    configDef={configDef}
+                    configuration={configuration}
+                    onWidgetEdited={onWidgetEdited}
                     show={this.state.showConfig}
                     onHideConfig={this.hideConfig.bind(this)}
                 />

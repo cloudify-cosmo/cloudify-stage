@@ -29,10 +29,11 @@ export default class Filter extends React.Component {
     }
 
     shouldComponentUpdate(nextProps, nextState) {
+        const { configuration, data } = this.props;
         return (
-            !_.isEqual(this.props.configuration, nextProps.configuration) ||
+            !_.isEqual(configuration, nextProps.configuration) ||
             !_.isEqual(this.state, nextState) ||
-            !_.isEqual(this.props.data, nextProps.data)
+            !_.isEqual(data, nextProps.data)
         );
     }
 
@@ -70,8 +71,9 @@ export default class Filter extends React.Component {
     }
 
     updateDeplomentNodeIdValue(selectedDeploymentId, selectedNodeId) {
-        const { allowMultipleSelection } = this.props.configuration;
-        const context = this.props.toolbox.getContext();
+        const { configuration, toolbox } = this.props;
+        const { allowMultipleSelection } = configuration;
+        const context = toolbox.getContext();
 
         if (!allowMultipleSelection) {
             if (!_.isEmpty(selectedDeploymentId) && !_.isEmpty(selectedNodeId)) {
@@ -87,10 +89,11 @@ export default class Filter extends React.Component {
     }
 
     updateTopologyWidget(selectedNodeId) {
-        const { allowMultipleSelection } = this.props.configuration;
+        const { configuration, toolbox } = this.props;
+        const { allowMultipleSelection } = configuration;
 
         if (!allowMultipleSelection) {
-            this.props.toolbox.getEventBus().trigger('topology:selectNode', selectedNodeId);
+            toolbox.getEventBus().trigger('topology:selectNode', selectedNodeId);
         }
     }
 
@@ -134,6 +137,7 @@ export default class Filter extends React.Component {
     }
 
     render() {
+        const { error, undefined } = this.state;
         const { ErrorMessage, Form } = Stage.Basic;
 
         const createDropdown = ({
@@ -166,7 +170,7 @@ export default class Filter extends React.Component {
                                 .join()}`}
                             onChange={this[`select${joinedEntityName}`].bind(this)}
                             toolbox={this.props.toolbox}
-                            value={this.state[stateProp || `${camelCaseEntityName}Id`]}
+                            value={stateProp || `${camelCaseEntityName}Id`}
                             placeholder={entityName}
                             fetchAll={fetchAll}
                             textFormatter={textFormatter}
@@ -185,7 +189,7 @@ export default class Filter extends React.Component {
 
         return (
             <div>
-                <ErrorMessage error={this.state.error} onDismiss={() => this.setState({ error: null })} autoHide />
+                <ErrorMessage error={error} onDismiss={() => this.setState({ error: null })} autoHide />
 
                 <Form size="small">
                     <Form.Group inline widths="equal">

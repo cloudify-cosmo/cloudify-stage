@@ -24,10 +24,11 @@ export default class UserRoles extends React.Component {
     }
 
     render() {
+        const { tenant, user } = this.props;
         const { RolesPresenter } = Stage.Common;
 
-        const directRole = this.props.tenant.user_roles.direct[this.props.user];
-        const groupRoles = this.groupGroupsByRole(this.props.tenant.user_roles.groups);
+        const directRole = tenant.user_roles.direct[user];
+        const groupRoles = this.groupGroupsByRole(tenant.user_roles.groups);
 
         return <RolesPresenter directRole={directRole} groupRoles={groupRoles} />;
     }

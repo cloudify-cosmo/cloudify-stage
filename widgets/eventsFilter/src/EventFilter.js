@@ -115,21 +115,24 @@ export default class EventFilter extends React.Component {
     }
 
     resetFilter() {
+        const { toolbox } = this.props;
         this.dirty = {};
 
         const fields = { ...EventFilter.initialState({}, {}).fields };
         this.setState({ fields }, () => {
-            this.props.toolbox.getContext().setValue('eventFilter', fields);
+            toolbox.getContext().setValue('eventFilter', fields);
 
-            this.props.toolbox.getEventBus().trigger('events:refresh');
+            toolbox.getEventBus().trigger('events:refresh');
         });
     }
 
     isTypeSet(type) {
-        return !this.state.fields.type || this.state.fields.type === type;
+        const { fields } = this.state;
+        return !fields.type || fields.type === type;
     }
 
     render() {
+        const { eventTypeOptions, fields, logLevelOptions } = this.state;
         const { Form, Popup, DateRangeInput } = Stage.Basic;
         const { EventUtils } = Stage.Common;
 
@@ -182,7 +185,7 @@ export default class EventFilter extends React.Component {
                             selection
                             options={EventUtils.typesOptions}
                             name="type"
-                            value={this.state.fields.type}
+                            value={fields.type}
                             onChange={this.handleInputChange.bind(this)}
                         />
                     </Form.Field>
@@ -193,11 +196,11 @@ export default class EventFilter extends React.Component {
                             multiple
                             search
                             selection
-                            options={this.state.eventTypeOptions}
+                            options={eventTypeOptions}
                             name="eventType"
                             renderLabel={this.renderLabel.bind(this)}
                             additionLabel="Add custom Event Type: "
-                            value={this.state.fields.eventType}
+                            value={fields.eventType}
                             allowAdditions
                             disabled={!this.isTypeSet(EventUtils.eventType)}
                             onAddItem={this.handleOptionAddition.bind(this)}
@@ -211,12 +214,12 @@ export default class EventFilter extends React.Component {
                             multiple
                             search
                             selection
-                            options={this.state.logLevelOptions}
+                            options={logLevelOptions}
                             name="logLevel"
                             allowAdditions
                             disabled={!this.isTypeSet(EventUtils.logType)}
                             additionLabel="Add custom Log Level: "
-                            value={this.state.fields.logLevel}
+                            value={fields.logLevel}
                             onAddItem={this.handleOptionAddition.bind(this)}
                             onChange={this.handleInputChange.bind(this)}
                         />
@@ -240,14 +243,14 @@ export default class EventFilter extends React.Component {
                         placeholder="Operation"
                         name="operationText"
                         fluid
-                        value={this.state.fields.operationText}
+                        value={fields.operationText}
                         onChange={this.handleInputChange.bind(this)}
                     />
                     <Form.Input
                         placeholder="Message"
                         name="messageText"
                         fluid
-                        value={this.state.fields.messageText}
+                        value={fields.messageText}
                         onChange={this.handleInputChange.bind(this)}
                     />
                     <Form.Field>
@@ -257,7 +260,7 @@ export default class EventFilter extends React.Component {
                             name="timeRange"
                             ranges={timeRanges}
                             defaultValue={DateRangeInput.EMPTY_VALUE}
-                            value={this.state.fields.timeRange}
+                            value={fields.timeRange}
                             onChange={this.handleInputChange.bind(this)}
                         />
                     </Form.Field>

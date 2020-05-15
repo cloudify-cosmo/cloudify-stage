@@ -43,24 +43,27 @@ export default class Widget extends Component {
     }
 
     widgetConfigUpdate(config) {
+        const { onWidgetConfigUpdate, pageId, widget } = this.props;
         if (config) {
-            config = { ...this.props.widget.configuration, ...config };
-            this.props.onWidgetConfigUpdate(this.props.pageId, this.props.widget.id, config);
+            config = { ...widget.configuration, ...config };
+            onWidgetConfigUpdate(pageId, widget.id, config);
         }
     }
 
     onKeyDown(event) {
+        const { onWidgetMaximize, pageId, widget } = this.props;
         if (event.keyCode === 27) {
-            this.props.onWidgetMaximize(this.props.pageId, this.props.widget.id, false);
+            onWidgetMaximize(pageId, widget.id, false);
         }
     }
 
     showReadmeModal() {
-        const { readme } = this.props.widget.definition;
+        const { widget } = this.props;
+        const { readme } = widget.definition;
         let readmeContent = '';
 
         if (!_.isEmpty(readme)) {
-            readmeContent = markdown.parse(this.props.widget.definition.readme);
+            readmeContent = markdown.parse(widget.definition.readme);
         }
         this.setState({ readmeContent, showReadmeModal: true });
     }
@@ -70,7 +73,8 @@ export default class Widget extends Component {
     }
 
     isUserAuthorized() {
-        return stageUtils.isUserAuthorized(this.props.widget.definition.permission, this.props.manager);
+        const { manager, widget } = this.props;
+        return stageUtils.isUserAuthorized(widget.definition.permission, manager);
     }
 
     componentDidCatch(error, info) {
@@ -88,20 +92,35 @@ export default class Widget extends Component {
     }
 
     render() {
-        if (!this.props.widget.definition) {
+        const { hasError, readmeContent, showReadmeModal } = this.state;
+        const {
+            context,
+            fetchWidgetData,
+            isEditMode,
+            manager,
+            onWidgetMaximize,
+            onWidgetNameChange,
+            onWidgetRemoved,
+            pageId,
+            pageManagementMode,
+            setContextValue,
+            widget,
+            widgetData
+        } = this.props;
+        if (!widget.definition) {
             return (
                 <div
-                    tabIndex={this.props.widget.maximized ? '-1' : ''}
+                    tabIndex={widget.maximized ? '-1' : ''}
                     onKeyDown={this.onKeyDown.bind(this)}
                     ref={this.widgetItemRef}
                     className="widgetItem ui segment widgetWithoutContent"
                 >
                     <div className="widgetButtons" onMouseDown={e => e.stopPropagation()}>
-                        {this.props.isEditMode && (
+                        {isEditMode && (
                             <div className="widgetEditButtons">
                                 <i
                                     className="remove link icon small"
-                                    onClick={() => this.props.onWidgetRemoved(this.props.pageId, this.props.widget.id)}
+                                    onClick={() => onWidgetRemoved(pageId, widget.id)}
                                 />
                             </div>
                         )}
@@ -109,8 +128,8 @@ export default class Widget extends Component {
                     <div className="ui segment basic" style={{ height: '100%' }}>
                         <div className="ui icon message error">
                             <i className="ban icon" />
-                            Cannot load widget {this.props.widget.name}. It might not be installed in your env. Please
-                            contact administrator.
+                            Cannot load widget {widget.name}. It might not be installed in your env. Please contact
+                            administrator.
                         </div>
                     </div>
                 </div>
@@ -120,12 +139,12 @@ export default class Widget extends Component {
         const helpIcon = (
             size = undefined // Setting size to 'undefined' means not overriding icon normal size
         ) =>
-            this.props.widget.definition.helpUrl ? (
-                <a key="helpLink" href={this.props.widget.definition.helpUrl} target="_blank">
+            widget.definition.helpUrl ? (
+                <a key="helpLink" href={widget.definition.helpUrl} target="_blank">
                     <Icon name="help circle" size={size} link />
                 </a>
             ) : (
-                this.props.widget.definition.readme && (
+                widget.definition.readme && (
                     <Icon
                         key="helpIcon"
                         name="help circle"
@@ -138,72 +157,47 @@ export default class Widget extends Component {
 
         return (
             <div
-                tabIndex={this.props.widget.maximized ? '-1' : ''}
+                tabIndex={widget.maximized ? '-1' : ''}
                 onKeyDown={this.onKeyDown.bind(this)}
                 ref={this.widgetItemRef}
                 className={`widgetItem ui segment
-                            ${this.props.widget.definition && !this.props.widget.definition.showBorder ? 'basic' : ''}
+                            ${widget.definition && !widget.definition.showBorder ? 'basic' : ''}
+                            ${isEditMode && widget.definition && !widget.definition.showBorder ? 'borderOnHover ' : ''}
                             ${
-                                this.props.isEditMode &&
-                                this.props.widget.definition &&
-                                !this.props.widget.definition.showBorder
-                                    ? 'borderOnHover '
-                                    : ''
-                            }
-                            ${
-                                this.props.widget.definition &&
-                                this.props.widget.definition.color &&
-                                this.props.widget.definition.showBorder
-                                    ? this.props.widget.definition.color
+                                widget.definition && widget.definition.color && widget.definition.showBorder
+                                    ? widget.definition.color
                                     : ''
                             }`}
             >
-                {this.props.widget.definition && this.props.widget.definition.showHeader && (
+                {widget.definition && widget.definition.showHeader && (
                     <h5 className="ui header dividing">
                         <EditableLabel
-                            value={this.props.widget.name}
+                            value={widget.name}
                             placeholder="Widget header"
-                            enabled={this.props.isEditMode}
+                            enabled={isEditMode}
                             className="widgetName"
-                            onChange={text =>
-                                this.props.onWidgetNameChange(this.props.pageId, this.props.widget.id, text)
-                            }
+                            onChange={text => onWidgetNameChange(pageId, widget.id, text)}
                         />
                     </h5>
                 )}
 
                 <div className="widgetButtons" onMouseDown={e => e.stopPropagation()}>
-                    {this.props.isEditMode ? (
+                    {isEditMode ? (
                         <div className="widgetEditButtons">
-                            <EditWidget
-                                pageId={this.props.pageId}
-                                widget={this.props.widget}
-                                pageManagementMode={this.props.pageManagementMode}
-                            />
+                            <EditWidget pageId={pageId} widget={widget} pageManagementMode={pageManagementMode} />
                             {helpIcon('small')}
-                            <Icon
-                                name="remove"
-                                link
-                                size="small"
-                                onClick={() => this.props.onWidgetRemoved(this.props.pageId, this.props.widget.id)}
-                            />
+                            <Icon name="remove" link size="small" onClick={() => onWidgetRemoved(pageId, widget.id)} />
                         </div>
-                    ) : this.props.widget.definition.showHeader ? (
-                        <div className={`widgetViewButtons ${this.props.widget.maximized ? 'alwaysOnTop' : ''}`}>
-                            {this.props.widget.maximized
+                    ) : widget.definition.showHeader ? (
+                        <div className={`widgetViewButtons ${widget.maximized ? 'alwaysOnTop' : ''}`}>
+                            {widget.maximized
                                 ? [
                                       helpIcon(),
                                       <Icon
                                           key="compressIcon"
                                           name="compress"
                                           link
-                                          onClick={() =>
-                                              this.props.onWidgetMaximize(
-                                                  this.props.pageId,
-                                                  this.props.widget.id,
-                                                  false
-                                              )
-                                          }
+                                          onClick={() => onWidgetMaximize(pageId, widget.id, false)}
                                       />
                                   ]
                                 : [
@@ -213,9 +207,7 @@ export default class Widget extends Component {
                                           name="expand"
                                           link
                                           size="small"
-                                          onClick={() =>
-                                              this.props.onWidgetMaximize(this.props.pageId, this.props.widget.id, true)
-                                          }
+                                          onClick={() => onWidgetMaximize(pageId, widget.id, true)}
                                       />
                                   ]}
                         </div>
@@ -224,30 +216,26 @@ export default class Widget extends Component {
                     )}
                 </div>
 
-                {this.state.hasError ? (
+                {hasError ? (
                     <ErrorMessage autoHide={false} error="Cannot render widget. Check browser console for details." />
-                ) : this.props.widget.definition &&
+                ) : widget.definition &&
                   !_.isEmpty(_.get(this.props, 'manager.tenants.selected')) &&
                   !_.get(this.props, 'manager.tenants.isFetching') ? (
                     <WidgetDynamicContent
-                        widget={this.props.widget}
-                        context={this.props.context}
-                        manager={this.props.manager}
-                        data={this.props.widgetData}
-                        setContextValue={this.props.setContextValue}
+                        widget={widget}
+                        context={context}
+                        manager={manager}
+                        data={widgetData}
+                        setContextValue={setContextValue}
                         onWidgetConfigUpdate={this.widgetConfigUpdate.bind(this)}
-                        fetchWidgetData={this.props.fetchWidgetData}
-                        pageId={this.props.pageId}
+                        fetchWidgetData={fetchWidgetData}
+                        pageId={pageId}
                     />
                 ) : (
                     <Loading />
                 )}
 
-                <ReadmeModal
-                    open={this.state.showReadmeModal}
-                    content={this.state.readmeContent}
-                    onHide={this.hideReadmeModal.bind(this)}
-                />
+                <ReadmeModal open={showReadmeModal} content={readmeContent} onHide={this.hideReadmeModal.bind(this)} />
             </div>
         );
     }

@@ -27,20 +27,31 @@ export default class BlueprintsTable extends React.Component {
     };
 
     render() {
+        const {
+            allowedSettingTo,
+            data,
+            fetchGridData,
+            noDataMessage,
+            onCreateDeployment,
+            onDeleteBlueprint,
+            onSelectBlueprint,
+            onSetVisibility,
+            widget
+        } = this.props;
         const { DataTable, Image, ResourceVisibility } = Stage.Basic;
         const tableName = 'blueprintsTable';
 
         return (
             <DataTable
-                fetchData={this.props.fetchGridData}
-                totalSize={this.props.data.total}
-                pageSize={this.props.widget.configuration.pageSize}
-                sortColumn={this.props.widget.configuration.sortColumn}
-                sortAscending={this.props.widget.configuration.sortAscending}
+                fetchData={fetchGridData}
+                totalSize={data.total}
+                pageSize={widget.configuration.pageSize}
+                sortColumn={widget.configuration.sortColumn}
+                sortAscending={widget.configuration.sortAscending}
                 selectable
                 searchable
                 className={tableName}
-                noDataMessage={this.props.noDataMessage}
+                noDataMessage={noDataMessage}
             >
                 <DataTable.Column label="Name" name="id" width="20%" />
                 <DataTable.Column label="Created" name="created_at" width="15%" />
@@ -50,13 +61,13 @@ export default class BlueprintsTable extends React.Component {
                 <DataTable.Column label="# Deployments" width="10%" />
                 <DataTable.Column width="10%" />
 
-                {this.props.data.items.map(item => {
+                {data.items.map(item => {
                     return (
                         <DataTable.Row
                             id={`${tableName}_${item.id}`}
                             key={item.id}
                             selected={item.isSelected}
-                            onClick={() => this.props.onSelectBlueprint(item)}
+                            onClick={() => onSelectBlueprint(item)}
                         >
                             <DataTable.Data>
                                 <Image
@@ -70,8 +81,8 @@ export default class BlueprintsTable extends React.Component {
                                 </a>
                                 <ResourceVisibility
                                     visibility={item.visibility}
-                                    onSetVisibility={visibility => this.props.onSetVisibility(item.id, visibility)}
-                                    allowedSettingTo={this.props.allowedSettingTo}
+                                    onSetVisibility={visibility => onSetVisibility(item.id, visibility)}
+                                    allowedSettingTo={allowedSettingTo}
                                     className="rightFloated"
                                 />
                             </DataTable.Data>
@@ -88,7 +99,7 @@ export default class BlueprintsTable extends React.Component {
                                     title="Create deployment"
                                     onClick={event => {
                                         event.stopPropagation();
-                                        this.props.onCreateDeployment(item);
+                                        onCreateDeployment(item);
                                     }}
                                 />
                                 <i
@@ -96,7 +107,7 @@ export default class BlueprintsTable extends React.Component {
                                     title="Delete blueprint"
                                     onClick={event => {
                                         event.stopPropagation();
-                                        this.props.onDeleteBlueprint(item);
+                                        onDeleteBlueprint(item);
                                     }}
                                 />
                             </DataTable.Data>

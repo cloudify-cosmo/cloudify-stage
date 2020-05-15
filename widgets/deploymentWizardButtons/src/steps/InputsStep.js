@@ -20,14 +20,14 @@ class InputsStepActions extends React.Component {
     static inputsDataPath = 'blueprint.inputs';
 
     onNext(id) {
+        const { fetchData, onError, onLoading, onNext, wizardData } = this.props;
         const { InputsUtils } = Stage.Common;
 
-        return this.props
-            .onLoading()
-            .then(this.props.fetchData)
+        return onLoading()
+            .then(fetchData)
             .then(({ stepData }) => {
                 const inputsWithoutValues = {};
-                const blueprintInputsPlan = _.get(this.props.wizardData, InputsStepActions.inputsDataPath, {});
+                const blueprintInputsPlan = _.get(wizardData, InputsStepActions.inputsDataPath, {});
                 const deploymentInputs = InputsUtils.getInputsToSend(
                     blueprintInputsPlan,
                     stepData,
@@ -40,9 +40,9 @@ class InputsStepActions extends React.Component {
                         errors: inputsWithoutValues
                     });
                 }
-                return this.props.onNext(id, { inputs: { ...deploymentInputs } });
+                return onNext(id, { inputs: { ...deploymentInputs } });
             })
-            .catch(error => this.props.onError(id, error.message, error.errors));
+            .catch(error => onError(id, error.message, error.errors));
     }
 
     render() {
@@ -67,44 +67,47 @@ class InputsStepContent extends React.Component {
     static dataTypesDataPath = 'blueprint.dataTypes';
 
     componentDidMount() {
-        const inputs = _.get(this.props.wizardData, InputsStepContent.inputsDataPath, {});
-        const dataTypes = _.get(this.props.wizardData, InputsStepContent.dataTypesDataPath, {});
+        const { id, onChange, wizardData } = this.props;
+        const inputs = _.get(wizardData, InputsStepContent.inputsDataPath, {});
+        const dataTypes = _.get(wizardData, InputsStepContent.dataTypesDataPath, {});
 
         const stepData = _.mapValues(inputs, (inputData, inputName) => {
-            if (!_.isUndefined(this.props.stepData[inputName])) {
-                return this.props.stepData[inputName];
+            if (!_.isUndefined(stepData[inputName])) {
+                return stepData[inputName];
             }
             const dataType =
                 !_.isEmpty(dataTypes) && !!inputs[inputName].type ? dataTypes[inputs[inputName].type] : undefined;
             return Stage.Common.InputsUtils.getInputFieldInitialValue(inputData.default, inputData.type, dataType);
         });
-        this.props.onChange(this.props.id, { ...stepData });
+        onChange(id, { ...stepData });
     }
 
     handleInputChange(event, field) {
-        this.props.onChange(this.props.id, { ...this.props.stepData, ...Stage.Basic.Form.fieldNameValue(field) });
+        const { id, onChange, stepData } = this.props;
+        onChange(id, { ...stepData, ...Stage.Basic.Form.fieldNameValue(field) });
     }
 
     handleYamlFileChange(file) {
+        const { id, onChange, onError, stepData, toolbox, wizardData } = this.props;
         if (!file) {
             return;
         }
 
         const { FileActions, InputsUtils } = Stage.Common;
-        const actions = new FileActions(this.props.toolbox);
+        const actions = new FileActions(toolbox);
         this.setState({ fileLoading: true });
 
         actions
             .doGetYamlFileContent(file)
             .then(yamlInputs => {
-                const plan = _.get(this.props.wizardData, InputsStepContent.inputsDataPath, {});
-                const deploymentInputs = InputsUtils.getUpdatedInputs(plan, this.props.stepData, yamlInputs);
-                this.props.onChange(this.props.id, { ...deploymentInputs });
+                const plan = _.get(wizardData, InputsStepContent.inputsDataPath, {});
+                const deploymentInputs = InputsUtils.getUpdatedInputs(plan, stepData, yamlInputs);
+                onChange(id, { ...deploymentInputs });
                 this.setState({ fileLoading: false });
             })
             .catch(err => {
                 const errorMessage = `Loading values from YAML file failed: ${_.isString(err) ? err : err.message}`;
-                this.props.onError(this.props.id, errorMessage, { yamlFile: errorMessage });
+                onError(id, errorMessage, { yamlFile: errorMessage });
                 this.setState({ fileLoading: false });
             });
     }
@@ -127,15 +130,16 @@ class InputsStepContent extends React.Component {
     }
 
     render() {
+        const { errors, loading, stepData, wizardData } = this.props;
         const { Divider, Form, Table } = Stage.Basic;
         const { DataTypesButton, InputsUtils, InputsHeader, YamlFileButton } = Stage.Common;
 
-        const inputs = _.get(this.props.wizardData, InputsStepContent.inputsDataPath, {});
-        const dataTypes = _.get(this.props.wizardData, InputsStepContent.dataTypesDataPath, {});
+        const inputs = _.get(wizardData, InputsStepContent.inputsDataPath, {});
+        const dataTypes = _.get(wizardData, InputsStepContent.dataTypesDataPath, {});
         const noInputs = _.isEmpty(inputs);
 
         return (
-            <Form loading={this.props.loading} success={noInputs}>
+            <Form loading={loading} success={noInputs}>
                 {noInputs ? (
                     <NoResourceMessage resourceName="inputs" />
                 ) : (
@@ -158,7 +162,7 @@ class InputsStepContent extends React.Component {
                             </Table.Header>
 
                             <Table.Body>
-                                {_.map(_.keys(this.props.stepData), inputName => {
+                                {_.map(_.keys(stepData), inputName => {
                                     if (!_.isNil(inputs[inputName])) {
                                         const dataType =
                                             !_.isEmpty(dataTypes) && !!inputs[inputName].type
@@ -182,10 +186,10 @@ class InputsStepContent extends React.Component {
                                                 <Table.Cell>
                                                     {InputsUtils.getInputField(
                                                         inputName,
-                                                        this.props.stepData[inputName],
+                                                        stepData[inputName],
                                                         inputs[inputName].default,
                                                         this.handleInputChange.bind(this),
-                                                        this.props.errors[inputName],
+                                                        errors[inputName],
                                                         inputs[inputName].type,
                                                         inputs[inputName].constraints
                                                     )}

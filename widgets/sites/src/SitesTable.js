@@ -33,10 +33,11 @@ export default class SitesTable extends React.Component {
     static UPDATE_SITE_ACTION = 'update';
 
     shouldComponentUpdate(nextProps, nextState) {
+        const { data, widget } = this.props;
         return (
-            !_.isEqual(this.props.widget, nextProps.widget) ||
+            !_.isEqual(widget, nextProps.widget) ||
             !_.isEqual(this.state, nextState) ||
-            !_.isEqual(this.props.data, nextProps.data)
+            !_.isEqual(data, nextProps.data)
         );
     }
 
@@ -66,29 +67,31 @@ export default class SitesTable extends React.Component {
     }
 
     setSiteVisibility(site_name, visibility) {
-        const actions = new SiteActions(this.props.toolbox);
-        this.props.toolbox.loading(true);
+        const { toolbox } = this.props;
+        const actions = new SiteActions(toolbox);
+        toolbox.loading(true);
         actions
             .doUpdate(site_name, visibility)
             .then(() => {
-                this.props.toolbox.loading(false);
-                this.props.toolbox.refresh();
+                toolbox.loading(false);
+                toolbox.refresh();
             })
             .catch(err => {
-                this.props.toolbox.loading(false);
+                toolbox.loading(false);
                 this.setState({ error: err.message });
             });
     }
 
     deleteSite() {
+        const { toolbox } = this.props;
         const HIDE_DELETE_MODAL_STATE = { modalType: SitesTable.DELETE_SITE_ACTION, showModal: false };
-        const actions = new SiteActions(this.props.toolbox);
+        const actions = new SiteActions(toolbox);
 
         actions
             .doDelete(this.state.site.name)
             .then(() => {
                 this.setState({ ...HIDE_DELETE_MODAL_STATE, error: null });
-                this.props.toolbox.getEventBus().trigger('sites:refresh');
+                toolbox.getEventBus().trigger('sites:refresh');
             })
             .catch(err => {
                 this.setState({ ...HIDE_DELETE_MODAL_STATE, error: err.message });
@@ -100,23 +103,24 @@ export default class SitesTable extends React.Component {
     }
 
     render() {
+        const { error, modalType, showModal, site } = this.state;
         const NO_DATA_MESSAGE = 'There are no Sites available. Click "Create" to create Sites.';
         const { DataTable, ErrorMessage, Icon, ResourceVisibility, Label, Popup } = Stage.Basic;
         const DeleteModal = Stage.Basic.Confirm;
-        const { data, toolbox } = this.props;
+        const { data, toolbox, widget } = this.props;
         let latitude;
         let longitude = null;
 
         return (
             <div>
-                <ErrorMessage error={this.state.error} onDismiss={() => this.setState({ error: null })} autoHide />
+                <ErrorMessage error={error} onDismiss={() => this.setState({ error: null })} autoHide />
 
                 <DataTable
                     fetchData={this.fetchGridData.bind(this)}
                     totalSize={data.total}
-                    pageSize={this.props.widget.configuration.pageSize}
-                    sortColumn={this.props.widget.configuration.sortColumn}
-                    sortAscending={this.props.widget.configuration.sortAscending}
+                    pageSize={widget.configuration.pageSize}
+                    sortColumn={widget.configuration.sortColumn}
+                    sortAscending={widget.configuration.sortAscending}
                     searchable
                     className="sitesTable"
                     noDataMessage={NO_DATA_MESSAGE}
@@ -204,22 +208,22 @@ export default class SitesTable extends React.Component {
                     })}
 
                     <DataTable.Action>
-                        <CreateModal toolbox={this.props.toolbox} />
+                        <CreateModal toolbox={toolbox} />
                     </DataTable.Action>
                 </DataTable>
 
                 <DeleteModal
-                    content={`Are you sure you want to delete the site '${this.state.site.name}'?`}
-                    open={this.state.modalType === SitesTable.DELETE_SITE_ACTION && this.state.showModal}
+                    content={`Are you sure you want to delete the site '${site.name}'?`}
+                    open={modalType === SitesTable.DELETE_SITE_ACTION && showModal}
                     onConfirm={this.deleteSite.bind(this)}
                     onCancel={this.hideModal.bind(this)}
                 />
 
                 <UpdateModal
-                    toolbox={this.props.toolbox}
-                    open={this.state.modalType === SitesTable.UPDATE_SITE_ACTION && this.state.showModal}
+                    toolbox={toolbox}
+                    open={modalType === SitesTable.UPDATE_SITE_ACTION && showModal}
                     onHide={this.hideModal.bind(this)}
-                    site={this.state.site}
+                    site={site}
                 />
             </div>
         );

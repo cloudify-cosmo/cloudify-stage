@@ -82,58 +82,78 @@ export default class StepActions extends React.Component {
     }
 
     onStartOver() {
-        return this.props.onStartOver(this.props.resetDataOnStartOver);
+        const { onStartOver, resetDataOnStartOver } = this.props;
+        return onStartOver(resetDataOnStartOver);
     }
 
     onPrev() {
-        return this.props.onPrev(this.props.id);
+        const { id, onPrev } = this.props;
+        return onPrev(id);
     }
 
     onNext() {
-        return this.props.onNext(this.props.id);
+        const { id, onNext } = this.props;
+        return onNext(id);
     }
 
     render() {
+        const {
+            children,
+            closeFloated,
+            closeIcon,
+            closeLabel,
+            disabled,
+            nextIcon,
+            nextLabel,
+            prevIcon,
+            prevLabel,
+            showClose,
+            showNext,
+            showPrev,
+            showStartOver,
+            startOverIcon,
+            startOverLabel
+        } = this.props;
         const { Button } = Stage.Basic;
 
         return (
             <>
-                {this.props.children}
+                {children}
 
-                {this.props.showClose && (
+                {showClose && (
                     <Button
-                        floated={this.props.closeFloated}
-                        icon={this.props.closeIcon}
-                        content={this.props.closeLabel}
+                        floated={closeFloated}
+                        icon={closeIcon}
+                        content={closeLabel}
                         labelPosition="left"
                         onClick={this.onClose.bind(this)}
                     />
                 )}
-                {this.props.showStartOver && (
+                {showStartOver && (
                     <Button
-                        icon={this.props.startOverIcon}
-                        content={this.props.startOverLabel}
-                        disabled={this.props.disabled}
+                        icon={startOverIcon}
+                        content={startOverLabel}
+                        disabled={disabled}
                         labelPosition="left"
                         onClick={this.onStartOver.bind(this)}
                     />
                 )}
 
                 <Button.Group>
-                    {this.props.showPrev && (
+                    {showPrev && (
                         <Button
-                            icon={this.props.prevIcon}
-                            content={this.props.prevLabel}
-                            disabled={this.props.disabled}
+                            icon={prevIcon}
+                            content={prevLabel}
+                            disabled={disabled}
                             labelPosition="left"
                             onClick={this.onPrev.bind(this)}
                         />
                     )}
-                    {this.props.showNext && (
+                    {showNext && (
                         <Button
-                            icon={this.props.nextIcon}
-                            content={this.props.nextLabel}
-                            disabled={this.props.disabled}
+                            icon={nextIcon}
+                            content={nextLabel}
+                            disabled={disabled}
                             labelPosition="right"
                             onClick={this.onNext.bind(this)}
                         />

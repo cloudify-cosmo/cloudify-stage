@@ -19,9 +19,9 @@ class PluginsStepActions extends React.Component {
     static propTypes = StepActions.propTypes;
 
     onNext(id) {
-        return this.props
-            .onLoading()
-            .then(this.props.fetchData)
+        const { fetchData, onError, onLoading, onNext } = this.props;
+        return onLoading()
+            .then(fetchData)
             .then(({ stepData }) => {
                 const plugins = _.pickBy(
                     stepData,
@@ -66,9 +66,9 @@ class PluginsStepActions extends React.Component {
                     plugin => plugin.status === PluginsStepContent.statusUserDefinedPlugin
                 );
                 const userResources = { plugins: _.mapValues(userDefinedPlugins, () => ({ params: {} })) };
-                return this.props.onNext(id, { plugins, userResources });
+                return onNext(id, { plugins, userResources });
             })
-            .catch(error => this.props.onError(id, error.message, error.errors));
+            .catch(error => onError(id, error.message, error.errors));
     }
 
     render() {
@@ -149,21 +149,21 @@ class PluginsStepContent extends React.Component {
     }
 
     componentDidMount() {
-        this.props
-            .onLoading()
+        const { id, onChange, onError, onLoading, onReady, toolbox, wizardData } = this.props;
+        onLoading()
             .then(() =>
                 Promise.all([
-                    this.props.toolbox
+                    toolbox
                         .getManager()
                         .doGet('/plugins?_include=distribution,package_name,package_version,visibility'),
-                    this.props.toolbox
+                    toolbox
                         .getInternal()
                         .doGet('/external/content', { url: Stage.Common.Consts.externalUrls.pluginsCatalog })
                 ])
             )
             .then(([pluginsInManager, pluginsInCatalog]) => {
-                const pluginsInBlueprint = _.get(this.props.wizardData, PluginsStepContent.blueprintDataPath, {});
-                const pluginsInUserResources = _.get(this.props.wizardData, PluginsStepContent.userDataPath, {});
+                const pluginsInBlueprint = _.get(wizardData, PluginsStepContent.blueprintDataPath, {});
+                const pluginsInUserResources = _.get(wizardData, PluginsStepContent.userDataPath, {});
 
                 pluginsInManager = pluginsInManager.items;
                 pluginsInManager = _.reduce(
@@ -192,7 +192,7 @@ class PluginsStepContent extends React.Component {
 
                 const stepData = {};
                 for (const plugin of _.keys(pluginsInBlueprint)) {
-                    const pluginState = { ...PluginsStepContent.defaultPluginState, ...this.props.stepData[plugin] };
+                    const pluginState = { ...PluginsStepContent.defaultPluginState, ...stepData[plugin] };
                     pluginState.status = PluginsStepContent.getPluginStatus(
                         plugin,
                         pluginsInBlueprint,
@@ -201,10 +201,10 @@ class PluginsStepContent extends React.Component {
                     );
 
                     if (pluginState.status === PluginsStepContent.statusNotInstalledAndInCatalog) {
-                        const distro = `${this.props.toolbox
+                        const distro = `${toolbox
                             .getManager()
                             .getDistributionName()
-                            .toLowerCase()} ${this.props.toolbox
+                            .toLowerCase()} ${toolbox
                             .getManager()
                             .getDistributionRelease()
                             .toLowerCase()}`;
@@ -221,7 +221,7 @@ class PluginsStepContent extends React.Component {
                     stepData[plugin] = { ...pluginState };
                 }
                 for (const plugin of _.keys(pluginsInUserResources)) {
-                    const pluginState = { ...PluginsStepContent.defaultPluginState, ...this.props.stepData[plugin] };
+                    const pluginState = { ...PluginsStepContent.defaultPluginState, ...stepData[plugin] };
                     pluginState.status = PluginsStepContent.statusUserDefinedPlugin;
 
                     stepData[plugin] = { ...pluginState };
@@ -233,13 +233,13 @@ class PluginsStepContent extends React.Component {
                 ({ stepData, pluginsInManager, pluginsInCatalog }) =>
                     new Promise(resolve =>
                         this.setState({ pluginsInManager, pluginsInCatalog }, () => {
-                            this.props.onChange(this.props.id, stepData);
+                            onChange(id, stepData);
                             resolve();
                         })
                     )
             )
-            .catch(error => this.props.onError(this.props.id, error))
-            .finally(() => this.props.onReady());
+            .catch(error => onError(id, error))
+            .finally(() => onReady());
     }
 
     getPluginStatus(pluginName) {
@@ -289,15 +289,17 @@ class PluginsStepContent extends React.Component {
     }
 
     onChange(pluginName) {
+        const { id, onChange } = this.props;
         return fields => {
-            const stepData = { ...this.props.stepData };
+            const stepData = { ...stepData };
             stepData[pluginName] = { ...stepData[pluginName], ...fields };
-            return this.props.onChange(this.props.id, { ...stepData });
+            return onChange(id, { ...stepData });
         };
     }
 
     addUserPlugin() {
-        const stepData = { ...this.props.stepData };
+        const { id, onChange } = this.props;
+        const stepData = { ...stepData };
 
         const getPluginName = (baseName = 'user-plugin', maxSuffixNumber = 1000) => {
             let pluginName = '';
@@ -313,16 +315,18 @@ class PluginsStepContent extends React.Component {
         const pluginName = getPluginName();
         stepData[pluginName] = { ...PluginsStepContent.defaultPluginState };
         stepData[pluginName].status = PluginsStepContent.statusUserDefinedPlugin;
-        this.props.onChange(this.props.id, stepData);
+        onChange(id, stepData);
     }
 
     deleteUserPlugin(pluginName) {
-        const stepData = { ..._.omit(this.props.stepData, pluginName) };
-        this.props.onChange(this.props.id, stepData);
+        const { id, onChange } = this.props;
+        const stepData = { ..._.omit(stepData, pluginName) };
+        onChange(id, stepData);
     }
 
     getPluginAction(pluginName) {
-        const status = _.get(this.props.stepData[pluginName], 'status');
+        const { errors, loading, stepData } = this.props;
+        const status = _.get(stepData[pluginName], 'status');
         const { UploadPluginForm } = Stage.Common;
 
         switch (status) {
@@ -334,14 +338,14 @@ class PluginsStepContent extends React.Component {
                 return (
                     <ResourceAction>
                         <UploadPluginForm
-                            wagonUrl={this.props.stepData[pluginName].wagonUrl}
-                            yamlUrl={this.props.stepData[pluginName].yamlUrl}
-                            iconUrl={this.props.stepData[pluginName].iconUrl}
-                            errors={this.props.errors[pluginName]}
+                            wagonUrl={stepData[pluginName].wagonUrl}
+                            yamlUrl={stepData[pluginName].yamlUrl}
+                            iconUrl={stepData[pluginName].iconUrl}
+                            errors={errors[pluginName]}
                             wrapInForm={false}
                             addRequiredMarks={false}
                             hidePlaceholders
-                            loading={this.props.loading}
+                            loading={loading}
                             onChange={this.onChange(pluginName).bind(this)}
                         />
                     </ResourceAction>
@@ -392,15 +396,16 @@ class PluginsStepContent extends React.Component {
     }
 
     render() {
+        const { loading, stepData, wizardData } = this.props;
         const { Button, Form, Popup, Table } = Stage.Basic;
         const plugins = {
-            ..._.get(this.props.wizardData, PluginsStepContent.blueprintDataPath, {}),
-            ..._.get(this.props.wizardData, PluginsStepContent.userDataPath, {})
+            ..._.get(wizardData, PluginsStepContent.blueprintDataPath, {}),
+            ..._.get(wizardData, PluginsStepContent.userDataPath, {})
         };
-        const noPlugins = _.isEmpty(this.props.stepData);
+        const noPlugins = _.isEmpty(stepData);
 
         return (
-            <Form loading={this.props.loading} success={noPlugins}>
+            <Form loading={loading} success={noPlugins}>
                 {noPlugins ? (
                     <NoResourceMessage resourceName="plugins" />
                 ) : (
@@ -418,7 +423,7 @@ class PluginsStepContent extends React.Component {
                             {noPlugins ? (
                                 <NoResourceMessage resourceName="plugins" />
                             ) : (
-                                _.map(_.keys(this.props.stepData), pluginName => {
+                                _.map(_.keys(stepData), pluginName => {
                                     const pluginInCatalog = this.state.pluginsInCatalog[pluginName];
                                     const { Image } = Stage.Basic;
 

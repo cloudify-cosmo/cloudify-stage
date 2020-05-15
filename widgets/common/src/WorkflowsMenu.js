@@ -106,7 +106,7 @@ class WorkflowsMenu extends React.Component {
     render() {
         const { Menu, Popup, PopupMenu } = Stage.Basic;
 
-        const { workflows } = this.props;
+        const { workflows, onClick, popupMenuProps, showInPopup, trigger } = this.props;
         const workflowsGroups = _.chain(workflows)
             .groupBy('plugin')
             .map((value, key) => ({ name: key, workflows: value }))
@@ -114,22 +114,22 @@ class WorkflowsMenu extends React.Component {
             .value();
         const showOnlyDefaultWorkflows = _.size(workflowsGroups) === 1;
 
-        return this.props.showInPopup ? (
-            <PopupMenu className="workflowAction" position="bottom center" offset={0} {...this.props.popupMenuProps}>
-                {!!this.props.trigger && <Popup.Trigger>{this.props.trigger}</Popup.Trigger>}
+        return showInPopup ? (
+            <PopupMenu className="workflowAction" position="bottom center" offset={0} {...popupMenuProps}>
+                {!!trigger && <Popup.Trigger>{trigger}</Popup.Trigger>}
 
                 {showOnlyDefaultWorkflows ? (
                     <Menu vertical>
-                        <WorkflowsMenuItems workflows={workflows} onClick={this.props.onClick} />
+                        <WorkflowsMenuItems workflows={workflows} onClick={onClick} />
                     </Menu>
                 ) : (
-                    <AccordionWorkflowsMenu workflowsGroups={workflowsGroups} onClick={this.props.onClick} />
+                    <AccordionWorkflowsMenu workflowsGroups={workflowsGroups} onClick={onClick} />
                 )}
             </PopupMenu>
         ) : showOnlyDefaultWorkflows ? (
-            <WorkflowsMenuItems workflows={workflows} onClick={this.props.onClick} />
+            <WorkflowsMenuItems workflows={workflows} onClick={onClick} />
         ) : (
-            <AccordionWorkflowsMenu workflowsGroups={workflowsGroups} onClick={this.props.onClick} />
+            <AccordionWorkflowsMenu workflowsGroups={workflowsGroups} onClick={onClick} />
         );
     }
 }

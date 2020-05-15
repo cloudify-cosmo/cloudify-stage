@@ -33,22 +33,24 @@ class InputsSection extends React.Component {
     }
 
     render() {
+        const { showOnlyChanged } = this.state;
+        const { oldInputs } = this.props;
         const { Form, Header, Icon, List, Popup, PopupHelp, Table } = Stage.Basic;
         const { ParameterValue, ParameterValueDescription } = Stage.Common;
         const { Json } = Stage.Utils;
 
-        const newInputs = Array.sort(_.keys(this.props.newInputs));
+        const newInputs = Array.sort(_.keys(newInputs));
         const onlyChangedInputs = _.chain(newInputs)
             .filter(
                 inputName =>
                     !_.isEqual(
-                        Json.getStringValue(this.props.newInputs[inputName] || ''),
-                        Json.getStringValue(this.props.oldInputs[inputName] || '')
+                        Json.getStringValue(newInputs[inputName] || ''),
+                        Json.getStringValue(oldInputs[inputName] || '')
                     )
             )
             .uniq()
             .value();
-        const inputsChanged = !_.isEqual(this.props.oldInputs, this.props.newInputs);
+        const inputsChanged = !_.isEqual(oldInputs, newInputs);
 
         const Diff = ({ stringA, stringB }) => {
             const difference = diffChars(String(stringA), String(stringB));
@@ -81,8 +83,8 @@ class InputsSection extends React.Component {
                             label="Show only changed"
                             help="Show only inputs which have different values"
                             className="rightFloated"
-                            checked={this.state.showOnlyChanged}
-                            onChange={() => this.setState({ showOnlyChanged: !this.state.showOnlyChanged })}
+                            checked={showOnlyChanged}
+                            onChange={() => this.setState({ showOnlyChanged: !showOnlyChanged })}
                         />
                     )}
                     Inputs
@@ -139,10 +141,10 @@ class InputsSection extends React.Component {
                         </Table.Header>
 
                         <Table.Body>
-                            {_.map(this.state.showOnlyChanged ? onlyChangedInputs : newInputs, input => {
-                                const oldValue = _.get(this.props.oldInputs, input, '');
+                            {_.map(showOnlyChanged ? onlyChangedInputs : newInputs, input => {
+                                const oldValue = _.get(oldInputs, input, '');
                                 const oldValueString = Json.getStringValue(oldValue);
-                                const newValue = _.get(this.props.newInputs, input, '');
+                                const newValue = _.get(newInputs, input, '');
                                 const newValueString = Json.getStringValue(newValue);
                                 const inputChanged = !_.isEqual(oldValueString, newValueString);
 
@@ -348,13 +350,14 @@ export default class UpdateDetailsModal extends React.Component {
     }
 
     componentDidUpdate(prevProps) {
-        if (!_.isEmpty(this.props.deploymentUpdateId) && !prevProps.open && this.props.open) {
+        const { deploymentUpdateId, executionParameters, open, toolbox } = this.props;
+        if (!_.isEmpty(deploymentUpdateId) && !prevProps.open && open) {
             this.setState({ loading: true });
-            const actions = new Stage.Common.DeploymentUpdatesActions(this.props.toolbox);
+            const actions = new Stage.Common.DeploymentUpdatesActions(toolbox);
             actions
-                .doGetUpdate(this.props.deploymentUpdateId)
+                .doGetUpdate(deploymentUpdateId)
                 .then(deploymentUpdate => {
-                    if (_.isEmpty(this.props.executionParameters) && !_.isEmpty(deploymentUpdate.execution_id)) {
+                    if (_.isEmpty(executionParameters) && !_.isEmpty(deploymentUpdate.execution_id)) {
                         actions
                             .doGetExecutionParameters(deploymentUpdate.execution_id)
                             .then(({ parameters: executionParameters }) =>
@@ -378,7 +381,7 @@ export default class UpdateDetailsModal extends React.Component {
                         deploymentUpdate: UpdateDetailsModal.EMPTY_DEPLOYMENT_UPDATE
                     });
                 });
-        } else if (prevProps.open && !this.props.open) {
+        } else if (prevProps.open && !open) {
             this.setState({ ...UpdateDetailsModal.initialState });
         }
     }
@@ -389,29 +392,23 @@ export default class UpdateDetailsModal extends React.Component {
     }
 
     render() {
+        const { errors, loading } = this.state;
+        const { deploymentUpdateId, isPreview, onClose, onUpdate, open } = this.props;
         const { ApproveButton, CancelButton, Form, Icon, Modal } = Stage.Basic;
 
-        const deploymentUpdate = !_.isEmpty(this.props.deploymentUpdateId)
-            ? this.state.deploymentUpdate
-            : this.props.deploymentUpdate;
-        const executionParameters = !_.isEmpty(this.props.executionParameters)
-            ? this.props.executionParameters
-            : this.state.executionParameters;
+        const deploymentUpdate = !_.isEmpty(deploymentUpdateId) ? deploymentUpdate : deploymentUpdate;
+        const executionParameters = !_.isEmpty(executionParameters) ? executionParameters : executionParameters;
 
         return (
             <div>
-                <Modal open={this.props.open} onClose={() => this.props.onClose()} className="updateDetailsModal">
+                <Modal open={open} onClose={() => onClose()} className="updateDetailsModal">
                     <Modal.Header>
                         <Icon name="zoom" /> Deployment update details
-                        {this.props.isPreview ? ' preview' : deploymentUpdate.id ? ` - ${deploymentUpdate.id}` : ''}
+                        {isPreview ? ' preview' : deploymentUpdate.id ? ` - ${deploymentUpdate.id}` : ''}
                     </Modal.Header>
 
                     <Modal.Content scrolling>
-                        <Form
-                            loading={this.state.loading}
-                            errors={this.state.errors}
-                            onErrorsDismiss={() => this.setState({ errors: {} })}
-                        >
+                        <Form loading={loading} errors={errors} onErrorsDismiss={() => this.setState({ errors: {} })}>
                             <BlueprintSection
                                 oldBlueprint={deploymentUpdate.old_blueprint_id}
                                 newBlueprint={deploymentUpdate.new_blueprint_id}
@@ -465,10 +462,8 @@ export default class UpdateDetailsModal extends React.Component {
                     </Modal.Content>
 
                     <Modal.Actions>
-                        <CancelButton onClick={this.props.onClose} content="Close" />
-                        {this.props.isPreview && (
-                            <ApproveButton onClick={this.props.onUpdate} content="Update" icon="edit" color="green" />
-                        )}
+                        <CancelButton onClick={onClose} content="Close" />
+                        {isPreview && <ApproveButton onClick={onUpdate} content="Update" icon="edit" color="green" />}
                     </Modal.Actions>
                 </Modal>
             </div>

@@ -19,10 +19,11 @@ export default class EventsTable extends React.Component {
     static MAX_MESSAGE_LENGTH = 200;
 
     shouldComponentUpdate(nextProps, nextState) {
+        const { data, widget } = this.props;
         return (
-            !_.isEqual(this.props.widget.configuration, nextProps.widget.configuration) ||
+            !_.isEqual(widget.configuration, nextProps.widget.configuration) ||
             !_.isEqual(this.state, nextState) ||
-            !_.isEqual(this.props.data, nextProps.data)
+            !_.isEqual(data, nextProps.data)
         );
     }
 
@@ -43,8 +44,9 @@ export default class EventsTable extends React.Component {
     }
 
     selectEvent(eventId) {
-        const selectedEventId = this.props.toolbox.getContext().getValue('eventId');
-        this.props.toolbox.getContext().setValue('eventId', eventId === selectedEventId ? null : eventId);
+        const { toolbox } = this.props;
+        const selectedEventId = toolbox.getContext().getValue('eventId');
+        toolbox.getContext().setValue('eventId', eventId === selectedEventId ? null : eventId);
     }
 
     showErrorCausesModal(errorCauses) {
@@ -83,26 +85,28 @@ export default class EventsTable extends React.Component {
     }
 
     render() {
+        const { error, errorCauses, showErrorCausesModal } = this.state;
+        const { data, widget } = this.props;
         const NO_DATA_MESSAGE = "There are no Events/Logs available. Probably there's no deployment created, yet.";
         const { CopyToClipboardButton, DataTable, ErrorMessage, HighlightText, Icon, Popup } = Stage.Basic;
         const { EventUtils } = Stage.Common;
         const { Json } = Stage.Utils;
         const EmptySpace = () => <span>&nbsp;&nbsp;</span>;
 
-        const { fieldsToShow } = this.props.widget.configuration;
-        const { colorLogs } = this.props.widget.configuration;
-        const maxMessageLength = this.props.widget.configuration.maxMessageLength || EventsTable.MAX_MESSAGE_LENGTH;
+        const { fieldsToShow } = widget.configuration;
+        const { colorLogs } = widget.configuration;
+        const maxMessageLength = widget.configuration.maxMessageLength || EventsTable.MAX_MESSAGE_LENGTH;
 
         return (
             <div>
-                <ErrorMessage error={this.state.error} onDismiss={() => this.setState({ error: null })} autoHide />
+                <ErrorMessage error={error} onDismiss={() => this.setState({ error: null })} autoHide />
 
                 <DataTable
                     fetchData={this.fetchGridData.bind(this)}
-                    totalSize={this.props.data.total}
-                    pageSize={this.props.widget.configuration.pageSize}
-                    sortColumn={this.props.widget.configuration.sortColumn}
-                    sortAscending={this.props.widget.configuration.sortAscending}
+                    totalSize={data.total}
+                    pageSize={widget.configuration.pageSize}
+                    sortColumn={widget.configuration.sortColumn}
+                    sortAscending={widget.configuration.sortAscending}
                     className="eventsTable"
                     noDataMessage={NO_DATA_MESSAGE}
                 >
@@ -119,10 +123,10 @@ export default class EventsTable extends React.Component {
                         label="Blueprint"
                         name="blueprint_id"
                         show={
-                            _.size(this.props.data.blueprintId) !== 1 &&
-                            _.size(this.props.data.deploymentId) !== 1 &&
-                            _.size(this.props.data.nodeInstanceId) !== 1 &&
-                            _.size(this.props.data.executionId) !== 1 &&
+                            _.size(data.blueprintId) !== 1 &&
+                            _.size(data.deploymentId) !== 1 &&
+                            _.size(data.nodeInstanceId) !== 1 &&
+                            _.size(data.executionId) !== 1 &&
                             fieldsToShow.indexOf('Blueprint') >= 0
                         }
                     />
@@ -130,29 +134,26 @@ export default class EventsTable extends React.Component {
                         label="Deployment"
                         name="deployment_id"
                         show={
-                            _.size(this.props.data.deploymentId) !== 1 &&
-                            _.size(this.props.data.nodeInstanceId) !== 1 &&
-                            _.size(this.props.data.executionId) !== 1 &&
+                            _.size(data.deploymentId) !== 1 &&
+                            _.size(data.nodeInstanceId) !== 1 &&
+                            _.size(data.executionId) !== 1 &&
                             fieldsToShow.indexOf('Deployment') >= 0
                         }
                     />
                     <DataTable.Column
                         label="Node Id"
                         name="node_name"
-                        show={_.size(this.props.data.nodeInstanceId) !== 1 && fieldsToShow.indexOf('Node Id') >= 0}
+                        show={_.size(data.nodeInstanceId) !== 1 && fieldsToShow.indexOf('Node Id') >= 0}
                     />
                     <DataTable.Column
                         label="Node Instance Id"
                         name="node_instance_id"
-                        show={
-                            _.size(this.props.data.nodeInstanceId) !== 1 &&
-                            fieldsToShow.indexOf('Node Instance Id') >= 0
-                        }
+                        show={_.size(data.nodeInstanceId) !== 1 && fieldsToShow.indexOf('Node Instance Id') >= 0}
                     />
                     <DataTable.Column
                         label="Workflow"
                         name="workflow_id"
-                        show={_.size(this.props.data.executionId) !== 1 && fieldsToShow.indexOf('Workflow') >= 0}
+                        show={_.size(data.executionId) !== 1 && fieldsToShow.indexOf('Workflow') >= 0}
                     />
                     <DataTable.Column
                         label="Operation"
@@ -160,7 +161,7 @@ export default class EventsTable extends React.Component {
                         show={fieldsToShow.indexOf('Operation') >= 0}
                     />
                     <DataTable.Column label="Message" show={fieldsToShow.indexOf('Message') >= 0} />
-                    {this.props.data.items.map((item, index) => {
+                    {data.items.map((item, index) => {
                         const isEventType = item.type === EventUtils.eventType;
 
                         const eventOptions = isEventType
@@ -257,8 +258,8 @@ export default class EventsTable extends React.Component {
                     })}
                 </DataTable>
                 <ErrorCausesModal
-                    errorCauses={this.state.errorCauses}
-                    open={this.state.showErrorCausesModal}
+                    errorCauses={errorCauses}
+                    open={showErrorCausesModal}
                     onClose={this.hideErrorCausesModal.bind(this)}
                 />
             </div>

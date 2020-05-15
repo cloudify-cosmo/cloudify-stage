@@ -38,11 +38,12 @@ class UploadPluginModal extends React.Component {
     }
 
     uploadPlugin() {
-        const { wagonUrl, yamlUrl, iconUrl } = this.state;
+        const { onHide, toolbox } = this.props;
+        const { wagonUrl, yamlUrl, iconUrl, iconFile, undefined, visibility, wagonFile, yamlFile } = this.state;
 
         const errors = {};
 
-        if (!this.state.wagonFile) {
+        if (!wagonFile) {
             if (_.isEmpty(wagonUrl)) {
                 errors.wagonUrl = 'Please select wagon file or provide URL to wagon file';
             } else if (!Stage.Utils.Url.isUrl(wagonUrl)) {
@@ -50,7 +51,7 @@ class UploadPluginModal extends React.Component {
             }
         }
 
-        if (!this.state.yamlFile) {
+        if (!yamlFile) {
             if (_.isEmpty(yamlUrl)) {
                 errors.yamlUrl = 'Please select YAML file or provide URL to YAML file';
             } else if (!Stage.Utils.Url.isUrl(yamlUrl)) {
@@ -58,7 +59,7 @@ class UploadPluginModal extends React.Component {
             }
         }
 
-        if (!this.state.iconFile && !_.isEmpty(iconUrl) && !Stage.Utils.Url.isUrl(iconUrl)) {
+        if (!iconFile && !_.isEmpty(iconUrl) && !Stage.Utils.Url.isUrl(iconUrl)) {
             errors.iconUrl = 'Please provide valid URL for icon file';
         }
 
@@ -71,19 +72,19 @@ class UploadPluginModal extends React.Component {
         this.setState({ loading: true });
 
         const createUploadResource = name => ({
-            [name]: { url: this.state[`${name}Url`], file: this.state[`${name}File`] }
+            [name]: { url: `${name}Url`, file: `${name}File` }
         });
 
-        const actions = new Stage.Common.PluginActions(this.props.toolbox);
+        const actions = new Stage.Common.PluginActions(toolbox);
         actions
-            .doUpload(this.state.visibility, {
+            .doUpload(visibility, {
                 ...createUploadResource('wagon'),
                 ...createUploadResource('yaml'),
                 ...createUploadResource('icon')
             })
             .then(() => {
-                this.setState({ errors: {}, loading: false }, this.props.onHide);
-                this.props.toolbox.refresh();
+                this.setState({ errors: {}, loading: false }, onHide);
+                toolbox.refresh();
             })
             .catch(err => {
                 this.setState({ errors: { error: err.message }, loading: false });
@@ -95,15 +96,17 @@ class UploadPluginModal extends React.Component {
     }
 
     render() {
+        const { errors, iconUrl, loading, visibility, wagonUrl, yamlUrl } = this.state;
+        const { onHide, open } = this.props;
         const { ApproveButton, CancelButton, Icon, Modal, VisibilityField } = Stage.Basic;
         const { UploadPluginForm } = Stage.Common;
 
         return (
-            <Modal open={this.props.open} onClose={this.props.onHide}>
+            <Modal open={open} onClose={onHide}>
                 <Modal.Header>
                     <Icon name="upload" /> Upload plugin
                     <VisibilityField
-                        visibility={this.state.visibility}
+                        visibility={visibility}
                         className="rightFloated"
                         onVisibilityChange={visibility => this.setState({ visibility })}
                     />
@@ -111,20 +114,20 @@ class UploadPluginModal extends React.Component {
 
                 <Modal.Content>
                     <UploadPluginForm
-                        wagonUrl={this.state.wagonUrl}
-                        yamlUrl={this.state.yamlUrl}
-                        iconUrl={this.state.iconUrl}
-                        errors={this.state.errors}
-                        loading={this.state.loading}
+                        wagonUrl={wagonUrl}
+                        yamlUrl={yamlUrl}
+                        iconUrl={iconUrl}
+                        errors={errors}
+                        loading={loading}
                         onChange={this.onFormFieldChange.bind(this)}
                     />
                 </Modal.Content>
 
                 <Modal.Actions>
-                    <CancelButton onClick={this.props.onHide} disabled={this.state.loading} />
+                    <CancelButton onClick={onHide} disabled={loading} />
                     <ApproveButton
                         onClick={this.uploadPlugin.bind(this)}
-                        disabled={this.state.loading}
+                        disabled={loading}
                         content="Upload"
                         icon="upload"
                         color="green"

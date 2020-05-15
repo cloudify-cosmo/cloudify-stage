@@ -35,6 +35,7 @@ export default class ToursButton extends React.Component {
     }
 
     render() {
+        const { tours } = this.props;
         const buttonStyle = {
             position: 'fixed',
             right: '20px',
@@ -44,7 +45,7 @@ export default class ToursButton extends React.Component {
         };
 
         return (
-            !_.isEmpty(this.props.tours) && (
+            !_.isEmpty(tours) && (
                 <PopupMenu onClose={this.onMouseOut.bind(this)}>
                     <Popup.Trigger>
                         <Button
@@ -62,7 +63,7 @@ export default class ToursButton extends React.Component {
                     </Popup.Trigger>
                     <Menu vertical>
                         <Menu.Item header>Tours</Menu.Item>
-                        {this.props.tours.map(tour => (
+                        {tours.map(tour => (
                             <Menu.Item key={tour.id} onClick={() => this.startTour(tour)}>
                                 {tour.name}
                             </Menu.Item>

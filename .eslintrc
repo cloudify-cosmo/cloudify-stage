@@ -67,7 +67,6 @@
         "radix": ["warn"],
         "react/button-has-type": ["warn"],
         "react/default-props-match-prop-types": ["warn"],
-        "react/destructuring-assignment": ["warn"],
         "react/no-find-dom-node": ["warn"],
         "react/forbid-prop-types": ["warn"],
         "react/jsx-filename-extension": ["warn"],

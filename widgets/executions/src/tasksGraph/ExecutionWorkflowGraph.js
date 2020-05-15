@@ -47,11 +47,11 @@ export default class ExecutionWorkflowGraph extends React.Component {
 
     componentDidUpdate() {
         const containerWidth = _.get(this.wrapper.current, 'offsetWidth');
-        if (containerWidth && containerWidth !== this.state.containerWidth) {
+        if (containerWidth && containerWidth !== containerWidth) {
             this.setState({ containerWidth });
         }
         const modalWidth = _.get(this.modal.current, 'offsetWidth');
-        if (modalWidth && modalWidth !== this.state.modalWidth) {
+        if (modalWidth && modalWidth !== modalWidth) {
             this.setState({ modalWidth });
         }
     }
@@ -61,14 +61,15 @@ export default class ExecutionWorkflowGraph extends React.Component {
     }
 
     startPolling() {
+        const { autoFocus, graphResult } = this.state;
         this.cancelablePromise = Stage.Utils.makeCancelable(this.getTasksGraphPromise());
         this.cancelablePromise.promise
             .then(tasksGraph => {
-                if (this.state.graphResult !== tasksGraph) {
+                if (graphResult !== tasksGraph) {
                     this.setState({
                         graphResult: tasksGraph
                     });
-                    if (this.state.autoFocus) {
+                    if (autoFocus) {
                         this.scrollToInProgress();
                     }
                 }
@@ -90,11 +91,12 @@ export default class ExecutionWorkflowGraph extends React.Component {
     }
 
     getTasksGraphPromise() {
+        const { selectedExecution, toolbox } = this.props;
         const tasksGraphParams = {
-            execution_id: this.props.selectedExecution.id,
-            name: this.props.selectedExecution.workflow_id
+            execution_id: selectedExecution.id,
+            name: selectedExecution.workflow_id
         };
-        return this.props.toolbox.getWidgetBackend().doGet('get_tasks_graph', { ...tasksGraphParams });
+        return toolbox.getWidgetBackend().doGet('get_tasks_graph', { ...tasksGraphParams });
     }
 
     scrollTo(x, y, zoom = 1, autoFocusOnly = true, frame = 1) {
@@ -124,6 +126,7 @@ export default class ExecutionWorkflowGraph extends React.Component {
     }
 
     renderGraph(width, height, positionStateProp, openInModalIcon = true, minimap) {
+        const { autoFocus, graphResult } = this.state;
         const { Icon } = Stage.Basic;
         return (
             <>
@@ -131,7 +134,7 @@ export default class ExecutionWorkflowGraph extends React.Component {
                     <Icon
                         name="play"
                         link
-                        color={this.state.autoFocus ? 'green' : null}
+                        color={autoFocus ? 'green' : null}
                         onClick={() => this.setState({ autoFocus: true }, this.scrollToInProgress)}
                         title="Focus on tasks in progress"
                     />
@@ -143,8 +146,8 @@ export default class ExecutionWorkflowGraph extends React.Component {
                                 0,
                                 0,
                                 Math.min(
-                                    width / (this.state.graphResult.width + GRAPH_MARGIN),
-                                    height / (this.state.graphResult.height + GRAPH_MARGIN)
+                                    width / (graphResult.width + GRAPH_MARGIN),
+                                    height / (graphResult.height + GRAPH_MARGIN)
                                 ),
                                 false
                             )
@@ -187,9 +190,9 @@ export default class ExecutionWorkflowGraph extends React.Component {
                     onPan={() => this.setState({ autoFocus: false })}
                     onChangeTool={_.noop}
                 >
-                    <svg width={this.state.graphResult.width} height={this.state.graphResult.height}>
-                        <GraphNodes graphNodes={this.state.graphResult.children} toolbox={this.props.toolbox} />
-                        <GraphEdges graphEdges={this.state.graphResult.edges} />
+                    <svg width={graphResult.width} height={graphResult.height}>
+                        <GraphNodes graphNodes={graphResult.children} toolbox={this.props.toolbox} />
+                        <GraphEdges graphEdges={graphResult.edges} />
                     </svg>
                 </ReactSVGPanZoom>
             </>
@@ -197,25 +200,26 @@ export default class ExecutionWorkflowGraph extends React.Component {
     }
 
     render() {
+        const { containerWidth, error, graphResult, maximized, modalWidth } = this.state;
         const { Loading, Message, Modal } = Stage.Basic;
-        if (this.state.graphResult !== null) {
-            const height = this.state.graphResult.height + 2 * GRAPH_MARGIN + 8;
+        if (graphResult !== null) {
+            const height = graphResult.height + 2 * GRAPH_MARGIN + 8;
             return (
                 <div ref={this.wrapper} style={{ position: 'relative' }}>
                     {this.renderGraph(
-                        Math.max(0, this.state.containerWidth - 1),
+                        Math.max(0, containerWidth - 1),
                         Math.min(MAX_TABLE_GRAPH_HEIGHT, height),
                         'position'
                     )}
                     <Modal
-                        open={this.state.maximized}
+                        open={maximized}
                         onClose={() => this.setState({ maximized: false })}
                         size="fullscreen"
                         closeOnDimmerClick={false}
                     >
                         <div ref={this.modal}>
                             {this.renderGraph(
-                                this.state.modalWidth,
+                                modalWidth,
                                 Math.max(MIN_MODAL_GRAPH_HEIGHT, height),
                                 'modalPosition',
                                 false,
@@ -226,7 +230,7 @@ export default class ExecutionWorkflowGraph extends React.Component {
                 </div>
             );
         }
-        if (this.state.error) {
+        if (error) {
             return (
                 <div id="graphContainer">
                     <Message>

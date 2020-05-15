@@ -37,10 +37,11 @@ export default class ManagersTable extends React.Component {
     }
 
     shouldComponentUpdate(nextProps, nextState) {
+        const { data, widget } = this.props;
         return (
-            !_.isEqual(this.props.widget, nextProps.widget) ||
+            !_.isEqual(widget, nextProps.widget) ||
             !_.isEqual(this.state, nextState) ||
-            !_.isEqual(this.props.data, nextProps.data)
+            !_.isEqual(data, nextProps.data)
         );
     }
 
@@ -49,9 +50,10 @@ export default class ManagersTable extends React.Component {
     }
 
     componentDidMount() {
-        this.props.toolbox.getEventBus().on('managers:refresh', this.refreshData, this);
+        const { data, toolbox } = this.props;
+        toolbox.getEventBus().on('managers:refresh', this.refreshData, this);
 
-        const managerIds = _.map(this.props.data.items, 'id');
+        const managerIds = _.map(data.items, 'id');
         this.handleStatusBulkFetching(managerIds);
         _.forEach(managerIds, managerId =>
             this.actions.getClusterStatus(managerId, _.noop, this.handleStatusUpdate, this.handleStatusError)
@@ -108,13 +110,14 @@ export default class ManagersTable extends React.Component {
     }
 
     actOnExecution(execution, action) {
-        const actions = new Stage.Common.ExecutionActions(this.props.toolbox);
+        const { toolbox } = this.props;
+        const actions = new Stage.Common.ExecutionActions(toolbox);
         actions
             .doAct(execution, action)
             .then(() => {
                 this.setState({ error: null });
-                this.props.toolbox.getEventBus().trigger('deployments:refresh');
-                this.props.toolbox.getEventBus().trigger('executions:refresh');
+                toolbox.getEventBus().trigger('deployments:refresh');
+                toolbox.getEventBus().trigger('executions:refresh');
             })
             .catch(err => {
                 this.setState({ error: err.message });
@@ -122,12 +125,8 @@ export default class ManagersTable extends React.Component {
     }
 
     showLogs(managerId, executionId) {
-        this.props.toolbox.drillDown(
-            this.props.widget,
-            'logs',
-            { deploymentId: managerId, executionId },
-            `Execution Logs - ${executionId}`
-        );
+        const { toolbox, widget } = this.props;
+        toolbox.drillDown(widget, 'logs', { deploymentId: managerId, executionId }, `Execution Logs - ${executionId}`);
     }
 
     handleStatusFetching(managerId) {
@@ -152,22 +151,33 @@ export default class ManagersTable extends React.Component {
     }
 
     render() {
+        const { data, toolbox, widget } = this.props;
         const NO_DATA_MESSAGE = 'There are no Managers available.';
-        const { configuration } = this.props.widget;
+        const { configuration } = widget;
         const { fieldsToShow } = configuration;
-        const totalSize = this.props.data.total > 0 ? undefined : 0;
+        const totalSize = data.total > 0 ? undefined : 0;
 
-        const allManagers = _.map(this.props.data.items, manager => manager.id);
-        const { selectedManagers } = this.state;
+        const allManagers = _.map(data.items, manager => manager.id);
+        const {
+            selectedManagers,
+            bulkOperation,
+            deployment,
+            deploymentUpdateId,
+            error,
+            selectedManagerId,
+            showDeploymentUpdateDetailsModal,
+            showExecuteWorkflowModal,
+            workflow
+        } = this.state;
         const allManagersSelected = _.isEmpty(_.difference(allManagers, selectedManagers));
-        const workflows = !_.isEmpty(selectedManagers) ? _.get(this.props.data, 'items[0].workflows', []) : [];
+        const workflows = !_.isEmpty(selectedManagers) ? _.get(data, 'items[0].workflows', []) : [];
 
         const { Checkbox, DataTable, ErrorMessage } = Stage.Basic;
         const { ExecuteDeploymentModal, LastExecutionStatusIcon, UpdateDetailsModal } = Stage.Common;
 
         return (
             <div>
-                <ErrorMessage error={this.state.error} onDismiss={() => this.setState({ error: null })} autoHide />
+                <ErrorMessage error={error} onDismiss={() => this.setState({ error: null })} autoHide />
 
                 <DataTable selectable={false} noDataMessage={NO_DATA_MESSAGE} totalSize={totalSize}>
                     <DataTable.Column
@@ -201,9 +211,9 @@ export default class ManagersTable extends React.Component {
                         show={fieldsToShow.indexOf('Actions') >= 0}
                     />
 
-                    {_.map(this.props.data.items, manager => {
+                    {_.map(data.items, manager => {
                         const inSelectedManagers = _.includes(selectedManagers, manager.id);
-                        const { isFetching, status } = _.get(this.state.status, manager.id, {
+                        const { isFetching, status } = _.get(status, manager.id, {
                             isFetching: false,
                             status: {}
                         });
@@ -211,7 +221,7 @@ export default class ManagersTable extends React.Component {
                         return (
                             <DataTable.Row
                                 key={manager.id}
-                                selected={manager.id === this.state.selectedManagerId}
+                                selected={manager.id === selectedManagerId}
                                 onClick={this.selectManager.bind(this, manager)}
                             >
                                 <DataTable.Data>
@@ -251,7 +261,7 @@ export default class ManagersTable extends React.Component {
                                     <ConsoleIcon manager={manager} />
                                     <RefreshIcon
                                         manager={manager}
-                                        toolbox={this.props.toolbox}
+                                        toolbox={toolbox}
                                         onStart={this.handleStatusFetching}
                                         onSuccess={this.handleStatusUpdate}
                                         onFail={this.handleStatusError}
@@ -268,7 +278,7 @@ export default class ManagersTable extends React.Component {
                     <DataTable.Action>
                         <RefreshButton
                             managers={selectedManagers}
-                            toolbox={this.props.toolbox}
+                            toolbox={toolbox}
                             onStart={this.handleStatusBulkFetching}
                             onSuccess={this.handleStatusUpdate}
                             onFail={this.handleStatusError}
@@ -282,19 +292,19 @@ export default class ManagersTable extends React.Component {
                 </DataTable>
 
                 <ExecuteDeploymentModal
-                    toolbox={this.props.toolbox}
-                    open={this.state.showExecuteWorkflowModal}
-                    deployment={this.state.deployment}
-                    deployments={this.state.bulkOperation ? this.state.selectedManagers : []}
-                    workflow={this.state.workflow}
+                    toolbox={toolbox}
+                    open={showExecuteWorkflowModal}
+                    deployment={deployment}
+                    deployments={bulkOperation ? selectedManagers : []}
+                    workflow={workflow}
                     onHide={this.hideExecuteWorkflowModal.bind(this)}
                 />
 
                 <UpdateDetailsModal
-                    open={this.state.showDeploymentUpdateDetailsModal}
-                    deploymentUpdateId={this.state.deploymentUpdateId}
+                    open={showDeploymentUpdateDetailsModal}
+                    deploymentUpdateId={deploymentUpdateId}
                     onClose={this.hideDeploymentUpdateDetailsModal.bind(this)}
-                    toolbox={this.props.toolbox}
+                    toolbox={toolbox}
                 />
             </div>
         );

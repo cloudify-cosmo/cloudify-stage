@@ -16,20 +16,20 @@ class InfrastructureStepActions extends React.Component {
     static propTypes = StepActions.propTypes;
 
     onNext(id) {
+        const { fetchData, onError, onLoading, onNext, toolbox } = this.props;
         let fetchedStepData = {};
 
-        this.props
-            .onLoading()
-            .then(this.props.fetchData)
+        onLoading()
+            .then(fetchData)
             .then(({ stepData }) => (fetchedStepData = stepData))
             .then(stepData =>
-                this.props.toolbox.getInternal().doPut('source/list/resources', {
+                toolbox.getInternal().doPut('source/list/resources', {
                     yamlFile: stepData.blueprintFileName,
                     url: stepData.blueprintUrl
                 })
             )
-            .then(resources => this.props.onNext(id, { blueprint: { ...resources, ...fetchedStepData } }))
-            .catch(() => this.props.onError(id, 'Error during fetching data for the next step'));
+            .then(resources => onNext(id, { blueprint: { ...resources, ...fetchedStepData } }))
+            .catch(() => onError(id, 'Error during fetching data for the next step'));
     }
 
     render() {
@@ -63,17 +63,18 @@ class InfrastructureStepContent extends React.Component {
     static propTypes = StepContent.propTypes;
 
     componentDidMount() {
-        if (!_.isEmpty(this.props.stepData)) {
-            this.setState({ stepData: { ...this.props.stepData } });
+        const { id, onChange, stepData } = this.props;
+        if (!_.isEmpty(stepData)) {
+            this.setState({ stepData: { ...stepData } });
         } else {
-            this.props.onChange(this.props.id, this.state.stepData);
+            onChange(id, this.state.stepData);
         }
     }
 
     onChange(blueprintFileName) {
-        this.setState({ stepData: { ...this.state.stepData, blueprintFileName } }, () =>
-            this.props.onChange(this.props.id, this.state.stepData)
-        );
+        const { stepData } = this.state;
+        const { id, onChange } = this.props;
+        this.setState({ stepData: { ...stepData, blueprintFileName } }, () => onChange(id, stepData));
     }
 
     render() {

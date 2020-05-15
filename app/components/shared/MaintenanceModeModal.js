@@ -53,14 +53,15 @@ class MaintenanceModeModal extends Component {
     };
 
     componentDidUpdate(prevProps) {
-        if (!prevProps.show && this.props.show) {
+        const { onClose, show } = this.props;
+        if (!prevProps.show && show) {
             this.setState(MaintenanceModeModal.initialState);
 
             this.loadPendingExecutions();
-        } else if (prevProps.show && !this.props.show) {
+        } else if (prevProps.show && !show) {
             this.stopPolling();
             this.stopFetchingData();
-            this.props.onClose();
+            onClose();
         }
     }
 
@@ -69,11 +70,12 @@ class MaintenanceModeModal extends Component {
     }
 
     loadPendingExecutions() {
-        if (this.props.manager.maintenance !== Consts.MAINTENANCE_DEACTIVATED) {
+        const { manager, onFetchActiveExecutions } = this.props;
+        if (manager.maintenance !== Consts.MAINTENANCE_DEACTIVATED) {
             return;
         }
 
-        this.fetchDataPromise = StageUtils.makeCancelable(this.props.onFetchActiveExecutions());
+        this.fetchDataPromise = StageUtils.makeCancelable(onFetchActiveExecutions());
         this.fetchDataPromise.promise
             .then(data => {
                 console.log('Maintenance data fetched');
@@ -126,11 +128,11 @@ class MaintenanceModeModal extends Component {
     }
 
     activate() {
-        this.props
-            .onMaintenanceActivate()
+        const { onHide, onMaintenanceActivate } = this.props;
+        onMaintenanceActivate()
             .then(() => {
                 this.setState({ error: '', loading: false });
-                this.props.onHide();
+                onHide();
             })
             .catch(err => {
                 this.setState({ error: err.message, loading: false });
@@ -138,11 +140,11 @@ class MaintenanceModeModal extends Component {
     }
 
     deactivate() {
-        this.props
-            .onMaintenanceDeactivate()
+        const { onHide, onMaintenanceDeactivate } = this.props;
+        onMaintenanceDeactivate()
             .then(() => {
                 this.setState({ error: '', loading: false });
-                this.props.onHide();
+                onHide();
             })
             .catch(err => {
                 this.setState({ error: err.message, loading: false });
@@ -150,12 +152,13 @@ class MaintenanceModeModal extends Component {
     }
 
     cancelExecution(execution, action) {
-        this.setState({ cancelling: [...this.state.cancelling, execution.id] }, () =>
+        const { cancelling } = this.state;
+        this.setState({ cancelling: [...cancelling, execution.id] }, () =>
             this.props
                 .onCancelExecution(execution, action)
                 .then(() => {
                     this.loadPendingExecutions();
-                    this.setState({ error: '', cancelling: _.without(this.state.cancelling, execution.id) });
+                    this.setState({ error: '', cancelling: _.without(cancelling, execution.id) });
                 })
                 .catch(err => {
                     this.setState({ error: err.message });
@@ -164,20 +167,22 @@ class MaintenanceModeModal extends Component {
     }
 
     render() {
+        const { error, loading } = this.state;
+        const { activeExecutions, manager, onHide, show } = this.props;
         return (
-            <Modal open={this.props.show} onClose={() => this.props.onHide()}>
+            <Modal open={show} onClose={() => onHide()}>
                 <Modal.Header>
                     <Icon name="doctor" />
-                    {this.props.manager.maintenance === Consts.MAINTENANCE_DEACTIVATED
+                    {manager.maintenance === Consts.MAINTENANCE_DEACTIVATED
                         ? 'Are you sure you want to enter maintenance mode?'
                         : 'Are you sure you want to exit maintenance mode?'}
                 </Modal.Header>
 
-                {this.state.error || !_.isEmpty(this.props.activeExecutions.items) ? (
+                {error || !_.isEmpty(activeExecutions.items) ? (
                     <Modal.Content>
-                        <ErrorMessage error={this.state.error} />
+                        <ErrorMessage error={error} />
 
-                        {!_.isEmpty(this.props.activeExecutions.items) && (
+                        {!_.isEmpty(activeExecutions.items) && (
                             <DataTable>
                                 <DataTable.Column label="Blueprint" width="15%" />
                                 <DataTable.Column label="Deployment" width="15%" />
@@ -187,7 +192,7 @@ class MaintenanceModeModal extends Component {
                                 <DataTable.Column label="Status" width="15%" />
                                 <DataTable.Column label="Action" />
 
-                                {this.props.activeExecutions.items.map(item => {
+                                {activeExecutions.items.map(item => {
                                     return (
                                         <DataTable.Row key={item.id}>
                                             <DataTable.Data>{item.blueprint_id}</DataTable.Data>
@@ -247,13 +252,13 @@ class MaintenanceModeModal extends Component {
                 )}
 
                 <Modal.Actions>
-                    <CancelButton onClick={this.onDeny.bind(this)} content="No" disabled={this.state.loading} />
+                    <CancelButton onClick={this.onDeny.bind(this)} content="No" disabled={loading} />
                     <ApproveButton
                         onClick={this.onApprove.bind(this)}
                         content="Yes"
                         icon="doctor"
                         color="green"
-                        disabled={this.state.loading}
+                        disabled={loading}
                     />
                 </Modal.Actions>
             </Modal>

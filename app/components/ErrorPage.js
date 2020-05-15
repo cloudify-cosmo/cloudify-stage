@@ -12,12 +12,13 @@ import { MessageContainer } from './shared';
 
 export default class ErrorPage extends Component {
     render() {
-        return _.isEmpty(this.props.error) ? (
+        const { error } = this.props;
+        return _.isEmpty(error) ? (
             <Redirect to={Consts.LOGOUT_PAGE_PATH} />
         ) : (
             <MessageContainer>
                 <Header as="h2">Unexpected Error Occurred</Header>
-                <Message content={this.props.error} error />
+                <Message content={error} error />
                 <LinkToLogin />
             </MessageContainer>
         );

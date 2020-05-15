@@ -29,10 +29,11 @@ export default class AboutModal extends Component {
     };
 
     render() {
+        const { canLicenseManagement, license, onHide, onLicenseManagment, open, version } = this.props;
         const { Button, CancelButton, Divider, Header, Modal } = Stage.Basic;
 
         return (
-            <Modal open={this.props.open} onClose={this.props.onHide}>
+            <Modal open={open} onClose={onHide}>
                 <Modal.Header className="mainBackgroundColor" style={{ padding: 0, paddingLeft: 10 }}>
                     <Banner hideOnSmallScreen={false} />
                 </Modal.Header>
@@ -40,25 +41,20 @@ export default class AboutModal extends Component {
                 <Modal.Content>
                     <Header>Version Details</Header>
                     <Divider />
-                    <CurrentVersion version={this.props.version} />
+                    <CurrentVersion version={version} />
 
                     <Header>License Details</Header>
                     <Divider />
-                    <CurrentLicense license={this.props.license} />
+                    <CurrentLicense license={license} />
 
                     <EulaLink />
                 </Modal.Content>
 
                 <Modal.Actions>
-                    {this.props.canLicenseManagement && (
-                        <Button
-                            content="License Management"
-                            icon="key"
-                            color="yellow"
-                            onClick={this.props.onLicenseManagment}
-                        />
+                    {canLicenseManagement && (
+                        <Button content="License Management" icon="key" color="yellow" onClick={onLicenseManagment} />
                     )}
-                    <CancelButton content="Close" onClick={this.props.onHide} />
+                    <CancelButton content="Close" onClick={onHide} />
                 </Modal.Actions>
             </Modal>
         );

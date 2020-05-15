@@ -66,14 +66,15 @@ export default class PluginsCatalogModal extends React.Component {
      * sending to server
      */
     onApprove() {
+        const { actions, onHide, onSuccess, plugin, toolbox } = this.props;
         this.setState({ loading: true });
-        this.props.actions
-            .doUpload(this.props.plugin, this.state.visibility)
+        actions
+            .doUpload(plugin, this.state.visibility)
             .then(() => {
                 this.setState({ errors: null, loading: false });
-                this.props.toolbox.getEventBus().trigger('plugins:refresh');
-                this.props.onHide();
-                this.props.onSuccess(`${this.props.plugin.title} Successfully uploaded`);
+                toolbox.getEventBus().trigger('plugins:refresh');
+                onHide();
+                onSuccess(`${plugin.title} Successfully uploaded`);
             })
             .catch(err => {
                 this.setState({ error: err.message, loading: false });
@@ -87,32 +88,33 @@ export default class PluginsCatalogModal extends React.Component {
   |--------------------------------------------------------------------------
   */
     render() {
+        const { error, loading, visibility } = this.state;
+        const { onHide, open, plugin } = this.props;
         const { Modal, CancelButton, ApproveButton, Icon, ErrorMessage, VisibilityField } = Stage.Basic;
 
         return (
             <div>
-                <Modal open={this.props.open} onClose={() => this.props.onHide()}>
+                <Modal open={open} onClose={() => onHide()}>
                     <Modal.Header>
                         <Icon name="upload" /> Upload Plugin
                         <VisibilityField
-                            visibility={this.state.visibility}
+                            visibility={visibility}
                             className="rightFloated"
                             onVisibilityChange={visibility => this.setState({ visibility })}
                         />
                     </Modal.Header>
 
                     <Modal.Content>
-                        <ErrorMessage error={this.state.error} onDismiss={() => this.setState({ error: null })} />
-                        Are you sure you want to upload the plugin <b>{this.props.plugin && this.props.plugin.title}</b>
-                        ?
+                        <ErrorMessage error={error} onDismiss={() => this.setState({ error: null })} />
+                        Are you sure you want to upload the plugin <b>{plugin && plugin.title}</b>?
                     </Modal.Content>
 
                     <Modal.Actions>
-                        <CancelButton onClick={this.onCancel.bind(this)} disabled={this.state.loading} />
+                        <CancelButton onClick={this.onCancel.bind(this)} disabled={loading} />
                         <ApproveButton
                             onClick={this.onApprove.bind(this)}
-                            disabled={this.state.loading}
-                            loading={this.state.loading}
+                            disabled={loading}
+                            loading={loading}
                             content="Upload"
                             icon="upload"
                             color="green"

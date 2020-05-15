@@ -22,10 +22,11 @@ export default class AgentsTable extends React.Component {
     };
 
     shouldComponentUpdate(nextProps, nextState) {
+        const { data, widget } = this.props;
         return (
-            !_.isEqual(this.props.widget, nextProps.widget) ||
+            !_.isEqual(widget, nextProps.widget) ||
             !_.isEqual(this.state, nextState) ||
-            !_.isEqual(this.props.data, nextProps.data)
+            !_.isEqual(data, nextProps.data)
         );
     }
 
@@ -50,16 +51,18 @@ export default class AgentsTable extends React.Component {
     }
 
     render() {
+        const { error, modal, showModal } = this.state;
+        const { data, toolbox, widget } = this.props;
         const NO_DATA_MESSAGE = 'There are no Agents available.';
-        const { configuration } = this.props.widget;
+        const { configuration } = widget;
         const { fieldsToShow } = configuration;
-        const totalSize = this.props.data.total > 0 ? undefined : 0;
+        const totalSize = data.total > 0 ? undefined : 0;
 
         const { Button, DataTable, ErrorMessage } = Stage.Basic;
 
         return (
             <div>
-                <ErrorMessage error={this.state.error} onDismiss={() => this.setState({ error: null })} autoHide />
+                <ErrorMessage error={error} onDismiss={() => this.setState({ error: null })} autoHide />
 
                 <DataTable
                     selectable={false}
@@ -73,24 +76,20 @@ export default class AgentsTable extends React.Component {
                         label="Deployment"
                         show={
                             fieldsToShow.indexOf('Deployment') >= 0 &&
-                            !this.props.data.deploymentId &&
-                            !this.props.data.nodeId &&
-                            !this.props.data.nodeInstanceId
+                            !data.deploymentId &&
+                            !data.nodeId &&
+                            !data.nodeInstanceId
                         }
                     />
                     <DataTable.Column
                         label="Node"
-                        show={
-                            fieldsToShow.indexOf('Node') >= 0 &&
-                            !this.props.data.nodeId &&
-                            !this.props.data.nodeInstanceId
-                        }
+                        show={fieldsToShow.indexOf('Node') >= 0 && !data.nodeId && !data.nodeInstanceId}
                     />
                     <DataTable.Column label="System" show={fieldsToShow.indexOf('System') >= 0} />
                     <DataTable.Column label="Version" show={fieldsToShow.indexOf('Version') >= 0} />
                     <DataTable.Column label="Install Method" show={fieldsToShow.indexOf('Install Method') >= 0} />
 
-                    {_.map(this.props.data.items, item => (
+                    {_.map(data.items, item => (
                         <DataTable.Row key={item.id}>
                             <DataTable.Data>{item.id}</DataTable.Data>
                             <DataTable.Data>{item.ip}</DataTable.Data>
@@ -119,25 +118,25 @@ export default class AgentsTable extends React.Component {
                 </DataTable>
 
                 <ValidateAgentsModal
-                    toolbox={this.props.toolbox}
-                    widget={this.props.widget}
-                    open={this.state.showModal && this.state.modal === AgentsTable.Modals.VALIDATE_AGENT}
-                    deploymentId={this.props.data.deploymentId}
-                    nodeId={this.props.data.nodeId}
-                    nodeInstanceId={this.props.data.nodeInstanceId}
-                    agents={this.props.data.items}
+                    toolbox={toolbox}
+                    widget={widget}
+                    open={showModal && modal === AgentsTable.Modals.VALIDATE_AGENT}
+                    deploymentId={data.deploymentId}
+                    nodeId={data.nodeId}
+                    nodeInstanceId={data.nodeInstanceId}
+                    agents={data.items}
                     installMethods={_.without(configuration.installMethods, '')}
                     onHide={this.hideModal.bind(this)}
                 />
 
                 <InstallAgentsModal
-                    toolbox={this.props.toolbox}
-                    widget={this.props.widget}
-                    open={this.state.showModal && this.state.modal === AgentsTable.Modals.INSTALL_AGENT}
-                    deploymentId={this.props.data.deploymentId}
-                    nodeId={this.props.data.nodeId}
-                    nodeInstanceId={this.props.data.nodeInstanceId}
-                    agents={this.props.data.items}
+                    toolbox={toolbox}
+                    widget={widget}
+                    open={showModal && modal === AgentsTable.Modals.INSTALL_AGENT}
+                    deploymentId={data.deploymentId}
+                    nodeId={data.nodeId}
+                    nodeInstanceId={data.nodeInstanceId}
+                    agents={data.items}
                     installMethods={_.without(configuration.installMethods, '')}
                     onHide={this.hideModal.bind(this)}
                 />

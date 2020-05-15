@@ -43,18 +43,19 @@ export default class EditWidgetModal extends Component {
     }
 
     onApprove() {
+        const { configuration, onHideConfig, onWidgetEdited } = this.props;
         // Get the changed configurations
-        const config = _.clone(this.props.configuration);
+        const config = _.clone(configuration);
 
         _.forEach(this.state.fields, (value, key) => {
             config[key] = value;
         });
 
         if (config) {
-            this.props.onWidgetEdited(config);
+            onWidgetEdited(config);
         }
 
-        this.props.onHideConfig();
+        onHideConfig();
         return true;
     }
 
@@ -74,13 +75,14 @@ export default class EditWidgetModal extends Component {
     }
 
     render() {
+        const { configDef, onHideConfig, show } = this.props;
         return (
-            <Modal open={this.props.show} onClose={() => this.props.onHideConfig()} className="editWidgetModal">
+            <Modal open={show} onClose={() => onHideConfig()} className="editWidgetModal">
                 <Modal.Header>Configure Widget</Modal.Header>
 
                 <Modal.Content>
                     <Form>
-                        {this.props.configDef
+                        {configDef
                             .filter(config => !config.hidden)
                             .map(config => {
                                 return (
@@ -95,9 +97,7 @@ export default class EditWidgetModal extends Component {
                                 );
                             })}
 
-                        {_.isEmpty(this.props.configDef) && (
-                            <Message>No configuration available for this widget</Message>
-                        )}
+                        {_.isEmpty(configDef) && <Message>No configuration available for this widget</Message>}
                     </Form>
                 </Modal.Content>
 

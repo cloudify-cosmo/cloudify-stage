@@ -15,7 +15,8 @@ export default class MenuAction extends React.Component {
     };
 
     onDropdownChange(event, { name }) {
-        this.props.onSelectAction(name, this.props.tenant);
+        const { onSelectAction, tenant } = this.props;
+        onSelectAction(name, tenant);
     }
 
     render() {

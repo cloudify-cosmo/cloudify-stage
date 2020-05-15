@@ -26,33 +26,35 @@ export default class DeploymentActionButtons extends React.Component {
     }
 
     shouldComponentUpdate(nextProps, nextState) {
+        const { deployment, widget } = this.props;
         return (
-            !_.isEqual(this.props.widget, nextProps.widget) ||
+            !_.isEqual(widget, nextProps.widget) ||
             !_.isEqual(this.state, nextState) ||
-            !_.isEqual(this.props.deployment, nextProps.deployment)
+            !_.isEqual(deployment, nextProps.deployment)
         );
     }
 
     deleteDeployment() {
-        this.props.toolbox.loading(true);
+        const { deployment, toolbox } = this.props;
+        toolbox.loading(true);
         this.setState({ loading: true });
-        const actions = new Stage.Common.DeploymentActions(this.props.toolbox);
+        const actions = new Stage.Common.DeploymentActions(toolbox);
         actions
-            .doDelete(this.props.deployment)
+            .doDelete(deployment)
             .then(() => {
                 this.setState({ loading: false, error: null });
                 this.hideModal();
-                this.props.toolbox.loading(false);
-                this.props.toolbox.getEventBus().trigger('deployments:refresh');
-                if (_.isEqual(this.props.deployment.id, this.props.toolbox.getContext().getValue('deploymentId'))) {
-                    this.props.toolbox.getContext().setValue('deploymentId', null);
+                toolbox.loading(false);
+                toolbox.getEventBus().trigger('deployments:refresh');
+                if (_.isEqual(deployment.id, toolbox.getContext().getValue('deploymentId'))) {
+                    toolbox.getContext().setValue('deploymentId', null);
                 }
-                this.props.toolbox.goToParentPage();
+                toolbox.goToParentPage();
             })
             .catch(err => {
                 this.setState({ loading: false, error: err.message });
                 this.hideModal();
-                this.props.toolbox.loading(false);
+                toolbox.loading(false);
             });
     }
 
@@ -70,20 +72,23 @@ export default class DeploymentActionButtons extends React.Component {
     }
 
     isShowModal(type) {
-        return this.state.modalType === type && this.state.showModal;
+        const { modalType, showModal } = this.state;
+        return modalType === type && showModal;
     }
 
     render() {
+        const { error, loading, workflow } = this.state;
+        const { deployment, toolbox } = this.props;
         const { Button, Confirm, ErrorMessage } = Stage.Basic;
         const { ExecuteDeploymentModal, UpdateDeploymentModal, WorkflowsMenu } = Stage.Common;
-        const deploymentId = this.props.deployment.id;
+        const deploymentId = deployment.id;
 
         return (
             <div>
-                <ErrorMessage error={this.state.error} onDismiss={() => this.setState({ error: null })} autoHide />
+                <ErrorMessage error={error} onDismiss={() => this.setState({ error: null })} autoHide />
 
                 <WorkflowsMenu
-                    workflows={this.props.deployment.workflows}
+                    workflows={deployment.workflows}
                     dropdownDirection="right"
                     trigger={
                         <Button
@@ -91,7 +96,7 @@ export default class DeploymentActionButtons extends React.Component {
                             color="teal"
                             icon="cogs"
                             id="executeWorkflowButton"
-                            disabled={_.isEmpty(deploymentId) || this.state.loading}
+                            disabled={_.isEmpty(deploymentId) || loading}
                             content="Execute workflow"
                         />
                     }
@@ -102,7 +107,7 @@ export default class DeploymentActionButtons extends React.Component {
                     className="labeled icon"
                     color="teal"
                     icon="edit"
-                    disabled={_.isEmpty(deploymentId) || this.state.loading}
+                    disabled={_.isEmpty(deploymentId) || loading}
                     onClick={this.showModal.bind(this, DeploymentActionButtons.EDIT_ACTION)}
                     content="Update deployment"
                     id="updateDeploymentButton"
@@ -112,7 +117,7 @@ export default class DeploymentActionButtons extends React.Component {
                     className="labeled icon"
                     color="teal"
                     icon="trash"
-                    disabled={_.isEmpty(deploymentId) || this.state.loading}
+                    disabled={_.isEmpty(deploymentId) || loading}
                     onClick={this.showModal.bind(this, DeploymentActionButtons.DELETE_ACTION)}
                     content="Delete deployment"
                     id="deleteDeploymentButton"
@@ -128,17 +133,17 @@ export default class DeploymentActionButtons extends React.Component {
 
                 <ExecuteDeploymentModal
                     open={this.isShowModal(DeploymentActionButtons.WORKFLOW_ACTION)}
-                    deployment={this.props.deployment}
-                    workflow={this.state.workflow}
+                    deployment={deployment}
+                    workflow={workflow}
                     onHide={this.hideModal.bind(this)}
-                    toolbox={this.props.toolbox}
+                    toolbox={toolbox}
                 />
 
                 <UpdateDeploymentModal
                     open={this.isShowModal(DeploymentActionButtons.EDIT_ACTION)}
-                    deployment={this.props.deployment}
+                    deployment={deployment}
                     onHide={this.hideModal.bind(this)}
-                    toolbox={this.props.toolbox}
+                    toolbox={toolbox}
                 />
             </div>
         );

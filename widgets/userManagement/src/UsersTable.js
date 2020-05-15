@@ -28,10 +28,11 @@ export default class UsersTable extends React.Component {
     static EMPTY_USER = { username: '' };
 
     shouldComponentUpdate(nextProps, nextState) {
+        const { data, widget } = this.props;
         return (
-            !_.isEqual(this.props.widget, nextProps.widget) ||
+            !_.isEqual(widget, nextProps.widget) ||
             !_.isEqual(this.state, nextState) ||
-            !_.isEqual(this.props.data, nextProps.data)
+            !_.isEqual(data, nextProps.data)
         );
     }
 
@@ -52,14 +53,16 @@ export default class UsersTable extends React.Component {
     }
 
     selectUser(userName) {
-        const selectedUserName = this.props.toolbox.getContext().getValue('userName');
-        this.props.toolbox.getContext().setValue('userName', userName === selectedUserName ? null : userName);
+        const { toolbox } = this.props;
+        const selectedUserName = toolbox.getContext().getValue('userName');
+        toolbox.getContext().setValue('userName', userName === selectedUserName ? null : userName);
     }
 
     getAvailableTenants(value, user, showModal = true) {
-        this.props.toolbox.loading(true);
+        const { toolbox } = this.props;
+        toolbox.loading(true);
 
-        const actions = new Actions(this.props.toolbox);
+        const actions = new Actions(toolbox);
         actions
             .doGetTenants()
             .then(tenants => {
@@ -70,27 +73,28 @@ export default class UsersTable extends React.Component {
                     modalType: showModal ? value : '',
                     showModal
                 });
-                this.props.toolbox.loading(false);
+                toolbox.loading(false);
             })
             .catch(err => {
                 this.setState({ error: err.message });
-                this.props.toolbox.loading(false);
+                toolbox.loading(false);
             });
     }
 
     getAvailableGroups(value, user) {
-        this.props.toolbox.loading(true);
+        const { toolbox } = this.props;
+        toolbox.loading(true);
 
-        const actions = new Actions(this.props.toolbox);
+        const actions = new Actions(toolbox);
         actions
             .doGetGroups()
             .then(groups => {
                 this.setState({ error: null, user, groups, modalType: value, showModal: true });
-                this.props.toolbox.loading(false);
+                toolbox.loading(false);
             })
             .catch(err => {
                 this.setState({ error: err.message });
-                this.props.toolbox.loading(false);
+                toolbox.loading(false);
             });
     }
 
@@ -129,102 +133,117 @@ export default class UsersTable extends React.Component {
     }
 
     deleteUser() {
-        this.props.toolbox.loading(true);
+        const { toolbox } = this.props;
+        toolbox.loading(true);
 
-        const actions = new Actions(this.props.toolbox);
+        const actions = new Actions(toolbox);
         actions
             .doDelete(this.state.user.username)
             .then(() => {
                 this.hideModal();
                 this.setState({ error: null });
-                this.props.toolbox.loading(false);
-                this.props.toolbox.refresh();
+                toolbox.loading(false);
+                toolbox.refresh();
             })
             .catch(err => {
                 this.hideModal();
                 this.setState({ error: err.message });
-                this.props.toolbox.loading(false);
+                toolbox.loading(false);
             });
     }
 
     setRole(user, isAdmin) {
-        this.props.toolbox.loading(true);
+        const { toolbox } = this.props;
+        toolbox.loading(true);
         this.setState({ settingUserRoleLoading: user.username });
 
-        const actions = new Actions(this.props.toolbox);
+        const actions = new Actions(toolbox);
         actions
             .doSetRole(user.username, Stage.Common.RolesUtil.getSystemRole(isAdmin))
             .then(() => {
                 this.setState({ error: null, settingUserRoleLoading: false });
-                this.props.toolbox.loading(false);
+                toolbox.loading(false);
                 if (this.isCurrentUser(user) && !isAdmin) {
-                    this.props.toolbox.getEventBus().trigger('menu.users:logout');
+                    toolbox.getEventBus().trigger('menu.users:logout');
                 } else {
-                    this.props.toolbox.refresh();
+                    toolbox.refresh();
                 }
             })
             .catch(err => {
                 this.setState({ error: err.message, settingUserRoleLoading: false });
-                this.props.toolbox.loading(false);
+                toolbox.loading(false);
             });
     }
 
     activateUser(user) {
-        this.props.toolbox.loading(true);
+        const { toolbox } = this.props;
+        toolbox.loading(true);
         this.setState({ activateLoading: user.username });
 
-        const actions = new Actions(this.props.toolbox);
+        const actions = new Actions(toolbox);
         actions
             .doActivate(user.username)
             .then(() => {
                 this.setState({ error: null, activateLoading: false });
-                this.props.toolbox.loading(false);
-                this.props.toolbox.refresh();
+                toolbox.loading(false);
+                toolbox.refresh();
             })
             .catch(err => {
                 this.setState({ error: err.message, activateLoading: false });
-                this.props.toolbox.loading(false);
+                toolbox.loading(false);
             });
     }
 
     deactivateUser(user) {
-        this.props.toolbox.loading(true);
+        const { toolbox } = this.props;
+        toolbox.loading(true);
         this.setState({ activateLoading: user.username });
 
-        const actions = new Actions(this.props.toolbox);
+        const actions = new Actions(toolbox);
         actions
             .doDeactivate(user.username)
             .then(() => {
                 this.setState({ error: null, activateLoading: false });
-                this.props.toolbox.loading(false);
+                toolbox.loading(false);
                 if (this.isCurrentUser(user)) {
-                    this.props.toolbox.getEventBus().trigger('menu.users:logout');
+                    toolbox.getEventBus().trigger('menu.users:logout');
                 } else {
-                    this.props.toolbox.refresh();
-                    this.props.toolbox.getEventBus().trigger('userGroups:refresh');
+                    toolbox.refresh();
+                    toolbox.getEventBus().trigger('userGroups:refresh');
                 }
             })
             .catch(err => {
                 this.setState({ error: err.message, activateLoading: false });
-                this.props.toolbox.loading(false);
+                toolbox.loading(false);
             });
     }
 
     render() {
+        const {
+            activateLoading,
+            error,
+            groups,
+            modalType,
+            settingUserRoleLoading,
+            showModal,
+            tenants,
+            user
+        } = this.state;
+        const { data, roles, toolbox, widget } = this.props;
         const NO_DATA_MESSAGE = 'There are no Users available in manager. Click "Add" to add Users.';
         const { Checkbox, Confirm, DataTable, ErrorMessage, Label, Loader, Popup } = Stage.Basic;
         const tableName = 'usersTable';
 
         return (
             <div>
-                <ErrorMessage error={this.state.error} onDismiss={() => this.setState({ error: null })} autoHide />
+                <ErrorMessage error={error} onDismiss={() => this.setState({ error: null })} autoHide />
 
                 <DataTable
                     fetchData={this.fetchData.bind(this)}
-                    totalSize={this.props.data.total}
-                    pageSize={this.props.widget.configuration.pageSize}
-                    sortColumn={this.props.widget.configuration.sortColumn}
-                    sortAscending={this.props.widget.configuration.sortAscending}
+                    totalSize={data.total}
+                    pageSize={widget.configuration.pageSize}
+                    sortColumn={widget.configuration.sortColumn}
+                    sortAscending={widget.configuration.sortAscending}
                     searchable
                     className={tableName}
                     noDataMessage={NO_DATA_MESSAGE}
@@ -236,7 +255,7 @@ export default class UsersTable extends React.Component {
                     <DataTable.Column label="# Groups" width="10%" />
                     <DataTable.Column label="# Tenants" width="10%" />
                     <DataTable.Column label="" width="5%" />
-                    {this.props.data.items.map(item => {
+                    {data.items.map(item => {
                         const isAdminCheckbox = (item, disabled) => (
                             <Checkbox
                                 checked={item.isAdmin}
@@ -263,7 +282,7 @@ export default class UsersTable extends React.Component {
                                     <DataTable.Data>{item.username}</DataTable.Data>
                                     <DataTable.Data>{item.last_login_at}</DataTable.Data>
                                     <DataTable.Data className="center aligned">
-                                        {this.state.settingUserRoleLoading === item.username ? (
+                                        {settingUserRoleLoading === item.username ? (
                                             <Loader active inline size="mini" />
                                         ) : this.isUserInAdminGroup(item) &&
                                           item.username !== Stage.Common.Consts.adminUsername ? (
@@ -279,7 +298,7 @@ export default class UsersTable extends React.Component {
                                         )}
                                     </DataTable.Data>
                                     <DataTable.Data className="center aligned">
-                                        {this.state.activateLoading === item.username ? (
+                                        {activateLoading === item.username ? (
                                             <Loader active inline size="mini" />
                                         ) : (
                                             <Checkbox
@@ -310,46 +329,42 @@ export default class UsersTable extends React.Component {
                                     </DataTable.Data>
                                 </DataTable.Row>
                                 <DataTable.DataExpandable key={item.username}>
-                                    <UserDetails
-                                        data={item}
-                                        toolbox={this.props.toolbox}
-                                        onError={this.handleError.bind(this)}
-                                    />
+                                    <UserDetails data={item} toolbox={toolbox} onError={this.handleError.bind(this)} />
                                 </DataTable.DataExpandable>
                             </DataTable.RowExpandable>
                         );
                     })}
                     <DataTable.Action>
-                        <CreateModal roles={this.props.roles} toolbox={this.props.toolbox} />
+                        <CreateModal roles={roles} toolbox={toolbox} />
                     </DataTable.Action>
                 </DataTable>
 
                 <PasswordModal
-                    open={this.state.modalType === MenuAction.SET_PASSWORD_ACTION && this.state.showModal}
-                    user={this.state.user}
+                    open={modalType === MenuAction.SET_PASSWORD_ACTION && showModal}
+                    user={user}
                     onHide={this.hideModal.bind(this)}
-                    toolbox={this.props.toolbox}
+                    toolbox={toolbox}
                 />
 
                 <TenantModal
-                    open={this.state.modalType === MenuAction.EDIT_TENANTS_ACTION && this.state.showModal}
-                    user={this.state.user}
-                    tenants={this.state.tenants}
+                    open={modalType === MenuAction.EDIT_TENANTS_ACTION && showModal}
+                    user={user}
+                    tenants={tenants}
                     onHide={this.hideModal.bind(this)}
-                    toolbox={this.props.toolbox}
+                    toolbox={toolbox}
                 />
 
                 <GroupModal
-                    open={this.state.modalType === MenuAction.EDIT_GROUPS_ACTION && this.state.showModal}
-                    user={this.state.user}
-                    groups={this.state.groups}
+                    open={modalType === MenuAction.EDIT_GROUPS_ACTION && showModal}
+                    user={user}
+                    groups={groups}
                     onHide={this.hideModal.bind(this)}
-                    toolbox={this.props.toolbox}
+                    toolbox={toolbox}
                 />
 
                 <Confirm
-                    content={`Are you sure you want to remove user ${this.state.user.username}?`}
-                    open={this.state.modalType === MenuAction.DELETE_ACTION && this.state.showModal}
+                    content={`Are you sure you want to remove user ${user.username}?`}
+                    open={modalType === MenuAction.DELETE_ACTION && showModal}
                     onConfirm={this.deleteUser.bind(this)}
                     onCancel={this.hideModal.bind(this)}
                 />
@@ -359,15 +374,15 @@ export default class UsersTable extends React.Component {
                         'Are you sure you want to remove your administrator privileges? ' +
                         'You will be logged out of the system so the changes take effect.'
                     }
-                    open={this.state.modalType === MenuAction.SET_DEFAULT_USER_ROLE_ACTION && this.state.showModal}
-                    onConfirm={this.setRole.bind(this, this.state.user, false)}
+                    open={modalType === MenuAction.SET_DEFAULT_USER_ROLE_ACTION && showModal}
+                    onConfirm={this.setRole.bind(this, user, false)}
                     onCancel={this.hideModal.bind(this)}
                 />
 
                 <Confirm
                     content="Are you sure you want to deactivate current user and log out?"
-                    open={this.state.modalType === MenuAction.DEACTIVATE_ACTION && this.state.showModal}
-                    onConfirm={this.deactivateUser.bind(this, this.state.user)}
+                    open={modalType === MenuAction.DEACTIVATE_ACTION && showModal}
+                    onConfirm={this.deactivateUser.bind(this, user)}
                     onCancel={this.hideModal.bind(this)}
                 />
             </div>

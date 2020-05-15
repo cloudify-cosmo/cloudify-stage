@@ -24,11 +24,12 @@ class InputsHeader extends React.Component {
     }
 
     render() {
+        const { compact, dividing, header } = this.props;
         const { Form, Header, List, PopupHelp } = Stage.Basic;
 
         const HeaderWithDescription = () => (
             <Header size="tiny">
-                {this.props.header}
+                {header}
                 <Header.Subheader>
                     See values typing details:&nbsp;
                     <PopupHelp
@@ -71,8 +72,8 @@ class InputsHeader extends React.Component {
             </Header>
         );
 
-        return this.props.dividing ? (
-            <Form.Divider style={this.props.compact ? { marginTop: 0 } : {}}>
+        return dividing ? (
+            <Form.Divider style={compact ? { marginTop: 0 } : {}}>
                 <HeaderWithDescription />
             </Form.Divider>
         ) : (
