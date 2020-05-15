@@ -97,7 +97,7 @@ export default class BlueprintActionButtons extends React.Component {
                         className="labeled icon"
                         color="teal"
                         icon="edit"
-                        disabled={_.isEmpty(blueprintId) || this.state.loading}
+                        disabled={_.isEmpty(blueprintId) || !blueprintYamlFileName || this.state.loading}
                         onClick={() =>
                             window.open(
                                 `/composer/import/${toolbox

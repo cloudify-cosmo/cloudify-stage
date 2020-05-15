@@ -19,6 +19,7 @@ import './commands';
 // use `Cypress` instead of `cy` so this persists across all tests
 Cypress.on('window:before:load', window => {
     delete window.fetch;
+    cy.stub(window, 'open');
 });
 
 Cypress.Cookies.defaults({
