@@ -6,23 +6,23 @@ import StageUtils from './stageUtils';
 
 export default class WidgetDataFetcher {
     constructor(widget, toolbox, paramsHandler) {
-        this._widget = widget;
-        this._toolbox = toolbox;
-        this._paramsHandler = paramsHandler;
+        this.widget = widget;
+        this.toolbox = toolbox;
+        this.paramsHandler = paramsHandler;
     }
 
     fetchByUrls() {
-        const urls = _.isString(this._widget.definition.fetchUrl)
-            ? [this._widget.definition.fetchUrl]
-            : _.valuesIn(this._widget.definition.fetchUrl);
+        const urls = _.isString(this.widget.definition.fetchUrl)
+            ? [this.widget.definition.fetchUrl]
+            : _.valuesIn(this.widget.definition.fetchUrl);
 
         const fetches = _.map(urls, url => this.fetchByUrl(url));
         return Promise.all(fetches).then(data => {
             // Parse the data per url key name
             let output = data;
-            if (!_.isString(this._widget.definition.fetchUrl)) {
+            if (!_.isString(this.widget.definition.fetchUrl)) {
                 output = {};
-                const keys = _.keysIn(this._widget.definition.fetchUrl);
+                const keys = _.keysIn(this.widget.definition.fetchUrl);
                 for (let i = 0; i < data.length; i++) {
                     output[keys[i]] = data[i];
                 }
@@ -41,7 +41,7 @@ export default class WidgetDataFetcher {
         if (!_.isNull(paramsMatch)) {
             const [paramsString, allowedParams] = paramsMatch;
 
-            params = this._paramsHandler.buildParamsToSend(allowedParams);
+            params = this.paramsHandler.buildParamsToSend(allowedParams);
 
             baseUrl = _.replace(baseUrl, paramsString, '');
         }
@@ -51,30 +51,30 @@ export default class WidgetDataFetcher {
 
     fetchByUrl(url) {
         const fetchUrl = _.replace(url, this.getUrlRegExString('config'), (match, configName) => {
-            return this._widget.configuration ? this._widget.configuration[configName] : 'NA';
+            return this.widget.configuration ? this.widget.configuration[configName] : 'NA';
         });
 
         if (url.indexOf('[manager]') >= 0) {
             // User manager accessor if needs to go to the manager
             var data = this.handleUrl('[manager]', url);
-            return this._toolbox.getManager().doGet(data.url, data.params);
+            return this.toolbox.getManager().doGet(data.url, data.params);
         }
         if (url.indexOf('[backend]') >= 0) {
             // User backend accessor if needs to go to the backend
             var data = this.handleUrl('[backend]', url);
-            return this._toolbox.getInternal().doGet(data.url, data.params);
+            return this.toolbox.getInternal().doGet(data.url, data.params);
         }
         // User external if the url is not manager based
-        return this._toolbox.getExternal().doGet(fetchUrl);
+        return this.toolbox.getExternal().doGet(fetchUrl);
     }
 
     fetchByFunc() {
-        if (_.isFunction(this._widget.definition.fetchData)) {
+        if (_.isFunction(this.widget.definition.fetchData)) {
             try {
-                return this._widget.definition.fetchData(
-                    this._widget,
-                    this._toolbox,
-                    this._paramsHandler.buildParamsToSend()
+                return this.widget.definition.fetchData(
+                    this.widget,
+                    this.toolbox,
+                    this.paramsHandler.buildParamsToSend()
                 );
             } catch (e) {
                 console.error('Error fetching widget data', e);

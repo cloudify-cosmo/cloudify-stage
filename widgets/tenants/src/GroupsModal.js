@@ -93,7 +93,7 @@ export default class GroupsModal extends React.Component {
         _.forEach(field.value, group => {
             newUserGroups[group] =
                 this.state.userGroups[group] ||
-                RolesUtil.getDefaultRoleName(this.props.toolbox.getManager()._data.roles);
+                RolesUtil.getDefaultRoleName(this.props.toolbox.getManagerState().roles);
         });
 
         this.setState({ userGroups: newUserGroups });

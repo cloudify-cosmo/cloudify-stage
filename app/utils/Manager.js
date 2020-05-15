@@ -1,6 +1,4 @@
-/**
- * Created by kinneretzin on 22/11/2016.
- */
+/* eslint no-underscore-dangle: ["error", { "allow": ["_size", "_offset"] }] */
 
 import Internal from './Internal';
 import StageUtils from './stageUtils';

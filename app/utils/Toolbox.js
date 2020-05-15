@@ -29,9 +29,9 @@ class Toolbox {
     initFromStore() {
         const state = this.store.getState();
         this.templates = state.templates || { templatesDef: {} };
-        this._Manager = new Manager(state.manager || {});
-        this._Internal = new Internal(state.manager || {});
-        this._Context = new Context(this.store);
+        this.manager = new Manager(state.manager || {});
+        this.internal = new Internal(state.manager || {});
+        this.context = new Context(this.store);
         this.widgetDefinitions = state.widgetDefinitions || [];
     }
 
@@ -64,11 +64,15 @@ class Toolbox {
     }
 
     getManager() {
-        return this._Manager;
+        return this.manager;
+    }
+
+    getManagerState() {
+        return _.get(this.store.getState(), 'manager', {});
     }
 
     getInternal() {
-        return this._Internal;
+        return this.internal;
     }
 
     getWidgetBackend() {
@@ -87,7 +91,7 @@ class Toolbox {
     }
 
     getContext() {
-        return this._Context;
+        return this.context;
     }
 
     refresh() {}

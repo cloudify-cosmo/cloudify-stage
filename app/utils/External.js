@@ -22,7 +22,7 @@ Text form of class hierarchy diagram to be used at: https://yuml.me/diagram/nofu
 
 export default class External {
     constructor(data) {
-        this._data = data;
+        this.data = data;
     }
 
     doGet(url, params, parseResponse, headers) {
@@ -268,13 +268,13 @@ export default class External {
     }
 
     buildHeaders() {
-        if (!this._data) {
+        if (!this.data) {
             return {};
         }
 
         const headers = {};
-        if (this._data.basicAuth) {
-            headers.Authorization = `Basic ${this._data.basicAuth}`;
+        if (this.data.basicAuth) {
+            headers.Authorization = `Basic ${this.data.basicAuth}`;
         }
 
         return headers;

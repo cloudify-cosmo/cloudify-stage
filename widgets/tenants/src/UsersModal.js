@@ -100,7 +100,7 @@ export default class UsersModal extends React.Component {
         const newUsers = {};
         _.forEach(field.value, user => {
             newUsers[user] =
-                this.state.users[user] || RolesUtil.getDefaultRoleName(this.props.toolbox.getManager()._data.roles);
+                this.state.users[user] || RolesUtil.getDefaultRoleName(this.props.toolbox.getManagerState().roles);
         });
         this.setState({ users: newUsers });
     }

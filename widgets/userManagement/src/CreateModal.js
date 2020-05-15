@@ -115,7 +115,7 @@ export default class CreateModal extends React.Component {
         _.forEach(field.value, tenant => {
             newTenants[tenant] =
                 this.state.tenants[tenant] ||
-                Stage.Common.RolesUtil.getDefaultRoleName(this.props.toolbox.getManager()._data.roles);
+                Stage.Common.RolesUtil.getDefaultRoleName(this.props.toolbox.getManagerState().roles);
         });
         this.setState({ tenants: newTenants });
     }

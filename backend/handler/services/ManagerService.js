@@ -1,6 +1,4 @@
-/**
- * Created by jakubniezgoda on 06/11/2017.
- */
+/* eslint no-underscore-dangle: ["error", { "allow": ["_size", "_offset"] }] */
 
 const _ = require('lodash');
 const param = require('jquery-param');

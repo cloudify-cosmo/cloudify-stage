@@ -13,11 +13,11 @@ export default class Internal extends External {
     }
 
     buildHeaders() {
-        if (!this._data) {
+        if (!this.data) {
             return {};
         }
 
-        const headers = { tenant: _.get(this._data, 'tenants.selected', Consts.DEFAULT_TENANT) };
+        const headers = { tenant: _.get(this.data, 'tenants.selected', Consts.DEFAULT_TENANT) };
 
         // read token from cookies
         const token = Cookies.get(Consts.TOKEN_COOKIE_NAME);

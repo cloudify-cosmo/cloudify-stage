@@ -76,7 +76,7 @@ export default class TenantsModal extends React.Component {
         const newTenants = {};
         _.forEach(field.value, tenant => {
             newTenants[tenant] =
-                this.state.tenants[tenant] || RolesUtil.getDefaultRoleName(this.props.toolbox.getManager()._data.roles);
+                this.state.tenants[tenant] || RolesUtil.getDefaultRoleName(this.props.toolbox.getManagerState().roles);
         });
         this.setState({ tenants: newTenants });
     }

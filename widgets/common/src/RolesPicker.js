@@ -21,7 +21,7 @@ export default class RolesPicker extends React.Component {
     render() {
         const { Form } = Stage.Basic;
         const roleOptions = _.reverse(
-            _.map(_.filter(this.props.toolbox.getManager()._data.roles, { type: 'tenant_role' }), role => {
+            _.map(_.filter(this.props.toolbox.getManagerState().roles, { type: 'tenant_role' }), role => {
                 return { text: role.name, value: role.name };
             })
         );
