@@ -27,7 +27,7 @@ router.post(
     passport.authenticate('token', { session: false }),
     upload.single('file'),
     checkIfFileUploaded,
-    function(req, res, next) {
+    (req, res, next) => {
         logger.debug(`Text file uploaded, name: ${req.file.originalname}, size: ${req.file.size}`);
         const data = req.file.buffer.toString();
         res.contentType('application/text').send(data);
@@ -39,7 +39,7 @@ router.post(
     passport.authenticate('token', { session: false }),
     upload.single('file'),
     checkIfFileUploaded,
-    function(req, res, next) {
+    (req, res, next) => {
         logger.debug(`YAML file uploaded, name: ${req.file.originalname}, size: ${req.file.size}`);
         const yamlString = req.file.buffer.toString();
         try {

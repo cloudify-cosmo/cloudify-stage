@@ -74,7 +74,7 @@ export default class WidgetParamsHandler {
 
     _buildFilterParams() {
         const params = {};
-        _.forIn(this.fetchParams.filterParams, function(value, key) {
+        _.forIn(this.fetchParams.filterParams, (value, key) => {
             if (_.isBoolean(value) || !_.isEmpty(value)) {
                 params[key] = value;
             }

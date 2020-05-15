@@ -7,19 +7,13 @@ module.exports = {
     up(queryInterface, Sequelize) {
         return queryInterface
             .removeColumn('UserApps', ROLE_COLUMN_NAME)
-            .then(function() {
-                return queryInterface.sequelize.query(`DELETE FROM "UserApps" WHERE id NOT IN 
-                                                   (SELECT DISTINCT ON ("managerIp",username,mode,tenant) id FROM "UserApps");`);
-            })
-            .then(function() {
-                return queryInterface.sequelize.query('DROP TYPE "enum_UserApps_role";');
-            })
-            .then(function() {
-                return queryInterface.removeIndex('UserApps', INDEX_WITH_ROLE, INDEX_OPTIONS);
-            })
-            .then(function() {
-                return queryInterface.addIndex('UserApps', INDEX_WITHOUT_ROLE, INDEX_OPTIONS);
-            });
+            .then(() =>
+                queryInterface.sequelize.query(`DELETE FROM "UserApps" WHERE id NOT IN 
+                                           (SELECT DISTINCT ON ("managerIp",username,mode,tenant) id FROM "UserApps");`)
+            )
+            .then(() => queryInterface.sequelize.query('DROP TYPE "enum_UserApps_role";'))
+            .then(() => queryInterface.removeIndex('UserApps', INDEX_WITH_ROLE, INDEX_OPTIONS))
+            .then(() => queryInterface.addIndex('UserApps', INDEX_WITHOUT_ROLE, INDEX_OPTIONS));
     },
 
     down(queryInterface, Sequelize) {
@@ -30,11 +24,7 @@ module.exports = {
                 notNull: false,
                 defaultValue: 'user'
             })
-            .then(function() {
-                return queryInterface.removeIndex('UserApps', INDEX_WITHOUT_ROLE, INDEX_OPTIONS);
-            })
-            .then(function() {
-                return queryInterface.addIndex('UserApps', INDEX_WITH_ROLE, INDEX_OPTIONS);
-            });
+            .then(() => queryInterface.removeIndex('UserApps', INDEX_WITHOUT_ROLE, INDEX_OPTIONS))
+            .then(() => queryInterface.addIndex('UserApps', INDEX_WITH_ROLE, INDEX_OPTIONS));
     }
 };

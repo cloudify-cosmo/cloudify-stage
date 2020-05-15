@@ -129,9 +129,9 @@ function cmdClear() {
     return sequelize
         .getQueryInterface()
         .showAllTables()
-        .then(function(tableNames) {
+        .then(tableNames => {
             const promises = [];
-            _.each(tableNames, function(tableName) {
+            _.each(tableNames, tableName => {
                 if (tableName !== 'SequelizeMeta') {
                     logger.info(`Clearing table ${tableName}`);
                     promises.push(sequelize.query(`truncate "${tableName}"`));

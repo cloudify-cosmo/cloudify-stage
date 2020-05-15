@@ -90,7 +90,7 @@ router.post(
     passport.authenticate('token', { session: false }),
     upload.fields(_.map(['wagon_file', 'yaml_file', 'icon_file'], name => ({ name, maxCount: 1 }))),
     checkParams,
-    function(req, res, next) {
+    (req, res, next) => {
         const promises = [];
         let wagonFilename;
 

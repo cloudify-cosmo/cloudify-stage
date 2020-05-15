@@ -3,7 +3,7 @@
  */
 
 module.exports = {
-    'Move to edit mode': function(client) {
+    'Move to edit mode': client => {
         const page = client.page.page();
 
         client.login().moveToEditMode();
@@ -20,7 +20,7 @@ module.exports = {
         client.end();
     },
 
-    'Add page': function(client) {
+    'Add page': client => {
         const page = client.page.page();
 
         client
@@ -36,7 +36,7 @@ module.exports = {
         client.end();
     },
 
-    'Add Widget': function(client) {
+    'Add Widget': client => {
         client
             .login()
             .moveToEditMode()

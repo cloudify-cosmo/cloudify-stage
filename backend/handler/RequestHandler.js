@@ -18,10 +18,10 @@ module.exports = (function() {
     function getResponseJson(res) {
         return new Promise((resolve, reject) => {
             let body = '';
-            res.on('data', function(chunk) {
+            res.on('data', chunk => {
                 body += chunk;
             });
-            res.on('end', function() {
+            res.on('end', () => {
                 try {
                     const jsonResponse = JSON.parse(body);
                     resolve(jsonResponse);

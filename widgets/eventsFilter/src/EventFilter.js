@@ -107,7 +107,7 @@ export default class EventFilter extends React.Component {
 
     _isDirty() {
         let res = false;
-        _.forEach(this.dirty, function(value, key) {
+        _.forEach(this.dirty, (value, key) => {
             res = res || value;
         });
 

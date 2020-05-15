@@ -29,20 +29,20 @@ function _pipeRequest(req, res, next, url, isMiddleware) {
         req.pipe(
             request
                 .get({ url, headers: authorization, qs: req.query, gzip: true, encoding: 'utf8' })
-                .on('data', function(chunk) {
+                .on('data', chunk => {
                     data += chunk;
                 })
-                .on('end', function() {
+                .on('end', () => {
                     res.data = data;
                     next();
                 })
-                .on('error', function(err) {
+                .on('error', err => {
                     res.status(500).send({ message: err.message });
                 })
         );
     } else {
         req.pipe(
-            request.get({ url, headers: authorization, qs: req.query }).on('error', function(err) {
+            request.get({ url, headers: authorization, qs: req.query }).on('error', err => {
                 res.status(500).send({ message: err.message });
             })
         ).pipe(res);
@@ -98,10 +98,10 @@ function addIsAuthToResponseBody(req, res, next) {
 router.get(
     '/search/repositories',
     passport.authenticate('token', { session: false }),
-    function(req, res, next) {
+    (req, res, next) => {
         _setAuthorizationHeader(req, res, next, true);
     },
-    function(req, res, next) {
+    (req, res, next) => {
         _pipeRequest(req, res, next, 'https://api.github.com/search/repositories', true);
     },
     addIsAuthToResponseBody
@@ -110,10 +110,10 @@ router.get(
 router.get(
     '/repos/:user/:repo/git/trees/master',
     passport.authenticate('token', { session: false }),
-    function(req, res, next) {
+    (req, res, next) => {
         _setAuthorizationHeader(req, res, next, false);
     },
-    function(req, res, next) {
+    (req, res, next) => {
         _pipeRequest(
             req,
             res,
@@ -125,7 +125,7 @@ router.get(
 
 // This path returns image resource so there is no point to secure that
 // (if yes all credentials should be passed in the query string)
-router.get('/content/:user/:repo/master/:file', function(req, res, next) {
+router.get('/content/:user/:repo/master/:file', (req, res, next) => {
     _pipeRequest(
         req,
         res,

@@ -80,7 +80,7 @@ export default class extends React.Component {
                                     name="value"
                                 />
 
-                                {Object.keys(instance.runtime_properties).map(function(key) {
+                                {Object.keys(instance.runtime_properties).map(key => {
                                     const value = instance.runtime_properties[key];
                                     return (
                                         <DataTable.Row key={key}>

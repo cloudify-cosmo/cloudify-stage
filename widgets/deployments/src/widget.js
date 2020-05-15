@@ -91,7 +91,7 @@ Stage.defineWidget({
             })
         );
 
-        return Promise.all([deploymentData, nodeInstanceData, executionsData]).then(function(data) {
+        return Promise.all([deploymentData, nodeInstanceData, executionsData]).then(data => {
             const deploymentData = data[0];
             const nodeInstanceData = _.reduce(
                 data[1].items,

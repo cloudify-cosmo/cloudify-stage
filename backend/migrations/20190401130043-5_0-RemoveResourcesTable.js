@@ -4,9 +4,7 @@ module.exports = {
     up: (queryInterface, Sequelize, logger) => {
         return queryInterface
             .dropTable('Resources', { cascade: true, logging: logger.info, benchmark: true })
-            .then(function() {
-                return queryInterface.removeIndex('Resources', ['resourceId', 'type'], { indicesType: 'UNIQUE' });
-            });
+            .then(() => queryInterface.removeIndex('Resources', ['resourceId', 'type'], { indicesType: 'UNIQUE' }));
     },
 
     down: (queryInterface, Sequelize) => {
@@ -22,8 +20,6 @@ module.exports = {
                 createdAt: { type: Sequelize.DATE, allowNull: false },
                 updatedAt: { type: Sequelize.DATE, allowNull: false }
             })
-            .then(function() {
-                return queryInterface.addIndex('Resources', ['resourceId', 'type'], { indicesType: 'UNIQUE' });
-            });
+            .then(() => queryInterface.addIndex('Resources', ['resourceId', 'type'], { indicesType: 'UNIQUE' }));
     }
 };

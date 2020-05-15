@@ -67,12 +67,12 @@ export default class External {
         return new Promise((resolve, reject) => {
             // Call upload method
             const xhr = new XMLHttpRequest();
-            (xhr.upload || xhr).addEventListener('progress', function(e) {
+            (xhr.upload || xhr).addEventListener('progress', e => {
                 const done = e.position || e.loaded;
                 const total = e.totalSize || e.total;
                 logger.debug(`xhr progress: ${Math.round((done / total) * 100)}%`);
             });
-            xhr.addEventListener('error', function(e) {
+            xhr.addEventListener('error', e => {
                 logger.error('xhr upload error', e, xhr.responseText);
 
                 try {
@@ -87,7 +87,7 @@ export default class External {
                     reject({ message: xhr.responseText || err.message });
                 }
             });
-            xhr.addEventListener('load', function(e) {
+            xhr.addEventListener('load', e => {
                 logger.debug('xhr upload complete', e, xhr.responseText);
 
                 const isSuccess = xhr.status >= 200 && xhr.status < 300;
@@ -110,7 +110,7 @@ export default class External {
             xhr.open(method || 'put', actualUrl);
 
             const headers = this._buildHeaders();
-            _.forIn(headers, function(value, key) {
+            _.forIn(headers, (value, key) => {
                 xhr.setRequestHeader(key, value);
             });
 
@@ -158,7 +158,7 @@ export default class External {
                         xhr.send(formData);
                     }
                 } else {
-                    _.forEach(files, function(value, key) {
+                    _.forEach(files, (value, key) => {
                         formData.append(key, value);
                     });
                     xhr.send(formData);

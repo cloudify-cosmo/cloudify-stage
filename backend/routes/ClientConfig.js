@@ -18,24 +18,24 @@ router.use(bodyParser.json());
 /**
  * End point to get a request from the server. Assuming it has a url parameter 'su' - server url
  */
-router.get('/', function(req, res, next) {
+router.get('/', (req, res, next) => {
     db.ClientConfig.findOrCreate({
         where: { managerIp: config.manager.ip },
         defaults: { config: { canUserEdit: true } }
     })
-        .then(function(clientConfig) {
+        .then(clientConfig => {
             res.send(clientConfig[0]);
         })
         .catch(next);
 });
 
-router.post('/', function(req, res, next) {
+router.post('/', (req, res, next) => {
     db.ClientConfig.findOrCreate({
         where: { managerIp: config.manager.ip },
         defaults: { config: { canUserEdit: true } }
     })
-        .spread(function(clientConfig, created) {
-            clientConfig.update({ config: req.body }, { fields: ['config'] }).then(function(c) {
+        .spread((clientConfig, created) => {
+            clientConfig.update({ config: req.body }, { fields: ['config'] }).then(c => {
                 res.send(c);
             });
         })

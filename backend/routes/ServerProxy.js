@@ -55,7 +55,7 @@ async function proxyRequest(req, res, next) {
     ManagerHandler.updateOptions(options, req.method, timeout);
 
     req.pipe(
-        request(req.su, options).on('error', function(err) {
+        request(req.su, options).on('error', err => {
             _errorHandler(req.su, res, err);
         })
     ).pipe(res);

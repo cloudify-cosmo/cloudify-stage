@@ -46,7 +46,7 @@ export default class EditWidgetModal extends Component {
         // Get the changed configurations
         const config = _.clone(this.props.configuration);
 
-        _.forEach(this.state.fields, function(value, key) {
+        _.forEach(this.state.fields, (value, key) => {
             config[key] = value;
         });
 

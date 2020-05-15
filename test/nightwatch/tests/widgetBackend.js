@@ -29,7 +29,7 @@ module.exports = {
             });
     },
 
-    'Install broken widget': function(client) {
+    'Install broken widget': client => {
         const page = client.page.page();
         const backend = client.page.widgetBackend();
 
@@ -51,7 +51,7 @@ module.exports = {
             .assert.containsText('@errorMessage', backend.section.installWidget.props.notAllowedModuleError);
     },
 
-    'Install broken service': function(client) {
+    'Install broken service': client => {
         const page = client.page.page();
         const backend = client.page.widgetBackend();
 
@@ -88,7 +88,7 @@ module.exports = {
             });
     },
 
-    'Install working service and check manager call': function(client) {
+    'Install working service and check manager call': client => {
         const page = client.page.page();
         const backend = client.page.widgetBackend();
 
@@ -120,7 +120,7 @@ module.exports = {
             .assert.elementPresent('@jsonResult');
     },
 
-    'Check request call': function(client) {
+    'Check request call': client => {
         const page = client.page.page();
         const backend = client.page.widgetBackend();
 

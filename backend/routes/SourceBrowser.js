@@ -10,7 +10,7 @@ const router = express.Router();
 
 router.use(passport.authenticate('token', { session: false }));
 
-router.get('/browse/file', function(req, res, next) {
+router.get('/browse/file', (req, res, next) => {
     const { path } = req.query;
 
     if (!path) {
@@ -22,19 +22,19 @@ router.get('/browse/file', function(req, res, next) {
         .catch(next);
 });
 
-router.get('/browse/:blueprintId/archive', function(req, res, next) {
+router.get('/browse/:blueprintId/archive', (req, res, next) => {
     SourceHandler.browseArchiveTree(req)
         .then(data => res.send(data))
         .catch(next);
 });
 
-router.put('/list/yaml', function(req, res, next) {
+router.put('/list/yaml', (req, res, next) => {
     SourceHandler.listYamlFiles(req)
         .then(data => res.send(data))
         .catch(next);
 });
 
-router.put('/list/resources', function(req, res, next) {
+router.put('/list/resources', (req, res, next) => {
     SourceHandler.getBlueprintResources(req)
         .then(data => res.send(data))
         .catch(next);

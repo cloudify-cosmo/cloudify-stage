@@ -54,13 +54,7 @@ function waitForHopscotchElementsToBeClosed() {
 }
 
 function hopscotchRegisterHelpers(dispatch) {
-    hopscotch.registerHelper('redirectTo', function(
-        url,
-        pageName,
-        selector,
-        noSelectorErrorTitle,
-        noSelectorErrorMessage
-    ) {
+    hopscotch.registerHelper('redirectTo', (url, pageName, selector, noSelectorErrorTitle, noSelectorErrorMessage) => {
         const minVisibilityTime = 500; // ms
         const maxWaitingTime = 5000; // ms
         const hopscotchButtonSelector = 'button.hopscotch-cta';

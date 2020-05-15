@@ -35,7 +35,7 @@ module.exports = (function() {
         const upload = multer({ storage }).single(multipartId);
 
         return new Promise((resolve, reject) => {
-            upload(req, null, function(err) {
+            upload(req, null, err => {
                 if (err) {
                     reject(err);
                 } else {
@@ -71,9 +71,7 @@ module.exports = (function() {
                 if (!archiveFile) {
                     const details = pathlib.parse(archiveUrl);
 
-                    const archiveExt = ['tar', 'bz2', 'gz', 'zip'].find(function(ext) {
-                        return _.includes(details.ext, ext);
-                    });
+                    const archiveExt = ['tar', 'bz2', 'gz', 'zip'].find(ext => _.includes(details.ext, ext));
 
                     if (archiveExt) {
                         archiveFile = details.base;
@@ -97,7 +95,7 @@ module.exports = (function() {
                     fs
                         .createWriteStream(archivePath)
                         .on('error', reject)
-                        .on('close', function() {
+                        .on('close', () => {
                             logger.debug('archive saved, archivePath:', archivePath);
                             resolve({ archiveFolder, archiveFile, archivePath });
                         })
@@ -154,23 +152,21 @@ module.exports = (function() {
     function removeOldExtracts(tempDir) {
         const PAST_TIME = 60 * 60 * 1000; // remove archives older then 1 hour async
 
-        fs.readdir(tempDir, function(err, files) {
+        fs.readdir(tempDir, (err, files) => {
             if (err) {
                 logger.warn('Cannot remove old extracts. Error:', err);
                 return;
             }
 
             files
-                .map(function(file) {
-                    return pathlib.join(tempDir, file);
-                })
-                .filter(function(file) {
+                .map(file => pathlib.join(tempDir, file))
+                .filter(file => {
                     const now = new Date().getTime();
                     const modTime = new Date(fs.statSync(file).mtime).getTime() + PAST_TIME;
 
                     return now > modTime;
                 })
-                .forEach(function(file) {
+                .forEach(file => {
                     fs.removeSync(file);
                 });
         });

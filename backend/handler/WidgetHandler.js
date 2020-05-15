@@ -35,7 +35,7 @@ module.exports = (function() {
 
     function _rmdirSync(path) {
         if (fs.existsSync(path)) {
-            fs.readdirSync(path).forEach(function(file, index) {
+            fs.readdirSync(path).forEach((file, index) => {
                 const curPath = `${path}/${file}`;
                 if (fs.lstatSync(curPath).isDirectory()) {
                     // recurse
@@ -282,7 +282,7 @@ module.exports = (function() {
     function isWidgetUsed(widgetId) {
         return db.UserApp.findAll({ attributes: ['appData', 'managerIp', 'username'] }).then(userApp => {
             const result = [];
-            _.forEach(userApp, function(row) {
+            _.forEach(userApp, row => {
                 const filter = _.filter(row.appData.pages, { widgets: [{ definition: widgetId }] });
                 if (!_.isEmpty(filter)) {
                     result.push({ username: row.username, managerIp: row.managerIp });
