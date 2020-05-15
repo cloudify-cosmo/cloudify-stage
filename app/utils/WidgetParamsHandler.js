@@ -19,7 +19,7 @@ export default class WidgetParamsHandler {
         };
 
         // process fetch params
-        this._runFetchParamsIfNeeded();
+        this.runFetchParamsIfNeeded();
     }
 
     update(widget) {
@@ -28,8 +28,8 @@ export default class WidgetParamsHandler {
 
     buildParamsToSend(userRequestedParams) {
         // Map grid params to params
-        const gridParams = this._mapGridParamsToParams();
-        const fetchParams = this._buildFilterParams();
+        const gridParams = this.mapGridParamsToParams();
+        const fetchParams = this.buildFilterParams();
 
         let params = { ...gridParams, ...fetchParams };
 
@@ -51,7 +51,7 @@ export default class WidgetParamsHandler {
         // save the old filter params
         const oldFilterParams = this.fetchParams.filterParams;
 
-        this._runFetchParamsIfNeeded();
+        this.runFetchParamsIfNeeded();
 
         // Check if the filter params have changed
         return !_.isEqual(this.fetchParams.filterParams, oldFilterParams);
@@ -61,7 +61,7 @@ export default class WidgetParamsHandler {
         Object.assign(this.fetchParams.gridParams, newGridParams);
     }
 
-    _runFetchParamsIfNeeded() {
+    runFetchParamsIfNeeded() {
         if (_.isFunction(this._widget.definition.fetchParams)) {
             try {
                 this.fetchParams.filterParams = this._widget.definition.fetchParams(this._widget, this._toolbox);
@@ -72,7 +72,7 @@ export default class WidgetParamsHandler {
         }
     }
 
-    _buildFilterParams() {
+    buildFilterParams() {
         const params = {};
         _.forIn(this.fetchParams.filterParams, (value, key) => {
             if (_.isBoolean(value) || !_.isEmpty(value)) {
@@ -83,7 +83,7 @@ export default class WidgetParamsHandler {
         return params;
     }
 
-    _mapGridParamsToParams() {
+    mapGridParamsToParams() {
         if (_.isEmpty(this.fetchParams.gridParams)) {
             return {};
         }

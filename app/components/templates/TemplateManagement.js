@@ -44,15 +44,15 @@ export default class TemplateManagement extends Component {
         this.props.onClear();
     }
 
-    _selectTemplate(template) {
+    selectTemplate(template) {
         this.props.onTemplateSelect(template.id);
     }
 
-    _selectPage(page) {
+    selectPage(page) {
         this.props.onPageSelect(page.id);
     }
 
-    _createTemplate(templateName, roles, tenants, pages) {
+    createTemplate(templateName, roles, tenants, pages) {
         const template = {
             id: templateName.trim(),
             data: {
@@ -65,11 +65,11 @@ export default class TemplateManagement extends Component {
         return this.props.onTemplateCreate(template);
     }
 
-    _deleteTemplate(template) {
+    deleteTemplate(template) {
         this.props.onTemplateDelete(template.id);
     }
 
-    _modifyTemplate(item, templateName, roles, tenants, pages) {
+    modifyTemplate(item, templateName, roles, tenants, pages) {
         const template = {
             oldId: item.id,
             id: templateName.trim(),
@@ -83,41 +83,41 @@ export default class TemplateManagement extends Component {
         return this.props.onTemplateUpdate(template);
     }
 
-    _removeTemplatePage(template, page) {
+    removeTemplatePage(template, page) {
         template.pages = _.without(template.pages, page);
 
-        this._updateTemplate(template);
+        this.updateTemplate(template);
     }
 
-    _removeTemplateRole(template, role) {
+    removeTemplateRole(template, role) {
         template.data.roles = _.without(template.data.roles, role);
 
-        this._updateTemplate(template);
+        this.updateTemplate(template);
     }
 
-    _removeTemplateTenant(template, tenant) {
+    removeTemplateTenant(template, tenant) {
         template.data.tenants = _.without(template.data.tenants, tenant);
 
-        this._updateTemplate(template);
+        this.updateTemplate(template);
     }
 
-    _updateTemplate(template) {
+    updateTemplate(template) {
         return this.props.onTemplateUpdate({ ...template, oldId: template.id });
     }
 
-    _deletePage(page) {
+    deletePage(page) {
         this.props.onPageDelete(page.id);
     }
 
-    _canDeletePage(page) {
+    canDeletePage(page) {
         return _.isEmpty(page.templates) ? null : 'Page is used by the templates and cannot be deleted';
     }
 
-    _editPage(page) {
+    editPage(page) {
         this.props.onPageEdit(page.id, page.name);
     }
 
-    _previewPage(page) {
+    previewPage(page) {
         this.props.onPagePreview(page.id, page.name);
     }
 
@@ -148,23 +148,23 @@ export default class TemplateManagement extends Component {
                         pages={this.props.pages}
                         roles={this.props.roles}
                         tenants={this.props.manager.tenants}
-                        onSelectTemplate={this._selectTemplate.bind(this)}
-                        onRemoveTemplatePage={this._removeTemplatePage.bind(this)}
-                        onRemoveTemplateRole={this._removeTemplateRole.bind(this)}
-                        onRemoveTemplateTenant={this._removeTemplateTenant.bind(this)}
-                        onCreateTemplate={this._createTemplate.bind(this)}
-                        onModifyTemplate={this._modifyTemplate.bind(this)}
-                        onDeleteTemplate={this._deleteTemplate.bind(this)}
+                        onSelectTemplate={this.selectTemplate.bind(this)}
+                        onRemoveTemplatePage={this.removeTemplatePage.bind(this)}
+                        onRemoveTemplateRole={this.removeTemplateRole.bind(this)}
+                        onRemoveTemplateTenant={this.removeTemplateTenant.bind(this)}
+                        onCreateTemplate={this.createTemplate.bind(this)}
+                        onModifyTemplate={this.modifyTemplate.bind(this)}
+                        onDeleteTemplate={this.deleteTemplate.bind(this)}
                     />
 
                     <Pages
                         pages={this.props.pages}
-                        onSelectPage={this._selectPage.bind(this)}
+                        onSelectPage={this.selectPage.bind(this)}
                         onCreatePage={this.props.onPageCreate}
-                        onDeletePage={this._deletePage.bind(this)}
-                        onEditPage={this._editPage.bind(this)}
-                        onPreviewPage={this._previewPage.bind(this)}
-                        onCanDeletePage={this._canDeletePage.bind(this)}
+                        onDeletePage={this.deletePage.bind(this)}
+                        onEditPage={this.editPage.bind(this)}
+                        onPreviewPage={this.previewPage.bind(this)}
+                        onCanDeletePage={this.canDeletePage.bind(this)}
                     />
                 </Segment>
             </div>

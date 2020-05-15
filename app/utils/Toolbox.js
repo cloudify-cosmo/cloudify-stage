@@ -18,15 +18,15 @@ class Toolbox {
     constructor(store) {
         // Save the link to the store on the context (so we can dispatch to it later)
         this.store = store;
-        this._initFromStore();
+        this.initFromStore();
 
         // Subscribe to store change
         this.unsubscribe = store.subscribe(() => {
-            this._initFromStore();
+            this.initFromStore();
         });
     }
 
-    _initFromStore() {
+    initFromStore() {
         const state = this.store.getState();
         this.templates = state.templates || { templatesDef: {} };
         this._Manager = new Manager(state.manager || {});

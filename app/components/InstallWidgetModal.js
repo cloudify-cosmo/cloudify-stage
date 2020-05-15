@@ -48,7 +48,7 @@ export default class InstallWidgetModal extends Component {
         return !_.isEqual(nextState, this.state);
     }
 
-    _installWidget() {
+    installWidget() {
         const widgetUrl = this.state.widgetFile ? '' : this.state.widgetUrl;
 
         const errors = {};
@@ -68,36 +68,36 @@ export default class InstallWidgetModal extends Component {
 
         this.setState({ loading: true, errors: {}, scriptError: '' });
 
-        EventBus.on('window:error', this._showScriptError, this);
+        EventBus.on('window:error', this.showScriptError, this);
         this.props
             .onWidgetInstalled(this.state.widgetFile, widgetUrl)
             .then(() => {
-                EventBus.off('window:error', this._showScriptError);
+                EventBus.off('window:error', this.showScriptError);
                 this.setState({ loading: false, open: false });
             })
             .catch(err => {
-                EventBus.off('window:error', this._showScriptError);
+                EventBus.off('window:error', this.showScriptError);
                 this.setState({ errors: { error: err.message }, loading: false });
             });
     }
 
-    _openModal() {
+    openModal() {
         this.setState({ ...InstallWidgetModal.initialState, open: true });
     }
 
-    _closeModal() {
+    closeModal() {
         this.setState({ open: false });
     }
 
-    _showScriptError(message, source, lineno, colno) {
+    showScriptError(message, source, lineno, colno) {
         this.setState({ scriptError: `${message} (${source}:${lineno}:${colno})` });
     }
 
-    _onWidgetUrlChange(widgetUrl) {
+    onWidgetUrlChange(widgetUrl) {
         this.setState({ errors: {}, widgetUrl, widgetFile: null });
     }
 
-    _onWidgetFileChange(widgetFile) {
+    onWidgetFileChange(widgetFile) {
         this.setState({ errors: {}, widgetUrl: null, widgetFile });
     }
 
@@ -108,8 +108,8 @@ export default class InstallWidgetModal extends Component {
                 dimmer="blurring"
                 open={this.state.open}
                 className={this.props.className}
-                onOpen={this._openModal.bind(this)}
-                onClose={this._closeModal.bind(this)}
+                onOpen={this.openModal.bind(this)}
+                onClose={this.closeModal.bind(this)}
             >
                 <Modal.Header>
                     <Icon name="puzzle" /> {this.props.header}
@@ -120,8 +120,8 @@ export default class InstallWidgetModal extends Component {
                             <Form.UrlOrFile
                                 name="widget"
                                 placeholder="Provide the widget's archive URL or click browse to select a file"
-                                onChangeUrl={this._onWidgetUrlChange.bind(this)}
-                                onChangeFile={this._onWidgetFileChange.bind(this)}
+                                onChangeUrl={this.onWidgetUrlChange.bind(this)}
+                                onChangeFile={this.onWidgetFileChange.bind(this)}
                             />
                         </Form.Field>
                     </Form>
@@ -135,7 +135,7 @@ export default class InstallWidgetModal extends Component {
                         content="Cancel"
                         onClick={event => {
                             event.stopPropagation();
-                            this._closeModal();
+                            this.closeModal();
                         }}
                     />
                     <Button
@@ -144,7 +144,7 @@ export default class InstallWidgetModal extends Component {
                         color="green"
                         onClick={event => {
                             event.stopPropagation();
-                            this._installWidget();
+                            this.installWidget();
                         }}
                     />
                 </Modal.Actions>

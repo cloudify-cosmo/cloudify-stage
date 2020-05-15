@@ -16,7 +16,7 @@ export default class WidgetDataFetcher {
             ? [this._widget.definition.fetchUrl]
             : _.valuesIn(this._widget.definition.fetchUrl);
 
-        const fetches = _.map(urls, url => this._fetchByUrl(url));
+        const fetches = _.map(urls, url => this.fetchByUrl(url));
         return Promise.all(fetches).then(data => {
             // Parse the data per url key name
             let output = data;
@@ -33,11 +33,11 @@ export default class WidgetDataFetcher {
         });
     }
 
-    _handleUrl(prefix, url) {
+    handleUrl(prefix, url) {
         let baseUrl = url.substring(prefix.length);
 
         let params = {};
-        const paramsMatch = this._getUrlRegExString('params').exec(baseUrl);
+        const paramsMatch = this.getUrlRegExString('params').exec(baseUrl);
         if (!_.isNull(paramsMatch)) {
             const [paramsString, allowedParams] = paramsMatch;
 
@@ -49,19 +49,19 @@ export default class WidgetDataFetcher {
         return { url: baseUrl, params };
     }
 
-    _fetchByUrl(url) {
-        const fetchUrl = _.replace(url, this._getUrlRegExString('config'), (match, configName) => {
+    fetchByUrl(url) {
+        const fetchUrl = _.replace(url, this.getUrlRegExString('config'), (match, configName) => {
             return this._widget.configuration ? this._widget.configuration[configName] : 'NA';
         });
 
         if (url.indexOf('[manager]') >= 0) {
             // User manager accessor if needs to go to the manager
-            var data = this._handleUrl('[manager]', url);
+            var data = this.handleUrl('[manager]', url);
             return this._toolbox.getManager().doGet(data.url, data.params);
         }
         if (url.indexOf('[backend]') >= 0) {
             // User backend accessor if needs to go to the backend
-            var data = this._handleUrl('[backend]', url);
+            var data = this.handleUrl('[backend]', url);
             return this._toolbox.getInternal().doGet(data.url, data.params);
         }
         // User external if the url is not manager based
@@ -85,7 +85,7 @@ export default class WidgetDataFetcher {
         }
     }
 
-    _getUrlRegExString(str) {
+    getUrlRegExString(str) {
         return new RegExp(`\\[${str}:?(.*)\\]`, 'i');
     }
 }

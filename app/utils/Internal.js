@@ -12,7 +12,7 @@ export default class Internal extends External {
         super(data);
     }
 
-    _buildHeaders() {
+    buildHeaders() {
         if (!this._data) {
             return {};
         }
@@ -28,15 +28,15 @@ export default class Internal extends External {
         return headers;
     }
 
-    _buildActualUrl(path, data) {
-        return super._buildActualUrl(StageUtils.Url.url(path), data);
+    buildActualUrl(path, data) {
+        return super.buildActualUrl(StageUtils.Url.url(path), data);
     }
 
-    _isUnauthorized(response) {
+    isUnauthorized(response) {
         return response.status === 401;
     }
 
-    _isLicenseError(response, body) {
+    isLicenseError(response, body) {
         return (
             response.status === 400 &&
             (body.error_code === Consts.NO_LICENSE_ERROR_CODE || body.error_code === Consts.EXPIRED_LICENSE_ERROR_CODE)

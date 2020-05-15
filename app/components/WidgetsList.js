@@ -20,7 +20,7 @@ export default class WidgetsList extends Component {
         pageManagementMode: PropTypes.string
     };
 
-    _updateWidget(widgetId, data) {
+    updateWidget(widgetId, data) {
         this.props.onWidgetsGridDataChange(this.props.pageId, widgetId, data);
     }
 
@@ -38,7 +38,7 @@ export default class WidgetsList extends Component {
             </Container>
         ) : (
             <div>
-                <Grid isEditMode={this.props.isEditMode} onGridDataChange={this._updateWidget.bind(this)}>
+                <Grid isEditMode={this.props.isEditMode} onGridDataChange={this.updateWidget.bind(this)}>
                     {this.props.widgets.map(widget => {
                         const widgetDefId = (widget.definition || {}).id;
                         return (

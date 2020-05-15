@@ -42,12 +42,12 @@ class UpdateDeploymentModal extends React.Component {
     }
 
     onUpdate() {
-        this.setState({ errors: {}, loading: true, showPreview: false }, () => this._submitUpdate(false));
+        this.setState({ errors: {}, loading: true, showPreview: false }, () => this.submitUpdate(false));
         return false;
     }
 
     onPreview() {
-        this.setState({ errors: {}, loading: true, showPreview: false }, () => this._submitUpdate(true));
+        this.setState({ errors: {}, loading: true, showPreview: false }, () => this.submitUpdate(true));
         return true;
     }
 
@@ -56,7 +56,7 @@ class UpdateDeploymentModal extends React.Component {
         return true;
     }
 
-    _submitUpdate(preview) {
+    submitUpdate(preview) {
         const { InputsUtils } = Stage.Common;
         const errors = {};
 
@@ -115,17 +115,17 @@ class UpdateDeploymentModal extends React.Component {
             });
     }
 
-    _handleInputChange(proxy, field) {
+    handleInputChange(proxy, field) {
         const fieldNameValue = Stage.Basic.Form.fieldNameValue(field);
         this.setState(fieldNameValue);
     }
 
-    _handleDeploymentInputChange(proxy, field) {
+    handleDeploymentInputChange(proxy, field) {
         const fieldNameValue = Stage.Basic.Form.fieldNameValue(field);
         this.setState({ deploymentInputs: { ...this.state.deploymentInputs, ...fieldNameValue } });
     }
 
-    _handleYamlFileChange(file) {
+    handleYamlFileChange(file) {
         if (!file) {
             return;
         }
@@ -237,7 +237,7 @@ class UpdateDeploymentModal extends React.Component {
                             <>
                                 {!_.isEmpty(this.state.blueprint.plan.inputs) && (
                                     <YamlFileButton
-                                        onChange={this._handleYamlFileChange.bind(this)}
+                                        onChange={this.handleYamlFileChange.bind(this)}
                                         dataType="deployment's inputs"
                                         fileLoading={this.state.fileLoading}
                                     />
@@ -254,7 +254,7 @@ class UpdateDeploymentModal extends React.Component {
 
                         {InputsUtils.getInputFields(
                             this.state.blueprint.plan.inputs,
-                            this._handleDeploymentInputChange.bind(this),
+                            this.handleDeploymentInputChange.bind(this),
                             this.state.deploymentInputs,
                             this.state.errors,
                             this.state.blueprint.plan.data_types
@@ -271,7 +271,7 @@ class UpdateDeploymentModal extends React.Component {
                                 name="installWorkflow"
                                 help="Run install lifecycle operations"
                                 checked={this.state.installWorkflow}
-                                onChange={this._handleInputChange.bind(this)}
+                                onChange={this.handleInputChange.bind(this)}
                             />
                         </Form.Field>
 
@@ -282,7 +282,7 @@ class UpdateDeploymentModal extends React.Component {
                                 name="uninstallWorkflow"
                                 help="Run uninstall lifecycle operations"
                                 checked={this.state.uninstallWorkflow}
-                                onChange={this._handleInputChange.bind(this)}
+                                onChange={this.handleInputChange.bind(this)}
                             />
                         </Form.Field>
 
@@ -294,7 +294,7 @@ class UpdateDeploymentModal extends React.Component {
                                 toggle
                                 name="installWorkflowFirst"
                                 checked={this.state.installWorkflowFirst}
-                                onChange={this._handleInputChange.bind(this)}
+                                onChange={this.handleInputChange.bind(this)}
                             />
                         </Form.Field>
 
@@ -306,7 +306,7 @@ class UpdateDeploymentModal extends React.Component {
                                 help="Supply the parameter `ignore_failure` with
                                                  the value `true` to the uninstall workflow"
                                 checked={this.state.ignoreFailure}
-                                onChange={this._handleInputChange.bind(this)}
+                                onChange={this.handleInputChange.bind(this)}
                             />
                         </Form.Field>
 
@@ -321,7 +321,7 @@ class UpdateDeploymentModal extends React.Component {
                                                  that were explicitly given to "Reinstall
                                                  node instances list" will still be reinstalled'
                                 checked={this.state.automaticReinstall}
-                                onChange={this._handleInputChange.bind(this)}
+                                onChange={this.handleInputChange.bind(this)}
                             />
                         </Form.Field>
 
@@ -332,7 +332,7 @@ class UpdateDeploymentModal extends React.Component {
                             value={this.state.reinstallList}
                             placeholder="Choose node instances to reinstall"
                             upward
-                            onChange={this._handleInputChange.bind(this)}
+                            onChange={this.handleInputChange.bind(this)}
                             help='Node instances ids to be reinstalled as part
                                                    of deployment update. They will be
                                                    reinstalled even if "Run automatic reinstall"
@@ -349,7 +349,7 @@ class UpdateDeploymentModal extends React.Component {
                                                  update on this deployment has failed to
                                                  finished successfully"
                                 checked={this.state.force}
-                                onChange={this._handleInputChange.bind(this)}
+                                onChange={this.handleInputChange.bind(this)}
                             />
                         </Form.Field>
                     </Form>

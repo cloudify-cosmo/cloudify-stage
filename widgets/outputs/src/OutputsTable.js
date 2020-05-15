@@ -16,16 +16,16 @@ export default class extends React.Component {
         );
     }
 
-    _refreshData() {
+    refreshData() {
         this.props.toolbox.refresh();
     }
 
     componentDidMount() {
-        this.props.toolbox.getEventBus().on('outputs:refresh', this._refreshData, this);
+        this.props.toolbox.getEventBus().on('outputs:refresh', this.refreshData, this);
     }
 
     componentWillUnmount() {
-        this.props.toolbox.getEventBus().off('outputs:refresh', this._refreshData);
+        this.props.toolbox.getEventBus().off('outputs:refresh', this.refreshData);
     }
 
     componentDidUpdate(prevProps, prevState) {
@@ -33,7 +33,7 @@ export default class extends React.Component {
             this.props.data.deploymentId !== prevProps.data.deploymentId ||
             this.props.data.blueprintId !== prevProps.data.blueprintId
         ) {
-            this._refreshData();
+            this.refreshData();
         }
     }
 

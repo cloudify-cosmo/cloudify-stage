@@ -63,7 +63,7 @@ export default class EditWidgetModal extends Component {
         return true;
     }
 
-    _handleInputChange(proxy, field) {
+    handleInputChange(proxy, field) {
         const { name } = field;
         const value = GenericField.formatValue(
             field.genericType,
@@ -90,7 +90,7 @@ export default class EditWidgetModal extends Component {
                                         name={config.id}
                                         label={config.name}
                                         value={this.state.fields[config.id]}
-                                        onChange={this._handleInputChange.bind(this)}
+                                        onChange={this.handleInputChange.bind(this)}
                                     />
                                 );
                             })}

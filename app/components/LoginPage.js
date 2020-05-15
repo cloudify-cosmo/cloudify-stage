@@ -52,7 +52,7 @@ export default class LoginPage extends Component {
         this.props.onLogin(this.state.username, this.state.password, redirect);
     }
 
-    _handleInputChange(proxy, field) {
+    handleInputChange(proxy, field) {
         const fieldNameValue = Form.fieldNameValue(field);
         this.setState({ ...fieldNameValue, errors: {} });
     }
@@ -104,7 +104,7 @@ export default class LoginPage extends Component {
                                 placeholder="Username"
                                 autoFocus
                                 value={this.state.username}
-                                onChange={this._handleInputChange.bind(this)}
+                                onChange={this.handleInputChange.bind(this)}
                             />
                         </Form.Field>
 
@@ -114,7 +114,7 @@ export default class LoginPage extends Component {
                                 type="password"
                                 placeholder="Password"
                                 value={this.state.password}
-                                onChange={this._handleInputChange.bind(this)}
+                                onChange={this.handleInputChange.bind(this)}
                             />
                         </Form.Field>
 

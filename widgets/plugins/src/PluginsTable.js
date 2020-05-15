@@ -23,7 +23,7 @@ export default class extends React.Component {
         );
     }
 
-    _selectPlugin(item) {
+    selectPlugin(item) {
         const oldSelectedPluginId = this.props.toolbox.getContext().getValue('pluginId');
         if (item.id === oldSelectedPluginId) {
             this.props.toolbox.getContext().setValue('pluginId', null);
@@ -32,7 +32,7 @@ export default class extends React.Component {
         }
     }
 
-    _deletePluginConfirm(item, event) {
+    deletePluginConfirm(item, event) {
         event.stopPropagation();
 
         this.setState({
@@ -42,7 +42,7 @@ export default class extends React.Component {
         });
     }
 
-    _downloadPlugin(item, event) {
+    downloadPlugin(item, event) {
         event.stopPropagation();
 
         const actions = new Stage.Common.PluginActions(this.props.toolbox);
@@ -56,7 +56,7 @@ export default class extends React.Component {
             });
     }
 
-    _deletePlugin() {
+    deletePlugin() {
         if (!this.state.item) {
             this.setState({ error: 'Something went wrong, no plugin was selected for delete' });
             return;
@@ -74,7 +74,7 @@ export default class extends React.Component {
             });
     }
 
-    _setPluginVisibility(pluginId, visibility) {
+    setPluginVisibility(pluginId, visibility) {
         const actions = new Stage.Common.PluginActions(this.props.toolbox);
         this.props.toolbox.loading(true);
         actions
@@ -89,28 +89,28 @@ export default class extends React.Component {
             });
     }
 
-    _showUploadModal() {
+    showUploadModal() {
         this.setState({ showUploadModal: true });
     }
 
-    _hideUploadModal() {
+    hideUploadModal() {
         this.setState({ showUploadModal: false });
     }
 
-    _refreshData() {
+    refreshData() {
         this.props.toolbox.refresh();
     }
 
-    _handleForceChange(event, field) {
+    handleForceChange(event, field) {
         this.setState(Stage.Basic.Form.fieldNameValue(field));
     }
 
     componentDidMount() {
-        this.props.toolbox.getEventBus().on('plugins:refresh', this._refreshData, this);
+        this.props.toolbox.getEventBus().on('plugins:refresh', this.refreshData, this);
     }
 
     componentWillUnmount() {
-        this.props.toolbox.getEventBus().off('plugins:refresh', this._refreshData);
+        this.props.toolbox.getEventBus().off('plugins:refresh', this.refreshData);
     }
 
     fetchGridData(fetchParams) {
@@ -154,7 +154,7 @@ export default class extends React.Component {
                             <DataTable.Row
                                 key={item.id}
                                 selected={item.isSelected}
-                                onClick={this._selectPlugin.bind(this, item)}
+                                onClick={this.selectPlugin.bind(this, item)}
                                 onMouseOver={() =>
                                     this.state.hoveredPlugin !== item.id && this.setState({ hoveredPlugin: item.id })
                                 }
@@ -172,7 +172,7 @@ export default class extends React.Component {
                                     {item.package_name}
                                     <ResourceVisibility
                                         visibility={item.visibility}
-                                        onSetVisibility={visibility => this._setPluginVisibility(item.id, visibility)}
+                                        onSetVisibility={visibility => this.setPluginVisibility(item.id, visibility)}
                                         allowedSettingTo={['tenant', 'global']}
                                         className="rightFloated"
                                     />
@@ -187,12 +187,12 @@ export default class extends React.Component {
                                     <i
                                         className="download icon link bordered"
                                         title="Download"
-                                        onClick={this._downloadPlugin.bind(this, item)}
+                                        onClick={this.downloadPlugin.bind(this, item)}
                                     />
                                     <i
                                         className="trash icon link bordered"
                                         title="Delete"
-                                        onClick={this._deletePluginConfirm.bind(this, item)}
+                                        onClick={this.deletePluginConfirm.bind(this, item)}
                                     />
                                 </DataTable.Data>
                             </DataTable.Row>
@@ -204,7 +204,7 @@ export default class extends React.Component {
                             content="Upload"
                             icon="upload"
                             labelPosition="left"
-                            onClick={this._showUploadModal.bind(this)}
+                            onClick={this.showUploadModal.bind(this)}
                         />
                     </DataTable.Action>
                 </DataTable>
@@ -212,7 +212,7 @@ export default class extends React.Component {
                 <UploadPluginModal
                     open={this.state.showUploadModal}
                     toolbox={this.props.toolbox}
-                    onHide={this._hideUploadModal.bind(this)}
+                    onHide={this.hideUploadModal.bind(this)}
                 />
 
                 <DeleteConfirm
@@ -223,9 +223,9 @@ export default class extends React.Component {
                     )}`}
                     force={this.state.force}
                     open={this.state.confirmDelete}
-                    onConfirm={this._deletePlugin.bind(this)}
+                    onConfirm={this.deletePlugin.bind(this)}
                     onCancel={() => this.setState({ confirmDelete: false })}
-                    onForceChange={this._handleForceChange.bind(this)}
+                    onForceChange={this.handleForceChange.bind(this)}
                 />
             </div>
         );

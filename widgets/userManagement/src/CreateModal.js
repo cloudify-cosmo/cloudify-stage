@@ -23,7 +23,7 @@ export default class CreateModal extends React.Component {
     };
 
     onApprove() {
-        this._submitCreate();
+        this.submitCreate();
         return false;
     }
 
@@ -57,7 +57,7 @@ export default class CreateModal extends React.Component {
         }
     }
 
-    _submitCreate() {
+    submitCreate() {
         const errors = {};
 
         if (_.isEmpty(this.state.username)) {
@@ -106,11 +106,11 @@ export default class CreateModal extends React.Component {
             });
     }
 
-    _handleInputChange(proxy, field) {
+    handleInputChange(proxy, field) {
         this.setState(Stage.Basic.Form.fieldNameValue(field));
     }
 
-    _handleTenantChange(proxy, field) {
+    handleTenantChange(proxy, field) {
         const newTenants = {};
         _.forEach(field.value, tenant => {
             newTenants[tenant] =
@@ -120,7 +120,7 @@ export default class CreateModal extends React.Component {
         this.setState({ tenants: newTenants });
     }
 
-    _handleRoleChange(tenant, role) {
+    handleRoleChange(tenant, role) {
         const newTenants = { ...this.state.tenants };
         newTenants[tenant] = role;
         this.setState({ tenants: newTenants });
@@ -159,7 +159,7 @@ export default class CreateModal extends React.Component {
                             <Form.Input
                                 name="username"
                                 value={this.state.username}
-                                onChange={this._handleInputChange.bind(this)}
+                                onChange={this.handleInputChange.bind(this)}
                             />
                         </Form.Field>
 
@@ -168,7 +168,7 @@ export default class CreateModal extends React.Component {
                                 name="password"
                                 type="password"
                                 value={this.state.password}
-                                onChange={this._handleInputChange.bind(this)}
+                                onChange={this.handleInputChange.bind(this)}
                             />
                         </Form.Field>
 
@@ -177,7 +177,7 @@ export default class CreateModal extends React.Component {
                                 name="confirmPassword"
                                 type="password"
                                 value={this.state.confirmPassword}
-                                onChange={this._handleInputChange.bind(this)}
+                                onChange={this.handleInputChange.bind(this)}
                             />
                         </Form.Field>
 
@@ -186,7 +186,7 @@ export default class CreateModal extends React.Component {
                                 label="Admin"
                                 name="isAdmin"
                                 checked={this.state.isAdmin}
-                                onChange={this._handleInputChange.bind(this)}
+                                onChange={this.handleInputChange.bind(this)}
                             />
                         </Form.Field>
 
@@ -201,11 +201,11 @@ export default class CreateModal extends React.Component {
                                 selection
                                 options={options}
                                 value={Object.keys(this.state.tenants)}
-                                onChange={this._handleTenantChange.bind(this)}
+                                onChange={this.handleTenantChange.bind(this)}
                             />
                         </Form.Field>
                         <RolesPicker
-                            onUpdate={this._handleRoleChange.bind(this)}
+                            onUpdate={this.handleRoleChange.bind(this)}
                             resources={this.state.tenants}
                             resourceName="tenant"
                             toolbox={this.props.toolbox}

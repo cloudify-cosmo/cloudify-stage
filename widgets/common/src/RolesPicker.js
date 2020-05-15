@@ -14,7 +14,7 @@ export default class RolesPicker extends React.Component {
         toolbox: PropTypes.object.isRequired
     };
 
-    _handleInputChange(proxy, field) {
+    handleInputChange(proxy, field) {
         this.props.onUpdate(field.name, field.value);
     }
 
@@ -37,7 +37,7 @@ export default class RolesPicker extends React.Component {
                                 options={roleOptions}
                                 name={resource}
                                 value={role}
-                                onChange={this._handleInputChange.bind(this)}
+                                onChange={this.handleInputChange.bind(this)}
                             />
                         </Form.Field>
                     );

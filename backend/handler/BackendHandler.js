@@ -76,7 +76,7 @@ const BackendRegistrator = (widgetId, resolve, reject) => ({
 });
 
 module.exports = (() => {
-    function _getUserWidgets() {
+    function getUserWidgets() {
         return fs
             .readdirSync(userWidgetsFolder)
             .filter(
@@ -86,7 +86,7 @@ module.exports = (() => {
             );
     }
 
-    function _getBuiltInWidgets() {
+    function getBuiltInWidgets() {
         return fs
             .readdirSync(builtInWidgetsFolder)
             .filter(
@@ -148,8 +148,8 @@ module.exports = (() => {
     function initWidgetBackends() {
         logger.info('Scanning widget backend files...');
 
-        const userWidgets = _getUserWidgets();
-        const builtInWidgets = _getBuiltInWidgets();
+        const userWidgets = getUserWidgets();
+        const builtInWidgets = getBuiltInWidgets();
 
         const promises = [];
         _.each(userWidgets, widgetId =>

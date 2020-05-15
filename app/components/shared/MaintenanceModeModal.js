@@ -56,19 +56,19 @@ class MaintenanceModeModal extends Component {
         if (!prevProps.show && this.props.show) {
             this.setState(MaintenanceModeModal.initialState);
 
-            this._loadPendingExecutions();
+            this.loadPendingExecutions();
         } else if (prevProps.show && !this.props.show) {
-            this._stopPolling();
-            this._stopFetchingData();
+            this.stopPolling();
+            this.stopFetchingData();
             this.props.onClose();
         }
     }
 
     componentWillUnmount() {
-        this._stopPolling();
+        this.stopPolling();
     }
 
-    _loadPendingExecutions() {
+    loadPendingExecutions() {
         if (this.props.manager.maintenance !== Consts.MAINTENANCE_DEACTIVATED) {
             return;
         }
@@ -77,33 +77,33 @@ class MaintenanceModeModal extends Component {
         this.fetchDataPromise.promise
             .then(data => {
                 console.log('Maintenance data fetched');
-                this._startPolling();
+                this.startPolling();
             })
             .catch(err => {
                 this.setState({ error: err.message });
-                this._startPolling();
+                this.startPolling();
             });
     }
 
-    _stopPolling() {
+    stopPolling() {
         console.log('Stop polling maintenance data');
         clearTimeout(this.pollingTimeout);
     }
 
-    _stopFetchingData() {
+    stopFetchingData() {
         if (this.fetchDataPromise) {
             this.fetchDataPromise.cancel();
         }
     }
 
-    _startPolling() {
-        this._stopPolling();
-        this._stopFetchingData();
+    startPolling() {
+        this.stopPolling();
+        this.stopFetchingData();
 
         if (this.props.show) {
             console.log(`Polling maintenance data - time interval: ${POLLING_INTERVAL / 1000} sec`);
             this.pollingTimeout = setTimeout(() => {
-                this._loadPendingExecutions();
+                this.loadPendingExecutions();
             }, POLLING_INTERVAL);
         }
     }
@@ -112,9 +112,9 @@ class MaintenanceModeModal extends Component {
         this.setState({ loading: true });
 
         if (this.props.manager.maintenance === Consts.MAINTENANCE_DEACTIVATED) {
-            this._activate();
+            this.activate();
         } else {
-            this._deactivate();
+            this.deactivate();
         }
 
         return false;
@@ -125,7 +125,7 @@ class MaintenanceModeModal extends Component {
         return true;
     }
 
-    _activate() {
+    activate() {
         this.props
             .onMaintenanceActivate()
             .then(() => {
@@ -137,7 +137,7 @@ class MaintenanceModeModal extends Component {
             });
     }
 
-    _deactivate() {
+    deactivate() {
         this.props
             .onMaintenanceDeactivate()
             .then(() => {
@@ -149,12 +149,12 @@ class MaintenanceModeModal extends Component {
             });
     }
 
-    _cancelExecution(execution, action) {
+    cancelExecution(execution, action) {
         this.setState({ cancelling: [...this.state.cancelling, execution.id] }, () =>
             this.props
                 .onCancelExecution(execution, action)
                 .then(() => {
-                    this._loadPendingExecutions();
+                    this.loadPendingExecutions();
                     this.setState({ error: '', cancelling: _.without(this.state.cancelling, execution.id) });
                 })
                 .catch(err => {
@@ -208,10 +208,7 @@ class MaintenanceModeModal extends Component {
                                                             icon="cancel"
                                                             name={ExecutionUtils.CANCEL_ACTION}
                                                             onClick={() =>
-                                                                this._cancelExecution(
-                                                                    item,
-                                                                    ExecutionUtils.CANCEL_ACTION
-                                                                )
+                                                                this.cancelExecution(item, ExecutionUtils.CANCEL_ACTION)
                                                             }
                                                         />
                                                         <Menu.Item
@@ -219,7 +216,7 @@ class MaintenanceModeModal extends Component {
                                                             icon={<Icon name="cancel" color="red" />}
                                                             name={ExecutionUtils.FORCE_CANCEL_ACTION}
                                                             onClick={() =>
-                                                                this._cancelExecution(
+                                                                this.cancelExecution(
                                                                     item,
                                                                     ExecutionUtils.FORCE_CANCEL_ACTION
                                                                 )
@@ -230,7 +227,7 @@ class MaintenanceModeModal extends Component {
                                                             icon={<Icon name="stop" color="red" />}
                                                             name={ExecutionUtils.KILL_CANCEL_EXECUTION}
                                                             onClick={() =>
-                                                                this._cancelExecution(
+                                                                this.cancelExecution(
                                                                     item,
                                                                     ExecutionUtils.KILL_CANCEL_EXECUTION
                                                                 )

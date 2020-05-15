@@ -26,27 +26,27 @@ export default class External {
     }
 
     doGet(url, params, parseResponse, headers) {
-        return this._ajaxCall(url, 'get', params, null, parseResponse, headers);
+        return this.ajaxCall(url, 'get', params, null, parseResponse, headers);
     }
 
     doPost(url, params, data, parseResponse, headers, withCredentials) {
-        return this._ajaxCall(url, 'post', params, data, parseResponse, headers, null, withCredentials);
+        return this.ajaxCall(url, 'post', params, data, parseResponse, headers, null, withCredentials);
     }
 
     doDelete(url, params, data, parseResponse, headers) {
-        return this._ajaxCall(url, 'delete', params, data, parseResponse, headers);
+        return this.ajaxCall(url, 'delete', params, data, parseResponse, headers);
     }
 
     doPut(url, params, data, parseResponse, headers) {
-        return this._ajaxCall(url, 'put', params, data, parseResponse, headers);
+        return this.ajaxCall(url, 'put', params, data, parseResponse, headers);
     }
 
     doPatch(url, params, data, parseResponse, headers) {
-        return this._ajaxCall(url, 'PATCH', params, data, parseResponse, headers);
+        return this.ajaxCall(url, 'PATCH', params, data, parseResponse, headers);
     }
 
     doDownload(url, fileName) {
-        return this._ajaxCall(url, 'get', null, null, null, null, fileName);
+        return this.ajaxCall(url, 'get', null, null, null, null, fileName);
     }
 
     isReachable(url) {
@@ -60,7 +60,7 @@ export default class External {
     }
 
     doUpload(url, params, files, method, parseResponse = true, compressFile = false) {
-        const actualUrl = this._buildActualUrl(url, params);
+        const actualUrl = this.buildActualUrl(url, params);
 
         logger.debug(`Uploading file for url: ${url}`);
 
@@ -109,7 +109,7 @@ export default class External {
 
             xhr.open(method || 'put', actualUrl);
 
-            const headers = this._buildHeaders();
+            const headers = this.buildHeaders();
             _.forIn(headers, (value, key) => {
                 xhr.setRequestHeader(key, value);
             });
@@ -169,11 +169,11 @@ export default class External {
         });
     }
 
-    _ajaxCall(url, method, params, data, parseResponse = true, userHeaders = {}, fileName = null, withCredentials) {
-        const actualUrl = this._buildActualUrl(url, params);
+    ajaxCall(url, method, params, data, parseResponse = true, userHeaders = {}, fileName = null, withCredentials) {
+        const actualUrl = this.buildActualUrl(url, params);
         logger.debug(`${method} data. URL: ${url}`);
 
-        const headers = Object.assign(this._buildHeaders(), this._contentType(), userHeaders);
+        const headers = Object.assign(this.buildHeaders(), this.contentType(), userHeaders);
 
         const options = {
             method,
@@ -184,7 +184,7 @@ export default class External {
             try {
                 if (_.isString(data)) {
                     options.body = data;
-                    _.merge(options.headers, this._contentType('text/plain'));
+                    _.merge(options.headers, this.contentType('text/plain'));
                 } else {
                     options.body = JSON.stringify(data);
                 }
@@ -200,12 +200,12 @@ export default class External {
 
         if (fileName) {
             return fetch(actualUrl, options)
-                .then(this._checkStatus.bind(this))
+                .then(this.checkStatus.bind(this))
                 .then(response => response.blob())
                 .then(blob => saveAs(blob, fileName));
         }
         return fetch(actualUrl, options)
-            .then(this._checkStatus.bind(this))
+            .then(this.checkStatus.bind(this))
             .then(response => {
                 if (parseResponse) {
                     const contentType = _.toLower(response.headers.get('content-type'));
@@ -215,20 +215,20 @@ export default class External {
             });
     }
 
-    _isUnauthorized(response) {
+    isUnauthorized(response) {
         return false;
     }
 
-    _isLicenseError(response, body) {
+    isLicenseError(response, body) {
         return false;
     }
 
-    _checkStatus(response) {
+    checkStatus(response) {
         if (response.ok) {
             return response;
         }
 
-        if (this._isUnauthorized(response)) {
+        if (this.isUnauthorized(response)) {
             const interceptor = Interceptor.getInterceptor();
             interceptor.handle401();
             return Promise.reject(UNAUTHORIZED_ERR);
@@ -241,7 +241,7 @@ export default class External {
                 const resJson = JSON.parse(resText);
                 const message = StageUtils.resolveMessage(resJson.message);
 
-                if (this._isLicenseError(response, resJson)) {
+                if (this.isLicenseError(response, resJson)) {
                     const interceptor = Interceptor.getInterceptor();
                     interceptor.handleLicenseError(resJson.error_code);
                     return Promise.reject(LICENSE_ERR);
@@ -258,16 +258,16 @@ export default class External {
         });
     }
 
-    _buildActualUrl(url, data) {
+    buildActualUrl(url, data) {
         const queryString = data ? (url.indexOf('?') > 0 ? '&' : '?') + $.param(data, true) : '';
         return `${url}${queryString}`;
     }
 
-    _contentType(type) {
+    contentType(type) {
         return { 'content-type': type || 'application/json' };
     }
 
-    _buildHeaders() {
+    buildHeaders() {
         if (!this._data) {
             return {};
         }

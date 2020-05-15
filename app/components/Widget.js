@@ -42,20 +42,20 @@ export default class Widget extends Component {
         return { hasError: true };
     }
 
-    _widgetConfigUpdate(config) {
+    widgetConfigUpdate(config) {
         if (config) {
             config = { ...this.props.widget.configuration, ...config };
             this.props.onWidgetConfigUpdate(this.props.pageId, this.props.widget.id, config);
         }
     }
 
-    _onKeyDown(event) {
+    onKeyDown(event) {
         if (event.keyCode === 27) {
             this.props.onWidgetMaximize(this.props.pageId, this.props.widget.id, false);
         }
     }
 
-    _showReadmeModal() {
+    showReadmeModal() {
         const { readme } = this.props.widget.definition;
         let readmeContent = '';
 
@@ -65,11 +65,11 @@ export default class Widget extends Component {
         this.setState({ readmeContent, showReadmeModal: true });
     }
 
-    _hideReadmeModal() {
+    hideReadmeModal() {
         this.setState({ readmeContent: '', showReadmeModal: false });
     }
 
-    _isUserAuthorized() {
+    isUserAuthorized() {
         return stageUtils.isUserAuthorized(this.props.widget.definition.permission, this.props.manager);
     }
 
@@ -92,7 +92,7 @@ export default class Widget extends Component {
             return (
                 <div
                     tabIndex={this.props.widget.maximized ? '-1' : ''}
-                    onKeyDown={this._onKeyDown.bind(this)}
+                    onKeyDown={this.onKeyDown.bind(this)}
                     ref={this.widgetItemRef}
                     className="widgetItem ui segment widgetWithoutContent"
                 >
@@ -131,7 +131,7 @@ export default class Widget extends Component {
                         name="help circle"
                         size={size}
                         link
-                        onClick={this._showReadmeModal.bind(this)}
+                        onClick={this.showReadmeModal.bind(this)}
                     />
                 )
             );
@@ -139,7 +139,7 @@ export default class Widget extends Component {
         return (
             <div
                 tabIndex={this.props.widget.maximized ? '-1' : ''}
-                onKeyDown={this._onKeyDown.bind(this)}
+                onKeyDown={this.onKeyDown.bind(this)}
                 ref={this.widgetItemRef}
                 className={`widgetItem ui segment
                             ${this.props.widget.definition && !this.props.widget.definition.showBorder ? 'basic' : ''}
@@ -235,7 +235,7 @@ export default class Widget extends Component {
                         manager={this.props.manager}
                         data={this.props.widgetData}
                         setContextValue={this.props.setContextValue}
-                        onWidgetConfigUpdate={this._widgetConfigUpdate.bind(this)}
+                        onWidgetConfigUpdate={this.widgetConfigUpdate.bind(this)}
                         fetchWidgetData={this.props.fetchWidgetData}
                         pageId={this.props.pageId}
                     />
@@ -246,7 +246,7 @@ export default class Widget extends Component {
                 <ReadmeModal
                     open={this.state.showReadmeModal}
                     content={this.state.readmeContent}
-                    onHide={this._hideReadmeModal.bind(this)}
+                    onHide={this.hideReadmeModal.bind(this)}
                 />
             </div>
         );

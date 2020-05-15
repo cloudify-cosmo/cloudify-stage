@@ -17,7 +17,7 @@ export default class UserAppDataAutoSaver {
         this.unsubscribe = store.subscribe(() => {
             const state = this._store.getState();
 
-            if (this._isActive && this._hasDataChanged(state) && this._validData(state)) {
+            if (this._isActive && this.hasDataChanged(state) && this.validData(state)) {
                 this.initFromStore();
 
                 this._store.dispatch(saveUserAppData());
@@ -32,11 +32,11 @@ export default class UserAppDataAutoSaver {
         this._role = _.get(state, 'manager.auth.role');
     }
 
-    _validData(state) {
+    validData(state) {
         return _.get(state, 'manager.username') && _.get(state, 'manager.auth.role');
     }
 
-    _hasDataChanged(state) {
+    hasDataChanged(state) {
         return (
             this._username !== state.manager.username ||
             this._role !== state.manager.auth.role ||

@@ -70,16 +70,16 @@ export default class CreateTemplateModal extends Component {
                 handle: '.handle',
                 forcePlaceholderSize: true,
                 start: (event, ui) => (this.pageIndex = ui.item.index()),
-                update: (event, ui) => this._reorderPage(this.pageIndex, ui.item.index())
+                update: (event, ui) => this.reorderPage(this.pageIndex, ui.item.index())
             });
         }
     }
 
-    _openModal() {
+    openModal() {
         this.setState(CreateTemplateModal.initialState(true, this.props));
     }
 
-    _reorderPage(oldIndex, newIndex) {
+    reorderPage(oldIndex, newIndex) {
         const { pages } = this.state;
 
         const removed = pages.splice(oldIndex, 1)[0];
@@ -88,7 +88,7 @@ export default class CreateTemplateModal extends Component {
         this.setState({ pages });
     }
 
-    _submitCreate() {
+    submitCreate() {
         const errors = {};
 
         if (_.isEmpty(_.trim(this.state.templateName))) {
@@ -125,7 +125,7 @@ export default class CreateTemplateModal extends Component {
             });
     }
 
-    _handleInputChange(proxy, field) {
+    handleInputChange(proxy, field) {
         if (field.name === 'tenants') {
             const wasSelectedAll = _.indexOf(this.state.tenants, Consts.DEFAULT_ALL) >= 0;
             const willSelectAll = _.indexOf(field.value, Consts.DEFAULT_ALL) >= 0;
@@ -140,7 +140,7 @@ export default class CreateTemplateModal extends Component {
         this.setState(Form.fieldNameValue(field));
     }
 
-    _addPage(item) {
+    addPage(item) {
         const availablePages = _.without(this.state.availablePages, item);
         const pages = [...this.state.pages, item];
 
@@ -149,7 +149,7 @@ export default class CreateTemplateModal extends Component {
         });
     }
 
-    _removePage(item) {
+    removePage(item) {
         const availablePages = [...this.state.availablePages, item];
         const pages = _.without(this.state.pages, item);
 
@@ -183,7 +183,7 @@ export default class CreateTemplateModal extends Component {
             <Modal
                 trigger={trigger}
                 open={this.state.open}
-                onOpen={this._openModal.bind(this)}
+                onOpen={this.openModal.bind(this)}
                 onClose={() => this.setState({ open: false })}
                 className="createTemplateModal"
             >
@@ -203,7 +203,7 @@ export default class CreateTemplateModal extends Component {
                                 name="templateName"
                                 placeholder="Template name"
                                 value={this.state.templateName}
-                                onChange={this._handleInputChange.bind(this)}
+                                onChange={this.handleInputChange.bind(this)}
                             />
                         </Form.Field>
 
@@ -215,7 +215,7 @@ export default class CreateTemplateModal extends Component {
                                 options={rolesOptions}
                                 name="roles"
                                 value={this.state.roles}
-                                onChange={this._handleInputChange.bind(this)}
+                                onChange={this.handleInputChange.bind(this)}
                             />
                         </Form.Field>
 
@@ -227,7 +227,7 @@ export default class CreateTemplateModal extends Component {
                                 options={tenantOptions}
                                 name="tenants"
                                 value={this.state.tenants}
-                                onChange={this._handleInputChange.bind(this)}
+                                onChange={this.handleInputChange.bind(this)}
                             />
                         </Form.Field>
 
@@ -245,7 +245,7 @@ export default class CreateTemplateModal extends Component {
                                                     link
                                                     name="add"
                                                     className="right floated"
-                                                    onClick={this._addPage.bind(this, item)}
+                                                    onClick={this.addPage.bind(this, item)}
                                                     title="Add page"
                                                 />
                                             </List.Item>
@@ -269,7 +269,7 @@ export default class CreateTemplateModal extends Component {
                                                     <Icon
                                                         link
                                                         name="minus"
-                                                        onClick={this._removePage.bind(this, item)}
+                                                        onClick={this.removePage.bind(this, item)}
                                                         title="Remove page"
                                                     />
                                                     <Icon link name="move" className="handle" title="Reorder page" />
@@ -288,7 +288,7 @@ export default class CreateTemplateModal extends Component {
                 <Modal.Actions>
                     <CancelButton onClick={() => this.setState({ open: false })} disabled={this.state.loading} />
                     <ApproveButton
-                        onClick={this._submitCreate.bind(this)}
+                        onClick={this.submitCreate.bind(this)}
                         disabled={this.state.loading}
                         content={editMode ? 'Update' : 'Create'}
                         icon={editMode ? 'edit' : 'checkmark'}

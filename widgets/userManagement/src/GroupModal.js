@@ -18,7 +18,7 @@ export default class GroupModal extends React.Component {
     };
 
     onApprove() {
-        this._submitGroup();
+        this.submitGroup();
         return false;
     }
 
@@ -33,7 +33,7 @@ export default class GroupModal extends React.Component {
         }
     }
 
-    _submitGroup() {
+    submitGroup() {
         // Disable the form
         this.setState({ loading: true });
 
@@ -55,7 +55,7 @@ export default class GroupModal extends React.Component {
             });
     }
 
-    _handleInputChange(proxy, field) {
+    handleInputChange(proxy, field) {
         this.setState(Stage.Basic.Form.fieldNameValue(field));
     }
 
@@ -89,7 +89,7 @@ export default class GroupModal extends React.Component {
                                 options={options}
                                 name="groups"
                                 value={this.state.groups}
-                                onChange={this._handleInputChange.bind(this)}
+                                onChange={this.handleInputChange.bind(this)}
                             />
                         </Form.Field>
                     </Form>

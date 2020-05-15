@@ -39,19 +39,19 @@ export default class ExecutionsTable extends React.Component {
         );
     }
 
-    _refreshData() {
+    refreshData() {
         this.props.toolbox.refresh();
     }
 
     componentDidMount() {
-        this.props.toolbox.getEventBus().on('executions:refresh', this._refreshData, this);
+        this.props.toolbox.getEventBus().on('executions:refresh', this.refreshData, this);
     }
 
     componentWillUnmount() {
-        this.props.toolbox.getEventBus().off('executions:refresh', this._refreshData);
+        this.props.toolbox.getEventBus().off('executions:refresh', this.refreshData);
     }
 
-    _selectExecution(item) {
+    selectExecution(item) {
         const { toolbox } = this.props;
 
         const context = toolbox.getContext();
@@ -81,7 +81,7 @@ export default class ExecutionsTable extends React.Component {
             });
     }
 
-    _actionClick(execution, proxy, { name }) {
+    actionClick(execution, proxy, { name }) {
         const { MenuAction } = ExecutionsTable;
 
         switch (name) {
@@ -211,7 +211,7 @@ export default class ExecutionsTable extends React.Component {
                                 <DataTable.Row
                                     key={item.id}
                                     selected={item.isSelected}
-                                    onClick={this._selectExecution.bind(this, item)}
+                                    onClick={this.selectExecution.bind(this, item)}
                                     onMouseOver={() =>
                                         this.state.hoveredExecution !== item.id &&
                                         this.setState({ hoveredExecution: item.id })
@@ -246,14 +246,14 @@ export default class ExecutionsTable extends React.Component {
                                                     content="Show Execution Parameters"
                                                     icon="options"
                                                     name={MenuAction.SHOW_EXECUTION_PARAMETERS}
-                                                    onClick={this._actionClick.bind(this, item)}
+                                                    onClick={this.actionClick.bind(this, item)}
                                                 />
                                                 {Utils.Execution.isUpdateExecution(item) && (
                                                     <Menu.Item
                                                         content="Show Update Details"
                                                         icon="magnify"
                                                         name={MenuAction.SHOW_UPDATE_DETAILS}
-                                                        onClick={this._actionClick.bind(this, item)}
+                                                        onClick={this.actionClick.bind(this, item)}
                                                     />
                                                 )}
                                                 {Utils.Execution.isFailedExecution(item) && (
@@ -261,7 +261,7 @@ export default class ExecutionsTable extends React.Component {
                                                         content="Show Error Details"
                                                         icon={<Icon name="exclamation circle" color="red" />}
                                                         name={MenuAction.SHOW_ERROR_DETAILS}
-                                                        onClick={this._actionClick.bind(this, item)}
+                                                        onClick={this.actionClick.bind(this, item)}
                                                     />
                                                 )}
                                                 {(Utils.Execution.isCancelledExecution(item) ||
@@ -270,7 +270,7 @@ export default class ExecutionsTable extends React.Component {
                                                         content="Resume"
                                                         icon={<Icon name="play" color="green" />}
                                                         name={MenuAction.RESUME_EXECUTION}
-                                                        onClick={this._actionClick.bind(this, item)}
+                                                        onClick={this.actionClick.bind(this, item)}
                                                     />
                                                 )}
                                                 {(Utils.Execution.isActiveExecution(item) ||
@@ -279,7 +279,7 @@ export default class ExecutionsTable extends React.Component {
                                                         content="Cancel"
                                                         icon="cancel"
                                                         name={MenuAction.CANCEL_EXECUTION}
-                                                        onClick={this._actionClick.bind(this, item)}
+                                                        onClick={this.actionClick.bind(this, item)}
                                                     />
                                                 )}
                                                 {(Utils.Execution.isActiveExecution(item) ||
@@ -288,14 +288,14 @@ export default class ExecutionsTable extends React.Component {
                                                         content="Force Cancel"
                                                         icon={<Icon name="cancel" color="red" />}
                                                         name={MenuAction.FORCE_CANCEL_EXECUTION}
-                                                        onClick={this._actionClick.bind(this, item)}
+                                                        onClick={this.actionClick.bind(this, item)}
                                                     />
                                                 )}
                                                 <Menu.Item
                                                     content="Kill Cancel"
                                                     icon={<Icon name="stop" color="red" />}
                                                     name={MenuAction.KILL_CANCEL_EXECUTION}
-                                                    onClick={this._actionClick.bind(this, item)}
+                                                    onClick={this.actionClick.bind(this, item)}
                                                 />
                                             </Menu>
                                         </PopupMenu>

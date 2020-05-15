@@ -61,7 +61,7 @@ module.exports = (() => {
             let getRequest = null;
             const onErrorFetch = reject;
             const onSuccessFetch = response => {
-                let archiveFile = _extractFilename(response.headers['content-disposition']);
+                let archiveFile = extractFilename(response.headers['content-disposition']);
 
                 logger.debug('Filename extracted from content-disposition', archiveFile);
                 logger.debug('Content length', response.headers['content-length']);
@@ -100,7 +100,7 @@ module.exports = (() => {
                 );
             };
 
-            if (_isExternalUrl(archiveUrl)) {
+            if (isExternalUrl(archiveUrl)) {
                 const options = { options: { headers: HEADERS } };
                 getRequest = RequestHandler.request('GET', archiveUrl, options, onSuccessFetch, onErrorFetch);
             } else {
@@ -113,14 +113,14 @@ module.exports = (() => {
         });
     }
 
-    function _isExternalUrl(url) {
+    function isExternalUrl(url) {
         // eslint-disable-next-line security/detect-unsafe-regex
         const ABSOLUTE_URL_REGEX = new RegExp('^(?:[a-z]+:)?//', 'i');
 
         return ABSOLUTE_URL_REGEX.test(url);
     }
 
-    function _extractFilename(contentDisposition) {
+    function extractFilename(contentDisposition) {
         const regexp = /filename=([^;]*)/g;
         const match = regexp.exec(contentDisposition);
         if (!match) {

@@ -22,7 +22,7 @@ const userPagesFolder = pathlib.resolve(userTemplatesFolder, 'pages');
 const allTenants = '*';
 
 module.exports = (() => {
-    function _getTemplates(folder, isCustom, filter) {
+    function getTemplates(folder, isCustom, filter) {
         const compareTemplates = (templateA, templateB) => {
             const conflictingTemplates =
                 !_.isEmpty(_.intersection(templateA.data.roles, templateB.data.roles)) &&
@@ -64,20 +64,20 @@ module.exports = (() => {
             .value();
     }
 
-    function _getUserTemplates() {
-        return _getTemplates(userTemplatesFolder, true, () => true);
+    function getUserTemplates() {
+        return getTemplates(userTemplatesFolder, true, () => true);
     }
 
-    function _getBuiltInTemplates() {
+    function getBuiltInTemplates() {
         const { mode } = ServerSettings.settings;
-        return _getTemplates(builtInTemplatesFolder, false, fileName => _.startsWith(pathlib.basename(fileName), mode));
+        return getTemplates(builtInTemplatesFolder, false, fileName => _.startsWith(pathlib.basename(fileName), mode));
     }
 
     function listTemplates() {
-        return Promise.resolve(_.concat(_getBuiltInTemplates(), _getUserTemplates()));
+        return Promise.resolve(_.concat(getBuiltInTemplates(), getUserTemplates()));
     }
 
-    function _getPages(folder, isCustom) {
+    function getPages(folder, isCustom) {
         return _.chain(fs.readdirSync(pathlib.resolve(folder)))
             .map(pageFile => {
                 const pageFilePath = pathlib.resolve(folder, pageFile);
@@ -101,15 +101,15 @@ module.exports = (() => {
             .value();
     }
 
-    function _getUserPages() {
-        return _getPages(userPagesFolder, true);
+    function getUserPages() {
+        return getPages(userPagesFolder, true);
     }
 
-    function _getBuiltInPages() {
-        return _getPages(builtInPagesFolder, false);
+    function getBuiltInPages() {
+        return getPages(builtInPagesFolder, false);
     }
 
-    async function _getRole(systemRole, groupSystemRoles, tenantsRoles, tenant, token) {
+    async function getRole(systemRole, groupSystemRoles, tenantsRoles, tenant, token) {
         const rbac = await AuthHandler.getRBAC(token);
         const { roles } = rbac;
 
@@ -136,7 +136,7 @@ module.exports = (() => {
     }
 
     function listPages() {
-        return Promise.resolve(_.concat(_getBuiltInPages(), _getUserPages()));
+        return Promise.resolve(_.concat(getBuiltInPages(), getUserPages()));
     }
 
     function createTemplate(username, template) {
@@ -192,7 +192,7 @@ module.exports = (() => {
         const { tenants } = data;
         const getTenantString = tenant => (tenant === allTenants ? 'all tenants' : `tenant=${tenant}`);
 
-        const userTemplates = _.filter(_getUserTemplates(), template => template.id !== excludeTemplateId);
+        const userTemplates = _.filter(getUserTemplates(), template => template.id !== excludeTemplateId);
 
         logger.debug(
             `Checking template existence for roles=${roles} and ${getTenantString(tenants)}.` +
@@ -284,7 +284,7 @@ module.exports = (() => {
     }
 
     async function selectTemplate(systemRole, groupSystemRoles, tenantsRoles, tenant, token) {
-        const role = await _getRole(systemRole, groupSystemRoles, tenantsRoles, tenant, token);
+        const role = await getRole(systemRole, groupSystemRoles, tenantsRoles, tenant, token);
         const { mode } = ServerSettings.settings;
         let templateId = null;
 
@@ -292,7 +292,7 @@ module.exports = (() => {
 
         // Search user template
         if (mode === ServerSettings.MODE_MAIN) {
-            const userTemplates = _getUserTemplates();
+            const userTemplates = getUserTemplates();
             const matchingTemplateForSpecificTenant = _.find(
                 userTemplates,
                 template => _.includes(template.data.roles, role) && _.includes(template.data.tenants, tenant)

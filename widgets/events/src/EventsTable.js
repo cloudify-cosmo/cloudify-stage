@@ -26,23 +26,23 @@ export default class EventsTable extends React.Component {
         );
     }
 
-    _refreshData() {
+    refreshData() {
         this.props.toolbox.refresh();
     }
 
     componentDidMount() {
-        this.props.toolbox.getEventBus().on('events:refresh', this._refreshData, this);
+        this.props.toolbox.getEventBus().on('events:refresh', this.refreshData, this);
     }
 
     componentWillUnmount() {
-        this.props.toolbox.getEventBus().off('events:refresh', this._refreshData);
+        this.props.toolbox.getEventBus().off('events:refresh', this.refreshData);
     }
 
     fetchGridData(fetchParams) {
         return this.props.toolbox.refresh(fetchParams);
     }
 
-    _selectEvent(eventId) {
+    selectEvent(eventId) {
         const selectedEventId = this.props.toolbox.getContext().getValue('eventId');
         this.props.toolbox.getContext().setValue('eventId', eventId === selectedEventId ? null : eventId);
     }
@@ -195,7 +195,7 @@ export default class EventsTable extends React.Component {
                             <DataTable.Row
                                 key={item.id + index}
                                 selected={item.isSelected}
-                                onClick={this._selectEvent.bind(this, item.id)}
+                                onClick={this.selectEvent.bind(this, item.id)}
                                 className={colorLogs ? eventOptions.rowClass : ''}
                             >
                                 <DataTable.Data className="alignCenter">

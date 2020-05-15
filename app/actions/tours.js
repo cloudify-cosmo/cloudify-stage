@@ -9,7 +9,7 @@ import * as types from './types';
 import Tours from '../utils/Tours';
 import Consts from '../utils/consts';
 
-function _handleClick(event) {
+function handleClick(event) {
     const isHopscotchElementClicked = _.includes(event.target.className, 'hopscotch');
 
     if (!isHopscotchElementClicked) {
@@ -17,7 +17,7 @@ function _handleClick(event) {
     }
 }
 
-function _handleKeyPressed(event) {
+function handleKeyPressed(event) {
     const isEscapeKeyPressed = event.key === 'Escape';
 
     if (isEscapeKeyPressed) {
@@ -26,13 +26,13 @@ function _handleKeyPressed(event) {
 }
 
 function addStopTourEventsListeners() {
-    document.addEventListener('click', _handleClick);
-    document.addEventListener('keydown', _handleKeyPressed);
+    document.addEventListener('click', handleClick);
+    document.addEventListener('keydown', handleKeyPressed);
 }
 
 function removeStopTourEventsListeners() {
-    document.removeEventListener('click', _handleClick);
-    document.removeEventListener('keydown', _handleKeyPressed);
+    document.removeEventListener('click', handleClick);
+    document.removeEventListener('keydown', handleKeyPressed);
 }
 
 function waitForHopscotchElementsToBeClosed() {

@@ -27,7 +27,7 @@ export default class SetSiteModal extends React.Component {
     };
 
     onApprove() {
-        this._setSite();
+        this.setSite();
         return false;
     }
 
@@ -55,7 +55,7 @@ export default class SetSiteModal extends React.Component {
         }
     }
 
-    _setSite() {
+    setSite() {
         // Disable the form
         this.setState({ loading: true });
 
@@ -72,7 +72,7 @@ export default class SetSiteModal extends React.Component {
             });
     }
 
-    _handleInputChange(proxy, field) {
+    handleInputChange(proxy, field) {
         this.setState(Stage.Basic.Form.fieldNameValue(field));
     }
 
@@ -102,7 +102,7 @@ export default class SetSiteModal extends React.Component {
                                     value={this.state.siteName}
                                     name="siteName"
                                     options={site_options}
-                                    onChange={this._handleInputChange.bind(this)}
+                                    onChange={this.handleInputChange.bind(this)}
                                 />
                             </Form.Field>
                             <Form.Field className="detachSite">
@@ -111,7 +111,7 @@ export default class SetSiteModal extends React.Component {
                                     label="Detach from the current site"
                                     name="detachSite"
                                     checked={this.state.detachSite}
-                                    onChange={this._handleInputChange.bind(this)}
+                                    onChange={this.handleInputChange.bind(this)}
                                 />
                             </Form.Field>
                         </Form>

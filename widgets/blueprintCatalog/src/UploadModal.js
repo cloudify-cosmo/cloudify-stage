@@ -37,7 +37,7 @@ export default class UploadModal extends React.Component {
     };
 
     onApprove() {
-        this._submitUpload();
+        this.submitUpload();
         return false;
     }
 
@@ -68,7 +68,7 @@ export default class UploadModal extends React.Component {
         }
     }
 
-    _submitUpload() {
+    submitUpload() {
         const errors = {};
 
         if (_.isEmpty(this.state.blueprintName)) {
@@ -105,7 +105,7 @@ export default class UploadModal extends React.Component {
             });
     }
 
-    _handleInputChange(proxy, field) {
+    handleInputChange(proxy, field) {
         this.setState(Stage.Basic.Form.fieldNameValue(field));
     }
 
@@ -143,7 +143,7 @@ export default class UploadModal extends React.Component {
                                 <Form.Input
                                     name="blueprintName"
                                     value={this.state.blueprintName}
-                                    onChange={this._handleInputChange.bind(this)}
+                                    onChange={this.handleInputChange.bind(this)}
                                 />
                             </Form.Field>
                             <Form.Field
@@ -159,7 +159,7 @@ export default class UploadModal extends React.Component {
                                     selection
                                     options={yamlFiles}
                                     value={this.state.blueprintYamlFile}
-                                    onChange={this._handleInputChange.bind(this)}
+                                    onChange={this.handleInputChange.bind(this)}
                                 />
                             </Form.Field>
                         </Form>

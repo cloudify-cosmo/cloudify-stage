@@ -27,7 +27,7 @@ export default class BlueprintList extends React.Component {
         );
     }
 
-    _selectBlueprint(item) {
+    selectBlueprint(item) {
         if (this.props.widget.configuration.clickToDrillDown) {
             this.props.toolbox.drillDown(this.props.widget, 'blueprint', { blueprintId: item.id }, item.id);
         } else {
@@ -38,15 +38,15 @@ export default class BlueprintList extends React.Component {
         }
     }
 
-    _createDeployment(item) {
+    createDeployment(item) {
         this.setState({ error: null, blueprintId: item.id, showDeploymentModal: true });
     }
 
-    _deleteBlueprintConfirm(item) {
+    deleteBlueprintConfirm(item) {
         this.setState({ confirmDelete: true, blueprintId: item.id, force: false });
     }
 
-    _deleteBlueprint() {
+    deleteBlueprint() {
         if (!this.state.blueprintId) {
             this.setState({ error: 'Something went wrong, no blueprint was selected for delete' });
             return;
@@ -65,7 +65,7 @@ export default class BlueprintList extends React.Component {
             });
     }
 
-    _setBlueprintVisibility(blueprintId, visibility) {
+    setBlueprintVisibility(blueprintId, visibility) {
         const actions = new Stage.Common.BlueprintActions(this.props.toolbox);
         this.props.toolbox.loading(true);
         actions
@@ -80,31 +80,31 @@ export default class BlueprintList extends React.Component {
             });
     }
 
-    _refreshData() {
+    refreshData() {
         this.props.toolbox.refresh();
     }
 
     componentDidMount() {
-        this.props.toolbox.getEventBus().on('blueprints:refresh', this._refreshData, this);
+        this.props.toolbox.getEventBus().on('blueprints:refresh', this.refreshData, this);
     }
 
     componentWillUnmount() {
-        this.props.toolbox.getEventBus().off('blueprints:refresh', this._refreshData);
+        this.props.toolbox.getEventBus().off('blueprints:refresh', this.refreshData);
     }
 
-    _hideDeploymentModal() {
+    hideDeploymentModal() {
         this.setState({ showDeploymentModal: false });
     }
 
-    _showUploadModal() {
+    showUploadModal() {
         this.setState({ showUploadModal: true });
     }
 
-    _hideUploadModal() {
+    hideUploadModal() {
         this.setState({ showUploadModal: false });
     }
 
-    _handleForceChange(event, field) {
+    handleForceChange(event, field) {
         this.setState(Stage.Basic.Form.fieldNameValue(field));
     }
 
@@ -128,7 +128,7 @@ export default class BlueprintList extends React.Component {
                     icon="upload"
                     labelPosition="left"
                     className="uploadBlueprintButton"
-                    onClick={this._showUploadModal.bind(this)}
+                    onClick={this.showUploadModal.bind(this)}
                 />
 
                 {shouldShowTable ? (
@@ -137,10 +137,10 @@ export default class BlueprintList extends React.Component {
                         data={this.props.data}
                         toolbox={this.props.toolbox}
                         fetchGridData={this.fetchGridData.bind(this)}
-                        onSelectBlueprint={this._selectBlueprint.bind(this)}
-                        onDeleteBlueprint={this._deleteBlueprintConfirm.bind(this)}
-                        onCreateDeployment={this._createDeployment.bind(this)}
-                        onSetVisibility={this._setBlueprintVisibility.bind(this)}
+                        onSelectBlueprint={this.selectBlueprint.bind(this)}
+                        onDeleteBlueprint={this.deleteBlueprintConfirm.bind(this)}
+                        onCreateDeployment={this.createDeployment.bind(this)}
+                        onSetVisibility={this.setBlueprintVisibility.bind(this)}
                         noDataMessage={NO_DATA_MESSAGE}
                     />
                 ) : (
@@ -149,10 +149,10 @@ export default class BlueprintList extends React.Component {
                         data={this.props.data}
                         toolbox={this.props.toolbox}
                         fetchData={this.fetchGridData.bind(this)}
-                        onSelectBlueprint={this._selectBlueprint.bind(this)}
-                        onDeleteBlueprint={this._deleteBlueprintConfirm.bind(this)}
-                        onCreateDeployment={this._createDeployment.bind(this)}
-                        onSetVisibility={this._setBlueprintVisibility.bind(this)}
+                        onSelectBlueprint={this.selectBlueprint.bind(this)}
+                        onDeleteBlueprint={this.deleteBlueprintConfirm.bind(this)}
+                        onCreateDeployment={this.createDeployment.bind(this)}
+                        onSetVisibility={this.setBlueprintVisibility.bind(this)}
                         noDataMessage={NO_DATA_MESSAGE}
                     />
                 )}
@@ -161,21 +161,21 @@ export default class BlueprintList extends React.Component {
                     resourceName={`blueprint ${this.state.blueprintId}`}
                     force={this.state.force}
                     open={this.state.confirmDelete}
-                    onConfirm={this._deleteBlueprint.bind(this)}
+                    onConfirm={this.deleteBlueprint.bind(this)}
                     onCancel={() => this.setState({ confirmDelete: false })}
-                    onForceChange={this._handleForceChange.bind(this)}
+                    onForceChange={this.handleForceChange.bind(this)}
                 />
 
                 <DeployBlueprintModal
                     open={this.state.showDeploymentModal}
                     blueprintId={this.state.blueprintId}
-                    onHide={this._hideDeploymentModal.bind(this)}
+                    onHide={this.hideDeploymentModal.bind(this)}
                     toolbox={this.props.toolbox}
                 />
 
                 <UploadBlueprintModal
                     open={this.state.showUploadModal}
-                    onHide={this._hideUploadModal.bind(this)}
+                    onHide={this.hideUploadModal.bind(this)}
                     toolbox={this.props.toolbox}
                 />
             </div>
