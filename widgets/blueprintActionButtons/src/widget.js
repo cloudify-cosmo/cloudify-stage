@@ -18,9 +18,22 @@ Stage.defineWidget({
     permission: Stage.GenericConfig.WIDGET_PERMISSION('blueprintActionButtons'),
     categories: [Stage.GenericConfig.CATEGORY.BLUEPRINTS, Stage.GenericConfig.CATEGORY.BUTTONS_AND_FILTERS],
 
+    fetchUrl: '[manager]/blueprints?_include=main_file_name[params]',
+
+    fetchParams(widget, toolbox) {
+        return { id: toolbox.getContext().getValue('blueprintId') };
+    },
+
     render(widget, data, error, toolbox) {
         const blueprintId = toolbox.getContext().getValue('blueprintId');
+        const blueprintYamlFileName = _.get(data, 'items[0].main_file_name');
 
-        return <BlueprintActionButtons blueprintId={blueprintId} toolbox={toolbox} />;
+        return (
+            <BlueprintActionButtons
+                blueprintId={blueprintId}
+                blueprintYamlFileName={blueprintYamlFileName}
+                toolbox={toolbox}
+            />
+        );
     }
 });

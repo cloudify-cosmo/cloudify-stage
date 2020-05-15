@@ -4,6 +4,7 @@
 
 import Internal from './Internal';
 import StageUtils from './stageUtils';
+import Consts from './consts';
 
 export default class Manager extends Internal {
     constructor(managerData) {
@@ -28,6 +29,10 @@ export default class Manager extends Internal {
 
     getDistributionRelease() {
         return _.get(this, '_data.version.distro_release', null);
+    }
+
+    isCommunityEdition() {
+        return _.get(this._data, 'version.edition') === Consts.EDITION.COMMUNITY;
     }
 
     getManagerUrl(url, data) {

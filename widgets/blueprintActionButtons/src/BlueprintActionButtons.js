@@ -20,7 +20,7 @@ export default class BlueprintActionButtons extends React.Component {
     }
 
     shouldComponentUpdate(nextProps, nextState) {
-        return !_.isEqual(this.state, nextState) || !_.isEqual(this.props.blueprintId, nextProps.blueprintId);
+        return !_.isEqual(this.state, nextState) || !_.isMatch(this.props, _.omit(nextProps, 'toolbox'));
     }
 
     _showModal(type) {
@@ -66,8 +66,7 @@ export default class BlueprintActionButtons extends React.Component {
     render() {
         const { ErrorMessage, Button } = Stage.Basic;
         const { DeleteConfirm, DeployBlueprintModal } = Stage.Common;
-
-        const { blueprintId } = this.props;
+        const { blueprintId, blueprintYamlFileName, toolbox } = this.props;
 
         return (
             <div>
@@ -93,11 +92,29 @@ export default class BlueprintActionButtons extends React.Component {
                     id="deleteBlueprintButton"
                 />
 
+                {!toolbox.getManager().isCommunityEdition() && (
+                    <Button
+                        className="labeled icon"
+                        color="teal"
+                        icon="edit"
+                        disabled={_.isEmpty(blueprintId) || this.state.loading}
+                        onClick={() =>
+                            window.open(
+                                `/composer/import/${toolbox
+                                    .getManager()
+                                    .getSelectedTenant()}/${blueprintId}/${blueprintYamlFileName}`,
+                                '_blank'
+                            )
+                        }
+                        content="Edit a copy in Composer"
+                    />
+                )}
+
                 <DeployBlueprintModal
                     open={this._isShowModal(BlueprintActionButtons.DEPLOY_ACTION)}
                     blueprintId={blueprintId}
                     onHide={this._hideModal.bind(this)}
-                    toolbox={this.props.toolbox}
+                    toolbox={toolbox}
                 />
 
                 <DeleteConfirm
