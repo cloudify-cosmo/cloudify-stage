@@ -22,6 +22,7 @@ import { Form } from '../basic';
  * <PageFilter name='pageId' value={value} />
  * ```
  *
+ * @param props
  */
 class PageFilter extends React.Component {
     constructor(props, context) {

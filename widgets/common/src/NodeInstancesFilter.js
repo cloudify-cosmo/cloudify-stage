@@ -1,6 +1,8 @@
 /**
  * NodeInstancesFilter - a component showing dropdown with nodes instances of specified deployment.
  * Data is dynamically fetched from manager.
+ *
+ * @param props
  */
 export default class NodeInstancesFilter extends React.Component {
     constructor(props, context) {
