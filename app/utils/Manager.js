@@ -10,27 +10,27 @@ export default class Manager extends Internal {
     }
 
     getIp() {
-        return _.get(this, '_data.ip', null);
+        return _.get(this, 'data.ip', null);
     }
 
     getCurrentUsername() {
-        return _.get(this, '_data.username', null);
+        return _.get(this, 'data.username', null);
     }
 
     getCurrentUserRole() {
-        return _.get(this, '_data.auth.role', null);
+        return _.get(this, 'data.auth.role', null);
     }
 
     getDistributionName() {
-        return _.get(this, '_data.version.distribution', null);
+        return _.get(this, 'data.version.distribution', null);
     }
 
     getDistributionRelease() {
-        return _.get(this, '_data.version.distro_release', null);
+        return _.get(this, 'data.version.distro_release', null);
     }
 
     isCommunityEdition() {
-        return _.get(this._data, 'version.edition') === Consts.EDITION.COMMUNITY;
+        return _.get(this.data, 'version.edition') === Consts.EDITION.COMMUNITY;
     }
 
     getManagerUrl(url, data) {
@@ -38,11 +38,11 @@ export default class Manager extends Internal {
     }
 
     getSelectedTenant() {
-        return _.get(this, '_data.tenants.selected', null);
+        return _.get(this, 'data.tenants.selected', null);
     }
 
     getSystemRoles() {
-        const roles = _.get(this, '_data.roles', null);
+        const roles = _.get(this, 'data.roles', null);
         return _.filter(roles, role => role.type === 'system_role');
     }
 
