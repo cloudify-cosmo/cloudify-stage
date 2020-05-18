@@ -1,35 +1,33 @@
-/**
- * Created by kinneretzin on 04/04/2017.
- */
+/* eslint no-underscore-dangle: ["error", { "allow": ["_sort", "_search", "_size", "_offset"] }] */
 
 export default class WidgetParamsHandler {
     constructor(widget, toolbox) {
-        this._widget = widget;
-        this._toolbox = toolbox;
+        this.widget = widget;
+        this.toolbox = toolbox;
 
         // initialize params
         this.fetchParams = {
             gridParams: {
                 currentPage: 1,
-                pageSize: this._widget.configuration.pageSize,
-                sortColumn: this._widget.configuration.sortColumn,
-                sortAscending: this._widget.configuration.sortAscending
+                pageSize: this.widget.configuration.pageSize,
+                sortColumn: this.widget.configuration.sortColumn,
+                sortAscending: this.widget.configuration.sortAscending
             },
             filterParams: {}
         };
 
         // process fetch params
-        this._runFetchParamsIfNeeded();
+        this.runFetchParamsIfNeeded();
     }
 
     update(widget) {
-        this._widget = widget;
+        this.widget = widget;
     }
 
     buildParamsToSend(userRequestedParams) {
         // Map grid params to params
-        const gridParams = this._mapGridParamsToParams();
-        const fetchParams = this._buildFilterParams();
+        const gridParams = this.mapGridParamsToParams();
+        const fetchParams = this.buildFilterParams();
 
         let params = { ...gridParams, ...fetchParams };
 
@@ -51,7 +49,7 @@ export default class WidgetParamsHandler {
         // save the old filter params
         const oldFilterParams = this.fetchParams.filterParams;
 
-        this._runFetchParamsIfNeeded();
+        this.runFetchParamsIfNeeded();
 
         // Check if the filter params have changed
         return !_.isEqual(this.fetchParams.filterParams, oldFilterParams);
@@ -61,10 +59,10 @@ export default class WidgetParamsHandler {
         Object.assign(this.fetchParams.gridParams, newGridParams);
     }
 
-    _runFetchParamsIfNeeded() {
-        if (_.isFunction(this._widget.definition.fetchParams)) {
+    runFetchParamsIfNeeded() {
+        if (_.isFunction(this.widget.definition.fetchParams)) {
             try {
-                this.fetchParams.filterParams = this._widget.definition.fetchParams(this._widget, this._toolbox);
+                this.fetchParams.filterParams = this.widget.definition.fetchParams(this.widget, this.toolbox);
             } catch (e) {
                 console.error('Error processing fetch params', e);
                 throw new Error('Error processing fetch params', e);
@@ -72,9 +70,9 @@ export default class WidgetParamsHandler {
         }
     }
 
-    _buildFilterParams() {
+    buildFilterParams() {
         const params = {};
-        _.forIn(this.fetchParams.filterParams, function(value, key) {
+        _.forIn(this.fetchParams.filterParams, (value, key) => {
             if (_.isBoolean(value) || !_.isEmpty(value)) {
                 params[key] = value;
             }
@@ -83,7 +81,7 @@ export default class WidgetParamsHandler {
         return params;
     }
 
-    _mapGridParamsToParams() {
+    mapGridParamsToParams() {
         if (_.isEmpty(this.fetchParams.gridParams)) {
             return {};
         }
@@ -91,9 +89,9 @@ export default class WidgetParamsHandler {
         let params = {};
 
         // If we have a mapping function run it
-        if (_.isFunction(this._widget.definition.mapGridParams)) {
+        if (_.isFunction(this.widget.definition.mapGridParams)) {
             try {
-                params = this._widget.definition.mapGridParams(this.fetchParams.gridParams);
+                params = this.widget.definition.mapGridParams(this.fetchParams.gridParams);
             } catch (e) {
                 console.error('Error processing match grid params', e);
                 throw new Error('Error processing match grid params', e);

@@ -24,7 +24,7 @@ export default class CreateModal extends React.Component {
     };
 
     onApprove() {
-        this._createSecret();
+        this.createSecret();
         return false;
     }
 
@@ -39,7 +39,7 @@ export default class CreateModal extends React.Component {
         }
     }
 
-    _createSecret() {
+    createSecret() {
         const errors = {};
 
         if (_.isEmpty(this.state.secretKey)) {
@@ -70,11 +70,11 @@ export default class CreateModal extends React.Component {
             });
     }
 
-    _handleInputChange(proxy, field) {
+    handleInputChange(proxy, field) {
         this.setState(Stage.Basic.Form.fieldNameValue(field));
     }
 
-    _onSecretFileChange(file) {
+    onSecretFileChange(file) {
         if (!file) {
             this.setState({ secretValue: '', errors: {} });
             return;
@@ -124,7 +124,7 @@ export default class CreateModal extends React.Component {
                                 name="secretKey"
                                 placeholder="Secret key"
                                 value={this.state.secretKey}
-                                onChange={this._handleInputChange.bind(this)}
+                                onChange={this.handleInputChange.bind(this)}
                             />
                         </Form.Field>
                         <Form.Field error={this.state.errors.secretValue}>
@@ -133,7 +133,7 @@ export default class CreateModal extends React.Component {
                                 placeholder="Secret value"
                                 autoHeight
                                 value={this.state.secretValue}
-                                onChange={this._handleInputChange.bind(this)}
+                                onChange={this.handleInputChange.bind(this)}
                             />
                         </Form.Field>
                         <Form.Field error={this.state.errors.secretFile}>
@@ -141,7 +141,7 @@ export default class CreateModal extends React.Component {
                                 name="secretFile"
                                 placeholder="Get secret value from file (max: 50kB)"
                                 ref="secretFile"
-                                onChange={this._onSecretFileChange.bind(this)}
+                                onChange={this.onSecretFileChange.bind(this)}
                                 loading={this.state.fileLoading}
                                 disabled={this.state.fileLoading}
                             />
@@ -151,7 +151,7 @@ export default class CreateModal extends React.Component {
                                 name="isHiddenValue"
                                 label="Hidden Value"
                                 checked={this.state.isHiddenValue}
-                                onChange={this._handleInputChange.bind(this)}
+                                onChange={this.handleInputChange.bind(this)}
                             />
                         </Form.Field>
                     </Form>

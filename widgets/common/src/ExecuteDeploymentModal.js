@@ -48,7 +48,7 @@ export default class ExecuteDeploymentModal extends React.Component {
     }
 
     onApprove() {
-        this.setState({ errors: {} }, this._submitExecute);
+        this.setState({ errors: {} }, this.submitExecute);
         return false;
     }
 
@@ -57,7 +57,7 @@ export default class ExecuteDeploymentModal extends React.Component {
         return true;
     }
 
-    _submitExecute() {
+    submitExecute() {
         const { InputsUtils, DeploymentActions } = Stage.Common;
         const errors = {};
 

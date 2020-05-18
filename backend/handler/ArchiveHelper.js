@@ -13,7 +13,7 @@ const RequestHandler = require('./RequestHandler');
 
 const logger = require('./LoggerHandler').getLogger('ArchiveHelper');
 
-module.exports = (function() {
+module.exports = (() => {
     function saveMultipartData(req, targetDir, multipartId) {
         const storage = multer.diskStorage({
             destination(req, file, cb) {
@@ -35,7 +35,7 @@ module.exports = (function() {
         const upload = multer({ storage }).single(multipartId);
 
         return new Promise((resolve, reject) => {
-            upload(req, null, function(err) {
+            upload(req, null, err => {
                 if (err) {
                     reject(err);
                 } else {
@@ -59,11 +59,9 @@ module.exports = (function() {
             logger.debug('Fetching file from url', archiveUrl);
 
             let getRequest = null;
-            const onErrorFetch = function(error) {
-                reject(error);
-            };
-            const onSuccessFetch = function(response) {
-                let archiveFile = _extractFilename(response.headers['content-disposition']);
+            const onErrorFetch = reject;
+            const onSuccessFetch = response => {
+                let archiveFile = extractFilename(response.headers['content-disposition']);
 
                 logger.debug('Filename extracted from content-disposition', archiveFile);
                 logger.debug('Content length', response.headers['content-length']);
@@ -71,9 +69,7 @@ module.exports = (function() {
                 if (!archiveFile) {
                     const details = pathlib.parse(archiveUrl);
 
-                    const archiveExt = ['tar', 'bz2', 'gz', 'zip'].find(function(ext) {
-                        return _.includes(details.ext, ext);
-                    });
+                    const archiveExt = ['tar', 'bz2', 'gz', 'zip'].find(ext => _.includes(details.ext, ext));
 
                     if (archiveExt) {
                         archiveFile = details.base;
@@ -97,14 +93,14 @@ module.exports = (function() {
                     fs
                         .createWriteStream(archivePath)
                         .on('error', reject)
-                        .on('close', function() {
+                        .on('close', () => {
                             logger.debug('archive saved, archivePath:', archivePath);
                             resolve({ archiveFolder, archiveFile, archivePath });
                         })
                 );
             };
 
-            if (_isExternalUrl(archiveUrl)) {
+            if (isExternalUrl(archiveUrl)) {
                 const options = { options: { headers: HEADERS } };
                 getRequest = RequestHandler.request('GET', archiveUrl, options, onSuccessFetch, onErrorFetch);
             } else {
@@ -117,14 +113,14 @@ module.exports = (function() {
         });
     }
 
-    function _isExternalUrl(url) {
+    function isExternalUrl(url) {
         // eslint-disable-next-line security/detect-unsafe-regex
         const ABSOLUTE_URL_REGEX = new RegExp('^(?:[a-z]+:)?//', 'i');
 
         return ABSOLUTE_URL_REGEX.test(url);
     }
 
-    function _extractFilename(contentDisposition) {
+    function extractFilename(contentDisposition) {
         const regexp = /filename=([^;]*)/g;
         const match = regexp.exec(contentDisposition);
         if (!match) {
@@ -154,23 +150,21 @@ module.exports = (function() {
     function removeOldExtracts(tempDir) {
         const PAST_TIME = 60 * 60 * 1000; // remove archives older then 1 hour async
 
-        fs.readdir(tempDir, function(err, files) {
+        fs.readdir(tempDir, (err, files) => {
             if (err) {
                 logger.warn('Cannot remove old extracts. Error:', err);
                 return;
             }
 
             files
-                .map(function(file) {
-                    return pathlib.join(tempDir, file);
-                })
-                .filter(function(file) {
+                .map(file => pathlib.join(tempDir, file))
+                .filter(file => {
                     const now = new Date().getTime();
                     const modTime = new Date(fs.statSync(file).mtime).getTime() + PAST_TIME;
 
                     return now > modTime;
                 })
-                .forEach(function(file) {
+                .forEach(file => {
                     fs.removeSync(file);
                 });
         });

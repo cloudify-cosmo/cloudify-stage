@@ -34,7 +34,7 @@ export default class UsersModal extends React.Component {
     };
 
     onApprove() {
-        this._updateTenant();
+        this.updateTenant();
         return false;
     }
 
@@ -67,7 +67,7 @@ export default class UsersModal extends React.Component {
         }
     }
 
-    _updateTenant() {
+    updateTenant() {
         // Disable the form
         this.setState({ loading: true });
 
@@ -96,11 +96,11 @@ export default class UsersModal extends React.Component {
             });
     }
 
-    _handleInputChange(proxy, field) {
+    handleInputChange(proxy, field) {
         const newUsers = {};
         _.forEach(field.value, user => {
             newUsers[user] =
-                this.state.users[user] || RolesUtil.getDefaultRoleName(this.props.toolbox.getManager()._data.roles);
+                this.state.users[user] || RolesUtil.getDefaultRoleName(this.props.toolbox.getManagerState().roles);
         });
         this.setState({ users: newUsers });
     }
@@ -133,7 +133,7 @@ export default class UsersModal extends React.Component {
                                 options={users}
                                 name="users"
                                 value={Object.keys(this.state.users)}
-                                onChange={this._handleInputChange.bind(this)}
+                                onChange={this.handleInputChange.bind(this)}
                             />
                         </Form.Field>
                         <RolesPicker

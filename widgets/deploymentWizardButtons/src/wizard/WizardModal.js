@@ -17,6 +17,8 @@ import './Wizard.css';
  * <Wizard.Modal header={wizardTitle} open={this.state.open} steps={helloWorldWizardSteps}
  * onClose={this.closeWizard.bind(this)} toolbox={toolbox} />
  * ```
+ *
+ * @param steps
  */
 export default class WizardModal extends React.Component {
     constructor(props) {

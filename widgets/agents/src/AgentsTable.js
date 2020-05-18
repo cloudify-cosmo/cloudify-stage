@@ -29,16 +29,16 @@ export default class AgentsTable extends React.Component {
         );
     }
 
-    _refreshData() {
+    refreshData() {
         this.props.toolbox.refresh();
     }
 
     componentDidMount() {
-        this.props.toolbox.getEventBus().on('agents:refresh', this._refreshData, this);
+        this.props.toolbox.getEventBus().on('agents:refresh', this.refreshData, this);
     }
 
     componentWillUnmount() {
-        this.props.toolbox.getEventBus().off('agents:refresh', this._refreshData);
+        this.props.toolbox.getEventBus().off('agents:refresh', this.refreshData);
     }
 
     openModal(modal) {

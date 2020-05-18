@@ -11,11 +11,11 @@ export default class extends React.Component {
         };
     }
 
-    _createDeployment() {
+    createDeployment() {
         this.setState({ open: true });
     }
 
-    _hideModal() {
+    hideModal() {
         this.setState({ open: false });
     }
 
@@ -32,12 +32,12 @@ export default class extends React.Component {
                     labelPosition="left"
                     className="widgetButton"
                     loading={this.state.loading}
-                    onClick={this._createDeployment.bind(this)}
+                    onClick={this.createDeployment.bind(this)}
                 />
 
                 <DeployBlueprintModal
                     open={this.state.open}
-                    onHide={this._hideModal.bind(this)}
+                    onHide={this.hideModal.bind(this)}
                     toolbox={this.props.toolbox}
                 />
             </div>

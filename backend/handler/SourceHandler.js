@@ -17,7 +17,7 @@ const logger = require('./LoggerHandler').getLogger('SourceHandler');
 const browseSourcesDir = pathlib.join(os.tmpdir(), config.app.source.browseSourcesDir);
 const lookupYamlsDir = pathlib.join(os.tmpdir(), config.app.source.lookupYamlsDir);
 
-module.exports = (function() {
+module.exports = (() => {
     function browseArchiveTree(req) {
         const archiveUrl = `/blueprints/${req.params.blueprintId}/archive`;
         logger.debug('download archive from url', archiveUrl);
@@ -29,16 +29,14 @@ module.exports = (function() {
                 const archivePath = pathlib.join(data.archiveFolder, data.archiveFile);
                 const extractedDir = pathlib.join(data.archiveFolder, 'extracted');
 
-                return ArchiveHelper.decompressArchive(archivePath, extractedDir).then(() =>
-                    _scanArchive(extractedDir)
-                );
+                return ArchiveHelper.decompressArchive(archivePath, extractedDir).then(() => scanArchive(extractedDir));
             });
     }
 
     function browseArchiveFile(path) {
         return new Promise((resolve, reject) => {
             const absolutePath = pathlib.resolve(browseSourcesDir, path);
-            if (!_checkPrefix(absolutePath, browseSourcesDir)) {
+            if (!checkPrefix(absolutePath, browseSourcesDir)) {
                 return reject('Wrong path');
             }
 
@@ -52,21 +50,21 @@ module.exports = (function() {
         });
     }
 
-    function _checkPrefix(absCandidate, absPrefix) {
+    function checkPrefix(absCandidate, absPrefix) {
         return absCandidate.substring(0, absPrefix.length) === absPrefix;
     }
 
-    function _saveMultipartData(req) {
+    function saveMultipartData(req) {
         const targetPath = pathlib.join(lookupYamlsDir, `archive${Date.now()}`);
         return ArchiveHelper.saveMultipartData(req, targetPath, 'archive');
     }
 
-    function _saveDataFromUrl(archiveUrl) {
+    function saveDataFromUrl(archiveUrl) {
         const targetPath = pathlib.join(lookupYamlsDir, `archive${Date.now()}`);
         return ArchiveHelper.saveDataFromUrl(archiveUrl, targetPath);
     }
 
-    function _convertYamlToJson(path, yamlFile) {
+    function convertYamlToJson(path, yamlFile) {
         let yamlFilePath = '';
 
         let files = fs.readdirSync(path);
@@ -94,11 +92,11 @@ module.exports = (function() {
         }
     }
 
-    function _getInputs(inputs) {
+    function getInputs(inputs) {
         return _.mapValues(inputs, inputObject => inputObject || {});
     }
 
-    function _getPlugins(imports) {
+    function getPlugins(imports) {
         const PLUGIN_KEYWORD = 'plugin:';
 
         return _.chain(imports)
@@ -121,7 +119,7 @@ module.exports = (function() {
             .value();
     }
 
-    function _getSecrets(json) {
+    function getSecrets(json) {
         const SECRET_KEYWORD = 'get_secret';
 
         return _.chain(Utils.getValuesWithPaths(json, SECRET_KEYWORD))
@@ -140,9 +138,9 @@ module.exports = (function() {
             .value();
     }
 
-    function _getBlueprintArchiveContent(request) {
+    function getBlueprintArchiveContent(request) {
         const { query } = request;
-        const promise = query.url ? _saveDataFromUrl(query.url) : _saveMultipartData(request);
+        const promise = query.url ? saveDataFromUrl(query.url) : saveMultipartData(request);
 
         return promise.then(data => {
             const { archiveFolder } = data;
@@ -176,13 +174,13 @@ module.exports = (function() {
         const { query } = request;
         const { yamlFile } = query;
 
-        return _getBlueprintArchiveContent(request)
-            .then(data => _convertYamlToJson(data.extractedDir, yamlFile))
+        return getBlueprintArchiveContent(request)
+            .then(data => convertYamlToJson(data.extractedDir, yamlFile))
             .then(json => ({
-                inputs: _getInputs(json.inputs),
+                inputs: getInputs(json.inputs),
                 dataTypes: json.data_types,
-                plugins: _getPlugins(json.imports),
-                secrets: _getSecrets(json)
+                plugins: getPlugins(json.imports),
+                secrets: getSecrets(json)
             }));
     }
 
@@ -191,15 +189,15 @@ module.exports = (function() {
         const includeFilename = query.includeFilename === 'true';
         let archiveFileName = '';
 
-        return _getBlueprintArchiveContent(request)
+        return getBlueprintArchiveContent(request)
             .then(data => {
                 archiveFileName = data.archiveFileName;
-                return _scanYamlFiles(data.extractedDir);
+                return scanYamlFiles(data.extractedDir);
             })
             .then(data => (includeFilename ? [archiveFileName, ...data] : data));
     }
 
-    function _scanYamlFiles(extractedDir) {
+    function scanYamlFiles(extractedDir) {
         logger.debug('scaning yaml files from', extractedDir);
 
         let items = fs.readdirSync(extractedDir);
@@ -213,20 +211,20 @@ module.exports = (function() {
         return Promise.resolve(items);
     }
 
-    function _scanArchive(archivePath) {
+    function scanArchive(archivePath) {
         logger.debug('scaning archive', archivePath);
-        return _scanRecursive(browseSourcesDir, archivePath);
+        return scanRecursive(browseSourcesDir, archivePath);
     }
 
-    function _isUnixHiddenPath(path) {
+    function isUnixHiddenPath(path) {
         return /(^|.\/)\.+[^\/\.]/g.test(path);
     }
 
-    function _scanRecursive(root, archivePath) {
+    function scanRecursive(root, archivePath) {
         const stats = fs.statSync(archivePath);
         const name = pathlib.basename(archivePath);
 
-        if (stats.isSymbolicLink() || _isUnixHiddenPath(name)) {
+        if (stats.isSymbolicLink() || isUnixHiddenPath(name)) {
             return null;
         }
 
@@ -243,7 +241,7 @@ module.exports = (function() {
             try {
                 const children = fs
                     .readdirSync(archivePath)
-                    .map(child => _scanRecursive(root, pathlib.join(archivePath, child)))
+                    .map(child => scanRecursive(root, pathlib.join(archivePath, child)))
                     .filter(e => !!e);
 
                 item.isDir = true;

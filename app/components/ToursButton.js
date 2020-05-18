@@ -26,11 +26,11 @@ export default class ToursButton extends React.Component {
         this.props.onTourStart(tour);
     }
 
-    _onMouseOver() {
+    onMouseOver() {
         this.setState({ hovered: true });
     }
 
-    _onMouseOut() {
+    onMouseOut() {
         this.setState({ hovered: false });
     }
 
@@ -45,7 +45,7 @@ export default class ToursButton extends React.Component {
 
         return (
             !_.isEmpty(this.props.tours) && (
-                <PopupMenu onClose={this._onMouseOut.bind(this)}>
+                <PopupMenu onClose={this.onMouseOut.bind(this)}>
                     <Popup.Trigger>
                         <Button
                             title="Take a tour"
@@ -54,8 +54,8 @@ export default class ToursButton extends React.Component {
                             size="huge"
                             icon="map signs"
                             id="toursButton"
-                            onMouseOver={this._onMouseOver.bind(this)}
-                            onMouseOut={this._onMouseOut.bind(this)}
+                            onMouseOver={this.onMouseOver.bind(this)}
+                            onMouseOut={this.onMouseOut.bind(this)}
                             style={buttonStyle}
                             onClick={e => e.stopPropagation()}
                         />

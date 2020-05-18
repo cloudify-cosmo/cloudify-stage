@@ -18,7 +18,7 @@ export default class SiteControl extends React.Component {
         toolbox: PropTypes.object.isRequired
     };
 
-    _goToDeploymentsPage(siteName) {
+    goToDeploymentsPage(siteName) {
         return new Promise(resolve => {
             resolve(this.props.toolbox.goToPage('deployments'));
         }).then(() => this.props.toolbox.getContext().setValue('siteName', siteName));
@@ -43,7 +43,7 @@ export default class SiteControl extends React.Component {
                                         state={state}
                                         value={value}
                                         className="deploymentState"
-                                        onClick={() => this._goToDeploymentsPage(site.name)}
+                                        onClick={() => this.goToDeploymentsPage(site.name)}
                                         description={description}
                                     />
                                 </Grid.Column>

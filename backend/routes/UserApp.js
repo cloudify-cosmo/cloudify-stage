@@ -17,7 +17,7 @@ router.use(bodyParser.json());
 /**
  * End point to get a request from the server. Assuming it has a url parameter 'su' - server url
  */
-router.get('/', function(req, res, next) {
+router.get('/', (req, res, next) => {
     db.UserApp.findOne({
         where: {
             managerIp: config.manager.ip,
@@ -26,13 +26,13 @@ router.get('/', function(req, res, next) {
             tenant: req.headers.tenant
         }
     })
-        .then(function(userApp) {
+        .then(userApp => {
             res.send(userApp || {});
         })
         .catch(next);
 });
 
-router.post('/', function(req, res, next) {
+router.post('/', (req, res, next) => {
     db.UserApp.findOrCreate({
         where: {
             managerIp: config.manager.ip,
@@ -53,7 +53,7 @@ router.post('/', function(req, res, next) {
         .catch(next);
 });
 
-router.get('/clear-pages', function(req, res, next) {
+router.get('/clear-pages', (req, res, next) => {
     db.UserApp.findOne({
         where: {
             managerIp: config.manager.ip,
@@ -62,7 +62,7 @@ router.get('/clear-pages', function(req, res, next) {
             tenant: req.query.tenant
         }
     })
-        .then(function(userApp) {
+        .then(userApp => {
             if (userApp) {
                 return userApp.update({ appData: { pages: [] } });
             }

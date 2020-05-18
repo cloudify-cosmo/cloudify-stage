@@ -5,7 +5,7 @@
 const winston = require('winston');
 const _ = require('lodash');
 
-module.exports = (function() {
+module.exports = (() => {
     function getArgsSupportedLogger(logger) {
         // This is workaround for no support for multi-arguments logging, e.g.: logger.info('Part 1', 'Part 2')
         // See: https://github.com/winstonjs/winston/issues/1614

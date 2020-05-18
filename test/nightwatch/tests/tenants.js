@@ -3,7 +3,7 @@
  */
 
 module.exports = {
-    'Tenants list': function(client) {
+    'Tenants list': client => {
         client
             .login()
             .page.page()

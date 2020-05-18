@@ -26,12 +26,12 @@ export default class extends React.Component {
         );
     }
 
-    _selectSnapshot(item) {
+    selectSnapshot(item) {
         const oldSelectedSnapshotId = this.props.toolbox.getContext().getValue('snapshotId');
         this.props.toolbox.getContext().setValue('snapshotId', item.id === oldSelectedSnapshotId ? null : item.id);
     }
 
-    _deleteSnapshotConfirm(item, event) {
+    deleteSnapshotConfirm(item, event) {
         event.stopPropagation();
 
         this.setState({
@@ -40,7 +40,7 @@ export default class extends React.Component {
         });
     }
 
-    _restoreSnapshot(item, event) {
+    restoreSnapshot(item, event) {
         event.stopPropagation();
 
         this.setState({
@@ -49,7 +49,7 @@ export default class extends React.Component {
         });
     }
 
-    _downloadSnapshot(item, event) {
+    downloadSnapshot(item, event) {
         event.stopPropagation();
 
         const actions = new Actions(this.props.toolbox);
@@ -63,7 +63,7 @@ export default class extends React.Component {
             });
     }
 
-    _deleteSnapshot() {
+    deleteSnapshot() {
         if (!this.state.item) {
             this.setState({ error: 'Something went wrong, no snapshot was selected for delete' });
             return;
@@ -81,20 +81,20 @@ export default class extends React.Component {
             });
     }
 
-    _isSnapshotUseful(snapshot) {
+    isSnapshotUseful(snapshot) {
         return snapshot.status === 'created' || snapshot.status === 'uploaded';
     }
 
-    _refreshData() {
+    refreshData() {
         this.props.toolbox.refresh();
     }
 
     componentDidMount() {
-        this.props.toolbox.getEventBus().on('snapshots:refresh', this._refreshData, this);
+        this.props.toolbox.getEventBus().on('snapshots:refresh', this.refreshData, this);
     }
 
     componentWillUnmount() {
-        this.props.toolbox.getEventBus().off('snapshots:refresh', this._refreshData);
+        this.props.toolbox.getEventBus().off('snapshots:refresh', this.refreshData);
     }
 
     fetchGridData(fetchParams) {
@@ -127,12 +127,12 @@ export default class extends React.Component {
                     <DataTable.Column width="10%" />
 
                     {this.props.data.items.map(item => {
-                        const isSnapshotUseful = this._isSnapshotUseful(item);
+                        const isSnapshotUseful = this.isSnapshotUseful(item);
                         return (
                             <DataTable.Row
                                 key={item.id}
                                 selected={item.isSelected}
-                                onClick={this._selectSnapshot.bind(this, item)}
+                                onClick={this.selectSnapshot.bind(this, item)}
                             >
                                 <DataTable.Data>
                                     {item.id}
@@ -148,7 +148,7 @@ export default class extends React.Component {
                                         bordered
                                         disabled={!isSnapshotUseful}
                                         link={isSnapshotUseful}
-                                        onClick={isSnapshotUseful ? this._restoreSnapshot.bind(this, item) : () => {}}
+                                        onClick={isSnapshotUseful ? this.restoreSnapshot.bind(this, item) : () => {}}
                                     />
                                     <Icon
                                         name="download"
@@ -156,14 +156,14 @@ export default class extends React.Component {
                                         bordered
                                         disabled={!isSnapshotUseful}
                                         link={isSnapshotUseful}
-                                        onClick={isSnapshotUseful ? this._downloadSnapshot.bind(this, item) : () => {}}
+                                        onClick={isSnapshotUseful ? this.downloadSnapshot.bind(this, item) : () => {}}
                                     />
                                     <Icon
                                         name="trash"
                                         link
                                         bordered
                                         title="Delete"
-                                        onClick={this._deleteSnapshotConfirm.bind(this, item)}
+                                        onClick={this.deleteSnapshotConfirm.bind(this, item)}
                                     />
                                 </DataTable.Data>
                             </DataTable.Row>
@@ -187,7 +187,7 @@ export default class extends React.Component {
                 <Confirm
                     content="Are you sure you want to remove this snapshot?"
                     open={this.state.confirmDelete}
-                    onConfirm={this._deleteSnapshot.bind(this)}
+                    onConfirm={this.deleteSnapshot.bind(this)}
                     onCancel={() => this.setState({ confirmDelete: false })}
                 />
             </div>

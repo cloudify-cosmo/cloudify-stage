@@ -34,7 +34,7 @@ function errorTenants(err) {
 
 export function getTenants(manager) {
     const managerAccessor = new Manager(manager);
-    return function(dispatch) {
+    return dispatch => {
         dispatch(requestTenants());
         return managerAccessor
             .doGet('/tenants', { _include: 'name', _get_all_results: true })
@@ -57,7 +57,7 @@ export function selectTenant(tenantName) {
 }
 
 export function changeTenant(tenantName) {
-    return function(dispatch) {
+    return dispatch => {
         dispatch(setAppLoading(true));
         dispatch(setEditMode(false));
         dispatch(clearContext());

@@ -75,6 +75,7 @@ router.get('/icons/:pluginId', (req, res) => {
     req.pipe(
         request(`${ManagerHandler.getManagerUrl()}/resources/plugins/${req.params.pluginId}/icon.png`, options).on(
             'response',
+            // eslint-disable-next-line func-names
             function(response) {
                 if (response.statusCode === 404) {
                     res.status(200).end();
@@ -90,7 +91,7 @@ router.post(
     passport.authenticate('token', { session: false }),
     upload.fields(_.map(['wagon_file', 'yaml_file', 'icon_file'], name => ({ name, maxCount: 1 }))),
     checkParams,
-    function(req, res, next) {
+    (req, res, next) => {
         const promises = [];
         let wagonFilename;
 

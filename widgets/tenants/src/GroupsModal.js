@@ -34,7 +34,7 @@ export default class GroupsModal extends React.Component {
     };
 
     onApprove() {
-        this._updateTenant();
+        this.updateTenant();
         return false;
     }
 
@@ -58,7 +58,7 @@ export default class GroupsModal extends React.Component {
         }
     }
 
-    _updateTenant() {
+    updateTenant() {
         // Disable the form
         this.setState({ loading: true });
 
@@ -88,12 +88,12 @@ export default class GroupsModal extends React.Component {
             });
     }
 
-    _handleInputChange(proxy, field) {
+    handleInputChange(proxy, field) {
         const newUserGroups = {};
         _.forEach(field.value, group => {
             newUserGroups[group] =
                 this.state.userGroups[group] ||
-                RolesUtil.getDefaultRoleName(this.props.toolbox.getManager()._data.roles);
+                RolesUtil.getDefaultRoleName(this.props.toolbox.getManagerState().roles);
         });
 
         this.setState({ userGroups: newUserGroups });
@@ -127,7 +127,7 @@ export default class GroupsModal extends React.Component {
                                 options={userGroups}
                                 name="userGroups"
                                 value={Object.keys(this.state.userGroups)}
-                                onChange={this._handleInputChange.bind(this)}
+                                onChange={this.handleInputChange.bind(this)}
                             />
                         </Form.Field>
                         <RolesPicker

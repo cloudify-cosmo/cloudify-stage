@@ -14,9 +14,8 @@ export function storeWidgetDefinitions(widgetDefinitions) {
 }
 
 export function loadWidgetDefinitions() {
-    return function(dispatch, getState) {
-        return widgetDefinitionLoader.load(getState().manager).then(result => dispatch(storeWidgetDefinitions(result)));
-    };
+    return (dispatch, getState) =>
+        widgetDefinitionLoader.load(getState().manager).then(result => dispatch(storeWidgetDefinitions(result)));
 }
 
 export function addWidget(pageId, name, widgetDefinition, width, height, x, y, configuration) {
@@ -91,11 +90,10 @@ export function setInstallWidget(widgetDefinitions) {
 }
 
 export function installWidget(widgetFile, widgetUrl) {
-    return function(dispatch, getState) {
-        return widgetDefinitionLoader
+    return (dispatch, getState) =>
+        widgetDefinitionLoader
             .install(widgetFile, widgetUrl, getState().manager)
             .then(widgetDefinitions => dispatch(setInstallWidget(widgetDefinitions)));
-    };
 }
 
 export function setUninstallWidget(widgetId) {
@@ -106,11 +104,10 @@ export function setUninstallWidget(widgetId) {
 }
 
 export function uninstallWidget(widgetId) {
-    return function(dispatch, getState) {
-        return widgetDefinitionLoader
+    return (dispatch, getState) =>
+        widgetDefinitionLoader
             .uninstall(widgetId, getState().manager)
             .then(() => dispatch(setUninstallWidget(widgetId)));
-    };
 }
 
 export function setUpdateWidget(widgetDefinitions, widgetId) {
@@ -122,15 +119,14 @@ export function setUpdateWidget(widgetDefinitions, widgetId) {
 }
 
 export function updateWidget(widgetId, widgetFile, widgetUrl) {
-    return function(dispatch, getState) {
-        return widgetDefinitionLoader
+    return (dispatch, getState) =>
+        widgetDefinitionLoader
             .update(widgetId, widgetFile, widgetUrl, getState().manager)
             .then(widgetDefinitions => dispatch(setUpdateWidget(widgetDefinitions, widgetId)));
-    };
 }
 
 export function checkIfWidgetIsUsed(widgetId) {
-    return function(dispatch, getState) {
+    return (dispatch, getState) => {
         const internal = new Internal(getState().manager);
         return internal.doGet(`/widgets/${widgetId}/used`);
     };

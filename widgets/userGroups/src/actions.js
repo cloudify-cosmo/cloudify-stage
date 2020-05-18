@@ -69,20 +69,20 @@ export default class Actions {
         return Promise.all(_.concat(addActions, deleteActions, updateActions));
     }
 
-    _isUserIn(users, username = this.currentUsername) {
+    isUserIn(users, username = this.currentUsername) {
         return _.includes(users, username);
     }
 
-    _hasCurrentUserAdminRole() {
+    hasCurrentUserAdminRole() {
         return this.currentUserRole === Stage.Common.Consts.sysAdminRole;
     }
 
-    _isAdminGroup(group) {
+    isAdminGroup(group) {
         return group.role === Stage.Common.Consts.sysAdminRole;
     }
 
     // Check if user <username> belongs to group <group> and it is the only admin group he belongs to
-    _isUserGroupTheOnlyAdminGroup(group, groups, username = this.currentUsername) {
+    isUserGroupTheOnlyAdminGroup(group, groups, username = this.currentUsername) {
         if (_.includes(group.users, username)) {
             const currentUserAdminGroups = _.filter(
                 groups,
@@ -99,10 +99,10 @@ export default class Actions {
     //          user <username> belongs to group <group> as the only admin group
     isLogoutToBePerformed(group, groups, users, username = this.currentUsername) {
         return (
-            this._isUserIn(users, username) &&
-            !this._hasCurrentUserAdminRole() &&
-            this._isAdminGroup(group) &&
-            this._isUserGroupTheOnlyAdminGroup(group, groups, username)
+            this.isUserIn(users, username) &&
+            !this.hasCurrentUserAdminRole() &&
+            this.isAdminGroup(group) &&
+            this.isUserGroupTheOnlyAdminGroup(group, groups, username)
         );
     }
 }

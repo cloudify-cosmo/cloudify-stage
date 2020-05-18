@@ -1,7 +1,10 @@
-module.exports = (function(settings) {
-    const _ = require('lodash');
+const _ = require('lodash');
+
+module.exports = (settings => {
+    let me = null;
     try {
-        const me = require('../../conf/me.json');
+        // eslint-disable-next-line global-require
+        me = require('../../conf/me.json');
         console.log('me.json found. Updating nightwatch settings.');
         _.merge(settings, me.e2e);
     } catch (err) {
@@ -21,7 +24,7 @@ module.exports = (function(settings) {
             './node_modules/chrome-driver-standalone/binaries/chromedriver_linux64';
     }
 
-    let managerUrl = process.env.STAGE_E2E_MANAGER_URL;
+    let managerUrl = process.env.STAGE_E2E_MANAGER_URL || _.get(me, 'manager.ip');
     if (managerUrl) {
         managerUrl = managerUrl.trim();
         console.log(`Connecting to manager: ${managerUrl}`);

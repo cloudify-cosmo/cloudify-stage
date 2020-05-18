@@ -1,6 +1,8 @@
 /**
  * NodeInstancesFilter - a component showing dropdown with nodes instances of specified deployment.
  * Data is dynamically fetched from manager.
+ *
+ * @param props
  */
 export default class NodeInstancesFilter extends React.Component {
     constructor(props, context) {
@@ -56,15 +58,15 @@ export default class NodeInstancesFilter extends React.Component {
     componentDidUpdate(prevProps) {
         if (prevProps.deploymentId !== this.props.deploymentId) {
             this.setState({ ...NodeInstancesFilter.initialState(this.props) });
-            this._fetchData();
+            this.fetchData();
         }
     }
 
     componentDidMount() {
-        this._fetchData();
+        this.fetchData();
     }
 
-    _fetchData() {
+    fetchData() {
         if (_.isEmpty(this.props.deploymentId)) {
             return;
         }
@@ -92,7 +94,7 @@ export default class NodeInstancesFilter extends React.Component {
             });
     }
 
-    _handleInputChange(event, field) {
+    handleInputChange(event, field) {
         this.setState({ value: field.value }, () => {
             this.props.onChange(event, {
                 name: this.props.name,
@@ -114,7 +116,7 @@ export default class NodeInstancesFilter extends React.Component {
                     value={errors.nodeInstanceIds ? '' : this.state.value}
                     placeholder={errors.nodeInstanceIds || this.props.placeholder}
                     options={this.state.nodeInstances}
-                    onChange={this._handleInputChange.bind(this)}
+                    onChange={this.handleInputChange.bind(this)}
                     name="nodeInstanceIds"
                     loading={this.state.loading}
                     upward={this.props.upward}

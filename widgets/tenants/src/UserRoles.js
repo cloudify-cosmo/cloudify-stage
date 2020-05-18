@@ -8,7 +8,7 @@ export default class UserRoles extends React.Component {
         user: PropTypes.string.isRequired
     };
 
-    _groupGroupsByRole(groups) {
+    groupGroupsByRole(groups) {
         const roles = {};
 
         _.forEach(groups, (group, name) => {
@@ -27,7 +27,7 @@ export default class UserRoles extends React.Component {
         const { RolesPresenter } = Stage.Common;
 
         const directRole = this.props.tenant.user_roles.direct[this.props.user];
-        const groupRoles = this._groupGroupsByRole(this.props.tenant.user_roles.groups);
+        const groupRoles = this.groupGroupsByRole(this.props.tenant.user_roles.groups);
 
         return <RolesPresenter directRole={directRole} groupRoles={groupRoles} />;
     }

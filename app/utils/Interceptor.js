@@ -11,19 +11,19 @@ let singleton = null;
 
 export default class Interceptor {
     constructor(store) {
-        this._store = store;
+        this.store = store;
     }
 
     handle401() {
-        this._store.dispatch(clearContext());
-        this._store.dispatch(push(Consts.LOGIN_PAGE_PATH));
+        this.store.dispatch(clearContext());
+        this.store.dispatch(push(Consts.LOGIN_PAGE_PATH));
     }
 
     handleLicenseError(errorCode) {
         if (errorCode === Consts.NO_LICENSE_ERROR_CODE) {
-            this._store.dispatch(showAppError('No active license'));
+            this.store.dispatch(showAppError('No active license'));
         } else if (errorCode === Consts.EXPIRED_LICENSE_ERROR_CODE) {
-            this._store.dispatch(showAppError('License has expired'));
+            this.store.dispatch(showAppError('License has expired'));
         }
     }
 

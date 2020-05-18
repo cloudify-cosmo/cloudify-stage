@@ -19,7 +19,7 @@ export default class PasswordModal extends React.Component {
     };
 
     onApprove() {
-        this._submitPassword();
+        this.submitPassword();
         return false;
     }
 
@@ -34,7 +34,7 @@ export default class PasswordModal extends React.Component {
         }
     }
 
-    _submitPassword() {
+    submitPassword() {
         const errors = {};
 
         if (_.isEmpty(this.state.password)) {
@@ -74,7 +74,7 @@ export default class PasswordModal extends React.Component {
             });
     }
 
-    _handleInputChange(proxy, field) {
+    handleInputChange(proxy, field) {
         this.setState(Stage.Basic.Form.fieldNameValue(field));
     }
 
@@ -101,7 +101,7 @@ export default class PasswordModal extends React.Component {
                                 placeholder="Password"
                                 type="password"
                                 value={this.state.password}
-                                onChange={this._handleInputChange.bind(this)}
+                                onChange={this.handleInputChange.bind(this)}
                             />
                         </Form.Field>
 
@@ -111,7 +111,7 @@ export default class PasswordModal extends React.Component {
                                 placeholder="Confirm password"
                                 type="password"
                                 value={this.state.confirmPassword}
-                                onChange={this._handleInputChange.bind(this)}
+                                onChange={this.handleInputChange.bind(this)}
                             />
                         </Form.Field>
                     </Form>

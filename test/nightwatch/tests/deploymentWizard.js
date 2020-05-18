@@ -3,7 +3,7 @@
  */
 
 module.exports = {
-    'Hello World Wizard - success': function(client) {
+    'Hello World Wizard - success': client => {
         const deploymentWizard = client.page.deploymentWizard();
 
         client
@@ -95,7 +95,7 @@ module.exports = {
         client.removeLastPage().end();
     },
 
-    'Deployment Wizard - failure': function(client) {
+    'Deployment Wizard - failure': client => {
         const deploymentWizard = client.page.deploymentWizard();
         const blueprintPackage = client.page.resources().props.fileByName('blueprint.zip', client.globals);
 

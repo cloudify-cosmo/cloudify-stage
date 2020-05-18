@@ -18,7 +18,7 @@ export default class CreateModal extends React.Component {
     };
 
     onApprove() {
-        this._createTenant();
+        this.createTenant();
         return false;
     }
 
@@ -33,7 +33,7 @@ export default class CreateModal extends React.Component {
         }
     }
 
-    _createTenant() {
+    createTenant() {
         const errors = {};
 
         if (_.isEmpty(this.state.tenantName)) {
@@ -61,7 +61,7 @@ export default class CreateModal extends React.Component {
             });
     }
 
-    _handleInputChange(proxy, field) {
+    handleInputChange(proxy, field) {
         this.setState(Stage.Basic.Form.fieldNameValue(field));
     }
 
@@ -91,7 +91,7 @@ export default class CreateModal extends React.Component {
                                 name="tenantName"
                                 placeholder="Tenant name"
                                 value={this.state.tenantName}
-                                onChange={this._handleInputChange.bind(this)}
+                                onChange={this.handleInputChange.bind(this)}
                             />
                         </Form.Field>
                     </Form>

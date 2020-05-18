@@ -31,29 +31,29 @@ export default class TenantsTable extends React.Component {
         );
     }
 
-    _refreshData() {
+    refreshData() {
         this.setState({ error: null });
         this.props.toolbox.refresh();
     }
 
     componentDidMount() {
-        this.props.toolbox.getEventBus().on('tenants:refresh', this._refreshData, this);
+        this.props.toolbox.getEventBus().on('tenants:refresh', this.refreshData, this);
     }
 
     componentWillUnmount() {
-        this.props.toolbox.getEventBus().off('tenants:refresh', this._refreshData);
+        this.props.toolbox.getEventBus().off('tenants:refresh', this.refreshData);
     }
 
     fetchGridData(fetchParams) {
         return this.props.toolbox.refresh(fetchParams);
     }
 
-    _selectTenant(tenantName) {
+    selectTenant(tenantName) {
         const selectedTenantName = this.props.toolbox.getContext().getValue('tenantName');
         this.props.toolbox.getContext().setValue('tenantName', tenantName === selectedTenantName ? null : tenantName);
     }
 
-    _deleteTenant() {
+    deleteTenant() {
         const tenantName = this.state.tenant.name;
         const actions = new Actions(this.props.toolbox);
         const HIDE_DELETE_MODAL_STATE = { modalType: MenuAction.DELETE_TENANT_ACTION, showModal: false };
@@ -70,7 +70,7 @@ export default class TenantsTable extends React.Component {
             });
     }
 
-    _getAvailableUsers(value, tenant) {
+    getAvailableUsers(value, tenant) {
         this.props.toolbox.loading(true);
 
         const actions = new Actions(this.props.toolbox);
@@ -86,7 +86,7 @@ export default class TenantsTable extends React.Component {
             });
     }
 
-    _getAvailableUserGroups(value, tenant) {
+    getAvailableUserGroups(value, tenant) {
         this.props.toolbox.loading(true);
 
         const actions = new Actions(this.props.toolbox);
@@ -102,11 +102,11 @@ export default class TenantsTable extends React.Component {
             });
     }
 
-    _selectAction(value, tenant) {
+    selectAction(value, tenant) {
         if (value === MenuAction.EDIT_USERS_ACTION) {
-            this._getAvailableUsers(value, tenant);
+            this.getAvailableUsers(value, tenant);
         } else if (value === MenuAction.EDIT_USER_GROUPS_ACTION) {
-            this._getAvailableUserGroups(value, tenant);
+            this.getAvailableUserGroups(value, tenant);
         } else if (value === MenuAction.DELETE_TENANT_ACTION) {
             this.setState({ tenant, modalType: value, showModal: true });
         } else {
@@ -114,7 +114,7 @@ export default class TenantsTable extends React.Component {
         }
     }
 
-    _hideModal() {
+    hideModal() {
         this.setState({ showModal: false });
     }
 
@@ -149,7 +149,7 @@ export default class TenantsTable extends React.Component {
                                 <DataTable.Row
                                     key={tenant.name}
                                     selected={tenant.isSelected}
-                                    onClick={this._selectTenant.bind(this, tenant.name)}
+                                    onClick={this.selectTenant.bind(this, tenant.name)}
                                 >
                                     <DataTable.Data>{tenant.name}</DataTable.Data>
                                     <DataTable.Data>
@@ -163,7 +163,7 @@ export default class TenantsTable extends React.Component {
                                         </Label>
                                     </DataTable.Data>
                                     <DataTable.Data className="center aligned rowActions">
-                                        <MenuAction tenant={tenant} onSelectAction={this._selectAction.bind(this)} />
+                                        <MenuAction tenant={tenant} onSelectAction={this.selectAction.bind(this)} />
                                     </DataTable.Data>
                                 </DataTable.Row>
 
@@ -186,15 +186,15 @@ export default class TenantsTable extends React.Component {
                 <DeleteModal
                     content={`Are you sure you want to delete tenant '${this.state.tenant.name}'?`}
                     open={this.state.modalType === MenuAction.DELETE_TENANT_ACTION && this.state.showModal}
-                    onConfirm={this._deleteTenant.bind(this)}
-                    onCancel={this._hideModal.bind(this)}
+                    onConfirm={this.deleteTenant.bind(this)}
+                    onCancel={this.hideModal.bind(this)}
                 />
 
                 <UsersModal
                     widget={this.props.widget}
                     toolbox={this.props.toolbox}
                     open={this.state.modalType === MenuAction.EDIT_USERS_ACTION && this.state.showModal}
-                    onHide={this._hideModal.bind(this)}
+                    onHide={this.hideModal.bind(this)}
                     tenant={this.state.tenant}
                     users={this.state.users}
                 />
@@ -203,7 +203,7 @@ export default class TenantsTable extends React.Component {
                     widget={this.props.widget}
                     toolbox={this.props.toolbox}
                     open={this.state.modalType === MenuAction.EDIT_USER_GROUPS_ACTION && this.state.showModal}
-                    onHide={this._hideModal.bind(this)}
+                    onHide={this.hideModal.bind(this)}
                     tenant={this.state.tenant}
                     userGroups={this.state.userGroups}
                 />

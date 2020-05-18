@@ -7,7 +7,7 @@ module.exports = {
         client.login().prepareTestWidget(client.page.plugins().props.widgetId);
     },
 
-    'upload from url': function(client) {
+    'upload from url': client => {
         const page = client.page.plugins();
         page.openUploadModal()
             .fillWagonUrl(page.props.testWagonUrl)

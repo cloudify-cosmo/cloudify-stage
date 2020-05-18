@@ -63,7 +63,7 @@ Stage.defineWidget({
             ? { created_by: toolbox.getManager().getCurrentUsername() }
             : {},
 
-    _processData(data, toolbox) {
+    processData(data, toolbox) {
         const blueprintsData = data.blueprints;
         const deploymentData = data.deployments;
 
@@ -101,7 +101,7 @@ Stage.defineWidget({
             return <Stage.Basic.Loading />;
         }
 
-        const formattedData = this._processData(data, toolbox);
+        const formattedData = this.processData(data, toolbox);
         return (
             <div>
                 <BlueprintsList widget={widget} data={formattedData} toolbox={toolbox} />

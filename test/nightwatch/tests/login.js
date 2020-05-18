@@ -5,7 +5,7 @@
 const Config = require('../config');
 
 module.exports = {
-    'Successful login test': function(client) {
+    'Successful login test': client => {
         client.page
             .login()
             .navigate()
@@ -21,7 +21,7 @@ module.exports = {
         client.end();
     },
 
-    'Failed login test': function(client) {
+    'Failed login test': client => {
         client.page
             .login()
             .navigate()

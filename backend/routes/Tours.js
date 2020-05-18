@@ -10,7 +10,7 @@ const router = express.Router();
 
 router.use(passport.authenticate('token', { session: false }));
 
-router.get('/', function(req, res, next) {
+router.get('/', (req, res, next) => {
     ToursHandler.listTours(
         req.user.role,
         req.user.group_system_roles,

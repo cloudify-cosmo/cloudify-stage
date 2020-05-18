@@ -14,11 +14,11 @@ const logger = require('../handler/LoggerHandler').getLogger('GitHub');
 const params = config.get().app.github;
 const authList = {};
 
-function _getSecretName(secretName) {
+function getSecretName(secretName) {
     return secretName.replace('secret(', '').replace(')', '');
 }
 
-function _pipeRequest(req, res, next, url, isMiddleware) {
+function pipeRequest(req, res, next, url, isMiddleware) {
     const authorization = req.header('authorization');
 
     logger.debug(
@@ -29,38 +29,38 @@ function _pipeRequest(req, res, next, url, isMiddleware) {
         req.pipe(
             request
                 .get({ url, headers: authorization, qs: req.query, gzip: true, encoding: 'utf8' })
-                .on('data', function(chunk) {
+                .on('data', chunk => {
                     data += chunk;
                 })
-                .on('end', function() {
+                .on('end', () => {
                     res.data = data;
                     next();
                 })
-                .on('error', function(err) {
+                .on('error', err => {
                     res.status(500).send({ message: err.message });
                 })
         );
     } else {
         req.pipe(
-            request.get({ url, headers: authorization, qs: req.query }).on('error', function(err) {
+            request.get({ url, headers: authorization, qs: req.query }).on('error', err => {
                 res.status(500).send({ message: err.message });
             })
         ).pipe(res);
     }
 }
 
-function _getAuthorizationHeader(user, tenant) {
+function getAuthorizationHeader(user, tenant) {
     return _.get(authList, `${user}.${tenant}`, '');
 }
 
-function _setAuthorizationHeader(req, res, next, fetchCredentials) {
+function setAuthorizationHeader(req, res, next, fetchCredentials) {
     const user = _.get(req, 'user.username', '');
     const tenant = req.header('tenant');
-    var fetchCredentials = fetchCredentials || _.isEmpty(_getAuthorizationHeader(user, tenant));
+    var fetchCredentials = fetchCredentials || _.isEmpty(getAuthorizationHeader(user, tenant));
 
     if (fetchCredentials) {
-        const userSecret = _getSecretName(params.username);
-        const passSecret = _getSecretName(params.password);
+        const userSecret = getSecretName(params.username);
+        const passSecret = getSecretName(params.password);
         Promise.all([
             ManagerHandler.jsonRequest('GET', `/secrets/${userSecret}`, req.headers),
             ManagerHandler.jsonRequest('GET', `/secrets/${passSecret}`, req.headers)
@@ -83,7 +83,7 @@ function _setAuthorizationHeader(req, res, next, fetchCredentials) {
             });
     } else {
         logger.debug('Setting authorization header from cached data.');
-        req.headers.authorization = _getAuthorizationHeader(user, tenant);
+        req.headers.authorization = getAuthorizationHeader(user, tenant);
         next();
     }
 }
@@ -98,11 +98,11 @@ function addIsAuthToResponseBody(req, res, next) {
 router.get(
     '/search/repositories',
     passport.authenticate('token', { session: false }),
-    function(req, res, next) {
-        _setAuthorizationHeader(req, res, next, true);
+    (req, res, next) => {
+        setAuthorizationHeader(req, res, next, true);
     },
-    function(req, res, next) {
-        _pipeRequest(req, res, next, 'https://api.github.com/search/repositories', true);
+    (req, res, next) => {
+        pipeRequest(req, res, next, 'https://api.github.com/search/repositories', true);
     },
     addIsAuthToResponseBody
 );
@@ -110,11 +110,11 @@ router.get(
 router.get(
     '/repos/:user/:repo/git/trees/master',
     passport.authenticate('token', { session: false }),
-    function(req, res, next) {
-        _setAuthorizationHeader(req, res, next, false);
+    (req, res, next) => {
+        setAuthorizationHeader(req, res, next, false);
     },
-    function(req, res, next) {
-        _pipeRequest(
+    (req, res, next) => {
+        pipeRequest(
             req,
             res,
             next,
@@ -125,8 +125,8 @@ router.get(
 
 // This path returns image resource so there is no point to secure that
 // (if yes all credentials should be passed in the query string)
-router.get('/content/:user/:repo/master/:file', function(req, res, next) {
-    _pipeRequest(
+router.get('/content/:user/:repo/master/:file', (req, res, next) => {
+    pipeRequest(
         req,
         res,
         next,

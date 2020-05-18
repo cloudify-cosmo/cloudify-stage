@@ -21,7 +21,7 @@ export default class TenantModal extends React.Component {
     };
 
     onApprove() {
-        this._submitTenant();
+        this.submitTenant();
         return false;
     }
 
@@ -50,7 +50,7 @@ export default class TenantModal extends React.Component {
         }
     }
 
-    _submitTenant() {
+    submitTenant() {
         // Disable the form
         this.setState({ loading: true });
 
@@ -79,11 +79,11 @@ export default class TenantModal extends React.Component {
             });
     }
 
-    _handleInputChange(proxy, field) {
+    handleInputChange(proxy, field) {
         const newTenants = {};
         _.forEach(field.value, tenant => {
             newTenants[tenant] =
-                this.state.tenants[tenant] || RolesUtil.getDefaultRoleName(this.props.toolbox.getManager()._data.roles);
+                this.state.tenants[tenant] || RolesUtil.getDefaultRoleName(this.props.toolbox.getManagerState().roles);
         });
         this.setState({ tenants: newTenants });
     }
@@ -118,7 +118,7 @@ export default class TenantModal extends React.Component {
                                 options={options}
                                 name="tenants"
                                 value={Object.keys(this.state.tenants)}
-                                onChange={this._handleInputChange.bind(this)}
+                                onChange={this.handleInputChange.bind(this)}
                             />
                         </Form.Field>
                         <RolesPicker

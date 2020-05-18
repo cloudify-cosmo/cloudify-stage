@@ -32,28 +32,28 @@ export default class extends React.Component {
         );
     }
 
-    _selectItem(item) {
+    selectItem(item) {
         const selectedCatalogId = this.props.toolbox.getContext().getValue('blueprintCatalogId');
         this.props.toolbox.getContext().setValue('blueprintCatalogId', item.id === selectedCatalogId ? null : item.id);
     }
 
-    _refreshData() {
+    refreshData() {
         this.props.toolbox.refresh();
     }
 
     componentDidMount() {
-        this.props.toolbox.getEventBus().on('blueprintCatalog:refresh', this._refreshData, this);
+        this.props.toolbox.getEventBus().on('blueprintCatalog:refresh', this.refreshData, this);
     }
 
     componentWillUnmount() {
-        this.props.toolbox.getEventBus().off('blueprintCatalog:refresh', this._refreshData);
+        this.props.toolbox.getEventBus().off('blueprintCatalog:refresh', this.refreshData);
     }
 
-    _fetchData(fetchParams) {
+    fetchData(fetchParams) {
         return this.props.toolbox.refresh(fetchParams);
     }
 
-    _showModal(repositoryName, zipUrl, imageUrl) {
+    showModal(repositoryName, zipUrl, imageUrl) {
         this.props.toolbox.loading(true);
 
         this.props.actions
@@ -68,18 +68,18 @@ export default class extends React.Component {
             });
     }
 
-    _hideModal() {
+    hideModal() {
         this.setState({ showModal: false });
     }
 
-    _showReadmeModal(repositoryName, readmeUrl) {
+    showReadmeModal(repositoryName, readmeUrl) {
         this.setState({ readmeLoading: repositoryName });
         this.props.actions.doGetReadme(repositoryName, readmeUrl).then(content => {
             this.setState({ readmeContent: markdown.parse(content) || '', showReadmeModal: true, readmeLoading: null });
         });
     }
 
-    _hideReadmeModal() {
+    hideReadmeModal() {
         this.setState({ showReadmeModal: false });
     }
 
@@ -110,10 +110,10 @@ export default class extends React.Component {
                     <RepositoryTable
                         widget={this.props.widget}
                         data={this.props.data}
-                        fetchData={this._fetchData.bind(this)}
-                        onSelect={this._selectItem.bind(this)}
-                        onUpload={this._showModal.bind(this)}
-                        onReadme={this._showReadmeModal.bind(this)}
+                        fetchData={this.fetchData.bind(this)}
+                        onSelect={this.selectItem.bind(this)}
+                        onUpload={this.showModal.bind(this)}
+                        onReadme={this.showReadmeModal.bind(this)}
                         readmeLoading={this.state.readmeLoading}
                         noDataMessage={NO_DATA_MESSAGE}
                     />
@@ -121,10 +121,10 @@ export default class extends React.Component {
                     <RepositoryCatalog
                         widget={this.props.widget}
                         data={this.props.data}
-                        fetchData={this._fetchData.bind(this)}
-                        onSelect={this._selectItem.bind(this)}
-                        onUpload={this._showModal.bind(this)}
-                        onReadme={this._showReadmeModal.bind(this)}
+                        fetchData={this.fetchData.bind(this)}
+                        onSelect={this.selectItem.bind(this)}
+                        onUpload={this.showModal.bind(this)}
+                        onReadme={this.showReadmeModal.bind(this)}
                         readmeLoading={this.state.readmeLoading}
                         noDataMessage={NO_DATA_MESSAGE}
                     />
@@ -136,7 +136,7 @@ export default class extends React.Component {
                     yamlFiles={this.state.yamlFiles}
                     zipUrl={this.state.zipUrl}
                     imageUrl={this.state.imageUrl}
-                    onHide={this._hideModal.bind(this)}
+                    onHide={this.hideModal.bind(this)}
                     toolbox={this.props.toolbox}
                     actions={this.props.actions}
                 />
@@ -144,7 +144,7 @@ export default class extends React.Component {
                 <ReadmeModal
                     open={this.state.showReadmeModal}
                     content={this.state.readmeContent}
-                    onHide={this._hideReadmeModal.bind(this)}
+                    onHide={this.hideReadmeModal.bind(this)}
                     toolbox={this.props.toolbox}
                     actions={this.props.actions}
                 />

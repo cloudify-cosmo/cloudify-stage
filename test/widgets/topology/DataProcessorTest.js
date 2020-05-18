@@ -5,7 +5,7 @@ import nodecellarInstancesData from './data/InstancesDataDone.json';
 import nodecellarExecutionData from './data/ExecutionsData.json';
 import { createBlueprintData, createHierarchy } from '../../../widgets/topology/src/DataProcessor';
 
-describe('(Widget) Topology', function() {
+describe('(Widget) Topology', () => {
     describe('DataProcessor createBlueprintData', () => {
         it('supports `plan` from manager', () => {
             const data = {

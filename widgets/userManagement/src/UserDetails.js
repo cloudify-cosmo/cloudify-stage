@@ -20,7 +20,7 @@ export default class UserDetails extends React.Component {
         onError: PropTypes.func
     };
 
-    _removeTenant(tenant) {
+    removeTenant(tenant) {
         this.setState({ processItem: tenant, processing: true });
 
         const actions = new Actions(this.props.toolbox);
@@ -37,7 +37,7 @@ export default class UserDetails extends React.Component {
             });
     }
 
-    _removeGroup(group) {
+    removeGroup(group) {
         this.setState({ processItem: group, processing: true });
 
         const actions = new Actions(this.props.toolbox);
@@ -75,7 +75,7 @@ export default class UserDetails extends React.Component {
                                         name={processing ? 'notched circle' : 'remove'}
                                         loading={processing}
                                         className="right floated"
-                                        onClick={this._removeGroup.bind(this, item)}
+                                        onClick={this.removeGroup.bind(this, item)}
                                     />
                                 </List.Item>
                             );
@@ -106,7 +106,7 @@ export default class UserDetails extends React.Component {
                                                 name={processing ? 'notched circle' : 'remove'}
                                                 loading={processing}
                                                 className="right floated"
-                                                onClick={this._removeTenant.bind(this, item)}
+                                                onClick={this.removeTenant.bind(this, item)}
                                             />
                                         </List.Item>
                                     );

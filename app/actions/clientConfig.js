@@ -14,14 +14,14 @@ function setClientConfig(config) {
 }
 
 export function getClientConfig() {
-    return function(dispatch, getState) {
+    return (dispatch, getState) => {
         const internal = new Internal(getState().manager);
         return internal.doGet('/clientConfig').then(response => dispatch(setClientConfig(response.config)));
     };
 }
 
 export function saveClientConfig(config) {
-    return function(dispatch, getState) {
+    return (dispatch, getState) => {
         const internal = new Internal(getState().manager);
         return internal.doPost('/clientConfig', null, config).then(response => {
             dispatch(setClientConfig(response.config));

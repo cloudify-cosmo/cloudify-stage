@@ -1,6 +1,8 @@
 /**
  * NodeFilter  - a component showing dropdowns for filtering blueprints, deployments, nodes and nodes instances.
  * Data (list of blueprints, deployments, nodes and node instances) is dynamically fetched from manager.
+ *
+ * @param props
  */
 export default class NodeFilter extends React.Component {
     constructor(props, context) {
@@ -108,21 +110,21 @@ export default class NodeFilter extends React.Component {
             prevState.nodeInstanceId !== this.props.value.nodeInstanceId
         ) {
             this.setState({ ...NodeFilter.initialState(this.props) });
-            this._fetchBlueprints();
-            this._fetchDeployments();
-            this._fetchNodes();
-            this._fetchNodeInstances();
+            this.fetchBlueprints();
+            this.fetchDeployments();
+            this.fetchNodes();
+            this.fetchNodeInstances();
         }
     }
 
     componentDidMount() {
-        this._fetchBlueprints();
-        this._fetchDeployments();
-        this._fetchNodes();
-        this._fetchNodeInstances();
+        this.fetchBlueprints();
+        this.fetchDeployments();
+        this.fetchNodes();
+        this.fetchNodeInstances();
     }
 
-    _fetchData(fetchUrl, params, optionsField) {
+    fetchData(fetchUrl, params, optionsField) {
         const loading = `${optionsField}Loading`;
 
         const errors = { ...this.state.errors };
@@ -136,12 +138,12 @@ export default class NodeFilter extends React.Component {
                     .map(item => item.id)
                     .uniqWith(_.isEqual)
                     .value();
-                if (this._isFilteringSetFor(optionsField)) {
-                    ids = _.intersection(ids, this._getAllowedOptionsFor(optionsField));
+                if (this.isFilteringSetFor(optionsField)) {
+                    ids = _.intersection(ids, this.getAllowedOptionsFor(optionsField));
                 }
 
                 const options = _.map(ids, id => ({ text: id, value: id, key: id }));
-                if (!this._isMultipleSetFor(optionsField)) {
+                if (!this.isMultipleSetFor(optionsField)) {
                     options.unshift({ text: '', value: '', key: '' });
                 }
 
@@ -153,20 +155,20 @@ export default class NodeFilter extends React.Component {
             });
     }
 
-    _fetchBlueprints() {
+    fetchBlueprints() {
         const params = { ...NodeFilter.BASIC_PARAMS };
-        this._fetchData('/blueprints', params, 'blueprints');
+        this.fetchData('/blueprints', params, 'blueprints');
     }
 
-    _fetchDeployments() {
+    fetchDeployments() {
         const params = { ...NodeFilter.BASIC_PARAMS };
         if (!_.isEmpty(this.state.blueprintId)) {
             params.blueprint_id = this.state.blueprintId;
         }
-        this._fetchData('/deployments', params, 'deployments');
+        this.fetchData('/deployments', params, 'deployments');
     }
 
-    _fetchNodes() {
+    fetchNodes() {
         const params = { ...NodeFilter.BASIC_PARAMS };
         if (!_.isEmpty(this.state.blueprintId)) {
             params.blueprint_id = this.state.blueprintId;
@@ -174,10 +176,10 @@ export default class NodeFilter extends React.Component {
         if (!_.isEmpty(this.state.deploymentId)) {
             params.deployment_id = this.state.deploymentId;
         }
-        this._fetchData('/nodes', params, 'nodes');
+        this.fetchData('/nodes', params, 'nodes');
     }
 
-    _fetchNodeInstances() {
+    fetchNodeInstances() {
         const params = { ...NodeFilter.BASIC_PARAMS };
         if (!_.isEmpty(this.state.deploymentId)) {
             params.deployment_id = this.state.deploymentId;
@@ -185,10 +187,10 @@ export default class NodeFilter extends React.Component {
         if (!_.isEmpty(this.state.nodeId)) {
             params.node_id = this.state.nodeId;
         }
-        this._fetchData('/node-instances', params, 'nodeInstances');
+        this.fetchData('/node-instances', params, 'nodeInstances');
     }
 
-    _handleInputChange(state, event, field, onStateChange) {
+    handleInputChange(state, event, field, onStateChange) {
         this.setState({ ...state, [field.name]: field.value }, () => {
             if (_.isFunction(onStateChange)) {
                 onStateChange();
@@ -205,69 +207,69 @@ export default class NodeFilter extends React.Component {
         });
     }
 
-    _isMultipleSetFor(resourcesName) {
+    isMultipleSetFor(resourcesName) {
         return this.props.allowMultiple || this.props[`allowMultiple${_.upperFirst(resourcesName)}`];
     }
 
-    _getEmptyValueFor(resourcesName) {
-        return this._isMultipleSetFor(resourcesName) ? [] : '';
+    getEmptyValueFor(resourcesName) {
+        return this.isMultipleSetFor(resourcesName) ? [] : '';
     }
 
-    _isFilteringSetFor(resourcesName) {
+    isFilteringSetFor(resourcesName) {
         return !_.isEmpty(this.props[`allowed${_.upperFirst(resourcesName)}`]);
     }
 
-    _getAllowedOptionsFor(resourcesName) {
+    getAllowedOptionsFor(resourcesName) {
         return this.props[`allowed${_.upperFirst(resourcesName)}`];
     }
 
-    _selectBlueprint(event, field) {
-        this._handleInputChange(
+    selectBlueprint(event, field) {
+        this.handleInputChange(
             {
-                deploymentId: this._getEmptyValueFor('deployments'),
-                nodeId: this._getEmptyValueFor('nodes'),
-                nodeInstanceId: this._getEmptyValueFor('nodeInstances')
+                deploymentId: this.getEmptyValueFor('deployments'),
+                nodeId: this.getEmptyValueFor('nodes'),
+                nodeInstanceId: this.getEmptyValueFor('nodeInstances')
             },
             event,
             field,
             () => {
-                this._fetchDeployments();
-                this._fetchNodes();
-                this._fetchNodeInstances();
+                this.fetchDeployments();
+                this.fetchNodes();
+                this.fetchNodeInstances();
             }
         );
     }
 
-    _selectDeployment(event, field) {
-        this._handleInputChange(
+    selectDeployment(event, field) {
+        this.handleInputChange(
             {
-                nodeId: this._getEmptyValueFor('nodes'),
-                nodeInstanceId: this._getEmptyValueFor('nodeInstances')
+                nodeId: this.getEmptyValueFor('nodes'),
+                nodeInstanceId: this.getEmptyValueFor('nodeInstances')
             },
             event,
             field,
             () => {
-                this._fetchNodes();
-                this._fetchNodeInstances();
+                this.fetchNodes();
+                this.fetchNodeInstances();
             }
         );
     }
 
-    _selectNode(event, field) {
-        this._handleInputChange(
+    selectNode(event, field) {
+        this.handleInputChange(
             {
-                nodeInstanceId: this._getEmptyValueFor('nodeInstances')
+                nodeInstanceId: this.getEmptyValueFor('nodeInstances')
             },
             event,
             field,
             () => {
-                this._fetchNodeInstances();
+                this.fetchNodeInstances();
             }
         );
     }
 
-    _selectNodeInstance(event, field) {
-        this._handleInputChange({}, event, field);
+    selectNodeInstance(event, field) {
+        this.handleInputChange({}, event, field);
     }
 
     render() {
@@ -281,11 +283,11 @@ export default class NodeFilter extends React.Component {
                         <Form.Dropdown
                             search
                             selection
-                            value={errors.blueprints ? this._getEmptyValueFor('blueprints') : this.state.blueprintId}
-                            multiple={this._isMultipleSetFor('blueprints')}
+                            value={errors.blueprints ? this.getEmptyValueFor('blueprints') : this.state.blueprintId}
+                            multiple={this.isMultipleSetFor('blueprints')}
                             placeholder={errors.blueprints || 'Blueprint'}
                             options={this.state.blueprints}
-                            onChange={this._selectBlueprint.bind(this)}
+                            onChange={this.selectBlueprint.bind(this)}
                             name="blueprintId"
                             loading={this.state.blueprintsLoading}
                         />
@@ -296,11 +298,11 @@ export default class NodeFilter extends React.Component {
                         <Form.Dropdown
                             search
                             selection
-                            value={errors.deployments ? this._getEmptyValueFor('deployments') : this.state.deploymentId}
-                            multiple={this._isMultipleSetFor('deployments')}
+                            value={errors.deployments ? this.getEmptyValueFor('deployments') : this.state.deploymentId}
+                            multiple={this.isMultipleSetFor('deployments')}
                             placeholder={errors.deployments || 'Deployment'}
                             options={this.state.deployments}
-                            onChange={this._selectDeployment.bind(this)}
+                            onChange={this.selectDeployment.bind(this)}
                             name="deploymentId"
                             loading={this.state.deploymentsLoading}
                         />
@@ -311,11 +313,11 @@ export default class NodeFilter extends React.Component {
                         <Form.Dropdown
                             search
                             selection
-                            value={errors.nodes ? this._getEmptyValueFor('nodes') : this.state.nodeId}
-                            multiple={this._isMultipleSetFor('nodes')}
+                            value={errors.nodes ? this.getEmptyValueFor('nodes') : this.state.nodeId}
+                            multiple={this.isMultipleSetFor('nodes')}
                             placeholder={errors.nodes || 'Node'}
                             options={this.state.nodes}
-                            onChange={this._selectNode.bind(this)}
+                            onChange={this.selectNode.bind(this)}
                             name="nodeId"
                             loading={this.state.nodesLoading}
                         />
@@ -328,13 +330,13 @@ export default class NodeFilter extends React.Component {
                             selection
                             value={
                                 errors.nodeInstances
-                                    ? this._getEmptyValueFor('nodeInstances')
+                                    ? this.getEmptyValueFor('nodeInstances')
                                     : this.state.nodeInstanceId
                             }
-                            multiple={this._isMultipleSetFor('nodeInstances')}
+                            multiple={this.isMultipleSetFor('nodeInstances')}
                             placeholder={errors.nodeInstances || 'Node Instance'}
                             options={this.state.nodeInstances}
-                            onChange={this._selectNodeInstance.bind(this)}
+                            onChange={this.selectNodeInstance.bind(this)}
                             name="nodeInstanceId"
                             loading={this.state.nodeInstancesLoading}
                         />

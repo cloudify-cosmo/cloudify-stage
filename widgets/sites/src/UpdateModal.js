@@ -30,7 +30,7 @@ export default class UpdateModal extends React.Component {
     };
 
     onApprove() {
-        this._updateSite();
+        this.updateSite();
         return false;
     }
 
@@ -49,7 +49,7 @@ export default class UpdateModal extends React.Component {
         }
     }
 
-    _updateSite() {
+    updateSite() {
         // Disable the form
         this.setState({ loading: true });
 
@@ -66,7 +66,7 @@ export default class UpdateModal extends React.Component {
             });
     }
 
-    _handleInputChange(proxy, field) {
+    handleInputChange(proxy, field) {
         this.setState(Stage.Basic.Form.fieldNameValue(field));
     }
 
@@ -92,13 +92,13 @@ export default class UpdateModal extends React.Component {
                                     label="Name"
                                     name="siteNewName"
                                     value={this.state.siteNewName}
-                                    onChange={this._handleInputChange.bind(this)}
+                                    onChange={this.handleInputChange.bind(this)}
                                 />
                             </Form.Field>
                             <Form.Field error={this.state.errors.siteLocation}>
                                 <SiteLocationInput
                                     value={this.state.siteLocation}
-                                    onChange={this._handleInputChange.bind(this)}
+                                    onChange={this.handleInputChange.bind(this)}
                                     toolbox={toolbox}
                                 />
                             </Form.Field>

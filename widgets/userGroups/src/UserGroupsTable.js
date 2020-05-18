@@ -31,28 +31,28 @@ export default class UserGroupsTable extends React.Component {
         );
     }
 
-    _refreshData() {
+    refreshData() {
         this.props.toolbox.refresh();
     }
 
     componentDidMount() {
-        this.props.toolbox.getEventBus().on('userGroups:refresh', this._refreshData, this);
+        this.props.toolbox.getEventBus().on('userGroups:refresh', this.refreshData, this);
     }
 
     componentWillUnmount() {
-        this.props.toolbox.getEventBus().off('userGroups:refresh', this._refreshData);
+        this.props.toolbox.getEventBus().off('userGroups:refresh', this.refreshData);
     }
 
     fetchData(fetchParams) {
         return this.props.toolbox.refresh(fetchParams);
     }
 
-    _selectUserGroup(userGroup) {
+    selectUserGroup(userGroup) {
         const selectedUserGroup = this.props.toolbox.getContext().getValue('userGroup');
         this.props.toolbox.getContext().setValue('userGroup', userGroup === selectedUserGroup ? null : userGroup);
     }
 
-    _getAvailableTenants(value, group) {
+    getAvailableTenants(value, group) {
         this.props.toolbox.loading(true);
 
         const actions = new Actions(this.props.toolbox);
@@ -68,7 +68,7 @@ export default class UserGroupsTable extends React.Component {
             });
     }
 
-    _getAvailableUsers(value, group) {
+    getAvailableUsers(value, group) {
         this.props.toolbox.loading(true);
 
         const actions = new Actions(this.props.toolbox);
@@ -84,13 +84,13 @@ export default class UserGroupsTable extends React.Component {
             });
     }
 
-    _showModal(value, group) {
+    showModal(value, group) {
         const actions = new Actions(this.props.toolbox);
 
         if (value === MenuAction.EDIT_TENANTS_ACTION) {
-            this._getAvailableTenants(value, group);
+            this.getAvailableTenants(value, group);
         } else if (value === MenuAction.EDIT_USERS_ACTION) {
-            this._getAvailableUsers(value, group);
+            this.getAvailableUsers(value, group);
         } else if (
             value === MenuAction.DELETE_ACTION ||
             (value === MenuAction.SET_DEFAULT_GROUP_ROLE_ACTION &&
@@ -98,23 +98,23 @@ export default class UserGroupsTable extends React.Component {
         ) {
             this.setState({ group, modalType: value, showModal: true });
         } else if (value === MenuAction.SET_ADMIN_GROUP_ROLE_ACTION) {
-            this._setRole(group, true);
+            this.setRole(group, true);
         } else if (value === MenuAction.SET_DEFAULT_GROUP_ROLE_ACTION) {
-            this._setRole(group, false);
+            this.setRole(group, false);
         } else {
             this.setState({ error: `Internal error: Unknown action ('${value}') cannot be handled.` });
         }
     }
 
-    _hideModal(newState) {
+    hideModal(newState) {
         this.setState({ showModal: false, ...newState });
     }
 
-    _handleError(message) {
+    handleError(message) {
         this.setState({ error: message });
     }
 
-    _deleteUserGroup() {
+    deleteUserGroup() {
         this.props.toolbox.loading(true);
 
         const actions = new Actions(this.props.toolbox);
@@ -124,7 +124,7 @@ export default class UserGroupsTable extends React.Component {
                 if (actions.isLogoutToBePerformed(this.state.group, this.props.data.items, this.state.group.users)) {
                     this.props.toolbox.getEventBus().trigger('menu.users:logout');
                 } else {
-                    this._hideModal({ error: null });
+                    this.hideModal({ error: null });
                     this.props.toolbox.loading(false);
                     this.props.toolbox.refresh();
                     this.props.toolbox.getEventBus().trigger('users:refresh');
@@ -132,12 +132,12 @@ export default class UserGroupsTable extends React.Component {
                 }
             })
             .catch(err => {
-                this._hideModal({ error: err.message });
+                this.hideModal({ error: err.message });
                 this.props.toolbox.loading(false);
             });
     }
 
-    _setRole(group, changeToAdmin) {
+    setRole(group, changeToAdmin) {
         this.props.toolbox.loading(true);
         this.setState({ settingGroupRoleLoading: group.name });
 
@@ -193,7 +193,7 @@ export default class UserGroupsTable extends React.Component {
                                 <DataTable.Row
                                     key={item.name}
                                     selected={item.isSelected}
-                                    onClick={this._selectUserGroup.bind(this, item.name)}
+                                    onClick={this.selectUserGroup.bind(this, item.name)}
                                 >
                                     <DataTable.Data>{item.name}</DataTable.Data>
                                     <DataTable.Data>{item.ldap_dn}</DataTable.Data>
@@ -205,11 +205,8 @@ export default class UserGroupsTable extends React.Component {
                                                 checked={item.isAdmin}
                                                 onChange={() =>
                                                     item.isAdmin
-                                                        ? this._showModal(
-                                                              MenuAction.SET_DEFAULT_GROUP_ROLE_ACTION,
-                                                              item
-                                                          )
-                                                        : this._showModal(MenuAction.SET_ADMIN_GROUP_ROLE_ACTION, item)
+                                                        ? this.showModal(MenuAction.SET_DEFAULT_GROUP_ROLE_ACTION, item)
+                                                        : this.showModal(MenuAction.SET_ADMIN_GROUP_ROLE_ACTION, item)
                                                 }
                                                 onClick={e => {
                                                     e.stopPropagation();
@@ -228,7 +225,7 @@ export default class UserGroupsTable extends React.Component {
                                         </Label>
                                     </DataTable.Data>
                                     <DataTable.Data className="center aligned">
-                                        <MenuAction item={item} onSelectAction={this._showModal.bind(this)} />
+                                        <MenuAction item={item} onSelectAction={this.showModal.bind(this)} />
                                     </DataTable.Data>
                                 </DataTable.Row>
                                 <DataTable.DataExpandable key={item.name}>
@@ -236,7 +233,7 @@ export default class UserGroupsTable extends React.Component {
                                         data={item}
                                         groups={this.props.data.items}
                                         toolbox={this.props.toolbox}
-                                        onError={this._handleError.bind(this)}
+                                        onError={this.handleError.bind(this)}
                                     />
                                 </DataTable.DataExpandable>
                             </DataTable.RowExpandable>
@@ -252,7 +249,7 @@ export default class UserGroupsTable extends React.Component {
                     group={this.state.group}
                     groups={this.props.data.items}
                     users={this.state.users}
-                    onHide={this._hideModal.bind(this)}
+                    onHide={this.hideModal.bind(this)}
                     toolbox={this.props.toolbox}
                 />
 
@@ -260,15 +257,15 @@ export default class UserGroupsTable extends React.Component {
                     open={this.state.modalType === MenuAction.EDIT_TENANTS_ACTION && this.state.showModal}
                     group={this.state.group}
                     tenants={this.state.tenants}
-                    onHide={this._hideModal.bind(this)}
+                    onHide={this.hideModal.bind(this)}
                     toolbox={this.props.toolbox}
                 />
 
                 <Confirm
                     content={`Are you sure you want to remove group ${this.state.group.name}?`}
                     open={this.state.modalType === MenuAction.DELETE_ACTION && this.state.showModal}
-                    onConfirm={this._deleteUserGroup.bind(this)}
-                    onCancel={this._hideModal.bind(this)}
+                    onConfirm={this.deleteUserGroup.bind(this)}
+                    onCancel={this.hideModal.bind(this)}
                 />
 
                 <Confirm
@@ -278,8 +275,8 @@ export default class UserGroupsTable extends React.Component {
                         'You will be logged out of the system so the changes take effect.'
                     }
                     open={this.state.modalType === MenuAction.SET_DEFAULT_GROUP_ROLE_ACTION && this.state.showModal}
-                    onConfirm={this._setRole.bind(this, this.state.group, false)}
-                    onCancel={this._hideModal.bind(this)}
+                    onConfirm={this.setRole.bind(this, this.state.group, false)}
+                    onCancel={this.hideModal.bind(this)}
                 />
             </div>
         );

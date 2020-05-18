@@ -16,14 +16,14 @@ export default class Home extends Component {
     // TODO: Context handling should not be here. Currently necessary to use deprecated methods.
     UNSAFE_componentWillMount() {
         this.props.onStorePageId(this.props.pageId);
-        this._handleContext(this.props.contextParams);
+        this.handleContext(this.props.contextParams);
     }
 
     // TODO: Context handling should not be here. Currently necessary to use deprecated methods.
     UNSAFE_componentWillReceiveProps(nextProps) {
         if (nextProps.pageId !== this.props.pageId) {
             this.props.onStorePageId(nextProps.pageId);
-            this._handleContext(nextProps.contextParams);
+            this.handleContext(nextProps.contextParams);
         }
     }
 
@@ -43,7 +43,7 @@ export default class Home extends Component {
         }
     }
 
-    _handleContext(contextParams) {
+    handleContext(contextParams) {
         // Always clear the context. Whatever is relevant to the drilldown should be passed as drilldown context
         this.props.onClearContext();
 

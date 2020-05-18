@@ -33,14 +33,14 @@ export default class PagesList extends Component {
             update: (event, ui) => this.props.onPageReorder(this.pageIndex, ui.item.index())
         });
 
-        this._enableReorderInEditMode();
+        this.enableReorderInEditMode();
     }
 
     componentDidUpdate(prevProps, prevState) {
-        this._enableReorderInEditMode();
+        this.enableReorderInEditMode();
     }
 
-    _enableReorderInEditMode() {
+    enableReorderInEditMode() {
         if (this.props.isEditMode) {
             if ($(this.pagesRef.current).sortable('option', 'disabled')) {
                 $(this.pagesRef.current).sortable('enable');
@@ -60,10 +60,8 @@ export default class PagesList extends Component {
 
         return (
             <div className="pages" ref={this.pagesRef}>
-                {_.filter(this.props.pages, p => {
-                    return !p.isDrillDown;
-                }).map(function(page) {
-                    return (
+                {_.filter(this.props.pages, p => !p.isDrillDown).map(
+                    page => (
                         <div
                             key={page.id}
                             className={`item link pageMenuItem ${page.id}PageMenuItem ${
@@ -87,8 +85,9 @@ export default class PagesList extends Component {
                                 ''
                             )}
                         </div>
-                    );
-                }, this)}
+                    ),
+                    this
+                )}
             </div>
         );
     }

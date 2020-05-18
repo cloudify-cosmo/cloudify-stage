@@ -20,7 +20,7 @@ export default class CreateModal extends React.Component {
     };
 
     onApprove() {
-        this._submitCreate();
+        this.submitCreate();
         return false;
     }
 
@@ -35,7 +35,7 @@ export default class CreateModal extends React.Component {
         }
     }
 
-    _submitCreate() {
+    submitCreate() {
         const errors = {};
 
         if (_.isEmpty(this.state.groupName)) {
@@ -66,7 +66,7 @@ export default class CreateModal extends React.Component {
             });
     }
 
-    _handleInputChange(proxy, field) {
+    handleInputChange(proxy, field) {
         this.setState(Stage.Basic.Form.fieldNameValue(field));
     }
 
@@ -96,7 +96,7 @@ export default class CreateModal extends React.Component {
                                 name="groupName"
                                 placeholder="Group name"
                                 value={this.state.groupName}
-                                onChange={this._handleInputChange.bind(this)}
+                                onChange={this.handleInputChange.bind(this)}
                             />
                         </Form.Field>
 
@@ -105,7 +105,7 @@ export default class CreateModal extends React.Component {
                                 name="ldapGroup"
                                 placeholder="LDAP group name"
                                 value={this.state.ldapGroup}
-                                onChange={this._handleInputChange.bind(this)}
+                                onChange={this.handleInputChange.bind(this)}
                             />
                         </Form.Field>
 
@@ -114,7 +114,7 @@ export default class CreateModal extends React.Component {
                                 label="Admin"
                                 name="isAdmin"
                                 checked={this.state.isAdmin}
-                                onChange={this._handleInputChange.bind(this)}
+                                onChange={this.handleInputChange.bind(this)}
                             />
                         </Form.Field>
                     </Form>

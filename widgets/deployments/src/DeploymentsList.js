@@ -32,14 +32,14 @@ export default class DeploymentsList extends React.Component {
     }
 
     componentDidMount() {
-        this.props.toolbox.getEventBus().on('deployments:refresh', this._refreshData, this);
+        this.props.toolbox.getEventBus().on('deployments:refresh', this.refreshData, this);
     }
 
     componentWillUnmount() {
-        this.props.toolbox.getEventBus().off('deployments:refresh', this._refreshData);
+        this.props.toolbox.getEventBus().off('deployments:refresh', this.refreshData);
     }
 
-    _selectDeployment(item) {
+    selectDeployment(item) {
         if (this.props.widget.configuration.clickToDrillDown) {
             this.props.toolbox.drillDown(this.props.widget, 'deployment', { deploymentId: item.id }, item.id);
         } else {
@@ -50,7 +50,7 @@ export default class DeploymentsList extends React.Component {
         }
     }
 
-    _showLogs(deploymentId, executionId) {
+    showLogs(deploymentId, executionId) {
         this.props.toolbox.drillDown(
             this.props.widget,
             'logs',
@@ -59,11 +59,11 @@ export default class DeploymentsList extends React.Component {
         );
     }
 
-    _deleteDeployment() {
-        this._hideModal();
+    deleteDeployment() {
+        this.hideModal();
 
         if (!this.state.deployment) {
-            this._setError('Something went wrong, no deployment was selected for delete');
+            this.setError('Something went wrong, no deployment was selected for delete');
             return;
         }
 
@@ -73,21 +73,21 @@ export default class DeploymentsList extends React.Component {
         actions
             .doDelete(this.state.deployment)
             .then(() => {
-                this._setError(null);
+                this.setError(null);
                 this.props.toolbox.getEventBus().trigger('deployments:refresh');
                 this.props.toolbox.loading(false);
             })
             .catch(err => {
-                this._setError(err.message);
+                this.setError(err.message);
                 this.props.toolbox.loading(false);
             });
     }
 
-    _forceDeleteDeployment() {
-        this._hideModal();
+    forceDeleteDeployment() {
+        this.hideModal();
 
         if (!this.state.deployment) {
-            this._setError('Something went wrong, no deployment was selected for delete');
+            this.setError('Something went wrong, no deployment was selected for delete');
             return;
         }
 
@@ -97,12 +97,12 @@ export default class DeploymentsList extends React.Component {
         actions
             .doForceDelete(this.state.deployment)
             .then(() => {
-                this._setError(null);
+                this.setError(null);
                 this.props.toolbox.getEventBus().trigger('deployments:refresh');
                 this.props.toolbox.loading(false);
             })
             .catch(err => {
-                this._setError(err.message);
+                this.setError(err.message);
                 this.props.toolbox.loading(false);
             });
     }
@@ -112,16 +112,16 @@ export default class DeploymentsList extends React.Component {
         actions
             .doAct(execution, action)
             .then(() => {
-                this._setError(null);
+                this.setError(null);
                 this.props.toolbox.getEventBus().trigger('deployments:refresh');
                 this.props.toolbox.getEventBus().trigger('executions:refresh');
             })
             .catch(err => {
-                this._setError(err.message);
+                this.setError(err.message);
             });
     }
 
-    _setDeploymentVisibility(deploymentId, visibility) {
+    setDeploymentVisibility(deploymentId, visibility) {
         const actions = new Stage.Common.DeploymentActions(this.props.toolbox);
         this.props.toolbox.loading(true);
         actions
@@ -136,11 +136,11 @@ export default class DeploymentsList extends React.Component {
             });
     }
 
-    _refreshData() {
+    refreshData() {
         this.props.toolbox.refresh();
     }
 
-    _showModal(value, deployment, workflow) {
+    showModal(value, deployment, workflow) {
         this.setState({
             deployment,
             workflow: workflow || {},
@@ -149,7 +149,7 @@ export default class DeploymentsList extends React.Component {
         });
     }
 
-    _showDeploymentUpdateDetailsModal(deploymentUpdateId) {
+    showDeploymentUpdateDetailsModal(deploymentUpdateId) {
         this.setState({
             deploymentUpdateId,
             modalType: DeploymentsList.DEPLOYMENT_UPDATE_DETAILS_MODAL,
@@ -157,11 +157,11 @@ export default class DeploymentsList extends React.Component {
         });
     }
 
-    _hideModal() {
+    hideModal() {
         this.setState({ showModal: false });
     }
 
-    _setError(errorMessage) {
+    setError(errorMessage) {
         this.setState({ error: errorMessage });
     }
 
@@ -184,13 +184,13 @@ export default class DeploymentsList extends React.Component {
                         widget={this.props.widget}
                         data={this.props.data}
                         fetchData={this.fetchData.bind(this)}
-                        onSelectDeployment={this._selectDeployment.bind(this)}
-                        onShowLogs={this._showLogs.bind(this)}
-                        onShowUpdateDetails={this._showDeploymentUpdateDetailsModal.bind(this)}
-                        onMenuAction={this._showModal.bind(this)}
+                        onSelectDeployment={this.selectDeployment.bind(this)}
+                        onShowLogs={this.showLogs.bind(this)}
+                        onShowUpdateDetails={this.showDeploymentUpdateDetailsModal.bind(this)}
+                        onMenuAction={this.showModal.bind(this)}
                         onActOnExecution={this.actOnExecution.bind(this)}
-                        onError={this._setError.bind(this)}
-                        onSetVisibility={this._setDeploymentVisibility.bind(this)}
+                        onError={this.setError.bind(this)}
+                        onSetVisibility={this.setDeploymentVisibility.bind(this)}
                         noDataMessage={NO_DATA_MESSAGE}
                         showExecutionStatusLabel={this.props.widget.configuration.showExecutionStatusLabel}
                     />
@@ -199,13 +199,13 @@ export default class DeploymentsList extends React.Component {
                         widget={this.props.widget}
                         data={this.props.data}
                         fetchData={this.fetchData.bind(this)}
-                        onSelectDeployment={this._selectDeployment.bind(this)}
-                        onShowLogs={this._showLogs.bind(this)}
-                        onShowUpdateDetails={this._showDeploymentUpdateDetailsModal.bind(this)}
-                        onMenuAction={this._showModal.bind(this)}
+                        onSelectDeployment={this.selectDeployment.bind(this)}
+                        onShowLogs={this.showLogs.bind(this)}
+                        onShowUpdateDetails={this.showDeploymentUpdateDetailsModal.bind(this)}
+                        onMenuAction={this.showModal.bind(this)}
                         onActOnExecution={this.actOnExecution.bind(this)}
-                        onError={this._setError.bind(this)}
-                        onSetVisibility={this._setDeploymentVisibility.bind(this)}
+                        onError={this.setError.bind(this)}
+                        onSetVisibility={this.setDeploymentVisibility.bind(this)}
                         noDataMessage={NO_DATA_MESSAGE}
                         showExecutionStatusLabel={this.props.widget.configuration.showExecutionStatusLabel}
                     />
@@ -214,8 +214,8 @@ export default class DeploymentsList extends React.Component {
                 <Confirm
                     content={`Are you sure you want to remove deployment ${this.state.deployment.id}?`}
                     open={this.state.modalType === MenuAction.DELETE_ACTION && this.state.showModal}
-                    onConfirm={this._deleteDeployment.bind(this)}
-                    onCancel={this._hideModal.bind(this)}
+                    onConfirm={this.deleteDeployment.bind(this)}
+                    onCancel={this.hideModal.bind(this)}
                 />
 
                 <Confirm
@@ -223,22 +223,22 @@ export default class DeploymentsList extends React.Component {
                                    Force delete will ignore any existing live nodes.
                                    Are you sure you want to ignore the live nodes and delete the deployment ${this.state.deployment.id}?`}
                     open={this.state.modalType === MenuAction.FORCE_DELETE_ACTION && this.state.showModal}
-                    onConfirm={this._forceDeleteDeployment.bind(this)}
-                    onCancel={this._hideModal.bind(this)}
+                    onConfirm={this.forceDeleteDeployment.bind(this)}
+                    onCancel={this.hideModal.bind(this)}
                 />
 
                 <ExecuteDeploymentModal
                     open={this.state.modalType === MenuAction.WORKFLOW_ACTION && this.state.showModal}
                     deployment={this.state.deployment}
                     workflow={this.state.workflow}
-                    onHide={this._hideModal.bind(this)}
+                    onHide={this.hideModal.bind(this)}
                     toolbox={this.props.toolbox}
                 />
 
                 <UpdateDeploymentModal
                     open={this.state.modalType === MenuAction.UPDATE_ACTION && this.state.showModal}
                     deployment={this.state.deployment}
-                    onHide={this._hideModal.bind(this)}
+                    onHide={this.hideModal.bind(this)}
                     toolbox={this.props.toolbox}
                 />
 
@@ -247,14 +247,14 @@ export default class DeploymentsList extends React.Component {
                         this.state.modalType === DeploymentsList.DEPLOYMENT_UPDATE_DETAILS_MODAL && this.state.showModal
                     }
                     deploymentUpdateId={this.state.deploymentUpdateId}
-                    onClose={this._hideModal.bind(this)}
+                    onClose={this.hideModal.bind(this)}
                     toolbox={this.props.toolbox}
                 />
 
                 <SetSiteModal
                     open={this.state.modalType === MenuAction.SET_SITE_ACTION && this.state.showModal}
                     deployment={this.state.deployment}
-                    onHide={this._hideModal.bind(this)}
+                    onHide={this.hideModal.bind(this)}
                     toolbox={this.props.toolbox}
                 />
             </div>

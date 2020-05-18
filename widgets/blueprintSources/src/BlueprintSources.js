@@ -32,7 +32,7 @@ export default class BlueprintSources extends React.Component {
         }
     }
 
-    _selectFile(selectedKeys, info) {
+    selectFile(selectedKeys, info) {
         if (_.isEmpty(selectedKeys) || !_.isEmpty(info.node.props.children)) {
             this.setState({ content: '', filename: '' });
             return;
@@ -125,7 +125,7 @@ export default class BlueprintSources extends React.Component {
                                 showLine
                                 selectable
                                 defaultExpandAll
-                                onSelect={this._selectFile.bind(this)}
+                                onSelect={this.selectFile.bind(this)}
                             >
                                 <NodesTree.Node
                                     key="blueprint"

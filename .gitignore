@@ -21,3 +21,4 @@ selenium-debug.log
 /userData
 
 /widgets/*/backend.js
+/.eslintcache

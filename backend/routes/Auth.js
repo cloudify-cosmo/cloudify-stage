@@ -59,7 +59,7 @@ router.post('/login', (req, res) =>
         })
 );
 
-router.post('/saml/callback', passport.authenticate('saml', { session: false }), function(req, res) {
+router.post('/saml/callback', passport.authenticate('saml', { session: false }), (req, res) => {
     if (!req.body || !req.body.SAMLResponse || !req.user) {
         res.status(401).send('Invalid Request');
     }

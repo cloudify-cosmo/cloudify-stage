@@ -11,13 +11,13 @@ export default class WidgetBackend extends Internal {
         this.widgetId = widgetId;
     }
 
-    _buildHeaders() {
-        const headers = super._buildHeaders();
+    buildHeaders() {
+        const headers = super.buildHeaders();
         headers[consts.WIDGET_ID_HEADER] = this.widgetId;
         return headers;
     }
 
-    _buildActualUrl(path, data) {
-        return super._buildActualUrl(`/wb/${path}`, data);
+    buildActualUrl(path, data) {
+        return super.buildActualUrl(`/wb/${path}`, data);
     }
 }

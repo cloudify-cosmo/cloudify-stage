@@ -33,7 +33,7 @@ export default class DeploymentActionButtons extends React.Component {
         );
     }
 
-    _deleteDeployment() {
+    deleteDeployment() {
         this.props.toolbox.loading(true);
         this.setState({ loading: true });
         const actions = new Stage.Common.DeploymentActions(this.props.toolbox);
@@ -41,7 +41,7 @@ export default class DeploymentActionButtons extends React.Component {
             .doDelete(this.props.deployment)
             .then(() => {
                 this.setState({ loading: false, error: null });
-                this._hideModal();
+                this.hideModal();
                 this.props.toolbox.loading(false);
                 this.props.toolbox.getEventBus().trigger('deployments:refresh');
                 if (_.isEqual(this.props.deployment.id, this.props.toolbox.getContext().getValue('deploymentId'))) {
@@ -51,25 +51,25 @@ export default class DeploymentActionButtons extends React.Component {
             })
             .catch(err => {
                 this.setState({ loading: false, error: err.message });
-                this._hideModal();
+                this.hideModal();
                 this.props.toolbox.loading(false);
             });
     }
 
-    _showExecuteWorkflowModal(workflow) {
+    showExecuteWorkflowModal(workflow) {
         this.setState({ workflow });
-        this._showModal(DeploymentActionButtons.WORKFLOW_ACTION);
+        this.showModal(DeploymentActionButtons.WORKFLOW_ACTION);
     }
 
-    _showModal(type) {
+    showModal(type) {
         this.setState({ modalType: type, showModal: true });
     }
 
-    _hideModal() {
+    hideModal() {
         this.setState({ showModal: false });
     }
 
-    _isShowModal(type) {
+    isShowModal(type) {
         return this.state.modalType === type && this.state.showModal;
     }
 
@@ -95,7 +95,7 @@ export default class DeploymentActionButtons extends React.Component {
                             content="Execute workflow"
                         />
                     }
-                    onClick={workflow => this._showExecuteWorkflowModal(workflow)}
+                    onClick={workflow => this.showExecuteWorkflowModal(workflow)}
                 />
 
                 <Button
@@ -103,7 +103,7 @@ export default class DeploymentActionButtons extends React.Component {
                     color="teal"
                     icon="edit"
                     disabled={_.isEmpty(deploymentId) || this.state.loading}
-                    onClick={this._showModal.bind(this, DeploymentActionButtons.EDIT_ACTION)}
+                    onClick={this.showModal.bind(this, DeploymentActionButtons.EDIT_ACTION)}
                     content="Update deployment"
                     id="updateDeploymentButton"
                 />
@@ -113,31 +113,31 @@ export default class DeploymentActionButtons extends React.Component {
                     color="teal"
                     icon="trash"
                     disabled={_.isEmpty(deploymentId) || this.state.loading}
-                    onClick={this._showModal.bind(this, DeploymentActionButtons.DELETE_ACTION)}
+                    onClick={this.showModal.bind(this, DeploymentActionButtons.DELETE_ACTION)}
                     content="Delete deployment"
                     id="deleteDeploymentButton"
                 />
 
                 <Confirm
                     content={`Are you sure you want to remove deployment ${deploymentId}?`}
-                    open={this._isShowModal(DeploymentActionButtons.DELETE_ACTION)}
-                    onConfirm={this._deleteDeployment.bind(this)}
-                    onCancel={this._hideModal.bind(this)}
+                    open={this.isShowModal(DeploymentActionButtons.DELETE_ACTION)}
+                    onConfirm={this.deleteDeployment.bind(this)}
+                    onCancel={this.hideModal.bind(this)}
                     className="deploymentRemoveConfirm"
                 />
 
                 <ExecuteDeploymentModal
-                    open={this._isShowModal(DeploymentActionButtons.WORKFLOW_ACTION)}
+                    open={this.isShowModal(DeploymentActionButtons.WORKFLOW_ACTION)}
                     deployment={this.props.deployment}
                     workflow={this.state.workflow}
-                    onHide={this._hideModal.bind(this)}
+                    onHide={this.hideModal.bind(this)}
                     toolbox={this.props.toolbox}
                 />
 
                 <UpdateDeploymentModal
-                    open={this._isShowModal(DeploymentActionButtons.EDIT_ACTION)}
+                    open={this.isShowModal(DeploymentActionButtons.EDIT_ACTION)}
                     deployment={this.props.deployment}
-                    onHide={this._hideModal.bind(this)}
+                    onHide={this.hideModal.bind(this)}
                     toolbox={this.props.toolbox}
                 />
             </div>

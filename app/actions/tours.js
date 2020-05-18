@@ -9,7 +9,7 @@ import * as types from './types';
 import Tours from '../utils/Tours';
 import Consts from '../utils/consts';
 
-function _handleClick(event) {
+function handleClick(event) {
     const isHopscotchElementClicked = _.includes(event.target.className, 'hopscotch');
 
     if (!isHopscotchElementClicked) {
@@ -17,7 +17,7 @@ function _handleClick(event) {
     }
 }
 
-function _handleKeyPressed(event) {
+function handleKeyPressed(event) {
     const isEscapeKeyPressed = event.key === 'Escape';
 
     if (isEscapeKeyPressed) {
@@ -26,13 +26,13 @@ function _handleKeyPressed(event) {
 }
 
 function addStopTourEventsListeners() {
-    document.addEventListener('click', _handleClick);
-    document.addEventListener('keydown', _handleKeyPressed);
+    document.addEventListener('click', handleClick);
+    document.addEventListener('keydown', handleKeyPressed);
 }
 
 function removeStopTourEventsListeners() {
-    document.removeEventListener('click', _handleClick);
-    document.removeEventListener('keydown', _handleKeyPressed);
+    document.removeEventListener('click', handleClick);
+    document.removeEventListener('keydown', handleKeyPressed);
 }
 
 function waitForHopscotchElementsToBeClosed() {
@@ -54,13 +54,7 @@ function waitForHopscotchElementsToBeClosed() {
 }
 
 function hopscotchRegisterHelpers(dispatch) {
-    hopscotch.registerHelper('redirectTo', function(
-        url,
-        pageName,
-        selector,
-        noSelectorErrorTitle,
-        noSelectorErrorMessage
-    ) {
+    hopscotch.registerHelper('redirectTo', (url, pageName, selector, noSelectorErrorTitle, noSelectorErrorMessage) => {
         const minVisibilityTime = 500; // ms
         const maxWaitingTime = 5000; // ms
         const hopscotchButtonSelector = 'button.hopscotch-cta';
@@ -169,14 +163,14 @@ export function storeTours(tours) {
 }
 
 export function loadTours() {
-    return function(dispatch, getState) {
+    return (dispatch, getState) => {
         hopscotchRegisterHelpers(dispatch);
         return Tours.load(getState().manager).then(result => dispatch(storeTours(result)));
     };
 }
 
 export function startTour(tour) {
-    return function(dispatch, getState) {
+    return (dispatch, getState) => {
         const path = getState().router.location.pathname;
 
         if (!_.isNil(tour.startAt) && tour.startAt !== path) {
