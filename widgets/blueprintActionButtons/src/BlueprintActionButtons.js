@@ -66,7 +66,8 @@ export default class BlueprintActionButtons extends React.Component {
     render() {
         const { ErrorMessage, Button } = Stage.Basic;
         const { DeleteConfirm, DeployBlueprintModal } = Stage.Common;
-        const { blueprintId, blueprintYamlFileName, toolbox } = this.props;
+        const { blueprintId, toolbox } = this.props;
+        const manager = toolbox.getManager();
 
         return (
             <div>
@@ -92,20 +93,30 @@ export default class BlueprintActionButtons extends React.Component {
                     id="deleteBlueprintButton"
                 />
 
-                {!toolbox.getManager().isCommunityEdition() && (
+                {!manager.isCommunityEdition() && (
                     <Button
                         className="labeled icon"
                         color="teal"
                         icon="external share"
-                        disabled={_.isEmpty(blueprintId) || !blueprintYamlFileName || this.state.loading}
-                        onClick={() =>
-                            window.open(
-                                `/composer/import/${toolbox
-                                    .getManager()
-                                    .getSelectedTenant()}/${blueprintId}/${blueprintYamlFileName}`,
-                                '_blank'
-                            )
-                        }
+                        disabled={_.isEmpty(blueprintId) || this.state.loading}
+                        onClick={() => {
+                            toolbox.loading(true);
+                            this.setState({ loading: true });
+                            manager
+                                .doGet('/blueprints?_include=main_file_name', { id: blueprintId })
+                                .then(data =>
+                                    window.open(
+                                        `/composer/import/${manager.getSelectedTenant()}/${blueprintId}/${
+                                            data.items[0].main_file_name
+                                        }`,
+                                        '_blank'
+                                    )
+                                )
+                                .finally(() => {
+                                    toolbox.loading(false);
+                                    this.setState({ loading: false });
+                                });
+                        }}
                         content="Edit a copy in Composer"
                     />
                 )}
