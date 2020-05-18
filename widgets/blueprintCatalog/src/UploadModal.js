@@ -107,10 +107,11 @@ export default class UploadModal extends React.Component {
     }
 
     render() {
-        const { blueprintName, blueprintYamlFile, errors, loading, visibility } = this.state;
+        const { blueprintName, blueprintYamlFile, errors, loading, visibility, yamlFiles: yamlFilesState } = this.state;
         const { onHide, open, repositoryName } = this.props;
         const { Modal, CancelButton, ApproveButton, Icon, Form, VisibilityField } = Stage.Basic;
-        const yamlFiles = _.map(yamlFiles, item => {
+
+        const yamlFiles = _.map(yamlFilesState, item => {
             return { text: item, value: item };
         });
 

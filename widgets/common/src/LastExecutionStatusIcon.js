@@ -31,11 +31,18 @@ export default class LastExecutionStatusIcon extends React.Component {
 
     render() {
         const { errorModalOpen, open } = this.state;
-        const { labelAttached, onActOnExecution, onShowLogs, onShowUpdateDetails, showLabel } = this.props;
+        const {
+            labelAttached,
+            execution: executionProp,
+            onActOnExecution,
+            onShowLogs,
+            onShowUpdateDetails,
+            showLabel
+        } = this.props;
         const { CancelButton, Button, CopyToClipboardButton, HighlightText, Icon, Table, Modal, Popup } = Stage.Basic;
         const { ExecutionStatus } = Stage.Shared;
         const { Utils } = Stage;
-        const execution = { workflow_id: '', status: '', ...execution };
+        const execution = { workflow_id: '', status: '', ...executionProp };
 
         const showScheduledColumn = !!execution.scheduled_for;
         const colSpan = showScheduledColumn ? 5 : 4;

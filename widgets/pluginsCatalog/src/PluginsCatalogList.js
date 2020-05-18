@@ -75,7 +75,7 @@ export default class PluginsCatalogList extends React.Component {
   */
     render() {
         const { plugin, selected, showModal, success } = this.state;
-        const { actions, toolbox } = this.props;
+        const { actions, items: itemsProp, toolbox } = this.props;
         const NO_DATA_MESSAGE = "There are no Plugins available in catalog. Check widget's configuration.";
         const { DataTable, Message, Button } = Stage.Basic;
         const { PluginIcon } = Stage.Common;
@@ -87,7 +87,7 @@ export default class PluginsCatalogList extends React.Component {
             .getManager()
             .getDistributionRelease()
             .toLowerCase()}`;
-        let items = _.map(items, item => {
+        let items = _.map(itemsProp, item => {
             const wagon = _.find(item.wagons, wagon => {
                 return wagon.name.toLowerCase() === distro || wagon.name.toLowerCase() === 'any';
             });

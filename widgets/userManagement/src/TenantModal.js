@@ -95,11 +95,11 @@ export default class TenantModal extends React.Component {
 
     render() {
         const { errors, loading } = this.state;
-        const { onHide, open, toolbox } = this.props;
+        const { onHide, open, toolbox, tenants: tenantsProp, user: userProp } = this.props;
         const { Modal, Icon, Form, ApproveButton, CancelButton } = Stage.Basic;
 
-        const user = { username: '', ...user };
-        const tenants = { items: [], ...tenants };
+        const user = { username: '', ...userProp };
+        const tenants = { items: [], ...tenantsProp };
 
         const options = _.map(tenants.items, item => {
             return { text: item.name, value: item.name, key: item.name };

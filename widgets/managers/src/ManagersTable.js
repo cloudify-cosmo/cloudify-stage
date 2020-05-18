@@ -222,7 +222,8 @@ export default class ManagersTable extends React.Component {
 
                     {_.map(data.items, manager => {
                         const inSelectedManagers = _.includes(selectedManagers, manager.id);
-                        const { isFetching, status } = _.get(status, manager.id, {
+                        const { status: statusState } = this.state;
+                        const { isFetching, status } = _.get(statusState, manager.id, {
                             isFetching: false,
                             status: {}
                         });

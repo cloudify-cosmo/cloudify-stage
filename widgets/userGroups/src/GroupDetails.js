@@ -81,7 +81,7 @@ export default class UserDetails extends React.Component {
     }
 
     render() {
-        const { processItem, showModal, user } = this.state;
+        const { processItem, processing: processingState, showModal, user } = this.state;
         const { data } = this.props;
         const { Confirm, Divider, Icon, List, Message, Segment } = Stage.Basic;
 
@@ -92,7 +92,7 @@ export default class UserDetails extends React.Component {
                     <Divider />
                     <List divided relaxed verticalAlign="middle" className="light">
                         {data.users.map(item => {
-                            const processing = processing && processItem === item;
+                            const processing = processingState && processItem === item;
 
                             return (
                                 <List.Item key={item}>
@@ -116,7 +116,7 @@ export default class UserDetails extends React.Component {
                     <Divider />
                     <List divided relaxed verticalAlign="middle" className="light">
                         {_.map(data.tenants, (role, item) => {
-                            const processing = processing && processItem === item;
+                            const processing = processingState && processItem === item;
 
                             return (
                                 <List.Item key={item}>

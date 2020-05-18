@@ -182,8 +182,8 @@ export default class AddWidgetModal extends Component {
     }
 
     doFilterWidgets(field, isCategoryChange = false) {
-        const { selectedCategory } = this.state;
-        const search = isCategoryChange ? search : field.value;
+        const { search: stateSearch, selectedCategory } = this.state;
+        const search = isCategoryChange ? stateSearch : field.value;
         const category = isCategoryChange ? field.name : selectedCategory;
 
         const { widgetDefinitions } = this.props;

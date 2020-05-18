@@ -108,8 +108,8 @@ export default class GroupsModal extends React.Component {
         const { errors, loading } = this.state;
         const { Modal, Icon, Form, CancelButton, ApproveButton } = Stage.Basic;
 
-        const { tenant, onHide, open, toolbox } = this.props;
-        const userGroups = _.map(userGroups.items, userGroup => {
+        const { tenant, onHide, open, toolbox, userGroups: userGroupsProp } = this.props;
+        const userGroups = _.map(userGroupsProp.items, userGroup => {
             return { text: userGroup.name, value: userGroup.name, key: userGroup.name };
         });
 

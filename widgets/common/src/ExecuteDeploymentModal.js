@@ -60,6 +60,7 @@ export default class ExecuteDeploymentModal extends React.Component {
     }
 
     submitExecute() {
+        const { deployment, deployments, onExecute, onHide, toolbox, workflow } = this.props;
         const { dryRun, force, params, queue, schedule, scheduledTime } = this.state;
         const { InputsUtils, DeploymentActions } = Stage.Common;
         const errors = {};
@@ -91,8 +92,8 @@ export default class ExecuteDeploymentModal extends React.Component {
         }
 
         if (_.isFunction(onExecute) && onExecute !== _.noop) {
-            const scheduledTime = schedule ? moment(scheduledTime).format('YYYYMMDDHHmmZ') : undefined;
-            onExecute(workflowParameters, force, dryRun, queue, scheduledTime);
+            const scheduled = schedule ? moment(scheduledTime).format('YYYYMMDDHHmmZ') : undefined;
+            onExecute(workflowParameters, force, dryRun, queue, scheduled);
             onHide();
             return true;
         }
@@ -100,15 +101,15 @@ export default class ExecuteDeploymentModal extends React.Component {
         this.setState({ loading: true });
         const actions = new DeploymentActions(toolbox);
 
-        let { deployments, deployment, onExecute, onHide, toolbox, workflow } = this.props;
+        let deploymentsList = deployments;
         if (_.isEmpty(deployments)) {
-            deployments = [deployment.id];
+            deploymentsList = [deployment.id];
         }
 
-        const executePromises = _.map(deployments, deploymentId => {
-            const scheduledTime = schedule ? moment(scheduledTime).format('YYYYMMDDHHmmZ') : undefined;
+        const executePromises = _.map(deploymentsList, deploymentId => {
+            const scheduled = schedule ? moment(scheduledTime).format('YYYYMMDDHHmmZ') : undefined;
             return actions
-                .doExecute({ id: deploymentId }, workflow, workflowParameters, force, dryRun, queue, scheduledTime)
+                .doExecute({ id: deploymentId }, workflow, workflowParameters, force, dryRun, queue, scheduled)
                 .then(() => {
                     this.setState({ loading: false, errors: {} });
                     onHide();
@@ -152,22 +153,22 @@ export default class ExecuteDeploymentModal extends React.Component {
 
     render() {
         const { dryRun, errors, fileLoading, force, loading, params, queue, schedule, scheduledTime } = this.state;
-        const { deployments, onHide, open } = this.props;
+        const { deployment, deployments, onHide, open, workflow } = this.props;
         const { ApproveButton, CancelButton, DateInput, Divider, Form, Header, Icon, Modal, Message } = Stage.Basic;
         const { InputsHeader, InputsUtils, YamlFileButton } = Stage.Common;
 
-        const workflow = { name: '', parameters: [], ...workflow };
-        const deployment = { id: '', ...deployment };
+        const enhancedWorkflow = { name: '', parameters: [], ...workflow };
+        const enhancedDeployment = { id: '', ...deployment };
         const deploymentName = !_.isEmpty(deployments)
             ? _.size(deployments) > 1
                 ? 'multiple deployments'
                 : deployments[0]
-            : deployment.id;
+            : enhancedDeployment.id;
 
         return (
             <Modal open={open} onClose={() => onHide()} closeOnEscape={false} className="executeWorkflowModal">
                 <Modal.Header>
-                    <Icon name="cogs" /> Execute workflow {workflow.name}
+                    <Icon name="cogs" /> Execute workflow {enhancedWorkflow.name}
                     {deploymentName && ` on ${deploymentName}`}
                 </Modal.Header>
 
@@ -178,7 +179,7 @@ export default class ExecuteDeploymentModal extends React.Component {
                         scrollToError
                         onErrorsDismiss={() => this.setState({ errors: {} })}
                     >
-                        {!_.isEmpty(workflow.parameters) && (
+                        {!_.isEmpty(enhancedWorkflow.parameters) && (
                             <YamlFileButton
                                 onChange={this.handleYamlFileChange.bind(this)}
                                 dataType="execution parameters"
@@ -188,12 +189,12 @@ export default class ExecuteDeploymentModal extends React.Component {
 
                         <InputsHeader header="Parameters" compact />
 
-                        {_.isEmpty(workflow.parameters) && (
+                        {_.isEmpty(enhancedWorkflow.parameters) && (
                             <Message content="No parameters available for the execution" />
                         )}
 
                         {InputsUtils.getInputFields(
-                            workflow.parameters,
+                            enhancedWorkflow.parameters,
                             this.handleInputChange.bind(this),
                             params,
                             errors

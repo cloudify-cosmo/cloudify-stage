@@ -51,8 +51,8 @@ export default class InstallWidgetModal extends Component {
 
     installWidget() {
         const { onWidgetInstalled } = this.props;
-        const { widgetFile } = this.state;
-        const widgetUrl = widgetFile ? '' : widgetUrl;
+        const { widgetFile, widgetUrl: stateWidgetUrl } = this.state;
+        const widgetUrl = widgetFile ? '' : stateWidgetUrl;
 
         const errors = {};
 

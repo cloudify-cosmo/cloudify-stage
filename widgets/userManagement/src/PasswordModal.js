@@ -80,10 +80,10 @@ export default class PasswordModal extends React.Component {
 
     render() {
         const { confirmPassword, errors, loading, password } = this.state;
-        const { onHide, open } = this.props;
+        const { onHide, open, user: userProp } = this.props;
         const { Modal, Icon, Form, ApproveButton, CancelButton } = Stage.Basic;
 
-        const user = { username: '', ...user };
+        const user = { username: '', ...userProp };
 
         return (
             <Modal open={open} onClose={() => onHide()} className="userPasswordModal">

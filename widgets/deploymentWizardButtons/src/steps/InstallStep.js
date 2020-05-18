@@ -205,21 +205,24 @@ class InstallStepContent extends React.Component {
     }
 
     handleTask(index) {
-        const tasks = [...tasks];
+        const { tasks: stateTasks } = this.state;
+        const tasks = [...stateTasks];
         const task = tasks[index];
         task.changeToInProgress();
 
         return new Promise(resolve => this.setState({ tasks }, resolve))
             .then(() => task.run())
             .then(() => {
-                const tasks = [...tasks];
+                const { tasks: stateTasks } = this.state;
+                const tasks = [...stateTasks];
 
                 tasks[index].changeToFinished();
 
                 return new Promise(resolve => this.setState({ tasks }, resolve));
             })
             .catch(error => {
-                const tasks = [...tasks];
+                const { tasks: stateTasks } = this.state;
+                const tasks = [...stateTasks];
                 error = _.isString(error) ? error : _.get(error, 'message', Stage.Utils.Json.getStringValue(error));
 
                 tasks[index].changeToFailed(error);

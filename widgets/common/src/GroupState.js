@@ -29,8 +29,8 @@ class GroupState extends React.Component {
 
     render() {
         const { Segment, Icon, Popup } = Stage.Basic;
-        const disabled = value === 0;
         const { state, className, description, onClick, value } = this.props;
+        const disabled = value === 0;
         const color = disabled ? 'grey' : state.colorSUI;
 
         return (

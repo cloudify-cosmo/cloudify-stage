@@ -62,6 +62,7 @@ class UpdateDeploymentModal extends React.Component {
         const {
             automaticReinstall,
             blueprint,
+            deploymentInputs: deploymentInputsState,
             force,
             ignoreFailure,
             installWorkflow,
@@ -79,7 +80,11 @@ class UpdateDeploymentModal extends React.Component {
 
         const inputsWithoutValue = {};
         const inputsPlanForUpdate = InputsUtils.getPlanForUpdate(blueprint.plan.inputs, deployment.inputs);
-        const deploymentInputs = InputsUtils.getInputsToSend(inputsPlanForUpdate, deploymentInputs, inputsWithoutValue);
+        const deploymentInputs = InputsUtils.getInputsToSend(
+            inputsPlanForUpdate,
+            deploymentInputsState,
+            inputsWithoutValue
+        );
         InputsUtils.addErrors(inputsWithoutValue, errors);
 
         if (!_.isEmpty(errors)) {
@@ -133,7 +138,7 @@ class UpdateDeploymentModal extends React.Component {
     }
 
     handleYamlFileChange(file) {
-        const { blueprint } = this.state;
+        const { blueprint, deploymentInputs: deploymentInputsState } = this.state;
         if (!file) {
             return;
         }
@@ -148,7 +153,7 @@ class UpdateDeploymentModal extends React.Component {
             .then(yamlInputs => {
                 const deploymentInputs = InputsUtils.getUpdatedInputs(
                     blueprint.plan.inputs,
-                    deploymentInputs,
+                    deploymentInputsState,
                     yamlInputs
                 );
                 this.setState({ errors: {}, deploymentInputs, fileLoading: false });

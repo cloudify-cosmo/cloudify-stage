@@ -42,10 +42,18 @@ class UploadBlueprintModal extends React.Component {
     }
 
     uploadBlueprint() {
-        const { blueprintFile, blueprintFileName, blueprintName, imageFile, visibility } = this.state;
+        const {
+            blueprintFile,
+            blueprintFileName,
+            blueprintName,
+            imageFile,
+            visibility,
+            blueprintUrl: blueprintUrlState,
+            imageUrl: imageUrlState
+        } = this.state;
         const { onHide, toolbox } = this.props;
-        const blueprintUrl = blueprintFile ? '' : blueprintUrl;
-        const imageUrl = imageFile ? '' : imageUrl;
+        const blueprintUrl = blueprintFile ? '' : blueprintUrlState;
+        const imageUrl = imageFile ? '' : imageUrlState;
 
         const errors = {};
 

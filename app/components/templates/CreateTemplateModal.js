@@ -143,8 +143,9 @@ export default class CreateTemplateModal extends Component {
     }
 
     addPage(item) {
-        const availablePages = _.without(availablePages, item);
-        const pages = [...pages, item];
+        const { availablePages: stateAvailablePages, pages: statePages } = this.state;
+        const availablePages = _.without(stateAvailablePages, item);
+        const pages = [...statePages, item];
 
         this.setState({ pages, availablePages }, () => {
             $('#reorderList').sortable('refresh');
@@ -152,8 +153,9 @@ export default class CreateTemplateModal extends Component {
     }
 
     removePage(item) {
-        const availablePages = [...availablePages, item];
-        const pages = _.without(pages, item);
+        const { availablePages: stateAvailablePages, pages: statePages } = this.state;
+        const availablePages = [...stateAvailablePages, item];
+        const pages = _.without(statePages, item);
 
         this.setState({ pages, availablePages }, () => {
             $('#reorderList').sortable('refresh');

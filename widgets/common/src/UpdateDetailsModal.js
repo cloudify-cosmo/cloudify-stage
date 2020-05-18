@@ -34,12 +34,12 @@ class InputsSection extends React.Component {
 
     render() {
         const { showOnlyChanged } = this.state;
-        const { oldInputs } = this.props;
+        const { oldInputs, newInputs: newInputsProp } = this.props;
         const { Form, Header, Icon, List, Popup, PopupHelp, Table } = Stage.Basic;
         const { ParameterValue, ParameterValueDescription } = Stage.Common;
         const { Json } = Stage.Utils;
 
-        const newInputs = Array.sort(_.keys(newInputs));
+        const newInputs = Array.sort(_.keys(newInputsProp));
         const onlyChangedInputs = _.chain(newInputs)
             .filter(
                 inputName =>
@@ -392,12 +392,27 @@ export default class UpdateDetailsModal extends React.Component {
     }
 
     render() {
-        const { errors, loading } = this.state;
-        const { deploymentUpdateId, isPreview, onClose, onUpdate, open } = this.props;
+        const {
+            errors,
+            loading,
+            executionParameters: executionParametersState,
+            deploymentUpdate: deploymentUpdateState
+        } = this.state;
+        const {
+            deploymentUpdateId,
+            isPreview,
+            onClose,
+            onUpdate,
+            open,
+            executionParameters: executionParametersProp,
+            deploymentUpdate: deploymentUpdateProp
+        } = this.props;
         const { ApproveButton, CancelButton, Form, Icon, Modal } = Stage.Basic;
 
-        const deploymentUpdate = !_.isEmpty(deploymentUpdateId) ? deploymentUpdate : deploymentUpdate;
-        const executionParameters = !_.isEmpty(executionParameters) ? executionParameters : executionParameters;
+        const deploymentUpdate = !_.isEmpty(deploymentUpdateId) ? deploymentUpdateState : deploymentUpdateProp;
+        const executionParameters = !_.isEmpty(executionParametersProp)
+            ? executionParametersProp
+            : executionParametersState;
 
         return (
             <div>

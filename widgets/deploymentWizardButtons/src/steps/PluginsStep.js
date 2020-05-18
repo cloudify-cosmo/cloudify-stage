@@ -290,17 +290,17 @@ class PluginsStepContent extends React.Component {
     }
 
     onChange(pluginName) {
-        const { id, onChange } = this.props;
+        const { id, onChange, stepData: stepDataProp } = this.props;
         return fields => {
-            const stepData = { ...stepData };
+            const stepData = { ...stepDataProp };
             stepData[pluginName] = { ...stepData[pluginName], ...fields };
             return onChange(id, { ...stepData });
         };
     }
 
     addUserPlugin() {
-        const { id, onChange } = this.props;
-        const stepData = { ...stepData };
+        const { id, onChange, stepData: stepDataProp } = this.props;
+        const stepData = { ...stepDataProp };
 
         const getPluginName = (baseName = 'user-plugin', maxSuffixNumber = 1000) => {
             let pluginName = '';
@@ -320,8 +320,8 @@ class PluginsStepContent extends React.Component {
     }
 
     deleteUserPlugin(pluginName) {
-        const { id, onChange } = this.props;
-        const stepData = { ..._.omit(stepData, pluginName) };
+        const { id, onChange, stepData: stepDataProp } = this.props;
+        const stepData = { ..._.omit(stepDataProp, pluginName) };
         onChange(id, stepData);
     }
 

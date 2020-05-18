@@ -38,10 +38,10 @@ export default class UsersModal extends React.Component {
 
     submitUsers() {
         const { group, groups, onHide, toolbox } = this.props;
+        const { waitingForConfirmation, users } = this.state;
         const actions = new Actions(toolbox);
         const usersToAdd = _.difference(users, group.users);
         const usersToRemove = _.difference(group.users, users);
-        const { waitingForConfirmation, users } = this.state;
 
         if (!waitingForConfirmation && actions.isLogoutToBePerformed(group, groups, usersToRemove)) {
             this.setState({ waitingForConfirmation: true });
@@ -74,11 +74,11 @@ export default class UsersModal extends React.Component {
 
     render() {
         const { errors, loading, waitingForConfirmation } = this.state;
-        const { onHide, open } = this.props;
+        const { group: groupProp, onHide, open, users: usersProp } = this.props;
         const { ApproveButton, CancelButton, Form, Icon, Message, Modal } = Stage.Basic;
 
-        const group = { name: '', ...group };
-        const users = { items: [], ...users };
+        const group = { name: '', ...groupProp };
+        const users = { items: [], ...usersProp };
 
         const options = _.map(users.items, item => {
             return { text: item.username, value: item.username, key: item.username };

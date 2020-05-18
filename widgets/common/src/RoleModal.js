@@ -67,10 +67,10 @@ export default class RoleModal extends React.Component {
 
     render() {
         const { errors, loading, role } = this.state;
-        const { onHide, open, roles } = this.props;
+        const { onHide, open, resource: resourceProp, roles } = this.props;
         const { Modal, Icon, Form, ApproveButton, CancelButton } = Stage.Basic;
 
-        const resource = { name: '', ...resource };
+        const resource = { name: '', ...resourceProp };
 
         return (
             <Modal open={open} onClose={() => onHide()} className="roleModal">

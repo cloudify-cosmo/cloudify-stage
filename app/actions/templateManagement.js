@@ -222,51 +222,6 @@ export function updatePageName(pageName) {
     };
 }
 
-export function showPage(pageId, pageName, isPageEditMode) {
-    return (dispatch, getState) => {
-        dispatch(setPageShow(pageId, pageName, isPageEditMode));
-
-        const { pagesDef } = getState().templates;
-        const { widgetDefinitions } = getState();
-        const page = pagesDef[pageId];
-        const invalidWidgets = [];
-
-        _.each(page.widgets, (widget, index) => {
-            const widgetDefinition = _.find(widgetDefinitions, { id: widget.definition });
-
-            try {
-                dispatch(
-                    addPageWidget(
-                        pageId,
-                        widget.name,
-                        widgetDefinition,
-                        widget.width,
-                        widget.height,
-                        widget.x,
-                        widget.y,
-                        widget.configuration
-                    )
-                );
-            } catch (error) {
-                const widgetName = `${index + 1} (${widget.name || 'Unknown name'})`;
-
-                console.error(`Error occurred when adding widget - ${widgetName} - to page.`, error);
-                invalidWidgets.push(widgetName);
-            }
-        });
-
-        dispatch(push('/page_management'));
-
-        if (!_.isEmpty(invalidWidgets)) {
-            dispatch(
-                errorTemplateManagement(
-                    `Page template contains invalid widgets definitions: ${_.join(invalidWidgets, ', ')}`
-                )
-            );
-        }
-    };
-}
-
 export function renamePageWidget(pageId, widgetId, newName) {
     return {
         type: types.PAGE_MANAGEMENT_RENAME_WIDGET,

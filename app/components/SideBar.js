@@ -17,12 +17,12 @@ export default class SideBar extends Component {
     };
 
     render() {
-        const { homePageId, isEditMode, pageId } = this.props;
-        const isOpen = isOpen ? 'open' : '';
+        const { homePageId, isEditMode, isOpen, pageId } = this.props;
+        const className = isOpen ? 'open' : '';
 
         return (
             <div className="sidebarContainer">
-                <div className={`ui visible left vertical sidebar menu small basic  ${isOpen}`}>
+                <div className={`ui visible left vertical sidebar menu small basic ${className}`}>
                     <Pages pageId={pageId} isEditMode={isEditMode} homePageId={homePageId} />
                 </div>
             </div>

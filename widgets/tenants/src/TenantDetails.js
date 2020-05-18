@@ -58,7 +58,7 @@ export default class TenantDetails extends React.Component {
     }
 
     render() {
-        const { processItem } = this.state;
+        const { processItem, processing: processingState } = this.state;
         const { Segment, List, Icon, Message, Divider, Popup } = Stage.Basic;
         const { tenant } = this.props;
 
@@ -69,7 +69,7 @@ export default class TenantDetails extends React.Component {
                     <Divider />
                     <List divided relaxed verticalAlign="middle" className="light">
                         {_.map(tenant.groups, (role, group) => {
-                            const processing = processing && processItem === group;
+                            const processing = processingState && processItem === group;
 
                             return (
                                 <List.Item key={group}>
@@ -96,7 +96,7 @@ export default class TenantDetails extends React.Component {
                             <Divider />
                             <List divided relaxed verticalAlign="middle" className="light">
                                 {_.map(tenant.users, (data, user) => {
-                                    const processing = processing && processItem === user;
+                                    const processing = processingState && processItem === user;
 
                                     return (
                                         <List.Item key={user}>

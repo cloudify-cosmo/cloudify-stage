@@ -165,21 +165,21 @@ export default class WizardModal extends React.Component {
      * @param {object} [stepOutputData] object with step data to be merged into wizardData
      */
     onNext(id, stepOutputData) {
-        const {
-            wizardData: currentWizardData,
-            activeStepIndex: currentActiveStepIndex,
-            [activeStepName]: activeStepState,
-            [previousStepName]: previousStepState
-        } = this.state;
+        const { activeStepIndex: currentActiveStepIndex } = this.state;
+
         if (this.getStepNameByIndex(currentActiveStepIndex) !== WizardModal.getStepNameById(id)) {
             return;
         }
 
         const activeStepIndex = currentActiveStepIndex + 1;
         const previousStepIndex = currentActiveStepIndex;
-
         const activeStepName = this.getStepNameByIndex(activeStepIndex);
         const previousStepName = this.getStepNameByIndex(previousStepIndex);
+        const {
+            wizardData: currentWizardData,
+            [activeStepName]: activeStepState,
+            [previousStepName]: previousStepState
+        } = this.state;
 
         const wizardData = { ...currentWizardData, ...stepOutputData };
 
@@ -202,21 +202,21 @@ export default class WizardModal extends React.Component {
      * @param {object} [stepOutputData] object with step data to be merged into wizardData
      */
     onPrev(id, stepOutputData) {
-        const {
-            wizardData: currentWizardData,
-            activeStepIndex: currentActiveStepIndex,
-            [activeStepName]: activeStepState,
-            [previousStepName]: previousStepState
-        } = this.state;
+        const { activeStepIndex: currentActiveStepIndex } = this.state;
+
         if (this.getStepNameByIndex(currentActiveStepIndex) !== WizardModal.getStepNameById(id)) {
             return;
         }
 
         const activeStepIndex = currentActiveStepIndex - 1;
         const previousStepIndex = currentActiveStepIndex;
-
         const activeStepName = this.getStepNameByIndex(activeStepIndex);
         const previousStepName = this.getStepNameByIndex(previousStepIndex);
+        const {
+            wizardData: currentWizardData,
+            [activeStepName]: activeStepState,
+            [previousStepName]: previousStepState
+        } = this.state;
 
         const wizardData = { ...currentWizardData, ...stepOutputData };
 
@@ -244,8 +244,8 @@ export default class WizardModal extends React.Component {
         }
 
         if (!_.isNil(errors)) {
-            const { [stepName]: stepState } = this.state;
             const stepName = WizardModal.getStepNameById(id);
+            const { [stepName]: stepState } = this.state;
 
             return new Promise(resolve =>
                 this.setState({ [stepName]: { ...stepState, errors }, error: errorMessage, loading: false }, resolve)
@@ -311,13 +311,7 @@ export default class WizardModal extends React.Component {
         const { header, onClose, open, steps, toolbox } = this.props;
         const { activeStepIndex } = this.state;
         const activeStepName = this.getStepNameByIndex(activeStepIndex);
-        const {
-            [activeStepName]: activeStepObject,
-            error,
-            loading,
-            wizardData,
-            showCloseModal
-        } = this.state;
+        const { [activeStepName]: activeStepObject, error, loading, wizardData, showCloseModal } = this.state;
         const ActiveStep = steps[activeStepIndex];
         const className = `wizardModal ${activeStepName}`;
 

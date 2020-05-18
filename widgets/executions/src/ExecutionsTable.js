@@ -122,6 +122,7 @@ export default class ExecutionsTable extends React.Component {
             deploymentUpdateModalOpen,
             error,
             errorModalOpen,
+            execution: stateExecution,
             executionParametersModalOpen,
             hoveredExecution
         } = this.state;
@@ -146,7 +147,7 @@ export default class ExecutionsTable extends React.Component {
         const { MenuAction } = ExecutionsTable;
 
         const { fieldsToShow } = widget.configuration;
-        const execution = execution || { parameters: {} };
+        const execution = stateExecution || { parameters: {} };
         return (
             <div>
                 <ErrorMessage error={error} onDismiss={() => this.setState({ error: null })} autoHide />

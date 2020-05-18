@@ -116,8 +116,8 @@ export default class UsersModal extends React.Component {
         const { errors, loading } = this.state;
         const { Modal, Icon, Form, ApproveButton, CancelButton } = Stage.Basic;
 
-        const { tenant, onHide, open, toolbox } = this.props;
-        const users = _.map(users.items, user => {
+        const { tenant, onHide, open, toolbox, users: usersProp } = this.props;
+        const users = _.map(usersProp.items, user => {
             return { text: user.username, value: user.username, key: user.username };
         });
 

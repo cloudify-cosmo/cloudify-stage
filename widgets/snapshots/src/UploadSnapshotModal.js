@@ -37,9 +37,9 @@ export default class UploadModal extends React.Component {
     }
 
     submitUpload() {
-        const { snapshotFile, snapshotId } = this.state;
+        const { snapshotFile, snapshotId, snapshotUrl: snapshotUrlState } = this.state;
         const { toolbox } = this.props;
-        const snapshotUrl = snapshotFile ? '' : snapshotUrl;
+        const snapshotUrl = snapshotFile ? '' : snapshotUrlState;
 
         const errors = {};
 
