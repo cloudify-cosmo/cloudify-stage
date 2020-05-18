@@ -72,7 +72,6 @@ export default class BlueprintActionButtons extends React.Component {
         const { error, force, loading } = this.state;
         const { ErrorMessage, Button } = Stage.Basic;
         const { DeleteConfirm, DeployBlueprintModal } = Stage.Common;
-        const { blueprintId, toolbox } = this.props;
         const manager = toolbox.getManager();
 
         return (
@@ -104,7 +103,7 @@ export default class BlueprintActionButtons extends React.Component {
                         className="labeled icon"
                         color="teal"
                         icon="external share"
-                        disabled={_.isEmpty(blueprintId) || this.state.loading}
+                        disabled={_.isEmpty(blueprintId) || loading}
                         onClick={() => {
                             toolbox.loading(true);
                             this.setState({ loading: true });
