@@ -20,8 +20,7 @@ export default class BlueprintActionButtons extends React.Component {
     }
 
     shouldComponentUpdate(nextProps, nextState) {
-        const { blueprintId } = this.props;
-        return !_.isEqual(this.state, nextState) || !_.isEqual(blueprintId, nextProps.blueprintId);
+        return !_.isEqual(this.state, nextState) || !_.isMatch(this.props, _.omit(nextProps, 'toolbox'));
     }
 
     showModal(type) {
@@ -73,6 +72,8 @@ export default class BlueprintActionButtons extends React.Component {
         const { error, force, loading } = this.state;
         const { ErrorMessage, Button } = Stage.Basic;
         const { DeleteConfirm, DeployBlueprintModal } = Stage.Common;
+        const { blueprintId, toolbox } = this.props;
+        const manager = toolbox.getManager();
 
         return (
             <div>
@@ -97,6 +98,34 @@ export default class BlueprintActionButtons extends React.Component {
                     content="Delete blueprint"
                     id="deleteBlueprintButton"
                 />
+
+                {!manager.isCommunityEdition() && (
+                    <Button
+                        className="labeled icon"
+                        color="teal"
+                        icon="external share"
+                        disabled={_.isEmpty(blueprintId) || this.state.loading}
+                        onClick={() => {
+                            toolbox.loading(true);
+                            this.setState({ loading: true });
+                            manager
+                                .doGet('/blueprints?_include=main_file_name', { id: blueprintId })
+                                .then(data =>
+                                    window.open(
+                                        `/composer/import/${manager.getSelectedTenant()}/${blueprintId}/${
+                                            data.items[0].main_file_name
+                                        }`,
+                                        '_blank'
+                                    )
+                                )
+                                .finally(() => {
+                                    toolbox.loading(false);
+                                    this.setState({ loading: false });
+                                });
+                        }}
+                        content="Edit a copy in Composer"
+                    />
+                )}
 
                 <DeployBlueprintModal
                     open={this.isShowModal(BlueprintActionButtons.DEPLOY_ACTION)}
