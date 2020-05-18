@@ -27,7 +27,7 @@ export default class BlueprintsTable extends React.Component {
     };
 
     render() {
-        const { DataTable, Image, ResourceVisibility } = Stage.Basic;
+        const { DataTable, Icon, Image, ResourceVisibility } = Stage.Basic;
         const tableName = 'blueprintsTable';
 
         return (
@@ -51,6 +51,7 @@ export default class BlueprintsTable extends React.Component {
                 <DataTable.Column width="10%" />
 
                 {this.props.data.items.map(item => {
+                    const manager = this.props.toolbox.getManager();
                     return (
                         <DataTable.Row
                             id={`${tableName}_${item.id}`}
@@ -82,7 +83,24 @@ export default class BlueprintsTable extends React.Component {
                             <DataTable.Data>
                                 <div className="ui green horizontal label">{item.depCount}</div>
                             </DataTable.Data>
+
                             <DataTable.Data className="center aligned rowActions">
+                                {!manager.isCommunityEdition() && (
+                                    <Icon
+                                        name="external share"
+                                        bordered
+                                        title="Edit a copy in Composer"
+                                        onClick={event => {
+                                            event.stopPropagation();
+                                            window.open(
+                                                `/composer/import/${manager.getSelectedTenant()}/${item.id}/${
+                                                    item.main_file_name
+                                                }`,
+                                                '_blank'
+                                            );
+                                        }}
+                                    />
+                                )}
                                 <i
                                     className="rocket icon link bordered"
                                     title="Create deployment"
