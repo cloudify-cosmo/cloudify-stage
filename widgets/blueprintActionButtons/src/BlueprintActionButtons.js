@@ -96,7 +96,7 @@ export default class BlueprintActionButtons extends React.Component {
                     <Button
                         className="labeled icon"
                         color="teal"
-                        icon="edit"
+                        icon="external share"
                         disabled={_.isEmpty(blueprintId) || !blueprintYamlFileName || this.state.loading}
                         onClick={() =>
                             window.open(

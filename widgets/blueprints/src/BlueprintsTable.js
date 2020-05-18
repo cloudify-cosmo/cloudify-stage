@@ -87,7 +87,7 @@ export default class BlueprintsTable extends React.Component {
                             <DataTable.Data className="center aligned rowActions">
                                 {!manager.isCommunityEdition() && (
                                     <Icon
-                                        name="edit"
+                                        name="external share"
                                         bordered
                                         title="Edit a copy in Composer"
                                         onClick={event => {
