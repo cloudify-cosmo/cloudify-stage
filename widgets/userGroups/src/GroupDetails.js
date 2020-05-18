@@ -23,7 +23,7 @@ export default class UserDetails extends React.Component {
         onError: PropTypes.func
     };
 
-    _removeTenant(tenant) {
+    removeTenant(tenant) {
         this.setState({ processItem: tenant, processing: true });
 
         const actions = new Actions(this.props.toolbox);
@@ -41,7 +41,7 @@ export default class UserDetails extends React.Component {
             });
     }
 
-    _removeUser(username) {
+    removeUser(username) {
         this.setState({ processItem: username, processing: true });
 
         const actions = new Actions(this.props.toolbox);
@@ -62,17 +62,17 @@ export default class UserDetails extends React.Component {
             });
     }
 
-    _removeUserOrShowModal(username) {
+    removeUserOrShowModal(username) {
         const actions = new Actions(this.props.toolbox);
 
         if (actions.isLogoutToBePerformed(this.props.data, this.props.groups, [username])) {
             this.setState({ user: username, showModal: true });
         } else {
-            this._removeUser(username);
+            this.removeUser(username);
         }
     }
 
-    _hideModal() {
+    hideModal() {
         this.setState({ user: '', showModal: false });
     }
 
@@ -96,7 +96,7 @@ export default class UserDetails extends React.Component {
                                         name={processing ? 'notched circle' : 'remove'}
                                         loading={processing}
                                         className="right floated"
-                                        onClick={this._removeUserOrShowModal.bind(this, item)}
+                                        onClick={this.removeUserOrShowModal.bind(this, item)}
                                     />
                                 </List.Item>
                             );
@@ -120,7 +120,7 @@ export default class UserDetails extends React.Component {
                                         name={processing ? 'notched circle' : 'remove'}
                                         loading={processing}
                                         className="right floated"
-                                        onClick={this._removeTenant.bind(this, item)}
+                                        onClick={this.removeTenant.bind(this, item)}
                                     />
                                 </List.Item>
                             );
@@ -137,8 +137,8 @@ export default class UserDetails extends React.Component {
                         'You will be logged out of the system so the changes take effect.'
                     }
                     open={this.state.showModal}
-                    onConfirm={this._removeUser.bind(this, this.state.user)}
-                    onCancel={this._hideModal.bind(this)}
+                    onConfirm={this.removeUser.bind(this, this.state.user)}
+                    onCancel={this.hideModal.bind(this)}
                 />
             </Segment.Group>
         );

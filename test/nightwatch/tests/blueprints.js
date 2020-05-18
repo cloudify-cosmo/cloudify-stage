@@ -18,7 +18,7 @@ module.exports = {
             .prepareTestWidget(client.page.blueprints().props.widgetId);
     },
 
-    'Blueprint upload - archive file': function(client) {
+    'Blueprint upload - archive file': client => {
         const blueprintUrl = client.page.blueprints().props.testBlueprintUrl;
 
         const page = client.page.blueprints();
@@ -28,7 +28,7 @@ module.exports = {
         page.section.blueprintsTable.checkIfBlueprintPresent(BLUEPRINT_NAME);
     },
 
-    'Blueprints widget configuration': function(client) {
+    'Blueprints widget configuration': client => {
         const page = client.page.blueprints();
 
         // 1. Catalog view & drilldown turned on
@@ -63,7 +63,7 @@ module.exports = {
         client.page.page().assert.containsText('@pageTitle', 'Page_0');
     },
 
-    'Blueprint deploy': function(client) {
+    'Blueprint deploy': client => {
         const BLUEPRINT_INPUTS = {
             webserver_port: {
                 value: '9999',
@@ -90,7 +90,7 @@ module.exports = {
         page.section.blueprintsTable.checkIfDeploymentsCountEqual(BLUEPRINT_NAME, 1);
     },
 
-    'Blueprint upload - single YAML file': function(client) {
+    'Blueprint upload - single YAML file': client => {
         const blueprintSingleYamlFile = client.page
             .resources()
             .props.fileByName(BLUEPRINT_SINGLE_YAML_FILENAME, client.globals);
@@ -102,7 +102,7 @@ module.exports = {
         page.section.blueprintsTable.checkIfBlueprintPresent(BLUEPRINT_SINGLE_YAML_NAME);
     },
 
-    'Blueprint remove - single YAML file': function(client) {
+    'Blueprint remove - single YAML file': client => {
         const page = client.page.blueprints();
 
         page.section.blueprintsTable

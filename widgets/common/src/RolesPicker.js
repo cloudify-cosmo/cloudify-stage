@@ -14,14 +14,14 @@ export default class RolesPicker extends React.Component {
         toolbox: PropTypes.object.isRequired
     };
 
-    _handleInputChange(proxy, field) {
+    handleInputChange(proxy, field) {
         this.props.onUpdate(field.name, field.value);
     }
 
     render() {
         const { Form } = Stage.Basic;
         const roleOptions = _.reverse(
-            _.map(_.filter(this.props.toolbox.getManager()._data.roles, { type: 'tenant_role' }), role => {
+            _.map(_.filter(this.props.toolbox.getManagerState().roles, { type: 'tenant_role' }), role => {
                 return { text: role.name, value: role.name };
             })
         );
@@ -37,7 +37,7 @@ export default class RolesPicker extends React.Component {
                                 options={roleOptions}
                                 name={resource}
                                 value={role}
-                                onChange={this._handleInputChange.bind(this)}
+                                onChange={this.handleInputChange.bind(this)}
                             />
                         </Form.Field>
                     );

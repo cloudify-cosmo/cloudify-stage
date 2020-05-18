@@ -19,7 +19,7 @@ export default class UsersModal extends React.Component {
     };
 
     onApprove() {
-        this._submitUsers();
+        this.submitUsers();
         return false;
     }
 
@@ -34,7 +34,7 @@ export default class UsersModal extends React.Component {
         }
     }
 
-    _submitUsers() {
+    submitUsers() {
         const actions = new Actions(this.props.toolbox);
         const usersToAdd = _.difference(this.state.users, this.props.group.users);
         const usersToRemove = _.difference(this.props.group.users, this.state.users);
@@ -68,7 +68,7 @@ export default class UsersModal extends React.Component {
             });
     }
 
-    _handleInputChange(proxy, field) {
+    handleInputChange(proxy, field) {
         this.setState({ ...Stage.Basic.Form.fieldNameValue(field), waitingForConfirmation: false });
     }
 
@@ -110,7 +110,7 @@ export default class UsersModal extends React.Component {
                                 options={options}
                                 name="users"
                                 value={this.state.users}
-                                onChange={this._handleInputChange.bind(this)}
+                                onChange={this.handleInputChange.bind(this)}
                             />
                         </Form.Field>
                     </Form>

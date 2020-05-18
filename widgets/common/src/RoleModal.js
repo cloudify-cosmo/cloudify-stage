@@ -16,7 +16,7 @@ export default class RoleModal extends React.Component {
     };
 
     onApprove() {
-        this._submitRole();
+        this.submitRole();
         return false;
     }
 
@@ -31,7 +31,7 @@ export default class RoleModal extends React.Component {
         }
     }
 
-    _submitRole() {
+    submitRole() {
         const errors = {};
 
         if (_.isEmpty(this.state.role)) {
@@ -58,7 +58,7 @@ export default class RoleModal extends React.Component {
             });
     }
 
-    _handleInputChange(proxy, field) {
+    handleInputChange(proxy, field) {
         this.setState(Stage.Basic.Form.fieldNameValue(field));
     }
 
@@ -86,7 +86,7 @@ export default class RoleModal extends React.Component {
                                 placeholder="Role"
                                 options={this.props.roles}
                                 value={this.state.role}
-                                onChange={this._handleInputChange.bind(this)}
+                                onChange={this.handleInputChange.bind(this)}
                             />
                         </Form.Field>
                     </Form>

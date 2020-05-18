@@ -62,25 +62,25 @@ class EditWidgetComponent extends React.Component {
         configuration: PropTypes.object
     };
 
-    _showConfig() {
+    showConfig() {
         this.setState({ showConfig: true });
     }
 
-    _hideConfig() {
+    hideConfig() {
         this.setState({ showConfig: false });
     }
 
     render() {
         return (
             <span>
-                <EditWidgetIcon widgetId={this.props.widget.id} onShowConfig={this._showConfig.bind(this)} />
+                <EditWidgetIcon widgetId={this.props.widget.id} onShowConfig={this.showConfig.bind(this)} />
                 <EditWidgetModal
                     widget={this.props.widget}
                     configDef={this.props.configDef}
                     configuration={this.props.configuration}
                     onWidgetEdited={this.props.onWidgetEdited}
                     show={this.state.showConfig}
-                    onHideConfig={this._hideConfig.bind(this)}
+                    onHideConfig={this.hideConfig.bind(this)}
                 />
             </span>
         );

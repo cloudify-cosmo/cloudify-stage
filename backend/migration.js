@@ -22,6 +22,7 @@ const umzug = new Umzug({
             sequelize.getQueryInterface(), // queryInterface
             sequelize.constructor, // DataTypes
             logger,
+            // eslint-disable-next-line func-names
             function() {
                 throw new Error(
                     'Migration tried to use old style "done" callback. Please upgrade to "umzug" and return a promise instead.'
@@ -38,9 +39,7 @@ const umzug = new Umzug({
 });
 
 function logUmzugEvent(eventName) {
-    return function(name, migration) {
-        logger.info(`${name} ${eventName}`);
-    };
+    return (name /* , migration */) => logger.info(`${name} ${eventName}`);
 }
 umzug.on('migrating', logUmzugEvent('migrating'));
 umzug.on('migrated', logUmzugEvent('migrated'));
@@ -129,9 +128,9 @@ function cmdClear() {
     return sequelize
         .getQueryInterface()
         .showAllTables()
-        .then(function(tableNames) {
+        .then(tableNames => {
             const promises = [];
-            _.each(tableNames, function(tableName) {
+            _.each(tableNames, tableName => {
                 if (tableName !== 'SequelizeMeta') {
                     logger.info(`Clearing table ${tableName}`);
                     promises.push(sequelize.query(`truncate "${tableName}"`));

@@ -26,7 +26,7 @@ export default class CreateModal extends React.Component {
     };
 
     onApprove() {
-        this._createSite();
+        this.createSite();
         return false;
     }
 
@@ -41,7 +41,7 @@ export default class CreateModal extends React.Component {
         }
     }
 
-    _createSite() {
+    createSite() {
         const errors = {};
 
         if (_.isEmpty(this.state.siteName)) {
@@ -68,7 +68,7 @@ export default class CreateModal extends React.Component {
             });
     }
 
-    _handleInputChange(proxy, field) {
+    handleInputChange(proxy, field) {
         this.setState(Stage.Basic.Form.fieldNameValue(field));
     }
 
@@ -103,11 +103,11 @@ export default class CreateModal extends React.Component {
                             <Form.Input
                                 name="siteName"
                                 value={this.state.siteName}
-                                onChange={this._handleInputChange.bind(this)}
+                                onChange={this.handleInputChange.bind(this)}
                             />
                         </Form.Field>
                         <Form.Field error={this.state.errors.siteLocation}>
-                            <SiteLocationInput onChange={this._handleInputChange.bind(this)} toolbox={toolbox} />
+                            <SiteLocationInput onChange={this.handleInputChange.bind(this)} toolbox={toolbox} />
                         </Form.Field>
                     </Form>
                 </Modal.Content>

@@ -13,7 +13,7 @@ export function addWidgetDrilldownPage(widgetId, drillDownName, drillDownPageId)
 }
 
 export function drillDownToPage(widget, defaultTemplate, widgetDefinitions, drilldownContext, drilldownPageName) {
-    return function(dispatch, getState) {
+    return (dispatch, getState) => {
         const isPageEditMode = _.get(getState().templateManagement, 'isPageEditMode');
         if (!_.isUndefined(isPageEditMode)) {
             return dispatch(drillDownWarning(true));

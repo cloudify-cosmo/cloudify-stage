@@ -10,11 +10,11 @@ module.exports = {
             .addBlueprint();
     },
 
-    'No blueprint selected': function(client) {
+    'No blueprint selected': client => {
         client.page.blueprintInfo().section.noData.assert.containsText('@message', 'No blueprint selected');
     },
 
-    'Show blueprint info': function(client) {
+    'Show blueprint info': client => {
         client
             .selectBlueprint()
             .page.blueprintInfo()

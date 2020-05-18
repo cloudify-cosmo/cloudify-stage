@@ -31,11 +31,11 @@ export default class CreatePageModal extends Component {
         pageName: ''
     };
 
-    _openModal() {
+    openModal() {
         this.setState(CreatePageModal.initialState(true, this.props));
     }
 
-    _submitCreate() {
+    submitCreate() {
         const errors = {};
 
         if (_.isEmpty(_.trim(this.state.pageName))) {
@@ -55,7 +55,7 @@ export default class CreatePageModal extends Component {
         });
     }
 
-    _handleInputChange(proxy, field) {
+    handleInputChange(proxy, field) {
         this.setState(Form.fieldNameValue(field));
     }
 
@@ -68,7 +68,7 @@ export default class CreatePageModal extends Component {
             <Modal
                 trigger={trigger}
                 open={this.state.open}
-                onOpen={this._openModal.bind(this)}
+                onOpen={this.openModal.bind(this)}
                 onClose={() => this.setState({ open: false })}
                 className="createPageModal"
             >
@@ -88,7 +88,7 @@ export default class CreatePageModal extends Component {
                                 name="pageName"
                                 placeholder="Page name"
                                 value={this.state.pageName}
-                                onChange={this._handleInputChange.bind(this)}
+                                onChange={this.handleInputChange.bind(this)}
                             />
                         </Form.Field>
                     </Form>
@@ -97,7 +97,7 @@ export default class CreatePageModal extends Component {
                 <Modal.Actions>
                     <CancelButton onClick={() => this.setState({ open: false })} disabled={this.state.loading} />
                     <ApproveButton
-                        onClick={this._submitCreate.bind(this)}
+                        onClick={this.submitCreate.bind(this)}
                         disabled={this.state.loading}
                         content="Create"
                         icon="checkmark"

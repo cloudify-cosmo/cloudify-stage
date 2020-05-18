@@ -87,7 +87,7 @@ class SitesMap extends React.Component {
         }
     }
 
-    _openPopup(marker) {
+    openPopup(marker) {
         if (marker && marker.leafletElement) {
             window.setTimeout(() => {
                 marker.leafletElement.openPopup();
@@ -95,10 +95,10 @@ class SitesMap extends React.Component {
         }
     }
 
-    _createMarkers() {
+    createMarkers() {
         const markers = [];
         const { data, showAllLabels, toolbox } = this.props;
-        const showLabels = showAllLabels ? this._openPopup : undefined;
+        const showLabels = showAllLabels ? this.openPopup : undefined;
 
         _.forEach(data, site => {
             const { createMarkerIcon } = Stage.Common;
@@ -107,7 +107,7 @@ class SitesMap extends React.Component {
             const { Marker, Popup } = Stage.Basic.Leaflet;
             markers.push(
                 <Marker
-                    position={this._mapToLatLng(site)}
+                    position={this.mapToLatLng(site)}
                     ref={showLabels}
                     key={`siteMarker${site.name}`}
                     riseOnHover
@@ -123,7 +123,7 @@ class SitesMap extends React.Component {
         return markers;
     }
 
-    _mapToLatLng(site) {
+    mapToLatLng(site) {
         return [site.latitude, site.longitude];
     }
 
@@ -138,7 +138,7 @@ class SitesMap extends React.Component {
             return <NoDataMessage repositoryName="maps" />;
         }
 
-        const markers = this._createMarkers();
+        const markers = this.createMarkers();
         if (_.isEmpty(markers)) {
             return <NoSitesDataMessage sitesAreDefined={sitesAreDefined} />;
         }
@@ -147,9 +147,9 @@ class SitesMap extends React.Component {
 
         const sites = _.values(this.props.data);
         if (sites.length > 1) {
-            mapOptions.bounds = L.latLngBounds(sites.map(this._mapToLatLng)).pad(0.05);
+            mapOptions.bounds = L.latLngBounds(sites.map(this.mapToLatLng)).pad(0.05);
         } else {
-            mapOptions.center = this._mapToLatLng(sites[0]);
+            mapOptions.center = this.mapToLatLng(sites[0]);
             mapOptions.zoom = Stage.Common.Consts.leaflet.initialZoom;
         }
 

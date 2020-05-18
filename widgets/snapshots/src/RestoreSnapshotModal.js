@@ -29,7 +29,7 @@ export default class RestoreSnapshotModal extends React.Component {
     };
 
     onApprove() {
-        this._submitRestore();
+        this.submitRestore();
         return false;
     }
 
@@ -44,7 +44,7 @@ export default class RestoreSnapshotModal extends React.Component {
         }
     }
 
-    _submitRestore() {
+    submitRestore() {
         const errors = {};
 
         if (!_.isEmpty(errors)) {
@@ -70,7 +70,7 @@ export default class RestoreSnapshotModal extends React.Component {
             });
     }
 
-    _handleFieldChange(proxy, field) {
+    handleFieldChange(proxy, field) {
         this.setState(Stage.Basic.Form.fieldNameValue(field));
     }
 
@@ -95,7 +95,7 @@ export default class RestoreSnapshotModal extends React.Component {
                                 label="Snapshot from a tenant-less environment"
                                 name="isFromTenantlessEnv"
                                 checked={this.state.isFromTenantlessEnv}
-                                onChange={this._handleFieldChange.bind(this)}
+                                onChange={this.handleFieldChange.bind(this)}
                             />
                         </Form.Field>
 
@@ -111,7 +111,7 @@ export default class RestoreSnapshotModal extends React.Component {
                                 label="Force restore even if manager is non-empty (it will delete all data)"
                                 name="shouldForceRestore"
                                 checked={this.state.shouldForceRestore}
-                                onChange={this._handleFieldChange.bind(this)}
+                                onChange={this.handleFieldChange.bind(this)}
                             />
                         </Form.Field>
                         <Form.Field help="Ignore plugin installation failures and deployment environment creation failures due to missing plugins">
@@ -120,7 +120,7 @@ export default class RestoreSnapshotModal extends React.Component {
                                 label="Ignore plugin failures"
                                 name="ignorePluginFailure"
                                 checked={this.state.ignorePluginFailure}
-                                onChange={this._handleFieldChange.bind(this)}
+                                onChange={this.handleFieldChange.bind(this)}
                             />
                         </Form.Field>
                     </Form>

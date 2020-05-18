@@ -38,7 +38,7 @@ function widgetFetchCanceled(widgetId) {
 }
 
 export function fetchWidgetData(widget, toolbox, paramsHandler) {
-    return function(dispatch) {
+    return dispatch => {
         dispatch(widgetFetchReq(widget.id));
 
         if (widget.definition.fetchUrl || _.isFunction(widget.definition.fetchData)) {

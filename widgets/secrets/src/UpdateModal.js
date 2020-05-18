@@ -28,7 +28,7 @@ export default class UpdateModal extends React.Component {
     };
 
     onApprove() {
-        this._updateSecret();
+        this.updateSecret();
         return false;
     }
 
@@ -57,7 +57,7 @@ export default class UpdateModal extends React.Component {
         }
     }
 
-    _updateSecret() {
+    updateSecret() {
         const errors = {};
 
         if (_.isEmpty(this.state.secretValue)) {
@@ -85,7 +85,7 @@ export default class UpdateModal extends React.Component {
             });
     }
 
-    _handleInputChange(proxy, field) {
+    handleInputChange(proxy, field) {
         this.setState(Stage.Basic.Form.fieldNameValue(field));
     }
 
@@ -120,7 +120,7 @@ export default class UpdateModal extends React.Component {
                                         placeholder="Secret value"
                                         autoHeight
                                         value={this.state.secretValue}
-                                        onChange={this._handleInputChange.bind(this)}
+                                        onChange={this.handleInputChange.bind(this)}
                                     />
                                 </Form.Field>
                             )}

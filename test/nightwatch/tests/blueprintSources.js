@@ -10,7 +10,7 @@ module.exports = {
             .addBlueprint();
     },
 
-    'No blueprint selected': function(client) {
+    'No blueprint selected': client => {
         client.page
             .blueprintSources()
             .section.noBlueprintSelected.assert.containsText(
@@ -19,7 +19,7 @@ module.exports = {
             );
     },
 
-    'Browse blueprint source': function(client) {
+    'Browse blueprint source': client => {
         client
             .selectBlueprint()
             .page.blueprintSources()

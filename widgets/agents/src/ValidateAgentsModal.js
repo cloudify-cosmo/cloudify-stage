@@ -78,7 +78,7 @@ export default class ValidateAgentsModal extends React.Component {
     }
 
     onApprove() {
-        this._submitExecute();
+        this.submitExecute();
         return false;
     }
 
@@ -99,7 +99,7 @@ export default class ValidateAgentsModal extends React.Component {
         );
     }
 
-    _submitExecute() {
+    submitExecute() {
         const { nodeFilter } = this.state;
         if (!nodeFilter.deploymentId) {
             this.setState({ errors: { error: 'Provide deployment in Nodes filter' } });

@@ -2,7 +2,7 @@
  * Created by pposel on 09/03/2017.
  */
 
-module.exports = function(sequelize, DataTypes) {
+module.exports = (sequelize, DataTypes) => {
     const BlueprintAdditions = sequelize.define(
         'BlueprintAdditions',
         {

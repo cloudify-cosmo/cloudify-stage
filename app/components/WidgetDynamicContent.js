@@ -31,39 +31,39 @@ export default class WidgetDynamicContent extends Component {
         this.mounted = false;
     }
 
-    _getToolbox() {
-        return getToolbox(this._fetchData.bind(this), this._loadingIndicator.bind(this), this.props.widget);
+    getToolbox() {
+        return getToolbox(this.fetchData.bind(this), this.loadingIndicator.bind(this), this.props.widget);
     }
 
-    _beforeFetch() {
-        this._stopPolling();
-        this._showLoading();
+    beforeFetch() {
+        this.stopPolling();
+        this.showLoading();
     }
 
-    _afterFetch() {
-        this._hideLoading();
-        this._startPolling();
+    afterFetch() {
+        this.hideLoading();
+        this.startPolling();
     }
 
-    _loadingIndicator(show) {
+    loadingIndicator(show) {
         if (this.mounted) {
             this.setState({ loading: show });
         }
     }
 
-    _showLoading() {
+    showLoading() {
         clearTimeout(this.loadingTimeout);
-        this.loadingTimeout = setTimeout(() => this._loadingIndicator(true), 1000);
+        this.loadingTimeout = setTimeout(() => this.loadingIndicator(true), 1000);
     }
 
-    _hideLoading() {
+    hideLoading() {
         clearTimeout(this.loadingTimeout);
         if (this.state.loading) {
-            this._loadingIndicator(false);
+            this.loadingIndicator(false);
         }
     }
 
-    _stopPolling() {
+    stopPolling() {
         clearTimeout(this.pollingTimeout);
 
         if (this.fetchDataPromise) {
@@ -71,8 +71,8 @@ export default class WidgetDynamicContent extends Component {
         }
     }
 
-    _startPolling() {
-        this._stopPolling();
+    startPolling() {
+        this.stopPolling();
 
         let interval = this.props.widget.configuration.pollingTime || 0;
         try {
@@ -87,12 +87,12 @@ export default class WidgetDynamicContent extends Component {
         if (interval > 0 && this.mounted) {
             console.log(`Polling widget '${this.props.widget.name}' - time interval: ${interval} sec`);
             this.pollingTimeout = setTimeout(() => {
-                this._fetchData();
+                this.fetchData();
             }, interval * 1000);
         }
     }
 
-    _updateConfiguration(params) {
+    updateConfiguration(params) {
         if (
             params.gridParams &&
             params.gridParams.pageSize &&
@@ -102,10 +102,10 @@ export default class WidgetDynamicContent extends Component {
         }
     }
 
-    _fetchData(params) {
+    fetchData(params) {
         if (params) {
-            this._paramsHandler.updateGridParams(params.gridParams);
-            this._updateConfiguration(params);
+            this.paramsHandler.updateGridParams(params.gridParams);
+            this.updateConfiguration(params);
         }
 
         if (this.fetchDataPromise) {
@@ -113,9 +113,9 @@ export default class WidgetDynamicContent extends Component {
         }
 
         if (this.props.widget.definition.fetchUrl || _.isFunction(this.props.widget.definition.fetchData)) {
-            this._beforeFetch();
+            this.beforeFetch();
 
-            const promises = this.props.fetchWidgetData(this.props.widget, this._getToolbox(), this._paramsHandler);
+            const promises = this.props.fetchWidgetData(this.props.widget, this.getToolbox(), this.paramsHandler);
 
             this.fetchDataPromise = promises.cancelablePromise;
 
@@ -136,19 +136,19 @@ export default class WidgetDynamicContent extends Component {
                         }
 
                         _.each(metadata, item => {
-                            item.gridParams = this._paramsHandler.getGridParams();
+                            item.gridParams = this.paramsHandler.getGridParams();
                         });
                     }
 
                     console.log(`Widget '${this.props.widget.name}' data fetched`);
-                    this._afterFetch();
+                    this.afterFetch();
                 })
                 .catch(e => {
                     if (e.isCanceled) {
                         console.log(`Widget '${this.props.widget.name}' data fetch canceled`);
                         return;
                     }
-                    this._afterFetch();
+                    this.afterFetch();
                 });
         }
 
@@ -164,7 +164,7 @@ export default class WidgetDynamicContent extends Component {
                 const oldConfig = prevProps.widget.configuration[confName];
 
                 if (oldConfig !== config) {
-                    this._paramsHandler.update(this.props.widget);
+                    this.paramsHandler.update(this.props.widget);
 
                     requiresFetch = true;
                     return false;
@@ -176,30 +176,30 @@ export default class WidgetDynamicContent extends Component {
             prevProps.manager.tenants.selected !== this.props.manager.tenants.selected ||
             // Fetch data after WIDGET_DATA_CLEAR action was dispatched (Fix for CY-957)
             (!_.isEmpty(prevProps.data) && _.isEmpty(this.props.data)) ||
-            this._paramsHandler.updateFetchParams()
+            this.paramsHandler.updateFetchParams()
         ) {
             requiresFetch = true;
         }
 
         if (requiresFetch) {
-            this._fetchData();
+            this.fetchData();
         }
     }
 
     // In component will mount fetch the data if needed
     componentDidMount() {
         this.mounted = true;
-        this._startPolling();
+        this.startPolling();
 
         console.log(`Widget '${this.props.widget.name}' mounted`);
 
-        this._paramsHandler = new WidgetParamsHandler(this.props.widget, this._getToolbox());
-        this._fetchData();
+        this.paramsHandler = new WidgetParamsHandler(this.props.widget, this.getToolbox());
+        this.fetchData();
     }
 
     componentWillUnmount() {
         this.mounted = false;
-        this._stopPolling();
+        this.stopPolling();
 
         console.log(`Widget '${this.props.widget.name}' unmounts`);
     }
@@ -223,7 +223,7 @@ export default class WidgetDynamicContent extends Component {
                     this.props.widget,
                     this.props.data.data,
                     this.props.data.error,
-                    this._getToolbox()
+                    this.getToolbox()
                 );
             } catch (e) {
                 console.error(`Error rendering widget - ${e.message}`, e.stack);
@@ -243,7 +243,7 @@ export default class WidgetDynamicContent extends Component {
                     this.props.widget,
                     this.props.data.data,
                     this.props.data.error,
-                    this._getToolbox()
+                    this.getToolbox()
                 );
             } catch (e) {
                 console.error(`Error rendering widget - ${e.message}`, e.stack);
@@ -269,7 +269,7 @@ export default class WidgetDynamicContent extends Component {
                         $(container)
                             .find(event.selector)
                             .on(event.event, e => {
-                                event.fn(e, this.props.widget, this._getToolbox());
+                                event.fn(e, this.props.widget, this.getToolbox());
                             });
                     },
                     this
@@ -284,7 +284,7 @@ export default class WidgetDynamicContent extends Component {
                 $(container),
                 this.props.widget,
                 this.props.data.data,
-                this._getToolbox()
+                this.getToolbox()
             );
         }
     }

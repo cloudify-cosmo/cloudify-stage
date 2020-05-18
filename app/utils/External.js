@@ -22,31 +22,31 @@ Text form of class hierarchy diagram to be used at: https://yuml.me/diagram/nofu
 
 export default class External {
     constructor(data) {
-        this._data = data;
+        this.data = data;
     }
 
     doGet(url, params, parseResponse, headers) {
-        return this._ajaxCall(url, 'get', params, null, parseResponse, headers);
+        return this.ajaxCall(url, 'get', params, null, parseResponse, headers);
     }
 
     doPost(url, params, data, parseResponse, headers, withCredentials) {
-        return this._ajaxCall(url, 'post', params, data, parseResponse, headers, null, withCredentials);
+        return this.ajaxCall(url, 'post', params, data, parseResponse, headers, null, withCredentials);
     }
 
     doDelete(url, params, data, parseResponse, headers) {
-        return this._ajaxCall(url, 'delete', params, data, parseResponse, headers);
+        return this.ajaxCall(url, 'delete', params, data, parseResponse, headers);
     }
 
     doPut(url, params, data, parseResponse, headers) {
-        return this._ajaxCall(url, 'put', params, data, parseResponse, headers);
+        return this.ajaxCall(url, 'put', params, data, parseResponse, headers);
     }
 
     doPatch(url, params, data, parseResponse, headers) {
-        return this._ajaxCall(url, 'PATCH', params, data, parseResponse, headers);
+        return this.ajaxCall(url, 'PATCH', params, data, parseResponse, headers);
     }
 
     doDownload(url, fileName) {
-        return this._ajaxCall(url, 'get', null, null, null, null, fileName);
+        return this.ajaxCall(url, 'get', null, null, null, null, fileName);
     }
 
     isReachable(url) {
@@ -60,19 +60,19 @@ export default class External {
     }
 
     doUpload(url, params, files, method, parseResponse = true, compressFile = false) {
-        const actualUrl = this._buildActualUrl(url, params);
+        const actualUrl = this.buildActualUrl(url, params);
 
         logger.debug(`Uploading file for url: ${url}`);
 
         return new Promise((resolve, reject) => {
             // Call upload method
             const xhr = new XMLHttpRequest();
-            (xhr.upload || xhr).addEventListener('progress', function(e) {
+            (xhr.upload || xhr).addEventListener('progress', e => {
                 const done = e.position || e.loaded;
                 const total = e.totalSize || e.total;
                 logger.debug(`xhr progress: ${Math.round((done / total) * 100)}%`);
             });
-            xhr.addEventListener('error', function(e) {
+            xhr.addEventListener('error', e => {
                 logger.error('xhr upload error', e, xhr.responseText);
 
                 try {
@@ -87,7 +87,7 @@ export default class External {
                     reject({ message: xhr.responseText || err.message });
                 }
             });
-            xhr.addEventListener('load', function(e) {
+            xhr.addEventListener('load', e => {
                 logger.debug('xhr upload complete', e, xhr.responseText);
 
                 const isSuccess = xhr.status >= 200 && xhr.status < 300;
@@ -109,8 +109,8 @@ export default class External {
 
             xhr.open(method || 'put', actualUrl);
 
-            const headers = this._buildHeaders();
-            _.forIn(headers, function(value, key) {
+            const headers = this.buildHeaders();
+            _.forIn(headers, (value, key) => {
                 xhr.setRequestHeader(key, value);
             });
 
@@ -124,7 +124,7 @@ export default class External {
                         const reader = new FileReader();
                         const zip = new JSZip();
 
-                        reader.onload = function(event) {
+                        reader.onload = event => {
                             const fileContent = event.target.result;
                             zip.folder(files.name).file(files.name, fileContent);
                             zip.generateAsync({
@@ -146,7 +146,7 @@ export default class External {
                             );
                         };
 
-                        reader.onerror = function(event) {
+                        reader.onerror = event => {
                             const errorMessage = `Cannot read file. Error code: ${event.target.error.code}`;
                             logger.error(errorMessage);
                             reject({ message: errorMessage });
@@ -158,7 +158,7 @@ export default class External {
                         xhr.send(formData);
                     }
                 } else {
-                    _.forEach(files, function(value, key) {
+                    _.forEach(files, (value, key) => {
                         formData.append(key, value);
                     });
                     xhr.send(formData);
@@ -169,11 +169,11 @@ export default class External {
         });
     }
 
-    _ajaxCall(url, method, params, data, parseResponse = true, userHeaders = {}, fileName = null, withCredentials) {
-        const actualUrl = this._buildActualUrl(url, params);
+    ajaxCall(url, method, params, data, parseResponse = true, userHeaders = {}, fileName = null, withCredentials) {
+        const actualUrl = this.buildActualUrl(url, params);
         logger.debug(`${method} data. URL: ${url}`);
 
-        const headers = Object.assign(this._buildHeaders(), this._contentType(), userHeaders);
+        const headers = Object.assign(this.buildHeaders(), this.contentType(), userHeaders);
 
         const options = {
             method,
@@ -184,7 +184,7 @@ export default class External {
             try {
                 if (_.isString(data)) {
                     options.body = data;
-                    _.merge(options.headers, this._contentType('text/plain'));
+                    _.merge(options.headers, this.contentType('text/plain'));
                 } else {
                     options.body = JSON.stringify(data);
                 }
@@ -200,12 +200,12 @@ export default class External {
 
         if (fileName) {
             return fetch(actualUrl, options)
-                .then(this._checkStatus.bind(this))
+                .then(this.checkStatus.bind(this))
                 .then(response => response.blob())
                 .then(blob => saveAs(blob, fileName));
         }
         return fetch(actualUrl, options)
-            .then(this._checkStatus.bind(this))
+            .then(this.checkStatus.bind(this))
             .then(response => {
                 if (parseResponse) {
                     const contentType = _.toLower(response.headers.get('content-type'));
@@ -215,20 +215,20 @@ export default class External {
             });
     }
 
-    _isUnauthorized(response) {
+    isUnauthorized(response) {
         return false;
     }
 
-    _isLicenseError(response, body) {
+    isLicenseError(response, body) {
         return false;
     }
 
-    _checkStatus(response) {
+    checkStatus(response) {
         if (response.ok) {
             return response;
         }
 
-        if (this._isUnauthorized(response)) {
+        if (this.isUnauthorized(response)) {
             const interceptor = Interceptor.getInterceptor();
             interceptor.handle401();
             return Promise.reject(UNAUTHORIZED_ERR);
@@ -241,7 +241,7 @@ export default class External {
                 const resJson = JSON.parse(resText);
                 const message = StageUtils.resolveMessage(resJson.message);
 
-                if (this._isLicenseError(response, resJson)) {
+                if (this.isLicenseError(response, resJson)) {
                     const interceptor = Interceptor.getInterceptor();
                     interceptor.handleLicenseError(resJson.error_code);
                     return Promise.reject(LICENSE_ERR);
@@ -258,23 +258,23 @@ export default class External {
         });
     }
 
-    _buildActualUrl(url, data) {
+    buildActualUrl(url, data) {
         const queryString = data ? (url.indexOf('?') > 0 ? '&' : '?') + $.param(data, true) : '';
         return `${url}${queryString}`;
     }
 
-    _contentType(type) {
+    contentType(type) {
         return { 'content-type': type || 'application/json' };
     }
 
-    _buildHeaders() {
-        if (!this._data) {
+    buildHeaders() {
+        if (!this.data) {
             return {};
         }
 
         const headers = {};
-        if (this._data.basicAuth) {
-            headers.Authorization = `Basic ${this._data.basicAuth}`;
+        if (this.data.basicAuth) {
+            headers.Authorization = `Basic ${this.data.basicAuth}`;
         }
 
         return headers;

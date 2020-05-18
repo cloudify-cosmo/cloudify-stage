@@ -44,7 +44,7 @@ export default class WidgetDefinitionsLoader {
         window.markdown = markdownImport;
     }
 
-    static _loadWidgets(manager) {
+    static loadWidgets(manager) {
         console.log('Load widgets');
 
         const internal = new Internal(manager);
@@ -55,7 +55,7 @@ export default class WidgetDefinitionsLoader {
             const data = results[1]; // widgets data
             const promises = [];
             data.forEach(item => {
-                promises.push(WidgetDefinitionsLoader._loadWidget(item, false));
+                promises.push(WidgetDefinitionsLoader.loadWidget(item, false));
             });
 
             const output = _.keyBy(data, 'id');
@@ -63,12 +63,12 @@ export default class WidgetDefinitionsLoader {
         });
     }
 
-    static _loadWidget(widget, rejectOnError) {
+    static loadWidget(widget, rejectOnError) {
         const scriptPath = `${LoaderUtils.getResourceUrl('widgets', widget.isCustom)}/${widget.id}/widget.js`;
         return new ScriptLoader(scriptPath).load(widget.id, rejectOnError);
     }
 
-    static _loadWidgetsResources(widgets) {
+    static loadWidgetsResources(widgets) {
         console.log('Load widgets resources');
 
         const promises = [];
@@ -116,7 +116,7 @@ export default class WidgetDefinitionsLoader {
         return Promise.all(promises);
     }
 
-    static _initWidgets() {
+    static initWidgets() {
         console.log('Init widgets');
 
         _.each(widgetDefinitions, w => {
@@ -132,16 +132,16 @@ export default class WidgetDefinitionsLoader {
     }
 
     static load(manager) {
-        return WidgetDefinitionsLoader._loadWidgets(manager)
-            .then(widgets => WidgetDefinitionsLoader._loadWidgetsResources(widgets))
-            .then(() => WidgetDefinitionsLoader._initWidgets())
+        return WidgetDefinitionsLoader.loadWidgets(manager)
+            .then(widgets => WidgetDefinitionsLoader.loadWidgetsResources(widgets))
+            .then(() => WidgetDefinitionsLoader.initWidgets())
             .catch(e => {
                 console.error(e);
                 widgetDefinitions = []; // Clear for next time
             });
     }
 
-    static _installWidget(widgetFile, widgetUrl, manager) {
+    static installWidget(widgetFile, widgetUrl, manager) {
         const internal = new Internal(manager);
 
         if (widgetUrl) {
@@ -152,7 +152,7 @@ export default class WidgetDefinitionsLoader {
         return internal.doUpload('/widgets/install', {}, { widget: widgetFile });
     }
 
-    static _updateWidget(widgetId, widgetFile, widgetUrl, manager) {
+    static updateWidget(widgetId, widgetFile, widgetUrl, manager) {
         const internal = new Internal(manager);
 
         if (widgetUrl) {
@@ -163,7 +163,7 @@ export default class WidgetDefinitionsLoader {
         return internal.doUpload('/widgets/update', { id: widgetId }, { widget: widgetFile });
     }
 
-    static _validateWidget(widgetId, manager) {
+    static validateWidget(widgetId, manager) {
         const errors = [];
 
         if (_.isEmpty(widgetDefinitions)) {
@@ -202,14 +202,14 @@ export default class WidgetDefinitionsLoader {
     static install(widgetFile, widgetUrl, manager) {
         let widgetData = {};
 
-        return WidgetDefinitionsLoader._installWidget(widgetFile, widgetUrl, manager)
+        return WidgetDefinitionsLoader.installWidget(widgetFile, widgetUrl, manager)
             .then(data => {
                 widgetData = data;
-                return WidgetDefinitionsLoader._loadWidget(data, true);
+                return WidgetDefinitionsLoader.loadWidget(data, true);
             })
-            .then(() => WidgetDefinitionsLoader._validateWidget(widgetData.id, manager))
-            .then(() => WidgetDefinitionsLoader._loadWidgetsResources(_.keyBy([widgetData], 'id')))
-            .then(() => WidgetDefinitionsLoader._initWidgets())
+            .then(() => WidgetDefinitionsLoader.validateWidget(widgetData.id, manager))
+            .then(() => WidgetDefinitionsLoader.loadWidgetsResources(_.keyBy([widgetData], 'id')))
+            .then(() => WidgetDefinitionsLoader.initWidgets())
             .catch(err => {
                 widgetDefinitions = []; // Clear for next time
                 console.error(err);
@@ -220,14 +220,14 @@ export default class WidgetDefinitionsLoader {
     static update(widgetId, widgetFile, widgetUrl, manager) {
         let widgetData = {};
 
-        return WidgetDefinitionsLoader._updateWidget(widgetId, widgetFile, widgetUrl, manager)
+        return WidgetDefinitionsLoader.updateWidget(widgetId, widgetFile, widgetUrl, manager)
             .then(data => {
                 widgetData = data;
-                return WidgetDefinitionsLoader._loadWidget(data, true);
+                return WidgetDefinitionsLoader.loadWidget(data, true);
             })
-            .then(() => WidgetDefinitionsLoader._validateWidget(widgetData.id, manager))
-            .then(() => WidgetDefinitionsLoader._loadWidgetsResources(_.keyBy([widgetData], 'id')))
-            .then(() => WidgetDefinitionsLoader._initWidgets())
+            .then(() => WidgetDefinitionsLoader.validateWidget(widgetData.id, manager))
+            .then(() => WidgetDefinitionsLoader.loadWidgetsResources(_.keyBy([widgetData], 'id')))
+            .then(() => WidgetDefinitionsLoader.initWidgets())
             .catch(err => {
                 widgetDefinitions = []; // Clear for next time
                 console.error(err);

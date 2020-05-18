@@ -20,7 +20,7 @@ export default class UploadModal extends React.Component {
     };
 
     onApprove() {
-        this._submitUpload();
+        this.submitUpload();
         return false;
     }
 
@@ -35,7 +35,7 @@ export default class UploadModal extends React.Component {
         }
     }
 
-    _submitUpload() {
+    submitUpload() {
         const snapshotUrl = this.state.snapshotFile ? '' : this.state.snapshotUrl;
 
         const errors = {};
@@ -72,11 +72,11 @@ export default class UploadModal extends React.Component {
             });
     }
 
-    _handleInputChange(proxy, field) {
+    handleInputChange(proxy, field) {
         this.setState(Stage.Basic.Form.fieldNameValue(field));
     }
 
-    _onSnapshotFileChange(file) {
+    onSnapshotFileChange(file) {
         if (file) {
             this.setState({ snapshotUrl: file.name, snapshotFile: file });
         }
@@ -113,7 +113,7 @@ export default class UploadModal extends React.Component {
                                 value={this.state.snapshotUrl}
                                 placeholder="Provide the snapshot's file URL or click browse to select a file"
                                 onChangeUrl={this.onSnapshotUrlChange.bind(this)}
-                                onChangeFile={this._onSnapshotFileChange.bind(this)}
+                                onChangeFile={this.onSnapshotFileChange.bind(this)}
                             />
                         </Form.Field>
 
@@ -121,7 +121,7 @@ export default class UploadModal extends React.Component {
                             <Form.Input
                                 name="snapshotId"
                                 value={this.state.snapshotId}
-                                onChange={this._handleInputChange.bind(this)}
+                                onChange={this.handleInputChange.bind(this)}
                             />
                         </Form.Field>
                     </Form>

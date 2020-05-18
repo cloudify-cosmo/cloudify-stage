@@ -21,8 +21,6 @@ module.exports = () => {
             entryPoint: config.app.saml.ssoUrl,
             cert
         },
-        function(user, done) {
-            return done(null, user);
-        }
+        (user, done) => done(null, user)
     );
 };

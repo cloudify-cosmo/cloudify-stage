@@ -22,11 +22,11 @@ export default class NodesTable extends React.Component {
         );
     }
 
-    _refreshData() {
+    refreshData() {
         this.props.toolbox.refresh();
     }
 
-    _selectNode(item) {
+    selectNode(item) {
         const selectedDepNodeId = this.props.toolbox.getContext().getValue('depNodeId');
         const clickedDepNodeId = item.id + item.deployment_id;
         const clickedAlreadySelectedNode = clickedDepNodeId === selectedDepNodeId;
@@ -37,11 +37,11 @@ export default class NodesTable extends React.Component {
     }
 
     componentDidMount() {
-        this.props.toolbox.getEventBus().on('nodes:refresh', this._refreshData, this);
+        this.props.toolbox.getEventBus().on('nodes:refresh', this.refreshData, this);
     }
 
     componentWillUnmount() {
-        this.props.toolbox.getEventBus().off('nodes:refresh', this._refreshData);
+        this.props.toolbox.getEventBus().off('nodes:refresh', this.refreshData);
     }
 
     fetchGridData(fetchParams) {
@@ -123,7 +123,7 @@ export default class NodesTable extends React.Component {
                                 <DataTable.Row
                                     key={node.id + node.deployment_id}
                                     selected={node.isSelected}
-                                    onClick={this._selectNode.bind(this, node)}
+                                    onClick={this.selectNode.bind(this, node)}
                                 >
                                     <DataTable.Data className="center aligned">
                                         <NodeTypeIcon typeHierarchy={node.type_hierarchy} />

@@ -8,7 +8,7 @@ const config = require('../config').get();
 const logger = require('./LoggerHandler').getLogger('ManagerHandler');
 const RequestHandler = require('./RequestHandler');
 
-module.exports = (function() {
+module.exports = (() => {
     let caFile = null;
     try {
         caFile = _.get(config, 'app.ssl.ca') ? fs.readFileSync(config.app.ssl.ca) : null;
@@ -60,7 +60,6 @@ module.exports = (function() {
     }
 
     // the request assumes the response is JSON
-
     function jsonRequest(method, url, headers, data, timeout) {
         return new Promise((resolve, reject) => {
             this.request(

@@ -1,6 +1,4 @@
-/**
- * Created by kinneretzin on 22/11/2016.
- */
+/* eslint no-underscore-dangle: ["error", { "allow": ["_size", "_offset"] }] */
 
 import Internal from './Internal';
 import StageUtils from './stageUtils';
@@ -31,7 +29,7 @@ export default class Manager extends Internal {
     }
 
     getManagerUrl(url, data) {
-        return this._buildActualUrl(url, data);
+        return this.buildActualUrl(url, data);
     }
 
     getSelectedTenant() {
@@ -43,7 +41,7 @@ export default class Manager extends Internal {
         return _.filter(roles, role => role.type === 'system_role');
     }
 
-    _buildActualUrl(url, data) {
+    buildActualUrl(url, data) {
         const index = url.indexOf('[manager]');
         if (index >= 0) {
             const managerUrl = url.substring(index + '[manager]'.length);

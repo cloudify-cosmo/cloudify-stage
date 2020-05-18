@@ -5,7 +5,7 @@
 const Config = require('../config');
 
 module.exports = {
-    'Admin user menu': function(client) {
+    'Admin user menu': client => {
         client
             .login()
             .page.page()
@@ -19,7 +19,7 @@ module.exports = {
         client.end();
     },
 
-    'Regular user menu': function(client) {
+    'Regular user menu': client => {
         client
             .ensureUserIsPresent(Config.user, Config.pass)
             .login(true)

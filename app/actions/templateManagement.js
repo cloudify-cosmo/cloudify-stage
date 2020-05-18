@@ -30,7 +30,7 @@ export function fetchTemplateManagement(templates, pages) {
 }
 
 export function fetchTemplates() {
-    return function(dispatch, getState) {
+    return (dispatch, getState) => {
         const state = getState();
         const internal = new Internal(state.manager);
         const storeTemplates = state.templates;
@@ -69,7 +69,7 @@ export function fetchTemplates() {
 }
 
 export function getTemplates() {
-    return function(dispatch) {
+    return dispatch => {
         dispatch(reqTemplateManagement());
 
         dispatch(fetchTemplates()).catch(err => dispatch(errorTemplateManagement(err.message)));
@@ -77,7 +77,7 @@ export function getTemplates() {
 }
 
 export function createTemplate(template) {
-    return function(dispatch, getState) {
+    return (dispatch, getState) => {
         const internal = new Internal(getState().manager);
         return internal
             .doPost('/templates', {}, template)
@@ -88,7 +88,7 @@ export function createTemplate(template) {
 }
 
 export function updateTemplate(template) {
-    return function(dispatch, getState) {
+    return (dispatch, getState) => {
         const internal = new Internal(getState().manager);
         return internal
             .doPut('/templates', {}, template)
@@ -104,7 +104,7 @@ export function updateTemplate(template) {
 }
 
 export function deleteTemplate(templateId) {
-    return function(dispatch, getState) {
+    return (dispatch, getState) => {
         dispatch(reqTemplateManagement());
 
         const internal = new Internal(getState().manager);
@@ -145,7 +145,7 @@ function createPageId(name, pages) {
 }
 
 export function createPage(pageName) {
-    return function(dispatch, getState) {
+    return (dispatch, getState) => {
         const pageId = createPageId(pageName, getState().templates.pagesDef);
         const page = {
             id: pageId,
@@ -164,7 +164,7 @@ export function createPage(pageName) {
 }
 
 export function deletePage(pageId) {
-    return function(dispatch, getState) {
+    return (dispatch, getState) => {
         dispatch(reqTemplateManagement());
 
         const internal = new Internal(getState().manager);
@@ -216,14 +216,14 @@ export function changePageName(pageId, pageName) {
 }
 
 export function updatePageName(pageName) {
-    return function(dispatch, getState) {
+    return (dispatch, getState) => {
         const pageId = createPageId(pageName, getState().templates.pagesDef);
         dispatch(changePageName(pageId, pageName));
     };
 }
 
 export function showPage(pageId, pageName, isPageEditMode) {
-    return function(dispatch, getState) {
+    return (dispatch, getState) => {
         dispatch(setPageShow(pageId, pageName, isPageEditMode));
 
         const { pagesDef } = getState().templates;
@@ -293,7 +293,7 @@ export function editPageWidget(pageId, widgetId, configuration) {
 }
 
 export function persistPage(page) {
-    return function(dispatch, getState) {
+    return (dispatch, getState) => {
         const widgets = page.widgets.map(w => {
             return {
                 name: w.name,
@@ -328,7 +328,7 @@ export function persistPage(page) {
 }
 
 export function savePage(page) {
-    return function(dispatch) {
+    return dispatch => {
         dispatch(persistPage(page)).then(() => dispatch(push('/template_management')));
     };
 }

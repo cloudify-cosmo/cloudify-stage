@@ -20,7 +20,7 @@ function setPages(pages) {
 }
 
 export function resetPagesForTenant(tenant) {
-    return function(dispatch, getState) {
+    return (dispatch, getState) => {
         const { manager } = getState();
         if (_.get(manager, 'tenants.selected', Consts.DEFAULT_ALL) === tenant) {
             dispatch(resetPages());
@@ -32,7 +32,7 @@ export function resetPagesForTenant(tenant) {
 }
 
 export function resetPages() {
-    return function(dispatch) {
+    return dispatch => {
         const autoSaver = UserAppDataAutoSaver.getAutoSaver();
         autoSaver.stop();
         // First clear the pages
@@ -58,7 +58,7 @@ export function resetPages() {
 }
 
 export function loadOrCreateUserAppData() {
-    return function(dispatch, getState) {
+    return (dispatch, getState) => {
         const { manager } = getState();
 
         const internal = new Internal(manager);
@@ -77,7 +77,7 @@ export function loadOrCreateUserAppData() {
 }
 
 export function reloadUserAppData() {
-    return function(dispatch, getState) {
+    return (dispatch, getState) => {
         dispatch(setAppLoading(true));
 
         return dispatch(loadOrCreateUserAppData()).then(() => {

@@ -29,17 +29,17 @@ module.exports = {
                     type: Sequelize.DATE
                 }
             })
-            .then(function() {
-                return queryInterface.addIndex('BlueprintUserData', ['blueprintId', 'username'], {
+            .then(() =>
+                queryInterface.addIndex('BlueprintUserData', ['blueprintId', 'username'], {
                     indicesType: 'UNIQUE'
-                });
-            });
+                })
+            );
     },
     down: (queryInterface, Sequelize) => {
-        return queryInterface.dropTable('BlueprintUserData').then(function() {
-            return queryInterface.removeIndex('BlueprintUserData', ['blueprintId', 'username'], {
+        return queryInterface.dropTable('BlueprintUserData').then(() =>
+            queryInterface.removeIndex('BlueprintUserData', ['blueprintId', 'username'], {
                 indicesType: 'UNIQUE'
-            });
-        });
+            })
+        );
     }
 };

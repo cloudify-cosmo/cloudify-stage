@@ -5,7 +5,7 @@
 const req = require('request');
 const logger = require('./LoggerHandler').getLogger('RequestHandler');
 
-module.exports = (function() {
+module.exports = (() => {
     function request(method, requestUrl, options, onSuccess, onError) {
         options.method = method;
 
@@ -18,10 +18,10 @@ module.exports = (function() {
     function getResponseJson(res) {
         return new Promise((resolve, reject) => {
             let body = '';
-            res.on('data', function(chunk) {
+            res.on('data', chunk => {
                 body += chunk;
             });
-            res.on('end', function() {
+            res.on('end', () => {
                 try {
                     const jsonResponse = JSON.parse(body);
                     resolve(jsonResponse);

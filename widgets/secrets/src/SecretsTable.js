@@ -35,28 +35,28 @@ export default class SecretsTable extends React.Component {
         );
     }
 
-    _refreshData() {
+    refreshData() {
         this.setState({ error: null });
         this.props.toolbox.refresh();
     }
 
     componentDidMount() {
-        this.props.toolbox.getEventBus().on('secrets:refresh', this._refreshData, this);
+        this.props.toolbox.getEventBus().on('secrets:refresh', this.refreshData, this);
     }
 
     componentWillUnmount() {
-        this.props.toolbox.getEventBus().off('secrets:refresh', this._refreshData);
+        this.props.toolbox.getEventBus().off('secrets:refresh', this.refreshData);
     }
 
     fetchGridData(fetchParams) {
         return this.props.toolbox.refresh(fetchParams);
     }
 
-    _onDeleteSecret(secret) {
+    onDeleteSecret(secret) {
         this.setState({ secret, modalType: SecretsTable.DELETE_SECRET_ACTION, showModal: true });
     }
 
-    _onUpdateSecret(secret) {
+    onUpdateSecret(secret) {
         this.setState({
             secret,
             modalType: SecretsTable.UPDATE_SECRET_ACTION,
@@ -66,7 +66,7 @@ export default class SecretsTable extends React.Component {
         });
     }
 
-    _onShowSecret(secret) {
+    onShowSecret(secret) {
         const secretKey = secret.key;
         this.setState({ secret, showSecretKey: secretKey, showSecretValue: '', showSecretLoading: true });
 
@@ -85,11 +85,11 @@ export default class SecretsTable extends React.Component {
             });
     }
 
-    _onHideSecret() {
+    onHideSecret() {
         this.setState({ showSecretKey: '', showSecretValue: '' });
     }
 
-    _deleteSecret() {
+    deleteSecret() {
         const secretKey = this.state.secret.key;
         const actions = new Stage.Common.SecretActions(this.props.toolbox);
         const HIDE_DELETE_MODAL_STATE = { modalType: SecretsTable.DELETE_SECRET_ACTION, showModal: false };
@@ -105,7 +105,7 @@ export default class SecretsTable extends React.Component {
             });
     }
 
-    _setSecretVisibility(secretKey, visibility) {
+    setSecretVisibility(secretKey, visibility) {
         const actions = new Stage.Common.SecretActions(this.props.toolbox);
         this.props.toolbox.loading(true);
         actions
@@ -120,7 +120,7 @@ export default class SecretsTable extends React.Component {
             });
     }
 
-    _onIsHiddenValueChange(secretKey, isHiddenValue) {
+    onIsHiddenValueChange(secretKey, isHiddenValue) {
         const actions = new Stage.Common.SecretActions(this.props.toolbox);
         this.props.toolbox.loading(true);
         actions
@@ -135,7 +135,7 @@ export default class SecretsTable extends React.Component {
             });
     }
 
-    _hideModal() {
+    hideModal() {
         this.setState({ showModal: false });
     }
 
@@ -178,7 +178,7 @@ export default class SecretsTable extends React.Component {
                                     <ResourceVisibility
                                         visibility={secret.visibility}
                                         onSetVisibility={visibility => {
-                                            this._setSecretVisibility(secret.key, visibility);
+                                            this.setSecretVisibility(secret.key, visibility);
                                         }}
                                         allowedSettingTo={['tenant', 'global']}
                                         className="rightFloated"
@@ -196,7 +196,7 @@ export default class SecretsTable extends React.Component {
                                                     link
                                                     name="hide"
                                                     title="Hide secret value"
-                                                    onClick={this._onHideSecret.bind(this)}
+                                                    onClick={this.onHideSecret.bind(this)}
                                                 />
                                             </div>
                                         ) : (
@@ -214,16 +214,14 @@ export default class SecretsTable extends React.Component {
                                             link
                                             name="unhide"
                                             title="Show secret value"
-                                            onClick={this._onShowSecret.bind(this, secret)}
+                                            onClick={this.onShowSecret.bind(this, secret)}
                                         />
                                     )}
                                 </DataTable.Data>
                                 <DataTable.Data className="center aligned">
                                     <Checkbox
                                         checked={secret.is_hidden_value}
-                                        onChange={() =>
-                                            this._onIsHiddenValueChange(secret.key, !secret.is_hidden_value)
-                                        }
+                                        onChange={() => this.onIsHiddenValueChange(secret.key, !secret.is_hidden_value)}
                                         onClick={e => e.stopPropagation()}
                                     />
                                     {secret.is_hidden_value}
@@ -238,14 +236,14 @@ export default class SecretsTable extends React.Component {
                                         link
                                         name="edit"
                                         title="Update secret"
-                                        onClick={this._onUpdateSecret.bind(this, secret)}
+                                        onClick={this.onUpdateSecret.bind(this, secret)}
                                     />
                                     <Icon
                                         bordered
                                         link
                                         name="trash"
                                         title="Delete secret"
-                                        onClick={this._onDeleteSecret.bind(this, secret)}
+                                        onClick={this.onDeleteSecret.bind(this, secret)}
                                     />
                                 </DataTable.Data>
                             </DataTable.Row>
@@ -260,14 +258,14 @@ export default class SecretsTable extends React.Component {
                 <DeleteModal
                     content={`Are you sure you want to delete secret '${this.state.secret.key}'?`}
                     open={this.state.modalType === SecretsTable.DELETE_SECRET_ACTION && this.state.showModal}
-                    onConfirm={this._deleteSecret.bind(this)}
-                    onCancel={this._hideModal.bind(this)}
+                    onConfirm={this.deleteSecret.bind(this)}
+                    onCancel={this.hideModal.bind(this)}
                 />
 
                 <UpdateModal
                     toolbox={this.props.toolbox}
                     open={this.state.modalType === SecretsTable.UPDATE_SECRET_ACTION && this.state.showModal}
-                    onHide={this._hideModal.bind(this)}
+                    onHide={this.hideModal.bind(this)}
                     secret={this.state.secret}
                 />
             </div>
