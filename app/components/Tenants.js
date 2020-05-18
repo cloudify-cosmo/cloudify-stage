@@ -6,7 +6,7 @@ import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 
 import EventBus from '../utils/EventBus';
-import { Dropdown, Loader, Icon, Input } from './basic';
+import { Dropdown, Icon, Input, Loader } from './basic';
 
 export default class Tenants extends Component {
     static propTypes = {
@@ -24,11 +24,13 @@ export default class Tenants extends Component {
     }
 
     componentDidMount() {
-        EventBus.on('menu.tenants:refresh', this.props.onTenantsRefresh, this);
+        const { onTenantsRefresh } = this.props;
+        EventBus.on('menu.tenants:refresh', onTenantsRefresh, this);
     }
 
     onTenantSelected(tenant) {
-        this.props.onTenantChange(tenant.name);
+        const { onTenantChange } = this.props;
+        onTenantChange(tenant.name);
     }
 
     onSearchChange(value) {
@@ -36,7 +38,9 @@ export default class Tenants extends Component {
     }
 
     render() {
-        const { tenants } = this.props.manager;
+        const {
+            manager: { tenants }
+        } = this.props;
         const { search } = this.state;
         if (!tenants || !tenants.items || tenants.isFetching) {
             return <Loader active inverted inline size="small" />;

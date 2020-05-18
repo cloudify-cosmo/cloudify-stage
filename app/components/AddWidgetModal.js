@@ -62,7 +62,8 @@ export default class AddWidgetModal extends Component {
     };
 
     componentDidUpdate(prevProps) {
-        if (!_.isEqual(prevProps.widgetDefinitions, this.props.widgetDefinitions)) {
+        const { widgetDefinitions } = this.props;
+        if (!_.isEqual(prevProps.widgetDefinitions, widgetDefinitions)) {
             this.setState(AddWidgetModal.initialState(this.props));
         }
     }
@@ -86,7 +87,8 @@ export default class AddWidgetModal extends Component {
 
     addWidgets() {
         const { onWidgetAdded, widgetDefinitions } = this.props;
-        _.forEach(this.state.widgetsToAdd, widgetId => {
+        const { widgetsToAdd } = this.state;
+        _.forEach(widgetsToAdd, widgetId => {
             const widget = _.find(widgetDefinitions, widgetDefinition => widgetId === widgetDefinition.id);
             if (widget) {
                 onWidgetAdded(widget);
@@ -118,22 +120,27 @@ export default class AddWidgetModal extends Component {
     }
 
     getWidgetsToAddWithout(widgetId) {
-        return _.without(this.state.widgetsToAdd, widgetId);
+        const { widgetsToAdd } = this.state;
+        return _.without(widgetsToAdd, widgetId);
     }
 
     uninstallWidget() {
-        const widgetId = this.state.widget.id;
+        const { onWidgetUninstalled } = this.props;
+        const {
+            widget: { id: widgetId }
+        } = this.state;
 
         this.setState({ showConfirm: false });
-        this.props
-            .onWidgetUninstalled(widgetId)
-            .then(() => this.setState({ widgetsToAdd: this.getWidgetsToAddWithout(widgetId) }));
+        onWidgetUninstalled(widgetId).then(() =>
+            this.setState({ widgetsToAdd: this.getWidgetsToAddWithout(widgetId) })
+        );
     }
 
     updateWidget(widget, widgetFile, widgetUrl) {
-        return this.props
-            .onWidgetUpdated(widget.id, widgetFile, widgetUrl)
-            .then(() => this.setState({ widgetsToAdd: this.getWidgetsToAddWithout(widget.id) }));
+        const { onWidgetUpdated } = this.props;
+        return onWidgetUpdated(widget.id, widgetFile, widgetUrl).then(() =>
+            this.setState({ widgetsToAdd: this.getWidgetsToAddWithout(widget.id) })
+        );
     }
 
     static generateCategories(widgets) {
@@ -149,7 +156,8 @@ export default class AddWidgetModal extends Component {
     }
 
     updateCategoriesCounter(widgets) {
-        const categories = this.state.categories.map(category => {
+        const { categories: categoriesFromState } = this.state;
+        const categories = categoriesFromState.map(category => {
             category.count = widgets.filter(
                 widget => (widget.categories || [GenericConfig.CATEGORY.OTHERS]).indexOf(category.name) !== -1
             ).length;
@@ -178,7 +186,8 @@ export default class AddWidgetModal extends Component {
         const search = isCategoryChange ? search : field.value;
         const category = isCategoryChange ? field.name : selectedCategory;
 
-        let filtered = this.getWidgetsBySearch(this.props.widgetDefinitions, search);
+        const { widgetDefinitions } = this.props;
+        let filtered = this.getWidgetsBySearch(widgetDefinitions, search);
         filtered = this.getWidgetsByCategory(filtered, category);
 
         this.setState({ search, selectedCategory: category, filteredWidgetDefinitions: filtered });

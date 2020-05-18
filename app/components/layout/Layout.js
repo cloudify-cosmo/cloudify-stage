@@ -6,18 +6,17 @@ import PropTypes from 'prop-types';
 
 import React, { Component } from 'react';
 import { Redirect, Route, Switch } from 'react-router-dom';
+import Home from '../../containers/Home';
 
 import Header from '../../containers/layout/Header';
+import PageManagement from '../../containers/templates/PageManagement';
+import TemplateManagement from '../../containers/templates/TemplateManagement';
+import Consts from '../../utils/consts';
+import { NO_TENANTS_ERR, UNAUTHORIZED_ERR } from '../../utils/ErrorCodes';
+import SplashLoadingScreen from '../../utils/SplashLoadingScreen';
 
 import StatusPoller from '../../utils/StatusPoller';
 import UserAppDataAutoSaver from '../../utils/UserAppDataAutoSaver';
-import SplashLoadingScreen from '../../utils/SplashLoadingScreen';
-import { NO_TENANTS_ERR, UNAUTHORIZED_ERR } from '../../utils/ErrorCodes';
-import Consts from '../../utils/consts';
-import TemplateManagement from '../../containers/templates/TemplateManagement';
-import PageManagement from '../../containers/templates/PageManagement';
-import Home from '../../containers/Home';
-import NotFound from '../NotFound';
 import ScrollToTop from './ScrollToTop';
 
 export default class Layout extends Component {
@@ -67,13 +66,15 @@ export default class Layout extends Component {
 
     render() {
         const { isLoading, isPageSetForPageManagement, isUserAuthorizedForTemplateManagement } = this.props;
+        const { initialized } = this.state;
+
         if (isLoading) {
             SplashLoadingScreen.turnOn();
             return null;
         }
         SplashLoadingScreen.turnOff();
 
-        if (!this.state.initialized) {
+        if (!initialized) {
             return null;
         }
 

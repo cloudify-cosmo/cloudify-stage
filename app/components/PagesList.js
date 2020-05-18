@@ -2,10 +2,10 @@
  * Created by kinneretzin on 01/09/2016.
  */
 
+import 'jquery-ui/ui/widgets/sortable';
 import PropTypes from 'prop-types';
 
 import React, { Component } from 'react';
-import 'jquery-ui/ui/widgets/sortable';
 
 export default class PagesList extends Component {
     constructor(props) {
@@ -25,12 +25,13 @@ export default class PagesList extends Component {
     };
 
     componentDidMount() {
+        const { onPageReorder } = this.props;
         $(this.pagesRef.current).sortable({
             placeholder: 'ui-sortable-placeholder',
             helper: 'clone',
             forcePlaceholderSize: true,
             start: (event, ui) => (this.pageIndex = ui.item.index()),
-            update: (event, ui) => this.props.onPageReorder(this.pageIndex, ui.item.index())
+            update: (event, ui) => onPageReorder(this.pageIndex, ui.item.index())
         });
 
         this.enableReorderInEditMode();
@@ -41,7 +42,8 @@ export default class PagesList extends Component {
     }
 
     enableReorderInEditMode() {
-        if (this.props.isEditMode) {
+        const { isEditMode } = this.props;
+        if (isEditMode) {
             if ($(this.pagesRef.current).sortable('option', 'disabled')) {
                 $(this.pagesRef.current).sortable('enable');
             }

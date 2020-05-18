@@ -24,7 +24,8 @@ export default class Users extends Component {
     };
 
     componentDidMount() {
-        EventBus.on('menu.users:logout', this.props.onLogout, this);
+        const { onLogout } = this.props;
+        EventBus.on('menu.users:logout', onLogout, this);
     }
 
     onEditModeClick() {

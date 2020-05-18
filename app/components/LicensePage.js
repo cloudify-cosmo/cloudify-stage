@@ -2,16 +2,16 @@
  * Created by jakub.niezgoda on 06/03/19.
  */
 
-import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import React, { Component } from 'react';
+import Banner from '../containers/banner/Banner';
 
 import Consts from '../utils/consts';
-import Banner from '../containers/banner/Banner';
-import FullScreenSegment from './layout/FullScreenSegment';
-import EulaLink from './license/EulaLink';
-import CurrentLicense from './license/CurrentLicense';
-import UploadLicense from './license/UploadLicense';
 import { Button, Form, Grid, Header, Icon, Message } from './basic';
+import FullScreenSegment from './layout/FullScreenSegment';
+import CurrentLicense from './license/CurrentLicense';
+import EulaLink from './license/EulaLink';
+import UploadLicense from './license/UploadLicense';
 import { MessageContainer } from './shared';
 
 function LicenseSwitchButton({ isEditLicenseActive, onClick, color }) {
@@ -184,10 +184,11 @@ export default class LicensePage extends Component {
 
     onLicenseUpload() {
         const { manager, onLicenseChange } = this.props;
+        const { license } = this.state;
         this.setState({ isLoading: true });
 
         return manager
-            .doPut('/license', null, this.state.license)
+            .doPut('/license', null, license)
             .then(data => {
                 this.setState({ isLoading: false, error: null, isEditLicenseActive: false });
                 onLicenseChange(data);
@@ -196,7 +197,8 @@ export default class LicensePage extends Component {
     }
 
     onLicenseButtonClick() {
-        this.setState({ isEditLicenseActive: !this.state.isEditLicenseActive });
+        const { isEditLicenseActive } = this.state;
+        this.setState({ isEditLicenseActive: !isEditLicenseActive });
     }
 
     render() {

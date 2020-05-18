@@ -7,9 +7,9 @@ import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 
 import EditWidget from '../containers/EditWidget';
-import WidgetDynamicContent from './WidgetDynamicContent';
-import { EditableLabel, ErrorMessage, Icon, Loading, ReadmeModal } from './basic';
 import stageUtils from '../utils/stageUtils';
+import { EditableLabel, ErrorMessage, Icon, Loading, ReadmeModal } from './basic';
+import WidgetDynamicContent from './WidgetDynamicContent';
 
 export default class Widget extends Component {
     constructor(props, context) {
@@ -82,7 +82,8 @@ export default class Widget extends Component {
     }
 
     componentDidUpdate(prevProps, prevState) {
-        if (this.props.widget.maximized) {
+        const { widget } = this.props;
+        if (widget.maximized) {
             this.widgetItemRef.current.focus();
         }
     }

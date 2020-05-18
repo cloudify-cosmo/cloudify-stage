@@ -5,10 +5,10 @@
 import PropTypes from 'prop-types';
 
 import React, { Component } from 'react';
-import WidgetsList from '../WidgetsList';
 import Const from '../../utils/consts';
+import { Alert, Breadcrumb, Divider, EditableLabel, ErrorMessage, Segment } from '../basic';
 import EditModeBubble from '../EditModeBubble';
-import { Breadcrumb, Segment, Divider, ErrorMessage, EditableLabel, Alert } from '../basic';
+import WidgetsList from '../WidgetsList';
 
 export default class PageManagement extends Component {
     static propTypes = {
@@ -24,7 +24,8 @@ export default class PageManagement extends Component {
     };
 
     componentWillUnmount() {
-        this.props.onClear();
+        const { onClear } = this.props;
+        onClear();
     }
 
     shouldComponentUpdate(nextProps, nextState) {

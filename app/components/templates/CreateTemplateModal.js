@@ -7,16 +7,16 @@ import React, { Component } from 'react';
 import Consts from '../../utils/consts';
 
 import {
-    Modal,
-    Button,
-    Icon,
-    Form,
-    Segment,
     ApproveButton,
+    Button,
     CancelButton,
-    Message,
     Divider,
-    List
+    Form,
+    Icon,
+    List,
+    Message,
+    Modal,
+    Segment
 } from '../basic/index';
 
 export default class CreateTemplateModal extends Component {
@@ -89,6 +89,7 @@ export default class CreateTemplateModal extends Component {
     }
 
     submitCreate() {
+        const { onCreateTemplate } = this.props;
         const { pages, roles, templateName, tenants } = this.state;
         const errors = {};
 
@@ -116,8 +117,7 @@ export default class CreateTemplateModal extends Component {
         // Disable the form
         this.setState({ loading: true });
 
-        this.props
-            .onCreateTemplate(_.trim(templateName), roles, tenants, pages)
+        onCreateTemplate(_.trim(templateName), roles, tenants, pages)
             .then(() => {
                 this.setState({ errors: {}, loading: false, open: false });
             })
@@ -128,7 +128,8 @@ export default class CreateTemplateModal extends Component {
 
     handleInputChange(proxy, field) {
         if (field.name === 'tenants') {
-            const wasSelectedAll = _.indexOf(this.state.tenants, Consts.DEFAULT_ALL) >= 0;
+            const { tenants } = this.state;
+            const wasSelectedAll = _.indexOf(tenants, Consts.DEFAULT_ALL) >= 0;
             const willSelectAll = _.indexOf(field.value, Consts.DEFAULT_ALL) >= 0;
 
             if (wasSelectedAll) {

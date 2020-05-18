@@ -2,22 +2,22 @@
  * Created by kinneretzin on 29/08/2016.
  */
 
-import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import React, { Component } from 'react';
+import Banner from '../../containers/banner/Banner';
+import SystemStatusHeader from '../../containers/status/SystemStatusHeader';
+import Consts from '../../utils/consts';
+import SplashLoadingScreen from '../../utils/SplashLoadingScreen';
+import StatusPoller from '../../utils/StatusPoller';
 
 import { Divider, Header } from '../basic';
+import FullScreenSegment from '../layout/FullScreenSegment';
 import {
     ClusterServicesList,
     MaintenanceModeActivationButton,
     MaintenanceModeModal,
     MessageContainer
 } from '../shared';
-import Banner from '../../containers/banner/Banner';
-import Consts from '../../utils/consts';
-import FullScreenSegment from '../layout/FullScreenSegment';
-import SplashLoadingScreen from '../../utils/SplashLoadingScreen';
-import StatusPoller from '../../utils/StatusPoller';
-import SystemStatusHeader from '../../containers/status/SystemStatusHeader';
 
 export default class MaintenanceModePageMessage extends Component {
     constructor(props, context) {
@@ -29,8 +29,9 @@ export default class MaintenanceModePageMessage extends Component {
     }
 
     componentDidMount() {
+        const { onGetClusterStatus } = this.props;
         StatusPoller.getPoller().start();
-        this.props.onGetClusterStatus();
+        onGetClusterStatus();
     }
 
     componentDidUpdate() {

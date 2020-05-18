@@ -6,9 +6,9 @@ import PropTypes from 'prop-types';
 
 import React from 'react';
 import { connect } from 'react-redux';
-import EditWidgetIcon from '../components/EditWidgetIcon';
-import { editWidget } from '../actions/widgets';
 import { editPageWidget } from '../actions/templateManagement';
+import { editWidget } from '../actions/widgets';
+import EditWidgetIcon from '../components/EditWidgetIcon';
 import EditWidgetModal from '../components/EditWidgetModal';
 
 const mapStateToProps = (state, ownProps) => {
@@ -72,6 +72,8 @@ class EditWidgetComponent extends React.Component {
 
     render() {
         const { configDef, configuration, onWidgetEdited, widget } = this.props;
+        const { showConfig } = this.state;
+
         return (
             <span>
                 <EditWidgetIcon widgetId={widget.id} onShowConfig={this.showConfig.bind(this)} />
@@ -80,7 +82,7 @@ class EditWidgetComponent extends React.Component {
                     configDef={configDef}
                     configuration={configuration}
                     onWidgetEdited={onWidgetEdited}
-                    show={this.state.showConfig}
+                    show={showConfig}
                     onHideConfig={this.hideConfig.bind(this)}
                 />
             </span>

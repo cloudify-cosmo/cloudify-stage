@@ -2,8 +2,8 @@
  * Created by edenp on 15/04/2018.
  */
 
-import React from 'react';
 import PropTypes from 'prop-types';
+import React from 'react';
 
 import { Button, Menu, Popup, PopupMenu } from './basic';
 
@@ -23,7 +23,8 @@ export default class ToursButton extends React.Component {
     };
 
     startTour(tour) {
-        this.props.onTourStart(tour);
+        const { onTourStart } = this.props;
+        onTourStart(tour);
     }
 
     onMouseOver() {
@@ -36,12 +37,13 @@ export default class ToursButton extends React.Component {
 
     render() {
         const { tours } = this.props;
+        const { hovered } = this.state;
         const buttonStyle = {
             position: 'fixed',
             right: '20px',
             bottom: '20px',
             zIndex: 9,
-            opacity: this.state.hovered ? 1 : 0.5
+            opacity: hovered ? 1 : 0.5
         };
 
         return (

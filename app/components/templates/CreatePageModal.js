@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
 
 import React, { Component } from 'react';
 
-import { Modal, Button, Icon, Form, ApproveButton, CancelButton } from '../basic/index';
+import { ApproveButton, Button, CancelButton, Form, Icon, Modal } from '../basic/index';
 
 export default class CreatePageModal extends Component {
     constructor(props, context) {
@@ -36,6 +36,7 @@ export default class CreatePageModal extends Component {
     }
 
     submitCreate() {
+        const { onCreatePage } = this.props;
         const { pageName } = this.state;
         const errors = {};
 
@@ -51,7 +52,7 @@ export default class CreatePageModal extends Component {
         // Disable the form
         this.setState({ loading: true });
 
-        this.props.onCreatePage(_.trim(pageName)).catch(err => {
+        onCreatePage(_.trim(pageName)).catch(err => {
             this.setState({ errors: { error: err.message }, loading: false });
         });
     }

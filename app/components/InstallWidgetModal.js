@@ -4,10 +4,10 @@
 
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
-
-import { Icon, Button, Form, Modal, Message } from './basic/index';
 import EventBus from '../utils/EventBus';
 import StageUtils from '../utils/stageUtils';
+
+import { Button, Form, Icon, Message, Modal } from './basic/index';
 
 export default class InstallWidgetModal extends Component {
     constructor(props, context) {
@@ -39,7 +39,8 @@ export default class InstallWidgetModal extends Component {
     };
 
     componentDidUpdate(prevProps) {
-        if (!prevProps.open && this.props.open) {
+        const { open } = this.props;
+        if (!prevProps.open && open) {
             this.setState(InstallWidgetModal.initialState);
         }
     }
@@ -49,6 +50,7 @@ export default class InstallWidgetModal extends Component {
     }
 
     installWidget() {
+        const { onWidgetInstalled } = this.props;
         const { widgetFile } = this.state;
         const widgetUrl = widgetFile ? '' : widgetUrl;
 
@@ -70,8 +72,7 @@ export default class InstallWidgetModal extends Component {
         this.setState({ loading: true, errors: {}, scriptError: '' });
 
         EventBus.on('window:error', this.showScriptError, this);
-        this.props
-            .onWidgetInstalled(widgetFile, widgetUrl)
+        onWidgetInstalled(widgetFile, widgetUrl)
             .then(() => {
                 EventBus.off('window:error', this.showScriptError);
                 this.setState({ loading: false, open: false });

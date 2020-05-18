@@ -4,11 +4,10 @@
 
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
-
-import Templates from './Templates';
-import Pages from './Pages';
 import Const from '../../utils/consts';
-import { Breadcrumb, Segment, Divider, ErrorMessage, Button } from '../basic';
+import { Breadcrumb, Button, Divider, ErrorMessage, Segment } from '../basic';
+import Pages from './Pages';
+import Templates from './Templates';
 
 export default class TemplateManagement extends Component {
     static propTypes = {
@@ -37,22 +36,27 @@ export default class TemplateManagement extends Component {
     };
 
     componentDidMount() {
-        this.props.onTemplatesLoad();
+        const { onTemplatesLoad } = this.props;
+        onTemplatesLoad();
     }
 
     componentWillUnmount() {
-        this.props.onClear();
+        const { onClear } = this.props;
+        onClear();
     }
 
     selectTemplate(template) {
-        this.props.onTemplateSelect(template.id);
+        const { onTemplateSelect } = this.props;
+        onTemplateSelect(template.id);
     }
 
     selectPage(page) {
-        this.props.onPageSelect(page.id);
+        const { onPageSelect } = this.props;
+        onPageSelect(page.id);
     }
 
     createTemplate(templateName, roles, tenants, pages) {
+        const { onTemplateCreate } = this.props;
         const template = {
             id: templateName.trim(),
             data: {
@@ -62,14 +66,16 @@ export default class TemplateManagement extends Component {
             pages
         };
 
-        return this.props.onTemplateCreate(template);
+        return onTemplateCreate(template);
     }
 
     deleteTemplate(template) {
-        this.props.onTemplateDelete(template.id);
+        const { onTemplateDelete } = this.props;
+        onTemplateDelete(template.id);
     }
 
     modifyTemplate(item, templateName, roles, tenants, pages) {
+        const { onTemplateUpdate } = this.props;
         const template = {
             oldId: item.id,
             id: templateName.trim(),
@@ -80,7 +86,7 @@ export default class TemplateManagement extends Component {
             pages
         };
 
-        return this.props.onTemplateUpdate(template);
+        return onTemplateUpdate(template);
     }
 
     removeTemplatePage(template, page) {
@@ -102,11 +108,13 @@ export default class TemplateManagement extends Component {
     }
 
     updateTemplate(template) {
-        return this.props.onTemplateUpdate({ ...template, oldId: template.id });
+        const { onTemplateUpdate } = this.props;
+        return onTemplateUpdate({ ...template, oldId: template.id });
     }
 
     deletePage(page) {
-        this.props.onPageDelete(page.id);
+        const { onPageDelete } = this.props;
+        onPageDelete(page.id);
     }
 
     canDeletePage(page) {
@@ -114,11 +122,13 @@ export default class TemplateManagement extends Component {
     }
 
     editPage(page) {
-        this.props.onPageEdit(page.id, page.name);
+        const { onPageEdit } = this.props;
+        onPageEdit(page.id, page.name);
     }
 
     previewPage(page) {
-        this.props.onPagePreview(page.id, page.name);
+        const { onPagePreview } = this.props;
+        onPagePreview(page.id, page.name);
     }
 
     render() {

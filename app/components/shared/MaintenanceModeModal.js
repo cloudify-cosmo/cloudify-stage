@@ -1,11 +1,6 @@
 /**
  * Created by pposel on 16/02/2017.
  */
-import React, { Component } from 'react';
-import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
-
-import { Icon, Modal } from 'semantic-ui-react';
 import {
     ApproveButton,
     CancelButton,
@@ -15,12 +10,17 @@ import {
     Menu,
     PopupMenu
 } from 'cloudify-ui-components';
+import PropTypes from 'prop-types';
+import React, { Component } from 'react';
+import { connect } from 'react-redux';
+
+import { Icon, Modal } from 'semantic-ui-react';
+import { doCancelExecution, getActiveExecutions, setActiveExecutions, switchMaintenance } from '../../actions/managers';
+import Consts from '../../utils/consts';
 
 import ExecutionUtils from '../../utils/shared/ExecutionUtils';
-import { switchMaintenance, getActiveExecutions, setActiveExecutions, doCancelExecution } from '../../actions/managers';
-import ExecutionStatus from './ExecutionStatus';
-import Consts from '../../utils/consts';
 import StageUtils from '../../utils/stageUtils';
+import ExecutionStatus from './ExecutionStatus';
 
 const POLLING_INTERVAL = 2000;
 
@@ -99,10 +99,12 @@ class MaintenanceModeModal extends Component {
     }
 
     startPolling() {
+        const { show } = this.props;
+
         this.stopPolling();
         this.stopFetchingData();
 
-        if (this.props.show) {
+        if (show) {
             console.log(`Polling maintenance data - time interval: ${POLLING_INTERVAL / 1000} sec`);
             this.pollingTimeout = setTimeout(() => {
                 this.loadPendingExecutions();
@@ -111,9 +113,10 @@ class MaintenanceModeModal extends Component {
     }
 
     onApprove() {
+        const { manager } = this.props;
         this.setState({ loading: true });
 
-        if (this.props.manager.maintenance === Consts.MAINTENANCE_DEACTIVATED) {
+        if (manager.maintenance === Consts.MAINTENANCE_DEACTIVATED) {
             this.activate();
         } else {
             this.deactivate();
@@ -123,7 +126,8 @@ class MaintenanceModeModal extends Component {
     }
 
     onDeny() {
-        this.props.onHide();
+        const { onHide } = this.props;
+        onHide();
         return true;
     }
 
@@ -152,10 +156,10 @@ class MaintenanceModeModal extends Component {
     }
 
     cancelExecution(execution, action) {
+        const { onCancelExecution } = this.props;
         const { cancelling } = this.state;
         this.setState({ cancelling: [...cancelling, execution.id] }, () =>
-            this.props
-                .onCancelExecution(execution, action)
+            onCancelExecution(execution, action)
                 .then(() => {
                     this.loadPendingExecutions();
                     this.setState({ error: '', cancelling: _.without(cancelling, execution.id) });

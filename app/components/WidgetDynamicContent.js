@@ -6,9 +6,8 @@ import PropTypes from 'prop-types';
 
 import React, { Component } from 'react';
 import { getToolbox } from '../utils/Toolbox';
-
-import { ErrorMessage } from './basic';
 import WidgetParamsHandler from '../utils/WidgetParamsHandler';
+import { ErrorMessage } from './basic';
 
 export default class WidgetDynamicContent extends Component {
     static propTypes = {
@@ -32,7 +31,8 @@ export default class WidgetDynamicContent extends Component {
     }
 
     getToolbox() {
-        return getToolbox(this.fetchData.bind(this), this.loadingIndicator.bind(this), this.props.widget);
+        const { widget } = this.props;
+        return getToolbox(this.fetchData.bind(this), this.loadingIndicator.bind(this), widget);
     }
 
     beforeFetch() {
@@ -57,8 +57,9 @@ export default class WidgetDynamicContent extends Component {
     }
 
     hideLoading() {
+        const { loading } = this.state;
         clearTimeout(this.loadingTimeout);
-        if (this.state.loading) {
+        if (loading) {
             this.loadingIndicator(false);
         }
     }
@@ -206,7 +207,8 @@ export default class WidgetDynamicContent extends Component {
         this.mounted = false;
         this.stopPolling();
 
-        console.log(`Widget '${this.props.widget.name}' unmounts`);
+        const { widget } = this.props;
+        console.log(`Widget '${widget.name}' unmounts`);
     }
 
     shouldComponentUpdate(nextProps, nextState) {
@@ -285,10 +287,11 @@ export default class WidgetDynamicContent extends Component {
 
     render() {
         const { widget } = this.props;
+        const { loading } = this.state;
         return (
             <div>
                 <div
-                    className={`ui ${this.state.loading ? 'active' : ''} small inline loader widgetLoader ${
+                    className={`ui ${loading ? 'active' : ''} small inline loader widgetLoader ${
                         widget.definition.showHeader ? 'header' : 'noheader'
                     }`}
                 />

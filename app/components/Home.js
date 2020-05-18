@@ -67,12 +67,11 @@ export default class Home extends Component {
     }
 
     render() {
-        if (this.props.emptyPages) {
+        const { emptyPages, pageId, pageName } = this.props;
+
+        if (emptyPages) {
             return null;
         }
-
-        const { pageId } = this.props;
-        const { pageName } = this.props;
 
         return (
             <div className="main">

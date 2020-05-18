@@ -6,10 +6,12 @@ import React, { Component } from 'react';
 
 export class ExternalRedirect extends Component {
     componentDidMount() {
-        window.location = this.props.url;
+        const { url } = this.props;
+        window.location = url;
     }
 
     render() {
-        return <section>Redirecting to {this.props.url}...</section>;
+        const { url } = this.props;
+        return <section>Redirecting to {url}...</section>;
     }
 }
