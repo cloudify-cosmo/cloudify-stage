@@ -26,12 +26,14 @@ export default class TenantModal extends React.Component {
     }
 
     onCancel() {
-        this.props.onHide();
+        const { onHide } = this.props;
+        onHide();
         return true;
     }
 
     onRoleChange(tenant, role) {
-        const newTenants = { ...this.state.tenants };
+        const { tenants } = this.state;
+        const newTenants = { ...tenants };
         newTenants[tenant] = role;
         this.setState({ tenants: newTenants });
     }
@@ -53,12 +55,12 @@ export default class TenantModal extends React.Component {
 
     submitTenant() {
         const { onHide, toolbox, user } = this.props;
+        const { tenants: submitTenants } = this.state;
         // Disable the form
         this.setState({ loading: true });
 
         const tenants = user.tenant_roles.direct;
         const tenantsList = Object.keys(tenants);
-        const submitTenants = this.state.tenants;
         const submitTenantsList = Object.keys(submitTenants);
 
         const tenantsToAdd = _.pick(submitTenants, _.difference(submitTenantsList, tenantsList));
@@ -84,8 +86,9 @@ export default class TenantModal extends React.Component {
     handleInputChange(proxy, field) {
         const newTenants = {};
         _.forEach(field.value, tenant => {
-            newTenants[tenant] =
-                this.state.tenants[tenant] || RolesUtil.getDefaultRoleName(this.props.toolbox.getManagerState().roles);
+            const { toolbox } = this.props;
+            const { tenants } = this.state;
+            newTenants[tenant] = tenants[tenant] || RolesUtil.getDefaultRoleName(toolbox.getManagerState().roles);
         });
         this.setState({ tenants: newTenants });
     }

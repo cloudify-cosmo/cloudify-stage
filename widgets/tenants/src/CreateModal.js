@@ -28,7 +28,8 @@ export default class CreateModal extends React.Component {
     }
 
     componentDidUpdate(prevProps, prevState) {
-        if (!prevState.open && this.state.open) {
+        const { open } = this.state;
+        if (!prevState.open && open) {
             this.setState(CreateModal.initialState);
         }
     }

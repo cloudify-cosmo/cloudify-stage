@@ -1,11 +1,10 @@
 /**
  * Created by kinneretzin on 02/10/2016.
  */
-import UploadModal from './UploadSnapshotModal';
+import Actions from './actions';
 import CreateModal from './CreateSnapshotModal';
 import RestoreModal from './RestoreSnapshotModal.js';
-
-import Actions from './actions';
+import UploadModal from './UploadSnapshotModal';
 
 export default class extends React.Component {
     constructor(props, context) {
@@ -54,7 +53,8 @@ export default class extends React.Component {
     downloadSnapshot(item, event) {
         event.stopPropagation();
 
-        const actions = new Actions(this.props.toolbox);
+        const { toolbox } = this.props;
+        const actions = new Actions(toolbox);
         actions
             .doDownload(item)
             .then(() => {
@@ -90,19 +90,23 @@ export default class extends React.Component {
     }
 
     refreshData() {
-        this.props.toolbox.refresh();
+        const { toolbox } = this.props;
+        toolbox.refresh();
     }
 
     componentDidMount() {
-        this.props.toolbox.getEventBus().on('snapshots:refresh', this.refreshData, this);
+        const { toolbox } = this.props;
+        toolbox.getEventBus().on('snapshots:refresh', this.refreshData, this);
     }
 
     componentWillUnmount() {
-        this.props.toolbox.getEventBus().off('snapshots:refresh', this.refreshData);
+        const { toolbox } = this.props;
+        toolbox.getEventBus().off('snapshots:refresh', this.refreshData);
     }
 
     fetchGridData(fetchParams) {
-        return this.props.toolbox.refresh(fetchParams);
+        const { toolbox } = this.props;
+        return toolbox.refresh(fetchParams);
     }
 
     render() {

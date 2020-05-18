@@ -30,7 +30,7 @@ export default class ParameterValue extends React.Component {
         const { Url } = Stage.Utils;
 
         const commonStyle = { padding: '0.5em', whiteSpace: 'pre-wrap', wordBreak: 'break-word' };
-        const typedValue = this.props.value;
+        const { value: typedValue } = this.props;
 
         switch (types.toType(typedValue)) {
             case 'array':

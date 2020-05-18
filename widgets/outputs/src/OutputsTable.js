@@ -18,15 +18,18 @@ export default class extends React.Component {
     }
 
     refreshData() {
-        this.props.toolbox.refresh();
+        const { toolbox } = this.props;
+        toolbox.refresh();
     }
 
     componentDidMount() {
-        this.props.toolbox.getEventBus().on('outputs:refresh', this.refreshData, this);
+        const { toolbox } = this.props;
+        toolbox.getEventBus().on('outputs:refresh', this.refreshData, this);
     }
 
     componentWillUnmount() {
-        this.props.toolbox.getEventBus().off('outputs:refresh', this.refreshData);
+        const { toolbox } = this.props;
+        toolbox.getEventBus().off('outputs:refresh', this.refreshData);
     }
 
     componentDidUpdate(prevProps, prevState) {
@@ -37,13 +40,14 @@ export default class extends React.Component {
     }
 
     render() {
+        const {
+            data: { blueprintId, deploymentId, outputsAndCapabilities }
+        } = this.props;
         const { error, sortAscending, sortColumn } = this.state;
         const NO_DATA_MESSAGE =
             "There are no Outputs/Capabilities available. Probably there's no deployment created, yet.";
         const { Button, DataTable, ErrorMessage, Header } = Stage.Basic;
         const { ParameterValue, ParameterValueDescription } = Stage.Common;
-
-        const { blueprintId, deploymentId, outputsAndCapabilities } = this.props.data;
 
         return (
             <div>

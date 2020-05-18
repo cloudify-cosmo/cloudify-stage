@@ -56,13 +56,15 @@ export default class Filter extends React.Component {
     }
 
     setValue(name, value) {
-        this.props.toolbox.getContext().setValue(name, value);
+        const { toolbox } = this.props;
+        toolbox.getContext().setValue(name, value);
         this.setState({ [name]: value });
     }
 
     componentDidUpdate(prevProps) {
+        const { configuration } = this.props;
         const oldAllowMultipleSelection = prevProps.configuration.allowMultipleSelection;
-        const newAllowMultipleSelection = this.props.configuration.allowMultipleSelection;
+        const newAllowMultipleSelection = configuration.allowMultipleSelection;
 
         if (oldAllowMultipleSelection !== newAllowMultipleSelection) {
             filterFields.forEach(filterField => this.setValue(filterField, null));
@@ -114,9 +116,10 @@ export default class Filter extends React.Component {
     }
 
     selectNode(nodeIds) {
+        const { deploymentId } = this.state;
         this.setValue('nodeId', nodeIds);
         this.setValue('nodeInstanceId', null);
-        this.updateDeplomentNodeIdValue(this.state.deploymentId, nodeIds);
+        this.updateDeplomentNodeIdValue(deploymentId, nodeIds);
         this.updateTopologyWidget(nodeIds);
     }
 
@@ -137,7 +140,7 @@ export default class Filter extends React.Component {
     }
 
     render() {
-        const { error, undefined } = this.state;
+        const { error } = this.state;
         const { ErrorMessage, Form } = Stage.Basic;
 
         const createDropdown = ({
@@ -154,10 +157,12 @@ export default class Filter extends React.Component {
             flushOnRefreshEvent
         }) => {
             const { DynamicDropdown } = Stage.Common;
-            const { configuration } = this.props;
+            const { configuration, toolbox } = this.props;
+
             const joinedEntityName = entityName.replace(' ', '');
             if (configuration[enabledConfigurationKey || `filterBy${joinedEntityName}s`]) {
                 const camelCaseEntityName = _.lowerFirst(joinedEntityName);
+                const { error, [stateProp || `${camelCaseEntityName}Id`]: value } = this.state;
                 return (
                     <Form.Field key={entityName}>
                         <DynamicDropdown
@@ -169,8 +174,8 @@ export default class Filter extends React.Component {
                                 .concat(fetchIncludeExtra || [])
                                 .join()}`}
                             onChange={this[`select${joinedEntityName}`].bind(this)}
-                            toolbox={this.props.toolbox}
-                            value={stateProp || `${camelCaseEntityName}Id`}
+                            toolbox={toolbox}
+                            value={value}
                             placeholder={entityName}
                             fetchAll={fetchAll}
                             textFormatter={textFormatter}

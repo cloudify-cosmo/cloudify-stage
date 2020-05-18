@@ -97,11 +97,12 @@ export default class WizardModal extends React.Component {
     }
 
     shouldComponentUpdate(nextProps, nextState) {
-        return !_.isEqual(this.props.open, nextProps.open) || !_.isEqual(this.state, nextState);
+        const { open } = this.props;
+        return !_.isEqual(open, nextProps.open) || !_.isEqual(this.state, nextState);
     }
 
     componentDidUpdate(prevProps) {
-        const { open, steps } = this.props;
+        const { steps, open } = this.props;
         if (prevProps.open && !open) {
             // reset wizard on close
             this.setState({ ...WizardModal.initialState(steps) });
@@ -113,7 +114,8 @@ export default class WizardModal extends React.Component {
      * @returns {string} step name used in wizard state
      */
     getStepNameByIndex(index) {
-        return WizardModal.getStepNameById(this.props.steps[index].id);
+        const { steps } = this.props;
+        return WizardModal.getStepNameById(steps[index].id);
     }
 
     showCloseModal() {
@@ -130,17 +132,18 @@ export default class WizardModal extends React.Component {
      * @param {boolean} resetData If set to true, then wizard data will be reset
      */
     onStartOver(resetData) {
-        const { activeStepIndex } = this.state;
         const { steps } = this.props;
         if (resetData) {
             this.setState({ ...WizardModal.initialState(steps) });
         } else {
+            const { activeStepIndex } = this.state;
             const activeStepName = this.getStepNameByIndex(0);
 
             const stepsObject = {};
             for (const step of steps) {
                 const stepName = WizardModal.getStepNameById(step.id);
-                stepsObject[stepName] = { ...stepName, state: WizardModal.DISABLED_STATE, errors: {} };
+                const { [stepName]: stepObject } = this.state;
+                stepsObject[stepName] = { ...stepObject, state: WizardModal.DISABLED_STATE, errors: {} };
             }
             stepsObject[activeStepName].state = WizardModal.ACTIVE_STATE;
 
@@ -162,23 +165,29 @@ export default class WizardModal extends React.Component {
      * @param {object} [stepOutputData] object with step data to be merged into wizardData
      */
     onNext(id, stepOutputData) {
-        if (this.getStepNameByIndex(activeStepIndex) !== WizardModal.getStepNameById(id)) {
+        const {
+            wizardData: currentWizardData,
+            activeStepIndex: currentActiveStepIndex,
+            [activeStepName]: activeStepState,
+            [previousStepName]: previousStepState
+        } = this.state;
+        if (this.getStepNameByIndex(currentActiveStepIndex) !== WizardModal.getStepNameById(id)) {
             return;
         }
 
-        const activeStepIndex = activeStepIndex + 1;
-        const previousStepIndex = activeStepIndex;
+        const activeStepIndex = currentActiveStepIndex + 1;
+        const previousStepIndex = currentActiveStepIndex;
 
         const activeStepName = this.getStepNameByIndex(activeStepIndex);
         const previousStepName = this.getStepNameByIndex(previousStepIndex);
 
-        const wizardData = { ...wizardData, ...stepOutputData };
+        const wizardData = { ...currentWizardData, ...stepOutputData };
 
         this.setState({
             activeStepIndex,
             previousStepIndex,
-            [activeStepName]: { ...activeStepName, state: WizardModal.ACTIVE_STATE },
-            [previousStepName]: { ...previousStepName, state: WizardModal.COMPLETED_STATE },
+            [activeStepName]: { ...activeStepState, state: WizardModal.ACTIVE_STATE },
+            [previousStepName]: { ...previousStepState, state: WizardModal.COMPLETED_STATE },
             wizardData,
             error: null,
             loading: false
@@ -193,23 +202,29 @@ export default class WizardModal extends React.Component {
      * @param {object} [stepOutputData] object with step data to be merged into wizardData
      */
     onPrev(id, stepOutputData) {
-        if (this.getStepNameByIndex(activeStepIndex) !== WizardModal.getStepNameById(id)) {
+        const {
+            wizardData: currentWizardData,
+            activeStepIndex: currentActiveStepIndex,
+            [activeStepName]: activeStepState,
+            [previousStepName]: previousStepState
+        } = this.state;
+        if (this.getStepNameByIndex(currentActiveStepIndex) !== WizardModal.getStepNameById(id)) {
             return;
         }
 
-        const activeStepIndex = activeStepIndex - 1;
-        const previousStepIndex = activeStepIndex;
+        const activeStepIndex = currentActiveStepIndex - 1;
+        const previousStepIndex = currentActiveStepIndex;
 
         const activeStepName = this.getStepNameByIndex(activeStepIndex);
         const previousStepName = this.getStepNameByIndex(previousStepIndex);
 
-        const wizardData = { ...wizardData, ...stepOutputData };
+        const wizardData = { ...currentWizardData, ...stepOutputData };
 
         this.setState({
             activeStepIndex,
             previousStepIndex,
-            [activeStepName]: { ...activeStepName, state: WizardModal.ACTIVE_STATE },
-            [previousStepName]: { ...previousStepName, state: WizardModal.DISABLED_STATE },
+            [activeStepName]: { ...activeStepState, state: WizardModal.ACTIVE_STATE },
+            [previousStepName]: { ...previousStepState, state: WizardModal.DISABLED_STATE },
             wizardData,
             error: null
         });
@@ -229,8 +244,8 @@ export default class WizardModal extends React.Component {
         }
 
         if (!_.isNil(errors)) {
+            const { [stepName]: stepState } = this.state;
             const stepName = WizardModal.getStepNameById(id);
-            const stepState = stepName;
 
             return new Promise(resolve =>
                 this.setState({ [stepName]: { ...stepState, errors }, error: errorMessage, loading: false }, resolve)
@@ -264,12 +279,14 @@ export default class WizardModal extends React.Component {
         if (internal) {
             // internal step data => state[stepId]
             const stepName = WizardModal.getStepNameById(id);
-            const stepState = stepName;
+            const { [stepName]: stepState } = this.state;
 
             this.setState({ [stepName]: { ...stepState, data, errors: {} }, error: null });
         } else {
+            const { wizardData: currentWizardData } = this.state;
+
             // step output data => state.wizardData
-            const wizardData = { ...wizardData, ...data };
+            const wizardData = { ...currentWizardData, ...data };
 
             this.setState({ wizardData });
         }
@@ -283,19 +300,25 @@ export default class WizardModal extends React.Component {
      */
     fetchStepData(id) {
         const stepName = WizardModal.getStepNameById(id);
-        const stepState = this.state[stepName];
+        const { [stepName]: stepState } = this.state;
 
         return Promise.resolve({ stepData: stepState.data });
     }
 
     render() {
-        const { activeStepIndex, error, loading, showCloseModal, undefined, wizardData } = this.state;
         const { Confirm, ErrorMessage, Modal, Step } = Stage.Basic;
 
-        const { steps, header, onClose, open, toolbox } = this.props;
-        const ActiveStep = steps[activeStepIndex];
+        const { header, onClose, open, steps, toolbox } = this.props;
+        const { activeStepIndex } = this.state;
         const activeStepName = this.getStepNameByIndex(activeStepIndex);
-        const activeStepObject = activeStepName;
+        const {
+            [activeStepName]: activeStepObject,
+            error,
+            loading,
+            wizardData,
+            showCloseModal
+        } = this.state;
+        const ActiveStep = steps[activeStepIndex];
         const className = `wizardModal ${activeStepName}`;
 
         return (
@@ -311,20 +334,23 @@ export default class WizardModal extends React.Component {
 
                 <Modal.Description>
                     <Step.Group ordered fluid widths={steps.length}>
-                        {_.map(steps, (step, index) => (
-                            <Step
-                                active={this.getStepNameByIndex(index).state === WizardModal.ACTIVE_STATE}
-                                completed={this.getStepNameByIndex(index).state === WizardModal.COMPLETED_STATE}
-                                disabled={this.getStepNameByIndex(index).state === WizardModal.DISABLED_STATE}
-                                id={step.id}
-                                key={step.id}
-                            >
-                                <Step.Content>
-                                    <Step.Title>{step.title}</Step.Title>
-                                    <Step.Description>{step.description}</Step.Description>
-                                </Step.Content>
-                            </Step>
-                        ))}
+                        {_.map(steps, (step, index) => {
+                            const { state, [this.getStepNameByIndex(index)]: stepState } = this.state;
+                            return (
+                                <Step
+                                    active={state === WizardModal.ACTIVE_STATE}
+                                    completed={stepState.state === WizardModal.COMPLETED_STATE}
+                                    disabled={stepState.state === WizardModal.DISABLED_STATE}
+                                    id={step.id}
+                                    key={step.id}
+                                >
+                                    <Step.Content>
+                                        <Step.Title>{step.title}</Step.Title>
+                                        <Step.Description>{step.description}</Step.Description>
+                                    </Step.Content>
+                                </Step>
+                            );
+                        })}
                     </Step.Group>
 
                     <ErrorMessage

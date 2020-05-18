@@ -39,12 +39,14 @@ export default class UsersModal extends React.Component {
     }
 
     onCancel() {
-        this.props.onHide();
+        const { onHide } = this.props;
+        onHide();
         return true;
     }
 
     onRoleChange(user, role) {
-        const newUsers = { ...this.state.users };
+        const { users } = this.state;
+        const newUsers = { ...users };
         newUsers[user] = role;
         this.setState({ users: newUsers });
     }
@@ -70,12 +72,12 @@ export default class UsersModal extends React.Component {
 
     updateTenant() {
         const { onHide, tenant, toolbox } = this.props;
+        const { users: submitUsers } = this.state;
         // Disable the form
         this.setState({ loading: true });
 
         const users = tenant.user_roles.direct;
         const usersList = Object.keys(users);
-        const submitUsers = this.state.users;
         const submitUsersList = Object.keys(submitUsers);
 
         const usersToAdd = _.pick(submitUsers, _.difference(submitUsersList, usersList));
@@ -101,8 +103,11 @@ export default class UsersModal extends React.Component {
     handleInputChange(proxy, field) {
         const newUsers = {};
         _.forEach(field.value, user => {
-            newUsers[user] =
-                this.state.users[user] || RolesUtil.getDefaultRoleName(this.props.toolbox.getManagerState().roles);
+            const {
+                toolbox: { getManagerState }
+            } = this.props;
+            const { users } = this.state;
+            newUsers[user] = users[user] || RolesUtil.getDefaultRoleName(getManagerState().roles);
         });
         this.setState({ users: newUsers });
     }

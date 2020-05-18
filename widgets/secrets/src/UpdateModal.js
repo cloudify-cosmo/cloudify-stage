@@ -33,7 +33,8 @@ export default class UpdateModal extends React.Component {
     }
 
     onCancel() {
-        this.props.onHide();
+        const { onHide } = this.props;
+        onHide();
         return true;
     }
 
@@ -47,7 +48,10 @@ export default class UpdateModal extends React.Component {
                 .doGet(secret.key)
                 .then(secret => {
                     let canUpdateSecret = true;
-                    if (this.props.secret.is_hidden_value && _.isEmpty(secret.value)) {
+                    const {
+                        secret: { is_hidden_value }
+                    } = this.props;
+                    if (is_hidden_value && _.isEmpty(secret.value)) {
                         canUpdateSecret = false;
                     }
                     this.setState({ secretValue: secret.value, loading: false, errors: {}, canUpdateSecret });

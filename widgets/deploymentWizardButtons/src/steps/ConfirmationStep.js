@@ -2,11 +2,11 @@
  * Created by jakub.niezgoda on 31/07/2018.
  */
 
-import TaskList from './helpers/TaskList';
-import Task from './helpers/Task';
-import { createWizardStep } from '../wizard/wizardUtils';
 import StepActions from '../wizard/StepActions';
 import StepContent from '../wizard/StepContent';
+import { createWizardStep } from '../wizard/wizardUtils';
+import Task from './helpers/Task';
+import TaskList from './helpers/TaskList';
 
 const confirmationStepId = 'confirm';
 
@@ -18,7 +18,8 @@ class ConfirmationStepActions extends React.Component {
     static propTypes = StepActions.propTypes;
 
     async isUsed(deploymentId) {
-        const deploymentActions = new Stage.Common.DeploymentActions(this.props.toolbox);
+        const { toolbox } = this.props;
+        const deploymentActions = new Stage.Common.DeploymentActions(toolbox);
         const deploymentPromise = () => deploymentActions.doGetDeployments({ _search: deploymentId });
 
         return !_.isEqual(
@@ -85,7 +86,8 @@ class ConfirmationStepContent extends React.Component {
     }
 
     addPluginsTasks(plugins, tasks) {
-        const pluginActions = new Stage.Common.PluginActions(this.props.toolbox);
+        const { toolbox } = this.props;
+        const pluginActions = new Stage.Common.PluginActions(toolbox);
 
         for (const pluginName of _.keys(plugins)) {
             const plugin = plugins[pluginName];
@@ -109,7 +111,8 @@ class ConfirmationStepContent extends React.Component {
     }
 
     addSecretsTasks(secrets, tasks) {
-        const secretActions = new Stage.Common.SecretActions(this.props.toolbox);
+        const { toolbox } = this.props;
+        const secretActions = new Stage.Common.SecretActions(toolbox);
 
         for (const secret of _.keys(secrets)) {
             const secretValue = secrets[secret].value;
@@ -126,7 +129,8 @@ class ConfirmationStepContent extends React.Component {
     }
 
     chooseBlueprintId(initialBlueprintId) {
-        const blueprintActions = new Stage.Common.BlueprintActions(this.props.toolbox);
+        const { toolbox } = this.props;
+        const blueprintActions = new Stage.Common.BlueprintActions(toolbox);
         return ConfirmationStepContent.chooseId(
             initialBlueprintId,
             () => blueprintActions.doGetBlueprints({ _search: initialBlueprintId }),
@@ -135,7 +139,8 @@ class ConfirmationStepContent extends React.Component {
     }
 
     addBlueprintUploadTask(blueprint, tasks) {
-        const blueprintActions = new Stage.Common.BlueprintActions(this.props.toolbox);
+        const { toolbox } = this.props;
+        const blueprintActions = new Stage.Common.BlueprintActions(toolbox);
         const blueprintUrl = blueprint.blueprintFile ? '' : blueprint.blueprintUrl;
         const imageUrl = blueprint.imageFile ? '' : blueprint.imageUrl;
 
@@ -157,7 +162,8 @@ class ConfirmationStepContent extends React.Component {
     }
 
     chooseDeploymentId(initialDeploymentId) {
-        const deploymentActions = new Stage.Common.DeploymentActions(this.props.toolbox);
+        const { toolbox } = this.props;
+        const deploymentActions = new Stage.Common.DeploymentActions(toolbox);
         return ConfirmationStepContent.chooseId(
             initialDeploymentId,
             () => deploymentActions.doGetDeployments({ _search: initialDeploymentId }),
@@ -182,7 +188,8 @@ class ConfirmationStepContent extends React.Component {
     }
 
     addRunInstallWorkflowTask(deploymentId, tasks) {
-        const deploymentActions = new Stage.Common.DeploymentActions(this.props.toolbox);
+        const { toolbox } = this.props;
+        const deploymentActions = new Stage.Common.DeploymentActions(toolbox);
 
         tasks.push(
             new Task(`Execute install workflow on ${deploymentId} deployment`, () =>

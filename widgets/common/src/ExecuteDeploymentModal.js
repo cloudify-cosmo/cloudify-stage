@@ -54,12 +54,13 @@ export default class ExecuteDeploymentModal extends React.Component {
     }
 
     onCancel() {
-        this.props.onHide();
+        const { onHide } = this.props;
+        onHide();
         return true;
     }
 
     submitExecute() {
-        const { dryRun, force, params, queue, schedule } = this.state;
+        const { dryRun, force, params, queue, schedule, scheduledTime } = this.state;
         const { InputsUtils, DeploymentActions } = Stage.Common;
         const errors = {};
 
@@ -134,7 +135,8 @@ export default class ExecuteDeploymentModal extends React.Component {
         actions
             .doGetYamlFileContent(file)
             .then(yamlInputs => {
-                const params = InputsUtils.getUpdatedInputs(workflow.parameters, this.state.params, yamlInputs);
+                const { params: stateParams } = this.state;
+                const params = InputsUtils.getUpdatedInputs(workflow.parameters, stateParams, yamlInputs);
                 this.setState({ errors: {}, params, fileLoading: false });
             })
             .catch(err => {
@@ -144,7 +146,8 @@ export default class ExecuteDeploymentModal extends React.Component {
     }
 
     handleInputChange(event, field) {
-        this.setState({ params: { ...this.state.params, ...Stage.Basic.Form.fieldNameValue(field) } });
+        const { params } = this.state;
+        this.setState({ params: { ...params, ...Stage.Basic.Form.fieldNameValue(field) } });
     }
 
     render() {

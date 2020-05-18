@@ -39,12 +39,14 @@ export default class GroupsModal extends React.Component {
     }
 
     onCancel() {
-        this.props.onHide();
+        const { onHide } = this.props;
+        onHide();
         return true;
     }
 
     onRoleChange(group, role) {
-        const newUserGroups = { ...this.state.userGroups };
+        const { userGroups } = this.state;
+        const newUserGroups = { ...userGroups };
         newUserGroups[group] = role;
         this.setState({ userGroups: newUserGroups });
     }
@@ -61,12 +63,13 @@ export default class GroupsModal extends React.Component {
 
     updateTenant() {
         const { onHide, tenant, toolbox } = this.props;
+        const { userGroups: submitUserGroups } = this.state;
+
         // Disable the form
         this.setState({ loading: true });
 
         const userGroups = tenant.groups;
         const userGroupsList = Object.keys(userGroups);
-        const submitUserGroups = this.state.userGroups;
         const submitUserGroupsList = Object.keys(submitUserGroups);
 
         const userGroupsToAdd = _.pick(submitUserGroups, _.difference(submitUserGroupsList, userGroupsList));
@@ -93,9 +96,9 @@ export default class GroupsModal extends React.Component {
     handleInputChange(proxy, field) {
         const newUserGroups = {};
         _.forEach(field.value, group => {
-            newUserGroups[group] =
-                this.state.userGroups[group] ||
-                RolesUtil.getDefaultRoleName(this.props.toolbox.getManagerState().roles);
+            const { toolbox } = this.props;
+            const { userGroups } = this.state;
+            newUserGroups[group] = userGroups[group] || RolesUtil.getDefaultRoleName(toolbox.getManagerState().roles);
         });
 
         this.setState({ userGroups: newUserGroups });

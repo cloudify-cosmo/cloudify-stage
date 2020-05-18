@@ -2,9 +2,9 @@
  * Created by jakub.niezgoda on 31/07/2018.
  */
 
-import { createWizardStep } from '../wizard/wizardUtils';
 import StepActions from '../wizard/StepActions';
 import StepContent from '../wizard/StepContent';
+import { createWizardStep } from '../wizard/wizardUtils';
 
 const infrastructureStepId = 'infrastructure';
 
@@ -64,10 +64,11 @@ class InfrastructureStepContent extends React.Component {
 
     componentDidMount() {
         const { id, onChange, stepData } = this.props;
+        const { stepData: stateStepData } = this.state;
         if (!_.isEmpty(stepData)) {
             this.setState({ stepData: { ...stepData } });
         } else {
-            onChange(id, this.state.stepData);
+            onChange(id, stateStepData);
         }
     }
 
@@ -80,8 +81,11 @@ class InfrastructureStepContent extends React.Component {
     render() {
         const { Button, Form, Image } = Stage.Basic;
         const { widgetResourceUrl } = Stage.Utils.Url;
+        const { loading } = this.props;
+        const {
+            stepData: { blueprintFileName }
+        } = this.state;
 
-        const { blueprintFileName } = this.state.stepData;
         const platformsYaml = ['aws.yaml', 'gcp.yaml', 'openstack.yaml', 'azure.yaml'];
 
         const PlatformButton = props => {
@@ -103,7 +107,7 @@ class InfrastructureStepContent extends React.Component {
         };
 
         return (
-            <Form loading={this.props.loading}>
+            <Form loading={loading}>
                 {_.map(_.chunk(platformsYaml, 2), (group, index) => (
                     <Form.Group key={`platformGroup${index}`} widths="equal">
                         {_.map(group, yaml => (

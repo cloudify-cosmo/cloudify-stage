@@ -8,7 +8,8 @@ export default class ResourceAction extends React.Component {
     };
 
     render() {
-        const action = this.props.children;
+        const { children } = this.props;
+        const action = children;
 
         return <div>{action}</div>;
     }

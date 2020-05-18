@@ -2,10 +2,10 @@
  * Created by pposel on 06/02/2017.
  */
 
-import RepositoryTable from './RepositoryTable';
-import RepositoryCatalog from './RepositoryCatalog';
-import UploadModal from './UploadModal';
 import Consts from './consts';
+import RepositoryCatalog from './RepositoryCatalog';
+import RepositoryTable from './RepositoryTable';
+import UploadModal from './UploadModal';
 
 export default class extends React.Component {
     constructor(props, context) {
@@ -40,19 +40,23 @@ export default class extends React.Component {
     }
 
     refreshData() {
-        this.props.toolbox.refresh();
+        const { toolbox } = this.props;
+        toolbox.refresh();
     }
 
     componentDidMount() {
-        this.props.toolbox.getEventBus().on('blueprintCatalog:refresh', this.refreshData, this);
+        const { toolbox } = this.props;
+        toolbox.getEventBus().on('blueprintCatalog:refresh', this.refreshData, this);
     }
 
     componentWillUnmount() {
-        this.props.toolbox.getEventBus().off('blueprintCatalog:refresh', this.refreshData);
+        const { toolbox } = this.props;
+        toolbox.getEventBus().off('blueprintCatalog:refresh', this.refreshData);
     }
 
     fetchData(fetchParams) {
-        return this.props.toolbox.refresh(fetchParams);
+        const { toolbox } = this.props;
+        return toolbox.refresh(fetchParams);
     }
 
     showModal(repositoryName, zipUrl, imageUrl) {
@@ -76,8 +80,10 @@ export default class extends React.Component {
     }
 
     showReadmeModal(repositoryName, readmeUrl) {
+        const { actions } = this.props;
+
         this.setState({ readmeLoading: repositoryName });
-        this.props.actions.doGetReadme(repositoryName, readmeUrl).then(content => {
+        actions.doGetReadme(repositoryName, readmeUrl).then(content => {
             this.setState({ readmeContent: markdown.parse(content) || '', showReadmeModal: true, readmeLoading: null });
         });
     }

@@ -24,7 +24,8 @@ export default class NodesTable extends React.Component {
     }
 
     refreshData() {
-        this.props.toolbox.refresh();
+        const { toolbox } = this.props;
+        toolbox.refresh();
     }
 
     selectNode(item) {
@@ -39,19 +40,23 @@ export default class NodesTable extends React.Component {
     }
 
     componentDidMount() {
-        this.props.toolbox.getEventBus().on('nodes:refresh', this.refreshData, this);
+        const { toolbox } = this.props;
+        toolbox.getEventBus().on('nodes:refresh', this.refreshData, this);
     }
 
     componentWillUnmount() {
-        this.props.toolbox.getEventBus().off('nodes:refresh', this.refreshData);
+        const { toolbox } = this.props;
+        toolbox.getEventBus().off('nodes:refresh', this.refreshData);
     }
 
     fetchGridData(fetchParams) {
-        return this.props.toolbox.refresh(fetchParams);
+        const { toolbox } = this.props;
+        return toolbox.refresh(fetchParams);
     }
 
     render() {
         const { data, toolbox, widget } = this.props;
+        const { error } = this.state;
         const NO_DATA_MESSAGE = "There are no Nodes available. Probably there's no deployment created, yet.";
         const { CopyToClipboardButton, DataTable, ErrorMessage, Icon, Popup } = Stage.Basic;
 
@@ -59,7 +64,7 @@ export default class NodesTable extends React.Component {
 
         return (
             <div>
-                <ErrorMessage error={this.state.error} onDismiss={() => this.setState({ error: null })} autoHide />
+                <ErrorMessage error={error} onDismiss={() => this.setState({ error: null })} autoHide />
 
                 <DataTable
                     fetchData={this.fetchGridData.bind(this)}

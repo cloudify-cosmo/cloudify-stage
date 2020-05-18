@@ -20,15 +20,18 @@ export default class extends React.Component {
     }
 
     refreshData() {
-        this.props.toolbox.refresh();
+        const { toolbox } = this.props;
+        toolbox.refresh();
     }
 
     componentDidMount() {
-        this.props.toolbox.getEventBus().on('inputs:refresh', this.refreshData, this);
+        const { toolbox } = this.props;
+        toolbox.getEventBus().on('inputs:refresh', this.refreshData, this);
     }
 
     componentWillUnmount() {
-        this.props.toolbox.getEventBus().off('inputs:refresh', this.refreshData);
+        const { toolbox } = this.props;
+        toolbox.getEventBus().off('inputs:refresh', this.refreshData);
     }
 
     componentDidUpdate(prevProps, prevState) {
@@ -42,13 +45,15 @@ export default class extends React.Component {
         const NO_DATA_MESSAGE = "There are no Inputs available. Probably there's no deployment created, yet.";
         const { DataTable, ErrorMessage, Header } = Stage.Basic;
         const { ParameterValue, ParameterValueDescription } = Stage.Common;
-
-        const inputs = this.props.data.items;
+        const {
+            data: { items: inputs }
+        } = this.props;
+        const { error } = this.state;
         const compareNames = (a, b) => (a.name > b.name ? 1 : b.name > a.name ? -1 : 0);
 
         return (
             <div>
-                <ErrorMessage error={this.state.error} onDismiss={() => this.setState({ error: null })} autoHide />
+                <ErrorMessage error={error} onDismiss={() => this.setState({ error: null })} autoHide />
 
                 <DataTable className="inputsTable" noDataAvailable={_.isEmpty(inputs)} noDataMessage={NO_DATA_MESSAGE}>
                     <DataTable.Column label="Name" width="35%" />

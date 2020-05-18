@@ -18,7 +18,9 @@ export default class ConsoleIcon extends React.Component {
     handleClick(event) {
         const { redirectToPage, url } = Stage.Utils.Url;
         const managerDefaultProtocol = 'https';
-        const { ip } = this.props.manager;
+        const {
+            manager: { ip }
+        } = this.props;
 
         event.stopPropagation();
         redirectToPage(`${managerDefaultProtocol}://${ip}${url('')}`);
@@ -26,7 +28,9 @@ export default class ConsoleIcon extends React.Component {
 
     render() {
         const { Icon, Popup } = Stage.Basic;
-        const { ip } = this.props.manager;
+        const {
+            manager: { ip }
+        } = this.props;
 
         return (
             ip && (

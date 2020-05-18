@@ -34,7 +34,8 @@ export default class CreateModal extends React.Component {
     }
 
     componentDidUpdate(prevProps, prevState) {
-        if (!prevState.open && this.state.open) {
+        const { open } = this.state;
+        if (!prevState.open && open) {
             this.setState(CreateModal.initialState);
         }
     }
@@ -77,6 +78,8 @@ export default class CreateModal extends React.Component {
     }
 
     onSecretFileChange(file) {
+        const { toolbox } = this.props;
+
         if (!file) {
             this.setState({ secretValue: '', errors: {} });
             return;
@@ -84,7 +87,7 @@ export default class CreateModal extends React.Component {
 
         this.setState({ fileLoading: true });
 
-        const actions = new Stage.Common.FileActions(this.props.toolbox);
+        const actions = new Stage.Common.FileActions(toolbox);
         actions
             .doGetTextFileContent(file)
             .then(fileContent => {

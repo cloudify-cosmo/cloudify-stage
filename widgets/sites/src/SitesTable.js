@@ -1,7 +1,7 @@
 import CreateModal from './CreateModal';
-import UpdateModal from './UpdateModal';
 import SiteActions from './SiteActions';
 import SiteLocationMap from './SiteLocationMap';
+import UpdateModal from './UpdateModal';
 
 export default class SitesTable extends React.Component {
     constructor(props, context) {
@@ -42,20 +42,25 @@ export default class SitesTable extends React.Component {
     }
 
     refreshData() {
+        const { toolbox } = this.props;
         this.setState({ error: null });
-        this.props.toolbox.refresh();
+
+        toolbox.refresh();
     }
 
     componentDidMount() {
-        this.props.toolbox.getEventBus().on('sites:refresh', this.refreshData, this);
+        const { toolbox } = this.props;
+        toolbox.getEventBus().on('sites:refresh', this.refreshData, this);
     }
 
     componentWillUnmount() {
-        this.props.toolbox.getEventBus().off('sites:refresh', this.refreshData);
+        const { toolbox } = this.props;
+        toolbox.getEventBus().off('sites:refresh', this.refreshData);
     }
 
     fetchGridData(fetchParams) {
-        return this.props.toolbox.refresh(fetchParams);
+        const { toolbox } = this.props;
+        return toolbox.refresh(fetchParams);
     }
 
     onDeleteSite(site) {
@@ -84,11 +89,12 @@ export default class SitesTable extends React.Component {
 
     deleteSite() {
         const { toolbox } = this.props;
+        const { site } = this.state;
         const HIDE_DELETE_MODAL_STATE = { modalType: SitesTable.DELETE_SITE_ACTION, showModal: false };
         const actions = new SiteActions(toolbox);
 
         actions
-            .doDelete(this.state.site.name)
+            .doDelete(site.name)
             .then(() => {
                 this.setState({ ...HIDE_DELETE_MODAL_STATE, error: null });
                 toolbox.getEventBus().trigger('sites:refresh');

@@ -50,7 +50,8 @@ export default class UserDetails extends React.Component {
         actions
             .doRemoveUserFromGroup(username, data.name)
             .then(() => {
-                if (this.state.showModal) {
+                const { showModal } = this.state;
+                if (showModal) {
                     toolbox.getEventBus().trigger('menu.users:logout');
                 }
                 this.setState({ processItem: '', processing: false });

@@ -2,8 +2,8 @@
  * Created by barucoh on 23/1/2019.
  */
 import { ReactSVGPanZoom } from 'react-svg-pan-zoom';
-import GraphNodes from './GraphNodes';
 import GraphEdges from './GraphEdges';
+import GraphNodes from './GraphNodes';
 import states from './States';
 
 const POLLING_INTERVAL = 5000;
@@ -46,12 +46,13 @@ export default class ExecutionWorkflowGraph extends React.Component {
     }
 
     componentDidUpdate() {
+        const { containerWidth: stateContainerWidth, modalWidth: stateModalWidth } = this.state;
         const containerWidth = _.get(this.wrapper.current, 'offsetWidth');
-        if (containerWidth && containerWidth !== containerWidth) {
+        if (containerWidth && containerWidth !== stateContainerWidth) {
             this.setState({ containerWidth });
         }
         const modalWidth = _.get(this.modal.current, 'offsetWidth');
-        if (modalWidth && modalWidth !== modalWidth) {
+        if (modalWidth && modalWidth !== stateModalWidth) {
             this.setState({ modalWidth });
         }
     }
@@ -117,7 +118,8 @@ export default class ExecutionWorkflowGraph extends React.Component {
     }
 
     scrollToInProgress() {
-        const focusNode = _.find(this.state.graphResult.children, containerNode =>
+        const { graphResult } = this.state;
+        const focusNode = _.find(graphResult.children, containerNode =>
             _.find(containerNode.children, subGraphNode => _.includes(states.inProgress, subGraphNode.labels[0].state))
         );
         if (focusNode) {
@@ -126,7 +128,9 @@ export default class ExecutionWorkflowGraph extends React.Component {
     }
 
     renderGraph(width, height, positionStateProp, openInModalIcon = true, minimap) {
-        const { autoFocus, graphResult } = this.state;
+        const { toolbox } = this.props;
+        const { state } = this;
+        const { autoFocus, graphResult } = state;
         const { Icon } = Stage.Basic;
         return (
             <>
@@ -178,10 +182,10 @@ export default class ExecutionWorkflowGraph extends React.Component {
                     tool="pan"
                     miniatureProps={minimap ? undefined : { position: 'none' }}
                     toolbarProps={{ position: 'none' }}
-                    value={this.state[positionStateProp]}
+                    value={state[positionStateProp]}
                     onChangeValue={position =>
                         this.setState({
-                            [positionStateProp]: _.isEmpty(this.state[positionStateProp])
+                            [positionStateProp]: _.isEmpty(state[positionStateProp])
                                 ? { ...position, f: GRAPH_MARGIN }
                                 : position
                         })
@@ -191,7 +195,7 @@ export default class ExecutionWorkflowGraph extends React.Component {
                     onChangeTool={_.noop}
                 >
                     <svg width={graphResult.width} height={graphResult.height}>
-                        <GraphNodes graphNodes={graphResult.children} toolbox={this.props.toolbox} />
+                        <GraphNodes graphNodes={graphResult.children} toolbox={toolbox} />
                         <GraphEdges graphEdges={graphResult.edges} />
                     </svg>
                 </ReactSVGPanZoom>

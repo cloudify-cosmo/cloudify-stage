@@ -2,8 +2,8 @@
  * Created by kinneretzin on 20/10/2016.
  */
 
-import ErrorCausesModal from './ErrorCausesModal';
 import ErrorCausesIcon from './ErrorCausesIcon';
+import ErrorCausesModal from './ErrorCausesModal';
 
 export default class EventsTable extends React.Component {
     constructor(props, context) {
@@ -28,19 +28,23 @@ export default class EventsTable extends React.Component {
     }
 
     refreshData() {
-        this.props.toolbox.refresh();
+        const { toolbox } = this.props;
+        toolbox.refresh();
     }
 
     componentDidMount() {
-        this.props.toolbox.getEventBus().on('events:refresh', this.refreshData, this);
+        const { toolbox } = this.props;
+        toolbox.getEventBus().on('events:refresh', this.refreshData, this);
     }
 
     componentWillUnmount() {
-        this.props.toolbox.getEventBus().off('events:refresh', this.refreshData);
+        const { toolbox } = this.props;
+        toolbox.getEventBus().off('events:refresh', this.refreshData);
     }
 
     fetchGridData(fetchParams) {
-        return this.props.toolbox.refresh(fetchParams);
+        const { toolbox } = this.props;
+        return toolbox.refresh(fetchParams);
     }
 
     selectEvent(eventId) {
@@ -58,7 +62,8 @@ export default class EventsTable extends React.Component {
     }
 
     getHighlightedText(text, parameterName, highlightColor = 'yellow') {
-        const eventFilter = this.props.toolbox.getContext().getValue('eventFilter') || {};
+        const { toolbox } = this.props;
+        const eventFilter = toolbox.getContext().getValue('eventFilter') || {};
         const highlightedTextFragment = eventFilter[parameterName];
         text = _.isString(text) ? text : '';
 

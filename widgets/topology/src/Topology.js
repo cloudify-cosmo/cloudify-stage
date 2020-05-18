@@ -307,7 +307,7 @@ export default class Topology extends React.Component {
 
     getExpandHandler(stateProp) {
         return entityId => {
-            const currentExpanded = this.state[stateProp];
+            const { [stateProp]: currentExpanded } = this.state;
 
             if (_.find(currentExpanded, entityId)) {
                 // Nothing to do
@@ -320,13 +320,13 @@ export default class Topology extends React.Component {
 
     getCollapseHandler(stateProp) {
         return entityId => {
-            const currentExpanded = this.state[stateProp];
+            const { [stateProp]: currentExpanded } = this.state;
             this.setState({ [stateProp]: _.reject(currentExpanded, entityId) });
         };
     }
 
     render() {
-        const { saveConfirmationOpen } = this.state;
+        const { saveConfirmationOpen, terraformDetails } = this.state;
         const { Popup } = Stage.Basic;
         return (
             <div
@@ -346,7 +346,7 @@ export default class Topology extends React.Component {
                     trigger={<div id="topologyContainer" />}
                 />
                 <TerraformDetailsModal
-                    terraformDetails={this.state.terraformDetails}
+                    terraformDetails={terraformDetails}
                     onClose={() => this.setState({ terraformDetails: null })}
                 />
             </div>

@@ -65,7 +65,8 @@ class UploadBlueprintForm extends React.Component {
     }
 
     handleInputChange(proxy, field) {
-        this.props.onChange({ ...UploadBlueprintForm.NO_ERRORS, ...Stage.Basic.Form.fieldNameValue(field) });
+        const { onChange } = this.props;
+        onChange({ ...UploadBlueprintForm.NO_ERRORS, ...Stage.Basic.Form.fieldNameValue(field) });
     }
 
     onBlueprintUrlBlur() {
@@ -137,20 +138,24 @@ class UploadBlueprintForm extends React.Component {
 
     onBlueprintImageChange(file) {
         if (file) {
-            this.props.onChange({ ...UploadBlueprintForm.NO_ERRORS, imageUrl: file.name, imageFile: file });
+            const { onChange } = this.props;
+            onChange({ ...UploadBlueprintForm.NO_ERRORS, imageUrl: file.name, imageFile: file });
         }
     }
 
     onBlueprintUrlChange(blueprintUrl) {
-        this.props.onChange({ ...UploadBlueprintForm.NO_ERRORS, blueprintUrl, blueprintFile: null });
+        const { onChange } = this.props;
+        onChange({ ...UploadBlueprintForm.NO_ERRORS, blueprintUrl, blueprintFile: null });
     }
 
     onBlueprintImageUrlChange(imageUrl) {
-        this.props.onChange({ ...UploadBlueprintForm.NO_ERRORS, imageUrl, imageFile: null });
+        const { onChange } = this.props;
+        onChange({ ...UploadBlueprintForm.NO_ERRORS, imageUrl, imageFile: null });
     }
 
     resetErrors() {
-        this.props.onChange(UploadBlueprintForm.NO_ERRORS);
+        const { onChange } = this.props;
+        onChange(UploadBlueprintForm.NO_ERRORS);
     }
 
     render() {

@@ -87,19 +87,23 @@ export default class InstallAgentsModal extends React.Component {
     }
 
     onCancel() {
-        this.props.onHide();
+        const { onHide } = this.props;
+        onHide();
         return true;
     }
 
     onShowExecutionStatus() {
         const { onHide, toolbox, widget } = this.props;
-        const { deploymentId } = this.state.nodeFilter;
-        const { executionId } = this.state;
+        const {
+            executionId,
+            nodeFilter: { deploymentId }
+        } = this.state;
         onHide();
         toolbox.drillDown(widget, 'execution', { deploymentId, executionId }, `Install New Agents on ${deploymentId}`);
     }
 
     submitExecute() {
+        const { toolbox } = this.props;
         const { nodeFilter, installMethods, managerCertificate, managerIp, stopOldAgent } = this.state;
         if (!nodeFilter.deploymentId) {
             this.setState({ errors: { error: 'Provide deployment in Nodes filter' } });
@@ -115,7 +119,8 @@ export default class InstallAgentsModal extends React.Component {
             manager_ip: !_.isEmpty(managerIp) ? managerIp : undefined,
             manager_certificate: !_.isEmpty(managerCertificate) ? managerCertificate : undefined
         };
-        const actions = new Stage.Common.DeploymentActions(this.props.toolbox);
+
+        const actions = new Stage.Common.DeploymentActions(toolbox);
         actions
             .doExecute({ id: nodeFilter.deploymentId }, { name: 'install_new_agents' }, params, false)
             .then(data => {

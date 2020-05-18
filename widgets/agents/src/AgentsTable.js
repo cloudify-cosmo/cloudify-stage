@@ -2,8 +2,8 @@
  * Created by jakub.niezgoda on 04/10/2018.
  */
 
-import ValidateAgentsModal from './ValidateAgentsModal';
 import InstallAgentsModal from './InstallAgentsModal';
+import ValidateAgentsModal from './ValidateAgentsModal';
 
 export default class AgentsTable extends React.Component {
     constructor(props, context) {
@@ -31,15 +31,18 @@ export default class AgentsTable extends React.Component {
     }
 
     refreshData() {
-        this.props.toolbox.refresh();
+        const { toolbox } = this.props;
+        toolbox.refresh();
     }
 
     componentDidMount() {
-        this.props.toolbox.getEventBus().on('agents:refresh', this.refreshData, this);
+        const { toolbox } = this.props;
+        toolbox.getEventBus().on('agents:refresh', this.refreshData, this);
     }
 
     componentWillUnmount() {
-        this.props.toolbox.getEventBus().off('agents:refresh', this.refreshData);
+        const { toolbox } = this.props;
+        toolbox.getEventBus().off('agents:refresh', this.refreshData);
     }
 
     openModal(modal) {

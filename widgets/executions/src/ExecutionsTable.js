@@ -2,8 +2,8 @@
  * Created by kinneretzin on 20/10/2016.
  */
 
-import SystemWorkflowIcon from './SystemWorkflowIcon';
 import DryRunIcon from './DryRunIcon';
+import SystemWorkflowIcon from './SystemWorkflowIcon';
 import ExecutionWorkflowGraph from './tasksGraph/ExecutionWorkflowGraph';
 
 export default class ExecutionsTable extends React.Component {
@@ -41,15 +41,18 @@ export default class ExecutionsTable extends React.Component {
     }
 
     refreshData() {
-        this.props.toolbox.refresh();
+        const { toolbox } = this.props;
+        toolbox.refresh();
     }
 
     componentDidMount() {
-        this.props.toolbox.getEventBus().on('executions:refresh', this.refreshData, this);
+        const { toolbox } = this.props;
+        toolbox.getEventBus().on('executions:refresh', this.refreshData, this);
     }
 
     componentWillUnmount() {
-        this.props.toolbox.getEventBus().off('executions:refresh', this.refreshData);
+        const { toolbox } = this.props;
+        toolbox.getEventBus().off('executions:refresh', this.refreshData);
     }
 
     selectExecution(item) {
@@ -109,7 +112,8 @@ export default class ExecutionsTable extends React.Component {
     }
 
     fetchGridData(fetchParams) {
-        return this.props.toolbox.refresh(fetchParams);
+        const { toolbox } = this.props;
+        return toolbox.refresh(fetchParams);
     }
 
     render() {

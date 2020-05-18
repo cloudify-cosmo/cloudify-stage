@@ -20,7 +20,8 @@ export default class BlueprintActionButtons extends React.Component {
     }
 
     shouldComponentUpdate(nextProps, nextState) {
-        return !_.isEqual(this.state, nextState) || !_.isEqual(this.props.blueprintId, nextProps.blueprintId);
+        const { blueprintId } = this.props;
+        return !_.isEqual(this.state, nextState) || !_.isEqual(blueprintId, nextProps.blueprintId);
     }
 
     showModal(type) {
@@ -42,11 +43,13 @@ export default class BlueprintActionButtons extends React.Component {
 
     deleteBlueprint() {
         const { blueprintId, toolbox } = this.props;
+        const { force } = this.state;
         toolbox.loading(true);
         this.setState({ loading: true });
         const actions = new Stage.Common.BlueprintActions(toolbox);
+
         actions
-            .doDelete(blueprintId, this.state.force)
+            .doDelete(blueprintId, force)
             .then(() => {
                 toolbox.getEventBus().trigger('blueprints:refresh');
                 this.setState({ loading: false, error: null });
@@ -66,11 +69,10 @@ export default class BlueprintActionButtons extends React.Component {
     }
 
     render() {
+        const { blueprintId, toolbox } = this.props;
         const { error, force, loading } = this.state;
         const { ErrorMessage, Button } = Stage.Basic;
         const { DeleteConfirm, DeployBlueprintModal } = Stage.Common;
-
-        const { blueprintId } = this.props;
 
         return (
             <div>
@@ -100,7 +102,7 @@ export default class BlueprintActionButtons extends React.Component {
                     open={this.isShowModal(BlueprintActionButtons.DEPLOY_ACTION)}
                     blueprintId={blueprintId}
                     onHide={this.hideModal.bind(this)}
-                    toolbox={this.props.toolbox}
+                    toolbox={toolbox}
                 />
 
                 <DeleteConfirm

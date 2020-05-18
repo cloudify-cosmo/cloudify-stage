@@ -2,13 +2,13 @@
  * Created by jakub.niezgoda on 25/10/2018.
  */
 
+import Actions from './actions';
 import ConsoleIcon from './ConsoleIcon';
 import ExecuteWorkflowButton from './ExecuteWorkflowButton';
 import ExecuteWorkflowIcon from './ExecuteWorkflowIcon';
 import RefreshButton from './RefreshButton';
 import RefreshIcon from './RefreshIcon';
 import StatusIcon from './StatusIcon';
-import Actions from './actions';
 
 export default class ManagersTable extends React.Component {
     constructor(props, context) {
@@ -29,7 +29,8 @@ export default class ManagersTable extends React.Component {
                 .value()
         };
 
-        this.actions = new Actions(this.props.toolbox);
+        const { toolbox } = this.props;
+        this.actions = new Actions(toolbox);
         this.handleStatusFetching = this.handleStatusFetching.bind(this);
         this.handleStatusBulkFetching = this.handleStatusBulkFetching.bind(this);
         this.handleStatusUpdate = this.handleStatusUpdate.bind(this);
@@ -46,7 +47,8 @@ export default class ManagersTable extends React.Component {
     }
 
     refreshData() {
-        this.props.toolbox.refresh();
+        const { toolbox } = this.props;
+        toolbox.refresh();
     }
 
     componentDidMount() {
@@ -78,7 +80,8 @@ export default class ManagersTable extends React.Component {
     }
 
     componentWillUnmount() {
-        this.props.toolbox.getEventBus().off('managers:refresh', this.refreshData);
+        const { toolbox } = this.props;
+        toolbox.getEventBus().off('managers:refresh', this.refreshData);
     }
 
     selectManager(manager) {
@@ -130,24 +133,30 @@ export default class ManagersTable extends React.Component {
     }
 
     handleStatusFetching(managerId) {
-        this.setState({ status: { ...this.state.status, [managerId]: { isFetching: true, status: {} } } });
+        const { status } = this.state;
+        this.setState({ status: { ...status, [managerId]: { isFetching: true, status: {} } } });
     }
 
     handleStatusBulkFetching(managerIds) {
+        const { status } = this.state;
         const newStatus = {};
         _.forEach(managerIds, managerId => {
             newStatus[managerId] = { isFetching: true, status: {} };
         });
-        this.setState({ status: { ...this.state.status, ...newStatus } });
+        this.setState({ status: { ...status, ...newStatus } });
     }
 
     handleStatusUpdate(managerId, status) {
-        this.setState({ status: { ...this.state.status, [managerId]: { isFetching: false, status } } });
+        const { status: stateStatus } = this.state;
+        this.setState({ status: { ...stateStatus, [managerId]: { isFetching: false, status } } });
     }
 
     handleStatusError(managerId, errorMessage) {
-        this.setState({ status: { ...this.state.status, [managerId]: { isFetching: false, status: {} } } });
-        this.setState({ error: `Status update for ${managerId} has failed.` });
+        const { status } = this.state;
+        this.setState({
+            status: { ...status, [managerId]: { isFetching: false, status: {} } },
+            error: `Status update for ${managerId} has failed.`
+        });
     }
 
     render() {

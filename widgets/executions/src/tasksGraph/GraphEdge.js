@@ -5,8 +5,7 @@
  * @property {Any} [graphEdge] - A Graph Edge to render
  */
 
-const GraphEdge = props => {
-    const edge = props.graphEdge;
+const GraphEdge = ({ graphEdge: edge }) => {
     const { startPoint } = edge.sections[0];
     const { bendPoints } = edge.sections[0];
     const { endPoint } = edge.sections[0];

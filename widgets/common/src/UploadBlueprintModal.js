@@ -30,13 +30,15 @@ class UploadBlueprintModal extends React.Component {
     };
 
     componentDidUpdate(prevProps) {
-        if (prevProps.open && !this.props.open) {
+        const { open } = this.props;
+        if (prevProps.open && !open) {
             this.setState(UploadBlueprintModal.initialState);
         }
     }
 
     shouldComponentUpdate(nextProps, nextState) {
-        return !_.isEqual(this.props.open, nextProps.open) || !_.isEqual(this.state, nextState);
+        const { open } = this.props;
+        return !_.isEqual(open, nextProps.open) || !_.isEqual(this.state, nextState);
     }
 
     uploadBlueprint() {

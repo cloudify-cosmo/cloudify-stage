@@ -130,7 +130,7 @@ class SitesMap extends React.Component {
     render() {
         const { Map, TileLayer } = Stage.Basic.Leaflet;
 
-        const { attribution, sitesAreDefined, tilesUrlTemplate } = this.props;
+        const { attribution, data, sitesAreDefined, tilesUrlTemplate } = this.props;
         const { isMapAvailable } = this.state;
 
         if (!isMapAvailable) {
@@ -145,7 +145,7 @@ class SitesMap extends React.Component {
 
         const mapOptions = { ...Stage.Common.Consts.leaflet.mapOptions };
 
-        const sites = _.values(this.props.data);
+        const sites = _.values(data);
         if (sites.length > 1) {
             mapOptions.bounds = L.latLngBounds(sites.map(this.mapToLatLng)).pad(0.05);
         } else {

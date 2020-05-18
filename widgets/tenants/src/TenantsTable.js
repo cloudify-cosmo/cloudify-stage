@@ -2,12 +2,12 @@
  * Created by kinneretzin on 30/01/2017.
  */
 
+import Actions from './actions';
 import CreateModal from './CreateModal';
-import UsersModal from './UsersModal';
 import GroupsModal from './GroupsModal';
 import MenuAction from './MenuAction';
-import Actions from './actions';
 import TenantDetails from './TenantDetails';
+import UsersModal from './UsersModal';
 
 export default class TenantsTable extends React.Component {
     constructor(props, context) {
@@ -33,20 +33,24 @@ export default class TenantsTable extends React.Component {
     }
 
     refreshData() {
+        const { toolbox } = this.props;
         this.setState({ error: null });
-        this.props.toolbox.refresh();
+        toolbox.refresh();
     }
 
     componentDidMount() {
-        this.props.toolbox.getEventBus().on('tenants:refresh', this.refreshData, this);
+        const { toolbox } = this.props;
+        toolbox.getEventBus().on('tenants:refresh', this.refreshData, this);
     }
 
     componentWillUnmount() {
-        this.props.toolbox.getEventBus().off('tenants:refresh', this.refreshData);
+        const { toolbox } = this.props;
+        toolbox.getEventBus().off('tenants:refresh', this.refreshData);
     }
 
     fetchGridData(fetchParams) {
-        return this.props.toolbox.refresh(fetchParams);
+        const { toolbox } = this.props;
+        return toolbox.refresh(fetchParams);
     }
 
     selectTenant(tenantName) {
@@ -57,7 +61,9 @@ export default class TenantsTable extends React.Component {
 
     deleteTenant() {
         const { toolbox } = this.props;
-        const tenantName = this.state.tenant.name;
+        const {
+            tenant: { name: tenantName }
+        } = this.state;
         const actions = new Actions(toolbox);
         const HIDE_DELETE_MODAL_STATE = { modalType: MenuAction.DELETE_TENANT_ACTION, showModal: false };
 

@@ -21,9 +21,10 @@ export default class BlueprintInfo extends React.Component {
     }
 
     render() {
+        const { data } = this.props;
+        const { error } = this.state;
         const { ErrorMessage, Grid, Image, ResourceVisibility, Message, Label } = Stage.Basic;
-
-        const blueprint = this.props.data;
+        const blueprint = data;
 
         if (!blueprint.id) {
             return (
@@ -35,7 +36,7 @@ export default class BlueprintInfo extends React.Component {
 
         return (
             <div>
-                <ErrorMessage error={this.state.error} onDismiss={() => this.setState({ error: null })} autoHide />
+                <ErrorMessage error={error} onDismiss={() => this.setState({ error: null })} autoHide />
                 <Grid>
                     <Grid.Row className="bottomDivider">
                         <Grid.Column width="4">

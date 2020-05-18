@@ -2,12 +2,12 @@
  * Created by pposel on 30/01/2017.
  */
 import Actions from './actions';
-import MenuAction from './MenuAction';
-import UserDetails from './UserDetails';
 import CreateModal from './CreateModal';
+import GroupModal from './GroupModal';
+import MenuAction from './MenuAction';
 import PasswordModal from './PasswordModal';
 import TenantModal from './TenantModal';
-import GroupModal from './GroupModal';
+import UserDetails from './UserDetails';
 
 export default class UsersTable extends React.Component {
     constructor(props, context) {
@@ -37,19 +37,23 @@ export default class UsersTable extends React.Component {
     }
 
     refreshData() {
-        this.props.toolbox.refresh();
+        const { toolbox } = this.props;
+        toolbox.refresh();
     }
 
     componentDidMount() {
-        this.props.toolbox.getEventBus().on('users:refresh', this.refreshData, this);
+        const { toolbox } = this.props;
+        toolbox.getEventBus().on('users:refresh', this.refreshData, this);
     }
 
     componentWillUnmount() {
-        this.props.toolbox.getEventBus().off('users:refresh', this.refreshData);
+        const { toolbox } = this.props;
+        toolbox.getEventBus().off('users:refresh', this.refreshData);
     }
 
     fetchData(fetchParams) {
-        return this.props.toolbox.refresh(fetchParams);
+        const { toolbox } = this.props;
+        return toolbox.refresh(fetchParams);
     }
 
     selectUser(userName) {
@@ -125,7 +129,8 @@ export default class UsersTable extends React.Component {
     }
 
     isCurrentUser(user) {
-        return this.props.toolbox.getManager().getCurrentUsername() === user.username;
+        const { toolbox } = this.props;
+        return toolbox.getManager().getCurrentUsername() === user.username;
     }
 
     isUserInAdminGroup(user) {
@@ -134,11 +139,12 @@ export default class UsersTable extends React.Component {
 
     deleteUser() {
         const { toolbox } = this.props;
+        const { user } = this.state;
         toolbox.loading(true);
 
         const actions = new Actions(toolbox);
         actions
-            .doDelete(this.state.user.username)
+            .doDelete(user.username)
             .then(() => {
                 this.hideModal();
                 this.setState({ error: null });

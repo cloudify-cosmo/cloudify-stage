@@ -84,19 +84,24 @@ export default class ValidateAgentsModal extends React.Component {
     }
 
     onCancel() {
-        this.props.onHide();
+        const { onHide } = this.props;
+        onHide();
         return true;
     }
 
     onShowExecutionStatus() {
         const { onHide, toolbox, widget } = this.props;
-        const { deploymentId } = this.state.nodeFilter;
-        const { executionId } = this.state;
+        const {
+            executionId,
+            nodeFilter: { deploymentId }
+        } = this.state;
+
         onHide();
         toolbox.drillDown(widget, 'execution', { deploymentId, executionId }, `Validate Agents on ${deploymentId}`);
     }
 
     submitExecute() {
+        const { toolbox } = this.props;
         const { nodeFilter, installMethods } = this.state;
         if (!nodeFilter.deploymentId) {
             this.setState({ errors: { error: 'Provide deployment in Nodes filter' } });
@@ -109,7 +114,8 @@ export default class ValidateAgentsModal extends React.Component {
             node_instance_ids: !_.isEmpty(nodeFilter.nodeInstanceId) ? nodeFilter.nodeInstanceId : undefined,
             install_methods: !_.isEmpty(installMethods) ? installMethods : undefined
         };
-        const actions = new Stage.Common.DeploymentActions(this.props.toolbox);
+
+        const actions = new Stage.Common.DeploymentActions(toolbox);
         actions
             .doExecute({ id: nodeFilter.deploymentId }, { name: 'validate_agents' }, params, false)
             .then(data => {

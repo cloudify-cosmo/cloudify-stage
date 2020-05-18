@@ -2,11 +2,11 @@
  * Created by jakub.niezgoda on 31/07/2018.
  */
 
-import ResourceStatus from './helpers/ResourceStatus';
-import NoResourceMessage from './helpers/NoResourceMessage';
-import { createWizardStep } from '../wizard/wizardUtils';
 import StepActions from '../wizard/StepActions';
 import StepContent from '../wizard/StepContent';
+import { createWizardStep } from '../wizard/wizardUtils';
+import NoResourceMessage from './helpers/NoResourceMessage';
+import ResourceStatus from './helpers/ResourceStatus';
 
 const inputsStepId = 'inputs';
 
@@ -130,9 +130,10 @@ class InputsStepContent extends React.Component {
     }
 
     render() {
-        const { errors, loading, stepData, wizardData } = this.props;
         const { Divider, Form, Table } = Stage.Basic;
         const { DataTypesButton, InputsUtils, InputsHeader, YamlFileButton } = Stage.Common;
+        const { errors, loading, stepData, wizardData } = this.props;
+        const { fileLoading } = this.state;
 
         const inputs = _.get(wizardData, InputsStepContent.inputsDataPath, {});
         const dataTypes = _.get(wizardData, InputsStepContent.dataTypesDataPath, {});
@@ -147,7 +148,7 @@ class InputsStepContent extends React.Component {
                         <YamlFileButton
                             onChange={this.handleYamlFileChange.bind(this)}
                             dataType="deployment's inputs"
-                            fileLoading={this.state.fileLoading}
+                            fileLoading={fileLoading}
                         />
                         {!_.isEmpty(dataTypes) && <DataTypesButton types={dataTypes} />}
                         <Divider hidden style={{ clear: 'both' }} />

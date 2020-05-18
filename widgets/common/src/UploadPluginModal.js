@@ -28,18 +28,20 @@ class UploadPluginModal extends React.Component {
     };
 
     componentDidUpdate(prevProps) {
-        if (!prevProps.open && this.props.open) {
+        const { open } = this.props;
+        if (!prevProps.open && open) {
             this.setState(UploadPluginModal.initialState);
         }
     }
 
     shouldComponentUpdate(nextProps, nextState) {
-        return !_.isEqual(this.props.open, nextProps.open) || !_.isEqual(this.state, nextState);
+        const { open } = this.props;
+        return !_.isEqual(open, nextProps.open) || !_.isEqual(this.state, nextState);
     }
 
     uploadPlugin() {
         const { onHide, toolbox } = this.props;
-        const { wagonUrl, yamlUrl, iconUrl, iconFile, undefined, visibility, wagonFile, yamlFile } = this.state;
+        const { wagonUrl, yamlUrl, iconUrl, iconFile, visibility, wagonFile, yamlFile } = this.state;
 
         const errors = {};
 
@@ -71,9 +73,12 @@ class UploadPluginModal extends React.Component {
         // Disable the form
         this.setState({ loading: true });
 
-        const createUploadResource = name => ({
-            [name]: { url: `${name}Url`, file: `${name}File` }
-        });
+        const createUploadResource = name => {
+            const { [`${name}Url`]: url, [`${name}File`]: file } = this.state;
+            return {
+                [name]: { url, file }
+            };
+        };
 
         const actions = new Stage.Common.PluginActions(toolbox);
         actions

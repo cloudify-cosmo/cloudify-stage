@@ -2,12 +2,12 @@
  * Created by jakub.niezgoda on 31/07/2018.
  */
 
-import ResourceStatus from './helpers/ResourceStatus';
-import ResourceAction from './helpers/ResourceAction';
-import NoResourceMessage from './helpers/NoResourceMessage';
-import { createWizardStep } from '../wizard/wizardUtils';
 import StepActions from '../wizard/StepActions';
 import StepContent from '../wizard/StepContent';
+import { createWizardStep } from '../wizard/wizardUtils';
+import NoResourceMessage from './helpers/NoResourceMessage';
+import ResourceAction from './helpers/ResourceAction';
+import ResourceStatus from './helpers/ResourceStatus';
 
 const secretsStepId = 'secrets';
 
@@ -119,7 +119,8 @@ class SecretsStepContent extends React.Component {
     }
 
     getSecretStatus(secretKey) {
-        const secret = this.props.stepData[secretKey];
+        const { stepData } = this.props;
+        const secret = stepData[secretKey];
 
         switch (secret.status) {
             case SecretsStepContent.statusDefined:
@@ -164,7 +165,8 @@ class SecretsStepContent extends React.Component {
 
     getSecretVisibility(secretKey) {
         const { VisibilityField } = Stage.Basic;
-        const secret = this.props.stepData[secretKey];
+        const { stepData } = this.props;
+        const secret = stepData[secretKey];
 
         switch (secret.status) {
             case SecretsStepContent.statusDefined:

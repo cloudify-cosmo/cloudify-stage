@@ -2,12 +2,12 @@
  * Created by jakub.niezgoda on 31/07/2018.
  */
 
-import ResourceStatus from './helpers/ResourceStatus';
-import ResourceAction from './helpers/ResourceAction';
-import NoResourceMessage from './helpers/NoResourceMessage';
-import { createWizardStep } from '../wizard/wizardUtils';
 import StepActions from '../wizard/StepActions';
 import StepContent from '../wizard/StepContent';
+import { createWizardStep } from '../wizard/wizardUtils';
+import NoResourceMessage from './helpers/NoResourceMessage';
+import ResourceAction from './helpers/ResourceAction';
+import ResourceStatus from './helpers/ResourceStatus';
 
 const pluginsStepId = 'plugins';
 
@@ -243,7 +243,8 @@ class PluginsStepContent extends React.Component {
     }
 
     getPluginStatus(pluginName) {
-        const status = _.get(this.props.stepData[pluginName], 'status');
+        const { stepData } = this.props;
+        const status = _.get(stepData[pluginName], 'status');
 
         switch (status) {
             case PluginsStepContent.statusInstalledAndParametersMatched:
@@ -361,7 +362,8 @@ class PluginsStepContent extends React.Component {
 
     getPluginVisibility(pluginName) {
         const { VisibilityField } = Stage.Basic;
-        const plugin = this.props.stepData[pluginName];
+        const { stepData } = this.props;
+        const plugin = stepData[pluginName];
 
         switch (_.get(plugin, 'status')) {
             case PluginsStepContent.statusInstalledAndParametersMatched:
@@ -389,8 +391,9 @@ class PluginsStepContent extends React.Component {
     }
 
     isUserDefinedPlugin(pluginName) {
+        const { stepData } = this.props;
         return _.isEqual(
-            _.get(this.props.stepData[pluginName], 'status', PluginsStepContent.statusUnknown),
+            _.get(stepData[pluginName], 'status', PluginsStepContent.statusUnknown),
             PluginsStepContent.statusUserDefinedPlugin
         );
     }
@@ -424,7 +427,8 @@ class PluginsStepContent extends React.Component {
                                 <NoResourceMessage resourceName="plugins" />
                             ) : (
                                 _.map(_.keys(stepData), pluginName => {
-                                    const pluginInCatalog = this.state.pluginsInCatalog[pluginName];
+                                    const { pluginsInCatalog } = this.state;
+                                    const pluginInCatalog = pluginsInCatalog[pluginName];
                                     const { Image } = Stage.Basic;
 
                                     return (

@@ -12,7 +12,8 @@ export default class UserRoles extends React.Component {
         const roles = {};
 
         _.forEach(groups, (group, name) => {
-            if (_.includes(group.users, this.props.user)) {
+            const { user } = this.props;
+            if (_.includes(group.users, user)) {
                 if (_.has(roles, group.role)) {
                     roles[group.role].push(name);
                 } else {

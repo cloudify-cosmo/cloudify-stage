@@ -2,9 +2,9 @@
  * Created by jakubniezgoda on 03/02/2017.
  */
 import Actions from './actions';
-import MenuAction from './MenuAction';
-import GroupDetails from './GroupDetails';
 import CreateModal from './CreateModal';
+import GroupDetails from './GroupDetails';
+import MenuAction from './MenuAction';
 import TenantsModal from './TenantsModal';
 import UsersModal from './UsersModal';
 
@@ -33,19 +33,23 @@ export default class UserGroupsTable extends React.Component {
     }
 
     refreshData() {
-        this.props.toolbox.refresh();
+        const { toolbox } = this.props;
+        toolbox.refresh();
     }
 
     componentDidMount() {
-        this.props.toolbox.getEventBus().on('userGroups:refresh', this.refreshData, this);
+        const { toolbox } = this.props;
+        toolbox.getEventBus().on('userGroups:refresh', this.refreshData, this);
     }
 
     componentWillUnmount() {
-        this.props.toolbox.getEventBus().off('userGroups:refresh', this.refreshData);
+        const { toolbox } = this.props;
+        toolbox.getEventBus().off('userGroups:refresh', this.refreshData);
     }
 
     fetchData(fetchParams) {
-        return this.props.toolbox.refresh(fetchParams);
+        const { toolbox } = this.props;
+        return toolbox.refresh(fetchParams);
     }
 
     selectUserGroup(userGroup) {

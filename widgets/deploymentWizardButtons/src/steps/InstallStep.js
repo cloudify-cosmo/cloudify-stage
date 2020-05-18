@@ -2,11 +2,11 @@
  * Created by jakub.niezgoda on 31/07/2018.
  */
 
-import TaskList from './helpers/TaskList';
-import Task from './helpers/Task';
-import { createWizardStep } from '../wizard/wizardUtils';
 import StepActions from '../wizard/StepActions';
 import StepContent from '../wizard/StepContent';
+import { createWizardStep } from '../wizard/wizardUtils';
+import Task from './helpers/Task';
+import TaskList from './helpers/TaskList';
 
 const installStepId = 'install';
 const emptyTasksStats = _.reduce(_.values(Task.Status), (acc, status) => ({ ...acc, [status]: 0 }), {});
@@ -239,10 +239,11 @@ class InstallStepContent extends React.Component {
 
     render() {
         const { Form } = Stage.Basic;
+        const { loading } = this.props;
         const { tasks } = this.state;
 
         return (
-            <Form loading={this.props.loading}>
+            <Form loading={loading}>
                 <TaskList tasks={tasks} withStatus />
             </Form>
         );

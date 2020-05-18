@@ -24,12 +24,14 @@ export default class PasswordModal extends React.Component {
     }
 
     onCancel() {
-        this.props.onHide();
+        const { onHide } = this.props;
+        onHide();
         return true;
     }
 
     componentDidUpdate(prevProps) {
-        if (!prevProps.open && this.props.open) {
+        const { open } = this.props;
+        if (!prevProps.open && open) {
             this.setState(PasswordModal.initialState);
         }
     }

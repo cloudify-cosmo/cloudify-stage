@@ -2,10 +2,10 @@
  * Created by kinneretzin on 18/10/2016.
  */
 
+import DeploymentsSegment from './DeploymentsSegment';
+import DeploymentsTable from './DeploymentsTable';
 import MenuAction from './MenuAction';
 import SetSiteModal from './SetSiteModal';
-import DeploymentsTable from './DeploymentsTable';
-import DeploymentsSegment from './DeploymentsSegment';
 
 export default class DeploymentsList extends React.Component {
     constructor(props, context) {
@@ -33,11 +33,13 @@ export default class DeploymentsList extends React.Component {
     }
 
     componentDidMount() {
-        this.props.toolbox.getEventBus().on('deployments:refresh', this.refreshData, this);
+        const { toolbox } = this.props;
+        toolbox.getEventBus().on('deployments:refresh', this.refreshData, this);
     }
 
     componentWillUnmount() {
-        this.props.toolbox.getEventBus().off('deployments:refresh', this.refreshData);
+        const { toolbox } = this.props;
+        toolbox.getEventBus().off('deployments:refresh', this.refreshData);
     }
 
     selectDeployment(item) {
@@ -139,7 +141,8 @@ export default class DeploymentsList extends React.Component {
     }
 
     refreshData() {
-        this.props.toolbox.refresh();
+        const { toolbox } = this.props;
+        toolbox.refresh();
     }
 
     showModal(value, deployment, workflow) {
@@ -168,7 +171,8 @@ export default class DeploymentsList extends React.Component {
     }
 
     fetchData(fetchParams) {
-        return this.props.toolbox.refresh(fetchParams);
+        const { toolbox } = this.props;
+        return toolbox.refresh(fetchParams);
     }
 
     render() {

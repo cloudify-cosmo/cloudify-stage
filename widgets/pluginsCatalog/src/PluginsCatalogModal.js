@@ -41,7 +41,8 @@ export default class PluginsCatalogModal extends React.Component {
      * @param {any} prevProps
      */
     componentDidUpdate(prevProps) {
-        if (!prevProps.open && this.props.open) {
+        const { open } = this.props;
+        if (!prevProps.open && open) {
             this.setState(PluginsCatalogModal.initialState);
         }
     }
@@ -57,7 +58,8 @@ export default class PluginsCatalogModal extends React.Component {
      * just hide the modal
      */
     onCancel() {
-        this.props.onHide();
+        const { onHide } = this.props;
+        onHide();
         return true;
     }
 
@@ -67,9 +69,11 @@ export default class PluginsCatalogModal extends React.Component {
      */
     onApprove() {
         const { actions, onHide, onSuccess, plugin, toolbox } = this.props;
+        const { visibility } = this.state;
         this.setState({ loading: true });
+
         actions
-            .doUpload(plugin, this.state.visibility)
+            .doUpload(plugin, visibility)
             .then(() => {
                 this.setState({ errors: null, loading: false });
                 toolbox.getEventBus().trigger('plugins:refresh');

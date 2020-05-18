@@ -42,11 +42,13 @@ class UploadPluginForm extends React.Component {
     }
 
     resetErrors() {
-        this.props.onChange(UploadPluginForm.NO_ERRORS);
+        const { onChange: cbOnChange } = this.props;
+        cbOnChange(UploadPluginForm.NO_ERRORS);
     }
 
     onChange(field, file, url) {
-        this.props.onChange({
+        const { onChange: cbOnChange } = this.props;
+        cbOnChange({
             ...UploadPluginForm.NO_ERRORS,
             [`${field}File`]: file,
             [`${field}Url`]: url

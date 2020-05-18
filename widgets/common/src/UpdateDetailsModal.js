@@ -4,9 +4,9 @@
 
 import { diffChars } from 'diff';
 
-function BlueprintSection(props) {
+function BlueprintSection({ newBlueprint, oldBlueprint }) {
     const { Header } = Stage.Basic;
-    const isChanged = props.oldBlueprint !== props.newBlueprint;
+    const isChanged = oldBlueprint !== newBlueprint;
 
     return (
         <>
@@ -14,7 +14,7 @@ function BlueprintSection(props) {
 
             {isChanged ? (
                 <span>
-                    Changed from <strong>{props.oldBlueprint}</strong> into <strong>{props.newBlueprint}</strong>.
+                    Changed from <strong>{oldBlueprint}</strong> into <strong>{newBlueprint}</strong>.
                 </span>
             ) : (
                 <span>Not changed.</span>
@@ -185,25 +185,25 @@ class InputsSection extends React.Component {
     }
 }
 
-function NodeInstancesCard(props) {
+function NodeInstancesCard({ action, color, icon, instances, name, workflowSkipped }) {
     const { Card, Icon, Label, List } = Stage.Basic;
 
     return (
-        <Card key={props.name} color={props.color}>
+        <Card key={name} color={color}>
             <Card.Content>
                 <Card.Header>
-                    <Icon name={props.icon} color={props.color} />
-                    {_.capitalize(_.lowerCase(props.name))}
-                    {props.action && (
+                    <Icon name={icon} color={color} />
+                    {_.capitalize(_.lowerCase(name))}
+                    {action && (
                         <Label className="right floated">
-                            {props.action}: {props.workflowSkipped ? 'No' : 'Yes'}
+                            {action}: {workflowSkipped ? 'No' : 'Yes'}
                         </Label>
                     )}
                 </Card.Header>
                 <Card.Description>
-                    {!_.isEmpty(props.instances) ? (
+                    {!_.isEmpty(instances) ? (
                         <List bulleted>
-                            {_.map(props.instances, instance => (
+                            {_.map(instances, instance => (
                                 <List.Item key={instance}>{instance}</List.Item>
                             ))}
                         </List>
@@ -216,9 +216,9 @@ function NodeInstancesCard(props) {
     );
 }
 
-function NodeInstancesSection(props) {
+function NodeInstancesSection({ types }) {
     const { Card, Header, PopupHelp } = Stage.Basic;
-    const isChanged = !_.isEmpty(_.filter(props.types, type => _.size(type.instances) > 0));
+    const isChanged = !_.isEmpty(_.filter(types, type => _.size(type.instances) > 0));
 
     return (
         <>
@@ -246,7 +246,7 @@ function NodeInstancesSection(props) {
 
             {isChanged ? (
                 <Card.Group itemsPerRow={2}>
-                    {_.map(props.types, type => (
+                    {_.map(types, type => (
                         <NodeInstancesCard key={type.name} {...type} />
                     ))}
                 </Card.Group>
@@ -257,9 +257,9 @@ function NodeInstancesSection(props) {
     );
 }
 
-function StepsSection(props) {
+function StepsSection({ steps }) {
     const { Header, Table } = Stage.Basic;
-    const stepsPresent = !_.isEmpty(props.steps);
+    const stepsPresent = !_.isEmpty(steps);
 
     return (
         <>
@@ -279,7 +279,7 @@ function StepsSection(props) {
                     </Table.Header>
 
                     <Table.Body>
-                        {_.map(props.steps, (step, index) => (
+                        {_.map(steps, (step, index) => (
                             <Table.Row key={step.id}>
                                 <Table.Cell>{index + 1}</Table.Cell>
                                 <Table.Cell>{step.action}</Table.Cell>

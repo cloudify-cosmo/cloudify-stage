@@ -53,7 +53,8 @@ class UpdateDeploymentModal extends React.Component {
     }
 
     onCancel() {
-        this.props.onHide();
+        const { onHide } = this.props;
+        onHide();
         return true;
     }
 
@@ -126,8 +127,9 @@ class UpdateDeploymentModal extends React.Component {
     }
 
     handleDeploymentInputChange(proxy, field) {
+        const { deploymentInputs } = this.state;
         const fieldNameValue = Stage.Basic.Form.fieldNameValue(field);
-        this.setState({ deploymentInputs: { ...this.state.deploymentInputs, ...fieldNameValue } });
+        this.setState({ deploymentInputs: { ...deploymentInputs, ...fieldNameValue } });
     }
 
     handleYamlFileChange(file) {
@@ -137,7 +139,8 @@ class UpdateDeploymentModal extends React.Component {
         }
 
         const { FileActions, InputsUtils } = Stage.Common;
-        const actions = new FileActions(this.props.toolbox);
+        const { toolbox } = this.props;
+        const actions = new FileActions(toolbox);
         this.setState({ fileLoading: true });
 
         actions

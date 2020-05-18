@@ -33,10 +33,12 @@ export default class CreateModal extends React.Component {
     }
 
     componentDidUpdate(prevProps, prevState) {
-        if (!prevState.open && this.state.open) {
+        const { open } = this.state;
+        if (!prevState.open && open) {
+            const { toolbox } = this.props;
             this.setState({ ...CreateModal.initialState, loading: true });
 
-            const actions = new Actions(this.props.toolbox);
+            const actions = new Actions(toolbox);
             this.availableTenantsPromise = Stage.Utils.makeCancelable(actions.doGetTenants());
 
             this.availableTenantsPromise.promise
@@ -107,20 +109,24 @@ export default class CreateModal extends React.Component {
     handleTenantChange(proxy, field) {
         const newTenants = {};
         _.forEach(field.value, tenant => {
+            const { toolbox } = this.props;
+            const { tenants } = this.state;
+
             newTenants[tenant] =
-                this.state.tenants[tenant] ||
-                Stage.Common.RolesUtil.getDefaultRoleName(this.props.toolbox.getManagerState().roles);
+                tenants[tenant] || Stage.Common.RolesUtil.getDefaultRoleName(toolbox.getManagerState().roles);
         });
         this.setState({ tenants: newTenants });
     }
 
     handleRoleChange(tenant, role) {
-        const newTenants = { ...this.state.tenants };
+        const { tenants } = this.state;
+        const newTenants = { ...tenants };
         newTenants[tenant] = role;
         this.setState({ tenants: newTenants });
     }
 
     render() {
+        const { toolbox } = this.props;
         const { availableTenants, confirmPassword, errors, isAdmin, loading, open, password, username } = this.state;
         const { ApproveButton, Button, CancelButton, Icon, Form, Message, Modal } = Stage.Basic;
         const { RolesPicker } = Stage.Common;
@@ -193,7 +199,7 @@ export default class CreateModal extends React.Component {
                             onUpdate={this.handleRoleChange.bind(this)}
                             resources={tenants}
                             resourceName="tenant"
-                            toolbox={this.props.toolbox}
+                            toolbox={toolbox}
                         />
                     </Form>
                 </Modal.Content>

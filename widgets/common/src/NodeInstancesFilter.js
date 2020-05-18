@@ -56,7 +56,8 @@ export default class NodeInstancesFilter extends React.Component {
     }
 
     componentDidUpdate(prevProps) {
-        if (prevProps.deploymentId !== this.props.deploymentId) {
+        const { deploymentId } = this.props;
+        if (prevProps.deploymentId !== deploymentId) {
             this.setState({ ...NodeInstancesFilter.initialState(this.props) });
             this.fetchData();
         }
@@ -68,13 +69,14 @@ export default class NodeInstancesFilter extends React.Component {
 
     fetchData() {
         const { deploymentId, toolbox } = this.props;
+        const { errors: stateErrors } = this.state;
         if (_.isEmpty(deploymentId)) {
             return;
         }
 
         const params = { _include: 'id', deployment_id: deploymentId };
         const fetchUrl = '/node-instances';
-        const errors = { ...this.state.errors };
+        const errors = { ...stateErrors };
         errors.nodeInstanceIds = null;
 
         this.setState({ loading: true, nodeInstances: [], errors });
@@ -98,10 +100,8 @@ export default class NodeInstancesFilter extends React.Component {
     handleInputChange(event, field) {
         const { name, onChange } = this.props;
         this.setState({ value: field.value }, () => {
-            onChange(event, {
-                name,
-                value: this.state.value
-            });
+            const { value } = this.state;
+            onChange(event, { name, value });
         });
     }
 

@@ -126,12 +126,15 @@ export default class NodeFilter extends React.Component {
     }
 
     fetchData(fetchUrl, params, optionsField) {
-        const loading = `${optionsField}Loading`;
+        const { toolbox } = this.props;
+        const { errors: stateErrors } = this.state;
 
-        const errors = { ...this.state.errors };
+        const loading = `${optionsField}Loading`;
+        const errors = { ...stateErrors };
         errors[optionsField] = null;
         this.setState({ [loading]: true, [optionsField]: [], errors });
-        this.props.toolbox
+
+        toolbox
             .getManager()
             .doGet(fetchUrl, params)
             .then(data => {
@@ -214,8 +217,8 @@ export default class NodeFilter extends React.Component {
     }
 
     isMultipleSetFor(resourcesName) {
-        const { allowMultiple, undefined } = this.props;
-        return allowMultiple || `allowMultiple${_.upperFirst(resourcesName)}`;
+        const { allowMultiple, [`allowMultiple${_.upperFirst(resourcesName)}`]: resourceAllowMultiple } = this.props;
+        return allowMultiple || resourceAllowMultiple;
     }
 
     getEmptyValueFor(resourcesName) {
@@ -223,11 +226,13 @@ export default class NodeFilter extends React.Component {
     }
 
     isFilteringSetFor(resourcesName) {
-        return !_.isEmpty(this.props[`allowed${_.upperFirst(resourcesName)}`]);
+        const { [`allowed${_.upperFirst(resourcesName)}`]: allowedOptions } = this.props;
+        return !_.isEmpty(allowedOptions);
     }
 
     getAllowedOptionsFor(resourcesName) {
-        return this.props[`allowed${_.upperFirst(resourcesName)}`];
+        const { [`allowed${_.upperFirst(resourcesName)}`]: allowedOptions } = this.props;
+        return allowedOptions;
     }
 
     selectBlueprint(event, field) {

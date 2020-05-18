@@ -44,15 +44,14 @@ export default class EventFilter extends React.Component {
     });
 
     shouldComponentUpdate(nextProps, nextState) {
-        return !_.isEqual(this.state.fields, nextState.fields) || !_.isEqual(this.props, nextProps);
+        const { fields } = this.state;
+        return !_.isEqual(fields, nextState.fields) || !_.isEqual(this.props, nextProps);
     }
 
     componentDidMount() {
         const { toolbox } = this.props;
-        this.debouncedContextUpdate = _.debounce(
-            () => toolbox.getContext().setValue(contextValueKey, this.state.fields),
-            500
-        );
+        const { fields } = this.state;
+        this.debouncedContextUpdate = _.debounce(() => toolbox.getContext().setValue(contextValueKey, fields), 500);
         toolbox.getEventBus().on(refreshEvent, this.refreshFilter, this);
     }
 
@@ -72,10 +71,11 @@ export default class EventFilter extends React.Component {
     }
 
     handleInputChange(proxy, field) {
+        const { fields: stateFields } = this.state;
         const { EventUtils } = Stage.Common;
         this.dirty[field.name] = !_.isEmpty(field.value);
 
-        const fields = { ...this.state.fields };
+        const fields = { ...stateFields };
         fields[field.name] = field.value;
         if (field.name === 'timeRange') {
             fields.timeStart = _.isEmpty(field.value.start) ? '' : moment(field.value.start);
@@ -102,7 +102,8 @@ export default class EventFilter extends React.Component {
     }
 
     handleOptionAddition(e, { name, value }) {
-        this.setState({ [`${name}Options`]: [{ text: value, value }, ...this.state[`${name}Options`]] });
+        const { state } = this;
+        this.setState({ [`${name}Options`]: [{ text: value, value }, ...state[`${name}Options`]] });
     }
 
     isDirty() {

@@ -78,7 +78,8 @@ export default class StepActions extends React.Component {
     };
 
     onClose() {
-        return this.props.onClose();
+        const { onClose } = this.props;
+        return onClose();
     }
 
     onStartOver() {

@@ -2,8 +2,8 @@
  * Created by kinneretzin on 02/10/2016.
  */
 
-import BlueprintsTable from './BlueprintsTable';
 import BlueprintsCatalog from './BlueprintsCatalog';
+import BlueprintsTable from './BlueprintsTable';
 
 export default class BlueprintList extends React.Component {
     constructor(props, context) {
@@ -84,15 +84,18 @@ export default class BlueprintList extends React.Component {
     }
 
     refreshData() {
-        this.props.toolbox.refresh();
+        const { toolbox } = this.props;
+        toolbox.refresh();
     }
 
     componentDidMount() {
-        this.props.toolbox.getEventBus().on('blueprints:refresh', this.refreshData, this);
+        const { toolbox } = this.props;
+        toolbox.getEventBus().on('blueprints:refresh', this.refreshData, this);
     }
 
     componentWillUnmount() {
-        this.props.toolbox.getEventBus().off('blueprints:refresh', this.refreshData);
+        const { toolbox } = this.props;
+        toolbox.getEventBus().off('blueprints:refresh', this.refreshData);
     }
 
     hideDeploymentModal() {
@@ -112,7 +115,8 @@ export default class BlueprintList extends React.Component {
     }
 
     fetchGridData(fetchParams) {
-        return this.props.toolbox.refresh(fetchParams);
+        const { toolbox } = this.props;
+        return toolbox.refresh(fetchParams);
     }
 
     render() {

@@ -31,6 +31,7 @@ export default class StepContent extends React.Component {
     };
 
     render() {
-        return this.props.children || null;
+        const { children } = this.props;
+        return children || null;
     }
 }

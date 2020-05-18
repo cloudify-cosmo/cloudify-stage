@@ -28,7 +28,8 @@ export default class BlueprintSources extends React.Component {
     }
 
     componentDidUpdate(prevProps) {
-        if (prevProps.data !== this.props.data) {
+        const { data } = this.props;
+        if (prevProps.data !== data) {
             this.setState(BlueprintSources.initialState);
         }
     }
@@ -68,10 +69,10 @@ export default class BlueprintSources extends React.Component {
     }
 
     render() {
+        const { data, widget } = this.props;
         const { content, error, filename, maximized, type } = this.state;
         const { NodesTree, Message, Label, Modal, HighlightText, ErrorMessage, Icon } = Stage.Basic;
 
-        const { data } = this.props;
         const loop = items => {
             return items.map(item => {
                 if (item.children) {
@@ -120,7 +121,7 @@ export default class BlueprintSources extends React.Component {
                     <SplitterLayout
                         primaryIndex={0}
                         percentage
-                        secondaryInitialSize={this.props.widget.configuration.contentPaneWidth}
+                        secondaryInitialSize={widget.configuration.contentPaneWidth}
                     >
                         <div>
                             <NodesTree

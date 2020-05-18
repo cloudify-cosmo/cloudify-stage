@@ -37,20 +37,25 @@ export default class SecretsTable extends React.Component {
     }
 
     refreshData() {
+        const { toolbox } = this.props;
         this.setState({ error: null });
-        this.props.toolbox.refresh();
+
+        toolbox.refresh();
     }
 
     componentDidMount() {
-        this.props.toolbox.getEventBus().on('secrets:refresh', this.refreshData, this);
+        const { toolbox } = this.props;
+        toolbox.getEventBus().on('secrets:refresh', this.refreshData, this);
     }
 
     componentWillUnmount() {
-        this.props.toolbox.getEventBus().off('secrets:refresh', this.refreshData);
+        const { toolbox } = this.props;
+        toolbox.getEventBus().off('secrets:refresh', this.refreshData);
     }
 
     fetchGridData(fetchParams) {
-        return this.props.toolbox.refresh(fetchParams);
+        const { toolbox } = this.props;
+        return toolbox.refresh(fetchParams);
     }
 
     onDeleteSecret(secret) {
@@ -68,10 +73,11 @@ export default class SecretsTable extends React.Component {
     }
 
     onShowSecret(secret) {
+        const { toolbox } = this.props;
         const secretKey = secret.key;
         this.setState({ secret, showSecretKey: secretKey, showSecretValue: '', showSecretLoading: true });
 
-        const actions = new Stage.Common.SecretActions(this.props.toolbox);
+        const actions = new Stage.Common.SecretActions(toolbox);
         actions
             .doGet(secretKey)
             .then(secret => {
@@ -92,7 +98,8 @@ export default class SecretsTable extends React.Component {
 
     deleteSecret() {
         const { toolbox } = this.props;
-        const secretKey = this.state.secret.key;
+        const { secret } = this.state;
+        const secretKey = secret.key;
         const actions = new Stage.Common.SecretActions(toolbox);
         const HIDE_DELETE_MODAL_STATE = { modalType: SecretsTable.DELETE_SECRET_ACTION, showModal: false };
 

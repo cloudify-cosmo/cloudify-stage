@@ -46,8 +46,8 @@ export default class extends React.Component {
 
     downloadPlugin(item, event) {
         event.stopPropagation();
-
-        const actions = new Stage.Common.PluginActions(this.props.toolbox);
+        const { toolbox } = this.props;
+        const actions = new Stage.Common.PluginActions(toolbox);
         actions
             .doDownload(item)
             .then(() => {
@@ -103,7 +103,8 @@ export default class extends React.Component {
     }
 
     refreshData() {
-        this.props.toolbox.refresh();
+        const { toolbox } = this.props;
+        toolbox.refresh();
     }
 
     handleForceChange(event, field) {
@@ -111,15 +112,18 @@ export default class extends React.Component {
     }
 
     componentDidMount() {
-        this.props.toolbox.getEventBus().on('plugins:refresh', this.refreshData, this);
+        const { toolbox } = this.props;
+        toolbox.getEventBus().on('plugins:refresh', this.refreshData, this);
     }
 
     componentWillUnmount() {
-        this.props.toolbox.getEventBus().off('plugins:refresh', this.refreshData);
+        const { toolbox } = this.props;
+        toolbox.getEventBus().off('plugins:refresh', this.refreshData);
     }
 
     fetchGridData(fetchParams) {
-        return this.props.toolbox.refresh(fetchParams);
+        const { toolbox } = this.props;
+        return toolbox.refresh(fetchParams);
     }
 
     render() {
