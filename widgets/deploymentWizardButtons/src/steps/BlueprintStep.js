@@ -98,7 +98,7 @@ class BlueprintStepContent extends React.Component {
         onChange(id, { ...BlueprintStepContent.defaultBlueprintState, ...stepData });
     }
 
-    onChange(fields) {
+    handleBlueprintChange(fields) {
         const { id, onChange, stepData } = this.props;
         onChange(id, { ...stepData, ...fields });
     }
@@ -114,7 +114,7 @@ class BlueprintStepContent extends React.Component {
                     <VisibilityField
                         visibility={stepData.visibility}
                         className="large"
-                        onVisibilityChange={visibility => this.onChange({ visibility })}
+                        onVisibilityChange={visibility => this.handleBlueprintChange({ visibility })}
                     />
                 </Container>
                 <UploadBlueprintForm
@@ -127,7 +127,7 @@ class BlueprintStepContent extends React.Component {
                     loading={loading}
                     errors={errors}
                     showErrorsSummary={false}
-                    onChange={this.onChange.bind(this)}
+                    onChange={this.handleBlueprintChange.bind(this)}
                     toolbox={toolbox}
                 />
             </>

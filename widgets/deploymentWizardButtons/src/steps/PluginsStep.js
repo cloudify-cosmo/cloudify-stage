@@ -149,7 +149,7 @@ class PluginsStepContent extends React.Component {
     }
 
     componentDidMount() {
-        const { id, onChange, onError, onLoading, onReady, toolbox, wizardData } = this.props;
+        const { id, onChange, onError, onLoading, onReady, stepData: stepDataProp, toolbox, wizardData } = this.props;
         onLoading()
             .then(() =>
                 Promise.all([
@@ -192,7 +192,7 @@ class PluginsStepContent extends React.Component {
 
                 const stepData = {};
                 for (const plugin of _.keys(pluginsInBlueprint)) {
-                    const pluginState = { ...PluginsStepContent.defaultPluginState, ...stepData[plugin] };
+                    const pluginState = { ...PluginsStepContent.defaultPluginState, ...stepDataProp[plugin] };
                     pluginState.status = PluginsStepContent.getPluginStatus(
                         plugin,
                         pluginsInBlueprint,
@@ -221,7 +221,7 @@ class PluginsStepContent extends React.Component {
                     stepData[plugin] = { ...pluginState };
                 }
                 for (const plugin of _.keys(pluginsInUserResources)) {
-                    const pluginState = { ...PluginsStepContent.defaultPluginState, ...stepData[plugin] };
+                    const pluginState = { ...PluginsStepContent.defaultPluginState, ...stepDataProp[plugin] };
                     pluginState.status = PluginsStepContent.statusUserDefinedPlugin;
 
                     stepData[plugin] = { ...pluginState };
@@ -289,7 +289,7 @@ class PluginsStepContent extends React.Component {
         }
     }
 
-    onChange(pluginName) {
+    handlePluginChange(pluginName) {
         const { id, onChange, stepData: stepDataProp } = this.props;
         return fields => {
             const stepData = { ...stepDataProp };
@@ -347,7 +347,7 @@ class PluginsStepContent extends React.Component {
                             addRequiredMarks={false}
                             hidePlaceholders
                             loading={loading}
-                            onChange={this.onChange(pluginName).bind(this)}
+                            onChange={this.handlePluginChange(pluginName).bind(this)}
                         />
                     </ResourceAction>
                 );
@@ -381,7 +381,7 @@ class PluginsStepContent extends React.Component {
                         <VisibilityField
                             visibility={plugin.visibility}
                             className="large"
-                            onVisibilityChange={visibility => this.onChange(pluginName)({ visibility })}
+                            onVisibilityChange={visibility => this.handlePluginChange(pluginName)({ visibility })}
                         />
                     </ResourceAction>
                 );

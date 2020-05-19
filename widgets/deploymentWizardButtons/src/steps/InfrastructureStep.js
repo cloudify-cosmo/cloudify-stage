@@ -40,49 +40,38 @@ class InfrastructureStepActions extends React.Component {
 class InfrastructureStepContent extends React.Component {
     constructor(props) {
         super(props);
-
-        this.state = InfrastructureStepContent.initialState;
     }
 
     static defaultBlueprintName = 'hello-world';
 
     static defaultBlueprintYaml = 'aws.yaml';
 
-    static initialState = {
-        stepData: {
-            blueprintUrl: Stage.Common.Consts.externalUrls.helloWorldBlueprint,
-            blueprintFile: null,
-            blueprintName: InfrastructureStepContent.defaultBlueprintName,
-            blueprintFileName: InfrastructureStepContent.defaultBlueprintYaml,
-            imageUrl: '',
-            imageFile: null,
-            visibility: Stage.Common.Consts.defaultVisibility
-        }
+    static defaultInfrastractureState = {
+        blueprintUrl: Stage.Common.Consts.externalUrls.helloWorldBlueprint,
+        blueprintFile: null,
+        blueprintName: InfrastructureStepContent.defaultBlueprintName,
+        blueprintFileName: InfrastructureStepContent.defaultBlueprintYaml,
+        imageUrl: '',
+        imageFile: null,
+        visibility: Stage.Common.Consts.defaultVisibility
     };
 
     static propTypes = StepContent.propTypes;
 
     componentDidMount() {
         const { id, onChange, stepData } = this.props;
-        const { stepData: stateStepData } = this.state;
-        if (!_.isEmpty(stepData)) {
-            this.setState({ stepData: { ...stepData } });
-        } else {
-            onChange(id, stateStepData);
-        }
+        onChange(id, { ...InfrastructureStepContent.defaultInfrastractureState, ...stepData });
     }
 
-    onChange(blueprintFileName) {
-        const { stepData } = this.state;
-        const { id, onChange } = this.props;
-        this.setState({ stepData: { ...stepData, blueprintFileName } }, () => onChange(id, stepData));
+    handleBlueprintChange(blueprintFileName) {
+        const { id, onChange, stepData } = this.props;
+        onChange(id, { ...stepData, blueprintFileName });
     }
 
     render() {
         const { Button, Form, Image } = Stage.Basic;
         const { widgetResourceUrl } = Stage.Utils.Url;
-        const { loading } = this.props;
-        const { stepData } = this.state;
+        const { loading, stepData } = this.props;
 
         const platformsYaml = ['aws.yaml', 'gcp.yaml', 'openstack.yaml', 'azure.yaml'];
 
@@ -97,7 +86,7 @@ class InfrastructureStepContent extends React.Component {
                     size="huge"
                     active={props.active}
                     name={props.value}
-                    onClick={this.onChange.bind(this, props.value)}
+                    onClick={this.handleBlueprintChange.bind(this, props.value)}
                 >
                     <Image src={platformLogoSrc(props.value)} inline style={{ cursor: 'pointer', height: 35 }} />
                 </Button>

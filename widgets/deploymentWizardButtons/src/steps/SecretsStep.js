@@ -73,7 +73,7 @@ class SecretsStepContent extends React.Component {
     };
 
     componentDidMount() {
-        const { id, onChange, onError, onLoading, onReady, toolbox, wizardData } = this.props;
+        const { id, onChange, onError, onLoading, onReady, toolbox, stepData: stepDataProp, wizardData } = this.props;
         const secrets = _.get(wizardData, SecretsStepContent.dataPath, {});
 
         onLoading()
@@ -93,7 +93,7 @@ class SecretsStepContent extends React.Component {
 
                 const stepData = {};
                 for (const secret of _.keys(secrets)) {
-                    stepData[secret] = stepData[secret] || { ...SecretsStepContent.defaultSecretState };
+                    stepData[secret] = stepDataProp[secret] || { ...SecretsStepContent.defaultSecretState };
 
                     if (_.includes(_.keys(secretsInManager), secret)) {
                         stepData[secret].status = SecretsStepContent.statusDefined;

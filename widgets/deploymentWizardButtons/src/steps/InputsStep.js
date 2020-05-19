@@ -67,13 +67,13 @@ class InputsStepContent extends React.Component {
     static dataTypesDataPath = 'blueprint.dataTypes';
 
     componentDidMount() {
-        const { id, onChange, wizardData } = this.props;
+        const { id, onChange, stepData: stepDataProp, wizardData } = this.props;
         const inputs = _.get(wizardData, InputsStepContent.inputsDataPath, {});
         const dataTypes = _.get(wizardData, InputsStepContent.dataTypesDataPath, {});
 
         const stepData = _.mapValues(inputs, (inputData, inputName) => {
-            if (!_.isUndefined(stepData[inputName])) {
-                return stepData[inputName];
+            if (!_.isUndefined(stepDataProp[inputName])) {
+                return stepDataProp[inputName];
             }
             const dataType =
                 !_.isEmpty(dataTypes) && !!inputs[inputName].type ? dataTypes[inputs[inputName].type] : undefined;
