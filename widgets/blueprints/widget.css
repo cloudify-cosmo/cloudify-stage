@@ -5,6 +5,10 @@
     line-height: 3;
 }
 
+.blueprintCatalog .segment {
+    background: white !important;
+}
+
 .blueprintCatalog .actionButtons > button {
     margin-right: 1rem;
 }

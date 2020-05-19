@@ -112,8 +112,8 @@ export default class BlueprintsCatalog extends React.Component {
                         <Button
                             icon="trash"
                             content="Delete"
-                            className="icon"
                             basic
+                            labelPosition="left"
                             onClick={event => {
                                 event.stopPropagation();
                                 this.props.onDeleteBlueprint(item);
@@ -123,7 +123,7 @@ export default class BlueprintsCatalog extends React.Component {
                         <Button
                             icon="rocket"
                             content="Deploy"
-                            className="labeled icon"
+                            labelPosition="left"
                             onClick={event => {
                                 event.stopPropagation();
                                 this.props.onCreateDeployment(item);
@@ -134,7 +134,7 @@ export default class BlueprintsCatalog extends React.Component {
                             <Button
                                 icon="external share"
                                 content="Edit a copy in Composer"
-                                className="labeled icon"
+                                labelPosition="left"
                                 onClick={event => {
                                     event.stopPropagation();
                                     new Stage.Common.BlueprintActions(toolbox).doEditInComposer(
