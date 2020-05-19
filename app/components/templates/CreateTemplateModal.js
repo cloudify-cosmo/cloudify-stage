@@ -163,16 +163,20 @@ export default class CreateTemplateModal extends Component {
     }
 
     render() {
-        const { availablePages, errors, loading, open, pages, roles, tenants } = this.state;
-        const { availableRoles, availableTenants, templateName } = this.props;
-        const tenantOptions = _.map(availableTenants.items, item => {
+        const { availablePages, errors, loading, open, pages, roles, tenants, templateName } = this.state;
+        const {
+            availableRoles: availableRolesProp,
+            availableTenants: availableTenantsProp,
+            templateName: templateNameProp
+        } = this.props;
+        const tenantOptions = _.map(availableTenantsProp.items, item => {
             return { text: item.name, value: item.name };
         });
         tenantOptions.push({ text: 'All tenants', value: Consts.DEFAULT_ALL });
 
-        const rolesOptions = availableRoles;
+        const rolesOptions = availableRolesProp;
 
-        const editMode = !_.isEmpty(templateName);
+        const editMode = !_.isEmpty(templateNameProp);
 
         const trigger = editMode ? (
             <Icon name="edit" link className="updateTemplateIcon" onClick={e => e.stopPropagation()} />
@@ -195,7 +199,7 @@ export default class CreateTemplateModal extends Component {
             >
                 <Modal.Header>
                     <Icon name="list layout" />{' '}
-                    {editMode ? <span>Update template {templateName}</span> : <span>Create template</span>}
+                    {editMode ? <span>Update template {templateNameProp}</span> : <span>Create template</span>}
                 </Modal.Header>
 
                 <Modal.Content>

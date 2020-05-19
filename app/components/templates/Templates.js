@@ -64,10 +64,10 @@ export default class Templates extends Component {
 
                     {templates.map(item => {
                         const data = item.data || { roles: [], tenants: [] };
-                        const { roles } = data;
-                        const { tenants } = data;
                         const tenantsCount =
-                            _.indexOf(tenants, Const.DEFAULT_ALL) >= 0 ? _.size(tenants.items) : _.size(tenants);
+                            _.indexOf(data.tenants, Const.DEFAULT_ALL) >= 0
+                                ? _.size(tenants.items)
+                                : _.size(data.tenants);
 
                         return (
                             <DataTable.RowExpandable key={item.id} expanded={item.selected}>
@@ -82,10 +82,10 @@ export default class Templates extends Component {
                                         </Header>
                                     </DataTable.Data>
                                     <DataTable.Data>
-                                        {roles.map((role, index) => (
+                                        {data.roles.map((role, index) => (
                                             <span key={role}>
                                                 {role === Const.DEFAULT_ALL ? 'all' : role}
-                                                {index < roles.length - 1 && <span>, </span>}
+                                                {index < data.roles.length - 1 && <span>, </span>}
                                             </span>
                                         ))}
                                     </DataTable.Data>
@@ -114,8 +114,8 @@ export default class Templates extends Component {
                                                     availableRoles={roles}
                                                     templateName={item.id}
                                                     pages={item.pages}
-                                                    roles={roles}
-                                                    tenants={tenants}
+                                                    roles={data.roles}
+                                                    tenants={data.tenants}
                                                     onCreateTemplate={(...args) => onModifyTemplate(item, ...args)}
                                                 />
                                             </div>
@@ -132,13 +132,13 @@ export default class Templates extends Component {
                                             style={{ width: '33%' }}
                                         />
                                         <RoleList
-                                            roles={roles}
+                                            roles={data.roles}
                                             custom={item.custom}
                                             onDelete={role => onRemoveTemplateRole(item, role)}
                                             style={{ width: '33%' }}
                                         />
                                         <TenantList
-                                            tenants={tenants}
+                                            tenants={data.tenants}
                                             custom={item.custom}
                                             onDelete={tenant => onRemoveTemplateTenant(item, tenant)}
                                             style={{ width: '33%' }}
