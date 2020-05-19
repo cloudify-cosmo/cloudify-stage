@@ -1,7 +1,8 @@
 .blueprintCatalog .actionButtons {
     position: absolute !important;
     bottom: 1rem;
-    right: 1rem;
+    text-align: center;
+    line-height: 3;
 }
 
 .blueprintCatalog .actionButtons > button {

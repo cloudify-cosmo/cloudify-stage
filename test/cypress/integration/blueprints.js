@@ -16,7 +16,7 @@ describe('Blueprints widget', () => {
         cy.get('.local_blueprintsPageMenuItem').click();
 
         // Click the action icon
-        cy.get(`#blueprintsTable_${blueprintName} .edit`).click();
+        cy.get(`#blueprintsTable_${blueprintName} .external.share`).click();
 
         cy.window()
             .its('open')
