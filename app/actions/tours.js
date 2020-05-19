@@ -54,7 +54,7 @@ function waitForHopscotchElementsToBeClosed() {
 }
 
 function hopscotchRegisterHelpers(dispatch) {
-    hopscotch.registerHelper('redirectTo', (url, pageName, selector, noSelectorErrorTitle, noSelectorErrorMessage) => {
+    hopscotch.registerHelper('redirectTo', (selector, url, pageName, noSelectorErrorTitle, noSelectorErrorMessage) => {
         const minVisibilityTime = 500; // ms
         const maxWaitingTime = 5000; // ms
         const hopscotchButtonSelector = 'button.hopscotch-cta';
@@ -111,9 +111,15 @@ function hopscotchRegisterHelpers(dispatch) {
             return rafAsync().then(() => waitForElementVisible(selector));
         };
 
+        const redirect = !!url && !!pageName;
         return setLoading()
-            .then(dispatch(push(url)))
-            .then(() => checkIfPageIsPresent(url, pageName))
+            .then(() => {
+                if (redirect) {
+                    dispatch(push(url));
+                    return checkIfPageIsPresent(url, pageName);
+                }
+                return false;
+            })
             .then(() => waitForElementVisible(selector))
             .then(() => hopscotch.nextStep())
             .catch(error => {
