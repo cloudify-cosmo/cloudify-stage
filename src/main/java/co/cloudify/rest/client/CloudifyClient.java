@@ -24,6 +24,8 @@ import co.cloudify.rest.model.Token;
  * @author Isaac Shabtay
  */
 public class CloudifyClient extends AbstractCloudifyClient {
+    public static final String DEFAULT_TENANT_ID = "default_tenant";
+
     protected BlueprintsClient blueprintsClient;
     protected DeploymentsClient deploymentsClient;
     protected ExecutionsClient executionsClient;
@@ -75,7 +77,9 @@ public class CloudifyClient extends AbstractCloudifyClient {
         if (username != null && password != null) {
             client.register(new BasicAuthenticator(username, password));
         }
-        client.register(new TenantFilter(tenant));
+        if (tenant != null) {
+            client.register(new TenantFilter(tenant));
+        }
         if (token != null) {
             client.register(new TokenAuthenticator(token));
         }
