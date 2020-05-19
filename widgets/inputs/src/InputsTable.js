@@ -45,10 +45,9 @@ export default class extends React.Component {
         const NO_DATA_MESSAGE = "There are no Inputs available. Probably there's no deployment created, yet.";
         const { DataTable, ErrorMessage, Header } = Stage.Basic;
         const { ParameterValue, ParameterValueDescription } = Stage.Common;
-        const {
-            data: { items: inputs }
-        } = this.props;
+        const { data } = this.props;
         const { error } = this.state;
+        const { items: inputs } = data;
         const compareNames = (a, b) => (a.name > b.name ? 1 : b.name > a.name ? -1 : 0);
 
         return (

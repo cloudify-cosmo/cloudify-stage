@@ -61,15 +61,13 @@ export default class TenantsTable extends React.Component {
 
     deleteTenant() {
         const { toolbox } = this.props;
-        const {
-            tenant: { name: tenantName }
-        } = this.state;
+        const { tenant } = this.state;
         const actions = new Actions(toolbox);
         const HIDE_DELETE_MODAL_STATE = { modalType: MenuAction.DELETE_TENANT_ACTION, showModal: false };
 
         actions
-            .doDelete(tenantName)
-            .then(tenant => {
+            .doDelete(tenant.name)
+            .then((/* tenant */) => {
                 this.setState({ ...HIDE_DELETE_MODAL_STATE, error: null });
                 toolbox.getEventBus().trigger('tenants:refresh');
                 toolbox.getEventBus().trigger('menu.tenants:refresh');

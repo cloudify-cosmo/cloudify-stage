@@ -38,18 +38,18 @@ export default class Tenants extends Component {
     }
 
     render() {
-        const {
-            manager: { tenants }
-        } = this.props;
+        const { manager } = this.props;
         const { search } = this.state;
+
+        const { tenants } = manager;
         if (!tenants || !tenants.items || tenants.isFetching) {
             return <Loader active inverted inline size="small" />;
         }
+
         const filteredTenants = _(tenants.items)
             .filter(tenant => _.includes(tenant.name, search))
             .sortBy('name')
             .value();
-
         const selectedTenant = tenants.selected || _.get(tenants, 'items[0].name');
 
         const tenantMenuTrigger = (

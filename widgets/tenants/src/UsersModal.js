@@ -103,11 +103,9 @@ export default class UsersModal extends React.Component {
     handleInputChange(proxy, field) {
         const newUsers = {};
         _.forEach(field.value, user => {
-            const {
-                toolbox: { getManagerState }
-            } = this.props;
+            const { toolbox } = this.props;
             const { users } = this.state;
-            newUsers[user] = users[user] || RolesUtil.getDefaultRoleName(getManagerState().roles);
+            newUsers[user] = users[user] || RolesUtil.getDefaultRoleName(toolbox.getManagerState().roles);
         });
         this.setState({ users: newUsers });
     }

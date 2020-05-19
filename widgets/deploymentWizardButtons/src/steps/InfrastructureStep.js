@@ -82,9 +82,7 @@ class InfrastructureStepContent extends React.Component {
         const { Button, Form, Image } = Stage.Basic;
         const { widgetResourceUrl } = Stage.Utils.Url;
         const { loading } = this.props;
-        const {
-            stepData: { blueprintFileName }
-        } = this.state;
+        const { stepData } = this.state;
 
         const platformsYaml = ['aws.yaml', 'gcp.yaml', 'openstack.yaml', 'azure.yaml'];
 
@@ -112,7 +110,7 @@ class InfrastructureStepContent extends React.Component {
                     <Form.Group key={`platformGroup${index}`} widths="equal">
                         {_.map(group, yaml => (
                             <Form.Field key={yaml}>
-                                <PlatformButton value={yaml} active={blueprintFileName === yaml} />
+                                <PlatformButton value={yaml} active={stepData.blueprintFileName === yaml} />
                             </Form.Field>
                         ))}
                     </Form.Group>

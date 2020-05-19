@@ -126,13 +126,11 @@ export default class AddWidgetModal extends Component {
 
     uninstallWidget() {
         const { onWidgetUninstalled } = this.props;
-        const {
-            widget: { id: widgetId }
-        } = this.state;
+        const { widget } = this.state;
 
         this.setState({ showConfirm: false });
-        onWidgetUninstalled(widgetId).then(() =>
-            this.setState({ widgetsToAdd: this.getWidgetsToAddWithout(widgetId) })
+        onWidgetUninstalled(widget.id).then(() =>
+            this.setState({ widgetsToAdd: this.getWidgetsToAddWithout(widget.id) })
         );
     }
 

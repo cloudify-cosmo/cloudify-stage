@@ -91,10 +91,8 @@ export default class ValidateAgentsModal extends React.Component {
 
     onShowExecutionStatus() {
         const { onHide, toolbox, widget } = this.props;
-        const {
-            executionId,
-            nodeFilter: { deploymentId }
-        } = this.state;
+        const { executionId, nodeFilter } = this.state;
+        const { deploymentId } = nodeFilter;
 
         onHide();
         toolbox.drillDown(widget, 'execution', { deploymentId, executionId }, `Validate Agents on ${deploymentId}`);
