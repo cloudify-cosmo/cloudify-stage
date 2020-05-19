@@ -105,7 +105,7 @@ export default class GroupsModal extends React.Component {
     }
 
     render() {
-        const { errors, loading } = this.state;
+        const { errors, loading, userGroups: userGroupsState } = this.state;
         const { Modal, Icon, Form, CancelButton, ApproveButton } = Stage.Basic;
 
         const { tenant, onHide, open, toolbox, userGroups: userGroupsProp } = this.props;
@@ -128,13 +128,13 @@ export default class GroupsModal extends React.Component {
                                 selection
                                 options={userGroups}
                                 name="userGroups"
-                                value={Object.keys(userGroups)}
+                                value={Object.keys(userGroupsState)}
                                 onChange={this.handleInputChange.bind(this)}
                             />
                         </Form.Field>
                         <RolesPicker
                             onUpdate={this.onRoleChange.bind(this)}
-                            resources={userGroups}
+                            resources={userGroupsState}
                             resourceName="user group"
                             toolbox={toolbox}
                         />

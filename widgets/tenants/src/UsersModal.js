@@ -111,7 +111,7 @@ export default class UsersModal extends React.Component {
     }
 
     render() {
-        const { errors, loading } = this.state;
+        const { errors, loading, users: stateUsers } = this.state;
         const { Modal, Icon, Form, ApproveButton, CancelButton } = Stage.Basic;
 
         const { tenant, onHide, open, toolbox, users: usersProp } = this.props;
@@ -134,13 +134,13 @@ export default class UsersModal extends React.Component {
                                 selection
                                 options={users}
                                 name="users"
-                                value={Object.keys(users)}
+                                value={Object.keys(stateUsers)}
                                 onChange={this.handleInputChange.bind(this)}
                             />
                         </Form.Field>
                         <RolesPicker
                             onUpdate={this.onRoleChange.bind(this)}
-                            resources={users}
+                            resources={stateUsers}
                             resourceName="user"
                             toolbox={toolbox}
                         />

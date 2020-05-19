@@ -87,7 +87,7 @@ export default class TenantsModal extends React.Component {
     }
 
     render() {
-        const { errors, loading } = this.state;
+        const { errors, loading, tenants: tenantsState } = this.state;
         const { group: groupProp, onHide, open, tenants: tenantsProp, toolbox } = this.props;
         const { Modal, Icon, Form, ApproveButton, CancelButton } = Stage.Basic;
 
@@ -113,13 +113,13 @@ export default class TenantsModal extends React.Component {
                                 selection
                                 options={options}
                                 name="tenants"
-                                value={Object.keys(tenants)}
+                                value={Object.keys(tenantsState)}
                                 onChange={this.handleInputChange.bind(this)}
                             />
                         </Form.Field>
                         <RolesPicker
                             onUpdate={this.onRoleChange.bind(this)}
-                            resources={tenants}
+                            resources={tenantsState}
                             resourceName="tenant"
                             toolbox={toolbox}
                         />

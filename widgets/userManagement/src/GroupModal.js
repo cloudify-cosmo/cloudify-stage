@@ -64,7 +64,7 @@ export default class GroupModal extends React.Component {
     }
 
     render() {
-        const { errors, loading } = this.state;
+        const { errors, loading, groups: groupsState } = this.state;
         const { onHide, open, user: userProp, groups: groupsProp } = this.props;
         const { Modal, Icon, Form, ApproveButton, CancelButton } = Stage.Basic;
 
@@ -90,7 +90,7 @@ export default class GroupModal extends React.Component {
                                 selection
                                 options={options}
                                 name="groups"
-                                value={groups}
+                                value={groupsState}
                                 onChange={this.handleInputChange.bind(this)}
                             />
                         </Form.Field>

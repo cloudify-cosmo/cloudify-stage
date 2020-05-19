@@ -128,11 +128,11 @@ export default class TenantsTable extends React.Component {
     }
 
     render() {
+        const { data, toolbox, widget } = this.props;
         const { error, modalType, showModal, tenant, userGroups, users } = this.state;
         const NO_DATA_MESSAGE = 'There are no Tenants available. Click "Add" to add Tenants.';
         const { ErrorMessage, DataTable, Label } = Stage.Basic;
         const DeleteModal = Stage.Basic.Confirm;
-        const { data, toolbox, widget } = this.props;
 
         return (
             <div>

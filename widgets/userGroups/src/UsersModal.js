@@ -73,7 +73,7 @@ export default class UsersModal extends React.Component {
     }
 
     render() {
-        const { errors, loading, waitingForConfirmation } = this.state;
+        const { errors, loading, users: usersState, waitingForConfirmation } = this.state;
         const { group: groupProp, onHide, open, users: usersProp } = this.props;
         const { ApproveButton, CancelButton, Form, Icon, Message, Modal } = Stage.Basic;
 
@@ -107,7 +107,7 @@ export default class UsersModal extends React.Component {
                                 selection
                                 options={options}
                                 name="users"
-                                value={users}
+                                value={usersState}
                                 onChange={this.handleInputChange.bind(this)}
                             />
                         </Form.Field>

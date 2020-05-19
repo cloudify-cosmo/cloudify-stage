@@ -127,7 +127,17 @@ export default class CreateModal extends React.Component {
 
     render() {
         const { toolbox } = this.props;
-        const { availableTenants, confirmPassword, errors, isAdmin, loading, open, password, username } = this.state;
+        const {
+            availableTenants,
+            confirmPassword,
+            errors,
+            isAdmin,
+            loading,
+            open,
+            password,
+            username,
+            tenants: tenantsState
+        } = this.state;
         const { ApproveButton, Button, CancelButton, Icon, Form, Message, Modal } = Stage.Basic;
         const { RolesPicker } = Stage.Common;
 
@@ -191,13 +201,13 @@ export default class CreateModal extends React.Component {
                                 multiple
                                 selection
                                 options={options}
-                                value={Object.keys(tenants)}
+                                value={Object.keys(tenantsState)}
                                 onChange={this.handleTenantChange.bind(this)}
                             />
                         </Form.Field>
                         <RolesPicker
                             onUpdate={this.handleRoleChange.bind(this)}
-                            resources={tenants}
+                            resources={tenantsState}
                             resourceName="tenant"
                             toolbox={toolbox}
                         />
