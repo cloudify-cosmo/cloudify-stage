@@ -16,7 +16,7 @@ export default class extends React.Component {
         const { ParameterValue, ParameterValueDescription } = Stage.Common;
         const { Json } = Stage.Utils;
 
-        const { instance } = this.props;
+        const { instance, onClose, open } = this.props;
 
         // Setting totalSize on DataTable components to:
         // 1. Show no-data message when there's no elements
@@ -26,7 +26,7 @@ export default class extends React.Component {
 
         return (
             <div>
-                <Modal open={this.props.open} onClose={() => this.props.onClose()} className="nodeInstanceModal">
+                <Modal open={open} onClose={() => onClose()} className="nodeInstanceModal">
                     <Modal.Header>Node instance {instance.id}</Modal.Header>
 
                     <Modal.Content>
@@ -96,7 +96,7 @@ export default class extends React.Component {
                     </Modal.Content>
 
                     <Modal.Actions>
-                        <CancelButton onClick={this.props.onClose} content="Close" />
+                        <CancelButton onClick={onClose} content="Close" />
                     </Modal.Actions>
                 </Modal>
             </div>

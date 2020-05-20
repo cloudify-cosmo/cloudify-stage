@@ -16,11 +16,11 @@ class BlueprintStepActions extends React.Component {
     static propTypes = StepActions.propTypes;
 
     onNext(id) {
+        const { fetchData, onError, onLoading, onNext, toolbox } = this.props;
         let fetchedStepData = {};
 
-        this.props
-            .onLoading()
-            .then(this.props.fetchData)
+        onLoading()
+            .then(fetchData)
             .then(({ stepData }) => {
                 fetchedStepData = stepData;
                 const blueprintUrl = stepData.blueprintFile ? '' : stepData.blueprintUrl;
@@ -54,7 +54,7 @@ class BlueprintStepActions extends React.Component {
                     });
                 }
                 if (!_.isNil(stepData.blueprintFile)) {
-                    return this.props.toolbox
+                    return toolbox
                         .getInternal()
                         .doUpload(
                             'source/list/resources',
@@ -62,13 +62,13 @@ class BlueprintStepActions extends React.Component {
                             { archive: stepData.blueprintFile }
                         );
                 }
-                return this.props.toolbox.getInternal().doPut('source/list/resources', {
+                return toolbox.getInternal().doPut('source/list/resources', {
                     yamlFile: stepData.blueprintFileName,
                     url: stepData.blueprintUrl
                 });
             })
-            .then(resources => this.props.onNext(id, { blueprint: { ...resources, ...fetchedStepData } }))
-            .catch(error => this.props.onError(id, error.message, error.errors));
+            .then(resources => onNext(id, { blueprint: { ...resources, ...fetchedStepData } }))
+            .catch(error => onError(id, error.message, error.errors));
     }
 
     render() {
@@ -94,38 +94,41 @@ class BlueprintStepContent extends React.Component {
     };
 
     componentDidMount() {
-        this.props.onChange(this.props.id, { ...BlueprintStepContent.defaultBlueprintState, ...this.props.stepData });
+        const { id, onChange, stepData } = this.props;
+        onChange(id, { ...BlueprintStepContent.defaultBlueprintState, ...stepData });
     }
 
-    onChange(fields) {
-        this.props.onChange(this.props.id, { ...this.props.stepData, ...fields });
+    handleBlueprintChange(fields) {
+        const { id, onChange, stepData } = this.props;
+        onChange(id, { ...stepData, ...fields });
     }
 
     render() {
+        const { errors, loading, stepData, toolbox } = this.props;
         const { Container, VisibilityField } = Stage.Basic;
         const { UploadBlueprintForm } = Stage.Common;
 
-        return !_.isEmpty(this.props.stepData) ? (
+        return !_.isEmpty(stepData) ? (
             <>
                 <Container textAlign="right">
                     <VisibilityField
-                        visibility={this.props.stepData.visibility}
+                        visibility={stepData.visibility}
                         className="large"
-                        onVisibilityChange={visibility => this.onChange({ visibility })}
+                        onVisibilityChange={visibility => this.handleBlueprintChange({ visibility })}
                     />
                 </Container>
                 <UploadBlueprintForm
-                    blueprintUrl={this.props.stepData.blueprintUrl}
-                    blueprintFile={this.props.stepData.blueprintFile}
-                    blueprintName={this.props.stepData.blueprintName}
-                    blueprintFileName={this.props.stepData.blueprintFileName}
-                    imageUrl={this.props.stepData.imageUrl}
-                    imageFile={this.props.stepData.imageFile}
-                    loading={this.props.loading}
-                    errors={this.props.errors}
+                    blueprintUrl={stepData.blueprintUrl}
+                    blueprintFile={stepData.blueprintFile}
+                    blueprintName={stepData.blueprintName}
+                    blueprintFileName={stepData.blueprintFileName}
+                    imageUrl={stepData.imageUrl}
+                    imageFile={stepData.imageFile}
+                    loading={loading}
+                    errors={errors}
                     showErrorsSummary={false}
-                    onChange={this.onChange.bind(this)}
-                    toolbox={this.props.toolbox}
+                    onChange={this.handleBlueprintChange.bind(this)}
+                    toolbox={toolbox}
                 />
             </>
         ) : null;

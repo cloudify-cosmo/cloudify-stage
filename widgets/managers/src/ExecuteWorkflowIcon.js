@@ -18,14 +18,15 @@ export default class ExecuteWorkflowIcon extends React.Component {
     };
 
     render() {
+        const { onClick, workflows } = this.props;
         const { WorkflowsMenu } = Stage.Common;
 
-        return !_.isEmpty(this.props.workflows) ? (
+        return !_.isEmpty(workflows) ? (
             <WorkflowsMenu
-                workflows={this.props.workflows}
+                workflows={workflows}
                 dropdownDirection="left"
                 popupMenuProps={{ icon: 'cogs', help: 'Execute Workflow', bordered: true }}
-                onClick={workflow => this.props.onClick(workflow)}
+                onClick={workflow => onClick(workflow)}
             />
         ) : null;
     }

@@ -42,11 +42,13 @@ class UploadPluginForm extends React.Component {
     }
 
     resetErrors() {
-        this.props.onChange(UploadPluginForm.NO_ERRORS);
+        const { onChange: cbOnChange } = this.props;
+        cbOnChange(UploadPluginForm.NO_ERRORS);
     }
 
     onChange(field, file, url) {
-        this.props.onChange({
+        const { onChange: cbOnChange } = this.props;
+        cbOnChange({
             ...UploadPluginForm.NO_ERRORS,
             [`${field}File`]: file,
             [`${field}Url`]: url
@@ -54,15 +56,16 @@ class UploadPluginForm extends React.Component {
     }
 
     createFormField(field, required) {
+        const { errors, hidePlaceholders } = this.props;
         const { Form } = Stage.Basic;
         const fieldName = field.toLowerCase();
         const urlProp = `${fieldName}Url`;
         return (
-            <Form.Field label={`${field} file`} required={required} key={field} error={this.props.errors[urlProp]}>
+            <Form.Field label={`${field} file`} required={required} key={field} error={errors[urlProp]}>
                 <Form.UrlOrFile
                     name={fieldName}
-                    value={this.props[urlProp]}
-                    placeholder={this.props.hidePlaceholders ? '' : placeholders[fieldName]}
+                    value={urlProp}
+                    placeholder={hidePlaceholders ? '' : placeholders[fieldName]}
                     onChangeUrl={url => this.onChange(fieldName, null, url)}
                     onChangeFile={file => this.onChange(fieldName, file || null, file ? file.name : '')}
                 />
@@ -71,21 +74,18 @@ class UploadPluginForm extends React.Component {
     }
 
     render() {
+        const { addRequiredMarks, errors, loading, wrapInForm } = this.props;
         const { Container, Form } = Stage.Basic;
 
         const formFields = [
-            this.createFormField('Wagon', this.props.addRequiredMarks),
-            this.createFormField('YAML', this.props.addRequiredMarks),
+            this.createFormField('Wagon', addRequiredMarks),
+            this.createFormField('YAML', addRequiredMarks),
             this.createFormField('Icon', false)
         ];
 
-        if (this.props.wrapInForm) {
+        if (wrapInForm) {
             return (
-                <Form
-                    errors={this.props.errors}
-                    onErrorsDismiss={this.resetErrors.bind(this)}
-                    loading={this.props.loading}
-                >
+                <Form errors={errors} onErrorsDismiss={this.resetErrors.bind(this)} loading={loading}>
                     {formFields}
                 </Form>
             );

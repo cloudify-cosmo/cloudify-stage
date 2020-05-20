@@ -4,11 +4,12 @@
 
 export default class MyResourcesCheckbox extends React.Component {
     handleChange(proxy, elm) {
-        this.props.toolbox.getContext().setValue('onlyMyResources', elm.checked);
-        this.props.toolbox.getEventBus().trigger('plugins:refresh');
-        this.props.toolbox.getEventBus().trigger('snapshots:refresh');
-        this.props.toolbox.getEventBus().trigger('blueprints:refresh');
-        this.props.toolbox.getEventBus().trigger('deployments:refresh');
+        const { toolbox } = this.props;
+        toolbox.getContext().setValue('onlyMyResources', elm.checked);
+        toolbox.getEventBus().trigger('plugins:refresh');
+        toolbox.getEventBus().trigger('snapshots:refresh');
+        toolbox.getEventBus().trigger('blueprints:refresh');
+        toolbox.getEventBus().trigger('deployments:refresh');
     }
 
     render() {

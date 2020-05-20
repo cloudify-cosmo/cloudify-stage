@@ -20,7 +20,8 @@ export default class TaskStatus extends React.Component {
             name: ''
         };
 
-        switch (this.props.status) {
+        const { status } = this.props;
+        switch (status) {
             case Task.Status.pending:
                 iconProps.color = 'black';
                 iconProps.name = 'clock';

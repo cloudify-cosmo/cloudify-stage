@@ -2,8 +2,8 @@
  * Created by kinneretzin on 02/10/2016.
  */
 
-import BlueprintsTable from './BlueprintsTable';
 import BlueprintsCatalog from './BlueprintsCatalog';
+import BlueprintsTable from './BlueprintsTable';
 
 export default class BlueprintList extends React.Component {
     constructor(props, context) {
@@ -20,21 +20,21 @@ export default class BlueprintList extends React.Component {
     }
 
     shouldComponentUpdate(nextProps, nextState) {
+        const { data, widget } = this.props;
         return (
-            !_.isEqual(this.props.widget, nextProps.widget) ||
+            !_.isEqual(widget, nextProps.widget) ||
             !_.isEqual(this.state, nextState) ||
-            !_.isEqual(this.props.data, nextProps.data)
+            !_.isEqual(data, nextProps.data)
         );
     }
 
     selectBlueprint(item) {
-        if (this.props.widget.configuration.clickToDrillDown) {
-            this.props.toolbox.drillDown(this.props.widget, 'blueprint', { blueprintId: item.id }, item.id);
+        const { toolbox, widget } = this.props;
+        if (widget.configuration.clickToDrillDown) {
+            toolbox.drillDown(widget, 'blueprint', { blueprintId: item.id }, item.id);
         } else {
-            const oldSelectedBlueprintId = this.props.toolbox.getContext().getValue('blueprintId');
-            this.props.toolbox
-                .getContext()
-                .setValue('blueprintId', item.id === oldSelectedBlueprintId ? null : item.id);
+            const oldSelectedBlueprintId = toolbox.getContext().getValue('blueprintId');
+            toolbox.getContext().setValue('blueprintId', item.id === oldSelectedBlueprintId ? null : item.id);
         }
     }
 
@@ -47,18 +47,20 @@ export default class BlueprintList extends React.Component {
     }
 
     deleteBlueprint() {
-        if (!this.state.blueprintId) {
+        const { blueprintId, force } = this.state;
+        const { toolbox } = this.props;
+        if (!blueprintId) {
             this.setState({ error: 'Something went wrong, no blueprint was selected for delete' });
             return;
         }
 
-        const actions = new Stage.Common.BlueprintActions(this.props.toolbox);
+        const actions = new Stage.Common.BlueprintActions(toolbox);
         this.setState({ confirmDelete: false });
         actions
-            .doDelete(this.state.blueprintId, this.state.force)
+            .doDelete(blueprintId, force)
             .then(() => {
                 this.setState({ error: null });
-                this.props.toolbox.refresh();
+                toolbox.refresh();
             })
             .catch(err => {
                 this.setState({ error: err.message });
@@ -66,30 +68,34 @@ export default class BlueprintList extends React.Component {
     }
 
     setBlueprintVisibility(blueprintId, visibility) {
-        const actions = new Stage.Common.BlueprintActions(this.props.toolbox);
-        this.props.toolbox.loading(true);
+        const { toolbox } = this.props;
+        const actions = new Stage.Common.BlueprintActions(toolbox);
+        toolbox.loading(true);
         actions
             .doSetVisibility(blueprintId, visibility)
             .then(() => {
-                this.props.toolbox.loading(false);
-                this.props.toolbox.refresh();
+                toolbox.loading(false);
+                toolbox.refresh();
             })
             .catch(err => {
-                this.props.toolbox.loading(false);
+                toolbox.loading(false);
                 this.setState({ error: err.message });
             });
     }
 
     refreshData() {
-        this.props.toolbox.refresh();
+        const { toolbox } = this.props;
+        toolbox.refresh();
     }
 
     componentDidMount() {
-        this.props.toolbox.getEventBus().on('blueprints:refresh', this.refreshData, this);
+        const { toolbox } = this.props;
+        toolbox.getEventBus().on('blueprints:refresh', this.refreshData, this);
     }
 
     componentWillUnmount() {
-        this.props.toolbox.getEventBus().off('blueprints:refresh', this.refreshData);
+        const { toolbox } = this.props;
+        toolbox.getEventBus().off('blueprints:refresh', this.refreshData);
     }
 
     hideDeploymentModal() {
@@ -109,19 +115,22 @@ export default class BlueprintList extends React.Component {
     }
 
     fetchGridData(fetchParams) {
-        return this.props.toolbox.refresh(fetchParams);
+        const { toolbox } = this.props;
+        return toolbox.refresh(fetchParams);
     }
 
     render() {
+        const { blueprintId, confirmDelete, error, force, showDeploymentModal, showUploadModal } = this.state;
+        const { data, toolbox, widget } = this.props;
         const NO_DATA_MESSAGE = 'There are no Blueprints available. Click "Upload" to add Blueprints.';
         const { Button, ErrorMessage } = Stage.Basic;
         const { DeleteConfirm, DeployBlueprintModal, UploadBlueprintModal } = Stage.Common;
 
-        const shouldShowTable = this.props.widget.configuration.displayStyle === 'table';
+        const shouldShowTable = widget.configuration.displayStyle === 'table';
 
         return (
             <div>
-                <ErrorMessage error={this.state.error} onDismiss={() => this.setState({ error: null })} autoHide />
+                <ErrorMessage error={error} onDismiss={() => this.setState({ error: null })} autoHide />
 
                 <Button
                     content="Upload"
@@ -133,9 +142,9 @@ export default class BlueprintList extends React.Component {
 
                 {shouldShowTable ? (
                     <BlueprintsTable
-                        widget={this.props.widget}
-                        data={this.props.data}
-                        toolbox={this.props.toolbox}
+                        widget={widget}
+                        data={data}
+                        toolbox={toolbox}
                         fetchGridData={this.fetchGridData.bind(this)}
                         onSelectBlueprint={this.selectBlueprint.bind(this)}
                         onDeleteBlueprint={this.deleteBlueprintConfirm.bind(this)}
@@ -145,9 +154,9 @@ export default class BlueprintList extends React.Component {
                     />
                 ) : (
                     <BlueprintsCatalog
-                        widget={this.props.widget}
-                        data={this.props.data}
-                        toolbox={this.props.toolbox}
+                        widget={widget}
+                        data={data}
+                        toolbox={toolbox}
                         fetchData={this.fetchGridData.bind(this)}
                         onSelectBlueprint={this.selectBlueprint.bind(this)}
                         onDeleteBlueprint={this.deleteBlueprintConfirm.bind(this)}
@@ -158,25 +167,25 @@ export default class BlueprintList extends React.Component {
                 )}
 
                 <DeleteConfirm
-                    resourceName={`blueprint ${this.state.blueprintId}`}
-                    force={this.state.force}
-                    open={this.state.confirmDelete}
+                    resourceName={`blueprint ${blueprintId}`}
+                    force={force}
+                    open={confirmDelete}
                     onConfirm={this.deleteBlueprint.bind(this)}
                     onCancel={() => this.setState({ confirmDelete: false })}
                     onForceChange={this.handleForceChange.bind(this)}
                 />
 
                 <DeployBlueprintModal
-                    open={this.state.showDeploymentModal}
-                    blueprintId={this.state.blueprintId}
+                    open={showDeploymentModal}
+                    blueprintId={blueprintId}
                     onHide={this.hideDeploymentModal.bind(this)}
-                    toolbox={this.props.toolbox}
+                    toolbox={toolbox}
                 />
 
                 <UploadBlueprintModal
-                    open={this.state.showUploadModal}
+                    open={showUploadModal}
                     onHide={this.hideUploadModal.bind(this)}
-                    toolbox={this.props.toolbox}
+                    toolbox={toolbox}
                 />
             </div>
         );

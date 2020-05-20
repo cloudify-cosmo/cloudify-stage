@@ -34,19 +34,22 @@ export default class CreateModal extends React.Component {
     }
 
     componentDidUpdate(prevProps, prevState) {
-        if (!prevState.open && this.state.open) {
+        const { open } = this.state;
+        if (!prevState.open && open) {
             this.setState(CreateModal.initialState);
         }
     }
 
     createSecret() {
+        const { isHiddenValue, secretKey, secretValue, visibility } = this.state;
+        const { toolbox } = this.props;
         const errors = {};
 
-        if (_.isEmpty(this.state.secretKey)) {
+        if (_.isEmpty(secretKey)) {
             errors.secretKey = 'Please provide secret key';
         }
 
-        if (_.isEmpty(this.state.secretValue)) {
+        if (_.isEmpty(secretValue)) {
             errors.secretValue = 'Please provide secret value';
         }
 
@@ -58,12 +61,12 @@ export default class CreateModal extends React.Component {
         // Disable the form
         this.setState({ loading: true });
 
-        const actions = new Stage.Common.SecretActions(this.props.toolbox);
+        const actions = new Stage.Common.SecretActions(toolbox);
         actions
-            .doCreate(this.state.secretKey, this.state.secretValue, this.state.visibility, this.state.isHiddenValue)
+            .doCreate(secretKey, secretValue, visibility, isHiddenValue)
             .then(() => {
                 this.setState({ errors: {}, loading: false, open: false });
-                this.props.toolbox.refresh();
+                toolbox.refresh();
             })
             .catch(err => {
                 this.setState({ errors: { error: err.message }, loading: false });
@@ -75,6 +78,8 @@ export default class CreateModal extends React.Component {
     }
 
     onSecretFileChange(file) {
+        const { toolbox } = this.props;
+
         if (!file) {
             this.setState({ secretValue: '', errors: {} });
             return;
@@ -82,7 +87,7 @@ export default class CreateModal extends React.Component {
 
         this.setState({ fileLoading: true });
 
-        const actions = new Stage.Common.FileActions(this.props.toolbox);
+        const actions = new Stage.Common.FileActions(toolbox);
         actions
             .doGetTextFileContent(file)
             .then(fileContent => {
@@ -94,63 +99,60 @@ export default class CreateModal extends React.Component {
     }
 
     render() {
+        const { errors, fileLoading, isHiddenValue, loading, open, secretKey, secretValue, visibility } = this.state;
         const { ApproveButton, Button, CancelButton, Checkbox, Icon, Form, Modal, VisibilityField } = Stage.Basic;
         const createButton = <Button content="Create" icon="add" labelPosition="left" />;
 
         return (
             <Modal
                 trigger={createButton}
-                open={this.state.open}
+                open={open}
                 onOpen={() => this.setState({ open: true })}
                 onClose={() => this.setState({ open: false })}
             >
                 <Modal.Header>
                     <Icon name="add" /> Create secret
                     <VisibilityField
-                        visibility={this.state.visibility}
+                        visibility={visibility}
                         className="rightFloated"
                         onVisibilityChange={visibility => this.setState({ visibility })}
                     />
                 </Modal.Header>
 
                 <Modal.Content>
-                    <Form
-                        loading={this.state.loading}
-                        errors={this.state.errors}
-                        onErrorsDismiss={() => this.setState({ errors: {} })}
-                    >
-                        <Form.Field error={this.state.errors.secretKey}>
+                    <Form loading={loading} errors={errors} onErrorsDismiss={() => this.setState({ errors: {} })}>
+                        <Form.Field error={errors.secretKey}>
                             <Form.Input
                                 name="secretKey"
                                 placeholder="Secret key"
-                                value={this.state.secretKey}
+                                value={secretKey}
                                 onChange={this.handleInputChange.bind(this)}
                             />
                         </Form.Field>
-                        <Form.Field error={this.state.errors.secretValue}>
+                        <Form.Field error={errors.secretValue}>
                             <Form.TextArea
                                 name="secretValue"
                                 placeholder="Secret value"
                                 autoHeight
-                                value={this.state.secretValue}
+                                value={secretValue}
                                 onChange={this.handleInputChange.bind(this)}
                             />
                         </Form.Field>
-                        <Form.Field error={this.state.errors.secretFile}>
+                        <Form.Field error={errors.secretFile}>
                             <Form.File
                                 name="secretFile"
                                 placeholder="Get secret value from file (max: 50kB)"
                                 ref="secretFile"
                                 onChange={this.onSecretFileChange.bind(this)}
-                                loading={this.state.fileLoading}
-                                disabled={this.state.fileLoading}
+                                loading={fileLoading}
+                                disabled={fileLoading}
                             />
                         </Form.Field>
-                        <Form.Field error={this.state.errors.isHiddenValue}>
+                        <Form.Field error={errors.isHiddenValue}>
                             <Form.Checkbox
                                 name="isHiddenValue"
                                 label="Hidden Value"
-                                checked={this.state.isHiddenValue}
+                                checked={isHiddenValue}
                                 onChange={this.handleInputChange.bind(this)}
                             />
                         </Form.Field>
@@ -158,10 +160,10 @@ export default class CreateModal extends React.Component {
                 </Modal.Content>
 
                 <Modal.Actions>
-                    <CancelButton onClick={this.onCancel.bind(this)} disabled={this.state.loading} />
+                    <CancelButton onClick={this.onCancel.bind(this)} disabled={loading} />
                     <ApproveButton
                         onClick={this.onApprove.bind(this)}
-                        disabled={this.state.loading}
+                        disabled={loading}
                         content="Create"
                         icon="add"
                         color="green"

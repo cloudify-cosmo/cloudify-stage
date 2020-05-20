@@ -33,10 +33,12 @@ export default class CreateModal extends React.Component {
     }
 
     componentDidUpdate(prevProps, prevState) {
-        if (!prevState.open && this.state.open) {
+        const { open } = this.state;
+        if (!prevState.open && open) {
+            const { toolbox } = this.props;
             this.setState({ ...CreateModal.initialState, loading: true });
 
-            const actions = new Actions(this.props.toolbox);
+            const actions = new Actions(toolbox);
             this.availableTenantsPromise = Stage.Utils.makeCancelable(actions.doGetTenants());
 
             this.availableTenantsPromise.promise
@@ -58,25 +60,23 @@ export default class CreateModal extends React.Component {
     }
 
     submitCreate() {
+        const { confirmPassword, isAdmin, password, tenants, username } = this.state;
+        const { toolbox } = this.props;
         const errors = {};
 
-        if (_.isEmpty(this.state.username)) {
+        if (_.isEmpty(username)) {
             errors.username = 'Please provide username';
         }
 
-        if (_.isEmpty(this.state.password)) {
+        if (_.isEmpty(password)) {
             errors.password = 'Please provide user password';
         }
 
-        if (_.isEmpty(this.state.confirmPassword)) {
+        if (_.isEmpty(confirmPassword)) {
             errors.confirmPassword = 'Please provide password confirmation';
         }
 
-        if (
-            !_.isEmpty(this.state.password) &&
-            !_.isEmpty(this.state.confirmPassword) &&
-            this.state.password !== this.state.confirmPassword
-        ) {
+        if (!_.isEmpty(password) && !_.isEmpty(confirmPassword) && password !== confirmPassword) {
             errors.confirmPassword = 'Passwords do not match';
         }
 
@@ -88,18 +88,14 @@ export default class CreateModal extends React.Component {
         // Disable the form
         this.setState({ loading: true });
 
-        const actions = new Actions(this.props.toolbox);
+        const actions = new Actions(toolbox);
         actions
-            .doCreate(
-                this.state.username,
-                this.state.password,
-                Stage.Common.RolesUtil.getSystemRole(this.state.isAdmin)
-            )
-            .then(() => actions.doHandleTenants(this.state.username, this.state.tenants, [], []))
+            .doCreate(username, password, Stage.Common.RolesUtil.getSystemRole(isAdmin))
+            .then(() => actions.doHandleTenants(username, tenants, [], []))
             .then(() => {
                 this.setState({ errors: {}, loading: false, open: false });
-                this.props.toolbox.refresh();
-                this.props.toolbox.getEventBus().trigger('tenants:refresh');
+                toolbox.refresh();
+                toolbox.getEventBus().trigger('tenants:refresh');
             })
             .catch(err => {
                 this.setState({ errors: { error: err.message }, loading: false });
@@ -113,26 +109,41 @@ export default class CreateModal extends React.Component {
     handleTenantChange(proxy, field) {
         const newTenants = {};
         _.forEach(field.value, tenant => {
+            const { toolbox } = this.props;
+            const { tenants } = this.state;
+
             newTenants[tenant] =
-                this.state.tenants[tenant] ||
-                Stage.Common.RolesUtil.getDefaultRoleName(this.props.toolbox.getManagerState().roles);
+                tenants[tenant] || Stage.Common.RolesUtil.getDefaultRoleName(toolbox.getManagerState().roles);
         });
         this.setState({ tenants: newTenants });
     }
 
     handleRoleChange(tenant, role) {
-        const newTenants = { ...this.state.tenants };
+        const { tenants } = this.state;
+        const newTenants = { ...tenants };
         newTenants[tenant] = role;
         this.setState({ tenants: newTenants });
     }
 
     render() {
+        const { toolbox } = this.props;
+        const {
+            availableTenants,
+            confirmPassword,
+            errors,
+            isAdmin,
+            loading,
+            open,
+            password,
+            username,
+            tenants: tenantsState
+        } = this.state;
         const { ApproveButton, Button, CancelButton, Icon, Form, Message, Modal } = Stage.Basic;
         const { RolesPicker } = Stage.Common;
 
         const addButton = <Button content="Add" icon="add user" labelPosition="left" className="addUserButton" />;
 
-        const tenants = { items: [], ...this.state.availableTenants };
+        const tenants = { items: [], ...availableTenants };
         const options = _.map(tenants.items, item => {
             return { text: item.name, value: item.name, key: item.name };
         });
@@ -140,7 +151,7 @@ export default class CreateModal extends React.Component {
         return (
             <Modal
                 trigger={addButton}
-                open={this.state.open}
+                open={open}
                 onOpen={() => this.setState({ open: true })}
                 onClose={() => this.setState({ open: false })}
                 className="addUserModal"
@@ -150,49 +161,39 @@ export default class CreateModal extends React.Component {
                 </Modal.Header>
 
                 <Modal.Content>
-                    <Form
-                        loading={this.state.loading}
-                        errors={this.state.errors}
-                        onErrorsDismiss={() => this.setState({ errors: {} })}
-                    >
-                        <Form.Field label="Username" error={this.state.errors.username} required>
-                            <Form.Input
-                                name="username"
-                                value={this.state.username}
-                                onChange={this.handleInputChange.bind(this)}
-                            />
+                    <Form loading={loading} errors={errors} onErrorsDismiss={() => this.setState({ errors: {} })}>
+                        <Form.Field label="Username" error={errors.username} required>
+                            <Form.Input name="username" value={username} onChange={this.handleInputChange.bind(this)} />
                         </Form.Field>
 
-                        <Form.Field label="Password" error={this.state.errors.password} required>
+                        <Form.Field label="Password" error={errors.password} required>
                             <Form.Input
                                 name="password"
                                 type="password"
-                                value={this.state.password}
+                                value={password}
                                 onChange={this.handleInputChange.bind(this)}
                             />
                         </Form.Field>
 
-                        <Form.Field label="Confirm password" error={this.state.errors.confirmPassword} required>
+                        <Form.Field label="Confirm password" error={errors.confirmPassword} required>
                             <Form.Input
                                 name="confirmPassword"
                                 type="password"
-                                value={this.state.confirmPassword}
+                                value={confirmPassword}
                                 onChange={this.handleInputChange.bind(this)}
                             />
                         </Form.Field>
 
-                        <Form.Field error={this.state.errors.isAdmin}>
+                        <Form.Field error={errors.isAdmin}>
                             <Form.Checkbox
                                 label="Admin"
                                 name="isAdmin"
-                                checked={this.state.isAdmin}
+                                checked={isAdmin}
                                 onChange={this.handleInputChange.bind(this)}
                             />
                         </Form.Field>
 
-                        {this.state.isAdmin && (
-                            <Message>Admin users have full permissions to all tenants on the manager.</Message>
-                        )}
+                        {isAdmin && <Message>Admin users have full permissions to all tenants on the manager.</Message>}
 
                         <Form.Field label="Tenants">
                             <Form.Dropdown
@@ -200,24 +201,24 @@ export default class CreateModal extends React.Component {
                                 multiple
                                 selection
                                 options={options}
-                                value={Object.keys(this.state.tenants)}
+                                value={Object.keys(tenantsState)}
                                 onChange={this.handleTenantChange.bind(this)}
                             />
                         </Form.Field>
                         <RolesPicker
                             onUpdate={this.handleRoleChange.bind(this)}
-                            resources={this.state.tenants}
+                            resources={tenantsState}
                             resourceName="tenant"
-                            toolbox={this.props.toolbox}
+                            toolbox={toolbox}
                         />
                     </Form>
                 </Modal.Content>
 
                 <Modal.Actions>
-                    <CancelButton onClick={this.onCancel.bind(this)} disabled={this.state.loading} />
+                    <CancelButton onClick={this.onCancel.bind(this)} disabled={loading} />
                     <ApproveButton
                         onClick={this.onApprove.bind(this)}
-                        disabled={this.state.loading}
+                        disabled={loading}
                         content="Add"
                         icon="add user"
                         color="green"

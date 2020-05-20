@@ -29,21 +29,24 @@ export default class GridItem extends Component {
     };
 
     componentDidMount() {
-        if (this.props.onItemAdded) {
-            this.props.onItemAdded(this.props.id);
+        const { id, onItemAdded } = this.props;
+        if (onItemAdded) {
+            onItemAdded(id);
         }
     }
 
     componentWillUnmount() {
-        if (this.props.onItemRemoved) {
-            this.props.onItemRemoved(this.props.id);
+        const { id, onItemRemoved } = this.props;
+        if (onItemRemoved) {
+            onItemRemoved(id);
         }
     }
 
     render() {
+        const { children, className, id } = this.props;
         return (
-            <div id={this.props.id} className={this.props.className}>
-                {this.props.children}
+            <div id={id} className={className}>
+                {children}
             </div>
         );
     }

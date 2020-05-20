@@ -34,6 +34,7 @@ export default class WizardButton extends React.Component {
     render() {
         const { Button, Icon } = Stage.Basic;
         const { color, icon, name, steps, toolbox, wizardTitle } = this.props;
+        const { open } = this.state;
 
         return (
             <>
@@ -49,7 +50,7 @@ export default class WizardButton extends React.Component {
                 </Button>
                 <Wizard.Modal
                     header={wizardTitle}
-                    open={this.state.open}
+                    open={open}
                     steps={steps}
                     onClose={this.closeWizard.bind(this)}
                     toolbox={toolbox}

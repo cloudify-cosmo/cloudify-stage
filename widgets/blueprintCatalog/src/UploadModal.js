@@ -42,16 +42,17 @@ export default class UploadModal extends React.Component {
     }
 
     onCancel() {
-        this.props.onHide();
+        const { onHide } = this.props;
+        onHide();
         return true;
     }
 
     componentDidUpdate(prevProps) {
-        if (!prevProps.open && this.props.open) {
-            if (!_.isEmpty(this.props.yamlFiles)) {
+        const { open, repositoryName, yamlFiles } = this.props;
+        if (!prevProps.open && open) {
+            if (!_.isEmpty(yamlFiles)) {
                 const defaultBlueprintYamlFile = Stage.Common.UploadBlueprintModal.DEFAULT_BLUEPRINT_YAML_FILE;
-                const { yamlFiles } = this.props;
-                const blueprintName = this.props.repositoryName;
+                const blueprintName = repositoryName;
                 const blueprintYamlFile = _.includes(yamlFiles, defaultBlueprintYamlFile)
                     ? defaultBlueprintYamlFile
                     : yamlFiles[0];
@@ -69,13 +70,15 @@ export default class UploadModal extends React.Component {
     }
 
     submitUpload() {
+        const { blueprintName, blueprintYamlFile, visibility } = this.state;
+        const { actions, imageUrl, onHide, toolbox, zipUrl } = this.props;
         const errors = {};
 
-        if (_.isEmpty(this.state.blueprintName)) {
+        if (_.isEmpty(blueprintName)) {
             errors.blueprintName = 'Please provide blueprint name';
         }
 
-        if (_.isEmpty(this.state.blueprintYamlFile)) {
+        if (_.isEmpty(blueprintYamlFile)) {
             errors.blueprintYamlFile = 'Please provide blueprint YAML file';
         }
 
@@ -87,18 +90,12 @@ export default class UploadModal extends React.Component {
         // Disable the form
         this.setState({ loading: true });
 
-        this.props.actions
-            .doUpload(
-                this.state.blueprintName,
-                this.state.blueprintYamlFile,
-                this.props.zipUrl,
-                this.props.imageUrl,
-                this.state.visibility
-            )
+        actions
+            .doUpload(blueprintName, blueprintYamlFile, zipUrl, imageUrl, visibility)
             .then(() => {
                 this.setState({ errors: {}, loading: false });
-                this.props.toolbox.getEventBus().trigger('blueprints:refresh');
-                this.props.onHide();
+                toolbox.getEventBus().trigger('blueprints:refresh');
+                onHide();
             })
             .catch(err => {
                 this.setState({ errors: { error: err.message }, loading: false });
@@ -110,46 +107,45 @@ export default class UploadModal extends React.Component {
     }
 
     render() {
+        const { blueprintName, blueprintYamlFile, errors, loading, visibility, yamlFiles: yamlFilesState } = this.state;
+        const { onHide, open, repositoryName } = this.props;
         const { Modal, CancelButton, ApproveButton, Icon, Form, VisibilityField } = Stage.Basic;
-        const yamlFiles = _.map(this.state.yamlFiles, item => {
+
+        const yamlFiles = _.map(yamlFilesState, item => {
             return { text: item, value: item };
         });
 
         return (
             <div>
-                <Modal open={this.props.open} onClose={() => this.props.onHide()} className="uploadModal">
+                <Modal open={open} onClose={() => onHide()} className="uploadModal">
                     <Modal.Header>
-                        <Icon name="upload" /> Upload blueprint from {this.props.repositoryName}
+                        <Icon name="upload" /> Upload blueprint from {repositoryName}
                         <VisibilityField
-                            visibility={this.state.visibility}
+                            visibility={visibility}
                             className="rightFloated"
                             onVisibilityChange={visibility => this.setState({ visibility })}
                         />
                     </Modal.Header>
 
                     <Modal.Content>
-                        <Form
-                            loading={this.state.loading}
-                            errors={this.state.errors}
-                            onErrorsDismiss={() => this.setState({ errors: {} })}
-                        >
+                        <Form loading={loading} errors={errors} onErrorsDismiss={() => this.setState({ errors: {} })}>
                             <Form.Field
                                 label="Blueprint name"
                                 required
-                                error={this.state.errors.blueprintName}
+                                error={errors.blueprintName}
                                 help="The package will be uploaded to the Manager as a Blueprint resource,
                                               under the name you specify here."
                             >
                                 <Form.Input
                                     name="blueprintName"
-                                    value={this.state.blueprintName}
+                                    value={blueprintName}
                                     onChange={this.handleInputChange.bind(this)}
                                 />
                             </Form.Field>
                             <Form.Field
                                 label="Blueprint YAML file"
                                 required
-                                error={this.state.errors.blueprintYamlFile}
+                                error={errors.blueprintYamlFile}
                                 help="As you can have more than one yaml file in the archive,
                                               you need to specify which is the main one for your application."
                             >
@@ -158,7 +154,7 @@ export default class UploadModal extends React.Component {
                                     search
                                     selection
                                     options={yamlFiles}
-                                    value={this.state.blueprintYamlFile}
+                                    value={blueprintYamlFile}
                                     onChange={this.handleInputChange.bind(this)}
                                 />
                             </Form.Field>
@@ -166,10 +162,10 @@ export default class UploadModal extends React.Component {
                     </Modal.Content>
 
                     <Modal.Actions>
-                        <CancelButton onClick={this.onCancel.bind(this)} disabled={this.state.loading} />
+                        <CancelButton onClick={this.onCancel.bind(this)} disabled={loading} />
                         <ApproveButton
                             onClick={this.onApprove.bind(this)}
-                            disabled={this.state.loading}
+                            disabled={loading}
                             content="Upload"
                             icon="upload"
                             color="green"

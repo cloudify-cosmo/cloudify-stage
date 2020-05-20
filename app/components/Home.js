@@ -15,55 +15,63 @@ export default class Home extends Component {
 
     // TODO: Context handling should not be here. Currently necessary to use deprecated methods.
     UNSAFE_componentWillMount() {
-        this.props.onStorePageId(this.props.pageId);
-        this.handleContext(this.props.contextParams);
+        const { contextParams, onStorePageId, pageId } = this.props;
+        onStorePageId(pageId);
+        this.handleContext(contextParams);
     }
 
     // TODO: Context handling should not be here. Currently necessary to use deprecated methods.
     UNSAFE_componentWillReceiveProps(nextProps) {
-        if (nextProps.pageId !== this.props.pageId) {
-            this.props.onStorePageId(nextProps.pageId);
+        const { onStorePageId, pageId } = this.props;
+        if (nextProps.pageId !== pageId) {
+            onStorePageId(nextProps.pageId);
             this.handleContext(nextProps.contextParams);
         }
     }
 
     componentDidUpdate() {
-        if (this.props.isMaintenance) {
-            this.props.navigateToMaintenancePage();
+        const {
+            emptyPages,
+            isMaintenance,
+            navigateTo404,
+            navigateToError,
+            navigateToMaintenancePage,
+            selectedPage
+        } = this.props;
+        if (isMaintenance) {
+            navigateToMaintenancePage();
         }
 
-        if (this.props.emptyPages) {
-            this.props.navigateToError(
-                'No pages available to display. Please try to reset application to the default settings.'
-            );
+        if (emptyPages) {
+            navigateToError('No pages available to display. Please try to reset application to the default settings.');
         }
 
-        if (!this.props.selectedPage) {
-            this.props.navigateTo404();
+        if (!selectedPage) {
+            navigateTo404();
         }
     }
 
     handleContext(contextParams) {
+        const { onClearContext, onSetContextValue, onSetDrilldownContext } = this.props;
         // Always clear the context. Whatever is relevant to the drilldown should be passed as drilldown context
-        this.props.onClearContext();
+        onClearContext();
 
         // Go over all the drilldown context and set it all (from top down)
         _.each(contextParams, cp => {
             _.each(cp.context, (value, key) => {
-                this.props.onSetContextValue(key, value);
+                onSetContextValue(key, value);
             });
         });
 
-        this.props.onSetDrilldownContext(contextParams);
+        onSetDrilldownContext(contextParams);
     }
 
     render() {
-        if (this.props.emptyPages) {
+        const { emptyPages, pageId, pageName } = this.props;
+
+        if (emptyPages) {
             return null;
         }
-
-        const { pageId } = this.props;
-        const { pageName } = this.props;
 
         return (
             <div className="main">

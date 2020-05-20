@@ -2,8 +2,8 @@
  * Created by kinneretzin on 20/10/2016.
  */
 
-import SystemWorkflowIcon from './SystemWorkflowIcon';
 import DryRunIcon from './DryRunIcon';
+import SystemWorkflowIcon from './SystemWorkflowIcon';
 import ExecutionWorkflowGraph from './tasksGraph/ExecutionWorkflowGraph';
 
 export default class ExecutionsTable extends React.Component {
@@ -32,23 +32,27 @@ export default class ExecutionsTable extends React.Component {
     };
 
     shouldComponentUpdate(nextProps, nextState) {
+        const { data, widget } = this.props;
         return (
-            !_.isEqual(this.props.widget.configuration, nextProps.widget.configuration) ||
+            !_.isEqual(widget.configuration, nextProps.widget.configuration) ||
             !_.isEqual(this.state, nextState) ||
-            !_.isEqual(this.props.data, nextProps.data)
+            !_.isEqual(data, nextProps.data)
         );
     }
 
     refreshData() {
-        this.props.toolbox.refresh();
+        const { toolbox } = this.props;
+        toolbox.refresh();
     }
 
     componentDidMount() {
-        this.props.toolbox.getEventBus().on('executions:refresh', this.refreshData, this);
+        const { toolbox } = this.props;
+        toolbox.getEventBus().on('executions:refresh', this.refreshData, this);
     }
 
     componentWillUnmount() {
-        this.props.toolbox.getEventBus().off('executions:refresh', this.refreshData);
+        const { toolbox } = this.props;
+        toolbox.getEventBus().off('executions:refresh', this.refreshData);
     }
 
     selectExecution(item) {
@@ -68,13 +72,14 @@ export default class ExecutionsTable extends React.Component {
     }
 
     actOnExecution(execution, action) {
-        const actions = new Stage.Common.ExecutionActions(this.props.toolbox);
+        const { toolbox } = this.props;
+        const actions = new Stage.Common.ExecutionActions(toolbox);
         actions
             .doAct(execution, action)
             .then(() => {
                 this.setState({ error: null });
-                this.props.toolbox.getEventBus().trigger('deployments:refresh');
-                this.props.toolbox.getEventBus().trigger('executions:refresh');
+                toolbox.getEventBus().trigger('deployments:refresh');
+                toolbox.getEventBus().trigger('executions:refresh');
             })
             .catch(err => {
                 this.setState({ error: err.message });
@@ -107,10 +112,21 @@ export default class ExecutionsTable extends React.Component {
     }
 
     fetchGridData(fetchParams) {
-        return this.props.toolbox.refresh(fetchParams);
+        const { toolbox } = this.props;
+        return toolbox.refresh(fetchParams);
     }
 
     render() {
+        const {
+            deploymentUpdateId,
+            deploymentUpdateModalOpen,
+            error,
+            errorModalOpen,
+            execution: stateExecution,
+            executionParametersModalOpen,
+            hoveredExecution
+        } = this.state;
+        const { data, toolbox, widget } = this.props;
         const NO_DATA_MESSAGE = "There are no Executions available. Probably there's no deployment created, yet.";
         const {
             CancelButton,
@@ -130,18 +146,18 @@ export default class ExecutionsTable extends React.Component {
 
         const { MenuAction } = ExecutionsTable;
 
-        const { fieldsToShow } = this.props.widget.configuration;
-        const execution = this.state.execution || { parameters: {} };
+        const { fieldsToShow } = widget.configuration;
+        const execution = stateExecution || { parameters: {} };
         return (
             <div>
-                <ErrorMessage error={this.state.error} onDismiss={() => this.setState({ error: null })} autoHide />
+                <ErrorMessage error={error} onDismiss={() => this.setState({ error: null })} autoHide />
 
                 <DataTable
                     fetchData={this.fetchGridData.bind(this)}
-                    totalSize={this.props.data.total}
-                    pageSize={this.props.widget.configuration.pageSize}
-                    sortColumn={this.props.widget.configuration.sortColumn}
-                    sortAscending={this.props.widget.configuration.sortAscending}
+                    totalSize={data.total}
+                    pageSize={widget.configuration.pageSize}
+                    sortColumn={widget.configuration.sortColumn}
+                    sortAscending={widget.configuration.sortAscending}
                     selectable
                     className="executionsTable"
                     noDataMessage={NO_DATA_MESSAGE}
@@ -151,17 +167,13 @@ export default class ExecutionsTable extends React.Component {
                         label="Blueprint"
                         name="blueprint_id"
                         width="15%"
-                        show={
-                            fieldsToShow.indexOf('Blueprint') >= 0 &&
-                            !this.props.data.blueprintId &&
-                            !this.props.data.deploymentId
-                        }
+                        show={fieldsToShow.indexOf('Blueprint') >= 0 && !data.blueprintId && !data.deploymentId}
                     />
                     <DataTable.Column
                         label="Deployment"
                         name="deployment_id"
                         width="15%"
-                        show={fieldsToShow.indexOf('Deployment') >= 0 && !this.props.data.deploymentId}
+                        show={fieldsToShow.indexOf('Deployment') >= 0 && !data.deploymentId}
                     />
                     <DataTable.Column
                         label="Workflow"
@@ -205,7 +217,7 @@ export default class ExecutionsTable extends React.Component {
                         show={fieldsToShow.indexOf('Params') >= 0 || fieldsToShow.indexOf('Actions') >= 0}
                     />
 
-                    {this.props.data.items.map(item => {
+                    {data.items.map(item => {
                         return (
                             <DataTable.RowExpandable key={item.id} expanded={item.isSelected}>
                                 <DataTable.Row
@@ -213,16 +225,14 @@ export default class ExecutionsTable extends React.Component {
                                     selected={item.isSelected}
                                     onClick={this.selectExecution.bind(this, item)}
                                     onMouseOver={() =>
-                                        this.state.hoveredExecution !== item.id &&
-                                        this.setState({ hoveredExecution: item.id })
+                                        hoveredExecution !== item.id && this.setState({ hoveredExecution: item.id })
                                     }
                                     onMouseOut={() =>
-                                        this.state.hoveredExecution === item.id &&
-                                        this.setState({ hoveredExecution: null })
+                                        hoveredExecution === item.id && this.setState({ hoveredExecution: null })
                                     }
                                 >
                                     <DataTable.Data>
-                                        <IdPopup id={item.id} selected={this.state.hoveredExecution === item.id} />
+                                        <IdPopup id={item.id} selected={hoveredExecution === item.id} />
                                     </DataTable.Data>
                                     <DataTable.Data>{item.blueprint_id}</DataTable.Data>
                                     <DataTable.Data>{item.deployment_id}</DataTable.Data>
@@ -302,7 +312,7 @@ export default class ExecutionsTable extends React.Component {
                                     </DataTable.Data>
                                 </DataTable.Row>
                                 <DataTable.DataExpandable key={item.id}>
-                                    <ExecutionWorkflowGraph selectedExecution={item} toolbox={this.props.toolbox} />
+                                    <ExecutionWorkflowGraph selectedExecution={item} toolbox={toolbox} />
                                 </DataTable.DataExpandable>
                             </DataTable.RowExpandable>
                         );
@@ -310,7 +320,7 @@ export default class ExecutionsTable extends React.Component {
                 </DataTable>
 
                 <Modal
-                    open={this.state.executionParametersModalOpen}
+                    open={executionParametersModalOpen}
                     onClose={() => this.setState({ execution: null, executionParametersModalOpen: false })}
                 >
                     <Modal.Header>Execution parameters</Modal.Header>
@@ -357,18 +367,15 @@ export default class ExecutionsTable extends React.Component {
                 </Modal>
 
                 <UpdateDetailsModal
-                    open={this.state.deploymentUpdateModalOpen}
-                    deploymentUpdateId={this.state.deploymentUpdateId}
+                    open={deploymentUpdateModalOpen}
+                    deploymentUpdateId={deploymentUpdateId}
                     onClose={() =>
                         this.setState({ execution: null, deploymentUpdateId: '', deploymentUpdateModalOpen: false })
                     }
-                    toolbox={this.props.toolbox}
+                    toolbox={toolbox}
                 />
 
-                <Modal
-                    open={this.state.errorModalOpen}
-                    onClose={() => this.setState({ execution: null, errorModalOpen: false })}
-                >
+                <Modal open={errorModalOpen} onClose={() => this.setState({ execution: null, errorModalOpen: false })}>
                     <Modal.Header>Error details</Modal.Header>
                     <Modal.Content scrolling>
                         <HighlightText language="python">{execution.error}</HighlightText>

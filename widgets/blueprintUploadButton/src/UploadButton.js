@@ -20,6 +20,8 @@ export default class extends React.Component {
     }
 
     render() {
+        const { toolbox } = this.props;
+        const { loading, open } = this.state;
         const { Button } = Stage.Basic;
         const { UploadBlueprintModal } = Stage.Common;
 
@@ -31,15 +33,11 @@ export default class extends React.Component {
                     content="Upload Blueprint"
                     labelPosition="left"
                     className="widgetButton"
-                    loading={this.state.loading}
+                    loading={loading}
                     onClick={this.showModal.bind(this)}
                 />
 
-                <UploadBlueprintModal
-                    open={this.state.open}
-                    onHide={this.hideModal.bind(this)}
-                    toolbox={this.props.toolbox}
-                />
+                <UploadBlueprintModal open={open} onHide={this.hideModal.bind(this)} toolbox={toolbox} />
             </div>
         );
     }

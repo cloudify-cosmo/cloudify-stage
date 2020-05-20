@@ -18,7 +18,8 @@ export default class EditWidgetIcon extends Component {
                 className="setting link icon small editWidgetIcon"
                 onClick={event => {
                     event.stopPropagation();
-                    this.props.onShowConfig();
+                    const { onShowConfig } = this.props;
+                    onShowConfig();
                 }}
             />
         );

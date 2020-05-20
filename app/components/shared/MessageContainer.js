@@ -54,18 +54,17 @@ export default class MessageContainer extends Component {
     };
 
     render() {
+        const { children, loading, margin, size, textAlign, wide } = this.props;
         SplashLoadingScreen.turnOff();
 
-        const style = { margin: this.props.margin, textAlign: this.props.textAlign };
-        const widths = this.props.wide
-            ? { mobile: 14, tablet: 14, computer: 12 }
-            : { mobile: 12, tablet: 8, computer: 6 };
+        const style = { margin, textAlign };
+        const widths = wide ? { mobile: 14, tablet: 14, computer: 12 } : { mobile: 12, tablet: 8, computer: 6 };
 
         return (
             <Grid centered container columns={1}>
                 <Grid.Column {...widths}>
-                    <Segment size={this.props.size} padded raised style={style} loading={this.props.loading}>
-                        {this.props.children}
+                    <Segment size={size} padded raised style={style} loading={loading}>
+                        {children}
                     </Segment>
                 </Grid.Column>
             </Grid>

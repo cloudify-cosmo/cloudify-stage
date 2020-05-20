@@ -57,20 +57,18 @@ export default class ExecutionStatus extends Component {
     };
 
     render() {
-        const { execution } = this.props;
+        const { execution, allowShowingPopup, iconProps, labelProps, showLabel, showWorkflowId } = this.props;
         const executionStatusDisplay = execution.status_display || execution.status;
         const showPopup =
-            this.props.allowShowingPopup &&
-            ExecutionUtils.isWaitingExecution(execution) &&
-            !_.isEmpty(execution.scheduled_for);
+            allowShowingPopup && ExecutionUtils.isWaitingExecution(execution) && !_.isEmpty(execution.scheduled_for);
 
-        return this.props.showLabel ? (
+        return showLabel ? (
             <Popup on={showPopup ? 'hover' : []}>
                 <Popup.Trigger>
-                    <Label {...this.props.labelProps} onClick={e => e.stopPropagation()}>
-                        <Icon {...ExecutionUtils.getExecutionStatusIconParams(execution)} {...this.props.iconProps} />
-                        {this.props.showWorkflowId && execution.workflow_id}
-                        {this.props.showWorkflowId && ' '}
+                    <Label {...labelProps} onClick={e => e.stopPropagation()}>
+                        <Icon {...ExecutionUtils.getExecutionStatusIconParams(execution)} {...iconProps} />
+                        {showWorkflowId && execution.workflow_id}
+                        {showWorkflowId && ' '}
                         {executionStatusDisplay}
                     </Label>
                 </Popup.Trigger>
@@ -83,7 +81,7 @@ export default class ExecutionStatus extends Component {
         ) : (
             <Icon
                 {...ExecutionUtils.getExecutionStatusIconParams(execution)}
-                {...this.props.iconProps}
+                {...iconProps}
                 onClick={e => e.stopPropagation()}
             />
         );

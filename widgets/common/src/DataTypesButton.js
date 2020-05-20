@@ -106,6 +106,8 @@ class DataTypesButton extends React.Component {
     }
 
     render() {
+        const { types } = this.props;
+        const { open } = this.state;
         const { Button, CancelButton, Modal } = Stage.Basic;
 
         return (
@@ -118,11 +120,11 @@ class DataTypesButton extends React.Component {
                     labelPosition="left"
                 />
 
-                <Modal open={this.state.open} onClose={this.onClose}>
+                <Modal open={open} onClose={this.onClose}>
                     <Modal.Header>Data Types</Modal.Header>
 
                     <Modal.Content>
-                        {_.map(this.props.types, (typeObject, typeName) => (
+                        {_.map(types, (typeObject, typeName) => (
                             <DataType
                                 key={typeName}
                                 name={typeName}

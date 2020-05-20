@@ -102,12 +102,7 @@ export default class Topology extends React.Component {
     }
 
     startTopology() {
-        const {
-            blueprintId,
-            configuration,
-            toolbox,
-            data: { icons }
-        } = this.props;
+        const { blueprintId, configuration, data, toolbox } = this.props;
         this.destroyTopology();
         this.topology = new BlueprintTopology({
             isLoading: true,
@@ -142,29 +137,27 @@ export default class Topology extends React.Component {
                         this.setState({ saveConfirmationOpen: true });
                         setTimeout(() => this.setState({ saveConfirmationOpen: false }), saveConfirmationTimeout);
                     }),
-            pluginsCatalog: _.map(icons, (icon, name) => ({ icon, name, title: name }))
+            pluginsCatalog: _.map(data.icons, (icon, name) => ({ icon, name, title: name }))
         });
         this.topology.start();
     }
 
     buildTopologyData() {
-        const {
-            data: { blueprintDeploymentData, componentDeploymentsData }
-        } = this.props;
+        const { data } = this.props;
         const { expandedDeployments, expandedTerraformNodes } = this.state;
 
-        if (_.isEmpty(blueprintDeploymentData)) {
+        if (_.isEmpty(data.blueprintDeploymentData)) {
             return null;
         }
 
-        const topology = _.cloneDeep(blueprintDeploymentData);
+        const topology = _.cloneDeep(data.blueprintDeploymentData);
 
         const determineComponentsPlugins = deploymentData => {
             _(deploymentData.nodes)
                 .map('templateData')
                 .filter({ actual_number_of_instances: 1 })
                 .each(templateData => {
-                    const componentDeploymentData = componentDeploymentsData[templateData.deploymentId];
+                    const componentDeploymentData = data.componentDeploymentsData[templateData.deploymentId];
                     if (componentDeploymentData) {
                         determineComponentsPlugins(componentDeploymentData);
                         templateData.plugins = _(componentDeploymentData.nodes)
@@ -186,7 +179,7 @@ export default class Topology extends React.Component {
                 }
 
                 const expandedTopology = createExpandedTopology(
-                    componentDeploymentsData[deploymentId],
+                    data.componentDeploymentsData[deploymentId],
                     expandedNodeData
                 );
                 _.each(expandedTopology.nodes, node => {
@@ -307,7 +300,7 @@ export default class Topology extends React.Component {
 
     getExpandHandler(stateProp) {
         return entityId => {
-            const currentExpanded = this.state[stateProp];
+            const { [stateProp]: currentExpanded } = this.state;
 
             if (_.find(currentExpanded, entityId)) {
                 // Nothing to do
@@ -320,13 +313,13 @@ export default class Topology extends React.Component {
 
     getCollapseHandler(stateProp) {
         return entityId => {
-            const currentExpanded = this.state[stateProp];
+            const { [stateProp]: currentExpanded } = this.state;
             this.setState({ [stateProp]: _.reject(currentExpanded, entityId) });
         };
     }
 
     render() {
-        const { saveConfirmationOpen } = this.state;
+        const { saveConfirmationOpen, terraformDetails } = this.state;
         const { Popup } = Stage.Basic;
         return (
             <div
@@ -346,7 +339,7 @@ export default class Topology extends React.Component {
                     trigger={<div id="topologyContainer" />}
                 />
                 <TerraformDetailsModal
-                    terraformDetails={this.state.terraformDetails}
+                    terraformDetails={terraformDetails}
                     onClose={() => this.setState({ terraformDetails: null })}
                 />
             </div>

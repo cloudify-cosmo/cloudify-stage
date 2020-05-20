@@ -39,20 +39,23 @@ export default class UsersModal extends React.Component {
     }
 
     onCancel() {
-        this.props.onHide();
+        const { onHide } = this.props;
+        onHide();
         return true;
     }
 
     onRoleChange(user, role) {
-        const newUsers = { ...this.state.users };
+        const { users } = this.state;
+        const newUsers = { ...users };
         newUsers[user] = role;
         this.setState({ users: newUsers });
     }
 
     componentDidUpdate(prevProps) {
-        if (!prevProps.open && this.props.open) {
+        const { open, tenant } = this.props;
+        if (!prevProps.open && open) {
             const users = _.mapValues(
-                _.pickBy(this.props.tenant.users, rolesObj => {
+                _.pickBy(tenant.users, rolesObj => {
                     return !_.isEmpty(rolesObj['tenant-role']);
                 }),
                 rolesObj => {
@@ -68,12 +71,13 @@ export default class UsersModal extends React.Component {
     }
 
     updateTenant() {
+        const { onHide, tenant, toolbox } = this.props;
+        const { users: submitUsers } = this.state;
         // Disable the form
         this.setState({ loading: true });
 
-        const users = this.props.tenant.user_roles.direct;
+        const users = tenant.user_roles.direct;
         const usersList = Object.keys(users);
-        const submitUsers = this.state.users;
         const submitUsersList = Object.keys(submitUsers);
 
         const usersToAdd = _.pick(submitUsers, _.difference(submitUsersList, usersList));
@@ -82,14 +86,14 @@ export default class UsersModal extends React.Component {
             return users[user] && !_.isEqual(users[user], role);
         });
 
-        const actions = new Actions(this.props.toolbox);
+        const actions = new Actions(toolbox);
         actions
-            .doHandleUsers(this.props.tenant.name, usersToAdd, usersToRemove, usersToUpdate)
+            .doHandleUsers(tenant.name, usersToAdd, usersToRemove, usersToUpdate)
             .then(() => {
                 this.setState({ errors: {}, loading: false });
-                this.props.toolbox.refresh();
-                this.props.toolbox.getEventBus().trigger('users:refresh');
-                this.props.onHide();
+                toolbox.refresh();
+                toolbox.getEventBus().trigger('users:refresh');
+                onHide();
             })
             .catch(err => {
                 this.setState({ errors: { error: err.message }, loading: false });
@@ -99,32 +103,30 @@ export default class UsersModal extends React.Component {
     handleInputChange(proxy, field) {
         const newUsers = {};
         _.forEach(field.value, user => {
-            newUsers[user] =
-                this.state.users[user] || RolesUtil.getDefaultRoleName(this.props.toolbox.getManagerState().roles);
+            const { toolbox } = this.props;
+            const { users } = this.state;
+            newUsers[user] = users[user] || RolesUtil.getDefaultRoleName(toolbox.getManagerState().roles);
         });
         this.setState({ users: newUsers });
     }
 
     render() {
+        const { errors, loading, users: stateUsers } = this.state;
         const { Modal, Icon, Form, ApproveButton, CancelButton } = Stage.Basic;
 
-        const { tenant } = this.props;
-        const users = _.map(this.props.users.items, user => {
+        const { tenant, onHide, open, toolbox, users: usersProp } = this.props;
+        const users = _.map(usersProp.items, user => {
             return { text: user.username, value: user.username, key: user.username };
         });
 
         return (
-            <Modal open={this.props.open} onClose={() => this.props.onHide()}>
+            <Modal open={open} onClose={() => onHide()}>
                 <Modal.Header>
                     <Icon name="user" /> Edit users for tenant {tenant.name}
                 </Modal.Header>
 
                 <Modal.Content>
-                    <Form
-                        loading={this.state.loading}
-                        errors={this.state.errors}
-                        onErrorsDismiss={() => this.setState({ errors: {} })}
-                    >
+                    <Form loading={loading} errors={errors} onErrorsDismiss={() => this.setState({ errors: {} })}>
                         <Form.Field>
                             <Form.Dropdown
                                 placeholder="Users"
@@ -132,24 +134,24 @@ export default class UsersModal extends React.Component {
                                 selection
                                 options={users}
                                 name="users"
-                                value={Object.keys(this.state.users)}
+                                value={Object.keys(stateUsers)}
                                 onChange={this.handleInputChange.bind(this)}
                             />
                         </Form.Field>
                         <RolesPicker
                             onUpdate={this.onRoleChange.bind(this)}
-                            resources={this.state.users}
+                            resources={stateUsers}
                             resourceName="user"
-                            toolbox={this.props.toolbox}
+                            toolbox={toolbox}
                         />
                     </Form>
                 </Modal.Content>
 
                 <Modal.Actions>
-                    <CancelButton onClick={this.onCancel.bind(this)} disabled={this.state.loading} />
+                    <CancelButton onClick={this.onCancel.bind(this)} disabled={loading} />
                     <ApproveButton
                         onClick={this.onApprove.bind(this)}
-                        disabled={this.state.loading}
+                        disabled={loading}
                         content="Save"
                         icon="user"
                         color="green"

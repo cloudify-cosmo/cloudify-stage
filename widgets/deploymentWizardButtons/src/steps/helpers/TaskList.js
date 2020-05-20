@@ -17,17 +17,15 @@ export default class TaskList extends React.Component {
     };
 
     render() {
-        const { tasks } = this.props;
+        const { tasks, header, withStatus } = this.props;
         const { Header, List } = Stage.Basic;
 
         return (
             <>
-                <Header as="h4">{this.props.header}</Header>
+                <Header as="h4">{header}</Header>
                 <List ordered relaxed>
                     {_.map(tasks, task => (
-                        <List.Item key={task.name}>
-                            {this.props.withStatus ? <TaskStatus {...task} /> : task.name}
-                        </List.Item>
+                        <List.Item key={task.name}>{withStatus ? <TaskStatus {...task} /> : task.name}</List.Item>
                     ))}
                 </List>
             </>

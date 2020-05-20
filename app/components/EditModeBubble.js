@@ -21,33 +21,25 @@ export default class EditModeBubble extends Component {
     };
 
     render() {
+        const { isVisible, onDismiss, onPageSave, page, pageManagementMode } = this.props;
         let header;
         let content;
 
-        if (this.props.pageManagementMode) {
-            if (this.props.pageManagementMode === Const.PAGE_MANAGEMENT_EDIT) {
+        if (pageManagementMode) {
+            if (pageManagementMode === Const.PAGE_MANAGEMENT_EDIT) {
                 header = 'Page management';
                 content = (
                     <Message.Content className="alignCenter">
-                        <AddWidget
-                            className="compactBlock"
-                            pageId={this.props.page.id}
-                            pageManagementMode={this.props.pageManagementMode}
-                        />
-                        <Button
-                            basic
-                            content="Save"
-                            icon="save"
-                            onClick={() => this.props.onPageSave(this.props.page)}
-                        />
-                        <Button basic content="Cancel" icon="remove" onClick={this.props.onDismiss} />
+                        <AddWidget className="compactBlock" pageId={page.id} pageManagementMode={pageManagementMode} />
+                        <Button basic content="Save" icon="save" onClick={() => onPageSave(page)} />
+                        <Button basic content="Cancel" icon="remove" onClick={onDismiss} />
                     </Message.Content>
                 );
             } else {
                 header = 'Page preview';
                 content = (
                     <Message.Content className="alignCenter">
-                        <Button basic content="Exit" icon="sign out" onClick={this.props.onDismiss} />
+                        <Button basic content="Exit" icon="sign out" onClick={onDismiss} />
                     </Message.Content>
                 );
             }
@@ -55,9 +47,9 @@ export default class EditModeBubble extends Component {
             header = 'Edit mode';
             content = (
                 <Message.Content className="alignCenter">
-                    <AddWidget className="compactBlock" pageId={this.props.page.id} />
+                    <AddWidget className="compactBlock" pageId={page.id} />
                     <AddPageButton />
-                    <Button basic content="Exit" icon="sign out" onClick={this.props.onDismiss} />
+                    <Button basic content="Exit" icon="sign out" onClick={onDismiss} />
                 </Message.Content>
             );
         }
@@ -67,10 +59,10 @@ export default class EditModeBubble extends Component {
                 as={Message}
                 animation="overlay"
                 direction="bottom"
-                visible={this.props.isVisible}
+                visible={isVisible}
                 className="editModeSidebar"
             >
-                <Message color="yellow" onDismiss={this.props.onDismiss}>
+                <Message color="yellow" onDismiss={onDismiss}>
                     <Message.Header className="alignCenter" content={header} />
                     {content}
                 </Message>

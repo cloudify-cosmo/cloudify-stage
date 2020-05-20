@@ -21,11 +21,12 @@ export default class extends React.Component {
 
     render() {
         const { MaintenanceModeActivationButton, MaintenanceModeModal } = Stage.Shared;
+        const { open } = this.state;
 
         return (
             <div>
                 <MaintenanceModeActivationButton activate onClick={this.showModal.bind(this)} />
-                <MaintenanceModeModal show={this.state.open} onHide={this.hideModal.bind(this)} />
+                <MaintenanceModeModal show={open} onHide={this.hideModal.bind(this)} />
             </div>
         );
     }

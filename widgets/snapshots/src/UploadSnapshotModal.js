@@ -30,17 +30,20 @@ export default class UploadModal extends React.Component {
     }
 
     componentDidUpdate(prevProps, prevState) {
-        if (!prevState.open && this.state.open) {
+        const { open } = this.state;
+        if (!prevState.open && open) {
             this.setState(UploadModal.initialState);
         }
     }
 
     submitUpload() {
-        const snapshotUrl = this.state.snapshotFile ? '' : this.state.snapshotUrl;
+        const { snapshotFile, snapshotId, snapshotUrl: snapshotUrlState } = this.state;
+        const { toolbox } = this.props;
+        const snapshotUrl = snapshotFile ? '' : snapshotUrlState;
 
         const errors = {};
 
-        if (!this.state.snapshotFile) {
+        if (!snapshotFile) {
             if (_.isEmpty(snapshotUrl)) {
                 errors.snapshotUrl = 'Please select snapshot file or url';
             } else if (!Stage.Utils.Url.isUrl(snapshotUrl)) {
@@ -48,7 +51,7 @@ export default class UploadModal extends React.Component {
             }
         }
 
-        if (_.isEmpty(this.state.snapshotId)) {
+        if (_.isEmpty(snapshotId)) {
             errors.snapshotId = 'Please provide snapshot ID';
         }
 
@@ -60,12 +63,12 @@ export default class UploadModal extends React.Component {
         // Disable the form
         this.setState({ loading: true });
 
-        const actions = new Actions(this.props.toolbox);
+        const actions = new Actions(toolbox);
         actions
-            .doUpload(snapshotUrl, this.state.snapshotId, this.state.snapshotFile)
+            .doUpload(snapshotUrl, snapshotId, snapshotFile)
             .then(() => {
                 this.setState({ errors: {}, loading: false, open: false });
-                this.props.toolbox.refresh();
+                toolbox.refresh();
             })
             .catch(err => {
                 this.setState({ errors: { error: err.message }, loading: false });
@@ -87,13 +90,14 @@ export default class UploadModal extends React.Component {
     }
 
     render() {
+        const { errors, loading, open, snapshotId, snapshotUrl } = this.state;
         const { ApproveButton, Button, CancelButton, Form, Icon, Label, Modal } = Stage.Basic;
         const uploadButton = <Button content="Upload" icon="upload" labelPosition="left" />;
 
         return (
             <Modal
                 trigger={uploadButton}
-                open={this.state.open}
+                open={open}
                 onOpen={() => this.setState({ open: true })}
                 onClose={() => this.setState({ open: false })}
             >
@@ -102,25 +106,21 @@ export default class UploadModal extends React.Component {
                 </Modal.Header>
 
                 <Modal.Content>
-                    <Form
-                        loading={this.state.loading}
-                        errors={this.state.errors}
-                        onErrorsDismiss={() => this.setState({ errors: {} })}
-                    >
-                        <Form.Field label="Snapshot file" required error={this.state.errors.snapshotUrl}>
+                    <Form loading={loading} errors={errors} onErrorsDismiss={() => this.setState({ errors: {} })}>
+                        <Form.Field label="Snapshot file" required error={errors.snapshotUrl}>
                             <Form.UrlOrFile
                                 name="snapshot"
-                                value={this.state.snapshotUrl}
+                                value={snapshotUrl}
                                 placeholder="Provide the snapshot's file URL or click browse to select a file"
                                 onChangeUrl={this.onSnapshotUrlChange.bind(this)}
                                 onChangeFile={this.onSnapshotFileChange.bind(this)}
                             />
                         </Form.Field>
 
-                        <Form.Field label="Snapshot name" required error={this.state.errors.snapshotId}>
+                        <Form.Field label="Snapshot name" required error={errors.snapshotId}>
                             <Form.Input
                                 name="snapshotId"
-                                value={this.state.snapshotId}
+                                value={snapshotId}
                                 onChange={this.handleInputChange.bind(this)}
                             />
                         </Form.Field>
@@ -128,10 +128,10 @@ export default class UploadModal extends React.Component {
                 </Modal.Content>
 
                 <Modal.Actions>
-                    <CancelButton onClick={this.onCancel.bind(this)} disabled={this.state.loading} />
+                    <CancelButton onClick={this.onCancel.bind(this)} disabled={loading} />
                     <ApproveButton
                         onClick={this.onApprove.bind(this)}
-                        disabled={this.state.loading}
+                        disabled={loading}
                         content="Upload"
                         icon="upload"
                         color="green"

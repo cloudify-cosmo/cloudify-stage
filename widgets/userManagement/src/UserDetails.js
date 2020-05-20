@@ -21,40 +21,44 @@ export default class UserDetails extends React.Component {
     };
 
     removeTenant(tenant) {
+        const { data, onError, toolbox } = this.props;
         this.setState({ processItem: tenant, processing: true });
 
-        const actions = new Actions(this.props.toolbox);
+        const actions = new Actions(toolbox);
         actions
-            .doRemoveFromTenant(this.props.data.username, tenant)
+            .doRemoveFromTenant(data.username, tenant)
             .then(() => {
-                this.props.toolbox.refresh();
-                this.props.toolbox.getEventBus().trigger('tenants:refresh');
+                toolbox.refresh();
+                toolbox.getEventBus().trigger('tenants:refresh');
                 this.setState({ processItem: '', processing: false });
             })
             .catch(err => {
-                this.props.onError(err.message);
+                onError(err.message);
                 this.setState({ processItem: '', processing: false });
             });
     }
 
     removeGroup(group) {
+        const { data, onError, toolbox } = this.props;
         this.setState({ processItem: group, processing: true });
 
-        const actions = new Actions(this.props.toolbox);
+        const actions = new Actions(toolbox);
         actions
-            .doRemoveFromGroup(this.props.data.username, group)
+            .doRemoveFromGroup(data.username, group)
             .then(() => {
-                this.props.toolbox.refresh();
-                this.props.toolbox.getEventBus().trigger('userGroups:refresh');
+                toolbox.refresh();
+                toolbox.getEventBus().trigger('userGroups:refresh');
                 this.setState({ processItem: '', processing: false });
             })
             .catch(err => {
-                this.props.onError(err.message);
+                onError(err.message);
                 this.setState({ processItem: '', processing: false });
             });
     }
 
     render() {
+        const { processItem, processing: processingState } = this.state;
+        const { data } = this.props;
         const { Segment, List, Icon, Message, Divider, Popup } = Stage.Basic;
         const { RolesPresenter } = Stage.Common;
 
@@ -64,8 +68,8 @@ export default class UserDetails extends React.Component {
                     <Icon name="users" /> Groups
                     <Divider />
                     <List divided relaxed verticalAlign="middle" className="light">
-                        {this.props.data.groups.map(item => {
-                            const processing = this.state.processing && this.state.processItem === item;
+                        {data.groups.map(item => {
+                            const processing = processingState && processItem === item;
 
                             return (
                                 <List.Item key={item}>
@@ -81,7 +85,7 @@ export default class UserDetails extends React.Component {
                             );
                         })}
 
-                        {_.isEmpty(this.props.data.groups) && <Message content="No groups available" />}
+                        {_.isEmpty(data.groups) && <Message content="No groups available" />}
                     </List>
                 </Segment>
 
@@ -91,15 +95,15 @@ export default class UserDetails extends React.Component {
                             <Icon name="user" /> Tenants
                             <Divider />
                             <List divided relaxed verticalAlign="middle" className="light">
-                                {_.map(_.keys(this.props.data.tenants), item => {
-                                    const processing = this.state.processing && this.state.processItem === item;
+                                {_.map(_.keys(data.tenants), item => {
+                                    const processing = processingState && processItem === item;
 
                                     return (
                                         <List.Item key={item}>
                                             {item} -{' '}
                                             <RolesPresenter
-                                                directRole={this.props.data.tenant_roles.direct[item]}
-                                                groupRoles={this.props.data.tenant_roles.groups[item]}
+                                                directRole={data.tenant_roles.direct[item]}
+                                                groupRoles={data.tenant_roles.groups[item]}
                                             />
                                             <Icon
                                                 link
@@ -112,7 +116,7 @@ export default class UserDetails extends React.Component {
                                     );
                                 })}
 
-                                {_.isEmpty(this.props.data.tenants) && <Message content="No tenants available" />}
+                                {_.isEmpty(data.tenants) && <Message content="No tenants available" />}
                             </List>
                         </Segment>
                     </Popup.Trigger>

@@ -34,17 +34,21 @@ export default class RestoreSnapshotModal extends React.Component {
     }
 
     onCancel() {
-        this.props.onHide();
+        const { onHide } = this.props;
+        onHide();
         return true;
     }
 
     componentDidUpdate(prevProps, prevState) {
-        if (!prevState.open && this.state.open) {
+        const { open } = this.state;
+        if (!prevState.open && open) {
             this.setState(RestoreSnapshotModal.initialState);
         }
     }
 
     submitRestore() {
+        const { ignorePluginFailure, shouldForceRestore } = this.state;
+        const { onHide, snapshot, toolbox } = this.props;
         const errors = {};
 
         if (!_.isEmpty(errors)) {
@@ -55,15 +59,15 @@ export default class RestoreSnapshotModal extends React.Component {
         // Disable the form
         this.setState({ loading: true });
 
-        const actions = new Actions(this.props.toolbox);
+        const actions = new Actions(toolbox);
         actions
-            .doRestore(this.props.snapshot, this.state.shouldForceRestore, this.state.ignorePluginFailure)
+            .doRestore(snapshot, shouldForceRestore, ignorePluginFailure)
             .then(() => {
                 this.setState({ errors: {}, loading: false });
-                this.props.toolbox.refresh();
-                this.props.toolbox.getEventBus().trigger('snapshots:refresh');
-                this.props.toolbox.getEventBus().trigger('menu.tenants:refresh');
-                this.props.onHide();
+                toolbox.refresh();
+                toolbox.getEventBus().trigger('snapshots:refresh');
+                toolbox.getEventBus().trigger('menu.tenants:refresh');
+                onHide();
             })
             .catch(err => {
                 this.setState({ errors: { error: err.message }, loading: false });
@@ -75,31 +79,29 @@ export default class RestoreSnapshotModal extends React.Component {
     }
 
     render() {
+        const { errors, ignorePluginFailure, isFromTenantlessEnv, loading, shouldForceRestore } = this.state;
+        const { onHide, open } = this.props;
         const { Modal, ApproveButton, CancelButton, Icon, Form, Message } = Stage.Basic;
 
         return (
-            <Modal open={this.props.open} onClose={() => this.props.onHide()}>
+            <Modal open={open} onClose={() => onHide()}>
                 <Modal.Header>
                     <Icon name="undo" /> Restore snapshot
                 </Modal.Header>
 
                 <Modal.Content>
-                    <Form
-                        loading={this.state.loading}
-                        errors={this.state.errors}
-                        onErrorsDismiss={() => this.setState({ errors: {} })}
-                    >
+                    <Form loading={loading} errors={errors} onErrorsDismiss={() => this.setState({ errors: {} })}>
                         <Form.Field>
                             <Form.Checkbox
                                 toggle
                                 label="Snapshot from a tenant-less environment"
                                 name="isFromTenantlessEnv"
-                                checked={this.state.isFromTenantlessEnv}
+                                checked={isFromTenantlessEnv}
                                 onChange={this.handleFieldChange.bind(this)}
                             />
                         </Form.Field>
 
-                        {this.state.isFromTenantlessEnv && (
+                        {isFromTenantlessEnv && (
                             <Message>
                                 When restoring from a tenant-less environment, make sure you uploaded the snapshot to a
                                 "clean" tenant that does not contain any other resources.
@@ -110,7 +112,7 @@ export default class RestoreSnapshotModal extends React.Component {
                                 toggle
                                 label="Force restore even if manager is non-empty (it will delete all data)"
                                 name="shouldForceRestore"
-                                checked={this.state.shouldForceRestore}
+                                checked={shouldForceRestore}
                                 onChange={this.handleFieldChange.bind(this)}
                             />
                         </Form.Field>
@@ -119,7 +121,7 @@ export default class RestoreSnapshotModal extends React.Component {
                                 toggle
                                 label="Ignore plugin failures"
                                 name="ignorePluginFailure"
-                                checked={this.state.ignorePluginFailure}
+                                checked={ignorePluginFailure}
                                 onChange={this.handleFieldChange.bind(this)}
                             />
                         </Form.Field>
@@ -127,10 +129,10 @@ export default class RestoreSnapshotModal extends React.Component {
                 </Modal.Content>
 
                 <Modal.Actions>
-                    <CancelButton onClick={this.onCancel.bind(this)} disabled={this.state.loading} />
+                    <CancelButton onClick={this.onCancel.bind(this)} disabled={loading} />
                     <ApproveButton
                         onClick={this.onApprove.bind(this)}
-                        disabled={this.state.loading}
+                        disabled={loading}
                         content="Restore"
                         icon="undo"
                         color="green"

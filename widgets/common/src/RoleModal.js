@@ -21,20 +21,24 @@ export default class RoleModal extends React.Component {
     }
 
     onCancel() {
-        this.props.onHide();
+        const { onHide } = this.props;
+        onHide();
         return true;
     }
 
     componentDidUpdate(prevProps) {
-        if (!prevProps.open && this.props.open) {
-            this.setState({ ...RoleModal.initialState, role: this.props.resource.role });
+        const { open, resource } = this.props;
+        if (!prevProps.open && open) {
+            this.setState({ ...RoleModal.initialState, role: resource.role });
         }
     }
 
     submitRole() {
+        const { role } = this.state;
+        const { onHide, onSetRole, resource, toolbox } = this.props;
         const errors = {};
 
-        if (_.isEmpty(this.state.role)) {
+        if (_.isEmpty(role)) {
             errors.role = 'Please provide a role';
         }
 
@@ -46,12 +50,11 @@ export default class RoleModal extends React.Component {
         // Disable the form
         this.setState({ loading: true });
 
-        this.props
-            .onSetRole(this.props.resource.name, this.state.role)
+        onSetRole(resource.name, role)
             .then(() => {
                 this.setState({ errors: {}, loading: false });
-                this.props.toolbox.refresh();
-                this.props.onHide();
+                toolbox.refresh();
+                onHide();
             })
             .catch(err => {
                 this.setState({ errors: { error: err.message }, loading: false });
@@ -63,29 +66,27 @@ export default class RoleModal extends React.Component {
     }
 
     render() {
+        const { errors, loading, role } = this.state;
+        const { onHide, open, resource: resourceProp, roles } = this.props;
         const { Modal, Icon, Form, ApproveButton, CancelButton } = Stage.Basic;
 
-        const resource = { name: '', ...this.props.resource };
+        const resource = { name: '', ...resourceProp };
 
         return (
-            <Modal open={this.props.open} onClose={() => this.props.onHide()} className="roleModal">
+            <Modal open={open} onClose={() => onHide()} className="roleModal">
                 <Modal.Header>
                     <Icon name="male" /> Set role for {resource.name}
                 </Modal.Header>
 
                 <Modal.Content>
-                    <Form
-                        loading={this.state.loading}
-                        errors={this.state.errors}
-                        onErrorsDismiss={() => this.setState({ errors: {} })}
-                    >
-                        <Form.Field error={this.state.errors.role}>
+                    <Form loading={loading} errors={errors} onErrorsDismiss={() => this.setState({ errors: {} })}>
+                        <Form.Field error={errors.role}>
                             <Form.Dropdown
                                 selection
                                 name="role"
                                 placeholder="Role"
-                                options={this.props.roles}
-                                value={this.state.role}
+                                options={roles}
+                                value={role}
                                 onChange={this.handleInputChange.bind(this)}
                             />
                         </Form.Field>
@@ -93,13 +94,8 @@ export default class RoleModal extends React.Component {
                 </Modal.Content>
 
                 <Modal.Actions>
-                    <CancelButton onClick={this.onCancel.bind(this)} disabled={this.state.loading} />
-                    <ApproveButton
-                        onClick={this.onApprove.bind(this)}
-                        disabled={this.state.loading}
-                        icon="male"
-                        color="green"
-                    />
+                    <CancelButton onClick={this.onCancel.bind(this)} disabled={loading} />
+                    <ApproveButton onClick={this.onApprove.bind(this)} disabled={loading} icon="male" color="green" />
                 </Modal.Actions>
             </Modal>
         );

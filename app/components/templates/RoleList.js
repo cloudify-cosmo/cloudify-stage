@@ -20,17 +20,18 @@ export default class RoleList extends Component {
     };
 
     render() {
+        const { custom, onDelete, roles, style } = this.props;
         return (
-            <Segment style={this.props.style}>
+            <Segment style={style}>
                 <Icon name="student" /> Roles
                 <Divider />
                 <List divided relaxed verticalAlign="middle" className="light">
-                    {this.props.roles.map(item => {
+                    {roles.map(item => {
                         return (
                             <List.Item key={item}>
                                 {item}
 
-                                {this.props.custom && _.size(this.props.roles) > 1 && (
+                                {custom && _.size(roles) > 1 && (
                                     <PopupConfirm
                                         trigger={
                                             <Icon
@@ -41,13 +42,13 @@ export default class RoleList extends Component {
                                             />
                                         }
                                         content="Are you sure to remove this role from template?"
-                                        onConfirm={() => this.props.onDelete(item)}
+                                        onConfirm={() => onDelete(item)}
                                     />
                                 )}
                             </List.Item>
                         );
                     })}
-                    {_.isEmpty(this.props.roles) && <Message content="No roles available" />}
+                    {_.isEmpty(roles) && <Message content="No roles available" />}
                 </List>
             </Segment>
         );

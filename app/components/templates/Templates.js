@@ -35,6 +35,19 @@ export default class Templates extends Component {
     };
 
     render() {
+        const {
+            onCreateTemplate,
+            onDeleteTemplate,
+            onModifyTemplate,
+            onRemoveTemplatePage,
+            onRemoveTemplateRole,
+            onRemoveTemplateTenant,
+            onSelectTemplate,
+            pages,
+            roles,
+            templates,
+            tenants
+        } = this.props;
         return (
             <Segment color="blue">
                 <Header dividing as="h5">
@@ -49,21 +62,19 @@ export default class Templates extends Component {
                     <DataTable.Column label="Updated by" width="15%" />
                     <DataTable.Column width="10%" />
 
-                    {this.props.templates.map(item => {
+                    {templates.map(item => {
                         const data = item.data || { roles: [], tenants: [] };
-                        const { roles } = data;
-                        const { tenants } = data;
                         const tenantsCount =
-                            _.indexOf(tenants, Const.DEFAULT_ALL) >= 0
-                                ? _.size(this.props.tenants.items)
-                                : _.size(tenants);
+                            _.indexOf(data.tenants, Const.DEFAULT_ALL) >= 0
+                                ? _.size(tenants.items)
+                                : _.size(data.tenants);
 
                         return (
                             <DataTable.RowExpandable key={item.id} expanded={item.selected}>
                                 <DataTable.Row
                                     key={item.id}
                                     selected={item.selected}
-                                    onClick={() => this.props.onSelectTemplate(item)}
+                                    onClick={() => onSelectTemplate(item)}
                                 >
                                     <DataTable.Data>
                                         <Header as="a" size="small">
@@ -71,10 +82,10 @@ export default class Templates extends Component {
                                         </Header>
                                     </DataTable.Data>
                                     <DataTable.Data>
-                                        {roles.map((role, index) => (
+                                        {data.roles.map((role, index) => (
                                             <span key={role}>
                                                 {role === Const.DEFAULT_ALL ? 'all' : role}
-                                                {index < roles.length - 1 && <span>, </span>}
+                                                {index < data.roles.length - 1 && <span>, </span>}
                                             </span>
                                         ))}
                                     </DataTable.Data>
@@ -95,19 +106,17 @@ export default class Templates extends Component {
                                                         <Icon name="remove" link onClick={e => e.stopPropagation()} />
                                                     }
                                                     content="Are you sure to remove this template?"
-                                                    onConfirm={() => this.props.onDeleteTemplate(item)}
+                                                    onConfirm={() => onDeleteTemplate(item)}
                                                 />
                                                 <CreateTemplateModal
-                                                    availableTenants={this.props.tenants}
-                                                    availablePages={this.props.pages}
-                                                    availableRoles={this.props.roles}
+                                                    availableTenants={tenants}
+                                                    availablePages={pages}
+                                                    availableRoles={roles}
                                                     templateName={item.id}
                                                     pages={item.pages}
-                                                    roles={roles}
-                                                    tenants={tenants}
-                                                    onCreateTemplate={(...args) =>
-                                                        this.props.onModifyTemplate(item, ...args)
-                                                    }
+                                                    roles={data.roles}
+                                                    tenants={data.tenants}
+                                                    onCreateTemplate={(...args) => onModifyTemplate(item, ...args)}
                                                 />
                                             </div>
                                         )}
@@ -119,19 +128,19 @@ export default class Templates extends Component {
                                         <PageList
                                             pages={item.pages}
                                             custom={item.custom}
-                                            onDelete={page => this.props.onRemoveTemplatePage(item, page)}
+                                            onDelete={page => onRemoveTemplatePage(item, page)}
                                             style={{ width: '33%' }}
                                         />
                                         <RoleList
-                                            roles={roles}
+                                            roles={data.roles}
                                             custom={item.custom}
-                                            onDelete={role => this.props.onRemoveTemplateRole(item, role)}
+                                            onDelete={role => onRemoveTemplateRole(item, role)}
                                             style={{ width: '33%' }}
                                         />
                                         <TenantList
-                                            tenants={tenants}
+                                            tenants={data.tenants}
                                             custom={item.custom}
-                                            onDelete={tenant => this.props.onRemoveTemplateTenant(item, tenant)}
+                                            onDelete={tenant => onRemoveTemplateTenant(item, tenant)}
                                             style={{ width: '33%' }}
                                         />
                                     </Segment.Group>
@@ -142,10 +151,10 @@ export default class Templates extends Component {
 
                     <DataTable.Action>
                         <CreateTemplateModal
-                            availableTenants={this.props.tenants}
-                            availablePages={this.props.pages}
-                            availableRoles={this.props.roles}
-                            onCreateTemplate={this.props.onCreateTemplate}
+                            availableTenants={tenants}
+                            availablePages={pages}
+                            availableRoles={roles}
+                            onCreateTemplate={onCreateTemplate}
                         />
                     </DataTable.Action>
                 </DataTable>

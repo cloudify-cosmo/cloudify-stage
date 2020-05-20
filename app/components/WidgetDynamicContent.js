@@ -6,9 +6,8 @@ import PropTypes from 'prop-types';
 
 import React, { Component } from 'react';
 import { getToolbox } from '../utils/Toolbox';
-
-import { ErrorMessage } from './basic';
 import WidgetParamsHandler from '../utils/WidgetParamsHandler';
+import { ErrorMessage } from './basic';
 
 export default class WidgetDynamicContent extends Component {
     static propTypes = {
@@ -32,7 +31,8 @@ export default class WidgetDynamicContent extends Component {
     }
 
     getToolbox() {
-        return getToolbox(this.fetchData.bind(this), this.loadingIndicator.bind(this), this.props.widget);
+        const { widget } = this.props;
+        return getToolbox(this.fetchData.bind(this), this.loadingIndicator.bind(this), widget);
     }
 
     beforeFetch() {
@@ -57,8 +57,9 @@ export default class WidgetDynamicContent extends Component {
     }
 
     hideLoading() {
+        const { loading } = this.state;
         clearTimeout(this.loadingTimeout);
-        if (this.state.loading) {
+        if (loading) {
             this.loadingIndicator(false);
         }
     }
@@ -72,20 +73,21 @@ export default class WidgetDynamicContent extends Component {
     }
 
     startPolling() {
+        const { widget } = this.props;
         this.stopPolling();
 
-        let interval = this.props.widget.configuration.pollingTime || 0;
+        let interval = widget.configuration.pollingTime || 0;
         try {
             interval = Number.isInteger(interval) ? interval : parseInt(interval);
         } catch (e) {
             console.log(
-                `Polling interval doesnt have a valid value, using zero. Value is: ${this.props.widget.configuration.pollingTime}`
+                `Polling interval doesnt have a valid value, using zero. Value is: ${widget.configuration.pollingTime}`
             );
             interval = 0;
         }
 
         if (interval > 0 && this.mounted) {
-            console.log(`Polling widget '${this.props.widget.name}' - time interval: ${interval} sec`);
+            console.log(`Polling widget '${widget.name}' - time interval: ${interval} sec`);
             this.pollingTimeout = setTimeout(() => {
                 this.fetchData();
             }, interval * 1000);
@@ -93,16 +95,18 @@ export default class WidgetDynamicContent extends Component {
     }
 
     updateConfiguration(params) {
+        const { onWidgetConfigUpdate, widget } = this.props;
         if (
             params.gridParams &&
             params.gridParams.pageSize &&
-            params.gridParams.pageSize !== this.props.widget.configuration.pageSize
+            params.gridParams.pageSize !== widget.configuration.pageSize
         ) {
-            this.props.onWidgetConfigUpdate({ pageSize: params.gridParams.pageSize });
+            onWidgetConfigUpdate({ pageSize: params.gridParams.pageSize });
         }
     }
 
     fetchData(params) {
+        const { fetchWidgetData, widget } = this.props;
         if (params) {
             this.paramsHandler.updateGridParams(params.gridParams);
             this.updateConfiguration(params);
@@ -112,10 +116,10 @@ export default class WidgetDynamicContent extends Component {
             this.fetchDataPromise.cancel();
         }
 
-        if (this.props.widget.definition.fetchUrl || _.isFunction(this.props.widget.definition.fetchData)) {
+        if (widget.definition.fetchUrl || _.isFunction(widget.definition.fetchData)) {
             this.beforeFetch();
 
-            const promises = this.props.fetchWidgetData(this.props.widget, this.getToolbox(), this.paramsHandler);
+            const promises = fetchWidgetData(widget, this.getToolbox(), this.paramsHandler);
 
             this.fetchDataPromise = promises.cancelablePromise;
 
@@ -140,12 +144,12 @@ export default class WidgetDynamicContent extends Component {
                         });
                     }
 
-                    console.log(`Widget '${this.props.widget.name}' data fetched`);
+                    console.log(`Widget '${widget.name}' data fetched`);
                     this.afterFetch();
                 })
                 .catch(e => {
                     if (e.isCanceled) {
-                        console.log(`Widget '${this.props.widget.name}' data fetch canceled`);
+                        console.log(`Widget '${widget.name}' data fetch canceled`);
                         return;
                     }
                     this.afterFetch();
@@ -156,15 +160,16 @@ export default class WidgetDynamicContent extends Component {
     }
 
     componentDidUpdate(prevProps, prevState) {
+        const { data, manager, widget } = this.props;
         // Check if any configuration that requires fetch was changed
         let requiresFetch = false;
-        if (prevProps.widget.configuration && this.props.widget.configuration) {
-            _.each(this.props.widget.configuration, (config, confName) => {
+        if (prevProps.widget.configuration && widget.configuration) {
+            _.each(widget.configuration, (config, confName) => {
                 // var oldConfig = _.find(prevProps.widget.configuration,{id:config});
                 const oldConfig = prevProps.widget.configuration[confName];
 
                 if (oldConfig !== config) {
-                    this.paramsHandler.update(this.props.widget);
+                    this.paramsHandler.update(widget);
 
                     requiresFetch = true;
                     return false;
@@ -173,9 +178,9 @@ export default class WidgetDynamicContent extends Component {
         }
 
         if (
-            prevProps.manager.tenants.selected !== this.props.manager.tenants.selected ||
+            prevProps.manager.tenants.selected !== manager.tenants.selected ||
             // Fetch data after WIDGET_DATA_CLEAR action was dispatched (Fix for CY-957)
-            (!_.isEmpty(prevProps.data) && _.isEmpty(this.props.data)) ||
+            (!_.isEmpty(prevProps.data) && _.isEmpty(data)) ||
             this.paramsHandler.updateFetchParams()
         ) {
             requiresFetch = true;
@@ -188,12 +193,13 @@ export default class WidgetDynamicContent extends Component {
 
     // In component will mount fetch the data if needed
     componentDidMount() {
+        const { widget } = this.props;
         this.mounted = true;
         this.startPolling();
 
-        console.log(`Widget '${this.props.widget.name}' mounted`);
+        console.log(`Widget '${widget.name}' mounted`);
 
-        this.paramsHandler = new WidgetParamsHandler(this.props.widget, this.getToolbox());
+        this.paramsHandler = new WidgetParamsHandler(widget, this.getToolbox());
         this.fetchData();
     }
 
@@ -201,30 +207,28 @@ export default class WidgetDynamicContent extends Component {
         this.mounted = false;
         this.stopPolling();
 
-        console.log(`Widget '${this.props.widget.name}' unmounts`);
+        const { widget } = this.props;
+        console.log(`Widget '${widget.name}' unmounts`);
     }
 
     shouldComponentUpdate(nextProps, nextState) {
+        const { context, data, manager, pageId, widget } = this.props;
         return (
-            !_.isEqual(this.props.widget, nextProps.widget) ||
-            !_.isEqual(this.props.context, nextProps.context) ||
-            !_.isEqual(this.props.manager, nextProps.manager) ||
-            !_.isEqual(this.props.data, nextProps.data) ||
-            !_.isEqual(this.props.pageId, nextProps.pageId) ||
+            !_.isEqual(widget, nextProps.widget) ||
+            !_.isEqual(context, nextProps.context) ||
+            !_.isEqual(manager, nextProps.manager) ||
+            !_.isEqual(data, nextProps.data) ||
+            !_.isEqual(pageId, nextProps.pageId) ||
             !_.isEqual(this.state, nextState)
         );
     }
 
     renderWidget() {
+        const { data, widget } = this.props;
         let widgetHtml = 'Loading...';
-        if (this.props.widget.definition && this.props.widget.definition.render) {
+        if (widget.definition && widget.definition.render) {
             try {
-                widgetHtml = this.props.widget.definition.render(
-                    this.props.widget,
-                    this.props.data.data,
-                    this.props.data.error,
-                    this.getToolbox()
-                );
+                widgetHtml = widget.definition.render(widget, data.data, data.error, this.getToolbox());
             } catch (e) {
                 console.error(`Error rendering widget - ${e.message}`, e.stack);
             }
@@ -233,18 +237,14 @@ export default class WidgetDynamicContent extends Component {
     }
 
     renderReact() {
-        if (this.props.data.error) {
-            return <ErrorMessage error={this.props.data.error} header="An unexpected error occurred" autoHide />;
+        const { data, widget } = this.props;
+        if (data.error) {
+            return <ErrorMessage error={data.error} header="An unexpected error occurred" autoHide />;
         }
 
-        if (this.props.widget.definition && this.props.widget.definition.render) {
+        if (widget.definition && widget.definition.render) {
             try {
-                return this.props.widget.definition.render(
-                    this.props.widget,
-                    this.props.data.data,
-                    this.props.data.error,
-                    this.getToolbox()
-                );
+                return widget.definition.render(widget, data.data, data.error, this.getToolbox());
             } catch (e) {
                 console.error(`Error rendering widget - ${e.message}`, e.stack);
                 return <ErrorMessage error={`Error rendering widget: ${e.message}`} autoHide />;
@@ -254,10 +254,11 @@ export default class WidgetDynamicContent extends Component {
     }
 
     attachEvents(container) {
-        if (this.props.widget.definition && this.props.widget.definition.events) {
+        const { data, widget } = this.props;
+        if (widget.definition && widget.definition.events) {
             try {
                 _.each(
-                    this.props.widget.definition.events,
+                    widget.definition.events,
                     event => {
                         if (!event || !event.selector || !event.event || !event.fn) {
                             console.warn('Cannot attach event, missing data. Event data is ', event);
@@ -269,7 +270,7 @@ export default class WidgetDynamicContent extends Component {
                         $(container)
                             .find(event.selector)
                             .on(event.event, e => {
-                                event.fn(e, this.props.widget, this.getToolbox());
+                                event.fn(e, widget, this.getToolbox());
                             });
                     },
                     this
@@ -279,36 +280,33 @@ export default class WidgetDynamicContent extends Component {
             }
         }
 
-        if (this.props.widget.definition.postRender) {
-            this.props.widget.definition.postRender(
-                $(container),
-                this.props.widget,
-                this.props.data.data,
-                this.getToolbox()
-            );
+        if (widget.definition.postRender) {
+            widget.definition.postRender($(container), widget, data.data, this.getToolbox());
         }
     }
 
     render() {
+        const { widget } = this.props;
+        const { loading } = this.state;
         return (
             <div>
                 <div
-                    className={`ui ${this.state.loading ? 'active' : ''} small inline loader widgetLoader ${
-                        this.props.widget.definition.showHeader ? 'header' : 'noheader'
+                    className={`ui ${loading ? 'active' : ''} small inline loader widgetLoader ${
+                        widget.definition.showHeader ? 'header' : 'noheader'
                     }`}
                 />
 
-                {this.props.widget.definition.isReact ? (
+                {widget.definition.isReact ? (
                     <div
-                        className={`widgetContent${this.props.widget.definition.showHeader ? '' : ' noHeader '}${
-                            this.props.widget.definition.showBorder ? '' : ' noBorder '
+                        className={`widgetContent${widget.definition.showHeader ? '' : ' noHeader '}${
+                            widget.definition.showBorder ? '' : ' noBorder '
                         }`}
                     >
                         {this.renderReact()}
                     </div>
                 ) : (
                     <div
-                        className={`widgetContent${this.props.widget.definition.showHeader ? '' : ' noHeader'}`}
+                        className={`widgetContent${widget.definition.showHeader ? '' : ' noHeader'}`}
                         dangerouslySetInnerHTML={this.renderWidget()}
                         ref={container => this.attachEvents(container)}
                     />

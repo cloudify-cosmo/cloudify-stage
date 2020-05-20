@@ -14,25 +14,28 @@ export default class MenuAction extends React.Component {
     static WORKFLOW_ACTION = 'workflow';
 
     actionClick(event, { name }) {
-        this.props.onSelectAction(name, this.props.item);
+        const { item, onSelectAction } = this.props;
+        onSelectAction(name, item);
     }
 
     workflowClick(workflow) {
-        this.props.onSelectAction(MenuAction.WORKFLOW_ACTION, this.props.item, workflow);
+        const { item, onSelectAction } = this.props;
+        onSelectAction(MenuAction.WORKFLOW_ACTION, item, workflow);
     }
 
     render() {
+        const { disabled, item } = this.props;
         const { PopupMenu, Menu } = Stage.Basic;
         const { WorkflowsMenu } = Stage.Common;
 
         return (
-            <PopupMenu className="menuAction segmentMenuAction" disabled={this.props.disabled}>
+            <PopupMenu className="menuAction segmentMenuAction" disabled={disabled}>
                 <Menu pointing vertical>
                     <Menu.Item header>
                         Execute workflow
                         <Menu.Menu>
                             <WorkflowsMenu
-                                workflows={this.props.item.workflows}
+                                workflows={item.workflows}
                                 showInPopup={false}
                                 dropdownDirection="left"
                                 onClick={this.workflowClick.bind(this)}

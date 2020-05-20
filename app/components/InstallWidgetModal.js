@@ -4,10 +4,10 @@
 
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
-
-import { Icon, Button, Form, Modal, Message } from './basic/index';
 import EventBus from '../utils/EventBus';
 import StageUtils from '../utils/stageUtils';
+
+import { Button, Form, Icon, Message, Modal } from './basic/index';
 
 export default class InstallWidgetModal extends Component {
     constructor(props, context) {
@@ -39,7 +39,8 @@ export default class InstallWidgetModal extends Component {
     };
 
     componentDidUpdate(prevProps) {
-        if (!prevProps.open && this.props.open) {
+        const { open } = this.props;
+        if (!prevProps.open && open) {
             this.setState(InstallWidgetModal.initialState);
         }
     }
@@ -49,11 +50,13 @@ export default class InstallWidgetModal extends Component {
     }
 
     installWidget() {
-        const widgetUrl = this.state.widgetFile ? '' : this.state.widgetUrl;
+        const { onWidgetInstalled } = this.props;
+        const { widgetFile, widgetUrl: stateWidgetUrl } = this.state;
+        const widgetUrl = widgetFile ? '' : stateWidgetUrl;
 
         const errors = {};
 
-        if (!this.state.widgetFile) {
+        if (!widgetFile) {
             if (_.isEmpty(widgetUrl)) {
                 errors.widgetUrl = "Please provide the widget's archive URL or select a file";
             } else if (!StageUtils.Url.isUrl(widgetUrl)) {
@@ -69,8 +72,7 @@ export default class InstallWidgetModal extends Component {
         this.setState({ loading: true, errors: {}, scriptError: '' });
 
         EventBus.on('window:error', this.showScriptError, this);
-        this.props
-            .onWidgetInstalled(this.state.widgetFile, widgetUrl)
+        onWidgetInstalled(widgetFile, widgetUrl)
             .then(() => {
                 EventBus.off('window:error', this.showScriptError);
                 this.setState({ loading: false, open: false });
@@ -102,21 +104,23 @@ export default class InstallWidgetModal extends Component {
     }
 
     render() {
+        const { errors, loading, open, scriptError } = this.state;
+        const { buttonLabel, className, header, trigger } = this.props;
         return (
             <Modal
-                trigger={this.props.trigger}
+                trigger={trigger}
                 dimmer="blurring"
-                open={this.state.open}
-                className={this.props.className}
+                open={open}
+                className={className}
                 onOpen={this.openModal.bind(this)}
                 onClose={this.closeModal.bind(this)}
             >
                 <Modal.Header>
-                    <Icon name="puzzle" /> {this.props.header}
+                    <Icon name="puzzle" /> {header}
                 </Modal.Header>
                 <Modal.Content>
-                    <Form errors={this.state.errors} loading={this.state.loading}>
-                        <Form.Field label="Widget package" required error={this.state.errors.widgetUrl}>
+                    <Form errors={errors} loading={loading}>
+                        <Form.Field label="Widget package" required error={errors.widgetUrl}>
                             <Form.UrlOrFile
                                 name="widget"
                                 placeholder="Provide the widget's archive URL or click browse to select a file"
@@ -126,7 +130,7 @@ export default class InstallWidgetModal extends Component {
                         </Form.Field>
                     </Form>
 
-                    {this.state.scriptError && <Message error>{this.state.scriptError}</Message>}
+                    {scriptError && <Message error>{scriptError}</Message>}
                 </Modal.Content>
                 <Modal.Actions>
                     <Button
@@ -140,7 +144,7 @@ export default class InstallWidgetModal extends Component {
                     />
                     <Button
                         icon="puzzle"
-                        content={this.props.buttonLabel}
+                        content={buttonLabel}
                         color="green"
                         onClick={event => {
                             event.stopPropagation();

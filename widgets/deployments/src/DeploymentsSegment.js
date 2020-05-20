@@ -38,48 +38,60 @@ export default class DeploymentsSegment extends React.Component {
     };
 
     render() {
+        const {
+            allowedSettingTo,
+            data,
+            fetchData,
+            noDataMessage,
+            onActOnExecution,
+            onMenuAction,
+            onSelectDeployment,
+            onSetVisibility,
+            onShowLogs,
+            onShowUpdateDetails,
+            showExecutionStatusLabel,
+            widget
+        } = this.props;
         const { DataSegment, Divider, Grid, Header, ResourceVisibility } = Stage.Basic;
         const { NodeInstancesConsts, LastExecutionStatusIcon, GroupState } = Stage.Common;
 
         return (
             <DataSegment
-                totalSize={this.props.data.total}
-                pageSize={this.props.widget.configuration.pageSize}
-                fetchData={this.props.fetchData}
+                totalSize={data.total}
+                pageSize={widget.configuration.pageSize}
+                fetchData={fetchData}
                 searchable
-                noDataMessage={this.props.noDataMessage}
+                noDataMessage={noDataMessage}
             >
-                {this.props.data.items.map(item => {
+                {data.items.map(item => {
                     return (
                         <DataSegment.Item
                             key={item.id}
                             selected={item.isSelected}
                             className={item.id}
-                            onClick={() => this.props.onSelectDeployment(item)}
+                            onClick={() => onSelectDeployment(item)}
                         >
                             <Grid stackable>
                                 <Grid.Row>
                                     <Grid.Column width={4}>
                                         <LastExecutionStatusIcon
                                             execution={item.lastExecution}
-                                            onShowLogs={() => this.props.onShowLogs(item.id, item.lastExecution.id)}
-                                            onShowUpdateDetails={this.props.onShowUpdateDetails}
-                                            onActOnExecution={this.props.onActOnExecution}
-                                            showLabel={this.props.showExecutionStatusLabel}
+                                            onShowLogs={() => onShowLogs(item.id, item.lastExecution.id)}
+                                            onShowUpdateDetails={onShowUpdateDetails}
+                                            onActOnExecution={onActOnExecution}
+                                            showLabel={showExecutionStatusLabel}
                                         />
                                         <ResourceVisibility
                                             visibility={item.visibility}
                                             className="rightFloated"
-                                            onSetVisibility={visibility =>
-                                                this.props.onSetVisibility(item.id, visibility)
-                                            }
-                                            allowedSettingTo={this.props.allowedSettingTo}
+                                            onSetVisibility={visibility => onSetVisibility(item.id, visibility)}
+                                            allowedSettingTo={allowedSettingTo}
                                         />
-                                        {this.props.showExecutionStatusLabel && <Divider hidden />}
+                                        {showExecutionStatusLabel && <Divider hidden />}
                                         <Header
                                             as="h3"
                                             textAlign="center"
-                                            style={this.props.showExecutionStatusLabel ? {} : { marginTop: 5 }}
+                                            style={showExecutionStatusLabel ? {} : { marginTop: 5 }}
                                         >
                                             <a href="javascript:void(0)" className="breakWord">
                                                 {item.id}
@@ -143,7 +155,7 @@ export default class DeploymentsSegment extends React.Component {
                                     </Grid.Column>
 
                                     <Grid.Column width={1}>
-                                        <MenuAction item={item} onSelectAction={this.props.onMenuAction} />
+                                        <MenuAction item={item} onSelectAction={onMenuAction} />
                                     </Grid.Column>
                                 </Grid.Row>
                             </Grid>

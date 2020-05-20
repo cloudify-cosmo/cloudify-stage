@@ -16,19 +16,21 @@ export default class extends React.Component {
     }
 
     shouldComponentUpdate(nextProps, nextState) {
+        const { data, widget } = this.props;
         return (
-            !_.isEqual(this.props.widget, nextProps.widget) ||
+            !_.isEqual(widget, nextProps.widget) ||
             !_.isEqual(this.state, nextState) ||
-            !_.isEqual(this.props.data, nextProps.data)
+            !_.isEqual(data, nextProps.data)
         );
     }
 
     selectPlugin(item) {
-        const oldSelectedPluginId = this.props.toolbox.getContext().getValue('pluginId');
+        const { toolbox } = this.props;
+        const oldSelectedPluginId = toolbox.getContext().getValue('pluginId');
         if (item.id === oldSelectedPluginId) {
-            this.props.toolbox.getContext().setValue('pluginId', null);
+            toolbox.getContext().setValue('pluginId', null);
         } else {
-            this.props.toolbox.getContext().setValue('pluginId', item.id);
+            toolbox.getContext().setValue('pluginId', item.id);
         }
     }
 
@@ -44,8 +46,8 @@ export default class extends React.Component {
 
     downloadPlugin(item, event) {
         event.stopPropagation();
-
-        const actions = new Stage.Common.PluginActions(this.props.toolbox);
+        const { toolbox } = this.props;
+        const actions = new Stage.Common.PluginActions(toolbox);
         actions
             .doDownload(item)
             .then(() => {
@@ -57,17 +59,19 @@ export default class extends React.Component {
     }
 
     deletePlugin() {
-        if (!this.state.item) {
+        const { force, item } = this.state;
+        const { toolbox } = this.props;
+        if (!item) {
             this.setState({ error: 'Something went wrong, no plugin was selected for delete' });
             return;
         }
 
-        const actions = new Stage.Common.PluginActions(this.props.toolbox);
+        const actions = new Stage.Common.PluginActions(toolbox);
         actions
-            .doDelete(this.state.item, this.state.force)
+            .doDelete(item, force)
             .then(() => {
                 this.setState({ confirmDelete: false, error: null });
-                this.props.toolbox.getEventBus().trigger('plugins:refresh');
+                toolbox.getEventBus().trigger('plugins:refresh');
             })
             .catch(err => {
                 this.setState({ confirmDelete: false, error: err.message });
@@ -75,16 +79,17 @@ export default class extends React.Component {
     }
 
     setPluginVisibility(pluginId, visibility) {
-        const actions = new Stage.Common.PluginActions(this.props.toolbox);
-        this.props.toolbox.loading(true);
+        const { toolbox } = this.props;
+        const actions = new Stage.Common.PluginActions(toolbox);
+        toolbox.loading(true);
         actions
             .doSetVisibility(pluginId, visibility)
             .then(() => {
-                this.props.toolbox.loading(false);
-                this.props.toolbox.refresh();
+                toolbox.loading(false);
+                toolbox.refresh();
             })
             .catch(err => {
-                this.props.toolbox.loading(false);
+                toolbox.loading(false);
                 this.setState({ error: err.message });
             });
     }
@@ -98,7 +103,8 @@ export default class extends React.Component {
     }
 
     refreshData() {
-        this.props.toolbox.refresh();
+        const { toolbox } = this.props;
+        toolbox.refresh();
     }
 
     handleForceChange(event, field) {
@@ -106,18 +112,23 @@ export default class extends React.Component {
     }
 
     componentDidMount() {
-        this.props.toolbox.getEventBus().on('plugins:refresh', this.refreshData, this);
+        const { toolbox } = this.props;
+        toolbox.getEventBus().on('plugins:refresh', this.refreshData, this);
     }
 
     componentWillUnmount() {
-        this.props.toolbox.getEventBus().off('plugins:refresh', this.refreshData);
+        const { toolbox } = this.props;
+        toolbox.getEventBus().off('plugins:refresh', this.refreshData);
     }
 
     fetchGridData(fetchParams) {
-        return this.props.toolbox.refresh(fetchParams);
+        const { toolbox } = this.props;
+        return toolbox.refresh(fetchParams);
     }
 
     render() {
+        const { confirmDelete, error, force, hoveredPlugin, item, showUploadModal } = this.state;
+        const { data, toolbox, widget } = this.props;
         const NO_DATA_MESSAGE = 'There are no Plugins available. Click "Upload" to add Plugins.';
         const { Button, DataTable, ErrorMessage, ResourceVisibility } = Stage.Basic;
         const { IdPopup } = Stage.Shared;
@@ -125,14 +136,14 @@ export default class extends React.Component {
 
         return (
             <div>
-                <ErrorMessage error={this.state.error} onDismiss={() => this.setState({ error: null })} autoHide />
+                <ErrorMessage error={error} onDismiss={() => this.setState({ error: null })} autoHide />
 
                 <DataTable
                     fetchData={this.fetchGridData.bind(this)}
-                    totalSize={this.props.data.total}
-                    pageSize={this.props.widget.configuration.pageSize}
-                    sortColumn={this.props.widget.configuration.sortColumn}
-                    sortAscending={this.props.widget.configuration.sortAscending}
+                    totalSize={data.total}
+                    pageSize={widget.configuration.pageSize}
+                    sortColumn={widget.configuration.sortColumn}
+                    sortAscending={widget.configuration.sortAscending}
                     selectable
                     searchable
                     className="pluginsTable"
@@ -149,21 +160,19 @@ export default class extends React.Component {
                     <DataTable.Column label="Creator" name="created_by" width="15%" />
                     <DataTable.Column width="10%" />
 
-                    {this.props.data.items.map(item => {
+                    {data.items.map(item => {
                         return (
                             <DataTable.Row
                                 key={item.id}
                                 selected={item.isSelected}
                                 onClick={this.selectPlugin.bind(this, item)}
                                 onMouseOver={() =>
-                                    this.state.hoveredPlugin !== item.id && this.setState({ hoveredPlugin: item.id })
+                                    hoveredPlugin !== item.id && this.setState({ hoveredPlugin: item.id })
                                 }
-                                onMouseOut={() =>
-                                    this.state.hoveredPlugin === item.id && this.setState({ hoveredPlugin: null })
-                                }
+                                onMouseOut={() => hoveredPlugin === item.id && this.setState({ hoveredPlugin: null })}
                             >
                                 <DataTable.Data>
-                                    <IdPopup selected={item.id === this.state.hoveredPlugin} id={item.id} />
+                                    <IdPopup selected={item.id === hoveredPlugin} id={item.id} />
                                 </DataTable.Data>
                                 <DataTable.Data>
                                     <PluginIcon src={item.icon} />
@@ -209,20 +218,12 @@ export default class extends React.Component {
                     </DataTable.Action>
                 </DataTable>
 
-                <UploadPluginModal
-                    open={this.state.showUploadModal}
-                    toolbox={this.props.toolbox}
-                    onHide={this.hideUploadModal.bind(this)}
-                />
+                <UploadPluginModal open={showUploadModal} toolbox={toolbox} onHide={this.hideUploadModal.bind(this)} />
 
                 <DeleteConfirm
-                    resourceName={`plugin ${_.get(this.state.item, 'package_name', '')} v${_.get(
-                        this.state.item,
-                        'package_version',
-                        ''
-                    )}`}
-                    force={this.state.force}
-                    open={this.state.confirmDelete}
+                    resourceName={`plugin ${_.get(item, 'package_name', '')} v${_.get(item, 'package_version', '')}`}
+                    force={force}
+                    open={confirmDelete}
                     onConfirm={this.deletePlugin.bind(this)}
                     onCancel={() => this.setState({ confirmDelete: false })}
                     onForceChange={this.handleForceChange.bind(this)}

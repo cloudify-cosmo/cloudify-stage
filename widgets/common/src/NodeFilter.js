@@ -103,11 +103,12 @@ export default class NodeFilter extends React.Component {
     }
 
     componentDidUpdate(prevProps, prevState) {
+        const { value } = this.props;
         if (
-            prevState.blueprintId !== this.props.value.blueprintId ||
-            prevState.deploymentId !== this.props.value.deploymentId ||
-            prevState.nodeId !== this.props.value.nodeId ||
-            prevState.nodeInstanceId !== this.props.value.nodeInstanceId
+            prevState.blueprintId !== value.blueprintId ||
+            prevState.deploymentId !== value.deploymentId ||
+            prevState.nodeId !== value.nodeId ||
+            prevState.nodeInstanceId !== value.nodeInstanceId
         ) {
             this.setState({ ...NodeFilter.initialState(this.props) });
             this.fetchBlueprints();
@@ -125,12 +126,15 @@ export default class NodeFilter extends React.Component {
     }
 
     fetchData(fetchUrl, params, optionsField) {
-        const loading = `${optionsField}Loading`;
+        const { toolbox } = this.props;
+        const { errors: stateErrors } = this.state;
 
-        const errors = { ...this.state.errors };
+        const loading = `${optionsField}Loading`;
+        const errors = { ...stateErrors };
         errors[optionsField] = null;
         this.setState({ [loading]: true, [optionsField]: [], errors });
-        this.props.toolbox
+
+        toolbox
             .getManager()
             .doGet(fetchUrl, params)
             .then(data => {
@@ -161,54 +165,60 @@ export default class NodeFilter extends React.Component {
     }
 
     fetchDeployments() {
+        const { blueprintId } = this.state;
         const params = { ...NodeFilter.BASIC_PARAMS };
-        if (!_.isEmpty(this.state.blueprintId)) {
-            params.blueprint_id = this.state.blueprintId;
+        if (!_.isEmpty(blueprintId)) {
+            params.blueprint_id = blueprintId;
         }
         this.fetchData('/deployments', params, 'deployments');
     }
 
     fetchNodes() {
+        const { blueprintId, deploymentId } = this.state;
         const params = { ...NodeFilter.BASIC_PARAMS };
-        if (!_.isEmpty(this.state.blueprintId)) {
-            params.blueprint_id = this.state.blueprintId;
+        if (!_.isEmpty(blueprintId)) {
+            params.blueprint_id = blueprintId;
         }
-        if (!_.isEmpty(this.state.deploymentId)) {
-            params.deployment_id = this.state.deploymentId;
+        if (!_.isEmpty(deploymentId)) {
+            params.deployment_id = deploymentId;
         }
         this.fetchData('/nodes', params, 'nodes');
     }
 
     fetchNodeInstances() {
+        const { deploymentId, nodeId } = this.state;
         const params = { ...NodeFilter.BASIC_PARAMS };
-        if (!_.isEmpty(this.state.deploymentId)) {
-            params.deployment_id = this.state.deploymentId;
+        if (!_.isEmpty(deploymentId)) {
+            params.deployment_id = deploymentId;
         }
-        if (!_.isEmpty(this.state.nodeId)) {
-            params.node_id = this.state.nodeId;
+        if (!_.isEmpty(nodeId)) {
+            params.node_id = nodeId;
         }
         this.fetchData('/node-instances', params, 'nodeInstances');
     }
 
     handleInputChange(state, event, field, onStateChange) {
+        const { blueprintId, deploymentId, nodeId, nodeInstanceId } = this.state;
+        const { name, onChange } = this.props;
         this.setState({ ...state, [field.name]: field.value }, () => {
             if (_.isFunction(onStateChange)) {
                 onStateChange();
             }
-            this.props.onChange(event, {
-                name: this.props.name,
+            onChange(event, {
+                name,
                 value: {
-                    blueprintId: this.state.blueprintId,
-                    deploymentId: this.state.deploymentId,
-                    nodeId: this.state.nodeId,
-                    nodeInstanceId: this.state.nodeInstanceId
+                    blueprintId,
+                    deploymentId,
+                    nodeId,
+                    nodeInstanceId
                 }
             });
         });
     }
 
     isMultipleSetFor(resourcesName) {
-        return this.props.allowMultiple || this.props[`allowMultiple${_.upperFirst(resourcesName)}`];
+        const { allowMultiple, [`allowMultiple${_.upperFirst(resourcesName)}`]: resourceAllowMultiple } = this.props;
+        return allowMultiple || resourceAllowMultiple;
     }
 
     getEmptyValueFor(resourcesName) {
@@ -216,11 +226,13 @@ export default class NodeFilter extends React.Component {
     }
 
     isFilteringSetFor(resourcesName) {
-        return !_.isEmpty(this.props[`allowed${_.upperFirst(resourcesName)}`]);
+        const { [`allowed${_.upperFirst(resourcesName)}`]: allowedOptions } = this.props;
+        return !_.isEmpty(allowedOptions);
     }
 
     getAllowedOptionsFor(resourcesName) {
-        return this.props[`allowed${_.upperFirst(resourcesName)}`];
+        const { [`allowed${_.upperFirst(resourcesName)}`]: allowedOptions } = this.props;
+        return allowedOptions;
     }
 
     selectBlueprint(event, field) {
@@ -273,72 +285,83 @@ export default class NodeFilter extends React.Component {
     }
 
     render() {
-        const { errors } = this.state;
+        const { showBlueprints, showDeployments, showNodeInstances, showNodes } = this.props;
+        const {
+            errors,
+            blueprintId,
+            blueprints,
+            blueprintsLoading,
+            deploymentId,
+            deployments,
+            deploymentsLoading,
+            nodeId,
+            nodeInstanceId,
+            nodeInstances,
+            nodeInstancesLoading,
+            nodes,
+            nodesLoading
+        } = this.state;
         const { Form } = Stage.Basic;
 
         return (
             <Form.Group widths="equal">
-                {this.props.showBlueprints && (
-                    <Form.Field error={this.state.errors.blueprints}>
+                {showBlueprints && (
+                    <Form.Field error={errors.blueprints}>
                         <Form.Dropdown
                             search
                             selection
-                            value={errors.blueprints ? this.getEmptyValueFor('blueprints') : this.state.blueprintId}
+                            value={errors.blueprints ? this.getEmptyValueFor('blueprints') : blueprintId}
                             multiple={this.isMultipleSetFor('blueprints')}
                             placeholder={errors.blueprints || 'Blueprint'}
-                            options={this.state.blueprints}
+                            options={blueprints}
                             onChange={this.selectBlueprint.bind(this)}
                             name="blueprintId"
-                            loading={this.state.blueprintsLoading}
+                            loading={blueprintsLoading}
                         />
                     </Form.Field>
                 )}
-                {this.props.showDeployments && (
-                    <Form.Field error={this.state.errors.deployments}>
+                {showDeployments && (
+                    <Form.Field error={errors.deployments}>
                         <Form.Dropdown
                             search
                             selection
-                            value={errors.deployments ? this.getEmptyValueFor('deployments') : this.state.deploymentId}
+                            value={errors.deployments ? this.getEmptyValueFor('deployments') : deploymentId}
                             multiple={this.isMultipleSetFor('deployments')}
                             placeholder={errors.deployments || 'Deployment'}
-                            options={this.state.deployments}
+                            options={deployments}
                             onChange={this.selectDeployment.bind(this)}
                             name="deploymentId"
-                            loading={this.state.deploymentsLoading}
+                            loading={deploymentsLoading}
                         />
                     </Form.Field>
                 )}
-                {this.props.showNodes && (
-                    <Form.Field error={this.state.errors.nodes}>
+                {showNodes && (
+                    <Form.Field error={errors.nodes}>
                         <Form.Dropdown
                             search
                             selection
-                            value={errors.nodes ? this.getEmptyValueFor('nodes') : this.state.nodeId}
+                            value={errors.nodes ? this.getEmptyValueFor('nodes') : nodeId}
                             multiple={this.isMultipleSetFor('nodes')}
                             placeholder={errors.nodes || 'Node'}
-                            options={this.state.nodes}
+                            options={nodes}
                             onChange={this.selectNode.bind(this)}
                             name="nodeId"
-                            loading={this.state.nodesLoading}
+                            loading={nodesLoading}
                         />
                     </Form.Field>
                 )}
-                {this.props.showNodeInstances && (
-                    <Form.Field error={this.state.errors.nodeInstances}>
+                {showNodeInstances && (
+                    <Form.Field error={errors.nodeInstances}>
                         <Form.Dropdown
                             search
                             selection
-                            value={
-                                errors.nodeInstances
-                                    ? this.getEmptyValueFor('nodeInstances')
-                                    : this.state.nodeInstanceId
-                            }
+                            value={errors.nodeInstances ? this.getEmptyValueFor('nodeInstances') : nodeInstanceId}
                             multiple={this.isMultipleSetFor('nodeInstances')}
                             placeholder={errors.nodeInstances || 'Node Instance'}
-                            options={this.state.nodeInstances}
+                            options={nodeInstances}
                             onChange={this.selectNodeInstance.bind(this)}
                             name="nodeInstanceId"
-                            loading={this.state.nodeInstancesLoading}
+                            loading={nodeInstancesLoading}
                         />
                     </Form.Field>
                 )}

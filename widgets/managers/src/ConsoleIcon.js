@@ -18,18 +18,18 @@ export default class ConsoleIcon extends React.Component {
     handleClick(event) {
         const { redirectToPage, url } = Stage.Utils.Url;
         const managerDefaultProtocol = 'https';
-        const { ip } = this.props.manager;
+        const { manager } = this.props;
 
         event.stopPropagation();
-        redirectToPage(`${managerDefaultProtocol}://${ip}${url('')}`);
+        redirectToPage(`${managerDefaultProtocol}://${manager.ip}${url('')}`);
     }
 
     render() {
         const { Icon, Popup } = Stage.Basic;
-        const { ip } = this.props.manager;
+        const { manager } = this.props;
 
         return (
-            ip && (
+            manager.ip && (
                 <Popup
                     trigger={<Icon name="computer" link bordered onClick={this.handleClick.bind(this)} />}
                     content="Open Console"

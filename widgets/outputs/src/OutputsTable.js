@@ -9,45 +9,48 @@ export default class extends React.Component {
     }
 
     shouldComponentUpdate(nextProps, nextState) {
+        const { data, widget } = this.props;
         return (
-            !_.isEqual(this.props.widget, nextProps.widget) ||
+            !_.isEqual(widget, nextProps.widget) ||
             !_.isEqual(this.state, nextState) ||
-            !_.isEqual(this.props.data, nextProps.data)
+            !_.isEqual(data, nextProps.data)
         );
     }
 
     refreshData() {
-        this.props.toolbox.refresh();
+        const { toolbox } = this.props;
+        toolbox.refresh();
     }
 
     componentDidMount() {
-        this.props.toolbox.getEventBus().on('outputs:refresh', this.refreshData, this);
+        const { toolbox } = this.props;
+        toolbox.getEventBus().on('outputs:refresh', this.refreshData, this);
     }
 
     componentWillUnmount() {
-        this.props.toolbox.getEventBus().off('outputs:refresh', this.refreshData);
+        const { toolbox } = this.props;
+        toolbox.getEventBus().off('outputs:refresh', this.refreshData);
     }
 
     componentDidUpdate(prevProps, prevState) {
-        if (
-            this.props.data.deploymentId !== prevProps.data.deploymentId ||
-            this.props.data.blueprintId !== prevProps.data.blueprintId
-        ) {
+        const { data } = this.props;
+        if (data.deploymentId !== prevProps.data.deploymentId || data.blueprintId !== prevProps.data.blueprintId) {
             this.refreshData();
         }
     }
 
     render() {
+        const { data } = this.props;
+        const { error, sortAscending, sortColumn } = this.state;
+        const { blueprintId, deploymentId, outputsAndCapabilities } = data;
         const NO_DATA_MESSAGE =
             "There are no Outputs/Capabilities available. Probably there's no deployment created, yet.";
         const { Button, DataTable, ErrorMessage, Header } = Stage.Basic;
         const { ParameterValue, ParameterValueDescription } = Stage.Common;
 
-        const { blueprintId, deploymentId, outputsAndCapabilities } = this.props.data;
-
         return (
             <div>
-                <ErrorMessage error={this.state.error} onDismiss={() => this.setState({ error: null })} autoHide />
+                <ErrorMessage error={error} onDismiss={() => this.setState({ error: null })} autoHide />
 
                 <DataTable
                     className="outputsTable"
@@ -66,8 +69,8 @@ export default class extends React.Component {
                         width="65%"
                     />
                     {_.chain(outputsAndCapabilities)
-                        .sortBy(this.state.sortColumn)
-                        .thru(data => (this.state.sortAscending ? data : _.reverse(data)))
+                        .sortBy(sortColumn)
+                        .thru(data => (sortAscending ? data : _.reverse(data)))
                         .map(outputOrCapability => (
                             <DataTable.Row key={outputOrCapability.name}>
                                 <DataTable.Data>

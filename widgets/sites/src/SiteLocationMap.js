@@ -20,16 +20,16 @@ class SiteLocationMap extends React.Component {
 
     constructor(props, context) {
         super(props, context);
-
-        this.initialLocation = this.props.location;
+        const { location } = this.props;
+        this.initialLocation = location;
         this.state = {
             isMapAvailable: true
         };
     }
 
     componentDidMount() {
-        const { mapUrl } = this.props;
-        this.props.toolbox
+        const { mapUrl, toolbox } = this.props;
+        toolbox
             .getExternal()
             .isReachable(mapUrl)
             .then(isMapAvailable => this.setState({ isMapAvailable }));

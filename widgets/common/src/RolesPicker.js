@@ -15,22 +15,24 @@ export default class RolesPicker extends React.Component {
     };
 
     handleInputChange(proxy, field) {
-        this.props.onUpdate(field.name, field.value);
+        const { onUpdate } = this.props;
+        onUpdate(field.name, field.value);
     }
 
     render() {
+        const { resourceName, resources, toolbox } = this.props;
         const { Form } = Stage.Basic;
         const roleOptions = _.reverse(
-            _.map(_.filter(this.props.toolbox.getManagerState().roles, { type: 'tenant_role' }), role => {
+            _.map(_.filter(toolbox.getManagerState().roles, { type: 'tenant_role' }), role => {
                 return { text: role.name, value: role.name };
             })
         );
 
         return (
             <span>
-                {_.map(this.props.resources, (role, resource) => {
+                {_.map(resources, (role, resource) => {
                     return (
-                        <Form.Field key={resource} label={`Choose a role for ${this.props.resourceName} ${resource}:`}>
+                        <Form.Field key={resource} label={`Choose a role for ${resourceName} ${resource}:`}>
                             <Form.Dropdown
                                 placeholder="Choose a role"
                                 selection

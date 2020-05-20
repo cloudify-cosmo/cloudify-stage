@@ -19,9 +19,10 @@ export default class SiteControl extends React.Component {
     };
 
     goToDeploymentsPage(siteName) {
+        const { toolbox } = this.props;
         return new Promise(resolve => {
-            resolve(this.props.toolbox.goToPage('deployments'));
-        }).then(() => this.props.toolbox.getContext().setValue('siteName', siteName));
+            resolve(toolbox.goToPage('deployments'));
+        }).then(() => toolbox.getContext().setValue('siteName', siteName));
     }
 
     render() {

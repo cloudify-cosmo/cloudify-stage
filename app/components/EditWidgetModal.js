@@ -5,7 +5,7 @@
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 
-import { Modal, ApproveButton, CancelButton, Form, GenericField, Message } from './basic';
+import { ApproveButton, CancelButton, Form, GenericField, Message, Modal } from './basic';
 
 export default class EditWidgetModal extends Component {
     constructor(props, context) {
@@ -37,67 +37,71 @@ export default class EditWidgetModal extends Component {
     };
 
     componentDidUpdate(prevProps) {
-        if (!prevProps.open && this.props.open) {
+        const { open } = this.props;
+        if (!prevProps.open && open) {
             this.setState(EditWidgetModal.initialState(this.props));
         }
     }
 
     onApprove() {
+        const { configuration, onHideConfig, onWidgetEdited } = this.props;
+        const { fields } = this.state;
         // Get the changed configurations
-        const config = _.clone(this.props.configuration);
+        const config = _.clone(configuration);
 
-        _.forEach(this.state.fields, (value, key) => {
+        _.forEach(fields, (value, key) => {
             config[key] = value;
         });
 
         if (config) {
-            this.props.onWidgetEdited(config);
+            onWidgetEdited(config);
         }
 
-        this.props.onHideConfig();
+        onHideConfig();
         return true;
     }
 
     onDeny() {
-        this.props.onHideConfig();
+        const { onHideConfig } = this.props;
+        onHideConfig();
         return true;
     }
 
     handleInputChange(proxy, field) {
+        const { fields } = this.state;
         const { name } = field;
         const value = GenericField.formatValue(
             field.genericType,
             field.genericType === GenericField.BOOLEAN_TYPE ? field.checked : field.value
         );
 
-        this.setState({ fields: { ...this.state.fields, [name]: value } });
+        this.setState({ fields: { ...fields, [name]: value } });
     }
 
     render() {
+        const { configDef, onHideConfig, show } = this.props;
+        const { fields } = this.state;
+
         return (
-            <Modal open={this.props.show} onClose={() => this.props.onHideConfig()} className="editWidgetModal">
+            <Modal open={show} onClose={() => onHideConfig()} className="editWidgetModal">
                 <Modal.Header>Configure Widget</Modal.Header>
 
                 <Modal.Content>
                     <Form>
-                        {this.props.configDef
+                        {configDef
                             .filter(config => !config.hidden)
-                            .map(config => {
-                                return (
-                                    <GenericField
-                                        {...config}
-                                        key={config.id}
-                                        name={config.id}
-                                        label={config.name}
-                                        value={this.state.fields[config.id]}
-                                        onChange={this.handleInputChange.bind(this)}
-                                    />
-                                );
-                            })}
+                            .map(config => (
+                                <GenericField
+                                    {...config}
+                                    key={config.id}
+                                    name={config.id}
+                                    label={config.name}
+                                    value={fields[config.id]}
+                                    onChange={this.handleInputChange.bind(this)}
+                                />
+                            ))}
 
-                        {_.isEmpty(this.props.configDef) && (
-                            <Message>No configuration available for this widget</Message>
-                        )}
+                        {_.isEmpty(configDef) && <Message>No configuration available for this widget</Message>}
                     </Form>
                 </Modal.Content>
 

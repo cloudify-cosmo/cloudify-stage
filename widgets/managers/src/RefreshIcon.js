@@ -28,31 +28,31 @@ export default class RefreshIcon extends React.Component {
     };
 
     handleClick(event) {
+        const { manager, onFail, onStart, onSuccess, toolbox } = this.props;
         event.stopPropagation();
 
         this.setState({ loading: true });
 
-        const managerId = this.props.manager.id;
-        const actions = new Actions(this.props.toolbox);
+        const managerId = manager.id;
+        const actions = new Actions(toolbox);
 
-        return actions.getClusterStatus(managerId, this.props.onStart, this.props.onSuccess, this.props.onFail, () =>
-            this.setState({ loading: false })
-        );
+        return actions.getClusterStatus(managerId, onStart, onSuccess, onFail, () => this.setState({ loading: false }));
     }
 
     render() {
+        const { loading } = this.state;
         const { Icon, Popup } = Stage.Basic;
 
         return (
             <Popup
                 trigger={
-                    this.state.loading ? (
+                    loading ? (
                         <Icon name="spinner" loading disabled />
                     ) : (
                         <Icon name="refresh" link bordered onClick={this.handleClick.bind(this)} />
                     )
                 }
-                content={this.state.loading ? 'Status refresh in progress...' : 'Refresh Status'}
+                content={loading ? 'Status refresh in progress...' : 'Refresh Status'}
             />
         );
     }

@@ -2,8 +2,8 @@
  * Created by jakubniezgoda on 21/05/2018.
  */
 
-import React from 'react';
 import PropTypes from 'prop-types';
+import React from 'react';
 import { connect } from 'react-redux';
 
 import { Form } from '../basic';
@@ -53,11 +53,10 @@ class PageFilter extends React.Component {
     });
 
     handleInputChange(event, field) {
+        const { name, onChange } = this.props;
         this.setState({ pageId: field.value }, () => {
-            this.props.onChange(event, {
-                name: this.props.name,
-                value: this.state.pageId
-            });
+            const { pageId: value } = this.state;
+            onChange(event, { name, value });
         });
     }
 
@@ -70,9 +69,9 @@ class PageFilter extends React.Component {
     }
 
     render() {
-        const pages = this.props.allowDrillDownPages
-            ? this.props.pages
-            : _.filter(this.props.pages, page => !page.isDrillDown);
+        const { allowDrillDownPages, propsPages } = this.props;
+        const { pageId } = this.state;
+        const pages = allowDrillDownPages ? propsPages : _.filter(propsPages, page => !page.isDrillDown);
         const pagesOptions = _.map(pages, page => ({
             text: this.getPageName(pages, page.id),
             value: page.id,
@@ -86,7 +85,7 @@ class PageFilter extends React.Component {
                 name="pageId"
                 search
                 selection
-                value={this.state.pageId || defaultValue}
+                value={pageId || defaultValue}
                 options={pagesOptions}
                 onChange={this.handleInputChange.bind(this)}
             />

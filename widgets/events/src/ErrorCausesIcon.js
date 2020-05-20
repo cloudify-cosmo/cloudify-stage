@@ -18,16 +18,17 @@ export default class ErrorCausesModal extends React.Component {
     };
 
     render() {
+        const { onClick, show } = this.props;
         const { Icon, Popup } = Stage.Basic;
 
-        return this.props.show ? (
+        return show ? (
             <Popup on="hover">
                 <Popup.Trigger>
                     <Icon.Group
                         size="big"
                         onClick={e => {
                             e.stopPropagation();
-                            this.props.onClick();
+                            onClick();
                         }}
                     >
                         <Icon name="file text" color="red" />

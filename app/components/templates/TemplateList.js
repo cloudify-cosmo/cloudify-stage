@@ -18,15 +18,16 @@ export default class TemplateList extends Component {
     };
 
     render() {
+        const { style, templates } = this.props;
         return (
-            <Segment style={this.props.style}>
+            <Segment style={style}>
                 <Icon name="list layout" /> Templates
                 <Divider />
                 <List divided relaxed verticalAlign="middle" className="light">
-                    {this.props.templates.map(item => {
+                    {templates.map(item => {
                         return <List.Item key={item}>{item}</List.Item>;
                     })}
-                    {_.isEmpty(this.props.templates) && <Message content="Page not used by any template" />}
+                    {_.isEmpty(templates) && <Message content="Page not used by any template" />}
                 </List>
             </Segment>
         );

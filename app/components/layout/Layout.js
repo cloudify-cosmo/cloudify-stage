@@ -6,18 +6,17 @@ import PropTypes from 'prop-types';
 
 import React, { Component } from 'react';
 import { Redirect, Route, Switch } from 'react-router-dom';
+import Home from '../../containers/Home';
 
 import Header from '../../containers/layout/Header';
+import PageManagement from '../../containers/templates/PageManagement';
+import TemplateManagement from '../../containers/templates/TemplateManagement';
+import Consts from '../../utils/consts';
+import { NO_TENANTS_ERR, UNAUTHORIZED_ERR } from '../../utils/ErrorCodes';
+import SplashLoadingScreen from '../../utils/SplashLoadingScreen';
 
 import StatusPoller from '../../utils/StatusPoller';
 import UserAppDataAutoSaver from '../../utils/UserAppDataAutoSaver';
-import SplashLoadingScreen from '../../utils/SplashLoadingScreen';
-import { NO_TENANTS_ERR, UNAUTHORIZED_ERR } from '../../utils/ErrorCodes';
-import Consts from '../../utils/consts';
-import TemplateManagement from '../../containers/templates/TemplateManagement';
-import PageManagement from '../../containers/templates/PageManagement';
-import Home from '../../containers/Home';
-import NotFound from '../NotFound';
 import ScrollToTop from './ScrollToTop';
 
 export default class Layout extends Component {
@@ -38,10 +37,10 @@ export default class Layout extends Component {
     };
 
     componentDidMount() {
+        const { doLogout, intialPageLoad } = this.props;
         console.log('First time logging in , fetching stuff');
 
-        this.props
-            .intialPageLoad()
+        intialPageLoad()
             .then(() => {
                 StatusPoller.getPoller().start();
                 UserAppDataAutoSaver.getAutoSaver().start();
@@ -50,12 +49,12 @@ export default class Layout extends Component {
             .catch(e => {
                 switch (e) {
                     case NO_TENANTS_ERR:
-                        this.props.doLogout(null, 'noTenants');
+                        doLogout(null, 'noTenants');
                         break;
                     case UNAUTHORIZED_ERR:
                         break;
                     default:
-                        this.props.doLogout('Error initializing user data, cannot load page');
+                        doLogout('Error initializing user data, cannot load page');
                 }
             });
     }
@@ -66,13 +65,16 @@ export default class Layout extends Component {
     }
 
     render() {
-        if (this.props.isLoading) {
+        const { isLoading, isPageSetForPageManagement, isUserAuthorizedForTemplateManagement } = this.props;
+        const { initialized } = this.state;
+
+        if (isLoading) {
             SplashLoadingScreen.turnOn();
             return null;
         }
         SplashLoadingScreen.turnOff();
 
-        if (!this.state.initialized) {
+        if (!initialized) {
             return null;
         }
 
@@ -80,10 +82,10 @@ export default class Layout extends Component {
             <ScrollToTop>
                 <Header />
                 <Switch>
-                    {this.props.isUserAuthorizedForTemplateManagement && (
+                    {isUserAuthorizedForTemplateManagement && (
                         <Route exact path="/template_management" component={TemplateManagement} />
                     )}
-                    {this.props.isUserAuthorizedForTemplateManagement && this.props.isPageSetForPageManagement && (
+                    {isUserAuthorizedForTemplateManagement && isPageSetForPageManagement && (
                         <Route exact path="/page_management" component={PageManagement} />
                     )}
                     <Route exact path="/page/:pageId/:pageName" component={Home} />

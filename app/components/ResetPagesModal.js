@@ -20,21 +20,24 @@ export default class ResetPagesModal extends React.Component {
     };
 
     toggleCheckbox(event, elem) {
+        const { tenants } = this.state;
         const clickedTenant = elem.name;
-        let newTenants = [...this.state.tenants];
+        let newTenants = [...tenants];
 
-        if (_.includes(this.state.tenants, clickedTenant)) {
+        if (_.includes(tenants, clickedTenant)) {
             newTenants = _.pull(newTenants, clickedTenant);
         } else {
             newTenants.push(clickedTenant);
         }
 
-        this.setState({ tenants: newTenants }, () => console.error(this.state.tenants));
+        this.setState({ tenants: newTenants }, () => console.error(tenants));
     }
 
     render() {
-        return this.props.tenants.items.length > 1 ? (
-            <Modal className="tiny resetPagesModal" open={this.props.open} onClose={this.props.onHide}>
+        const { loading } = this.state;
+        const { onConfirm, onHide, open, tenants } = this.props;
+        return tenants.items.length > 1 ? (
+            <Modal className="tiny resetPagesModal" open={open} onClose={onHide}>
                 <Modal.Header>
                     <Icon name="user" /> Reset pages for tenants
                 </Modal.Header>
@@ -45,7 +48,7 @@ export default class ResetPagesModal extends React.Component {
                     <Card fluid>
                         <Card.Content>
                             <List relaxed>
-                                {this.props.tenants.items.map(tenant => {
+                                {tenants.items.map(tenant => {
                                     return (
                                         <List.Item key={tenant.name}>
                                             <Checkbox
@@ -63,10 +66,10 @@ export default class ResetPagesModal extends React.Component {
                 </Modal.Content>
 
                 <Modal.Actions>
-                    <CancelButton onClick={this.props.onHide} disabled={this.state.loading} />
+                    <CancelButton onClick={onHide} disabled={loading} />
                     <ApproveButton
-                        onClick={() => this.props.onConfirm(this.state.tenants)}
-                        disabled={this.state.loading || _.isEmpty(this.state.tenants)}
+                        onClick={() => onConfirm(tenants)}
+                        disabled={loading || _.isEmpty(tenants)}
                         icon="undo"
                         color="green"
                         content="Reset"
@@ -76,10 +79,10 @@ export default class ResetPagesModal extends React.Component {
         ) : (
             <Confirm
                 content="Are you sure you want to reset application screens to default?"
-                open={this.props.open}
-                onClose={this.props.onHide}
-                onConfirm={() => this.props.onConfirm(this.state.tenants)}
-                onCancel={this.props.onHide}
+                open={open}
+                onClose={onHide}
+                onConfirm={() => onConfirm(tenants)}
+                onCancel={onHide}
             />
         );
     }

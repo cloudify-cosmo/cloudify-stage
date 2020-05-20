@@ -38,6 +38,14 @@ function errorLogin(username, err) {
     };
 }
 
+export function storeRBAC(RBAC) {
+    return {
+        type: types.STORE_RBAC,
+        roles: RBAC.roles,
+        permissions: RBAC.permissions
+    };
+}
+
 export function login(username, password, redirect) {
     return (dispatch, getState) => {
         dispatch(requestLogin());
@@ -106,14 +114,6 @@ export function logout(err, path) {
         };
 
         return Auth.logout(getState().manager).then(localLogout, localLogout);
-    };
-}
-
-export function storeRBAC(RBAC) {
-    return {
-        type: types.STORE_RBAC,
-        roles: RBAC.roles,
-        permissions: RBAC.permissions
     };
 }
 
