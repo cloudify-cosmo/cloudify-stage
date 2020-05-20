@@ -78,9 +78,9 @@ To create RPM package:
 ### Package upload
 
 To upload the package to the remote Cloudify Manager:
-1. Have private SSH key to access Cloudify Manager in `~/.ssh/cloudify.key`or explicitly define path to it: `export SSH_KEY_PATH=<PATH>`.
-1. Have `manager.ip` defined in `conf/me.json` or explicitly define Cloudify Manager IP address: `export MANAGER_IP=<MANAGER_IP>`.
-1. Have tarball package (`stage.tar.gz`) present or explicitly define path to tarball or RPM package: `export STAGE_PACKAGE=<PATH>`.
+1. Copy private SSH key to access Cloudify Manager to `~/.ssh/cloudify.key` or explicitly define path to it: `export SSH_KEY_PATH=<PATH>`.
+1. Define Cloudify Manager IP address by specifying `manager.ip` in `conf/me.json` or by exporting environment variable: `export MANAGER_IP=<MANAGER_IP>`.
+1. Make sure tarball package (`stage.tar.gz`) is built or explicitly define path to the tarball or RPM package: `export STAGE_PACKAGE=<PATH>`.
 1. Run uploading script: `npm run upload`.
 1. Open browser and go to page `http://<MANAGER_IP>` to see if application is running.
 
