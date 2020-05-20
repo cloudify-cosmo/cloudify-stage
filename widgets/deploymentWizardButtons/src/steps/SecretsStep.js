@@ -2,12 +2,12 @@
  * Created by jakub.niezgoda on 31/07/2018.
  */
 
-import ResourceStatus from './helpers/ResourceStatus';
-import ResourceAction from './helpers/ResourceAction';
-import NoResourceMessage from './helpers/NoResourceMessage';
-import { createWizardStep } from '../wizard/wizardUtils';
 import StepActions from '../wizard/StepActions';
 import StepContent from '../wizard/StepContent';
+import { createWizardStep } from '../wizard/wizardUtils';
+import NoResourceMessage from './helpers/NoResourceMessage';
+import ResourceAction from './helpers/ResourceAction';
+import ResourceStatus from './helpers/ResourceStatus';
 
 const secretsStepId = 'secrets';
 
@@ -15,9 +15,9 @@ class SecretsStepActions extends React.Component {
     static propTypes = StepActions.propTypes;
 
     onNext(id) {
-        return this.props
-            .onLoading()
-            .then(this.props.fetchData)
+        const { fetchData, onError, onLoading, onNext } = this.props;
+        return onLoading()
+            .then(fetchData)
             .then(({ stepData }) => {
                 const undefinedSecrets = _.chain(stepData)
                     .pickBy(secret => secret.status === SecretsStepContent.statusUndefined)
@@ -34,9 +34,9 @@ class SecretsStepActions extends React.Component {
                         errors: secretsWithoutValue
                     });
                 }
-                return this.props.onNext(id, { secrets: undefinedSecrets });
+                return onNext(id, { secrets: undefinedSecrets });
             })
-            .catch(error => this.props.onError(id, error.message, error.errors));
+            .catch(error => onError(id, error.message, error.errors));
     }
 
     render() {
@@ -73,11 +73,11 @@ class SecretsStepContent extends React.Component {
     };
 
     componentDidMount() {
-        const secrets = _.get(this.props.wizardData, SecretsStepContent.dataPath, {});
+        const { id, onChange, onError, onLoading, onReady, toolbox, stepData: stepDataProp, wizardData } = this.props;
+        const secrets = _.get(wizardData, SecretsStepContent.dataPath, {});
 
-        this.props
-            .onLoading()
-            .then(() => this.props.toolbox.getManager().doGet('/secrets?_include=key,visibility'))
+        onLoading()
+            .then(() => toolbox.getManager().doGet('/secrets?_include=key,visibility'))
             .then(secretsInManager => {
                 secretsInManager = secretsInManager.items;
                 secretsInManager = _.reduce(
@@ -93,7 +93,7 @@ class SecretsStepContent extends React.Component {
 
                 const stepData = {};
                 for (const secret of _.keys(secrets)) {
-                    stepData[secret] = this.props.stepData[secret] || { ...SecretsStepContent.defaultSecretState };
+                    stepData[secret] = stepDataProp[secret] || { ...SecretsStepContent.defaultSecretState };
 
                     if (_.includes(_.keys(secretsInManager), secret)) {
                         stepData[secret].status = SecretsStepContent.statusDefined;
@@ -109,17 +109,18 @@ class SecretsStepContent extends React.Component {
                 ({ stepData, secretsInManager }) =>
                     new Promise(resolve =>
                         this.setState({ secretsInManager }, () => {
-                            this.props.onChange(this.props.id, stepData);
+                            onChange(id, stepData);
                             resolve();
                         })
                     )
             )
-            .catch(error => this.props.onError(this.props.id, error))
-            .finally(() => this.props.onReady());
+            .catch(error => onError(id, error))
+            .finally(() => onReady());
     }
 
     getSecretStatus(secretKey) {
-        const secret = this.props.stepData[secretKey];
+        const { stepData } = this.props;
+        const secret = stepData[secretKey];
 
         switch (secret.status) {
             case SecretsStepContent.statusDefined:
@@ -137,8 +138,9 @@ class SecretsStepContent extends React.Component {
     }
 
     getSecretAction(secretKey) {
+        const { errors, stepData } = this.props;
         const { Form } = Stage.Basic;
-        const secret = this.props.stepData[secretKey];
+        const secret = stepData[secretKey];
 
         switch (secret.status) {
             case SecretsStepContent.statusDefined:
@@ -149,7 +151,7 @@ class SecretsStepContent extends React.Component {
                         <Form.Input
                             name={secretKey}
                             value={secret.value}
-                            error={this.props.errors[secretKey]}
+                            error={errors[secretKey]}
                             fluid
                             placeholder="Provide secret value"
                             onChange={(event, { name, value }) => this.handleChange(secretKey, 'value', value)}
@@ -163,7 +165,8 @@ class SecretsStepContent extends React.Component {
 
     getSecretVisibility(secretKey) {
         const { VisibilityField } = Stage.Basic;
-        const secret = this.props.stepData[secretKey];
+        const { stepData } = this.props;
+        const secret = stepData[secretKey];
 
         switch (secret.status) {
             case SecretsStepContent.statusDefined:
@@ -188,19 +191,21 @@ class SecretsStepContent extends React.Component {
     }
 
     handleChange(secretKey, fieldName, fieldValue) {
-        const secret = { ...this.props.stepData[secretKey] };
+        const { id, onChange, stepData } = this.props;
+        const secret = { ...stepData[secretKey] };
         secret[fieldName] = fieldValue;
 
-        this.props.onChange(this.props.id, { ...this.props.stepData, [secretKey]: secret });
+        onChange(id, { ...stepData, [secretKey]: secret });
     }
 
     render() {
+        const { loading, stepData, wizardData } = this.props;
         const { Form, Table } = Stage.Basic;
-        const secrets = _.get(this.props.wizardData, SecretsStepContent.dataPath, {});
+        const secrets = _.get(wizardData, SecretsStepContent.dataPath, {});
         const noSecrets = _.isEmpty(secrets);
 
         return (
-            <Form loading={this.props.loading} success={noSecrets}>
+            <Form loading={loading} success={noSecrets}>
                 {noSecrets ? (
                     <NoResourceMessage resourceName="secrets" />
                 ) : (
@@ -214,7 +219,7 @@ class SecretsStepContent extends React.Component {
 
                         <Table.Body>
                             {_.map(
-                                _.keys(this.props.stepData),
+                                _.keys(stepData),
                                 secretKey =>
                                     !_.isNil(secrets[secretKey]) && (
                                         <Table.Row key={secretKey} name={secretKey}>

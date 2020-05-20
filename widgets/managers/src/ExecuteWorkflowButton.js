@@ -22,14 +22,14 @@ export default class ExecuteWorkflowButton extends React.Component {
     render() {
         const { Button, Popup } = Stage.Basic;
         const { WorkflowsMenu } = Stage.Common;
-        const { managers } = this.props;
+        const { managers, onClick, workflows } = this.props;
 
         return (
             <Popup on={_.isEmpty(managers) ? 'hover' : []} open={_.isEmpty(managers) ? undefined : false}>
                 <Popup.Trigger>
                     <div>
                         <WorkflowsMenu
-                            workflows={this.props.workflows}
+                            workflows={workflows}
                             dropdownDirection="left"
                             trigger={
                                 <Button
@@ -39,7 +39,7 @@ export default class ExecuteWorkflowButton extends React.Component {
                                     disabled={_.isEmpty(managers)}
                                 />
                             }
-                            onClick={workflow => this.props.onClick(workflow)}
+                            onClick={workflow => onClick(workflow)}
                         />
                     </div>
                 </Popup.Trigger>

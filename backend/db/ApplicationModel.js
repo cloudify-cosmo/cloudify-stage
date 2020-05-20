@@ -2,8 +2,8 @@
  * Created by Alex on 21/03/2017.
  */
 
-module.exports = function(sequelize, DataTypes) {
-    return sequelize.define('Application', {
+module.exports = (sequelize, DataTypes) =>
+    sequelize.define('Application', {
         id: {
             type: DataTypes.INTEGER,
             primaryKey: true,
@@ -17,4 +17,3 @@ module.exports = function(sequelize, DataTypes) {
         isPrivate: { type: DataTypes.BOOLEAN },
         extras: { type: DataTypes.JSON }
     });
-};

@@ -12,17 +12,19 @@ export default class BlueprintInfo extends React.Component {
     }
 
     shouldComponentUpdate(nextProps, nextState) {
+        const { data, widget } = this.props;
         return (
-            !_.isEqual(this.props.widget, nextProps.widget) ||
+            !_.isEqual(widget, nextProps.widget) ||
             !_.isEqual(this.state, nextState) ||
-            !_.isEqual(this.props.data, nextProps.data)
+            !_.isEqual(data, nextProps.data)
         );
     }
 
     render() {
+        const { data } = this.props;
+        const { error } = this.state;
         const { ErrorMessage, Grid, Image, ResourceVisibility, Message, Label } = Stage.Basic;
-
-        const blueprint = this.props.data;
+        const blueprint = data;
 
         if (!blueprint.id) {
             return (
@@ -34,7 +36,7 @@ export default class BlueprintInfo extends React.Component {
 
         return (
             <div>
-                <ErrorMessage error={this.state.error} onDismiss={() => this.setState({ error: null })} autoHide />
+                <ErrorMessage error={error} onDismiss={() => this.setState({ error: null })} autoHide />
                 <Grid>
                     <Grid.Row className="bottomDivider">
                         <Grid.Column width="4">

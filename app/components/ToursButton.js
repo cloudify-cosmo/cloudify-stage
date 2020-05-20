@@ -2,8 +2,8 @@
  * Created by edenp on 15/04/2018.
  */
 
-import React from 'react';
 import PropTypes from 'prop-types';
+import React from 'react';
 
 import { Button, Menu, Popup, PopupMenu } from './basic';
 
@@ -23,29 +23,32 @@ export default class ToursButton extends React.Component {
     };
 
     startTour(tour) {
-        this.props.onTourStart(tour);
+        const { onTourStart } = this.props;
+        onTourStart(tour);
     }
 
-    _onMouseOver() {
+    onMouseOver() {
         this.setState({ hovered: true });
     }
 
-    _onMouseOut() {
+    onMouseOut() {
         this.setState({ hovered: false });
     }
 
     render() {
+        const { tours } = this.props;
+        const { hovered } = this.state;
         const buttonStyle = {
             position: 'fixed',
             right: '20px',
             bottom: '20px',
             zIndex: 9,
-            opacity: this.state.hovered ? 1 : 0.5
+            opacity: hovered ? 1 : 0.5
         };
 
         return (
-            !_.isEmpty(this.props.tours) && (
-                <PopupMenu onClose={this._onMouseOut.bind(this)}>
+            !_.isEmpty(tours) && (
+                <PopupMenu onClose={this.onMouseOut.bind(this)}>
                     <Popup.Trigger>
                         <Button
                             title="Take a tour"
@@ -54,15 +57,15 @@ export default class ToursButton extends React.Component {
                             size="huge"
                             icon="map signs"
                             id="toursButton"
-                            onMouseOver={this._onMouseOver.bind(this)}
-                            onMouseOut={this._onMouseOut.bind(this)}
+                            onMouseOver={this.onMouseOver.bind(this)}
+                            onMouseOut={this.onMouseOut.bind(this)}
                             style={buttonStyle}
                             onClick={e => e.stopPropagation()}
                         />
                     </Popup.Trigger>
                     <Menu vertical>
                         <Menu.Item header>Tours</Menu.Item>
-                        {this.props.tours.map(tour => (
+                        {tours.map(tour => (
                             <Menu.Item key={tour.id} onClick={() => this.startTour(tour)}>
                                 {tour.name}
                             </Menu.Item>

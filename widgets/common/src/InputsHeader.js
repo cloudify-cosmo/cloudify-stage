@@ -24,11 +24,12 @@ class InputsHeader extends React.Component {
     }
 
     render() {
+        const { compact, dividing, header } = this.props;
         const { Form, Header, List, PopupHelp } = Stage.Basic;
 
         const HeaderWithDescription = () => (
             <Header size="tiny">
-                {this.props.header}
+                {header}
                 <Header.Subheader>
                     See values typing details:&nbsp;
                     <PopupHelp
@@ -36,25 +37,34 @@ class InputsHeader extends React.Component {
                         header="Value type"
                         content={
                             <div>
-                                Values are casted to types, e.g.:
+                                <p>Values are casted to types:</p>
                                 <List bulleted>
+                                    <List.Item>
+                                        <strong>524</strong> or <strong>3.14</strong> will be casted to a number
+                                    </List.Item>
+                                    <List.Item>
+                                        <strong>false</strong> will be casted to a boolean
+                                    </List.Item>
                                     <List.Item>
                                         <strong>[1, 2]</strong> will be casted to an array
                                     </List.Item>
                                     <List.Item>
-                                        <strong>524</strong> will be casted to a number
-                                    </List.Item>
-                                </List>
-                                Surround value with <strong>"</strong> to explicitly declare it as a string, e.g.:
-                                <List bulleted>
-                                    <List.Item>
-                                        <strong>{'"{"a":"b"}"'}</strong> will be send as string not an object
+                                        <strong>{'{"a":"b"}'}</strong> will be casted to an object
                                     </List.Item>
                                     <List.Item>
-                                        <strong>"true"</strong> will be send as string not a boolean value
+                                        <strong>null</strong> will be casted to a null value
                                     </List.Item>
                                 </List>
-                                Use <strong>""</strong> for an empty string.
+                                <p>Value is treated as string if it is not possible to cast it to a different type.</p>
+                                <p>
+                                    Surround value with <strong>"</strong> (double quotes) to explicitly declare it as a
+                                    string, e.g.:
+                                    <br />
+                                    <strong>"true"</strong> will be treated as a string, not a boolean value.
+                                </p>
+                                <p>
+                                    Use <strong>""</strong> for an empty string.
+                                </p>
                             </div>
                         }
                     />
@@ -62,8 +72,8 @@ class InputsHeader extends React.Component {
             </Header>
         );
 
-        return this.props.dividing ? (
-            <Form.Divider style={this.props.compact ? { marginTop: 0 } : {}}>
+        return dividing ? (
+            <Form.Divider style={compact ? { marginTop: 0 } : {}}>
                 <HeaderWithDescription />
             </Form.Divider>
         ) : (

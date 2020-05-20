@@ -13,8 +13,9 @@ export default class MenuAction extends React.Component {
 
     static SET_ADMIN_GROUP_ROLE_ACTION = 'set-admin-role';
 
-    _actionClick(proxy, { name }) {
-        this.props.onSelectAction(name, this.props.item);
+    actionClick(proxy, { name }) {
+        const { item, onSelectAction } = this.props;
+        onSelectAction(name, item);
     }
 
     render() {
@@ -27,19 +28,19 @@ export default class MenuAction extends React.Component {
                         icon="users"
                         content="Edit group's users"
                         name={MenuAction.EDIT_USERS_ACTION}
-                        onClick={this._actionClick.bind(this)}
+                        onClick={this.actionClick.bind(this)}
                     />
                     <Menu.Item
                         icon="user"
                         content="Edit group's tenants"
                         name={MenuAction.EDIT_TENANTS_ACTION}
-                        onClick={this._actionClick.bind(this)}
+                        onClick={this.actionClick.bind(this)}
                     />
                     <Menu.Item
                         icon="trash"
                         content="Delete"
                         name={MenuAction.DELETE_ACTION}
-                        onClick={this._actionClick.bind(this)}
+                        onClick={this.actionClick.bind(this)}
                     />
                 </Menu>
             </PopupMenu>

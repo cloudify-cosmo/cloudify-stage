@@ -2,8 +2,8 @@
  * Created by kinneretzin on 02/10/2016.
  */
 
-import BlueprintsTable from './BlueprintsTable';
 import BlueprintsCatalog from './BlueprintsCatalog';
+import BlueprintsTable from './BlueprintsTable';
 
 export default class BlueprintList extends React.Component {
     constructor(props, context) {
@@ -20,163 +20,172 @@ export default class BlueprintList extends React.Component {
     }
 
     shouldComponentUpdate(nextProps, nextState) {
+        const { data, widget } = this.props;
         return (
-            !_.isEqual(this.props.widget, nextProps.widget) ||
+            !_.isEqual(widget, nextProps.widget) ||
             !_.isEqual(this.state, nextState) ||
-            !_.isEqual(this.props.data, nextProps.data)
+            !_.isEqual(data, nextProps.data)
         );
     }
 
-    _selectBlueprint(item) {
-        if (this.props.widget.configuration.clickToDrillDown) {
-            this.props.toolbox.drillDown(this.props.widget, 'blueprint', { blueprintId: item.id }, item.id);
+    selectBlueprint(item) {
+        const { toolbox, widget } = this.props;
+        if (widget.configuration.clickToDrillDown) {
+            toolbox.drillDown(widget, 'blueprint', { blueprintId: item.id }, item.id);
         } else {
-            const oldSelectedBlueprintId = this.props.toolbox.getContext().getValue('blueprintId');
-            this.props.toolbox
-                .getContext()
-                .setValue('blueprintId', item.id === oldSelectedBlueprintId ? null : item.id);
+            const oldSelectedBlueprintId = toolbox.getContext().getValue('blueprintId');
+            toolbox.getContext().setValue('blueprintId', item.id === oldSelectedBlueprintId ? null : item.id);
         }
     }
 
-    _createDeployment(item) {
+    createDeployment(item) {
         this.setState({ error: null, blueprintId: item.id, showDeploymentModal: true });
     }
 
-    _deleteBlueprintConfirm(item) {
+    deleteBlueprintConfirm(item) {
         this.setState({ confirmDelete: true, blueprintId: item.id, force: false });
     }
 
-    _deleteBlueprint() {
-        if (!this.state.blueprintId) {
+    deleteBlueprint() {
+        const { blueprintId, force } = this.state;
+        const { toolbox } = this.props;
+        if (!blueprintId) {
             this.setState({ error: 'Something went wrong, no blueprint was selected for delete' });
             return;
         }
 
-        const actions = new Stage.Common.BlueprintActions(this.props.toolbox);
+        const actions = new Stage.Common.BlueprintActions(toolbox);
         this.setState({ confirmDelete: false });
         actions
-            .doDelete(this.state.blueprintId, this.state.force)
+            .doDelete(blueprintId, force)
             .then(() => {
                 this.setState({ error: null });
-                this.props.toolbox.refresh();
+                toolbox.refresh();
             })
             .catch(err => {
                 this.setState({ error: err.message });
             });
     }
 
-    _setBlueprintVisibility(blueprintId, visibility) {
-        const actions = new Stage.Common.BlueprintActions(this.props.toolbox);
-        this.props.toolbox.loading(true);
+    setBlueprintVisibility(blueprintId, visibility) {
+        const { toolbox } = this.props;
+        const actions = new Stage.Common.BlueprintActions(toolbox);
+        toolbox.loading(true);
         actions
             .doSetVisibility(blueprintId, visibility)
             .then(() => {
-                this.props.toolbox.loading(false);
-                this.props.toolbox.refresh();
+                toolbox.loading(false);
+                toolbox.refresh();
             })
             .catch(err => {
-                this.props.toolbox.loading(false);
+                toolbox.loading(false);
                 this.setState({ error: err.message });
             });
     }
 
-    _refreshData() {
-        this.props.toolbox.refresh();
+    refreshData() {
+        const { toolbox } = this.props;
+        toolbox.refresh();
     }
 
     componentDidMount() {
-        this.props.toolbox.getEventBus().on('blueprints:refresh', this._refreshData, this);
+        const { toolbox } = this.props;
+        toolbox.getEventBus().on('blueprints:refresh', this.refreshData, this);
     }
 
     componentWillUnmount() {
-        this.props.toolbox.getEventBus().off('blueprints:refresh', this._refreshData);
+        const { toolbox } = this.props;
+        toolbox.getEventBus().off('blueprints:refresh', this.refreshData);
     }
 
-    _hideDeploymentModal() {
+    hideDeploymentModal() {
         this.setState({ showDeploymentModal: false });
     }
 
-    _showUploadModal() {
+    showUploadModal() {
         this.setState({ showUploadModal: true });
     }
 
-    _hideUploadModal() {
+    hideUploadModal() {
         this.setState({ showUploadModal: false });
     }
 
-    _handleForceChange(event, field) {
+    handleForceChange(event, field) {
         this.setState(Stage.Basic.Form.fieldNameValue(field));
     }
 
     fetchGridData(fetchParams) {
-        return this.props.toolbox.refresh(fetchParams);
+        const { toolbox } = this.props;
+        return toolbox.refresh(fetchParams);
     }
 
     render() {
+        const { blueprintId, confirmDelete, error, force, showDeploymentModal, showUploadModal } = this.state;
+        const { data, toolbox, widget } = this.props;
         const NO_DATA_MESSAGE = 'There are no Blueprints available. Click "Upload" to add Blueprints.';
         const { Button, ErrorMessage } = Stage.Basic;
         const { DeleteConfirm, DeployBlueprintModal, UploadBlueprintModal } = Stage.Common;
 
-        const shouldShowTable = this.props.widget.configuration.displayStyle === 'table';
+        const shouldShowTable = widget.configuration.displayStyle === 'table';
 
         return (
             <div>
-                <ErrorMessage error={this.state.error} onDismiss={() => this.setState({ error: null })} autoHide />
+                <ErrorMessage error={error} onDismiss={() => this.setState({ error: null })} autoHide />
 
                 <Button
                     content="Upload"
                     icon="upload"
                     labelPosition="left"
                     className="uploadBlueprintButton"
-                    onClick={this._showUploadModal.bind(this)}
+                    onClick={this.showUploadModal.bind(this)}
                 />
 
                 {shouldShowTable ? (
                     <BlueprintsTable
-                        widget={this.props.widget}
-                        data={this.props.data}
-                        toolbox={this.props.toolbox}
+                        widget={widget}
+                        data={data}
+                        toolbox={toolbox}
                         fetchGridData={this.fetchGridData.bind(this)}
-                        onSelectBlueprint={this._selectBlueprint.bind(this)}
-                        onDeleteBlueprint={this._deleteBlueprintConfirm.bind(this)}
-                        onCreateDeployment={this._createDeployment.bind(this)}
-                        onSetVisibility={this._setBlueprintVisibility.bind(this)}
+                        onSelectBlueprint={this.selectBlueprint.bind(this)}
+                        onDeleteBlueprint={this.deleteBlueprintConfirm.bind(this)}
+                        onCreateDeployment={this.createDeployment.bind(this)}
+                        onSetVisibility={this.setBlueprintVisibility.bind(this)}
                         noDataMessage={NO_DATA_MESSAGE}
                     />
                 ) : (
                     <BlueprintsCatalog
-                        widget={this.props.widget}
-                        data={this.props.data}
-                        toolbox={this.props.toolbox}
+                        widget={widget}
+                        data={data}
+                        toolbox={toolbox}
                         fetchData={this.fetchGridData.bind(this)}
-                        onSelectBlueprint={this._selectBlueprint.bind(this)}
-                        onDeleteBlueprint={this._deleteBlueprintConfirm.bind(this)}
-                        onCreateDeployment={this._createDeployment.bind(this)}
-                        onSetVisibility={this._setBlueprintVisibility.bind(this)}
+                        onSelectBlueprint={this.selectBlueprint.bind(this)}
+                        onDeleteBlueprint={this.deleteBlueprintConfirm.bind(this)}
+                        onCreateDeployment={this.createDeployment.bind(this)}
+                        onSetVisibility={this.setBlueprintVisibility.bind(this)}
                         noDataMessage={NO_DATA_MESSAGE}
                     />
                 )}
 
                 <DeleteConfirm
-                    resourceName={`blueprint ${this.state.blueprintId}`}
-                    force={this.state.force}
-                    open={this.state.confirmDelete}
-                    onConfirm={this._deleteBlueprint.bind(this)}
+                    resourceName={`blueprint ${blueprintId}`}
+                    force={force}
+                    open={confirmDelete}
+                    onConfirm={this.deleteBlueprint.bind(this)}
                     onCancel={() => this.setState({ confirmDelete: false })}
-                    onForceChange={this._handleForceChange.bind(this)}
+                    onForceChange={this.handleForceChange.bind(this)}
                 />
 
                 <DeployBlueprintModal
-                    open={this.state.showDeploymentModal}
-                    blueprintId={this.state.blueprintId}
-                    onHide={this._hideDeploymentModal.bind(this)}
-                    toolbox={this.props.toolbox}
+                    open={showDeploymentModal}
+                    blueprintId={blueprintId}
+                    onHide={this.hideDeploymentModal.bind(this)}
+                    toolbox={toolbox}
                 />
 
                 <UploadBlueprintModal
-                    open={this.state.showUploadModal}
-                    onHide={this._hideUploadModal.bind(this)}
-                    toolbox={this.props.toolbox}
+                    open={showUploadModal}
+                    onHide={this.hideUploadModal.bind(this)}
+                    toolbox={toolbox}
                 />
             </div>
         );

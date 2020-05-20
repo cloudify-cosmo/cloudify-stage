@@ -15,10 +15,11 @@ export default class Grid extends Component {
         isEditMode: PropTypes.bool.isRequired
     };
 
-    _saveChangedItems(layout) {
-        this.props.isEditMode &&
+    saveChangedItems(layout) {
+        const { isEditMode, onGridDataChange } = this.props;
+        isEditMode &&
             _.each(layout, item => {
-                this.props.onGridDataChange(item.i, {
+                onGridDataChange(item.i, {
                     height: item.h,
                     width: item.w,
                     x: item.x,
@@ -48,18 +49,19 @@ export default class Grid extends Component {
     }
 
     render() {
+        const { children, isEditMode } = this.props;
         return (
             <ReactGridLayout
-                className={['layout', this.props.isEditMode && 'isEditMode'].join(' ')}
+                className={['layout', isEditMode && 'isEditMode'].join(' ')}
                 breakpoints={{ lg: 1000, md: 800, sm: 640, xs: 320, xxs: 0 }}
                 cols={{ lg: 12, md: 10, sm: 8, xs: 6, xxs: 2 }}
                 rowHeight={10}
-                onLayoutChange={this._saveChangedItems.bind(this)}
-                isDraggable={this.props.isEditMode}
-                isResizable={this.props.isEditMode}
+                onLayoutChange={this.saveChangedItems.bind(this)}
+                isDraggable={isEditMode}
+                isResizable={isEditMode}
                 useCSSTransforms={false}
             >
-                {_.map(this.props.children, this.processGridItem.bind(this))}
+                {_.map(children, this.processGridItem.bind(this))}
             </ReactGridLayout>
         );
     }

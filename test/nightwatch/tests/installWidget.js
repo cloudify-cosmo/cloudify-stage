@@ -28,7 +28,7 @@ module.exports = {
             });
     },
 
-    'Install widget - error handling': function(client) {
+    'Install widget - error handling': client => {
         const page = client.page.page();
 
         page.section.addWidgetModal.clickElement('@installWidgetBtn');
@@ -66,7 +66,7 @@ module.exports = {
         page.section.installWidgetModal.clickElement('@cancelButton').waitForElementNotPresent('@okButton');
     },
 
-    'Install and update widget': function(client) {
+    'Install and update widget': client => {
         const page = client.page.page();
 
         page.section.addWidgetModal.clickElement('@installWidgetBtn');
@@ -99,7 +99,7 @@ module.exports = {
             .waitForElementNotPresent('@okButton');
     },
 
-    'Check widget removing': function(client) {
+    'Check widget removing': client => {
         const page = client.page.page();
 
         page.section.addWidgetModal.waitForElementPresent('@testWidget').clickElement('@removeWidgetButton');
@@ -111,7 +111,7 @@ module.exports = {
             .waitForElementNotPresent('@okButton');
     },
 
-    'Add installed widget': function(client) {
+    'Add installed widget': client => {
         const page = client.page.page();
 
         page.section.page
@@ -120,7 +120,7 @@ module.exports = {
             .assert.containsText('@testWidgetContent', page.section.page.props.testWidgetLabel);
     },
 
-    'Widget already installed': function(client) {
+    'Widget already installed': client => {
         const page = client.page.page();
 
         page.section.editModeSidebar.clickElement('@addWidgetButton');
@@ -139,7 +139,7 @@ module.exports = {
             .waitForElementNotPresent('@okButton');
     },
 
-    'Remove widget': function(client) {
+    'Remove widget': client => {
         const page = client.page.page();
 
         page.section.addWidgetModal.clickElement('@removeWidgetButton');

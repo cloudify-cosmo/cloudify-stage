@@ -11,15 +11,17 @@ export default class extends React.Component {
         };
     }
 
-    _showModal() {
+    showModal() {
         this.setState({ open: true });
     }
 
-    _hideModal() {
+    hideModal() {
         this.setState({ open: false });
     }
 
     render() {
+        const { toolbox } = this.props;
+        const { loading, open } = this.state;
         const { Button } = Stage.Basic;
         const { UploadBlueprintModal } = Stage.Common;
 
@@ -31,15 +33,11 @@ export default class extends React.Component {
                     content="Upload Blueprint"
                     labelPosition="left"
                     className="widgetButton"
-                    loading={this.state.loading}
-                    onClick={this._showModal.bind(this)}
+                    loading={loading}
+                    onClick={this.showModal.bind(this)}
                 />
 
-                <UploadBlueprintModal
-                    open={this.state.open}
-                    onHide={this._hideModal.bind(this)}
-                    toolbox={this.props.toolbox}
-                />
+                <UploadBlueprintModal open={open} onHide={this.hideModal.bind(this)} toolbox={toolbox} />
             </div>
         );
     }

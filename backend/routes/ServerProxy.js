@@ -13,7 +13,7 @@ const ManagerHandler = require('../handler/ManagerHandler');
 
 const logger = require('../handler/LoggerHandler').getLogger('ServerProxy');
 
-function _errorHandler(url, res, err) {
+function errorHandler(url, res, err) {
     const isTimeout = err.code === 'ETIMEDOUT';
     const isConnTimeout = err.connect;
 
@@ -55,8 +55,8 @@ async function proxyRequest(req, res, next) {
     ManagerHandler.updateOptions(options, req.method, timeout);
 
     req.pipe(
-        request(req.su, options).on('error', function(err) {
-            _errorHandler(req.su, res, err);
+        request(req.su, options).on('error', err => {
+            errorHandler(req.su, res, err);
         })
     ).pipe(res);
 }

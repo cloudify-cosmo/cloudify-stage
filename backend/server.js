@@ -60,7 +60,7 @@ const app = express();
 
 app.use(morgan('short', { stream: LoggerHandler.getStream('Express') }));
 
-app.all('/', function(request, response) {
+app.all('/', (request, response) => {
     logger.info(`Redirecting to "${contextPath}".`);
     response.redirect(contextPath);
 });
@@ -137,14 +137,14 @@ app.use(`${contextPath}/clientConfig`, clientConfig);
 app.use(`${contextPath}/github`, GitHub);
 app.use(`${contextPath}/external`, External);
 app.use(`${contextPath}/file`, File);
-app.use(`${contextPath}/config`, function(req, res) {
+app.use(`${contextPath}/config`, (req, res) => {
     res.send(config.getForClient(ServerSettings.settings.mode));
 });
 app.use(`${contextPath}/wb`, WidgetBackend);
 app.use(`${contextPath}/plugins`, Plugins);
 
 // Redirect URLs with old context path (/stage)
-app.use([oldContextPath, `${oldContextPath}/*`], function(request, response) {
+app.use([oldContextPath, `${oldContextPath}/*`], (request, response) => {
     const pathWithoutOldContextPath = request.originalUrl.replace(new RegExp(`^${oldContextPath}`), '');
     const redirectUrl = `${contextPath}${pathWithoutOldContextPath}`;
     logger.info(`Old base url detected: "${request.originalUrl}". Redirecting to "${redirectUrl}".`);
@@ -153,13 +153,13 @@ app.use([oldContextPath, `${oldContextPath}/*`], function(request, response) {
 });
 
 // Serving index.html for routes defined in frontend - react-router (e.g. /console/login, /console/page/dashboard)
-app.get('*', function(request, response) {
+app.get('*', (request, response) => {
     logger.info(`URL: "${request.originalUrl}". Sending index.html file.`);
     response.sendFile(path.resolve(__dirname, '../dist/static', 'index.html'));
 });
 
 // Error handling
-app.use(function(err, req, res, next) {
+app.use((err, req, res, next) => {
     logger.error('Error has occured ', err);
 
     let { message } = err;
@@ -171,7 +171,7 @@ app.use(function(err, req, res, next) {
 });
 
 const startServer = instanceNumber => {
-    app.listen(Consts.SERVER_PORT, Consts.SERVER_HOST, function() {
+    app.listen(Consts.SERVER_PORT, Consts.SERVER_HOST, () => {
         logger.info(`Server (${String(instanceNumber || 0)}) started in mode ${ServerSettings.settings.mode}`);
         if (process.env.NODE_ENV === 'development') {
             logger.info('Server started for development');

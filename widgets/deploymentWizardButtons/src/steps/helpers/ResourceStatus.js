@@ -22,15 +22,15 @@ export default class ResourceStatus extends React.Component {
     };
 
     shouldComponentUpdate(nextProps) {
-        return this.props.status !== nextProps.status || this.props.text !== nextProps.text;
+        const { status, text } = this.props;
+        return status !== nextProps.status || text !== nextProps.text;
     }
 
     render() {
         const { Icon, Popup } = Stage.Basic;
 
-        const { status } = this.props;
+        const { status, text } = this.props;
         let statusIcon = null;
-        const statusText = this.props.text;
 
         switch (status) {
             case ResourceStatus.unknown:
@@ -48,6 +48,6 @@ export default class ResourceStatus extends React.Component {
                 break;
         }
 
-        return <Popup hoverable trigger={statusIcon} header="Status" content={statusText} />;
+        return <Popup hoverable trigger={statusIcon} header="Status" content={text} />;
     }
 }

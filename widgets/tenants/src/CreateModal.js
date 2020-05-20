@@ -18,7 +18,7 @@ export default class CreateModal extends React.Component {
     };
 
     onApprove() {
-        this._createTenant();
+        this.createTenant();
         return false;
     }
 
@@ -28,15 +28,18 @@ export default class CreateModal extends React.Component {
     }
 
     componentDidUpdate(prevProps, prevState) {
-        if (!prevState.open && this.state.open) {
+        const { open } = this.state;
+        if (!prevState.open && open) {
             this.setState(CreateModal.initialState);
         }
     }
 
-    _createTenant() {
+    createTenant() {
+        const { tenantName } = this.state;
+        const { toolbox } = this.props;
         const errors = {};
 
-        if (_.isEmpty(this.state.tenantName)) {
+        if (_.isEmpty(tenantName)) {
             errors.tenantName = 'Please provide tenant name';
         }
 
@@ -48,31 +51,32 @@ export default class CreateModal extends React.Component {
         // Disable the form
         this.setState({ loading: true });
 
-        const actions = new Actions(this.props.toolbox);
+        const actions = new Actions(toolbox);
         actions
-            .doCreate(this.state.tenantName)
+            .doCreate(tenantName)
             .then(tenant => {
                 this.setState({ errors: {}, loading: false, open: false });
-                this.props.toolbox.refresh();
-                this.props.toolbox.getEventBus().trigger('menu.tenants:refresh');
+                toolbox.refresh();
+                toolbox.getEventBus().trigger('menu.tenants:refresh');
             })
             .catch(err => {
                 this.setState({ errors: { error: err.message }, loading: false });
             });
     }
 
-    _handleInputChange(proxy, field) {
+    handleInputChange(proxy, field) {
         this.setState(Stage.Basic.Form.fieldNameValue(field));
     }
 
     render() {
+        const { errors, loading, open, tenantName } = this.state;
         const { Modal, Button, Icon, Form, ApproveButton, CancelButton } = Stage.Basic;
         const addButton = <Button content="Add" icon="add user" labelPosition="left" />;
 
         return (
             <Modal
                 trigger={addButton}
-                open={this.state.open}
+                open={open}
                 onOpen={() => this.setState({ open: true })}
                 onClose={() => this.setState({ open: false })}
             >
@@ -81,27 +85,23 @@ export default class CreateModal extends React.Component {
                 </Modal.Header>
 
                 <Modal.Content>
-                    <Form
-                        loading={this.state.loading}
-                        errors={this.state.errors}
-                        onErrorsDismiss={() => this.setState({ errors: {} })}
-                    >
-                        <Form.Field error={this.state.errors.tenantName}>
+                    <Form loading={loading} errors={errors} onErrorsDismiss={() => this.setState({ errors: {} })}>
+                        <Form.Field error={errors.tenantName}>
                             <Form.Input
                                 name="tenantName"
                                 placeholder="Tenant name"
-                                value={this.state.tenantName}
-                                onChange={this._handleInputChange.bind(this)}
+                                value={tenantName}
+                                onChange={this.handleInputChange.bind(this)}
                             />
                         </Form.Field>
                     </Form>
                 </Modal.Content>
 
                 <Modal.Actions>
-                    <CancelButton onClick={this.onCancel.bind(this)} disabled={this.state.loading} />
+                    <CancelButton onClick={this.onCancel.bind(this)} disabled={loading} />
                     <ApproveButton
                         onClick={this.onApprove.bind(this)}
-                        disabled={this.state.loading}
+                        disabled={loading}
                         content="Add"
                         icon="add user"
                         color="green"

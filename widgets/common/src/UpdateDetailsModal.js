@@ -4,9 +4,9 @@
 
 import { diffChars } from 'diff';
 
-function BlueprintSection(props) {
+function BlueprintSection({ newBlueprint, oldBlueprint }) {
     const { Header } = Stage.Basic;
-    const isChanged = props.oldBlueprint !== props.newBlueprint;
+    const isChanged = oldBlueprint !== newBlueprint;
 
     return (
         <>
@@ -14,7 +14,7 @@ function BlueprintSection(props) {
 
             {isChanged ? (
                 <span>
-                    Changed from <strong>{props.oldBlueprint}</strong> into <strong>{props.newBlueprint}</strong>.
+                    Changed from <strong>{oldBlueprint}</strong> into <strong>{newBlueprint}</strong>.
                 </span>
             ) : (
                 <span>Not changed.</span>
@@ -33,22 +33,24 @@ class InputsSection extends React.Component {
     }
 
     render() {
+        const { showOnlyChanged } = this.state;
+        const { oldInputs, newInputs: newInputsProp } = this.props;
         const { Form, Header, Icon, List, Popup, PopupHelp, Table } = Stage.Basic;
         const { ParameterValue, ParameterValueDescription } = Stage.Common;
         const { Json } = Stage.Utils;
 
-        const newInputs = Array.sort(_.keys(this.props.newInputs));
+        const newInputs = Array.sort(_.keys(newInputsProp));
         const onlyChangedInputs = _.chain(newInputs)
             .filter(
                 inputName =>
                     !_.isEqual(
-                        Json.getStringValue(this.props.newInputs[inputName] || ''),
-                        Json.getStringValue(this.props.oldInputs[inputName] || '')
+                        Json.getStringValue(newInputs[inputName] || ''),
+                        Json.getStringValue(oldInputs[inputName] || '')
                     )
             )
             .uniq()
             .value();
-        const inputsChanged = !_.isEqual(this.props.oldInputs, this.props.newInputs);
+        const inputsChanged = !_.isEqual(oldInputs, newInputs);
 
         const Diff = ({ stringA, stringB }) => {
             const difference = diffChars(String(stringA), String(stringB));
@@ -81,8 +83,8 @@ class InputsSection extends React.Component {
                             label="Show only changed"
                             help="Show only inputs which have different values"
                             className="rightFloated"
-                            checked={this.state.showOnlyChanged}
-                            onChange={() => this.setState({ showOnlyChanged: !this.state.showOnlyChanged })}
+                            checked={showOnlyChanged}
+                            onChange={() => this.setState({ showOnlyChanged: !showOnlyChanged })}
                         />
                     )}
                     Inputs
@@ -139,10 +141,10 @@ class InputsSection extends React.Component {
                         </Table.Header>
 
                         <Table.Body>
-                            {_.map(this.state.showOnlyChanged ? onlyChangedInputs : newInputs, input => {
-                                const oldValue = _.get(this.props.oldInputs, input, '');
+                            {_.map(showOnlyChanged ? onlyChangedInputs : newInputs, input => {
+                                const oldValue = _.get(oldInputs, input, '');
                                 const oldValueString = Json.getStringValue(oldValue);
-                                const newValue = _.get(this.props.newInputs, input, '');
+                                const newValue = _.get(newInputs, input, '');
                                 const newValueString = Json.getStringValue(newValue);
                                 const inputChanged = !_.isEqual(oldValueString, newValueString);
 
@@ -183,25 +185,25 @@ class InputsSection extends React.Component {
     }
 }
 
-function NodeInstancesCard(props) {
+function NodeInstancesCard({ action, color, icon, instances, name, workflowSkipped }) {
     const { Card, Icon, Label, List } = Stage.Basic;
 
     return (
-        <Card key={props.name} color={props.color}>
+        <Card key={name} color={color}>
             <Card.Content>
                 <Card.Header>
-                    <Icon name={props.icon} color={props.color} />
-                    {_.capitalize(_.lowerCase(props.name))}
-                    {props.action && (
+                    <Icon name={icon} color={color} />
+                    {_.capitalize(_.lowerCase(name))}
+                    {action && (
                         <Label className="right floated">
-                            {props.action}: {props.workflowSkipped ? 'No' : 'Yes'}
+                            {action}: {workflowSkipped ? 'No' : 'Yes'}
                         </Label>
                     )}
                 </Card.Header>
                 <Card.Description>
-                    {!_.isEmpty(props.instances) ? (
+                    {!_.isEmpty(instances) ? (
                         <List bulleted>
-                            {_.map(props.instances, instance => (
+                            {_.map(instances, instance => (
                                 <List.Item key={instance}>{instance}</List.Item>
                             ))}
                         </List>
@@ -214,9 +216,9 @@ function NodeInstancesCard(props) {
     );
 }
 
-function NodeInstancesSection(props) {
+function NodeInstancesSection({ types }) {
     const { Card, Header, PopupHelp } = Stage.Basic;
-    const isChanged = !_.isEmpty(_.filter(props.types, type => _.size(type.instances) > 0));
+    const isChanged = !_.isEmpty(_.filter(types, type => _.size(type.instances) > 0));
 
     return (
         <>
@@ -244,7 +246,7 @@ function NodeInstancesSection(props) {
 
             {isChanged ? (
                 <Card.Group itemsPerRow={2}>
-                    {_.map(props.types, type => (
+                    {_.map(types, type => (
                         <NodeInstancesCard key={type.name} {...type} />
                     ))}
                 </Card.Group>
@@ -255,9 +257,9 @@ function NodeInstancesSection(props) {
     );
 }
 
-function StepsSection(props) {
+function StepsSection({ steps }) {
     const { Header, Table } = Stage.Basic;
-    const stepsPresent = !_.isEmpty(props.steps);
+    const stepsPresent = !_.isEmpty(steps);
 
     return (
         <>
@@ -277,7 +279,7 @@ function StepsSection(props) {
                     </Table.Header>
 
                     <Table.Body>
-                        {_.map(props.steps, (step, index) => (
+                        {_.map(steps, (step, index) => (
                             <Table.Row key={step.id}>
                                 <Table.Cell>{index + 1}</Table.Cell>
                                 <Table.Cell>{step.action}</Table.Cell>
@@ -348,13 +350,14 @@ export default class UpdateDetailsModal extends React.Component {
     }
 
     componentDidUpdate(prevProps) {
-        if (!_.isEmpty(this.props.deploymentUpdateId) && !prevProps.open && this.props.open) {
+        const { deploymentUpdateId, executionParameters, open, toolbox } = this.props;
+        if (!_.isEmpty(deploymentUpdateId) && !prevProps.open && open) {
             this.setState({ loading: true });
-            const actions = new Stage.Common.DeploymentUpdatesActions(this.props.toolbox);
+            const actions = new Stage.Common.DeploymentUpdatesActions(toolbox);
             actions
-                .doGetUpdate(this.props.deploymentUpdateId)
+                .doGetUpdate(deploymentUpdateId)
                 .then(deploymentUpdate => {
-                    if (_.isEmpty(this.props.executionParameters) && !_.isEmpty(deploymentUpdate.execution_id)) {
+                    if (_.isEmpty(executionParameters) && !_.isEmpty(deploymentUpdate.execution_id)) {
                         actions
                             .doGetExecutionParameters(deploymentUpdate.execution_id)
                             .then(({ parameters: executionParameters }) =>
@@ -378,7 +381,7 @@ export default class UpdateDetailsModal extends React.Component {
                         deploymentUpdate: UpdateDetailsModal.EMPTY_DEPLOYMENT_UPDATE
                     });
                 });
-        } else if (prevProps.open && !this.props.open) {
+        } else if (prevProps.open && !open) {
             this.setState({ ...UpdateDetailsModal.initialState });
         }
     }
@@ -389,29 +392,38 @@ export default class UpdateDetailsModal extends React.Component {
     }
 
     render() {
+        const {
+            errors,
+            loading,
+            executionParameters: executionParametersState,
+            deploymentUpdate: deploymentUpdateState
+        } = this.state;
+        const {
+            deploymentUpdateId,
+            isPreview,
+            onClose,
+            onUpdate,
+            open,
+            executionParameters: executionParametersProp,
+            deploymentUpdate: deploymentUpdateProp
+        } = this.props;
         const { ApproveButton, CancelButton, Form, Icon, Modal } = Stage.Basic;
 
-        const deploymentUpdate = !_.isEmpty(this.props.deploymentUpdateId)
-            ? this.state.deploymentUpdate
-            : this.props.deploymentUpdate;
-        const executionParameters = !_.isEmpty(this.props.executionParameters)
-            ? this.props.executionParameters
-            : this.state.executionParameters;
+        const deploymentUpdate = !_.isEmpty(deploymentUpdateId) ? deploymentUpdateState : deploymentUpdateProp;
+        const executionParameters = !_.isEmpty(executionParametersProp)
+            ? executionParametersProp
+            : executionParametersState;
 
         return (
             <div>
-                <Modal open={this.props.open} onClose={() => this.props.onClose()} className="updateDetailsModal">
+                <Modal open={open} onClose={() => onClose()} className="updateDetailsModal">
                     <Modal.Header>
                         <Icon name="zoom" /> Deployment update details
-                        {this.props.isPreview ? ' preview' : deploymentUpdate.id ? ` - ${deploymentUpdate.id}` : ''}
+                        {isPreview ? ' preview' : deploymentUpdate.id ? ` - ${deploymentUpdate.id}` : ''}
                     </Modal.Header>
 
                     <Modal.Content scrolling>
-                        <Form
-                            loading={this.state.loading}
-                            errors={this.state.errors}
-                            onErrorsDismiss={() => this.setState({ errors: {} })}
-                        >
+                        <Form loading={loading} errors={errors} onErrorsDismiss={() => this.setState({ errors: {} })}>
                             <BlueprintSection
                                 oldBlueprint={deploymentUpdate.old_blueprint_id}
                                 newBlueprint={deploymentUpdate.new_blueprint_id}
@@ -465,10 +477,8 @@ export default class UpdateDetailsModal extends React.Component {
                     </Modal.Content>
 
                     <Modal.Actions>
-                        <CancelButton onClick={this.props.onClose} content="Close" />
-                        {this.props.isPreview && (
-                            <ApproveButton onClick={this.props.onUpdate} content="Update" icon="edit" color="green" />
-                        )}
+                        <CancelButton onClick={onClose} content="Close" />
+                        {isPreview && <ApproveButton onClick={onUpdate} content="Update" icon="edit" color="green" />}
                     </Modal.Actions>
                 </Modal>
             </div>

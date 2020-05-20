@@ -35,43 +35,54 @@ class UpdateDeploymentModal extends React.Component {
     };
 
     componentDidUpdate(prevProps) {
-        if (!prevProps.open && this.props.open) {
+        const { deployment, open } = this.props;
+        if (!prevProps.open && open) {
             this.setState(UpdateDeploymentModal.initialState(this.props));
-            this.selectBlueprint(this.props.deployment.blueprint_id);
+            this.selectBlueprint(deployment.blueprint_id);
         }
     }
 
     onUpdate() {
-        this.setState({ errors: {}, loading: true, showPreview: false }, () => this._submitUpdate(false));
+        this.setState({ errors: {}, loading: true, showPreview: false }, () => this.submitUpdate(false));
         return false;
     }
 
     onPreview() {
-        this.setState({ errors: {}, loading: true, showPreview: false }, () => this._submitUpdate(true));
+        this.setState({ errors: {}, loading: true, showPreview: false }, () => this.submitUpdate(true));
         return true;
     }
 
     onCancel() {
-        this.props.onHide();
+        const { onHide } = this.props;
+        onHide();
         return true;
     }
 
-    _submitUpdate(preview) {
+    submitUpdate(preview) {
+        const {
+            automaticReinstall,
+            blueprint,
+            deploymentInputs: deploymentInputsState,
+            force,
+            ignoreFailure,
+            installWorkflow,
+            installWorkflowFirst,
+            reinstallList,
+            uninstallWorkflow
+        } = this.state;
+        const { deployment, onHide, toolbox } = this.props;
         const { InputsUtils } = Stage.Common;
         const errors = {};
 
-        if (_.isEmpty(this.state.blueprint.id)) {
+        if (_.isEmpty(blueprint.id)) {
             errors.blueprintName = 'Please select blueprint';
         }
 
         const inputsWithoutValue = {};
-        const inputsPlanForUpdate = InputsUtils.getPlanForUpdate(
-            this.state.blueprint.plan.inputs,
-            this.props.deployment.inputs
-        );
+        const inputsPlanForUpdate = InputsUtils.getPlanForUpdate(blueprint.plan.inputs, deployment.inputs);
         const deploymentInputs = InputsUtils.getInputsToSend(
             inputsPlanForUpdate,
-            this.state.deploymentInputs,
+            deploymentInputsState,
             inputsWithoutValue
         );
         InputsUtils.addErrors(inputsWithoutValue, errors);
@@ -81,19 +92,19 @@ class UpdateDeploymentModal extends React.Component {
             return false;
         }
 
-        const actions = new Stage.Common.DeploymentActions(this.props.toolbox);
+        const actions = new Stage.Common.DeploymentActions(toolbox);
         actions
             .doUpdate(
-                this.props.deployment.id,
-                this.state.blueprint.id,
+                deployment.id,
+                blueprint.id,
                 deploymentInputs,
-                this.state.installWorkflow,
-                this.state.uninstallWorkflow,
-                this.state.installWorkflowFirst,
-                this.state.ignoreFailure,
-                this.state.automaticReinstall,
-                this.state.reinstallList,
-                this.state.force,
+                installWorkflow,
+                uninstallWorkflow,
+                installWorkflowFirst,
+                ignoreFailure,
+                automaticReinstall,
+                reinstallList,
+                force,
                 preview
             )
             .then(data => {
@@ -101,12 +112,12 @@ class UpdateDeploymentModal extends React.Component {
                     this.setState({ errors: {}, loading: false, showPreview: true, previewData: data });
                 } else {
                     this.setState({ errors: {}, loading: false });
-                    this.props.toolbox.refresh();
-                    this.props.onHide();
-                    this.props.toolbox.getEventBus().trigger('nodes:refresh');
-                    this.props.toolbox.getEventBus().trigger('inputs:refresh');
-                    this.props.toolbox.getEventBus().trigger('outputs:refresh');
-                    this.props.toolbox.getEventBus().trigger('executions:refresh');
+                    toolbox.refresh();
+                    onHide();
+                    toolbox.getEventBus().trigger('nodes:refresh');
+                    toolbox.getEventBus().trigger('inputs:refresh');
+                    toolbox.getEventBus().trigger('outputs:refresh');
+                    toolbox.getEventBus().trigger('executions:refresh');
                 }
             })
             .catch(err => {
@@ -115,31 +126,34 @@ class UpdateDeploymentModal extends React.Component {
             });
     }
 
-    _handleInputChange(proxy, field) {
+    handleInputChange(proxy, field) {
         const fieldNameValue = Stage.Basic.Form.fieldNameValue(field);
         this.setState(fieldNameValue);
     }
 
-    _handleDeploymentInputChange(proxy, field) {
+    handleDeploymentInputChange(proxy, field) {
+        const { deploymentInputs } = this.state;
         const fieldNameValue = Stage.Basic.Form.fieldNameValue(field);
-        this.setState({ deploymentInputs: { ...this.state.deploymentInputs, ...fieldNameValue } });
+        this.setState({ deploymentInputs: { ...deploymentInputs, ...fieldNameValue } });
     }
 
-    _handleYamlFileChange(file) {
+    handleYamlFileChange(file) {
+        const { blueprint, deploymentInputs: deploymentInputsState } = this.state;
         if (!file) {
             return;
         }
 
         const { FileActions, InputsUtils } = Stage.Common;
-        const actions = new FileActions(this.props.toolbox);
+        const { toolbox } = this.props;
+        const actions = new FileActions(toolbox);
         this.setState({ fileLoading: true });
 
         actions
             .doGetYamlFileContent(file)
             .then(yamlInputs => {
                 const deploymentInputs = InputsUtils.getUpdatedInputs(
-                    this.state.blueprint.plan.inputs,
-                    this.state.deploymentInputs,
+                    blueprint.plan.inputs,
+                    deploymentInputsState,
                     yamlInputs
                 );
                 this.setState({ errors: {}, deploymentInputs, fileLoading: false });
@@ -151,15 +165,16 @@ class UpdateDeploymentModal extends React.Component {
     }
 
     selectBlueprint(id) {
+        const { deployment, toolbox } = this.props;
         if (!_.isEmpty(id)) {
             this.setState({ loading: true });
 
-            const actions = new Stage.Common.BlueprintActions(this.props.toolbox);
+            const actions = new Stage.Common.BlueprintActions(toolbox);
             actions
                 .doGetFullBlueprintData({ id })
                 .then(blueprint => {
                     const deploymentInputs = {};
-                    const currentDeploymentInputs = this.props.deployment.inputs;
+                    const currentDeploymentInputs = deployment.inputs;
 
                     _.forEach(blueprint.plan.inputs, (inputObj, inputName) => {
                         deploymentInputs[inputName] = Stage.Common.InputsUtils.getInputFieldInitialValue(
@@ -184,6 +199,23 @@ class UpdateDeploymentModal extends React.Component {
     }
 
     render() {
+        const {
+            automaticReinstall,
+            blueprint,
+            deploymentInputs,
+            errors,
+            fileLoading,
+            force,
+            ignoreFailure,
+            installWorkflow,
+            installWorkflowFirst,
+            loading,
+            previewData,
+            reinstallList,
+            showPreview,
+            uninstallWorkflow
+        } = this.state;
+        const { deployment, onHide, open, toolbox } = this.props;
         const { ApproveButton, CancelButton, Form, Header, Icon, Message, Modal } = Stage.Basic;
         const {
             DataTypesButton,
@@ -195,69 +227,64 @@ class UpdateDeploymentModal extends React.Component {
             UpdateDetailsModal
         } = Stage.Common;
 
-        const executionParameters = this.state.showPreview
+        const executionParameters = showPreview
             ? {
-                  skip_install: !this.state.installWorkflow,
-                  skip_uninstall: !this.state.uninstallWorkflow,
-                  skip_reinstall: !this.state.automaticReinstall,
-                  reinstall_list: this.state.reinstallList
+                  skip_install: !installWorkflow,
+                  skip_uninstall: !uninstallWorkflow,
+                  skip_reinstall: !automaticReinstall,
+                  reinstall_list: reinstallList
               }
             : {};
 
         return (
-            <Modal
-                open={this.props.open}
-                onClose={() => this.props.onHide()}
-                closeOnEscape={false}
-                className="updateDeploymentModal"
-            >
+            <Modal open={open} onClose={() => onHide()} closeOnEscape={false} className="updateDeploymentModal">
                 <Modal.Header>
-                    <Icon name="edit" /> Update deployment {this.props.deployment.id}
+                    <Icon name="edit" /> Update deployment {deployment.id}
                 </Modal.Header>
 
                 <Modal.Content>
                     <Form
-                        loading={this.state.loading}
-                        errors={this.state.errors}
+                        loading={loading}
+                        errors={errors}
                         scrollToError
                         onErrorsDismiss={() => this.setState({ errors: {} })}
                     >
-                        <Form.Field error={this.state.errors.blueprintName} label="Blueprint" required>
+                        <Form.Field error={errors.blueprintName} label="Blueprint" required>
                             <DynamicDropdown
-                                value={this.state.blueprint.id}
+                                value={blueprint.id}
                                 placeholder="Select Blueprint"
                                 name="blueprintName"
                                 fetchUrl="/blueprints?_include=id"
                                 onChange={this.selectBlueprint.bind(this)}
-                                toolbox={this.props.toolbox}
+                                toolbox={toolbox}
                             />
                         </Form.Field>
 
-                        {this.state.blueprint.id && (
+                        {blueprint.id && (
                             <>
-                                {!_.isEmpty(this.state.blueprint.plan.inputs) && (
+                                {!_.isEmpty(blueprint.plan.inputs) && (
                                     <YamlFileButton
-                                        onChange={this._handleYamlFileChange.bind(this)}
+                                        onChange={this.handleYamlFileChange.bind(this)}
                                         dataType="deployment's inputs"
-                                        fileLoading={this.state.fileLoading}
+                                        fileLoading={fileLoading}
                                     />
                                 )}
-                                {!_.isEmpty(this.state.blueprint.plan.data_types) && (
-                                    <DataTypesButton types={this.state.blueprint.plan.data_types} />
+                                {!_.isEmpty(blueprint.plan.data_types) && (
+                                    <DataTypesButton types={blueprint.plan.data_types} />
                                 )}
                                 <InputsHeader />
-                                {_.isEmpty(this.state.blueprint.plan.inputs) && (
+                                {_.isEmpty(blueprint.plan.inputs) && (
                                     <Message content="No inputs available for the selected blueprint" />
                                 )}
                             </>
                         )}
 
                         {InputsUtils.getInputFields(
-                            this.state.blueprint.plan.inputs,
-                            this._handleDeploymentInputChange.bind(this),
-                            this.state.deploymentInputs,
-                            this.state.errors,
-                            this.state.blueprint.plan.data_types
+                            blueprint.plan.inputs,
+                            this.handleDeploymentInputChange.bind(this),
+                            deploymentInputs,
+                            errors,
+                            blueprint.plan.data_types
                         )}
 
                         <Form.Divider>
@@ -270,8 +297,8 @@ class UpdateDeploymentModal extends React.Component {
                                 toggle
                                 name="installWorkflow"
                                 help="Run install lifecycle operations"
-                                checked={this.state.installWorkflow}
-                                onChange={this._handleInputChange.bind(this)}
+                                checked={installWorkflow}
+                                onChange={this.handleInputChange.bind(this)}
                             />
                         </Form.Field>
 
@@ -281,8 +308,8 @@ class UpdateDeploymentModal extends React.Component {
                                 toggle
                                 name="uninstallWorkflow"
                                 help="Run uninstall lifecycle operations"
-                                checked={this.state.uninstallWorkflow}
-                                onChange={this._handleInputChange.bind(this)}
+                                checked={uninstallWorkflow}
+                                onChange={this.handleInputChange.bind(this)}
                             />
                         </Form.Field>
 
@@ -293,8 +320,8 @@ class UpdateDeploymentModal extends React.Component {
                                                  Default: first uninstall and then install"
                                 toggle
                                 name="installWorkflowFirst"
-                                checked={this.state.installWorkflowFirst}
-                                onChange={this._handleInputChange.bind(this)}
+                                checked={installWorkflowFirst}
+                                onChange={this.handleInputChange.bind(this)}
                             />
                         </Form.Field>
 
@@ -305,8 +332,8 @@ class UpdateDeploymentModal extends React.Component {
                                 name="ignoreFailure"
                                 help="Supply the parameter `ignore_failure` with
                                                  the value `true` to the uninstall workflow"
-                                checked={this.state.ignoreFailure}
-                                onChange={this._handleInputChange.bind(this)}
+                                checked={ignoreFailure}
+                                onChange={this.handleInputChange.bind(this)}
                             />
                         </Form.Field>
 
@@ -320,24 +347,24 @@ class UpdateDeploymentModal extends React.Component {
                                                  part of a deployment update. If not set, then node instances
                                                  that were explicitly given to "Reinstall
                                                  node instances list" will still be reinstalled'
-                                checked={this.state.automaticReinstall}
-                                onChange={this._handleInputChange.bind(this)}
+                                checked={automaticReinstall}
+                                onChange={this.handleInputChange.bind(this)}
                             />
                         </Form.Field>
 
                         <NodeInstancesFilter
                             name="reinstallList"
-                            deploymentId={this.props.deployment.id}
+                            deploymentId={deployment.id}
                             label="Reinstall node instances list"
-                            value={this.state.reinstallList}
+                            value={reinstallList}
                             placeholder="Choose node instances to reinstall"
                             upward
-                            onChange={this._handleInputChange.bind(this)}
+                            onChange={this.handleInputChange.bind(this)}
                             help='Node instances ids to be reinstalled as part
                                                    of deployment update. They will be
                                                    reinstalled even if "Run automatic reinstall"
                                                    is not set'
-                            toolbox={this.props.toolbox}
+                            toolbox={toolbox}
                         />
 
                         <Form.Field>
@@ -348,35 +375,35 @@ class UpdateDeploymentModal extends React.Component {
                                 help="Force running update in case a previous
                                                  update on this deployment has failed to
                                                  finished successfully"
-                                checked={this.state.force}
-                                onChange={this._handleInputChange.bind(this)}
+                                checked={force}
+                                onChange={this.handleInputChange.bind(this)}
                             />
                         </Form.Field>
                     </Form>
 
                     <UpdateDetailsModal
-                        open={this.state.showPreview}
+                        open={showPreview}
                         isPreview
-                        deploymentUpdate={this.state.previewData}
+                        deploymentUpdate={previewData}
                         executionParameters={executionParameters}
                         onClose={() => this.setState({ showPreview: false })}
                         onUpdate={this.onUpdate.bind(this)}
-                        toolbox={this.props.toolbox}
+                        toolbox={toolbox}
                     />
                 </Modal.Content>
 
                 <Modal.Actions>
-                    <CancelButton onClick={this.onCancel.bind(this)} disabled={this.state.loading} />
+                    <CancelButton onClick={this.onCancel.bind(this)} disabled={loading} />
                     <ApproveButton
                         onClick={this.onPreview.bind(this)}
-                        disabled={this.state.loading}
+                        disabled={loading}
                         content="Preview"
                         icon="zoom"
                         color="blue"
                     />
                     <ApproveButton
                         onClick={this.onUpdate.bind(this)}
-                        disabled={this.state.loading}
+                        disabled={loading}
                         content="Update"
                         icon="edit"
                         color="green"

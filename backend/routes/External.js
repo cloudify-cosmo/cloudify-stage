@@ -7,19 +7,19 @@ const request = require('request');
 const router = express.Router();
 const logger = require('../handler/LoggerHandler').getLogger('External');
 
-function _pipeRequest(req, res, next, url, queryString) {
+function pipeRequest(req, res, next, url, queryString) {
     logger.debug(`Piping get request to url: ${url} with query string: ${queryString}`);
 
     req.pipe(
-        request.get({ url: url.startsWith('//') ? `http:${url}` : url, qs: queryString }).on('error', function(err) {
+        request.get({ url: url.startsWith('//') ? `http:${url}` : url, qs: queryString }).on('error', err => {
             res.status(500).send({ message: err.message });
         })
     ).pipe(res);
 }
 
-router.get('/content', function(req, res, next) {
+router.get('/content', (req, res, next) => {
     const { url, ...queryString } = req.query;
-    _pipeRequest(req, res, next, url, queryString);
+    pipeRequest(req, res, next, url, queryString);
 });
 
 module.exports = router;

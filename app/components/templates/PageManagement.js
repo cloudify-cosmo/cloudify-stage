@@ -5,10 +5,10 @@
 import PropTypes from 'prop-types';
 
 import React, { Component } from 'react';
-import WidgetsList from '../WidgetsList';
 import Const from '../../utils/consts';
+import { Alert, Breadcrumb, Divider, EditableLabel, ErrorMessage, Segment } from '../basic';
 import EditModeBubble from '../EditModeBubble';
-import { Breadcrumb, Segment, Divider, ErrorMessage, EditableLabel, Alert } from '../basic';
+import WidgetsList from '../WidgetsList';
 
 export default class PageManagement extends Component {
     static propTypes = {
@@ -24,21 +24,35 @@ export default class PageManagement extends Component {
     };
 
     componentWillUnmount() {
-        this.props.onClear();
+        const { onClear } = this.props;
+        onClear();
     }
 
     shouldComponentUpdate(nextProps, nextState) {
+        const { isPageEditMode, page, showDrillDownWarn } = this.props;
         return (
-            !_.isEqual(this.props.page, nextProps.page) ||
-            this.props.isPageEditMode !== nextProps.isPageEditMode ||
-            this.props.showDrillDownWarn !== nextProps.showDrillDownWarn
+            !_.isEqual(page, nextProps.page) ||
+            isPageEditMode !== nextProps.isPageEditMode ||
+            showDrillDownWarn !== nextProps.showDrillDownWarn
         );
     }
 
     render() {
-        const pageManagementMode = this.props.isPageEditMode ? Const.PAGE_MANAGEMENT_EDIT : Const.PAGE_MANAGEMENT_VIEW;
+        const {
+            error,
+            isLoading,
+            isPageEditMode,
+            onCloseDrillDownWarning,
+            onPageNameChange,
+            onPageSave,
+            onTemplateNavigate,
+            onWidgetsGridDataChange,
+            page,
+            showDrillDownWarn
+        } = this.props;
+        const pageManagementMode = isPageEditMode ? Const.PAGE_MANAGEMENT_EDIT : Const.PAGE_MANAGEMENT_VIEW;
 
-        const maximizeWidget = _.findIndex(this.props.page.widgets, { maximized: true }) >= 0;
+        const maximizeWidget = _.findIndex(page.widgets, { maximized: true }) >= 0;
 
         $('body')
             .css({ overflow: maximizeWidget ? 'hidden' : 'inherit' })
@@ -49,7 +63,7 @@ export default class PageManagement extends Component {
                 <div className="sidebarContainer">
                     <div className="ui visible left vertical sidebar menu small basic">
                         <div className="pages" ref="pages">
-                            <div className="item link pageMenuItem">{this.props.page.name}</div>
+                            <div className="item link pageMenuItem">{page.name}</div>
                             <div className="item link pageMenuItem" />
                         </div>
                     </div>
@@ -58,52 +72,52 @@ export default class PageManagement extends Component {
                 <div className="page">
                     <Segment
                         basic
-                        loading={this.props.isLoading}
+                        loading={isLoading}
                         className={`fullHeight ${maximizeWidget ? 'maximizeWidget' : ''}`}
                     >
                         <div>
                             <Breadcrumb className="breadcrumbLineHeight">
-                                <Breadcrumb.Section onClick={this.props.onTemplateNavigate}>
+                                <Breadcrumb.Section onClick={onTemplateNavigate}>
                                     Template management
                                 </Breadcrumb.Section>
                                 <Breadcrumb.Divider />
                                 <Breadcrumb.Section active>
                                     <EditableLabel
-                                        value={this.props.page.name}
+                                        value={page.name}
                                         placeHolder="You must fill a page name"
                                         className="section active pageTitle"
-                                        enabled={this.props.isPageEditMode}
-                                        onChange={this.props.onPageNameChange}
+                                        enabled={isPageEditMode}
+                                        onChange={onPageNameChange}
                                     />
                                 </Breadcrumb.Section>
                             </Breadcrumb>
                         </div>
                         <Divider />
 
-                        <ErrorMessage error={this.props.error} />
+                        <ErrorMessage error={error} />
 
                         <WidgetsList
-                            widgets={this.props.page.widgets}
-                            onWidgetsGridDataChange={this.props.onWidgetsGridDataChange}
-                            pageId={this.props.page.id}
-                            isEditMode={this.props.isPageEditMode}
+                            widgets={page.widgets}
+                            onWidgetsGridDataChange={onWidgetsGridDataChange}
+                            pageId={page.id}
+                            isEditMode={isPageEditMode}
                             pageManagementMode={pageManagementMode}
                         />
 
                         <EditModeBubble
                             isVisible
-                            onDismiss={this.props.onTemplateNavigate}
-                            onPageSave={this.props.onPageSave}
-                            page={this.props.page}
+                            onDismiss={onTemplateNavigate}
+                            onPageSave={onPageSave}
+                            page={page}
                             pageManagementMode={pageManagementMode}
                         />
                     </Segment>
                 </div>
 
                 <Alert
-                    open={this.props.showDrillDownWarn}
+                    open={showDrillDownWarn}
                     content="Drill down action is not available in the template management"
-                    onDismiss={this.props.onCloseDrillDownWarning}
+                    onDismiss={onCloseDrillDownWarning}
                 />
             </div>
         );

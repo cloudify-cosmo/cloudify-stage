@@ -1,6 +1,8 @@
 /**
  * NodeInstancesFilter - a component showing dropdown with nodes instances of specified deployment.
  * Data is dynamically fetched from manager.
+ *
+ * @param props
  */
 export default class NodeInstancesFilter extends React.Component {
     constructor(props, context) {
@@ -54,28 +56,31 @@ export default class NodeInstancesFilter extends React.Component {
     }
 
     componentDidUpdate(prevProps) {
-        if (prevProps.deploymentId !== this.props.deploymentId) {
+        const { deploymentId } = this.props;
+        if (prevProps.deploymentId !== deploymentId) {
             this.setState({ ...NodeInstancesFilter.initialState(this.props) });
-            this._fetchData();
+            this.fetchData();
         }
     }
 
     componentDidMount() {
-        this._fetchData();
+        this.fetchData();
     }
 
-    _fetchData() {
-        if (_.isEmpty(this.props.deploymentId)) {
+    fetchData() {
+        const { deploymentId, toolbox } = this.props;
+        const { errors: stateErrors } = this.state;
+        if (_.isEmpty(deploymentId)) {
             return;
         }
 
-        const params = { _include: 'id', deployment_id: this.props.deploymentId };
+        const params = { _include: 'id', deployment_id: deploymentId };
         const fetchUrl = '/node-instances';
-        const errors = { ...this.state.errors };
+        const errors = { ...stateErrors };
         errors.nodeInstanceIds = null;
 
         this.setState({ loading: true, nodeInstances: [], errors });
-        this.props.toolbox
+        toolbox
             .getManager()
             .doGet(fetchUrl, params)
             .then(data => {
@@ -92,32 +97,32 @@ export default class NodeInstancesFilter extends React.Component {
             });
     }
 
-    _handleInputChange(event, field) {
+    handleInputChange(event, field) {
+        const { name, onChange } = this.props;
         this.setState({ value: field.value }, () => {
-            this.props.onChange(event, {
-                name: this.props.name,
-                value: this.state.value
-            });
+            const { value } = this.state;
+            onChange(event, { name, value });
         });
     }
 
     render() {
+        const { help, label, placeholder, upward } = this.props;
         const { Form } = Stage.Basic;
-        const { errors } = this.state;
+        const { errors, loading, nodeInstances, value } = this.state;
 
         return (
-            <Form.Field error={this.state.errors.nodeInstanceIds} label={this.props.label} help={this.props.help}>
+            <Form.Field error={errors.nodeInstanceIds} label={label} help={help}>
                 <Form.Dropdown
                     search
                     selection
                     multiple
-                    value={errors.nodeInstanceIds ? '' : this.state.value}
-                    placeholder={errors.nodeInstanceIds || this.props.placeholder}
-                    options={this.state.nodeInstances}
-                    onChange={this._handleInputChange.bind(this)}
+                    value={errors.nodeInstanceIds ? '' : value}
+                    placeholder={errors.nodeInstanceIds || placeholder}
+                    options={nodeInstances}
+                    onChange={this.handleInputChange.bind(this)}
                     name="nodeInstanceIds"
-                    loading={this.state.loading}
-                    upward={this.props.upward}
+                    loading={loading}
+                    upward={upward}
                 />
             </Form.Field>
         );

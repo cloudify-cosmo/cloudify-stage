@@ -11,21 +11,22 @@ export default class extends React.Component {
         };
     }
 
-    _showModal() {
+    showModal() {
         this.setState({ open: true });
     }
 
-    _hideModal() {
+    hideModal() {
         this.setState({ open: false });
     }
 
     render() {
         const { MaintenanceModeActivationButton, MaintenanceModeModal } = Stage.Shared;
+        const { open } = this.state;
 
         return (
             <div>
-                <MaintenanceModeActivationButton activate onClick={this._showModal.bind(this)} />
-                <MaintenanceModeModal show={this.state.open} onHide={this._hideModal.bind(this)} />
+                <MaintenanceModeActivationButton activate onClick={this.showModal.bind(this)} />
+                <MaintenanceModeModal show={open} onHide={this.hideModal.bind(this)} />
             </div>
         );
     }

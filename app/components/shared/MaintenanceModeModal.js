@@ -1,11 +1,6 @@
 /**
  * Created by pposel on 16/02/2017.
  */
-import React, { Component } from 'react';
-import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
-
-import { Icon, Modal } from 'semantic-ui-react';
 import {
     ApproveButton,
     CancelButton,
@@ -15,12 +10,17 @@ import {
     Menu,
     PopupMenu
 } from 'cloudify-ui-components';
+import PropTypes from 'prop-types';
+import React, { Component } from 'react';
+import { connect } from 'react-redux';
+
+import { Icon, Modal } from 'semantic-ui-react';
+import { doCancelExecution, getActiveExecutions, setActiveExecutions, switchMaintenance } from '../../actions/managers';
+import Consts from '../../utils/consts';
 
 import ExecutionUtils from '../../utils/shared/ExecutionUtils';
-import { switchMaintenance, getActiveExecutions, setActiveExecutions, doCancelExecution } from '../../actions/managers';
-import ExecutionStatus from './ExecutionStatus';
-import Consts from '../../utils/consts';
 import StageUtils from '../../utils/stageUtils';
+import ExecutionStatus from './ExecutionStatus';
 
 const POLLING_INTERVAL = 2000;
 
@@ -53,109 +53,116 @@ class MaintenanceModeModal extends Component {
     };
 
     componentDidUpdate(prevProps) {
-        if (!prevProps.show && this.props.show) {
+        const { onClose, show } = this.props;
+        if (!prevProps.show && show) {
             this.setState(MaintenanceModeModal.initialState);
 
-            this._loadPendingExecutions();
-        } else if (prevProps.show && !this.props.show) {
-            this._stopPolling();
-            this._stopFetchingData();
-            this.props.onClose();
+            this.loadPendingExecutions();
+        } else if (prevProps.show && !show) {
+            this.stopPolling();
+            this.stopFetchingData();
+            onClose();
         }
     }
 
     componentWillUnmount() {
-        this._stopPolling();
+        this.stopPolling();
     }
 
-    _loadPendingExecutions() {
-        if (this.props.manager.maintenance !== Consts.MAINTENANCE_DEACTIVATED) {
+    loadPendingExecutions() {
+        const { manager, onFetchActiveExecutions } = this.props;
+        if (manager.maintenance !== Consts.MAINTENANCE_DEACTIVATED) {
             return;
         }
 
-        this.fetchDataPromise = StageUtils.makeCancelable(this.props.onFetchActiveExecutions());
+        this.fetchDataPromise = StageUtils.makeCancelable(onFetchActiveExecutions());
         this.fetchDataPromise.promise
             .then(data => {
                 console.log('Maintenance data fetched');
-                this._startPolling();
+                this.startPolling();
             })
             .catch(err => {
                 this.setState({ error: err.message });
-                this._startPolling();
+                this.startPolling();
             });
     }
 
-    _stopPolling() {
+    stopPolling() {
         console.log('Stop polling maintenance data');
         clearTimeout(this.pollingTimeout);
     }
 
-    _stopFetchingData() {
+    stopFetchingData() {
         if (this.fetchDataPromise) {
             this.fetchDataPromise.cancel();
         }
     }
 
-    _startPolling() {
-        this._stopPolling();
-        this._stopFetchingData();
+    startPolling() {
+        const { show } = this.props;
 
-        if (this.props.show) {
+        this.stopPolling();
+        this.stopFetchingData();
+
+        if (show) {
             console.log(`Polling maintenance data - time interval: ${POLLING_INTERVAL / 1000} sec`);
             this.pollingTimeout = setTimeout(() => {
-                this._loadPendingExecutions();
+                this.loadPendingExecutions();
             }, POLLING_INTERVAL);
         }
     }
 
     onApprove() {
+        const { manager } = this.props;
         this.setState({ loading: true });
 
-        if (this.props.manager.maintenance === Consts.MAINTENANCE_DEACTIVATED) {
-            this._activate();
+        if (manager.maintenance === Consts.MAINTENANCE_DEACTIVATED) {
+            this.activate();
         } else {
-            this._deactivate();
+            this.deactivate();
         }
 
         return false;
     }
 
     onDeny() {
-        this.props.onHide();
+        const { onHide } = this.props;
+        onHide();
         return true;
     }
 
-    _activate() {
-        this.props
-            .onMaintenanceActivate()
+    activate() {
+        const { onHide, onMaintenanceActivate } = this.props;
+        onMaintenanceActivate()
             .then(() => {
                 this.setState({ error: '', loading: false });
-                this.props.onHide();
+                onHide();
             })
             .catch(err => {
                 this.setState({ error: err.message, loading: false });
             });
     }
 
-    _deactivate() {
-        this.props
-            .onMaintenanceDeactivate()
+    deactivate() {
+        const { onHide, onMaintenanceDeactivate } = this.props;
+        onMaintenanceDeactivate()
             .then(() => {
                 this.setState({ error: '', loading: false });
-                this.props.onHide();
+                onHide();
             })
             .catch(err => {
                 this.setState({ error: err.message, loading: false });
             });
     }
 
-    _cancelExecution(execution, action) {
-        this.setState({ cancelling: [...this.state.cancelling, execution.id] }, () =>
-            this.props
-                .onCancelExecution(execution, action)
+    cancelExecution(execution, action) {
+        const { onCancelExecution } = this.props;
+        const { cancelling } = this.state;
+        this.setState({ cancelling: [...cancelling, execution.id] }, () =>
+            onCancelExecution(execution, action)
                 .then(() => {
-                    this._loadPendingExecutions();
-                    this.setState({ error: '', cancelling: _.without(this.state.cancelling, execution.id) });
+                    this.loadPendingExecutions();
+                    this.setState({ error: '', cancelling: _.without(cancelling, execution.id) });
                 })
                 .catch(err => {
                     this.setState({ error: err.message });
@@ -164,20 +171,22 @@ class MaintenanceModeModal extends Component {
     }
 
     render() {
+        const { error, loading } = this.state;
+        const { activeExecutions, manager, onHide, show } = this.props;
         return (
-            <Modal open={this.props.show} onClose={() => this.props.onHide()}>
+            <Modal open={show} onClose={() => onHide()}>
                 <Modal.Header>
                     <Icon name="doctor" />
-                    {this.props.manager.maintenance === Consts.MAINTENANCE_DEACTIVATED
+                    {manager.maintenance === Consts.MAINTENANCE_DEACTIVATED
                         ? 'Are you sure you want to enter maintenance mode?'
                         : 'Are you sure you want to exit maintenance mode?'}
                 </Modal.Header>
 
-                {this.state.error || !_.isEmpty(this.props.activeExecutions.items) ? (
+                {error || !_.isEmpty(activeExecutions.items) ? (
                     <Modal.Content>
-                        <ErrorMessage error={this.state.error} />
+                        <ErrorMessage error={error} />
 
-                        {!_.isEmpty(this.props.activeExecutions.items) && (
+                        {!_.isEmpty(activeExecutions.items) && (
                             <DataTable>
                                 <DataTable.Column label="Blueprint" width="15%" />
                                 <DataTable.Column label="Deployment" width="15%" />
@@ -187,7 +196,7 @@ class MaintenanceModeModal extends Component {
                                 <DataTable.Column label="Status" width="15%" />
                                 <DataTable.Column label="Action" />
 
-                                {this.props.activeExecutions.items.map(item => {
+                                {activeExecutions.items.map(item => {
                                     return (
                                         <DataTable.Row key={item.id}>
                                             <DataTable.Data>{item.blueprint_id}</DataTable.Data>
@@ -208,10 +217,7 @@ class MaintenanceModeModal extends Component {
                                                             icon="cancel"
                                                             name={ExecutionUtils.CANCEL_ACTION}
                                                             onClick={() =>
-                                                                this._cancelExecution(
-                                                                    item,
-                                                                    ExecutionUtils.CANCEL_ACTION
-                                                                )
+                                                                this.cancelExecution(item, ExecutionUtils.CANCEL_ACTION)
                                                             }
                                                         />
                                                         <Menu.Item
@@ -219,7 +225,7 @@ class MaintenanceModeModal extends Component {
                                                             icon={<Icon name="cancel" color="red" />}
                                                             name={ExecutionUtils.FORCE_CANCEL_ACTION}
                                                             onClick={() =>
-                                                                this._cancelExecution(
+                                                                this.cancelExecution(
                                                                     item,
                                                                     ExecutionUtils.FORCE_CANCEL_ACTION
                                                                 )
@@ -230,7 +236,7 @@ class MaintenanceModeModal extends Component {
                                                             icon={<Icon name="stop" color="red" />}
                                                             name={ExecutionUtils.KILL_CANCEL_EXECUTION}
                                                             onClick={() =>
-                                                                this._cancelExecution(
+                                                                this.cancelExecution(
                                                                     item,
                                                                     ExecutionUtils.KILL_CANCEL_EXECUTION
                                                                 )
@@ -250,13 +256,13 @@ class MaintenanceModeModal extends Component {
                 )}
 
                 <Modal.Actions>
-                    <CancelButton onClick={this.onDeny.bind(this)} content="No" disabled={this.state.loading} />
+                    <CancelButton onClick={this.onDeny.bind(this)} content="No" disabled={loading} />
                     <ApproveButton
                         onClick={this.onApprove.bind(this)}
                         content="Yes"
                         icon="doctor"
                         color="green"
-                        disabled={this.state.loading}
+                        disabled={loading}
                     />
                 </Modal.Actions>
             </Modal>

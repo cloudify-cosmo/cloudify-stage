@@ -112,6 +112,7 @@ Stage.defineWidget({
         if (timeStart || timeEnd) {
             timeStart = timeStart ? timeStart.utc().toISOString() : '';
             timeEnd = timeEnd ? timeEnd.utc().toISOString() : '';
+            // eslint-disable-next-line no-underscore-dangle
             params._range = `@reported_timestamp,${timeStart},${timeEnd}`;
         }
 

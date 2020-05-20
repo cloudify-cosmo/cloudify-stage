@@ -2,8 +2,8 @@
  * Created by jakubniezgoda on 21/05/2018.
  */
 
-import React from 'react';
 import PropTypes from 'prop-types';
+import React from 'react';
 import { connect } from 'react-redux';
 
 import { Form } from '../basic';
@@ -22,6 +22,7 @@ import { Form } from '../basic';
  * <PageFilter name='pageId' value={value} />
  * ```
  *
+ * @param props
  */
 class PageFilter extends React.Component {
     constructor(props, context) {
@@ -51,29 +52,28 @@ class PageFilter extends React.Component {
         allowDrillDownPages: false
     });
 
-    _handleInputChange(event, field) {
+    handleInputChange(event, field) {
+        const { name, onChange } = this.props;
         this.setState({ pageId: field.value }, () => {
-            this.props.onChange(event, {
-                name: this.props.name,
-                value: this.state.pageId
-            });
+            const { pageId: value } = this.state;
+            onChange(event, { name, value });
         });
     }
 
-    _getPageName(pages, pageId) {
+    getPageName(pages, pageId) {
         const page = _.find(pages, { id: pageId });
         if (page.isDrillDown) {
-            return `${this._getPageName(pages, page.parent)} > ${page.name}`;
+            return `${this.getPageName(pages, page.parent)} > ${page.name}`;
         }
         return page.name;
     }
 
     render() {
-        const pages = this.props.allowDrillDownPages
-            ? this.props.pages
-            : _.filter(this.props.pages, page => !page.isDrillDown);
+        const { allowDrillDownPages, propsPages } = this.props;
+        const { pageId } = this.state;
+        const pages = allowDrillDownPages ? propsPages : _.filter(propsPages, page => !page.isDrillDown);
         const pagesOptions = _.map(pages, page => ({
-            text: this._getPageName(pages, page.id),
+            text: this.getPageName(pages, page.id),
             value: page.id,
             key: page.id
         }));
@@ -85,9 +85,9 @@ class PageFilter extends React.Component {
                 name="pageId"
                 search
                 selection
-                value={this.state.pageId || defaultValue}
+                value={pageId || defaultValue}
                 options={pagesOptions}
-                onChange={this._handleInputChange.bind(this)}
+                onChange={this.handleInputChange.bind(this)}
             />
         );
     }

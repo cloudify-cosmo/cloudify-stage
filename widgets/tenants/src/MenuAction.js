@@ -14,8 +14,9 @@ export default class MenuAction extends React.Component {
         onSelectAction: PropTypes.func.isRequired
     };
 
-    _onDropdownChange(event, { name }) {
-        this.props.onSelectAction(name, this.props.tenant);
+    onDropdownChange(event, { name }) {
+        const { onSelectAction, tenant } = this.props;
+        onSelectAction(name, tenant);
     }
 
     render() {
@@ -28,19 +29,19 @@ export default class MenuAction extends React.Component {
                         icon="user"
                         content="Edit users"
                         name={MenuAction.EDIT_USERS_ACTION}
-                        onClick={this._onDropdownChange.bind(this)}
+                        onClick={this.onDropdownChange.bind(this)}
                     />
                     <Menu.Item
                         icon="users"
                         content="Edit user groups"
                         name={MenuAction.EDIT_USER_GROUPS_ACTION}
-                        onClick={this._onDropdownChange.bind(this)}
+                        onClick={this.onDropdownChange.bind(this)}
                     />
                     <Menu.Item
                         icon="trash"
                         content="Delete"
                         name={MenuAction.DELETE_TENANT_ACTION}
-                        onClick={this._onDropdownChange.bind(this)}
+                        onClick={this.onDropdownChange.bind(this)}
                     />
                 </Menu>
             </PopupMenu>

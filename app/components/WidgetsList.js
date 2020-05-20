@@ -20,14 +20,16 @@ export default class WidgetsList extends Component {
         pageManagementMode: PropTypes.string
     };
 
-    _updateWidget(widgetId, data) {
-        this.props.onWidgetsGridDataChange(this.props.pageId, widgetId, data);
+    updateWidget(widgetId, data) {
+        const { onWidgetsGridDataChange, pageId } = this.props;
+        onWidgetsGridDataChange(pageId, widgetId, data);
     }
 
     render() {
-        return _.isEmpty(this.props.widgets) ? (
+        const { isEditMode, pageId, pageManagementMode, widgets } = this.props;
+        return _.isEmpty(widgets) ? (
             <Container className="emptyPage alignCenter">
-                {this.props.isEditMode ? (
+                {isEditMode ? (
                     <Header size="large">
                         This page is empty, <br />
                         don't be shy, give it a meaning!
@@ -38,8 +40,8 @@ export default class WidgetsList extends Component {
             </Container>
         ) : (
             <div>
-                <Grid isEditMode={this.props.isEditMode} onGridDataChange={this._updateWidget.bind(this)}>
-                    {this.props.widgets.map(function(widget) {
+                <Grid isEditMode={isEditMode} onGridDataChange={this.updateWidget.bind(this)}>
+                    {widgets.map(widget => {
                         const widgetDefId = (widget.definition || {}).id;
                         return (
                             <GridItem
@@ -54,15 +56,15 @@ export default class WidgetsList extends Component {
                             >
                                 <Widget
                                     widget={widget}
-                                    pageId={this.props.pageId}
-                                    isEditMode={this.props.isEditMode}
-                                    pageManagementMode={this.props.pageManagementMode}
+                                    pageId={pageId}
+                                    isEditMode={isEditMode}
+                                    pageManagementMode={pageManagementMode}
                                 />
                             </GridItem>
                         );
                     }, this)}
                 </Grid>
-                {(this.props.isEditMode || this.props.pageManagementMode) && <div className="gridStackBottomSpace" />}
+                {(isEditMode || pageManagementMode) && <div className="gridStackBottomSpace" />}
             </div>
         );
     }

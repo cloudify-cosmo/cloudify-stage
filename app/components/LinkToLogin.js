@@ -14,10 +14,11 @@ export default class LinkToLogin extends Component {
     };
 
     render() {
-        return this.props.portalUrl ? (
-            <a href={this.props.portalUrl}>Back to apps</a>
+        const { portalUrl, searchQuery } = this.props;
+        return portalUrl ? (
+            <a href={portalUrl}>Back to apps</a>
         ) : (
-            <Link to={{ pathname: Consts.LOGIN_PAGE_PATH, search: this.props.searchQuery }}>Back to login</Link>
+            <Link to={{ pathname: Consts.LOGIN_PAGE_PATH, search: searchQuery }}>Back to login</Link>
         );
     }
 }

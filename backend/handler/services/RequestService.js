@@ -7,7 +7,7 @@ const param = require('jquery-param');
 const RequestHandler = require('../RequestHandler');
 const consts = require('../../consts');
 
-module.exports = (function() {
+module.exports = (() => {
     function call(method, url, params, data, parseResponse = true, headers = {}, certificate = null) {
         return new Promise((resolve, reject) => {
             const options = { headers: {} };
@@ -40,10 +40,10 @@ module.exports = (function() {
                 res => {
                     const isSuccess = res.statusCode >= 200 && res.statusCode < 300;
                     let body = '';
-                    res.on('data', function(chunk) {
+                    res.on('data', chunk => {
                         body += chunk;
                     });
-                    res.on('end', function() {
+                    res.on('end', () => {
                         if (isSuccess) {
                             if (parseResponse) {
                                 const contentType = _.toLower(res.headers['content-type']);

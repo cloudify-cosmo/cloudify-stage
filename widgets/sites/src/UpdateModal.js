@@ -30,75 +30,76 @@ export default class UpdateModal extends React.Component {
     };
 
     onApprove() {
-        this._updateSite();
+        this.updateSite();
         return false;
     }
 
     onCancel() {
-        this.props.onHide();
+        const { onHide } = this.props;
+        onHide();
         return true;
     }
 
     componentDidUpdate(prevProps) {
-        if (!prevProps.open && this.props.open) {
+        const { open, site } = this.props;
+        if (!prevProps.open && open) {
             this.setState({
                 ...UpdateModal.initialState,
-                siteNewName: this.props.site.name,
-                siteLocation: this.props.site.location || ''
+                siteNewName: site.name,
+                siteLocation: site.location || ''
             });
         }
     }
 
-    _updateSite() {
+    updateSite() {
+        const { siteLocation, siteNewName } = this.state;
+        const { onHide, site, toolbox } = this.props;
         // Disable the form
         this.setState({ loading: true });
 
-        const actions = new SiteActions(this.props.toolbox);
+        const actions = new SiteActions(toolbox);
         actions
-            .doUpdate(this.props.site.name, null, this.state.siteLocation, this.state.siteNewName)
+            .doUpdate(site.name, null, siteLocation, siteNewName)
             .then(() => {
                 this.setState({ errors: {}, loading: false });
-                this.props.toolbox.refresh();
-                this.props.onHide();
+                toolbox.refresh();
+                onHide();
             })
             .catch(err => {
                 this.setState({ errors: { error: err.message }, loading: false });
             });
     }
 
-    _handleInputChange(proxy, field) {
+    handleInputChange(proxy, field) {
         this.setState(Stage.Basic.Form.fieldNameValue(field));
     }
 
     render() {
+        const { errors, loading, siteLocation, siteNewName } = this.state;
         const { Modal, Icon, Form, ApproveButton, CancelButton } = Stage.Basic;
-        const { toolbox } = this.props;
+        const { toolbox, onHide, open, site } = this.props;
 
         return (
             <div>
-                <Modal open={this.props.open} onClose={() => this.props.onHide()}>
+                <Modal open={open} onClose={() => onHide()}>
                     <Modal.Header>
-                        <Icon name="edit" /> Update site {this.props.site.name}
+                        <Icon name="edit" /> Update site {site.name}
                     </Modal.Header>
 
                     <Modal.Content>
-                        <Form
-                            loading={this.state.loading}
-                            errors={this.state.errors}
-                            onErrorsDismiss={() => this.setState({ errors: {} })}
-                        >
-                            <Form.Field error={this.state.errors.siteNewName}>
+                        <Form loading={loading} errors={errors} onErrorsDismiss={() => this.setState({ errors: {} })}>
+                            <Form.Field error={errors.siteNewName}>
                                 <Form.Input
                                     label="Name"
                                     name="siteNewName"
-                                    value={this.state.siteNewName}
-                                    onChange={this._handleInputChange.bind(this)}
+                                    value={siteNewName}
+                                    onChange={this.handleInputChange.bind(this)}
                                 />
                             </Form.Field>
-                            <Form.Field error={this.state.errors.siteLocation}>
+                            <Form.Field error={errors.siteLocation}>
                                 <SiteLocationInput
-                                    value={this.state.siteLocation}
-                                    onChange={this._handleInputChange.bind(this)}
+                                    value={siteLocation}
+                                    onChange={this.handleInputChange.bind(this)}
                                     toolbox={toolbox}
                                 />
                             </Form.Field>
@@ -106,10 +107,10 @@ export default class UpdateModal extends React.Component {
                     </Modal.Content>
 
                     <Modal.Actions>
-                        <CancelButton onClick={this.onCancel.bind(this)} disabled={this.state.loading} />
+                        <CancelButton onClick={this.onCancel.bind(this)} disabled={loading} />
                         <ApproveButton
                             onClick={this.onApprove.bind(this)}
-                            disabled={this.state.loading}
+                            disabled={loading}
                             content="Update"
                             icon="edit"
                             color="green"

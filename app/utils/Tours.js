@@ -25,27 +25,29 @@ export default class Tours {
         hopscotchTour.onError = ['showError'];
         hopscotchTour.skipIfNoElement = false;
         hopscotchTour.steps = _.map(hopscotchTour.steps, (step, index) => {
-            if (!_.isUndefined(step.onNextRedirectTo)) {
-                const nextStep = hopscotchTour.steps[index + 1];
-
-                if (!_.isUndefined(nextStep)) {
+            const nextStep = hopscotchTour.steps[index + 1];
+            if (!_.isUndefined(nextStep)) {
+                step.showCTAButton = true;
+                step.showNextButton = false;
+                step.ctaLabel = 'Next';
+                step.onCTA = ['redirectTo', nextStep.target];
+                if (!_.isUndefined(step.onNextRedirectTo)) {
                     const [url, pageName, noTargetErrorTitle, noTargetErrorMessage] = _.isArray(step.onNextRedirectTo)
                         ? step.onNextRedirectTo
                         : [step.onNextRedirectTo, step.onNextRedirectTo, undefined, undefined];
-                    step.showCTAButton = true;
                     step.ctaLabel = 'Next (change page)';
                     step.onCTA = [
                         'redirectTo',
+                        nextStep.target,
                         url,
                         pageName,
-                        nextStep.target,
                         noTargetErrorTitle,
                         noTargetErrorMessage
                     ];
-                    step.showNextButton = false;
+                    step = _.omit(step, 'onNextRedirectTo');
                 }
-                step = _.omit(step, 'onNextRedirectTo');
             }
+
             return step;
         });
 

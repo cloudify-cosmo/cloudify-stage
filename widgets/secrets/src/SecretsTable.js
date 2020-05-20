@@ -28,35 +28,41 @@ export default class SecretsTable extends React.Component {
     static UPDATE_SECRET_ACTION = 'update';
 
     shouldComponentUpdate(nextProps, nextState) {
+        const { data, widget } = this.props;
         return (
-            !_.isEqual(this.props.widget, nextProps.widget) ||
+            !_.isEqual(widget, nextProps.widget) ||
             !_.isEqual(this.state, nextState) ||
-            !_.isEqual(this.props.data, nextProps.data)
+            !_.isEqual(data, nextProps.data)
         );
     }
 
-    _refreshData() {
+    refreshData() {
+        const { toolbox } = this.props;
         this.setState({ error: null });
-        this.props.toolbox.refresh();
+
+        toolbox.refresh();
     }
 
     componentDidMount() {
-        this.props.toolbox.getEventBus().on('secrets:refresh', this._refreshData, this);
+        const { toolbox } = this.props;
+        toolbox.getEventBus().on('secrets:refresh', this.refreshData, this);
     }
 
     componentWillUnmount() {
-        this.props.toolbox.getEventBus().off('secrets:refresh', this._refreshData);
+        const { toolbox } = this.props;
+        toolbox.getEventBus().off('secrets:refresh', this.refreshData);
     }
 
     fetchGridData(fetchParams) {
-        return this.props.toolbox.refresh(fetchParams);
+        const { toolbox } = this.props;
+        return toolbox.refresh(fetchParams);
     }
 
-    _onDeleteSecret(secret) {
+    onDeleteSecret(secret) {
         this.setState({ secret, modalType: SecretsTable.DELETE_SECRET_ACTION, showModal: true });
     }
 
-    _onUpdateSecret(secret) {
+    onUpdateSecret(secret) {
         this.setState({
             secret,
             modalType: SecretsTable.UPDATE_SECRET_ACTION,
@@ -66,11 +72,12 @@ export default class SecretsTable extends React.Component {
         });
     }
 
-    _onShowSecret(secret) {
+    onShowSecret(secret) {
+        const { toolbox } = this.props;
         const secretKey = secret.key;
         this.setState({ secret, showSecretKey: secretKey, showSecretValue: '', showSecretLoading: true });
 
-        const actions = new Stage.Common.SecretActions(this.props.toolbox);
+        const actions = new Stage.Common.SecretActions(toolbox);
         actions
             .doGet(secretKey)
             .then(secret => {
@@ -85,78 +92,92 @@ export default class SecretsTable extends React.Component {
             });
     }
 
-    _onHideSecret() {
+    onHideSecret() {
         this.setState({ showSecretKey: '', showSecretValue: '' });
     }
 
-    _deleteSecret() {
-        const secretKey = this.state.secret.key;
-        const actions = new Stage.Common.SecretActions(this.props.toolbox);
+    deleteSecret() {
+        const { toolbox } = this.props;
+        const { secret } = this.state;
+        const secretKey = secret.key;
+        const actions = new Stage.Common.SecretActions(toolbox);
         const HIDE_DELETE_MODAL_STATE = { modalType: SecretsTable.DELETE_SECRET_ACTION, showModal: false };
 
         actions
             .doDelete(secretKey)
             .then(() => {
                 this.setState({ ...HIDE_DELETE_MODAL_STATE, error: null });
-                this.props.toolbox.getEventBus().trigger('secrets:refresh');
+                toolbox.getEventBus().trigger('secrets:refresh');
             })
             .catch(err => {
                 this.setState({ ...HIDE_DELETE_MODAL_STATE, error: err.message });
             });
     }
 
-    _setSecretVisibility(secretKey, visibility) {
-        const actions = new Stage.Common.SecretActions(this.props.toolbox);
-        this.props.toolbox.loading(true);
+    setSecretVisibility(secretKey, visibility) {
+        const { toolbox } = this.props;
+        const actions = new Stage.Common.SecretActions(toolbox);
+        toolbox.loading(true);
         actions
             .doSetVisibility(secretKey, visibility)
             .then(() => {
-                this.props.toolbox.loading(false);
-                this.props.toolbox.refresh();
+                toolbox.loading(false);
+                toolbox.refresh();
             })
             .catch(err => {
-                this.props.toolbox.loading(false);
+                toolbox.loading(false);
                 this.setState({ error: err.message });
             });
     }
 
-    _onIsHiddenValueChange(secretKey, isHiddenValue) {
-        const actions = new Stage.Common.SecretActions(this.props.toolbox);
-        this.props.toolbox.loading(true);
+    onIsHiddenValueChange(secretKey, isHiddenValue) {
+        const { toolbox } = this.props;
+        const actions = new Stage.Common.SecretActions(toolbox);
+        toolbox.loading(true);
         actions
             .doSetIsHiddenValue(secretKey, isHiddenValue)
             .then(() => {
-                this.props.toolbox.loading(false);
-                this.props.toolbox.refresh();
+                toolbox.loading(false);
+                toolbox.refresh();
             })
             .catch(err => {
-                this.props.toolbox.loading(false);
+                toolbox.loading(false);
                 this.setState({ error: err.message });
             });
     }
 
-    _hideModal() {
+    hideModal() {
         this.setState({ showModal: false });
     }
 
     render() {
+        const {
+            canShowSecret,
+            error,
+            modalType,
+            secret,
+            showModal,
+            showSecretKey,
+            showSecretLoading,
+            showSecretValue
+        } = this.state;
         const NO_DATA_MESSAGE = 'There are no Secrets available. Click "Create" to create Secrets.';
         const { Checkbox, DataTable, ErrorMessage, Icon, Popup, ResourceVisibility } = Stage.Basic;
         const DeleteModal = Stage.Basic.Confirm;
-        const { data } = this.props;
-        const currentUsername = this.props.toolbox.getManager().getCurrentUsername();
-        const selectedTenant = this.props.toolbox.getManager().getSelectedTenant();
+        const { data, toolbox, widget } = this.props;
+        const currentUsername = toolbox.getManager().getCurrentUsername();
+        const selectedTenant = toolbox.getManager().getSelectedTenant();
 
         return (
             <div>
-                <ErrorMessage error={this.state.error} onDismiss={() => this.setState({ error: null })} autoHide />
+                <ErrorMessage error={error} onDismiss={() => this.setState({ error: null })} autoHide />
 
                 <DataTable
                     fetchData={this.fetchGridData.bind(this)}
                     totalSize={data.total}
-                    pageSize={this.props.widget.configuration.pageSize}
-                    sortColumn={this.props.widget.configuration.sortColumn}
-                    sortAscending={this.props.widget.configuration.sortAscending}
+                    pageSize={widget.configuration.pageSize}
+                    sortColumn={widget.configuration.sortColumn}
+                    sortAscending={widget.configuration.sortAscending}
                     searchable
                     className="secretsTable"
                     noDataMessage={NO_DATA_MESSAGE}
@@ -178,25 +199,25 @@ export default class SecretsTable extends React.Component {
                                     <ResourceVisibility
                                         visibility={secret.visibility}
                                         onSetVisibility={visibility => {
-                                            this._setSecretVisibility(secret.key, visibility);
+                                            this.setSecretVisibility(secret.key, visibility);
                                         }}
                                         allowedSettingTo={['tenant', 'global']}
                                         className="rightFloated"
                                     />
                                 </DataTable.Data>
                                 <DataTable.Data className="center aligned rowActions">
-                                    {this.state.showSecretKey === secret.key ? (
-                                        this.state.showSecretLoading ? (
+                                    {showSecretKey === secret.key ? (
+                                        showSecretLoading ? (
                                             <Icon name="spinner" loading />
-                                        ) : this.state.canShowSecret ? (
+                                        ) : canShowSecret ? (
                                             <div>
-                                                <pre className="forceMaxWidth">{this.state.showSecretValue}</pre>
+                                                <pre className="forceMaxWidth">{showSecretValue}</pre>
                                                 <Icon
                                                     bordered
                                                     link
                                                     name="hide"
                                                     title="Hide secret value"
-                                                    onClick={this._onHideSecret.bind(this)}
+                                                    onClick={this.onHideSecret.bind(this)}
                                                 />
                                             </div>
                                         ) : (
@@ -214,16 +235,14 @@ export default class SecretsTable extends React.Component {
                                             link
                                             name="unhide"
                                             title="Show secret value"
-                                            onClick={this._onShowSecret.bind(this, secret)}
+                                            onClick={this.onShowSecret.bind(this, secret)}
                                         />
                                     )}
                                 </DataTable.Data>
                                 <DataTable.Data className="center aligned">
                                     <Checkbox
                                         checked={secret.is_hidden_value}
-                                        onChange={() =>
-                                            this._onIsHiddenValueChange(secret.key, !secret.is_hidden_value)
-                                        }
+                                        onChange={() => this.onIsHiddenValueChange(secret.key, !secret.is_hidden_value)}
                                         onClick={e => e.stopPropagation()}
                                     />
                                     {secret.is_hidden_value}
@@ -238,14 +257,14 @@ export default class SecretsTable extends React.Component {
                                         link
                                         name="edit"
                                         title="Update secret"
-                                        onClick={this._onUpdateSecret.bind(this, secret)}
+                                        onClick={this.onUpdateSecret.bind(this, secret)}
                                     />
                                     <Icon
                                         bordered
                                         link
                                         name="trash"
                                         title="Delete secret"
-                                        onClick={this._onDeleteSecret.bind(this, secret)}
+                                        onClick={this.onDeleteSecret.bind(this, secret)}
                                     />
                                 </DataTable.Data>
                             </DataTable.Row>
@@ -253,22 +272,22 @@ export default class SecretsTable extends React.Component {
                     })}
 
                     <DataTable.Action>
-                        <CreateModal toolbox={this.props.toolbox} />
+                        <CreateModal toolbox={toolbox} />
                     </DataTable.Action>
                 </DataTable>
 
                 <DeleteModal
-                    content={`Are you sure you want to delete secret '${this.state.secret.key}'?`}
-                    open={this.state.modalType === SecretsTable.DELETE_SECRET_ACTION && this.state.showModal}
-                    onConfirm={this._deleteSecret.bind(this)}
-                    onCancel={this._hideModal.bind(this)}
+                    content={`Are you sure you want to delete secret '${secret.key}'?`}
+                    open={modalType === SecretsTable.DELETE_SECRET_ACTION && showModal}
+                    onConfirm={this.deleteSecret.bind(this)}
+                    onCancel={this.hideModal.bind(this)}
                 />
 
                 <UpdateModal
-                    toolbox={this.props.toolbox}
-                    open={this.state.modalType === SecretsTable.UPDATE_SECRET_ACTION && this.state.showModal}
-                    onHide={this._hideModal.bind(this)}
-                    secret={this.state.secret}
+                    toolbox={toolbox}
+                    open={modalType === SecretsTable.UPDATE_SECRET_ACTION && showModal}
+                    onHide={this.hideModal.bind(this)}
+                    secret={secret}
                 />
             </div>
         );

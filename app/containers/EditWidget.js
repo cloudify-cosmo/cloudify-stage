@@ -6,9 +6,9 @@ import PropTypes from 'prop-types';
 
 import React from 'react';
 import { connect } from 'react-redux';
-import EditWidgetIcon from '../components/EditWidgetIcon';
-import { editWidget } from '../actions/widgets';
 import { editPageWidget } from '../actions/templateManagement';
+import { editWidget } from '../actions/widgets';
+import EditWidgetIcon from '../components/EditWidgetIcon';
 import EditWidgetModal from '../components/EditWidgetModal';
 
 const mapStateToProps = (state, ownProps) => {
@@ -62,25 +62,28 @@ class EditWidgetComponent extends React.Component {
         configuration: PropTypes.object
     };
 
-    _showConfig() {
+    showConfig() {
         this.setState({ showConfig: true });
     }
 
-    _hideConfig() {
+    hideConfig() {
         this.setState({ showConfig: false });
     }
 
     render() {
+        const { configDef, configuration, onWidgetEdited, widget } = this.props;
+        const { showConfig } = this.state;
+
         return (
             <span>
-                <EditWidgetIcon widgetId={this.props.widget.id} onShowConfig={this._showConfig.bind(this)} />
+                <EditWidgetIcon widgetId={widget.id} onShowConfig={this.showConfig.bind(this)} />
                 <EditWidgetModal
-                    widget={this.props.widget}
-                    configDef={this.props.configDef}
-                    configuration={this.props.configuration}
-                    onWidgetEdited={this.props.onWidgetEdited}
-                    show={this.state.showConfig}
-                    onHideConfig={this._hideConfig.bind(this)}
+                    widget={widget}
+                    configDef={configDef}
+                    configuration={configuration}
+                    onWidgetEdited={onWidgetEdited}
+                    show={showConfig}
+                    onHideConfig={this.hideConfig.bind(this)}
                 />
             </span>
         );

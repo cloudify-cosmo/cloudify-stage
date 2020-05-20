@@ -20,6 +20,7 @@ class YamlFileButton extends React.Component {
     };
 
     render() {
+        const { dataType, fileLoading, onChange } = this.props;
         const { Form } = Stage.Basic;
 
         return (
@@ -28,10 +29,10 @@ class YamlFileButton extends React.Component {
                 showInput={false}
                 showReset={false}
                 openButtonParams={{ className: 'rightFloated', content: 'Load Values', labelPosition: 'left' }}
-                onChange={this.props.onChange}
-                help={`You can provide YAML file with ${this.props.dataType} to automatically fill in the form.`}
-                loading={this.props.fileLoading}
-                disabled={this.props.fileLoading}
+                onChange={onChange}
+                help={`You can provide YAML file with ${dataType} to automatically fill in the form.`}
+                loading={fileLoading}
+                disabled={fileLoading}
             />
         );
     }

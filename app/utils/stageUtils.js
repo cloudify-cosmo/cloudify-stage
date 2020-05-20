@@ -4,6 +4,7 @@
 
 import md5 from 'blueimp-md5';
 import _ from 'lodash';
+import { saveAs } from 'file-saver';
 import { GenericField } from '../components/basic';
 
 import ExecutionUtils from './shared/ExecutionUtils';
@@ -20,24 +21,31 @@ export default class StageUtils {
 
     static Url = UrlUtils;
 
+    static saveAs() {
+        saveAs(...arguments);
+    }
+
     static makeCancelable(promise) {
-        let hasCanceled_ = false;
+        let hasCanceled = false;
 
         const wrappedPromise = new Promise((resolve, reject) => {
-            promise.then(val => (hasCanceled_ ? reject({ isCanceled: true }) : resolve(val)));
-            promise.catch(error => (hasCanceled_ ? reject({ isCanceled: true }) : reject(error)));
+            promise.then(val => (hasCanceled ? reject({ isCanceled: true }) : resolve(val)));
+            promise.catch(error => (hasCanceled ? reject({ isCanceled: true }) : reject(error)));
         });
 
         return {
             promise: wrappedPromise,
             cancel() {
-                hasCanceled_ = true;
+                hasCanceled = true;
             }
         };
     }
 
     /**
      * @deprecated use TimeUtils.formatTimestamp
+     * @param timestamp
+     * @param outputPattern
+     * @param inputPattern
      */
     static formatTimestamp(timestamp, outputPattern = 'DD-MM-YYYY HH:mm', inputPattern = 'YYYY-MM-DD HH:mm:ss') {
         return TimeUtils.formatTimestamp(timestamp, outputPattern, inputPattern);
@@ -45,6 +53,9 @@ export default class StageUtils {
 
     /**
      * @deprecated use TimeUtils.formatLocalTimestamp
+     * @param timestamp
+     * @param outputPattern
+     * @param inputPattern
      */
     static formatLocalTimestamp(timestamp, outputPattern = 'DD-MM-YYYY HH:mm', inputPattern = undefined) {
         return TimeUtils.formatLocalTimestamp(timestamp, outputPattern, inputPattern);
@@ -101,6 +112,7 @@ export default class StageUtils {
 
     /**
      * @deprecated use UrlUtils.url
+     * @param path
      */
     static url(path) {
         return UrlUtils.url(path);
@@ -108,6 +120,7 @@ export default class StageUtils {
 
     /**
      * @deprecated use UrlUtils.isUrl
+     * @param str
      */
     static isUrl(str) {
         return UrlUtils.isUrl(str);
@@ -115,6 +128,7 @@ export default class StageUtils {
 
     /**
      * @deprecated use UrlUtils.redirectToPage
+     * @param url
      */
     static redirectToPage(url) {
         return UrlUtils.redirectToPage(url);
@@ -122,6 +136,10 @@ export default class StageUtils {
 
     /**
      * @deprecated use UrlUtils.widgetResourceUrl
+     * @param widgetId
+     * @param internalPath
+     * @param isCustom
+     * @param addContextPath
      */
     static widgetResourceUrl(widgetId, internalPath, isCustom = true, addContextPath = true) {
         return UrlUtils.widgetResourceUrl(widgetId, internalPath, isCustom, addContextPath);

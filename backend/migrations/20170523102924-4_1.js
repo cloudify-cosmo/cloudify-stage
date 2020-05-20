@@ -21,11 +21,11 @@ function createResourcesModel(queryInterface, Sequelize) {
                 type: Sequelize.DATE
             }
         })
-        .then(function() {
-            return queryInterface.addIndex('Resources', ['resourceId', 'type'], {
+        .then(() =>
+            queryInterface.addIndex('Resources', ['resourceId', 'type'], {
                 indicesType: 'UNIQUE'
-            });
-        });
+            })
+        );
 }
 
 module.exports = {

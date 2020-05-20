@@ -62,7 +62,7 @@ export default class app {
         window.L = Leaflet;
         window.connectToStore = connect;
 
-        window.onerror = function(message, source, lineno, colno, error) {
+        window.onerror = (message, source, lineno, colno, error) => {
             EventBus.trigger('window:error', message, source, lineno, colno, error);
         };
 

@@ -26,6 +26,15 @@ export default class Pages extends Component {
     };
 
     render() {
+        const {
+            onCanDeletePage,
+            onCreatePage,
+            onDeletePage,
+            onEditPage,
+            onPreviewPage,
+            onSelectPage,
+            pages
+        } = this.props;
         return (
             <Segment color="red">
                 <Header dividing as="h5">
@@ -40,13 +49,13 @@ export default class Pages extends Component {
                     <DataTable.Column label="Updated by" width="15%" />
                     <DataTable.Column width="10%" />
 
-                    {this.props.pages.map(item => {
+                    {pages.map(item => {
                         return (
                             <DataTable.RowExpandable key={item.id} expanded={item.selected}>
                                 <DataTable.Row
                                     key={item.id}
                                     selected={item.selected}
-                                    onClick={() => this.props.onSelectPage(item)}
+                                    onClick={() => onSelectPage(item)}
                                 >
                                     <DataTable.Data>
                                         <Header as="a" size="small">
@@ -71,8 +80,8 @@ export default class Pages extends Component {
                                                         <Icon name="remove" link onClick={e => e.stopPropagation()} />
                                                     }
                                                     content="Are you sure to remove this page?"
-                                                    onConfirm={() => this.props.onDeletePage(item)}
-                                                    onCanConfirm={() => this.props.onCanDeletePage(item)}
+                                                    onConfirm={() => onDeletePage(item)}
+                                                    onCanConfirm={() => onCanDeletePage(item)}
                                                 />
                                                 <Icon
                                                     name="edit"
@@ -80,7 +89,7 @@ export default class Pages extends Component {
                                                     className="updatePageIcon"
                                                     onClick={e => {
                                                         e.stopPropagation();
-                                                        this.props.onEditPage(item);
+                                                        onEditPage(item);
                                                     }}
                                                 />
                                             </div>
@@ -92,7 +101,7 @@ export default class Pages extends Component {
                                                     className="updatePageIcon"
                                                     onClick={e => {
                                                         e.stopPropagation();
-                                                        this.props.onPreviewPage(item);
+                                                        onPreviewPage(item);
                                                     }}
                                                 />
                                             </div>
@@ -108,7 +117,7 @@ export default class Pages extends Component {
                     })}
 
                     <DataTable.Action>
-                        <CreatePageModal onCreatePage={this.props.onCreatePage} />
+                        <CreatePageModal onCreatePage={onCreatePage} />
                     </DataTable.Action>
                 </DataTable>
             </Segment>

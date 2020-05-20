@@ -3,7 +3,7 @@
  */
 
 exports.command = function(callback) {
-    return this.perform(function(client, done) {
+    return this.perform((client, done) => {
         console.log('press to continue');
         let pressed = false;
         process.stdin.setRawMode(true);
@@ -18,7 +18,7 @@ exports.command = function(callback) {
         }
 
         function pause() {
-            client.pause(10, function() {
+            client.pause(10, () => {
                 if (!pressed) return pause();
                 done();
             });

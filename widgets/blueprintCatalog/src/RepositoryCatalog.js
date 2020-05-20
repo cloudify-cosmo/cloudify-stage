@@ -21,17 +21,18 @@ export default class extends React.Component {
     };
 
     render() {
+        const { data, fetchData, noDataMessage, onReadme, onSelect, onUpload, readmeLoading, widget } = this.props;
         const { DataSegment, Grid, Image, Button, Header } = Stage.Basic;
 
         const index = 0;
-        const catalogItems = this.props.data.items.map(item => {
+        const catalogItems = data.items.map(item => {
             return (
                 <Grid.Column key={item.id}>
                     <DataSegment.Item
                         selected={item.isSelected}
                         onClick={event => {
                             event.stopPropagation();
-                            this.props.onSelect(item);
+                            onSelect(item);
                         }}
                         className="fullHeight"
                     >
@@ -67,11 +68,11 @@ export default class extends React.Component {
                             <Button
                                 circular
                                 icon="info"
-                                loading={this.props.readmeLoading === item.name}
+                                loading={readmeLoading === item.name}
                                 className="readmeButton icon"
                                 onClick={event => {
                                     event.stopPropagation();
-                                    this.props.onReadme(item.name, item.readme_url);
+                                    onReadme(item.name, item.readme_url);
                                 }}
                             />
                             <Button
@@ -80,7 +81,7 @@ export default class extends React.Component {
                                 className="uploadButton labeled icon"
                                 onClick={event => {
                                     event.stopPropagation();
-                                    this.props.onUpload(item.name, item.zip_url, item.image_url);
+                                    onUpload(item.name, item.zip_url, item.image_url);
                                 }}
                             />
                         </div>
@@ -113,11 +114,11 @@ export default class extends React.Component {
         return (
             <div>
                 <DataSegment
-                    totalSize={this.props.data.total}
-                    pageSize={this.props.widget.configuration.pageSize}
-                    fetchData={this.props.fetchData}
+                    totalSize={data.total}
+                    pageSize={widget.configuration.pageSize}
+                    fetchData={fetchData}
                     className="repositoryCatalog"
-                    noDataMessage={this.props.noDataMessage}
+                    noDataMessage={noDataMessage}
                 >
                     <Grid>{catalogRows}</Grid>
                 </DataSegment>

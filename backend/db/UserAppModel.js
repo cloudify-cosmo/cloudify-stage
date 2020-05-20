@@ -3,7 +3,7 @@
  */
 const ServerSettings = require('../serverSettings');
 
-module.exports = function(sequelize, DataTypes) {
+module.exports = (sequelize, DataTypes) => {
     const UserApp = sequelize.define(
         'UserApp',
         {

@@ -12,20 +12,20 @@ module.exports = {
                 createdAt: { type: Sequelize.DATE, allowNull: false },
                 updatedAt: { type: Sequelize.DATE, allowNull: false }
             })
-            .then(function() {
-                return queryInterface.addIndex('WidgetBackends', ['widgetId', 'serviceName', 'method'], {
+            .then(() =>
+                queryInterface.addIndex('WidgetBackends', ['widgetId', 'serviceName', 'method'], {
                     indicesType: 'UNIQUE'
-                });
-            });
+                })
+            );
     },
 
     down: (queryInterface, Sequelize, logger) => {
         return queryInterface
             .dropTable('WidgetBackends', { cascade: true, logging: logger.info, benchmark: true })
-            .then(function() {
-                return queryInterface.removeIndex('WidgetBackends', ['widgetId', 'serviceName', 'method'], {
+            .then(() =>
+                queryInterface.removeIndex('WidgetBackends', ['widgetId', 'serviceName', 'method'], {
                     indicesType: 'UNIQUE'
-                });
-            });
+                })
+            );
     }
 };

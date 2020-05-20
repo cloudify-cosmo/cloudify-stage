@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
 
 import React, { Component } from 'react';
 
-import { Modal, Button, Icon, Form, ApproveButton, CancelButton } from '../basic/index';
+import { ApproveButton, Button, CancelButton, Form, Icon, Modal } from '../basic/index';
 
 export default class CreatePageModal extends Component {
     constructor(props, context) {
@@ -31,14 +31,16 @@ export default class CreatePageModal extends Component {
         pageName: ''
     };
 
-    _openModal() {
+    openModal() {
         this.setState(CreatePageModal.initialState(true, this.props));
     }
 
-    _submitCreate() {
+    submitCreate() {
+        const { onCreatePage } = this.props;
+        const { pageName } = this.state;
         const errors = {};
 
-        if (_.isEmpty(_.trim(this.state.pageName))) {
+        if (_.isEmpty(_.trim(pageName))) {
             errors.pageName = 'Please provide correct page name';
         }
 
@@ -50,16 +52,17 @@ export default class CreatePageModal extends Component {
         // Disable the form
         this.setState({ loading: true });
 
-        this.props.onCreatePage(_.trim(this.state.pageName)).catch(err => {
+        onCreatePage(_.trim(pageName)).catch(err => {
             this.setState({ errors: { error: err.message }, loading: false });
         });
     }
 
-    _handleInputChange(proxy, field) {
+    handleInputChange(proxy, field) {
         this.setState(Form.fieldNameValue(field));
     }
 
     render() {
+        const { errors, loading, open, pageName } = this.state;
         const trigger = (
             <Button content="Create page" icon="block layout" labelPosition="left" className="createPageButton" />
         );
@@ -67,8 +70,8 @@ export default class CreatePageModal extends Component {
         return (
             <Modal
                 trigger={trigger}
-                open={this.state.open}
-                onOpen={this._openModal.bind(this)}
+                open={open}
+                onOpen={this.openModal.bind(this)}
                 onClose={() => this.setState({ open: false })}
                 className="createPageModal"
             >
@@ -78,27 +81,23 @@ export default class CreatePageModal extends Component {
                 </Modal.Header>
 
                 <Modal.Content>
-                    <Form
-                        loading={this.state.loading}
-                        errors={this.state.errors}
-                        onErrorsDismiss={() => this.setState({ errors: {} })}
-                    >
-                        <Form.Field error={this.state.errors.pageName}>
+                    <Form loading={loading} errors={errors} onErrorsDismiss={() => this.setState({ errors: {} })}>
+                        <Form.Field error={errors.pageName}>
                             <Form.Input
                                 name="pageName"
                                 placeholder="Page name"
-                                value={this.state.pageName}
-                                onChange={this._handleInputChange.bind(this)}
+                                value={pageName}
+                                onChange={this.handleInputChange.bind(this)}
                             />
                         </Form.Field>
                     </Form>
                 </Modal.Content>
 
                 <Modal.Actions>
-                    <CancelButton onClick={() => this.setState({ open: false })} disabled={this.state.loading} />
+                    <CancelButton onClick={() => this.setState({ open: false })} disabled={loading} />
                     <ApproveButton
-                        onClick={this._submitCreate.bind(this)}
-                        disabled={this.state.loading}
+                        onClick={this.submitCreate.bind(this)}
+                        disabled={loading}
                         content="Create"
                         icon="checkmark"
                         color="green"

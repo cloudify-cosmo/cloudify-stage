@@ -26,6 +26,23 @@ Stage.defineWidget({
         const deploymentId = toolbox.getContext().getValue('deploymentId');
         const blueprintId = toolbox.getContext().getValue('blueprintId');
 
+        function createEntity(name, value, object, isOutput) {
+            return {
+                name,
+                value,
+                description: object.description || '',
+                isOutput
+            };
+        }
+
+        function createOutput(name, value, object) {
+            return createEntity(name, value, object, true);
+        }
+
+        function createCapability(name, value, object) {
+            return createEntity(name, value, object, false);
+        }
+
         if (deploymentId) {
             const deploymentOutputsPromise = toolbox.getManager().doGet(`/deployments/${deploymentId}/outputs`);
             const deploymentCapabilitiesPromise = widget.configuration.showCapabilities
@@ -44,18 +61,16 @@ Stage.defineWidget({
 
                     return Promise.resolve({
                         outputsAndCapabilities: [
-                            ..._.map(outputs, (outputObject, outputName) => ({
-                                name: outputName,
-                                value: deploymentOutputs[outputName],
-                                description: outputObject.description || '',
-                                isCapability: false
-                            })),
-                            ..._.map(capabilities, (capabilityObject, capabilityName) => ({
-                                name: capabilityName,
-                                value: deploymentCapabilities[capabilityName],
-                                description: capabilityObject.description || '',
-                                isCapability: true
-                            }))
+                            ..._.map(outputs, (outputObject, outputName) =>
+                                createOutput(outputName, deploymentOutputs[outputName], outputObject)
+                            ),
+                            ..._.map(capabilities, (capabilityObject, capabilityName) =>
+                                createCapability(
+                                    capabilityName,
+                                    deploymentCapabilities[capabilityName],
+                                    capabilityObject
+                                )
+                            )
                         ]
                     });
                 }
@@ -74,18 +89,12 @@ Stage.defineWidget({
 
                     return Promise.resolve({
                         outputsAndCapabilities: [
-                            ..._.map(blueprintOutputs, (outputObject, outputName) => ({
-                                name: outputName,
-                                value: outputObject.value,
-                                description: outputObject.description || '',
-                                isCapability: false
-                            })),
-                            ..._.map(blueprintCapabilities, (capabilityObject, capabilityName) => ({
-                                name: capabilityName,
-                                value: capabilityObject.value,
-                                description: capabilityObject.description || '',
-                                isCapability: true
-                            }))
+                            ..._.map(blueprintOutputs, (outputObject, outputName) =>
+                                createOutput(outputName, outputObject.value, outputObject)
+                            ),
+                            ..._.map(blueprintCapabilities, (capabilityObject, capabilityName) =>
+                                createCapability(capabilityName, capabilityObject.value, capabilityObject)
+                            )
                         ]
                     });
                 });

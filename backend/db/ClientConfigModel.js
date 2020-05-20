@@ -2,7 +2,7 @@
  * Created by kinneretzin on 08/03/2017.
  */
 
-module.exports = function(sequelize, DataTypes) {
+module.exports = (sequelize, DataTypes) => {
     const ClientConfig = sequelize.define(
         'ClientConfig',
         {

@@ -2,8 +2,8 @@
  * Created by jakub.niezgoda on 23/04/2019.
  */
 
-module.exports = function(sequelize, DataTypes) {
-    return sequelize.define(
+module.exports = (sequelize, DataTypes) =>
+    sequelize.define(
         'WidgetBackend',
 
         {
@@ -14,4 +14,3 @@ module.exports = function(sequelize, DataTypes) {
         },
         { indexes: [{ unique: true, fields: ['widgetId', 'serviceName', 'method'] }] }
     );
-};

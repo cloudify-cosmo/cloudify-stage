@@ -4,11 +4,10 @@
 
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
-
-import Templates from './Templates';
-import Pages from './Pages';
 import Const from '../../utils/consts';
-import { Breadcrumb, Segment, Divider, ErrorMessage, Button } from '../basic';
+import { Breadcrumb, Button, Divider, ErrorMessage, Segment } from '../basic';
+import Pages from './Pages';
+import Templates from './Templates';
 
 export default class TemplateManagement extends Component {
     static propTypes = {
@@ -37,22 +36,27 @@ export default class TemplateManagement extends Component {
     };
 
     componentDidMount() {
-        this.props.onTemplatesLoad();
+        const { onTemplatesLoad } = this.props;
+        onTemplatesLoad();
     }
 
     componentWillUnmount() {
-        this.props.onClear();
+        const { onClear } = this.props;
+        onClear();
     }
 
-    _selectTemplate(template) {
-        this.props.onTemplateSelect(template.id);
+    selectTemplate(template) {
+        const { onTemplateSelect } = this.props;
+        onTemplateSelect(template.id);
     }
 
-    _selectPage(page) {
-        this.props.onPageSelect(page.id);
+    selectPage(page) {
+        const { onPageSelect } = this.props;
+        onPageSelect(page.id);
     }
 
-    _createTemplate(templateName, roles, tenants, pages) {
+    createTemplate(templateName, roles, tenants, pages) {
+        const { onTemplateCreate } = this.props;
         const template = {
             id: templateName.trim(),
             data: {
@@ -62,14 +66,16 @@ export default class TemplateManagement extends Component {
             pages
         };
 
-        return this.props.onTemplateCreate(template);
+        return onTemplateCreate(template);
     }
 
-    _deleteTemplate(template) {
-        this.props.onTemplateDelete(template.id);
+    deleteTemplate(template) {
+        const { onTemplateDelete } = this.props;
+        onTemplateDelete(template.id);
     }
 
-    _modifyTemplate(item, templateName, roles, tenants, pages) {
+    modifyTemplate(item, templateName, roles, tenants, pages) {
+        const { onTemplateUpdate } = this.props;
         const template = {
             oldId: item.id,
             id: templateName.trim(),
@@ -80,51 +86,56 @@ export default class TemplateManagement extends Component {
             pages
         };
 
-        return this.props.onTemplateUpdate(template);
+        return onTemplateUpdate(template);
     }
 
-    _removeTemplatePage(template, page) {
+    removeTemplatePage(template, page) {
         template.pages = _.without(template.pages, page);
 
-        this._updateTemplate(template);
+        this.updateTemplate(template);
     }
 
-    _removeTemplateRole(template, role) {
+    removeTemplateRole(template, role) {
         template.data.roles = _.without(template.data.roles, role);
 
-        this._updateTemplate(template);
+        this.updateTemplate(template);
     }
 
-    _removeTemplateTenant(template, tenant) {
+    removeTemplateTenant(template, tenant) {
         template.data.tenants = _.without(template.data.tenants, tenant);
 
-        this._updateTemplate(template);
+        this.updateTemplate(template);
     }
 
-    _updateTemplate(template) {
-        return this.props.onTemplateUpdate({ ...template, oldId: template.id });
+    updateTemplate(template) {
+        const { onTemplateUpdate } = this.props;
+        return onTemplateUpdate({ ...template, oldId: template.id });
     }
 
-    _deletePage(page) {
-        this.props.onPageDelete(page.id);
+    deletePage(page) {
+        const { onPageDelete } = this.props;
+        onPageDelete(page.id);
     }
 
-    _canDeletePage(page) {
+    canDeletePage(page) {
         return _.isEmpty(page.templates) ? null : 'Page is used by the templates and cannot be deleted';
     }
 
-    _editPage(page) {
-        this.props.onPageEdit(page.id, page.name);
+    editPage(page) {
+        const { onPageEdit } = this.props;
+        onPageEdit(page.id, page.name);
     }
 
-    _previewPage(page) {
-        this.props.onPagePreview(page.id, page.name);
+    previewPage(page) {
+        const { onPagePreview } = this.props;
+        onPagePreview(page.id, page.name);
     }
 
     render() {
+        const { error, isLoading, manager, onClose, onPageCreate, pages, roles, templates } = this.props;
         return (
             <div className="main">
-                <Segment basic loading={this.props.isLoading}>
+                <Segment basic loading={isLoading}>
                     <div style={{ position: 'relative' }}>
                         <Breadcrumb className="breadcrumbLineHeight">
                             <Breadcrumb.Section active>Template management</Breadcrumb.Section>
@@ -135,36 +146,36 @@ export default class TemplateManagement extends Component {
                             compact
                             floated="right"
                             icon="sign out"
-                            onClick={this.props.onClose}
+                            onClick={onClose}
                             style={{ position: 'absolute', right: 0 }}
                         />
                     </div>
                     <Divider />
 
-                    <ErrorMessage error={this.props.error} />
+                    <ErrorMessage error={error} />
 
                     <Templates
-                        templates={this.props.templates}
-                        pages={this.props.pages}
-                        roles={this.props.roles}
-                        tenants={this.props.manager.tenants}
-                        onSelectTemplate={this._selectTemplate.bind(this)}
-                        onRemoveTemplatePage={this._removeTemplatePage.bind(this)}
-                        onRemoveTemplateRole={this._removeTemplateRole.bind(this)}
-                        onRemoveTemplateTenant={this._removeTemplateTenant.bind(this)}
-                        onCreateTemplate={this._createTemplate.bind(this)}
-                        onModifyTemplate={this._modifyTemplate.bind(this)}
-                        onDeleteTemplate={this._deleteTemplate.bind(this)}
+                        templates={templates}
+                        pages={pages}
+                        roles={roles}
+                        tenants={manager.tenants}
+                        onSelectTemplate={this.selectTemplate.bind(this)}
+                        onRemoveTemplatePage={this.removeTemplatePage.bind(this)}
+                        onRemoveTemplateRole={this.removeTemplateRole.bind(this)}
+                        onRemoveTemplateTenant={this.removeTemplateTenant.bind(this)}
+                        onCreateTemplate={this.createTemplate.bind(this)}
+                        onModifyTemplate={this.modifyTemplate.bind(this)}
+                        onDeleteTemplate={this.deleteTemplate.bind(this)}
                     />
 
                     <Pages
-                        pages={this.props.pages}
-                        onSelectPage={this._selectPage.bind(this)}
-                        onCreatePage={this.props.onPageCreate}
-                        onDeletePage={this._deletePage.bind(this)}
-                        onEditPage={this._editPage.bind(this)}
-                        onPreviewPage={this._previewPage.bind(this)}
-                        onCanDeletePage={this._canDeletePage.bind(this)}
+                        pages={pages}
+                        onSelectPage={this.selectPage.bind(this)}
+                        onCreatePage={onPageCreate}
+                        onDeletePage={this.deletePage.bind(this)}
+                        onEditPage={this.editPage.bind(this)}
+                        onPreviewPage={this.previewPage.bind(this)}
+                        onCanDeletePage={this.canDeletePage.bind(this)}
                     />
                 </Segment>
             </div>

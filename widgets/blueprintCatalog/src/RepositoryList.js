@@ -2,10 +2,10 @@
  * Created by pposel on 06/02/2017.
  */
 
-import RepositoryTable from './RepositoryTable';
-import RepositoryCatalog from './RepositoryCatalog';
-import UploadModal from './UploadModal';
 import Consts from './consts';
+import RepositoryCatalog from './RepositoryCatalog';
+import RepositoryTable from './RepositoryTable';
+import UploadModal from './UploadModal';
 
 export default class extends React.Component {
     constructor(props, context) {
@@ -25,65 +25,86 @@ export default class extends React.Component {
     }
 
     shouldComponentUpdate(nextProps, nextState) {
+        const { data, widget } = this.props;
         return (
-            !_.isEqual(this.props.widget, nextProps.widget) ||
+            !_.isEqual(widget, nextProps.widget) ||
             !_.isEqual(this.state, nextState) ||
-            !_.isEqual(this.props.data, nextProps.data)
+            !_.isEqual(data, nextProps.data)
         );
     }
 
-    _selectItem(item) {
-        const selectedCatalogId = this.props.toolbox.getContext().getValue('blueprintCatalogId');
-        this.props.toolbox.getContext().setValue('blueprintCatalogId', item.id === selectedCatalogId ? null : item.id);
+    selectItem(item) {
+        const { toolbox } = this.props;
+        const selectedCatalogId = toolbox.getContext().getValue('blueprintCatalogId');
+        toolbox.getContext().setValue('blueprintCatalogId', item.id === selectedCatalogId ? null : item.id);
     }
 
-    _refreshData() {
-        this.props.toolbox.refresh();
+    refreshData() {
+        const { toolbox } = this.props;
+        toolbox.refresh();
     }
 
     componentDidMount() {
-        this.props.toolbox.getEventBus().on('blueprintCatalog:refresh', this._refreshData, this);
+        const { toolbox } = this.props;
+        toolbox.getEventBus().on('blueprintCatalog:refresh', this.refreshData, this);
     }
 
     componentWillUnmount() {
-        this.props.toolbox.getEventBus().off('blueprintCatalog:refresh', this._refreshData);
+        const { toolbox } = this.props;
+        toolbox.getEventBus().off('blueprintCatalog:refresh', this.refreshData);
     }
 
-    _fetchData(fetchParams) {
-        return this.props.toolbox.refresh(fetchParams);
+    fetchData(fetchParams) {
+        const { toolbox } = this.props;
+        return toolbox.refresh(fetchParams);
     }
 
-    _showModal(repositoryName, zipUrl, imageUrl) {
-        this.props.toolbox.loading(true);
+    showModal(repositoryName, zipUrl, imageUrl) {
+        const { actions, toolbox } = this.props;
+        toolbox.loading(true);
 
-        this.props.actions
+        actions
             .doListYamlFiles(zipUrl)
             .then(yamlFiles => {
                 this.setState({ error: null, repositoryName, yamlFiles, zipUrl, imageUrl, showModal: true });
-                this.props.toolbox.loading(false);
+                toolbox.loading(false);
             })
             .catch(err => {
                 this.setState({ error: err.message });
-                this.props.toolbox.loading(false);
+                toolbox.loading(false);
             });
     }
 
-    _hideModal() {
+    hideModal() {
         this.setState({ showModal: false });
     }
 
-    _showReadmeModal(repositoryName, readmeUrl) {
+    showReadmeModal(repositoryName, readmeUrl) {
+        const { actions } = this.props;
+
         this.setState({ readmeLoading: repositoryName });
-        this.props.actions.doGetReadme(repositoryName, readmeUrl).then(content => {
+        actions.doGetReadme(repositoryName, readmeUrl).then(content => {
             this.setState({ readmeContent: markdown.parse(content) || '', showReadmeModal: true, readmeLoading: null });
         });
     }
 
-    _hideReadmeModal() {
+    hideReadmeModal() {
         this.setState({ showReadmeModal: false });
     }
 
     render() {
+        const {
+            error,
+            imageUrl,
+            readmeContent,
+            readmeLoading,
+            repositoryName,
+            showModal,
+            showReadmeModal,
+            yamlFiles,
+            zipUrl
+        } = this.state;
+        const { actions, data, toolbox, widget } = this.props;
         const NO_DATA_MESSAGE = "There are no Blueprints available in catalog. Check widget's configuration.";
         const { ErrorMessage, Message, Icon, ReadmeModal } = Stage.Basic;
 
@@ -98,55 +119,54 @@ export default class extends React.Component {
             </Message>
         );
 
-        const showNotAuthenticatedWarning =
-            this.props.data.source === Consts.GITHUB_DATA_SOURCE && !this.props.data.isAuthenticated;
+        const showNotAuthenticatedWarning = data.source === Consts.GITHUB_DATA_SOURCE && !data.isAuthenticated;
 
         return (
             <div>
-                <ErrorMessage error={this.state.error} onDismiss={() => this.setState({ error: null })} autoHide />
+                <ErrorMessage error={error} onDismiss={() => this.setState({ error: null })} autoHide />
 
                 {showNotAuthenticatedWarning && notAuthenticatedWarning}
-                {this.props.widget.configuration.displayStyle === 'table' ? (
+                {widget.configuration.displayStyle === 'table' ? (
                     <RepositoryTable
-                        widget={this.props.widget}
-                        data={this.props.data}
-                        fetchData={this._fetchData.bind(this)}
-                        onSelect={this._selectItem.bind(this)}
-                        onUpload={this._showModal.bind(this)}
-                        onReadme={this._showReadmeModal.bind(this)}
-                        readmeLoading={this.state.readmeLoading}
+                        widget={widget}
+                        data={data}
+                        fetchData={this.fetchData.bind(this)}
+                        onSelect={this.selectItem.bind(this)}
+                        onUpload={this.showModal.bind(this)}
+                        onReadme={this.showReadmeModal.bind(this)}
+                        readmeLoading={readmeLoading}
                         noDataMessage={NO_DATA_MESSAGE}
                     />
                 ) : (
                     <RepositoryCatalog
-                        widget={this.props.widget}
-                        data={this.props.data}
-                        fetchData={this._fetchData.bind(this)}
-                        onSelect={this._selectItem.bind(this)}
-                        onUpload={this._showModal.bind(this)}
-                        onReadme={this._showReadmeModal.bind(this)}
-                        readmeLoading={this.state.readmeLoading}
+                        widget={widget}
+                        data={data}
+                        fetchData={this.fetchData.bind(this)}
+                        onSelect={this.selectItem.bind(this)}
+                        onUpload={this.showModal.bind(this)}
+                        onReadme={this.showReadmeModal.bind(this)}
+                        readmeLoading={readmeLoading}
                         noDataMessage={NO_DATA_MESSAGE}
                     />
                 )}
 
                 <UploadModal
-                    open={this.state.showModal}
-                    repositoryName={this.state.repositoryName}
-                    yamlFiles={this.state.yamlFiles}
-                    zipUrl={this.state.zipUrl}
-                    imageUrl={this.state.imageUrl}
-                    onHide={this._hideModal.bind(this)}
-                    toolbox={this.props.toolbox}
-                    actions={this.props.actions}
+                    open={showModal}
+                    repositoryName={repositoryName}
+                    yamlFiles={yamlFiles}
+                    zipUrl={zipUrl}
+                    imageUrl={imageUrl}
+                    onHide={this.hideModal.bind(this)}
+                    toolbox={toolbox}
+                    actions={actions}
                 />
 
                 <ReadmeModal
-                    open={this.state.showReadmeModal}
-                    content={this.state.readmeContent}
-                    onHide={this._hideReadmeModal.bind(this)}
-                    toolbox={this.props.toolbox}
-                    actions={this.props.actions}
+                    open={showReadmeModal}
+                    content={readmeContent}
+                    onHide={this.hideReadmeModal.bind(this)}
+                    toolbox={toolbox}
+                    actions={actions}
                 />
             </div>
         );

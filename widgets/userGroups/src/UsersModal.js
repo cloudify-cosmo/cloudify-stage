@@ -19,31 +19,31 @@ export default class UsersModal extends React.Component {
     };
 
     onApprove() {
-        this._submitUsers();
+        this.submitUsers();
         return false;
     }
 
     onCancel() {
-        this.props.onHide();
+        const { onHide } = this.props;
+        onHide();
         return true;
     }
 
     componentDidUpdate(prevProps) {
-        if (!prevProps.open && this.props.open) {
-            this.setState({ ...UsersModal.initialState, users: this.props.group.users });
+        const { group, open } = this.props;
+        if (!prevProps.open && open) {
+            this.setState({ ...UsersModal.initialState, users: group.users });
         }
     }
 
-    _submitUsers() {
-        const actions = new Actions(this.props.toolbox);
-        const usersToAdd = _.difference(this.state.users, this.props.group.users);
-        const usersToRemove = _.difference(this.props.group.users, this.state.users);
-        const { waitingForConfirmation } = this.state;
+    submitUsers() {
+        const { group, groups, onHide, toolbox } = this.props;
+        const { waitingForConfirmation, users } = this.state;
+        const actions = new Actions(toolbox);
+        const usersToAdd = _.difference(users, group.users);
+        const usersToRemove = _.difference(group.users, users);
 
-        if (
-            !waitingForConfirmation &&
-            actions.isLogoutToBePerformed(this.props.group, this.props.groups, usersToRemove)
-        ) {
+        if (!waitingForConfirmation && actions.isLogoutToBePerformed(group, groups, usersToRemove)) {
             this.setState({ waitingForConfirmation: true });
             return;
         }
@@ -52,44 +52,46 @@ export default class UsersModal extends React.Component {
         this.setState({ loading: true });
 
         actions
-            .doHandleUsers(this.props.group.name, usersToAdd, usersToRemove)
+            .doHandleUsers(group.name, usersToAdd, usersToRemove)
             .then(() => {
                 if (waitingForConfirmation) {
-                    this.props.toolbox.getEventBus().trigger('menu.users:logout');
+                    toolbox.getEventBus().trigger('menu.users:logout');
                 }
                 this.setState({ errors: {}, loading: false });
-                this.props.toolbox.refresh();
-                this.props.toolbox.getEventBus().trigger('users:refresh');
-                this.props.toolbox.getEventBus().trigger('tenants:refresh');
-                this.props.onHide();
+                toolbox.refresh();
+                toolbox.getEventBus().trigger('users:refresh');
+                toolbox.getEventBus().trigger('tenants:refresh');
+                onHide();
             })
             .catch(err => {
                 this.setState({ errors: { error: err.message }, loading: false });
             });
     }
 
-    _handleInputChange(proxy, field) {
+    handleInputChange(proxy, field) {
         this.setState({ ...Stage.Basic.Form.fieldNameValue(field), waitingForConfirmation: false });
     }
 
     render() {
+        const { errors, loading, users: usersState, waitingForConfirmation } = this.state;
+        const { group: groupProp, onHide, open, users: usersProp } = this.props;
         const { ApproveButton, CancelButton, Form, Icon, Message, Modal } = Stage.Basic;
 
-        const group = { name: '', ...this.props.group };
-        const users = { items: [], ...this.props.users };
+        const group = { name: '', ...groupProp };
+        const users = { items: [], ...usersProp };
 
         const options = _.map(users.items, item => {
             return { text: item.username, value: item.username, key: item.username };
         });
 
         return (
-            <Modal open={this.props.open} onClose={() => this.props.onHide()}>
+            <Modal open={open} onClose={() => onHide()}>
                 <Modal.Header>
                     <Icon name="user" /> Edit users for {group.name}
                 </Modal.Header>
 
                 <Modal.Content>
-                    {this.state.waitingForConfirmation && (
+                    {waitingForConfirmation && (
                         <Message warning onDismiss={() => this.setState({ waitingForConfirmation: false })}>
                             <Message.Header>Confirmation request</Message.Header>
                             You are about to remove yourself from this group. Your administrative privileges will be
@@ -97,11 +99,7 @@ export default class UsersModal extends React.Component {
                             you want to continue?
                         </Message>
                     )}
-                    <Form
-                        loading={this.state.loading}
-                        errors={this.state.errors}
-                        onErrorsDismiss={() => this.setState({ errors: {} })}
-                    >
+                    <Form loading={loading} errors={errors} onErrorsDismiss={() => this.setState({ errors: {} })}>
                         <Form.Field>
                             <Form.Dropdown
                                 placeholder="Users"
@@ -109,8 +107,8 @@ export default class UsersModal extends React.Component {
                                 selection
                                 options={options}
                                 name="users"
-                                value={this.state.users}
-                                onChange={this._handleInputChange.bind(this)}
+                                value={usersState}
+                                onChange={this.handleInputChange.bind(this)}
                             />
                         </Form.Field>
                     </Form>
@@ -119,15 +117,15 @@ export default class UsersModal extends React.Component {
                 <Modal.Actions>
                     <CancelButton
                         onClick={this.onCancel.bind(this)}
-                        disabled={this.state.loading}
-                        content={this.state.waitingForConfirmation ? 'No' : undefined}
+                        disabled={loading}
+                        content={waitingForConfirmation ? 'No' : undefined}
                     />
                     <ApproveButton
                         onClick={this.onApprove.bind(this)}
-                        disabled={this.state.loading}
+                        disabled={loading}
                         icon="user"
                         color="green"
-                        content={this.state.waitingForConfirmation ? 'Yes' : undefined}
+                        content={waitingForConfirmation ? 'Yes' : undefined}
                     />
                 </Modal.Actions>
             </Modal>

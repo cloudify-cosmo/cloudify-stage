@@ -4,6 +4,4 @@
 
 const LoggerHandler = require('../LoggerHandler');
 
-module.exports = (function() {
-    return (category = '') => LoggerHandler.getLogger(`WidgetBackend${category ? `-${category}` : ''}`);
-})();
+module.exports = (() => (category = '') => LoggerHandler.getLogger(`WidgetBackend${category ? `-${category}` : ''}`))();

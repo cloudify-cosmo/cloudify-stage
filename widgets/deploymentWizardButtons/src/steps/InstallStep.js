@@ -2,11 +2,11 @@
  * Created by jakub.niezgoda on 31/07/2018.
  */
 
-import TaskList from './helpers/TaskList';
-import Task from './helpers/Task';
-import { createWizardStep } from '../wizard/wizardUtils';
 import StepActions from '../wizard/StepActions';
 import StepContent from '../wizard/StepContent';
+import { createWizardStep } from '../wizard/wizardUtils';
+import Task from './helpers/Task';
+import TaskList from './helpers/TaskList';
 
 const installStepId = 'install';
 const emptyTasksStats = _.reduce(_.values(Task.Status), (acc, status) => ({ ...acc, [status]: 0 }), {});
@@ -30,12 +30,13 @@ class InstallStepActions extends React.Component {
     }
 
     componentDidUpdate() {
+        const { secondsRemaining } = this.state;
         const tasksStats = this.getTasksStats();
 
-        if (this.state.secondsRemaining === -1 && tasksStats.allTasksEnded) {
+        if (secondsRemaining === -1 && tasksStats.allTasksEnded) {
             const tick = () => {
-                this.setState({ secondsRemaining: this.state.secondsRemaining - 1 }, () => {
-                    if (this.state.secondsRemaining <= 0) {
+                this.setState({ secondsRemaining: secondsRemaining - 1 }, () => {
+                    if (secondsRemaining <= 0) {
                         this.cancelRedirection();
                         this.drillDownToDeploymentPage();
                     }
@@ -53,8 +54,9 @@ class InstallStepActions extends React.Component {
     }
 
     drillDownToDeploymentPage() {
+        const { toolbox } = this.props;
         const deploymentId = _.get(this.props, 'wizardData.installOutputs.deploymentId', null);
-        this.props.toolbox.drillDown(this.props.toolbox.getWidget(), 'deployment', { deploymentId }, deploymentId);
+        toolbox.drillDown(toolbox.getWidget(), 'deployment', { deploymentId }, deploymentId);
     }
 
     cancelRedirection() {
@@ -81,6 +83,7 @@ class InstallStepActions extends React.Component {
     }
 
     render() {
+        const { secondsRemaining } = this.state;
         const { Button, Progress } = Stage.Basic;
 
         const tasksStats = this.getTasksStats();
@@ -89,7 +92,7 @@ class InstallStepActions extends React.Component {
                 ? Math.floor((tasksStats.numberOfEndedTasks / tasksStats.numberOfTasks) * 100)
                 : 0;
 
-        if (!tasksStats.installationEnded && this.state.secondsRemaining === -1) {
+        if (!tasksStats.installationEnded && secondsRemaining === -1) {
             // in progress
             return (
                 <StepActions
@@ -105,12 +108,12 @@ class InstallStepActions extends React.Component {
                 </StepActions>
             );
         }
-        if (tasksStats.allTasksEnded && this.state.secondsRemaining > 0) {
+        if (tasksStats.allTasksEnded && secondsRemaining > 0) {
             // success, waiting for redirection
             return (
                 <StepActions {...this.props} showNext={false} showPrev={false} showStartOver={false} showClose={false}>
                     <Progress size="large" percent={percent} autoSuccess>
-                        Installation started! Redirecting to deployment page in {this.state.secondsRemaining} seconds...
+                        Installation started! Redirecting to deployment page in {secondsRemaining} seconds...
                     </Progress>
                     <Button
                         content="Stay on this page"
@@ -121,7 +124,7 @@ class InstallStepActions extends React.Component {
                 </StepActions>
             );
         }
-        if (tasksStats.allTasksEnded && this.state.secondsRemaining === 0) {
+        if (tasksStats.allTasksEnded && secondsRemaining === 0) {
             // success, no redirection
             return (
                 <StepActions
@@ -177,16 +180,18 @@ class InstallStepContent extends React.Component {
     static propTypes = StepContent.propTypes;
 
     componentDidMount() {
-        const { tasks } = this.props.wizardData;
+        const { id, onError, wizardData } = this.props;
+        const { tasks } = wizardData;
 
         this.setState({ tasks }, () => {
             this.updateTasksInWizard()
                 .then(() => this.handleTasks(tasks))
-                .catch(error => this.props.onError(this.props.id, error));
+                .catch(error => onError(id, error));
         });
     }
 
     updateTasksInWizard() {
+        const { id, onChange } = this.props;
         const { tasks } = this.state;
 
         return new Promise(resolve => {
@@ -194,27 +199,30 @@ class InstallStepContent extends React.Component {
                 ...emptyTasksStats,
                 ..._.countBy(tasks, task => task.status)
             };
-            this.props.onChange(this.props.id, { tasksStats }, false);
+            onChange(id, { tasksStats }, false);
             resolve({ tasksStats });
         });
     }
 
     handleTask(index) {
-        const tasks = [...this.state.tasks];
+        const { tasks: stateTasks } = this.state;
+        const tasks = [...stateTasks];
         const task = tasks[index];
         task.changeToInProgress();
 
         return new Promise(resolve => this.setState({ tasks }, resolve))
             .then(() => task.run())
             .then(() => {
-                const tasks = [...this.state.tasks];
+                const { tasks: stateTasks } = this.state;
+                const tasks = [...stateTasks];
 
                 tasks[index].changeToFinished();
 
                 return new Promise(resolve => this.setState({ tasks }, resolve));
             })
             .catch(error => {
-                const tasks = [...this.state.tasks];
+                const { tasks: stateTasks } = this.state;
+                const tasks = [...stateTasks];
                 error = _.isString(error) ? error : _.get(error, 'message', Stage.Utils.Json.getStringValue(error));
 
                 tasks[index].changeToFailed(error);
@@ -234,10 +242,11 @@ class InstallStepContent extends React.Component {
 
     render() {
         const { Form } = Stage.Basic;
+        const { loading } = this.props;
         const { tasks } = this.state;
 
         return (
-            <Form loading={this.props.loading}>
+            <Form loading={loading}>
                 <TaskList tasks={tasks} withStatus />
             </Form>
         );

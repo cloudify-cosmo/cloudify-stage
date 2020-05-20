@@ -21,41 +21,44 @@ export default class TenantDetails extends React.Component {
         onError: PropTypes.func
     };
 
-    _removeUser(username) {
+    removeUser(username) {
+        const { onError, tenant, toolbox } = this.props;
         this.setState({ processItem: username, processing: true });
 
-        const actions = new Actions(this.props.toolbox);
+        const actions = new Actions(toolbox);
         actions
-            .doRemoveUser(this.props.tenant.name, username)
+            .doRemoveUser(tenant.name, username)
             .then(() => {
-                this.props.toolbox.refresh();
-                this.props.toolbox.getEventBus().trigger('users:refresh');
+                toolbox.refresh();
+                toolbox.getEventBus().trigger('users:refresh');
                 this.setState({ processItem: '', processing: false });
             })
             .catch(err => {
-                this.props.onError(err.message);
+                onError(err.message);
                 this.setState({ processItem: '', processing: false });
             });
     }
 
-    _removeUserGroup(group) {
+    removeUserGroup(group) {
+        const { onError, tenant, toolbox } = this.props;
         this.setState({ processItem: group, processing: true });
 
-        const actions = new Actions(this.props.toolbox);
+        const actions = new Actions(toolbox);
         actions
-            .doRemoveUserGroup(this.props.tenant.name, group)
+            .doRemoveUserGroup(tenant.name, group)
             .then(() => {
-                this.props.toolbox.refresh();
-                this.props.toolbox.getEventBus().trigger('userGroups:refresh');
+                toolbox.refresh();
+                toolbox.getEventBus().trigger('userGroups:refresh');
                 this.setState({ processItem: '', processing: false });
             })
             .catch(err => {
-                this.props.onError(err.message);
+                onError(err.message);
                 this.setState({ processItem: '', processing: false });
             });
     }
 
     render() {
+        const { processItem, processing: processingState } = this.state;
         const { Segment, List, Icon, Message, Divider, Popup } = Stage.Basic;
         const { tenant } = this.props;
 
@@ -66,7 +69,7 @@ export default class TenantDetails extends React.Component {
                     <Divider />
                     <List divided relaxed verticalAlign="middle" className="light">
                         {_.map(tenant.groups, (role, group) => {
-                            const processing = this.state.processing && this.state.processItem === group;
+                            const processing = processingState && processItem === group;
 
                             return (
                                 <List.Item key={group}>
@@ -76,7 +79,7 @@ export default class TenantDetails extends React.Component {
                                         name={processing ? 'notched circle' : 'remove'}
                                         loading={processing}
                                         className="right floated"
-                                        onClick={this._removeUserGroup.bind(this, group)}
+                                        onClick={this.removeUserGroup.bind(this, group)}
                                     />
                                 </List.Item>
                             );
@@ -93,7 +96,7 @@ export default class TenantDetails extends React.Component {
                             <Divider />
                             <List divided relaxed verticalAlign="middle" className="light">
                                 {_.map(tenant.users, (data, user) => {
-                                    const processing = this.state.processing && this.state.processItem === user;
+                                    const processing = processingState && processItem === user;
 
                                     return (
                                         <List.Item key={user}>
@@ -103,7 +106,7 @@ export default class TenantDetails extends React.Component {
                                                 name={processing ? 'notched circle' : 'remove'}
                                                 loading={processing}
                                                 className="right floated"
-                                                onClick={this._removeUser.bind(this, user)}
+                                                onClick={this.removeUser.bind(this, user)}
                                             />
                                         </List.Item>
                                     );

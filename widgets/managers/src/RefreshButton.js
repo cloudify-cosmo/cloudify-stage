@@ -28,28 +28,29 @@ export default class RefreshButton extends React.Component {
     };
 
     handleClick(event) {
+        const { managers, onFail, onStart, onSuccess, toolbox } = this.props;
         event.stopPropagation();
 
         this.setState({ loading: true });
 
-        const actions = new Actions(this.props.toolbox);
+        const actions = new Actions(toolbox);
 
-        const clusterStatusPromise = managerId =>
-            actions.getClusterStatus(managerId, _.noop, this.props.onSuccess, this.props.onFail);
-        const clusterStatusPromises = _.map(this.props.managers, managerId => clusterStatusPromise(managerId));
-        this.props.onStart(this.props.managers);
+        const clusterStatusPromise = managerId => actions.getClusterStatus(managerId, _.noop, onSuccess, onFail);
+        const clusterStatusPromises = _.map(managers, managerId => clusterStatusPromise(managerId));
+        onStart(managers);
 
         return Promise.all(clusterStatusPromises).then(() => this.setState({ loading: false }));
     }
 
     render() {
+        const { loading } = this.state;
         const { Button, Popup } = Stage.Basic;
         const { managers } = this.props;
 
         return (
             <Popup
-                on={_.isEmpty(managers) || this.state.loading ? 'hover' : []}
-                open={_.isEmpty(managers) || this.state.loading ? undefined : false}
+                on={_.isEmpty(managers) || loading ? 'hover' : []}
+                open={_.isEmpty(managers) || loading ? undefined : false}
             >
                 <Popup.Trigger>
                     <div>
@@ -57,15 +58,15 @@ export default class RefreshButton extends React.Component {
                             icon="refresh"
                             content="Refresh Status"
                             labelPosition="left"
-                            disabled={_.isEmpty(managers) || this.state.loading}
-                            loading={this.state.loading}
+                            disabled={_.isEmpty(managers) || loading}
+                            loading={loading}
                             onClick={this.handleClick.bind(this)}
                         />
                     </div>
                 </Popup.Trigger>
 
                 <Popup.Content>
-                    {this.state.loading
+                    {loading
                         ? 'Bulk status refresh in progress...'
                         : 'Tick at least one manager to perform bulk status refresh'}
                 </Popup.Content>

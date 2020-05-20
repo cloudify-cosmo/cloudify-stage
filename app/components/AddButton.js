@@ -17,14 +17,12 @@ export default class AddButton extends Component {
     };
 
     render() {
+        const { children, className, onClick } = this.props;
         return (
             // eslint-disable-next-line react/button-has-type
-            <button
-                className={`ui labeled icon button tiny teal basic compact ${this.props.className}`}
-                onClick={this.props.onClick}
-            >
+            <button className={`ui labeled icon button tiny teal basic compact ${className}`} onClick={onClick}>
                 <i className="plus icon" />
-                {this.props.children}
+                {children}
             </button>
         );
     }

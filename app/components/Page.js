@@ -24,11 +24,22 @@ export default class Page extends Component {
     };
 
     shouldComponentUpdate(nextProps, nextState) {
-        return !_.isEqual(this.props.page, nextProps.page) || this.props.isEditMode !== nextProps.isEditMode;
+        const { isEditMode, page } = this.props;
+        return !_.isEqual(page, nextProps.page) || isEditMode !== nextProps.isEditMode;
     }
 
     render() {
-        const maximizeWidget = _.findIndex(this.props.page.widgets, { maximized: true }) >= 0;
+        const {
+            isEditMode,
+            onEditModeExit,
+            onPageDescriptionChange,
+            onPageNameChange,
+            onPageSelected,
+            onWidgetsGridDataChange,
+            page,
+            pagesList
+        } = this.props;
+        const maximizeWidget = _.findIndex(page.widgets, { maximized: true }) >= 0;
 
         $('body')
             .css({ overflow: maximizeWidget ? 'hidden' : 'inherit' })
@@ -37,19 +48,19 @@ export default class Page extends Component {
         return (
             <div className={`fullHeight ${maximizeWidget ? 'maximizeWidget' : ''}`}>
                 <Breadcrumbs
-                    pagesList={this.props.pagesList}
-                    onPageNameChange={this.props.onPageNameChange}
-                    isEditMode={this.props.isEditMode}
-                    onPageSelected={this.props.onPageSelected}
+                    pagesList={pagesList}
+                    onPageNameChange={onPageNameChange}
+                    isEditMode={isEditMode}
+                    onPageSelected={onPageSelected}
                 />
 
                 <div>
                     <EditableLabel
-                        value={this.props.page.description}
+                        value={page.description}
                         placeholder="Page description"
                         className="pageDescription"
-                        enabled={this.props.isEditMode}
-                        onChange={newDesc => this.props.onPageDescriptionChange(this.props.page.id, newDesc)}
+                        enabled={isEditMode}
+                        onChange={newDesc => onPageDescriptionChange(page.id, newDesc)}
                         inputSize="mini"
                     />
                 </div>
@@ -57,17 +68,13 @@ export default class Page extends Component {
                 <div className="ui divider" />
 
                 <WidgetsList
-                    widgets={this.props.page.widgets}
-                    pageId={this.props.page.id}
-                    onWidgetsGridDataChange={this.props.onWidgetsGridDataChange}
-                    isEditMode={this.props.isEditMode || false}
+                    widgets={page.widgets}
+                    pageId={page.id}
+                    onWidgetsGridDataChange={onWidgetsGridDataChange}
+                    isEditMode={isEditMode || false}
                 />
 
-                <EditModeBubble
-                    isVisible={this.props.isEditMode}
-                    onDismiss={this.props.onEditModeExit}
-                    page={this.props.page}
-                />
+                <EditModeBubble isVisible={isEditMode} onDismiss={onEditModeExit} page={page} />
             </div>
         );
     }

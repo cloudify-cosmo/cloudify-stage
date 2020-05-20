@@ -16,17 +16,18 @@ export default class PageList extends Component {
     };
 
     render() {
+        const { custom, onDelete, pages, style } = this.props;
         return (
-            <Segment style={this.props.style}>
+            <Segment style={style}>
                 <Icon name="block layout" /> Pages
                 <Divider />
                 <List divided relaxed verticalAlign="middle" className="light">
-                    {this.props.pages.map(item => {
+                    {pages.map(item => {
                         return (
                             <List.Item key={item}>
                                 {item}
 
-                                {this.props.custom && _.size(this.props.pages) > 1 && (
+                                {custom && _.size(pages) > 1 && (
                                     <PopupConfirm
                                         trigger={
                                             <Icon
@@ -37,14 +38,14 @@ export default class PageList extends Component {
                                             />
                                         }
                                         content="Are you sure to remove this page from template?"
-                                        onConfirm={() => this.props.onDelete(item)}
+                                        onConfirm={() => onDelete(item)}
                                     />
                                 )}
                             </List.Item>
                         );
                     })}
 
-                    {_.isEmpty(this.props.pages) && <Message content="No pages available" />}
+                    {_.isEmpty(pages) && <Message content="No pages available" />}
                 </List>
             </Segment>
         );

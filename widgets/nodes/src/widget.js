@@ -55,7 +55,7 @@ Stage.defineWidget({
         };
     },
 
-    _getGroups(deployments) {
+    getGroups(deployments) {
         const groups = {};
         _.forEach(deployments, deployment => {
             _.forIn(deployment.groups, (group, groupId) => {
@@ -81,7 +81,7 @@ Stage.defineWidget({
 
         const nodes = data.nodes.items;
         const instances = data.nodeInstances.items;
-        const groups = this._getGroups(data.deployments.items);
+        const groups = this.getGroups(data.deployments.items);
         let group;
 
         const formattedData = {

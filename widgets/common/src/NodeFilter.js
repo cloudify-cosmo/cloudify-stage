@@ -1,6 +1,8 @@
 /**
  * NodeFilter  - a component showing dropdowns for filtering blueprints, deployments, nodes and nodes instances.
  * Data (list of blueprints, deployments, nodes and node instances) is dynamically fetched from manager.
+ *
+ * @param props
  */
 export default class NodeFilter extends React.Component {
     constructor(props, context) {
@@ -101,34 +103,38 @@ export default class NodeFilter extends React.Component {
     }
 
     componentDidUpdate(prevProps, prevState) {
+        const { value } = this.props;
         if (
-            prevState.blueprintId !== this.props.value.blueprintId ||
-            prevState.deploymentId !== this.props.value.deploymentId ||
-            prevState.nodeId !== this.props.value.nodeId ||
-            prevState.nodeInstanceId !== this.props.value.nodeInstanceId
+            prevState.blueprintId !== value.blueprintId ||
+            prevState.deploymentId !== value.deploymentId ||
+            prevState.nodeId !== value.nodeId ||
+            prevState.nodeInstanceId !== value.nodeInstanceId
         ) {
             this.setState({ ...NodeFilter.initialState(this.props) });
-            this._fetchBlueprints();
-            this._fetchDeployments();
-            this._fetchNodes();
-            this._fetchNodeInstances();
+            this.fetchBlueprints();
+            this.fetchDeployments();
+            this.fetchNodes();
+            this.fetchNodeInstances();
         }
     }
 
     componentDidMount() {
-        this._fetchBlueprints();
-        this._fetchDeployments();
-        this._fetchNodes();
-        this._fetchNodeInstances();
+        this.fetchBlueprints();
+        this.fetchDeployments();
+        this.fetchNodes();
+        this.fetchNodeInstances();
     }
 
-    _fetchData(fetchUrl, params, optionsField) {
-        const loading = `${optionsField}Loading`;
+    fetchData(fetchUrl, params, optionsField) {
+        const { toolbox } = this.props;
+        const { errors: stateErrors } = this.state;
 
-        const errors = { ...this.state.errors };
+        const loading = `${optionsField}Loading`;
+        const errors = { ...stateErrors };
         errors[optionsField] = null;
         this.setState({ [loading]: true, [optionsField]: [], errors });
-        this.props.toolbox
+
+        toolbox
             .getManager()
             .doGet(fetchUrl, params)
             .then(data => {
@@ -136,12 +142,12 @@ export default class NodeFilter extends React.Component {
                     .map(item => item.id)
                     .uniqWith(_.isEqual)
                     .value();
-                if (this._isFilteringSetFor(optionsField)) {
-                    ids = _.intersection(ids, this._getAllowedOptionsFor(optionsField));
+                if (this.isFilteringSetFor(optionsField)) {
+                    ids = _.intersection(ids, this.getAllowedOptionsFor(optionsField));
                 }
 
                 const options = _.map(ids, id => ({ text: id, value: id, key: id }));
-                if (!this._isMultipleSetFor(optionsField)) {
+                if (!this.isMultipleSetFor(optionsField)) {
                     options.unshift({ text: '', value: '', key: '' });
                 }
 
@@ -153,190 +159,209 @@ export default class NodeFilter extends React.Component {
             });
     }
 
-    _fetchBlueprints() {
+    fetchBlueprints() {
         const params = { ...NodeFilter.BASIC_PARAMS };
-        this._fetchData('/blueprints', params, 'blueprints');
+        this.fetchData('/blueprints', params, 'blueprints');
     }
 
-    _fetchDeployments() {
+    fetchDeployments() {
+        const { blueprintId } = this.state;
         const params = { ...NodeFilter.BASIC_PARAMS };
-        if (!_.isEmpty(this.state.blueprintId)) {
-            params.blueprint_id = this.state.blueprintId;
+        if (!_.isEmpty(blueprintId)) {
+            params.blueprint_id = blueprintId;
         }
-        this._fetchData('/deployments', params, 'deployments');
+        this.fetchData('/deployments', params, 'deployments');
     }
 
-    _fetchNodes() {
+    fetchNodes() {
+        const { blueprintId, deploymentId } = this.state;
         const params = { ...NodeFilter.BASIC_PARAMS };
-        if (!_.isEmpty(this.state.blueprintId)) {
-            params.blueprint_id = this.state.blueprintId;
+        if (!_.isEmpty(blueprintId)) {
+            params.blueprint_id = blueprintId;
         }
-        if (!_.isEmpty(this.state.deploymentId)) {
-            params.deployment_id = this.state.deploymentId;
+        if (!_.isEmpty(deploymentId)) {
+            params.deployment_id = deploymentId;
         }
-        this._fetchData('/nodes', params, 'nodes');
+        this.fetchData('/nodes', params, 'nodes');
     }
 
-    _fetchNodeInstances() {
+    fetchNodeInstances() {
+        const { deploymentId, nodeId } = this.state;
         const params = { ...NodeFilter.BASIC_PARAMS };
-        if (!_.isEmpty(this.state.deploymentId)) {
-            params.deployment_id = this.state.deploymentId;
+        if (!_.isEmpty(deploymentId)) {
+            params.deployment_id = deploymentId;
         }
-        if (!_.isEmpty(this.state.nodeId)) {
-            params.node_id = this.state.nodeId;
+        if (!_.isEmpty(nodeId)) {
+            params.node_id = nodeId;
         }
-        this._fetchData('/node-instances', params, 'nodeInstances');
+        this.fetchData('/node-instances', params, 'nodeInstances');
     }
 
-    _handleInputChange(state, event, field, onStateChange) {
+    handleInputChange(state, event, field, onStateChange) {
+        const { blueprintId, deploymentId, nodeId, nodeInstanceId } = this.state;
+        const { name, onChange } = this.props;
         this.setState({ ...state, [field.name]: field.value }, () => {
             if (_.isFunction(onStateChange)) {
                 onStateChange();
             }
-            this.props.onChange(event, {
-                name: this.props.name,
+            onChange(event, {
+                name,
                 value: {
-                    blueprintId: this.state.blueprintId,
-                    deploymentId: this.state.deploymentId,
-                    nodeId: this.state.nodeId,
-                    nodeInstanceId: this.state.nodeInstanceId
+                    blueprintId,
+                    deploymentId,
+                    nodeId,
+                    nodeInstanceId
                 }
             });
         });
     }
 
-    _isMultipleSetFor(resourcesName) {
-        return this.props.allowMultiple || this.props[`allowMultiple${_.upperFirst(resourcesName)}`];
+    isMultipleSetFor(resourcesName) {
+        const { allowMultiple, [`allowMultiple${_.upperFirst(resourcesName)}`]: resourceAllowMultiple } = this.props;
+        return allowMultiple || resourceAllowMultiple;
     }
 
-    _getEmptyValueFor(resourcesName) {
-        return this._isMultipleSetFor(resourcesName) ? [] : '';
+    getEmptyValueFor(resourcesName) {
+        return this.isMultipleSetFor(resourcesName) ? [] : '';
     }
 
-    _isFilteringSetFor(resourcesName) {
-        return !_.isEmpty(this.props[`allowed${_.upperFirst(resourcesName)}`]);
+    isFilteringSetFor(resourcesName) {
+        const { [`allowed${_.upperFirst(resourcesName)}`]: allowedOptions } = this.props;
+        return !_.isEmpty(allowedOptions);
     }
 
-    _getAllowedOptionsFor(resourcesName) {
-        return this.props[`allowed${_.upperFirst(resourcesName)}`];
+    getAllowedOptionsFor(resourcesName) {
+        const { [`allowed${_.upperFirst(resourcesName)}`]: allowedOptions } = this.props;
+        return allowedOptions;
     }
 
-    _selectBlueprint(event, field) {
-        this._handleInputChange(
+    selectBlueprint(event, field) {
+        this.handleInputChange(
             {
-                deploymentId: this._getEmptyValueFor('deployments'),
-                nodeId: this._getEmptyValueFor('nodes'),
-                nodeInstanceId: this._getEmptyValueFor('nodeInstances')
+                deploymentId: this.getEmptyValueFor('deployments'),
+                nodeId: this.getEmptyValueFor('nodes'),
+                nodeInstanceId: this.getEmptyValueFor('nodeInstances')
             },
             event,
             field,
             () => {
-                this._fetchDeployments();
-                this._fetchNodes();
-                this._fetchNodeInstances();
+                this.fetchDeployments();
+                this.fetchNodes();
+                this.fetchNodeInstances();
             }
         );
     }
 
-    _selectDeployment(event, field) {
-        this._handleInputChange(
+    selectDeployment(event, field) {
+        this.handleInputChange(
             {
-                nodeId: this._getEmptyValueFor('nodes'),
-                nodeInstanceId: this._getEmptyValueFor('nodeInstances')
+                nodeId: this.getEmptyValueFor('nodes'),
+                nodeInstanceId: this.getEmptyValueFor('nodeInstances')
             },
             event,
             field,
             () => {
-                this._fetchNodes();
-                this._fetchNodeInstances();
+                this.fetchNodes();
+                this.fetchNodeInstances();
             }
         );
     }
 
-    _selectNode(event, field) {
-        this._handleInputChange(
+    selectNode(event, field) {
+        this.handleInputChange(
             {
-                nodeInstanceId: this._getEmptyValueFor('nodeInstances')
+                nodeInstanceId: this.getEmptyValueFor('nodeInstances')
             },
             event,
             field,
             () => {
-                this._fetchNodeInstances();
+                this.fetchNodeInstances();
             }
         );
     }
 
-    _selectNodeInstance(event, field) {
-        this._handleInputChange({}, event, field);
+    selectNodeInstance(event, field) {
+        this.handleInputChange({}, event, field);
     }
 
     render() {
-        const { errors } = this.state;
+        const { showBlueprints, showDeployments, showNodeInstances, showNodes } = this.props;
+        const {
+            errors,
+            blueprintId,
+            blueprints,
+            blueprintsLoading,
+            deploymentId,
+            deployments,
+            deploymentsLoading,
+            nodeId,
+            nodeInstanceId,
+            nodeInstances,
+            nodeInstancesLoading,
+            nodes,
+            nodesLoading
+        } = this.state;
         const { Form } = Stage.Basic;
 
         return (
             <Form.Group widths="equal">
-                {this.props.showBlueprints && (
-                    <Form.Field error={this.state.errors.blueprints}>
+                {showBlueprints && (
+                    <Form.Field error={errors.blueprints}>
                         <Form.Dropdown
                             search
                             selection
-                            value={errors.blueprints ? this._getEmptyValueFor('blueprints') : this.state.blueprintId}
-                            multiple={this._isMultipleSetFor('blueprints')}
+                            value={errors.blueprints ? this.getEmptyValueFor('blueprints') : blueprintId}
+                            multiple={this.isMultipleSetFor('blueprints')}
                             placeholder={errors.blueprints || 'Blueprint'}
-                            options={this.state.blueprints}
-                            onChange={this._selectBlueprint.bind(this)}
+                            options={blueprints}
+                            onChange={this.selectBlueprint.bind(this)}
                             name="blueprintId"
-                            loading={this.state.blueprintsLoading}
+                            loading={blueprintsLoading}
                         />
                     </Form.Field>
                 )}
-                {this.props.showDeployments && (
-                    <Form.Field error={this.state.errors.deployments}>
+                {showDeployments && (
+                    <Form.Field error={errors.deployments}>
                         <Form.Dropdown
                             search
                             selection
-                            value={errors.deployments ? this._getEmptyValueFor('deployments') : this.state.deploymentId}
-                            multiple={this._isMultipleSetFor('deployments')}
+                            value={errors.deployments ? this.getEmptyValueFor('deployments') : deploymentId}
+                            multiple={this.isMultipleSetFor('deployments')}
                             placeholder={errors.deployments || 'Deployment'}
-                            options={this.state.deployments}
-                            onChange={this._selectDeployment.bind(this)}
+                            options={deployments}
+                            onChange={this.selectDeployment.bind(this)}
                             name="deploymentId"
-                            loading={this.state.deploymentsLoading}
+                            loading={deploymentsLoading}
                         />
                     </Form.Field>
                 )}
-                {this.props.showNodes && (
-                    <Form.Field error={this.state.errors.nodes}>
+                {showNodes && (
+                    <Form.Field error={errors.nodes}>
                         <Form.Dropdown
                             search
                             selection
-                            value={errors.nodes ? this._getEmptyValueFor('nodes') : this.state.nodeId}
-                            multiple={this._isMultipleSetFor('nodes')}
+                            value={errors.nodes ? this.getEmptyValueFor('nodes') : nodeId}
+                            multiple={this.isMultipleSetFor('nodes')}
                             placeholder={errors.nodes || 'Node'}
-                            options={this.state.nodes}
-                            onChange={this._selectNode.bind(this)}
+                            options={nodes}
+                            onChange={this.selectNode.bind(this)}
                             name="nodeId"
-                            loading={this.state.nodesLoading}
+                            loading={nodesLoading}
                         />
                     </Form.Field>
                 )}
-                {this.props.showNodeInstances && (
-                    <Form.Field error={this.state.errors.nodeInstances}>
+                {showNodeInstances && (
+                    <Form.Field error={errors.nodeInstances}>
                         <Form.Dropdown
                             search
                             selection
-                            value={
-                                errors.nodeInstances
-                                    ? this._getEmptyValueFor('nodeInstances')
-                                    : this.state.nodeInstanceId
-                            }
-                            multiple={this._isMultipleSetFor('nodeInstances')}
+                            value={errors.nodeInstances ? this.getEmptyValueFor('nodeInstances') : nodeInstanceId}
+                            multiple={this.isMultipleSetFor('nodeInstances')}
                             placeholder={errors.nodeInstances || 'Node Instance'}
-                            options={this.state.nodeInstances}
-                            onChange={this._selectNodeInstance.bind(this)}
+                            options={nodeInstances}
+                            onChange={this.selectNodeInstance.bind(this)}
                             name="nodeInstanceId"
-                            loading={this.state.nodeInstancesLoading}
+                            loading={nodeInstancesLoading}
                         />
                     </Form.Field>
                 )}

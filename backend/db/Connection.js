@@ -39,10 +39,8 @@ const sequelize = new Sequelize(config.app.db.url, options);
 const db = {};
 
 fs.readdirSync(__dirname)
-    .filter(function(file) {
-        return _.indexOf(excludes, file) < 0;
-    })
-    .forEach(function(file) {
+    .filter(file => _.indexOf(excludes, file) < 0)
+    .forEach(file => {
         const model = sequelize.import(path.join(__dirname, file));
         db[model.name] = model;
     });

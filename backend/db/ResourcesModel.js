@@ -4,8 +4,8 @@
 
 const ResourceTypes = require('./types/ResourceTypes');
 
-module.exports = function(sequelize, DataTypes) {
-    return sequelize.define(
+module.exports = (sequelize, DataTypes) =>
+    sequelize.define(
         'Resources',
         {
             resourceId: { type: DataTypes.STRING, allowNull: false },
@@ -15,4 +15,3 @@ module.exports = function(sequelize, DataTypes) {
         },
         { indexes: [{ unique: true, fields: ['resourceId'] }] }
     );
-};

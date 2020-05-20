@@ -38,27 +38,37 @@ export default class Banner extends Component {
     };
 
     render() {
-        const className = this.props.hideOnSmallScreen ? 'hide-on-small-screen' : '';
+        const {
+            hideOnSmallScreen,
+            isCommunity,
+            isExpired,
+            isTrial,
+            licenseEdition,
+            productName,
+            productVersion,
+            showVersionDetails
+        } = this.props;
+        const className = hideOnSmallScreen ? 'hide-on-small-screen' : '';
 
         return (
             <div style={{ lineHeight: '55px' }}>
                 <Link to={Consts.HOME_PAGE_PATH}>
                     <Header as="h1" style={{ textDecoration: 'none', display: 'inline-block' }}>
                         <Logo />
-                        <ProductName name={this.props.productName} className={className} />
-                        {this.props.showVersionDetails && !this.props.isCommunity && (
+                        <ProductName name={productName} className={className} />
+                        {showVersionDetails && !isCommunity && (
                             <>
-                                <LicenseEdition edition={this.props.licenseEdition} className={className} />
-                                <ProductVersion version={this.props.productVersion} className={className} />
+                                <LicenseEdition edition={licenseEdition} className={className} />
+                                <ProductVersion version={productVersion} className={className} />
                             </>
                         )}
                     </Header>
                 </Link>
-                {this.props.showVersionDetails && (
+                {showVersionDetails && (
                     <LicenseTag
-                        isCommunity={this.props.isCommunity}
-                        isExpired={this.props.isExpired}
-                        isTrial={this.props.isTrial}
+                        isCommunity={isCommunity}
+                        isExpired={isExpired}
+                        isTrial={isTrial}
                         className={className}
                     />
                 )}

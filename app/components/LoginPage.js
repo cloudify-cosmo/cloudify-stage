@@ -33,12 +33,14 @@ export default class LoginPage extends Component {
     }
 
     onSubmit() {
+        const { password, username } = this.state;
+        const { location, onLogin } = this.props;
         const errors = {};
 
-        if (_.isEmpty(this.state.username)) {
+        if (_.isEmpty(username)) {
             errors.username = 'Please provide username';
         }
-        if (_.isEmpty(this.state.password)) {
+        if (_.isEmpty(password)) {
             errors.password = 'Please provide password';
         }
         if (!_.isEmpty(errors)) {
@@ -46,18 +48,20 @@ export default class LoginPage extends Component {
             return false;
         }
 
-        const query = parse(this.props.location.search);
+        const query = parse(location.search);
         const redirect = query.redirect || null;
 
-        this.props.onLogin(this.state.username, this.state.password, redirect);
+        onLogin(username, password, redirect);
     }
 
-    _handleInputChange(proxy, field) {
+    handleInputChange(proxy, field) {
         const fieldNameValue = Form.fieldNameValue(field);
         this.setState({ ...fieldNameValue, errors: {} });
     }
 
     render() {
+        const { errors, password, username } = this.state;
+        const { isLoggingIn, loginError } = this.props;
         SplashLoadingScreen.turnOff();
 
         const loginPageHeader = _.get(this.props, 'whiteLabel.loginPageHeader');
@@ -97,36 +101,36 @@ export default class LoginPage extends Component {
                     )}
 
                     <Form onSubmit={this.onSubmit.bind(this)}>
-                        <Form.Field required error={this.state.errors.username}>
+                        <Form.Field required error={errors.username}>
                             <Input
                                 name="username"
                                 type="text"
                                 placeholder="Username"
                                 autoFocus
-                                value={this.state.username}
-                                onChange={this._handleInputChange.bind(this)}
+                                value={username}
+                                onChange={this.handleInputChange.bind(this)}
                             />
                         </Form.Field>
 
-                        <Form.Field required error={this.state.errors.password}>
+                        <Form.Field required error={errors.password}>
                             <Input
                                 name="password"
                                 type="password"
                                 placeholder="Password"
-                                value={this.state.password}
-                                onChange={this._handleInputChange.bind(this)}
+                                value={password}
+                                onChange={this.handleInputChange.bind(this)}
                             />
                         </Form.Field>
 
-                        {this.props.loginError && (
+                        {loginError && (
                             <Message error style={{ display: 'block' }}>
-                                {this.props.loginError}
+                                {loginError}
                             </Message>
                         )}
 
                         <Button
-                            disabled={this.props.isLoggingIn}
-                            loading={this.props.isLoggingIn}
+                            disabled={isLoggingIn}
+                            loading={isLoggingIn}
                             color="yellow"
                             size="large"
                             type="submit"

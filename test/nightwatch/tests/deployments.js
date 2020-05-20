@@ -20,7 +20,7 @@ module.exports = {
             .deployBlueprint(DEPLOYMENT_NAME, BLUEPRINT_INPUTS, BLUEPRINT_NAME);
     },
 
-    'Deployments widget configuration': function(client) {
+    'Deployments widget configuration': client => {
         const page = client.page.deployments();
 
         // 1. List view & drilldown turned on
@@ -56,7 +56,7 @@ module.exports = {
         client.page.page().assert.containsText('@pageTitle', 'Page_0');
     },
 
-    'Execute workflow': function(client) {
+    'Execute workflow': client => {
         const WORKFLOW_NAME = 'install';
         const page = client.page.deployments();
 
@@ -75,7 +75,7 @@ module.exports = {
             .checkIfWorkflowFinishedOnDeployment(DEPLOYMENT_NAME, WORKFLOW_VERIFICATION_TIMEOUT);
     },
 
-    'Deployment update': function(client) {
+    'Deployment update': client => {
         const page = client.page.deployments();
 
         page.section.deploymentsTable.checkIfDeploymentPresent(DEPLOYMENT_NAME).clickUpdate(DEPLOYMENT_NAME);
@@ -98,7 +98,7 @@ module.exports = {
         );
     },
 
-    'Deployment remove': function(client) {
+    'Deployment remove': client => {
         const page = client.page.deployments();
 
         page.section.deploymentsTable.checkIfDeploymentPresent(DEPLOYMENT_NAME).clickForceDelete(DEPLOYMENT_NAME);

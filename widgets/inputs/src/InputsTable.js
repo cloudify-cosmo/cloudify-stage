@@ -11,31 +11,33 @@ export default class extends React.Component {
     }
 
     shouldComponentUpdate(nextProps, nextState) {
+        const { data, widget } = this.props;
         return (
-            !_.isEqual(this.props.widget, nextProps.widget) ||
+            !_.isEqual(widget, nextProps.widget) ||
             !_.isEqual(this.state, nextState) ||
-            !_.isEqual(this.props.data, nextProps.data)
+            !_.isEqual(data, nextProps.data)
         );
     }
 
-    _refreshData() {
-        this.props.toolbox.refresh();
+    refreshData() {
+        const { toolbox } = this.props;
+        toolbox.refresh();
     }
 
     componentDidMount() {
-        this.props.toolbox.getEventBus().on('inputs:refresh', this._refreshData, this);
+        const { toolbox } = this.props;
+        toolbox.getEventBus().on('inputs:refresh', this.refreshData, this);
     }
 
     componentWillUnmount() {
-        this.props.toolbox.getEventBus().off('inputs:refresh', this._refreshData);
+        const { toolbox } = this.props;
+        toolbox.getEventBus().off('inputs:refresh', this.refreshData);
     }
 
     componentDidUpdate(prevProps, prevState) {
-        if (
-            this.props.data.deploymentId !== prevProps.data.deploymentId ||
-            this.props.data.blueprintId !== prevProps.data.blueprintId
-        ) {
-            this._refreshData();
+        const { data } = this.props;
+        if (data.deploymentId !== prevProps.data.deploymentId || data.blueprintId !== prevProps.data.blueprintId) {
+            this.refreshData();
         }
     }
 
@@ -43,13 +45,14 @@ export default class extends React.Component {
         const NO_DATA_MESSAGE = "There are no Inputs available. Probably there's no deployment created, yet.";
         const { DataTable, ErrorMessage, Header } = Stage.Basic;
         const { ParameterValue, ParameterValueDescription } = Stage.Common;
-
-        const inputs = this.props.data.items;
+        const { data } = this.props;
+        const { error } = this.state;
+        const { items: inputs } = data;
         const compareNames = (a, b) => (a.name > b.name ? 1 : b.name > a.name ? -1 : 0);
 
         return (
             <div>
-                <ErrorMessage error={this.state.error} onDismiss={() => this.setState({ error: null })} autoHide />
+                <ErrorMessage error={error} onDismiss={() => this.setState({ error: null })} autoHide />
 
                 <DataTable className="inputsTable" noDataAvailable={_.isEmpty(inputs)} noDataMessage={NO_DATA_MESSAGE}>
                     <DataTable.Column label="Name" width="35%" />

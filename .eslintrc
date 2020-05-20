@@ -5,9 +5,7 @@
         "./node_modules/cloudify-ui-common/eslint/eslint-common-react.json"
     ],
     "parser": "babel-eslint",
-    "plugins": [
-        "jsdoc"
-    ],
+    "plugins": ["jsdoc"],
     "rules": {
         // FIXME: All below listed rules are off only during transition period. We need to remove them as we update the code.
         "array-callback-return": ["warn"],
@@ -55,7 +53,6 @@
         "no-shadow": ["warn"],
         "no-template-curly-in-string": ["warn"],
         "no-throw-literal": ["warn"],
-        "no-underscore-dangle": ["warn"],
         "no-unused-expressions": ["warn"],
         "no-unused-vars": ["warn"],
         "no-use-before-define": ["warn"],
@@ -70,7 +67,6 @@
         "radix": ["warn"],
         "react/button-has-type": ["warn"],
         "react/default-props-match-prop-types": ["warn"],
-        "react/destructuring-assignment": ["warn"],
         "react/no-find-dom-node": ["warn"],
         "react/forbid-prop-types": ["warn"],
         "react/jsx-filename-extension": ["warn"],
@@ -110,20 +106,6 @@
             }
         },
         {
-            "files": "test/**/*.js",
-            "env": {
-                "mocha": true,
-                "cypress/globals": true
-            },
-            "plugins": [
-                "chai-friendly"
-            ],
-            "rules": {
-                "no-unused-expressions": 0,
-                "chai-friendly/no-unused-expressions": 2
-            }
-        },
-        {
             "files": ["backend/**/*.js", "scripts/*.js"],
             "env": {
                 "node": true
@@ -132,7 +114,7 @@
         {
             "files": ["./*.js", "scripts/*.js", "test/**/*.js"],
             "rules": {
-                "import/no-extraneous-dependencies": ["error", {"devDependencies": true}],
+                "import/no-extraneous-dependencies": ["error", { "devDependencies": true }],
                 "no-console": "off"
             },
             "env": {

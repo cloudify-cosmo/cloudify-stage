@@ -21,17 +21,18 @@ export default class TenantList extends Component {
     };
 
     render() {
+        const { custom, onDelete, style, tenants } = this.props;
         return (
-            <Segment style={this.props.style}>
+            <Segment style={style}>
                 <Icon name="male" /> Tenants
                 <Divider />
                 <List divided relaxed verticalAlign="middle" className="light">
-                    {this.props.tenants.map(item => {
+                    {tenants.map(item => {
                         return (
                             <List.Item key={item}>
                                 {item === Const.DEFAULT_ALL ? 'all' : item}
 
-                                {this.props.custom && _.size(this.props.tenants) > 1 && (
+                                {custom && _.size(tenants) > 1 && (
                                     <PopupConfirm
                                         trigger={
                                             <Icon
@@ -42,13 +43,13 @@ export default class TenantList extends Component {
                                             />
                                         }
                                         content="Are you sure to remove this tenant from template?"
-                                        onConfirm={() => this.props.onDelete(item)}
+                                        onConfirm={() => onDelete(item)}
                                     />
                                 )}
                             </List.Item>
                         );
                     })}
-                    {_.isEmpty(this.props.tenants) && <Message content="No tenants available" />}
+                    {_.isEmpty(tenants) && <Message content="No tenants available" />}
                 </List>
             </Segment>
         );

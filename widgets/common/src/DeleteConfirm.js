@@ -24,28 +24,23 @@ class DeleteConfirm extends React.Component {
     };
 
     render() {
+        const { className, force, onCancel, onConfirm, onForceChange, open, resourceName } = this.props;
         const { Confirm, Form, Segment } = Stage.Basic;
 
         return (
             <Confirm
-                className={this.props.className}
-                header={`Are you sure you want to remove ${this.props.resourceName}?`}
+                className={className}
+                header={`Are you sure you want to remove ${resourceName}?`}
                 content={
                     <Segment basic>
                         <Form.Field>
-                            <Form.Checkbox
-                                name="force"
-                                toggle
-                                label="Force"
-                                checked={this.props.force}
-                                onChange={this.props.onForceChange}
-                            />
+                            <Form.Checkbox name="force" toggle label="Force" checked={force} onChange={onForceChange} />
                         </Form.Field>
                     </Segment>
                 }
-                open={this.props.open}
-                onConfirm={this.props.onConfirm}
-                onCancel={this.props.onCancel}
+                open={open}
+                onConfirm={onConfirm}
+                onCancel={onCancel}
             />
         );
     }

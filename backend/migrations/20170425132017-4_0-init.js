@@ -24,11 +24,11 @@ function createClientConfigs(queryInterface, Sequelize) {
                 type: Sequelize.DATE
             }
         })
-        .then(function() {
-            return queryInterface.addIndex('ClientConfigs', ['managerIp'], {
+        .then(() =>
+            queryInterface.addIndex('ClientConfigs', ['managerIp'], {
                 indicesType: 'UNIQUE'
-            });
-        });
+            })
+        );
 }
 
 function createUserAppModel(queryInterface, Sequelize) {
@@ -57,11 +57,11 @@ function createUserAppModel(queryInterface, Sequelize) {
                 type: Sequelize.DATE
             }
         })
-        .then(function() {
-            return queryInterface.addIndex('UserApps', ['managerIp', 'username', 'role', 'mode'], {
+        .then(() =>
+            queryInterface.addIndex('UserApps', ['managerIp', 'username', 'role', 'mode'], {
                 indicesType: 'UNIQUE'
-            });
-        });
+            })
+        );
 }
 
 function createBlueprintAdditionsModel(queryInterface, Sequelize) {
@@ -87,11 +87,11 @@ function createBlueprintAdditionsModel(queryInterface, Sequelize) {
                 type: Sequelize.DATE
             }
         })
-        .then(function() {
-            return queryInterface.addIndex('BlueprintAdditions', ['blueprintId'], {
+        .then(() =>
+            queryInterface.addIndex('BlueprintAdditions', ['blueprintId'], {
                 indicesType: 'UNIQUE'
-            });
-        });
+            })
+        );
 }
 
 function createApplicationModel(queryInterface, Sequelize) {
@@ -121,37 +121,25 @@ function createApplicationModel(queryInterface, Sequelize) {
                 type: Sequelize.DATE
             }
         })
-        .then(function() {
-            return queryInterface.addIndex('Applications', ['id'], {
+        .then(() =>
+            queryInterface.addIndex('Applications', ['id'], {
                 indicesType: 'UNIQUE'
-            });
-        });
+            })
+        );
 }
 
 module.exports = {
     up(queryInterface, Sequelize) {
         return createClientConfigs(queryInterface, Sequelize)
-            .then(function() {
-                return createUserAppModel(queryInterface, Sequelize);
-            })
-            .then(function() {
-                return createBlueprintAdditionsModel(queryInterface, Sequelize);
-            })
-            .then(function() {
-                return createApplicationModel(queryInterface, Sequelize);
-            });
+            .then(() => createUserAppModel(queryInterface, Sequelize))
+            .then(() => createBlueprintAdditionsModel(queryInterface, Sequelize))
+            .then(() => createApplicationModel(queryInterface, Sequelize));
     },
     down(queryInterface, Sequelize) {
         return queryInterface
             .dropTable('ClientConfigs')
-            .then(function() {
-                return queryInterface.dropTable('UserApps');
-            })
-            .then(function() {
-                return queryInterface.dropTable('BlueprintAdditions');
-            })
-            .then(function() {
-                return queryInterface.dropTable('Applications');
-            });
+            .then(() => queryInterface.dropTable('UserApps'))
+            .then(() => queryInterface.dropTable('BlueprintAdditions'))
+            .then(() => queryInterface.dropTable('Applications'));
     }
 };

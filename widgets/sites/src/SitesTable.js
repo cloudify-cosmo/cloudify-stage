@@ -1,7 +1,7 @@
 import CreateModal from './CreateModal';
-import UpdateModal from './UpdateModal';
 import SiteActions from './SiteActions';
 import SiteLocationMap from './SiteLocationMap';
+import UpdateModal from './UpdateModal';
 
 export default class SitesTable extends React.Component {
     constructor(props, context) {
@@ -33,90 +33,100 @@ export default class SitesTable extends React.Component {
     static UPDATE_SITE_ACTION = 'update';
 
     shouldComponentUpdate(nextProps, nextState) {
+        const { data, widget } = this.props;
         return (
-            !_.isEqual(this.props.widget, nextProps.widget) ||
+            !_.isEqual(widget, nextProps.widget) ||
             !_.isEqual(this.state, nextState) ||
-            !_.isEqual(this.props.data, nextProps.data)
+            !_.isEqual(data, nextProps.data)
         );
     }
 
-    _refreshData() {
+    refreshData() {
+        const { toolbox } = this.props;
         this.setState({ error: null });
-        this.props.toolbox.refresh();
+
+        toolbox.refresh();
     }
 
     componentDidMount() {
-        this.props.toolbox.getEventBus().on('sites:refresh', this._refreshData, this);
+        const { toolbox } = this.props;
+        toolbox.getEventBus().on('sites:refresh', this.refreshData, this);
     }
 
     componentWillUnmount() {
-        this.props.toolbox.getEventBus().off('sites:refresh', this._refreshData);
+        const { toolbox } = this.props;
+        toolbox.getEventBus().off('sites:refresh', this.refreshData);
     }
 
     fetchGridData(fetchParams) {
-        return this.props.toolbox.refresh(fetchParams);
+        const { toolbox } = this.props;
+        return toolbox.refresh(fetchParams);
     }
 
-    _onDeleteSite(site) {
+    onDeleteSite(site) {
         this.setState({ site, modalType: SitesTable.DELETE_SITE_ACTION, showModal: true });
     }
 
-    _onUpdateSite(site) {
+    onUpdateSite(site) {
         this.setState({ site, modalType: SitesTable.UPDATE_SITE_ACTION, showModal: true });
     }
 
-    _setSiteVisibility(site_name, visibility) {
-        const actions = new SiteActions(this.props.toolbox);
-        this.props.toolbox.loading(true);
+    setSiteVisibility(site_name, visibility) {
+        const { toolbox } = this.props;
+        const actions = new SiteActions(toolbox);
+        toolbox.loading(true);
         actions
             .doUpdate(site_name, visibility)
             .then(() => {
-                this.props.toolbox.loading(false);
-                this.props.toolbox.refresh();
+                toolbox.loading(false);
+                toolbox.refresh();
             })
             .catch(err => {
-                this.props.toolbox.loading(false);
+                toolbox.loading(false);
                 this.setState({ error: err.message });
             });
     }
 
-    _deleteSite() {
+    deleteSite() {
+        const { toolbox } = this.props;
+        const { site } = this.state;
         const HIDE_DELETE_MODAL_STATE = { modalType: SitesTable.DELETE_SITE_ACTION, showModal: false };
-        const actions = new SiteActions(this.props.toolbox);
+        const actions = new SiteActions(toolbox);
 
         actions
-            .doDelete(this.state.site.name)
+            .doDelete(site.name)
             .then(() => {
                 this.setState({ ...HIDE_DELETE_MODAL_STATE, error: null });
-                this.props.toolbox.getEventBus().trigger('sites:refresh');
+                toolbox.getEventBus().trigger('sites:refresh');
             })
             .catch(err => {
                 this.setState({ ...HIDE_DELETE_MODAL_STATE, error: err.message });
             });
     }
 
-    _hideModal() {
+    hideModal() {
         this.setState({ showModal: false });
     }
 
     render() {
+        const { error, modalType, showModal, site } = this.state;
         const NO_DATA_MESSAGE = 'There are no Sites available. Click "Create" to create Sites.';
         const { DataTable, ErrorMessage, Icon, ResourceVisibility, Label, Popup } = Stage.Basic;
         const DeleteModal = Stage.Basic.Confirm;
-        const { data, toolbox } = this.props;
+        const { data, toolbox, widget } = this.props;
         let latitude;
         let longitude = null;
 
         return (
             <div>
-                <ErrorMessage error={this.state.error} onDismiss={() => this.setState({ error: null })} autoHide />
+                <ErrorMessage error={error} onDismiss={() => this.setState({ error: null })} autoHide />
 
                 <DataTable
                     fetchData={this.fetchGridData.bind(this)}
                     totalSize={data.total}
-                    pageSize={this.props.widget.configuration.pageSize}
-                    sortColumn={this.props.widget.configuration.sortColumn}
-                    sortAscending={this.props.widget.configuration.sortAscending}
+                    pageSize={widget.configuration.pageSize}
+                    sortColumn={widget.configuration.sortColumn}
+                    sortAscending={widget.configuration.sortAscending}
                     searchable
                     className="sitesTable"
                     noDataMessage={NO_DATA_MESSAGE}
@@ -141,7 +151,7 @@ export default class SitesTable extends React.Component {
                                     <ResourceVisibility
                                         visibility={site.visibility}
                                         onSetVisibility={visibility => {
-                                            this._setSiteVisibility(site.name, visibility);
+                                            this.setSiteVisibility(site.name, visibility);
                                         }}
                                         allowedSettingTo={['tenant', 'global']}
                                         className="rightFloated"
@@ -189,14 +199,14 @@ export default class SitesTable extends React.Component {
                                         link
                                         name="edit"
                                         title="Update site"
-                                        onClick={this._onUpdateSite.bind(this, site)}
+                                        onClick={this.onUpdateSite.bind(this, site)}
                                     />
                                     <Icon
                                         bordered
                                         link
                                         name="trash"
                                         title="Delete site"
-                                        onClick={this._onDeleteSite.bind(this, site)}
+                                        onClick={this.onDeleteSite.bind(this, site)}
                                     />
                                 </DataTable.Data>
                             </DataTable.Row>
@@ -204,22 +214,22 @@ export default class SitesTable extends React.Component {
                     })}
 
                     <DataTable.Action>
-                        <CreateModal toolbox={this.props.toolbox} />
+                        <CreateModal toolbox={toolbox} />
                     </DataTable.Action>
                 </DataTable>
 
                 <DeleteModal
-                    content={`Are you sure you want to delete the site '${this.state.site.name}'?`}
-                    open={this.state.modalType === SitesTable.DELETE_SITE_ACTION && this.state.showModal}
-                    onConfirm={this._deleteSite.bind(this)}
-                    onCancel={this._hideModal.bind(this)}
+                    content={`Are you sure you want to delete the site '${site.name}'?`}
+                    open={modalType === SitesTable.DELETE_SITE_ACTION && showModal}
+                    onConfirm={this.deleteSite.bind(this)}
+                    onCancel={this.hideModal.bind(this)}
                 />
 
                 <UpdateModal
-                    toolbox={this.props.toolbox}
-                    open={this.state.modalType === SitesTable.UPDATE_SITE_ACTION && this.state.showModal}
-                    onHide={this._hideModal.bind(this)}
-                    site={this.state.site}
+                    toolbox={toolbox}
+                    open={modalType === SitesTable.UPDATE_SITE_ACTION && showModal}
+                    onHide={this.hideModal.bind(this)}
+                    site={site}
                 />
             </div>
         );

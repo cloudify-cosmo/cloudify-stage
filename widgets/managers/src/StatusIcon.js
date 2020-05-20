@@ -21,8 +21,10 @@ export default class StatusIcon extends React.Component {
         const { Icon, Popup } = Stage.Basic;
         const { ClusterStatusIcon, ClusterServicesOverview } = Stage.Shared;
 
-        const { isFetching } = this.props;
-        const { status, services } = this.props.status;
+        const {
+            isFetching,
+            status: { status, services }
+        } = this.props;
 
         return isFetching ? (
             <Icon name="spinner" loading disabled />

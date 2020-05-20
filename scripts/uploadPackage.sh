@@ -9,9 +9,9 @@ PRE_COMMANDS="
 
 POST_COMMANDS="
   cd /opt/cloudify-stage/backend;
-  sudo /opt/nodejs/bin/npm run db-migrate;
+  sudo /bin/npm run db-migrate;
   sudo service cloudify-stage restart;
-  sudo /opt/nodejs/bin/npm run wait-on-server;"
+  sudo /bin/npm run wait-on-server;"
 
 COMMANDS_FOR_RPM="
   ${PRE_COMMANDS}
@@ -24,7 +24,8 @@ COMMANDS_FOR_TAR_GZ="
   ${PRE_COMMANDS}
   rm -rf cloudify-stage;
   tar xzf ${STAGE_PACKAGE};
-  sudo rsync -a --delete cloudify-stage /opt;
+  sudo rm -rf /opt/cloudify-stage/;
+  sudo cp -r cloudify-stage /opt/;
   sudo chown -R stage_user:stage_group /opt/cloudify-stage;
   ${POST_COMMANDS}"
 

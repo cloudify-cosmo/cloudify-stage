@@ -8,7 +8,7 @@ import { setAppError } from './appState';
 import Consts from '../utils/consts';
 
 export function showAppError(err) {
-    return function(dispatch) {
+    return dispatch => {
         dispatch(clearContext());
         dispatch(setAppError(err));
         dispatch(push(Consts.ERROR_PAGE_PATH));

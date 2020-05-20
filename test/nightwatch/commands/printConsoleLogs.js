@@ -3,9 +3,9 @@
  */
 
 exports.command = function(callback) {
-    return this.getLogTypes(function(result) {
+    return this.getLogTypes(result => {
         console.log(result);
-    }).getLog('browser', function(result) {
+    }).getLog('browser', result => {
         console.log(result);
     });
 };

@@ -29,21 +29,21 @@ class GroupState extends React.Component {
 
     render() {
         const { Segment, Icon, Popup } = Stage.Basic;
-        const disabled = this.props.value === 0;
-        const { state } = this.props;
+        const { state, className, description, onClick, value } = this.props;
+        const disabled = value === 0;
         const color = disabled ? 'grey' : state.colorSUI;
 
         return (
             <Popup
                 header={_.capitalize(state.name)}
-                content={this.props.description}
+                content={description}
                 trigger={
-                    <Segment.Group className={this.props.className} disabled={disabled} onClick={this.props.onClick}>
+                    <Segment.Group className={className} disabled={disabled} onClick={onClick}>
                         <Segment color={color} disabled={disabled} inverted>
                             <Icon name={state.icon} />
                         </Segment>
                         <Segment color={color} disabled={disabled} tertiary inverted>
-                            {this.props.value}
+                            {value}
                         </Segment>
                     </Segment.Group>
                 }

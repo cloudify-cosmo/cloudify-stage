@@ -66,7 +66,7 @@ function convertHugoShortcodes(widget, content) {
 
         // relref
         const relrefRegex = /{{<\s*relref\s*"(\S*)"\s*>}}/gm;
-        const _indexRegex = /\_index.md/gm;
+        const indexRegex = /\_index.md/gm;
         const mdRegex = /\.md/gm;
 
         log(widget, 'Converting Hugo shortcodes:');
@@ -84,7 +84,7 @@ function convertHugoShortcodes(widget, content) {
 
         content = content
             .replace(relrefRegex, '/$1')
-            .replace(_indexRegex, 'index.html')
+            .replace(indexRegex, 'index.html')
             .replace(mdRegex, '');
 
         resolve(content);
