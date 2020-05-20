@@ -39,6 +39,8 @@ export default class BlueprintsCatalog extends React.Component {
             widget
         } = this.props;
         const { DataSegment, Grid, Image, Button, Label, ResourceVisibility, Header } = Stage.Basic;
+        const { toolbox } = this.props;
+        const manager = toolbox.getManager();
 
         const index = 0;
         const blueprintsItems = data.items.map(item => {
@@ -113,7 +115,7 @@ export default class BlueprintsCatalog extends React.Component {
                         </Grid>
 
                         <Grid.Column width="16">
-                            <div style={{ height: '50px' }} />
+                            <div style={{ height: '80px' }} />
                         </Grid.Column>
                     </DataSegment.Item>
 
@@ -121,8 +123,8 @@ export default class BlueprintsCatalog extends React.Component {
                         <Button
                             icon="trash"
                             content="Delete"
-                            className="icon"
                             basic
+                            labelPosition="left"
                             onClick={event => {
                                 event.stopPropagation();
                                 onDeleteBlueprint(item);
@@ -132,12 +134,27 @@ export default class BlueprintsCatalog extends React.Component {
                         <Button
                             icon="rocket"
                             content="Deploy"
-                            className="labeled icon"
+                            labelPosition="left"
                             onClick={event => {
                                 event.stopPropagation();
                                 onCreateDeployment(item);
                             }}
                         />
+
+                        {!manager.isCommunityEdition() && (
+                            <Button
+                                icon="external share"
+                                content="Edit a copy in Composer"
+                                labelPosition="left"
+                                onClick={event => {
+                                    event.stopPropagation();
+                                    new Stage.Common.BlueprintActions(toolbox).doEditInComposer(
+                                        item.id,
+                                        item.main_file_name
+                                    );
+                                }}
+                            />
+                        )}
                     </div>
                 </Grid.Column>
             );

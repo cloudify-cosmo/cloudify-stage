@@ -7,6 +7,13 @@ class BlueprintActions {
         this.toolbox = toolbox;
     }
 
+    doEditInComposer(blueprintId, mainFileName) {
+        window.open(
+            `/composer/import/${this.toolbox.getManager().getSelectedTenant()}/${blueprintId}/${mainFileName}`,
+            '_blank'
+        );
+    }
+
     doGetBlueprints(params = null) {
         return this.toolbox.getManager().doGet('/blueprints?_include=id', params);
     }

@@ -62,77 +62,72 @@ export default class BlueprintsTable extends React.Component {
                 <DataTable.Column label="# Deployments" width="10%" />
                 <DataTable.Column width="10%" />
 
-                {data.items.map(item => {
-                    const manager = toolbox.getManager();
-                    return (
-                        <DataTable.Row
-                            id={`${tableName}_${item.id}`}
-                            key={item.id}
-                            selected={item.isSelected}
-                            onClick={() => onSelectBlueprint(item)}
-                        >
-                            <DataTable.Data>
-                                <Image
-                                    src={Stage.Utils.Url.url(`/ba/image/${item.id}`)}
-                                    width="30px"
-                                    height="auto"
-                                    inline
-                                />{' '}
-                                <a className="blueprintName" href="#!">
-                                    {item.id}
-                                </a>
-                                <ResourceVisibility
-                                    visibility={item.visibility}
-                                    onSetVisibility={visibility => onSetVisibility(item.id, visibility)}
-                                    allowedSettingTo={allowedSettingTo}
-                                    className="rightFloated"
-                                />
-                            </DataTable.Data>
-                            <DataTable.Data>{item.created_at}</DataTable.Data>
-                            <DataTable.Data>{item.updated_at}</DataTable.Data>
-                            <DataTable.Data>{item.created_by}</DataTable.Data>
-                            <DataTable.Data>{item.main_file_name}</DataTable.Data>
-                            <DataTable.Data>
-                                <div className="ui green horizontal label">{item.depCount}</div>
-                            </DataTable.Data>
+                {data.items.map(item => (
+                    <DataTable.Row
+                        id={`${tableName}_${item.id}`}
+                        key={item.id}
+                        selected={item.isSelected}
+                        onClick={() => onSelectBlueprint(item)}
+                    >
+                        <DataTable.Data>
+                            <Image
+                                src={Stage.Utils.Url.url(`/ba/image/${item.id}`)}
+                                width="30px"
+                                height="auto"
+                                inline
+                            />{' '}
+                            <a className="blueprintName" href="#!">
+                                {item.id}
+                            </a>
+                            <ResourceVisibility
+                                visibility={item.visibility}
+                                onSetVisibility={visibility => onSetVisibility(item.id, visibility)}
+                                allowedSettingTo={allowedSettingTo}
+                                className="rightFloated"
+                            />
+                        </DataTable.Data>
+                        <DataTable.Data>{item.created_at}</DataTable.Data>
+                        <DataTable.Data>{item.updated_at}</DataTable.Data>
+                        <DataTable.Data>{item.created_by}</DataTable.Data>
+                        <DataTable.Data>{item.main_file_name}</DataTable.Data>
+                        <DataTable.Data>
+                            <div className="ui green horizontal label">{item.depCount}</div>
+                        </DataTable.Data>
 
-                            <DataTable.Data className="center aligned rowActions">
-                                {!manager.isCommunityEdition() && (
-                                    <Icon
-                                        name="external share"
-                                        bordered
-                                        title="Edit a copy in Composer"
-                                        onClick={event => {
-                                            event.stopPropagation();
-                                            window.open(
-                                                `/composer/import/${manager.getSelectedTenant()}/${item.id}/${
-                                                    item.main_file_name
-                                                }`,
-                                                '_blank'
-                                            );
-                                        }}
-                                    />
-                                )}
-                                <i
-                                    className="rocket icon link bordered"
-                                    title="Create deployment"
+                        <DataTable.Data className="center aligned rowActions">
+                            {!toolbox.getManager().isCommunityEdition() && (
+                                <Icon
+                                    name="external share"
+                                    bordered
+                                    title="Edit a copy in Composer"
                                     onClick={event => {
                                         event.stopPropagation();
-                                        onCreateDeployment(item);
+                                        new Stage.Common.BlueprintActions(toolbox).doEditInComposer(
+                                            item.id,
+                                            item.main_file_name
+                                        );
                                     }}
                                 />
-                                <i
-                                    className="trash icon link bordered"
-                                    title="Delete blueprint"
-                                    onClick={event => {
-                                        event.stopPropagation();
-                                        onDeleteBlueprint(item);
-                                    }}
-                                />
-                            </DataTable.Data>
-                        </DataTable.Row>
-                    );
-                })}
+                            )}
+                            <i
+                                className="rocket icon link bordered"
+                                title="Create deployment"
+                                onClick={event => {
+                                    event.stopPropagation();
+                                    onCreateDeployment(item);
+                                }}
+                            />
+                            <i
+                                className="trash icon link bordered"
+                                title="Delete blueprint"
+                                onClick={event => {
+                                    event.stopPropagation();
+                                    onDeleteBlueprint(item);
+                                }}
+                            />
+                        </DataTable.Data>
+                    </DataTable.Row>
+                ))}
             </DataTable>
         );
     }
