@@ -1,3 +1,16 @@
+def upload_artifacts = { from_job ->
+    def prefix = "cloudify/${cloudify_ver}/${milestone}-release"
+    retry(3){
+        build(job: 'dir_prepare/upload_artifacts_to_s3',
+              parameters: [
+                string(name: 'build_number', value: from_job.getId()),
+                string(name: 'from_job', value: from_job.getFullProjectName()),
+                string(name: 'bucket', value: 'cloudify-release-eu'),
+                string(name: 'bucket_key_prefix', value: prefix)]
+        )
+    }
+}
+
 pipeline {
     agent { label 'web-ui' }
     environment {
@@ -31,34 +44,13 @@ pipeline {
             }
         }
 
-        stage('Pack') {
+        stage('Upload RPM') {
             steps {
-                dir('cloudify-stage') {
-                    sh 'npm run zip'
-                }
-                sh '''#!/usr/bin/env bash
-                      first=$(echo $BRANCH_NAME | cut -d. -f1)
-                      if [[ $first =~ ^[0-9]+$ ]] && [[ "$first" -gt 17 ]] || [[ "$first" -eq 17 ]] ; then REPO="cloudify-versions" ; else REPO="cloudify-premium" ; fi
-                      . ${JENKINS_HOME}/jobs/credentials.sh > /dev/null 2>&1
-                      echo "#BRANCH_NAME=$BRANCH_NAME"
-                      echo "#first=$first"
-                      if [[ $first =~ ^[0-9]+$ ]] || [[ "${BRANCH_NAME}" == "master" ]];then echo "# build branch and master";BRANCH="${BRANCH_NAME}";export BRANCH_S3_FOLDER="";else echo "# dev branches";BRANCH="master";export BRANCH_S3_FOLDER="/${BRANCH_NAME}";fi
-                      curl -u $GITHUB_USERNAME:$GITHUB_TOKEN https://raw.githubusercontent.com/cloudify-cosmo/${REPO}/${BRANCH}/packages-urls/common_build_env.sh -o ./common_build_env.sh
-                      . $PWD/common_build_env.sh
-                      printenv > env.txt
-                      mv cloudify-stage/stage.tar.gz  cloudify-stage-$VERSION-$PRERELEASE.tgz'''
-
-            }
-        }
-
-        stage('Upload package to S3') {
-            steps {
-
-                sh '''#!/usr/bin/env bash
-                      . $PWD/env.txt
-                      s3cmd put --access_key=${AWS_ACCESS_KEY_ID} --secret_key=${AWS_ACCESS_KEY} --human-readable-sizes --acl-public \\
-                      cloudify-stage-$VERSION-$PRERELEASE.tgz \\
-                      s3://$AWS_S3_BUCKET/$AWS_S3_PATH$BRANCH_S3_FOLDER/'''
+                def job_build = build(job: 'rpms/cloudify-stage', parameters: [
+                    string(name: 'tag', value: branch),
+                    string(name: 'manager_tag', value:  branch),
+                ])
+                upload_artifacts(job_build)
             }
         }
     }

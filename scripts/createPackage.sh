@@ -9,8 +9,7 @@ mkdir -p ${TMP_DIR}/cloudify-stage/dist ${TMP_DIR}/cloudify-stage/backend ${TMP_
 
 cp -r dist/** ${TMP_DIR}/cloudify-stage/dist
 cp -r backend/** ${TMP_DIR}/cloudify-stage/backend
-cp conf/** ${TMP_DIR}/cloudify-stage/conf
-rm ${TMP_DIR}/cloudify-stage/conf/me.json*
+rsync -avr --exclude='me.json*' conf ${TMP_DIR}/cloudify-stage
 cp package.json ${TMP_DIR}/cloudify-stage/package.json
 
 ( cd ${TMP_DIR} && tar -czf ${STAGE_PACKAGE} cloudify-stage )
