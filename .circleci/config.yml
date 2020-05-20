@@ -36,6 +36,54 @@ jobs:
           paths:
             - repo
 
+  build-rpm:
+    docker:
+      - image: rpmbuild/centos7
+
+    working_directory: ~/rpm
+
+    steps:
+      - checkout
+      - run:
+          name: Get current version numbers from cloudify-manager
+          command: |
+            # Try to download the file from a branch named the same as current branch, otherwise master
+            CLOUDIFY_MANAGER_URL=https://raw.githubusercontent.com/cloudify-cosmo/cloudify-manager
+            curl -fO "${CLOUDIFY_MANAGER_URL}/${CIRCLE_BRANCH}/packaging/version_info" || \
+              curl -fO "${CLOUDIFY_MANAGER_URL}/master/packaging/version_info"
+            tee -a $BASH_ENV <version_info
+      - run:
+          name: Install NodeJS & RPM development tools
+          command: |
+            sudo yum install -y \
+              http://repository.cloudifysource.org/cloudify/components/nodejs-12.16.1-1nodesource.x86_64.rpm \
+              rpmdevtools rpmlint
+      - run:
+          name: Lint RPM spec file
+          command: rpmlint --info packaging/cloudify-stage.spec
+      - run:
+          name: Install build dependencies for RPM spec file
+          command: sudo yum-builddep -y packaging/cloudify-stage.spec
+      - run:
+          name: Download sources for RPM spec file
+          command: |
+            spectool \
+              -d "CLOUDIFY_VERSION ${CLOUDIFY_VERSION}" \
+              -d "CLOUDIFY_PACKAGE_RELEASE ${CLOUDIFY_PACKAGE_RELEASE}" \
+              -P packaging/cloudify-stage.spec \
+              -S -g
+      - run:
+          name: Build RPM
+          command: |
+            sudo chmod a+wx /opt
+            rpmbuild \
+              -D "CLOUDIFY_VERSION ${CLOUDIFY_VERSION}" \
+              -D "CLOUDIFY_PACKAGE_RELEASE ${CLOUDIFY_PACKAGE_RELEASE}" \
+              -bb packaging/cloudify-stage.spec
+      - store_artifacts:
+          path: x86_64
+          destination: rpm
+
   test:
     <<: *default-working-directory
 
@@ -110,6 +158,7 @@ workflows:
   build-test-check:
     jobs:
       - build
+      - build-rpm
       - test:
           requires:
             - build
