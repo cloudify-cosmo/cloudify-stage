@@ -1,19 +1,22 @@
 const webpack = require('webpack');
 const path = require('path');
 const glob = require('glob');
+const fs = require('fs');
 
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const CompressionPlugin = require('compression-webpack-plugin');
 const ImageminPlugin = require('imagemin-webpack-plugin').default;
 const BrotliPlugin = require('brotli-webpack-plugin');
-// const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
+const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
 
 const Consts = require('./backend/consts');
 
+const outputPath = path.join(__dirname, 'dist');
+
 const getWidgetEntries = () => {
     return glob.sync('./widgets/*/src/widget.js').reduce((acc, item) => {
-        const name = item.replace('./widgets', '').replace('/src', '');
+        const name = item.replace('./widgets/', '').replace('/src', '');
         acc[name] = item;
         return acc;
     }, {});
@@ -96,23 +99,33 @@ const rules = [
     }
 ];
 
-const compressionPlugins = [
-    new ImageminPlugin({ test: /\.(jpe?g|png|gif|svg)$/i }),
-    new CompressionPlugin({
-        algorithm: 'gzip',
-        test: /\.js$|\.css$|\.html$/,
-        threshold: 10240,
-        minRatio: 0.8
-    }),
-    new BrotliPlugin({
-        asset: '[path].br[query]',
-        test: /\.js$|\.css$|\.html$/,
-        threshold: 10240,
-        minRatio: 0.8
-    })
-];
+const compressionPlugins = isAnalysisMode =>
+    isAnalysisMode
+        ? [new BundleAnalyzerPlugin()]
+        : [
+              new ImageminPlugin({ test: /\.(jpe?g|png|gif|svg)$/i }),
+              new CompressionPlugin({
+                  algorithm: 'gzip',
+                  test: /\.js$|\.css$|\.html$/,
+                  threshold: 10240,
+                  minRatio: 0.8
+              }),
+              new BrotliPlugin({
+                  asset: '[path].br[query]',
+                  test: /\.js$|\.css$|\.html$/,
+                  threshold: 10240,
+                  minRatio: 0.8
+              })
+          ];
 
-module.exports = [
+try {
+    fs.rmdirSync(outputPath, { recursive: true });
+} catch (err) {
+    console.error(`Cannot delete output directory: ${outputPath}. Error: ${err}.`);
+    process.exit(-1);
+}
+
+module.exports = env => [
     {
         mode: 'production',
         context: path.join(__dirname),
@@ -124,7 +137,7 @@ module.exports = [
         },
         entry: ['./app/main.js'],
         output: {
-            path: path.join(__dirname, 'dist'),
+            path: outputPath,
             filename: 'static/js/[name].bundle.js',
             publicPath: Consts.CONTEXT_PATH
         },
@@ -175,8 +188,7 @@ module.exports = [
                 jQuery: 'jquery',
                 d3: 'd3'
             }),
-            // new BundleAnalyzerPlugin(),
-            ...compressionPlugins
+            ...compressionPlugins(env && env.analyse === 'main')
         ],
         module: {
             rules
@@ -187,7 +199,7 @@ module.exports = [
         context: path.join(__dirname),
         entry: getWidgetEntries(),
         output: {
-            path: path.join(__dirname, 'dist/appData'),
+            path: path.join(outputPath, 'appData'),
             filename: 'widgets/[name]',
             publicPath: Consts.CONTEXT_PATH
         },
@@ -198,7 +210,7 @@ module.exports = [
                     to: '[path]../backend.js'
                 }
             ]),
-            ...compressionPlugins
+            ...compressionPlugins(env && env.analyse === 'widgets')
         ],
         module: {
             rules
@@ -209,7 +221,7 @@ module.exports = [
         context: path.join(__dirname),
         entry: glob.sync('./widgets/common/src/*.js'),
         output: {
-            path: path.join(__dirname, 'dist/appData/widgets'),
+            path: path.join(outputPath, 'appData/widgets'),
             filename: 'common/common.js',
             publicPath: Consts.CONTEXT_PATH
         },
@@ -217,7 +229,7 @@ module.exports = [
             react: 'React',
             'react-dom': 'ReactDOM'
         },
-        plugins: compressionPlugins,
+        plugins: compressionPlugins(env && env.analyse === 'widgets-common'),
         module: {
             rules
         }
