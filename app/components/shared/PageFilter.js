@@ -69,11 +69,11 @@ class PageFilter extends React.Component {
     }
 
     render() {
-        const { allowDrillDownPages, propsPages } = this.props;
+        const { allowDrillDownPages, pages } = this.props;
         const { pageId } = this.state;
-        const pages = allowDrillDownPages ? propsPages : _.filter(propsPages, page => !page.isDrillDown);
-        const pagesOptions = _.map(pages, page => ({
-            text: this.getPageName(pages, page.id),
+        const filteredPages = allowDrillDownPages ? pages : _.filter(pages, page => !page.isDrillDown);
+        const pagesOptions = _.map(filteredPages, page => ({
+            text: this.getPageName(filteredPages, page.id),
             value: page.id,
             key: page.id
         }));
