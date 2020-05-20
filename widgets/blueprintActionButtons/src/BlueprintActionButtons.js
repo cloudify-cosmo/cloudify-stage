@@ -105,11 +105,9 @@ export default class BlueprintActionButtons extends React.Component {
                             manager
                                 .doGet('/blueprints?_include=main_file_name', { id: blueprintId })
                                 .then(data =>
-                                    window.open(
-                                        `/composer/import/${manager.getSelectedTenant()}/${blueprintId}/${
-                                            data.items[0].main_file_name
-                                        }`,
-                                        '_blank'
+                                    new Stage.Common.BlueprintActions(toolbox).doEditInComposer(
+                                        blueprintId,
+                                        data.items[0].main_file_name
                                     )
                                 )
                                 .finally(() => {

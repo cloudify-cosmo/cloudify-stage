@@ -28,6 +28,7 @@ export default class BlueprintsTable extends React.Component {
 
     render() {
         const { DataTable, Icon, Image, ResourceVisibility } = Stage.Basic;
+        const { toolbox } = this.props;
         const tableName = 'blueprintsTable';
 
         return (
@@ -51,7 +52,6 @@ export default class BlueprintsTable extends React.Component {
                 <DataTable.Column width="10%" />
 
                 {this.props.data.items.map(item => {
-                    const manager = this.props.toolbox.getManager();
                     return (
                         <DataTable.Row
                             id={`${tableName}_${item.id}`}
@@ -85,18 +85,16 @@ export default class BlueprintsTable extends React.Component {
                             </DataTable.Data>
 
                             <DataTable.Data className="center aligned rowActions">
-                                {!manager.isCommunityEdition() && (
+                                {!toolbox.getManager().isCommunityEdition() && (
                                     <Icon
                                         name="external share"
                                         bordered
                                         title="Edit a copy in Composer"
                                         onClick={event => {
                                             event.stopPropagation();
-                                            window.open(
-                                                `/composer/import/${manager.getSelectedTenant()}/${item.id}/${
-                                                    item.main_file_name
-                                                }`,
-                                                '_blank'
+                                            new Stage.Common.BlueprintActions(toolbox).doEditInComposer(
+                                                item.id,
+                                                item.main_file_name
                                             );
                                         }}
                                     />
