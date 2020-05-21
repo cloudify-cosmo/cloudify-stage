@@ -117,7 +117,7 @@ jobs:
           name: Check code style
           command: npm run lint
 
-  checkBundleSize:
+  size:
     <<: *default-env
 
     steps:
@@ -127,7 +127,7 @@ jobs:
           name: Check bundle size
           command: npm run size
 
-  checkDocs:
+  docs:
     <<: *default-env
 
     steps:
@@ -162,10 +162,10 @@ workflows:
       - test:
           requires:
             - build
-      - checkBundleSize:
+      - size:
           requires:
             - build
-      - checkDocs:
+      - docs:
           requires:
             - build
       - audit:
