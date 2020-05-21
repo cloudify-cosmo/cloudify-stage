@@ -15,12 +15,14 @@
         "name": "Widgets",
         "limit": "2.5 MB",
         "gzip": false,
+        "running": false,
         "path": ["dist/appData/widgets", "!dist/appData/widgets/**/*.gz", "!dist/appData/widgets/**/*.br"]
     },
     {
         "name": "Application package",
         "limit": "13 MB",
         "gzip": false,
+        "running": false,
         "path": ["dist", "!dist/**/*.gz", "!dist/**/*.br"]
     },
 ]

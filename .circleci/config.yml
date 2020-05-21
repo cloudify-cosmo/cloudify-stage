@@ -4,7 +4,7 @@ directory: &default-working-directory
   working_directory: ~/repo
 
 image: &default-node-image
-  image: circleci/node:12.16-stretch
+  image: circleci/node:12.16-stretch-browsers
 
 env: &default-env
   <<: *default-working-directory
