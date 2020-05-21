@@ -44,7 +44,8 @@ const options = {
         [`${contextPath}/wb`]: proxyOptions,
         [`${contextPath}/file`]: proxyOptions,
         [`${contextPath}/plugins`]: proxyOptions,
-        [`${contextPath}/userData`]: proxyOptions
+        [`${contextPath}/userData`]: proxyOptions,
+        [`${contextPath}/static`]: proxyOptions
     },
     watchOptions: {
         ignored: ['**/userData/**']
