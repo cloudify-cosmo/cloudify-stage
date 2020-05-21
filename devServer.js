@@ -5,29 +5,26 @@
 const webpack = require('webpack');
 const WebpackDevServer = require('webpack-dev-server');
 
-const webpackConfig = require('./webpack.config');
+const webpackConfig = require('./webpack.config')({}, { mode: 'development' });
 const Consts = require('./backend/consts');
 const startWidgetBackendWatcher = require('./scripts/widgetBackendWatcher');
 
 const host = 'localhost';
 const devServerPort = 4000;
-
-const proxyPort = 8088;
-const proxyTarget = `http://${host}:${proxyPort}`;
+const stageBackendPort = 8088;
 const contextPath = Consts.CONTEXT_PATH;
 
 const proxyOptions = {
-    target: proxyTarget,
+    target: `http://${host}:${stageBackendPort}`,
     secure: false
 };
 
-const indexHtml = `${contextPath}/static/index.html`;
 const options = {
-    publicPath: webpackConfig[0].output.publicPath,
+    publicPath: contextPath,
     host,
     inline: false,
     historyApiFallback: {
-        index: indexHtml
+        index: `${contextPath}/static/index.html`
     },
     proxy: {
         [`${contextPath}/sp`]: proxyOptions,
