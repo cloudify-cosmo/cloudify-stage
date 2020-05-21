@@ -8,7 +8,6 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const CompressionPlugin = require('compression-webpack-plugin');
 const ImageminPlugin = require('imagemin-webpack-plugin').default;
-const BrotliPlugin = require('brotli-webpack-plugin');
 const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
 
 const Consts = require('./backend/consts');
@@ -115,12 +114,6 @@ module.exports = (env, argv) => {
                   new ImageminPlugin({ test: /\.(jpe?g|png|gif|svg)$/i }),
                   new CompressionPlugin({
                       algorithm: 'gzip',
-                      test: /\.js$|\.css$|\.html$/,
-                      threshold: 10240,
-                      minRatio: 0.8
-                  }),
-                  new BrotliPlugin({
-                      asset: '[path].br[query]',
                       test: /\.js$|\.css$|\.html$/,
                       threshold: 10240,
                       minRatio: 0.8

@@ -101,7 +101,6 @@
     "@types/request": "^2.48.4",
     "babel-eslint": "^10.0.3",
     "babel-loader": "^8.0.6",
-    "brotli-webpack-plugin": "^1.1.0",
     "chai": "^3.5.0",
     "chai-as-promised": "^7.1.1",
     "chai-enzyme": "^1.0.0-beta.0",

@@ -98,7 +98,7 @@ app.use(passport.initialize());
 app.use(
     `${contextPath}/appData`,
     passport.authenticate('cookie', { session: false }),
-    expressStaticGzip(path.resolve(__dirname, '../dist/appData'), { enableBrotli: true, indexFromEmptyFile: false })
+    expressStaticGzip(path.resolve(__dirname, '../dist/appData'), { indexFromEmptyFile: false })
 );
 
 app.use(
@@ -107,7 +107,6 @@ app.use(
     expressStaticGzip(
         path.resolve(__dirname, process.env.NODE_ENV === 'development' ? '../userData' : '../dist/userData'),
         {
-            enableBrotli: true,
             indexFromEmptyFile: false
         }
     )
@@ -117,7 +116,7 @@ app.use(
 if (process.env.NODE_ENV === 'development' || process.env.LOCAL_ENV === 'true') {
     app.use(
         `${contextPath}/static`,
-        expressStaticGzip(path.resolve(__dirname, '../dist/static'), { enableBrotli: true, indexFromEmptyFile: false })
+        expressStaticGzip(path.resolve(__dirname, '../dist/static'), { indexFromEmptyFile: false })
     );
 }
 

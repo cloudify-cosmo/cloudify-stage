@@ -97,8 +97,7 @@ Package tarball archive contains the following resources:
     * `tours` - built-in tours - whole [tours](./tours) folder
     * `widgets` - built-in widgets
       * `<widget-name>` - every widget has its own folder 
-        * `widget.js` - minified widget bundle file (+ brotli-compressed widget and gzip-compressed widget bundles)
-        * `widget.js.br` - (optional) brotli-compressed `widget.js`
+        * `widget.js` - minified widget bundle file (+ gzip-compressed widget bundles)
         * `widget.js.gz` - (optional) gzip-compressed `widget.js`
         * `README.md` - documentation file
         * `widget.png` - widget thumbnail
@@ -109,11 +108,9 @@ Package tarball archive contains the following resources:
     * `images` - image files
     * `fonts` - font files
     * `js` - JavaScript bundles
-      * `main.bundle.js` - bundle created from client-side application source code (+ brotli-compressed and gzip-compressed bundle)
-      * `main.bundle.js` - brotli-compressed `main.bundle.js`
+      * `main.bundle.js` - bundle created from client-side application source code (+ gzip-compressed bundle)
       * `main.bundle.js` - gzip-compressed `main.bundle.js`
       * `vendor.bundle.js` - bundle created from client-side application external dependencies
-      * `vendor.bundle.js.br` - brotli-compressed `vendor.bundle.js`
       * `vendor.bundle.js.gz` - gzip-compressed `vendor.bundle.js`
     * `index.html` - main HTML file (created from [app/index.tmpl.html](./app/index.tmpl.html))
   * `userData` - user application data (empty in clean package)
