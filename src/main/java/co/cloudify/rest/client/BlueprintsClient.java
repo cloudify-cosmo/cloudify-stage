@@ -187,9 +187,9 @@ public class BlueprintsClient extends AbstractCloudifyClient {
      * 
      * @param id ID of blueprint to delete
      */
-    public void delete(final String id) {
+    public Blueprint delete(final String id) {
         try {
-            getBuilder(id).delete();
+            return getBuilder(id).delete(Blueprint.class);
         } catch (NotFoundException ex) {
             throw new BlueprintNotFoundException(id, ex);
         } catch (WebApplicationException ex) {

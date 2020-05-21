@@ -153,9 +153,9 @@ public class DeploymentsClient extends AbstractCloudifyClient {
      * 
      * @param id deployment to delete
      */
-    public void delete(final String id) {
+    public Deployment delete(final String id) {
         try {
-            getDeploymentBuilder(ID_PATH, id).delete();
+            return getDeploymentBuilder(ID_PATH, id).delete(Deployment.class);
         } catch (NotFoundException ex) {
             throw new DeploymentNotFoundException(id, ex);
         } catch (WebApplicationException ex) {
