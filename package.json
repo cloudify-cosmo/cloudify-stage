@@ -16,7 +16,7 @@
   "scripts": {
     "audit": "npm audit --production && cd backend && npm run audit",
     "beforebuild": "npm ci --prefer-offline && (cd backend && npm ci --prefer-offline)",
-    "build": "webpack --config webpack.config.js --bail --progress",
+    "build": "webpack --config webpack.config.js --mode=production --bail --progress",
     "build:analyse:main": "npm run build -- --env.analyse=main",
     "build:analyse:widgets": "npm run build -- --env.analyse=widgets",
     "build:analyse:widgets-common": "npm run build -- --env.analyse=widgets-common",
