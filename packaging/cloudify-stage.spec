@@ -1,3 +1,4 @@
+%global __os_install_post %(echo '%{__os_install_post}' | sed -e 's!/usr/lib[^[:space:]]*/brp-python-bytecompile[[:space:]].*$!!g')
 %define _libdir %{_exec_prefix}/lib
 %define stage_path /opt/cloudify-stage
 %define logs_path /var/log/cloudify/stage
@@ -71,7 +72,7 @@ groupdel stage_group
 /etc/logrotate.d/cloudify-stage
 /etc/sudoers.d/cloudify-stage
 %{_libdir}/systemd/system/cloudify-stage.service
-/opt/cloudify/stage
+%attr(555,root,cfyuser) /opt/cloudify/stage/restore-snapshot.py
 %attr(-,stage_user,stage_group) %{stage_path}
 %attr(-,cfyuser,cfyuser) %{stage_path}/conf
 %attr(-,stage_user,stage_group) %{logs_path}
