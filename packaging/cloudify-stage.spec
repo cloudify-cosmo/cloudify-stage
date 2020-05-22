@@ -1,3 +1,4 @@
+%global _python_bytecompile_extra 0
 %define _libdir %{_exec_prefix}/lib
 %define stage_path /opt/cloudify-stage
 %define logs_path /var/log/cloudify/stage
