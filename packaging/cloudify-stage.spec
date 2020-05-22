@@ -71,7 +71,7 @@ groupdel stage_group
 /etc/logrotate.d/cloudify-stage
 /etc/sudoers.d/cloudify-stage
 %{_libdir}/systemd/system/cloudify-stage.service
-/opt/cloudify/stage
+%attr(555,root,cfyuser) /opt/cloudify/stage/restore-snapshot.py
 %attr(-,stage_user,stage_group) %{stage_path}
 %attr(-,cfyuser,cfyuser) %{stage_path}/conf
 %attr(-,stage_user,stage_group) %{logs_path}
