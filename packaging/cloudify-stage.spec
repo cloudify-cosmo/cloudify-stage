@@ -1,4 +1,4 @@
-%global _python_bytecompile_extra 0
+%global __os_install_post %(echo '%{__os_install_post}' | sed -e 's!/usr/lib[^[:space:]]*/brp-python-bytecompile[[:space:]].*$!!g')
 %define _libdir %{_exec_prefix}/lib
 %define stage_path /opt/cloudify-stage
 %define logs_path /var/log/cloudify/stage
