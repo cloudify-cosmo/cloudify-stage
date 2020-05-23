@@ -88,9 +88,9 @@ public class ExecutionsClient extends AbstractCloudifyClient {
     /**
      * Starts an execution.
      * 
-     * @param deploymentId deployment to start for
-     * @param workflowId   workflow to start
-     * @param parameters   a {@link Map} of execution parameters
+     * @param deployment deployment to start for
+     * @param workflowId workflow to start
+     * @param parameters a {@link Map} of execution parameters
      * 
      * @return An {@link Execution} object, representing the created execution.
      */

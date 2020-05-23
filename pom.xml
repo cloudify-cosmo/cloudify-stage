@@ -10,8 +10,8 @@
     </properties>
     <licenses>
         <license>
-            <name>MIT License</name>
-            <url>https://www.apache.org/licenses/LICENSE-2.0</url>
+            <name>Apache License, Version 2.0</name>
+            <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
         </license>
     </licenses>
     <developers>
@@ -24,7 +24,7 @@
     <scm>
         <connection>https://github.com/cloudify-cosmo/cloudify-java-rest-client.git</connection>
         <developerConnection>https://github.com/cloudify-cosmo/cloudify-java-rest-client.git</developerConnection>
-        <url>https://github.com/cloudify-cosmo/cloudify-java-rest-client.git</url>
+        <url>https://github.com/cloudify-cosmo/cloudify-java-rest-client</url>
     </scm>
     <dependencies>
         <!--
