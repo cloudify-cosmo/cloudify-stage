@@ -16,13 +16,13 @@
         "limit": "2.5 MB",
         "gzip": false,
         "running": false,
-        "path": ["dist/appData/widgets", "!dist/appData/widgets/**/*.gz", "!dist/appData/widgets/**/*.br"]
+        "path": ["dist/appData/widgets", "!dist/appData/widgets/**/*.gz"]
     },
     {
         "name": "Application package",
         "limit": "13 MB",
         "gzip": false,
         "running": false,
-        "path": ["dist", "!dist/**/*.gz", "!dist/**/*.br"]
+        "path": ["dist", "!dist/**/*.gz"]
     },
 ]

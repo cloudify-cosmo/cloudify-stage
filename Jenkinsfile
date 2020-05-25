@@ -31,34 +31,15 @@ pipeline {
             }
         }
 
-        stage('Upload RPM') {
+        stage('Build RPM') {
             steps {
-                script {
-                    def upload_artifacts = { from_job ->
-                        def prefix = "cloudify/${cloudify_ver}/${milestone}-release"
-                        retry(3){
-                            build(
-                                job: 'dir_prepare/upload_artifacts_to_s3',
-                                parameters: [
-                                    string(name: 'build_number', value: from_job.getId()),
-                                    string(name: 'from_job', value: from_job.getFullProjectName()),
-                                    string(name: 'bucket', value: 'cloudify-release-eu'),
-                                    string(name: 'bucket_key_prefix', value: prefix)
-                                ]
-                            )
-                        }
-                    }
-
-                    def rpm_job = build(
-                        job: 'rpms/cloudify-stage',
-                        parameters: [
-                            string(name: 'tag', value: env.BRANCH_NAME),
-                            string(name: 'manager_tag', value:  env.BRANCH_NAME)
-                        ]
-                    )
-
-                    upload_artifacts(rpm_job)
-                }
+                build(
+                    job: 'rpms/cloudify-stage',
+                    parameters: [
+                        string(name: 'tag', value: env.BRANCH_NAME),
+                        string(name: 'manager_tag', value:  env.BRANCH_NAME)
+                    ]
+                )
             }
         }
     }

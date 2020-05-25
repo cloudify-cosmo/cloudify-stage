@@ -120,7 +120,7 @@ module.exports = (env, argv) => {
                   })
               ];
 
-    if (isProduction) {
+    if (isProduction && fs.existsSync(outputPath)) {
         try {
             fs.rmdirSync(outputPath, { recursive: true });
         } catch (err) {
