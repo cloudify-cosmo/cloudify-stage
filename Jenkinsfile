@@ -24,9 +24,9 @@ pipeline {
                     sh '''#!/usr/bin/env bash
                         source ${JENKINS_HOME}/.profile
                         nvm install
+                        npm run beforebuild
+                        npm run build
                     '''
-                    sh 'npm run beforebuild'
-                    sh 'npm run build'
                 }
             }
         }
