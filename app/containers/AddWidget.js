@@ -4,7 +4,7 @@
 
 import React from 'react';
 import { connect } from 'react-redux';
-import { addWidget, checkIfWidgetIsUsed, installWidget, uninstallWidget, updateWidgetDefinition } from '../actions/widgets';
+import { checkIfWidgetIsUsed, installWidget, uninstallWidget, updateWidgetDefinition } from '../actions/widgets';
 import AddWidgetModal from '../components/AddWidgetModal';
 import stageUtils from '../utils/stageUtils';
 import Consts from '../utils/consts';
