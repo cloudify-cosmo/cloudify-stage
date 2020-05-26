@@ -51,13 +51,16 @@ describe('(Reducer) Pages', () => {
                 {
                     type: types.ADD_WIDGET,
                     pageId: '0',
-                    name: 'some widget',
+                    tab: null,
                     widgetDefinition: initialState.widgetDefinitions[0],
-                    width: 1,
-                    height: 1,
-                    x: 1,
-                    y: 1,
-                    configuration: undefined
+                    widget: {
+                        definition: 'widget1',
+                        height: 1,
+                        name: 'some widget',
+                        width: 1,
+                        x: 1,
+                        y: 1
+                    }
                 },
                 { type: types.ADD_DRILLDOWN_PAGE, widgetId: '1', drillDownPageId: '0', drillDownName: 'tmp1' },
                 { type: types.WIDGET_DATA_CLEAR },
