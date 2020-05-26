@@ -17,8 +17,7 @@ const mapStateToProps = (state, ownProps) => {
         isUserAuthorizedForTemplateManagement:
             state.manager &&
             state.manager.permissions &&
-            stageUtils.isUserAuthorized(Consts.permissions.STAGE_TEMPLATE_MANAGEMENT, state.manager),
-        isPageSetForPageManagement: state.templateManagement ? !_.isEmpty(state.templateManagement.page) : false
+            stageUtils.isUserAuthorized(Consts.permissions.STAGE_TEMPLATE_MANAGEMENT, state.manager)
     };
 };
 

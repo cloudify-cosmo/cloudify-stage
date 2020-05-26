@@ -10,7 +10,7 @@ export default (state = {}, action) => {
             return [...action.widgetDefinitions];
         case types.INSTALL_WIDGET:
             return _.sortBy([...state, ...action.widgetDefinitions], ['name']);
-        case types.UPDATE_WIDGET:
+        case types.UPDATE_WIDGET_DEFINITION:
             var defs = _.reject(state, { id: action.widgetId });
             return _.sortBy([...defs, ...action.widgetDefinitions], ['name']);
         case types.UNINSTALL_WIDGET:

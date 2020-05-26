@@ -11,32 +11,17 @@ const widget = (state = {}, action) => {
         case types.ADD_WIDGET:
             return {
                 id: v4(),
-                name: action.name,
-                width: action.width || action.widgetDefinition.initialWidth,
-                height: action.height || action.widgetDefinition.initialHeight,
-                x: action.x,
-                y: action.y,
+                ..._.pick(action.widget, 'name', 'x', 'y'),
+                width: action.widget.width || action.widgetDefinition.initialWidth,
+                height: action.widget.height || action.widgetDefinition.initialHeight,
                 definition: action.widgetDefinition.id,
-                configuration: { ...StageUtils.buildConfig(action.widgetDefinition), ...action.configuration },
+                configuration: { ...StageUtils.buildConfig(action.widgetDefinition), ...action.widget.configuration },
                 drillDownPages: {}
             };
-        case types.RENAME_WIDGET:
-            return { ...state, name: action.name };
-        case types.EDIT_WIDGET:
-            return { ...state, configuration: action.configuration };
-        case types.MAXIMIZE_WIDGET:
-            return { ...state, maximized: action.maximized };
+        case types.UPDATE_WIDGET:
+            return { ...state, ...action.params };
         case types.MINIMIZE_WIDGETS:
             return { ...state, maximized: false };
-        case types.CHANGE_WIDGET_GRID_DATA:
-            return {
-                ...state,
-                x: action.gridData.x,
-                y: action.gridData.y,
-                width: action.gridData.width,
-                height: action.gridData.height
-            };
-
         case types.ADD_DRILLDOWN_PAGE:
             var newW = { ...state, drillDownPages: { ...state.drillDownPages } };
             newW.drillDownPages[action.drillDownName] = action.drillDownPageId;
@@ -54,21 +39,7 @@ const widgets = (state = [], action) => {
             }
 
             return [...state, widget(undefined, action)];
-        case types.RENAME_WIDGET:
-            return state.map(w => {
-                if (w.id === action.widgetId) {
-                    return widget(w, action);
-                }
-                return w;
-            });
-        case types.EDIT_WIDGET:
-            return state.map(w => {
-                if (w.id === action.widgetId) {
-                    return widget(w, action);
-                }
-                return w;
-            });
-        case types.MAXIMIZE_WIDGET:
+        case types.UPDATE_WIDGET:
             return state.map(w => {
                 if (w.id === action.widgetId) {
                     return widget(w, action);
@@ -82,16 +53,8 @@ const widgets = (state = [], action) => {
                 }
                 return w;
             });
-        case types.CHANGE_WIDGET_GRID_DATA:
-            return state.map(w => {
-                if (w.id === action.widgetId) {
-                    return widget(w, action);
-                }
-                return w;
-            });
         case types.REMOVE_WIDGET:
-            var removeIndex = _.findIndex(state, { id: action.widgetId });
-            return [...state.slice(0, removeIndex), ...state.slice(removeIndex + 1)];
+            return _.reject(state, { id: action.widgetId });
         case types.ADD_DRILLDOWN_PAGE:
             return state.map(w => {
                 if (w.id === action.widgetId) {

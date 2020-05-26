@@ -24,18 +24,14 @@ export default class Widget extends Component {
     }
 
     static propTypes = {
-        pageId: PropTypes.string.isRequired,
         widget: PropTypes.object.isRequired,
         context: PropTypes.object.isRequired,
         manager: PropTypes.object.isRequired,
         widgetData: PropTypes.object,
-        onWidgetNameChange: PropTypes.func.isRequired,
         setContextValue: PropTypes.func.isRequired,
         onWidgetRemoved: PropTypes.func.isRequired,
-        onWidgetMaximize: PropTypes.func.isRequired,
-        onWidgetConfigUpdate: PropTypes.func.isRequired,
-        fetchWidgetData: PropTypes.func.isRequired,
-        pageManagementMode: PropTypes.string
+        onWidgetUpdated: PropTypes.func.isRequired,
+        fetchWidgetData: PropTypes.func.isRequired
     };
 
     static getDerivedStateFromError() {
@@ -43,17 +39,16 @@ export default class Widget extends Component {
     }
 
     widgetConfigUpdate(config) {
-        const { onWidgetConfigUpdate, pageId, widget } = this.props;
+        const { onWidgetUpdated, widget } = this.props;
         if (config) {
-            config = { ...widget.configuration, ...config };
-            onWidgetConfigUpdate(pageId, widget.id, config);
+            onWidgetUpdated(widget.id, { configuration: { ...widget.configuration, ...config } });
         }
     }
 
     onKeyDown(event) {
-        const { onWidgetMaximize, pageId, widget } = this.props;
+        const { onWidgetUpdated, widget } = this.props;
         if (event.keyCode === 27) {
-            onWidgetMaximize(pageId, widget.id, false);
+            onWidgetUpdated(widget.id, { maximized: false });
         }
     }
 
@@ -99,11 +94,8 @@ export default class Widget extends Component {
             fetchWidgetData,
             isEditMode,
             manager,
-            onWidgetMaximize,
-            onWidgetNameChange,
+            onWidgetUpdated,
             onWidgetRemoved,
-            pageId,
-            pageManagementMode,
             setContextValue,
             widget,
             widgetData
@@ -119,10 +111,7 @@ export default class Widget extends Component {
                     <div className="widgetButtons" onMouseDown={e => e.stopPropagation()}>
                         {isEditMode && (
                             <div className="widgetEditButtons">
-                                <i
-                                    className="remove link icon small"
-                                    onClick={() => onWidgetRemoved(pageId, widget.id)}
-                                />
+                                <i className="remove link icon small" onClick={() => onWidgetRemoved(widget.id)} />
                             </div>
                         )}
                     </div>
@@ -177,7 +166,7 @@ export default class Widget extends Component {
                             placeholder="Widget header"
                             enabled={isEditMode}
                             className="widgetName"
-                            onChange={text => onWidgetNameChange(pageId, widget.id, text)}
+                            onChange={name => onWidgetUpdated(widget.id, { name })}
                         />
                     </h5>
                 )}
@@ -185,9 +174,9 @@ export default class Widget extends Component {
                 <div className="widgetButtons" onMouseDown={e => e.stopPropagation()}>
                     {isEditMode ? (
                         <div className="widgetEditButtons">
-                            <EditWidget pageId={pageId} widget={widget} pageManagementMode={pageManagementMode} />
+                            <EditWidget widget={widget} onWidgetEdited={onWidgetUpdated} />
                             {helpIcon('small')}
-                            <Icon name="remove" link size="small" onClick={() => onWidgetRemoved(pageId, widget.id)} />
+                            <Icon name="remove" link size="small" onClick={() => onWidgetRemoved(widget.id)} />
                         </div>
                     ) : widget.definition.showHeader ? (
                         <div className={`widgetViewButtons ${widget.maximized ? 'alwaysOnTop' : ''}`}>
@@ -198,7 +187,7 @@ export default class Widget extends Component {
                                           key="compressIcon"
                                           name="compress"
                                           link
-                                          onClick={() => onWidgetMaximize(pageId, widget.id, false)}
+                                          onClick={() => onWidgetUpdated(widget.id, { maximized: false })}
                                       />
                                   ]
                                 : [
@@ -208,7 +197,7 @@ export default class Widget extends Component {
                                           name="expand"
                                           link
                                           size="small"
-                                          onClick={() => onWidgetMaximize(pageId, widget.id, true)}
+                                          onClick={() => onWidgetUpdated(widget.id, { maximized: true })}
                                       />
                                   ]}
                         </div>
@@ -230,7 +219,6 @@ export default class Widget extends Component {
                         setContextValue={setContextValue}
                         onWidgetConfigUpdate={this.widgetConfigUpdate.bind(this)}
                         fetchWidgetData={fetchWidgetData}
-                        pageId={pageId}
                     />
                 ) : (
                     <Loading />

@@ -22,7 +22,7 @@ const templates = (state = {}, action) => {
         case types.TEMPLATE_MANAGEMENT_ERROR:
             return { ...state, isLoading: false, error: action.error };
         case types.TEMPLATE_MANAGEMENT_FETCH:
-            return { templates: action.templates, pages: action.pages, isLoading: false, error: null };
+            return { templates: action.templates, pages: action.pages, isLoading: false, error: null, isActive: true };
         case types.TEMPLATE_MANAGEMENT_SELECT:
             return {
                 ...state,
@@ -94,6 +94,9 @@ const templates = (state = {}, action) => {
             return pageRest;
         case types.PAGE_MANAGEMENT_DRILLDOWN_WARN:
             return { ...state, showDrillDownWarn: action.show };
+        case types.TEMPLATE_MANAGEMENT_ACTIVE:
+        case types.PAGE_MANAGEMENT_SET_EDIT_MODE:
+            return { ...state, ..._.omit(action, 'type') };
         default:
             return state;
     }

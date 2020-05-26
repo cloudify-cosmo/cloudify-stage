@@ -26,6 +26,9 @@ import {
     Segment
 } from './basic/index';
 import InstallWidgetModal from './InstallWidgetModal';
+import { addWidget } from '../actions/widgets';
+
+let nameIndex = 0;
 
 export default class AddWidgetModal extends Component {
     constructor(props, context) {
@@ -91,7 +94,7 @@ export default class AddWidgetModal extends Component {
         _.forEach(widgetsToAdd, widgetId => {
             const widget = _.find(widgetDefinitions, widgetDefinition => widgetId === widgetDefinition.id);
             if (widget) {
-                onWidgetAdded(widget);
+                onWidgetAdded(widget.name || `Widget_${nameIndex++}`, widget);
             }
         });
         this.setState({ ...this.state, widgetsToAdd: [] });
@@ -210,7 +213,7 @@ export default class AddWidgetModal extends Component {
             widget,
             widgetsToAdd
         } = this.state;
-        const { canInstallWidgets, className, onWidgetInstalled } = this.props;
+        const { canInstallWidgets, onWidgetInstalled } = this.props;
         const addWidgetBtn = (
             <Button icon="bar chart" labelPosition="left" basic content="Add Widget" className="addWidgetBtn" />
         );
@@ -285,7 +288,7 @@ export default class AddWidgetModal extends Component {
             StageUtils.Url.url(LoaderUtils.getResourceUrl(`widgets/${widget.id}/widget.png`, widget.isCustom));
 
         return (
-            <div className={className}>
+            <div className="compactBlock">
                 <Modal
                     trigger={addWidgetBtn}
                     className="addWidgetModal"

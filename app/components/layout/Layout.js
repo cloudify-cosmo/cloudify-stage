@@ -9,7 +9,7 @@ import { Redirect, Route, Switch } from 'react-router-dom';
 import Home from '../../containers/Home';
 
 import Header from '../../containers/layout/Header';
-import PageManagement from '../../containers/templates/PageManagement';
+import PageManagement from '../templates/PageManagement';
 import TemplateManagement from '../../containers/templates/TemplateManagement';
 import Consts from '../../utils/consts';
 import { NO_TENANTS_ERR, UNAUTHORIZED_ERR } from '../../utils/ErrorCodes';
@@ -28,7 +28,6 @@ export default class Layout extends Component {
     static propTypes = {
         isLoading: PropTypes.bool.isRequired,
         isUserAuthorizedForTemplateManagement: PropTypes.bool.isRequired,
-        isPageSetForPageManagement: PropTypes.bool,
         intialPageLoad: PropTypes.func.isRequired
     };
 
@@ -65,7 +64,7 @@ export default class Layout extends Component {
     }
 
     render() {
-        const { isLoading, isPageSetForPageManagement, isUserAuthorizedForTemplateManagement } = this.props;
+        const { isLoading, isUserAuthorizedForTemplateManagement } = this.props;
         const { initialized } = this.state;
 
         if (isLoading) {
@@ -85,8 +84,19 @@ export default class Layout extends Component {
                     {isUserAuthorizedForTemplateManagement && (
                         <Route exact path="/template_management" component={TemplateManagement} />
                     )}
-                    {isUserAuthorizedForTemplateManagement && isPageSetForPageManagement && (
-                        <Route exact path="/page_management" component={PageManagement} />
+                    {isUserAuthorizedForTemplateManagement && (
+                        <Route
+                            exact
+                            path="/page_preview/:pageId"
+                            render={({ match }) => <PageManagement pageId={match.params.pageId} />}
+                        />
+                    )}
+                    {isUserAuthorizedForTemplateManagement && (
+                        <Route
+                            exact
+                            path="/page_edit/:pageId"
+                            render={({ match }) => <PageManagement pageId={match.params.pageId} isEditMode />}
+                        />
                     )}
                     <Route exact path="/page/:pageId/:pageName" component={Home} />
                     <Route exact path="/page/:pageId" component={Home} />

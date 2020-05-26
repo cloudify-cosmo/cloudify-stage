@@ -5,11 +5,12 @@
 import PropTypes from 'prop-types';
 
 import React, { Component } from 'react';
-
-import WidgetsList from '../containers/WidgetsList';
 import Breadcrumbs from './Breadcrumbs';
 import EditModeBubble from './EditModeBubble';
-import { EditableLabel } from './basic';
+import { Button, EditableLabel } from './basic';
+import PageContent from './PageContent';
+import AddWidget from '../containers/AddWidget';
+import AddPageButton from '../containers/AddPageButton';
 
 export default class Page extends Component {
     static propTypes = {
@@ -17,7 +18,9 @@ export default class Page extends Component {
         pagesList: PropTypes.array.isRequired,
         onPageNameChange: PropTypes.func.isRequired,
         onPageDescriptionChange: PropTypes.func.isRequired,
-        onWidgetsGridDataChange: PropTypes.func.isRequired,
+        onWidgetUpdated: PropTypes.func.isRequired,
+        onWidgetRemoved: PropTypes.func.isRequired,
+        onWidgetAdded: PropTypes.func.isRequired,
         onPageSelected: PropTypes.func.isRequired,
         onEditModeExit: PropTypes.func.isRequired,
         isEditMode: PropTypes.bool.isRequired
@@ -35,11 +38,17 @@ export default class Page extends Component {
             onPageDescriptionChange,
             onPageNameChange,
             onPageSelected,
-            onWidgetsGridDataChange,
+            onWidgetAdded,
+            onWidgetUpdated,
+            onWidgetRemoved,
             page,
             pagesList
         } = this.props;
-        const maximizeWidget = _.findIndex(page.widgets, { maximized: true }) >= 0;
+        const maximizeWidget =
+            _.find(page.widgets, { maximized: true }) ||
+            _(page.tabs)
+                .flatMap('widgets')
+                .find({ maximized: true });
 
         $('body')
             .css({ overflow: maximizeWidget ? 'hidden' : 'inherit' })
@@ -53,7 +62,6 @@ export default class Page extends Component {
                     isEditMode={isEditMode}
                     onPageSelected={onPageSelected}
                 />
-
                 <div>
                     <EditableLabel
                         value={page.description}
@@ -64,17 +72,20 @@ export default class Page extends Component {
                         inputSize="mini"
                     />
                 </div>
-
                 <div className="ui divider" />
-
-                <WidgetsList
-                    widgets={page.widgets}
-                    pageId={page.id}
-                    onWidgetsGridDataChange={onWidgetsGridDataChange}
+                <PageContent
+                    page={page}
+                    onWidgetUpdated={onWidgetUpdated}
+                    onWidgetRemoved={onWidgetRemoved}
                     isEditMode={isEditMode || false}
                 />
-
-                <EditModeBubble isVisible={isEditMode} onDismiss={onEditModeExit} page={page} />
+                {isEditMode && (
+                    <EditModeBubble onDismiss={onEditModeExit} header="Edit mode">
+                        <AddWidget onWidgetAdded={onWidgetAdded} />
+                        <AddPageButton />
+                        <Button basic content="Exit" icon="sign out" onClick={onEditModeExit} />
+                    </EditModeBubble>
+                )}
             </div>
         );
     }

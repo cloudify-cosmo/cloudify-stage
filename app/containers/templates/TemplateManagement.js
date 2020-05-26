@@ -4,19 +4,20 @@
 
 import React from 'react';
 import { connect } from 'react-redux';
+import { push } from 'connected-react-router';
 import { selectHomePage } from '../../actions/page';
 import TemplateManagement from '../../components/templates/TemplateManagement';
 import {
-    getTemplates,
-    createTemplate,
-    updateTemplate,
-    deleteTemplate,
+    clearTemplateContext,
     createPage,
+    createTemplate,
     deletePage,
-    showPage,
-    selectTemplate,
+    deleteTemplate,
+    getTemplates,
     selectPage,
-    clearTemplateContext
+    selectTemplate,
+    setActive,
+    updateTemplate
 } from '../../actions/templateManagement';
 
 const mapStateToProps = (state, ownProps) => {
@@ -45,10 +46,13 @@ const mapDispatchToProps = (dispatch, getState, ownProps) => {
         onTemplateSelect: templateId => dispatch(selectTemplate(templateId)),
         onPageCreate: page => dispatch(createPage(page)),
         onPageDelete: pageId => dispatch(deletePage(pageId)),
-        onPagePreview: (pageId, pageName) => dispatch(showPage(pageId, pageName, false)),
-        onPageEdit: (pageId, pageName) => dispatch(showPage(pageId, pageName, true)),
+        onPagePreview: pageId => dispatch(push(`/page_preview/${pageId}`)),
+        onPageEdit: pageId => dispatch(push(`/page_edit/${pageId}`)),
         onPageSelect: pageId => dispatch(selectPage(pageId)),
-        onClear: () => dispatch(clearTemplateContext()),
+        onClear: () => {
+            dispatch(clearTemplateContext());
+            dispatch(setActive(false));
+        },
         onClose: () => dispatch(selectHomePage())
     };
 };

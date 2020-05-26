@@ -4,8 +4,7 @@
 
 import React from 'react';
 import { connect } from 'react-redux';
-import { addWidget, installWidget, uninstallWidget, updateWidget, checkIfWidgetIsUsed } from '../actions/widgets';
-import { addPageWidget } from '../actions/templateManagement';
+import { addWidget, checkIfWidgetIsUsed, installWidget, uninstallWidget, updateWidgetDefinition } from '../actions/widgets';
 import AddWidgetModal from '../components/AddWidgetModal';
 import stageUtils from '../utils/stageUtils';
 import Consts from '../utils/consts';
@@ -22,26 +21,12 @@ const mapStateToProps = (state, ownProps) => {
     return {
         widgetDefinitions,
         pageId: ownProps.pageId,
-        pageManagementMode: ownProps.pageManagementMode,
         canInstallWidgets
     };
 };
 
-let nameIndex = 0;
-
 const mapDispatchToProps = (dispatch, ownProps) => {
     return {
-        onWidgetAdded: widgetDefinition => {
-            if (ownProps.pageManagementMode) {
-                dispatch(
-                    addPageWidget(ownProps.pageId, widgetDefinition.name || `Widget_${nameIndex++}`, widgetDefinition)
-                );
-            } else {
-                dispatch(
-                    addWidget(ownProps.pageId, widgetDefinition.name || `Widget_${nameIndex++}`, widgetDefinition)
-                );
-            }
-        },
         onWidgetInstalled: (widgetFile, widgetUrl) => {
             return dispatch(installWidget(widgetFile, widgetUrl));
         },
@@ -49,7 +34,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
             return dispatch(uninstallWidget(widgetId));
         },
         onWidgetUpdated: (widgetId, widgetFile, widgetUrl) => {
-            return dispatch(updateWidget(widgetId, widgetFile, widgetUrl));
+            return dispatch(updateWidgetDefinition(widgetId, widgetFile, widgetUrl));
         },
         onWidgetUsed: widgetId => {
             return dispatch(checkIfWidgetIsUsed(widgetId));

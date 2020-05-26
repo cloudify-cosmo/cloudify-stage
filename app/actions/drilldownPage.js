@@ -29,18 +29,7 @@ export function drillDownToPage(widget, defaultTemplate, widgetDefinitions, dril
                 dispatch(createDrilldownPage(newPageId, defaultTemplate.name));
                 _.each(defaultTemplate.widgets, widget => {
                     const widgetDefinition = _.find(widgetDefinitions, { id: widget.definition });
-                    dispatch(
-                        addWidget(
-                            newPageId,
-                            widget.name,
-                            widgetDefinition,
-                            widget.width,
-                            widget.height,
-                            widget.x,
-                            widget.y,
-                            widget.configuration
-                        )
-                    );
+                    dispatch(addWidget(newPageId, null, widget, widgetDefinition));
                 });
             }
 

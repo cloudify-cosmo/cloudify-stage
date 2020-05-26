@@ -10,8 +10,9 @@ const page = (state = {}, action) => {
         case types.ADD_PAGE:
             return {
                 id: action.newPageId,
-                name: action.name,
+                name: action.page.name,
                 description: '',
+                tabs: _.map(action.page.tabs, tab => _.omit(tab, 'widgets')),
                 widgets: []
             };
         case types.CREATE_DRILLDOWN_PAGE:
@@ -51,14 +52,29 @@ const pages = (state = [], action) => {
         case types.CREATE_DRILLDOWN_PAGE:
             return [...state, page(undefined, action)];
         case types.ADD_WIDGET:
-        case types.RENAME_WIDGET:
-        case types.CHANGE_WIDGET_GRID_DATA:
-        case types.EDIT_WIDGET:
-        case types.MAXIMIZE_WIDGET:
+            return state.map(p => {
+                if (p.id === action.pageId) {
+                    if (!_.isNil(action.tab)) {
+                        const tabs = [...p.tabs];
+                        tabs[action.tab] = { ...tabs[action.tab], widgets: widgets(tabs[action.tab].widgets, action) };
+                        return { ...p, tabs };
+                    }
+                    return { ...p, widgets: widgets(p.widgets, action) };
+                }
+                return p;
+            });
+        case types.UPDATE_WIDGET:
         case types.REMOVE_WIDGET:
             return state.map(p => {
                 if (p.id === action.pageId) {
-                    return { ...p, widgets: widgets(p.widgets, action) };
+                    return {
+                        ...p,
+                        widgets: widgets(p.widgets, action),
+                        tabs: _.map(p.tabs, tab => ({
+                            ...tab,
+                            widgets: widgets(tab.widgets, action)
+                        }))
+                    };
                 }
                 return p;
             });

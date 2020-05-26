@@ -6,7 +6,7 @@ import { connect } from 'react-redux';
 
 import Page from '../components/Page';
 import { changePageDescription, changePageName, createPagesMap, selectPage } from '../actions/page';
-import { changeWidgetGridData } from '../actions/widgets';
+import { addWidget, removeWidget, updateWidget } from '../actions/widgets';
 import { setDrilldownContext } from '../actions/drilldownContext';
 import { setEditMode } from '../actions/config';
 
@@ -44,12 +44,15 @@ const mapStateToProps = (state, ownProps) => {
     const homePageId = pages[0].id;
     const pageId = page ? page.id : homePageId;
 
-    const pageData = _.clone(_.find(pages, { id: pageId }));
-    pageData.widgets = _.map(pageData.widgets, wd => {
-        const w = _.clone(wd);
-        w.definition = _.find(state.widgetDefinitions, { id: w.definition });
-        return w;
-    });
+    const pageData = _.cloneDeep(_.find(pages, { id: pageId }));
+
+    function assignWidgetDefinition(widget) {
+        widget.definition = _.find(state.widgetDefinitions, { id: widget.definition });
+    }
+
+    _.each(pageData.widgets, assignWidgetDefinition);
+    _.flatMap(pageData.tabs, 'widgets').forEach(assignWidgetDefinition);
+
     pageData.name = ownProps.pageName || pageData.name;
 
     const pagesList = buildPagesList(pages, state.drilldownContext, pageId);
@@ -60,7 +63,7 @@ const mapStateToProps = (state, ownProps) => {
     };
 };
 
-const mapDispatchToProps = dispatch => {
+const mapDispatchToProps = (dispatch, ownProps) => {
     return {
         onPageNameChange: (page, newName) => {
             dispatch(changePageName(page, newName));
@@ -78,11 +81,17 @@ const mapDispatchToProps = dispatch => {
             dispatch(setDrilldownContext(drilldownContext));
             dispatch(selectPage(page.id, page.isDrillDown, page.context, page.name));
         },
-        onWidgetsGridDataChange: (pageId, widgetId, gridData) => {
-            dispatch(changeWidgetGridData(pageId, widgetId, gridData));
+        onWidgetAdded: (name, widgetDefinition) => {
+            dispatch(addWidget(ownProps.pageId, null, { name }, widgetDefinition));
         },
         onEditModeExit: () => {
             dispatch(setEditMode(false));
+        },
+        onWidgetUpdated: (widgetId, params) => {
+            dispatch(updateWidget(ownProps.pageId, widgetId, params));
+        },
+        onWidgetRemoved: widgetId => {
+            dispatch(removeWidget(ownProps.pageId, widgetId));
         }
     };
 };
