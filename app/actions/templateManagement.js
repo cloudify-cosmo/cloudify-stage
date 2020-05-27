@@ -123,7 +123,7 @@ export function selectTemplate(templateId) {
     };
 }
 
-function createPageId(name, pages) {
+export function createPageId(name, pages) {
     const ids = _.keysIn(pages);
 
     // Add suffix to make URL unique if same page name already exists
@@ -158,7 +158,7 @@ export function createPage(pageName) {
             .doPost('/templates/pages', {}, page)
             .then(() => dispatch(addPage(page.id, page.name, page.widgets)))
             .then(() => dispatch(fetchTemplates()))
-            .then(() => dispatch(showPage(pageId, pageName, true)))
+            .then(() => dispatch(push(`/page_edit/${pageId}`)))
             .catch(err => dispatch(errorTemplateManagement(err.message)));
     };
 }
@@ -176,37 +176,6 @@ export function deletePage(pageId) {
     };
 }
 
-export function addPageWidget(pageId, name, widgetDefinition, width, height, x, y, configuration) {
-    return {
-        type: types.PAGE_MANAGEMENT_ADD_WIDGET,
-        pageId,
-        name,
-        widgetDefinition,
-        width,
-        height,
-        x,
-        y,
-        configuration
-    };
-}
-
-export function changePageWidgetGridData(widgetId, gridData) {
-    return {
-        type: types.PAGE_MANAGEMENT_CHANGE_WIDGET,
-        widgetId,
-        gridData
-    };
-}
-
-export function setPageShow(pageId, pageName, isPageEditMode) {
-    return {
-        type: types.PAGE_MANAGEMENT_SHOW,
-        pageId,
-        pageName,
-        isPageEditMode
-    };
-}
-
 export function changePageName(pageId, pageName) {
     return {
         type: types.PAGE_MANAGEMENT_CHANGE_NAME,
@@ -219,76 +188,6 @@ export function updatePageName(pageName) {
     return (dispatch, getState) => {
         const pageId = createPageId(pageName, getState().templates.pagesDef);
         dispatch(changePageName(pageId, pageName));
-    };
-}
-
-export function showPage(pageId, pageName, isPageEditMode) {
-    return (dispatch, getState) => {
-        dispatch(setPageShow(pageId, pageName, isPageEditMode));
-
-        const { pagesDef } = getState().templates;
-        const { widgetDefinitions } = getState();
-        const page = pagesDef[pageId];
-        const invalidWidgets = [];
-
-        _.each(page.widgets, (widget, index) => {
-            const widgetDefinition = _.find(widgetDefinitions, { id: widget.definition });
-
-            try {
-                dispatch(
-                    addPageWidget(
-                        pageId,
-                        widget.name,
-                        widgetDefinition,
-                        widget.width,
-                        widget.height,
-                        widget.x,
-                        widget.y,
-                        widget.configuration
-                    )
-                );
-            } catch (error) {
-                const widgetName = `${index + 1} (${widget.name || 'Unknown name'})`;
-
-                console.error(`Error occurred when adding widget - ${widgetName} - to page.`, error);
-                invalidWidgets.push(widgetName);
-            }
-        });
-
-        dispatch(push('/page_management'));
-
-        if (!_.isEmpty(invalidWidgets)) {
-            dispatch(
-                errorTemplateManagement(
-                    `Page template contains invalid widgets definitions: ${_.join(invalidWidgets, ', ')}`
-                )
-            );
-        }
-    };
-}
-
-export function renamePageWidget(pageId, widgetId, newName) {
-    return {
-        type: types.PAGE_MANAGEMENT_RENAME_WIDGET,
-        pageId,
-        widgetId,
-        name: newName
-    };
-}
-
-export function removePageWidget(widgetId) {
-    return {
-        type: types.PAGE_MANAGEMENT_REMOVE_WIDGET,
-        widgetId
-    };
-}
-
-export function editPageWidget(pageId, widgetId, configuration) {
-    return {
-        type: types.PAGE_MANAGEMENT_EDIT_WIDGET,
-        pageId,
-        widgetId,
-        configuration
     };
 }
 
@@ -352,18 +251,17 @@ export function clearPageContext() {
     };
 }
 
-export function maximizePageWidget(pageId, widgetId, maximized) {
-    return {
-        type: types.PAGE_MANAGEMENT_MAXIMIZE_WIDGET,
-        pageId,
-        widgetId,
-        maximized
-    };
-}
-
 export function drillDownWarning(show) {
     return {
         type: types.PAGE_MANAGEMENT_DRILLDOWN_WARN,
         show
     };
+}
+
+export function setActive(isActive) {
+    return { type: types.TEMPLATE_MANAGEMENT_ACTIVE, isActive };
+}
+
+export function setPageEditMode(isPageEditMode) {
+    return { type: types.PAGE_MANAGEMENT_SET_EDIT_MODE, isPageEditMode };
 }

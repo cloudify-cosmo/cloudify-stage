@@ -12,10 +12,10 @@ import { clearWidgetsData } from './WidgetData';
 import Internal from '../utils/Internal';
 import Consts from '../utils/consts';
 
-export function createPage(name, newPageId) {
+export function createPage(page, newPageId) {
     return {
         type: types.ADD_PAGE,
-        name,
+        page,
         newPageId
     };
 }
@@ -107,7 +107,7 @@ export function addPage(name) {
     return (dispatch, getState) => {
         const newPageId = createPageId(name, getState().pages);
 
-        dispatch(createPage(name, newPageId));
+        dispatch(createPage({ name }, newPageId));
         dispatch(selectPage(newPageId, false));
     };
 }
@@ -159,22 +159,17 @@ export function createPagesFromTemplate() {
                 }
 
                 const pageId = createPageId(page.name, getState().pages);
-                dispatch(createPage(page.name, pageId));
+                dispatch(createPage(page, pageId));
                 _.each(page.widgets, widget => {
                     const widgetDefinition = _.find(widgetDefinitions, { id: widget.definition });
-                    dispatch(
-                        addWidget(
-                            pageId,
-                            widget.name,
-                            widgetDefinition,
-                            widget.width,
-                            widget.height,
-                            widget.x,
-                            widget.y,
-                            widget.configuration
-                        )
-                    );
+                    dispatch(addWidget(pageId, null, widget, widgetDefinition));
                 });
+                _.each(page.tabs, (tab, tabIndex) =>
+                    _.each(tab.widgets, tabWidget => {
+                        const widgetDefinition = _.find(widgetDefinitions, { id: tabWidget.definition });
+                        dispatch(addWidget(pageId, tabIndex, tabWidget, widgetDefinition));
+                    })
+                );
             });
         });
     };

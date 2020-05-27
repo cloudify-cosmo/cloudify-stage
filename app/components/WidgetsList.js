@@ -4,68 +4,75 @@
 
 import PropTypes from 'prop-types';
 
-import React, { Component } from 'react';
+import React from 'react';
 import { Container, Header } from 'semantic-ui-react';
 
+import { useSelector } from 'react-redux';
 import Widget from '../containers/Widget';
 import Grid from './layout/Grid';
 import GridItem from './layout/GridItem';
+import stageUtils from '../utils/stageUtils';
 
-export default class WidgetsList extends Component {
-    static propTypes = {
-        pageId: PropTypes.string.isRequired,
-        widgets: PropTypes.array.isRequired,
-        onWidgetsGridDataChange: PropTypes.func.isRequired,
-        isEditMode: PropTypes.bool.isRequired,
-        pageManagementMode: PropTypes.string
-    };
+export default function WidgetsList({ onWidgetUpdated, onWidgetRemoved, isEditMode, tab, widgets }) {
+    const filteredWidgets = useSelector(state => {
+        const manager = state.manager || {};
 
-    updateWidget(widgetId, data) {
-        const { onWidgetsGridDataChange, pageId } = this.props;
-        onWidgetsGridDataChange(pageId, widgetId, data);
-    }
-
-    render() {
-        const { isEditMode, pageId, pageManagementMode, widgets } = this.props;
-        return _.isEmpty(widgets) ? (
-            <Container className="emptyPage alignCenter">
-                {isEditMode ? (
-                    <Header size="large">
-                        This page is empty, <br />
-                        don't be shy, give it a meaning!
-                    </Header>
-                ) : (
-                    <Header size="large">This page is empty</Header>
-                )}
-            </Container>
-        ) : (
-            <div>
-                <Grid isEditMode={isEditMode} onGridDataChange={this.updateWidget.bind(this)}>
-                    {widgets.map(widget => {
-                        const widgetDefId = (widget.definition || {}).id;
-                        return (
-                            <GridItem
-                                key={widget.id}
-                                id={widget.id}
-                                x={widget.x}
-                                y={widget.y}
-                                height={widget.height}
-                                width={widget.width}
-                                className={`widget ${widgetDefId}Widget`}
-                                maximized={widget.maximized}
-                            >
-                                <Widget
-                                    widget={widget}
-                                    pageId={pageId}
-                                    isEditMode={isEditMode}
-                                    pageManagementMode={pageManagementMode}
-                                />
-                            </GridItem>
-                        );
-                    }, this)}
-                </Grid>
-                {(isEditMode || pageManagementMode) && <div className="gridStackBottomSpace" />}
-            </div>
+        return widgets.filter(
+            widget =>
+                widget.definition &&
+                stageUtils.isUserAuthorized(widget.definition.permission, manager) &&
+                stageUtils.isWidgetPermitted(widget.definition.supportedEditions, manager)
         );
-    }
+    });
+
+    return _.isEmpty(filteredWidgets) ? (
+        <Container className="emptyPage alignCenter">
+            {isEditMode ? (
+                <Header size="large">
+                    This page is empty, <br />
+                    don't be shy, give it a meaning!
+                </Header>
+            ) : (
+                <Header size="large">This page is empty</Header>
+            )}
+        </Container>
+    ) : (
+        <Grid isEditMode={isEditMode} onGridDataChange={onWidgetUpdated}>
+            {filteredWidgets.map(widget => {
+                const widgetDefId = (widget.definition || {}).id;
+                return (
+                    <GridItem
+                        key={widget.id}
+                        id={widget.id}
+                        x={widget.x}
+                        y={widget.y}
+                        height={widget.height}
+                        width={widget.width}
+                        className={`widget ${widgetDefId}Widget`}
+                        maximized={widget.maximized}
+                    >
+                        <Widget
+                            widget={widget}
+                            tab={tab}
+                            isEditMode={isEditMode}
+                            onWidgetUpdated={onWidgetUpdated}
+                            onWidgetRemoved={onWidgetRemoved}
+                        />
+                    </GridItem>
+                );
+            }, this)}
+        </Grid>
+    );
 }
+
+WidgetsList.propTypes = {
+    tab: PropTypes.number,
+    widgets: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
+    onWidgetRemoved: PropTypes.func.isRequired,
+    onWidgetUpdated: PropTypes.func.isRequired,
+    isEditMode: PropTypes.bool.isRequired
+};
+
+WidgetsList.defaultProps = {
+    tab: null
+};

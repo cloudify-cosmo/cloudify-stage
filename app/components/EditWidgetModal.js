@@ -44,17 +44,11 @@ export default class EditWidgetModal extends Component {
     }
 
     onApprove() {
-        const { configuration, onHideConfig, onWidgetEdited } = this.props;
-        const { fields } = this.state;
-        // Get the changed configurations
-        const config = _.clone(configuration);
+        const { configuration, onHideConfig, onWidgetEdited, widget } = this.props;
 
-        _.forEach(fields, (value, key) => {
-            config[key] = value;
-        });
-
-        if (config) {
-            onWidgetEdited(config);
+        if (configuration) {
+            const { fields } = this.state;
+            onWidgetEdited(widget.id, { configuration: { ...configuration, ...fields } });
         }
 
         onHideConfig();

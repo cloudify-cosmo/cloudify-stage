@@ -34,9 +34,9 @@ export default class ResetPagesModal extends React.Component {
     }
 
     render() {
-        const { loading } = this.state;
-        const { onConfirm, onHide, open, tenants } = this.props;
-        return tenants.items.length > 1 ? (
+        const { loading, tenants } = this.state;
+        const { onConfirm, onHide, open } = this.props;
+        return tenants.length > 1 ? (
             <Modal className="tiny resetPagesModal" open={open} onClose={onHide}>
                 <Modal.Header>
                     <Icon name="user" /> Reset pages for tenants
@@ -48,14 +48,14 @@ export default class ResetPagesModal extends React.Component {
                     <Card fluid>
                         <Card.Content>
                             <List relaxed>
-                                {tenants.items.map(tenant => {
+                                {tenants.map(tenant => {
                                     return (
-                                        <List.Item key={tenant.name}>
+                                        <List.Item key={tenant}>
                                             <Checkbox
-                                                name={tenant.name}
+                                                name={tenant}
                                                 defaultChecked
                                                 onChange={this.toggleCheckbox.bind(this)}
-                                                label={tenant.name}
+                                                label={tenant}
                                             />
                                         </List.Item>
                                     );

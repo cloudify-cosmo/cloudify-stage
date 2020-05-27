@@ -18,26 +18,22 @@ export function loadWidgetDefinitions() {
         widgetDefinitionLoader.load(getState().manager).then(result => dispatch(storeWidgetDefinitions(result)));
 }
 
-export function addWidget(pageId, name, widgetDefinition, width, height, x, y, configuration) {
+export function addWidget(pageId, tab, widget, widgetDefinition) {
     return {
         type: types.ADD_WIDGET,
         pageId,
-        name,
-        widgetDefinition,
-        width,
-        height,
-        x,
-        y,
-        configuration
+        tab,
+        widget,
+        widgetDefinition
     };
 }
 
-export function renameWidget(pageId, widgetId, newName) {
+export function updateWidget(pageId, widgetId, params) {
     return {
-        type: types.RENAME_WIDGET,
+        type: types.UPDATE_WIDGET,
         pageId,
         widgetId,
-        name: newName
+        params
     };
 }
 
@@ -49,36 +45,9 @@ export function removeWidget(pageId, widgetId) {
     };
 }
 
-export function editWidget(pageId, widgetId, configuration) {
-    return {
-        type: types.EDIT_WIDGET,
-        pageId,
-        widgetId,
-        configuration
-    };
-}
-
-export function maximizeWidget(pageId, widgetId, maximized) {
-    return {
-        type: types.MAXIMIZE_WIDGET,
-        pageId,
-        widgetId,
-        maximized
-    };
-}
-
 export function minimizeWidgets() {
     return {
         type: types.MINIMIZE_WIDGETS
-    };
-}
-
-export function changeWidgetGridData(pageId, widgetId, gridData) {
-    return {
-        type: types.CHANGE_WIDGET_GRID_DATA,
-        pageId,
-        widgetId,
-        gridData
     };
 }
 
@@ -110,19 +79,15 @@ export function uninstallWidget(widgetId) {
             .then(() => dispatch(setUninstallWidget(widgetId)));
 }
 
-export function setUpdateWidget(widgetDefinitions, widgetId) {
-    return {
-        type: types.UPDATE_WIDGET,
-        widgetDefinitions,
-        widgetId
-    };
-}
-
-export function updateWidget(widgetId, widgetFile, widgetUrl) {
+export function updateWidgetDefinition(widgetId, widgetFile, widgetUrl) {
     return (dispatch, getState) =>
-        widgetDefinitionLoader
-            .update(widgetId, widgetFile, widgetUrl, getState().manager)
-            .then(widgetDefinitions => dispatch(setUpdateWidget(widgetDefinitions, widgetId)));
+        widgetDefinitionLoader.update(widgetId, widgetFile, widgetUrl, getState().manager).then(widgetDefinitions =>
+            dispatch({
+                type: types.UPDATE_WIDGET_DEFINITION,
+                widgetDefinitions,
+                widgetId
+            })
+        );
 }
 
 export function checkIfWidgetIsUsed(widgetId) {

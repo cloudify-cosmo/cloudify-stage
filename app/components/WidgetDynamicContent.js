@@ -15,8 +15,7 @@ export default class WidgetDynamicContent extends Component {
         manager: PropTypes.object.isRequired,
         data: PropTypes.object.isRequired,
         onWidgetConfigUpdate: PropTypes.func,
-        fetchWidgetData: PropTypes.func.isRequired,
-        pageId: PropTypes.string.isRequired
+        fetchWidgetData: PropTypes.func.isRequired
     };
 
     constructor(props) {
@@ -212,13 +211,12 @@ export default class WidgetDynamicContent extends Component {
     }
 
     shouldComponentUpdate(nextProps, nextState) {
-        const { context, data, manager, pageId, widget } = this.props;
+        const { context, data, manager, widget } = this.props;
         return (
             !_.isEqual(widget, nextProps.widget) ||
             !_.isEqual(context, nextProps.context) ||
             !_.isEqual(manager, nextProps.manager) ||
             !_.isEqual(data, nextProps.data) ||
-            !_.isEqual(pageId, nextProps.pageId) ||
             !_.isEqual(this.state, nextState)
         );
     }

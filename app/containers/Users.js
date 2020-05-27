@@ -12,7 +12,7 @@ import Consts from '../utils/consts';
 import stageUtils from '../utils/stageUtils';
 
 const mapStateToProps = (state, ownProps) => {
-    const isTemplateManagementActive = !!state.templateManagement.templates || !!state.templateManagement.page;
+    const isTemplateManagementActive = state.templateManagement.isActive;
 
     const canEditMode =
         !isTemplateManagementActive && stageUtils.isUserAuthorized(Consts.permissions.STAGE_EDIT_MODE, state.manager);

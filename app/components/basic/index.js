@@ -30,6 +30,7 @@ import {
     Segment,
     Sidebar,
     Step,
+    Tab,
     Table
 } from 'semantic-ui-react';
 
@@ -127,6 +128,7 @@ export {
     Segment,
     Sidebar,
     Step,
+    Tab,
     Table,
     VisibilityIcon,
     VisibilityField
