@@ -51,6 +51,8 @@ export default function PageManagement({ pageId, isEditMode }) {
                     widget.id = v4();
                     widget.configuration = { ...StageUtils.buildConfig(widgetDefinition), ...widget.configuration };
                     widget.definition = widgetDefinition;
+                    widget.width = widget.width || widgetDefinition.initialWidth;
+                    widget.height = widget.height || widgetDefinition.initialHeight;
                     widgetInstances.push(widget);
                 } else {
                     invalidWidgetNames.push(widget.name);
