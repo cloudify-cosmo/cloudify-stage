@@ -8,7 +8,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
 import v4 from 'uuid/v4';
 import Const from '../../utils/consts';
-import { Alert, Breadcrumb, Button, Divider, EditableLabel, ErrorMessage, Segment } from '../basic';
+import { Alert, Breadcrumb, Button, Divider, EditableLabel, ErrorMessage, Menu, Segment, Sidebar } from '../basic';
 import EditModeBubble from '../EditModeBubble';
 import PageContent from '../PageContent';
 import { createPageId, drillDownWarning, savePage, setActive, setPageEditMode } from '../../actions/templateManagement';
@@ -139,12 +139,14 @@ export default function PageManagement({ pageId, isEditMode }) {
     return (
         <div className="main">
             <div className="sidebarContainer">
-                <div className="ui visible left vertical sidebar menu small basic">
+                <Sidebar visible as={Menu} vertical size="small">
                     <div className="pages">
-                        <div className="item link pageMenuItem">{page.name}</div>
-                        <div className="item link pageMenuItem" />
+                        <Menu.Item link className="pageMenuItem">
+                            {page.name}
+                        </Menu.Item>
+                        <Menu.Item link className="pageMenuItem" />
                     </div>
-                </div>
+                </Sidebar>
             </div>
 
             <div className="page">

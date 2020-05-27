@@ -288,7 +288,7 @@ export default class AddWidgetModal extends Component {
             StageUtils.Url.url(LoaderUtils.getResourceUrl(`widgets/${widget.id}/widget.png`, widget.isCustom));
 
         return (
-            <div className="compactBlock">
+            <div style={{ display: 'inline-block' }}>
                 <Modal
                     trigger={addWidgetBtn}
                     className="addWidgetModal"

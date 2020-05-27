@@ -111,13 +111,13 @@ export default class Widget extends Component {
                     <div className="widgetButtons" onMouseDown={e => e.stopPropagation()}>
                         {isEditMode && (
                             <div className="widgetEditButtons">
-                                <i className="remove link icon small" onClick={() => onWidgetRemoved(widget.id)} />
+                                <Icon link size="small" name="remove" onClick={() => onWidgetRemoved(widget.id)} />
                             </div>
                         )}
                     </div>
                     <div className="ui segment basic" style={{ height: '100%' }}>
                         <div className="ui icon message error">
-                            <i className="ban icon" />
+                            <Icon name="ban" />
                             Cannot load widget {widget.name}. It might not be installed in your env. Please contact
                             administrator.
                         </div>
