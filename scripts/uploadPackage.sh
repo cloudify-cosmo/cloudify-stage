@@ -9,9 +9,9 @@ PRE_COMMANDS="
 
 POST_COMMANDS="
   cd /opt/cloudify-stage/backend;
-  sudo /bin/npm run db-migrate;
+  sudo /usr/bin/npm run db-migrate;
   sudo service cloudify-stage restart;
-  sudo /bin/npm run wait-on-server;"
+  sudo /usr/bin/npm run wait-on-server;"
 
 COMMANDS_FOR_RPM="
   ${PRE_COMMANDS}
