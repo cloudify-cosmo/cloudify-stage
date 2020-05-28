@@ -1,37 +1,28 @@
 [
     {
-        "name": "Application (gzip)",
-        "limit": "8.6 MB",
-        "gzip": false,
-        "webpack": false,
-        "path": ["dist/static/js/*.gz", "dist/appData/widgets/*/widget.js.gz", "dist/appData/widgets/*/widget.css", "dist/appData/widgets/*/widget.png", "dist/appData/widgets/*/widget.html", "dist/appData/widgets/*/README.md", "dist/appData/widgets/*/backend.js", "dist/appData/templates/**", "dist/static/images/*", "dist/static/fonts/*", "dist/static/*" ]
-    },
-    {
-        "name": "Application (brotli)",
-        "limit": "8.2 MB",
-        "gzip": false,
-        "webpack": false,
-        "path": ["dist/static/js/*.br", "dist/appData/widgets/*/widget.js.br", "dist/appData/widgets/*/widget.css", "dist/appData/widgets/*/widget.png", "dist/appData/widgets/*/widget.html", "dist/appData/widgets/*/README.md", "dist/appData/widgets/*/backend.js", "dist/appData/templates/**", "dist/static/images/*", "dist/static/fonts/*", "dist/static/*" ]
-    },
-    {
         "name": "Main JS bundle",
-        "limit": "360 KB",
+        "limit": "250 KB",
         "gzip": false,
-        "webpack": false,
         "path": "dist/static/js/main.bundle.js"
     },
     {
         "name": "Vendor JS bundle",
-        "limit": "4.05 MB",
+        "limit": "4.10 MB",
         "gzip": false,
-        "webpack": false,
         "path": "dist/static/js/vendor.bundle.js"
     },
     {
-        "name": "Application package",
-        "limit": "16.6 MB",
+        "name": "Widgets",
+        "limit": "2.5 MB",
         "gzip": false,
-        "webpack": false,
-        "path": "dist/**"
+        "running": false,
+        "path": ["dist/appData/widgets", "!dist/appData/widgets/**/*.gz"]
+    },
+    {
+        "name": "Application package",
+        "limit": "13 MB",
+        "gzip": false,
+        "running": false,
+        "path": ["dist", "!dist/**/*.gz"]
     },
 ]

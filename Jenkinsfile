@@ -1,16 +1,3 @@
-def upload_artifacts = { from_job ->
-    def prefix = "cloudify/${cloudify_ver}/${milestone}-release"
-    retry(3){
-        build(job: 'dir_prepare/upload_artifacts_to_s3',
-              parameters: [
-                string(name: 'build_number', value: from_job.getId()),
-                string(name: 'from_job', value: from_job.getFullProjectName()),
-                string(name: 'bucket', value: 'cloudify-release-eu'),
-                string(name: 'bucket_key_prefix', value: prefix)]
-        )
-    }
-}
-
 pipeline {
     agent { label 'web-ui' }
     environment {
@@ -37,20 +24,22 @@ pipeline {
                     sh '''#!/usr/bin/env bash
                         source ${JENKINS_HOME}/.profile
                         nvm install
+                        npm run beforebuild
+                        npm run build
                     '''
-                    sh 'npm run beforebuild'
-                    sh 'npm run build'
                 }
             }
         }
 
-        stage('Upload RPM') {
+        stage('Build RPM') {
             steps {
-                def job_build = build(job: 'rpms/cloudify-stage', parameters: [
-                    string(name: 'tag', value: branch),
-                    string(name: 'manager_tag', value:  branch),
-                ])
-                upload_artifacts(job_build)
+                build(
+                    job: 'rpms/cloudify-stage',
+                    parameters: [
+                        string(name: 'tag', value: env.BRANCH_NAME),
+                        string(name: 'manager_tag', value:  env.BRANCH_NAME)
+                    ]
+                )
             }
         }
     }

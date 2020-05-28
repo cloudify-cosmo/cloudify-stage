@@ -1,5 +1,5 @@
 # snapshot restore script
-cfyuser ALL=(stage_user) NOPASSWD:/opt/manager/env/bin/python
+cfyuser ALL=(stage_user) NOPASSWD:/opt/cloudify/stage/restore-snapshot.py
 
 # running node scripts
 cfyuser ALL=(stage_user) NOPASSWD:/usr/bin/npm
