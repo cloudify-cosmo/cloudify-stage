@@ -1,5 +1,3 @@
-import PropTypes from 'prop-types';
-
 class GroupState extends React.Component {
     /**
      * propTypes
