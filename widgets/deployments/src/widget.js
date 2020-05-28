@@ -92,19 +92,13 @@ Stage.defineWidget({
         );
 
         return Promise.all([deploymentData, nodeInstanceData, executionsData]).then(data => {
+            const { NodeInstancesConsts } = Stage.Common;
             const deploymentData = data[0];
             const nodeInstanceData = _.reduce(
                 data[1].items,
                 (result, item) => {
                     result[item.deployment_id] = {
-                        states: _.reduce(
-                            item['by state'],
-                            (result, state) => {
-                                result[state.state] = state.node_instances;
-                                return result;
-                            },
-                            {}
-                        ),
+                        states: NodeInstancesConsts.extractStatesFrom(item),
                         count: item.node_instances
                     };
                     return result;

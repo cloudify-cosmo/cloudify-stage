@@ -53,7 +53,7 @@ export default class DeploymentsSegment extends React.Component {
             widget
         } = this.props;
         const { DataSegment, Divider, Grid, Header, ResourceVisibility } = Stage.Basic;
-        const { NodeInstancesConsts, LastExecutionStatusIcon, GroupState } = Stage.Common;
+        const { LastExecutionStatusIcon, NodeInstancesSummary } = Stage.Common;
 
         return (
             <DataSegment
@@ -93,9 +93,7 @@ export default class DeploymentsSegment extends React.Component {
                                             textAlign="center"
                                             style={showExecutionStatusLabel ? {} : { marginTop: 5 }}
                                         >
-                                            <a href="javascript:void(0)" className="breakWord">
-                                                {item.id}
-                                            </a>
+                                            <span className="breakWord">{item.id}</span>
                                         </Header>
                                     </Grid.Column>
 
@@ -124,34 +122,7 @@ export default class DeploymentsSegment extends React.Component {
 
                                     <Grid.Column width={3}>
                                         <Header as="h5">Node Instances ({item.nodeInstancesCount})</Header>
-                                        <Grid columns={4}>
-                                            <Grid.Row>
-                                                {_.map(NodeInstancesConsts.groupStates, groupState => {
-                                                    const value = _.sum(
-                                                        _.map(groupState.states, state =>
-                                                            _.isNumber(item.nodeInstancesStates[state])
-                                                                ? item.nodeInstancesStates[state]
-                                                                : 0
-                                                        )
-                                                    );
-                                                    return (
-                                                        <Grid.Column key={groupState.name} textAlign="center">
-                                                            <GroupState
-                                                                state={groupState}
-                                                                description={
-                                                                    <StateDescription
-                                                                        states={groupState.states}
-                                                                        value={value}
-                                                                    />
-                                                                }
-                                                                className="nodeState"
-                                                                value={value}
-                                                            />
-                                                        </Grid.Column>
-                                                    );
-                                                })}
-                                            </Grid.Row>
-                                        </Grid>
+                                        <NodeInstancesSummary instancesStates={item.nodeInstancesStates} />
                                     </Grid.Column>
 
                                     <Grid.Column width={1}>
@@ -170,15 +141,4 @@ export default class DeploymentsSegment extends React.Component {
             </DataSegment>
         );
     }
-}
-
-function StateDescription({ states, value }) {
-    const state = _.join(states, ', ');
-    const areManyStates = _.size(_.words(state)) > 1;
-
-    return (
-        <span>
-            <strong>{value}</strong> node instances in <strong>{state}</strong> state{areManyStates && 's'}
-        </span>
-    );
 }
