@@ -18,14 +18,14 @@ export default function NodeInstancesSummary({ instancesStates }) {
     const { GroupState, NodeInstancesConsts } = Stage.Common;
 
     return (
-        <Grid columns={_.size(NodeInstancesConsts.groupStates)}>
-            <Grid.Row>
+        <Grid columns="equal">
+            <Grid.Row style={{ marginLeft: '0.5rem', marginRight: '0.5rem' }}>
                 {_.map(NodeInstancesConsts.groupStates, group => {
                     const value = _.sum(
                         _.map(group.states, state => (_.isNumber(instancesStates[state]) ? instancesStates[state] : 0))
                     );
                     return (
-                        <Grid.Column key={group.name} textAlign="center">
+                        <Grid.Column key={group.name} style={{ paddingLeft: '0.5rem', paddingRight: '0.5rem' }}>
                             <GroupState
                                 state={group}
                                 description={<StateDescription states={group.states} value={value} />}

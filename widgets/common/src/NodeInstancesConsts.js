@@ -74,7 +74,24 @@ function extractStatesFrom(instancesSummaryItem) {
     );
 }
 
+/**
+ * Extracts number of node instances from node instances summary item
+ *
+ * @param {object} instancesSummaryItem - item received from /summary/node_instances REST API,
+ * should have the following format:
+ * {
+ *  'by state': [{state: "started", node_instances: 4, {state: "deleted", node_instances: 2}, ... }],
+ *  deployment_id: "nodecellar",
+ *  node_instances: 4
+ * }
+ *
+ * @returns {number} number of node instances
+ */
+function extractCountFrom(instancesSummaryItem) {
+    return _.get(instancesSummaryItem, 'node_instances', 0);
+}
+
 Stage.defineCommon({
     name: 'NodeInstancesConsts',
-    common: { extractStatesFrom, groupNames, groupStates }
+    common: { extractCountFrom, extractStatesFrom, groupNames, groupStates }
 });
