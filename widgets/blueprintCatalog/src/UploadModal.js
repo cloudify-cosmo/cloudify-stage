@@ -24,7 +24,12 @@ export default class UploadModal extends React.Component {
         open: PropTypes.bool.isRequired,
         onHide: PropTypes.func.isRequired,
         toolbox: PropTypes.object.isRequired,
-        actions: PropTypes.object.isRequired
+        actions: PropTypes.object.isRequired,
+        defaultYamlFile: PropTypes.string
+    };
+
+    static defaultProps = {
+        defaultYamlFile: ''
     };
 
     static initialState = {
@@ -48,14 +53,17 @@ export default class UploadModal extends React.Component {
     }
 
     componentDidUpdate(prevProps) {
-        const { open, repositoryName, yamlFiles } = this.props;
+        const { open, repositoryName, defaultYamlFile, yamlFiles } = this.props;
         if (!prevProps.open && open) {
             if (!_.isEmpty(yamlFiles)) {
                 const defaultBlueprintYamlFile = Stage.Common.UploadBlueprintModal.DEFAULT_BLUEPRINT_YAML_FILE;
                 const blueprintName = repositoryName;
-                const blueprintYamlFile = _.includes(yamlFiles, defaultBlueprintYamlFile)
-                    ? defaultBlueprintYamlFile
-                    : yamlFiles[0];
+                let blueprintYamlFile = defaultYamlFile;
+                if (!blueprintYamlFile) {
+                    blueprintYamlFile = _.includes(yamlFiles, defaultBlueprintYamlFile)
+                        ? defaultBlueprintYamlFile
+                        : yamlFiles[0];
+                }
 
                 this.setState({
                     ...UploadModal.initialState,
