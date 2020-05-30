@@ -17,7 +17,7 @@ import co.cloudify.rest.model.ListResponse;
 public class DeploymentsHelper {
     private static final Logger logger = LoggerFactory.getLogger(DeploymentsHelper.class);
 
-    private static final int POLLING_INTERVAL = 2000;
+    public static final long DEFAULT_POLLING_INTERVAL = 2000;
 
     /**
      * Creates a deployment and wait for the creation process to finish.
@@ -34,7 +34,8 @@ public class DeploymentsHelper {
      * @throws Exception All exceptions are percolated.
      */
     public static Deployment createDeploymentAndWait(CloudifyClient client, String id, String blueprintId,
-            final Map<String, Object> inputs, final ExecutionFollowCallback callback) throws Exception {
+            final Map<String, Object> inputs, final ExecutionFollowCallback callback,
+            final long pollingInterval) throws Exception {
         DeploymentsClient deploymentsClient = client.getDeploymentsClient();
         Deployment deployment = deploymentsClient.create(id, blueprintId, inputs);
 
@@ -52,7 +53,8 @@ public class DeploymentsHelper {
                             deployment.getId(), items.size()));
         }
         Execution depCreationExecution = items.get(0);
-        depCreationExecution = ExecutionsHelper.followExecution(client, depCreationExecution, callback);
+        depCreationExecution = ExecutionsHelper.followExecution(executionsClient, depCreationExecution, callback,
+                pollingInterval);
         return deployment;
     }
 
@@ -62,14 +64,14 @@ public class DeploymentsHelper {
      * @param client a {@link CloudifyClient} instance
      * @param id     ID of deployment to delete
      */
-    public static void deleteDeploymentAndWait(CloudifyClient client, String id) {
+    public static void deleteDeploymentAndWait(CloudifyClient client, String id, final long pollingInterval) {
         DeploymentsClient deploymentsClient = client.getDeploymentsClient();
         deploymentsClient.delete(id);
         while (true) {
             try {
                 deploymentsClient.get(id);
                 // No exception thrown; the deployment still exists.
-                Thread.sleep(POLLING_INTERVAL);
+                Thread.sleep(pollingInterval);
                 continue;
             } catch (DeploymentNotFoundException ex) {
                 // Deleted.

@@ -16,6 +16,8 @@ import co.cloudify.rest.model.ExecutionStatus;
 public class ExecutionsHelper {
     private static final Logger logger = LoggerFactory.getLogger(ExecutionsHelper.class);
 
+    public static final long DEFAULT_POLLING_INTERVAL = 2000;
+
     private static ExecutionFollowCallback DEFAULT_FOLLOW_CALLBACK = DefaultExecutionFollowCallback.getInstance();
 
     /**
@@ -39,10 +41,12 @@ public class ExecutionsHelper {
             final String deploymentId,
             final String workflowId,
             final Map<String, Object> parameters,
-            ExecutionFollowCallback callback) throws Exception {
-        Execution execution = client.getExecutionsClient().start(deploymentId, workflowId, parameters);
+            ExecutionFollowCallback callback,
+            final long pollingInterval) throws Exception {
+        ExecutionsClient executionsClient = client.getExecutionsClient();
+        Execution execution = executionsClient.start(deploymentId, workflowId, parameters);
         if (callback != null) {
-            execution = followExecution(client, execution, callback);
+            execution = followExecution(executionsClient, execution, callback, pollingInterval);
         }
         return execution;
     }
@@ -63,8 +67,8 @@ public class ExecutionsHelper {
      * @throws Exception May be anything thrown by Cloudify's REST client.
      */
     public static Execution install(final CloudifyClient client, final String deploymentId,
-            ExecutionFollowCallback callback) throws Exception {
-        return start(client, deploymentId, "install", null, callback);
+            ExecutionFollowCallback callback, final long pollingInterval) throws Exception {
+        return start(client, deploymentId, "install", null, callback, pollingInterval);
     }
 
     /**
@@ -84,24 +88,24 @@ public class ExecutionsHelper {
      * @throws Exception May be anything thrown by Cloudify's REST client.
      */
     public static Execution uninstall(final CloudifyClient client, final String deploymentId, Boolean ignoreFailure,
-            ExecutionFollowCallback callback) throws Exception {
+            ExecutionFollowCallback callback, final long pollingInterval) throws Exception {
         Map<String, Object> params = ignoreFailure != null ? Collections.singletonMap("ignore_failure", ignoreFailure)
                 : null;
-        return start(client, deploymentId, "uninstall", params, callback);
+        return start(client, deploymentId, "uninstall", params, callback, pollingInterval);
     }
 
     /**
      * Follows an execution until it ends.
      * 
-     * @param client    Cloudify's REST client
-     * @param execution execution to track
-     * @param callback  a callback object to call while following
+     * @param executionsClient Cloudify's Executions REST client
+     * @param execution        execution to track
+     * @param callback         a callback object to call while following
+     * @param pollingInterval  number of milliseconds to wait between pollings
      * 
      * @return The most up-to-date representation of the execution.
      */
-    public static Execution followExecution(final CloudifyClient client, Execution execution,
-            ExecutionFollowCallback callback) throws Exception {
-        ExecutionsClient executionsClient = client.getExecutionsClient();
+    public static Execution followExecution(final ExecutionsClient executionsClient, Execution execution,
+            ExecutionFollowCallback callback, long pollingInterval) throws Exception {
         String executionId = execution.getId();
         ExecutionFollowCallback effectiveCallback = ObjectUtils.defaultIfNull(callback, DEFAULT_FOLLOW_CALLBACK);
         effectiveCallback.start(execution);
@@ -113,7 +117,7 @@ public class ExecutionsHelper {
                     break;
                 }
                 try {
-                    Thread.sleep(2000);
+                    Thread.sleep(pollingInterval);
                 } catch (InterruptedException ex) {
                     logger.warn("Asked to stop waiting; returning", ex);
                     throw ex;
@@ -138,7 +142,7 @@ public class ExecutionsHelper {
      * 
      * @throws ExecutionNotCompletedException Thrown when the execution fails validation.
      */
-    public static void validate(final Execution execution, final String msg, final Object... args)
+    public static void validateCompleted(final Execution execution, final String msg, final Object... args)
             throws ExecutionNotCompletedException {
         if (execution.getStatus() != ExecutionStatus.terminated) {
             throw new ExecutionNotCompletedException(String.format(msg, args), execution);

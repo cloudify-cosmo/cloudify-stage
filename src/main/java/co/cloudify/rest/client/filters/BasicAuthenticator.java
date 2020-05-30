@@ -9,6 +9,8 @@ import javax.ws.rs.client.ClientRequestFilter;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.ext.Provider;
 
+import org.apache.commons.lang3.Validate;
+
 /**
  * A {@link ClientRequestFilter} implementation for HTTP basic authentication.
  * 
@@ -20,6 +22,8 @@ public class BasicAuthenticator implements ClientRequestFilter {
     private final String password;
 
     public BasicAuthenticator(String username, String password) {
+        Validate.notBlank(username);
+        Validate.notBlank(password);
         this.username = username;
         this.password = password;
     }

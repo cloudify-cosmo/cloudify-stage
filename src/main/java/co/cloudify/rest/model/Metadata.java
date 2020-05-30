@@ -19,8 +19,21 @@ public class Metadata implements Serializable {
     @XmlElement
     private Pagination pagination;
 
+    public Metadata() {
+        super();
+    }
+
+    public Metadata(final Pagination pagination) {
+        this();
+        setPagination(pagination);
+    }
+
     public Pagination getPagination() {
         return pagination;
+    }
+
+    public void setPagination(Pagination pagination) {
+        this.pagination = pagination;
     }
 
     @Override

@@ -9,6 +9,19 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
 
 public class Utilities {
+    /**
+     * Given a string that can represent a locally-accessible file or a URL, copy the contents
+     * into a file in the specified directory.
+     * 
+     * It is the caller's responsibility to delete the file after use.
+     * 
+     * @param location  either a URL or a locally-accessible path
+     * @param directory directory to copy the file to
+     * 
+     * @return A {@link File} instance representing the locally-accessible file
+     * 
+     * @throws IOException May be thrown if there was a problem reading or writing contents.
+     */
     public static File copyFileOrURLToDir(String location, File directory) throws IOException {
         File returnedFile;
         try {

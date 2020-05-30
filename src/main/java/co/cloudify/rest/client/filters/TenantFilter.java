@@ -6,6 +6,7 @@ import javax.ws.rs.client.ClientRequestContext;
 import javax.ws.rs.client.ClientRequestFilter;
 import javax.ws.rs.ext.Provider;
 
+import org.apache.commons.lang3.Validate;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
 /**
@@ -20,6 +21,7 @@ public class TenantFilter implements ClientRequestFilter {
     private String tenant;
 
     public TenantFilter(final String tenant) {
+        Validate.notBlank(tenant);
         this.tenant = tenant;
     }
 

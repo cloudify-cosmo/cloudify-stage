@@ -23,16 +23,39 @@ public class Pagination implements Serializable {
     @XmlElement
     private long size;
 
+    public Pagination() {
+        super();
+    }
+
+    public Pagination(final long total, final long offset, final long size) {
+        this();
+        setTotal(total);
+        setOffset(offset);
+        setSize(size);
+    }
+
     public long getTotal() {
         return total;
+    }
+
+    public void setTotal(long total) {
+        this.total = total;
     }
 
     public long getOffset() {
         return offset;
     }
 
+    public void setOffset(long offset) {
+        this.offset = offset;
+    }
+
     public long getSize() {
         return size;
+    }
+
+    public void setSize(long size) {
+        this.size = size;
     }
 
     @Override

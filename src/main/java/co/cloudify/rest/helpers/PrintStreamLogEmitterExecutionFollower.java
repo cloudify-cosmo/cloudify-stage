@@ -9,7 +9,8 @@ import co.cloudify.rest.model.Execution;
 
 /**
  * A {@link LogEmitterExecutionFollower} implementation that prints to a
- * {@link PrintStream}. This is useful, among others, for Jenkins.
+ * {@link PrintStream}. This is useful, among others, for Jenkins, as Jenkins'
+ * log is a {@link PrintStream}.
  * 
  * @author Isaac Shabtay
  */

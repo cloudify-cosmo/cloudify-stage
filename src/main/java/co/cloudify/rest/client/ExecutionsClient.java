@@ -3,6 +3,7 @@ package co.cloudify.rest.client;
 import java.util.Collections;
 import java.util.Map;
 
+import javax.ws.rs.NotFoundException;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.Entity;
@@ -11,6 +12,7 @@ import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.GenericType;
 
 import co.cloudify.rest.client.exceptions.CloudifyClientException;
+import co.cloudify.rest.client.exceptions.ExecutionNotFoundException;
 import co.cloudify.rest.client.params.ExecutionStartParams;
 import co.cloudify.rest.model.Deployment;
 import co.cloudify.rest.model.Execution;
@@ -53,6 +55,8 @@ public class ExecutionsClient extends AbstractCloudifyClient {
     public Execution get(String id) {
         try {
             return getExecutionBuilder(id).get(Execution.class);
+        } catch (NotFoundException ex) {
+            throw new ExecutionNotFoundException(id, ex);
         } catch (WebApplicationException ex) {
             throw CloudifyClientException.create("Failed retrieving execution", ex);
         }

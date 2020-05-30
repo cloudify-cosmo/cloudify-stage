@@ -23,6 +23,8 @@ public class TokenAuthenticator implements ClientRequestFilter {
 
     @Override
     public void filter(ClientRequestContext requestContext) throws IOException {
-        requestContext.getHeaders().putSingle(AUTH_TOKEN_HEADER, token);
+        if (token != null) {
+            requestContext.getHeaders().putSingle(AUTH_TOKEN_HEADER, token);
+        }
     }
 }

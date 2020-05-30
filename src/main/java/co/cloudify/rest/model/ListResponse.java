@@ -42,11 +42,19 @@ public class ListResponse<T> implements Iterable<T>, Serializable {
         return items;
     }
 
+    public void setItems(List<T> items) {
+        this.items = items;
+    }
+
     /**
      * @return The {@link Metadata} information.
      */
     public Metadata getMetadata() {
         return metadata;
+    }
+
+    public void setMetadata(Metadata metadata) {
+        this.metadata = metadata;
     }
 
     @Override

@@ -47,6 +47,10 @@ public class DeploymentsClient extends AbstractCloudifyClient {
         return getBuilder(getTarget(path, Collections.singletonMap("id", id)));
     }
 
+    protected Builder getDeploymentIdBuilder(String id) {
+        return getDeploymentBuilder(ID_PATH, id);
+    }
+
     /**
      * @return A {@link ListResponse} of all deployments.
      */
@@ -81,7 +85,7 @@ public class DeploymentsClient extends AbstractCloudifyClient {
      */
     public Deployment get(final String id) {
         try {
-            return getDeploymentBuilder(ID_PATH, id).get(Deployment.class);
+            return getDeploymentIdBuilder(id).get(Deployment.class);
         } catch (NotFoundException ex) {
             throw new DeploymentNotFoundException(id, ex);
         } catch (WebApplicationException ex) {
@@ -115,7 +119,7 @@ public class DeploymentsClient extends AbstractCloudifyClient {
     public Deployment create(final String id, final String blueprintId,
             final Map<String, Object> inputs) {
         try {
-            return getDeploymentBuilder(ID_PATH, id).put(
+            return getDeploymentIdBuilder(id).put(
                     Entity.json(
                             new DeploymentCreateParams(blueprintId, inputs)),
                     Deployment.class);
@@ -155,7 +159,7 @@ public class DeploymentsClient extends AbstractCloudifyClient {
      */
     public Deployment delete(final String id) {
         try {
-            return getDeploymentBuilder(ID_PATH, id).delete(Deployment.class);
+            return getDeploymentIdBuilder(id).delete(Deployment.class);
         } catch (NotFoundException ex) {
             throw new DeploymentNotFoundException(id, ex);
         } catch (WebApplicationException ex) {

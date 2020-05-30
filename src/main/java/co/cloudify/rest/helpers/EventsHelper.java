@@ -7,7 +7,7 @@ import org.apache.commons.lang3.StringUtils;
 import co.cloudify.rest.model.Event;
 
 public class EventsHelper {
-    private static final String DATETIME_FORMAT = "dd-MM-yyyy hh:mm:ss";
+    private static final String DATETIME_FORMAT = "yyyy-MM-dd hh:mm:ss";
 
     public static String formatEvent(final Event event) {
         return formatEvent(event, true);
