@@ -1,8 +1,5 @@
 package co.cloudify.rest.client;
 
-import java.security.NoSuchAlgorithmException;
-
-import javax.net.ssl.SSLContext;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.WebTarget;
@@ -63,16 +60,8 @@ public class CloudifyClient extends AbstractCloudifyClient {
             final String host, final String username,
             final String password, final String token,
             final boolean secure, final String tenant) {
-        // TODO: Add support for specifying certs.
-        SSLContext sslContext;
-        try {
-            sslContext = SSLContext.getInstance("SSL");
-        } catch (NoSuchAlgorithmException ex) {
-            throw new IllegalStateException("Failed obtaining SSL context", ex);
-        }
         Client client = ClientBuilder
                 .newBuilder()
-//                .sslContext(sslContext)
                 .build();
         if (username != null && password != null) {
             client.register(new BasicAuthenticator(username, password));
