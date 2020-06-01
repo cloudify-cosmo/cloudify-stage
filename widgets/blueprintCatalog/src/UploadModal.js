@@ -17,6 +17,7 @@ export default class UploadModal extends React.Component {
      * @property {Function} onHide function called when modal is closed
      * @property {object} toolbox Toolbox object
      * @property {object} actions Actions object
+     * @property {string} defaultYamlFile string name of the repository used as a blueprint name
      */
     static propTypes = {
         repositoryName: PropTypes.string.isRequired,
@@ -24,7 +25,12 @@ export default class UploadModal extends React.Component {
         open: PropTypes.bool.isRequired,
         onHide: PropTypes.func.isRequired,
         toolbox: PropTypes.object.isRequired,
-        actions: PropTypes.object.isRequired
+        actions: PropTypes.object.isRequired,
+        defaultYamlFile: PropTypes.string
+    };
+
+    static defaultProps = {
+        defaultYamlFile: ''
     };
 
     static initialState = {
@@ -47,15 +53,9 @@ export default class UploadModal extends React.Component {
     }
 
     componentDidUpdate(prevProps) {
-        if (!prevProps.open && this.props.open) {
-            if (!_.isEmpty(this.props.yamlFiles)) {
-                const defaultBlueprintYamlFile = Stage.Common.UploadBlueprintModal.DEFAULT_BLUEPRINT_YAML_FILE;
-                const { yamlFiles } = this.props;
-                const blueprintName = this.props.repositoryName;
-                const blueprintYamlFile = _.includes(yamlFiles, defaultBlueprintYamlFile)
-                    ? defaultBlueprintYamlFile
-                    : yamlFiles[0];
-
+        const { open, repositoryName: blueprintName, defaultYamlFile: blueprintYamlFile, yamlFiles } = this.props;
+        if (!prevProps.open && open) {
+            if (!_.isEmpty(yamlFiles)) {
                 this.setState({
                     ...UploadModal.initialState,
                     blueprintName,
