@@ -81,7 +81,7 @@ export default class extends React.Component {
                                 className="uploadButton labeled icon"
                                 onClick={event => {
                                     event.stopPropagation();
-                                    onUpload(item.name, item.zip_url, item.image_url);
+                                    onUpload(item.name, item.zip_url, item.image_url, item.main_blueprint);
                                 }}
                             />
                         </div>
