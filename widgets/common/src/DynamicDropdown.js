@@ -85,8 +85,12 @@ function DynamicDropdown({
     useEffect(() => {
         if (_.isEmpty(value)) {
             setOptions(_.reject(options, 'implicit'));
-        } else if (!_.find(options, { [valueProp]: value })) {
-            setOptions([{ [valueProp]: value, implicit: true }, ...options]);
+        } else {
+            _.castArray(value).forEach(singleValue => {
+                if (!_.find(options, { [valueProp]: singleValue })) {
+                    setOptions([{ [valueProp]: singleValue, implicit: true }, ...options]);
+                }
+            });
         }
     }, [value]);
 

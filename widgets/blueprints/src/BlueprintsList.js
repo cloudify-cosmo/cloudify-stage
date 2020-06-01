@@ -59,6 +59,7 @@ export default class BlueprintList extends React.Component {
         actions
             .doDelete(blueprintId, force)
             .then(() => {
+                toolbox.getEventBus().trigger('blueprints:refresh');
                 this.setState({ error: null });
                 toolbox.refresh();
             })
