@@ -24,7 +24,8 @@ export default class extends React.Component {
     render() {
         const { DataTable, Image, Icon } = Stage.Basic;
 
-        // Show pagination only in case of data provided from GitHub
+        // Show pagination only in case when data is provided from GitHub
+        const { data } = this.props;
         const pageSize = data.source === Consts.GITHUB_DATA_SOURCE ? widget.configuration.pageSize : data.total;
         const totalSize = data.source === Consts.GITHUB_DATA_SOURCE ? data.total : -1;
 
@@ -49,6 +50,7 @@ export default class extends React.Component {
                     return (
                         <DataTable.Row
                             key={item.id}
+                            className={`bp_${item.name}`}
                             selected={item.isSelected}
                             onClick={() => this.props.onSelect(item)}
                         >

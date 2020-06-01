@@ -1,6 +1,7 @@
 /**
  * Created by pposel on 06/02/2017.
  */
+import Consts from './consts';
 
 export default class extends React.Component {
     static propTypes = {
@@ -110,12 +111,16 @@ export default class extends React.Component {
             );
         }
 
+        // Show pagination only in case when data is provided from GitHub
+        const { data } = this.props;
+        const pageSize = data.source === Consts.GITHUB_DATA_SOURCE ? widget.configuration.pageSize : data.total;
+        const totalSize = data.source === Consts.GITHUB_DATA_SOURCE ? data.total : -1;
+
         return (
             <div>
                 <DataSegment
-                    fetchSize={this.props.data.items.length}
-                    totalSize={this.props.data.total}
-                    pageSize={this.props.widget.configuration.pageSize}
+                    totalSize={totalSize}
+                    pageSize={pageSize}
                     fetchData={this.props.fetchData}
                     className="repositoryCatalog"
                     noDataMessage={this.props.noDataMessage}
