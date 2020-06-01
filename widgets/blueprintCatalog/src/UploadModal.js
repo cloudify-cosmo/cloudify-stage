@@ -54,11 +54,9 @@ export default class UploadModal extends React.Component {
     }
 
     componentDidUpdate(prevProps) {
-        const { open, repositoryName, defaultYamlFile: blueprintYamlFile, yamlFiles } = this.props;
+        const { open, repositoryName: blueprintName, defaultYamlFile: blueprintYamlFile, yamlFiles } = this.props;
         if (!prevProps.open && open) {
             if (!_.isEmpty(yamlFiles)) {
-                const blueprintName = repositoryName;
-
                 this.setState({
                     ...UploadModal.initialState,
                     blueprintName,
