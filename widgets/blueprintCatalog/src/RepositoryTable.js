@@ -1,6 +1,7 @@
 /**
  * Created by pposel on 08/02/2017.
  */
+import Consts from './consts';
 
 export default class extends React.Component {
     static propTypes = {
@@ -24,13 +25,17 @@ export default class extends React.Component {
         const { data, fetchData, noDataMessage, onReadme, onSelect, onUpload, readmeLoading, widget } = this.props;
         const { DataTable, Image, Icon } = Stage.Basic;
 
+        // Show pagination only in case of data provided from GitHub
+        const pageSize = data.source === Consts.GITHUB_DATA_SOURCE ? widget.configuration.pageSize : data.total;
+        const totalSize = data.source === Consts.GITHUB_DATA_SOURCE ? data.total : -1;
+
         return (
             <DataTable
                 fetchData={fetchData}
-                pageSize={widget.configuration.pageSize}
+                pageSize={pageSize}
                 sortColumn={widget.configuration.sortColumn}
                 sortAscending={widget.configuration.sortAscending}
-                totalSize={data.total}
+                totalSize={totalSize}
                 selectable
                 noDataMessage={noDataMessage}
             >
