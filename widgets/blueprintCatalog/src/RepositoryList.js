@@ -18,6 +18,7 @@ export default class extends React.Component {
             readmeLoading: null,
             repositoryName: '',
             yamlFiles: [],
+            defaultYamlFile: '',
             zipUrl: '',
             imageUrl: '',
             error: null
@@ -59,14 +60,22 @@ export default class extends React.Component {
         return toolbox.refresh(fetchParams);
     }
 
-    showModal(repositoryName, zipUrl, imageUrl) {
+    showModal(repositoryName, zipUrl, imageUrl, defaultYamlFile = '') {
         const { actions, toolbox } = this.props;
         toolbox.loading(true);
 
         actions
             .doListYamlFiles(zipUrl)
             .then(yamlFiles => {
-                this.setState({ error: null, repositoryName, yamlFiles, zipUrl, imageUrl, showModal: true });
+                this.setState({
+                    error: null,
+                    repositoryName,
+                    defaultYamlFile,
+                    yamlFiles,
+                    zipUrl,
+                    imageUrl,
+                    showModal: true
+                });
                 toolbox.loading(false);
             })
             .catch(err => {
@@ -101,6 +110,7 @@ export default class extends React.Component {
             repositoryName,
             showModal,
             showReadmeModal,
+            defaultYamlFile,
             yamlFiles,
             zipUrl
         } = this.state;
@@ -154,6 +164,7 @@ export default class extends React.Component {
                     open={showModal}
                     repositoryName={repositoryName}
                     yamlFiles={yamlFiles}
+                    defaultYamlFile={defaultYamlFile}
                     zipUrl={zipUrl}
                     imageUrl={imageUrl}
                     onHide={this.hideModal.bind(this)}
