@@ -22,24 +22,15 @@ export default class Actions {
             // JSON URL
             return this.toolbox
                 .getInternal()
-                .doGet(
-                    '/external/content',
-                    {
-                        url: this.jsonPath
-                    },
-                    false
-                )
+                .doGet('/external/content', { url: this.jsonPath }, false)
                 .then(response => response.json())
-                .then(data => {
-                    const numberOfBlueprints = data.length;
-                    const startOffset = Math.min(params.per_page * (params.page - 1), numberOfBlueprints);
-                    const endOffset = Math.min(params.per_page * params.page, numberOfBlueprints);
-                    return Promise.resolve({
-                        items: _.slice(data, startOffset, endOffset),
-                        total_count: numberOfBlueprints,
+                .then(data =>
+                    Promise.resolve({
+                        items: data,
+                        total_count: data.length,
                         source: Consts.JSON_DATA_SOURCE
-                    });
-                });
+                    })
+                );
         }
         // GitHub API
         return this.toolbox

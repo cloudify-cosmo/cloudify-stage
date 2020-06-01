@@ -25,7 +25,7 @@ export default class extends React.Component {
         const { data, fetchData, noDataMessage, onReadme, onSelect, onUpload, readmeLoading, widget } = this.props;
         const { DataTable, Image, Icon } = Stage.Basic;
 
-        // Show pagination only in case of data provided from GitHub
+        // Show pagination only in case when data is provided from GitHub
         const pageSize = data.source === Consts.GITHUB_DATA_SOURCE ? widget.configuration.pageSize : data.total;
         const totalSize = data.source === Consts.GITHUB_DATA_SOURCE ? data.total : -1;
 
@@ -48,7 +48,12 @@ export default class extends React.Component {
                 {data.items.map(item => {
                     const isLoading = readmeLoading === item.name;
                     return (
-                        <DataTable.Row key={item.id} selected={item.isSelected} onClick={() => onSelect(item)}>
+                        <DataTable.Row
+                            key={item.id}
+                            className={`bp_${item.name}`}
+                            selected={item.isSelected}
+                            onClick={() => onSelect(item)}
+                        >
                             <DataTable.Data>
                                 <Image src={Stage.Utils.Url.url(item.image_url)} width="30px" height="auto" inline />{' '}
                                 <a href={item.html_url} target="_blank">
