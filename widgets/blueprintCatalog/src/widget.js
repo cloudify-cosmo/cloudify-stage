@@ -11,7 +11,7 @@ Stage.defineWidget({
     name: 'Blueprints Catalog',
     description: 'Shows blueprints catalog',
     initialWidth: 8,
-    initialHeight: 16,
+    initialHeight: 20,
     color: 'teal',
     hasStyle: true,
     isReact: true,
@@ -20,7 +20,7 @@ Stage.defineWidget({
     categories: [Stage.GenericConfig.CATEGORY.BLUEPRINTS],
 
     initialConfiguration: [
-        Stage.GenericConfig.PAGE_SIZE_CONFIG(3),
+        Stage.GenericConfig.PAGE_SIZE_CONFIG(),
         {
             id: 'jsonPath',
             name: 'Blueprints Examples URL',
@@ -53,7 +53,7 @@ Stage.defineWidget({
             id: 'displayStyle',
             name: 'Display style',
             items: [{ name: 'Table', value: 'table' }, { name: 'Catalog', value: 'catalog' }],
-            default: 'catalog',
+            default: 'table',
             type: Stage.Basic.GenericField.LIST_TYPE
         },
         {
