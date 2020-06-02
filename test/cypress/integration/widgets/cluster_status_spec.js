@@ -1,4 +1,4 @@
-import { className, styles } from '../support/cluster_status_commons';
+import { className, styles } from '../../support/cluster_status_commons';
 
 describe('Cluster Status', () => {
     before(() => {

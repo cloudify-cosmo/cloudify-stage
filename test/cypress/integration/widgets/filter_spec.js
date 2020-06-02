@@ -42,61 +42,31 @@ describe('Filter', () => {
         cy.get('#dynamicDropdown3 .menu > *').should('have.length', 2);
     });
 
-    describe('refreshes dropdown data on', () => {
-        before(() => {
-            cy.contains('Cloudify Catalog').click();
-            cy.contains('tr', 'AWS')
-                .find('button')
-                .click();
-            cy.contains('.ok', 'Upload').click();
-            cy.contains('.ok.loading', 'Upload').should('not.exist');
+    describe.only('refreshes dropdown data on', () => {
+        const blueprintName = 'filter-test';
 
-            cy.get('body').type('{esc}');
-        });
-
-        function uploadExampleBlueprint() {
-            const blueprint = 'aws-example-network';
-            cy.contains('.segment', blueprint)
-                .contains('Upload')
-                .click();
-            const blueprintNameSuffix = Date.now();
-            cy.get('input[name=blueprintName]').type(blueprintNameSuffix);
-            cy.contains('.ok', 'Upload').click();
-            cy.contains('.ok', 'Upload', { timeout: 90000 }).should('not.exist');
-
-            return blueprint + blueprintNameSuffix;
-        }
+        beforeEach(() =>
+            cy
+                .deleteDeployments(blueprintName)
+                .deleteBlueprints(blueprintName)
+                .uploadBlueprint('blueprints/empty.zip', blueprintName)
+        );
 
         it('blueprint upload and removal', () => {
-            cy.get('.usersMenu')
-                .click()
-                .contains('Edit Mode')
-                .click();
-            cy.contains('Add Widget').click();
-            cy.get('*[data-id=filter]').click();
-            cy.get('*[data-id=blueprintActionButtons]').click();
-            cy.contains('Add selected widgets').click();
-            cy.contains('.message', 'Edit mode')
-                .contains('Exit')
-                .click();
-
             cy.get('.blueprintFilterField').click();
 
-            const blueprintName = uploadExampleBlueprint();
             cy.get('.blueprintFilterField input').type(blueprintName);
             cy.get(`div[option-value=${blueprintName}]`).click();
 
-            cy.contains('Delete blueprint').click();
+            cy.get(`tr:contains(${blueprintName}) .trash`).click();
             cy.contains('Yes').click();
 
             cy.get('.blueprintFilterField > .label').should('not.exist');
-            cy.get('.blueprintFilterField input').type(blueprintName);
+            cy.get('.blueprintFilterField input').type(blueprintName, { force: true });
             cy.contains('.blueprintFilterField', 'No results found.');
         });
 
         it('deployment creation and removal', () => {
-            const blueprintName = uploadExampleBlueprint();
-
             cy.contains('Deployments').click();
             cy.get('.usersMenu')
                 .click()
@@ -114,7 +84,7 @@ describe('Filter', () => {
             cy.get('.deploymentFilterField').click();
 
             cy.contains('Create Deployment').click();
-            const deploymentName = `deployment${Date.now()}`;
+            const deploymentName = `${blueprintName}-deployment`;
             cy.get('input[name=deploymentName]').type(deploymentName);
             cy.get('div[name=blueprintName] input').type(blueprintName);
             cy.get(`div[option-value=${blueprintName}]`).click();
