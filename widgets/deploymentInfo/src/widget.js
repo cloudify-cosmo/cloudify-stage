@@ -115,15 +115,17 @@ Stage.defineWidget({
         };
     },
 
-    render(widget, data) {
+    render(widget, data, error, toolbox) {
+        const { Loading, Message } = Stage.Basic;
+
         if (_.isEmpty(data)) {
-            return <Stage.Basic.Loading />;
+            return <Loading />;
         }
 
-        const { deployment, instancesCount, instancesStates } = data;
+        if (!('deployment' in data)) {
+            return <Message info>No deployment selected</Message>;
+        }
 
-        return (
-            <DeploymentInfo deployment={deployment} instancesCount={instancesCount} instancesStates={instancesStates} />
-        );
+        return <DeploymentInfo data={data} toolbox={toolbox} />;
     }
 });

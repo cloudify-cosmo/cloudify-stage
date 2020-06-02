@@ -47,6 +47,7 @@ Stage.defineWidget({
     ],
     isReact: true,
     hasReadme: true,
+    hasStyle: true,
     permission: Stage.GenericConfig.WIDGET_PERMISSION('deployments'),
 
     fetchParams(widget, toolbox) {
