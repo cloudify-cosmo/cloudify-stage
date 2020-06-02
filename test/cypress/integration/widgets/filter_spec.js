@@ -42,7 +42,7 @@ describe('Filter', () => {
         cy.get('#dynamicDropdown3 .menu > *').should('have.length', 2);
     });
 
-    describe.only('refreshes dropdown data on', () => {
+    describe('refreshes dropdown data on', () => {
         const blueprintName = 'filter-test';
 
         beforeEach(() =>
@@ -53,6 +53,17 @@ describe('Filter', () => {
         );
 
         it('blueprint upload and removal', () => {
+            cy.get('.usersMenu')
+                .click()
+                .contains('Edit Mode')
+                .click();
+            cy.contains('Add Widget').click();
+            cy.get('*[data-id=blueprints]').click();
+            cy.contains('Add selected widgets').click();
+            cy.contains('.message', 'Edit mode')
+                .contains('Exit')
+                .click();
+
             cy.get('.blueprintFilterField').click();
 
             cy.get('.blueprintFilterField input').type(blueprintName);
