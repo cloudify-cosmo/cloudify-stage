@@ -122,7 +122,7 @@ Stage.defineWidget({
             return <Loading />;
         }
 
-        if (!('deployment' in data)) {
+        if (_.isEmpty(data.deployment)) {
             return <Message info>No deployment selected</Message>;
         }
 
