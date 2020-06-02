@@ -42,7 +42,7 @@ export default function DeploymentDetails({
     const showCreated = 'created_at' in deployment;
     const showUpdated = 'updated_at' in deployment && deployment.created_at !== deployment.updated_at;
     const showCreator = 'created_by' in deployment;
-    const showNodeInstances = !_.isEmpty(instancesStates);
+    const showNodeInstances = instancesStates !== null;
     const as = big ? 'h3' : 'h5';
     const stackable = !big;
 

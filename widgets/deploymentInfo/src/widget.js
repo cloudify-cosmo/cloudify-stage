@@ -67,7 +67,7 @@ Stage.defineWidget({
         const { configuration } = widget;
 
         let deployment = {};
-        let instancesStates = {};
+        let instancesStates = null;
         let instancesCount = 0;
 
         if (deploymentId) {
@@ -101,7 +101,7 @@ Stage.defineWidget({
                       _sub_field: 'state',
                       deployment_id: deploymentId
                   })
-                : {};
+                : null;
 
             const { NodeInstancesConsts } = Stage.Common;
             instancesStates = NodeInstancesConsts.extractStatesFrom(_.get(nodeInstancesSummary, 'items[0]', {}));
