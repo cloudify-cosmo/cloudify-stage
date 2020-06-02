@@ -1,4 +1,4 @@
-describe('Page tabs', () => {
+describe('Tabs', () => {
     const testPage = {
         id: 'admin_dashboard',
         name: 'Admin Dashboard',
@@ -49,84 +49,89 @@ describe('Page tabs', () => {
         ]
     };
 
-    before(() => cy.activate('valid_trial_license').login());
+    before(() => cy.activate('valid_trial_license'));
 
-    beforeEach(() => {
-        cy.stageRequest('/console/ua', 'POST', {
-            body: {
-                appData: {
-                    pages: [testPage]
-                },
-                version: 4
-            }
+    describe('when present on active page', () => {
+        beforeEach(() => {
+            cy.stageRequest('/console/ua', 'POST', {
+                body: {
+                    appData: {
+                        pages: [testPage]
+                    },
+                    version: 4
+                }
+            });
+            cy.login();
         });
-        cy.reload();
+
+        it('should allow to switch subpages and maximize widgets', () => {
+            cy.contains('.widgetName', 'Cluster Status');
+            cy.contains('.widgetName', 'Blueprints');
+
+            cy.contains('Tab2').click();
+
+            // Verify tabs switching works
+            cy.contains('.widgetName', 'Cluster Status').should('not.exist');
+            cy.contains('.widgetName', 'Blueprints').should('not.exist');
+            cy.get('.deploymentNumWidget');
+
+            cy.contains('Tab1').click();
+
+            // Verify widget maximize button works for widgets inside tabs
+            cy.get('.blueprintsWidget .expand').click({ force: true });
+
+            cy.contains('.widgetName', 'Cluster Status').should('not.be.visible');
+            cy.contains('.widgetName', 'Catalog').should('not.be.visible');
+            cy.get('.blueprintNumWidget').should('not.be.visible');
+
+            // Verify maximize state is saved
+            cy.reload();
+            cy.contains('.widgetName', 'Blueprints').should('be.visible');
+            cy.contains('.widgetName', 'Cluster Status').should('not.be.visible');
+            cy.contains('.widgetName', 'Catalog').should('not.be.visible');
+            cy.get('.blueprintNumWidget').should('not.be.visible');
+
+            // Verify widget collapse button works
+            cy.get('.blueprintsWidget .compress').click({ force: true });
+            cy.contains('.widgetName', 'Catalog').should('be.visible');
+        });
+
+        it('should allow to edit widget settings in edite mode', () => {
+            cy.get('.usersMenu').click();
+            cy.contains('Edit Mode').click();
+
+            cy.get('.blueprintsWidget .setting').click({ force: true });
+
+            cy.get('.pollingTime input').type(0);
+            cy.contains('Save').click();
+
+            cy.reload();
+            cy.get('.usersMenu').click();
+            cy.contains('Edit Mode').click();
+
+            cy.get('.blueprintsWidget .setting').click({ force: true });
+            cy.get('.pollingTime input').should('have.value', '100');
+        });
+
+        it('should allow to remove widget in edit mode', () => {
+            cy.get('.usersMenu').click();
+            cy.contains('Edit Mode').click();
+
+            cy.get('.blueprintsWidget .remove').click({ force: true });
+            cy.get('.blueprintsWidget').should('not.exist');
+
+            cy.reload();
+            cy.contains('.widgetName', 'Catalog').should('be.visible');
+            cy.get('.blueprintsWidget').should('not.exist');
+        });
     });
 
-    it('should work when present on active page', () => {
-        cy.contains('.widgetName', 'Cluster Status');
-        cy.contains('.widgetName', 'Blueprints');
-
-        cy.contains('Tab2').click();
-
-        // Verify tabs switching works
-        cy.contains('.widgetName', 'Cluster Status').should('not.exist');
-        cy.contains('.widgetName', 'Blueprints').should('not.exist');
-        cy.get('.deploymentNumWidget');
-
-        cy.contains('Tab1').click();
-
-        // Verify widget maximize button works for widgets inside tabs
-        cy.get('.blueprintsWidget .expand').click({ force: true });
-
-        cy.contains('.widgetName', 'Cluster Status').should('not.be.visible');
-        cy.contains('.widgetName', 'Catalog').should('not.be.visible');
-        cy.get('.blueprintNumWidget').should('not.be.visible');
-
-        // Verify maximize state is saved
-        cy.reload();
-        cy.contains('.widgetName', 'Blueprints').should('be.visible');
-        cy.contains('.widgetName', 'Cluster Status').should('not.be.visible');
-        cy.contains('.widgetName', 'Catalog').should('not.be.visible');
-        cy.get('.blueprintNumWidget').should('not.be.visible');
-
-        // Verify widget collapse button works
-        cy.get('.blueprintsWidget .compress').click({ force: true });
-        cy.contains('.widgetName', 'Catalog').should('be.visible');
-    });
-
-    it('should allow to edit widget settings when present on edited page', () => {
-        cy.get('.usersMenu').click();
-        cy.contains('Edit Mode').click();
-
-        cy.get('.blueprintsWidget .setting').click({ force: true });
-
-        cy.get('.pollingTime input').type(0);
-        cy.contains('Save').click();
-
-        cy.reload();
-        cy.get('.usersMenu').click();
-        cy.contains('Edit Mode').click();
-
-        cy.get('.blueprintsWidget .setting').click({ force: true });
-        cy.get('.pollingTime input').should('have.value', '100');
-    });
-
-    it('should allow to remove widget when present on edited page', () => {
-        cy.get('.usersMenu').click();
-        cy.contains('Edit Mode').click();
-
-        cy.get('.blueprintsWidget .remove').click({ force: true });
-        cy.get('.blueprintsWidget').should('not.exist');
-
-        cy.reload();
-        cy.contains('.widgetName', 'Catalog').should('be.visible');
-        cy.get('.blueprintsWidget').should('not.exist');
-    });
-
-    it('should work when present on page preview', () => {
+    it('when present on page preview should allow to switch subpages and maximize widgets', () => {
         cy.server();
         cy.route('/console/appData/templates/pages/adminDash.json', testPage);
+        cy.login();
+
+        cy.get('.loader').should('be.not.visible');
 
         cy.get('.usersMenu').click();
         cy.contains('Template Management').click();
