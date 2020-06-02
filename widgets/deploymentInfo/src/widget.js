@@ -7,7 +7,7 @@ Stage.defineWidget({
     initialWidth: 16,
     initialHeight: 7,
     isReact: true,
-    hasReadme: false,
+    hasReadme: true,
     showHeader: false,
     showBorder: false,
     permission: Stage.GenericConfig.WIDGET_PERMISSION('deploymentInfo'),
