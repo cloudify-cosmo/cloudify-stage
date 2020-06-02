@@ -22,7 +22,7 @@ const consts = {
     },
     externalUrls: {
         pluginsCatalog: 'http://repository.cloudifysource.org/cloudify/wagons/plugins.json',
-        blueprintsCatalog: 'http://repository.cloudifysource.org/cloudify/blueprints/5.0.5/examples.json',
+        blueprintsCatalog: 'http://repository.cloudifysource.org/cloudify/blueprints/5.1/examples.json',
         helloWorldBlueprint: 'https://github.com/cloudify-cosmo/cloudify-hello-world-example/archive/master.zip'
     }
 };

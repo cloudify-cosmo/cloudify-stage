@@ -5,14 +5,9 @@
       "name": "Blueprints Catalog",
       "definition": "blueprintCatalog",
       "width": 12,
-      "height": 26,
+      "height": 24,
       "x": 0,
-      "y": 0,
-      "configuration":{
-        "displayStyle":"catalog",
-        "username":"cloudify-examples",
-        "filter":"blueprint in:name NOT local"
-      }
+      "y": 0
     },
     {
       "name": "Plugins Catalog",
@@ -20,7 +15,7 @@
       "width": 12,
       "height": 24,
       "x": 0,
-      "y": 0
+      "y": 24
     }
   ]
 }
