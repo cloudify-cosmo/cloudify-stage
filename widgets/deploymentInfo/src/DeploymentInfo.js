@@ -12,14 +12,9 @@ export default function DeploymentInfo({ data, toolbox }) {
         toolbox.loading(true);
         return actions
             .doSetVisibility(id, visibility)
-            .then(() => {
-                toolbox.loading(false);
-                toolbox.refresh();
-            })
-            .catch(err => {
-                toolbox.loading(false);
-                setVisibilityError(err.message);
-            });
+            .then(() => toolbox.refresh())
+            .catch(err => setVisibilityError(err.message))
+            .finally(() => toolbox.loading(false));
     };
 
     return (
