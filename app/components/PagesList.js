@@ -6,6 +6,8 @@ import 'jquery-ui/ui/widgets/sortable';
 import PropTypes from 'prop-types';
 
 import React, { Component } from 'react';
+import AddPageButton from '../containers/AddPageButton';
+import { Message } from './basic';
 
 export default class PagesList extends Component {
     constructor(props) {
@@ -90,6 +92,11 @@ export default class PagesList extends Component {
                         </div>
                     ),
                     this
+                )}
+                {isEditMode && (
+                    <div style={{ textAlign: 'center', marginTop: 10 }}>
+                        <AddPageButton />
+                    </div>
                 )}
             </div>
         );

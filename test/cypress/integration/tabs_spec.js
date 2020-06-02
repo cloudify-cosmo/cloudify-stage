@@ -124,6 +124,24 @@ describe('Tabs', () => {
             cy.contains('.widgetName', 'Catalog').should('be.visible');
             cy.get('.blueprintsWidget').should('not.exist');
         });
+
+        it.only('should allow to add widget in edit mode', () => {
+            cy.get('.usersMenu')
+                .click()
+                .contains('Edit Mode')
+                .click();
+            cy.get('.editModeButton:contains(Add Widget):eq(1)').click();
+            cy.get('*[data-id=blueprintSources]').click();
+            cy.contains('Add selected widgets').click();
+            cy.contains('.message', 'Edit mode')
+                .contains('Exit')
+                .click();
+
+            cy.contains('.react-grid-layout:eq(1) .widgetName', 'Blueprint Sources');
+
+            cy.reload();
+            cy.contains('.react-grid-layout:eq(1) .widgetName', 'Blueprint Sources');
+        });
     });
 
     it('when present on page preview should allow to switch subpages and maximize widgets', () => {
