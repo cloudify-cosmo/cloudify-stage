@@ -20,7 +20,7 @@
     "devTrace": "cross-env NODE_ENV=development nodemon --trace-warnings server.js",
     "prodStart": "cross-env STAGE_BACKEND_INSTANCES=0 pm2 start --env local_production --watch --node-args=\"--trace-warnings\" && pm2 logs",
     "restart": "pm2 reload stage-backend",
-    "start": "pm2 start --env production",
+    "start": "pm2 start --env production --no-daemon",
     "stop": "pm2 kill",
     "test": "echo \"Error: no test specified\" && exit 1",
     "wait-on-server": "wait-on tcp:localhost:8088 --timeout 5000 && echo 'Stage backend is up!'"
