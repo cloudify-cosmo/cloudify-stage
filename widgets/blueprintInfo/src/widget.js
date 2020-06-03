@@ -7,8 +7,8 @@ import Actions from './actions';
 
 Stage.defineWidget({
     id: 'blueprintInfo',
-    name: 'Blueprint info',
-    description: 'Shows blueprint info and status',
+    name: 'Blueprint Info',
+    description: 'Shows blueprint basic information and status',
     initialWidth: 3,
     initialHeight: 14,
     color: 'orange',
@@ -43,7 +43,7 @@ Stage.defineWidget({
     fetchData(widget, toolbox, params) {
         const actions = new Actions(toolbox);
 
-        let blueprintId = params.blueprint_id;
+        const blueprintId = params.blueprint_id;
         const deploymentId = params.deployment_id;
 
         let promise = Promise.resolve({ blueprint_id: blueprintId });
@@ -51,19 +51,16 @@ Stage.defineWidget({
             promise = actions.doGetBlueprintId(deploymentId);
         }
 
-        return promise.then(({ blueprint_id }) => {
-            blueprintId = blueprint_id;
-
-            if (blueprintId) {
-                return Promise.all([
-                    actions.doGetBlueprintDetails(blueprintId),
-                    actions.doGetBlueprintDeployments(blueprintId)
-                ]).then(data => ({
-                    ...data[0],
-                    created_at: Stage.Utils.Time.formatTimestamp(data[0].created_at),
-                    updated_at: Stage.Utils.Time.formatTimestamp(data[0].updated_at),
-                    deployments: _.get(data[1].items[0], 'deployments', 0)
-                }));
+        return promise.then(({ blueprint_id: id }) => {
+            if (id) {
+                return Promise.all([actions.doGetBlueprintDetails(id), actions.doGetBlueprintDeployments(id)]).then(
+                    data => ({
+                        ...data[0],
+                        created_at: Stage.Utils.Time.formatTimestamp(data[0].created_at),
+                        updated_at: Stage.Utils.Time.formatTimestamp(data[0].updated_at),
+                        deployments: _.get(data[1].items[0], 'deployments', 0)
+                    })
+                );
             }
             return Promise.resolve({ id: '' });
         });

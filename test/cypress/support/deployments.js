@@ -10,6 +10,22 @@ Cypress.Commands.add('deployBlueprint', (blueprintId, deploymentId, inputs = {})
     });
 });
 
+Cypress.Commands.add('setSite', (deploymentId, siteName) => {
+    cy.cfyRequest(
+        `/deployments/${deploymentId}/set-site`,
+        'POST',
+        null,
+        siteName !== ''
+            ? {
+                  site_name: siteName,
+                  detach_site: false
+              }
+            : {
+                  detach_site: true
+              }
+    );
+});
+
 Cypress.Commands.add('deleteDeployment', (deploymentId, force = false) => {
     cy.cfyRequest(`/deployments/${deploymentId}?ignore_live_nodes=${force}`, 'DELETE');
 });
