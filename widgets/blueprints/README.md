@@ -11,7 +11,7 @@ Displays all the blueprints on the tenant, according to the user’s permissions
 * **Main blueprint file name** (as the blueprint archive can contain multiple files)
 * **Number of deployments derived from the blueprint**
 
-![blueprints-list](https://docs.cloudify.co/5.0.5/images/ui/widgets/blueprints-list.png)
+![blueprints-list](https://docs.cloudify.co/staging/dev/images/ui/widgets/blueprints-list.png)
 
 There are also action buttons to create deployment or delete blueprint.
 
