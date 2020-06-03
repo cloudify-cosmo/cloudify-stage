@@ -125,7 +125,7 @@ describe('Tabs', () => {
             cy.get('.blueprintsWidget').should('not.exist');
         });
 
-        it.only('should allow to add widget in edit mode', () => {
+        it('should allow to add widget in edit mode', () => {
             cy.get('.usersMenu')
                 .click()
                 .contains('Edit Mode')
