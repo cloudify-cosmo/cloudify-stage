@@ -6,10 +6,11 @@ pipeline {
       yamlFile 'jenkins/build-pod.yaml'
     }
   }
-  options { timestamps () }
+
   environment {
     branch = "${env.BRANCH_NAME}"
     workspace = "/home/jenkins/agent/workspace/stage-testing"
+    stage_dir = "cloudify-stage-${env.BUILD_NUMBER}"
     cfy_manager_url = 'https://raw.githubusercontent.com/cloudify-cosmo/cloudify-manager'
     cfy_node_rpm = 'http://repository.cloudifysource.org/cloudify/components/nodejs-12.16.1-1nodesource.x86_64.rpm'
   }
@@ -17,12 +18,12 @@ pipeline {
   stages {
     stage('Run Builds') {
       parallel {
-         stage('Build') {
+        stage('Build') {
           steps {
-            checkout([$class: 'GitSCM', branches: [[name: "${branch}"]], doGenerateSubmoduleConfigurations: false, extensions: [[$class: 'RelativeTargetDirectory', relativeTargetDir: 'cloudify-stage']], submoduleCfg: [], userRemoteConfigs: [[credentialsId: '9f6aca75-ebff-4045-9919-b8ec6b5ccf9d', url: 'https://github.com/cloudify-cosmo/cloudify-stage.git']]])
-
+            checkout([$class: 'GitSCM', branches: [[name: "${branch}"]], doGenerateSubmoduleConfigurations: false, extensions: [[$class: 'RelativeTargetDirectory', relativeTargetDir: "${stage_dir}"]], submoduleCfg: [], userRemoteConfigs: [[credentialsId: '9f6aca75-ebff-4045-9919-b8ec6b5ccf9d', url: 'https://github.com/cloudify-cosmo/cloudify-stage.git']]])
+            
             container('node'){
-              dir("${workspace}/cloudify-stage") {
+              dir("${workspace}/${stage_dir}") {
                 echo "Install dependencies"
                 sh 'npm run beforebuild'
                 
@@ -66,6 +67,12 @@ pipeline {
                   -D "CLOUDIFY_PACKAGE_RELEASE $CLOUDIFY_PACKAGE_RELEASE" \
                   -bb packaging/cloudify-stage.spec
               '''
+              
+              echo 'Save Artifacts'
+              sh("mkdir -p ${workspace}/rpm && cp -rf /root/rpmbuild/RPMS/x86_64/. ${workspace}/rpm")
+              dir("${workspace}/rpm") {
+                archiveArtifacts artifacts: '*.rpm', onlyIfSuccessful: true
+              }
             }
           }
         }
@@ -76,19 +83,13 @@ pipeline {
         stage('Test'){
           steps {
             container('node'){
-              dir("${workspace}/cloudify-stage/backend") {
-                echo 'npm Install'
-                sh 'npm install'
-                
+              dir("${workspace}/${stage_dir}") {
                 echo 'Initialize database'
-                sh 'npm run db-migrate'
+                sh 'cd backend && npm run db-migrate'
 
                 echo 'Start Stage Backend'
-                withEnv(["STAGE_BACKEND_INSTANCES=0"]) {
-                  sh 'npm run start'
-                }
-              }
-              dir("${workspace}/cloudify-stage") {
+                sh 'cd backend && npm run start'
+                
                 echo 'Run tests'
                 sh 'npm run prodtest'
                   
@@ -105,7 +106,7 @@ pipeline {
             container('node'){
               dir("${workspace}/size") {
                 echo 'Check bundle size'
-                sh 'npm install'
+                sh 'npm ci --prefer-offline'
                 sh 'npm run size'
               }
             }
@@ -116,7 +117,7 @@ pipeline {
     stage('Docs'){
       steps {
         container('node'){
-          dir("${workspace}/cloudify-stage") {
+          dir("${workspace}/${stage_dir}") {
             echo 'Generate widgets documentation'
             sh 'npm run docWidgets'
             
@@ -131,16 +132,22 @@ pipeline {
     }
     stage('Audit'){
       when {
-        branch 'production'
+        branch 'master'
       }
       steps {
         container('node'){
-          dir("${workspace}/cloudify-stage") {
+          dir("${workspace}/${stage_dir}") {
             echo 'Run npm production dependencies security audit'
             sh 'npm run audit'
           }
         }
       }
     }
+  }
+  
+  options {
+    buildDiscarder(logRotator(numToKeepStr:'30'))
+    timeout(time: 60, unit: 'MINUTES')
+    timestamps()
   }
 }
