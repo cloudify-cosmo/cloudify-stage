@@ -13,7 +13,7 @@ The widget displays the following information:
    
 Upon hovering over ID label a pop up with the plugin’s ID will open, allowing you to copy it to the clipboard. 
 
-![plugins-list](https://docs.cloudify.co/dev/staging/images/ui/widgets/plugins-list.png)
+![plugins-list](https://docs.cloudify.co/staging/dev/images/ui/widgets/plugins-list.png)
 
 #### Widget Settings 
 * `Refresh time interval` - The time interval in which the widget’s data will be refreshed, in seconds. Default: 30 seconds.

@@ -4,10 +4,10 @@ Displays data about the executions in the current tenant, according to the userâ
 
 In **Attributes** column you can see one of these icons:
 
-* ![Dry Run icon](https://docs.cloudify.co/dev/staging/images/ui/icons/dry-run-icon.png) - **Dry Run** 
-* ![System Workflow icon](https://docs.cloudify.co/dev/staging/images/ui/icons/system-workflow-icon.png) - **System Workflow**
+* ![Dry Run icon](https://docs.cloudify.co/staging/dev/images/ui/icons/dry-run-icon.png) - **Dry Run** 
+* ![System Workflow icon](https://docs.cloudify.co/staging/dev/images/ui/icons/system-workflow-icon.png) - **System Workflow**
 
-In the actions menu on the right side of the execution row (click ![List icon](https://docs.cloudify.co/dev/staging/images/ui/icons/list-icon.png) to open) you can perform additional actions on the execution:
+In the actions menu on the right side of the execution row (click ![List icon](https://docs.cloudify.co/staging/dev/images/ui/icons/list-icon.png) to open) you can perform additional actions on the execution:
 
 * `Show Execution Parameters` - shows details in modal window about execution parameters,    
 * `Show Update Details` - shows details in modal window about blueprint and inputs change (available only for 'update' executions),
@@ -17,9 +17,9 @@ In the actions menu on the right side of the execution row (click ![List icon](h
 * `Force Cancel` - enforces cancellation of the execution (available only for active executions), 
 * `Kill Cancel` - the process executing the workflow is forcefully stopped, even if it is stuck or unresponsive.
  
- For details about cancelling executions, see [cancelling workflow executions](https://docs.cloudify.co/dev/staging/working_with/workflows/cancelling-execution)
+ For details about cancelling executions, see [cancelling workflow executions](https://docs.cloudify.co/staging/dev/working_with/workflows/cancelling-execution)
 
-![executions](https://docs.cloudify.co/dev/staging/images/ui/widgets/executions.png)
+![executions](https://docs.cloudify.co/staging/dev/images/ui/widgets/executions.png)
 
 #### Widget Settings
 * `Refresh time interval` - The time interval in which the widgetâ€™s data will be refreshed, in seconds. Default: 5 seconds

@@ -1,7 +1,7 @@
 ### Sites Map
 Displays the world map with defined sites marked. Only sites with defined location are displayed on the map.
 
-![sitesMap](https://docs.cloudify.co/dev/staging/images/ui/widgets/sitesMap.png)
+![sitesMap](https://docs.cloudify.co/staging/dev/images/ui/widgets/sitesMap.png)
 
 
 The widget is available only when Spire license is activated on the Cloudify Manager.
@@ -11,7 +11,7 @@ The color of the site marker on the map indicates the site's health. It is deriv
 
 After clicking the site marker on the map, the user is presented with a popup with the status breakdown of the deployments assigned with the site.
 
-![sitesMap](https://docs.cloudify.co/dev/staging/images/ui/widgets/sitesMap_siteDetails.png)
+![sitesMap](https://docs.cloudify.co/staging/dev/images/ui/widgets/sitesMap_siteDetails.png)
 
 Site details contain information about deployments' statuses, indicated as follows:
 

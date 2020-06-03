@@ -14,7 +14,7 @@ You can and should enter Github credentials for fetching data, as the defaults u
 These parameters are pulled from secrets as the github-username and github-password keys. 
 These parameters are a must if you want to configure the widget to access private repositories.
 
-![blueprints-catalog](https://docs.cloudify.co/dev/staging/images/ui/widgets/blueprints-catalog.png)
+![blueprints-catalog](https://docs.cloudify.co/staging/dev/images/ui/widgets/blueprints-catalog.png)
 
 #### Widget Settings
 * `Blueprint Examples URL` - Specifies the JSON file from which the blueprints are being read
