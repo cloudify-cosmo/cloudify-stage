@@ -1,5 +1,3 @@
-import PropTypes from 'prop-types';
-
 class GroupState extends React.Component {
     /**
      * propTypes
@@ -39,10 +37,10 @@ class GroupState extends React.Component {
                 content={description}
                 trigger={
                     <Segment.Group className={className} disabled={disabled} onClick={onClick}>
-                        <Segment color={color} disabled={disabled} inverted>
-                            <Icon name={state.icon} />
+                        <Segment color={color} disabled={disabled} inverted textAlign="center">
+                            <Icon fitted name={state.icon} />
                         </Segment>
-                        <Segment color={color} disabled={disabled} tertiary inverted>
+                        <Segment color={color} disabled={disabled} tertiary inverted textAlign="center">
                             {value}
                         </Segment>
                     </Segment.Group>

@@ -81,8 +81,8 @@ const mapDispatchToProps = (dispatch, ownProps) => {
             dispatch(setDrilldownContext(drilldownContext));
             dispatch(selectPage(page.id, page.isDrillDown, page.context, page.name));
         },
-        onWidgetAdded: (name, widgetDefinition) => {
-            dispatch(addWidget(ownProps.pageId, null, { name }, widgetDefinition));
+        onWidgetAdded: (name, widgetDefinition, tabIndex) => {
+            dispatch(addWidget(ownProps.pageId, tabIndex, { name }, widgetDefinition));
         },
         onEditModeExit: () => {
             dispatch(setEditMode(false));

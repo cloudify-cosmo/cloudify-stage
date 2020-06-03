@@ -6,6 +6,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { addPage } from '../actions/page';
 import { Button } from '../components/basic/index';
+import EditModeButton from '../components/EditModeButton';
 
 let nameIndex = 0;
 
@@ -19,8 +20,8 @@ const mapDispatchToProps = (dispatch, ownProps) => {
 
 const AddPageButton = ({ onClick }) => {
     return (
-        <Button
-            icon="file text outline"
+        <EditModeButton
+            icon="add"
             labelPosition="left"
             basic
             onClick={onClick}

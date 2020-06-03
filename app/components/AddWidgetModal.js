@@ -27,6 +27,7 @@ import {
 } from './basic/index';
 import InstallWidgetModal from './InstallWidgetModal';
 import { addWidget } from '../actions/widgets';
+import EditModeButton from './EditModeButton';
 
 let nameIndex = 0;
 
@@ -215,7 +216,14 @@ export default class AddWidgetModal extends Component {
         } = this.state;
         const { canInstallWidgets, onWidgetInstalled } = this.props;
         const addWidgetBtn = (
-            <Button icon="bar chart" labelPosition="left" basic content="Add Widget" className="addWidgetBtn" />
+            <EditModeButton
+                icon="add"
+                labelPosition="left"
+                basic
+                content="Add Widget"
+                className="addWidgetBtn"
+                style={{ marginBottom: 15 }}
+            />
         );
 
         const installWidgetBtn = (

@@ -96,7 +96,7 @@ describe('Tabs', () => {
             cy.contains('.widgetName', 'Catalog').should('be.visible');
         });
 
-        it('should allow to edit widget settings in edite mode', () => {
+        it('should allow to edit widget settings in edit mode', () => {
             cy.get('.usersMenu').click();
             cy.contains('Edit Mode').click();
 
@@ -123,6 +123,24 @@ describe('Tabs', () => {
             cy.reload();
             cy.contains('.widgetName', 'Catalog').should('be.visible');
             cy.get('.blueprintsWidget').should('not.exist');
+        });
+
+        it('should allow to add widget in edit mode', () => {
+            cy.get('.usersMenu')
+                .click()
+                .contains('Edit Mode')
+                .click();
+            cy.get('.editModeButton:contains(Add Widget):eq(1)').click();
+            cy.get('*[data-id=blueprintSources]').click();
+            cy.contains('Add selected widgets').click();
+            cy.contains('.message', 'Edit mode')
+                .contains('Exit')
+                .click();
+
+            cy.contains('.react-grid-layout:eq(1) .widgetName', 'Blueprint Sources');
+
+            cy.reload();
+            cy.contains('.react-grid-layout:eq(1) .widgetName', 'Blueprint Sources');
         });
     });
 

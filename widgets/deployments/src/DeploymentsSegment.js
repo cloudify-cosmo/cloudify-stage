@@ -52,8 +52,8 @@ export default class DeploymentsSegment extends React.Component {
             showExecutionStatusLabel,
             widget
         } = this.props;
-        const { DataSegment, Divider, Grid, Header, ResourceVisibility } = Stage.Basic;
-        const { NodeInstancesConsts, LastExecutionStatusIcon, GroupState } = Stage.Common;
+        const { DataSegment, Divider, Header } = Stage.Basic;
+        const { DeploymentDetails, LastExecutionStatusIcon } = Stage.Common;
 
         return (
             <DataSegment
@@ -63,122 +63,48 @@ export default class DeploymentsSegment extends React.Component {
                 searchable
                 noDataMessage={noDataMessage}
             >
-                {data.items.map(item => {
-                    return (
-                        <DataSegment.Item
-                            key={item.id}
-                            selected={item.isSelected}
-                            className={item.id}
-                            onClick={() => onSelectDeployment(item)}
-                        >
-                            <Grid stackable>
-                                <Grid.Row>
-                                    <Grid.Column width={4}>
-                                        <LastExecutionStatusIcon
-                                            execution={item.lastExecution}
-                                            onShowLogs={() => onShowLogs(item.id, item.lastExecution.id)}
-                                            onShowUpdateDetails={onShowUpdateDetails}
-                                            onActOnExecution={onActOnExecution}
-                                            showLabel={showExecutionStatusLabel}
-                                        />
-                                        <ResourceVisibility
-                                            visibility={item.visibility}
-                                            className="rightFloated"
-                                            onSetVisibility={visibility => onSetVisibility(item.id, visibility)}
-                                            allowedSettingTo={allowedSettingTo}
-                                        />
-                                        {showExecutionStatusLabel && <Divider hidden />}
-                                        <Header
-                                            as="h3"
-                                            textAlign="center"
-                                            style={showExecutionStatusLabel ? {} : { marginTop: 5 }}
-                                        >
-                                            <a href="javascript:void(0)" className="breakWord">
-                                                {item.id}
-                                            </a>
-                                        </Header>
-                                    </Grid.Column>
+                {data.items.map(item => (
+                    <DataSegment.Item
+                        key={item.id}
+                        selected={item.isSelected}
+                        className={`${item.id} deploymentSegment`}
+                        onClick={() => onSelectDeployment(item)}
+                    >
+                        <DeploymentDetails
+                            customName={
+                                <div>
+                                    <LastExecutionStatusIcon
+                                        execution={item.lastExecution}
+                                        onShowLogs={() => onShowLogs(item.id, item.lastExecution.id)}
+                                        onShowUpdateDetails={onShowUpdateDetails}
+                                        onActOnExecution={onActOnExecution}
+                                        showLabel={showExecutionStatusLabel}
+                                    />
+                                    {showExecutionStatusLabel && <Divider hidden />}
+                                    <Header
+                                        as="h3"
+                                        textAlign="center"
+                                        style={showExecutionStatusLabel ? {} : { marginTop: 5 }}
+                                    >
+                                        <span className="breakWord">{item.id}</span>
+                                    </Header>
+                                </div>
+                            }
+                            customActions={<MenuAction item={item} onSelectAction={onMenuAction} />}
+                            deployment={item}
+                            instancesCount={item.nodeInstancesCount}
+                            instancesStates={item.nodeInstancesStates}
+                            onSetVisibility={visibility => onSetVisibility(item.id, visibility)}
+                        />
 
-                                    <Grid.Column width={2}>
-                                        <Header as="h5">Blueprint</Header>
-                                        <span>{item.blueprint_id}</span>
-                                    </Grid.Column>
-
-                                    <Grid.Column width={2}>
-                                        <Header as="h5">Site Name</Header>
-                                        <span>{item.site_name}</span>
-                                    </Grid.Column>
-
-                                    <Grid.Column width={2}>
-                                        <Header as="h5">Created</Header>
-                                        <span>
-                                            {item.created_at}
-                                            <DeploymentUpdatedIcon deployment={item} />
-                                        </span>
-                                    </Grid.Column>
-
-                                    <Grid.Column width={2}>
-                                        <Header as="h5">Creator</Header>
-                                        <span>{item.created_by}</span>
-                                    </Grid.Column>
-
-                                    <Grid.Column width={3}>
-                                        <Header as="h5">Node Instances ({item.nodeInstancesCount})</Header>
-                                        <Grid columns={4}>
-                                            <Grid.Row>
-                                                {_.map(NodeInstancesConsts.groupStates, groupState => {
-                                                    const value = _.sum(
-                                                        _.map(groupState.states, state =>
-                                                            _.isNumber(item.nodeInstancesStates[state])
-                                                                ? item.nodeInstancesStates[state]
-                                                                : 0
-                                                        )
-                                                    );
-                                                    return (
-                                                        <Grid.Column key={groupState.name} textAlign="center">
-                                                            <GroupState
-                                                                state={groupState}
-                                                                description={
-                                                                    <StateDescription
-                                                                        states={groupState.states}
-                                                                        value={value}
-                                                                    />
-                                                                }
-                                                                className="nodeState"
-                                                                value={value}
-                                                            />
-                                                        </Grid.Column>
-                                                    );
-                                                })}
-                                            </Grid.Row>
-                                        </Grid>
-                                    </Grid.Column>
-
-                                    <Grid.Column width={1}>
-                                        <MenuAction item={item} onSelectAction={onMenuAction} />
-                                    </Grid.Column>
-                                </Grid.Row>
-                            </Grid>
-                            <ExecutionProgress
-                                execution={item.lastExecution}
-                                instancesCount={item.nodeInstancesCount}
-                                instancesStates={item.nodeInstancesStates}
-                            />
-                        </DataSegment.Item>
-                    );
-                })}
+                        <ExecutionProgress
+                            execution={item.lastExecution}
+                            instancesCount={item.nodeInstancesCount}
+                            instancesStates={item.nodeInstancesStates}
+                        />
+                    </DataSegment.Item>
+                ))}
             </DataSegment>
         );
     }
-}
-
-function StateDescription({ states, value }) {
-    const state = _.join(states, ', ');
-    const areManyStates = _.size(_.words(state)) > 1;
-
-    return (
-        <span>
-            <strong>{value}</strong> node instances in <strong>{state}</strong> state{areManyStates && 's'}
-        </span>
-    );
 }

@@ -130,14 +130,9 @@ export default class DeploymentsList extends React.Component {
         toolbox.loading(true);
         actions
             .doSetVisibility(deploymentId, visibility)
-            .then(() => {
-                toolbox.loading(false);
-                toolbox.refresh();
-            })
-            .catch(err => {
-                toolbox.loading(false);
-                this.setState({ error: err.message });
-            });
+            .then(() => toolbox.refresh())
+            .catch(err => this.setState({ error: err.message }))
+            .finally(() => toolbox.loading(false));
     }
 
     refreshData() {
