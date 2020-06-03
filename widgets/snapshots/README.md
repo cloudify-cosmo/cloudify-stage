@@ -25,7 +25,7 @@ The widget also exposes the following operations by the buttons on the top right
 * **Create** - Create a new snapshot on the current tenant 
 * **Upload** - Upload a snapshot to the current tenant
 
-![snapshots-list](https://docs.cloudify.co/dev/staging/images/ui/widgets/snapshots-list.png)
+![snapshots-list](https://docs.cloudify.co/staging/dev/images/ui/widgets/snapshots-list.png)
 
 #### Widget Settings 
 * `Refresh time interval` - The time interval in which the widget’s data will be refreshed, in seconds. Default: 30 seconds.

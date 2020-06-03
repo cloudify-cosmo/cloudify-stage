@@ -3,7 +3,7 @@ Displays all the source files in a blueprint package in tree view, adjacent to t
 
 If blueprint imports another blueprint, then all imported blueprint will be listed under **Imported blueprints** node in tree view.  
 
-![blueprint-sources](https://docs.cloudify.co/dev/staging/images/ui/widgets/blueprint-sources.png)
+![blueprint-sources](https://docs.cloudify.co/staging/dev/images/ui/widgets/blueprint-sources.png)
 
 #### Widget Settings
 * `Content pane initial width in %` - sets the default size of the source part of the window in percent of screen width. Default: 65%. 

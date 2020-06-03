@@ -1,7 +1,7 @@
 ### Button link
 Opens the specified URL in a separate tab. You can define the label that appears on the button
 
-![button-link](https://docs.cloudify.co/dev/staging/images/ui/widgets/button-link.png)
+![button-link](https://docs.cloudify.co/staging/dev/images/ui/widgets/button-link.png)
 
 #### Widget Settings 
 * `Button label` - The text to appear on the button
