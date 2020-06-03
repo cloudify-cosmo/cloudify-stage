@@ -96,7 +96,7 @@ describe('Tabs', () => {
             cy.contains('.widgetName', 'Catalog').should('be.visible');
         });
 
-        it('should allow to edit widget settings in edite mode', () => {
+        it('should allow to edit widget settings in edit mode', () => {
             cy.get('.usersMenu').click();
             cy.contains('Edit Mode').click();
 

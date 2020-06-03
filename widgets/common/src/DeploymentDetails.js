@@ -90,7 +90,7 @@ export default function DeploymentDetails({
                             as={as}
                             name={`Node Instances (${instancesCount})`}
                             value={<NodeInstancesSummary instancesStates={instancesStates} />}
-                            subHeaderStyle={{ lineHeight: '2rem' }}
+                            subHeaderStyle={{ lineHeight: `${big ? '1' : '2'}rem` }}
                         />
                     </Grid.Column>
                 )}

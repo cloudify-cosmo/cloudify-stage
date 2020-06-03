@@ -4,7 +4,7 @@ describe('Deployment Info', () => {
     const siteName = 'deployment_info_test_site';
 
     before(() => {
-        cy.activate('valid_trial_license')
+        cy.activate()
             .login()
             .deleteDeployments(deploymentName, true)
             .deleteBlueprints(blueprintName, true)
