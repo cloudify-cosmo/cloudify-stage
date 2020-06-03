@@ -1,7 +1,7 @@
 ### Text
 Displays text provided in the configuration of the widget in markdown syntax. 
 
-![text-widget](https://docs.cloudify.co/5.0.5/images/ui/widgets/text_widget_content.png)
+![text-widget](https://docs.cloudify.co/dev/staging/images/ui/widgets/text_widget_content.png)
 
 #### Widget Settings 
 * `Header` - the header to be presented as the textbox’s title
@@ -13,4 +13,4 @@ Displays text provided in the configuration of the widget in markdown syntax.
 * `Content text size (px)` - Size of the header
 * `Content text font` - Font of the header
 
-![text-widget-configuration](https://docs.cloudify.co/5.0.5/images/ui/widgets/text_widget_configuration.png)
+![text-widget-configuration](https://docs.cloudify.co/dev/staging/images/ui/widgets/text_widget_configuration.png)

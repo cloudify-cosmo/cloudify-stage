@@ -10,7 +10,7 @@ You can also specify your log level by typing in text. Multiselection available.
 * **Message Text** - part of log/event message
 * **Time Range** - time range to get log/events
 
-![events-logs-filter](https://docs.cloudify.co/5.0.5/images/ui/widgets/events-logs-filter.png)
+![events-logs-filter](https://docs.cloudify.co/dev/staging/images/ui/widgets/events-logs-filter.png)
 
 #### Widget Settings
 None
