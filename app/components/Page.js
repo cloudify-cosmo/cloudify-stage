@@ -77,12 +77,11 @@ export default class Page extends Component {
                     page={page}
                     onWidgetUpdated={onWidgetUpdated}
                     onWidgetRemoved={onWidgetRemoved}
+                    onWidgetAdded={onWidgetAdded}
                     isEditMode={isEditMode || false}
                 />
                 {isEditMode && (
                     <EditModeBubble onDismiss={onEditModeExit} header="Edit mode">
-                        <AddWidget onWidgetAdded={onWidgetAdded} />
-                        <AddPageButton />
                         <Button basic content="Exit" icon="sign out" onClick={onEditModeExit} />
                     </EditModeBubble>
                 )}
