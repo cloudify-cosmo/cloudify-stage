@@ -11,7 +11,7 @@ class ScrollToTop extends Component {
     componentDidUpdate(prevProps) {
         const { location } = this.props;
         if (location !== prevProps.location) {
-            window.scrollTo(0, 0);
+            $('div.main').scrollTop(0);
         }
     }
 
