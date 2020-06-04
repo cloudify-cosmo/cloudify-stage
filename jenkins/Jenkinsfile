@@ -141,6 +141,7 @@ pipeline {
       }
       steps {
         container('node'){
+          echo "${branch}"
           dir("${stage_dir}") {
             echo 'Run npm production dependencies security audit'
             sh 'npm run audit'
