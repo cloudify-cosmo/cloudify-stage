@@ -28,7 +28,7 @@ pipeline {
         stage('Build') {
           steps {
             container('node'){
-              dir("${workspace}/${stage_dir}") {
+              dir("${stage_dir}") {
                 echo "Install dependencies"
                 sh 'npm run beforebuild'
                 
@@ -88,7 +88,7 @@ pipeline {
         stage('Test'){
           steps {
             container('node'){
-              dir("${workspace}/${stage_dir}") {
+              dir("${stage_dir}") {
                 echo 'Initialize database'
                 sh 'cd backend && npm run db-migrate'
 
@@ -122,7 +122,7 @@ pipeline {
     stage('Docs'){
       steps {
         container('node'){
-          dir("${workspace}/${stage_dir}") {
+          dir("${stage_dir}") {
             echo 'Generate widgets documentation'
             sh 'npm run docWidgets'
             
@@ -141,7 +141,7 @@ pipeline {
       }
       steps {
         container('node'){
-          dir("${workspace}/${stage_dir}") {
+          dir("${stage_dir}") {
             echo 'Run npm production dependencies security audit'
             sh 'npm run audit'
           }
