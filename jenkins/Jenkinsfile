@@ -88,25 +88,19 @@ pipeline {
         stage('Test'){
           steps {
             container('node'){
-              sh "mkdir -p ${workspace}/test && cp -rf ${workspace}/${stage_dir}/. ${workspace}/test"
-              dir("${stage_dir}/test") {
+              sh "mkdir -p ${workspace}/backend && cp -rf ${workspace}/${stage_dir}/backend/. ${workspace}/backend"
+              dir("backend") {
                 echo 'Initialize database'
-                sh 'cd backend && npm run db-migrate'
+                sh 'npm run db-migrate'
 
                 echo 'Start Stage Backend'
-                sh 'cd backend && npm run start'
-                
-                echo 'Run tests'
-                sh 'npm run prodtest'
-                  
-                echo 'Check code style'
-                sh 'npm run lint'
+                sh 'npm run start'
               }
             }
             
             container('node'){
-              sh "mkdir -p ${workspace}/test2 && cp -rf ${workspace}/${stage_dir}/. ${workspace}/test2"
-              dir("${stage_dir}/test2") {
+              sh "mkdir -p ${workspace}/test && cp -rf ${workspace}/${stage_dir}/. ${workspace}/test"
+              dir("test") {
                 echo 'Run tests'
                 sh 'npm run prodtest'
                   
@@ -121,7 +115,7 @@ pipeline {
             checkout([$class: 'GitSCM', branches: [[name: "${branch}"]], doGenerateSubmoduleConfigurations: false, extensions: [[$class: 'RelativeTargetDirectory', relativeTargetDir: 'size']], submoduleCfg: [], userRemoteConfigs: [[credentialsId: '9f6aca75-ebff-4045-9919-b8ec6b5ccf9d', url: 'https://github.com/cloudify-cosmo/cloudify-stage.git']]])
             
             container('node'){
-              dir("${workspace}/size") {
+              dir("size") {
                 echo 'Check bundle size'
                 sh 'npm ci --prefer-offline'
                 sh 'npm run size'
@@ -133,7 +127,7 @@ pipeline {
           steps {
             container('node'){
               sh "mkdir -p ${workspace}/docs && cp -rf ${workspace}/${stage_dir}/. ${workspace}/docs"
-              dir("${stage_dir}/docs") {
+              dir("docs") {
                 echo 'Generate widgets documentation'
                 sh 'npm run docWidgets'
                 
