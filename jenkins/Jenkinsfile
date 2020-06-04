@@ -88,13 +88,13 @@ pipeline {
         stage('Test'){
           steps {
             container('node'){
-              sh "mkdir -p ${workspace}/backend && cp -rf ${workspace}/${stage_dir}/backend/. ${workspace}/backend"
+              sh "mkdir -p ${workspace}/backend && cp -rf ${workspace}/${stage_dir}/. ${workspace}/backend"
               dir("backend") {
                 echo 'Initialize database'
-                sh 'npm run db-migrate'
+                sh 'cd backend && npm run db-migrate'
 
                 echo 'Start Stage Backend'
-                sh 'npm run start'
+                sh 'cd backend && npm run start'
               }
             }
             
