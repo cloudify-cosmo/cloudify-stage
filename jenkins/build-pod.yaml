@@ -6,7 +6,7 @@ spec:
     image: rpmbuild/centos7
     resources:
       requests:
-        cpu: 0.8
+        cpu: 0.7
     command:
     - cat
     tty: true
