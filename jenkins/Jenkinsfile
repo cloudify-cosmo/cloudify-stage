@@ -87,8 +87,10 @@ pipeline {
       parallel {
         stage('Test'){
           steps {
+            checkout([$class: 'GitSCM', branches: [[name: "${branch}"]], doGenerateSubmoduleConfigurations: false, extensions: [[$class: 'RelativeTargetDirectory', relativeTargetDir: 'test']], submoduleCfg: [], userRemoteConfigs: [[credentialsId: '9f6aca75-ebff-4045-9919-b8ec6b5ccf9d', url: 'https://github.com/cloudify-cosmo/cloudify-stage.git']]])
+            
             container('node'){
-              dir("${stage_dir}") {
+              dir("${stage_dir}/test") {
                 echo 'Initialize database'
                 sh 'cd backend && npm run db-migrate'
 
@@ -117,20 +119,22 @@ pipeline {
             }
           }
         }
-      }
-    }
-    stage('Docs'){
-      steps {
-        container('node'){
-          dir("${stage_dir}") {
-            echo 'Generate widgets documentation'
-            sh 'npm run docWidgets'
+        stage('Docs'){
+          steps {
+            checkout([$class: 'GitSCM', branches: [[name: "${branch}"]], doGenerateSubmoduleConfigurations: false, extensions: [[$class: 'RelativeTargetDirectory', relativeTargetDir: 'docs']], submoduleCfg: [], userRemoteConfigs: [[credentialsId: '9f6aca75-ebff-4045-9919-b8ec6b5ccf9d', url: 'https://github.com/cloudify-cosmo/cloudify-stage.git']]])
             
-            echo 'Check if widgets documentation is up to date'
-            sh 'git diff --exit-code ./widgets'
+            container('node'){
+              dir("${stage_dir}/docs") {
+                echo 'Generate widgets documentation'
+                sh 'npm run docWidgets'
+                
+                echo 'Check if widgets documentation is up to date'
+                sh 'git diff --exit-code ./widgets'
 
-            echo 'Check if cloudify-ui-components version is the same as in official documentation'
-            sh 'npm run docCheck'
+                echo 'Check if cloudify-ui-components version is the same as in official documentation'
+                sh 'npm run docCheck'
+              }
+            }
           }
         }
       }
