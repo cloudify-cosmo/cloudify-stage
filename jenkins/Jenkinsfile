@@ -17,29 +17,17 @@ pipeline {
   environment {
     branch = "${env.BRANCH_NAME}"
     workspace = "${env.WORKSPACE}"
-    stage_dir = "cloudify-stage-${env.BUILD_NUMBER}"
+    stage_dir = "cloudify-stage"
     cfy_manager_url = 'https://raw.githubusercontent.com/cloudify-cosmo/cloudify-manager'
     cfy_node_rpm = 'http://repository.cloudifysource.org/cloudify/components/nodejs-12.16.1-1nodesource.x86_64.rpm'
   }
   
   stages {
-    stage('Build') {
-      steps {
-        sh """
-          id
-          pwd
-          ls -al
-          printenv | sort
-        """
-      }
-    }
-
     stage('Run Builds') {
       parallel {
         stage('Build') {
           steps {
             container('node'){
-              echo "${workspace}"
               dir("${workspace}/${stage_dir}") {
                 echo "Install dependencies"
                 sh 'npm run beforebuild'
