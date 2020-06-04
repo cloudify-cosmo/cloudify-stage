@@ -1,0 +1,160 @@
+pipeline {
+  agent {
+    kubernetes {
+      label 'ci'
+      defaultContainer 'jnlp'
+      yamlFile 'jenkins/build-pod.yaml'
+    }
+  }
+
+  options {
+    checkoutToSubdirectory('cloudify-stage')
+    buildDiscarder(logRotator(numToKeepStr:'30'))
+    timeout(time: 60, unit: 'MINUTES')
+    timestamps()
+  }
+
+  environment {
+    branch = "${env.BRANCH_NAME}"
+    workspace = "${env.WORKSPACE}"
+    stage_dir = "cloudify-stage"
+    cfy_manager_url = 'https://raw.githubusercontent.com/cloudify-cosmo/cloudify-manager'
+    cfy_node_rpm = 'http://repository.cloudifysource.org/cloudify/components/nodejs-12.16.1-1nodesource.x86_64.rpm'
+  }
+  
+  stages {
+    stage('Run Builds') {
+      parallel {
+        stage('Build') {
+          steps {
+            container('node'){
+              dir("${stage_dir}") {
+                echo "Install dependencies"
+                sh 'npm run beforebuild'
+                
+                echo "Build application"
+                sh 'npm run build'
+              }
+            }
+          }
+        }
+        stage('Build RPM'){
+          steps {
+            container('rpmbuild'){
+              echo 'Create RPM directory and copy all data from build stage to, for rpmbuild to run'
+              sh """
+                cd && mkdir rpmbuild && cd rpmbuild
+                git clone https://github.com/cloudify-cosmo/cloudify-stage.git BUILD && cd BUILD
+                curl -fO "${cfy_manager_url}/${branch}/packaging/version_info" || curl -fO "${cfy_manager_url}/master/packaging/version_info"
+              """
+
+              echo 'Install NodeJS & RPM development tools'
+              sh "yum install -y ${cfy_node_rpm} rpmdevtools rpmlint"
+
+              echo 'Lint RPM spec file & Install build dependencies for RPM spec file'
+              sh '''
+                cd ~/rpmbuild/BUILD
+                rpmlint --info packaging/cloudify-stage.spec
+                yum-builddep -y packaging/cloudify-stage.spec
+              '''
+                
+              echo 'Download sources for RPM spec file & Build RPM'
+              sh '''
+                cd ~/rpmbuild/BUILD && source ./version_info
+                spectool \
+                  -d "CLOUDIFY_VERSION $CLOUDIFY_VERSION" \
+                  -d "CLOUDIFY_PACKAGE_RELEASE $CLOUDIFY_PACKAGE_RELEASE" \
+                  -P packaging/cloudify-stage.spec \
+                  -S -g
+
+                rpmbuild \
+                  -D "CLOUDIFY_VERSION $CLOUDIFY_VERSION" \
+                  -D "CLOUDIFY_PACKAGE_RELEASE $CLOUDIFY_PACKAGE_RELEASE" \
+                  -bb packaging/cloudify-stage.spec
+              '''
+              
+              echo 'Save Artifacts'
+              sh("mkdir -p ${workspace}/rpm && cp -rf /root/rpmbuild/RPMS/x86_64/. ${workspace}/rpm")
+              dir("${workspace}/rpm") {
+                archiveArtifacts artifacts: '*.rpm', onlyIfSuccessful: true
+              }
+            }
+          }
+        }
+      }
+    }
+    stage('Run Tests') {
+      parallel {
+        stage('Test'){
+          steps {
+            container('node'){
+              sh "mkdir -p ${workspace}/backend && cp -rf ${workspace}/${stage_dir}/. ${workspace}/backend"
+              dir("backend") {
+                echo 'Initialize database'
+                sh 'cd backend && npm run db-migrate'
+
+                echo 'Start Stage Backend'
+                sh 'cd backend && npm run start'
+              }
+            }
+            
+            container('node'){
+              sh "mkdir -p ${workspace}/test && cp -rf ${workspace}/${stage_dir}/. ${workspace}/test"
+              dir("test") {
+                echo 'Run tests'
+                sh 'npm run prodtest'
+                  
+                echo 'Check code style'
+                sh 'npm run lint'
+              }
+            }
+          }
+        }
+        stage('Size') {
+          steps {
+            checkout([$class: 'GitSCM', branches: [[name: "${branch}"]], doGenerateSubmoduleConfigurations: false, extensions: [[$class: 'RelativeTargetDirectory', relativeTargetDir: 'size']], submoduleCfg: [], userRemoteConfigs: [[credentialsId: '9f6aca75-ebff-4045-9919-b8ec6b5ccf9d', url: 'https://github.com/cloudify-cosmo/cloudify-stage.git']]])
+            
+            container('node'){
+              dir("size") {
+                echo 'Check bundle size'
+                sh 'npm ci --prefer-offline'
+                sh 'npm run size'
+              }
+            }
+          }
+        }
+        stage('Docs'){
+          steps {
+            container('node'){
+              sh "mkdir -p ${workspace}/docs && cp -rf ${workspace}/${stage_dir}/. ${workspace}/docs"
+              dir("docs") {
+                echo 'Generate widgets documentation'
+                sh 'npm run docWidgets'
+                
+                echo 'Check if widgets documentation is up to date'
+                sh 'git diff --exit-code ./widgets'
+
+                echo 'Check if cloudify-ui-components version is the same as in official documentation'
+                sh 'npm run docCheck'
+              }
+            }
+          }
+        }
+      }
+    }
+    stage('Audit'){
+      when {
+        branch "master"
+      }
+      steps {
+        container('node'){
+          echo "${branch}"
+          dir("${stage_dir}") {
+            echo 'Run npm production dependencies security audit'
+            sh 'npm run audit'
+          }
+        }
+      }
+    }
+  }
+}
