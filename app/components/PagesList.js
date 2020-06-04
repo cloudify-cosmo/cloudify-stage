@@ -64,41 +64,43 @@ export default class PagesList extends Component {
         });
 
         return (
-            <div className="pages" ref={this.pagesRef}>
-                {_.filter(pages, p => !p.isDrillDown).map(
-                    page => (
-                        <div
-                            key={page.id}
-                            className={`item link pageMenuItem ${page.id}PageMenuItem ${
-                                selected === page.id ? 'active' : ''
-                            }`}
-                            onClick={event => {
-                                event.stopPropagation();
-                                onPageSelected(page);
-                            }}
-                        >
-                            {page.name}
-                            {isEditMode && pageCount > 1 ? (
-                                <i
-                                    className="remove link icon small pageRemoveButton"
-                                    onClick={event => {
-                                        event.stopPropagation();
-                                        onPageRemoved(page);
-                                    }}
-                                />
-                            ) : (
-                                ''
-                            )}
-                        </div>
-                    ),
-                    this
-                )}
+            <>
+                <div className="pages" ref={this.pagesRef}>
+                    {_.filter(pages, p => !p.isDrillDown).map(
+                        page => (
+                            <div
+                                key={page.id}
+                                className={`item link pageMenuItem ${page.id}PageMenuItem ${
+                                    selected === page.id ? 'active' : ''
+                                }`}
+                                onClick={event => {
+                                    event.stopPropagation();
+                                    onPageSelected(page);
+                                }}
+                            >
+                                {page.name}
+                                {isEditMode && pageCount > 1 ? (
+                                    <i
+                                        className="remove link icon small pageRemoveButton"
+                                        onClick={event => {
+                                            event.stopPropagation();
+                                            onPageRemoved(page);
+                                        }}
+                                    />
+                                ) : (
+                                    ''
+                                )}
+                            </div>
+                        ),
+                        this
+                    )}
+                </div>
                 {isEditMode && (
                     <div style={{ textAlign: 'center', marginTop: 10 }}>
                         <AddPageButton />
                     </div>
                 )}
-            </div>
+            </>
         );
     }
 }

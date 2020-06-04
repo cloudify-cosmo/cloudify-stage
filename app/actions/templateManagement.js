@@ -193,23 +193,17 @@ export function updatePageName(pageName) {
 
 export function persistPage(page) {
     return (dispatch, getState) => {
-        const widgets = page.widgets.map(w => {
+        function prepareWidgetData(widget) {
             return {
-                name: w.name,
-                definition: w.definition.id,
-                width: w.width,
-                height: w.height,
-                x: w.x,
-                y: w.y,
-                configuration: w.configuration
+                ..._.pick(widget, 'name', 'width', 'height', 'x', 'y', 'configuration'),
+                definition: widget.definition.id
             };
-        });
+        }
 
         const pageData = {
-            id: page.id,
-            oldId: page.oldId,
-            name: page.name,
-            widgets
+            ..._.pick(page, 'id', 'oldId', 'name'),
+            widgets: page.widgets.map(prepareWidgetData),
+            tabs: _.map(page.tabs, tab => ({ ...tab, widgets: _.map(tab.widgets, prepareWidgetData) }))
         };
 
         const internal = new Internal(getState().manager);
@@ -221,7 +215,7 @@ export function persistPage(page) {
                     dispatch(removePage(page.oldId));
                 }
             })
-            .then(() => dispatch(addPage(page.id, page.name, pageData.widgets)))
+            .then(() => dispatch(addPage(_.omit(pageData, 'oldId'))))
             .catch(err => dispatch(errorTemplateManagement(err.message)));
     };
 }

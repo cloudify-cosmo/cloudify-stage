@@ -40,12 +40,10 @@ export function removeTemplate(templateId) {
     };
 }
 
-export function addPage(pageId, name, widgets) {
+export function addPage(page) {
     return {
         type: types.ADD_TEMPLATE_PAGE,
-        pageId,
-        name,
-        widgets
+        page
     };
 }
 
