@@ -7,6 +7,13 @@ pipeline {
     }
   }
 
+  options {
+    checkoutToSubdirectory('cloudify-stage')
+    buildDiscarder(logRotator(numToKeepStr:'30'))
+    timeout(time: 60, unit: 'MINUTES')
+    timestamps()
+  }
+
   environment {
     branch = "${env.BRANCH_NAME}"
     workspace = "${env.WORKSPACE}"
@@ -32,7 +39,7 @@ pipeline {
         stage('Build') {
           steps {
             container('node'){
-              sh 'sleep 900'
+              echo "${workspace}"
               dir("${workspace}/${stage_dir}") {
                 echo "Install dependencies"
                 sh 'npm run beforebuild'
@@ -153,11 +160,5 @@ pipeline {
         }
       }
     }
-  }
-  
-  options {
-    buildDiscarder(logRotator(numToKeepStr:'30'))
-    timeout(time: 60, unit: 'MINUTES')
-    timestamps()
   }
 }
