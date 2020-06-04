@@ -137,7 +137,7 @@ pipeline {
     }
     stage('Audit'){
       when {
-        branch 'master'
+        branch "${branch}"
       }
       steps {
         container('node'){
