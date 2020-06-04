@@ -33,4 +33,4 @@ spec:
     - name: POSTGRES_DB
       value: stage
   nodeSelector:
-    instance-type: spot-xlarge
+    instance-type: spot

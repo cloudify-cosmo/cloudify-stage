@@ -88,8 +88,8 @@ pipeline {
         stage('Test'){
           steps {
             container('node'){
-              // sh "mkdir -p ${workspace}/test && cp -rf ${workspace}/${stage_dir}/. ${workspace}/test"
-              dir("${stage_dir}") {
+              sh "mkdir -p ${workspace}/backend && cp -rf ${workspace}/${stage_dir}/. ${workspace}/backend"
+              dir("backend") {
                 echo 'Initialize database'
                 sh 'cd backend && npm run db-migrate'
 
@@ -123,38 +123,21 @@ pipeline {
             }
           }
         }
-        // stage('Docs'){
-        //   steps {
-        //     container('node'){
-        //       // sh "mkdir -p ${workspace}/docs && cp -rf ${workspace}/${stage_dir}/. ${workspace}/docs"
-        //       dir("${stage_dir}") {
-        //         echo 'Generate widgets documentation'
-        //         sh 'npm run docWidgets'
+        stage('Docs'){
+          steps {
+            container('node'){
+              sh "mkdir -p ${workspace}/docs && cp -rf ${workspace}/${stage_dir}/. ${workspace}/docs"
+              dir("docs") {
+                echo 'Generate widgets documentation'
+                sh 'npm run docWidgets'
                 
-        //         echo 'Check if widgets documentation is up to date'
-        //         sh 'git diff --exit-code ./widgets'
+                echo 'Check if widgets documentation is up to date'
+                sh 'git diff --exit-code ./widgets'
 
-        //         echo 'Check if cloudify-ui-components version is the same as in official documentation'
-        //         sh 'npm run docCheck'
-        //       }
-        //     }
-        //   }
-        // }
-      }
-    }
-    stage('Docs'){
-      steps {
-        container('node'){
-          // sh "mkdir -p ${workspace}/docs && cp -rf ${workspace}/${stage_dir}/. ${workspace}/docs"
-          dir("${stage_dir}") {
-            echo 'Generate widgets documentation'
-            sh 'npm run docWidgets'
-            
-            echo 'Check if widgets documentation is up to date'
-            sh 'git diff --exit-code ./widgets'
-
-            echo 'Check if cloudify-ui-components version is the same as in official documentation'
-            sh 'npm run docCheck'
+                echo 'Check if cloudify-ui-components version is the same as in official documentation'
+                sh 'npm run docCheck'
+              }
+            }
           }
         }
       }
