@@ -9,19 +9,31 @@ pipeline {
 
   environment {
     branch = "${env.BRANCH_NAME}"
-    workspace = "/home/jenkins/agent/workspace/stage-testing"
+    workspace = "${env.WORKSPACE}"
     stage_dir = "cloudify-stage-${env.BUILD_NUMBER}"
     cfy_manager_url = 'https://raw.githubusercontent.com/cloudify-cosmo/cloudify-manager'
     cfy_node_rpm = 'http://repository.cloudifysource.org/cloudify/components/nodejs-12.16.1-1nodesource.x86_64.rpm'
   }
   
   stages {
+    stage('Build') {
+      steps {
+        sh """
+          id
+          pwd
+          ls -al
+          printenv | sort
+          ${env.WORKSPACE}
+          echo 'test'
+          ${WORKSPACE}
+        """
+      }
+    }
+
     stage('Run Builds') {
       parallel {
         stage('Build') {
           steps {
-            checkout([$class: 'GitSCM', branches: [[name: "${branch}"]], doGenerateSubmoduleConfigurations: false, extensions: [[$class: 'RelativeTargetDirectory', relativeTargetDir: "${stage_dir}"]], submoduleCfg: [], userRemoteConfigs: [[credentialsId: '9f6aca75-ebff-4045-9919-b8ec6b5ccf9d', url: 'https://github.com/cloudify-cosmo/cloudify-stage.git']]])
-            
             container('node'){
               dir("${workspace}/${stage_dir}") {
                 echo "Install dependencies"
