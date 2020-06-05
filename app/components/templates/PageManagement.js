@@ -93,7 +93,6 @@ export default function PageManagement({ pageId, isEditMode }) {
     };
     const onTemplateNavigate = () => dispatch(push('/template_management'));
     const onWidgetAdded = (name, widgetDefinition, tabIndex) => {
-        const updatedPage = _.cloneDeep(page);
         const widgetInstance = {
             id: v4(),
             name,
@@ -103,11 +102,11 @@ export default function PageManagement({ pageId, isEditMode }) {
             definition: widgetDefinition
         };
         if (!_.isNil(tabIndex)) {
-            updatedPage.tabs[tabIndex].widgets.push(widgetInstance);
+            page.tabs[tabIndex].widgets.push(widgetInstance);
         } else {
-            updatedPage.widgets.push(widgetInstance);
+            page.widgets.push(widgetInstance);
         }
-        setPage(updatedPage);
+        setPage(_.clone(page));
     };
     const onWidgetRemoved = id => {
         const updatedPage = _.clone(page);
