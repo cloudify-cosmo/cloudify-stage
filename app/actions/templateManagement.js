@@ -156,7 +156,7 @@ export function createPage(pageName) {
         const internal = new Internal(getState().manager);
         return internal
             .doPost('/templates/pages', {}, page)
-            .then(() => dispatch(addPage(page.id, page.name, page.widgets)))
+            .then(() => dispatch(addPage(page)))
             .then(() => dispatch(fetchTemplates()))
             .then(() => dispatch(push(`/page_edit/${pageId}`)))
             .catch(err => dispatch(errorTemplateManagement(err.message)));
