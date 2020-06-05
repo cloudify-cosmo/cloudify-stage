@@ -46,7 +46,7 @@ export default function EditTabModal({ tab, trigger, onTabUpdate }) {
 }
 
 EditTabModal.propTypes = {
-    tab: PropTypes.shape({}).isRequired,
+    tab: PropTypes.shape({ name: PropTypes.string, isDefault: PropTypes.bool }).isRequired,
     trigger: PropTypes.element.isRequired,
     onTabUpdate: PropTypes.func.isRequired
 };
