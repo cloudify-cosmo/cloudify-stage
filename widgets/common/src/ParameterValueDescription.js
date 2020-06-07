@@ -1,10 +1,9 @@
-import ParameterValue from './ParameterValue';
-
 /**
  * ParameterValueDescription is a popup description for ParameterValue component.
  */
 export default function ParameterValueDescription() {
     const { List, PopupHelp } = Stage.Basic;
+    const { ParameterValue } = Stage.Common;
 
     return (
         <PopupHelp

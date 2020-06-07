@@ -34,7 +34,7 @@ class InputsSection extends React.Component {
 
     render() {
         const { showOnlyChanged } = this.state;
-        const { oldInputs, newInputs: newInputsProp } = this.props;
+        const { oldInputs: oldInputsProp, newInputs: newInputsProp } = this.props;
         const { Form, Header, Icon, List, Popup, PopupHelp, Table } = Stage.Basic;
         const { ParameterValue, ParameterValueDescription } = Stage.Common;
         const { Json } = Stage.Utils;
@@ -44,13 +44,13 @@ class InputsSection extends React.Component {
             .filter(
                 inputName =>
                     !_.isEqual(
-                        Json.getStringValue(newInputs[inputName] || ''),
-                        Json.getStringValue(oldInputs[inputName] || '')
+                        Json.getStringValue(newInputsProp[inputName] || ''),
+                        Json.getStringValue(oldInputsProp[inputName] || '')
                     )
             )
             .uniq()
             .value();
-        const inputsChanged = !_.isEqual(oldInputs, newInputs);
+        const inputsChanged = !_.isEqual(oldInputsProp, newInputsProp);
 
         const Diff = ({ stringA, stringB }) => {
             const difference = diffChars(String(stringA), String(stringB));
@@ -142,9 +142,9 @@ class InputsSection extends React.Component {
 
                         <Table.Body>
                             {_.map(showOnlyChanged ? onlyChangedInputs : newInputs, input => {
-                                const oldValue = _.get(oldInputs, input, '');
+                                const oldValue = _.get(oldInputsProp, input, '');
                                 const oldValueString = Json.getStringValue(oldValue);
-                                const newValue = _.get(newInputs, input, '');
+                                const newValue = _.get(newInputsProp, input, '');
                                 const newValueString = Json.getStringValue(newValue);
                                 const inputChanged = !_.isEqual(oldValueString, newValueString);
 

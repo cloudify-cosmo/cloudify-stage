@@ -1,8 +1,9 @@
 import PropTypes from 'prop-types';
 import WidgetsList from './WidgetsList';
 import { Tab } from './basic';
+import AddWidget from '../containers/AddWidget';
 
-export default function PageContent({ onWidgetUpdated, onWidgetRemoved, page, isEditMode }) {
+export default function PageContent({ onWidgetUpdated, onWidgetRemoved, onWidgetAdded, page, isEditMode }) {
     function createWidgetList(widgets, tab) {
         return (
             <WidgetsList
@@ -17,12 +18,22 @@ export default function PageContent({ onWidgetUpdated, onWidgetRemoved, page, is
 
     return (
         <>
+            {isEditMode && <AddWidget onWidgetAdded={onWidgetAdded} />}
             {createWidgetList(page.widgets)}
             {!_.isEmpty(page.tabs) && (
                 <Tab
                     panes={_.map(page.tabs, (tab, tabIndex) => ({
                         menuItem: tab.name,
-                        render: () => createWidgetList(tab.widgets, tabIndex)
+                        render: () => (
+                            <>
+                                {isEditMode && (
+                                    <div style={{ paddingTop: 15 }}>
+                                        <AddWidget onWidgetAdded={(...params) => onWidgetAdded(...params, tabIndex)} />
+                                    </div>
+                                )}
+                                {createWidgetList(tab.widgets, tabIndex)}
+                            </>
+                        )
                     }))}
                 />
             )}
@@ -33,6 +44,7 @@ export default function PageContent({ onWidgetUpdated, onWidgetRemoved, page, is
 PageContent.propTypes = {
     onWidgetUpdated: PropTypes.func.isRequired,
     onWidgetRemoved: PropTypes.func.isRequired,
+    onWidgetAdded: PropTypes.func.isRequired,
     page: PropTypes.shape({
         widgets: PropTypes.arrayOf(PropTypes.shape({})),
         tabs: PropTypes.arrayOf(PropTypes.shape({}))
