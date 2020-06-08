@@ -64,14 +64,14 @@ export default function PageContent({
             </Menu.Item>
         ),
         render: () => (
-            <>
+            <span className="tabContent">
                 {isEditMode && (
                     <div style={{ paddingTop: 15 }}>
                         <AddWidget onWidgetAdded={(...params) => onWidgetAdded(...params, tabIndex)} />
                     </div>
                 )}
                 {createWidgetList(tab.widgets, tabIndex)}
-            </>
+            </span>
         )
     }));
 

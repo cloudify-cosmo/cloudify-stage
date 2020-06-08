@@ -65,7 +65,9 @@ describe('Edit mode', () => {
         cy.contains('Add Tabs').click();
 
         cy.get('.editModeButton .remove:eq(0)').click();
-        cy.contains('New Tab').should('have.length', 1);
+        cy.get('.item:contains(New Tab)').should('have.length', 1);
+        cy.get('.item .editModeButton .add').click();
+        cy.get('.item:contains(New Tab)').should('have.length', 2);
     });
 
     it('should allow to rename tab and set default tab', () => {
