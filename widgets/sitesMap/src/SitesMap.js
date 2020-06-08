@@ -9,7 +9,6 @@ class SitesMap extends React.Component {
      * @property {object} data - object with sites data
      * @property {object} dimensions - object with widget dimensions
      * @property {string} mapUrl - map provider URL
-     * @property {string} tilesUrlTemplate - map tiles provider template URL
      * @property {string} attribution - map attribution to be added to map view
      * @property {boolean} showAllLabels - specifies whether all the site labels displayed
      */
@@ -38,7 +37,6 @@ class SitesMap extends React.Component {
         }).isRequired,
 
         mapUrl: PropTypes.string.isRequired,
-        tilesUrlTemplate: PropTypes.string.isRequired,
         attribution: PropTypes.string.isRequired,
 
         showAllLabels: PropTypes.bool.isRequired
@@ -54,7 +52,7 @@ class SitesMap extends React.Component {
     }
 
     shouldComponentUpdate(nextProps, nextState) {
-        const { attribution, data, dimensions, mapUrl, showAllLabels, sitesAreDefined, tilesUrlTemplate } = this.props;
+        const { attribution, data, dimensions, mapUrl, showAllLabels, sitesAreDefined } = this.props;
         const { isMapAvailable } = this.state;
 
         return (
@@ -64,7 +62,6 @@ class SitesMap extends React.Component {
             !_.isEqual(mapUrl, nextProps.mapUrl) ||
             !_.isEqual(showAllLabels, nextProps.showAllLabels) ||
             !_.isEqual(sitesAreDefined, nextProps.sitesAreDefined) ||
-            !_.isEqual(tilesUrlTemplate, nextProps.tilesUrlTemplate) ||
             !_.isEqual(isMapAvailable, nextState.isMapAvailable)
         );
     }
@@ -130,7 +127,7 @@ class SitesMap extends React.Component {
     render() {
         const { Map, TileLayer } = Stage.Basic.Leaflet;
 
-        const { attribution, data, sitesAreDefined, tilesUrlTemplate } = this.props;
+        const { attribution, data, sitesAreDefined } = this.props;
         const { isMapAvailable } = this.state;
 
         if (!isMapAvailable) {
@@ -143,7 +140,7 @@ class SitesMap extends React.Component {
             return <NoSitesDataMessage sitesAreDefined={sitesAreDefined} />;
         }
 
-        const mapOptions = { ...Stage.Common.Consts.leaflet.mapOptions };
+        const { mapOptions, url } = Stage.Common.Consts.leaflet;
 
         const sites = _.values(data);
         if (sites.length > 1) {
@@ -155,7 +152,7 @@ class SitesMap extends React.Component {
 
         return (
             <Map ref={this.mapRef} className="sites-map" {...mapOptions}>
-                <TileLayer attribution={attribution} url={tilesUrlTemplate} />
+                <TileLayer attribution={attribution} url={url} />
                 {markers}
             </Map>
         );

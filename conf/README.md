@@ -50,12 +50,13 @@ The following section describes different configuration files used in cloudify-s
 
 ## User (`userConfig.json`)
 
-This configuration can be overriden by: `/dist/userData/userConfig.json`.
+This configuration can be overridden by: `/dist/userData/userConfig.json`.
 
 * `maps` - object, LeafletJS map configuration, see [Leaflet-providers preview](http://leaflet-extras.github.io/leaflet-providers/preview/) for allowed Tiles URL templates and Attribution values 
   * `mapUrl` - string, URL for the map service, used to check service availability
   * `tilesUrlTemplate` - string, template map tiles provider URL, check URL template section at [TileLayer page](https://leafletjs.com/reference-1.5.0.html#tilelayer) for details
   * `attribution` -  string, attribution data to be displayed as small text box on a map,  HTML allowed, it is required by map providers, check [Leaflet-providers preview](https://leaflet-extras.github.io/leaflet-providers/preview/) for examples and requirements from different providers
+  * `key` - string, API key to be passed to map tile tiles provider 
   
 * `whiteLabel` - object, Cloudify UI white-labelling configuration
   * `pageTitle` - string, page title

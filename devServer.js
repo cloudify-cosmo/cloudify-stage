@@ -27,25 +27,25 @@ const options = {
         index: `${contextPath}/static/index.html`
     },
     proxy: {
-        [`${contextPath}/sp`]: proxyOptions,
         [`${contextPath}/auth`]: proxyOptions,
-        [`${contextPath}/config`]: proxyOptions,
-        [`${contextPath}/ua`]: proxyOptions,
-        [`${contextPath}/source`]: proxyOptions,
         [`${contextPath}/ba`]: proxyOptions,
         [`${contextPath}/bud`]: proxyOptions,
         [`${contextPath}/clientConfig`]: proxyOptions,
-        [`${contextPath}/github`]: proxyOptions,
+        [`${contextPath}/config`]: proxyOptions,
         [`${contextPath}/external`]: proxyOptions,
+        [`${contextPath}/file`]: proxyOptions,
+        [`${contextPath}/github`]: proxyOptions,
+        [`${contextPath}/maps`]: proxyOptions,
+        [`${contextPath}/plugins`]: proxyOptions,
+        [`${contextPath}/source`]: proxyOptions,
+        [`${contextPath}/sp`]: proxyOptions,
         [`${contextPath}/style`]: proxyOptions,
-        [`${contextPath}/widgets`]: proxyOptions,
         [`${contextPath}/templates`]: proxyOptions,
         [`${contextPath}/tours`]: proxyOptions,
-        [`${contextPath}/wb`]: proxyOptions,
-        [`${contextPath}/file`]: proxyOptions,
-        [`${contextPath}/plugins`]: proxyOptions,
+        [`${contextPath}/ua`]: proxyOptions,
         [`${contextPath}/userData`]: proxyOptions,
-        [`${contextPath}/static`]: proxyOptions
+        [`${contextPath}/wb`]: proxyOptions,
+        [`${contextPath}/widgets`]: proxyOptions
     },
     watchOptions: {
         ignored: ['**/userData/**']
