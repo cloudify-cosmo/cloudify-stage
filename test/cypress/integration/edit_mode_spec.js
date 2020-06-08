@@ -13,12 +13,13 @@ describe('Edit mode', () => {
             })
         );
         cy.login();
+        cy.get('.usersMenu')
+            .click()
+            .contains('Edit Mode')
+            .click();
     });
 
     it('should allow to edit widget settings', () => {
-        cy.get('.usersMenu').click();
-        cy.contains('Edit Mode').click();
-
         cy.get('.blueprintsWidget .setting').click({ force: true });
 
         cy.get('.pollingTime input').type(0);
@@ -33,9 +34,6 @@ describe('Edit mode', () => {
     });
 
     it('should allow to remove widget', () => {
-        cy.get('.usersMenu').click();
-        cy.contains('Edit Mode').click();
-
         cy.get('.blueprintsWidget .remove').click({ force: true });
         cy.get('.blueprintsWidget').should('not.exist');
 
@@ -45,10 +43,6 @@ describe('Edit mode', () => {
     });
 
     it('should allow to add widget', () => {
-        cy.get('.usersMenu')
-            .click()
-            .contains('Edit Mode')
-            .click();
         cy.get('.editModeButton:contains(Add Widget):eq(1)').click();
         cy.get('*[data-id=blueprintSources]').click();
         cy.contains('Add selected widgets').click();
@@ -60,5 +54,43 @@ describe('Edit mode', () => {
 
         cy.reload();
         cy.contains('.react-grid-layout:eq(1) .widgetName', 'Blueprint Sources');
+    });
+
+    it('should allow to remove and add tabs', () => {
+        cy.get('.editModeButton .remove:eq(0)').click();
+        cy.contains('Yes').click();
+        cy.get('.editModeButton .remove').click();
+        cy.contains('Yes').click();
+
+        cy.contains('Add Tabs').click();
+
+        cy.get('.editModeButton .remove:eq(0)').click();
+        cy.contains('New Tab').should('have.length', 1);
+    });
+
+    it('should allow to rename tab and set default tab', () => {
+        cy.get('.editModeButton .edit:eq(0)').click();
+        cy.get('.modal input[type=text]').type(2);
+        cy.get('.modal .toggle').click();
+        cy.contains('Save').click();
+
+        cy.log('Verify default flag was set');
+        cy.get('.editModeButton .edit:eq(0)').click();
+        cy.get('.modal .toggle.checked');
+        cy.contains('Cancel').click();
+
+        cy.log('Set another tab as default');
+        cy.get('.editModeButton .edit:eq(1)').click();
+        cy.get('.modal .toggle').click();
+        cy.contains('Save').click();
+
+        cy.log('Verify previous tab is no longer default');
+        cy.get('.editModeButton .edit:eq(0)').click();
+        cy.get('.modal .toggle:not(.checked)');
+
+        cy.log('Verify updates are preserved');
+        cy.reload().waitUntilLoaded();
+        cy.contains('Tab12').should('not.have.class', 'active');
+        cy.contains('Tab2').should('have.class', 'active');
     });
 });
