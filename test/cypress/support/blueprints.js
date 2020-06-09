@@ -1,14 +1,18 @@
 import { waitUntilEmpty } from './resource_commons';
 
-Cypress.Commands.add('uploadBlueprint', (pathOrUrl, id, yamlFile = 'blueprint.yaml') => {
+Cypress.Commands.add('uploadBlueprint', (pathOrUrl, id, yamlFile = 'blueprint.yaml', visibility = 'tenant') => {
     if (pathOrUrl.startsWith('http')) {
         return cy.cfyRequest(
-            `/blueprints/${id}?blueprint_archive_url=${pathOrUrl}&visibility=tenant&application_file_name=${yamlFile}`,
+            `/blueprints/${id}?blueprint_archive_url=${pathOrUrl}&visibility=${visibility}&application_file_name=${yamlFile}`,
             'PUT'
         );
     }
 
-    return cy.cfyFileRequest(pathOrUrl, true, `/blueprints/${id}?visibility=tenant&application_file_name=${yamlFile}`);
+    return cy.cfyFileRequest(
+        pathOrUrl,
+        true,
+        `/blueprints/${id}?visibility=${visibility}&application_file_name=${yamlFile}`
+    );
 });
 
 Cypress.Commands.add('deleteBlueprint', (blueprintId, force = false) => {
