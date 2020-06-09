@@ -39,10 +39,10 @@ module.exports = {
             }
         },
         editModeSidebar: {
-            selector: '.editModeSidebar:not(.animating)',
+            selector: 'div.main',
             elements: {
                 addWidgetButton: '.addWidgetBtn',
-                addPageButton: 'button:nth-child(2)'
+                addPageButton: '.addPageBtn'
             }
         },
         page: {
