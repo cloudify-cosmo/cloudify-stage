@@ -185,10 +185,6 @@ module.exports = (env, argv) => {
                             {
                                 from: 'tours',
                                 to: 'appData/tours'
-                            },
-                            !isProduction && {
-                                from: 'userData',
-                                to: 'userData'
                             }
                         ])
                     ),

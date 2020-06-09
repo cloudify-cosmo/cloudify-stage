@@ -26,14 +26,14 @@ export default function WidgetsList({ onWidgetUpdated, onWidgetRemoved, isEditMo
     });
 
     return _.isEmpty(filteredWidgets) ? (
-        <Container className="emptyPage alignCenter">
+        <Container className="emptyPage alignCenter" style={{ padding: '10rem 0' }}>
             {isEditMode ? (
                 <Header size="large">
-                    This page is empty, <br />
+                    This {_.isNil(tab) ? 'page' : 'tab'} is empty, <br />
                     don't be shy, give it a meaning!
                 </Header>
             ) : (
-                <Header size="large">This page is empty</Header>
+                <Header size="large">This {_.isNil(tab) ? 'page' : 'tab'} is empty</Header>
             )}
         </Container>
     ) : (
