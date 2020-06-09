@@ -29,6 +29,14 @@ pipeline {
           steps {
             container('node'){
               dir("${stage_dir}") {
+                echo "Install headless chrome dependencies"
+                sh '''
+                  wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add -
+                  sh -c 'echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google.list'
+                  apt-get update 
+                  apt-get --assume-yes install google-chrome-stable
+                '''
+                
                 echo "Install dependencies"
                 sh 'npm run beforebuild'
                 
@@ -112,12 +120,10 @@ pipeline {
         }
         stage('Size') {
           steps {
-            checkout([$class: 'GitSCM', branches: [[name: "${branch}"]], doGenerateSubmoduleConfigurations: false, extensions: [[$class: 'RelativeTargetDirectory', relativeTargetDir: 'size']], submoduleCfg: [], userRemoteConfigs: [[credentialsId: '9f6aca75-ebff-4045-9919-b8ec6b5ccf9d', url: 'https://github.com/cloudify-cosmo/cloudify-stage.git']]])
-            
             container('node'){
+              sh "mkdir -p ${workspace}/size && cp -rf ${workspace}/${stage_dir}/. ${workspace}/size"
               dir("size") {
                 echo 'Check bundle size'
-                sh 'npm ci --prefer-offline'
                 sh 'npm run size'
               }
             }
