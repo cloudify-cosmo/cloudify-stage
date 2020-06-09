@@ -42,15 +42,19 @@ class SiteLocationMap extends React.Component {
     render() {
         const { Leaflet, Loading, Message } = Stage.Basic;
         const { Consts, createMarkerIcon } = Stage.Common;
-        const { mapOptions: defaultMapOptions, initialZoom, templateUrl } = Consts.leaflet;
+        const { mapOptions: defaultMapOptions, initialZoom, urlTemplate } = Consts.leaflet;
 
         const { attribution, location, mapOptions } = this.props;
         const { isMapAvailable } = this.state;
 
-        const url = Stage.Utils.Url.url(templateUrl);
+        const url = Stage.Utils.Url.url(urlTemplate);
 
         if (isMapAvailable === null) {
-            return <Loading />;
+            return (
+                <div style={{ width: 50, height: 50, margin: '0 auto' }}>
+                    <Loading />
+                </div>
+            );
         }
 
         if (isMapAvailable === false) {
