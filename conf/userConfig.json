@@ -1,7 +1,6 @@
 {
   "maps": {
-    "mapUrl": "https://tiles.stadiamaps.com/tiles/osm_bright/0/0/0.png",
-    "tilesUrlTemplate": "https://tiles.stadiamaps.com/tiles/osm_bright/${z}/${x}/${y}.png?api_key=${key}",
+    "tilesUrlTemplate": "https://tiles.stadiamaps.com/tiles/osm_bright/${z}/${x}/${y}${r}.png?api_key=${key}",
     "attribution": "&copy; <a href=\"https://stadiamaps.com/\">Stadia Maps</a>, &copy; <a href=\"https://openmaptiles.org/\">OpenMapTiles</a> &copy; <a href=\"http://openstreetmap.org\">OpenStreetMap</a> contributors"
   },
   "whiteLabel": {

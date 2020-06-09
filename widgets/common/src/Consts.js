@@ -19,7 +19,7 @@ const consts = {
             maxBoundsViscosity: 0.75
         },
         initialZoom: 2.5,
-        url: '/console/maps/{z}/{x}/{y}{r}'
+        urlTemplate: '/maps/{z}/{x}/{y}/{r}'
     },
     externalUrls: {
         pluginsCatalog: 'http://repository.cloudifysource.org/cloudify/wagons/plugins.json',
