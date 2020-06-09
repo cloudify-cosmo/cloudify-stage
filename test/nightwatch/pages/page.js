@@ -14,14 +14,6 @@ module.exports = {
                 sidebarButton: 'i.sidebar-button'
             }
         },
-        tenants: {
-            selector: '.tenantsMenu',
-            elements: {
-                tenantName: 'span span',
-                tenantsDropdownMenu: '.menu',
-                tenantsDropdownMenuItem: '.menu .item span'
-            }
-        },
         userMenu: {
             selector: '.usersMenu',
             elements: {
