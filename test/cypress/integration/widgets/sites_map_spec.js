@@ -5,11 +5,13 @@ describe('Sites Map', () => {
     };
 
     before(() => {
+        const testSite = { name: 'Tel-Aviv', location: '32.079991, 34.767291' };
+
         cy.activate('valid_spire_license')
             .login()
-            .waitUntilLoaded()
             .deleteSites()
-            .createSite({ name: 'Tel-Aviv', location: '32.079991, 34.767291' });
+            .createSite(testSite)
+            .waitUntilLoaded();
     });
 
     it('is not displayed when there is no connection to map tiles provider', () => {
@@ -41,7 +43,8 @@ describe('Sites Map', () => {
         cy.get('.leaflet-popup .leaflet-popup-content h5.header').should('have.text', 'Tel-Aviv');
 
         // Add second site
-        cy.createSite({ name: 'Bergen', location: '60.389433, 5.332489', visibility: 'private' });
+        const secondSite = { name: 'Bergen', location: '60.389433, 5.332489', visibility: 'private' };
+        cy.createSite(secondSite);
         reloadDashboardPage();
 
         // Verify second site is present on the map
