@@ -5,7 +5,15 @@
 import { connect } from 'react-redux';
 
 import Page from '../components/Page';
-import { changePageDescription, changePageName, createPagesMap, selectPage } from '../actions/page';
+import {
+    addTab,
+    changePageDescription,
+    changePageName,
+    createPagesMap,
+    removeTab,
+    selectPage,
+    updateTab
+} from '../actions/page';
 import { addWidget, removeWidget, updateWidget } from '../actions/widgets';
 import { setDrilldownContext } from '../actions/drilldownContext';
 import { setEditMode } from '../actions/config';
@@ -84,6 +92,9 @@ const mapDispatchToProps = (dispatch, ownProps) => {
         onWidgetAdded: (name, widgetDefinition, tabIndex) => {
             dispatch(addWidget(ownProps.pageId, tabIndex, { name }, widgetDefinition));
         },
+        onTabAdded: () => dispatch(addTab(ownProps.pageId)),
+        onTabRemoved: tabIndex => dispatch(removeTab(ownProps.pageId, tabIndex)),
+        onTabUpdated: (tabIndex, name, isDefault) => dispatch(updateTab(ownProps.pageId, tabIndex, name, isDefault)),
         onEditModeExit: () => {
             dispatch(setEditMode(false));
         },

@@ -2,6 +2,10 @@
  * Created by kinneretzin on 30/08/2016.
  */
 
+export const ADD_TAB = 'Add_TAB';
+export const REMOVE_TAB = 'REMOVE_TAB';
+export const UPDATE_TAB = 'UPDATE_TAB';
+
 export const ADD_PAGE = 'ADD_PAGE';
 export const SET_PAGES = 'SET_PAGES';
 export const CREATE_DRILLDOWN_PAGE = 'CREATE_DRILLDOWN_PAGE';

@@ -7,13 +7,11 @@ import { push } from 'connected-react-router';
 import { useDispatch, useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
 import v4 from 'uuid/v4';
-import Const from '../../utils/consts';
 import { Alert, Breadcrumb, Button, Divider, EditableLabel, ErrorMessage, Menu, Segment, Sidebar } from '../basic';
 import EditModeBubble from '../EditModeBubble';
 import PageContent from '../PageContent';
 import { createPageId, drillDownWarning, savePage, setActive, setPageEditMode } from '../../actions/templateManagement';
 import StageUtils from '../../utils/stageUtils';
-import AddWidget from '../../containers/AddWidget';
 
 export default function PageManagement({ pageId, isEditMode }) {
     const dispatch = useDispatch();
@@ -36,7 +34,7 @@ export default function PageManagement({ pageId, isEditMode }) {
     const [error, setError] = useState();
 
     useEffect(() => {
-        const managedPage = _.cloneDeep(pageDefs[pageId]);
+        const managedPage = _.cloneDeep(pageDefs[pageId]) || {};
         managedPage.id = pageId;
 
         const invalidWidgetNames = [];
@@ -62,7 +60,7 @@ export default function PageManagement({ pageId, isEditMode }) {
             return widgetInstances;
         }
 
-        managedPage.widdgets = toWidgetInstances(managedPage.widgets);
+        managedPage.widgets = toWidgetInstances(managedPage.widgets);
         _.each(managedPage.tabs, tab => {
             tab.widgets = toWidgetInstances(tab.widgets);
         });
@@ -94,17 +92,21 @@ export default function PageManagement({ pageId, isEditMode }) {
         setPage(updatedPage);
     };
     const onTemplateNavigate = () => dispatch(push('/template_management'));
-    const onWidgetAdded = (name, widgetDefinition) => {
-        const updatedPage = _.clone(page);
-        updatedPage.widgets.push({
+    const onWidgetAdded = (name, widgetDefinition, tabIndex) => {
+        const widgetInstance = {
             id: v4(),
             name,
             width: widgetDefinition.initialWidth,
             height: widgetDefinition.initialHeight,
             configuration: StageUtils.buildConfig(widgetDefinition),
             definition: widgetDefinition
-        });
-        setPage(updatedPage);
+        };
+        if (!_.isNil(tabIndex)) {
+            page.tabs[tabIndex].widgets.push(widgetInstance);
+        } else {
+            page.widgets.push(widgetInstance);
+        }
+        setPage(_.clone(page));
     };
     const onWidgetRemoved = id => {
         const updatedPage = _.clone(page);
@@ -128,6 +130,28 @@ export default function PageManagement({ pageId, isEditMode }) {
     };
     const onCloseDrillDownWarning = () => {
         dispatch(drillDownWarning(false));
+    };
+    const onTabAdded = () => {
+        const updatedPage = _.cloneDeep(page);
+        updatedPage.tabs = updatedPage.tabs || [];
+        updatedPage.tabs.push({ name: 'New Tab', widgets: [] });
+        if (updatedPage.tabs.length === 1) {
+            updatedPage.tabs.push({ name: 'New Tab', widgets: [] });
+        }
+        setPage(updatedPage);
+    };
+    const onTabRemoved = tabIndex => {
+        const updatedPage = _.clone(page);
+        updatedPage.tabs = _.without(updatedPage.tabs, _.nth(updatedPage.tabs, tabIndex));
+        setPage(updatedPage);
+    };
+    const onTabUpdated = (tabIndex, name, isDefault) => {
+        let tabs = [...page.tabs];
+        if (isDefault) {
+            tabs = _.map(tabs, tab => ({ ...tab, isDefault: false }));
+        }
+        tabs[tabIndex] = { ...tabs[tabIndex], name, isDefault };
+        setPage({ ...page, tabs });
     };
 
     const isWidgetMaximized = findWidget({ maximized: true });
@@ -171,8 +195,12 @@ export default function PageManagement({ pageId, isEditMode }) {
                     <ErrorMessage error={error} />
 
                     <PageContent
+                        onTabAdded={onTabAdded}
+                        onTabRemoved={onTabRemoved}
+                        onTabUpdated={onTabUpdated}
                         onWidgetUpdated={onWidgetUpdated}
                         onWidgetRemoved={onWidgetRemoved}
+                        onWidgetAdded={onWidgetAdded}
                         page={page}
                         isEditMode={isEditMode}
                     />
@@ -183,7 +211,6 @@ export default function PageManagement({ pageId, isEditMode }) {
                     >
                         {isEditMode ? (
                             <>
-                                <AddWidget onWidgetAdded={onWidgetAdded} />
                                 <Button basic content="Save" icon="save" onClick={onPageSave} />
                                 <Button basic content="Cancel" icon="remove" onClick={onTemplateNavigate} />
                             </>

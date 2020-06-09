@@ -21,6 +21,9 @@ export default class Page extends Component {
         onWidgetUpdated: PropTypes.func.isRequired,
         onWidgetRemoved: PropTypes.func.isRequired,
         onWidgetAdded: PropTypes.func.isRequired,
+        onTabAdded: PropTypes.func.isRequired,
+        onTabRemoved: PropTypes.func.isRequired,
+        onTabUpdated: PropTypes.func.isRequired,
         onPageSelected: PropTypes.func.isRequired,
         onEditModeExit: PropTypes.func.isRequired,
         isEditMode: PropTypes.bool.isRequired
@@ -41,6 +44,9 @@ export default class Page extends Component {
             onWidgetAdded,
             onWidgetUpdated,
             onWidgetRemoved,
+            onTabAdded,
+            onTabRemoved,
+            onTabUpdated,
             page,
             pagesList
         } = this.props;
@@ -78,6 +84,9 @@ export default class Page extends Component {
                     onWidgetUpdated={onWidgetUpdated}
                     onWidgetRemoved={onWidgetRemoved}
                     onWidgetAdded={onWidgetAdded}
+                    onTabAdded={onTabAdded}
+                    onTabRemoved={onTabRemoved}
+                    onTabUpdated={onTabUpdated}
                     isEditMode={isEditMode || false}
                 />
                 {isEditMode && (

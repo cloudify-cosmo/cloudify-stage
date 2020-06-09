@@ -41,6 +41,18 @@ const page = (state = {}, action) => {
             return { ...state, description: action.description };
         case types.RENAME_PAGE:
             return { ...state, name: action.name };
+        case types.ADD_TAB:
+            return { ...state, tabs: [...state.tabs, { name: 'New Tab', widgets: [] }] };
+        case types.REMOVE_TAB:
+            return { ...state, tabs: _.without(state.tabs, _.nth(state.tabs, action.tabIndex)) };
+        case types.UPDATE_TAB: {
+            let tabs = [...state.tabs];
+            if (action.isDefault) {
+                tabs = _.map(tabs, tab => ({ ...tab, isDefault: false }));
+            }
+            tabs[action.tabIndex] = { ...tabs[action.tabIndex], ..._.pick(action, 'name', 'isDefault') };
+            return { ...state, tabs };
+        }
         default:
             return state;
     }
@@ -88,6 +100,9 @@ const pages = (state = [], action) => {
         }
         case types.RENAME_PAGE:
         case types.CHANGE_PAGE_DESCRIPTION:
+        case types.ADD_TAB:
+        case types.REMOVE_TAB:
+        case types.UPDATE_TAB:
             return state.map(p => {
                 if (p.id === action.pageId) {
                     return page(p, action);

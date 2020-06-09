@@ -12,6 +12,31 @@ import { clearWidgetsData } from './WidgetData';
 import Internal from '../utils/Internal';
 import Consts from '../utils/consts';
 
+export function addTab(pageId) {
+    return {
+        type: types.ADD_TAB,
+        pageId
+    };
+}
+
+export function removeTab(pageId, tabIndex) {
+    return {
+        type: types.REMOVE_TAB,
+        pageId,
+        tabIndex
+    };
+}
+
+export function updateTab(pageId, tabIndex, name, isDefault) {
+    return {
+        type: types.UPDATE_TAB,
+        pageId,
+        tabIndex,
+        name,
+        isDefault
+    };
+}
+
 export function createPage(page, newPageId) {
     return {
         type: types.ADD_PAGE,

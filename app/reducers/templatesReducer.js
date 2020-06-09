@@ -22,7 +22,7 @@ const templates = (state = {}, action) => {
         case types.ADD_TEMPLATE_PAGE:
             return {
                 ...state,
-                pagesDef: { ...state.pagesDef, [action.pageId]: { name: action.name, widgets: action.widgets } }
+                pagesDef: { ...state.pagesDef, [action.page.id]: _.omit(action.page, 'id') }
             };
         case types.REMOVE_TEMPLATE_PAGE:
             return { ...state, pagesDef: _.omit(state.pagesDef, [action.pageId]) };

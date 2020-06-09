@@ -248,10 +248,9 @@ module.exports = (() => {
         const path = pathlib.resolve(userPagesFolder, `${page.id}.json`);
 
         const content = {
-            name: page.name,
+            ..._.omit(page, 'id'),
             updatedBy: username,
-            updatedAt: moment().format(),
-            widgets: page.widgets
+            updatedAt: moment().format()
         };
 
         return new Promise((resolve, reject) => {
