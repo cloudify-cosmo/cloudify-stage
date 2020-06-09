@@ -1,0 +1,20 @@
+.draggedTab {
+    border: 1px solid #d4d4d5;
+    border-bottom: none;
+    border-top-left-radius: 4px;
+    border-top-right-radius: 4px;
+    margin-bottom: 4px;
+    padding-top:13px;
+    text-align: center;
+    color:rgba(0, 0, 0, 0.95);
+    background-color: white;
+    opacity: 0.9;
+}
+
+.draggedTab.active {
+    font-weight: bold;
+}
+
+.draggedTab button {
+    margin-right: 0 !important;
+}

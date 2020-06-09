@@ -67,12 +67,13 @@ export default function WidgetsList({ onWidgetUpdated, onWidgetRemoved, isEditMo
 
 WidgetsList.propTypes = {
     tab: PropTypes.number,
-    widgets: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
+    widgets: PropTypes.arrayOf(PropTypes.shape({})),
     onWidgetRemoved: PropTypes.func.isRequired,
     onWidgetUpdated: PropTypes.func.isRequired,
     isEditMode: PropTypes.bool.isRequired
 };
 
 WidgetsList.defaultProps = {
-    tab: null
+    tab: null,
+    widgets: []
 };

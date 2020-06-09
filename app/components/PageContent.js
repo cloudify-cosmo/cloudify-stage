@@ -1,10 +1,15 @@
 import PropTypes from 'prop-types';
+import { SortableContainer, SortableElement } from 'react-sortable-hoc';
 import { useState } from 'react';
 import WidgetsList from './WidgetsList';
-import { Confirm, Menu, Tab } from './basic';
+import { Confirm, Menu } from './basic';
 import AddWidget from '../containers/AddWidget';
 import EditModeButton from './EditModeButton';
 import EditTabModal from './EditTabModal';
+import './PageContent.css';
+
+const SortableMenu = SortableContainer(Menu);
+const SortableMenuItem = SortableElement(Menu.Item);
 
 export default function PageContent({
     onWidgetUpdated,
@@ -13,6 +18,7 @@ export default function PageContent({
     onTabAdded,
     onTabRemoved,
     onTabUpdated,
+    onTabMoved,
     page,
     isEditMode
 }) {
@@ -38,64 +44,77 @@ export default function PageContent({
         onTabRemoved(tabIndex);
     }
 
-    const panes = _.map(page.tabs, (tab, tabIndex) => ({
-        menuItem: (
-            <Menu.Item key={`${page.tabs.length}_${tabIndex}`}>
-                {tab.name}
-                {isEditMode && (
-                    <>
-                        <EditTabModal
-                            tab={tab}
-                            onTabUpdate={(name, isDefault) => onTabUpdated(tabIndex, name, isDefault)}
-                            trigger={<EditModeButton style={{ padding: 3, marginLeft: 3 }} icon="edit" basic />}
-                        />
-                        <EditModeButton
-                            style={{ padding: 3, marginLeft: 3 }}
-                            icon="remove"
-                            basic
-                            onClick={e => {
-                                e.stopPropagation();
-                                if (_.isEmpty(tab.widgets)) removeTab(tabIndex);
-                                else setTabIndexToRemove(tabIndex);
-                            }}
-                        />
-                    </>
-                )}
-            </Menu.Item>
-        ),
-        render: () => (
-            <span className="tabContent">
-                {isEditMode && (
-                    <div style={{ paddingTop: 15 }}>
-                        <AddWidget onWidgetAdded={(...params) => onWidgetAdded(...params, tabIndex)} />
-                    </div>
-                )}
-                {createWidgetList(tab.widgets, tabIndex)}
-            </span>
-        )
-    }));
-
-    if (isEditMode) {
-        panes.push({
-            menuItem: (
-                <Menu.Item key="add">
-                    <EditModeButton icon="add" basic onClick={onTabAdded} />
-                </Menu.Item>
-            )
-        });
-    }
-
     return (
         <>
             {isEditMode && <AddWidget onWidgetAdded={onWidgetAdded} />}
             {createWidgetList(page.widgets)}
             <div style={{ height: 15 }} />
             {!_.isEmpty(page.tabs) && (
-                <Tab
-                    panes={panes}
-                    activeIndex={activeTab}
-                    onTabChange={(e, { activeIndex }) => setActiveTab(activeIndex)}
-                />
+                <>
+                    <SortableMenu
+                        axis="x"
+                        lockAxis="x"
+                        tabular
+                        distance={1}
+                        helperClass="draggedTab"
+                        onSortEnd={({ oldIndex, newIndex }) => {
+                            onTabMoved(oldIndex, newIndex);
+                            if (oldIndex === activeTab) setActiveTab(newIndex);
+                            else if (oldIndex < activeTab && newIndex >= activeTab) setActiveTab(activeTab - 1);
+                            else if (oldIndex > activeTab && newIndex <= activeTab) setActiveTab(activeTab + 1);
+                        }}
+                    >
+                        {_.map(page.tabs, (tab, tabIndex) => (
+                            <SortableMenuItem
+                                key={`${page.tabs.length}_${tabIndex}`}
+                                index={tabIndex}
+                                active={activeTab === tabIndex}
+                                onClick={() => setActiveTab(tabIndex)}
+                                disabled={!isEditMode}
+                            >
+                                {tab.name}
+                                {isEditMode && (
+                                    <>
+                                        <EditTabModal
+                                            tab={tab}
+                                            onTabUpdate={(name, isDefault) => onTabUpdated(tabIndex, name, isDefault)}
+                                            trigger={
+                                                <EditModeButton
+                                                    style={{ padding: 3, marginLeft: 3 }}
+                                                    icon="edit"
+                                                    basic
+                                                />
+                                            }
+                                        />
+                                        <EditModeButton
+                                            style={{ padding: 3, marginLeft: 3 }}
+                                            icon="remove"
+                                            basic
+                                            onClick={e => {
+                                                e.stopPropagation();
+                                                if (_.isEmpty(tab.widgets)) removeTab(tabIndex);
+                                                else setTabIndexToRemove(tabIndex);
+                                            }}
+                                        />
+                                    </>
+                                )}
+                            </SortableMenuItem>
+                        ))}
+                        {isEditMode && (
+                            <Menu.Item key="add">
+                                <EditModeButton icon="add" basic onClick={onTabAdded} />
+                            </Menu.Item>
+                        )}
+                    </SortableMenu>
+                    <span className="tabContent">
+                        {isEditMode && (
+                            <div style={{ paddingTop: 15 }}>
+                                <AddWidget onWidgetAdded={(...params) => onWidgetAdded(...params, activeTab)} />
+                            </div>
+                        )}
+                        {createWidgetList(_.get(page.tabs[activeTab], 'widgets'), activeTab)}
+                    </span>
+                </>
             )}
             {_.isEmpty(page.tabs) && isEditMode && (
                 <EditModeButton
@@ -131,9 +150,10 @@ PageContent.propTypes = {
     onTabAdded: PropTypes.func.isRequired,
     onTabRemoved: PropTypes.func.isRequired,
     onTabUpdated: PropTypes.func.isRequired,
+    onTabMoved: PropTypes.func.isRequired,
     page: PropTypes.shape({
         widgets: PropTypes.arrayOf(PropTypes.shape({})),
-        tabs: PropTypes.arrayOf(PropTypes.shape({}))
+        tabs: PropTypes.arrayOf(PropTypes.shape({ widgets: PropTypes.arrayOf(PropTypes.shape({})) }))
     }).isRequired,
     isEditMode: PropTypes.bool.isRequired
 };
