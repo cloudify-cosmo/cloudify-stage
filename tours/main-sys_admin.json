@@ -204,7 +204,7 @@
                 "content": "When you click <strong>Upload</strong>, the blueprint is uploaded to your Cloudify Manager. The blueprint is available in Local Blueprints, where you can also upload other blueprints.",
                 "onNextRedirectTo": ["/page/local_blueprints", "Local Blueprints", "No Blueprints", "You need to have <strong>Blueprints</strong> widget present on current page with at least one blueprint to proceed to the next step."],
                 "target": "div.blueprintCatalogWidget table.ui tr:first-child > td.rowActions > i.upload",
-                "placement": "right"
+                "placement": "left"
             },
             {
                 "title": "Deploy Blueprint",
