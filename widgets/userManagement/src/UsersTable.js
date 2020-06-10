@@ -5,7 +5,6 @@ import Actions from './actions';
 import CreateModal from './CreateModal';
 import GroupModal from './GroupModal';
 import MenuAction from './MenuAction';
-import PasswordModal from './PasswordModal';
 import TenantModal from './TenantModal';
 import UserDetails from './UserDetails';
 
@@ -238,6 +237,7 @@ export default class UsersTable extends React.Component {
         const { data, roles, toolbox, widget } = this.props;
         const NO_DATA_MESSAGE = 'There are no Users available in manager. Click "Add" to add Users.';
         const { Checkbox, Confirm, DataTable, ErrorMessage, Label, Loader, Popup } = Stage.Basic;
+        const { PasswordModal } = Stage.Shared;
         const tableName = 'usersTable';
 
         return (
@@ -346,10 +346,9 @@ export default class UsersTable extends React.Component {
                 </DataTable>
 
                 <PasswordModal
-                    open={modalType === MenuAction.SET_PASSWORD_ACTION && showModal}
-                    user={user}
+                    open={modalType === MenuAction.CHANGE_PASSWORD_ACTION && showModal}
                     onHide={this.hideModal.bind(this)}
-                    toolbox={toolbox}
+                    username={user.username}
                 />
 
                 <TenantModal

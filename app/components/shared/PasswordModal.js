@@ -1,22 +1,34 @@
-/**
- * Created by pposel on 31/01/2017.
- */
+import PropTypes from 'prop-types';
+import { Component } from 'react';
+import { connect } from 'react-redux';
 
-import Actions from './actions';
+import Manager from '../../utils/Manager';
+import { Modal, Icon, Form, ApproveButton, CancelButton } from '../basic';
 
-export default class PasswordModal extends React.Component {
-    constructor(props, context) {
-        super(props, context);
-
-        this.state = PasswordModal.initialState;
-    }
-
+class PasswordModal extends Component {
     static initialState = {
         loading: false,
         password: '',
         confirmPassword: '',
         errors: {}
     };
+
+    constructor(props, context) {
+        super(props, context);
+
+        this.state = PasswordModal.initialState;
+
+        this.handleInputChange = this.handleInputChange.bind(this);
+        this.onApprove = this.onApprove.bind(this);
+        this.onCancel = this.onCancel.bind(this);
+    }
+
+    componentDidUpdate(prevProps) {
+        const { open } = this.props;
+        if (!prevProps.open && open) {
+            this.setState(PasswordModal.initialState);
+        }
+    }
 
     onApprove() {
         this.submitPassword();
@@ -29,16 +41,9 @@ export default class PasswordModal extends React.Component {
         return true;
     }
 
-    componentDidUpdate(prevProps) {
-        const { open } = this.props;
-        if (!prevProps.open && open) {
-            this.setState(PasswordModal.initialState);
-        }
-    }
-
     submitPassword() {
         const { confirmPassword, password } = this.state;
-        const { onHide, toolbox, user } = this.props;
+        const { onHide, manager, username } = this.props;
         const errors = {};
 
         if (_.isEmpty(password)) {
@@ -61,12 +66,10 @@ export default class PasswordModal extends React.Component {
         // Disable the form
         this.setState({ loading: true });
 
-        const actions = new Actions(toolbox);
-        actions
-            .doSetPassword(user.username, password)
+        return manager
+            .doPost(`/users/${username}`, null, { password })
             .then(() => {
                 this.setState({ errors: {}, loading: false });
-                toolbox.refresh();
                 onHide();
             })
             .catch(err => {
@@ -75,51 +78,62 @@ export default class PasswordModal extends React.Component {
     }
 
     handleInputChange(proxy, field) {
-        this.setState(Stage.Basic.Form.fieldNameValue(field));
+        this.setState(Form.fieldNameValue(field));
     }
 
     render() {
         const { confirmPassword, errors, loading, password } = this.state;
-        const { onHide, open, user: userProp } = this.props;
-        const { Modal, Icon, Form, ApproveButton, CancelButton } = Stage.Basic;
-
-        const user = { username: '', ...userProp };
+        const { onHide, open, username } = this.props;
 
         return (
             <Modal open={open} onClose={() => onHide()} className="userPasswordModal">
                 <Modal.Header>
-                    <Icon name="lock" /> Set password for {user.username}
+                    <Icon name="lock" /> Change password for {username}
                 </Modal.Header>
 
                 <Modal.Content>
                     <Form loading={loading} errors={errors} onErrorsDismiss={() => this.setState({ errors: {} })}>
-                        <Form.Field error={errors.password}>
+                        <Form.Field label="Password" error={errors.password} required>
                             <Form.Input
                                 name="password"
-                                placeholder="Password"
                                 type="password"
                                 value={password}
-                                onChange={this.handleInputChange.bind(this)}
+                                onChange={this.handleInputChange}
                             />
                         </Form.Field>
 
-                        <Form.Field error={errors.confirmPassword}>
+                        <Form.Field label="Confirm password" error={errors.confirmPassword} required>
                             <Form.Input
                                 name="confirmPassword"
-                                placeholder="Confirm password"
                                 type="password"
                                 value={confirmPassword}
-                                onChange={this.handleInputChange.bind(this)}
+                                onChange={this.handleInputChange}
                             />
                         </Form.Field>
                     </Form>
                 </Modal.Content>
 
                 <Modal.Actions>
-                    <CancelButton onClick={this.onCancel.bind(this)} disabled={loading} />
-                    <ApproveButton onClick={this.onApprove.bind(this)} disabled={loading} icon="lock" color="green" />
+                    <CancelButton onClick={this.onCancel} disabled={loading} />
+                    <ApproveButton onClick={this.onApprove} disabled={loading} icon="lock" color="green" />
                 </Modal.Actions>
             </Modal>
         );
     }
 }
+
+PasswordModal.propTypes = {
+    open: PropTypes.bool.isRequired,
+    onHide: PropTypes.func.isRequired,
+    manager: PropTypes.shape({ doPost: PropTypes.func.isRequired }).isRequired,
+    username: PropTypes.string.isRequired
+};
+
+const mapStateToProps = (state, ownProps) => {
+    return {
+        manager: new Manager(state.manager),
+        username: ownProps.username || state.manager.username
+    };
+};
+
+export default connect(mapStateToProps)(PasswordModal);
