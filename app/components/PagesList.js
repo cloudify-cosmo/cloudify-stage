@@ -7,13 +7,14 @@ import PropTypes from 'prop-types';
 
 import React, { Component } from 'react';
 import AddPageButton from '../containers/AddPageButton';
-import { Message } from './basic';
+import { Confirm, Message } from './basic';
 
 export default class PagesList extends Component {
     constructor(props) {
         super(props);
 
         this.pagesRef = React.createRef();
+        this.state = {};
     }
 
     static propTypes = {
@@ -56,6 +57,7 @@ export default class PagesList extends Component {
 
     render() {
         const { isEditMode, onPageRemoved, onPageSelected, pages, selected } = this.props;
+        const { pageToRemove } = this.state;
         let pageCount = 0;
         pages.map(p => {
             if (!p.isDrillDown) {
@@ -84,7 +86,8 @@ export default class PagesList extends Component {
                                         className="remove link icon small pageRemoveButton"
                                         onClick={event => {
                                             event.stopPropagation();
-                                            onPageRemoved(page);
+                                            if (_.isEmpty(page.tabs) && _.isEmpty(page.widgets)) onPageRemoved(page);
+                                            else this.setState({ pageToRemove: page });
                                         }}
                                     />
                                 ) : (
@@ -100,6 +103,16 @@ export default class PagesList extends Component {
                         <AddPageButton />
                     </div>
                 )}
+                <Confirm
+                    open={pageToRemove}
+                    onCancel={() => this.setState({ pageToRemove: null })}
+                    onConfirm={() => {
+                        onPageRemoved(pageToRemove);
+                        this.setState({ pageToRemove: null });
+                    }}
+                    header={`Are you sure you want to remove page ${_.get(pageToRemove, 'name')}?`}
+                    content="All widgets and tabs present in this page will be removed as well"
+                />
             </>
         );
     }

@@ -70,6 +70,7 @@
     "react-redux": "^7.1.3",
     "react-resizable": "^1.7.5",
     "react-router-dom": "^5.1.2",
+    "react-sortable-hoc": "^1.11.0",
     "react-splitter-layout": "^3.0.0",
     "react-svg-pan-zoom": "^3.8.0",
     "react-visibility-sensor": "^5.1.1",

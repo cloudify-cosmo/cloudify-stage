@@ -7,6 +7,7 @@ import { push } from 'connected-react-router';
 import { useDispatch, useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
 import v4 from 'uuid/v4';
+import { arrayMove } from 'react-sortable-hoc';
 import { Alert, Breadcrumb, Button, Divider, EditableLabel, ErrorMessage, Menu, Segment, Sidebar } from '../basic';
 import EditModeBubble from '../EditModeBubble';
 import PageContent from '../PageContent';
@@ -153,6 +154,8 @@ export default function PageManagement({ pageId, isEditMode }) {
         tabs[tabIndex] = { ...tabs[tabIndex], name, isDefault };
         setPage({ ...page, tabs });
     };
+    const onTabMoved = (oldTabIndex, newTabIndex) =>
+        setPage({ ...page, tabs: arrayMove(page.tabs, oldTabIndex, newTabIndex) });
 
     const isWidgetMaximized = findWidget({ maximized: true });
 
@@ -201,6 +204,7 @@ export default function PageManagement({ pageId, isEditMode }) {
                         onWidgetUpdated={onWidgetUpdated}
                         onWidgetRemoved={onWidgetRemoved}
                         onWidgetAdded={onWidgetAdded}
+                        onTabMoved={onTabMoved}
                         page={page}
                         isEditMode={isEditMode}
                     />

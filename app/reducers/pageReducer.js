@@ -2,6 +2,7 @@
  * Created by kinneretzin on 30/08/2016.
  */
 
+import { arrayMove } from 'react-sortable-hoc';
 import * as types from '../actions/types';
 import widgets from './widgetsReducer';
 
@@ -53,6 +54,8 @@ const page = (state = {}, action) => {
             tabs[action.tabIndex] = { ...tabs[action.tabIndex], ..._.pick(action, 'name', 'isDefault') };
             return { ...state, tabs };
         }
+        case types.MOVE_TAB:
+            return { ...state, tabs: arrayMove(state.tabs, action.oldTabIndex, action.newTabIndex) };
         default:
             return state;
     }
@@ -103,6 +106,7 @@ const pages = (state = [], action) => {
         case types.ADD_TAB:
         case types.REMOVE_TAB:
         case types.UPDATE_TAB:
+        case types.MOVE_TAB:
             return state.map(p => {
                 if (p.id === action.pageId) {
                     return page(p, action);
