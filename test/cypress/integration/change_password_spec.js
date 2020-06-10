@@ -54,7 +54,7 @@ describe('Change Password modal', () => {
     });
 
     it('should allow to change password for the current user', () => {
-        // Change password
+        cy.log('Change password');
         cy.get('.userPasswordModal').within(() => {
             cy.get('input[name=password]')
                 .clear()
@@ -66,13 +66,13 @@ describe('Change Password modal', () => {
         });
         cy.get('.userPasswordModal').should('not.be.visible');
 
-        // Logout
+        cy.log('Logout');
         cy.get('.usersMenu')
             .click()
             .contains('Logout')
             .click();
 
-        // Login with new password
+        cy.log('Login with new password');
         cy.login(username, 'new-pass');
 
         cy.get('.error.message').should('not.be.visible');
