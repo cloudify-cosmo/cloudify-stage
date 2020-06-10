@@ -60,12 +60,6 @@ usermod -aG cfyuser stage_user
 usermod -aG stage_group cfyuser
 
 
-%postun
-
-userdel -fr stage_user
-groupdel stage_group
-
-
 %files
 
 %defattr(-,root,root)
