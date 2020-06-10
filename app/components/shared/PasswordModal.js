@@ -1,11 +1,11 @@
 import PropTypes from 'prop-types';
-import { Component } from 'react';
+import React from 'react';
 import { connect } from 'react-redux';
 
 import Manager from '../../utils/Manager';
 import { Modal, Icon, Form, ApproveButton, CancelButton } from '../basic';
 
-class PasswordModal extends Component {
+class PasswordModal extends React.Component {
     static initialState = {
         loading: false,
         password: '',
