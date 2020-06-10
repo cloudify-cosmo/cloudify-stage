@@ -10,7 +10,6 @@ import Home from '../../containers/Home';
 
 import Header from '../../containers/layout/Header';
 import PageManagement from '../templates/PageManagement';
-import TemplateManagement from '../../containers/templates/TemplateManagement';
 import Consts from '../../utils/consts';
 import { NO_TENANTS_ERR, UNAUTHORIZED_ERR } from '../../utils/ErrorCodes';
 import SplashLoadingScreen from '../../utils/SplashLoadingScreen';
@@ -18,6 +17,7 @@ import SplashLoadingScreen from '../../utils/SplashLoadingScreen';
 import StatusPoller from '../../utils/StatusPoller';
 import UserAppDataAutoSaver from '../../utils/UserAppDataAutoSaver';
 import ScrollToTop from './ScrollToTop';
+import TemplateManagement from '../templates/TemplateManagement';
 
 export default class Layout extends Component {
     constructor(props, context) {
