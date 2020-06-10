@@ -115,7 +115,13 @@ class PasswordModal extends Component {
 
                 <Modal.Actions>
                     <CancelButton onClick={this.onCancel} disabled={loading} />
-                    <ApproveButton onClick={this.onApprove} disabled={loading} icon="lock" color="green" />
+                    <ApproveButton
+                        onClick={this.onApprove}
+                        disabled={loading}
+                        content="Change"
+                        icon="lock"
+                        color="green"
+                    />
                 </Modal.Actions>
             </Modal>
         );
