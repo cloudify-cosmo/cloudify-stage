@@ -1,12 +1,15 @@
 import PropTypes from 'prop-types';
 import { SortableContainer, SortableElement } from 'react-sortable-hoc';
 import { useState } from 'react';
+import { Container, Header } from 'semantic-ui-react';
+import { useSelector } from 'react-redux';
 import WidgetsList from './WidgetsList';
 import { Confirm, Menu } from './basic';
 import AddWidget from '../containers/AddWidget';
 import EditModeButton from './EditModeButton';
 import EditTabModal from './EditTabModal';
 import './PageContent.css';
+import stageUtils from '../utils/stageUtils';
 
 const SortableMenu = SortableContainer(Menu);
 const SortableMenuItem = SortableElement(Menu.Item);
@@ -22,13 +25,24 @@ export default function PageContent({
     page,
     isEditMode
 }) {
+    const manager = useSelector(state => state.manager);
+
     const [activeTab, setActiveTab] = useState(Math.max(_.findIndex(page.tabs, { isDefault: true }), 0));
     const [tabIndexToRemove, setTabIndexToRemove] = useState();
 
-    function createWidgetList(widgets, tab) {
+    function filterWidgets(widgets) {
+        return _.filter(
+            widgets,
+            widget =>
+                widget.definition &&
+                stageUtils.isUserAuthorized(widget.definition.permission, manager) &&
+                stageUtils.isWidgetPermitted(widget.definition.supportedEditions, manager)
+        );
+    }
+
+    function createWidgetList(widgets) {
         return (
             <WidgetsList
-                tab={tab}
                 widgets={widgets}
                 onWidgetUpdated={onWidgetUpdated}
                 onWidgetRemoved={onWidgetRemoved}
@@ -44,10 +58,26 @@ export default function PageContent({
         onTabRemoved(tabIndex);
     }
 
+    const pageWidgets = filterWidgets(page.widgets);
+    const activeTabWidgets = filterWidgets(_.get(page.tabs[activeTab], 'widgets'));
+
     return (
         <>
             {isEditMode && <AddWidget onWidgetAdded={onWidgetAdded} />}
-            {createWidgetList(page.widgets)}
+            {_.isEmpty(pageWidgets) && _.isEmpty(page.tabs) ? (
+                <Container className="emptyPage alignCenter" style={{ padding: '10rem 0' }}>
+                    {isEditMode ? (
+                        <Header size="large">
+                            This page is empty, <br />
+                            don't be shy, give it a meaning!
+                        </Header>
+                    ) : (
+                        <Header size="large">This page is empty</Header>
+                    )}
+                </Container>
+            ) : (
+                createWidgetList(pageWidgets)
+            )}
             <div style={{ height: 15 }} />
             {!_.isEmpty(page.tabs) && (
                 <>
@@ -112,7 +142,20 @@ export default function PageContent({
                                 <AddWidget onWidgetAdded={(...params) => onWidgetAdded(...params, activeTab)} />
                             </div>
                         )}
-                        {createWidgetList(_.get(page.tabs[activeTab], 'widgets'), activeTab)}
+                        {_.isEmpty(activeTabWidgets) ? (
+                            <Container className="emptyPage alignCenter" style={{ padding: '10rem 0' }}>
+                                {isEditMode ? (
+                                    <Header size="large">
+                                        This tab is empty, <br />
+                                        don't be shy, give it a meaning!
+                                    </Header>
+                                ) : (
+                                    <Header size="large">This tab is empty</Header>
+                                )}
+                            </Container>
+                        ) : (
+                            createWidgetList(activeTabWidgets)
+                        )}
                     </span>
                 </>
             )}
