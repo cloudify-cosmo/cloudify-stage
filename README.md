@@ -9,6 +9,13 @@ This repository contains a Java implementation for Cloudify's REST API.
 * Maven 3.x+
 * JDK 8+
 
+
+## How to Test
+
+```bash
+mvn clean test
+```
+
 ## How to Build
 
 ```bash
