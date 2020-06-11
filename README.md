@@ -1,5 +1,7 @@
 # Cloudify REST Client for Java
 
+master: [![Build Status](https://jenkins.eks.cloudify.co/buildStatus/icon?job=Java+Rest+Client%2Fmaster)](https://jenkins.eks.cloudify.co/job/Java%20Rest%20Client/job/master/)
+
 **NOTE**: This is still in development
  
 This repository contains a Java implementation for Cloudify's REST API.
