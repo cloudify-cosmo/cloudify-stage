@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: Pod
+spec:
+  containers:
+    - name: mvn
+      image: maven:3.6.3-jdk-8
+      resources:
+        requests:
+          cpu: 0.5
+      command:
+        - cat
+      tty: true
+  nodeSelector:
+    instance-type: spot

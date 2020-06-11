@@ -1,0 +1,79 @@
+pipeline {
+  agent {
+    kubernetes {
+      label 'java-rest-client'
+      defaultContainer 'jnlp'
+      yamlFile 'jenkins/build-pod.yaml'
+    }
+  }
+
+  options {
+    checkoutToSubdirectory('cloudify-java-rest-client')
+    buildDiscarder(logRotator(numToKeepStr:'30'))
+    timeout(time: 60, unit: 'MINUTES')
+    timestamps()
+  }
+
+  environment {
+    branch = "${env.BRANCH_NAME}"
+    workspace = "${env.WORKSPACE}"
+    target_dir = "cloudify-java-rest-client-${env.BUILD_NUMBER}"
+    cloudify_java_rest_client = 'https://raw.githubusercontent.com/cloudify-cosmo/cloudify-java-rest-client'
+  }
+
+  stages {
+    stage('Compile') {
+      steps {
+        checkout(
+            [
+                $class: 'GitSCM',
+                branches: [[name: "${branch}"]],
+                doGenerateSubmoduleConfigurations: false,
+                extensions: [
+                    [
+                        $class: 'RelativeTargetDirectory',
+                        relativeTargetDir: "${target_dir}"
+                    ]
+                ],
+                submoduleCfg: [],
+                userRemoteConfigs: [
+                    [
+                        credentialsId: '9f6aca75-ebff-4045-9919-b8ec6b5ccf9d',
+                        url: 'https://github.com/cloudify-cosmo/cloudify-java-rest-client.git'
+                    ]
+                ]
+            ]
+        )
+
+        container('mvn'){
+          dir("${target_dir}") {
+            echo "Maevn Clean Compile"
+            sh 'mvn clean compile'
+          }
+        }
+      }
+    }
+
+    stage('Test') {
+      steps {
+        container('mvn'){
+          dir("${target_dir}") {
+            echo "Maven Test"
+            sh 'mvn test'
+          }
+        }
+      }
+    }
+
+    stage('Install') {
+      steps {
+        container('mvn'){
+          dir("${target_dir}") {
+            echo "Maven Install"
+            sh 'mvn install'
+          }
+        }
+      }
+    }
+  }
+}
