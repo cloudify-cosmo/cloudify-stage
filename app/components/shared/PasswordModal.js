@@ -1,131 +1,102 @@
 import PropTypes from 'prop-types';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 
 import Manager from '../../utils/Manager';
 import { Modal, Icon, Form, ApproveButton, CancelButton } from '../basic';
 
-class PasswordModal extends React.Component {
-    static initialState = {
-        loading: false,
-        password: '',
-        confirmPassword: '',
-        errors: {}
+function PasswordModal({ onHide, open, manager, username }) {
+    const [loading, setLoading] = useState(false);
+    const [password, setPassword] = useState('');
+    const [confirmPassword, setConfirmPassword] = useState('');
+    const [errors, setErrors] = useState({});
+
+    useEffect(() => {
+        if (open) {
+            setLoading(false);
+            setPassword('');
+            setConfirmPassword('');
+            setErrors({});
+        }
+    }, [open]);
+
+    const onApprove = () => {
+        submitPassword();
+        return false;
     };
 
-    constructor(props, context) {
-        super(props, context);
-
-        this.state = PasswordModal.initialState;
-
-        this.handleInputChange = this.handleInputChange.bind(this);
-        this.onApprove = this.onApprove.bind(this);
-        this.onCancel = this.onCancel.bind(this);
-    }
-
-    componentDidUpdate(prevProps) {
-        const { open } = this.props;
-        if (!prevProps.open && open) {
-            this.setState(PasswordModal.initialState);
-        }
-    }
-
-    onApprove() {
-        this.submitPassword();
-        return false;
-    }
-
-    onCancel() {
-        const { onHide } = this.props;
+    const onCancel = () => {
         onHide();
         return true;
-    }
+    };
 
-    submitPassword() {
-        const { confirmPassword, password } = this.state;
-        const { onHide, manager, username } = this.props;
-        const errors = {};
+    const submitPassword = () => {
+        const errorsFound = {};
 
         if (_.isEmpty(password)) {
-            errors.password = 'Please provide user password';
+            errorsFound.password = 'Please provide user password';
         }
 
         if (_.isEmpty(confirmPassword)) {
-            errors.confirmPassword = 'Please provide password confirmation';
+            errorsFound.confirmPassword = 'Please provide password confirmation';
         }
 
         if (!_.isEmpty(password) && !_.isEmpty(confirmPassword) && password !== confirmPassword) {
-            errors.confirmPassword = 'Passwords do not match';
+            errorsFound.confirmPassword = 'Passwords do not match';
         }
 
-        if (!_.isEmpty(errors)) {
-            this.setState({ errors });
+        if (!_.isEmpty(errorsFound)) {
+            setErrors(errorsFound);
             return false;
         }
 
         // Disable the form
-        this.setState({ loading: true });
+        setLoading(true);
 
         return manager
             .doPost(`/users/${username}`, null, { password })
             .then(() => {
-                this.setState({ errors: {}, loading: false });
+                setErrors({});
                 onHide();
             })
-            .catch(err => {
-                this.setState({ errors: { error: err.message }, loading: false });
-            });
-    }
+            .catch(err => setErrors({ error: err.message }))
+            .finally(() => setLoading(false));
+    };
 
-    handleInputChange(proxy, field) {
-        this.setState(Form.fieldNameValue(field));
-    }
+    return (
+        <Modal open={open} onClose={() => onHide()} className="userPasswordModal">
+            <Modal.Header>
+                <Icon name="lock" /> Change password for {username}
+            </Modal.Header>
 
-    render() {
-        const { confirmPassword, errors, loading, password } = this.state;
-        const { onHide, open, username } = this.props;
+            <Modal.Content>
+                <Form loading={loading} errors={errors} onErrorsDismiss={() => setErrors({})}>
+                    <Form.Field label="Password" error={errors.password} required>
+                        <Form.Input
+                            name="password"
+                            type="password"
+                            value={password}
+                            onChange={(event, { value }) => setPassword(value)}
+                        />
+                    </Form.Field>
 
-        return (
-            <Modal open={open} onClose={() => onHide()} className="userPasswordModal">
-                <Modal.Header>
-                    <Icon name="lock" /> Change password for {username}
-                </Modal.Header>
+                    <Form.Field label="Confirm password" error={errors.confirmPassword} required>
+                        <Form.Input
+                            name="confirmPassword"
+                            type="password"
+                            value={confirmPassword}
+                            onChange={(event, { value }) => setConfirmPassword(value)}
+                        />
+                    </Form.Field>
+                </Form>
+            </Modal.Content>
 
-                <Modal.Content>
-                    <Form loading={loading} errors={errors} onErrorsDismiss={() => this.setState({ errors: {} })}>
-                        <Form.Field label="Password" error={errors.password} required>
-                            <Form.Input
-                                name="password"
-                                type="password"
-                                value={password}
-                                onChange={this.handleInputChange}
-                            />
-                        </Form.Field>
-
-                        <Form.Field label="Confirm password" error={errors.confirmPassword} required>
-                            <Form.Input
-                                name="confirmPassword"
-                                type="password"
-                                value={confirmPassword}
-                                onChange={this.handleInputChange}
-                            />
-                        </Form.Field>
-                    </Form>
-                </Modal.Content>
-
-                <Modal.Actions>
-                    <CancelButton onClick={this.onCancel} disabled={loading} />
-                    <ApproveButton
-                        onClick={this.onApprove}
-                        disabled={loading}
-                        content="Change"
-                        icon="lock"
-                        color="green"
-                    />
-                </Modal.Actions>
-            </Modal>
-        );
-    }
+            <Modal.Actions>
+                <CancelButton onClick={onCancel} disabled={loading} />
+                <ApproveButton onClick={onApprove} disabled={loading} content="Change" icon="lock" color="green" />
+            </Modal.Actions>
+        </Modal>
+    );
 }
 
 PasswordModal.propTypes = {
