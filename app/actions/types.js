@@ -5,6 +5,7 @@
 export const ADD_TAB = 'Add_TAB';
 export const REMOVE_TAB = 'REMOVE_TAB';
 export const UPDATE_TAB = 'UPDATE_TAB';
+export const MOVE_TAB = 'MOVE_TAB';
 
 export const ADD_PAGE = 'ADD_PAGE';
 export const SET_PAGES = 'SET_PAGES';
