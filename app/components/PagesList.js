@@ -104,7 +104,7 @@ export default class PagesList extends Component {
                     </div>
                 )}
                 <Confirm
-                    open={pageToRemove}
+                    open={!!pageToRemove}
                     onCancel={() => this.setState({ pageToRemove: null })}
                     onConfirm={() => {
                         onPageRemoved(pageToRemove);
