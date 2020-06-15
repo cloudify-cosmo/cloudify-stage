@@ -30,14 +30,16 @@ export default function PageContent({
     const [activeTab, setActiveTab] = useState(Math.max(_.findIndex(page.tabs, { isDefault: true }), 0));
     const [tabIndexToRemove, setTabIndexToRemove] = useState();
 
-    function filterWidgets(widgets) {
-        return _.filter(
-            widgets,
-            widget =>
-                widget.definition &&
-                stageUtils.isUserAuthorized(widget.definition.permission, manager) &&
-                stageUtils.isWidgetPermitted(widget.definition.supportedEditions, manager)
-        );
+    function filterWidgets(widgetsContainer) {
+        return _.chain(widgetsContainer)
+            .get('widgets')
+            .filter(
+                widget =>
+                    widget.definition &&
+                    stageUtils.isUserAuthorized(widget.definition.permission, manager) &&
+                    stageUtils.isWidgetPermitted(widget.definition.supportedEditions, manager)
+            )
+            .value();
     }
 
     function createWidgetList(widgets) {
@@ -58,8 +60,8 @@ export default function PageContent({
         onTabRemoved(tabIndex);
     }
 
-    const pageWidgets = filterWidgets(page.widgets);
-    const activeTabWidgets = filterWidgets(_.get(page.tabs[activeTab], 'widgets'));
+    const pageWidgets = filterWidgets(page);
+    const activeTabWidgets = filterWidgets(_.nth(page.tabs, activeTab));
 
     return (
         <>
