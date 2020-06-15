@@ -2,6 +2,13 @@ describe('Change Password modal', () => {
     const username = 'test_user';
     const password = 'test_user';
 
+    const openChangePasswordModal = () => {
+        cy.get('.usersMenu')
+            .click()
+            .contains('Change Password')
+            .click();
+    };
+
     before(() => {
         cy.activate()
             .deleteAllUsersAndTenants()
@@ -10,15 +17,9 @@ describe('Change Password modal', () => {
             .login(username, password);
     });
 
-    beforeEach(() => {
-        cy.visit('/console');
-        cy.get('.usersMenu')
-            .click()
-            .contains('Change Password')
-            .click();
-    });
-
     it('should validate password and confirm password fields', () => {
+        openChangePasswordModal();
+
         cy.get('.userPasswordModal').within(() => {
             cy.get('.error.message').should('not.be.visible');
 
@@ -50,10 +51,14 @@ describe('Change Password modal', () => {
                     cy.get('div').should('have.text', 'Errors in the form');
                     cy.get('ul li:nth-child(1)').should('have.text', 'Passwords do not match');
                 });
+
+            cy.get('button.cancel').click();
         });
     });
 
     it('should allow to change password for the current user', () => {
+        openChangePasswordModal();
+
         cy.log('Change password');
         cy.get('.userPasswordModal').within(() => {
             cy.get('input[name=password]')
