@@ -2,80 +2,144 @@
  * Created by pposel on 11/08/2017.
  */
 
-import PropTypes from 'prop-types';
-import React, { Component } from 'react';
+import React, { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { push } from 'connected-react-router';
 import Const from '../../utils/consts';
 import { Breadcrumb, Button, Divider, ErrorMessage, Segment } from '../basic';
 import Pages from './Pages';
 import Templates from './Templates';
+import { createPageId, setActive } from '../../actions/templateManagement';
+import { selectHomePage } from '../../actions/page';
+import Internal from '../../utils/Internal';
+import { addPage, addTemplate, editTemplate, removePage, removeTemplate } from '../../actions/templates';
 
-export default class TemplateManagement extends Component {
-    static propTypes = {
-        onTemplatesLoad: PropTypes.func.isRequired,
-        onTemplateCreate: PropTypes.func.isRequired,
-        onTemplateUpdate: PropTypes.func.isRequired,
-        onTemplateDelete: PropTypes.func.isRequired,
-        onTemplateSelect: PropTypes.func.isRequired,
-        onPageCreate: PropTypes.func.isRequired,
-        onPageDelete: PropTypes.func.isRequired,
-        onPageEdit: PropTypes.func.isRequired,
-        onPagePreview: PropTypes.func.isRequired,
-        onPageSelect: PropTypes.func.isRequired,
-        onClear: PropTypes.func.isRequired,
-        onClose: PropTypes.func.isRequired,
-        templates: PropTypes.array,
-        pages: PropTypes.array,
-        roles: PropTypes.array
-    };
+export default function TemplateManagement() {
+    const dispatch = useDispatch();
 
-    static defaultProps = {
-        templates: [],
-        pages: [],
-        isLoading: false,
-        error: null
-    };
+    const [isLoading, setLoading] = useState(true);
+    const [templates, setTemplates] = useState();
+    const [pages, setPages] = useState();
+    const [error, setError] = useState();
 
-    componentDidMount() {
-        const { onTemplatesLoad } = this.props;
-        onTemplatesLoad();
+    const internal = useSelector(state => new Internal(state.manager));
+    const pageDefs = useSelector(state => state.templates.pagesDef);
+    const templateDefs = useSelector(state => state.templates.templatesDef);
+    const tenants = useSelector(state => state.manager.tenants);
+    const roles = useSelector(state => state.manager.roles);
+
+    function handleError(err) {
+        console.error(err);
+        setError(err.message);
+        setLoading(false);
     }
 
-    componentWillUnmount() {
-        const { onClear } = this.props;
-        onClear();
+    function fetchData() {
+        return Promise.all([internal.doGet('/templates'), internal.doGet('/templates/pages')])
+            .then(data => {
+                const selectedTemplate = _.find(templates, { selected: true });
+                const selectedPage = _.find(pages, { selected: true });
+
+                const templateList = data[0];
+                const pageList = data[1];
+
+                const preparedTemplates = _.map(templateList, template => {
+                    return { ...template, pages: templateDefs[template.id].pages };
+                });
+                if (selectedTemplate) {
+                    (_.find(preparedTemplates, { id: selectedTemplate.id }) || {}).selected = true;
+                }
+
+                const preparedPages = _.map(pageList, page => {
+                    return {
+                        ...page,
+                        name: (pageDefs[page.id] || {}).name,
+                        templates: _.map(
+                            _.filter(preparedTemplates, template => _.indexOf(template.pages, page.id) >= 0),
+                            'id'
+                        )
+                    };
+                });
+                if (selectedPage) {
+                    (_.find(preparedPages, { id: selectedPage.id }) || {}).selected = true;
+                }
+
+                setTemplates(preparedTemplates);
+                setPages(preparedPages);
+                setError(null);
+                setLoading(false);
+            })
+            .catch(handleError);
     }
 
-    selectTemplate(template) {
-        const { onTemplateSelect } = this.props;
-        onTemplateSelect(template.id);
+    useEffect(() => {
+        dispatch(setActive(true));
+        return () => dispatch(setActive(false));
+    }, []);
+
+    useEffect(() => {
+        fetchData();
+    }, [templateDefs, pageDefs]);
+
+    function setSelected(collection, id) {
+        return _.map(collection, item => ({ ...item, selected: !item.selected && item.id === id }));
     }
 
-    selectPage(page) {
-        const { onPageSelect } = this.props;
-        onPageSelect(page.id);
+    function onSelectTemplate({ id }) {
+        setTemplates(setSelected(templates, id));
     }
 
-    createTemplate(templateName, roles, tenants, pages) {
-        const { onTemplateCreate } = this.props;
+    function onSelectPage({ id }) {
+        setPages(setSelected(pages, id));
+    }
+
+    function startLoading() {
+        setLoading(true);
+        setError(null);
+    }
+
+    function onCreateTemplate(templateName, roles, tenants, templatePages) {
+        startLoading();
+
         const template = {
             id: templateName.trim(),
             data: {
                 roles,
                 tenants
             },
-            pages
+            pages: templatePages
         };
 
-        return onTemplateCreate(template);
+        return internal
+            .doPost('/templates', {}, template)
+            .then(() => dispatch(addTemplate(template.id, template.pages)))
+            .catch(handleError);
     }
 
-    deleteTemplate(template) {
-        const { onTemplateDelete } = this.props;
-        onTemplateDelete(template.id);
+    function onDeleteTemplate(template) {
+        startLoading();
+
+        return internal
+            .doDelete(`/templates/${template.id}`)
+            .then(() => dispatch(removeTemplate(template.id)))
+            .catch(handleError);
     }
 
-    modifyTemplate(item, templateName, roles, tenants, pages) {
-        const { onTemplateUpdate } = this.props;
+    function updateTemplate(template) {
+        startLoading();
+
+        return internal
+            .doPut('/templates', {}, template)
+            .then(() => {
+                dispatch(editTemplate(template.id, template.pages));
+                if (template.oldId && template.oldId !== template.id) {
+                    dispatch(removeTemplate(template.oldId));
+                }
+            })
+            .catch(handleError);
+    }
+
+    function onModifyTemplate(item, templateName, roles, tenants, templatePages) {
         const template = {
             oldId: item.id,
             id: templateName.trim(),
@@ -83,102 +147,123 @@ export default class TemplateManagement extends Component {
                 roles,
                 tenants: _.isEmpty(tenants) ? [Const.DEFAULT_ALL] : tenants
             },
-            pages
+            pages: templatePages
         };
 
-        return onTemplateUpdate(template);
+        return updateTemplate(template);
     }
 
-    removeTemplatePage(template, page) {
+    function onUpdateTemplate(template) {
+        return updateTemplate({ ...template, oldId: template.id });
+    }
+
+    function onRemoveTemplatePage(template, page) {
         template.pages = _.without(template.pages, page);
 
-        this.updateTemplate(template);
+        return onUpdateTemplate(template);
     }
 
-    removeTemplateRole(template, role) {
+    function onRemoveTemplateRole(template, role) {
         template.data.roles = _.without(template.data.roles, role);
 
-        this.updateTemplate(template);
+        return onUpdateTemplate(template);
     }
 
-    removeTemplateTenant(template, tenant) {
+    function onRemoveTemplateTenant(template, tenant) {
         template.data.tenants = _.without(template.data.tenants, tenant);
 
-        this.updateTemplate(template);
+        return onUpdateTemplate(template);
     }
 
-    updateTemplate(template) {
-        const { onTemplateUpdate } = this.props;
-        return onTemplateUpdate({ ...template, oldId: template.id });
+    function onDeletePage(page) {
+        startLoading();
+        return internal
+            .doDelete(`/templates/pages/${page.id}`)
+            .then(() => dispatch(removePage(page.id)))
+            .catch(handleError);
     }
 
-    deletePage(page) {
-        const { onPageDelete } = this.props;
-        onPageDelete(page.id);
-    }
-
-    canDeletePage(page) {
+    function canDeletePage(page) {
         return _.isEmpty(page.templates) ? null : 'Page is used by the templates and cannot be deleted';
     }
 
-    editPage(page) {
-        const { onPageEdit } = this.props;
-        onPageEdit(page.id, page.name);
+    function onEditPage(page) {
+        return dispatch(push(`/page_edit/${page.id}`));
     }
 
-    previewPage(page) {
-        const { onPagePreview } = this.props;
-        onPagePreview(page.id, page.name);
+    function onPreviewPage(page) {
+        return dispatch(push(`/page_preview/${page.id}`));
     }
 
-    render() {
-        const { error, isLoading, manager, onClose, onPageCreate, pages, roles, templates } = this.props;
-        return (
-            <div className="main">
-                <Segment basic loading={isLoading}>
-                    <div style={{ position: 'relative' }}>
-                        <Breadcrumb className="breadcrumbLineHeight">
-                            <Breadcrumb.Section active>Template management</Breadcrumb.Section>
-                        </Breadcrumb>
-                        <Button
-                            content="Close"
-                            basic
-                            compact
-                            floated="right"
-                            icon="sign out"
-                            onClick={onClose}
-                            style={{ position: 'absolute', right: 0 }}
-                        />
-                    </div>
-                    <Divider />
+    function onPageCreate(name) {
+        startLoading();
 
-                    <ErrorMessage error={error} />
+        const pageId = createPageId(name, pageDefs);
+        const page = {
+            id: pageId,
+            name,
+            widgets: []
+        };
 
-                    <Templates
-                        templates={templates}
-                        pages={pages}
-                        roles={roles}
-                        tenants={manager.tenants}
-                        onSelectTemplate={this.selectTemplate.bind(this)}
-                        onRemoveTemplatePage={this.removeTemplatePage.bind(this)}
-                        onRemoveTemplateRole={this.removeTemplateRole.bind(this)}
-                        onRemoveTemplateTenant={this.removeTemplateTenant.bind(this)}
-                        onCreateTemplate={this.createTemplate.bind(this)}
-                        onModifyTemplate={this.modifyTemplate.bind(this)}
-                        onDeleteTemplate={this.deleteTemplate.bind(this)}
+        return internal
+            .doPost('/templates/pages', {}, page)
+            .then(() => dispatch(addPage(page)))
+            .then(() => dispatch(push(`/page_edit/${pageId}`)))
+            .catch(handleError);
+    }
+
+    function onClose() {
+        return dispatch(selectHomePage());
+    }
+
+    return (
+        <div className="main">
+            <Segment basic loading={isLoading}>
+                <div style={{ position: 'relative' }}>
+                    <Breadcrumb className="breadcrumbLineHeight">
+                        <Breadcrumb.Section active>Template management</Breadcrumb.Section>
+                    </Breadcrumb>
+                    <Button
+                        content="Close"
+                        basic
+                        compact
+                        floated="right"
+                        icon="sign out"
+                        onClick={onClose}
+                        style={{ position: 'absolute', right: 0 }}
                     />
+                </div>
+                <Divider />
 
-                    <Pages
-                        pages={pages}
-                        onSelectPage={this.selectPage.bind(this)}
-                        onCreatePage={onPageCreate}
-                        onDeletePage={this.deletePage.bind(this)}
-                        onEditPage={this.editPage.bind(this)}
-                        onPreviewPage={this.previewPage.bind(this)}
-                        onCanDeletePage={this.canDeletePage.bind(this)}
-                    />
-                </Segment>
-            </div>
-        );
-    }
+                <ErrorMessage error={error} />
+
+                <Templates
+                    templates={templates}
+                    pages={pages}
+                    roles={_.map(roles, role => ({
+                        text: role.description ? `${role.name} - ${role.description}` : role.name,
+                        value: role.name
+                    }))}
+                    tenants={tenants}
+                    onSelectTemplate={onSelectTemplate}
+                    onRemoveTemplatePage={onRemoveTemplatePage}
+                    onRemoveTemplateRole={onRemoveTemplateRole}
+                    onRemoveTemplateTenant={onRemoveTemplateTenant}
+                    onCreateTemplate={onCreateTemplate}
+                    onModifyTemplate={onModifyTemplate}
+                    onDeleteTemplate={onDeleteTemplate}
+                />
+
+                <Pages
+                    pages={pages}
+                    onSelectPage={onSelectPage}
+                    onCreatePage={onPageCreate}
+                    onDeletePage={onDeletePage}
+                    onEditPage={onEditPage}
+                    onPreviewPage={onPreviewPage}
+                    onCanDeletePage={canDeletePage}
+                />
+            </Segment>
+        </div>
+    );
 }

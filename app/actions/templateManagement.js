@@ -4,124 +4,8 @@
 
 import { push } from 'connected-react-router';
 import * as types from './types';
-import { addTemplate, editTemplate, removeTemplate, addPage, removePage } from './templates';
+import { addPage, removePage } from './templates';
 import Internal from '../utils/Internal';
-
-export function reqTemplateManagement() {
-    return {
-        type: types.TEMPLATE_MANAGEMENT_LOADING
-    };
-}
-
-function errorTemplateManagement(err) {
-    return {
-        type: types.TEMPLATE_MANAGEMENT_ERROR,
-        error: err,
-        receivedAt: Date.now()
-    };
-}
-
-export function fetchTemplateManagement(templates, pages) {
-    return {
-        type: types.TEMPLATE_MANAGEMENT_FETCH,
-        templates,
-        pages
-    };
-}
-
-export function fetchTemplates() {
-    return (dispatch, getState) => {
-        const state = getState();
-        const internal = new Internal(state.manager);
-        const storeTemplates = state.templates;
-        const storeTemplateManagement = state.templateManagement;
-
-        return Promise.all([internal.doGet('/templates'), internal.doGet('/templates/pages')])
-            .then(data => {
-                const selectedTemplate = _.find(storeTemplateManagement.templates, { selected: true });
-                const selectedPage = _.find(storeTemplateManagement.pages, { selected: true });
-
-                const templateList = data[0];
-                const pageList = data[1];
-
-                const templates = _.map(templateList, template => {
-                    return { ...template, pages: storeTemplates.templatesDef[template.id].pages };
-                });
-                if (selectedTemplate) {
-                    (_.find(templates, { id: selectedTemplate.id }) || {}).selected = true;
-                }
-
-                const pages = _.map(pageList, page => {
-                    return {
-                        ...page,
-                        name: (storeTemplates.pagesDef[page.id] || {}).name,
-                        templates: _.map(_.filter(templates, template => _.indexOf(template.pages, page.id) >= 0), 'id')
-                    };
-                });
-                if (selectedPage) {
-                    (_.find(pages, { id: selectedPage.id }) || {}).selected = true;
-                }
-
-                return dispatch(fetchTemplateManagement(templates, pages));
-            })
-            .catch(err => dispatch(errorTemplateManagement(err.message)));
-    };
-}
-
-export function getTemplates() {
-    return dispatch => {
-        dispatch(reqTemplateManagement());
-
-        dispatch(fetchTemplates()).catch(err => dispatch(errorTemplateManagement(err.message)));
-    };
-}
-
-export function createTemplate(template) {
-    return (dispatch, getState) => {
-        const internal = new Internal(getState().manager);
-        return internal
-            .doPost('/templates', {}, template)
-            .then(() => dispatch(addTemplate(template.id, template.pages)))
-            .then(() => dispatch(fetchTemplates()))
-            .catch(err => dispatch(errorTemplateManagement(err.message)));
-    };
-}
-
-export function updateTemplate(template) {
-    return (dispatch, getState) => {
-        const internal = new Internal(getState().manager);
-        return internal
-            .doPut('/templates', {}, template)
-            .then(() => {
-                dispatch(editTemplate(template.id, template.pages));
-                if (template.oldId && template.oldId !== template.id) {
-                    dispatch(removeTemplate(template.oldId));
-                }
-            })
-            .then(() => dispatch(fetchTemplates()))
-            .catch(err => dispatch(errorTemplateManagement(err.message)));
-    };
-}
-
-export function deleteTemplate(templateId) {
-    return (dispatch, getState) => {
-        dispatch(reqTemplateManagement());
-
-        const internal = new Internal(getState().manager);
-        return internal
-            .doDelete(`/templates/${templateId}`)
-            .then(() => dispatch(removeTemplate(templateId)))
-            .then(() => dispatch(fetchTemplates()))
-            .catch(err => dispatch(errorTemplateManagement(err.message)));
-    };
-}
-
-export function selectTemplate(templateId) {
-    return {
-        type: types.TEMPLATE_MANAGEMENT_SELECT,
-        templateId
-    };
-}
 
 export function createPageId(name, pages) {
     const ids = _.keysIn(pages);
@@ -142,53 +26,6 @@ export function createPageId(name, pages) {
     }
 
     return newPageId;
-}
-
-export function createPage(pageName) {
-    return (dispatch, getState) => {
-        const pageId = createPageId(pageName, getState().templates.pagesDef);
-        const page = {
-            id: pageId,
-            name: pageName,
-            widgets: []
-        };
-
-        const internal = new Internal(getState().manager);
-        return internal
-            .doPost('/templates/pages', {}, page)
-            .then(() => dispatch(addPage(page)))
-            .then(() => dispatch(fetchTemplates()))
-            .then(() => dispatch(push(`/page_edit/${pageId}`)))
-            .catch(err => dispatch(errorTemplateManagement(err.message)));
-    };
-}
-
-export function deletePage(pageId) {
-    return (dispatch, getState) => {
-        dispatch(reqTemplateManagement());
-
-        const internal = new Internal(getState().manager);
-        return internal
-            .doDelete(`/templates/pages/${pageId}`)
-            .then(() => dispatch(removePage(pageId)))
-            .then(() => dispatch(fetchTemplates()))
-            .catch(err => dispatch(errorTemplateManagement(err.message)));
-    };
-}
-
-export function changePageName(pageId, pageName) {
-    return {
-        type: types.PAGE_MANAGEMENT_CHANGE_NAME,
-        pageId,
-        pageName
-    };
-}
-
-export function updatePageName(pageName) {
-    return (dispatch, getState) => {
-        const pageId = createPageId(pageName, getState().templates.pagesDef);
-        dispatch(changePageName(pageId, pageName));
-    };
 }
 
 export function persistPage(page) {
@@ -215,34 +52,12 @@ export function persistPage(page) {
                     dispatch(removePage(page.oldId));
                 }
             })
-            .then(() => dispatch(addPage(_.omit(pageData, 'oldId'))))
-            .catch(err => dispatch(errorTemplateManagement(err.message)));
+            .then(() => dispatch(addPage(_.omit(pageData, 'oldId'))));
     };
 }
 
 export function savePage(page) {
-    return dispatch => {
-        dispatch(persistPage(page)).then(() => dispatch(push('/template_management')));
-    };
-}
-
-export function selectPage(pageId) {
-    return {
-        type: types.PAGE_MANAGEMENT_SELECT,
-        pageId
-    };
-}
-
-export function clearTemplateContext() {
-    return {
-        type: types.TEMPLATE_MANAGEMENT_CLEAR
-    };
-}
-
-export function clearPageContext() {
-    return {
-        type: types.PAGE_MANAGEMENT_CLEAR
-    };
+    return dispatch => dispatch(persistPage(page)).then(() => dispatch(push('/template_management')));
 }
 
 export function drillDownWarning(show) {
