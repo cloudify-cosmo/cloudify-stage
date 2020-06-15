@@ -10,6 +10,7 @@ import MaintenanceModeActivationButton from './MaintenanceModeActivationButton';
 import MaintenanceModeModal from './MaintenanceModeModal';
 import MessageContainer from './MessageContainer';
 import PageFilter from './PageFilter';
+import PasswordModal from './PasswordModal';
 
 export {
     ClusterServicesList,
@@ -23,5 +24,6 @@ export {
     MaintenanceModeModal,
     MessageContainer,
     PageFilter,
+    PasswordModal,
     PieGraph
 };

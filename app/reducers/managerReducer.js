@@ -11,6 +11,7 @@ const manager = (state = {}, action) => {
             return {
                 ...state,
                 isLoggingIn: false,
+                isLdap: action.isLdap,
                 username: action.username,
                 auth: {
                     role: action.role,
@@ -28,6 +29,7 @@ const manager = (state = {}, action) => {
             return {
                 ...state,
                 isLoggingIn: false,
+                isLdap: false,
                 auth: {
                     role: null,
                     groupSystemRoles: {},
@@ -44,6 +46,7 @@ const manager = (state = {}, action) => {
             return {
                 ...state,
                 isLoggingIn: false,
+                isLdap: false,
                 username: action.username,
                 auth: {
                     role: null,

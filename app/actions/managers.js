@@ -19,12 +19,13 @@ function requestLogin() {
     };
 }
 
-function receiveLogin(username, role, licenseRequired) {
+function receiveLogin(username, role, licenseRequired, isLdap) {
     return {
         type: types.RES_LOGIN,
         username,
         role,
         licenseRequired,
+        isLdap,
         receivedAt: Date.now()
     };
 }
@@ -50,8 +51,8 @@ export function login(username, password, redirect) {
     return (dispatch, getState) => {
         dispatch(requestLogin());
         return Auth.login(username, password)
-            .then(({ role, version, license, rbac }) => {
-                dispatch(receiveLogin(username, role, !_.isNull(license)));
+            .then(({ ldap, license, rbac, role, version }) => {
+                dispatch(receiveLogin(username, role, !_.isNull(license), ldap));
                 dispatch(setVersion(version));
                 dispatch(setLicense(license));
                 dispatch(storeRBAC(rbac));
