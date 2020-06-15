@@ -1,5 +1,3 @@
 import PasswordModal from './PasswordModal';
 
-export {
-    PasswordModal
-};
+export { PasswordModal };
