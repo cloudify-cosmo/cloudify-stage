@@ -103,7 +103,7 @@
     "css-loader": "^3.2.0",
     "cypress": "^3.4.1",
     "enzyme": "^3.9.0",
-    "enzyme-adapter-react-16": "^1.11.2",
+    "enzyme-adapter-react-16": "^1.15.1",
     "esdoc": "^1.1.0",
     "esdoc-ecmascript-proposal-plugin": "^1.0.0",
     "esdoc-jsx-plugin": "^1.0.0",

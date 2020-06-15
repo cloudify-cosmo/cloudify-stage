@@ -3,7 +3,7 @@
  */
 
 export default class MenuAction extends React.Component {
-    static SET_PASSWORD_ACTION = 'password';
+    static CHANGE_PASSWORD_ACTION = 'password';
 
     static EDIT_TENANTS_ACTION = 'tenants';
 
@@ -31,8 +31,8 @@ export default class MenuAction extends React.Component {
                 <Menu pointing vertical>
                     <Menu.Item
                         icon="lock"
-                        content="Set password"
-                        name={MenuAction.SET_PASSWORD_ACTION}
+                        content="Change password"
+                        name={MenuAction.CHANGE_PASSWORD_ACTION}
                         onClick={this._actionClick.bind(this)}
                     />
                     <Menu.Item

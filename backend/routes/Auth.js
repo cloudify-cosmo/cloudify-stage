@@ -23,30 +23,33 @@ router.post('/login', (req, res) =>
                 AuthHandler.getTenants(token.value),
                 AuthHandler.getManagerVersion(token.value),
                 AuthHandler.getAndCacheConfig(token.value),
+                AuthHandler.getLDAP(token.value),
                 Promise.resolve(token)
             ])
         )
-        .then(([tenants, version, rbac, token]) => {
+        .then(([tenants, version, rbac, ldap, token]) => {
             if (!!tenants && !!tenants.items && tenants.items.length > 0) {
                 res.cookie(Consts.TOKEN_COOKIE_NAME, token.value);
 
                 return AuthHandler.isProductLicensed(version)
                     ? AuthHandler.getLicense(token.value).then(data => ({
+                          ldap,
                           license: _.get(data, 'items[0]', {}),
-                          version,
+                          rbac,
                           role: token.role,
-                          rbac
+                          version
                       }))
                     : Promise.resolve({
+                          ldap,
                           license: null,
-                          version,
+                          rbac,
                           role: token.role,
-                          rbac
+                          version
                       });
             }
             return Promise.reject({ message: 'User has no tenants', error_code: 'no_tenants' });
         })
-        .then(({ license, version, role, rbac }) => res.send({ license, version, role, rbac }))
+        .then(({ ldap, license, rbac, role, version }) => res.send({ ldap, license, rbac, role, version }))
         .catch(err => {
             logger.error(err);
             if (err.error_code === 'unauthorized_error') {
