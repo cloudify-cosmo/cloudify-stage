@@ -139,7 +139,7 @@ export default class ExecutionWorkflowGraph extends React.Component {
                         name="play"
                         link
                         color={autoFocus ? 'green' : null}
-                        onClick={() => this.setState({ autoFocus: true }, this.scrollToInProgress)}
+                        onClick={() => this.setState({ autoFocus: !autoFocus }, this.scrollToInProgress)}
                         title="Focus on tasks in progress"
                     />
                     <Icon
