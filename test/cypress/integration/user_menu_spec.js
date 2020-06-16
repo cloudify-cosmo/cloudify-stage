@@ -23,7 +23,7 @@ describe('User Menu', () => {
     });
 
     it('should contain options for admin users', () => {
-        cy.login().waitUntilLoaded();
+        cy.login();
 
         cy.get('.usersMenu').click();
         cy.get('.usersMenu .menu').within(() => {
@@ -37,7 +37,7 @@ describe('User Menu', () => {
     });
 
     it('should contain options for non-admin users', () => {
-        cy.login(nonAdminUsername, nonAdminPassword).waitUntilLoaded();
+        cy.login(nonAdminUsername, nonAdminPassword);
 
         cy.get('.usersMenu').click();
         cy.get('.usersMenu .menu').within(() => {

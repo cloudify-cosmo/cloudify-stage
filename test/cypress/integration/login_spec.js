@@ -1,16 +1,12 @@
 describe('Login', () => {
     it('succeeds when provided credentials are valid and license is active', () => {
-        cy.activate()
-            .login()
-            .waitUntilLoaded();
+        cy.activate().login();
 
         cy.location('pathname').should('be.equal', '/console/');
     });
 
     it('succeeds when provided credentials are valid and license is not active', () => {
-        cy.uploadLicense('expired_trial_license')
-            .login()
-            .waitUntilLoaded();
+        cy.uploadLicense('expired_trial_license').login();
 
         cy.get('.container h2').should('contain.text', 'License Management');
         cy.location('pathname').should('be.equal', '/console/license');
