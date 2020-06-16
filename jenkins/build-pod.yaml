@@ -14,7 +14,7 @@ spec:
       runAsUser: 0
       privileged: true
   - name: node
-    image: node:12.16.1
+    image: circleci/node:12.16-browsers
     resources:
       requests:
         cpu: 1.5
