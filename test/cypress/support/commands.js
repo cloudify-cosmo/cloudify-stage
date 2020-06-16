@@ -30,23 +30,26 @@ Cypress.Commands.add('waitUntilLoaded', () => {
     cy.get('#loader', { timeout: 20000 }).should('be.not.visible', true);
 });
 
+Cypress.Commands.add('uploadLicense', license =>
+    cy.fixture(`license/${license}.yaml`).then(yaml =>
+        cy.request({
+            method: 'PUT',
+            url: '/console/sp',
+            qs: {
+                su: '/license'
+            },
+            headers: {
+                Authorization: `Basic ${btoa('admin:admin')}`,
+                'Content-Type': 'text/plain'
+            },
+            body: yaml
+        })
+    )
+);
+
 Cypress.Commands.add('activate', (license = 'valid_trial_license') =>
     cy
-        .fixture(`license/${license}.yaml`)
-        .then(license =>
-            cy.request({
-                method: 'PUT',
-                url: '/console/sp',
-                qs: {
-                    su: '/license'
-                },
-                headers: {
-                    Authorization: `Basic ${btoa('admin:admin')}`,
-                    'Content-Type': 'text/plain'
-                },
-                body: license
-            })
-        )
+        .uploadLicense(license)
         .then(() =>
             cy.request({
                 method: 'GET',
