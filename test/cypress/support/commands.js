@@ -21,36 +21,37 @@ Cypress.Commands.add('waitUntilLoaded', () => {
     cy.get('#loader', { timeout: 20000 }).should('be.not.visible', true);
 });
 
-Cypress.Commands.add('activate', (license = 'valid_trial_license') =>
-    cy
-        .fixture(`license/${license}.yaml`)
-        .then(license =>
-            cy.request({
-                method: 'PUT',
-                url: '/console/sp',
-                qs: {
-                    su: '/license'
-                },
-                headers: {
-                    Authorization: `Basic ${btoa('admin:admin')}`,
-                    'Content-Type': 'text/plain'
-                },
-                body: license
-            })
-        )
-        .then(() => {
-            cy.request({
-                method: 'GET',
-                url: '/console/sp',
-                qs: {
-                    su: '/tokens'
-                },
-                headers: {
-                    Authorization: `Basic ${btoa('admin:admin')}`,
-                    'Content-Type': 'application/json'
-                }
-            }).then(response => (token = response.body.value));
+Cypress.Commands.add('uploadLicense', license =>
+    cy.fixture(`license/${license}.yaml`).then(yaml =>
+        cy.request({
+            method: 'PUT',
+            url: '/console/sp',
+            qs: {
+                su: '/license'
+            },
+            headers: {
+                Authorization: `Basic ${btoa('admin:admin')}`,
+                'Content-Type': 'text/plain'
+            },
+            body: yaml
         })
+    )
+);
+
+Cypress.Commands.add('activate', (license = 'valid_trial_license') =>
+    cy.uploadLicense(license).then(() => {
+        cy.request({
+            method: 'GET',
+            url: '/console/sp',
+            qs: {
+                su: '/tokens'
+            },
+            headers: {
+                Authorization: `Basic ${btoa('admin:admin')}`,
+                'Content-Type': 'application/json'
+            }
+        }).then(response => (token = response.body.value));
+    })
 );
 
 Cypress.Commands.add('cfyRequest', (url, method = 'GET', headers = null, body = null) =>
