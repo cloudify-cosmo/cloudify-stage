@@ -11,7 +11,6 @@ const manager = (state = {}, action) => {
             return {
                 ...state,
                 isLoggingIn: false,
-                isLdap: action.isLdap,
                 username: action.username,
                 auth: {
                     role: action.role,
@@ -29,7 +28,6 @@ const manager = (state = {}, action) => {
             return {
                 ...state,
                 isLoggingIn: false,
-                isLdap: false,
                 auth: {
                     role: null,
                     groupSystemRoles: {},
@@ -46,7 +44,6 @@ const manager = (state = {}, action) => {
             return {
                 ...state,
                 isLoggingIn: false,
-                isLdap: false,
                 username: action.username,
                 auth: {
                     role: null,
@@ -59,6 +56,11 @@ const manager = (state = {}, action) => {
                 clusterStatus: {},
                 license: {},
                 version: {}
+            };
+        case types.SET_LDAP:
+            return {
+                ...state,
+                isLdap: action.isLdap
             };
         case types.SET_USER_DATA:
             return {

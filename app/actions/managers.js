@@ -19,13 +19,12 @@ function requestLogin() {
     };
 }
 
-function receiveLogin(username, role, licenseRequired, isLdap) {
+function receiveLogin(username, role, licenseRequired) {
     return {
         type: types.RES_LOGIN,
         username,
         role,
         licenseRequired,
-        isLdap,
         receivedAt: Date.now()
     };
 }
@@ -51,8 +50,8 @@ export function login(username, password, redirect) {
     return (dispatch, getState) => {
         dispatch(requestLogin());
         return Auth.login(username, password)
-            .then(({ ldap, license, rbac, role, version }) => {
-                dispatch(receiveLogin(username, role, !_.isNull(license), ldap));
+            .then(({ role, version, license, rbac }) => {
+                dispatch(receiveLogin(username, role, !_.isNull(license)));
                 dispatch(setVersion(version));
                 dispatch(setLicense(license));
                 dispatch(storeRBAC(rbac));
@@ -96,6 +95,20 @@ export function getUserData() {
         Auth.getUserData(getState().manager).then(data => {
             dispatch(responseUserData(data.username, data.role, data.groupSystemRoles, data.tenantsRoles));
         });
+}
+
+function responseLdap(isLdap) {
+    return {
+        type: types.SET_LDAP,
+        isLdap
+    };
+}
+
+export function getLdap() {
+    return (dispatch, getState) => {
+        const manager = new Manager(getState().manager);
+        manager.doGet('/ldap').then(data => dispatch(responseLdap(data === 'enabled')));
+    };
 }
 
 function doLogout(err) {
