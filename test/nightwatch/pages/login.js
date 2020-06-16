@@ -10,8 +10,6 @@ module.exports = {
         usernameField: 'input[name="username"]',
         passwordField: 'input[name="password"]',
         submitButton: 'button[type="submit"]',
-        tenantsDropdownText: 'div.tenantsMenu',
-        statusIcon: '.statusIcon',
-        errorMessage: '.error.message'
+        statusIcon: '.statusIcon'
     }
 };

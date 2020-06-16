@@ -60,12 +60,6 @@ class AuthHandler {
         return !_.isEmpty(authorizationCache);
     }
 
-    static getLDAP(token) {
-        return ManagerHandler.jsonRequest('GET', '/ldap', {
-            'Authentication-Token': token
-        }).then(ldap => ldap === 'enabled');
-    }
-
     static async getRBAC(token) {
         if (!AuthHandler.isRbacInCache()) {
             logger.debug('No RBAC data in cache.');

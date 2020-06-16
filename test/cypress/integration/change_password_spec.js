@@ -83,4 +83,20 @@ describe('Change Password modal', () => {
         cy.get('.error.message').should('not.be.visible');
         cy.waitUntilLoaded();
     });
+
+    it('should not be available when LDAP is enabled', () => {
+        cy.server();
+        cy.route({
+            method: 'GET',
+            url: `/console/sp/?su=/ldap`,
+            response: 'enabled'
+        }).as('ldap');
+
+        cy.login();
+
+        cy.get('.usersMenu').click();
+        cy.get('#changePasswordMenuItem').should('have.class', 'disabled');
+
+        cy.server({ enable: false });
+    });
 });

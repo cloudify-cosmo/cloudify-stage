@@ -6,7 +6,7 @@ import { loadWidgetDefinitions } from './widgets';
 import { getTenants } from './tenants';
 import { getClientConfig } from './clientConfig';
 import { loadOrCreateUserAppData } from './userApp';
-import { getUserData } from './managers';
+import { getLdap, getUserData } from './managers';
 import { getClusterStatus } from './clusterStatus';
 import { NO_TENANTS_ERR } from '../utils/ErrorCodes';
 
@@ -43,7 +43,8 @@ export function intialPageLoad() {
                     dispatch(loadTours()),
                     dispatch(loadWidgetDefinitions()),
                     dispatch(getClientConfig()),
-                    dispatch(getClusterStatus())
+                    dispatch(getClusterStatus()),
+                    dispatch(getLdap())
                 ]);
             })
             .then(() => {
