@@ -24,7 +24,6 @@ describe('(Reducer) License', () => {
 
     const username = 'admin';
     const password = 'admin';
-    const ldap = false;
     const sysAdminRole = 'sys_admin';
 
     describe('Receive login action', () => {
@@ -45,7 +44,7 @@ describe('(Reducer) License', () => {
         it('empty license triggers actions', () => {
             store = mockStore({});
             fetchMock.post('/console/auth/login', {
-                body: { license: {}, version: versions.premium, role: sysAdminRole, rbac, ldap },
+                body: { license: {}, version: versions.premium, role: sysAdminRole, rbac },
                 headers: { 'content-type': 'application/json' }
             });
 
@@ -56,7 +55,6 @@ describe('(Reducer) License', () => {
                     username,
                     role: sysAdminRole,
                     licenseRequired: true,
-                    isLdap: ldap,
                     receivedAt: Date.now()
                 };
                 const expectedActions = [
@@ -76,7 +74,7 @@ describe('(Reducer) License', () => {
         it('empty license changes license state', () => {
             store = createStore(licenseReducer, {}, applyMiddleware(thunk));
             fetchMock.post('/console/auth/login', {
-                body: { license: [], version: versions.premium, role: sysAdminRole, rbac, ldap },
+                body: { license: [], version: versions.premium, role: sysAdminRole, rbac },
                 headers: { 'content-type': 'application/json' }
             });
 
@@ -94,13 +92,7 @@ describe('(Reducer) License', () => {
         it('active license triggers actions', () => {
             store = mockStore({});
             fetchMock.post('/console/auth/login', {
-                body: {
-                    license: licenses.activePayingLicense,
-                    version: versions.premium,
-                    role: sysAdminRole,
-                    rbac,
-                    ldap
-                },
+                body: { license: licenses.activePayingLicense, version: versions.premium, role: sysAdminRole, rbac },
                 headers: { 'content-type': 'application/json' }
             });
 
@@ -111,7 +103,6 @@ describe('(Reducer) License', () => {
                     username,
                     role: sysAdminRole,
                     licenseRequired: true,
-                    isLdap: ldap,
                     receivedAt: Date.now()
                 };
                 const expectedActions = [
@@ -131,13 +122,7 @@ describe('(Reducer) License', () => {
         it('active license changes license state', () => {
             store = createStore(licenseReducer, {}, applyMiddleware(thunk));
             fetchMock.post('/console/auth/login', {
-                body: {
-                    license: licenses.activePayingLicense,
-                    version: versions.premium,
-                    role: sysAdminRole,
-                    rbac,
-                    ldap
-                },
+                body: { license: licenses.activePayingLicense, version: versions.premium, role: sysAdminRole, rbac },
                 headers: { 'content-type': 'application/json' }
             });
 
@@ -155,13 +140,7 @@ describe('(Reducer) License', () => {
         it('expired license triggers actions', () => {
             store = mockStore({});
             fetchMock.post('/console/auth/login', {
-                body: {
-                    license: licenses.expiredPayingLicense,
-                    version: versions.premium,
-                    role: sysAdminRole,
-                    rbac,
-                    ldap
-                },
+                body: { license: licenses.expiredPayingLicense, version: versions.premium, role: sysAdminRole, rbac },
                 headers: { 'content-type': 'application/json' }
             });
 
@@ -172,7 +151,6 @@ describe('(Reducer) License', () => {
                     username,
                     role: sysAdminRole,
                     licenseRequired: true,
-                    isLdap: ldap,
                     receivedAt: Date.now()
                 };
                 const expectedActions = [
@@ -192,13 +170,7 @@ describe('(Reducer) License', () => {
         it('expired license changes license state', () => {
             store = createStore(licenseReducer, {}, applyMiddleware(thunk));
             fetchMock.post('/console/auth/login', {
-                body: {
-                    license: licenses.expiredPayingLicense,
-                    version: versions.premium,
-                    role: sysAdminRole,
-                    rbac,
-                    ldap
-                },
+                body: { license: licenses.expiredPayingLicense, version: versions.premium, role: sysAdminRole, rbac },
                 headers: { 'content-type': 'application/json' }
             });
 
@@ -216,7 +188,7 @@ describe('(Reducer) License', () => {
         it('non-licensed version triggers actions', () => {
             store = mockStore({});
             fetchMock.post('/console/auth/login', {
-                body: { license: null, version: versions.community, role: sysAdminRole, rbac, ldap },
+                body: { license: null, version: versions.community, role: sysAdminRole, rbac },
                 headers: { 'content-type': 'application/json' }
             });
 
@@ -227,7 +199,6 @@ describe('(Reducer) License', () => {
                     username,
                     role: sysAdminRole,
                     licenseRequired: false,
-                    isLdap: ldap,
                     receivedAt: Date.now()
                 };
                 const expectedActions = [
@@ -247,7 +218,7 @@ describe('(Reducer) License', () => {
         it('non-licensed version changes license state', () => {
             store = createStore(licenseReducer, {}, applyMiddleware(thunk));
             fetchMock.post('/console/auth/login', {
-                body: { license: null, version: versions.community, role: sysAdminRole, rbac, ldap },
+                body: { license: null, version: versions.community, role: sysAdminRole, rbac },
                 headers: { 'content-type': 'application/json' }
             });
 
