@@ -26,7 +26,6 @@ import {
     Segment
 } from './basic/index';
 import InstallWidgetModal from './InstallWidgetModal';
-import { addWidget } from '../actions/widgets';
 import EditModeButton from './EditModeButton';
 
 let nameIndex = 0;
@@ -54,15 +53,6 @@ export default class AddWidgetModal extends Component {
             categories: AddWidgetModal.generateCategories(props.widgetDefinitions),
             selectedCategory: GenericConfig.CATEGORY.ALL
         };
-    };
-
-    static propTypes = {
-        widgetDefinitions: PropTypes.array.isRequired,
-        onWidgetAdded: PropTypes.func.isRequired,
-        onWidgetInstalled: PropTypes.func.isRequired,
-        onWidgetUninstalled: PropTypes.func.isRequired,
-        onWidgetUpdated: PropTypes.func.isRequired,
-        onWidgetUsed: PropTypes.func.isRequired
     };
 
     componentDidUpdate(prevProps) {
@@ -445,3 +435,20 @@ export default class AddWidgetModal extends Component {
         );
     }
 }
+
+AddWidgetModal.propTypes = {
+    canInstallWidgets: PropTypes.bool.isRequired,
+    widgetDefinitions: PropTypes.arrayOf(
+        PropTypes.shape({
+            description: PropTypes.string,
+            id: PropTypes.string,
+            isCustom: PropTypes.bool,
+            name: PropTypes.string
+        })
+    ).isRequired,
+    onWidgetAdded: PropTypes.func.isRequired,
+    onWidgetInstalled: PropTypes.func.isRequired,
+    onWidgetUninstalled: PropTypes.func.isRequired,
+    onWidgetUpdated: PropTypes.func.isRequired,
+    onWidgetUsed: PropTypes.func.isRequired
+};

@@ -2,7 +2,6 @@
  * Created by pposel on 22/08/2017.
  */
 import PropTypes from 'prop-types';
-
 import React, { Component } from 'react';
 
 import { ApproveButton, Button, CancelButton, Form, Icon, Modal } from '../basic/index';
@@ -21,14 +20,6 @@ export default class CreatePageModal extends Component {
             pageName: props.pageName,
             errors: {}
         };
-    };
-
-    static propTypes = {
-        onCreatePage: PropTypes.func.isRequired
-    };
-
-    static defaultProps = {
-        pageName: ''
     };
 
     openModal() {
@@ -107,3 +98,13 @@ export default class CreatePageModal extends Component {
         );
     }
 }
+
+CreatePageModal.propTypes = {
+    onCreatePage: PropTypes.func.isRequired,
+    // eslint-disable-next-line react/no-unused-prop-types
+    pageName: PropTypes.string
+};
+
+CreatePageModal.defaultProps = {
+    pageName: ''
+};

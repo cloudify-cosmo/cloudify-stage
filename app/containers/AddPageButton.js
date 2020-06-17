@@ -2,15 +2,16 @@
  * Created by kinneretzin on 29/08/2016.
  */
 
+import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
+
 import { addPage } from '../actions/page';
-import { Button } from '../components/basic/index';
 import EditModeButton from '../components/EditModeButton';
 
 let nameIndex = 0;
 
-const mapDispatchToProps = (dispatch, ownProps) => {
+const mapDispatchToProps = dispatch => {
     return {
         onClick: () => {
             dispatch(addPage(`Page_${nameIndex++}`));
@@ -29,6 +30,10 @@ const AddPageButton = ({ onClick }) => {
             className="addPageBtn"
         />
     );
+};
+
+AddPageButton.propTypes = {
+    onClick: PropTypes.func.isRequired
 };
 
 const AddPage = connect(

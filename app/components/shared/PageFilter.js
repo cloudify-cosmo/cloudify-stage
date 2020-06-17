@@ -31,25 +31,8 @@ class PageFilter extends React.Component {
         this.state = PageFilter.initialState(props);
     }
 
-    /**
-     * propTypes
-     *
-     * @property {string} name name of the field
-     * @property {string} value value of the field
-     * @property {Array} pages array containing page objects - {id, name} - it is fetched from redux store automatically
-     * @property {Function} [onChange=()=>{}] function called on input value change
-     */
-    static propTypes = {
-        name: PropTypes.string.isRequired,
-        value: PropTypes.string.isRequired,
-        pages: PropTypes.array.isRequired,
-        onChange: PropTypes.func,
-        allowDrillDownPages: PropTypes.bool
-    };
-
     static initialState = props => ({
-        pageId: props.value,
-        allowDrillDownPages: false
+        pageId: props.value
     });
 
     handleInputChange(event, field) {
@@ -92,6 +75,46 @@ class PageFilter extends React.Component {
         );
     }
 }
+
+PageFilter.propTypes = {
+    /**
+     * name of the field
+     */
+    name: PropTypes.string.isRequired,
+
+    /**
+     * value of the field
+     */
+    // eslint-disable-next-line react/no-unused-prop-types
+    value: PropTypes.string.isRequired,
+
+    /**
+     * array containing page objects
+     */
+    pages: PropTypes.arrayOf(
+        PropTypes.shape({
+            id: PropTypes.string,
+            isDrilldown: PropTypes.bool,
+            name: PropTypes.string,
+            parent: PropTypes.string
+        })
+    ).isRequired,
+
+    /**
+     *
+     */
+    allowDrillDownPages: PropTypes.bool,
+
+    /**
+     * function called on input value change
+     */
+    onChange: PropTypes.func
+};
+
+PageFilter.defaultProps = {
+    allowDrillDownPages: false,
+    onChange: _.noop
+};
 
 const mapStateToProps = state => {
     return {

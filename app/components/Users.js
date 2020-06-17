@@ -2,6 +2,7 @@
  * Created by jakubniezgoda on 07/02/2017.
  */
 
+import _ from 'lodash';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 
@@ -21,21 +22,6 @@ export default class Users extends Component {
         this.onHideChangePasswordModal = this.onHideChangePasswordModal.bind(this);
         this.onEditModeClick = this.onEditModeClick.bind(this);
     }
-
-    static propTypes = {
-        manager: PropTypes.object.isRequired,
-        showAllOptions: PropTypes.bool.isRequired,
-        isEditMode: PropTypes.bool.isRequired,
-        canChangePassword: PropTypes.bool.isRequired,
-        canEditMode: PropTypes.bool.isRequired,
-        canTemplateManagement: PropTypes.bool.isRequired,
-        canLicenseManagement: PropTypes.bool.isRequired,
-        onEditModeChange: PropTypes.func.isRequired,
-        onLogout: PropTypes.func.isRequired,
-        onReset: PropTypes.func,
-        onTemplates: PropTypes.func,
-        onLicense: PropTypes.func
-    };
 
     componentDidMount() {
         const { onLogout } = this.props;
@@ -158,3 +144,24 @@ export default class Users extends Component {
         );
     }
 }
+
+Users.propTypes = {
+    manager: PropTypes.shape({ username: PropTypes.string }).isRequired,
+    showAllOptions: PropTypes.bool.isRequired,
+    isEditMode: PropTypes.bool.isRequired,
+    canChangePassword: PropTypes.bool.isRequired,
+    canEditMode: PropTypes.bool.isRequired,
+    canTemplateManagement: PropTypes.bool.isRequired,
+    canLicenseManagement: PropTypes.bool.isRequired,
+    onEditModeChange: PropTypes.func.isRequired,
+    onLogout: PropTypes.func.isRequired,
+    onReset: PropTypes.func,
+    onTemplates: PropTypes.func,
+    onLicense: PropTypes.func
+};
+
+Users.defaultProps = {
+    onReset: _.noop,
+    onTemplates: _.noop,
+    onLicense: _.noop
+};

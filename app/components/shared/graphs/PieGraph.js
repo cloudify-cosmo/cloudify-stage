@@ -3,8 +3,7 @@
  */
 
 import PropTypes from 'prop-types';
-
-import React, { Component } from 'react';
+import React from 'react';
 import { PieChart, Pie, Legend, Cell, ResponsiveContainer } from 'recharts';
 
 /**
@@ -40,34 +39,27 @@ import { PieChart, Pie, Legend, Cell, ResponsiveContainer } from 'recharts';
  * return (<PieGraph data={formattedData} />);
  * ```
  */
-export default class PieGraph extends Component {
-    constructor(props) {
-        super(props);
-    }
-
-    /**
-     * propTypes
-     *
-     * @property {object[]} data graph input data
-     */
-    static propTypes = {
-        data: PropTypes.array.isRequired
-    };
-
-    render() {
-        const { data } = this.props;
-
-        return (
-            <ResponsiveContainer width="100%" height="100%">
-                <PieChart>
-                    <Pie dataKey="value" data={data} labelLine label isAnimationActive={false} cx="40%">
-                        {data.map((entry, index) => (
-                            <Cell key={index} fill={entry.color} />
-                        ))}
-                    </Pie>
-                    <Legend layout="vertical" verticalAlign="middle" align="right" />
-                </PieChart>
-            </ResponsiveContainer>
-        );
-    }
+export default function PieGraph({ data }) {
+    return (
+        <ResponsiveContainer width="100%" height="100%">
+            <PieChart>
+                <Pie dataKey="value" data={data} labelLine label isAnimationActive={false} cx="40%">
+                    {data.map((entry, index) => (
+                        <Cell key={index} fill={entry.color} />
+                    ))}
+                </Pie>
+                <Legend layout="vertical" verticalAlign="middle" align="right" />
+            </PieChart>
+        </ResponsiveContainer>
+    );
 }
+
+PieGraph.propTypes = {
+    data: PropTypes.arrayOf(
+        PropTypes.shape({
+            color: PropTypes.string,
+            name: PropTypes.string,
+            value: PropTypes.number
+        })
+    ).isRequired
+};

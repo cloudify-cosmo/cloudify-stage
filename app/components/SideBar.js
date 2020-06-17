@@ -3,29 +3,25 @@
  */
 
 import PropTypes from 'prop-types';
-
-import React, { Component } from 'react';
+import React from 'react';
 
 import Pages from '../containers/Pages';
 
-export default class SideBar extends Component {
-    static propTypes = {
-        homePageId: PropTypes.string.isRequired,
-        pageId: PropTypes.string.isRequired,
-        isEditMode: PropTypes.bool.isRequired,
-        isOpen: PropTypes.bool
-    };
+export default function SideBar({ homePageId, isEditMode, isOpen, pageId }) {
+    const className = isOpen ? 'open' : '';
 
-    render() {
-        const { homePageId, isEditMode, isOpen, pageId } = this.props;
-        const className = isOpen ? 'open' : '';
-
-        return (
-            <div className="sidebarContainer">
-                <div className={`ui visible left vertical sidebar menu small basic ${className}`}>
-                    <Pages pageId={pageId} isEditMode={isEditMode} homePageId={homePageId} />
-                </div>
+    return (
+        <div className="sidebarContainer">
+            <div className={`ui visible left vertical sidebar menu small basic ${className}`}>
+                <Pages pageId={pageId} isEditMode={isEditMode} homePageId={homePageId} />
             </div>
-        );
-    }
+        </div>
+    );
 }
+
+SideBar.propTypes = {
+    homePageId: PropTypes.string.isRequired,
+    pageId: PropTypes.string.isRequired,
+    isEditMode: PropTypes.bool.isRequired,
+    isOpen: PropTypes.bool.isRequired
+};

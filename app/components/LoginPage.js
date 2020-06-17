@@ -14,19 +14,11 @@ import FullScreenSegment from './layout/FullScreenSegment';
 import 'cloudify-ui-common/styles/font-JosefinSans-Bold.css';
 
 export default class LoginPage extends Component {
-    static propTypes = {
-        username: PropTypes.string,
-        loginError: PropTypes.string,
-        onLogin: PropTypes.func.isRequired,
-        isLoggingIn: PropTypes.bool.isRequired,
-        whiteLabel: PropTypes.object
-    };
-
     constructor(props, context) {
         super(props, context);
 
         this.state = {
-            username: props.username || '',
+            username: props.username,
             password: '',
             errors: {}
         };
@@ -142,3 +134,29 @@ export default class LoginPage extends Component {
         );
     }
 }
+
+LoginPage.propTypes = {
+    isLoggingIn: PropTypes.bool.isRequired,
+    onLogin: PropTypes.func.isRequired,
+    location: PropTypes.shape({ search: PropTypes.string }),
+    loginError: PropTypes.string,
+    username: PropTypes.string,
+    whiteLabel: PropTypes.shape({
+        loginPageHeader: PropTypes.string,
+        loginPageHeaderColor: PropTypes.string,
+        loginPageText: PropTypes.string,
+        loginPageTextColor: PropTypes.string
+    })
+};
+
+LoginPage.defaultProps = {
+    location: { search: '' },
+    loginError: null,
+    username: '',
+    whiteLabel: PropTypes.shape({
+        loginPageHeader: '',
+        loginPageHeaderColor: '',
+        loginPageText: '',
+        loginPageTextColor: ''
+    })
+};

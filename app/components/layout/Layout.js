@@ -25,21 +25,15 @@ export default class Layout extends Component {
         this.state = Layout.initialState;
     }
 
-    static propTypes = {
-        isLoading: PropTypes.bool.isRequired,
-        isUserAuthorizedForTemplateManagement: PropTypes.bool.isRequired,
-        intialPageLoad: PropTypes.func.isRequired
-    };
-
     static initialState = {
         initialized: false
     };
 
     componentDidMount() {
-        const { doLogout, intialPageLoad } = this.props;
+        const { doLogout, initialPageLoad } = this.props;
         console.log('First time logging in , fetching stuff');
 
-        intialPageLoad()
+        initialPageLoad()
             .then(() => {
                 StatusPoller.getPoller().start();
                 UserAppDataAutoSaver.getAutoSaver().start();
@@ -107,3 +101,10 @@ export default class Layout extends Component {
         );
     }
 }
+
+Layout.propTypes = {
+    doLogout: PropTypes.func.isRequired,
+    initialPageLoad: PropTypes.func.isRequired,
+    isLoading: PropTypes.bool.isRequired,
+    isUserAuthorizedForTemplateManagement: PropTypes.bool.isRequired
+};

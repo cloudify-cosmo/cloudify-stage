@@ -38,20 +38,6 @@ class MaintenanceModeModal extends Component {
         error: ''
     };
 
-    static propTypes = {
-        show: PropTypes.bool.isRequired,
-        manager: PropTypes.object.isRequired,
-        activeExecutions: PropTypes.object,
-        onHide: PropTypes.func.isRequired,
-        onMaintenanceActivate: PropTypes.func.isRequired,
-        onMaintenanceDeactivate: PropTypes.func.isRequired,
-        onFetchActiveExecutions: PropTypes.func.isRequired
-    };
-
-    static defaultProps = {
-        activeExecutions: {}
-    };
-
     componentDidUpdate(prevProps) {
         const { onClose, show } = this.props;
         if (!prevProps.show && show) {
@@ -269,6 +255,31 @@ class MaintenanceModeModal extends Component {
         );
     }
 }
+
+MaintenanceModeModal.propTypes = {
+    show: PropTypes.bool.isRequired,
+    manager: PropTypes.shape({ maintenance: PropTypes.string }).isRequired,
+    onCancelExecution: PropTypes.func.isRequired,
+    onClose: PropTypes.func.isRequired,
+    onHide: PropTypes.func.isRequired,
+    onMaintenanceActivate: PropTypes.func.isRequired,
+    onMaintenanceDeactivate: PropTypes.func.isRequired,
+    onFetchActiveExecutions: PropTypes.func.isRequired,
+    activeExecutions: PropTypes.shape({
+        items: PropTypes.shape({
+            blueprint_id: PropTypes.string,
+            deployment_id: PropTypes.string,
+            id: PropTypes.string,
+            is_system_workflow: PropTypes.string,
+            map: PropTypes.func,
+            workflow_id: PropTypes.string
+        })
+    })
+};
+
+MaintenanceModeModal.defaultProps = {
+    activeExecutions: {}
+};
 
 const mapStateToProps = (state, ownProps) => {
     return {

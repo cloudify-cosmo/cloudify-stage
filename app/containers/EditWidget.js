@@ -28,14 +28,10 @@ class EditWidgetComponent extends React.Component {
         this.state = {
             showConfig: false
         };
-    }
 
-    static propTypes = {
-        widget: PropTypes.object,
-        onWidgetEdited: PropTypes.func,
-        configDef: PropTypes.array,
-        configuration: PropTypes.object
-    };
+        this.hideConfig = this.hideConfig.bind(this);
+        this.showConfig = this.showConfig.bind(this);
+    }
 
     showConfig() {
         this.setState({ showConfig: true });
@@ -51,19 +47,26 @@ class EditWidgetComponent extends React.Component {
 
         return (
             <span>
-                <EditWidgetIcon widgetId={widget.id} onShowConfig={this.showConfig.bind(this)} />
+                <EditWidgetIcon onShowConfig={this.showConfig} />
                 <EditWidgetModal
                     widget={widget}
                     configDef={configDef}
                     configuration={configuration}
                     onWidgetEdited={onWidgetEdited}
                     show={showConfig}
-                    onHideConfig={this.hideConfig.bind(this)}
+                    onHideConfig={this.hideConfig}
                 />
             </span>
         );
     }
 }
+
+EditWidgetComponent.propTypes = {
+    widget: PropTypes.shape({}).isRequired,
+    onWidgetEdited: PropTypes.func.isRequired,
+    configDef: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
+    configuration: PropTypes.shape({}).isRequired
+};
 
 const EditWidget = connect(
     mapStateToProps,

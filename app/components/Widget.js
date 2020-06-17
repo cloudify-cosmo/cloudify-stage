@@ -23,17 +23,6 @@ export default class Widget extends Component {
         };
     }
 
-    static propTypes = {
-        widget: PropTypes.object.isRequired,
-        context: PropTypes.object.isRequired,
-        manager: PropTypes.object.isRequired,
-        widgetData: PropTypes.object,
-        setContextValue: PropTypes.func.isRequired,
-        onWidgetRemoved: PropTypes.func.isRequired,
-        onWidgetUpdated: PropTypes.func.isRequired,
-        fetchWidgetData: PropTypes.func.isRequired
-    };
-
     static getDerivedStateFromError() {
         return { hasError: true };
     }
@@ -229,3 +218,30 @@ export default class Widget extends Component {
         );
     }
 }
+
+Widget.propTypes = {
+    context: PropTypes.shape({}).isRequired,
+    fetchWidgetData: PropTypes.func.isRequired,
+    isEditMode: PropTypes.bool.isRequired,
+    manager: PropTypes.shape({
+        tenants: PropTypes.shape({ selected: PropTypes.string, isFetching: PropTypes.bool })
+    }).isRequired,
+    onWidgetRemoved: PropTypes.func.isRequired,
+    onWidgetUpdated: PropTypes.func.isRequired,
+    setContextValue: PropTypes.func.isRequired,
+    widget: PropTypes.shape({
+        configuration: PropTypes.shape({}),
+        id: PropTypes.string,
+        name: PropTypes.string,
+        definition: PropTypes.shape({
+            color: PropTypes.string,
+            helpUrl: PropTypes.string,
+            permission: PropTypes.string,
+            readme: PropTypes.string,
+            showHeader: PropTypes.bool,
+            showBorder: PropTypes.bool
+        }),
+        maximized: PropTypes.bool
+    }).isRequired,
+    widgetData: PropTypes.shape({}).isRequired
+};

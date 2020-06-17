@@ -2,9 +2,10 @@
  * Created by jakub.niezgoda on 15/03/2019.
  */
 
+import PropTypes from 'prop-types';
 import React from 'react';
 
-import { Button, Form, Segment } from '../basic';
+import { Button, ErrorMessage, Form, Segment } from '../basic';
 
 export default function UploadLicense({ error, isLoading, license, onChange, onErrorDismiss, onUpload }) {
     return (
@@ -34,3 +35,16 @@ export default function UploadLicense({ error, isLoading, license, onChange, onE
         </Segment>
     );
 }
+
+UploadLicense.propTypes = {
+    error: ErrorMessage.propTypes.error,
+    isLoading: PropTypes.bool.isRequired,
+    license: PropTypes.string.isRequired,
+    onChange: PropTypes.func.isRequired,
+    onErrorDismiss: PropTypes.func.isRequired,
+    onUpload: PropTypes.func.isRequired
+};
+
+UploadLicense.defaultProps = {
+    error: ''
+};
