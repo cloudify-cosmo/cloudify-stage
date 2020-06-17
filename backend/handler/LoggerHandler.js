@@ -4,6 +4,9 @@
 
 const winston = require('winston');
 const _ = require('lodash');
+const config = require('../config').get();
+
+const { logLevel } = config.app;
 
 module.exports = (() => {
     function getArgsSupportedLogger(logger) {
@@ -30,7 +33,7 @@ module.exports = (() => {
         return logger;
     }
 
-    function getLogger(category, level = 'debug') {
+    function getLogger(category, level = logLevel) {
         const logFormat = winston.format.printf(({ level, message, label, timestamp }) => {
             const instanceNumber = parseInt(process.env.NODE_APP_INSTANCE);
             return `${instanceNumber >= 0 ? `[${instanceNumber}]` : ''}[${timestamp}][${label}] ${_.upperCase(
@@ -51,7 +54,7 @@ module.exports = (() => {
         return getArgsSupportedLogger(logger);
     }
 
-    function getStream(category, level = 'debug') {
+    function getStream(category, level = logLevel) {
         const logger = getLogger(category, level);
         return {
             write: message => logger.info(_.trim(message))

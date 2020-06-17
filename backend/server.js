@@ -10,13 +10,12 @@ const cookieParser = require('cookie-parser');
 const morgan = require('morgan');
 const _ = require('lodash');
 
-// Initialize logger
-const LoggerHandler = require('./handler/LoggerHandler');
-
-const logger = LoggerHandler.getLogger('Server');
-
 const config = require('./config');
 const Consts = require('./consts');
+const LoggerHandler = require('./handler/LoggerHandler');
+
+// Initialize logger
+const logger = LoggerHandler.getLogger('Server');
 
 // Initialize the DB connection
 require('./db/Connection');
