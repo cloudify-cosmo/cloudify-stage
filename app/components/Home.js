@@ -91,7 +91,7 @@ export default class Home extends Component {
 }
 
 Home.propTypes = {
-    contextParams: PropTypes.shape([]).isRequired,
+    contextParams: PropTypes.arrayOf(PropTypes.shape({ context: PropTypes.shape({}) })).isRequired,
     emptyPages: PropTypes.bool.isRequired,
     isMaintenance: PropTypes.bool.isRequired,
     navigateTo404: PropTypes.func.isRequired,

@@ -112,13 +112,13 @@ Pages.propTypes = {
     onSelectPage: PropTypes.func,
     pages: PropTypes.arrayOf(
         PropTypes.shape({
+            custom: PropTypes.bool,
             id: PropTypes.string,
             name: PropTypes.string,
-            selected: PropTypes.string,
+            selected: PropTypes.bool,
             templates: PropTypes.arrayOf(PropTypes.string),
             updatedAt: PropTypes.string,
-            updatedBy: PropTypes.string,
-            custom: PropTypes.bool
+            updatedBy: PropTypes.string
         })
     )
 };

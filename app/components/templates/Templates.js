@@ -150,7 +150,10 @@ Templates.propTypes = {
     templates: PropTypes.arrayOf(
         PropTypes.shape({
             custom: PropTypes.bool,
-            data: PropTypes.arrayOf(PropTypes.shape({ roles: [], tenants: [] })),
+            data: PropTypes.shape({
+                roles: PropTypes.arrayOf(PropTypes.string),
+                tenants: PropTypes.arrayOf(PropTypes.string)
+            }),
             id: PropTypes.string,
             pages: PropTypes.arrayOf(PropTypes.string),
             updatedAt: PropTypes.string,

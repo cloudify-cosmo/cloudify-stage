@@ -137,8 +137,8 @@ export default class LoginPage extends Component {
 
 LoginPage.propTypes = {
     isLoggingIn: PropTypes.bool.isRequired,
-    location: PropTypes.string.isRequired,
     onLogin: PropTypes.func.isRequired,
+    location: PropTypes.shape({ search: PropTypes.string }),
     loginError: PropTypes.string,
     username: PropTypes.string,
     whiteLabel: PropTypes.shape({
@@ -150,6 +150,7 @@ LoginPage.propTypes = {
 };
 
 LoginPage.defaultProps = {
+    location: { search: '' },
     loginError: null,
     username: '',
     whiteLabel: PropTypes.shape({

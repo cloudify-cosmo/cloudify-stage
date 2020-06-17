@@ -25,9 +25,9 @@ export default class InstallWidgetModal extends Component {
         scriptError: ''
     };
 
-    componentDidUpdate(prevProps) {
-        const { open } = this.props;
-        if (!prevProps.open && open) {
+    componentDidUpdate(prevProps, prevState) {
+        const { open } = this.state;
+        if (!prevState.open && open) {
             this.setState(InstallWidgetModal.initialState);
         }
     }
@@ -147,7 +147,6 @@ export default class InstallWidgetModal extends Component {
 InstallWidgetModal.propTypes = {
     buttonLabel: PropTypes.string.isRequired,
     header: PropTypes.string.isRequired,
-    open: PropTypes.bool.isRequired,
     trigger: PropTypes.node.isRequired,
     className: PropTypes.string,
     onWidgetInstalled: PropTypes.func

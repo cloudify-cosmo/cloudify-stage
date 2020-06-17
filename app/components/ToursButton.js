@@ -73,7 +73,7 @@ export default class ToursButton extends React.Component {
 
 ToursButton.propTypes = {
     tours: PropTypes.arrayOf(
-        PropTypes.shape({ id: PropTypes.string, name: PropTypes.string, steps: PropTypes.shape({}) })
+        PropTypes.shape({ id: PropTypes.string, name: PropTypes.string, steps: PropTypes.arrayOf(PropTypes.shape({})) })
     ).isRequired,
     onTourStart: PropTypes.func.isRequired
 };

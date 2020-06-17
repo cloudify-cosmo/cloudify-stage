@@ -23,7 +23,7 @@ class ScrollToTop extends Component {
 }
 
 ScrollToTop.propTypes = {
-    location: PropTypes.string.isRequired,
+    location: PropTypes.shape({}).isRequired,
     children: PropTypes.node.isRequired
 };
 

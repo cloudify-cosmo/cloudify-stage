@@ -23,7 +23,7 @@ export default function TemplateList({ style, templates }) {
 }
 
 TemplateList.propTypes = {
-    templates: PropTypes.arrayOf(PropTypes.shape({})),
+    templates: PropTypes.arrayOf(PropTypes.string),
     style: PropTypes.shape({})
 };
 

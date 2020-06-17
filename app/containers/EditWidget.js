@@ -64,7 +64,7 @@ class EditWidgetComponent extends React.Component {
 EditWidgetComponent.propTypes = {
     widget: PropTypes.shape({}).isRequired,
     onWidgetEdited: PropTypes.func.isRequired,
-    configDef: PropTypes.shape([]).isRequired,
+    configDef: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
     configuration: PropTypes.shape({}).isRequired
 };
 

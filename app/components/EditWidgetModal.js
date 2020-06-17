@@ -28,8 +28,8 @@ export default class EditWidgetModal extends Component {
     };
 
     componentDidUpdate(prevProps) {
-        const { open } = this.props;
-        if (!prevProps.open && open) {
+        const { show } = this.props;
+        if (!prevProps.show && show) {
             this.setState(EditWidgetModal.initialState(this.props));
         }
     }
@@ -113,6 +113,5 @@ EditWidgetModal.propTypes = {
     widget: PropTypes.shape({ id: PropTypes.string }).isRequired,
     show: PropTypes.bool.isRequired,
     onWidgetEdited: PropTypes.func.isRequired,
-    onHideConfig: PropTypes.func.isRequired,
-    open: PropTypes.bool.isRequired
+    onHideConfig: PropTypes.func.isRequired
 };

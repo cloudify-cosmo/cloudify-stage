@@ -92,13 +92,11 @@ export default class Tenants extends Component {
 
 Tenants.propTypes = {
     manager: PropTypes.shape({
-        tenants: PropTypes.arrayOf(
-            PropTypes.shape({
-                items: PropTypes.arrayOf(PropTypes.shape({ name: PropTypes.string })),
-                isFetching: PropTypes.bool,
-                selected: PropTypes.string
-            })
-        )
+        tenants: PropTypes.shape({
+            items: PropTypes.arrayOf(PropTypes.shape({ name: PropTypes.string })),
+            isFetching: PropTypes.bool,
+            selected: PropTypes.string
+        })
     }).isRequired,
     onTenantChange: PropTypes.func.isRequired,
     onTenantsRefresh: PropTypes.func.isRequired
