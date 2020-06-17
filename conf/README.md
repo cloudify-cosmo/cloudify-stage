@@ -56,7 +56,9 @@ This configuration can be overriden by: `/dist/userData/userConfig.json`.
   * `mapUrl` - string, URL for the map service, used to check service availability
   * `tilesUrlTemplate` - string, template map tiles provider URL, check URL template section at [TileLayer page](https://leafletjs.com/reference-1.5.0.html#tilelayer) for details
   * `attribution` -  string, attribution data to be displayed as small text box on a map,  HTML allowed, it is required by map providers, check [Leaflet-providers preview](https://leaflet-extras.github.io/leaflet-providers/preview/) for examples and requirements from different providers
-  
+
+* `logLevel` - string, default logging level, allowed strings are defined by [Winston](https://github.com/winstonjs/winston) logger
+
 * `whiteLabel` - object, Cloudify UI white-labelling configuration
   * `pageTitle` - string, page title
   * `logoUrl` - string, relative URL to logo image

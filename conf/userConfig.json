@@ -4,6 +4,7 @@
     "tilesUrlTemplate": "https://maps.wikimedia.org/osm-intl/{z}/{x}/{y}{r}.png",
     "attribution": "<a href='https://wikimediafoundation.org/wiki/Maps_Terms_of_Use'>Wikimedia</a>"
   },
+  "logLevel": "warn",
   "whiteLabel": {
     "pageTitle": "Cloudify Console",
     "logoUrl": "/console/static/images/logo.png",
