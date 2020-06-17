@@ -58,6 +58,7 @@ groupadd -fr stage_group
 getent passwd stage_user >/dev/null || useradd -r -g stage_group -d /opt/cloudify-stage -s /sbin/nologin stage_user
 usermod -aG cfyuser stage_user
 usermod -aG stage_group cfyuser
+getent group nginx >/dev/null || groupadd -r nginx
 usermod -aG stage_group nginx
 
 
