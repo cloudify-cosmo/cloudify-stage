@@ -36,11 +36,26 @@ GridItem.propTypes = {
     children: PropTypes.node.isRequired,
     className: PropTypes.string,
     onItemAdded: PropTypes.func,
-    onItemRemoved: PropTypes.func
+    onItemRemoved: PropTypes.func,
+
+    // FIXME: These props are only used outside, in Grid component
+    // eslint-disable-next-line react/no-unused-prop-types
+    x: PropTypes.number,
+    // eslint-disable-next-line react/no-unused-prop-types
+    y: PropTypes.number,
+    // eslint-disable-next-line react/no-unused-prop-types
+    width: PropTypes.number,
+    // eslint-disable-next-line react/no-unused-prop-types
+    height: PropTypes.number
 };
 
 GridItem.defaultProps = {
     className: '',
     onItemAdded: _.noop,
-    onItemRemoved: _.noop
+    onItemRemoved: _.noop,
+
+    x: 0,
+    y: 0,
+    width: 10,
+    height: 5
 };
