@@ -59,6 +59,7 @@ getent passwd stage_user >/dev/null || useradd -r -g stage_group -d /opt/cloudif
 usermod -aG cfyuser stage_user
 usermod -aG stage_group cfyuser
 getent group nginx >/dev/null || groupadd -r nginx
+getent passwd nginx >/dev/null || useradd -r -g nginx -s /sbin/nologin -d /var/cache/nginx -c "nginx user" nginx
 usermod -aG stage_group nginx
 
 
