@@ -33,7 +33,7 @@ module.exports = (() => {
         return logger;
     }
 
-    function getLogger(category, level = logLevel) {
+    function getLogger(category) {
         const logFormat = winston.format.printf(({ level, message, label, timestamp }) => {
             const instanceNumber = parseInt(process.env.NODE_APP_INSTANCE);
             return `${instanceNumber >= 0 ? `[${instanceNumber}]` : ''}[${timestamp}][${label}] ${_.upperCase(
@@ -42,7 +42,7 @@ module.exports = (() => {
         });
 
         const logger = winston.loggers.add(category, {
-            level,
+            level: logLevel,
             transports: [new winston.transports.Console()],
             format: winston.format.combine(
                 winston.format.label({ label: category }),
@@ -54,8 +54,8 @@ module.exports = (() => {
         return getArgsSupportedLogger(logger);
     }
 
-    function getStream(category, level = logLevel) {
-        const logger = getLogger(category, level);
+    function getStream(category) {
+        const logger = getLogger(category);
         return {
             write: message => logger.info(_.trim(message))
         };
