@@ -2,32 +2,11 @@
  * Created by kinneretzin on 13/12/2016.
  */
 
+import _ from 'lodash';
 import PropTypes from 'prop-types';
-
 import React, { Component } from 'react';
 
 export default class GridItem extends Component {
-    static propTypes = {
-        id: PropTypes.string.isRequired,
-        x: PropTypes.number,
-        y: PropTypes.number,
-        width: PropTypes.number,
-        height: PropTypes.number,
-        className: PropTypes.string,
-        onItemAdded: PropTypes.func,
-        onItemRemoved: PropTypes.func,
-        maximized: PropTypes.bool
-    };
-
-    static defaultProps = {
-        x: 0,
-        y: 0,
-        width: 10,
-        height: 5,
-        className: '',
-        maximized: false
-    };
-
     componentDidMount() {
         const { id, onItemAdded } = this.props;
         if (onItemAdded) {
@@ -51,3 +30,17 @@ export default class GridItem extends Component {
         );
     }
 }
+
+GridItem.propTypes = {
+    id: PropTypes.string.isRequired,
+    children: PropTypes.node.isRequired,
+    className: PropTypes.string,
+    onItemAdded: PropTypes.func,
+    onItemRemoved: PropTypes.func
+};
+
+GridItem.defaultProps = {
+    className: '',
+    onItemAdded: _.noop,
+    onItemRemoved: _.noop
+};

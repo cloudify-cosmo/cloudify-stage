@@ -9,12 +9,6 @@ import EventBus from '../utils/EventBus';
 import { Dropdown, Icon, Input, Loader } from './basic';
 
 export default class Tenants extends Component {
-    static propTypes = {
-        manager: PropTypes.object.isRequired,
-        onTenantChange: PropTypes.func.isRequired,
-        onTenantsRefresh: PropTypes.func.isRequired
-    };
-
     constructor(props) {
         super(props);
 
@@ -95,3 +89,17 @@ export default class Tenants extends Component {
         );
     }
 }
+
+Tenants.propTypes = {
+    manager: PropTypes.shape({
+        tenants: PropTypes.arrayOf(
+            PropTypes.shape({
+                items: PropTypes.arrayOf(PropTypes.shape({ name: PropTypes.string })),
+                isFetching: PropTypes.bool,
+                selected: PropTypes.string
+            })
+        )
+    }).isRequired,
+    onTenantChange: PropTypes.func.isRequired,
+    onTenantsRefresh: PropTypes.func.isRequired
+};

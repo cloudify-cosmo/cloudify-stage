@@ -10,14 +10,6 @@ import WidgetParamsHandler from '../utils/WidgetParamsHandler';
 import { ErrorMessage } from './basic';
 
 export default class WidgetDynamicContent extends Component {
-    static propTypes = {
-        widget: PropTypes.object.isRequired,
-        manager: PropTypes.object.isRequired,
-        data: PropTypes.object.isRequired,
-        onWidgetConfigUpdate: PropTypes.func,
-        fetchWidgetData: PropTypes.func.isRequired
-    };
-
     constructor(props) {
         super(props);
         this.state = {
@@ -313,3 +305,35 @@ export default class WidgetDynamicContent extends Component {
         );
     }
 }
+
+WidgetDynamicContent.propTypes = {
+    context: PropTypes.shape({}).isRequired,
+    data: PropTypes.shape({ data: PropTypes.any, error: PropTypes.string }).isRequired,
+    fetchWidgetData: PropTypes.func.isRequired,
+    onWidgetConfigUpdate: PropTypes.func.isRequired,
+    manager: PropTypes.shape({ tenants: PropTypes.shape({ selected: PropTypes.string }) }).isRequired,
+    widget: PropTypes.shape({
+        configuration: PropTypes.shape({
+            pollingTime: PropTypes.number,
+            pageSize: PropTypes.number
+        }),
+        id: PropTypes.string,
+        name: PropTypes.string,
+        definition: PropTypes.shape({
+            events: PropTypes.arrayOf(
+                PropTypes.shape({
+                    selector: PropTypes.string,
+                    event: PropTypes.string,
+                    fn: PropTypes.func
+                })
+            ),
+            fetchUrl: PropTypes.string,
+            fetchData: PropTypes.func,
+            isReact: PropTypes.bool,
+            postRender: PropTypes.func,
+            render: PropTypes.func,
+            showHeader: PropTypes.bool,
+            showBorder: PropTypes.bool
+        })
+    }).isRequired
+};

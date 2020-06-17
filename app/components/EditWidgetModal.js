@@ -14,15 +14,6 @@ export default class EditWidgetModal extends Component {
         this.state = EditWidgetModal.initialState(props);
     }
 
-    static propTypes = {
-        configuration: PropTypes.object.isRequired,
-        configDef: PropTypes.array.isRequired,
-        widget: PropTypes.object.isRequired,
-        show: PropTypes.bool.isRequired,
-        onWidgetEdited: PropTypes.func.isRequired,
-        onHideConfig: PropTypes.func.isRequired
-    };
-
     static initialState = props => {
         const fields = {};
 
@@ -107,3 +98,21 @@ export default class EditWidgetModal extends Component {
         );
     }
 }
+
+EditWidgetModal.propTypes = {
+    configuration: PropTypes.shape({}).isRequired,
+    configDef: PropTypes.arrayOf(
+        PropTypes.shape({
+            default: PropTypes.any,
+            id: PropTypes.string,
+            name: PropTypes.string,
+            hidden: PropTypes.bool,
+            value: PropTypes.any
+        })
+    ).isRequired,
+    widget: PropTypes.shape({ id: PropTypes.string }).isRequired,
+    show: PropTypes.bool.isRequired,
+    onWidgetEdited: PropTypes.func.isRequired,
+    onHideConfig: PropTypes.func.isRequired,
+    open: PropTypes.bool.isRequired
+};

@@ -2,6 +2,7 @@
  * Created by kinneretzin on 29/08/2016.
  */
 
+import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 
 import SideBar from '../containers/SideBar';
@@ -88,3 +89,23 @@ export default class Home extends Component {
         );
     }
 }
+
+Home.propTypes = {
+    contextParams: PropTypes.shape([]).isRequired,
+    emptyPages: PropTypes.bool.isRequired,
+    isMaintenance: PropTypes.bool.isRequired,
+    navigateTo404: PropTypes.func.isRequired,
+    navigateToError: PropTypes.func.isRequired,
+    navigateToMaintenancePage: PropTypes.func.isRequired,
+    onClearContext: PropTypes.func.isRequired,
+    onSetContextValue: PropTypes.func.isRequired,
+    onSetDrilldownContext: PropTypes.func.isRequired,
+    onStorePageId: PropTypes.func.isRequired,
+    pageId: PropTypes.string.isRequired,
+    pageName: PropTypes.string.isRequired,
+    selectedPage: PropTypes.shape({})
+};
+
+Home.defaultProps = {
+    selectedPage: null
+};

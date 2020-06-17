@@ -3,60 +3,54 @@
  */
 
 import PropTypes from 'prop-types';
-
-import React, { Component } from 'react';
+import React from 'react';
 
 import Banner from '../containers/banner/Banner';
 import CurrentLicense from './license/CurrentLicense';
 import CurrentVersion from './license/CurrentVersion';
 import EulaLink from './license/EulaLink';
 
-export default class AboutModal extends Component {
-    constructor(props) {
-        super(props);
-    }
+export default function AboutModal({ canLicenseManagement, license, onHide, onLicenseManagement, open, version }) {
+    const { Button, CancelButton, Divider, Header, Modal } = Stage.Basic;
 
-    static propTypes = {
-        open: PropTypes.bool.isRequired,
-        onHide: PropTypes.func.isRequired,
-        version: PropTypes.object.isRequired,
-        license: PropTypes.object,
-        onLicenseManagment: PropTypes.func
-    };
+    return (
+        <Modal open={open} onClose={onHide}>
+            <Modal.Header className="mainBackgroundColor" style={{ padding: 0, paddingLeft: 10 }}>
+                <Banner hideOnSmallScreen={false} />
+            </Modal.Header>
 
-    static defaultProps = {
-        onLicenseManagment: _.noop
-    };
+            <Modal.Content>
+                <Header>Version Details</Header>
+                <Divider />
+                <CurrentVersion version={version} />
 
-    render() {
-        const { canLicenseManagement, license, onHide, onLicenseManagment, open, version } = this.props;
-        const { Button, CancelButton, Divider, Header, Modal } = Stage.Basic;
+                <Header>License Details</Header>
+                <Divider />
+                <CurrentLicense license={license} />
 
-        return (
-            <Modal open={open} onClose={onHide}>
-                <Modal.Header className="mainBackgroundColor" style={{ padding: 0, paddingLeft: 10 }}>
-                    <Banner hideOnSmallScreen={false} />
-                </Modal.Header>
+                <EulaLink />
+            </Modal.Content>
 
-                <Modal.Content>
-                    <Header>Version Details</Header>
-                    <Divider />
-                    <CurrentVersion version={version} />
-
-                    <Header>License Details</Header>
-                    <Divider />
-                    <CurrentLicense license={license} />
-
-                    <EulaLink />
-                </Modal.Content>
-
-                <Modal.Actions>
-                    {canLicenseManagement && (
-                        <Button content="License Management" icon="key" color="yellow" onClick={onLicenseManagment} />
-                    )}
-                    <CancelButton content="Close" onClick={onHide} />
-                </Modal.Actions>
-            </Modal>
-        );
-    }
+            <Modal.Actions>
+                {canLicenseManagement && (
+                    <Button content="License Management" icon="key" color="yellow" onClick={onLicenseManagement} />
+                )}
+                <CancelButton content="Close" onClick={onHide} />
+            </Modal.Actions>
+        </Modal>
+    );
 }
+
+AboutModal.propTypes = {
+    canLicenseManagement: PropTypes.bool.isRequired,
+    open: PropTypes.bool.isRequired,
+    onHide: PropTypes.func.isRequired,
+    version: PropTypes.shape({}).isRequired,
+    license: PropTypes.shape({}),
+    onLicenseManagement: PropTypes.func
+};
+
+AboutModal.defaultProps = {
+    license: {},
+    onLicenseManagement: _.noop
+};

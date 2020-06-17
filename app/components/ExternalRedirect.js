@@ -2,16 +2,18 @@
  * Created by jakubniezgoda on 23/04/2018.
  */
 
-import React, { Component } from 'react';
+import PropTypes from 'prop-types';
+import React, { useEffect } from 'react';
 
-export class ExternalRedirect extends Component {
-    componentDidMount() {
-        const { url } = this.props;
+export default function ExternalRedirect({ url }) {
+    useEffect(() => {
+        // eslint-disable-next-line scanjs-rules/assign_to_location
         window.location = url;
-    }
+    }, []);
 
-    render() {
-        const { url } = this.props;
-        return <section>Redirecting to {url}...</section>;
-    }
+    return <section>Redirecting to {url}...</section>;
 }
+
+ExternalRedirect.propTypes = {
+    url: PropTypes.string.isRequired
+};

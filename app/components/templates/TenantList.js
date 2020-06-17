@@ -2,56 +2,57 @@
  * Created by pposel on 11/08/2017.
  */
 
+import _ from 'lodash';
 import PropTypes from 'prop-types';
-import React, { Component } from 'react';
+import React from 'react';
 
 import Const from '../../utils/consts';
 import { Segment, Icon, Divider, List, Message, PopupConfirm } from '../basic';
 
-export default class TenantList extends Component {
-    static propTypes = {
-        tenants: PropTypes.any.isRequired,
-        onDelete: PropTypes.func,
-        custom: PropTypes.bool,
-        style: PropTypes.any
-    };
+export default function TenantList({ custom, onDelete, style, tenants }) {
+    return (
+        <Segment style={style}>
+            <Icon name="male" /> Tenants
+            <Divider />
+            <List divided relaxed verticalAlign="middle" className="light">
+                {tenants.map(item => {
+                    return (
+                        <List.Item key={item}>
+                            {item === Const.DEFAULT_ALL ? 'all' : item}
 
-    static defaultProps = {
-        tenants: []
-    };
-
-    render() {
-        const { custom, onDelete, style, tenants } = this.props;
-        return (
-            <Segment style={style}>
-                <Icon name="male" /> Tenants
-                <Divider />
-                <List divided relaxed verticalAlign="middle" className="light">
-                    {tenants.map(item => {
-                        return (
-                            <List.Item key={item}>
-                                {item === Const.DEFAULT_ALL ? 'all' : item}
-
-                                {custom && _.size(tenants) > 1 && (
-                                    <PopupConfirm
-                                        trigger={
-                                            <Icon
-                                                link
-                                                name="remove"
-                                                className="right floated"
-                                                onClick={e => e.stopPropagation()}
-                                            />
-                                        }
-                                        content="Are you sure to remove this tenant from template?"
-                                        onConfirm={() => onDelete(item)}
-                                    />
-                                )}
-                            </List.Item>
-                        );
-                    })}
-                    {_.isEmpty(tenants) && <Message content="No tenants available" />}
-                </List>
-            </Segment>
-        );
-    }
+                            {custom && _.size(tenants) > 1 && (
+                                <PopupConfirm
+                                    trigger={
+                                        <Icon
+                                            link
+                                            name="remove"
+                                            className="right floated"
+                                            onClick={e => e.stopPropagation()}
+                                        />
+                                    }
+                                    content="Are you sure to remove this tenant from template?"
+                                    onConfirm={() => onDelete(item)}
+                                />
+                            )}
+                        </List.Item>
+                    );
+                })}
+                {_.isEmpty(tenants) && <Message content="No tenants available" />}
+            </List>
+        </Segment>
+    );
 }
+
+TenantList.propTypes = {
+    custom: PropTypes.bool,
+    onDelete: PropTypes.func,
+    style: PropTypes.shape({}),
+    tenants: PropTypes.arrayOf(PropTypes.string)
+};
+
+TenantList.defaultProps = {
+    custom: false,
+    onDelete: _.noop,
+    style: {},
+    tenants: []
+};

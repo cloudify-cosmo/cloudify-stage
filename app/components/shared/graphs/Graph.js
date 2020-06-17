@@ -172,49 +172,6 @@ export default class Graph extends Component {
      */
     static MAX_NUMBER_OF_CHARTS = 5;
 
-    /**
-     * propTypes
-     *
-     * @property {object[]} data charts input data (see class description for the format details)
-     * @property {string} type graph chart type ({@link Graph.LINE_CHART_TYPE}, {@link Graph.BAR_CHART_TYPE} or {@link Graph.AREA_CHART_TYPE})
-     * @property {object[]} charts charts configuration (see class description for format details)
-     * @property {string} [xDataKey=Graph.DEFAULT_X_DATA_KEY] X-axis key name, must match key in data object
-     * @property {boolean} [showXAxis=true] should show X-axis
-     * @property {boolean} [showYAxis=true] should show Y-axis
-     * @property {boolean} [showBrush=false] should show brush (zoom)
-     * @property {boolean} [showTooltip=true] should show tooltip on line
-     * @property {boolean} [showLegend=true] should show legend
-     * @property {string} [dataTimeFormat=undefined] input date format, by default not specified
-     * @property {string} [xAxisTimeFormat='DD-MM-YYYY HH:mm'] format of X-axis tick label
-     * @property {object} [xAxisTick={fontSize:'10px'}] stylesheet for X-axis tick
-     * @property {object} [yAxisTick={fontSize:'10px'}] stylesheet for Y-axis tick
-     * @property {object} [tooltipFormatter=undefined] callback function to format the text of the tooltip
-     * @property {boolean} [yAxisAllowDecimals=true] whether to allow decimals in Y-axis tick
-     * @property {object} [yAxisDataFormatter=undefined] format of Y-axis tick label
-     */
-    static propTypes = {
-        data: PropTypes.array.isRequired,
-        type: PropTypes.string.isRequired,
-        charts: PropTypes.array.isRequired,
-        xDataKey: PropTypes.string
-    };
-
-    static defaultProps = {
-        xDataKey: Graph.DEFAULT_X_DATA_KEY,
-        showXAxis: true,
-        showYAxis: true,
-        showBrush: false,
-        showTooltip: true,
-        showLegend: true,
-        dataTimeFormat: undefined,
-        xAxisTimeFormat: 'DD-MM-YYYY HH:mm',
-        xAxisTick: { fontSize: '10px' },
-        yAxisTick: { fontSize: '10px' },
-        tooltipFormatter: undefined,
-        yAxisAllowDecimals: true,
-        yAxisDataFormatter: undefined
-    };
-
     render() {
         const {
             charts,
@@ -382,3 +339,119 @@ export default class Graph extends Component {
         );
     }
 }
+
+Graph.propTypes = {
+    /**
+     * charts configuration (see class description for format details)
+     */
+    charts: PropTypes.arrayOf(
+        PropTypes.shape({
+            name: PropTypes.string,
+            label: PropTypes.string,
+            axisLabel: PropTypes.string
+        })
+    ).isRequired,
+
+    /**
+     * data charts input data (see class description for the format details)
+     */
+    data: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
+
+    /**
+     * graph chart type ({@link Graph.LINE_CHART_TYPE}, {@link Graph.BAR_CHART_TYPE} or {@link Graph.AREA_CHART_TYPE})
+     */
+    type: PropTypes.string.isRequired,
+
+    /**
+     * input date format, by default not specified
+     */
+    dataTimeFormat: PropTypes.string,
+
+    /**
+     * function to be called on graph click
+     */
+    onClick: PropTypes.func,
+
+    /**
+     * should show brush (zoom)
+     */
+    showBrush: PropTypes.bool,
+
+    /**
+     * should show legend
+     */
+    showLegend: PropTypes.bool,
+
+    /**
+     * should show tooltip on line
+     */
+    showTooltip: PropTypes.bool,
+
+    /**
+     * should show X-axis
+     */
+    showXAxis: PropTypes.bool,
+
+    /**
+     * should show Y-axis
+     */
+    showYAxis: PropTypes.bool,
+
+    /**
+     * syncId to sync tooltip position (see recharts documentation for details)
+     */
+    syncId: PropTypes.string,
+
+    /**
+     * callback function to format the text of the tooltip
+     */
+    tooltipFormatter: PropTypes.func,
+
+    /**
+     * stylesheet for X-axis tick
+     */
+    xAxisTick: PropTypes.shape({}),
+
+    /**
+     * format of X-axis tick label
+     */
+    xAxisTimeFormat: PropTypes.string,
+
+    /**
+     * X-axis key name, must match key in data object
+     */
+    xDataKey: PropTypes.string,
+
+    /**
+     * whether to allow decimals in Y-axis tick
+     */
+    yAxisAllowDecimals: PropTypes.bool,
+
+    /**
+     * format of Y-axis tick label
+     */
+    yAxisDataFormatter: PropTypes.func,
+
+    /**
+     * stylesheet for Y-axis tick
+     */
+    yAxisTick: PropTypes.shape({})
+};
+
+Graph.defaultProps = {
+    dataTimeFormat: undefined,
+    onClick: _.noop,
+    showBrush: false,
+    showLegend: true,
+    showTooltip: true,
+    showXAxis: true,
+    showYAxis: true,
+    syncId: '',
+    tooltipFormatter: _.noop,
+    xAxisTick: { fontSize: '10px' },
+    xAxisTimeFormat: 'DD-MM-YYYY HH:mm',
+    xDataKey: Graph.DEFAULT_X_DATA_KEY,
+    yAxisAllowDecimals: true,
+    yAxisDataFormatter: _.noop,
+    yAxisTick: { fontSize: '10px' }
+};

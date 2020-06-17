@@ -4,10 +4,10 @@
 
 import 'jquery-ui/ui/widgets/sortable';
 import PropTypes from 'prop-types';
-
 import React, { Component } from 'react';
+
 import AddPageButton from '../containers/AddPageButton';
-import { Confirm, Message } from './basic';
+import { Confirm } from './basic';
 
 export default class PagesList extends Component {
     constructor(props) {
@@ -16,16 +16,6 @@ export default class PagesList extends Component {
         this.pagesRef = React.createRef();
         this.state = {};
     }
-
-    static propTypes = {
-        onPageSelected: PropTypes.func.isRequired,
-        onPageRemoved: PropTypes.func.isRequired,
-        onPageReorder: PropTypes.func.isRequired,
-        onSidebarClose: PropTypes.func.isRequired,
-        pages: PropTypes.array.isRequired,
-        selected: PropTypes.string,
-        isEditMode: PropTypes.bool.isRequired
-    };
 
     componentDidMount() {
         const { onPageReorder } = this.props;
@@ -40,7 +30,7 @@ export default class PagesList extends Component {
         this.enableReorderInEditMode();
     }
 
-    componentDidUpdate(prevProps, prevState) {
+    componentDidUpdate(/* prevProps, prevState */) {
         this.enableReorderInEditMode();
     }
 
@@ -117,3 +107,24 @@ export default class PagesList extends Component {
         );
     }
 }
+
+PagesList.propTypes = {
+    onPageSelected: PropTypes.func.isRequired,
+    onPageRemoved: PropTypes.func.isRequired,
+    onPageReorder: PropTypes.func.isRequired,
+    pages: PropTypes.arrayOf(
+        PropTypes.shape({
+            id: PropTypes.string,
+            name: PropTypes.string,
+            isDrillDown: PropTypes.bool,
+            tabs: PropTypes.arrayOf(PropTypes.shape({})),
+            widgets: PropTypes.arrayOf(PropTypes.shape({}))
+        })
+    ).isRequired,
+    selected: PropTypes.string,
+    isEditMode: PropTypes.bool.isRequired
+};
+
+PagesList.defaultProps = {
+    selected: ''
+};

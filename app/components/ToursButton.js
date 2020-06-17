@@ -12,15 +12,9 @@ export default class ToursButton extends React.Component {
         super(props, context);
 
         this.state = {
-            open: false,
             hovered: false
         };
     }
-
-    static propTypes = {
-        tours: PropTypes.array.isRequired,
-        onTourStart: PropTypes.func.isRequired
-    };
 
     startTour(tour) {
         const { onTourStart } = this.props;
@@ -76,3 +70,10 @@ export default class ToursButton extends React.Component {
         );
     }
 }
+
+ToursButton.propTypes = {
+    tours: PropTypes.arrayOf(
+        PropTypes.shape({ id: PropTypes.string, name: PropTypes.string, steps: PropTypes.shape({}) })
+    ).isRequired,
+    onTourStart: PropTypes.func.isRequired
+};
