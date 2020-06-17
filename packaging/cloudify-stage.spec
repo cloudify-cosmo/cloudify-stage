@@ -14,7 +14,7 @@ Vendor:         Cloudify Platform Ltd.
 Packager:       Cloudify Platform Ltd.
 
 BuildRequires:  nodejs >= 12.16.1, rsync
-Requires:       nodejs >= 12.16.1, cloudify-rest-service, shadow-utils
+Requires:       nodejs >= 12.16.1, cloudify-rest-service, nginx, shadow-utils
 AutoReqProv:    no
 
 
@@ -58,6 +58,7 @@ groupadd -fr stage_group
 getent passwd stage_user >/dev/null || useradd -r -g stage_group -d /opt/cloudify-stage -s /sbin/nologin stage_user
 usermod -aG cfyuser stage_user
 usermod -aG stage_group cfyuser
+usermod -aG stage_group nginx
 
 
 %files
