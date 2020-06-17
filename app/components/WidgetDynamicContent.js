@@ -308,7 +308,7 @@ export default class WidgetDynamicContent extends Component {
 
 WidgetDynamicContent.propTypes = {
     context: PropTypes.shape({}).isRequired,
-    data: PropTypes.shape({ data: PropTypes.any, error: PropTypes.string }).isRequired,
+    data: PropTypes.shape({ data: PropTypes.any, error: ErrorMessage.propTypes.error }).isRequired,
     fetchWidgetData: PropTypes.func.isRequired,
     onWidgetConfigUpdate: PropTypes.func.isRequired,
     manager: PropTypes.shape({ tenants: PropTypes.shape({ selected: PropTypes.string }) }).isRequired,
@@ -327,7 +327,7 @@ WidgetDynamicContent.propTypes = {
                     fn: PropTypes.func
                 })
             ),
-            fetchUrl: PropTypes.string,
+            fetchUrl: PropTypes.oneOfType([PropTypes.string, PropTypes.objectOf(PropTypes.string)]),
             fetchData: PropTypes.func,
             isReact: PropTypes.bool,
             postRender: PropTypes.func,
