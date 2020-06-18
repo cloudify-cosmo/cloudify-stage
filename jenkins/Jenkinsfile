@@ -64,7 +64,7 @@ pipeline {
               echo 'Create RPM directory and copy all data from build stage to, for rpmbuild to run'
               sh """
                 cd && mkdir rpmbuild && cd rpmbuild
-                git clone https://github.com/cloudify-cosmo/cloudify-stage.git BUILD && cd BUILD
+                mkdir -p BUILD && cp -rf ${workspace}/${stage_dir}/. BUILD && cd BUILD
                 curl -fO "${cfy_manager_url}/${branch}/packaging/version_info" || curl -fO "${cfy_manager_url}/master/packaging/version_info"
               """
 
