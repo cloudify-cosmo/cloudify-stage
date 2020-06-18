@@ -1,3 +1,10 @@
+def secrets = [
+  [path: 'secret/jenkins/wikimedia', engineVersion: 2, secretValues: [
+    [envVar: 'WIKIMEDIA_ACCESS_TOKEN', vaultKey: 'access_token']]],
+]
+
+def configuration = [vaultUrl: "${env.VAULT_URL}",  vaultCredentialId: 'vault-app-role', engineVersion: 2]
+
 pipeline {
   agent {
     kubernetes {
@@ -23,6 +30,15 @@ pipeline {
   }
   
   stages {
+    stage('Prepare'){
+      steps {
+        dir("${stage_dir/conf}") {
+          withVault([configuration: configuration, vaultSecrets: secrets]) {
+            jq '".maps.accessToken = ${env.WIKIMEDIA_ACCESS_TOKEN}" app.json > app.json.tmp && cp app.json.tmp app.json'
+          }
+        }
+      }
+    }
     stage('Run Builds') {
       parallel {
         stage('Build') {
