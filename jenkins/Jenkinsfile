@@ -32,9 +32,13 @@ pipeline {
   stages {
     stage('Prepare'){
       steps {
-        dir("${stage_dir/conf}") {
-          withVault([configuration: configuration, vaultSecrets: secrets]) {
-            jq '".maps.accessToken = ${env.WIKIMEDIA_ACCESS_TOKEN}" app.json > app.json.tmp && cp app.json.tmp app.json'
+        container('node'){
+          dir("${stage_dir}/conf") {
+            withVault([configuration: configuration, vaultSecrets: secrets]) {
+              sh """
+                jq '.maps.accessToken = "${env.WIKIMEDIA_ACCESS_TOKEN}"' app.json > app.json.tmp && cp app.json.tmp app.json
+              """
+            }
           }
         }
       }
