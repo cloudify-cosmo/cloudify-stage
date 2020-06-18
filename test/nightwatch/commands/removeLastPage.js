@@ -5,5 +5,8 @@
 exports.command = function() {
     const section = this.moveToEditMode().page.page().section.sidebar;
 
-    return section.moveToElement('@lastPage', 10, 10).clickElement('@lastPageRemoveButton');
+    return section
+        .moveToElement('@lastPage', 10, 10)
+        .clickElement('@lastPageRemoveButton')
+        .clickElement('button.primary');
 };
