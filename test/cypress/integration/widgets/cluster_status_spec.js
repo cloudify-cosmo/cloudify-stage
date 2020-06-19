@@ -44,12 +44,14 @@ describe('Cluster Status', () => {
     };
 
     it('is fetched periodically', () => {
-        // Check if periodic status check fetches only summary when no Cluster Status widget is present on active page
-        cy.get('.dashboardPageMenuItem').click();
-        cy.location('pathname').should('be.equal', '/console/page/dashboard');
+        cy.log(
+            'Check if periodic status check fetches only summary when no Cluster Status widget is present on active page'
+        );
         cy.wait('@clusterStatusSummary', clusterStatusFetchTimeout);
 
-        // Check if periodic status check fetches full status when Cluster Status widget is present on active page
+        cy.log(
+            'Check if periodic status check fetches full status when Cluster Status widget is present on active page'
+        );
         cy.get('.admin_operationsPageMenuItem').click();
         cy.location('pathname').should('be.equal', '/console/page/admin_operations');
         cy.wait('@clusterStatusFull', clusterStatusFetchTimeout);
@@ -83,7 +85,7 @@ describe('Cluster Status', () => {
 
     it('is in sync between Cluster Status widget and system status icon', () => {
         const checkOverallStatus = (overallStatus, expectedManagerStatus, expectedDbStatus, expectedBrokerStatus) => {
-            // Check system status icon and Cluster Status widget
+            cy.log('Check system status icon and Cluster Status widget');
             let iconColor = 'gray';
             if (overallStatus === 'OK') {
                 iconColor = 'green';
@@ -97,7 +99,7 @@ describe('Cluster Status', () => {
                 checkServicesStatus(true, expectedManagerStatus, expectedDbStatus, expectedBrokerStatus);
             });
 
-            // Check system status popup content
+            cy.log('Check system status popup content');
             cy.get('.headerBar i.heartbeat.statusIcon').trigger('mouseover');
             cy.wait('@clusterStatusFull', clusterStatusFetchTimeout);
             cy.get('table.servicesData').within(() => {

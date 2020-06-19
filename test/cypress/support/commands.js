@@ -27,7 +27,10 @@ const getCommonHeaders = () => ({
 Cypress.Commands.add('restoreState', () => cy.restoreLocalStorage());
 
 Cypress.Commands.add('waitUntilLoaded', () => {
-    cy.get('#loader', { timeout: 20000 }).should('be.not.visible', true);
+    cy.log('Wait for splash screen loader to disappear');
+    cy.get('#loader', { timeout: 20000 }).should('be.not.visible');
+    cy.log('Wait for widgets loaders to disappear');
+    cy.get('div.loader', { timeout: 10000 }).should('not.be.visible');
 });
 
 Cypress.Commands.add('uploadLicense', license =>
