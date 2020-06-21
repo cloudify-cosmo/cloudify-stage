@@ -1,6 +1,6 @@
 def secrets = [
-  [path: 'secret/jenkins/wikimedia', engineVersion: 2, secretValues: [
-    [envVar: 'WIKIMEDIA_ACCESS_TOKEN', vaultKey: 'access_token']]],
+  [path: 'secret/jenkins/maps', engineVersion: 2, secretValues: [
+    [envVar: 'MAPS_ACCESS_TOKEN', vaultKey: 'access_token']]],
 ]
 
 def configuration = [vaultUrl: "${env.VAULT_URL}",  vaultCredentialId: 'vault-app-role', engineVersion: 2]
@@ -36,7 +36,7 @@ pipeline {
           dir("${stage_dir}/conf") {
             withVault([configuration: configuration, vaultSecrets: secrets]) {
               sh """
-                jq '.maps.accessToken = "${env.WIKIMEDIA_ACCESS_TOKEN}"' app.json > app.json.tmp && cp app.json.tmp app.json
+                jq '.maps.accessToken = "${env.MAPS_ACCESS_TOKEN}"' app.json > app.json.tmp && mv app.json.tmp app.json
               """
             }
           }

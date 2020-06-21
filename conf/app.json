@@ -48,6 +48,6 @@
     "portalUrl": ""
   },
   "maps": {
-    "accessToken": "<TOKEN>"
+    "accessToken": ""
   }
 }
