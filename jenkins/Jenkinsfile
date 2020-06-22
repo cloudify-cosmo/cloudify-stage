@@ -1,3 +1,10 @@
+def secrets = [
+  [path: 'secret/jenkins/maps', engineVersion: 2, secretValues: [
+    [envVar: 'MAPS_ACCESS_TOKEN', vaultKey: 'access_token']]],
+]
+
+def configuration = [vaultUrl: "${env.VAULT_URL}",  vaultCredentialId: 'vault-app-role', engineVersion: 2]
+
 pipeline {
   agent {
     kubernetes {
@@ -23,6 +30,19 @@ pipeline {
   }
   
   stages {
+    stage('Prepare'){
+      steps {
+        container('node'){
+          dir("${stage_dir}/conf") {
+            withVault([configuration: configuration, vaultSecrets: secrets]) {
+              sh """
+                jq '.maps.accessToken = "${env.MAPS_ACCESS_TOKEN}"' app.json > app.json.tmp && mv app.json.tmp app.json
+              """
+            }
+          }
+        }
+      }
+    }
     stage('Run Builds') {
       parallel {
         stage('Build') {
@@ -44,7 +64,7 @@ pipeline {
               echo 'Create RPM directory and copy all data from build stage to, for rpmbuild to run'
               sh """
                 cd && mkdir rpmbuild && cd rpmbuild
-                git clone https://github.com/cloudify-cosmo/cloudify-stage.git BUILD && cd BUILD
+                mkdir -p BUILD && cp -rf ${workspace}/${stage_dir}/. BUILD && cd BUILD
                 curl -fO "${cfy_manager_url}/${branch}/packaging/version_info" || curl -fO "${cfy_manager_url}/master/packaging/version_info"
               """
 
