@@ -98,7 +98,7 @@ class ConfirmationStepContent extends React.Component {
 
             tasks.push(
                 new Task(`Upload plugin ${pluginName}`, () =>
-                    pluginActions.doUpload(plugin.visibility, {
+                    pluginActions.doUpload(plugin.visibility, plugin.title, {
                         ...createUploadResource('wagon'),
                         ...createUploadResource('yaml'),
                         ...createUploadResource('icon')

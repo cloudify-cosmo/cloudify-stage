@@ -11,8 +11,8 @@ class PluginActions {
         return this.toolbox.getManager().doDelete(`/plugins/${plugin.id}`, null, { force });
     }
 
-    doUpload(visibility, resources) {
-        const params = { visibility };
+    doUpload(visibility, title, resources) {
+        const params = { visibility, title };
         const files = {};
 
         _.each(resources, ({ url, file }, name) => {

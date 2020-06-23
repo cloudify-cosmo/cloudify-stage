@@ -41,6 +41,7 @@ class PluginsStepActions extends React.Component {
                         !pluginObject.iconFile &&
                         !_.isEmpty(pluginObject.iconUrl) &&
                         !Stage.Utils.Url.isUrl(pluginObject.iconUrl);
+                    const titleNotValid = !pluginObject.title;
 
                     if (wagonNotValid || yamlNotValid || iconNotValid) {
                         missingFields.push(pluginName);
@@ -48,7 +49,8 @@ class PluginsStepActions extends React.Component {
                         errors[pluginName] = {
                             wagonUrl: wagonNotValid,
                             yamlUrl: yamlNotValid,
-                            iconUrl: iconNotValid
+                            iconUrl: iconNotValid,
+                            title: titleNotValid
                         };
                     }
                 });
@@ -155,7 +157,7 @@ class PluginsStepContent extends React.Component {
                 Promise.all([
                     toolbox
                         .getManager()
-                        .doGet('/plugins?_include=distribution,package_name,package_version,visibility'),
+                        .doGet('/plugins?_inclubde=distribution,package_name,package_version,visibility'),
                     toolbox
                         .getInternal()
                         .doGet('/external/content', { url: Stage.Common.Consts.externalUrls.pluginsCatalog })
@@ -214,6 +216,7 @@ class PluginsStepContent extends React.Component {
 
                         pluginState.wagonUrl = wagon.url;
                         pluginState.yamlUrl = pluginsInCatalog[plugin].link;
+                        pluginState.title = pluginsInCatalog[plugin].title;
                     } else if (pluginState.status === PluginsStepContent.statusInstalledAndParametersMatched) {
                         pluginState.visibility = pluginsInManager[plugin].visibility;
                     }
@@ -326,9 +329,10 @@ class PluginsStepContent extends React.Component {
     }
 
     getPluginAction(pluginName) {
-        const { errors, loading, stepData } = this.props;
+        const { errors, stepData, toolbox } = this.props;
         const status = _.get(stepData[pluginName], 'status');
         const { UploadPluginForm } = Stage.Common;
+        const { Container } = Stage.Basic;
 
         switch (status) {
             case PluginsStepContent.statusInstalledAndParametersMatched:
@@ -338,17 +342,18 @@ class PluginsStepContent extends React.Component {
             case PluginsStepContent.statusUserDefinedPlugin:
                 return (
                     <ResourceAction>
-                        <UploadPluginForm
-                            wagonUrl={stepData[pluginName].wagonUrl}
-                            yamlUrl={stepData[pluginName].yamlUrl}
-                            iconUrl={stepData[pluginName].iconUrl}
-                            errors={errors[pluginName]}
-                            wrapInForm={false}
-                            addRequiredMarks={false}
-                            hidePlaceholders
-                            loading={loading}
-                            onChange={this.handlePluginChange(pluginName).bind(this)}
-                        />
+                        <Container fluid>
+                            <UploadPluginForm
+                                wagonUrl={stepData[pluginName].wagonUrl}
+                                yamlUrl={stepData[pluginName].yamlUrl}
+                                iconUrl={stepData[pluginName].iconUrl}
+                                errors={errors[pluginName]}
+                                addRequiredMarks={false}
+                                hidePlaceholders
+                                toolbox={toolbox}
+                                onChange={this.handlePluginChange(pluginName).bind(this)}
+                            />
+                        </Container>
                     </ResourceAction>
                 );
             case PluginsStepContent.statusNotInstalledAndInCatalog:

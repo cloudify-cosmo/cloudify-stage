@@ -3,3 +3,9 @@ Cypress.Commands.add('installPlugin', (wagonUrl, yamlUrl) =>
         failOnStatusCode: false
     })
 );
+
+Cypress.Commands.add('deletePlugins', () => {
+    cy.cfyRequest('/plugins').then(response =>
+        response.body.items.forEach(({ id }) => cy.cfyRequest(`/plugins/${id}`, 'DELETE', null, { force: true }))
+    );
+});

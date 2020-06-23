@@ -178,7 +178,7 @@ export default class extends React.Component {
                                     <PluginIcon src={item.icon} />
                                 </DataTable.Data>
                                 <DataTable.Data>
-                                    {item.package_name}
+                                    {item.title || item.package_name}
                                     <ResourceVisibility
                                         visibility={item.visibility}
                                         onSetVisibility={visibility => this.setPluginVisibility(item.id, visibility)}

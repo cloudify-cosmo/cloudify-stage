@@ -41,7 +41,7 @@ class UploadPluginModal extends React.Component {
 
     uploadPlugin() {
         const { onHide, toolbox } = this.props;
-        const { wagonUrl, yamlUrl, iconUrl, iconFile, visibility, wagonFile, yamlFile } = this.state;
+        const { wagonUrl, yamlUrl, iconUrl, iconFile, title, visibility, wagonFile, yamlFile } = this.state;
 
         const errors = {};
 
@@ -59,6 +59,10 @@ class UploadPluginModal extends React.Component {
             } else if (!Stage.Utils.Url.isUrl(yamlUrl)) {
                 errors.yamlUrl = 'Please provide valid URL for YAML file';
             }
+        }
+
+        if (!title) {
+            errors.title = 'Please provide plugin title';
         }
 
         if (!iconFile && !_.isEmpty(iconUrl) && !Stage.Utils.Url.isUrl(iconUrl)) {
@@ -82,7 +86,7 @@ class UploadPluginModal extends React.Component {
 
         const actions = new Stage.Common.PluginActions(toolbox);
         actions
-            .doUpload(visibility, {
+            .doUpload(visibility, title, {
                 ...createUploadResource('wagon'),
                 ...createUploadResource('yaml'),
                 ...createUploadResource('icon')
@@ -102,8 +106,8 @@ class UploadPluginModal extends React.Component {
 
     render() {
         const { errors, iconUrl, loading, visibility, wagonUrl, yamlUrl } = this.state;
-        const { onHide, open } = this.props;
-        const { ApproveButton, CancelButton, Icon, Modal, VisibilityField } = Stage.Basic;
+        const { onHide, open, toolbox } = this.props;
+        const { ApproveButton, CancelButton, Form, Icon, Modal, VisibilityField } = Stage.Basic;
         const { UploadPluginForm } = Stage.Common;
 
         return (
@@ -118,14 +122,16 @@ class UploadPluginModal extends React.Component {
                 </Modal.Header>
 
                 <Modal.Content>
-                    <UploadPluginForm
-                        wagonUrl={wagonUrl}
-                        yamlUrl={yamlUrl}
-                        iconUrl={iconUrl}
-                        errors={errors}
-                        loading={loading}
-                        onChange={this.onFormFieldChange.bind(this)}
-                    />
+                    <Form errors={errors} onErrorsDismiss={() => this.setState({ errors: {} })} loading={loading}>
+                        <UploadPluginForm
+                            wagonUrl={wagonUrl}
+                            yamlUrl={yamlUrl}
+                            iconUrl={iconUrl}
+                            errors={errors}
+                            onChange={this.onFormFieldChange.bind(this)}
+                            toolbox={toolbox}
+                        />
+                    </Form>
                 </Modal.Content>
 
                 <Modal.Actions>

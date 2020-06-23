@@ -39,12 +39,13 @@ export default class Actions {
      * @param visibility
      * @access public
      */
-    doUpload({ url: wagonUrl, yamlUrl, icon: iconUrl }, visibility) {
+    doUpload({ url: wagonUrl, yamlUrl, icon: iconUrl, title }, visibility) {
         const params = {
             visibility,
             wagonUrl,
             yamlUrl,
-            iconUrl
+            iconUrl,
+            title
         };
 
         return this.toolbox.getInternal().doUpload('/plugins/upload', params, null, 'post');
