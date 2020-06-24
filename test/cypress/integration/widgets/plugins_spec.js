@@ -10,17 +10,19 @@ describe('Plugins widget', () => {
         cy.contains('System Resources').click();
         cy.contains('Upload').click();
         cy.get('input[name=wagonUrl]').type(
-            'http://repository.cloudifysource.org/cloudify/wagons/cloudify-diamond-plugin/1.3.6/cloudify_diamond_plugin-1.3.6-py26-none-linux_x86_64-centos-Final.wgn'
+            'https://github.com/cloudify-cosmo/cloudify-openstack-plugin/releases/download/3.2.15/cloudify_openstack_plugin-3.2.15-py27-none-linux_x86_64-centos-Core.wgn'
         );
-        cy.get('input[name=yamlUrl]').type('http://www.getcloudify.org/spec/diamond-plugin/1.3.6/plugin.yaml');
+        cy.get('input[name=yamlUrl]').type(
+            'https://github.com/cloudify-cosmo/cloudify-openstack-plugin/releases/download/3.2.15/plugin.yaml'
+        );
         cy.get('input[name=title]')
             .click()
-            .should('have.value', 'cloudify-diamond-plugin')
+            .should('have.value', 'cloudify-openstack-plugin')
             .type('-edited');
         cy.get('.ok').click();
         cy.get('.modal').should('not.exist');
 
         cy.log('Verify plugin was uploaded');
-        cy.contains('cloudify-diamond-plugin-edited');
+        cy.contains('cloudify-openstack-plugin-edited');
     });
 });
