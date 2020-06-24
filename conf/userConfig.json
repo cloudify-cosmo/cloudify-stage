@@ -1,8 +1,7 @@
 {
   "maps": {
-    "mapUrl": "https://maps.wikimedia.org/osm-intl/0/0/0.png",
-    "tilesUrlTemplate": "https://maps.wikimedia.org/osm-intl/{z}/{x}/{y}{r}.png",
-    "attribution": "<a href='https://wikimediafoundation.org/wiki/Maps_Terms_of_Use'>Wikimedia</a>"
+    "tilesUrlTemplate": "https://tiles.stadiamaps.com/tiles/osm_bright/${z}/${x}/${y}${r}.png?api_key=${accessToken}",
+    "attribution": "&copy; <a href=\"https://stadiamaps.com/\">Stadia Maps</a>, &copy; <a href=\"https://openmaptiles.org/\">OpenMapTiles</a> &copy; <a href=\"http://openstreetmap.org\">OpenStreetMap</a> contributors"
   },
   "logLevel": "warn",
   "whiteLabel": {

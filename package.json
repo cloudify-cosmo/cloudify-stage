@@ -32,7 +32,7 @@
     "e2e:old:dev": "nightwatch -c ./test/nightwatch/nightwatch.conf.js --env dev",
     "lint": "eslint --cache app backend widgets test scripts",
     "prodtest": "mocha --require @babel/register --require esm --require ./test/setup.js -R spec --recursive \"./test/**/*Test.js\"",
-    "size": "size-limit",
+    "size": "[ -d \"dist\" ] && size-limit",
     "test": "npm run lint && npm run prodtest && npm run size",
     "upload": "scripts/uploadPackage.sh",
     "zip": "scripts/createPackage.sh"

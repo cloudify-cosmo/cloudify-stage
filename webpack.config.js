@@ -86,7 +86,7 @@ module.exports = (env, argv) => {
 
                         options: {
                             limit: 100000,
-                            name: '/static/fonts/[name].[ext]'
+                            name: `${isProduction ? '/' : ''}static/fonts/[name].[ext]`
                         }
                     }
                 ]
@@ -99,7 +99,7 @@ module.exports = (env, argv) => {
 
                         options: {
                             limit: 100000,
-                            name: '/static/images/[name].[ext]'
+                            name: `${isProduction ? '/' : ''}static/images/[name].[ext]`
                         }
                     }
                 ]

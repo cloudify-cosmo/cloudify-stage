@@ -5,16 +5,12 @@ class SiteLocationMap extends React.Component {
      * @property {string} attribution - map attribution to be added to map view
      * @property {string} location - location, format: "<latitude>, <longitude>"
      * @property {object} mapOptions - props to be passed to Leaflet.Map component
-     * @property {string} mapUrl - map provider URL
-     * @property {string} tilesUrlTemplate - map tiles provider template URL
      * @property {object} toolbox Toolbox object
      */
     static propTypes = {
         attribution: PropTypes.string.isRequired,
         location: PropTypes.string.isRequired,
         mapOptions: PropTypes.object.isRequired,
-        mapUrl: PropTypes.string.isRequired,
-        tilesUrlTemplate: PropTypes.string.isRequired,
         toolbox: PropTypes.object.isRequired
     };
 
@@ -23,16 +19,15 @@ class SiteLocationMap extends React.Component {
         const { location } = this.props;
         this.initialLocation = location;
         this.state = {
-            isMapAvailable: true
+            isMapAvailable: null
         };
     }
 
     componentDidMount() {
-        const { mapUrl, toolbox } = this.props;
-        toolbox
-            .getExternal()
-            .isReachable(mapUrl)
-            .then(isMapAvailable => this.setState({ isMapAvailable }));
+        const { toolbox } = this.props;
+        const { MapsActions } = Stage.Common;
+
+        return new MapsActions(toolbox).isAvailable().then(isMapAvailable => this.setState({ isMapAvailable }));
     }
 
     toLatLng(value) {
@@ -45,13 +40,24 @@ class SiteLocationMap extends React.Component {
     }
 
     render() {
-        const { Leaflet, Message } = Stage.Basic;
+        const { Leaflet, Loading, Message } = Stage.Basic;
         const { Consts, createMarkerIcon } = Stage.Common;
+        const { mapOptions: defaultMapOptions, initialZoom, urlTemplate } = Consts.leaflet;
 
-        const { attribution, location, mapOptions, tilesUrlTemplate } = this.props;
+        const { attribution, location, mapOptions } = this.props;
         const { isMapAvailable } = this.state;
 
-        if (!isMapAvailable) {
+        const url = Stage.Utils.Url.url(urlTemplate);
+
+        if (isMapAvailable === null) {
+            return (
+                <div style={{ width: 50, height: 50, margin: '0 auto' }}>
+                    <Loading />
+                </div>
+            );
+        }
+
+        if (isMapAvailable === false) {
             const NO_INTERNET_MESSAGE = `Map cannot be displayed because there is no connection 
                                          to the maps repository. Please check network connection.`;
             return (
@@ -64,11 +70,11 @@ class SiteLocationMap extends React.Component {
         return (
             <Leaflet.Map
                 {...mapOptions}
-                {...Consts.leaflet.mapOptions}
-                zoom={Consts.leaflet.initialZoom}
+                {...defaultMapOptions}
+                zoom={initialZoom}
                 center={this.toLatLng(this.initialLocation)}
             >
-                <Leaflet.TileLayer attribution={attribution} url={tilesUrlTemplate} />
+                <Leaflet.TileLayer attribution={attribution} url={url} />
                 {location && <Leaflet.Marker position={this.toLatLng(location)} icon={createMarkerIcon('grey')} />}
             </Leaflet.Map>
         );
