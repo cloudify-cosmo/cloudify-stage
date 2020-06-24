@@ -42,26 +42,6 @@ export default class CreateTemplateModal extends Component {
         };
     };
 
-    static propTypes = {
-        availableTenants: PropTypes.object,
-        availablePages: PropTypes.array,
-        availableRoles: PropTypes.array,
-        templateName: PropTypes.string,
-        pages: PropTypes.array,
-        roles: PropTypes.array,
-        tenants: PropTypes.array,
-        onCreateTemplate: PropTypes.func.isRequired
-    };
-
-    static defaultProps = {
-        templateName: '',
-        pages: [],
-        roles: [],
-        tenants: [Consts.DEFAULT_ALL],
-        availablePages: [],
-        availableRoles: []
-    };
-
     componentDidUpdate() {
         if (!$('#reorderList').hasClass('ui-sortable')) {
             $('#reorderList').sortable({
@@ -305,3 +285,27 @@ export default class CreateTemplateModal extends Component {
         );
     }
 }
+
+CreateTemplateModal.propTypes = {
+    availableTenants: PropTypes.shape({}).isRequired,
+    // eslint-disable-next-line react/no-unused-prop-types
+    availablePages: PropTypes.arrayOf(PropTypes.shape({})),
+    availableRoles: PropTypes.arrayOf(PropTypes.shape({})),
+    templateName: PropTypes.string,
+    // eslint-disable-next-line react/no-unused-prop-types
+    pages: PropTypes.arrayOf(PropTypes.string),
+    // eslint-disable-next-line react/no-unused-prop-types
+    roles: PropTypes.arrayOf(PropTypes.string),
+    // eslint-disable-next-line react/no-unused-prop-types
+    tenants: PropTypes.arrayOf(PropTypes.string),
+    onCreateTemplate: PropTypes.func.isRequired
+};
+
+CreateTemplateModal.defaultProps = {
+    templateName: '',
+    pages: [],
+    roles: [],
+    tenants: [Consts.DEFAULT_ALL],
+    availablePages: [],
+    availableRoles: []
+};

@@ -105,6 +105,23 @@
                 "browser": true
             }
         },
+        { // FIXME: Temporary override, to be removed when /widgets directory will be fixed
+            "files": ["app/**/*.js"],
+            "rules": {
+                "react/prop-types": ["error"],
+                "react/default-props-match-prop-types": ["error"],
+                "react/forbid-prop-types": ["error"],
+                "react/no-unused-prop-types": ["error"],
+                "react/no-unused-state": ["error"],
+                "react/require-default-props": ["error"]
+            }
+        },
+        {
+            "files": ["widgets/**/*.js"],
+            "globals": {
+                "PropTypes": true
+            }
+        },
         {
             "files": ["backend/**/*.js", "scripts/*.js"],
             "env": {
@@ -130,7 +147,6 @@
         "L": true,
         "markdown": true,
         "moment": true,
-        "PropTypes": true,
         "React": true,
 
         "Stage": true

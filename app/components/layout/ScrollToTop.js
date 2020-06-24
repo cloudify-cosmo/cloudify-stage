@@ -2,6 +2,7 @@
  * Created by jakub.niezgoda on 21/09/2018.
  */
 
+import PropTypes from 'prop-types';
 import { Component } from 'react';
 import { withRouter } from 'react-router-dom';
 
@@ -20,4 +21,10 @@ class ScrollToTop extends Component {
         return children;
     }
 }
+
+ScrollToTop.propTypes = {
+    location: PropTypes.shape({}).isRequired,
+    children: PropTypes.node.isRequired
+};
+
 export default withRouter(ScrollToTop);

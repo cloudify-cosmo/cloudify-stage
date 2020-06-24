@@ -57,6 +57,11 @@ const manager = (state = {}, action) => {
                 license: {},
                 version: {}
             };
+        case types.SET_LDAP:
+            return {
+                ...state,
+                isLdap: action.isLdap
+            };
         case types.SET_USER_DATA:
             return {
                 ...state,

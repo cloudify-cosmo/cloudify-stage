@@ -8,10 +8,9 @@ PRE_COMMANDS="
   sudo service cloudify-stage stop;"
 
 POST_COMMANDS="
-  cd /opt/cloudify-stage/backend;
-  sudo /usr/bin/npm run db-migrate;
+  sudo -u stage_user /usr/bin/npm run db-migrate --prefix /opt/cloudify-stage/backend;
   sudo service cloudify-stage restart;
-  sudo /usr/bin/npm run wait-on-server;"
+  sudo -u stage_user /usr/bin/npm run wait-on-server --prefix /opt/cloudify-stage/backend;"
 
 COMMANDS_FOR_RPM="
   ${PRE_COMMANDS}
@@ -27,6 +26,7 @@ COMMANDS_FOR_TAR_GZ="
   sudo rm -rf /opt/cloudify-stage/;
   sudo cp -r cloudify-stage /opt/;
   sudo chown -R stage_user:stage_group /opt/cloudify-stage;
+  sudo chown -R cfyuser. /opt/cloudify-stage/conf;
   ${POST_COMMANDS}"
 
 NODE_MODULES_PATH="$( npm root )"

@@ -24,7 +24,7 @@ const mapStateToProps = (state, ownProps) => {
 
 const mapDispatchToProps = (dispatch, ownProps) => {
     return {
-        onLicenseManagment: () => dispatch(push(Consts.LICENSE_PAGE_PATH))
+        onLicenseManagement: () => dispatch(push(Consts.LICENSE_PAGE_PATH))
     };
 };
 

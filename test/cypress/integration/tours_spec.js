@@ -22,7 +22,12 @@ describe('Tours', () => {
 
     describe('for admin user provide', () => {
         before(() => {
-            cy.login();
+            const blueprintName = 'tours_test';
+            cy.login()
+                .deleteDeployments(blueprintName)
+                .deleteBlueprints(blueprintName)
+                .uploadBlueprint('blueprints/empty.zip', blueprintName)
+                .deployBlueprint(blueprintName, blueprintName);
             resetTemplates();
         });
 

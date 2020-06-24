@@ -10,6 +10,7 @@ import {
     changePageDescription,
     changePageName,
     createPagesMap,
+    moveTab,
     removeTab,
     selectPage,
     updateTab
@@ -95,6 +96,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
         onTabAdded: () => dispatch(addTab(ownProps.pageId)),
         onTabRemoved: tabIndex => dispatch(removeTab(ownProps.pageId, tabIndex)),
         onTabUpdated: (tabIndex, name, isDefault) => dispatch(updateTab(ownProps.pageId, tabIndex, name, isDefault)),
+        onTabMoved: (oldTabIndex, newTabIndex) => dispatch(moveTab(ownProps.pageId, oldTabIndex, newTabIndex)),
         onEditModeExit: () => {
             dispatch(setEditMode(false));
         },

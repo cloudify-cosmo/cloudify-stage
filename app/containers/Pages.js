@@ -67,9 +67,6 @@ const mapDispatchToProps = (dispatch, ownProps) => {
         },
         onPageReorder: (pageIndex, newPageIndex) => {
             dispatch(reorderPage(pageIndex, newPageIndex));
-        },
-        onSidebarClose: () => {
-            dispatch(toogleSidebar());
         }
     };
 };

@@ -10,11 +10,6 @@ import GridItem from './GridItem';
 const ReactGridLayout = WidthProvider(Responsive);
 
 export default class Grid extends Component {
-    static propTypes = {
-        onGridDataChange: PropTypes.func.isRequired,
-        isEditMode: PropTypes.bool.isRequired
-    };
-
     saveChangedItems(layout) {
         const { isEditMode, onGridDataChange } = this.props;
         isEditMode &&
@@ -66,3 +61,9 @@ export default class Grid extends Component {
         );
     }
 }
+
+Grid.propTypes = {
+    children: PropTypes.node.isRequired,
+    onGridDataChange: PropTypes.func.isRequired,
+    isEditMode: PropTypes.bool.isRequired
+};

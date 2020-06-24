@@ -14,7 +14,7 @@ import EulaLink from './license/EulaLink';
 import UploadLicense from './license/UploadLicense';
 import { MessageContainer } from './shared';
 
-function LicenseSwitchButton({ isEditLicenseActive, onClick, color }) {
+function LicenseSwitchButton({ color, isEditLicenseActive, onClick }) {
     return (
         <Button
             content={isEditLicenseActive ? 'Show License' : 'Edit License'}
@@ -27,9 +27,18 @@ function LicenseSwitchButton({ isEditLicenseActive, onClick, color }) {
     );
 }
 
+LicenseSwitchButton.propTypes = {
+    color: PropTypes.string.isRequired,
+    isEditLicenseActive: PropTypes.bool.isRequired,
+    onClick: PropTypes.func.isRequired
+};
+
 function DescriptionMessage({ canUploadLicense, isTrial, isEditLicenseActive, onLicenseButtonClick, status }) {
     const commonMessageProps = { icon: true };
     const SpanMessage = ({ children }) => <span>{children}</span>;
+    SpanMessage.propTypes = {
+        children: PropTypes.node.isRequired
+    };
 
     switch (status) {
         case Consts.LICENSE.EMPTY:
@@ -132,6 +141,14 @@ function DescriptionMessage({ canUploadLicense, isTrial, isEditLicenseActive, on
     }
 }
 
+DescriptionMessage.propTypes = {
+    canUploadLicense: PropTypes.bool.isRequired,
+    isTrial: PropTypes.bool.isRequired,
+    isEditLicenseActive: PropTypes.bool.isRequired,
+    onLicenseButtonClick: PropTypes.func.isRequired,
+    status: PropTypes.oneOf([Consts.LICENSE.EMPTY, Consts.LICENSE.EXPIRED, Consts.LICENSE.ACTIVE]).isRequired
+};
+
 export default class LicensePage extends Component {
     constructor(props) {
         super(props);
@@ -148,18 +165,6 @@ export default class LicensePage extends Component {
         this.onLicenseEdit = this.onLicenseEdit.bind(this);
         this.onLicenseUpload = this.onLicenseUpload.bind(this);
     }
-
-    static propTypes = {
-        canUploadLicense: PropTypes.bool.isRequired,
-        isProductOperational: PropTypes.bool.isRequired,
-        license: PropTypes.object.isRequired,
-        onLicenseChange: PropTypes.func.isRequired,
-        onGoToApp: PropTypes.func.isRequired,
-        status: PropTypes.oneOf([Consts.LICENSE.ACTIVE, Consts.LICENSE.EMPTY, Consts.LICENSE.EXPIRED]).isRequired,
-        manager: PropTypes.object.isRequired
-    };
-
-    static defaultProps = {};
 
     componentDidMount() {
         const { manager, onLicenseChange } = this.props;
@@ -259,3 +264,13 @@ export default class LicensePage extends Component {
         );
     }
 }
+
+LicensePage.propTypes = {
+    canUploadLicense: PropTypes.bool.isRequired,
+    isProductOperational: PropTypes.bool.isRequired,
+    license: PropTypes.shape({ trial: PropTypes.bool }).isRequired,
+    onLicenseChange: PropTypes.func.isRequired,
+    onGoToApp: PropTypes.func.isRequired,
+    status: PropTypes.oneOf([Consts.LICENSE.ACTIVE, Consts.LICENSE.EMPTY, Consts.LICENSE.EXPIRED]).isRequired,
+    manager: PropTypes.shape({ doGet: PropTypes.func, doPut: PropTypes.func }).isRequired
+};

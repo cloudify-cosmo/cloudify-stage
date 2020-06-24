@@ -1,0 +1,39 @@
+apiVersion: v1
+kind: Pod
+spec:
+  containers:
+  - name: rpmbuild
+    image: rpmbuild/centos7
+    resources:
+      requests:
+        cpu: 1.5
+    command:
+    - cat
+    tty: true
+    securityContext:
+      runAsUser: 0
+      privileged: true
+  - name: node
+    image: circleci/node:12.16-browsers
+    resources:
+      requests:
+        cpu: 1.5
+    command:
+    - cat
+    tty: true
+    securityContext:
+      runAsUser: 0
+      privileged: true
+  - name: postgres
+    image: postgres:latest
+    ports:
+      - containerPort: 5432
+    env:
+    - name: POSTGRES_USER
+      value: cloudify
+    - name: POSTGRES_PASSWORD
+      value: cloudify
+    - name: POSTGRES_DB
+      value: stage
+  nodeSelector:
+    instance-type: spot-xlarge

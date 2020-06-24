@@ -16,14 +16,6 @@ import { Icon } from '../basic';
 import Consts from '../../utils/consts';
 
 export default class Header extends Component {
-    static propTypes = {
-        manager: PropTypes.any.isRequired,
-        mode: PropTypes.string.isRequired,
-        pageTitle: PropTypes.string.isRequired,
-        onResetPages: PropTypes.func.isRequired,
-        onSidebarOpen: PropTypes.func.isRequired
-    };
-
     constructor(props, context) {
         super(props, context);
 
@@ -100,3 +92,11 @@ export default class Header extends Component {
         );
     }
 }
+
+Header.propTypes = {
+    manager: PropTypes.shape({ tenants: PropTypes.shape({}) }).isRequired,
+    mode: PropTypes.string.isRequired,
+    pageTitle: PropTypes.string.isRequired,
+    onResetPages: PropTypes.func.isRequired,
+    onSidebarOpen: PropTypes.func.isRequired
+};

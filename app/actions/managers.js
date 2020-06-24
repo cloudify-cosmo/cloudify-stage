@@ -97,6 +97,20 @@ export function getUserData() {
         });
 }
 
+function responseLdap(isLdap) {
+    return {
+        type: types.SET_LDAP,
+        isLdap
+    };
+}
+
+export function getLdap() {
+    return (dispatch, getState) => {
+        const manager = new Manager(getState().manager);
+        manager.doGet('/ldap').then(data => dispatch(responseLdap(data === 'enabled')));
+    };
+}
+
 function doLogout(err) {
     return {
         type: types.LOGOUT,

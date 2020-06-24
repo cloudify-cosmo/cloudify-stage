@@ -2,6 +2,7 @@
  * Created by jakub.niezgoda on 15/03/2019.
  */
 
+import PropTypes from 'prop-types';
 import React from 'react';
 
 import { Icon, Header, Message, Segment, Table } from '../basic';
@@ -46,3 +47,15 @@ export default function CurrentVersion({ version = {} }) {
         <Message>There is no version data.</Message>
     );
 }
+
+CurrentVersion.propTypes = {
+    version: PropTypes.shape({
+        build: PropTypes.string,
+        commit: PropTypes.string,
+        date: PropTypes.string,
+        distribution: PropTypes.string,
+        distro_release: PropTypes.string,
+        edition: PropTypes.string,
+        version: PropTypes.string
+    }).isRequired
+};

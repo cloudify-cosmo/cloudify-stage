@@ -27,26 +27,32 @@ const getCommonHeaders = () => ({
 Cypress.Commands.add('restoreState', () => cy.restoreLocalStorage());
 
 Cypress.Commands.add('waitUntilLoaded', () => {
-    cy.get('#loader', { timeout: 20000 }).should('be.not.visible', true);
+    cy.log('Wait for splash screen loader to disappear');
+    cy.get('#loader', { timeout: 20000 }).should('be.not.visible');
+    cy.log('Wait for widgets loaders to disappear');
+    cy.get('div.loader', { timeout: 10000 }).should('not.be.visible');
 });
+
+Cypress.Commands.add('uploadLicense', license =>
+    cy.fixture(`license/${license}.yaml`).then(yaml =>
+        cy.request({
+            method: 'PUT',
+            url: '/console/sp',
+            qs: {
+                su: '/license'
+            },
+            headers: {
+                Authorization: `Basic ${btoa('admin:admin')}`,
+                'Content-Type': 'text/plain'
+            },
+            body: yaml
+        })
+    )
+);
 
 Cypress.Commands.add('activate', (license = 'valid_trial_license') =>
     cy
-        .fixture(`license/${license}.yaml`)
-        .then(license =>
-            cy.request({
-                method: 'PUT',
-                url: '/console/sp',
-                qs: {
-                    su: '/license'
-                },
-                headers: {
-                    Authorization: `Basic ${btoa('admin:admin')}`,
-                    'Content-Type': 'text/plain'
-                },
-                body: license
-            })
-        )
+        .uploadLicense(license)
         .then(() =>
             cy.request({
                 method: 'GET',
@@ -115,7 +121,9 @@ Cypress.Commands.add('stageRequest', (url, method = 'GET', options) => {
 });
 
 Cypress.Commands.add('login', (username = 'admin', password = 'admin') => {
-    cy.visit('/console/login');
+    if (cy.location('pathname') !== '/console/login') {
+        cy.visit('/console/login');
+    }
 
     cy.get('.form > :nth-child(1) > .ui > input')
         .clear()

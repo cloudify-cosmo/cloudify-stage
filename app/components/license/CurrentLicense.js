@@ -2,6 +2,7 @@
  * Created by jakub.niezgoda on 15/03/2019.
  */
 
+import PropTypes from 'prop-types';
 import React from 'react';
 import StageUtils from '../../utils/stageUtils';
 
@@ -54,3 +55,14 @@ export default function CurrentLicense({ license }) {
         )
     );
 }
+
+CurrentLicense.propTypes = {
+    license: PropTypes.shape({
+        capabilities: PropTypes.any,
+        cloudify_version: PropTypes.any,
+        customer_id: PropTypes.string,
+        exiration_date: PropTypes.string,
+        license_edition: PropTypes.string,
+        trial: PropTypes.bool
+    }).isRequired
+};

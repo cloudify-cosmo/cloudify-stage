@@ -25,22 +25,9 @@ export default class InstallWidgetModal extends Component {
         scriptError: ''
     };
 
-    static propTypes = {
-        trigger: PropTypes.object.isRequired,
-        header: PropTypes.string.isRequired,
-        buttonLabel: PropTypes.string.isRequired,
-        onWidgetInstalled: PropTypes.func.isRequired,
-        className: PropTypes.string
-    };
-
-    static defaultProps = {
-        className: 'installWidgetModal',
-        onWidgetInstalled: () => Promise.resolve()
-    };
-
-    componentDidUpdate(prevProps) {
-        const { open } = this.props;
-        if (!prevProps.open && open) {
+    componentDidUpdate(prevProps, prevState) {
+        const { open } = this.state;
+        if (!prevState.open && open) {
             this.setState(InstallWidgetModal.initialState);
         }
     }
@@ -156,3 +143,16 @@ export default class InstallWidgetModal extends Component {
         );
     }
 }
+
+InstallWidgetModal.propTypes = {
+    buttonLabel: PropTypes.string.isRequired,
+    header: PropTypes.string.isRequired,
+    trigger: PropTypes.node.isRequired,
+    className: PropTypes.string,
+    onWidgetInstalled: PropTypes.func
+};
+
+InstallWidgetModal.defaultProps = {
+    className: 'installWidgetModal',
+    onWidgetInstalled: () => Promise.resolve()
+};

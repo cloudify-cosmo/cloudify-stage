@@ -1,6 +1,7 @@
 /**
  * Created by aleksander laktionow on 19/10/2017.
  */
+import PropTypes from 'prop-types';
 import React from 'react';
 
 import { Modal, Icon, ApproveButton, CancelButton, Checkbox, List, Card, Confirm } from './basic';
@@ -87,3 +88,12 @@ export default class ResetPagesModal extends React.Component {
         );
     }
 }
+
+ResetPagesModal.propTypes = {
+    onConfirm: PropTypes.func.isRequired,
+    onHide: PropTypes.func.isRequired,
+    open: PropTypes.bool.isRequired,
+    tenants: PropTypes.shape({
+        items: PropTypes.arrayOf(PropTypes.shape({ name: PropTypes.string }))
+    }).isRequired
+};

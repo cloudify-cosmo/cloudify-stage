@@ -4,27 +4,18 @@
 
 import 'jquery-ui/ui/widgets/sortable';
 import PropTypes from 'prop-types';
-
 import React, { Component } from 'react';
+
 import AddPageButton from '../containers/AddPageButton';
-import { Message } from './basic';
+import { Confirm } from './basic';
 
 export default class PagesList extends Component {
     constructor(props) {
         super(props);
 
         this.pagesRef = React.createRef();
+        this.state = {};
     }
-
-    static propTypes = {
-        onPageSelected: PropTypes.func.isRequired,
-        onPageRemoved: PropTypes.func.isRequired,
-        onPageReorder: PropTypes.func.isRequired,
-        onSidebarClose: PropTypes.func.isRequired,
-        pages: PropTypes.array.isRequired,
-        selected: PropTypes.string,
-        isEditMode: PropTypes.bool.isRequired
-    };
 
     componentDidMount() {
         const { onPageReorder } = this.props;
@@ -39,7 +30,7 @@ export default class PagesList extends Component {
         this.enableReorderInEditMode();
     }
 
-    componentDidUpdate(prevProps, prevState) {
+    componentDidUpdate(/* prevProps, prevState */) {
         this.enableReorderInEditMode();
     }
 
@@ -56,6 +47,7 @@ export default class PagesList extends Component {
 
     render() {
         const { isEditMode, onPageRemoved, onPageSelected, pages, selected } = this.props;
+        const { pageToRemove } = this.state;
         let pageCount = 0;
         pages.map(p => {
             if (!p.isDrillDown) {
@@ -84,7 +76,8 @@ export default class PagesList extends Component {
                                         className="remove link icon small pageRemoveButton"
                                         onClick={event => {
                                             event.stopPropagation();
-                                            onPageRemoved(page);
+                                            if (_.isEmpty(page.tabs) && _.isEmpty(page.widgets)) onPageRemoved(page);
+                                            else this.setState({ pageToRemove: page });
                                         }}
                                     />
                                 ) : (
@@ -100,7 +93,38 @@ export default class PagesList extends Component {
                         <AddPageButton />
                     </div>
                 )}
+                <Confirm
+                    open={!!pageToRemove}
+                    onCancel={() => this.setState({ pageToRemove: null })}
+                    onConfirm={() => {
+                        onPageRemoved(pageToRemove);
+                        this.setState({ pageToRemove: null });
+                    }}
+                    header={`Are you sure you want to remove page ${_.get(pageToRemove, 'name')}?`}
+                    content="All widgets and tabs present in this page will be removed as well"
+                />
             </>
         );
     }
 }
+
+PagesList.propTypes = {
+    onPageSelected: PropTypes.func.isRequired,
+    onPageRemoved: PropTypes.func.isRequired,
+    onPageReorder: PropTypes.func.isRequired,
+    pages: PropTypes.arrayOf(
+        PropTypes.shape({
+            id: PropTypes.string,
+            name: PropTypes.string,
+            isDrillDown: PropTypes.bool,
+            tabs: PropTypes.arrayOf(PropTypes.shape({})),
+            widgets: PropTypes.arrayOf(PropTypes.shape({}))
+        })
+    ).isRequired,
+    selected: PropTypes.string,
+    isEditMode: PropTypes.bool.isRequired
+};
+
+PagesList.defaultProps = {
+    selected: ''
+};

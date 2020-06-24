@@ -5,40 +5,14 @@
 import PropTypes from 'prop-types';
 
 import React from 'react';
-import { Container, Header } from 'semantic-ui-react';
-
-import { useSelector } from 'react-redux';
 import Widget from '../containers/Widget';
 import Grid from './layout/Grid';
 import GridItem from './layout/GridItem';
-import stageUtils from '../utils/stageUtils';
 
-export default function WidgetsList({ onWidgetUpdated, onWidgetRemoved, isEditMode, tab, widgets }) {
-    const filteredWidgets = useSelector(state => {
-        const manager = state.manager || {};
-
-        return widgets.filter(
-            widget =>
-                widget.definition &&
-                stageUtils.isUserAuthorized(widget.definition.permission, manager) &&
-                stageUtils.isWidgetPermitted(widget.definition.supportedEditions, manager)
-        );
-    });
-
-    return _.isEmpty(filteredWidgets) ? (
-        <Container className="emptyPage alignCenter" style={{ padding: '10rem 0' }}>
-            {isEditMode ? (
-                <Header size="large">
-                    This {_.isNil(tab) ? 'page' : 'tab'} is empty, <br />
-                    don't be shy, give it a meaning!
-                </Header>
-            ) : (
-                <Header size="large">This {_.isNil(tab) ? 'page' : 'tab'} is empty</Header>
-            )}
-        </Container>
-    ) : (
+export default function WidgetsList({ onWidgetUpdated, onWidgetRemoved, isEditMode, widgets }) {
+    return (
         <Grid isEditMode={isEditMode} onGridDataChange={onWidgetUpdated}>
-            {filteredWidgets.map(widget => {
+            {widgets.map(widget => {
                 const widgetDefId = (widget.definition || {}).id;
                 return (
                     <GridItem
@@ -53,7 +27,6 @@ export default function WidgetsList({ onWidgetUpdated, onWidgetRemoved, isEditMo
                     >
                         <Widget
                             widget={widget}
-                            tab={tab}
                             isEditMode={isEditMode}
                             onWidgetUpdated={onWidgetUpdated}
                             onWidgetRemoved={onWidgetRemoved}
@@ -66,13 +39,12 @@ export default function WidgetsList({ onWidgetUpdated, onWidgetRemoved, isEditMo
 }
 
 WidgetsList.propTypes = {
-    tab: PropTypes.number,
-    widgets: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
+    widgets: PropTypes.arrayOf(PropTypes.shape({})),
     onWidgetRemoved: PropTypes.func.isRequired,
     onWidgetUpdated: PropTypes.func.isRequired,
     isEditMode: PropTypes.bool.isRequired
 };
 
 WidgetsList.defaultProps = {
-    tab: null
+    widgets: []
 };

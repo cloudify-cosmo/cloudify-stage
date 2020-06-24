@@ -11,18 +11,17 @@ function DeploymentParameter({ name, value, as, headerStyle, subHeaderStyle }) {
 
 DeploymentParameter.propTypes = {
     name: PropTypes.node.isRequired,
-    value: PropTypes.node.isRequired,
     as: PropTypes.string,
-    // eslint-disable-next-line react/forbid-prop-types
-    headerStyle: PropTypes.object,
-    // eslint-disable-next-line react/forbid-prop-types
-    subHeaderStyle: PropTypes.object
+    headerStyle: PropTypes.shape({}),
+    subHeaderStyle: PropTypes.shape({}),
+    value: PropTypes.node
 };
 
 DeploymentParameter.defaultProps = {
     as: 'h5',
     headerStyle: {},
-    subHeaderStyle: {}
+    subHeaderStyle: {},
+    value: ''
 };
 
 export default function DeploymentDetails({

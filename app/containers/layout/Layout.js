@@ -23,7 +23,7 @@ const mapStateToProps = (state, ownProps) => {
 
 const mapDispatchToProps = (dispatch, ownProps) => {
     return {
-        intialPageLoad: () => {
+        initialPageLoad: () => {
             return dispatch(intialPageLoad());
         },
         doLogout: (err, path) => {

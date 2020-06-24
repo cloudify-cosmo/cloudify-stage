@@ -37,6 +37,10 @@ export function updateTab(pageId, tabIndex, name, isDefault) {
     };
 }
 
+export function moveTab(pageId, oldTabIndex, newTabIndex) {
+    return { type: types.MOVE_TAB, pageId, oldTabIndex, newTabIndex };
+}
+
 export function createPage(page, newPageId) {
     return {
         type: types.ADD_PAGE,
