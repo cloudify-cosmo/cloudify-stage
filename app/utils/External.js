@@ -49,16 +49,6 @@ export default class External {
         return this._ajaxCall(url, 'get', null, null, null, null, fileName);
     }
 
-    isReachable(url) {
-        return fetch(url)
-            .then(response => {
-                return response.status === 200;
-            })
-            .catch(() => {
-                return false;
-            });
-    }
-
     doUpload(url, params, files, method, parseResponse = true, compressFile = false) {
         const actualUrl = this._buildActualUrl(url, params);
 

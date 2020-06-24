@@ -24,7 +24,7 @@ describe('Sites Management', () => {
 
     const reloadSiteManagementPage = () => {
         cy.get('.pageMenuItem.active').click();
-        cy.get('.widget .loadingSegment').should('not.be.visible');
+        cy.get('.sitesWidget .ui.text.loader').should('not.be.visible');
     };
 
     const createSite = site => {
@@ -237,26 +237,5 @@ describe('Sites Management', () => {
 
         // No sites message
         cy.get('.center > span').should('have.text', 'There are no Sites available. Click "Create" to create Sites.');
-    });
-
-    it('display sites in map', () => {
-        cy.createSite(siteWithLocation);
-
-        cy.get('.usersMenu')
-            .click()
-            .contains('Edit Mode')
-            .click();
-
-        cy.get('.editModeSidebar .content > :nth-child(1)').click();
-        cy.get('[data-id="sitesMap"]').click();
-        cy.get('button#addWidgetsBtn').click();
-
-        cy.get('.leaflet-marker-icon');
-
-        cy.createSite(siteWithPrivateVisibility);
-
-        reloadSiteManagementPage();
-
-        cy.get('.leaflet-marker-icon').should('have.length', 2);
     });
 });

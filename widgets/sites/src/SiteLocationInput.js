@@ -4,12 +4,13 @@ export default class SiteLocationInput extends React.Component {
     /**
      * propTypes
      *
-     * @property {function} onChange - function to be called on value change
+     * @property {Function} onChange - function to be called on value change
      * @property {string} value - location, format: "<latitude>, <longitude>"
      */
     static propTypes = {
         onChange: PropTypes.func.isRequired,
-        value: PropTypes.string.isRequired
+        value: PropTypes.string.isRequired,
+        toolbox: PropTypes.shape({}).isRequired
     };
 
     constructor(props, context) {
@@ -38,6 +39,7 @@ export default class SiteLocationInput extends React.Component {
     render() {
         const { Button, Form } = Stage.Basic;
         const { mapOpen, value } = this.state;
+        const { toolbox } = this.props;
 
         return (
             <>
@@ -61,6 +63,7 @@ export default class SiteLocationInput extends React.Component {
                             onClick: e => this.onLocationChange(`${e.latlng.lat}, ${e.latlng.lng}`),
                             style: { height: 'calc(100vh - 344px)', maxHeight: 460, marginTop: -14, cursor: 'pointer' }
                         }}
+                        toolbox={toolbox}
                     />
                 )}
             </>
