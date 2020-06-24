@@ -36,12 +36,6 @@ describe('Outputs/Capabilities', () => {
             // Navigate to Local Blueprints page
             cy.get('.local_blueprintsPageMenuItem').click();
 
-            // Use search to limit number of presented blueprints
-            cy.get('.blueprintsTable div.input input')
-                .clear()
-                .type(blueprintName)
-                .blur();
-
             // Go into Blueprint page
             cy.get(`#blueprintsTable_${blueprintName} > td > .blueprintName`).click();
 
@@ -68,12 +62,6 @@ describe('Outputs/Capabilities', () => {
 
         // Navigate to Local Blueprints page
         cy.get('.local_blueprintsPageMenuItem').click();
-
-        // Use search to limit number of presented blueprints
-        cy.get('.blueprintsTable div.input input')
-            .clear()
-            .type(blueprintName)
-            .blur();
 
         // Go into Blueprint page
         cy.get(`#blueprintsTable_${blueprintName} > td > .blueprintName`).click();
