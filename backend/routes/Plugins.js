@@ -3,6 +3,7 @@ const express = require('express');
 const router = express.Router();
 const passport = require('passport');
 const multer = require('multer');
+const yaml = require('js-yaml');
 
 const upload = multer();
 
@@ -86,6 +87,27 @@ router.get('/icons/:pluginId', (req, res) => {
     ).pipe(res);
 });
 
+router.put('/title', upload.fields(_.map(['yaml_file'], name => ({ name, maxCount: 1 }))), (req, res, next) => {
+    let getPluginYaml;
+    if (req.query.yamlUrl) {
+        getPluginYaml = downloadFile(req.query.yamlUrl);
+    } else {
+        getPluginYaml = Promise.resolve(req.files.yaml_file[0].buffer);
+    }
+
+    getPluginYaml
+        .then(yaml.safeLoad)
+        .then(pluginYamlData =>
+            res.status(200).send({
+                title: _.chain(pluginYamlData.plugins)
+                    .values()
+                    .head()
+                    .get('package_name', '')
+            })
+        )
+        .catch(() => res.status(200).send({ title: '' }));
+});
+
 router.post(
     '/upload',
     passport.authenticate('token', { session: false }),
@@ -121,7 +143,7 @@ router.post(
             .then(([wagonFile, yamlFile, iconFile]) => {
                 const uploadRequest = ManagerHandler.request(
                     'post',
-                    `/plugins?visibility=${req.query.visibility}`,
+                    `/plugins?visibility=${req.query.visibility}&title=${req.query.title}`,
                     {
                         'authentication-token': req.headers['authentication-token'],
                         tenant: req.headers.tenant

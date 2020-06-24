@@ -5,12 +5,14 @@
 const placeholders = {
     wagon: "Provide the plugin's wagon file URL or click browse to select a file",
     yaml: "Provide the plugin's YAML file URL or click browse to select a file",
+    title: "Provide the plugin's title",
     icon: "Provide the plugin's icon file URL or click browse to select a file"
 };
 
 class UploadPluginForm extends React.Component {
     constructor(props) {
         super(props);
+        this.state = { title: '' };
     }
 
     static propTypes = {
@@ -18,11 +20,11 @@ class UploadPluginForm extends React.Component {
         yamlUrl: PropTypes.string,
         iconUrl: PropTypes.string,
         errors: PropTypes.object,
-        loading: PropTypes.bool,
         onChange: PropTypes.func.isRequired,
         wrapInForm: PropTypes.bool,
         addRequiredMarks: PropTypes.bool,
-        hidePlaceholders: PropTypes.bool
+        hidePlaceholders: PropTypes.bool,
+        toolbox: PropTypes.shape({ getInternal: PropTypes.func }).isRequired
     };
 
     static defaultProps = {
@@ -30,7 +32,6 @@ class UploadPluginForm extends React.Component {
         yamlUrl: '',
         iconUrl: '',
         errors: {},
-        loading: false,
         wrapInForm: true,
         addRequiredMarks: true
     };
@@ -38,10 +39,6 @@ class UploadPluginForm extends React.Component {
     static NO_ERRORS = { errors: {} };
 
     componentDidMount() {
-        this.resetErrors();
-    }
-
-    resetErrors() {
         const { onChange: cbOnChange } = this.props;
         cbOnChange(UploadPluginForm.NO_ERRORS);
     }
@@ -55,7 +52,7 @@ class UploadPluginForm extends React.Component {
         });
     }
 
-    createFormField(field, required) {
+    createUrlOrFileFormField(field, required, onChangeUrl = _.noop, onChangeFile = _.noop, onBlurUrl) {
         const { errors, hidePlaceholders } = this.props;
         const { Form } = Stage.Basic;
         const fieldName = field.toLowerCase();
@@ -66,31 +63,77 @@ class UploadPluginForm extends React.Component {
                     name={fieldName}
                     value={urlProp}
                     placeholder={hidePlaceholders ? '' : placeholders[fieldName]}
-                    onChangeUrl={url => this.onChange(fieldName, null, url)}
-                    onChangeFile={file => this.onChange(fieldName, file || null, file ? file.name : '')}
+                    onChangeUrl={url => {
+                        this.onChange(fieldName, null, url);
+                        onChangeUrl(url);
+                    }}
+                    onChangeFile={file => {
+                        this.onChange(fieldName, file || null, file ? file.name : '');
+                        onChangeFile(file);
+                    }}
+                    onBlurUrl={onBlurUrl}
                 />
             </Form.Field>
         );
     }
 
     render() {
-        const { addRequiredMarks, errors, loading, wrapInForm } = this.props;
-        const { Container, Form } = Stage.Basic;
+        const { addRequiredMarks, errors, hidePlaceholders, toolbox, wrapInForm } = this.props;
+        const { loading, title } = this.state;
+        const { Container, Form, LoadingOverlay } = Stage.Basic;
 
         const formFields = [
-            this.createFormField('Wagon', addRequiredMarks),
-            this.createFormField('YAML', addRequiredMarks),
-            this.createFormField('Icon', false)
+            this.createUrlOrFileFormField('Wagon', addRequiredMarks),
+            this.createUrlOrFileFormField(
+                'YAML',
+                addRequiredMarks,
+                pluginYamlUrl => this.setState({ pluginYamlUrl }),
+                pluginYamlFile => {
+                    if (pluginYamlFile && !title) {
+                        this.setState({ loading: true });
+                        toolbox
+                            .getInternal()
+                            .doUpload('/plugins/title', null, { yaml_file: pluginYamlFile })
+                            .then(response => this.setState(response))
+                            .finally(() => this.setState({ loading: false }));
+                    }
+                },
+                () => {
+                    const { pluginYamlUrl } = this.state;
+                    if (pluginYamlUrl && !title) {
+                        this.setState({ loading: true });
+                        toolbox
+                            .getInternal()
+                            .doPut('/plugins/title', { yamlUrl: pluginYamlUrl })
+                            .then(response => this.setState(response))
+                            .finally(() => this.setState({ loading: false }));
+                    }
+                }
+            ),
+            <Form.Field label="Plugin title" required={addRequiredMarks} key="title" error={errors.title}>
+                <Form.Input
+                    name="title"
+                    value={title}
+                    placeholder={hidePlaceholders ? '' : placeholders.title}
+                    onChange={(e, { value }) => {
+                        const { onChange } = this.props;
+                        onChange({
+                            ...UploadPluginForm.NO_ERRORS,
+                            title: value
+                        });
+                        this.setState({ title: value });
+                    }}
+                />
+            </Form.Field>,
+            this.createUrlOrFileFormField('Icon', false)
         ];
 
-        if (wrapInForm) {
-            return (
-                <Form errors={errors} onErrorsDismiss={this.resetErrors.bind(this)} loading={loading}>
-                    {formFields}
-                </Form>
-            );
-        }
-        return <Container fluid>{formFields}</Container>;
+        return (
+            <>
+                {loading && <LoadingOverlay />}
+                {formFields}
+            </>
+        );
     }
 }
 
