@@ -67,10 +67,9 @@ class SitesMap extends React.Component {
         const { toolbox } = this.props;
         const { MapsActions } = Stage.Common;
 
-        return new MapsActions(toolbox).isAvailable().then(isMapAvailable => {
-            console.error(isMapAvailable);
-            this.setState({ isMapAvailable });
-        });
+        return new MapsActions(toolbox).isAvailable().then(isMapAvailable =>
+            this.setState({ isMapAvailable })
+        );
     }
 
     componentDidUpdate(prevProps) {
