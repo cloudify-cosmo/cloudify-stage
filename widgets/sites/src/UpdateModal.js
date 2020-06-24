@@ -98,6 +98,7 @@ export default class UpdateModal extends React.Component {
                                 <SiteLocationInput
                                     value={this.state.siteLocation}
                                     onChange={this._handleInputChange.bind(this)}
+                                    toolbox={this.props.toolbox}
                                 />
                             </Form.Field>
                         </Form>

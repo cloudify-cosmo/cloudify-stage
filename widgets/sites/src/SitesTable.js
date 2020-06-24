@@ -168,6 +168,7 @@ export default class SitesTable extends React.Component {
                                                             zoomControl: false,
                                                             style: { width: 200, height: 200 }
                                                         }}
+                                                        toolbox={this.props.toolbox}
                                                     />
                                                 </Popup.Content>
                                             </Popup>

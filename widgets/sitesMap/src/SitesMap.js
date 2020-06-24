@@ -8,8 +8,6 @@ class SitesMap extends React.Component {
      * @property {object} toolbox - Toolbox object
      * @property {object} data - object with sites data
      * @property {object} dimensions - object with widget dimensions
-     * @property {string} mapUrl - map provider URL
-     * @property {string} tilesUrlTemplate - map tiles provider template URL
      * @property {string} attribution - map attribution to be added to map view
      * @property {boolean} showAllLabels - specifies whether all the site labels displayed
      */
@@ -37,8 +35,6 @@ class SitesMap extends React.Component {
             maximized: PropTypes.bool
         }).isRequired,
 
-        mapUrl: PropTypes.string.isRequired,
-        tilesUrlTemplate: PropTypes.string.isRequired,
         attribution: PropTypes.string.isRequired,
 
         showAllLabels: PropTypes.bool.isRequired
@@ -49,32 +45,29 @@ class SitesMap extends React.Component {
 
         this.mapRef = React.createRef();
         this.state = {
-            isMapAvailable: true
+            isMapAvailable: null
         };
     }
 
     shouldComponentUpdate(nextProps, nextState) {
-        const { attribution, data, dimensions, mapUrl, showAllLabels, sitesAreDefined, tilesUrlTemplate } = this.props;
+        const { attribution, data, dimensions, showAllLabels, sitesAreDefined } = this.props;
         const { isMapAvailable } = this.state;
 
         return (
             !_.isEqual(attribution, nextProps.attribution) ||
             !_.isEqual(data, nextProps.data) ||
             !_.isEqual(dimensions, nextProps.dimensions) ||
-            !_.isEqual(mapUrl, nextProps.mapUrl) ||
             !_.isEqual(showAllLabels, nextProps.showAllLabels) ||
             !_.isEqual(sitesAreDefined, nextProps.sitesAreDefined) ||
-            !_.isEqual(tilesUrlTemplate, nextProps.tilesUrlTemplate) ||
             !_.isEqual(isMapAvailable, nextState.isMapAvailable)
         );
     }
 
     componentDidMount() {
-        const { mapUrl, toolbox } = this.props;
-        toolbox
-            .getExternal()
-            .isReachable(mapUrl)
-            .then(isMapAvailable => this.setState({ isMapAvailable }));
+        const { toolbox } = this.props;
+        const { MapsActions } = Stage.Common;
+
+        return new MapsActions(toolbox).isAvailable().then(isMapAvailable => this.setState({ isMapAvailable }));
     }
 
     componentDidUpdate(prevProps) {
@@ -87,7 +80,7 @@ class SitesMap extends React.Component {
         }
     }
 
-    _openPopup(marker) {
+    openPopup(marker) {
         if (marker && marker.leafletElement) {
             window.setTimeout(() => {
                 marker.leafletElement.openPopup();
@@ -95,10 +88,10 @@ class SitesMap extends React.Component {
         }
     }
 
-    _createMarkers() {
+    createMarkers() {
         const markers = [];
         const { data, showAllLabels, toolbox } = this.props;
-        const showLabels = showAllLabels ? this._openPopup : undefined;
+        const showLabels = showAllLabels ? this.openPopup : undefined;
 
         _.forEach(data, site => {
             const { createMarkerIcon } = Stage.Common;
@@ -107,7 +100,7 @@ class SitesMap extends React.Component {
             const { Marker, Popup } = Stage.Basic.Leaflet;
             markers.push(
                 <Marker
-                    position={this._mapToLatLng(site)}
+                    position={this.mapToLatLng(site)}
                     ref={showLabels}
                     key={`siteMarker${site.name}`}
                     riseOnHover
@@ -123,40 +116,46 @@ class SitesMap extends React.Component {
         return markers;
     }
 
-    _mapToLatLng(site) {
+    mapToLatLng(site) {
         return [site.latitude, site.longitude];
     }
 
     render() {
-        const { Map, TileLayer } = Stage.Basic.Leaflet;
+        const { Leaflet, Loading } = Stage.Basic;
+        const { Map, TileLayer } = Leaflet;
 
-        const { attribution, sitesAreDefined, tilesUrlTemplate } = this.props;
+        const { attribution, data, sitesAreDefined } = this.props;
         const { isMapAvailable } = this.state;
 
-        if (!isMapAvailable) {
+        if (isMapAvailable === null) {
+            return <Loading />;
+        }
+
+        if (isMapAvailable === false) {
             const NO_INTERNET_MESSAGE = `The widget content cannot be displayed because there is no connection 
                                          to the maps repository. Please check network connection and widget's configuration.`;
             return <MapMessage text={NO_INTERNET_MESSAGE} />;
         }
 
-        const markers = this._createMarkers();
+        const markers = this.createMarkers();
         if (_.isEmpty(markers)) {
             return <NoDataMessage sitesAreDefined={sitesAreDefined} />;
         }
 
-        const mapOptions = { ...Stage.Common.Consts.leaflet.mapOptions };
+        const { initialZoom, mapOptions, urlTemplate } = Stage.Common.Consts.leaflet;
+        const url = Stage.Utils.Url.url(urlTemplate);
 
-        const sites = _.values(this.props.data);
+        const sites = _.values(data);
         if (sites.length > 1) {
-            mapOptions.bounds = L.latLngBounds(sites.map(this._mapToLatLng)).pad(0.05);
+            mapOptions.bounds = L.latLngBounds(sites.map(this.mapToLatLng)).pad(0.05);
         } else {
-            mapOptions.center = this._mapToLatLng(sites[0]);
-            mapOptions.zoom = Stage.Common.Consts.leaflet.initialZoom;
+            mapOptions.center = this.mapToLatLng(sites[0]);
+            mapOptions.zoom = initialZoom;
         }
 
         return (
             <Map ref={this.mapRef} className="sites-map" {...mapOptions}>
-                <TileLayer attribution={attribution} url={tilesUrlTemplate} />
+                <TileLayer attribution={attribution} url={url} />
                 {markers}
             </Map>
         );

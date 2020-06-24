@@ -106,7 +106,10 @@ export default class CreateModal extends React.Component {
                             />
                         </Form.Field>
                         <Form.Field error={this.state.errors.siteLocation}>
-                            <SiteLocationInput onChange={this._handleInputChange.bind(this)} />
+                            <SiteLocationInput
+                                onChange={this._handleInputChange.bind(this)}
+                                toolbox={this.props.toolbox}
+                            />
                         </Form.Field>
                     </Form>
                 </Modal.Content>
