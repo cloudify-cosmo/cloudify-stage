@@ -11,8 +11,8 @@ router.use(passport.authenticate('cookie', { session: false }));
 
 router.get('/:z/:x/:y/:r?', (req, res) => {
     const { x, y, z, r = '' } = req.params;
-    const { key, tilesUrlTemplate } = config.app.maps;
-    const url = _.template(tilesUrlTemplate)({ x, y, z, r, key });
+    const { accessToken, tilesUrlTemplate } = config.app.maps;
+    const url = _.template(tilesUrlTemplate)({ x, y, z, r, accessToken });
 
     logger.debug(`Fetching map tiles from ${tilesUrlTemplate}, x=${x}, y=${y}, z=${z}, r='${r}'.`);
     req.pipe(
