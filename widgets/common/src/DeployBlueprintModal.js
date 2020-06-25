@@ -85,6 +85,11 @@ class DeployBlueprintModal extends React.Component {
         return true;
     }
 
+    openDeploymentPage(deploymentId) {
+        const { toolbox } = this.props;
+        toolbox.drillDown(toolbox.getWidget(), 'deployment', { deploymentId }, deploymentId);
+    }
+
     onDeploy() {
         const { onHide, toolbox } = this.props;
 
@@ -95,10 +100,11 @@ class DeployBlueprintModal extends React.Component {
                 this.setLoadingMessage(paths.deploy, steps.deployBlueprint);
                 return this.deployBlueprint(deploymentInputs);
             })
-            .then((/* deployment */) => {
+            .then(({ id }) => {
                 this.setState({ loading: false, errors: {} });
                 toolbox.getEventBus().trigger('deployments:refresh');
                 onHide();
+                this.openDeploymentPage(id);
             })
             .catch(errors => {
                 this.setState({ loading: false, errors });
@@ -125,11 +131,12 @@ class DeployBlueprintModal extends React.Component {
                 this.setLoadingMessage(paths.deployAndInstall, steps.installDeployment);
                 return this.installDeployment(deploymentId, workflowParameters, force, dryRun, queue, scheduledTime);
             })
-            .then((/* execution */) => {
+            .then(({ deployment_id: id }) => {
                 this.setState({ loading: false, errors: {} });
                 toolbox.getEventBus().trigger('deployments:refresh');
                 toolbox.getEventBus().trigger('executions:refresh');
-                return onHide();
+                onHide();
+                this.openDeploymentPage(id);
             })
             .catch(errors => {
                 this.setState({ loading: false, errors });
@@ -490,7 +497,9 @@ DeployBlueprintModal.propTypes = {
      * Toolbox object
      */
     toolbox: PropTypes.shape({
-        getEventBus: PropTypes.func.isRequired
+        drillDown: PropTypes.func.isRequired,
+        getEventBus: PropTypes.func.isRequired,
+        getWidget: PropTypes.func.isRequired
     }).isRequired,
 
     /**
