@@ -39,8 +39,8 @@ class DeploymentStates {
     };
 
     static getDeploymentState(deploymentId, nodeInstanceData, lastExecution) {
-        const nodeStates = nodeInstanceData[deploymentId].states;
-        const nodeInstanceCount = nodeInstanceData[deploymentId].count;
+        const nodeStates = _.get(nodeInstanceData[deploymentId], 'states', {});
+        const nodeInstanceCount = _.get(nodeInstanceData[deploymentId], 'count', 0);
 
         if (Stage.Utils.Execution.isActiveExecution(lastExecution)) {
             return DeploymentStates.IN_PROGRESS_STATE;
