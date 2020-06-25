@@ -33,10 +33,10 @@ describe('Outputs/Capabilities', () => {
         }
 
         it('in Blueprint page', () => {
-            // Navigate to Local Blueprints page
+            cy.log('Navigate to Local Blueprints page');
             cy.get('.local_blueprintsPageMenuItem').click();
 
-            // Go into Blueprint page
+            cy.log('Go into Blueprint page');
             cy.get(`#blueprintsTable_${blueprintName} > td > .blueprintName`).click();
 
             checkTable();
@@ -45,10 +45,10 @@ describe('Outputs/Capabilities', () => {
         it('in Deployment page', () => {
             cy.deployBlueprint(blueprintName, deploymentName);
 
-            // Navigate to Deployments page
+            cy.log('Navigate to Deployments page');
             cy.get('.deploymentsPageMenuItem').click();
 
-            // Go into Deployment page
+            cy.log('Go into Deployment page');
             cy.get(`.ui.segment.${deploymentName} > .ui > .row`).click();
 
             checkTable();
@@ -60,10 +60,10 @@ describe('Outputs/Capabilities', () => {
             .deleteBlueprints(blueprintName, true)
             .uploadBlueprint('blueprints/empty.zip', blueprintName);
 
-        // Navigate to Local Blueprints page
+        cy.log('Navigate to Local Blueprints page');
         cy.get('.local_blueprintsPageMenuItem').click();
 
-        // Go into Blueprint page
+        cy.log('Go into Blueprint page');
         cy.get(`#blueprintsTable_${blueprintName} > td > .blueprintName`).click();
 
         cy.contains('Export to JSON').should('not.exist');
