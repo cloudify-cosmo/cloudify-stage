@@ -3,6 +3,8 @@
  */
 
 import ExecutionsTable from './ExecutionsTable';
+import ExecutionWorkflowGraph from './tasksGraph/ExecutionWorkflowGraph';
+import SingleExecution from './SingleExecution';
 
 Stage.defineWidget({
     id: 'executions',
@@ -48,10 +50,20 @@ Stage.defineWidget({
             type: Stage.Basic.GenericField.BOOLEAN_TYPE
         },
         Stage.GenericConfig.SORT_COLUMN_CONFIG('created_at'),
-        Stage.GenericConfig.SORT_ASCENDING_CONFIG(false)
+        Stage.GenericConfig.SORT_ASCENDING_CONFIG(false),
+        {
+            id: 'singleExecutionView',
+            name: 'Show most recent execution only',
+            default: false,
+            type: Stage.Basic.GenericField.BOOLEAN_TYPE
+        }
     ],
 
     fetchParams(widget, toolbox) {
+        if (widget.configuration.singleExecutionView)
+            return {
+                id: toolbox.getContext().getValue('executionId')
+            };
         return {
             blueprint_id: toolbox.getContext().getValue('blueprintId'),
             deployment_id: toolbox.getContext().getValue('deploymentId'),
@@ -64,6 +76,18 @@ Stage.defineWidget({
     },
 
     render(widget, data, error, toolbox) {
+        const { singleExecutionView } = widget.configuration;
+        const selectedExecutionId = toolbox.getContext().getValue('executionId');
+
+        if (singleExecutionView) {
+            const selectedExecution = _.find(data.items, { id: selectedExecutionId });
+            if (_.isEmpty(data) || !selectedExecution) {
+                return <Stage.Basic.Loading />;
+            }
+
+            return <SingleExecution execution={selectedExecution} toolbox={toolbox} />;
+        }
+
         if (_.isEmpty(data)) {
             return <Stage.Basic.Loading />;
         }
@@ -76,7 +100,7 @@ Stage.defineWidget({
                 created_at: Stage.Utils.Time.formatTimestamp(item.created_at), // 2016-07-20 09:10:53.103579
                 scheduled_for: Stage.Utils.Time.formatTimestamp(item.scheduled_for),
                 ended_at: Stage.Utils.Time.formatTimestamp(item.ended_at),
-                isSelected: item.id === selectedExecution
+                isSelected: item.id === selectedExecutionId
             })),
             total: _.get(data, 'metadata.pagination.total', 0),
             blueprintId: params.blueprint_id,

@@ -8,7 +8,6 @@ import states from './States';
 
 const POLLING_INTERVAL = 5000;
 
-const MAX_TABLE_GRAPH_HEIGHT = 380;
 const MIN_MODAL_GRAPH_HEIGHT = 300;
 const GRAPH_MARGIN = 25;
 
@@ -20,7 +19,8 @@ export default class ExecutionWorkflowGraph extends React.Component {
      * @property {Any} [selectedExecution] - Used to pull the execution's tasks graphs and corresponding operations' lists
      */
     static propTypes = {
-        selectedExecution: PropTypes.any.isRequired
+        selectedExecution: PropTypes.any.isRequired,
+        containerHeight: PropTypes.number.isRequired
     };
 
     constructor(props, context) {
@@ -206,15 +206,12 @@ export default class ExecutionWorkflowGraph extends React.Component {
     render() {
         const { containerWidth, error, graphResult, maximized, modalWidth } = this.state;
         const { Loading, Message, Modal } = Stage.Basic;
+        const { containerHeight } = this.props;
         if (graphResult !== null) {
             const height = graphResult.height + 2 * GRAPH_MARGIN + 8;
             return (
                 <div ref={this.wrapper} style={{ position: 'relative' }}>
-                    {this.renderGraph(
-                        Math.max(0, containerWidth - 1),
-                        Math.min(MAX_TABLE_GRAPH_HEIGHT, height),
-                        'position'
-                    )}
+                    {this.renderGraph(Math.max(0, containerWidth - 1), containerHeight, 'position')}
                     <Modal
                         open={maximized}
                         onClose={() => this.setState({ maximized: false })}
