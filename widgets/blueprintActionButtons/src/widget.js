@@ -18,34 +18,9 @@ Stage.defineWidget({
     permission: Stage.GenericConfig.WIDGET_PERMISSION('blueprintActionButtons'),
     categories: [Stage.GenericConfig.CATEGORY.BLUEPRINTS, Stage.GenericConfig.CATEGORY.BUTTONS_AND_FILTERS],
 
-    fetchData(widget, toolbox) {
-        const blueprintId = toolbox.getContext().getValue('blueprintId');
-
-        if (!_.isEmpty(blueprintId)) {
-            toolbox.loading(true);
-            return toolbox
-                .getManager()
-                .doGet(`/blueprints/${blueprintId}`)
-                .then(blueprint => {
-                    toolbox.loading(false);
-                    return Promise.resolve(blueprint);
-                });
-        }
-
-        return Promise.resolve(BlueprintActionButtons.EMPTY_BLUEPRINT);
-    },
-
-    fetchParams(widget, toolbox) {
-        const blueprintId = toolbox.getContext().getValue('blueprintId');
-
-        return { blueprint_id: blueprintId };
-    },
-
     render(widget, data, error, toolbox) {
-        if (_.isEmpty(data)) {
-            return <Stage.Basic.Loading />;
-        }
+        const blueprintId = toolbox.getContext().getValue('blueprintId');
 
-        return <BlueprintActionButtons blueprint={data} widget={widget} toolbox={toolbox} />;
+        return <BlueprintActionButtons blueprintId={blueprintId} toolbox={toolbox} />;
     }
 });

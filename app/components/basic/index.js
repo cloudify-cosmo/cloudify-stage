@@ -52,6 +52,7 @@ import HighlightText from './HighlightText';
 import IdPopup from './IdPopup';
 import KeyIndicator from './KeyIndicator';
 import Loading from './Loading';
+import LoadingOverlay from './LoadingOverlay';
 import Leaflet from './leaflet';
 import MaintenanceModeActivationButton from './maintenance/MaintenanceModeActivationButton';
 import MaintenanceModeModal from './maintenance/MaintenanceModeModal';
@@ -115,6 +116,7 @@ export {
     Link,
     Loader,
     Loading,
+    LoadingOverlay,
     MaintenanceModeActivationButton,
     MaintenanceModeModal,
     Menu,

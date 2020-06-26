@@ -24,14 +24,17 @@ export default class ExecuteDeploymentModal extends React.Component {
     static propTypes = {
         toolbox: PropTypes.object.isRequired,
         open: PropTypes.bool.isRequired,
-        deployment: PropTypes.object.isRequired,
+        deployment: PropTypes.object,
         deployments: PropTypes.array,
         workflow: PropTypes.object.isRequired,
+        onExecute: PropTypes.func,
         onHide: PropTypes.func.isRequired
     };
 
     static defaultProps = {
-        deployments: []
+        deployment: {},
+        deployments: [],
+        onExecute: _.noop
     };
 
     componentDidUpdate(prevProps) {
@@ -86,6 +89,21 @@ export default class ExecuteDeploymentModal extends React.Component {
         if (!_.isEmpty(errors)) {
             this.setState({ errors });
             return false;
+        }
+
+        if (_.isFunction(this.props.onExecute) && this.props.onExecute !== _.noop) {
+            const scheduledTime = this.state.schedule
+                ? moment(this.state.scheduledTime).format('YYYYMMDDHHmmZ')
+                : undefined;
+            this.props.onExecute(
+                workflowParameters,
+                this.state.force,
+                this.state.dryRun,
+                this.state.queue,
+                scheduledTime
+            );
+            this.props.onHide();
+            return true;
         }
 
         this.setState({ loading: true });
@@ -172,7 +190,8 @@ export default class ExecuteDeploymentModal extends React.Component {
                 className="executeWorkflowModal"
             >
                 <Modal.Header>
-                    <Icon name="road" /> Execute workflow {workflow.name} on {deploymentName}
+                    <Icon name="road" /> Execute workflow {workflow.name}
+                    {deploymentName && ` on ${deploymentName}`}
                 </Modal.Header>
 
                 <Modal.Content>

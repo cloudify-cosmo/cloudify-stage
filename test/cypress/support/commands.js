@@ -8,6 +8,9 @@
 // https://on.cypress.io/custom-commands
 // ***********************************************
 
+import './blueprints';
+import './deployments';
+import './executions';
 import './users';
 import './sites';
 import './templates';
@@ -15,10 +18,18 @@ import './localStorage';
 
 let token = '';
 
+const getCommonHeaders = () => ({
+    'Authentication-Token': token,
+    tenant: 'default_tenant'
+});
+
 Cypress.Commands.add('restoreState', () => cy.restoreLocalStorage());
 
 Cypress.Commands.add('waitUntilLoaded', () => {
-    cy.get('#loader', { timeout: 20000 }).should('be.not.visible', true);
+    cy.log('Wait for splash screen loader to disappear');
+    cy.get('#loader', { timeout: 20000 }).should('be.not.visible');
+    cy.log('Wait for widgets loaders to disappear');
+    cy.get('div.loader', { timeout: 10000 }).should('not.be.visible');
 });
 
 Cypress.Commands.add('uploadLicense', license =>
@@ -39,19 +50,23 @@ Cypress.Commands.add('uploadLicense', license =>
 );
 
 Cypress.Commands.add('activate', (license = 'valid_trial_license') =>
-    cy.uploadLicense(license).then(() => {
-        cy.request({
-            method: 'GET',
-            url: '/console/sp',
-            qs: {
-                su: '/tokens'
-            },
-            headers: {
-                Authorization: `Basic ${btoa('admin:admin')}`,
-                'Content-Type': 'application/json'
-            }
-        }).then(response => (token = response.body.value));
-    })
+    cy
+        .uploadLicense(license)
+        .then(() =>
+            cy.request({
+                method: 'GET',
+                url: '/console/sp',
+                qs: {
+                    su: '/tokens'
+                },
+                headers: {
+                    Authorization: `Basic ${btoa('admin:admin')}`,
+                    'Content-Type': 'application/json'
+                }
+            })
+        )
+        .then(response => (token = response.body.value))
+        .then(() => cy.stageRequest(`/console/ua/clear-pages?tenant=default_tenant`))
 );
 
 Cypress.Commands.add('cfyRequest', (url, method = 'GET', headers = null, body = null) =>
@@ -62,25 +77,45 @@ Cypress.Commands.add('cfyRequest', (url, method = 'GET', headers = null, body = 
             su: url
         },
         headers: {
-            'Authentication-Token': token,
             'Content-Type': 'application/json',
+            ...getCommonHeaders(),
             ...headers
         },
         body
     })
 );
 
-Cypress.Commands.add('stageRequest', (url, method = 'GET', headers = null, body = null) => {
+Cypress.Commands.add('cfyFileRequest', (filePath, isBinaryFile, url, method = 'PUT', headers = null) => {
+    const filePromise = isBinaryFile
+        ? cy.fixture(filePath, 'binary').then(binary => Cypress.Blob.binaryStringToBlob(binary))
+        : cy.fixture(filePath);
+
+    return filePromise.then(fileContent =>
+        cy.window().then(
+            window =>
+                new Promise((resolve, reject) => {
+                    const xhr = new window.XMLHttpRequest();
+                    xhr.open(method, `/console/sp?su=${encodeURIComponent(url)}`);
+                    xhr.onload = resolve;
+                    xhr.onerror = reject;
+                    Object.entries({ ...getCommonHeaders(), ...headers }).forEach(([name, value]) =>
+                        xhr.setRequestHeader(name, value)
+                    );
+                    xhr.send(fileContent);
+                })
+        )
+    );
+});
+
+Cypress.Commands.add('stageRequest', (url, method = 'GET', options) => {
     cy.request({
         method,
         url,
         headers: {
-            'Authentication-Token': token,
             'Content-Type': 'application/json',
-            tenant: 'default-tenant',
-            ...headers
+            ...getCommonHeaders()
         },
-        body
+        ...options
     });
 });
 
