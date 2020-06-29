@@ -24,7 +24,9 @@ pipeline {
                 dir('cloudify-stage') {
                     sh '''#!/bin/bash
                       . ${JENKINS_HOME}/jobs/credentials.sh > /dev/null 2>&1
-                      jq '.maps.accessToken = "$MAPS_ACCESS_TOKEN"' app.json > app.json.tmp && mv app.json.tmp app.json
+                      cd conf
+                      jq --arg map "${MAPS_ACCESS_TOKEN}" '.maps.accessToken = $map' app.json > app.json.tmp && mv app.json.tmp app.json
+                      cat app.json
                     '''
                     sh 'npm run beforebuild'
                     sh 'npm run build'
