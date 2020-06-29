@@ -26,7 +26,6 @@ pipeline {
                       . ${JENKINS_HOME}/jobs/credentials.sh > /dev/null 2>&1
                       cd conf
                       jq --arg map "${MAPS_ACCESS_TOKEN}" '.maps.accessToken = $map' app.json > app.json.tmp && mv app.json.tmp app.json
-                      cat app.json
                     '''
                     sh 'npm run beforebuild'
                     sh 'npm run build'
