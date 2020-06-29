@@ -163,37 +163,34 @@ module.exports = (env, argv) => {
             module,
             plugins: _.flatten(
                 _.compact([
-                    new CopyWebpackPlugin(
-                        _.compact([
-                            {
-                                from: 'node_modules/cloudify-ui-common/images/favicon.png',
-                                to: 'static/images'
-                            },
-                            {
-                                from: 'node_modules/cloudify-ui-common/images/logo.png',
-                                to: 'static/images'
-                            },
-                            {
-                                from: 'widgets',
-                                to: 'appData/widgets',
-                                ignore: ['**/src/**']
-                            },
-                            {
-                                from: 'templates',
-                                to: 'appData/templates'
-                            },
-                            {
-                                from: 'tours',
-                                to: 'appData/tours'
-                            }
-                        ])
-                    ),
+                    new CopyWebpackPlugin([
+                        {
+                            from: 'node_modules/cloudify-ui-common/images/favicon.png',
+                            to: 'static/images'
+                        },
+                        {
+                            from: 'node_modules/cloudify-ui-common/images/logo.png',
+                            to: 'static/images'
+                        },
+                        {
+                            from: 'widgets',
+                            to: 'appData/widgets',
+                            ignore: ['**/src/**']
+                        },
+                        {
+                            from: 'templates',
+                            to: 'appData/templates'
+                        },
+                        {
+                            from: 'tours',
+                            to: 'appData/tours'
+                        }
+                    ]),
                     new HtmlWebpackPlugin({
                         template: 'app/index.tmpl.html',
                         inject: 'body',
                         filename: 'static/index.html'
                     }),
-                    new webpack.optimize.OccurrenceOrderPlugin(false),
                     new webpack.ProvidePlugin({
                         $: 'jquery',
                         jQuery: 'jquery',

@@ -65,6 +65,11 @@ describe('Deployments - Create new deployment modal', () => {
         });
     };
 
+    const verifyRedirectionToDeploymentPage = deploymentName => {
+        cy.location('pathname').should('have.string', `deployment/${deploymentName}`);
+        cy.get('.breadcrumb .pageTitle').should('have.text', deploymentName);
+    };
+
     const verifyDeployBlueprintModal = () => {
         cy.get('div.deployBlueprintModal').should('be.visible');
         cy.get('.actions > .ui:nth-child(1)').should('have.text', 'Cancel');
@@ -112,6 +117,7 @@ describe('Deployments - Create new deployment modal', () => {
         cy.get('div.deploymentButtonWidget button').click();
         const deploymentNameWithoutInstall = `${resourcePrefix}onlyDeploy`;
         deployBlueprint(deploymentNameWithoutInstall, false);
+        verifyRedirectionToDeploymentPage(deploymentNameWithoutInstall);
         verifyBlueprintDeployed(testBlueprintId, deploymentNameWithoutInstall);
     });
 
@@ -121,6 +127,7 @@ describe('Deployments - Create new deployment modal', () => {
         const deploymentNameWithInstall = `${resourcePrefix}deployAndInstall`;
         deployBlueprint(deploymentNameWithInstall, true);
         verifyBlueprintDeployed(testBlueprintId, deploymentNameWithInstall);
+        verifyRedirectionToDeploymentPage(deploymentNameWithInstall);
         verifyDeploymentInstallStarted(deploymentNameWithInstall);
     });
 
