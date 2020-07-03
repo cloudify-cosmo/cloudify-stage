@@ -75,8 +75,7 @@ Stage.defineWidget({
 
     render(widget, data, error, toolbox) {
         if (!_.every(data, Boolean)) {
-            const { Message } = Stage.Basic;
-            const { MessageContainer } = Stage.Shared;
+            const { Message, MessageContainer } = Stage.Basic;
             return (
                 <MessageContainer wide size="mini" margin="0">
                     <Message style={{ padding: 7 }}>

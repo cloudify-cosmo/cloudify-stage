@@ -8,7 +8,6 @@ import IdPopup from './IdPopup';
 import Link from './Link';
 import MaintenanceModeActivationButton from './MaintenanceModeActivationButton';
 import MaintenanceModeModal from './MaintenanceModeModal';
-import MessageContainer from './MessageContainer';
 import PageFilter from './PageFilter';
 import PasswordModal from './PasswordModal';
 
@@ -22,7 +21,6 @@ export {
     Link,
     MaintenanceModeActivationButton,
     MaintenanceModeModal,
-    MessageContainer,
     PageFilter,
     PasswordModal,
     PieGraph

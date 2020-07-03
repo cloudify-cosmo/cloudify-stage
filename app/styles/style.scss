@@ -392,19 +392,7 @@ a:hover {
   }
 }
 
-.logoPage.ui.segment {
-  margin: 0 !important;
-  padding: 0 !important;
-  overflow: auto;
-  position: absolute;
-  left: 0;
-  right: 0;
-  top: 0;
-  bottom: 0;
-  border: none !important;
-  border-radius: 0 !important;
-
-  .loginContainer {
+.loginContainer {
     margin: auto;
     width: 350px;
     height: 170px;
@@ -416,33 +404,32 @@ a:hover {
 
     input,
     input:placeholder-shown {
-      margin: 0 50px;
+      margin: 0 50px !important;
       color: $white !important;
       background: rgba(255, 255, 255, 0.3) !important;
     }
 
     input:focus,
     input:placeholder-shown:focus {
-      background: rgba(255, 255, 255, 0.6);
+      background: rgba(255, 255, 255, 0.6) !important;
     }
 
     input::placeholder {
-      color: $white;
+      color: $white !important;
       opacity: 1 !important; /* Firefox */
     }
 
     button {
-      display: block;
-      margin: 30px auto;
-      width: 50%;
-      border-radius: 25px;
-      color: $white;
+      display: block !important;
+      margin: 30px auto !important;
+      width: 50% !important;
+      border-radius: 25px !important;
+      color: $white !important;
     }
   }
 
-  .loginContainerExtended {
-    height: 400px;
-  }
+.loginContainerExtended {
+  height: 400px;
 }
 
 .manager {
