@@ -230,7 +230,7 @@ export default class DeploymentsList extends React.Component {
                             </p>
                             <p>
                                 It's recommended to first run uninstall to stop the live nodes, and make sure there are
-                                no running deployments which depend on this one - and then run delete.
+                                no running installations which depend on this deployment - and then run delete.
                             </p>
                             <p>
                                 Are you sure you want to ignore the live nodes and delete the deployment {deployment.id}
