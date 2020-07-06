@@ -20,7 +20,7 @@ const mapStateToProps = state => ({
     url: _.get(state, 'config.app.whiteLabel.logoUrl', '')
 });
 
-const mapDispatchToProps = () => {};
+const mapDispatchToProps = () => ({});
 
 export default connect(
     mapStateToProps,
