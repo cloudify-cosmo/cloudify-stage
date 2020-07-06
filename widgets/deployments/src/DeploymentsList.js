@@ -222,9 +222,22 @@ export default class DeploymentsList extends React.Component {
                 />
 
                 <Confirm
-                    content={`Its recommended to first run uninstall to stop the live nodes, and then run delete.
-                                   Force delete will ignore any existing live nodes.
-                                   Are you sure you want to ignore the live nodes and delete the deployment ${deployment.id}?`}
+                    content={
+                        <div className="content">
+                            <p>
+                                Force delete will ignore any existing live nodes, or existing deployments which depend
+                                on this deployment.
+                            </p>
+                            <p>
+                                It's recommended to first run uninstall to stop the live nodes, and make sure there are
+                                no running installations which depend on this deployment - and then run delete.
+                            </p>
+                            <p>
+                                Are you sure you want to ignore the live nodes and delete the deployment {deployment.id}
+                                ?
+                            </p>
+                        </div>
+                    }
                     open={modalType === MenuAction.FORCE_DELETE_ACTION && showModal}
                     onConfirm={this.forceDeleteDeployment.bind(this)}
                     onCancel={this.hideModal.bind(this)}
