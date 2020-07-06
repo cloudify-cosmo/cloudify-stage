@@ -42,7 +42,7 @@
     "blueimp-md5": "^2.7.0",
     "cloudify-blueprint-topology": "^2.3.0",
     "cloudify-ui-common": "1.6.2",
-    "cloudify-ui-components": "1.1.0",
+    "cloudify-ui-components": "1.2.0",
     "connected-react-router": "^6.5.2",
     "d3": "^3.5.17",
     "d3-format": "^1.3.2",
