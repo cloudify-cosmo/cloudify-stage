@@ -1,91 +1,136 @@
 {
-  "name": "Deployment",
+  "name": "deployment",
   "widgets": [
     {
       "name": "Deployment Info",
-      "definition": "deploymentInfo",
-      "width": 16,
+      "width": 12,
       "height": 7,
       "x": 0,
-      "y": 0
+      "y": 0,
+      "definition": "deploymentInfo"
     },
     {
-      "name": "Deployment Action Buttons",
-      "definition": "deploymentActionButtons",
-      "width": 7,
-      "height": 3,
-      "x": 0,
-      "y": 7
-    },
-    {
-      "name": "Deployment Topology",
-      "definition": "topology",
+      "name": "Deployment action buttons",
       "width": 12,
-      "height": 30,
+      "height": 2,
       "x": 0,
-      "y": 12
-    },
-    {
-      "name": "Deployment Nodes",
-      "definition": "nodes",
-      "width": 12,
-      "height": 24,
-      "x": 0,
-      "y": 42,
-      "configuration": {
-        "fieldsToShow": ["Name","Type","Deployment","Contained in","Connected to","Host","Creator","# Instances","Groups"]
-      }
-    },
-    {
-      "name": "Deployment Inputs",
-      "width": 6,
-      "height": 12,
-      "definition": "inputs",
-      "x": 0,
-      "y": 66
-    },
-    {
-      "name": "Deployment Outputs/Capabilities",
-      "width": 6,
-      "height": 12,
-      "definition": "outputs",
-      "x": 6,
-      "y": 66
-    },
-    {
-      "name": "Deployment Executions",
-      "width": 12,
-      "height": 24,
-      "definition": "executions",
-      "x": 0,
-      "y": 78
-    },
-    {
-      "name": "Events/Logs Filter",
-      "width": 12,
-      "height": 5,
-      "definition": "eventsFilter",
-      "x": 0,
-      "y": 102
-    },
-    {
-      "name": "Deployment Events/Logs",
-      "width": 12,
-      "height": 24,
-      "definition": "events",
-      "configuration": {
-        "fieldsToShow": ["Icon","Timestamp","Type","Workflow","Operation","Node Id","Node Instance Id","Message"]
-      },
-      "x": 0,
-      "y": 107
-    },
-    {
-      "name": "Deployment Sources",
-      "width": 12,
-      "height": 40,
-      "definition": "blueprintSources",
-      "x": 0,
-      "y": 131
+      "y": 7,
+      "definition": "deploymentActionButtons"
     }
-  ]
+  ],
+  "tabs": [
+    {
+      "name": "Last Execution",
+      "widgets": [
+        {
+          "name": "Execution Task Graph",
+          "width": 12,
+          "height": 24,
+          "x": 0,
+          "y": 0,
+          "configuration": {
+            "pollingTime": 3,
+            "showSystemExecutions": false,
+            "singleExecutionView": true
+          },
+          "definition": "executions"
+        },
+        {
+          "name": "Events/logs filter",
+          "width": 12,
+          "height": 5,
+          "x": 0,
+          "y": 24,
+          "definition": "eventsFilter"
+        },
+        {
+          "name": "Deployment Events/Logs",
+          "width": 12,
+          "height": 18,
+          "x": 0,
+          "y": 29,
+          "definition": "events"
+        }
+      ],
+      "isDefault": true
+    },
+    {
+      "name": "Deployment Info",
+      "widgets": [
+        {
+          "name": "Deployment Topology",
+          "width": 12,
+          "height": 21,
+          "x": 0,
+          "y": 0,
+          "definition": "topology"
+        },
+        {
+          "name": "Deployment Outputs/Capabilities",
+          "width": 12,
+          "height": 20,
+          "x": 0,
+          "y": 21,
+          "definition": "outputs"
+        },
+        {
+          "name": "Deployment Inputs",
+          "width": 12,
+          "height": 20,
+          "x": 0,
+          "y": 41,
+          "definition": "inputs"
+        },
+        {
+          "name": "Deployment Sources",
+          "width": 12,
+          "height": 24,
+          "x": 0,
+          "y": 85,
+          "definition": "blueprintSources"
+        },
+        {
+          "name": "Deployment Nodes",
+          "width": 12,
+          "height": 24,
+          "x": 0,
+          "y": 61,
+          "definition": "nodes"
+        }
+      ],
+      "isDefault": false
+    },
+    {
+      "name": "History",
+      "widgets": [
+        {
+          "name": "Executions",
+          "width": 12,
+          "height": 24,
+          "x": 0,
+          "y": 0,
+          "definition": "executions"
+        },
+        {
+          "name": "Events/logs filter",
+          "width": 12,
+          "height": 5,
+          "x": 0,
+          "y": 24,
+          "definition": "eventsFilter"
+        },
+        {
+          "name": "Events/logs",
+          "width": 12,
+          "height": 23,
+          "x": 0,
+          "y": 29,
+          "definition": "events"
+        }
+      ],
+      "isDefault": false
+    }
+  ],
+  "updatedBy": "admin",
+  "updatedAt": "2020-07-07T11:24:19+02:00"
 }
