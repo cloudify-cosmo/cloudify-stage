@@ -60,10 +60,6 @@ Stage.defineWidget({
     ],
 
     fetchParams(widget, toolbox) {
-        if (widget.configuration.singleExecutionView)
-            return {
-                id: toolbox.getContext().getValue('executionId')
-            };
         return {
             blueprint_id: toolbox.getContext().getValue('blueprintId'),
             deployment_id: toolbox.getContext().getValue('deploymentId'),
@@ -76,20 +72,19 @@ Stage.defineWidget({
     },
 
     render(widget, data, error, toolbox) {
+        const { Loading } = Stage.Basic;
         const { singleExecutionView } = widget.configuration;
-        const selectedExecutionId = toolbox.getContext().getValue('executionId');
-
-        if (singleExecutionView) {
-            const selectedExecution = _.find(data.items, { id: selectedExecutionId });
-            if (_.isEmpty(data) || !selectedExecution) {
-                return <Stage.Basic.Loading />;
-            }
-
-            return <SingleExecution execution={selectedExecution} toolbox={toolbox} />;
-        }
 
         if (_.isEmpty(data)) {
-            return <Stage.Basic.Loading />;
+            return <Loading />;
+        }
+
+        if (singleExecutionView) {
+            const lastExecution = _.chain(data.items)
+                .sortBy('started_at')
+                .last()
+                .value();
+            return <SingleExecution execution={lastExecution} toolbox={toolbox} />;
         }
 
         const selectedExecution = toolbox.getContext().getValue('executionId');
@@ -100,7 +95,7 @@ Stage.defineWidget({
                 created_at: Stage.Utils.Time.formatTimestamp(item.created_at), // 2016-07-20 09:10:53.103579
                 scheduled_for: Stage.Utils.Time.formatTimestamp(item.scheduled_for),
                 ended_at: Stage.Utils.Time.formatTimestamp(item.ended_at),
-                isSelected: item.id === selectedExecutionId
+                isSelected: item.id === selectedExecution
             })),
             total: _.get(data, 'metadata.pagination.total', 0),
             blueprintId: params.blueprint_id,

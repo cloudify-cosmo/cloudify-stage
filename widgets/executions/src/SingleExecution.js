@@ -10,6 +10,11 @@ export default function SingleExecution({ execution, toolbox }) {
         if (newContainerHeight && newContainerHeight !== containerHeight) {
             setContainerHeight(newContainerHeight);
         }
+        toolbox.getEventBus().on('executions:refresh', toolbox.refresh, this);
+
+        return function cleanup() {
+            toolbox.getEventBus().off('executions:refresh', toolbox.refresh);
+        };
     });
 
     return (
@@ -18,3 +23,11 @@ export default function SingleExecution({ execution, toolbox }) {
         </div>
     );
 }
+
+SingleExecution.propTypes = {
+    execution: PropTypes.shape({}).isRequired,
+    toolbox: PropTypes.shape({
+        getEventBus: PropTypes.func,
+        refresh: PropTypes.func
+    }).isRequired
+};
