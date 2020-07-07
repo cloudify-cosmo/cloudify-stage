@@ -32,18 +32,11 @@ class Toolbox {
         this.manager = new Manager(state.manager || {});
         this.internal = new Internal(state.manager || {});
         this.context = new Context(this.store);
-        this.widgetDefinitions = state.widgetDefinitions || [];
     }
 
     drillDown(widget, defaultTemplate, drilldownContext, drilldownPageName) {
         this.store.dispatch(
-            drillDownToPage(
-                widget,
-                this.templates.pagesDef[defaultTemplate],
-                this.widgetDefinitions,
-                drilldownContext,
-                drilldownPageName
-            )
+            drillDownToPage(widget, this.templates.pagesDef[defaultTemplate], drilldownContext, drilldownPageName)
         );
     }
 

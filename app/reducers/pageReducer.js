@@ -9,20 +9,14 @@ import widgets from './widgetsReducer';
 const page = (state = {}, action) => {
     switch (action.type) {
         case types.ADD_PAGE:
+        case types.CREATE_DRILLDOWN_PAGE:
             return {
                 id: action.newPageId,
                 name: action.page.name,
                 description: '',
                 tabs: _.map(action.page.tabs, tab => _.omit(tab, 'widgets')),
-                widgets: []
-            };
-        case types.CREATE_DRILLDOWN_PAGE:
-            return {
-                isDrillDown: true,
-                id: action.newPageId,
-                name: action.name,
-                description: '',
-                widgets: []
+                widgets: [],
+                isDrillDown: action.type === types.CREATE_DRILLDOWN_PAGE
             };
 
         case types.ADD_DRILLDOWN_PAGE: {

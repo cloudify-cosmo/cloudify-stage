@@ -47,7 +47,23 @@ describe('(Reducer) Pages', () => {
             const store = mockStore(initialState);
 
             const expectedActions = [
-                { type: types.CREATE_DRILLDOWN_PAGE, newPageId: '0', name: 'tmp1' },
+                {
+                    type: types.CREATE_DRILLDOWN_PAGE,
+                    newPageId: '0',
+                    page: {
+                        name: 'tmp1',
+                        widgets: [
+                            {
+                                definition: 'widget1',
+                                height: 1,
+                                name: 'some widget',
+                                width: 1,
+                                x: 1,
+                                y: 1
+                            }
+                        ]
+                    }
+                },
                 {
                     type: types.ADD_WIDGET,
                     pageId: '0',
@@ -69,9 +85,8 @@ describe('(Reducer) Pages', () => {
 
             const widget = initialState.pages[0].widgets[0];
             const defaultTemplate = initialState.templates.templatesDef.tmp1;
-            const { widgetDefinitions } = initialState;
 
-            store.dispatch(drillDownToPage(widget, defaultTemplate, widgetDefinitions));
+            store.dispatch(drillDownToPage(widget, defaultTemplate));
 
             const storeActions = store.getActions();
 
@@ -133,9 +148,8 @@ describe('(Reducer) Pages', () => {
 
             const widget = initialState.pages[0].widgets[0];
             const defaultTemplate = initialState.templates.templatesDef.tmp1;
-            const { widgetDefinitions } = initialState;
 
-            store.dispatch(drillDownToPage(widget, defaultTemplate, widgetDefinitions));
+            store.dispatch(drillDownToPage(widget, defaultTemplate));
 
             const storeActions = store.getActions();
 
@@ -181,9 +195,8 @@ describe('(Reducer) Pages', () => {
 
             const widget = initialState.pages[0].widgets[0];
             const defaultTemplate = initialState.templates.templatesDef.tmp1;
-            const { widgetDefinitions } = initialState;
 
-            store.dispatch(drillDownToPage(widget, defaultTemplate, widgetDefinitions, { contextValue: 'kuku' }));
+            store.dispatch(drillDownToPage(widget, defaultTemplate, { contextValue: 'kuku' }));
 
             const storeActions = store.getActions();
             const routeAction = storeActions[1];
@@ -219,20 +232,24 @@ describe('(Reducer) Pages', () => {
             ]
         };
 
-        const store = createStore(pageReducer, initialState.pages, applyMiddleware(thunk));
+        const store = createStore(
+            combineReducers({ pages: pageReducer, widgetDefinitions: pageReducer }),
+            initialState,
+            applyMiddleware(thunk)
+        );
 
         const widget = initialState.pages[0].widgets[0];
         const defaultTemplate = initialState.templates.templatesDef.tmp1;
-        const { widgetDefinitions } = initialState;
 
-        store.dispatch(drillDownToPage(widget, defaultTemplate, widgetDefinitions));
+        store.dispatch(drillDownToPage(widget, defaultTemplate));
 
-        const state = store.getState();
-        const parentPage = state[0];
-        const drillDownPage = state[1];
+        const { pages } = store.getState();
+        const parentPage = pages[0];
+        const drillDownPage = pages[1];
+        console.error(store.getState());
 
         it('Should have a drilldown page', () => {
-            expect(state).to.have.length(2);
+            expect(pages).to.have.length(2);
             expect(drillDownPage.id).to.exist;
         });
 
@@ -252,7 +269,8 @@ describe('(Reducer) Pages', () => {
                         configuration: {},
                         drillDownPages: {}
                     }
-                ]
+                ],
+                tabs: []
             };
             // Set ids data so can compare (i dont want to delete values from the store inorder to compare)
             pageAccordingToTemplate.id = drillDownPage.id;
@@ -303,20 +321,19 @@ describe('(Reducer) Pages', () => {
             ]
         };
 
-        const store = createStore(pageReducer, initialState.pages, applyMiddleware(thunk));
+        const store = createStore(combineReducers({ pages: pageReducer }), initialState, applyMiddleware(thunk));
 
         const widget = initialState.pages[0].widgets[0];
         const defaultTemplate1 = initialState.templates.templatesDef.tmp1;
         const defaultTemplate2 = initialState.templates.templatesDef.tmp2;
-        const { widgetDefinitions } = initialState;
 
-        store.dispatch(drillDownToPage(widget, defaultTemplate1, widgetDefinitions));
-        store.dispatch(drillDownToPage(widget, defaultTemplate2, widgetDefinitions));
+        store.dispatch(drillDownToPage(widget, defaultTemplate1));
+        store.dispatch(drillDownToPage(widget, defaultTemplate2));
 
-        const state = store.getState();
-        const parentPage = state[0];
-        const drillDownPage1 = state[1];
-        const drillDownPage2 = state[2];
+        const { pages } = store.getState();
+        const parentPage = pages[0];
+        const drillDownPage1 = pages[1];
+        const drillDownPage2 = pages[2];
 
         it('The 2 pages should exist in the drilldown pages list', () => {
             expect(parentPage.widgets[0].drillDownPages.tmp1).to.exist;
