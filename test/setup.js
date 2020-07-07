@@ -36,9 +36,11 @@ function noop() {
     return {};
 }
 
-// prevent mocha tests from breaking when trying to require a css file
+// prevent mocha tests from breaking when trying to require non-js file
 require.extensions['.css'] = noop;
+require.extensions['.scss'] = noop;
 require.extensions['.svg'] = noop;
+require.extensions['.png'] = noop;
 
 // For the window.location to work...
 jsdom.changeURL(window, 'http://myhost:8088/');

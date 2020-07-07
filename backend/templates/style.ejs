@@ -27,7 +27,7 @@ div.headerBar,
 div.headerBar {
     height: 55px;
 }
-div.logo {
+div.splashPage div.logo {
     position: relative;
     display: inline-block;
     vertical-align: middle;
@@ -35,21 +35,10 @@ div.logo {
     left: 0;
     height: 45px;
     width: 45px;
-    margin: 8px 10px;
+    margin: 5px 10px;
     background-size: contain;
     background-repeat: no-repeat;
     background-image: url("<%= logoUrl %>");
-}
-div.splashPage div.logo,
-div.logoPage div.logo {
-    margin: 4px 10px;
-}
-div.loginContainer > div.logo {
-    text-align: center;
-    margin: 0 auto;
-    display: block;
-    width: 100px;
-    height: 100px;
 }
 div.splashPage.active div#loader,
 div.splashPage.active div#loader:after {

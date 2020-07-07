@@ -4,15 +4,15 @@
 
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
-import Banner from '../containers/banner/Banner';
+import { FullScreenSegment } from 'cloudify-ui-components';
 
+import Banner from '../containers/banner/Banner';
 import Consts from '../utils/consts';
-import { Button, Form, Grid, Header, Icon, Message } from './basic';
-import FullScreenSegment from './layout/FullScreenSegment';
+import { Button, Form, Grid, Header, Icon, Message, MessageContainer } from './basic';
 import CurrentLicense from './license/CurrentLicense';
 import EulaLink from './license/EulaLink';
 import UploadLicense from './license/UploadLicense';
-import { MessageContainer } from './shared';
+import SplashLoadingScreen from '../utils/SplashLoadingScreen';
 
 function LicenseSwitchButton({ color, isEditLicenseActive, onClick }) {
     return (
@@ -216,7 +216,13 @@ export default class LicensePage extends Component {
             <FullScreenSegment>
                 <Banner />
 
-                <MessageContainer wide size="large" textAlign="left" loading={isLoading}>
+                <MessageContainer
+                    wide
+                    size="large"
+                    textAlign="left"
+                    loading={isLoading}
+                    onRender={SplashLoadingScreen.turnOff}
+                >
                     <Header as="h2">
                         <Icon name="key" /> License Management
                     </Header>

@@ -1,6 +1,6 @@
 function NoDataMessage({ repositoryName, error, children }) {
     const { Message } = Stage.Basic;
-    const { MessageContainer } = Stage.Shared;
+    const { MessageContainer } = Stage.Basic;
     return (
         <MessageContainer wide margin="30px auto">
             <Message>

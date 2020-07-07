@@ -8,14 +8,14 @@ import { Redirect } from 'react-router-dom';
 
 import Consts from '../utils/consts';
 import LinkToLogin from '../containers/LinkToLogin';
-import { Header, Message } from './basic';
-import { MessageContainer } from './shared';
+import { Header, Message, MessageContainer } from './basic';
+import SplashLoadingScreen from '../utils/SplashLoadingScreen';
 
 export default function ErrorPage({ error }) {
     return _.isEmpty(error) ? (
         <Redirect to={Consts.LOGOUT_PAGE_PATH} />
     ) : (
-        <MessageContainer>
+        <MessageContainer onRender={SplashLoadingScreen.turnOff}>
             <Header as="h2">Unexpected Error Occurred</Header>
             <Message content={error} error />
             <LinkToLogin />

@@ -5,11 +5,11 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { parse } from 'query-string';
+import { FullScreenSegment } from 'cloudify-ui-components';
 
 import { Button, Input, Message, Form } from './basic';
 import SplashLoadingScreen from '../utils/SplashLoadingScreen';
 import Logo from './banner/Logo';
-import FullScreenSegment from './layout/FullScreenSegment';
 
 import 'cloudify-ui-common/styles/font-JosefinSans-Bold.css';
 
@@ -65,7 +65,15 @@ export default class LoginPage extends Component {
         return (
             <FullScreenSegment>
                 <div className={`loginContainer ${isHeaderTextPresent ? 'loginContainerExtended' : ''}`}>
-                    <Logo />
+                    <Logo
+                        style={{
+                            textAlign: 'center',
+                            margin: '0 auto',
+                            display: 'block',
+                            width: 100,
+                            height: 100
+                        }}
+                    />
                     {isHeaderTextPresent && (
                         <div style={{ textAlign: 'center', marginBottom: 30 }}>
                             {loginPageHeader && (

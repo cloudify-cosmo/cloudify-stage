@@ -4,9 +4,9 @@
 
 import React, { Component } from 'react';
 import { Route, Switch } from 'react-router-dom';
+import { FullScreenSegment } from 'cloudify-ui-components';
 import Consts from '../utils/consts';
 
-import FullScreenSegment from './layout/FullScreenSegment';
 import ErrorPage from '../containers/ErrorPage';
 import NoTenants from '../containers/NoTenants';
 import Logo from './banner/Logo';

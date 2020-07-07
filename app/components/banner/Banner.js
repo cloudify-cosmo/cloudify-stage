@@ -29,7 +29,7 @@ export default function Banner({
     return (
         <div style={{ lineHeight: '55px' }}>
             <Link to={Consts.HOME_PAGE_PATH}>
-                <Header as="h1" style={{ textDecoration: 'none', display: 'inline-block' }}>
+                <Header as="h1" style={{ textDecoration: 'none', display: 'inline-block', marginTop: 0 }}>
                     <Logo />
                     <ProductName name={productName} className={className} />
                     {showVersionDetails && !isCommunity && (
