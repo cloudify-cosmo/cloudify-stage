@@ -50,8 +50,10 @@ export default class EventFilter extends React.Component {
 
     componentDidMount() {
         const { toolbox } = this.props;
-        const { fields } = this.state;
-        this.debouncedContextUpdate = _.debounce(() => toolbox.getContext().setValue(contextValueKey, fields), 500);
+        this.debouncedContextUpdate = _.debounce(() => {
+            const { fields } = this.state;
+            toolbox.getContext().setValue(contextValueKey, fields);
+        }, 500);
         toolbox.getEventBus().on(refreshEvent, this.refreshFilter, this);
     }
 
