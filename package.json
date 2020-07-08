@@ -2,9 +2,10 @@
   "name": "cloudify-stage",
   "version": "5.1.0-.dev1",
   "description": "Cloudify Console",
+  "homepage": "https://github.com/cloudify-cosmo/cloudify-stage#readme",
   "repository": "https://github.com/cloudify-cosmo/cloudify-stage",
   "license": "Apache-2.0",
-  "author": "Cloudify",
+  "author": "Cloudify Platform Ltd. <cosmo-admin@cloudify.co>",
   "files": [
     "backend",
     "dist",
