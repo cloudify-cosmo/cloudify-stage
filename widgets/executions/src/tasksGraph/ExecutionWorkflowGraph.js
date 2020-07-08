@@ -147,7 +147,7 @@ export default class ExecutionWorkflowGraph extends React.Component {
         return (
             <>
                 {showStatus && (
-                    <div style={{ position: 'absolute', top: 1, left: 0, zIndex: 1 }}>
+                    <div style={{ position: 'absolute', top: 2, left: 2, zIndex: 1, opacity: 1 }}>
                         <LastExecutionStatusIcon
                             execution={selectedExecution}
                             onActOnExecution={this.actOnExecution}
@@ -170,8 +170,8 @@ export default class ExecutionWorkflowGraph extends React.Component {
                         link
                         onClick={() =>
                             this.scrollTo(
-                                0,
-                                0,
+                                GRAPH_MARGIN / 2,
+                                GRAPH_MARGIN,
                                 Math.min(
                                     width / (graphResult.width + GRAPH_MARGIN),
                                     height / (graphResult.height + GRAPH_MARGIN)
