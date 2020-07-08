@@ -19,7 +19,12 @@ export default function SingleExecution({ execution, toolbox }) {
 
     return (
         <div ref={container} style={{ height: '100%' }}>
-            <ExecutionWorkflowGraph selectedExecution={execution} toolbox={toolbox} containerHeight={containerHeight} />
+            <ExecutionWorkflowGraph
+                selectedExecution={execution}
+                toolbox={toolbox}
+                containerHeight={containerHeight}
+                showStatus
+            />
         </div>
     );
 }

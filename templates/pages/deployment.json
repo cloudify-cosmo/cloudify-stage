@@ -29,7 +29,6 @@
           "x": 0,
           "y": 0,
           "configuration": {
-            "pollingTime": 3,
             "showSystemExecutions": false,
             "singleExecutionView": true
           },

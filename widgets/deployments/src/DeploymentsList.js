@@ -52,11 +52,6 @@ export default class DeploymentsList extends React.Component {
         }
     }
 
-    showLogs(deploymentId, executionId) {
-        const { toolbox, widget } = this.props;
-        toolbox.drillDown(widget, 'logs', { deploymentId, executionId }, `Execution Logs - ${executionId}`);
-    }
-
     deleteDeployment() {
         const { deployment } = this.state;
         const { toolbox } = this.props;
@@ -109,19 +104,8 @@ export default class DeploymentsList extends React.Component {
             });
     }
 
-    actOnExecution(execution, action) {
-        const { toolbox } = this.props;
-        const actions = new Stage.Common.ExecutionActions(toolbox);
-        actions
-            .doAct(execution, action)
-            .then(() => {
-                this.setError(null);
-                toolbox.getEventBus().trigger('deployments:refresh');
-                toolbox.getEventBus().trigger('executions:refresh');
-            })
-            .catch(err => {
-                this.setError(err.message);
-            });
+    actOnExecution(execution, action, error) {
+        this.setError(error);
     }
 
     setDeploymentVisibility(deploymentId, visibility) {
@@ -145,14 +129,6 @@ export default class DeploymentsList extends React.Component {
             deployment,
             workflow: workflow || {},
             modalType: workflow ? MenuAction.WORKFLOW_ACTION : value,
-            showModal: true
-        });
-    }
-
-    showDeploymentUpdateDetailsModal(deploymentUpdateId) {
-        this.setState({
-            deploymentUpdateId,
-            modalType: DeploymentsList.DEPLOYMENT_UPDATE_DETAILS_MODAL,
             showModal: true
         });
     }
@@ -188,14 +164,13 @@ export default class DeploymentsList extends React.Component {
                         data={data}
                         fetchData={this.fetchData.bind(this)}
                         onSelectDeployment={this.selectDeployment.bind(this)}
-                        onShowLogs={this.showLogs.bind(this)}
-                        onShowUpdateDetails={this.showDeploymentUpdateDetailsModal.bind(this)}
                         onMenuAction={this.showModal.bind(this)}
                         onActOnExecution={this.actOnExecution.bind(this)}
                         onError={this.setError.bind(this)}
                         onSetVisibility={this.setDeploymentVisibility.bind(this)}
                         noDataMessage={NO_DATA_MESSAGE}
                         showExecutionStatusLabel={widget.configuration.showExecutionStatusLabel}
+                        toolbox={toolbox}
                     />
                 ) : (
                     <DeploymentsSegment
@@ -203,14 +178,13 @@ export default class DeploymentsList extends React.Component {
                         data={data}
                         fetchData={this.fetchData.bind(this)}
                         onSelectDeployment={this.selectDeployment.bind(this)}
-                        onShowLogs={this.showLogs.bind(this)}
-                        onShowUpdateDetails={this.showDeploymentUpdateDetailsModal.bind(this)}
                         onMenuAction={this.showModal.bind(this)}
                         onActOnExecution={this.actOnExecution.bind(this)}
                         onError={this.setError.bind(this)}
                         onSetVisibility={this.setDeploymentVisibility.bind(this)}
                         noDataMessage={NO_DATA_MESSAGE}
                         showExecutionStatusLabel={widget.configuration.showExecutionStatusLabel}
+                        toolbox={toolbox}
                     />
                 )}
 
@@ -255,13 +229,6 @@ export default class DeploymentsList extends React.Component {
                     open={modalType === MenuAction.UPDATE_ACTION && showModal}
                     deployment={deployment}
                     onHide={this.hideModal.bind(this)}
-                    toolbox={toolbox}
-                />
-
-                <UpdateDetailsModal
-                    open={modalType === DeploymentsList.DEPLOYMENT_UPDATE_DETAILS_MODAL && showModal}
-                    deploymentUpdateId={deploymentUpdateId}
-                    onClose={this.hideModal.bind(this)}
                     toolbox={toolbox}
                 />
 

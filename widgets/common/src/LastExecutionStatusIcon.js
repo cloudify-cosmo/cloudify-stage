@@ -7,14 +7,17 @@ export default class LastExecutionStatusIcon extends React.Component {
         super(props, context);
         this.state = {
             errorModalOpen: false,
+            updateModalOpen: false,
             open: false
         };
+
+        this.actOnExecution = this.actOnExecution.bind(this);
+        this.showLogs = this.showLogs.bind(this);
     }
 
     static propTypes = {
-        execution: PropTypes.object,
-        onShowLogs: PropTypes.func,
-        onShowUpdateDetails: PropTypes.func,
+        toolbox: PropTypes.shape({ drilldown: PropTypes.func, getWidget: PropTypes.func }).isRequired,
+        execution: PropTypes.shape({ workflow_id: '', status: '' }),
         onActOnExecution: PropTypes.func,
         showLabel: PropTypes.bool,
         labelAttached: PropTypes.bool
@@ -22,24 +25,43 @@ export default class LastExecutionStatusIcon extends React.Component {
 
     static defaultProps = {
         execution: { workflow_id: '', status: '' },
-        onShowLogs: _.noop,
-        onShowUpdateDetails: _.noop,
         onActOnExecution: _.noop,
         showLabel: false,
         labelAttached: true
     };
 
+    showLogs() {
+        const { execution, toolbox } = this.props;
+
+        toolbox.drillDown(
+            toolbox.getWidget(),
+            'logs',
+            { deploymentId: execution.deployment_id, executionId: execution.id },
+            `Execution Logs - ${execution.id}`
+        );
+    }
+
+    actOnExecution(execution, action) {
+        const { onActOnExecution, toolbox } = this.props;
+        const actions = new Stage.Common.ExecutionActions(toolbox);
+        actions
+            .doAct(execution, action)
+            .then(() => {
+                this.setState({ error: null });
+                toolbox.getEventBus().trigger('deployments:refresh');
+                toolbox.getEventBus().trigger('executions:refresh');
+                onActOnExecution(execution, action, null);
+            })
+            .catch(err => {
+                onActOnExecution(execution, action, err.message);
+            });
+    }
+
     render() {
-        const { errorModalOpen, open } = this.state;
-        const {
-            labelAttached,
-            execution: executionProp,
-            onActOnExecution,
-            onShowLogs,
-            onShowUpdateDetails,
-            showLabel
-        } = this.props;
+        const { errorModalOpen, open, updateModalOpen } = this.state;
+        const { labelAttached, execution: executionProp, showLabel, toolbox } = this.props;
         const { CancelButton, Button, CopyToClipboardButton, HighlightText, Icon, Table, Modal, Popup } = Stage.Basic;
+        const { UpdateDetailsModal } = Stage.Common;
         const { ExecutionStatus } = Stage.Shared;
         const { Utils } = Stage;
         const execution = { workflow_id: '', status: '', ...executionProp };
@@ -109,14 +131,13 @@ export default class LastExecutionStatusIcon extends React.Component {
                                             <Button
                                                 icon
                                                 labelPosition="left"
-                                                color="red"
                                                 onClick={() => this.setState({ errorModalOpen: true })}
                                             >
                                                 <Icon name="remove" />
                                                 Show Error
                                             </Button>
                                         )}
-                                        <Button icon labelPosition="left" color="grey" onClick={onShowLogs}>
+                                        <Button icon labelPosition="left" onClick={this.showLogs}>
                                             <Icon name="file text" />
                                             Show Logs
                                         </Button>
@@ -124,10 +145,7 @@ export default class LastExecutionStatusIcon extends React.Component {
                                             <Button
                                                 icon
                                                 labelPosition="left"
-                                                color="blue"
-                                                onClick={() =>
-                                                    onShowUpdateDetails(_.get(execution, 'parameters.update_id'))
-                                                }
+                                                onClick={() => this.setState({ updateModalOpen: true })}
                                             >
                                                 <Icon name="magnify" />
                                                 Show Update Details
@@ -142,9 +160,8 @@ export default class LastExecutionStatusIcon extends React.Component {
                                             <Button
                                                 icon
                                                 labelPosition="left"
-                                                color="green"
                                                 onClick={() =>
-                                                    onActOnExecution(execution, Utils.Execution.FORCE_RESUME_ACTION)
+                                                    this.actOnExecution(execution, Utils.Execution.FORCE_RESUME_ACTION)
                                                 }
                                             >
                                                 <Icon name="play" />
@@ -156,9 +173,8 @@ export default class LastExecutionStatusIcon extends React.Component {
                                             <Button
                                                 icon
                                                 labelPosition="left"
-                                                color="yellow"
                                                 onClick={() =>
-                                                    onActOnExecution(execution, Utils.Execution.CANCEL_ACTION)
+                                                    this.actOnExecution(execution, Utils.Execution.CANCEL_ACTION)
                                                 }
                                             >
                                                 <Icon name="cancel" />
@@ -170,9 +186,8 @@ export default class LastExecutionStatusIcon extends React.Component {
                                             <Button
                                                 icon
                                                 labelPosition="left"
-                                                color="orange"
                                                 onClick={() =>
-                                                    onActOnExecution(execution, Utils.Execution.FORCE_CANCEL_ACTION)
+                                                    this.actOnExecution(execution, Utils.Execution.FORCE_CANCEL_ACTION)
                                                 }
                                             >
                                                 <Icon name="cancel" />
@@ -182,9 +197,8 @@ export default class LastExecutionStatusIcon extends React.Component {
                                         <Button
                                             icon
                                             labelPosition="left"
-                                            color="red"
                                             onClick={() =>
-                                                onActOnExecution(execution, Utils.Execution.KILL_CANCEL_ACTION)
+                                                this.actOnExecution(execution, Utils.Execution.KILL_CANCEL_ACTION)
                                             }
                                         >
                                             <Icon name="stop" />
@@ -216,6 +230,14 @@ export default class LastExecutionStatusIcon extends React.Component {
                             />
                         </Modal.Actions>
                     </Modal>
+                )}
+                {Utils.Execution.isUpdateExecution(execution) && (
+                    <UpdateDetailsModal
+                        open={updateModalOpen}
+                        deploymentUpdateId={_.get(execution, 'parameters.update_id')}
+                        onClose={() => this.setState({ updateModalOpen: false })}
+                        toolbox={toolbox}
+                    />
                 )}
             </>
         ) : null;
