@@ -26,7 +26,7 @@ Stage.defineWidget({
             name: 'Blueprints Examples URL',
             placeHolder: 'Type URL to blueprint examples JSON file',
             description: 'If set, then GitHub options are not used for fetching data.',
-            default: 'http://repository.cloudifysource.org/cloudify/blueprints/5.0.5/examples.json',
+            default: 'https://repository.cloudifysource.org/cloudify/blueprints/5.0.5/examples.json',
             type: Stage.Basic.GenericField.STRING_TYPE
         },
         {
