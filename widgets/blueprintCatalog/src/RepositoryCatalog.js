@@ -112,7 +112,7 @@ export default class extends React.Component {
         }
 
         // Show pagination only in case when data is provided from GitHub
-        const { data } = this.props;
+        const { data, widget } = this.props;
         const pageSize = data.source === Consts.GITHUB_DATA_SOURCE ? widget.configuration.pageSize : data.total;
         const totalSize = data.source === Consts.GITHUB_DATA_SOURCE ? data.total : -1;
 

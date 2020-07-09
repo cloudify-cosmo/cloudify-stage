@@ -25,7 +25,7 @@ export default class extends React.Component {
         const { DataTable, Image, Icon } = Stage.Basic;
 
         // Show pagination only in case when data is provided from GitHub
-        const { data } = this.props;
+        const { data, widget } = this.props;
         const pageSize = data.source === Consts.GITHUB_DATA_SOURCE ? widget.configuration.pageSize : data.total;
         const totalSize = data.source === Consts.GITHUB_DATA_SOURCE ? data.total : -1;
 
@@ -82,7 +82,12 @@ export default class extends React.Component {
                                     bordered
                                     onClick={event => {
                                         event.stopPropagation();
-                                        this.props.onUpload(item.name, item.zip_url, item.image_url, item.main_blueprint);
+                                        this.props.onUpload(
+                                            item.name,
+                                            item.zip_url,
+                                            item.image_url,
+                                            item.main_blueprint
+                                        );
                                     }}
                                 />
                             </DataTable.Data>

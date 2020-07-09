@@ -60,7 +60,15 @@ export default class extends React.Component {
         this.props.actions
             .doListYamlFiles(zipUrl)
             .then(yamlFiles => {
-                this.setState({ error: null, repositoryName, defaultYamlFile, yamlFiles, zipUrl, imageUrl, showModal: true });
+                this.setState({
+                    error: null,
+                    repositoryName,
+                    defaultYamlFile,
+                    yamlFiles,
+                    zipUrl,
+                    imageUrl,
+                    showModal: true
+                });
                 this.props.toolbox.loading(false);
             })
             .catch(err => {
