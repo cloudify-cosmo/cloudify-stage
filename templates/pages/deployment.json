@@ -1,5 +1,5 @@
 {
-  "name": "deployment",
+  "name": "Deployment",
   "widgets": [
     {
       "name": "Deployment Info",
@@ -10,7 +10,7 @@
       "definition": "deploymentInfo"
     },
     {
-      "name": "Deployment action buttons",
+      "name": "Deployment Action Buttons",
       "width": 12,
       "height": 2,
       "x": 0,
@@ -35,7 +35,7 @@
           "definition": "executions"
         },
         {
-          "name": "Events/logs filter",
+          "name": "Events/Logs Filter",
           "width": 12,
           "height": 5,
           "x": 0,
@@ -103,7 +103,7 @@
       "name": "History",
       "widgets": [
         {
-          "name": "Executions",
+          "name": "Deployment Executions",
           "width": 12,
           "height": 24,
           "x": 0,
@@ -111,7 +111,7 @@
           "definition": "executions"
         },
         {
-          "name": "Events/logs filter",
+          "name": "Events/Logs Filter",
           "width": 12,
           "height": 5,
           "x": 0,
@@ -119,7 +119,7 @@
           "definition": "eventsFilter"
         },
         {
-          "name": "Events/logs",
+          "name": "Deployment Events/Logs",
           "width": 12,
           "height": 23,
           "x": 0,
