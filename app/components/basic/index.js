@@ -69,6 +69,11 @@ import {
 
 import { Map, TileLayer, Marker, Popup as LeafletPopup } from 'react-leaflet';
 
+Modal.defaultProps = {
+    ...Modal.defaultProps,
+    closeOnDimmerClick: false
+};
+
 const Leaflet = {
     Map,
     TileLayer,
