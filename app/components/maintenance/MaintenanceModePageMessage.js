@@ -4,14 +4,14 @@
 
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
-import { FullScreenSegment } from 'cloudify-ui-components';
+
 import Banner from '../../containers/banner/Banner';
 import SystemStatusHeader from '../../containers/status/SystemStatusHeader';
 import Consts from '../../utils/consts';
 import SplashLoadingScreen from '../../utils/SplashLoadingScreen';
 import StatusPoller from '../../utils/StatusPoller';
 
-import { Divider, Header, MessageContainer } from '../basic';
+import { Divider, Header, FullScreenSegment, MessageContainer } from '../basic';
 import { ClusterServicesList, MaintenanceModeActivationButton, MaintenanceModeModal } from '../shared';
 
 export default class MaintenanceModePageMessage extends Component {

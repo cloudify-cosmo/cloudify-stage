@@ -1,10 +1,9 @@
 import PropTypes from 'prop-types';
 import { SortableContainer, SortableElement } from 'react-sortable-hoc';
 import { useState } from 'react';
-import { Container, Header } from 'semantic-ui-react';
 import { useSelector } from 'react-redux';
 import WidgetsList from './WidgetsList';
-import { Confirm, Menu } from './basic';
+import { Confirm, Container, Header, Menu } from './basic';
 import AddWidget from '../containers/AddWidget';
 import EditModeButton from './EditModeButton';
 import EditTabModal from './EditTabModal';

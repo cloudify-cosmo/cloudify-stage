@@ -1,10 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import { Icon } from 'semantic-ui-react';
-import { Popup } from 'cloudify-ui-components';
 import NodeServices from './NodeServices';
 import { clusterNodeStatusEnum, clusterNodeStatuses } from './consts';
+import { Icon, Popup } from '../../basic';
 
 export default function NodeStatus({ name, type, status, services }) {
     const icon = {

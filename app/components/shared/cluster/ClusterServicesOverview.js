@@ -2,8 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import { Link } from 'react-router-dom';
-import { Message, Table } from 'semantic-ui-react';
-import { ErrorMessage } from 'cloudify-ui-components';
+import { ErrorMessage, Message, Table } from '../../basic';
 import ClusterService from './ClusterService';
 import { clusterServiceBgColor, clusterServiceEnum, clusterServiceStatusEnum, clusterServiceStatuses } from './consts';
 import './ClusterServicesOverview.css';

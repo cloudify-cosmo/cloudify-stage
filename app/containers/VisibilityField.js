@@ -3,7 +3,8 @@
  */
 
 import { connect } from 'react-redux';
-import { VisibilityField } from 'cloudify-ui-components';
+
+import { VisibilityField } from '../components/basic';
 import stageUtils from '../utils/stageUtils';
 import consts from '../utils/consts';
 

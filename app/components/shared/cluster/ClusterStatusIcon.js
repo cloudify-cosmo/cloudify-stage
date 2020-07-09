@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import { Icon } from 'semantic-ui-react';
+import { Icon } from '../../basic';
 import { clusterStatusEnum } from './consts';
 
 export default function ClusterStatusIcon({ status }) {

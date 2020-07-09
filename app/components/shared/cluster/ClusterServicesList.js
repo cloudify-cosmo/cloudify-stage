@@ -1,8 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { DataTable } from 'cloudify-ui-components';
 
+import { DataTable } from '../../basic';
 import IdPopup from '../IdPopup';
 import ClusterService from './ClusterService';
 import NodeStatus from './NodeStatus';

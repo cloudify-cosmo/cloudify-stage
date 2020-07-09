@@ -3,8 +3,8 @@
  */
 import PropTypes from 'prop-types';
 import React from 'react';
-import { Label } from 'semantic-ui-react';
-import { CopyToClipboardButton, Popup } from 'cloudify-ui-components';
+
+import { CopyToClipboardButton, Label, Popup } from '../basic';
 
 export default function IdPopup({ buttonPosition, label, id, selected }) {
     return (

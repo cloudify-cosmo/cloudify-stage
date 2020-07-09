@@ -4,9 +4,8 @@
 
 import PropTypes from 'prop-types';
 import React from 'react';
-import { Icon, Label } from 'semantic-ui-react';
-import { Popup } from 'cloudify-ui-components';
 
+import { Icon, Label, Popup } from '../basic';
 import ExecutionUtils from '../../utils/shared/ExecutionUtils';
 
 /**

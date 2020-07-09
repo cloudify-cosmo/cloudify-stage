@@ -4,11 +4,10 @@
 
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
-import { FullScreenSegment } from 'cloudify-ui-components';
 
 import Banner from '../containers/banner/Banner';
 import Consts from '../utils/consts';
-import { Button, Form, Grid, Header, Icon, Message, MessageContainer } from './basic';
+import { Button, Form, FullScreenSegment, Grid, Header, Icon, Message, MessageContainer } from './basic';
 import CurrentLicense from './license/CurrentLicense';
 import EulaLink from './license/EulaLink';
 import UploadLicense from './license/UploadLicense';
