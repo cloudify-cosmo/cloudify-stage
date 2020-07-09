@@ -340,7 +340,7 @@ class DeployBlueprintModal extends React.Component {
         const workflow = { ...blueprint.plan.workflows.install, name: 'install' };
 
         return (
-            <Modal open={open} onClose={() => onHide()} closeOnEscape={false} className="deployBlueprintModal">
+            <Modal open={open} onClose={() => onHide()} className="deployBlueprintModal">
                 <Modal.Header>
                     <Icon name="rocket" /> Deploy blueprint {blueprint.id}
                     <VisibilityField

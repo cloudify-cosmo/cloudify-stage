@@ -1,20 +1,21 @@
 /**
  * Created by pposel on 16/02/2017.
  */
+import PropTypes from 'prop-types';
+import React, { Component } from 'react';
+import { connect } from 'react-redux';
+
 import {
     ApproveButton,
     CancelButton,
     Checkmark,
     DataTable,
     ErrorMessage,
+    Icon,
     Menu,
+    Modal,
     PopupMenu
-} from 'cloudify-ui-components';
-import PropTypes from 'prop-types';
-import React, { Component } from 'react';
-import { connect } from 'react-redux';
-
-import { Icon, Modal } from 'semantic-ui-react';
+} from '../basic';
 import { doCancelExecution, getActiveExecutions, setActiveExecutions, switchMaintenance } from '../../actions/managers';
 import Consts from '../../utils/consts';
 

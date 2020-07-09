@@ -3,7 +3,8 @@
  */
 
 import { connect } from 'react-redux';
-import { ResourceVisibility } from 'cloudify-ui-components';
+
+import { ResourceVisibility } from '../components/basic';
 import stageUtils from '../utils/stageUtils';
 import consts from '../utils/consts';
 

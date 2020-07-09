@@ -5,9 +5,8 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { parse } from 'query-string';
-import { FullScreenSegment } from 'cloudify-ui-components';
 
-import { Button, Input, Message, Form } from './basic';
+import { Button, Input, Message, Form, FullScreenSegment } from './basic';
 import SplashLoadingScreen from '../utils/SplashLoadingScreen';
 import Logo from './banner/Logo';
 

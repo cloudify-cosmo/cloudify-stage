@@ -1,8 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Header, Icon, Label } from 'semantic-ui-react';
 
 import { clusterServiceEnum, clusterServices, clusterServiceName } from './consts';
+import { Header, Icon, Label } from '../../basic';
 
 export default function ClusterService({ name, isExternal }) {
     const icon = {

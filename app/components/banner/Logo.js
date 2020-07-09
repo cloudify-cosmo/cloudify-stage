@@ -1,7 +1,8 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
-import { Logo as CommonLogo } from 'cloudify-ui-components';
+
+import { Logo as CommonLogo } from '../basic';
 
 function Logo({ style, url }) {
     return <CommonLogo style={style} url={url} />;

@@ -49,11 +49,13 @@ import {
     EditableLabel,
     ErrorMessage,
     Form,
+    FullScreenSegment,
     GenericField,
     HighlightText,
     KeyIndicator,
     Loading,
     LoadingOverlay,
+    Logo,
     Menu,
     MessageContainer,
     NodesTree,
@@ -68,6 +70,11 @@ import {
 } from 'cloudify-ui-components';
 
 import { Map, TileLayer, Marker, Popup as LeafletPopup } from 'react-leaflet';
+
+Modal.defaultProps = {
+    ...Modal.defaultProps,
+    closeOnDimmerClick: false
+};
 
 const Leaflet = {
     Map,
@@ -98,6 +105,7 @@ export {
     EditableLabel,
     ErrorMessage,
     Form,
+    FullScreenSegment,
     GenericField,
     Grid,
     Header,
@@ -113,6 +121,7 @@ export {
     Loader,
     Loading,
     LoadingOverlay,
+    Logo,
     Menu,
     Message,
     MessageContainer,
