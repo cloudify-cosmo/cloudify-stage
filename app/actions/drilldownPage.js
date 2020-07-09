@@ -1,7 +1,6 @@
 import * as types from './types';
 import { drillDownWarning } from './templateManagement';
-import { createDrilldownPage, selectPage } from './page';
-import { addWidget } from './widgets';
+import { createDrilldownPage, selectPage, addWidgetsToPage } from './page';
 
 export function addWidgetDrilldownPage(widgetId, drillDownName, drillDownPageId) {
     return {
@@ -12,7 +11,7 @@ export function addWidgetDrilldownPage(widgetId, drillDownName, drillDownPageId)
     };
 }
 
-export function drillDownToPage(widget, defaultTemplate, widgetDefinitions, drilldownContext, drilldownPageName) {
+export function drillDownToPage(widget, defaultTemplate, drilldownContext, drilldownPageName) {
     return (dispatch, getState) => {
         const isPageEditMode = _.get(getState().templateManagement, 'isPageEditMode');
         if (!_.isUndefined(isPageEditMode)) {
@@ -26,17 +25,14 @@ export function drillDownToPage(widget, defaultTemplate, widgetDefinitions, dril
             const isDrilldownPagePresent = !!_.find(getState().pages, { id: newPageId });
 
             if (!isDrilldownPagePresent) {
-                dispatch(createDrilldownPage(newPageId, defaultTemplate.name));
-                _.each(defaultTemplate.widgets, widget => {
-                    const widgetDefinition = _.find(widgetDefinitions, { id: widget.definition });
-                    dispatch(addWidget(newPageId, null, widget, widgetDefinition));
-                });
+                dispatch(createDrilldownPage(defaultTemplate, newPageId));
+                dispatch(addWidgetsToPage(defaultTemplate, newPageId));
             }
 
             dispatch(addWidgetDrilldownPage(widget.id, defaultTemplate.name, newPageId));
             pageId = newPageId;
         }
 
-        dispatch(selectPage(pageId, true, drilldownContext, drilldownPageName));
+        return dispatch(selectPage(pageId, true, drilldownContext, drilldownPageName));
     };
 }

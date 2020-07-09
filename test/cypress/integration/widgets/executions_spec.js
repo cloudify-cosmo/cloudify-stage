@@ -8,22 +8,77 @@ describe('Executions', () => {
             .deleteSites()
             .uploadBlueprint('blueprints/simple.zip', blueprintName, 'blueprint.yaml', 'global')
             .deployBlueprint(blueprintName, blueprintName, { server_ip: 'localhost' })
-            .login();
-    });
+            .login()
+            .executeWorkflow(blueprintName, 'install');
 
-    it('allow to toggle graph auto focus mode', () => {
-        cy.get('.loader').should('be.not.visible');
         cy.contains('Deployments').click();
         cy.get('.deploymentsWidget')
             .contains(blueprintName)
             .click();
-        cy.executeWorkflow(blueprintName, 'install');
+    });
+
+    it('works in table mode', () => {
+        cy.get('.tabular.menu')
+            .contains('a.item', 'History')
+            .click();
+
+        cy.log('Check if Executions widget has table rows');
         cy.get('.executionsWidget')
             .contains('tr', 'failed')
             .contains('install')
             .click();
-        cy.get('.play').click();
-        cy.get('.play.green').click();
-        cy.get('.play:not(.green)');
+
+        cy.log('Check if Task Graph is is visible');
+        cy.get('.executionsWidget svg').should('be.visible');
+    });
+
+    it('works in single execution mode', () => {
+        cy.get('.tabular.menu')
+            .contains('a.item', 'Last Execution')
+            .click();
+
+        cy.log('Check if Task Graph is visible');
+        cy.get('.executionsWidget svg').should('be.visible');
+
+        cy.log('Check if Executions widget has Last Execution status icon');
+        cy.get('.executionsWidget')
+            .contains('.ui.label', 'install failed')
+            .as('statusLabel');
+
+        cy.get('@statusLabel').trigger('mouseover');
+        cy.get('.modal .header').should('have.text', 'Last Execution');
+        cy.get('@statusLabel').trigger('mouseout');
+    });
+
+    describe('provides Task Execution Graph', () => {
+        before(() => {
+            cy.get('.tabular.menu')
+                .contains('a.item', 'Last Execution')
+                .click();
+        });
+
+        it('allows to start/stop focus mode', () => {
+            cy.get('.play').click();
+            cy.get('.play.green').click();
+            cy.get('.play').should('not.have.class', 'green');
+        });
+
+        it('allows to fit graph to view', () => {
+            cy.get('.executionsWidget svg > g')
+                .invoke('attr', 'transform')
+                .then(transformNotFit => {
+                    cy.get('.expand.arrows.alternate').click();
+                    cy.get('.executionsWidget svg > g').should('not.equal', transformNotFit);
+                });
+        });
+
+        it('allows to display graph in modal window', () => {
+            cy.get('.executions-graph-toolbar .expand:not(.arrows)').click();
+            cy.get('.modal')
+                .should('be.visible')
+                .within(() => {
+                    cy.get('div[role=navigation]').should('be.visible');
+                });
+        });
     });
 });

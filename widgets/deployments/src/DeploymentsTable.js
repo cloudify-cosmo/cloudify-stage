@@ -11,15 +11,14 @@ export default class extends React.Component {
         widget: PropTypes.object.isRequired,
         fetchData: PropTypes.func,
         onSelectDeployment: PropTypes.func,
-        onShowLogs: PropTypes.func,
-        onShowUpdateDetails: PropTypes.func,
         onActOnExecution: PropTypes.func,
         onMenuAction: PropTypes.func,
         onError: PropTypes.func,
         onSetVisibility: PropTypes.func,
         allowedSettingTo: PropTypes.array,
         noDataMessage: PropTypes.string,
-        showExecutionStatusLabel: PropTypes.bool
+        showExecutionStatusLabel: PropTypes.bool,
+        toolbox: PropTypes.shape({})
     };
 
     static defaultProps = {
@@ -43,9 +42,8 @@ export default class extends React.Component {
             onMenuAction,
             onSelectDeployment,
             onSetVisibility,
-            onShowLogs,
-            onShowUpdateDetails,
             showExecutionStatusLabel,
+            toolbox,
             widget
         } = this.props;
         const { DataTable, ResourceVisibility } = Stage.Basic;
@@ -95,11 +93,10 @@ export default class extends React.Component {
                             <DataTable.Data>
                                 <LastExecutionStatusIcon
                                     execution={item.lastExecution}
-                                    onShowLogs={() => onShowLogs(item.id, item.lastExecution.id)}
-                                    onShowUpdateDetails={onShowUpdateDetails}
                                     onActOnExecution={onActOnExecution}
                                     showLabel={showExecutionStatusLabel}
                                     labelAttached={false}
+                                    toolbox={toolbox}
                                 />
                             </DataTable.Data>
                             <DataTable.Data>{item.blueprint_id}</DataTable.Data>

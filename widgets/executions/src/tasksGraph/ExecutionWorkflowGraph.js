@@ -8,7 +8,6 @@ import states from './States';
 
 const POLLING_INTERVAL = 5000;
 
-const MAX_TABLE_GRAPH_HEIGHT = 380;
 const MIN_MODAL_GRAPH_HEIGHT = 300;
 const GRAPH_MARGIN = 25;
 
@@ -20,7 +19,13 @@ export default class ExecutionWorkflowGraph extends React.Component {
      * @property {Any} [selectedExecution] - Used to pull the execution's tasks graphs and corresponding operations' lists
      */
     static propTypes = {
-        selectedExecution: PropTypes.any.isRequired
+        selectedExecution: PropTypes.any.isRequired,
+        containerHeight: PropTypes.number.isRequired,
+        showStatus: PropTypes.bool
+    };
+
+    static defaultProps = {
+        showStatus: false
     };
 
     constructor(props, context) {
@@ -36,6 +41,7 @@ export default class ExecutionWorkflowGraph extends React.Component {
         };
         this.timer = null;
         this.cancelablePromise = null;
+        this.actOnExecution = this.actOnExecution.bind(this);
         this.startPolling = this.startPolling.bind(this); // Required for the setTimeout function which changes the scope for 'this'
         this.wrapper = React.createRef();
         this.modal = React.createRef();
@@ -61,6 +67,10 @@ export default class ExecutionWorkflowGraph extends React.Component {
         this.stopPolling();
     }
 
+    actOnExecution(execution, action, error) {
+        this.setState({ error });
+    }
+
     startPolling() {
         const { autoFocus, graphResult } = this.state;
         this.cancelablePromise = Stage.Utils.makeCancelable(this.getTasksGraphPromise());
@@ -68,7 +78,8 @@ export default class ExecutionWorkflowGraph extends React.Component {
             .then(tasksGraph => {
                 if (graphResult !== tasksGraph) {
                     this.setState({
-                        graphResult: tasksGraph
+                        graphResult: tasksGraph,
+                        error: ''
                     });
                     if (autoFocus) {
                         this.scrollToInProgress();
@@ -128,12 +139,24 @@ export default class ExecutionWorkflowGraph extends React.Component {
     }
 
     renderGraph(width, height, positionStateProp, openInModalIcon = true, minimap) {
-        const { toolbox } = this.props;
+        const { selectedExecution, showStatus, toolbox } = this.props;
         const { state } = this;
         const { autoFocus, graphResult } = state;
         const { Icon } = Stage.Basic;
+        const { LastExecutionStatusIcon } = Stage.Common;
         return (
             <>
+                {showStatus && (
+                    <div style={{ position: 'absolute', top: 2, left: 2, zIndex: 1, opacity: 1 }}>
+                        <LastExecutionStatusIcon
+                            execution={selectedExecution}
+                            onActOnExecution={this.actOnExecution}
+                            showLabel
+                            labelAttached={false}
+                            toolbox={toolbox}
+                        />
+                    </div>
+                )}
                 <div className="executions-graph-toolbar">
                     <Icon
                         name="play"
@@ -147,8 +170,8 @@ export default class ExecutionWorkflowGraph extends React.Component {
                         link
                         onClick={() =>
                             this.scrollTo(
-                                0,
-                                0,
+                                GRAPH_MARGIN / 2,
+                                GRAPH_MARGIN,
                                 Math.min(
                                     width / (graphResult.width + GRAPH_MARGIN),
                                     height / (graphResult.height + GRAPH_MARGIN)
@@ -205,33 +228,33 @@ export default class ExecutionWorkflowGraph extends React.Component {
 
     render() {
         const { containerWidth, error, graphResult, maximized, modalWidth } = this.state;
-        const { Loading, Message, Modal } = Stage.Basic;
+        const { ErrorMessage, Loading, Message, Modal } = Stage.Basic;
+        const { containerHeight } = this.props;
         if (graphResult !== null) {
             const height = graphResult.height + 2 * GRAPH_MARGIN + 8;
             return (
-                <div ref={this.wrapper} style={{ position: 'relative' }}>
-                    {this.renderGraph(
-                        Math.max(0, containerWidth - 1),
-                        Math.min(MAX_TABLE_GRAPH_HEIGHT, height),
-                        'position'
-                    )}
-                    <Modal
-                        open={maximized}
-                        onClose={() => this.setState({ maximized: false })}
-                        size="fullscreen"
-                        closeOnDimmerClick={false}
-                    >
-                        <div ref={this.modal}>
-                            {this.renderGraph(
-                                modalWidth,
-                                Math.max(MIN_MODAL_GRAPH_HEIGHT, height),
-                                'modalPosition',
-                                false,
-                                true
-                            )}
-                        </div>
-                    </Modal>
-                </div>
+                <>
+                    <ErrorMessage error={error} />
+                    <div ref={this.wrapper} style={{ position: 'relative' }}>
+                        {this.renderGraph(Math.max(0, containerWidth - 1), containerHeight, 'position')}
+                        <Modal
+                            open={maximized}
+                            onClose={() => this.setState({ maximized: false })}
+                            size="fullscreen"
+                            closeOnDimmerClick={false}
+                        >
+                            <div ref={this.modal}>
+                                {this.renderGraph(
+                                    modalWidth,
+                                    Math.max(MIN_MODAL_GRAPH_HEIGHT, height),
+                                    'modalPosition',
+                                    false,
+                                    true
+                                )}
+                            </div>
+                        </Modal>
+                    </div>
+                </>
             );
         }
         if (error) {

@@ -49,11 +49,11 @@ export function createPage(page, newPageId) {
     };
 }
 
-export function createDrilldownPage(newPageId, name) {
+export function createDrilldownPage(page, newPageId) {
     return {
         type: types.CREATE_DRILLDOWN_PAGE,
-        newPageId,
-        name
+        page,
+        newPageId
     };
 }
 
@@ -164,6 +164,22 @@ export function removePage(page) {
     };
 }
 
+export function addWidgetsToPage(page, pageId) {
+    return (dispatch, getState) => {
+        const { widgetDefinitions } = getState();
+        _.each(page.widgets, widget => {
+            const widgetDefinition = _.find(widgetDefinitions, { id: widget.definition });
+            dispatch(addWidget(pageId, null, widget, widgetDefinition));
+        });
+        _.each(page.tabs, (tab, tabIndex) =>
+            _.each(tab.widgets, tabWidget => {
+                const widgetDefinition = _.find(widgetDefinitions, { id: tabWidget.definition });
+                dispatch(addWidget(pageId, tabIndex, tabWidget, widgetDefinition));
+            })
+        );
+    };
+}
+
 export function createPagesFromTemplate() {
     return (dispatch, getState) => {
         const { manager } = getState();
@@ -189,16 +205,7 @@ export function createPagesFromTemplate() {
 
                 const pageId = createPageId(page.name, getState().pages);
                 dispatch(createPage(page, pageId));
-                _.each(page.widgets, widget => {
-                    const widgetDefinition = _.find(widgetDefinitions, { id: widget.definition });
-                    dispatch(addWidget(pageId, null, widget, widgetDefinition));
-                });
-                _.each(page.tabs, (tab, tabIndex) =>
-                    _.each(tab.widgets, tabWidget => {
-                        const widgetDefinition = _.find(widgetDefinitions, { id: tabWidget.definition });
-                        dispatch(addWidget(pageId, tabIndex, tabWidget, widgetDefinition));
-                    })
-                );
+                dispatch(addWidgetsToPage(page, pageId));
             });
         });
     };

@@ -6,6 +6,8 @@ import DryRunIcon from './DryRunIcon';
 import SystemWorkflowIcon from './SystemWorkflowIcon';
 import ExecutionWorkflowGraph from './tasksGraph/ExecutionWorkflowGraph';
 
+const MAX_TABLE_GRAPH_HEIGHT = 380;
+
 export default class ExecutionsTable extends React.Component {
     constructor(props, context) {
         super(props, context);
@@ -312,7 +314,11 @@ export default class ExecutionsTable extends React.Component {
                                     </DataTable.Data>
                                 </DataTable.Row>
                                 <DataTable.DataExpandable key={item.id}>
-                                    <ExecutionWorkflowGraph selectedExecution={item} toolbox={toolbox} />
+                                    <ExecutionWorkflowGraph
+                                        selectedExecution={item}
+                                        toolbox={toolbox}
+                                        containerHeight={MAX_TABLE_GRAPH_HEIGHT}
+                                    />
                                 </DataTable.DataExpandable>
                             </DataTable.RowExpandable>
                         );

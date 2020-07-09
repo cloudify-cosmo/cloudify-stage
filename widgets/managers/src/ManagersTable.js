@@ -20,7 +20,6 @@ export default class ManagersTable extends React.Component {
             error: null,
             selectedManagerId: null,
             selectedManagers: [],
-            showDeploymentUpdateDetailsModal: false,
             showExecuteWorkflowModal: false,
             workflow: { name: '', parameters: [] },
             status: _(props.data.items)
@@ -104,32 +103,8 @@ export default class ManagersTable extends React.Component {
         this.refreshData();
     }
 
-    openDeploymentUpdateDetailsModal(deploymentUpdateId) {
-        this.setState({ deploymentUpdateId, showDeploymentUpdateDetailsModal: true });
-    }
-
-    hideDeploymentUpdateDetailsModal() {
-        this.setState({ deploymentUpdateId: null, showDeploymentUpdateDetailsModal: false });
-    }
-
-    actOnExecution(execution, action) {
-        const { toolbox } = this.props;
-        const actions = new Stage.Common.ExecutionActions(toolbox);
-        actions
-            .doAct(execution, action)
-            .then(() => {
-                this.setState({ error: null });
-                toolbox.getEventBus().trigger('deployments:refresh');
-                toolbox.getEventBus().trigger('executions:refresh');
-            })
-            .catch(err => {
-                this.setState({ error: err.message });
-            });
-    }
-
-    showLogs(managerId, executionId) {
-        const { toolbox, widget } = this.props;
-        toolbox.drillDown(widget, 'logs', { deploymentId: managerId, executionId }, `Execution Logs - ${executionId}`);
+    actOnExecution(execution, action, error) {
+        this.setState({ error });
     }
 
     handleStatusFetching(managerId) {
@@ -171,10 +146,8 @@ export default class ManagersTable extends React.Component {
             selectedManagers,
             bulkOperation,
             deployment,
-            deploymentUpdateId,
             error,
             selectedManagerId,
-            showDeploymentUpdateDetailsModal,
             showExecuteWorkflowModal,
             workflow
         } = this.state;
@@ -182,7 +155,7 @@ export default class ManagersTable extends React.Component {
         const workflows = !_.isEmpty(selectedManagers) ? _.get(data, 'items[0].workflows', []) : [];
 
         const { Checkbox, DataTable, ErrorMessage } = Stage.Basic;
-        const { ExecuteDeploymentModal, LastExecutionStatusIcon, UpdateDetailsModal } = Stage.Common;
+        const { ExecuteDeploymentModal, LastExecutionStatusIcon } = Stage.Common;
 
         return (
             <div>
@@ -257,11 +230,10 @@ export default class ManagersTable extends React.Component {
                                 <DataTable.Data>
                                     <LastExecutionStatusIcon
                                         execution={manager.lastExecution}
-                                        onShowLogs={() => this.showLogs(manager.id, manager.lastExecution.id)}
-                                        onShowUpdateDetails={this.openDeploymentUpdateDetailsModal.bind(this)}
                                         onActOnExecution={this.actOnExecution.bind(this)}
                                         showLabel
                                         labelAttached={false}
+                                        toolbox={toolbox}
                                     />
                                 </DataTable.Data>
                                 <DataTable.Data className="center aligned">
@@ -308,13 +280,6 @@ export default class ManagersTable extends React.Component {
                     deployments={bulkOperation ? selectedManagers : []}
                     workflow={workflow}
                     onHide={this.hideExecuteWorkflowModal.bind(this)}
-                />
-
-                <UpdateDetailsModal
-                    open={showDeploymentUpdateDetailsModal}
-                    deploymentUpdateId={deploymentUpdateId}
-                    onClose={this.hideDeploymentUpdateDetailsModal.bind(this)}
-                    toolbox={toolbox}
                 />
             </div>
         );

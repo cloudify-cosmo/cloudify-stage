@@ -12,22 +12,19 @@ export default class DeploymentsSegment extends React.Component {
         widget: PropTypes.object.isRequired,
         fetchData: PropTypes.func,
         onSelectDeployment: PropTypes.func,
-        onShowLogs: PropTypes.func,
-        onShowUpdateDetails: PropTypes.func,
         onActOnExecution: PropTypes.func,
         onMenuAction: PropTypes.func,
         onError: PropTypes.func,
         onSetVisibility: PropTypes.func,
         allowedSettingTo: PropTypes.array,
         noDataMessage: PropTypes.string,
-        showExecutionStatusLabel: PropTypes.bool
+        showExecutionStatusLabel: PropTypes.bool,
+        toolbox: PropTypes.shape({})
     };
 
     static defaultProps = {
         fetchData: () => {},
         onSelectDeployment: () => {},
-        onShowLogs: () => {},
-        onShowUpdateDetails: () => {},
         onActOnExecution: () => {},
         onMenuAction: () => {},
         onError: () => {},
@@ -47,9 +44,8 @@ export default class DeploymentsSegment extends React.Component {
             onMenuAction,
             onSelectDeployment,
             onSetVisibility,
-            onShowLogs,
-            onShowUpdateDetails,
             showExecutionStatusLabel,
+            toolbox,
             widget
         } = this.props;
         const { DataSegment, Divider, Header } = Stage.Basic;
@@ -75,10 +71,9 @@ export default class DeploymentsSegment extends React.Component {
                                 <div>
                                     <LastExecutionStatusIcon
                                         execution={item.lastExecution}
-                                        onShowLogs={() => onShowLogs(item.id, item.lastExecution.id)}
-                                        onShowUpdateDetails={onShowUpdateDetails}
                                         onActOnExecution={onActOnExecution}
                                         showLabel={showExecutionStatusLabel}
+                                        toolbox={toolbox}
                                     />
                                     {showExecutionStatusLabel && <Divider hidden />}
                                     <Header

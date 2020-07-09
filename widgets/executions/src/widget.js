@@ -3,6 +3,8 @@
  */
 
 import ExecutionsTable from './ExecutionsTable';
+import ExecutionWorkflowGraph from './tasksGraph/ExecutionWorkflowGraph';
+import SingleExecution from './SingleExecution';
 
 Stage.defineWidget({
     id: 'executions',
@@ -48,7 +50,13 @@ Stage.defineWidget({
             type: Stage.Basic.GenericField.BOOLEAN_TYPE
         },
         Stage.GenericConfig.SORT_COLUMN_CONFIG('created_at'),
-        Stage.GenericConfig.SORT_ASCENDING_CONFIG(false)
+        Stage.GenericConfig.SORT_ASCENDING_CONFIG(false),
+        {
+            id: 'singleExecutionView',
+            name: 'Show most recent execution only',
+            default: false,
+            type: Stage.Basic.GenericField.BOOLEAN_TYPE
+        }
     ],
 
     fetchParams(widget, toolbox) {
@@ -64,8 +72,19 @@ Stage.defineWidget({
     },
 
     render(widget, data, error, toolbox) {
+        const { Loading } = Stage.Basic;
+        const { singleExecutionView } = widget.configuration;
+
         if (_.isEmpty(data)) {
-            return <Stage.Basic.Loading />;
+            return <Loading />;
+        }
+
+        if (singleExecutionView) {
+            const lastExecution = _.chain(data.items)
+                .sortBy('started_at')
+                .last()
+                .value();
+            return <SingleExecution execution={lastExecution} toolbox={toolbox} />;
         }
 
         const selectedExecution = toolbox.getContext().getValue('executionId');
