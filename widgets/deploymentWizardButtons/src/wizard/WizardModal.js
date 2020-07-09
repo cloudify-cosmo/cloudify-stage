@@ -316,14 +316,7 @@ export default class WizardModal extends React.Component {
         const className = `wizardModal ${activeStepName}`;
 
         return (
-            <Modal
-                open={open}
-                onClose={onClose}
-                className={className}
-                closeIcon={false}
-                closeOnEscape={false}
-                closeOnDimmerClick={false}
-            >
+            <Modal open={open} onClose={onClose} className={className} closeIcon={false}>
                 <Modal.Header>{header}</Modal.Header>
 
                 <Modal.Description>

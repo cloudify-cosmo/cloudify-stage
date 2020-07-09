@@ -237,7 +237,7 @@ class UpdateDeploymentModal extends React.Component {
             : {};
 
         return (
-            <Modal open={open} onClose={() => onHide()} closeOnEscape={false} className="updateDeploymentModal">
+            <Modal open={open} onClose={() => onHide()} className="updateDeploymentModal">
                 <Modal.Header>
                     <Icon name="edit" /> Update deployment {deployment.id}
                 </Modal.Header>

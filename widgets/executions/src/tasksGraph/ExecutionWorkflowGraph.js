@@ -237,12 +237,7 @@ export default class ExecutionWorkflowGraph extends React.Component {
                     <ErrorMessage error={error} />
                     <div ref={this.wrapper} style={{ position: 'relative' }}>
                         {this.renderGraph(Math.max(0, containerWidth - 1), containerHeight, 'position')}
-                        <Modal
-                            open={maximized}
-                            onClose={() => this.setState({ maximized: false })}
-                            size="fullscreen"
-                            closeOnDimmerClick={false}
-                        >
+                        <Modal open={maximized} onClose={() => this.setState({ maximized: false })} size="fullscreen">
                             <div ref={this.modal}>
                                 {this.renderGraph(
                                     modalWidth,

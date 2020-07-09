@@ -166,7 +166,7 @@ export default class ExecuteDeploymentModal extends React.Component {
             : enhancedDeployment.id;
 
         return (
-            <Modal open={open} onClose={() => onHide()} closeOnEscape={false} className="executeWorkflowModal">
+            <Modal open={open} onClose={() => onHide()} className="executeWorkflowModal">
                 <Modal.Header>
                     <Icon name="cogs" /> Execute workflow {enhancedWorkflow.name}
                     {deploymentName && ` on ${deploymentName}`}
