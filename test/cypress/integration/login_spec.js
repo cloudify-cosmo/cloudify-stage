@@ -17,7 +17,7 @@ describe('Login', () => {
 
         cy.get('.error.message').should(
             'have.text',
-            'User unauthorized: Authentication failed for user admin. Bad credentials or locked account'
+            'User unauthorized: Authentication failed for user admin. Wrong credentials or locked account'
         );
         cy.location('pathname').should('be.equal', '/console/login');
     });
