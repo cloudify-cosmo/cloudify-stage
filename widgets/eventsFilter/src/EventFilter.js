@@ -12,11 +12,13 @@ const initialFields = Object.freeze({
     logLevel: []
 });
 
+function isDirty(fields) {
+    return !_.every(initialFields, (value, name) => fields[name] === initialFields[name]);
+}
+
 export default class EventFilter extends React.Component {
     constructor(props, context) {
         super(props, context);
-
-        this.dirty = {};
 
         const { EventUtils } = Stage.Common;
 
@@ -34,18 +36,26 @@ export default class EventFilter extends React.Component {
 
         this.debouncedContextUpdate = _.noop();
 
-        this.state = EventFilter.initialState(this.eventTypeOptions, this.logLevelOptions);
+        const { toolbox } = this.props;
+        const fieldsFromContext = toolbox.getContext().getValue('eventFilter');
+        this.state = EventFilter.initialState(this.eventTypeOptions, this.logLevelOptions, fieldsFromContext);
+
+        this.renderLabel = this.renderLabel.bind(this);
+        this.handleOptionAddition = this.handleOptionAddition.bind(this);
+        this.handleInputChange = this.handleInputChange.bind(this);
+        this.resetFilter = this.resetFilter.bind(this);
     }
 
-    static initialState = (eventTypeOptions, logLevelOptions) => ({
-        fields: initialFields,
+    static initialState = (eventTypeOptions, logLevelOptions, fields = initialFields) => ({
+        fields,
         eventTypeOptions,
-        logLevelOptions
+        logLevelOptions,
+        dirty: isDirty(fields)
     });
 
     shouldComponentUpdate(nextProps, nextState) {
-        const { fields } = this.state;
-        return !_.isEqual(fields, nextState.fields) || !_.isEqual(this.props, nextProps);
+        const { props, state } = this;
+        return !_.isEqual(state, nextState) || !_.isEqual(props, nextProps);
     }
 
     componentDidMount() {
@@ -55,6 +65,14 @@ export default class EventFilter extends React.Component {
             toolbox.getContext().setValue(contextValueKey, fields);
         }, 500);
         toolbox.getEventBus().on(refreshEvent, this.refreshFilter, this);
+    }
+
+    componentDidUpdate(prevProps, prevState, snapshot) {
+        const { fields } = this.state;
+
+        if (!_.isEqual(fields, prevState.fields)) {
+            this.setState({ dirty: isDirty(fields) });
+        }
     }
 
     componentWillUnmount() {
@@ -75,7 +93,6 @@ export default class EventFilter extends React.Component {
     handleInputChange(proxy, field) {
         const { fields: stateFields } = this.state;
         const { EventUtils } = Stage.Common;
-        this.dirty[field.name] = !_.isEmpty(field.value);
 
         const fields = { ...stateFields };
         fields[field.name] = field.value;
@@ -108,21 +125,11 @@ export default class EventFilter extends React.Component {
         this.setState({ [`${name}Options`]: [{ text: value, value }, ...state[`${name}Options`]] });
     }
 
-    isDirty() {
-        let res = false;
-        _.forEach(this.dirty, (value, key) => {
-            res = res || value;
-        });
-
-        return res;
-    }
-
     resetFilter() {
         const { toolbox } = this.props;
-        this.dirty = {};
 
         const fields = { ...EventFilter.initialState({}, {}).fields };
-        this.setState({ fields }, () => {
+        this.setState({ dirty: false, fields }, () => {
             toolbox.getContext().setValue('eventFilter', fields);
 
             toolbox.getEventBus().trigger('events:refresh');
@@ -135,7 +142,7 @@ export default class EventFilter extends React.Component {
     }
 
     render() {
-        const { eventTypeOptions, fields, logLevelOptions } = this.state;
+        const { dirty, eventTypeOptions, fields, logLevelOptions } = this.state;
         const { Form, Popup, DateRangeInput } = Stage.Basic;
         const { EventUtils } = Stage.Common;
 
@@ -189,7 +196,7 @@ export default class EventFilter extends React.Component {
                             options={EventUtils.typesOptions}
                             name="type"
                             value={fields.type}
-                            onChange={this.handleInputChange.bind(this)}
+                            onChange={this.handleInputChange}
                         />
                     </Form.Field>
                     <Form.Field>
@@ -201,13 +208,13 @@ export default class EventFilter extends React.Component {
                             selection
                             options={eventTypeOptions}
                             name="eventType"
-                            renderLabel={this.renderLabel.bind(this)}
+                            renderLabel={this.renderLabel}
                             additionLabel="Add custom Event Type: "
                             value={fields.eventType}
                             allowAdditions
                             disabled={!this.isTypeSet(EventUtils.eventType)}
-                            onAddItem={this.handleOptionAddition.bind(this)}
-                            onChange={this.handleInputChange.bind(this)}
+                            onAddItem={this.handleOptionAddition}
+                            onChange={this.handleInputChange}
                         />
                     </Form.Field>
                     <Form.Field>
@@ -223,20 +230,13 @@ export default class EventFilter extends React.Component {
                             disabled={!this.isTypeSet(EventUtils.logType)}
                             additionLabel="Add custom Log Level: "
                             value={fields.logLevel}
-                            onAddItem={this.handleOptionAddition.bind(this)}
-                            onChange={this.handleInputChange.bind(this)}
+                            onAddItem={this.handleOptionAddition}
+                            onChange={this.handleInputChange}
                         />
                     </Form.Field>
                     <Form.Field>
                         <Popup
-                            trigger={
-                                <Form.Button
-                                    icon="undo"
-                                    basic
-                                    onClick={this.resetFilter.bind(this)}
-                                    disabled={!this.isDirty()}
-                                />
-                            }
+                            trigger={<Form.Button icon="undo" basic onClick={this.resetFilter} disabled={!dirty} />}
                             content="Reset filter"
                         />
                     </Form.Field>
@@ -247,14 +247,14 @@ export default class EventFilter extends React.Component {
                         name="operationText"
                         fluid
                         value={fields.operationText}
-                        onChange={this.handleInputChange.bind(this)}
+                        onChange={this.handleInputChange}
                     />
                     <Form.Input
                         placeholder="Message"
                         name="messageText"
                         fluid
                         value={fields.messageText}
-                        onChange={this.handleInputChange.bind(this)}
+                        onChange={this.handleInputChange}
                     />
                     <Form.Field>
                         <Form.DateRange
@@ -264,7 +264,7 @@ export default class EventFilter extends React.Component {
                             ranges={timeRanges}
                             defaultValue={DateRangeInput.EMPTY_VALUE}
                             value={fields.timeRange}
-                            onChange={this.handleInputChange.bind(this)}
+                            onChange={this.handleInputChange}
                         />
                     </Form.Field>
                 </Form.Group>
