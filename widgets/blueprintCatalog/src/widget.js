@@ -11,7 +11,7 @@ Stage.defineWidget({
     name: 'Blueprints Catalog',
     description: 'Shows blueprints catalog',
     initialWidth: 8,
-    initialHeight: 16,
+    initialHeight: 20,
     color: 'teal',
     hasStyle: true,
     isReact: true,
@@ -20,13 +20,13 @@ Stage.defineWidget({
     categories: [Stage.GenericConfig.CATEGORY.BLUEPRINTS],
 
     initialConfiguration: [
-        Stage.GenericConfig.PAGE_SIZE_CONFIG(3),
+        Stage.GenericConfig.PAGE_SIZE_CONFIG(),
         {
             id: 'jsonPath',
             name: 'Blueprints Examples URL',
             placeHolder: 'Type URL to blueprint examples JSON file',
             description: 'If set, then GitHub options are not used for fetching data.',
-            default: '//repository.cloudifysource.org/cloudify/blueprints/5.0.5/examples.json',
+            default: 'https://repository.cloudifysource.org/cloudify/blueprints/5.0.5/examples.json',
             type: Stage.Basic.GenericField.STRING_TYPE
         },
         {
@@ -53,7 +53,7 @@ Stage.defineWidget({
             id: 'displayStyle',
             name: 'Display style',
             items: [{ name: 'Table', value: 'table' }, { name: 'Catalog', value: 'catalog' }],
-            default: 'catalog',
+            default: 'table',
             type: Stage.Basic.GenericField.LIST_TYPE
         },
         {

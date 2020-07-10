@@ -21,19 +21,16 @@ export default class Actions {
         if (!_.isEmpty(this.jsonPath)) {
             // JSON URL
             return this.toolbox
-                .getExternal()
-                .doGet(this.jsonPath)
-                .then(data => {
-                    const numberOfBlueprints = data.length;
-                    const startOffset = Math.min(params.per_page * (params.page - 1), numberOfBlueprints);
-                    const endOffset = Math.min(params.per_page * params.page, numberOfBlueprints);
-                    return Promise.resolve({
-                        items: _.slice(data, startOffset, endOffset),
-                        total_count: numberOfBlueprints,
+                .getInternal()
+                .doGet('/external/content', { url: this.jsonPath }, false)
+                .then(response => response.json())
+                .then(data =>
+                    Promise.resolve({
+                        items: data,
+                        total_count: data.length,
                         source: Consts.JSON_DATA_SOURCE
-                    });
-                })
-                .catch(() => Promise.reject({ message: `Cannot fetch data from ${this.jsonPath}.` }));
+                    })
+                );
         }
         // GitHub API
         return this.toolbox

@@ -1,6 +1,7 @@
 /**
  * Created by pposel on 08/02/2017.
  */
+import Consts from './consts';
 
 export default class extends React.Component {
     static propTypes = {
@@ -23,14 +24,18 @@ export default class extends React.Component {
     render() {
         const { DataTable, Image, Icon } = Stage.Basic;
 
+        // Show pagination only in case when data is provided from GitHub
+        const { data, widget } = this.props;
+        const pageSize = data.source === Consts.GITHUB_DATA_SOURCE ? widget.configuration.pageSize : data.total;
+        const totalSize = data.source === Consts.GITHUB_DATA_SOURCE ? data.total : -1;
+
         return (
             <DataTable
                 fetchData={this.props.fetchData}
-                pageSize={this.props.widget.configuration.pageSize}
+                pageSize={pageSize}
                 sortColumn={this.props.widget.configuration.sortColumn}
                 sortAscending={this.props.widget.configuration.sortAscending}
-                fetchSize={this.props.data.items.length}
-                totalSize={this.props.data.total}
+                totalSize={totalSize}
                 selectable
                 noDataMessage={this.props.noDataMessage}
             >
@@ -45,6 +50,7 @@ export default class extends React.Component {
                     return (
                         <DataTable.Row
                             key={item.id}
+                            className={`bp_${item.name}`}
                             selected={item.isSelected}
                             onClick={() => this.props.onSelect(item)}
                         >
@@ -76,7 +82,12 @@ export default class extends React.Component {
                                     bordered
                                     onClick={event => {
                                         event.stopPropagation();
-                                        this.props.onUpload(item.name, item.zip_url, item.image_url);
+                                        this.props.onUpload(
+                                            item.name,
+                                            item.zip_url,
+                                            item.image_url,
+                                            item.main_blueprint
+                                        );
                                     }}
                                 />
                             </DataTable.Data>
