@@ -27,7 +27,7 @@ Cypress.Commands.add('setSite', (deploymentId, siteName) => {
 });
 
 Cypress.Commands.add('deleteDeployment', (deploymentId, force = false) => {
-    cy.cfyRequest(`/deployments/${deploymentId}?ignore_live_nodes=${force}`, 'DELETE');
+    cy.cfyRequest(`/deployments/${deploymentId}?force=${force}`, 'DELETE');
 });
 
 Cypress.Commands.add('deleteDeployments', (search, force = false) => {

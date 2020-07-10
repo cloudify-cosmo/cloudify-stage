@@ -20,7 +20,7 @@ class DeploymentActions {
     }
 
     doForceDelete(deployment) {
-        return this.toolbox.getManager().doDelete(`/deployments/${deployment.id}`, { ignore_live_nodes: 'true' });
+        return this.toolbox.getManager().doDelete(`/deployments/${deployment.id}`, { force: 'true' });
     }
 
     doCancel(execution, action) {
