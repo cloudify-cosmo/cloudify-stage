@@ -130,6 +130,7 @@ export default class LastExecutionStatusIcon extends React.Component {
                                         {Utils.Execution.isFailedExecution(execution) && (
                                             <Button
                                                 icon
+                                                color="teal"
                                                 labelPosition="left"
                                                 onClick={() => this.setState({ errorModalOpen: true })}
                                             >
@@ -137,13 +138,14 @@ export default class LastExecutionStatusIcon extends React.Component {
                                                 Show Error
                                             </Button>
                                         )}
-                                        <Button icon labelPosition="left" onClick={this.showLogs}>
+                                        <Button icon color="teal" labelPosition="left" onClick={this.showLogs}>
                                             <Icon name="file text" />
                                             Show Logs
                                         </Button>
                                         {Utils.Execution.isUpdateExecution(execution) && (
                                             <Button
                                                 icon
+                                                color="teal"
                                                 labelPosition="left"
                                                 onClick={() => this.setState({ updateModalOpen: true })}
                                             >
@@ -159,6 +161,7 @@ export default class LastExecutionStatusIcon extends React.Component {
                                             Utils.Execution.isFailedExecution(execution)) && (
                                             <Button
                                                 icon
+                                                color="teal"
                                                 labelPosition="left"
                                                 onClick={() =>
                                                     this.actOnExecution(execution, Utils.Execution.FORCE_RESUME_ACTION)
@@ -172,6 +175,7 @@ export default class LastExecutionStatusIcon extends React.Component {
                                             Utils.Execution.isWaitingExecution(execution)) && (
                                             <Button
                                                 icon
+                                                color="teal"
                                                 labelPosition="left"
                                                 onClick={() =>
                                                     this.actOnExecution(execution, Utils.Execution.CANCEL_ACTION)
@@ -185,6 +189,7 @@ export default class LastExecutionStatusIcon extends React.Component {
                                             Utils.Execution.isWaitingExecution(execution)) && (
                                             <Button
                                                 icon
+                                                color="teal"
                                                 labelPosition="left"
                                                 onClick={() =>
                                                     this.actOnExecution(execution, Utils.Execution.FORCE_CANCEL_ACTION)
@@ -196,6 +201,7 @@ export default class LastExecutionStatusIcon extends React.Component {
                                         )}
                                         <Button
                                             icon
+                                            color="teal"
                                             labelPosition="left"
                                             onClick={() =>
                                                 this.actOnExecution(execution, Utils.Execution.KILL_CANCEL_ACTION)
