@@ -16,10 +16,7 @@ class UploadPluginForm extends React.Component {
     }
 
     static propTypes = {
-        wagonUrl: PropTypes.string,
-        yamlUrl: PropTypes.string,
-        iconUrl: PropTypes.string,
-        errors: PropTypes.object,
+        errors: PropTypes.shape({ title: PropTypes.string }),
         onChange: PropTypes.func.isRequired,
         wrapInForm: PropTypes.bool,
         addRequiredMarks: PropTypes.bool,
@@ -28,9 +25,6 @@ class UploadPluginForm extends React.Component {
     };
 
     static defaultProps = {
-        wagonUrl: '',
-        yamlUrl: '',
-        iconUrl: '',
         errors: {},
         wrapInForm: true,
         addRequiredMarks: true
@@ -136,6 +130,10 @@ class UploadPluginForm extends React.Component {
         );
     }
 }
+
+UploadPluginForm.defaultProps = {
+    hidePlaceholders: false
+};
 
 Stage.defineCommon({
     name: 'UploadPluginForm',

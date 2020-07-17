@@ -6,8 +6,10 @@ import Consts from './consts';
 import RepositoryCatalog from './RepositoryCatalog';
 import RepositoryTable from './RepositoryTable';
 import UploadModal from './UploadModal';
+import DataPropType from './props/DataPropType';
+import ActionsPropType from './props/ActionsPropType';
 
-export default class extends React.Component {
+export default class RepositoryList extends React.Component {
     constructor(props, context) {
         super(props, context);
 
@@ -131,34 +133,23 @@ export default class extends React.Component {
 
         const showNotAuthenticatedWarning = data.source === Consts.GITHUB_DATA_SOURCE && !data.isAuthenticated;
 
+        const RepositoryView = widget.configuration.displayStyle === 'table' ? RepositoryTable : RepositoryCatalog;
+
         return (
             <div>
                 <ErrorMessage error={error} onDismiss={() => this.setState({ error: null })} autoHide />
 
                 {showNotAuthenticatedWarning && notAuthenticatedWarning}
-                {widget.configuration.displayStyle === 'table' ? (
-                    <RepositoryTable
-                        widget={widget}
-                        data={data}
-                        fetchData={this.fetchData.bind(this)}
-                        onSelect={this.selectItem.bind(this)}
-                        onUpload={this.showModal.bind(this)}
-                        onReadme={this.showReadmeModal.bind(this)}
-                        readmeLoading={readmeLoading}
-                        noDataMessage={NO_DATA_MESSAGE}
-                    />
-                ) : (
-                    <RepositoryCatalog
-                        widget={widget}
-                        data={data}
-                        fetchData={this.fetchData.bind(this)}
-                        onSelect={this.selectItem.bind(this)}
-                        onUpload={this.showModal.bind(this)}
-                        onReadme={this.showReadmeModal.bind(this)}
-                        readmeLoading={readmeLoading}
-                        noDataMessage={NO_DATA_MESSAGE}
-                    />
-                )}
+                <RepositoryView
+                    widget={widget}
+                    data={data}
+                    fetchData={this.fetchData.bind(this)}
+                    onSelect={this.selectItem.bind(this)}
+                    onUpload={this.showModal.bind(this)}
+                    onReadme={this.showReadmeModal.bind(this)}
+                    readmeLoading={readmeLoading}
+                    noDataMessage={NO_DATA_MESSAGE}
+                />
 
                 <UploadModal
                     open={showModal}
@@ -183,3 +174,10 @@ export default class extends React.Component {
         );
     }
 }
+
+RepositoryList.propTypes = {
+    actions: ActionsPropType.isRequired,
+    data: DataPropType.isRequired,
+    toolbox: Stage.Common.PropTypes.Toolbox.isRequired,
+    widget: Stage.Common.PropTypes.Widget.isRequired
+};

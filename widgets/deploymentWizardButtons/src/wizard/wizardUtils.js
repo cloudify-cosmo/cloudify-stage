@@ -1,5 +1,5 @@
 import StepActions from './StepActions';
-import StepContent from './StepContent';
+import StepContentPropTypes from '../steps/StepContentPropTypes';
 
 function getDisplayName(WrappedComponent) {
     return WrappedComponent.displayName || WrappedComponent.name || 'Component';
@@ -11,7 +11,7 @@ function createStepContent(ContentComponent, id) {
             super(props);
         }
 
-        static propTypes = _.omit(StepContent.propTypes, 'id');
+        static propTypes = _.omit(StepContentPropTypes, 'id');
 
         render() {
             return <ContentComponent id={id} {...this.props} />;

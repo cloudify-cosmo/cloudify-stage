@@ -16,7 +16,7 @@ function NoDataMessage({ repositoryName, error, children }) {
 NoDataMessage.propTypes = {
     repositoryName: PropTypes.string,
     children: PropTypes.node,
-    error: PropTypes.shape({})
+    error: PropTypes.shape({ name: PropTypes.string })
 };
 
 NoDataMessage.defaultProps = {

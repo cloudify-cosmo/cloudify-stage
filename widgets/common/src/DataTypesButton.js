@@ -2,16 +2,36 @@
  * Created by jakubniezgoda on 15/04/2019.
  */
 
+const PropertiesPropType = PropTypes.objectOf(
+    PropTypes.shape({
+        description: PropTypes.string,
+        type: PropTypes.string,
+        default: PropTypes.any,
+        required: PropTypes.bool
+    })
+);
+
+const DataTypeProperty = ({ show, name, value }) =>
+    show && (
+        <>
+            <Header as="h4">{_.capitalize(name)}</Header>
+            {value}
+        </>
+    );
+
+DataTypeProperty.propTypes = {
+    name: PropTypes.string.isRequired,
+    show: PropTypes.bool.isRequired,
+    value: PropTypes.string
+};
+
+DataTypeProperty.defaultProps = {
+    value: null
+};
+
 function DataType({ name, description, version, derivedFrom, properties }) {
     const { Header, Segment, Table } = Stage.Basic;
     const { InputsUtils, ParameterValue } = Stage.Common;
-    const DataTypeProperty = ({ show, name, value }) =>
-        show && (
-            <>
-                <Header as="h4">{_.capitalize(name)}</Header>
-                {value}
-            </>
-        );
 
     const example = InputsUtils.getTemplateForDataType({ properties });
 
@@ -64,6 +84,20 @@ function DataType({ name, description, version, derivedFrom, properties }) {
     );
 }
 
+DataType.propTypes = {
+    derivedFrom: PropTypes.string,
+    description: PropTypes.string,
+    properties: PropertiesPropType.isRequired,
+    name: PropTypes.string.isRequired,
+    version: PropTypes.string
+};
+
+DataType.defaultProps = {
+    derivedFrom: null,
+    description: null,
+    version: null
+};
+
 class DataTypesButton extends React.Component {
     constructor(props) {
         super(props);
@@ -81,14 +115,7 @@ class DataTypesButton extends React.Component {
             PropTypes.shape({
                 derived_from: PropTypes.string,
                 version: PropTypes.string,
-                properties: PropTypes.objectOf(
-                    PropTypes.shape({
-                        description: PropTypes.string,
-                        type: PropTypes.string,
-                        default: PropTypes.any,
-                        required: PropTypes.bool
-                    })
-                ).isRequired
+                properties: PropertiesPropType.isRequired
             }).isRequired
         ).isRequired
     };

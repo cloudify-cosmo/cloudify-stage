@@ -28,9 +28,13 @@ class UpdateDeploymentModal extends React.Component {
     });
 
     static propTypes = {
-        toolbox: PropTypes.object.isRequired,
+        toolbox: Stage.Common.PropTypes.Toolbox.isRequired,
         open: PropTypes.bool.isRequired,
-        deployment: PropTypes.object.isRequired,
+        deployment: PropTypes.shape({
+            blueprint_id: PropTypes.string,
+            id: PropTypes.string,
+            inputs: PropTypes.shape({})
+        }).isRequired,
         onHide: PropTypes.func.isRequired
     };
 

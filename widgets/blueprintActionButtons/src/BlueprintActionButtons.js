@@ -144,3 +144,12 @@ export default class BlueprintActionButtons extends React.Component {
         );
     }
 }
+
+BlueprintActionButtons.propTypes = {
+    blueprintId: PropTypes.string,
+    toolbox: Stage.Common.PropTypes.Toolbox.isRequired
+};
+
+BlueprintActionButtons.defaultProps = {
+    blueprintId: undefined
+};

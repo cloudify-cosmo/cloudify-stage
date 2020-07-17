@@ -4,33 +4,13 @@
 
 import MenuAction from './MenuAction';
 import DeploymentUpdatedIcon from './DeploymentUpdatedIcon';
+import DeploymentsViewPropTypes from './props/DeploymentsViewPropTypes';
+import DeploymentsViewDefaultProps from './props/DeploymentsViewDefaultProps';
 
 export default class extends React.Component {
-    static propTypes = {
-        data: PropTypes.object.isRequired,
-        widget: PropTypes.object.isRequired,
-        fetchData: PropTypes.func,
-        onSelectDeployment: PropTypes.func,
-        onActOnExecution: PropTypes.func,
-        onMenuAction: PropTypes.func,
-        onError: PropTypes.func,
-        onSetVisibility: PropTypes.func,
-        allowedSettingTo: PropTypes.array,
-        noDataMessage: PropTypes.string,
-        showExecutionStatusLabel: PropTypes.bool,
-        toolbox: PropTypes.shape({})
-    };
+    static propTypes = DeploymentsViewPropTypes;
 
-    static defaultProps = {
-        fetchData: () => {},
-        onSelectDeployment: () => {},
-        onActOnExecution: () => {},
-        onMenuAction: () => {},
-        onError: () => {},
-        onSetVisibility: () => {},
-        allowedSettingTo: ['tenant', 'global'],
-        noDataMessage: ''
-    };
+    static defaultProps = DeploymentsViewDefaultProps;
 
     render() {
         const {

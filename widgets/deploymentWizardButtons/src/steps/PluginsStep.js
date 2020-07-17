@@ -3,11 +3,11 @@
  */
 
 import StepActions from '../wizard/StepActions';
-import StepContent from '../wizard/StepContent';
 import { createWizardStep } from '../wizard/wizardUtils';
 import NoResourceMessage from './helpers/NoResourceMessage';
 import ResourceAction from './helpers/ResourceAction';
 import ResourceStatus from './helpers/ResourceStatus';
+import StepContentPropTypes from './StepContentPropTypes';
 
 const pluginsStepId = 'plugins';
 
@@ -83,12 +83,11 @@ class PluginsStepContent extends React.Component {
         super(props);
 
         this.state = {
-            pluginsInCatalog: [],
-            pluginsInManager: []
+            pluginsInCatalog: []
         };
     }
 
-    static propTypes = StepContent.propTypes;
+    static propTypes = StepContentPropTypes;
 
     static statusUnknown = 0;
 
@@ -230,12 +229,12 @@ class PluginsStepContent extends React.Component {
                     stepData[plugin] = { ...pluginState };
                 }
 
-                return { stepData, pluginsInManager, pluginsInCatalog };
+                return { stepData, pluginsInCatalog };
             })
             .then(
-                ({ stepData, pluginsInManager, pluginsInCatalog }) =>
+                ({ stepData, pluginsInCatalog }) =>
                     new Promise(resolve =>
-                        this.setState({ pluginsInManager, pluginsInCatalog }, () => {
+                        this.setState({ pluginsInCatalog }, () => {
                             onChange(id, stepData);
                             resolve();
                         })

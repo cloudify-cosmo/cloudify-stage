@@ -2,7 +2,7 @@
  * Created by jakubniezgoda on 22/05/2018.
  */
 
-export default class extends React.Component {
+export default class UploadButton extends React.Component {
     constructor(props, context) {
         super(props, context);
 
@@ -42,3 +42,7 @@ export default class extends React.Component {
         );
     }
 }
+
+UploadButton.propTypes = {
+    toolbox: Stage.Common.PropTypes.Toolbox.isRequired
+};

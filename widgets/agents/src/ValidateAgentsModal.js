@@ -3,6 +3,7 @@
  */
 
 import Consts from './consts';
+import AgentsPropType from './props/AgentsPropType';
 
 export default class ValidateAgentsModal extends React.Component {
     constructor(props, context) {
@@ -34,20 +35,22 @@ export default class ValidateAgentsModal extends React.Component {
     static propTypes = {
         open: PropTypes.bool.isRequired,
         onHide: PropTypes.func.isRequired,
-        toolbox: PropTypes.object.isRequired,
-        widget: PropTypes.object.isRequired,
+        toolbox: Stage.Common.PropTypes.Toolbox.isRequired,
+        widget: Stage.Common.PropTypes.Widget.isRequired,
 
-        agents: PropTypes.array,
-        blueprintId: PropTypes.oneOfType([PropTypes.string, PropTypes.array]),
-        deploymentId: PropTypes.oneOfType([PropTypes.string, PropTypes.array]),
-        nodeId: PropTypes.oneOfType([PropTypes.string, PropTypes.array]),
-        nodeInstanceId: PropTypes.oneOfType([PropTypes.string, PropTypes.array]),
-        installMethods: PropTypes.oneOfType([PropTypes.string, PropTypes.array])
+        agents: AgentsPropType,
+        // eslint-disable-next-line react/no-unused-prop-types
+        deploymentId: Stage.Common.PropTypes.StringOrArray,
+        // eslint-disable-next-line react/no-unused-prop-types
+        nodeId: Stage.Common.PropTypes.StringOrArray,
+        // eslint-disable-next-line react/no-unused-prop-types
+        nodeInstanceId: Stage.Common.PropTypes.StringOrArray,
+        // eslint-disable-next-line react/no-unused-prop-types
+        installMethods: Stage.Common.PropTypes.StringOrArray
     };
 
     static defaultProps = {
         agents: [],
-        blueprintId: '',
         deploymentId: '',
         nodeId: [],
         nodeInstanceId: [],

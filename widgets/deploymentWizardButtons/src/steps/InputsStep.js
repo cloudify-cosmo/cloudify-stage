@@ -3,10 +3,10 @@
  */
 
 import StepActions from '../wizard/StepActions';
-import StepContent from '../wizard/StepContent';
 import { createWizardStep } from '../wizard/wizardUtils';
 import NoResourceMessage from './helpers/NoResourceMessage';
 import ResourceStatus from './helpers/ResourceStatus';
+import StepContentPropTypes from './StepContentPropTypes';
 
 const inputsStepId = 'inputs';
 
@@ -60,7 +60,7 @@ class InputsStepContent extends React.Component {
         };
     }
 
-    static propTypes = StepContent.propTypes;
+    static propTypes = StepContentPropTypes;
 
     static inputsDataPath = 'blueprint.inputs';
 

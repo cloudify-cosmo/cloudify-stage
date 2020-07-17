@@ -8,7 +8,7 @@ export default class DeploymentUpdatedIcon extends React.Component {
     }
 
     static propTypes = {
-        deployment: PropTypes.object,
+        deployment: PropTypes.shape({ isUpdated: PropTypes.bool, updated_at: PropTypes.string }),
         className: PropTypes.string
     };
 

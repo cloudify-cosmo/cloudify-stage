@@ -23,6 +23,16 @@ function BlueprintSection({ newBlueprint, oldBlueprint }) {
     );
 }
 
+BlueprintSection.propTypes = {
+    newBlueprint: PropTypes.string,
+    oldBlueprint: PropTypes.string
+};
+
+BlueprintSection.defaultProps = {
+    newBlueprint: null,
+    oldBlueprint: null
+};
+
 class InputsSection extends React.Component {
     constructor(props) {
         super(props);
@@ -185,6 +195,16 @@ class InputsSection extends React.Component {
     }
 }
 
+InputsSection.propTypes = {
+    newInputs: PropTypes.shape({}),
+    oldInputs: PropTypes.shape({})
+};
+
+InputsSection.defaultProps = {
+    newInputs: {},
+    oldInputs: {}
+};
+
 function NodeInstancesCard({ action, color, icon, instances, name, workflowSkipped }) {
     const { Card, Icon, Label, List } = Stage.Basic;
 
@@ -215,6 +235,20 @@ function NodeInstancesCard({ action, color, icon, instances, name, workflowSkipp
         </Card>
     );
 }
+
+NodeInstancesCard.propTypes = {
+    action: PropTypes.string,
+    color: PropTypes.string.isRequired,
+    icon: PropTypes.string.isRequired,
+    instances: PropTypes.arrayOf(PropTypes.string).isRequired,
+    name: PropTypes.string.isRequired,
+    workflowSkipped: PropTypes.bool
+};
+
+NodeInstancesCard.defaultProps = {
+    action: null,
+    workflowSkipped: false
+};
 
 function NodeInstancesSection({ types }) {
     const { Card, Header, PopupHelp } = Stage.Basic;
@@ -257,6 +291,14 @@ function NodeInstancesSection({ types }) {
     );
 }
 
+NodeInstancesSection.propTypes = {
+    types: PropTypes.arrayOf(
+        PropTypes.shape({
+            ...NodeInstancesCard.propTypes
+        })
+    ).isRequired
+};
+
 function StepsSection({ steps }) {
     const { Header, Table } = Stage.Basic;
     const stepsPresent = !_.isEmpty(steps);
@@ -296,6 +338,12 @@ function StepsSection({ steps }) {
     );
 }
 
+StepsSection.propTypes = {
+    steps: PropTypes.arrayOf(PropTypes.shape({}))
+};
+
+StepsSection.defaultProps = { steps: null };
+
 export default class UpdateDetailsModal extends React.Component {
     constructor(props, context) {
         super(props, context);
@@ -326,12 +374,24 @@ export default class UpdateDetailsModal extends React.Component {
     };
 
     static propTypes = {
-        toolbox: PropTypes.object.isRequired,
+        toolbox: Stage.Common.PropTypes.Toolbox.isRequired,
         open: PropTypes.bool.isRequired,
         isPreview: PropTypes.bool,
         deploymentUpdateId: PropTypes.string,
-        deploymentUpdate: PropTypes.object,
-        executionParameters: PropTypes.object,
+        deploymentUpdate: PropTypes.shape({
+            id: PropTypes.string,
+            new_blueprint_id: PropTypes.string,
+            new_inputs: PropTypes.shape({}),
+            old_blueprint_id: PropTypes.string,
+            old_inputs: PropTypes.shape({}),
+            steps: PropTypes.arrayOf(PropTypes.shape({}))
+        }),
+        executionParameters: PropTypes.shape({
+            reinstall_list: PropTypes.arrayOf(PropTypes.string),
+            skip_install: PropTypes.bool,
+            skip_reinstall: PropTypes.bool,
+            skip_uninstall: PropTypes.bool
+        }),
         onClose: PropTypes.func,
         onUpdate: PropTypes.func
     };

@@ -271,3 +271,16 @@ export default class EventsTable extends React.Component {
         );
     }
 }
+
+EventsTable.propTypes = {
+    data: PropTypes.shape({
+        blueprintId: PropTypes.arrayOf(PropTypes.string),
+        deploymentId: PropTypes.arrayOf(PropTypes.string),
+        executionId: PropTypes.arrayOf(PropTypes.string),
+        items: PropTypes.arrayOf(PropTypes.shape({})),
+        nodeInstanceId: PropTypes.arrayOf(PropTypes.string),
+        total: PropTypes.number
+    }).isRequired,
+    toolbox: Stage.Common.PropTypes.Toolbox.isRequired,
+    widget: Stage.Common.PropTypes.Widget.isRequired
+};

@@ -28,27 +28,6 @@ export default class WizardModal extends React.Component {
     }
 
     /**
-     * @property {boolean} open Controls whether or not the wizard modal is displayed
-     * @property {function(event: SyntheticEvent, data: object)} onClose Function called when wizard is to be closed
-     * @property {object[]} steps List of objects describing the steps (@see wizardUtils.createWizardStep function for details)
-     * @property {object} toolbox Toolbox object
-     */
-    static propTypes = {
-        open: PropTypes.bool.isRequired,
-        onClose: PropTypes.func.isRequired,
-        steps: PropTypes.arrayOf(
-            PropTypes.shape({
-                id: PropTypes.string.isRequired,
-                title: PropTypes.string.isRequired,
-                description: PropTypes.string.isRequired,
-                Content: PropTypes.func.isRequired,
-                Actions: PropTypes.func.isRequired
-            })
-        ).isRequired,
-        toolbox: PropTypes.object.isRequired
-    };
-
-    /**
      * Active step state
      */
     static ACTIVE_STATE = 'active';
@@ -390,3 +369,27 @@ export default class WizardModal extends React.Component {
         );
     }
 }
+
+WizardModal.StepsPropType = PropTypes.arrayOf(
+    PropTypes.shape({
+        id: PropTypes.string.isRequired,
+        title: PropTypes.string.isRequired,
+        description: PropTypes.string.isRequired,
+        Content: PropTypes.func.isRequired,
+        Actions: PropTypes.func.isRequired
+    })
+);
+
+/**
+ * @property {boolean} open Controls whether or not the wizard modal is displayed
+ * @property {function(event: SyntheticEvent, data: object)} onClose Function called when wizard is to be closed
+ * @property {object[]} steps List of objects describing the steps (@see wizardUtils.createWizardStep function for details)
+ * @property {object} toolbox Toolbox object
+ */
+WizardModal.propTypes = {
+    header: PropTypes.string.isRequired,
+    open: PropTypes.bool.isRequired,
+    onClose: PropTypes.func.isRequired,
+    steps: WizardModal.StepsPropType.isRequired,
+    toolbox: Stage.Common.PropTypes.Toolbox.isRequired
+};

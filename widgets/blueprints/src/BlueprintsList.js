@@ -4,6 +4,7 @@
 
 import BlueprintsCatalog from './BlueprintsCatalog';
 import BlueprintsTable from './BlueprintsTable';
+import DataPropType from './props/DataPropType';
 
 export default class BlueprintList extends React.Component {
     constructor(props, context) {
@@ -129,6 +130,8 @@ export default class BlueprintList extends React.Component {
 
         const shouldShowTable = widget.configuration.displayStyle === 'table';
 
+        const BlueprintsView = shouldShowTable ? BlueprintsTable : BlueprintsCatalog;
+
         return (
             <div>
                 <ErrorMessage error={error} onDismiss={() => this.setState({ error: null })} autoHide />
@@ -141,31 +144,17 @@ export default class BlueprintList extends React.Component {
                     onClick={this.showUploadModal.bind(this)}
                 />
 
-                {shouldShowTable ? (
-                    <BlueprintsTable
-                        widget={widget}
-                        data={data}
-                        toolbox={toolbox}
-                        fetchGridData={this.fetchGridData.bind(this)}
-                        onSelectBlueprint={this.selectBlueprint.bind(this)}
-                        onDeleteBlueprint={this.deleteBlueprintConfirm.bind(this)}
-                        onCreateDeployment={this.createDeployment.bind(this)}
-                        onSetVisibility={this.setBlueprintVisibility.bind(this)}
-                        noDataMessage={NO_DATA_MESSAGE}
-                    />
-                ) : (
-                    <BlueprintsCatalog
-                        widget={widget}
-                        data={data}
-                        toolbox={toolbox}
-                        fetchData={this.fetchGridData.bind(this)}
-                        onSelectBlueprint={this.selectBlueprint.bind(this)}
-                        onDeleteBlueprint={this.deleteBlueprintConfirm.bind(this)}
-                        onCreateDeployment={this.createDeployment.bind(this)}
-                        onSetVisibility={this.setBlueprintVisibility.bind(this)}
-                        noDataMessage={NO_DATA_MESSAGE}
-                    />
-                )}
+                <BlueprintsView
+                    widget={widget}
+                    data={data}
+                    toolbox={toolbox}
+                    fetchData={this.fetchGridData.bind(this)}
+                    onSelectBlueprint={this.selectBlueprint.bind(this)}
+                    onDeleteBlueprint={this.deleteBlueprintConfirm.bind(this)}
+                    onCreateDeployment={this.createDeployment.bind(this)}
+                    onSetVisibility={this.setBlueprintVisibility.bind(this)}
+                    noDataMessage={NO_DATA_MESSAGE}
+                />
 
                 <DeleteConfirm
                     resourceName={`blueprint ${blueprintId}`}
@@ -192,3 +181,9 @@ export default class BlueprintList extends React.Component {
         );
     }
 }
+
+BlueprintList.propTypes = {
+    data: DataPropType.isRequired,
+    toolbox: Stage.Common.PropTypes.Toolbox.isRequired,
+    widget: Stage.Common.PropTypes.Widget.isRequired
+};

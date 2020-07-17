@@ -272,3 +272,7 @@ export default class EventFilter extends React.Component {
         );
     }
 }
+
+EventFilter.propTypes = {
+    toolbox: Stage.Common.PropTypes.Toolbox.isRequired
+};

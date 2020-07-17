@@ -1,3 +1,5 @@
+import ActionsPropType from './props/ActionsPropType';
+
 /**
  * Created by pposel on 07/02/2017.
  */
@@ -21,16 +23,19 @@ export default class UploadModal extends React.Component {
      */
     static propTypes = {
         repositoryName: PropTypes.string.isRequired,
-        yamlFiles: PropTypes.array.isRequired,
+        yamlFiles: PropTypes.arrayOf(PropTypes.string).isRequired,
         open: PropTypes.bool.isRequired,
         onHide: PropTypes.func.isRequired,
-        toolbox: PropTypes.object.isRequired,
-        actions: PropTypes.object.isRequired,
-        defaultYamlFile: PropTypes.string
+        toolbox: Stage.Common.PropTypes.Toolbox.isRequired,
+        actions: ActionsPropType.isRequired,
+        defaultYamlFile: PropTypes.string,
+        zipUrl: PropTypes.string.isRequired,
+        imageUrl: PropTypes.string
     };
 
     static defaultProps = {
-        defaultYamlFile: ''
+        defaultYamlFile: '',
+        imageUrl: undefined
     };
 
     static initialState = {

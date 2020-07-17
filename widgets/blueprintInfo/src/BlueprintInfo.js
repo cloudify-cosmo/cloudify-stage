@@ -97,3 +97,8 @@ export default class BlueprintInfo extends React.Component {
         );
     }
 }
+
+BlueprintInfo.propTypes = {
+    widget: Stage.Common.PropTypes.Widget.isRequired,
+    data: PropTypes.shape({}).isRequired
+};

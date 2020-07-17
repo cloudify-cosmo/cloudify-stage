@@ -4,7 +4,7 @@
 
 import { createWizardStep } from '../wizard/wizardUtils';
 import StepActions from '../wizard/StepActions';
-import StepContent from '../wizard/StepContent';
+import StepContentPropTypes from './StepContentPropTypes';
 
 const blueprintStepId = 'blueprint';
 
@@ -81,7 +81,7 @@ class BlueprintStepContent extends React.Component {
         super(props);
     }
 
-    static propTypes = StepContent.propTypes;
+    static propTypes = StepContentPropTypes;
 
     static defaultBlueprintState = {
         blueprintUrl: '',

@@ -26,9 +26,10 @@ export default class NodeInstancesFilter extends React.Component {
      */
     static propTypes = {
         name: PropTypes.string.isRequired,
-        value: PropTypes.array.isRequired,
+        // eslint-disable-next-line react/no-unused-prop-types
+        value: PropTypes.arrayOf(PropTypes.string).isRequired,
         onChange: PropTypes.func.isRequired,
-        toolbox: PropTypes.object.isRequired,
+        toolbox: Stage.Common.PropTypes.Toolbox.isRequired,
         deploymentId: PropTypes.string,
         label: PropTypes.string,
         placeholder: PropTypes.string,
