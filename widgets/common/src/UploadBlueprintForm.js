@@ -27,7 +27,7 @@ class UploadBlueprintForm extends React.Component {
         loading: PropTypes.bool,
         showErrorsSummary: PropTypes.bool,
         onChange: PropTypes.func.isRequired,
-        toolbox: Stage.Common.PropTypes.Toolbox.isRequired
+        toolbox: Stage.PropTypes.Toolbox.isRequired
     };
 
     static defaultProps = {

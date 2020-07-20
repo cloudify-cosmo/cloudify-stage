@@ -44,5 +44,5 @@ export default class DeploymentButton extends React.Component {
 }
 
 DeploymentButton.propTypes = {
-    toolbox: Stage.Common.PropTypes.Toolbox.isRequired
+    toolbox: Stage.PropTypes.Toolbox.isRequired
 };

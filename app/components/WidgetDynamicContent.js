@@ -8,6 +8,7 @@ import React, { Component } from 'react';
 import { getToolbox } from '../utils/Toolbox';
 import WidgetParamsHandler from '../utils/WidgetParamsHandler';
 import { ErrorMessage } from './basic';
+import WidgetPropType from '../utils/WidgetPropType';
 
 export default class WidgetDynamicContent extends Component {
     constructor(props) {
@@ -312,28 +313,5 @@ WidgetDynamicContent.propTypes = {
     fetchWidgetData: PropTypes.func.isRequired,
     onWidgetConfigUpdate: PropTypes.func.isRequired,
     manager: PropTypes.shape({ tenants: PropTypes.shape({ selected: PropTypes.string }) }).isRequired,
-    widget: PropTypes.shape({
-        configuration: PropTypes.shape({
-            pollingTime: PropTypes.number,
-            pageSize: PropTypes.number
-        }),
-        id: PropTypes.string,
-        name: PropTypes.string,
-        definition: PropTypes.shape({
-            events: PropTypes.arrayOf(
-                PropTypes.shape({
-                    selector: PropTypes.string,
-                    event: PropTypes.string,
-                    fn: PropTypes.func
-                })
-            ),
-            fetchUrl: PropTypes.oneOfType([PropTypes.string, PropTypes.objectOf(PropTypes.string)]),
-            fetchData: PropTypes.func,
-            isReact: PropTypes.bool,
-            postRender: PropTypes.func,
-            render: PropTypes.func,
-            showHeader: PropTypes.bool,
-            showBorder: PropTypes.bool
-        })
-    }).isRequired
+    widget: WidgetPropType.isRequired
 };

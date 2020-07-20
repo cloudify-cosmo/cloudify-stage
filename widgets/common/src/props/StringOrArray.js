@@ -1,1 +1,4 @@
-export default PropTypes.oneOfType([PropTypes.string, PropTypes.array]);
+Stage.definePropType({
+    name: 'StringOrArray',
+    common: PropTypes.oneOfType([PropTypes.string, PropTypes.array])
+});

@@ -19,7 +19,7 @@ export default class WizardButton extends React.Component {
         icon: PropTypes.string.isRequired,
         wizardTitle: PropTypes.string.isRequired,
         steps: Wizard.Modal.StepsPropType.isRequired,
-        toolbox: Stage.Common.PropTypes.Toolbox.isRequired
+        toolbox: Stage.PropTypes.Toolbox.isRequired
     };
 
     openWizard(event) {

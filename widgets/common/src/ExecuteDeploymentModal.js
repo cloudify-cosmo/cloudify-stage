@@ -22,7 +22,7 @@ export default class ExecuteDeploymentModal extends React.Component {
     };
 
     static propTypes = {
-        toolbox: Stage.Common.PropTypes.Toolbox.isRequired,
+        toolbox: Stage.PropTypes.Toolbox.isRequired,
         open: PropTypes.bool.isRequired,
         deployment: PropTypes.shape({ id: PropTypes.string }),
         deployments: PropTypes.arrayOf(PropTypes.string),

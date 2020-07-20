@@ -153,10 +153,10 @@ AgentsTable.propTypes = {
     data: PropTypes.shape({
         items: AgentsPropType,
         total: PropTypes.number,
-        deploymentId: Stage.Common.PropTypes.StringOrArray,
-        nodeId: Stage.Common.PropTypes.StringOrArray,
-        nodeInstanceId: Stage.Common.PropTypes.StringOrArray
+        deploymentId: Stage.PropTypes.StringOrArray,
+        nodeId: Stage.PropTypes.StringOrArray,
+        nodeInstanceId: Stage.PropTypes.StringOrArray
     }).isRequired,
-    widget: Stage.Common.PropTypes.Widget.isRequired,
-    toolbox: Stage.Common.PropTypes.Toolbox.isRequired
+    widget: Stage.PropTypes.Widget.isRequired,
+    toolbox: Stage.PropTypes.Toolbox.isRequired
 };

@@ -178,6 +178,6 @@ export default class RepositoryList extends React.Component {
 RepositoryList.propTypes = {
     actions: ActionsPropType.isRequired,
     data: DataPropType.isRequired,
-    toolbox: Stage.Common.PropTypes.Toolbox.isRequired,
-    widget: Stage.Common.PropTypes.Widget.isRequired
+    toolbox: Stage.PropTypes.Toolbox.isRequired,
+    widget: Stage.PropTypes.Widget.isRequired
 };

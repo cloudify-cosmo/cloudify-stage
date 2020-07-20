@@ -374,7 +374,7 @@ export default class UpdateDetailsModal extends React.Component {
     };
 
     static propTypes = {
-        toolbox: Stage.Common.PropTypes.Toolbox.isRequired,
+        toolbox: Stage.PropTypes.Toolbox.isRequired,
         open: PropTypes.bool.isRequired,
         isPreview: PropTypes.bool,
         deploymentUpdateId: PropTypes.string,

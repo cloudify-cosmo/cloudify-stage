@@ -29,7 +29,7 @@ export default class NodeInstancesFilter extends React.Component {
         // eslint-disable-next-line react/no-unused-prop-types
         value: PropTypes.arrayOf(PropTypes.string).isRequired,
         onChange: PropTypes.func.isRequired,
-        toolbox: Stage.Common.PropTypes.Toolbox.isRequired,
+        toolbox: Stage.PropTypes.Toolbox.isRequired,
         deploymentId: PropTypes.string,
         label: PropTypes.string,
         placeholder: PropTypes.string,

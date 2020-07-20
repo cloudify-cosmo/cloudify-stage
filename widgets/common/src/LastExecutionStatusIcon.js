@@ -16,7 +16,7 @@ export default class LastExecutionStatusIcon extends React.Component {
     }
 
     static propTypes = {
-        toolbox: Stage.Common.PropTypes.Toolbox.isRequired,
+        toolbox: Stage.PropTypes.Toolbox.isRequired,
         execution: PropTypes.shape({
             created_at: PropTypes.string,
             deployment_id: PropTypes.string,

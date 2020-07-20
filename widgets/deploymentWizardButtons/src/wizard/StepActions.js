@@ -41,7 +41,7 @@ export default class StepActions extends React.Component {
         nextLabel: PropTypes.string,
         nextIcon: PropTypes.string,
         showNext: PropTypes.bool,
-        children: PropTypes.oneOfType([PropTypes.element, PropTypes.arrayOf(PropTypes.element)]),
+        children: PropTypes.node,
         showClose: PropTypes.bool,
         closeOnRight: PropTypes.bool
     };

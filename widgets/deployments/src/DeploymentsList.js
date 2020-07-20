@@ -231,6 +231,6 @@ export default class DeploymentsList extends React.Component {
 
 DeploymentsList.propTypes = {
     data: PropTypes.shape({}).isRequired,
-    toolbox: Stage.Common.PropTypes.Toolbox.isRequired,
-    widget: Stage.Common.PropTypes.Widget.isRequired
+    toolbox: Stage.PropTypes.Toolbox.isRequired,
+    widget: Stage.PropTypes.Widget.isRequired
 };

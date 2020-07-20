@@ -125,7 +125,6 @@ GraphNode.propTypes = {
             PropTypes.shape({
                 display_text: PropTypes.arrayOf(PropTypes.string),
                 display_title: PropTypes.arrayOf(PropTypes.string),
-                displayTitle: PropTypes.arrayOf(PropTypes.string),
                 text: PropTypes.oneOfType([PropTypes.string, PropTypes.arrayOf(PropTypes.string)]),
                 state: PropTypes.string,
                 retry: PropTypes.number

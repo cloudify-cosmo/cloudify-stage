@@ -50,7 +50,7 @@ export default class NodeFilter extends React.Component {
             nodeId: PropTypes.oneOfType([PropTypes.string, PropTypes.array]).isRequired,
             nodeInstanceId: PropTypes.oneOfType([PropTypes.string, PropTypes.array]).isRequired
         }).isRequired,
-        toolbox: Stage.Common.PropTypes.Toolbox.isRequired,
+        toolbox: Stage.PropTypes.Toolbox.isRequired,
         onChange: PropTypes.func,
         allowMultiple: PropTypes.bool,
         allowMultipleBlueprints: PropTypes.bool,

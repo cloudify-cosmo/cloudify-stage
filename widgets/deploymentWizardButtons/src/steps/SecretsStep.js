@@ -68,9 +68,7 @@ class SecretsStepContent extends React.Component {
 
     static dataPath = 'blueprint.secrets';
 
-    static initialState = {
-        secretsInManager: []
-    };
+    static initialState = {};
 
     componentDidMount() {
         const { id, onChange, onError, onLoading, onReady, toolbox, stepData: stepDataProp, wizardData } = this.props;

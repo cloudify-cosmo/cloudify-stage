@@ -2,7 +2,7 @@ import DataPropType from './DataPropType';
 
 export default {
     data: DataPropType.isRequired,
-    widget: Stage.Common.PropTypes.Widget.isRequired,
+    widget: Stage.PropTypes.Widget.isRequired,
     fetchData: PropTypes.func,
     onSelect: PropTypes.func,
     onUpload: PropTypes.func,

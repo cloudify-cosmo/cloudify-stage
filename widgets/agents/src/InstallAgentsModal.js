@@ -38,18 +38,18 @@ export default class InstallAgentsModal extends React.Component {
     static propTypes = {
         open: PropTypes.bool.isRequired,
         onHide: PropTypes.func.isRequired,
-        toolbox: Stage.Common.PropTypes.Toolbox.isRequired,
-        widget: Stage.Common.PropTypes.Widget.isRequired,
+        toolbox: Stage.PropTypes.Toolbox.isRequired,
+        widget: Stage.PropTypes.Widget.isRequired,
 
         agents: AgentsPropType,
         // eslint-disable-next-line react/no-unused-prop-types
-        deploymentId: Stage.Common.PropTypes.StringOrArray,
+        deploymentId: Stage.PropTypes.StringOrArray,
         // eslint-disable-next-line react/no-unused-prop-types
-        nodeId: Stage.Common.PropTypes.StringOrArray,
+        nodeId: Stage.PropTypes.StringOrArray,
         // eslint-disable-next-line react/no-unused-prop-types
-        nodeInstanceId: Stage.Common.PropTypes.StringOrArray,
+        nodeInstanceId: Stage.PropTypes.StringOrArray,
         // eslint-disable-next-line react/no-unused-prop-types
-        installMethods: Stage.Common.PropTypes.StringOrArray
+        installMethods: Stage.PropTypes.StringOrArray
     };
 
     static defaultProps = {

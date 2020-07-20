@@ -43,5 +43,5 @@ export default class UploadButton extends React.Component {
 }
 
 UploadButton.propTypes = {
-    toolbox: Stage.Common.PropTypes.Toolbox.isRequired
+    toolbox: Stage.PropTypes.Toolbox.isRequired
 };

@@ -252,5 +252,5 @@ export default class Filter extends React.Component {
 
 Filter.propTypes = {
     configuration: PropTypes.shape({ allowMultipleSelection: PropTypes.bool }).isRequired,
-    toolbox: Stage.Common.PropTypes.Toolbox.isRequired
+    toolbox: Stage.PropTypes.Toolbox.isRequired
 };

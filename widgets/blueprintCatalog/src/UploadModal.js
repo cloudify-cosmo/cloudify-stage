@@ -26,7 +26,7 @@ export default class UploadModal extends React.Component {
         yamlFiles: PropTypes.arrayOf(PropTypes.string).isRequired,
         open: PropTypes.bool.isRequired,
         onHide: PropTypes.func.isRequired,
-        toolbox: Stage.Common.PropTypes.Toolbox.isRequired,
+        toolbox: Stage.PropTypes.Toolbox.isRequired,
         actions: ActionsPropType.isRequired,
         defaultYamlFile: PropTypes.string,
         zipUrl: PropTypes.string.isRequired,

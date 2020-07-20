@@ -381,6 +381,7 @@ WizardModal.StepsPropType = PropTypes.arrayOf(
 );
 
 /**
+ * @property {string} header Wizard modal header
  * @property {boolean} open Controls whether or not the wizard modal is displayed
  * @property {function(event: SyntheticEvent, data: object)} onClose Function called when wizard is to be closed
  * @property {object[]} steps List of objects describing the steps (@see wizardUtils.createWizardStep function for details)
@@ -391,5 +392,5 @@ WizardModal.propTypes = {
     open: PropTypes.bool.isRequired,
     onClose: PropTypes.func.isRequired,
     steps: WizardModal.StepsPropType.isRequired,
-    toolbox: Stage.Common.PropTypes.Toolbox.isRequired
+    toolbox: Stage.PropTypes.Toolbox.isRequired
 };

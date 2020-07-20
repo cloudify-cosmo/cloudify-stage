@@ -21,7 +21,7 @@ export default class SetSiteModal extends React.Component {
      */
     static propTypes = {
         deployment: PropTypes.shape({ id: PropTypes.string, site_name: PropTypes.string }).isRequired,
-        toolbox: Stage.Common.PropTypes.Toolbox.isRequired,
+        toolbox: Stage.PropTypes.Toolbox.isRequired,
         open: PropTypes.bool.isRequired,
         onHide: PropTypes.func.isRequired
     };

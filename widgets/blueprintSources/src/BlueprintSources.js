@@ -213,6 +213,6 @@ BlueprintSources.propTypes = {
         importedBlueprintTrees: PropTypes.arrayOf(PropTypes.shape({})),
         yamlFileName: PropTypes.string
     }).isRequired,
-    toolbox: Stage.Common.PropTypes.Toolbox.isRequired,
-    widget: Stage.Common.PropTypes.Widget.isRequired
+    toolbox: Stage.PropTypes.Toolbox.isRequired,
+    widget: Stage.PropTypes.Widget.isRequired
 };

@@ -8,5 +8,5 @@ export default {
     wizardData: PropTypes.shape({}).isRequired,
     errors: PropTypes.shape({}).isRequired,
     loading: PropTypes.bool.isRequired,
-    toolbox: Stage.Common.PropTypes.Toolbox.isRequired
+    toolbox: Stage.PropTypes.Toolbox.isRequired
 };

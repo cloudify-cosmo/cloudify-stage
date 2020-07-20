@@ -22,7 +22,7 @@ export default class ExecutionWorkflowGraph extends React.Component {
         selectedExecution: PropTypes.shape({ id: PropTypes.string, workflow_id: PropTypes.string }).isRequired,
         containerHeight: PropTypes.number.isRequired,
         showStatus: PropTypes.bool,
-        toolbox: Stage.Common.PropTypes.Toolbox.isRequired
+        toolbox: Stage.PropTypes.Toolbox.isRequired
     };
 
     static defaultProps = {

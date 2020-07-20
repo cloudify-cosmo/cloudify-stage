@@ -99,7 +99,7 @@ export default class BlueprintInfo extends React.Component {
 }
 
 BlueprintInfo.propTypes = {
-    widget: Stage.Common.PropTypes.Widget.isRequired,
+    widget: Stage.PropTypes.Widget.isRequired,
     data: PropTypes.shape({
         created_by: PropTypes.string,
         deployments: PropTypes.number,
