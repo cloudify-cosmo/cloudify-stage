@@ -15,9 +15,6 @@ const AUTO_FOCUS_ANIMATION_FRAMES = 30;
 const AUTO_FOCUS_ANIMATION_FRAME_DURATION = 15;
 
 export default class ExecutionWorkflowGraph extends React.Component {
-    /**
-     * @property {Any} [selectedExecution] - Used to pull the execution's tasks graphs and corresponding operations' lists
-     */
     static propTypes = {
         selectedExecution: PropTypes.shape({ id: PropTypes.string, workflow_id: PropTypes.string }).isRequired,
         containerHeight: PropTypes.number.isRequired,

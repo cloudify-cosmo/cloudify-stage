@@ -10,7 +10,7 @@ import GraphEdge from './GraphEdge';
 const GraphEdges = props => props.graphEdges.map(graphEdge => <GraphEdge key={graphEdge.id} graphEdge={graphEdge} />);
 
 GraphEdges.propTypes = {
-    graphEdges: PropTypes.arrayOf(PropTypes.shape({})).isRequired
+    graphEdges: PropTypes.arrayOf(PropTypes.shape({ id: PropTypes.string })).isRequired
 };
 
 export default GraphEdges;
