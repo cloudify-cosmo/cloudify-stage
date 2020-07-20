@@ -17,7 +17,7 @@ class GroupState extends React.Component {
             icon: PropTypes.string.isRequired
         }).isRequired,
         className: PropTypes.string.isRequired,
-        description: PropTypes.shape({}).isRequired
+        description: PropTypes.element.isRequired
     };
 
     static defaultProps = {
