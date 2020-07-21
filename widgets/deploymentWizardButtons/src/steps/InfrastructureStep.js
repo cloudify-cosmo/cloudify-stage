@@ -3,8 +3,8 @@
  */
 
 import StepActions from '../wizard/StepActions';
-import StepContent from '../wizard/StepContent';
 import { createWizardStep } from '../wizard/wizardUtils';
+import StepContentPropTypes from './StepContentPropTypes';
 
 const infrastructureStepId = 'infrastructure';
 
@@ -56,7 +56,7 @@ class InfrastructureStepContent extends React.Component {
         visibility: Stage.Common.Consts.defaultVisibility
     };
 
-    static propTypes = StepContent.propTypes;
+    static propTypes = StepContentPropTypes;
 
     componentDidMount() {
         const { id, onChange, stepData } = this.props;

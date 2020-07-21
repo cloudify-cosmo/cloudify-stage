@@ -204,3 +204,15 @@ export default class BlueprintSources extends React.Component {
         );
     }
 }
+
+BlueprintSources.propTypes = {
+    data: PropTypes.shape({
+        blueprintId: PropTypes.string,
+        blueprintTree: PropTypes.shape({ children: PropTypes.arrayOf(PropTypes.shape({})) }),
+        importedBlueprintIds: PropTypes.arrayOf(PropTypes.string),
+        importedBlueprintTrees: PropTypes.arrayOf(PropTypes.shape({})),
+        yamlFileName: PropTypes.string
+    }).isRequired,
+    toolbox: Stage.PropTypes.Toolbox.isRequired,
+    widget: Stage.PropTypes.Widget.isRequired
+};

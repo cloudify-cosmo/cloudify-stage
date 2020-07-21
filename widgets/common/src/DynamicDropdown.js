@@ -182,7 +182,7 @@ DynamicDropdown.propTypes = {
     fetchAll: PropTypes.bool,
     value: PropTypes.oneOfType([PropTypes.string, PropTypes.array]),
     onChange: PropTypes.func.isRequired,
-    toolbox: PropTypes.shape({}).isRequired,
+    toolbox: Stage.PropTypes.Toolbox.isRequired,
     filter: PropTypes.shape({}),
     valueProp: PropTypes.string,
     textFormatter: PropTypes.func,

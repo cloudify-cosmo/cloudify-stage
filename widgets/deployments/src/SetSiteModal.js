@@ -20,8 +20,8 @@ export default class SetSiteModal extends React.Component {
      * @property {boolean} open specifies whether the update modal is displayed
      */
     static propTypes = {
-        deployment: PropTypes.object,
-        toolbox: PropTypes.object.isRequired,
+        deployment: PropTypes.shape({ id: PropTypes.string, site_name: PropTypes.string }).isRequired,
+        toolbox: Stage.PropTypes.Toolbox.isRequired,
         open: PropTypes.bool.isRequired,
         onHide: PropTypes.func.isRequired
     };
@@ -52,7 +52,7 @@ export default class SetSiteModal extends React.Component {
                     });
                 })
                 .catch(err => {
-                    this.setState({ loading: false, error: err.message });
+                    this.setState({ loading: false });
                 });
         }
     }

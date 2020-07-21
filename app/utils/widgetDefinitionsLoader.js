@@ -16,6 +16,7 @@ import LoaderUtils from './LoaderUtils';
 
 import GenericConfig from './GenericConfig';
 import WidgetDefinition from './WidgetDefinition';
+import WidgetPropType from './WidgetPropType';
 
 const ReactDOMServer = require('react-dom/server');
 
@@ -33,11 +34,17 @@ export default class WidgetDefinitionsLoader {
                 return ReactDOMServer.renderToString(component);
             },
             GenericConfig,
+            Utils: StageUtils,
+
             Common: [],
             defineCommon: def => {
                 Stage.Common[def.name] = def.common;
             },
-            Utils: StageUtils
+
+            PropTypes: { Widget: WidgetPropType },
+            definePropType: def => {
+                Stage.PropTypes[def.name] = def.common;
+            }
         };
 
         window.moment = momentImport;

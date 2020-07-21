@@ -21,7 +21,7 @@ export default class ManagersTable extends React.Component {
             selectedManagerId: null,
             selectedManagers: [],
             showExecuteWorkflowModal: false,
-            workflow: { name: '', parameters: [] },
+            workflow: { name: '', parameters: {} },
             status: _(props.data.items)
                 .mapKeys(manager => manager.id)
                 .mapValues(() => ({ isFetching: false, status: {} }))
@@ -97,7 +97,7 @@ export default class ManagersTable extends React.Component {
     hideExecuteWorkflowModal() {
         this.setState({
             deployment: { id: '' },
-            workflow: { name: '', parameters: [] },
+            workflow: { name: '', parameters: {} },
             showExecuteWorkflowModal: false
         });
         this.refreshData();

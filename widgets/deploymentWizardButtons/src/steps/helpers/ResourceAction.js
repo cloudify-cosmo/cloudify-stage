@@ -4,7 +4,7 @@
 
 export default class ResourceAction extends React.Component {
     static propTypes = {
-        children: PropTypes.any
+        children: PropTypes.oneOfType([PropTypes.string, PropTypes.element])
     };
 
     render() {
@@ -14,3 +14,7 @@ export default class ResourceAction extends React.Component {
         return <div>{action}</div>;
     }
 }
+
+ResourceAction.defaultProps = {
+    children: ''
+};

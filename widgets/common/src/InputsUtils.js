@@ -31,6 +31,24 @@ RevertToDefaultIcon.defaultProps = {
     onClick: _.noop
 };
 
+const HelpProperty = ({ show, name, value }) =>
+    show && (
+        <>
+            <Header as="h4">{name}</Header>
+            <div>{value}</div>
+        </>
+    );
+
+HelpProperty.propTypes = {
+    name: PropTypes.string.isRequired,
+    show: PropTypes.bool.isRequired,
+    value: PropTypes.string
+};
+
+HelpProperty.defaultProps = {
+    value: null
+};
+
 class InputsUtils {
     static DEFAULT_INITIAL_VALUE_FOR_LIST = '[]';
 
@@ -177,14 +195,6 @@ class InputsUtils {
     static getHelp(description, type, constraints, defaultValue, dataType) {
         const { Header, List } = Stage.Basic;
         const { ParameterValue } = Stage.Common;
-
-        const HelpProperty = ({ show, name, value }) =>
-            show && (
-                <>
-                    <Header as="h4">{name}</Header>
-                    <div>{value}</div>
-                </>
-            );
 
         const example = !_.isUndefined(defaultValue)
             ? defaultValue

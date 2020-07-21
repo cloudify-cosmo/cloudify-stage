@@ -3,14 +3,12 @@
  */
 
 import StepActions from './StepActions';
-import StepContent from './StepContent';
 import WizardModal from './WizardModal';
 import wizardUtils from './wizardUtils';
 
 export default {
     Step: {
-        Actions: StepActions,
-        Content: StepContent
+        Actions: StepActions
     },
     Modal: WizardModal,
     Utils: wizardUtils

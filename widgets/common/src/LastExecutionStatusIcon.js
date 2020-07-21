@@ -16,8 +16,18 @@ export default class LastExecutionStatusIcon extends React.Component {
     }
 
     static propTypes = {
-        toolbox: PropTypes.shape({ drilldown: PropTypes.func, getWidget: PropTypes.func }).isRequired,
-        execution: PropTypes.shape({ workflow_id: '', status: '' }),
+        toolbox: Stage.PropTypes.Toolbox.isRequired,
+        execution: PropTypes.shape({
+            created_at: PropTypes.string,
+            deployment_id: PropTypes.string,
+            ended_at: PropTypes.string,
+            error: PropTypes.string,
+            id: PropTypes.string,
+            scheduled_for: PropTypes.string,
+            status_display: PropTypes.string,
+            workflow_id: '',
+            status: ''
+        }),
         onActOnExecution: PropTypes.func,
         showLabel: PropTypes.bool,
         labelAttached: PropTypes.bool
@@ -47,7 +57,6 @@ export default class LastExecutionStatusIcon extends React.Component {
         actions
             .doAct(execution, action)
             .then(() => {
-                this.setState({ error: null });
                 toolbox.getEventBus().trigger('deployments:refresh');
                 toolbox.getEventBus().trigger('executions:refresh');
                 onActOnExecution(execution, action, null);

@@ -9,9 +9,9 @@ export default class RolesPicker extends React.Component {
 
     static propTypes = {
         onUpdate: PropTypes.func.isRequired,
-        resources: PropTypes.object.isRequired,
+        resources: PropTypes.shape({}).isRequired,
         resourceName: PropTypes.string.isRequired,
-        toolbox: PropTypes.object.isRequired
+        toolbox: Stage.PropTypes.Toolbox.isRequired
     };
 
     handleInputChange(proxy, field) {

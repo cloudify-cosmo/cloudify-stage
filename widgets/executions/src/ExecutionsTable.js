@@ -401,3 +401,26 @@ export default class ExecutionsTable extends React.Component {
         );
     }
 }
+
+ExecutionsTable.propTypes = {
+    data: PropTypes.shape({
+        blueprintId: PropTypes.bool,
+        deploymentId: PropTypes.bool,
+        items: PropTypes.arrayOf(
+            PropTypes.shape({
+                blueprint_id: PropTypes.string,
+                created_at: PropTypes.string,
+                created_by: PropTypes.string,
+                deployment_id: PropTypes.string,
+                ended_at: PropTypes.string,
+                id: PropTypes.string,
+                isSelected: PropTypes.bool,
+                scheduled_for: PropTypes.string,
+                workflow_id: PropTypes.string
+            })
+        ),
+        total: PropTypes.number
+    }).isRequired,
+    toolbox: Stage.PropTypes.Toolbox.isRequired,
+    widget: Stage.PropTypes.Widget.isRequired
+};

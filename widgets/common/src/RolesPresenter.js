@@ -7,11 +7,6 @@ export default class RolesPresenter extends React.Component {
         super(props, context);
     }
 
-    static propTypes = {
-        groupRoles: PropTypes.object,
-        directRole: PropTypes.string
-    };
-
     render() {
         const { directRole, groupRoles } = this.props;
         let restOfGroupRoles = '';
@@ -46,6 +41,16 @@ export default class RolesPresenter extends React.Component {
         );
     }
 }
+
+RolesPresenter.propTypes = {
+    groupRoles: PropTypes.shape({}),
+    directRole: PropTypes.string
+};
+
+RolesPresenter.defaultProps = {
+    groupRoles: {},
+    directRole: null
+};
 
 Stage.defineCommon({
     name: 'RolesPresenter',

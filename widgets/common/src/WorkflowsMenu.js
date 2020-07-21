@@ -4,7 +4,7 @@
 
 class WorkflowsMenuItems extends React.Component {
     static propTypes = {
-        workflows: PropTypes.array.isRequired,
+        workflows: PropTypes.arrayOf(PropTypes.shape({ name: PropTypes.string })).isRequired,
         onClick: PropTypes.func
     };
 
@@ -89,9 +89,9 @@ class AccordionWorkflowsMenu extends React.Component {
 
 class WorkflowsMenu extends React.Component {
     static propTypes = {
-        workflows: PropTypes.array.isRequired,
+        workflows: PropTypes.arrayOf(PropTypes.shape({ plugin: PropTypes.string })).isRequired,
         onClick: PropTypes.func,
-        popupMenuProps: PropTypes.object,
+        popupMenuProps: PropTypes.shape({}),
         showInPopup: PropTypes.bool,
         trigger: PropTypes.element
     };

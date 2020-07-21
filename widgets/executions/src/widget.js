@@ -3,7 +3,6 @@
  */
 
 import ExecutionsTable from './ExecutionsTable';
-import ExecutionWorkflowGraph from './tasksGraph/ExecutionWorkflowGraph';
 import SingleExecution from './SingleExecution';
 
 Stage.defineWidget({
@@ -98,8 +97,8 @@ Stage.defineWidget({
                 isSelected: item.id === selectedExecution
             })),
             total: _.get(data, 'metadata.pagination.total', 0),
-            blueprintId: params.blueprint_id,
-            deploymentId: params.deployment_id
+            blueprintId: !!params.blueprint_id,
+            deploymentId: !!params.deployment_id
         };
 
         return <ExecutionsTable widget={widget} data={formattedData} toolbox={toolbox} />;

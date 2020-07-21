@@ -10,7 +10,7 @@ export default class ErrorCausesModal extends React.Component {
     static propTypes = {
         open: PropTypes.bool,
         onClose: PropTypes.func,
-        errorCauses: PropTypes.array
+        errorCauses: PropTypes.arrayOf(PropTypes.shape({}))
     };
 
     static defaultProps = {

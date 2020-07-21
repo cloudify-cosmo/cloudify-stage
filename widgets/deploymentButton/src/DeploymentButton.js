@@ -2,7 +2,7 @@
  * Created by kinneretzin on 18/10/2016.
  */
 
-export default class extends React.Component {
+export default class DeploymentButton extends React.Component {
     constructor(props, context) {
         super(props, context);
 
@@ -42,3 +42,7 @@ export default class extends React.Component {
         );
     }
 }
+
+DeploymentButton.propTypes = {
+    toolbox: Stage.PropTypes.Toolbox.isRequired
+};

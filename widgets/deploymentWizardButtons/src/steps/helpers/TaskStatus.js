@@ -84,3 +84,7 @@ export default class TaskStatus extends React.Component {
         );
     }
 }
+
+TaskStatus.defaultProps = {
+    error: null
+};

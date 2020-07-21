@@ -1,37 +1,20 @@
+import BlueprintsViewPropTypes from './props/BlueprintsViewPropTypes';
+import BlueprintsViewDefaultProps from './props/BlueprintsViewDefaultProps';
+
 /**
  * Created by kinneretzin on 08/01/2017.
  */
 
 export default class BlueprintsTable extends React.Component {
-    static propTypes = {
-        data: PropTypes.object.isRequired,
-        widget: PropTypes.object.isRequired,
-        toolbox: PropTypes.object.isRequired,
-        fetchGridData: PropTypes.func,
-        onSelectBlueprint: PropTypes.func,
-        onDeleteBlueprint: PropTypes.func,
-        onCreateDeployment: PropTypes.func,
-        onSetVisibility: PropTypes.func,
-        allowedSettingTo: PropTypes.array,
-        noDataMessage: PropTypes.string
-    };
+    static propTypes = BlueprintsViewPropTypes;
 
-    static defaultProps = {
-        fetchGridData: () => {},
-        onSelectBlueprint: () => {},
-        onDeleteBlueprint: () => {},
-        onCreateDeployment: () => {},
-        onSetVisibility: () => {},
-        allowedSettingTo: ['tenant', 'global'],
-        noDataMessage: ''
-    };
+    static defaultProps = BlueprintsViewDefaultProps;
 
     render() {
         const { DataTable, Icon, Image, ResourceVisibility } = Stage.Basic;
         const {
-            allowedSettingTo,
             data,
-            fetchGridData,
+            fetchData,
             noDataMessage,
             onCreateDeployment,
             onDeleteBlueprint,
@@ -44,7 +27,7 @@ export default class BlueprintsTable extends React.Component {
 
         return (
             <DataTable
-                fetchData={fetchGridData}
+                fetchData={fetchData}
                 totalSize={data.total}
                 pageSize={widget.configuration.pageSize}
                 sortColumn={widget.configuration.sortColumn}
@@ -82,7 +65,7 @@ export default class BlueprintsTable extends React.Component {
                             <ResourceVisibility
                                 visibility={item.visibility}
                                 onSetVisibility={visibility => onSetVisibility(item.id, visibility)}
-                                allowedSettingTo={allowedSettingTo}
+                                allowedSettingTo={['tenant', 'global']}
                                 className="rightFloated"
                             />
                         </DataTable.Data>

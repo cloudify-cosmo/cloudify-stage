@@ -12,12 +12,6 @@ export default class StepActions extends React.Component {
      * @property {Function} onStartOver function calling wizard to start over wizard process
      * @property {Function} onPrev function calling wizard to move to the previous step
      * @property {Function} onNext function calling wizard to move to the next step
-     * @property {Function} onError function setting wizard in error state
-     * @property {Function} onLoading function setting wizard in loading state
-     * @property {Function} onReady function setting wizard in ready state
-     * @property {Function} fetchData function providing step data from step content
-     * @property {object} wizardData wizard data object
-     * @property {object} toolbox Toolbox object
      * @property {boolean} [disabled=false] if set then action buttons will be disabled
      * @property {string} [startOverLabel='Start Over'] label for Start Over button
      * @property {string} [startOverIcon='undo'] icon to be added to Start Over button
@@ -36,12 +30,6 @@ export default class StepActions extends React.Component {
         onStartOver: PropTypes.func.isRequired,
         onPrev: PropTypes.func.isRequired,
         onNext: PropTypes.func.isRequired,
-        onError: PropTypes.func.isRequired,
-        onLoading: PropTypes.func.isRequired,
-        onReady: PropTypes.func.isRequired,
-        fetchData: PropTypes.func.isRequired,
-        wizardData: PropTypes.object.isRequired,
-        toolbox: PropTypes.object.isRequired,
         disabled: PropTypes.bool,
         startOverLabel: PropTypes.string,
         startOverIcon: PropTypes.string,
@@ -52,16 +40,17 @@ export default class StepActions extends React.Component {
         showPrev: PropTypes.bool,
         nextLabel: PropTypes.string,
         nextIcon: PropTypes.string,
-        showNext: PropTypes.bool
+        showNext: PropTypes.bool,
+        children: PropTypes.node,
+        showClose: PropTypes.bool,
+        closeOnRight: PropTypes.bool
     };
 
     static defaultProps = {
         disabled: false,
 
-        closeLabel: 'Close',
-        closeIcon: 'cancel',
         showClose: true,
-        closeFloated: 'left',
+        closeOnRight: false,
 
         startOverLabel: 'Start Over',
         startOverIcon: 'undo',
@@ -74,7 +63,8 @@ export default class StepActions extends React.Component {
 
         nextLabel: 'Next',
         nextIcon: 'arrow right',
-        showNext: true
+        showNext: true,
+        children: null
     };
 
     onClose() {
@@ -100,9 +90,7 @@ export default class StepActions extends React.Component {
     render() {
         const {
             children,
-            closeFloated,
-            closeIcon,
-            closeLabel,
+            closeOnRight,
             disabled,
             nextIcon,
             nextLabel,
@@ -123,9 +111,9 @@ export default class StepActions extends React.Component {
 
                 {showClose && (
                     <Button
-                        floated={closeFloated}
-                        icon={closeIcon}
-                        content={closeLabel}
+                        floated={closeOnRight ? null : 'left'}
+                        icon="cancel"
+                        content="Close"
                         labelPosition="left"
                         onClick={this.onClose.bind(this)}
                     />

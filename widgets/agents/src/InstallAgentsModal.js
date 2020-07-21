@@ -3,6 +3,7 @@
  */
 
 import Consts from './consts';
+import AgentsPropType from './props/AgentsPropType';
 
 export default class InstallAgentsModal extends React.Component {
     constructor(props, context) {
@@ -37,20 +38,22 @@ export default class InstallAgentsModal extends React.Component {
     static propTypes = {
         open: PropTypes.bool.isRequired,
         onHide: PropTypes.func.isRequired,
-        toolbox: PropTypes.object.isRequired,
-        widget: PropTypes.object.isRequired,
+        toolbox: Stage.PropTypes.Toolbox.isRequired,
+        widget: Stage.PropTypes.Widget.isRequired,
 
-        agents: PropTypes.array,
-        blueprintId: PropTypes.oneOfType([PropTypes.string, PropTypes.array]),
-        deploymentId: PropTypes.oneOfType([PropTypes.string, PropTypes.array]),
-        nodeId: PropTypes.oneOfType([PropTypes.string, PropTypes.array]),
-        nodeInstanceId: PropTypes.oneOfType([PropTypes.string, PropTypes.array]),
-        installMethods: PropTypes.oneOfType([PropTypes.string, PropTypes.array])
+        agents: AgentsPropType,
+        // eslint-disable-next-line react/no-unused-prop-types
+        deploymentId: Stage.PropTypes.StringOrArray,
+        // eslint-disable-next-line react/no-unused-prop-types
+        nodeId: Stage.PropTypes.StringOrArray,
+        // eslint-disable-next-line react/no-unused-prop-types
+        nodeInstanceId: Stage.PropTypes.StringOrArray,
+        // eslint-disable-next-line react/no-unused-prop-types
+        installMethods: Stage.PropTypes.StringOrArray
     };
 
     static defaultProps = {
         agents: [],
-        blueprintId: '',
         deploymentId: '',
         nodeId: [],
         nodeInstanceId: [],

@@ -2,24 +2,13 @@
  * Created by pposel on 06/02/2017.
  */
 import Consts from './consts';
+import RepositoryViewPropTypes from './props/RepositoryViewPropTypes';
+import RepositoryViewDefaultProps from './props/RepositoryViewDefaultProps';
 
 export default class extends React.Component {
-    static propTypes = {
-        data: PropTypes.object.isRequired,
-        widget: PropTypes.object.isRequired,
-        fetchData: PropTypes.func,
-        onSelect: PropTypes.func,
-        onUpload: PropTypes.func,
-        onReadme: PropTypes.func,
-        readmeLoading: PropTypes.string,
-        noDataMessage: PropTypes.string
-    };
+    static propTypes = RepositoryViewPropTypes;
 
-    static defaultProps = {
-        fetchData: () => {},
-        onSelect: () => {},
-        onUpload: () => {}
-    };
+    static defaultProps = RepositoryViewDefaultProps;
 
     render() {
         const { data, fetchData, noDataMessage, onReadme, onSelect, onUpload, readmeLoading, widget } = this.props;

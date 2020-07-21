@@ -3,10 +3,10 @@
  */
 
 import StepActions from '../wizard/StepActions';
-import StepContent from '../wizard/StepContent';
 import { createWizardStep } from '../wizard/wizardUtils';
 import Task from './helpers/Task';
 import TaskList from './helpers/TaskList';
+import StepContentPropTypes from './StepContentPropTypes';
 
 const installStepId = 'install';
 const emptyTasksStats = _.reduce(_.values(Task.Status), (acc, status) => ({ ...acc, [status]: 0 }), {});
@@ -95,13 +95,7 @@ class InstallStepActions extends React.Component {
         if (!tasksStats.installationEnded && secondsRemaining === -1) {
             // in progress
             return (
-                <StepActions
-                    {...this.props}
-                    showNext={false}
-                    showPrev={false}
-                    showStartOver={false}
-                    closeFloated={null}
-                >
+                <StepActions {...this.props} showNext={false} showPrev={false} showStartOver={false} closeOnRight>
                     <Progress progress size="large" percent={percent} indicating>
                         Installation in progress...
                     </Progress>
@@ -177,7 +171,7 @@ class InstallStepContent extends React.Component {
         };
     }
 
-    static propTypes = StepContent.propTypes;
+    static propTypes = StepContentPropTypes;
 
     componentDidMount() {
         const { id, onError, wizardData } = this.props;

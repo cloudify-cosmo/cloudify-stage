@@ -29,12 +29,8 @@ export default class Filter extends React.Component {
     }
 
     shouldComponentUpdate(nextProps, nextState) {
-        const { configuration, data } = this.props;
-        return (
-            !_.isEqual(configuration, nextProps.configuration) ||
-            !_.isEqual(this.state, nextState) ||
-            !_.isEqual(data, nextProps.data)
-        );
+        const { configuration } = this.props;
+        return !_.isEqual(configuration, nextProps.configuration) || !_.isEqual(this.state, nextState);
     }
 
     componentDidMount() {
@@ -253,3 +249,8 @@ export default class Filter extends React.Component {
         );
     }
 }
+
+Filter.propTypes = {
+    configuration: PropTypes.shape({ allowMultipleSelection: PropTypes.bool }).isRequired,
+    toolbox: Stage.PropTypes.Toolbox.isRequired
+};

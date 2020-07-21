@@ -8,7 +8,7 @@ export default class SystemWorkflowIcon extends React.Component {
     }
 
     static propTypes = {
-        execution: PropTypes.object
+        execution: PropTypes.shape({ is_system_workflow: PropTypes.bool })
     };
 
     static defaultProps = {

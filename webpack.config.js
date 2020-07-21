@@ -232,7 +232,7 @@ module.exports = (env, argv) => {
             mode,
             context,
             devtool,
-            entry: glob.sync('./widgets/common/src/*.js'),
+            entry: glob.sync('./widgets/common/src/props/*.js').concat(glob.sync('./widgets/common/src/*.js')),
             output: {
                 path: path.join(outputPath, 'appData/widgets'),
                 filename: 'common/common.js',

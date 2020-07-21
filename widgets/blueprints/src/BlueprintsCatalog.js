@@ -1,34 +1,16 @@
 /**
  * Created by kinneretzin on 08/01/2017.
  */
+import BlueprintsViewPropTypes from './props/BlueprintsViewPropTypes';
+import BlueprintsViewDefaultProps from './props/BlueprintsViewDefaultProps';
 
 export default class BlueprintsCatalog extends React.Component {
-    static propTypes = {
-        data: PropTypes.object.isRequired,
-        widget: PropTypes.object.isRequired,
-        toolbox: PropTypes.object.isRequired,
-        fetchData: PropTypes.func,
-        onSelectBlueprint: PropTypes.func,
-        onDeleteBlueprint: PropTypes.func,
-        onCreateDeployment: PropTypes.func,
-        onSetVisibility: PropTypes.func,
-        allowedSettingTo: PropTypes.array,
-        noDataMessage: PropTypes.string
-    };
+    static propTypes = BlueprintsViewPropTypes;
 
-    static defaultProps = {
-        fetchData: () => {},
-        onSelectBlueprint: () => {},
-        onDeleteBlueprint: () => {},
-        onCreateDeployment: () => {},
-        onSetVisibility: () => {},
-        allowedSettingTo: ['tenant', 'global'],
-        noDataMessage: ''
-    };
+    static defaultProps = BlueprintsViewDefaultProps;
 
     render() {
         const {
-            allowedSettingTo,
             data,
             fetchData,
             noDataMessage,
@@ -66,7 +48,7 @@ export default class BlueprintsCatalog extends React.Component {
                                     <ResourceVisibility
                                         visibility={item.visibility}
                                         onSetVisibility={visibility => onSetVisibility(item.id, visibility)}
-                                        allowedSettingTo={allowedSettingTo}
+                                        allowedSettingTo={['tenant', 'global']}
                                         className="rightFloated"
                                     />
                                 </Grid.Column>

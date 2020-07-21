@@ -14,7 +14,7 @@ class UploadBlueprintModal extends React.Component {
     static propTypes = {
         open: PropTypes.bool.isRequired,
         onHide: PropTypes.func.isRequired,
-        toolbox: PropTypes.object.isRequired
+        toolbox: Stage.PropTypes.Toolbox.isRequired
     };
 
     static initialState = {

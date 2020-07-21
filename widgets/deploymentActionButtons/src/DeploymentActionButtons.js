@@ -11,7 +11,7 @@ export default class DeploymentActionButtons extends React.Component {
 
     static EMPTY_DEPLOYMENT = { id: '', workflows: [] };
 
-    static EMPTY_WORKFLOW = { name: '', parameters: [] };
+    static EMPTY_WORKFLOW = { name: '', parameters: {} };
 
     constructor(props, context) {
         super(props, context);
@@ -149,3 +149,9 @@ export default class DeploymentActionButtons extends React.Component {
         );
     }
 }
+
+DeploymentActionButtons.propTypes = {
+    deployment: PropTypes.shape({ id: PropTypes.string, workflows: PropTypes.arrayOf(PropTypes.shape({})) }).isRequired,
+    toolbox: Stage.PropTypes.Toolbox.isRequired,
+    widget: Stage.PropTypes.Widget.isRequired
+};

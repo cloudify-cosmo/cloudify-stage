@@ -24,12 +24,12 @@ export default class MenuAction extends React.Component {
     }
 
     render() {
-        const { disabled, item } = this.props;
+        const { item } = this.props;
         const { PopupMenu, Menu } = Stage.Basic;
         const { WorkflowsMenu } = Stage.Common;
 
         return (
-            <PopupMenu className="menuAction segmentMenuAction" disabled={disabled}>
+            <PopupMenu className="menuAction segmentMenuAction">
                 <Menu pointing vertical>
                     <Menu.Item header>
                         Execute workflow
@@ -71,3 +71,8 @@ export default class MenuAction extends React.Component {
         );
     }
 }
+
+MenuAction.propTypes = {
+    item: PropTypes.shape({ workflows: PropTypes.arrayOf(PropTypes.shape({})) }).isRequired,
+    onSelectAction: PropTypes.func.isRequired
+};

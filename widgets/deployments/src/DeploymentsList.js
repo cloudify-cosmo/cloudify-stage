@@ -154,39 +154,25 @@ export default class DeploymentsList extends React.Component {
         const { ExecuteDeploymentModal, UpdateDeploymentModal, UpdateDetailsModal } = Stage.Common;
         const showTableComponent = widget.configuration.displayStyle === 'table';
 
+        const DeploymentsView = showTableComponent ? DeploymentsTable : DeploymentsSegment;
+
         return (
             <div>
                 <ErrorMessage error={error} onDismiss={() => this.setState({ error: null })} autoHide />
 
-                {showTableComponent ? (
-                    <DeploymentsTable
-                        widget={widget}
-                        data={data}
-                        fetchData={this.fetchData.bind(this)}
-                        onSelectDeployment={this.selectDeployment.bind(this)}
-                        onMenuAction={this.showModal.bind(this)}
-                        onActOnExecution={this.actOnExecution.bind(this)}
-                        onError={this.setError.bind(this)}
-                        onSetVisibility={this.setDeploymentVisibility.bind(this)}
-                        noDataMessage={NO_DATA_MESSAGE}
-                        showExecutionStatusLabel={widget.configuration.showExecutionStatusLabel}
-                        toolbox={toolbox}
-                    />
-                ) : (
-                    <DeploymentsSegment
-                        widget={widget}
-                        data={data}
-                        fetchData={this.fetchData.bind(this)}
-                        onSelectDeployment={this.selectDeployment.bind(this)}
-                        onMenuAction={this.showModal.bind(this)}
-                        onActOnExecution={this.actOnExecution.bind(this)}
-                        onError={this.setError.bind(this)}
-                        onSetVisibility={this.setDeploymentVisibility.bind(this)}
-                        noDataMessage={NO_DATA_MESSAGE}
-                        showExecutionStatusLabel={widget.configuration.showExecutionStatusLabel}
-                        toolbox={toolbox}
-                    />
-                )}
+                <DeploymentsView
+                    widget={widget}
+                    data={data}
+                    fetchData={this.fetchData.bind(this)}
+                    onSelectDeployment={this.selectDeployment.bind(this)}
+                    onMenuAction={this.showModal.bind(this)}
+                    onActOnExecution={this.actOnExecution.bind(this)}
+                    onError={this.setError.bind(this)}
+                    onSetVisibility={this.setDeploymentVisibility.bind(this)}
+                    noDataMessage={NO_DATA_MESSAGE}
+                    showExecutionStatusLabel={widget.configuration.showExecutionStatusLabel}
+                    toolbox={toolbox}
+                />
 
                 <Confirm
                     content={`Are you sure you want to remove deployment ${deployment.id}?`}
@@ -242,3 +228,9 @@ export default class DeploymentsList extends React.Component {
         );
     }
 }
+
+DeploymentsList.propTypes = {
+    data: PropTypes.shape({}).isRequired,
+    toolbox: Stage.PropTypes.Toolbox.isRequired,
+    widget: Stage.PropTypes.Widget.isRequired
+};

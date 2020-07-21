@@ -3,10 +3,10 @@
  */
 
 import StepActions from '../wizard/StepActions';
-import StepContent from '../wizard/StepContent';
 import { createWizardStep } from '../wizard/wizardUtils';
 import Task from './helpers/Task';
 import TaskList from './helpers/TaskList';
+import StepContentPropTypes from './StepContentPropTypes';
 
 const confirmationStepId = 'confirm';
 
@@ -65,7 +65,7 @@ class ConfirmationStepContent extends React.Component {
         super(props);
     }
 
-    static propTypes = StepContent.propTypes;
+    static propTypes = StepContentPropTypes;
 
     static chooseId(baseId, promise, idName) {
         const maxSuffixNumber = 1000;
@@ -223,7 +223,6 @@ class ConfirmationStepContent extends React.Component {
             .then(() => this.addRunInstallWorkflowTask(deploymentId, tasks))
             .then(() => ({ stepData: { tasks, blueprintId, deploymentId } }))
             .then(({ stepData }) => onChange(id, stepData))
-            .then(() => this.setState({ deploymentId }))
             .catch(error => onError(id, error))
             .finally(() => onReady());
     }

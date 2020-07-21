@@ -13,16 +13,21 @@ class UploadBlueprintForm extends React.Component {
 
     static propTypes = {
         blueprintUrl: PropTypes.string,
-        blueprintFile: PropTypes.object,
+        blueprintFile: PropTypes.shape({}),
         blueprintName: PropTypes.string,
         blueprintFileName: PropTypes.string,
         imageUrl: PropTypes.string,
-        imageFile: PropTypes.object,
-        errors: PropTypes.object,
+        imageFile: PropTypes.shape({}),
+        errors: PropTypes.shape({
+            blueprintFileName: PropTypes.string,
+            blueprintName: PropTypes.string,
+            blueprintUrl: PropTypes.string,
+            imageUrl: PropTypes.string
+        }),
         loading: PropTypes.bool,
         showErrorsSummary: PropTypes.bool,
         onChange: PropTypes.func.isRequired,
-        toolbox: PropTypes.object.isRequired
+        toolbox: Stage.PropTypes.Toolbox.isRequired
     };
 
     static defaultProps = {

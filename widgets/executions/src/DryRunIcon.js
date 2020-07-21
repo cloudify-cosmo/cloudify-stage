@@ -8,7 +8,7 @@ export default class DryRunIcon extends React.Component {
     }
 
     static propTypes = {
-        execution: PropTypes.object
+        execution: PropTypes.shape({ is_dry_run: PropTypes.bool })
     };
 
     static defaultProps = {

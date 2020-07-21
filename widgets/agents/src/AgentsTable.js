@@ -4,6 +4,7 @@
 
 import InstallAgentsModal from './InstallAgentsModal';
 import ValidateAgentsModal from './ValidateAgentsModal';
+import AgentsPropType from './props/AgentsPropType';
 
 export default class AgentsTable extends React.Component {
     constructor(props, context) {
@@ -147,3 +148,15 @@ export default class AgentsTable extends React.Component {
         );
     }
 }
+
+AgentsTable.propTypes = {
+    data: PropTypes.shape({
+        items: AgentsPropType,
+        total: PropTypes.number,
+        deploymentId: Stage.PropTypes.StringOrArray,
+        nodeId: Stage.PropTypes.StringOrArray,
+        nodeInstanceId: Stage.PropTypes.StringOrArray
+    }).isRequired,
+    widget: Stage.PropTypes.Widget.isRequired,
+    toolbox: Stage.PropTypes.Toolbox.isRequired
+};

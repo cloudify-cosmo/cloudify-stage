@@ -7,7 +7,7 @@ import TaskStatus from './TaskStatus';
 export default class TaskList extends React.Component {
     static propTypes = {
         header: PropTypes.string,
-        tasks: PropTypes.arrayOf(PropTypes.shape(TaskStatus.propTypes)),
+        tasks: PropTypes.arrayOf(PropTypes.shape(TaskStatus.propTypes)).isRequired,
         withStatus: PropTypes.bool
     };
 

@@ -3,11 +3,11 @@
  */
 
 import StepActions from '../wizard/StepActions';
-import StepContent from '../wizard/StepContent';
 import { createWizardStep } from '../wizard/wizardUtils';
 import NoResourceMessage from './helpers/NoResourceMessage';
 import ResourceAction from './helpers/ResourceAction';
 import ResourceStatus from './helpers/ResourceStatus';
+import StepContentPropTypes from './StepContentPropTypes';
 
 const secretsStepId = 'secrets';
 
@@ -52,7 +52,7 @@ class SecretsStepContent extends React.Component {
         this.state = SecretsStepContent.initialState;
     }
 
-    static propTypes = StepContent.propTypes;
+    static propTypes = StepContentPropTypes;
 
     static statusUnknown = 0;
 
@@ -68,9 +68,7 @@ class SecretsStepContent extends React.Component {
 
     static dataPath = 'blueprint.secrets';
 
-    static initialState = {
-        secretsInManager: []
-    };
+    static initialState = {};
 
     componentDidMount() {
         const { id, onChange, onError, onLoading, onReady, toolbox, stepData: stepDataProp, wizardData } = this.props;
@@ -103,16 +101,14 @@ class SecretsStepContent extends React.Component {
                     }
                 }
 
-                return { stepData, secretsInManager };
+                return stepData;
             })
             .then(
-                ({ stepData, secretsInManager }) =>
-                    new Promise(resolve =>
-                        this.setState({ secretsInManager }, () => {
-                            onChange(id, stepData);
-                            resolve();
-                        })
-                    )
+                stepData =>
+                    new Promise(resolve => {
+                        onChange(id, stepData);
+                        resolve();
+                    })
             )
             .catch(error => onError(id, error))
             .finally(() => onReady());
