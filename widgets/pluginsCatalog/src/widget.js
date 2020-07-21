@@ -67,15 +67,10 @@ Stage.defineWidget({
             return <Stage.Basic.Loading />;
         }
 
-        const actions = new Actions({
-            toolbox,
-            ...widget.configuration
-        });
-
         if (_.get(widget.configuration, 'sortByName', false)) {
             data = _.sortBy(data, 'title');
         }
 
-        return <PluginsCatalogList widget={widget} items={data} toolbox={toolbox} actions={actions} />;
+        return <PluginsCatalogList widget={widget} items={data} toolbox={toolbox} />;
     }
 });

@@ -23,18 +23,6 @@ export default class UsersModal extends React.Component {
         errors: {}
     };
 
-    static propTypes = {
-        tenant: TenantPropType.isRequired,
-        users: PropTypes.shape({}).isRequired,
-        toolbox: Stage.PropTypes.Toolbox.isRequired,
-        onHide: PropTypes.func,
-        open: PropTypes.bool.isRequired
-    };
-
-    static defaultProps = {
-        onHide: () => {}
-    };
-
     onApprove() {
         this.updateTenant();
         return false;
@@ -163,3 +151,15 @@ export default class UsersModal extends React.Component {
         );
     }
 }
+
+UsersModal.propTypes = {
+    tenant: TenantPropType.isRequired,
+    users: PropTypes.shape({ items: PropTypes.array }).isRequired,
+    toolbox: Stage.PropTypes.Toolbox.isRequired,
+    onHide: PropTypes.func,
+    open: PropTypes.bool.isRequired
+};
+
+UsersModal.defaultProps = {
+    onHide: () => {}
+};

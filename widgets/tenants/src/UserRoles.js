@@ -3,13 +3,6 @@
  */
 
 export default class UserRoles extends React.Component {
-    static propTypes = {
-        tenant: PropTypes.shape({
-            user_roles: PropTypes.shape({ direct: PropTypes.string, groups: PropTypes.shape({}) })
-        }).isRequired,
-        user: PropTypes.string.isRequired
-    };
-
     groupGroupsByRole(groups) {
         const roles = {};
 
@@ -36,3 +29,10 @@ export default class UserRoles extends React.Component {
         return <RolesPresenter directRole={directRole} groupRoles={groupRoles} />;
     }
 }
+
+UserRoles.propTypes = {
+    tenant: PropTypes.shape({
+        user_roles: PropTypes.shape({ direct: PropTypes.string, groups: PropTypes.object })
+    }).isRequired,
+    user: PropTypes.string.isRequired
+};

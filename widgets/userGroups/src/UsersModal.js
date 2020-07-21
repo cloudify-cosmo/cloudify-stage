@@ -141,6 +141,6 @@ UsersModal.propTypes = {
     open: PropTypes.bool.isRequired,
     toolbox: Stage.PropTypes.Toolbox.isRequired,
     users: PropTypes.shape({
-        items: PropTypes.arrayOf(PropTypes.shape({}))
+        items: PropTypes.arrayOf(PropTypes.object)
     }).isRequired
 };

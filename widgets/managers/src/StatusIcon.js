@@ -8,7 +8,7 @@ export default class StatusIcon extends React.Component {
     }
 
     static propTypes = {
-        status: PropTypes.shape({ status: PropTypes.string, services: PropTypes.shape({}) }),
+        status: PropTypes.shape({ status: PropTypes.string, services: PropTypes.object }),
         isFetching: PropTypes.bool
     };
 

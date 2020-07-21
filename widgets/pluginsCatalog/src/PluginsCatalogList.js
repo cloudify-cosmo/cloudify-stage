@@ -2,6 +2,7 @@
  * Created by Tamer on 30/07/2017.
  */
 import PluginsCatalogModal from './PluginsCatalogModal';
+import Actions from './Actions';
 
 /**
  * @class List
@@ -71,7 +72,7 @@ export default class PluginsCatalogList extends React.Component {
   */
     render() {
         const { plugin, selected, showModal, success } = this.state;
-        const { actions, items: itemsProp, toolbox } = this.props;
+        const { items: itemsProp, toolbox, widget } = this.props;
         const NO_DATA_MESSAGE = "There are no Plugins available in catalog. Check widget's configuration.";
         const { DataTable, Message, Button } = Stage.Basic;
         const { PluginIcon } = Stage.Common;
@@ -142,7 +143,12 @@ export default class PluginsCatalogList extends React.Component {
                     onSuccess={this.onSuccess.bind(this)}
                     onHide={this.hideModal.bind(this)}
                     toolbox={toolbox}
-                    actions={actions}
+                    actions={
+                        new Actions({
+                            toolbox,
+                            ...widget.configuration
+                        })
+                    }
                 />
             </div>
         );
@@ -150,7 +156,6 @@ export default class PluginsCatalogList extends React.Component {
 }
 
 PluginsCatalogList.propTypes = {
-    actions: PropTypes.shape({}).isRequired,
     items: PropTypes.arrayOf(
         PropTypes.shape({
             description: PropTypes.string,

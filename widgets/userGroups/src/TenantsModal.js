@@ -140,6 +140,6 @@ TenantsModal.propTypes = {
     group: GroupPropType.isRequired,
     onHide: PropTypes.func.isRequired,
     open: PropTypes.bool.isRequired,
-    tenants: PropTypes.shape({ items: PropTypes.arrayOf(PropTypes.shape({})) }).isRequired,
+    tenants: PropTypes.shape({ items: PropTypes.arrayOf(PropTypes.object) }).isRequired,
     toolbox: Stage.PropTypes.Toolbox.isRequired
 };

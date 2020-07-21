@@ -23,18 +23,6 @@ export default class GroupsModal extends React.Component {
         errors: {}
     };
 
-    static propTypes = {
-        tenant: TenantPropType.isRequired,
-        userGroups: PropTypes.shape({}).isRequired,
-        toolbox: Stage.PropTypes.Toolbox.isRequired,
-        onHide: PropTypes.func,
-        open: PropTypes.bool.isRequired
-    };
-
-    static defaultProps = {
-        onHide: _.noop
-    };
-
     onApprove() {
         this.updateTenant();
         return false;
@@ -151,3 +139,15 @@ export default class GroupsModal extends React.Component {
         );
     }
 }
+
+GroupsModal.propTypes = {
+    tenant: TenantPropType.isRequired,
+    userGroups: PropTypes.shape({ items: PropTypes.array }).isRequired,
+    toolbox: Stage.PropTypes.Toolbox.isRequired,
+    onHide: PropTypes.func,
+    open: PropTypes.bool.isRequired
+};
+
+GroupsModal.defaultProps = {
+    onHide: _.noop
+};

@@ -10,7 +10,7 @@ export default class ExecuteWorkflowButton extends React.Component {
     static propTypes = {
         onClick: PropTypes.func,
         noManagers: PropTypes.bool.isRequired,
-        workflows: PropTypes.arrayOf(PropTypes.shape({}))
+        workflows: PropTypes.arrayOf(PropTypes.object)
     };
 
     static defaultProps = {
