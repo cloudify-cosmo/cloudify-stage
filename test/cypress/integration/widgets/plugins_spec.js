@@ -1,12 +1,9 @@
 describe('Plugins widget', () => {
-    before(() =>
-        cy
-            .activate('valid_trial_license')
-            .deletePlugins()
-            .login()
-    );
+    before(() => cy.activate('valid_trial_license'));
 
-    it('should allow to install new plugin', () => {
+    beforeEach(() => {
+        cy.deletePlugins().login();
+
         cy.contains('System Resources').click();
         cy.contains('Upload').click();
         cy.get('input[name=wagonUrl]').type(
@@ -17,12 +14,23 @@ describe('Plugins widget', () => {
         );
         cy.get('input[name=title]')
             .click()
-            .should('have.value', 'cloudify-openstack-plugin')
-            .type('-edited');
+            .should('have.value', 'cloudify-openstack-plugin');
+    });
+
+    it('should allow to install new plugin with custom name', () => {
+        cy.get('input[name=title]').type('-edited');
         cy.get('.ok').click();
         cy.get('.modal').should('not.exist');
 
         cy.log('Verify plugin was uploaded');
         cy.contains('cloudify-openstack-plugin-edited');
+    });
+
+    it('should allow to install new plugin with default name', () => {
+        cy.get('.ok').click();
+        cy.get('.modal').should('not.exist');
+
+        cy.log('Verify plugin was uploaded');
+        cy.contains('cloudify-openstack-plugin');
     });
 });
