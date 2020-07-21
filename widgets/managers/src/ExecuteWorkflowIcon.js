@@ -7,16 +7,6 @@ export default class ExecuteWorkflowIcon extends React.Component {
         super(props, context);
     }
 
-    static propTypes = {
-        onClick: PropTypes.func,
-        workflows: PropTypes.arrayOf(PropTypes.shape({}))
-    };
-
-    static defaultProps = {
-        onClick: _.noop,
-        workflows: []
-    };
-
     render() {
         const { onClick, workflows } = this.props;
         const { WorkflowsMenu } = Stage.Common;
@@ -31,3 +21,13 @@ export default class ExecuteWorkflowIcon extends React.Component {
         ) : null;
     }
 }
+
+ExecuteWorkflowIcon.propTypes = {
+    onClick: PropTypes.func,
+    workflows: PropTypes.arrayOf(PropTypes.object)
+};
+
+ExecuteWorkflowIcon.defaultProps = {
+    onClick: _.noop,
+    workflows: []
+};
