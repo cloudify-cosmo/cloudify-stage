@@ -1,19 +1,4 @@
 class SiteLocationMap extends React.Component {
-    /**
-     * propTypes
-     *
-     * @property {string} attribution - map attribution to be added to map view
-     * @property {string} location - location, format: "<latitude>, <longitude>"
-     * @property {object} mapOptions - props to be passed to Leaflet.Map component
-     * @property {object} toolbox Toolbox object
-     */
-    static propTypes = {
-        attribution: PropTypes.string.isRequired,
-        location: PropTypes.string.isRequired,
-        mapOptions: PropTypes.object.isRequired,
-        toolbox: PropTypes.object.isRequired
-    };
-
     constructor(props, context) {
         super(props, context);
         const { location } = this.props;
@@ -80,5 +65,19 @@ class SiteLocationMap extends React.Component {
         );
     }
 }
+
+/**
+ * @property {string} attribution - map attribution to be added to map view
+ * @property {string} location - location, format: "<latitude>, <longitude>"
+ * @property {object} mapOptions - props to be passed to Leaflet.Map component
+ * @property {object} toolbox Toolbox object
+ */
+SiteLocationMap.propTypes = {
+    attribution: PropTypes.string.isRequired,
+    location: PropTypes.string.isRequired,
+    mapOptions: PropTypes.shape({ onClick: PropTypes.func, style: PropTypes.object, zoomControl: PropTypes.bool })
+        .isRequired,
+    toolbox: Stage.PropTypes.Toolbox.isRequired
+};
 
 export default connectToStore(state => _.get(state, 'config.app.maps', () => ({})), {})(SiteLocationMap);

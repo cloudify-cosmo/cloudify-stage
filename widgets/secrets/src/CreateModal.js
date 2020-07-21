@@ -19,10 +19,6 @@ export default class CreateModal extends React.Component {
         isHiddenValue: false
     };
 
-    static propTypes = {
-        toolbox: PropTypes.object.isRequired
-    };
-
     onApprove() {
         this.createSecret();
         return false;
@@ -173,3 +169,7 @@ export default class CreateModal extends React.Component {
         );
     }
 }
+
+CreateModal.propTypes = {
+    toolbox: Stage.PropTypes.Toolbox.isRequired
+};

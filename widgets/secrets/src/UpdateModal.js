@@ -1,6 +1,7 @@
 /**
  * Created by jakubniezgoda on 24/03/2017.
  */
+import SecretPropType from './props/SecretPropType';
 
 export default class UpdateModal extends React.Component {
     constructor(props, context) {
@@ -14,17 +15,6 @@ export default class UpdateModal extends React.Component {
         secretValue: '',
         canUpdateSecret: true,
         errors: {}
-    };
-
-    static propTypes = {
-        secret: PropTypes.object.isRequired,
-        toolbox: PropTypes.object.isRequired,
-        open: PropTypes.bool.isRequired,
-        onHide: PropTypes.func
-    };
-
-    static defaultProps = {
-        onHide: () => {}
     };
 
     onApprove() {
@@ -46,15 +36,12 @@ export default class UpdateModal extends React.Component {
             const actions = new Stage.Common.SecretActions(toolbox);
             actions
                 .doGet(secret.key)
-                .then(secret => {
+                .then(({ is_hidden_value: isHidden, value }) => {
                     let canUpdateSecret = true;
-                    const {
-                        secret: { is_hidden_value }
-                    } = this.props;
-                    if (is_hidden_value && _.isEmpty(secret.value)) {
+                    if (isHidden && _.isEmpty(value)) {
                         canUpdateSecret = false;
                     }
-                    this.setState({ secretValue: secret.value, loading: false, errors: {}, canUpdateSecret });
+                    this.setState({ secretValue: value, loading: false, errors: {}, canUpdateSecret });
                 })
                 .catch(err => {
                     this.setState({ loading: false, errors: { secretValue: err.message } });
@@ -148,3 +135,14 @@ export default class UpdateModal extends React.Component {
         );
     }
 }
+
+UpdateModal.propTypes = {
+    secret: SecretPropType.isRequired,
+    toolbox: Stage.PropTypes.Toolbox.isRequired,
+    open: PropTypes.bool.isRequired,
+    onHide: PropTypes.func
+};
+
+UpdateModal.defaultProps = {
+    onHide: () => {}
+};

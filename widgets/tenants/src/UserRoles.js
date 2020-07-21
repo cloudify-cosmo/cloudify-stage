@@ -4,7 +4,9 @@
 
 export default class UserRoles extends React.Component {
     static propTypes = {
-        tenant: PropTypes.object.isRequired,
+        tenant: PropTypes.shape({
+            user_roles: PropTypes.shape({ direct: PropTypes.string, groups: PropTypes.shape({}) })
+        }).isRequired,
         user: PropTypes.string.isRequired
     };
 

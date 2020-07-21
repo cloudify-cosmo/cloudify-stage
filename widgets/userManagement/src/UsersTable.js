@@ -7,6 +7,7 @@ import GroupModal from './GroupModal';
 import MenuAction from './MenuAction';
 import TenantModal from './TenantModal';
 import UserDetails from './UserDetails';
+import UserPropType from './props/UserPropType';
 
 export default class UsersTable extends React.Component {
     constructor(props, context) {
@@ -234,7 +235,7 @@ export default class UsersTable extends React.Component {
             tenants,
             user
         } = this.state;
-        const { data, roles, toolbox, widget } = this.props;
+        const { data, toolbox, widget } = this.props;
         const NO_DATA_MESSAGE = 'There are no Users available in manager. Click "Add" to add Users.';
         const { Checkbox, Confirm, DataTable, ErrorMessage, Label, Loader, Popup } = Stage.Basic;
         const { PasswordModal } = Stage.Shared;
@@ -341,7 +342,7 @@ export default class UsersTable extends React.Component {
                         );
                     })}
                     <DataTable.Action>
-                        <CreateModal roles={roles} toolbox={toolbox} />
+                        <CreateModal toolbox={toolbox} />
                     </DataTable.Action>
                 </DataTable>
 
@@ -394,3 +395,9 @@ export default class UsersTable extends React.Component {
         );
     }
 }
+
+UsersTable.propTypes = {
+    data: PropTypes.shape({ items: PropTypes.arrayOf(UserPropType), total: PropTypes.number }).isRequired,
+    toolbox: Stage.PropTypes.Toolbox.isRequired,
+    widget: Stage.PropTypes.Widget.isRequired
+};

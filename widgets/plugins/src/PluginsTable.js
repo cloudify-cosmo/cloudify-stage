@@ -2,7 +2,7 @@
  * Created by kinneretzin on 02/10/2016.
  */
 
-export default class extends React.Component {
+export default class PluginsTable extends React.Component {
     constructor(props, context) {
         super(props, context);
 
@@ -232,3 +232,27 @@ export default class extends React.Component {
         );
     }
 }
+
+PluginsTable.propTypes = {
+    data: PropTypes.shape({
+        items: PropTypes.arrayOf(
+            PropTypes.shape({
+                created_by: PropTypes.string,
+                distribution: PropTypes.string,
+                distribution_release: PropTypes.string,
+                icon: PropTypes.string,
+                id: PropTypes.string,
+                isSelected: PropTypes.bool,
+                title: PropTypes.string,
+                package_name: PropTypes.string,
+                package_version: PropTypes.string,
+                supported_platform: PropTypes.string,
+                uploaded_at: PropTypes.string,
+                visibility: PropTypes.string
+            })
+        ),
+        total: PropTypes.number
+    }).isRequired,
+    toolbox: Stage.PropTypes.Toolbox.isRequired,
+    widget: Stage.PropTypes.Widget.isRequired
+};

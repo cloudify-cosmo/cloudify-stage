@@ -107,8 +107,8 @@ Stage.defineWidget({
                 };
             }),
             total: _.get(data.nodes, 'metadata.pagination.total', 0),
-            blueprintId: params.blueprint_id,
-            deploymentId: params.deployment_id
+            blueprintSelected: !_.isEmpty(params.blueprint_id),
+            deploymentSelected: !_.isEmpty(params.deployment_id)
         };
 
         return <NodesTable widget={widget} data={formattedData} toolbox={toolbox} />;

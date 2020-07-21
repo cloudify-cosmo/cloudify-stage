@@ -3,6 +3,7 @@
  */
 
 import Actions from './actions';
+import SnapshotPropType from './props/SnapshotPropType';
 
 export default class RestoreSnapshotModal extends React.Component {
     constructor(props, context) {
@@ -17,15 +18,6 @@ export default class RestoreSnapshotModal extends React.Component {
         isFromTenantlessEnv: false,
         shouldForceRestore: false,
         ignorePluginFailure: false
-    };
-
-    static propTypes = {
-        snapshot: PropTypes.object.isRequired,
-        toolbox: PropTypes.object.isRequired
-    };
-
-    static defaultProps = {
-        onHide: _.noop
     };
 
     onApprove() {
@@ -142,3 +134,14 @@ export default class RestoreSnapshotModal extends React.Component {
         );
     }
 }
+
+RestoreSnapshotModal.propTypes = {
+    onHide: PropTypes.func,
+    open: PropTypes.bool.isRequired,
+    snapshot: SnapshotPropType.isRequired,
+    toolbox: Stage.PropTypes.Toolbox.isRequired
+};
+
+RestoreSnapshotModal.defaultProps = {
+    onHide: _.noop
+};

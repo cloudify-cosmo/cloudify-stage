@@ -66,9 +66,7 @@
         "prefer-spread": ["warn"],
         "radix": ["warn"],
         "react/button-has-type": ["warn"],
-        "react/default-props-match-prop-types": ["warn"],
         "react/no-find-dom-node": ["warn"],
-        "react/forbid-prop-types": ["warn"],
         "react/jsx-filename-extension": ["warn"],
         "react/jsx-no-bind": ["warn"],
         "react/jsx-no-target-blank": ["warn"],
@@ -79,11 +77,7 @@
         "react/no-did-update-set-state": ["warn"],
         "react/no-string-refs": ["warn"],
         "react/no-unescaped-entities": ["warn"],
-        "react/no-unused-prop-types": ["warn"],
-        "react/no-unused-state": ["warn"],
         "react/prefer-stateless-function": ["warn"],
-        "react/prop-types": ["warn"],
-        "react/require-default-props": ["warn"],
         "react/sort-comp": ["warn"],
         "react/static-property-placement": ["warn"],
         "vars-on-top": ["warn"]
@@ -103,17 +97,6 @@
             "files": ["app/**/*.js", "widgets/**/*.js"],
             "env": {
                 "browser": true
-            }
-        },
-        { // FIXME: Temporary override, to be removed when /widgets directory will be fixed
-            "files": ["app/**/*.js"],
-            "rules": {
-                "react/prop-types": ["error"],
-                "react/default-props-match-prop-types": ["error"],
-                "react/forbid-prop-types": ["error"],
-                "react/no-unused-prop-types": ["error"],
-                "react/no-unused-state": ["error"],
-                "react/require-default-props": ["error"]
             }
         },
         {

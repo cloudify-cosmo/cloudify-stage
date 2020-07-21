@@ -9,23 +9,22 @@ export default class ExecuteWorkflowButton extends React.Component {
 
     static propTypes = {
         onClick: PropTypes.func,
-        managers: PropTypes.array,
-        workflows: PropTypes.array
+        noManagers: PropTypes.bool.isRequired,
+        workflows: PropTypes.arrayOf(PropTypes.shape({}))
     };
 
     static defaultProps = {
         onClick: _.noop,
-        managers: [],
         workflows: []
     };
 
     render() {
         const { Button, Popup } = Stage.Basic;
         const { WorkflowsMenu } = Stage.Common;
-        const { managers, onClick, workflows } = this.props;
+        const { noManagers, onClick, workflows } = this.props;
 
         return (
-            <Popup on={_.isEmpty(managers) ? 'hover' : []} open={_.isEmpty(managers) ? undefined : false}>
+            <Popup on={noManagers ? 'hover' : []} open={noManagers ? undefined : false}>
                 <Popup.Trigger>
                     <div>
                         <WorkflowsMenu
@@ -36,7 +35,7 @@ export default class ExecuteWorkflowButton extends React.Component {
                                     icon="cogs"
                                     content="Execute Workflow"
                                     labelPosition="left"
-                                    disabled={_.isEmpty(managers)}
+                                    disabled={noManagers}
                                 />
                             }
                             onClick={workflow => onClick(workflow)}

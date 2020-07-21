@@ -1,4 +1,4 @@
-export default class extends React.Component {
+export default class OutputsTable extends React.Component {
     constructor(props, context) {
         super(props, context);
         this.state = {
@@ -106,3 +106,20 @@ export default class extends React.Component {
         );
     }
 }
+
+OutputsTable.propTypes = {
+    data: PropTypes.shape({
+        blueprintId: PropTypes.string,
+        deploymentId: PropTypes.string,
+        outputsAndCapabilities: PropTypes.arrayOf(
+            PropTypes.shape({
+                description: PropTypes.string,
+                isOutput: PropTypes.bool,
+                name: PropTypes.string,
+                value: PropTypes.any
+            })
+        )
+    }).isRequired,
+    toolbox: Stage.PropTypes.Toolbox.isRequired,
+    widget: Stage.PropTypes.Widget.isRequired
+};

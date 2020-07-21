@@ -1,18 +1,6 @@
 import SiteLocationMap from './SiteLocationMap';
 
 export default class SiteLocationInput extends React.Component {
-    /**
-     * propTypes
-     *
-     * @property {Function} onChange - function to be called on value change
-     * @property {string} value - location, format: "<latitude>, <longitude>"
-     */
-    static propTypes = {
-        onChange: PropTypes.func.isRequired,
-        value: PropTypes.string.isRequired,
-        toolbox: PropTypes.shape({}).isRequired
-    };
-
     constructor(props, context) {
         super(props, context);
 
@@ -70,3 +58,13 @@ export default class SiteLocationInput extends React.Component {
         );
     }
 }
+
+SiteLocationInput.propTypes = {
+    onChange: PropTypes.func.isRequired,
+    toolbox: Stage.PropTypes.Toolbox.isRequired,
+    value: PropTypes.string
+};
+
+SiteLocationInput.defaultProps = {
+    value: null
+};

@@ -1,6 +1,7 @@
 /**
  * Created by jakubniezgoda on 03/02/2017.
  */
+import GroupPropType from './props/GroupPropType';
 
 export default class MenuAction extends React.Component {
     static EDIT_USERS_ACTION = 'users';
@@ -47,3 +48,5 @@ export default class MenuAction extends React.Component {
         );
     }
 }
+
+MenuAction.propTypes = { item: GroupPropType.isRequired, onSelectAction: PropTypes.func.isRequired };

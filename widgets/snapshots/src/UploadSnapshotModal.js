@@ -141,3 +141,5 @@ export default class UploadModal extends React.Component {
         );
     }
 }
+
+UploadModal.propTypes = { toolbox: Stage.PropTypes.Toolbox.isRequired };

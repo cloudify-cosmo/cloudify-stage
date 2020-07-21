@@ -17,3 +17,7 @@ export default class MyResourcesCheckbox extends React.Component {
         return <Checkbox toggle label="Show Only my Resources" onChange={this.handleChange.bind(this)} />;
     }
 }
+
+MyResourcesCheckbox.propTypes = {
+    toolbox: Stage.PropTypes.Toolbox.isRequired
+};

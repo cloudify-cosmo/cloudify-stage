@@ -4,6 +4,7 @@
 
 import { icons } from 'cloudify-ui-common';
 import NodeInstancesTable from './NodeInstancesTable';
+import NodeInstancePropType from './props/NodeInstancePropType';
 
 export default class NodesTable extends React.Component {
     constructor(props, context) {
@@ -84,13 +85,13 @@ export default class NodesTable extends React.Component {
                         label="Blueprint"
                         name="blueprint_id"
                         width="10%"
-                        show={fieldsToShow.indexOf('Blueprint') >= 0 && _.isEmpty(data.blueprintId)}
+                        show={fieldsToShow.indexOf('Blueprint') >= 0 && !data.blueprintSelected}
                     />
                     <DataTable.Column
                         label="Deployment"
                         name="deployment_id"
                         width="10%"
-                        show={fieldsToShow.indexOf('Deployment') >= 0 && _.isEmpty(data.deploymentId)}
+                        show={fieldsToShow.indexOf('Deployment') >= 0 && !data.deploymentSelected}
                     />
                     <DataTable.Column
                         label="Contained in"
@@ -120,8 +121,7 @@ export default class NodesTable extends React.Component {
                         label="Groups"
                         width="10%"
                         show={
-                            fieldsToShow.indexOf('Groups') >= 0 &&
-                            (!_.isEmpty(data.blueprintId) || !_.isEmpty(data.deploymentId))
+                            fieldsToShow.indexOf('Groups') >= 0 && (data.blueprintSelected || data.deploymentSelected)
                         }
                     />
 
@@ -191,11 +191,42 @@ export default class NodesTable extends React.Component {
     }
 }
 
+NodesTable.propTypes = {
+    data: PropTypes.shape({
+        blueprintSelected: PropTypes.bool,
+        deploymentSelected: PropTypes.bool,
+        items: PropTypes.arrayOf(
+            PropTypes.shape({
+                blueprint_id: PropTypes.string,
+                connectedTo: PropTypes.string,
+                containedIn: PropTypes.string,
+                created_by: PropTypes.string,
+                deployment_id: PropTypes.string,
+                groups: PropTypes.string,
+                host_id: PropTypes.string,
+                id: PropTypes.string,
+                instances: PropTypes.arrayOf(NodeInstancePropType),
+                isSelected: PropTypes.bool,
+                numberOfInstances: PropTypes.number,
+                type: PropTypes.string,
+                type_hierarchy: PropTypes.array
+            })
+        ),
+        total: PropTypes.number
+    }).isRequired,
+    widget: Stage.PropTypes.Widget.isRequired,
+    toolbox: Stage.PropTypes.Toolbox.isRequired
+};
+
 function NodeTypeIcon({ typeHierarchy }) {
     const icon = icons.getNodeIcon(_.reverse(_.clone(typeHierarchy)));
 
     return <span style={{ fontSize: 20, fontFamily: 'cloudify' }}>{icon}</span>;
 }
+
+NodeTypeIcon.propTypes = {
+    typeHierarchy: PropTypes.arrayOf(PropTypes.string).isRequired
+};
 
 function TypeHierarchyTree({ typeHierarchy }) {
     const { Icon, NodesTree } = Stage.Basic;
@@ -235,3 +266,7 @@ function TypeHierarchyTree({ typeHierarchy }) {
         </NodesTree>
     );
 }
+
+TypeHierarchyTree.propTypes = {
+    typeHierarchy: PropTypes.arrayOf(PropTypes.string).isRequired
+};

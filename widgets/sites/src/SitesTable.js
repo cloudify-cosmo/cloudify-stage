@@ -2,6 +2,7 @@ import CreateModal from './CreateModal';
 import SiteActions from './SiteActions';
 import SiteLocationMap from './SiteLocationMap';
 import UpdateModal from './UpdateModal';
+import SitePropType from './props/SitePropType';
 
 export default class SitesTable extends React.Component {
     constructor(props, context) {
@@ -14,19 +15,6 @@ export default class SitesTable extends React.Component {
             site: {}
         };
     }
-
-    /**
-     * propTypes
-     *
-     * @property {object} widget Widget object
-     * @property {object} data sites data including the items and the total number
-     * @property {object} toolbox Toolbox object
-     */
-    static propTypes = {
-        widget: PropTypes.object.isRequired,
-        data: PropTypes.object.isRequired,
-        toolbox: PropTypes.object.isRequired
-    };
 
     static DELETE_SITE_ACTION = 'delete';
 
@@ -235,3 +223,12 @@ export default class SitesTable extends React.Component {
         );
     }
 }
+
+SitesTable.propTypes = {
+    data: PropTypes.shape({
+        items: PropTypes.arrayOf(SitePropType),
+        total: PropTypes.number
+    }).isRequired,
+    toolbox: Stage.PropTypes.Toolbox.isRequired,
+    widget: Stage.PropTypes.Widget.isRequired
+};

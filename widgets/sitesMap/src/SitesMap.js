@@ -1,45 +1,6 @@
 import SiteControl from './SiteControl';
 
 class SitesMap extends React.Component {
-    /**
-     * propTypes
-     *
-     * @property {boolean} sitesAreDefined - specifies whether sites are defined
-     * @property {object} toolbox - Toolbox object
-     * @property {object} data - object with sites data
-     * @property {object} dimensions - object with widget dimensions
-     * @property {string} attribution - map attribution to be added to map view
-     * @property {boolean} showAllLabels - specifies whether all the site labels displayed
-     */
-    static propTypes = {
-        sitesAreDefined: PropTypes.bool.isRequired,
-        toolbox: PropTypes.object.isRequired,
-        data: PropTypes.objectOf(
-            PropTypes.shape({
-                name: PropTypes.string.isRequired,
-                color: PropTypes.string.isRequired,
-                latitude: PropTypes.number.isRequired,
-                longitude: PropTypes.number.isRequired,
-                deploymentStates: PropTypes.shape({
-                    pending: PropTypes.array.isRequired,
-                    inProgress: PropTypes.array.isRequired,
-                    good: PropTypes.array.isRequired,
-                    failed: PropTypes.array.isRequired
-                }).isRequired
-            })
-        ).isRequired,
-
-        dimensions: PropTypes.shape({
-            height: PropTypes.number.isRequired,
-            width: PropTypes.number.isRequired,
-            maximized: PropTypes.bool
-        }).isRequired,
-
-        attribution: PropTypes.string.isRequired,
-
-        showAllLabels: PropTypes.bool.isRequired
-    };
-
     constructor(props) {
         super(props);
 
@@ -161,6 +122,32 @@ class SitesMap extends React.Component {
     }
 }
 
+SitesMap.propTypes = {
+    attribution: PropTypes.string.isRequired,
+    data: PropTypes.objectOf(
+        PropTypes.shape({
+            name: PropTypes.string.isRequired,
+            color: PropTypes.string.isRequired,
+            latitude: PropTypes.number.isRequired,
+            longitude: PropTypes.number.isRequired,
+            deploymentStates: PropTypes.shape({
+                pending: PropTypes.array.isRequired,
+                inProgress: PropTypes.array.isRequired,
+                good: PropTypes.array.isRequired,
+                failed: PropTypes.array.isRequired
+            }).isRequired
+        })
+    ).isRequired,
+    dimensions: PropTypes.shape({
+        height: PropTypes.number.isRequired,
+        width: PropTypes.number.isRequired,
+        maximized: PropTypes.bool
+    }).isRequired,
+    showAllLabels: PropTypes.bool.isRequired,
+    sitesAreDefined: PropTypes.bool.isRequired,
+    toolbox: Stage.PropTypes.Toolbox.isRequired
+};
+
 export default connectToStore(state => _.get(state, 'config.app.maps', () => ({})), {})(SitesMap);
 
 function NoSitesDataMessage({ sitesAreDefined }) {
@@ -175,3 +162,7 @@ function NoSitesDataMessage({ sitesAreDefined }) {
         </NoDataMessage>
     );
 }
+
+NoSitesDataMessage.propTypes = {
+    sitesAreDefined: PropTypes.bool.isRequired
+};

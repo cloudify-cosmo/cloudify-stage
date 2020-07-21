@@ -8,6 +8,7 @@ Stage.definePropType({
         getManagerState: PropTypes.func,
         getWidget: PropTypes.func,
         getWidgetBackend: PropTypes.func,
+        goToPage: PropTypes.func,
         goToParentPage: PropTypes.func,
         loading: PropTypes.func,
         refresh: PropTypes.func

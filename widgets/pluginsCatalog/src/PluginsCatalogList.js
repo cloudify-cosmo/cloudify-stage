@@ -25,12 +25,8 @@ export default class PluginsCatalogList extends React.Component {
     }
 
     shouldComponentUpdate(nextProps, nextState) {
-        const { data, widget } = this.props;
-        return (
-            !_.isEqual(widget, nextProps.widget) ||
-            !_.isEqual(this.state, nextState) ||
-            !_.isEqual(data, nextProps.data)
-        );
+        const { widget } = this.props;
+        return !_.isEqual(widget, nextProps.widget) || !_.isEqual(this.state, nextState);
     }
 
     /*
@@ -152,3 +148,18 @@ export default class PluginsCatalogList extends React.Component {
         );
     }
 }
+
+PluginsCatalogList.propTypes = {
+    actions: PropTypes.shape({}).isRequired,
+    items: PropTypes.arrayOf(
+        PropTypes.shape({
+            description: PropTypes.string,
+            icon: PropTypes.string,
+            link: PropTypes.string,
+            title: PropTypes.string,
+            version: PropTypes.string
+        })
+    ).isRequired,
+    toolbox: Stage.PropTypes.Toolbox.isRequired,
+    widget: Stage.PropTypes.Widget.isRequired
+};

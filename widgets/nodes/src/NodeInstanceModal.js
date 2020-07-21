@@ -1,8 +1,9 @@
 /**
  * Created by jakubniezgoda on 10/01/2017.
  */
+import NodeInstancePropType from './props/NodeInstancePropType';
 
-export default class extends React.Component {
+export default class NodeInstanceModal extends React.Component {
     constructor(props, context) {
         super(props, context);
 
@@ -103,3 +104,9 @@ export default class extends React.Component {
         );
     }
 }
+
+NodeInstanceModal.propTypes = {
+    instance: NodeInstancePropType.isRequired,
+    onClose: PropTypes.func.isRequired,
+    open: PropTypes.bool.isRequired
+};

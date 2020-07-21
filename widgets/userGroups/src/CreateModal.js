@@ -130,3 +130,7 @@ export default class CreateModal extends React.Component {
         );
     }
 }
+
+CreateModal.propTypes = {
+    toolbox: Stage.PropTypes.Toolbox.isRequired
+};

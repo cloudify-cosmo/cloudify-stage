@@ -9,7 +9,7 @@ export default class ExecuteWorkflowIcon extends React.Component {
 
     static propTypes = {
         onClick: PropTypes.func,
-        workflows: PropTypes.array
+        workflows: PropTypes.arrayOf(PropTypes.shape({}))
     };
 
     static defaultProps = {

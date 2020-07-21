@@ -3,6 +3,7 @@
  */
 
 import Actions from './actions';
+import GroupPropType from './props/GroupPropType';
 
 export default class UserDetails extends React.Component {
     constructor(props, context) {
@@ -17,10 +18,10 @@ export default class UserDetails extends React.Component {
     }
 
     static propTypes = {
-        toolbox: PropTypes.object.isRequired,
-        data: PropTypes.object.isRequired,
-        groups: PropTypes.array.isRequired,
-        onError: PropTypes.func
+        toolbox: Stage.PropTypes.Toolbox.isRequired,
+        data: GroupPropType.isRequired,
+        groups: PropTypes.arrayOf(GroupPropType).isRequired,
+        onError: PropTypes.func.isRequired
     };
 
     removeTenant(tenant) {
