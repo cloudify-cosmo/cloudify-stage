@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 import { SortableContainer, SortableElement } from 'react-sortable-hoc';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import WidgetsList from './WidgetsList';
 import { Confirm, Container, Header, Menu } from './basic';
@@ -26,8 +26,12 @@ export default function PageContent({
 }) {
     const manager = useSelector(state => state.manager);
 
-    const [activeTab, setActiveTab] = useState(Math.max(_.findIndex(page.tabs, { isDefault: true }), 0));
+    const [activeTab, setActiveTab] = useState(0);
     const [tabIndexToRemove, setTabIndexToRemove] = useState();
+
+    useEffect(() => {
+        setActiveTab(Math.max(_.findIndex(page.tabs, { isDefault: true }), 0));
+    }, [page]);
 
     function filterWidgets(widgetsContainer) {
         return _.chain(widgetsContainer)
