@@ -2,9 +2,8 @@
  * Created by Tamer on 14/08/2017.
  */
 
-export default class MyResourcesCheckbox extends React.Component {
-    handleChange(proxy, elm) {
-        const { toolbox } = this.props;
+export default function MyResourcesCheckbox({ toolbox }) {
+    function handleChange(proxy, elm) {
         toolbox.getContext().setValue('onlyMyResources', elm.checked);
         toolbox.getEventBus().trigger('plugins:refresh');
         toolbox.getEventBus().trigger('snapshots:refresh');
@@ -12,10 +11,8 @@ export default class MyResourcesCheckbox extends React.Component {
         toolbox.getEventBus().trigger('deployments:refresh');
     }
 
-    render() {
-        const { Checkbox } = Stage.Basic;
-        return <Checkbox toggle label="Show Only my Resources" onChange={this.handleChange.bind(this)} />;
-    }
+    const { Checkbox } = Stage.Basic;
+    return <Checkbox toggle label="Show Only my Resources" onChange={handleChange} />;
 }
 
 MyResourcesCheckbox.propTypes = {

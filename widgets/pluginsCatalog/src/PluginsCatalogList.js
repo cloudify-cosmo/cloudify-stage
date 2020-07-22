@@ -4,17 +4,7 @@
 import PluginsCatalogModal from './PluginsCatalogModal';
 import Actions from './Actions';
 
-/**
- * @class List
- * @augments {Component}
- */
 export default class PluginsCatalogList extends React.Component {
-    /**
-     * Creates an instance of List.
-     *
-     * @param {any} props
-     * @param {any} context
-     */
     constructor(props, context) {
         super(props, context);
         this.state = {
@@ -26,50 +16,31 @@ export default class PluginsCatalogList extends React.Component {
     }
 
     shouldComponentUpdate(nextProps, nextState) {
-        const { widget } = this.props;
-        return !_.isEqual(widget, nextProps.widget) || !_.isEqual(this.state, nextState);
+        const { items, widget } = this.props;
+        return (
+            !_.isEqual(items, nextProps.items) ||
+            !_.isEqual(widget, nextProps.widget) ||
+            !_.isEqual(this.state, nextState)
+        );
     }
 
-    /*
-  |--------------------------------------------------------------------------
-  | Custom Events
-  |--------------------------------------------------------------------------
-  */
-    /**
-     * onSuccess Event
-     *
-     * @param {any} msg
-     */
     onSuccess(msg) {
         this.setState({ success: msg });
     }
 
-    /**
-     * Modal Events
-     */
-    showModal() {
-        this.setState({ showModal: true });
+    onUpload(plugin) {
+        this.setState({ plugin });
+        this.showModal();
     }
 
     hideModal() {
         this.setState({ showModal: false });
     }
 
-    /**
-     * Upload Click Event
-     *
-     * @param plugin
-     */
-    onUpload(plugin) {
-        this.setState({ plugin });
-        this.showModal();
+    showModal() {
+        this.setState({ showModal: true });
     }
 
-    /*
-  |--------------------------------------------------------------------------
-  | React Renderer
-  |--------------------------------------------------------------------------
-  */
     render() {
         const { plugin, selected, showModal, success } = this.state;
         const { items: itemsProp, toolbox, widget } = this.props;
