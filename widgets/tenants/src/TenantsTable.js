@@ -8,6 +8,7 @@ import GroupsModal from './GroupsModal';
 import MenuAction from './MenuAction';
 import TenantDetails from './TenantDetails';
 import UsersModal from './UsersModal';
+import TenantPropType from './props/TenantPropType';
 
 export default class TenantsTable extends React.Component {
     constructor(props, context) {
@@ -221,3 +222,9 @@ export default class TenantsTable extends React.Component {
         );
     }
 }
+
+TenantsTable.propTypes = {
+    data: PropTypes.shape({ items: PropTypes.arrayOf(TenantPropType), total: PropTypes.number }).isRequired,
+    toolbox: Stage.PropTypes.Toolbox.isRequired,
+    widget: Stage.PropTypes.Widget.isRequired
+};

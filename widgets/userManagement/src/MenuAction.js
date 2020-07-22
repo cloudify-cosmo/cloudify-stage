@@ -1,6 +1,7 @@
 /**
  * Created by kinneretzin on 19/10/2016.
  */
+import UserPropType from './props/UserPropType';
 
 export default class MenuAction extends React.Component {
     static CHANGE_PASSWORD_ACTION = 'password';
@@ -59,3 +60,5 @@ export default class MenuAction extends React.Component {
         );
     }
 }
+
+MenuAction.propTypes = { item: UserPropType.isRequired, onSelectAction: PropTypes.func.isRequired };

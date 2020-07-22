@@ -16,15 +16,6 @@ export default class CreateModal extends React.Component {
         errors: {}
     };
 
-    /**
-     * propTypes
-     *
-     * @property {object} toolbox Toolbox object
-     * */
-    static propTypes = {
-        toolbox: PropTypes.object.isRequired
-    };
-
     onApprove() {
         this.createSite();
         return false;
@@ -122,3 +113,7 @@ export default class CreateModal extends React.Component {
         );
     }
 }
+
+CreateModal.propTypes = {
+    toolbox: Stage.PropTypes.Toolbox.isRequired
+};

@@ -3,6 +3,7 @@
  */
 
 import Actions from './actions';
+import UserPropType from './props/UserPropType';
 
 export default class GroupModal extends React.Component {
     constructor(props, context) {
@@ -105,3 +106,11 @@ export default class GroupModal extends React.Component {
         );
     }
 }
+
+GroupModal.propTypes = {
+    groups: PropTypes.shape({ items: PropTypes.array }).isRequired,
+    onHide: PropTypes.func.isRequired,
+    open: PropTypes.bool.isRequired,
+    toolbox: Stage.PropTypes.Toolbox.isRequired,
+    user: UserPropType.isRequired
+};

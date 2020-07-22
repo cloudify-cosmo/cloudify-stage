@@ -8,7 +8,7 @@ export default class ConsoleIcon extends React.Component {
     }
 
     static propTypes = {
-        manager: PropTypes.object
+        manager: PropTypes.shape({ ip: PropTypes.string })
     };
 
     static defaultProps = {

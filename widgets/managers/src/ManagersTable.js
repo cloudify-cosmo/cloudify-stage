@@ -22,10 +22,7 @@ export default class ManagersTable extends React.Component {
             selectedManagers: [],
             showExecuteWorkflowModal: false,
             workflow: { name: '', parameters: {} },
-            status: _(props.data.items)
-                .mapKeys(manager => manager.id)
-                .mapValues(() => ({ isFetching: false, status: {} }))
-                .value()
+            status: {}
         };
 
         const { toolbox } = this.props;
@@ -266,7 +263,7 @@ export default class ManagersTable extends React.Component {
                             onFail={this.handleStatusError}
                         />
                         <ExecuteWorkflowButton
-                            managers={selectedManagers}
+                            noManagers={_.isEmpty(selectedManagers)}
                             workflows={workflows}
                             onClick={this.openExecuteWorkflowModal.bind(this, selectedManagers[0], true)}
                         />
@@ -285,3 +282,9 @@ export default class ManagersTable extends React.Component {
         );
     }
 }
+
+ManagersTable.propTypes = {
+    data: PropTypes.shape({ items: PropTypes.array, total: PropTypes.number }).isRequired,
+    toolbox: Stage.PropTypes.Toolbox.isRequired,
+    widget: Stage.PropTypes.Widget.isRequired
+};

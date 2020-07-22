@@ -14,8 +14,8 @@ export default class RefreshButton extends React.Component {
     }
 
     static propTypes = {
-        managers: PropTypes.array.isRequired,
-        toolbox: PropTypes.object.isRequired,
+        managers: PropTypes.arrayOf(PropTypes.string).isRequired,
+        toolbox: Stage.PropTypes.Toolbox.isRequired,
         onStart: PropTypes.func,
         onSuccess: PropTypes.func,
         onFail: PropTypes.func

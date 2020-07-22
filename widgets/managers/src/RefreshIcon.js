@@ -14,8 +14,8 @@ export default class RefreshIcon extends React.Component {
     }
 
     static propTypes = {
-        manager: PropTypes.object.isRequired,
-        toolbox: PropTypes.object.isRequired,
+        manager: PropTypes.shape({ id: PropTypes.string }).isRequired,
+        toolbox: Stage.PropTypes.Toolbox.isRequired,
         onStart: PropTypes.func,
         onSuccess: PropTypes.func,
         onFail: PropTypes.func

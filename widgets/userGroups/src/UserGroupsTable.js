@@ -7,6 +7,7 @@ import GroupDetails from './GroupDetails';
 import MenuAction from './MenuAction';
 import TenantsModal from './TenantsModal';
 import UsersModal from './UsersModal';
+import GroupPropType from './props/GroupPropType';
 
 export default class UserGroupsTable extends React.Component {
     constructor(props, context) {
@@ -178,7 +179,7 @@ export default class UserGroupsTable extends React.Component {
 
     render() {
         const { error, group, modalType, settingGroupRoleLoading, showModal, tenants, users } = this.state;
-        const { data, roles, toolbox, widget } = this.props;
+        const { data, toolbox, widget } = this.props;
         const NO_DATA_MESSAGE = 'There are no User Groups available. Click "Add" to add User Groups.';
         const { Checkbox, Confirm, DataTable, ErrorMessage, Label, Loader } = Stage.Basic;
 
@@ -255,7 +256,7 @@ export default class UserGroupsTable extends React.Component {
                         );
                     })}
                     <DataTable.Action>
-                        <CreateModal roles={roles} toolbox={toolbox} />
+                        <CreateModal toolbox={toolbox} />
                     </DataTable.Action>
                 </DataTable>
 
@@ -297,3 +298,12 @@ export default class UserGroupsTable extends React.Component {
         );
     }
 }
+
+UserGroupsTable.propTypes = {
+    data: PropTypes.shape({
+        items: PropTypes.arrayOf(GroupPropType),
+        total: PropTypes.number.isRequired
+    }).isRequired,
+    toolbox: Stage.PropTypes.Toolbox.isRequired,
+    widget: Stage.PropTypes.Widget.isRequired
+};
