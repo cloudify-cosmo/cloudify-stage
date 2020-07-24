@@ -76,6 +76,15 @@ class UploadPluginForm extends React.Component {
         const { loading, title } = this.state;
         const { Container, Form, LoadingOverlay } = Stage.Basic;
 
+        const onTitleChange = titleChange => {
+            const { onChange } = this.props;
+            onChange({
+                ...UploadPluginForm.NO_ERRORS,
+                ...titleChange
+            });
+            this.setState(titleChange);
+        };
+
         const formFields = [
             this.createUrlOrFileFormField('Wagon', addRequiredMarks),
             this.createUrlOrFileFormField(
@@ -88,7 +97,7 @@ class UploadPluginForm extends React.Component {
                         toolbox
                             .getInternal()
                             .doUpload('/plugins/title', null, { yaml_file: pluginYamlFile })
-                            .then(response => this.setState(response))
+                            .then(onTitleChange)
                             .finally(() => this.setState({ loading: false }));
                     }
                 },
@@ -99,7 +108,7 @@ class UploadPluginForm extends React.Component {
                         toolbox
                             .getInternal()
                             .doPut('/plugins/title', { yamlUrl: pluginYamlUrl })
-                            .then(response => this.setState(response))
+                            .then(onTitleChange)
                             .finally(() => this.setState({ loading: false }));
                     }
                 }
@@ -109,14 +118,7 @@ class UploadPluginForm extends React.Component {
                     name="title"
                     value={title}
                     placeholder={hidePlaceholders ? '' : placeholders.title}
-                    onChange={(e, { value }) => {
-                        const { onChange } = this.props;
-                        onChange({
-                            ...UploadPluginForm.NO_ERRORS,
-                            title: value
-                        });
-                        this.setState({ title: value });
-                    }}
+                    onChange={(e, { value }) => onTitleChange({ title: value })}
                 />
             </Form.Field>,
             this.createUrlOrFileFormField('Icon', false)

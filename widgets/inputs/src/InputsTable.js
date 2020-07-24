@@ -2,7 +2,7 @@
  * Created by pawelposel on 07/11/2016.
  */
 
-export default class extends React.Component {
+export default class InputsTable extends React.Component {
     constructor(props, context) {
         super(props, context);
         this.state = {
@@ -83,3 +83,15 @@ export default class extends React.Component {
         );
     }
 }
+
+InputsTable.propTypes = {
+    data: PropTypes.shape({
+        blueprintId: Stage.PropTypes.StringOrArray,
+        deploymentId: Stage.PropTypes.StringOrArray,
+        items: PropTypes.arrayOf(
+            PropTypes.shape({ description: PropTypes.string, name: PropTypes.string, value: PropTypes.any })
+        )
+    }).isRequired,
+    toolbox: Stage.PropTypes.Toolbox.isRequired,
+    widget: Stage.PropTypes.Widget.isRequired
+};

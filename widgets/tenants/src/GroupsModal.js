@@ -3,6 +3,7 @@
  */
 
 import Actions from './actions';
+import TenantPropType from './props/TenantPropType';
 
 const { RolesPicker } = Stage.Common;
 const { RolesUtil } = Stage.Common;
@@ -20,17 +21,6 @@ export default class GroupsModal extends React.Component {
         userGroups: {},
         loading: false,
         errors: {}
-    };
-
-    static propTypes = {
-        tenant: PropTypes.object.isRequired,
-        userGroups: PropTypes.object.isRequired,
-        toolbox: PropTypes.object.isRequired,
-        onHide: PropTypes.func
-    };
-
-    static defaultProps = {
-        onHide: _.noop
     };
 
     onApprove() {
@@ -149,3 +139,15 @@ export default class GroupsModal extends React.Component {
         );
     }
 }
+
+GroupsModal.propTypes = {
+    tenant: TenantPropType.isRequired,
+    userGroups: PropTypes.shape({ items: PropTypes.array }).isRequired,
+    toolbox: Stage.PropTypes.Toolbox.isRequired,
+    onHide: PropTypes.func,
+    open: PropTypes.bool.isRequired
+};
+
+GroupsModal.defaultProps = {
+    onHide: _.noop
+};

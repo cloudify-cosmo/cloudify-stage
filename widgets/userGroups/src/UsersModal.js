@@ -3,6 +3,7 @@
  */
 
 import Actions from './actions';
+import GroupPropType from './props/GroupPropType';
 
 export default class UsersModal extends React.Component {
     constructor(props, context) {
@@ -132,3 +133,14 @@ export default class UsersModal extends React.Component {
         );
     }
 }
+
+UsersModal.propTypes = {
+    group: GroupPropType.isRequired,
+    groups: PropTypes.arrayOf(GroupPropType).isRequired,
+    onHide: PropTypes.func.isRequired,
+    open: PropTypes.bool.isRequired,
+    toolbox: Stage.PropTypes.Toolbox.isRequired,
+    users: PropTypes.shape({
+        items: PropTypes.arrayOf(PropTypes.object)
+    }).isRequired
+};

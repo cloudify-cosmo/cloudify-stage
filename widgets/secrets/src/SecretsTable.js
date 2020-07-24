@@ -4,6 +4,7 @@
 
 import CreateModal from './CreateModal';
 import UpdateModal from './UpdateModal';
+import SecretPropType from './props/SecretPropType';
 
 export default class SecretsTable extends React.Component {
     constructor(props, context) {
@@ -293,3 +294,12 @@ export default class SecretsTable extends React.Component {
         );
     }
 }
+
+SecretsTable.propTypes = {
+    data: PropTypes.shape({
+        items: PropTypes.arrayOf(SecretPropType),
+        total: PropTypes.number
+    }).isRequired,
+    toolbox: Stage.PropTypes.Toolbox.isRequired,
+    widget: Stage.PropTypes.Widget.isRequired
+};

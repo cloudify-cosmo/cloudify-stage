@@ -2,18 +2,9 @@
  * Created by Tamer on 30/07/2017.
  */
 import PluginsCatalogModal from './PluginsCatalogModal';
+import Actions from './Actions';
 
-/**
- * @class List
- * @augments {Component}
- */
 export default class PluginsCatalogList extends React.Component {
-    /**
-     * Creates an instance of List.
-     *
-     * @param {any} props
-     * @param {any} context
-     */
     constructor(props, context) {
         super(props, context);
         this.state = {
@@ -25,57 +16,34 @@ export default class PluginsCatalogList extends React.Component {
     }
 
     shouldComponentUpdate(nextProps, nextState) {
-        const { data, widget } = this.props;
+        const { items, widget } = this.props;
         return (
+            !_.isEqual(items, nextProps.items) ||
             !_.isEqual(widget, nextProps.widget) ||
-            !_.isEqual(this.state, nextState) ||
-            !_.isEqual(data, nextProps.data)
+            !_.isEqual(this.state, nextState)
         );
     }
 
-    /*
-  |--------------------------------------------------------------------------
-  | Custom Events
-  |--------------------------------------------------------------------------
-  */
-    /**
-     * onSuccess Event
-     *
-     * @param {any} msg
-     */
     onSuccess(msg) {
         this.setState({ success: msg });
     }
 
-    /**
-     * Modal Events
-     */
-    showModal() {
-        this.setState({ showModal: true });
+    onUpload(plugin) {
+        this.setState({ plugin });
+        this.showModal();
     }
 
     hideModal() {
         this.setState({ showModal: false });
     }
 
-    /**
-     * Upload Click Event
-     *
-     * @param plugin
-     */
-    onUpload(plugin) {
-        this.setState({ plugin });
-        this.showModal();
+    showModal() {
+        this.setState({ showModal: true });
     }
 
-    /*
-  |--------------------------------------------------------------------------
-  | React Renderer
-  |--------------------------------------------------------------------------
-  */
     render() {
         const { plugin, selected, showModal, success } = this.state;
-        const { actions, items: itemsProp, toolbox } = this.props;
+        const { items: itemsProp, toolbox, widget } = this.props;
         const NO_DATA_MESSAGE = "There are no Plugins available in catalog. Check widget's configuration.";
         const { DataTable, Message, Button } = Stage.Basic;
         const { PluginIcon } = Stage.Common;
@@ -146,9 +114,28 @@ export default class PluginsCatalogList extends React.Component {
                     onSuccess={this.onSuccess.bind(this)}
                     onHide={this.hideModal.bind(this)}
                     toolbox={toolbox}
-                    actions={actions}
+                    actions={
+                        new Actions({
+                            toolbox,
+                            ...widget.configuration
+                        })
+                    }
                 />
             </div>
         );
     }
 }
+
+PluginsCatalogList.propTypes = {
+    items: PropTypes.arrayOf(
+        PropTypes.shape({
+            description: PropTypes.string,
+            icon: PropTypes.string,
+            link: PropTypes.string,
+            title: PropTypes.string,
+            version: PropTypes.string
+        })
+    ).isRequired,
+    toolbox: Stage.PropTypes.Toolbox.isRequired,
+    widget: Stage.PropTypes.Widget.isRequired
+};

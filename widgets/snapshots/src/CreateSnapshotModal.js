@@ -158,11 +158,6 @@ export default class CreateModal extends React.Component {
 }
 
 CreateModal.propTypes = {
-    toolbox: PropTypes.shape({
-        getContext: PropTypes.func.isRequired,
-        getEventBus: PropTypes.func.isRequired
-    }).isRequired,
-    widget: PropTypes.shape({
-        id: PropTypes.string.isRequired
-    }).isRequired
+    toolbox: Stage.PropTypes.Toolbox.isRequired,
+    widget: Stage.PropTypes.Widget.isRequired
 };

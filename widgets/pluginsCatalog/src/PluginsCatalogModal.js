@@ -51,7 +51,7 @@ export default class PluginsCatalogModal extends React.Component {
   |--------------------------------------------------------------------------
   | Modal Events
   |--------------------------------------------------------------------------
-  */
+
 
     /**
      * onCancel
@@ -75,7 +75,7 @@ export default class PluginsCatalogModal extends React.Component {
         actions
             .doUpload(plugin, visibility)
             .then(() => {
-                this.setState({ errors: null, loading: false });
+                this.setState({ loading: false });
                 toolbox.getEventBus().trigger('plugins:refresh');
                 onHide();
                 onSuccess(`${plugin.title} Successfully uploaded`);
@@ -129,3 +129,18 @@ export default class PluginsCatalogModal extends React.Component {
         );
     }
 }
+
+PluginsCatalogModal.propTypes = {
+    actions: PropTypes.shape({
+        doUpload: PropTypes.func
+    }).isRequired,
+    onHide: PropTypes.func.isRequired,
+    onSuccess: PropTypes.func.isRequired,
+    open: PropTypes.bool.isRequired,
+    plugin: PropTypes.shape({ title: PropTypes.string }),
+    toolbox: Stage.PropTypes.Toolbox.isRequired
+};
+
+PluginsCatalogModal.defaultProps = {
+    plugin: null
+};

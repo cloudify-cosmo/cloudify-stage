@@ -3,6 +3,7 @@
  */
 
 import Actions from './actions';
+import UserPropType from './props/UserPropType';
 
 const { RolesPicker } = Stage.Common;
 const { RolesUtil } = Stage.Common;
@@ -141,3 +142,13 @@ export default class TenantModal extends React.Component {
         );
     }
 }
+
+TenantModal.propTypes = {
+    onHide: PropTypes.func.isRequired,
+    open: PropTypes.bool.isRequired,
+    tenants: PropTypes.shape({
+        items: PropTypes.array
+    }).isRequired,
+    toolbox: Stage.PropTypes.Toolbox.isRequired,
+    user: UserPropType.isRequired
+};

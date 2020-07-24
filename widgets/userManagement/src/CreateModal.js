@@ -43,11 +43,11 @@ export default class CreateModal extends React.Component {
 
             this.availableTenantsPromise.promise
                 .then(availableTenants => {
-                    this.setState({ error: null, availableTenants, loading: false });
+                    this.setState({ availableTenants, loading: false });
                 })
                 .catch(err => {
                     if (!err.isCanceled) {
-                        this.setState({ error: err.message, availableTenants: { items: [] }, loading: false });
+                        this.setState({ availableTenants: { items: [] }, loading: false });
                     }
                 });
         }
@@ -228,3 +228,5 @@ export default class CreateModal extends React.Component {
         );
     }
 }
+
+CreateModal.propTypes = { toolbox: Stage.PropTypes.Toolbox.isRequired };

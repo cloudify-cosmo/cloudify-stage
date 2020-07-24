@@ -4,6 +4,7 @@
 
 import Actions from './actions';
 import UserRoles from './UserRoles';
+import TenantPropType from './props/TenantPropType';
 
 export default class TenantDetails extends React.Component {
     constructor(props, context) {
@@ -16,9 +17,9 @@ export default class TenantDetails extends React.Component {
     }
 
     static propTypes = {
-        toolbox: PropTypes.object.isRequired,
-        tenant: PropTypes.object.isRequired,
-        onError: PropTypes.func
+        toolbox: Stage.PropTypes.Toolbox.isRequired,
+        tenant: TenantPropType.isRequired,
+        onError: PropTypes.func.isRequired
     };
 
     removeUser(username) {

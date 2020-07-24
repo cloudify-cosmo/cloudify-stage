@@ -5,8 +5,9 @@ import Actions from './actions';
 import CreateModal from './CreateSnapshotModal';
 import RestoreModal from './RestoreSnapshotModal.js';
 import UploadModal from './UploadSnapshotModal';
+import SnapshotPropType from './props/SnapshotPropType';
 
-export default class extends React.Component {
+export default class SnapshotsTable extends React.Component {
     constructor(props, context) {
         super(props, context);
 
@@ -204,3 +205,12 @@ export default class extends React.Component {
         );
     }
 }
+
+SnapshotsTable.propTypes = {
+    data: PropTypes.shape({
+        items: PropTypes.arrayOf(SnapshotPropType),
+        total: PropTypes.number
+    }).isRequired,
+    toolbox: Stage.PropTypes.Toolbox.isRequired,
+    widget: Stage.PropTypes.Widget.isRequired
+};

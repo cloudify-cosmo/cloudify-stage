@@ -1,6 +1,7 @@
 /**
  * Created by jakubniezgoda on 01/02/2017.
  */
+import TenantPropType from './props/TenantPropType';
 
 export default class MenuAction extends React.Component {
     static EDIT_USERS_ACTION = 'users';
@@ -10,7 +11,7 @@ export default class MenuAction extends React.Component {
     static DELETE_TENANT_ACTION = 'delete';
 
     static propTypes = {
-        tenant: PropTypes.object.isRequired,
+        tenant: TenantPropType.isRequired,
         onSelectAction: PropTypes.func.isRequired
     };
 

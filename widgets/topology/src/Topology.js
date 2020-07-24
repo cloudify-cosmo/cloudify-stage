@@ -314,7 +314,7 @@ export default class Topology extends React.Component {
     getCollapseHandler(stateProp) {
         return entityId => {
             const { [stateProp]: currentExpanded } = this.state;
-            this.setState({ [stateProp]: _.reject(currentExpanded, entityId) });
+            this.setState({ [stateProp]: _.without(currentExpanded, entityId) });
         };
     }
 
@@ -362,8 +362,7 @@ Topology.propTypes = {
         layout: PropTypes.object,
         icons: PropTypes.object
     }),
-    // eslint-disable-next-line react/forbid-prop-types
-    toolbox: PropTypes.object.isRequired
+    toolbox: Stage.PropTypes.Toolbox.isRequired
 };
 
 Topology.defaultProps = {

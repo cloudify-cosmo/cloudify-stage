@@ -1,5 +1,6 @@
 import SiteActions from './SiteActions';
 import SiteLocationInput from './SiteLocationInput';
+import SitePropType from './props/SitePropType';
 
 export default class UpdateModal extends React.Component {
     constructor(props, context) {
@@ -12,21 +13,6 @@ export default class UpdateModal extends React.Component {
         loading: false,
         errors: {},
         siteNewName: ''
-    };
-
-    /**
-     * propTypes
-     *
-     * @property {object} site Site object
-     * @property {object} toolbox Toolbox object
-     * @property {Function} onHide function to be called when the modal is closed
-     * @property {boolean} open specifies whether the update modal is displayed
-     */
-    static propTypes = {
-        site: PropTypes.object.isRequired,
-        toolbox: PropTypes.object.isRequired,
-        open: PropTypes.bool.isRequired,
-        onHide: PropTypes.func.isRequired
     };
 
     onApprove() {
@@ -121,3 +107,10 @@ export default class UpdateModal extends React.Component {
         );
     }
 }
+
+UpdateModal.propTypes = {
+    onHide: PropTypes.func.isRequired,
+    open: PropTypes.bool.isRequired,
+    site: SitePropType.isRequired,
+    toolbox: Stage.PropTypes.Toolbox.isRequired
+};

@@ -15,7 +15,7 @@ export default class SiteControl extends React.Component {
                 failed: PropTypes.array.isRequired
             }).isRequired
         }).isRequired,
-        toolbox: PropTypes.object.isRequired
+        toolbox: Stage.PropTypes.Toolbox.isRequired
     };
 
     goToDeploymentsPage(siteName) {
@@ -72,6 +72,8 @@ function SiteName({ name }) {
     return <Popup content={name} trigger={nameHeader(`${name.slice(0, maxNameLength - 3)}...`)} />;
 }
 
+SiteName.propTypes = { name: PropTypes.string.isRequired };
+
 function StateDescription({ description, value }) {
     return (
         <span>
@@ -79,3 +81,5 @@ function StateDescription({ description, value }) {
         </span>
     );
 }
+
+StateDescription.propTypes = { description: PropTypes.string.isRequired, value: PropTypes.number.isRequired };

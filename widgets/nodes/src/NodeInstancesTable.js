@@ -3,6 +3,7 @@
  */
 
 import InstanceModal from './NodeInstanceModal';
+import NodeInstancePropType from './props/NodeInstancePropType';
 
 const EMPTY_NODE_INSTANCE_OBJ = { id: '', relationships: [], runtime_properties: {} };
 
@@ -94,3 +95,9 @@ export default class NodeInstancesTable extends React.Component {
         );
     }
 }
+
+NodeInstancesTable.propTypes = {
+    instances: PropTypes.arrayOf(NodeInstancePropType).isRequired,
+    toolbox: Stage.PropTypes.Toolbox.isRequired,
+    widget: Stage.PropTypes.Widget.isRequired
+};
