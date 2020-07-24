@@ -257,6 +257,7 @@ export default class ExecutionWorkflowGraph extends React.Component {
     }
 
     render() {
+        const { containerHeight, selectedExecution, showStatus, toolbox } = this.props;
         const { containerWidth, error, graphResult, maximized, modalWidth } = this.state;
         const { Loading, Message, Modal } = Stage.Basic;
         const { containerHeight } = this.props;
