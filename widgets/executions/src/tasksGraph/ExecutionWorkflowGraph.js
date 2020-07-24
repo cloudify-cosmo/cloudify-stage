@@ -95,13 +95,17 @@ export default class ExecutionWorkflowGraph extends React.Component {
                 .then(tasksGraph => {
                     const { autoFocus, graphResult } = this.state;
                     if (graphResult !== tasksGraph) {
-                        this.setState({
-                            graphResult: tasksGraph,
-                            error: ''
-                        });
-                        if (autoFocus) {
-                            this.scrollToInProgress();
-                        }
+                        this.setState(
+                            {
+                                graphResult: tasksGraph,
+                                error: ''
+                            },
+                            () => {
+                                if (autoFocus) {
+                                    this.scrollToInProgress();
+                                }
+                            }
+                        );
                     }
                 })
                 .catch(error => {
