@@ -73,13 +73,11 @@ describe('Topology', () => {
 
         cy.log('Install the deployment');
         cy.executeWorkflow(deploymentId, 'install');
-        cy.reload().waitUntilLoaded();
-        cy.contains('install completed');
-
-        cy.contains('Deployment Info').click();
 
         cy.log('Check terraform module details');
-        cy.get('.nodeTopologyButton:eq(0)').click({ force: true });
+        cy.get('.nodeTopologyButton:eq(0)')
+            .should('not.have.css', 'visibility', 'hidden')
+            .click({ force: true });
         cy.get('.modal td:eq(0)').should('have.text', 'null_resource');
         cy.get('.modal td:eq(2)').should('have.text', 'provider.null');
         cy.get('.modal tr:eq(1) td:eq(1)').should('have.text', 'foo1');
