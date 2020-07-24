@@ -71,6 +71,7 @@ module.exports = r => {
         const _ = require('lodash');
 
         const elk = new ELK();
+        const logger = helper.Logger();
 
         const tasksGraphsFetchUrl = '/tasks_graphs';
         const operationsFetchUrl = '/operations';
@@ -107,15 +108,25 @@ module.exports = r => {
 
         const runGraphCreation = () => {
             const tasksGraphParams = { ...req.query };
+            const headers = _.pick(req.headers, ['authentication-token', 'tenant']);
 
-            let { headers } = req;
             const operationsList = [];
             helper.Manager.doGet(tasksGraphsFetchUrl, tasksGraphParams, headers)
                 .then(data => {
-                    headers = _.omit(headers, 'accept-encoding'); // Required otherwise the data is returned in bytes and screwed up
-                    const operationsPromises = _.map(data.items, graph =>
+                    const { items } = data;
+
+                    if (_.isEmpty(items)) {
+                        const { execution_id: id } = tasksGraphParams;
+                        const message = `No tasks graph for execution id=${id}.`;
+                        logger.info(message);
+                        res.status(404).send({ message });
+                        return;
+                    }
+
+                    const operationsPromises = _.map(items, graph =>
                         helper.Manager.doGet(operationsFetchUrl, { graph_id: graph.id }, headers)
                     );
+
                     Promise.all(operationsPromises)
                         .then(results => {
                             _.map(results[0].items, item => {
@@ -141,12 +152,12 @@ module.exports = r => {
                             });
                         })
                         .catch(error => {
-                            console.log(error);
+                            logger.error(error);
                             next(error);
                         });
                 })
                 .catch(error => {
-                    console.log(error);
+                    logger.error(error);
                     next(error);
                 });
         };
