@@ -108,7 +108,7 @@ module.exports = r => {
 
         const runGraphCreation = () => {
             const tasksGraphParams = { ...req.query };
-            const headers = _.pick(req.headers, ['authentication-token', 'tenant']);
+            const headers = _.pick(req.headers, 'authentication-token', 'tenant');
 
             const operationsList = [];
             helper.Manager.doGet(tasksGraphsFetchUrl, tasksGraphParams, headers)
@@ -116,8 +116,7 @@ module.exports = r => {
                     const { items } = data;
 
                     if (_.isEmpty(items)) {
-                        const { execution_id: id } = tasksGraphParams;
-                        const message = `No tasks graph for execution id=${id}.`;
+                        const message = `No tasks graph for execution id=${tasksGraphParams.execution_id}.`;
                         logger.info(message);
                         res.status(404).send({ message });
                         return;
