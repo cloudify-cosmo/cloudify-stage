@@ -55,22 +55,28 @@ export default class ExecutionWorkflowGraph extends React.Component {
 
     componentDidUpdate(prevProps) {
         const { containerWidth: stateContainerWidth, modalWidth: stateModalWidth } = this.state;
+        const newState = {};
 
         const containerWidth = _.get(this.wrapper.current, 'offsetWidth');
         if (containerWidth && containerWidth !== stateContainerWidth) {
-            this.setState({ containerWidth });
+            newState.containerWidth = containerWidth;
         }
 
         const modalWidth = _.get(this.modal.current, 'offsetWidth');
         if (modalWidth && modalWidth !== stateModalWidth) {
-            this.setState({ modalWidth });
+            newState.modalWidth = modalWidth;
         }
 
         const { selectedExecution } = this.props;
         const { id: newExecutionId } = selectedExecution;
         const { id: oldExecutionId } = prevProps.selectedExecution;
         if (newExecutionId !== oldExecutionId) {
-            this.setState({ graphResult: null, error: '' }, () => this.startPolling());
+            newState.graphResult = null;
+            newState.error = '';
+        }
+
+        if (!_.isEmpty(newState)) {
+            this.setState(newState, () => this.startPolling());
         }
     }
 
