@@ -29,8 +29,9 @@ export default class StageUtils {
         let hasCanceled = false;
 
         const wrappedPromise = new Promise((resolve, reject) => {
-            promise.then(val => (hasCanceled ? reject({ isCanceled: true }) : resolve(val)));
-            promise.catch(error => (hasCanceled ? reject({ isCanceled: true }) : reject(error)));
+            promise
+                .then(val => (hasCanceled ? reject({ isCanceled: true }) : resolve(val)))
+                .catch(error => (hasCanceled ? reject({ isCanceled: true }) : reject(error)));
         });
 
         return {

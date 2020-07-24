@@ -6,13 +6,16 @@ import GraphEdges from './GraphEdges';
 import GraphNodes from './GraphNodes';
 import states from './States';
 
-const POLLING_INTERVAL = 5000;
+const INACTIVE_EXECUTION_POLLING_INTERVAL = 5000;
+const ACTIVE_EXECUTION_POLLING_INTERVAL = 2500;
 
 const MIN_MODAL_GRAPH_HEIGHT = 300;
 const GRAPH_MARGIN = 25;
 
 const AUTO_FOCUS_ANIMATION_FRAMES = 30;
 const AUTO_FOCUS_ANIMATION_FRAME_DURATION = 15;
+
+const NO_TASKS_GRAPH_MESSAGE = 'The selected execution does not have a tasks graph';
 
 export default class ExecutionWorkflowGraph extends React.Component {
     static propTypes = {
@@ -41,6 +44,7 @@ export default class ExecutionWorkflowGraph extends React.Component {
         this.cancelablePromise = null;
         this.actOnExecution = this.actOnExecution.bind(this);
         this.startPolling = this.startPolling.bind(this); // Required for the setTimeout function which changes the scope for 'this'
+        this.stopPolling = this.stopPolling.bind(this);
         this.wrapper = React.createRef();
         this.modal = React.createRef();
     }
@@ -49,15 +53,24 @@ export default class ExecutionWorkflowGraph extends React.Component {
         this.startPolling();
     }
 
-    componentDidUpdate() {
+    componentDidUpdate(prevProps) {
         const { containerWidth: stateContainerWidth, modalWidth: stateModalWidth } = this.state;
+
         const containerWidth = _.get(this.wrapper.current, 'offsetWidth');
         if (containerWidth && containerWidth !== stateContainerWidth) {
             this.setState({ containerWidth });
         }
+
         const modalWidth = _.get(this.modal.current, 'offsetWidth');
         if (modalWidth && modalWidth !== stateModalWidth) {
             this.setState({ modalWidth });
+        }
+
+        const { selectedExecution } = this.props;
+        const { id: newExecutionId } = selectedExecution;
+        const { id: oldExecutionId } = prevProps.selectedExecution;
+        if (newExecutionId !== oldExecutionId) {
+            this.setState({ graphResult: null, error: '' }, () => this.startPolling());
         }
     }
 
@@ -70,28 +83,41 @@ export default class ExecutionWorkflowGraph extends React.Component {
     }
 
     startPolling() {
-        const { autoFocus, graphResult } = this.state;
-        this.cancelablePromise = Stage.Utils.makeCancelable(this.getTasksGraphPromise());
-        this.cancelablePromise.promise
-            .then(tasksGraph => {
-                if (graphResult !== tasksGraph) {
-                    this.setState({
-                        graphResult: tasksGraph,
-                        error: ''
-                    });
-                    if (autoFocus) {
-                        this.scrollToInProgress();
+        const fetchTasksGraph = () => {
+            this.cancelablePromise = Stage.Utils.makeCancelable(this.getTasksGraphPromise());
+            this.cancelablePromise.promise
+                .then(tasksGraph => {
+                    const { autoFocus, graphResult } = this.state;
+                    if (graphResult !== tasksGraph) {
+                        this.setState({
+                            graphResult: tasksGraph,
+                            error: ''
+                        });
+                        if (autoFocus) {
+                            this.scrollToInProgress();
+                        }
                     }
-                }
-            })
-            .catch(error => {
-                let errorMessage = error.message;
-                if (error.status === 404) errorMessage = 'The selected execution does not have a tasks graph';
-                this.setState({ error: errorMessage });
-                console.debug(error);
-                this.stopPolling();
-            });
-        this.timer = setTimeout(this.startPolling, POLLING_INTERVAL);
+                })
+                .catch(error => {
+                    const { message } = error;
+                    this.setState({
+                        graphResult: null,
+                        error: error.status === 404 ? NO_TASKS_GRAPH_MESSAGE : message
+                    });
+                });
+
+            const { selectedExecution } = this.props;
+            const { isActiveExecution } = Stage.Utils.Execution;
+            this.timer = setTimeout(
+                fetchTasksGraph,
+                isActiveExecution(selectedExecution)
+                    ? ACTIVE_EXECUTION_POLLING_INTERVAL
+                    : INACTIVE_EXECUTION_POLLING_INTERVAL
+            );
+        };
+
+        this.stopPolling();
+        fetchTasksGraph();
     }
 
     stopPolling() {
@@ -226,20 +252,34 @@ export default class ExecutionWorkflowGraph extends React.Component {
 
     render() {
         const { containerWidth, error, graphResult, maximized, modalWidth } = this.state;
-        const { ErrorMessage, Loading, Message, Modal } = Stage.Basic;
+        const { Loading, Message, Modal } = Stage.Basic;
         const { containerHeight } = this.props;
-        if (graphResult !== null) {
-            const height = graphResult.height + 2 * GRAPH_MARGIN + 8;
-            return (
-                <>
-                    <ErrorMessage error={error} />
+        const { selectedExecution, showStatus, toolbox } = this.props;
+
+        const { LastExecutionStatusIcon } = Stage.Common;
+
+        return (
+            <div>
+                {showStatus && !graphResult && (
+                    <LastExecutionStatusIcon
+                        execution={selectedExecution}
+                        onActOnExecution={this.actOnExecution}
+                        showLabel
+                        labelAttached={false}
+                        toolbox={toolbox}
+                    />
+                )}
+
+                {error && <Message error={error !== NO_TASKS_GRAPH_MESSAGE}>{error}</Message>}
+
+                {graphResult && (
                     <div ref={this.wrapper} style={{ position: 'relative' }}>
                         {this.renderGraph(Math.max(0, containerWidth - 1), containerHeight, 'position')}
                         <Modal open={maximized} onClose={() => this.setState({ maximized: false })} size="fullscreen">
                             <div ref={this.modal}>
                                 {this.renderGraph(
                                     modalWidth,
-                                    Math.max(MIN_MODAL_GRAPH_HEIGHT, height),
+                                    Math.max(MIN_MODAL_GRAPH_HEIGHT, graphResult.height + 2 * GRAPH_MARGIN + 8),
                                     'modalPosition',
                                     false,
                                     true
@@ -247,23 +287,13 @@ export default class ExecutionWorkflowGraph extends React.Component {
                             </div>
                         </Modal>
                     </div>
-                </>
-            );
-        }
-        if (error) {
-            return (
-                <div id="graphContainer">
-                    <Message>
-                        <Message.Header>Note</Message.Header>
-                        <p>This execution has no tasks graph to display.</p>
-                    </Message>
-                </div>
-            );
-        }
+                )}
 
-        return (
-            <div id="graphContainerLoading">
-                <Loading />
+                {!graphResult && !error && (
+                    <div style={{ height: 200 }}>
+                        <Loading />
+                    </div>
+                )}
             </div>
         );
     }
