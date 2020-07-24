@@ -176,7 +176,7 @@ export default class ExecutionWorkflowGraph extends React.Component {
         const { LastExecutionStatusIcon } = Stage.Common;
         return (
             <>
-                {showStatus && (
+                {showStatus && !minimap && (
                     <div style={{ position: 'absolute', top: 2, left: 2, zIndex: 1, opacity: 1 }}>
                         <LastExecutionStatusIcon
                             execution={selectedExecution}
