@@ -31,13 +31,17 @@ RevertToDefaultIcon.defaultProps = {
     onClick: _.noop
 };
 
-const HelpProperty = ({ show, name, value }) =>
-    show && (
-        <>
-            <Header as="h4">{name}</Header>
-            <div>{value}</div>
-        </>
+const HelpProperty = ({ show, name, value }) => {
+    const { Header } = Stage.Basic;
+    return (
+        show && (
+            <>
+                <Header as="h4">{name}</Header>
+                <div>{value}</div>
+            </>
+        )
     );
+};
 
 HelpProperty.propTypes = {
     name: PropTypes.string.isRequired,
@@ -193,7 +197,7 @@ class InputsUtils {
     }
 
     static getHelp(description, type, constraints, defaultValue, dataType) {
-        const { Header, List } = Stage.Basic;
+        const { List } = Stage.Basic;
         const { ParameterValue } = Stage.Common;
 
         const example = !_.isUndefined(defaultValue)
