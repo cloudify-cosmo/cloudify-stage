@@ -28,7 +28,7 @@ describe('Executions', () => {
             .contains('install')
             .click();
 
-        cy.log('Check if Task Graph is is visible');
+        cy.log('Check if Task Graph is visible');
         cy.get('.executionsWidget svg').should('be.visible');
     });
 
@@ -46,8 +46,24 @@ describe('Executions', () => {
             .as('statusLabel');
 
         cy.get('@statusLabel').trigger('mouseover');
-        cy.get('.modal .header').should('have.text', 'Last Execution');
+        cy.get('.popup .header').should('have.text', 'Last Execution');
         cy.get('@statusLabel').trigger('mouseout');
+    });
+
+    it('provides message when there is no Task Execution Graph', () => {
+        cy.get('.tabular.menu')
+            .contains('a.item', 'History')
+            .click();
+
+        cy.log('Check if Executions widget has table rows');
+        cy.get('.executionsWidget')
+            .contains('tr', 'create_deployment_environment')
+            .click();
+
+        cy.log('Check if message is provided');
+        cy.get('.executionsTable .message')
+            .should('be.visible')
+            .should('have.text', 'The selected execution does not have a tasks graph');
     });
 
     describe('provides Task Execution Graph', () => {
