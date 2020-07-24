@@ -5,8 +5,9 @@ describe('Topology', () => {
     const blueprintId = `${resourcePrefix}bp`;
     const deploymentId = `${resourcePrefix}dep`;
     const pluginWagonUrl =
-        'http://repository.cloudifysource.org/cloudify/wagons/cloudify-terraform-plugin/0.13.1/cloudify_terraform_plugin-0.13.1-py27-none-linux_x86_64-redhat-Maipo.wgn';
-    const pluginYamlUrl = 'http://www.getcloudify.org/spec/terraform-plugin/0.13.1/plugin.yaml';
+        'https://github.com/cloudify-cosmo/cloudify-terraform-plugin/releases/download/0.13.4/cloudify_terraform_plugin-0.13.4-redhat-Maipo-py27.py36-none-linux_x86_64.wgn';
+    const pluginYamlUrl =
+        'https://github.com/cloudify-cosmo/cloudify-terraform-plugin/releases/download/0.13.4/plugin.yaml';
     const blueprintFile = 'blueprints/topology.zip';
 
     before(() => {
@@ -25,10 +26,10 @@ describe('Topology', () => {
     });
 
     it('is presented in Blueprint page', () => {
-        // Navigate to Local Blueprints page
+        cy.log('Navigate to Local Blueprints page');
         cy.get('.local_blueprintsPageMenuItem').click();
 
-        // Use search to limit number of presented blueprints
+        cy.log('Use search to limit number of presented blueprints');
         cy.route(/console\/sp\/\?su=\/blueprints/).as('getBlueprints');
         cy.get('.blueprintsTable div.input input')
             .clear()
@@ -37,20 +38,20 @@ describe('Topology', () => {
         cy.wait('@getBlueprints');
         cy.wait('@getSummary');
 
-        // Go into Blueprint page
+        cy.log('Go into Blueprint page');
         cy.get(`#blueprintsTable_${blueprintId} > td > .blueprintName`).click();
 
-        // Check Topology widget
+        cy.log('Check Topology widget');
         cy.get('.widgetItem > div > .widgetContent > div > .scrollGlass').click();
         cy.contains('#gridContainer > #gridSvg > #gridContent > .nodeContainer > .title', 'terraform');
         cy.contains('#gridContainer > #gridSvg > #gridContent > .nodeContainer > .title', 'cloud_resources');
     });
 
     it('is presented in Deployment page', () => {
-        // Navigate to Deployments page
+        cy.log('Navigate to Deployments page');
         cy.get('.deploymentsPageMenuItem').click();
 
-        // Use search to limit number of presented deployments
+        cy.log('Use search to limit number of presented deployments');
         cy.route(/console\/sp\/\?su=\/deployments/).as('getDeployments');
         cy.route(/console\/sp\/\?su=\/executions/).as('getExecutions');
         cy.get('.segmentList div.input input')
@@ -61,23 +62,22 @@ describe('Topology', () => {
         cy.wait('@getSummary');
         cy.wait('@getExecutions');
 
-        // Go into Deployment page
+        cy.log('Go into Deployment page');
         cy.get(`.ui.segment.${deploymentId} > .ui > .row`).click();
 
-        // Check Topology widget
+        cy.log('Check Topology widget');
+        cy.contains('Deployment Info').click();
         cy.get('.widgetItem > div > .widgetContent > div > .scrollGlass').click();
         cy.contains('#gridContainer > #gridSvg > #gridContent > .nodeContainer > .title', 'terraform');
         cy.contains('#gridContainer > #gridSvg > #gridContent > .nodeContainer > .title', 'cloud_resources');
 
-        // Install the deployment
+        cy.log('Install the deployment');
         cy.executeWorkflow(deploymentId, 'install');
-        cy.get('.executionsTable tr:eq(2)');
-        cy.get('.executionsTable tr:eq(1)').contains('completed');
 
-        cy.reload();
-
-        // Check terraform module details
-        cy.get('.nodeTopologyButton:eq(0)').click({ force: true });
+        cy.log('Check terraform module details');
+        cy.get('.nodeTopologyButton:eq(0)')
+            .should('not.have.css', 'visibility', 'hidden')
+            .click({ force: true });
         cy.get('.modal td:eq(0)').should('have.text', 'null_resource');
         cy.get('.modal td:eq(2)').should('have.text', 'provider.null');
         cy.get('.modal tr:eq(1) td:eq(1)').should('have.text', 'foo1');
