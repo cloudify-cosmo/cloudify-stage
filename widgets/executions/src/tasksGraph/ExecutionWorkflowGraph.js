@@ -10,7 +10,7 @@ const INACTIVE_EXECUTION_POLLING_INTERVAL = 5000;
 const ACTIVE_EXECUTION_POLLING_INTERVAL = 2500;
 
 const MIN_MODAL_GRAPH_HEIGHT = 300;
-const GRAPH_MARGIN = 30;
+const GRAPH_MARGIN = 25;
 
 const AUTO_FOCUS_ANIMATION_FRAMES = 30;
 const AUTO_FOCUS_ANIMATION_FRAME_DURATION = 15;
@@ -105,13 +105,12 @@ export default class ExecutionWorkflowGraph extends React.Component {
         const height = maximized
             ? Math.max(MIN_MODAL_GRAPH_HEIGHT, graphResult.height + 2 * GRAPH_MARGIN)
             : containerHeight;
-
-        this.scrollTo(
-            GRAPH_MARGIN / 2,
-            GRAPH_MARGIN / 2,
-            Math.min(width / (graphResult.width + GRAPH_MARGIN), height / (graphResult.height + GRAPH_MARGIN)),
-            false
+        const zoom = Math.min(
+            (width - 2 * GRAPH_MARGIN) / graphResult.width,
+            (height - 2 * GRAPH_MARGIN) / graphResult.height
         );
+
+        this.scrollTo(GRAPH_MARGIN, GRAPH_MARGIN, zoom, false);
     }
 
     startPolling() {
