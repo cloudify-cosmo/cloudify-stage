@@ -8,11 +8,22 @@ export default class PluginsTable extends React.Component {
 
         this.state = {
             error: null,
-            force: true,
+            force: false,
             confirmDelete: false,
             showUploadModal: false,
             hoveredPlugin: false
         };
+
+        this.deletePlugin = this.deletePlugin.bind(this);
+        this.fetchGridData = this.fetchGridData.bind(this);
+        this.hideUploadModal = this.hideUploadModal.bind(this);
+        this.handleForceChange = this.handleForceChange.bind(this);
+        this.showUploadModal = this.showUploadModal.bind(this);
+    }
+
+    componentDidMount() {
+        const { toolbox } = this.props;
+        toolbox.getEventBus().on('plugins:refresh', this.refreshData, this);
     }
 
     shouldComponentUpdate(nextProps, nextState) {
@@ -22,6 +33,27 @@ export default class PluginsTable extends React.Component {
             !_.isEqual(this.state, nextState) ||
             !_.isEqual(data, nextProps.data)
         );
+    }
+
+    componentWillUnmount() {
+        const { toolbox } = this.props;
+        toolbox.getEventBus().off('plugins:refresh', this.refreshData);
+    }
+
+    setPluginVisibility(pluginId, visibility) {
+        const { toolbox } = this.props;
+        const actions = new Stage.Common.PluginActions(toolbox);
+        toolbox.loading(true);
+        actions
+            .doSetVisibility(pluginId, visibility)
+            .then(() => {
+                toolbox.loading(false);
+                toolbox.refresh();
+            })
+            .catch(err => {
+                toolbox.loading(false);
+                this.setState({ error: err.message });
+            });
     }
 
     selectPlugin(item) {
@@ -40,7 +72,7 @@ export default class PluginsTable extends React.Component {
         this.setState({
             confirmDelete: true,
             item,
-            force: true
+            force: false
         });
     }
 
@@ -78,22 +110,6 @@ export default class PluginsTable extends React.Component {
             });
     }
 
-    setPluginVisibility(pluginId, visibility) {
-        const { toolbox } = this.props;
-        const actions = new Stage.Common.PluginActions(toolbox);
-        toolbox.loading(true);
-        actions
-            .doSetVisibility(pluginId, visibility)
-            .then(() => {
-                toolbox.loading(false);
-                toolbox.refresh();
-            })
-            .catch(err => {
-                toolbox.loading(false);
-                this.setState({ error: err.message });
-            });
-    }
-
     showUploadModal() {
         this.setState({ showUploadModal: true });
     }
@@ -111,26 +127,16 @@ export default class PluginsTable extends React.Component {
         this.setState(Stage.Basic.Form.fieldNameValue(field));
     }
 
-    componentDidMount() {
-        const { toolbox } = this.props;
-        toolbox.getEventBus().on('plugins:refresh', this.refreshData, this);
-    }
-
-    componentWillUnmount() {
-        const { toolbox } = this.props;
-        toolbox.getEventBus().off('plugins:refresh', this.refreshData);
-    }
-
     fetchGridData(fetchParams) {
         const { toolbox } = this.props;
         return toolbox.refresh(fetchParams);
     }
 
     render() {
-        const { confirmDelete, error, force, hoveredPlugin, item, showUploadModal } = this.state;
+        const { confirmDelete, error, force, hoveredPlugin, item: selectedPlugin, showUploadModal } = this.state;
         const { data, toolbox, widget } = this.props;
         const NO_DATA_MESSAGE = 'There are no Plugins available. Click "Upload" to add Plugins.';
-        const { Button, DataTable, ErrorMessage, ResourceVisibility } = Stage.Basic;
+        const { Button, DataTable, ErrorMessage, Icon, ResourceVisibility } = Stage.Basic;
         const { IdPopup } = Stage.Shared;
         const { DeleteConfirm, UploadPluginModal, PluginIcon } = Stage.Common;
 
@@ -139,7 +145,7 @@ export default class PluginsTable extends React.Component {
                 <ErrorMessage error={error} onDismiss={() => this.setState({ error: null })} autoHide />
 
                 <DataTable
-                    fetchData={this.fetchGridData.bind(this)}
+                    fetchData={this.fetchGridData}
                     totalSize={data.total}
                     pageSize={widget.configuration.pageSize}
                     sortColumn={widget.configuration.sortColumn}
@@ -165,7 +171,7 @@ export default class PluginsTable extends React.Component {
                             <DataTable.Row
                                 key={item.id}
                                 selected={item.isSelected}
-                                onClick={this.selectPlugin.bind(this, item)}
+                                onClick={() => this.selectPlugin(item)}
                                 onMouseOver={() =>
                                     hoveredPlugin !== item.id && this.setState({ hoveredPlugin: item.id })
                                 }
@@ -193,15 +199,19 @@ export default class PluginsTable extends React.Component {
                                 <DataTable.Data>{item.uploaded_at}</DataTable.Data>
                                 <DataTable.Data>{item.created_by}</DataTable.Data>
                                 <DataTable.Data className="center aligned rowActions">
-                                    <i
-                                        className="download icon link bordered"
+                                    <Icon
+                                        name="download"
+                                        link
+                                        bordered
                                         title="Download"
-                                        onClick={this.downloadPlugin.bind(this, item)}
+                                        onClick={event => this.downloadPlugin(item, event)}
                                     />
-                                    <i
-                                        className="trash icon link bordered"
+                                    <Icon
+                                        name="trash"
+                                        link
+                                        bordered
                                         title="Delete"
-                                        onClick={this.deletePluginConfirm.bind(this, item)}
+                                        onClick={event => this.deletePluginConfirm(item, event)}
                                     />
                                 </DataTable.Data>
                             </DataTable.Row>
@@ -209,24 +219,23 @@ export default class PluginsTable extends React.Component {
                     })}
 
                     <DataTable.Action>
-                        <Button
-                            content="Upload"
-                            icon="upload"
-                            labelPosition="left"
-                            onClick={this.showUploadModal.bind(this)}
-                        />
+                        <Button content="Upload" icon="upload" labelPosition="left" onClick={this.showUploadModal} />
                     </DataTable.Action>
                 </DataTable>
 
-                <UploadPluginModal open={showUploadModal} toolbox={toolbox} onHide={this.hideUploadModal.bind(this)} />
+                <UploadPluginModal open={showUploadModal} toolbox={toolbox} onHide={this.hideUploadModal} />
 
                 <DeleteConfirm
-                    resourceName={`plugin ${_.get(item, 'package_name', '')} v${_.get(item, 'package_version', '')}`}
+                    resourceName={`plugin ${_.get(selectedPlugin, 'package_name', '')} v${_.get(
+                        selectedPlugin,
+                        'package_version',
+                        ''
+                    )}`}
                     force={force}
                     open={confirmDelete}
-                    onConfirm={this.deletePlugin.bind(this)}
+                    onConfirm={this.deletePlugin}
                     onCancel={() => this.setState({ confirmDelete: false })}
-                    onForceChange={this.handleForceChange.bind(this)}
+                    onForceChange={this.handleForceChange}
                 />
             </div>
         );

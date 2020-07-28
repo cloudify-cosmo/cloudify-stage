@@ -41,7 +41,7 @@
   "dependencies": {
     "better-console": "^0.2.4",
     "blueimp-md5": "^2.7.0",
-    "cloudify-blueprint-topology": "^2.3.3",
+    "cloudify-blueprint-topology": "^2.3.5",
     "cloudify-ui-common": "1.6.2",
     "cloudify-ui-components": "1.2.0",
     "connected-react-router": "^6.5.2",
@@ -149,7 +149,7 @@
     "selenium-server-standalone-jar": "^3.141.5",
     "sinon": "^1.17.6",
     "sinon-chai": "^2.8.0",
-    "size-limit": "^4.5.0",
+    "size-limit": "^4.5.5",
     "source-map-loader": "^0.2.4",
     "style-loader": "^1.0.0",
     "timekeeper": "^1.0.0",

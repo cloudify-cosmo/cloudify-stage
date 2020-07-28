@@ -312,9 +312,9 @@ export default class Topology extends React.Component {
     }
 
     getCollapseHandler(stateProp) {
-        return entityId => {
+        return entityToCollapse => {
             const { [stateProp]: currentExpanded } = this.state;
-            this.setState({ [stateProp]: _.without(currentExpanded, entityId) });
+            this.setState({ [stateProp]: _.reject(currentExpanded, entity => _.isEqual(entity, entityToCollapse)) });
         };
     }
 

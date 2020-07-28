@@ -43,6 +43,8 @@ export default class ExecutionWorkflowGraph extends React.Component {
         this.timer = null;
         this.cancelablePromise = null;
         this.actOnExecution = this.actOnExecution.bind(this);
+        this.fitToView = this.fitToView.bind(this);
+        this.scrollToInProgress = this.scrollToInProgress.bind(this);
         this.startPolling = this.startPolling.bind(this); // Required for the setTimeout function which changes the scope for 'this'
         this.stopPolling = this.stopPolling.bind(this);
         this.wrapper = React.createRef();
@@ -50,27 +52,40 @@ export default class ExecutionWorkflowGraph extends React.Component {
     }
 
     componentDidMount() {
-        this.startPolling();
+        this.startPolling().then(() => {
+            const { graphResult } = this.state;
+            if (graphResult) {
+                this.fitToView();
+            }
+        });
     }
 
     componentDidUpdate(prevProps) {
         const { containerWidth: stateContainerWidth, modalWidth: stateModalWidth } = this.state;
+        const newState = {};
+        let setStateCallback = _.noop;
 
         const containerWidth = _.get(this.wrapper.current, 'offsetWidth');
         if (containerWidth && containerWidth !== stateContainerWidth) {
-            this.setState({ containerWidth });
+            newState.containerWidth = containerWidth;
         }
 
         const modalWidth = _.get(this.modal.current, 'offsetWidth');
         if (modalWidth && modalWidth !== stateModalWidth) {
-            this.setState({ modalWidth });
+            newState.modalWidth = modalWidth;
         }
 
         const { selectedExecution } = this.props;
         const { id: newExecutionId } = selectedExecution;
         const { id: oldExecutionId } = prevProps.selectedExecution;
         if (newExecutionId !== oldExecutionId) {
-            this.setState({ graphResult: null, error: '' }, () => this.startPolling());
+            newState.graphResult = null;
+            newState.error = '';
+            setStateCallback = this.startPolling;
+        }
+
+        if (!_.isEmpty(newState)) {
+            this.setState(newState, setStateCallback);
         }
     }
 
@@ -82,6 +97,22 @@ export default class ExecutionWorkflowGraph extends React.Component {
         this.setState({ error });
     }
 
+    fitToView() {
+        const { containerHeight } = this.props;
+        const { containerWidth, graphResult, maximized, modalWidth } = this.state;
+
+        const width = maximized ? modalWidth : Math.max(0, containerWidth - 1);
+        const height = maximized
+            ? Math.max(MIN_MODAL_GRAPH_HEIGHT, graphResult.height + 2 * GRAPH_MARGIN)
+            : containerHeight;
+        const zoom = Math.min(
+            (width - 2 * GRAPH_MARGIN) / graphResult.width,
+            (height - 2 * GRAPH_MARGIN) / graphResult.height
+        );
+
+        this.scrollTo(GRAPH_MARGIN, GRAPH_MARGIN, zoom, false);
+    }
+
     startPolling() {
         const fetchTasksGraph = () => {
             this.cancelablePromise = Stage.Utils.makeCancelable(this.getTasksGraphPromise());
@@ -89,13 +120,17 @@ export default class ExecutionWorkflowGraph extends React.Component {
                 .then(tasksGraph => {
                     const { autoFocus, graphResult } = this.state;
                     if (graphResult !== tasksGraph) {
-                        this.setState({
-                            graphResult: tasksGraph,
-                            error: ''
-                        });
-                        if (autoFocus) {
-                            this.scrollToInProgress();
-                        }
+                        this.setState(
+                            {
+                                graphResult: tasksGraph,
+                                error: ''
+                            },
+                            () => {
+                                if (autoFocus) {
+                                    this.scrollToInProgress();
+                                }
+                            }
+                        );
                     }
                 })
                 .catch(error => {
@@ -114,10 +149,12 @@ export default class ExecutionWorkflowGraph extends React.Component {
                     ? ACTIVE_EXECUTION_POLLING_INTERVAL
                     : INACTIVE_EXECUTION_POLLING_INTERVAL
             );
+
+            return this.cancelablePromise.promise;
         };
 
         this.stopPolling();
-        fetchTasksGraph();
+        return fetchTasksGraph();
     }
 
     stopPolling() {
@@ -170,7 +207,7 @@ export default class ExecutionWorkflowGraph extends React.Component {
         const { LastExecutionStatusIcon } = Stage.Common;
         return (
             <>
-                {showStatus && (
+                {showStatus && !minimap && (
                     <div style={{ position: 'absolute', top: 2, left: 2, zIndex: 1, opacity: 1 }}>
                         <LastExecutionStatusIcon
                             execution={selectedExecution}
@@ -192,17 +229,9 @@ export default class ExecutionWorkflowGraph extends React.Component {
                     <Icon
                         name="expand arrows alternate"
                         link
-                        onClick={() =>
-                            this.scrollTo(
-                                GRAPH_MARGIN / 2,
-                                GRAPH_MARGIN,
-                                Math.min(
-                                    width / (graphResult.width + GRAPH_MARGIN),
-                                    height / (graphResult.height + GRAPH_MARGIN)
-                                ),
-                                false
-                            )
-                        }
+                        onClick={() => {
+                            this.setState({ autoFocus: false }, this.fitToView);
+                        }}
                         title="Fit to view"
                     />
                     {openInModalIcon ? (
@@ -251,11 +280,9 @@ export default class ExecutionWorkflowGraph extends React.Component {
     }
 
     render() {
+        const { containerHeight, selectedExecution, showStatus, toolbox } = this.props;
         const { containerWidth, error, graphResult, maximized, modalWidth } = this.state;
         const { Loading, Message, Modal } = Stage.Basic;
-        const { containerHeight } = this.props;
-        const { selectedExecution, showStatus, toolbox } = this.props;
-
         const { LastExecutionStatusIcon } = Stage.Common;
 
         return (
@@ -279,7 +306,7 @@ export default class ExecutionWorkflowGraph extends React.Component {
                             <div ref={this.modal}>
                                 {this.renderGraph(
                                     modalWidth,
-                                    Math.max(MIN_MODAL_GRAPH_HEIGHT, graphResult.height + 2 * GRAPH_MARGIN + 8),
+                                    Math.max(MIN_MODAL_GRAPH_HEIGHT, graphResult.height + 2 * GRAPH_MARGIN),
                                     'modalPosition',
                                     false,
                                     true
