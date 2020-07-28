@@ -8,7 +8,7 @@ export default class PluginsTable extends React.Component {
 
         this.state = {
             error: null,
-            force: true,
+            force: false,
             confirmDelete: false,
             showUploadModal: false,
             hoveredPlugin: false
@@ -72,7 +72,7 @@ export default class PluginsTable extends React.Component {
         this.setState({
             confirmDelete: true,
             item,
-            force: true
+            force: false
         });
     }
 
