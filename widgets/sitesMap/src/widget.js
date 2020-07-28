@@ -12,7 +12,7 @@ Stage.defineWidget({
     hasStyle: true,
     permission: Stage.GenericConfig.WIDGET_PERMISSION('sitesMap'),
     categories: [Stage.GenericConfig.CATEGORY.SPIRE],
-    supportedEditions: [Stage.Common.Consts.licenseEdition.spire],
+    supportedEditions: [Stage.Common.Consts.licenseEdition.premium, Stage.Common.Consts.licenseEdition.spire],
     initialConfiguration: [
         Stage.GenericConfig.POLLING_TIME_CONFIG(10),
         {

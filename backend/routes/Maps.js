@@ -5,9 +5,20 @@ const request = require('request');
 
 const config = require('../config').get();
 const logger = require('../handler/LoggerHandler').getLogger('Maps');
+const ServerSettings = require('../serverSettings');
 
 const router = express.Router();
+
+function validateEdition(req, res, next) {
+    if (ServerSettings.settings.mode === ServerSettings.MODE_COMMUNITY) {
+        logger.error(`Endpoint ${req.baseUrl} not available in community edition.`);
+        res.sendStatus(403);
+    }
+    next();
+}
+
 router.use(passport.authenticate('cookie', { session: false }));
+router.use(validateEdition);
 
 router.get('/:z/:x/:y/:r?', (req, res) => {
     const { x, y, z, r = '' } = req.params;
