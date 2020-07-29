@@ -28,6 +28,9 @@ export default class MenuAction extends React.Component {
         const { PopupMenu, Menu } = Stage.Basic;
         const { WorkflowsMenu } = Stage.Common;
 
+        const installWorkflow = _.find(item.workflows, ['name', 'install']);
+        const uninstallWorkflow = _.find(item.workflows, ['name', 'uninstall']);
+
         return (
             <PopupMenu className="menuAction segmentMenuAction">
                 <Menu pointing vertical>
@@ -42,6 +45,7 @@ export default class MenuAction extends React.Component {
                             />
                         </Menu.Menu>
                     </Menu.Item>
+                    <Menu.Item icon="play" content="Install" onClick={() => this.workflowClick(installWorkflow)} />
                     <Menu.Item
                         icon="edit"
                         content="Update"
@@ -53,6 +57,11 @@ export default class MenuAction extends React.Component {
                         content="Set Site"
                         name={MenuAction.SET_SITE_ACTION}
                         onClick={this.actionClick.bind(this)}
+                    />
+                    <Menu.Item
+                        icon="recycle"
+                        content="Uninstall"
+                        onClick={() => this.workflowClick(uninstallWorkflow)}
                     />
                     <Menu.Item
                         icon="trash alternate"
