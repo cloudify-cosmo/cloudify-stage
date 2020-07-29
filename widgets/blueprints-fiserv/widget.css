@@ -1,0 +1,14 @@
+.blueprintCatalog .actionButtons {
+    position: absolute !important;
+    bottom: 1rem;
+    right: 1rem;
+}
+
+.blueprintCatalog .actionButtons > button {
+    margin-right: 1rem;
+}
+
+.uploadBlueprintButton {
+    z-index: 5;
+    float: right;
+}
