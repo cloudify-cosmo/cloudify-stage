@@ -44,35 +44,32 @@ export default function({ blueprintId, open, onHide, properties, toolbox }) {
         });
 
         const newInputs = {};
-        function fillInputs(propertiesMap, parentPropValue) {
+        function fillInputs(propertiesMap, nested) {
             _.each(propertiesMap, (property, propertyName) => {
                 if (!newInputs[propertyName]) {
-                    newInputs[propertyName] = { possibleValues: [] };
+                    newInputs[propertyName] = { dependantProperties: [] };
                 }
 
                 if (_.isPlainObject(property)) {
-                    newInputs[propertyName].possibleValues.push(
-                        ..._.map(property, (allowedProperties, value) => ({
-                            value,
-                            allows: _.mapValues(allowedProperties, allowedValues =>
-                                _.isPlainObject(allowedValues) ? _.keys(allowedValues) : allowedValues
-                            )
-                        }))
+                    // has dependant properties
+                    _.each(
+                        property,
+                        dependantProperties =>
+                            (newInputs[propertyName].dependantProperties = _.uniq([
+                                ...newInputs[propertyName].dependantProperties,
+                                ..._.keys(dependantProperties)
+                            ]))
                     );
-                } else if (_.isArray(property)) {
-                    newInputs[propertyName].possibleValues.push(...property.map(value => ({ value })));
                 }
 
-                newInputs[propertyName].possibleValues = _.uniqBy(newInputs[propertyName].possibleValues, 'value');
-
-                if (parentPropValue) {
+                if (nested) {
                     newInputs[propertyName].values = [];
                 } else {
-                    newInputs[propertyName].values = _.map(newInputs[propertyName].possibleValues, 'value');
+                    newInputs[propertyName].values = _.isPlainObject(property) ? _.keys(property) : property;
                 }
 
                 if (_.isPlainObject(property)) {
-                    _.each(property, childProperty => fillInputs(childProperty, {}));
+                    _.each(property, childProperty => fillInputs(childProperty, true));
                 }
             });
         }
@@ -86,34 +83,49 @@ export default function({ blueprintId, open, onHide, properties, toolbox }) {
             updatedInputs[propertyName].values = [];
         }
 
-        _.each(inputs[propertyName].possibleValues, ({ allows }) =>
-            _.each(allows, (values, dependantProperty) => clearValue(updatedInputs, dependantProperty, true))
+        _.each(inputs[propertyName].dependantProperties, dependantProperty =>
+            clearValue(updatedInputs, dependantProperty, true)
         );
+    }
+
+    function findDependantProperties(propertiesSubTree, name, value) {
+        if (propertiesSubTree[name] && propertiesSubTree[name][value]) {
+            return propertiesSubTree[name][value];
+        }
+
+        for (const parentPropertyName of _.keys(propertiesSubTree)) {
+            const propertyValue = inputs[parentPropertyName].currentValue;
+            if (propertyValue && propertiesSubTree[parentPropertyName][propertyValue]) {
+                const dependantProperties = findDependantProperties(
+                    propertiesSubTree[parentPropertyName][propertyValue],
+                    name,
+                    value
+                );
+                if (dependantProperties) {
+                    return dependantProperties;
+                }
+            }
+        }
+
+        return null;
     }
 
     function handleInputChange(event, { name, value }) {
         setErrors({});
         const updatedInputs = _.clone(inputs);
+
+        // recursively clear values of dependant fields
+        clearValue(updatedInputs, name);
+
         if (value) {
             updatedInputs[name].currentValue = value;
-            // set values for dependant fields
-            _.chain(inputs[name].possibleValues)
-                .find({ value })
-                .get('allows')
-                .each((values, property) => {
-                    updatedInputs[property].values = values;
-                    if (
-                        updatedInputs[property].currentValue &&
-                        !_.includes(values, updatedInputs[property].currentValue)
-                    ) {
-                        clearValue(updatedInputs, property);
-                    }
-                })
-                .value();
-        } else {
-            // recursively clear values of dependant fields
-            clearValue(updatedInputs, name);
+            // recursively traverse properties tree to set values for dependant fields
+            const dependantProperties = findDependantProperties(properties, name, value);
+            _.each(dependantProperties, (values, propertyName) => {
+                updatedInputs[propertyName].values = _.isPlainObject(values) ? _.keys(values) : values;
+            });
         }
+
         setInputs(updatedInputs);
     }
 
@@ -180,7 +192,7 @@ export default function({ blueprintId, open, onHide, properties, toolbox }) {
                                 disabled={_.isEmpty(input.values)}
                                 selection
                                 name={inputName}
-                                value={input.currentValue}
+                                value={input.currentValue || ''}
                                 options={_.map(input.values, value => ({ key: value, value, text: value }))}
                                 onChange={handleInputChange}
                             ></Form.Dropdown>
