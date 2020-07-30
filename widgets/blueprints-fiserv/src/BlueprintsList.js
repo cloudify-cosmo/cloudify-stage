@@ -118,6 +118,13 @@ export default class BlueprintList extends React.Component {
         const { Button, ErrorMessage } = Stage.Basic;
         const { DeleteConfirm, UploadBlueprintModal } = Stage.Common;
 
+        let properties;
+        try {
+            properties = JSON.parse(this.props.widget.configuration.properties);
+        } catch (e) {
+            properties = {};
+        }
+
         return (
             <div>
                 <ErrorMessage error={this.state.error} onDismiss={() => this.setState({ error: null })} autoHide />
@@ -156,7 +163,7 @@ export default class BlueprintList extends React.Component {
                     blueprintId={this.state.blueprintId}
                     onHide={this._hideDeploymentModal.bind(this)}
                     toolbox={this.props.toolbox}
-                    properties={JSON.parse(this.props.widget.configuration.properties || '{}')[this.state.blueprintId]}
+                    properties={properties[this.state.blueprintId]}
                 />
 
                 <UploadBlueprintModal
