@@ -208,7 +208,7 @@ export default class Topology extends React.Component {
         }
 
         expandedTerraformNodes.forEach(terraformNodeData => {
-            const terraformNode = _.find(topology.nodes, node => _.matches(node.templateData, terraformNodeData));
+            const terraformNode = _.find(topology.nodes, node => _.isMatch(node.templateData, terraformNodeData));
             const terraformDeploymentNodes = _.map(terraformNode.templateData.terraformResources, resource => {
                 const newNode = {
                     name: resource.name,
