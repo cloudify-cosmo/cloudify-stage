@@ -14,7 +14,15 @@ Stage.defineWidget({
 
     initialConfiguration: [
         { id: 'label', name: 'Button label', default: 'Button Link', type: Stage.Basic.GenericField.STRING },
-        { id: 'url', name: 'URL address', default: '', type: Stage.Basic.GenericField.STRING }
+        { id: 'url', name: 'URL address', default: '', type: Stage.Basic.GenericField.STRING },
+        { id: 'fullHeight', name: 'Full height', default: false, type: Stage.Basic.GenericField.BOOLEAN_TYPE },
+        {
+            id: 'color',
+            name: 'Color',
+            default: '#21ba45',
+            type: Stage.Basic.GenericField.CUSTOM_TYPE,
+            component: Stage.Basic.Form.ColorPicker
+        }
     ],
     isReact: true,
     hasReadme: true,
@@ -22,18 +30,29 @@ Stage.defineWidget({
 
     render(widget, data, error, toolbox) {
         const { Button } = Stage.Basic;
+        const { color, fullHeight, label, url } = widget.configuration;
+
+        const style = { color: 'white' };
+
+        if (fullHeight) {
+            style.height = 'calc(100% + 14px)';
+        }
+
+        if (color) {
+            style.backgroundColor = color;
+        }
 
         return (
             <Button
                 className="labeled icon"
-                color="green"
                 fluid
                 icon="external"
-                disabled={!widget.configuration.url}
+                disabled={!url}
                 onClick={() => {
-                    window.open(widget.configuration.url, '_blank');
+                    window.open(url, '_blank');
                 }}
-                content={widget.configuration.label}
+                content={label}
+                style={style}
             />
         );
     }
