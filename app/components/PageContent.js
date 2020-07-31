@@ -29,8 +29,14 @@ export default function PageContent({
     const [activeTab, setActiveTab] = useState(0);
     const [tabIndexToRemove, setTabIndexToRemove] = useState();
 
+    const updateActiveTab = () => setActiveTab(Math.max(_.findIndex(page.tabs, { isDefault: true }), 0));
+
     useEffect(() => {
-        setActiveTab(Math.max(_.findIndex(page.tabs, { isDefault: true }), 0));
+        updateActiveTab();
+    }, []);
+
+    useEffect(() => {
+        if (!isEditMode) updateActiveTab();
     }, [page]);
 
     function filterWidgets(widgetsContainer) {

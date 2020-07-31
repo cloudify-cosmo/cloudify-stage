@@ -37,7 +37,10 @@ class SitesMap extends React.Component {
             // Widget properties change doesn't affect immediately DOM changes,
             // so it's necessary to wait a bit till DOM is updated.
             const refreshAfterDimensionChangeTimeout = 500;
-            setTimeout(() => this.mapRef.current.leafletElement.invalidateSize(), refreshAfterDimensionChangeTimeout);
+            setTimeout(() => {
+                const { current } = this.mapRef;
+                if (current && current.leafletElement) current.leafletElement.invalidateSize();
+            }, refreshAfterDimensionChangeTimeout);
         }
     }
 

@@ -102,6 +102,7 @@ describe('Filter', () => {
             cy.contains('Runtime only evaluation').click();
             cy.contains('.modal button', 'Deploy').click();
 
+            cy.contains('Deployments').click();
             cy.get('.deploymentFilterField input').type(deploymentName);
             cy.get(`div[option-value=${deploymentName}]`).click();
 
