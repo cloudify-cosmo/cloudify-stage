@@ -50,6 +50,7 @@ describe('Outputs/Capabilities', () => {
 
             cy.log('Go into Deployment page');
             cy.get(`.ui.segment.${deploymentName} > .ui > .row`).click();
+            cy.contains('Deployment Info').click();
 
             checkTable();
         });
