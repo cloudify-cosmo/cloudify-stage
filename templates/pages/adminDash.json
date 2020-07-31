@@ -2,22 +2,11 @@
   "name": "Dashboard",
   "widgets": [
     {
-      "name": "Deployment Wizard Buttons",
-      "width": 2,
-      "height": 11,
-      "definition": "deploymentWizardButtons",
-      "x": 0,
-      "y": 0,
-      "configuration": {
-        "helloWorldWizardButtonLabel": "Get started with the Hello World Wizard"
-      }
-    },
-    {
       "name": "Number of blueprints",
       "width": 2,
       "height": 8,
       "definition": "blueprintNum",
-      "x": 2,
+      "x": 0,
       "y": 0,
       "configuration":{
         "page": "local_blueprints"
@@ -28,7 +17,7 @@
       "width": 2,
       "height": 8,
       "definition": "deploymentNum",
-      "x": 4,
+      "x": 2,
       "y": 0,
       "configuration":{
         "page": "deployments"
@@ -39,7 +28,7 @@
       "width": 2,
       "height": 8,
       "definition": "pluginsNum",
-      "x": 6,
+      "x": 4,
       "y": 0,
       "configuration":{
         "page": "system_resources"
@@ -50,7 +39,7 @@
       "width": 2,
       "height": 8,
       "definition": "nodesComputeNum",
-      "x": 8,
+      "x": 6,
       "y": 0
     },
     {
@@ -58,7 +47,7 @@
       "width": 2,
       "height": 8,
       "definition": "executionNum",
-      "x": 10,
+      "x": 8,
       "y": 0
     },
     {
@@ -66,7 +55,7 @@
       "width": 2,
       "height": 3,
       "definition": "blueprintUploadButton",
-      "x": 2,
+      "x": 0,
       "y": 8
     },
     {
@@ -74,7 +63,7 @@
       "width": 2,
       "height": 3,
       "definition": "deploymentButton",
-      "x": 4,
+      "x": 2,
       "y": 8
     },
     {
@@ -82,7 +71,7 @@
       "width": 2,
       "height": 3,
       "definition": "pluginUploadButton",
-      "x": 6,
+      "x": 4,
       "y": 8
     },
     {
@@ -122,6 +111,19 @@
       "definition": "executionsStatus",
       "x": 8,
       "y": 38
+    },
+    {
+      "name": "Button link",
+      "width": 2,
+      "height": 8,
+      "configuration": {
+        "label": "Getting Started Walkthrough",
+        "url": "https://docs.cloudify.co/latest/trial_getting_started/examples/",
+        "fullHeight": true
+      },
+      "definition": "buttonLink",
+      "x": 10,
+      "y": 0
     }
   ]
 }

@@ -14,7 +14,8 @@ Stage.defineWidget({
 
     initialConfiguration: [
         { id: 'label', name: 'Button label', default: 'Button Link', type: Stage.Basic.GenericField.STRING },
-        { id: 'url', name: 'URL address', default: '', type: Stage.Basic.GenericField.STRING }
+        { id: 'url', name: 'URL address', default: '', type: Stage.Basic.GenericField.STRING },
+        { id: 'fullHeight', name: 'Full height', default: false, type: Stage.Basic.GenericField.BOOLEAN_TYPE }
     ],
     isReact: true,
     hasReadme: true,
@@ -34,6 +35,7 @@ Stage.defineWidget({
                     window.open(widget.configuration.url, '_blank');
                 }}
                 content={widget.configuration.label}
+                style={widget.configuration.fullHeight ? { height: 'calc(100% + 14px)' } : null}
             />
         );
     }
