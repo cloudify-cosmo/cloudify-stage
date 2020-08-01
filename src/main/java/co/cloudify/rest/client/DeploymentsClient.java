@@ -102,8 +102,7 @@ public class DeploymentsClient extends AbstractCloudifyClient {
      * 
      * @return A {@link Deployment} instance for the new deployment.
      */
-    public Deployment create(final String id, final Blueprint blueprint,
-            final Map<String, Object> inputs) {
+    public Deployment create(final String id, final Blueprint blueprint, final Map<String, Object> inputs) {
         return create(id, blueprint.getId(), inputs);
     }
 
@@ -116,8 +115,7 @@ public class DeploymentsClient extends AbstractCloudifyClient {
      * 
      * @return A {@link Deployment} instance for the new deployment.
      */
-    public Deployment create(final String id, final String blueprintId,
-            final Map<String, Object> inputs) {
+    public Deployment create(final String id, final String blueprintId, final Map<String, Object> inputs) {
         try {
             return getDeploymentIdBuilder(id).put(
                     Entity.json(
@@ -156,6 +154,8 @@ public class DeploymentsClient extends AbstractCloudifyClient {
      * Deletes a deployment. Note: this operation is asynchronous.
      * 
      * @param id deployment to delete
+     * 
+     * @return The deleted deployment.
      */
     public Deployment delete(final String id) {
         try {

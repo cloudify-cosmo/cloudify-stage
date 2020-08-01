@@ -23,26 +23,24 @@ public class ExecutionsHelper {
     /**
      * Starts an execution and optionally follow it until it is done.
      * 
-     * @param client       a {@link CloudifyClient} pointing at Cloudify Manager
-     * @param deploymentId deployment to start execution for
-     * @param workflowId   workflow to start
-     * @param parameters   workflow parameters
-     * @param callback     an {@link ExecutionFollowCallback} instance to use for
-     *                     callbacks; may be <code>null</code>, in which case it
-     *                     won't be followed. For a no-op following (that is, just
-     *                     wait until execution is over), use
-     *                     {@link DefaultExecutionFollowCallback}
+     * @param client          a {@link CloudifyClient} pointing at Cloudify Manager
+     * @param deploymentId    deployment to start execution for
+     * @param workflowId      workflow to start
+     * @param parameters      workflow parameters
+     * @param callback        an {@link ExecutionFollowCallback} instance to use for
+     *                        callbacks; may be <code>null</code>, in which case it
+     *                        won't be followed. For a no-op following (that is,
+     *                        just wait until execution is over), use
+     *                        {@link DefaultExecutionFollowCallback}
+     * @param pollingInterval number of milliseconds between polling iterations
      * 
      * @return The updated {@link Execution} object.
      * 
      * @throws Exception May be anything thrown by Cloudify's REST client.
      */
-    public static Execution start(final CloudifyClient client,
-            final String deploymentId,
-            final String workflowId,
-            final Map<String, Object> parameters,
-            ExecutionFollowCallback callback,
-            final long pollingInterval) throws Exception {
+    public static Execution start(final CloudifyClient client, final String deploymentId, final String workflowId,
+            final Map<String, Object> parameters, ExecutionFollowCallback callback, final long pollingInterval)
+            throws Exception {
         ExecutionsClient executionsClient = client.getExecutionsClient();
         Execution execution = executionsClient.start(deploymentId, workflowId, parameters);
         if (callback != null) {
@@ -54,13 +52,14 @@ public class ExecutionsHelper {
     /**
      * Run the "install" workflow.
      * 
-     * @param client       a {@link CloudifyClient} pointing at Cloudify Manager
-     * @param deploymentId deployment to start execution for
-     * @param callback     an {@link ExecutionFollowCallback} instance to use for
-     *                     callbacks; may be <code>null</code>, in which case it
-     *                     won't be followed. For a no-op following (that is, just
-     *                     wait until execution is over), use
-     *                     {@link DefaultExecutionFollowCallback}
+     * @param client          a {@link CloudifyClient} pointing at Cloudify Manager
+     * @param deploymentId    deployment to start execution for
+     * @param callback        an {@link ExecutionFollowCallback} instance to use for
+     *                        callbacks; may be <code>null</code>, in which case it
+     *                        won't be followed. For a no-op following (that is,
+     *                        just wait until execution is over), use
+     *                        {@link DefaultExecutionFollowCallback}
+     * @param pollingInterval number of milliseconds between polling iterations
      * 
      * @return The updated {@link Execution} object.
      * 
@@ -74,14 +73,15 @@ public class ExecutionsHelper {
     /**
      * Run the "uninstall" workflow.
      * 
-     * @param client        a {@link CloudifyClient} pointing at Cloudify Manager
-     * @param deploymentId  deployment to start execution for
-     * @param ignoreFailure whether to ignore failures during uninstall
-     * @param callback      an {@link ExecutionFollowCallback} instance to use for
-     *                      callbacks; may be <code>null</code>, in which case it
-     *                      won't be followed. For a no-op following (that is, just
-     *                      wait until execution is over), use
-     *                      {@link DefaultExecutionFollowCallback}
+     * @param client          a {@link CloudifyClient} pointing at Cloudify Manager
+     * @param deploymentId    deployment to start execution for
+     * @param ignoreFailure   whether to ignore failures during uninstall
+     * @param callback        an {@link ExecutionFollowCallback} instance to use for
+     *                        callbacks; may be <code>null</code>, in which case it
+     *                        won't be followed. For a no-op following (that is,
+     *                        just wait until execution is over), use
+     *                        {@link DefaultExecutionFollowCallback}
+     * @param pollingInterval number of milliseconds between polling iterations
      * 
      * @return The updated {@link Execution} object.
      * 
@@ -103,6 +103,9 @@ public class ExecutionsHelper {
      * @param pollingInterval  number of milliseconds to wait between pollings
      * 
      * @return The most up-to-date representation of the execution.
+     * 
+     * @throws Exception Thrown if an exception occurred while following the
+     *                   execution.
      */
     public static Execution followExecution(final ExecutionsClient executionsClient, Execution execution,
             ExecutionFollowCallback callback, long pollingInterval) throws Exception {
@@ -133,14 +136,15 @@ public class ExecutionsHelper {
     }
 
     /**
-     * Validates an execution: if its status is not {@link ExecutionStatus#terminated},
-     * an exception is raised.
+     * Validates an execution: if its status is not
+     * {@link ExecutionStatus#terminated}, an exception is raised.
      * 
      * @param execution execution to validate
      * @param msg       message exception message, in case validation failed
      * @param args      parameters for the exception message
      * 
-     * @throws ExecutionNotCompletedException Thrown when the execution fails validation.
+     * @throws ExecutionNotCompletedException Thrown when the execution fails
+     *                                        validation.
      */
     public static void validateCompleted(final Execution execution, final String msg, final Object... args)
             throws ExecutionNotCompletedException {

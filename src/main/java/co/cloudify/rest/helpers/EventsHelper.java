@@ -16,7 +16,9 @@ public class EventsHelper {
     /**
      * Returns the string representation of an event/log record.
      * 
-     * @param event event/log record
+     * @param event        event/log record
+     * @param includeLevel if <code>true</code>, then the event's logging level will
+     *                     be included
      * 
      * @return String representation.
      */

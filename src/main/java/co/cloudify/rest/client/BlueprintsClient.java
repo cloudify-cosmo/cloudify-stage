@@ -89,15 +89,10 @@ public class BlueprintsClient extends AbstractCloudifyClient {
      * @throws IOException I/O issue encountered while reading archive.
      */
     public Blueprint uploadArchive(final String id, final File archive, final String main) throws IOException {
-        Builder builder = getBuilder(
-                getBlueprintTarget(id)
-                        .queryParam("application_file_name", main));
+        Builder builder = getBuilder(getBlueprintTarget(id).queryParam("application_file_name", main));
         try (InputStream is = new FileInputStream(archive)) {
             try {
-                return builder.put(
-                        Entity.entity(
-                                is, MediaType.APPLICATION_OCTET_STREAM),
-                        Blueprint.class);
+                return builder.put(Entity.entity(is, MediaType.APPLICATION_OCTET_STREAM), Blueprint.class);
             } catch (WebApplicationException ex) {
                 throw CloudifyClientException.create("Failed uploading blueprint", ex);
             }
@@ -186,6 +181,8 @@ public class BlueprintsClient extends AbstractCloudifyClient {
      * Deletes a blueprint.
      * 
      * @param id ID of blueprint to delete
+     * 
+     * @return The deleted blueprint.
      */
     public Blueprint delete(final String id) {
         try {

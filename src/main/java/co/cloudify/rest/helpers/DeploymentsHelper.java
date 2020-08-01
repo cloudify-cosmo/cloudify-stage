@@ -22,20 +22,21 @@ public class DeploymentsHelper {
     /**
      * Creates a deployment and wait for the creation process to finish.
      * 
-     * @param client      {@link CloudifyClient} instance
-     * @param id          deployment ID
-     * @param blueprintId blueprint ID
-     * @param inputs      deployment inputs
-     * @param callback    an {@link ExecutionFollowCallback} instance containing
-     *                    callback methods
+     * @param client          {@link CloudifyClient} instance
+     * @param id              deployment ID
+     * @param blueprintId     blueprint ID
+     * @param inputs          deployment inputs
+     * @param callback        an {@link ExecutionFollowCallback} instance containing
+     *                        callback methods
+     * @param pollingInterval number of milliseconds between polling iterations
      * 
      * @return The created {@link Deployment} instance.
      * 
      * @throws Exception All exceptions are percolated.
      */
     public static Deployment createDeploymentAndWait(CloudifyClient client, String id, String blueprintId,
-            final Map<String, Object> inputs, final ExecutionFollowCallback callback,
-            final long pollingInterval) throws Exception {
+            final Map<String, Object> inputs, final ExecutionFollowCallback callback, final long pollingInterval)
+            throws Exception {
         DeploymentsClient deploymentsClient = client.getDeploymentsClient();
         Deployment deployment = deploymentsClient.create(id, blueprintId, inputs);
 
@@ -61,8 +62,9 @@ public class DeploymentsHelper {
     /**
      * Deletes a deployment and waits until it's deleted.
      * 
-     * @param client a {@link CloudifyClient} instance
-     * @param id     ID of deployment to delete
+     * @param client          a {@link CloudifyClient} instance
+     * @param id              ID of deployment to delete
+     * @param pollingInterval number of milliseconds between polling iterations
      */
     public static void deleteDeploymentAndWait(CloudifyClient client, String id, final long pollingInterval) {
         DeploymentsClient deploymentsClient = client.getDeploymentsClient();
