@@ -1,3 +1,5 @@
+@Library('pipeline-shared-library')
+
 pipeline {
   agent {
     kubernetes {
@@ -15,39 +17,17 @@ pipeline {
   }
 
   environment {
-    branch = "${env.BRANCH_NAME}"
-    workspace = "${env.WORKSPACE}"
-    target_dir = "cloudify-java-rest-client-${env.BUILD_NUMBER}"
-    cloudify_java_rest_client = 'https://raw.githubusercontent.com/cloudify-cosmo/cloudify-java-rest-client'
+    BRANCH = "${env.BRANCH_NAME}"
+    WORKSPACE = "${env.WORKSPACE}"
+    PROJECT = "cloudify-ui-components"
   }
 
   stages {
     stage('Compile') {
       steps {
-        checkout(
-            [
-                $class: 'GitSCM',
-                branches: [[name: "${branch}"]],
-                doGenerateSubmoduleConfigurations: false,
-                extensions: [
-                    [
-                        $class: 'RelativeTargetDirectory',
-                        relativeTargetDir: "${target_dir}"
-                    ]
-                ],
-                submoduleCfg: [],
-                userRemoteConfigs: [
-                    [
-                        credentialsId: '9f6aca75-ebff-4045-9919-b8ec6b5ccf9d',
-                        url: 'https://github.com/cloudify-cosmo/cloudify-java-rest-client.git'
-                    ]
-                ]
-            ]
-        )
-
         container('mvn'){
-          dir("${target_dir}") {
-            echo "Maevn Clean Compile"
+          dir("${env.WORKSPACE}/${env.PROJECT}") {
+            echo "Maven Clean Compile"
             sh 'mvn clean compile'
           }
         }
@@ -57,7 +37,7 @@ pipeline {
     stage('Test') {
       steps {
         container('mvn'){
-          dir("${target_dir}") {
+          dir("${env.WORKSPACE}/${env.PROJECT}") {
             echo "Maven Test"
             sh 'mvn test'
           }
@@ -68,9 +48,23 @@ pipeline {
     stage('Install') {
       steps {
         container('mvn'){
-          dir("${target_dir}") {
+          dir("${env.WORKSPACE}/${env.PROJECT}") {
             echo "Maven Install"
             sh 'mvn install'
+          }
+        }
+      }
+    }
+    
+    stage('Deploy') {
+      when {
+        expression { return env.BRANCH =~ /^publish-v.*/ }
+      }
+      steps {
+        container('mvn'){
+          dir("${env.WORKSPACE}/${env.PROJECT}") {
+            echo "Maven Deploy"
+            sh 'mvn clean deploy'
           }
         }
       }
