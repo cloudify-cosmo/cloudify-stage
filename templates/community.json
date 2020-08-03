@@ -4,7 +4,7 @@
 
   "pages": [
     "app",
-    "catalog-community",
+    "catalog",
     "blueprints-community",
     "deploy",
     "systemResources-community",

@@ -2,26 +2,65 @@
   "name": "Cloudify Catalog",
   "widgets": [
     {
-      "name": "Blueprints Catalog",
-      "definition": "blueprintCatalog",
-      "width": 12,
-      "height": 24,
-      "x": 0,
-      "y": 0
-    },
-    {
       "name": "Plugins Catalog",
       "definition": "pluginsCatalog",
       "width": 12,
       "height": 24,
       "x": 0,
       "y": 24
+    }
+  ],
+  "tabs": [
+    {
+      "name": "VM Blueprint Examples",
+      "widgets": [
+        {
+          "name": "Blueprints Catalog",
+          "definition": "blueprintCatalog",
+          "width": 12,
+          "height": 24,
+          "x": 0,
+          "y": 0,
+          "configuration": {
+            "jsonPath": "https://repository.cloudifysource.org/cloudify/blueprints/5.1/vm-examples.json",
+            "displayStyle": "catalog"
+          }
+        }
+      ]
     },
     {
-      "name": "Composer link",
-      "definition": "composerLink",
-      "x": 0,
-      "y": 48
+      "name": "Kubernetes Blueprint Examples",
+      "widgets": [
+        {
+          "name": "Blueprints Catalog",
+          "definition": "blueprintCatalog",
+          "width": 12,
+          "height": 24,
+          "x": 0,
+          "y": 0,
+          "configuration": {
+            "jsonPath": "https://repository.cloudifysource.org/cloudify/blueprints/5.1/k8s-examples.json",
+            "displayStyle": "catalog"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Orchestrator Blueprint Examples",
+      "widgets": [
+        {
+          "name": "Blueprints Catalog",
+          "definition": "blueprintCatalog",
+          "width": 12,
+          "height": 24,
+          "x": 0,
+          "y": 0,
+          "configuration": {
+            "jsonPath": "https://repository.cloudifysource.org/cloudify/blueprints/5.1/orc-examples.json",
+            "displayStyle": "catalog"
+          }
+        }
+      ]
     }
   ]
 }
