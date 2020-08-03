@@ -128,7 +128,6 @@
         "connectToStore": true,
         "d3": true,
         "L": true,
-        "markdown": true,
         "moment": true,
         "React": true,
 
