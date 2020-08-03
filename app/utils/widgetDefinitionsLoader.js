@@ -7,7 +7,6 @@ import ScriptLoader from './scriptLoader';
 import StyleLoader from './StyleLoader';
 import 'd3';
 import momentImport from 'moment';
-import markdownImport from 'markdown';
 
 import * as Basic from '../components/basic';
 import * as Shared from '../components/shared';
@@ -48,7 +47,6 @@ export default class WidgetDefinitionsLoader {
         };
 
         window.moment = momentImport;
-        window.markdown = markdownImport;
     }
 
     static loadWidgets(manager) {

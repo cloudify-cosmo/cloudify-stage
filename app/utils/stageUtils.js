@@ -5,6 +5,7 @@
 import md5 from 'blueimp-md5';
 import _ from 'lodash';
 import { saveAs } from 'file-saver';
+import marked from 'marked';
 import { GenericField } from '../components/basic';
 
 import ExecutionUtils from './shared/ExecutionUtils';
@@ -20,6 +21,8 @@ export default class StageUtils {
     static Time = TimeUtils;
 
     static Url = UrlUtils;
+
+    static parseMarkdown = marked;
 
     static saveAs() {
         saveAs(...arguments);

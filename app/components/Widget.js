@@ -3,6 +3,7 @@
  */
 
 import PropTypes from 'prop-types';
+import marked from 'marked';
 
 import React, { Component } from 'react';
 
@@ -47,7 +48,7 @@ export default class Widget extends Component {
         let readmeContent = '';
 
         if (!_.isEmpty(readme)) {
-            readmeContent = markdown.parse(widget.definition.readme);
+            readmeContent = marked(widget.definition.readme);
         }
         this.setState({ readmeContent, showReadmeModal: true });
     }

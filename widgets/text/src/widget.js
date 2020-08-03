@@ -77,7 +77,7 @@ Stage.defineWidget({
 
     render(widget, data, error, toolbox) {
         const header = widget.configuration.header ? widget.configuration.header : '';
-        const content = widget.configuration.content ? markdown.parse(widget.configuration.content) : '';
+        const content = widget.configuration.content ? Stage.Utils.parseMarkdown(widget.configuration.content) : '';
 
         const headerStyle = {
             fontFamily: widget.configuration.headerTextFont,
