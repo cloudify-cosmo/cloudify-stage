@@ -157,6 +157,7 @@ export default class PluginsTable extends React.Component {
                 >
                     <DataTable.Column name="id" />
                     <DataTable.Column />
+                    <DataTable.Column label="Plugin" name="title" width="20%" />
                     <DataTable.Column label="Package name" name="package_name" width="20%" />
                     <DataTable.Column label="Package version" name="package_version" width="10%" />
                     <DataTable.Column label="Supported platform" name="supported_platform" width="10%" />
@@ -192,6 +193,7 @@ export default class PluginsTable extends React.Component {
                                         className="rightFloated"
                                     />
                                 </DataTable.Data>
+                                <DataTable.Data>{item.package_name}</DataTable.Data>
                                 <DataTable.Data>{item.package_version}</DataTable.Data>
                                 <DataTable.Data>{item.supported_platform}</DataTable.Data>
                                 <DataTable.Data>{item.distribution}</DataTable.Data>
