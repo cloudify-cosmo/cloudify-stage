@@ -7,7 +7,7 @@ import { mount } from 'enzyme';
 import { expect } from 'chai';
 import sinon from 'sinon';
 
-import GridItem from '../../app/components/layout/GridItem';
+import GridItem from '../../app/components/layout/GridItem.jsx';
 
 describe('(Component) GridItem', () => {
     const wrapper = mount(

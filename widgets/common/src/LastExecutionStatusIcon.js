@@ -99,8 +99,9 @@ export default class LastExecutionStatusIcon extends React.Component {
                                 allowShowingPopup={false}
                                 showLabel={showLabel}
                                 showWorkflowId={showLabel}
-                                labelProps={{ attached: labelAttached ? 'top left' : undefined }}
-                                iconProps={{ attached: showLabel ? undefined : 'top left', size: 'large' }}
+                                labelAttached={labelAttached ? 'top left' : undefined}
+                                iconAttached={showLabel ? undefined : 'top left'}
+                                iconSize="large"
                             />
                         </div>
                     </Popup.Trigger>

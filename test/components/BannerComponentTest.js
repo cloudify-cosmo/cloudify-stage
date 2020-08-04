@@ -11,7 +11,7 @@ import configureMockStore from 'redux-mock-store';
 import { MemoryRouter as Router } from 'react-router-dom';
 import Consts from '../../app/utils/consts.js';
 import ConnectedBanner from '../../app/containers/banner/Banner.js';
-import Banner from '../../app/components/banner/Banner.js';
+import Banner from '../../app/components/banner/Banner.jsx';
 import * as BasicComponents from '../../app/components/basic';
 
 import { createToolbox } from '../../app/utils/Toolbox';

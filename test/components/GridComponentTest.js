@@ -7,8 +7,8 @@ import { shallow, mount } from 'enzyme';
 import { expect } from 'chai';
 import sinon from 'sinon';
 
-import Grid from '../../app/components/layout/Grid';
-import GridItem from '../../app/components/layout/GridItem';
+import Grid from '../../app/components/layout/Grid.jsx';
+import GridItem from '../../app/components/layout/GridItem.jsx';
 
 describe('(Component) Grid ', () => {
     it('Renders Non-Edit mode', () => {

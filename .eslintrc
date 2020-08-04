@@ -65,21 +65,21 @@
         "prefer-rest-params": ["warn"],
         "prefer-spread": ["warn"],
         "radix": ["warn"],
-        "react/button-has-type": ["warn"],
-        "react/no-find-dom-node": ["warn"],
-        "react/jsx-filename-extension": ["warn"],
-        "react/jsx-no-bind": ["warn"],
-        "react/jsx-no-target-blank": ["warn"],
-        "react/jsx-no-undef": ["warn"],
-        "react/jsx-props-no-spreading": ["warn"],
-        "react/no-access-state-in-setstate": ["warn"],
-        "react/no-array-index-key": ["warn"],
-        "react/no-did-update-set-state": ["warn"],
-        "react/no-string-refs": ["warn"],
-        "react/no-unescaped-entities": ["warn"],
-        "react/prefer-stateless-function": ["warn"],
-        "react/sort-comp": ["warn"],
-        "react/static-property-placement": ["warn"],
+//        "react/button-has-type": ["warn"],
+//        "react/no-find-dom-node": ["warn"],
+//        "react/jsx-filename-extension": ["warn"],
+//        "react/jsx-no-bind": ["warn"],
+//        "react/jsx-no-target-blank": ["warn"],
+//        "react/jsx-no-undef": ["warn"],
+//        "react/jsx-props-no-spreading": ["warn"],
+//        "react/no-access-state-in-setstate": ["warn"],
+//        "react/no-array-index-key": ["warn"],
+//        "react/no-did-update-set-state": ["warn"],
+//        "react/no-string-refs": ["warn"],
+//        "react/no-unescaped-entities": ["warn"],
+//        "react/prefer-stateless-function": ["warn"],
+//        "react/sort-comp": ["warn"],
+//        "react/static-property-placement": ["warn"],
         "vars-on-top": ["warn"]
     },
     "settings": {
@@ -100,7 +100,7 @@
             }
         },
         {
-            "files": ["widgets/**/*.js"],
+            "files": ["widgets/**/*.js", "widgets/**/*.jsx"],
             "globals": {
                 "PropTypes": true
             }

@@ -31,7 +31,7 @@ module.exports = (env, argv) => {
                 enforce: 'pre'
             },
             {
-                test: /\.js?$/,
+                test: /\.js(x?)$/,
                 exclude: /node_modules/,
                 use: [
                     {
@@ -149,6 +149,7 @@ module.exports = (env, argv) => {
             context,
             devtool,
             resolve: {
+                extensions: ['.js', '.jsx'],
                 alias: {
                     'jquery-ui': 'jquery-ui/ui',
                     jquery: `${__dirname}/node_modules/jquery` // Always make sure we take jquery from the same place
