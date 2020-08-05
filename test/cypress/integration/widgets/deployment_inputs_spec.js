@@ -11,7 +11,7 @@ describe('Deployments - Create new deployment modal', () => {
                 cy.get('input').type(`${blueprintName}`);
                 cy.get(`div[option-value="${blueprintName}"]`).click();
             });
-        cy.log('Waiting for blueprint to load and modal to be operational.')
+        cy.log('Waiting for blueprint to load and modal to be operational.');
         cy.contains('Deployment inputs').should('be.visible');
     };
 
