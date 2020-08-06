@@ -3,16 +3,16 @@ describe('Deployments - Create new deployment modal', () => {
     const firstInputNthChild = 8;
 
     const selectBlueprintInModal = type => {
+        const blueprintName = `${blueprintPrefix}${type}_type`;
+        cy.log(`Selecting blueprint: ${blueprintName}.`);
         cy.get('.modal form div[name="blueprintName"]')
             .click()
             .within(() => {
-                cy.get('input').type(`${blueprintPrefix}${type}`);
-                cy.get(`div[option-value="${blueprintPrefix}${type}_type"]`).click();
+                cy.get('input').type(`${blueprintName}`);
+                cy.get(`div[option-value="${blueprintName}"]`).click();
             });
-        cy.get('div.deployBlueprintModal div.ui.text.loader')
-            .as('loader')
-            .should('be.visible');
-        cy.get('@loader', { timeout: 5000 }).should('not.be.visible');
+        cy.log('Waiting for blueprint to load and modal to be operational.');
+        cy.contains('Deployment inputs').should('be.visible');
     };
 
     const checkAttribute = (input, attrName, attrValue) => {

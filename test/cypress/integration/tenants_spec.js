@@ -21,7 +21,7 @@ describe('Tenants menu', () => {
                 pages: [
                     { id: 'app', name: 'Dashboard' },
                     { id: 'blueprints-community', name: 'Local Blueprints' },
-                    { id: 'catalog-community', name: 'Cloudify Catalog' }
+                    { id: 'catalog', name: 'Cloudify Catalog' }
                 ]
             }
         ]

@@ -39,7 +39,6 @@ describe('Template Management', () => {
         { id: 'blueprint', name: 'Blueprint' },
         { id: 'blueprints-community', name: 'Local Blueprints' },
         { id: 'blueprints', name: 'Local Blueprints' },
-        { id: 'catalog-community', name: 'Cloudify Catalog' },
         { id: 'catalog', name: 'Cloudify Catalog' },
         { id: 'deploy', name: 'Deployments' },
         { id: 'deployment', name: 'Deployment' },

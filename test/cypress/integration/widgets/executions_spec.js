@@ -61,7 +61,8 @@ describe('Executions', () => {
             .click();
 
         cy.log('Check if message is provided');
-        cy.get('.executionsTable .message')
+        cy.get('table.executionsTable').scrollIntoView();
+        cy.get('table.executionsTable .message')
             .should('be.visible')
             .should('have.text', 'The selected execution does not have a tasks graph');
     });
