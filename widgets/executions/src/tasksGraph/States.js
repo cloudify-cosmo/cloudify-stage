@@ -1,5 +1,5 @@
 export default {
-    inProgress: ['Started', 'Sent', 'Rescheduled'],
+    inProgress: ['Sending', 'Sent', 'Started', 'Response-sent', 'Rescheduled'],
     succeeded: ['Succeeded'],
     failed: ['Failed']
 };
