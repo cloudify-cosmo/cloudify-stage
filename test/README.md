@@ -40,11 +40,18 @@ All of Cypress-based tests are stored in [test/cypress](./test/cypress) director
 #### Running tests using test runner
 Run `npm run e2e:new:open`.
 
-It opens the Cypress Test Runner in interactive mode. You can pass additional parameters to the script following [cypress open command documentation](https://docs.cypress.io/guides/guides/command-line.html#cypress-open).
+It opens the Cypress Test Runner in the interactive mode. You can pass additional parameters to the script following [cypress open command documentation](https://docs.cypress.io/guides/guides/command-line.html#cypress-open).
 
 #### Running tests in silent mode
 Run `npm run e2e:new`.
 
 That command runs Cypress tests to completion. 
-By default will run all tests headlessly in the [Electron](https://electronjs.org/) browser. You can pass additional parameters to the script following [cypress run command documentation](https://docs.cypress.io/guides/guides/command-line.html#cypress-run).
+By default, will run all tests headlessly in the [Electron](https://electronjs.org/) browser. You can pass additional parameters to the script following [cypress run command documentation](https://docs.cypress.io/guides/guides/command-line.html#cypress-run).
 
+## Other tests
+
+### Bundle size checks
+
+After building application (`npm run build`) you can its size by running `npm run size` command.
+
+To get more detailed information about JS bundles sizes, you can use `npm run build:analyse:<area>` scripts, see [package.json](../package.json) file for the list of available scripts. 
