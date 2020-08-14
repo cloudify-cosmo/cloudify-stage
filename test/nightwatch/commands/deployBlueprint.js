@@ -28,6 +28,8 @@ exports.command = function(deploymentName, inputs, blueprintName) {
 
                 const blueprints = this.page.blueprints();
                 blueprints.section.deployBlueprintModal.fillIn(deploymentName, inputs).clickDeploy();
+
+                this.pause(2000).back();
             });
         } else {
             this.log('not deploying', blueprintName, 'blueprint,', deploymentName, 'deployment already exists');

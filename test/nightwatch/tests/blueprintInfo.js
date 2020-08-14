@@ -20,9 +20,5 @@ module.exports = {
             .page.blueprintInfo()
             .section.info.waitForElementPresent('@blueprintName')
             .assert.containsText('@blueprintName', client.page.blueprints().props.testBlueprint);
-    },
-
-    after(client) {
-        client.removeLastPage().end();
     }
 };
