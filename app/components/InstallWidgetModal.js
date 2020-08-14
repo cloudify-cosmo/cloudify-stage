@@ -10,12 +10,6 @@ import StageUtils from '../utils/stageUtils';
 import { Button, Form, Icon, Message, Modal } from './basic/index';
 
 export default class InstallWidgetModal extends Component {
-    constructor(props, context) {
-        super(props, context);
-
-        this.state = InstallWidgetModal.initialState;
-    }
-
     static initialState = {
         open: false,
         loading: false,
@@ -25,15 +19,19 @@ export default class InstallWidgetModal extends Component {
         scriptError: ''
     };
 
-    componentDidUpdate(prevProps, prevState) {
-        const { open } = this.state;
-        if (!prevState.open && open) {
-            this.setState(InstallWidgetModal.initialState);
-        }
+    constructor(props, context) {
+        super(props, context);
+
+        this.state = InstallWidgetModal.initialState;
+
+        this.openModal = this.openModal.bind(this);
+        this.closeModal = this.closeModal.bind(this);
+        this.onWidgetUrlChange = this.onWidgetUrlChange.bind(this);
+        this.onWidgetFileChange = this.onWidgetFileChange.bind(this);
     }
 
     shouldComponentUpdate(nextProps, nextState) {
-        return !_.isEqual(nextState, this.state);
+        return !_.isEqual(nextState, this.state) || !_.isEqual(nextProps, this.props);
     }
 
     installWidget() {
@@ -99,8 +97,8 @@ export default class InstallWidgetModal extends Component {
                 dimmer="blurring"
                 open={open}
                 className={className}
-                onOpen={this.openModal.bind(this)}
-                onClose={this.closeModal.bind(this)}
+                onOpen={this.openModal}
+                onClose={this.closeModal}
             >
                 <Modal.Header>
                     <Icon name="puzzle" /> {header}
@@ -111,8 +109,8 @@ export default class InstallWidgetModal extends Component {
                             <Form.UrlOrFile
                                 name="widget"
                                 placeholder="Provide the widget's archive URL or click browse to select a file"
-                                onChangeUrl={this.onWidgetUrlChange.bind(this)}
-                                onChangeFile={this.onWidgetFileChange.bind(this)}
+                                onChangeUrl={this.onWidgetUrlChange}
+                                onChangeFile={this.onWidgetFileChange}
                             />
                         </Form.Field>
                     </Form>
