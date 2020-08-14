@@ -91,8 +91,6 @@ module.exports = {
             .cancelRedirection();
 
         deploymentWizard.closeWizard();
-
-        client.removeLastPage().end();
     },
 
     'Deployment Wizard - failure': client => {
@@ -144,7 +142,5 @@ module.exports = {
             'Required plugin cloudify-aws-plugin, version 1.4.3 is not installed on the manager';
         deploymentWizard.section.installStep.checkIfInstallInProgress().checkIfInstallFailed();
         deploymentWizard.checkIfErrorPresent(expectedInstallErrorMessage).closeWizard();
-
-        client.removeLastPage().end();
     }
 };
