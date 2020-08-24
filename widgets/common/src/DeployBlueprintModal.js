@@ -472,7 +472,7 @@ class DeployBlueprintModal extends React.Component {
                         disabled={loading}
                         content="Deploy"
                         icon="rocket"
-                        className="green"
+                        className="basic"
                     />
                     <ApproveButton
                         onClick={this.showInstallModal}
