@@ -4,7 +4,6 @@
 
 exports.command = function(widgetId) {
     return this.moveToEditMode()
-        .removeLastPage()
         .addPage()
         .addWidget(widgetId)
         .moveOutOfEditMode();
