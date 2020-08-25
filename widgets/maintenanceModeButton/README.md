@@ -1,5 +1,8 @@
 ### Maintenance Mode button
-This Button allows to activate Maintenance Mode. 
+
+{{%children style="h3" description="true"%}}
+
+This Button allows to activate Maintenance Mode.
 
 
 Maintenance Mode can only be activated by `admin` users.
