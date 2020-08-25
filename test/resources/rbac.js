@@ -133,7 +133,7 @@ export default {
         agent_list: ['sys_admin', 'manager', 'user', 'operations', 'viewer'],
         widget_highAvailability: ['sys_admin'],
         widget_tenants: ['sys_admin'],
-        widget_blueprintActionButtons: ['sys_admin', 'manager', 'user'],
+        widget_blueprintActionButtons: ['sys_admin', 'manager', 'user', 'operations'],
         execution_cancel: ['sys_admin', 'manager', 'user', 'operations'],
         widget_custom_admin: ['sys_admin', 'manager'],
         widget_managers: ['sys_admin'],
