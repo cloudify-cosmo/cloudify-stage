@@ -111,9 +111,5 @@ module.exports = {
         page.section.removeBlueprintModal.clickYes();
 
         page.section.blueprintsTable.checkIfBlueprintRemoved(BLUEPRINT_SINGLE_YAML_NAME);
-    },
-
-    after(client) {
-        client.removeLastPage().end();
     }
 };

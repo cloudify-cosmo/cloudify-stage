@@ -39,9 +39,5 @@ module.exports = {
             .waitForElementPresent('@fullScreen')
             .clickElement('@overlay')
             .api.keys(client.Keys.ESCAPE);
-    },
-
-    after(client) {
-        client.removeLastPage().end();
     }
 };
