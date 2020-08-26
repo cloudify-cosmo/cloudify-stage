@@ -12,13 +12,10 @@ export default function NodeStatus({ name, type, status, services }) {
     }[status];
 
     return (
-        <Popup hoverable>
-            <Popup.Trigger>
-                <span>{icon}</span>
-            </Popup.Trigger>
-            <Popup.Content>
+        <Popup hoverable trigger={icon} position="right center">
+            <div style={{ maxHeight: '80vh' }}>
                 <NodeServices name={name} type={type} services={services} />
-            </Popup.Content>
+            </div>
         </Popup>
     );
 }

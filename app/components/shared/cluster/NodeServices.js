@@ -86,43 +86,27 @@ export default function NodeServices({ name, type, services }) {
     const stringifiedServices = JsonUtils.stringify(services, true);
 
     return (
-        <Table celled basic="very" collapsing className="servicesData">
-            <Table.Header>
-                <Table.Row>
-                    <Table.HeaderCell colSpan={numberOfColumns}>
-                        <StatusHeader nodeName={name} nodeType={type} />
-                    </Table.HeaderCell>
-                </Table.Row>
-            </Table.Header>
-
-            <Table.Body>
-                {_.map(formattedServices, service => {
-                    const { description, isRemote, name: serviceName, status: serviceStatus } = service;
-                    return (
-                        <Table.Row key={serviceName}>
-                            <Table.Cell collapsing>
-                                <ServiceHeader name={serviceName} description={description} isRemote={isRemote} />
-                            </Table.Cell>
-                            <Table.Cell textAlign="center">
-                                <ServiceStatus status={serviceStatus} />
-                            </Table.Cell>
-                        </Table.Row>
-                    );
-                })}
-            </Table.Body>
-
-            <Table.Footer>
-                <Table.Row>
-                    <Table.HeaderCell colSpan={numberOfColumns}>
-                        <CopyToClipboardButton
-                            className="rightFloated"
-                            content="Copy Raw Info"
-                            text={stringifiedServices}
-                        />
-                    </Table.HeaderCell>
-                </Table.Row>
-            </Table.Footer>
-        </Table>
+        <div>
+            <StatusHeader nodeName={name} nodeType={type} />
+            <Table celled basic="very" collapsing className="servicesData">
+                <Table.Body style={{ display: 'block', paddingRight: 10, maxHeight: '60vh', overflowY: 'auto' }}>
+                    {_.map(formattedServices, service => {
+                        const { description, isRemote, name: serviceName, status: serviceStatus } = service;
+                        return (
+                            <Table.Row key={serviceName}>
+                                <Table.Cell collapsing>
+                                    <ServiceHeader name={serviceName} description={description} isRemote={isRemote} />
+                                </Table.Cell>
+                                <Table.Cell textAlign="center">
+                                    <ServiceStatus status={serviceStatus} />
+                                </Table.Cell>
+                            </Table.Row>
+                        );
+                    })}
+                </Table.Body>
+            </Table>
+            <CopyToClipboardButton className="rightFloated" content="Copy Raw Info" text={stringifiedServices} />
+        </div>
     );
 }
 
