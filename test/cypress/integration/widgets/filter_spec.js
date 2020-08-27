@@ -53,16 +53,7 @@ describe('Filter', () => {
         );
 
         it('blueprint upload and removal', () => {
-            cy.get('.usersMenu')
-                .click()
-                .contains('Edit Mode')
-                .click();
-            cy.contains('Add Widget').click();
-            cy.get('*[data-id=blueprints]').click();
-            cy.contains('Add selected widgets').click();
-            cy.contains('.message', 'Edit mode')
-                .contains('Exit')
-                .click();
+            cy.addWidget('blueprints');
 
             cy.get('.blueprintFilterField').click();
 
