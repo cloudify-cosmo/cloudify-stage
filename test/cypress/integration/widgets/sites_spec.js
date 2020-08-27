@@ -23,7 +23,7 @@ describe('Sites Management', () => {
     const invalidSites = [siteWithInvalidName, siteWithInvalidLocation, siteAlreadyExists];
 
     const reloadSiteManagementPage = () => {
-        cy.get('.pageMenuItem.active').click();
+        cy.visitPage('Site Management');
         cy.get('.sitesWidget .ui.text.loader').should('not.be.visible');
     };
 

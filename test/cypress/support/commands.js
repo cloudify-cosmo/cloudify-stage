@@ -27,11 +27,15 @@ const getCommonHeaders = () => ({
 
 Cypress.Commands.add('restoreState', () => cy.restoreLocalStorage());
 
+Cypress.Commands.add('waitUntilPageLoaded', () => {
+    cy.log('Wait for widgets loaders to disappear');
+    cy.get('div.loader', { timeout: 10000 }).should('not.be.visible');
+});
+
 Cypress.Commands.add('waitUntilLoaded', () => {
     cy.log('Wait for splash screen loader to disappear');
     cy.get('#loader', { timeout: 20000 }).should('be.not.visible');
-    cy.log('Wait for widgets loaders to disappear');
-    cy.get('div.loader', { timeout: 10000 }).should('not.be.visible');
+    cy.waitUntilPageLoaded();
 });
 
 Cypress.Commands.add('uploadLicense', license =>
@@ -143,4 +147,13 @@ Cypress.Commands.add('login', (username = 'admin', password = 'admin') => {
         });
 
     cy.waitUntilLoaded().then(() => cy.saveLocalStorage());
+});
+
+Cypress.Commands.add('visitPage', (name, id = null) => {
+    cy.log(`Switching to '${name}' page`);
+    cy.get('.sidebar.menu .pages').within(() => cy.contains(name).click());
+    if (id) {
+        cy.location('pathname').should('be.equal', `/console/page/${id}`);
+    }
+    cy.waitUntilPageLoaded();
 });

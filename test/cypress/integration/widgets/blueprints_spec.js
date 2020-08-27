@@ -10,8 +10,7 @@ describe('Blueprints widget', () => {
     );
 
     it('should open Composer with imported blueprint on "Edit a copy in Composer" icon click', () => {
-        // Navigate to Local Blueprints page
-        cy.get('.local_blueprintsPageMenuItem').click();
+        cy.visitPage('Local Blueprints');
 
         // Click the action icon
         cy.get(`#blueprintsTable_${blueprintName} .external.share`).click();

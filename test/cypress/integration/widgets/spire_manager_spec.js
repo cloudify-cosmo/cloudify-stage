@@ -2,19 +2,10 @@ import { styles } from '../../support/cluster_status_commons';
 
 describe('Spire Manager widget', () => {
     before(() => {
-        cy.activate('valid_spire_license');
-        cy.login();
-
-        // Add Spire Manager widget
-        cy.get('.usersMenu').click();
-        cy.get('div#editModeMenuItem').click();
-        cy.get('button.addPageBtn').click();
-        cy.get('button.addWidgetBtn').click();
-
-        cy.get('[option-value="Spire"]').click();
-        cy.get('[data-id="managers"] > .content > .header').click();
-        cy.get('#addWidgetsBtn').click();
-        cy.get('button i.icon.sign.out').click();
+        cy.activate('valid_spire_license')
+            .login()
+            .addPage('Spire Manager Test')
+            .addWidget('managers');
     });
 
     beforeEach(() => {
@@ -56,7 +47,7 @@ describe('Spire Manager widget', () => {
             response: {}
         }).as('postExecutions');
 
-        cy.get('.pageMenuItem.active').click(); // to refresh widget data
+        cy.visitPage('Spire Manager Test');
 
         // Wait to load Spire Manager widget
         cy.wait('@getSpireDeployments');
