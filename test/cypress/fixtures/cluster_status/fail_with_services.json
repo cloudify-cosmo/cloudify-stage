@@ -1,0 +1,271 @@
+{
+    "status": "Fail",
+    "services": {
+        "db": {
+            "status": "OK",
+            "is_external": false,
+            "nodes": {
+                "cloudify": {
+                    "status": "OK",
+                    "public_ip": null,
+                    "private_ip": "10.110.0.39",
+                    "version": "5.1.0.dev1",
+                    "services": {
+                        "PostgreSQL 9.5 database server": {
+                            "status": "Active",
+                            "extra_info": {
+                                "systemd": {
+                                    "instances": [
+                                        {
+                                            "Description": "PostgreSQL 9.5 database server",
+                                            "state": "running",
+                                            "Id": "postgresql-9.5.service"
+                                        }
+                                    ],
+                                    "display_name": "PostgreSQL 9.5 database server",
+                                    "unit_id": "postgresql-9.5.service"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "manager": {
+            "status": "Fail",
+            "is_external": false,
+            "nodes": {
+                "cloudify": {
+                    "status": "Fail",
+                    "public_ip": "10.110.0.39",
+                    "private_ip": "10.110.0.39",
+                    "version": "5.1.0.dev1",
+                    "services": {
+                        "Blackbox Exporter": {
+                            "status": "Active",
+                            "extra_info": {
+                                "systemd": {
+                                    "instances": [
+                                        {
+                                            "Description": "Prometheus blackbox exporter (HTTP/HTTPS/TCP pings)",
+                                            "state": "running",
+                                            "Id": "blackbox_exporter.service"
+                                        }
+                                    ],
+                                    "display_name": "Blackbox Exporter",
+                                    "unit_id": "blackbox_exporter.service"
+                                }
+                            }
+                        },
+                        "AMQP-Postgres": {
+                            "status": "Active",
+                            "extra_info": {
+                                "systemd": {
+                                    "instances": [
+                                        {
+                                            "Description": "Cloudify AMQP PostgreSQL Broker service",
+                                            "state": "running",
+                                            "Id": "cloudify-amqp-postgres.service"
+                                        }
+                                    ],
+                                    "display_name": "AMQP-Postgres",
+                                    "unit_id": "cloudify-amqp-postgres.service"
+                                }
+                            }
+                        },
+                        "Cloudify Composer": {
+                            "status": "Inactive",
+                            "extra_info": {
+                                "systemd": {
+                                    "instances": [
+                                        {
+                                            "Description": "Cloudify Composer service",
+                                            "state": "running",
+                                            "Id": "cloudify-composer.service"
+                                        }
+                                    ],
+                                    "display_name": "Cloudify Composer",
+                                    "unit_id": "cloudify-composer.service"
+                                }
+                            }
+                        },
+                        "Management Worker": {
+                            "status": "Inactive",
+                            "extra_info": {
+                                "systemd": {
+                                    "instances": [
+                                        {
+                                            "Description": "Cloudify Management Worker service",
+                                            "state": "running",
+                                            "Id": "cloudify-mgmtworker.service"
+                                        }
+                                    ],
+                                    "display_name": "Management Worker",
+                                    "unit_id": "cloudify-mgmtworker.service"
+                                }
+                            }
+                        },
+                        "RabbitMQ Broker": {
+                            "status": "Active",
+                            "extra_info": {
+                                "systemd": {
+                                    "instances": [
+                                        {
+                                            "Description": "RabbitMQ Broker service",
+                                            "state": "running",
+                                            "Id": "cloudify-rabbitmq.service"
+                                        }
+                                    ],
+                                    "display_name": "RabbitMQ Broker",
+                                    "unit_id": "cloudify-rabbitmq.service"
+                                }
+                            }
+                        },
+                        "Manager REST": {
+                            "status": "Active",
+                            "extra_info": {
+                                "systemd": {
+                                    "instances": [
+                                        {
+                                            "Description": "Cloudify REST service",
+                                            "state": "running",
+                                            "Id": "cloudify-restservice.service"
+                                        }
+                                    ],
+                                    "display_name": "Manager REST",
+                                    "unit_id": "cloudify-restservice.service"
+                                }
+                            }
+                        },
+                        "Cloudify Console": {
+                            "status": "Active",
+                            "extra_info": {
+                                "systemd": {
+                                    "instances": [
+                                        {
+                                            "Description": "Cloudify Console service",
+                                            "state": "running",
+                                            "Id": "cloudify-stage.service"
+                                        }
+                                    ],
+                                    "display_name": "Cloudify Console",
+                                    "unit_id": "cloudify-stage.service"
+                                }
+                            }
+                        },
+                        "Webserver": {
+                            "status": "Active",
+                            "extra_info": {
+                                "systemd": {
+                                    "instances": [
+                                        {
+                                            "Description": "nginx - high performance web server",
+                                            "state": "running",
+                                            "Id": "nginx.service"
+                                        }
+                                    ],
+                                    "display_name": "Webserver",
+                                    "unit_id": "nginx.service"
+                                }
+                            }
+                        },
+                        "Node Exporter": {
+                            "status": "Active",
+                            "extra_info": {
+                                "systemd": {
+                                    "instances": [
+                                        {
+                                            "Description": "Prometheus exporter for hardware and OS metrics",
+                                            "state": "running",
+                                            "Id": "node_exporter.service"
+                                        }
+                                    ],
+                                    "display_name": "Node Exporter",
+                                    "unit_id": "node_exporter.service"
+                                }
+                            }
+                        },
+                        "Prometheus exporter for PostgreSQL": {
+                            "status": "Active",
+                            "extra_info": {
+                                "systemd": {
+                                    "instances": [
+                                        {
+                                            "Description": "Prometheus exporter for PostgreSQL service",
+                                            "state": "running",
+                                            "Id": "postgres_exporter.service"
+                                        }
+                                    ],
+                                    "display_name": "Prometheus exporter for PostgreSQL",
+                                    "unit_id": "postgres_exporter.service"
+                                }
+                            }
+                        },
+                        "PostgreSQL 9.5 database server": {
+                            "status": "Active",
+                            "extra_info": {
+                                "systemd": {
+                                    "instances": [
+                                        {
+                                            "Description": "PostgreSQL 9.5 database server",
+                                            "state": "running",
+                                            "Id": "postgresql-9.5.service"
+                                        }
+                                    ],
+                                    "display_name": "PostgreSQL 9.5 database server",
+                                    "unit_id": "postgresql-9.5.service"
+                                }
+                            }
+                        },
+                        "Prometheus": {
+                            "status": "Active",
+                            "extra_info": {
+                                "systemd": {
+                                    "instances": [
+                                        {
+                                            "Description": "Prometheus monitoring service",
+                                            "state": "running",
+                                            "Id": "prometheus.service"
+                                        }
+                                    ],
+                                    "display_name": "Prometheus",
+                                    "unit_id": "prometheus.service"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "broker": {
+            "status": "OK",
+            "is_external": false,
+            "nodes": {
+                "cloudify": {
+                    "status": "OK",
+                    "public_ip": null,
+                    "private_ip": "10.110.0.39",
+                    "version": "5.1.0.dev1",
+                    "services": {
+                        "RabbitMQ Broker": {
+                            "status": "Active",
+                            "extra_info": {
+                                "systemd": {
+                                    "instances": [
+                                        {
+                                            "Description": "RabbitMQ Broker service",
+                                            "state": "running",
+                                            "Id": "cloudify-rabbitmq.service"
+                                        }
+                                    ],
+                                    "display_name": "RabbitMQ Broker",
+                                    "unit_id": "cloudify-rabbitmq.service"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
