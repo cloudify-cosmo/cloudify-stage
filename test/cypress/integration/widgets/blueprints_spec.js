@@ -1,5 +1,3 @@
-import _ from 'lodash';
-
 describe('Blueprints widget', () => {
     const blueprintName = 'blueprints_test';
 
