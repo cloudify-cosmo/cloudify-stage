@@ -13,7 +13,7 @@ describe('Cluster Status', () => {
             'clusterStatusSummary'
         );
 
-        cy.get('.dashboardPageMenuItem').click();
+        cy.visitPage('Dashboard');
         cy.location('pathname').should('be.equal', '/console/page/dashboard');
     });
 
@@ -52,8 +52,7 @@ describe('Cluster Status', () => {
         cy.log(
             'Check if periodic status check fetches full status when Cluster Status widget is present on active page'
         );
-        cy.get('.admin_operationsPageMenuItem').click();
-        cy.location('pathname').should('be.equal', '/console/page/admin_operations');
+        cy.visitPage('Admin Operations', 'admin_operations');
         cy.wait('@clusterStatusFull', clusterStatusFetchTimeout);
     });
 
@@ -75,8 +74,7 @@ describe('Cluster Status', () => {
     });
 
     it('is presented in Cluster Status widget on Admin Operations page', () => {
-        cy.get('.admin_operationsPageMenuItem').click();
-        cy.location('pathname').should('be.equal', '/console/page/admin_operations');
+        cy.visitPage('Admin Operations', 'admin_operations');
 
         cy.get('div.widget.highAvailabilityWidget').within(() => {
             checkServicesStatus(true, 'Degraded', 'OK', 'OK');
@@ -134,8 +132,7 @@ describe('Cluster Status', () => {
             checkStatusIcon(thirdNodeCell, expectedThirdNodeStatus);
         };
 
-        cy.get('.admin_operationsPageMenuItem').click();
-        cy.location('pathname').should('be.equal', '/console/page/admin_operations');
+        cy.visitPage('Admin Operations', 'admin_operations');
         cy.wait('@clusterStatusFull', clusterStatusFetchTimeout);
         checkOverallStatus('Degraded', 'Degraded', 'OK', 'OK');
         checkNodesStatus('manager', 'OK', 'OK', 'OK');
@@ -201,13 +198,12 @@ describe('Cluster Status', () => {
         cy.route(/cluster-status\?summary=false/, 'fixture:cluster_status/fail_with_services.json').as(
             'clusterStatusFailWithServices'
         );
-        cy.get('.admin_operationsPageMenuItem').click();
-        cy.location('pathname').should('be.equal', '/console/page/admin_operations');
+        cy.visitPage('Admin Operations', 'admin_operations');
         cy.wait('@clusterStatusFailWithServices', clusterStatusFetchTimeout);
 
         cy.log('Trigger Cluster Status table re-render before starting verification.');
-        cy.get('.dashboardPageMenuItem').click();
-        cy.get('.admin_operationsPageMenuItem').click();
+        cy.visitPage('Dashboard');
+        cy.visitPage('Admin Operations');
 
         checkService('database', 'OK', [
             { name: 'PostgreSQL 9.5 database server', description: 'PostgreSQL 9.5 database server', active: true }

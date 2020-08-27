@@ -15,7 +15,7 @@ describe('Deployment Info', () => {
     });
 
     beforeEach(() => {
-        cy.get('.deploymentsPageMenuItem').click();
+        cy.visitPage('Deployments');
         cy.get(`.${deploymentName}`).click();
         cy.get('div.deploymentInfoWidget')
             .should('be.visible')
