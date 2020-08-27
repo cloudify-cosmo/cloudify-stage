@@ -37,7 +37,7 @@ export default function PageContent({
 
     useEffect(() => {
         if (!isEditMode) updateActiveTab();
-    }, [page]);
+    }, [page.id]);
 
     function filterWidgets(widgetsContainer) {
         return _.chain(widgetsContainer)
@@ -206,6 +206,7 @@ PageContent.propTypes = {
     onTabUpdated: PropTypes.func.isRequired,
     onTabMoved: PropTypes.func.isRequired,
     page: PropTypes.shape({
+        id: PropTypes.string,
         widgets: PropTypes.arrayOf(PropTypes.shape({})),
         tabs: PropTypes.arrayOf(PropTypes.shape({ widgets: PropTypes.arrayOf(PropTypes.shape({})) }))
     }).isRequired,
