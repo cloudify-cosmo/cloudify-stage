@@ -71,7 +71,7 @@ export default class BlueprintSources extends React.Component {
     render() {
         const { data, widget } = this.props;
         const { content, error, filename, maximized, type } = this.state;
-        const { NodesTree, Message, Label, Modal, HighlightText, ErrorMessage, Icon } = Stage.Basic;
+        const { CancelButton, NodesTree, Message, Label, Modal, HighlightText, ErrorMessage, Icon } = Stage.Basic;
 
         const loop = items => {
             return items.map(item => {
@@ -184,7 +184,16 @@ export default class BlueprintSources extends React.Component {
                                     {filename}
                                 </Label>
                                 <Modal open={maximized} onClose={() => this.setState({ maximized: false })}>
-                                    <HighlightText language={type}>{content}</HighlightText>
+                                    <Modal.Header>{filename}</Modal.Header>
+                                    <Modal.Content>
+                                        <HighlightText language={type}>{content}</HighlightText>
+                                    </Modal.Content>
+                                    <Modal.Actions>
+                                        <CancelButton
+                                            content="Close"
+                                            onClick={() => this.setState({ maximized: false })}
+                                        />
+                                    </Modal.Actions>
                                 </Modal>
                             </div>
                         ) : (
