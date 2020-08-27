@@ -16,6 +16,7 @@ import './sites';
 import './templates';
 import './localStorage';
 import './plugins';
+import './editMode';
 
 let token = '';
 
