@@ -163,7 +163,7 @@ export default class Topology extends React.Component {
                         templateData.plugins = _(componentDeploymentData.nodes)
                             .flatMap('templateData.plugins')
                             .filter('package_name')
-                            .uniq()
+                            .uniqBy('package_name')
                             .value();
                     }
                 });
