@@ -20,8 +20,8 @@ Cypress.Commands.add('deleteSite', siteName => {
     cy.cfyRequest(`/sites/${siteName}`, 'DELETE');
 });
 
-Cypress.Commands.add('deleteSites', () => {
-    cy.cfyRequest('/sites', 'GET').then(response => {
+Cypress.Commands.add('deleteSites', (search = '') => {
+    cy.cfyRequest(`/sites?_search=${search}`, 'GET').then(response => {
         for (const site of response.body.items) {
             cy.deleteSite(site.name);
         }
