@@ -132,9 +132,7 @@ describe('Deployments widget', () => {
         cy.visitPage('Deployments');
         actOnDeployment(deploymentName, 'Install');
 
-        cy.get('.executeWorkflowModal')
-            .get('button.ok')
-            .click();
+        cy.get('.executeWorkflowModal button.ok').click();
 
         cy.wait('@executeWorkflow');
         cy.contains('div.row', deploymentName)
@@ -203,9 +201,7 @@ describe('Deployments widget', () => {
         cy.visitPage('Deployments');
         actOnDeployment(testDeploymentName, 'Force Delete');
 
-        cy.get('.modal')
-            .find('button.primary')
-            .click();
+        cy.get('.modal button.primary').click();
 
         cy.wait('@deleteDeployment');
         cy.contains('div.row', testDeploymentName).should('not.be.visible');
