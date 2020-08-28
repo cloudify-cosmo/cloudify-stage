@@ -1,23 +1,28 @@
-Cypress.Commands.add('addWidget', widgetId => {
+Cypress.Commands.add('enterEditMode', () => {
     cy.get('.usersMenu')
         .click()
         .contains('Edit Mode')
         .click();
+});
+
+Cypress.Commands.add('exitEditMode', () => {
+    cy.get('.editModeSidebar')
+        .contains('Exit')
+        .click();
+});
+
+Cypress.Commands.add('addWidget', widgetId => {
+    cy.enterEditMode();
 
     cy.contains('Add Widget').click();
     cy.get(`*[data-id=${widgetId}]`).click();
     cy.contains('Add selected widgets').click();
 
-    cy.contains('.message', 'Edit mode')
-        .contains('Exit')
-        .click();
+    cy.exitEditMode();
 });
 
 Cypress.Commands.add('addPage', pageName => {
-    cy.get('.usersMenu')
-        .click()
-        .contains('Edit Mode')
-        .click();
+    cy.enterEditMode();
 
     cy.contains('Add Page').click();
     cy.get('.breadcrumb').within(() => {
@@ -27,7 +32,17 @@ Cypress.Commands.add('addPage', pageName => {
             .type(pageName);
     });
 
-    cy.contains('.message', 'Edit mode')
-        .contains('Exit')
-        .click();
+    cy.exitEditMode();
+});
+
+Cypress.Commands.add('editWidgetConfiguration', (widgetId, fnWithinEditWidgetModal, save = true) => {
+    cy.enterEditMode();
+
+    cy.get(`.${widgetId}Widget .widgetEditButtons .editWidgetIcon`).click({ force: true });
+    cy.get('.editWidgetModal').within(() => {
+        fnWithinEditWidgetModal();
+        cy.get(`button${save ? '.ok' : '.cancel'}`).click();
+    });
+
+    cy.exitEditMode();
 });
