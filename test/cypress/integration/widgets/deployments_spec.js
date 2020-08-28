@@ -16,8 +16,12 @@ describe('Deployments widget', () => {
 
     const actOnDeployment = (name, action) => {
         searchForDeployment(name);
-        cy.contains('div.row', name).within(() => cy.get('.menuAction').click());
-        cy.get('.popupMenu > .menu').within(() => cy.contains(action).click());
+        cy.contains('div.row', name)
+            .find('.menuAction')
+            .click();
+        cy.get('.popupMenu > .menu')
+            .contains(action)
+            .click();
     };
 
     before(() => {
@@ -128,10 +132,14 @@ describe('Deployments widget', () => {
         cy.visitPage('Deployments');
         actOnDeployment(deploymentName, 'Install');
 
-        cy.get('.executeWorkflowModal').within(() => cy.get('button.ok').click());
+        cy.get('.executeWorkflowModal')
+            .get('button.ok')
+            .click();
 
         cy.wait('@executeWorkflow');
-        cy.contains('div.row', deploymentName).within(() => cy.get('.spinner.loading.icon').should('be.visible'));
+        cy.contains('div.row', deploymentName)
+            .find('.spinner.loading.icon')
+            .should('be.visible');
     });
 
     it('should allow to set site for deployment', () => {
@@ -148,9 +156,9 @@ describe('Deployments widget', () => {
         });
 
         cy.wait('@setDeploymentSite');
-        cy.contains('div.row', deploymentName).within(() =>
-            cy.get('div.column:nth-child(2) h5:nth-child(2) .sub.header').should('have.text', siteName)
-        );
+        cy.contains('div.row', deploymentName)
+            .find('div.column:nth-child(2) h5:nth-child(2) .sub.header')
+            .should('have.text', siteName);
     });
 
     it('should allow to update deployment', () => {
@@ -195,9 +203,9 @@ describe('Deployments widget', () => {
         cy.visitPage('Deployments');
         actOnDeployment(testDeploymentName, 'Force Delete');
 
-        cy.get('.modal').within(() => {
-            cy.get('button.primary').click();
-        });
+        cy.get('.modal')
+            .find('button.primary')
+            .click();
 
         cy.wait('@deleteDeployment');
         cy.contains('div.row', testDeploymentName).should('not.be.visible');
