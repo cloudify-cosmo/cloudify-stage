@@ -81,34 +81,30 @@ describe('Blueprints widget', () => {
 
     describe('configuration', () => {
         beforeEach(() => {
-            cy.contains('Edit Mode').click({ force: true });
-            cy.get('.blueprintsWidget .editWidgetIcon').click({ force: true });
+            cy.contains('Reset Templates').click({ force: true });
+            cy.contains('.modal .button', 'Yes').click();
+            cy.visitPage('Local Blueprints');
         });
 
         it('should allow to switch to catalog view', () => {
-            cy.get('.dropdown')
-                .contains('Catalog')
-                .click({ force: true });
-            cy.contains('Save').click();
+            cy.editWidgetConfiguration('blueprints', () =>
+                cy
+                    .get('.dropdown')
+                    .contains('Catalog')
+                    .click({ force: true })
+            );
 
             cy.get('div.blueprintsWidget table.blueprintsTable').should('not.exist');
             cy.get('div.blueprintsWidget .segmentList');
         });
 
         it('should allow to disable drill down on click', () => {
-            cy.get('.checkbox').click();
-            cy.contains('Save').click();
+            cy.editWidgetConfiguration('blueprints', () => cy.get('.checkbox').click());
 
             cy.contains(emptyBlueprintName).click();
 
             cy.get('div.blueprintsWidget table.blueprintsTable');
             cy.contains('.pageTitle', 'Local Blueprints');
-        });
-
-        afterEach(() => {
-            cy.contains('Exit').click({ force: true });
-            cy.contains('Reset Templates').click({ force: true });
-            cy.contains('.modal .button', 'Yes').click();
         });
     });
 
