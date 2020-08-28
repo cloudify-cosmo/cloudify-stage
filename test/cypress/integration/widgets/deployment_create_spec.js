@@ -2,7 +2,7 @@ describe('Deployments - Create new deployment modal', () => {
     const resourcePrefix = 'deploy_test_';
     const testBlueprintId = `${resourcePrefix}bp`;
     const testBlueprintUrl =
-        'https://github.com/cloudify-community/blueprint-examples/releases/download/5.0.5-42/simple-hello-world-example.zip';
+        'https://github.com/cloudify-community/blueprint-examples/releases/download/latest/simple-hello-world-example.zip';
 
     const searchTestBlueprintsInBlueprintsWidget = () => {
         cy.server();
