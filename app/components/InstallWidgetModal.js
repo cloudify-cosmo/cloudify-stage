@@ -31,7 +31,7 @@ export default class InstallWidgetModal extends Component {
     }
 
     shouldComponentUpdate(nextProps, nextState) {
-        return !_.isEqual(nextState, this.state);
+        return !_.isEqual(nextState, this.state) || !_.isEqual(nextProps, this.props);
     }
 
     installWidget() {
