@@ -112,4 +112,95 @@ describe('Edit mode', () => {
         cy.get('.pageMenuItem:last() .remove').click({ force: true });
         cy.contains('Page_0').should('not.exist');
     });
+
+    describe('should open widget install modal and', () => {
+        beforeEach(() => {
+            cy.get('.editModeButton:contains(Add Widget):eq(1)').click();
+            cy.contains('Install new widget').click();
+        });
+
+        function submitWidget(widgetName = '') {
+            const widgetFileName = `testWidget${widgetName}`;
+            cy.log(`Installing widget ${widgetFileName}`);
+            cy.get('input[name=widgetFile]').attachFile(`widgets/${widgetFileName}.zip`);
+            cy.contains('.fileOrUrl .label', 'File');
+            cy.get('.actions button.green').click();
+        }
+
+        function submitInvalidWidget(widgetName, errorMessage) {
+            submitWidget(widgetName);
+            cy.contains(errorMessage);
+        }
+
+        it('validate widget installation', () => {
+            cy.log('Submit install widget form with no data');
+            cy.contains('Install Widget').click();
+            cy.contains("Please provide the widget's archive URL or select a file");
+
+            cy.log('Submit install widget form with invalid URL');
+            cy.get('input[name=widgetUrl]').type('test');
+            cy.contains('Install Widget').click();
+            cy.contains("Please provide valid URL for widget's archive");
+
+            submitInvalidWidget(
+                'IncorrectFiles',
+                'The following files are required for widget registration: widget.js, widget.png'
+            );
+            submitInvalidWidget(
+                'InstallIncorrectDirectoryName',
+                'Incorrect widget folder name not consistent with widget id. ' +
+                    "Widget ID: 'testWidgetInstallIncorrectDirectoryName'. Directory name: 'testWidget'"
+            );
+            submitInvalidWidget(
+                'InvalidPermission',
+                "Specified widget permission ('invalid_permission_name') not found in available permissions list."
+            );
+            submitInvalidWidget(
+                'MandatoryFieldMissingName',
+                "Mandatory field - 'name' - not specified in widget definition."
+            );
+        });
+
+        it('install and manage a widget', () => {
+            submitWidget();
+
+            cy.log('Verifying widget update validation');
+            cy.contains('button', 'Update').click();
+            submitInvalidWidget(
+                'InvalidPermission',
+                'Updated widget directory name invalid. ' +
+                    "Expected: 'testWidget'. Received: 'testWidgetInvalidPermission'"
+            );
+
+            cy.log('Verifying successful widget update');
+            submitWidget();
+            cy.contains('Update widget definition').should('not.exist');
+
+            cy.log('Verifying same widget cannot be installed twice');
+            cy.contains('Install new widget').click();
+            submitInvalidWidget('', 'Widget testWidget is already installed');
+            cy.contains('Cancel').click();
+
+            cy.log('Verifying widget can be removed');
+            cy.contains('Remove').click();
+            cy.contains('Yes').click();
+            cy.contains('Test widget').should('not.exist');
+        });
+
+        it('install and use a widget', () => {
+            submitWidget();
+
+            cy.log('Verifying widget can be added to the page');
+            cy.get('*[data-id=testWidget]').click();
+            cy.contains('Add selected widgets').click();
+            cy.get('.testWidgetWidget');
+
+            cy.log('Verifying used widget can be uninstalled');
+            cy.get('.editModeButton:contains(Add Widget):eq(1)').click();
+            cy.contains('Remove').click();
+            cy.contains('Yes').click();
+            cy.contains('Test widget').should('not.exist');
+            cy.get('.testWidgetWidget').should('not.exist');
+        });
+    });
 });
