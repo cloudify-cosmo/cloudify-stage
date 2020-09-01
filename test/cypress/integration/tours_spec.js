@@ -67,7 +67,7 @@ describe('Tours', () => {
         });
 
         it('Cloudify Console Dashboard tour', () => {
-            checkTourSteps('Cloudify Console Dashboard', 7);
+            checkTourSteps('Cloudify Console Dashboard', 6);
         });
     });
 });
