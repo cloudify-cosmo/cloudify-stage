@@ -62,6 +62,10 @@ export default class AddWidgetModal extends Component {
         }
     }
 
+    shouldComponentUpdate(nextProps, nextState) {
+        return !_.isEqual(nextState, this.state) || !_.isEqual(nextProps, this.props);
+    }
+
     openModal() {
         this.setState({ ...AddWidgetModal.initialState(this.props), open: true, widgetsToAdd: [] });
     }

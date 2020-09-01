@@ -8,6 +8,7 @@
 // https://on.cypress.io/custom-commands
 // ***********************************************
 
+import 'cypress-file-upload';
 import './blueprints';
 import './deployments';
 import './executions';
