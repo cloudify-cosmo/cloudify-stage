@@ -9,6 +9,7 @@
 // ***********************************************
 
 import 'cypress-file-upload';
+
 import './blueprints';
 import './deployments';
 import './executions';
@@ -18,6 +19,7 @@ import './templates';
 import './localStorage';
 import './plugins';
 import './editMode';
+import './widgets';
 
 let token = '';
 

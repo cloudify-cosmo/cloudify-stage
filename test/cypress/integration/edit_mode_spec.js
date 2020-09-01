@@ -1,5 +1,5 @@
 describe('Edit mode', () => {
-    before(() => cy.activate('valid_trial_license'));
+    before(() => cy.activate('valid_trial_license').removeCustomWidgets());
 
     beforeEach(() => {
         cy.fixture('page/page_with_tabs').then(testPage =>
@@ -12,11 +12,7 @@ describe('Edit mode', () => {
                 }
             })
         );
-        cy.login();
-        cy.get('.usersMenu')
-            .click()
-            .contains('Edit Mode')
-            .click();
+        cy.login().enterEditMode();
     });
 
     it('should allow to edit widget settings', () => {
@@ -119,12 +115,16 @@ describe('Edit mode', () => {
             cy.contains('Install new widget').click();
         });
 
-        function submitWidget(widgetName = '') {
+        function submitWidget(widgetName = '', addToPage = false) {
             const widgetFileName = `testWidget${widgetName}`;
             cy.log(`Installing widget ${widgetFileName}`);
             cy.get('input[name=widgetFile]').attachFile(`widgets/${widgetFileName}.zip`);
             cy.contains('.fileOrUrl .label', 'File');
             cy.get('.actions button.green').click();
+            if (addToPage) {
+                cy.get(`*[data-id=${widgetFileName}]`).click();
+                cy.contains('Add selected widgets').click();
+            }
         }
 
         function submitInvalidWidget(widgetName, errorMessage) {
@@ -159,6 +159,7 @@ describe('Edit mode', () => {
                 'MandatoryFieldMissingName',
                 "Mandatory field - 'name' - not specified in widget definition."
             );
+            submitInvalidWidget('ModuleNotAllowed', "The module 'fs-extra' is not whitelisted in VM.");
         });
 
         it('install and manage a widget', () => {
@@ -188,11 +189,8 @@ describe('Edit mode', () => {
         });
 
         it('install and use a widget', () => {
-            submitWidget();
-
             cy.log('Verifying widget can be added to the page');
-            cy.get('*[data-id=testWidget]').click();
-            cy.contains('Add selected widgets').click();
+            submitWidget('', true);
             cy.get('.testWidgetWidget');
 
             cy.log('Verifying used widget can be uninstalled');
@@ -201,6 +199,58 @@ describe('Edit mode', () => {
             cy.contains('Yes').click();
             cy.contains('Test widget').should('not.exist');
             cy.get('.testWidgetWidget').should('not.exist');
+        });
+
+        it('install and use a widget with broken backend service', () => {
+            cy.server();
+            cy.route('GET', '/console/wb/manager?endpoint=version').as('managerService');
+            submitWidget('ModuleNotAllowedInService', true);
+            cy.exitEditMode();
+
+            cy.get('input[name="endpoint"]').type('version');
+            cy.contains('Fire').click();
+
+            cy.wait('@managerService')
+                .its('status')
+                .should('equal', 404);
+
+            cy.get('.message .content').should('have.text', "404 - The module 'fs-extra' is not whitelisted in VM.");
+        });
+
+        it('install and use a widget with working backend services', () => {
+            const widgetName = 'Backend';
+            const widgetId = `testWidget${widgetName}`;
+            const url = 'https://this-page-intentionally-left-blank.org/';
+            const verifyRequest = service =>
+                cy.wait(service).then(xhr => {
+                    expect(xhr.requestHeaders).contain({ 'widget-id': widgetId });
+                    expect(xhr.status).equals(200);
+                });
+            const verifyResponse = text => cy.get('.widgetContent .ui.segment pre code').should('contain.text', text);
+
+            cy.server();
+            cy.route('GET', '/console/wb/manager?endpoint=version').as('managerService');
+            cy.route('GET', `/console/wb/request?url=${url}`).as('requestService');
+            submitWidget(widgetName, true);
+            cy.exitEditMode();
+
+            cy.log('Verifying manager service');
+            cy.get('input[name="endpoint"]').type('version');
+            cy.contains('Fire').click();
+
+            verifyRequest('@managerService');
+            verifyResponse('"edition": "premium"');
+
+            cy.log('Verifying request service');
+            cy.editWidgetConfiguration(widgetId, () => {
+                cy.get('div[name="service"]').click();
+                cy.get('div[option-value="request"]').click();
+            });
+            cy.get('input[name="url"]').type(url);
+            cy.contains('Fire').click();
+
+            verifyRequest('@requestService');
+            verifyResponse('This page intentionally left blank');
         });
     });
 });
