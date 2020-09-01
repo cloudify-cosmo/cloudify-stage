@@ -7,7 +7,7 @@
     "catalog",
     "blueprints-community",
     "deploy",
-    "systemResources-community",
+    "systemResources",
     "logs"
   ]
 }
