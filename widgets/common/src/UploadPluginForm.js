@@ -24,12 +24,6 @@ class UploadPluginForm extends React.Component {
         toolbox: PropTypes.shape({ getInternal: PropTypes.func }).isRequired
     };
 
-    static defaultProps = {
-        errors: {},
-        wrapInForm: true,
-        addRequiredMarks: true
-    };
-
     static NO_ERRORS = { errors: {} };
 
     componentDidMount() {
@@ -134,7 +128,10 @@ class UploadPluginForm extends React.Component {
 }
 
 UploadPluginForm.defaultProps = {
-    hidePlaceholders: false
+    hidePlaceholders: false,
+    errors: {},
+    wrapInForm: true,
+    addRequiredMarks: true
 };
 
 Stage.defineCommon({

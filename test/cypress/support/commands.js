@@ -20,6 +20,7 @@ import './localStorage';
 import './plugins';
 import './editMode';
 import './widgets';
+import './secrets';
 
 let token = '';
 
