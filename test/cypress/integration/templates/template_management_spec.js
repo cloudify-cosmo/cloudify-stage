@@ -12,7 +12,7 @@ describe('Template Management', () => {
     const builtInTemplates = [
         {
             id: 'main-default',
-            pages: ['app', 'catalog', 'blueprints', 'deploy', 'sites', 'systemResources', 'logs'],
+            pages: ['adminDash', 'catalog', 'blueprints', 'deploy', 'sites', 'systemResources', 'logs'],
             roles: 'default',
             tenants: ['all']
         },
@@ -25,7 +25,6 @@ describe('Template Management', () => {
     ];
     const builtInPages = [
         { id: 'adminDash', name: 'Dashboard' },
-        { id: 'app', name: 'Dashboard' },
         { id: 'blueprint', name: 'Blueprint' },
         { id: 'blueprints-community', name: 'Local Blueprints' },
         { id: 'blueprints', name: 'Local Blueprints' },
@@ -152,15 +151,9 @@ describe('Template Management', () => {
 
         cy.log('Add pages');
         cy.get('.horizontal > :nth-child(1)').within(() => {
-            cy.contains('deployment')
-                .get('.add')
-                .click();
-            cy.contains('plugins')
-                .get('.add')
-                .click();
-            cy.contains('logs')
-                .get('.add')
-                .click();
+            cy.contains('deployment').within(() => cy.get('.add').click());
+            cy.contains('plugins').within(() => cy.get('.add').click());
+            cy.contains('logs').within(() => cy.get('.add').click());
         });
 
         cy.log('Create template');
