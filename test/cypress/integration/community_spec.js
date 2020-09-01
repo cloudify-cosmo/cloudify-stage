@@ -28,8 +28,8 @@ describe('Community version', () => {
                 cy.contains('Change Password').should('be.visible');
                 cy.contains('Logout').should('be.visible');
 
-                cy.contains('License Management').should('not.be.visible');
-                cy.contains('Template Management').should('not.be.visible');
+                cy.contains('License Management').should('not.exist');
+                cy.contains('Template Management').should('not.exist');
             });
     });
 
