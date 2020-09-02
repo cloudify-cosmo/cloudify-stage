@@ -12,30 +12,19 @@ describe('Template Management', () => {
     const builtInTemplates = [
         {
             id: 'main-default',
-            pages: ['app', 'catalog', 'blueprints', 'deploy', 'sites', 'systemResources', 'logs'],
+            pages: ['adminDash', 'catalog', 'blueprints', 'deploy', 'sites', 'systemResources', 'logs'],
             roles: 'default',
             tenants: ['all']
         },
         {
             id: 'main-sys_admin',
-            pages: [
-                'adminDash',
-                'catalog',
-                'blueprints',
-                'deploy',
-                'sites',
-                'tmm',
-                'ha',
-                'systemResources-admin',
-                'logs'
-            ],
+            pages: ['adminDash', 'catalog', 'blueprints', 'deploy', 'sites', 'tmm', 'ha', 'systemResources', 'logs'],
             roles: 'sys_admin',
             tenants: ['all']
         }
     ];
     const builtInPages = [
         { id: 'adminDash', name: 'Dashboard' },
-        { id: 'app', name: 'Dashboard' },
         { id: 'blueprint', name: 'Blueprint' },
         { id: 'blueprints-community', name: 'Local Blueprints' },
         { id: 'blueprints', name: 'Local Blueprints' },
@@ -47,8 +36,6 @@ describe('Template Management', () => {
         { id: 'logs', name: 'Logs' },
         { id: 'plugins', name: 'Plugins' },
         { id: 'sites', name: 'Site Management' },
-        { id: 'systemResources-admin', name: 'System Resources' },
-        { id: 'systemResources-community', name: 'System Resources' },
         { id: 'systemResources', name: 'System Resources' },
         { id: 'tmm', name: 'Tenant Management' }
     ];
@@ -94,20 +81,16 @@ describe('Template Management', () => {
             .removeUserPages()
             .removeUserTemplates();
 
-        // Create tenants
-        for (const tenant of tenants) {
-            cy.addTenant(tenant);
-        }
+        cy.log('Create tenants');
+        tenants.forEach(cy.addTenant);
 
-        // Create users and add them to tenants
-        for (const user of users) {
+        cy.log('Create users and add them to tenants');
+        users.forEach(user => {
             cy.addUser(user.username, user.password, user.isAdmin);
             if (user.tenants) {
-                for (const tenant of user.tenants) {
-                    cy.addUserToTenant(user.username, tenant.name, tenant.role);
-                }
+                user.tenants.forEach(tenant => cy.addUserToTenant(user.username, tenant.name, tenant.role));
             }
-        }
+        });
     });
 
     it('is available for admin users', () => {
@@ -148,6 +131,7 @@ describe('Template Management', () => {
     });
 
     it('allows admin users to create and modify templates', () => {
+        const clickOnHeader = () => cy.get('.modal > .header').click();
         cy.removeUserTemplates().login();
 
         cy.get('.usersMenu').click();
@@ -157,26 +141,26 @@ describe('Template Management', () => {
 
         cy.get('.createTemplateButton').click();
 
-        // Specify template name
+        cy.log('Specify template name');
         cy.get('.field > .ui > input').type('Template 1');
 
-        // Select roles
+        cy.log('Select roles');
         cy.get('.form > :nth-child(3) > .ui').click();
         cy.get('[option-value="user"]').click();
         cy.get('[option-value="viewer"]').click();
 
-        // Add pages
+        cy.log('Add pages');
         cy.get('.horizontal > :nth-child(1)').within(() => {
             cy.contains('deployment').within(() => cy.get('.add').click());
             cy.contains('plugins').within(() => cy.get('.add').click());
             cy.contains('logs').within(() => cy.get('.add').click());
         });
 
-        // Create template
+        cy.log('Create template');
         cy.get('.actions > .ok').click();
         cy.get('.modal').should('not.be.visible', true);
 
-        // Verify template
+        cy.log('Verify template');
         verifyTemplateRow(
             builtInTemplates.length + 1,
             'Template 1',
@@ -185,45 +169,43 @@ describe('Template Management', () => {
             ['all']
         );
 
-        // Edit template
+        cy.log('Edit template');
         getTemplateRow('Template 1').within(() => cy.get('.edit').click());
 
-        // Change template name
+        cy.log('Change template name');
         cy.get('.field > .ui > input')
             .clear()
             .type('Another Template');
 
-        // Add roles
+        cy.log('Add roles');
         cy.get('.form > :nth-child(3) > .multiple .clear').click();
         cy.get('.form > :nth-child(3) > .ui').click();
         cy.get('[option-value="manager"]').click();
         cy.get('[option-value="operations"]').click();
-        // click on header to close roles dropdown
-        cy.get('.page > .scrolling > :nth-child(1)').click();
+        clickOnHeader();
 
-        // Select tenants
+        cy.log('Select tenants');
         cy.get('.form > :nth-child(4) > .multiple .clear').click();
         cy.get('.form > :nth-child(4) > .ui').click();
         cy.get('[option-value="T1"]').click();
         cy.get('[option-value="T2"]').click();
-        // click on header to close tenants dropdown
-        cy.get('.page > .scrolling > :nth-child(1)').click();
+        clickOnHeader();
 
-        // Add pages
+        cy.log('Add pages');
         cy.get('.horizontal > :nth-child(1)').within(() => {
             cy.contains('tmm').within(() => cy.get('.add').click());
         });
 
-        // Remove pages
+        cy.log('Remove pages');
         cy.get('.horizontal > :nth-child(2)').within(() => {
             cy.contains('logs').within(() => cy.get('.minus').click());
         });
 
-        // Save template
+        cy.log('Save template');
         cy.get('.actions > .ok').click();
         cy.get('.modal').should('not.be.visible', true);
 
-        // Verify template changes
+        cy.log('Verify template changes');
         verifyTemplateRow(
             builtInTemplates.length + 1,
             'Another Template',
@@ -232,13 +214,13 @@ describe('Template Management', () => {
             ['T1', 'T2']
         );
 
-        // Remove template
+        cy.log('Remove template');
         cy.get('.blue.segment');
         getTemplateRow('Another Template').within(() => cy.get('.remove').click());
         cy.get('.popup button.green').click();
         cy.get('.main .loading').should('be.not.visible', true);
 
-        // Verify template was removed
+        cy.log('Verify template was removed');
         cy.getTemplates().then(
             data => expect(data.body.filter(template => template.id === 'Another Template')).to.be.empty
         );

@@ -86,12 +86,6 @@
                 "placement": "bottom"
             },
             {
-                "title": "Deployments",
-                "content": "These are the deployments that are currently available on your tenant. <strong>Click on the menu to run an execution</strong>.",
-                "target": ".widget.deploymentsWidget",
-                "placement": "top"
-            },
-            {
                 "title": "Execution filters",
                 "content": "Here you can filter the executions and events to <strong>show only those that are related to a specific blueprint or deployment</strong>.",
                 "target": ".widget.filterWidget",
