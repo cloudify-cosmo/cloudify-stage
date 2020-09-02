@@ -20,6 +20,7 @@ import './localStorage';
 import './plugins';
 import './editMode';
 import './widgets';
+import './secrets';
 
 let token = '';
 
@@ -75,7 +76,9 @@ Cypress.Commands.add('activate', (license = 'valid_trial_license') =>
             })
         )
         .then(response => (token = response.body.value))
-        .then(() => cy.stageRequest(`/console/ua/clear-pages?tenant=default_tenant`))
+        .then(() =>
+            cy.stageRequest(`/console/ua/clear-pages?tenant=default_tenant`, 'GET', { failOnStatusCode: false })
+        )
         .then(() => token)
 );
 

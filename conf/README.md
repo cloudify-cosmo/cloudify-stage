@@ -83,4 +83,3 @@ This file is optional, used only in development environment.
 
 * `app` - object, overrides for Application configuration
 * `manager` - object, overrides for Manager configuration
-* `e2e` - object, overrides for [NightwatchJS configuration](../test/nightwatch/nightwatch.conf.js)
