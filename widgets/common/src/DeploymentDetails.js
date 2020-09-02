@@ -89,7 +89,12 @@ export default function DeploymentDetails({
                 {(showBlueprint || showSiteName) && (
                     <Grid.Column width={3}>
                         {showBlueprint && (
-                            <DeploymentParameter as={as} name="Blueprint" value={deployment.blueprint_id} />
+                            <DeploymentParameter
+                                as={as}
+                                name="Blueprint"
+                                value={deployment.blueprint_id}
+                                subHeaderStyle={{ wordBreak: 'break-word' }}
+                            />
                         )}
                         {showSiteName && <DeploymentParameter as={as} name="Site Name" value={deployment.site_name} />}
                     </Grid.Column>
