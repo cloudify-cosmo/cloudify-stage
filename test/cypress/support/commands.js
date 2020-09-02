@@ -76,7 +76,9 @@ Cypress.Commands.add('activate', (license = 'valid_trial_license') =>
             })
         )
         .then(response => (token = response.body.value))
-        .then(() => cy.stageRequest(`/console/ua/clear-pages?tenant=default_tenant`))
+        .then(() =>
+            cy.stageRequest(`/console/ua/clear-pages?tenant=default_tenant`, 'GET', { failOnStatusCode: false })
+        )
 );
 
 Cypress.Commands.add('cfyRequest', (url, method = 'GET', headers = null, body = null) =>

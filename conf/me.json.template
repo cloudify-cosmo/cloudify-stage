@@ -8,8 +8,5 @@
     "ip":"<MANAGER_IP>",
     "protocol" : "http",
     "port": "80"
-  },
-  "e2e": {
-
   }
 }
