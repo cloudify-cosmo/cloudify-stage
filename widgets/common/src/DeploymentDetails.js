@@ -45,24 +45,44 @@ export default function DeploymentDetails({
     const as = big ? 'h3' : 'h5';
     const stackable = !big;
 
+    const resourceVisibility = (
+        <ResourceVisibility
+            allowedSettingTo={['tenant', 'global']}
+            visibility={deployment.visibility}
+            onSetVisibility={onSetVisibility}
+            className="rightFloated"
+        />
+    );
+
     return (
         <Grid stackable={stackable}>
             <Grid.Row>
                 <Grid.Column width={4}>
-                    <div style={customName ? { float: 'right' } : { position: 'absolute', right: -3, top: -6 }}>
-                        <ResourceVisibility
-                            allowedSettingTo={['tenant', 'global']}
-                            visibility={deployment.visibility}
-                            onSetVisibility={onSetVisibility}
-                        />
-                    </div>
-                    {customName || (
+                    {customName ? (
+                        <>
+                            {resourceVisibility}
+                            {customName}
+                        </>
+                    ) : (
                         <DeploymentParameter
                             as="h3"
-                            name={deployment.id}
+                            name={
+                                <div>
+                                    <span style={{ fontSize: 14 }}>{resourceVisibility}</span>
+                                    {deployment.id}
+                                </div>
+                            }
                             value={deployment.description}
-                            style={{ marginTop: 0 }}
-                            subHeaderStyle={{ position: 'absolute', bottom: 0, top: 23, overflow: 'auto' }}
+                            headerStyle={{
+                                wordBreak: 'break-word',
+                                display: 'flex',
+                                flexDirection: 'column',
+                                position: 'absolute',
+                                bottom: 0,
+                                top: 0,
+                                width: '100%'
+                            }}
+                            subHeaderStyle={{ overflow: 'auto', marginRight: '.75rem' }}
                         />
                     )}
                 </Grid.Column>
