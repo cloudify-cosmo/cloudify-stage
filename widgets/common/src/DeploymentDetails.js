@@ -49,18 +49,20 @@ export default function DeploymentDetails({
         <Grid stackable={stackable}>
             <Grid.Row>
                 <Grid.Column width={4}>
-                    <ResourceVisibility
-                        allowedSettingTo={['tenant', 'global']}
-                        className="rightFloated"
-                        visibility={deployment.visibility}
-                        onSetVisibility={onSetVisibility}
-                    />
+                    <div style={customName ? { float: 'right' } : { position: 'absolute', right: -3, top: -6 }}>
+                        <ResourceVisibility
+                            allowedSettingTo={['tenant', 'global']}
+                            visibility={deployment.visibility}
+                            onSetVisibility={onSetVisibility}
+                        />
+                    </div>
                     {customName || (
                         <DeploymentParameter
                             as="h3"
                             name={deployment.id}
                             value={deployment.description}
                             style={{ marginTop: 0 }}
+                            subHeaderStyle={{ position: 'absolute', bottom: 0, top: 23, overflow: 'auto' }}
                         />
                     )}
                 </Grid.Column>
