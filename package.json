@@ -17,7 +17,7 @@
   "scripts": {
     "audit": "npm audit --production && cd backend && npm run audit",
     "beforebuild": "npm ci --prefer-offline && (cd backend && npm ci --prefer-offline)",
-    "build": "webpack --config webpack.config.js --mode=production --bail --progress",
+    "build": "webpack --config webpack.config.js --mode=production --bail",
     "build:analyse:main": "npm run build -- --env.analyse=main",
     "build:analyse:widgets": "npm run build -- --env.analyse=widgets",
     "build:analyse:widgets-common": "npm run build -- --env.analyse=widgets-common",
@@ -27,7 +27,7 @@
     "docWidgets": "node scripts/updateReadmes.js",
     "e2e": "cypress run --reporter cypress-multi-reporters --reporter-options configFile=test/cypress/reporter-config.json",
     "e2e:open": "cypress open",
-    "lint": "eslint --cache app backend widgets test scripts",
+    "lint": "eslint --cache --quiet app backend widgets test scripts",
     "prodtest": "mocha --require @babel/register --require esm --require ./test/setup.js -R spec --recursive \"./test/**/*Test.js\"",
     "size": "[ -d \"dist\" ] && size-limit",
     "test": "npm run lint && npm run prodtest && npm run size",
