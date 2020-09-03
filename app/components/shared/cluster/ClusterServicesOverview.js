@@ -1,5 +1,6 @@
-import React from 'react';
 import PropTypes from 'prop-types';
+import React from 'react';
+import { useSelector } from 'react-redux';
 
 import { Link } from 'react-router-dom';
 import { ErrorMessage, Message, Table } from '../../basic';
@@ -8,7 +9,9 @@ import { clusterServiceBgColor, clusterServiceEnum, clusterServiceStatusEnum, cl
 import './ClusterServicesOverview.css';
 
 export default function ClusterServicesOverview({ services, clickable, isFetching, fetchingError, header }) {
-    const adminOperationsPageUrl = '/page/admin_operations';
+    const adminPageId = 'admin_operations';
+    const adminPageUrl = `/page/${adminPageId}`;
+    const isAdminPagePresent = !!useSelector(state => _.find(state.pages, { id: adminPageId }));
 
     return (
         <Table celled basic="very" collapsing className="servicesData">
@@ -20,8 +23,8 @@ export default function ClusterServicesOverview({ services, clickable, isFetchin
                     _.map(services, (service, serviceName) => (
                         <Table.Row key={serviceName} style={{ backgroundColor: clusterServiceBgColor(service.status) }}>
                             <Table.Cell>
-                                {clickable ? (
-                                    <Link to={adminOperationsPageUrl}>
+                                {clickable && isAdminPagePresent ? (
+                                    <Link to={adminPageUrl}>
                                         <ClusterService isExternal={service.is_external} name={serviceName} />
                                     </Link>
                                 ) : (

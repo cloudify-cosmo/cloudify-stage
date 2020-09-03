@@ -45,29 +45,56 @@ export default function DeploymentDetails({
     const as = big ? 'h3' : 'h5';
     const stackable = !big;
 
+    const resourceVisibility = (
+        <ResourceVisibility
+            allowedSettingTo={['tenant', 'global']}
+            visibility={deployment.visibility}
+            onSetVisibility={onSetVisibility}
+            className="rightFloated"
+        />
+    );
+
     return (
         <Grid stackable={stackable}>
             <Grid.Row>
                 <Grid.Column width={4}>
-                    <ResourceVisibility
-                        allowedSettingTo={['tenant', 'global']}
-                        className="rightFloated"
-                        visibility={deployment.visibility}
-                        onSetVisibility={onSetVisibility}
-                    />
-                    {customName || (
+                    {customName ? (
+                        <>
+                            {resourceVisibility}
+                            {customName}
+                        </>
+                    ) : (
                         <DeploymentParameter
                             as="h3"
-                            name={deployment.id}
+                            name={
+                                <div>
+                                    <span style={{ fontSize: 14 }}>{resourceVisibility}</span>
+                                    {deployment.id}
+                                </div>
+                            }
                             value={deployment.description}
-                            style={{ marginTop: 0 }}
+                            headerStyle={{
+                                wordBreak: 'break-word',
+                                display: 'flex',
+                                flexDirection: 'column',
+                                position: 'absolute',
+                                bottom: 0,
+                                top: 0,
+                                width: '100%'
+                            }}
+                            subHeaderStyle={{ overflow: 'auto', marginRight: '.75rem' }}
                         />
                     )}
                 </Grid.Column>
                 {(showBlueprint || showSiteName) && (
                     <Grid.Column width={3}>
                         {showBlueprint && (
-                            <DeploymentParameter as={as} name="Blueprint" value={deployment.blueprint_id} />
+                            <DeploymentParameter
+                                as={as}
+                                name="Blueprint"
+                                value={deployment.blueprint_id}
+                                subHeaderStyle={{ wordBreak: 'break-word' }}
+                            />
                         )}
                         {showSiteName && <DeploymentParameter as={as} name="Site Name" value={deployment.site_name} />}
                     </Grid.Column>
