@@ -33,6 +33,7 @@ pipeline {
     stage('Prepare'){
       steps {
         container('node'){
+          sh 'sudo apt-get update && sudo apt-get install postgresql-client'
           dir("${stage_dir}/conf") {
             withVault([configuration: configuration, vaultSecrets: secrets]) {
               sh """
@@ -48,7 +49,6 @@ pipeline {
         stage('Build') {
           steps {
             container('node'){
-              sh 'sudo apt-get install postgresql-client'
               dir("${stage_dir}") {
                 echo "Install dependencies"
                 sh 'npm run beforebuild'
