@@ -22,8 +22,7 @@ describe('Edit mode', () => {
         cy.contains('Save').click();
 
         cy.reload();
-        cy.get('.usersMenu').click();
-        cy.contains('Edit Mode').click();
+        cy.enterEditMode();
 
         cy.get('.blueprintsWidget .setting').click({ force: true });
         cy.get('.pollingTime input').should('have.value', '100');
@@ -111,6 +110,9 @@ describe('Edit mode', () => {
 
     describe('should open widget install modal and', () => {
         beforeEach(() => {
+            cy.server();
+            cy.route('PUT', '/console/widgets/install*').as('installWidget');
+            cy.route('DELETE', '/console/widgets/*').as('deleteWidget');
             cy.get('.editModeButton:contains(Add Widget):eq(1)').click();
             cy.contains('Install new widget').click();
         });
@@ -118,18 +120,35 @@ describe('Edit mode', () => {
         function submitWidget(widgetName = '', addToPage = false) {
             const widgetFileName = `testWidget${widgetName}`;
             cy.log(`Installing widget ${widgetFileName}`);
-            cy.get('input[name=widgetFile]').attachFile(`widgets/${widgetFileName}.zip`);
-            cy.contains('.fileOrUrl .label', 'File');
-            cy.get('.actions button.green').click();
+            cy.get('.modal').within(() => {
+                cy.get('.fileOrUrl').within(() => {
+                    cy.get('.remove.icon').click({ force: true });
+                    cy.contains('.label', 'URL');
+                    cy.get('input[name=widgetFile]').attachFile(`widgets/${widgetFileName}.zip`);
+                    cy.contains('.label', 'File');
+                });
+                cy.get('.actions button.green').click();
+            });
             if (addToPage) {
                 cy.get(`*[data-id=${widgetFileName}]`).click();
                 cy.contains('Add selected widgets').click();
             }
         }
 
-        function submitInvalidWidget(widgetName, errorMessage) {
+        function submitInvalidWidget(widgetName, expectedError, expectedStatus, expectedDelete = false) {
             submitWidget(widgetName);
-            cy.contains(errorMessage);
+
+            cy.wait('@installWidget')
+                .its('status')
+                .should('equal', expectedStatus);
+
+            if (expectedDelete) {
+                cy.wait('@deleteWidget')
+                    .its('status')
+                    .should('equal', 200);
+            }
+
+            cy.get('.modal .message ul').should('have.text', expectedError);
         }
 
         it('validate widget installation', () => {
@@ -144,22 +163,28 @@ describe('Edit mode', () => {
 
             submitInvalidWidget(
                 'IncorrectFiles',
-                'The following files are required for widget registration: widget.js, widget.png'
+                'The following files are required for widget registration: widget.js, widget.png',
+                400
             );
             submitInvalidWidget(
                 'InstallIncorrectDirectoryName',
                 'Incorrect widget folder name not consistent with widget id. ' +
-                    "Widget ID: 'testWidgetInstallIncorrectDirectoryName'. Directory name: 'testWidget'"
+                    "Widget ID: 'testWidgetInstallIncorrectDirectoryName'. Directory name: 'testWidget'",
+                400
             );
             submitInvalidWidget(
                 'InvalidPermission',
-                "Specified widget permission ('invalid_permission_name') not found in available permissions list."
+                "Specified widget permission ('invalid_permission_name') not found in available permissions list.",
+                200,
+                true
             );
             submitInvalidWidget(
                 'MandatoryFieldMissingName',
-                "Mandatory field - 'name' - not specified in widget definition."
+                "Mandatory field - 'name' - not specified in widget definition.",
+                200,
+                true
             );
-            submitInvalidWidget('ModuleNotAllowed', "The module 'fs-extra' is not whitelisted in VM.");
+            submitInvalidWidget('ModuleNotAllowed', "The module 'fs-extra' is not whitelisted in VM.", 404);
         });
 
         it('install and manage a widget', () => {
@@ -170,7 +195,9 @@ describe('Edit mode', () => {
             submitInvalidWidget(
                 'InvalidPermission',
                 'Updated widget directory name invalid. ' +
-                    "Expected: 'testWidget'. Received: 'testWidgetInvalidPermission'"
+                    "Expected: 'testWidget'. Received: 'testWidgetInvalidPermission'",
+                200,
+                false
             );
 
             cy.log('Verifying successful widget update');
@@ -179,7 +206,7 @@ describe('Edit mode', () => {
 
             cy.log('Verifying same widget cannot be installed twice');
             cy.contains('Install new widget').click();
-            submitInvalidWidget('', 'Widget testWidget is already installed');
+            submitInvalidWidget('', 'Widget testWidget is already installed', 422);
             cy.contains('Cancel').click();
 
             cy.log('Verifying widget can be removed');
@@ -202,7 +229,6 @@ describe('Edit mode', () => {
         });
 
         it('install and use a widget with broken backend service', () => {
-            cy.server();
             cy.route('GET', '/console/wb/manager?endpoint=version').as('managerService');
             submitWidget('ModuleNotAllowedInService', true);
             cy.exitEditMode();
@@ -228,7 +254,6 @@ describe('Edit mode', () => {
                 });
             const verifyResponse = text => cy.get('.widgetContent .ui.segment pre code').should('contain.text', text);
 
-            cy.server();
             cy.route('GET', '/console/wb/manager?endpoint=version').as('managerService');
             cy.route('GET', `/console/wb/request?url=${url}`).as('requestService');
             submitWidget(widgetName, true);
