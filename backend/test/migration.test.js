@@ -1,7 +1,3 @@
-/**
- * Created by jakub.niezgoda on 07/05/2019.
- */
-
 const { execSync } = require('child_process');
 
 const config = require('../config').get();
