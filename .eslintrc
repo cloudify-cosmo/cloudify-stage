@@ -1,6 +1,5 @@
 {
     "extends": [
-        "plugin:jest/recommended",
         "plugin:jsdoc/recommended",
         "plugin:cypress/recommended",
         "./node_modules/cloudify-ui-common/eslint/eslint-common-react.json"
