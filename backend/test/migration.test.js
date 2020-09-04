@@ -2,11 +2,18 @@
  * Created by jakub.niezgoda on 07/05/2019.
  */
 
-const config = require('../config').get();
-
 const { execSync } = require('child_process');
+const { mkdirSync } = require('fs');
+
+const config = require('../config').get();
+const { getResourcePath } = require('../utils');
 
 describe('Migration script', () => {
+    beforeAll(() => {
+        execSync('node migration.js clear');
+        execSync('node migration.js up');
+    });
+
     it('prints latest revision for "current" argument', () => {
         const result = execSync('node migration.js current').toString();
         expect(result).toEqual('20200123095213-5_1-CreateBlueprintUserData.js\n');
