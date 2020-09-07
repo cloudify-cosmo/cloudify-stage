@@ -162,9 +162,9 @@ app.use((err, req, res, next) => {
     res.status(err.status || 404).send({ message: message || err });
 });
 
-const startServer = instanceNumber => {
+const startServer = () => {
     app.listen(Consts.SERVER_PORT, Consts.SERVER_HOST, () => {
-        logger.info(`Server (${String(instanceNumber || 0)}) started in mode ${ServerSettings.settings.mode}`);
+        logger.info(`Server started in mode ${ServerSettings.settings.mode}`);
         if (process.env.NODE_ENV === 'development') {
             logger.info('Server started for development');
         }
@@ -172,26 +172,12 @@ const startServer = instanceNumber => {
     });
 };
 
-const instanceNumber = parseInt(process.env.NODE_APP_INSTANCE);
-if (_.isNaN(instanceNumber) || instanceNumber === 0) {
-    // Application data (widgets, templates) initialization only in the first instance
-    Promise.all([ToursHandler.init(), WidgetHandler.init(), TemplateHandler.init()])
-        .then(() => {
-            logger.info('Tours, widgets and templates data initialized successfully.');
-            startServer(instanceNumber);
-        })
-        .catch(error => {
-            logger.error(`Error during tours, widgets and templates data initialization: ${error}`);
-            process.exit(1);
-        });
-} else {
-    ToursHandler.init()
-        .then(() => {
-            logger.info('Tours data initialized successfully.');
-            startServer(instanceNumber);
-        })
-        .catch(error => {
-            logger.error(`Error during tours data initialization: ${error}`);
-            process.exit(1);
-        });
-}
+Promise.all([ToursHandler.init(), WidgetHandler.init(), TemplateHandler.init()])
+    .then(() => {
+        logger.info('Tours, widgets and templates data initialized successfully.');
+        startServer();
+    })
+    .catch(error => {
+        logger.error(`Error during tours, widgets and templates data initialization: ${error}`);
+        process.exit(1);
+    });

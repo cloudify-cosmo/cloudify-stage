@@ -34,12 +34,9 @@ module.exports = (() => {
     }
 
     function getLogger(category) {
-        const logFormat = winston.format.printf(({ level, message, label, timestamp }) => {
-            const instanceNumber = parseInt(process.env.NODE_APP_INSTANCE);
-            return `${instanceNumber >= 0 ? `[${instanceNumber}]` : ''}[${timestamp}][${label}] ${_.upperCase(
-                level
-            )}: ${message}`;
-        });
+        const logFormat = winston.format.printf(
+            ({ level, message, label, timestamp }) => `[${timestamp}][${label}] ${_.upperCase(level)}: ${message}`
+        );
 
         const logger = winston.loggers.add(category, {
             level: logLevel,
