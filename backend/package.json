@@ -19,7 +19,7 @@
     "devStart": "cross-env NODE_ENV=development nodemon server.js",
     "devTrace": "cross-env NODE_ENV=development nodemon --trace-warnings server.js",
     "start": "node server.js ${STAGE_BACKEND_ARGS}",
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "jest",
     "wait-on-server": "wait-on tcp:localhost:8088 --timeout 5000 && echo 'Stage backend is up!'"
   },
   "nodemonConfig": {
@@ -63,6 +63,7 @@
     "winston": "^3.2.1"
   },
   "devDependencies": {
+    "jest": "^26.4.2",
     "nodemon": "^2.0.2",
     "sequelize-cli": "^5.5.1"
   },

@@ -34,6 +34,7 @@ module.exports = {
                     } catch (error) {
                         pages = [];
                         logger.info('File does not exist. Creating new one...');
+                        fs.mkdirSync(path.dirname(templateFilePath), { recursive: true });
                     }
 
                     templateFileContent = {
