@@ -4,20 +4,14 @@ Wants=network-online.target
 After=network-online.target
 
 [Service]
-Type=forking
-LimitNOFILE=infinity
-LimitNPROC=infinity
-LimitCORE=infinity
-Restart=on-failure
+TimeoutStartSec=0
+Restart=always
 RestartSec=10
-PIDFile=/opt/cloudify-stage/.pm2/pm2.pid
 EnvironmentFile=/etc/sysconfig/cloudify-stage
 User=stage_user
 Group=stage_group
 WorkingDirectory=/opt/cloudify-stage/backend
 ExecStart=/usr/bin/npm run start
-ExecStop=/usr/bin/npm run stop
-ExecReload=/usr/bin/npm run restart
 UMask=0002
 
 [Install]

@@ -115,7 +115,9 @@ pipeline {
                 sh 'cd backend && npm run db-migrate'
 
                 echo 'Start Stage Backend'
-                sh 'cd backend && npm run start'
+                sh 'echo \'{"app":{"ssl":{"ca":null},"logLevel":"debug"}}\' > conf/me.json'
+                sh 'cd backend && npm run start &'
+                sh 'cd backend && npm run wait-on-server'
               }
             }
 
