@@ -1,5 +1,3 @@
-import _ from 'lodash';
-
 describe('Blueprint Actions widget', () => {
     const blueprintName = 'blueprints_actions_test';
 
@@ -12,10 +10,9 @@ describe('Blueprint Actions widget', () => {
     );
 
     it('should open Composer with imported blueprint on "Edit a copy in Composer" button click', () => {
-        // Navigate to Local Blueprints page
-        cy.get('.local_blueprintsPageMenuItem').click();
+        cy.visitPage('Local Blueprints');
 
-        // Go into Blueprint page
+        cy.log('Go into Blueprint page');
         cy.get(`#blueprintsTable_${blueprintName} > td > .blueprintName`).click();
 
         cy.contains('Edit a copy in Composer').click();

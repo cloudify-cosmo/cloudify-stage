@@ -2,7 +2,7 @@ describe('Deployments - Create new deployment modal', () => {
     const resourcePrefix = 'deploy_test_';
     const testBlueprintId = `${resourcePrefix}bp`;
     const testBlueprintUrl =
-        'https://github.com/cloudify-community/blueprint-examples/releases/download/5.0.5-42/simple-hello-world-example.zip';
+        'https://github.com/cloudify-community/blueprint-examples/releases/download/latest/simple-hello-world-example.zip';
 
     const searchTestBlueprintsInBlueprintsWidget = () => {
         cy.server();
@@ -89,14 +89,14 @@ describe('Deployments - Create new deployment modal', () => {
     });
 
     it('is available in Dashboard page in Create Deployment Button widget ', () => {
-        cy.get('div.dashboardPageMenuItem').click();
+        cy.visitPage('Dashboard');
         cy.get('div.deploymentButtonWidget button').click();
 
         verifyDeployBlueprintModal();
     });
 
     it('is available in Blueprint page in Blueprint Action Buttons widget', () => {
-        cy.get('div.local_blueprintsPageMenuItem').click();
+        cy.visitPage('Local Blueprints');
         searchTestBlueprintsInBlueprintsWidget();
         cy.get(`tr#blueprintsTable_${testBlueprintId} td a`).click();
         cy.get('button#createDeploymentButton').click();
@@ -105,7 +105,7 @@ describe('Deployments - Create new deployment modal', () => {
     });
 
     it('is available in Local Blueprints page in Blueprints widget', () => {
-        cy.get('div.local_blueprintsPageMenuItem').click();
+        cy.visitPage('Local Blueprints');
         searchTestBlueprintsInBlueprintsWidget();
         cy.get(`tr#blueprintsTable_${testBlueprintId} i.icon.link.rocket`).click();
 
@@ -113,7 +113,7 @@ describe('Deployments - Create new deployment modal', () => {
     });
 
     it('allows to deploy a blueprint', () => {
-        cy.get('div.dashboardPageMenuItem').click();
+        cy.visitPage('Dashboard');
         cy.get('div.deploymentButtonWidget button').click();
         const deploymentNameWithoutInstall = `${resourcePrefix}onlyDeploy`;
         deployBlueprint(deploymentNameWithoutInstall, false);
@@ -122,7 +122,7 @@ describe('Deployments - Create new deployment modal', () => {
     });
 
     it('allows to deploy and install a blueprint', () => {
-        cy.get('div.dashboardPageMenuItem').click();
+        cy.visitPage('Dashboard');
         cy.get('div.deploymentButtonWidget button').click();
         const deploymentNameWithInstall = `${resourcePrefix}deployAndInstall`;
         deployBlueprint(deploymentNameWithInstall, true);
@@ -133,7 +133,7 @@ describe('Deployments - Create new deployment modal', () => {
 
     describe('handles errors during deploy & install process', () => {
         before(() => {
-            cy.get('div.dashboardPageMenuItem').click();
+            cy.visitPage('Dashboard');
         });
 
         beforeEach(() => {

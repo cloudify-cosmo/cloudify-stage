@@ -3,7 +3,7 @@
   "tenants": ["*"],
 
   "pages": [
-    "app",
+    "adminDash",
     "deploy"
   ]
 }

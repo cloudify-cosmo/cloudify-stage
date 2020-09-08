@@ -19,9 +19,9 @@ describe('Tenants menu', () => {
                 name: 'T1',
                 role: 'manager',
                 pages: [
-                    { id: 'app', name: 'Dashboard' },
+                    { id: 'adminDash', name: 'Dashboard' },
                     { id: 'blueprints-community', name: 'Local Blueprints' },
-                    { id: 'catalog-community', name: 'Cloudify Catalog' }
+                    { id: 'catalog', name: 'Cloudify Catalog' }
                 ]
             }
         ]

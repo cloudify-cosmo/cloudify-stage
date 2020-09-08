@@ -8,6 +8,8 @@
 // https://on.cypress.io/custom-commands
 // ***********************************************
 
+import 'cypress-file-upload';
+
 import './blueprints';
 import './deployments';
 import './executions';
@@ -16,6 +18,9 @@ import './sites';
 import './templates';
 import './localStorage';
 import './plugins';
+import './editMode';
+import './widgets';
+import './secrets';
 
 let token = '';
 
@@ -26,11 +31,15 @@ const getCommonHeaders = () => ({
 
 Cypress.Commands.add('restoreState', () => cy.restoreLocalStorage());
 
+Cypress.Commands.add('waitUntilPageLoaded', () => {
+    cy.log('Wait for widgets loaders to disappear');
+    cy.get('div.loader', { timeout: 10000 }).should('not.be.visible');
+});
+
 Cypress.Commands.add('waitUntilLoaded', () => {
     cy.log('Wait for splash screen loader to disappear');
     cy.get('#loader', { timeout: 20000 }).should('be.not.visible');
-    cy.log('Wait for widgets loaders to disappear');
-    cy.get('div.loader', { timeout: 10000 }).should('not.be.visible');
+    cy.waitUntilPageLoaded();
 });
 
 Cypress.Commands.add('uploadLicense', license =>
@@ -67,7 +76,10 @@ Cypress.Commands.add('activate', (license = 'valid_trial_license') =>
             })
         )
         .then(response => (token = response.body.value))
-        .then(() => cy.stageRequest(`/console/ua/clear-pages?tenant=default_tenant`))
+        .then(() =>
+            cy.stageRequest(`/console/ua/clear-pages?tenant=default_tenant`, 'GET', { failOnStatusCode: false })
+        )
+        .then(() => token)
 );
 
 Cypress.Commands.add('cfyRequest', (url, method = 'GET', headers = null, body = null) =>
@@ -142,4 +154,13 @@ Cypress.Commands.add('login', (username = 'admin', password = 'admin') => {
         });
 
     cy.waitUntilLoaded().then(() => cy.saveLocalStorage());
+});
+
+Cypress.Commands.add('visitPage', (name, id = null) => {
+    cy.log(`Switching to '${name}' page`);
+    cy.get('.sidebar.menu .pages').within(() => cy.contains(name).click());
+    if (id) {
+        cy.location('pathname').should('be.equal', `/console/page/${id}`);
+    }
+    cy.waitUntilPageLoaded();
 });

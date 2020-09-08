@@ -1,6 +1,6 @@
 describe('Sites Map', () => {
     const reloadDashboardPage = () => {
-        cy.get('.dashboardPageMenuItem.active').click();
+        cy.visitPage('Dashboard');
         cy.get('.sitesMapWidget .ui.text.loader').should('not.be.visible');
     };
 

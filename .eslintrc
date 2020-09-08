@@ -112,10 +112,11 @@
             }
         },
         {
-            "files": ["./*.js", "scripts/*.js", "test/**/*.js"],
+            "files": ["./*.js", "scripts/*.js", "test/**/*.js", "**/*.test.js"],
             "rules": {
                 "import/no-extraneous-dependencies": ["error", { "devDependencies": true }],
-                "no-console": "off"
+                "no-console": "off",
+                "security/detect-child-process": "off"
             },
             "env": {
                 "node": true

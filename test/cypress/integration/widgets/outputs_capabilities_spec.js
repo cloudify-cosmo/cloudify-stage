@@ -33,8 +33,7 @@ describe('Outputs/Capabilities', () => {
         }
 
         it('in Blueprint page', () => {
-            cy.log('Navigate to Local Blueprints page');
-            cy.get('.local_blueprintsPageMenuItem').click();
+            cy.visitPage('Local Blueprints');
 
             cy.log('Go into Blueprint page');
             cy.get(`#blueprintsTable_${blueprintName} > td > .blueprintName`).click();
@@ -45,8 +44,7 @@ describe('Outputs/Capabilities', () => {
         it('in Deployment page', () => {
             cy.deployBlueprint(blueprintName, deploymentName);
 
-            cy.log('Navigate to Deployments page');
-            cy.get('.deploymentsPageMenuItem').click();
+            cy.visitPage('Deployments');
 
             cy.log('Go into Deployment page');
             cy.get(`.ui.segment.${deploymentName} > .ui > .row`).click();
@@ -61,8 +59,7 @@ describe('Outputs/Capabilities', () => {
             .deleteBlueprints(blueprintName, true)
             .uploadBlueprint('blueprints/empty.zip', blueprintName);
 
-        cy.log('Navigate to Local Blueprints page');
-        cy.get('.local_blueprintsPageMenuItem').click();
+        cy.visitPage('Local Blueprints');
 
         cy.log('Go into Blueprint page');
         cy.get(`#blueprintsTable_${blueprintName} > td > .blueprintName`).click();

@@ -41,6 +41,11 @@ The following section describes different configuration files used in cloudify-s
   * `ssoUrl` - string, redirect URL to the application at the Single Sign-On identity provider
   * `portalUrl` - string, redirect URL to the organization portal
 
+* `logsFile` - string, logs file path
+
+* `errorsFile` - string, errors file path
+
+
 ## Manager (`manager.json`)
 
 * `ip` - string, Cloudify Manager IP
@@ -83,4 +88,3 @@ This file is optional, used only in development environment.
 
 * `app` - object, overrides for Application configuration
 * `manager` - object, overrides for Manager configuration
-* `e2e` - object, overrides for [NightwatchJS configuration](../test/nightwatch/nightwatch.conf.js)

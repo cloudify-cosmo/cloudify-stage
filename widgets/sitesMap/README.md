@@ -1,4 +1,7 @@
 ### Sites Map
+
+{{%children style="h3" description="true"%}}
+
 Displays the world map with defined sites marked. Only sites with defined location are displayed on the map.
 
 ![sitesMap](https://docs.cloudify.co/staging/dev/images/ui/widgets/sitesMap.png)
@@ -21,7 +24,7 @@ Site details contain information about deployments' statuses, indicated as follo
 * **Red** - the number of deployments with failed workflow execution.
 
 
-#### Widget Settings 
+#### Widget Settings
 
 * `Refresh time interval` - Time interval in which widget’s data will be refreshed, in seconds. Default: 10 seconds.
-* `Show all the site labels` - If set, then all sites will be displayed with site details popup opened. 
+* `Show all the site labels` - If set, then all sites will be displayed with site details popup opened.

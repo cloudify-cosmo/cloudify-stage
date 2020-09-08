@@ -26,8 +26,7 @@ describe('Topology', () => {
     });
 
     it('is presented in Blueprint page', () => {
-        cy.log('Navigate to Local Blueprints page');
-        cy.get('.local_blueprintsPageMenuItem').click();
+        cy.visitPage('Local Blueprints');
 
         cy.log('Use search to limit number of presented blueprints');
         cy.route(/console\/sp\/\?su=\/blueprints/).as('getBlueprints');
@@ -48,8 +47,7 @@ describe('Topology', () => {
     });
 
     it('is presented in Deployment page', () => {
-        cy.log('Navigate to Deployments page');
-        cy.get('.deploymentsPageMenuItem').click();
+        cy.visitPage('Deployments');
 
         cy.log('Use search to limit number of presented deployments');
         cy.route(/console\/sp\/\?su=\/deployments/).as('getDeployments');

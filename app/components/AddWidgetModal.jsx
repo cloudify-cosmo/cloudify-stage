@@ -42,7 +42,7 @@ function generateCategories(widgets) {
     return _.sortBy(categories, 'name');
 }
 
-export default function AddWidgetModal({
+function AddWidgetModal({
     canInstallWidgets,
     onWidgetInstalled,
     onWidgetAdded,
@@ -420,3 +420,5 @@ AddWidgetModal.propTypes = {
     onWidgetUpdated: PropTypes.func.isRequired,
     onWidgetUsed: PropTypes.func.isRequired
 };
+
+export default React.memo(AddWidgetModal, _.isEqual);

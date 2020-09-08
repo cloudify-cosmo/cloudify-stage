@@ -184,6 +184,7 @@ function handleCommand(cmd) {
             logger.error('='.repeat(errorStr.length));
             logger.error(err);
             logger.error('='.repeat(errorStr.length));
+            process.exit(1);
         })
         .then(() => {
             if (cmd !== 'status' && cmd !== 'reset-hard') {
