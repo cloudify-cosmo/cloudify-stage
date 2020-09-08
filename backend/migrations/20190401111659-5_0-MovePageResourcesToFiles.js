@@ -37,6 +37,7 @@ module.exports = {
                             updatedAt: moment(pageRow.updatedAt).format(),
                             widgets: []
                         };
+                        fs.mkdirSync(path.dirname(pageFilePath), { recursive: true });
                     }
 
                     fs.writeJsonSync(pageFilePath, pageFileContent, { spaces: 2, EOL: '\n' });

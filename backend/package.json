@@ -22,7 +22,7 @@
     "restart": "pm2 reload stage-backend",
     "start": "pm2 start --env production",
     "stop": "pm2 kill",
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "jest",
     "wait-on-server": "wait-on tcp:localhost:8088 --timeout 5000 && echo 'Stage backend is up!'"
   },
   "nodemonConfig": {
@@ -67,6 +67,7 @@
     "winston": "^3.2.1"
   },
   "devDependencies": {
+    "jest": "^26.4.2",
     "nodemon": "^2.0.2",
     "sequelize-cli": "^5.5.1"
   },
