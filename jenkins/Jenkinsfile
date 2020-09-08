@@ -110,15 +110,14 @@ pipeline {
           steps {
             container('node'){
               sh "mkdir -p ${workspace}/backend && cp -rf ${workspace}/${stage_dir}/. ${workspace}/backend"
-              dir("backend") {
+              dir("backend/backend") {
                 echo 'Initialize database'
-                sh 'cd backend && npm run db-migrate'
+                sh 'npm run db-migrate'
 
                 echo 'Start Stage Backend'
-                sh """
-                  echo '{"app":{"ssl":{"ca":null}}}' > conf/me.json
-                """
-                sh 'cd backend && npm run start'
+                sh 'echo \'{"app":{"ssl":{"ca":null},"logLevel":"debug"}}\' > ../conf/me.json'
+                sh 'npm run start &'
+                sh 'npm run wait-on-server'
               }
             }
 
