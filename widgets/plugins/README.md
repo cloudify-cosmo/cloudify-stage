@@ -3,6 +3,8 @@ Displays a list of all the plugins uploaded to the current tenant, according to 
 
 The widget displays the following information:
 
+* **Plugin icon**
+* **Plugin name**
 * **Plugin Package name**
 * **Plugin Package version**
 * **Supported platform**

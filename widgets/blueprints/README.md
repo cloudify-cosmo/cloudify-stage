@@ -13,7 +13,7 @@ Displays all the blueprints on the tenant, according to the user’s permissions
 
 ![blueprints-list](https://docs.cloudify.co/staging/dev/images/ui/widgets/blueprints-list.png)
 
-There are also action buttons to create deployment or delete blueprint.
+There are also action buttons to create deployment, delete blueprint or edit blueprint copy in Composer (available as part of the Cloudify Premium edition).
 
 #### Widget Settings
 * `Refresh time interval` - The time interval in which the widget’s data will be refreshed, in seconds. Default: 10 seconds
