@@ -86,6 +86,7 @@ describe('Deployment Wizard Buttons widget', () => {
     });
 
     it('should provide Deployment Wizard', () => {
+        cy.visitPage('Dashboard');
         cy.contains('Deployment Wizard').click();
 
         cy.log('Verifying blueprints step');
