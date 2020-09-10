@@ -80,13 +80,13 @@ describe('Deployment Wizard Buttons widget', () => {
         cy.log('Verifying install step');
         cy.contains('Installation in progress...');
         cy.contains('Installation started!', { timeout: 2 * 60 * 1000 });
-        cy.get('i.icon.hand.paper').click();
-        cy.get('div.wizardModal div.actions i.cancel.icon').click();
-        cy.get('div.small.modal button.primary.button').click();
+
+        cy.log('Waiting for modal to auto close');
         cy.get('div.wizardModal').should('not.exist');
     });
 
     it('should provide Deployment Wizard', () => {
+        cy.visitPage('Dashboard');
         cy.contains('Deployment Wizard').click();
 
         cy.log('Verifying blueprints step');
