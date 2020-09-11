@@ -2,6 +2,8 @@ const { execSync } = require('child_process');
 
 const config = require('../config').get();
 
+const latestMigration = '20200123095213-5_1-CreateBlueprintUserData.js';
+
 describe('Migration script', () => {
     beforeAll(() => execSync('node migration.js up'));
 
@@ -9,7 +11,11 @@ describe('Migration script', () => {
 
     it('prints latest revision for "current" argument', () => {
         const result = execSync('node migration.js current').toString();
-        expect(result).toEqual('20200123095213-5_1-CreateBlueprintUserData.js\n');
+        expect(result).toEqual(`${latestMigration}\n`);
+    });
+
+    it('handles migration down to the same version with no error', () => {
+        execSync(`node migration.js downTo ${latestMigration}`);
     });
 
     function testMigrationUp(snapshotVersion, initialMigration) {

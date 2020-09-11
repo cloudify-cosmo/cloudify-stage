@@ -21,6 +21,17 @@ In the actions menu on the right side of the execution row (click ![List icon](h
 
 ![executions](https://docs.cloudify.co/staging/dev/images/ui/widgets/executions.png)
 
+After selecting an execution by clicking its row in the table a corresponding task graph is displayed.
+
+![executions](https://docs.cloudify.co/staging/dev/images/ui/widgets/executions-tasks-graph.png)
+
+Each graph node represents a task that is part of the execution. Each node is colored depending on task state:
+
+* **White** - pending
+* **Yellow** - executing
+* **Green** - completed
+* **Red** - failed
+
 #### Widget Settings
 * `Refresh time interval` - The time interval in which the widget’s data will be refreshed, in seconds. Default: 5 seconds
 * `List of fields to show in the table` You can choose which fields to present. By default, these are the fields presented:
@@ -37,3 +48,4 @@ In the actions menu on the right side of the execution row (click ![List icon](h
 You can also choose to add `Id` column from the list, which will present the execution id. By default this value is not presented as a column in the table, but as a pop up shown by hovering over ID label.
 
 * `Show system executions`- allow to include or exclude executions of system workflows in the list. Default: On
+* `Show most recent execution only` - if enabled the widget only shows a tasks graph for the most recent execution
