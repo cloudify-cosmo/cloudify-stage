@@ -26,7 +26,7 @@ const DataTypeProperty = ({ show, name, value }) => {
 DataTypeProperty.propTypes = {
     name: PropTypes.string.isRequired,
     show: PropTypes.bool.isRequired,
-    value: PropTypes.string
+    value: PropTypes.node
 };
 
 DataTypeProperty.defaultProps = {
