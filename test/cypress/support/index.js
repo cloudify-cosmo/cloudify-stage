@@ -23,5 +23,5 @@ Cypress.on('window:before:load', window => {
 });
 
 Cypress.Cookies.defaults({
-    whitelist: 'XSRF-TOKEN'
+    preserve: 'XSRF-TOKEN'
 });

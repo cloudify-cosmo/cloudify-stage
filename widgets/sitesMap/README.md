@@ -1,7 +1,4 @@
 ### Sites Map
-
-{{%children style="h3" description="true"%}}
-
 Displays the world map with defined sites marked. Only sites with defined location are displayed on the map.
 
 ![sitesMap](https://docs.cloudify.co/staging/dev/images/ui/widgets/sitesMap.png)
