@@ -11,18 +11,22 @@ const PropertiesPropType = PropTypes.objectOf(
     })
 );
 
-const DataTypeProperty = ({ show, name, value }) =>
-    show && (
-        <>
-            <Header as="h4">{_.capitalize(name)}</Header>
-            {value}
-        </>
+const DataTypeProperty = ({ show, name, value }) => {
+    const { Header } = Stage.Basic;
+    return (
+        show && (
+            <>
+                <Header as="h4">{_.capitalize(name)}</Header>
+                {value}
+            </>
+        )
     );
+};
 
 DataTypeProperty.propTypes = {
     name: PropTypes.string.isRequired,
     show: PropTypes.bool.isRequired,
-    value: PropTypes.string
+    value: PropTypes.node
 };
 
 DataTypeProperty.defaultProps = {
