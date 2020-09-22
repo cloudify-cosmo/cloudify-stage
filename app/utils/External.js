@@ -2,7 +2,6 @@
  * Created by pposel on 09/02/2017.
  */
 
-import 'isomorphic-fetch';
 import { saveAs } from 'file-saver';
 import log from 'loglevel';
 import StageUtils from './stageUtils';

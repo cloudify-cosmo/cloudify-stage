@@ -2,8 +2,6 @@
  * Created by jakub.niezgoda on 13/07/2018.
  */
 
-import fetch from 'isomorphic-fetch';
-
 import Consts from './consts';
 import StageUtils from './stageUtils';
 

@@ -8,6 +8,7 @@ import 'jquery-ui/ui/widget.js';
 import 'jquery-ui/ui/widgets/mouse.js';
 import 'jquery-ui/ui/widgets/draggable.js';
 import 'jquery-ui/ui/widgets/droppable.js';
+import 'whatwg-fetch';
 
 import './styles/style.scss';
 import 'cloudify-ui-common/styles/font-cloudify.css';
