@@ -169,6 +169,7 @@ export default class EventsTable extends React.Component {
                     <DataTable.Column label="Message" show={fieldsToShow.indexOf('Message') >= 0} />
                     {data.items.map((item, index) => {
                         const isEventType = item.type === EventUtils.eventType;
+                        const showErrorCausesIcon = !_.isEmpty(item.error_causes);
 
                         const eventOptions = isEventType
                             ? EventUtils.getEventTypeOptions(item.event_type)
@@ -253,10 +254,15 @@ export default class EventsTable extends React.Component {
                                             </Popup.Content>
                                         </Popup>
                                     )}
-                                    {!!item.error_causes && <EmptySpace />}
+                                    {showErrorCausesIcon && <EmptySpace />}
                                     <ErrorCausesIcon
+<<<<<<< HEAD:widgets/events/src/EventsTable.jsx
                                         show={!!item.error_causes}
                                         onClick={() => this.showErrorCausesModal(item.error_causes)}
+=======
+                                        show={showErrorCausesIcon}
+                                        onClick={this.showErrorCausesModal.bind(this, item.error_causes)}
+>>>>>>> 290fddb1b4637543cb7d08d598b5a6a73f7fefc9:widgets/events/src/EventsTable.js
                                     />
                                 </DataTable.Data>
                             </DataTable.Row>

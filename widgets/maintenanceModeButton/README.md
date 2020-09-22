@@ -1,7 +1,4 @@
 ### Maintenance Mode button
-
-{{%children style="h3" description="true"%}}
-
 This Button allows to activate Maintenance Mode.
 
 
