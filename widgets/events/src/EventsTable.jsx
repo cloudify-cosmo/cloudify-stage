@@ -256,13 +256,8 @@ export default class EventsTable extends React.Component {
                                     )}
                                     {showErrorCausesIcon && <EmptySpace />}
                                     <ErrorCausesIcon
-<<<<<<< HEAD:widgets/events/src/EventsTable.jsx
-                                        show={!!item.error_causes}
-                                        onClick={() => this.showErrorCausesModal(item.error_causes)}
-=======
                                         show={showErrorCausesIcon}
-                                        onClick={this.showErrorCausesModal.bind(this, item.error_causes)}
->>>>>>> 290fddb1b4637543cb7d08d598b5a6a73f7fefc9:widgets/events/src/EventsTable.js
+                                        onClick={() => this.showErrorCausesModal(item.error_causes)}
                                     />
                                 </DataTable.Data>
                             </DataTable.Row>
