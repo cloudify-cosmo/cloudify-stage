@@ -19,9 +19,7 @@ const DataTypeProperty = ({ show, name, value }) =>
             <Header as="h4">{_.capitalize(name)}</Header>
             {value}
         </>
-        )
     );
-};
 
 DataTypeProperty.propTypes = {
     name: PropTypes.string.isRequired,
