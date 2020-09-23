@@ -5,14 +5,15 @@ You can configure the fields that are displayed and can choose to indicate in co
 
 You can sort events/logs by Timestamp (default), Blueprint, Deployment, Node Id, Node Instance Id, Workflow, Operation and Type.
 
-![events-logs](https://docs.cloudify.co/staging/dev/images/ui/widgets/events-logs.png)
+![events-logs](https://docs.cloudify.co/5.1/images/ui/widgets/events-logs.png)
 
-Sometimes error logs may contain additional information about error cause. This will be indicated by ![error-cause-icon](https://docs.cloudify.co/staging/dev/images/ui/icons/error-cause-icon.png) icon in the Message column. When you click on this icon you will see detailed information about the error:
+Sometimes error logs may contain additional information about error cause. This will be indicated by ![error-cause-icon](https://docs.cloudify.co/5.1/images/ui/icons/error-cause-icon.png) icon in the Message column. When you click on this icon you will see detailed information about the error:
 
-![error-cause-modal](https://docs.cloudify.co/staging/dev/images/ui/widgets/events-logs-error-cause-modal.png)
+![error-cause-modal](https://docs.cloudify.co/5.1/images/ui/widgets/events-logs-error-cause-modal.png)
 
 
-#### Widget Settings
+## Settings
+
 * `Refresh time interval` - The time interval in which the widget’s data will be refreshed, in seconds. Default: 2 seconds
 * `List of fields to show in the table` - You can choose which fields to present. By default, these are the fields presented: 
 

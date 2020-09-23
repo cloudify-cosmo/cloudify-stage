@@ -1,7 +1,9 @@
 ### Number of compute nodes
 Displays the total number of compute nodes created on the tenant, according to the user’s permissions.
 
-![number_of_compute_nodes](https://docs.cloudify.co/staging/dev/images/ui/widgets/num_of_compute_nodes.png)
+![number_of_compute_nodes](https://docs.cloudify.co/5.1/images/ui/widgets/num_of_compute_nodes.png)
 
-#### Widget Settings 
+
+## Settings
+ 
 * `Refresh time interval` - The time interval in which the widget’s data will be refreshed, in seconds. Default: 30 seconds.
