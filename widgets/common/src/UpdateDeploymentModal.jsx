@@ -3,7 +3,7 @@
  */
 
 function UpdateDeploymentModal({ deployment, open, onHide, toolbox }) {
-    const { useInputs, useOpenProp, useBoolean, useErrors, useResetableState } = React.Hooks;
+    const { useInputs, useOpenProp, useBoolean, useErrors, useResetableState } = Stage.Hooks;
 
     const [isLoading, setLoading, unsetLoading] = useBoolean();
     const [isFileLoading, setFileLoading, unsetFileLoading] = useBoolean();

@@ -48,7 +48,7 @@ export default function PluginsCatalogModal({ actions, onSuccess, onHide, open, 
                 <Modal.Actions>
                     <CancelButton onClick={onHide} disabled={isLoading} />
                     <ApproveButton
-                        onClick={onApprove()}
+                        onClick={onApprove}
                         disabled={isLoading}
                         loading={isLoading}
                         content="Upload"
