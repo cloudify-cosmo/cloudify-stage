@@ -265,7 +265,7 @@ export default class SecretsTable extends React.Component {
                                         link
                                         name="trash"
                                         title="Delete secret"
-                                        onClick={this.onDeleteSecret(secret)}
+                                        onClick={() => this.onDeleteSecret(secret)}
                                     />
                                 </DataTable.Data>
                             </DataTable.Row>

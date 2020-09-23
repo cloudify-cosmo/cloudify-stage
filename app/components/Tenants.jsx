@@ -22,10 +22,10 @@ export default class Tenants extends Component {
         EventBus.on('menu.tenants:refresh', onTenantsRefresh, this);
     }
 
-    onTenantSelected = tenant => {
+    onTenantSelected(tenant) {
         const { onTenantChange } = this.props;
         onTenantChange(tenant.name);
-    };
+    }
 
     onSearchChange(value) {
         this.setState({ search: value });
@@ -80,7 +80,7 @@ export default class Tenants extends Component {
                                 text={tenant.name}
                                 selected={tenant.name === selectedTenant}
                                 active={tenant.name === selectedTenant}
-                                onClick={this.onTenantSelected}
+                                onClick={() => this.onTenantSelected(tenant)}
                             />
                         ))}
                     </Dropdown.Menu>

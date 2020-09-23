@@ -208,8 +208,8 @@ module.exports = (env, argv) => {
             resolve: {
                 extensions: ['.js', '.jsx']
             },
-            entry: glob.sync('./widgets/*/src/widget.js').reduce((acc, item) => {
-                const name = item.replace('./widgets/', '').replace('/src', '');
+            entry: glob.sync('./widgets/*/src/widget.jsx').reduce((acc, item) => {
+                const name = item.replace('./widgets/', '').replace('/src/widget.jsx', '/widget.js');
                 acc[name] = item;
                 return acc;
             }, {}),
@@ -239,7 +239,7 @@ module.exports = (env, argv) => {
             entry: glob
                 .sync('./widgets/common/src/props/*.js')
                 .concat(glob.sync('./widgets/common/src/hooks/*.js'))
-                .concat(glob.sync('./widgets/common/src/*.js')),
+                .concat(glob.sync('./widgets/common/src/*.js*')),
             output: {
                 path: path.join(outputPath, 'appData/widgets'),
                 filename: 'common/common.js',

@@ -28,7 +28,7 @@
     "e2e": "cypress run --reporter cypress-multi-reporters --reporter-options configFile=test/cypress/reporter-config.json",
     "e2e:open": "cypress open",
     "lint": "eslint --cache app backend widgets test scripts",
-    "prodtest": "mocha --require @babel/register --require esm --require ./test/setup.js -R spec --recursive \"./test/**/*Test.js\" && cd backend && npm test",
+    "prodtest": "mocha --require @babel/register --require esm --require ./test/setup.js -R spec --recursive \"./test/**/*Test.js*\" && cd backend && npm test",
     "size": "[ -d \"dist\" ] && size-limit",
     "test": "npm run lint && npm run prodtest && npm run size",
     "upload": "scripts/uploadPackage.sh",
