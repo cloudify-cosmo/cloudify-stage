@@ -42,7 +42,7 @@ function updateTitle(widget, content) {
         log(widget, 'Updating title:');
         logChange(widget, 'title', content.match(titleRegex)[1]);
 
-        content = content.replace(titleRegex, '### $1');
+        content = content.replace(titleRegex, '# $1');
 
         resolve(content);
     });

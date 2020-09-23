@@ -1,4 +1,4 @@
-### Agents Management
+# Agents Management
 Displays the following information about a specific agent: 
 
 * **Id** - unique identifier of the agent

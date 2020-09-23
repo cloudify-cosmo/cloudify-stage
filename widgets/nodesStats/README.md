@@ -1,4 +1,4 @@
-### Nodes Statistics
+# Nodes Statistics
 Displays the number of node instances, according to their status. 
 
 ![node-statistics](https://docs.cloudify.co/5.1/images/ui/widgets/node-statistics.png)

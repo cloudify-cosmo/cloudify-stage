@@ -1,4 +1,4 @@
-### Plugins List
+# Plugins List
 Displays a list of all the plugins uploaded to the current tenant, according to the user’s permissions, and enables their management. From this widget you can upload, delete, and download the plugins. 
 
 ## Features

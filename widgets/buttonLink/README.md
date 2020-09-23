@@ -1,4 +1,4 @@
-### Button link
+# Button link
 Opens the specified URL in a separate tab. You can define the label that appears on the button
 
 ![button-link](https://docs.cloudify.co/5.1/images/ui/widgets/button-link.png)

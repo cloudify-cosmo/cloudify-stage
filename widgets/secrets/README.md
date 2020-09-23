@@ -1,4 +1,4 @@
-### Secrets Store Management
+# Secrets Store Management
 Displays all the secrets visible to the logged-in user in the current tenant (including global secrets). The widget provides the following information:
 
 * **Secret key**

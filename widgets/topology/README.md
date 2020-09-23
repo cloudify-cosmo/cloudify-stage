@@ -1,4 +1,4 @@
-### Topology
+# Topology
 
 Displays the topology of a selected blueprint or deployment.
 

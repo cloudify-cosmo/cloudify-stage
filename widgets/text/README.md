@@ -1,4 +1,4 @@
-### Text
+# Text
 Displays text provided in the configuration of the widget in markdown syntax. 
 
 ![text-widget](https://docs.cloudify.co/5.1/images/ui/widgets/text_widget_content.png)

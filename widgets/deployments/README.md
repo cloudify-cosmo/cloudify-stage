@@ -1,4 +1,4 @@
-### Blueprint deployments
+# Blueprint deployments
 Displays the list of the deployments in the current tenant, according to the user’s permissions. The data can be displayed as a table or list. 
 
 ![Blueprint Deployments widget](https://docs.cloudify.co/5.1/images/ui/widgets/blueprint-deployments.png)

@@ -1,4 +1,4 @@
-### Plugins Catalog
+# Plugins Catalog
 A widget listing all the latest releases of the officially supported Cloudify plugins, and allows uploading them to the current tenant. 
 
 ![plugins_catalog](https://docs.cloudify.co/5.1/images/ui/widgets/plugins-catalog.png)

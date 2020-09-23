@@ -1,4 +1,4 @@
-### Blueprints Catalog
+# Blueprints Catalog
 
 Displays blueprints from a repository under a configurable Github account or from an HTTP endpoint providing JSON response.
 

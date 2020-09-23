@@ -1,4 +1,4 @@
-### Tenant Management
+# Tenant Management
 Displays a list of tenants on the Manager and enables tenant management. 
 
 

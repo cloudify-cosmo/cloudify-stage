@@ -1,4 +1,4 @@
-### Maintenance Mode button
+# Maintenance Mode button
 This Button allows to activate Maintenance Mode.
 
 

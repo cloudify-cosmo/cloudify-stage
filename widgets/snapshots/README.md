@@ -1,4 +1,4 @@
-### Snapshots List
+# Snapshots List
 
 Displays a list of snapshots of the Manager - both snapshots that were created on this manager, and snapshots uploaded to it. 
 

@@ -1,4 +1,4 @@
-### Nodes List
+# Nodes List
 Displays a list of the existing nodes in the current tenant, according to the user’s permissions. The node’s blueprint and deployment, type, connected nodes, number of instances, and nodes groups of which the node is part are displayed.
 
 The nodes are listed by name. When you select a node, either by clicking its name in the table or by clicking it in the Topology pane, additional data about the node’s instances is displayed: The instances names, statuses, relationships and runtime properties. 

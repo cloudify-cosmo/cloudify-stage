@@ -1,4 +1,4 @@
-### User Group Management
+# User Group Management
 Displays the list of user groups and enables their management. 
 
 

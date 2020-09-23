@@ -1,4 +1,4 @@
-### Sites Map
+# Sites Map
 Displays the world map with defined sites marked. Only sites with defined location are displayed on the map.
 
 ![sitesMap](https://docs.cloudify.co/5.1/images/ui/widgets/sitesMap.png)

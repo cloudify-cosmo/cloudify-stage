@@ -1,4 +1,4 @@
-### Executions
+# Executions
 
 Displays data about the executions in the current tenant, according to the user’s permissions. By default, the presented details include the blueprint and deployment of the execution, name of the workflow, the time that it was created and ended, execution creator, execution attributes, its status and actions menu.
 

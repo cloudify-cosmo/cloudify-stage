@@ -1,4 +1,4 @@
-### Deployment wizard buttons
+# Deployment wizard buttons
 Allows installing a deployment of a Hello World example or chosen blueprint. 
 
 ![deployment_wizard_buttons](https://docs.cloudify.co/5.1/images/ui/widgets/deployment_wizard_buttons.png)

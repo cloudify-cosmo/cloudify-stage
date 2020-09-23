@@ -1,4 +1,4 @@
-### Number of compute nodes
+# Number of compute nodes
 Displays the total number of compute nodes created on the tenant, according to the user’s permissions.
 
 ![number_of_compute_nodes](https://docs.cloudify.co/5.1/images/ui/widgets/num_of_compute_nodes.png)

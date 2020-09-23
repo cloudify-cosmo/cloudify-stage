@@ -1,4 +1,4 @@
-### Blueprint Info
+# Blueprint Info
 Displays the following information about a specific blueprint: 
 
 * **Picture**

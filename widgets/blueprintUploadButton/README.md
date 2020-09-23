@@ -1,4 +1,4 @@
-### Blueprint upload button
+# Blueprint upload button
 This button allows uploading a blueprint to the manager. 
 
 ![blueprint-upload-button](https://docs.cloudify.co/5.1/images/ui/widgets/blueprint-upload-button.png)

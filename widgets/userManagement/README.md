@@ -1,4 +1,4 @@
-### User Management
+# User Management
 Displays the list of users and enables their management. 
 
 

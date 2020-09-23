@@ -1,4 +1,4 @@
-### Cluster Status
+# Cluster Status
 
 Displays status of the Cloudify cluster divided into 3 cluster services: 
 

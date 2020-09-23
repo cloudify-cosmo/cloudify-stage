@@ -1,4 +1,4 @@
-### Deployment Info
+# Deployment Info
 Displays the following information about a specific deployment: 
 
 * **Name**

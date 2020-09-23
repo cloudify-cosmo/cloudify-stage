@@ -1,4 +1,4 @@
-### Blueprints
+# Blueprints
 
 Displays all the blueprints on the tenant, according to the user’s permissions and the blueprints visibility levels. 
  The data can be displayed as a table or a catalog.

@@ -1,4 +1,4 @@
-### Sites
+# Sites
 
 Displays the list of sites and enables their management.
 
