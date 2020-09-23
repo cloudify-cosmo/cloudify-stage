@@ -1,4 +1,4 @@
-### Events and Logs Filter
+# Events and Logs Filter
 Displays a filter pane for events and logs. The following filtering options are available:
 
 * **Type** - Logs/Events
@@ -10,7 +10,9 @@ You can also specify your log level by typing in text. Multiselection available.
 * **Message Text** - part of log/event message
 * **Time Range** - time range to get log/events
 
-![events-logs-filter](https://docs.cloudify.co/staging/dev/images/ui/widgets/events-logs-filter.png)
+![events-logs-filter](https://docs.cloudify.co/5.1/images/ui/widgets/events-logs-filter.png)
 
-#### Widget Settings
+
+## Settings
+
 None

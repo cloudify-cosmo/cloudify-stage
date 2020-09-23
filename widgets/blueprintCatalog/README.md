@@ -1,4 +1,4 @@
-### Blueprints Catalog
+# Blueprints Catalog
 
 Displays blueprints from a repository under a configurable Github account or from an HTTP endpoint providing JSON response.
 
@@ -14,9 +14,11 @@ You can and should enter Github credentials for fetching data, as the defaults u
 These parameters are pulled from secrets as the github-username and github-password keys. 
 These parameters are a must if you want to configure the widget to access private repositories.
 
-![blueprints-catalog](https://docs.cloudify.co/staging/dev/images/ui/widgets/blueprints-catalog.png)
+![blueprints-catalog](https://docs.cloudify.co/5.1/images/ui/widgets/blueprints-catalog.png)
 
-#### Widget Settings
+
+## Settings
+
 * `Blueprint Examples URL` - Specifies the JSON file from which the blueprints are being read
 * `GitHub User` - GitHub user or organization account name which is the owner of the repository to fetch. Default: cloudify-examples
 * `GitHub Filter` - Optional filter for GitHub repositories. See GitHub’s web page ‘Searching repositories’ for more details. 
