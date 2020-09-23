@@ -1,12 +1,16 @@
 const request = require('request').defaults({ encoding: 'utf8' });
 const fs = require('fs');
 const path = require('path');
-const _ = require('lodash');
+const toml = require('@iarna/toml');
 
 const config = require('./readmesConfig.json');
 
 function log(prefix, message) {
     console.log(`[${prefix}]:`, message);
+}
+
+function logError(prefix, message) {
+    console.error(`[${prefix}]:`, message);
 }
 
 function logChange(prefix, type, changes) {
@@ -22,7 +26,7 @@ function downloadFile(widget, url) {
         request.get(url, (err, res, body) => {
             const isSuccess = res.statusCode >= 200 && res.statusCode < 300;
             if (err || !isSuccess) {
-                reject(`Failed downloading ${url}. Status code: ${res.statusCode}. Error: ${err}.`);
+                reject(new Error(`Failed downloading ${url}. Status code: ${res.statusCode}. Error: ${err}.`));
             } else {
                 log(widget, `Downloaded ${url}.`);
                 resolve(String(body));
@@ -57,9 +61,31 @@ function updateLinks(widget, content) {
     });
 }
 
+function convertHugoParams(widget, content, params) {
+    return new Promise((resolve, reject) => {
+        const paramRegex = /{{<\s*param\s*(\S*)\s*>}}/gm;
+
+        log(widget, 'Converting Hugo params:');
+        logChange(widget, 'param shortcodes', content.match(paramRegex));
+
+        Array.from(content.matchAll(paramRegex)).forEach(match => {
+            const paramName = match[1];
+            const paramValue = params[paramName];
+            log(widget, match[0], match[1]);
+            if (paramValue !== undefined) {
+                log(widget, `Converting "${match[0]}" into "${paramValue}".`);
+                content = content.replace(match[0], paramValue);
+            } else {
+                reject(new Error(`No ${paramName} parameter found.`));
+            }
+        });
+
+        resolve(content);
+    });
+}
+
 function convertHugoShortcodes(widget, content) {
     return new Promise((resolve, reject) => {
-        // note
         const noteRegex = /{{%\s*note.*%}}([^]*){{%\s*\/note\s*%}}/gm;
         const tipRegex = /{{%\s*tip.*%}}([^]*){{%\s*\/tip\s*%}}/gm;
         const warningRegex = /{{%\s*warning.*%}}([^]*){{%\s*\/warning\s*%}}/gm;
@@ -111,25 +137,37 @@ function saveToReadmeFile(widget, content, readmePath) {
 }
 
 function updateFiles() {
-    for (const file of config.files) {
-        const widgetsPath = 'widgets';
-        const readmeFileName = 'README.md';
-        const readmePath = path.resolve(`${widgetsPath}/${file.widget}/${readmeFileName}`);
-        const url = `${config.rawContentBasePath}${file.link}`;
-        const { widget } = file;
+    const logPrefix = 'main';
+    const hugoConfigUrl = `${config.rawContentBasePath}/${config.configFile}`;
 
-        log(widget, `Adding to queue: '${url}' for '${widget}' widget...`);
-        downloadFile(widget, url)
-            .then(content => updateTitle(widget, content))
-            .then(content => convertHugoShortcodes(widget, content))
-            .then(content => updateLinks(widget, content))
-            .then(content => removeHTMLTags(widget, content))
-            .then(content => saveToReadmeFile(widget, content, readmePath))
-            .catch(error => {
-                console.error(error);
-                process.exit(-1);
+    downloadFile(logPrefix, hugoConfigUrl)
+        .then(tomlString => {
+            const hugoConfig = toml.parse(tomlString);
+            const { params } = hugoConfig;
+
+            const promises = config.files.map(file => {
+                const widgetsPath = 'widgets';
+                const readmeFileName = 'README.md';
+                const readmePath = path.resolve(`${widgetsPath}/${file.widget}/${readmeFileName}`);
+                const url = `${config.rawContentBasePath}${file.link}`;
+                const { widget } = file;
+
+                log(logPrefix, `Adding to queue: '${url}' for '${widget}' widget...`);
+                return downloadFile(widget, url)
+                    .then(content => updateTitle(widget, content))
+                    .then(content => convertHugoParams(widget, content, params))
+                    .then(content => convertHugoShortcodes(widget, content))
+                    .then(content => updateLinks(widget, content))
+                    .then(content => removeHTMLTags(widget, content))
+                    .then(content => saveToReadmeFile(widget, content, readmePath));
             });
-    }
+
+            return Promise.all(promises);
+        })
+        .catch(error => {
+            logError(logPrefix, error);
+            process.exit(-1);
+        });
 }
 
 updateFiles();
