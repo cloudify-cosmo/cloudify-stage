@@ -49,5 +49,7 @@
   },
   "maps": {
     "accessToken": ""
-  }
+  },
+  "logsFile": "/var/log/cloudify/stage/server-output.log",
+  "errorsFile": "/var/log/cloudify/stage/server-error.log"
 }

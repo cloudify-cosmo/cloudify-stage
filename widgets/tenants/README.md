@@ -1,11 +1,26 @@
-### Tenant Management
-Displays a list of tenants on the Manager and enables tenant management. This widget is only available to admin users.
+# Tenant Management
+Displays a list of tenants on the Manager and enables tenant management. 
+
+
+This widget is only available to admin users.
+
+
+![Tenants list](https://docs.cloudify.co/5.1/images/ui/widgets/tenants-list.png)
+
+
+## Features
+
+### Tenants information
+
 The widget displays the following information regarding each of the tenants:
 
 * **Name**
 * **Number of user-groups assigned to the tenant**
 * **Number of users directly assigned to the tenant** (not as part of groups)
  
+
+### Tenants actions
+
 The hamburger menu on the right of every tenant allows performing the following operations:
 
 * Adding/removing users to/from the tenant
@@ -15,7 +30,6 @@ The hamburger menu on the right of every tenant allows performing the following 
 Also, using the “Add” button on the right top corner of the widget, you will be able to create new tenants. 
 
 
-![tenants-list](https://docs.cloudify.co/staging/dev/images/ui/widgets/tenants-list.png)
-
-#### Widget Settings 
+## Settings
+ 
 * `Refresh time interval` - The time interval in which the widget’s data will be refreshed, in seconds. Default: 30 seconds.

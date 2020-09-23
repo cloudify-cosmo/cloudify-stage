@@ -21,6 +21,11 @@ pipeline {
             steps {
                 checkout([$class: 'GitSCM', branches: [[name: BRANCH_NAME]], doGenerateSubmoduleConfigurations: false, extensions: [[$class: 'RelativeTargetDirectory', relativeTargetDir: 'cloudify-stage']], submoduleCfg: [], userRemoteConfigs: [[credentialsId: '9f6aca75-ebff-4045-9919-b8ec6b5ccf9d', url: 'https://github.com/cloudify-cosmo/cloudify-stage.git']]])
                 dir('cloudify-stage') {
+                    sh '''#!/bin/bash
+                      . ${JENKINS_HOME}/jobs/credentials.sh > /dev/null 2>&1
+                      cd conf
+                      jq --arg map "${MAPS_ACCESS_TOKEN}" '.maps.accessToken = $map' app.json > app.json.tmp && mv app.json.tmp app.json
+                    '''
                     sh '''#!/usr/bin/env bash
                         source ${JENKINS_HOME}/.profile
                         nvm install

@@ -113,7 +113,8 @@ function cmdDownTo(migrationName) {
         }
         if (migrationIndex + 1 >= executed.length) {
             // Or if its the last one so we cannot migrate to it - or actually one after it, then ignore)
-            return Promise.reject(new Error('Migration to downgrade to is the last migration, ignoring'));
+            logger.info('Migration to downgrade to is the last migration, ignoring');
+            return Promise.resolve();
         }
         const migrationToMigrateTo = executed[migrationIndex + 1];
         return umzug.down({ to: migrationToMigrateTo });

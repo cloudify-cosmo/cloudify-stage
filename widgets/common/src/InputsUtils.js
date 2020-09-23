@@ -46,7 +46,7 @@ const HelpProperty = ({ show, name, value }) => {
 HelpProperty.propTypes = {
     name: PropTypes.string.isRequired,
     show: PropTypes.bool.isRequired,
-    value: PropTypes.string
+    value: PropTypes.node
 };
 
 HelpProperty.defaultProps = {
