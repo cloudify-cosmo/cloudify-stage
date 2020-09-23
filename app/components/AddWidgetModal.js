@@ -106,7 +106,6 @@ export default class AddWidgetModal extends Component {
     }
 
     confirmRemove(event, widget) {
-        event.stopPropagation();
         const { onWidgetUsed } = this.props;
         onWidgetUsed(widget.id)
             .then(usedByList => {
@@ -229,15 +228,7 @@ export default class AddWidgetModal extends Component {
             </Button>
         );
         const updateWidgetBtn = (
-            <Button
-                floated="left"
-                size="small"
-                compact
-                basic
-                content="Update"
-                className="updateWidgetButton"
-                onClick={e => e.stopPropagation()}
-            />
+            <Button floated="left" size="small" compact basic content="Update" className="updateWidgetButton" />
         );
 
         const confirmContent = !_.isEmpty(usedByList) ? (
@@ -347,7 +338,7 @@ export default class AddWidgetModal extends Component {
                                                         <Item.Description />
                                                         <Item.Extra>
                                                             {widget.isCustom && canInstallWidgets && (
-                                                                <div>
+                                                                <div onClick={e => e.stopPropagation()}>
                                                                     <InstallWidgetModal
                                                                         onWidgetInstalled={this.updateWidget.bind(
                                                                             this,
