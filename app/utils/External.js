@@ -199,7 +199,9 @@ export default class External {
             .then(response => {
                 if (parseResponse) {
                     const contentType = _.toLower(response.headers.get('content-type'));
-                    return contentType.indexOf('application/json') >= 0 ? response.json() : response.text();
+                    return response.status !== 204 && contentType.indexOf('application/json') >= 0
+                        ? response.json()
+                        : response.text();
                 }
                 return response;
             });
