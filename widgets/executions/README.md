@@ -1,13 +1,13 @@
-### Executions
+# Executions
 
 Displays data about the executions in the current tenant, according to the user’s permissions. By default, the presented details include the blueprint and deployment of the execution, name of the workflow, the time that it was created and ended, execution creator, execution attributes, its status and actions menu.
 
 In **Attributes** column you can see one of these icons:
 
-* ![Dry Run icon](https://docs.cloudify.co/staging/dev/images/ui/icons/dry-run-icon.png) - **Dry Run** 
-* ![System Workflow icon](https://docs.cloudify.co/staging/dev/images/ui/icons/system-workflow-icon.png) - **System Workflow**
+* ![Dry Run icon](https://docs.cloudify.co/5.1/images/ui/icons/dry-run-icon.png) - **Dry Run** 
+* ![System Workflow icon](https://docs.cloudify.co/5.1/images/ui/icons/system-workflow-icon.png) - **System Workflow**
 
-In the actions menu on the right side of the execution row (click ![List icon](https://docs.cloudify.co/staging/dev/images/ui/icons/list-icon.png) to open) you can perform additional actions on the execution:
+In the actions menu on the right side of the execution row (click ![List icon](https://docs.cloudify.co/5.1/images/ui/icons/list-icon.png) to open) you can perform additional actions on the execution:
 
 * `Show Execution Parameters` - shows details in modal window about execution parameters,    
 * `Show Update Details` - shows details in modal window about blueprint and inputs change (available only for 'update' executions),
@@ -17,13 +17,13 @@ In the actions menu on the right side of the execution row (click ![List icon](h
 * `Force Cancel` - enforces cancellation of the execution (available only for active executions), 
 * `Kill Cancel` - the process executing the workflow is forcefully stopped, even if it is stuck or unresponsive.
  
- For details about cancelling executions, see [cancelling workflow executions](https://docs.cloudify.co/staging/dev/working_with/workflows/cancelling-execution)
+ For details about cancelling executions, see [cancelling workflow executions](https://docs.cloudify.co/5.1/working_with/workflows/cancelling-execution)
 
-![executions](https://docs.cloudify.co/staging/dev/images/ui/widgets/executions.png)
+![executions](https://docs.cloudify.co/5.1/images/ui/widgets/executions.png)
 
 After selecting an execution by clicking its row in the table a corresponding task graph is displayed.
 
-![executions](https://docs.cloudify.co/staging/dev/images/ui/widgets/executions-tasks-graph.png)
+![executions](https://docs.cloudify.co/5.1/images/ui/widgets/executions-tasks-graph.png)
 
 Each graph node represents a task that is part of the execution. Each node is colored depending on task state:
 
@@ -32,7 +32,9 @@ Each graph node represents a task that is part of the execution. Each node is co
 * **Green** - completed
 * **Red** - failed
 
-#### Widget Settings
+
+## Settings
+
 * `Refresh time interval` - The time interval in which the widget’s data will be refreshed, in seconds. Default: 5 seconds
 * `List of fields to show in the table` You can choose which fields to present. By default, these are the fields presented:
   * Blueprint

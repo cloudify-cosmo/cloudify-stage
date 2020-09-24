@@ -117,7 +117,6 @@ function AddWidgetModal({
     }
 
     function confirmRemove(event, widget) {
-        event.stopPropagation();
         onWidgetUsed(widget.id)
             .then(usedByList => {
                 setWidget(widget);
@@ -205,15 +204,7 @@ function AddWidgetModal({
         </Button>
     );
     const updateWidgetBtn = (
-        <Button
-            floated="left"
-            size="small"
-            compact
-            basic
-            content="Update"
-            className="updateWidgetButton"
-            onClick={e => e.stopPropagation()}
-        />
+        <Button floated="left" size="small" compact basic content="Update" className="updateWidgetButton" />
     );
 
     const confirmContent = !_.isEmpty(usedByList) ? (
@@ -323,7 +314,7 @@ function AddWidgetModal({
                                                     <Item.Description />
                                                     <Item.Extra>
                                                         {widget.isCustom && canInstallWidgets && (
-                                                            <div>
+                                                            <div onClick={e => e.stopPropagation()}>
                                                                 <InstallWidgetModal
                                                                     onWidgetInstalled={() => updateWidget(widget)}
                                                                     trigger={updateWidgetBtn}

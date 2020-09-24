@@ -16,7 +16,7 @@ Text form of class hierarchy diagram to be used at: https://yuml.me/diagram/nofu
 
 [External|doDelete();doDownload();doGet();doPatch();doPost();doPut();doUpload()]<-[Internal|]
 [Internal]<-[WidgetBackend|]
-[Internal]<-[Manager|doGetFull();getCurrentUsername();getCurrentUserRole();getIp();getManagerUrl();getSelectedTenant();getSystemRoles()]
+[Internal]<-[Manager|doGetFull();getCurrentUsername();getCurrentUserRole();getDistributionName();getDistributionRelease();getIp();getManagerUrl();getSelectedTenant();getSystemRoles();isCommunityEdition()]
 
 */
 
@@ -199,7 +199,9 @@ export default class External {
             .then(response => {
                 if (parseResponse) {
                     const contentType = _.toLower(response.headers.get('content-type'));
-                    return contentType.indexOf('application/json') >= 0 ? response.json() : response.text();
+                    return response.status !== 204 && contentType.indexOf('application/json') >= 0
+                        ? response.json()
+                        : response.text();
                 }
                 return response;
             });
