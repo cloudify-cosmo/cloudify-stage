@@ -316,7 +316,7 @@ function AddWidgetModal({
                                                         {widget.isCustom && canInstallWidgets && (
                                                             <div onClick={e => e.stopPropagation()}>
                                                                 <InstallWidgetModal
-                                                                    onWidgetInstalled={() => updateWidget(widget)}
+                                                                    onWidgetInstalled={_.wrap(widget, updateWidget)}
                                                                     trigger={updateWidgetBtn}
                                                                     buttonLabel="Update Widget"
                                                                     className="updateWidgetModal"

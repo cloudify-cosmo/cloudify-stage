@@ -12,7 +12,7 @@ import StatusIcon from './StatusIcon';
 
 function ManagersTable({ data, toolbox, widget }) {
     const { useBoolean } = Stage.Hooks;
-    const { useState, useRef, useEffect } = React;
+    const { useState, useEffect } = React;
     const [bulkOperation, setBulkOperation] = useState(false);
     const [deployment, setDeployment] = useState({ id: '' });
     const [error, setError] = useState(null);
@@ -20,55 +20,46 @@ function ManagersTable({ data, toolbox, widget }) {
     const [selectedManagers, setSelectedManagers] = useState([]);
     const [isExecuteWorkflowModalShown, showExecuteWorkflowModal, hideExecuteWorkflowModal] = useBoolean();
     const [workflow, setWorkflow] = useState({ name: '', parameters: {} });
-    const [status, setStatus] = useState({});
 
-    const actions = useRef(new Actions(toolbox));
+    function createFetchingStatuses(managerIds) {
+        const newStatuses = {};
+        _.forEach(managerIds, managerId => {
+            newStatuses[managerId] = { isFetching: true, status: {} };
+        });
+        return newStatuses;
+    }
 
-    const items = _.get(data, 'items', []);
+    const [statuses, setStatuses] = useState(createFetchingStatuses(_.map(data.items, 'id')));
 
     function refreshData() {
         toolbox.refresh();
     }
 
     function handleStatusBulkFetching(managerIds) {
-        const newStatus = {};
-        _.forEach(managerIds, managerId => {
-            newStatus[managerId] = { isFetching: true, status: {} };
-        });
-        setStatus({ ...status, ...newStatus });
+        setStatuses({ ...statuses, ...createFetchingStatuses(managerIds) });
     }
 
-    function handleStatusUpdate(managerId, updatedStatus) {
-        setStatus({ ...status, [managerId]: { isFetching: false, status: updatedStatus } });
+    function handleStatusUpdate(managerId, status) {
+        statuses[managerId] = { isFetching: false, status };
+        setStatuses({ ...statuses });
     }
 
     function handleStatusError(managerId) {
-        setStatus({ ...status, [managerId]: { isFetching: false, status: {} } });
+        handleStatusUpdate(managerId, {});
         setError(`Status update for ${managerId} has failed.`);
     }
 
     useEffect(() => {
         toolbox.getEventBus().on('managers:refresh', refreshData, this);
-
-        const managerIds = _.map(data.items, 'id');
-        handleStatusBulkFetching(managerIds);
-        _.forEach(managerIds, managerId =>
-            actions.current.getClusterStatus(managerId, _.noop, handleStatusUpdate, handleStatusError)
-        );
-
         return () => toolbox.getEventBus().off('managers:refresh', refreshData);
     }, []);
 
     useEffect(() => {
-        const managerIds = _.map(items, 'id');
-
-        const currentStatus = _.pick(status, managerIds);
-        const emptyStatusForAllManagers = _(items)
-            .mapKeys('id')
-            .mapValues(() => ({ isFetching: false, status: {} }))
-            .value();
-        setStatus({ ...emptyStatusForAllManagers, ...currentStatus });
-    }, [JSON.stringify(items)]);
+        const actions = new Actions(toolbox);
+        _.forEach(statuses, (managerStatus, managerId) =>
+            actions.getClusterStatus(managerId, _.noop, handleStatusUpdate, handleStatusError)
+        );
+    }, []);
 
     function selectManager(manager) {
         const clickedManagerId = manager.id;
@@ -94,7 +85,7 @@ function ManagersTable({ data, toolbox, widget }) {
     }
 
     function handleStatusFetching(managerId) {
-        setStatus({ ...status, [managerId]: { isFetching: true, status: {} } });
+        setStatuses({ ...statuses, [managerId]: { isFetching: true, status: {} } });
     }
 
     const NO_DATA_MESSAGE = 'There are no Managers available.';
@@ -143,7 +134,7 @@ function ManagersTable({ data, toolbox, widget }) {
 
                 {_.map(data.items, manager => {
                     const inSelectedManagers = _.includes(selectedManagers, manager.id);
-                    const managerStatus = _.get(status, manager.id, {
+                    const managerStatus = _.get(statuses, manager.id, {
                         isFetching: false,
                         status: {}
                     });
@@ -233,4 +224,4 @@ ManagersTable.propTypes = {
     widget: Stage.PropTypes.Widget.isRequired
 };
 
-export default React.memo(ManagersTable);
+export default React.memo(ManagersTable, _.isEqual);
