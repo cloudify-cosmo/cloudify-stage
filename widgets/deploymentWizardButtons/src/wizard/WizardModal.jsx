@@ -335,7 +335,7 @@ export default class WizardModal extends React.Component {
 
                 <Modal.Actions>
                     <ActiveStep.Actions
-                        onClose={this.showCloseModal.bind}
+                        onClose={this.showCloseModal}
                         onStartOver={this.onStartOver}
                         onPrev={this.onPrev}
                         onNext={this.onNext}

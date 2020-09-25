@@ -49,10 +49,12 @@ class SecretsStepActions extends React.Component {
             showPrev,
             fetchData,
             wizardData,
-            toolbox
+            toolbox,
+            id
         } = this.props;
         return (
             <StepActions
+                id={id}
                 onClose={onClose}
                 onStartOver={onStartOver}
                 onPrev={onPrev}

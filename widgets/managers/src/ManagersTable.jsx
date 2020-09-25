@@ -67,8 +67,9 @@ function ManagersTable({ data, toolbox, widget }) {
         setSelectedManagerId(clickedAlreadySelectedManager ? null : manager.id);
     }
 
-    function openExecuteWorkflowModal(id, bulk) {
+    function openExecuteWorkflowModal(id, bulk, workflowToExecute) {
         setDeployment({ id });
+        setWorkflow(workflowToExecute);
         showExecuteWorkflowModal();
         setBulkOperation(bulk);
     }
@@ -183,7 +184,9 @@ function ManagersTable({ data, toolbox, widget }) {
                                 />
                                 <ExecuteWorkflowIcon
                                     workflows={manager.workflows}
-                                    onClick={() => openExecuteWorkflowModal(manager.id, false)}
+                                    onClick={selectedWorkflow =>
+                                        openExecuteWorkflowModal(manager.id, false, selectedWorkflow)
+                                    }
                                 />
                             </DataTable.Data>
                         </DataTable.Row>
@@ -201,7 +204,9 @@ function ManagersTable({ data, toolbox, widget }) {
                     <ExecuteWorkflowButton
                         noManagers={_.isEmpty(selectedManagers)}
                         workflows={workflows}
-                        onClick={() => openExecuteWorkflowModal(selectedManagers[0], true)}
+                        onClick={selectedWorkflow =>
+                            openExecuteWorkflowModal(selectedManagers[0], true, selectedWorkflow)
+                        }
                     />
                 </DataTable.Action>
             </DataTable>

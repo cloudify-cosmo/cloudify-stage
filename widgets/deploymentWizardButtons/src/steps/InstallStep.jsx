@@ -20,7 +20,8 @@ function InstallStepActions({
     onReady,
     disabled,
     fetchData,
-    onStartOver
+    onStartOver,
+    id
 }) {
     const { useRef, useState, useEffect } = React;
 
@@ -86,6 +87,7 @@ function InstallStepActions({
         // in progress
         return (
             <StepActions
+                id={id}
                 onClose={onClose}
                 onError={onError}
                 onLoading={onLoading}
@@ -109,6 +111,7 @@ function InstallStepActions({
         // success, waiting for redirection
         return (
             <StepActions
+                id={id}
                 onError={onError}
                 onLoading={onLoading}
                 onReady={onReady}
@@ -137,6 +140,7 @@ function InstallStepActions({
         // success, no redirection
         return (
             <StepActions
+                id={id}
                 onClose={onClose}
                 onError={onError}
                 onLoading={onLoading}
@@ -168,6 +172,7 @@ function InstallStepActions({
         // failure
         return (
             <StepActions
+                id={id}
                 onClose={onClose}
                 onError={onError}
                 onLoading={onLoading}
