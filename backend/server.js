@@ -103,13 +103,7 @@ app.use(
 app.use(
     `${contextPath}/userData`,
     passport.authenticate('cookie', { session: false }),
-    expressStaticGzip(
-        path.resolve(__dirname, process.env.NODE_ENV === 'development' ? '../userData' : '../dist/userData'),
-        {
-            enableBrotli: true,
-            indexFromEmptyFile: false
-        }
-    )
+    expressStaticGzip(path.resolve(__dirname, '../dist/userData'), { enableBrotli: true, indexFromEmptyFile: false })
 );
 
 // API Routes
