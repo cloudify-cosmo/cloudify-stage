@@ -3,9 +3,9 @@ Displays the world map with defined sites marked. Only sites with defined locati
 
 ![sitesMap](https://docs.cloudify.co/5.1/images/ui/widgets/sitesMap.png)
 
-
+<div class="ui message info">
 The widget is available only when Premium or Spire license is activated on the Cloudify Manager.
-
+</div>
 
 
 ## Site markers

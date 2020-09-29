@@ -2,9 +2,9 @@
 
 Displays the list of the deployments created using [Cloudify Spire plugin](https://github.com/cloudify-cosmo/cloudify-spire-plugin) in the current tenant, according to the user’s permissions. The data is displayed in a table.
 
-
+<div class="ui message info">
 Spire Manager can only be used on Cloudify with Spire license edition.
-
+</div>
 
 
 ![Spire Manager](https://docs.cloudify.co/5.1/images/ui/widgets/spire-manager.png)

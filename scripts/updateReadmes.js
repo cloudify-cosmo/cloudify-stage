@@ -101,9 +101,9 @@ function convertHugoShortcodes(widget, content) {
         logChange(widget, 'warning shortcodes', content.match(warningRegex));
 
         content = content
-            .replace(noteRegex, '$1')
-            .replace(tipRegex, '$1')
-            .replace(warningRegex, '$1');
+            .replace(noteRegex, '<div class="ui message info">$1</div>')
+            .replace(tipRegex, '<div class="ui message info">$1</div>')
+            .replace(warningRegex, '<div class="ui message warning">$1</div>');
 
         log(widget, 'Converting relref links:');
         logChange(widget, 'relref shortcodes', content.match(relrefRegex));
@@ -158,7 +158,6 @@ function updateFiles() {
                     .then(content => convertHugoParams(widget, content, params))
                     .then(content => convertHugoShortcodes(widget, content))
                     .then(content => updateLinks(widget, content))
-                    .then(content => removeHTMLTags(widget, content))
                     .then(content => saveToReadmeFile(widget, content, readmePath));
             });
 

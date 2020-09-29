@@ -1,9 +1,9 @@
 # User Group Management
 Displays the list of user groups and enables their management. 
 
-
+<div class="ui message info">
 This widget is only available to admin users.
-
+</div>
 
 ![User Groups](https://docs.cloudify.co/5.1/images/ui/widgets/usergroups-mgmt.png)
 

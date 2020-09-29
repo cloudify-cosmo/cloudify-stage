@@ -31,12 +31,12 @@ There are also action buttons to upload a blueprint, create deployment, delete b
 1. Click the **Upload** button.
 2. In the Upload Blueprint dialog, provide the URL of the remote archive in which the blueprint is located or select a local blueprint archive. 
 3. Enter the `Blueprint name` and `Blueprint YAML file`.   
-   `Blueprint name` is the name with which you want to identify this blueprint on the Cloudify Manager instance.
+   `Blueprint name` is the name with which you want to identify this blueprint on the Cloudify Manager instance.<br>
    `Blueprint YAML file` is the name of the YAML file in the archive that you want to upload as the main blueprint - as there can be multiple files in the archive. If a blueprint filename field is omitted, the default `blueprint.yaml` filename is used, but if a file under that name does not exist in the archive, an error message will appear.    
 4. (Optional) Provide a .png file URL or select a local one, to appear as an icon in the catalog or table view next to the blueprint name.   
-5. Choose the blueprint's visibility by clicking on the icon in the top right corner:
-![Resource visibility](https://docs.cloudify.co/5.1/images/ui/icons/tenant-wide-resource-icon.png).
-The default visibility is "Tenant", and according to the logged-in user's permissions you can also choose other levels of [resource visibilities](https://docs.cloudify.co/5.1/working_with/manager/resource-visibility).
+5. Choose the blueprint's visibility by clicking on the icon in the top right corner:<br>
+![Resource visibility](https://docs.cloudify.co/5.1/images/ui/icons/tenant-wide-resource-icon.png).<br>
+The default visibility is "Tenant", and according to the logged-in user's permissions you can also choose other levels of [resource visibilities](https://docs.cloudify.co/5.1/working_with/manager/resource-visibility).<br>
 6. Click **Upload**.
 
 

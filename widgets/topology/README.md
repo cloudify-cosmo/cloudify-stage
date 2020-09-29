@@ -79,7 +79,7 @@ Terraform node info table:
 
 ### Badges
 
-When executing a workflow for a deployment (e.g. the `install` workflow), the topology nodes show badges that reflect the workflow execution state.
+When executing a workflow for a deployment (e.g. the `install` workflow), the topology nodes show badges that reflect the workflow execution state.<br/>
 
 * Install state - The workflow execution is in progress for this node
 * Done state - The workflow execution was completed successfully for this node
