@@ -60,7 +60,17 @@ The hamburger menu on the right of every deployment allows performing the follow
 3. Click **Execute**.
 
 You can also use **Install** or **Uninstall** menu options to execute those specific workflows.
+For these two workflows you will also be able to track the progress of the execution as at the bottom of the deployment row there will be thin line visible. Progress is calculated based on number of node instances installed (in case of install workflow) or deleted (in case of uninstall workflow). 
  
+![Deployment progress](https://docs.cloudify.co/5.1/images/ui/widgets/blueprint-deployments_progress-bar.png)
+
+The color of the line indicates the status of the execution:
+
+* **Green** - succeeded
+* **Yellow** - in progress
+* **Red** - failed
+
+
 Each of the default workflows are described in detail [here](https://docs.cloudify.co/5.1/working_with/workflows/built-in-workflows).
 
 
