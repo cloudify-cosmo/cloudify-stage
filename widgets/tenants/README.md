@@ -1,9 +1,9 @@
 # Tenant Management
 Displays a list of tenants on the Manager and enables tenant management. 
 
-
+<div class="ui message info">
 This widget is only available to admin users.
-
+</div>
 
 ![Tenants list](https://docs.cloudify.co/5.1/images/ui/widgets/tenants-list.png)
 

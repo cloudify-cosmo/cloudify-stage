@@ -2,10 +2,10 @@
 
 Displays a list of snapshots of the Manager - both snapshots that were created on this manager, and snapshots uploaded to it. 
 
-
+<div class="ui message info">
 * This widget is only available to users with the ‘admin’ role.
 * Snapshots are always created with “private” visibility, which cannot be set to a different visibility level.
-
+</div>
 
 ![snapshots-list](https://docs.cloudify.co/5.1/images/ui/widgets/snapshots-list.png)
 
