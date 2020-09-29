@@ -7,15 +7,19 @@ import _ from 'lodash';
 import $ from 'jquery';
 import d3 from 'd3';
 import moment from 'moment';
-import chai from 'chai';
 import { configure } from 'enzyme';
 import Adapter from 'enzyme-adapter-react-16';
 
 configure({ adapter: new Adapter() });
 
+function noop() {
+    return {};
+}
+
 process.env.NODE_ENV = 'test';
 global.document = jsdom.jsdom('<!doctype html><html><body></body></html>');
 global.window = document.defaultView;
+global.window.open = noop;
 global.navigator = window.navigator;
 Object.keys(document.defaultView).forEach(property => {
     if (typeof global[property] === 'undefined') {
@@ -23,24 +27,14 @@ Object.keys(document.defaultView).forEach(property => {
     }
 });
 
-global.$ = global.jQuery = global.window.$ = global.window.jQuery = $(window);
+global.$ = global.jQuery = global.window.$ = global.window.jQuery = $;
 global._ = _;
 global.d3 = d3;
 global.moment = moment;
 global.HTMLElement = window.HTMLElement;
-
-chai.use(require('chai-enzyme')());
-chai.use(require('sinon-chai'));
-
-function noop() {
-    return {};
-}
 
 // prevent mocha tests from breaking when trying to require non-js file
 require.extensions['.css'] = noop;
 require.extensions['.scss'] = noop;
 require.extensions['.svg'] = noop;
 require.extensions['.png'] = noop;
-
-// For the window.location to work...
-jsdom.changeURL(window, 'http://myhost:8088/');

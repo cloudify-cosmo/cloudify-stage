@@ -5,11 +5,10 @@
 /**
  * Created by kinneretzin on 11/12/2016.
  */
-import { expect } from 'chai';
 import sinon from 'sinon';
 
 import configureMockStore from 'redux-mock-store';
-import { createToolbox, getToolbox } from '../../app/utils/Toolbox';
+import { createToolbox, getToolbox } from 'utils/Toolbox';
 
 const mockStore = configureMockStore();
 
@@ -35,7 +34,8 @@ describe('(Utils) Toolbox', () => {
     it('Toolbox created properly', () => {
         const toolbox = getToolbox(() => {});
 
-        expect(toolbox.store).to.exist;
+        expect(toolbox.store).not.toBeUndefined();
+        expect(toolbox.store).not.toBeNull();
     });
 
     /**

@@ -4,19 +4,18 @@
 
 import React from 'react';
 import { mount } from 'enzyme';
-import { expect } from 'chai';
 import fetchMock from 'fetch-mock';
 
 import { Provider } from 'react-redux';
 import configureMockStore from 'redux-mock-store';
 import { MemoryRouter as Router } from 'react-router-dom';
 import moment from 'moment';
-import Consts from '../../app/utils/consts';
-import ConnectedLicensePage from '../../app/containers/LicensePage';
-import LicensePage from '../../app/components/LicensePage';
-import * as BasicComponents from '../../app/components/basic';
+import Consts from 'utils/consts';
+import ConnectedLicensePage from 'containers/LicensePage';
+import LicensePage from 'components/LicensePage';
+import * as BasicComponents from 'components/basic';
 
-import { createToolbox } from '../../app/utils/Toolbox';
+import { createToolbox } from 'utils/Toolbox';
 import licenses from '../resources/licenses';
 import versions from '../resources/versions';
 
@@ -27,28 +26,28 @@ describe('(Component) LicensePage', () => {
     global.moment = (timestamp, inputPattern) => moment(timestamp, inputPattern).utcOffset(0);
 
     const verifyProps = (canUploadLicense, isProductOperational, license, status) => {
-        expect(licensePageComponent.props().canUploadLicense).to.be.eql(canUploadLicense);
-        expect(licensePageComponent.props().isProductOperational).to.be.eql(isProductOperational);
-        expect(licensePageComponent.props().license).to.be.eql(license);
-        expect(licensePageComponent.props().status).to.be.eql(status);
+        expect(licensePageComponent.props().canUploadLicense).toEqual(canUploadLicense);
+        expect(licensePageComponent.props().isProductOperational).toEqual(isProductOperational);
+        expect(licensePageComponent.props().license).toEqual(license);
+        expect(licensePageComponent.props().status).toEqual(status);
     };
 
     const verifyHeader = () => {
         const header = messageContainerComponent.find('Header').first();
-        expect(header.text()).to.be.eql(' License Management');
-        expect(header.find('Icon').props().name).to.be.eql('key');
+        expect(header.text()).toBe(' License Management');
+        expect(header.find('Icon').props().name).toBe('key');
     };
 
     const verifyMessage = (messageHeader, icon, isLicenseSwitchButtonVisible) => {
         const descriptionMessage = messageContainerComponent.find('DescriptionMessage');
-        expect(descriptionMessage.find('MessageHeader').text()).to.be.eql(messageHeader);
+        expect(descriptionMessage.find('MessageHeader').text()).toBe(messageHeader);
         expect(
             descriptionMessage
                 .find('Icon')
                 .first()
                 .props().name
-        ).to.be.eql(icon);
-        expect(descriptionMessage.find('LicenseSwitchButton')).to.have.length(isLicenseSwitchButtonVisible ? 1 : 0);
+        ).toBe(icon);
+        expect(descriptionMessage.find('LicenseSwitchButton')).toHaveLength(isLicenseSwitchButtonVisible ? 1 : 0);
     };
 
     const verifyCurrentLicense = (
@@ -62,42 +61,42 @@ describe('(Component) LicensePage', () => {
         const currentLicense = messageContainerComponent.find('CurrentLicense');
         const tableCells = currentLicense.find('TableCell');
         if (firstRow !== '') {
-            expect(tableCells.at(1).text()).to.be.eql(firstRow);
+            expect(tableCells.at(1).text()).toBe(firstRow);
         }
         if (secondRow !== '') {
-            expect(tableCells.at(3).text()).to.be.eql(secondRow);
+            expect(tableCells.at(3).text()).toBe(secondRow);
         }
         if (thirdRow !== '') {
-            expect(tableCells.at(5).text()).to.be.eql(thirdRow);
+            expect(tableCells.at(5).text()).toBe(thirdRow);
         }
         if (fourthRow !== '') {
-            expect(tableCells.at(7).text()).to.be.eql(fourthRow);
+            expect(tableCells.at(7).text()).toBe(fourthRow);
         }
         if (fifthRow !== '') {
-            expect(tableCells.at(9).text()).to.be.eql(fifthRow);
+            expect(tableCells.at(9).text()).toBe(fifthRow);
         }
         if (sixthRow !== '') {
-            expect(tableCells.at(11).text()).to.be.eql(sixthRow);
+            expect(tableCells.at(11).text()).toBe(sixthRow);
         }
     };
 
     const verifyUploadLicense = isPresent => {
         const uploadLicense = messageContainerComponent.find('UploadLicense');
-        expect(uploadLicense).to.have.length(isPresent ? 1 : 0);
+        expect(uploadLicense).toHaveLength(isPresent ? 1 : 0);
     };
 
     const verifyFooter = isGoToAppButtonEnabled => {
         const footer = messageContainerComponent.find('Grid');
-        expect(footer.find('EulaLink')).to.have.length(1);
+        expect(footer.find('EulaLink')).toHaveLength(1);
         const goToAppButton = footer.find('Button').findWhere(el => el.props().content === 'Go to app');
-        expect(goToAppButton).to.have.length(1);
-        expect(goToAppButton.props().disabled).to.be.eql(!isGoToAppButtonEnabled);
+        expect(goToAppButton).toHaveLength(1);
+        expect(goToAppButton.props().disabled).toBe(!isGoToAppButtonEnabled);
     };
 
     const verifySwitchToUpload = isButtonPresent => {
         const descriptionMessage = messageContainerComponent.find('DescriptionMessage');
         const licenseSwitchButton = descriptionMessage.find('LicenseSwitchButton');
-        expect(licenseSwitchButton).to.have.length(isButtonPresent ? 1 : 0);
+        expect(licenseSwitchButton).toHaveLength(isButtonPresent ? 1 : 0);
     };
 
     const getLicenseState = (data, isRequired, status) => {
@@ -156,7 +155,7 @@ describe('(Component) LicensePage', () => {
         await licensePageComponent.instance().componentDidMount();
 
         // Check that license was fetch request was called
-        expect(myMock.called(licenseUrl)).to.be.true;
+        expect(myMock.called(licenseUrl)).toBeTruthy();
     };
 
     describe('for admin users', () => {

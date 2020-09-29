@@ -1,7 +1,6 @@
 /**
  * Created by kinneretzin on 11/12/2016.
  */
-import { expect } from 'chai';
 import { parse } from 'query-string';
 
 import configureMockStore from 'redux-mock-store';
@@ -9,12 +8,12 @@ import thunk from 'redux-thunk';
 
 import { applyMiddleware, combineReducers, createStore } from 'redux';
 
-import pageReducer from '../../app/reducers/pageReducer';
+import pageReducer from 'reducers/pageReducer';
 
-import { drillDownToPage } from '../../app/actions/drilldownPage';
-import { changePageName, changePageDescription, removePage } from '../../app/actions/page';
+import { drillDownToPage } from 'actions/drilldownPage';
+import { changePageName, changePageDescription, removePage } from 'actions/page';
 
-import * as types from '../../app/actions/types';
+import * as types from 'actions/types';
 
 const mockStore = configureMockStore([thunk]);
 
@@ -90,7 +89,7 @@ describe('(Reducer) Pages', () => {
 
             const storeActions = store.getActions();
 
-            expect(storeActions).to.have.length(expectedActions.length);
+            expect(storeActions).toHaveLength(expectedActions.length);
             storeActions.pop(); // remove last cause we want to ignore it
 
             _.each(storeActions, (action, index) => {
@@ -103,7 +102,7 @@ describe('(Reducer) Pages', () => {
                 delete actualAction.pageId;
                 delete actualAction.drillDownPageId;
 
-                expect(action).to.eql(expectedAction);
+                expect(action).toEqual(expectedAction);
             });
         });
 
@@ -153,7 +152,7 @@ describe('(Reducer) Pages', () => {
 
             const storeActions = store.getActions();
 
-            expect(storeActions).to.have.length(expectedActions.length);
+            expect(storeActions).toHaveLength(expectedActions.length);
         });
 
         it('Pass drilldown context', () => {
@@ -201,27 +200,14 @@ describe('(Reducer) Pages', () => {
             const storeActions = store.getActions();
             const routeAction = storeActions[1];
 
-            expect(routeAction.payload.args).to.have.length(1);
+            expect(routeAction.payload.args).toHaveLength(1);
             const query = parse(routeAction.payload.args[0].search);
-            expect(query.c).to.equal('[{"context":{"contextValue":"kuku"}}]');
+            expect(query.c).toBe('[{"context":{"contextValue":"kuku"}}]');
         });
     });
 
     describe('Drilldown to page state', () => {
         const initialState = {
-            templates: {
-                templatesDef: {
-                    tmp1: {
-                        name: 'tmp1',
-                        widgets: [{ name: 'some widget', definition: 'widget1', width: 1, height: 1, x: 1, y: 1 }]
-                    }
-                }
-            },
-            manager: {
-                ip: '1.1.1.1'
-            },
-            context: {},
-            drilldownContext: [],
             widgetDefinitions: [{ id: 'widget1' }],
             pages: [
                 {
@@ -239,18 +225,22 @@ describe('(Reducer) Pages', () => {
         );
 
         const widget = initialState.pages[0].widgets[0];
-        const defaultTemplate = initialState.templates.templatesDef.tmp1;
+        const defaultTemplate = {
+            name: 'tmp1',
+            widgets: [{ name: 'some widget', definition: 'widget1', width: 1, height: 1, x: 1, y: 1 }]
+        };
 
         store.dispatch(drillDownToPage(widget, defaultTemplate));
 
         const { pages } = store.getState();
         const parentPage = pages[0];
         const drillDownPage = pages[1];
-        console.error(store.getState());
+        store.getState();
 
         it('Should have a drilldown page', () => {
-            expect(pages).to.have.length(2);
-            expect(drillDownPage.id).to.exist;
+            expect(pages).toHaveLength(2);
+            expect(drillDownPage.id).not.toBeUndefined();
+            expect(drillDownPage.id).not.toBeNull();
         });
 
         it('Drilldown page should have the right template data', () => {
@@ -277,41 +267,23 @@ describe('(Reducer) Pages', () => {
             pageAccordingToTemplate.parent = parentPage.id;
             pageAccordingToTemplate.widgets[0].id = drillDownPage.widgets[0].id;
 
-            expect(drillDownPage).to.eql(pageAccordingToTemplate);
+            expect(drillDownPage).toEqual(pageAccordingToTemplate);
         });
 
         it('Drilldown parent widget should have the expected drillDownPage', () => {
-            expect(parentPage.widgets[0].drillDownPages.tmp1).to.equal(drillDownPage.id);
+            expect(parentPage.widgets[0].drillDownPages.tmp1).toBe(drillDownPage.id);
         });
 
         it('Should link parent and child pages properly', () => {
-            expect(parentPage.children).to.have.length(1);
-            expect(parentPage.children[0]).to.equal(drillDownPage.id);
+            expect(parentPage.children).toHaveLength(1);
+            expect(parentPage.children[0]).toBe(drillDownPage.id);
 
-            expect(drillDownPage.parent).to.equal(parentPage.id);
+            expect(drillDownPage.parent).toBe(parentPage.id);
         });
     });
 
     describe('Drilldown to 2 pages from the same widget', () => {
         const initialState = {
-            templates: {
-                templatesDef: {
-                    tmp1: {
-                        name: 'tmp1',
-                        widgets: [{ name: 'some widget', definition: 'widget1', width: 1, height: 1, x: 1, y: 1 }]
-                    },
-                    tmp2: {
-                        name: 'tmp2',
-                        widgets: [{ name: 'some widget2', definition: 'widget1', width: 1, height: 1, x: 1, y: 1 }]
-                    }
-                }
-            },
-            manager: {
-                ip: '1.1.1.1'
-            },
-            context: {},
-            drilldownContext: [],
-            widgetDefinitions: [{ id: 'widget1' }],
             pages: [
                 {
                     id: '0',
@@ -324,9 +296,14 @@ describe('(Reducer) Pages', () => {
         const store = createStore(combineReducers({ pages: pageReducer }), initialState, applyMiddleware(thunk));
 
         const widget = initialState.pages[0].widgets[0];
-        const defaultTemplate1 = initialState.templates.templatesDef.tmp1;
-        const defaultTemplate2 = initialState.templates.templatesDef.tmp2;
-
+        const defaultTemplate1 = {
+            name: 'tmp1',
+            widgets: [{ name: 'some widget', definition: 'widget1', width: 1, height: 1, x: 1, y: 1 }]
+        };
+        const defaultTemplate2 = {
+            name: 'tmp2',
+            widgets: [{ name: 'some widget2', definition: 'widget1', width: 1, height: 1, x: 1, y: 1 }]
+        };
         store.dispatch(drillDownToPage(widget, defaultTemplate1));
         store.dispatch(drillDownToPage(widget, defaultTemplate2));
 
@@ -336,13 +313,15 @@ describe('(Reducer) Pages', () => {
         const drillDownPage2 = pages[2];
 
         it('The 2 pages should exist in the drilldown pages list', () => {
-            expect(parentPage.widgets[0].drillDownPages.tmp1).to.exist;
-            expect(parentPage.widgets[0].drillDownPages.tmp2).to.exist;
+            expect(parentPage.widgets[0].drillDownPages.tmp1).not.toBeUndefined();
+            expect(parentPage.widgets[0].drillDownPages.tmp1).not.toBeNull();
+            expect(parentPage.widgets[0].drillDownPages.tmp2).not.toBeUndefined();
+            expect(parentPage.widgets[0].drillDownPages.tmp2).not.toBeNull();
         });
 
         it('Drilldown pages should have the right IDs', () => {
-            expect(parentPage.widgets[0].drillDownPages.tmp1).to.equal(drillDownPage1.id);
-            expect(parentPage.widgets[0].drillDownPages.tmp2).to.equal(drillDownPage2.id);
+            expect(parentPage.widgets[0].drillDownPages.tmp1).toBe(drillDownPage1.id);
+            expect(parentPage.widgets[0].drillDownPages.tmp2).toBe(drillDownPage2.id);
         });
     });
 
@@ -409,7 +388,7 @@ describe('(Reducer) Pages', () => {
             store.dispatch(removePage(dashboardPage));
 
             const { pages } = store.getState();
-            expect(pages).to.deep.equal([
+            expect(pages).toEqual([
                 localBlueprintsPage,
                 deploymentsPage,
                 deploymentDrillDownPage,
@@ -424,7 +403,7 @@ describe('(Reducer) Pages', () => {
             store.dispatch(removePage(localBlueprintsPage));
 
             const { pages } = store.getState();
-            expect(pages).to.deep.equal([dashboardPage, deploymentsPage, deploymentDrillDownPage]);
+            expect(pages).toEqual([dashboardPage, deploymentsPage, deploymentDrillDownPage]);
         });
     });
 
@@ -447,7 +426,7 @@ describe('(Reducer) Pages', () => {
             store.dispatch(changePageName(dashboardPage, 'Control Panel'));
 
             const { pages } = store.getState();
-            expect(pages[0]).to.deep.equal({
+            expect(pages[0]).toEqual({
                 id: 'dashboard',
                 name: 'Control Panel',
                 description: 'DevOps control panel',
@@ -461,7 +440,7 @@ describe('(Reducer) Pages', () => {
             store.dispatch(changePageDescription(dashboardPage.id, 'Widgets for controlling the world'));
 
             const { pages } = store.getState();
-            expect(pages[0]).to.deep.equal({
+            expect(pages[0]).toEqual({
                 id: 'dashboard',
                 name: 'Dashboard',
                 description: 'Widgets for controlling the world',
