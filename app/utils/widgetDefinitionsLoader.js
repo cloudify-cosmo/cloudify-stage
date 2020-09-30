@@ -43,6 +43,11 @@ export default class WidgetDefinitionsLoader {
             PropTypes: { Widget: WidgetPropType },
             definePropType: def => {
                 Stage.PropTypes[def.name] = def.common;
+            },
+
+            Hooks: {},
+            defineHook: def => {
+                Stage.Hooks = { ...Stage.Hooks, ...def };
             }
         };
 
