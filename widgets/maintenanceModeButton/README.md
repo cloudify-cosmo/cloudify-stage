@@ -1,9 +1,9 @@
 # Maintenance Mode button
 This Button allows to activate Maintenance Mode.
 
-
+<div class="ui message info">
 Maintenance Mode can only be activated by `admin` users.
-
+</div>
 
 ![maintenance-mode-button](https://docs.cloudify.co/5.1/images/ui/widgets/maintenance-mode-button.png)
 
