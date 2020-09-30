@@ -1,7 +1,6 @@
 /**
  * Created by kinneretzin on 11/12/2016.
  */
-import { expect } from 'chai';
 import sinon from 'sinon';
 
 import configureMockStore from 'redux-mock-store';
@@ -10,10 +9,10 @@ import { createStore, applyMiddleware } from 'redux';
 
 import timeKeeper from 'timekeeper';
 
-import TenantReducer from '../../app/reducers/tenantsReducer.js';
-import { getTenants, requestTenants, recieveTenants, errorTenants, selectTenant } from '../../app/actions/tenants.js';
+import TenantReducer from 'reducers/tenantsReducer.js';
+import { getTenants, requestTenants, recieveTenants, errorTenants, selectTenant } from 'actions/tenants.js';
 
-import * as types from '../../app/actions/types.js';
+import * as types from 'actions/types.js';
 
 const fetchMock = require('fetch-mock');
 
@@ -35,11 +34,11 @@ describe('(Reducer) Tenants', () => {
         fetchMock.restore();
     });
 
-    before(() => {
+    beforeAll(() => {
         timeKeeper.freeze(time);
     });
 
-    after(() => {
+    afterAll(() => {
         timeKeeper.reset();
     });
 
@@ -62,11 +61,13 @@ describe('(Reducer) Tenants', () => {
 
         return store.dispatch(getTenants(managerData)).then(() => {
             // return of async actions
-            expect(store.getActions()).to.eql(expectedActions);
+            expect(store.getActions()).toEqual(expectedActions);
         });
     });
 
     it('creates error action when fetching tenants returns an error', () => {
+        console.error = jest.fn();
+
         fetchMock.get(/sp*/, {
             status: 500,
             body: { message: 'Error fetching tenants' },
@@ -83,11 +84,14 @@ describe('(Reducer) Tenants', () => {
 
         return store.dispatch(getTenants(managerData)).catch(() => {
             // return of async actions
-            expect(store.getActions()).to.eql(expectedActions);
+            expect(store.getActions()).toEqual(expectedActions);
+            expect(console.error).toHaveBeenCalled();
         });
     });
 
     it('Store has an error if fetch tenants produces an error', () => {
+        console.error = jest.fn();
+
         fetchMock.get(/sp*/, {
             status: 500,
             body: { message: 'Error fetching tenants' },
@@ -98,12 +102,13 @@ describe('(Reducer) Tenants', () => {
 
         return store.dispatch(getTenants(managerData)).catch(() => {
             // return of async actions
-            expect(store.getState()).to.eql({
+            expect(store.getState()).toEqual({
                 isFetching: false,
                 error: 'Error fetching tenants',
                 items: [],
                 lastUpdated: Date.now()
             });
+            expect(console.error).toHaveBeenCalled();
         });
     });
 
@@ -117,7 +122,7 @@ describe('(Reducer) Tenants', () => {
 
         return store.dispatch(getTenants(managerData)).then(() => {
             // return of async actions
-            expect(store.getState()).to.eql({
+            expect(store.getState()).toEqual({
                 isFetching: false,
                 items: [{ name: 'aaa' }, { name: 'bbb' }, { name: 'ccc' }],
                 selected: 'aaa',
@@ -127,7 +132,7 @@ describe('(Reducer) Tenants', () => {
     });
 
     it('should handle selectTenant', () => {
-        expect(TenantReducer({}, selectTenant('abc'))).to.eql({
+        expect(TenantReducer({}, selectTenant('abc'))).toEqual({
             selected: 'abc'
         });
     });
