@@ -31,7 +31,7 @@ module.exports = (env, argv) => {
                 enforce: 'pre'
             },
             {
-                test: /\.js?$/,
+                test: /\.js(x?)$/,
                 exclude: /node_modules/,
                 use: [
                     {
@@ -149,6 +149,7 @@ module.exports = (env, argv) => {
             context,
             devtool,
             resolve: {
+                extensions: ['.js', '.jsx'],
                 alias: {
                     'jquery-ui': 'jquery-ui/ui',
                     jquery: `${__dirname}/node_modules/jquery` // Always make sure we take jquery from the same place
@@ -204,8 +205,11 @@ module.exports = (env, argv) => {
             mode,
             context,
             devtool,
-            entry: glob.sync('./widgets/*/src/widget.js').reduce((acc, item) => {
-                const name = item.replace('./widgets/', '').replace('/src', '');
+            resolve: {
+                extensions: ['.js', '.jsx']
+            },
+            entry: glob.sync('./widgets/*/src/widget.jsx').reduce((acc, item) => {
+                const name = item.replace('./widgets/', '').replace('/src/widget.jsx', '/widget.js');
                 acc[name] = item;
                 return acc;
             }, {}),
@@ -232,7 +236,10 @@ module.exports = (env, argv) => {
             mode,
             context,
             devtool,
-            entry: glob.sync('./widgets/common/src/props/*.js').concat(glob.sync('./widgets/common/src/*.js')),
+            entry: glob
+                .sync('./widgets/common/src/props/*.js')
+                .concat(glob.sync('./widgets/common/src/hooks/*.js'))
+                .concat(glob.sync('./widgets/common/src/*.js*')),
             output: {
                 path: path.join(outputPath, 'appData/widgets'),
                 filename: 'common/common.js',
