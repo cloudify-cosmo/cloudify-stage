@@ -38,7 +38,10 @@ Stage.defineWidget({
         {
             id: 'displayStyle',
             name: 'Display style',
-            items: [{ name: 'Table', value: 'table' }, { name: 'List', value: 'list' }],
+            items: [
+                { name: 'Table', value: 'table' },
+                { name: 'List', value: 'list' }
+            ],
             default: 'table',
             type: Stage.Basic.GenericField.LIST_TYPE
         },
@@ -118,6 +121,7 @@ Stage.defineWidget({
                         nodeInstancesStates: nodeInstanceData[item.id] ? nodeInstanceData[item.id].states : {},
                         created_at: Stage.Utils.Time.formatTimestamp(item.created_at), // 2016-07-20 09:10:53.103579
                         updated_at: Stage.Utils.Time.formatTimestamp(item.updated_at),
+                        isUpdated: !_.isEqual(item.created_at, item.updated_at),
                         executions: _.filter(executionsData[item.id], Stage.Utils.Execution.isActiveExecution),
                         lastExecution: _.first(executionsData[item.id]),
                         workflows
@@ -140,8 +144,7 @@ Stage.defineWidget({
             items: _.map(data.items, item => {
                 return {
                     ...item,
-                    isSelected: selectedDeployment === item.id,
-                    isUpdated: !_.isEqual(item.created_at, item.updated_at)
+                    isSelected: selectedDeployment === item.id
                 };
             })
         };
