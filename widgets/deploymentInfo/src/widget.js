@@ -87,13 +87,14 @@ Stage.defineWidget({
                         ','
                     )
                 })
-                .then(deploymentItem =>
-                    _.mapValues(deploymentItem, (fieldValue, fieldName) =>
+                .then(deploymentItem => ({
+                    ..._.mapValues(deploymentItem, (fieldValue, fieldName) =>
                         fieldName === 'created_at' || fieldName === 'updated_at'
                             ? Stage.Utils.Time.formatTimestamp(fieldValue)
                             : fieldValue
-                    )
-                );
+                    ),
+                    isUpdated: !_.isEqual(deploymentItem.created_at, deploymentItem.updated_at)
+                }));
 
             const nodeInstancesSummary = configuration.showNodeInstances
                 ? await manager.doGet('/summary/node_instances', {
