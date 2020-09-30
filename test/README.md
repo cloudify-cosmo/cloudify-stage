@@ -2,13 +2,14 @@
 ## Unit tests
 
 There are multiple tests divided by category:
-- React components tests in [test/components](./test/components) directory
-- Redux reducers tests in [test/reducers](./test/reducers) directory
-- Util classes tests in [test/utils](./test/utils) directory
+- React components tests in [test/jest/components](./test/jest/components) directory
+- Redux reducers tests in [test/jest/reducers](./test/jest/reducers) directory
+- Util classes tests in [test/jest/utils](./test/jest/utils) directory
+- Widgets tests in [test/jest/widgets](./test/jest/widgets) directory
 
 Run `npm run prodtest` to start all unit tests.
 
-Run `npm run devtest -- --test <path_to_spec_file>` to start specific unit test from `<path_to_spec_file>`.
+Run `npm run devtest -- <path_to_spec_file>` to start specific unit test from `<path_to_spec_file>`.
 
 ## System tests
 

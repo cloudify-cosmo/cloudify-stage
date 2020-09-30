@@ -1,7 +1,9 @@
 # Composer link
-Opens the Cloudify Composer, which allows creating blueprints with a graphical drag-and-drop tool. The Composer comes as part of the Cloudify Premium edition, and is only available for users with certain roles. 
+Opens the [Cloudify Composer](https://docs.cloudify.co/5.1/developer/composer/), which allows creating blueprints with a graphical drag-and-drop tool. 
 
-For more information regarding the Composer, see [Cloudify Composer](https://docs.cloudify.co/5.1/developer/composer/index.html).
+<div class="ui message info">
+The Cloudify Composer comes as part of the Cloudify Premium Manager, and is only available for users with certain roles.
+</div>
 
 ![Composer-link](https://docs.cloudify.co/5.1/images/ui/widgets/composer-link.png)
 

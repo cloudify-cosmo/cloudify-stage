@@ -4,15 +4,14 @@
 
 import React from 'react';
 import { mount } from 'enzyme';
-import { expect } from 'chai';
 import sinon from 'sinon';
 import configureMockStore from 'redux-mock-store';
 import { Provider } from 'react-redux';
 
-import StageUtils from '../../app/utils/stageUtils';
-import * as BasicComponents from '../../app/components/basic';
-import Help from '../../app/components/Help';
-import HelpContainer from '../../app/containers/Help';
+import StageUtils from 'utils/stageUtils';
+import * as BasicComponents from 'components/basic';
+import Help from 'components/Help';
+import HelpContainer from 'containers/Help';
 
 describe('(Component) Help', () => {
     global.Stage = { Basic: BasicComponents };
@@ -20,19 +19,19 @@ describe('(Component) Help', () => {
 
     it('renders help menu', () => {
         const wrapper = mount(<Help onAbout={() => {}} version="5.0.5" />);
-        expect(wrapper.find(Dropdown)).to.have.length(1);
+        expect(wrapper.find(Dropdown)).toHaveLength(1);
 
         const dropdownItemComponents = wrapper.find(Dropdown.Item);
-        expect(dropdownItemComponents.length).to.equal(3);
+        expect(dropdownItemComponents.length).toBe(3);
 
-        expect(dropdownItemComponents.get(0).props.text).to.equal('Documentation');
-        expect(dropdownItemComponents.get(0).props.icon).to.equal('book');
+        expect(dropdownItemComponents.get(0).props.text).toBe('Documentation');
+        expect(dropdownItemComponents.get(0).props.icon).toBe('book');
 
-        expect(dropdownItemComponents.get(1).props.text).to.equal('Contact Us');
-        expect(dropdownItemComponents.get(1).props.icon).to.equal('comments');
+        expect(dropdownItemComponents.get(1).props.text).toBe('Contact Us');
+        expect(dropdownItemComponents.get(1).props.icon).toBe('comments');
 
-        expect(dropdownItemComponents.get(2).props.text).to.equal('About');
-        expect(dropdownItemComponents.get(2).props.icon).to.equal('info circle');
+        expect(dropdownItemComponents.get(2).props.text).toBe('About');
+        expect(dropdownItemComponents.get(2).props.icon).toBe('info circle');
     });
 
     it('calls onAbout function on click on About option', () => {
@@ -41,7 +40,7 @@ describe('(Component) Help', () => {
         const dropdownItemComponents = wrapper.find(Dropdown.Item);
 
         dropdownItemComponents.filterWhere(element => element.instance().props.text === 'About').simulate('click');
-        expect(onAbout).to.have.been.calledOnce;
+        expect(onAbout.calledOnce).toBeTruthy();
     });
 
     it('calls redirectToPage function on click on Documentation and Contact Us options', () => {
@@ -51,10 +50,10 @@ describe('(Component) Help', () => {
         dropdownItemComponents
             .filterWhere(element => element.instance().props.text === 'Documentation')
             .simulate('click');
-        expect(redirectToPage).to.have.been.calledWith('https://docs.cloudify.co/5.0.5');
+        expect(redirectToPage.calledWithExactly('https://docs.cloudify.co/5.0.5')).toBeTruthy();
 
         dropdownItemComponents.filterWhere(element => element.instance().props.text === 'Contact Us').simulate('click');
-        expect(redirectToPage).to.have.been.calledWith('https://cloudify.co/contact');
+        expect(redirectToPage.calledWithExactly('https://cloudify.co/contact')).toBeTruthy();
         redirectToPage.restore();
     });
 
@@ -79,7 +78,7 @@ describe('(Component) Help', () => {
             .filterWhere(element => element.instance().props.text === 'Documentation')
             .simulate('click');
 
-        expect(redirectToPage).to.have.been.calledWith('https://docs.cloudify.co/latest');
+        expect(redirectToPage.calledWithExactly('https://docs.cloudify.co/latest')).toBeTruthy();
         redirectToPage.restore();
     });
 });

@@ -1,9 +1,9 @@
 # User Management
 Displays the list of users and enables their management. 
 
-
+<div class="ui message info">
 This widget is only available to admin users.
-
+</div>
 
 ![Users](https://docs.cloudify.co/5.1/images/ui/widgets/users-mgmt.png)
 

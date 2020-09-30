@@ -4,17 +4,16 @@
 
 import React from 'react';
 import { mount } from 'enzyme';
-import { expect } from 'chai';
 
 import { Provider } from 'react-redux';
 import configureMockStore from 'redux-mock-store';
 import { MemoryRouter as Router } from 'react-router-dom';
-import Consts from '../../app/utils/consts';
-import ConnectedBanner from '../../app/containers/banner/Banner';
-import Banner from '../../app/components/banner/Banner';
-import * as BasicComponents from '../../app/components/basic';
+import Consts from 'utils/consts';
+import ConnectedBanner from 'containers/banner/Banner';
+import Banner from 'components/banner/Banner';
+import * as BasicComponents from 'components/basic';
 
-import { createToolbox } from '../../app/utils/Toolbox';
+import { createToolbox } from 'utils/Toolbox';
 import licenses from '../resources/licenses';
 import versions from '../resources/versions';
 
@@ -31,28 +30,28 @@ describe('(Component) Banner', () => {
         licenseEdition,
         hideOnSmallScreen
     ) => {
-        expect(bannerComponent.props().isCommunity).to.be.eql(isCommunity);
-        expect(bannerComponent.props().isExpired).to.be.eql(isExpired);
-        expect(bannerComponent.props().isTrial).to.be.eql(isTrial);
-        expect(bannerComponent.props().productName).to.be.eql(productName);
-        expect(bannerComponent.props().productVersion).to.be.eql(productVersion);
-        expect(bannerComponent.props().licenseEdition).to.be.eql(licenseEdition);
-        expect(bannerComponent.props().hideOnSmallScreen).to.be.eql(hideOnSmallScreen);
+        expect(bannerComponent.props().isCommunity).toBe(isCommunity);
+        expect(bannerComponent.props().isExpired).toBe(isExpired);
+        expect(bannerComponent.props().isTrial).toBe(isTrial);
+        expect(bannerComponent.props().productName).toBe(productName);
+        expect(bannerComponent.props().productVersion).toBe(productVersion);
+        expect(bannerComponent.props().licenseEdition).toBe(licenseEdition);
+        expect(bannerComponent.props().hideOnSmallScreen).toBe(hideOnSmallScreen);
     };
 
     const verifyTag = (isPresent = false, tag = null, isLinked = false) => {
         const tagComponent = bannerComponent.find('LicenseTag');
-        expect(tagComponent).to.have.length(isPresent ? 1 : 0);
+        expect(tagComponent).toHaveLength(isPresent ? 1 : 0);
         if (isPresent) {
             const labelComponent = bannerComponent.find('Label');
             if (_.isEmpty(tag)) {
-                expect(labelComponent).to.have.length(0);
+                expect(labelComponent).toHaveLength(0);
             } else {
-                expect(labelComponent.text()).to.be.eql(tag);
+                expect(labelComponent.text()).toBe(tag);
                 const linkComponent = tagComponent.find('Link');
-                expect(linkComponent).to.have.length(isLinked ? 1 : 0);
+                expect(linkComponent).toHaveLength(isLinked ? 1 : 0);
                 if (isLinked) {
-                    expect(linkComponent.props().to).to.be.eql(Consts.LICENSE_PAGE_PATH);
+                    expect(linkComponent.props().to).toBe(Consts.LICENSE_PAGE_PATH);
                 }
             }
         }
@@ -60,11 +59,11 @@ describe('(Component) Banner', () => {
 
     const verifyFullName = fullName => {
         const headerComponent = bannerComponent.find('Header');
-        expect(headerComponent.text()).to.be.eql(fullName);
+        expect(headerComponent.text()).toBe(fullName);
 
         const linkComponent = bannerComponent.find('Link').first();
-        expect(linkComponent).to.have.length(1);
-        expect(linkComponent.props().to).to.be.eql(Consts.HOME_PAGE_PATH);
+        expect(linkComponent).toHaveLength(1);
+        expect(linkComponent.props().to).toBe(Consts.HOME_PAGE_PATH);
     };
 
     const getLicenseEdition = license => {
