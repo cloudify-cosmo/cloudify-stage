@@ -4,11 +4,11 @@
 
 function UploadBlueprintModal({ toolbox, open, onHide }) {
     const { useRef } = React;
-    const { useBoolean, useInputs, useOpenProp, useErrors, useResetableState } = Stage.Hooks;
+    const { useBoolean, useInputs, useOpenProp, useErrors, useResettableState } = Stage.Hooks;
 
     const [isLoading, setLoading, unsetLoading] = useBoolean();
     const { errors, setErrors, clearErrors, setMessageAsError } = useErrors();
-    const [visibility, setVisibility, clearVisibility] = useResetableState(Stage.Common.Consts.defaultVisibility);
+    const [visibility, setVisibility, clearVisibility] = useResettableState(Stage.Common.Consts.defaultVisibility);
     const [inputs, setInputs, clearInputs] = useInputs({
         blueprintUrl: '',
         blueprintFile: null,

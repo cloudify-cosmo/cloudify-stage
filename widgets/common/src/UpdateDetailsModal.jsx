@@ -377,14 +377,14 @@ export default function UpdateDetailsModal({
     onUpdate,
     deploymentUpdate: providedDeploymentUpdate
 }) {
-    const { useBoolean, useResetableState } = Stage.Hooks;
+    const { useBoolean, useResettableState } = Stage.Hooks;
     const { useEffect } = React;
 
     const [isLoading, setLoading, unsetLoading] = useBoolean();
-    const [deploymentUpdate, setDeploymentUpdate, resetDeploymentUpdate] = useResetableState(
+    const [deploymentUpdate, setDeploymentUpdate, resetDeploymentUpdate] = useResettableState(
         !_.isEmpty(deploymentUpdateId) ? EMPTY_DEPLOYMENT_UPDATE : providedDeploymentUpdate
     );
-    const [executionParameters, setExecutionParameters, resetExecutionParameters] = useResetableState(
+    const [executionParameters, setExecutionParameters, resetExecutionParameters] = useResettableState(
         EMPTY_EXECUTION_PARAMETERS
     );
 

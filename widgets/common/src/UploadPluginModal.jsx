@@ -3,11 +3,11 @@
  */
 
 function UploadPluginModal({ open, onHide, toolbox }) {
-    const { useResetableState, useBoolean, useErrors, useInputs, useOpenProp } = Stage.Hooks;
+    const { useResettableState, useBoolean, useErrors, useInputs, useOpenProp } = Stage.Hooks;
 
     const [isLoading, setLoading, unsetLoading] = useBoolean();
     const { errors, setErrors, clearErrors, setMessageAsError } = useErrors();
-    const [visibility, setVisibility, clearVisibility] = useResetableState(Stage.Common.Consts.defaultVisibility);
+    const [visibility, setVisibility, clearVisibility] = useResettableState(Stage.Common.Consts.defaultVisibility);
     const [inputs, setInputs, clearInputs] = useInputs({
         wagonUrl: '',
         wagonFile: null,

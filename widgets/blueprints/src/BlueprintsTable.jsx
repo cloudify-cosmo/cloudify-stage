@@ -1,9 +1,9 @@
-import BlueprintsViewPropTypes from './props/BlueprintsViewPropTypes';
-import BlueprintsViewDefaultProps from './props/BlueprintsViewDefaultProps';
-
 /**
  * Created by kinneretzin on 08/01/2017.
  */
+
+import BlueprintsViewPropTypes from './props/BlueprintsViewPropTypes';
+import BlueprintsViewDefaultProps from './props/BlueprintsViewDefaultProps';
 
 export default function BlueprintsTable({
     data,

@@ -1,8 +1,8 @@
-import ActionsPropType from './props/ActionsPropType';
-
 /**
  * Created by pposel on 07/02/2017.
  */
+
+import ActionsPropType from './props/ActionsPropType';
 
 const initialInputValues = {
     blueprintName: '',

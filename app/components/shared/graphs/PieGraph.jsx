@@ -44,7 +44,7 @@ export default function PieGraph({ data }) {
         <ResponsiveContainer width="100%" height="100%">
             <PieChart>
                 <Pie dataKey="value" data={data} labelLine label isAnimationActive={false} cx="40%">
-                    {data.map((entry, index) => (
+                    {data.map(entry => (
                         <Cell key={entry.name} fill={entry.color} />
                     ))}
                 </Pie>

@@ -3,17 +3,17 @@
  */
 
 function UpdateDeploymentModal({ deployment, open, onHide, toolbox }) {
-    const { useInputs, useOpenProp, useBoolean, useErrors, useResetableState } = Stage.Hooks;
+    const { useInputs, useOpenProp, useBoolean, useErrors, useResettableState } = Stage.Hooks;
 
     const [isLoading, setLoading, unsetLoading] = useBoolean();
     const [isFileLoading, setFileLoading, unsetFileLoading] = useBoolean();
     const [isPreviewShown, showPreview, hidePreview] = useBoolean();
     const { errors, setErrors, clearErrors, setMessageAsError } = useErrors();
 
-    const [blueprint, setBlueprint, resetBlueprint] = useResetableState(
+    const [blueprint, setBlueprint, resetBlueprint] = useResettableState(
         Stage.Common.DeployBlueprintModal.EMPTY_BLUEPRINT
     );
-    const [previewData, setPreviewData, resetPreviewData] = useResetableState({});
+    const [previewData, setPreviewData, resetPreviewData] = useResettableState({});
 
     const [deploymentInputs, setDeploymentInputs, resetDeploymentInputs] = useInputs({ ...deployment.inputs });
     const [inputs, setInput, resetInputs] = useInputs({

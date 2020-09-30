@@ -5,13 +5,13 @@ import SplitterLayout from 'react-splitter-layout';
 import Actions from './actions';
 
 export default function BlueprintSources({ data, toolbox, widget }) {
-    const { useResetableState, useBoolean } = Stage.Hooks;
+    const { useResettableState, useBoolean } = Stage.Hooks;
     const { useEffect } = React;
 
-    const [content, setContent, clearContent] = useResetableState('');
-    const [filename, setFilename, clearFilename] = useResetableState('');
-    const [error, setError, clearError] = useResetableState('');
-    const [type, setType, resetType] = useResetableState('json');
+    const [content, setContent, clearContent] = useResettableState('');
+    const [filename, setFilename, clearFilename] = useResettableState('');
+    const [error, setError, clearError] = useResettableState('');
+    const [type, setType, resetType] = useResettableState('json');
     const [isMaximized, maximize, minimize] = useBoolean();
 
     useEffect(() => {

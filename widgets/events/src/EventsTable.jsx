@@ -116,7 +116,6 @@ export default class EventsTable extends React.Component {
                     className="eventsTable"
                     noDataMessage={NO_DATA_MESSAGE}
                 >
-                    &gt;
                     <DataTable.Column label="" width="40px" show={fieldsToShow.indexOf('Icon') >= 0} />
                     <DataTable.Column
                         label="Timestamp"

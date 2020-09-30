@@ -23,11 +23,6 @@ export default class InstallWidgetModal extends Component {
         super(props, context);
 
         this.state = InstallWidgetModal.initialState;
-
-        this.openModal = this.openModal.bind(this);
-        this.closeModal = this.closeModal.bind(this);
-        this.onWidgetUrlChange = this.onWidgetUrlChange.bind(this);
-        this.onWidgetFileChange = this.onWidgetFileChange.bind(this);
     }
 
     shouldComponentUpdate(nextProps, nextState) {
