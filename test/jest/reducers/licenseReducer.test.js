@@ -2,21 +2,19 @@
  * Created by jakub.niezgoda on 20/03/2019.
  */
 
-import { expect } from 'chai';
 import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 import fetchMock from 'fetch-mock';
 import timeKeeper from 'timekeeper';
 import { applyMiddleware, createStore } from 'redux';
 
-import licenses from '../resources/licenses';
-import versions from '../resources/versions';
+import { login } from 'actions/managers';
+import { setLicense } from 'actions/license';
+import * as types from 'actions/types.js';
+import licenseReducer from 'reducers/licenseReducer';
 import rbac from '../resources/rbac';
-
-import { login } from '../../app/actions/managers';
-import { setLicense } from '../../app/actions/license';
-import * as types from '../../app/actions/types.js';
-import licenseReducer from '../../app/reducers/licenseReducer';
+import versions from '../resources/versions';
+import licenses from '../resources/licenses';
 
 describe('(Reducer) License', () => {
     const mockStore = configureMockStore([thunk]);
@@ -29,11 +27,11 @@ describe('(Reducer) License', () => {
     describe('Receive login action', () => {
         let store = null;
 
-        before(() => {
+        beforeAll(() => {
             timeKeeper.freeze(mockDate);
         });
 
-        after(() => {
+        afterAll(() => {
             timeKeeper.reset();
         });
 
@@ -66,8 +64,8 @@ describe('(Reducer) License', () => {
                     { type: '@@router/CALL_HISTORY_METHOD', payload: { args: ['/'], method: 'push' } }
                 ];
 
-                expect(actualActions).to.have.length(expectedActions.length);
-                expect(actualActions).to.eql(expectedActions);
+                expect(actualActions).toHaveLength(expectedActions.length);
+                expect(actualActions).toEqual(expectedActions);
             });
         });
 
@@ -84,8 +82,8 @@ describe('(Reducer) License', () => {
                 status: 'no_license'
             };
 
-            store.dispatch(login(username, password)).then(() => {
-                expect(store.getState()).to.eql(expectedLicenseState);
+            return store.dispatch(login(username, password)).then(() => {
+                expect(store.getState()).toEqual(expectedLicenseState);
             });
         });
 
@@ -114,8 +112,8 @@ describe('(Reducer) License', () => {
                     { type: '@@router/CALL_HISTORY_METHOD', payload: { args: ['/'], method: 'push' } }
                 ];
 
-                expect(actualActions).to.have.length(expectedActions.length);
-                expect(actualActions).to.eql(expectedActions);
+                expect(actualActions).toHaveLength(expectedActions.length);
+                expect(actualActions).toEqual(expectedActions);
             });
         });
 
@@ -133,7 +131,7 @@ describe('(Reducer) License', () => {
             };
 
             return store.dispatch(login(username, password)).then(() => {
-                expect(store.getState()).to.eql(expectedLicenseState);
+                expect(store.getState()).toEqual(expectedLicenseState);
             });
         });
 
@@ -162,8 +160,8 @@ describe('(Reducer) License', () => {
                     { type: '@@router/CALL_HISTORY_METHOD', payload: { args: ['/'], method: 'push' } }
                 ];
 
-                expect(actualActions).to.have.length(expectedActions.length);
-                expect(actualActions).to.eql(expectedActions);
+                expect(actualActions).toHaveLength(expectedActions.length);
+                expect(actualActions).toEqual(expectedActions);
             });
         });
 
@@ -181,7 +179,7 @@ describe('(Reducer) License', () => {
             };
 
             return store.dispatch(login(username, password)).then(() => {
-                expect(store.getState()).to.eql(expectedLicenseState);
+                expect(store.getState()).toEqual(expectedLicenseState);
             });
         });
 
@@ -210,8 +208,8 @@ describe('(Reducer) License', () => {
                     { type: '@@router/CALL_HISTORY_METHOD', payload: { args: ['/'], method: 'push' } }
                 ];
 
-                expect(actualActions).to.have.length(expectedActions.length);
-                expect(actualActions).to.eql(expectedActions);
+                expect(actualActions).toHaveLength(expectedActions.length);
+                expect(actualActions).toEqual(expectedActions);
             });
         });
 
@@ -229,7 +227,7 @@ describe('(Reducer) License', () => {
             };
 
             return store.dispatch(login(username, password)).then(() => {
-                expect(store.getState()).to.eql(expectedLicenseState);
+                expect(store.getState()).toEqual(expectedLicenseState);
             });
         });
     });
@@ -245,8 +243,8 @@ describe('(Reducer) License', () => {
             const setManagerLicenseAction = { type: types.SET_MANAGER_LICENSE, license: licenses.activePayingLicense };
             const expectedActions = [setManagerLicenseAction];
 
-            expect(actualActions).to.have.length(expectedActions.length);
-            expect(actualActions).to.eql(expectedActions);
+            expect(actualActions).toHaveLength(expectedActions.length);
+            expect(actualActions).toEqual(expectedActions);
         });
 
         it('active license changes license state', () => {
@@ -258,7 +256,7 @@ describe('(Reducer) License', () => {
                 status: 'active_license'
             };
 
-            expect(store.getState()).to.eql(expectedLicenseState);
+            expect(store.getState()).toEqual(expectedLicenseState);
         });
 
         it('expired license triggers actions', () => {
@@ -269,8 +267,8 @@ describe('(Reducer) License', () => {
             const setManagerLicenseAction = { type: types.SET_MANAGER_LICENSE, license: licenses.expiredPayingLicense };
             const expectedActions = [setManagerLicenseAction];
 
-            expect(actualActions).to.have.length(expectedActions.length);
-            expect(actualActions).to.eql(expectedActions);
+            expect(actualActions).toHaveLength(expectedActions.length);
+            expect(actualActions).toEqual(expectedActions);
         });
 
         it('expired license sets license state', () => {
@@ -282,7 +280,7 @@ describe('(Reducer) License', () => {
                 status: 'expired_license'
             };
 
-            expect(store.getState()).to.eql(expectedLicenseState);
+            expect(store.getState()).toEqual(expectedLicenseState);
         });
     });
 });

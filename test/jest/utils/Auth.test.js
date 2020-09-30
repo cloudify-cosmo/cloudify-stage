@@ -2,32 +2,26 @@
  * Created by edenp on 7/20/17.
  */
 
-import chai from 'chai';
 import sinon from 'sinon';
 
 import Cookies from 'js-cookie';
-import Auth from '../../app/utils/auth';
-
-chai.use(require('chai-as-promised'));
-
-chai.should();
-const { expect } = chai;
+import Auth from 'utils/auth';
 
 describe('(Utils) Auth', () => {
-    after(() => {
+    afterAll(() => {
         sinon.restore(Cookies.get);
     });
 
     it('should check is logged in', () => {
         let managerData = {};
-        expect(Auth.isLoggedIn(managerData)).to.equal(false);
+        expect(Auth.isLoggedIn(managerData)).toBe(false);
 
         managerData = { auth: {} };
-        expect(Auth.isLoggedIn(managerData)).to.equal(false);
+        expect(Auth.isLoggedIn(managerData)).toBe(false);
 
         sinon.stub(Cookies, 'get', () => {
             return 'WyIwIiwiYWY4ODQ2YjFiNjZlZTlkNWIyZGNhNGU3MDY3Yjk3NTgiXQ.DFJJOw.zXZeFuhPJ-n-lds_UJsLTAub2Q0';
         });
-        expect(Auth.isLoggedIn(managerData)).to.equal(true);
+        expect(Auth.isLoggedIn(managerData)).toBe(true);
     });
 });
