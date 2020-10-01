@@ -17,7 +17,7 @@ console.log(`Collecting coverage for: ${changedFiles}`);
 
 module.exports = {
     collectCoverage: true,
-    collectCoverageFrom: [...changedFiles, '!migrations/**', '!jest.config.js', '!migration.js'],
+    collectCoverageFrom: [...changedFiles, 'config.js', '!migrations/**', '!jest.config.js', '!migration.js'],
     coverageThreshold: {
         '**/*.js': {
             branches: 1,
