@@ -3,12 +3,12 @@ const { execSync } = require('child_process');
 
 let changedFiles;
 try {
-    changedFiles = execSync('git diff --name-only --relative master -- *.js **/*.js 2> /dev/null')
+    changedFiles = execSync('git diff --name-only --relative master -- *.js **/*.js')
         .toString()
         .trim()
         .split('\n');
 } catch (e) {
-    console.error(e.stdout.toString());
+    console.error(e.stderr.toString());
     throw e;
 }
 
