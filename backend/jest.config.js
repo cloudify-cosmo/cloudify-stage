@@ -1,10 +1,16 @@
 // eslint-disable-next-line security/detect-child-process
 const { execSync } = require('child_process');
 
-const changedFiles = execSync('git diff --name-only --relative master -- *.js **/*.js 2> /dev/null')
-    .toString()
-    .trim()
-    .split('\n');
+let changedFiles;
+try {
+    changedFiles = execSync('git diff --name-only --relative master -- *.js **/*.js 2> /dev/null')
+        .toString()
+        .trim()
+        .split('\n');
+} catch (e) {
+    console.error(e.stdout.toString());
+    throw e;
+}
 
 module.exports = {
     collectCoverage: true,
