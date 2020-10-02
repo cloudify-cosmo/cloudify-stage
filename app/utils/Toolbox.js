@@ -89,7 +89,7 @@ class Toolbox {
 
     refresh() {}
 
-    loading(show) {}
+    loading() {}
 
     getWidget() {}
 }

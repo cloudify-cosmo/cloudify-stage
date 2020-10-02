@@ -2,7 +2,6 @@
  * Created by kinneretzin on 11/09/2016.
  */
 
-import React from 'react';
 import { connect } from 'react-redux';
 import Widget from '../components/Widget';
 import { setValue } from '../actions/context';

@@ -32,7 +32,7 @@ export default class Widget extends Component {
         return !_.isEqual(this.props, nextProps) || !_.isEqual(this.state, nextState);
     }
 
-    componentDidUpdate(prevProps, prevState) {
+    componentDidUpdate() {
         const { widget } = this.props;
         if (widget.maximized) {
             this.widgetItemRef.current.focus();

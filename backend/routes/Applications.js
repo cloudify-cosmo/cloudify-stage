@@ -7,7 +7,6 @@ const express = require('express');
 const passport = require('passport');
 
 const router = express.Router();
-const logger = require('../handler/LoggerHandler').getLogger('Applications');
 const db = require('../db/Connection');
 
 router.use(passport.authenticate('token', { session: false }));

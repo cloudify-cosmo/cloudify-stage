@@ -6,7 +6,6 @@ import { connect } from 'react-redux';
 
 import PagesList from '../components/PagesList';
 import { selectPage, removePage, reorderPage, createPagesMap } from '../actions/page';
-import { toogleSidebar } from '../actions/app';
 
 const findSelectedRootPageId = (pagesMap, selectedPageId) => {
     const getParentPageId = page => {

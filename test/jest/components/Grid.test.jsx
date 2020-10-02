@@ -3,8 +3,7 @@
  */
 
 import React from 'react';
-import { shallow, mount } from 'enzyme';
-import sinon from 'sinon';
+import { shallow } from 'enzyme';
 
 import Grid from 'components/layout/Grid';
 import GridItem from 'components/layout/GridItem';

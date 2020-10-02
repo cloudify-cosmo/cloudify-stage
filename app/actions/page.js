@@ -190,8 +190,6 @@ export function createPagesFromTemplate() {
             console.log('Selected template id', templateId);
 
             const storeTemplates = getState().templates;
-            const { widgetDefinitions } = getState();
-
             const { pages } = storeTemplates.templatesDef[templateId];
 
             console.log('Create pages from selected template', pages);

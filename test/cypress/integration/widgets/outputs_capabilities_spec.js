@@ -1,5 +1,3 @@
-import _ from 'lodash';
-
 describe('Outputs/Capabilities', () => {
     const blueprintName = 'outputs_capabilities_test';
     const deploymentName = 'outputs_capabilities_test';

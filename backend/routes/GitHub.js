@@ -88,7 +88,7 @@ function setAuthorizationHeader(req, res, next, fetchCredentials) {
     }
 }
 
-function addIsAuthToResponseBody(req, res, next) {
+function addIsAuthToResponseBody(req, res) {
     const json = JSON.parse(res.data);
     json.isAuth = !_.isEmpty(req.header('authorization'));
     res.setHeader('content-type', 'application/json');

@@ -174,7 +174,7 @@ function handleCommand(cmd) {
     }
 
     executedCmd
-        .then(result => {
+        .then(() => {
             const doneStr = `${cmd.toUpperCase()} DONE`;
             logger.info(doneStr);
             logger.info('='.repeat(doneStr.length));

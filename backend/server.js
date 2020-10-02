@@ -8,7 +8,6 @@ const express = require('express');
 const passport = require('passport');
 const cookieParser = require('cookie-parser');
 const morgan = require('morgan');
-const _ = require('lodash');
 
 const config = require('./config');
 const Consts = require('./consts');
@@ -151,7 +150,7 @@ app.get('*', (request, response) => {
 });
 
 // Error handling
-app.use((err, req, res, next) => {
+app.use((err, req, res) => {
     logger.error('Error has occured ', err);
 
     let { message } = err;

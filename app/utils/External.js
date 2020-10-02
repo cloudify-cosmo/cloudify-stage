@@ -207,11 +207,11 @@ export default class External {
             });
     }
 
-    isUnauthorized(response) {
+    isUnauthorized() {
         return false;
     }
 
-    isLicenseError(response, body) {
+    isLicenseError() {
         return false;
     }
 

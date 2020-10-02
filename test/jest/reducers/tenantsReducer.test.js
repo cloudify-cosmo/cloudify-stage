@@ -1,7 +1,6 @@
 /**
  * Created by kinneretzin on 11/12/2016.
  */
-import sinon from 'sinon';
 
 import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
@@ -10,7 +9,7 @@ import { createStore, applyMiddleware } from 'redux';
 import timeKeeper from 'timekeeper';
 
 import TenantReducer from 'reducers/tenantsReducer.js';
-import { getTenants, requestTenants, recieveTenants, errorTenants, selectTenant } from 'actions/tenants.js';
+import { getTenants, selectTenant } from 'actions/tenants.js';
 
 import * as types from 'actions/types.js';
 

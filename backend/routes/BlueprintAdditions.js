@@ -41,7 +41,7 @@ router.get('/image/:blueprint', (req, res, next) => {
 
 router.post('/image/:blueprint', passport.authenticate('token', { session: false }), (req, res, next) => {
     db.BlueprintAdditions.findOrCreate({ where: { blueprintId: req.params.blueprint } })
-        .spread((blueprintAdditions, created) => {
+        .spread(blueprintAdditions => {
             blueprintAdditions
                 .update(
                     { image: _.isEmpty(req.body) ? null : req.body, imageUrl: req.query.imageUrl },
@@ -56,7 +56,7 @@ router.post('/image/:blueprint', passport.authenticate('token', { session: false
 
 router.delete('/image/:blueprint', passport.authenticate('token', { session: false }), (req, res, next) => {
     db.BlueprintAdditions.destroy({ where: { blueprintId: req.params.blueprint } })
-        .then(deletedRecord => {
+        .then(() => {
             res.end(JSON.stringify({ status: 'ok' }));
         })
         .catch(next);

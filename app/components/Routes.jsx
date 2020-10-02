@@ -48,6 +48,7 @@ export default function Routes({
                         isInMaintenanceMode ? (
                             <Redirect to={Consts.MAINTENANCE_PAGE_PATH} />
                         ) : isProductOperational ? (
+                            // eslint-disable-next-line react/jsx-props-no-spreading
                             <Layout {...props} />
                         ) : (
                             <Redirect to={Consts.LICENSE_PAGE_PATH} />

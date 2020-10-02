@@ -2,8 +2,6 @@
  * Created by kinneretzin on 03/04/2017.
  */
 
-import StageUtils from './stageUtils';
-
 export default class WidgetDataFetcher {
     constructor(widget, toolbox, paramsHandler) {
         this.widget = widget;

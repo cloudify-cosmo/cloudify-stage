@@ -4,16 +4,14 @@
 import { connect } from 'react-redux';
 import LinkToLogin from '../components/LinkToLogin';
 
-const mapStateToProps = (state, ownProps) => {
+const mapStateToProps = state => {
     return {
         portalUrl: state.config.app.saml.enabled ? state.config.app.saml.portalUrl : null,
         searchQuery: state.router.location.search
     };
 };
 
-const mapDispatchToProps = (dispatch, ownProps) => {
-    return {};
-};
+const mapDispatchToProps = () => {};
 
 export default connect(
     mapStateToProps,

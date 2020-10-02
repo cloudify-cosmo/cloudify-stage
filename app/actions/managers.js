@@ -47,7 +47,7 @@ export function storeRBAC(RBAC) {
 }
 
 export function login(username, password, redirect) {
-    return (dispatch, getState) => {
+    return dispatch => {
         dispatch(requestLogin());
         return Auth.login(username, password)
             .then(({ role, version, license, rbac }) => {

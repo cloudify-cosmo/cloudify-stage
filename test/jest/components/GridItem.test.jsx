@@ -62,7 +62,7 @@ describe('(Component) GridItem', () => {
     describe('Test lifecycle - calling add/remove of item', () => {
         it('Calling itemAdded callback', () => {
             const onItemAdded = sinon.spy();
-            const m = mount(
+            mount(
                 <GridItem id="1a" onItemAdded={onItemAdded}>
                     {[]}
                 </GridItem>

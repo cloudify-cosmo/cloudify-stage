@@ -1,11 +1,6 @@
 /**
- * Created by kinneretzin on 03/01/2017.
- */
-
-/**
  * Created by kinneretzin on 11/12/2016.
  */
-import sinon from 'sinon';
 
 import configureMockStore from 'redux-mock-store';
 import { createToolbox, getToolbox } from 'utils/Toolbox';

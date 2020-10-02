@@ -36,7 +36,7 @@ function downloadFile(widget, url) {
 }
 
 function updateTitle(widget, content) {
-    return new Promise((resolve, reject) => {
+    return new Promise(resolve => {
         const titleRegex = /---[^]*title: ([\w ]*)[^]*---/m;
 
         log(widget, 'Updating title:');
@@ -49,7 +49,7 @@ function updateTitle(widget, content) {
 }
 
 function updateLinks(widget, content) {
-    return new Promise((resolve, reject) => {
+    return new Promise(resolve => {
         const linkRegex = /(\[.*?\])\(\s*(?!http)(.*?)\s*\)/gm;
 
         log(widget, 'Updating markdown links:');
@@ -85,7 +85,7 @@ function convertHugoParams(widget, content, params) {
 }
 
 function convertHugoShortcodes(widget, content) {
-    return new Promise((resolve, reject) => {
+    return new Promise(resolve => {
         const noteRegex = /{{%\s*note.*%}}([^]*){{%\s*\/note\s*%}}/gm;
         const tipRegex = /{{%\s*tip.*%}}([^]*){{%\s*\/tip\s*%}}/gm;
         const warningRegex = /{{%\s*warning.*%}}([^]*){{%\s*\/warning\s*%}}/gm;
@@ -112,19 +112,6 @@ function convertHugoShortcodes(widget, content) {
             .replace(relrefRegex, '/$1')
             .replace(indexRegex, 'index.html')
             .replace(mdRegex, '');
-
-        resolve(content);
-    });
-}
-
-function removeHTMLTags(widget, content) {
-    return new Promise((resolve, reject) => {
-        const htmlTagRegex = /<[^>]*>/gm;
-
-        log(widget, 'Removing HTML tags:');
-        logChange(widget, 'html tags', content.match(htmlTagRegex));
-
-        content = content.replace(htmlTagRegex, '');
 
         resolve(content);
     });

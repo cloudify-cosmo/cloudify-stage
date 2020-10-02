@@ -8,7 +8,7 @@ import Consts from '../utils/consts';
 
 import { FullScreenSegment } from './basic';
 import ErrorPage from '../containers/ErrorPage';
-import NoTenants from '../containers/NoTenants';
+import NoTenants from './NoTenants';
 import Logo from './banner/Logo';
 import NotFound from './NotFound';
 

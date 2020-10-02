@@ -49,7 +49,7 @@ router.get('/:widgetId/used', (req, res, next) => {
 
 router.delete('/:widgetId', validateInstallWidgetsPermission, (req, res, next) => {
     WidgetHandler.deleteWidget(req.params.widgetId)
-        .then(response => res.send({ status: 'ok' }))
+        .then(() => res.send({ status: 'ok' }))
         .catch(next);
 });
 

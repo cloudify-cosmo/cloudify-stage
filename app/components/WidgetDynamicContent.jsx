@@ -45,7 +45,7 @@ export default class WidgetDynamicContent extends Component {
         );
     }
 
-    componentDidUpdate(prevProps, prevState) {
+    componentDidUpdate(prevProps) {
         const { data, manager, widget } = this.props;
         // Check if any configuration that requires fetch was changed
         let requiresFetch = false;

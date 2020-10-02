@@ -4,7 +4,6 @@
 
 const express = require('express');
 const request = require('request');
-const _ = require('lodash');
 const config = require('../config').get();
 
 const router = express.Router();
@@ -39,7 +38,7 @@ function buildManagerUrl(req, res, next) {
     }
 }
 
-async function proxyRequest(req, res, next) {
+async function proxyRequest(req, res) {
     const options = {};
     let timeout;
 
