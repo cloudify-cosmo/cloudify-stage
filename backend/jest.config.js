@@ -4,7 +4,9 @@ const { execSync } = require('child_process');
 let changedFiles;
 try {
     // Collect coverage only for files changed after this check was first introduced
-    changedFiles = execSync('git diff --name-only --relative 4347094038309750af37c8990389a360bf480e07 -- *.js **/*.js')
+    changedFiles = execSync(
+        'git diff --name-only --relative 4347094038309750af37c8990389a360bf480e07 -- "*.js" "**/*.js"'
+    )
         .toString()
         .trim()
         .split('\n');
