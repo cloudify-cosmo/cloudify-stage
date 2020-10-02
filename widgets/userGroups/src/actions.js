@@ -34,24 +34,30 @@ export default class Actions {
         return this.toolbox.getManager().doGet('/tenants?_get_all_results=true&_include=name');
     }
 
-    doAddUserToGroup(username, group_name) {
-        return this.toolbox.getManager().doPut('/user-groups/users', null, { username, group_name });
+    doAddUserToGroup(username, groupName) {
+        return this.toolbox.getManager().doPut('/user-groups/users', null, { username, group_name: groupName });
     }
 
-    doRemoveUserFromGroup(username, group_name) {
-        return this.toolbox.getManager().doDelete('/user-groups/users', null, { username, group_name });
+    doRemoveUserFromGroup(username, groupName) {
+        return this.toolbox.getManager().doDelete('/user-groups/users', null, { username, group_name: groupName });
     }
 
-    doAddTenantToGroup(tenant_name, group_name, role) {
-        return this.toolbox.getManager().doPut('/tenants/user-groups', null, { tenant_name, group_name, role });
+    doAddTenantToGroup(tenantName, groupName, role) {
+        return this.toolbox
+            .getManager()
+            .doPut('/tenants/user-groups', null, { tenant_name: tenantName, group_name: groupName, role });
     }
 
-    doRemoveTenantFromGroup(tenant_name, group_name) {
-        return this.toolbox.getManager().doDelete('/tenants/user-groups', null, { tenant_name, group_name });
+    doRemoveTenantFromGroup(tenantName, groupName) {
+        return this.toolbox
+            .getManager()
+            .doDelete('/tenants/user-groups', null, { tenant_name: tenantName, group_name: groupName });
     }
 
-    doUpdateTenant(tenant_name, group_name, role) {
-        return this.toolbox.getManager().doPatch('/tenants/user-groups', null, { tenant_name, group_name, role });
+    doUpdateTenant(tenantName, groupName, role) {
+        return this.toolbox
+            .getManager()
+            .doPatch('/tenants/user-groups', null, { tenant_name: tenantName, group_name: groupName, role });
     }
 
     doHandleUsers(groupName, usersToAdd, usersToDelete) {

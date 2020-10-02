@@ -1,3 +1,4 @@
+/* eslint camelcase: ["error", {allow: ["containing_subgraph", "display_title", "display_text", "graph_id"]}] */
 /**
  * Created by barucoh on 11/2/2019.
  */

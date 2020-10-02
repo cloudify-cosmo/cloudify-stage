@@ -102,6 +102,7 @@ module.exports = (() => {
         return _.chain(imports)
             .filter(imp => String(imp).match(PLUGIN_KEYWORD))
             .map(plugin => {
+                // eslint-disable-next-line camelcase
                 const [package_name, pluginQueryString] = _.chain(plugin)
                     .replace(PLUGIN_KEYWORD, '')
                     .split('?')

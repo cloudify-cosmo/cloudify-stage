@@ -15,16 +15,16 @@ class SecretActions {
         return this.toolbox.getManager().doDelete(`/secrets/${key}`);
     }
 
-    doCreate(key, value, visibility, is_hidden_value) {
-        return this.toolbox.getManager().doPut(`/secrets/${key}`, null, { value, visibility, is_hidden_value });
+    doCreate(key, value, visibility, hidden) {
+        return this.toolbox.getManager().doPut(`/secrets/${key}`, null, { value, visibility, is_hidden_value: hidden });
     }
 
     doUpdate(key, value) {
         return this.toolbox.getManager().doPatch(`/secrets/${key}`, null, { value });
     }
 
-    doSetIsHiddenValue(key, is_hidden_value) {
-        return this.toolbox.getManager().doPatch(`/secrets/${key}`, null, { is_hidden_value });
+    doSetIsHiddenValue(key, hidden) {
+        return this.toolbox.getManager().doPatch(`/secrets/${key}`, null, { is_hidden_value: hidden });
     }
 
     doSetVisibility(key, visibility) {

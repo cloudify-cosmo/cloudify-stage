@@ -169,18 +169,18 @@ describe('Sites Management', () => {
         cy.get(':nth-child(2) > .field > .ui > input').as('name');
         cy.get(':nth-child(3) > .field > .ui > input').as('location');
 
-        const new_name = 'new_name';
+        const newName = 'new_name';
         cy.get('@name')
             .clear()
-            .type(new_name)
-            .should('have.value', new_name);
+            .type(newName)
+            .should('have.value', newName);
 
         cy.get('@location').clear();
 
         // Click update
         cy.get('.actions > .green').click();
 
-        verifySiteRow(1, { name: new_name, location: '' });
+        verifySiteRow(1, { name: newName, location: '' });
     });
 
     it('update a site with location changed with map', () => {
