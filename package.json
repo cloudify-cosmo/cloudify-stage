@@ -21,6 +21,7 @@
     "build:analyse:main": "npm run build -- --env.analyse=main",
     "build:analyse:widgets": "npm run build -- --env.analyse=widgets",
     "build:analyse:widgets-common": "npm run build -- --env.analyse=widgets-common",
+    "coverage": "jest test/jest --coverage",
     "devServer": "node devServer.js",
     "devtest": "jest",
     "docCheck": "scripts/checkDocs.sh",
@@ -89,6 +90,7 @@
     "@babel/preset-react": "^7.7.4",
     "@babel/register": "^7.7.7",
     "@babel/runtime": "^7.7.7",
+    "@cypress/code-coverage": "^3.8.1",
     "@iarna/toml": "^2.2.5",
     "@size-limit/preset-app": "^4.5.5",
     "@types/lodash": "^4.14.149",
@@ -157,5 +159,8 @@
   },
   "engines": {
     "node": "12.x"
+  },
+  "nyc": {
+    "report-dir": "coverage-cypress"
   }
 }
