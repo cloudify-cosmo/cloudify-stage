@@ -23,6 +23,7 @@ export function intialPageLoad() {
                     dispatch(setAppLoading(false));
                     return Promise.reject(NO_TENANTS_ERR);
                 }
+                return Promise.resolve();
             })
             .then(() => dispatch(getUserData()))
             .then(() => {

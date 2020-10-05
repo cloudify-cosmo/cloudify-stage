@@ -10,14 +10,13 @@ export default class EventBus {
         this.events[event].push([callback, context]);
     }
 
-    static trigger(event) {
-        const tail = Array.prototype.slice.call(arguments, 1);
+    static trigger(event, ...args) {
         const callbacks = this.events[event];
         if (callbacks) {
             _.each(callbacks, callback => {
                 const currCallback = callback[0];
                 const context = callback[1] === undefined ? this : callback[1];
-                currCallback.apply(context, tail);
+                currCallback.apply(context, args);
             });
         }
     }

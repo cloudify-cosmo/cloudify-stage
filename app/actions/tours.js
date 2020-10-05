@@ -185,6 +185,7 @@ export function startTour(tour) {
             sessionStorage.setItem('startedTour', tour.id);
             return Promise.resolve(dispatch(push(tour.startAt))).then(() => hopscotchStartTour(tour));
         }
-        hopscotchStartTour(tour);
+
+        return hopscotchStartTour(tour);
     };
 }

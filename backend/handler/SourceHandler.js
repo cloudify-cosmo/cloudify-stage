@@ -52,9 +52,9 @@ module.exports = (() => {
                 return item;
             } catch (ex) {
                 if (ex.code === 'EACCES') {
-                    // User does not have permissions, ignore directory
-                    return null;
+                    logger.debug('cannot access directory, ignoring');
                 }
+                return null;
             }
         } else {
             return null;
@@ -89,16 +89,10 @@ module.exports = (() => {
         return new Promise((resolve, reject) => {
             const absolutePath = pathlib.resolve(browseSourcesDir, path);
             if (!checkPrefix(absolutePath, browseSourcesDir)) {
-                return reject('Wrong path');
+                reject('Wrong path');
+            } else {
+                fs.readFile(absolutePath, 'utf-8', (err, data) => (err ? reject(err) : resolve(data)));
             }
-
-            fs.readFile(absolutePath, 'utf-8', (err, data) => {
-                if (err) {
-                    return reject(err);
-                }
-
-                resolve(data);
-            });
         });
     }
 

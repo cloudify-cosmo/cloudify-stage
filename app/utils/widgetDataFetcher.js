@@ -25,7 +25,7 @@ export default class WidgetDataFetcher {
                     output[keys[i]] = data[i];
                 }
             } else {
-                output = data[0];
+                [output] = data;
             }
             return output;
         });

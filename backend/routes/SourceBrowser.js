@@ -14,12 +14,12 @@ router.get('/browse/file', (req, res, next) => {
     const { path } = req.query;
 
     if (!path) {
-        return next('no file path passed [path]');
+        next('no file path passed [path]');
+    } else {
+        SourceHandler.browseArchiveFile(path)
+            .then(content => res.contentType('application/text').send(content))
+            .catch(next);
     }
-
-    SourceHandler.browseArchiveFile(path)
-        .then(content => res.contentType('application/text').send(content))
-        .catch(next);
 });
 
 router.get('/browse/:blueprintId/archive', (req, res, next) => {

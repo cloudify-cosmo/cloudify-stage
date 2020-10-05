@@ -33,8 +33,8 @@ const umzug = new Umzug({
         pattern: /\.js$/
     },
 
-    logging() {
-        logger.info.apply(logger, arguments);
+    logging(...args) {
+        logger.info(args);
     }
 });
 

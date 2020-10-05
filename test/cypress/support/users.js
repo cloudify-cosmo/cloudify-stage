@@ -6,7 +6,7 @@ Cypress.Commands.add('addTenant', tenant => cy.cfyRequest(`/tenants/${tenant}`, 
 
 Cypress.Commands.add('deleteTenant', tenant => {
     if (tenant !== 'default_tenant') {
-        return cy.cfyRequest(`/tenants/${tenant}`, 'DELETE');
+        cy.cfyRequest(`/tenants/${tenant}`, 'DELETE');
     }
 });
 
@@ -28,7 +28,7 @@ Cypress.Commands.add('addUserToTenant', (username, tenant, role) =>
 
 Cypress.Commands.add('removeUserFromTenant', (username, tenant) => {
     if (tenant !== 'default_tenant' || !_.includes(builtInUsernames, username)) {
-        return cy.cfyRequest('/tenants/users', 'DELETE', null, {
+        cy.cfyRequest('/tenants/users', 'DELETE', null, {
             username,
             tenant_name: tenant
         });
@@ -37,7 +37,7 @@ Cypress.Commands.add('removeUserFromTenant', (username, tenant) => {
 
 Cypress.Commands.add('deleteUser', username => {
     if (!_.includes(builtInUsernames, username)) {
-        return cy.cfyRequest(`/users/${username}`, 'DELETE');
+        cy.cfyRequest(`/users/${username}`, 'DELETE');
     }
 });
 

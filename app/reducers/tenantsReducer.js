@@ -25,6 +25,8 @@ const tenants = (state = {}, action) => {
             return { ...state, isFetching: false, error: action.error, items: [], lastUpdated: action.receivedAt };
         case types.SELECT_TENANT:
             return { ...state, selected: action.tenant };
+        default:
+            return state;
     }
 };
 

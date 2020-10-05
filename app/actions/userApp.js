@@ -49,11 +49,10 @@ export function resetPagesForTenant(tenant) {
     return (dispatch, getState) => {
         const { manager } = getState();
         if (_.get(manager, 'tenants.selected', Consts.DEFAULT_ALL) === tenant) {
-            dispatch(resetPages());
-        } else {
-            const internal = new Internal(getState().manager);
-            return internal.doGet('ua/clear-pages', { tenant });
+            return dispatch(resetPages());
         }
+        const internal = new Internal(getState().manager);
+        return internal.doGet('ua/clear-pages', { tenant });
     };
 }
 

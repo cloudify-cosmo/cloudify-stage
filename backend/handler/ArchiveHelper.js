@@ -77,6 +77,7 @@ module.exports = (() => {
 
             let getRequest = null;
             const onErrorFetch = reject;
+            // eslint-disable-next-line consistent-return
             const onSuccessFetch = response => {
                 let archiveFile = extractFilename(response.headers['content-disposition']);
 

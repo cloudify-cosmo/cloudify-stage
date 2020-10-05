@@ -39,6 +39,7 @@ function widgetFetchCanceled(widgetId) {
 }
 
 export function fetchWidgetData(widget, toolbox, paramsHandler) {
+    // eslint-disable-next-line consistent-return
     return dispatch => {
         dispatch(widgetFetchReq(widget.id));
 

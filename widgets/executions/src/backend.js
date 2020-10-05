@@ -222,6 +222,7 @@ module.exports = r => {
             _.map(allSubgraphs, subGraph => {
                 if (subGraph.children && subGraph.children.length > 0) {
                     // Go through all the subgraphs
+                    // eslint-disable-next-line consistent-return
                     subGraph.children = _.map(subGraph.children, workflowTask => {
                         // For each subgraph, go through all the tasks
                         if (
@@ -237,6 +238,7 @@ module.exports = r => {
                             // Need to go through the array twice because the
                             // update of the rest of the edges must be after all the
                             // "Node to remove"'s edges have been scanned
+                            // eslint-disable-next-line consistent-return
                             subGraph.edges = _.map(subGraph.edges, edge => {
                                 const sourceNode = edge.sources[0];
                                 const targetNode = edge.targets[0];
@@ -345,6 +347,7 @@ module.exports = r => {
             // Removing irrelevant vertices (when a task is rescheduled due to failure mostly)
             allSubgraphs = safeDeleteIrrelevantGraphVertices(allSubgraphs);
             // Removing subgraphs with 0 children
+            // eslint-disable-next-line consistent-return
             allSubgraphs = _.omitBy(allSubgraphs, subGraph => {
                 if (
                     _.isEmpty(subGraph.children) &&
