@@ -51,6 +51,23 @@ module.exports = (() => {
         });
     }
 
+    function isExternalUrl(url) {
+        // eslint-disable-next-line security/detect-unsafe-regex
+        const ABSOLUTE_URL_REGEX = new RegExp('^(?:[a-z]+:)?//', 'i');
+
+        return ABSOLUTE_URL_REGEX.test(url);
+    }
+
+    function extractFilename(contentDisposition) {
+        const regexp = /filename=([^;]*)/g;
+        const match = regexp.exec(contentDisposition);
+        if (!match) {
+            return '';
+        }
+
+        return match[1];
+    }
+
     function saveDataFromUrl(archiveUrl, targetDir, req) {
         return new Promise((resolve, reject) => {
             const HEADERS = { 'User-Agent': 'Cloudify' };
@@ -111,23 +128,6 @@ module.exports = (() => {
                 req.pipe(getRequest);
             }
         });
-    }
-
-    function isExternalUrl(url) {
-        // eslint-disable-next-line security/detect-unsafe-regex
-        const ABSOLUTE_URL_REGEX = new RegExp('^(?:[a-z]+:)?//', 'i');
-
-        return ABSOLUTE_URL_REGEX.test(url);
-    }
-
-    function extractFilename(contentDisposition) {
-        const regexp = /filename=([^;]*)/g;
-        const match = regexp.exec(contentDisposition);
-        if (!match) {
-            return '';
-        }
-
-        return match[1];
     }
 
     function storeSingleYamlFile(archivePath, archiveFile, targetDir) {

@@ -13,6 +13,7 @@ function handleClick(event) {
     const isHopscotchElementClicked = _.includes(event.target.className, 'hopscotch');
 
     if (!isHopscotchElementClicked) {
+        // eslint-disable-next-line no-use-before-define
         hopscotchEndTour(false);
     }
 }
@@ -21,6 +22,7 @@ function handleKeyPressed(event) {
     const isEscapeKeyPressed = event.key === 'Escape';
 
     if (isEscapeKeyPressed) {
+        // eslint-disable-next-line no-use-before-define
         hopscotchEndTour(false);
     }
 }
@@ -51,6 +53,17 @@ function waitForHopscotchElementsToBeClosed() {
     };
 
     listenerRemovalTimeoutObject = setTimeout(checkForRemainingHopscotchElements, listenerRemovalTimeout);
+}
+
+function hopscotchEndTour(errorOccured) {
+    hopscotch.endTour();
+
+    if (errorOccured) {
+        waitForHopscotchElementsToBeClosed();
+    } else {
+        hopscotch.getCalloutManager().removeAllCallouts();
+        removeStopTourEventsListeners();
+    }
 }
 
 function hopscotchRegisterHelpers(dispatch) {
@@ -148,17 +161,6 @@ function hopscotchRegisterHelpers(dispatch) {
 function hopscotchStartTour(tour) {
     hopscotchEndTour(false);
     hopscotch.startTour(Tours.parseTour(tour));
-}
-
-function hopscotchEndTour(errorOccured) {
-    hopscotch.endTour();
-
-    if (errorOccured) {
-        waitForHopscotchElementsToBeClosed();
-    } else {
-        hopscotch.getCalloutManager().removeAllCallouts();
-        removeStopTourEventsListeners();
-    }
 }
 
 export function storeTours(tours) {

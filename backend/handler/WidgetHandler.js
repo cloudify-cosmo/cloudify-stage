@@ -146,6 +146,54 @@ module.exports = (() => {
         });
     }
 
+    function backupWidget(widgetId, tempPath) {
+        const installPath = pathlib.resolve(userWidgetsFolder, widgetId);
+        const backupPath = pathlib.resolve(tempPath, 'backup');
+
+        logger.debug(`Creating backup of widget ${widgetId} in ${backupPath}`);
+        return new Promise((resolve, reject) => {
+            fs.copy(installPath, backupPath, err => {
+                if (err) {
+                    reject(err);
+                } else {
+                    resolve();
+                }
+            });
+        });
+    }
+
+    function restoreBackup(widgetId, tempPath) {
+        const installPath = pathlib.resolve(userWidgetsFolder, widgetId);
+        const backupPath = pathlib.resolve(tempPath, 'backup');
+
+        logger.debug(`Restoring backup of widget ${widgetId} from ${backupPath}`);
+        return new Promise((resolve, reject) => {
+            fs.removeSync(installPath);
+            fs.move(backupPath, installPath, err => {
+                if (err) {
+                    reject(err);
+                } else {
+                    resolve();
+                }
+            });
+        });
+    }
+
+    function deleteWidget(widgetId) {
+        const path = pathlib.resolve(userWidgetsFolder, widgetId);
+
+        logger.debug(`Deleting widget ${widgetId} from ${path}`);
+        return new Promise((resolve, reject) => {
+            fs.remove(path, err => {
+                if (err) {
+                    reject(err);
+                } else {
+                    resolve();
+                }
+            });
+        }).then(() => BackendHandler.removeWidgetBackend(widgetId));
+    }
+
     function installWidget(archiveUrl, username, req) {
         logger.debug('Installing widget from', archiveUrl || 'file');
 
@@ -223,60 +271,11 @@ module.exports = (() => {
                     });
             });
     }
-
-    function backupWidget(widgetId, tempPath) {
-        const installPath = pathlib.resolve(userWidgetsFolder, widgetId);
-        const backupPath = pathlib.resolve(tempPath, 'backup');
-
-        logger.debug(`Creating backup of widget ${widgetId} in ${backupPath}`);
-        return new Promise((resolve, reject) => {
-            fs.copy(installPath, backupPath, err => {
-                if (err) {
-                    reject(err);
-                } else {
-                    resolve();
-                }
-            });
-        });
-    }
-
-    function restoreBackup(widgetId, tempPath) {
-        const installPath = pathlib.resolve(userWidgetsFolder, widgetId);
-        const backupPath = pathlib.resolve(tempPath, 'backup');
-
-        logger.debug(`Restoring backup of widget ${widgetId} from ${backupPath}`);
-        return new Promise((resolve, reject) => {
-            fs.removeSync(installPath);
-            fs.move(backupPath, installPath, err => {
-                if (err) {
-                    reject(err);
-                } else {
-                    resolve();
-                }
-            });
-        });
-    }
-
     function listWidgets() {
         const builtInWidgets = _.map(getBuiltInWidgets(), widget => ({ id: widget, isCustom: false }));
         const userWidgets = _.map(getUserWidgets(), widget => ({ id: widget, isCustom: true }));
 
         return Promise.resolve(_.concat(builtInWidgets, userWidgets));
-    }
-
-    function deleteWidget(widgetId) {
-        const path = pathlib.resolve(userWidgetsFolder, widgetId);
-
-        logger.debug(`Deleting widget ${widgetId} from ${path}`);
-        return new Promise((resolve, reject) => {
-            fs.remove(path, err => {
-                if (err) {
-                    reject(err);
-                } else {
-                    resolve();
-                }
-            });
-        }).then(() => BackendHandler.removeWidgetBackend(widgetId));
     }
 
     function isWidgetUsed(widgetId) {

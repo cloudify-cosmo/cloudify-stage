@@ -107,60 +107,6 @@ module.exports = r => {
         const textSizingFactor = 5.8;
         const textHeight = 18;
 
-        const runGraphCreation = () => {
-            const tasksGraphParams = { ...req.query };
-            const headers = _.pick(req.headers, 'authentication-token', 'tenant');
-
-            const operationsList = [];
-            helper.Manager.doGet(tasksGraphsFetchUrl, tasksGraphParams, headers)
-                .then(data => {
-                    const { items } = data;
-
-                    if (_.isEmpty(items)) {
-                        const message = `No tasks graph for execution id=${tasksGraphParams.execution_id}.`;
-                        logger.info(message);
-                        res.status(404).send({ message });
-                        return;
-                    }
-
-                    const operationsPromises = _.map(items, graph =>
-                        helper.Manager.doGet(operationsFetchUrl, { graph_id: graph.id }, headers)
-                    );
-
-                    Promise.all(operationsPromises)
-                        .then(results => {
-                            _.map(results[0].items, item => {
-                                operationsList.push(item);
-                            });
-                            return operationsList;
-                        })
-                        .then(operationsList => {
-                            // Constructing SubGraphs
-                            let allSubgraphs = constructSubgraphs(operationsList);
-                            // Constructing Dependencies
-                            allSubgraphs = constructDependencies(operationsList, allSubgraphs);
-                            // Increase the Node's rectangle height based on inner texts
-                            allSubgraphs = adjustingNodeSizes(allSubgraphs);
-                            // Remove LocalWorkflow & NOPWorkflowTasks from the graph while keeping it connected
-                            allSubgraphs = cleanSubgraphsList(allSubgraphs);
-                            // Creating the ELK-formatted graph
-                            return createELKTasksGraphs(allSubgraphs);
-                        })
-                        .then(tasksGraph => {
-                            elk.layout(tasksGraph).then(elkGraph => {
-                                res.send(elkGraph);
-                            });
-                        })
-                        .catch(error => {
-                            logger.error(error);
-                            next(error);
-                        });
-                })
-                .catch(error => {
-                    logger.error(error);
-                    next(error);
-                });
-        };
         const constructSubgraphs = operationsList => {
             // All the subgraphs and leaves are in the same list for better time-complexity performance, meaning -
             // For every subgraph - instead of traversing its children until we find the desired subgraph/leaf, we simply
@@ -445,6 +391,60 @@ module.exports = r => {
                 tasksGraph.children.push(subGraph);
             });
             return tasksGraph;
+        };
+        const runGraphCreation = () => {
+            const tasksGraphParams = { ...req.query };
+            const headers = _.pick(req.headers, 'authentication-token', 'tenant');
+
+            const operationsList = [];
+            helper.Manager.doGet(tasksGraphsFetchUrl, tasksGraphParams, headers)
+                .then(data => {
+                    const { items } = data;
+
+                    if (_.isEmpty(items)) {
+                        const message = `No tasks graph for execution id=${tasksGraphParams.execution_id}.`;
+                        logger.info(message);
+                        res.status(404).send({ message });
+                        return;
+                    }
+
+                    const operationsPromises = _.map(items, graph =>
+                        helper.Manager.doGet(operationsFetchUrl, { graph_id: graph.id }, headers)
+                    );
+
+                    Promise.all(operationsPromises)
+                        .then(results => {
+                            _.map(results[0].items, item => {
+                                operationsList.push(item);
+                            });
+                            return operationsList;
+                        })
+                        .then(operationsList => {
+                            // Constructing SubGraphs
+                            let allSubgraphs = constructSubgraphs(operationsList);
+                            // Constructing Dependencies
+                            allSubgraphs = constructDependencies(operationsList, allSubgraphs);
+                            // Increase the Node's rectangle height based on inner texts
+                            allSubgraphs = adjustingNodeSizes(allSubgraphs);
+                            // Remove LocalWorkflow & NOPWorkflowTasks from the graph while keeping it connected
+                            allSubgraphs = cleanSubgraphsList(allSubgraphs);
+                            // Creating the ELK-formatted graph
+                            return createELKTasksGraphs(allSubgraphs);
+                        })
+                        .then(tasksGraph => {
+                            elk.layout(tasksGraph).then(elkGraph => {
+                                res.send(elkGraph);
+                            });
+                        })
+                        .catch(error => {
+                            logger.error(error);
+                            next(error);
+                        });
+                })
+                .catch(error => {
+                    logger.error(error);
+                    next(error);
+                });
         };
 
         runGraphCreation();

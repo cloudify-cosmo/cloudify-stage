@@ -139,6 +139,33 @@ module.exports = (() => {
         return Promise.resolve(_.concat(getBuiltInPages(), getUserPages()));
     }
 
+    function checkTemplateExistence(data, excludeTemplateId) {
+        const { roles } = data;
+        const { tenants } = data;
+        const getTenantString = tenant => (tenant === allTenants ? 'all tenants' : `tenant=${tenant}`);
+
+        const userTemplates = _.filter(getUserTemplates(), template => template.id !== excludeTemplateId);
+
+        logger.debug(
+            `Checking template existence for roles=${roles} and ${getTenantString(tenants)}.` +
+                `${excludeTemplateId ? ` Excluding: '${excludeTemplateId}' template.` : ''}`
+        );
+
+        const conflictingTemplate = _.filter(
+            userTemplates,
+            userTemplate =>
+                !_.isEmpty(_.intersection(roles, userTemplate.data.roles)) &&
+                !_.isEmpty(_.intersection(tenants, userTemplate.data.tenants))
+        );
+
+        if (!_.isEmpty(conflictingTemplate)) {
+            return Promise.reject(
+                `Template for specified role(s) and tenant(s) already exists: '${conflictingTemplate[0].id}'.`
+            );
+        }
+        return Promise.resolve();
+    }
+
     function createTemplate(username, template) {
         const path = pathlib.resolve(userTemplatesFolder, `${template.id}.json`);
         if (fs.existsSync(path)) {
@@ -154,6 +181,20 @@ module.exports = (() => {
         };
 
         return checkTemplateExistence(template.data).then(() => fs.writeJson(path, content, { spaces: '  ' }));
+    }
+
+    function deleteTemplate(templateId) {
+        const path = pathlib.resolve(userTemplatesFolder, `${templateId}.json`);
+
+        return new Promise((resolve, reject) => {
+            fs.remove(path, err => {
+                if (err) {
+                    reject(err);
+                } else {
+                    resolve();
+                }
+            });
+        });
     }
 
     function updateTemplate(username, template) {
@@ -187,47 +228,6 @@ module.exports = (() => {
             .then(() => fs.writeJson(path, content, { spaces: '  ' }));
     }
 
-    function checkTemplateExistence(data, excludeTemplateId) {
-        const { roles } = data;
-        const { tenants } = data;
-        const getTenantString = tenant => (tenant === allTenants ? 'all tenants' : `tenant=${tenant}`);
-
-        const userTemplates = _.filter(getUserTemplates(), template => template.id !== excludeTemplateId);
-
-        logger.debug(
-            `Checking template existence for roles=${roles} and ${getTenantString(tenants)}.` +
-                `${excludeTemplateId ? ` Excluding: '${excludeTemplateId}' template.` : ''}`
-        );
-
-        const conflictingTemplate = _.filter(
-            userTemplates,
-            userTemplate =>
-                !_.isEmpty(_.intersection(roles, userTemplate.data.roles)) &&
-                !_.isEmpty(_.intersection(tenants, userTemplate.data.tenants))
-        );
-
-        if (!_.isEmpty(conflictingTemplate)) {
-            return Promise.reject(
-                `Template for specified role(s) and tenant(s) already exists: '${conflictingTemplate[0].id}'.`
-            );
-        }
-        return Promise.resolve();
-    }
-
-    function deleteTemplate(templateId) {
-        const path = pathlib.resolve(userTemplatesFolder, `${templateId}.json`);
-
-        return new Promise((resolve, reject) => {
-            fs.remove(path, err => {
-                if (err) {
-                    reject(err);
-                } else {
-                    resolve();
-                }
-            });
-        });
-    }
-
     function createPage(username, page) {
         const path = pathlib.resolve(userPagesFolder, `${page.id}.json`);
         if (fs.existsSync(path)) {
@@ -242,6 +242,20 @@ module.exports = (() => {
         };
 
         return fs.writeJson(path, content, { spaces: '  ' });
+    }
+
+    function deletePage(pageId) {
+        const path = pathlib.resolve(userPagesFolder, `${pageId}.json`);
+
+        return new Promise((resolve, reject) => {
+            fs.remove(path, err => {
+                if (err) {
+                    reject(err);
+                } else {
+                    resolve();
+                }
+            });
+        });
     }
 
     function updatePage(username, page) {
@@ -266,20 +280,6 @@ module.exports = (() => {
                 resolve();
             }
         }).then(() => fs.writeJson(path, content, { spaces: '  ' }));
-    }
-
-    function deletePage(pageId) {
-        const path = pathlib.resolve(userPagesFolder, `${pageId}.json`);
-
-        return new Promise((resolve, reject) => {
-            fs.remove(path, err => {
-                if (err) {
-                    reject(err);
-                } else {
-                    resolve();
-                }
-            });
-        });
     }
 
     async function selectTemplate(systemRole, groupSystemRoles, tenantsRoles, tenant, token) {
