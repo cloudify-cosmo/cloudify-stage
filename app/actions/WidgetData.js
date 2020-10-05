@@ -2,6 +2,7 @@
  * Created by kinneretzin on 03/04/2017.
  */
 
+import log from 'loglevel';
 import * as types from './types';
 import WidgetDataFetcher from '../utils/widgetDataFetcher';
 import StageUtils from '../utils/stageUtils';
@@ -57,7 +58,7 @@ export function fetchWidgetData(widget, toolbox, paramsHandler) {
                 })
                 .catch(e => {
                     if (e.isCanceled) {
-                        console.log(`Widget '${widget.name}' data fetch canceled`);
+                        log.log(`Widget '${widget.name}' data fetch canceled`);
                         dispatch(widgetFetchCanceled(widget.id));
                     } else {
                         dispatch(widgetFetchError(widget.id, e));

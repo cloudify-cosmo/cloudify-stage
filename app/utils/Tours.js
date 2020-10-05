@@ -7,7 +7,7 @@ import Consts from './consts';
 
 export default class Tours {
     static load(manager) {
-        console.log('Load tours');
+        log.log('Load tours');
 
         const tenant = _.get(manager, 'tenants.selected', Consts.DEFAULT_ALL);
 

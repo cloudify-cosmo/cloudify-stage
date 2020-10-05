@@ -2,6 +2,7 @@
  * Created by addihorowitz on 19/09/2016.
  */
 
+import log from 'loglevel';
 import { push } from 'connected-react-router';
 
 import * as types from './types';
@@ -64,7 +65,7 @@ export function login(username, password, redirect) {
                 }
             })
             .catch(err => {
-                console.log(err);
+                log.log(err);
                 if (err.status === 403) {
                     dispatch(errorLogin(username));
                     dispatch(
@@ -148,7 +149,7 @@ export function getMaintenanceStatus(manager) {
                 dispatch(setMaintenanceStatus(data.status));
             })
             .catch(err => {
-                console.error(err);
+                log.error(err);
             });
 }
 

@@ -17,7 +17,7 @@ export default class LoaderUtils {
             credentials: 'same-origin'
         }).then(response => {
             if (response.status >= 400) {
-                console.error(response.statusText);
+                log.error(response.statusText);
                 return;
             }
             if (parseResponse) {

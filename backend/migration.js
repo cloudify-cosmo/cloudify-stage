@@ -201,6 +201,7 @@ const cmd = process.argv[2].trim();
 // Make an exception because we dont want all the printout around it
 if (cmd === 'current') {
     getCurrMigration().then(current => {
+        // eslint-disable-next-line no-console
         console.log(current);
         process.exit(0);
     });

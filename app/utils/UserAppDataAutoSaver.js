@@ -46,14 +46,14 @@ export default class UserAppDataAutoSaver {
 
     start() {
         if (!this.isActive) {
-            console.log(`Starting UserAppDataAutoSaver for user ${this.username} role ${this.role}`);
+            log.log(`Starting UserAppDataAutoSaver for user ${this.username} role ${this.role}`);
             this.isActive = true;
         }
     }
 
     stop() {
         if (this.isActive) {
-            console.log(`Stopping UserAppDataAutoSaver for user ${this.username} role ${this.role}`);
+            log.log(`Stopping UserAppDataAutoSaver for user ${this.username} role ${this.role}`);
 
             this.isActive = false;
         }

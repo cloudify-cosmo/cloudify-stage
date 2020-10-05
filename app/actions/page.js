@@ -187,17 +187,17 @@ export function createPagesFromTemplate() {
 
         const internal = new Internal(manager);
         return internal.doGet('/templates/select', { tenant }).then(templateId => {
-            console.log('Selected template id', templateId);
+            log.log('Selected template id', templateId);
 
             const storeTemplates = getState().templates;
             const { pages } = storeTemplates.templatesDef[templateId];
 
-            console.log('Create pages from selected template', pages);
+            log.log('Create pages from selected template', pages);
 
             _.each(pages, id => {
                 const page = storeTemplates.pagesDef[id];
                 if (!page) {
-                    console.error(`Cannot find page template: ${id}. Skipping... `);
+                    log.error(`Cannot find page template: ${id}. Skipping... `);
                     return;
                 }
 

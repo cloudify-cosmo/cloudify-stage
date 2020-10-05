@@ -1,5 +1,6 @@
-import * as types from './types';
+import log from 'loglevel';
 
+import * as types from './types';
 import { setAppLoading, setAppError } from './appState';
 import { loadTemplates } from './templates';
 import { loadTours } from './tours';
@@ -18,7 +19,7 @@ export function intialPageLoad() {
         return dispatch(getTenants(state.manager))
             .then(() => {
                 if (getState().manager.tenants.items.length === 0) {
-                    console.log('User is not attached to any tenant, cannot login');
+                    log.log('User is not attached to any tenant, cannot login');
                     dispatch(setAppLoading(false));
                     return Promise.reject(NO_TENANTS_ERR);
                 }
@@ -42,7 +43,7 @@ export function intialPageLoad() {
                 dispatch(setAppError(null));
             })
             .catch(e => {
-                console.error('Error initializing user data. Cannot load page', e);
+                log.error('Error initializing user data. Cannot load page', e);
                 dispatch(setAppLoading(false));
                 return Promise.reject(e);
             });

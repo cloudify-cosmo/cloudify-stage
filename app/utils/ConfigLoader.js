@@ -11,7 +11,7 @@ export default class ConfigLoader {
         return fetch(StageUtils.Url.url('/config'))
             .then(response => response.json())
             .catch(e => {
-                console.log('Error fetching configuration file', e);
+                log.log('Error fetching configuration file', e);
             });
     }
 }

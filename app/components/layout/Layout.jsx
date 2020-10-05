@@ -31,7 +31,7 @@ export default class Layout extends Component {
 
     componentDidMount() {
         const { doLogout, initialPageLoad } = this.props;
-        console.log('First time logging in , fetching stuff');
+        log.log('First time logging in , fetching stuff');
 
         initialPageLoad()
             .then(() => {

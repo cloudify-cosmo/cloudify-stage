@@ -29,6 +29,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
 import * as Leaflet from 'leaflet';
+import log from 'loglevel';
 
 import { connect, Provider } from 'react-redux';
 import { createBrowserHistory } from 'history';
@@ -60,7 +61,10 @@ export default class app {
         window.ReactDOM = ReactDOM;
         window.PropTypes = PropTypes;
         window.L = Leaflet;
+        window.log = log;
         window.connectToStore = connect;
+
+        log.setLevel(log.levels.WARN);
 
         window.onerror = (message, source, lineno, colno, error) => {
             EventBus.trigger('window:error', message, source, lineno, colno, error);

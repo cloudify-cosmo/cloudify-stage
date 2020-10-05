@@ -65,7 +65,7 @@ describe('(Reducer) Tenants', () => {
     });
 
     it('creates error action when fetching tenants returns an error', () => {
-        console.error = jest.fn();
+        log.error = jest.fn();
 
         fetchMock.get(/sp*/, {
             status: 500,
@@ -84,12 +84,12 @@ describe('(Reducer) Tenants', () => {
         return store.dispatch(getTenants(managerData)).catch(() => {
             // return of async actions
             expect(store.getActions()).toEqual(expectedActions);
-            expect(console.error).toHaveBeenCalled();
+            expect(log.error).toHaveBeenCalled();
         });
     });
 
     it('Store has an error if fetch tenants produces an error', () => {
-        console.error = jest.fn();
+        log.error = jest.fn();
 
         fetchMock.get(/sp*/, {
             status: 500,
@@ -107,7 +107,7 @@ describe('(Reducer) Tenants', () => {
                 items: [],
                 lastUpdated: Date.now()
             });
-            expect(console.error).toHaveBeenCalled();
+            expect(log.error).toHaveBeenCalled();
         });
     });
 

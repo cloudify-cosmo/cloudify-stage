@@ -28,7 +28,7 @@ export default class WidgetDynamicContent extends Component {
         this.mounted = true;
         this.startPolling();
 
-        console.log(`Widget '${widget.name}' mounted`);
+        log.log(`Widget '${widget.name}' mounted`);
 
         this.paramsHandler = new WidgetParamsHandler(widget, this.getToolbox());
         this.fetchData();
@@ -82,7 +82,7 @@ export default class WidgetDynamicContent extends Component {
         this.stopPolling();
 
         const { widget } = this.props;
-        console.log(`Widget '${widget.name}' unmounts`);
+        log.log(`Widget '${widget.name}' unmounts`);
     }
 
     getToolbox() {
@@ -135,14 +135,14 @@ export default class WidgetDynamicContent extends Component {
         try {
             interval = Number.isInteger(interval) ? interval : parseInt(interval);
         } catch (e) {
-            console.log(
+            log.log(
                 `Polling interval doesnt have a valid value, using zero. Value is: ${widget.configuration.pollingTime}`
             );
             interval = 0;
         }
 
         if (interval > 0 && this.mounted) {
-            console.log(`Polling widget '${widget.name}' - time interval: ${interval} sec`);
+            log.log(`Polling widget '${widget.name}' - time interval: ${interval} sec`);
             this.pollingTimeout = setTimeout(() => {
                 this.fetchData();
             }, interval * 1000);
@@ -199,12 +199,12 @@ export default class WidgetDynamicContent extends Component {
                         });
                     }
 
-                    console.log(`Widget '${widget.name}' data fetched`);
+                    log.log(`Widget '${widget.name}' data fetched`);
                     this.afterFetch();
                 })
                 .catch(e => {
                     if (e.isCanceled) {
-                        console.log(`Widget '${widget.name}' data fetch canceled`);
+                        log.log(`Widget '${widget.name}' data fetch canceled`);
                         return;
                     }
                     this.afterFetch();
@@ -224,7 +224,7 @@ export default class WidgetDynamicContent extends Component {
             try {
                 return widget.definition.render(widget, data.data, data.error, this.getToolbox());
             } catch (e) {
-                console.error(`Error rendering widget - ${e.message}`, e.stack);
+                log.error(`Error rendering widget - ${e.message}`, e.stack);
                 return <ErrorMessage error={`Error rendering widget: ${e.message}`} autoHide />;
             }
         }
@@ -239,7 +239,7 @@ export default class WidgetDynamicContent extends Component {
                     widget.definition.events,
                     event => {
                         if (!event || !event.selector || !event.event || !event.fn) {
-                            console.warn('Cannot attach event, missing data. Event data is ', event);
+                            log.warn('Cannot attach event, missing data. Event data is ', event);
                             return;
                         }
                         $(container)
@@ -254,7 +254,7 @@ export default class WidgetDynamicContent extends Component {
                     this
                 );
             } catch (e) {
-                console.error('Error attaching events to widget', e);
+                log.error('Error attaching events to widget', e);
             }
         }
 
@@ -270,7 +270,7 @@ export default class WidgetDynamicContent extends Component {
             try {
                 widgetHtml = widget.definition.render(widget, data.data, data.error, this.getToolbox());
             } catch (e) {
-                console.error(`Error rendering widget - ${e.message}`, e.stack);
+                log.error(`Error rendering widget - ${e.message}`, e.stack);
             }
         }
         return { __html: widgetHtml };

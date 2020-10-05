@@ -75,7 +75,7 @@ export default class WidgetDataFetcher {
                     this.paramsHandler.buildParamsToSend()
                 );
             } catch (e) {
-                console.error('Error fetching widget data', e);
+                log.error('Error fetching widget data', e);
                 return Promise.reject({ error: 'Error fetching widget data' });
             }
         } else {

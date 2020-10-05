@@ -123,7 +123,7 @@ function hopscotchRegisterHelpers(dispatch) {
             .then(() => waitForElementVisible(selector))
             .then(() => hopscotch.nextStep())
             .catch(error => {
-                console.error(error);
+                log.error(error);
                 hopscotchEndTour(true);
             });
     });

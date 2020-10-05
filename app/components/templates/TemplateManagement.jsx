@@ -29,7 +29,7 @@ export default function TemplateManagement() {
     const roles = useSelector(state => state.manager.roles);
 
     function handleError(err) {
-        console.error(err);
+        log.error(err);
         setError(err.message);
         setLoading(false);
     }

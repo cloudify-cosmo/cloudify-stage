@@ -6,6 +6,7 @@ import jsdom from 'jsdom';
 import _ from 'lodash';
 import $ from 'jquery';
 import d3 from 'd3';
+import log from 'loglevel';
 import moment from 'moment';
 import { configure } from 'enzyme';
 import Adapter from 'enzyme-adapter-react-16';
@@ -32,6 +33,7 @@ global._ = _;
 global.d3 = d3;
 global.moment = moment;
 global.HTMLElement = window.HTMLElement;
+global.log = log;
 
 // prevent mocha tests from breaking when trying to require non-js file
 require.extensions['.css'] = noop;

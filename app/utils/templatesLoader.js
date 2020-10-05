@@ -7,7 +7,7 @@ import LoaderUtils from './LoaderUtils';
 
 export default class TemplateLoader {
     static load(manager) {
-        console.log('Load templates');
+        log.log('Load templates');
 
         const templatesDef = {};
         const pagesDef = {};
@@ -44,7 +44,7 @@ export default class TemplateLoader {
                 return { templatesDef, pagesDef };
             })
             .catch(e => {
-                console.error(e);
+                log.error(e);
             });
     }
 }

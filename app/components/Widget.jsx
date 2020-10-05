@@ -40,7 +40,7 @@ export default class Widget extends Component {
     }
 
     componentDidCatch(error, info) {
-        console.error(error, info);
+        log.error(error, info);
     }
 
     onKeyDown(event) {

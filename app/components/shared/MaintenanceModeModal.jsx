@@ -77,7 +77,7 @@ function MaintenanceModeModal({
         stopFetchingData();
 
         if (show) {
-            console.log(`Polling maintenance data - time interval: ${POLLING_INTERVAL / 1000} sec`);
+            log.log(`Polling maintenance data - time interval: ${POLLING_INTERVAL / 1000} sec`);
             pollingTimeout.current = setTimeout(() => {
                 loadPendingExecutions();
             }, POLLING_INTERVAL);
@@ -91,7 +91,7 @@ function MaintenanceModeModal({
     }
 
     function stopPolling() {
-        console.log('Stop polling maintenance data');
+        log.log('Stop polling maintenance data');
         clearTimeout(pollingTimeout.current);
     }
 
@@ -103,7 +103,7 @@ function MaintenanceModeModal({
         fetchDataPromise.current = StageUtils.makeCancelable(onFetchActiveExecutions());
         fetchDataPromise.current.promise
             .then(data => {
-                console.log('Maintenance data fetched');
+                log.log('Maintenance data fetched');
                 startPolling();
             })
             .catch(err => {
@@ -299,8 +299,4 @@ const mergeProps = (stateProps, dispatchProps, ownProps) => {
     };
 };
 
-export default connect(
-    mapStateToProps,
-    mapDispatchToProps,
-    mergeProps
-)(MaintenanceModeModal);
+export default connect(mapStateToProps, mapDispatchToProps, mergeProps)(MaintenanceModeModal);

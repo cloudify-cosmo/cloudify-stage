@@ -154,7 +154,7 @@ export default class StageUtils {
 
         _.each(widgetDefinition.initialConfiguration, config => {
             if (!config.id) {
-                console.log(
+                log.log(
                     `Cannot process config for widget :"${widgetDefinition.name}" , because it missing an Id `,
                     config
                 );
