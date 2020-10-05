@@ -10,3 +10,5 @@ export function setLicense(license) {
         license
     };
 }
+
+export default setLicense;

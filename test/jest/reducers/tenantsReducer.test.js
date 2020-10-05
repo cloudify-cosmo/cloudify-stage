@@ -5,13 +5,11 @@
 import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 import { createStore, applyMiddleware } from 'redux';
-
 import timeKeeper from 'timekeeper';
 
-import TenantReducer from 'reducers/tenantsReducer.js';
-import { getTenants, selectTenant } from 'actions/tenants.js';
-
-import * as types from 'actions/types.js';
+import TenantReducer from 'reducers/tenantsReducer';
+import { getTenants, selectTenant } from 'actions/tenants';
+import * as types from 'actions/types';
 
 const fetchMock = require('fetch-mock');
 

@@ -7,10 +7,10 @@ const express = require('express');
 const router = express.Router();
 const passport = require('passport');
 const multer = require('multer');
+const yaml = require('js-yaml');
 
 const upload = multer({ limits: { fileSize: 50000 } });
 const logger = require('../handler/LoggerHandler').getLogger('File');
-const yaml = require('js-yaml');
 
 function checkIfFileUploaded(req, res, next) {
     if (!req.file) {

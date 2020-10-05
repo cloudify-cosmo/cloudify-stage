@@ -6,7 +6,6 @@ import Internal from './Internal';
 import ScriptLoader from './scriptLoader';
 import StyleLoader from './StyleLoader';
 import 'd3';
-import momentImport from 'moment';
 
 import * as Basic from '../components/basic';
 import * as Shared from '../components/shared';
@@ -50,8 +49,6 @@ export default class WidgetDefinitionsLoader {
                 Stage.Hooks = { ...Stage.Hooks, ...def };
             }
         };
-
-        window.moment = momentImport;
     }
 
     static loadWidgets(manager) {

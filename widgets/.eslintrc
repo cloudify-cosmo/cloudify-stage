@@ -4,5 +4,17 @@
   },
   "globals": {
     "PropTypes": true
-  }
+  },
+  "overrides": [
+    {
+      "files": ["backend.js"],
+      "rules": {
+        "global-require": "off",
+        "import/no-unresolved": ["error", { ignore: ['elkjs'] }]
+      },
+      "env": {
+        "node": true
+      }
+    }
+  ]
 }

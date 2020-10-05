@@ -30,6 +30,7 @@ import ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
 import * as Leaflet from 'leaflet';
 import log from 'loglevel';
+import moment from 'moment';
 
 import { connect, Provider } from 'react-redux';
 import { createBrowserHistory } from 'history';
@@ -63,6 +64,7 @@ export default class app {
         window.L = Leaflet;
         window.log = log;
         window.connectToStore = connect;
+        window.moment = moment;
 
         log.setLevel(log.levels.WARN);
 
