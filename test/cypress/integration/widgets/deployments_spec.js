@@ -32,7 +32,13 @@ describe('Deployments widget', () => {
             .uploadBlueprint(blueprintUrl, blueprintName)
             .deployBlueprint(blueprintName, deploymentName, { webserver_port: 9123 })
             .createSite(site)
-            .login();
+            .login()
+            .visitPage('Deployments')
+            .editWidgetConfiguration('deployments', () => {
+                cy.get('input[name="pollingTime"]')
+                    .clear()
+                    .type(_.repeat('{uparrow}', 5));
+            });
     });
 
     it('should be present in Deployments page', () => {
