@@ -54,12 +54,12 @@ export default class WidgetDataFetcher {
 
         if (url.indexOf('[manager]') >= 0) {
             // User manager accessor if needs to go to the manager
-            var data = this.handleUrl('[manager]', url);
+            const data = this.handleUrl('[manager]', url);
             return this.toolbox.getManager().doGet(data.url, data.params);
         }
         if (url.indexOf('[backend]') >= 0) {
             // User backend accessor if needs to go to the backend
-            var data = this.handleUrl('[backend]', url);
+            const data = this.handleUrl('[backend]', url);
             return this.toolbox.getInternal().doGet(data.url, data.params);
         }
         // User external if the url is not manager based

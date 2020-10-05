@@ -21,11 +21,11 @@ function checkParams(req, res, next) {
     const noYaml = req.files && _.isEmpty(req.files.yaml_file) && !req.query.yamlUrl;
 
     if (noWagon) {
-        var errorMessage = 'Must provide a wagon file or url.';
+        const errorMessage = 'Must provide a wagon file or url.';
         logger.error(errorMessage);
         res.status(500).send({ message: errorMessage });
     } else if (noYaml) {
-        var errorMessage = 'Must provide a yaml file or url.';
+        const errorMessage = 'Must provide a yaml file or url.';
         logger.error(errorMessage);
         res.status(500).send({ message: errorMessage });
     } else {

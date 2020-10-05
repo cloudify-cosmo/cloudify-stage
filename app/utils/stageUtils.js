@@ -78,12 +78,12 @@ export default class StageUtils {
 
         let matchedTag;
         let matchedAttr;
-        var sentence = '';
+        let sentence = '';
         while ((matchedTag = tagPattern.exec(message))) {
             const tag = matchedTag[0];
-            var sentence = matchedTag[1].toLowerCase();
+            sentence = matchedTag[1].toLowerCase();
 
-            var attributes = [];
+            const attributes = [];
             while ((matchedAttr = attrPattern.exec(tag))) {
                 attributes.push({ key: matchedAttr[1], value: matchedAttr[2] });
             }

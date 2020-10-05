@@ -81,8 +81,9 @@ export default class External {
                 logger.debug('xhr upload complete', e, xhr.responseText);
 
                 const isSuccess = xhr.status >= 200 && xhr.status < 300;
+                let response;
                 try {
-                    var response = parseResponse || !isSuccess ? JSON.parse(xhr.responseText) : xhr.responseText;
+                    response = parseResponse || !isSuccess ? JSON.parse(xhr.responseText) : xhr.responseText;
                     if (response.message) {
                         logger.error('xhr upload error', e, xhr.responseText);
 

@@ -7,6 +7,7 @@ import * as types from '../actions/types';
 import StageUtils from '../utils/stageUtils';
 
 const widget = (state = {}, action) => {
+    let newState;
     switch (action.type) {
         case types.ADD_WIDGET:
             return {
@@ -23,9 +24,9 @@ const widget = (state = {}, action) => {
         case types.MINIMIZE_WIDGETS:
             return { ...state, maximized: false };
         case types.ADD_DRILLDOWN_PAGE:
-            var newW = { ...state, drillDownPages: { ...state.drillDownPages } };
-            newW.drillDownPages[action.drillDownName] = action.drillDownPageId;
-            return newW;
+            newState = { ...state, drillDownPages: { ...state.drillDownPages } };
+            newState.drillDownPages[action.drillDownName] = action.drillDownPageId;
+            return newState;
         default:
             return state;
     }

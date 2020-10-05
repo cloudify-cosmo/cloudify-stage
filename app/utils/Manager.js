@@ -50,17 +50,17 @@ export default class Manager extends Internal {
         const index = url.indexOf('[manager]');
         if (index >= 0) {
             const managerUrl = url.substring(index + '[manager]'.length);
-            var urlInServer = encodeURIComponent(managerUrl);
+            const urlInServer = encodeURIComponent(managerUrl);
 
             url = url.substring(0, index);
 
             data = { ...data, su: urlInServer };
-            var queryString = (url.indexOf('?') > 0 ? (_.endsWith(url, '?') ? '' : '&') : '?') + $.param(data, true);
+            const queryString = (url.indexOf('?') > 0 ? (_.endsWith(url, '?') ? '' : '&') : '?') + $.param(data, true);
 
             return url + queryString;
         }
-        var queryString = data ? (url.indexOf('?') > 0 ? '&' : '?') + $.param(data, true) : '';
-        var urlInServer = encodeURIComponent(url + queryString);
+        const queryString = data ? (url.indexOf('?') > 0 ? '&' : '?') + $.param(data, true) : '';
+        const urlInServer = encodeURIComponent(url + queryString);
 
         return StageUtils.Url.url(`/sp/?su=${urlInServer}`);
     }

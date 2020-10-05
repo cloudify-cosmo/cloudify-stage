@@ -56,7 +56,7 @@ function getAuthorizationHeader(user, tenant) {
 function setAuthorizationHeader(req, res, next, fetchCredentials) {
     const user = _.get(req, 'user.username', '');
     const tenant = req.header('tenant');
-    var fetchCredentials = fetchCredentials || _.isEmpty(getAuthorizationHeader(user, tenant));
+    fetchCredentials = fetchCredentials || _.isEmpty(getAuthorizationHeader(user, tenant));
 
     if (fetchCredentials) {
         const userSecret = getSecretName(params.username);
