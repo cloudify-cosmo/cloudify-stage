@@ -1,5 +1,14 @@
 module.exports = {
-    collectCoverageFrom: ['*/**/*.js', '**/*.jsx', '!userData/**', '!scripts/**', '!backend/**', '!test/**'],
+    collectCoverageFrom: [
+        '*/**/*.js',
+        '**/*.jsx',
+        '!userData/**',
+        '!scripts/**',
+        '!backend/**',
+        '!test/**',
+        '!widgets/**/backend.js',
+        '!coverage-*/**'
+    ],
     coverageDirectory: 'coverage-jest',
     coverageReporters: ['json', 'lcov'],
     moduleNameMapper: {
