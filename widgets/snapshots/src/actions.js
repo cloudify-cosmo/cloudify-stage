@@ -41,8 +41,7 @@ export default class {
     }
 
     doCreate(snapshotId, includeCredentials = false, excludeLogs = false, excludeEvents = false, queue = false) {
-        snapshotId = encodeURIComponent(snapshotId);
-        return this.toolbox.getManager().doPut(`/snapshots/${snapshotId}`, null, {
+        return this.toolbox.getManager().doPut(`/snapshots/${encodeURIComponent(snapshotId)}`, null, {
             include_credentials: includeCredentials,
             include_logs: !excludeLogs,
             include_events: !excludeEvents,

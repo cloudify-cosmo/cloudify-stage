@@ -19,6 +19,7 @@ const builtInWidgetsFolder = Utils.getResourcePath('widgets', false);
 const userWidgetsFolder = Utils.getResourcePath('widgets', true);
 const getServiceString = (widgetId, method, serviceName) => `widget=${widgetId} method=${method} name=${serviceName}`;
 
+/* eslint-disable no-param-reassign */
 const BackendRegistrator = (widgetId, resolve, reject) => ({
     register: (serviceName, method, service) => {
         if (!serviceName) {
@@ -74,6 +75,7 @@ const BackendRegistrator = (widgetId, resolve, reject) => ({
             });
     }
 });
+/* eslint-enable no-param-reassign */
 
 module.exports = (() => {
     function getUserWidgets() {
@@ -182,6 +184,7 @@ module.exports = (() => {
             });
     }
 
+    /* eslint-disable no-param-reassign */
     function callService(serviceName, method, req, res, next) {
         const widgetId = req.header(consts.WIDGET_ID_HEADER);
         method = _.toUpper(method);
@@ -209,6 +212,7 @@ module.exports = (() => {
                 );
             });
     }
+    /* eslint-enable no-param-reassign */
 
     function removeWidgetBackend(widgetId) {
         return db.WidgetBackend.destroy({ where: { widgetId } }).then(() =>

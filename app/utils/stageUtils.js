@@ -79,8 +79,10 @@ export default class StageUtils {
         let matchedTag;
         let matchedAttr;
         let sentence = '';
+        let resolvedMessage = message;
+
         // eslint-disable-next-line no-cond-assign,scanjs-rules/accidental_assignment
-        while ((matchedTag = tagPattern.exec(message))) {
+        while ((matchedTag = tagPattern.exec(resolvedMessage))) {
             const tag = matchedTag[0];
             sentence = matchedTag[1].toLowerCase();
 
@@ -107,10 +109,10 @@ export default class StageUtils {
                 }
             }
 
-            message = message.replace(tag, sentence);
+            resolvedMessage = resolvedMessage.replace(tag, sentence);
         }
 
-        return message;
+        return resolvedMessage;
     }
 
     static getMD5(str) {

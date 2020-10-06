@@ -68,10 +68,10 @@ module.exports = (() => {
         return match[1];
     }
 
-    function saveDataFromUrl(archiveUrl, targetDir, req) {
+    function saveDataFromUrl(url, targetDir, req) {
         return new Promise((resolve, reject) => {
             const HEADERS = { 'User-Agent': 'Cloudify' };
-            archiveUrl = decodeURIComponent(archiveUrl.trim());
+            const archiveUrl = decodeURIComponent(url.trim());
 
             logger.debug('Fetching file from url', archiveUrl);
 

@@ -97,6 +97,7 @@ module.exports = (() => {
         logger.debug(`Validating widget ${widgetId}.`);
 
         let files = fs.readdirSync(extractedDir);
+        let tempPath = extractedDir;
 
         // remove hidden or junk files
         files = _.filter(files, file => {
@@ -112,8 +113,8 @@ module.exports = (() => {
                 });
             }
 
-            extractedDir = pathlib.join(extractedDir, dirName);
-            files = fs.readdirSync(extractedDir);
+            tempPath = pathlib.join(extractedDir, dirName);
+            files = fs.readdirSync(tempPath);
         }
 
         const { requiredFiles } = config.app.widgets;
@@ -125,7 +126,7 @@ module.exports = (() => {
                 message: `The following files are required for widget registration: ${_.join(missingFiles, ', ')}`
             });
         }
-        return Promise.resolve(extractedDir);
+        return Promise.resolve(tempPath);
     }
 
     function installFiles(widgetId, tempPath) {

@@ -48,20 +48,19 @@ export default class Manager extends Internal {
         if (index >= 0) {
             const managerUrl = url.substring(index + '[manager]'.length);
             const urlInServer = encodeURIComponent(managerUrl);
+            const urlWithoutWildcard = url.substring(0, index);
+            const params = { ...data, su: urlInServer };
 
-            url = url.substring(0, index);
-
-            data = { ...data, su: urlInServer };
             let queryString = '';
-            if (url.indexOf('?') > 0) {
-                if (!_.endsWith(url, '?')) {
+            if (urlWithoutWildcard.indexOf('?') > 0) {
+                if (!_.endsWith(urlWithoutWildcard, '?')) {
                     queryString += '&';
                 }
             } else {
                 queryString += '?';
             }
-            queryString += $.param(data, true);
-            return url + queryString;
+            queryString += $.param(params, true);
+            return urlWithoutWildcard + queryString;
         }
         const queryString = data ? (url.indexOf('?') > 0 ? '&' : '?') + $.param(data, true) : '';
         const urlInServer = encodeURIComponent(url + queryString);
@@ -76,12 +75,13 @@ export default class Manager extends Internal {
         const pr = this.doGet(url, params, parseResponse);
 
         return pr.then(data => {
-            size += data.items.length;
-            fullData.items = _.concat(fullData.items, data.items);
-            const total = _.get(data, 'metadata.pagination.total');
+            const cumulativeSize = size + data.items.length;
+            const totalSize = _.get(data, 'metadata.pagination.total');
 
-            if (total > size) {
-                return this.doGetFull(url, params, parseResponse, fullData, size);
+            fullData.items = _.concat(fullData.items, data.items);
+
+            if (totalSize > cumulativeSize) {
+                return this.doGetFull(url, params, parseResponse, fullData, cumulativeSize);
             }
             return fullData;
         });

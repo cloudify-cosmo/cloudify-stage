@@ -343,9 +343,9 @@ module.exports = r => {
             });
             return allSubgraphs;
         };
-        const cleanSubgraphsList = allSubgraphs => {
+        const cleanSubgraphsList = subgraphs => {
             // Removing irrelevant vertices (when a task is rescheduled due to failure mostly)
-            allSubgraphs = safeDeleteIrrelevantGraphVertices(allSubgraphs);
+            let allSubgraphs = safeDeleteIrrelevantGraphVertices(subgraphs);
             // Removing subgraphs with 0 children
             // eslint-disable-next-line consistent-return
             allSubgraphs = _.omitBy(allSubgraphs, subGraph => {
@@ -389,7 +389,8 @@ module.exports = r => {
             });
             return allSubgraphs;
         };
-        const createELKTasksGraphs = allSubgraphs => {
+        const createELKTasksGraphs = subgraphs => {
+            let allSubgraphs = subgraphs;
             tasksGraph.edges = allSubgraphs.edges;
             allSubgraphs = _.omit(allSubgraphs, ['edges']);
             _.map(allSubgraphs, subGraph => {
