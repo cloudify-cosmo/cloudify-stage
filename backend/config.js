@@ -21,7 +21,7 @@ try {
 
 let me = null;
 try {
-    // eslint-disable-next-line global-require
+    // eslint-disable-next-line import/no-unresolved,global-require
     me = require('../conf/me.json');
 } catch (err) {
     if (err.code !== 'MODULE_NOT_FOUND') {
