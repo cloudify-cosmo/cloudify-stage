@@ -1,3 +1,4 @@
+const _ = require('lodash');
 const fs = require('fs-extra');
 const moment = require('moment');
 const path = require('path');
@@ -19,7 +20,7 @@ module.exports = {
             })
             .then(results => {
                 logger.info(`Found ${results.length} page rows to migrate.`);
-                for (const pageRow of results) {
+                _.forEach(results, pageRow => {
                     const pageFilePath = path.resolve(userPagesFolder, `${pageRow.id}.json`);
 
                     logger.info(`Updating ${pageFilePath}`);
@@ -41,7 +42,7 @@ module.exports = {
                     }
 
                     fs.writeJsonSync(pageFilePath, pageFileContent, { spaces: 2, EOL: '\n' });
-                }
+                });
 
                 logger.info('Removing page rows from DB.');
                 return queryInterface.bulkDelete('Resources', { type: ResourceTypes.PAGE });

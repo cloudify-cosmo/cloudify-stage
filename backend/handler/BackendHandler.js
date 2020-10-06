@@ -11,11 +11,13 @@ const config = require('../config').get();
 const consts = require('../consts');
 const db = require('../db/Connection');
 const Utils = require('../utils');
+const helper = require('./services');
 
 const logger = require('./LoggerHandler').getLogger('WidgetBackend');
 
 const builtInWidgetsFolder = Utils.getResourcePath('widgets', false);
 const userWidgetsFolder = Utils.getResourcePath('widgets', true);
+const getServiceString = (widgetId, method, serviceName) => `widget=${widgetId} method=${method} name=${serviceName}`;
 
 const BackendRegistrator = (widgetId, resolve, reject) => ({
     register: (serviceName, method, service) => {
@@ -43,8 +45,6 @@ const BackendRegistrator = (widgetId, resolve, reject) => ({
             return reject('Service body must be a function (function(request, response, next, helper) {...})');
         }
 
-        const getServiceString = (widgetId, method, serviceName) =>
-            `widget=${widgetId} method=${method} name=${serviceName}`;
         logger.info(`--- registering service ${getServiceString(widgetId, method, serviceName)}`);
 
         return db.WidgetBackend.findOrCreate({
@@ -197,8 +197,6 @@ module.exports = (() => {
                 const script = _.get(widgetBackend, 'script.code', null);
 
                 if (script) {
-                    const helper = require('./services');
-
                     const vm = new NodeVM({
                         require: {
                             external: config.app.widgets.allowedModules

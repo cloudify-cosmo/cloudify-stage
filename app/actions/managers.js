@@ -59,6 +59,7 @@ export function login(username, password, redirect) {
             })
             .then(() => {
                 if (redirect) {
+                    // eslint-disable-next-line scanjs-rules/assign_to_location
                     window.location = redirect;
                 } else {
                     dispatch(push(Consts.HOME_PAGE_PATH));

@@ -20,9 +20,11 @@ function shadeColor(color, percent) {
     const num = parseInt(color.slice(1), 16); // Remove the '#'
     const t = percent > 0 ? 0 : 255;
     const p = percent < 0 ? percent * -1 : percent;
+    /* eslint-disable no-bitwise */
     const R = num >> 16;
     const G = (num >> 8) & 0x00ff;
     const B = num & 0x0000ff; // extract the RGB
+    /* eslint-enable no-bitwise */
     const newR = Math.round((t - R) * p) + R;
     const newG = Math.round((t - G) * p) + G;
     const newB = Math.round((t - B) * p) + B;

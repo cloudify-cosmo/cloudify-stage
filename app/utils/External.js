@@ -4,6 +4,7 @@
 
 import 'isomorphic-fetch';
 import { saveAs } from 'file-saver';
+import JSZip from 'jszip';
 import StageUtils from './stageUtils';
 import Interceptor from './Interceptor';
 import { LICENSE_ERR, UNAUTHORIZED_ERR } from './ErrorCodes';
@@ -16,6 +17,10 @@ Text form of class hierarchy diagram to be used at: https://yuml.me/diagram/nofu
 [Internal]<-[Manager|doGetFull();getCurrentUsername();getCurrentUserRole();getDistributionName();getDistributionRelease();getIp();getManagerUrl();getSelectedTenant();getSystemRoles();isCommunityEdition()]
 
 */
+
+function getContentType(type) {
+    return { 'content-type': type || 'application/json' };
+}
 
 export default class External {
     constructor(data) {
@@ -108,7 +113,6 @@ export default class External {
                 if (files instanceof File) {
                     // Single file
                     if (compressFile) {
-                        const JSZip = require('jszip');
                         const reader = new FileReader();
                         const zip = new JSZip();
 
@@ -126,8 +130,8 @@ export default class External {
                                     formData = new File([blob], `${files.name}.zip`);
                                     xhr.send(formData);
                                 },
-                                function error(error) {
-                                    const errorMessage = `Cannot compress file. Error: ${error}`;
+                                function error(err) {
+                                    const errorMessage = `Cannot compress file. Error: ${err}`;
                                     log.error(errorMessage);
                                     reject({ message: errorMessage });
                                 }
@@ -161,7 +165,7 @@ export default class External {
         const actualUrl = this.buildActualUrl(url, params);
         log.debug(`${method} data. URL: ${url}`);
 
-        const headers = Object.assign(this.buildHeaders(), this.contentType(), userHeaders);
+        const headers = Object.assign(this.buildHeaders(), getContentType(), userHeaders);
 
         const options = {
             method,
@@ -172,7 +176,7 @@ export default class External {
             try {
                 if (_.isString(data)) {
                     options.body = data;
-                    _.merge(options.headers, this.contentType('text/plain'));
+                    _.merge(options.headers, getContentType('text/plain'));
                 } else {
                     options.body = JSON.stringify(data);
                 }
@@ -205,10 +209,12 @@ export default class External {
             });
     }
 
+    // eslint-disable-next-line class-methods-use-this
     isUnauthorized() {
         return false;
     }
 
+    // eslint-disable-next-line class-methods-use-this
     isLicenseError() {
         return false;
     }
@@ -248,13 +254,10 @@ export default class External {
         });
     }
 
+    // eslint-disable-next-line class-methods-use-this
     buildActualUrl(url, data) {
         const queryString = data ? (url.indexOf('?') > 0 ? '&' : '?') + $.param(data, true) : '';
         return `${url}${queryString}`;
-    }
-
-    contentType(type) {
-        return { 'content-type': type || 'application/json' };
     }
 
     buildHeaders() {

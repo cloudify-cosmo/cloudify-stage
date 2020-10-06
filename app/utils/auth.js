@@ -34,11 +34,13 @@ export default class Auth {
         const isTrialLicense = _.get(license, 'data.trial', false);
         const licenseStatus = _.get(license, 'status', Consts.LICENSE.EMPTY);
 
-        return isLicenseRequired
-            ? isTrialLicense
+        if (isLicenseRequired) {
+            return isTrialLicense
                 ? _.isEqual(licenseStatus, Consts.LICENSE.ACTIVE)
-                : !_.isEqual(licenseStatus, Consts.LICENSE.EMPTY)
-            : true;
+                : !_.isEqual(licenseStatus, Consts.LICENSE.EMPTY);
+        }
+
+        return true;
     }
 
     static getLicenseStatus(licenseData) {

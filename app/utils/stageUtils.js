@@ -79,11 +79,13 @@ export default class StageUtils {
         let matchedTag;
         let matchedAttr;
         let sentence = '';
+        // eslint-disable-next-line no-cond-assign,scanjs-rules/accidental_assignment
         while ((matchedTag = tagPattern.exec(message))) {
             const tag = matchedTag[0];
             sentence = matchedTag[1].toLowerCase();
 
             const attributes = [];
+            // eslint-disable-next-line no-cond-assign,scanjs-rules/accidental_assignment
             while ((matchedAttr = attrPattern.exec(tag))) {
                 attributes.push({ key: matchedAttr[1], value: matchedAttr[2] });
             }
@@ -91,6 +93,7 @@ export default class StageUtils {
             if (attributes.length > 0) {
                 if (attributes.length > 1) {
                     sentence += ' with';
+                    // eslint-disable-next-line no-loop-func
                     _.each(attributes, (item, index) => {
                         sentence += ` ${item.key}=${item.value} ${index < attributes.length - 1 ? ' and' : ''}`;
                     });
@@ -161,8 +164,14 @@ export default class StageUtils {
                 return;
             }
 
-            const value =
-                config.default && !config.value ? config.default : _.isUndefined(config.value) ? null : config.value;
+            let value;
+            if (config.default && !config.value) {
+                value = config.default;
+            } else if (_.isUndefined(config.value)) {
+                value = null;
+            } else {
+                value = config.value;
+            }
 
             configs[config.id] = GenericField.formatValue(config.type, value);
         });

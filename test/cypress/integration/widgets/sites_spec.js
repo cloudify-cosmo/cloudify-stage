@@ -144,11 +144,11 @@ describe('Sites Management', () => {
         verifySiteRow(1, { name, location: '0.0878905905308242, 0.0', visibility: 'private' });
     });
 
-    for (const site of invalidSites) {
+    invalidSites.forEach(site => {
         it(`create site fails when ${site.check}`, () => {
             createInvalidSite(site);
         });
-    }
+    });
 
     it('list all sites', () => {
         cy.createSites(sites);
@@ -156,7 +156,7 @@ describe('Sites Management', () => {
 
         cy.get('.sitesWidget').should('be.visible', true);
 
-        for (let i = 0; i < sites.length; i++) {
+        for (let i = 0; i < sites.length; i += 1) {
             verifySiteRow(i + 1, sites[i]);
         }
     });
@@ -226,7 +226,7 @@ describe('Sites Management', () => {
         cy.createSites(sites);
         reloadSiteManagementPage();
 
-        for (let i = sites.length; i > 0; i--) {
+        for (let i = sites.length; i > 0; i -= 1) {
             deleteSite(i);
         }
 

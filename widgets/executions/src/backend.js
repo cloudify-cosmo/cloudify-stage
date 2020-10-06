@@ -146,7 +146,7 @@ module.exports = r => {
                     edges: [],
                     containing_subgraph: null // Needed to distinguish which nodes to keep (=not null -> not root-level subgraphs -> will be removed)
                 };
-                if (!allSubgraphs.hasOwnProperty(task.id)) {
+                if (!Object.prototype.hasOwnProperty.call(allSubgraphs, task.id)) {
                     allSubgraphs[task.id] = subGraph;
                 } else {
                     allSubgraphs[task.id].labels[0].text = taskName;
@@ -159,7 +159,7 @@ module.exports = r => {
                     // Need to create its parent and update self as its child
                     const { containing_subgraph } = task.parameters;
                     subGraph.containing_subgraph = containing_subgraph;
-                    if (!allSubgraphs.hasOwnProperty(containing_subgraph)) {
+                    if (!Object.prototype.hasOwnProperty.call(allSubgraphs, containing_subgraph)) {
                         // Parent does not exist - creating parent skeleton to be filled later
                         const parentGraph = {
                             id: containing_subgraph,
@@ -287,7 +287,7 @@ module.exports = r => {
                 if (textToCalculate.length > maximumLength) {
                     let indexOfSplitLocation;
                     // Traversing the splitting location backwards to find the beginning of the word
-                    for (indexOfSplitLocation = maximumLength; indexOfSplitLocation >= 0; indexOfSplitLocation--) {
+                    for (indexOfSplitLocation = maximumLength; indexOfSplitLocation >= 0; indexOfSplitLocation -= 1) {
                         if (textToCalculate[indexOfSplitLocation] === ' ') {
                             break;
                         }
@@ -357,7 +357,8 @@ module.exports = r => {
                     // Verify the subGraph doesn't have connected edges
                     if (subGraph.containing_subgraph !== null) {
                         let i = allSubgraphs[subGraph.containing_subgraph].edges.length;
-                        while (i--) {
+                        while (i) {
+                            i -= 1;
                             if (
                                 allSubgraphs[subGraph.containing_subgraph].edges[i].sources.indexOf(subGraph.id) > -1 ||
                                 allSubgraphs[subGraph.containing_subgraph].edges[i].targets.indexOf(subGraph.id) > -1
@@ -367,7 +368,8 @@ module.exports = r => {
                         }
                     } else {
                         let i = allSubgraphs.edges.length;
-                        while (i--) {
+                        while (i) {
+                            i -= 1;
                             if (
                                 allSubgraphs.edges[i].sources.indexOf(subGraph.id) > -1 ||
                                 allSubgraphs.edges[i].targets.indexOf(subGraph.id) > -1
@@ -422,11 +424,11 @@ module.exports = r => {
                             });
                             return operationsList;
                         })
-                        .then(operationsList => {
+                        .then(list => {
                             // Constructing SubGraphs
-                            let allSubgraphs = constructSubgraphs(operationsList);
+                            let allSubgraphs = constructSubgraphs(list);
                             // Constructing Dependencies
-                            allSubgraphs = constructDependencies(operationsList, allSubgraphs);
+                            allSubgraphs = constructDependencies(list, allSubgraphs);
                             // Increase the Node's rectangle height based on inner texts
                             allSubgraphs = adjustingNodeSizes(allSubgraphs);
                             // Remove LocalWorkflow & NOPWorkflowTasks from the graph while keeping it connected
@@ -434,8 +436,8 @@ module.exports = r => {
                             // Creating the ELK-formatted graph
                             return createELKTasksGraphs(allSubgraphs);
                         })
-                        .then(tasksGraph => {
-                            elk.layout(tasksGraph).then(elkGraph => {
+                        .then(graphs => {
+                            elk.layout(graphs).then(elkGraph => {
                                 res.send(elkGraph);
                             });
                         })

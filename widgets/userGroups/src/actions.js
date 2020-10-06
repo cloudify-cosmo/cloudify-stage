@@ -2,6 +2,10 @@
  * Created by jakubniezgoda on 03/02/2017.
  */
 
+function isAdminGroup(group) {
+    return group.role === Stage.Common.Consts.sysAdminRole;
+}
+
 export default class Actions {
     constructor(toolbox) {
         this.toolbox = toolbox;
@@ -83,10 +87,6 @@ export default class Actions {
         return this.currentUserRole === Stage.Common.Consts.sysAdminRole;
     }
 
-    isAdminGroup(group) {
-        return group.role === Stage.Common.Consts.sysAdminRole;
-    }
-
     // Check if user <username> belongs to group <group> and it is the only admin group he belongs to
     isUserGroupTheOnlyAdminGroup(group, groups, username = this.currentUsername) {
         if (_.includes(group.users, username)) {
@@ -107,7 +107,7 @@ export default class Actions {
         return (
             this.isUserIn(users, username) &&
             !this.hasCurrentUserAdminRole() &&
-            this.isAdminGroup(group) &&
+            isAdminGroup(group) &&
             this.isUserGroupTheOnlyAdminGroup(group, groups, username)
         );
     }

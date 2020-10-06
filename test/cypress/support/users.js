@@ -43,16 +43,15 @@ Cypress.Commands.add('deleteUser', username => {
 
 Cypress.Commands.add('deleteAllUsersAndTenants', () => {
     cy.cfyRequest('/users?_get_data=true').then(response => {
-        for (const user of response.body.items) {
-            for (const tenant of Object.keys(user.tenants)) {
-                cy.removeUserFromTenant(user.username, tenant);
-            }
+        const users = response.body.items;
+        users.forEach(user => {
+            const tenants = Object.keys(user.tenants);
+            tenants.forEach(tenant => cy.removeUserFromTenant(user.username, tenant));
             cy.deleteUser(user.username);
-        }
-        cy.cfyRequest('/tenants?_include=name').then(response => {
-            for (const tenant of response.body.items) {
-                cy.deleteTenant(tenant.name);
-            }
+        });
+        cy.cfyRequest('/tenants?_include=name').then(tenantsResponse => {
+            const tenants = tenantsResponse.body.items;
+            tenants.forEach(tenant => cy.deleteTenant(tenant.name));
         });
     });
 });

@@ -59,9 +59,8 @@ function cmdStatus() {
             result.pending = pending;
             return result;
         })
-        .then(result => {
-            let { executed } = result;
-            let { pending } = result;
+        .then(res => {
+            let { executed, pending } = res;
 
             executed = executed.map(m => {
                 m.name = path.basename(m.file, '.js');
@@ -144,6 +143,7 @@ function cmdClear() {
 
 function handleCommand(cmd) {
     let executedCmd;
+    let downToMigration;
 
     logger.info(`${cmd.toUpperCase()} BEGIN`);
 
@@ -158,7 +158,7 @@ function handleCommand(cmd) {
             break;
 
         case 'downTo':
-            const downToMigration = process.argv[3].trim();
+            downToMigration = process.argv[3].trim();
             executedCmd = cmdDownTo(downToMigration);
             break;
 

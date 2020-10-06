@@ -21,7 +21,9 @@ export default class TemplateLoader {
                 templateList.forEach(item => {
                     promises.push(
                         LoaderUtils.fetchResource(`templates/${item.id}.json`, item.custom)
-                            .then(templateData => (templatesDef[item.id] = templateData))
+                            .then(templateData => {
+                                templatesDef[item.id] = templateData;
+                            })
                             .catch(e => {
                                 throw new Error(`Error loading template ${item.id}`, e);
                             })
@@ -31,7 +33,9 @@ export default class TemplateLoader {
                 pageList.forEach(item => {
                     promises.push(
                         LoaderUtils.fetchResource(`templates/pages/${item.id}.json`, item.custom)
-                            .then(pageData => (pagesDef[item.id] = pageData))
+                            .then(pageData => {
+                                pagesDef[item.id] = pageData;
+                            })
                             .catch(e => {
                                 throw new Error(`Error loading page template ${item.id}`, e);
                             })

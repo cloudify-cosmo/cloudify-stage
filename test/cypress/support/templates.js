@@ -4,20 +4,22 @@ Cypress.Commands.add('getTemplates', () => cy.stageRequest('/console/templates')
 
 Cypress.Commands.add('removeUserPages', () => {
     cy.getPages().then(response => {
-        for (const page of response.body) {
+        const pages = response.body;
+        pages.forEach(page => {
             if (page.custom) {
                 cy.stageRequest(`/console/templates/pages/${page.id}`, 'DELETE');
             }
-        }
+        });
     });
 });
 
 Cypress.Commands.add('removeUserTemplates', () => {
     cy.getTemplates().then(response => {
-        for (const template of response.body) {
+        const templates = response.body;
+        templates.forEach(template => {
             if (template.custom) {
                 cy.stageRequest(`/console/templates/${template.id}`, 'DELETE');
             }
-        }
+        });
     });
 });

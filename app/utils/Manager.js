@@ -5,10 +5,6 @@ import StageUtils from './stageUtils';
 import Consts from './consts';
 
 export default class Manager extends Internal {
-    constructor(managerData) {
-        super(managerData);
-    }
-
     getIp() {
         return _.get(this, 'data.ip', null);
     }
@@ -46,6 +42,7 @@ export default class Manager extends Internal {
         return _.filter(roles, role => role.type === 'system_role');
     }
 
+    // eslint-disable-next-line class-methods-use-this
     buildActualUrl(url, data) {
         const index = url.indexOf('[manager]');
         if (index >= 0) {
@@ -55,8 +52,15 @@ export default class Manager extends Internal {
             url = url.substring(0, index);
 
             data = { ...data, su: urlInServer };
-            const queryString = (url.indexOf('?') > 0 ? (_.endsWith(url, '?') ? '' : '&') : '?') + $.param(data, true);
-
+            let queryString = '';
+            if (url.indexOf('?') > 0) {
+                if (!_.endsWith(url, '?')) {
+                    queryString += '&';
+                }
+            } else {
+                queryString += '?';
+            }
+            queryString += $.param(data, true);
             return url + queryString;
         }
         const queryString = data ? (url.indexOf('?') > 0 ? '&' : '?') + $.param(data, true) : '';

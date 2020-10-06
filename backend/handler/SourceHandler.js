@@ -19,6 +19,7 @@ const lookupYamlsDir = pathlib.join(os.tmpdir(), config.app.source.lookupYamlsDi
 
 module.exports = (() => {
     function isUnixHiddenPath(path) {
+        // eslint-disable-next-line no-useless-escape
         return /(^|.\/)\.+[^\/\.]/g.test(path);
     }
 
@@ -194,7 +195,7 @@ module.exports = (() => {
             return ArchiveHelper.removeOldExtracts(lookupYamlsDir)
                 .then(() => {
                     if (_.isEmpty(archiveFile)) {
-                        throw 'No archive file provided';
+                        throw new Error('No archive file provided');
                     } else {
                         const archivePath = pathlib.join(archiveFolder, archiveFile);
                         const archiveExtension = pathlib.parse(archiveFile).ext; // file extension

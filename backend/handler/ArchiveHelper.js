@@ -16,18 +16,18 @@ const logger = require('./LoggerHandler').getLogger('ArchiveHelper');
 module.exports = (() => {
     function saveMultipartData(req, targetDir, multipartId) {
         const storage = multer.diskStorage({
-            destination(req, file, cb) {
+            destination(request, file, cb) {
                 logger.debug('Saving file on disk');
 
                 const archiveFolder = _.isFunction(targetDir) ? targetDir(file.originalname) : targetDir;
 
                 fs.mkdirsSync(archiveFolder);
 
-                req.archiveFolder = archiveFolder;
+                request.archiveFolder = archiveFolder;
                 cb(null, archiveFolder);
             },
-            filename(req, file, cb) {
-                req.archiveFile = file.originalname;
+            filename(request, file, cb) {
+                request.archiveFile = file.originalname;
                 cb(null, file.originalname);
             }
         });

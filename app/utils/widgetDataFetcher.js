@@ -2,6 +2,11 @@
  * Created by kinneretzin on 03/04/2017.
  */
 
+function getUrlRegExString(str) {
+    // eslint-disable-next-line security/detect-non-literal-regexp
+    return new RegExp(`\\[${str}:?(.*)\\]`, 'i');
+}
+
 export default class WidgetDataFetcher {
     constructor(widget, toolbox, paramsHandler) {
         this.widget = widget;
@@ -21,7 +26,7 @@ export default class WidgetDataFetcher {
             if (!_.isString(this.widget.definition.fetchUrl)) {
                 output = {};
                 const keys = _.keysIn(this.widget.definition.fetchUrl);
-                for (let i = 0; i < data.length; i++) {
+                for (let i = 0; i < data.length; i += 1) {
                     output[keys[i]] = data[i];
                 }
             } else {
@@ -35,7 +40,7 @@ export default class WidgetDataFetcher {
         let baseUrl = url.substring(prefix.length);
 
         let params = {};
-        const paramsMatch = this.getUrlRegExString('params').exec(baseUrl);
+        const paramsMatch = getUrlRegExString('params').exec(baseUrl);
         if (!_.isNull(paramsMatch)) {
             const [paramsString, allowedParams] = paramsMatch;
 
@@ -48,7 +53,7 @@ export default class WidgetDataFetcher {
     }
 
     fetchByUrl(url) {
-        const fetchUrl = _.replace(url, this.getUrlRegExString('config'), (match, configName) => {
+        const fetchUrl = _.replace(url, getUrlRegExString('config'), (match, configName) => {
             return this.widget.configuration ? this.widget.configuration[configName] : 'NA';
         });
 
@@ -81,9 +86,5 @@ export default class WidgetDataFetcher {
         } else {
             return Promise.reject({ error: 'Widget doesnt have a fetchData function' });
         }
-    }
-
-    getUrlRegExString(str) {
-        return new RegExp(`\\[${str}:?(.*)\\]`, 'i');
     }
 }

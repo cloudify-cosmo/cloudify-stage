@@ -1,6 +1,7 @@
 Cypress.Commands.add('createSite', site => {
     const data = { name: site.name };
     if (site.location) {
+        // eslint-disable-next-line scanjs-rules/assign_to_location
         data.location = site.location;
     }
     if (site.visibility) {
@@ -11,9 +12,7 @@ Cypress.Commands.add('createSite', site => {
 });
 
 Cypress.Commands.add('createSites', sites => {
-    for (const site of sites) {
-        cy.createSite(site);
-    }
+    sites.forEach(site => cy.createSite(site));
 });
 
 Cypress.Commands.add('deleteSite', siteName => {
@@ -22,8 +21,7 @@ Cypress.Commands.add('deleteSite', siteName => {
 
 Cypress.Commands.add('deleteSites', (search = '') => {
     cy.cfyRequest(`/sites?_search=${search}`, 'GET').then(response => {
-        for (const site of response.body.items) {
-            cy.deleteSite(site.name);
-        }
+        const sites = response.body.items;
+        sites.forEach(site => cy.deleteSite(site.name));
     });
 });

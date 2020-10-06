@@ -63,9 +63,10 @@ class AuthHandler {
     static async getRBAC(token) {
         if (!AuthHandler.isRbacInCache()) {
             logger.debug('No RBAC data in cache.');
-            return await AuthHandler.getAndCacheConfig(token);
+            await AuthHandler.getAndCacheConfig(token);
+        } else {
+            logger.debug('RBAC data found in cache.');
         }
-        logger.debug('RBAC data found in cache.');
         return authorizationCache;
     }
 

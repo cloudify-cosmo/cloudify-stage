@@ -79,6 +79,7 @@ module.exports = (env, argv) => {
                 ]
             },
             {
+                // eslint-disable-next-line security/detect-unsafe-regex
                 test: /\.(eot|woff|woff2|ttf)(\?\S*)?$/,
                 use: [
                     {
@@ -92,6 +93,7 @@ module.exports = (env, argv) => {
                 ]
             },
             {
+                // eslint-disable-next-line security/detect-unsafe-regex
                 test: /\.(svg|png|jpe?g|gif)(\?\S*)?$/,
                 use: [
                     {

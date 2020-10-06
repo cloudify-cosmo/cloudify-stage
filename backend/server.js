@@ -136,6 +136,7 @@ app.use(`${contextPath}/maps`, Maps);
 
 // Redirect URLs with old context path (/stage)
 app.use([oldContextPath, `${oldContextPath}/*`], (request, response) => {
+    // eslint-disable-next-line security/detect-non-literal-regexp
     const pathWithoutOldContextPath = request.originalUrl.replace(new RegExp(`^${oldContextPath}`), '');
     const redirectUrl = `${contextPath}${pathWithoutOldContextPath}`;
     logger.info(`Old base url detected: "${request.originalUrl}". Redirecting to "${redirectUrl}".`);

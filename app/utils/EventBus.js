@@ -6,7 +6,7 @@ export default class EventBus {
     static events = {};
 
     static on(event, callback, context) {
-        this.events.hasOwnProperty(event) || (this.events[event] = []);
+        this.events[event] = this.events[event] || [];
         this.events[event].push([callback, context]);
     }
 

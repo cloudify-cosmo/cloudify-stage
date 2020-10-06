@@ -123,7 +123,7 @@ module.exports = (() => {
         );
 
         let result = null;
-        for (let i = 0; i < roles.length; i++) {
+        for (let i = 0; i < roles.length; i += 1) {
             const role = roles[i].name;
             if (_.includes(userRoles, role)) {
                 result = role;

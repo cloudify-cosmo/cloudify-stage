@@ -15,11 +15,13 @@ describe('Migration script', () => {
         expect(result).toEqual(`${latestMigration}\n`);
     });
 
+    // eslint-disable-next-line jest/expect-expect
     it('handles migration down to the same version with no error', () => {
         execSync(`node migration.js downTo ${latestMigration}`);
     });
 
     function testMigrationUp(snapshotVersion, initialMigration) {
+        // eslint-disable-next-line jest/expect-expect
         it(`migrates from ${snapshotVersion} snapshot`, () => {
             try {
                 execSync(`node migration.js downTo ${initialMigration}`);

@@ -79,34 +79,36 @@ function hopscotchRegisterHelpers(dispatch) {
             new Promise(resolve => $(hopscotchButtonSelector).addClass(buttonLoadingClass) && resolve());
 
         let isWaitingTimeExceeded = false;
-        const waitingTimeout = setTimeout(() => (isWaitingTimeExceeded = true), maxWaitingTime);
+        const waitingTimeout = setTimeout(() => {
+            isWaitingTimeExceeded = true;
+        }, maxWaitingTime);
 
-        const checkIfPageIsPresent = (pageUrl, pageName) => {
+        const checkIfPageIsPresent = (pageUrl, name) => {
             if (!_.isEqual(window.location.pathname, `${Consts.CONTEXT_PATH}${pageUrl}`)) {
                 hopscotch.getCalloutManager().createCallout({
                     id: 'error',
                     target: 'div.logo',
                     placement: 'bottom',
                     title: 'No page',
-                    content: `Cannot find <strong>${pageName ||
+                    content: `Cannot find <strong>${name ||
                         pageUrl}</strong> page. Tours are intended to work only on default templates. Reset templates to finish this tour.`
                 });
 
-                return Promise.reject(`Page ${pageName} not found.`);
+                return Promise.reject(`Page ${name} not found.`);
             }
-            return Promise.resolve(`Page ${pageName} found.`);
+            return Promise.resolve(`Page ${name} found.`);
         };
 
-        const waitForElementVisible = (selector, isVisibilityConfirmed = false) => {
-            const element = document.querySelector(selector);
+        const waitForElementVisible = (elSelector, isVisibilityConfirmed = false) => {
+            const element = document.querySelector(elSelector);
             const isElementVisible = element !== null && window.getComputedStyle(element).display !== 'none';
 
             if (isElementVisible) {
                 if (isVisibilityConfirmed) {
                     clearTimeout(waitingTimeout);
-                    return Promise.resolve(`Element for selector ${selector} found.`);
+                    return Promise.resolve(`Element for selector ${elSelector} found.`);
                 }
-                return delay(minVisibilityTime).then(() => waitForElementVisible(selector, true));
+                return delay(minVisibilityTime).then(() => waitForElementVisible(elSelector, true));
             }
             if (isWaitingTimeExceeded) {
                 hopscotch.getCalloutManager().createCallout({
@@ -119,9 +121,9 @@ function hopscotchRegisterHelpers(dispatch) {
                     content: noSelectorErrorMessage || 'Cannot find element for the next tour step on the screen.'
                 });
 
-                return Promise.reject(`Element for selector ${selector} not found.`);
+                return Promise.reject(`Element for selector ${elSelector} not found.`);
             }
-            return rafAsync().then(() => waitForElementVisible(selector));
+            return rafAsync().then(() => waitForElementVisible(elSelector));
         };
 
         const redirect = !!url && !!pageName;

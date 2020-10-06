@@ -108,6 +108,7 @@ export function selectPage(pageId, isDrilldown, drilldownContext, drilldownPageN
             dispatch(clearContext());
         } else {
             if (!_.isEmpty(drilldownPageName)) {
+                // eslint-disable-next-line scanjs-rules/assign_to_pathname
                 location.pathname += `/${drilldownPageName}`;
             }
             if (drilldownPageName || drilldownContext) {
@@ -120,6 +121,7 @@ export function selectPage(pageId, isDrilldown, drilldownContext, drilldownPageN
                 ];
             }
 
+            // eslint-disable-next-line scanjs-rules/assign_to_search
             location.search = stringify({ c: JSON.stringify(newDrilldownContext) });
         }
 

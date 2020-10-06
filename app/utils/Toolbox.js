@@ -52,6 +52,7 @@ class Toolbox {
         this.store.dispatch(selectPageByName(pageName));
     }
 
+    // eslint-disable-next-line class-methods-use-this
     getEventBus() {
         return EventBus;
     }
@@ -74,11 +75,13 @@ class Toolbox {
         return new WidgetBackend(_.get(widget, 'definition.id', ''), state.manager || {});
     }
 
+    // eslint-disable-next-line class-methods-use-this
     getExternal(basicAuth) {
         return new External(basicAuth);
     }
 
     // This is sometimes needed inorder to join a different manager (for cluster joining for example)
+    // eslint-disable-next-line class-methods-use-this
     getNewManager() {
         return new Manager();
     }
@@ -87,10 +90,13 @@ class Toolbox {
         return this.context;
     }
 
+    // eslint-disable-next-line class-methods-use-this
     refresh() {}
 
+    // eslint-disable-next-line class-methods-use-this
     loading() {}
 
+    // eslint-disable-next-line class-methods-use-this
     getWidget() {}
 }
 

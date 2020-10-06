@@ -17,11 +17,14 @@ function errorHandler(url, res, err) {
     const isConnTimeout = err.connect;
 
     const urlMsg = `Requested URL: ${url}.`;
-    const exMsg = isConnTimeout
-        ? 'Manager is not available'
-        : isTimeout
-        ? 'Request timed out'
-        : `An unexpected error has occurred: ${err.message}`;
+    let exMsg;
+    if (isConnTimeout) {
+        exMsg = 'Manager is not available';
+    } else if (isTimeout) {
+        exMsg = 'Request timed out';
+    } else {
+        exMsg = `An unexpected error has occurred: ${err.message}`;
+    }
 
     logger.error(`${urlMsg} ${exMsg}`, err);
     res.status(500).send({ message: `${urlMsg} ${exMsg}` });
