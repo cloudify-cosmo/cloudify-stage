@@ -1,27 +1,11 @@
 {
     "extends": [
-        "plugin:jsdoc/recommended",
         "./node_modules/cloudify-ui-common/eslint/eslint-common-react.json"
     ],
     "parser": "babel-eslint",
-    "plugins": ["jsdoc"],
     "rules": {
         "no-console": "error",
-
-        // FIXME: All below listed rules are off only during transition period. We need to remove them as we update the code.
-        "jsdoc/require-jsdoc": ["off"],
-        "no-param-reassign": ["warn"],
-        "prefer-promise-reject-errors": ["warn"],
-    },
-    "settings": {
-        "react": {
-            "version": "detect"
-        }
-    },
-    "parserOptions": {
-        "ecmaFeatures": {
-            "modules": true
-        }
+        "prefer-promise-reject-errors": ["off"],
     },
     "overrides": [
         {
