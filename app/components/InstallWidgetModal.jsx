@@ -72,7 +72,7 @@ export default class InstallWidgetModal extends Component {
         this.setState({ loading: true, errors: {}, scriptError: '' });
 
         EventBus.on('window:error', this.showScriptError, this);
-        onWidgetInstalled(widgetFile, widgetUrl)
+        return onWidgetInstalled(widgetFile, widgetUrl)
             .then(() => {
                 EventBus.off('window:error', this.showScriptError);
                 this.setState({ loading: false, open: false });

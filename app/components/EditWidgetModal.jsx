@@ -13,7 +13,7 @@ export default function EditWidgetModal({ configDef, configuration, show, onHide
 
         configDef
             .filter(config => !config.hidden)
-            .map(config => {
+            .forEach(config => {
                 const currValue = _.get(configuration, `[${config.id}]`, config.value || config.default);
                 fields[config.id] = currValue;
             });

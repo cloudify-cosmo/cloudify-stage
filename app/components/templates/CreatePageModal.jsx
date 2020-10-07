@@ -20,21 +20,21 @@ export default function CreatePageModal({ onCreatePage, pageName: initialPageNam
     }
 
     function submitCreate() {
-        const errors = {};
+        const errorsObject = {};
 
         if (_.isEmpty(_.trim(pageName))) {
-            errors.pageName = 'Please provide correct page name';
+            errorsObject.pageName = 'Please provide correct page name';
         }
 
-        if (!_.isEmpty(errors)) {
-            setErrors(errors);
+        if (!_.isEmpty(errorsObject)) {
+            setErrors(errorsObject);
             return false;
         }
 
         // Disable the form
         setLoading(true);
 
-        onCreatePage(_.trim(pageName)).catch(err => {
+        return onCreatePage(_.trim(pageName)).catch(err => {
             setErrors({ error: err.message });
             setLoading(false);
         });

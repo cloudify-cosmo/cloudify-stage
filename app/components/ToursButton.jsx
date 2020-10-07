@@ -52,7 +52,9 @@ export default class ToursButton extends React.Component {
                             icon="map signs"
                             id="toursButton"
                             onMouseOver={this.onMouseOver}
+                            onFocus={this.onMouseOver}
                             onMouseOut={this.onMouseOut}
+                            onBlur={this.onMouseOut}
                             style={buttonStyle}
                             onClick={e => e.stopPropagation()}
                         />

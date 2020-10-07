@@ -1,3 +1,4 @@
+/* eslint-disable jest/expect-expect */
 /**
  * Created by jakubniezgoda on 22/03/2019.
  */

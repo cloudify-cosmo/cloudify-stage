@@ -51,15 +51,14 @@ export default class WidgetDynamicContent extends Component {
         let requiresFetch = false;
         if (prevProps.widget.configuration && widget.configuration) {
             _.each(widget.configuration, (config, confName) => {
-                // var oldConfig = _.find(prevProps.widget.configuration,{id:config});
                 const oldConfig = prevProps.widget.configuration[confName];
 
                 if (oldConfig !== config) {
                     this.paramsHandler.update(widget);
-
                     requiresFetch = true;
-                    return false;
                 }
+
+                return !requiresFetch;
             });
         }
 
@@ -133,7 +132,7 @@ export default class WidgetDynamicContent extends Component {
 
         let interval = widget.configuration.pollingTime || 0;
         try {
-            interval = Number.isInteger(interval) ? interval : parseInt(interval);
+            interval = Number.isInteger(interval) ? interval : parseInt(interval, 10);
         } catch (e) {
             log.log(
                 `Polling interval doesnt have a valid value, using zero. Value is: ${widget.configuration.pollingTime}`
@@ -187,6 +186,7 @@ export default class WidgetDynamicContent extends Component {
                             metadata = [data.metadata];
                         } else {
                             // Check for multiple fetches
+                            // eslint-disable-next-line consistent-return
                             metadata = _.filter(data, item => {
                                 if (item.metadata) {
                                     return item.metadata;
@@ -212,23 +212,6 @@ export default class WidgetDynamicContent extends Component {
         }
 
         return Promise.resolve();
-    }
-
-    renderReact() {
-        const { data, widget } = this.props;
-        if (data.error) {
-            return <ErrorMessage error={data.error} header="An unexpected error occurred" autoHide />;
-        }
-
-        if (widget.definition && widget.definition.render) {
-            try {
-                return widget.definition.render(widget, data.data, data.error, this.getToolbox());
-            } catch (e) {
-                log.error(`Error rendering widget - ${e.message}`, e.stack);
-                return <ErrorMessage error={`Error rendering widget: ${e.message}`} autoHide />;
-            }
-        }
-        return <div />;
     }
 
     attachEvents(container) {
@@ -261,6 +244,23 @@ export default class WidgetDynamicContent extends Component {
         if (widget.definition.postRender) {
             widget.definition.postRender($(container), widget, data.data, this.getToolbox());
         }
+    }
+
+    renderReact() {
+        const { data, widget } = this.props;
+        if (data.error) {
+            return <ErrorMessage error={data.error} header="An unexpected error occurred" autoHide />;
+        }
+
+        if (widget.definition && widget.definition.render) {
+            try {
+                return widget.definition.render(widget, data.data, data.error, this.getToolbox());
+            } catch (e) {
+                log.error(`Error rendering widget - ${e.message}`, e.stack);
+                return <ErrorMessage error={`Error rendering widget: ${e.message}`} autoHide />;
+            }
+        }
+        return <div />;
     }
 
     renderWidget() {
@@ -298,6 +298,7 @@ export default class WidgetDynamicContent extends Component {
                 ) : (
                     <div
                         className={`widgetContent${widget.definition.showHeader ? '' : ' noHeader'}`}
+                        /* eslint-disable-next-line react/no-danger */
                         dangerouslySetInnerHTML={this.renderWidget()}
                         ref={container => this.attachEvents(container)}
                     />

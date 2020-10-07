@@ -42,7 +42,7 @@ export default class LoginPage extends Component {
         const query = parse(location.search);
         const redirect = query.redirect || null;
 
-        onLogin(username, password, redirect);
+        return onLogin(username, password, redirect);
     };
 
     handleInputChange = (proxy, field) => {

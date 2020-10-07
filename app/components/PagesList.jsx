@@ -7,7 +7,7 @@ import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 
 import AddPageButton from '../containers/AddPageButton';
-import { Confirm } from './basic';
+import { Confirm, Icon, Menu } from './basic';
 
 export default class PagesList extends Component {
     constructor(props) {
@@ -23,7 +23,9 @@ export default class PagesList extends Component {
             placeholder: 'ui-sortable-placeholder',
             helper: 'clone',
             forcePlaceholderSize: true,
-            start: (event, ui) => (this.pageIndex = ui.item.index()),
+            start: (event, ui) => {
+                this.pageIndex = ui.item.index();
+            },
             update: (event, ui) => onPageReorder(this.pageIndex, ui.item.index())
         });
 
@@ -49,9 +51,9 @@ export default class PagesList extends Component {
         const { isEditMode, onPageRemoved, onPageSelected, pages, selected } = this.props;
         const { pageToRemove } = this.state;
         let pageCount = 0;
-        pages.map(p => {
-            if (!p.isDrillDown) {
-                pageCount++;
+        pages.forEach(page => {
+            if (!page.isDrillDown) {
+                pageCount += 1;
             }
         });
 
@@ -60,11 +62,12 @@ export default class PagesList extends Component {
                 <div className="pages" ref={this.pagesRef}>
                     {_.filter(pages, p => !p.isDrillDown).map(
                         page => (
-                            <div
+                            <Menu.Item
+                                as="div"
+                                link
                                 key={page.id}
-                                className={`item link pageMenuItem ${page.id}PageMenuItem ${
-                                    selected === page.id ? 'active' : ''
-                                }`}
+                                active={selected === page.id}
+                                className={`pageMenuItem ${page.id}PageMenuItem`}
                                 onClick={event => {
                                     event.stopPropagation();
                                     onPageSelected(page);
@@ -72,8 +75,10 @@ export default class PagesList extends Component {
                             >
                                 {page.name}
                                 {isEditMode && pageCount > 1 ? (
-                                    <i
-                                        className="remove link icon small pageRemoveButton"
+                                    <Icon
+                                        name="remove"
+                                        size="small"
+                                        className="pageRemoveButton"
                                         onClick={event => {
                                             event.stopPropagation();
                                             if (_.isEmpty(page.tabs) && _.isEmpty(page.widgets)) onPageRemoved(page);
@@ -83,7 +88,7 @@ export default class PagesList extends Component {
                                 ) : (
                                     ''
                                 )}
-                            </div>
+                            </Menu.Item>
                         ),
                         this
                     )}

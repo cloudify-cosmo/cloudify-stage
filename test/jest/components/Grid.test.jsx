@@ -19,10 +19,12 @@ describe('(Component) Grid ', () => {
         expect(wrapper).toHaveLength(1);
     }
 
+    // eslint-disable-next-line jest/expect-expect
     it('Renders Non-Edit mode', () => {
         testGridRender(false);
     });
 
+    // eslint-disable-next-line jest/expect-expect
     it('Renders Edit mode', () => {
         testGridRender(true);
     });

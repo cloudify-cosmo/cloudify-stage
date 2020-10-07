@@ -49,7 +49,9 @@ export default class CreateTemplateModal extends Component {
                 helper: 'clone',
                 handle: '.handle',
                 forcePlaceholderSize: true,
-                start: (event, ui) => (this.pageIndex = ui.item.index()),
+                start: (event, ui) => {
+                    this.pageIndex = ui.item.index();
+                },
                 update: (event, ui) => this.reorderPage(this.pageIndex, ui.item.index())
             });
         }
@@ -88,7 +90,7 @@ export default class CreateTemplateModal extends Component {
         // Disable the form
         this.setState({ loading: true });
 
-        onCreateTemplate(_.trim(templateName), roles, tenants, pages)
+        return onCreateTemplate(_.trim(templateName), roles, tenants, pages)
             .then(() => {
                 this.setState({ errors: {}, loading: false, open: false });
             })

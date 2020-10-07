@@ -2,12 +2,11 @@
  * Created by kinneretzin on 29/08/2016.
  */
 
-import 'babel-polyfill';
-import 'jquery-ui/ui/core.js';
-import 'jquery-ui/ui/widget.js';
-import 'jquery-ui/ui/widgets/mouse.js';
-import 'jquery-ui/ui/widgets/draggable.js';
-import 'jquery-ui/ui/widgets/droppable.js';
+import 'jquery-ui/ui/core';
+import 'jquery-ui/ui/widget';
+import 'jquery-ui/ui/widgets/mouse';
+import 'jquery-ui/ui/widgets/draggable';
+import 'jquery-ui/ui/widgets/droppable';
 
 import './styles/style.scss';
 import 'cloudify-ui-common/styles/font-cloudify.css';

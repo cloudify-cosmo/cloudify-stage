@@ -36,8 +36,17 @@ LinkedLicenseLabel.propTypes = labelPropTypes;
 LinkedLicenseLabel.defaultProps = labelDefaultProps;
 
 export default function LicenseTag({ isCommunity, isExpired, isTrial, className = '' }) {
-    const labelContent = isCommunity ? 'Community' : isExpired ? 'Expired' : isTrial ? 'Trial' : undefined;
     const LabelComponent = isCommunity ? LicenseLabel : LinkedLicenseLabel;
+    let labelContent;
+    if (isCommunity) {
+        labelContent = 'Community';
+    } else if (isExpired) {
+        labelContent = 'Expired';
+    } else if (isTrial) {
+        labelContent = 'Trial';
+    } else {
+        labelContent = undefined;
+    }
 
     return <LabelComponent content={labelContent} className={className} />;
 }

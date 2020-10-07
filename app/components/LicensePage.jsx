@@ -136,6 +136,8 @@ function DescriptionMessage({ canUploadLicense, isTrial, isEditLicenseActive, on
                     </Message.Content>
                 </Message>
             );
+        default:
+            return null;
     }
 }
 
