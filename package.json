@@ -27,7 +27,7 @@
     "docWidgets": "node scripts/updateReadmes.js",
     "e2e": "cypress run --reporter cypress-multi-reporters --reporter-options configFile=test/cypress/reporter-config.json",
     "e2e:open": "cypress open",
-    "lint": "eslint --cache --quiet app backend widgets test scripts",
+    "lint": "eslint --cache --ext js,jsx --max-warnings 10 .",
     "prodtest": "jest test/jest && cd backend && npm test",
     "size": "[ -d \"dist\" ] && size-limit",
     "test": "npm run lint && npm run prodtest && npm run size",
