@@ -7,7 +7,8 @@ module.exports = {
         '!backend/**',
         '!test/**',
         '!widgets/**/backend.js',
-        '!coverage-*/**'
+        '!coverage-*/**',
+        '!dist/**'
     ],
     coverageDirectory: 'coverage-jest',
     coverageReporters: ['json', 'lcov'],
