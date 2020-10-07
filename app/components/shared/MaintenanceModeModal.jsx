@@ -300,4 +300,8 @@ const mergeProps = (stateProps, dispatchProps, ownProps) => {
     };
 };
 
-export default connect(mapStateToProps, mapDispatchToProps, mergeProps)(MaintenanceModeModal);
+export default connect(
+    mapStateToProps,
+    mapDispatchToProps,
+    mergeProps
+)(MaintenanceModeModal);
