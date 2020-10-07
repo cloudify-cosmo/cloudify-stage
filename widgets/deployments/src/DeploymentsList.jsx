@@ -147,11 +147,11 @@ export default class DeploymentsList extends React.Component {
     }
 
     render() {
-        const { deployment, deploymentUpdateId, error, modalType, showModal, workflow } = this.state;
+        const { deployment, error, modalType, showModal, workflow } = this.state;
         const { data, toolbox, widget } = this.props;
         const NO_DATA_MESSAGE = 'There are no Deployments available. Click "Create deployment" to add deployments.';
         const { ErrorMessage, Confirm } = Stage.Basic;
-        const { ExecuteDeploymentModal, UpdateDeploymentModal, UpdateDetailsModal } = Stage.Common;
+        const { ExecuteDeploymentModal, UpdateDeploymentModal } = Stage.Common;
         const showTableComponent = widget.configuration.displayStyle === 'table';
 
         const DeploymentsView = showTableComponent ? DeploymentsTable : DeploymentsSegment;

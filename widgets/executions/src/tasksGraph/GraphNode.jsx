@@ -20,7 +20,7 @@ const GraphNode = ({ graphNode, toolbox }) => {
     const { Icon } = Stage.Basic;
     const labels = graphNode.labels[0];
 
-    let currentTextPlacement_Y = 0;
+    let currentTextPlacementY = 0;
 
     const title = labels.display_title || [labels.text];
     const displayText = labels.display_text;
@@ -63,13 +63,14 @@ const GraphNode = ({ graphNode, toolbox }) => {
             <rect height={graphNode.height} width={graphNode.width} rx={rx} fillOpacity={0} />
             <path d={`m 0,${headerHeight} h ${graphNode.width} z`} strokeWidth={0.5} />
             {title !== null &&
+                // eslint-disable-next-line no-return-assign
                 title.map(line => (
                     <text
-                        key={currentTextPlacement_Y}
+                        key={currentTextPlacementY}
                         className="text-tasks-graph-subgraph-title"
                         transform={
                             graphNode.children && graphNode.children.length === 0 // Placing text according to subgraph tier
-                                ? `translate(10, ${(currentTextPlacement_Y += textHeight)})`
+                                ? `translate(10, ${(currentTextPlacementY += textHeight)})`
                                 : 'translate(12, 18)'
                         }
                     >
@@ -106,11 +107,12 @@ const GraphNode = ({ graphNode, toolbox }) => {
                 </foreignObject>
             )}
             {displayText &&
+                // eslint-disable-next-line no-return-assign
                 displayText.map(line => (
                     <text
-                        key={currentTextPlacement_Y}
+                        key={currentTextPlacementY}
                         className="text-tasks-graph-operation-and-state"
-                        transform={`translate(10, ${(currentTextPlacement_Y += textHeight) + 7})`}
+                        transform={`translate(10, ${(currentTextPlacementY += textHeight) + 7})`}
                     >
                         {line}
                     </text>

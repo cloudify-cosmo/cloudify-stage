@@ -56,13 +56,8 @@ export default class PluginsCatalogList extends React.Component {
             .getDistributionRelease()
             .toLowerCase()}`;
         let items = _.map(itemsProp, item => {
-            const wagon = _.find(item.wagons, wagon => {
-                return wagon.name.toLowerCase() === distro || wagon.name.toLowerCase() === 'any';
-            });
-
-            if (wagon) {
-                return { ...item, isSelected: item.title === selected, wagon };
-            }
+            const wagon = _.find(item.wagons, w => w.name.toLowerCase() === distro || w.name.toLowerCase() === 'any');
+            return wagon ? { ...item, isSelected: item.title === selected, wagon } : undefined;
         });
         items = _.compact(items);
 

@@ -137,7 +137,7 @@ export default class NodesTable extends React.Component {
                                         <NodeTypeIcon typeHierarchy={node.type_hierarchy} />
                                     </DataTable.Data>
                                     <DataTable.Data>
-                                        <a className="nodeName" href="javascript:void(0)">
+                                        <a className="nodeName" href="#!">
                                             {node.id}
                                         </a>
                                     </DataTable.Data>

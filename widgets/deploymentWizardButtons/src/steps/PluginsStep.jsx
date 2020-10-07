@@ -12,10 +12,6 @@ import StepContentPropTypes from './StepContentPropTypes';
 const pluginsStepId = 'plugins';
 
 class PluginsStepActions extends React.Component {
-    constructor(props) {
-        super(props);
-    }
-
     onNext = id => {
         const { fetchData, onError, onLoading, onNext } = this.props;
         return onLoading()

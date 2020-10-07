@@ -57,9 +57,9 @@ class UploadPluginForm extends React.Component {
     }
 
     render() {
-        const { addRequiredMarks, errors, hidePlaceholders, toolbox, wrapInForm } = this.props;
+        const { addRequiredMarks, errors, hidePlaceholders, toolbox } = this.props;
         const { loading, title } = this.state;
-        const { Container, Form, LoadingOverlay } = Stage.Basic;
+        const { Form, LoadingOverlay } = Stage.Basic;
 
         const onTitleChange = titleChange => {
             const { onChange } = this.props;
@@ -121,7 +121,6 @@ class UploadPluginForm extends React.Component {
 UploadPluginForm.propTypes = {
     errors: PropTypes.shape({ title: PropTypes.string }),
     onChange: PropTypes.func.isRequired,
-    wrapInForm: PropTypes.bool,
     addRequiredMarks: PropTypes.bool,
     hidePlaceholders: PropTypes.bool,
     toolbox: PropTypes.shape({ getInternal: PropTypes.func }).isRequired
@@ -130,7 +129,6 @@ UploadPluginForm.propTypes = {
 UploadPluginForm.defaultProps = {
     hidePlaceholders: false,
     errors: {},
-    wrapInForm: true,
     addRequiredMarks: true
 };
 

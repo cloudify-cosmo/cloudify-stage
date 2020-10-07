@@ -13,10 +13,6 @@ const inputsStepId = 'inputs';
 class InputsStepActions extends React.Component {
     static inputsDataPath = 'blueprint.inputs';
 
-    constructor(props) {
-        super(props);
-    }
-
     onNext = id => {
         const { fetchData, onError, onLoading, onNext, wizardData } = this.props;
         const { InputsUtils } = Stage.Common;

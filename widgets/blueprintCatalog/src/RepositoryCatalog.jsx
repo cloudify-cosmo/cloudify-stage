@@ -17,7 +17,6 @@ export default function RepositoryCatalog({
 }) {
     const { DataSegment, Grid, Image, Button, Header } = Stage.Basic;
 
-    const index = 0;
     const catalogItems = data.items.map(item => {
         return (
             <Grid.Column key={item.id}>

@@ -24,7 +24,7 @@ export default class InputsTable extends React.Component {
         );
     }
 
-    componentDidUpdate(prevProps, prevState) {
+    componentDidUpdate(prevProps) {
         const { data } = this.props;
         if (data.deploymentId !== prevProps.data.deploymentId || data.blueprintId !== prevProps.data.blueprintId) {
             this.refreshData();
@@ -48,7 +48,11 @@ export default class InputsTable extends React.Component {
         const { data } = this.props;
         const { error } = this.state;
         const { items: inputs } = data;
-        const compareNames = (a, b) => (a.name > b.name ? 1 : b.name > a.name ? -1 : 0);
+        const compareNames = (a, b) => {
+            if (a.name > b.name) return 1;
+            if (b.name > a.name) return -1;
+            return 0;
+        };
 
         return (
             <div>

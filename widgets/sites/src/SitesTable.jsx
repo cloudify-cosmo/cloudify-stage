@@ -47,12 +47,12 @@ export default class SitesTable extends React.Component {
         this.setState({ site, modalType: SitesTable.DELETE_SITE_ACTION, showModal: true });
     }
 
-    setSiteVisibility(site_name, visibility) {
+    setSiteVisibility(siteName, visibility) {
         const { toolbox } = this.props;
         const actions = new SiteActions(toolbox);
         toolbox.loading(true);
         actions
-            .doUpdate(site_name, visibility)
+            .doUpdate(siteName, visibility)
             .then(() => {
                 toolbox.loading(false);
                 toolbox.refresh();
@@ -127,26 +127,26 @@ export default class SitesTable extends React.Component {
                     <DataTable.Column label="# Deployments" width="10%" />
                     <DataTable.Column width="10%" />
 
-                    {data.items.map(site => {
-                        if (site.location) {
-                            [latitude, longitude] = site.location.split(',');
+                    {data.items.map(item => {
+                        if (item.location) {
+                            [latitude, longitude] = item.location.split(',');
                         }
 
                         return (
-                            <DataTable.Row key={site.name}>
+                            <DataTable.Row key={item.name}>
                                 <DataTable.Data>
-                                    {site.name}
+                                    {item.name}
                                     <ResourceVisibility
-                                        visibility={site.visibility}
+                                        visibility={item.visibility}
                                         onSetVisibility={visibility => {
-                                            this.setSiteVisibility(site.name, visibility);
+                                            this.setSiteVisibility(item.name, visibility);
                                         }}
                                         allowedSettingTo={['tenant', 'global']}
                                         className="rightFloated"
                                     />
                                 </DataTable.Data>
                                 <DataTable.Data>
-                                    {site.location && (
+                                    {item.location && (
                                         <>
                                             Latitude: {latitude}, Longitude: {longitude}
                                             <Popup hoverable>
@@ -161,7 +161,7 @@ export default class SitesTable extends React.Component {
                                                 </Popup.Trigger>
                                                 <Popup.Content>
                                                     <SiteLocationMap
-                                                        location={site.location}
+                                                        location={item.location}
                                                         mapOptions={{
                                                             zoomControl: false,
                                                             style: { width: 200, height: 200 }
@@ -173,12 +173,12 @@ export default class SitesTable extends React.Component {
                                         </>
                                     )}
                                 </DataTable.Data>
-                                <DataTable.Data>{site.created_at}</DataTable.Data>
-                                <DataTable.Data>{site.created_by}</DataTable.Data>
-                                <DataTable.Data>{site.tenant_name}</DataTable.Data>
+                                <DataTable.Data>{item.created_at}</DataTable.Data>
+                                <DataTable.Data>{item.created_by}</DataTable.Data>
+                                <DataTable.Data>{item.tenant_name}</DataTable.Data>
                                 <DataTable.Data>
                                     <Label className="blue" horizontal>
-                                        {site.deploymentCount}
+                                        {item.deploymentCount}
                                     </Label>
                                 </DataTable.Data>
                                 <DataTable.Data className="center aligned rowActions">
@@ -187,14 +187,14 @@ export default class SitesTable extends React.Component {
                                         link
                                         name="edit"
                                         title="Update site"
-                                        onClick={() => this.onUpdateSite(site)}
+                                        onClick={() => this.onUpdateSite(item)}
                                     />
                                     <Icon
                                         bordered
                                         link
                                         name="trash"
                                         title="Delete site"
-                                        onClick={() => this.onDeleteSite(site)}
+                                        onClick={() => this.onDeleteSite(item)}
                                     />
                                 </DataTable.Data>
                             </DataTable.Row>

@@ -200,11 +200,12 @@ class InputsUtils {
         const { List } = Stage.Basic;
         const { ParameterValue } = Stage.Common;
 
-        const example = !_.isUndefined(defaultValue)
-            ? defaultValue
-            : !_.isUndefined(dataType)
-            ? InputsUtils.getTemplateForDataType(dataType)
-            : null;
+        let example = null;
+        if (!_.isUndefined(defaultValue)) {
+            example = defaultValue;
+        } else if (!_.isUndefined(dataType)) {
+            example = InputsUtils.getTemplateForDataType(dataType);
+        }
 
         return (
             <div>
@@ -269,15 +270,19 @@ class InputsUtils {
         let max;
 
         if (!_.isEmpty(constraints)) {
-            const getConstraintValue = (constraints, constraintName) => {
+            const getConstraintValue = constraintName => {
                 const index = _.findIndex(constraints, constraintName);
                 return index >= 0 ? constraints[index][constraintName] : null;
             };
 
             // Show only valid values in dropdown if 'valid_values' constraint is set
-            const validValues = getConstraintValue(constraints, 'valid_values');
+            const validValues = getConstraintValue('valid_values');
             if (!_.isNull(validValues)) {
-                const options = _.map(validValues, value => ({ name: value, text: value, value }));
+                const options = _.map(validValues, validValue => ({
+                    name: validValue,
+                    text: validValue,
+                    value: validValue
+                }));
                 return (
                     <div style={{ position: 'relative' }}>
                         <Form.Dropdown
@@ -297,20 +302,20 @@ class InputsUtils {
             }
 
             // Limit numerical values if at least one of range limitation constraints is set
-            const inRange = getConstraintValue(constraints, 'in_range');
-            const greaterThan = getConstraintValue(constraints, 'greater_than');
-            const greaterOrEqual = getConstraintValue(constraints, 'greater_or_equal');
-            const lessThan = getConstraintValue(constraints, 'less_than');
-            const lessOrEqual = getConstraintValue(constraints, 'less_or_equal');
+            const inRange = getConstraintValue('in_range');
+            const greaterThan = getConstraintValue('greater_than');
+            const greaterOrEqual = getConstraintValue('greater_or_equal');
+            const lessThan = getConstraintValue('less_than');
+            const lessOrEqual = getConstraintValue('less_or_equal');
 
             min = _.max([inRange ? inRange[0] : null, greaterThan, greaterOrEqual]);
             max = _.min([inRange ? inRange[1] : null, lessThan, lessOrEqual]);
         }
 
+        const isBooleanValue = value === false || value === true;
+        const checked = isBooleanValue ? value : undefined;
         switch (type) {
             case 'boolean':
-                const isBooleanValue = value === false || value === true;
-                const checked = isBooleanValue ? value : undefined;
                 return (
                     <>
                         <Form.Checkbox
@@ -510,7 +515,9 @@ class InputsUtils {
     }
 
     static addErrors(inputsWithoutValues, errors) {
-        _.forEach(_.keys(inputsWithoutValues), inputName => (errors[inputName] = `Please provide ${inputName}`));
+        _.forEach(_.keys(inputsWithoutValues), inputName => {
+            errors[inputName] = `Please provide ${inputName}`;
+        });
     }
 
     static getErrorObject(message) {

@@ -40,7 +40,7 @@ Stage.defineWidget({
      * @param {any} params
      * @returns
      */
-    fetchData(widget, toolbox, params) {
+    fetchData(widget, toolbox) {
         const actions = new Actions({
             toolbox,
             ...widget.configuration
@@ -69,10 +69,11 @@ Stage.defineWidget({
             return <Basic.Loading />;
         }
 
+        let formattedData = data;
         if (_.get(widget.configuration, 'sortByName', false)) {
-            data = _.sortBy(data, 'title');
+            formattedData = _.sortBy(data, 'title');
         }
 
-        return <PluginsCatalogList widget={widget} items={data} toolbox={toolbox} />;
+        return <PluginsCatalogList widget={widget} items={formattedData} toolbox={toolbox} />;
     }
 });

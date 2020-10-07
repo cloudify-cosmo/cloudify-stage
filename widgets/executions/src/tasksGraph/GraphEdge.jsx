@@ -70,6 +70,7 @@ const GraphEdge = ({ graphEdge: edge }) => {
                         />
                     );
                 }
+                return undefined;
             })}
             <path
                 key={`${endPoint.x + endPoint.y + drawingPath.x + drawingPath.y}`}

@@ -23,6 +23,8 @@ export default class DeploymentActionButtons extends React.Component {
             loading: false,
             error: null
         };
+
+        this.showExecuteWorkflowModal = this.showExecuteWorkflowModal.bind(this);
     }
 
     shouldComponentUpdate(nextProps, nextState) {
@@ -100,7 +102,7 @@ export default class DeploymentActionButtons extends React.Component {
                             content="Execute workflow"
                         />
                     }
-                    onClick={workflow => this.showExecuteWorkflowModal(workflow)}
+                    onClick={this.showExecuteWorkflowModal}
                 />
 
                 <Button

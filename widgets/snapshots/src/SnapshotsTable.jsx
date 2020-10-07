@@ -7,6 +7,10 @@ import RestoreModal from './RestoreSnapshotModal';
 import UploadModal from './UploadSnapshotModal';
 import SnapshotPropType from './props/SnapshotPropType';
 
+function isSnapshotUseful(snapshot) {
+    return snapshot.status === 'created' || snapshot.status === 'uploaded';
+}
+
 export default class SnapshotsTable extends React.Component {
     constructor(props, context) {
         super(props, context);
@@ -101,10 +105,6 @@ export default class SnapshotsTable extends React.Component {
             });
     }
 
-    isSnapshotUseful(snapshot) {
-        return snapshot.status === 'created' || snapshot.status === 'uploaded';
-    }
-
     refreshData() {
         const { toolbox } = this.props;
         toolbox.refresh();
@@ -138,7 +138,7 @@ export default class SnapshotsTable extends React.Component {
                     <DataTable.Column width="10%" />
 
                     {data.items.map(item => {
-                        const isSnapshotUseful = this.isSnapshotUseful(item);
+                        const isUseful = isSnapshotUseful(item);
                         return (
                             <DataTable.Row
                                 key={item.id}
@@ -157,17 +157,17 @@ export default class SnapshotsTable extends React.Component {
                                         name="undo"
                                         title="Restore"
                                         bordered
-                                        disabled={!isSnapshotUseful}
-                                        link={isSnapshotUseful}
-                                        onClick={isSnapshotUseful ? () => this.restoreSnapshot(item) : () => {}}
+                                        disabled={!isUseful}
+                                        link={isUseful}
+                                        onClick={isUseful ? () => this.restoreSnapshot(item) : () => {}}
                                     />
                                     <Icon
                                         name="download"
                                         title="Download"
                                         bordered
-                                        disabled={!isSnapshotUseful}
-                                        link={isSnapshotUseful}
-                                        onClick={isSnapshotUseful ? () => this.downloadSnapshot(item) : () => {}}
+                                        disabled={!isUseful}
+                                        link={isUseful}
+                                        onClick={isUseful ? () => this.downloadSnapshot(item) : () => {}}
                                     />
                                     <Icon
                                         name="trash"

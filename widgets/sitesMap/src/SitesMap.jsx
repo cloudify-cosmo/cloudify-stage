@@ -1,5 +1,17 @@
 import SiteControl from './SiteControl';
 
+function openPopup(marker) {
+    if (marker && marker.leafletElement) {
+        window.setTimeout(() => {
+            marker.leafletElement.openPopup();
+        });
+    }
+}
+
+function mapToLatLng(site) {
+    return [site.latitude, site.longitude];
+}
+
 class SitesMap extends React.Component {
     constructor(props) {
         super(props);
@@ -44,18 +56,10 @@ class SitesMap extends React.Component {
         }
     }
 
-    openPopup(marker) {
-        if (marker && marker.leafletElement) {
-            window.setTimeout(() => {
-                marker.leafletElement.openPopup();
-            });
-        }
-    }
-
     createMarkers() {
         const markers = [];
         const { data, showAllLabels, toolbox } = this.props;
-        const showLabels = showAllLabels ? this.openPopup : undefined;
+        const showLabels = showAllLabels ? openPopup : undefined;
 
         _.forEach(data, site => {
             const { createMarkerIcon } = Stage.Common;
@@ -64,7 +68,7 @@ class SitesMap extends React.Component {
             const { Marker, Popup } = Stage.Basic.Leaflet;
             markers.push(
                 <Marker
-                    position={this.mapToLatLng(site)}
+                    position={mapToLatLng(site)}
                     ref={showLabels}
                     key={`siteMarker${site.name}`}
                     riseOnHover
@@ -78,10 +82,6 @@ class SitesMap extends React.Component {
         });
 
         return markers;
-    }
-
-    mapToLatLng(site) {
-        return [site.latitude, site.longitude];
     }
 
     render() {
@@ -110,9 +110,9 @@ class SitesMap extends React.Component {
 
         const sites = _.values(data);
         if (sites.length > 1) {
-            mapOptions.bounds = L.latLngBounds(sites.map(this.mapToLatLng)).pad(0.05);
+            mapOptions.bounds = L.latLngBounds(sites.map(mapToLatLng)).pad(0.05);
         } else {
-            mapOptions.center = this.mapToLatLng(sites[0]);
+            mapOptions.center = mapToLatLng(sites[0]);
             mapOptions.zoom = initialZoom;
         }
 

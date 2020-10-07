@@ -44,9 +44,7 @@ export default class BlueprintInfo extends React.Component {
                         </Grid.Column>
                         <Grid.Column width="12">
                             <h3 className="ui icon header verticalCenter">
-                                <a className="underline blueprintInfoName" href="javascript:void(0)">
-                                    {blueprint.id}
-                                </a>
+                                <span className="underline blueprintInfoName">{blueprint.id}</span>
                             </h3>
                             <ResourceVisibility visibility={blueprint.visibility} className="rightFloated" />
                         </Grid.Column>

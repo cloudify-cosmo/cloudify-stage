@@ -11,10 +11,6 @@ import StepContentPropTypes from './StepContentPropTypes';
 const confirmationStepId = 'confirm';
 
 class ConfirmationStepActions extends React.Component {
-    constructor(props) {
-        super(props);
-    }
-
     onNext = id => {
         const { fetchData, onError, onLoading, onNext } = this.props;
         return onLoading()
@@ -109,10 +105,6 @@ class ConfirmationStepContent extends React.Component {
 
             return idChosen ? Promise.resolve(id) : Promise.reject(`Not found unused ${idName} ID.`);
         });
-    }
-
-    constructor(props) {
-        super(props);
     }
 
     componentDidMount() {

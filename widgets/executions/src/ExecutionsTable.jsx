@@ -52,6 +52,13 @@ export default class ExecutionsTable extends React.Component {
         toolbox.getEventBus().off('executions:refresh', this.refreshData);
     }
 
+    setHoveredExecution(idToCheck) {
+        const { hoveredExecution } = this.state;
+        if (hoveredExecution !== idToCheck) {
+            this.setState({ hoveredExecution: idToCheck });
+        }
+    }
+
     actionClick = (execution, proxy, { name }) => {
         const { MenuAction } = ExecutionsTable;
 
@@ -74,6 +81,8 @@ export default class ExecutionsTable extends React.Component {
             case MenuAction.KILL_CANCEL_EXECUTION:
                 this.actOnExecution(execution, name);
                 break;
+
+            default:
         }
     };
 
@@ -101,6 +110,13 @@ export default class ExecutionsTable extends React.Component {
         });
 
         toolbox.getEventBus().trigger('filter:refresh');
+    }
+
+    unsetHoveredExecution(idToCheck) {
+        const { hoveredExecution } = this.state;
+        if (hoveredExecution === idToCheck) {
+            this.setState({ hoveredExecution: null });
+        }
     }
 
     actOnExecution(execution, action) {
@@ -226,12 +242,10 @@ export default class ExecutionsTable extends React.Component {
                                     key={item.id}
                                     selected={item.isSelected}
                                     onClick={() => this.selectExecution(item)}
-                                    onMouseOver={() =>
-                                        hoveredExecution !== item.id && this.setState({ hoveredExecution: item.id })
-                                    }
-                                    onMouseOut={() =>
-                                        hoveredExecution === item.id && this.setState({ hoveredExecution: null })
-                                    }
+                                    onMouseOver={() => this.setHoveredExecution(item.id)}
+                                    onFocus={() => this.setHoveredExecution(item.id)}
+                                    onMouseOut={() => this.unsetHoveredExecution(item.id)}
+                                    onBlur={() => this.unsetHoveredExecution(item.id)}
                                 >
                                     <DataTable.Data>
                                         <IdPopup id={item.id} selected={hoveredExecution === item.id} />

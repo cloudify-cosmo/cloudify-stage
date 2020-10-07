@@ -28,7 +28,7 @@ Stage.defineWidget({
     hasReadme: true,
     permission: Stage.GenericConfig.WIDGET_PERMISSION('buttonLink'),
 
-    render(widget, data, error, toolbox) {
+    render(widget) {
         const { Button } = Stage.Basic;
         const { color, fullHeight, label, url } = widget.configuration;
 

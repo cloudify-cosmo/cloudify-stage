@@ -23,7 +23,7 @@ Stage.defineWidget({
         };
     },
 
-    render(widget, data, error, toolbox) {
+    render(widget, data) {
         const { Loading } = Stage.Basic;
 
         if (_.isEmpty(data)) {
@@ -34,19 +34,19 @@ Stage.defineWidget({
             return <Message content="There are no Executions available." />;
         }
 
-        const formatted_data = _.sortBy(
-            _.map(data.items, status_sum => ({
-                status: _.startCase(status_sum.status_display),
-                number_of_executions: status_sum.executions
+        const formattedData = _.sortBy(
+            _.map(data.items, statusSum => ({
+                status: _.startCase(statusSum.status_display),
+                number_of_executions: statusSum.executions
             })),
-            status_sum => status_sum.status
+            statusSum => statusSum.status
         );
         const { Graph } = Stage.Shared;
         const charts = [{ name: 'number_of_executions', label: 'Number of executions', axisLabel: 'status' }];
         return (
             <Graph
                 type={Graph.BAR_CHART_TYPE}
-                data={formatted_data}
+                data={formattedData}
                 charts={charts}
                 xDataKey="status"
                 yAxisAllowDecimals={false}

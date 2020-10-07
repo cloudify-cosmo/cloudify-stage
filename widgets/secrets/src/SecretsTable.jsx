@@ -57,10 +57,15 @@ export default class SecretsTable extends React.Component {
         });
     }
 
-    onShowSecret(secret) {
+    onShowSecret(selectedSecret) {
         const { toolbox } = this.props;
-        const secretKey = secret.key;
-        this.setState({ secret, showSecretKey: secretKey, showSecretValue: '', showSecretLoading: true });
+        const secretKey = selectedSecret.key;
+        this.setState({
+            secret: selectedSecret,
+            showSecretKey: secretKey,
+            showSecretValue: '',
+            showSecretLoading: true
+        });
 
         const actions = new Stage.Common.SecretActions(toolbox);
         actions
@@ -192,22 +197,22 @@ export default class SecretsTable extends React.Component {
                     <DataTable.Column label="Tenant" name="tenant_name" width="10%" />
                     <DataTable.Column width="10%" />
 
-                    {data.items.map(secret => {
+                    {data.items.map(item => {
                         return (
-                            <DataTable.Row key={secret.key}>
+                            <DataTable.Row key={item.key}>
                                 <DataTable.Data>
-                                    {secret.key}
+                                    {item.key}
                                     <ResourceVisibility
-                                        visibility={secret.visibility}
+                                        visibility={item.visibility}
                                         onSetVisibility={visibility => {
-                                            this.setSecretVisibility(secret.key, visibility);
+                                            this.setSecretVisibility(item.key, visibility);
                                         }}
                                         allowedSettingTo={['tenant', 'global']}
                                         className="rightFloated"
                                     />
                                 </DataTable.Data>
                                 <DataTable.Data className="center aligned rowActions">
-                                    {showSecretKey === secret.key ? (
+                                    {showSecretKey === item.key ? (
                                         showSecretLoading ? (
                                             <Icon name="spinner" loading />
                                         ) : canShowSecret ? (
@@ -226,8 +231,8 @@ export default class SecretsTable extends React.Component {
                                                 <Popup.Trigger>
                                                     <Icon bordered name="dont" color="red" />
                                                 </Popup.Trigger>
-                                                User `{currentUsername}` is not permitted to show the secret `
-                                                {secret.key}` in the tenant `{selectedTenant}` .
+                                                User `{currentUsername}` is not permitted to show the secret `{item.key}
+                                                {item.key}` in the tenant `{selectedTenant}` .
                                             </Popup>
                                         )
                                     ) : (
@@ -236,36 +241,36 @@ export default class SecretsTable extends React.Component {
                                             link
                                             name="unhide"
                                             title="Show secret value"
-                                            onClick={() => this.onShowSecret(secret)}
+                                            onClick={() => this.onShowSecret(item)}
                                         />
                                     )}
                                 </DataTable.Data>
                                 <DataTable.Data className="center aligned">
                                     <Checkbox
-                                        checked={secret.is_hidden_value}
-                                        onChange={() => this.onIsHiddenValueChange(secret.key, !secret.is_hidden_value)}
+                                        checked={item.is_hidden_value}
+                                        onChange={() => this.onIsHiddenValueChange(item.key, !item.is_hidden_value)}
                                         onClick={e => e.stopPropagation()}
                                     />
-                                    {secret.is_hidden_value}
+                                    {item.is_hidden_value}
                                 </DataTable.Data>
-                                <DataTable.Data>{secret.created_at}</DataTable.Data>
-                                <DataTable.Data>{secret.updated_at}</DataTable.Data>
-                                <DataTable.Data>{secret.created_by}</DataTable.Data>
-                                <DataTable.Data>{secret.tenant_name}</DataTable.Data>
+                                <DataTable.Data>{item.created_at}</DataTable.Data>
+                                <DataTable.Data>{item.updated_at}</DataTable.Data>
+                                <DataTable.Data>{item.created_by}</DataTable.Data>
+                                <DataTable.Data>{item.tenant_name}</DataTable.Data>
                                 <DataTable.Data className="center aligned rowActions">
                                     <Icon
                                         bordered
                                         link
                                         name="edit"
                                         title="Update secret"
-                                        onClick={() => this.onUpdateSecret(secret)}
+                                        onClick={() => this.onUpdateSecret(item)}
                                     />
                                     <Icon
                                         bordered
                                         link
                                         name="trash"
                                         title="Delete secret"
-                                        onClick={() => this.onDeleteSecret(secret)}
+                                        onClick={() => this.onDeleteSecret(item)}
                                     />
                                 </DataTable.Data>
                             </DataTable.Row>

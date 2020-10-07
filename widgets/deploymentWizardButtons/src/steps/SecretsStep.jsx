@@ -177,7 +177,7 @@ class SecretsStepContent extends React.Component {
                             error={errors[secretKey]}
                             fluid
                             placeholder="Provide secret value"
-                            onChange={(event, { name, value }) => this.handleChange(secretKey, 'value', value)}
+                            onChange={(event, { value }) => this.handleChange(secretKey, 'value', value)}
                         />
                     </ResourceAction>
                 );

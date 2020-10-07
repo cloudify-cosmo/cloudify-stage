@@ -16,7 +16,7 @@ Stage.defineWidget({
     permission: Stage.GenericConfig.WIDGET_PERMISSION('composerLink'),
     categories: [Stage.GenericConfig.CATEGORY.BUTTONS_AND_FILTERS],
 
-    render(widget, data, error, toolbox) {
+    render() {
         const composerUrl = `${location.protocol}//${location.hostname}/composer`;
 
         return (

@@ -41,10 +41,11 @@ export default class EventsTable extends React.Component {
         const { toolbox } = this.props;
         const eventFilter = toolbox.getContext().getValue('eventFilter') || {};
         const highlightedTextFragment = eventFilter[parameterName];
-        text = _.isString(text) ? text : '';
+        const strText = _.isString(text) ? text : '';
 
         if (!_.isEmpty(highlightedTextFragment)) {
-            const parts = text.split(new RegExp(`(${_.escapeRegExp(highlightedTextFragment)})`, 'gi'));
+            // eslint-disable-next-line security/detect-non-literal-regexp
+            const parts = strText.split(new RegExp(`(${_.escapeRegExp(highlightedTextFragment)})`, 'gi'));
             return (
                 <span>
                     {parts.map((part, i) => (
@@ -63,7 +64,7 @@ export default class EventsTable extends React.Component {
                 </span>
             );
         }
-        return <span>{text}</span>;
+        return <span>{strText}</span>;
     }
 
     fetchGridData = fetchParams => {
@@ -166,7 +167,7 @@ export default class EventsTable extends React.Component {
                         show={fieldsToShow.indexOf('Operation') >= 0}
                     />
                     <DataTable.Column label="Message" show={fieldsToShow.indexOf('Message') >= 0} />
-                    {data.items.map((item, index) => {
+                    {data.items.map(item => {
                         const isEventType = item.type === EventUtils.eventType;
                         const showErrorCausesIcon = !_.isEmpty(item.error_causes);
 

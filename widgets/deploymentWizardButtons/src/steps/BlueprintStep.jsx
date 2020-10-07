@@ -9,10 +9,6 @@ import StepContentPropTypes from './StepContentPropTypes';
 const blueprintStepId = 'blueprint';
 
 class BlueprintStepActions extends React.Component {
-    constructor(props) {
-        super(props);
-    }
-
     onNext = id => {
         const { fetchData, onError, onLoading, onNext, toolbox } = this.props;
         let fetchedStepData = {};
@@ -116,10 +112,6 @@ class BlueprintStepContent extends React.Component {
         imageFile: null,
         visibility: Stage.Common.Consts.defaultVisibility
     };
-
-    constructor(props) {
-        super(props);
-    }
 
     componentDidMount() {
         const { id, onChange, stepData } = this.props;

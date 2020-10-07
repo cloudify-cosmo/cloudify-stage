@@ -22,7 +22,7 @@ export default class OutputsTable extends React.Component {
         );
     }
 
-    componentDidUpdate(prevProps, prevState) {
+    componentDidUpdate(prevProps) {
         const { data } = this.props;
         if (data.deploymentId !== prevProps.data.deploymentId || data.blueprintId !== prevProps.data.blueprintId) {
             this.refreshData();
@@ -70,7 +70,7 @@ export default class OutputsTable extends React.Component {
                     />
                     {_.chain(outputsAndCapabilities)
                         .sortBy(sortColumn)
-                        .thru(data => (sortAscending ? data : _.reverse(data)))
+                        .thru(sortedData => (sortAscending ? sortedData : _.reverse(sortedData)))
                         .map(outputOrCapability => (
                             <DataTable.Row key={outputOrCapability.name}>
                                 <DataTable.Data>

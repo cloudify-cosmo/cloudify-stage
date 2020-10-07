@@ -110,7 +110,7 @@ function DynamicDropdown({
         .uniqBy(valueProp)
         .value();
 
-    function getDropdownValue(value) {
+    function getDropdownValue() {
         if (!value) {
             return multiple ? [] : '';
         }
@@ -141,7 +141,7 @@ function DynamicDropdown({
             selectOnBlur={false}
             placeholder={placeholder}
             fluid
-            value={getDropdownValue(value)}
+            value={getDropdownValue()}
             id={id}
             name={name}
             onChange={(proxy, field) => onChange(!_.isEmpty(field.value) ? field.value : null)}
