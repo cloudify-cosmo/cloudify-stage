@@ -15,6 +15,10 @@ export default class LastExecutionStatusIcon extends React.Component {
         this.showLogs = this.showLogs.bind(this);
     }
 
+    shouldComponentUpdate(nextProps, nextState) {
+        return !_.isEqual(this.props, nextProps) || !_.isEqual(this.state, nextState);
+    }
+
     showLogs() {
         const { execution, toolbox } = this.props;
 
