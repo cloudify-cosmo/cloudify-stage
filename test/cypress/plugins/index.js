@@ -11,7 +11,11 @@
 // This function is called when a project is opened or re-opened (e.g. due to
 // the project's config changing)
 
+const coverageTask = require('@cypress/code-coverage/task');
+
 module.exports = (on, config) => {
+    coverageTask(on, config);
+
     if (process.env.STAGE_E2E_MANAGER_URL) {
         config.baseUrl = `http://${process.env.STAGE_E2E_MANAGER_URL}`;
     }
