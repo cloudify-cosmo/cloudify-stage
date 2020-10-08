@@ -11,9 +11,13 @@ Run `npm run prodtest` to start all unit tests.
 
 Run `npm run devtest -- <path_to_spec_file>` to start specific unit test from `<path_to_spec_file>`.
 
+Run `npm run jest:coverage` to run all unit tests and generate coverage report. Once completed the report will be available in `coverage-jest` directory.
+
 ## System tests
 
 All system tests are written using [Cypress](https://www.cypress.io/) front end testing tool. They are stored in [test/cypress](./test/cypress) directory.
+Cypress is configured to gather test coverage, but it will only work if application build is instrumented prior running the tests.
+To create application build instrumented for coverate run `npm run build:coverage`.  
  
 ### Running tests using test runner
 Run `npm run e2e:open`.
@@ -26,9 +30,17 @@ Run `npm run e2e`.
 That command runs Cypress tests to completion. 
 By default, will run all tests headlessly in the [Electron](https://electronjs.org/) browser. You can pass additional parameters to the script following [cypress run command documentation](https://docs.cypress.io/guides/guides/command-line.html#cypress-run).
 
-## Other tests
+Once tests complete coverage report will be available in `coverage-cypress` directory.
 
-### Bundle size checks
+## Coverage check
+
+Once unit and system tests are completed it is possible to generate combined coverage report and check it against predefined threshold levels.
+To generate the report and check coverage against predefined thresholds run `npm run coverageCheck`.
+The command will generate combined report in `coverage-overall` directory.
+
+To update threshold levels edit `.nycrc` file. 
+
+## Bundle size checks
 
 After building application (`npm run build`) you can its size by running `npm run size` command.
 

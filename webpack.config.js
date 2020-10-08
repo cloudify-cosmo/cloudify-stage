@@ -23,6 +23,12 @@ module.exports = (env, argv) => {
         react: 'React',
         'react-dom': 'ReactDOM'
     };
+
+    const babelPlugins = ['@babel/plugin-transform-runtime', '@babel/plugin-proposal-class-properties'];
+    if (env && env.coverage) {
+        babelPlugins.push('istanbul');
+    }
+
     const module = {
         rules: _.compact([
             !isProduction && {
@@ -38,7 +44,7 @@ module.exports = (env, argv) => {
                         loader: 'babel-loader',
                         options: {
                             presets: [['@babel/preset-env', { modules: false }], '@babel/preset-react'],
-                            plugins: ['@babel/plugin-transform-runtime', '@babel/plugin-proposal-class-properties'],
+                            plugins: babelPlugins,
                             babelrc: false
                         }
                     }

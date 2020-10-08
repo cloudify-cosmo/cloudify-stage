@@ -2,6 +2,8 @@
 .vscode
 .history
 .tmp
+.nyc_output
+coverage-*
 dist
 node_modules
 /logs
