@@ -5,7 +5,7 @@ let changedFiles;
 try {
     // Collect coverage only for files changed after this check was first introduced
     changedFiles = execSync(
-        'git diff --name-only --relative 4347094038309750af37c8990389a360bf480e07 -- "*.js" "**/*.js"'
+        'git diff --name-only --relative dadc76fe91e33eb4bafef5a03306c4adab52ed58 -- "*.js" "**/*.js"'
     )
         .toString()
         .trim()
