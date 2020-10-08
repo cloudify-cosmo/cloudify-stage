@@ -13,19 +13,29 @@ const MIN_MODAL_GRAPH_HEIGHT = 300;
 const GRAPH_MARGIN = 25;
 
 const AUTO_FOCUS_ANIMATION_FRAMES = 30;
-const AUTO_FOCUS_ANIMATION_FRAME_DURATION = 15;
+const AUTO_FOCUS_ANIMATION_FRAME_DURATION = 10;
 
 const NO_TASKS_GRAPH_MESSAGE = 'The selected execution does not have a tasks graph';
 
-export default function ExecutionWorkflowGraph({ containerHeight, selectedExecution, showStatus, toolbox }) {
-    const { useState, useRef, useEffect } = React;
-    const { useBoolean } = Stage.Hooks;
+const INITIAL_POSITION = {
+    a: 1,
+    b: 0,
+    c: 0,
+    d: 1,
+    e: 0,
+    f: GRAPH_MARGIN,
+    version: 3
+};
 
-    const [graphResult, setGraphResult] = useState(null);
-    const [error, setError] = useState('');
+export default function ExecutionWorkflowGraph({ containerHeight, selectedExecution, showStatus, toolbox }) {
+    const { useState, useRef, useEffect, useCallback } = React;
+    const { useBoolean, useResettableState } = Stage.Hooks;
+
+    const [graphData, setGraphData, clearGraphData] = useResettableState(null);
+    const [error, setError, clearError] = useResettableState('');
     const [isMaximized, maximize, minimize] = useBoolean();
-    const [position, setPosition] = useState({});
-    const [modalPosition, setModalPosition] = useState({});
+    const [position, setPosition] = useState(INITIAL_POSITION);
+    const [modalPosition, setModalPosition] = useState(INITIAL_POSITION);
     const [autoFocus, setAutoFocus] = useState();
 
     const timer = useRef(null);
@@ -52,13 +62,11 @@ export default function ExecutionWorkflowGraph({ containerHeight, selectedExecut
             cancelablePromise.current = Stage.Utils.makeCancelable(getTasksGraphPromise());
             cancelablePromise.current.promise
                 .then(tasksGraph => {
-                    if (graphResult !== tasksGraph) {
-                        setGraphResult(tasksGraph);
-                        setError('');
-                    }
+                    setGraphData(tasksGraph);
+                    clearError();
                 })
                 .catch(({ message, status }) => {
-                    setGraphResult(null);
+                    clearGraphData();
                     setError(status === 404 ? NO_TASKS_GRAPH_MESSAGE : message);
                 });
 
@@ -73,16 +81,14 @@ export default function ExecutionWorkflowGraph({ containerHeight, selectedExecut
             return cancelablePromise.current.promise;
         };
 
-        stopPolling();
         return fetchTasksGraph();
     }
 
     useEffect(() => {
-        if (timer.current) {
-            setGraphResult(null);
-            setError('');
-            startPolling();
-        }
+        clearGraphData();
+        clearError();
+        startPolling();
+        return stopPolling;
     }, [selectedExecution.id]);
 
     function scrollTo(x, y, zoom = 1, autoFocusOnly = true, frame = 1) {
@@ -108,29 +114,20 @@ export default function ExecutionWorkflowGraph({ containerHeight, selectedExecut
     }
 
     function fitToView() {
+        const { width: graphWidth, height: graphHeight } = graphData;
         const width = isMaximized ? getModalWidth() : Math.max(0, getContainerWidth() - 1);
-        const height = isMaximized
-            ? Math.max(MIN_MODAL_GRAPH_HEIGHT, graphResult.height + 2 * GRAPH_MARGIN)
-            : containerHeight;
-        const zoom = Math.min(
-            (width - 2 * GRAPH_MARGIN) / graphResult.width,
-            (height - 2 * GRAPH_MARGIN) / graphResult.height
-        );
+        const height = isMaximized ? Math.max(MIN_MODAL_GRAPH_HEIGHT, graphHeight + 2 * GRAPH_MARGIN) : containerHeight;
+        const zoom = Math.min((width - 2 * GRAPH_MARGIN) / graphWidth, (height - 2 * GRAPH_MARGIN) / graphHeight);
 
         scrollTo(GRAPH_MARGIN, GRAPH_MARGIN, zoom, false);
     }
 
     useEffect(() => {
-        startPolling().then(() => {
-            if (graphResult) {
-                fitToView();
-            }
-        });
-        return stopPolling;
-    }, []);
+        if (graphData) fitToView();
+    }, [!!graphData]);
 
     function scrollToInProgress() {
-        const focusNode = _.find(graphResult.children, containerNode =>
+        const focusNode = _.find(graphData.children, containerNode =>
             _.find(containerNode.children, subGraphNode => _.includes(states.inProgress, subGraphNode.labels[0].state))
         );
         if (focusNode) {
@@ -139,14 +136,12 @@ export default function ExecutionWorkflowGraph({ containerHeight, selectedExecut
     }
 
     useEffect(() => {
-        if (graphResult && autoFocus) {
+        if (graphData && autoFocus) {
             scrollToInProgress();
         }
-    }, [graphResult, autoFocus]);
+    }, [graphData, autoFocus]);
 
-    function actOnExecution(execution, action, executionError) {
-        setError(executionError);
-    }
+    const actOnExecution = useCallback((execution, action, executionError) => setError(executionError), []);
 
     function renderGraph(width, height, positionValue, positionSetter, openInModalIcon = true, minimap) {
         const { Icon } = Stage.Basic;
@@ -200,17 +195,15 @@ export default function ExecutionWorkflowGraph({ containerHeight, selectedExecut
                     tool="pan"
                     miniatureProps={minimap ? undefined : { position: 'none' }}
                     toolbarProps={{ position: 'none' }}
-                    value={positionValue}
-                    onChangeValue={newPosition =>
-                        positionSetter(_.isEmpty(positionValue) ? { ...newPosition, f: GRAPH_MARGIN } : newPosition)
-                    }
+                    value={{ ...positionValue, viewerWidth: width, viewerHeight: height }}
+                    onChangeValue={positionSetter}
                     onZoom={() => setAutoFocus(false)}
                     onPan={() => setAutoFocus(false)}
                     onChangeTool={_.noop}
                 >
-                    <svg width={graphResult.width} height={graphResult.height}>
-                        <GraphNodes graphNodes={graphResult.children} toolbox={toolbox} />
-                        <GraphEdges graphEdges={graphResult.edges} />
+                    <svg width={graphData.width} height={graphData.height}>
+                        <GraphNodes graphNodes={graphData.children} toolbox={toolbox} />
+                        <GraphEdges graphEdges={graphData.edges} />
                     </svg>
                 </ReactSVGPanZoom>
             </>
@@ -222,7 +215,7 @@ export default function ExecutionWorkflowGraph({ containerHeight, selectedExecut
 
     return (
         <div>
-            {showStatus && !graphResult && (
+            {showStatus && !graphData && (
                 <LastExecutionStatusIcon
                     execution={selectedExecution}
                     onActOnExecution={actOnExecution}
@@ -234,14 +227,14 @@ export default function ExecutionWorkflowGraph({ containerHeight, selectedExecut
 
             {error && <Message error={error !== NO_TASKS_GRAPH_MESSAGE}>{error}</Message>}
 
-            {graphResult && (
+            {graphData && (
                 <div ref={wrapper} style={{ position: 'relative' }}>
                     {renderGraph(Math.max(0, getContainerWidth() - 1), containerHeight, position, setPosition)}
                     <Modal open={isMaximized} onClose={minimize} size="fullscreen">
                         <div ref={modal}>
                             {renderGraph(
                                 getModalWidth(),
-                                Math.max(MIN_MODAL_GRAPH_HEIGHT, graphResult.height + 2 * GRAPH_MARGIN),
+                                Math.max(MIN_MODAL_GRAPH_HEIGHT, graphData.height + 2 * GRAPH_MARGIN),
                                 modalPosition,
                                 setModalPosition,
                                 false,
@@ -252,7 +245,7 @@ export default function ExecutionWorkflowGraph({ containerHeight, selectedExecut
                 </div>
             )}
 
-            {!graphResult && !error && (
+            {!graphData && !error && (
                 <div style={{ height: 200 }}>
                     <Loading />
                 </div>
