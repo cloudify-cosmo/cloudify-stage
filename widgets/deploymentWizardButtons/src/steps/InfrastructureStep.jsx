@@ -8,57 +8,56 @@ import StepContentPropTypes from './StepContentPropTypes';
 
 const infrastructureStepId = 'infrastructure';
 
-class InfrastructureStepActions extends React.Component {
-    onNext = id => {
-        const { fetchData, onError, onLoading, onNext, toolbox } = this.props;
+function InfrastructureStepActions({
+    onClose,
+    onStartOver,
+    onPrev,
+    onNext,
+    onError,
+    onLoading,
+    onReady,
+    disabled,
+    showPrev,
+    fetchData,
+    wizardData,
+    toolbox,
+    id
+}) {
+    function handleNext(stepId) {
         let fetchedStepData = {};
 
         onLoading()
             .then(fetchData)
-            .then(({ stepData }) => (fetchedStepData = stepData))
+            .then(({ stepData }) => {
+                fetchedStepData = stepData;
+            })
             .then(stepData =>
                 toolbox.getInternal().doPut('source/list/resources', {
                     yamlFile: stepData.blueprintFileName,
                     url: stepData.blueprintUrl
                 })
             )
-            .then(resources => onNext(id, { blueprint: { ...resources, ...fetchedStepData } }))
-            .catch(() => onError(id, 'Error during fetching data for the next step'));
-    };
-
-    render() {
-        const {
-            onClose,
-            onStartOver,
-            onPrev,
-            onError,
-            onLoading,
-            onReady,
-            disabled,
-            showPrev,
-            fetchData,
-            wizardData,
-            toolbox,
-            id
-        } = this.props;
-        return (
-            <StepActions
-                id={id}
-                onClose={onClose}
-                onStartOver={onStartOver}
-                onPrev={onPrev}
-                onError={onError}
-                onLoading={onLoading}
-                onReady={onReady}
-                disabled={disabled}
-                showPrev={showPrev}
-                fetchData={fetchData}
-                wizardData={wizardData}
-                toolbox={toolbox}
-                onNext={this.onNext}
-            />
-        );
+            .then(resources => onNext(stepId, { blueprint: { ...resources, ...fetchedStepData } }))
+            .catch(() => onError(stepId, 'Error during fetching data for the next step'));
     }
+
+    return (
+        <StepActions
+            id={id}
+            onClose={onClose}
+            onStartOver={onStartOver}
+            onPrev={onPrev}
+            onError={onError}
+            onLoading={onLoading}
+            onReady={onReady}
+            disabled={disabled}
+            showPrev={showPrev}
+            fetchData={fetchData}
+            wizardData={wizardData}
+            toolbox={toolbox}
+            onNext={handleNext}
+        />
+    );
 }
 
 InfrastructureStepActions.propTypes = StepActions.propTypes;

@@ -111,7 +111,7 @@ export default class SnapshotsTable extends React.Component {
     }
 
     render() {
-        const { confirmDelete, error, item, showRestore } = this.state;
+        const { confirmDelete, error, item: snapshot, showRestore } = this.state;
         const { data, toolbox, widget } = this.props;
         const NO_DATA_MESSAGE = 'There are no Snapshots available. Click "Create" to create Snapshots.';
         const { Confirm, ErrorMessage, DataTable, Icon, ResourceVisibility } = Stage.Basic;
@@ -192,7 +192,7 @@ export default class SnapshotsTable extends React.Component {
                     open={showRestore}
                     onHide={() => this.setState({ showRestore: false })}
                     toolbox={toolbox}
-                    snapshot={item}
+                    snapshot={snapshot}
                 />
 
                 <Confirm

@@ -59,35 +59,25 @@ export default function ValidateAgentsModal({
         }
     }, [open]);
 
-    function onApprove() {
-        submitExecute();
-        return false;
-    }
-
-    function onCancel() {
-        onHide();
-        return true;
-    }
-
     function onShowExecutionStatus() {
-        const { deploymentId } = inputValues.nodeFilter;
+        const { deploymentId: id } = inputValues.nodeFilter;
 
         onHide();
-        toolbox.drillDown(widget, 'execution', { deploymentId, executionId }, `Validate Agents on ${deploymentId}`);
+        toolbox.drillDown(widget, 'execution', { deploymentId: id, executionId }, `Validate Agents on ${id}`);
     }
 
     function submitExecute() {
-        const { nodeFilter, installMethods } = inputValues;
+        const { nodeFilter, installMethods: methods } = inputValues;
         if (!nodeFilter.deploymentId) {
             setErrors({ error: 'Provide deployment in Nodes filter' });
-            return false;
+            return;
         }
 
         setLoading(true);
         const params = {
             node_ids: !_.isEmpty(nodeFilter.nodeId) ? nodeFilter.nodeId : undefined,
             node_instance_ids: !_.isEmpty(nodeFilter.nodeInstanceId) ? nodeFilter.nodeInstanceId : undefined,
-            install_methods: !_.isEmpty(installMethods) ? installMethods : undefined
+            install_methods: !_.isEmpty(methods) ? methods : undefined
         };
 
         const actions = new Stage.Common.DeploymentActions(toolbox);
@@ -100,6 +90,16 @@ export default function ValidateAgentsModal({
             })
             .catch(err => setErrors({ error: err.message }))
             .finally(() => setLoading(false));
+    }
+
+    function onApprove() {
+        submitExecute();
+        return false;
+    }
+
+    function onCancel() {
+        onHide();
+        return true;
     }
 
     function handleInputChange(event, field) {

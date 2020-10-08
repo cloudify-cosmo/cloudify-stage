@@ -17,7 +17,8 @@ Stage.defineWidget({
     categories: [Stage.GenericConfig.CATEGORY.BUTTONS_AND_FILTERS],
 
     render() {
-        const composerUrl = `${location.protocol}//${location.hostname}/composer`;
+        // eslint-disable-next-line no-restricted-globals
+        const composerUrl = `${location.origin}/composer`;
 
         return (
             <Button

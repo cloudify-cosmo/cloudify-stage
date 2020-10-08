@@ -234,39 +234,43 @@ class InstallStepContent extends React.Component {
     }
 
     handleTask(index) {
-        const { tasks: stateTasks } = this.state;
-        const tasks = [...stateTasks];
+        let { tasks: stateTasks } = this.state;
+        let tasks = [...stateTasks];
         const task = tasks[index];
         task.changeToInProgress();
 
         return new Promise(resolve => this.setState({ tasks }, resolve))
             .then(() => task.run())
             .then(() => {
-                const { tasks: stateTasks } = this.state;
-                const tasks = [...stateTasks];
+                ({ tasks: stateTasks } = this.state);
+                tasks = [...stateTasks];
 
                 tasks[index].changeToFinished();
 
                 return new Promise(resolve => this.setState({ tasks }, resolve));
             })
             .catch(error => {
-                const { tasks: stateTasks } = this.state;
-                const tasks = [...stateTasks];
-                error = _.isString(error) ? error : _.get(error, 'message', Stage.Utils.Json.getStringValue(error));
+                ({ tasks: stateTasks } = this.state);
+                tasks = [...stateTasks];
+                const formattedError = _.isString(error)
+                    ? error
+                    : _.get(error, 'message', Stage.Utils.Json.getStringValue(error));
 
-                tasks[index].changeToFailed(error);
+                tasks[index].changeToFailed(formattedError);
 
                 return new Promise((resolve, reject) =>
-                    this.setState({ tasks }, reject(`Task '${task.name}' failed with error: ${error}`))
+                    this.setState({ tasks }, reject(`Task '${task.name}' failed with error: ${formattedError}`))
                 );
             })
             .finally(() => this.updateTasksInWizard());
     }
 
     async handleTasks(tasks) {
-        for (let i = 0; i < tasks.length; i++) {
-            await this.handleTask(i);
+        const taskPromises = [];
+        for (let i = 0; i < tasks.length; i += 1) {
+            taskPromises.push(this.handleTask(i));
         }
+        await Promise.all(taskPromises);
     }
 
     render() {

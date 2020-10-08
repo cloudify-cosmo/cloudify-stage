@@ -193,7 +193,7 @@ export default class WizardModal extends React.Component {
     onError = (id, errorMessage, errors) => {
         const { activeStepIndex } = this.state;
         if (this.getStepNameByIndex(activeStepIndex) !== WizardModal.getStepNameById(id)) {
-            return;
+            return Promise.resolve();
         }
 
         if (!_.isNil(errors)) {

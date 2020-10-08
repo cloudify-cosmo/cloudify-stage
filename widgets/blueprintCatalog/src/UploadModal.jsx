@@ -40,30 +40,20 @@ export default function UploadModal({
         }
     }, [open]);
 
-    function onApprove() {
-        submitUpload();
-        return false;
-    }
-
-    function onCancel() {
-        onHide();
-        return true;
-    }
-
     function submitUpload() {
-        const errors = {};
+        const errorsFound = {};
 
         if (_.isEmpty(inputValues.blueprintName)) {
-            errors.blueprintName = 'Please provide blueprint name';
+            errorsFound.blueprintName = 'Please provide blueprint name';
         }
 
         if (_.isEmpty(inputValues.blueprintYamlFile)) {
-            errors.blueprintYamlFile = 'Please provide blueprint YAML file';
+            errorsFound.blueprintYamlFile = 'Please provide blueprint YAML file';
         }
 
-        if (!_.isEmpty(errors)) {
-            setErrors(errors);
-            return false;
+        if (!_.isEmpty(errorsFound)) {
+            setErrors(errorsFound);
+            return;
         }
 
         // Disable the form
@@ -81,6 +71,16 @@ export default function UploadModal({
                 setErrors({ error: err.message });
             })
             .finally(() => setLoading(false));
+    }
+
+    function onApprove() {
+        submitUpload();
+        return false;
+    }
+
+    function onCancel() {
+        onHide();
+        return true;
     }
 
     function handleInputChange(proxy, field) {

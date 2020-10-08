@@ -8,9 +8,22 @@ import StepContentPropTypes from './StepContentPropTypes';
 
 const blueprintStepId = 'blueprint';
 
-class BlueprintStepActions extends React.Component {
-    onNext = id => {
-        const { fetchData, onError, onLoading, onNext, toolbox } = this.props;
+function BlueprintStepActions({
+    onClose,
+    onStartOver,
+    onPrev,
+    onNext,
+    onError,
+    onLoading,
+    onReady,
+    disabled,
+    showPrev,
+    fetchData,
+    wizardData,
+    toolbox,
+    id
+}) {
+    function handleNext(stepId) {
         let fetchedStepData = {};
 
         onLoading()
@@ -61,43 +74,27 @@ class BlueprintStepActions extends React.Component {
                     url: stepData.blueprintUrl
                 });
             })
-            .then(resources => onNext(id, { blueprint: { ...resources, ...fetchedStepData } }))
-            .catch(error => onError(id, error.message, error.errors));
-    };
-
-    render() {
-        const {
-            onClose,
-            onStartOver,
-            onPrev,
-            onError,
-            onLoading,
-            onReady,
-            disabled,
-            showPrev,
-            fetchData,
-            wizardData,
-            toolbox,
-            id
-        } = this.props;
-        return (
-            <StepActions
-                id={id}
-                onClose={onClose}
-                onStartOver={onStartOver}
-                onPrev={onPrev}
-                onError={onError}
-                onLoading={onLoading}
-                onReady={onReady}
-                disabled={disabled}
-                showPrev={showPrev}
-                fetchData={fetchData}
-                wizardData={wizardData}
-                toolbox={toolbox}
-                onNext={this.onNext}
-            />
-        );
+            .then(resources => onNext(stepId, { blueprint: { ...resources, ...fetchedStepData } }))
+            .catch(error => onError(stepId, error.message, error.errors));
     }
+
+    return (
+        <StepActions
+            id={id}
+            onClose={onClose}
+            onStartOver={onStartOver}
+            onPrev={onPrev}
+            onError={onError}
+            onLoading={onLoading}
+            onReady={onReady}
+            disabled={disabled}
+            showPrev={showPrev}
+            fetchData={fetchData}
+            wizardData={wizardData}
+            toolbox={toolbox}
+            onNext={handleNext}
+        />
+    );
 }
 
 BlueprintStepActions.propTypes = StepActions.propTypes;

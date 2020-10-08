@@ -68,11 +68,13 @@ class InputsSection extends React.Component {
             return (
                 <div>
                     {_.map(difference, (part, index) => {
-                        const style = part.added
-                            ? { color: 'green' }
-                            : part.removed
-                            ? { color: 'red', textDecoration: 'line-through' }
-                            : null;
+                        let style = null;
+                        if (part.added) {
+                            style = { color: 'green' };
+                        } else if (part.removed) {
+                            style = { color: 'red', textDecoration: 'line-through' };
+                        }
+
                         return (
                             <span key={`part_${index}`} style={style}>
                                 {part.value}
@@ -431,12 +433,16 @@ export default function UpdateDetailsModal({
         ? providedExecutionParameters
         : executionParameters;
 
+    let header = `Deployment update details${isPreview ? ' preview' : ''}`;
+    if (!isPreview && deploymentUpdate.id) {
+        header += ` - ${deploymentUpdate.id}`;
+    }
+
     return (
         <div>
             <Modal open={open} onClose={() => onClose()} className="updateDetailsModal">
                 <Modal.Header>
-                    <Icon name="zoom" /> Deployment update details
-                    {isPreview ? ' preview' : deploymentUpdate.id ? ` - ${deploymentUpdate.id}` : ''}
+                    <Icon name="zoom" /> {header}
                 </Modal.Header>
 
                 <Modal.Content scrolling>

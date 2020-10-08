@@ -11,18 +11,37 @@ import StepContentPropTypes from './StepContentPropTypes';
 
 const secretsStepId = 'secrets';
 
-class SecretsStepActions extends React.Component {
-    onNext = id => {
-        const { fetchData, onError, onLoading, onNext } = this.props;
+const secretStatuses = {
+    unknown: 0,
+    defined: 1,
+    undefined: 2
+};
+
+function SecretsStepActions({
+    onClose,
+    onStartOver,
+    onPrev,
+    onNext,
+    onError,
+    onLoading,
+    onReady,
+    disabled,
+    showPrev,
+    fetchData,
+    wizardData,
+    toolbox,
+    id
+}) {
+    function handleNext(stepId) {
         return onLoading()
             .then(fetchData)
             .then(({ stepData }) => {
                 const undefinedSecrets = _.chain(stepData)
-                    .pickBy(secret => secret.status === SecretsStepContent.statusUndefined)
+                    .pickBy(secret => secret.status === secretStatuses.undefined)
                     .value();
 
                 const secretsWithoutValue = _.chain(stepData)
-                    .pickBy(secret => secret.status === SecretsStepContent.statusUndefined && _.isEmpty(secret.value))
+                    .pickBy(secret => secret.status === secretStatuses.undefined && _.isEmpty(secret.value))
                     .mapValues(() => true)
                     .value();
 
@@ -32,59 +51,37 @@ class SecretsStepActions extends React.Component {
                         errors: secretsWithoutValue
                     });
                 }
-                return onNext(id, { secrets: undefinedSecrets });
+                return onNext(stepId, { secrets: undefinedSecrets });
             })
-            .catch(error => onError(id, error.message, error.errors));
-    };
-
-    render() {
-        const {
-            onClose,
-            onStartOver,
-            onPrev,
-            onError,
-            onLoading,
-            onReady,
-            disabled,
-            showPrev,
-            fetchData,
-            wizardData,
-            toolbox,
-            id
-        } = this.props;
-        return (
-            <StepActions
-                id={id}
-                onClose={onClose}
-                onStartOver={onStartOver}
-                onPrev={onPrev}
-                onError={onError}
-                onLoading={onLoading}
-                onReady={onReady}
-                disabled={disabled}
-                showPrev={showPrev}
-                fetchData={fetchData}
-                wizardData={wizardData}
-                toolbox={toolbox}
-                onNext={this.onNext}
-            />
-        );
+            .catch(error => onError(stepId, error.message, error.errors));
     }
+
+    return (
+        <StepActions
+            id={id}
+            onClose={onClose}
+            onStartOver={onStartOver}
+            onPrev={onPrev}
+            onError={onError}
+            onLoading={onLoading}
+            onReady={onReady}
+            disabled={disabled}
+            showPrev={showPrev}
+            fetchData={fetchData}
+            wizardData={wizardData}
+            toolbox={toolbox}
+            onNext={handleNext}
+        />
+    );
 }
 
 SecretsStepActions.propTypes = StepActions.propTypes;
 
 class SecretsStepContent extends React.Component {
-    static statusUnknown = 0;
-
-    static statusDefined = 1;
-
-    static statusUndefined = 2;
-
     static defaultSecretState = {
         value: '',
         visibility: Stage.Common.Consts.defaultVisibility,
-        status: SecretsStepContent.statusUnknown
+        status: secretStatuses.unknown
     };
 
     static dataPath = 'blueprint.secrets';
@@ -104,9 +101,9 @@ class SecretsStepContent extends React.Component {
         onLoading()
             .then(() => toolbox.getManager().doGet('/secrets?_include=key,visibility'))
             .then(secretsInManager => {
-                secretsInManager = secretsInManager.items;
-                secretsInManager = _.reduce(
-                    secretsInManager,
+                let formattedSecretsInManager = secretsInManager.items;
+                formattedSecretsInManager = _.reduce(
+                    formattedSecretsInManager,
                     (result, secretObject) => {
                         result[secretObject.key] = {
                             visibility: secretObject.visibility
@@ -117,16 +114,16 @@ class SecretsStepContent extends React.Component {
                 );
 
                 const stepData = {};
-                for (const secret of _.keys(secrets)) {
+                _.forEach(_.keys(secrets), secret => {
                     stepData[secret] = stepDataProp[secret] || { ...SecretsStepContent.defaultSecretState };
 
-                    if (_.includes(_.keys(secretsInManager), secret)) {
-                        stepData[secret].status = SecretsStepContent.statusDefined;
-                        stepData[secret].visibility = secretsInManager[secret].visibility;
+                    if (_.includes(_.keys(formattedSecretsInManager), secret)) {
+                        stepData[secret].status = secretStatuses.defined;
+                        stepData[secret].visibility = formattedSecretsInManager[secret].visibility;
                     } else {
-                        stepData[secret].status = SecretsStepContent.statusUndefined;
+                        stepData[secret].status = secretStatuses.undefined;
                     }
-                }
+                });
 
                 return stepData;
             })
@@ -146,9 +143,9 @@ class SecretsStepContent extends React.Component {
         const secret = stepData[secretKey];
 
         switch (secret.status) {
-            case SecretsStepContent.statusDefined:
+            case secretStatuses.defined:
                 return <ResourceStatus status={ResourceStatus.noActionRequired} text="Secret defined." />;
-            case SecretsStepContent.statusUndefined:
+            case secretStatuses.undefined:
                 return (
                     <ResourceStatus
                         status={ResourceStatus.actionRequired}
@@ -166,9 +163,9 @@ class SecretsStepContent extends React.Component {
         const secret = stepData[secretKey];
 
         switch (secret.status) {
-            case SecretsStepContent.statusDefined:
+            case secretStatuses.defined:
                 return <ResourceAction>No action required.</ResourceAction>;
-            case SecretsStepContent.statusUndefined:
+            case secretStatuses.undefined:
                 return (
                     <ResourceAction>
                         <Form.Input
@@ -192,13 +189,13 @@ class SecretsStepContent extends React.Component {
         const secret = stepData[secretKey];
 
         switch (secret.status) {
-            case SecretsStepContent.statusDefined:
+            case secretStatuses.defined:
                 return (
                     <ResourceAction>
                         <VisibilityField visibility={secret.visibility} className="large" allowChange={false} />
                     </ResourceAction>
                 );
-            case SecretsStepContent.statusUndefined:
+            case secretStatuses.undefined:
                 return (
                     <ResourceAction>
                         <VisibilityField
