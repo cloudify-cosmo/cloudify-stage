@@ -13,9 +13,10 @@
 // https://on.cypress.io/configuration
 // ***********************************************************
 
+import '@cypress/code-coverage/support';
+
 // Import commands.js using ES2015 syntax:
 import './commands';
-
 // use `Cypress` instead of `cy` so this persists across all tests
 Cypress.on('window:before:load', window => {
     delete window.fetch;

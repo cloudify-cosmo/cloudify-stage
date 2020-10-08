@@ -39,7 +39,7 @@ export default function DeploymentDetails({
     const showBlueprint = 'blueprint_id' in deployment;
     const showSiteName = 'site_name' in deployment && !_.isEmpty(deployment.site_name);
     const showCreated = 'created_at' in deployment;
-    const showUpdated = 'updated_at' in deployment && deployment.created_at !== deployment.updated_at;
+    const showUpdated = 'updated_at' in deployment && deployment.isUpdated;
     const showCreator = 'created_by' in deployment;
     const showNodeInstances = instancesStates !== null;
     const as = big ? 'h3' : 'h5';
@@ -135,7 +135,8 @@ DeploymentDetails.propTypes = {
         site_name: PropTypes.string,
         created_at: PropTypes.string,
         updated_at: PropTypes.string,
-        created_by: PropTypes.string
+        created_by: PropTypes.string,
+        isUpdated: PropTypes.bool
     }).isRequired,
     instancesCount: PropTypes.number.isRequired,
     instancesStates: PropTypes.objectOf(PropTypes.number).isRequired,
