@@ -21,7 +21,7 @@
     "build:analyse:main": "npm run build -- --env.analyse=main",
     "build:analyse:widgets": "npm run build -- --env.analyse=widgets",
     "build:analyse:widgets-common": "npm run build -- --env.analyse=widgets-common",
-    "build:coverage": "webpack --config webpack.config.js --mode=production --bail --env.coverage",
+    "build:coverage": "npm run build -- --env.coverage",
     "coverageCheck": "cp coverage-jest/coverage-final.json .nyc_output && nyc report --reporter lcov --report-dir coverage-overall && nyc check-coverage",
     "devServer": "node devServer.js",
     "devtest": "jest",
