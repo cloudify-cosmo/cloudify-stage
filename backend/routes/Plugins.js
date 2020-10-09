@@ -87,7 +87,7 @@ router.get('/icons/:pluginId', (req, res) => {
     ).pipe(res);
 });
 
-router.put('/title', upload.fields(_.map(['yaml_file'], name => ({ name, maxCount: 1 }))), (req, res) => {
+router.put('/title', upload.fields(_.map(['yaml_file'], name => ({ name, maxCount: 1 }))), (req, res, next) => {
     let getPluginYaml;
     if (req.query.yamlUrl) {
         getPluginYaml = downloadFile(req.query.yamlUrl);
@@ -113,7 +113,7 @@ router.post(
     passport.authenticate('token', { session: false }),
     upload.fields(_.map(['wagon_file', 'yaml_file', 'icon_file'], name => ({ name, maxCount: 1 }))),
     checkParams,
-    (req, res) => {
+    (req, res, next) => {
         const promises = [];
         let wagonFilename;
 

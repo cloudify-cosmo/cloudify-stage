@@ -39,7 +39,7 @@ router.post(
     passport.authenticate('token', { session: false }),
     upload.single('file'),
     checkIfFileUploaded,
-    (req, res) => {
+    (req, res, next) => {
         logger.debug(`YAML file uploaded, name: ${req.file.originalname}, size: ${req.file.size}`);
         const yamlString = req.file.buffer.toString();
         let json;

@@ -3,12 +3,15 @@ describe('Deployment Wizard Buttons widget', () => {
         cy
             .activate('valid_trial_license')
             .login()
+            .addPage('Wizard')
             .addWidget('deploymentWizardButtons')
     );
 
     function next() {
         cy.contains('Next').click();
     }
+
+    beforeEach(() => cy.visitPage('Wizard'));
 
     it('should provide Hello World Wizard', () => {
         cy.deletePlugins().deleteSecrets('gcp_');
@@ -86,7 +89,6 @@ describe('Deployment Wizard Buttons widget', () => {
     });
 
     it('should provide Deployment Wizard', () => {
-        cy.visitPage('Dashboard');
         cy.contains('Deployment Wizard').click();
 
         cy.log('Verifying blueprints step');

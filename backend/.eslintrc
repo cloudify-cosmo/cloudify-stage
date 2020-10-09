@@ -1,4 +1,7 @@
 {
+  "rules": {
+    "no-unused-vars": ["error", { "argsIgnorePattern": "next" }]
+  },
   "env": {
     "node": true
   }

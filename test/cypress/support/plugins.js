@@ -1,7 +1,7 @@
 Cypress.Commands.add('installPlugin', (wagonUrl, yamlUrl) =>
     cy.stageRequest(`/console/plugins/upload?visibility=tenant&wagonUrl=${wagonUrl}&yamlUrl=${yamlUrl}`, 'POST', {
         failOnStatusCode: false,
-        timeout: 80000
+        timeout: 2 * 60 * 1000
     })
 );
 

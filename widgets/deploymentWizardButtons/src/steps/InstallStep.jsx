@@ -266,11 +266,10 @@ class InstallStepContent extends React.Component {
     }
 
     async handleTasks(tasks) {
-        const taskPromises = [];
         for (let i = 0; i < tasks.length; i += 1) {
-            taskPromises.push(this.handleTask(i));
+            // eslint-disable-next-line no-await-in-loop
+            await this.handleTask(i);
         }
-        await Promise.all(taskPromises);
     }
 
     render() {

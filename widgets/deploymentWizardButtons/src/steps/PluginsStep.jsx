@@ -142,19 +142,19 @@ class PluginsStepContent extends React.Component {
                 (_.isNil(version) || _.isEqual(version, pluginInManager.version)) &&
                 (_.isNil(distribution) || _.isEqual(distribution, pluginInManager.distribution))
             ) {
-                pluginStatus = pluginStatus.installedAndParametersMatched;
+                pluginStatus = pluginStatuses.installedAndParametersMatched;
             } else {
-                pluginStatus = pluginStatus.installedAndParametersUnmatched;
+                pluginStatus = pluginStatuses.installedAndParametersUnmatched;
             }
         } else if (!_.isNil(pluginInCatalog)) {
             if (_.isNil(version) || _.isEqual(version, pluginInCatalog.version)) {
                 // TODO: Check distribution
-                pluginStatus = pluginStatus.notInstalledAndInCatalog;
+                pluginStatus = pluginStatuses.notInstalledAndInCatalog;
             } else {
-                pluginStatus = pluginStatus.notInstalledAndNotInCatalog;
+                pluginStatus = pluginStatuses.notInstalledAndNotInCatalog;
             }
         } else {
-            pluginStatus = pluginStatus.notInstalledAndNotInCatalog;
+            pluginStatus = pluginStatuses.notInstalledAndNotInCatalog;
         }
 
         return pluginStatus;

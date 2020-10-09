@@ -30,6 +30,7 @@ function InfrastructureStepActions({
             .then(fetchData)
             .then(({ stepData }) => {
                 fetchedStepData = stepData;
+                return fetchedStepData;
             })
             .then(stepData =>
                 toolbox.getInternal().doPut('source/list/resources', {

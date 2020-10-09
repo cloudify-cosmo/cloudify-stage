@@ -41,7 +41,7 @@ function buildManagerUrl(req, res, next) {
     }
 }
 
-async function proxyRequest(req, res) {
+async function proxyRequest(req, res, next) {
     const options = {};
     let timeout;
 

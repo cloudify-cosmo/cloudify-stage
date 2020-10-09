@@ -38,10 +38,7 @@ Stage.defineWidget({
         {
             id: 'displayStyle',
             name: 'Display style',
-            items: [
-                { name: 'Table', value: 'table' },
-                { name: 'List', value: 'list' }
-            ],
+            items: [{ name: 'Table', value: 'table' }, { name: 'List', value: 'list' }],
             default: 'table',
             type: Stage.Basic.GenericField.LIST_TYPE
         },

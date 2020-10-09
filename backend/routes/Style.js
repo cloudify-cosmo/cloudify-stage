@@ -31,7 +31,7 @@ function shadeColor(color, percent) {
     return `#${(0x1000000 + newR * 0x10000 + newG * 0x100 + newB).toString(16).slice(1)}`;
 }
 
-router.get('/', (req, res) => {
+router.get('/', (req, res, next) => {
     const { whiteLabel } = config.app;
     const stylesheetTemplate = fs.readFileSync(styleTemplateFile, 'utf8');
 

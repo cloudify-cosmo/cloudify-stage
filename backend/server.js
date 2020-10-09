@@ -151,8 +151,8 @@ app.get('*', (request, response) => {
 });
 
 // Error handling
-app.use((err, req, res) => {
-    logger.error('Error has occured ', err);
+app.use((err, req, res, next) => {
+    logger.error('Error has occured ', JSON.stringify(err));
 
     let { message } = err;
     if (err.status === 500) {

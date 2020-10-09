@@ -33,168 +33,161 @@ BlueprintSection.defaultProps = {
     oldBlueprint: null
 };
 
-class InputsSection extends React.Component {
-    constructor(props) {
-        super(props);
+function Diff({ stringA, stringB }) {
+    const difference = diffChars(String(stringA), String(stringB));
 
-        this.state = {
-            showOnlyChanged: false
-        };
-    }
+    return (
+        <div>
+            {_.map(difference, (part, index) => {
+                let style = null;
+                if (part.added) {
+                    style = { color: 'green' };
+                } else if (part.removed) {
+                    style = { color: 'red', textDecoration: 'line-through' };
+                }
 
-    render() {
-        const { showOnlyChanged } = this.state;
-        const { oldInputs: oldInputsProp, newInputs: newInputsProp } = this.props;
-        const { Form, Header, Icon, List, Popup, PopupHelp, Table } = Stage.Basic;
-        const { ParameterValue, ParameterValueDescription } = Stage.Common;
-        const { Json } = Stage.Utils;
+                return (
+                    <span key={`part_${index}`} style={style}>
+                        {part.value}
+                    </span>
+                );
+            })}
+        </div>
+    );
+}
+Diff.propTypes = {
+    stringA: PropTypes.string.isRequired,
+    stringB: PropTypes.string.isRequired
+};
 
-        const newInputs = Array.sort(_.keys(newInputsProp));
-        const onlyChangedInputs = _.chain(newInputs)
-            .filter(
-                inputName =>
-                    !_.isEqual(
-                        Json.getStringValue(newInputsProp[inputName] || ''),
-                        Json.getStringValue(oldInputsProp[inputName] || '')
-                    )
-            )
-            .uniq()
-            .value();
-        const inputsChanged = !_.isEqual(oldInputsProp, newInputsProp);
+function InputsSection({ oldInputs: oldInputsProp, newInputs: newInputsProp }) {
+    const [showOnlyChanged, setShowOnlyChanged] = React.useState(false);
+    const { Form, Header, Icon, List, Popup, PopupHelp, Table } = Stage.Basic;
+    const { ParameterValue, ParameterValueDescription } = Stage.Common;
+    const { Json } = Stage.Utils;
 
-        const Diff = ({ stringA, stringB }) => {
-            const difference = diffChars(String(stringA), String(stringB));
+    const newInputs = _.keys(newInputsProp).sort();
+    const onlyChangedInputs = _.chain(newInputs)
+        .filter(
+            inputName =>
+                !_.isEqual(
+                    Json.getStringValue(newInputsProp[inputName] || ''),
+                    Json.getStringValue(oldInputsProp[inputName] || '')
+                )
+        )
+        .uniq()
+        .value();
+    const inputsChanged = !_.isEqual(oldInputsProp, newInputsProp);
 
-            return (
-                <div>
-                    {_.map(difference, (part, index) => {
-                        let style = null;
-                        if (part.added) {
-                            style = { color: 'green' };
-                        } else if (part.removed) {
-                            style = { color: 'red', textDecoration: 'line-through' };
-                        }
-
-                        return (
-                            <span key={`part_${index}`} style={style}>
-                                {part.value}
-                            </span>
-                        );
-                    })}
-                </div>
-            );
-        };
-
-        return (
-            <>
-                <Header>
-                    {inputsChanged && (
-                        <Form.Checkbox
-                            name="showOnlyChanged"
-                            toggle
-                            label="Show only changed"
-                            help="Show only inputs which have different values"
-                            className="rightFloated"
-                            checked={showOnlyChanged}
-                            onChange={() => this.setState({ showOnlyChanged: !showOnlyChanged })}
-                        />
-                    )}
-                    Inputs
-                    {inputsChanged && (
-                        <Header.Subheader>
-                            See details:&nbsp;
-                            <PopupHelp
-                                content={
-                                    <div>
-                                        <div>
-                                            To show only changed inputs use <strong>Show only changed</strong> toggle.
-                                        </div>
-                                        <br />
-                                        <div>
-                                            To see difference between old and new inputs hover over&nbsp;
-                                            <Icon name="asterisk" color="red" size="tiny" className="superscripted" />
-                                            &nbsp;character on the right side of changed input to open popup with change
-                                            details.
-                                        </div>
-                                        <br />
-                                        <div>
-                                            Inside popup you will see text in:
-                                            <List bulleted>
-                                                <List.Item>
-                                                    <span style={{ color: 'green' }}>green</span> - added characters
-                                                </List.Item>
-                                                <List.Item>
-                                                    <span style={{ color: 'red' }}>red</span> - removed characters
-                                                </List.Item>
-                                                <List.Item>
-                                                    <span style={{ color: 'black' }}>black</span> - unchanged characters
-                                                </List.Item>
-                                            </List>
-                                        </div>
-                                    </div>
-                                }
-                            />
-                        </Header.Subheader>
-                    )}
-                </Header>
-
-                {inputsChanged ? (
-                    <Table striped>
-                        <Table.Header>
-                            <Table.Row>
-                                <Table.HeaderCell width={4}>Input</Table.HeaderCell>
-                                <Table.HeaderCell width={6}>
-                                    Old <ParameterValueDescription />
-                                </Table.HeaderCell>
-                                <Table.HeaderCell width={6}>
-                                    New <ParameterValueDescription />
-                                </Table.HeaderCell>
-                            </Table.Row>
-                        </Table.Header>
-
-                        <Table.Body>
-                            {_.map(showOnlyChanged ? onlyChangedInputs : newInputs, input => {
-                                const oldValue = _.get(oldInputsProp, input, '');
-                                const oldValueString = Json.getStringValue(oldValue);
-                                const newValue = _.get(newInputsProp, input, '');
-                                const newValueString = Json.getStringValue(newValue);
-                                const inputChanged = !_.isEqual(oldValueString, newValueString);
-
-                                return (
-                                    <Table.Row key={input}>
-                                        <Table.Cell>{input}</Table.Cell>
-                                        <Table.Cell>
-                                            <ParameterValue value={oldValue} showCopyButton={false} />
-                                        </Table.Cell>
-                                        <Table.Cell>
-                                            <ParameterValue value={newValue} showCopyButton={false} />
-                                            {inputChanged && (
-                                                <Popup>
-                                                    <Popup.Trigger>
-                                                        <Icon
-                                                            name="asterisk"
-                                                            color="red"
-                                                            size="tiny"
-                                                            className="superscripted"
-                                                        />
-                                                    </Popup.Trigger>
-                                                    <Popup.Content>
-                                                        <Diff stringA={oldValueString} stringB={newValueString} />
-                                                    </Popup.Content>
-                                                </Popup>
-                                            )}
-                                        </Table.Cell>
-                                    </Table.Row>
-                                );
-                            })}
-                        </Table.Body>
-                    </Table>
-                ) : (
-                    <span>No inputs changed.</span>
+    return (
+        <>
+            <Header>
+                {inputsChanged && (
+                    <Form.Checkbox
+                        name="showOnlyChanged"
+                        toggle
+                        label="Show only changed"
+                        help="Show only inputs which have different values"
+                        className="rightFloated"
+                        checked={showOnlyChanged}
+                        onChange={() => setShowOnlyChanged(!showOnlyChanged)}
+                    />
                 )}
-            </>
-        );
-    }
+                Inputs
+                {inputsChanged && (
+                    <Header.Subheader>
+                        See details:&nbsp;
+                        <PopupHelp
+                            content={
+                                <div>
+                                    <div>
+                                        To show only changed inputs use <strong>Show only changed</strong> toggle.
+                                    </div>
+                                    <br />
+                                    <div>
+                                        To see difference between old and new inputs hover over&nbsp;
+                                        <Icon name="asterisk" color="red" size="tiny" className="superscripted" />
+                                        &nbsp;character on the right side of changed input to open popup with change
+                                        details.
+                                    </div>
+                                    <br />
+                                    <div>
+                                        Inside popup you will see text in:
+                                        <List bulleted>
+                                            <List.Item>
+                                                <span style={{ color: 'green' }}>green</span> - added characters
+                                            </List.Item>
+                                            <List.Item>
+                                                <span style={{ color: 'red' }}>red</span> - removed characters
+                                            </List.Item>
+                                            <List.Item>
+                                                <span style={{ color: 'black' }}>black</span> - unchanged characters
+                                            </List.Item>
+                                        </List>
+                                    </div>
+                                </div>
+                            }
+                        />
+                    </Header.Subheader>
+                )}
+            </Header>
+
+            {inputsChanged ? (
+                <Table striped>
+                    <Table.Header>
+                        <Table.Row>
+                            <Table.HeaderCell width={4}>Input</Table.HeaderCell>
+                            <Table.HeaderCell width={6}>
+                                Old <ParameterValueDescription />
+                            </Table.HeaderCell>
+                            <Table.HeaderCell width={6}>
+                                New <ParameterValueDescription />
+                            </Table.HeaderCell>
+                        </Table.Row>
+                    </Table.Header>
+
+                    <Table.Body>
+                        {_.map(showOnlyChanged ? onlyChangedInputs : newInputs, input => {
+                            const oldValue = _.get(oldInputsProp, input, '');
+                            const oldValueString = Json.getStringValue(oldValue);
+                            const newValue = _.get(newInputsProp, input, '');
+                            const newValueString = Json.getStringValue(newValue);
+                            const inputChanged = !_.isEqual(oldValueString, newValueString);
+
+                            return (
+                                <Table.Row key={input}>
+                                    <Table.Cell>{input}</Table.Cell>
+                                    <Table.Cell>
+                                        <ParameterValue value={oldValue} showCopyButton={false} />
+                                    </Table.Cell>
+                                    <Table.Cell>
+                                        <ParameterValue value={newValue} showCopyButton={false} />
+                                        {inputChanged && (
+                                            <Popup>
+                                                <Popup.Trigger>
+                                                    <Icon
+                                                        name="asterisk"
+                                                        color="red"
+                                                        size="tiny"
+                                                        className="superscripted"
+                                                    />
+                                                </Popup.Trigger>
+                                                <Popup.Content>
+                                                    <Diff stringA={oldValueString} stringB={newValueString} />
+                                                </Popup.Content>
+                                            </Popup>
+                                        )}
+                                    </Table.Cell>
+                                </Table.Row>
+                            );
+                        })}
+                    </Table.Body>
+                </Table>
+            ) : (
+                <span>No inputs changed.</span>
+            )}
+        </>
+    );
 }
 
 InputsSection.propTypes = {
@@ -421,6 +414,12 @@ export default function UpdateDetailsModal({
             resetExecutionParameters();
         }
     }, [open]);
+
+    useEffect(() => {
+        if (_.isEmpty(deploymentUpdateId)) {
+            setDeploymentUpdate(providedDeploymentUpdate);
+        }
+    }, [providedDeploymentUpdate]);
 
     function getInstances(type) {
         const instances = _.get(deploymentUpdate, `deployment_update_node_instances.${type}_and_related.affected`, []);
