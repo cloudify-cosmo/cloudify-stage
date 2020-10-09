@@ -4,16 +4,13 @@ describe('Topology', () => {
     const resourcePrefix = 'topology_test_';
     const blueprintId = `${resourcePrefix}bp`;
     const deploymentId = `${resourcePrefix}dep`;
-    const pluginWagonUrl =
-        'https://github.com/cloudify-cosmo/cloudify-terraform-plugin/releases/download/0.13.4/cloudify_terraform_plugin-0.13.4-redhat-Maipo-py27.py36-none-linux_x86_64.wgn';
-    const pluginYamlUrl =
-        'https://github.com/cloudify-cosmo/cloudify-terraform-plugin/releases/download/0.13.4/plugin.yaml';
     const blueprintFile = 'blueprints/topology.zip';
 
     before(() => {
         cy.activate('valid_trial_license').login();
 
-        cy.installPlugin(pluginWagonUrl, pluginYamlUrl)
+        cy.deletePlugins()
+            .uploadPluginFromCatalog('Terraform')
             .deleteDeployments(resourcePrefix, true)
             .deleteBlueprints(resourcePrefix, true)
             .uploadBlueprint(blueprintFile, blueprintId)
@@ -72,7 +69,18 @@ describe('Topology', () => {
         cy.log('Install the deployment');
         cy.executeWorkflow(deploymentId, 'install');
 
+        cy.log('Wait for deployment to be installed');
+        const installDeploymentTimeout = 60 * 1000;
+        cy.contains('Last Execution').click();
+        cy.waitUntilPageLoaded();
+        cy.get('.executionsWidget .label i').should('have.class', 'spinner');
+        cy.get('.executionsWidget .label i', { timeout: installDeploymentTimeout }).should('have.class', 'checkmark');
+        cy.contains('Deployment Info').click();
+        cy.waitUntilPageLoaded();
+
         cy.log('Check terraform module details');
+        cy.contains('#gridContainer > #gridSvg > #gridContent > .nodeContainer > .title', 'terraform');
+        cy.contains('#gridContainer > #gridSvg > #gridContent > .nodeContainer > .title', 'cloud_resources');
         cy.get('.nodeTopologyButton:eq(0)')
             .should('not.have.css', 'visibility', 'hidden')
             .click({ force: true });
