@@ -249,6 +249,7 @@ export default class WidgetDynamicContent extends Component {
     renderReact() {
         const { data, widget } = this.props;
         if (data.error) {
+            log.error(data);
             return <ErrorMessage error={data.error} header="An unexpected error occurred" autoHide />;
         }
 
