@@ -151,6 +151,7 @@ app.get('*', (request, response) => {
 });
 
 // Error handling
+// eslint-disable-next-line no-unused-vars
 app.use((err, req, res, next) => {
     logger.error('Error has occured ', JSON.stringify(err));
 
