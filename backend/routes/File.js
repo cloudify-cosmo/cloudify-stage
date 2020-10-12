@@ -27,7 +27,7 @@ router.post(
     passport.authenticate('token', { session: false }),
     upload.single('file'),
     checkIfFileUploaded,
-    (req, res) => {
+    (req, res, next) => {
         logger.debug(`Text file uploaded, name: ${req.file.originalname}, size: ${req.file.size}`);
         const data = req.file.buffer.toString();
         res.contentType('application/text').send(data);
