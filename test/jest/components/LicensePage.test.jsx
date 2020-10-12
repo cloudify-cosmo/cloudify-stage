@@ -105,7 +105,7 @@ describe('(Component) LicensePage', () => {
     };
 
     const mockStoreAndRender = async (role, license, version) => {
-        const licenseUrl = '/console/sp/?su=%2Flicense';
+        const licenseUrl = '/console/sp?su=%2Flicense';
         const mockStore = configureMockStore();
         const store = mockStore({
             manager: {
