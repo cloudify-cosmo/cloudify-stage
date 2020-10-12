@@ -6,8 +6,8 @@ describe('Deployments - Create new deployment modal', () => {
 
     const searchTestBlueprintsInBlueprintsWidget = () => {
         cy.server();
-        cy.route(/console\/sp\/\?su=\/summary/).as('getSummary');
-        cy.route(/console\/sp\/\?su=\/blueprints/).as('getBlueprints');
+        cy.route(/console\/sp\?su=\/summary/).as('getSummary');
+        cy.route(/console\/sp\?su=\/blueprints/).as('getBlueprints');
         cy.get('.blueprintsTable div.input input')
             .clear()
             .type(resourcePrefix)
@@ -162,7 +162,7 @@ describe('Deployments - Create new deployment modal', () => {
 
             cy.route({
                 method: 'PUT',
-                url: `console/sp/?su=/deployments/${deploymentName}`,
+                url: `console/sp?su=/deployments/${deploymentName}`,
                 status: 400,
                 response: {
                     message: 'Cannot deploy blueprint'
@@ -181,7 +181,7 @@ describe('Deployments - Create new deployment modal', () => {
 
             cy.route({
                 method: 'POST',
-                url: '/console/sp/?su=/executions',
+                url: '/console/sp?su=/executions',
                 status: 400,
                 response: {
                     message: 'Cannot start install workflow'

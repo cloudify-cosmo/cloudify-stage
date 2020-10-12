@@ -19,14 +19,14 @@ describe('Topology', () => {
 
     beforeEach(() => {
         cy.server();
-        cy.route(/console\/sp\/\?su=\/summary/).as('getSummary');
+        cy.route(/console\/sp\?su=\/summary/).as('getSummary');
     });
 
     it('is presented in Blueprint page', () => {
         cy.visitPage('Local Blueprints');
 
         cy.log('Use search to limit number of presented blueprints');
-        cy.route(/console\/sp\/\?su=\/blueprints/).as('getBlueprints');
+        cy.route(/console\/sp\?su=\/blueprints/).as('getBlueprints');
         cy.get('.blueprintsTable div.input input')
             .clear()
             .type(resourcePrefix)
@@ -47,8 +47,8 @@ describe('Topology', () => {
         cy.visitPage('Deployments');
 
         cy.log('Use search to limit number of presented deployments');
-        cy.route(/console\/sp\/\?su=\/deployments/).as('getDeployments');
-        cy.route(/console\/sp\/\?su=\/executions/).as('getExecutions');
+        cy.route(/console\/sp\?su=\/deployments/).as('getDeployments');
+        cy.route(/console\/sp\?su=\/executions/).as('getExecutions');
         cy.get('.segmentList div.input input')
             .clear()
             .type(resourcePrefix)

@@ -380,7 +380,7 @@ describe('Deployments - Create new deployment modal', () => {
         cy.server();
         cy.route({
             method: 'PUT',
-            url: `/console/sp/?su=/deployments/${deploymentName}`
+            url: `/console/sp?su=/deployments/${deploymentName}`
         }).as('deployBlueprint');
 
         cy.get('input[name="deploymentName"]').type(deploymentName);
