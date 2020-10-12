@@ -5,10 +5,6 @@ import StageUtils from './stageUtils';
 import Consts from './consts';
 
 export default class Manager extends Internal {
-    getIp() {
-        return _.get(this, 'data.ip', null);
-    }
-
     getCurrentUsername() {
         return _.get(this, 'data.username', null);
     }
@@ -65,7 +61,7 @@ export default class Manager extends Internal {
         const queryString = data ? (url.indexOf('?') > 0 ? '&' : '?') + $.param(data, true) : '';
         const urlInServer = encodeURIComponent(url + queryString);
 
-        return StageUtils.Url.url(`/sp/?su=${urlInServer}`);
+        return StageUtils.Url.url(`/sp?su=${urlInServer}`);
     }
 
     doGetFull(url, params = {}, parseResponse = true, fullData = { items: [] }, size = 0) {

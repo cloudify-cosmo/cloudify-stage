@@ -10,5 +10,3 @@ export function setEditMode(isEditMode) {
         isEditMode
     };
 }
-
-export default setEditMode;

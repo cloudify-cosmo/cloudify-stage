@@ -10,5 +10,3 @@ export function setVersion(version) {
         version
     };
 }
-
-export default setVersion;

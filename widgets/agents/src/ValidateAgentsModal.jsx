@@ -60,10 +60,15 @@ export default function ValidateAgentsModal({
     }, [open]);
 
     function onShowExecutionStatus() {
-        const { deploymentId: id } = inputValues.nodeFilter;
+        const { deploymentId: selectedDeploymentId } = inputValues.nodeFilter;
 
         onHide();
-        toolbox.drillDown(widget, 'execution', { deploymentId: id, executionId }, `Validate Agents on ${id}`);
+        toolbox.drillDown(
+            widget,
+            'execution',
+            { deploymentId: selectedDeploymentId, executionId },
+            `Validate Agents on ${selectedDeploymentId}`
+        );
     }
 
     function submitExecute() {

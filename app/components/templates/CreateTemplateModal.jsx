@@ -84,13 +84,13 @@ export default class CreateTemplateModal extends Component {
 
         if (!_.isEmpty(errors)) {
             this.setState({ errors });
-            return false;
+            return;
         }
 
         // Disable the form
         this.setState({ loading: true });
 
-        return onCreateTemplate(_.trim(templateName), roles, tenants, pages)
+        onCreateTemplate(_.trim(templateName), roles, tenants, pages)
             .then(() => {
                 this.setState({ errors: {}, loading: false, open: false });
             })

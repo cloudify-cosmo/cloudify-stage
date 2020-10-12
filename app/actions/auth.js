@@ -14,5 +14,3 @@ export function showAppError(err) {
         dispatch(push(Consts.ERROR_PAGE_PATH));
     };
 }
-
-export default showAppError;

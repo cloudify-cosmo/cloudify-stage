@@ -63,14 +63,14 @@ export default function InstallAgentsModal({
     }, [open]);
 
     function onShowExecutionStatus() {
-        const { deploymentId: id } = inputValues.nodeFilter;
+        const { deploymentId: selectedDeploymentId } = inputValues.nodeFilter;
 
         onHide();
         toolbox.drillDown(
             widget,
             'execution',
-            { deploymentId: id, executionId },
-            `Install New Agents on ${deploymentId}`
+            { deploymentId: selectedDeploymentId, executionId },
+            `Install New Agents on ${selectedDeploymentId}`
         );
     }
 

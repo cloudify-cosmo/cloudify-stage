@@ -22,10 +22,8 @@ const GraphNode = ({ graphNode, toolbox }) => {
 
     let currentTextPlacementY = 0;
 
-    const title = labels.display_title || [labels.text];
-    const displayText = labels.display_text;
-
-    const { state } = labels;
+    const title = labels.displayTitle || [labels.text];
+    const { displayText, state } = labels;
     const mappedState = _.findKey(states, stateArray => _.includes(stateArray, state));
     const stateColor = colors[mappedState];
 
@@ -125,8 +123,8 @@ GraphNode.propTypes = {
     graphNode: PropTypes.shape({
         labels: PropTypes.arrayOf(
             PropTypes.shape({
-                display_text: Stage.PropTypes.StringOrArray,
-                display_title: PropTypes.arrayOf(PropTypes.string),
+                displayText: Stage.PropTypes.StringOrArray,
+                displayTitle: PropTypes.arrayOf(PropTypes.string),
                 text: Stage.PropTypes.StringOrArray,
                 state: PropTypes.string,
                 retry: PropTypes.number

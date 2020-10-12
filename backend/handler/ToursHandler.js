@@ -30,7 +30,6 @@ class ToursHandler {
 
     static init() {
         return new Promise((resolve, reject) => {
-            // eslint-disable-next-line consistent-return
             fs.readdirSync(builtInToursFolder).forEach(filename => {
                 try {
                     tours[filename] = JSON.parse(
@@ -38,10 +37,10 @@ class ToursHandler {
                     );
                 } catch (err) {
                     logger.error(`Failed to load tour - ${filename}: ${err.message}`);
-                    return reject(`Failed to load tour - ${filename}: ${err.message}`);
+                    reject(`Failed to load tour - ${filename}: ${err.message}`);
                 }
             });
-            return resolve();
+            resolve();
         });
     }
 }

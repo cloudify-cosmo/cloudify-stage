@@ -12,7 +12,7 @@ Cypress.Commands.add('createSite', site => {
 });
 
 Cypress.Commands.add('createSites', sites => {
-    sites.forEach(site => cy.createSite(site));
+    sites.forEach(cy.createSite);
 });
 
 Cypress.Commands.add('deleteSite', siteName => {

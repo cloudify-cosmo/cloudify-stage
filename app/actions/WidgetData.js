@@ -39,40 +39,37 @@ function widgetFetchCanceled(widgetId) {
 }
 
 export function fetchWidgetData(widget, toolbox, paramsHandler) {
-    // eslint-disable-next-line consistent-return
     return dispatch => {
         dispatch(widgetFetchReq(widget.id));
 
-        if (widget.definition.fetchUrl || _.isFunction(widget.definition.fetchData)) {
-            const widgetDataFetcher = new WidgetDataFetcher(widget, toolbox, paramsHandler);
+        const widgetDataFetcher = new WidgetDataFetcher(widget, toolbox, paramsHandler);
 
-            const fetchPromise = widget.definition.fetchUrl
-                ? widgetDataFetcher.fetchByUrls()
-                : widgetDataFetcher.fetchByFunc();
+        const fetchPromise = widget.definition.fetchUrl
+            ? widgetDataFetcher.fetchByUrls()
+            : widgetDataFetcher.fetchByFunc();
 
-            const cancelablePromise = StageUtils.makeCancelable(fetchPromise);
+        const cancelablePromise = StageUtils.makeCancelable(fetchPromise);
 
-            const waitForPromise = cancelablePromise.promise
-                .then(response => {
-                    dispatch(widgetFetchRes(widget.id, response));
-                    return response;
-                })
-                .catch(e => {
-                    if (e.isCanceled) {
-                        log.log(`Widget '${widget.name}' data fetch canceled`);
-                        dispatch(widgetFetchCanceled(widget.id));
-                    } else {
-                        dispatch(widgetFetchError(widget.id, e));
-                    }
+        const waitForPromise = cancelablePromise.promise
+            .then(response => {
+                dispatch(widgetFetchRes(widget.id, response));
+                return response;
+            })
+            .catch(e => {
+                if (e.isCanceled) {
+                    log.log(`Widget '${widget.name}' data fetch canceled`);
+                    dispatch(widgetFetchCanceled(widget.id));
+                } else {
+                    dispatch(widgetFetchError(widget.id, e));
+                }
 
-                    throw e;
-                });
+                throw e;
+            });
 
-            return {
-                cancelablePromise,
-                waitForPromise
-            };
-        }
+        return {
+            cancelablePromise,
+            waitForPromise
+        };
     };
 }
 

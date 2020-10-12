@@ -14,7 +14,7 @@ Text form of class hierarchy diagram to be used at: https://yuml.me/diagram/nofu
 
 [External|doDelete();doDownload();doGet();doPatch();doPost();doPut();doUpload()]<-[Internal|]
 [Internal]<-[WidgetBackend|]
-[Internal]<-[Manager|doGetFull();getCurrentUsername();getCurrentUserRole();getDistributionName();getDistributionRelease();getIp();getManagerUrl();getSelectedTenant();getSystemRoles();isCommunityEdition()]
+[Internal]<-[Manager|doGetFull();getCurrentUsername();getCurrentUserRole();getDistributionName();getDistributionRelease();getManagerUrl();getSelectedTenant();getSystemRoles();isCommunityEdition()]
 
 */
 

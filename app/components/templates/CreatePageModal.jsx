@@ -28,13 +28,13 @@ export default function CreatePageModal({ onCreatePage, pageName: initialPageNam
 
         if (!_.isEmpty(errorsObject)) {
             setErrors(errorsObject);
-            return false;
+            return;
         }
 
         // Disable the form
         setLoading(true);
 
-        return onCreatePage(_.trim(pageName)).catch(err => {
+        onCreatePage(_.trim(pageName)).catch(err => {
             setErrors({ error: err.message });
             setLoading(false);
         });

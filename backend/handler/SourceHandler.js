@@ -145,19 +145,18 @@ module.exports = (() => {
         return _.chain(imports)
             .filter(imp => String(imp).match(PLUGIN_KEYWORD))
             .map(plugin => {
-                // eslint-disable-next-line camelcase
-                const [package_name, pluginQueryString] = _.chain(plugin)
+                const [packageName, pluginQueryString] = _.chain(plugin)
                     .replace(PLUGIN_KEYWORD, '')
                     .split('?')
                     .value();
 
                 const params = Utils.getParams(pluginQueryString);
-                const pluginObject = { package_name, params };
+                const pluginObject = { packageName, params };
 
                 return pluginObject;
             })
             .reduce((result, pluginObject) => {
-                result[pluginObject.package_name] = _.omit(pluginObject, 'package_name');
+                result[pluginObject.packageName] = _.omit(pluginObject, 'packageName');
                 return result;
             }, {})
             .value();
