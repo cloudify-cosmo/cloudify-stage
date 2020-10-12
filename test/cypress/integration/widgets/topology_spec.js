@@ -85,7 +85,7 @@ describe('Topology', () => {
             .should('not.have.css', 'visibility', 'hidden')
             .click({ force: true });
         cy.get('.modal td:eq(0)').should('have.text', 'null_resource');
-        cy.get('.modal td:eq(2)').should('have.text', 'provider.null');
+        cy.get('.modal td:eq(2)').should('have.text', 'provider["registry.terraform.io/hashicorp/null"]');
         cy.get('.modal tr:eq(1) td:eq(1)').should('have.text', 'foo1');
         cy.get('.modal tr:eq(2) td:eq(1)').should('have.text', 'foo2');
         cy.get('.modal tr:eq(1) td:eq(3)')
@@ -93,11 +93,10 @@ describe('Topology', () => {
             .then(rawData => {
                 const parsedData = JSON.parse(rawData);
                 expect(_.omit(parsedData, 'instances')).to.deep.equal({
-                    provider: 'provider.null',
+                    provider: 'provider["registry.terraform.io/hashicorp/null"]',
                     type: 'null_resource',
                     mode: 'managed',
-                    name: 'foo1',
-                    each: 'list'
+                    name: 'foo1'
                 });
                 expect(parsedData.instances.length).to.equal(2);
                 parsedData.instances.forEach((instance, i) => {
@@ -117,7 +116,7 @@ describe('Topology', () => {
             .then(rawData => {
                 const parsedData = JSON.parse(rawData);
                 expect(_.omit(parsedData, 'instances')).to.deep.equal({
-                    provider: 'provider.null',
+                    provider: 'provider["registry.terraform.io/hashicorp/null"]',
                     type: 'null_resource',
                     mode: 'managed',
                     name: 'foo2'
