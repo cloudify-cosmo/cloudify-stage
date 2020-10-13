@@ -30,6 +30,7 @@ export default class TaskStatus extends React.Component {
                 color = 'red';
                 name = 'remove';
                 break;
+            default:
         }
 
         return <Icon color={color} loading={loading} name={name} />;
@@ -53,6 +54,7 @@ export default class TaskStatus extends React.Component {
             case Task.Status.failed:
                 statusText = 'Failed with error: ';
                 break;
+            default:
         }
 
         return (

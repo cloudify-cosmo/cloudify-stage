@@ -2,7 +2,6 @@
  * Created by addihorowitz on 19/09/2016.
  */
 
-import React from 'react';
 import { connect } from 'react-redux';
 import SideBar from '../components/SideBar';
 

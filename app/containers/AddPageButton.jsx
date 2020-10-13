@@ -14,7 +14,8 @@ let nameIndex = 0;
 const mapDispatchToProps = dispatch => {
     return {
         onClick: () => {
-            dispatch(addPage(`Page_${nameIndex++}`));
+            dispatch(addPage(`Page_${nameIndex}`));
+            nameIndex += 1;
         }
     };
 };

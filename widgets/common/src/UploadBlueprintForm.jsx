@@ -135,7 +135,7 @@ class UploadBlueprintForm extends React.Component {
     render() {
         const { loading: loadingState, yamlFiles } = this.state;
         const { blueprintFileName, blueprintName, errors, loading: loadingProp, showErrorsSummary } = this.props;
-        const { Form, Label } = Stage.Basic;
+        const { Form } = Stage.Basic;
         const options = _.map(yamlFiles, item => {
             return { text: item, value: item };
         });

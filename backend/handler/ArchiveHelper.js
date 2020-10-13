@@ -16,18 +16,18 @@ const logger = require('./LoggerHandler').getLogger('ArchiveHelper');
 module.exports = (() => {
     function saveMultipartData(req, targetDir, multipartId) {
         const storage = multer.diskStorage({
-            destination(req, file, cb) {
+            destination(request, file, cb) {
                 logger.debug('Saving file on disk');
 
                 const archiveFolder = _.isFunction(targetDir) ? targetDir(file.originalname) : targetDir;
 
                 fs.mkdirsSync(archiveFolder);
 
-                req.archiveFolder = archiveFolder;
+                request.archiveFolder = archiveFolder;
                 cb(null, archiveFolder);
             },
-            filename(req, file, cb) {
-                req.archiveFile = file.originalname;
+            filename(request, file, cb) {
+                request.archiveFile = file.originalname;
                 cb(null, file.originalname);
             }
         });
@@ -51,15 +51,33 @@ module.exports = (() => {
         });
     }
 
-    function saveDataFromUrl(archiveUrl, targetDir, req) {
+    function isExternalUrl(url) {
+        // eslint-disable-next-line security/detect-unsafe-regex
+        const ABSOLUTE_URL_REGEX = new RegExp('^(?:[a-z]+:)?//', 'i');
+
+        return ABSOLUTE_URL_REGEX.test(url);
+    }
+
+    function extractFilename(contentDisposition) {
+        const regexp = /filename=([^;]*)/g;
+        const match = regexp.exec(contentDisposition);
+        if (!match) {
+            return '';
+        }
+
+        return match[1];
+    }
+
+    function saveDataFromUrl(url, targetDir, req) {
         return new Promise((resolve, reject) => {
             const HEADERS = { 'User-Agent': 'Cloudify' };
-            archiveUrl = decodeURIComponent(archiveUrl.trim());
+            const archiveUrl = decodeURIComponent(url.trim());
 
             logger.debug('Fetching file from url', archiveUrl);
 
             let getRequest = null;
             const onErrorFetch = reject;
+
             const onSuccessFetch = response => {
                 let archiveFile = extractFilename(response.headers['content-disposition']);
 
@@ -74,7 +92,8 @@ module.exports = (() => {
                     if (archiveExt) {
                         archiveFile = details.base;
                     } else {
-                        return reject(`Unable to determine filename from url ${archiveUrl}`);
+                        reject(`Unable to determine filename from url ${archiveUrl}`);
+                        return;
                     }
 
                     logger.debug('Filename build from url', archiveFile);
@@ -111,23 +130,6 @@ module.exports = (() => {
                 req.pipe(getRequest);
             }
         });
-    }
-
-    function isExternalUrl(url) {
-        // eslint-disable-next-line security/detect-unsafe-regex
-        const ABSOLUTE_URL_REGEX = new RegExp('^(?:[a-z]+:)?//', 'i');
-
-        return ABSOLUTE_URL_REGEX.test(url);
-    }
-
-    function extractFilename(contentDisposition) {
-        const regexp = /filename=([^;]*)/g;
-        const match = regexp.exec(contentDisposition);
-        if (!match) {
-            return '';
-        }
-
-        return match[1];
     }
 
     function storeSingleYamlFile(archivePath, archiveFile, targetDir) {

@@ -49,7 +49,9 @@ export default class CreateTemplateModal extends Component {
                 helper: 'clone',
                 handle: '.handle',
                 forcePlaceholderSize: true,
-                start: (event, ui) => (this.pageIndex = ui.item.index()),
+                start: (event, ui) => {
+                    this.pageIndex = ui.item.index();
+                },
                 update: (event, ui) => this.reorderPage(this.pageIndex, ui.item.index())
             });
         }
@@ -82,7 +84,7 @@ export default class CreateTemplateModal extends Component {
 
         if (!_.isEmpty(errors)) {
             this.setState({ errors });
-            return false;
+            return;
         }
 
         // Disable the form

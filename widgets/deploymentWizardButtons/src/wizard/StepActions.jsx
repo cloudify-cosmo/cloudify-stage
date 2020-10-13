@@ -2,10 +2,6 @@
  * StepActions component is interface for components implementing step actions for {@link WizardModal}
  */
 export default class StepActions extends React.Component {
-    constructor(props) {
-        super(props);
-    }
-
     onClose = () => {
         const { onClose } = this.props;
         return onClose();

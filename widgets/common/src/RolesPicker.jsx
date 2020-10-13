@@ -3,10 +3,6 @@
  */
 
 export default class RolesPicker extends React.Component {
-    constructor(props, context) {
-        super(props, context);
-    }
-
     handleInputChange = (proxy, field) => {
         const { onUpdate } = this.props;
         onUpdate(field.name, field.value);

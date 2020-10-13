@@ -6,6 +6,56 @@ import CreateModal from './CreateModal';
 import UpdateModal from './UpdateModal';
 import SecretPropType from './props/SecretPropType';
 
+function SecretValue({
+    canShowSecret,
+    showSecretKey,
+    showSecretValue,
+    showSecretLoading,
+    secretKey,
+    onHide,
+    onShow,
+    toolbox
+}) {
+    const { Icon, Popup } = Stage.Basic;
+
+    const currentUsername = toolbox.getManager().getCurrentUsername();
+    const selectedTenant = toolbox.getManager().getSelectedTenant();
+
+    if (showSecretKey === secretKey) {
+        if (showSecretLoading) {
+            return <Icon name="spinner" loading />;
+        }
+        if (canShowSecret) {
+            return (
+                <div>
+                    <pre className="forceMaxWidth">{showSecretValue}</pre>
+                    <Icon bordered link name="hide" title="Hide secret value" onClick={onHide} />
+                </div>
+            );
+        }
+        return (
+            <Popup position="top right" on="hover">
+                <Popup.Trigger>
+                    <Icon bordered name="dont" color="red" />
+                </Popup.Trigger>
+                User `{currentUsername}` is not permitted to show the secret `{secretKey}
+                {secretKey}` in the tenant `{selectedTenant}` .
+            </Popup>
+        );
+    }
+    return <Icon bordered link name="unhide" title="Show secret value" onClick={onShow} />;
+}
+
+SecretValue.propTypes = {
+    canShowSecret: PropTypes.bool.isRequired,
+    showSecretLoading: PropTypes.bool.isRequired,
+    showSecretKey: PropTypes.string.isRequired,
+    showSecretValue: PropTypes.string.isRequired,
+    secretKey: PropTypes.string.isRequired,
+    onHide: PropTypes.func.isRequired,
+    onShow: PropTypes.func.isRequired,
+    toolbox: Stage.PropTypes.Toolbox.isRequired
+};
 export default class SecretsTable extends React.Component {
     static CREATE_SECRET_ACTION = 'create';
 
@@ -57,10 +107,15 @@ export default class SecretsTable extends React.Component {
         });
     }
 
-    onShowSecret(secret) {
+    onShowSecret(selectedSecret) {
         const { toolbox } = this.props;
-        const secretKey = secret.key;
-        this.setState({ secret, showSecretKey: secretKey, showSecretValue: '', showSecretLoading: true });
+        const secretKey = selectedSecret.key;
+        this.setState({
+            secret: selectedSecret,
+            showSecretKey: secretKey,
+            showSecretValue: '',
+            showSecretLoading: true
+        });
 
         const actions = new Stage.Common.SecretActions(toolbox);
         actions
@@ -163,11 +218,9 @@ export default class SecretsTable extends React.Component {
             showSecretValue
         } = this.state;
         const NO_DATA_MESSAGE = 'There are no Secrets available. Click "Create" to create Secrets.';
-        const { Checkbox, DataTable, ErrorMessage, Icon, Popup, ResourceVisibility } = Stage.Basic;
+        const { Checkbox, DataTable, ErrorMessage, Icon, ResourceVisibility } = Stage.Basic;
         const DeleteModal = Stage.Basic.Confirm;
         const { data, toolbox, widget } = this.props;
-        const currentUsername = toolbox.getManager().getCurrentUsername();
-        const selectedTenant = toolbox.getManager().getSelectedTenant();
 
         return (
             <div>
@@ -192,80 +245,58 @@ export default class SecretsTable extends React.Component {
                     <DataTable.Column label="Tenant" name="tenant_name" width="10%" />
                     <DataTable.Column width="10%" />
 
-                    {data.items.map(secret => {
+                    {data.items.map(item => {
                         return (
-                            <DataTable.Row key={secret.key}>
+                            <DataTable.Row key={item.key}>
                                 <DataTable.Data>
-                                    {secret.key}
+                                    {item.key}
                                     <ResourceVisibility
-                                        visibility={secret.visibility}
+                                        visibility={item.visibility}
                                         onSetVisibility={visibility => {
-                                            this.setSecretVisibility(secret.key, visibility);
+                                            this.setSecretVisibility(item.key, visibility);
                                         }}
                                         allowedSettingTo={['tenant', 'global']}
                                         className="rightFloated"
                                     />
                                 </DataTable.Data>
                                 <DataTable.Data className="center aligned rowActions">
-                                    {showSecretKey === secret.key ? (
-                                        showSecretLoading ? (
-                                            <Icon name="spinner" loading />
-                                        ) : canShowSecret ? (
-                                            <div>
-                                                <pre className="forceMaxWidth">{showSecretValue}</pre>
-                                                <Icon
-                                                    bordered
-                                                    link
-                                                    name="hide"
-                                                    title="Hide secret value"
-                                                    onClick={this.onHideSecret}
-                                                />
-                                            </div>
-                                        ) : (
-                                            <Popup position="top right" on="hover">
-                                                <Popup.Trigger>
-                                                    <Icon bordered name="dont" color="red" />
-                                                </Popup.Trigger>
-                                                User `{currentUsername}` is not permitted to show the secret `
-                                                {secret.key}` in the tenant `{selectedTenant}` .
-                                            </Popup>
-                                        )
-                                    ) : (
-                                        <Icon
-                                            bordered
-                                            link
-                                            name="unhide"
-                                            title="Show secret value"
-                                            onClick={() => this.onShowSecret(secret)}
-                                        />
-                                    )}
+                                    <SecretValue
+                                        canShowSecret={canShowSecret}
+                                        secretKey={item.key}
+                                        onHide={this.onHideSecret}
+                                        onShow={() => this.onShowSecret(item)}
+                                        showSecretKey={showSecretKey}
+                                        showSecretLoading={showSecretLoading}
+                                        showSecretValue={showSecretValue}
+                                        toolbox={toolbox}
+                                    />
                                 </DataTable.Data>
                                 <DataTable.Data className="center aligned">
                                     <Checkbox
-                                        checked={secret.is_hidden_value}
-                                        onChange={() => this.onIsHiddenValueChange(secret.key, !secret.is_hidden_value)}
+                                        checked={item.is_hidden_value}
+                                        onChange={() => this.onIsHiddenValueChange(item.key, !item.is_hidden_value)}
                                         onClick={e => e.stopPropagation()}
                                     />
-                                    {secret.is_hidden_value}
+                                    {item.is_hidden_value}
                                 </DataTable.Data>
-                                <DataTable.Data>{secret.created_at}</DataTable.Data>
-                                <DataTable.Data>{secret.updated_at}</DataTable.Data>
-                                <DataTable.Data>{secret.created_by}</DataTable.Data>
-                                <DataTable.Data>{secret.tenant_name}</DataTable.Data>
+                                <DataTable.Data>{item.created_at}</DataTable.Data>
+                                <DataTable.Data>{item.updated_at}</DataTable.Data>
+                                <DataTable.Data>{item.created_by}</DataTable.Data>
+                                <DataTable.Data>{item.tenant_name}</DataTable.Data>
                                 <DataTable.Data className="center aligned rowActions">
                                     <Icon
                                         bordered
                                         link
                                         name="edit"
                                         title="Update secret"
-                                        onClick={() => this.onUpdateSecret(secret)}
+                                        onClick={() => this.onUpdateSecret(item)}
                                     />
                                     <Icon
                                         bordered
                                         link
                                         name="trash"
                                         title="Delete secret"
-                                        onClick={() => this.onDeleteSecret(secret)}
+                                        onClick={() => this.onDeleteSecret(item)}
                                     />
                                 </DataTable.Data>
                             </DataTable.Row>

@@ -32,6 +32,7 @@ export function getColorByStatus(nodeStatus) {
         case NODE_STATUS.FAILED:
             return '#d54931';
         case NODE_STATUS.UNINITIALIZED:
+        default:
             return 'white';
     }
 }

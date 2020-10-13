@@ -38,10 +38,7 @@ Stage.defineWidget({
         {
             id: 'displayStyle',
             name: 'Display style',
-            items: [
-                { name: 'Table', value: 'table' },
-                { name: 'List', value: 'list' }
-            ],
+            items: [{ name: 'Table', value: 'table' }, { name: 'List', value: 'list' }],
             default: 'table',
             type: Stage.Basic.GenericField.LIST_TYPE
         },
@@ -72,13 +69,13 @@ Stage.defineWidget({
     },
 
     fetchData(widget, toolbox, params) {
-        const deploymentData = toolbox.getManager().doGet('/deployments', {
+        const deploymentDataPromise = toolbox.getManager().doGet('/deployments', {
             _include: 'id,blueprint_id,visibility,created_at,created_by,updated_at,inputs,workflows,site_name',
             ...params
         });
-        const deploymentIds = deploymentData.then(data => _.map(data.items, item => item.id));
+        const deploymentIdsPromise = deploymentDataPromise.then(data => _.map(data.items, item => item.id));
 
-        const nodeInstanceData = deploymentIds.then(ids =>
+        const nodeInstanceDataPromise = deploymentIdsPromise.then(ids =>
             toolbox.getManager().doGet('/summary/node_instances', {
                 _target_field: 'deployment_id',
                 _sub_field: 'state',
@@ -86,7 +83,7 @@ Stage.defineWidget({
             })
         );
 
-        const executionsData = deploymentIds.then(ids =>
+        const executionsDataPromise = deploymentIdsPromise.then(ids =>
             toolbox.getManager().doGet('/executions', {
                 _include:
                     'id,deployment_id,workflow_id,status,status_display,created_at,scheduled_for,ended_at,parameters,error',
@@ -95,7 +92,7 @@ Stage.defineWidget({
             })
         );
 
-        return Promise.all([deploymentData, nodeInstanceData, executionsData]).then(data => {
+        return Promise.all([deploymentDataPromise, nodeInstanceDataPromise, executionsDataPromise]).then(data => {
             const { NodeInstancesConsts } = Stage.Common;
             const deploymentData = data[0];
             const nodeInstanceData = _.reduce(

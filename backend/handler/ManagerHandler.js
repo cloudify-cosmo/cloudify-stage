@@ -42,8 +42,8 @@ module.exports = (() => {
         if (data) {
             options.json = data;
             try {
-                data = JSON.stringify(data);
-                options.headers = { ...options.headers, 'content-length': Buffer.byteLength(data) };
+                const strData = JSON.stringify(data);
+                options.headers = { ...options.headers, 'content-length': Buffer.byteLength(strData) };
             } catch (error) {
                 logger.error('Invalid payload data. Error:', error);
             }
@@ -71,7 +71,7 @@ module.exports = (() => {
                     const isSuccess = res.statusCode >= 200 && res.statusCode < 300;
 
                     RequestHandler.getResponseJson(res)
-                        .then(data => (isSuccess ? resolve(data) : reject(data)))
+                        .then(json => (isSuccess ? resolve(json) : reject(json)))
                         .catch(e =>
                             isSuccess
                                 ? reject(`response data could not be parsed to JSON: ${e}`)

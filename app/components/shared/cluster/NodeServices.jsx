@@ -71,7 +71,6 @@ ServiceStatus.propTypes = {
 };
 
 export default function NodeServices({ name, type, services }) {
-    const numberOfColumns = 2;
     const formattedServices = _(services)
         .keys()
         .sort()

@@ -10,11 +10,8 @@ import Page from '../containers/Page';
 import ToursButton from '../containers/ToursButton';
 
 export default class Home extends Component {
-    constructor(props, context) {
-        super(props, context);
-    }
-
     // TODO: Context handling should not be here. Currently necessary to use deprecated methods.
+    // eslint-disable-next-line camelcase
     UNSAFE_componentWillMount() {
         const { contextParams, onStorePageId, pageId } = this.props;
         onStorePageId(pageId);
@@ -22,6 +19,7 @@ export default class Home extends Component {
     }
 
     // TODO: Context handling should not be here. Currently necessary to use deprecated methods.
+    // eslint-disable-next-line camelcase
     UNSAFE_componentWillReceiveProps(nextProps) {
         const { onStorePageId, pageId } = this.props;
         if (nextProps.pageId !== pageId) {

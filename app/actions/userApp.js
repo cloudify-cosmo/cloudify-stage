@@ -19,18 +19,6 @@ function setPages(pages) {
     };
 }
 
-export function resetPagesForTenant(tenant) {
-    return (dispatch, getState) => {
-        const { manager } = getState();
-        if (_.get(manager, 'tenants.selected', Consts.DEFAULT_ALL) === tenant) {
-            dispatch(resetPages());
-        } else {
-            const internal = new Internal(getState().manager);
-            return internal.doGet('ua/clear-pages', { tenant });
-        }
-    };
-}
-
 export function resetPages() {
     return dispatch => {
         const autoSaver = UserAppDataAutoSaver.getAutoSaver();
@@ -54,6 +42,17 @@ export function resetPages() {
                 autoSaver.initFromStore();
                 autoSaver.start();
             });
+    };
+}
+
+export function resetPagesForTenant(tenant) {
+    return (dispatch, getState) => {
+        const { manager } = getState();
+        if (_.get(manager, 'tenants.selected', Consts.DEFAULT_ALL) === tenant) {
+            return dispatch(resetPages());
+        }
+        const internal = new Internal(getState().manager);
+        return internal.doGet('ua/clear-pages', { tenant });
     };
 }
 

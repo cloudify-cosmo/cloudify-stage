@@ -10,8 +10,6 @@ const passport = require('passport');
 const db = require('../db/Connection');
 const config = require('../config').get();
 
-const logger = require('../handler/LoggerHandler').getLogger('ClientConfig');
-
 router.use(passport.authenticate('token', { session: false }));
 router.use(bodyParser.json());
 
@@ -34,7 +32,7 @@ router.post('/', (req, res, next) => {
         where: { managerIp: config.manager.ip },
         defaults: { config: { canUserEdit: true } }
     })
-        .spread((clientConfig, created) => {
+        .spread(clientConfig => {
             clientConfig.update({ config: req.body }, { fields: ['config'] }).then(c => {
                 res.send(c);
             });

@@ -2,18 +2,7 @@
  * Created by kinneretzin on 30/08/2016.
  */
 
-import v4 from 'uuid/v4';
 import * as types from '../actions/types';
-import StageUtils from '../utils/stageUtils';
-
-function updateWidget(widgets, widgetId, params) {
-    return widgets.map(w => {
-        if (w.id === widgetId) {
-            return { ...w, ...params };
-        }
-        return w;
-    });
-}
 
 const templates = (state = {}, action) => {
     switch (action.type) {

@@ -62,35 +62,30 @@ export default function InstallAgentsModal({
         }
     }, [open]);
 
-    function onApprove() {
-        submitExecute();
-        return false;
-    }
-
-    function onCancel() {
-        onHide();
-        return true;
-    }
-
     function onShowExecutionStatus() {
-        const { deploymentId } = inputValues.nodeFilter;
+        const { deploymentId: selectedDeploymentId } = inputValues.nodeFilter;
 
         onHide();
-        toolbox.drillDown(widget, 'execution', { deploymentId, executionId }, `Install New Agents on ${deploymentId}`);
+        toolbox.drillDown(
+            widget,
+            'execution',
+            { deploymentId: selectedDeploymentId, executionId },
+            `Install New Agents on ${selectedDeploymentId}`
+        );
     }
 
     function submitExecute() {
-        const { nodeFilter, installMethods, managerCertificate, managerIp, stopOldAgent } = inputValues;
+        const { nodeFilter, installMethods: methods, managerCertificate, managerIp, stopOldAgent } = inputValues;
         if (!nodeFilter.deploymentId) {
             setErrors({ error: 'Provide deployment in Nodes filter' });
-            return false;
+            return;
         }
 
         setLoading(true);
         const params = {
             node_ids: !_.isEmpty(nodeFilter.nodeId) ? nodeFilter.nodeId : undefined,
             node_instance_ids: !_.isEmpty(nodeFilter.nodeInstanceId) ? nodeFilter.nodeInstanceId : undefined,
-            install_methods: !_.isEmpty(installMethods) ? installMethods : undefined,
+            install_methods: !_.isEmpty(methods) ? methods : undefined,
             stop_old_agent: stopOldAgent,
             manager_ip: !_.isEmpty(managerIp) ? managerIp : undefined,
             manager_certificate: !_.isEmpty(managerCertificate) ? managerCertificate : undefined
@@ -106,6 +101,16 @@ export default function InstallAgentsModal({
             })
             .catch(err => setErrors({ error: err.message }))
             .finally(() => setLoading(false));
+    }
+
+    function onApprove() {
+        submitExecute();
+        return false;
+    }
+
+    function onCancel() {
+        onHide();
+        return true;
     }
 
     function handleInputChange(event, field) {

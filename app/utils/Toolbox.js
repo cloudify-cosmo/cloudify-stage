@@ -1,3 +1,4 @@
+/* eslint-disable class-methods-use-this */
 /**
  * Created by kinneretzin on 14/11/2016.
  */
@@ -89,7 +90,7 @@ class Toolbox {
 
     refresh() {}
 
-    loading(show) {}
+    loading() {}
 
     getWidget() {}
 }

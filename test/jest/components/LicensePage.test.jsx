@@ -1,3 +1,4 @@
+/* eslint-disable jest/expect-expect */
 /**
  * Created by jakubniezgoda on 20/03/2019.
  */
@@ -104,7 +105,7 @@ describe('(Component) LicensePage', () => {
     };
 
     const mockStoreAndRender = async (role, license, version) => {
-        const licenseUrl = '/console/sp/?su=%2Flicense';
+        const licenseUrl = '/console/sp?su=%2Flicense';
         const mockStore = configureMockStore();
         const store = mockStore({
             manager: {

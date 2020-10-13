@@ -20,15 +20,15 @@ export default function CreatePageModal({ onCreatePage, pageName: initialPageNam
     }
 
     function submitCreate() {
-        const errors = {};
+        const errorsObject = {};
 
         if (_.isEmpty(_.trim(pageName))) {
-            errors.pageName = 'Please provide correct page name';
+            errorsObject.pageName = 'Please provide correct page name';
         }
 
-        if (!_.isEmpty(errors)) {
-            setErrors(errors);
-            return false;
+        if (!_.isEmpty(errorsObject)) {
+            setErrors(errorsObject);
+            return;
         }
 
         // Disable the form

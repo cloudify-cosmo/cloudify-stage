@@ -23,16 +23,6 @@ class ExecutionActions {
             action
         });
     }
-
-    async waitUntilFinished(executionIds, interval) {
-        const executions = await this.doGetStatus(executionIds);
-        const activeExecutions = _.filter(executions.items, Stage.Utils.Execution.isActiveExecution);
-
-        if (!_.isEmpty(activeExecutions)) {
-            await new Promise(resolve => setTimeout(resolve, interval));
-            return await this.waitUntilFinished(executionIds, interval);
-        }
-    }
 }
 
 Stage.defineCommon({

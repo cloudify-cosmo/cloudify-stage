@@ -3,10 +3,6 @@
  */
 
 class InputsHeader extends React.Component {
-    constructor(props, context) {
-        super(props, context);
-    }
-
     shouldComponentUpdate(nextProps) {
         return !_.isEqual(this.props, nextProps);
     }

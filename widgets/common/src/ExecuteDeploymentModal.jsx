@@ -146,11 +146,16 @@ export default function ExecuteDeploymentModal({
 
     const enhancedWorkflow = { name: '', parameters: [], ...workflow };
     const enhancedDeployment = { id: '', ...deployment };
-    const deploymentName = !_.isEmpty(deployments)
-        ? _.size(deployments) > 1
-            ? 'multiple deployments'
-            : deployments[0]
-        : enhancedDeployment.id;
+    let deploymentName;
+    if (!_.isEmpty(deployments)) {
+        if (_.size(deployments) > 1) {
+            deploymentName = 'multiple deployments';
+        } else {
+            [deploymentName] = deployments;
+        }
+    } else {
+        deploymentName = enhancedDeployment.id;
+    }
 
     return (
         <Modal open={open} onClose={() => onHide()} className="executeWorkflowModal">

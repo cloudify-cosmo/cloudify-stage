@@ -42,11 +42,11 @@ export default class WizardModal extends React.Component {
 
         const stepsList = [];
         const stepsObject = {};
-        for (const step of steps) {
+        _.forEach(steps, step => {
             const stepName = WizardModal.getStepNameById(step.id);
             stepsList.push(stepName);
             stepsObject[stepName] = { state: WizardModal.DISABLED_STATE, data: {}, errors: {} };
-        }
+        });
         stepsObject[stepsList[activeStepIndex]].state = WizardModal.ACTIVE_STATE;
 
         return {
@@ -93,11 +93,11 @@ export default class WizardModal extends React.Component {
             const activeStepName = this.getStepNameByIndex(0);
 
             const stepsObject = {};
-            for (const step of steps) {
+            _.forEach(steps, step => {
                 const stepName = WizardModal.getStepNameById(step.id);
                 const { [stepName]: stepObject } = this.state;
                 stepsObject[stepName] = { ...stepObject, state: WizardModal.DISABLED_STATE, errors: {} };
-            }
+            });
             stepsObject[activeStepName].state = WizardModal.ACTIVE_STATE;
 
             this.setState({
@@ -193,7 +193,7 @@ export default class WizardModal extends React.Component {
     onError = (id, errorMessage, errors) => {
         const { activeStepIndex } = this.state;
         if (this.getStepNameByIndex(activeStepIndex) !== WizardModal.getStepNameById(id)) {
-            return;
+            return Promise.resolve();
         }
 
         if (!_.isNil(errors)) {

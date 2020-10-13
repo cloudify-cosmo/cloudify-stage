@@ -2,7 +2,6 @@
  * Created by kinneretzin on 11/09/2016.
  */
 
-import React from 'react';
 import { connect } from 'react-redux';
 import Layout from '../../components/layout/Layout';
 
@@ -11,7 +10,7 @@ import { logout } from '../../actions/managers';
 import stageUtils from '../../utils/stageUtils';
 import Consts from '../../utils/consts';
 
-const mapStateToProps = (state, ownProps) => {
+const mapStateToProps = state => {
     return {
         isLoading: state.app.loading,
         isUserAuthorizedForTemplateManagement:
@@ -21,7 +20,7 @@ const mapStateToProps = (state, ownProps) => {
     };
 };
 
-const mapDispatchToProps = (dispatch, ownProps) => {
+const mapDispatchToProps = dispatch => {
     return {
         initialPageLoad: () => {
             return dispatch(intialPageLoad());

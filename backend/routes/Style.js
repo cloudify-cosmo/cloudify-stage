@@ -20,16 +20,18 @@ function shadeColor(color, percent) {
     const num = parseInt(color.slice(1), 16); // Remove the '#'
     const t = percent > 0 ? 0 : 255;
     const p = percent < 0 ? percent * -1 : percent;
+    /* eslint-disable no-bitwise */
     const R = num >> 16;
     const G = (num >> 8) & 0x00ff;
     const B = num & 0x0000ff; // extract the RGB
+    /* eslint-enable no-bitwise */
     const newR = Math.round((t - R) * p) + R;
     const newG = Math.round((t - G) * p) + G;
     const newB = Math.round((t - B) * p) + B;
     return `#${(0x1000000 + newR * 0x10000 + newG * 0x100 + newB).toString(16).slice(1)}`;
 }
 
-router.get('/', (req, res, next) => {
+router.get('/', (req, res) => {
     const { whiteLabel } = config.app;
     const stylesheetTemplate = fs.readFileSync(styleTemplateFile, 'utf8');
 

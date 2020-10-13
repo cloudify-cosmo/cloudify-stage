@@ -81,16 +81,20 @@ export default function BlueprintsTable({
                                 }}
                             />
                         )}
-                        <i
-                            className="rocket icon link bordered"
+                        <Icon
+                            name="rocket"
+                            link
+                            bordered
                             title="Create deployment"
                             onClick={event => {
                                 event.stopPropagation();
                                 onCreateDeployment(item);
                             }}
                         />
-                        <i
-                            className="trash icon link bordered"
+                        <Icon
+                            name="trash"
+                            link
+                            bordered
                             title="Delete blueprint"
                             onClick={event => {
                                 event.stopPropagation();

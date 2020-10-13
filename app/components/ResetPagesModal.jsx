@@ -31,7 +31,7 @@ export default class ResetPagesModal extends React.Component {
             newTenants.push(clickedTenant);
         }
 
-        this.setState({ tenants: newTenants }, () => console.error(tenants));
+        this.setState({ tenants: newTenants }, () => log.error(tenants));
     };
 
     render() {

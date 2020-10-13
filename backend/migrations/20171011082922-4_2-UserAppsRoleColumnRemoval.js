@@ -4,7 +4,7 @@ const INDEX_WITH_ROLE = INDEX_WITHOUT_ROLE.concat(ROLE_COLUMN_NAME);
 const INDEX_OPTIONS = { indicesType: 'UNIQUE' };
 
 module.exports = {
-    up(queryInterface, Sequelize) {
+    up(queryInterface) {
         return queryInterface
             .removeColumn('UserApps', ROLE_COLUMN_NAME)
             .then(() =>

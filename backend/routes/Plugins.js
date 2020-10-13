@@ -21,11 +21,11 @@ function checkParams(req, res, next) {
     const noYaml = req.files && _.isEmpty(req.files.yaml_file) && !req.query.yamlUrl;
 
     if (noWagon) {
-        var errorMessage = 'Must provide a wagon file or url.';
+        const errorMessage = 'Must provide a wagon file or url.';
         logger.error(errorMessage);
         res.status(500).send({ message: errorMessage });
     } else if (noYaml) {
-        var errorMessage = 'Must provide a yaml file or url.';
+        const errorMessage = 'Must provide a yaml file or url.';
         logger.error(errorMessage);
         res.status(500).send({ message: errorMessage });
     } else {
@@ -87,7 +87,7 @@ router.get('/icons/:pluginId', (req, res) => {
     ).pipe(res);
 });
 
-router.put('/title', upload.fields(_.map(['yaml_file'], name => ({ name, maxCount: 1 }))), (req, res, next) => {
+router.put('/title', upload.fields(_.map(['yaml_file'], name => ({ name, maxCount: 1 }))), (req, res) => {
     let getPluginYaml;
     if (req.query.yamlUrl) {
         getPluginYaml = downloadFile(req.query.yamlUrl);
@@ -113,7 +113,7 @@ router.post(
     passport.authenticate('token', { session: false }),
     upload.fields(_.map(['wagon_file', 'yaml_file', 'icon_file'], name => ({ name, maxCount: 1 }))),
     checkParams,
-    (req, res, next) => {
+    (req, res) => {
         const promises = [];
         let wagonFilename;
 

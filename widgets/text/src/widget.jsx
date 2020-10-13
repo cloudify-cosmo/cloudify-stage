@@ -75,7 +75,7 @@ Stage.defineWidget({
         }
     ],
 
-    render(widget, data, error, toolbox) {
+    render(widget) {
         const header = widget.configuration.header ? widget.configuration.header : '';
         const content = widget.configuration.content ? Stage.Utils.parseMarkdown(widget.configuration.content) : '';
 
@@ -93,6 +93,7 @@ Stage.defineWidget({
         return (
             <div>
                 {header && <h3 style={headerStyle}>{header}</h3>}
+                {/* eslint-disable-next-line react/no-danger */}
                 {content && <div style={contentStyle} dangerouslySetInnerHTML={{ __html: content }} />}
             </div>
         );

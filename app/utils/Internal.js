@@ -8,10 +8,6 @@ import Consts from './consts';
 import StageUtils from './stageUtils';
 
 export default class Internal extends External {
-    constructor(data) {
-        super(data);
-    }
-
     buildHeaders() {
         if (!this.data) {
             return {};
@@ -32,10 +28,12 @@ export default class Internal extends External {
         return super.buildActualUrl(StageUtils.Url.url(path), data);
     }
 
+    // eslint-disable-next-line class-methods-use-this
     isUnauthorized(response) {
         return response.status === 401;
     }
 
+    // eslint-disable-next-line class-methods-use-this
     isLicenseError(response, body) {
         return (
             response.status === 400 &&

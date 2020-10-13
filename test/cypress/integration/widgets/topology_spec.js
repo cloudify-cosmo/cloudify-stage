@@ -4,16 +4,13 @@ describe('Topology', () => {
     const resourcePrefix = 'topology_test_';
     const blueprintId = `${resourcePrefix}bp`;
     const deploymentId = `${resourcePrefix}dep`;
-    const pluginWagonUrl =
-        'https://github.com/cloudify-cosmo/cloudify-terraform-plugin/releases/download/0.13.4/cloudify_terraform_plugin-0.13.4-redhat-Maipo-py27.py36-none-linux_x86_64.wgn';
-    const pluginYamlUrl =
-        'https://github.com/cloudify-cosmo/cloudify-terraform-plugin/releases/download/0.13.4/plugin.yaml';
     const blueprintFile = 'blueprints/topology.zip';
 
     before(() => {
         cy.activate('valid_trial_license').login();
 
-        cy.installPlugin(pluginWagonUrl, pluginYamlUrl)
+        cy.deletePlugins()
+            .uploadPluginFromCatalog('Terraform')
             .deleteDeployments(resourcePrefix, true)
             .deleteBlueprints(resourcePrefix, true)
             .uploadBlueprint(blueprintFile, blueprintId)
@@ -22,14 +19,14 @@ describe('Topology', () => {
 
     beforeEach(() => {
         cy.server();
-        cy.route(/console\/sp\/\?su=\/summary/).as('getSummary');
+        cy.route(/console\/sp\?su=\/summary/).as('getSummary');
     });
 
     it('is presented in Blueprint page', () => {
         cy.visitPage('Local Blueprints');
 
         cy.log('Use search to limit number of presented blueprints');
-        cy.route(/console\/sp\/\?su=\/blueprints/).as('getBlueprints');
+        cy.route(/console\/sp\?su=\/blueprints/).as('getBlueprints');
         cy.get('.blueprintsTable div.input input')
             .clear()
             .type(resourcePrefix)
@@ -50,8 +47,8 @@ describe('Topology', () => {
         cy.visitPage('Deployments');
 
         cy.log('Use search to limit number of presented deployments');
-        cy.route(/console\/sp\/\?su=\/deployments/).as('getDeployments');
-        cy.route(/console\/sp\/\?su=\/executions/).as('getExecutions');
+        cy.route(/console\/sp\?su=\/deployments/).as('getDeployments');
+        cy.route(/console\/sp\?su=\/executions/).as('getExecutions');
         cy.get('.segmentList div.input input')
             .clear()
             .type(resourcePrefix)
@@ -72,12 +69,23 @@ describe('Topology', () => {
         cy.log('Install the deployment');
         cy.executeWorkflow(deploymentId, 'install');
 
+        cy.log('Wait for deployment to be installed');
+        const installDeploymentTimeout = 60 * 1000;
+        cy.contains('Last Execution').click();
+        cy.waitUntilPageLoaded();
+        cy.get('.executionsWidget .label i').should('have.class', 'spinner');
+        cy.get('.executionsWidget .label i', { timeout: installDeploymentTimeout }).should('have.class', 'checkmark');
+        cy.contains('Deployment Info').click();
+        cy.waitUntilPageLoaded();
+
         cy.log('Check terraform module details');
+        cy.contains('#gridContainer > #gridSvg > #gridContent > .nodeContainer > .title', 'terraform');
+        cy.contains('#gridContainer > #gridSvg > #gridContent > .nodeContainer > .title', 'cloud_resources');
         cy.get('.nodeTopologyButton:eq(0)')
             .should('not.have.css', 'visibility', 'hidden')
             .click({ force: true });
         cy.get('.modal td:eq(0)').should('have.text', 'null_resource');
-        cy.get('.modal td:eq(2)').should('have.text', 'provider.null');
+        cy.get('.modal td:eq(2)').should('have.text', 'provider["registry.terraform.io/hashicorp/null"]');
         cy.get('.modal tr:eq(1) td:eq(1)').should('have.text', 'foo1');
         cy.get('.modal tr:eq(2) td:eq(1)').should('have.text', 'foo2');
         cy.get('.modal tr:eq(1) td:eq(3)')
@@ -85,11 +93,10 @@ describe('Topology', () => {
             .then(rawData => {
                 const parsedData = JSON.parse(rawData);
                 expect(_.omit(parsedData, 'instances')).to.deep.equal({
-                    provider: 'provider.null',
+                    provider: 'provider["registry.terraform.io/hashicorp/null"]',
                     type: 'null_resource',
                     mode: 'managed',
-                    name: 'foo1',
-                    each: 'list'
+                    name: 'foo1'
                 });
                 expect(parsedData.instances.length).to.equal(2);
                 parsedData.instances.forEach((instance, i) => {
@@ -109,7 +116,7 @@ describe('Topology', () => {
             .then(rawData => {
                 const parsedData = JSON.parse(rawData);
                 expect(_.omit(parsedData, 'instances')).to.deep.equal({
-                    provider: 'provider.null',
+                    provider: 'provider["registry.terraform.io/hashicorp/null"]',
                     type: 'null_resource',
                     mode: 'managed',
                     name: 'foo2'

@@ -10,7 +10,7 @@ import Consts from '../utils/consts';
 import AboutModal from '../components/AboutModal';
 import stageUtils from '../utils/stageUtils';
 
-const mapStateToProps = (state, ownProps) => {
+const mapStateToProps = state => {
     const manager = _.get(state, 'manager', {});
 
     return {
@@ -22,7 +22,7 @@ const mapStateToProps = (state, ownProps) => {
     };
 };
 
-const mapDispatchToProps = (dispatch, ownProps) => {
+const mapDispatchToProps = dispatch => {
     return {
         onLicenseManagement: () => dispatch(push(Consts.LICENSE_PAGE_PATH))
     };

@@ -24,7 +24,7 @@ export default class StatusPoller {
 
     start() {
         if (!this.isActive) {
-            console.log(`Starting status polling for manager ${this.getManagerIp()}`);
+            log.log(`Starting status polling for manager ${this.getManagerIp()}`);
 
             this.isActive = true;
 
@@ -36,7 +36,7 @@ export default class StatusPoller {
 
     stop() {
         if (this.isActive) {
-            console.log(`Stopping status polling for manager ${this.getManagerIp()}`);
+            log.log(`Stopping status polling for manager ${this.getManagerIp()}`);
 
             this.isActive = false;
             this.stopPolling();
@@ -57,7 +57,7 @@ export default class StatusPoller {
     startPolling() {
         this.stopPolling();
 
-        console.log(`Polling status for manager ${this.getManagerIp()} - time interval: ${this.interval} sec`);
+        log.log(`Polling status for manager ${this.getManagerIp()} - time interval: ${this.interval} sec`);
         this.pollerTimer = setTimeout(() => {
             this.fetchStatus().then(this.startPolling.bind(this));
         }, this.interval);

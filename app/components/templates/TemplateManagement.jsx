@@ -29,7 +29,7 @@ export default function TemplateManagement() {
     const roles = useSelector(state => state.manager.roles);
 
     function handleError(err) {
-        console.error(err);
+        log.error(err);
         setError(err.message);
         setLoading(false);
     }
@@ -98,14 +98,14 @@ export default function TemplateManagement() {
         setError(null);
     }
 
-    function onCreateTemplate(templateName, roles, tenants, templatePages) {
+    function onCreateTemplate(templateName, templateRoles, templateTenants, templatePages) {
         startLoading();
 
         const template = {
             id: templateName.trim(),
             data: {
-                roles,
-                tenants
+                roles: templateRoles,
+                tenants: templateTenants
             },
             pages: templatePages
         };
@@ -139,13 +139,13 @@ export default function TemplateManagement() {
             .catch(handleError);
     }
 
-    function onModifyTemplate(item, templateName, roles, tenants, templatePages) {
+    function onModifyTemplate(item, templateName, templateRoles, templateTenants, templatePages) {
         const template = {
             oldId: item.id,
             id: templateName.trim(),
             data: {
-                roles,
-                tenants: _.isEmpty(tenants) ? [Const.DEFAULT_ALL] : tenants
+                roles: templateRoles,
+                tenants: _.isEmpty(templateTenants) ? [Const.DEFAULT_ALL] : templateTenants
             },
             pages: templatePages
         };

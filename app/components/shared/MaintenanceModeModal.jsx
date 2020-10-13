@@ -42,6 +42,47 @@ function MaintenanceModeModal({
     const pollingTimeout = useRef(null);
     const fetchDataPromise = useRef();
 
+    function stopFetchingData() {
+        if (fetchDataPromise.current) {
+            fetchDataPromise.current.cancel();
+        }
+    }
+
+    function stopPolling() {
+        log.log('Stop polling maintenance data');
+        clearTimeout(pollingTimeout.current);
+    }
+
+    function startPolling() {
+        stopPolling();
+        stopFetchingData();
+
+        if (show) {
+            log.log(`Polling maintenance data - time interval: ${POLLING_INTERVAL / 1000} sec`);
+            pollingTimeout.current = setTimeout(() => {
+                // eslint-disable-next-line no-use-before-define
+                loadPendingExecutions();
+            }, POLLING_INTERVAL);
+        }
+    }
+
+    function loadPendingExecutions() {
+        if (manager.maintenance !== Consts.MAINTENANCE_DEACTIVATED) {
+            return;
+        }
+
+        fetchDataPromise.current = StageUtils.makeCancelable(onFetchActiveExecutions());
+        fetchDataPromise.current.promise
+            .then(() => {
+                log.log('Maintenance data fetched');
+                startPolling();
+            })
+            .catch(err => {
+                setError(err.message);
+                startPolling();
+            });
+    }
+
     useEffect(() => {
         if (show) {
             setLoading(false);
@@ -54,63 +95,6 @@ function MaintenanceModeModal({
         }
         return stopPolling;
     }, [show]);
-
-    function onApprove() {
-        setLoading(true);
-
-        if (manager.maintenance === Consts.MAINTENANCE_DEACTIVATED) {
-            activate();
-        } else {
-            deactivate();
-        }
-
-        return false;
-    }
-
-    function onDeny() {
-        onHide();
-        return true;
-    }
-
-    function startPolling() {
-        stopPolling();
-        stopFetchingData();
-
-        if (show) {
-            console.log(`Polling maintenance data - time interval: ${POLLING_INTERVAL / 1000} sec`);
-            pollingTimeout.current = setTimeout(() => {
-                loadPendingExecutions();
-            }, POLLING_INTERVAL);
-        }
-    }
-
-    function stopFetchingData() {
-        if (fetchDataPromise.current) {
-            fetchDataPromise.current.cancel();
-        }
-    }
-
-    function stopPolling() {
-        console.log('Stop polling maintenance data');
-        clearTimeout(pollingTimeout.current);
-    }
-
-    function loadPendingExecutions() {
-        if (manager.maintenance !== Consts.MAINTENANCE_DEACTIVATED) {
-            return;
-        }
-
-        fetchDataPromise.current = StageUtils.makeCancelable(onFetchActiveExecutions());
-        fetchDataPromise.current.promise
-            .then(data => {
-                console.log('Maintenance data fetched');
-                startPolling();
-            })
-            .catch(err => {
-                setError(err.message);
-                startPolling();
-            });
-    }
 
     function activate() {
         onMaintenanceActivate()
@@ -136,6 +120,23 @@ function MaintenanceModeModal({
                 setError(err.message);
                 setLoading(false);
             });
+    }
+
+    function onApprove() {
+        setLoading(true);
+
+        if (manager.maintenance === Consts.MAINTENANCE_DEACTIVATED) {
+            activate();
+        } else {
+            deactivate();
+        }
+
+        return false;
+    }
+
+    function onDeny() {
+        onHide();
+        return true;
     }
 
     function cancelExecution(execution, action) {
@@ -267,7 +268,7 @@ const mapStateToProps = (state, ownProps) => {
     };
 };
 
-const mapDispatchToProps = (dispatch, ownProps) => {
+const mapDispatchToProps = dispatch => {
     return {
         onMaintenanceActivate: manager => {
             return dispatch(switchMaintenance(manager, true));

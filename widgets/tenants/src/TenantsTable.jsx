@@ -154,33 +154,33 @@ export default class TenantsTable extends React.Component {
                     <DataTable.Column label="# Users" width="30%" />
                     <DataTable.Column width="10%" />
 
-                    {data.items.map(tenant => {
+                    {data.items.map(item => {
                         return (
-                            <DataTable.RowExpandable key={tenant.name} expanded={tenant.isSelected}>
+                            <DataTable.RowExpandable key={item.name} expanded={item.isSelected}>
                                 <DataTable.Row
-                                    key={tenant.name}
-                                    selected={tenant.isSelected}
-                                    onClick={() => this.selectTenant(tenant.name)}
+                                    key={item.name}
+                                    selected={item.isSelected}
+                                    onClick={() => this.selectTenant(item.name)}
                                 >
-                                    <DataTable.Data>{tenant.name}</DataTable.Data>
+                                    <DataTable.Data>{item.name}</DataTable.Data>
                                     <DataTable.Data>
                                         <Label className="green" horizontal>
-                                            {Object.keys(tenant.groups).length}
+                                            {Object.keys(item.groups).length}
                                         </Label>
                                     </DataTable.Data>
                                     <DataTable.Data>
                                         <Label className="blue" horizontal>
-                                            {Object.keys(tenant.users).length}
+                                            {Object.keys(item.users).length}
                                         </Label>
                                     </DataTable.Data>
                                     <DataTable.Data className="center aligned rowActions">
-                                        <MenuAction tenant={tenant} onSelectAction={this.selectAction} />
+                                        <MenuAction tenant={item} onSelectAction={this.selectAction} />
                                     </DataTable.Data>
                                 </DataTable.Row>
 
-                                <DataTable.DataExpandable key={tenant.name}>
+                                <DataTable.DataExpandable key={item.name}>
                                     <TenantDetails
-                                        tenant={tenant}
+                                        tenant={item}
                                         toolbox={toolbox}
                                         onError={err => this.setState({ error: err })}
                                     />

@@ -125,20 +125,20 @@ describe('License Management', () => {
         cy.location('pathname').should('be.equal', '/console/');
     });
 
-    for (const license of validLicenses) {
+    validLicenses.forEach(license => {
         it(`allows ${license.name} license upload`, () => {
             cy.visit('/console/license');
             goToEditLicense();
             uploadLicense(license.file).then(() => verifyMessageHeader(license.header));
         });
-    }
+    });
 
-    for (const license of invalidLicenses) {
+    invalidLicenses.forEach(license => {
         it(`handles ${license.name} license error`, () => {
             cy.visit('/console/license');
 
             goToEditLicense();
             uploadLicense(license.file).then(() => verifyError(license.error));
         });
-    }
+    });
 });

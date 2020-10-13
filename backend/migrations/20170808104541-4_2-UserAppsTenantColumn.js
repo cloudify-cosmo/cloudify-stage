@@ -14,7 +14,7 @@ function createTenantColumnInUserAppTable(queryInterface, Sequelize) {
         .then(() => queryInterface.addIndex('UserApps', INDEX_WITH_TENANT, INDEX_OPTIONS));
 }
 
-function removeTenantColumnInUserAppTable(queryInterface, Sequelize) {
+function removeTenantColumnInUserAppTable(queryInterface) {
     return queryInterface
         .removeColumn('UserApps', TENANT_COLUMN_NAME)
         .then(() =>

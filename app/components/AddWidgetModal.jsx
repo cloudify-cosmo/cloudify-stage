@@ -32,9 +32,13 @@ let nameIndex = 0;
 
 function generateCategories(widgets) {
     const categories = widgets.reduce((curr, next) => {
-        (next.categories || [GenericConfig.CATEGORY.OTHERS]).map(category => {
+        (next.categories || [GenericConfig.CATEGORY.OTHERS]).forEach(category => {
             const idx = curr.findIndex(current => current.name === category);
-            idx === -1 ? curr.push({ name: category, count: 1 }) : curr[idx].count++;
+            if (idx === -1) {
+                curr.push({ name: category, count: 1 });
+            } else {
+                curr[idx].count += 1;
+            }
         });
         return curr;
     }, []);
@@ -54,7 +58,7 @@ function AddWidgetModal({
     const [filteredWidgetDefinitions, setFilteredWidgetDefinitions] = useState(widgetDefinitions);
     const [search, setSearch] = useState('');
     const [showConfirm, setShowConfirm] = useState(false);
-    const [widget, setWidget] = useState({});
+    const [widgetToRemove, setWidgetToRemove] = useState({});
     const [showThumbnail, setShowThumbnail] = useState(false);
     const [thumbnailWidget, setThumbnailWidget] = useState({});
     const [usedByList, setUsedByList] = useState([]);
@@ -68,7 +72,7 @@ function AddWidgetModal({
         setFilteredWidgetDefinitions(widgetDefinitions);
         setSearch('');
         setShowConfirm(false);
-        setWidget({});
+        setWidgetToRemove({});
         setShowThumbnail(false);
         setThumbnailWidget({});
         setUsedByList([]);
@@ -103,7 +107,8 @@ function AddWidgetModal({
         _.forEach(widgetsToAdd, widgetId => {
             const widget = _.find(widgetDefinitions, widgetDefinition => widgetId === widgetDefinition.id);
             if (widget) {
-                onWidgetAdded(widget.name || `Widget_${nameIndex++}`, widget);
+                onWidgetAdded(widget.name || `Widget_${nameIndex}`, widget);
+                nameIndex += 1;
             }
         });
         setWidgetsToAdd([]);
@@ -118,9 +123,9 @@ function AddWidgetModal({
 
     function confirmRemove(event, widget) {
         onWidgetUsed(widget.id)
-            .then(usedByList => {
-                setWidget(widget);
-                setUsedByList(usedByList);
+            .then(widgetUsedByList => {
+                setWidgetToRemove(widget);
+                setUsedByList(widgetUsedByList);
                 setShowConfirm(true);
             })
             .catch(err => {
@@ -134,7 +139,7 @@ function AddWidgetModal({
 
     function uninstallWidget() {
         setShowConfirm(false);
-        onWidgetUninstalled(widget.id).then(() => setWidgetsToAdd(getWidgetsToAddWithout(widget.id)));
+        onWidgetUninstalled(widgetToRemove.id).then(() => setWidgetsToAdd(getWidgetsToAddWithout(widgetToRemove.id)));
     }
 
     function updateWidget(widget, widgetFile, widgetUrl) {
@@ -163,8 +168,8 @@ function AddWidgetModal({
         return filtered;
     }
 
-    function getWidgetsBySearch(widgets, search) {
-        const filtered = widgets.filter(el => el.name.toLowerCase().includes(search.toLowerCase() || ''));
+    function getWidgetsBySearch(widgets, searchText) {
+        const filtered = widgets.filter(el => el.name.toLowerCase().includes(searchText.toLowerCase() || ''));
         updateCategoriesCounter(filtered);
         return filtered;
     }
@@ -314,6 +319,7 @@ function AddWidgetModal({
                                                     <Item.Description />
                                                     <Item.Extra>
                                                         {widget.isCustom && canInstallWidgets && (
+                                                            // eslint-disable-next-line jsx-a11y/click-events-have-key-events,jsx-a11y/no-static-element-interactions
                                                             <div onClick={e => e.stopPropagation()}>
                                                                 <InstallWidgetModal
                                                                     onWidgetInstalled={_.wrap(widget, updateWidget)}
@@ -381,7 +387,7 @@ function AddWidgetModal({
                 open={showConfirm}
                 onCancel={() => setShowConfirm(false)}
                 onConfirm={uninstallWidget}
-                header={`Are you sure to remove widget ${widget.name}?`}
+                header={`Are you sure to remove widget ${widgetToRemove.name}?`}
                 content={confirmContent}
                 className="removeWidgetConfirm"
             />

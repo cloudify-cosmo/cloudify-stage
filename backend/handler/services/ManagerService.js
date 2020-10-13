@@ -7,11 +7,12 @@ const consts = require('../../consts');
 
 module.exports = (() => {
     function call(method, url, params, data, headers = {}) {
+        let fullUrl = url;
         if (!_.isEmpty(params)) {
             const queryString = (url.indexOf('?') > 0 ? '&' : '?') + param(params, true);
-            url = `${url}${queryString}`;
+            fullUrl = `${url}${queryString}`;
         }
-        return ManagerHandler.jsonRequest(method, url, headers, data);
+        return ManagerHandler.jsonRequest(method, fullUrl, headers, data);
     }
 
     function doGet(url, params, headers) {
@@ -25,12 +26,13 @@ module.exports = (() => {
         const promise = this.doGet(url, params, headers);
 
         return promise.then(data => {
-            size += data.items.length;
-            fullData.items = _.concat(fullData.items, data.items);
-            const total = _.get(data, 'metadata.pagination.total');
+            const cumulativeSize = size + data.items.length;
+            const totalSize = _.get(data, 'metadata.pagination.total');
 
-            if (total > size) {
-                return this.doGetFull(url, params, headers, fullData, size);
+            fullData.items = _.concat(fullData.items, data.items);
+
+            if (totalSize > cumulativeSize) {
+                return this.doGetFull(url, params, headers, fullData, cumulativeSize);
             }
             return fullData;
         });

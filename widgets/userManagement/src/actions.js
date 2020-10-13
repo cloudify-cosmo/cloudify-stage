@@ -23,19 +23,19 @@ export default class Actions {
         return this.toolbox.getManager().doGet('/tenants?_get_all_results=true&_include=name');
     }
 
-    doRemoveFromTenant(username, tenant_name) {
-        return this.toolbox.getManager().doDelete('/tenants/users', null, { username, tenant_name });
+    doRemoveFromTenant(username, tenantName) {
+        return this.toolbox.getManager().doDelete('/tenants/users', null, { username, tenant_name: tenantName });
     }
 
     doHandleTenants(username, tenantsToAdd, tenantsToDelete, tenantsToUpdate) {
-        const addActions = _.map(tenantsToAdd, (role, tenant_name) =>
-            this.toolbox.getManager().doPut('/tenants/users', null, { username, tenant_name, role })
+        const addActions = _.map(tenantsToAdd, (role, tenantName) =>
+            this.toolbox.getManager().doPut('/tenants/users', null, { username, tenant_name: tenantName, role })
         );
-        const deleteActions = _.map(tenantsToDelete, tenant_name =>
-            this.toolbox.getManager().doDelete('/tenants/users', null, { username, tenant_name })
+        const deleteActions = _.map(tenantsToDelete, tenantName =>
+            this.toolbox.getManager().doDelete('/tenants/users', null, { username, tenant_name: tenantName })
         );
-        const updateActions = _.map(tenantsToUpdate, (role, tenant_name) =>
-            this.toolbox.getManager().doPatch('/tenants/users', null, { username, tenant_name, role })
+        const updateActions = _.map(tenantsToUpdate, (role, tenantName) =>
+            this.toolbox.getManager().doPatch('/tenants/users', null, { username, tenant_name: tenantName, role })
         );
 
         return Promise.all(_.concat(addActions, deleteActions, updateActions));
@@ -45,16 +45,16 @@ export default class Actions {
         return this.toolbox.getManager().doGet('/user-groups?_include=name');
     }
 
-    doRemoveFromGroup(username, group_name) {
-        return this.toolbox.getManager().doDelete('/user-groups/users', null, { username, group_name });
+    doRemoveFromGroup(username, groupName) {
+        return this.toolbox.getManager().doDelete('/user-groups/users', null, { username, group_name: groupName });
     }
 
     doHandleGroups(username, groupsToAdd, groupsToDelete) {
-        const addActions = _.map(groupsToAdd, group_name =>
-            this.toolbox.getManager().doPut('/user-groups/users', null, { username, group_name })
+        const addActions = _.map(groupsToAdd, groupName =>
+            this.toolbox.getManager().doPut('/user-groups/users', null, { username, group_name: groupName })
         );
-        const deleteActions = _.map(groupsToDelete, group_name =>
-            this.toolbox.getManager().doDelete('/user-groups/users', null, { username, group_name })
+        const deleteActions = _.map(groupsToDelete, groupName =>
+            this.toolbox.getManager().doDelete('/user-groups/users', null, { username, group_name: groupName })
         );
 
         return Promise.all(_.concat(addActions, deleteActions));

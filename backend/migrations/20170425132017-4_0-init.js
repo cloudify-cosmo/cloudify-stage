@@ -135,7 +135,7 @@ module.exports = {
             .then(() => createBlueprintAdditionsModel(queryInterface, Sequelize))
             .then(() => createApplicationModel(queryInterface, Sequelize));
     },
-    down(queryInterface, Sequelize) {
+    down(queryInterface) {
         return queryInterface
             .dropTable('ClientConfigs')
             .then(() => queryInterface.dropTable('UserApps'))

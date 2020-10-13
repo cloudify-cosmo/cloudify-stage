@@ -1,3 +1,12 @@
+function toLatLng(value) {
+    return _(value)
+        .split(',')
+        .map(v => parseFloat(v) || 0)
+        .concat(0, 0)
+        .take(2)
+        .value();
+}
+
 class SiteLocationMap extends React.Component {
     constructor(props, context) {
         super(props, context);
@@ -13,15 +22,6 @@ class SiteLocationMap extends React.Component {
         const { MapsActions } = Stage.Common;
 
         return new MapsActions(toolbox).isAvailable().then(isMapAvailable => this.setState({ isMapAvailable }));
-    }
-
-    toLatLng(value) {
-        return _(value)
-            .split(',')
-            .map(v => parseFloat(v) || 0)
-            .concat(0, 0)
-            .take(2)
-            .value();
     }
 
     render() {
@@ -62,10 +62,10 @@ class SiteLocationMap extends React.Component {
                 maxBounds={defaultMapOptions.maxBounds}
                 maxBoundsViscosity={defaultMapOptions.maxBoundsViscosity}
                 zoom={initialZoom}
-                center={this.toLatLng(this.initialLocation)}
+                center={toLatLng(this.initialLocation)}
             >
                 <Leaflet.TileLayer attribution={attribution} url={url} />
-                {location && <Leaflet.Marker position={this.toLatLng(location)} icon={createMarkerIcon('grey')} />}
+                {location && <Leaflet.Marker position={toLatLng(location)} icon={createMarkerIcon('grey')} />}
             </Leaflet.Map>
         );
     }

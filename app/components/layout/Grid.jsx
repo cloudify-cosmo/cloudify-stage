@@ -11,7 +11,7 @@ const ReactGridLayout = WidthProvider(Responsive);
 
 export default function Grid({ children, isEditMode, onGridDataChange }) {
     function saveChangedItems(layout) {
-        isEditMode &&
+        if (isEditMode) {
             _.each(layout, item => {
                 onGridDataChange(item.i, {
                     height: item.h,
@@ -20,6 +20,7 @@ export default function Grid({ children, isEditMode, onGridDataChange }) {
                     y: item.y
                 });
             });
+        }
     }
 
     function processGridItem(el) {

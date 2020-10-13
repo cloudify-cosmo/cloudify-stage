@@ -20,7 +20,7 @@ Stage.defineWidget({
         '[manager]/executions?_include=id&_size=1&' +
         '&status=pending&status=started&status=cancelling&status=force_cancelling&status=kill_cancelling',
 
-    render(widget, data, error, toolbox) {
+    render(widget, data) {
         const { Loading } = Stage.Basic;
 
         if (_.isEmpty(data)) {

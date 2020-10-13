@@ -43,7 +43,7 @@ describe('Spire Manager widget', () => {
         });
         cy.route({
             method: 'POST',
-            url: '/console/sp/?su=/executions',
+            url: '/console/sp?su=/executions',
             response: {}
         }).as('postExecutions');
 

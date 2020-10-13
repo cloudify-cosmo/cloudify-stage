@@ -3,13 +3,11 @@
  */
 
 import MenuAction from './MenuAction';
-import DeploymentUpdatedIcon from './DeploymentUpdatedIcon';
 import ExecutionProgress from './ExecutionProgress';
 import DeploymentsViewPropTypes from './props/DeploymentsViewPropTypes';
 import DeploymentsViewDefaultProps from './props/DeploymentsViewDefaultProps';
 
 export default function DeploymentsSegment({
-    allowedSettingTo,
     data,
     fetchData,
     noDataMessage,

@@ -20,16 +20,6 @@ function PasswordModal({ onHide, open, manager, username }) {
         }
     }, [open]);
 
-    const onApprove = () => {
-        submitPassword();
-        return false;
-    };
-
-    const onCancel = () => {
-        onHide();
-        return true;
-    };
-
     const submitPassword = () => {
         const errorsFound = {};
 
@@ -61,6 +51,16 @@ function PasswordModal({ onHide, open, manager, username }) {
             })
             .catch(err => setErrors({ error: err.message }))
             .finally(() => setLoading(false));
+    };
+
+    const onApprove = () => {
+        submitPassword();
+        return false;
+    };
+
+    const onCancel = () => {
+        onHide();
+        return true;
     };
 
     return (

@@ -19,7 +19,7 @@ export default function PluginsCatalogModal({ actions, onSuccess, onHide, open, 
             .then(() => {
                 toolbox.getEventBus().trigger('plugins:refresh');
                 onHide();
-                onSuccess(`${plugin.title} Successfully uploaded`);
+                onSuccess(`${plugin.title} successfully uploaded`);
             })
             .catch(err => setError(err.message))
             .finally(unsetLoading);

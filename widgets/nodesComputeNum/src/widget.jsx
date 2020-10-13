@@ -17,7 +17,7 @@ Stage.defineWidget({
     initialConfiguration: [Stage.GenericConfig.POLLING_TIME_CONFIG(30)],
     fetchUrl: '[manager]/summary/node_instances?_target_field=host_id&state=started',
 
-    render(widget, data, error, toolbox) {
+    render(widget, data) {
         const { Loading } = Stage.Basic;
 
         if (_.isEmpty(data)) {

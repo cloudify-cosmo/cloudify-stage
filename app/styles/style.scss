@@ -188,9 +188,10 @@ a:hover {
     top: 40%;
 }
 
-.pageMenuItem:hover .pageRemoveButton{
+.pageMenuItem:hover .pageRemoveButton {
   display:block;
   visibility: visible;
+  text-decoration: none;
 }
 
 .pages {

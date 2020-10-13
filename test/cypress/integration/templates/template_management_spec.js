@@ -1,5 +1,5 @@
 describe('Template Management', () => {
-    const tenants = ['T1', 'T2', 'T3'];
+    const testTenants = ['T1', 'T2', 'T3'];
     const password = 'cypress';
     const defaultUser = {
         username: 'default',
@@ -47,12 +47,12 @@ describe('Template Management', () => {
 
         cy.get(`${templateRow} > :nth-child(1)`).click();
         cy.get('.horizontal > :nth-child(1)').within(() => {
-            for (let i = 0; i < pages.length; i++) {
+            for (let i = 0; i < pages.length; i += 1) {
                 cy.get(`.divided > :nth-child(${i + 1})`).should('have.text', pages[i]);
             }
         });
         cy.get('.horizontal > :nth-child(3)').within(() => {
-            for (let i = 0; i < tenants.length; i++) {
+            for (let i = 0; i < tenants.length; i += 1) {
                 cy.get(`.divided > :nth-child(${i + 1})`).should('have.text', tenants[i]);
             }
         });
@@ -82,7 +82,7 @@ describe('Template Management', () => {
             .removeUserTemplates();
 
         cy.log('Create tenants');
-        tenants.forEach(cy.addTenant);
+        testTenants.forEach(cy.addTenant);
 
         cy.log('Create users and add them to tenants');
         users.forEach(user => {
@@ -105,7 +105,7 @@ describe('Template Management', () => {
 
         cy.location('pathname').should('be.equal', '/console/template_management');
 
-        for (let i = 0; i < builtInTemplates.length; i++) {
+        for (let i = 0; i < builtInTemplates.length; i += 1) {
             verifyTemplateRow(
                 i + 1,
                 builtInTemplates[i].id,
@@ -115,7 +115,7 @@ describe('Template Management', () => {
             );
         }
 
-        for (let i = 0; i < builtInPages.length; i++) {
+        for (let i = 0; i < builtInPages.length; i += 1) {
             verifyPageRow(i + 1, builtInPages[i].id, builtInPages[i].name);
         }
     });

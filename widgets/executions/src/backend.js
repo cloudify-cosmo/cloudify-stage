@@ -106,60 +106,6 @@ module.exports = r => {
         const textSizingFactor = 5.8;
         const textHeight = 18;
 
-        const runGraphCreation = () => {
-            const tasksGraphParams = { ...req.query };
-            const headers = _.pick(req.headers, 'authentication-token', 'tenant');
-
-            const operationsList = [];
-            helper.Manager.doGet(tasksGraphsFetchUrl, tasksGraphParams, headers)
-                .then(data => {
-                    const { items } = data;
-
-                    if (_.isEmpty(items)) {
-                        const message = `No tasks graph for execution id=${tasksGraphParams.execution_id}.`;
-                        logger.info(message);
-                        res.status(404).send({ message });
-                        return;
-                    }
-
-                    const operationsPromises = _.map(items, graph =>
-                        helper.Manager.doGet(operationsFetchUrl, { graph_id: graph.id }, headers)
-                    );
-
-                    Promise.all(operationsPromises)
-                        .then(results => {
-                            _.map(results[0].items, item => {
-                                operationsList.push(item);
-                            });
-                            return operationsList;
-                        })
-                        .then(operationsList => {
-                            // Constructing SubGraphs
-                            let allSubgraphs = constructSubgraphs(operationsList);
-                            // Constructing Dependencies
-                            allSubgraphs = constructDependencies(operationsList, allSubgraphs);
-                            // Increase the Node's rectangle height based on inner texts
-                            allSubgraphs = adjustingNodeSizes(allSubgraphs);
-                            // Remove LocalWorkflow & NOPWorkflowTasks from the graph while keeping it connected
-                            allSubgraphs = cleanSubgraphsList(allSubgraphs);
-                            // Creating the ELK-formatted graph
-                            return createELKTasksGraphs(allSubgraphs);
-                        })
-                        .then(tasksGraph => {
-                            elk.layout(tasksGraph).then(elkGraph => {
-                                res.send(elkGraph);
-                            });
-                        })
-                        .catch(error => {
-                            logger.error(error);
-                            next(error);
-                        });
-                })
-                .catch(error => {
-                    logger.error(error);
-                    next(error);
-                });
-        };
         const constructSubgraphs = operationsList => {
             // All the subgraphs and leaves are in the same list for better time-complexity performance, meaning -
             // For every subgraph - instead of traversing its children until we find the desired subgraph/leaf, we simply
@@ -190,16 +136,16 @@ module.exports = r => {
                             type: task.type,
                             state: _.upperFirst(task.state),
                             operation: taskOperation,
-                            display_text: ''
+                            displayText: ''
                         }
                     ],
                     nodeInstanceId: cloudifyContext.node_id,
                     operation: _.get(cloudifyContext.operation, 'name'),
                     children: [],
                     edges: [],
-                    containing_subgraph: null // Needed to distinguish which nodes to keep (=not null -> not root-level subgraphs -> will be removed)
+                    containingSubgraph: null // Needed to distinguish which nodes to keep (=not null -> not root-level subgraphs -> will be removed)
                 };
-                if (!allSubgraphs.hasOwnProperty(task.id)) {
+                if (!Object.prototype.hasOwnProperty.call(allSubgraphs, task.id)) {
                     allSubgraphs[task.id] = subGraph;
                 } else {
                     allSubgraphs[task.id].labels[0].text = taskName;
@@ -210,23 +156,23 @@ module.exports = r => {
                 if (task.parameters.containing_subgraph) {
                     // Task is inside a Subgraph (could be subgraph in subgraph)
                     // Need to create its parent and update self as its child
-                    const { containing_subgraph } = task.parameters;
-                    subGraph.containing_subgraph = containing_subgraph;
-                    if (!allSubgraphs.hasOwnProperty(containing_subgraph)) {
+                    const { containing_subgraph: containingSubgraph } = task.parameters;
+                    subGraph.containingSubgraph = containingSubgraph;
+                    if (!Object.prototype.hasOwnProperty.call(allSubgraphs, containingSubgraph)) {
                         // Parent does not exist - creating parent skeleton to be filled later
                         const parentGraph = {
-                            id: containing_subgraph,
+                            id: containingSubgraph,
                             labels: [{ state: null }],
                             children: [subGraph],
                             edges: [],
-                            containing_subgraph: null
+                            containingSubgraph: null
                         };
-                        allSubgraphs[containing_subgraph] = parentGraph;
+                        allSubgraphs[containingSubgraph] = parentGraph;
                     } else {
                         // parentGraph already exists - only update its children and its child that its contained in it
-                        allSubgraphs[containing_subgraph].children.push(subGraph);
-                        allSubgraphs[containing_subgraph].labels[0].state = null;
-                        allSubgraphs[task.id].containing_subgraph = containing_subgraph;
+                        allSubgraphs[containingSubgraph].children.push(subGraph);
+                        allSubgraphs[containingSubgraph].labels[0].state = null;
+                        allSubgraphs[task.id].containingSubgraph = containingSubgraph;
                     }
                 }
             });
@@ -240,7 +186,7 @@ module.exports = r => {
                 if (task.parameters.current_retries > 0) {
                     allSubgraphs[task.id].labels[0].retry = task.parameters.current_retries;
                 }
-                if (allSubgraphs[task.id].containing_subgraph) {
+                if (allSubgraphs[task.id].containingSubgraph) {
                     allSubgraphs[task.id].width = 270;
                     allSubgraphs[task.id].height = 40;
                 }
@@ -257,11 +203,11 @@ module.exports = r => {
                         edge.id = `${task.id}_${dependantTask.id}`;
                         edge.sources.push(task.id);
                         edge.targets.push(dependantTask.id);
-                        const { containing_subgraph } = allSubgraphs[task.id];
-                        if (containing_subgraph === null) {
+                        const { containingSubgraph } = allSubgraphs[task.id];
+                        if (containingSubgraph === null) {
                             allSubgraphs.edges.push(edge);
                         } else {
-                            allSubgraphs[containing_subgraph].edges.push(edge);
+                            allSubgraphs[containingSubgraph].edges.push(edge);
                         }
                     }
                 });
@@ -275,6 +221,7 @@ module.exports = r => {
             _.map(allSubgraphs, subGraph => {
                 if (subGraph.children && subGraph.children.length > 0) {
                     // Go through all the subgraphs
+                    // eslint-disable-next-line consistent-return
                     subGraph.children = _.map(subGraph.children, workflowTask => {
                         // For each subgraph, go through all the tasks
                         if (
@@ -290,6 +237,7 @@ module.exports = r => {
                             // Need to go through the array twice because the
                             // update of the rest of the edges must be after all the
                             // "Node to remove"'s edges have been scanned
+                            // eslint-disable-next-line consistent-return
                             subGraph.edges = _.map(subGraph.edges, edge => {
                                 const sourceNode = edge.sources[0];
                                 const targetNode = edge.targets[0];
@@ -301,8 +249,8 @@ module.exports = r => {
                                         // If a task is retrying - delete it and combine it with its father
                                         allSubgraphs[sourceNode].labels[0].retry = workflowTask.labels[0].retry;
                                         allSubgraphs[sourceNode].labels[0].state = workflowTask.labels[0].state;
-                                        allSubgraphs[sourceNode].labels[0].display_text =
-                                            workflowTask.labels[0].display_text;
+                                        allSubgraphs[sourceNode].labels[0].displayText =
+                                            workflowTask.labels[0].displayText;
                                     }
                                 } else {
                                     return edge;
@@ -338,7 +286,7 @@ module.exports = r => {
                 if (textToCalculate.length > maximumLength) {
                     let indexOfSplitLocation;
                     // Traversing the splitting location backwards to find the beginning of the word
-                    for (indexOfSplitLocation = maximumLength; indexOfSplitLocation >= 0; indexOfSplitLocation--) {
+                    for (indexOfSplitLocation = maximumLength; indexOfSplitLocation >= 0; indexOfSplitLocation -= 1) {
                         if (textToCalculate[indexOfSplitLocation] === ' ') {
                             break;
                         }
@@ -353,7 +301,7 @@ module.exports = r => {
                 return [textToCalculate];
             };
             _.map(allSubgraphs, subGraph => {
-                if (subGraph.containing_subgraph !== null && subGraph.labels) {
+                if (subGraph.containingSubgraph !== null && subGraph.labels) {
                     subGraph.labels[0].text = _.capitalize(_.lowerCase(subGraph.labels[0].text));
                 }
                 if (subGraph.children && subGraph.children.length !== 0) {
@@ -368,7 +316,7 @@ module.exports = r => {
                         textToCalculate = labels.text;
                         textToCalculate = textSplitCalculation(subGraph.width, textToCalculate);
                         // Each element in the resulting array will be rendered in a separate <text> element
-                        labels.display_title = textToCalculate;
+                        labels.displayTitle = textToCalculate;
                         numberOfSplits += textToCalculate.length - 1;
                     }
                     // Description text
@@ -384,7 +332,7 @@ module.exports = r => {
                     textToCalculate = tempArr.join(' - ');
                     textToCalculate = textSplitCalculation(subGraph.width, textToCalculate);
                     // Each element in the resulting array will be rendered in a separate <text> element
-                    labels.display_text = textToCalculate;
+                    labels.displayText = textToCalculate;
                     numberOfSplits += textToCalculate.length - 1;
                     if (numberOfSplits > 0) {
                         subGraph.height += textHeight * numberOfSplits;
@@ -394,10 +342,11 @@ module.exports = r => {
             });
             return allSubgraphs;
         };
-        const cleanSubgraphsList = allSubgraphs => {
+        const cleanSubgraphsList = subgraphs => {
             // Removing irrelevant vertices (when a task is rescheduled due to failure mostly)
-            allSubgraphs = safeDeleteIrrelevantGraphVertices(allSubgraphs);
+            let allSubgraphs = safeDeleteIrrelevantGraphVertices(subgraphs);
             // Removing subgraphs with 0 children
+            // eslint-disable-next-line consistent-return
             allSubgraphs = _.omitBy(allSubgraphs, subGraph => {
                 if (
                     _.isEmpty(subGraph.children) &&
@@ -405,19 +354,21 @@ module.exports = r => {
                     subGraph.labels[0].type === subgraphTask
                 ) {
                     // Verify the subGraph doesn't have connected edges
-                    if (subGraph.containing_subgraph !== null) {
-                        let i = allSubgraphs[subGraph.containing_subgraph].edges.length;
-                        while (i--) {
+                    if (subGraph.containingSubgraph !== null) {
+                        let i = allSubgraphs[subGraph.containingSubgraph].edges.length;
+                        while (i) {
+                            i -= 1;
                             if (
-                                allSubgraphs[subGraph.containing_subgraph].edges[i].sources.indexOf(subGraph.id) > -1 ||
-                                allSubgraphs[subGraph.containing_subgraph].edges[i].targets.indexOf(subGraph.id) > -1
+                                allSubgraphs[subGraph.containingSubgraph].edges[i].sources.indexOf(subGraph.id) > -1 ||
+                                allSubgraphs[subGraph.containingSubgraph].edges[i].targets.indexOf(subGraph.id) > -1
                             ) {
-                                allSubgraphs[subGraph.containing_subgraph].edges.splice(i, 1);
+                                allSubgraphs[subGraph.containingSubgraph].edges.splice(i, 1);
                             }
                         }
                     } else {
                         let i = allSubgraphs.edges.length;
-                        while (i--) {
+                        while (i) {
+                            i -= 1;
                             if (
                                 allSubgraphs.edges[i].sources.indexOf(subGraph.id) > -1 ||
                                 allSubgraphs.edges[i].targets.indexOf(subGraph.id) > -1
@@ -431,19 +382,75 @@ module.exports = r => {
             });
             allSubgraphs = _.omitBy(allSubgraphs, subGraph => {
                 // Return all the nodes that are root-level subgraphs
-                const { containing_subgraph } = subGraph;
-                delete subGraph.containing_subgraph;
-                return containing_subgraph;
+                const { containingSubgraph } = subGraph;
+                delete subGraph.containingSubgraph;
+                return containingSubgraph;
             });
             return allSubgraphs;
         };
-        const createELKTasksGraphs = allSubgraphs => {
+        const createELKTasksGraphs = subgraphs => {
+            let allSubgraphs = subgraphs;
             tasksGraph.edges = allSubgraphs.edges;
             allSubgraphs = _.omit(allSubgraphs, ['edges']);
             _.map(allSubgraphs, subGraph => {
                 tasksGraph.children.push(subGraph);
             });
             return tasksGraph;
+        };
+        const runGraphCreation = () => {
+            const tasksGraphParams = { ...req.query };
+            const headers = _.pick(req.headers, 'authentication-token', 'tenant');
+
+            const operationsList = [];
+            helper.Manager.doGet(tasksGraphsFetchUrl, tasksGraphParams, headers)
+                .then(data => {
+                    const { items } = data;
+
+                    if (_.isEmpty(items)) {
+                        const message = `No tasks graph for execution id=${tasksGraphParams.execution_id}.`;
+                        logger.info(message);
+                        res.status(404).send({ message });
+                        return;
+                    }
+
+                    const operationsPromises = _.map(items, graph =>
+                        // eslint-disable-next-line camelcase
+                        helper.Manager.doGet(operationsFetchUrl, { graph_id: graph.id }, headers)
+                    );
+
+                    Promise.all(operationsPromises)
+                        .then(results => {
+                            _.map(results[0].items, item => {
+                                operationsList.push(item);
+                            });
+                            return operationsList;
+                        })
+                        .then(list => {
+                            // Constructing SubGraphs
+                            let allSubgraphs = constructSubgraphs(list);
+                            // Constructing Dependencies
+                            allSubgraphs = constructDependencies(list, allSubgraphs);
+                            // Increase the Node's rectangle height based on inner texts
+                            allSubgraphs = adjustingNodeSizes(allSubgraphs);
+                            // Remove LocalWorkflow & NOPWorkflowTasks from the graph while keeping it connected
+                            allSubgraphs = cleanSubgraphsList(allSubgraphs);
+                            // Creating the ELK-formatted graph
+                            return createELKTasksGraphs(allSubgraphs);
+                        })
+                        .then(graphs => {
+                            elk.layout(graphs).then(elkGraph => {
+                                res.send(elkGraph);
+                            });
+                        })
+                        .catch(error => {
+                            logger.error(error);
+                            next(error);
+                        });
+                })
+                .catch(error => {
+                    logger.error(error);
+                    next(error);
+                });
         };
 
         runGraphCreation();

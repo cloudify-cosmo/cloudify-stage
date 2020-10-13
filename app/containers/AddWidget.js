@@ -2,7 +2,6 @@
  * Created by kinneretzin on 08/09/2016.
  */
 
-import React from 'react';
 import { connect } from 'react-redux';
 import { checkIfWidgetIsUsed, installWidget, uninstallWidget, updateWidgetDefinition } from '../actions/widgets';
 import AddWidgetModal from '../components/AddWidgetModal';
@@ -25,7 +24,7 @@ const mapStateToProps = (state, ownProps) => {
     };
 };
 
-const mapDispatchToProps = (dispatch, ownProps) => {
+const mapDispatchToProps = dispatch => {
     return {
         onWidgetInstalled: (widgetFile, widgetUrl) => {
             return dispatch(installWidget(widgetFile, widgetUrl));

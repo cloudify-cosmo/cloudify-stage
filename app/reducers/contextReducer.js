@@ -5,9 +5,10 @@
 import * as types from '../actions/types';
 
 const context = (state = {}, action) => {
+    let newState;
     switch (action.type) {
         case types.SET_CONTEXT_VALUE:
-            var newState = { ...state };
+            newState = { ...state };
             newState[action.key] = action.value;
             return newState;
         case types.CLEAR_CONTEXT:

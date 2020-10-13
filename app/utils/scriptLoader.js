@@ -11,7 +11,7 @@ export default class ScriptLoader {
     }
 
     load(id, rejectOnError) {
-        console.log(`Loading javascript from ${this.path}...`);
+        log.log(`Loading javascript from ${this.path}...`);
 
         const scriptLoader = this;
         return new Promise((resolve, reject) => {
@@ -22,7 +22,7 @@ export default class ScriptLoader {
                 scriptObj.setAttribute('id', id);
             }
             scriptObj.onload = () => {
-                console.log(this.path, 'loaded');
+                log.log(this.path, 'loaded');
                 scriptLoader.loaded = true;
                 resolve();
             };
@@ -30,7 +30,7 @@ export default class ScriptLoader {
                 if (rejectOnError) {
                     reject(`Error loading ${this.path}`);
                 } else {
-                    console.error(`Error loading ${this.path}`);
+                    log.error(`Error loading ${this.path}`);
                     resolve({ error: `Error loading ${this.path}` });
                 }
             };

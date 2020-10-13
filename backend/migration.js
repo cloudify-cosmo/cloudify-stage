@@ -33,8 +33,8 @@ const umzug = new Umzug({
         pattern: /\.js$/
     },
 
-    logging() {
-        logger.info.apply(logger, arguments);
+    logging(...args) {
+        logger.info(args);
     }
 });
 
@@ -59,9 +59,8 @@ function cmdStatus() {
             result.pending = pending;
             return result;
         })
-        .then(result => {
-            let { executed } = result;
-            let { pending } = result;
+        .then(res => {
+            let { executed, pending } = res;
 
             executed = executed.map(m => {
                 m.name = path.basename(m.file, '.js');
@@ -144,6 +143,7 @@ function cmdClear() {
 
 function handleCommand(cmd) {
     let executedCmd;
+    let downToMigration;
 
     logger.info(`${cmd.toUpperCase()} BEGIN`);
 
@@ -158,7 +158,7 @@ function handleCommand(cmd) {
             break;
 
         case 'downTo':
-            const downToMigration = process.argv[3].trim();
+            downToMigration = process.argv[3].trim();
             executedCmd = cmdDownTo(downToMigration);
             break;
 
@@ -174,7 +174,7 @@ function handleCommand(cmd) {
     }
 
     executedCmd
-        .then(result => {
+        .then(() => {
             const doneStr = `${cmd.toUpperCase()} DONE`;
             logger.info(doneStr);
             logger.info('='.repeat(doneStr.length));
@@ -201,6 +201,7 @@ const cmd = process.argv[2].trim();
 // Make an exception because we dont want all the printout around it
 if (cmd === 'current') {
     getCurrMigration().then(current => {
+        // eslint-disable-next-line no-console
         console.log(current);
         process.exit(0);
     });

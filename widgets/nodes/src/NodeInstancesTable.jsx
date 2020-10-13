@@ -45,7 +45,7 @@ export default class NodeInstancesTable extends React.Component {
     }
 
     render() {
-        const { instance, showModal } = this.state;
+        const { instance: selectedInstance, showModal } = this.state;
         const { instances, widget } = this.props;
         const NO_DATA_MESSAGE = 'There are no Node Instances of selected Node available.';
         const { CopyToClipboardButton, DataTable, Icon } = Stage.Basic;
@@ -85,7 +85,12 @@ export default class NodeInstancesTable extends React.Component {
                     })}
                 </DataTable>
 
-                <InstanceModal open={showModal} onClose={this.closeInstanceModal} widget={widget} instance={instance} />
+                <InstanceModal
+                    open={showModal}
+                    onClose={this.closeInstanceModal}
+                    widget={widget}
+                    instance={selectedInstance}
+                />
             </div>
         );
     }
