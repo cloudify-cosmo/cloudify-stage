@@ -111,11 +111,13 @@ export default function ValidateAgentsModal({
         setInputValues({ ...inputValues, ...Stage.Basic.Form.fieldNameValue(field) });
     }
 
+    if (!open) return null;
+
     const { ApproveButton, Button, CancelButton, Form, Icon, Message, Modal } = Stage.Basic;
     const { NodeFilter } = Stage.Common;
 
     return (
-        <Modal open={open} onClose={() => onHide()}>
+        <Modal open onClose={() => onHide()}>
             <Modal.Header>
                 <Icon name="checkmark" /> Validate agents
             </Modal.Header>
