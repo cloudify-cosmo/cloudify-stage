@@ -18,6 +18,55 @@ const browseSourcesDir = pathlib.join(os.tmpdir(), config.app.source.browseSourc
 const lookupYamlsDir = pathlib.join(os.tmpdir(), config.app.source.lookupYamlsDir);
 
 module.exports = (() => {
+    function isUnixHiddenPath(path) {
+        // eslint-disable-next-line no-useless-escape
+        return /(^|.\/)\.+[^\/\.]/g.test(path);
+    }
+
+    function scanRecursive(root, archivePath) {
+        const stats = fs.statSync(archivePath);
+        const name = pathlib.basename(archivePath);
+
+        if (stats.isSymbolicLink() || isUnixHiddenPath(name)) {
+            return null;
+        }
+
+        const item = {
+            key: archivePath.replace(pathlib.join(root, pathlib.sep), ''),
+            title: name,
+            isDir: false
+        };
+
+        if (stats.isFile()) {
+            return item;
+        }
+        if (stats.isDirectory()) {
+            try {
+                const children = fs
+                    .readdirSync(archivePath)
+                    .map(child => scanRecursive(root, pathlib.join(archivePath, child)))
+                    .filter(e => !!e);
+
+                item.isDir = true;
+                item.children = _.sortBy(children, i => !i.isDir);
+
+                return item;
+            } catch (ex) {
+                if (ex.code === 'EACCES') {
+                    logger.debug('cannot access directory, ignoring');
+                }
+                return null;
+            }
+        } else {
+            return null;
+        }
+    }
+
+    function scanArchive(archivePath) {
+        logger.debug('scaning archive', archivePath);
+        return scanRecursive(browseSourcesDir, archivePath);
+    }
+
     function browseArchiveTree(req) {
         const archiveUrl = `/blueprints/${req.params.blueprintId}/archive`;
         logger.debug('download archive from url', archiveUrl);
@@ -33,25 +82,19 @@ module.exports = (() => {
             });
     }
 
+    function checkPrefix(absCandidate, absPrefix) {
+        return absCandidate.substring(0, absPrefix.length) === absPrefix;
+    }
+
     function browseArchiveFile(path) {
         return new Promise((resolve, reject) => {
             const absolutePath = pathlib.resolve(browseSourcesDir, path);
             if (!checkPrefix(absolutePath, browseSourcesDir)) {
-                return reject('Wrong path');
+                reject('Wrong path');
+            } else {
+                fs.readFile(absolutePath, 'utf-8', (err, data) => (err ? reject(err) : resolve(data)));
             }
-
-            fs.readFile(absolutePath, 'utf-8', (err, data) => {
-                if (err) {
-                    return reject(err);
-                }
-
-                resolve(data);
-            });
         });
-    }
-
-    function checkPrefix(absCandidate, absPrefix) {
-        return absCandidate.substring(0, absPrefix.length) === absPrefix;
     }
 
     function saveMultipartData(req) {
@@ -102,18 +145,18 @@ module.exports = (() => {
         return _.chain(imports)
             .filter(imp => String(imp).match(PLUGIN_KEYWORD))
             .map(plugin => {
-                const [package_name, pluginQueryString] = _.chain(plugin)
+                const [packageName, pluginQueryString] = _.chain(plugin)
                     .replace(PLUGIN_KEYWORD, '')
                     .split('?')
                     .value();
 
                 const params = Utils.getParams(pluginQueryString);
-                const pluginObject = { package_name, params };
+                const pluginObject = { packageName, params };
 
                 return pluginObject;
             })
             .reduce((result, pluginObject) => {
-                result[pluginObject.package_name] = _.omit(pluginObject, 'package_name');
+                result[pluginObject.packageName] = _.omit(pluginObject, 'packageName');
                 return result;
             }, {})
             .value();
@@ -151,7 +194,7 @@ module.exports = (() => {
             return ArchiveHelper.removeOldExtracts(lookupYamlsDir)
                 .then(() => {
                     if (_.isEmpty(archiveFile)) {
-                        throw 'No archive file provided';
+                        throw new Error('No archive file provided');
                     } else {
                         const archivePath = pathlib.join(archiveFolder, archiveFile);
                         const archiveExtension = pathlib.parse(archiveFile).ext; // file extension
@@ -184,19 +227,6 @@ module.exports = (() => {
             }));
     }
 
-    function listYamlFiles(request) {
-        const { query } = request;
-        const includeFilename = query.includeFilename === 'true';
-        let archiveFileName = '';
-
-        return getBlueprintArchiveContent(request)
-            .then(data => {
-                archiveFileName = data.archiveFileName;
-                return scanYamlFiles(data.extractedDir);
-            })
-            .then(data => (includeFilename ? [archiveFileName, ...data] : data));
-    }
-
     function scanYamlFiles(extractedDir) {
         logger.debug('scaning yaml files from', extractedDir);
 
@@ -211,52 +241,17 @@ module.exports = (() => {
         return Promise.resolve(items);
     }
 
-    function scanArchive(archivePath) {
-        logger.debug('scaning archive', archivePath);
-        return scanRecursive(browseSourcesDir, archivePath);
-    }
+    function listYamlFiles(request) {
+        const { query } = request;
+        const includeFilename = query.includeFilename === 'true';
+        let archiveFileName = '';
 
-    function isUnixHiddenPath(path) {
-        return /(^|.\/)\.+[^\/\.]/g.test(path);
-    }
-
-    function scanRecursive(root, archivePath) {
-        const stats = fs.statSync(archivePath);
-        const name = pathlib.basename(archivePath);
-
-        if (stats.isSymbolicLink() || isUnixHiddenPath(name)) {
-            return null;
-        }
-
-        const item = {
-            key: archivePath.replace(pathlib.join(root, pathlib.sep), ''),
-            title: name,
-            isDir: false
-        };
-
-        if (stats.isFile()) {
-            return item;
-        }
-        if (stats.isDirectory()) {
-            try {
-                const children = fs
-                    .readdirSync(archivePath)
-                    .map(child => scanRecursive(root, pathlib.join(archivePath, child)))
-                    .filter(e => !!e);
-
-                item.isDir = true;
-                item.children = _.sortBy(children, i => !i.isDir);
-
-                return item;
-            } catch (ex) {
-                if (ex.code === 'EACCES') {
-                    // User does not have permissions, ignore directory
-                    return null;
-                }
-            }
-        } else {
-            return null;
-        }
+        return getBlueprintArchiveContent(request)
+            .then(data => {
+                archiveFileName = data.archiveFileName;
+                return scanYamlFiles(data.extractedDir);
+            })
+            .then(data => (includeFilename ? [archiveFileName, ...data] : data));
     }
 
     return {

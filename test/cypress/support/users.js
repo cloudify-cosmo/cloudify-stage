@@ -6,7 +6,7 @@ Cypress.Commands.add('addTenant', tenant => cy.cfyRequest(`/tenants/${tenant}`, 
 
 Cypress.Commands.add('deleteTenant', tenant => {
     if (tenant !== 'default_tenant') {
-        return cy.cfyRequest(`/tenants/${tenant}`, 'DELETE');
+        cy.cfyRequest(`/tenants/${tenant}`, 'DELETE');
     }
 });
 
@@ -28,7 +28,7 @@ Cypress.Commands.add('addUserToTenant', (username, tenant, role) =>
 
 Cypress.Commands.add('removeUserFromTenant', (username, tenant) => {
     if (tenant !== 'default_tenant' || !_.includes(builtInUsernames, username)) {
-        return cy.cfyRequest('/tenants/users', 'DELETE', null, {
+        cy.cfyRequest('/tenants/users', 'DELETE', null, {
             username,
             tenant_name: tenant
         });
@@ -37,22 +37,21 @@ Cypress.Commands.add('removeUserFromTenant', (username, tenant) => {
 
 Cypress.Commands.add('deleteUser', username => {
     if (!_.includes(builtInUsernames, username)) {
-        return cy.cfyRequest(`/users/${username}`, 'DELETE');
+        cy.cfyRequest(`/users/${username}`, 'DELETE');
     }
 });
 
 Cypress.Commands.add('deleteAllUsersAndTenants', () => {
     cy.cfyRequest('/users?_get_data=true').then(response => {
-        for (const user of response.body.items) {
-            for (const tenant of Object.keys(user.tenants)) {
-                cy.removeUserFromTenant(user.username, tenant);
-            }
+        const users = response.body.items;
+        users.forEach(user => {
+            const tenants = Object.keys(user.tenants);
+            tenants.forEach(tenant => cy.removeUserFromTenant(user.username, tenant));
             cy.deleteUser(user.username);
-        }
-        cy.cfyRequest('/tenants?_include=name').then(response => {
-            for (const tenant of response.body.items) {
-                cy.deleteTenant(tenant.name);
-            }
+        });
+        cy.cfyRequest('/tenants?_include=name').then(tenantsResponse => {
+            const tenants = tenantsResponse.body.items;
+            tenants.forEach(tenant => cy.deleteTenant(tenant.name));
         });
     });
 });

@@ -34,12 +34,14 @@ export default class WidgetParamsHandler {
         // If user stated params, replace the grid params and pick the ones we need from the real params
         if (!_.isEmpty(userRequestedParams)) {
             // If user stated he wanted gridParams, then add the grid params fields
-            userRequestedParams = _.replace(userRequestedParams, 'gridParams', '_sort,_size,_offset,_search').split(
-                ','
-            );
+            const userParamsResolved = _.replace(
+                userRequestedParams,
+                'gridParams',
+                '_sort,_size,_offset,_search'
+            ).split(',');
 
             // Pick only the values that the user asked for
-            params = _.pick(params, userRequestedParams);
+            params = _.pick(params, userParamsResolved);
         }
 
         return params;
@@ -64,7 +66,7 @@ export default class WidgetParamsHandler {
             try {
                 this.fetchParams.filterParams = this.widget.definition.fetchParams(this.widget, this.toolbox);
             } catch (e) {
-                console.error('Error processing fetch params', e);
+                log.error('Error processing fetch params', e);
                 throw new Error('Error processing fetch params', e);
             }
         }
@@ -93,7 +95,7 @@ export default class WidgetParamsHandler {
             try {
                 params = this.widget.definition.mapGridParams(this.fetchParams.gridParams);
             } catch (e) {
-                console.error('Error processing match grid params', e);
+                log.error('Error processing match grid params', e);
                 throw new Error('Error processing match grid params', e);
             }
         } else {

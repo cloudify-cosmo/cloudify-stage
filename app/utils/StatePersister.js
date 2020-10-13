@@ -10,7 +10,7 @@ export default class StatePersister {
             });
             localStorage.setItem(`state-${mode}`, sState);
         } catch (e) {
-            console.error(e);
+            log.error(e);
         }
     }
 
@@ -26,7 +26,7 @@ export default class StatePersister {
                 manager: state.manager
             };
         } catch (e) {
-            console.error(e);
+            log.error(e);
             return undefined;
         }
     }

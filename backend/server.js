@@ -8,7 +8,6 @@ const express = require('express');
 const passport = require('passport');
 const cookieParser = require('cookie-parser');
 const morgan = require('morgan');
-const _ = require('lodash');
 
 const config = require('./config');
 const Consts = require('./consts');
@@ -137,6 +136,7 @@ app.use(`${contextPath}/maps`, Maps);
 
 // Redirect URLs with old context path (/stage)
 app.use([oldContextPath, `${oldContextPath}/*`], (request, response) => {
+    // eslint-disable-next-line security/detect-non-literal-regexp
     const pathWithoutOldContextPath = request.originalUrl.replace(new RegExp(`^${oldContextPath}`), '');
     const redirectUrl = `${contextPath}${pathWithoutOldContextPath}`;
     logger.info(`Old base url detected: "${request.originalUrl}". Redirecting to "${redirectUrl}".`);
@@ -151,8 +151,9 @@ app.get('*', (request, response) => {
 });
 
 // Error handling
+// eslint-disable-next-line no-unused-vars
 app.use((err, req, res, next) => {
-    logger.error('Error has occured ', err);
+    logger.error('Error has occured ', JSON.stringify(err));
 
     let { message } = err;
     if (err.status === 500) {

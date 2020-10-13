@@ -3,8 +3,7 @@
  */
 
 import React from 'react';
-import { shallow, mount } from 'enzyme';
-import sinon from 'sinon';
+import { shallow } from 'enzyme';
 
 import Grid from 'components/layout/Grid';
 import GridItem from 'components/layout/GridItem';
@@ -20,10 +19,12 @@ describe('(Component) Grid ', () => {
         expect(wrapper).toHaveLength(1);
     }
 
+    // eslint-disable-next-line jest/expect-expect
     it('Renders Non-Edit mode', () => {
         testGridRender(false);
     });
 
+    // eslint-disable-next-line jest/expect-expect
     it('Renders Edit mode', () => {
         testGridRender(true);
     });

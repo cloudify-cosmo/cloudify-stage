@@ -245,7 +245,7 @@ export default class Graph extends Component {
                 }
 
                 _.each(chart.fieldNames, field => {
-                    const COLOR = COLORS[index++];
+                    const COLOR = COLORS[index];
                     chartElements.push(
                         <DrawingComponent
                             key={field}
@@ -259,10 +259,12 @@ export default class Graph extends Component {
                             dot={false}
                         />
                     );
+                    index += 1;
                 });
             } else {
-                const COLOR = COLORS[index++];
+                const COLOR = COLORS[index];
                 const STYLE = { stroke: COLOR };
+                index += 1;
 
                 const yaxisComponent = IS_KEY_TIME ? (
                     <YAxis

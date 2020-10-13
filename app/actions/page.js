@@ -108,6 +108,7 @@ export function selectPage(pageId, isDrilldown, drilldownContext, drilldownPageN
             dispatch(clearContext());
         } else {
             if (!_.isEmpty(drilldownPageName)) {
+                // eslint-disable-next-line scanjs-rules/assign_to_pathname
                 location.pathname += `/${drilldownPageName}`;
             }
             if (drilldownPageName || drilldownContext) {
@@ -120,6 +121,7 @@ export function selectPage(pageId, isDrilldown, drilldownContext, drilldownPageN
                 ];
             }
 
+            // eslint-disable-next-line scanjs-rules/assign_to_search
             location.search = stringify({ c: JSON.stringify(newDrilldownContext) });
         }
 
@@ -187,19 +189,17 @@ export function createPagesFromTemplate() {
 
         const internal = new Internal(manager);
         return internal.doGet('/templates/select', { tenant }).then(templateId => {
-            console.log('Selected template id', templateId);
+            log.log('Selected template id', templateId);
 
             const storeTemplates = getState().templates;
-            const { widgetDefinitions } = getState();
-
             const { pages } = storeTemplates.templatesDef[templateId];
 
-            console.log('Create pages from selected template', pages);
+            log.log('Create pages from selected template', pages);
 
             _.each(pages, id => {
                 const page = storeTemplates.pagesDef[id];
                 if (!page) {
-                    console.error(`Cannot find page template: ${id}. Skipping... `);
+                    log.error(`Cannot find page template: ${id}. Skipping... `);
                     return;
                 }
 

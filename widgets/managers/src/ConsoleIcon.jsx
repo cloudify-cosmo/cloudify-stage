@@ -3,10 +3,6 @@
  */
 
 export default class ConsoleIcon extends React.Component {
-    constructor(props, context) {
-        super(props, context);
-    }
-
     handleClick = event => {
         const { redirectToPage, url } = Stage.Utils.Url;
         const managerDefaultProtocol = 'https';

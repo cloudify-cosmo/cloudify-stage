@@ -6,7 +6,6 @@ import Internal from './Internal';
 import ScriptLoader from './scriptLoader';
 import StyleLoader from './StyleLoader';
 import 'd3';
-import momentImport from 'moment';
 
 import * as Basic from '../components/basic';
 import * as Shared from '../components/shared';
@@ -50,12 +49,10 @@ export default class WidgetDefinitionsLoader {
                 Stage.Hooks = { ...Stage.Hooks, ...def };
             }
         };
-
-        window.moment = momentImport;
     }
 
     static loadWidgets(manager) {
-        console.log('Load widgets');
+        log.log('Load widgets');
 
         const internal = new Internal(manager);
         return Promise.all([
@@ -79,7 +76,7 @@ export default class WidgetDefinitionsLoader {
     }
 
     static loadWidgetsResources(widgets) {
-        console.log('Load widgets resources');
+        log.log('Load widgets resources');
 
         const promises = [];
         widgetDefinitions.forEach(widgetDefinition => {
@@ -127,7 +124,7 @@ export default class WidgetDefinitionsLoader {
     }
 
     static initWidgets() {
-        console.log('Init widgets');
+        log.log('Init widgets');
 
         _.each(widgetDefinitions, w => {
             if (w.init && typeof w.init === 'function') {
@@ -146,7 +143,7 @@ export default class WidgetDefinitionsLoader {
             .then(widgets => WidgetDefinitionsLoader.loadWidgetsResources(widgets))
             .then(() => WidgetDefinitionsLoader.initWidgets())
             .catch(e => {
-                console.error(e);
+                log.error(e);
                 widgetDefinitions = []; // Clear for next time
             });
     }
@@ -155,10 +152,10 @@ export default class WidgetDefinitionsLoader {
         const internal = new Internal(manager);
 
         if (widgetUrl) {
-            console.log('Install widget from url', widgetUrl);
+            log.log('Install widget from url', widgetUrl);
             return internal.doPut('/widgets/install', { url: widgetUrl });
         }
-        console.log('Install widget from file');
+        log.log('Install widget from file');
         return internal.doUpload('/widgets/install', {}, { widget: widgetFile });
     }
 
@@ -166,10 +163,10 @@ export default class WidgetDefinitionsLoader {
         const internal = new Internal(manager);
 
         if (widgetUrl) {
-            console.log(`Update widget ${widgetId} from url`, widgetUrl);
+            log.log(`Update widget ${widgetId} from url`, widgetUrl);
             return internal.doPut('/widgets/update', { url: widgetUrl, id: widgetId });
         }
-        console.log(`Update widget ${widgetId} from file`);
+        log.log(`Update widget ${widgetId} from file`);
         return internal.doUpload('/widgets/update', { id: widgetId }, { widget: widgetFile });
     }
 
@@ -222,7 +219,7 @@ export default class WidgetDefinitionsLoader {
             .then(() => WidgetDefinitionsLoader.initWidgets())
             .catch(err => {
                 widgetDefinitions = []; // Clear for next time
-                console.error(err);
+                log.error(err);
                 throw err;
             });
     }
@@ -240,7 +237,7 @@ export default class WidgetDefinitionsLoader {
             .then(() => WidgetDefinitionsLoader.initWidgets())
             .catch(err => {
                 widgetDefinitions = []; // Clear for next time
-                console.error(err);
+                log.error(err);
                 throw err;
             });
     }

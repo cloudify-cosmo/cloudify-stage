@@ -10,22 +10,56 @@ import StepContentPropTypes from './StepContentPropTypes';
 
 const inputsStepId = 'inputs';
 
-class InputsStepActions extends React.Component {
-    static inputsDataPath = 'blueprint.inputs';
-
-    constructor(props) {
-        super(props);
+function InputStatus({ defaultValue }) {
+    if (_.isNil(defaultValue)) {
+        return (
+            <ResourceStatus
+                status={ResourceStatus.actionRequired}
+                text="Input has no default value defined. Please provide value."
+            />
+        );
     }
+    return (
+        <ResourceStatus
+            status={ResourceStatus.noActionRequired}
+            text="Input has default value defined. No action required."
+        />
+    );
+}
 
-    onNext = id => {
-        const { fetchData, onError, onLoading, onNext, wizardData } = this.props;
+InputStatus.propTypes = {
+    // eslint-disable-next-line react/forbid-prop-types
+    defaultValue: PropTypes.any
+};
+
+InputStatus.defaultProps = {
+    defaultValue: null
+};
+
+function InputsStepActions({
+    onClose,
+    onStartOver,
+    onPrev,
+    onNext,
+    onError,
+    onLoading,
+    onReady,
+    disabled,
+    showPrev,
+    fetchData,
+    wizardData,
+    toolbox,
+    id
+}) {
+    function handleNext(stepId) {
         const { InputsUtils } = Stage.Common;
+        const inputsDataPath = 'blueprint.inputs';
 
         return onLoading()
             .then(fetchData)
             .then(({ stepData }) => {
                 const inputsWithoutValues = {};
-                const blueprintInputsPlan = _.get(wizardData, InputsStepActions.inputsDataPath, {});
+                const blueprintInputsPlan = _.get(wizardData, inputsDataPath, {});
                 const deploymentInputs = InputsUtils.getInputsToSend(
                     blueprintInputsPlan,
                     stepData,
@@ -38,44 +72,28 @@ class InputsStepActions extends React.Component {
                         errors: inputsWithoutValues
                     });
                 }
-                return onNext(id, { inputs: { ...deploymentInputs } });
+                return onNext(stepId, { inputs: { ...deploymentInputs } });
             })
-            .catch(error => onError(id, error.message, error.errors));
-    };
-
-    render() {
-        const {
-            onClose,
-            onStartOver,
-            onPrev,
-            onError,
-            onLoading,
-            onReady,
-            disabled,
-            showPrev,
-            fetchData,
-            wizardData,
-            toolbox,
-            id
-        } = this.props;
-        return (
-            <StepActions
-                id={id}
-                onClose={onClose}
-                onStartOver={onStartOver}
-                onPrev={onPrev}
-                onError={onError}
-                onLoading={onLoading}
-                onReady={onReady}
-                disabled={disabled}
-                showPrev={showPrev}
-                fetchData={fetchData}
-                wizardData={wizardData}
-                toolbox={toolbox}
-                onNext={this.onNext}
-            />
-        );
+            .catch(error => onError(stepId, error.message, error.errors));
     }
+
+    return (
+        <StepActions
+            id={id}
+            onClose={onClose}
+            onStartOver={onStartOver}
+            onPrev={onPrev}
+            onError={onError}
+            onLoading={onLoading}
+            onReady={onReady}
+            disabled={disabled}
+            showPrev={showPrev}
+            fetchData={fetchData}
+            wizardData={wizardData}
+            toolbox={toolbox}
+            onNext={handleNext}
+        />
+    );
 }
 
 InputsStepActions.propTypes = StepActions.propTypes;
@@ -107,23 +125,6 @@ class InputsStepContent extends React.Component {
             return Stage.Common.InputsUtils.getInputFieldInitialValue(inputData.default, inputData.type, dataType);
         });
         onChange(id, { ...stepData });
-    }
-
-    getInputStatus(defaultValue) {
-        if (_.isNil(defaultValue)) {
-            return (
-                <ResourceStatus
-                    status={ResourceStatus.actionRequired}
-                    text="Input has no default value defined. Please provide value."
-                />
-            );
-        }
-        return (
-            <ResourceStatus
-                status={ResourceStatus.noActionRequired}
-                text="Input has default value defined. No action required."
-            />
-        );
     }
 
     handleYamlFileChange = file => {
@@ -209,7 +210,7 @@ class InputsStepContent extends React.Component {
                                                     <Form.Field key={inputName} help={help} label={inputName} />
                                                 </Table.Cell>
                                                 <Table.Cell collapsing>
-                                                    {this.getInputStatus(inputs[inputName].default)}
+                                                    <InputStatus defaultValue={inputs[inputName].default} />
                                                 </Table.Cell>
                                                 <Table.Cell>
                                                     {InputsUtils.getInputField(

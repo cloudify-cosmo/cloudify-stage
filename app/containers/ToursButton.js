@@ -6,13 +6,11 @@ import { connect } from 'react-redux';
 import ToursButton from '../components/ToursButton';
 import { startTour } from '../actions/tours';
 
-const mapStateToProps = (state, ownProps) => {
-    return {
-        tours: state.tours
-    };
-};
+const mapStateToProps = state => ({
+    tours: state.tours
+});
 
-const mapDispatchToProps = (dispatch, ownProps) => {
+const mapDispatchToProps = dispatch => {
     return {
         onTourStart: tour => dispatch(startTour(tour))
     };

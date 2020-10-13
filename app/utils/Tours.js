@@ -7,7 +7,7 @@ import Consts from './consts';
 
 export default class Tours {
     static load(manager) {
-        console.log('Load tours');
+        log.log('Load tours');
 
         const tenant = _.get(manager, 'tenants.selected', Consts.DEFAULT_ALL);
 
@@ -26,17 +26,21 @@ export default class Tours {
         hopscotchTour.skipIfNoElement = false;
         hopscotchTour.steps = _.map(hopscotchTour.steps, (step, index) => {
             const nextStep = hopscotchTour.steps[index + 1];
+            let newStep = step;
+
             if (!_.isUndefined(nextStep)) {
-                step.showCTAButton = true;
-                step.showNextButton = false;
-                step.ctaLabel = 'Next';
-                step.onCTA = ['redirectTo', nextStep.target];
-                if (!_.isUndefined(step.onNextRedirectTo)) {
-                    const [url, pageName, noTargetErrorTitle, noTargetErrorMessage] = _.isArray(step.onNextRedirectTo)
-                        ? step.onNextRedirectTo
-                        : [step.onNextRedirectTo, step.onNextRedirectTo, undefined, undefined];
-                    step.ctaLabel = 'Next (change page)';
-                    step.onCTA = [
+                newStep.showCTAButton = true;
+                newStep.showNextButton = false;
+                newStep.ctaLabel = 'Next';
+                newStep.onCTA = ['redirectTo', nextStep.target];
+                if (!_.isUndefined(newStep.onNextRedirectTo)) {
+                    const [url, pageName, noTargetErrorTitle, noTargetErrorMessage] = _.isArray(
+                        newStep.onNextRedirectTo
+                    )
+                        ? newStep.onNextRedirectTo
+                        : [newStep.onNextRedirectTo, newStep.onNextRedirectTo, undefined, undefined];
+                    newStep.ctaLabel = 'Next (change page)';
+                    newStep.onCTA = [
                         'redirectTo',
                         nextStep.target,
                         url,
@@ -44,11 +48,11 @@ export default class Tours {
                         noTargetErrorTitle,
                         noTargetErrorMessage
                     ];
-                    step = _.omit(step, 'onNextRedirectTo');
+                    newStep = _.omit(newStep, 'onNextRedirectTo');
                 }
             }
 
-            return step;
+            return newStep;
         });
 
         return hopscotchTour;

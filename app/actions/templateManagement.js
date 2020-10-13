@@ -16,7 +16,7 @@ export function createPageId(name, pages) {
     let suffix = 1;
     _.each(ids, id => {
         if (id.startsWith(newPageId)) {
-            const index = parseInt(id.substring(newPageId.length)) || suffix;
+            const index = parseInt(id.substring(newPageId.length), 10) || suffix;
             suffix = Math.max(index + 1, suffix + 1);
         }
     });

@@ -11,7 +11,7 @@ import { minimizeWidgets } from '../actions/widgets';
 import Consts from '../utils/consts';
 import stageUtils from '../utils/stageUtils';
 
-const mapStateToProps = (state, ownProps) => {
+const mapStateToProps = state => {
     const isTemplateManagementActive = state.templateManagement.isActive;
 
     const canChangePassword = !state.manager.isLdap;

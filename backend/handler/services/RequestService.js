@@ -11,9 +11,10 @@ module.exports = (() => {
     function call(method, url, params, data, parseResponse = true, headers = {}, certificate = null) {
         return new Promise((resolve, reject) => {
             const options = { headers: {} };
+            let fullUrl = url;
             if (!_.isEmpty(params)) {
                 const queryString = (url.indexOf('?') > 0 ? '&' : '?') + param(params, true);
-                url = `${url}${queryString}`;
+                fullUrl = `${url}${queryString}`;
             }
             if (headers) {
                 options.headers = _.omit(headers, 'cert');
@@ -26,8 +27,8 @@ module.exports = (() => {
             if (data) {
                 options.json = data;
                 try {
-                    data = JSON.stringify(data);
-                    options.headers['content-length'] = Buffer.byteLength(data);
+                    const strData = JSON.stringify(data);
+                    options.headers['content-length'] = Buffer.byteLength(strData);
                 } catch (error) {
                     throw new Error(`Invalid (non-json) payload data. Error: ${error}`);
                 }
@@ -35,7 +36,7 @@ module.exports = (() => {
 
             RequestHandler.request(
                 method,
-                url,
+                fullUrl,
                 options,
                 res => {
                     const isSuccess = res.statusCode >= 200 && res.statusCode < 300;

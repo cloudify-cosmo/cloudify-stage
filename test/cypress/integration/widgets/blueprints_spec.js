@@ -6,10 +6,7 @@ describe('Blueprints widget', () => {
         cy
             .activate('valid_trial_license')
             .login()
-            .installPlugin(
-                'http://repository.cloudifysource.org/cloudify/wagons/cloudify-utilities-plugin/1.23.5/cloudify_utilities_plugin-1.23.5-redhat-Maipo-py27.py36-none-linux_x86_64.wgn',
-                'http://repository.cloudifysource.org/cloudify/wagons/cloudify-utilities-plugin/1.23.5/plugin.yaml'
-            )
+            .uploadPluginFromCatalog('Utilities')
             .deleteDeployments(blueprintNamePrefix, true)
             .deleteBlueprints(blueprintNamePrefix, true)
             .uploadBlueprint('blueprints/empty.zip', emptyBlueprintName)

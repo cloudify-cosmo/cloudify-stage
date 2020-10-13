@@ -56,9 +56,9 @@ Stage.defineWidget({
                 result[item.deployment_id] = {
                     states: _.reduce(
                         item['by state'],
-                        (result, state) => {
-                            result[state.state] = state.node_instances;
-                            return result;
+                        (states, state) => {
+                            states[state.state] = state.node_instances;
+                            return states;
                         },
                         {}
                     ),

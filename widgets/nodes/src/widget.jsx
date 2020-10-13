@@ -60,7 +60,8 @@ Stage.defineWidget({
         _.forEach(deployments, deployment => {
             _.forIn(deployment.groups, (group, groupId) => {
                 _.forEach(group.members, nodeId => {
-                    const groupList = (groups[nodeId + deployment.id] = groups[nodeId + deployment.id] || []);
+                    groups[nodeId + deployment.id] = groups[nodeId + deployment.id] || [];
+                    const groupList = groups[nodeId + deployment.id];
                     groupList.push(groupId);
                 });
             });
@@ -84,11 +85,10 @@ Stage.defineWidget({
         const nodes = data.nodes.items;
         const instances = data.nodeInstances.items;
         const groups = this.getGroups(data.deployments.items);
-        let group;
 
         const formattedData = {
             items: _.map(nodes, node => {
-                let group;
+                const group = groups[node.id + node.deployment_id];
                 return {
                     ...node,
                     deploymentId: node.deployment_id,
@@ -105,7 +105,7 @@ Stage.defineWidget({
                         )
                         .map(instance => ({ ...instance, isSelected: instance.id === SELECTED_NODE_INSTANCE_ID })),
                     isSelected: node.id + node.deployment_id === SELECTED_NODE_ID,
-                    groups: !_.isNil((group = groups[node.id + node.deployment_id])) ? group.join(', ') : ''
+                    groups: !_.isNil(group) ? group.join(', ') : ''
                 };
             }),
             total: _.get(data.nodes, 'metadata.pagination.total', 0),

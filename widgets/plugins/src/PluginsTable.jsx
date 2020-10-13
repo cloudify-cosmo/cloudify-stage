@@ -56,6 +56,20 @@ export default class PluginsTable extends React.Component {
             });
     }
 
+    setHoveredPlugin(idToCheck) {
+        const { hoveredPlugin } = this.state;
+        if (hoveredPlugin !== idToCheck) {
+            this.setState({ hoveredPlugin: idToCheck });
+        }
+    }
+
+    unsetHoveredPlugin(idToCheck) {
+        const { hoveredPlugin } = this.state;
+        if (hoveredPlugin === idToCheck) {
+            this.setState({ hoveredPlugin: null });
+        }
+    }
+
     selectPlugin(item) {
         const { toolbox } = this.props;
         const oldSelectedPluginId = toolbox.getContext().getValue('pluginId');
@@ -173,10 +187,10 @@ export default class PluginsTable extends React.Component {
                                 key={item.id}
                                 selected={item.isSelected}
                                 onClick={() => this.selectPlugin(item)}
-                                onMouseOver={() =>
-                                    hoveredPlugin !== item.id && this.setState({ hoveredPlugin: item.id })
-                                }
-                                onMouseOut={() => hoveredPlugin === item.id && this.setState({ hoveredPlugin: null })}
+                                onMouseOver={() => this.setHoveredPlugin(item.id)}
+                                onFocus={() => this.setHoveredPlugin(item.id)}
+                                onMouseOut={() => this.unsetHoveredPlugin(item.id)}
+                                onBlur={() => this.unsetHoveredPlugin(item.id)}
                             >
                                 <DataTable.Data>
                                     <IdPopup selected={item.id === hoveredPlugin} id={item.id} />

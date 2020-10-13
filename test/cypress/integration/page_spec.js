@@ -15,7 +15,7 @@ describe('Page', () => {
                             }
                         ]
                     },
-                    version: 4
+                    appDataVersion: 4
                 }
             })
         );

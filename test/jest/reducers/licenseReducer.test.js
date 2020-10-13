@@ -10,7 +10,7 @@ import { applyMiddleware, createStore } from 'redux';
 
 import { login } from 'actions/managers';
 import { setLicense } from 'actions/license';
-import * as types from 'actions/types.js';
+import * as types from 'actions/types';
 import licenseReducer from 'reducers/licenseReducer';
 import rbac from '../resources/rbac';
 import versions from '../resources/versions';

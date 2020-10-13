@@ -105,6 +105,7 @@ class DeploymentActions {
                 setTimeout(resolve, waitingInterval);
             })
                 .then(() => executionActions.doGetExecutions(deploymentId))
+                // eslint-disable-next-line no-loop-func
                 .then(({ items }) => {
                     deploymentCreated = !_.isEmpty(items) && _.isUndefined(_.find(items, { ended_at: null }));
                 });

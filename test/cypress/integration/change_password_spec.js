@@ -88,7 +88,7 @@ describe('Change Password modal', () => {
         cy.server();
         cy.route({
             method: 'GET',
-            url: `/console/sp/?su=/ldap`,
+            url: `/console/sp?su=/ldap`,
             response: 'enabled'
         }).as('ldap');
 

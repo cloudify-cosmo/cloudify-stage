@@ -150,8 +150,8 @@ export default class Topology extends React.Component {
             enableDragToSelect: true,
             enableContextMenu: false,
             onNodeSelected: node => this.setSelectedNode(node),
-            onDataProcessed: data => {
-                this.processedTopologyData = data;
+            onDataProcessed: processedData => {
+                this.processedTopologyData = processedData;
             },
             onDeploymentNodeClick: deploymentId => this.goToDeploymentPage(deploymentId),
             onExpandClick: this.getExpandHandler('expandedDeployments'),
@@ -323,8 +323,10 @@ export default class Topology extends React.Component {
         const { Popup } = Stage.Basic;
         return (
             <div
+                role="none"
                 ref={this.topologyParentContainerRef}
                 onClick={this.scrollerGlassHandler.releaseScroller}
+                onKeyPress={this.scrollerGlassHandler.releaseScroller}
                 onMouseEnter={this.scrollerGlassHandler.timerReleaseScroller}
                 onMouseLeave={this.scrollerGlassHandler.reactivateScroller}
             >

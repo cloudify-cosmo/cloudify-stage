@@ -7,6 +7,10 @@ import RestoreModal from './RestoreSnapshotModal';
 import UploadModal from './UploadSnapshotModal';
 import SnapshotPropType from './props/SnapshotPropType';
 
+function isSnapshotUseful(snapshot) {
+    return snapshot.status === 'created' || snapshot.status === 'uploaded';
+}
+
 export default class SnapshotsTable extends React.Component {
     constructor(props, context) {
         super(props, context);
@@ -101,17 +105,13 @@ export default class SnapshotsTable extends React.Component {
         toolbox.getContext().setValue('snapshotId', item.id === oldSelectedSnapshotId ? null : item.id);
     }
 
-    isSnapshotUseful(snapshot) {
-        return snapshot.status === 'created' || snapshot.status === 'uploaded';
-    }
-
     refreshData() {
         const { toolbox } = this.props;
         toolbox.refresh();
     }
 
     render() {
-        const { confirmDelete, error, item, showRestore } = this.state;
+        const { confirmDelete, error, item: snapshot, showRestore } = this.state;
         const { data, toolbox, widget } = this.props;
         const NO_DATA_MESSAGE = 'There are no Snapshots available. Click "Create" to create Snapshots.';
         const { Confirm, ErrorMessage, DataTable, Icon, ResourceVisibility } = Stage.Basic;
@@ -138,7 +138,7 @@ export default class SnapshotsTable extends React.Component {
                     <DataTable.Column width="10%" />
 
                     {data.items.map(item => {
-                        const isSnapshotUseful = this.isSnapshotUseful(item);
+                        const isUseful = isSnapshotUseful(item);
                         return (
                             <DataTable.Row
                                 key={item.id}
@@ -157,16 +157,16 @@ export default class SnapshotsTable extends React.Component {
                                         name="undo"
                                         title="Restore"
                                         bordered
-                                        disabled={!isSnapshotUseful}
-                                        link={isSnapshotUseful}
+                                        disabled={!isUseful}
+                                        link={isUseful}
                                         onClick={_.wrap(item, this.restoreSnapshot)}
                                     />
                                     <Icon
                                         name="download"
                                         title="Download"
                                         bordered
-                                        disabled={!isSnapshotUseful}
-                                        link={isSnapshotUseful}
+                                        disabled={!isUseful}
+                                        link={isUseful}
                                         onClick={_.wrap(item, this.downloadSnapshot)}
                                     />
                                     <Icon
@@ -192,7 +192,7 @@ export default class SnapshotsTable extends React.Component {
                     open={showRestore}
                     onHide={() => this.setState({ showRestore: false })}
                     toolbox={toolbox}
-                    snapshot={item}
+                    snapshot={snapshot}
                 />
 
                 <Confirm

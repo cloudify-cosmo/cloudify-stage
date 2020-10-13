@@ -75,6 +75,25 @@ export function createBlueprintData(data) {
 }
 
 /**
+ * Creates hierarchy map out of blueprint plan as returned by manager
+ *
+ * @param {object} blueprintPlan
+ */
+export function createHierarchy(blueprintPlan) {
+    const hierarchy = {};
+
+    _.each(blueprintPlan.nodes, node => {
+        hierarchy[node.type] = _.reverse(node.type_hierarchy);
+
+        _.each(node.relationships, rel => {
+            hierarchy[rel.type] = _.reverse(rel.type_hierarchy);
+        });
+    });
+
+    return hierarchy;
+}
+
+/**
  * Takes blueprint plan, as returned by manager, as well as inProgress flag and instances data and transforms it into
  * topology compatible blueprint data structure containing 'nodes', 'connectors' and 'groups' properties
  *
@@ -135,23 +154,4 @@ export function createExpandedTopology(componentBlueprintData, extendedNode) {
     });
 
     return res;
-}
-
-/**
- * Creates hierarchy map out of blueprint plan as returned by manager
- *
- * @param {object} blueprintPlan
- */
-export function createHierarchy(blueprintPlan) {
-    const hierarchy = {};
-
-    _.each(blueprintPlan.nodes, node => {
-        hierarchy[node.type] = _.reverse(node.type_hierarchy);
-
-        _.each(node.relationships, rel => {
-            hierarchy[rel.type] = _.reverse(rel.type_hierarchy);
-        });
-    });
-
-    return hierarchy;
 }

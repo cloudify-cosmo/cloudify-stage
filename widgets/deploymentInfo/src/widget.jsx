@@ -89,13 +89,13 @@ Stage.defineWidget({
                 })
                 .then(deploymentItem => {
                     const { formatTimestamp } = Stage.Utils.Time;
-                    const { created_at, updated_at } = deploymentItem;
+                    const { created_at: createdAt, updated_at: updatedAt } = deploymentItem;
 
                     return {
                         ...deploymentItem,
-                        created_at: formatTimestamp(created_at),
-                        updated_at: formatTimestamp(updated_at),
-                        isUpdated: !_.isEqual(created_at, updated_at)
+                        created_at: formatTimestamp(createdAt),
+                        updated_at: formatTimestamp(updatedAt),
+                        isUpdated: !_.isEqual(createdAt, updatedAt)
                     };
                 });
 

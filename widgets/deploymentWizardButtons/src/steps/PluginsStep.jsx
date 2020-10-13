@@ -1,3 +1,4 @@
+/* eslint-disable max-classes-per-file */
 /**
  * Created by jakub.niezgoda on 31/07/2018.
  */
@@ -11,19 +12,37 @@ import StepContentPropTypes from './StepContentPropTypes';
 
 const pluginsStepId = 'plugins';
 
-class PluginsStepActions extends React.Component {
-    constructor(props) {
-        super(props);
-    }
+const pluginStatuses = {
+    unknown: 0,
+    installedAndParametersMatched: 1,
+    installedAndParametersUnmatched: 2,
+    notInstalledAndInCatalog: 3,
+    userDefinedPlugin: 4,
+    notInstalledAndNotInCatalog: 5
+};
 
-    onNext = id => {
-        const { fetchData, onError, onLoading, onNext } = this.props;
+function PluginsStepActions({
+    onClose,
+    onStartOver,
+    onPrev,
+    onNext,
+    onError,
+    onLoading,
+    onReady,
+    disabled,
+    showPrev,
+    fetchData,
+    wizardData,
+    toolbox,
+    id
+}) {
+    function handleNext(stepId) {
         return onLoading()
             .then(fetchData)
             .then(({ stepData }) => {
                 const plugins = _.pickBy(
                     stepData,
-                    plugin => plugin.status !== PluginsStepContent.statusInstalledAndParametersMatched
+                    plugin => plugin.status !== pluginStatuses.installedAndParametersMatched
                 );
 
                 const missingFields = [];
@@ -63,64 +82,36 @@ class PluginsStepActions extends React.Component {
                 }
                 const userDefinedPlugins = _.pickBy(
                     plugins,
-                    plugin => plugin.status === PluginsStepContent.statusUserDefinedPlugin
+                    plugin => plugin.status === pluginStatuses.userDefinedPlugin
                 );
                 const userResources = { plugins: _.mapValues(userDefinedPlugins, () => ({ params: {} })) };
-                return onNext(id, { plugins, userResources });
+                return onNext(stepId, { plugins, userResources });
             })
             .catch(error => onError(id, error.message, error.errors));
-    };
-
-    render() {
-        const {
-            onClose,
-            onStartOver,
-            onPrev,
-            onError,
-            onLoading,
-            onReady,
-            disabled,
-            showPrev,
-            fetchData,
-            wizardData,
-            toolbox,
-            id
-        } = this.props;
-        return (
-            <StepActions
-                id={id}
-                onClose={onClose}
-                onStartOver={onStartOver}
-                onPrev={onPrev}
-                onError={onError}
-                onLoading={onLoading}
-                onReady={onReady}
-                disabled={disabled}
-                showPrev={showPrev}
-                fetchData={fetchData}
-                wizardData={wizardData}
-                toolbox={toolbox}
-                onNext={this.onNext}
-            />
-        );
     }
+
+    return (
+        <StepActions
+            id={id}
+            onClose={onClose}
+            onStartOver={onStartOver}
+            onPrev={onPrev}
+            onError={onError}
+            onLoading={onLoading}
+            onReady={onReady}
+            disabled={disabled}
+            showPrev={showPrev}
+            fetchData={fetchData}
+            wizardData={wizardData}
+            toolbox={toolbox}
+            onNext={handleNext}
+        />
+    );
 }
 
 PluginsStepActions.propTypes = StepActions.propTypes;
 
 class PluginsStepContent extends React.Component {
-    static statusUnknown = 0;
-
-    static statusInstalledAndParametersMatched = 1;
-
-    static statusInstalledAndParametersUnmatched = 2;
-
-    static statusNotInstalledAndInCatalog = 3;
-
-    static statusUserDefinedPlugin = 4;
-
-    static statusNotInstalledAndNotInCatalog = 5;
-
     static defaultPluginState = {
         yamlUrl: '',
         yamlFile: null,
@@ -129,7 +120,7 @@ class PluginsStepContent extends React.Component {
         iconUrl: '',
         iconFile: null,
         visibility: Stage.Common.Consts.defaultVisibility,
-        status: PluginsStepContent.statusUnknown
+        status: pluginStatuses.unknown
     };
 
     static blueprintDataPath = 'blueprint.plugins';
@@ -151,19 +142,19 @@ class PluginsStepContent extends React.Component {
                 (_.isNil(version) || _.isEqual(version, pluginInManager.version)) &&
                 (_.isNil(distribution) || _.isEqual(distribution, pluginInManager.distribution))
             ) {
-                pluginStatus = PluginsStepContent.statusInstalledAndParametersMatched;
+                pluginStatus = pluginStatuses.installedAndParametersMatched;
             } else {
-                pluginStatus = PluginsStepContent.statusInstalledAndParametersUnmatched;
+                pluginStatus = pluginStatuses.installedAndParametersUnmatched;
             }
         } else if (!_.isNil(pluginInCatalog)) {
             if (_.isNil(version) || _.isEqual(version, pluginInCatalog.version)) {
                 // TODO: Check distribution
-                pluginStatus = PluginsStepContent.statusNotInstalledAndInCatalog;
+                pluginStatus = pluginStatuses.notInstalledAndInCatalog;
             } else {
-                pluginStatus = PluginsStepContent.statusNotInstalledAndNotInCatalog;
+                pluginStatus = pluginStatuses.notInstalledAndNotInCatalog;
             }
         } else {
-            pluginStatus = PluginsStepContent.statusNotInstalledAndNotInCatalog;
+            pluginStatus = pluginStatuses.notInstalledAndNotInCatalog;
         }
 
         return pluginStatus;
@@ -194,9 +185,9 @@ class PluginsStepContent extends React.Component {
                 const pluginsInBlueprint = _.get(wizardData, PluginsStepContent.blueprintDataPath, {});
                 const pluginsInUserResources = _.get(wizardData, PluginsStepContent.userDataPath, {});
 
-                pluginsInManager = pluginsInManager.items;
-                pluginsInManager = _.reduce(
-                    pluginsInManager,
+                let formattedPluginsInManager = pluginsInManager.items;
+                formattedPluginsInManager = _.reduce(
+                    formattedPluginsInManager,
                     (result, pluginObject) => {
                         result[pluginObject.package_name] = {
                             version: pluginObject.package_version,
@@ -208,7 +199,7 @@ class PluginsStepContent extends React.Component {
                     {}
                 );
 
-                pluginsInCatalog = _.reduce(
+                const formattedPluginsInCatalog = _.reduce(
                     pluginsInCatalog,
                     (result, pluginObject) => {
                         result[pluginObject.name] = {
@@ -220,16 +211,16 @@ class PluginsStepContent extends React.Component {
                 );
 
                 const stepData = {};
-                for (const plugin of _.keys(pluginsInBlueprint)) {
+                _.forEach(_.keys(pluginsInBlueprint), plugin => {
                     const pluginState = { ...PluginsStepContent.defaultPluginState, ...stepDataProp[plugin] };
                     pluginState.status = PluginsStepContent.getPluginStatus(
                         plugin,
                         pluginsInBlueprint,
-                        pluginsInManager,
-                        pluginsInCatalog
+                        formattedPluginsInManager,
+                        formattedPluginsInCatalog
                     );
 
-                    if (pluginState.status === PluginsStepContent.statusNotInstalledAndInCatalog) {
+                    if (pluginState.status === pluginStatuses.notInstalledAndInCatalog) {
                         const distro = `${toolbox
                             .getManager()
                             .getDistributionName()
@@ -237,27 +228,28 @@ class PluginsStepContent extends React.Component {
                             .getManager()
                             .getDistributionRelease()
                             .toLowerCase()}`;
-                        const wagon = _.find(pluginsInCatalog[plugin].wagons, wagon => {
-                            return wagon.name.toLowerCase() === distro || wagon.name.toLowerCase() === 'any';
-                        });
+                        const matchingWagon = _.find(
+                            formattedPluginsInCatalog[plugin].wagons,
+                            wagon => wagon.name.toLowerCase() === distro || wagon.name.toLowerCase() === 'any'
+                        );
 
-                        pluginState.wagonUrl = wagon.url;
-                        pluginState.yamlUrl = pluginsInCatalog[plugin].link;
-                        pluginState.title = pluginsInCatalog[plugin].title;
-                    } else if (pluginState.status === PluginsStepContent.statusInstalledAndParametersMatched) {
-                        pluginState.visibility = pluginsInManager[plugin].visibility;
+                        pluginState.wagonUrl = matchingWagon.url;
+                        pluginState.yamlUrl = formattedPluginsInCatalog[plugin].link;
+                        pluginState.title = formattedPluginsInCatalog[plugin].title;
+                    } else if (pluginState.status === pluginStatuses.installedAndParametersMatched) {
+                        pluginState.visibility = formattedPluginsInManager[plugin].visibility;
                     }
 
                     stepData[plugin] = { ...pluginState };
-                }
-                for (const plugin of _.keys(pluginsInUserResources)) {
+                });
+                _.forEach(_.keys(pluginsInUserResources), plugin => {
                     const pluginState = { ...PluginsStepContent.defaultPluginState, ...stepDataProp[plugin] };
-                    pluginState.status = PluginsStepContent.statusUserDefinedPlugin;
+                    pluginState.status = pluginStatuses.userDefinedPlugin;
 
                     stepData[plugin] = { ...pluginState };
-                }
+                });
 
-                return { stepData, pluginsInCatalog };
+                return { stepData, pluginsInCatalog: formattedPluginsInCatalog };
             })
             .then(
                 ({ stepData, pluginsInCatalog }) =>
@@ -277,42 +269,42 @@ class PluginsStepContent extends React.Component {
         const status = _.get(stepData[pluginName], 'status');
 
         switch (status) {
-            case PluginsStepContent.statusInstalledAndParametersMatched:
+            case pluginStatuses.installedAndParametersMatched:
                 return (
                     <ResourceStatus
                         status={ResourceStatus.noActionRequired}
                         text="Plugin already installed. No action required."
                     />
                 );
-            case PluginsStepContent.statusInstalledAndParametersUnmatched:
+            case pluginStatuses.installedAndParametersUnmatched:
                 return (
                     <ResourceStatus
                         status={ResourceStatus.actionRequired}
                         text="Plugin installed but with different parameters. Provide details."
                     />
                 );
-            case PluginsStepContent.statusNotInstalledAndNotInCatalog:
+            case pluginStatuses.notInstalledAndNotInCatalog:
                 return (
                     <ResourceStatus
                         status={ResourceStatus.actionRequired}
                         text="Cannot find plugin. Provide details."
                     />
                 );
-            case PluginsStepContent.statusUserDefinedPlugin:
+            case pluginStatuses.userDefinedPlugin:
                 return (
                     <ResourceStatus
                         status={ResourceStatus.actionRequired}
                         text="User defined plugin. Provide details."
                     />
                 );
-            case PluginsStepContent.statusNotInstalledAndInCatalog:
+            case pluginStatuses.notInstalledAndInCatalog:
                 return (
                     <ResourceStatus
                         status={ResourceStatus.noActionRequired}
                         text="Plugin has been found in catalog and will be installed automatically. No action required."
                     />
                 );
-            case PluginsStepContent.statusUnknown:
+            case pluginStatuses.unknown:
                 return <ResourceStatus status={ResourceStatus.unknown} text="Unknown status." />;
             default:
                 return <ResourceStatus status={ResourceStatus.errorOccurred} text="Error during status calculation." />;
@@ -326,11 +318,11 @@ class PluginsStepContent extends React.Component {
         const { Container } = Stage.Basic;
 
         switch (status) {
-            case PluginsStepContent.statusInstalledAndParametersMatched:
+            case pluginStatuses.installedAndParametersMatched:
                 return <ResourceAction>No action required.</ResourceAction>;
-            case PluginsStepContent.statusInstalledAndParametersUnmatched:
-            case PluginsStepContent.statusNotInstalledAndNotInCatalog:
-            case PluginsStepContent.statusUserDefinedPlugin:
+            case pluginStatuses.installedAndParametersUnmatched:
+            case pluginStatuses.notInstalledAndNotInCatalog:
+            case pluginStatuses.userDefinedPlugin:
                 return (
                     <ResourceAction>
                         <Container fluid>
@@ -347,9 +339,9 @@ class PluginsStepContent extends React.Component {
                         </Container>
                     </ResourceAction>
                 );
-            case PluginsStepContent.statusNotInstalledAndInCatalog:
+            case pluginStatuses.notInstalledAndInCatalog:
                 return <ResourceAction>No action required.</ResourceAction>;
-            case PluginsStepContent.statusUnknown:
+            case pluginStatuses.unknown:
                 return <ResourceAction />;
             default:
                 return <ResourceAction />;
@@ -362,16 +354,16 @@ class PluginsStepContent extends React.Component {
         const plugin = stepData[pluginName];
 
         switch (_.get(plugin, 'status')) {
-            case PluginsStepContent.statusInstalledAndParametersMatched:
+            case pluginStatuses.installedAndParametersMatched:
                 return (
                     <ResourceAction>
                         <VisibilityField visibility={plugin.visibility} className="large" allowChange={false} />
                     </ResourceAction>
                 );
-            case PluginsStepContent.statusInstalledAndParametersUnmatched:
-            case PluginsStepContent.statusNotInstalledAndNotInCatalog:
-            case PluginsStepContent.statusNotInstalledAndInCatalog:
-            case PluginsStepContent.statusUserDefinedPlugin:
+            case pluginStatuses.installedAndParametersUnmatched:
+            case pluginStatuses.notInstalledAndNotInCatalog:
+            case pluginStatuses.notInstalledAndInCatalog:
+            case pluginStatuses.userDefinedPlugin:
                 return (
                     <ResourceAction>
                         <VisibilityField
@@ -393,7 +385,7 @@ class PluginsStepContent extends React.Component {
         const getPluginName = (baseName = 'user-plugin', maxSuffixNumber = 1000) => {
             let pluginName = '';
 
-            for (let pluginNameChosen = false, i = 0; i < maxSuffixNumber && !pluginNameChosen; i++) {
+            for (let pluginNameChosen = false, i = 0; i < maxSuffixNumber && !pluginNameChosen; i += 1) {
                 pluginName = `${baseName}-${i}`;
                 pluginNameChosen = !stepData[pluginName];
             }
@@ -403,7 +395,7 @@ class PluginsStepContent extends React.Component {
 
         const pluginName = getPluginName();
         stepData[pluginName] = { ...PluginsStepContent.defaultPluginState };
-        stepData[pluginName].status = PluginsStepContent.statusUserDefinedPlugin;
+        stepData[pluginName].status = pluginStatuses.userDefinedPlugin;
         onChange(id, stepData);
     };
 
@@ -425,8 +417,8 @@ class PluginsStepContent extends React.Component {
     isUserDefinedPlugin(pluginName) {
         const { stepData } = this.props;
         return _.isEqual(
-            _.get(stepData[pluginName], 'status', PluginsStepContent.statusUnknown),
-            PluginsStepContent.statusUserDefinedPlugin
+            _.get(stepData[pluginName], 'status', pluginStatuses.unknown),
+            pluginStatuses.userDefinedPlugin
         );
     }
 

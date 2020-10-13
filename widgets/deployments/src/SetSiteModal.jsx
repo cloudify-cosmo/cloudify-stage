@@ -25,7 +25,7 @@ export default class SetSiteModal extends React.Component {
                         sites
                     });
                 })
-                .catch(err => {
+                .catch(() => {
                     this.setState({ loading: false });
                 });
         }
@@ -69,7 +69,7 @@ export default class SetSiteModal extends React.Component {
         const { detachSite, errors, loading, siteName, sites } = this.state;
         const { deployment, onHide, open } = this.props;
         const { Modal, Icon, Form, ApproveButton, CancelButton } = Stage.Basic;
-        const site_options = _.map(sites.items, site => {
+        const siteOptions = _.map(sites.items, site => {
             return { text: site.name, value: site.name };
         });
 
@@ -88,7 +88,7 @@ export default class SetSiteModal extends React.Component {
                                     selection
                                     value={siteName}
                                     name="siteName"
-                                    options={site_options}
+                                    options={siteOptions}
                                     onChange={this.handleInputChange}
                                 />
                             </Form.Field>

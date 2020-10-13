@@ -3,7 +3,7 @@
  */
 
 import { connect } from 'react-redux';
-import { withRouter } from 'react-router';
+import { withRouter } from 'react-router-dom';
 
 import LoginPage from '../components/LoginPage';
 import { login } from '../actions/managers';
@@ -18,7 +18,7 @@ const mapStateToProps = state => {
     };
 };
 
-const mapDispatchToProps = (dispatch, ownProps) => {
+const mapDispatchToProps = dispatch => {
     return {
         onLogin: (username, password, redirect) => {
             dispatch(login(username, password, redirect));

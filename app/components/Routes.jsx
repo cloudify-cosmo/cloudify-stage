@@ -43,19 +43,19 @@ export default function Routes({
             {isLoggedIn && isLicenseRequired && <Route exact path={Consts.LICENSE_PAGE_PATH} component={LicensePage} />}
             {isLoggedIn && <Route exact path={Consts.MAINTENANCE_PAGE_PATH} component={MaintenanceMode} />}
             <Route
-                render={props =>
-                    isLoggedIn ? (
-                        isInMaintenanceMode ? (
-                            <Redirect to={Consts.MAINTENANCE_PAGE_PATH} />
-                        ) : isProductOperational ? (
-                            <Layout {...props} />
-                        ) : (
-                            <Redirect to={Consts.LICENSE_PAGE_PATH} />
-                        )
-                    ) : (
-                        <Redirect to={Consts.LOGIN_PAGE_PATH} />
-                    )
-                }
+                render={props => {
+                    if (isLoggedIn) {
+                        if (isInMaintenanceMode) {
+                            return <Redirect to={Consts.MAINTENANCE_PAGE_PATH} />;
+                        }
+                        if (isProductOperational) {
+                            // eslint-disable-next-line react/jsx-props-no-spreading
+                            return <Layout {...props} />;
+                        }
+                        return <Redirect to={Consts.LICENSE_PAGE_PATH} />;
+                    }
+                    return <Redirect to={Consts.LOGIN_PAGE_PATH} />;
+                }}
             />
         </Switch>
     );

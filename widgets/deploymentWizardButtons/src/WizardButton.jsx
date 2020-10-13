@@ -11,6 +11,8 @@ export default class WizardButton extends React.Component {
         this.state = {
             open: false
         };
+        this.openWizard = this.openWizard.bind(this);
+        this.closeWizard = this.closeWizard.bind(this);
     }
 
     openWizard(event) {
@@ -29,22 +31,13 @@ export default class WizardButton extends React.Component {
 
         return (
             <>
-                <Button
-                    color={color}
-                    onClick={this.openWizard.bind(this)}
-                    labelPosition="left"
-                    icon
-                    className="widgetButton"
-                >
+                <Button color={color} onClick={this.openWizard} labelPosition="left" icon className="widgetButton">
                     <Icon name={icon} size="large" />
                     {name}
                 </Button>
-                {open && <Wizard.Modal
-                    header={wizardTitle}
-                    steps={steps}
-                    onClose={this.closeWizard.bind(this)}
-                    toolbox={toolbox}
-                />}
+                {open && (
+                    <Wizard.Modal header={wizardTitle} steps={steps} onClose={this.closeWizard} toolbox={toolbox} />
+                )}
             </>
         );
     }

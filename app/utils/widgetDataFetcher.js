@@ -2,7 +2,10 @@
  * Created by kinneretzin on 03/04/2017.
  */
 
-import StageUtils from './stageUtils';
+function getUrlRegExString(str) {
+    // eslint-disable-next-line security/detect-non-literal-regexp
+    return new RegExp(`\\[${str}:?(.*)\\]`, 'i');
+}
 
 export default class WidgetDataFetcher {
     constructor(widget, toolbox, paramsHandler) {
@@ -23,11 +26,11 @@ export default class WidgetDataFetcher {
             if (!_.isString(this.widget.definition.fetchUrl)) {
                 output = {};
                 const keys = _.keysIn(this.widget.definition.fetchUrl);
-                for (let i = 0; i < data.length; i++) {
+                for (let i = 0; i < data.length; i += 1) {
                     output[keys[i]] = data[i];
                 }
             } else {
-                output = data[0];
+                [output] = data;
             }
             return output;
         });
@@ -37,7 +40,7 @@ export default class WidgetDataFetcher {
         let baseUrl = url.substring(prefix.length);
 
         let params = {};
-        const paramsMatch = this.getUrlRegExString('params').exec(baseUrl);
+        const paramsMatch = getUrlRegExString('params').exec(baseUrl);
         if (!_.isNull(paramsMatch)) {
             const [paramsString, allowedParams] = paramsMatch;
 
@@ -50,18 +53,18 @@ export default class WidgetDataFetcher {
     }
 
     fetchByUrl(url) {
-        const fetchUrl = _.replace(url, this.getUrlRegExString('config'), (match, configName) => {
+        const fetchUrl = _.replace(url, getUrlRegExString('config'), (match, configName) => {
             return this.widget.configuration ? this.widget.configuration[configName] : 'NA';
         });
 
         if (url.indexOf('[manager]') >= 0) {
             // User manager accessor if needs to go to the manager
-            var data = this.handleUrl('[manager]', url);
+            const data = this.handleUrl('[manager]', url);
             return this.toolbox.getManager().doGet(data.url, data.params);
         }
         if (url.indexOf('[backend]') >= 0) {
             // User backend accessor if needs to go to the backend
-            var data = this.handleUrl('[backend]', url);
+            const data = this.handleUrl('[backend]', url);
             return this.toolbox.getInternal().doGet(data.url, data.params);
         }
         // User external if the url is not manager based
@@ -77,15 +80,11 @@ export default class WidgetDataFetcher {
                     this.paramsHandler.buildParamsToSend()
                 );
             } catch (e) {
-                console.error('Error fetching widget data', e);
+                log.error('Error fetching widget data', e);
                 return Promise.reject({ error: 'Error fetching widget data' });
             }
         } else {
             return Promise.reject({ error: 'Widget doesnt have a fetchData function' });
         }
-    }
-
-    getUrlRegExString(str) {
-        return new RegExp(`\\[${str}:?(.*)\\]`, 'i');
     }
 }

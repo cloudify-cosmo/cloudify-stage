@@ -2,6 +2,7 @@
  * Created by addihorowitz on 19/09/2016.
  */
 
+import log from 'loglevel';
 import { push } from 'connected-react-router';
 
 import * as types from './types';
@@ -47,7 +48,7 @@ export function storeRBAC(RBAC) {
 }
 
 export function login(username, password, redirect) {
-    return (dispatch, getState) => {
+    return dispatch => {
         dispatch(requestLogin());
         return Auth.login(username, password)
             .then(({ role, version, license, rbac }) => {
@@ -58,13 +59,14 @@ export function login(username, password, redirect) {
             })
             .then(() => {
                 if (redirect) {
+                    // eslint-disable-next-line scanjs-rules/assign_to_location
                     window.location = redirect;
                 } else {
                     dispatch(push(Consts.HOME_PAGE_PATH));
                 }
             })
             .catch(err => {
-                console.log(err);
+                log.log(err);
                 if (err.status === 403) {
                     dispatch(errorLogin(username));
                     dispatch(
@@ -148,7 +150,7 @@ export function getMaintenanceStatus(manager) {
                 dispatch(setMaintenanceStatus(data.status));
             })
             .catch(err => {
-                console.error(err);
+                log.error(err);
             });
 }
 

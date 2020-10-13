@@ -16,7 +16,7 @@ export default class SiteActions {
     }
 
     doUpdate(name, visibility, location = null, newName = null) {
-        const site_data = _.omitBy({ location, visibility, new_name: newName }, _.isNil);
-        return this.toolbox.getManager().doPost(`/sites/${name}`, null, site_data);
+        const siteData = _.omitBy({ location, visibility, new_name: newName }, _.isNil);
+        return this.toolbox.getManager().doPost(`/sites/${name}`, null, siteData);
     }
 }

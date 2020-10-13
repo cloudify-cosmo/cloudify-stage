@@ -14,7 +14,7 @@ module.exports = (() => {
         // See: https://github.com/winstonjs/winston/issues/1614
         const wrapper = original => {
             return (...args) => {
-                for (let index = 0; index < args.length; index++) {
+                for (let index = 0; index < args.length; index += 1) {
                     if (args[index] instanceof Error) {
                         args[index] = args[index].stack;
                     }

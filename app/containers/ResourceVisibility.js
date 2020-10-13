@@ -21,9 +21,7 @@ const mapStateToProps = (state, ownProps) => {
     };
 };
 
-const mapDispatchToProps = (dispatch, ownProps) => {
-    return {};
-};
+const mapDispatchToProps = () => ({});
 
 export default connect(
     mapStateToProps,

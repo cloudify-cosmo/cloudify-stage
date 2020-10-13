@@ -37,32 +37,32 @@ describe('(Component) GridItem', () => {
     });
 
     it('No props were sent', () => {
-        const wrapper = mount(<GridItem id="1a">{[]}</GridItem>);
-        expect(wrapper).toHaveLength(1);
-        expect(wrapper.prop('x')).toBe(0);
-        expect(wrapper.prop('y')).toBe(0);
-        expect(wrapper.prop('width')).toBe(10);
-        expect(wrapper.prop('height')).toBe(5);
+        const gridItem = mount(<GridItem id="1a">{[]}</GridItem>);
+        expect(gridItem).toHaveLength(1);
+        expect(gridItem.prop('x')).toBe(0);
+        expect(gridItem.prop('y')).toBe(0);
+        expect(gridItem.prop('width')).toBe(10);
+        expect(gridItem.prop('height')).toBe(5);
     });
 
     it('No positioning props were sent - use auto position', () => {
-        const wrapper = mount(
+        const gridItem = mount(
             <GridItem id="1a" width={10} height={20}>
                 {[]}
             </GridItem>
         );
 
-        expect(wrapper).toHaveLength(1);
-        expect(wrapper.prop('x')).toBe(0);
-        expect(wrapper.prop('y')).toBe(0);
-        expect(wrapper.prop('width')).toBe(10);
-        expect(wrapper.prop('height')).toBe(20);
+        expect(gridItem).toHaveLength(1);
+        expect(gridItem.prop('x')).toBe(0);
+        expect(gridItem.prop('y')).toBe(0);
+        expect(gridItem.prop('width')).toBe(10);
+        expect(gridItem.prop('height')).toBe(20);
     });
 
     describe('Test lifecycle - calling add/remove of item', () => {
         it('Calling itemAdded callback', () => {
             const onItemAdded = sinon.spy();
-            const m = mount(
+            mount(
                 <GridItem id="1a" onItemAdded={onItemAdded}>
                     {[]}
                 </GridItem>

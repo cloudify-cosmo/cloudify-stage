@@ -5,15 +5,13 @@
 import { connect } from 'react-redux';
 import ErrorPage from '../components/ErrorPage';
 
-const mapStateToProps = (state, ownProps) => {
+const mapStateToProps = state => {
     return {
         error: state.app.error
     };
 };
 
-const mapDispatchToProps = (dispatch, ownProps) => {
-    return {};
-};
+const mapDispatchToProps = () => ({});
 
 export default connect(
     mapStateToProps,

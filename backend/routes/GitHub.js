@@ -53,10 +53,10 @@ function getAuthorizationHeader(user, tenant) {
     return _.get(authList, `${user}.${tenant}`, '');
 }
 
-function setAuthorizationHeader(req, res, next, fetchCredentials) {
+function setAuthorizationHeader(req, res, next, forceFetchCredentials) {
     const user = _.get(req, 'user.username', '');
     const tenant = req.header('tenant');
-    var fetchCredentials = fetchCredentials || _.isEmpty(getAuthorizationHeader(user, tenant));
+    const fetchCredentials = forceFetchCredentials || _.isEmpty(getAuthorizationHeader(user, tenant));
 
     if (fetchCredentials) {
         const userSecret = getSecretName(params.username);
@@ -88,7 +88,7 @@ function setAuthorizationHeader(req, res, next, fetchCredentials) {
     }
 }
 
-function addIsAuthToResponseBody(req, res, next) {
+function addIsAuthToResponseBody(req, res) {
     const json = JSON.parse(res.data);
     json.isAuth = !_.isEmpty(req.header('authorization'));
     res.setHeader('content-type', 'application/json');

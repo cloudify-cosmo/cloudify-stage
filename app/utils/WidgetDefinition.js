@@ -30,10 +30,10 @@ export default class WidgetDefinition {
         Object.assign(this, data);
 
         if (!this.name) {
-            console.error('Missing widget name. Widget data is :', data);
+            log.error('Missing widget name. Widget data is :', data);
         }
         if (!this.id) {
-            console.error('Missing widget id. Widget data is :', data);
+            log.error('Missing widget id. Widget data is :', data);
         }
     }
 }

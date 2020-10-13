@@ -2,7 +2,6 @@
  * Created by jakubniezgoda on 18/04/2018.
  */
 
-import React from 'react';
 import { connect } from 'react-redux';
 import Routes from '../components/Routes';
 
@@ -21,9 +20,7 @@ const mapStateToProps = state => {
     };
 };
 
-const mapDispatchToProps = (dispatch, ownProps) => {
-    return {};
-};
+const mapDispatchToProps = () => ({});
 
 export default connect(
     mapStateToProps,

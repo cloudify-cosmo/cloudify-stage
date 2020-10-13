@@ -36,97 +36,89 @@ function downloadFile(widget, url) {
 }
 
 function updateTitle(widget, content) {
-    return new Promise((resolve, reject) => {
+    return new Promise(resolve => {
         const titleRegex = /---[^]*title: ([\w ]*)[^]*---/m;
+        let newContent = content;
 
         log(widget, 'Updating title:');
-        logChange(widget, 'title', content.match(titleRegex)[1]);
+        logChange(widget, 'title', newContent.match(titleRegex)[1]);
 
-        content = content.replace(titleRegex, '# $1');
+        newContent = newContent.replace(titleRegex, '# $1');
 
-        resolve(content);
+        resolve(newContent);
     });
 }
 
 function updateLinks(widget, content) {
-    return new Promise((resolve, reject) => {
+    return new Promise(resolve => {
         const linkRegex = /(\[.*?\])\(\s*(?!http)(.*?)\s*\)/gm;
+        let newContent = content;
 
         log(widget, 'Updating markdown links:');
-        logChange(widget, 'markdown links', content.match(linkRegex));
+        logChange(widget, 'markdown links', newContent.match(linkRegex));
 
-        content = content.replace(linkRegex, `$1(${config.linksBasePath}$2)`);
+        newContent = newContent.replace(linkRegex, `$1(${config.linksBasePath}$2)`);
 
-        resolve(content);
+        resolve(newContent);
     });
 }
 
 function convertHugoParams(widget, content, params) {
     return new Promise((resolve, reject) => {
         const paramRegex = /{{<\s*param\s*(\S*)\s*>}}/gm;
+        let newContent = content;
 
         log(widget, 'Converting Hugo params:');
-        logChange(widget, 'param shortcodes', content.match(paramRegex));
+        logChange(widget, 'param shortcodes', newContent.match(paramRegex));
 
-        Array.from(content.matchAll(paramRegex)).forEach(match => {
+        Array.from(newContent.matchAll(paramRegex)).forEach(match => {
             const paramName = match[1];
             const paramValue = params[paramName];
             log(widget, match[0], match[1]);
             if (paramValue !== undefined) {
                 log(widget, `Converting "${match[0]}" into "${paramValue}".`);
-                content = content.replace(match[0], paramValue);
+                newContent = newContent.replace(match[0], paramValue);
             } else {
                 reject(new Error(`No ${paramName} parameter found.`));
             }
         });
 
-        resolve(content);
+        resolve(newContent);
     });
 }
 
 function convertHugoShortcodes(widget, content) {
-    return new Promise((resolve, reject) => {
+    return new Promise(resolve => {
         const noteRegex = /{{%\s*note.*%}}([^]*){{%\s*\/note\s*%}}/gm;
         const tipRegex = /{{%\s*tip.*%}}([^]*){{%\s*\/tip\s*%}}/gm;
         const warningRegex = /{{%\s*warning.*%}}([^]*){{%\s*\/warning\s*%}}/gm;
 
         // relref
         const relrefRegex = /{{<\s*relref\s*"(\S*)"\s*>}}/gm;
-        const indexRegex = /\_index.md/gm;
+        const indexRegex = /_index.md/gm;
         const mdRegex = /\.md/gm;
 
-        log(widget, 'Converting Hugo shortcodes:');
-        logChange(widget, 'note shortcodes', content.match(noteRegex));
-        logChange(widget, 'tip shortcodes', content.match(tipRegex));
-        logChange(widget, 'warning shortcodes', content.match(warningRegex));
+        let newContent = content;
 
-        content = content
+        log(widget, 'Converting Hugo shortcodes:');
+        logChange(widget, 'note shortcodes', newContent.match(noteRegex));
+        logChange(widget, 'tip shortcodes', newContent.match(tipRegex));
+        logChange(widget, 'warning shortcodes', newContent.match(warningRegex));
+
+        newContent = newContent
             .replace(noteRegex, '<div class="ui message info">$1</div>')
             .replace(tipRegex, '<div class="ui message info">$1</div>')
             .replace(warningRegex, '<div class="ui message warning">$1</div>');
 
         log(widget, 'Converting relref links:');
-        logChange(widget, 'relref shortcodes', content.match(relrefRegex));
+        logChange(widget, 'relref shortcodes', newContent.match(relrefRegex));
 
-        content = content
+        newContent = newContent
             .replace(relrefRegex, '/$1')
             .replace(indexRegex, 'index.html')
             .replace(mdRegex, '');
 
-        resolve(content);
-    });
-}
-
-function removeHTMLTags(widget, content) {
-    return new Promise((resolve, reject) => {
-        const htmlTagRegex = /<[^>]*>/gm;
-
-        log(widget, 'Removing HTML tags:');
-        logChange(widget, 'html tags', content.match(htmlTagRegex));
-
-        content = content.replace(htmlTagRegex, '');
-
-        resolve(content);
+        resolve(newContent);
     });
 }
 

@@ -54,7 +54,7 @@ SiteControl.propTypes = {
 function SiteName({ name }) {
     const maxNameLength = 50;
     const { Popup, Header } = Stage.Basic;
-    const nameHeader = name => (
+    const nameHeader = () => (
         <Header as="h5" className="ui header dividing">
             {name}
         </Header>

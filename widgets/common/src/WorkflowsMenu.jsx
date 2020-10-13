@@ -14,20 +14,17 @@ StyledTitle.defaultProps = {
     bold: false
 };
 
-class WorkflowsMenuItems extends React.Component {
-    render() {
-        const { Menu } = Stage.Basic;
-        const { onClick, workflows } = this.props;
+function WorkflowsMenuItems({ onClick, workflows }) {
+    const { Menu } = Stage.Basic;
 
-        return _.map(workflows, workflow => (
-            <Menu.Item
-                name={workflow.name}
-                content={<StyledTitle name={workflow.name} />}
-                key={workflow.name}
-                onClick={() => onClick(workflow)}
-            />
-        ));
-    }
+    return _.map(workflows, workflow => (
+        <Menu.Item
+            name={workflow.name}
+            content={<StyledTitle name={workflow.name} />}
+            key={workflow.name}
+            onClick={() => onClick(workflow)}
+        />
+    ));
 }
 
 WorkflowsMenuItems.propTypes = {
@@ -111,26 +108,30 @@ function WorkflowsMenu({ workflows, onClick, popupMenuProps, showInPopup, trigge
         .value();
     const showOnlyDefaultWorkflows = _.size(workflowsGroups) === 1;
 
-    return showInPopup ? (
-        <PopupMenu
-            className="workflowAction"
-            position="bottom center"
-            offset={0}
-            icon={popupMenuProps.icon}
-            help={popupMenuProps.help}
-            bordered={popupMenuProps.bordered}
-        >
-            {!!trigger && <Popup.Trigger>{trigger}</Popup.Trigger>}
+    if (showInPopup) {
+        return (
+            <PopupMenu
+                className="workflowAction"
+                position="bottom center"
+                offset={0}
+                icon={popupMenuProps.icon}
+                help={popupMenuProps.help}
+                bordered={popupMenuProps.bordered}
+            >
+                {!!trigger && <Popup.Trigger>{trigger}</Popup.Trigger>}
 
-            {showOnlyDefaultWorkflows ? (
-                <Menu vertical>
-                    <WorkflowsMenuItems workflows={workflows} onClick={onClick} />
-                </Menu>
-            ) : (
-                <AccordionWorkflowsMenu workflowsGroups={workflowsGroups} onClick={onClick} />
-            )}
-        </PopupMenu>
-    ) : showOnlyDefaultWorkflows ? (
+                {showOnlyDefaultWorkflows ? (
+                    <Menu vertical>
+                        <WorkflowsMenuItems workflows={workflows} onClick={onClick} />
+                    </Menu>
+                ) : (
+                    <AccordionWorkflowsMenu workflowsGroups={workflowsGroups} onClick={onClick} />
+                )}
+            </PopupMenu>
+        );
+    }
+
+    return showOnlyDefaultWorkflows ? (
         <WorkflowsMenuItems workflows={workflows} onClick={onClick} />
     ) : (
         <AccordionWorkflowsMenu workflowsGroups={workflowsGroups} onClick={onClick} />

@@ -8,7 +8,7 @@ module.exports = {
         });
     },
 
-    down(queryInterface, Sequelize) {
+    down(queryInterface) {
         return queryInterface.removeColumn('Resources', DATA_COLUMN_NAME);
     }
 };

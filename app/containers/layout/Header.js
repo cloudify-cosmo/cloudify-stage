@@ -2,13 +2,12 @@
  * Created by addihorowitz on 19/09/2016.
  */
 
-import React from 'react';
 import { connect } from 'react-redux';
 import Header from '../../components/layout/Header';
 import { resetPagesForTenant } from '../../actions/userApp';
 import { toogleSidebar } from '../../actions/app';
 
-const mapStateToProps = (state, ownProps) => {
+const mapStateToProps = state => {
     return {
         manager: state.manager || {},
         mode: state.config.mode,
@@ -16,7 +15,7 @@ const mapStateToProps = (state, ownProps) => {
     };
 };
 
-const mapDispatchToProps = (dispatch, ownProps) => {
+const mapDispatchToProps = dispatch => {
     return {
         onResetPages: tenantList => {
             _.forEach(tenantList, tenant => {

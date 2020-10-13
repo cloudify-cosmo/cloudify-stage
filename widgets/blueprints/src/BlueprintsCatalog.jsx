@@ -18,7 +18,6 @@ export default function BlueprintsCatalog({
     const { DataSegment, Grid, Image, Button, Label, ResourceVisibility, Header } = Stage.Basic;
     const manager = toolbox.getManager();
 
-    const index = 0;
     const blueprintsItems = data.items.map(item => {
         return (
             <Grid.Column key={item.id}>
@@ -35,7 +34,7 @@ export default function BlueprintsCatalog({
                             <Grid.Column width="16">
                                 <Image src={Stage.Utils.Url.url(`/ba/image/${item.id}`)} />
                                 <Header>
-                                    <a href="javascript:void(0)" className="breakWord">
+                                    <a href="#!" className="breakWord">
                                         {item.id}
                                     </a>
                                 </Header>

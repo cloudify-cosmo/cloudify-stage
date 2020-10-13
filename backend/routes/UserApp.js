@@ -42,7 +42,7 @@ router.post('/', (req, res, next) => {
         },
         defaults: { appData: {}, appDataVersion: req.body.version }
     })
-        .spread((userApp, created) =>
+        .spread(userApp =>
             userApp
                 .update(
                     { appData: req.body.appData, appDataVersion: req.body.version },

@@ -27,10 +27,10 @@ import { Form } from '../basic';
 function PageFilter({ allowDrillDownPages, name, onChange, pages, value }) {
     const [pageId, setPageId] = useState(value);
 
-    function getPageName(pages, pageId) {
-        const page = _.find(pages, { id: pageId });
+    function getPageName(allPages, id) {
+        const page = _.find(allPages, { id });
         if (page.isDrillDown) {
-            return `${getPageName(pages, page.parent)} > ${page.name}`;
+            return `${getPageName(allPages, page.parent)} > ${page.name}`;
         }
         return page.name;
     }

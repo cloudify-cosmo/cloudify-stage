@@ -158,7 +158,7 @@ export default class Filter extends React.Component {
             const joinedEntityName = entityName.replace(' ', '');
             if (configuration[enabledConfigurationKey || `filterBy${joinedEntityName}s`]) {
                 const camelCaseEntityName = _.lowerFirst(joinedEntityName);
-                const { error, [stateProp || `${camelCaseEntityName}Id`]: value } = this.state;
+                const { [stateProp || `${camelCaseEntityName}Id`]: value } = this.state;
                 return (
                     <Form.Field key={entityName}>
                         <DynamicDropdown

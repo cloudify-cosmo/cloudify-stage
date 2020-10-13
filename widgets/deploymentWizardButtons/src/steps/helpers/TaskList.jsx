@@ -11,8 +11,10 @@ export default function TaskList({ tasks, header, withStatus }) {
         <>
             <Header as="h4">{header}</Header>
             <List ordered relaxed>
-                {_.map(tasks, task => (
-                    <List.Item key={task.name}>{withStatus ? <TaskStatus {...task} /> : task.name}</List.Item>
+                {_.map(tasks, ({ name, status, error }) => (
+                    <List.Item key={name}>
+                        {withStatus ? <TaskStatus name={name} status={status} error={error} /> : name}
+                    </List.Item>
                 ))}
             </List>
         </>

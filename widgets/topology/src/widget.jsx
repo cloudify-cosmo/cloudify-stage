@@ -99,19 +99,16 @@ Stage.defineWidget({
                     .doGet('/plugins?_include=id,package_name,package_version')
                     .then(pluginsData =>
                         Promise.all(
-                            _.map(plugins, plugin =>
-                                toolbox
+                            _.map(plugins, plugin => {
+                                const pluginId = _.get(
+                                    _.find(pluginsData.items, plugin) ||
+                                        _.find(pluginsData.items, _.pick(plugin, 'package_name')),
+                                    'id'
+                                );
+
+                                return toolbox
                                     .getInternal()
-                                    .doGet(
-                                        `/plugins/icons/${
-                                            (
-                                                _.find(pluginsData.items, plugin) ||
-                                                _.find(pluginsData.items, _.pick(plugin, 'package_name'))
-                                            ).id
-                                        }`,
-                                        null,
-                                        false
-                                    )
+                                    .doGet(`/plugins/icons/${pluginId}`, null, false)
                                     .then(response => response.blob())
                                     .then(
                                         blob =>
@@ -127,8 +124,8 @@ Stage.defineWidget({
                                                     resolve();
                                                 }
                                             })
-                                    )
-                            )
+                                    );
+                            })
                         )
                     )
                     .then(icons => ({

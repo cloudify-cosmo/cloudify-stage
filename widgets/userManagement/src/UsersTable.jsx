@@ -9,6 +9,73 @@ import TenantModal from './TenantModal';
 import UserDetails from './UserDetails';
 import UserPropType from './props/UserPropType';
 
+function IsAdminCheckbox({ user, disabled, onAdminUserChange, onDefaultUserChange }) {
+    const { Checkbox } = Stage.Basic;
+    return (
+        <Checkbox
+            checked={user.isAdmin}
+            disabled={disabled || user.username === Stage.Common.Consts.adminUsername}
+            onChange={() => (user.isAdmin ? onDefaultUserChange() : onAdminUserChange())}
+            onClick={e => e.stopPropagation()}
+        />
+    );
+}
+
+IsAdminCheckbox.propTypes = {
+    user: PropTypes.shape({
+        username: PropTypes.string,
+        isAdmin: PropTypes.bool
+    }).isRequired,
+    onAdminUserChange: PropTypes.func.isRequired,
+    onDefaultUserChange: PropTypes.func.isRequired,
+    disabled: PropTypes.bool
+};
+IsAdminCheckbox.defaultProps = {
+    disabled: false
+};
+
+function EnhancedIsAdminCheckbox({ user, settingUserRoleLoading, onAdminUserChange, onDefaultUserChange }) {
+    const { Loader, Popup } = Stage.Basic;
+    const isUserInAdminGroup = _.has(user.group_system_roles, Stage.Common.Consts.sysAdminRole);
+    const isUserAnAdminUser = user.username === Stage.Common.Consts.adminUsername;
+
+    if (settingUserRoleLoading === user.username) {
+        return <Loader active inline size="mini" />;
+    }
+    if (isUserInAdminGroup && !isUserAnAdminUser) {
+        return (
+            <Popup>
+                <Popup.Trigger>
+                    <IsAdminCheckbox
+                        disabled
+                        user={user}
+                        onAdminUserChange={onAdminUserChange}
+                        onDefaultUserChange={onDefaultUserChange}
+                    />
+                </Popup.Trigger>
+                <Popup.Content>
+                    To remove the administrator privileges for this user, remove the user from the group that is
+                    assigned administrator privileges.
+                </Popup.Content>
+            </Popup>
+        );
+    }
+    return (
+        <IsAdminCheckbox user={user} onAdminUserChange={onAdminUserChange} onDefaultUserChange={onDefaultUserChange} />
+    );
+}
+
+EnhancedIsAdminCheckbox.propTypes = {
+    user: PropTypes.shape({
+        username: PropTypes.string,
+        group_system_roles: PropTypes.arrayOf(PropTypes.string),
+        isAdmin: PropTypes.bool
+    }).isRequired,
+    settingUserRoleLoading: PropTypes.string.isRequired,
+    onAdminUserChange: PropTypes.func.isRequired,
+    onDefaultUserChange: PropTypes.func.isRequired
+};
+
 export default class UsersTable extends React.Component {
     static EMPTY_USER = { username: '' };
 
@@ -114,12 +181,6 @@ export default class UsersTable extends React.Component {
         return toolbox.refresh(fetchParams);
     };
 
-    selectUser(userName) {
-        const { toolbox } = this.props;
-        const selectedUserName = toolbox.getContext().getValue('userName');
-        toolbox.getContext().setValue('userName', userName === selectedUserName ? null : userName);
-    }
-
     showModal = (value, user) => {
         if (value === MenuAction.EDIT_TENANTS_ACTION) {
             this.getAvailableTenants(value, user);
@@ -167,6 +228,12 @@ export default class UsersTable extends React.Component {
             });
     };
 
+    selectUser(userName) {
+        const { toolbox } = this.props;
+        const selectedUserName = toolbox.getContext().getValue('userName');
+        toolbox.getContext().setValue('userName', userName === selectedUserName ? null : userName);
+    }
+
     deactivateUser(user) {
         const { toolbox } = this.props;
         toolbox.loading(true);
@@ -201,10 +268,6 @@ export default class UsersTable extends React.Component {
         return toolbox.getManager().getCurrentUsername() === user.username;
     }
 
-    isUserInAdminGroup(user) {
-        return _.has(user.group_system_roles, Stage.Common.Consts.sysAdminRole);
-    }
-
     activateUser(user) {
         const { toolbox } = this.props;
         toolbox.loading(true);
@@ -237,7 +300,7 @@ export default class UsersTable extends React.Component {
         } = this.state;
         const { data, toolbox, widget } = this.props;
         const NO_DATA_MESSAGE = 'There are no Users available in manager. Click "Add" to add Users.';
-        const { Checkbox, Confirm, DataTable, ErrorMessage, Label, Loader, Popup } = Stage.Basic;
+        const { Checkbox, Confirm, DataTable, ErrorMessage, Label, Loader } = Stage.Basic;
         const { PasswordModal } = Stage.Shared;
         const tableName = 'usersTable';
 
@@ -262,85 +325,64 @@ export default class UsersTable extends React.Component {
                     <DataTable.Column label="# Groups" width="10%" />
                     <DataTable.Column label="# Tenants" width="10%" />
                     <DataTable.Column label="" width="5%" />
-                    {data.items.map(item => {
-                        const isAdminCheckbox = (item, disabled) => (
-                            <Checkbox
-                                checked={item.isAdmin}
-                                disabled={disabled || item.username === Stage.Common.Consts.adminUsername}
-                                onChange={() =>
-                                    item.isAdmin
-                                        ? this.showModal(MenuAction.SET_DEFAULT_USER_ROLE_ACTION, item)
-                                        : this.showModal(MenuAction.SET_ADMIN_USER_ROLE_ACTION, item)
-                                }
-                                onClick={e => {
-                                    e.stopPropagation();
-                                }}
-                            />
-                        );
-
-                        return (
-                            <DataTable.RowExpandable key={item.username} expanded={item.isSelected}>
-                                <DataTable.Row
-                                    id={`${tableName}_${item.username}`}
-                                    key={item.username}
-                                    selected={item.isSelected}
-                                    onClick={() => this.selectUser(item.username)}
-                                >
-                                    <DataTable.Data>{item.username}</DataTable.Data>
-                                    <DataTable.Data>{item.last_login_at}</DataTable.Data>
-                                    <DataTable.Data className="center aligned">
-                                        {settingUserRoleLoading === item.username ? (
-                                            <Loader active inline size="mini" />
-                                        ) : this.isUserInAdminGroup(item) &&
-                                          item.username !== Stage.Common.Consts.adminUsername ? (
-                                            <Popup>
-                                                <Popup.Trigger>{isAdminCheckbox(item, true)}</Popup.Trigger>
-                                                <Popup.Content>
-                                                    To remove the administrator privileges for this user, remove the
-                                                    user from the group that is assigned administrator privileges.
-                                                </Popup.Content>
-                                            </Popup>
-                                        ) : (
-                                            isAdminCheckbox(item, false)
-                                        )}
-                                    </DataTable.Data>
-                                    <DataTable.Data className="center aligned">
-                                        {activateLoading === item.username ? (
-                                            <Loader active inline size="mini" />
-                                        ) : (
-                                            <Checkbox
-                                                checked={item.active}
-                                                onChange={() =>
-                                                    item.active
-                                                        ? this.showModal(MenuAction.DEACTIVATE_ACTION, item)
-                                                        : this.showModal(MenuAction.ACTIVATE_ACTION, item)
-                                                }
-                                                onClick={e => {
-                                                    e.stopPropagation();
-                                                }}
-                                            />
-                                        )}
-                                    </DataTable.Data>
-                                    <DataTable.Data>
-                                        <Label className="green" horizontal>
-                                            {item.groupCount}
-                                        </Label>
-                                    </DataTable.Data>
-                                    <DataTable.Data>
-                                        <Label className="blue" horizontal>
-                                            {item.tenantCount}
-                                        </Label>
-                                    </DataTable.Data>
-                                    <DataTable.Data className="center aligned">
-                                        <MenuAction item={item} onSelectAction={this.showModal} />
-                                    </DataTable.Data>
-                                </DataTable.Row>
-                                <DataTable.DataExpandable key={item.username}>
-                                    <UserDetails data={item} toolbox={toolbox} onError={this.handleError} />
-                                </DataTable.DataExpandable>
-                            </DataTable.RowExpandable>
-                        );
-                    })}
+                    {data.items.map(item => (
+                        <DataTable.RowExpandable key={item.username} expanded={item.isSelected}>
+                            <DataTable.Row
+                                id={`${tableName}_${item.username}`}
+                                key={item.username}
+                                selected={item.isSelected}
+                                onClick={() => this.selectUser(item.username)}
+                            >
+                                <DataTable.Data>{item.username}</DataTable.Data>
+                                <DataTable.Data>{item.last_login_at}</DataTable.Data>
+                                <DataTable.Data className="center aligned">
+                                    <EnhancedIsAdminCheckbox
+                                        onAdminUserChange={() =>
+                                            this.showModal(MenuAction.SET_ADMIN_USER_ROLE_ACTION, item)
+                                        }
+                                        onDefaultUserChange={() =>
+                                            this.showModal(MenuAction.SET_DEFAULT_USER_ROLE_ACTION, item)
+                                        }
+                                        user={item}
+                                        settingUserRoleLoading={settingUserRoleLoading}
+                                    />
+                                </DataTable.Data>
+                                <DataTable.Data className="center aligned">
+                                    {activateLoading === item.username ? (
+                                        <Loader active inline size="mini" />
+                                    ) : (
+                                        <Checkbox
+                                            checked={item.active}
+                                            onChange={() =>
+                                                item.active
+                                                    ? this.showModal(MenuAction.DEACTIVATE_ACTION, item)
+                                                    : this.showModal(MenuAction.ACTIVATE_ACTION, item)
+                                            }
+                                            onClick={e => {
+                                                e.stopPropagation();
+                                            }}
+                                        />
+                                    )}
+                                </DataTable.Data>
+                                <DataTable.Data>
+                                    <Label className="green" horizontal>
+                                        {item.groupCount}
+                                    </Label>
+                                </DataTable.Data>
+                                <DataTable.Data>
+                                    <Label className="blue" horizontal>
+                                        {item.tenantCount}
+                                    </Label>
+                                </DataTable.Data>
+                                <DataTable.Data className="center aligned">
+                                    <MenuAction item={item} onSelectAction={this.showModal} />
+                                </DataTable.Data>
+                            </DataTable.Row>
+                            <DataTable.DataExpandable key={item.username}>
+                                <UserDetails data={item} toolbox={toolbox} onError={this.handleError} />
+                            </DataTable.DataExpandable>
+                        </DataTable.RowExpandable>
+                    ))}
                     <DataTable.Action>
                         <CreateModal toolbox={toolbox} />
                     </DataTable.Action>

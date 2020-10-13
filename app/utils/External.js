@@ -4,21 +4,23 @@
 
 import 'isomorphic-fetch';
 import { saveAs } from 'file-saver';
-import log from 'loglevel';
+import JSZip from 'jszip';
 import StageUtils from './stageUtils';
 import Interceptor from './Interceptor';
 import { LICENSE_ERR, UNAUTHORIZED_ERR } from './ErrorCodes';
-
-const logger = log.getLogger('External');
 
 /*
 Text form of class hierarchy diagram to be used at: https://yuml.me/diagram/nofunky/class/draw
 
 [External|doDelete();doDownload();doGet();doPatch();doPost();doPut();doUpload()]<-[Internal|]
 [Internal]<-[WidgetBackend|]
-[Internal]<-[Manager|doGetFull();getCurrentUsername();getCurrentUserRole();getDistributionName();getDistributionRelease();getIp();getManagerUrl();getSelectedTenant();getSystemRoles();isCommunityEdition()]
+[Internal]<-[Manager|doGetFull();getCurrentUsername();getCurrentUserRole();getDistributionName();getDistributionRelease();getManagerUrl();getSelectedTenant();getSystemRoles();isCommunityEdition()]
 
 */
+
+function getContentType(type) {
+    return { 'content-type': type || 'application/json' };
+}
 
 export default class External {
     constructor(data) {
@@ -52,7 +54,7 @@ export default class External {
     doUpload(url, params, files, method, parseResponse = true, compressFile = false) {
         const actualUrl = this.buildActualUrl(url, params);
 
-        logger.debug(`Uploading file for url: ${url}`);
+        log.debug(`Uploading file for url: ${url}`);
 
         return new Promise((resolve, reject) => {
             // Call upload method
@@ -60,10 +62,10 @@ export default class External {
             (xhr.upload || xhr).addEventListener('progress', e => {
                 const done = e.position || e.loaded;
                 const total = e.totalSize || e.total;
-                logger.debug(`xhr progress: ${Math.round((done / total) * 100)}%`);
+                log.debug(`xhr progress: ${Math.round((done / total) * 100)}%`);
             });
             xhr.addEventListener('error', e => {
-                logger.error('xhr upload error', e, xhr.responseText);
+                log.error('xhr upload error', e, xhr.responseText);
 
                 try {
                     const response = JSON.parse(xhr.responseText);
@@ -73,24 +75,25 @@ export default class External {
                         reject({ message: e.message });
                     }
                 } catch (err) {
-                    logger.error('Cannot parse upload error', err, xhr.responseText);
+                    log.error('Cannot parse upload error', err, xhr.responseText);
                     reject({ message: xhr.responseText || err.message });
                 }
             });
             xhr.addEventListener('load', e => {
-                logger.debug('xhr upload complete', e, xhr.responseText);
+                log.debug('xhr upload complete', e, xhr.responseText);
 
                 const isSuccess = xhr.status >= 200 && xhr.status < 300;
+                let response;
                 try {
-                    var response = parseResponse || !isSuccess ? JSON.parse(xhr.responseText) : xhr.responseText;
+                    response = parseResponse || !isSuccess ? JSON.parse(xhr.responseText) : xhr.responseText;
                     if (response.message) {
-                        logger.error('xhr upload error', e, xhr.responseText);
+                        log.error('xhr upload error', e, xhr.responseText);
 
                         reject({ message: StageUtils.resolveMessage(response.message) });
                         return;
                     }
                 } catch (err) {
-                    logger.error('Cannot parse upload response', err, xhr.responseText);
+                    log.error('Cannot parse upload response', err, xhr.responseText);
                     reject({ message: xhr.responseText || err.message });
                 }
 
@@ -110,7 +113,6 @@ export default class External {
                 if (files instanceof File) {
                     // Single file
                     if (compressFile) {
-                        const JSZip = require('jszip');
                         const reader = new FileReader();
                         const zip = new JSZip();
 
@@ -128,9 +130,9 @@ export default class External {
                                     formData = new File([blob], `${files.name}.zip`);
                                     xhr.send(formData);
                                 },
-                                function error(error) {
-                                    const errorMessage = `Cannot compress file. Error: ${error}`;
-                                    logger.error(errorMessage);
+                                function error(err) {
+                                    const errorMessage = `Cannot compress file. Error: ${err}`;
+                                    log.error(errorMessage);
                                     reject({ message: errorMessage });
                                 }
                             );
@@ -138,7 +140,7 @@ export default class External {
 
                         reader.onerror = event => {
                             const errorMessage = `Cannot read file. Error code: ${event.target.error.code}`;
-                            logger.error(errorMessage);
+                            log.error(errorMessage);
                             reject({ message: errorMessage });
                         };
 
@@ -161,9 +163,9 @@ export default class External {
 
     ajaxCall(url, method, params, data, parseResponse = true, userHeaders = {}, fileName = null, withCredentials) {
         const actualUrl = this.buildActualUrl(url, params);
-        logger.debug(`${method} data. URL: ${url}`);
+        log.debug(`${method} data. URL: ${url}`);
 
-        const headers = Object.assign(this.buildHeaders(), this.contentType(), userHeaders);
+        const headers = Object.assign(this.buildHeaders(), getContentType(), userHeaders);
 
         const options = {
             method,
@@ -174,12 +176,12 @@ export default class External {
             try {
                 if (_.isString(data)) {
                     options.body = data;
-                    _.merge(options.headers, this.contentType('text/plain'));
+                    _.merge(options.headers, getContentType('text/plain'));
                 } else {
                     options.body = JSON.stringify(data);
                 }
             } catch (e) {
-                logger.error(`Error stringifying data. URL: ${actualUrl} data `, data);
+                log.error(`Error stringifying data. URL: ${actualUrl} data `, data);
             }
         }
 
@@ -207,11 +209,13 @@ export default class External {
             });
     }
 
-    isUnauthorized(response) {
+    // eslint-disable-next-line class-methods-use-this
+    isUnauthorized() {
         return false;
     }
 
-    isLicenseError(response, body) {
+    // eslint-disable-next-line class-methods-use-this
+    isLicenseError() {
         return false;
     }
 
@@ -244,19 +248,16 @@ export default class External {
                     code: resJson.error_code
                 });
             } catch (e) {
-                logger.error(e);
+                log.error(e);
                 return Promise.reject({ message: response.statusText, status: response.status });
             }
         });
     }
 
+    // eslint-disable-next-line class-methods-use-this
     buildActualUrl(url, data) {
         const queryString = data ? (url.indexOf('?') > 0 ? '&' : '?') + $.param(data, true) : '';
         return `${url}${queryString}`;
-    }
-
-    contentType(type) {
-        return { 'content-type': type || 'application/json' };
     }
 
     buildHeaders() {

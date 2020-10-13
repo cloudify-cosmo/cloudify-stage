@@ -18,14 +18,13 @@ module.exports = {
 
     getValuesWithPaths(obj, key, arr = []) {
         let objects = [];
-        for (const i in obj) {
-            if (!obj.hasOwnProperty(i)) continue;
+        Object.keys(obj).forEach(i => {
             if (typeof obj[i] === 'object') {
                 objects = objects.concat(this.getValuesWithPaths(obj[i], key, [...arr, i]));
             } else if (i === key) {
                 objects.push({ [obj[i]]: arr });
             }
-        }
+        });
         return objects;
     },
 

@@ -7,10 +7,10 @@ describe('Filter', () => {
 
     it('fills dropdowns with correct data', () => {
         cy.server();
-        cy.route(/console\/sp\/\?su=\/blueprints/, 'fixture:filter/blueprints.json');
-        cy.route(/console\/sp\/\?su=\/deployments.*offset=0/, 'fixture:filter/deployments0.json');
-        cy.route(/console\/sp\/\?su=\/deployments.*offset=20/, 'fixture:filter/deployments1.json');
-        cy.route(/console\/sp\/\?su=\/executions/, 'fixture:filter/executions.json');
+        cy.route(/console\/sp\?su=\/blueprints/, 'fixture:filter/blueprints.json');
+        cy.route(/console\/sp\?su=\/deployments.*offset=0/, 'fixture:filter/deployments0.json');
+        cy.route(/console\/sp\?su=\/deployments.*offset=20/, 'fixture:filter/deployments1.json');
+        cy.route(/console\/sp\?su=\/executions/, 'fixture:filter/executions.json');
 
         cy.get('#dynamicDropdown1').click();
         cy.contains('app2.2-clickme').click();

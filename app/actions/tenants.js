@@ -42,7 +42,7 @@ export function getTenants(manager) {
                 dispatch(recieveTenants(tenants));
             })
             .catch(err => {
-                console.error(err);
+                log.error(err);
                 dispatch(errorTenants(err.message));
                 return Promise.reject(err);
             });

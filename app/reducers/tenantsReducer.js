@@ -5,15 +5,15 @@
 import * as types from '../actions/types';
 
 const tenants = (state = {}, action) => {
+    let selectedTenant;
     switch (action.type) {
         case types.REQ_TENANTS:
             return { ...state, isFetching: true };
         case types.RES_TENANTS:
-            var selectedTenant = _.get(action.tenants, 'items[0].name', null);
+            selectedTenant = _.get(action.tenants, 'items[0].name', null);
             if (!_.isEmpty(state.selected) && _.find(action.tenants.items, { name: state.selected }) != null) {
                 selectedTenant = state.selected;
             }
-
             return {
                 ...state,
                 isFetching: false,
@@ -25,6 +25,8 @@ const tenants = (state = {}, action) => {
             return { ...state, isFetching: false, error: action.error, items: [], lastUpdated: action.receivedAt };
         case types.SELECT_TENANT:
             return { ...state, selected: action.tenant };
+        default:
+            return state;
     }
 };
 

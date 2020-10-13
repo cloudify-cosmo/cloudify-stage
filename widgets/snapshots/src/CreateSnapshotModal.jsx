@@ -39,21 +39,9 @@ export default class CreateModal extends React.Component {
     submitCreate() {
         const { toolbox, widget } = this.props;
         const { snapshotId, includeCredentials, excludeLogs, excludeEvents, queue } = this.state;
-        const errors = {};
 
         if (_.isEmpty(snapshotId)) {
-            errors.snapshotId = 'Please provide snapshot ID';
-        } else {
-            const URL_SAFE_CHARACTERS_RE = /^[0-9a-zA-Z\$\-\_\.\+\!\*\'\(\)\,]+$/;
-            if (!URL_SAFE_CHARACTERS_RE.test(snapshotId)) {
-                errors.snapshotId =
-                    'Please use safe characters. Letters, digits and the following ' +
-                    "special characters $-_.+!*'(), are allowed";
-            }
-        }
-
-        if (!_.isEmpty(errors)) {
-            this.setState({ errors });
+            this.setState({ errors: { snapshotId: 'Please provide snapshot ID' } });
             return;
         }
 

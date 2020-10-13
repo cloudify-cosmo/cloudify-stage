@@ -1,10 +1,11 @@
-export default function ExecutionProgress({ execution, instancesCount, instancesStates }) {
+export default function ExecutionProgress({ execution: executionProp, instancesCount, instancesStates }) {
     const { Progress } = Stage.Basic;
     const {
         NodeInstancesConsts: { groupNames }
     } = Stage.Common;
     const { Execution } = Stage.Utils;
 
+    const execution = { workflow_id: '', status: '', ...executionProp };
     const color = Execution.isActiveExecution(execution) ? 'yellow' : 'green';
     const error = Execution.isFailedExecution(execution);
 
@@ -22,6 +23,7 @@ export default function ExecutionProgress({ execution, instancesCount, instances
 
 ExecutionProgress.propTypes = {
     execution: PropTypes.shape({
+        status: PropTypes.string,
         workflow_id: PropTypes.string,
         error: PropTypes.string
     }).isRequired,

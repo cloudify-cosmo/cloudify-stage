@@ -1,3 +1,4 @@
+const _ = require('lodash');
 const fs = require('fs-extra');
 const moment = require('moment');
 const path = require('path');
@@ -18,7 +19,7 @@ module.exports = {
             })
             .then(results => {
                 logger.info(`Found ${results.length} template rows to migrate.`);
-                for (const templateRow of results) {
+                _.forEach(results, templateRow => {
                     const templateFilePath = path.resolve(userTemplatesFolder, `${templateRow.id}.json`);
                     const { data } = templateRow;
                     const { roles } = data;
@@ -47,7 +48,7 @@ module.exports = {
                     };
 
                     fs.writeJsonSync(templateFilePath, templateFileContent, { spaces: 2, EOL: '\n' });
-                }
+                });
 
                 logger.info('Removing template rows from DB.');
                 return queryInterface.bulkDelete('Resources', { type: ResourceTypes.TEMPLATE });

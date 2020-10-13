@@ -35,7 +35,7 @@ module.exports = {
                 })
             );
     },
-    down: (queryInterface, Sequelize) => {
+    down: queryInterface => {
         return queryInterface.dropTable('BlueprintUserData').then(() =>
             queryInterface.removeIndex('BlueprintUserData', ['blueprintId', 'username'], {
                 indicesType: 'UNIQUE'
