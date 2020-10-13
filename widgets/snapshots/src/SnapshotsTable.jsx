@@ -62,31 +62,25 @@ export default class SnapshotsTable extends React.Component {
             });
     };
 
-    selectSnapshot(item) {
-        const { toolbox } = this.props;
-        const oldSelectedSnapshotId = toolbox.getContext().getValue('snapshotId');
-        toolbox.getContext().setValue('snapshotId', item.id === oldSelectedSnapshotId ? null : item.id);
-    }
-
-    deleteSnapshotConfirm(item, event) {
+    deleteSnapshotConfirm = (item, event) => {
         event.stopPropagation();
 
         this.setState({
             confirmDelete: true,
             item
         });
-    }
+    };
 
-    restoreSnapshot(item, event) {
+    restoreSnapshot = (item, event) => {
         event.stopPropagation();
 
         this.setState({
             showRestore: true,
             item
         });
-    }
+    };
 
-    downloadSnapshot(item, event) {
+    downloadSnapshot = (item, event) => {
         event.stopPropagation();
 
         const { toolbox } = this.props;
@@ -99,6 +93,12 @@ export default class SnapshotsTable extends React.Component {
             .catch(err => {
                 this.setState({ error: err.message });
             });
+    };
+
+    selectSnapshot(item) {
+        const { toolbox } = this.props;
+        const oldSelectedSnapshotId = toolbox.getContext().getValue('snapshotId');
+        toolbox.getContext().setValue('snapshotId', item.id === oldSelectedSnapshotId ? null : item.id);
     }
 
     isSnapshotUseful(snapshot) {
@@ -159,7 +159,7 @@ export default class SnapshotsTable extends React.Component {
                                         bordered
                                         disabled={!isSnapshotUseful}
                                         link={isSnapshotUseful}
-                                        onClick={isSnapshotUseful ? () => this.restoreSnapshot(item) : () => {}}
+                                        onClick={_.wrap(item, this.restoreSnapshot)}
                                     />
                                     <Icon
                                         name="download"
@@ -167,14 +167,14 @@ export default class SnapshotsTable extends React.Component {
                                         bordered
                                         disabled={!isSnapshotUseful}
                                         link={isSnapshotUseful}
-                                        onClick={isSnapshotUseful ? () => this.downloadSnapshot(item) : () => {}}
+                                        onClick={_.wrap(item, this.downloadSnapshot)}
                                     />
                                     <Icon
                                         name="trash"
                                         link
                                         bordered
                                         title="Delete"
-                                        onClick={() => this.deleteSnapshotConfirm(item)}
+                                        onClick={_.wrap(item, this.deleteSnapshotConfirm)}
                                     />
                                 </DataTable.Data>
                             </DataTable.Row>
