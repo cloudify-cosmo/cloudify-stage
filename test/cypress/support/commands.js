@@ -21,6 +21,7 @@ import './plugins';
 import './editMode';
 import './widgets';
 import './secrets';
+import './snapshots';
 
 let token = '';
 
@@ -84,7 +85,7 @@ Cypress.Commands.add('activate', (license = 'valid_trial_license') =>
         .then(() => token)
 );
 
-Cypress.Commands.add('cfyRequest', (url, method = 'GET', headers = null, body = null) =>
+Cypress.Commands.add('cfyRequest', (url, method = 'GET', headers = null, body = null, options = {}) =>
     cy.request({
         method,
         url: '/console/sp',
@@ -96,7 +97,8 @@ Cypress.Commands.add('cfyRequest', (url, method = 'GET', headers = null, body = 
             ...getCommonHeaders(),
             ...headers
         },
-        body
+        body,
+        ...options
     })
 );
 

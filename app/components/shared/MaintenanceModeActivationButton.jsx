@@ -6,7 +6,7 @@ import PropTypes from 'prop-types';
 import { Button } from '../basic';
 
 export default function MaintenanceModeActivationButton({ activate, onClick }) {
-    const content = activate ? 'Activate Maintenance Mode' : 'Dectivate Maintenance Mode';
+    const content = activate ? 'Activate Maintenance Mode' : 'Deactivate Maintenance Mode';
 
     return (
         <Button

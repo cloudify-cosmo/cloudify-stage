@@ -32,12 +32,33 @@ describe('Plugins widget', () => {
         cy.contains('cloudify-openstack-plug-edited');
     });
 
-    it('should allow to install new plugin with default name', () => {
+    it('should allow to install and manage new plugin', () => {
         cy.get('.ok').click();
         cy.get('.modal').should('not.exist');
 
         cy.log('Verify plugin was uploaded');
         cy.get('.pluginsTable tbody tr').should('have.length', 1);
         cy.contains('cloudify-openstack-plugin');
+
+        cy.log('Check ID popup works');
+        cy.get('.pluginsTable')
+            .contains('ID')
+            .trigger('mouseover');
+        cy.contains('Copy ID');
+        cy.get('.pluginsTable')
+            .contains('ID')
+            .trigger('mouseout');
+        cy.contains('Copy ID').should('not.exist');
+
+        cy.log('Set visibility to global');
+        cy.get('.pluginsTable .user').click();
+        cy.contains('Global').click();
+        cy.contains('Yes').click();
+        cy.get('.pluginsTable .globe');
+
+        cy.log('Delete the plugin');
+        cy.get('.pluginsTable .trash').click();
+        cy.contains('Yes').click();
+        cy.contains('There are no Plugins available');
     });
 });
