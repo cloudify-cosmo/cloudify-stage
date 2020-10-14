@@ -1,3 +1,5 @@
+import _ from 'lodash';
+
 describe('Deployments widget', () => {
     const blueprintName = 'deployments_test_hw';
     const deploymentName = 'deployments_test_hw_dep';

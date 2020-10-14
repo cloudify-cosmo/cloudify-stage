@@ -2,6 +2,7 @@
  * Created by kinneretzin on 10/11/2016.
  */
 
+import _ from 'lodash';
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { parse } from 'query-string';

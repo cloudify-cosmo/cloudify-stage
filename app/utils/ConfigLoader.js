@@ -2,6 +2,7 @@
  * Created by kinneretzin on 11/01/2017.
  */
 
+import log from 'loglevel';
 import fetch from 'isomorphic-fetch';
 
 import StageUtils from './stageUtils';

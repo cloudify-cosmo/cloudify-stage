@@ -2,6 +2,8 @@
  * Created by kinneretzin on 30/08/2016.
  */
 
+import _ from 'lodash';
+import log from 'loglevel';
 import { push } from 'connected-react-router';
 import { stringify } from 'query-string';
 import * as types from './types';

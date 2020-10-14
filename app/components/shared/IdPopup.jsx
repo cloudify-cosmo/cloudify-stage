@@ -1,6 +1,7 @@
 /**
  * Created by jakubniezgoda on 05/07/2018.
  */
+import _ from 'lodash';
 import PropTypes from 'prop-types';
 import React from 'react';
 

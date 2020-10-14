@@ -2,6 +2,7 @@
  * Created by jakub.niezgoda on 07/03/2019.
  */
 
+import _ from 'lodash';
 import { connect } from 'react-redux';
 import { push } from 'connected-react-router';
 import Manager from '../utils/Manager';

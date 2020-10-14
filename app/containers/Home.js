@@ -2,6 +2,7 @@
  * Created by addihorowitz on 19/09/2016.
  */
 
+import _ from 'lodash';
 import { connect } from 'react-redux';
 import { push } from 'connected-react-router';
 import { parse } from 'query-string';

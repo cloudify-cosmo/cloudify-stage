@@ -2,6 +2,7 @@
  * Created by kinneretzin on 08/09/2016.
  */
 
+import log from 'loglevel';
 import Internal from './Internal';
 import LoaderUtils from './LoaderUtils';
 

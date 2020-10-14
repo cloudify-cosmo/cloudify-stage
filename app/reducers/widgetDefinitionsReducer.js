@@ -2,6 +2,7 @@
  * Created by kinneretzin on 30/08/2016.
  */
 
+import _ from 'lodash';
 import * as types from '../actions/types';
 
 export default (state = {}, action) => {

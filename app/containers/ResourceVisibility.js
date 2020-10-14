@@ -2,6 +2,7 @@
  * Created by edenp on 17/12/2017.
  */
 
+import _ from 'lodash';
 import { connect } from 'react-redux';
 
 import { ResourceVisibility } from '../components/basic';

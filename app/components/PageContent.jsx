@@ -1,6 +1,7 @@
+import _ from 'lodash';
 import PropTypes from 'prop-types';
+import React, { useEffect, useState } from 'react';
 import { SortableContainer, SortableElement } from 'react-sortable-hoc';
-import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import WidgetsList from './WidgetsList';
 import { Confirm, Container, Header, Menu } from './basic';

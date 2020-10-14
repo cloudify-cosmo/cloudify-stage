@@ -1,5 +1,6 @@
 /* eslint no-underscore-dangle: ["error", { "allow": ["_size", "_offset"] }] */
 
+import _ from 'lodash';
 import Internal from './Internal';
 import StageUtils from './stageUtils';
 import Consts from './consts';

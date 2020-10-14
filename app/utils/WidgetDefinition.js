@@ -2,6 +2,7 @@
  * Created by kinneretzin on 16/01/2017.
  */
 
+import log from 'loglevel';
 import GenericConfig from './GenericConfig';
 
 export default class WidgetDefinition {

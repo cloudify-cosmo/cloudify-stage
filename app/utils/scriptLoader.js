@@ -1,7 +1,7 @@
 /**
  * Created by kinneretzin on 11/09/2016.
  */
-
+import log from 'loglevel';
 import StageUtils from './stageUtils';
 
 export default class ScriptLoader {

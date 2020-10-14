@@ -2,6 +2,7 @@
  * Created by jakubniezgoda on 16/03/2017.
  */
 
+import _ from 'lodash';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import {
@@ -21,6 +22,7 @@ import {
 } from 'recharts';
 import { format as d3format } from 'd3-format';
 
+import TimeUtils from '../../../utils/shared/TimeUtils';
 /**
  * Graph is a component to present data in form of line or bar charts.
  * Up to {@link Graph.MAX_NUMBER_OF_CHARTS} charts can be displayed within one Graph component.
@@ -311,7 +313,7 @@ export default class Graph extends Component {
         });
 
         const xAxisDataFormatter = value => {
-            return Stage.Utils.Time.formatLocalTimestamp(value, xAxisTimeFormat, dataTimeFormat);
+            return TimeUtils.formatLocalTimestamp(value, xAxisTimeFormat, dataTimeFormat);
         };
 
         return (

@@ -2,8 +2,8 @@
  * Created by kinneretzin on 29/08/2016.
  */
 
+import log from 'loglevel';
 import PropTypes from 'prop-types';
-
 import React, { Component } from 'react';
 import { Redirect, Route, Switch } from 'react-router-dom';
 import Home from '../../containers/Home';

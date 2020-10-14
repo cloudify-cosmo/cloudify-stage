@@ -2,6 +2,8 @@
  * Created by jakub.niezgoda on 13/07/2018.
  */
 
+import _ from 'lodash';
+import log from 'loglevel';
 import fetch from 'isomorphic-fetch';
 
 import Consts from './consts';

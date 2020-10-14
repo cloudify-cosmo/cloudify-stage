@@ -2,6 +2,8 @@
  * Created by edenp on 15/04/2018.
  */
 
+import _ from 'lodash';
+import log from 'loglevel';
 import hopscotch from 'hopscotch';
 import { push } from 'connected-react-router';
 

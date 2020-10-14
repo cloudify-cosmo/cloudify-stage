@@ -2,6 +2,7 @@
  * Created by jakubniezgoda on 26/02/2018.
  */
 
+import _ from 'lodash';
 import { connect } from 'react-redux';
 import Help from '../components/Help';
 

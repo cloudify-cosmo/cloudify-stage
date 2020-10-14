@@ -1,5 +1,8 @@
 /* eslint no-underscore-dangle: ["error", { "allow": ["_sort", "_search", "_size", "_offset"] }] */
 
+import _ from 'lodash';
+import log from 'loglevel';
+
 export default class WidgetParamsHandler {
     constructor(widget, toolbox) {
         this.widget = widget;

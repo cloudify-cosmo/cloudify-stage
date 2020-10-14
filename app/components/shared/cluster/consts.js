@@ -1,3 +1,5 @@
+import _ from 'lodash';
+
 export const clusterStatusEnum = Object.freeze({
     OK: 'OK',
     Fail: 'Fail',
