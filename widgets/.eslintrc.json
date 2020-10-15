@@ -1,0 +1,46 @@
+{
+    "extends": [
+        "plugin:react/recommended",
+        "../node_modules/cloudify-ui-common/configs/eslint-common-react.json"
+    ],
+    "rules": {
+        "no-console": "error",
+        "prefer-promise-reject-errors": "off"
+    },
+    "globals": {
+        "_": true,
+        "$": true,
+        "connectToStore": true,
+        "d3": true,
+        "log": true,
+        "L": true,
+        "moment": true,
+        "PropTypes": true,
+        "React": true,
+        "Stage": true
+    },
+    "overrides": [
+        {
+            "files": [
+                "./*/src/backend.js"
+            ],
+            "extends": [
+                "../node_modules/cloudify-ui-common/configs/eslint-common-node.json"
+            ],
+            "rules": {
+                "global-require": "off",
+                "import/no-unresolved": "off",
+                "node/no-missing-require": [
+                    "error",
+                    {
+                        "allowModules": [
+                            "lodash",
+                            "body",
+                            "elkjs"
+                        ]
+                    }
+                ]
+            }
+        }
+    ]
+}

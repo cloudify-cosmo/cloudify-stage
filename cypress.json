@@ -8,10 +8,13 @@
   "supportFile": "test/cypress/support/index.js",
   "pluginsFile": "test/cypress/plugins/index.js",
 
-  "viewportWidth": 1200,
-  "viewportHeight": 800,
   "defaultCommandTimeout": 40000,
-
+  "video": true,
+  "reporter": "junit",
+  "reporterOptions": {
+    "mochaFile": "test/cypress/results/test-results-[hash].xml",
+    "testCaseSwitchClassnameAndName": true
+  },
   "videoUploadOnPasses": false,
 
   "retries": {
