@@ -27,10 +27,7 @@ describe('Topology', () => {
 
         cy.log('Use search to limit number of presented blueprints');
         cy.route(/console\/sp\?su=\/blueprints/).as('getBlueprints');
-        cy.get('.blueprintsTable div.input input')
-            .clear()
-            .type(resourcePrefix)
-            .blur();
+        cy.get('.blueprintsTable div.input input').clear().type(resourcePrefix).blur();
         cy.wait('@getBlueprints');
         cy.wait('@getSummary');
 
@@ -49,10 +46,7 @@ describe('Topology', () => {
         cy.log('Use search to limit number of presented deployments');
         cy.route(/console\/sp\?su=\/deployments/).as('getDeployments');
         cy.route(/console\/sp\?su=\/executions/).as('getExecutions');
-        cy.get('.segmentList div.input input')
-            .clear()
-            .type(resourcePrefix)
-            .blur();
+        cy.get('.segmentList div.input input').clear().type(resourcePrefix).blur();
         cy.wait('@getDeployments');
         cy.wait('@getSummary');
         cy.wait('@getExecutions');
@@ -81,9 +75,7 @@ describe('Topology', () => {
         cy.log('Check terraform module details');
         cy.contains('#gridContainer > #gridSvg > #gridContent > .nodeContainer > .title', 'terraform');
         cy.contains('#gridContainer > #gridSvg > #gridContent > .nodeContainer > .title', 'cloud_resources');
-        cy.get('.nodeTopologyButton:eq(0)')
-            .should('not.have.css', 'visibility', 'hidden')
-            .click({ force: true });
+        cy.get('.nodeTopologyButton:eq(0)').should('not.have.css', 'visibility', 'hidden').click({ force: true });
         cy.get('.modal td:eq(0)').should('have.text', 'null_resource');
         cy.get('.modal td:eq(2)').should('have.text', 'provider["registry.terraform.io/hashicorp/null"]');
         cy.get('.modal tr:eq(1) td:eq(1)').should('have.text', 'foo1');

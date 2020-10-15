@@ -10,20 +10,14 @@ describe('Deployments widget', () => {
 
     const searchForDeployment = name =>
         cy.get('.deploymentsWidget').within(() => {
-            cy.get('.input input')
-                .clear()
-                .type(name);
+            cy.get('.input input').clear().type(name);
             cy.get('.input.loading').should('be.not.visible');
         });
 
     const actOnDeployment = (name, action) => {
         searchForDeployment(name);
-        cy.contains('div.row', name)
-            .find('.menuAction')
-            .click();
-        cy.get('.popupMenu > .menu')
-            .contains(action)
-            .click();
+        cy.contains('div.row', name).find('.menuAction').click();
+        cy.get('.popupMenu > .menu').contains(action).click();
     };
 
     before(() => {
@@ -37,9 +31,7 @@ describe('Deployments widget', () => {
             .login()
             .visitPage('Deployments')
             .editWidgetConfiguration('deployments', () => {
-                cy.get('input[name="pollingTime"]')
-                    .clear()
-                    .type(_.repeat('{uparrow}', 5));
+                cy.get('input[name="pollingTime"]').clear().type(_.repeat('{uparrow}', 5));
             });
     });
 
@@ -69,9 +61,7 @@ describe('Deployments widget', () => {
 
             cy.visitPage('Deployments Test');
             cy.editWidgetConfiguration('deployments', () => {
-                cy.get('input[name="clickToDrillDown"]')
-                    .parent()
-                    .click();
+                cy.get('input[name="clickToDrillDown"]').parent().click();
             });
 
             cy.contains(deploymentName).click();
@@ -90,9 +80,7 @@ describe('Deployments widget', () => {
             });
 
             cy.editWidgetConfiguration('deployments', () => {
-                cy.get('input[name="showExecutionStatusLabel"]')
-                    .parent()
-                    .click();
+                cy.get('input[name="showExecutionStatusLabel"]').parent().click();
             });
 
             searchForDeployment(deploymentName);
@@ -109,9 +97,7 @@ describe('Deployments widget', () => {
             cy.visitPage('Deployments Test');
 
             cy.editWidgetConfiguration('deployments', () => {
-                cy.get('input[name="blueprintIdFilter"]')
-                    .clear()
-                    .type(blueprintName);
+                cy.get('input[name="blueprintIdFilter"]').clear().type(blueprintName);
             });
 
             cy.wait('@getFilteredDeployments');
@@ -143,9 +129,7 @@ describe('Deployments widget', () => {
         cy.get('.executeWorkflowModal button.ok').click();
 
         cy.wait('@executeWorkflow');
-        cy.contains('div.row', deploymentName)
-            .find('.spinner.loading.icon')
-            .should('be.visible');
+        cy.contains('div.row', deploymentName).find('.spinner.loading.icon').should('be.visible');
     });
 
     it('should allow to set site for deployment', () => {
@@ -175,9 +159,7 @@ describe('Deployments widget', () => {
         actOnDeployment(deploymentName, 'Update');
 
         cy.get('.updateDeploymentModal').within(() => {
-            cy.get('textarea[name="webserver_port"]')
-                .clear()
-                .type('9321');
+            cy.get('textarea[name="webserver_port"]').clear().type('9321');
             cy.get('button.blue.ok').click();
         });
 

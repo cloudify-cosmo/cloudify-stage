@@ -43,7 +43,7 @@ class SiteLocationMap extends React.Component {
         }
 
         if (isMapAvailable === false) {
-            const NO_INTERNET_MESSAGE = `Map cannot be displayed because there is no connection 
+            const NO_INTERNET_MESSAGE = `Map cannot be displayed because there is no connection
                                          to the maps repository. Please check network connection.`;
             return (
                 <Message warning style={{ display: 'block' }}>
@@ -80,7 +80,7 @@ class SiteLocationMap extends React.Component {
 SiteLocationMap.propTypes = {
     attribution: PropTypes.string.isRequired,
     location: PropTypes.string.isRequired,
-    mapOptions: PropTypes.shape({ onClick: PropTypes.func, style: PropTypes.object, zoomControl: PropTypes.bool })
+    mapOptions: PropTypes.shape({ onClick: PropTypes.func, style: PropTypes.shape({}), zoomControl: PropTypes.bool })
         .isRequired,
     toolbox: Stage.PropTypes.Toolbox.isRequired
 };

@@ -92,8 +92,9 @@ function hopscotchRegisterHelpers(dispatch) {
                     target: 'div.logo',
                     placement: 'bottom',
                     title: 'No page',
-                    content: `Cannot find <strong>${name ||
-                        pageUrl}</strong> page. Tours are intended to work only on default templates. Reset templates to finish this tour.`
+                    content: `Cannot find <strong>${
+                        name || pageUrl
+                    }</strong> page. Tours are intended to work only on default templates. Reset templates to finish this tour.`
                 });
 
                 return Promise.reject(`Page ${name} not found.`);

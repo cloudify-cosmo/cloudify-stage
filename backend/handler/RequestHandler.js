@@ -10,9 +10,7 @@ module.exports = (() => {
         options.method = method;
 
         logger.debug(`Calling ${options.method} request to: ${requestUrl}`);
-        return req(requestUrl, options)
-            .on('error', onError)
-            .on('response', onSuccess);
+        return req(requestUrl, options).on('error', onError).on('response', onSuccess);
     }
 
     function getResponseJson(res) {

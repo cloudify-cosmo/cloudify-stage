@@ -180,5 +180,6 @@ Promise.all([ToursHandler.init(), WidgetHandler.init(), TemplateHandler.init()])
     })
     .catch(error => {
         logger.error(`Error during tours, widgets and templates data initialization: ${error}`);
+        // eslint-disable-next-line no-process-exit
         process.exit(1);
     });

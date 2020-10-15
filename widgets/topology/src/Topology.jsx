@@ -359,10 +359,10 @@ Topology.propTypes = {
         enableDrag: PropTypes.boolean
     }),
     data: PropTypes.shape({
-        blueprintDeploymentData: PropTypes.object,
-        componentDeploymentsData: PropTypes.object,
-        layout: PropTypes.object,
-        icons: PropTypes.object
+        blueprintDeploymentData: PropTypes.shape({}),
+        componentDeploymentsData: PropTypes.shape({}),
+        layout: PropTypes.shape({ scaleInfo: PropTypes.shape({}) }),
+        icons: PropTypes.shape({})
     }),
     toolbox: Stage.PropTypes.Toolbox.isRequired
 };

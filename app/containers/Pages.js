@@ -70,10 +70,6 @@ const mapDispatchToProps = (dispatch, ownProps) => {
     };
 };
 
-const Pages = connect(
-    mapStateToProps,
-    mapDispatchToProps,
-    mergeProps
-)(PagesList);
+const Pages = connect(mapStateToProps, mapDispatchToProps, mergeProps)(PagesList);
 
 export default Pages;

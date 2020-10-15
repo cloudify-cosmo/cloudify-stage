@@ -7,11 +7,7 @@ describe('Sites Map', () => {
     before(() => {
         const testSite = { name: 'Tel-Aviv', location: '32.079991, 34.767291' };
 
-        cy.activate('valid_spire_license')
-            .login()
-            .deleteSites()
-            .createSite(testSite)
-            .waitUntilLoaded();
+        cy.activate('valid_spire_license').login().deleteSites().createSite(testSite).waitUntilLoaded();
     });
 
     it('is not displayed when there is no connection to map tiles provider', () => {
@@ -36,9 +32,7 @@ describe('Sites Map', () => {
     it('shows markers for each site', () => {
         reloadDashboardPage();
         cy.log('Verify first site is present on the map');
-        cy.get('.leaflet-marker-icon')
-            .should('have.length', 1)
-            .click();
+        cy.get('.leaflet-marker-icon').should('have.length', 1).click();
         cy.get('.leaflet-popup .leaflet-popup-content').should('be.visible');
         cy.get('.leaflet-popup .leaflet-popup-content h5.header').should('have.text', 'Tel-Aviv');
 

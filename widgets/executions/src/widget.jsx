@@ -79,10 +79,7 @@ Stage.defineWidget({
         }
 
         if (singleExecutionView) {
-            const lastExecution = _.chain(data.items)
-                .sortBy('started_at')
-                .last()
-                .value();
+            const lastExecution = _.chain(data.items).sortBy('started_at').last().value();
             return <SingleExecution execution={lastExecution} toolbox={toolbox} />;
         }
 

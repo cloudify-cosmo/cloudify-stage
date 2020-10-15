@@ -158,10 +158,7 @@ function NodeFilter({
     function handleInputChange(inputsToClear, event, field, onStateChange = _.noop) {
         const newValues = {
             ...values,
-            ..._(inputsToClear)
-                .keyBy()
-                .mapValues(getEmptyValueFor)
-                .value(),
+            ..._(inputsToClear).keyBy().mapValues(getEmptyValueFor).value(),
             [field.name]: field.value
         };
         setValues(newValues);

@@ -14,6 +14,7 @@ import EditModeBubble from '../EditModeBubble';
 import PageContent from '../PageContent';
 import { createPageId, drillDownWarning, savePage, setActive, setPageEditMode } from '../../actions/templateManagement';
 import StageUtils from '../../utils/stageUtils';
+import { useErrors } from '../../utils/hooks';
 
 export default function PageManagement({ pageId, isEditMode }) {
     const dispatch = useDispatch();
@@ -33,7 +34,7 @@ export default function PageManagement({ pageId, isEditMode }) {
     const widgetDefinitions = useSelector(state => state.widgetDefinitions);
 
     const [page, setPage] = useState();
-    const [error, setError] = useState();
+    const { errors, setMessageAsError, clearErrors, setErrors } = useErrors();
 
     useEffect(() => {
         const managedPage = _.cloneDeep(pageDefs[pageId]) || {};
@@ -68,7 +69,7 @@ export default function PageManagement({ pageId, isEditMode }) {
         });
 
         if (invalidWidgetNames.length) {
-            setError(`Page template contains invalid widgets definitions: ${_.join(invalidWidgetNames, ', ')}`);
+            setErrors(`Page template contains invalid widgets definitions: ${_.join(invalidWidgetNames, ', ')}`);
         }
 
         setPage(managedPage);
@@ -79,12 +80,7 @@ export default function PageManagement({ pageId, isEditMode }) {
     }
 
     function findWidget(criteria) {
-        return (
-            _.find(page.widgets, criteria) ||
-            _(page.tabs)
-                .flatMap('widgets')
-                .find(criteria)
-        );
+        return _.find(page.widgets, criteria) || _(page.tabs).flatMap('widgets').find(criteria);
     }
 
     const onWidgetUpdated = (id, params) => {
@@ -119,7 +115,7 @@ export default function PageManagement({ pageId, isEditMode }) {
         setPage(updatedPage);
     };
     const onPageSave = () => {
-        dispatch(savePage(page)).catch(err => setError(err.message));
+        dispatch(savePage(page)).catch(err => setMessageAsError(err));
     };
     const onPageNameChange = pageName => {
         const updatedPage = _.clone(page);
@@ -196,7 +192,7 @@ export default function PageManagement({ pageId, isEditMode }) {
                     </div>
                     <Divider />
 
-                    <ErrorMessage error={error} />
+                    <ErrorMessage error={errors} onDismiss={clearErrors} />
 
                     <PageContent
                         onTabAdded={onTabAdded}

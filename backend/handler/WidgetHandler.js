@@ -298,9 +298,7 @@ module.exports = (() => {
             try {
                 logger.info('Setting up user widgets directory:', userWidgetsFolder);
                 mkdirp.sync(userWidgetsFolder);
-                return BackendHandler.initWidgetBackends()
-                    .then(resolve)
-                    .catch(reject);
+                return BackendHandler.initWidgetBackends().then(resolve).catch(reject);
             } catch (e) {
                 logger.error('Could not set up directory, error was:', e);
                 return reject(`Could not set up directory, error was: ${e}`);

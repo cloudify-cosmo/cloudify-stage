@@ -14,15 +14,16 @@ import Templates from './Templates';
 import { createPageId, setActive } from '../../actions/templateManagement';
 import { selectHomePage } from '../../actions/page';
 import Internal from '../../utils/Internal';
+import { useBoolean, useErrors } from '../../utils/hooks';
 import { addPage, addTemplate, editTemplate, removePage, removeTemplate } from '../../actions/templates';
 
 export default function TemplateManagement() {
     const dispatch = useDispatch();
 
-    const [isLoading, setLoading] = useState(true);
+    const [isLoading, setLoading, unsetLoading] = useBoolean(true);
     const [templates, setTemplates] = useState();
     const [pages, setPages] = useState();
-    const [error, setError] = useState();
+    const { errors, setMessageAsError, clearErrors } = useErrors();
 
     const internal = useSelector(state => new Internal(state.manager));
     const pageDefs = useSelector(state => state.templates.pagesDef);
@@ -32,8 +33,8 @@ export default function TemplateManagement() {
 
     function handleError(err) {
         log.error(err);
-        setError(err.message);
-        setLoading(false);
+        setMessageAsError(err);
+        unsetLoading();
     }
 
     function fetchData() {
@@ -68,8 +69,8 @@ export default function TemplateManagement() {
 
                 setTemplates(preparedTemplates);
                 setPages(preparedPages);
-                setError(null);
-                setLoading(false);
+                clearErrors();
+                unsetLoading();
             })
             .catch(handleError);
     }
@@ -96,8 +97,8 @@ export default function TemplateManagement() {
     }
 
     function startLoading() {
-        setLoading(true);
-        setError(null);
+        setLoading();
+        clearErrors();
     }
 
     function onCreateTemplate(templateName, templateRoles, templateTenants, templatePages) {
@@ -237,7 +238,7 @@ export default function TemplateManagement() {
                 </div>
                 <Divider />
 
-                <ErrorMessage error={error} />
+                <ErrorMessage error={errors} onDismiss={clearErrors} />
 
                 <Templates
                     templates={templates}

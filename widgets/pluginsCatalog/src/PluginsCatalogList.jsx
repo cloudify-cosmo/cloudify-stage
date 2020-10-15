@@ -51,10 +51,7 @@ export default class PluginsCatalogList extends React.Component {
         const distro = `${toolbox
             .getManager()
             .getDistributionName()
-            .toLowerCase()} ${toolbox
-            .getManager()
-            .getDistributionRelease()
-            .toLowerCase()}`;
+            .toLowerCase()} ${toolbox.getManager().getDistributionRelease().toLowerCase()}`;
         let items = _.map(itemsProp, item => {
             const wagon = _.find(item.wagons, w => w.name.toLowerCase() === distro || w.name.toLowerCase() === 'any');
             return wagon ? { ...item, isSelected: item.title === selected, wagon } : undefined;

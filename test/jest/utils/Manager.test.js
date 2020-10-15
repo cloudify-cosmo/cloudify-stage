@@ -154,8 +154,16 @@ describe('(Utils) Manager', () => {
 
     it('allows to get system roles', () => {
         expect(manager.getSystemRoles()).toEqual([
-            { description: 'User that can manage Cloudify', name: 'sys_admin', type: 'system_role' },
-            { description: 'User exists, but have no permissions', name: 'default', type: 'system_role' }
+            {
+                description: 'User that can manage Cloudify',
+                name: 'sys_admin',
+                type: 'system_role'
+            },
+            {
+                description: 'User exists, but have no permissions',
+                name: 'default',
+                type: 'system_role'
+            }
         ]);
     });
 });

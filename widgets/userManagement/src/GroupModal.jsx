@@ -81,7 +81,7 @@ export default function GroupModal({ onHide, open, user, toolbox, groups }) {
 }
 
 GroupModal.propTypes = {
-    groups: PropTypes.shape({ items: PropTypes.array }).isRequired,
+    groups: PropTypes.shape({ items: PropTypes.arrayOf(PropTypes.shape({ name: PropTypes.string })) }).isRequired,
     onHide: PropTypes.func.isRequired,
     open: PropTypes.bool.isRequired,
     toolbox: Stage.PropTypes.Toolbox.isRequired,

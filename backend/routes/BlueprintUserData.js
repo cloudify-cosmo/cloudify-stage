@@ -16,13 +16,7 @@ router.get('/layout/:blueprintId', (req, res) => {
             res.send(blueprintData.layout);
         } else {
             SourceHandler.browseArchiveTree(req)
-                .then(data =>
-                    _.chain(data)
-                        .get('children[0].children')
-                        .find({ title: 'info.yaml' })
-                        .get('key')
-                        .value()
-                )
+                .then(data => _.chain(data).get('children[0].children').find({ title: 'info.yaml' }).get('key').value())
                 .then(path => {
                     if (path) {
                         SourceHandler.browseArchiveFile(path)

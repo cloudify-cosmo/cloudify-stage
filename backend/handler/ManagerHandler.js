@@ -13,8 +13,7 @@ module.exports = (() => {
     try {
         caFile = _.get(config, 'app.ssl.ca') ? fs.readFileSync(config.app.ssl.ca) : null;
     } catch (e) {
-        logger.error('Could not setup ssl ca, error loading file.', e);
-        process.exit(1);
+        throw new Error('Could not setup ssl ca, error loading file.', e);
     }
 
     function getManagerUrl() {

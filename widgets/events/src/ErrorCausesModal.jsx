@@ -1,6 +1,7 @@
 /**
  * Created by jakub.niezgoda on 29/10/2018.
  */
+import ErrorCausesPropType from './props/ErrorCausesPropType';
 
 export default function ErrorCausesModal({ errorCauses, onClose, open }) {
     const { Json } = Stage.Utils;
@@ -54,7 +55,7 @@ export default function ErrorCausesModal({ errorCauses, onClose, open }) {
 ErrorCausesModal.propTypes = {
     open: PropTypes.bool,
     onClose: PropTypes.func,
-    errorCauses: PropTypes.arrayOf(PropTypes.shape({}))
+    errorCauses: ErrorCausesPropType
 };
 
 ErrorCausesModal.defaultProps = {

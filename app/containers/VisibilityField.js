@@ -18,7 +18,4 @@ const mapStateToProps = (state, ownProps) => {
 
 const mapDispatchToProps = () => ({});
 
-export default connect(
-    mapStateToProps,
-    mapDispatchToProps
-)(VisibilityField);
+export default connect(mapStateToProps, mapDispatchToProps)(VisibilityField);

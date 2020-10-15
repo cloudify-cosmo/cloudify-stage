@@ -2,10 +2,7 @@ import { styles } from '../../support/cluster_status_commons';
 
 describe('Spire Manager widget', () => {
     before(() => {
-        cy.activate('valid_spire_license')
-            .login()
-            .addPage('Spire Manager Test')
-            .addWidget('managers');
+        cy.activate('valid_spire_license').login().addPage('Spire Manager Test').addWidget('managers');
     });
 
     beforeEach(() => {
@@ -149,24 +146,19 @@ describe('Spire Manager widget', () => {
         cy.get('[option-value="install"]').click();
         cy.get('.modal').should('be.visible');
         cy.get('.actions > .green').click();
-        cy.wait('@postExecutions')
-            .its('request.body')
-            .should('contain', {
-                deployment_id: 'london',
-                workflow_id: 'install'
-            });
+        cy.wait('@postExecutions').its('request.body').should('contain', {
+            deployment_id: 'london',
+            workflow_id: 'install'
+        });
         cy.get('.modal').should('not.be.visible');
     });
 
     it('allows to do bulk workflow execution on spire deployments', () => {
         const waitForExecutionsRequest = id =>
-            cy
-                .wait('@postExecutions')
-                .its('request.body')
-                .should('contain', {
-                    deployment_id: id,
-                    workflow_id: 'install'
-                });
+            cy.wait('@postExecutions').its('request.body').should('contain', {
+                deployment_id: id,
+                workflow_id: 'install'
+            });
 
         cy.get('th > div.checkbox').click();
         cy.get('div.actionField > div:nth-child(2) > button').click();

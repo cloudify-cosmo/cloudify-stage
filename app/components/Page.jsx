@@ -35,10 +35,7 @@ export default class Page extends Component {
             pagesList
         } = this.props;
         const maximizeWidget =
-            _.find(page.widgets, { maximized: true }) ||
-            _(page.tabs)
-                .flatMap('widgets')
-                .find({ maximized: true });
+            _.find(page.widgets, { maximized: true }) || _(page.tabs).flatMap('widgets').find({ maximized: true });
 
         $('body')
             .css({ overflow: maximizeWidget ? 'hidden' : 'inherit' })

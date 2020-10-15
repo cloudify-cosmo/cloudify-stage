@@ -114,8 +114,9 @@ module.exports = (() => {
         const { roles } = rbac;
 
         logger.debug(
-            `${'Inputs for role calculation: ' +
-                'systemRole='}${systemRole}, tenant=${tenant}, tenantsRoles=${JSON.stringify(tenantsRoles)}`
+            `${'Inputs for role calculation: systemRole='}${systemRole}, tenant=${tenant}, tenantsRoles=${JSON.stringify(
+                tenantsRoles
+            )}`
         );
 
         const userRoles = _.compact(

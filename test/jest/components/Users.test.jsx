@@ -65,7 +65,7 @@ describe('(Component) Users', () => {
         expect(wrapper).toHaveLength(1);
     });
 
-    it('renders user menu with full options list ', () => {
+    it('renders user menu with full options list', () => {
         const wrapper = getUsers();
         expect(wrapper.find(Dropdown)).toHaveLength(1); // Showing the users menu
         expect(wrapper.find(Dropdown.Item).length).toBe(6); // 5 menu options
@@ -83,7 +83,7 @@ describe('(Component) Users', () => {
         expect(wrapper.find(Dropdown.Item).get(5).props.icon).toBe('log out'); // Having log out icon for Logout option
     });
 
-    it('renders user menu with full options list and edit mode selected ', () => {
+    it('renders user menu with full options list and edit mode selected', () => {
         const wrapper = getUsers({ isEditMode: true });
 
         expect(wrapper.find(Dropdown)).toHaveLength(1); // Showing the users menu
@@ -92,7 +92,7 @@ describe('(Component) Users', () => {
         expect(wrapper.find(Dropdown.Item).get(0).props.selected).toBe(true); // Having Edit Mode option selected
     });
 
-    it('renders user menu with limited options list ', () => {
+    it('renders user menu with limited options list', () => {
         const wrapper = getUsers({ showAllOptions: false });
 
         expect(wrapper.find(Dropdown)).toHaveLength(1); // Showing the users menu

@@ -224,7 +224,17 @@ function ManagersTable({ data, toolbox, widget }) {
 }
 
 ManagersTable.propTypes = {
-    data: PropTypes.shape({ items: PropTypes.array, total: PropTypes.number }).isRequired,
+    data: PropTypes.shape({
+        items: PropTypes.arrayOf(
+            PropTypes.shape({
+                id: PropTypes.string,
+                ip: PropTypes.string,
+                workflows: PropTypes.shape({}),
+                lastExecution: PropTypes.shape({})
+            })
+        ),
+        total: PropTypes.number
+    }).isRequired,
     toolbox: Stage.PropTypes.Toolbox.isRequired,
     widget: Stage.PropTypes.Widget.isRequired
 };

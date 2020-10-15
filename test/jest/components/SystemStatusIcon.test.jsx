@@ -19,21 +19,21 @@ describe('(Component) SystemStatusIcon', () => {
         wrapper = mount(<SystemStatusIcon systemStatus={systemStatus} />);
     });
 
-    it('renders with available status ', () => {
+    it('renders with available status', () => {
         systemStatus = 'OK';
         wrapper.setProps({ systemStatus });
         expect(wrapper).toHaveLength(1);
         expect(wrapper.find(Icon).instance().props.color).toBe('green'); // Green icon
     });
 
-    it('renders with unavailable status ', () => {
+    it('renders with unavailable status', () => {
         systemStatus = 'Fail';
         wrapper.setProps({ systemStatus });
         expect(wrapper).toHaveLength(1);
         expect(wrapper.find(Icon).instance().props.color).toBe('red'); // Red icon
     });
 
-    it('renders with no status ', () => {
+    it('renders with no status', () => {
         systemStatus = undefined;
         wrapper.setProps({ systemStatus });
         expect(wrapper).toHaveLength(1);

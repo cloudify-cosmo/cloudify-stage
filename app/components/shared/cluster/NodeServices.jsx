@@ -47,10 +47,11 @@ const ServiceHeader = ({ name, description, isRemote }) => {
 ServiceHeader.propTypes = {
     name: PropTypes.string.isRequired,
     description: PropTypes.string,
-    isRemote: PropTypes.bool.isRequired
+    isRemote: PropTypes.bool
 };
 ServiceHeader.defaultProps = {
-    description: ''
+    description: '',
+    isRemote: false
 };
 
 const ServiceStatus = ({ status }) => {
@@ -112,9 +113,17 @@ export default function NodeServices({ name, type, services }) {
 
 export const nodeServicesPropType = PropTypes.objectOf(
     PropTypes.shape({
-        is_remote: PropTypes.bool.isRequired,
+        is_remote: PropTypes.bool,
         status: PropTypes.oneOf(nodeServiceStatuses).isRequired,
-        extra_info: PropTypes.object
+        extra_info: PropTypes.shape({
+            systemd: PropTypes.shape({
+                display_name: PropTypes.string,
+                instances: PropTypes.arrayOf(
+                    PropTypes.shape({ Description: PropTypes.string, Id: PropTypes.string, State: PropTypes.string })
+                ),
+                unit_it: PropTypes.string
+            })
+        })
     })
 );
 

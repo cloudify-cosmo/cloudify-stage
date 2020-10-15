@@ -4,6 +4,7 @@
 
 import ErrorCausesIcon from './ErrorCausesIcon';
 import ErrorCausesModal from './ErrorCausesModal';
+import ErrorCausesPropType from './props/ErrorCausesPropType';
 
 export default class EventsTable extends React.Component {
     static MAX_MESSAGE_LENGTH = 200;
@@ -283,7 +284,7 @@ EventsTable.propTypes = {
             PropTypes.shape({
                 blueprint_id: PropTypes.string,
                 deployment_id: PropTypes.string,
-                error_causes: PropTypes.array,
+                error_causes: ErrorCausesPropType,
                 event_type: PropTypes.string,
                 id: PropTypes.string,
                 isSelected: PropTypes.bool,

@@ -41,7 +41,9 @@ describe('(Reducer) Tenants', () => {
 
     it('creates success action when fetching tenants has been done', () => {
         fetchMock.get('*', {
-            body: { items: [{ name: 'aaa' }, { name: 'bbb' }, { name: 'ccc' }] },
+            body: {
+                items: [{ name: 'aaa' }, { name: 'bbb' }, { name: 'ccc' }]
+            },
             headers: { 'content-type': 'application/json' }
         });
 
@@ -49,7 +51,9 @@ describe('(Reducer) Tenants', () => {
             { type: types.REQ_TENANTS },
             {
                 type: types.RES_TENANTS,
-                tenants: { items: [{ name: 'aaa' }, { name: 'bbb' }, { name: 'ccc' }] },
+                tenants: {
+                    items: [{ name: 'aaa' }, { name: 'bbb' }, { name: 'ccc' }]
+                },
                 receivedAt: Date.now()
             }
         ];
@@ -73,7 +77,11 @@ describe('(Reducer) Tenants', () => {
 
         const expectedActions = [
             { type: types.REQ_TENANTS },
-            { type: types.ERR_TENANTS, error: 'Error fetching tenants', receivedAt: Date.now() }
+            {
+                type: types.ERR_TENANTS,
+                error: 'Error fetching tenants',
+                receivedAt: Date.now()
+            }
         ];
 
         const store = mockStore({});
@@ -111,7 +119,9 @@ describe('(Reducer) Tenants', () => {
 
     it('store has success and tenants data if fetch tenants is ok', () => {
         fetchMock.get(/sp*/, {
-            body: { items: [{ name: 'aaa' }, { name: 'bbb' }, { name: 'ccc' }] },
+            body: {
+                items: [{ name: 'aaa' }, { name: 'bbb' }, { name: 'ccc' }]
+            },
             headers: { 'content-type': 'application/json' }
         });
 

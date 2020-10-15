@@ -1,11 +1,5 @@
 describe('Deployment Wizard Buttons widget', () => {
-    before(() =>
-        cy
-            .activate('valid_trial_license')
-            .login()
-            .addPage('Wizard')
-            .addWidget('deploymentWizardButtons')
-    );
+    before(() => cy.activate('valid_trial_license').login().addPage('Wizard').addWidget('deploymentWizardButtons'));
 
     function next() {
         cy.contains('Next').click();

@@ -113,10 +113,7 @@ function convertHugoShortcodes(widget, content) {
         log(widget, 'Converting relref links:');
         logChange(widget, 'relref shortcodes', newContent.match(relrefRegex));
 
-        newContent = newContent
-            .replace(relrefRegex, '/$1')
-            .replace(indexRegex, 'index.html')
-            .replace(mdRegex, '');
+        newContent = newContent.replace(relrefRegex, '/$1').replace(indexRegex, 'index.html').replace(mdRegex, '');
 
         resolve(newContent);
     });

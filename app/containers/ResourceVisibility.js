@@ -24,7 +24,4 @@ const mapStateToProps = (state, ownProps) => {
 
 const mapDispatchToProps = () => ({});
 
-export default connect(
-    mapStateToProps,
-    mapDispatchToProps
-)(ResourceVisibility);
+export default connect(mapStateToProps, mapDispatchToProps)(ResourceVisibility);

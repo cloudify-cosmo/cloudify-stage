@@ -116,7 +116,7 @@ OutputsTable.propTypes = {
                 description: PropTypes.string,
                 isOutput: PropTypes.bool,
                 name: PropTypes.string,
-                value: PropTypes.any
+                value: Stage.PropTypes.AnyDataType
             })
         )
     }).isRequired,

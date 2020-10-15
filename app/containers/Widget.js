@@ -27,9 +27,6 @@ const mapDispatchToProps = (dispatch /* , ownProps */) => {
     };
 };
 
-const WidgetW = connect(
-    mapStateToProps,
-    mapDispatchToProps
-)(Widget);
+const WidgetW = connect(mapStateToProps, mapDispatchToProps)(Widget);
 
 export default WidgetW;

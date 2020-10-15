@@ -155,21 +155,11 @@ module.exports = (() => {
 
         const promises = [];
         _.each(userWidgets, widgetId =>
-            promises.push(
-                new Promise((resolve, reject) =>
-                    importWidgetBackend(widgetId)
-                        .then(resolve)
-                        .catch(reject)
-                )
-            )
+            promises.push(new Promise((resolve, reject) => importWidgetBackend(widgetId).then(resolve).catch(reject)))
         );
         _.each(builtInWidgets, widgetId =>
             promises.push(
-                new Promise((resolve, reject) =>
-                    importWidgetBackend(widgetId, false)
-                        .then(resolve)
-                        .catch(reject)
-                )
+                new Promise((resolve, reject) => importWidgetBackend(widgetId, false).then(resolve).catch(reject))
             )
         );
 

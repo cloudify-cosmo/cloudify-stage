@@ -22,7 +22,4 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = () => ({});
 
-export default connect(
-    mapStateToProps,
-    mapDispatchToProps
-)(Banner);
+export default connect(mapStateToProps, mapDispatchToProps)(Banner);

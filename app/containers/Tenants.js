@@ -24,7 +24,4 @@ const mapDispatchToProps = (dispatch, ownProps) => {
     };
 };
 
-export default connect(
-    mapStateToProps,
-    mapDispatchToProps
-)(Tenants);
+export default connect(mapStateToProps, mapDispatchToProps)(Tenants);

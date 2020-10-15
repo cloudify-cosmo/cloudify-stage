@@ -17,7 +17,8 @@ import LoaderUtils from './LoaderUtils';
 
 import GenericConfig from './GenericConfig';
 import WidgetDefinition from './WidgetDefinition';
-import WidgetPropType from './WidgetPropType';
+import * as PropTypes from './props';
+import * as Hooks from './hooks';
 
 const ReactDOMServer = require('react-dom/server');
 
@@ -42,12 +43,12 @@ export default class WidgetDefinitionsLoader {
                 window.Stage.Common[def.name] = def.common;
             },
 
-            PropTypes: { Widget: WidgetPropType },
+            PropTypes,
             definePropType: def => {
                 window.Stage.PropTypes[def.name] = def.common;
             },
 
-            Hooks: {},
+            Hooks,
             defineHook: def => {
                 window.Stage.Hooks = { ...window.Stage.Hooks, ...def };
             }

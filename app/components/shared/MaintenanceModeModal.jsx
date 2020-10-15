@@ -4,7 +4,7 @@
 import _ from 'lodash';
 import log from 'loglevel';
 import PropTypes from 'prop-types';
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { connect } from 'react-redux';
 
 import {
@@ -21,6 +21,7 @@ import {
 import { doCancelExecution, getActiveExecutions, setActiveExecutions, switchMaintenance } from '../../actions/managers';
 import Consts from '../../utils/consts';
 
+import { useBoolean, useErrors } from '../../utils/hooks';
 import ExecutionUtils from '../../utils/shared/ExecutionUtils';
 import StageUtils from '../../utils/stageUtils';
 import ExecutionStatus from './ExecutionStatus';
@@ -38,8 +39,8 @@ function MaintenanceModeModal({
     onMaintenanceDeactivate,
     show
 }) {
-    const [loading, setLoading] = useState(false);
-    const [error, setError] = useState('');
+    const [loading, setLoading, unsetLoading] = useBoolean();
+    const { errors, setMessageAsError, clearErrors, setErrors } = useErrors();
 
     const pollingTimeout = useRef(null);
     const fetchDataPromise = useRef();
@@ -80,15 +81,15 @@ function MaintenanceModeModal({
                 startPolling();
             })
             .catch(err => {
-                setError(err.message);
+                setErrors(err.message);
                 startPolling();
             });
     }
 
     useEffect(() => {
         if (show) {
-            setLoading(false);
-            setError('');
+            unsetLoading();
+            clearErrors();
             loadPendingExecutions();
         } else {
             stopPolling();
@@ -101,31 +102,31 @@ function MaintenanceModeModal({
     function activate() {
         onMaintenanceActivate()
             .then(() => {
-                setError('');
-                setLoading(false);
+                clearErrors();
+                unsetLoading();
                 onHide();
             })
             .catch(err => {
-                setError(err.message);
-                setLoading(false);
+                setMessageAsError(err);
+                unsetLoading();
             });
     }
 
     function deactivate() {
         onMaintenanceDeactivate()
             .then(() => {
-                setError('');
-                setLoading(false);
+                clearErrors();
+                unsetLoading();
                 onHide();
             })
             .catch(err => {
-                setError(err.message);
-                setLoading(false);
+                setMessageAsError(err);
+                unsetLoading();
             });
     }
 
     function onApprove() {
-        setLoading(true);
+        setLoading();
 
         if (manager.maintenance === Consts.MAINTENANCE_DEACTIVATED) {
             activate();
@@ -145,10 +146,10 @@ function MaintenanceModeModal({
         onCancelExecution(execution, action)
             .then(() => {
                 loadPendingExecutions();
-                setError('');
+                clearErrors();
             })
             .catch(err => {
-                setError(err.message);
+                setMessageAsError(err);
             });
     }
 
@@ -161,9 +162,9 @@ function MaintenanceModeModal({
                     : 'Are you sure you want to exit maintenance mode?'}
             </Modal.Header>
 
-            {error || !_.isEmpty(activeExecutions.items) ? (
+            {errors || !_.isEmpty(activeExecutions.items) ? (
                 <Modal.Content>
-                    <ErrorMessage error={error} />
+                    <ErrorMessage error={errors} />
 
                     {!_.isEmpty(activeExecutions.items) && (
                         <DataTable>
@@ -302,8 +303,4 @@ const mergeProps = (stateProps, dispatchProps, ownProps) => {
     };
 };
 
-export default connect(
-    mapStateToProps,
-    mapDispatchToProps,
-    mergeProps
-)(MaintenanceModeModal);
+export default connect(mapStateToProps, mapDispatchToProps, mergeProps)(MaintenanceModeModal);

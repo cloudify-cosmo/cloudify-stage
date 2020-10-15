@@ -6,6 +6,7 @@ import _ from 'lodash';
 import PropTypes from 'prop-types';
 
 import React, { useEffect, useState } from 'react';
+import { useBoolean, useResettableState } from '../utils/hooks';
 import GenericConfig from '../utils/GenericConfig';
 import LoaderUtils from '../utils/LoaderUtils';
 import StageUtils from '../utils/stageUtils';
@@ -57,26 +58,26 @@ function AddWidgetModal({
     widgetDefinitions
 }) {
     const [filteredWidgetDefinitions, setFilteredWidgetDefinitions] = useState(widgetDefinitions);
-    const [search, setSearch] = useState('');
-    const [showConfirm, setShowConfirm] = useState(false);
-    const [widgetToRemove, setWidgetToRemove] = useState({});
-    const [showThumbnail, setShowThumbnail] = useState(false);
-    const [thumbnailWidget, setThumbnailWidget] = useState({});
-    const [usedByList, setUsedByList] = useState([]);
+    const [search, setSearch, resetSearch] = useResettableState('');
+    const [showConfirm, setShowConfirm, unsetShowConfirm] = useBoolean();
+    const [widgetToRemove, setWidgetToRemove, resetWidgetToRemove] = useResettableState({});
+    const [showThumbnail, setShowThumbnail, unsetShowThumbnail] = useBoolean();
+    const [thumbnailWidget, setThumbnailWidget, resetThumbnailWidget] = useResettableState({});
+    const [usedByList, setUsedByList, resetUsedByList] = useResettableState([]);
     const [categories, setCategories] = useState(generateCategories(widgetDefinitions));
     const [selectedCategory, setSelectedCategory] = useState(GenericConfig.CATEGORY.ALL);
-    const [widgetsToAdd, setWidgetsToAdd] = useState([]);
-    const [open, setOpen] = useState(false);
+    const [widgetsToAdd, setWidgetsToAdd, resetWidgetsToAdd] = useResettableState([]);
+    const [open, setOpen, unsetOpen] = useBoolean();
     const [error, setError] = useState();
 
     function resetInternalState() {
         setFilteredWidgetDefinitions(widgetDefinitions);
-        setSearch('');
-        setShowConfirm(false);
-        setWidgetToRemove({});
-        setShowThumbnail(false);
-        setThumbnailWidget({});
-        setUsedByList([]);
+        resetSearch();
+        unsetShowConfirm();
+        resetWidgetToRemove();
+        unsetShowThumbnail();
+        resetThumbnailWidget();
+        resetUsedByList();
         setCategories(generateCategories(widgetDefinitions));
         setSelectedCategory(GenericConfig.CATEGORY.ALL);
     }
@@ -85,23 +86,23 @@ function AddWidgetModal({
 
     function openModal() {
         resetInternalState();
-        setOpen(true);
-        setWidgetsToAdd([]);
+        setOpen();
+        resetWidgetsToAdd();
     }
 
     function closeModal() {
-        setOpen(false);
+        unsetOpen();
     }
 
     function openThumbnailModal(event, widget) {
         event.stopPropagation();
-        setShowThumbnail(true);
+        setShowThumbnail();
         setThumbnailWidget(widget);
     }
 
     function closeThumbnailModal() {
-        setShowThumbnail(false);
-        setThumbnailWidget({});
+        unsetShowThumbnail();
+        resetThumbnailWidget();
     }
 
     function addWidgets() {
@@ -112,7 +113,7 @@ function AddWidgetModal({
                 nameIndex += 1;
             }
         });
-        setWidgetsToAdd([]);
+        resetWidgetsToAdd();
         closeModal();
     }
 
@@ -127,7 +128,7 @@ function AddWidgetModal({
             .then(widgetUsedByList => {
                 setWidgetToRemove(widget);
                 setUsedByList(widgetUsedByList);
-                setShowConfirm(true);
+                setShowConfirm();
             })
             .catch(err => {
                 setError(err.message);
@@ -139,7 +140,7 @@ function AddWidgetModal({
     }
 
     function uninstallWidget() {
-        setShowConfirm(false);
+        unsetShowConfirm();
         onWidgetUninstalled(widgetToRemove.id).then(() => setWidgetsToAdd(getWidgetsToAddWithout(widgetToRemove.id)));
     }
 
@@ -386,7 +387,7 @@ function AddWidgetModal({
 
             <Confirm
                 open={showConfirm}
-                onCancel={() => setShowConfirm(false)}
+                onCancel={unsetShowConfirm}
                 onConfirm={uninstallWidget}
                 header={`Are you sure to remove widget ${widgetToRemove.name}?`}
                 content={confirmContent}

@@ -1,14 +1,9 @@
 Cypress.Commands.add('enterEditMode', () => {
-    cy.get('.usersMenu')
-        .click()
-        .contains('Edit Mode')
-        .click();
+    cy.get('.usersMenu').click().contains('Edit Mode').click();
 });
 
 Cypress.Commands.add('exitEditMode', () => {
-    cy.get('.editModeSidebar')
-        .contains('Exit')
-        .click();
+    cy.get('.editModeSidebar').contains('Exit').click();
 });
 
 Cypress.Commands.add('addWidget', widgetId => {
@@ -27,9 +22,7 @@ Cypress.Commands.add('addPage', pageName => {
     cy.contains('Add Page').click();
     cy.get('.breadcrumb').within(() => {
         cy.get('.pageTitle').click();
-        cy.get('.pageTitle.input input')
-            .clear()
-            .type(pageName);
+        cy.get('.pageTitle.input input').clear().type(pageName);
     });
 
     cy.exitEditMode();

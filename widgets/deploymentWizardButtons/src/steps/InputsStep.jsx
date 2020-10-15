@@ -28,8 +28,7 @@ function InputStatus({ defaultValue }) {
 }
 
 InputStatus.propTypes = {
-    // eslint-disable-next-line react/forbid-prop-types
-    defaultValue: PropTypes.any
+    defaultValue: Stage.PropTypes.AnyDataType
 };
 
 InputStatus.defaultProps = {

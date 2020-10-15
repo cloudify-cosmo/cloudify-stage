@@ -6,10 +6,7 @@ describe('Tours', () => {
     beforeEach(() => cy.get('#toursButton').click());
 
     function resetTemplates() {
-        cy.get('.usersMenu')
-            .click()
-            .contains('Reset Templates')
-            .click();
+        cy.get('.usersMenu').click().contains('Reset Templates').click();
         cy.contains('Yes').click();
         cy.get('#loader');
     }

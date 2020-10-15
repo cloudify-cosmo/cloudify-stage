@@ -10,14 +10,12 @@ RevertToDefaultIcon.propTypes = {
     /**
      * value typed field value
      */
-    // eslint-disable-next-line react/forbid-prop-types
-    value: PropTypes.any,
+    value: Stage.PropTypes.AnyDataType,
 
     /**
      * defaultValue typed field default value
      */
-    // eslint-disable-next-line react/forbid-prop-types
-    defaultValue: PropTypes.any,
+    defaultValue: Stage.PropTypes.AnyDataType,
 
     /**
      * onClick function to be called on revert icon click
@@ -189,9 +187,7 @@ class InputsUtils {
 
         const revertToDefault = () => inputChangeFunction(null, { name, value: cloudifyTypedDefaultValue });
 
-        return _.isUndefined(typedDefaultValue) ? (
-            undefined
-        ) : (
+        return _.isUndefined(typedDefaultValue) ? undefined : (
             <RevertToDefaultIcon value={typedValue} defaultValue={typedDefaultValue} onClick={revertToDefault} />
         );
     }
@@ -392,10 +388,10 @@ class InputsUtils {
     }
 
     static getInputFields(inputs, onChange, inputsState, errorsState, dataTypes) {
-        const enhancedInputs = _.sortBy(_.map(inputs, (input, name) => ({ name, ...input })), [
-            input => !_.isUndefined(input.default),
-            'name'
-        ]);
+        const enhancedInputs = _.sortBy(
+            _.map(inputs, (input, name) => ({ name, ...input })),
+            [input => !_.isUndefined(input.default), 'name']
+        );
 
         return _.map(enhancedInputs, input => {
             const dataType = !_.isEmpty(dataTypes) && !!input.type ? dataTypes[input.type] : undefined;
