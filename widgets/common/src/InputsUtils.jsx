@@ -10,12 +10,12 @@ RevertToDefaultIcon.propTypes = {
     /**
      * value typed field value
      */
-    value: Stage.PropTypes.AnyDataType,
+    value: Stage.PropTypes.AnyData,
 
     /**
      * defaultValue typed field default value
      */
-    defaultValue: Stage.PropTypes.AnyDataType,
+    defaultValue: Stage.PropTypes.AnyData,
 
     /**
      * onClick function to be called on revert icon click

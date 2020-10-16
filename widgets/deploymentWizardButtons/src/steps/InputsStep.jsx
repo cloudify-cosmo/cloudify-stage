@@ -28,7 +28,7 @@ function InputStatus({ defaultValue }) {
 }
 
 InputStatus.propTypes = {
-    defaultValue: Stage.PropTypes.AnyDataType
+    defaultValue: Stage.PropTypes.AnyData
 };
 
 InputStatus.defaultProps = {

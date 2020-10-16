@@ -96,7 +96,7 @@ InputsTable.propTypes = {
             PropTypes.shape({
                 description: PropTypes.string,
                 name: PropTypes.string,
-                value: Stage.PropTypes.AnyDataType
+                value: Stage.PropTypes.AnyData
             })
         )
     }).isRequired,

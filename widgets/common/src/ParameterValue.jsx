@@ -80,7 +80,7 @@ export default class ParameterValue extends React.Component {
  * @property {boolean} [showCopyButton=true] if set to true, then CopyToClipboardButton will be shown
  */
 ParameterValue.propTypes = {
-    value: Stage.PropTypes.AnyDataType,
+    value: Stage.PropTypes.AnyData,
     showCopyButton: PropTypes.bool
 };
 
