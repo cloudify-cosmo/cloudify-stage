@@ -64,7 +64,7 @@ describe('Blueprint Sources widget', () => {
         cy.get('.blueprintSourcesWidget .widgetItem').scrollIntoView().should('be.visible');
     });
 
-    it.only('should show blueprint sources details', () => {
+    it('should show blueprint sources details', () => {
         cy.visitPage('Local Blueprints');
         cy.get(`tr#blueprintsTable_${blueprintName}`).click();
 

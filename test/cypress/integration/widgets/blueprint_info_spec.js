@@ -15,7 +15,7 @@ describe('Blueprint Info widget', () => {
         cy.get('.blueprintInfoWidget .message').should('contain.text', 'No blueprint selected');
     });
 
-    it.only('should show blueprint information when blueprint selected', () => {
+    it('should show blueprint information when blueprint selected', () => {
         cy.addWidget('filter');
         cy.get('.filterWidget').within(() => {
             cy.get('.blueprintFilterField').click();
