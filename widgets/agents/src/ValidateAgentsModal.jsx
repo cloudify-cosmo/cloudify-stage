@@ -117,7 +117,7 @@ export default function ValidateAgentsModal({
     const { NodeFilter } = Stage.Common;
 
     return (
-        <Modal open onClose={() => onHide()}>
+        <Modal open onClose={onHide}>
             <Modal.Header>
                 <Icon name="checkmark" /> Validate agents
             </Modal.Header>
