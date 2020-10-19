@@ -11,7 +11,7 @@ export default class {
         return this.toolbox.getManager().doDelete(`/snapshots/${snapshot.id}`);
     }
 
-    doRestore(snapshot, shouldForceRestore, ignorePluginFailure = false) {
+    doRestore(snapshot, shouldForceRestore, ignorePluginFailure) {
         return this.toolbox.getManager().doPost(`/snapshots/${snapshot.id}/restore`, null, {
             force: shouldForceRestore,
             recreate_deployments_envs: false,
@@ -40,7 +40,7 @@ export default class {
         return this.toolbox.getManager().doDownload(snapshotDownloadUrl, snapshotFileName);
     }
 
-    doCreate(snapshotId, includeCredentials = false, excludeLogs = false, excludeEvents = false, queue = false) {
+    doCreate(snapshotId, includeCredentials, excludeLogs, excludeEvents, queue) {
         return this.toolbox.getManager().doPut(`/snapshots/${encodeURIComponent(snapshotId)}`, null, {
             include_credentials: includeCredentials,
             include_logs: !excludeLogs,
