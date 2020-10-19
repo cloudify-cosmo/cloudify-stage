@@ -21,15 +21,13 @@ export default class {
     }
 
     doUpload(snapshotUrl, snapshotId, file) {
-        const params = {};
-        if (!_.isEmpty(snapshotUrl)) {
-            params.snapshot_archive_url = snapshotUrl;
+        if (file) {
+            return this.toolbox.getManager().doUpload(`/snapshots/${snapshotId}/archive`, {}, file, 'put');
         }
 
-        if (file) {
-            return this.toolbox.getManager().doUpload(`/snapshots/${snapshotId}/archive`, params, file, 'put');
-        }
-        return this.toolbox.getManager().doPut(`/snapshots/${snapshotId}/archive`, params);
+        return this.toolbox
+            .getManager()
+            .doPut(`/snapshots/${snapshotId}/archive`, { snapshot_archive_url: snapshotUrl });
     }
 
     doDownload(snapshot) {
