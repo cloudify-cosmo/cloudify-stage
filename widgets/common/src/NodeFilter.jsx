@@ -1,84 +1,112 @@
-const BASIC_PARAMS = { _include: 'id' };
-
-const inputNames = ['blueprint', 'deployment', 'node', 'nodeInstance'];
-
-function toId(resourceName) {
-    return `${resourceName}Id`;
-}
-
 /**
  * NodeFilter  - a component showing dropdowns for filtering blueprints, deployments, nodes and nodes instances.
  * Data (list of blueprints, deployments, nodes and node instances) is dynamically fetched from manager.
- *
- * @param props
  */
-function NodeFilter({
-    value,
-    toolbox,
-    name,
-    onChange,
-    showBlueprints,
-    showDeployments,
-    showNodeInstances,
-    showNodes,
-    allowMultiple,
-    allowMultipleBlueprints,
-    allowMultipleDeployments,
-    allowMultipleNodes,
-    allowMultipleNodeInstances,
-    allowedBlueprints,
-    allowedDeployments,
-    allowedNodes,
-    allowedNodeInstances
-}) {
-    const { useState, useEffect } = React;
-    const { useErrors } = Stage.Hooks;
+export default class NodeFilter extends React.Component {
+    static EMPTY_VALUE = {
+        blueprintId: '',
+        deploymentId: '',
+        nodeId: '',
+        nodeInstanceId: ''
+    };
 
-    const [values, setValues] = useState();
-    const [options, setOptions] = useState();
-    const [loading, setLoading] = useState();
+    static BASIC_PARAMS = { _include: 'id' };
 
-    const { errors, clearErrors, setErrors } = useErrors();
+    static initialState = props => ({
+        blueprints: [],
+        deployments: [],
+        nodes: [],
+        nodeInstances: [],
+        blueprintId: props.value.blueprintId,
+        deploymentId: props.value.deploymentId,
+        nodeId: props.value.nodeId,
+        nodeInstanceId: props.value.nodeInstanceId,
+        errors: {}
+    });
 
-    function resetState() {
-        setValues(
-            _(inputNames)
-                .keyBy()
-                .mapValues(inputName => value[toId(inputName)])
-                .value()
+    constructor(props, context) {
+        super(props, context);
+
+        this.state = NodeFilter.initialState(props);
+    }
+
+    componentDidMount() {
+        this.fetchBlueprints();
+        this.fetchDeployments();
+        this.fetchNodes();
+        this.fetchNodeInstances();
+    }
+
+    shouldComponentUpdate(nextProps, nextState) {
+        return !_.isEqual(this.props, nextProps) || !_.isEqual(this.state, nextState);
+    }
+
+    getEmptyValueFor(resourcesName) {
+        return this.isMultipleSetFor(resourcesName) ? [] : '';
+    }
+
+    getAllowedOptionsFor(resourcesName) {
+        const { [`allowed${_.upperFirst(resourcesName)}`]: allowedOptions } = this.props;
+        return allowedOptions;
+    }
+
+    selectBlueprint = (event, field) => {
+        this.handleInputChange(
+            {
+                deploymentId: this.getEmptyValueFor('deployments'),
+                nodeId: this.getEmptyValueFor('nodes'),
+                nodeInstanceId: this.getEmptyValueFor('nodeInstances')
+            },
+            event,
+            field,
+            () => {
+                this.fetchDeployments();
+                this.fetchNodes();
+                this.fetchNodeInstances();
+            }
         );
-        setOptions(
-            _(inputNames)
-                .keyBy()
-                .mapValues(() => [])
-                .value()
+    };
+
+    selectDeployment = (event, field) => {
+        this.handleInputChange(
+            {
+                nodeId: this.getEmptyValueFor('nodes'),
+                nodeInstanceId: this.getEmptyValueFor('nodeInstances')
+            },
+            event,
+            field,
+            () => {
+                this.fetchNodes();
+                this.fetchNodeInstances();
+            }
         );
-        clearErrors();
-    }
+    };
 
-    function getAllowedOptionsFor(resourcesName) {
-        return { allowedBlueprints, allowedDeployments, allowedNodeInstances, allowedNodes }[
-            `allowed${_.upperFirst(resourcesName)}s`
-        ];
-    }
-
-    function isFilteringSetFor(resourceName) {
-        return !_.isEmpty(getAllowedOptionsFor(resourceName));
-    }
-
-    function isMultipleSetFor(resourceName) {
-        return (
-            allowMultiple ||
-            { allowMultipleBlueprints, allowMultipleDeployments, allowMultipleNodeInstances, allowMultipleNodes }[
-                `allowMultiple${_.upperFirst(resourceName)}s`
-            ]
+    selectNode = (event, field) => {
+        this.handleInputChange(
+            {
+                nodeInstanceId: this.getEmptyValueFor('nodeInstances')
+            },
+            event,
+            field,
+            () => {
+                this.fetchNodeInstances();
+            }
         );
-    }
+    };
 
-    function fetchData(fetchUrl, params, inputName) {
-        setErrors({ ...errors, [inputName]: null });
-        setOptions({ ...options, [inputName]: [] });
-        setLoading({ ...loading, [inputName]: true });
+    selectNodeInstance = (event, field) => {
+        this.handleInputChange({}, event, field);
+    };
+
+    fetchData(fetchUrl, params, optionsField) {
+        const { toolbox } = this.props;
+        const { errors: stateErrors } = this.state;
+
+        const loading = `${optionsField}Loading`;
+        const errors = { ...stateErrors };
+        errors[optionsField] = null;
+        this.setState({ [loading]: true, [optionsField]: [], errors });
 
         toolbox
             .getManager()
@@ -88,140 +116,174 @@ function NodeFilter({
                     .map(item => item.id)
                     .uniqWith(_.isEqual)
                     .value();
-                if (isFilteringSetFor(inputName)) {
-                    ids = _.intersection(ids, getAllowedOptionsFor(inputName));
+                if (this.isFilteringSetFor(optionsField)) {
+                    ids = _.intersection(ids, this.getAllowedOptionsFor(optionsField));
                 }
 
-                const newOptions = _.map(ids, id => ({ text: id, value: id, key: id }));
-                if (!isMultipleSetFor(inputName)) {
-                    newOptions.unshift({ text: '', value: '', key: '' });
+                const options = _.map(ids, id => ({ text: id, value: id, key: id }));
+                if (!this.isMultipleSetFor(optionsField)) {
+                    options.unshift({ text: '', value: '', key: '' });
                 }
 
-                setOptions({ ...options, [inputName]: newOptions });
+                this.setState({ [loading]: false, [optionsField]: options });
             })
-            .catch(error => setErrors({ ...errors, [inputName]: `Data fetching error: ${error.message}` }))
-            .finally(() => setLoading({ ...loading, [inputName]: false }));
+            .catch(error => {
+                errors[optionsField] = `Data fetching error: ${error.message}`;
+                this.setState({ [loading]: false, [optionsField]: [], errors });
+            });
     }
 
-    function fetchNodeInstances(paramValues = values) {
-        const { node, deployment } = paramValues;
-        const params = { ...BASIC_PARAMS };
-        if (!_.isEmpty(deployment)) {
-            params.deployment_id = deployment;
-        }
-        if (!_.isEmpty(node)) {
-            params.node_id = node;
-        }
-        fetchData('/node-instances', params, 'nodeInstance');
+    fetchBlueprints() {
+        const params = { ...NodeFilter.BASIC_PARAMS };
+        this.fetchData('/blueprints', params, 'blueprints');
     }
 
-    function fetchNodes(paramValues = values) {
-        const { blueprint, deployment } = paramValues;
-        const params = { ...BASIC_PARAMS };
-        if (!_.isEmpty(blueprint)) {
-            params.blueprint_id = blueprint;
+    fetchDeployments() {
+        const { blueprintId } = this.state;
+        const params = { ...NodeFilter.BASIC_PARAMS };
+        if (!_.isEmpty(blueprintId)) {
+            params.blueprint_id = blueprintId;
         }
-        if (!_.isEmpty(deployment)) {
-            params.deployment_id = deployment;
-        }
-        fetchData('/nodes', params, 'node');
-        fetchNodeInstances(paramValues);
+        this.fetchData('/deployments', params, 'deployments');
     }
 
-    function fetchDeployments(paramValues = values) {
-        const { blueprint } = paramValues;
-        const params = { ...BASIC_PARAMS };
-        if (!_.isEmpty(blueprint)) {
-            params.blueprint_id = blueprint;
+    fetchNodes() {
+        const { blueprintId, deploymentId } = this.state;
+        const params = { ...NodeFilter.BASIC_PARAMS };
+        if (!_.isEmpty(blueprintId)) {
+            params.blueprint_id = blueprintId;
         }
-        fetchData('/deployments', params, 'deployment');
-        fetchNodes(paramValues);
-    }
-
-    function fetchBlueprints() {
-        const params = { ...BASIC_PARAMS };
-        fetchData('/blueprints', params, 'blueprint');
-        fetchDeployments();
-    }
-
-    useEffect(() => {
-        if (!_.isEqual(_.pick(value, inputNames.map(toId)), _.mapKeys(values, toId))) {
-            resetState();
-            fetchBlueprints();
+        if (!_.isEmpty(deploymentId)) {
+            params.deployment_id = deploymentId;
         }
-    }, [JSON.stringify(value)]);
-
-    function getEmptyValueFor(resourceName) {
-        return isMultipleSetFor(resourceName) ? [] : '';
+        this.fetchData('/nodes', params, 'nodes');
     }
 
-    function handleInputChange(inputsToClear, event, field, onStateChange = _.noop) {
-        const newValues = {
-            ...values,
-            ..._(inputsToClear)
-                .keyBy()
-                .mapValues(getEmptyValueFor)
-                .value(),
-            [field.name]: field.value
-        };
-        setValues(newValues);
+    fetchNodeInstances() {
+        const { deploymentId, nodeId } = this.state;
+        const params = { ...NodeFilter.BASIC_PARAMS };
+        if (!_.isEmpty(deploymentId)) {
+            params.deployment_id = deploymentId;
+        }
+        if (!_.isEmpty(nodeId)) {
+            params.node_id = nodeId;
+        }
+        this.fetchData('/node-instances', params, 'nodeInstances');
+    }
 
-        onStateChange(newValues);
-        onChange(event, {
-            name,
-            value: _.mapKeys(values, toId)
+    handleInputChange(state, event, field, onStateChange) {
+        const { blueprintId, deploymentId, nodeId, nodeInstanceId } = this.state;
+        const { name, onChange } = this.props;
+        this.setState({ ...state, [field.name]: field.value }, () => {
+            if (_.isFunction(onStateChange)) {
+                onStateChange();
+            }
+            onChange(event, {
+                name,
+                value: {
+                    blueprintId,
+                    deploymentId,
+                    nodeId,
+                    nodeInstanceId
+                }
+            });
         });
     }
 
-    function selectBlueprint(event, field) {
-        handleInputChange(['deployment', 'node', 'nodeInstance'], event, field, fetchDeployments);
+    isMultipleSetFor(resourcesName) {
+        const { allowMultiple, [`allowMultiple${_.upperFirst(resourcesName)}`]: resourceAllowMultiple } = this.props;
+        return allowMultiple || resourceAllowMultiple;
     }
 
-    function selectDeployment(event, field) {
-        handleInputChange(['node', 'nodeInstance'], event, field, fetchNodes);
+    isFilteringSetFor(resourcesName) {
+        const { [`allowed${_.upperFirst(resourcesName)}`]: allowedOptions } = this.props;
+        return !_.isEmpty(allowedOptions);
     }
 
-    function selectNode(event, field) {
-        handleInputChange(['nodeInstance'], event, field, fetchNodeInstances);
-    }
+    render() {
+        const { showBlueprints, showDeployments, showNodeInstances, showNodes } = this.props;
+        const {
+            errors,
+            blueprintId,
+            blueprints,
+            blueprintsLoading,
+            deploymentId,
+            deployments,
+            deploymentsLoading,
+            nodeId,
+            nodeInstanceId,
+            nodeInstances,
+            nodeInstancesLoading,
+            nodes,
+            nodesLoading
+        } = this.state;
+        const { Form } = Stage.Basic;
 
-    function selectNodeInstance(event, field) {
-        handleInputChange([], event, field);
-    }
-
-    function renderInput(inputName, onInputChange) {
-        const show = { showBlueprints, showDeployments, showNodeInstances, showNodes }[
-            `show${_.upperFirst(inputName)}s`
-        ];
         return (
-            show && (
-                <Form.Field error={errors[inputName]}>
-                    <Form.Dropdown
-                        search
-                        selection
-                        value={errors[inputName] ? getEmptyValueFor(inputName) : values[inputName]}
-                        multiple={isMultipleSetFor(inputName)}
-                        placeholder={errors[inputName] || _.startCase(inputName)}
-                        options={options[inputName]}
-                        onChange={onInputChange}
-                        name={inputName}
-                        loading={loading[inputName]}
-                    />
-                </Form.Field>
-            )
+            <Form.Group widths="equal">
+                {showBlueprints && (
+                    <Form.Field error={errors.blueprints}>
+                        <Form.Dropdown
+                            search
+                            selection
+                            value={errors.blueprints ? this.getEmptyValueFor('blueprints') : blueprintId}
+                            multiple={this.isMultipleSetFor('blueprints')}
+                            placeholder={errors.blueprints || 'Blueprint'}
+                            options={blueprints}
+                            onChange={this.selectBlueprint}
+                            name="blueprintId"
+                            loading={blueprintsLoading}
+                        />
+                    </Form.Field>
+                )}
+                {showDeployments && (
+                    <Form.Field error={errors.deployments}>
+                        <Form.Dropdown
+                            search
+                            selection
+                            value={errors.deployments ? this.getEmptyValueFor('deployments') : deploymentId}
+                            multiple={this.isMultipleSetFor('deployments')}
+                            placeholder={errors.deployments || 'Deployment'}
+                            options={deployments}
+                            onChange={this.selectDeployment}
+                            name="deploymentId"
+                            loading={deploymentsLoading}
+                        />
+                    </Form.Field>
+                )}
+                {showNodes && (
+                    <Form.Field error={errors.nodes}>
+                        <Form.Dropdown
+                            search
+                            selection
+                            value={errors.nodes ? this.getEmptyValueFor('nodes') : nodeId}
+                            multiple={this.isMultipleSetFor('nodes')}
+                            placeholder={errors.nodes || 'Node'}
+                            options={nodes}
+                            onChange={this.selectNode}
+                            name="nodeId"
+                            loading={nodesLoading}
+                        />
+                    </Form.Field>
+                )}
+                {showNodeInstances && (
+                    <Form.Field error={errors.nodeInstances}>
+                        <Form.Dropdown
+                            search
+                            selection
+                            value={errors.nodeInstances ? this.getEmptyValueFor('nodeInstances') : nodeInstanceId}
+                            multiple={this.isMultipleSetFor('nodeInstances')}
+                            placeholder={errors.nodeInstances || 'Node Instance'}
+                            options={nodeInstances}
+                            onChange={this.selectNodeInstance}
+                            name="nodeInstanceId"
+                            loading={nodeInstancesLoading}
+                        />
+                    </Form.Field>
+                )}
+            </Form.Group>
         );
     }
-
-    const { Form } = Stage.Basic;
-
-    return (
-        <Form.Group widths="equal">
-            {renderInput('blueprint', selectBlueprint)}
-            {renderInput('deployment', selectDeployment)}
-            {renderInput('node', selectNode)}
-            {renderInput('nodeInstance', selectNodeInstance)}
-        </Form.Group>
-    );
 }
 
 /**
@@ -287,5 +349,5 @@ NodeFilter.defaultProps = {
 
 Stage.defineCommon({
     name: 'NodeFilter',
-    common: React.memo(NodeFilter, _.isEqual)
+    common: NodeFilter
 });
