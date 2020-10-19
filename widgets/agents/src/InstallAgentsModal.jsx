@@ -123,7 +123,7 @@ export default function InstallAgentsModal({
     const { NodeFilter } = Stage.Common;
 
     return (
-        <Modal open onClose={() => onHide()}>
+        <Modal open onClose={onHide}>
             <Modal.Header>
                 <Icon name="download" /> Install new agents
             </Modal.Header>
