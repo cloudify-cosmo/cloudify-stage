@@ -1,10 +1,6 @@
 /**
  * NodeFilter  - a component showing dropdowns for filtering blueprints, deployments, nodes and nodes instances.
  * Data (list of blueprints, deployments, nodes and node instances) is dynamically fetched from manager.
- *
- * @param event
- * @param field
- * @param props
  */
 export default class NodeFilter extends React.Component {
     static EMPTY_VALUE = {
