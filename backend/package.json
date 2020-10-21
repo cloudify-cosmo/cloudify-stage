@@ -29,7 +29,7 @@
     "archiver": "^2.1.1",
     "body": "^5.1.0",
     "body-parser": "^1.16.1",
-    "cloudify-ui-common": "^1.6.2",
+    "cloudify-ui-common": "^2.0.0",
     "cookie-parser": "^1.4.3",
     "cross-env": "^5.2.0",
     "decompress": "^4.2.1",
