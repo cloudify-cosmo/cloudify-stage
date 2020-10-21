@@ -2,7 +2,7 @@ import _ from 'lodash';
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import { CopyToClipboardButton, Header, Icon, Popup, Table } from '../../basic';
+import { CopyToClipboardButton, Header, Icon, Table } from '../../basic';
 import JsonUtils from '../../../utils/shared/JsonUtils';
 
 import { clusterServiceEnum, clusterServices, nodeServiceStatusEnum, nodeServiceStatuses } from './consts';
@@ -26,19 +26,11 @@ StatusHeader.propTypes = {
     nodeType: PropTypes.oneOf(clusterServices).isRequired
 };
 
-const ServiceHeader = ({ name, description, isRemote }) => {
+const ServiceHeader = ({ name, description }) => {
     return (
         <Header size="tiny">
             <Header.Content>
-                {name}&nbsp;
-                {isRemote && (
-                    <Popup>
-                        <Popup.Trigger>
-                            <Icon name="external square" />
-                        </Popup.Trigger>
-                        <Popup.Content>Remote</Popup.Content>
-                    </Popup>
-                )}
+                {name}
                 {description && <Header.Subheader>{description}</Header.Subheader>}
             </Header.Content>
         </Header>
@@ -46,12 +38,10 @@ const ServiceHeader = ({ name, description, isRemote }) => {
 };
 ServiceHeader.propTypes = {
     name: PropTypes.string.isRequired,
-    description: PropTypes.string,
-    isRemote: PropTypes.bool
+    description: PropTypes.string
 };
 ServiceHeader.defaultProps = {
-    description: '',
-    isRemote: false
+    description: ''
 };
 
 const ServiceStatus = ({ status }) => {
@@ -78,7 +68,6 @@ export default function NodeServices({ name, type, services }) {
         .sort()
         .map(serviceName => ({
             name: serviceName,
-            isRemote: services[serviceName].is_remote,
             status: services[serviceName].status,
             description: _.get(services[serviceName], 'extra_info.systemd.instances[0].Description', ''),
             extraInfo: services[serviceName].extra_info
@@ -92,11 +81,11 @@ export default function NodeServices({ name, type, services }) {
             <Table celled basic="very" collapsing className="servicesData">
                 <Table.Body style={{ display: 'block', paddingRight: 10, maxHeight: '60vh', overflowY: 'auto' }}>
                     {_.map(formattedServices, service => {
-                        const { description, isRemote, name: serviceName, status: serviceStatus } = service;
+                        const { description, name: serviceName, status: serviceStatus } = service;
                         return (
                             <Table.Row key={serviceName}>
                                 <Table.Cell collapsing>
-                                    <ServiceHeader name={serviceName} description={description} isRemote={isRemote} />
+                                    <ServiceHeader name={serviceName} description={description} />
                                 </Table.Cell>
                                 <Table.Cell textAlign="center">
                                     <ServiceStatus status={serviceStatus} />
@@ -113,7 +102,6 @@ export default function NodeServices({ name, type, services }) {
 
 export const nodeServicesPropType = PropTypes.objectOf(
     PropTypes.shape({
-        is_remote: PropTypes.bool,
         status: PropTypes.oneOf(nodeServiceStatuses).isRequired,
         extra_info: PropTypes.shape({
             systemd: PropTypes.shape({

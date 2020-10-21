@@ -9,7 +9,7 @@
                     "status": "OK",
                     "public_ip": null,
                     "private_ip": "10.110.0.39",
-                    "version": "5.1.0.dev1",
+                    "version": "5.2.0",
                     "services": {
                         "PostgreSQL 9.5 database server": {
                             "status": "Active",
@@ -39,7 +39,7 @@
                     "status": "Fail",
                     "public_ip": "10.110.0.39",
                     "private_ip": "10.110.0.39",
-                    "version": "5.1.0.dev1",
+                    "version": "5.2.0",
                     "services": {
                         "Blackbox Exporter": {
                             "status": "Active",
@@ -245,7 +245,7 @@
                     "status": "OK",
                     "public_ip": null,
                     "private_ip": "10.110.0.39",
-                    "version": "5.1.0.dev1",
+                    "version": "5.2.0",
                     "services": {
                         "RabbitMQ Broker": {
                             "status": "Active",

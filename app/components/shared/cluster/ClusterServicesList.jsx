@@ -4,7 +4,6 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
 import { DataTable } from '../../basic';
-import IdPopup from '../IdPopup';
 import ClusterService from './ClusterService';
 import NodeStatus from './NodeStatus';
 import { nodeServicesPropType } from './NodeServices';
@@ -31,13 +30,12 @@ function ClusterServicesList({ services }) {
 
     return (
         <DataTable noDataMessage={noServicesMessage} noDataAvailable={_.isEmpty(services)} selectable>
-            <DataTable.Column label="Service Type" width="20%" />
+            <DataTable.Column label="Service Type" width="25%" />
             <DataTable.Column label="Node Name" width="25%" />
             <DataTable.Column label="Status" width="5%" />
             <DataTable.Column label="Private IP" width="15%" />
             <DataTable.Column label="Public IP / LB IP" width="15%" />
             <DataTable.Column label="Version" width="15%" />
-            <DataTable.Column label="" width="1%" />
 
             {_.map(services, (service, serviceName) => {
                 const numberOfNodes = _.size(service.nodes);
@@ -46,7 +44,7 @@ function ClusterServicesList({ services }) {
                     .map((node, nodeName) => ({ name: nodeName, ...node }))
                     .sortBy('name')
                     .map((node, index) => (
-                        <DataTable.Row key={`${serviceName}_${node.name}_${node.node_id}`}>
+                        <DataTable.Row key={`${serviceName}_${node.name}_${node.private_ip}`}>
                             {index === 0 && (
                                 <DataTable.Data
                                     rowSpan={numberOfNodes}
@@ -69,9 +67,6 @@ function ClusterServicesList({ services }) {
                                 <PublicIP ip={node.public_ip} serviceName={serviceName} />
                             </DataTable.Data>
                             <DataTable.Data>{node.version}</DataTable.Data>
-                            <DataTable.Data>
-                                <IdPopup selected id={node.node_id} buttonPosition="right" />
-                            </DataTable.Data>
                         </DataTable.Row>
                     ))
                     .value();
@@ -87,7 +82,6 @@ const clusterServiceProps = PropTypes.shape({
             status: PropTypes.oneOf(clusterNodeStatuses).isRequired,
             public_ip: PropTypes.string,
             version: PropTypes.string.isRequired,
-            node_id: PropTypes.string.isRequired,
             private_ip: PropTypes.string.isRequired,
             services: nodeServicesPropType
         })
