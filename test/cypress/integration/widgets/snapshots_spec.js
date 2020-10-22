@@ -29,6 +29,15 @@ describe('Snapshots list widget', () => {
     it('should allow to upload and restore a snapshot', () => {
         cy.contains('Upload').click();
         cy.get('.modal').within(() => {
+            cy.get('.green').click();
+            cy.contains('Please select snapshot file or url');
+            cy.contains('Please provide snapshot ID');
+
+            cy.get('input[name=snapshotUrl]').type('bad url');
+            cy.get('.green').click();
+            cy.contains('Please provide valid URL for snapshot');
+
+            cy.get('input[name=snapshotUrl]').clear();
             cy.get('input[name=snapshotFile]').attachFile('snapshots/empty.zip');
             cy.get('input[name=snapshotId]').type(uploadedSnapshotName);
             cy.get('.green').click();

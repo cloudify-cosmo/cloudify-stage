@@ -37,6 +37,7 @@ global.d3 = d3;
 global.moment = moment;
 global.HTMLElement = window.HTMLElement;
 global.log = log;
+global.Stage = { defineCommon: noop };
 
 // prevent mocha tests from breaking when trying to require non-js file
 require.extensions['.css'] = noop;

@@ -137,9 +137,11 @@ Cypress.Commands.add('stageRequest', (url, method = 'GET', options) => {
 });
 
 Cypress.Commands.add('login', (username = 'admin', password = 'admin') => {
-    if (cy.location('pathname') !== '/console/login') {
-        cy.visit('/console/login');
-    }
+    cy.location('pathname').then(pathname => {
+        if (pathname !== '/console/login') {
+            cy.visit('/console/login');
+        }
+    });
 
     cy.get('.form > :nth-child(1) > .ui > input')
         .clear()

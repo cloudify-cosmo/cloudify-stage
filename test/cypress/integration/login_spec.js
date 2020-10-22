@@ -5,6 +5,32 @@ describe('Login', () => {
         cy.location('pathname').should('be.equal', '/console/');
     });
 
+    it('fails when provided credentials are valid, license is active but user is not authorized', () => {
+        cy.server();
+        cy.route({
+            method: 'POST',
+            url: '/console/auth/login',
+            status: 403,
+            response: ''
+        });
+
+        cy.activate().login();
+
+        cy.location('pathname').should('be.equal', '/console/noTenants');
+        cy.contains('User is not associated with any tenants');
+    });
+
+    it('succeeds and redirects when provided credentials are valid, license is active and redirect query parameter is specified', () => {
+        cy.activate();
+
+        const redirectUrl = '/console/page/logs';
+        cy.visit(`/console/login?redirect=${redirectUrl}`);
+
+        cy.login();
+
+        cy.location('pathname').should('be.equal', redirectUrl);
+    });
+
     it('succeeds when provided credentials are valid and license is not active', () => {
         cy.uploadLicense('expired_trial_license').login();
 
