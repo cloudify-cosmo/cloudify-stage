@@ -8,7 +8,7 @@ rm -Rf ${TMP_DIR} ${STAGE_PACKAGE}
 mkdir -p ${TMP_DIR}/cloudify-stage/dist ${TMP_DIR}/cloudify-stage/backend ${TMP_DIR}/cloudify-stage/conf
 
 cp -r dist/** ${TMP_DIR}/cloudify-stage/dist
-cp -r backend/** ${TMP_DIR}/cloudify-stage/backend
+rsync -avr --exclude='test/' --exclude='package-lock.json' backend ${TMP_DIR}/cloudify-stage
 rsync -avr --exclude='me.json*' conf ${TMP_DIR}/cloudify-stage
 cp package.json ${TMP_DIR}/cloudify-stage/package.json
 
