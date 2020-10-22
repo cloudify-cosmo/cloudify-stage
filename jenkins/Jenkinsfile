@@ -8,7 +8,7 @@ def configuration = [vaultUrl: "${env.VAULT_URL}",  vaultCredentialId: 'vault-ap
 pipeline {
   agent {
     kubernetes {
-      label 'stage-ui'
+      label "stage-ui-${env.BUILD_NUMBER}"
       defaultContainer 'jnlp'
       yamlFile 'jenkins/build-pod.yaml'
     }
