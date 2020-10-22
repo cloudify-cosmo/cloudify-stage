@@ -32,7 +32,7 @@
     "size": "[ -d \"dist\" ] && size-limit",
     "test": "npm run test:frontend && npm run test:backend",
     "test:frontend": "jest test/jest",
-    "jest:frontend:coverage": "jest test/jest --coverage",
+    "test:frontend:coverage": "npm run test:frontend -- --coverage",
     "test:backend": "cd backend && npm test",
     "upload": "scripts/uploadPackage.sh",
     "zip": "scripts/createPackage.sh"
