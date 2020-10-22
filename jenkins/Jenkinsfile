@@ -124,14 +124,14 @@ pipeline {
             container('node'){
               sh "mkdir -p ${workspace}/test && cp -rf ${workspace}/${stage_dir}/. ${workspace}/test"
               dir("test") {
+                echo 'Run static code analysis and code style check'
+                sh 'npm run lint'
+
                 echo 'Run frontend tests'
                 sh 'npm run test:frontend'
 
                 echo 'Run backend tests'
                 sh 'npm run test:backend'
-
-                echo 'Check code style'
-                sh 'npm run lint'
               }
             }
           }
@@ -172,7 +172,6 @@ pipeline {
       }
       steps {
         container('node'){
-          echo "${branch}"
           dir("${stage_dir}") {
             echo 'Run npm production dependencies security audit'
             sh 'npm run audit'
