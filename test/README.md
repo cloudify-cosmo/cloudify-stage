@@ -7,11 +7,14 @@ There are multiple tests divided by category:
 - Util classes tests in [test/jest/utils](./test/jest/utils) directory
 - Widgets tests in [test/jest/widgets](./test/jest/widgets) directory
 
-Run `npm run prodtest` to start all unit tests.
+Run `npm run test` to start all unit tests.
 
-Run `npm run devtest -- <path_to_spec_file>` to start specific unit test from `<path_to_spec_file>`.
+Run `npm run test:frontend -- <path_to_spec_file>` to start specific frontend unit test from `<path_to_spec_file>`.
 
-Run `npm run jest:coverage` to run all unit tests and generate coverage report. Once completed the report will be available in `coverage-jest` directory.
+Run `npm run test:backend -- <path_to_spec_file>` to start specific backend unit test from `<path_to_spec_file>`.
+
+Run `npm run test:frontend:coverage` to run all frontend unit tests and generate coverage report. Once completed the
+ report will be available in `coverage-jest` directory.
 
 ## System tests
 

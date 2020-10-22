@@ -124,8 +124,11 @@ pipeline {
             container('node'){
               sh "mkdir -p ${workspace}/test && cp -rf ${workspace}/${stage_dir}/. ${workspace}/test"
               dir("test") {
-                echo 'Run tests'
-                sh 'npm run prodtest'
+                echo 'Run frontend tests'
+                sh 'npm run test:frontend'
+
+                echo 'Run backend tests'
+                sh 'npm run test:backend'
 
                 echo 'Check code style'
                 sh 'npm run lint'
