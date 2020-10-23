@@ -5,6 +5,13 @@
     "extends": [
         "plugin:jest/recommended"
     ],
+    "settings": {
+        "import/resolver": {
+            "jest": {
+                "jestConfigFile": "jest.config.js"
+            }
+        }
+    },
     "rules": {
         "no-console": "off"
     },

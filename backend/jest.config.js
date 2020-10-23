@@ -29,5 +29,6 @@ module.exports = {
             statements: 1
         }
     },
-    coverageReporters: ['text']
+    coverageReporters: ['text'],
+    moduleDirectories: ['node_modules', '..']
 };
