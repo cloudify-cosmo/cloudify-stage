@@ -2,7 +2,6 @@
  * Created by kinneretzin on 15/12/2016.
  */
 
-import React from 'react';
 import { mount } from 'enzyme';
 import sinon from 'sinon';
 

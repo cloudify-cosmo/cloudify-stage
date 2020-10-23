@@ -2,7 +2,6 @@
  * Created by jakubniezgoda on 07/02/2017.
  */
 
-import React from 'react';
 import { mount } from 'enzyme';
 import sinon from 'sinon';
 import configureMockStore from 'redux-mock-store';

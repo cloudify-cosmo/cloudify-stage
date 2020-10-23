@@ -2,7 +2,6 @@
  * Created by jakubniezgoda on 07/02/2017.
  */
 
-import React from 'react';
 import { mount } from 'enzyme';
 import SystemStatusIcon from 'components/status/SystemStatusIcon';
 import * as BasicComponents from 'components/basic';

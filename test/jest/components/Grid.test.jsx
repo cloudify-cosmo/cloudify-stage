@@ -2,7 +2,6 @@
  * Created by kinneretzin on 15/12/2016.
  */
 
-import React from 'react';
 import { shallow } from 'enzyme';
 
 import Grid from 'components/layout/Grid';

@@ -5,7 +5,7 @@ describe('Page management', () => {
     });
 
     it('allows admin users to create and modify pages', () => {
-        const pageName = 'Page 1;';
+        const pageName = 'Page 1';
 
         cy.get('.usersMenu').click();
         cy.get('.usersMenu')
@@ -66,8 +66,8 @@ describe('Page management', () => {
         cy.get('.blueprintsWidget');
 
         cy.log('Changing page name');
-        cy.contains(pageName).click();
-        cy.get('input').type('.1');
+        cy.get('.pageTitle').click();
+        cy.get('.pageTitle input').type('.1');
 
         cy.log('Adding more widgets');
         cy.contains('Add Widget').click();

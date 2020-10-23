@@ -164,7 +164,7 @@ Cypress.Commands.add('login', (username = 'admin', password = 'admin') => {
 
 Cypress.Commands.add('visitPage', (name, id = null) => {
     cy.log(`Switching to '${name}' page`);
-    cy.get('.sidebar.menu .pages').within(() => cy.contains(name).click());
+    cy.get('.sidebar.menu .pages').within(() => cy.contains(name).click({ force: true }));
     if (id) {
         cy.location('pathname').should('be.equal', `/console/page/${id}`);
     }
