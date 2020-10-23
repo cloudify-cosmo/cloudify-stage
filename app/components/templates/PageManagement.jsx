@@ -115,7 +115,7 @@ export default function PageManagement({ pageId, isEditMode }) {
         setPage(updatedPage);
     };
     const onPageSave = () => {
-        dispatch(savePage(page)).catch(err => setMessageAsError(err));
+        dispatch(savePage(page)).catch(setMessageAsError);
     };
     const onPageNameChange = pageName => {
         const updatedPage = _.clone(page);
