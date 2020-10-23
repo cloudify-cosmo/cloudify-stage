@@ -20,7 +20,7 @@ WIDGETS_COMPONENTS_PATH="content/developer/writing_widgets/widgets-components.md
 WIDGET_COMPONENTS_URL="https://raw.githubusercontent.com/cloudify-cosmo/${DOCS_REPOSITORY}/${DOCS_BRANCH}/${WIDGETS_COMPONENTS_PATH}"
 
 VERSION_IN_DOCS=$(curl -s "$CURL_OPTIONS" "$WIDGET_COMPONENTS_URL" | grep ui_components_link: | sed 's/.*ui-components\/\(.*\)"/\1/')
-VERSION_IN_STAGE=$(npm view ${COMPONENTS_REPOSITORY} version)
+VERSION_IN_STAGE=$(npm --json list ${COMPONENTS_REPOSITORY} | jq --raw-output ".dependencies.\"${COMPONENTS_REPOSITORY}\".version")
 
 echo "Checking version of ${COMPONENTS_REPOSITORY} package in official Cloudify documentation ..."
 if [ "$VERSION_IN_DOCS" == "$VERSION_IN_STAGE" ]; then
