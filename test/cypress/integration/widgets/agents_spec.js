@@ -1,4 +1,4 @@
-describe('Aggents widget', () => {
+describe('Agents widget', () => {
     const blueprintName = 'agents_test_blueprint';
     const deploymentName = 'agents_test_deployment';
 
