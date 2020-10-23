@@ -131,6 +131,7 @@ pipeline {
                 sh 'npm run test:frontend'
 
                 echo 'Run backend tests'
+                sh 'echo \'{"app":{"ssl":{"ca":null},"logLevel":"debug"}}\' > conf/me.json'
                 sh 'npm run test:backend'
               }
             }
