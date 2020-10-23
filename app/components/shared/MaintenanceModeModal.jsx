@@ -148,9 +148,7 @@ function MaintenanceModeModal({
                 loadPendingExecutions();
                 clearErrors();
             })
-            .catch(err => {
-                setMessageAsError(err);
-            });
+            .catch(setMessageAsError);
     }
 
     return (
