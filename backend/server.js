@@ -163,23 +163,24 @@ app.use((err, req, res, next) => {
     res.status(err.status || 404).send({ message: message || err });
 });
 
-const startServer = () => {
-    app.listen(Consts.SERVER_PORT, Consts.SERVER_HOST, () => {
-        logger.info(`Server started in mode ${ServerSettings.settings.mode}`);
-        if (process.env.NODE_ENV === 'development') {
-            logger.info('Server started for development');
-        }
-        logger.info(`Stage runs on ${Consts.SERVER_HOST}:${Consts.SERVER_PORT}!`);
-    });
-};
-
-Promise.all([ToursHandler.init(), WidgetHandler.init(), TemplateHandler.init()])
+module.exports = Promise.all([ToursHandler.init(), WidgetHandler.init(), TemplateHandler.init()])
     .then(() => {
         logger.info('Tours, widgets and templates data initialized successfully.');
-        startServer();
+        return new Promise((resolve, reject) => {
+            const server = app.listen(Consts.SERVER_PORT, Consts.SERVER_HOST);
+            server.on('error', reject);
+            server.on('listening', () => {
+                logger.info(`Server started in mode ${ServerSettings.settings.mode}`);
+                if (process.env.NODE_ENV === 'development') {
+                    logger.info('Server started for development');
+                }
+                logger.info(`Stage runs on ${Consts.SERVER_HOST}:${Consts.SERVER_PORT}!`);
+                resolve(server);
+            });
+        });
     })
     .catch(error => {
-        logger.error(`Error during tours, widgets and templates data initialization: ${error}`);
+        logger.error(`Server initialization failed. ${error}`);
         // eslint-disable-next-line no-process-exit
         process.exit(1);
     });
