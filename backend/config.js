@@ -1,4 +1,5 @@
-/* eslint-disable node/no-unpublished-require,import/no-unresolved,global-require,import/no-dynamic-require */
+/* eslint-disable
+ node/no-unpublished-require,node/no-missing-require,import/no-unresolved,global-require,import/no-dynamic-require */
 const _ = require('lodash');
 const flatten = require('flat');
 
