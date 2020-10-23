@@ -9,7 +9,7 @@ describe('Blueprints widget', () => {
             .uploadPluginFromCatalog('Utilities')
             .deleteDeployments(blueprintNamePrefix, true)
             .deleteBlueprints(blueprintNamePrefix, true)
-            .uploadBlueprint('blueprints/empty.zip', emptyBlueprintName)
+            .uploadBlueprint('blueprints/simple.zip', emptyBlueprintName)
     );
 
     beforeEach(() => cy.visitPage('Local Blueprints'));
@@ -138,8 +138,10 @@ describe('Blueprints widget', () => {
 
         cy.get('input[name=deploymentName]').type(blueprintNamePrefix);
         cy.contains('Show Data Types').click();
-        cy.contains('.modal button', 'Close');
+        cy.contains('.modal button', 'Close').click();
+        cy.get('textarea').type('127.0.0.1');
         cy.contains('.modal .basic', 'Deploy').click();
+        cy.get('.modal').should('not.exist');
 
         cy.visitPage('Local Blueprints');
         getBlueprintRow(emptyBlueprintName)
