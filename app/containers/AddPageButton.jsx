@@ -30,9 +30,6 @@ AddPageButton.propTypes = {
     onClick: PropTypes.func.isRequired
 };
 
-const AddPage = connect(
-    null,
-    mapDispatchToProps
-)(AddPageButton);
+const AddPage = connect(null, mapDispatchToProps)(AddPageButton);
 
 export default AddPage;

@@ -120,7 +120,10 @@ describe('(Component) Banner', () => {
         });
 
         it('without tag for active paying license without license edition', () => {
-            const licenseWithoutEdition = { ...licenses.activePayingLicense, license_edition: '' };
+            const licenseWithoutEdition = {
+                ...licenses.activePayingLicense,
+                license_edition: ''
+            };
             const license = getLicenseState(licenseWithoutEdition, true, Consts.LICENSE.ACTIVE);
             const edition = getLicenseEdition(licenseWithoutEdition);
             const whiteLabel = getWhiteLabel();
@@ -205,7 +208,14 @@ describe('(Component) Banner', () => {
             const license = getLicenseState(licenses.activeTrialLicense, true, Consts.LICENSE.ACTIVE);
             const edition = getLicenseEdition(licenses.activeTrialLicense);
             const whiteLabel = getWhiteLabel();
-            mockStoreAndRender(license, { ...versions.premium, version: '5.1.2432-build123-commit-42342' }, whiteLabel);
+            mockStoreAndRender(
+                license,
+                {
+                    ...versions.premium,
+                    version: '5.1.2432-build123-commit-42342'
+                },
+                whiteLabel
+            );
 
             verifyProps(false, false, true, 'Cloudify', '5.1.2432-build123-commit-42342', edition, true);
             verifyFullName('Cloudify Spire 5.1');

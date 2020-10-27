@@ -16,7 +16,4 @@ const mapDispatchToProps = dispatch => {
     };
 };
 
-export default connect(
-    mapStateToProps,
-    mapDispatchToProps
-)(ToursButton);
+export default connect(mapStateToProps, mapDispatchToProps)(ToursButton);

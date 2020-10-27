@@ -1,6 +1,6 @@
 export default PropTypes.shape({
-    groups: PropTypes.array,
-    tenant_roles: PropTypes.shape({ direct: PropTypes.object, groups: PropTypes.object }),
-    tenants: PropTypes.object,
+    groups: PropTypes.arrayOf(PropTypes.string),
+    tenant_roles: PropTypes.shape({ direct: PropTypes.shape({}), groups: PropTypes.shape({}) }),
+    tenants: PropTypes.shape({}),
     username: PropTypes.string
 });

@@ -2,6 +2,7 @@
  * Created by pposel on 11/04/2017.
  */
 
+import _ from 'lodash';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import EventBus from '../utils/EventBus';

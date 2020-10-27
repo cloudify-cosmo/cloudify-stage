@@ -1,3 +1,4 @@
+import _ from 'lodash';
 import { connect } from 'react-redux';
 import SystemStatusHeader from '../../components/status/SystemStatusHeader';
 import { getClusterStatus } from '../../actions/clusterStatus';
@@ -17,7 +18,4 @@ const mapDispatchToProps = dispatch => {
     };
 };
 
-export default connect(
-    mapStateToProps,
-    mapDispatchToProps
-)(SystemStatusHeader);
+export default connect(mapStateToProps, mapDispatchToProps)(SystemStatusHeader);

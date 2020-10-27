@@ -2,6 +2,8 @@
  * Created by kinneretzin on 01/09/2016.
  */
 
+import log from 'loglevel';
+
 export default class StatePersister {
     static save(state, mode) {
         try {

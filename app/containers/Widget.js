@@ -2,6 +2,7 @@
  * Created by kinneretzin on 11/09/2016.
  */
 
+import _ from 'lodash';
 import { connect } from 'react-redux';
 import Widget from '../components/Widget';
 import { setValue } from '../actions/context';
@@ -26,9 +27,6 @@ const mapDispatchToProps = (dispatch /* , ownProps */) => {
     };
 };
 
-const WidgetW = connect(
-    mapStateToProps,
-    mapDispatchToProps
-)(Widget);
+const WidgetW = connect(mapStateToProps, mapDispatchToProps)(Widget);
 
 export default WidgetW;

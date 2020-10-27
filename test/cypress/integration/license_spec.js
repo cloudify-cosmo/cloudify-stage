@@ -34,9 +34,7 @@ describe('License Management', () => {
         cy.get('.form > .message')
             .scrollIntoView()
             .within(() => {
-                cy.get('.header')
-                    .should('be.visible')
-                    .should('have.text', 'License error');
+                cy.get('.header').should('be.visible').should('have.text', 'License error');
                 cy.get('.list > .content').should('have.text', error);
             });
     };
@@ -74,9 +72,7 @@ describe('License Management', () => {
         cy.visit('/console').waitUntilLoaded();
 
         cy.get('.usersMenu').click();
-        cy.get('.usersMenu')
-            .contains('License Management')
-            .click();
+        cy.get('.usersMenu').contains('License Management').click();
 
         cy.location('pathname').should('be.equal', '/console/license');
     });
@@ -85,9 +81,7 @@ describe('License Management', () => {
         cy.visit('/console').waitUntilLoaded();
 
         cy.get('.helpMenu').click();
-        cy.get('.helpMenu')
-            .contains('About')
-            .click();
+        cy.get('.helpMenu').contains('About').click();
 
         cy.get('.actions > button.yellow').should('have.text', 'License Management');
 
@@ -103,9 +97,7 @@ describe('License Management', () => {
         uploadLicense(expiredTrialLicense.file).then(() => verifyMessageHeader(expiredTrialLicense.header));
 
         // Update license using REST call
-        cy.activate()
-            .reload()
-            .waitUntilLoaded();
+        cy.activate().reload().waitUntilLoaded();
 
         verifyMessageHeader(validTrialLicense.header);
     });

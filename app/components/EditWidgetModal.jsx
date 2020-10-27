@@ -2,6 +2,7 @@
  * Created by addihorowitz on 11/09/2016.
  */
 
+import _ from 'lodash';
 import PropTypes from 'prop-types';
 import React, { useEffect, useState } from 'react';
 
@@ -92,10 +93,12 @@ EditWidgetModal.propTypes = {
     configuration: PropTypes.shape({}).isRequired,
     configDef: PropTypes.arrayOf(
         PropTypes.shape({
+            // eslint-disable-next-line react/forbid-prop-types
             default: PropTypes.any,
             id: PropTypes.string,
             name: PropTypes.string,
             hidden: PropTypes.bool,
+            // eslint-disable-next-line react/forbid-prop-types
             value: PropTypes.any
         })
     ).isRequired,

@@ -26,7 +26,7 @@ export default function StatusIcon({ isFetching, status: { status, services } })
 }
 
 StatusIcon.propTypes = {
-    status: PropTypes.shape({ status: PropTypes.string, services: PropTypes.object }),
+    status: PropTypes.shape({ status: PropTypes.string, services: PropTypes.shape({}) }),
     isFetching: PropTypes.bool
 };
 

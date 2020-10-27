@@ -19,9 +19,7 @@ describe('Blueprint Info widget', () => {
         cy.addWidget('filter');
         cy.get('.filterWidget').within(() => {
             cy.get('.blueprintFilterField').click();
-            cy.get('.blueprintFilterField input')
-                .type(`${blueprintName}{enter}`, { force: true })
-                .click();
+            cy.get('.blueprintFilterField input').type(`${blueprintName}{enter}`, { force: true });
         });
 
         cy.get('.blueprintInfoWidget').within(() => {

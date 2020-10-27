@@ -34,10 +34,7 @@ describe('Community version', () => {
     });
 
     it('should have community license in About modal', () => {
-        cy.get('.helpMenu')
-            .click()
-            .contains('About')
-            .click();
+        cy.get('.helpMenu').click().contains('About').click();
         cy.contains('a', 'End User License Agreement').should(
             'have.attr',
             'href',

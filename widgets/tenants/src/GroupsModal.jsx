@@ -105,7 +105,7 @@ export default function GroupsModal({ onHide, open, tenant, toolbox, userGroups 
 
 GroupsModal.propTypes = {
     tenant: TenantPropType.isRequired,
-    userGroups: PropTypes.shape({ items: PropTypes.array }).isRequired,
+    userGroups: PropTypes.shape({ items: PropTypes.arrayOf(PropTypes.shape({ name: PropTypes.string })) }).isRequired,
     toolbox: Stage.PropTypes.Toolbox.isRequired,
     onHide: PropTypes.func,
     open: PropTypes.bool.isRequired

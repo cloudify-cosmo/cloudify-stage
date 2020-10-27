@@ -2,6 +2,7 @@
  * Created by jakubniezgoda on 03/03/2017.
  */
 
+import _ from 'lodash';
 import { types } from 'cloudify-ui-common';
 
 export default class JsonUtils {

@@ -4,6 +4,7 @@
 
 import md5 from 'blueimp-md5';
 import _ from 'lodash';
+import log from 'loglevel';
 import { saveAs } from 'file-saver';
 import marked from 'marked';
 import { GenericField } from '../components/basic';

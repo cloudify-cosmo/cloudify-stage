@@ -93,7 +93,11 @@ InputsTable.propTypes = {
         blueprintId: Stage.PropTypes.StringOrArray,
         deploymentId: Stage.PropTypes.StringOrArray,
         items: PropTypes.arrayOf(
-            PropTypes.shape({ description: PropTypes.string, name: PropTypes.string, value: PropTypes.any })
+            PropTypes.shape({
+                description: PropTypes.string,
+                name: PropTypes.string,
+                value: Stage.PropTypes.AnyData
+            })
         )
     }).isRequired,
     toolbox: Stage.PropTypes.Toolbox.isRequired,

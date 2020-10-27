@@ -1,1 +1,1 @@
-export default PropTypes.shape({ groups: PropTypes.object, name: PropTypes.string, users: PropTypes.object });
+export default PropTypes.shape({ groups: PropTypes.shape({}), name: PropTypes.string, users: PropTypes.shape({}) });

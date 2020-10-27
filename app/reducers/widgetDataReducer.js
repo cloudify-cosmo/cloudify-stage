@@ -2,6 +2,7 @@
  * Created by kinneretzin on 3/4/2017
  */
 
+import _ from 'lodash';
 import * as types from '../actions/types';
 
 const widgetData = (state = [], action) => {

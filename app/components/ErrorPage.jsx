@@ -2,6 +2,7 @@
  * Created by pposel on 8/17/17.
  */
 
+import _ from 'lodash';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { Redirect } from 'react-router-dom';

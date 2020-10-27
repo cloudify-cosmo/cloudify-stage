@@ -1,0 +1,8 @@
+{
+    "extends": [
+        "../node_modules/cloudify-ui-common/configs/eslint-common-node.json"
+    ],
+    "rules": {
+        "prefer-promise-reject-errors": "off"
+    }
+}

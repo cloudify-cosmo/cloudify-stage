@@ -2,6 +2,7 @@
  * Created by jakubniezgoda on 21/05/2018.
  */
 
+import _ from 'lodash';
 import PropTypes from 'prop-types';
 import React, { useState } from 'react';
 import { connect } from 'react-redux';

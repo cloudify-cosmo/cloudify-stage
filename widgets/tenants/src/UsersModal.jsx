@@ -113,7 +113,7 @@ export default function UsersModal({ onHide, tenant, open, toolbox, users }) {
 
 UsersModal.propTypes = {
     tenant: TenantPropType.isRequired,
-    users: PropTypes.shape({ items: PropTypes.array }).isRequired,
+    users: PropTypes.shape({ items: PropTypes.arrayOf(PropTypes.shape({ username: PropTypes.string })) }).isRequired,
     toolbox: Stage.PropTypes.Toolbox.isRequired,
     onHide: PropTypes.func,
     open: PropTypes.bool.isRequired

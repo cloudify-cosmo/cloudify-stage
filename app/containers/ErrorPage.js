@@ -13,7 +13,4 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = () => ({});
 
-export default connect(
-    mapStateToProps,
-    mapDispatchToProps
-)(ErrorPage);
+export default connect(mapStateToProps, mapDispatchToProps)(ErrorPage);

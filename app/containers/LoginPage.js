@@ -26,9 +26,4 @@ const mapDispatchToProps = dispatch => {
     };
 };
 
-export default withRouter(
-    connect(
-        mapStateToProps,
-        mapDispatchToProps
-    )(LoginPage)
-);
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(LoginPage));

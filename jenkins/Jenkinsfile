@@ -8,7 +8,7 @@ def configuration = [vaultUrl: "${env.VAULT_URL}",  vaultCredentialId: 'vault-ap
 pipeline {
   agent {
     kubernetes {
-      label 'stage-ui'
+      label "stage-ui-${env.BUILD_NUMBER}"
       defaultContainer 'jnlp'
       yamlFile 'jenkins/build-pod.yaml'
     }
@@ -124,11 +124,15 @@ pipeline {
             container('node'){
               sh "mkdir -p ${workspace}/test && cp -rf ${workspace}/${stage_dir}/. ${workspace}/test"
               dir("test") {
-                echo 'Run tests'
-                sh 'npm run prodtest'
-
-                echo 'Check code style'
+                echo 'Run static code analysis and code style check'
                 sh 'npm run lint'
+
+                echo 'Run frontend tests'
+                sh 'npm run test:frontend'
+
+                echo 'Run backend tests'
+                sh 'echo \'{"app":{"ssl":{"ca":null},"logLevel":"debug"}}\' > conf/me.json'
+                sh 'npm run test:backend'
               }
             }
           }
@@ -169,7 +173,6 @@ pipeline {
       }
       steps {
         container('node'){
-          echo "${branch}"
           dir("${stage_dir}") {
             echo 'Run npm production dependencies security audit'
             sh 'npm run audit'

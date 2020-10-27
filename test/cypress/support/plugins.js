@@ -15,9 +15,7 @@ Cypress.Commands.add('uploadPluginFromCatalog', pluginName => {
     cy.log(`Upload ${pluginName} plugin`);
     cy.visitPage('Cloudify Catalog');
     cy.get('.pluginsCatalogWidget').within(() => {
-        cy.contains('tr', pluginName)
-            .find('button')
-            .click();
+        cy.contains('tr', pluginName).find('button').click();
     });
     cy.get('.modal').within(() => {
         cy.get('button.ok').click();

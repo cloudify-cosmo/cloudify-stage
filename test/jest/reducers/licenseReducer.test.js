@@ -42,7 +42,12 @@ describe('(Reducer) License', () => {
         it('empty license triggers actions', () => {
             store = mockStore({});
             fetchMock.post('/console/auth/login', {
-                body: { license: {}, version: versions.premium, role: sysAdminRole, rbac },
+                body: {
+                    license: {},
+                    version: versions.premium,
+                    role: sysAdminRole,
+                    rbac
+                },
                 headers: { 'content-type': 'application/json' }
             });
 
@@ -58,10 +63,20 @@ describe('(Reducer) License', () => {
                 const expectedActions = [
                     { type: types.REQ_LOGIN },
                     { ...resLoginAction },
-                    { type: types.SET_MANAGER_VERSION, version: versions.premium },
+                    {
+                        type: types.SET_MANAGER_VERSION,
+                        version: versions.premium
+                    },
                     { type: types.SET_MANAGER_LICENSE, license: {} },
-                    { type: types.STORE_RBAC, roles: rbac.roles, permissions: rbac.permissions },
-                    { type: '@@router/CALL_HISTORY_METHOD', payload: { args: ['/'], method: 'push' } }
+                    {
+                        type: types.STORE_RBAC,
+                        roles: rbac.roles,
+                        permissions: rbac.permissions
+                    },
+                    {
+                        type: '@@router/CALL_HISTORY_METHOD',
+                        payload: { args: ['/'], method: 'push' }
+                    }
                 ];
 
                 expect(actualActions).toHaveLength(expectedActions.length);
@@ -72,7 +87,12 @@ describe('(Reducer) License', () => {
         it('empty license changes license state', () => {
             store = createStore(licenseReducer, {}, applyMiddleware(thunk));
             fetchMock.post('/console/auth/login', {
-                body: { license: [], version: versions.premium, role: sysAdminRole, rbac },
+                body: {
+                    license: [],
+                    version: versions.premium,
+                    role: sysAdminRole,
+                    rbac
+                },
                 headers: { 'content-type': 'application/json' }
             });
 
@@ -90,7 +110,12 @@ describe('(Reducer) License', () => {
         it('active license triggers actions', () => {
             store = mockStore({});
             fetchMock.post('/console/auth/login', {
-                body: { license: licenses.activePayingLicense, version: versions.premium, role: sysAdminRole, rbac },
+                body: {
+                    license: licenses.activePayingLicense,
+                    version: versions.premium,
+                    role: sysAdminRole,
+                    rbac
+                },
                 headers: { 'content-type': 'application/json' }
             });
 
@@ -106,10 +131,23 @@ describe('(Reducer) License', () => {
                 const expectedActions = [
                     { type: types.REQ_LOGIN },
                     { ...resLoginAction },
-                    { type: types.SET_MANAGER_VERSION, version: versions.premium },
-                    { type: types.SET_MANAGER_LICENSE, license: licenses.activePayingLicense },
-                    { type: types.STORE_RBAC, roles: rbac.roles, permissions: rbac.permissions },
-                    { type: '@@router/CALL_HISTORY_METHOD', payload: { args: ['/'], method: 'push' } }
+                    {
+                        type: types.SET_MANAGER_VERSION,
+                        version: versions.premium
+                    },
+                    {
+                        type: types.SET_MANAGER_LICENSE,
+                        license: licenses.activePayingLicense
+                    },
+                    {
+                        type: types.STORE_RBAC,
+                        roles: rbac.roles,
+                        permissions: rbac.permissions
+                    },
+                    {
+                        type: '@@router/CALL_HISTORY_METHOD',
+                        payload: { args: ['/'], method: 'push' }
+                    }
                 ];
 
                 expect(actualActions).toHaveLength(expectedActions.length);
@@ -120,7 +158,12 @@ describe('(Reducer) License', () => {
         it('active license changes license state', () => {
             store = createStore(licenseReducer, {}, applyMiddleware(thunk));
             fetchMock.post('/console/auth/login', {
-                body: { license: licenses.activePayingLicense, version: versions.premium, role: sysAdminRole, rbac },
+                body: {
+                    license: licenses.activePayingLicense,
+                    version: versions.premium,
+                    role: sysAdminRole,
+                    rbac
+                },
                 headers: { 'content-type': 'application/json' }
             });
 
@@ -138,7 +181,12 @@ describe('(Reducer) License', () => {
         it('expired license triggers actions', () => {
             store = mockStore({});
             fetchMock.post('/console/auth/login', {
-                body: { license: licenses.expiredPayingLicense, version: versions.premium, role: sysAdminRole, rbac },
+                body: {
+                    license: licenses.expiredPayingLicense,
+                    version: versions.premium,
+                    role: sysAdminRole,
+                    rbac
+                },
                 headers: { 'content-type': 'application/json' }
             });
 
@@ -154,10 +202,23 @@ describe('(Reducer) License', () => {
                 const expectedActions = [
                     { type: types.REQ_LOGIN },
                     { ...resLoginAction },
-                    { type: types.SET_MANAGER_VERSION, version: versions.premium },
-                    { type: types.SET_MANAGER_LICENSE, license: licenses.expiredPayingLicense },
-                    { type: types.STORE_RBAC, roles: rbac.roles, permissions: rbac.permissions },
-                    { type: '@@router/CALL_HISTORY_METHOD', payload: { args: ['/'], method: 'push' } }
+                    {
+                        type: types.SET_MANAGER_VERSION,
+                        version: versions.premium
+                    },
+                    {
+                        type: types.SET_MANAGER_LICENSE,
+                        license: licenses.expiredPayingLicense
+                    },
+                    {
+                        type: types.STORE_RBAC,
+                        roles: rbac.roles,
+                        permissions: rbac.permissions
+                    },
+                    {
+                        type: '@@router/CALL_HISTORY_METHOD',
+                        payload: { args: ['/'], method: 'push' }
+                    }
                 ];
 
                 expect(actualActions).toHaveLength(expectedActions.length);
@@ -168,7 +229,12 @@ describe('(Reducer) License', () => {
         it('expired license changes license state', () => {
             store = createStore(licenseReducer, {}, applyMiddleware(thunk));
             fetchMock.post('/console/auth/login', {
-                body: { license: licenses.expiredPayingLicense, version: versions.premium, role: sysAdminRole, rbac },
+                body: {
+                    license: licenses.expiredPayingLicense,
+                    version: versions.premium,
+                    role: sysAdminRole,
+                    rbac
+                },
                 headers: { 'content-type': 'application/json' }
             });
 
@@ -186,7 +252,12 @@ describe('(Reducer) License', () => {
         it('non-licensed version triggers actions', () => {
             store = mockStore({});
             fetchMock.post('/console/auth/login', {
-                body: { license: null, version: versions.community, role: sysAdminRole, rbac },
+                body: {
+                    license: null,
+                    version: versions.community,
+                    role: sysAdminRole,
+                    rbac
+                },
                 headers: { 'content-type': 'application/json' }
             });
 
@@ -202,10 +273,20 @@ describe('(Reducer) License', () => {
                 const expectedActions = [
                     { type: types.REQ_LOGIN },
                     { ...resLoginAction },
-                    { type: types.SET_MANAGER_VERSION, version: versions.community },
+                    {
+                        type: types.SET_MANAGER_VERSION,
+                        version: versions.community
+                    },
                     { type: types.SET_MANAGER_LICENSE, license: null },
-                    { type: types.STORE_RBAC, roles: rbac.roles, permissions: rbac.permissions },
-                    { type: '@@router/CALL_HISTORY_METHOD', payload: { args: ['/'], method: 'push' } }
+                    {
+                        type: types.STORE_RBAC,
+                        roles: rbac.roles,
+                        permissions: rbac.permissions
+                    },
+                    {
+                        type: '@@router/CALL_HISTORY_METHOD',
+                        payload: { args: ['/'], method: 'push' }
+                    }
                 ];
 
                 expect(actualActions).toHaveLength(expectedActions.length);
@@ -216,7 +297,12 @@ describe('(Reducer) License', () => {
         it('non-licensed version changes license state', () => {
             store = createStore(licenseReducer, {}, applyMiddleware(thunk));
             fetchMock.post('/console/auth/login', {
-                body: { license: null, version: versions.community, role: sysAdminRole, rbac },
+                body: {
+                    license: null,
+                    version: versions.community,
+                    role: sysAdminRole,
+                    rbac
+                },
                 headers: { 'content-type': 'application/json' }
             });
 
@@ -240,7 +326,10 @@ describe('(Reducer) License', () => {
             store.dispatch(setLicense(licenses.activePayingLicense));
 
             const actualActions = store.getActions();
-            const setManagerLicenseAction = { type: types.SET_MANAGER_LICENSE, license: licenses.activePayingLicense };
+            const setManagerLicenseAction = {
+                type: types.SET_MANAGER_LICENSE,
+                license: licenses.activePayingLicense
+            };
             const expectedActions = [setManagerLicenseAction];
 
             expect(actualActions).toHaveLength(expectedActions.length);
@@ -264,7 +353,10 @@ describe('(Reducer) License', () => {
             store.dispatch(setLicense(licenses.expiredPayingLicense));
 
             const actualActions = store.getActions();
-            const setManagerLicenseAction = { type: types.SET_MANAGER_LICENSE, license: licenses.expiredPayingLicense };
+            const setManagerLicenseAction = {
+                type: types.SET_MANAGER_LICENSE,
+                license: licenses.expiredPayingLicense
+            };
             const expectedActions = [setManagerLicenseAction];
 
             expect(actualActions).toHaveLength(expectedActions.length);

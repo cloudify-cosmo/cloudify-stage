@@ -16,8 +16,6 @@ try {
     throw e;
 }
 
-console.log(`Collecting coverage for: ${changedFiles}`);
-
 module.exports = {
     collectCoverage: true,
     collectCoverageFrom: [...changedFiles, 'config.js', '!migrations/**', '!jest.config.js', '!migration.js'],
@@ -29,5 +27,6 @@ module.exports = {
             statements: 1
         }
     },
-    coverageReporters: ['text']
+    coverageReporters: ['text'],
+    moduleDirectories: ['node_modules', '..']
 };

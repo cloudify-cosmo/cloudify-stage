@@ -77,7 +77,7 @@ router.get('/icons/:pluginId', (req, res) => {
         request(`${ManagerHandler.getManagerUrl()}/resources/plugins/${req.params.pluginId}/icon.png`, options).on(
             'response',
             // eslint-disable-next-line func-names
-            function(response) {
+            function (response) {
                 if (response.statusCode === 404) {
                     res.status(200).end();
                     this.abort();
@@ -99,10 +99,7 @@ router.put('/title', upload.fields(_.map(['yaml_file'], name => ({ name, maxCoun
         .then(yaml.safeLoad)
         .then(pluginYamlData =>
             res.status(200).send({
-                title: _.chain(pluginYamlData.plugins)
-                    .values()
-                    .head()
-                    .get('package_name', '')
+                title: _.chain(pluginYamlData.plugins).values().head().get('package_name', '')
             })
         )
         .catch(() => res.status(200).send({ title: '' }));

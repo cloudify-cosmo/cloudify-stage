@@ -40,10 +40,7 @@ export default function ValidateAgentsModal({
     const [inputValues, setInputValues] = useState(getInitialInputValues());
 
     function getAgentsAttributeList(attributeName) {
-        return _.chain(agents)
-            .map(attributeName)
-            .uniq()
-            .value();
+        return _.chain(agents).map(attributeName).uniq().value();
     }
 
     useEffect(() => {

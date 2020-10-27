@@ -1,6 +1,7 @@
+import _ from 'lodash';
 import PropTypes from 'prop-types';
+import React, { useEffect } from 'react';
 import { SortableContainer, SortableElement } from 'react-sortable-hoc';
-import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import WidgetsList from './WidgetsList';
 import { Confirm, Container, Header, Menu } from './basic';
@@ -9,6 +10,7 @@ import EditModeButton from './EditModeButton';
 import EditTabModal from './EditTabModal';
 import './PageContent.css';
 import stageUtils from '../utils/stageUtils';
+import { useResettableState } from '../utils/hooks';
 
 const SortableMenu = SortableContainer(Menu);
 const SortableMenuItem = SortableElement(Menu.Item);
@@ -26,8 +28,8 @@ export default function PageContent({
 }) {
     const manager = useSelector(state => state.manager);
 
-    const [activeTab, setActiveTab] = useState(0);
-    const [tabIndexToRemove, setTabIndexToRemove] = useState();
+    const [activeTab, setActiveTab, resetActiveTab] = useResettableState(0);
+    const [tabIndexToRemove, setTabIndexToRemove, resetTabIndexToRemove] = useResettableState(null);
 
     const updateActiveTab = () => setActiveTab(Math.max(_.findIndex(page.tabs, { isDefault: true }), 0));
 
@@ -173,16 +175,16 @@ export default function PageContent({
                     onClick={() => {
                         onTabAdded();
                         onTabAdded();
-                        setActiveTab(0);
+                        resetActiveTab();
                     }}
                 />
             )}
             <Confirm
                 open={!_.isNil(tabIndexToRemove)}
-                onCancel={() => setTabIndexToRemove(null)}
+                onCancel={resetTabIndexToRemove}
                 onConfirm={() => {
                     removeTab(tabIndexToRemove);
-                    setTabIndexToRemove(null);
+                    resetTabIndexToRemove();
                 }}
                 header={`Are you sure you want to remove tab ${_.get(page.tabs, [tabIndexToRemove, 'name'])}?`}
                 content="All widgets present in this tab will be removed as well"

@@ -118,10 +118,7 @@ function DynamicDropdown({
         let valueArray = _.castArray(value);
 
         if (!hasMore) {
-            const filteredValueArray = _(filteredOptions)
-                .map(valueProp)
-                .intersection(valueArray)
-                .value();
+            const filteredValueArray = _(filteredOptions).map(valueProp).intersection(valueArray).value();
             if (filteredValueArray.length !== valueArray.length) {
                 onChange(filteredValueArray);
                 valueArray = filteredValueArray;

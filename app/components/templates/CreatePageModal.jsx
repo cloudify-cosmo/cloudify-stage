@@ -1,22 +1,24 @@
 /**
  * Created by pposel on 22/08/2017.
  */
+import _ from 'lodash';
 import PropTypes from 'prop-types';
 import React, { useState } from 'react';
 
+import { useBoolean, useErrors, useResettableState } from '../../utils/hooks';
 import { ApproveButton, Button, CancelButton, Form, Icon, Modal } from '../basic/index';
 
 export default function CreatePageModal({ onCreatePage, pageName: initialPageName }) {
     const [pageName, setPageName] = useState(initialPageName);
-    const [errors, setErrors] = useState({});
-    const [loading, setLoading] = useState(false);
-    const [open, setOpen] = useState(false);
+    const { errors, setMessageAsError, clearErrors, setErrors } = useErrors();
+    const [loading, setLoading, unsetLoading] = useBoolean();
+    const [open, setOpen, unsetOpen] = useResettableState();
 
     function openModal() {
-        setOpen(true);
-        setLoading(false);
+        setOpen();
+        unsetLoading();
         setPageName(initialPageName);
-        setErrors({});
+        clearErrors();
     }
 
     function submitCreate() {
@@ -32,11 +34,11 @@ export default function CreatePageModal({ onCreatePage, pageName: initialPageNam
         }
 
         // Disable the form
-        setLoading(true);
+        setLoading();
 
         onCreatePage(_.trim(pageName)).catch(err => {
-            setErrors({ error: err.message });
-            setLoading(false);
+            setMessageAsError(err);
+            unsetLoading();
         });
     }
 
@@ -49,20 +51,14 @@ export default function CreatePageModal({ onCreatePage, pageName: initialPageNam
     );
 
     return (
-        <Modal
-            trigger={trigger}
-            open={open}
-            onOpen={openModal}
-            onClose={() => setOpen(false)}
-            className="createPageModal"
-        >
+        <Modal trigger={trigger} open={open} onOpen={openModal} onClose={unsetOpen} className="createPageModal">
             <Modal.Header>
                 <Icon name="block layout" />
                 Create page
             </Modal.Header>
 
             <Modal.Content>
-                <Form loading={loading} errors={errors} onErrorsDismiss={() => setErrors({})}>
+                <Form loading={loading} errors={errors} onErrorsDismiss={clearErrors}>
                     <Form.Field error={errors.pageName}>
                         <Form.Input
                             name="pageName"

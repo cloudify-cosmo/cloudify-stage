@@ -1,22 +1,24 @@
+import _ from 'lodash';
 import PropTypes from 'prop-types';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
 
 import Manager from '../../utils/Manager';
+import { useBoolean, useErrors, useResettableState } from '../../utils/hooks';
 import { Modal, Icon, Form, ApproveButton, CancelButton } from '../basic';
 
 function PasswordModal({ onHide, open, manager, username }) {
-    const [loading, setLoading] = useState(false);
-    const [password, setPassword] = useState('');
-    const [confirmPassword, setConfirmPassword] = useState('');
-    const [errors, setErrors] = useState({});
+    const [loading, setLoading, unsetLoading] = useBoolean();
+    const [password, setPassword, resetPassword] = useResettableState('');
+    const [confirmPassword, setConfirmPassword, resetConfirmPassword] = useResettableState('');
+    const { errors, setMessageAsError, clearErrors, setErrors } = useErrors();
 
     useEffect(() => {
         if (open) {
-            setLoading(false);
-            setPassword('');
-            setConfirmPassword('');
-            setErrors({});
+            unsetLoading();
+            resetPassword();
+            resetConfirmPassword();
+            clearErrors();
         }
     }, [open]);
 
@@ -41,16 +43,16 @@ function PasswordModal({ onHide, open, manager, username }) {
         }
 
         // Disable the form
-        setLoading(true);
+        setLoading();
 
         return manager
             .doPost(`/users/${username}`, null, { password })
             .then(() => {
-                setErrors({});
+                clearErrors();
                 onHide();
             })
-            .catch(err => setErrors({ error: err.message }))
-            .finally(() => setLoading(false));
+            .catch(setMessageAsError)
+            .finally(unsetLoading);
     };
 
     const onApprove = () => {
@@ -70,7 +72,7 @@ function PasswordModal({ onHide, open, manager, username }) {
             </Modal.Header>
 
             <Modal.Content>
-                <Form loading={loading} errors={errors} onErrorsDismiss={() => setErrors({})}>
+                <Form loading={loading} errors={errors} onErrorsDismiss={clearErrors}>
                     <Form.Field label="Password" error={errors.password} required>
                         <Form.Input
                             name="password"

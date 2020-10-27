@@ -1,4 +1,7 @@
 {
+    "plugins": [
+        "jest"
+    ],
     "extends": [
         "plugin:jest/recommended"
     ],
@@ -9,5 +12,10 @@
             }
         }
     },
-    "env": {"browser" : true}
+    "rules": {
+        "no-console": "off"
+    },
+    "env": {
+        "jest": true
+    }
 }

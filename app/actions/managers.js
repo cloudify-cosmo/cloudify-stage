@@ -2,6 +2,7 @@
  * Created by addihorowitz on 19/09/2016.
  */
 
+import _ from 'lodash';
 import log from 'loglevel';
 import { push } from 'connected-react-router';
 

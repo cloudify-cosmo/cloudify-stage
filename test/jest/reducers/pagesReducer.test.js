@@ -25,7 +25,16 @@ describe('(Reducer) Pages', () => {
                     templatesDef: {
                         tmp1: {
                             name: 'tmp1',
-                            widgets: [{ name: 'some widget', definition: 'widget1', width: 1, height: 1, x: 1, y: 1 }]
+                            widgets: [
+                                {
+                                    name: 'some widget',
+                                    definition: 'widget1',
+                                    width: 1,
+                                    height: 1,
+                                    x: 1,
+                                    y: 1
+                                }
+                            ]
                         }
                     }
                 },
@@ -39,7 +48,14 @@ describe('(Reducer) Pages', () => {
                     {
                         id: '0',
                         name: 'page',
-                        widgets: [{ id: '1', name: 'widget1', definition: 'widget1', drillDownPages: {} }]
+                        widgets: [
+                            {
+                                id: '1',
+                                name: 'widget1',
+                                definition: 'widget1',
+                                drillDownPages: {}
+                            }
+                        ]
                     }
                 ]
             };
@@ -77,7 +93,12 @@ describe('(Reducer) Pages', () => {
                         y: 1
                     }
                 },
-                { type: types.ADD_DRILLDOWN_PAGE, widgetId: '1', drillDownPageId: '0', drillDownName: 'tmp1' },
+                {
+                    type: types.ADD_DRILLDOWN_PAGE,
+                    widgetId: '1',
+                    drillDownPageId: '0',
+                    drillDownName: 'tmp1'
+                },
                 { type: types.WIDGET_DATA_CLEAR },
                 { type: 'router action' }
             ];
@@ -106,13 +127,22 @@ describe('(Reducer) Pages', () => {
             });
         });
 
-        it('move to an existing drilldown ', () => {
+        it('move to an existing drilldown', () => {
             const initialState = {
                 templates: {
                     templatesDef: {
                         tmp1: {
                             name: 'tmp1',
-                            widgets: [{ name: 'some widget', definition: 'widget1', width: 1, height: 1, x: 1, y: 1 }]
+                            widgets: [
+                                {
+                                    name: 'some widget',
+                                    definition: 'widget1',
+                                    width: 1,
+                                    height: 1,
+                                    x: 1,
+                                    y: 1
+                                }
+                            ]
                         }
                     }
                 },
@@ -127,7 +157,14 @@ describe('(Reducer) Pages', () => {
                         id: '0',
                         children: ['1'],
                         name: 'page',
-                        widgets: [{ id: '1', name: 'widget1', definition: 'widget1', drillDownPages: { tmp1: '1' } }]
+                        widgets: [
+                            {
+                                id: '1',
+                                name: 'widget1',
+                                definition: 'widget1',
+                                drillDownPages: { tmp1: '1' }
+                            }
+                        ]
                     },
                     {
                         id: '1',
@@ -135,7 +172,15 @@ describe('(Reducer) Pages', () => {
                         name: 'tmp1',
                         isDrillDown: true,
                         widgets: [
-                            { id: '2', name: 'some widget', definition: 'widget1', width: 1, height: 1, x: 1, y: 1 }
+                            {
+                                id: '2',
+                                name: 'some widget',
+                                definition: 'widget1',
+                                width: 1,
+                                height: 1,
+                                x: 1,
+                                y: 1
+                            }
                         ]
                     }
                 ]
@@ -161,7 +206,16 @@ describe('(Reducer) Pages', () => {
                     templatesDef: {
                         tmp1: {
                             name: 'tmp1',
-                            widgets: [{ name: 'some widget', definition: 'widget1', width: 1, height: 1, x: 1, y: 1 }]
+                            widgets: [
+                                {
+                                    name: 'some widget',
+                                    definition: 'widget1',
+                                    width: 1,
+                                    height: 1,
+                                    x: 1,
+                                    y: 1
+                                }
+                            ]
                         }
                     }
                 },
@@ -176,7 +230,14 @@ describe('(Reducer) Pages', () => {
                         id: '0',
                         children: ['1'],
                         name: 'page',
-                        widgets: [{ id: '1', name: 'widget1', definition: 'widget1', drillDownPages: { tmp1: '1' } }]
+                        widgets: [
+                            {
+                                id: '1',
+                                name: 'widget1',
+                                definition: 'widget1',
+                                drillDownPages: { tmp1: '1' }
+                            }
+                        ]
                     },
                     {
                         id: '1',
@@ -184,7 +245,15 @@ describe('(Reducer) Pages', () => {
                         name: 'tmp1',
                         isDrillDown: true,
                         widgets: [
-                            { id: '2', name: 'some widget', definition: 'widget1', width: 1, height: 1, x: 1, y: 1 }
+                            {
+                                id: '2',
+                                name: 'some widget',
+                                definition: 'widget1',
+                                width: 1,
+                                height: 1,
+                                x: 1,
+                                y: 1
+                            }
                         ]
                     }
                 ]
@@ -195,7 +264,11 @@ describe('(Reducer) Pages', () => {
             const widget = initialState.pages[0].widgets[0];
             const defaultTemplate = initialState.templates.templatesDef.tmp1;
 
-            store.dispatch(drillDownToPage(widget, defaultTemplate, { contextValue: 'kuku' }));
+            store.dispatch(
+                drillDownToPage(widget, defaultTemplate, {
+                    contextValue: 'kuku'
+                })
+            );
 
             const storeActions = store.getActions();
             const routeAction = storeActions[1];
@@ -213,13 +286,23 @@ describe('(Reducer) Pages', () => {
                 {
                     id: '0',
                     name: 'page',
-                    widgets: [{ id: '1', name: 'widget1', definition: 'widget1', drillDownPages: {} }]
+                    widgets: [
+                        {
+                            id: '1',
+                            name: 'widget1',
+                            definition: 'widget1',
+                            drillDownPages: {}
+                        }
+                    ]
                 }
             ]
         };
 
         const store = createStore(
-            combineReducers({ pages: pageReducer, widgetDefinitions: pageReducer }),
+            combineReducers({
+                pages: pageReducer,
+                widgetDefinitions: pageReducer
+            }),
             initialState,
             applyMiddleware(thunk)
         );
@@ -227,7 +310,16 @@ describe('(Reducer) Pages', () => {
         const widget = initialState.pages[0].widgets[0];
         const defaultTemplate = {
             name: 'tmp1',
-            widgets: [{ name: 'some widget', definition: 'widget1', width: 1, height: 1, x: 1, y: 1 }]
+            widgets: [
+                {
+                    name: 'some widget',
+                    definition: 'widget1',
+                    width: 1,
+                    height: 1,
+                    x: 1,
+                    y: 1
+                }
+            ]
         };
 
         store.dispatch(drillDownToPage(widget, defaultTemplate));
@@ -288,7 +380,14 @@ describe('(Reducer) Pages', () => {
                 {
                     id: '0',
                     name: 'page',
-                    widgets: [{ id: '1', name: 'widget1', definition: 'widget1', drillDownPages: {} }]
+                    widgets: [
+                        {
+                            id: '1',
+                            name: 'widget1',
+                            definition: 'widget1',
+                            drillDownPages: {}
+                        }
+                    ]
                 }
             ]
         };
@@ -298,11 +397,29 @@ describe('(Reducer) Pages', () => {
         const widget = initialState.pages[0].widgets[0];
         const defaultTemplate1 = {
             name: 'tmp1',
-            widgets: [{ name: 'some widget', definition: 'widget1', width: 1, height: 1, x: 1, y: 1 }]
+            widgets: [
+                {
+                    name: 'some widget',
+                    definition: 'widget1',
+                    width: 1,
+                    height: 1,
+                    x: 1,
+                    y: 1
+                }
+            ]
         };
         const defaultTemplate2 = {
             name: 'tmp2',
-            widgets: [{ name: 'some widget2', definition: 'widget1', width: 1, height: 1, x: 1, y: 1 }]
+            widgets: [
+                {
+                    name: 'some widget2',
+                    definition: 'widget1',
+                    width: 1,
+                    height: 1,
+                    x: 1,
+                    y: 1
+                }
+            ]
         };
         store.dispatch(drillDownToPage(widget, defaultTemplate1));
         store.dispatch(drillDownToPage(widget, defaultTemplate2));

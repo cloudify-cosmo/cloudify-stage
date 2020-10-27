@@ -3,10 +3,7 @@ describe('Change Password modal', () => {
     const password = 'test_user';
 
     const openChangePasswordModal = () => {
-        cy.get('.usersMenu')
-            .click()
-            .contains('Change Password')
-            .click();
+        cy.get('.usersMenu').click().contains('Change Password').click();
     };
 
     before(() => {
@@ -61,21 +58,14 @@ describe('Change Password modal', () => {
 
         cy.log('Change password');
         cy.get('.userPasswordModal').within(() => {
-            cy.get('input[name=password]')
-                .clear()
-                .type('new-pass');
-            cy.get('input[name=confirmPassword]')
-                .clear()
-                .type('new-pass');
+            cy.get('input[name=password]').clear().type('new-pass');
+            cy.get('input[name=confirmPassword]').clear().type('new-pass');
             cy.get('button.ok').click();
         });
         cy.get('.userPasswordModal').should('not.be.visible');
 
         cy.log('Logout');
-        cy.get('.usersMenu')
-            .click()
-            .contains('Logout')
-            .click();
+        cy.get('.usersMenu').click().contains('Logout').click();
 
         cy.log('Login with new password');
         cy.login(username, 'new-pass');

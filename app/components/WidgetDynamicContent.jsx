@@ -2,13 +2,15 @@
  * Created by kinneretzin on 30/08/2016.
  */
 
+import _ from 'lodash';
+import log from 'loglevel';
 import PropTypes from 'prop-types';
 
 import React, { Component } from 'react';
 import { getToolbox } from '../utils/Toolbox';
 import WidgetParamsHandler from '../utils/WidgetParamsHandler';
 import { ErrorMessage } from './basic';
-import WidgetPropType from '../utils/WidgetPropType';
+import WidgetPropType from '../utils/props/WidgetPropType';
 
 export default class WidgetDynamicContent extends Component {
     constructor(props) {
@@ -225,9 +227,7 @@ export default class WidgetDynamicContent extends Component {
                             log.warn('Cannot attach event, missing data. Event data is ', event);
                             return;
                         }
-                        $(container)
-                            .find(event.selector)
-                            .off(event.event);
+                        $(container).find(event.selector).off(event.event);
                         $(container)
                             .find(event.selector)
                             .on(event.event, e => {
@@ -311,6 +311,7 @@ export default class WidgetDynamicContent extends Component {
 
 WidgetDynamicContent.propTypes = {
     context: PropTypes.shape({}).isRequired,
+    // eslint-disable-next-line react/forbid-prop-types
     data: PropTypes.shape({ data: PropTypes.any, error: ErrorMessage.propTypes.error }).isRequired,
     fetchWidgetData: PropTypes.func.isRequired,
     onWidgetConfigUpdate: PropTypes.func.isRequired,
