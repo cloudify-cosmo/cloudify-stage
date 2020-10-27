@@ -16,11 +16,11 @@ Cluster services can have the following statuses:
 
 Each cluster node is presented with:
 
+* **Node Name**,
 * **Status** - on hovering status icon you can see popup with details, you can copy raw info about node status to clipboard to get even more details,
 * **Private IP**,
 * **Public IP / Load Balancer IP** - in case of Manager node, you can click on the IP to go to Cloudify UI of that specific node,
-* **Version**,
-* **ID** - displayed in popup on hovering ID button.
+* **Version**.
 
 ![cluster-status-widget](https://docs.cloudify.co/5.1/images/ui/widgets/cluster-status-node-status.png)
 
