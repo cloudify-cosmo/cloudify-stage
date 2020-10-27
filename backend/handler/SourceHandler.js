@@ -145,10 +145,7 @@ module.exports = (() => {
         return _.chain(imports)
             .filter(imp => String(imp).match(PLUGIN_KEYWORD))
             .map(plugin => {
-                const [packageName, pluginQueryString] = _.chain(plugin)
-                    .replace(PLUGIN_KEYWORD, '')
-                    .split('?')
-                    .value();
+                const [packageName, pluginQueryString] = _.chain(plugin).replace(PLUGIN_KEYWORD, '').split('?').value();
 
                 const params = Utils.getParams(pluginQueryString);
                 const pluginObject = { packageName, params };
@@ -205,7 +202,11 @@ module.exports = (() => {
                         return ArchiveHelper.decompressArchive(archivePath, extractedDir);
                     }
                 })
-                .then(decompressData => ({ archiveFileName, extractedDir, decompressData }))
+                .then(decompressData => ({
+                    archiveFileName,
+                    extractedDir,
+                    decompressData
+                }))
                 .catch(err => {
                     ArchiveHelper.cleanTempData(archiveFolder);
                     throw err;

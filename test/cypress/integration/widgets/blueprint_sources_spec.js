@@ -18,16 +18,12 @@ describe('Blueprint Sources widget', () => {
             if (text === '') {
                 cy.get(`.${name}FilterField .dropdown.icon`).click();
             } else {
-                cy.get(`.${name}FilterField input`)
-                    .clear()
-                    .type(`${text}{enter}`, { force: true });
+                cy.get(`.${name}FilterField input`).clear().type(`${text}{enter}`, { force: true });
             }
         }
 
         before(() => {
-            cy.addPage('Blueprint Sources Test')
-                .addWidget('blueprintSources')
-                .addWidget('filter');
+            cy.addPage('Blueprint Sources Test').addWidget('blueprintSources').addWidget('filter');
         });
 
         it('blueprint is not selected', () => {
@@ -58,18 +54,14 @@ describe('Blueprint Sources widget', () => {
     it('should be present in blueprint page', () => {
         cy.visitPage('Local Blueprints');
         cy.get(`tr#blueprintsTable_${blueprintName}`).click();
-        cy.get('.blueprintSourcesWidget .widgetItem')
-            .scrollIntoView()
-            .should('be.visible');
+        cy.get('.blueprintSourcesWidget .widgetItem').scrollIntoView().should('be.visible');
     });
 
     it('should be present in deployment page', () => {
         cy.visitPage('Deployments');
         cy.contains(deploymentName).click();
         cy.contains('Deployment Info').click();
-        cy.get('.blueprintSourcesWidget .widgetItem')
-            .scrollIntoView()
-            .should('be.visible');
+        cy.get('.blueprintSourcesWidget .widgetItem').scrollIntoView().should('be.visible');
     });
 
     it('should show blueprint sources details', () => {
@@ -97,10 +89,7 @@ describe('Blueprint Sources widget', () => {
                 });
                 cy.get('@rightPane').within(() => {
                     cy.get('pre').should('contain.text', 'tosca_definitions_version: cloudify_dsl_1_3');
-                    cy.get('.attached.label')
-                        .should('be.visible')
-                        .should('have.text', 'blueprint.yamlMain')
-                        .click();
+                    cy.get('.attached.label').should('have.text', 'blueprint.yamlMain').click();
                 });
             });
 

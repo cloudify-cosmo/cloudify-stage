@@ -1,11 +1,5 @@
 describe('Deployment Wizard Buttons widget', () => {
-    before(() =>
-        cy
-            .activate('valid_trial_license')
-            .login()
-            .addPage('Wizard')
-            .addWidget('deploymentWizardButtons')
-    );
+    before(() => cy.activate('valid_trial_license').login().addPage('Wizard').addWidget('deploymentWizardButtons'));
 
     function next() {
         cy.contains('Next').click();
@@ -99,9 +93,7 @@ describe('Deployment Wizard Buttons widget', () => {
         );
         cy.get('input[name=blueprintFile]').attachFile('blueprints/empty.zip');
         cy.contains('blueprint.yaml');
-        cy.contains('.field', 'Blueprint package')
-            .find('.remove')
-            .click();
+        cy.contains('.field', 'Blueprint package').find('.remove').click();
         cy.get('input[name=blueprintFile]').attachFile('blueprints/custom_plugin.zip');
         cy.contains('ec2-blueprint.yaml');
 

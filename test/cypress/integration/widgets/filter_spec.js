@@ -1,8 +1,6 @@
 describe('Filter', () => {
     before(() => {
-        cy.activate('valid_trial_license')
-            .deleteAllUsersAndTenants()
-            .login();
+        cy.activate('valid_trial_license').deleteAllUsersAndTenants().login();
     });
 
     it('fills dropdowns with correct data', () => {
@@ -24,10 +22,7 @@ describe('Filter', () => {
         cy.get('#dynamicDropdown2 > .label').should('have.length', 1);
 
         cy.get('#dynamicDropdown3').click();
-        cy.get('#dynamicDropdown3 .menu > *')
-            .should('have.text', 'uuustatus')
-            .should('have.length', 1)
-            .click();
+        cy.get('#dynamicDropdown3 .menu > *').should('have.text', 'uuustatus').should('have.length', 1).click();
         cy.get('#dynamicDropdown3 > .label').should('have.length', 1);
 
         cy.get('#dynamicDropdown1 > .label .delete').click();
@@ -70,18 +65,11 @@ describe('Filter', () => {
 
         it('deployment creation and removal', () => {
             cy.contains('Deployments').click();
-            cy.get('.usersMenu')
-                .click()
-                .contains('Edit Mode')
-                .click();
+            cy.get('.usersMenu').click().contains('Edit Mode').click();
             cy.get('.filterWidget .setting').click({ force: true });
-            cy.contains('div', 'Show deployment filter')
-                .find('.toggle')
-                .click();
+            cy.contains('div', 'Show deployment filter').find('.toggle').click();
             cy.contains('Save').click();
-            cy.contains('.message', 'Edit mode')
-                .contains('Exit')
-                .click();
+            cy.contains('.message', 'Edit mode').contains('Exit').click();
 
             cy.get('.deploymentFilterField').click();
 
@@ -98,9 +86,7 @@ describe('Filter', () => {
             cy.get(`div[option-value=${deploymentName}]`).click();
 
             cy.contains('.deploymentsWidget .row', deploymentName).find('.green.checkmark');
-            cy.contains('.deploymentsWidget .row', deploymentName)
-                .find('.menuAction')
-                .click();
+            cy.contains('.deploymentsWidget .row', deploymentName).find('.menuAction').click();
             cy.contains('Force Delete').click();
             cy.contains('Yes').click();
 

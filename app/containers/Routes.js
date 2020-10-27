@@ -2,6 +2,7 @@
  * Created by jakubniezgoda on 18/04/2018.
  */
 
+import _ from 'lodash';
 import { connect } from 'react-redux';
 import Routes from '../components/Routes';
 
@@ -22,7 +23,4 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = () => ({});
 
-export default connect(
-    mapStateToProps,
-    mapDispatchToProps
-)(Routes);
+export default connect(mapStateToProps, mapDispatchToProps)(Routes);

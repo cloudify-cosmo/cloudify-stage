@@ -104,39 +104,27 @@ function EventFilter({ toolbox }) {
 
     const timeRanges = {
         'Last 15 Minutes': {
-            start: moment()
-                .subtract(15, 'minutes')
-                .format(DateRangeInput.DATETIME_FORMAT),
+            start: moment().subtract(15, 'minutes').format(DateRangeInput.DATETIME_FORMAT),
             end: ''
         },
         'Last 30 Minutes': {
-            start: moment()
-                .subtract(30, 'minutes')
-                .format(DateRangeInput.DATETIME_FORMAT),
+            start: moment().subtract(30, 'minutes').format(DateRangeInput.DATETIME_FORMAT),
             end: ''
         },
         'Last Hour': {
-            start: moment()
-                .subtract(1, 'hours')
-                .format(DateRangeInput.DATETIME_FORMAT),
+            start: moment().subtract(1, 'hours').format(DateRangeInput.DATETIME_FORMAT),
             end: ''
         },
         'Last 2 Hours': {
-            start: moment()
-                .subtract(2, 'hours')
-                .format(DateRangeInput.DATETIME_FORMAT),
+            start: moment().subtract(2, 'hours').format(DateRangeInput.DATETIME_FORMAT),
             end: ''
         },
         'Last Day': {
-            start: moment()
-                .subtract(1, 'days')
-                .format(DateRangeInput.DATETIME_FORMAT),
+            start: moment().subtract(1, 'days').format(DateRangeInput.DATETIME_FORMAT),
             end: ''
         },
         'Last Week': {
-            start: moment()
-                .subtract(1, 'weeks')
-                .format(DateRangeInput.DATETIME_FORMAT),
+            start: moment().subtract(1, 'weeks').format(DateRangeInput.DATETIME_FORMAT),
             end: ''
         }
     };

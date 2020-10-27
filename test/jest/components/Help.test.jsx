@@ -56,7 +56,7 @@ describe('(Component) Help', () => {
         redirectToPage.restore();
     });
 
-    it('calls redirectToPage function with latest link on click on Documentation ', () => {
+    it('calls redirectToPage function with latest link on click on Documentation', () => {
         const redirectToPage = sinon.spy(StageUtils.Url, 'redirectToPage');
         const mockStore = configureMockStore();
         const store = mockStore({

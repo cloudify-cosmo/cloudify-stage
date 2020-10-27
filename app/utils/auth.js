@@ -2,6 +2,7 @@
  * Created by kinneretzin on 10/11/2016.
  */
 
+import _ from 'lodash';
 import Cookies from 'js-cookie';
 
 import Consts from './consts';

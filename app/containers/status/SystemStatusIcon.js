@@ -1,3 +1,4 @@
+import _ from 'lodash';
 import { connect } from 'react-redux';
 import SystemStatusIcon from '../../components/status/SystemStatusIcon';
 
@@ -12,7 +13,4 @@ const mapDispatchToProps = () => {
     return {};
 };
 
-export default connect(
-    mapStateToProps,
-    mapDispatchToProps
-)(SystemStatusIcon);
+export default connect(mapStateToProps, mapDispatchToProps)(SystemStatusIcon);

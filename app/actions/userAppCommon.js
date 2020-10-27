@@ -1,3 +1,4 @@
+import _ from 'lodash';
 import Internal from '../utils/Internal';
 
 export const CURRENT_APP_DATA_VERSION = 4;

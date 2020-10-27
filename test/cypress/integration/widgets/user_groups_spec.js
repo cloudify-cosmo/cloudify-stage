@@ -1,13 +1,7 @@
 describe('User group management widget', () => {
     const groupName = 'user_groups_test';
 
-    before(() =>
-        cy
-            .activate('valid_trial_license')
-            .login()
-            .deleteUserGroup(groupName)
-            .visitPage('Tenant Management')
-    );
+    before(() => cy.activate('valid_trial_license').login().deleteUserGroup(groupName).visitPage('Tenant Management'));
 
     it('should allow to manage a group', () => {
         cy.log('Creating new group');
@@ -23,9 +17,7 @@ describe('User group management widget', () => {
         });
 
         cy.log('Verifying group users can be edited');
-        cy.contains('tr', groupName)
-            .find('.content')
-            .click();
+        cy.contains('tr', groupName).find('.content').click();
         cy.contains("Edit group's users").click();
         cy.get('.selection').click();
         cy.contains('.modal .item', 'admin').click();
@@ -33,9 +25,7 @@ describe('User group management widget', () => {
         cy.contains('tr', groupName).contains('.label.green', '1');
 
         cy.log('Verifying group tenants can be edited');
-        cy.contains('tr', groupName)
-            .find('.content')
-            .click();
+        cy.contains('tr', groupName).find('.content').click();
         cy.contains("Edit group's tenants").click();
         cy.get('.selection').click();
         cy.contains('.modal .item', 'default_tenant').click();

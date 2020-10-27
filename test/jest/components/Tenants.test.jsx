@@ -35,7 +35,7 @@ describe('(Component) Tenants', () => {
         expect(wrapper.find('div.loader')).toHaveLength(1);
     });
 
-    it('renders empty tenants list ', () => {
+    it('renders empty tenants list', () => {
         manager.tenants.isFetching = false;
         manager.tenants.items = [];
         wrapper.setProps({ manager });
@@ -92,10 +92,7 @@ describe('(Component) Tenants', () => {
         manager.tenants.selected = 'abc';
         wrapper.setProps({ manager, onTenantChange });
 
-        wrapper
-            .find('.tenantsMenu .menu .item')
-            .first()
-            .simulate('click');
+        wrapper.find('.tenantsMenu .menu .item').first().simulate('click');
         expect(onTenantChange.calledOnce).toBe(true);
         expect(onTenantChange.calledWithExactly('aaa')).toBe(true);
     });

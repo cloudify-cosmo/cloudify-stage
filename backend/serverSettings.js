@@ -1,9 +1,9 @@
+/* eslint-disable no-console, no-process-exit */
 /**
  * Created by kinneretzin on 25/01/2017.
  */
 
 const _ = require('lodash');
-const logger = require('./handler/LoggerHandler').getLogger('argsReader');
 
 const ServerSettings = {
     MODE_MAIN: 'main',
@@ -19,7 +19,7 @@ const ServerSettings = {
         const modes = [this.MODE_MAIN, this.MODE_CUSTOMER, this.MODE_COMMUNITY];
 
         const displayUsage = () => {
-            logger.info(`Usage: server.js -mode [${_.join(modes, '|')}]`);
+            console.log(`Usage: server.js -mode [${_.join(modes, '|')}]`);
             process.exit(0);
         };
 

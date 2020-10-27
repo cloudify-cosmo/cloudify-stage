@@ -163,8 +163,9 @@ export default class Filter extends React.Component {
                     <Form.Field key={entityName}>
                         <DynamicDropdown
                             multiple={configuration.allowMultipleSelection}
-                            fetchUrl={`/${fetchManagerEndpoint ||
-                                `${entityName.replace(' ', '-').toLowerCase()}s`}?_include=${_(filter)
+                            fetchUrl={`/${
+                                fetchManagerEndpoint || `${entityName.replace(' ', '-').toLowerCase()}s`
+                            }?_include=${_(filter)
                                 .keys()
                                 .concat(valueProp || 'id')
                                 .concat(fetchIncludeExtra || [])

@@ -38,9 +38,7 @@ describe('User management widget', () => {
         });
 
         cy.log('Verifying password can be changed');
-        cy.contains('tr', username)
-            .find('.content')
-            .click();
+        cy.contains('tr', username).find('.content').click();
         cy.contains('Change password').click();
         const newPassword = 'changed';
         cy.get('input[name=password]').type(newPassword);
@@ -48,9 +46,7 @@ describe('User management widget', () => {
         cy.contains('button', 'Change').click();
 
         cy.log('Verifying user groups can be edited');
-        cy.contains('tr', username)
-            .find('.content')
-            .click();
+        cy.contains('tr', username).find('.content').click();
         cy.contains("Edit user's groups").click();
         cy.get('.selection').click();
         cy.contains('.modal .item', group).click();
@@ -58,9 +54,7 @@ describe('User management widget', () => {
         cy.contains('tr', username).contains('.label.green', '1');
 
         cy.log('Verifying user tenants can be edited');
-        cy.contains('tr', username)
-            .find('.content')
-            .click();
+        cy.contains('tr', username).find('.content').click();
         cy.contains("Edit user's tenants").click();
         cy.get('.selection').click();
         cy.contains('.modal .item', 'default_tenant').click();

@@ -7,9 +7,9 @@ export default {
                 created_at: PropTypes.string,
                 id: PropTypes.string,
                 isSelected: PropTypes.bool,
-                lastExecution: PropTypes.object,
+                lastExecution: PropTypes.shape({}),
                 nodeInstancesCount: PropTypes.number,
-                nodeInstancesStates: PropTypes.object,
+                nodeInstancesStates: PropTypes.objectOf(PropTypes.number),
                 site_name: PropTypes.string,
                 updated_at: PropTypes.string,
                 visibility: PropTypes.string

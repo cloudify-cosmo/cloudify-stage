@@ -1,13 +1,7 @@
 describe('Secret store management widget', () => {
     const secretName = 'secrets_test';
 
-    before(() =>
-        cy
-            .activate()
-            .login()
-            .deleteSecrets(secretName)
-            .visitPage('System Resources')
-    );
+    before(() => cy.activate().login().deleteSecrets(secretName).visitPage('System Resources'));
 
     it('should allow to manage secrets', () => {
         const secretValue = 'confidental';
@@ -35,9 +29,7 @@ describe('Secret store management widget', () => {
         const newValue = 'top_secret';
         cy.get('.secretsWidget .edit').click();
         cy.contains(secretValue);
-        cy.get('textarea')
-            .clear()
-            .type(newValue);
+        cy.get('textarea').clear().type(newValue);
         cy.get('button.green').click();
         cy.get('.secretsWidget').within(() => {
             cy.get('.unhide').click();

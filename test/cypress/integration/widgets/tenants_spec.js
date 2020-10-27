@@ -24,9 +24,7 @@ describe('Tenants management widget', () => {
         cy.get('button.green').click();
 
         cy.log('Verifying tenant users can be edited');
-        cy.contains('tr', tenant)
-            .find('.content')
-            .click();
+        cy.contains('tr', tenant).find('.content').click();
         cy.contains('Edit users').click();
         cy.get('.modal').within(() => {
             cy.get('.selection').click();
@@ -36,9 +34,7 @@ describe('Tenants management widget', () => {
         cy.contains('tr', tenant).contains('.label.blue', '1');
 
         cy.log('Verifying tenant groups can be edited');
-        cy.contains('tr', tenant)
-            .find('.content')
-            .click();
+        cy.contains('tr', tenant).find('.content').click();
         cy.contains('Edit user groups').click();
         cy.get('.modal').within(() => {
             cy.get('.selection').click();

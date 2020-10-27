@@ -1,3 +1,4 @@
+import _ from 'lodash';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
@@ -23,7 +24,4 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = () => ({});
 
-export default connect(
-    mapStateToProps,
-    mapDispatchToProps
-)(Logo);
+export default connect(mapStateToProps, mapDispatchToProps)(Logo);

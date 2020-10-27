@@ -41,12 +41,7 @@ describe('(Component) LicensePage', () => {
     const verifyMessage = (messageHeader, icon, isLicenseSwitchButtonVisible) => {
         const descriptionMessage = messageContainerComponent.find('DescriptionMessage');
         expect(descriptionMessage.find('MessageHeader').text()).toBe(messageHeader);
-        expect(
-            descriptionMessage
-                .find('Icon')
-                .first()
-                .props().name
-        ).toBe(icon);
+        expect(descriptionMessage.find('Icon').first().props().name).toBe(icon);
         expect(descriptionMessage.find('LicenseSwitchButton')).toHaveLength(isLicenseSwitchButtonVisible ? 1 : 0);
     };
 

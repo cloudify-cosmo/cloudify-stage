@@ -7,7 +7,7 @@ import { shallow } from 'enzyme';
 import Grid from 'components/layout/Grid';
 import GridItem from 'components/layout/GridItem';
 
-describe('(Component) Grid ', () => {
+describe('(Component) Grid', () => {
     function testGridRender(isEditMode) {
         const wrapper = shallow(
             <Grid isEditMode={isEditMode} onGridDataChange={() => {}}>

@@ -5,7 +5,10 @@ describe('Template Management', () => {
         username: 'default',
         password,
         isAdmin: false,
-        tenants: [{ name: 'default_tenant', role: 'user' }, { name: 'T1', role: 'manager' }],
+        tenants: [
+            { name: 'default_tenant', role: 'user' },
+            { name: 'T1', role: 'manager' }
+        ],
         pages: ['catalog', 'blueprints']
     };
     const users = [defaultUser];
@@ -68,18 +71,10 @@ describe('Template Management', () => {
         cy
             .get('.blue.segment')
             .should('be.visible', true)
-            .within(() =>
-                cy
-                    .contains(templateId)
-                    .parent()
-                    .parent()
-            );
+            .within(() => cy.contains(templateId).parent().parent());
 
     before(() => {
-        cy.activate()
-            .deleteAllUsersAndTenants()
-            .removeUserPages()
-            .removeUserTemplates();
+        cy.activate().deleteAllUsersAndTenants().removeUserPages().removeUserTemplates();
 
         cy.log('Create tenants');
         testTenants.forEach(cy.addTenant);
@@ -99,9 +94,7 @@ describe('Template Management', () => {
         cy.get('.loader').should('be.not.visible');
 
         cy.get('.usersMenu').click();
-        cy.get('.usersMenu')
-            .contains('Template Management')
-            .click();
+        cy.get('.usersMenu').contains('Template Management').click();
 
         cy.location('pathname').should('be.equal', '/console/template_management');
 
@@ -135,9 +128,7 @@ describe('Template Management', () => {
         cy.removeUserTemplates().login();
 
         cy.get('.usersMenu').click();
-        cy.get('.usersMenu')
-            .contains('Template Management')
-            .click();
+        cy.get('.usersMenu').contains('Template Management').click();
 
         cy.get('.createTemplateButton').click();
 
@@ -145,7 +136,7 @@ describe('Template Management', () => {
         cy.get('.field > .ui > input').type('Template 1');
 
         cy.log('Select roles');
-        cy.get('.form > :nth-child(3) > .ui').click();
+        cy.get('.form > :nth-child(2) > .ui').click();
         cy.get('[option-value="user"]').click();
         cy.get('[option-value="viewer"]').click();
 
@@ -173,20 +164,18 @@ describe('Template Management', () => {
         getTemplateRow('Template 1').within(() => cy.get('.edit').click());
 
         cy.log('Change template name');
-        cy.get('.field > .ui > input')
-            .clear()
-            .type('Another Template');
+        cy.get('.field > .ui > input').clear().type('Another Template');
 
         cy.log('Add roles');
-        cy.get('.form > :nth-child(3) > .multiple .clear').click();
-        cy.get('.form > :nth-child(3) > .ui').click();
+        cy.get('.form > :nth-child(2) > .multiple .clear').click();
+        cy.get('.form > :nth-child(2) > .ui').click();
         cy.get('[option-value="manager"]').click();
         cy.get('[option-value="operations"]').click();
         clickOnHeader();
 
         cy.log('Select tenants');
-        cy.get('.form > :nth-child(4) > .multiple .clear').click();
-        cy.get('.form > :nth-child(4) > .ui').click();
+        cy.get('.form > :nth-child(3) > .multiple .clear').click();
+        cy.get('.form > :nth-child(3) > .ui').click();
         cy.get('[option-value="T1"]').click();
         cy.get('[option-value="T2"]').click();
         clickOnHeader();

@@ -1,0 +1,31 @@
+{
+    "plugins": [
+        "jest"
+    ],
+    "extends": [
+        "plugin:jest/recommended",
+        "plugin:react/recommended",
+        "../../node_modules/cloudify-ui-common/configs/eslint-common-react.json"
+    ],
+    "settings": {
+        "import/resolver": {
+            "jest": {
+                "jestConfigFile": "jest.config.js"
+            }
+        }
+    },
+    "rules": {
+        "react/react-in-jsx-scope": "off"
+    },
+    "globals": {
+        "_": true,
+        "$": true,
+        "d3": true,
+        "log": true,
+        "moment": true,
+        "Stage": true
+    },
+    "env": {
+        "jest": true
+    }
+}

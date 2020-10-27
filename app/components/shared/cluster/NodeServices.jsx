@@ -1,3 +1,4 @@
+import _ from 'lodash';
 import React from 'react';
 import PropTypes from 'prop-types';
 
@@ -102,7 +103,15 @@ export default function NodeServices({ name, type, services }) {
 export const nodeServicesPropType = PropTypes.objectOf(
     PropTypes.shape({
         status: PropTypes.oneOf(nodeServiceStatuses).isRequired,
-        extra_info: PropTypes.object
+        extra_info: PropTypes.shape({
+            systemd: PropTypes.shape({
+                display_name: PropTypes.string,
+                instances: PropTypes.arrayOf(
+                    PropTypes.shape({ Description: PropTypes.string, Id: PropTypes.string, State: PropTypes.string })
+                ),
+                unit_it: PropTypes.string
+            })
+        })
     })
 );
 

@@ -2,6 +2,9 @@
  * Created by kinneretzin on 08/09/2016.
  */
 
+import _ from 'lodash';
+import log from 'loglevel';
+
 import Internal from './Internal';
 import ScriptLoader from './scriptLoader';
 import StyleLoader from './StyleLoader';
@@ -14,7 +17,8 @@ import LoaderUtils from './LoaderUtils';
 
 import GenericConfig from './GenericConfig';
 import WidgetDefinition from './WidgetDefinition';
-import WidgetPropType from './WidgetPropType';
+import * as PropTypes from './props';
+import * as Hooks from './hooks';
 
 const ReactDOMServer = require('react-dom/server');
 
@@ -36,17 +40,17 @@ export default class WidgetDefinitionsLoader {
 
             Common: [],
             defineCommon: def => {
-                Stage.Common[def.name] = def.common;
+                window.Stage.Common[def.name] = def.common;
             },
 
-            PropTypes: { Widget: WidgetPropType },
+            PropTypes,
             definePropType: def => {
-                Stage.PropTypes[def.name] = def.common;
+                window.Stage.PropTypes[def.name] = def.common;
             },
 
-            Hooks: {},
+            Hooks,
             defineHook: def => {
-                Stage.Hooks = { ...Stage.Hooks, ...def };
+                window.Stage.Hooks = { ...window.Stage.Hooks, ...def };
             }
         };
     }

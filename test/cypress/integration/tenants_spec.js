@@ -28,10 +28,7 @@ describe('Tenants menu', () => {
     };
 
     before(() => {
-        cy.activate()
-            .deleteAllUsersAndTenants()
-            .removeUserPages()
-            .removeUserTemplates();
+        cy.activate().deleteAllUsersAndTenants().removeUserPages().removeUserTemplates();
 
         cy.log('Creating tenant');
         cy.addTenant('T1');
@@ -61,12 +58,7 @@ describe('Tenants menu', () => {
         cy.login(user.username, user.password);
 
         function verifyTemplate(tenant) {
-            cy.get('.tenantsMenu')
-                .click()
-                .find('.menu')
-                .contains(tenant.name)
-                .click()
-                .waitUntilLoaded();
+            cy.get('.tenantsMenu').click().find('.menu').contains(tenant.name).click().waitUntilLoaded();
             tenant.pages.forEach(page => cy.get('.sidebar > .pages').contains(page.name));
         }
 

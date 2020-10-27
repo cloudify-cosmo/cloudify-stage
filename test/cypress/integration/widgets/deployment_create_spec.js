@@ -8,10 +8,7 @@ describe('Deployments - Create new deployment modal', () => {
         cy.server();
         cy.route(/console\/sp\?su=\/summary/).as('getSummary');
         cy.route(/console\/sp\?su=\/blueprints/).as('getBlueprints');
-        cy.get('.blueprintsTable div.input input')
-            .clear()
-            .type(resourcePrefix)
-            .blur();
+        cy.get('.blueprintsTable div.input input').clear().type(resourcePrefix).blur();
         cy.wait('@getBlueprints');
         cy.wait('@getSummary');
     };
@@ -34,9 +31,7 @@ describe('Deployments - Create new deployment modal', () => {
                     cy.get(`div[option-value=${blueprintId}]`).click();
                 });
 
-            cy.get('input[name="deploymentName"]')
-                .click()
-                .type(deploymentName);
+            cy.get('input[name="deploymentName"]').click().type(deploymentName);
         });
     };
 

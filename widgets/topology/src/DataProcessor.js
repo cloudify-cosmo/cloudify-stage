@@ -53,15 +53,9 @@ export function createBlueprintData(data) {
                     NodeDataUtils.isInheritedFrom(node.type_hierarchy, Consts.componentType) ||
                     NodeDataUtils.isInheritedFrom(node.type_hierarchy, Consts.sharedResourceType)
                 ) {
-                    node.deploymentId = _.chain(nodeInstances)
-                        .head()
-                        .get('runtime_properties.deployment.id')
-                        .value();
+                    node.deploymentId = _.chain(nodeInstances).head().get('runtime_properties.deployment.id').value();
                 } else if (NodeDataUtils.isInheritedFrom(node.type_hierarchy, Consts.terraformModuleType)) {
-                    node.terraformResources = _.chain(nodeInstances)
-                        .head()
-                        .get('runtime_properties.resources')
-                        .value();
+                    node.terraformResources = _.chain(nodeInstances).head().get('runtime_properties.resources').value();
                 }
             }
         }

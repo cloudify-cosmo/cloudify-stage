@@ -80,8 +80,7 @@ export default class ParameterValue extends React.Component {
  * @property {boolean} [showCopyButton=true] if set to true, then CopyToClipboardButton will be shown
  */
 ParameterValue.propTypes = {
-    // eslint-disable-next-line react/forbid-prop-types
-    value: PropTypes.any,
+    value: Stage.PropTypes.AnyData,
     showCopyButton: PropTypes.bool
 };
 

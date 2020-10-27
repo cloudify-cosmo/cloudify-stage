@@ -2,6 +2,7 @@
  * Created by jakub.niezgoda on 15/03/2019.
  */
 
+import _ from 'lodash';
 import { connect } from 'react-redux';
 
 import Consts from '../../utils/consts';
@@ -21,7 +22,4 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = () => ({});
 
-export default connect(
-    mapStateToProps,
-    mapDispatchToProps
-)(Banner);
+export default connect(mapStateToProps, mapDispatchToProps)(Banner);

@@ -56,9 +56,7 @@ describe('Deployments - Create new deployment modal', () => {
         cy.get(`form :nth-child(${firstInputNthChild}).field`)
             .as('boolean_no_default')
             .within(() => {
-                cy.get('div.toggle.checkbox')
-                    .as('toggle')
-                    .should('not.have.class', 'checked');
+                cy.get('div.toggle.checkbox').as('toggle').should('not.have.class', 'checked');
                 cy.get('@toggle').should('have.class', 'indeterminate');
                 cy.get('input[type="checkbox"]').should('not.have.attr', 'checked');
 
@@ -72,16 +70,12 @@ describe('Deployments - Create new deployment modal', () => {
         cy.get(`form :nth-child(${firstInputNthChild + 1}).field`)
             .as('boolean_default_false')
             .within(() => {
-                cy.get('div.toggle.checkbox')
-                    .as('toggle')
-                    .should('not.have.class', 'checked');
+                cy.get('div.toggle.checkbox').as('toggle').should('not.have.class', 'checked');
                 cy.get('@toggle').should('not.have.class', 'indeterminate');
                 cy.get('input[type="checkbox"]').should('not.have.attr', 'checked');
 
                 cy.get('@toggle').click();
-                cy.get('i.undo.link.icon')
-                    .as('revertToDefaultValue')
-                    .should('be.visible');
+                cy.get('i.undo.link.icon').as('revertToDefaultValue').should('be.visible');
                 cy.get('@toggle').should('have.class', 'checked');
 
                 cy.get('@revertToDefaultValue').click();
@@ -92,16 +86,12 @@ describe('Deployments - Create new deployment modal', () => {
         cy.get(`form :nth-child(${firstInputNthChild + 2}).field`)
             .as('boolean_default_true')
             .within(() => {
-                cy.get('div.toggle.checkbox')
-                    .as('toggle')
-                    .should('have.class', 'checked');
+                cy.get('div.toggle.checkbox').as('toggle').should('have.class', 'checked');
                 cy.get('@toggle').should('not.have.class', 'indeterminate');
                 cy.get('input[type="checkbox"]').should('have.attr', 'checked');
 
                 cy.get('@toggle').click();
-                cy.get('i.undo.link.icon')
-                    .as('revertToDefaultValue')
-                    .should('be.visible');
+                cy.get('i.undo.link.icon').as('revertToDefaultValue').should('be.visible');
                 cy.get('@toggle').should('not.have.class', 'checked');
 
                 cy.get('@revertToDefaultValue').click();
@@ -152,16 +142,10 @@ describe('Deployments - Create new deployment modal', () => {
             .within(() => {
                 verifyNumberInput(null, null, 50);
 
-                cy.get('input')
-                    .as('inputField')
-                    .clear()
-                    .type('123')
-                    .blur();
+                cy.get('input').as('inputField').clear().type('123').blur();
 
                 verifyNumberInput(null, null, 123);
-                cy.get('i.undo.link.icon')
-                    .as('revertToDefaultValue')
-                    .should('be.visible');
+                cy.get('i.undo.link.icon').as('revertToDefaultValue').should('be.visible');
 
                 cy.get('@revertToDefaultValue').click();
                 verifyNumberInput(null, null, 50);
@@ -181,16 +165,10 @@ describe('Deployments - Create new deployment modal', () => {
             .within(() => {
                 verifyNumberInput(null, null, 3.14, 'any');
 
-                cy.get('input')
-                    .as('inputField')
-                    .clear()
-                    .type('2.71')
-                    .blur();
+                cy.get('input').as('inputField').clear().type('2.71').blur();
 
                 verifyNumberInput(null, null, 2.71, 'any');
-                cy.get('i.undo.link.icon')
-                    .as('revertToDefaultValue')
-                    .should('be.visible');
+                cy.get('i.undo.link.icon').as('revertToDefaultValue').should('be.visible');
 
                 cy.get('@revertToDefaultValue').click();
                 verifyNumberInput(null, null, 3.14, 'any');
@@ -208,12 +186,8 @@ describe('Deployments - Create new deployment modal', () => {
 
                 cy.get('@reactJsonView').should('have.text', '{}0 items');
                 cy.get('@reactJsonView').trigger('mouseover');
-                cy.get('.icon.edit.link')
-                    .as('switchIcon')
-                    .should('be.visible');
-                cy.get('.icon.info')
-                    .as('infoIcon')
-                    .should('be.visible');
+                cy.get('.icon.edit.link').as('switchIcon').should('be.visible');
+                cy.get('.icon.info').as('infoIcon').should('be.visible');
 
                 cy.get('@reactJsonView').trigger('mouseout');
                 cy.get('@switchIcon').should('not.be.visible');
@@ -230,19 +204,12 @@ describe('Deployments - Create new deployment modal', () => {
                 cy.get('div.react-json-view').as('reactJsonView');
 
                 cy.get('@reactJsonView').trigger('mouseover');
-                cy.get('.icon.edit.link')
-                    .as('switchIcon')
-                    .click();
-                cy.get('textarea')
-                    .as('rawTextArea')
-                    .clear()
-                    .type('{}');
+                cy.get('.icon.edit.link').as('switchIcon').click();
+                cy.get('textarea').as('rawTextArea').clear().type('{}');
                 cy.get('@switchIcon').click();
 
                 cy.get('@reactJsonView').should('have.text', '{}0 items');
-                cy.get('.icon.undo.link')
-                    .as('revertToDefaultIcon')
-                    .click();
+                cy.get('.icon.undo.link').as('revertToDefaultIcon').click();
 
                 cy.get('@reactJsonView').trigger('mouseover');
                 cy.get('@switchIcon').click();
@@ -270,12 +237,8 @@ describe('Deployments - Create new deployment modal', () => {
 
                 cy.get('@reactJsonView').should('have.text', '[]0 items');
                 cy.get('@reactJsonView').trigger('mouseover');
-                cy.get('.icon.edit.link')
-                    .as('switchIcon')
-                    .should('be.visible');
-                cy.get('.icon.info')
-                    .as('infoIcon')
-                    .should('be.visible');
+                cy.get('.icon.edit.link').as('switchIcon').should('be.visible');
+                cy.get('.icon.info').as('infoIcon').should('be.visible');
             });
 
         cy.get(`form :nth-child(${firstInputNthChild + 1}).field`)
@@ -288,13 +251,9 @@ describe('Deployments - Create new deployment modal', () => {
                     '[5 items0:int11:{1 item"a":string"b"}2:string"test"3:[3 items0:int11:int22:int3]4:float3.14]'
                 );
                 cy.get('@reactJsonView').trigger('mouseover');
-                cy.get('.icon.edit')
-                    .should('have.class', 'link')
-                    .click();
+                cy.get('.icon.edit').should('have.class', 'link').click();
 
-                cy.get('textarea')
-                    .clear()
-                    .type('invalidValue');
+                cy.get('textarea').clear().type('invalidValue');
 
                 cy.get('.icon.edit').should('have.class', 'disabled');
             });
@@ -313,14 +272,9 @@ describe('Deployments - Create new deployment modal', () => {
             .as('string_constraint_pattern')
             .within(() => {
                 verifyTextInput('Ubuntu 18.04');
-                cy.get('input')
-                    .clear()
-                    .type('Something')
-                    .blur();
+                cy.get('input').clear().type('Something').blur();
                 verifyTextInput('Something');
-                cy.get('i.undo.link.icon')
-                    .as('revertToDefaultValue')
-                    .should('be.visible');
+                cy.get('i.undo.link.icon').as('revertToDefaultValue').should('be.visible');
                 cy.get('@revertToDefaultValue').click();
                 cy.get('@revertToDefaultValue').should('not.be.visible');
                 verifyTextInput('Ubuntu 18.04');
@@ -329,9 +283,7 @@ describe('Deployments - Create new deployment modal', () => {
         cy.get(`form :nth-child(${firstInputNthChild + 2}).field`)
             .as('string_constraint_valid_values')
             .within(() => {
-                cy.get('div.text')
-                    .as('text')
-                    .should('have.text', 'en');
+                cy.get('div.text').as('text').should('have.text', 'en');
                 cy.get('div.dropdown').click();
 
                 cy.get('div[name="pl"]').should('be.visible');
@@ -340,18 +292,13 @@ describe('Deployments - Create new deployment modal', () => {
                 cy.get('div[name="pl"]').click();
                 cy.get('@text').should('have.text', 'pl');
 
-                cy.get('i.undo.link.icon')
-                    .as('revertToDefaultValue')
-                    .should('be.visible');
+                cy.get('i.undo.link.icon').as('revertToDefaultValue').should('be.visible');
                 cy.get('@revertToDefaultValue').click();
 
                 cy.get('@revertToDefaultValue').should('not.be.visible');
                 cy.get('@text').should('have.text', 'en');
 
-                cy.get('i.dropdown.icon')
-                    .as('dropdownOrClearIcon')
-                    .should('be.visible')
-                    .should('have.class', 'clear');
+                cy.get('i.dropdown.icon').as('dropdownOrClearIcon').should('be.visible').should('have.class', 'clear');
                 cy.get('@dropdownOrClearIcon').click();
 
                 cy.get('@text').should('have.text', '');
@@ -387,18 +334,13 @@ describe('Deployments - Create new deployment modal', () => {
         cy.get(`form :nth-child(${firstInputNthChild}).field`)
             .as('string_no_default')
             .within(() => {
-                cy.get('input')
-                    .clear()
-                    .type('Something');
+                cy.get('input').clear().type('Something');
             });
 
         cy.get(`form :nth-child(${firstInputNthChild + 1}).field`)
             .as('string_constraint_pattern')
             .within(() => {
-                cy.get('input')
-                    .clear()
-                    .type('CentOS 7.6')
-                    .blur();
+                cy.get('input').clear().type('CentOS 7.6').blur();
             });
         cy.get('string_constraint_pattern').should('not.have.class', 'error');
 

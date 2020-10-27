@@ -5,10 +5,7 @@ export default class DataFetcher {
         }
 
         function getLayoutPromise(layoutBlueprintId) {
-            return toolbox
-                .getInternal()
-                .doGet(`/bud/layout/${layoutBlueprintId}`)
-                .catch(_.constant(null));
+            return toolbox.getInternal().doGet(`/bud/layout/${layoutBlueprintId}`).catch(_.constant(null));
         }
 
         if (deploymentId) {

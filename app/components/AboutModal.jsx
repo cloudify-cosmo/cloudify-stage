@@ -2,17 +2,17 @@
  * Created by jakub.niezgoda on 15/03/2019.
  */
 
+import _ from 'lodash';
 import PropTypes from 'prop-types';
 import React from 'react';
 
+import { Button, CancelButton, Divider, Header, Modal } from './basic';
 import Banner from '../containers/banner/Banner';
 import CurrentLicense from './license/CurrentLicense';
 import CurrentVersion from './license/CurrentVersion';
 import EulaLink from './license/EulaLink';
 
 export default function AboutModal({ canLicenseManagement, license, onHide, onLicenseManagement, open, version }) {
-    const { Button, CancelButton, Divider, Header, Modal } = Stage.Basic;
-
     return (
         <Modal open={open} onClose={onHide}>
             <Modal.Header className="mainBackgroundColor" style={{ padding: 0, paddingLeft: 10 }}>

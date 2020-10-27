@@ -32,18 +32,14 @@ describe('Sites Management', () => {
         cy.get('@createSiteButton').click();
 
         cy.get('.required > .field > .ui > input').as('name');
-        cy.get(':nth-child(3) > .field > .ui > input').as('location');
+        cy.get('form :nth-child(2) > .field > .ui > input').as('location');
         cy.get('.actions > .green').as('createButton');
         cy.get('.modal > :nth-child(1) > .green').as('visibility');
 
-        cy.get('@name')
-            .type(site.name)
-            .should('have.value', site.name);
+        cy.get('@name').type(site.name).should('have.value', site.name);
 
         if (site.location) {
-            cy.get('@location')
-                .type(site.location)
-                .should('have.value', site.location);
+            cy.get('@location').type(site.location).should('have.value', site.location);
         }
 
         cy.get('@createButton').click();
@@ -131,9 +127,9 @@ describe('Sites Management', () => {
         cy.get('.required > .field > .ui > input').type(name);
 
         // use map to specify location
-        cy.get(':nth-child(3) > .field > .ui > button').click();
+        cy.get('form :nth-child(2) > .field > .ui > button').click();
         cy.get('.leaflet-container').click();
-        cy.get(':nth-child(3) > .field > .ui > input').should('have.value', '0.08789059053082422, 0');
+        cy.get('form :nth-child(2) > .field > .ui > input').should('have.value', '0.08789059053082422, 0');
 
         // change visibility
         cy.get('.modal > :nth-child(1) > .green').click();
@@ -166,14 +162,11 @@ describe('Sites Management', () => {
         reloadSiteManagementPage();
 
         cy.get('.edit').click();
-        cy.get(':nth-child(2) > .field > .ui > input').as('name');
-        cy.get(':nth-child(3) > .field > .ui > input').as('location');
+        cy.get('form :nth-child(1) > .field > .ui > input').as('name');
+        cy.get('form :nth-child(2) > .field > .ui > input').as('location');
 
         const newName = 'new_name';
-        cy.get('@name')
-            .clear()
-            .type(newName)
-            .should('have.value', newName);
+        cy.get('@name').clear().type(newName).should('have.value', newName);
 
         cy.get('@location').clear();
 
@@ -189,10 +182,13 @@ describe('Sites Management', () => {
 
         cy.get('.edit').click();
 
-        cy.get(':nth-child(3) > .field > .ui > button').click();
+        cy.get('form :nth-child(2) > .field > .ui > button').click();
         cy.get('.leaflet-container').click();
 
-        cy.get(':nth-child(3) > .field > .ui > input').should('have.value', '32.175612478499346, 34.80468750000001');
+        cy.get('form :nth-child(2) > .field > .ui > input').should(
+            'have.value',
+            '32.175612478499346, 34.80468750000001'
+        );
 
         // Click update
         cy.get('.actions > .green').click();

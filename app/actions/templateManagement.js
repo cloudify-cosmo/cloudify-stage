@@ -2,6 +2,7 @@
  * Created by pposel on 11/09/2017.
  */
 
+import _ from 'lodash';
 import { push } from 'connected-react-router';
 import * as types from './types';
 import { addPage, removePage } from './templates';

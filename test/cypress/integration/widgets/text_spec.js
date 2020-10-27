@@ -1,10 +1,5 @@
 describe('Text box widget', () => {
-    before(() =>
-        cy
-            .activate('valid_trial_license')
-            .login()
-            .addWidget('text')
-    );
+    before(() => cy.activate('valid_trial_license').login().addWidget('text'));
 
     it('should render', () => {
         cy.contains('Header text');

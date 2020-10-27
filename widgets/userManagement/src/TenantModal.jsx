@@ -117,7 +117,7 @@ TenantModal.propTypes = {
     onHide: PropTypes.func.isRequired,
     open: PropTypes.bool.isRequired,
     tenants: PropTypes.shape({
-        items: PropTypes.array
+        items: PropTypes.arrayOf(PropTypes.shape({ name: PropTypes.string }))
     }).isRequired,
     toolbox: Stage.PropTypes.Toolbox.isRequired,
     user: UserPropType.isRequired

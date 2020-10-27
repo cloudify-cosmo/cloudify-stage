@@ -2,6 +2,8 @@
  * Created by kinneretzin on 18/10/2016.
  */
 
+import _ from 'lodash';
+
 export default class EventBus {
     static events = {};
 

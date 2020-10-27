@@ -8,9 +8,7 @@ describe('Page management', () => {
         const pageName = 'Page 1';
 
         cy.get('.usersMenu').click();
-        cy.get('.usersMenu')
-            .contains('Template Management')
-            .click();
+        cy.get('.usersMenu').contains('Template Management').click();
 
         cy.get('.createPageButton').click();
 
@@ -28,27 +26,21 @@ describe('Page management', () => {
 
         cy.log('Managing tabs');
         cy.contains('Add Tabs').click();
-        cy.get('.tabContent')
-            .contains('Add Widget')
-            .click();
+        cy.get('.tabContent').contains('Add Widget').click();
         cy.get('[data-id="blueprints"]').click();
         cy.get('button#addWidgetsBtn').click();
         cy.get('.item .editModeButton .add').click();
         cy.get('.editModeButton .remove:eq(0)').click();
         cy.contains('Yes').click();
         cy.get('.editModeButton .remove:eq(0)').click();
-        cy.get('.tabContent')
-            .contains('Add Widget')
-            .click();
+        cy.get('.tabContent').contains('Add Widget').click();
         cy.get('[data-id="blueprints"]').click();
         cy.get('button#addWidgetsBtn').click();
         cy.get('.item .editModeButton .add').click();
         cy.get('.editModeButton .edit:eq(1)').click();
         cy.get('.modal input[type=text]').type(2);
         cy.get('.modal .toggle').click();
-        cy.get('.modal')
-            .contains('Save')
-            .click();
+        cy.get('.modal').contains('Save').click();
 
         cy.log('Saving page');
         cy.contains('Save').click();
@@ -76,14 +68,10 @@ describe('Page management', () => {
         cy.get('button#addWidgetsBtn').click();
 
         cy.log('Saving page');
-        cy.contains('Save')
-            .click()
-            .should('not.exist');
+        cy.contains('Save').click().should('not.exist');
 
         cy.log('Removing page');
-        cy.contains('.segment', 'Pages')
-            .find('.remove')
-            .click();
+        cy.contains('.segment', 'Pages').find('.remove').click();
         cy.get('.popup button.green').click();
         cy.get('.main .loading').should('be.not.visible', true);
 

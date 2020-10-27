@@ -1,9 +1,10 @@
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
+import { useBoolean } from '../utils/hooks';
 import { ApproveButton, CancelButton, Form, Modal } from './basic';
 
 export default function EditTabModal({ tab, trigger, onTabUpdate }) {
-    const [open, setOpen] = useState();
+    const [open, setOpen, unsetOpen] = useBoolean();
     const [name, setName] = useState();
     const [isDefault, setDefault] = useState();
 
@@ -13,7 +14,7 @@ export default function EditTabModal({ tab, trigger, onTabUpdate }) {
     }, [tab]);
 
     return (
-        <Modal trigger={trigger} open={open} onOpen={() => setOpen(true)} onClose={() => setOpen(false)}>
+        <Modal trigger={trigger} open={open} onOpen={setOpen} onClose={unsetOpen}>
             <Modal.Header>Edit Tab</Modal.Header>
 
             <Modal.Content>
@@ -36,10 +37,10 @@ export default function EditTabModal({ tab, trigger, onTabUpdate }) {
                 <ApproveButton
                     onClick={() => {
                         onTabUpdate(name, isDefault);
-                        setOpen(false);
+                        unsetOpen();
                     }}
                 />
-                <CancelButton onClick={() => setOpen(false)} />
+                <CancelButton onClick={unsetOpen} />
             </Modal.Actions>
         </Modal>
     );

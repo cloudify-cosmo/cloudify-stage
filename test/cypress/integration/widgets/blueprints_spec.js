@@ -20,9 +20,7 @@ describe('Blueprints widget', () => {
 
     it('should open Composer with imported blueprint on "Edit a copy in Composer" icon click', () => {
         // Click the action icon
-        getBlueprintRow(emptyBlueprintName)
-            .find('.external.share')
-            .click();
+        getBlueprintRow(emptyBlueprintName).find('.external.share').click();
 
         cy.window()
             .its('open')
@@ -43,9 +41,7 @@ describe('Blueprints widget', () => {
 
     it('should handle invalid blueprint url upload failure gracefully', () => {
         cy.contains('Upload').click();
-        cy.get('input[name=blueprintUrl]')
-            .type('http://wp.pl')
-            .blur();
+        cy.get('input[name=blueprintUrl]').type('http://wp.pl').blur();
         cy.contains('Cancel').click();
     });
 
@@ -55,15 +51,11 @@ describe('Blueprints widget', () => {
 
         beforeEach(() => {
             cy.contains('Upload').click();
-            cy.get('input[name=blueprintUrl]')
-                .type(url)
-                .blur();
+            cy.get('input[name=blueprintUrl]').type(url).blur();
         });
 
         it('with default blueprint file', () => {
-            cy.get('input[name=blueprintUrl]')
-                .clear()
-                .blur();
+            cy.get('input[name=blueprintUrl]').clear().blur();
             cy.get('div[name=blueprintFileName] input').click();
             cy.contains('No results found.');
 
@@ -74,15 +66,10 @@ describe('Blueprints widget', () => {
                 .blur();
             cy.contains('.modal', 'blueprint.yaml');
 
-            cy.get('input[name=blueprintUrl]')
-                .clear()
-                .type(url)
-                .blur();
+            cy.get('input[name=blueprintUrl]').clear().type(url).blur();
 
             const blueprintName = `${blueprintNamePrefix}_default_file`;
-            cy.get('input[name=blueprintName]')
-                .clear()
-                .type(blueprintName);
+            cy.get('input[name=blueprintName]').clear().type(blueprintName);
             cy.get('.button.ok').click();
 
             getBlueprintRow(blueprintName).contains('read-secret-blueprint.yaml');
@@ -92,9 +79,7 @@ describe('Blueprints widget', () => {
             const blueprintName = `${blueprintNamePrefix}_specified_file`;
             const blueprintFileName = 'write-secret-blueprint.yaml';
 
-            cy.get('input[name=blueprintName]')
-                .clear()
-                .type(blueprintName);
+            cy.get('input[name=blueprintName]').clear().type(blueprintName);
             cy.get('div[name=blueprintFileName] input').type(blueprintFileName);
             cy.get('.button.ok').click();
 
@@ -111,10 +96,7 @@ describe('Blueprints widget', () => {
 
         it('should allow to switch to catalog view', () => {
             cy.editWidgetConfiguration('blueprints', () =>
-                cy
-                    .get('.dropdown')
-                    .contains('Catalog')
-                    .click({ force: true })
+                cy.get('.dropdown').contains('Catalog').click({ force: true })
             );
 
             cy.get('div.blueprintsWidget table.blueprintsTable').should('not.exist');
@@ -132,9 +114,7 @@ describe('Blueprints widget', () => {
     });
 
     it('should allow to deploy a blueprint', () => {
-        getBlueprintRow(emptyBlueprintName)
-            .find('.rocket')
-            .click();
+        getBlueprintRow(emptyBlueprintName).find('.rocket').click();
 
         cy.get('input[name=deploymentName]').type(blueprintNamePrefix);
         cy.contains('Show Data Types').click();
@@ -144,18 +124,14 @@ describe('Blueprints widget', () => {
         cy.get('.modal').should('not.exist');
 
         cy.visitPage('Local Blueprints');
-        getBlueprintRow(emptyBlueprintName)
-            .find('.label.green')
-            .should('have.text', '1');
+        getBlueprintRow(emptyBlueprintName).find('.label.green').should('have.text', '1');
     });
 
     it('should allow to delete blueprint', () => {
         const blueprintName = `${blueprintNamePrefix}_delete`;
 
         cy.uploadBlueprint('blueprints/empty.zip', blueprintName);
-        getBlueprintRow(blueprintName)
-            .find('.trash')
-            .click();
+        getBlueprintRow(blueprintName).find('.trash').click();
         cy.contains('.modal .button', 'Yes').click();
 
         cy.contains(blueprintName).should('not.exist');

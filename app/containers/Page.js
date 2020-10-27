@@ -2,6 +2,7 @@
  * Created by kinneretzin on 11/09/2016.
  */
 
+import _ from 'lodash';
 import { connect } from 'react-redux';
 
 import Page from '../components/Page';
@@ -56,7 +57,9 @@ const mapStateToProps = (state, ownProps) => {
     const pageData = _.cloneDeep(_.find(pages, { id: pageId }));
 
     function assignWidgetDefinition(widget) {
-        widget.definition = _.find(state.widgetDefinitions, { id: widget.definition });
+        widget.definition = _.find(state.widgetDefinitions, {
+            id: widget.definition
+        });
     }
 
     _.each(pageData.widgets, assignWidgetDefinition);
@@ -85,7 +88,10 @@ const mapDispatchToProps = (dispatch, ownProps) => {
             // Starting from 1 cause the first page doesnt have any context and shouldnt be in the context array (only drilldown pages)
             // and also skip the last page, because we are sending the context of this one to the select page
             for (let i = 1; i <= index - 1; i += 1) {
-                drilldownContext.push({ pageName: pagesList[i].name, context: pagesList[i].context });
+                drilldownContext.push({
+                    pageName: pagesList[i].name,
+                    context: pagesList[i].context
+                });
             }
             dispatch(setDrilldownContext(drilldownContext));
             dispatch(selectPage(page.id, page.isDrillDown, page.context, page.name));
@@ -109,9 +115,6 @@ const mapDispatchToProps = (dispatch, ownProps) => {
     };
 };
 
-const PageW = connect(
-    mapStateToProps,
-    mapDispatchToProps
-)(Page);
+const PageW = connect(mapStateToProps, mapDispatchToProps)(Page);
 
 export default PageW;

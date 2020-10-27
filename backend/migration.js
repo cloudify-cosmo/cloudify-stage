@@ -23,7 +23,7 @@ const umzug = new Umzug({
             sequelize.constructor, // DataTypes
             logger,
             // eslint-disable-next-line func-names
-            function() {
+            function () {
                 throw new Error(
                     'Migration tried to use old style "done" callback. Please upgrade to "umzug" and return a promise instead.'
                 );
@@ -45,6 +45,11 @@ umzug.on('migrating', logUmzugEvent('migrating'));
 umzug.on('migrated', logUmzugEvent('migrated'));
 umzug.on('reverting', logUmzugEvent('reverting'));
 umzug.on('reverted', logUmzugEvent('reverted'));
+
+function endMigration(exitCode = 0) {
+    // eslint-disable-next-line no-process-exit
+    process.exit(exitCode);
+}
 
 function cmdStatus() {
     const result = {};
@@ -170,7 +175,7 @@ function handleCommand(cmd) {
             break;
         default:
             logger.error(`invalid cmd: ${cmd}`);
-            process.exit(1);
+            endMigration(1);
     }
 
     executedCmd
@@ -185,7 +190,7 @@ function handleCommand(cmd) {
             logger.error('='.repeat(errorStr.length));
             logger.error(err);
             logger.error('='.repeat(errorStr.length));
-            process.exit(1);
+            endMigration(1);
         })
         .then(() => {
             if (cmd !== 'status' && cmd !== 'reset-hard') {
@@ -193,7 +198,7 @@ function handleCommand(cmd) {
             }
             return Promise.resolve();
         })
-        .then(() => process.exit(0));
+        .then(() => endMigration(0));
 }
 
 const cmd = process.argv[2].trim();
@@ -203,7 +208,7 @@ if (cmd === 'current') {
     getCurrMigration().then(current => {
         // eslint-disable-next-line no-console
         console.log(current);
-        process.exit(0);
+        endMigration(0);
     });
 } else {
     handleCommand(cmd);

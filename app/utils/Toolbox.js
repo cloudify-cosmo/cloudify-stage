@@ -3,6 +3,7 @@
  * Created by kinneretzin on 14/11/2016.
  */
 
+import _ from 'lodash';
 import 'proxy-polyfill';
 
 import { drillDownToPage } from '../actions/drilldownPage';

@@ -1,3 +1,5 @@
+import DeploymentStatePropType from './props/DeploymentStatePropType';
+
 export default class SiteControl extends React.Component {
     goToDeploymentsPage(siteName) {
         const { toolbox } = this.props;
@@ -41,12 +43,7 @@ export default class SiteControl extends React.Component {
 SiteControl.propTypes = {
     site: PropTypes.shape({
         name: PropTypes.string.isRequired,
-        deploymentStates: PropTypes.shape({
-            pending: PropTypes.array.isRequired,
-            inProgress: PropTypes.array.isRequired,
-            good: PropTypes.array.isRequired,
-            failed: PropTypes.array.isRequired
-        }).isRequired
+        deploymentStates: DeploymentStatePropType.isRequired
     }).isRequired,
     toolbox: Stage.PropTypes.Toolbox.isRequired
 };

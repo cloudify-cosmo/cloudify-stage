@@ -2,14 +2,18 @@
  * Created by jakubniezgoda on 31/01/2019.
  */
 
+const WorkflowsPropType = PropTypes.arrayOf(PropTypes.shape({ name: PropTypes.string, plugin: PropTypes.string }));
+
 function StyledTitle({ name, bold }) {
     const displayName = _.capitalize(_.lowerCase(name));
     return <span style={bold ? { fontWeight: 'bold' } : {}}>{displayName}</span>;
 }
+
 StyledTitle.propTypes = {
     name: PropTypes.string.isRequired,
     bold: PropTypes.bool
 };
+
 StyledTitle.defaultProps = {
     bold: false
 };
@@ -28,7 +32,7 @@ function WorkflowsMenuItems({ onClick, workflows }) {
 }
 
 WorkflowsMenuItems.propTypes = {
-    workflows: PropTypes.arrayOf(PropTypes.shape({ name: PropTypes.string })).isRequired,
+    workflows: WorkflowsPropType.isRequired,
     onClick: PropTypes.func
 };
 
@@ -88,7 +92,7 @@ AccordionWorkflowsMenu.propTypes = {
     workflowsGroups: PropTypes.arrayOf(
         PropTypes.shape({
             name: PropTypes.string,
-            workflows: PropTypes.array
+            workflows: WorkflowsPropType
         })
     ).isRequired,
     onClick: PropTypes.func
@@ -139,7 +143,7 @@ function WorkflowsMenu({ workflows, onClick, popupMenuProps, showInPopup, trigge
 }
 
 WorkflowsMenu.propTypes = {
-    workflows: PropTypes.arrayOf(PropTypes.shape({ plugin: PropTypes.string })).isRequired,
+    workflows: WorkflowsPropType.isRequired,
     onClick: PropTypes.func,
     popupMenuProps: PropTypes.shape({ icon: PropTypes.string, help: PropTypes.string, bordered: PropTypes.bool }),
     showInPopup: PropTypes.bool,

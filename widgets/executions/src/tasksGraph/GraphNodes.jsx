@@ -1,6 +1,7 @@
 /**
  * Created by barucoh on 23/1/2019.
  */
+import GraphNodePropType from './props/GraphNodePropType';
 import GraphNode from './GraphNode';
 import GraphEdges from './GraphEdges';
 
@@ -24,15 +25,7 @@ const GraphNodes = ({ graphNodes, toolbox }) =>
     ));
 
 GraphNodes.propTypes = {
-    graphNodes: PropTypes.arrayOf(
-        PropTypes.shape({
-            x: PropTypes.number.isRequired,
-            y: PropTypes.number.isRequired,
-            id: PropTypes.string,
-            children: PropTypes.array.isRequired, // While required, may be empty
-            edges: PropTypes.array.isRequired // Same as above
-        })
-    ).isRequired
+    graphNodes: PropTypes.arrayOf(GraphNodePropType).isRequired
 };
 
 export default GraphNodes;

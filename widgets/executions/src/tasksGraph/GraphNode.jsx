@@ -4,6 +4,7 @@
 /**
  * @property {Any} [graphNode] - A Graph Node to render
  */
+import GraphNodePropType from './props/GraphNodePropType';
 import states from './States';
 
 const textHeight = 18;
@@ -120,26 +121,8 @@ const GraphNode = ({ graphNode, toolbox }) => {
 };
 
 GraphNode.propTypes = {
-    graphNode: PropTypes.shape({
-        labels: PropTypes.arrayOf(
-            PropTypes.shape({
-                displayText: Stage.PropTypes.StringOrArray,
-                displayTitle: PropTypes.arrayOf(PropTypes.string),
-                text: Stage.PropTypes.StringOrArray,
-                state: PropTypes.string,
-                retry: PropTypes.number
-            })
-        ),
-        height: PropTypes.number,
-        width: PropTypes.number,
-        children: PropTypes.array,
-        nodeInstanceId: PropTypes.string,
-        operation: PropTypes.string
-    }).isRequired,
-    toolbox: PropTypes.shape({
-        getContext: PropTypes.func.isRequired,
-        getEventBus: PropTypes.func.isRequired
-    }).isRequired
+    graphNode: GraphNodePropType.isRequired,
+    toolbox: Stage.PropTypes.Toolbox.isRequired
 };
 
 export default GraphNode;

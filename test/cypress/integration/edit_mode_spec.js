@@ -41,9 +41,7 @@ describe('Edit mode', () => {
         cy.get('.editModeButton:contains(Add Widget):eq(1)').click();
         cy.get('*[data-id=blueprintSources]').click();
         cy.contains('Add selected widgets').click();
-        cy.contains('.message', 'Edit mode')
-            .contains('Exit')
-            .click();
+        cy.contains('.message', 'Edit mode').contains('Exit').click();
 
         cy.contains('.react-grid-layout:eq(1) .widgetName', 'Blueprint Sources');
 
@@ -95,9 +93,7 @@ describe('Edit mode', () => {
         cy.contains('Add Page').click();
 
         cy.log('Verify empty page was added');
-        cy.get('.pageMenuItem:last()')
-            .should('have.class', 'active')
-            .should('have.text', 'Page_0');
+        cy.get('.pageMenuItem:last()').should('have.class', 'active').should('have.text', 'Page_0');
         cy.contains('.pageTitle', 'Page_0');
         cy.contains('This page is empty');
         cy.contains("don't be shy, give it a meaning!");
@@ -138,14 +134,10 @@ describe('Edit mode', () => {
         function submitInvalidWidget(widgetName, expectedError, expectedStatus, expectedDelete = false) {
             submitWidget(widgetName);
 
-            cy.wait('@installWidget')
-                .its('status')
-                .should('equal', expectedStatus);
+            cy.wait('@installWidget').its('status').should('equal', expectedStatus);
 
             if (expectedDelete) {
-                cy.wait('@deleteWidget')
-                    .its('status')
-                    .should('equal', 200);
+                cy.wait('@deleteWidget').its('status').should('equal', 200);
             }
 
             cy.get('.modal .message ul').should('have.text', expectedError);
@@ -236,9 +228,7 @@ describe('Edit mode', () => {
             cy.get('input[name="endpoint"]').type('version');
             cy.contains('Fire').click();
 
-            cy.wait('@managerService')
-                .its('status')
-                .should('equal', 404);
+            cy.wait('@managerService').its('status').should('equal', 404);
 
             cy.get('.message .content').should('have.text', "404 - The module 'fs-extra' is not whitelisted in VM.");
         });

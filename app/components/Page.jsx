@@ -2,6 +2,7 @@
  * Created by kinneretzin on 29/08/2016.
  */
 
+import _ from 'lodash';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 
@@ -34,10 +35,7 @@ export default class Page extends Component {
             pagesList
         } = this.props;
         const maximizeWidget =
-            _.find(page.widgets, { maximized: true }) ||
-            _(page.tabs)
-                .flatMap('widgets')
-                .find({ maximized: true });
+            _.find(page.widgets, { maximized: true }) || _(page.tabs).flatMap('widgets').find({ maximized: true });
 
         $('body')
             .css({ overflow: maximizeWidget ? 'hidden' : 'inherit' })

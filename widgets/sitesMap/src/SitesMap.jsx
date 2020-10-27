@@ -1,3 +1,4 @@
+import DeploymentStatePropType from './props/DeploymentStatePropType';
 import SiteControl from './SiteControl';
 
 function openPopup(marker) {
@@ -139,12 +140,7 @@ SitesMap.propTypes = {
             color: PropTypes.string.isRequired,
             latitude: PropTypes.number.isRequired,
             longitude: PropTypes.number.isRequired,
-            deploymentStates: PropTypes.shape({
-                pending: PropTypes.array.isRequired,
-                inProgress: PropTypes.array.isRequired,
-                good: PropTypes.array.isRequired,
-                failed: PropTypes.array.isRequired
-            }).isRequired
+            deploymentStates: DeploymentStatePropType.isRequired
         })
     ).isRequired,
     dimensions: PropTypes.shape({

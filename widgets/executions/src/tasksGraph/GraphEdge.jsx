@@ -1,6 +1,8 @@
 /**
  * Created by barucoh on 23/1/2019.
  */
+import GraphEdgePropType from './props/GraphEdgePropType';
+
 /**
  * @property {Any} [graphEdge] - A Graph Edge to render
  */
@@ -22,8 +24,9 @@ const GraphEdge = ({ graphEdge: edge }) => {
 
         return (
             <polygon
-                points={`${endPoint.x + svgArrowVisualAdjustment},${endPoint.y} ${endPoint.x + svgArrowX},${endPoint.y +
-                    svgArrowY} ${endPoint.x + svgArrowX},${endPoint.y - svgArrowY}`}
+                points={`${endPoint.x + svgArrowVisualAdjustment},${endPoint.y} ${endPoint.x + svgArrowX},${
+                    endPoint.y + svgArrowY
+                } ${endPoint.x + svgArrowX},${endPoint.y - svgArrowY}`}
             />
         );
     }
@@ -81,21 +84,8 @@ const GraphEdge = ({ graphEdge: edge }) => {
     );
 };
 
-const pointPropType = PropTypes.shape({
-    x: PropTypes.number,
-    y: PropTypes.number
-});
-
 GraphEdge.propTypes = {
-    graphEdge: PropTypes.shape({
-        sections: PropTypes.arrayOf(
-            PropTypes.shape({
-                startPoint: pointPropType.isRequired,
-                bendPoints: PropTypes.arrayOf(pointPropType),
-                endPoint: pointPropType.isRequired
-            })
-        ).isRequired
-    }).isRequired
+    graphEdge: GraphEdgePropType.isRequired
 };
 
 export default GraphEdge;

@@ -2,6 +2,8 @@
  * Created by kinneretzin on 09/02/2017.
  */
 
+import _ from 'lodash';
+import log from 'loglevel';
 import { saveUserAppData } from '../actions/userAppCommon';
 
 let singleton = null;

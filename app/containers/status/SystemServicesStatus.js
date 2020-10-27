@@ -22,7 +22,4 @@ const mapDispatchToProps = dispatch => {
     };
 };
 
-export default connect(
-    mapStateToProps,
-    mapDispatchToProps
-)(SystemServicesStatus);
+export default connect(mapStateToProps, mapDispatchToProps)(SystemServicesStatus);

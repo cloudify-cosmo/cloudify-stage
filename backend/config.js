@@ -1,3 +1,5 @@
+/* eslint-disable
+ node/no-unpublished-require,node/no-missing-require,import/no-unresolved,global-require,import/no-dynamic-require */
 const _ = require('lodash');
 const flatten = require('flat');
 
@@ -9,7 +11,6 @@ let userConfig = require('../conf/userConfig.json');
 
 try {
     const userDataConfigPath = Utils.getResourcePath('userConfig.json', true);
-    // eslint-disable-next-line import/no-dynamic-require,global-require
     let userDataConfig = require(userDataConfigPath);
     userDataConfig = _.pick(userDataConfig, _.keys(flatten(userConfig, { safe: true }))); // Security reason - get only allowed parameters
     userConfig = _.defaultsDeep(userDataConfig, userConfig); // Create full user configuration
@@ -21,7 +22,6 @@ try {
 
 let me = null;
 try {
-    // eslint-disable-next-line import/no-unresolved,global-require
     me = require('../conf/me.json');
 } catch (err) {
     if (err.code !== 'MODULE_NOT_FOUND') {

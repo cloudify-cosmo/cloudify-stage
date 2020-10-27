@@ -2,6 +2,7 @@
  * Created by kinneretzin on 26/09/2016.
  */
 
+import _ from 'lodash';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 

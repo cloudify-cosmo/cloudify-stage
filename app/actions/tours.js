@@ -2,6 +2,8 @@
  * Created by edenp on 15/04/2018.
  */
 
+import _ from 'lodash';
+import log from 'loglevel';
 import hopscotch from 'hopscotch';
 import { push } from 'connected-react-router';
 
@@ -90,8 +92,9 @@ function hopscotchRegisterHelpers(dispatch) {
                     target: 'div.logo',
                     placement: 'bottom',
                     title: 'No page',
-                    content: `Cannot find <strong>${name ||
-                        pageUrl}</strong> page. Tours are intended to work only on default templates. Reset templates to finish this tour.`
+                    content: `Cannot find <strong>${
+                        name || pageUrl
+                    }</strong> page. Tours are intended to work only on default templates. Reset templates to finish this tour.`
                 });
 
                 return Promise.reject(`Page ${name} not found.`);

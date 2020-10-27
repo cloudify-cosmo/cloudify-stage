@@ -14,10 +14,7 @@ describe('Nodes statistics widget', () => {
     );
 
     it('should display node statistics', () => {
-        cy.get('.deploymentFilterField')
-            .click()
-            .find('input')
-            .type(`${deploymentName}{enter}`);
+        cy.get('.deploymentFilterField').click().find('input').type(`${deploymentName}{enter}`);
 
         cy.get('.nodesStatsWidget tspan:contains(0)').should('have.length', 3);
         cy.get('.nodesStatsWidget tspan:contains(1)').should('have.length', 1);

@@ -2,6 +2,9 @@
  * Created by kinneretzin on 03/04/2017.
  */
 
+import _ from 'lodash';
+import log from 'loglevel';
+
 function getUrlRegExString(str) {
     // eslint-disable-next-line security/detect-non-literal-regexp
     return new RegExp(`\\[${str}:?(.*)\\]`, 'i');

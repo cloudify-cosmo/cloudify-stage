@@ -209,7 +209,7 @@ NodesTable.propTypes = {
                 isSelected: PropTypes.bool,
                 numberOfInstances: PropTypes.number,
                 type: PropTypes.string,
-                type_hierarchy: PropTypes.array
+                type_hierarchy: PropTypes.arrayOf(PropTypes.string)
             })
         ),
         total: PropTypes.number

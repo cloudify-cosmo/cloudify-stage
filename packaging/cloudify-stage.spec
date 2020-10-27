@@ -38,7 +38,7 @@ npm run build
 # Adding stage files
 mkdir -p %{buildroot}%{stage_path}
 cp %{_builddir}/package.json %{buildroot}%{stage_path}
-cp -r %{_builddir}/backend %{buildroot}%{stage_path}
+rsync -avr --exclude='test/' --exclude='package-lock.json' %{_builddir}/backend %{buildroot}%{stage_path}
 rsync -avr --exclude='me.json*' %{_builddir}/conf %{buildroot}%{stage_path}
 cp -r %{_builddir}/dist %{buildroot}%{stage_path}
 

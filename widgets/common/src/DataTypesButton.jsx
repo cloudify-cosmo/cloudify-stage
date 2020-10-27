@@ -6,7 +6,7 @@ const PropertiesPropType = PropTypes.objectOf(
     PropTypes.shape({
         description: PropTypes.string,
         type: PropTypes.string,
-        default: PropTypes.any,
+        default: Stage.PropTypes.AnyData,
         required: PropTypes.bool
     })
 );

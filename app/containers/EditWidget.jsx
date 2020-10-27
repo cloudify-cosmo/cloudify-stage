@@ -68,9 +68,6 @@ EditWidgetComponent.propTypes = {
     configuration: PropTypes.shape({}).isRequired
 };
 
-const EditWidget = connect(
-    mapStateToProps,
-    mapDispatchToProps
-)(EditWidgetComponent);
+const EditWidget = connect(mapStateToProps, mapDispatchToProps)(EditWidgetComponent);
 
 export default EditWidget;

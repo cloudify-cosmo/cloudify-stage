@@ -23,8 +23,7 @@ EditModeButton.propTypes = {
     icon: PropTypes.string.isRequired,
     labelPosition: PropTypes.string,
     onClick: PropTypes.func,
-    // eslint-disable-next-line react/forbid-prop-types
-    style: PropTypes.object
+    style: PropTypes.shape({})
 };
 
 EditModeButton.defaultProps = {

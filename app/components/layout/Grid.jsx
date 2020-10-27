@@ -2,6 +2,7 @@
  * Created by kinneretzin on 13/12/2016.
  */
 
+import _ from 'lodash';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { Responsive, WidthProvider } from 'react-grid-layout';

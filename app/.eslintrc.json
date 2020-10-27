@@ -1,0 +1,13 @@
+{
+    "extends": [
+        "plugin:react/recommended",
+        "../node_modules/cloudify-ui-common/configs/eslint-common-react.json"
+    ],
+    "rules": {
+        "no-console": "error",
+        "prefer-promise-reject-errors": "off"
+    },
+    "env": {
+        "jquery": true
+    }
+}

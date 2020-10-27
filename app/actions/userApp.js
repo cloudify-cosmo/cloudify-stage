@@ -2,6 +2,7 @@
  * Created by kinneretzin on 21/02/2017.
  */
 
+import _ from 'lodash';
 import { push } from 'connected-react-router';
 import * as types from './types';
 import { createPagesFromTemplate } from './page';

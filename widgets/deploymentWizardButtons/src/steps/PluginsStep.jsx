@@ -224,10 +224,7 @@ class PluginsStepContent extends React.Component {
                         const distro = `${toolbox
                             .getManager()
                             .getDistributionName()
-                            .toLowerCase()} ${toolbox
-                            .getManager()
-                            .getDistributionRelease()
-                            .toLowerCase()}`;
+                            .toLowerCase()} ${toolbox.getManager().getDistributionRelease().toLowerCase()}`;
                         const matchingWagon = _.find(
                             formattedPluginsInCatalog[plugin].wagons,
                             wagon => wagon.name.toLowerCase() === distro || wagon.name.toLowerCase() === 'any'
