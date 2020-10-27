@@ -12,7 +12,7 @@ export default function MyResourcesCheckbox({ toolbox }) {
     }
 
     const { Checkbox } = Stage.Basic;
-    return <Checkbox toggle label="Show Only my Resources" onChange={handleChange} />;
+    return <Checkbox toggle label="Show only my resources" onChange={handleChange} />;
 }
 
 MyResourcesCheckbox.propTypes = {

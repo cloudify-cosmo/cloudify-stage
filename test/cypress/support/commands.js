@@ -21,6 +21,7 @@ import './plugins';
 import './editMode';
 import './widgets';
 import './secrets';
+import './snapshots';
 
 let token = '';
 
@@ -84,7 +85,7 @@ Cypress.Commands.add('activate', (license = 'valid_trial_license') =>
         .then(() => token)
 );
 
-Cypress.Commands.add('cfyRequest', (url, method = 'GET', headers = null, body = null) =>
+Cypress.Commands.add('cfyRequest', (url, method = 'GET', headers = null, body = null, options = {}) =>
     cy.request({
         method,
         url: '/console/sp',
@@ -96,7 +97,8 @@ Cypress.Commands.add('cfyRequest', (url, method = 'GET', headers = null, body = 
             ...getCommonHeaders(),
             ...headers
         },
-        body
+        body,
+        ...options
     })
 );
 
@@ -135,9 +137,11 @@ Cypress.Commands.add('stageRequest', (url, method = 'GET', options) => {
 });
 
 Cypress.Commands.add('login', (username = 'admin', password = 'admin') => {
-    if (cy.location('pathname') !== '/console/login') {
-        cy.visit('/console/login');
-    }
+    cy.location('pathname').then(pathname => {
+        if (pathname !== '/console/login') {
+            cy.visit('/console/login');
+        }
+    });
 
     cy.get('.form > :nth-child(1) > .ui > input').clear().type(username);
     cy.get('.form > :nth-child(2) > .ui > input').clear().type(password);
@@ -156,7 +160,7 @@ Cypress.Commands.add('login', (username = 'admin', password = 'admin') => {
 
 Cypress.Commands.add('visitPage', (name, id = null) => {
     cy.log(`Switching to '${name}' page`);
-    cy.get('.sidebar.menu .pages').within(() => cy.contains(name).click());
+    cy.get('.sidebar.menu .pages').within(() => cy.contains(name).click({ force: true }));
     if (id) {
         cy.location('pathname').should('be.equal', `/console/page/${id}`);
     }

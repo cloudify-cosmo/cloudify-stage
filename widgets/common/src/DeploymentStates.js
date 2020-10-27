@@ -1,4 +1,4 @@
-class DeploymentStates {
+export default class DeploymentStates {
     static GOOD_STATE = 'good';
 
     static IN_PROGRESS_STATE = 'inProgress';

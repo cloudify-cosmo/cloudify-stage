@@ -11,7 +11,7 @@ class DeploymentActions {
         return this.toolbox.getManager().doGet(`/deployments/${deployment.id}`);
     }
 
-    doGetDeployments(params = null) {
+    doGetDeployments(params) {
         return this.toolbox.getManager().doGet('/deployments?_include=id', params);
     }
 
@@ -30,7 +30,7 @@ class DeploymentActions {
         });
     }
 
-    doExecute(deployment, workflow, params, force = false, dry_run = false, queue = false, scheduled_time = undefined) {
+    doExecute(deployment, workflow, params, force, dry_run = false, queue = false, scheduled_time = undefined) {
         return this.toolbox.getManager().doPost('/executions', null, {
             deployment_id: deployment.id,
             workflow_id: workflow.name,
@@ -45,15 +45,15 @@ class DeploymentActions {
     doUpdate(
         deploymentName,
         blueprintName,
-        deploymentInputs = {},
-        shouldRunInstallWorkflow = true,
-        shouldRunUninstallWorkflow = true,
-        installWorkflowFirst = false,
-        ignoreFailure = false,
-        shouldRunReinstall = true,
-        reinstallList = [],
-        forceUpdate = false,
-        preview = false
+        deploymentInputs,
+        shouldRunInstallWorkflow,
+        shouldRunUninstallWorkflow,
+        installWorkflowFirst,
+        ignoreFailure,
+        shouldRunReinstall,
+        reinstallList,
+        forceUpdate,
+        preview
     ) {
         const data = {};
 
@@ -81,7 +81,7 @@ class DeploymentActions {
         return this.toolbox.getManager().doPatch(`/deployments/${deploymentId}/set-visibility`, null, { visibility });
     }
 
-    doSetSite(deploymentId, siteName = null, detachSite = false) {
+    doSetSite(deploymentId, siteName, detachSite) {
         const data = { detach_site: detachSite };
         if (siteName) {
             data.site_name = siteName;

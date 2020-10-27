@@ -3,7 +3,6 @@
  * Created by jakubniezgoda on 22/03/2019.
  */
 
-import React from 'react';
 import { mount } from 'enzyme';
 
 import { Provider } from 'react-redux';
