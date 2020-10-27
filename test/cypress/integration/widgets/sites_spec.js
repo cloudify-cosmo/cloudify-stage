@@ -129,7 +129,7 @@ describe('Sites Management', () => {
         // use map to specify location
         cy.get('form :nth-child(2) > .field > .ui > button').click();
         cy.get('.leaflet-container').click();
-        cy.get('form :nth-child(2) > .field > .ui > input').should('have.value', '0.08789059053082422, 0');
+        cy.get('form :nth-child(2) > .field > .ui > input').should('have.value', '0, 0');
 
         // change visibility
         cy.get('.modal > :nth-child(1) > .green').click();
@@ -137,7 +137,7 @@ describe('Sites Management', () => {
         // submit
         cy.get('.actions > .green').click();
 
-        verifySiteRow(1, { name, location: '0.0878905905308242, 0.0', visibility: 'private' });
+        verifySiteRow(1, { name, location: '0.0, 0.0', visibility: 'private' });
     });
 
     invalidSites.forEach(site => {
@@ -187,13 +187,13 @@ describe('Sites Management', () => {
 
         cy.get('form :nth-child(2) > .field > .ui > input').should(
             'have.value',
-            '32.175612478499346, 34.80468750000001'
+            '32.10118973232094, 34.80468750000001'
         );
 
         // Click update
         cy.get('.actions > .green').click();
 
-        verifySiteRow(1, { name: siteWithLocation.name, location: '32.1756124784993, 34.8046875' });
+        verifySiteRow(1, { name: siteWithLocation.name, location: '32.1011897323209, 34.8046875' });
     });
 
     it('update the visibility of a site', () => {
