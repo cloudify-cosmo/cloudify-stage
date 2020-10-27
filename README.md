@@ -6,6 +6,7 @@ The Cloudify Console provides User Interface for managing and analyzing [Cloudif
 
 ![Cloudify Console screenshot](./doc/screenshot.png)
 
+
 ## Requirements
 
 The following requirements should be met prior starting the application:
