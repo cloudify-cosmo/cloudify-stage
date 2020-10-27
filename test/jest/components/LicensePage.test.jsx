@@ -3,7 +3,6 @@
  * Created by jakubniezgoda on 20/03/2019.
  */
 
-import React from 'react';
 import { mount } from 'enzyme';
 import fetchMock from 'fetch-mock';
 

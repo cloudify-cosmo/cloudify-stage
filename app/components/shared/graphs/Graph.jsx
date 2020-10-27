@@ -17,12 +17,9 @@ import {
     CartesianGrid,
     Tooltip,
     Legend,
-    ResponsiveContainer,
-    Brush
+    ResponsiveContainer
 } from 'recharts';
-import { format as d3format } from 'd3-format';
 
-import TimeUtils from '../../../utils/shared/TimeUtils';
 /**
  * Graph is a component to present data in form of line or bar charts.
  * Up to {@link Graph.MAX_NUMBER_OF_CHARTS} charts can be displayed within one Graph component.
@@ -178,22 +175,14 @@ export default class Graph extends Component {
         const {
             charts,
             data,
-            dataTimeFormat,
             onClick,
-            showBrush,
             showLegend,
-            showTooltip,
-            showXAxis,
-            showYAxis,
             syncId,
             tooltipFormatter,
             type,
-            xAxisTick,
-            xAxisTimeFormat,
             xDataKey,
             yAxisAllowDecimals,
-            yAxisDataFormatter,
-            yAxisTick
+            yAxisDataFormatter
         } = this.props;
         const CHART_COMPONENTS = {
             [Graph.LINE_CHART_TYPE]: LineChart,
@@ -207,24 +196,9 @@ export default class Graph extends Component {
         };
         const COLORS = ['#000069', '#28aae1', '#f4773c', '#21ba45', '#af41f4'];
 
-        const VALUE_FORMATTER = d3format('.3s');
         const MARGIN = { top: 5, right: 30, left: 20, bottom: 5 };
         const INTERPOLATION_TYPE = 'monotone';
         const STROKE_DASHARRAY = '3 3';
-        const IS_KEY_TIME = xDataKey === Graph.DEFAULT_X_DATA_KEY;
-
-        // Code copied from re-charts GitHub, see: https://github.com/recharts/recharts/issues/184
-        const AxisLabel = ({ vertical, x, y, width, height, children, fill }) => {
-            const CX = vertical ? x + 20 : x + width / 2 + 10;
-            const CY = vertical ? height / 2 : y + height + 20;
-            const ROTATION = vertical ? `270 ${CX} ${CY}` : 0;
-            const STYLE = { fill, stroke: fill };
-            return (
-                <text x={CX} y={CY} transform={`rotate(${ROTATION})`} textAnchor="middle" style={STYLE}>
-                    {children}
-                </text>
-            );
-        };
 
         const ChartComponent = CHART_COMPONENTS[type];
         const DrawingComponent = DRAWING_COMPONENTS[type];
@@ -232,112 +206,45 @@ export default class Graph extends Component {
         const chartElements = [];
         let index = 0;
         _.each(_.slice(charts, 0, Graph.MAX_NUMBER_OF_CHARTS), chart => {
-            if (chart.fieldNames) {
-                if (showYAxis) {
-                    chartElements.push(
-                        <YAxis
-                            key={`yaxis${chart.name}`}
-                            padding={{ top: 10 }}
-                            width={chart.axisLabel ? 50 : 25}
-                            tickFormatter={VALUE_FORMATTER}
-                            tick={yAxisTick}
-                            label={<AxisLabel vertical>{chart.axisLabel}</AxisLabel>}
-                        />
-                    );
-                }
+            const COLOR = COLORS[index];
+            const STYLE = { stroke: COLOR };
+            index += 1;
 
-                _.each(chart.fieldNames, field => {
-                    const COLOR = COLORS[index];
-                    chartElements.push(
-                        <DrawingComponent
-                            key={field}
-                            isAnimationActive={false}
-                            name={field}
-                            type={INTERPOLATION_TYPE}
-                            dataKey={field}
-                            stroke={COLOR}
-                            fill={COLOR}
-                            fillOpacity={0.3}
-                            dot={false}
-                        />
-                    );
-                    index += 1;
-                });
-            } else {
-                const COLOR = COLORS[index];
-                const STYLE = { stroke: COLOR };
-                index += 1;
-
-                const yaxisComponent = IS_KEY_TIME ? (
-                    <YAxis
-                        key={`yaxis${chart.name}`}
-                        dataKey={chart.name}
-                        yAxisId={chart.name}
-                        width={50}
-                        axisLine={STYLE}
-                        tick={STYLE}
-                        tickLine={STYLE}
-                        tickFormatter={VALUE_FORMATTER}
-                        label={
-                            <AxisLabel vertical fill={COLOR}>
-                                {chart.axisLabel}
-                            </AxisLabel>
-                        }
-                    />
-                ) : (
-                    <YAxis
-                        key={`yaxis${chart.name}`}
-                        dataKey={chart.name}
-                        yAxisId={chart.name}
-                        axisLine={STYLE}
-                        width={30}
-                        allowDecimals={yAxisAllowDecimals}
-                        tickFormatter={yAxisDataFormatter}
-                    />
-                );
-                chartElements.push(yaxisComponent);
-                chartElements.push(
-                    <DrawingComponent
-                        key={chart.name}
-                        isAnimationActive={false}
-                        name={chart.label}
-                        type={INTERPOLATION_TYPE}
-                        dataKey={chart.name}
-                        stroke={COLOR}
-                        fillOpacity={0.3}
-                        fill={COLOR}
-                        yAxisId={chart.name}
-                    />
-                );
-            }
+            const yaxisComponent = (
+                <YAxis
+                    key={`yaxis${chart.name}`}
+                    dataKey={chart.name}
+                    yAxisId={chart.name}
+                    axisLine={STYLE}
+                    width={30}
+                    allowDecimals={yAxisAllowDecimals}
+                    tickFormatter={yAxisDataFormatter}
+                />
+            );
+            chartElements.push(yaxisComponent);
+            chartElements.push(
+                <DrawingComponent
+                    key={chart.name}
+                    isAnimationActive={false}
+                    name={chart.label}
+                    type={INTERPOLATION_TYPE}
+                    dataKey={chart.name}
+                    stroke={COLOR}
+                    fillOpacity={0.3}
+                    fill={COLOR}
+                    yAxisId={chart.name}
+                />
+            );
         });
-
-        const xAxisDataFormatter = value => {
-            return TimeUtils.formatLocalTimestamp(value, xAxisTimeFormat, dataTimeFormat);
-        };
 
         return (
             <ResponsiveContainer width="100%" height="100%">
                 <ChartComponent data={data} margin={MARGIN} syncId={syncId} onClick={onClick}>
                     {chartElements}
                     <CartesianGrid strokeDasharray={STROKE_DASHARRAY} />
-                    {showXAxis && IS_KEY_TIME ? (
-                        <XAxis dataKey={xDataKey} tickFormatter={xAxisDataFormatter} tick={xAxisTick} />
-                    ) : (
-                        <XAxis dataKey={xDataKey} />
-                    )}
-                    {showTooltip && IS_KEY_TIME ? (
-                        <Tooltip
-                            isAnimationActive={false}
-                            formatter={VALUE_FORMATTER}
-                            labelFormatter={xAxisDataFormatter}
-                            cursor={false}
-                        />
-                    ) : (
-                        <Tooltip isAnimationActive={false} formatter={tooltipFormatter} cursor={false} />
-                    )}
+                    <XAxis dataKey={xDataKey} />
+                    <Tooltip isAnimationActive={false} formatter={tooltipFormatter} cursor={false} />
                     {showLegend && <Legend />}
-                    {showBrush && <Brush />}
                 </ChartComponent>
             </ResponsiveContainer>
         );
@@ -367,39 +274,14 @@ Graph.propTypes = {
     type: PropTypes.string.isRequired,
 
     /**
-     * input date format, by default not specified
-     */
-    dataTimeFormat: PropTypes.string,
-
-    /**
      * function to be called on graph click
      */
     onClick: PropTypes.func,
 
     /**
-     * should show brush (zoom)
-     */
-    showBrush: PropTypes.bool,
-
-    /**
      * should show legend
      */
     showLegend: PropTypes.bool,
-
-    /**
-     * should show tooltip on line
-     */
-    showTooltip: PropTypes.bool,
-
-    /**
-     * should show X-axis
-     */
-    showXAxis: PropTypes.bool,
-
-    /**
-     * should show Y-axis
-     */
-    showYAxis: PropTypes.bool,
 
     /**
      * syncId to sync tooltip position (see recharts documentation for details)
@@ -415,11 +297,6 @@ Graph.propTypes = {
      * stylesheet for X-axis tick
      */
     xAxisTick: PropTypes.shape({}),
-
-    /**
-     * format of X-axis tick label
-     */
-    xAxisTimeFormat: PropTypes.string,
 
     /**
      * X-axis key name, must match key in data object
@@ -443,17 +320,11 @@ Graph.propTypes = {
 };
 
 Graph.defaultProps = {
-    dataTimeFormat: undefined,
     onClick: _.noop,
-    showBrush: false,
     showLegend: true,
-    showTooltip: true,
-    showXAxis: true,
-    showYAxis: true,
     syncId: '',
     tooltipFormatter: _.noop,
     xAxisTick: { fontSize: '10px' },
-    xAxisTimeFormat: 'DD-MM-YYYY HH:mm',
     xDataKey: Graph.DEFAULT_X_DATA_KEY,
     yAxisAllowDecimals: true,
     yAxisDataFormatter: _.noop,

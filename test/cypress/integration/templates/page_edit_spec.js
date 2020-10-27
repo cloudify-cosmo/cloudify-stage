@@ -5,13 +5,15 @@ describe('Page management', () => {
     });
 
     it('allows admin users to create and modify pages', () => {
+        const pageName = 'Page 1';
+
         cy.get('.usersMenu').click();
         cy.get('.usersMenu').contains('Template Management').click();
 
         cy.get('.createPageButton').click();
 
         cy.log('Specifying page name');
-        cy.get('.field > .ui > input').type('Page 1');
+        cy.get('.field > .ui > input').type(pageName);
 
         cy.log('Creating page');
         cy.get('.actions > .ok').click();
@@ -55,6 +57,10 @@ describe('Page management', () => {
         cy.contains('New Tab').click();
         cy.get('.blueprintsWidget');
 
+        cy.log('Changing page name');
+        cy.get('.pageTitle').click();
+        cy.get('.pageTitle input').type('.1');
+
         cy.log('Adding more widgets');
         cy.contains('Add Widget').click();
         cy.get('[data-id="plugins"]').click();
@@ -70,6 +76,6 @@ describe('Page management', () => {
         cy.get('.main .loading').should('be.not.visible', true);
 
         cy.log('Verifying page was removed');
-        cy.getPages().then(data => expect(data.body.filter(page => page.id === 'page_1')).to.be.empty);
+        cy.getPages().then(data => expect(data.body.filter(page => page.id.startsWith('page'))).to.be.empty);
     });
 });

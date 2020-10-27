@@ -9,7 +9,7 @@ describe('Blueprints widget', () => {
             .uploadPluginFromCatalog('Utilities')
             .deleteDeployments(blueprintNamePrefix, true)
             .deleteBlueprints(blueprintNamePrefix, true)
-            .uploadBlueprint('blueprints/empty.zip', emptyBlueprintName)
+            .uploadBlueprint('blueprints/simple.zip', emptyBlueprintName)
     );
 
     beforeEach(() => cy.visitPage('Local Blueprints'));
@@ -39,19 +39,36 @@ describe('Blueprints widget', () => {
         cy.contains('.pageTitle', emptyBlueprintName);
     });
 
+    it('should handle invalid blueprint url upload failure gracefully', () => {
+        cy.contains('Upload').click();
+        cy.get('input[name=blueprintUrl]').type('http://wp.pl').blur();
+        cy.contains('Cancel').click();
+    });
+
     describe('should upload a blueprint', () => {
+        const url =
+            'https://github.com/cloudify-community/blueprint-examples/releases/download/5.0.5-65/utilities-examples-cloudify_secrets.zip';
+
         beforeEach(() => {
             cy.contains('Upload').click();
-            cy.get('input[name=blueprintUrl]')
-                .type(
-                    'https://github.com/cloudify-community/blueprint-examples/releases/download/5.0.5-65/utilities-examples-cloudify_secrets.zip'
-                )
-                .blur();
+            cy.get('input[name=blueprintUrl]').type(url).blur();
         });
 
         it('with default blueprint file', () => {
-            const blueprintName = `${blueprintNamePrefix}_default_file`;
+            cy.get('input[name=blueprintUrl]').clear().blur();
+            cy.get('div[name=blueprintFileName] input').click();
+            cy.contains('No results found.');
 
+            cy.get('input[name=blueprintUrl]')
+                .type(
+                    'https://github.com/cloudify-community/blueprint-examples/releases/download/5.0.5-72/simple-hello-world-example.zip'
+                )
+                .blur();
+            cy.contains('.modal', 'blueprint.yaml');
+
+            cy.get('input[name=blueprintUrl]').clear().type(url).blur();
+
+            const blueprintName = `${blueprintNamePrefix}_default_file`;
             cy.get('input[name=blueprintName]').clear().type(blueprintName);
             cy.get('.button.ok').click();
 
@@ -100,7 +117,11 @@ describe('Blueprints widget', () => {
         getBlueprintRow(emptyBlueprintName).find('.rocket').click();
 
         cy.get('input[name=deploymentName]').type(blueprintNamePrefix);
+        cy.contains('Show Data Types').click();
+        cy.contains('.modal button', 'Close').click();
+        cy.get('textarea').type('127.0.0.1');
         cy.contains('.modal .basic', 'Deploy').click();
+        cy.get('.modal').should('not.exist');
 
         cy.visitPage('Local Blueprints');
         getBlueprintRow(emptyBlueprintName).find('.label.green').should('have.text', '1');

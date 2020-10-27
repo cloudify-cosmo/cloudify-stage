@@ -6,7 +6,7 @@ Cypress.Commands.add('addTenant', tenant => cy.cfyRequest(`/tenants/${tenant}`, 
 
 Cypress.Commands.add('deleteTenant', tenant => {
     if (tenant !== 'default_tenant') {
-        cy.cfyRequest(`/tenants/${tenant}`, 'DELETE');
+        cy.cfyRequest(`/tenants/${tenant}`, 'DELETE', null, null, { failOnStatusCode: false });
     }
 });
 
@@ -28,20 +28,41 @@ Cypress.Commands.add('addUserToTenant', (username, tenant, role) =>
 
 Cypress.Commands.add('removeUserFromTenant', (username, tenant) => {
     if (tenant !== 'default_tenant' || !_.includes(builtInUsernames, username)) {
-        cy.cfyRequest('/tenants/users', 'DELETE', null, {
-            username,
-            tenant_name: tenant
-        });
+        cy.cfyRequest(
+            '/tenants/users',
+            'DELETE',
+            null,
+            {
+                username,
+                tenant_name: tenant
+            },
+            { failOnStatusCode: false }
+        );
+    }
+});
+
+Cypress.Commands.add('removeUserGroupFromTenant', (groupName, tenant) => {
+    if (tenant !== 'default_tenant') {
+        cy.cfyRequest(
+            '/tenants/user-groups',
+            'DELETE',
+            null,
+            {
+                group_name: groupName,
+                tenant_name: tenant
+            },
+            { failOnStatusCode: false }
+        );
     }
 });
 
 Cypress.Commands.add('deleteUser', username => {
     if (!_.includes(builtInUsernames, username)) {
-        cy.cfyRequest(`/users/${username}`, 'DELETE');
+        cy.cfyRequest(`/users/${username}`, 'DELETE', null, null, { failOnStatusCode: false });
     }
 });
 
-Cypress.Commands.add('deleteAllUsersAndTenants', () => {
+Cypress.Commands.add('deleteAllUsersAndTenants', () =>
     cy.cfyRequest('/users?_get_data=true').then(response => {
         const users = response.body.items;
         users.forEach(user => {
@@ -53,5 +74,15 @@ Cypress.Commands.add('deleteAllUsersAndTenants', () => {
             const tenants = tenantsResponse.body.items;
             tenants.forEach(tenant => cy.deleteTenant(tenant.name));
         });
-    });
-});
+    })
+);
+
+Cypress.Commands.add('deleteUserGroup', groupName =>
+    cy.cfyRequest(`/user-groups/${groupName}`, 'DELETE', null, null, { failOnStatusCode: false })
+);
+
+Cypress.Commands.add('addUserGroup', groupName =>
+    cy.cfyRequest('/user-groups', 'POST', null, {
+        group_name: groupName
+    })
+);

@@ -91,11 +91,17 @@ describe('Deployment Wizard Buttons widget', () => {
             'Please fill in the following fields with valid values: ' +
                 'Blueprint package, Blueprint name, Blueprint YAML file.'
         );
-        cy.get('input[name=blueprintFile]').attachFile('blueprints/custom_plugin.zip');
+        cy.get('input[name=blueprintFile]').attachFile('blueprints/empty.zip');
         cy.contains('blueprint.yaml');
+        cy.contains('.field', 'Blueprint package').find('.remove').click();
+        cy.get('input[name=blueprintFile]').attachFile('blueprints/custom_plugin.zip');
+        cy.contains('ec2-blueprint.yaml');
 
         next();
         cy.contains('You can go to the next step.');
+        cy.contains('Back').click();
+        next();
+        cy.get('.loading').should('not.exist');
         next();
         cy.contains('You can go to the next step.');
         next();

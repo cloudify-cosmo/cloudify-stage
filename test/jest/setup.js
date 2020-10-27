@@ -10,6 +10,8 @@ import log from 'loglevel';
 import moment from 'moment';
 import { configure } from 'enzyme';
 import Adapter from 'enzyme-adapter-react-16';
+import PropTypes from 'prop-types';
+import React from 'react';
 
 configure({ adapter: new Adapter() });
 
@@ -37,6 +39,9 @@ global.d3 = d3;
 global.moment = moment;
 global.HTMLElement = window.HTMLElement;
 global.log = log;
+global.Stage = { defineCommon: noop };
+global.PropTypes = PropTypes;
+global.React = React;
 
 // prevent mocha tests from breaking when trying to require non-js file
 require.extensions['.css'] = noop;
