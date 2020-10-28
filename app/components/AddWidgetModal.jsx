@@ -49,6 +49,7 @@ function generateCategories(widgets) {
 }
 
 function AddWidgetModal({
+    addButtonTitle,
     canInstallWidgets,
     onWidgetInstalled,
     onWidgetAdded,
@@ -198,7 +199,8 @@ function AddWidgetModal({
             labelPosition="left"
             content="Add Widget"
             className="addWidgetBtn"
-            style={{ marginBottom: 15 }}
+            style={{ marginBottom: 15, marginLeft: 1, marginTop: 1 }}
+            title={addButtonTitle}
         />
     );
 
@@ -404,6 +406,7 @@ function AddWidgetModal({
 }
 
 AddWidgetModal.propTypes = {
+    addButtonTitle: PropTypes.string,
     canInstallWidgets: PropTypes.bool.isRequired,
     widgetDefinitions: PropTypes.arrayOf(
         PropTypes.shape({
@@ -418,6 +421,10 @@ AddWidgetModal.propTypes = {
     onWidgetUninstalled: PropTypes.func.isRequired,
     onWidgetUpdated: PropTypes.func.isRequired,
     onWidgetUsed: PropTypes.func.isRequired
+};
+
+AddWidgetModal.defaultProps = {
+    addButtonTitle: null
 };
 
 export default React.memo(AddWidgetModal, _.isEqual);

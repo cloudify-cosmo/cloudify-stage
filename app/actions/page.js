@@ -14,33 +14,36 @@ import { clearWidgetsData } from './WidgetData';
 import Internal from '../utils/Internal';
 import Consts from '../utils/consts';
 
-export function addTab(pageId) {
+export function addTab(pageId, layoutSection) {
     return {
         type: types.ADD_TAB,
-        pageId
+        pageId,
+        layoutSection
     };
 }
 
-export function removeTab(pageId, tabIndex) {
+export function removeTab(pageId, layoutSection, tabIndex) {
     return {
         type: types.REMOVE_TAB,
         pageId,
+        layoutSection,
         tabIndex
     };
 }
 
-export function updateTab(pageId, tabIndex, name, isDefault) {
+export function updateTab(pageId, layoutSection, tabIndex, name, isDefault) {
     return {
         type: types.UPDATE_TAB,
         pageId,
+        layoutSection,
         tabIndex,
         name,
         isDefault
     };
 }
 
-export function moveTab(pageId, oldTabIndex, newTabIndex) {
-    return { type: types.MOVE_TAB, pageId, oldTabIndex, newTabIndex };
+export function moveTab(pageId, layoutSection, oldTabIndex, newTabIndex) {
+    return { type: types.MOVE_TAB, pageId, layoutSection, oldTabIndex, newTabIndex };
 }
 
 export function createPage(page, newPageId) {
@@ -61,6 +64,23 @@ export function createDrilldownPage(page, newPageId) {
 
 export function createPagesMap(pages) {
     return _.keyBy(pages, 'id');
+}
+
+export function forEachWidget(page, widgetModifier) {
+    _.each(page.layout, (layoutSection, layoutSectionIdx) => {
+        if (layoutSection.type === 'widgets')
+            layoutSection.content = _(layoutSection.content)
+                .map(widget => widgetModifier(widget, layoutSectionIdx, null))
+                .compact()
+                .value();
+        else
+            _.each(layoutSection.content, (tab, tabIdx) => {
+                tab.widgets = _(tab.widgets)
+                    .map(widget => widgetModifier(widget, layoutSectionIdx, tabIdx))
+                    .compact()
+                    .value();
+            });
+    });
 }
 
 function createPageId(name, pages) {
@@ -168,20 +188,23 @@ export function removePage(page) {
     };
 }
 
-export function addWidgetsToPage(page, pageId) {
+export function addLayoutToPage(page, pageId) {
     return (dispatch, getState) => {
         const { widgetDefinitions } = getState();
-        _.each(page.widgets, widget => {
+        forEachWidget(page, (widget, layoutSectionIdx, tabIdx) => {
             const widgetDefinition = _.find(widgetDefinitions, { id: widget.definition });
-            dispatch(addWidget(pageId, null, widget, widgetDefinition));
+            dispatch(addWidget(pageId, layoutSectionIdx, tabIdx, widget, widgetDefinition));
+            return widget;
         });
-        _.each(page.tabs, (tab, tabIndex) =>
-            _.each(tab.widgets, tabWidget => {
-                const widgetDefinition = _.find(widgetDefinitions, { id: tabWidget.definition });
-                dispatch(addWidget(pageId, tabIndex, tabWidget, widgetDefinition));
-            })
-        );
     };
+}
+
+export function addLayoutSectionToPage(pageId, layoutSection) {
+    return { type: types.ADD_LAYOUT_SECTION, pageId, layoutSection };
+}
+
+export function removeLayoutSectionFromPage(pageId, layoutSection) {
+    return { type: types.REMOVE_LAYOUT_SECTION, pageId, layoutSection };
 }
 
 export function createPagesFromTemplate() {
@@ -207,7 +230,7 @@ export function createPagesFromTemplate() {
 
                 const pageId = createPageId(page.name, getState().pages);
                 dispatch(createPage(page, pageId));
-                dispatch(addWidgetsToPage(page, pageId));
+                dispatch(addLayoutToPage(page, pageId));
             });
         });
     };

@@ -15,6 +15,7 @@ import PageContent from '../PageContent';
 import { createPageId, drillDownWarning, savePage, setActive, setPageEditMode } from '../../actions/templateManagement';
 import StageUtils from '../../utils/stageUtils';
 import { useErrors } from '../../utils/hooks';
+import { forEachWidget } from '../../actions/page';
 
 export default function PageManagement({ pageId, isEditMode }) {
     const dispatch = useDispatch();
@@ -42,31 +43,22 @@ export default function PageManagement({ pageId, isEditMode }) {
 
         const invalidWidgetNames = [];
 
-        function toWidgetInstances(widgets) {
-            const widgetInstances = [];
+        function toWidgetInstance(widget) {
+            const widgetDefinition = _.find(widgetDefinitions, { id: widget.definition });
 
-            _.each(widgets, widget => {
-                const widgetDefinition = _.find(widgetDefinitions, { id: widget.definition });
-
-                if (widgetDefinition) {
-                    widget.id = v4();
-                    widget.configuration = { ...StageUtils.buildConfig(widgetDefinition), ...widget.configuration };
-                    widget.definition = widgetDefinition;
-                    widget.width = widget.width || widgetDefinition.initialWidth;
-                    widget.height = widget.height || widgetDefinition.initialHeight;
-                    widgetInstances.push(widget);
-                } else {
-                    invalidWidgetNames.push(widget.name);
-                }
-            });
-
-            return widgetInstances;
+            if (widgetDefinition) {
+                widget.id = v4();
+                widget.configuration = { ...StageUtils.buildConfig(widgetDefinition), ...widget.configuration };
+                widget.definition = widgetDefinition;
+                widget.width = widget.width || widgetDefinition.initialWidth;
+                widget.height = widget.height || widgetDefinition.initialHeight;
+                return widget;
+            }
+            invalidWidgetNames.push(widget.name);
+            return null;
         }
 
-        managedPage.widgets = toWidgetInstances(managedPage.widgets);
-        _.each(managedPage.tabs, tab => {
-            tab.widgets = toWidgetInstances(tab.widgets);
-        });
+        forEachWidget(managedPage, toWidgetInstance);
 
         if (invalidWidgetNames.length) {
             setErrors(`Page template contains invalid widgets definitions: ${_.join(invalidWidgetNames, ', ')}`);
@@ -80,17 +72,23 @@ export default function PageManagement({ pageId, isEditMode }) {
     }
 
     function findWidget(criteria) {
-        return _.find(page.widgets, criteria) || _(page.tabs).flatMap('widgets').find(criteria);
+        return (
+            _(page.layout).flatMap('content').find(criteria) ||
+            _(page.layout).flatMap('content').flatMap('widgets').find(criteria)
+        );
+    }
+
+    function updatePage() {
+        setPage(_.clone(page));
     }
 
     const onWidgetUpdated = (id, params) => {
-        const updatedPage = _.clone(page);
         const widget = findWidget({ id });
         Object.assign(widget, params);
-        setPage(updatedPage);
+        updatePage();
     };
     const onTemplateNavigate = () => dispatch(push('/template_management'));
-    const onWidgetAdded = (name, widgetDefinition, tabIndex) => {
+    const onWidgetAdded = (layoutSection, name, widgetDefinition, tabIndex) => {
         const widgetInstance = {
             id: v4(),
             name,
@@ -100,59 +98,63 @@ export default function PageManagement({ pageId, isEditMode }) {
             definition: widgetDefinition
         };
         if (!_.isNil(tabIndex)) {
-            page.tabs[tabIndex].widgets.push(widgetInstance);
+            page.layout[layoutSection].content[tabIndex].widgets.push(widgetInstance);
         } else {
-            page.widgets.push(widgetInstance);
+            page.layout[layoutSection].content.push(widgetInstance);
         }
-        setPage(_.clone(page));
+        updatePage();
     };
     const onWidgetRemoved = id => {
-        const updatedPage = _.clone(page);
-        updatedPage.widgets = _.reject(updatedPage.widgets, { id });
-        _.each(updatedPage.tabs, tab => {
-            tab.widgets = _.reject(tab.widgets, { id });
-        });
-        setPage(updatedPage);
+        forEachWidget(page, widget => (widget.id === id ? null : widget));
+        updatePage();
     };
     const onPageSave = () => {
         dispatch(savePage(page)).catch(setMessageAsError);
     };
     const onPageNameChange = pageName => {
-        const updatedPage = _.clone(page);
-        updatedPage.name = pageName;
-        if (!updatedPage.oldId) {
-            updatedPage.oldId = updatedPage.id;
-            updatedPage.id = createPageId(pageName, pageDefs);
+        page.name = pageName;
+        if (!page.oldId) {
+            page.oldId = page.id;
+            page.id = createPageId(pageName, pageDefs);
         }
-        setPage(updatedPage);
+        updatePage();
     };
     const onCloseDrillDownWarning = () => {
         dispatch(drillDownWarning(false));
     };
-    const onTabAdded = () => {
-        const updatedPage = _.cloneDeep(page);
-        updatedPage.tabs = updatedPage.tabs || [];
-        updatedPage.tabs.push({ name: 'New Tab', widgets: [] });
-        if (updatedPage.tabs.length === 1) {
-            updatedPage.tabs.push({ name: 'New Tab', widgets: [] });
-        }
-        setPage(updatedPage);
+    const onTabAdded = layoutSection => {
+        page.layout[layoutSection].content.push({ name: 'New Tab', widgets: [] });
+        updatePage();
     };
-    const onTabRemoved = tabIndex => {
-        const updatedPage = _.clone(page);
-        updatedPage.tabs = _.without(updatedPage.tabs, _.nth(updatedPage.tabs, tabIndex));
-        setPage(updatedPage);
+    const onTabRemoved = (layoutSection, tabIndex) => {
+        page.layout[layoutSection].content = _.without(
+            page.layout[layoutSection].content,
+            _.nth(page.layout[layoutSection].content, tabIndex)
+        );
+        updatePage();
     };
-    const onTabUpdated = (tabIndex, name, isDefault) => {
-        let tabs = [...page.tabs];
+    const onTabUpdated = (layoutSection, tabIndex, name, isDefault) => {
+        const tabs = page.layout[layoutSection].content;
         if (isDefault) {
-            tabs = _.map(tabs, tab => ({ ...tab, isDefault: false }));
+            _.each(tabs, tab => {
+                tab.isDefault = false;
+            });
         }
-        tabs[tabIndex] = { ...tabs[tabIndex], name, isDefault };
-        setPage({ ...page, tabs });
+        Object.assign(tabs[tabIndex], { name, isDefault });
+        updatePage();
     };
-    const onTabMoved = (oldTabIndex, newTabIndex) =>
-        setPage({ ...page, tabs: arrayMove(page.tabs, oldTabIndex, newTabIndex) });
+    const onTabMoved = (layoutSection, oldTabIndex, newTabIndex) => {
+        page.layout[layoutSection].content = arrayMove(page.layout[layoutSection].content, oldTabIndex, newTabIndex);
+        updatePage();
+    };
+    const onLayoutSectionRemoved = layoutSection => {
+        page.layout = _.without(page.layout, _.nth(page.layout, layoutSection));
+        updatePage();
+    };
+    const onLayoutSectionAdded = layoutSection => {
+        page.layout.push(layoutSection);
+        updatePage();
+    };
 
     const isWidgetMaximized = findWidget({ maximized: true });
 
@@ -202,6 +204,8 @@ export default function PageManagement({ pageId, isEditMode }) {
                         onWidgetRemoved={onWidgetRemoved}
                         onWidgetAdded={onWidgetAdded}
                         onTabMoved={onTabMoved}
+                        onLayoutSectionRemoved={onLayoutSectionRemoved}
+                        onLayoutSectionAdded={onLayoutSectionAdded}
                         page={page}
                         isEditMode={isEditMode}
                     />

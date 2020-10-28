@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { Button } from './basic';
 import './EditModeButton.css';
 
-export default function EditModeButton({ className, icon, labelPosition, content, style, onClick }) {
+export default function EditModeButton({ className, icon, labelPosition, content, style, title, onClick }) {
     return (
         <Button
             className={`editModeButton ${className}`}
@@ -13,6 +13,7 @@ export default function EditModeButton({ className, icon, labelPosition, content
             content={content}
             style={style}
             onClick={onClick}
+            title={title}
         />
     );
 }
@@ -23,7 +24,8 @@ EditModeButton.propTypes = {
     icon: PropTypes.string.isRequired,
     labelPosition: PropTypes.string,
     onClick: PropTypes.func,
-    style: PropTypes.shape({})
+    style: PropTypes.shape({}),
+    title: PropTypes.string
 };
 
 EditModeButton.defaultProps = {
@@ -31,5 +33,6 @@ EditModeButton.defaultProps = {
     className: '',
     labelPosition: undefined,
     onClick: undefined,
-    style: undefined
+    style: undefined,
+    title: undefined
 };

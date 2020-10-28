@@ -1,33 +1,38 @@
 {
   "name": "Deployments",
-  "widgets": [
+  "layout": [
     {
-      "name": "Deployment Button",
-      "definition": "deploymentButton",
-      "x": 0,
-      "y": 0
-    },
-    {
-      "name": "Filter",
-      "definition": "filter",
-      "x": 0,
-      "y": 3,
-      "configuration": {
-        "filterByDeployments": false,
-        "filterByExecutions": false,
-        "filterBySiteName": true
-      }
-    },
-    {
-      "name": "Deployments",
-      "width": 12,
-      "height": 40,
-      "definition": "deployments",
-      "x": 0,
-      "y": 7,
-      "configuration":{
-        "displayStyle": "list"
-      }
+      "type": "widgets",
+      "content":[
+        {
+          "name": "Deployment Button",
+          "definition": "deploymentButton",
+          "x": 0,
+          "y": 0
+        },
+        {
+          "name": "Filter",
+          "definition": "filter",
+          "x": 0,
+          "y": 3,
+          "configuration": {
+            "filterByDeployments": false,
+            "filterByExecutions": false,
+            "filterBySiteName": true
+          }
+        },
+        {
+          "name": "Deployments",
+          "width": 12,
+          "height": 40,
+          "definition": "deployments",
+          "x": 0,
+          "y": 7,
+          "configuration":{
+            "displayStyle": "list"
+          }
+        }
+      ]
     }
   ]
 }

@@ -1,23 +1,27 @@
 {
   "name": "Tenant Management",
-  "widgets": [
-    {
-      "name": "User Management",
-      "definition": "userManagement",
-      "width": 12,
-      "height": 20
-    },
-    {
-      "name": "Tenants Management",
-      "definition": "tenants",
-      "width": 12,
-      "height": 20
-    },
-    {
-      "name": "User Groups Management",
-      "definition": "userGroups",
-      "width": 12,
-      "height": 20
-    }
-  ]
+  "layout": [{
+    "type": "widgets",
+    "content": [
+      {
+        "name": "User Management",
+        "definition": "userManagement",
+        "width": 12,
+        "height": 20
+      },
+      {
+        "name": "Tenants Management",
+        "definition": "tenants",
+        "width": 12,
+        "height": 20
+      },
+      {
+        "name": "User Groups Management",
+        "definition": "userGroups",
+        "width": 12,
+        "height": 20
+      }
+    ]
+  }]
 }
+
