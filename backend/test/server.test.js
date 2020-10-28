@@ -12,7 +12,7 @@ describe('Server', () => {
         });
 
         // eslint-disable-next-line global-require
-        const server = await require('../server');
+        const server = await require('server');
         expect(server.listening).toBeTruthy();
         await server.close();
     });
