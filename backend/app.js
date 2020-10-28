@@ -9,6 +9,7 @@ const config = require('./config');
 const Consts = require('./consts');
 const LoggerHandler = require('./handler/LoggerHandler');
 const ServerSettings = require('./serverSettings');
+const { getResourcePath } = require('./utils');
 
 const getCookieStrategy = require('./auth/CookieStrategy');
 const getTokenStrategy = require('./auth/TokenStrategy');
@@ -85,12 +86,9 @@ app.use(
 app.use(
     `${contextPath}/userData`,
     passport.authenticate('cookie', { session: false }),
-    expressStaticGzip(
-        path.resolve(__dirname, process.env.NODE_ENV === 'development' ? '../userData' : '../dist/userData'),
-        {
-            indexFromEmptyFile: false
-        }
-    )
+    expressStaticGzip(getResourcePath('', true), {
+        indexFromEmptyFile: false
+    })
 );
 
 // API Routes

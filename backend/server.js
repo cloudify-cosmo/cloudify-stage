@@ -4,6 +4,7 @@
 
 const Consts = require('./consts');
 const LoggerHandler = require('./handler/LoggerHandler');
+const { isDevelopmentOrTest } = require('./utils');
 
 // Initialize logger
 const logger = LoggerHandler.getLogger('Server');
@@ -28,7 +29,7 @@ module.exports = Promise.all([ToursHandler.init(), WidgetHandler.init(), Templat
             server.on('error', reject);
             server.on('listening', () => {
                 logger.info(`Server started in mode ${ServerSettings.settings.mode}`);
-                if (process.env.NODE_ENV === 'development') {
+                if (isDevelopmentOrTest) {
                     logger.info('Server started for development');
                 }
                 logger.info(`Stage runs on ${Consts.SERVER_HOST}:${Consts.SERVER_PORT}!`);

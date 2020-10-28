@@ -6,11 +6,13 @@ const pathlib = require('path');
 
 const Consts = require('./consts');
 
-const isDevelopment = process.env.NODE_ENV === 'development';
+const isDevelopmentOrTest = process.env.NODE_ENV === 'development' || process.env.NODE_ENV === 'test';
 
 module.exports = {
+    isDevelopmentOrTest,
+
     getResourcePath: (path, isUserData) => {
-        if (isDevelopment) {
+        if (isDevelopmentOrTest) {
             return pathlib.resolve(`..${isUserData ? Consts.USER_DATA_PATH : ''}/${path}`);
         }
         return pathlib.resolve(`../dist/${isUserData ? Consts.USER_DATA_PATH : Consts.APP_DATA_PATH}/${path}`);
