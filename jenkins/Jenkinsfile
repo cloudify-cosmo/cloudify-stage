@@ -120,7 +120,6 @@ pipeline {
             sh 'npm run test:backend'
           }
         }
-        sh 'rm -rf ${workspace}/test && rm -rf ${workspace}/backend'
       }
     }
     stage('Run Tests') {
@@ -128,6 +127,7 @@ pipeline {
         stage('Size') {
           steps {
             container('node'){
+              sh 'rm -rf ${workspace}/test && rm -rf ${workspace}/backend'
               sh "mkdir -p ${workspace}/size && cp -rf ${workspace}/${stage_dir}/. ${workspace}/size"
               dir("size") {
                 echo 'Check bundle size'
@@ -140,6 +140,7 @@ pipeline {
         stage('Docs'){
           steps {
             container('node'){
+              sh 'rm -rf ${workspace}/test && rm -rf ${workspace}/backend'
               sh "mkdir -p ${workspace}/docs && cp -rf ${workspace}/${stage_dir}/. ${workspace}/docs"
               dir("docs") {
                 echo 'Generate widgets documentation'
