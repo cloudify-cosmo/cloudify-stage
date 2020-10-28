@@ -49,8 +49,6 @@ pipeline {
           steps {
             container('node'){
               dir("${stage_dir}") {
-                sh 'sudo apt-get update && sudo apt-get install postgresql-client'
-
                 echo "Install dependencies"
                 sh 'npm run beforebuild'
 
@@ -130,6 +128,7 @@ pipeline {
             sh 'npm run test:frontend'
 
             echo 'Run backend tests'
+            sh 'sudo apt-get update && sudo apt-get install postgresql-client'
             sh 'echo \'{"app":{"ssl":{"ca":null},"logLevel":"debug"}}\' > conf/me.json'
             sh 'npm run test:backend'
           }
