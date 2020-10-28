@@ -18,6 +18,9 @@ spec:
     resources:
       requests:
         cpu: 1.5
+        ephemeral-storage: "12Gi"
+      limits:
+        ephemeral-storage: "15Gi"
     command:
     - cat
     tty: true
