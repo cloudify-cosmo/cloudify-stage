@@ -8,7 +8,7 @@ def configuration = [vaultUrl: "${env.VAULT_URL}",  vaultCredentialId: 'vault-ap
 pipeline {
   agent {
     kubernetes {
-      label "stage-ui"
+      label "stage-ui-${env.BUILD_NUMBER}"
       defaultContainer 'jnlp'
       yamlFile 'jenkins/build-pod.yaml'
     }
@@ -33,7 +33,6 @@ pipeline {
     stage('Prepare'){
       steps {
         container('node'){
-          sh 'sudo apt-get update && sudo apt-get install postgresql-client'
           dir("${stage_dir}/conf") {
             withVault([configuration: configuration, vaultSecrets: secrets]) {
               sh """
@@ -104,53 +103,44 @@ pipeline {
         }
       }
     }
-    stage('Run Tests') {
-      parallel {
-        stage('Test'){
-          steps {
-            container('node'){
-              sh "mkdir -p ${workspace}/backend && cp -rf ${workspace}/${stage_dir}/. ${workspace}/backend"
-              dir("backend") {
-                echo 'Initialize database'
-                sh 'cd backend && npm run db-migrate'
+    stage('Test'){
+      steps {
+        container('node'){
+          sh "mkdir -p ${workspace}/test && cp -rf ${workspace}/${stage_dir}/. ${workspace}/test"
+          dir("test") {
+            echo 'Run static code analysis and code style check'
+            sh 'npm run lint'
 
-                echo 'Start Stage Backend'
-                sh 'echo \'{"app":{"ssl":{"ca":null},"logLevel":"debug"}}\' > conf/me.json'
-                sh 'cd backend && npm run start &'
-                sh 'cd backend && npm run wait-on-server'
-              }
-            }
+            echo 'Run frontend tests'
+            sh 'npm run test:frontend'
 
-            container('node'){
-              sh "mkdir -p ${workspace}/test && cp -rf ${workspace}/${stage_dir}/. ${workspace}/test"
-              dir("test") {
-                echo 'Run static code analysis and code style check'
-                sh 'npm run lint'
-
-                echo 'Run frontend tests'
-                sh 'npm run test:frontend'
-
-                echo 'Run backend tests'
-                sh 'echo \'{"app":{"ssl":{"ca":null},"logLevel":"debug"}}\' > conf/me.json'
-                sh 'npm run test:backend'
-              }
-            }
+            echo 'Run backend tests'
+            sh 'sudo apt-get update && sudo apt-get install postgresql-client'
+            sh 'echo \'{"app":{"ssl":{"ca":null},"logLevel":"debug"}}\' > conf/me.json'
+            sh 'npm run test:backend'
           }
         }
+      }
+    }
+    stage('Run Tests') {
+      parallel {
         stage('Size') {
           steps {
             container('node'){
+              sh 'rm -rf ${workspace}/test && rm -rf ${workspace}/backend'
               sh "mkdir -p ${workspace}/size && cp -rf ${workspace}/${stage_dir}/. ${workspace}/size"
               dir("size") {
                 echo 'Check bundle size'
                 sh 'npm run size'
               }
+              sh "rm -rf ${workspace}/size"
             }
           }
         }
         stage('Docs'){
           steps {
             container('node'){
+              sh 'rm -rf ${workspace}/test && rm -rf ${workspace}/backend'
               sh "mkdir -p ${workspace}/docs && cp -rf ${workspace}/${stage_dir}/. ${workspace}/docs"
               dir("docs") {
                 echo 'Generate widgets documentation'
