@@ -13,7 +13,8 @@
         }
     },
     "rules": {
-        "no-console": "off"
+        "no-console": "off",
+        "node/no-missing-require": "off"
     },
     "env": {
         "jest": true
