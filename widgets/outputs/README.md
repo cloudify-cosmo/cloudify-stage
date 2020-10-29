@@ -7,7 +7,7 @@ Presents the names and values of the outputs and capabilities of a specific depl
 
 If only a blueprint was selected, the widget will present the default values for the outputs, defined in the blueprint itself. 
 
-![deployment-outputs](https://docs.cloudify.co/5.1/images/ui/widgets/deployment-outputs.png)
+![deployment-outputs](https://docs.cloudify.co/latest/images/ui/widgets/deployment-outputs.png)
 
 
 ## Settings

@@ -5,7 +5,7 @@ The action buttons need to receive the id of the desired blueprint. This can be 
 * By placing the buttons in a blueprint’s drill-down page, meaning the blueprint has been selected before entering the page, and its id is included in the page’s context. 
 * By adding to the page a widget allowing to select blueprints, such as the resources filter or the blueprints list.  
 
-![blueprint-actions](https://docs.cloudify.co/5.1/images/ui/widgets/blueprint-action-buttons.png)
+![blueprint-actions](https://docs.cloudify.co/latest/images/ui/widgets/blueprint-action-buttons.png)
 
 
 ## Settings

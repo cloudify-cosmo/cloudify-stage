@@ -1,7 +1,7 @@
 # Number of nodes
 Displays the total number of nodes created on the tenant, according to the user’s permissions.
 
-![number_of_nodes](https://docs.cloudify.co/5.1/images/ui/widgets/num_of_nodes.png)
+![number_of_nodes](https://docs.cloudify.co/latest/images/ui/widgets/num_of_nodes.png)
 
 
 ## Settings

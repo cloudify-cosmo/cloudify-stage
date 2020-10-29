@@ -19,7 +19,7 @@ The widget displays the following information:
    
 Upon hovering over ID label a pop up with the plugin’s ID will open, allowing you to copy it to the clipboard. 
 
-![Plugins list](https://docs.cloudify.co/5.1/images/ui/widgets/plugins-list.png)
+![Plugins list](https://docs.cloudify.co/latest/images/ui/widgets/plugins-list.png)
 
 
 ### Uploading a Plugin
@@ -31,7 +31,7 @@ Upon hovering over ID label a pop up with the plugin’s ID will open, allowing 
 5. Optionally provide icon file for the plugin.
 6. Click **Upload**.
 
-![Upload Plugin modal](https://docs.cloudify.co/5.1/images/ui/widgets/plugins_upload-plugin.png)
+![Upload Plugin modal](https://docs.cloudify.co/latest/images/ui/widgets/plugins_upload-plugin.png)
 
 
 ### Downloading a Plugin

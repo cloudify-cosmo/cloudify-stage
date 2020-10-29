@@ -5,7 +5,7 @@ Displays the list of user groups and enables their management.
 This widget is only available to admin users.
 </div>
 
-![User Groups](https://docs.cloudify.co/5.1/images/ui/widgets/usergroups-mgmt.png)
+![User Groups](https://docs.cloudify.co/latest/images/ui/widgets/usergroups-mgmt.png)
 
 ## Features
 
@@ -47,7 +47,7 @@ Like Users, User-Groups need to be assigned with tenants in order to access Clou
 
 #### Adding User Groups to a Tenant
 
-1. Click the List icon ![List icon](https://docs.cloudify.co/5.1/images/ui/icons/list-icon.png) on the far right of the user group entry in the table that you want to add to a tenant.
+1. Click the List icon ![List icon](https://docs.cloudify.co/latest/images/ui/icons/list-icon.png) on the far right of the user group entry in the table that you want to add to a tenant.
 2. Click **Edit group's tenants**.
 3. Select one or more tenants from the dropdown list. Now, choose the desired role for each of those tenants, and click **Save**.
 4. The user group is added to the specified tenants.   
@@ -57,7 +57,7 @@ All users within the group, unless they have a deactivated status, can perform a
 
 #### Deleting User Groups
 
-1. Click the List icon ![List icon](https://docs.cloudify.co/5.1/images/ui/icons/list-icon.png) on the far right of the entry and select the entity to delete.
+1. Click the List icon ![List icon](https://docs.cloudify.co/latest/images/ui/icons/list-icon.png) on the far right of the entry and select the entity to delete.
 2. Click **Delete**.   
 
 

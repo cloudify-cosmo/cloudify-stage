@@ -6,11 +6,11 @@ Displays all the secrets visible to the logged-in user in the current tenant (in
 * **Secret value** If the secret’s value is not hidden from the logged-in user, clicking on the “eye” icon will present its value, like in the following example, in which the logged-in user is a sys admin:
 
 
-![hidden-value-admin](https://docs.cloudify.co/5.1/images/ui/widgets/hidden_secret_admin.png)
+![hidden-value-admin](https://docs.cloudify.co/latest/images/ui/widgets/hidden_secret_admin.png)
 
 If the secret’s value is hidden and the logged-in user isn’t the secret’s creator or has admin/manager permissions in the tenant, then the same clicking will result in a red “restricted” sign, as seen here:
 
-![hidden-value-user](https://docs.cloudify.co/5.1/images/ui/widgets/hidden_secret_unauth_user.png)
+![hidden-value-user](https://docs.cloudify.co/latest/images/ui/widgets/hidden_secret_unauth_user.png)
 
 
 * **Hidden Value** Indicates if the secret’s value is hidden of not. If the logged-in user is the secret’s creator, or has admin/manager permissions in the tenant, checking/unchecking this field will be enabled, and will make the secret hidden/non-hidden. 
@@ -22,7 +22,7 @@ If the secret’s value is hidden and the logged-in user isn’t the secret’s 
 The right column of the table allows permitted users (secret creator, sys admin or tenant managers) to edit the secret’s value or delete it.
 Even if the secret’s value is hidden from users, they might still be able to use the secret by providing its key in the blueprint. 
 
-To better understand how secrets work in Cloudify, go to [Secret Store page](https://docs.cloudify.co/5.1/developer/blueprints/spec-secretstore) or [Using the Secret Store page](https://docs.cloudify.co/5.1/working_with/manager/using-secrets).
+To better understand how secrets work in Cloudify, go to [Secret Store page](https://docs.cloudify.co/latest/developer/blueprints/spec-secretstore) or [Using the Secret Store page](https://docs.cloudify.co/latest/working_with/manager/using-secrets).
 
 
 ## Settings

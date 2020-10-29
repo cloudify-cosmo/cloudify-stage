@@ -7,7 +7,7 @@ Displays a list of snapshots of the Manager - both snapshots that were created o
 * Snapshots are always created with “private” visibility, which cannot be set to a different visibility level.
 </div>
 
-![snapshots-list](https://docs.cloudify.co/5.1/images/ui/widgets/snapshots-list.png)
+![snapshots-list](https://docs.cloudify.co/latest/images/ui/widgets/snapshots-list.png)
 
 ## Features
 
@@ -56,7 +56,7 @@ If you restore a snapshot to a Cloudify Manager instance that already contains d
 2. Either enter the URL of the snapshot or select the snapshot file from your file repository.
 3. Enter the Snapshot name.
 4. Click **Upload** button and see that snapshot was uploaded and is available in Snapshots table.
-5. Click Restore icon ![Restore icon](https://docs.cloudify.co/5.1/images/ui/icons/restore-icon.png) on the far right of newly uploaded snapshot's row
+5. Click Restore icon ![Restore icon](https://docs.cloudify.co/latest/images/ui/icons/restore-icon.png) on the far right of newly uploaded snapshot's row
    * To restore a snapshot from a tenant-less (legacy) environment, toggle the relevant button.
    * To overwrite all content in the existing Cloudify Manager, toggle the relevant button.
 6. Click **Restore**. 
@@ -64,13 +64,13 @@ If you restore a snapshot to a Cloudify Manager instance that already contains d
 
 #### Downloading a Snapshot
 
-1. Click Download icon ![Download icon](https://docs.cloudify.co/5.1/images/ui/icons/download-icon.png) for the snapshot entry that you want to download.
+1. Click Download icon ![Download icon](https://docs.cloudify.co/latest/images/ui/icons/download-icon.png) for the snapshot entry that you want to download.
 2. Wait for the snapshot to be downloaded.
 
 
 #### Deleting a Snapshot
 
-1. Click Delete icon ![Delete icon](https://docs.cloudify.co/5.1/images/ui/icons/delete-icon.png) for the snapshot entry that you want to delete.
+1. Click Delete icon ![Delete icon](https://docs.cloudify.co/latest/images/ui/icons/delete-icon.png) for the snapshot entry that you want to delete.
 2. Click **Yes** to delete the snapshot from Cloudify Manager.
 
 

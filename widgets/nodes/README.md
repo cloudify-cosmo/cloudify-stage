@@ -3,9 +3,9 @@ Displays a list of the existing nodes in the current tenant, according to the us
 
 The nodes are listed by name. When you select a node, either by clicking its name in the table or by clicking it in the Topology pane, additional data about the node’s instances is displayed: The instances names, statuses, relationships and runtime properties. 
 
-Node type hierarchy can be shown by hovering over type hierarchy icon (![type-hierarchy-icon](https://docs.cloudify.co/5.1/images/ui/icons/type-hierarchy-icon.png)).
+Node type hierarchy can be shown by hovering over type hierarchy icon (![type-hierarchy-icon](https://docs.cloudify.co/latest/images/ui/icons/type-hierarchy-icon.png)).
 
-![nodes-list](https://docs.cloudify.co/5.1/images/ui/widgets/nodes-list-2.png)
+![nodes-list](https://docs.cloudify.co/latest/images/ui/widgets/nodes-list-2.png)
 
 
 ## Settings
