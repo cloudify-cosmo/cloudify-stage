@@ -1,6 +1,6 @@
 describe('Deployments - Create new deployment modal', () => {
     const blueprintPrefix = 'inputs_test_';
-    const firstInputNthChild = 8;
+    const firstInputNthChild = 7;
 
     const selectBlueprintInModal = type => {
         const blueprintName = `${blueprintPrefix}${type}_type`;
@@ -301,7 +301,7 @@ describe('Deployments - Create new deployment modal', () => {
                 cy.get('i.dropdown.icon').as('dropdownOrClearIcon').should('be.visible').should('have.class', 'clear');
                 cy.get('@dropdownOrClearIcon').click();
 
-                cy.get('@text').should('have.text', '');
+                cy.get('@text').should('not.be.visible');
                 cy.get('@revertToDefaultValue').should('be.visible');
                 cy.get('@dropdownOrClearIcon').should('not.have.class', 'clear');
             });
