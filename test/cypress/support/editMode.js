@@ -9,7 +9,6 @@ Cypress.Commands.add('exitEditMode', () => {
 Cypress.Commands.add('addWidget', widgetId => {
     cy.enterEditMode();
 
-    cy.contains('Add Widgets').click();
     cy.contains('Add Widget').click();
     cy.get(`*[data-id=${widgetId}]`).click();
     cy.contains('Add selected widgets').click();
@@ -25,6 +24,7 @@ Cypress.Commands.add('addPage', pageName => {
         cy.get('.pageTitle').click();
         cy.get('.pageTitle.input input').clear().type(pageName);
     });
+    cy.contains('Add Widgets').click();
 
     cy.exitEditMode();
 });

@@ -52,7 +52,7 @@ describe('Page management', () => {
         cy.log('Verifying page content');
         cy.get('.updatePageIcon.edit').click();
         cy.get('.agentsWidget').should('be.visible', true);
-        cy.get('.blueprintSourcesWidget').should('be.visible', true);
+        cy.get('.react-grid-item.blueprintSourcesWidget').scrollIntoView().should('be.visible', true);
         cy.contains('New Tab').should('not.have.class', 'active');
         cy.contains('New Tab2').should('have.class', 'active');
         cy.contains('New Tab').click();
