@@ -9,6 +9,7 @@ Cypress.Commands.add('exitEditMode', () => {
 Cypress.Commands.add('addWidget', widgetId => {
     cy.enterEditMode();
 
+    cy.contains('Add Widgets').click();
     cy.contains('Add Widget').click();
     cy.get(`*[data-id=${widgetId}]`).click();
     cy.contains('Add selected widgets').click();

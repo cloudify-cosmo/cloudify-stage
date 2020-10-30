@@ -19,6 +19,7 @@ describe('Page management', () => {
         cy.get('.actions > .ok').click();
 
         cy.log('Adding widgets');
+        cy.contains('Add Widgets').click();
         cy.contains('Add Widget').click();
         cy.get('[data-id="agents"]').click();
         cy.get('[data-id="blueprintSources"]').click();
@@ -30,9 +31,9 @@ describe('Page management', () => {
         cy.get('[data-id="blueprints"]').click();
         cy.get('button#addWidgetsBtn').click();
         cy.get('.item .editModeButton .add').click();
-        cy.get('.editModeButton .remove:eq(0)').click();
+        cy.get('.item .remove:eq(0)').click();
         cy.contains('Yes').click();
-        cy.get('.editModeButton .remove:eq(0)').click();
+        cy.get('.item .remove:eq(0)').click();
         cy.get('.tabContent').contains('Add Widget').click();
         cy.get('[data-id="blueprints"]').click();
         cy.get('button#addWidgetsBtn').click();
