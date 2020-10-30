@@ -14,8 +14,8 @@ By default, the presented details include the blueprint and deployment of the ex
 
 In **Attributes** column you can see one of these icons:
 
-* ![Dry Run icon](https://docs.cloudify.co/5.1/images/ui/icons/dry-run-icon.png) - **Dry Run** 
-* ![System Workflow icon](https://docs.cloudify.co/5.1/images/ui/icons/system-workflow-icon.png) - **System Workflow**
+* ![Dry Run icon](https://docs.cloudify.co/5.1/images/ui/icons/dry-run-icon.png) - [Dry-run execution](https://docs.cloudify.co/5.1/working_with/workflows/dry-run)
+* ![System Workflow icon](https://docs.cloudify.co/5.1/images/ui/icons/system-workflow-icon.png) - [System-wide execution](https://docs.cloudify.co/5.1/working_with/workflows/index.html)
 
 #### Actions
 
