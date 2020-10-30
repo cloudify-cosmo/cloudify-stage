@@ -6,6 +6,7 @@ import _ from 'lodash';
 import { arrayMove } from 'react-sortable-hoc';
 import * as types from '../actions/types';
 import widgets from './widgetsReducer';
+import { forAllWidgets, forEachWidget } from '../actions/page';
 
 const tabs = (state, action) => {
     switch (action.type) {
@@ -36,24 +37,17 @@ const tabs = (state, action) => {
     }
 };
 
+function executeWidgetsReducer(page) {}
+
 const page = (state = {}, action) => {
     switch (action.type) {
+        case types.MINIMIZE_WIDGETS:
         case types.REMOVE_WIDGET:
-        case types.UPDATE_WIDGET:
-            return {
-                ...state,
-                layout: _.map(state.layout, layoutSection => {
-                    if (layoutSection.type === 'widgets')
-                        return { ...layoutSection, content: widgets(layoutSection.content, action) };
-                    return {
-                        ...layoutSection,
-                        content: _.map(layoutSection.content, tab => ({
-                            ...tab,
-                            widgets: widgets(tab.widgets, action)
-                        }))
-                    };
-                })
-            };
+        case types.UPDATE_WIDGET: {
+            const newState = _.cloneDeep(state);
+            forAllWidgets(newState, widgetsList => widgets(widgetsList, action));
+            return newState;
+        }
         case types.ADD_WIDGET:
             return {
                 ...state,
@@ -87,7 +81,8 @@ const page = (state = {}, action) => {
                 isDrillDown: action.type === types.CREATE_DRILLDOWN_PAGE
             };
         case types.ADD_DRILLDOWN_PAGE: {
-            const pageData = { ...state, widgets: widgets(state.widgets, action) };
+            const pageData = _.cloneDeep(state);
+            forAllWidgets(pageData, layoutSectionWidgets => widgets(layoutSectionWidgets, action));
 
             if (action.parentPageId && action.drillDownPageId) {
                 if (state.id === action.parentPageId) {
@@ -126,9 +121,7 @@ const pages = (state = [], action) => {
         case types.CREATE_DRILLDOWN_PAGE:
             return [...state, page(undefined, action)];
         case types.MINIMIZE_WIDGETS:
-            return state.map(p => {
-                return { ...p, widgets: widgets(p.widgets, action) };
-            });
+            return state.map(p => page(p, action));
         case types.REMOVE_PAGE: {
             const removeIndex = _.findIndex(state, { id: action.pageId });
             return [...state.slice(0, removeIndex), ...state.slice(removeIndex + 1)];
@@ -153,13 +146,14 @@ const pages = (state = [], action) => {
         case types.ADD_DRILLDOWN_PAGE: {
             // Add drilldown page to children list of this page, and drilldown page parent id
             let parentPageId = null;
-            _.each(state, p => {
-                _.each(p.widgets, w => {
-                    if (w.id === action.widgetId) {
+            _.each(state, p =>
+                forEachWidget(p, widget => {
+                    if (widget.id === action.widgetId) {
                         parentPageId = p.id;
                     }
-                });
-            });
+                    return widget;
+                })
+            );
             const updatedAction = { ...action, parentPageId };
 
             return state.map(p => {

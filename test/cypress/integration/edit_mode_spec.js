@@ -50,14 +50,18 @@ describe('Edit mode', () => {
     });
 
     it('should allow to remove and add tabs', () => {
-        cy.get('.editModeButton .remove:eq(0)').click();
+        cy.contains('Tab2').find('.remove').click();
         cy.contains('Yes').click();
-        cy.get('.editModeButton .remove').click();
+        cy.contains('Tab2').should('not.exist');
+        cy.contains('Tab1').find('.remove').should('not.exist');
+
+        cy.get('button[title="Remove tabs container"]').click();
         cy.contains('Yes').click();
+        cy.contains('Tab1').should('not.exist');
 
         cy.contains('Add Tabs').click();
 
-        cy.get('.editModeButton .remove:eq(0)').click();
+        cy.get('.menu .remove:eq(0)').click();
         cy.get('.item:contains(New Tab)').should('have.length', 1);
         cy.get('.item .editModeButton .add').click();
         cy.get('.item:contains(New Tab)').should('have.length', 2);

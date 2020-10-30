@@ -66,21 +66,21 @@ export function createPagesMap(pages) {
     return _.keyBy(pages, 'id');
 }
 
-export function forEachWidget(page, widgetModifier) {
+export function forAllWidgets(page, widgetListModifier) {
     _.each(page.layout, (layoutSection, layoutSectionIdx) => {
         if (layoutSection.type === 'widgets')
-            layoutSection.content = _(layoutSection.content)
-                .map(widget => widgetModifier(widget, layoutSectionIdx, null))
-                .compact()
-                .value();
+            layoutSection.content = _.compact(widgetListModifier(layoutSection.content, layoutSectionIdx, null));
         else
             _.each(layoutSection.content, (tab, tabIdx) => {
-                tab.widgets = _(tab.widgets)
-                    .map(widget => widgetModifier(widget, layoutSectionIdx, tabIdx))
-                    .compact()
-                    .value();
+                tab.widgets = _.compact(widgetListModifier(tab.widgets, layoutSectionIdx, tabIdx));
             });
     });
+}
+
+export function forEachWidget(page, widgetModifier) {
+    forAllWidgets(page, (widgets, layoutSectionIdx, tabIdx) =>
+        _.map(widgets, widget => widgetModifier(widget, layoutSectionIdx, tabIdx))
+    );
 }
 
 function createPageId(name, pages) {

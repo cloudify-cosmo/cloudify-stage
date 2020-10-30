@@ -20,68 +20,35 @@ const mockStore = configureMockStore([thunk]);
 describe('(Reducer) Pages', () => {
     describe('Drilldown to page actions', () => {
         it('create a drilldown page if it doesnt exist', () => {
-            const initialState = {
-                templates: {
-                    templatesDef: {
-                        tmp1: {
-                            name: 'tmp1',
-                            widgets: [
-                                {
-                                    name: 'some widget',
-                                    definition: 'widget1',
-                                    width: 1,
-                                    height: 1,
-                                    x: 1,
-                                    y: 1
-                                }
-                            ]
-                        }
-                    }
-                },
-                manager: {
-                    ip: '1.1.1.1'
-                },
-                context: {},
-                drilldownContext: [],
-                widgetDefinitions: [{ id: 'widget1' }],
-                pages: [
-                    {
-                        id: '0',
-                        name: 'page',
-                        widgets: [
-                            {
-                                id: '1',
-                                name: 'widget1',
-                                definition: 'widget1',
-                                drillDownPages: {}
-                            }
-                        ]
-                    }
-                ]
-            };
+            const initialState = { widgetDefinitions: [{ id: 'widget1' }] };
+
             const store = mockStore(initialState);
 
             const expectedActions = [
                 {
                     type: types.CREATE_DRILLDOWN_PAGE,
-                    newPageId: '0',
                     page: {
                         name: 'tmp1',
-                        widgets: [
+                        layout: [
                             {
-                                definition: 'widget1',
-                                height: 1,
-                                name: 'some widget',
-                                width: 1,
-                                x: 1,
-                                y: 1
+                                type: 'widgets',
+                                content: [
+                                    {
+                                        definition: 'widget1',
+                                        height: 1,
+                                        name: 'some widget',
+                                        width: 1,
+                                        x: 1,
+                                        y: 1
+                                    }
+                                ]
                             }
                         ]
                     }
                 },
                 {
                     type: types.ADD_WIDGET,
-                    pageId: '0',
+                    layoutSection: 0,
                     tab: null,
                     widgetDefinition: initialState.widgetDefinitions[0],
                     widget: {
@@ -96,17 +63,37 @@ describe('(Reducer) Pages', () => {
                 {
                     type: types.ADD_DRILLDOWN_PAGE,
                     widgetId: '1',
-                    drillDownPageId: '0',
                     drillDownName: 'tmp1'
                 },
                 { type: types.WIDGET_DATA_CLEAR },
                 { type: 'router action' }
             ];
 
-            const widget = initialState.pages[0].widgets[0];
-            const defaultTemplate = initialState.templates.templatesDef.tmp1;
-
-            store.dispatch(drillDownToPage(widget, defaultTemplate));
+            const widget = {
+                id: '1',
+                name: 'widget1',
+                definition: 'widget1',
+                drillDownPages: {}
+            };
+            const pageDef = {
+                name: 'tmp1',
+                layout: [
+                    {
+                        type: 'widgets',
+                        content: [
+                            {
+                                name: 'some widget',
+                                definition: 'widget1',
+                                width: 1,
+                                height: 1,
+                                x: 1,
+                                y: 1
+                            }
+                        ]
+                    }
+                ]
+            };
+            store.dispatch(drillDownToPage(widget, pageDef));
 
             const storeActions = store.getActions();
 
@@ -116,9 +103,6 @@ describe('(Reducer) Pages', () => {
             _.each(storeActions, (action, index) => {
                 const expectedAction = expectedActions[index];
                 const actualAction = action;
-                delete expectedAction.newPageId;
-                delete expectedAction.pageId;
-                delete expectedAction.drillDownPageId;
                 delete actualAction.newPageId;
                 delete actualAction.pageId;
                 delete actualAction.drillDownPageId;
@@ -286,12 +270,17 @@ describe('(Reducer) Pages', () => {
                 {
                     id: '0',
                     name: 'page',
-                    widgets: [
+                    layout: [
                         {
-                            id: '1',
-                            name: 'widget1',
-                            definition: 'widget1',
-                            drillDownPages: {}
+                            type: 'widgets',
+                            content: [
+                                {
+                                    id: '1',
+                                    name: 'widget1',
+                                    definition: 'widget1',
+                                    drillDownPages: {}
+                                }
+                            ]
                         }
                     ]
                 }
@@ -307,22 +296,27 @@ describe('(Reducer) Pages', () => {
             applyMiddleware(thunk)
         );
 
-        const widget = initialState.pages[0].widgets[0];
-        const defaultTemplate = {
+        const widget = initialState.pages[0].layout[0].content[0];
+        const pageDef = {
             name: 'tmp1',
-            widgets: [
+            layout: [
                 {
-                    name: 'some widget',
-                    definition: 'widget1',
-                    width: 1,
-                    height: 1,
-                    x: 1,
-                    y: 1
+                    type: 'widgets',
+                    content: [
+                        {
+                            name: 'some widget',
+                            definition: 'widget1',
+                            width: 1,
+                            height: 1,
+                            x: 1,
+                            y: 1
+                        }
+                    ]
                 }
             ]
         };
 
-        store.dispatch(drillDownToPage(widget, defaultTemplate));
+        store.dispatch(drillDownToPage(widget, pageDef));
 
         const { pages } = store.getState();
         const parentPage = pages[0];
@@ -335,35 +329,39 @@ describe('(Reducer) Pages', () => {
             expect(drillDownPage.id).not.toBeNull();
         });
 
-        it('Drilldown page should have the right template data', () => {
-            const pageAccordingToTemplate = {
+        it('Drilldown page should have the right page definition data', () => {
+            const expectedPage = {
                 name: 'tmp1',
                 isDrillDown: true,
                 description: '',
-                widgets: [
+                layout: [
                     {
-                        name: 'some widget',
-                        definition: 'widget1',
-                        width: 1,
-                        height: 1,
-                        x: 1,
-                        y: 1,
-                        configuration: {},
-                        drillDownPages: {}
+                        type: 'widgets',
+                        content: [
+                            {
+                                name: 'some widget',
+                                definition: 'widget1',
+                                width: 1,
+                                height: 1,
+                                x: 1,
+                                y: 1,
+                                configuration: {},
+                                drillDownPages: {}
+                            }
+                        ]
                     }
-                ],
-                tabs: []
+                ]
             };
             // Set ids data so can compare (i dont want to delete values from the store inorder to compare)
-            pageAccordingToTemplate.id = drillDownPage.id;
-            pageAccordingToTemplate.parent = parentPage.id;
-            pageAccordingToTemplate.widgets[0].id = drillDownPage.widgets[0].id;
+            expectedPage.id = drillDownPage.id;
+            expectedPage.parent = parentPage.id;
+            expectedPage.layout[0].content[0].id = drillDownPage.layout[0].content[0].id;
 
-            expect(drillDownPage).toEqual(pageAccordingToTemplate);
+            expect(drillDownPage).toEqual(expectedPage);
         });
 
         it('Drilldown parent widget should have the expected drillDownPage', () => {
-            expect(parentPage.widgets[0].drillDownPages.tmp1).toBe(drillDownPage.id);
+            expect(parentPage.layout[0].content[0].drillDownPages.tmp1).toBe(drillDownPage.id);
         });
 
         it('Should link parent and child pages properly', () => {
@@ -380,12 +378,17 @@ describe('(Reducer) Pages', () => {
                 {
                     id: '0',
                     name: 'page',
-                    widgets: [
+                    layout: [
                         {
-                            id: '1',
-                            name: 'widget1',
-                            definition: 'widget1',
-                            drillDownPages: {}
+                            type: 'widgets',
+                            content: [
+                                {
+                                    id: '1',
+                                    name: 'widget1',
+                                    definition: 'widget1',
+                                    drillDownPages: {}
+                                }
+                            ]
                         }
                     ]
                 }
@@ -394,35 +397,45 @@ describe('(Reducer) Pages', () => {
 
         const store = createStore(combineReducers({ pages: pageReducer }), initialState, applyMiddleware(thunk));
 
-        const widget = initialState.pages[0].widgets[0];
-        const defaultTemplate1 = {
+        const widget = initialState.pages[0].layout[0].content[0];
+        const pageDef1 = {
             name: 'tmp1',
-            widgets: [
+            layout: [
                 {
-                    name: 'some widget',
-                    definition: 'widget1',
-                    width: 1,
-                    height: 1,
-                    x: 1,
-                    y: 1
+                    type: 'widgets',
+                    content: [
+                        {
+                            name: 'some widget',
+                            definition: 'widget1',
+                            width: 1,
+                            height: 1,
+                            x: 1,
+                            y: 1
+                        }
+                    ]
                 }
             ]
         };
-        const defaultTemplate2 = {
+        const pageDef2 = {
             name: 'tmp2',
-            widgets: [
+            layout: [
                 {
-                    name: 'some widget2',
-                    definition: 'widget1',
-                    width: 1,
-                    height: 1,
-                    x: 1,
-                    y: 1
+                    type: 'widgets',
+                    content: [
+                        {
+                            name: 'some widget2',
+                            definition: 'widget1',
+                            width: 1,
+                            height: 1,
+                            x: 1,
+                            y: 1
+                        }
+                    ]
                 }
             ]
         };
-        store.dispatch(drillDownToPage(widget, defaultTemplate1));
-        store.dispatch(drillDownToPage(widget, defaultTemplate2));
+        store.dispatch(drillDownToPage(widget, pageDef1));
+        store.dispatch(drillDownToPage(widget, pageDef2));
 
         const { pages } = store.getState();
         const parentPage = pages[0];
@@ -430,15 +443,15 @@ describe('(Reducer) Pages', () => {
         const drillDownPage2 = pages[2];
 
         it('The 2 pages should exist in the drilldown pages list', () => {
-            expect(parentPage.widgets[0].drillDownPages.tmp1).not.toBeUndefined();
-            expect(parentPage.widgets[0].drillDownPages.tmp1).not.toBeNull();
-            expect(parentPage.widgets[0].drillDownPages.tmp2).not.toBeUndefined();
-            expect(parentPage.widgets[0].drillDownPages.tmp2).not.toBeNull();
+            expect(parentPage.layout[0].content[0].drillDownPages.tmp1).not.toBeUndefined();
+            expect(parentPage.layout[0].content[0].drillDownPages.tmp1).not.toBeNull();
+            expect(parentPage.layout[0].content[0].drillDownPages.tmp2).not.toBeUndefined();
+            expect(parentPage.layout[0].content[0].drillDownPages.tmp2).not.toBeNull();
         });
 
         it('Drilldown pages should have the right IDs', () => {
-            expect(parentPage.widgets[0].drillDownPages.tmp1).toBe(drillDownPage1.id);
-            expect(parentPage.widgets[0].drillDownPages.tmp2).toBe(drillDownPage2.id);
+            expect(parentPage.layout[0].content[0].drillDownPages.tmp1).toBe(drillDownPage1.id);
+            expect(parentPage.layout[0].content[0].drillDownPages.tmp2).toBe(drillDownPage2.id);
         });
     });
 

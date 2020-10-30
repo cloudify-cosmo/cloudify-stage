@@ -2,48 +2,55 @@
     "id": "admin_dashboard",
     "name": "Admin Dashboard",
     "description": "",
-    "tabs": [
+    "layout": [
         {
-            "name": "Tab1",
-            "widgets": [
+            "type": "widgets",
+            "content": [
                 {
-                    "id": "9a710b70-9183-49a3-ba14-6c0d47c0b23d",
-                    "name": "Cluster Status",
-                    "definition": "highAvailability",
-                    "configuration": {}
+                    "id": "0be12640-7352-4e33-b651-ae4905942ebc",
+                    "name": "Number of blueprints",
+                    "definition": "blueprintNum",
+                    "configuration": { "pollingTime": 10, "page": "local_blueprints" }
                 },
                 {
-                    "id": "4331eb43-bd5e-4170-b3fd-aa01de7917b8",
-                    "name": "Blueprints",
-                    "definition": "blueprints",
+                    "id": "9c8134b6-3ec3-4251-abb5-52ca8e6c9a61",
+                    "name": "Catalog",
+                    "definition": "blueprintCatalog",
                     "configuration": {}
                 }
             ]
-        },
-        {
-            "name": "Tab2",
-            "widgets": [
+        }, {
+            "type": "tabs",
+            "content": [
                 {
-                    "id": "3bb0dca0-b290-4dc1-ae2a-62b3bcb4fdef",
-                    "name": "Number of deployments",
-                    "definition": "deploymentNum",
-                    "configuration": { "pollingTime": 10, "page": "deployments" }
+                    "name": "Tab1",
+                    "widgets": [
+                        {
+                            "id": "9a710b70-9183-49a3-ba14-6c0d47c0b23d",
+                            "name": "Cluster Status",
+                            "definition": "highAvailability",
+                            "configuration": {}
+                        },
+                        {
+                            "id": "4331eb43-bd5e-4170-b3fd-aa01de7917b8",
+                            "name": "Blueprints",
+                            "definition": "blueprints",
+                            "configuration": {}
+                        }
+                    ]
+                },
+                {
+                    "name": "Tab2",
+                    "widgets": [
+                        {
+                            "id": "3bb0dca0-b290-4dc1-ae2a-62b3bcb4fdef",
+                            "name": "Number of deployments",
+                            "definition": "deploymentNum",
+                            "configuration": { "pollingTime": 10, "page": "deployments" }
+                        }
+                    ]
                 }
             ]
-        }
-    ],
-    "widgets": [
-        {
-            "id": "0be12640-7352-4e33-b651-ae4905942ebc",
-            "name": "Number of blueprints",
-            "definition": "blueprintNum",
-            "configuration": { "pollingTime": 10, "page": "local_blueprints" }
-        },
-        {
-            "id": "9c8134b6-3ec3-4251-abb5-52ca8e6c9a61",
-            "name": "Catalog",
-            "definition": "blueprintCatalog",
-            "configuration": {}
         }
     ]
 }
