@@ -3,7 +3,7 @@ const { execSync } = require('child_process');
 
 const config = require('../config').get();
 
-const latestMigration = '20200123095213-5_1-CreateBlueprintUserData.js';
+const latestMigration = '20201030110539-5_1_1-MigratePageLayouts.js';
 
 describe('Migration script', () => {
     beforeAll(() => execSync('node migration.js up'));
@@ -39,4 +39,5 @@ describe('Migration script', () => {
     testMigrationUp('4.5.5', '20171011082922-4_2-UserAppsRoleColumnRemoval.js');
     testMigrationUp('4.6', '20171011082922-4_2-UserAppsRoleColumnRemoval.js');
     testMigrationUp('5.0.5', '20190423064931-5_0-CreateWidgetBackendTable.js');
+    testMigrationUp('5.1', '20200123095213-5_1-CreateBlueprintUserData.js');
 });
