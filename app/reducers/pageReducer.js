@@ -37,8 +37,6 @@ const tabs = (state, action) => {
     }
 };
 
-function executeWidgetsReducer(page) {}
-
 const page = (state = {}, action) => {
     switch (action.type) {
         case types.MINIMIZE_WIDGETS:
