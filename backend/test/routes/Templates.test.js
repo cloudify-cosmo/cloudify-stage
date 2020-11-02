@@ -1,4 +1,3 @@
-const _ = require('lodash');
 const request = require('supertest');
 const passport = require('passport');
 const fs = require('fs-extra');
