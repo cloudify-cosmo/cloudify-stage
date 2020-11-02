@@ -20,12 +20,13 @@ function migrate(queryInterface, pageProcessor) {
                 userAppRow.save();
             })
         );
-    _.each(fs.readdirSync(userPagesFolder), pageFile => {
-        const pageFilePath = path.resolve(userPagesFolder, pageFile);
-        const pageFileContent = fs.readJsonSync(pageFilePath);
-        pageProcessor(pageFileContent);
-        fs.writeJsonSync(pageFilePath, pageFileContent, { spaces: 2, EOL: '\n' });
-    });
+    if (fs.existsSync(userPagesFolder))
+        _.each(fs.readdirSync(userPagesFolder), pageFile => {
+            const pageFilePath = path.resolve(userPagesFolder, pageFile);
+            const pageFileContent = fs.readJsonSync(pageFilePath);
+            pageProcessor(pageFileContent);
+            fs.writeJsonSync(pageFilePath, pageFileContent, { spaces: 2, EOL: '\n' });
+        });
 }
 
 module.exports = {
