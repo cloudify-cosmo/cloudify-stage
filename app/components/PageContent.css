@@ -22,4 +22,5 @@
 .layoutSection:hover {
     border: 1px dashed;
     margin: -1px;
+    margin-bottom: 14px !important;
 }
