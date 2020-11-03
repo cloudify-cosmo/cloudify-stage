@@ -5,11 +5,12 @@ import { SortableContainer, SortableElement } from 'react-sortable-hoc';
 import PropTypes from 'prop-types';
 import EditTabModal from './EditTabModal';
 import EditModeButton from './EditModeButton';
-import { Confirm, Menu, Container, Header } from './basic';
+import { Confirm, Menu } from './basic';
 import AddWidget from '../containers/AddWidget';
 import WidgetsList from './WidgetsList';
 import useWidgetsFilter from './useWidgetsFilter';
 import { useBoolean } from '../utils/hooks';
+import EmptyContainerMessage from './EmptyContainerMessage';
 
 const SortableMenu = SortableContainer(Menu);
 const SortableMenuItem = SortableElement(Menu.Item);
@@ -106,16 +107,7 @@ export default function Tabs({
                     </div>
                 )}
                 {_.isEmpty(activeTabWidgets) ? (
-                    <Container className="emptyPage alignCenter" style={{ padding: '10rem 0' }}>
-                        {isEditMode ? (
-                            <Header size="large">
-                                This tab is empty, <br />
-                                don&apos;t be shy, give it a meaning!
-                            </Header>
-                        ) : (
-                            <Header size="large">This tab is empty</Header>
-                        )}
-                    </Container>
+                    <EmptyContainerMessage isEditMode={isEditMode} containerTypeLabel="tab" />
                 ) : (
                     <WidgetsList
                         widgets={activeTabWidgets}

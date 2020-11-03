@@ -2,7 +2,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import _ from 'lodash';
 import WidgetsList from './WidgetsList';
-import { Confirm, Container, Header } from './basic';
+import { Confirm } from './basic';
 import AddWidget from '../containers/AddWidget';
 import './PageContent.css';
 import Tabs from './Tabs';
@@ -11,6 +11,7 @@ import EditModeButton from './EditModeButton';
 import { useResettableState } from '../utils/hooks';
 import LayoutPropType from '../utils/props/LayoutPropType';
 import Consts from '../utils/consts';
+import EmptyContainerMessage from './EmptyContainerMessage';
 
 export default function PageContent({
     onWidgetUpdated,
@@ -31,20 +32,11 @@ export default function PageContent({
     return (
         <>
             {_.isEmpty(page.layout) ? (
-                <Container className="emptyPage alignCenter" style={{ padding: '10rem 0' }}>
-                    {isEditMode ? (
-                        <Header size="large">
-                            This page is empty, <br />
-                            don&apos;t be shy, give it a meaning!
-                        </Header>
-                    ) : (
-                        <Header size="large">This page is empty</Header>
-                    )}
-                </Container>
+                <EmptyContainerMessage isEditMode={isEditMode} containerTypeLabel="page" />
             ) : (
                 _.map(page.layout, (layoutSection, layoutSectionIdx) => (
                     <>
-                        <div className={isEditMode ? 'layoutSection' : ''}>
+                        <div className={isEditMode ? 'layoutSection' : ''} style={{ marginBottom: 15 }}>
                             {layoutSection.type === Consts.LAYOUT_TYPE.WIDGETS ? (
                                 <>
                                     {isEditMode && (
@@ -83,7 +75,6 @@ export default function PageContent({
                                 />
                             )}
                         </div>
-                        <div style={{ height: 15 }} />
                     </>
                 ))
             )}
