@@ -41,12 +41,21 @@ describe('Edit mode', () => {
         cy.get('.editModeButton:contains(Add Widget):eq(1)').click();
         cy.get('*[data-id=blueprintSources]').click();
         cy.contains('Add selected widgets').click();
+        cy.contains('Add Widgets').click();
+        cy.get('.editModeButton:contains(Add Widget):last()').click();
+        cy.get('*[data-id=agents]').click();
+        cy.contains('Add selected widgets').click();
+
         cy.contains('.message', 'Edit mode').contains('Exit').click();
 
+        cy.get('.react-grid-layout').should('have.length', 3);
         cy.contains('.react-grid-layout:eq(1) .widgetName', 'Blueprint Sources');
+        cy.contains('.react-grid-layout:last() .widgetName', 'Agents');
 
         cy.reload();
+        cy.get('.react-grid-layout').should('have.length', 3);
         cy.contains('.react-grid-layout:eq(1) .widgetName', 'Blueprint Sources');
+        cy.contains('.react-grid-layout:last() .widgetName', 'Agents');
     });
 
     it('should allow to remove and add tabs', () => {
@@ -65,6 +74,8 @@ describe('Edit mode', () => {
         cy.get('.item:contains(New Tab)').should('have.length', 1);
         cy.get('.item .editModeButton .add').click();
         cy.get('.item:contains(New Tab)').should('have.length', 2);
+        cy.contains('Add Tabs').click();
+        cy.get('.item:contains(New Tab)').should('have.length', 4);
     });
 
     it('should allow to rename tab and set default tab', () => {
