@@ -10,6 +10,7 @@ import Breadcrumbs from './Breadcrumbs';
 import EditModeBubble from './EditModeBubble';
 import { Button, EditableLabel } from './basic';
 import PageContent from './PageContent';
+import LayoutPropType from '../utils/props/LayoutPropType';
 
 export default class Page extends Component {
     shouldComponentUpdate(nextProps) {
@@ -90,7 +91,7 @@ Page.propTypes = {
     page: PropTypes.shape({
         id: PropTypes.string,
         description: PropTypes.string,
-        layout: PropTypes.arrayOf(PropTypes.shape({}))
+        layout: LayoutPropType
     }).isRequired,
     pagesList: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
     onPageNameChange: PropTypes.func.isRequired,

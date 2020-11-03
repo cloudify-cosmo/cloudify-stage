@@ -68,7 +68,7 @@ export function createPagesMap(pages) {
 
 export function forAllWidgets(page, widgetListModifier) {
     _.each(page.layout, (layoutSection, layoutSectionIdx) => {
-        if (layoutSection.type === 'widgets')
+        if (layoutSection.type === Consts.LAYOUT_TYPE.WIDGETS)
             layoutSection.content = _.compact(widgetListModifier(layoutSection.content, layoutSectionIdx, null));
         else
             _.each(layoutSection.content, (tab, tabIdx) => {

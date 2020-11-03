@@ -9,6 +9,8 @@ import Tabs from './Tabs';
 import useWidgetsFilter from './useWidgetsFilter';
 import EditModeButton from './EditModeButton';
 import { useResettableState } from '../utils/hooks';
+import LayoutPropType from '../utils/props/LayoutPropType';
+import Consts from '../utils/consts';
 
 export default function PageContent({
     onWidgetUpdated,
@@ -43,7 +45,7 @@ export default function PageContent({
                 _.map(page.layout, (layoutSection, layoutSectionIdx) => (
                     <>
                         <div className={isEditMode ? 'layoutSection' : ''}>
-                            {layoutSection.type === 'widgets' ? (
+                            {layoutSection.type === Consts.LAYOUT_TYPE.WIDGETS ? (
                                 <>
                                     {isEditMode && (
                                         <>
@@ -87,12 +89,12 @@ export default function PageContent({
             )}
             {isEditMode && (
                 <>
-                    {(_.last(page.layout) || {}).type !== 'widgets' && (
+                    {(_.last(page.layout) || {}).type !== Consts.LAYOUT_TYPE.WIDGETS && (
                         <EditModeButton
                             icon="add"
                             labelPosition="left"
                             content="Add Widgets Container"
-                            onClick={() => onLayoutSectionAdded({ type: 'widgets', content: [] })}
+                            onClick={() => onLayoutSectionAdded({ type: Consts.LAYOUT_TYPE.WIDGETS, content: [] })}
                         />
                     )}
                     <EditModeButton
@@ -101,7 +103,7 @@ export default function PageContent({
                         content="Add Tabs Container"
                         onClick={() =>
                             onLayoutSectionAdded({
-                                type: 'tabs',
+                                type: Consts.LAYOUT_TYPE.TABS,
                                 content: _.map(new Array(2), () => ({ name: 'New Tab', widgets: [] }))
                             })
                         }
@@ -134,7 +136,7 @@ PageContent.propTypes = {
     onLayoutSectionRemoved: PropTypes.func.isRequired,
     page: PropTypes.shape({
         id: PropTypes.string,
-        layout: PropTypes.arrayOf(PropTypes.shape({}))
+        layout: LayoutPropType
     }).isRequired,
     isEditMode: PropTypes.bool.isRequired
 };

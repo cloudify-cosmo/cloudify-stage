@@ -7,6 +7,7 @@ import { arrayMove } from 'react-sortable-hoc';
 import * as types from '../actions/types';
 import widgets from './widgetsReducer';
 import { forAllWidgets, forEachWidget } from '../actions/page';
+import Consts from '../utils/consts';
 
 const tabs = (state, action) => {
     switch (action.type) {
@@ -72,7 +73,7 @@ const page = (state = {}, action) => {
                 layout: _.map(action.page.layout, layoutSection => ({
                     ...layoutSection,
                     content:
-                        layoutSection.type === 'widgets'
+                        layoutSection.type === Consts.LAYOUT_TYPE.WIDGETS
                             ? []
                             : _.map(layoutSection.content, tab => ({ ...tab, widgets: [] }))
                 })),
@@ -103,7 +104,7 @@ const page = (state = {}, action) => {
             return {
                 ...state,
                 layout: _.map(state.layout, (layoutSection, layoutSectionIdx) => {
-                    if (layoutSection.type === 'tabs' && layoutSectionIdx === action.layoutSection)
+                    if (layoutSection.type === Consts.LAYOUT_TYPE.TABS && layoutSectionIdx === action.layoutSection)
                         return { ...layoutSection, content: tabs(layoutSection.content, action) };
                     return layoutSection;
                 })
