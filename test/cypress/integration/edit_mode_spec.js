@@ -42,7 +42,7 @@ describe('Edit mode', () => {
         cy.get('*[data-id=blueprintSources]').click();
         cy.contains('Add selected widgets').click();
         cy.contains('Add Widgets').click();
-        cy.get('.editModeButton:contains(Add Widget):last()').click();
+        cy.get('button[title]:contains(Add Widget):last()').click();
         cy.get('*[data-id=agents]').click();
         cy.contains('Add selected widgets').click();
 
