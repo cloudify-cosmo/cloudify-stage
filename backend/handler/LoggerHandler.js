@@ -33,13 +33,13 @@ module.exports = (() => {
         return logger;
     }
 
-    function getLogger(category) {
+    function getLogger(category, forceLogLevel) {
         const logFormat = winston.format.printf(
             ({ level, message, label, timestamp }) => `[${timestamp}][${label}] ${_.upperCase(level)}: ${message}`
         );
 
         const logger = winston.loggers.add(category, {
-            level: logLevel,
+            level: forceLogLevel || logLevel,
             transports: [
                 new winston.transports.File({ filename: logsFile }),
                 new winston.transports.File({ filename: errorsFile, level: 'error' }),
