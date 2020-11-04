@@ -12,7 +12,7 @@ let logger = null;
 function getDbOptions(configOptions) {
     const options = _.merge(
         {
-            logging: message => logger.debug(message)
+            logging: logger.debug
         },
         configOptions
     );
@@ -91,7 +91,7 @@ async function selectDbUrl() {
         selectedDbUrl = await findRespondingHost(dbUrls);
     } else {
         throw new Error(
-            'Invalid type of db.url parameter passed to the configuration. Expected string or list of strings.'
+            'Invalid type of db.url parameter passed to the configuration. Expected string or array of strings.'
         );
     }
 

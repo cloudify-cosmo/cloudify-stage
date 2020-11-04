@@ -19,7 +19,7 @@ ServerSettings.init();
 module.exports = DBConnection.init()
     .then(() => {
         logger.info('DB connection initialized successfully.');
-        Promise.all([ToursHandler.init(), WidgetHandler.init(), TemplateHandler.init()]);
+        return Promise.all([ToursHandler.init(), WidgetHandler.init(), TemplateHandler.init()]);
     })
     .then(() => {
         logger.info('Tours, widgets and templates data initialized successfully.');
