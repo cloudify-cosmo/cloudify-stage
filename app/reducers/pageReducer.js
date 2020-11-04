@@ -60,8 +60,17 @@ const page = (state = {}, action) => {
                     return layoutSection;
                 })
             };
-        case types.ADD_LAYOUT_SECTION:
-            return { ...state, layout: [...state.layout, action.layoutSection] };
+        case types.ADD_LAYOUT_SECTION: {
+            const position = _.isNil(action.position) ? _.size(state.layout) : action.position;
+            return {
+                ...state,
+                layout: [
+                    ..._.slice(state.layout, 0, position),
+                    action.layoutSection,
+                    ..._.slice(state.layout, position)
+                ]
+            };
+        }
         case types.REMOVE_LAYOUT_SECTION:
             return { ...state, layout: _.without(state.layout, _.nth(state.layout, action.layoutSection)) };
         case types.ADD_PAGE:

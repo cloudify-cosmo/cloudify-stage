@@ -117,7 +117,8 @@ const mapDispatchToProps = (dispatch, ownProps) => {
         onWidgetRemoved: widgetId => {
             dispatch(removeWidget(ownProps.pageId, widgetId));
         },
-        onLayoutSectionAdded: layoutSection => dispatch(addLayoutSectionToPage(ownProps.pageId, layoutSection)),
+        onLayoutSectionAdded: (layoutSection, position) =>
+            dispatch(addLayoutSectionToPage(ownProps.pageId, layoutSection, position)),
         onLayoutSectionRemoved: layoutSection => dispatch(removeLayoutSectionFromPage(ownProps.pageId, layoutSection))
     };
 };

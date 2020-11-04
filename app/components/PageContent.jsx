@@ -36,6 +36,39 @@ export default function PageContent({
             ) : (
                 _.map(page.layout, (layoutSection, layoutSectionIdx) => (
                     <>
+                        {isEditMode && (
+                            <div className="layoutSection" style={{ marginBottom: 15, padding: 1 }}>
+                                {layoutSection.type !== Consts.LAYOUT_TYPE.WIDGETS &&
+                                    (layoutSectionIdx === 0 ||
+                                        page.layout[layoutSectionIdx - 1].type !== Consts.LAYOUT_TYPE.WIDGETS) && (
+                                        <EditModeButton
+                                            icon="add"
+                                            labelPosition="left"
+                                            content="Insert Widgets Container"
+                                            onClick={() =>
+                                                onLayoutSectionAdded(
+                                                    { type: Consts.LAYOUT_TYPE.WIDGETS, content: [] },
+                                                    layoutSectionIdx
+                                                )
+                                            }
+                                        />
+                                    )}
+                                <EditModeButton
+                                    icon="add"
+                                    labelPosition="left"
+                                    content="Insert Tabs Container"
+                                    onClick={() =>
+                                        onLayoutSectionAdded(
+                                            {
+                                                type: Consts.LAYOUT_TYPE.TABS,
+                                                content: _.map(new Array(2), () => ({ name: 'New Tab', widgets: [] }))
+                                            },
+                                            layoutSectionIdx
+                                        )
+                                    }
+                                />
+                            </div>
+                        )}
                         <div className={isEditMode ? 'layoutSection' : ''} style={{ marginBottom: 15 }}>
                             {layoutSection.type === Consts.LAYOUT_TYPE.WIDGETS ? (
                                 <>
@@ -79,13 +112,18 @@ export default function PageContent({
                 ))
             )}
             {isEditMode && (
-                <>
+                <div className="layoutSection" style={{ padding: 1 }}>
                     {(_.last(page.layout) || {}).type !== Consts.LAYOUT_TYPE.WIDGETS && (
                         <EditModeButton
                             icon="add"
                             labelPosition="left"
                             content="Add Widgets Container"
-                            onClick={() => onLayoutSectionAdded({ type: Consts.LAYOUT_TYPE.WIDGETS, content: [] })}
+                            onClick={() =>
+                                onLayoutSectionAdded(
+                                    { type: Consts.LAYOUT_TYPE.WIDGETS, content: [] },
+                                    _.size(page.layout)
+                                )
+                            }
                         />
                     )}
                     <EditModeButton
@@ -93,13 +131,16 @@ export default function PageContent({
                         labelPosition="left"
                         content="Add Tabs Container"
                         onClick={() =>
-                            onLayoutSectionAdded({
-                                type: Consts.LAYOUT_TYPE.TABS,
-                                content: _.map(new Array(2), () => ({ name: 'New Tab', widgets: [] }))
-                            })
+                            onLayoutSectionAdded(
+                                {
+                                    type: Consts.LAYOUT_TYPE.TABS,
+                                    content: _.map(new Array(2), () => ({ name: 'New Tab', widgets: [] }))
+                                },
+                                _.size(page.layout)
+                            )
                         }
                     />
-                </>
+                </div>
             )}
             <Confirm
                 open={!_.isNil(layoutSectionToRemove)}

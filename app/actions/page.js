@@ -199,8 +199,8 @@ export function addLayoutToPage(page, pageId) {
     };
 }
 
-export function addLayoutSectionToPage(pageId, layoutSection) {
-    return { type: types.ADD_LAYOUT_SECTION, pageId, layoutSection };
+export function addLayoutSectionToPage(pageId, layoutSection, position) {
+    return { type: types.ADD_LAYOUT_SECTION, pageId, layoutSection, position };
 }
 
 export function removeLayoutSectionFromPage(pageId, layoutSection) {

@@ -151,8 +151,8 @@ export default function PageManagement({ pageId, isEditMode }) {
         page.layout = _.without(page.layout, _.nth(page.layout, layoutSection));
         updatePage();
     };
-    const onLayoutSectionAdded = layoutSection => {
-        page.layout.push(layoutSection);
+    const onLayoutSectionAdded = (layoutSection, position) => {
+        page.layout = [..._.slice(page.layout, 0, position), layoutSection, ..._.slice(page.layout, position)];
         updatePage();
     };
 
