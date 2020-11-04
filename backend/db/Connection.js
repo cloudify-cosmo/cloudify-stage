@@ -12,7 +12,7 @@ let logger = null;
 function getDbOptions(configOptions) {
     const options = _.merge(
         {
-            logging: logger.debug
+            logging: (message /* , sequelize */) => logger.debug(message)
         },
         configOptions
     );
