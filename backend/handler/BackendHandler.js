@@ -9,7 +9,7 @@ const { NodeVM, VMScript } = require('vm2');
 
 const config = require('../config').get();
 const consts = require('../consts');
-const db = require('../db/Connection');
+const { db } = require('../db/Connection');
 const Utils = require('../utils');
 const helper = require('./services');
 

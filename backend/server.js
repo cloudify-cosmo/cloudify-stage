@@ -2,26 +2,25 @@
  * Created by kinneretzin on 05/12/2016.
  */
 
+const app = require('./app');
 const Consts = require('./consts');
+const DBConnection = require('./db/Connection');
+const ToursHandler = require('./handler/ToursHandler');
+const WidgetHandler = require('./handler/WidgetHandler');
+const TemplateHandler = require('./handler/TemplateHandler');
 const LoggerHandler = require('./handler/LoggerHandler');
 const { isDevelopmentOrTest } = require('./utils');
 
-// Initialize logger
 const logger = LoggerHandler.getLogger('Server');
-
-// Initialize the DB connection
-require('./db/Connection');
-
 const ServerSettings = require('./serverSettings');
 
 ServerSettings.init();
 
-const ToursHandler = require('./handler/ToursHandler');
-const WidgetHandler = require('./handler/WidgetHandler');
-const TemplateHandler = require('./handler/TemplateHandler');
-const app = require('./app');
-
-module.exports = Promise.all([ToursHandler.init(), WidgetHandler.init(), TemplateHandler.init()])
+module.exports = DBConnection.init()
+    .then(() => {
+        logger.info('DB connection initialized successfully.');
+        Promise.all([ToursHandler.init(), WidgetHandler.init(), TemplateHandler.init()]);
+    })
     .then(() => {
         logger.info('Tours, widgets and templates data initialized successfully.');
         return new Promise((resolve, reject) => {
