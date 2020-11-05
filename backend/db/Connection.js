@@ -159,9 +159,9 @@ async function init(forceLogLevel) {
             isRestarting = true;
             logger.info(reason);
             logger.info('Closing all DB connections...');
-            await wait(1);
             await sequelize.close();
             logger.info('Re-initializing DB...');
+            await wait(1);
             init();
         }
     }
