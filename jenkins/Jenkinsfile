@@ -115,7 +115,7 @@ pipeline {
             sh 'npm run test:frontend'
 
             echo 'Run backend tests'
-            sh 'sudo apt-get update && sudo apt-get install postgresql-client'
+            sh 'sudo rm -rf /var/lib/apt/lists/* && sudo apt update && sudo apt install postgresql-client'
             sh 'echo \'{"app":{"ssl":{"ca":null},"logLevel":"debug"}}\' > conf/me.json'
             sh 'npm run test:backend'
           }
