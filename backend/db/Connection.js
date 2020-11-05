@@ -6,7 +6,7 @@ const request = require('request');
 const config = require('../config').get();
 const loggerHandler = require('../handler/LoggerHandler');
 
-const db = {};
+const db = { Sequelize };
 let logger = null;
 
 function getDbOptions(configOptions) {
@@ -29,15 +29,20 @@ function getDbOptions(configOptions) {
     return options;
 }
 
+function wait(seconds) {
+    return new Promise(resolve => setTimeout(resolve, 1000 * seconds));
+}
+
 async function selectDbUrl() {
-    function getHostUrl(dbUrl) {
-        return `https://${new URL(dbUrl).hostname}:8008`;
+    function getHostname(dbUrl) {
+        return new URL(dbUrl).hostname;
     }
     function isResponding(url) {
+        const patroniUrl = `https://${getHostname(url)}:8008`;
         return new Promise(resolve =>
             request(
                 {
-                    url,
+                    url: patroniUrl,
                     strictSSL: false
                 },
                 (error, response) => {
@@ -51,24 +56,21 @@ async function selectDbUrl() {
             )
         );
     }
-    function wait(seconds) {
-        return new Promise(resolve => setTimeout(resolve, 1000 * seconds));
-    }
     async function findRespondingHost(urls) {
         let respondingHost = null;
 
         /* eslint-disable no-await-in-loop */
         do {
             for (let i = 0; i < urls.length; i += 1) {
-                const dbHost = getHostUrl(urls[i]);
-                logger.info(`Checking DB host ${i}: ${dbHost}`);
-                const hasResponded = await isResponding(dbHost);
+                const hostname = getHostname(urls[i]);
+                logger.info(`Checking DB host ${i}: ${hostname}`);
+                const hasResponded = await isResponding(urls[i]);
                 if (hasResponded) {
-                    logger.debug(`DB host ${dbHost} has responded.`);
+                    logger.debug(`DB host ${hostname} has responded.`);
                     respondingHost = urls[i];
                     break;
                 } else {
-                    logger.debug(`DB host ${dbHost} not responding.`);
+                    logger.debug(`DB host ${hostname} not responding.`);
                 }
             }
             if (!respondingHost) {
@@ -99,7 +101,7 @@ async function selectDbUrl() {
         throw new Error('None of the DBs defined in the configuration (db.url) responded.');
     }
 
-    logger.info(`Selected DB URL: ${selectedDbUrl}`);
+    logger.info(`Selected DB host: ${getHostname(selectedDbUrl)}`);
     return selectedDbUrl;
 }
 
@@ -133,28 +135,40 @@ function addHooks(sequelize, restart) {
     });
 }
 
+async function connect(sequelize, restart) {
+    try {
+        await sequelize.authenticate();
+        logger.info('DB connection has been established successfully.');
+    } catch (error) {
+        logger.error(error);
+        restart('Unable to connect to the database.');
+    }
+}
+
 async function init(forceLogLevel) {
     logger = loggerHandler.getLogger('DBConnection', forceLogLevel);
     const { options, url } = config.app.db;
     const dbOptions = getDbOptions(options);
     const dbUrl = await selectDbUrl(url);
     const sequelize = new Sequelize(dbUrl, dbOptions);
-    let isRestarting = false;
+    db.sequelize = sequelize;
 
+    let isRestarting = false;
     async function restart(reason) {
         if (!isRestarting) {
             isRestarting = true;
-            logger.info(`${reason} Re-initializing DB...`);
+            logger.info(reason);
+            logger.info('Closing all DB connections...');
+            await wait(1);
             await sequelize.close();
+            logger.info('Re-initializing DB...');
             init();
         }
     }
 
     addModels(sequelize);
     addHooks(sequelize, restart);
-
-    db.sequelize = sequelize;
-    db.Sequelize = Sequelize;
+    await connect(sequelize, restart);
 }
 
 module.exports = { init, db };
