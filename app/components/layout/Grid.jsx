@@ -10,7 +10,7 @@ import GridItem from './GridItem';
 
 const ReactGridLayout = WidthProvider(Responsive);
 
-export default function Grid({ children, isEditMode, onGridDataChange }) {
+export default function Grid({ children, isEditMode, onGridDataChange, style }) {
     function saveChangedItems(layout) {
         if (isEditMode) {
             _.each(layout, item => {
@@ -54,6 +54,7 @@ export default function Grid({ children, isEditMode, onGridDataChange }) {
             isDraggable={isEditMode}
             isResizable={isEditMode}
             useCSSTransforms={false}
+            style={style}
         >
             {_.map(children, processGridItem)}
         </ReactGridLayout>
@@ -63,5 +64,10 @@ export default function Grid({ children, isEditMode, onGridDataChange }) {
 Grid.propTypes = {
     children: PropTypes.node.isRequired,
     onGridDataChange: PropTypes.func.isRequired,
-    isEditMode: PropTypes.bool.isRequired
+    isEditMode: PropTypes.bool.isRequired,
+    style: PropTypes.shape({})
+};
+
+Grid.defaultProps = {
+    style: undefined
 };

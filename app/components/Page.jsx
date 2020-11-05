@@ -10,6 +10,7 @@ import Breadcrumbs from './Breadcrumbs';
 import EditModeBubble from './EditModeBubble';
 import { Button, EditableLabel } from './basic';
 import PageContent from './PageContent';
+import LayoutPropType from '../utils/props/LayoutPropType';
 
 export default class Page extends Component {
     shouldComponentUpdate(nextProps) {
@@ -31,11 +32,14 @@ export default class Page extends Component {
             onTabRemoved,
             onTabUpdated,
             onTabMoved,
+            onLayoutSectionAdded,
+            onLayoutSectionRemoved,
             page,
             pagesList
         } = this.props;
         const maximizeWidget =
-            _.find(page.widgets, { maximized: true }) || _(page.tabs).flatMap('widgets').find({ maximized: true });
+            _(page.layout).flatMap('content').find({ maximized: true }) ||
+            _(page.layout).flatMap('content').flatMap('widgets').find({ maximized: true });
 
         $('body')
             .css({ overflow: maximizeWidget ? 'hidden' : 'inherit' })
@@ -69,6 +73,8 @@ export default class Page extends Component {
                     onTabRemoved={onTabRemoved}
                     onTabUpdated={onTabUpdated}
                     onTabMoved={onTabMoved}
+                    onLayoutSectionAdded={onLayoutSectionAdded}
+                    onLayoutSectionRemoved={onLayoutSectionRemoved}
                     isEditMode={isEditMode || false}
                 />
                 {isEditMode && (
@@ -85,8 +91,7 @@ Page.propTypes = {
     page: PropTypes.shape({
         id: PropTypes.string,
         description: PropTypes.string,
-        widgets: PropTypes.arrayOf(PropTypes.shape({})),
-        tabs: PropTypes.arrayOf(PropTypes.shape({ widgets: PropTypes.arrayOf(PropTypes.shape({})) }))
+        layout: LayoutPropType
     }).isRequired,
     pagesList: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
     onPageNameChange: PropTypes.func.isRequired,
@@ -100,5 +105,7 @@ Page.propTypes = {
     onTabMoved: PropTypes.func.isRequired,
     onPageSelected: PropTypes.func.isRequired,
     onEditModeExit: PropTypes.func.isRequired,
+    onLayoutSectionRemoved: PropTypes.func.isRequired,
+    onLayoutSectionAdded: PropTypes.func.isRequired,
     isEditMode: PropTypes.bool.isRequired
 };

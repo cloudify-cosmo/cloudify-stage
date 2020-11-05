@@ -59,5 +59,10 @@ export default {
     PAGE_MANAGEMENT_VIEW: 'view',
     PAGE_MANAGEMENT_EDIT: 'edit',
     PRIVATE_RESOURCE: 'private',
-    WIDGET_ID_HEADER: 'widget-id'
+    WIDGET_ID_HEADER: 'widget-id',
+
+    LAYOUT_TYPE: {
+        WIDGETS: 'widgets',
+        TABS: 'tabs'
+    }
 };

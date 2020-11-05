@@ -10,16 +10,6 @@ import StageUtils from '../utils/stageUtils';
 const widget = (state = {}, action) => {
     let newState;
     switch (action.type) {
-        case types.ADD_WIDGET:
-            return {
-                id: v4(),
-                ..._.pick(action.widget, 'name', 'x', 'y'),
-                width: action.widget.width || action.widgetDefinition.initialWidth,
-                height: action.widget.height || action.widgetDefinition.initialHeight,
-                definition: action.widgetDefinition.id,
-                configuration: { ...StageUtils.buildConfig(action.widgetDefinition), ...action.widget.configuration },
-                drillDownPages: {}
-            };
         case types.UPDATE_WIDGET:
             return { ...state, ...action.params };
         case types.MINIMIZE_WIDGETS:
@@ -40,7 +30,21 @@ const widgets = (state = [], action) => {
                 return state;
             }
 
-            return [...state, widget(undefined, action)];
+            return [
+                ...state,
+                {
+                    id: v4(),
+                    ..._.pick(action.widget, 'name', 'x', 'y'),
+                    width: action.widget.width || action.widgetDefinition.initialWidth,
+                    height: action.widget.height || action.widgetDefinition.initialHeight,
+                    definition: action.widgetDefinition.id,
+                    configuration: {
+                        ...StageUtils.buildConfig(action.widgetDefinition),
+                        ...action.widget.configuration
+                    },
+                    drillDownPages: {}
+                }
+            ];
         case types.UPDATE_WIDGET:
             return state.map(w => {
                 if (w.id === action.widgetId) {
@@ -49,12 +53,7 @@ const widgets = (state = [], action) => {
                 return w;
             });
         case types.MINIMIZE_WIDGETS:
-            return state.map(w => {
-                if (w.maximized) {
-                    return widget(w, action);
-                }
-                return w;
-            });
+            return state.map(w => widget(w, action));
         case types.REMOVE_WIDGET:
             return _.reject(state, { id: action.widgetId });
         case types.ADD_DRILLDOWN_PAGE:

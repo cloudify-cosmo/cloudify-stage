@@ -24,6 +24,7 @@ Cypress.Commands.add('addPage', pageName => {
         cy.get('.pageTitle').click();
         cy.get('.pageTitle.input input').clear().type(pageName);
     });
+    cy.contains('Add Widgets').click();
 
     cy.exitEditMode();
 });

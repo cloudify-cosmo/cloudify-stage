@@ -1,55 +1,61 @@
 {
   "name": "Blueprint",
-  "widgets": [
+  "layout": [
     {
-      "name": "Blueprint Actions",
-      "definition": "blueprintActionButtons",
-      "width": 7,
-      "height": 3,
-      "x": 0,
-      "y": 0
-    },
-    {
-      "name": "Blueprint Topology",
-      "definition": "topology",
-      "width": 12,
-      "height": 30,
-      "x": 0,
-      "y": 5
-    },
-    {
-      "name": "Blueprint Deployments",
-      "width": 12,
-      "height": 24,
-      "definition": "deployments",
-      "x": 7,
-      "y": 35,
-      "configuration":{
-        "displayStyle":"list"
-      }
-    },
-    {
-      "name": "Blueprint Inputs",
-      "width": 6,
-      "height": 12,
-      "definition": "inputs",
-      "x": 0,
-      "y": 59
-    },
-    {
-      "name": "Blueprint Outputs/Capabilities",
-      "width": 6,
-      "height": 12,
-      "definition": "outputs",
-      "x": 6,
-      "y": 59
-    },
-    {
-      "name": "Blueprint Sources",
-      "width": 12,
-      "height": 40,
-      "definition": "blueprintSources",
-      "x": 0,
-      "y": 71
-    }]
+      "type": "widgets",
+      "content":[
+        {
+          "name": "Blueprint Actions",
+          "definition": "blueprintActionButtons",
+          "width": 7,
+          "height": 3,
+          "x": 0,
+          "y": 0
+        },
+        {
+          "name": "Blueprint Topology",
+          "definition": "topology",
+          "width": 12,
+          "height": 30,
+          "x": 0,
+          "y": 5
+        },
+        {
+          "name": "Blueprint Deployments",
+          "width": 12,
+          "height": 24,
+          "definition": "deployments",
+          "x": 7,
+          "y": 35,
+          "configuration":{
+            "displayStyle":"list"
+          }
+        },
+        {
+          "name": "Blueprint Inputs",
+          "width": 6,
+          "height": 12,
+          "definition": "inputs",
+          "x": 0,
+          "y": 59
+        },
+        {
+          "name": "Blueprint Outputs/Capabilities",
+          "width": 6,
+          "height": 12,
+          "definition": "outputs",
+          "x": 6,
+          "y": 59
+        },
+        {
+          "name": "Blueprint Sources",
+          "width": 12,
+          "height": 40,
+          "definition": "blueprintSources",
+          "x": 0,
+          "y": 71
+        }]
+
+    }
+  ]
 }

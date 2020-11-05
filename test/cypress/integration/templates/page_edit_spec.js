@@ -19,6 +19,7 @@ describe('Page management', () => {
         cy.get('.actions > .ok').click();
 
         cy.log('Adding widgets');
+        cy.contains('Add Widgets').click();
         cy.contains('Add Widget').click();
         cy.get('[data-id="agents"]').click();
         cy.get('[data-id="blueprintSources"]').click();
@@ -30,9 +31,9 @@ describe('Page management', () => {
         cy.get('[data-id="blueprints"]').click();
         cy.get('button#addWidgetsBtn').click();
         cy.get('.item .editModeButton .add').click();
-        cy.get('.editModeButton .remove:eq(0)').click();
+        cy.get('.item .remove:eq(0)').click();
         cy.contains('Yes').click();
-        cy.get('.editModeButton .remove:eq(0)').click();
+        cy.get('.item .remove:eq(0)').click();
         cy.get('.tabContent').contains('Add Widget').click();
         cy.get('[data-id="blueprints"]').click();
         cy.get('button#addWidgetsBtn').click();
@@ -51,7 +52,7 @@ describe('Page management', () => {
         cy.log('Verifying page content');
         cy.get('.updatePageIcon.edit').click();
         cy.get('.agentsWidget').should('be.visible', true);
-        cy.get('.blueprintSourcesWidget').should('be.visible', true);
+        cy.get('.react-grid-item.blueprintSourcesWidget').scrollIntoView().should('be.visible', true);
         cy.contains('New Tab').should('not.have.class', 'active');
         cy.contains('New Tab2').should('have.class', 'active');
         cy.contains('New Tab').click();

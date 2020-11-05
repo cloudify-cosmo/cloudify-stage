@@ -1,133 +1,140 @@
 {
   "name": "Deployment",
-  "widgets": [
+  "layout": [
     {
-      "name": "Deployment Info",
-      "width": 12,
-      "height": 7,
-      "x": 0,
-      "y": 0,
-      "definition": "deploymentInfo"
-    },
-    {
-      "name": "Deployment Action Buttons",
-      "width": 12,
-      "height": 2,
-      "x": 0,
-      "y": 7,
-      "definition": "deploymentActionButtons"
-    }
-  ],
-  "tabs": [
-    {
-      "name": "Last Execution",
-      "widgets": [
+      "type": "widgets",
+      "content":[
         {
-          "name": "Execution Task Graph",
+          "name": "Deployment Info",
           "width": 12,
-          "height": 24,
+          "height": 7,
           "x": 0,
           "y": 0,
-          "configuration": {
-            "showSystemExecutions": false,
-            "singleExecutionView": true
-          },
-          "definition": "executions"
+          "definition": "deploymentInfo"
         },
         {
-          "name": "Events/Logs Filter",
+          "name": "Deployment Action Buttons",
           "width": 12,
-          "height": 5,
+          "height": 2,
           "x": 0,
-          "y": 24,
-          "definition": "eventsFilter"
-        },
-        {
-          "name": "Deployment Events/Logs",
-          "width": 12,
-          "height": 18,
-          "x": 0,
-          "y": 29,
-          "definition": "events"
+          "y": 7,
+          "definition": "deploymentActionButtons"
         }
-      ],
-      "isDefault": true
-    },
-    {
-      "name": "Deployment Info",
-      "widgets": [
+      ]
+    }, {
+      "type": "tabs",
+      "content":[
         {
-          "name": "Deployment Topology",
-          "width": 12,
-          "height": 21,
-          "x": 0,
-          "y": 0,
-          "definition": "topology"
+          "name": "Last Execution",
+          "widgets": [
+            {
+              "name": "Execution Task Graph",
+              "width": 12,
+              "height": 24,
+              "x": 0,
+              "y": 0,
+              "configuration": {
+                "showSystemExecutions": false,
+                "singleExecutionView": true
+              },
+              "definition": "executions"
+            },
+            {
+              "name": "Events/Logs Filter",
+              "width": 12,
+              "height": 5,
+              "x": 0,
+              "y": 24,
+              "definition": "eventsFilter"
+            },
+            {
+              "name": "Deployment Events/Logs",
+              "width": 12,
+              "height": 18,
+              "x": 0,
+              "y": 29,
+              "definition": "events"
+            }
+          ],
+          "isDefault": true
         },
         {
-          "name": "Deployment Outputs/Capabilities",
-          "width": 12,
-          "height": 20,
-          "x": 0,
-          "y": 21,
-          "definition": "outputs"
+          "name": "Deployment Info",
+          "widgets": [
+            {
+              "name": "Deployment Topology",
+              "width": 12,
+              "height": 21,
+              "x": 0,
+              "y": 0,
+              "definition": "topology"
+            },
+            {
+              "name": "Deployment Outputs/Capabilities",
+              "width": 12,
+              "height": 20,
+              "x": 0,
+              "y": 21,
+              "definition": "outputs"
+            },
+            {
+              "name": "Deployment Inputs",
+              "width": 12,
+              "height": 20,
+              "x": 0,
+              "y": 41,
+              "definition": "inputs"
+            },
+            {
+              "name": "Deployment Sources",
+              "width": 12,
+              "height": 24,
+              "x": 0,
+              "y": 85,
+              "definition": "blueprintSources"
+            },
+            {
+              "name": "Deployment Nodes",
+              "width": 12,
+              "height": 24,
+              "x": 0,
+              "y": 61,
+              "definition": "nodes"
+            }
+          ],
+          "isDefault": false
         },
         {
-          "name": "Deployment Inputs",
-          "width": 12,
-          "height": 20,
-          "x": 0,
-          "y": 41,
-          "definition": "inputs"
-        },
-        {
-          "name": "Deployment Sources",
-          "width": 12,
-          "height": 24,
-          "x": 0,
-          "y": 85,
-          "definition": "blueprintSources"
-        },
-        {
-          "name": "Deployment Nodes",
-          "width": 12,
-          "height": 24,
-          "x": 0,
-          "y": 61,
-          "definition": "nodes"
+          "name": "History",
+          "widgets": [
+            {
+              "name": "Deployment Executions",
+              "width": 12,
+              "height": 24,
+              "x": 0,
+              "y": 0,
+              "definition": "executions"
+            },
+            {
+              "name": "Events/Logs Filter",
+              "width": 12,
+              "height": 5,
+              "x": 0,
+              "y": 24,
+              "definition": "eventsFilter"
+            },
+            {
+              "name": "Deployment Events/Logs",
+              "width": 12,
+              "height": 23,
+              "x": 0,
+              "y": 29,
+              "definition": "events"
+            }
+          ],
+          "isDefault": false
         }
-      ],
-      "isDefault": false
-    },
-    {
-      "name": "History",
-      "widgets": [
-        {
-          "name": "Deployment Executions",
-          "width": 12,
-          "height": 24,
-          "x": 0,
-          "y": 0,
-          "definition": "executions"
-        },
-        {
-          "name": "Events/Logs Filter",
-          "width": 12,
-          "height": 5,
-          "x": 0,
-          "y": 24,
-          "definition": "eventsFilter"
-        },
-        {
-          "name": "Deployment Events/Logs",
-          "width": 12,
-          "height": 23,
-          "x": 0,
-          "y": 29,
-          "definition": "events"
-        }
-      ],
-      "isDefault": false
+      ]
     }
   ]
 }

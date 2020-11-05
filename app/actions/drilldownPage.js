@@ -1,7 +1,7 @@
 import _ from 'lodash';
 import * as types from './types';
 import { drillDownWarning } from './templateManagement';
-import { createDrilldownPage, selectPage, addWidgetsToPage } from './page';
+import { createDrilldownPage, selectPage, addLayoutToPage } from './page';
 
 export function addWidgetDrilldownPage(widgetId, drillDownName, drillDownPageId) {
     return {
@@ -14,8 +14,8 @@ export function addWidgetDrilldownPage(widgetId, drillDownName, drillDownPageId)
 
 export function drillDownToPage(widget, defaultTemplate, drilldownContext, drilldownPageName) {
     return (dispatch, getState) => {
-        const isPageEditMode = _.get(getState().templateManagement, 'isPageEditMode');
-        if (!_.isUndefined(isPageEditMode)) {
+        const isTemplateManagement = _.get(getState().templateManagement, 'isActive');
+        if (isTemplateManagement) {
             return dispatch(drillDownWarning(true));
         }
 
@@ -27,7 +27,7 @@ export function drillDownToPage(widget, defaultTemplate, drilldownContext, drill
 
             if (!isDrilldownPagePresent) {
                 dispatch(createDrilldownPage(defaultTemplate, newPageId));
-                dispatch(addWidgetsToPage(defaultTemplate, newPageId));
+                dispatch(addLayoutToPage(defaultTemplate, newPageId));
             }
 
             dispatch(addWidgetDrilldownPage(widget.id, defaultTemplate.name, newPageId));

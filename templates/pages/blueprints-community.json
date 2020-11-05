@@ -1,13 +1,16 @@
 {
   "name": "Local Blueprints",
-  "widgets": [
-    {
-      "name": "Blueprints",
-      "definition": "blueprints",
-      "width": 12,
-      "height": 24,
-      "x": 0,
-      "y": 0
-    }
-  ]
+  "layout": [{
+    "type": "widgets",
+    "content": [
+      {
+        "name": "Blueprints",
+        "definition": "blueprints",
+        "width": 12,
+        "height": 24,
+        "x": 0,
+        "y": 0
+      }
+    ]
+  }]
 }
