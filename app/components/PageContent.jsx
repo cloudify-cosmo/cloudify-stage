@@ -37,7 +37,7 @@ export default function PageContent({
                 _.map(page.layout, (layoutSection, layoutSectionIdx) => (
                     <>
                         {isEditMode && (
-                            <div className="layoutSection" style={{ marginBottom: 15, padding: 1 }}>
+                            <div style={{ marginBottom: 15 }}>
                                 <EditModeButton
                                     icon="add"
                                     labelPosition="left"
@@ -65,7 +65,7 @@ export default function PageContent({
                                 />
                             </div>
                         )}
-                        <div className={isEditMode ? 'layoutSection' : ''} style={{ marginBottom: 15 }}>
+                        <div style={{ marginBottom: 15, border: isEditMode ? '1px dashed' : 'none' }}>
                             {layoutSection.type === Consts.LAYOUT_TYPE.WIDGETS ? (
                                 <>
                                     {isEditMode && (
@@ -108,7 +108,7 @@ export default function PageContent({
                 ))
             )}
             {isEditMode && (
-                <div className="layoutSection" style={{ padding: 1 }}>
+                <>
                     <EditModeButton
                         icon="add"
                         labelPosition="left"
@@ -131,7 +131,7 @@ export default function PageContent({
                             )
                         }
                     />
-                </div>
+                </>
             )}
             <Confirm
                 open={!_.isNil(layoutSectionToRemove)}
