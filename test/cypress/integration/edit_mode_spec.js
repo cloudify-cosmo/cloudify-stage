@@ -41,26 +41,41 @@ describe('Edit mode', () => {
         cy.get('.editModeButton:contains(Add Widget):eq(1)').click();
         cy.get('*[data-id=blueprintSources]').click();
         cy.contains('Add selected widgets').click();
+        cy.contains('Add Widgets').click();
+        cy.get('button[title]:contains(Add Widget):last()').click();
+        cy.get('*[data-id=agents]').click();
+        cy.contains('Add selected widgets').click();
+
         cy.contains('.message', 'Edit mode').contains('Exit').click();
 
+        cy.get('.react-grid-layout').should('have.length', 3);
         cy.contains('.react-grid-layout:eq(1) .widgetName', 'Blueprint Sources');
+        cy.contains('.react-grid-layout:last() .widgetName', 'Agents');
 
         cy.reload();
+        cy.get('.react-grid-layout').should('have.length', 3);
         cy.contains('.react-grid-layout:eq(1) .widgetName', 'Blueprint Sources');
+        cy.contains('.react-grid-layout:last() .widgetName', 'Agents');
     });
 
     it('should allow to remove and add tabs', () => {
-        cy.get('.editModeButton .remove:eq(0)').click();
+        cy.contains('Tab2').find('.remove').click();
         cy.contains('Yes').click();
-        cy.get('.editModeButton .remove').click();
+        cy.contains('Tab2').should('not.exist');
+        cy.contains('Tab1').find('.remove').should('not.exist');
+
+        cy.get('button[title="Remove tabs container"]').click();
         cy.contains('Yes').click();
+        cy.contains('Tab1').should('not.exist');
 
         cy.contains('Add Tabs').click();
 
-        cy.get('.editModeButton .remove:eq(0)').click();
+        cy.get('.menu .remove:eq(0)').click();
         cy.get('.item:contains(New Tab)').should('have.length', 1);
         cy.get('.item .editModeButton .add').click();
         cy.get('.item:contains(New Tab)').should('have.length', 2);
+        cy.contains('Add Tabs').click();
+        cy.get('.item:contains(New Tab)').should('have.length', 4);
     });
 
     it('should allow to rename tab and set default tab', () => {

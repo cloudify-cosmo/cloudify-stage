@@ -18,10 +18,11 @@ export function loadWidgetDefinitions() {
         widgetDefinitionLoader.load(getState().manager).then(result => dispatch(storeWidgetDefinitions(result)));
 }
 
-export function addWidget(pageId, tab, widget, widgetDefinition) {
+export function addWidget(pageId, layoutSection, tab, widget, widgetDefinition) {
     return {
         type: types.ADD_WIDGET,
         pageId,
+        layoutSection,
         tab,
         widget,
         widgetDefinition

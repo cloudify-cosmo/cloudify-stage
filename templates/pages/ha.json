@@ -1,27 +1,30 @@
 {
   "name": "Admin Operations",
-  "widgets": [
-    {
-      "name": "Maintenance Mode Button",
-      "definition": "maintenanceModeButton",
-      "x": 0,
-      "y": 0
-    },
-    {
-      "name": "Cluster Status",
-      "definition": "highAvailability",
-      "width": 12,
-      "height": 24,
-      "x": 0,
-      "y": 3
-    },
-    {
-      "name": "Snapshots",
-      "definition": "snapshots",
-      "width": 12,
-      "height": 24,
-      "x": 0,
-      "y": 27
-    }
-  ]
+  "layout": [{
+    "type": "widgets",
+    "content": [
+      {
+        "name": "Maintenance Mode Button",
+        "definition": "maintenanceModeButton",
+        "x": 0,
+        "y": 0
+      },
+      {
+        "name": "Cluster Status",
+        "definition": "highAvailability",
+        "width": 12,
+        "height": 24,
+        "x": 0,
+        "y": 3
+      },
+      {
+        "name": "Snapshots",
+        "definition": "snapshots",
+        "width": 12,
+        "height": 24,
+        "x": 0,
+        "y": 27
+      }
+    ]
+  }]
 }

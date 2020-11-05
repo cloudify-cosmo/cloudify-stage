@@ -3,7 +3,7 @@
  */
 
 import PropTypes from 'prop-types';
-
+import _ from 'lodash';
 import React from 'react';
 import Widget from '../containers/Widget';
 import Grid from './layout/Grid';
@@ -11,7 +11,11 @@ import GridItem from './layout/GridItem';
 
 export default function WidgetsList({ onWidgetUpdated, onWidgetRemoved, isEditMode, widgets }) {
     return (
-        <Grid isEditMode={isEditMode} onGridDataChange={onWidgetUpdated}>
+        <Grid
+            isEditMode={isEditMode}
+            onGridDataChange={onWidgetUpdated}
+            style={{ zIndex: _(widgets).filter({ maximized: true }).size() }}
+        >
             {widgets.map(widget => {
                 const widgetDefId = (widget.definition || {}).id;
                 return (

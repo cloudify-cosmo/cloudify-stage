@@ -1,6 +1,7 @@
 import _ from 'lodash';
 import * as types from './types';
 import Manager from '../utils/Manager';
+import { forEachWidget } from './page';
 
 export function requestClusterStatus() {
     return {
@@ -26,11 +27,14 @@ export function errorClusterStatus(error) {
 function isClusterStatusWidgetOnPage(pageId, pages) {
     const currentPage = _.find(pages, { id: pageId }) || {};
     const clusterStatusWidgetDefinitionName = 'highAvailability';
-    const clusterStatusWidget = _.find(_.get(currentPage, 'widgets'), {
-        definition: clusterStatusWidgetDefinitionName
+
+    let widgetPresent;
+    forEachWidget(currentPage, widget => {
+        if (widget.definition === clusterStatusWidgetDefinitionName) widgetPresent = true;
+        return widget;
     });
 
-    return _.isObject(clusterStatusWidget);
+    return widgetPresent;
 }
 
 export function getClusterStatus(summaryOnly = false) {
