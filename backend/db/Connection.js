@@ -6,6 +6,7 @@ const request = require('request');
 const config = require('../config').get();
 const loggerHandler = require('../handler/LoggerHandler');
 
+const dbConfig = config.app.db;
 const db = { Sequelize };
 let logger = null;
 
@@ -83,7 +84,7 @@ async function selectDbUrl() {
         return respondingHost;
     }
 
-    const dbUrls = config.app.db.url;
+    const { url: dbUrls } = dbConfig;
     let selectedDbUrl = null;
 
     if (_.isString(dbUrls)) {
@@ -147,7 +148,7 @@ async function connect(sequelize, restart) {
 
 async function init(forceLogLevel) {
     logger = loggerHandler.getLogger('DBConnection', forceLogLevel);
-    const { options, url } = config.app.db;
+    const { options, url } = dbConfig;
     const dbOptions = getDbOptions(options);
     const dbUrl = await selectDbUrl(url);
     const sequelize = new Sequelize(dbUrl, dbOptions);
