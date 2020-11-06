@@ -1,14 +1,14 @@
-const Sequelize = require('sequelize');
 const _ = require('lodash');
 const fs = require('fs');
 const path = require('path');
 const request = require('request');
-const config = require('../config').get();
+const Sequelize = require('sequelize');
+
+const dbConfig = require('../config').get().app.db;
 const loggerHandler = require('../handler/LoggerHandler');
 
-const dbConfig = config.app.db;
-const db = { Sequelize };
 let logger = null;
+const db = { Sequelize };
 
 function getDbOptions(configOptions) {
     const options = _.merge(
