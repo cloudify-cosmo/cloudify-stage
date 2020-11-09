@@ -6,14 +6,13 @@ describe('/clientConfig endpoint', () => {
     it('allows to get client config', () => {
         mockDb({
             ClientConfig: {
-                findOrCreate: jest.fn(() =>
+                findOrCreate: () =>
                     Promise.resolve([
                         {
                             managerIp: 'localhost',
                             config: { str: 'value', int: 5 }
                         }
                     ])
-                )
             }
         });
         const app = require('app');

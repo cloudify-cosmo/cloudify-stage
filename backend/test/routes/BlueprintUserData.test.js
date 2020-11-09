@@ -6,7 +6,7 @@ describe('/bud endpoint', () => {
     it('allows to get layout for a blueprint', () => {
         mockDb({
             BlueprintUserData: {
-                findOne: jest.fn(() => Promise.resolve({ blueprintId: 1, username: 'test', layout: {} }))
+                findOne: () => Promise.resolve({ blueprintId: 1, username: 'test', layout: {} })
             }
         });
         const app = require('app');

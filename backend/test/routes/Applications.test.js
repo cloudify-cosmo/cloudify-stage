@@ -6,12 +6,11 @@ describe('/applications endpoint', () => {
     it('allows to get all data about applications', () => {
         mockDb({
             Application: {
-                findAll: jest.fn(() =>
+                findAll: () =>
                     Promise.resolve([
                         { id: 1, name: 'A' },
                         { id: 2, name: 'B' }
                     ])
-                )
             }
         });
         const app = require('app');

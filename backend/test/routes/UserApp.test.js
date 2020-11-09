@@ -6,7 +6,7 @@ describe('/ua endpoint', () => {
     it('allows to get user layout', () => {
         mockDb({
             UserApp: {
-                findOne: jest.fn(() =>
+                findOne: () =>
                     Promise.resolve({
                         managerIp: 'localhost',
                         username: 'test',
@@ -15,7 +15,6 @@ describe('/ua endpoint', () => {
                         tenant: 'default_tenant',
                         appData: {}
                     })
-                )
             }
         });
         const app = require('app');

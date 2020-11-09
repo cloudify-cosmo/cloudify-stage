@@ -6,9 +6,7 @@ describe('/ba endpoint', () => {
     it('allows to get blueprint image', () => {
         mockDb({
             BlueprintAdditions: {
-                findOne: jest.fn(() =>
-                    Promise.resolve({ blueprintId: 1, image: null, imageUrl: 'http://test.url/image1.png' })
-                )
+                findOne: () => Promise.resolve({ blueprintId: 1, image: null, imageUrl: 'http://test.url/image1.png' })
             }
         });
         const app = require('app');

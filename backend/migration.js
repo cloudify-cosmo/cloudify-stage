@@ -58,7 +58,7 @@ function endMigration(exitCode = 0) {
 }
 
 function getCurrent(executed) {
-    return executed.length > 0 ? _.last(executed).file : '<NO_MIGRATIONS>';
+    return _.last(executed).file || '<NO_MIGRATIONS>';
 }
 
 function cmdStatus() {
