@@ -1,30 +1,33 @@
-const _ = require('lodash');
 const request = require('supertest');
-const app = require('app');
-const appConfig = require('conf/app.json');
-const userConfig = require('conf/userConfig.json');
+const mockDb = require('../mocks/mockDb');
+require('../mocks/passport');
 
-describe('/config endpoint', () => {
+describe('/clientConfig endpoint', () => {
     it('allows to get client config', () => {
+        mockDb({
+            ClientConfig: {
+                findOrCreate: jest.fn(() =>
+                    Promise.resolve([
+                        {
+                            managerIp: 'localhost',
+                            config: { str: 'value', int: 5 }
+                        }
+                    ])
+                )
+            }
+        });
+        const app = require('app');
+
         return new Promise(done => {
             request(app)
-                .get('/console/config')
+                .get('/console/clientConfig')
                 .then(response => {
                     expect(response.type).toContain('json');
                     expect(response.statusCode).toBe(200);
-                    const expectedResponse = {
-                        app: {
-                            whiteLabel: userConfig.whiteLabel,
-                            maps: userConfig.maps,
-                            maintenancePollingInterval: appConfig.maintenancePollingInterval,
-                            singleManager: appConfig.singleManager,
-                            saml: _.omit(appConfig.saml, 'certPath')
-                        },
-                        manager: {
-                            ip: expect.any(String)
-                        }
-                    };
-                    expect(response.body).toStrictEqual(expectedResponse);
+                    expect(response.body).toStrictEqual({
+                        managerIp: 'localhost',
+                        config: { str: 'value', int: 5 }
+                    });
                     done();
                 });
         });

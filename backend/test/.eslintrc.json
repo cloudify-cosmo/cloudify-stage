@@ -13,6 +13,7 @@
         }
     },
     "rules": {
+        "global-require": "off",
         "no-console": "off",
         "node/no-missing-require": "off"
     },
