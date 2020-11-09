@@ -57,6 +57,10 @@ function endMigration(exitCode = 0) {
     process.exit(exitCode);
 }
 
+function getCurrent(executed) {
+    return executed.length > 0 ? _.last(executed).file : '<NO_MIGRATIONS>';
+}
+
 function cmdStatus() {
     const result = {};
 
@@ -82,7 +86,7 @@ function cmdStatus() {
                 return m;
             });
 
-            const current = executed.length > 0 ? executed[0].file : '<NO_MIGRATIONS>';
+            const current = getCurrent(executed);
             const status = {
                 current,
                 executed: executed.map(m => m.file),
@@ -101,7 +105,7 @@ function cmdMigrate() {
 
 function cmdCurrent() {
     return umzug.executed().then(executed => {
-        return Promise.resolve(executed.length > 0 ? _.last(executed).file : '<NO_MIGRATIONS>');
+        return Promise.resolve(getCurrent(executed));
     });
 }
 
