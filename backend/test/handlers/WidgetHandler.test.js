@@ -1,7 +1,11 @@
+const mkdirp = require('mkdirp');
+const Utils = require('../../utils');
 const WidgetHandler = require('../../handler/WidgetHandler');
 
 describe('WidgetHandler', () => {
     it('allows to list all widgets', async () => {
+        const userWidgetsFolder = Utils.getResourcePath('widgets', true);
+        mkdirp(userWidgetsFolder);
         await expect(WidgetHandler.listWidgets()).resolves.toEqual([
             { id: 'agents', isCustom: false },
             { id: 'blueprintActionButtons', isCustom: false },
