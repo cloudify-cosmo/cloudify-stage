@@ -5,7 +5,7 @@ const bodyParser = require('body-parser');
 const _ = require('lodash');
 
 const SourceHandler = require('../handler/SourceHandler');
-const db = require('../db/Connection');
+const { db } = require('../db/Connection');
 
 router.use(passport.authenticate('token', { session: false }));
 router.use(bodyParser.json());

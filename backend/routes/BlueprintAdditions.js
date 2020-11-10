@@ -8,7 +8,7 @@ const bodyParser = require('body-parser');
 const path = require('path');
 const _ = require('lodash');
 const passport = require('passport');
-const db = require('../db/Connection');
+const { db } = require('../db/Connection');
 
 router.use(
     bodyParser.raw({

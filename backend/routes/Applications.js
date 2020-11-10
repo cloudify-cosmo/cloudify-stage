@@ -7,7 +7,7 @@ const express = require('express');
 const passport = require('passport');
 
 const router = express.Router();
-const db = require('../db/Connection');
+const { db } = require('../db/Connection');
 
 router.use(passport.authenticate('token', { session: false }));
 router.use(bodyParser.json());
