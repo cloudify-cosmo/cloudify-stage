@@ -1,15 +1,6 @@
 const request = require('supertest');
-const passport = require('passport');
 const fs = require('fs-extra');
-
-function authMock(req, res, next) {
-    req.user = { username: 'testuser' };
-    next();
-}
-
-jest.mock('passport');
-passport.authenticate.mockReturnValue(authMock);
-passport.initialize.mockReturnValue(authMock);
+require('../mocks/passport');
 
 jest.mock('fs-extra');
 fs.writeJson.mockReturnValue(Promise.resolve());

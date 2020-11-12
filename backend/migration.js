@@ -5,50 +5,60 @@
 const path = require('path');
 const Umzug = require('umzug');
 const _ = require('lodash');
-const db = require('./db/Connection');
+const { db, init } = require('./db/Connection');
 
-const { sequelize } = db;
-const logger = require('./handler/LoggerHandler').getLogger('DBMigration');
+const command = process.argv[2].trim();
+const forceLogLevel = command === 'current' ? 'error' : null;
+const logger = require('./handler/LoggerHandler').getLogger('DBMigration', forceLogLevel);
 
-const umzug = new Umzug({
-    storage: 'sequelize',
-    storageOptions: {
-        sequelize
-    },
+let umzug = null;
 
-    // see: https://github.com/sequelize/umzug/issues/17
-    migrations: {
-        params: [
-            sequelize.getQueryInterface(), // queryInterface
-            sequelize.constructor, // DataTypes
-            logger,
-            // eslint-disable-next-line func-names
-            function () {
-                throw new Error(
-                    'Migration tried to use old style "done" callback. Please upgrade to "umzug" and return a promise instead.'
-                );
-            }
-        ],
-        path: './migrations',
-        pattern: /\.js$/
-    },
+function initUmzug() {
+    const { sequelize } = db;
+    umzug = new Umzug({
+        storage: 'sequelize',
+        storageOptions: {
+            sequelize
+        },
 
-    logging(...args) {
-        logger.info(args);
+        // see: https://github.com/sequelize/umzug/issues/17
+        migrations: {
+            params: [
+                sequelize.getQueryInterface(), // queryInterface
+                sequelize.constructor, // DataTypes
+                logger,
+                // eslint-disable-next-line func-names
+                function () {
+                    throw new Error(
+                        'Migration tried to use old style "done" callback. Please upgrade to "umzug" and return a promise instead.'
+                    );
+                }
+            ],
+            path: './migrations',
+            pattern: /\.js$/
+        },
+
+        logging(...args) {
+            logger.info(args);
+        }
+    });
+
+    function logUmzugEvent(eventName) {
+        return (name /* , migration */) => logger.info(`${name} ${eventName}`);
     }
-});
-
-function logUmzugEvent(eventName) {
-    return (name /* , migration */) => logger.info(`${name} ${eventName}`);
+    umzug.on('migrating', logUmzugEvent('migrating'));
+    umzug.on('migrated', logUmzugEvent('migrated'));
+    umzug.on('reverting', logUmzugEvent('reverting'));
+    umzug.on('reverted', logUmzugEvent('reverted'));
 }
-umzug.on('migrating', logUmzugEvent('migrating'));
-umzug.on('migrated', logUmzugEvent('migrated'));
-umzug.on('reverting', logUmzugEvent('reverting'));
-umzug.on('reverted', logUmzugEvent('reverted'));
 
 function endMigration(exitCode = 0) {
     // eslint-disable-next-line no-process-exit
     process.exit(exitCode);
+}
+
+function getCurrent(executed) {
+    return _.last(executed).file || '<NO_MIGRATIONS>';
 }
 
 function cmdStatus() {
@@ -76,7 +86,7 @@ function cmdStatus() {
                 return m;
             });
 
-            const current = executed.length > 0 ? executed[0].file : '<NO_MIGRATIONS>';
+            const current = getCurrent(executed);
             const status = {
                 current,
                 executed: executed.map(m => m.file),
@@ -93,9 +103,9 @@ function cmdMigrate() {
     return umzug.up();
 }
 
-function getCurrMigration() {
+function cmdCurrent() {
     return umzug.executed().then(executed => {
-        return Promise.resolve(executed.length > 0 ? _.last(executed).file : '<NO_MIGRATIONS>');
+        return Promise.resolve(getCurrent(executed));
     });
 }
 
@@ -130,6 +140,7 @@ function cmdReset() {
 }
 
 function cmdClear() {
+    const { sequelize } = db;
     return sequelize
         .getQueryInterface()
         .showAllTables()
@@ -153,6 +164,11 @@ function handleCommand(cmd) {
     logger.info(`${cmd.toUpperCase()} BEGIN`);
 
     switch (cmd) {
+        case 'current':
+            // eslint-disable-next-line no-console
+            executedCmd = cmdCurrent().then(console.log);
+            break;
+
         case 'status':
             executedCmd = cmdStatus();
             break;
@@ -201,15 +217,7 @@ function handleCommand(cmd) {
         .then(() => endMigration(0));
 }
 
-const cmd = process.argv[2].trim();
-
-// Make an exception because we dont want all the printout around it
-if (cmd === 'current') {
-    getCurrMigration().then(current => {
-        // eslint-disable-next-line no-console
-        console.log(current);
-        endMigration(0);
-    });
-} else {
-    handleCommand(cmd);
-}
+init(forceLogLevel).then(() => {
+    initUmzug();
+    handleCommand(command);
+});
