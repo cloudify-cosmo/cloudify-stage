@@ -5,6 +5,7 @@
 import _ from 'lodash';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
+import { HeaderMenu } from 'cloudify-ui-components';
 
 import EventBus from '../utils/EventBus';
 import { Dropdown, Icon } from './basic';
@@ -58,10 +59,10 @@ export default class Users extends Component {
         const { showPasswordModal } = this.state;
 
         const userMenuTrigger = (
-            <span>
+            <>
                 <Icon name="user" />
-                <span>{manager.username}</span>
-            </span>
+                {manager.username}
+            </>
         );
 
         const dropdownItems = [];
@@ -71,74 +72,72 @@ export default class Users extends Component {
 
         return (
             <>
-                <Dropdown item pointing="top right" trigger={userMenuTrigger} className="usersMenu">
-                    <Dropdown.Menu>
-                        {showAllOptions && canEditMode && (
-                            <Dropdown.Item
-                                icon="configure"
-                                selected={isEditMode}
-                                active={isEditMode}
-                                text={isEditMode ? 'Exit Edit Mode' : 'Edit Mode'}
-                                id="editModeMenuItem"
-                                value="editMode"
-                                onClick={this.onEditModeClick}
-                            />
-                        )}
-
-                        {showAllOptions && canTemplateManagement && (
-                            <Dropdown.Item
-                                icon="list layout"
-                                text="Template Management"
-                                value="templates"
-                                title="Template management"
-                                onClick={onTemplates}
-                                id="templatesMenuItem"
-                            />
-                        )}
-
+                <HeaderMenu trigger={userMenuTrigger}>
+                    {showAllOptions && canEditMode && (
                         <Dropdown.Item
-                            key="reset"
-                            id="resetMenuItem"
-                            icon="undo"
-                            text="Reset Templates"
-                            value="reset"
-                            title="Reset application screens"
-                            onClick={onReset}
+                            icon="configure"
+                            selected={isEditMode}
+                            active={isEditMode}
+                            text={isEditMode ? 'Exit Edit Mode' : 'Edit Mode'}
+                            id="editModeMenuItem"
+                            value="editMode"
+                            onClick={this.onEditModeClick}
                         />
+                    )}
 
-                        {showAllOptions && canLicenseManagement && (
-                            <Dropdown.Item
-                                key="license"
-                                id="licenseMenuItem"
-                                icon="key"
-                                text="License Management"
-                                value="license"
-                                onClick={onLicense}
-                            />
-                        )}
-
-                        <Dropdown.Divider key="log-out-divider" />
-
+                    {showAllOptions && canTemplateManagement && (
                         <Dropdown.Item
-                            disabled={!canChangePassword}
-                            key="change-password"
-                            id="changePasswordMenuItem"
-                            icon="lock"
-                            text="Change Password"
-                            value="change-password"
-                            onClick={this.onShowChangePasswordModal}
+                            icon="list layout"
+                            text="Template Management"
+                            value="templates"
+                            title="Template management"
+                            onClick={onTemplates}
+                            id="templatesMenuItem"
                         />
+                    )}
 
+                    <Dropdown.Item
+                        key="reset"
+                        id="resetMenuItem"
+                        icon="undo"
+                        text="Reset Templates"
+                        value="reset"
+                        title="Reset application screens"
+                        onClick={onReset}
+                    />
+
+                    {showAllOptions && canLicenseManagement && (
                         <Dropdown.Item
-                            key="log-out"
-                            id="logoutMenuItem"
-                            icon="log out"
-                            text="Logout"
-                            value="logout"
-                            onClick={onLogout}
+                            key="license"
+                            id="licenseMenuItem"
+                            icon="key"
+                            text="License Management"
+                            value="license"
+                            onClick={onLicense}
                         />
-                    </Dropdown.Menu>
-                </Dropdown>
+                    )}
+
+                    <Dropdown.Divider key="log-out-divider" />
+
+                    <Dropdown.Item
+                        disabled={!canChangePassword}
+                        key="change-password"
+                        id="changePasswordMenuItem"
+                        icon="lock"
+                        text="Change Password"
+                        value="change-password"
+                        onClick={this.onShowChangePasswordModal}
+                    />
+
+                    <Dropdown.Item
+                        key="log-out"
+                        id="logoutMenuItem"
+                        icon="log out"
+                        text="Logout"
+                        value="logout"
+                        onClick={onLogout}
+                    />
+                </HeaderMenu>
                 <PasswordModal open={showPasswordModal} onHide={this.onHideChangePasswordModal} />
             </>
         );

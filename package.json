@@ -82,6 +82,7 @@
     "request": "^2.88.0",
     "semantic-ui-css-offline": "^1.0.4-2.4.2",
     "semantic-ui-react": "^2.0.1",
+    "styled-components": "^5.2.1",
     "uuid": "^3.3.2"
   },
   "devDependencies": {

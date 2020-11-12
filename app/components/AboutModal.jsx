@@ -4,19 +4,24 @@
 
 import _ from 'lodash';
 import PropTypes from 'prop-types';
-import React from 'react';
+import React, { useContext } from 'react';
+import { ThemeContext } from 'styled-components';
+import { HeaderBar } from 'cloudify-ui-components';
 
 import { Button, CancelButton, Divider, Header, Modal } from './basic';
-import Banner from '../containers/banner/Banner';
+import Banner from './banner/Banner';
 import CurrentLicense from './license/CurrentLicense';
 import CurrentVersion from './license/CurrentVersion';
 import EulaLink from './license/EulaLink';
 
 export default function AboutModal({ canLicenseManagement, license, onHide, onLicenseManagement, open, version }) {
+    const theme = useContext(ThemeContext);
     return (
         <Modal open={open} onClose={onHide}>
-            <Modal.Header className="mainBackgroundColor" style={{ padding: 0, paddingLeft: 10 }}>
-                <Banner hideOnSmallScreen={false} />
+            <Modal.Header style={{ padding: 0, backgroundColor: theme.mainColor }}>
+                <HeaderBar>
+                    <Banner hideOnSmallScreen={false} />
+                </HeaderBar>
             </Modal.Header>
 
             <Modal.Content>

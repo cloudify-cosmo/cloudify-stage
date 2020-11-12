@@ -1,10 +1,7 @@
-/**
- * Created by jakub.niezgoda on 15/03/2019.
- */
-
 import _ from 'lodash';
 import PropTypes from 'prop-types';
 import React from 'react';
+import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 
 import { Label } from '../basic';
@@ -20,7 +17,7 @@ const LicenseLabel = ({ content, className }) => (
     <Label
         content={content}
         size="large"
-        style={{ marginLeft: 15, backgroundColor: '#FFC304', color: '#000000' }}
+        style={{ marginLeft: 15, backgroundColor: '#FFC304', color: '#000000', verticalAlign: 'middle' }}
         className={className}
     />
 );
@@ -36,7 +33,15 @@ const LinkedLicenseLabel = ({ content, className }) =>
 LinkedLicenseLabel.propTypes = labelPropTypes;
 LinkedLicenseLabel.defaultProps = labelDefaultProps;
 
-export default function LicenseTag({ isCommunity, isExpired, isTrial, className = '' }) {
+export default function LicenseTag({ className = '' }) {
+    const isCommunity = useSelector(
+        state => _.get(state, 'manager.version.edition', Consts.EDITION.PREMIUM) === Consts.EDITION.COMMUNITY
+    );
+    const isExpired = useSelector(
+        state => _.get(state, 'manager.license.status', Consts.LICENSE.EMPTY) === Consts.LICENSE.EXPIRED
+    );
+    const isTrial = useSelector(state => _.get(state, 'manager.license.data.trial', false));
+
     const LabelComponent = isCommunity ? LicenseLabel : LinkedLicenseLabel;
     let labelContent;
     if (isCommunity) {
@@ -51,11 +56,7 @@ export default function LicenseTag({ isCommunity, isExpired, isTrial, className 
 
     return <LabelComponent content={labelContent} className={className} />;
 }
-
 LicenseTag.propTypes = {
-    isCommunity: PropTypes.bool.isRequired,
-    isExpired: PropTypes.bool.isRequired,
-    isTrial: PropTypes.bool.isRequired,
     className: PropTypes.string
 };
 

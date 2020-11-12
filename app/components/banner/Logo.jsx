@@ -1,27 +1,18 @@
 import _ from 'lodash';
 import PropTypes from 'prop-types';
 import React from 'react';
-import { connect } from 'react-redux';
+import { useSelector } from 'react-redux';
 
 import { Logo as CommonLogo } from '../basic';
 
-function Logo({ style, url }) {
+export default function Logo({ style }) {
+    const url = useSelector(state => _.get(state, 'config.app.whiteLabel.logoUrl', ''));
     return <CommonLogo style={style} url={url} />;
 }
 
 Logo.propTypes = {
-    style: PropTypes.shape({}),
-    url: PropTypes.string
+    style: PropTypes.shape({})
 };
 Logo.defaultProps = {
-    style: {},
-    url: ''
+    style: {}
 };
-
-const mapStateToProps = state => ({
-    url: _.get(state, 'config.app.whiteLabel.logoUrl', '')
-});
-
-const mapDispatchToProps = () => ({});
-
-export default connect(mapStateToProps, mapDispatchToProps)(Logo);

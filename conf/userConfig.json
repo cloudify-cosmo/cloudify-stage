@@ -6,11 +6,11 @@
   "logLevel": "warn",
   "whiteLabel": {
     "pageTitle": "Cloudify Console",
-    "logoUrl": "/console/static/images/logo.png",
-    "mainColor": "#0077FC",
+    "logoUrl": "https://www.questionpro.com/blog/wp-content/uploads/2015/03/primary-test-it.png",
+    "mainColor": "green",
 
-    "productName": "Cloudify",
-    "headerTextColor": "#d8e3e8",
+    "productName": "My Product",
+    "headerTextColor": "yellow",
     "showVersionDetails": true,
 
     "loginPageHeader": "CLOUDIFY",
