@@ -5,7 +5,7 @@
 import _ from 'lodash';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
-
+import i18n from 'i18next';
 import SideBar from '../containers/SideBar';
 import Page from '../containers/Page';
 import ToursButton from '../containers/ToursButton';
@@ -43,7 +43,12 @@ export default class Home extends Component {
         }
 
         if (emptyPages) {
-            navigateToError('No pages available to display. Please try to reset application to the default settings.');
+            navigateToError(
+                i18n.t(
+                    'noPages',
+                    'No pages available to display. Please try to reset application to the default settings.'
+                )
+            );
         }
 
         if (!selectedPage) {

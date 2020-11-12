@@ -2,7 +2,7 @@ import _ from 'lodash';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { useSelector } from 'react-redux';
-
+import i18n from 'i18next';
 import { Link } from 'react-router-dom';
 import { ErrorMessage, Message, Table } from '../../basic';
 import ClusterService from './ClusterService';
@@ -20,7 +20,12 @@ export default function ClusterServicesOverview({ services, clickable, isFetchin
             <Table.Body>
                 {!isFetching && (
                     <>
-                        {fetchingError && <ErrorMessage error={fetchingError} header="Failed to fetch status" />}
+                        {fetchingError && (
+                            <ErrorMessage
+                                error={fetchingError}
+                                header={i18n.t('cluster.overview.errorHeader', 'Failed to fetch status')}
+                            />
+                        )}
                         {!fetchingError &&
                             (!_.isEmpty(services) ? (
                                 _.map(services, (service, serviceName) => (
@@ -44,7 +49,9 @@ export default function ClusterServicesOverview({ services, clickable, isFetchin
                                 ))
                             ) : (
                                 <Message>
-                                    <Message.Header>No services available</Message.Header>
+                                    <Message.Header>
+                                        {i18n.t('cluster.overview.noServices', 'No services available')}
+                                    </Message.Header>
                                 </Message>
                             ))}
                     </>

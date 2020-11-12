@@ -5,7 +5,7 @@
 import _ from 'lodash';
 import PropTypes from 'prop-types';
 import React from 'react';
-
+import i18n from 'i18next';
 import { Segment, Icon, Divider, List, Message, PopupConfirm } from '../basic';
 
 export default function PageList({ custom, onDelete, pages, style }) {
@@ -29,7 +29,10 @@ export default function PageList({ custom, onDelete, pages, style }) {
                                             onClick={e => e.stopPropagation()}
                                         />
                                     }
-                                    content="Are you sure to remove this page from template?"
+                                    content={i18n.t(
+                                        'templates.templateManagement.pageList.removeConfirm',
+                                        'Are you sure to remove this page from template?'
+                                    )}
                                     onConfirm={() => onDelete(item)}
                                 />
                             )}
@@ -37,7 +40,9 @@ export default function PageList({ custom, onDelete, pages, style }) {
                     );
                 })}
 
-                {_.isEmpty(pages) && <Message content="No pages available" />}
+                {_.isEmpty(pages) && (
+                    <Message content={i18n.t('templates.templateManagement.pageList.noPages', 'No pages available')} />
+                )}
             </List>
         </Segment>
     );

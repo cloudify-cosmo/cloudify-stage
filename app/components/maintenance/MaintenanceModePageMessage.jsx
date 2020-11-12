@@ -1,7 +1,7 @@
 /**
  * Created by kinneretzin on 29/08/2016.
  */
-
+import i18n from 'i18next';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 
@@ -51,9 +51,14 @@ export default class MaintenanceModePageMessage extends Component {
                 <Banner />
 
                 <MessageContainer wide>
-                    <Header as="h2">Maintenance mode</Header>
+                    <Header as="h2">{i18n.t('maintenanceMode.header', 'Maintenance mode')}</Header>
 
-                    <p>Server is on maintenance mode and is not available at the moment.</p>
+                    <p>
+                        {i18n.t(
+                            'maintenanceMode.message',
+                            'Server is on maintenance mode and is not available at the moment.'
+                        )}
+                    </p>
 
                     {canMaintenanceMode && (
                         <MaintenanceModeActivationButton

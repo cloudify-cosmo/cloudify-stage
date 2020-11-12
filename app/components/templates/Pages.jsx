@@ -5,7 +5,7 @@
 import _ from 'lodash';
 import PropTypes from 'prop-types';
 import React from 'react';
-
+import i18n from 'i18next';
 import CreatePageModal from './CreatePageModal';
 import TemplateList from './TemplateList';
 import { Segment, Header, DataTable, Icon, PopupConfirm, Label } from '../basic';
@@ -23,15 +23,21 @@ export default function Pages({
     return (
         <Segment color="red">
             <Header dividing as="h5">
-                Pages
+                {i18n.t('templates.pageManagement.header', 'Pages')}
             </Header>
 
             <DataTable>
-                <DataTable.Column label="Page id" width="25%" />
-                <DataTable.Column label="Page name" width="25%" />
-                <DataTable.Column label="Templates" width="10%" />
-                <DataTable.Column label="Updated at" width="15%" />
-                <DataTable.Column label="Updated by" width="15%" />
+                <DataTable.Column label={i18n.t('templates.pageManagement.table.pageID', 'Page id')} width="25%" />
+                <DataTable.Column label={i18n.t('templates.pageManagement.table.pageName', 'Page name')} width="25%" />
+                <DataTable.Column label={i18n.t('templates.pageManagement.table.templates', 'Templates')} width="10%" />
+                <DataTable.Column
+                    label={i18n.t('templates.pageManagement.table.updatedAt', 'Updated at')}
+                    width="15%"
+                />
+                <DataTable.Column
+                    label={i18n.t('templates.pageManagement.table.updatedBy', 'Updated by')}
+                    width="15%"
+                />
                 <DataTable.Column width="10%" />
 
                 {pages.map(item => {
@@ -58,7 +64,10 @@ export default function Pages({
                                         <div>
                                             <PopupConfirm
                                                 trigger={<Icon name="remove" link onClick={e => e.stopPropagation()} />}
-                                                content="Are you sure to remove this page?"
+                                                content={i18n.t(
+                                                    'templates.pageManagement.removeConfirm',
+                                                    'Are you sure to remove this page?'
+                                                )}
                                                 onConfirm={() => onDeletePage(item)}
                                                 onCanConfirm={() => onCanDeletePage(item)}
                                             />

@@ -6,7 +6,7 @@ import log from 'loglevel';
 import PropTypes from 'prop-types';
 import React, { useEffect, useRef } from 'react';
 import { connect } from 'react-redux';
-
+import i18n from 'i18next';
 import {
     ApproveButton,
     CancelButton,
@@ -156,8 +156,14 @@ function MaintenanceModeModal({
             <Modal.Header>
                 <Icon name="doctor" />
                 {manager.maintenance === Consts.MAINTENANCE_DEACTIVATED
-                    ? 'Are you sure you want to enter maintenance mode?'
-                    : 'Are you sure you want to exit maintenance mode?'}
+                    ? i18n.t(
+                          'maintenanceMode.confirmModal.header.activate',
+                          'Are you sure you want to enter maintenance mode?'
+                      )
+                    : i18n.t(
+                          'maintenanceMode.confirmModal.header.deactivate',
+                          'Are you sure you want to exit maintenance mode?'
+                      )}
             </Modal.Header>
 
             {errors || !_.isEmpty(activeExecutions.items) ? (
@@ -166,13 +172,33 @@ function MaintenanceModeModal({
 
                     {!_.isEmpty(activeExecutions.items) && (
                         <DataTable>
-                            <DataTable.Column label="Blueprint" width="15%" />
-                            <DataTable.Column label="Deployment" width="15%" />
-                            <DataTable.Column label="Workflow" width="15%" />
-                            <DataTable.Column label="Id" width="20%" />
-                            <DataTable.Column label="System" width="5%" />
-                            <DataTable.Column label="Status" width="15%" />
-                            <DataTable.Column label="Action" />
+                            <DataTable.Column
+                                label={i18n.t('maintenanceMode.confirmModal.executions.blueprint', 'Blueprint')}
+                                width="15%"
+                            />
+                            <DataTable.Column
+                                label={i18n.t('maintenanceMode.confirmModal.executions.deployment', 'Deployment')}
+                                width="15%"
+                            />
+                            <DataTable.Column
+                                label={i18n.t('maintenanceMode.confirmModal.executions.workflow', 'Workflow')}
+                                width="15%"
+                            />
+                            <DataTable.Column
+                                label={i18n.t('maintenanceMode.confirmModal.executions.id', 'Id')}
+                                width="20%"
+                            />
+                            <DataTable.Column
+                                label={i18n.t('maintenanceMode.confirmModal.executions.system', 'System')}
+                                width="5%"
+                            />
+                            <DataTable.Column
+                                label={i18n.t('maintenanceMode.confirmModal.executions.status', 'Status')}
+                                width="15%"
+                            />
+                            <DataTable.Column
+                                label={i18n.t('maintenanceMode.confirmModal.executions.action', 'Action')}
+                            />
 
                             {activeExecutions.items.map(item => {
                                 return (
@@ -191,7 +217,10 @@ function MaintenanceModeModal({
                                             <PopupMenu className="menuAction">
                                                 <Menu pointing vertical>
                                                     <Menu.Item
-                                                        content="Cancel"
+                                                        content={i18n.t(
+                                                            'maintenanceMode.confirmModal.executions.cancel',
+                                                            'Cancel'
+                                                        )}
                                                         icon="cancel"
                                                         name={ExecutionUtils.CANCEL_ACTION}
                                                         onClick={() =>
@@ -199,7 +228,10 @@ function MaintenanceModeModal({
                                                         }
                                                     />
                                                     <Menu.Item
-                                                        content="Force Cancel"
+                                                        content={i18n.t(
+                                                            'maintenanceMode.confirmModal.executions.forceCancel',
+                                                            'Force Cancel'
+                                                        )}
                                                         icon={<Icon name="cancel" color="red" />}
                                                         name={ExecutionUtils.FORCE_CANCEL_ACTION}
                                                         onClick={() =>
@@ -207,7 +239,10 @@ function MaintenanceModeModal({
                                                         }
                                                     />
                                                     <Menu.Item
-                                                        content="Kill Cancel"
+                                                        content={i18n.t(
+                                                            'maintenanceMode.confirmModal.executions.killCancel',
+                                                            'Kill Cancel'
+                                                        )}
                                                         icon={<Icon name="stop" color="red" />}
                                                         name={ExecutionUtils.KILL_CANCEL_EXECUTION}
                                                         onClick={() =>
@@ -228,8 +263,18 @@ function MaintenanceModeModal({
             )}
 
             <Modal.Actions>
-                <CancelButton onClick={onDeny} content="No" disabled={loading} />
-                <ApproveButton onClick={onApprove} content="Yes" icon="doctor" color="green" disabled={loading} />
+                <CancelButton
+                    onClick={onDeny}
+                    content={i18n.t('maintenanceMode.confirmModal.no', 'No')}
+                    disabled={loading}
+                />
+                <ApproveButton
+                    onClick={onApprove}
+                    content={i18n.t('maintenanceMode.confirmModal.yes', 'Yes')}
+                    icon="doctor"
+                    color="green"
+                    disabled={loading}
+                />
             </Modal.Actions>
         </Modal>
     );

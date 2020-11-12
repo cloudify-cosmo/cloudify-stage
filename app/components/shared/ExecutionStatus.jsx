@@ -5,7 +5,7 @@
 import _ from 'lodash';
 import PropTypes from 'prop-types';
 import React from 'react';
-
+import i18n from 'i18next';
 import { Icon, Label, Popup } from '../basic';
 import ExecutionUtils from '../../utils/shared/ExecutionUtils';
 
@@ -67,9 +67,15 @@ export default function ExecutionStatus({
                 </Label>
             </Popup.Trigger>
             {showPopup ? (
-                <span>
-                    Scheduled for: <strong>{execution.scheduled_for}</strong>
-                </span>
+                <span
+                    dangerouslySetInnerHTML={{
+                        __html: i18n.t(
+                            'shared.executionStatus.scheduledFor',
+                            'Scheduled for: <strong>{{datetime}}}</strong>',
+                            { datetime: execution.scheduled_for }
+                        )
+                    }}
+                />
             ) : null}
         </Popup>
     ) : (

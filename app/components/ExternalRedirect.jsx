@@ -4,6 +4,7 @@
 
 import PropTypes from 'prop-types';
 import React, { useEffect } from 'react';
+import i18n from 'i18next';
 
 export default function ExternalRedirect({ url }) {
     useEffect(() => {
@@ -11,7 +12,7 @@ export default function ExternalRedirect({ url }) {
         window.location = url;
     }, []);
 
-    return <section>Redirecting to {url}...</section>;
+    return <section>{i18n.t('redirecting', 'Redirecting to {{url}}...', { url })}</section>;
 }
 
 ExternalRedirect.propTypes = {

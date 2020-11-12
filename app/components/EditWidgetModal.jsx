@@ -1,7 +1,7 @@
 /**
  * Created by addihorowitz on 11/09/2016.
  */
-
+import i18n from 'i18next';
 import _ from 'lodash';
 import PropTypes from 'prop-types';
 import React, { useEffect, useState } from 'react';
@@ -77,7 +77,14 @@ export default function EditWidgetModal({ configDef, configuration, show, onHide
                             />
                         ))}
 
-                    {_.isEmpty(configDef) && <Message>No configuration available for this widget</Message>}
+                    {_.isEmpty(configDef) && (
+                        <Message>
+                            {i18n.t(
+                                'editMode.editWidget.noConfiguration',
+                                'No configuration available for this widget'
+                            )}
+                        </Message>
+                    )}
                 </Form>
             </Modal.Content>
 

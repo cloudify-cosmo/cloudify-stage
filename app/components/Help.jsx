@@ -4,7 +4,7 @@
 
 import React from 'react';
 import PropTypes from 'prop-types';
-
+import i18n from 'i18next';
 import { Dropdown, Icon } from './basic';
 import StageUtils from '../utils/stageUtils';
 
@@ -16,16 +16,16 @@ export default function Help({ onAbout, version }) {
             <Dropdown.Menu>
                 <Dropdown.Item
                     icon="book"
-                    text="Documentation"
-                    onClick={() => redirectToPage(`https://docs.cloudify.co/${version}`)}
+                    text={i18n.t('help.documentation', 'Documentation')}
+                    onClick={() => redirectToPage(i18n.t('help.documentationLink', { version }))}
                 />
                 <Dropdown.Item
                     icon="comments"
-                    text="Contact Us"
-                    onClick={() => redirectToPage('https://cloudify.co/contact')}
+                    text={i18n.t('help.contact', 'Contact Us')}
+                    onClick={() => redirectToPage(i18n.t('help.contactLink'))}
                 />
                 <Dropdown.Divider />
-                <Dropdown.Item icon="info circle" text="About" onClick={onAbout} />
+                <Dropdown.Item icon="info circle" text={i18n.t('help.about', 'About')} onClick={onAbout} />
             </Dropdown.Menu>
         </Dropdown>
     );
