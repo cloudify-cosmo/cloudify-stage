@@ -79,5 +79,8 @@ Routes.propTypes = {
     isSamlEnabled: PropTypes.bool.isRequired,
     samlPortalUrl: PropTypes.string.isRequired,
     samlSsoUrl: PropTypes.string.isRequired,
-    theme: PropTypes.shape({}).isRequired
+    theme: PropTypes.shape({
+        mainColor: PropTypes.string,
+        headerTextColor: PropTypes.string
+    }).isRequired
 };

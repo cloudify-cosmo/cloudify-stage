@@ -5,7 +5,6 @@
 import _ from 'lodash';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
-import { withTheme } from 'styled-components';
 import { HeaderBar, MenusBar } from 'cloudify-ui-components';
 
 import Tenants from '../../containers/Tenants';
@@ -18,7 +17,7 @@ import ResetPagesModal from '../ResetPagesModal';
 import { Icon } from '../basic';
 import Consts from '../../utils/consts';
 
-class Header extends Component {
+export default class Header extends Component {
     constructor(props, context) {
         super(props, context);
 
@@ -103,5 +102,3 @@ Header.propTypes = {
     onResetPages: PropTypes.func.isRequired,
     onSidebarOpen: PropTypes.func.isRequired
 };
-
-export default withTheme(Header);
