@@ -50,7 +50,9 @@ export default class WidgetDefinitionsLoader {
             Hooks,
             defineHook: def => {
                 window.Stage.Hooks = { ...window.Stage.Hooks, ...def };
-            }
+            },
+
+            i18n
         };
     }
 

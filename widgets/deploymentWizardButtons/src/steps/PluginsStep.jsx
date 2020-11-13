@@ -178,7 +178,7 @@ class PluginsStepContent extends React.Component {
                         .doGet('/plugins?_include=distribution,package_name,package_version,visibility'),
                     toolbox
                         .getInternal()
-                        .doGet('/external/content', { url: Stage.Common.Consts.externalUrls.pluginsCatalog })
+                        .doGet('/external/content', { url: Stage.i18n.t('widgets.common.urls.pluginsCatalog') })
                 ])
             )
             .then(([pluginsInManager, pluginsInCatalog]) => {

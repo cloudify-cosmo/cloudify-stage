@@ -30,7 +30,15 @@
             "addToContainerButtonTitle": "Add widget to this widgets container",
             "addToTabButtonTitle": "Add widget to this tab",
             "category": {
-                "all": ""
+                "all": "All",
+                "blueprints": "Blueprints",
+                "deployments": "Deployments",
+                "buttonsAndFilters": "Buttons and Filters",
+                "chartsAndStatistics": "Charts and Statistics",
+                "executionsNodes": "Executions/Nodes",
+                "systemResources": "System Resources",
+                "spire": "Spire",
+                "others": "Others"
             },
             "checkbox": "Add widget to page",
             "defaultWidgetName": "Widget_{{index}}",
@@ -350,6 +358,16 @@
             "multipleErrors": "Multiple errors occured: {{}}",
             "nameNotSpecified": "Mandatory field - 'name' - not specified in widget definition.",
             "noWidgetDefinition": "Widget not properly initialized. Please check if widget.js is correctly defined."
+        }
+    },
+    "widgets": {
+        "common": {
+            "urls": {
+                "pluginsCatalog": "http://repository.cloudifysource.org/cloudify/wagons/plugins.json",
+                "blueprintsCatalog": "http://repository.cloudifysource.org/cloudify/blueprints/5.1/examples.json",
+                "helloWorldBlueprint": "https://github.com/cloudify-cosmo/cloudify-hello-world-example/archive/master.zip",
+                "linkParameterExample": "https://cloudify.co"
+            }
         }
     }
 }

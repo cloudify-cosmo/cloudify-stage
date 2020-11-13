@@ -44,7 +44,10 @@ export default function ParameterValueDescription() {
                     </List.Item>
                     <List.Item>
                         Link:&nbsp;&nbsp;
-                        <ParameterValue value="https://cloudify.co" showCopyButton={false} />
+                        <ParameterValue
+                            value={Stage.i18n.t('widgets.common.urls.linkParameterExample')}
+                            showCopyButton={false}
+                        />
                     </List.Item>
                     <List.Item>
                         Null:
