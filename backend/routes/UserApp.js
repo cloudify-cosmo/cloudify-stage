@@ -6,7 +6,7 @@ const express = require('express');
 const router = express.Router();
 const bodyParser = require('body-parser');
 const passport = require('passport');
-const db = require('../db/Connection');
+const { db } = require('../db/Connection');
 
 const ServerSettings = require('../serverSettings');
 const config = require('../config').get();

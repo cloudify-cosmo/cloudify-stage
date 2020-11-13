@@ -7,7 +7,7 @@ const fs = require('fs-extra');
 const pathlib = require('path');
 const mkdirp = require('mkdirp');
 const _ = require('lodash');
-const db = require('../db/Connection');
+const { db } = require('../db/Connection');
 
 const logger = require('./LoggerHandler').getLogger('WidgetHandler');
 

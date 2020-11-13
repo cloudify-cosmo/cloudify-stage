@@ -205,7 +205,7 @@ export default function TemplateManagement() {
         const page = {
             id: pageId,
             name,
-            widgets: []
+            layout: []
         };
 
         return internal

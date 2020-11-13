@@ -1,129 +1,134 @@
 {
   "name": "Dashboard",
-  "widgets": [
+  "layout": [
     {
-      "name": "Number of blueprints",
-      "width": 2,
-      "height": 8,
-      "definition": "blueprintNum",
-      "x": 0,
-      "y": 0,
-      "configuration":{
-        "page": "local_blueprints"
-      }
-    },
-    {
-      "name": "Number of deployments",
-      "width": 2,
-      "height": 8,
-      "definition": "deploymentNum",
-      "x": 2,
-      "y": 0,
-      "configuration":{
-        "page": "deployments"
-      }
-    },
-    {
-      "name": "Number of plugins",
-      "width": 2,
-      "height": 8,
-      "definition": "pluginsNum",
-      "x": 4,
-      "y": 0,
-      "configuration":{
-        "page": "system_resources"
-      }
-    },
-    {
-      "name": "Number of compute nodes",
-      "width": 2,
-      "height": 8,
-      "definition": "nodesComputeNum",
-      "x": 6,
-      "y": 0
-    },
-    {
-      "name": "Number of running executions",
-      "width": 2,
-      "height": 8,
-      "definition": "executionNum",
-      "x": 8,
-      "y": 0
-    },
-    {
-      "name": "Blueprint Upload Button",
-      "width": 2,
-      "height": 3,
-      "definition": "blueprintUploadButton",
-      "x": 0,
-      "y": 8
-    },
-    {
-      "name": "Deployment Button",
-      "width": 2,
-      "height": 3,
-      "definition": "deploymentButton",
-      "x": 2,
-      "y": 8
-    },
-    {
-      "name": "Plugin Upload Button",
-      "width": 2,
-      "height": 3,
-      "definition": "pluginUploadButton",
-      "x": 4,
-      "y": 8
-    },
-    {
-      "name": "Filter",
-      "definition": "filter",
-      "x": 0,
-      "y": 10,
-      "configuration": {
-        "filterByExecutions":false,
-        "filterByExecutionsStatus":true,
-        "allowMultipleSelection":true
-      }
-    },
-    {
-      "name": "Sites Map",
-      "width": 12,
-      "height": 24,
-      "definition": "sitesMap",
-      "x": 0,
-      "y": 14
-    },
-    {
-      "name": "Executions",
-      "width": 8,
-      "height": 24,
-      "definition": "executions",
-      "configuration": {
-        "pageSize": 10
-      },
-      "x": 0,
-      "y": 38
-    },
-    {
-      "name": "Executions Statuses Graph",
-      "width": 4,
-      "height": 24,
-      "definition": "executionsStatus",
-      "x": 8,
-      "y": 38
-    },
-    {
-      "name": "Button link",
-      "width": 2,
-      "height": 8,
-      "configuration": {
-        "label": "Getting Started Walkthrough",
-        "url": "https://docs.cloudify.co/latest/trial_getting_started/examples/",
-        "fullHeight": true
-      },
-      "definition": "buttonLink",
-      "x": 10,
-      "y": 0
+      "type": "widgets",
+      "content": [
+        {
+          "name": "Number of blueprints",
+          "width": 2,
+          "height": 8,
+          "definition": "blueprintNum",
+          "x": 0,
+          "y": 0,
+          "configuration":{
+            "page": "local_blueprints"
+          }
+        },
+        {
+          "name": "Number of deployments",
+          "width": 2,
+          "height": 8,
+          "definition": "deploymentNum",
+          "x": 2,
+          "y": 0,
+          "configuration":{
+            "page": "deployments"
+          }
+        },
+        {
+          "name": "Number of plugins",
+          "width": 2,
+          "height": 8,
+          "definition": "pluginsNum",
+          "x": 4,
+          "y": 0,
+          "configuration":{
+            "page": "system_resources"
+          }
+        },
+        {
+          "name": "Number of compute nodes",
+          "width": 2,
+          "height": 8,
+          "definition": "nodesComputeNum",
+          "x": 6,
+          "y": 0
+        },
+        {
+          "name": "Number of running executions",
+          "width": 2,
+          "height": 8,
+          "definition": "executionNum",
+          "x": 8,
+          "y": 0
+        },
+        {
+          "name": "Blueprint Upload Button",
+          "width": 2,
+          "height": 3,
+          "definition": "blueprintUploadButton",
+          "x": 0,
+          "y": 8
+        },
+        {
+          "name": "Deployment Button",
+          "width": 2,
+          "height": 3,
+          "definition": "deploymentButton",
+          "x": 2,
+          "y": 8
+        },
+        {
+          "name": "Plugin Upload Button",
+          "width": 2,
+          "height": 3,
+          "definition": "pluginUploadButton",
+          "x": 4,
+          "y": 8
+        },
+        {
+          "name": "Filter",
+          "definition": "filter",
+          "x": 0,
+          "y": 10,
+          "configuration": {
+            "filterByExecutions":false,
+            "filterByExecutionsStatus":true,
+            "allowMultipleSelection":true
+          }
+        },
+        {
+          "name": "Sites Map",
+          "width": 12,
+          "height": 24,
+          "definition": "sitesMap",
+          "x": 0,
+          "y": 14
+        },
+        {
+          "name": "Executions",
+          "width": 8,
+          "height": 24,
+          "definition": "executions",
+          "configuration": {
+            "pageSize": 10
+          },
+          "x": 0,
+          "y": 38
+        },
+        {
+          "name": "Executions Statuses Graph",
+          "width": 4,
+          "height": 24,
+          "definition": "executionsStatus",
+          "x": 8,
+          "y": 38
+        },
+        {
+          "name": "Button link",
+          "width": 2,
+          "height": 8,
+          "configuration": {
+            "label": "Getting Started Walkthrough",
+            "url": "https://docs.cloudify.co/latest/trial_getting_started/examples/",
+            "fullHeight": true
+          },
+          "definition": "buttonLink",
+          "x": 10,
+          "y": 0
+        }
+      ]
     }
   ]
 }

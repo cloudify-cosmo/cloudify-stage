@@ -7,6 +7,7 @@ import { push } from 'connected-react-router';
 import * as types from './types';
 import { addPage, removePage } from './templates';
 import Internal from '../utils/Internal';
+import { forEachWidget } from './page';
 
 export function createPageId(name, pages) {
     const ids = _.keysIn(pages);
@@ -38,11 +39,8 @@ export function persistPage(page) {
             };
         }
 
-        const pageData = {
-            ..._.pick(page, 'id', 'oldId', 'name'),
-            widgets: page.widgets.map(prepareWidgetData),
-            tabs: _.map(page.tabs, tab => ({ ...tab, widgets: _.map(tab.widgets, prepareWidgetData) }))
-        };
+        const pageData = _(page).pick('id', 'oldId', 'name', 'layout').cloneDeep();
+        forEachWidget(pageData, prepareWidgetData);
 
         const internal = new Internal(getState().manager);
         return internal

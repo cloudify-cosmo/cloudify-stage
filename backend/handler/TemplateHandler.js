@@ -236,10 +236,9 @@ module.exports = (() => {
         }
 
         const content = {
-            name: page.name,
+            ..._.pick(page, 'name', 'layout'),
             updatedBy: username,
-            updatedAt: moment().format(),
-            widgets: page.widgets
+            updatedAt: moment().format()
         };
 
         return fs.writeJson(path, content, { spaces: '  ' });

@@ -1,13 +1,16 @@
 {
   "name": "Plugins",
-  "widgets": [
-    {
-      "name": "Plugins",
-      "definition": "plugins",
-      "width": 12,
-      "height": 24,
-      "x": 0,
-      "y": 0
-    }
-  ]
+  "layout": [{
+    "type": "widgets",
+    "content": [
+      {
+        "name": "Plugins",
+        "definition": "plugins",
+        "width": 12,
+        "height": 24,
+        "x": 0,
+        "y": 0
+      }
+    ]
+  }]
 }

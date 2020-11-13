@@ -7,11 +7,14 @@ import { connect } from 'react-redux';
 
 import Page from '../components/Page';
 import {
+    addLayoutSectionToPage,
     addTab,
     changePageDescription,
     changePageName,
     createPagesMap,
+    forEachWidget,
     moveTab,
+    removeLayoutSectionFromPage,
     removeTab,
     selectPage,
     updateTab
@@ -60,10 +63,10 @@ const mapStateToProps = (state, ownProps) => {
         widget.definition = _.find(state.widgetDefinitions, {
             id: widget.definition
         });
+        return widget;
     }
 
-    _.each(pageData.widgets, assignWidgetDefinition);
-    _.flatMap(pageData.tabs, 'widgets').forEach(assignWidgetDefinition);
+    forEachWidget(pageData, assignWidgetDefinition);
 
     pageData.name = ownProps.pageName || pageData.name;
 
@@ -96,13 +99,15 @@ const mapDispatchToProps = (dispatch, ownProps) => {
             dispatch(setDrilldownContext(drilldownContext));
             dispatch(selectPage(page.id, page.isDrillDown, page.context, page.name));
         },
-        onWidgetAdded: (name, widgetDefinition, tabIndex) => {
-            dispatch(addWidget(ownProps.pageId, tabIndex, { name }, widgetDefinition));
+        onWidgetAdded: (layoutSection, name, widgetDefinition, tabIndex) => {
+            dispatch(addWidget(ownProps.pageId, layoutSection, tabIndex, { name }, widgetDefinition));
         },
-        onTabAdded: () => dispatch(addTab(ownProps.pageId)),
-        onTabRemoved: tabIndex => dispatch(removeTab(ownProps.pageId, tabIndex)),
-        onTabUpdated: (tabIndex, name, isDefault) => dispatch(updateTab(ownProps.pageId, tabIndex, name, isDefault)),
-        onTabMoved: (oldTabIndex, newTabIndex) => dispatch(moveTab(ownProps.pageId, oldTabIndex, newTabIndex)),
+        onTabAdded: layoutSection => dispatch(addTab(ownProps.pageId, layoutSection)),
+        onTabRemoved: (layoutSection, tabIndex) => dispatch(removeTab(ownProps.pageId, layoutSection, tabIndex)),
+        onTabUpdated: (layoutSection, tabIndex, name, isDefault) =>
+            dispatch(updateTab(ownProps.pageId, layoutSection, tabIndex, name, isDefault)),
+        onTabMoved: (layoutSection, oldTabIndex, newTabIndex) =>
+            dispatch(moveTab(ownProps.pageId, layoutSection, oldTabIndex, newTabIndex)),
         onEditModeExit: () => {
             dispatch(setEditMode(false));
         },
@@ -111,7 +116,10 @@ const mapDispatchToProps = (dispatch, ownProps) => {
         },
         onWidgetRemoved: widgetId => {
             dispatch(removeWidget(ownProps.pageId, widgetId));
-        }
+        },
+        onLayoutSectionAdded: (layoutSection, position) =>
+            dispatch(addLayoutSectionToPage(ownProps.pageId, layoutSection, position)),
+        onLayoutSectionRemoved: layoutSection => dispatch(removeLayoutSectionFromPage(ownProps.pageId, layoutSection))
     };
 };
 

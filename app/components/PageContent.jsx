@@ -1,19 +1,17 @@
-import _ from 'lodash';
 import PropTypes from 'prop-types';
-import React, { useEffect } from 'react';
-import { SortableContainer, SortableElement } from 'react-sortable-hoc';
-import { useSelector } from 'react-redux';
+import React from 'react';
+import _ from 'lodash';
 import WidgetsList from './WidgetsList';
-import { Confirm, Container, Header, Menu } from './basic';
+import { Confirm } from './basic';
 import AddWidget from '../containers/AddWidget';
-import EditModeButton from './EditModeButton';
-import EditTabModal from './EditTabModal';
 import './PageContent.css';
-import stageUtils from '../utils/stageUtils';
+import Tabs from './Tabs';
+import useWidgetsFilter from './useWidgetsFilter';
+import EditModeButton from './EditModeButton';
 import { useResettableState } from '../utils/hooks';
-
-const SortableMenu = SortableContainer(Menu);
-const SortableMenuItem = SortableElement(Menu.Item);
+import LayoutPropType from '../utils/props/LayoutPropType';
+import Consts from '../utils/consts';
+import EmptyContainerMessage from './EmptyContainerMessage';
 
 export default function PageContent({
     onWidgetUpdated,
@@ -23,171 +21,127 @@ export default function PageContent({
     onTabRemoved,
     onTabUpdated,
     onTabMoved,
+    onLayoutSectionAdded,
+    onLayoutSectionRemoved,
     page,
     isEditMode
 }) {
-    const manager = useSelector(state => state.manager);
-
-    const [activeTab, setActiveTab, resetActiveTab] = useResettableState(0);
-    const [tabIndexToRemove, setTabIndexToRemove, resetTabIndexToRemove] = useResettableState(null);
-
-    const updateActiveTab = () => setActiveTab(Math.max(_.findIndex(page.tabs, { isDefault: true }), 0));
-
-    useEffect(() => {
-        updateActiveTab();
-    }, []);
-
-    useEffect(() => {
-        if (!isEditMode) updateActiveTab();
-    }, [page.id]);
-
-    function filterWidgets(widgetsContainer) {
-        return _.chain(widgetsContainer)
-            .get('widgets')
-            .filter(
-                widget =>
-                    widget.definition &&
-                    stageUtils.isUserAuthorized(widget.definition.permission, manager) &&
-                    stageUtils.isWidgetPermitted(widget.definition.supportedEditions, manager)
-            )
-            .value();
-    }
-
-    function createWidgetList(widgets) {
-        return (
-            <WidgetsList
-                widgets={widgets}
-                onWidgetUpdated={onWidgetUpdated}
-                onWidgetRemoved={onWidgetRemoved}
-                isEditMode={isEditMode}
-            />
-        );
-    }
-
-    function removeTab(tabIndex) {
-        if (tabIndex < activeTab || (tabIndex === activeTab && page.tabs.length - 1 === activeTab)) {
-            setActiveTab(activeTab - 1);
-        }
-        onTabRemoved(tabIndex);
-    }
-
-    const pageWidgets = filterWidgets(page);
-    const activeTabWidgets = filterWidgets(_.nth(page.tabs, activeTab));
+    const filterWidgets = useWidgetsFilter();
+    const [layoutSectionToRemove, setLayoutSectionToRemove, resetLayoutSectionToRemove] = useResettableState();
 
     return (
         <>
-            {isEditMode && <AddWidget onWidgetAdded={onWidgetAdded} />}
-            {_.isEmpty(pageWidgets) && _.isEmpty(page.tabs) ? (
-                <Container className="emptyPage alignCenter" style={{ padding: '10rem 0' }}>
-                    {isEditMode ? (
-                        <Header size="large">
-                            This page is empty, <br />
-                            don&apos;t be shy, give it a meaning!
-                        </Header>
-                    ) : (
-                        <Header size="large">This page is empty</Header>
-                    )}
-                </Container>
+            {_.isEmpty(page.layout) ? (
+                <EmptyContainerMessage isEditMode={isEditMode} containerTypeLabel="page" />
             ) : (
-                createWidgetList(pageWidgets)
-            )}
-            <div style={{ height: 15 }} />
-            {!_.isEmpty(page.tabs) && (
-                <>
-                    <SortableMenu
-                        axis="x"
-                        lockAxis="x"
-                        tabular
-                        distance={1}
-                        helperClass="draggedTab"
-                        onSortEnd={({ oldIndex, newIndex }) => {
-                            onTabMoved(oldIndex, newIndex);
-                            if (oldIndex === activeTab) setActiveTab(newIndex);
-                            else if (oldIndex < activeTab && newIndex >= activeTab) setActiveTab(activeTab - 1);
-                            else if (oldIndex > activeTab && newIndex <= activeTab) setActiveTab(activeTab + 1);
-                        }}
-                    >
-                        {_.map(page.tabs, (tab, tabIndex) => (
-                            <SortableMenuItem
-                                key={`${page.tabs.length}_${tabIndex}`}
-                                index={tabIndex}
-                                active={activeTab === tabIndex}
-                                onClick={() => setActiveTab(tabIndex)}
-                                disabled={!isEditMode}
-                            >
-                                {tab.name}
-                                {isEditMode && (
-                                    <>
-                                        <EditTabModal
-                                            tab={tab}
-                                            onTabUpdate={(name, isDefault) => onTabUpdated(tabIndex, name, isDefault)}
-                                            trigger={
-                                                <EditModeButton style={{ padding: 3, marginLeft: 3 }} icon="edit" />
-                                            }
-                                        />
-                                        <EditModeButton
-                                            style={{ padding: 3, marginLeft: 3 }}
-                                            icon="remove"
-                                            onClick={e => {
-                                                e.stopPropagation();
-                                                if (_.isEmpty(tab.widgets)) removeTab(tabIndex);
-                                                else setTabIndexToRemove(tabIndex);
-                                            }}
-                                        />
-                                    </>
-                                )}
-                            </SortableMenuItem>
-                        ))}
+                _.map(page.layout, (layoutSection, layoutSectionIdx) => (
+                    <>
                         {isEditMode && (
-                            <Menu.Item key="add">
-                                <EditModeButton icon="add" onClick={onTabAdded} />
-                            </Menu.Item>
-                        )}
-                    </SortableMenu>
-                    <span className="tabContent">
-                        {isEditMode && (
-                            <div style={{ paddingTop: 15 }}>
-                                <AddWidget onWidgetAdded={(...params) => onWidgetAdded(...params, activeTab)} />
+                            <div style={{ marginBottom: 15 }}>
+                                <EditModeButton
+                                    icon="add"
+                                    labelPosition="left"
+                                    content="Insert Widgets Container"
+                                    onClick={() =>
+                                        onLayoutSectionAdded(
+                                            { type: Consts.LAYOUT_TYPE.WIDGETS, content: [] },
+                                            layoutSectionIdx
+                                        )
+                                    }
+                                />
+                                <EditModeButton
+                                    icon="add"
+                                    labelPosition="left"
+                                    content="Insert Tabs Container"
+                                    onClick={() =>
+                                        onLayoutSectionAdded(
+                                            {
+                                                type: Consts.LAYOUT_TYPE.TABS,
+                                                content: _.map(new Array(2), () => ({ name: 'New Tab', widgets: [] }))
+                                            },
+                                            layoutSectionIdx
+                                        )
+                                    }
+                                />
                             </div>
                         )}
-                        {_.isEmpty(activeTabWidgets) ? (
-                            <Container className="emptyPage alignCenter" style={{ padding: '10rem 0' }}>
-                                {isEditMode ? (
-                                    <Header size="large">
-                                        This tab is empty, <br />
-                                        don&apos;t be shy, give it a meaning!
-                                    </Header>
-                                ) : (
-                                    <Header size="large">This tab is empty</Header>
-                                )}
-                            </Container>
-                        ) : (
-                            createWidgetList(activeTabWidgets)
-                        )}
-                    </span>
+                        <div style={{ marginBottom: 15, border: isEditMode ? '1px dashed' : 'none' }}>
+                            {layoutSection.type === Consts.LAYOUT_TYPE.WIDGETS ? (
+                                <>
+                                    {isEditMode && (
+                                        <>
+                                            <AddWidget
+                                                addButtonTitle="Add widget to this widgets container"
+                                                onWidgetAdded={_.wrap(layoutSectionIdx, onWidgetAdded)}
+                                            />
+                                            <EditModeButton
+                                                icon="remove"
+                                                onClick={() => setLayoutSectionToRemove(layoutSectionIdx)}
+                                                title="Remove widgets container"
+                                                style={{ float: 'right', margin: 1 }}
+                                            />
+                                        </>
+                                    )}
+                                    <WidgetsList
+                                        widgets={filterWidgets(layoutSection.content)}
+                                        onWidgetUpdated={onWidgetUpdated}
+                                        onWidgetRemoved={onWidgetRemoved}
+                                        isEditMode={isEditMode}
+                                    />
+                                </>
+                            ) : (
+                                <Tabs
+                                    tabs={layoutSection.content}
+                                    isEditMode={isEditMode}
+                                    onTabAdded={_.wrap(layoutSectionIdx, onTabAdded)}
+                                    onTabMoved={_.wrap(layoutSectionIdx, onTabMoved)}
+                                    onTabRemoved={_.wrap(layoutSectionIdx, onTabRemoved)}
+                                    onTabUpdated={_.wrap(layoutSectionIdx, onTabUpdated)}
+                                    onWidgetUpdated={onWidgetUpdated}
+                                    onWidgetRemoved={onWidgetRemoved}
+                                    onWidgetAdded={_.wrap(layoutSectionIdx, onWidgetAdded)}
+                                    onLayoutSectionRemoved={_.wrap(layoutSectionIdx, onLayoutSectionRemoved)}
+                                />
+                            )}
+                        </div>
+                    </>
+                ))
+            )}
+            {isEditMode && (
+                <>
+                    <EditModeButton
+                        icon="add"
+                        labelPosition="left"
+                        content="Add Widgets Container"
+                        onClick={() =>
+                            onLayoutSectionAdded({ type: Consts.LAYOUT_TYPE.WIDGETS, content: [] }, _.size(page.layout))
+                        }
+                    />
+                    <EditModeButton
+                        icon="add"
+                        labelPosition="left"
+                        content="Add Tabs Container"
+                        onClick={() =>
+                            onLayoutSectionAdded(
+                                {
+                                    type: Consts.LAYOUT_TYPE.TABS,
+                                    content: _.map(new Array(2), () => ({ name: 'New Tab', widgets: [] }))
+                                },
+                                _.size(page.layout)
+                            )
+                        }
+                    />
                 </>
             )}
-            {_.isEmpty(page.tabs) && isEditMode && (
-                <EditModeButton
-                    icon="add"
-                    labelPosition="left"
-                    content="Add Tabs"
-                    onClick={() => {
-                        onTabAdded();
-                        onTabAdded();
-                        resetActiveTab();
-                    }}
-                />
-            )}
             <Confirm
-                open={!_.isNil(tabIndexToRemove)}
-                onCancel={resetTabIndexToRemove}
+                open={!_.isNil(layoutSectionToRemove)}
+                onCancel={resetLayoutSectionToRemove}
                 onConfirm={() => {
-                    removeTab(tabIndexToRemove);
-                    resetTabIndexToRemove();
+                    onLayoutSectionRemoved(layoutSectionToRemove);
+                    resetLayoutSectionToRemove();
                 }}
-                header={`Are you sure you want to remove tab ${_.get(page.tabs, [tabIndexToRemove, 'name'])}?`}
-                content="All widgets present in this tab will be removed as well"
+                header="Are you sure you want to remove this widgets container?"
+                content="All widgets present in this container will be removed"
             />
         </>
     );
@@ -201,10 +155,11 @@ PageContent.propTypes = {
     onTabRemoved: PropTypes.func.isRequired,
     onTabUpdated: PropTypes.func.isRequired,
     onTabMoved: PropTypes.func.isRequired,
+    onLayoutSectionAdded: PropTypes.func.isRequired,
+    onLayoutSectionRemoved: PropTypes.func.isRequired,
     page: PropTypes.shape({
         id: PropTypes.string,
-        widgets: PropTypes.arrayOf(PropTypes.shape({})),
-        tabs: PropTypes.arrayOf(PropTypes.shape({ widgets: PropTypes.arrayOf(PropTypes.shape({})) }))
+        layout: LayoutPropType
     }).isRequired,
     isEditMode: PropTypes.bool.isRequired
 };
