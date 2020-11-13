@@ -136,7 +136,7 @@
         "errorHeader": "License error",
         "eula": "End User License Agreement",
         "eulaLink": "https://cloudify.co/license",
-        "eulaLinkCommunity": "https://cloudify.co/license-community",
+        "eulaLinkCommunity": "https://cloudify.co/license-community/",
         "expirationDate": "Expiration Date",
         "expirationDateNever": "Never",
         "goToApp": "Go to app",
