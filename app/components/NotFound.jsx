@@ -15,7 +15,7 @@ export default function NotFound() {
             <Header as="h2">
                 <Label horizontal size="massive" color="blue">
                     404
-                </Label>
+                </Label>{' '}
                 {i18n.t('notFound.header', 'Page Not Found')}
             </Header>
             <Message>
