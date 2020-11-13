@@ -205,8 +205,8 @@
             "scheduledFor": "Scheduled for: <strong>{{datetime}}}</strong>"
         },
         "idPopup": {
-            "copy": "Copy {{label}}",
-            "defaultLabel": "ID"
+            "copyButton": "Copy ID",
+            "label": "ID"
         }
     },
     "templates": {

@@ -7,15 +7,13 @@ import React from 'react';
 import i18n from 'i18next';
 import { CopyToClipboardButton, Label, Popup } from '../basic';
 
-export default function IdPopup({ buttonPosition, label, id, selected }) {
-    const button = (
-        <CopyToClipboardButton content={i18n.t('shared.idPopup.copy', `Copy {{label}}`, { label })} text={id} />
-    );
+export default function IdPopup({ buttonPosition, id, selected }) {
+    const button = <CopyToClipboardButton content={i18n.t('shared.idPopup.copyButton')} text={id} />;
 
     return (
         <Popup wide hoverable position="right center">
             <Popup.Trigger>
-                <Label style={{ opacity: selected ? '1' : '0.2' }}>{label}</Label>
+                <Label style={{ opacity: selected ? '1' : '0.2' }}>{i18n.t('shared.idPopup.label')}</Label>
             </Popup.Trigger>
             <Popup.Content>
                 <div className="noWrap">
@@ -42,14 +40,12 @@ IdPopup.buttonPositions = Object.freeze({
 });
 
 IdPopup.propTypes = {
-    label: PropTypes.string,
     id: PropTypes.string,
     selected: PropTypes.bool,
     buttonPosition: PropTypes.oneOf(_.keys(IdPopup.buttonPositions))
 };
 
 IdPopup.defaultProps = {
-    label: i18n.t('shared.idPopup.defaultLabel', 'ID'),
     id: '',
     selected: true,
     buttonPosition: 'left'
