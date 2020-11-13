@@ -17,7 +17,7 @@ function Banner({ className }) {
     const productName = useSelector(state => _.get(state, 'config.app.whiteLabel.productName', 'Cloudify'));
     const productVersion = useSelector(state => _.get(state, 'manager.version.version', ''));
     const showVersionDetails = useSelector(state => _.get(state, 'config.app.whiteLabel.showVersionDetails', true));
-    const logoUrl = useSelector(state => _.get(state, 'config.app.whiteLabel.logoUrl', true));
+    const logoUrl = useSelector(state => _.get(state, 'config.app.whiteLabel.logoUrl', ''));
 
     return (
         <>
