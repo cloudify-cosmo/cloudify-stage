@@ -196,7 +196,7 @@ export default function InstallAgentsModal({
 
                             <Form.Field
                                 help="If set, after installing the new agent the old agent
-                                          (that is connected to the old Cloudify Manager) will be stopped.
+                                          (that is connected to the old Manager) will be stopped.
                                           *IMPORTANT* if the deployment has monitoring with auto-healing configured,
                                           you need to disable it first"
                             >
