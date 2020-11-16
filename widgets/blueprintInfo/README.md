@@ -1,5 +1,5 @@
 # Blueprint Info
-Displays the following information about a specific blueprint: 
+Displays the following information about a specific blueprint:
 
 * **Picture**
 * **Name**

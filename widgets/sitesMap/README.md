@@ -4,7 +4,7 @@ Displays the world map with defined sites marked. Only sites with defined locati
 ![sitesMap](https://docs.cloudify.co/latest/images/ui/widgets/sitesMap.png)
 
 <div class="ui message info">
-The widget is available only when Premium or Spire license is activated on the Cloudify Manager.
+This widget is available with Premium or Spire license.
 </div>
 
 
@@ -26,12 +26,12 @@ Site details contain information about deployments' statuses, indicated as follo
 
 ## Map provider
 
-Sites Map widget uses [Leaflet](https://leafletjs.com/) library for displaying interactive map. 
+Sites Map widget uses [Leaflet](https://leafletjs.com/) library for displaying interactive map.
 The library can display various types of maps from different providers.
 The list of all supported providers can be found in [leaflet-providers](https://github.com/leaflet-extras/leaflet-providers) repository.
 
 Sites Map widget with default configuration displays map tiles provided by [Stadia Maps](https://stadiamaps.com/).
-You can change the provider in [User Configuration](https://docs.cloudify.co/latest/working_with/console/customization/user-configuration). 
+You can change the provider in [User Configuration](https://docs.cloudify.co/latest/working_with/console/customization/user-configuration).
 
 
 ## Settings

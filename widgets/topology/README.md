@@ -2,9 +2,9 @@
 
 Displays the topology of a selected blueprint or deployment.
 
-The blueprint or deployment ID must be selected in one of the following ways: 
+The blueprint or deployment ID must be selected in one of the following ways:
 
-* By placing the widget in the blueprints/deployments drill-down page, meaning the blueprint/deployment has been selected before entering the page, and its id is included in the page’s context. 
+* By placing the widget in the blueprints/deployments drill-down page, meaning the blueprint/deployment has been selected before entering the page, and its id is included in the page’s context.
 * By adding to the page a widget allowing to select blueprints or deployments, such as the resources filter, the blueprints list or the blueprint deployments.  
 
 ![Topology](https://docs.cloudify.co/latest/images/ui/widgets/topology.png)
@@ -13,17 +13,17 @@ The blueprint or deployment ID must be selected in one of the following ways:
 
 ### Presentation
 
-Each of the blueprint's nodes is displayed as a square container that can contain other nodes. 
-Each node has a name, and an icon (upper right corner) to indicate its [node type](https://docs.cloudify.co/latest/developer/blueprints/spec-node-types). 
+Each of the blueprint's nodes is displayed as a square container that can contain other nodes.
+Each node has a name, and an icon (upper right corner) to indicate its [node type](https://docs.cloudify.co/latest/developer/blueprints/spec-node-types).
 
 [Relationships](https://docs.cloudify.co/latest/developer/blueprints/spec-relationships) between nodes are indicated with arrows that start at the connected node and end at the target node.
 
 The number of node instances is marked in a bullet beside the node's type icon.
 
-Each node is provided with an icon (top left corner). For built-in node types it is Cloudify logo. For node types coming from [plugins](https://docs.cloudify.co/latest/developer/blueprints/spec-plugins) it is an icon selected during plugin upload (setting plugin icon is optional, by default a plug icon is used). 
+Each node is provided with an icon (top left corner). For built-in node types it is the Cloudify logo. For node types coming from [plugins](https://docs.cloudify.co/latest/developer/blueprints/spec-plugins) it is an icon selected during plugin upload (setting plugin icon is optional, by default a plug icon is used). 
 See [Plugins widget](https://docs.cloudify.co/latest/working_with/console/widgets/plugins) or [Plugins Catalog widget](https://docs.cloudify.co/latest/working_with/console/widgets/pluginsCatalog) for more details.
 
-For **Component** nodes you can also see bottom right corner icons showing all plugins used by the component's internal nodes. 
+For **Component** nodes you can also see bottom right corner icons showing all plugins used by the component's internal nodes.
 
 ![Topology - multi plugins](https://docs.cloudify.co/latest/images/ui/widgets/topology-widget_multi-plugins.png)
 
@@ -35,7 +35,7 @@ Node types used in [service composition](https://docs.cloudify.co/latest/working
 ### Actions
 
 In Topology widget you can:
- 
+
 * Pan around the view (drag'n'drop outside node)
 * Change location of the nodes (drag'n'drop inside node)
 * Zoom in/out (using mouse wheel)     
@@ -50,12 +50,12 @@ It allows you to make changes in the view:
 * **Zoom in** the topology
 * **Zoom out** the topology
 * **Fit topology to screen**
-* **Save layout** - save location of the nodes (the location is saved per blueprint per user) 
+* **Save layout** - save location of the nodes (the location is saved per blueprint per user)
 * **Revert layout changes** - revert the location of the nodes to the previous state
 * **Auto layout** - automatically distribute the nodes on the canvas
 
 
-### Terraform support 
+### Terraform support
 
 Terraform nodes created using [Terraform plugin](https://docs.cloudify.co/latest/working_with/official_plugins/orchestration/terraform)
 are treated in a special way. There are dedicated action icons in the bottom left corner of such nodes:
@@ -91,7 +91,7 @@ When executing a workflow for a deployment (e.g. the `install` workflow), the to
 When you hover over the badge and the topology is displayed for specific deployment (not a blueprint), then you will see summary of node instances states related to specific node:
 
 ![Deployment Topology Node Instances Details](https://docs.cloudify.co/latest/images/ui/widgets/topology-widget-node-instances-details.png)
- 
+
 
 #### Workflow states represented by badges
 
@@ -124,14 +124,14 @@ When you hover over the badge and the topology is displayed for specific deploym
     ![Deployment Topology Execution Completed Errors](https://docs.cloudify.co/latest/images/ui/widgets/topology-widget-7.png)
 
 
-## Settings 
+## Settings
 
 * `Refresh time interval` - The time interval in which the widget’s data will be refreshed, in seconds. Default: 10 seconds.
 
-The following settings allow changing the presentation of the widget in different aspects, and are by default marked as “on”: 
+The following settings allow changing the presentation of the widget in different aspects, and are by default marked as “on”:
 
-* `Enable node click` 
-* `Enable group click` 
-* `Enable zoom` 
-* `Enable drag` 
-* `Show toolbar` 
+* `Enable node click`
+* `Enable group click`
+* `Enable zoom`
+* `Enable drag`
+* `Show toolbar`

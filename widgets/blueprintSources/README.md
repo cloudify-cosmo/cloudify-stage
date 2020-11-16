@@ -8,4 +8,4 @@ If blueprint imports another blueprint, then all imported blueprint will be list
 
 ## Settings
 
-* `Content pane initial width in %` - sets the default size of the source part of the window in percent of screen width. Default: 65%. 
+* `Content pane initial width in %` - sets the default size of the source part of the window in percent of screen width. Default: 65%.

@@ -1,13 +1,13 @@
 # Resource Filter
 
-This widget provides the ability to filter the data presented in other widgets on the page according to a specific resource. 
+This widget provides the ability to filter the data presented in other widgets on the page according to a specific resource.
 By default, the widget allows filtering by blueprint, deployment and execution, and you can also add fields to filter by node, node instance and more, by configuring the widget’s settings.
 
 ![resource-filter](https://docs.cloudify.co/latest/images/ui/widgets/resource_filter.png)
 
 
 ## Settings
- 
+
 * `Refresh time interval` - The time interval in which the widget’s data will be refreshed, in seconds. Default: 10 seconds.
 * `Show blueprint filter` - Defines whether to expose filtering by Blueprint. Default: On
 * `Show deployment filter` - Defines whether to expose filtering by Deployment. Default: On

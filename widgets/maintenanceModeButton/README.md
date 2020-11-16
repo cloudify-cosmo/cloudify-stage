@@ -10,7 +10,7 @@ Maintenance Mode can only be activated by `admin` users.
 You can activate Maintenance Mode by clicking **Activate Maintenance Mode** button. To enter Maintenance Mode, click **Yes** in the *Are you sure you want to enter maintenance mode?* dialog.
 
 In order for Maintenance Mode to be activated, all running workflows must be stopped.
-During the Maintenance Mode activation process, Cloudify Manager waits for all running executions to finish. 
+During the Maintenance Mode activation process, the Cloudify Manager waits for all running executions to finish. 
 During this time, you can see all running executions and cancel them manually, if necessary.
 
 ![Remaining executions](https://docs.cloudify.co/latest/images/ui/widgets/maintenance-mode-button_remaining-executions.png)

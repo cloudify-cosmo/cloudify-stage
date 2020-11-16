@@ -1,13 +1,13 @@
 # Text
-Displays text provided in the configuration of the widget in markdown syntax. 
+Displays text provided in the configuration of the widget in markdown syntax.
 
 ![text-widget](https://docs.cloudify.co/latest/images/ui/widgets/text_widget_content.png)
 
 
 ## Settings
- 
+
 * `Header` - the header to be presented as the textbox’s title
-* `Content` - the text to be presented in the textbox itself, in Markdown syntax. 
+* `Content` - the text to be presented in the textbox itself, in Markdown syntax.
 * `Header text color` - Can be picked out of the suggested colors
 * `Header text size (px)` - Size of the header
 * `Header text font` - Font of the header

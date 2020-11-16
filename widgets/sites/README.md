@@ -58,5 +58,5 @@ Deleting a site will remove the assignment of this site from all assigned deploy
 
 
 ## Settings
- 
+
 * `Refresh time interval` - The time interval in which the widget’s data will be refreshed, in seconds. Default: 30 seconds.

@@ -5,5 +5,5 @@ Displays the total number of nodes created on the tenant, according to the userâ
 
 
 ## Settings
- 
+
 * `Refresh time interval` - The time interval in which the widgetâ€™s data will be refreshed, in seconds. Default: 30 seconds.
