@@ -14,7 +14,6 @@ const mapStateToProps = state => {
         isExpired: _.get(state, 'manager.license.status', Consts.LICENSE.EMPTY) === Consts.LICENSE.EXPIRED,
         isTrial: _.get(state, 'manager.license.data.trial', false),
         licenseEdition: _.get(state, 'manager.license.data.license_edition', ''),
-        productName: _.get(state, 'config.app.whiteLabel.productName', 'Cloudify'),
         productVersion: _.get(state, 'manager.version.version', ''),
         showVersionDetails: _.get(state, 'config.app.whiteLabel.showVersionDetails', true)
     };

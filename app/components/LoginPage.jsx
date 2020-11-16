@@ -56,9 +56,9 @@ export default class LoginPage extends Component {
         const { isLoggingIn, loginError } = this.props;
         SplashLoadingScreen.turnOff();
 
-        const loginPageHeader = _.get(this.props, 'whiteLabel.loginPageHeader');
+        const loginPageHeader = i18n.t('login.header');
         const loginPageHeaderColor = _.get(this.props, 'whiteLabel.loginPageHeaderColor');
-        const loginPageText = _.get(this.props, 'whiteLabel.loginPageText');
+        const loginPageText = i18n.t('login.message');
         const loginPageTextColor = _.get(this.props, 'whiteLabel.loginPageTextColor');
         const isHeaderTextPresent = !_.isEmpty(loginPageHeader) || !_.isEmpty(loginPageText);
 
@@ -150,9 +150,7 @@ LoginPage.propTypes = {
     loginError: PropTypes.string,
     username: PropTypes.string,
     whiteLabel: PropTypes.shape({
-        loginPageHeader: PropTypes.string,
         loginPageHeaderColor: PropTypes.string,
-        loginPageText: PropTypes.string,
         loginPageTextColor: PropTypes.string
     })
 };
@@ -162,9 +160,7 @@ LoginPage.defaultProps = {
     loginError: null,
     username: '',
     whiteLabel: PropTypes.shape({
-        loginPageHeader: '',
         loginPageHeaderColor: '',
-        loginPageText: '',
         loginPageTextColor: ''
     })
 };

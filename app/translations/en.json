@@ -167,6 +167,8 @@
         "version": "Version"
     },
     "login": {
+        "header": "CLOUDIFY",
+        "message": "Welcome to the Cloudify Management Console, Please log in",
         "error": {
             "noPassword": "Please provide password",
             "noUsername": "Please provide username"
@@ -207,6 +209,8 @@
         "header": "Reset pages for tenants",
         "selectTenants": "Please select tenants you would like to reset pages for:"
     },
+    "pageTitle": "Cloudify Console",
+    "productName": "Cloudify",
     "redirecting": "Redirecting to {{url}}...",
     "shared": {
         "executionStatus": {

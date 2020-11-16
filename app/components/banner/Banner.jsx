@@ -20,7 +20,6 @@ export default function Banner({
     isExpired,
     isTrial,
     licenseEdition,
-    productName,
     productVersion,
     showVersionDetails
 }) {
@@ -31,7 +30,7 @@ export default function Banner({
             <Link to={Consts.HOME_PAGE_PATH}>
                 <Header as="h1" style={{ textDecoration: 'none', display: 'inline-block', marginTop: 0 }}>
                     <Logo />
-                    <ProductName name={productName} className={className} />
+                    <ProductName className={className} />
                     {showVersionDetails && !isCommunity && (
                         <>
                             <LicenseEdition edition={licenseEdition} className={className} />
@@ -53,7 +52,6 @@ Banner.propTypes = {
     isTrial: PropTypes.bool,
     hideOnSmallScreen: PropTypes.bool,
     licenseEdition: PropTypes.string,
-    productName: PropTypes.string,
     productVersion: PropTypes.string,
     showVersionDetails: PropTypes.bool
 };
@@ -64,7 +62,6 @@ Banner.defaultProps = {
     isTrial: false,
     hideOnSmallScreen: true,
     licenseEdition: '',
-    productName: '',
     productVersion: '',
     showVersionDetails: true
 };

@@ -4,17 +4,17 @@
 
 import PropTypes from 'prop-types';
 import React from 'react';
+import i18n from 'i18next';
 
-export default function ProductName({ name, className }) {
+export default function ProductName({ className }) {
     return (
         <span style={{ color: 'white', verticalAlign: 'middle' }} className={className}>
-            {name}
+            {i18n.t('productName')}
         </span>
     );
 }
 
 ProductName.propTypes = {
-    name: PropTypes.string.isRequired,
     className: PropTypes.string
 };
 
