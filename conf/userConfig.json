@@ -10,7 +10,7 @@
     "mainColor": "#0077FC",
 
     "productName": "Cloudify",
-    "headerTextColor": "#d8e3e8",
+    "headerTextColor": "white",
     "showVersionDetails": true,
 
     "loginPageHeader": "CLOUDIFY",

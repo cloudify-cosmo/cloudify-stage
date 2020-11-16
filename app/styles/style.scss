@@ -13,12 +13,6 @@ a:hover {
     z-index: 5 !important;
 }
 
-.ui.top.menu .right.menu .ui.dropdown.item{
-  padding: 5px 10px;
-  border-left: none;
-  height: 55px;
-}
-
 .dropDownText
 {
   display: inline-block;
@@ -31,12 +25,6 @@ a:hover {
 
 .show-on-small-screen {
   @media (min-width: 992px) {
-    display: none !important;
-  }
-}
-
-.hide-on-small-screen {
-  @media (max-width: 800px) {
     display: none !important;
   }
 }
@@ -440,38 +428,6 @@ a:hover {
     margin-left: 7px;
   }
 }
-.tenantsMenu {
-  .menu {
-    min-width: 190px;
-    left: auto !important;
-    right: 0;
-  }
-
-  .configure.icon {
-    margin: 0 0 0 0.5em !important;
-    opacity: 0.5 !important;
-  }
-}
-
-.usersMenu {
-  .dropdown.icon {
-    margin: 0 0 0 0.4em !important;
-  }
-  &>span{
-    margin-top: 1px;
-  }
-}
-
-.tenantsMenu, .helpMenu {
-  .dropdown.icon {
-    margin: 0 0 0 0.4em !important;
-    vertical-align: middle;
-  }
-
-  i + span {
-    vertical-align: middle;
-  }
-}
 
 table.servicesData {
   margin-left: auto !important;
@@ -480,18 +436,6 @@ table.servicesData {
 
 table.servicesData button.refreshButton {
   width: auto !important;
-}
-
-.helpMenu {
-  .help.icon {
-    margin: 0 !important;
-  }
-  a {
-    color: inherit !important;
-  }
-  a:hover {
-    text-decoration: none !important;
-  }
 }
 
 .managerVersion {

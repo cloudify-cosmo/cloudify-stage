@@ -4,8 +4,9 @@
 
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
+import { HeaderBar } from 'cloudify-ui-components';
 
-import Banner from '../../containers/banner/Banner';
+import Banner from '../banner/Banner';
 import SystemStatusHeader from '../../containers/status/SystemStatusHeader';
 import Consts from '../../utils/consts';
 import SplashLoadingScreen from '../../utils/SplashLoadingScreen';
@@ -48,7 +49,9 @@ export default class MaintenanceModePageMessage extends Component {
 
         return (
             <FullScreenSegment>
-                <Banner />
+                <HeaderBar>
+                    <Banner hideOnSmallScreen={false} />
+                </HeaderBar>
 
                 <MessageContainer wide>
                     <Header as="h2">Maintenance mode</Header>

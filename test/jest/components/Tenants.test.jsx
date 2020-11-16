@@ -41,9 +41,9 @@ describe('(Component) Tenants', () => {
         wrapper.setProps({ manager });
 
         expect(wrapper.find('div.loader')).toHaveLength(0); // Loader not existing
-        expect(wrapper.find('.dropdown.tenantsMenu')).toHaveLength(1); // Showing the tenants menu
-        expect(wrapper.find('.dropdown.tenantsMenu > span > span').text()).toBe('No Tenants'); // Showing 'No Tenants' text
-        expect(wrapper.find('.tenantsMenu .menu .item')).toHaveLength(0); // No options in dropdown
+        expect(wrapper.find('div.dropdown')).toHaveLength(1); // Showing the tenants menu
+        expect(wrapper.find('div.dropdown').text()).toBe('No Tenants'); // Showing 'No Tenants' text
+        expect(wrapper.find('div.dropdown .menu .item')).toHaveLength(0); // No options in dropdown
     });
 
     it('renders tenants list no selected', () => {
@@ -52,10 +52,11 @@ describe('(Component) Tenants', () => {
         wrapper.setProps({ manager });
 
         expect(wrapper.find('div.loader')).toHaveLength(0); // Loader not existing
-        expect(wrapper.find('.dropdown.tenantsMenu')).toHaveLength(1); // Showing the tenatns menu
-        expect(wrapper.find('.dropdown.tenantsMenu > span > span').text()).toBe('aaa'); // Showing the default tenant (first one) if no 'selected one was stated'
-        expect(wrapper.find('.tenantsMenu .menu .item')).toHaveLength(3); // Having 3 items in the dropdown
-        expect(wrapper.find('.tenantsMenu .menu .item.selected').text()).toBe('aaa'); // Selected marked in the dropdown as the first value
+        expect(wrapper.find('div.dropdown')).toHaveLength(1); // Showing the tenatns menu
+        expect(_.startsWith(wrapper.find('div.dropdown').text(), 'aaa')).toBe(true); // Showing the default tenant
+        // (first one) if no 'selected one was stated'
+        expect(wrapper.find('div.dropdown .menu .item')).toHaveLength(3); // Having 3 items in the dropdown
+        expect(wrapper.find('div.dropdown .menu .item.selected').text()).toBe('aaa'); // Selected marked in the dropdown as the first value
     });
 
     it('renders tenants list has selected', () => {
@@ -65,10 +66,12 @@ describe('(Component) Tenants', () => {
         wrapper.setProps({ manager });
 
         expect(wrapper.find('div.loader')).toHaveLength(0); // Loader not existing
-        expect(wrapper.find('.dropdown.tenantsMenu')).toHaveLength(1); // Showing the tenants menu
-        expect(wrapper.find('.dropdown.tenantsMenu > span > span').text()).toBe('bbb'); // Showing the default tenant (first one) if no 'selected one was stated'
-        expect(wrapper.find('.tenantsMenu .menu .item')).toHaveLength(3); // Having 3 items in the dropdown
-        expect(wrapper.find('.tenantsMenu .menu .item.selected').text()).toBe('bbb'); // Selected marked in the dropdown as the first value
+        expect(wrapper.find('div.dropdown')).toHaveLength(1); // Showing the tenants menu
+        expect(_.startsWith(wrapper.find('div.dropdown').text(), 'bbb')).toBe(true); // Showing the default tenant
+        // (first one) if no 'selected one was stated'
+        expect(wrapper.find('div.dropdown .menu .item')).toHaveLength(3); // Having 3 items in the dropdown
+        expect(wrapper.find('div.dropdown .menu .item.selected').text()).toBe('bbb'); // Selected marked in the dropdown
+        // as the first value
     });
 
     it('renders tenants list has selected that isnt in the list', () => {
@@ -78,10 +81,11 @@ describe('(Component) Tenants', () => {
         wrapper.setProps({ manager });
 
         expect(wrapper.find('div.loader')).toHaveLength(0); // Loader not existing
-        expect(wrapper.find('.dropdown.tenantsMenu')).toHaveLength(1); // Showing the tenatns menu
-        expect(wrapper.find('.dropdown.tenantsMenu > span > span').text()).toBe('abc'); // Showing the default tenant (first one) if no 'selected one was stated'
-        expect(wrapper.find('.tenantsMenu .menu .item')).toHaveLength(3); // Having 3 items in the dropdown
-        expect(wrapper.find('.tenantsMenu .menu .item.selected')).toHaveLength(0);
+        expect(wrapper.find('div.dropdown')).toHaveLength(1); // Showing the tenatns menu
+        expect(_.startsWith(wrapper.find('div.dropdown').text(), 'abc')).toBe(true); // Showing the default tenant
+        // (first one) if no 'selected one was stated'
+        expect(wrapper.find('div.dropdown .menu .item')).toHaveLength(3); // Having 3 items in the dropdown
+        expect(wrapper.find('div.dropdown .menu .item.selected')).toHaveLength(0);
     });
 
     it('onTenantChange is called', () => {
@@ -92,7 +96,7 @@ describe('(Component) Tenants', () => {
         manager.tenants.selected = 'abc';
         wrapper.setProps({ manager, onTenantChange });
 
-        wrapper.find('.tenantsMenu .menu .item').first().simulate('click');
+        wrapper.find('div.dropdown .menu .item').first().simulate('click');
         expect(onTenantChange.calledOnce).toBe(true);
         expect(onTenantChange.calledWithExactly('aaa')).toBe(true);
     });

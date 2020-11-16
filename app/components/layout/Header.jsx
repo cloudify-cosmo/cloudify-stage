@@ -5,13 +5,14 @@
 import _ from 'lodash';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
+import { HeaderBar, MenusBar } from 'cloudify-ui-components';
 
 import Tenants from '../../containers/Tenants';
 import Manager from '../../containers/Manager';
 import Users from '../../containers/Users';
 import Help from '../../containers/Help';
-import Banner from '../../containers/banner/Banner';
 import AboutModal from '../../containers/AboutModal';
+import Banner from '../banner/Banner';
 import ResetPagesModal from '../ResetPagesModal';
 import { Icon } from '../basic';
 import Consts from '../../utils/consts';
@@ -52,7 +53,7 @@ export default class Header extends Component {
         const { showAboutModal, showResetPagesConfirm } = this.state;
 
         return (
-            <div className="ui top fixed menu inverted secondary headerBar">
+            <HeaderBar>
                 <Icon
                     link
                     name="content"
@@ -62,7 +63,7 @@ export default class Header extends Component {
                 />
                 <Banner />
 
-                <div className="right menu">
+                <MenusBar>
                     {!this.isModeCustomer() && (
                         <div className="item" style={{ margin: 0, padding: 0 }}>
                             <Manager />
@@ -76,7 +77,7 @@ export default class Header extends Component {
                         showAllOptions={!this.isModeCustomer()}
                         onReset={() => this.setState({ showResetPagesConfirm: true })}
                     />
-                </div>
+                </MenusBar>
 
                 <ResetPagesModal
                     open={showResetPagesConfirm}
@@ -89,7 +90,7 @@ export default class Header extends Component {
                 />
 
                 <AboutModal open={showAboutModal} onHide={() => this.setState({ showAboutModal: false })} />
-            </div>
+            </HeaderBar>
         );
     }
 }

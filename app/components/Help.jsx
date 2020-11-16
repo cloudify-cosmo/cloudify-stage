@@ -4,6 +4,7 @@
 
 import React from 'react';
 import PropTypes from 'prop-types';
+import { HeaderMenu } from 'cloudify-ui-components';
 
 import { Dropdown, Icon } from './basic';
 import StageUtils from '../utils/stageUtils';
@@ -12,22 +13,21 @@ export default function Help({ onAbout, version }) {
     const { redirectToPage } = StageUtils.Url;
 
     return (
-        <Dropdown item pointing="top right" trigger={<Icon name="help circle" />} className="helpMenu">
-            <Dropdown.Menu>
-                <Dropdown.Item
-                    icon="book"
-                    text="Documentation"
-                    onClick={() => redirectToPage(`https://docs.cloudify.co/${version}`)}
-                />
-                <Dropdown.Item
-                    icon="comments"
-                    text="Contact Us"
-                    onClick={() => redirectToPage('https://cloudify.co/contact')}
-                />
-                <Dropdown.Divider />
-                <Dropdown.Item icon="info circle" text="About" onClick={onAbout} />
-            </Dropdown.Menu>
-        </Dropdown>
+        <HeaderMenu trigger={<Icon name="help circle" style={{ margin: 0 }} />}>
+            <Dropdown.Item
+                icon="book"
+                text="Documentation"
+                onClick={() => redirectToPage(`https://docs.cloudify.co/${version}`)}
+            />
+            <Dropdown.Item
+                icon="comments"
+                text="Contact Us"
+                onClick={() => redirectToPage('https://cloudify.co/contact')}
+            />
+            <Dropdown.Divider />
+
+            <Dropdown.Item icon="info circle" text="About" onClick={onAbout} />
+        </HeaderMenu>
     );
 }
 
