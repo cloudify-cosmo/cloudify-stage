@@ -98,13 +98,13 @@ describe('Cluster Status', () => {
             });
 
             cy.log('Check system status popup content');
-            cy.get('.headerBar i.heartbeat.statusIcon').trigger('mouseover');
+            cy.get('i.heartbeat.statusIcon').trigger('mouseover');
             cy.wait('@clusterStatusFull', clusterStatusFetchTimeout);
             cy.get('table.servicesData').within(() => {
                 cy.get('button.refreshButton').should('not.have.class', 'loading');
                 checkServicesStatus(false, expectedManagerStatus, expectedDbStatus, expectedBrokerStatus);
             });
-            cy.get('.headerBar i.heartbeat.statusIcon').trigger('mouseout');
+            cy.get('i.heartbeat.statusIcon').trigger('mouseout');
             cy.get('.popup').should('not.exist');
         };
 
