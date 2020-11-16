@@ -1,0 +1,14 @@
+diff --git a/node_modules/pg/lib/connection.js b/node_modules/pg/lib/connection.js
+index a63d9cd..ee7f201 100644
+--- a/node_modules/pg/lib/connection.js
++++ b/node_modules/pg/lib/connection.js
+@@ -105,7 +105,8 @@ Connection.prototype.connect = function (port, host) {
+       passphrase: self.ssl.passphrase,
+       cert: self.ssl.cert,
+       secureOptions: self.ssl.secureOptions,
+-      NPNProtocols: self.ssl.NPNProtocols
++      NPNProtocols: self.ssl.NPNProtocols,
++      host
+     }
+     if (typeof self.ssl.rejectUnauthorized !== 'boolean') {
+       warnDeprecation('Implicit disabling of certificate verification is deprecated and will be removed in pg 8. Specify `rejectUnauthorized: true` to require a valid CA or `rejectUnauthorized: false` to explicitly opt out of MITM protection.', 'PG-SSL-VERIFY')

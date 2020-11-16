@@ -19,6 +19,7 @@
     "devDebug": "npm run startWithNodemon -- --inspect server.js",
     "devStart": "npm run startWithNodemon -- server.js",
     "devTrace": "npm run startWithNodemon -- --trace-warnings server.js",
+    "postinstall": "patch-package",
     "start": "node server.js ${STAGE_BACKEND_ARGS}",
     "test": "jest",
     "wait-on-server": "wait-on tcp:localhost:8088 --timeout 5000 && echo 'Stage backend is up!'"
@@ -66,6 +67,7 @@
   "devDependencies": {
     "jest": "^26.4.2",
     "nodemon": "^2.0.2",
+    "patch-package": "^6.2.2",
     "sequelize-cli": "^5.5.1"
   },
   "engines": {
