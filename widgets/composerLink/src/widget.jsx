@@ -17,9 +17,6 @@ Stage.defineWidget({
     categories: [Stage.GenericConfig.CATEGORY.BUTTONS_AND_FILTERS],
 
     render() {
-        // eslint-disable-next-line no-restricted-globals
-        const composerUrl = `${location.origin}/composer`;
-
         return (
             <Button
                 labelPosition="left"
@@ -27,7 +24,7 @@ Stage.defineWidget({
                 className="widgetButton"
                 icon="external"
                 onClick={() => {
-                    window.open(composerUrl, '_blank');
+                    window.open('/composer', '_blank');
                 }}
                 content="Blueprint Composer"
             />
