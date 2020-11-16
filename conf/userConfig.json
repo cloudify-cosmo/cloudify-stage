@@ -8,7 +8,7 @@
     "logoUrl": "/console/static/images/logo.png",
     "mainColor": "#0077FC",
 
-    "headerTextColor": "#d8e3e8",
+    "headerTextColor": "white",
     "showVersionDetails": true,
 
     "loginPageHeaderColor": "white",

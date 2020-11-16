@@ -66,7 +66,7 @@ describe('(Component) Users', () => {
 
     it('renders user menu with full options list', () => {
         const wrapper = getUsers();
-        expect(wrapper.find(Dropdown)).toHaveLength(1); // Showing the users menu
+        expect(wrapper.find('HeaderMenu')).toHaveLength(1); // Showing the users menu
         expect(wrapper.find(Dropdown.Item).length).toBe(6); // 5 menu options
         expect(wrapper.find(Dropdown.Item).get(0).props.text).toBe('Edit Mode'); // Having Edit Mode option
         expect(wrapper.find(Dropdown.Item).get(0).props.icon).toBe('configure'); // Having configure icon for Edit Mode option
@@ -85,7 +85,7 @@ describe('(Component) Users', () => {
     it('renders user menu with full options list and edit mode selected', () => {
         const wrapper = getUsers({ isEditMode: true });
 
-        expect(wrapper.find(Dropdown)).toHaveLength(1); // Showing the users menu
+        expect(wrapper.find('HeaderMenu')).toHaveLength(1); // Showing the users menu
         expect(wrapper.find(Dropdown.Item).length).toBe(6); // 6 menu options
         expect(wrapper.find(Dropdown.Item).get(0).props.text).toBe('Exit Edit Mode'); // Having Exit Edit Mode option
         expect(wrapper.find(Dropdown.Item).get(0).props.selected).toBe(true); // Having Edit Mode option selected
@@ -94,7 +94,7 @@ describe('(Component) Users', () => {
     it('renders user menu with limited options list', () => {
         const wrapper = getUsers({ showAllOptions: false });
 
-        expect(wrapper.find(Dropdown)).toHaveLength(1); // Showing the users menu
+        expect(wrapper.find('HeaderMenu')).toHaveLength(1); // Showing the users menu
         expect(wrapper.find(Dropdown.Item).length).toBe(3); // 3 menu options
         expect(wrapper.find(Dropdown.Item).get(0).props.text).toBe('Reset Templates'); // Having Reset Templates option
         expect(wrapper.find(Dropdown.Item).get(0).props.icon).toBe('undo'); // Having configure icon for Edit Mode option

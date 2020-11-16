@@ -5,8 +5,10 @@
 import _ from 'lodash';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
+import { HeaderBar } from 'cloudify-ui-components';
+
 import i18n from 'i18next';
-import Banner from '../containers/banner/Banner';
+import Banner from './banner/Banner';
 import Consts from '../utils/consts';
 import { Button, Form, FullScreenSegment, Grid, Header, Icon, Message, MessageContainer } from './basic';
 import CurrentLicense from './license/CurrentLicense';
@@ -233,7 +235,9 @@ export default class LicensePage extends Component {
 
         return (
             <FullScreenSegment>
-                <Banner />
+                <HeaderBar>
+                    <Banner hideOnSmallScreen={false} />
+                </HeaderBar>
 
                 <MessageContainer
                     wide

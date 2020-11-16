@@ -9,7 +9,6 @@ import { Provider } from 'react-redux';
 import configureMockStore from 'redux-mock-store';
 import { MemoryRouter as Router } from 'react-router-dom';
 import Consts from 'utils/consts';
-import ConnectedBanner from 'containers/banner/Banner';
 import Banner from 'components/banner/Banner';
 import * as BasicComponents from 'components/basic';
 
@@ -31,12 +30,12 @@ describe('(Component) Banner', () => {
         licenseEdition,
         hideOnSmallScreen
     ) => {
-        expect(bannerComponent.props().isCommunity).toBe(isCommunity);
-        expect(bannerComponent.props().isExpired).toBe(isExpired);
-        expect(bannerComponent.props().isTrial).toBe(isTrial);
-        expect(bannerComponent.props().productVersion).toBe(productVersion);
-        expect(bannerComponent.props().licenseEdition).toBe(licenseEdition);
+        const headerBanner = bannerComponent.find('HeaderBanner');
         expect(bannerComponent.props().hideOnSmallScreen).toBe(hideOnSmallScreen);
+        expect(headerBanner.props().isCommunity).toBe(isCommunity);
+        expect(headerBanner.props().productName).toBe(productName);
+        expect(headerBanner.props().productVersion).toBe(productVersion);
+        expect(headerBanner.props().licenseEdition).toBe(licenseEdition);
     };
 
     const verifyTag = (isPresent = false, tag = null, isLinked = false) => {
@@ -98,7 +97,7 @@ describe('(Component) Banner', () => {
         const componentsTree = mount(
             <Provider store={store}>
                 <Router>
-                    <ConnectedBanner hideOnSmallScreen />
+                    <Banner hideOnSmallScreen />
                 </Router>
             </Provider>
         );

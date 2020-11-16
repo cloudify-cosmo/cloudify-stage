@@ -18,7 +18,7 @@ describe('(Component) Help', () => {
 
     it('renders help menu', () => {
         const wrapper = mount(<Help onAbout={() => {}} version="5.0.5" />);
-        expect(wrapper.find(Dropdown)).toHaveLength(1);
+        expect(wrapper.find('HeaderMenu')).toHaveLength(1);
 
         const dropdownItemComponents = wrapper.find(Dropdown.Item);
         expect(dropdownItemComponents.length).toBe(3);

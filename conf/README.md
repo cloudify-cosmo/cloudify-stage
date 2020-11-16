@@ -7,7 +7,7 @@ The following section describes different configuration files used in cloudify-s
 * `maintenancePollingInterval` - integer, time interval for Cloudify Manager status polling (milliseconds) 
 * `singleManager` - boolean, defines if Cloudify Manager is executed as single (depracated)
 * `db` - object, Cloudify Stage PostgreSQL DB connection configuration
-  * `url` - string, DB URL 
+  * `url` - string or array, DB URL or array of DB URLs 
   * `options` - object, DB connection options passed to [Sequelize constructor](https://sequelize.org/master/class/lib/sequelize.js~Sequelize.html#instance-constructor-constructor)
   
 * `proxy` - object, configuration of Stage Backend proxy to Cloudify Manager 
