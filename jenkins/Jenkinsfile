@@ -75,7 +75,7 @@ pipeline {
               sh '''
                 cd ~/rpmbuild/BUILD
                 rpmlint --info packaging/cloudify-stage.spec
-                yum-builddep -y packaging/cloudify-stage.spec
+                for i in {1..10}; do yum-builddep -y packaging/cloudify-stage.spec && break || sleep 5; done
               '''
 
               echo 'Download sources for RPM spec file & Build RPM'
