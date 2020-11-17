@@ -174,6 +174,13 @@ module.exports = r => {
                         allSubgraphs[containingSubgraph].labels[0].state = null;
                         allSubgraphs[task.id].containingSubgraph = containingSubgraph;
                     }
+
+                    if (task.dependencies) {
+                        // Updating task dependencies not to include containing_subgraph
+                        task.dependencies = task.dependencies.filter(
+                            taskId => taskId !== task.parameters.containing_subgraph
+                        );
+                    }
                 }
             });
             return allSubgraphs;
@@ -437,11 +444,8 @@ module.exports = r => {
                             // Creating the ELK-formatted graph
                             return createELKTasksGraphs(allSubgraphs);
                         })
-                        .then(graphs => {
-                            elk.layout(graphs).then(elkGraph => {
-                                res.send(elkGraph);
-                            });
-                        })
+                        .then(graphs => elk.layout(graphs))
+                        .then(elkGraph => res.send(elkGraph))
                         .catch(error => {
                             logger.error(error);
                             next(error);
