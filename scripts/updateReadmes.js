@@ -4,6 +4,10 @@ const path = require('path');
 
 const config = require('./readmesConfig.json');
 
+const i18nBundlePath = '../app/translations/en.json';
+// eslint-disable-next-line import/no-dynamic-require
+const supportedParams = require(i18nBundlePath).widgets.common.readmes.params;
+
 function log(prefix, message) {
     console.log(`[${prefix}]:`, message);
 }
@@ -45,6 +49,29 @@ function updateTitle(widget, content) {
         newContent = newContent.replace(titleRegex, '# $1');
 
         resolve(newContent);
+    });
+}
+
+function validateHugoParams(widget, content) {
+    return new Promise((resolve, reject) => {
+        const paramRegex = /{{<\s*param\s*(\S*)\s*>}}/gm;
+
+        log(widget, 'Validating Hugo params:');
+
+        Array.from(content.matchAll(paramRegex)).forEach(match => {
+            const paramName = match[1];
+            const paramValue = supportedParams[paramName];
+            log(widget, paramName);
+            if (paramValue === undefined) {
+                reject(
+                    new Error(
+                        `${paramName} not found in supported parameters. Add support by extending ${i18nBundlePath} file`
+                    )
+                );
+            }
+        });
+
+        resolve(content);
     });
 }
 
@@ -98,6 +125,7 @@ function updateFiles() {
 
         log(logPrefix, `Adding to queue: '${url}' for '${widget}' widget...`);
         return downloadFile(widget, url)
+            .then(content => validateHugoParams(widget, content))
             .then(content => updateTitle(widget, content))
             .then(content => convertHugoShortcodes(widget, content))
             .then(content => saveToReadmeFile(widget, content, readmePath));
