@@ -13,7 +13,7 @@ export default function Help({ onAbout, version }) {
     const { redirectToPage } = StageUtils.Url;
 
     return (
-        <HeaderMenu trigger={<Icon name="help circle" style={{ margin: 0 }} />}>
+        <HeaderMenu trigger={<Icon name="help circle" style={{ margin: 0 }} />} className="helpMenu">
             <Dropdown.Item
                 icon="book"
                 text="Documentation"
