@@ -4,6 +4,7 @@
 
 import _ from 'lodash';
 import log from 'loglevel';
+import i18n from 'i18next';
 import Internal from './Internal';
 import Consts from './consts';
 
@@ -33,7 +34,7 @@ export default class Tours {
             if (!_.isUndefined(nextStep)) {
                 newStep.showCTAButton = true;
                 newStep.showNextButton = false;
-                newStep.ctaLabel = 'Next';
+                newStep.ctaLabel = i18n.t('tours.next', 'Next');
                 newStep.onCTA = ['redirectTo', nextStep.target];
                 if (!_.isUndefined(newStep.onNextRedirectTo)) {
                     const [url, pageName, noTargetErrorTitle, noTargetErrorMessage] = _.isArray(
@@ -41,7 +42,7 @@ export default class Tours {
                     )
                         ? newStep.onNextRedirectTo
                         : [newStep.onNextRedirectTo, newStep.onNextRedirectTo, undefined, undefined];
-                    newStep.ctaLabel = 'Next (change page)';
+                    newStep.ctaLabel = i18n.t('tours.nextPage', 'Next (change page)');
                     newStep.onCTA = [
                         'redirectTo',
                         nextStep.target,

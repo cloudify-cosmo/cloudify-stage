@@ -6,7 +6,7 @@ import _ from 'lodash';
 import log from 'loglevel';
 import PropTypes from 'prop-types';
 import marked from 'marked';
-
+import i18n from 'i18next';
 import React, { Component } from 'react';
 
 import EditWidget from '../containers/EditWidget';
@@ -112,8 +112,11 @@ export default class Widget extends Component {
                         <Segment basic style={{ height: '100%' }}>
                             <Message icon error>
                                 <Icon name="ban" />
-                                Cannot load widget {widget.name}. It might not be installed in your env. Please contact
-                                administrator.
+                                {i18n.t(
+                                    'widget.loadError',
+                                    'Cannot load widget {{widgetName}}. It might not be installed in your env. Please contact administrator.',
+                                    { widgetName: widget.name }
+                                )}
                             </Message>
                         </Segment>
                     </Segment>
@@ -202,7 +205,10 @@ export default class Widget extends Component {
                     {hasError && (
                         <ErrorMessage
                             autoHide={false}
-                            error="Cannot render widget. Check browser console for details."
+                            error={i18n.t(
+                                'widget.renderError',
+                                'Cannot render widget. Check browser console for details.'
+                            )}
                         />
                     )}
                     {!hasError &&

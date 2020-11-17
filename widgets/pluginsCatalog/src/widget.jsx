@@ -20,7 +20,7 @@ Stage.defineWidget({
             id: 'jsonPath',
             name: 'Plugins Catalog JSON Source',
             placeHolder: 'Type JSON Path',
-            default: Stage.Common.Consts.externalUrls.pluginsCatalog,
+            default: Stage.i18n.t('widgets.common.urls.pluginsCatalog'),
             type: Stage.Basic.GenericField.STRING_TYPE
         },
         {

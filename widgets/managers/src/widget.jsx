@@ -7,7 +7,7 @@ import ManagersTable from './ManagersTable';
 Stage.defineWidget({
     id: 'managers',
     name: 'Spire Manager',
-    description: 'This widget allows to manage Cloudify Managers created using Cloudify Spire plugin',
+    description: 'This widget allows to manage Managers created using Spire plugin',
     initialWidth: 12,
     initialHeight: 24,
     color: 'black',

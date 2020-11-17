@@ -1,7 +1,7 @@
 /**
  * Created by edenp on 15/04/2018.
  */
-
+import i18n from 'i18next';
 import _ from 'lodash';
 import PropTypes from 'prop-types';
 import React from 'react';
@@ -46,7 +46,7 @@ export default class ToursButton extends React.Component {
                 <PopupMenu onClose={this.onMouseOut}>
                     <Popup.Trigger>
                         <Button
-                            title="Take a tour"
+                            title={i18n.t('tours.buttonTitle', 'Take a tour')}
                             circular
                             color="blue"
                             size="huge"

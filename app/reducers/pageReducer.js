@@ -4,6 +4,7 @@
 
 import _ from 'lodash';
 import { arrayMove } from 'react-sortable-hoc';
+import i18n from 'i18next';
 import * as types from '../actions/types';
 import widgets from './widgetsReducer';
 import { forAllWidgets, forEachWidget } from '../actions/page';
@@ -12,7 +13,7 @@ import Consts from '../utils/consts';
 const tabs = (state, action) => {
     switch (action.type) {
         case types.ADD_TAB:
-            return [...state, { name: 'New Tab', widgets: [] }];
+            return [...state, { name: i18n.t('editMode.tabs.newTab'), widgets: [] }];
         case types.REMOVE_TAB:
             return _.without(state, _.nth(state, action.tabIndex));
         case types.UPDATE_TAB: {

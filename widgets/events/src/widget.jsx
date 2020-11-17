@@ -7,7 +7,7 @@ import EventsTable from './EventsTable';
 Stage.defineWidget({
     id: 'events',
     name: 'Events/logs',
-    description: 'This widget shows Cloudify events/logs',
+    description: 'This widget shows events/logs',
     initialWidth: 12,
     initialHeight: 18,
     color: 'green',

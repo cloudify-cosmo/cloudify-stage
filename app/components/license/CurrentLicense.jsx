@@ -1,7 +1,7 @@
 /**
  * Created by jakub.niezgoda on 15/03/2019.
  */
-
+import i18n from 'i18next';
 import _ from 'lodash';
 import PropTypes from 'prop-types';
 import React from 'react';
@@ -10,20 +10,55 @@ import StageUtils from '../../utils/stageUtils';
 import { Icon, Header, Segment, Table } from '../basic';
 
 export default function CurrentLicense({ license }) {
-    const formatTrial = isTrial => (isTrial ? 'Yes' : 'No');
     const formatExpirationDate = stringDate =>
-        _.isEmpty(stringDate) ? 'Never' : StageUtils.formatLocalTimestamp(stringDate, 'DD-MM-YYYY');
-    const formatVersion = version => (_.isEmpty(version) ? 'All' : String(version));
+        _.isEmpty(stringDate)
+            ? i18n.t('licenseManagement.expirationDateNever', 'Never')
+            : StageUtils.formatLocalTimestamp(stringDate, 'DD-MM-YYYY');
+    const formatVersion = version =>
+        _.isEmpty(version) ? i18n.t('licenseManagement.allVersions', 'All') : String(version);
     const formatCapabilities = capabilities => _.join(capabilities, ', ');
     const isFalse = boolValue => !boolValue;
 
     const fields = [
-        { name: 'expiration_date', header: 'Expiration Date', icon: 'clock', format: formatExpirationDate },
-        { name: 'cloudify_version', header: 'Valid For Version', icon: 'thumbs up', format: formatVersion },
-        { name: 'license_edition', header: 'License Edition', icon: 'file alternate outline', format: String },
-        { name: 'capabilities', header: 'Capabilities', icon: 'wrench', format: formatCapabilities, hide: _.isEmpty },
-        { name: 'trial', header: 'Trial', icon: 'lab', format: formatTrial, hide: isFalse },
-        { name: 'customer_id', header: 'Licensed To', icon: 'handshake', format: String, hide: _.isEmpty }
+        {
+            name: 'expiration_date',
+            header: i18n.t('licenseManagement.expirationDate', 'Expiration Date'),
+            icon: 'clock',
+            format: formatExpirationDate
+        },
+        {
+            name: 'cloudify_version',
+            header: i18n.t('licenseManagement.validForVersion', 'Valid For Version'),
+            icon: 'thumbs up',
+            format: formatVersion
+        },
+        {
+            name: 'license_edition',
+            header: i18n.t('licenseManagement.licenseEdition', 'License Edition'),
+            icon: 'file alternate outline',
+            format: String
+        },
+        {
+            name: 'capabilities',
+            header: i18n.t('licenseManagement.capabilities', 'Capabilities'),
+            icon: 'wrench',
+            format: formatCapabilities,
+            hide: _.isEmpty
+        },
+        {
+            name: 'trial',
+            header: i18n.t('licenseManagement.trial', 'Trial'),
+            icon: 'lab',
+            format: _.constant(i18n.t('licenseManagement.trialYes', 'Yes')),
+            hide: isFalse
+        },
+        {
+            name: 'customer_id',
+            header: i18n.t('licenseManagement.licensedTo', 'Licensed To'),
+            icon: 'handshake',
+            format: String,
+            hide: _.isEmpty
+        }
     ];
 
     return (

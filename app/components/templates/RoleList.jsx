@@ -5,7 +5,7 @@
 import _ from 'lodash';
 import PropTypes from 'prop-types';
 import React from 'react';
-
+import i18n from 'i18next';
 import { Segment, Icon, Divider, List, Message, PopupConfirm } from '../basic';
 
 export default function RoleList({ custom, onDelete, roles, style }) {
@@ -29,14 +29,19 @@ export default function RoleList({ custom, onDelete, roles, style }) {
                                             onClick={e => e.stopPropagation()}
                                         />
                                     }
-                                    content="Are you sure to remove this role from template?"
+                                    content={i18n.t(
+                                        'templates.templateManagement.roleList.removeConfirm',
+                                        'Are you sure to remove this role from template?'
+                                    )}
                                     onConfirm={() => onDelete(item)}
                                 />
                             )}
                         </List.Item>
                     );
                 })}
-                {_.isEmpty(roles) && <Message content="No roles available" />}
+                {_.isEmpty(roles) && (
+                    <Message content={i18n.t('templates.templateManagement.roleList.noRoles', 'No roles available')} />
+                )}
             </List>
         </Segment>
     );

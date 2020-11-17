@@ -1,7 +1,7 @@
 /**
  * Created by jakub.niezgoda on 15/03/2019.
  */
-
+import i18n from 'i18next';
 import _ from 'lodash';
 import PropTypes from 'prop-types';
 import React from 'react';
@@ -14,8 +14,14 @@ export default function CurrentVersion({ version = {} }) {
          (${_.capitalize(version.edition)})`;
 
     const fields = [
-        { name: 'full_version', header: 'Version', icon: 'star', format: String },
-        { name: 'distro', header: 'Distribution', icon: 'linux', format: _.startCase, hide: _.isEmpty }
+        { name: 'full_version', header: i18n.t('licenseManagement.version', 'Version'), icon: 'star', format: String },
+        {
+            name: 'distro',
+            header: i18n.t('licenseManagement.distribution', 'Distribution'),
+            icon: 'linux',
+            format: _.startCase,
+            hide: _.isEmpty
+        }
     ];
 
     return !_.isEmpty(version) ? (
@@ -45,7 +51,7 @@ export default function CurrentVersion({ version = {} }) {
             </Table>
         </Segment>
     ) : (
-        <Message>There is no version data.</Message>
+        <Message>{i18n.t('licenseManagement.noVersion', 'There is no version data.')}</Message>
     );
 }
 

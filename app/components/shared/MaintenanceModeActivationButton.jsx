@@ -4,10 +4,13 @@
 
 import PropTypes from 'prop-types';
 import React from 'react';
+import i18n from 'i18next';
 import { Button } from '../basic';
 
 export default function MaintenanceModeActivationButton({ activate, onClick }) {
-    const content = activate ? 'Activate Maintenance Mode' : 'Deactivate Maintenance Mode';
+    const content = activate
+        ? i18n.t('maintenanceMode.activate', 'Activate Maintenance Mode')
+        : i18n.t('maintenanceMode.deactivate', 'Deactivate Maintenance Mode');
 
     return (
         <Button

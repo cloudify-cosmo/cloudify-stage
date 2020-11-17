@@ -6,7 +6,7 @@ const { Button } = Stage.Basic;
 Stage.defineWidget({
     id: 'composerLink',
     name: 'Composer link',
-    description: 'Opens Cloudify Composer in a different tab',
+    description: 'Opens Blueprint Composer in a different tab',
     initialWidth: 2,
     initialHeight: 3,
     showHeader: false,
@@ -26,7 +26,7 @@ Stage.defineWidget({
                 onClick={() => {
                     window.open('/composer', '_blank');
                 }}
-                content="Cloudify Composer"
+                content="Blueprint Composer"
             />
         );
     }

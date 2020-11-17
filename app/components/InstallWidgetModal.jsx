@@ -5,9 +5,9 @@
 import _ from 'lodash';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
+import i18n from 'i18next';
 import EventBus from '../utils/EventBus';
 import StageUtils from '../utils/stageUtils';
-
 import { Button, Form, Icon, Message, Modal } from './basic/index';
 
 export default class InstallWidgetModal extends Component {
@@ -59,9 +59,15 @@ export default class InstallWidgetModal extends Component {
 
         if (!widgetFile) {
             if (_.isEmpty(widgetUrl)) {
-                errors.widgetUrl = "Please provide the widget's archive URL or select a file";
+                errors.widgetUrl = i18n.t(
+                    'editMode.addWidget.installModal.error.noFileOrUrl',
+                    "Please provide the widget's archive URL or select a file"
+                );
             } else if (!StageUtils.Url.isUrl(widgetUrl)) {
-                errors.widgetUrl = "Please provide valid URL for widget's archive";
+                errors.widgetUrl = i18n.t(
+                    'editMode.addWidget.installModal.error.invalidUrl',
+                    "Please provide valid URL for widget's archive"
+                );
             }
         }
 
@@ -101,10 +107,17 @@ export default class InstallWidgetModal extends Component {
                 </Modal.Header>
                 <Modal.Content>
                     <Form errors={errors} loading={loading}>
-                        <Form.Field label="Widget package" required error={errors.widgetUrl}>
+                        <Form.Field
+                            label={i18n.t('editMode.addWidget.installModal.fileOrUrlLabel', 'Widget package')}
+                            required
+                            error={errors.widgetUrl}
+                        >
                             <Form.UrlOrFile
                                 name="widget"
-                                placeholder="Provide the widget's archive URL or click browse to select a file"
+                                placeholder={i18n.t(
+                                    'editMode.addWidget.installModal.fileOrUrlPlaceholder',
+                                    "Provide the widget's archive URL or click browse to select a file"
+                                )}
                                 onChangeUrl={this.onWidgetUrlChange}
                                 onChangeFile={this.onWidgetFileChange}
                             />
@@ -117,7 +130,7 @@ export default class InstallWidgetModal extends Component {
                     <Button
                         icon="remove"
                         basic
-                        content="Cancel"
+                        content={i18n.t('editMode.addWidget.installModal.cancelButton', 'Cancel')}
                         onClick={event => {
                             event.stopPropagation();
                             this.closeModal();

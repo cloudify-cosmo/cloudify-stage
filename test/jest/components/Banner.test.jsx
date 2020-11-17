@@ -15,6 +15,7 @@ import * as BasicComponents from 'components/basic';
 import { createToolbox } from 'utils/Toolbox';
 import licenses from '../resources/licenses';
 import versions from '../resources/versions';
+import i18nInit from '../i18n';
 
 describe('(Component) Banner', () => {
     let bannerComponent = null;
@@ -72,9 +73,8 @@ describe('(Component) Banner', () => {
         return { data, isRequired, status };
     };
 
-    const getWhiteLabel = (productName, showVersionDetails) => {
+    const getWhiteLabel = showVersionDetails => {
         return {
-            productName: _.isUndefined(productName) ? 'Cloudify' : productName,
             showVersionDetails: _.isUndefined(showVersionDetails) ? true : showVersionDetails
         };
     };
@@ -103,6 +103,8 @@ describe('(Component) Banner', () => {
         );
         bannerComponent = componentsTree.find(Banner);
     };
+
+    beforeEach(() => i18nInit());
 
     describe('shows full name', () => {
         it('without tag for active paying license', () => {
@@ -145,7 +147,7 @@ describe('(Component) Banner', () => {
         it('with expired tag for expired paying license', () => {
             const license = getLicenseState(licenses.expiredPayingLicense, true, Consts.LICENSE.EXPIRED);
             const edition = getLicenseEdition(licenses.expiredPayingLicense);
-            const whiteLabel = getWhiteLabel('Cloudify', true);
+            const whiteLabel = getWhiteLabel(true);
             mockStoreAndRender(license, versions.premium, whiteLabel);
 
             verifyProps(false, true, false, 'Cloudify', '4.6', edition, true);
@@ -180,10 +182,13 @@ describe('(Component) Banner', () => {
         it('without tag when version edition is premium and white labelling customization is done', () => {
             const license = getLicenseState(licenses.expiredTrialLicense, true, Consts.LICENSE.EXPIRED);
             const edition = getLicenseEdition(licenses.expiredTrialLicense);
-            const whiteLabel = getWhiteLabel('VNFM', false);
+            const whiteLabel = getWhiteLabel(false);
+            const productName = 'VNFM';
+            i18nInit({ productName });
+
             mockStoreAndRender(license, versions.premium, whiteLabel);
 
-            verifyProps(false, true, true, 'VNFM', '4.6', edition, true);
+            verifyProps(false, true, true, productName, '4.6', edition, true);
             verifyFullName('VNFM');
             verifyTag(false, null);
         });
