@@ -437,11 +437,8 @@ module.exports = r => {
                             // Creating the ELK-formatted graph
                             return createELKTasksGraphs(allSubgraphs);
                         })
-                        .then(graphs => {
-                            elk.layout(graphs).then(elkGraph => {
-                                res.send(elkGraph);
-                            });
-                        })
+                        .then(graphs => elk.layout(graphs))
+                        .then(elkGraph => res.send(elkGraph))
                         .catch(error => {
                             logger.error(error);
                             next(error);
