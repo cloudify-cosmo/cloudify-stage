@@ -5,7 +5,7 @@
 import _ from 'lodash';
 import log from 'loglevel';
 import PropTypes from 'prop-types';
-
+import i18n from 'i18next';
 import React, { Component } from 'react';
 import { getToolbox } from '../utils/Toolbox';
 import WidgetParamsHandler from '../utils/WidgetParamsHandler';
@@ -250,7 +250,13 @@ export default class WidgetDynamicContent extends Component {
         const { data, widget } = this.props;
         if (data.error) {
             log.error(data);
-            return <ErrorMessage error={data.error} header="An unexpected error occurred" autoHide />;
+            return (
+                <ErrorMessage
+                    error={data.error}
+                    header={i18n.t('widget.unexpectedError', 'An unexpected error occurred')}
+                    autoHide
+                />
+            );
         }
 
         if (widget.definition && widget.definition.render) {
@@ -258,7 +264,14 @@ export default class WidgetDynamicContent extends Component {
                 return widget.definition.render(widget, data.data, data.error, this.getToolbox());
             } catch (e) {
                 log.error(`Error rendering widget - ${e.message}`, e.stack);
-                return <ErrorMessage error={`Error rendering widget: ${e.message}`} autoHide />;
+                return (
+                    <ErrorMessage
+                        error={i18n.t('widget.detailedRenderError', `Error rendering widget: {{errorDetails}}`, {
+                            errorDetails: e.message
+                        })}
+                        autoHide
+                    />
+                );
             }
         }
         return <div />;
@@ -266,7 +279,7 @@ export default class WidgetDynamicContent extends Component {
 
     renderWidget() {
         const { data, widget } = this.props;
-        let widgetHtml = 'Loading...';
+        let widgetHtml = i18n.t('widget.loading', 'Loading...');
         if (widget.definition && widget.definition.render) {
             try {
                 widgetHtml = widget.definition.render(widget, data.data, data.error, this.getToolbox());

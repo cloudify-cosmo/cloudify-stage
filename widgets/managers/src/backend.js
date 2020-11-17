@@ -90,8 +90,8 @@ module.exports = r => {
             {
                 _include: 'id,workflows,capabilities,description',
                 description:
-                    'This blueprint creates several VMs, installs a Cloudify Manager on each of them, ' +
-                    'creates a Cloudify Spire Management Cluster between all the managers and uploads ' +
+                    'This blueprint creates several VMs, installs a Manager on each of them, ' +
+                    'creates a Spire Management Cluster between all the managers and uploads ' +
                     'several auxiliary resources to the cluster.\n'
             },
             extractedHeaders

@@ -5,7 +5,7 @@
 import _ from 'lodash';
 import PropTypes from 'prop-types';
 import React from 'react';
-
+import i18n from 'i18next';
 import PageList from './PageList';
 import RoleList from './RoleList';
 import TenantList from './TenantList';
@@ -30,15 +30,24 @@ export default function Templates({
     return (
         <Segment color="blue">
             <Header dividing as="h5">
-                Templates
+                {i18n.t('templates.templateManagement.header', 'Templates')}
             </Header>
 
             <DataTable>
-                <DataTable.Column label="Template id" width="25%" />
-                <DataTable.Column label="Roles" width="25%" />
-                <DataTable.Column label="Tenants" width="10%" />
-                <DataTable.Column label="Updated at" width="15%" />
-                <DataTable.Column label="Updated by" width="15%" />
+                <DataTable.Column
+                    label={i18n.t('templates.templateManagement.table.templateId', 'Template id')}
+                    width="25%"
+                />
+                <DataTable.Column label={i18n.t('templates.templateManagement.table.roles', 'Roles')} width="25%" />
+                <DataTable.Column label={i18n.t('templates.templateManagement.table.tenants', 'Tenants')} width="10%" />
+                <DataTable.Column
+                    label={i18n.t('templates.templateManagement.table.updatedAt', 'Updated at')}
+                    width="15%"
+                />
+                <DataTable.Column
+                    label={i18n.t('templates.templateManagement.table.updatedBy', 'Updated by')}
+                    width="15%"
+                />
                 <DataTable.Column width="10%" />
 
                 {templates.map(item => {
@@ -80,7 +89,10 @@ export default function Templates({
                                         <div>
                                             <PopupConfirm
                                                 trigger={<Icon name="remove" link onClick={e => e.stopPropagation()} />}
-                                                content="Are you sure to remove this template?"
+                                                content={i18n.t(
+                                                    'templates.templateManagement.removeConfirm',
+                                                    'Are you sure to remove this template?'
+                                                )}
                                                 onConfirm={() => onDeleteTemplate(item)}
                                             />
                                             <CreateTemplateModal

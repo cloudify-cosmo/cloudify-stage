@@ -6,6 +6,7 @@ import _ from 'lodash';
 import log from 'loglevel';
 import hopscotch from 'hopscotch';
 import { push } from 'connected-react-router';
+import i18n from 'i18next';
 
 import * as types from './types';
 import Tours from '../utils/Tours';
@@ -91,10 +92,12 @@ function hopscotchRegisterHelpers(dispatch) {
                     id: 'error',
                     target: 'div.logo',
                     placement: 'bottom',
-                    title: 'No page',
-                    content: `Cannot find <strong>${
-                        name || pageUrl
-                    }</strong> page. Tours are intended to work only on default templates. Reset templates to finish this tour.`
+                    title: i18n.t('tours.noPage.title', 'No page'),
+                    content: i18n.t(
+                        'tours.noPage.message',
+                        'Cannot find <strong>{{page}}</strong> page. Tours are intended to work only on default templates. Reset templates to finish this tour.',
+                        { page: name || pageUrl }
+                    )
                 });
 
                 return Promise.reject(`Page ${name} not found.`);
@@ -120,8 +123,10 @@ function hopscotchRegisterHelpers(dispatch) {
                     placement: 'top',
                     xOffset: -270,
                     arrowOffset: 270,
-                    title: noSelectorErrorTitle || 'No element',
-                    content: noSelectorErrorMessage || 'Cannot find element for the next tour step on the screen.'
+                    title: noSelectorErrorTitle || i18n.t('tours.noSelector.title', 'No element'),
+                    content:
+                        noSelectorErrorMessage ||
+                        i18n.t('tours.noSelector.message', 'Cannot find element for the next tour step on the screen.')
                 });
 
                 return Promise.reject(`Element for selector ${elSelector} not found.`);
@@ -154,11 +159,13 @@ function hopscotchRegisterHelpers(dispatch) {
             placement: 'top',
             xOffset: -270,
             arrowOffset: 270,
-            title: 'No target element for next step',
+            title: i18n.t('tours.noTarget.title', 'No target element for next step'),
             content:
                 content ||
-                'Cannot find target element. Tours are intended to work only on default templates. ' +
-                    'Reset templates to finish this tour.'
+                i18n.t(
+                    'tours.noTarget.message',
+                    'Cannot find target element. Tours are intended to work only on default templates. Reset templates to finish this tour.'
+                )
         });
     });
 }

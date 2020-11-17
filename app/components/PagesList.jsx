@@ -6,7 +6,7 @@ import _ from 'lodash';
 import 'jquery-ui/ui/widgets/sortable';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
-
+import i18n from 'i18next';
 import AddPageButton from '../containers/AddPageButton';
 import { Confirm, Icon, Menu } from './basic';
 
@@ -106,8 +106,15 @@ export default class PagesList extends Component {
                         onPageRemoved(pageToRemove);
                         this.setState({ pageToRemove: null });
                     }}
-                    header={`Are you sure you want to remove page ${_.get(pageToRemove, 'name')}?`}
-                    content="All widgets and tabs present in this page will be removed as well"
+                    header={i18n.t(
+                        'editMode.pageRemovalModal.header',
+                        `Are you sure you want to remove page {{pageName}}?`,
+                        { pageName: _.get(pageToRemove, 'name') }
+                    )}
+                    content={i18n.t(
+                        'editMode.pageRemovalModal.message',
+                        'All widgets and tabs present in this page will be removed as well'
+                    )}
                 />
             </>
         );

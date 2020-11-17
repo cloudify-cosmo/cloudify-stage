@@ -5,7 +5,7 @@
 import _ from 'lodash';
 import PropTypes from 'prop-types';
 import React from 'react';
-
+import i18n from 'i18next';
 import { Segment, Icon, Divider, List, Message } from '../basic';
 
 export default function TemplateList({ style, templates }) {
@@ -17,7 +17,11 @@ export default function TemplateList({ style, templates }) {
                 {templates.map(item => {
                     return <List.Item key={item}>{item}</List.Item>;
                 })}
-                {_.isEmpty(templates) && <Message content="Page not used by any template" />}
+                {_.isEmpty(templates) && (
+                    <Message
+                        content={i18n.t('templates.templateManagement.pageNotUsed', 'Page not used by any template')}
+                    />
+                )}
             </List>
         </Segment>
     );

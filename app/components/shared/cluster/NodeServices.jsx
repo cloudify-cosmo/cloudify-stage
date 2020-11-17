@@ -1,7 +1,7 @@
 import _ from 'lodash';
 import React from 'react';
 import PropTypes from 'prop-types';
-
+import i18n from 'i18next';
 import { CopyToClipboardButton, Header, Icon, Table } from '../../basic';
 import JsonUtils from '../../../utils/shared/JsonUtils';
 
@@ -17,7 +17,7 @@ const StatusHeader = ({ nodeName, nodeType }) => {
     return (
         <Header floated="left" style={{ width: 'auto', marginTop: '4px' }} size="medium">
             <Icon name={nodeIcon} />
-            {nodeName} Services Status
+            {nodeName} {i18n.t('cluster.servicesStatus', 'Services Status')}
         </Header>
     );
 };
@@ -95,7 +95,11 @@ export default function NodeServices({ name, type, services }) {
                     })}
                 </Table.Body>
             </Table>
-            <CopyToClipboardButton className="rightFloated" content="Copy Raw Info" text={stringifiedServices} />
+            <CopyToClipboardButton
+                className="rightFloated"
+                content={i18n.t('cluster.copyInfo', 'Copy Raw Info')}
+                text={stringifiedServices}
+            />
         </div>
     );
 }

@@ -1,7 +1,7 @@
 /**
  * Created by jakubniezgoda on 07/02/2017.
  */
-
+import i18n from 'i18next';
 import _ from 'lodash';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
@@ -78,7 +78,11 @@ export default class Users extends Component {
                             icon="configure"
                             selected={isEditMode}
                             active={isEditMode}
-                            text={isEditMode ? 'Exit Edit Mode' : 'Edit Mode'}
+                            text={
+                                isEditMode
+                                    ? i18n.t('users.exitEditMode', 'Exit Edit Mode')
+                                    : i18n.t('users.enterEditMode', 'Edit Mode')
+                            }
                             id="editModeMenuItem"
                             value="editMode"
                             onClick={this.onEditModeClick}
@@ -88,9 +92,9 @@ export default class Users extends Component {
                     {showAllOptions && canTemplateManagement && (
                         <Dropdown.Item
                             icon="list layout"
-                            text="Template Management"
+                            text={i18n.t('users.templateManagement', 'Template Management')}
                             value="templates"
-                            title="Template management"
+                            title={i18n.t('users.templateManagement', 'Template Management')}
                             onClick={onTemplates}
                             id="templatesMenuItem"
                         />
@@ -100,9 +104,9 @@ export default class Users extends Component {
                         key="reset"
                         id="resetMenuItem"
                         icon="undo"
-                        text="Reset Templates"
+                        text={i18n.t('users.resetTemplates.label', 'Reset Templates')}
                         value="reset"
-                        title="Reset application screens"
+                        title={i18n.t('users.resetTemplates.title', 'Reset application screens')}
                         onClick={onReset}
                     />
 
@@ -111,7 +115,7 @@ export default class Users extends Component {
                             key="license"
                             id="licenseMenuItem"
                             icon="key"
-                            text="License Management"
+                            text={i18n.t('users.licenseManagement', 'License Management')}
                             value="license"
                             onClick={onLicense}
                         />
@@ -124,7 +128,7 @@ export default class Users extends Component {
                         key="change-password"
                         id="changePasswordMenuItem"
                         icon="lock"
-                        text="Change Password"
+                        text={i18n.t('users.changePassword', 'Change Password')}
                         value="change-password"
                         onClick={this.onShowChangePasswordModal}
                     />
@@ -133,7 +137,7 @@ export default class Users extends Component {
                         key="log-out"
                         id="logoutMenuItem"
                         icon="log out"
-                        text="Logout"
+                        text={i18n.t('users.logout', 'Logout')}
                         value="logout"
                         onClick={onLogout}
                     />

@@ -5,7 +5,7 @@
 import _ from 'lodash';
 import PropTypes from 'prop-types';
 import React from 'react';
-
+import i18n from 'i18next';
 import Const from '../../utils/consts';
 import { Segment, Icon, Divider, List, Message, PopupConfirm } from '../basic';
 
@@ -30,14 +30,21 @@ export default function TenantList({ custom, onDelete, style, tenants }) {
                                             onClick={e => e.stopPropagation()}
                                         />
                                     }
-                                    content="Are you sure to remove this tenant from template?"
+                                    content={i18n.t(
+                                        'templates.templateManagement.tenantsList.removeConfirm',
+                                        'Are you sure to remove this tenant from template?'
+                                    )}
                                     onConfirm={() => onDelete(item)}
                                 />
                             )}
                         </List.Item>
                     );
                 })}
-                {_.isEmpty(tenants) && <Message content="No tenants available" />}
+                {_.isEmpty(tenants) && (
+                    <Message
+                        content={i18n.t('templates.templateManagement.tenantsList.noTenants', 'No tenants available')}
+                    />
+                )}
             </List>
         </Segment>
     );

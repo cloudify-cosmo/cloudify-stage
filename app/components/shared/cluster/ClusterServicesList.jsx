@@ -2,6 +2,7 @@ import _ from 'lodash';
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import i18n from 'i18next';
 
 import { DataTable } from '../../basic';
 import ClusterService from './ClusterService';
@@ -26,16 +27,16 @@ PublicIP.defaultProps = {
 };
 
 function ClusterServicesList({ services }) {
-    const noServicesMessage = 'There are no Cluster Services available.';
+    const noServicesMessage = i18n.t('cluster.servicesList.noServices', 'There are no Cluster Services available.');
 
     return (
         <DataTable noDataMessage={noServicesMessage} noDataAvailable={_.isEmpty(services)} selectable>
-            <DataTable.Column label="Service Type" width="25%" />
-            <DataTable.Column label="Node Name" width="25%" />
-            <DataTable.Column label="Status" width="5%" />
-            <DataTable.Column label="Private IP" width="15%" />
-            <DataTable.Column label="Public IP / LB IP" width="15%" />
-            <DataTable.Column label="Version" width="15%" />
+            <DataTable.Column label={i18n.t('cluster.servicesList.serviceType', 'Service Type')} width="25%" />
+            <DataTable.Column label={i18n.t('cluster.servicesList.modeName', 'Node Name')} width="25%" />
+            <DataTable.Column label={i18n.t('cluster.servicesList.status', 'Status')} width="5%" />
+            <DataTable.Column label={i18n.t('cluster.servicesList.privateIp', 'Private IP')} width="15%" />
+            <DataTable.Column label={i18n.t('cluster.servicesList.publicIp', 'Public IP / LB IP')} width="15%" />
+            <DataTable.Column label={i18n.t('cluster.servicesList.version', 'Version')} width="15%" />
 
             {_.map(services, (service, serviceName) => {
                 const numberOfNodes = _.size(service.nodes);

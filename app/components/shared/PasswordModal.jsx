@@ -2,7 +2,7 @@ import _ from 'lodash';
 import PropTypes from 'prop-types';
 import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
-
+import i18n from 'i18next';
 import Manager from '../../utils/Manager';
 import { useBoolean, useErrors, useResettableState } from '../../utils/hooks';
 import { Modal, Icon, Form, ApproveButton, CancelButton } from '../basic';
@@ -26,15 +26,24 @@ function PasswordModal({ onHide, open, manager, username }) {
         const errorsFound = {};
 
         if (_.isEmpty(password)) {
-            errorsFound.password = 'Please provide user password';
+            errorsFound.password = i18n.t(
+                'users.changePasswordModal.errors.noPassword',
+                'Please provide user password'
+            );
         }
 
         if (_.isEmpty(confirmPassword)) {
-            errorsFound.confirmPassword = 'Please provide password confirmation';
+            errorsFound.confirmPassword = i18n.t(
+                'users.changePasswordModal.errors.noPasswordConfirmation',
+                'Please provide password confirmation'
+            );
         }
 
         if (!_.isEmpty(password) && !_.isEmpty(confirmPassword) && password !== confirmPassword) {
-            errorsFound.confirmPassword = 'Passwords do not match';
+            errorsFound.confirmPassword = i18n.t(
+                'users.changePasswordModal.errors.passwordsMismatch',
+                'Passwords do not match'
+            );
         }
 
         if (!_.isEmpty(errorsFound)) {
@@ -68,12 +77,17 @@ function PasswordModal({ onHide, open, manager, username }) {
     return (
         <Modal open={open} onClose={() => onHide()} className="userPasswordModal">
             <Modal.Header>
-                <Icon name="lock" /> Change password for {username}
+                <Icon name="lock" />
+                {i18n.t('users.changePasswordModal.header', 'Change password for {{username}}', { username })}
             </Modal.Header>
 
             <Modal.Content>
                 <Form loading={loading} errors={errors} onErrorsDismiss={clearErrors}>
-                    <Form.Field label="Password" error={errors.password} required>
+                    <Form.Field
+                        label={i18n.t('users.changePasswordModal.password', 'Password')}
+                        error={errors.password}
+                        required
+                    >
                         <Form.Input
                             name="password"
                             type="password"
@@ -82,7 +96,11 @@ function PasswordModal({ onHide, open, manager, username }) {
                         />
                     </Form.Field>
 
-                    <Form.Field label="Confirm password" error={errors.confirmPassword} required>
+                    <Form.Field
+                        label={i18n.t('users.changePasswordModal.passwordConfirm', 'Confirm password')}
+                        error={errors.confirmPassword}
+                        required
+                    >
                         <Form.Input
                             name="confirmPassword"
                             type="password"
@@ -95,7 +113,13 @@ function PasswordModal({ onHide, open, manager, username }) {
 
             <Modal.Actions>
                 <CancelButton onClick={onCancel} disabled={loading} />
-                <ApproveButton onClick={onApprove} disabled={loading} content="Change" icon="lock" color="green" />
+                <ApproveButton
+                    onClick={onApprove}
+                    disabled={loading}
+                    content={i18n.t('users.changePasswordModal.change', 'Change')}
+                    icon="lock"
+                    color="green"
+                />
             </Modal.Actions>
         </Modal>
     );

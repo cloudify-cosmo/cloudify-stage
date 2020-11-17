@@ -23,11 +23,6 @@ const consts = {
         },
         initialZoom: 2.5,
         urlTemplate: '/maps/{z}/{x}/{y}/{r}'
-    },
-    externalUrls: {
-        pluginsCatalog: 'http://repository.cloudifysource.org/cloudify/wagons/plugins.json',
-        blueprintsCatalog: 'http://repository.cloudifysource.org/cloudify/blueprints/5.1/examples.json',
-        helloWorldBlueprint: 'https://github.com/cloudify-cosmo/cloudify-hello-world-example/archive/master.zip'
     }
 };
 

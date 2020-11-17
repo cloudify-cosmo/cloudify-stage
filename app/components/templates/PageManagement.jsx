@@ -1,7 +1,7 @@
 /**
  * Created by pposel on 19/09/2017.
  */
-
+import i18n from 'i18next';
 import _ from 'lodash';
 import React, { useEffect, useState } from 'react';
 import { push } from 'connected-react-router';
@@ -61,7 +61,13 @@ export default function PageManagement({ pageId, isEditMode }) {
         forEachWidget(managedPage, toWidgetInstance);
 
         if (invalidWidgetNames.length) {
-            setErrors(`Page template contains invalid widgets definitions: ${_.join(invalidWidgetNames, ', ')}`);
+            setErrors(
+                i18n.t(
+                    'templates.pageManagement.invalidWidgets',
+                    `Page template contains invalid widgets definitions: {{widgetsList}}`,
+                    { widgetsList: _.join(invalidWidgetNames, ', ') }
+                )
+            );
         }
 
         setPage(managedPage);
@@ -123,7 +129,7 @@ export default function PageManagement({ pageId, isEditMode }) {
         dispatch(drillDownWarning(false));
     };
     const onTabAdded = layoutSection => {
-        page.layout[layoutSection].content.push({ name: 'New Tab', widgets: [] });
+        page.layout[layoutSection].content.push({ name: i18n.t('editMode.tabs.newTab'), widgets: [] });
         updatePage();
     };
     const onTabRemoved = (layoutSection, tabIndex) => {
@@ -179,12 +185,17 @@ export default function PageManagement({ pageId, isEditMode }) {
                 <Segment basic className={`fullHeight ${isWidgetMaximized ? 'maximizeWidget' : ''}`}>
                     <div>
                         <Breadcrumb className="breadcrumbLineHeight">
-                            <Breadcrumb.Section onClick={onTemplateNavigate}>Template management</Breadcrumb.Section>
+                            <Breadcrumb.Section onClick={onTemplateNavigate}>
+                                {i18n.t('templates.pageManagement.breadcrumb', 'Template management')}
+                            </Breadcrumb.Section>
                             <Breadcrumb.Divider />
                             <Breadcrumb.Section active>
                                 <EditableLabel
                                     value={page.name}
-                                    placeHolder="You must fill a page name"
+                                    placeHolder={i18n.t(
+                                        'templates.pageManagement.pageNamePlaceholder',
+                                        'You must fill a page name'
+                                    )}
                                     className="section active pageTitle"
                                     enabled={isEditMode}
                                     onChange={onPageNameChange}
@@ -212,15 +223,34 @@ export default function PageManagement({ pageId, isEditMode }) {
 
                     <EditModeBubble
                         onDismiss={onTemplateNavigate}
-                        header={isEditMode ? 'Page management' : 'Page preview'}
+                        header={
+                            isEditMode
+                                ? i18n.t('templates.pageManagement.editHeader', 'Page management')
+                                : i18n.t('templates.pageManagement.previewHeader', 'Page preview')
+                        }
                     >
                         {isEditMode ? (
                             <>
-                                <Button basic content="Save" icon="save" onClick={onPageSave} />
-                                <Button basic content="Cancel" icon="remove" onClick={onTemplateNavigate} />
+                                <Button
+                                    basic
+                                    content={i18n.t('templates.pageManagement.save', 'Save')}
+                                    icon="save"
+                                    onClick={onPageSave}
+                                />
+                                <Button
+                                    basic
+                                    content={i18n.t('templates.pageManagement.cancel', 'Cancel')}
+                                    icon="remove"
+                                    onClick={onTemplateNavigate}
+                                />
                             </>
                         ) : (
-                            <Button basic content="Exit" icon="sign out" onClick={onTemplateNavigate} />
+                            <Button
+                                basic
+                                content={i18n.t('templates.pageManagement.exit', 'Exit')}
+                                icon="sign out"
+                                onClick={onTemplateNavigate}
+                            />
                         )}
                     </EditModeBubble>
                 </Segment>
@@ -228,7 +258,10 @@ export default function PageManagement({ pageId, isEditMode }) {
 
             <Alert
                 open={showDrillDownWarn}
-                content="Drill down action is not available in the template management"
+                content={i18n.t(
+                    'templates.pageManagement.drillDownWarning',
+                    'Drill down action is not available in the template management'
+                )}
                 onDismiss={onCloseDrillDownWarning}
             />
         </div>

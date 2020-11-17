@@ -1,7 +1,7 @@
 /**
  * Created by edenp on 08/11/2017.
  */
-
+import i18n from 'i18next';
 import { push } from 'connected-react-router';
 import { showAppError } from '../actions/auth';
 import Consts from './consts';
@@ -21,9 +21,9 @@ export default class Interceptor {
 
     handleLicenseError(errorCode) {
         if (errorCode === Consts.NO_LICENSE_ERROR_CODE) {
-            this.store.dispatch(showAppError('No active license'));
+            this.store.dispatch(showAppError(i18n.t('noLicense', 'No active license')));
         } else if (errorCode === Consts.EXPIRED_LICENSE_ERROR_CODE) {
-            this.store.dispatch(showAppError('License has expired'));
+            this.store.dispatch(showAppError(i18n.t('licenseExpired', 'License has expired')));
         }
     }
 

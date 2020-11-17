@@ -1,7 +1,7 @@
 /**
  * Created by kinneretzin on 18/09/2016.
  */
-
+import i18n from 'i18next';
 import _ from 'lodash';
 import PropTypes from 'prop-types';
 import React from 'react';
@@ -26,7 +26,7 @@ export default function Breadcrumbs({ isEditMode, onPageNameChange, onPageSelect
                 <EditableLabel
                     key={p.id}
                     value={p.name}
-                    placeholder="You must fill a page name"
+                    placeholder={i18n.t('editMode.pageName', 'You must fill a page name')}
                     className="section active pageTitle"
                     enabled={isEditMode}
                     onChange={newName => onPageNameChange(p, newName)}

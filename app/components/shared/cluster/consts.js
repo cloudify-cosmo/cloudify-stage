@@ -7,12 +7,6 @@ export const clusterStatusEnum = Object.freeze({
     Unknown: 'Unknown'
 });
 
-export const clusterServiceName = Object.freeze({
-    manager: 'Manager',
-    db: 'Database',
-    broker: 'Message Broker'
-});
-
 export const clusterServiceEnum = Object.freeze({
     manager: 'manager',
     db: 'db',

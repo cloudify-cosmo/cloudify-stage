@@ -36,6 +36,7 @@ import { createBrowserHistory } from 'history';
 import { ConnectedRouter } from 'connected-react-router';
 import { Switch } from 'react-router-dom';
 
+import i18n from 'i18next';
 import configureStore from './configureStore';
 import { createToolbox } from './utils/Toolbox';
 import ConfigLoader from './utils/ConfigLoader';
@@ -48,6 +49,7 @@ import widgetDefinitionLoader from './utils/widgetDefinitionsLoader';
 import Interceptor from './utils/Interceptor';
 
 import Routes from './containers/Routes';
+import translation from './translations/en.json';
 
 window.$ = $;
 
@@ -57,6 +59,16 @@ const browserHistory = createBrowserHistory({
 
 export default class app {
     static load() {
+        i18n.init({
+            resources: {
+                en: {
+                    translation
+                }
+            },
+            lng: 'en',
+            fallbackLng: 'en'
+        });
+
         window.React = React;
         window.ReactDOM = ReactDOM;
         window.PropTypes = PropTypes;

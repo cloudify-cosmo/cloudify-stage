@@ -4,7 +4,7 @@
 import _ from 'lodash';
 import PropTypes from 'prop-types';
 import React, { useState } from 'react';
-
+import i18n from 'i18next';
 import { useBoolean, useErrors, useResettableState } from '../../utils/hooks';
 import { ApproveButton, Button, CancelButton, Form, Icon, Modal } from '../basic/index';
 
@@ -25,7 +25,10 @@ export default function CreatePageModal({ onCreatePage, pageName: initialPageNam
         const errorsObject = {};
 
         if (_.isEmpty(_.trim(pageName))) {
-            errorsObject.pageName = 'Please provide correct page name';
+            errorsObject.pageName = i18n.t(
+                'templates.createPageModal.pageNameError',
+                'Please provide correct page name'
+            );
         }
 
         if (!_.isEmpty(errorsObject)) {
@@ -54,7 +57,7 @@ export default function CreatePageModal({ onCreatePage, pageName: initialPageNam
         <Modal trigger={trigger} open={open} onOpen={openModal} onClose={unsetOpen} className="createPageModal">
             <Modal.Header>
                 <Icon name="block layout" />
-                Create page
+                {i18n.t('templates.createPageModal.header', 'Create page')}
             </Modal.Header>
 
             <Modal.Content>
@@ -62,7 +65,7 @@ export default function CreatePageModal({ onCreatePage, pageName: initialPageNam
                     <Form.Field error={errors.pageName}>
                         <Form.Input
                             name="pageName"
-                            placeholder="Page name"
+                            placeholder={i18n.t('templates.createPageModal.pageName', 'Page name')}
                             value={pageName}
                             onChange={handleInputChange}
                         />
@@ -75,7 +78,7 @@ export default function CreatePageModal({ onCreatePage, pageName: initialPageNam
                 <ApproveButton
                     onClick={submitCreate}
                     disabled={loading}
-                    content="Create"
+                    content={i18n.t('templates.createPageModal.create', 'Create')}
                     icon="checkmark"
                     color="green"
                 />

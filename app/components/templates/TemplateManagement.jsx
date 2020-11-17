@@ -1,7 +1,7 @@
 /**
  * Created by pposel on 11/08/2017.
  */
-
+import i18n from 'i18next';
 import _ from 'lodash';
 import log from 'loglevel';
 import React, { useEffect, useState } from 'react';
@@ -187,7 +187,9 @@ export default function TemplateManagement() {
     }
 
     function canDeletePage(page) {
-        return _.isEmpty(page.templates) ? null : 'Page is used by the templates and cannot be deleted';
+        return _.isEmpty(page.templates)
+            ? null
+            : i18n.t('templates.pageManagement.cantDelete', 'Page is used by the templates and cannot be deleted');
     }
 
     function onEditPage(page) {
@@ -224,10 +226,12 @@ export default function TemplateManagement() {
             <Segment basic loading={isLoading}>
                 <div style={{ position: 'relative' }}>
                     <Breadcrumb className="breadcrumbLineHeight">
-                        <Breadcrumb.Section active>Template management</Breadcrumb.Section>
+                        <Breadcrumb.Section active>
+                            {i18n.t('templates.breadcrumb', 'Template management')}
+                        </Breadcrumb.Section>
                     </Breadcrumb>
                     <Button
-                        content="Close"
+                        content={i18n.t('templates.close', 'Close')}
                         basic
                         compact
                         floated="right"

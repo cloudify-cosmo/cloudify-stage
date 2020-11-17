@@ -1,0 +1,377 @@
+{
+    "backToApps": "Back to apps",
+    "backToLogin": "Back to login",
+    "cluster": {
+        "manager": "Manager",
+        "db": "Database",
+        "broker": "Message Broker",
+        "copyInfo": "Copy Raw Info",
+        "overview": {
+            "errorHeader": "Failed to fetch status",
+            "noServices": "No services available"
+        },
+        "servicesList": {
+            "modeName": "Node Name",
+            "noServices": "There are no Cluster Services available.",
+            "privateIp": "Private IP",
+            "publicIp": "Public IP / LB IP",
+            "serviceType": "Service Type",
+            "status": "Status",
+            "version": "Version"
+        },
+        "servicesStatus": "Services Status",
+        "systemStatus": "System Status"
+    },
+    "editMode": {
+        "addPage": "Add Page",
+        "addTabsContainer": "Add Tabs Container",
+        "addWidget": {
+            "addButton": "Add Widget",
+            "addToContainerButtonTitle": "Add widget to this widgets container",
+            "addToTabButtonTitle": "Add widget to this tab",
+            "category": {
+                "all": "All",
+                "blueprints": "Blueprints",
+                "deployments": "Deployments",
+                "buttonsAndFilters": "Buttons and Filters",
+                "chartsAndStatistics": "Charts and Statistics",
+                "executionsNodes": "Executions/Nodes",
+                "systemResources": "System Resources",
+                "spire": "Spire",
+                "others": "Others"
+            },
+            "checkbox": "Add widget to page",
+            "defaultWidgetName": "Widget_{{index}}",
+            "installButton": "Install new widget",
+            "installModal": {
+                "cancelButton": "Cancel",
+                "error": {
+                    "invalidUrl": "Please provide valid URL for widget's archive",
+                    "noFileOrUrl": "Please provide the widget's archive URL or select a file"
+                },
+                "fileOrUrlLabel": "Widget package",
+                "fileOrUrlPlaceholder": "Provide the widget's archive URL or click browse to select a file",
+                "header": "Install new widget",
+                "submitButton": "Install Widget"
+            },
+            "noWidgets": "No widgets available",
+            "search": "Search widgets ...",
+            "submitButton": "Add selected widgets ({{widgetsCount}})",
+            "updateButton": "Update",
+            "updateModal": {
+                "button": "Update Widget",
+                "header": "Update widget definition"
+            }
+        },
+        "addWidgetsContainer": "Add Widgets Container",
+        "containerRemovalModal": {
+            "header": "Are you sure you want to remove this widgets container?",
+            "message": "All widgets present in this container will be removed"
+        },
+        "defaultPageName": "Page_{{index}}",
+        "editWidget": {
+            "noConfiguration": "No configuration available for this widget"
+        },
+        "emptyContainer": {
+            "line1": "This {{containerType}} is empty,",
+            "line2": "don't be shy, give it a meaning!"
+        },
+        "exit": "Exit",
+        "insertTabsContainer": "Insert Tabs Container",
+        "insertWidgetsContainer": "Insert Widgets Container",
+        "pageName": "You must fill a page name",
+        "pageRemovalModal": {
+            "header": "Are you sure you want to remove page {{pageName}}?",
+            "message": "All widgets and tabs present in this page will be removed as well"
+        },
+        "removeTabsContainer": "Remove tabs container",
+        "removeWidget": {
+            "button": "Remove",
+            "confirm": "Are you sure to remove widget {{name}}",
+            "usedBy": {
+                "header": "Widget is currently used by:",
+                "manager": "Manager IP",
+                "username": "Username"
+            }
+        },
+        "removeWidgetsContainer": "Remove widgets container",
+        "tabRemovalModal": {
+            "header": "Are you sure you want to remove this tabs container?",
+            "message": "All tabs and widgets present in this container will be removed"
+        },
+        "tabs": {
+            "add": "Add new tab",
+            "default": "Default tab",
+            "name": "Tab name",
+            "newTab": "New Tab",
+            "removeModal": {
+                "header": "Are you sure you want to remove tab {{tabName}}?",
+                "message": "All widgets present in this tab will be removed as well"
+            }
+        }
+    },
+    "help": {
+        "about": "About",
+        "aboutModal": {
+            "close": "Close",
+            "licenseDetails": "License Details",
+            "licenseManagement": "License Management",
+            "versionDetails": "Version Details"
+        },
+        "contact": "Contact Us",
+        "contactLink": "https://cloudify.co/contact",
+        "documentation": "Documentation",
+        "documentationLink": "https://docs.cloudify.co/{{version}}"
+    },
+    "licenseExpired": "License has expired",
+    "licenseManagement": {
+        "action": {
+            "activeLicense": "No action required.",
+            "canUpload": {
+                "noLicense": "To activate this product, please enter the license key provided by Cloudify below and press update. Visit the Cloudify <a target=\"_blank\" href=\"https://cloudify.co\">web site</a> to learn more and acquire a free <a target=\"_blank\" href=\"https://cloudify.co/download/#trial\">trial license</a>.",
+                "regularLicenseExpired": "Please contact <a target=\"_blank\" href=\"https://cloudify.co/support\">Cloudify support</a> to obtain a new license key.",
+                "trialLicenseExpired": "Please contact <a target=\"_blank\" href=\"https://cloudify.co/contact\">Cloudify</a> to obtain a license key."
+            },
+            "cannotUpload": {
+                "common": "Please contact your Cloudify administrator.",
+                "noLicense": "To activate this product, please contact your Cloudify administrator."
+            }
+        },
+        "allVersions": "All",
+        "capabilities": "Capabilities",
+        "distribution": "Distribution",
+        "editLicense": "Edit License",
+        "errorHeader": "License error",
+        "eula": "End User License Agreement",
+        "eulaLink": "https://cloudify.co/license",
+        "eulaLinkCommunity": "https://cloudify.co/license-community/",
+        "expirationDate": "Expiration Date",
+        "expirationDateNever": "Never",
+        "goToApp": "Go to app",
+        "header": "License Management",
+        "licenseEdition": "License Edition",
+        "licensePlaceholder": "Paste the complete license string, including the license signature",
+        "licensedTo": "Licensed To",
+        "noVersion": "There is no version data.",
+        "showLicense": "Show License",
+        "subheader": {
+            "activeLicense": "License is valid",
+            "noLicense": "No active license",
+            "regularLicenseExpired": "Product license has expired",
+            "trialLicenseExpired": "The trial license has expired"
+        },
+        "trial": "Trial",
+        "trialYes": "Yes",
+        "update": "Update",
+        "validForVersion": "Valid For Version",
+        "version": "Version"
+    },
+    "login": {
+        "header": "CLOUDIFY",
+        "message": "Welcome to the Cloudify Management Console, Please log in",
+        "error": {
+            "noPassword": "Please provide password",
+            "noUsername": "Please provide username"
+        },
+        "noTenants": {
+            "header": "User is not associated with any tenants.",
+            "message": "Unfortunately you cannot login since your account is not associated with any tenants. Please ask the administrator to assign at least one tenant to your account."
+        },
+        "password": "Password",
+        "username": "Username"
+    },
+    "maintenanceMode": {
+        "activate": "Activate Maintenance Mode",
+        "confirmModal": {
+            "header": {
+                "activate": "Are you sure you want to enter maintenance mode?",
+                "deactivate": "Are you sure you want to exit maintenance mode?"
+            }
+        },
+        "deactivate": "Deactivate Maintenance Mode",
+        "header": "Maintenance mode",
+        "message": "Server is on maintenance mode and is not available at the moment."
+    },
+    "noLicense": "No active license",
+    "noPages": "No pages available to display. Please try to reset application to the default settings.",
+    "notFound": {
+        "header": "Page Not Found",
+        "homepageLink": "Go to the Homepage",
+        "message": "We are sorry, but the page you are looking for doesn't exist."
+    },
+    "page": {
+        "description": "Page description",
+        "emptyContainer": "This {{containerType}} is empty"
+    },
+    "pageLoadError": "Error initializing user data, cannot load page",
+    "pagesResetModal": {
+        "confirm": "Are you sure you want to reset application screens to default?",
+        "header": "Reset pages for tenants",
+        "selectTenants": "Please select tenants you would like to reset pages for:"
+    },
+    "pageTitle": "Cloudify Console",
+    "productName": "Cloudify",
+    "redirecting": "Redirecting to {{url}}...",
+    "shared": {
+        "executionStatus": {
+            "scheduledFor": "Scheduled for: <strong>{{datetime}}}</strong>"
+        },
+        "idPopup": {
+            "copyButton": "Copy ID",
+            "label": "ID"
+        }
+    },
+    "templates": {
+        "breadcrumb": "Template management",
+        "close": "Close",
+        "createPageModal": {
+            "create": "Create",
+            "header": "Create page",
+            "pageName": "Page name",
+            "pageNameError": "Please provide correct page name"
+        },
+        "createTemplateModal": {
+            "addPage": "Add page",
+            "availablePages": "Available pages",
+            "button": "Create template",
+            "create": "Create",
+            "createHeader": "Create template",
+            "errors": {
+                "page": "Please select page",
+                "role": "Please select role",
+                "templateName": "Please provide correct template name",
+                "tenant": "Please select tenant"
+            },
+            "noPagesAvailable": "No pages available",
+            "noPagesSelected": "No pages selected",
+            "removePage": "Remove page",
+            "reorderPage": "Reorder page",
+            "roles": "Roles",
+            "selectedPages": "Selected pages",
+            "templateName": "Template name",
+            "tenants": "Tenants",
+            "update": "Update",
+            "updateHeader": "Update template {{templateName}}"
+        },
+        "pageManagement": {
+            "breadcrumb": "Template management",
+            "cancel": "Cancel",
+            "cantDelete": "Page is used by the templates and cannot be deleted",
+            "drillDownWarning": "Drill down action is not available in the template management",
+            "editHeader": "Page management",
+            "exit": "Exit",
+            "header": "Pages",
+            "invalidWidgets": "Page template contains invalid widgets definitions: {{widgetsList}}",
+            "pageNamePlaceholder": "You must fill a page name",
+            "previewHeader": "Page preview",
+            "removeConfirm": "Are you sure to remove this page?",
+            "save": "Save",
+            "table": {
+                "pageID": "Page id",
+                "pageName": "Page name",
+                "templates": "Templates",
+                "updatedAt": "Updated at",
+                "updatedBy": "Updated by"
+            }
+        },
+        "templateManagement": {
+            "header": "Templates",
+            "pageList": {
+                "noPages": "No pages available",
+                "removeConfirm": "Are you sure to remove this page from template?"
+            },
+            "pageNotUsed": "Page not used by any template",
+            "removeConfirm": "Are you sure to remove this template?",
+            "roleList": {
+                "noRoles": "No roles available",
+                "removeConfirm": "Are you sure to remove this role from template?"
+            },
+            "table": {
+                "roles": "Roles",
+                "templateId": "Template id",
+                "tenants": "Tenants",
+                "updatedAt": "Updated at",
+                "updatedBy": "Updated by"
+            },
+            "tenantsList": {
+                "noTenants": "No tenants available",
+                "removeConfirm": "Are you sure to remove this tenant from template?"
+            }
+        }
+    },
+    "tours": {
+        "buttonTitle": "Take a tour",
+        "next": "Next",
+        "nextPage": "Next (change page)",
+        "noPage": {
+            "message": "Cannot find <strong>{{page}}</strong> page. Tours are intended to work only on default templates. Reset templates to finish this tour.",
+            "title": "No page"
+        },
+        "noSelector": {
+            "message": "Cannot find element for the next tour step on the screen.",
+            "title": "No element"
+        },
+        "noTarget": {
+            "message": "Cannot find target element. Tours are intended to work only on default templates. Reset templates to finish this tour.",
+            "title": "No target element for next step"
+        }
+    },
+    "unexpectedError": "Unexpected Error Occurred",
+    "users": {
+        "changePassword": "Change Password",
+        "changePasswordModal": {
+            "change": "Change",
+            "errors": {
+                "noPassword": "Please provide user password",
+                "noPasswordConfirmation": "Please provide password confirmation",
+                "passwordsMismatch": "Passwords do not match"
+            },
+            "header": "Change password for {{username}}",
+            "password": "Password",
+            "passwordConfirm": "Confirm password"
+        },
+        "enterEditMode": "Edit Mode",
+        "exitEditMode": "Exit Edit Mode",
+        "licenseManagement": "License Management",
+        "logout": "Logout",
+        "resetTemplates": {
+            "label": "Reset Templates",
+            "title": "Reset application screens"
+        },
+        "templateManagement": "Template Management"
+    },
+    "widget": {
+        "config": {
+            "pollingTime": {
+                "description": "Data of the widget will be refreshed per provided interval time in seconds",
+                "name": "Refresh time interval",
+                "placeholder": "Enter time interval in seconds"
+            }
+        },
+        "detailedRenderError": "Error rendering widget: {{errorDetails}}",
+        "fetchDataFunctionError": "Widget doesnt have a fetchData function",
+        "fetchError": "Error fetching widget data",
+        "loadError": "Cannot load widget {{widgetName}}. It might not be installed in your env. Please contact administrator.",
+        "loading": "Loading...",
+        "renderError": "Cannot render widget. Check browser console for details.",
+        "unexpectedError": "An unexpected error occurred",
+        "validationErrors": {
+            "idNotSpecified": "Mandatory field - 'id' - not specified in widget definition.",
+            "invalidPermission": "Specified widget permission ('{{permission}}') not found in available permissions list.",
+            "multipleDefinitions": "Only single widget should be defined within widget.js",
+            "multipleErrors": "Multiple errors occured: {{}}",
+            "nameNotSpecified": "Mandatory field - 'name' - not specified in widget definition.",
+            "noWidgetDefinition": "Widget not properly initialized. Please check if widget.js is correctly defined."
+        }
+    },
+    "widgets": {
+        "common": {
+            "urls": {
+                "pluginsCatalog": "http://repository.cloudifysource.org/cloudify/wagons/plugins.json",
+                "blueprintsCatalog": "http://repository.cloudifysource.org/cloudify/blueprints/5.1/examples.json",
+                "helloWorldBlueprint": "https://github.com/cloudify-cosmo/cloudify-hello-world-example/archive/master.zip",
+                "linkParameterExample": "https://cloudify.co"
+            }
+        }
+    }
+}

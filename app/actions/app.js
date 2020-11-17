@@ -1,7 +1,8 @@
 import log from 'loglevel';
 
+import i18n from 'i18next';
 import * as types from './types';
-import { setAppLoading, setAppError } from './appState';
+import { setAppError, setAppLoading } from './appState';
 import { loadTemplates } from './templates';
 import { loadTours } from './tours';
 import { loadWidgetDefinitions } from './widgets';
@@ -11,6 +12,13 @@ import { loadOrCreateUserAppData } from './userApp';
 import { getLdap, getUserData } from './managers';
 import { getClusterStatus } from './clusterStatus';
 import { NO_TENANTS_ERR } from '../utils/ErrorCodes';
+import LoaderUtils from '../utils/LoaderUtils';
+
+function loadTranslationOverrides() {
+    LoaderUtils.fetchResource('overrides.json', true).then(overrides =>
+        i18n.addResourceBundle('en', 'translation', overrides, true, true)
+    );
+}
 
 export function intialPageLoad() {
     return (dispatch, getState) => {
@@ -33,7 +41,8 @@ export function intialPageLoad() {
                     dispatch(loadWidgetDefinitions()),
                     dispatch(getClientConfig()),
                     dispatch(getClusterStatus()),
-                    dispatch(getLdap())
+                    dispatch(getLdap()),
+                    loadTranslationOverrides()
                 ]);
             })
             .then(() => {

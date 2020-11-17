@@ -18,6 +18,8 @@ const configurationDefaults = {
     deploymentWizardButtonLabel: 'Deployment Wizard'
 };
 
+const { i18n } = Stage;
+
 Stage.defineWidget({
     id: 'deploymentWizardButtons',
     name: 'Deployment Wizard Buttons',
@@ -60,9 +62,8 @@ Stage.defineWidget({
     permission: Stage.GenericConfig.WIDGET_PERMISSION('deploymentWizardButtons'),
 
     fetchData(widget, toolbox) {
-        const { externalUrls } = Stage.Common.Consts;
         return Promise.all(
-            [externalUrls.pluginsCatalog, externalUrls.helloWorldBlueprint].map(url =>
+            [i18n.t('widgets.common.urls.pluginsCatalog'), i18n.t('widgets.common.urls.helloWorldBlueprint')].map(url =>
                 toolbox
                     .getInternal()
                     .doGet('/external/content', {
