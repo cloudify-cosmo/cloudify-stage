@@ -174,6 +174,13 @@ module.exports = r => {
                         allSubgraphs[containingSubgraph].labels[0].state = null;
                         allSubgraphs[task.id].containingSubgraph = containingSubgraph;
                     }
+
+                    if (task.dependencies) {
+                        // Updating task dependencies not to include containing_subgraph
+                        task.dependencies = task.dependencies.filter(
+                            taskId => taskId !== task.parameters.containing_subgraph
+                        );
+                    }
                 }
             });
             return allSubgraphs;
