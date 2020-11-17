@@ -56,7 +56,7 @@ export default class Tenants extends Component {
         );
 
         return (
-            <HeaderMenu trigger={tenantMenuTrigger} onClose={() => this.onSearchChange('')}>
+            <HeaderMenu trigger={tenantMenuTrigger} onClose={() => this.onSearchChange('')} className="tenantsMenu">
                 <Input
                     icon="search"
                     iconPosition="left"
