@@ -72,7 +72,7 @@ export default class Users extends Component {
 
         return (
             <>
-                <HeaderMenu trigger={userMenuTrigger}>
+                <HeaderMenu trigger={userMenuTrigger} className="usersMenu">
                     {showAllOptions && canEditMode && (
                         <Dropdown.Item
                             icon="configure"
