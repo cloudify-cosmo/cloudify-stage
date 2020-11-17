@@ -9,7 +9,7 @@ Displays the following information about a specific blueprint:
 * **Creator user-name**
 * **Main blueprint file name** (as the blueprint archive can contain multiple files)
 
-![blueprint-info](https://docs.cloudify.co/latest/images/ui/widgets/blueprint-info.png)
+![blueprint-info]( /images/ui/widgets/blueprint-info.png )
 
 
 ## Settings
