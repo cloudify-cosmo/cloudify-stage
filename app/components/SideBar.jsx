@@ -3,18 +3,32 @@
  */
 
 import PropTypes from 'prop-types';
-import React from 'react';
+import React, { useContext } from 'react';
 
+import styled, { ThemeContext } from 'styled-components';
 import Pages from '../containers/Pages';
+
+const Sidebar = styled.div`
+    background-color: ${props => props.theme.sidebarColor} !important;
+    .item {
+        color: ${props => props.theme.sidebarTextColor} !important;
+    }
+    .item.active,
+    .item:hover {
+        background-color: ${props => props.theme.sideBarHoverActiveColor} !important;
+        color: ${props => props.theme.sidebarTextColor} !important;
+    }
+`;
 
 export default function SideBar({ homePageId, isEditMode, isOpen, pageId }) {
     const className = isOpen ? 'open' : '';
+    const theme = useContext(ThemeContext);
 
     return (
         <div className="sidebarContainer">
-            <div className={`ui visible left vertical sidebar menu small basic ${className}`}>
+            <Sidebar className={`ui visible left vertical sidebar menu small basic ${className}`} theme={theme}>
                 <Pages pageId={pageId} isEditMode={isEditMode} homePageId={homePageId} />
-            </div>
+            </Sidebar>
         </div>
     );
 }
