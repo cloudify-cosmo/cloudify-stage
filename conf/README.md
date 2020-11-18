@@ -73,7 +73,7 @@ This configuration can be overridden by: `/dist/userData/userConfig.json`.
   * `loginPageTextColor` - string, login page text under header color (CSS color) 
   * `sidebarColor` - string, menu sidebar color (CSS color)
   * `sidebarTextColor` - string, menu sidebar text color (CSS color) 
-  * `sideBarHoverActiveColor` - string, menu sidebar color (CSS color) for active and hovered items
+  * `sidebarHoverActiveColor` - string, menu sidebar color (CSS color) for active and hovered items
   * `customCssPath` - string, relative path to custom CSS file
   
 * `widgets` - object, widget configuration exposed to user

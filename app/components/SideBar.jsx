@@ -16,7 +16,7 @@ const ThemedSidebar = styled(Sidebar)`
     }
     .item.active,
     .item:hover {
-        background-color: ${props => props.theme.sideBarHoverActiveColor} !important;
+        background-color: ${props => props.theme.sidebarHoverActiveColor} !important;
         color: ${props => props.theme.sidebarTextColor} !important;
     }
 `;
