@@ -366,6 +366,18 @@
     },
     "widgets": {
         "common": {
+            "readmes": {
+                "linksBasePath": "https://docs.cloudify.co/latest",
+                "params": {
+                    "cfy_composer_link": "/developer/composer/",
+                    "cfy_composer_name": "Cloudify Composer",
+                    "cfy_console_name": "Cloudify Management Console",
+                    "cfy_manager_name": "Cloudify Manager",
+                    "cfy_spire_name": "Cloudify Spire",
+                    "mgr_premium_title": "Cloudify Premium Manager",
+                    "product_name": "Cloudify"
+                }
+            },
             "urls": {
                 "pluginsCatalog": "http://repository.cloudifysource.org/cloudify/wagons/plugins.json",
                 "blueprintsCatalog": "http://repository.cloudifysource.org/cloudify/blueprints/5.1/examples.json",

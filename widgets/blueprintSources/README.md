@@ -3,7 +3,7 @@ Displays all the source files in a blueprint package in tree view, adjacent to t
 
 If blueprint imports another blueprint, then all imported blueprint will be listed under **Imported blueprints** node in tree view.  
 
-![blueprint-sources](https://docs.cloudify.co/latest/images/ui/widgets/blueprint-sources.png)
+![blueprint-sources]( /images/ui/widgets/blueprint-sources.png )
 
 
 ## Settings

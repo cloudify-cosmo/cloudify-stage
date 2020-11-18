@@ -1,7 +1,7 @@
 # Text
 Displays text provided in the configuration of the widget in markdown syntax.
 
-![text-widget](https://docs.cloudify.co/latest/images/ui/widgets/text_widget_content.png)
+![text-widget]( /images/ui/widgets/text_widget_content.png )
 
 
 ## Settings
@@ -15,4 +15,4 @@ Displays text provided in the configuration of the widget in markdown syntax.
 * `Content text size (px)` - Size of the header
 * `Content text font` - Font of the header
 
-![text-widget-configuration](https://docs.cloudify.co/latest/images/ui/widgets/text_widget_configuration.png)
+![text-widget-configuration]( /images/ui/widgets/text_widget_configuration.png )

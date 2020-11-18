@@ -2,7 +2,7 @@
 
 Displays the list of sites and enables their management.
 
-![Sites widget](https://docs.cloudify.co/latest/images/ui/widgets/sites.png)
+![Sites widget]( /images/ui/widgets/sites.png )
 
 ## Features
 
@@ -29,7 +29,7 @@ Also, using the “Create” button on the right top corner of the widget, you w
 
 #### Creating a Site
 
-![Create Site](https://docs.cloudify.co/latest/images/ui/widgets/sites_create-site.png)
+![Create Site]( /images/ui/widgets/sites_create-site.png )
 
 1. Click the **Create** button.
 2. Enter a name for the site. The name must be unique in the scope of the site (tenant/global).
@@ -46,7 +46,7 @@ The site is added to the list.
 2. Enter a new name or location for the site.
 3. Click **Update**.
 
-![Update Site](https://docs.cloudify.co/latest/images/ui/widgets/sites_update-site.png)
+![Update Site]( /images/ui/widgets/sites_update-site.png )
 
 
 #### Deleting a Site
