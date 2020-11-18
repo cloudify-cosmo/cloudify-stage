@@ -7,7 +7,7 @@ Presents the names and values of the inputs of a specific deployment. The deploy
 
 If only a blueprint was selected, the widget will present the default values for the inputs, defined in the blueprint itself.
 
-![deployment-inputs](https://docs.cloudify.co/latest/images/ui/widgets/deployment-inputs.png)
+![deployment-inputs]( /images/ui/widgets/deployment-inputs.png )
 
 
 ## Settings

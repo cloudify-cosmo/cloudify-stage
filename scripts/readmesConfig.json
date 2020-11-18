@@ -1,7 +1,5 @@
 {
-  "linksBasePath": "https://docs.cloudify.co/latest",
   "rawContentBasePath": "https://raw.githubusercontent.com/cloudify-cosmo/docs.getcloudify.org/master",
-  "configFile": "config.toml",
   "files": [
     {"widget": "agents", "link": "/content/working_with/console/widgets/agents.md"},
     {"widget": "blueprintActionButtons", "link": "/content/working_with/console/widgets/blueprintActionButtons.md"},

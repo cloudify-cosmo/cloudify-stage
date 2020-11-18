@@ -96,7 +96,6 @@
     "@babel/register": "^7.7.7",
     "@babel/runtime": "^7.7.7",
     "@cypress/code-coverage": "^3.8.1",
-    "@iarna/toml": "^2.2.5",
     "@size-limit/preset-app": "^4.5.5",
     "@types/lodash": "^4.14.149",
     "@types/prop-types": "^15.7.3",
