@@ -46,7 +46,7 @@ module.exports = (() => {
                     const id = pathlib.basename(templateFile, '.json');
 
                     const name = _.get(pageFileContent, 'name', id);
-                    const updatedBy = _.get(pageFileContent, 'updatedBy', isCustom ? '' : 'Cloudify');
+                    const updatedBy = _.get(pageFileContent, 'updatedBy', isCustom ? '' : 'Manager');
                     const updatedAt = _.get(pageFileContent, 'updatedAt', '');
                     const data = {
                         roles: _.get(pageFileContent, 'roles', []),
@@ -87,7 +87,7 @@ module.exports = (() => {
                     const id = pathlib.basename(pageFile, '.json');
 
                     const name = _.get(pageFileContent, 'name', id);
-                    const updatedBy = _.get(pageFileContent, 'updatedBy', isCustom ? '' : 'Cloudify');
+                    const updatedBy = _.get(pageFileContent, 'updatedBy', isCustom ? '' : 'Manager');
                     const updatedAt = _.get(pageFileContent, 'updatedAt', '');
 
                     return { id, name, custom: isCustom, updatedBy, updatedAt };

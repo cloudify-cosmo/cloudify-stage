@@ -14,12 +14,6 @@ import { getClusterStatus } from './clusterStatus';
 import { NO_TENANTS_ERR } from '../utils/ErrorCodes';
 import LoaderUtils from '../utils/LoaderUtils';
 
-function loadTranslationOverrides() {
-    LoaderUtils.fetchResource('overrides.json', true).then(overrides =>
-        i18n.addResourceBundle('en', 'translation', overrides, true, true)
-    );
-}
-
 export function intialPageLoad() {
     return (dispatch, getState) => {
         dispatch(setAppLoading(true));
@@ -41,8 +35,7 @@ export function intialPageLoad() {
                     dispatch(loadWidgetDefinitions()),
                     dispatch(getClientConfig()),
                     dispatch(getClusterStatus()),
-                    dispatch(getLdap()),
-                    loadTranslationOverrides()
+                    dispatch(getLdap())
                 ]);
             })
             .then(() => {
