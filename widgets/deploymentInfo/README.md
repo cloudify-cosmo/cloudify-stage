@@ -11,7 +11,7 @@ Displays the following information about a specific deployment:
 * **Creator username**
 
 
-![deployment-info](https://docs.cloudify.co/latest/images/ui/widgets/deployment-info.png)
+![deployment-info]( /images/ui/widgets/deployment-info.png )
 
 
 ## Settings

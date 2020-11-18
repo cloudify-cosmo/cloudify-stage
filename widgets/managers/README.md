@@ -1,13 +1,13 @@
 # Spire Manager
 
-Displays the list of the deployments created using [Cloudify Spire plugin](https://github.com/cloudify-cosmo/cloudify-spire-plugin) in the current tenant, according to the user’s permissions. The data is displayed in a table.
+Displays the list of the deployments created using [{{< param cfy_spire_name >}} plugin](https://github.com/cloudify-cosmo/cloudify-spire-plugin) in the current tenant, according to the user’s permissions. The data is displayed in a table.
 
 <div class="ui message info">
-The Cloudify Spire widget can only be used on a Cloudify Manager with the Cloudify Spire license.
+The {{< param cfy_spire_name >}} widget can only be used on a {{< param cfy_manager_name >}} with the {{< param cfy_spire_name >}} license.
 </div>
 
 
-![Spire Manager](https://docs.cloudify.co/latest/images/ui/widgets/spire-manager.png)
+![Spire Manager]( /images/ui/widgets/spire-manager.png )
 
 ## Features
 
@@ -17,20 +17,20 @@ You can see IP addresses, names and status of the cluster created by Spire deplo
 
 Detailed status about specific cluster is presented after hovering the status icon:
 
-![Spire Manager - status](https://docs.cloudify.co/latest/images/ui/widgets/spire-manager-status.png)
+![Spire Manager - status]( /images/ui/widgets/spire-manager-status.png )
 
 Similarly to Deployments widget you can see detailed information about last execution by hovering the cell in Last Execution column:
 
-![Spire Manager - last execution](https://docs.cloudify.co/latest/images/ui/widgets/spire-manager-last-execution.png)
+![Spire Manager - last execution]( /images/ui/widgets/spire-manager-last-execution.png )
 
 
 ### User actions
 
 You can perform the following actions:
 
-* **Open Console** (![Open Console icon](https://docs.cloudify.co/latest/images/ui/icons/open-console-icon.png)) - Open the Cloudify Management Console of that Cloudify Manager.
-* **Refresh Status** (![Refresh Status icon](https://docs.cloudify.co/latest/images/ui/icons/refresh-status-icon.png)) - Refresh the status of the Cloudify Manager.
-* **Execute Workflow** (![Execute Workflow icon](https://docs.cloudify.co/latest/images/ui/icons/execute-workflow-icon.png)) - Execute a workflow through the selected Cloudify Manager.
+* **Open Console** (![Open Console icon]( /images/ui/icons/open-console-icon.png )) - Open the {{< param cfy_console_name >}} of that {{< param cfy_manager_name >}}.
+* **Refresh Status** (![Refresh Status icon]( /images/ui/icons/refresh-status-icon.png )) - Refresh the status of the {{< param cfy_manager_name >}}.
+* **Execute Workflow** (![Execute Workflow icon]( /images/ui/icons/execute-workflow-icon.png )) - Execute a workflow through the selected {{< param cfy_manager_name >}}.
 
 You can also refresh status or execute any workflow available on the Spire deployment on multiple managers using bulk operations.
 To do so, select Spire deployments using checkboxes in the left column and click one of the buttons above the table - **Refresh Status** or **Execute Workflow**.

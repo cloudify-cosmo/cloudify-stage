@@ -23,6 +23,30 @@ const ReactDOMServer = require('react-dom/server');
 
 let widgetDefinitions = [];
 
+function updateReadmeLinks(content) {
+    const linkRegex = /(\[.*?\])\(\s*(?!http)(.*?)\s*\)/gm;
+    let newContent = content;
+
+    newContent = newContent.replace(linkRegex, `$1(${i18n.t('widgets.common.readmes.linksBasePath')}$2)`);
+
+    return newContent;
+}
+
+function convertReadmeParams(content) {
+    const paramRegex = /{{<\s*param\s*(\S*)\s*>}}/gm;
+    let newContent = content;
+
+    Array.from(newContent.matchAll(paramRegex)).forEach(match => {
+        const paramName = match[1];
+        const paramValue = i18n.t(`widgets.common.readmes.params.${paramName}`);
+        if (paramValue !== undefined) {
+            newContent = newContent.replace(match[0], paramValue);
+        }
+    });
+
+    return newContent;
+}
+
 export default class WidgetDefinitionsLoader {
     static init() {
         window.Stage = {
@@ -118,7 +142,9 @@ export default class WidgetDefinitionsLoader {
                         widgetDefinition.isCustom
                     ).then(widgetReadme => {
                         if (widgetReadme) {
-                            widgetDefinition.readme = widgetReadme;
+                            widgetDefinition.readme = widgetDefinition.isCustom
+                                ? widgetReadme
+                                : updateReadmeLinks(convertReadmeParams(widgetReadme));
                         }
                     })
                 );
