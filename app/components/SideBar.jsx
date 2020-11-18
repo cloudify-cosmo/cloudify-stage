@@ -7,8 +7,9 @@ import React, { useContext } from 'react';
 
 import styled, { ThemeContext } from 'styled-components';
 import Pages from '../containers/Pages';
+import { Sidebar } from './basic';
 
-const Sidebar = styled.div`
+const ThemedSidebar = styled(Sidebar)`
     background-color: ${props => props.theme.sidebarColor} !important;
     .item {
         color: ${props => props.theme.sidebarTextColor} !important;
@@ -22,13 +23,13 @@ const Sidebar = styled.div`
 
 export default function SideBar({ homePageId, isEditMode, isOpen, pageId }) {
     const className = isOpen ? 'open' : '';
-    const theme = useContext(ThemeContext);
+    const theme = useContext(ThemeContext) || {};
 
     return (
         <div className="sidebarContainer">
-            <Sidebar className={`ui visible left vertical sidebar menu small basic ${className}`} theme={theme}>
+            <ThemedSidebar theme={theme} visible className={`vertical menu small basic ${className}`}>
                 <Pages pageId={pageId} isEditMode={isEditMode} homePageId={homePageId} />
-            </Sidebar>
+            </ThemedSidebar>
         </div>
     );
 }
