@@ -81,7 +81,7 @@ describe('Cluster Status', () => {
         });
     });
 
-    it.only('is in sync between Cluster Status widget and system status icon', () => {
+    it('is in sync between Cluster Status widget and system status icon', () => {
         const checkOverallStatus = (overallStatus, expectedManagerStatus, expectedDbStatus, expectedBrokerStatus) => {
             cy.log('Check system status icon and Cluster Status widget');
             let iconColor = 'gray';
