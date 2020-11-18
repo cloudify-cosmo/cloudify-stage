@@ -53,7 +53,7 @@ export default class Header extends Component {
         const { showAboutModal, showResetPagesConfirm } = this.state;
 
         return (
-            <HeaderBar className="headerBar">
+            <HeaderBar>
                 <Icon
                     link
                     name="content"
