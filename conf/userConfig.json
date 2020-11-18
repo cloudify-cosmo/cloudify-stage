@@ -16,6 +16,7 @@
 
     "sidebarColor": "#E2E2E2",
     "sidebarTextColor" : "#585860",
+    "sideBarHoverActiveColor": "rgba(0,0,0,.05)",
 
     "customCssPath": ""
   },
