@@ -15,7 +15,8 @@ function Banner({ className }) {
     );
     const licenseEdition = useSelector(state => _.get(state, 'manager.license.data.license_edition', ''));
     const productVersion = useSelector(state => _.get(state, 'manager.version.version', ''));
-    const { showVersionDetails } = useContext(ThemeContext);
+    const theme = useContext(ThemeContext) || {};
+    const showVersionDetails = _.isBoolean(theme.showVersionDetails) ? theme.showVersionDetails : true;
 
     const productName = i18n.t('productName');
 
