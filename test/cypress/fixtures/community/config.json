@@ -1,22 +1,7 @@
 {
   "app": {
     "maintenancePollingInterval": 10000,
-    "singleManager": true,
-    "whiteLabel": {
-      "pageTitle": "Cloudify Console",
-      "logoUrl": "/console/static/images/logo.png",
-      "mainColor": "#0077FC",
-      "productName": "Cloudify",
-      "headerTextColor": "#d8e3e8",
-      "showVersionDetails": true,
-      "loginPageHeader": "CLOUDIFY",
-      "loginPageHeaderColor": "white",
-      "loginPageText": "Welcome to the Cloudify Management Console, Please log in",
-      "loginPageTextColor": "white",
-      "sidebarColor": "#E2E2E2",
-      "sidebarTextColor": "#585860",
-      "customCssPath": ""
-    }
+    "whiteLabel": {}
   },
   "manager": { "ip": "127.0.0.1" },
   "mode": "community"
