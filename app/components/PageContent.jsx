@@ -36,7 +36,7 @@ export default function PageContent({
                 <EmptyContainerMessage isEditMode={isEditMode} containerTypeLabel="page" />
             ) : (
                 _.map(page.layout, (layoutSection, layoutSectionIdx) => (
-                    <>
+                    <React.Fragment key={layoutSectionIdx}>
                         {isEditMode && (
                             <div style={{ marginBottom: 15 }}>
                                 <EditModeButton
@@ -111,7 +111,7 @@ export default function PageContent({
                                 />
                             )}
                         </div>
-                    </>
+                    </React.Fragment>
                 ))
             )}
             {isEditMode && (
