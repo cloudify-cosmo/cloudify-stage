@@ -1,6 +1,4 @@
 import log from 'loglevel';
-
-import i18n from 'i18next';
 import * as types from './types';
 import { setAppError, setAppLoading } from './appState';
 import { loadTemplates } from './templates';
@@ -12,7 +10,6 @@ import { loadOrCreateUserAppData } from './userApp';
 import { getLdap, getUserData } from './managers';
 import { getClusterStatus } from './clusterStatus';
 import { NO_TENANTS_ERR } from '../utils/ErrorCodes';
-import LoaderUtils from '../utils/LoaderUtils';
 
 export function intialPageLoad() {
     return (dispatch, getState) => {
