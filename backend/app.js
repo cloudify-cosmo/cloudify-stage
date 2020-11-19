@@ -85,7 +85,7 @@ app.use(
 
 const translationsOverrides = 'overrides.json';
 app.use(`${contextPath}/userData/${translationsOverrides}`, (req, res) =>
-    res.sendfile(getResourcePath(translationsOverrides, true))
+    res.sendFile(getResourcePath(translationsOverrides, true))
 );
 
 app.use(

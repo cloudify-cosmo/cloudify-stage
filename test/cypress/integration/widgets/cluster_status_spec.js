@@ -92,19 +92,19 @@ describe('Cluster Status', () => {
             } else if (overallStatus === 'Fail') {
                 iconColor = 'red';
             }
-            cy.get('i.heartbeat.statusIcon').should('have.class', iconColor);
+            cy.get('.headerBar i.heartbeat.statusIcon').should('have.class', iconColor);
             cy.get('div.widget.highAvailabilityWidget').within(() => {
                 checkServicesStatus(true, expectedManagerStatus, expectedDbStatus, expectedBrokerStatus);
             });
 
             cy.log('Check system status popup content');
-            cy.get('i.heartbeat.statusIcon').trigger('mouseover');
+            cy.get('.headerBar i.heartbeat.statusIcon').trigger('mouseover');
             cy.wait('@clusterStatusFull', clusterStatusFetchTimeout);
             cy.get('table.servicesData').within(() => {
                 cy.get('button.refreshButton').should('not.have.class', 'loading');
                 checkServicesStatus(false, expectedManagerStatus, expectedDbStatus, expectedBrokerStatus);
             });
-            cy.get('i.heartbeat.statusIcon').trigger('mouseout');
+            cy.get('.headerBar i.heartbeat.statusIcon').trigger('mouseout');
             cy.get('.popup').should('not.exist');
         };
 

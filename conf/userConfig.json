@@ -5,7 +5,7 @@
   },
   "logLevel": "warn",
   "whiteLabel": {
-    "logoUrl": "/console/static/images/logo.png",
+    "logoUrl": "",
     "mainColor": "#0077FC",
 
     "headerTextColor": "white",

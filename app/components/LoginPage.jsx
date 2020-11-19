@@ -7,9 +7,8 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { parse } from 'query-string';
 import i18n from 'i18next';
-import { Button, Input, Message, Form, FullScreenSegment } from './basic';
+import { Button, Input, Message, Form, FullScreenSegment, Logo } from './basic';
 import SplashLoadingScreen from '../utils/SplashLoadingScreen';
-import Logo from './banner/Logo';
 
 import 'cloudify-ui-common/styles/font-JosefinSans-Bold.css';
 

@@ -50,6 +50,7 @@ import Interceptor from './utils/Interceptor';
 
 import Routes from './containers/Routes';
 import translation from './translations/en.json';
+import LoaderUtils from './utils/LoaderUtils';
 
 window.$ = $;
 
@@ -84,17 +85,23 @@ export default class app {
         };
 
         widgetDefinitionLoader.init();
-        return ConfigLoader.load().then(result => {
-            const store = configureStore(browserHistory, result);
 
-            createToolbox(store);
+        return Promise.all([
+            ConfigLoader.load().then(result => {
+                const store = configureStore(browserHistory, result);
 
-            StatusPoller.create(store);
-            UserAppDataAutoSaver.create(store);
-            Interceptor.create(store);
+                createToolbox(store);
 
-            return store;
-        });
+                StatusPoller.create(store);
+                UserAppDataAutoSaver.create(store);
+                Interceptor.create(store);
+
+                return store;
+            }),
+            LoaderUtils.fetchResource('overrides.json', true).then(overrides =>
+                i18n.addResourceBundle('en', 'translation', overrides, true, true)
+            )
+        ]).then(results => results[0]);
     }
 
     static start(store) {
