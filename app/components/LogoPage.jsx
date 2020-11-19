@@ -6,10 +6,9 @@ import React from 'react';
 import { Route, Switch } from 'react-router-dom';
 import Consts from '../utils/consts';
 
-import { FullScreenSegment } from './basic';
+import { FullScreenSegment, Logo } from './basic';
 import ErrorPage from '../containers/ErrorPage';
 import NoTenants from './NoTenants';
-import Logo from './banner/Logo';
 import NotFound from './NotFound';
 
 export default function LogoPage() {
