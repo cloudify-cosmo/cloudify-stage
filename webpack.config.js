@@ -178,10 +178,6 @@ module.exports = (env, argv) => {
                             to: 'static/images'
                         },
                         {
-                            from: 'node_modules/cloudify-ui-common/images/logo.png',
-                            to: 'static/images'
-                        },
-                        {
                             from: 'widgets',
                             to: 'appData/widgets',
                             ignore: ['**/src/**']
