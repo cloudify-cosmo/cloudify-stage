@@ -74,5 +74,5 @@
   "engines": {
     "node": "12.x"
   },
-  "files": []
+  "files": ["**" ,"!test"]
 }
