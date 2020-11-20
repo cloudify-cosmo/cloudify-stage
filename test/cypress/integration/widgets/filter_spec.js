@@ -1,6 +1,9 @@
 describe('Filter', () => {
     before(() => {
-        cy.activate('valid_trial_license').deleteAllUsersAndTenants().login();
+        cy.activate('valid_trial_license')
+            .deleteAllUsersAndTenants()
+            .usePageMock(['blueprints', 'deployments'])
+            .login();
     });
 
     it('fills dropdowns with correct data', () => {
@@ -40,50 +43,26 @@ describe('Filter', () => {
     describe('refreshes dropdown data on', () => {
         const blueprintName = 'filter-test';
 
-        beforeEach(() =>
+        before(() =>
             cy
                 .deleteDeployments(blueprintName)
                 .deleteBlueprints(blueprintName)
                 .uploadBlueprint('blueprints/empty.zip', blueprintName)
+                .setBlueprintContext(blueprintName)
         );
 
-        it('blueprint upload and removal', () => {
-            cy.addWidget('blueprints');
-
-            cy.get('.blueprintFilterField').click();
-
-            cy.get('.blueprintFilterField input').type(blueprintName);
-            cy.get(`div[option-value=${blueprintName}]`).click();
-
-            cy.get(`tr:contains(${blueprintName}) .trash`).click();
-            cy.contains('Yes').click();
-
-            cy.get('.blueprintFilterField > .label').should('not.exist');
-            cy.get('.blueprintFilterField input').type(blueprintName, { force: true });
-            cy.contains('.blueprintFilterField', 'No results found.');
-        });
-
         it('deployment creation and removal', () => {
-            cy.contains('Deployments').click();
-            cy.get('.usersMenu').click().contains('Edit Mode').click();
-            cy.get('.filterWidget .setting').click({ force: true });
-            cy.contains('div', 'Show deployment filter').find('.toggle').click();
-            cy.contains('Save').click();
-            cy.contains('.message', 'Edit mode').contains('Exit').click();
-
-            cy.get('.deploymentFilterField').click();
-
-            cy.contains('Create Deployment').click();
+            cy.get('.blueprintsWidget input[placeholder^=Search]').clear().type(blueprintName);
+            cy.get(`.blueprintsWidget .${blueprintName}`).parent().find('.rocket').click();
             const deploymentName = `${blueprintName}-deployment`;
             cy.get('input[name=deploymentName]').type(deploymentName);
-            cy.get('div[name=blueprintName] input').type(blueprintName);
-            cy.get(`div[option-value=${blueprintName}]`).click();
             cy.contains('Runtime only evaluation').click();
             cy.contains('.modal button', 'Deploy').click();
 
-            cy.contains('Deployments').click();
-            cy.get('.deploymentFilterField input').type(deploymentName);
-            cy.get(`div[option-value=${deploymentName}]`).click();
+            cy.get('.modal').should('not.exist');
+            cy.refreshPage();
+
+            cy.get('.blueprintsWidget input[placeholder^=Search]').clear().type(blueprintName);
 
             cy.contains('.deploymentsWidget .row', deploymentName).find('.green.checkmark');
             cy.contains('.deploymentsWidget .row', deploymentName).find('.menuAction').click();
@@ -93,8 +72,18 @@ describe('Filter', () => {
             cy.contains('.deploymentsWidget .row', deploymentName).should('not.exist');
 
             cy.get('.deploymentFilterField > .text.default');
-            cy.get('.deploymentFilterField input').type(deploymentName);
+            cy.get('.deploymentFilterField input').type(deploymentName, { force: true });
             cy.contains('.deploymentFilterField', 'No results found.');
+        });
+
+        it('blueprint upload and removal', () => {
+            cy.get('.blueprintsWidget input[placeholder^=Search]').clear().type(blueprintName);
+            cy.get(`.blueprintsWidget .${blueprintName}`).parent().find('.trash').click();
+            cy.contains('Yes').click();
+
+            cy.get('.blueprintFilterField > .label').should('not.exist');
+            cy.get('.blueprintFilterField input').type(blueprintName, { force: true });
+            cy.contains('.blueprintFilterField', 'No results found.');
         });
     });
 });

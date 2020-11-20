@@ -1,21 +1,24 @@
 describe('Blueprints widget', () => {
     const blueprintNamePrefix = 'blueprints_test';
-    const emptyBlueprintName = 'blueprints_test_empty';
+    const emptyBlueprintName = `${blueprintNamePrefix}_empty`;
 
     before(() =>
         cy
             .activate('valid_trial_license')
+            .usePageMock('blueprints', { displayStyle: 'table', clickToDrillDown: true })
             .login()
+            .deletePlugins()
             .uploadPluginFromCatalog('Utilities')
             .deleteDeployments(blueprintNamePrefix, true)
             .deleteBlueprints(blueprintNamePrefix, true)
             .uploadBlueprint('blueprints/simple.zip', emptyBlueprintName)
     );
 
-    beforeEach(() => cy.visitPage('Local Blueprints'));
+    beforeEach(cy.refreshPage);
 
-    function getBlueprintRow(bluerintName) {
-        return cy.get(`#blueprintsTable_${bluerintName}`);
+    function getBlueprintRow(blueprintName) {
+        cy.get('input[placeholder^=Search]').clear().type(blueprintName);
+        return cy.get(`#blueprintsTable_${blueprintName}`);
     }
 
     it('should open Composer with imported blueprint on "Edit a copy in Composer" icon click', () => {
@@ -27,13 +30,13 @@ describe('Blueprints widget', () => {
             .should('be.calledWith', `/composer/import/default_tenant/${emptyBlueprintName}/blueprint.yaml`);
     });
 
-    it('should render in table view by default', () => {
+    it('should render in table view', () => {
         cy.get('div.blueprintsWidget table.blueprintsTable');
         cy.get('div.blueprintsWidget .segmentList').should('not.exist');
     });
 
     it('should drill down to blueprint on click', () => {
-        cy.contains(emptyBlueprintName).click();
+        getBlueprintRow(emptyBlueprintName).find('.blueprintName').click();
 
         cy.get('div.blueprintsWidget table.blueprintsTable').should('not.exist');
         cy.contains('.pageTitle', emptyBlueprintName);
@@ -87,44 +90,31 @@ describe('Blueprints widget', () => {
         });
     });
 
-    describe('configuration', () => {
-        beforeEach(() => {
-            cy.contains('Reset Templates').click({ force: true });
-            cy.contains('.modal .button', 'Yes').click();
-            cy.visitPage('Local Blueprints');
-        });
-
-        it('should allow to switch to catalog view', () => {
-            cy.editWidgetConfiguration('blueprints', () =>
-                cy.get('.dropdown').contains('Catalog').click({ force: true })
-            );
-
-            cy.get('div.blueprintsWidget table.blueprintsTable').should('not.exist');
-            cy.get('div.blueprintsWidget .segmentList');
-        });
-
-        it('should allow to disable drill down on click', () => {
-            cy.editWidgetConfiguration('blueprints', () => cy.get('.checkbox').click());
-
-            cy.contains(emptyBlueprintName).click();
-
-            cy.get('div.blueprintsWidget table.blueprintsTable');
-            cy.contains('.pageTitle', 'Local Blueprints');
-        });
-    });
-
     it('should allow to deploy a blueprint', () => {
         getBlueprintRow(emptyBlueprintName).find('.rocket').click();
 
-        cy.get('input[name=deploymentName]').type(blueprintNamePrefix);
+        const deploymentName = blueprintNamePrefix;
+
+        cy.server();
+        cy.route('PUT', `/console/sp?su=/deployments/${deploymentName}`).as('deploy');
+
+        cy.get('input[name=deploymentName]').type(deploymentName);
         cy.contains('Show Data Types').click();
         cy.contains('.modal button', 'Close').click();
-        cy.get('textarea').type('127.0.0.1');
+        const serverIp = '127.0.0.1';
+        cy.get('textarea').type(serverIp);
         cy.contains('.modal .basic', 'Deploy').click();
         cy.get('.modal').should('not.exist');
 
-        cy.visitPage('Local Blueprints');
-        getBlueprintRow(emptyBlueprintName).find('.label.green').should('have.text', '1');
+        cy.wait('@deploy').then(({ requestBody }) => {
+            expect(requestBody).to.deep.equal({
+                blueprint_id: emptyBlueprintName,
+                inputs: { server_ip: serverIp },
+                visibility: 'tenant',
+                skip_plugins_validation: false,
+                runtime_only_evaluation: false
+            });
+        });
     });
 
     it('should allow to delete blueprint', () => {
@@ -135,5 +125,24 @@ describe('Blueprints widget', () => {
         cy.contains('.modal .button', 'Yes').click();
 
         cy.contains(blueprintName).should('not.exist');
+    });
+
+    describe('configuration', () => {
+        it('should allow to disable drill down on click', () => {
+            cy.editWidgetConfiguration('blueprints', () => cy.get('.checkbox').click());
+
+            cy.contains(emptyBlueprintName).click();
+
+            cy.get('div.blueprintsWidget table.blueprintsTable');
+        });
+
+        it('should allow to switch to catalog view', () => {
+            cy.editWidgetConfiguration('blueprints', () =>
+                cy.get('.dropdown').contains('Catalog').click({ force: true })
+            );
+
+            cy.get('div.blueprintsWidget table.blueprintsTable').should('not.exist');
+            cy.get('div.blueprintsWidget .segmentList');
+        });
     });
 });

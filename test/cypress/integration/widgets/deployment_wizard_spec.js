@@ -1,11 +1,11 @@
 describe('Deployment Wizard Buttons widget', () => {
-    before(() => cy.activate('valid_trial_license').login().addPage('Wizard').addWidget('deploymentWizardButtons'));
+    before(() => cy.activate('valid_trial_license').usePageMock('deploymentWizardButtons').login());
 
     function next() {
         cy.contains('Next').click();
     }
 
-    beforeEach(() => cy.visitPage('Wizard'));
+    beforeEach(cy.refreshPage);
 
     it('should provide Hello World Wizard', () => {
         cy.deletePlugins().deleteSecrets('gcp_');

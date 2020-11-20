@@ -5,16 +5,16 @@ describe('Nodes statistics widget', () => {
     before(() =>
         cy
             .activate('valid_trial_license')
+            .usePageMock('nodesStats')
             .login()
             .deleteDeployments(deploymentName, true)
             .deleteBlueprints(blueprintName, true)
             .uploadBlueprint('blueprints/simple.zip', blueprintName)
             .deployBlueprint(blueprintName, deploymentName, { server_ip: '127.0.0.1' })
-            .addWidget('nodesStats')
     );
 
     it('should display node statistics', () => {
-        cy.get('.deploymentFilterField').click().find('input').type(`${deploymentName}{enter}`);
+        cy.setDeploymentContext(deploymentName);
 
         cy.get('.nodesStatsWidget tspan:contains(0)').should('have.length', 3);
         cy.get('.nodesStatsWidget tspan:contains(1)').should('have.length', 1);
