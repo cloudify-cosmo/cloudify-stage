@@ -35,7 +35,7 @@ describe('Deployments widget', () => {
         cy.get('.deploymentSegment h3').should('have.text', deploymentName);
     });
 
-    describe('should provide display configuration', () => {
+    describe('should provide display configuration for', () => {
         /*
         Default configuration
         - clickToDrillDown = true
@@ -46,11 +46,11 @@ describe('Deployments widget', () => {
 
         before(cy.refreshPage);
 
-        it('to change clickToDrillDown option', () => {
+        it('clickToDrillDown option', () => {
             searchForDeployment(deploymentName);
             cy.contains(deploymentName).click();
             cy.location('pathname').should('contain', '_deployment/deployments_test_hw_dep');
-            cy.get('.breadcrumb').should('have.text', 'deployments_test_hw_dep');
+            cy.contains('.breadcrumb', 'deployments_test_hw_dep');
 
             cy.refreshPage();
             cy.editWidgetConfiguration('deployments', () => {
@@ -62,7 +62,7 @@ describe('Deployments widget', () => {
             cy.get('.deploymentsWidget');
         });
 
-        it('to change showExecutionStatusLabel option', () => {
+        it('showExecutionStatusLabel option', () => {
             searchForDeployment(deploymentName);
 
             const lastExecutionCellSelector = 'tr#deploymentsTable_deployments_test_hw_dep td:nth-child(2)';
@@ -82,7 +82,7 @@ describe('Deployments widget', () => {
             });
         });
 
-        it('to change blueprintIdFilter option', () => {
+        it('blueprintIdFilter option', () => {
             cy.server();
             cy.route('GET', `**/deployments*blueprint_id=${blueprintName}`).as('getFilteredDeployments');
 
@@ -95,7 +95,7 @@ describe('Deployments widget', () => {
             cy.wait('@getFilteredDeployments');
         });
 
-        it('to change displayStyle option', () => {
+        it('displayStyle option', () => {
             cy.get('table.deploymentsTable').should('be.visible');
             cy.get('div.segmentList').should('not.be.visible');
 

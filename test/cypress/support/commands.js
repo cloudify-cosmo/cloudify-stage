@@ -200,14 +200,20 @@ Cypress.Commands.add('usePageMock', (widgetIds, widgetConfiguration = {}) => {
                                               filterByExecutionsStatus: true,
                                               allowMultipleSelection: true
                                           },
-                                          height: 2
+                                          height: 2,
+                                          width: 8,
+                                          x: 0,
+                                          y: 0
                                       },
-                                      ..._.map(widgetIdsArray, widgetId => ({
+                                      ..._.map(widgetIdsArray, (widgetId, index) => ({
                                           id: widgetId,
                                           definition: widgetId,
                                           configuration: widgetConfiguration,
                                           height: 20,
-                                          drillDownPages: {}
+                                          drillDownPages: {},
+                                          width: 8,
+                                          x: 0,
+                                          y: 2 + (index + 1) * 20
                                       }))
                                   ]
                               }
@@ -241,6 +247,11 @@ Cypress.Commands.add('usePageMock', (widgetIds, widgetConfiguration = {}) => {
 });
 
 Cypress.Commands.add('refreshPage', () => cy.get('.pageMenuItem.active').click({ force: true }));
+
+Cypress.Commands.add('refreshTemplate', () => {
+    cy.get('.tenantsMenu').click({ force: true });
+    cy.contains('.text', 'default_tenant').click({ force: true });
+});
 
 function setContext(field, value) {
     cy.get(`.${field}FilterField`).click();

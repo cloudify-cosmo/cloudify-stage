@@ -48,6 +48,7 @@ describe('Filter', () => {
                 .deleteDeployments(blueprintName)
                 .deleteBlueprints(blueprintName)
                 .uploadBlueprint('blueprints/empty.zip', blueprintName)
+                .refreshTemplate()
                 .setBlueprintContext(blueprintName)
         );
 

@@ -5,6 +5,7 @@ describe('Blueprint Sources widget', () => {
     before(() =>
         cy
             .activate()
+            .usePageMock('blueprintSources')
             .login()
             .deleteDeployments(deploymentName, true)
             .deleteBlueprints(blueprintName, true)
@@ -12,26 +13,7 @@ describe('Blueprint Sources widget', () => {
             .deployBlueprint(blueprintName, deploymentName)
     );
 
-    describe('should be present in default template', () => {
-        it('in blueprint page', () => {
-            cy.visitPage('Local Blueprints');
-            cy.get(`tr#blueprintsTable_${blueprintName}`).click();
-            cy.get('.blueprintSourcesWidget .widgetItem').scrollIntoView().should('be.visible');
-        });
-
-        it('in deployment page', () => {
-            cy.visitPage('Deployments');
-            cy.contains(deploymentName).click();
-            cy.contains('Deployment Info').click();
-            cy.get('.blueprintSourcesWidget .widgetItem').scrollIntoView().should('be.visible');
-        });
-    });
-
     describe('provides information when', () => {
-        before(() => {
-            cy.usePageMock('blueprintSources').visit('/console');
-        });
-
         it('blueprint is not selected', () => {
             cy.get('.message').should('have.text', 'Please select blueprint to display source files');
         });

@@ -19,7 +19,10 @@ describe('Outputs/Capabilities', () => {
     });
 
     describe('presents data and export button for', () => {
-        before(() => setUpBlueprint('outputs'));
+        before(() => {
+            setUpBlueprint('outputs');
+            cy.refreshTemplate();
+        });
 
         function checkTable() {
             cy.get('div.outputsTable').within(() => {

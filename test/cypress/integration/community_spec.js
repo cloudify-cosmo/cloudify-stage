@@ -11,7 +11,7 @@ describe('Community version', () => {
                 }
             });
             cy.route('/console/config', 'fixture:community/config.json');
-            cy.login();
+            cy.usePageMock().login();
         });
     });
 
