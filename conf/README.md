@@ -65,18 +65,15 @@ This configuration can be overridden by: `/dist/userData/userConfig.json`.
 * `logLevel` - string, default logging level, allowed strings are defined by [Winston](https://github.com/winstonjs/winston) logger
 
 * `whiteLabel` - object, Cloudify UI white-labelling configuration
-  * `pageTitle` - string, page title
   * `logoUrl` - string, relative URL to logo image
-  * `mainColor` - string, main color (CSS color) 
-  * `productName` - string, product name, used in the page header 
+  * `mainColor` - string, main color (CSS color)  
   * `headerTextColor` - string, color of text in page header (CSS color)
-  * `showVersionDetails` - boolean, if set to true, then version will be shown in page header 
-  * `loginPageHeader` - string, login page header
-  * `loginPageHeaderColor` - string, login page header color (CSS color)  
-  * `loginPageText` - string, login page text under header
+  * `showVersionDetails` - boolean, if set to true, then version will be shown in page header
+  * `loginPageHeaderColor` - string, login page header color (CSS color)
   * `loginPageTextColor` - string, login page text under header color (CSS color) 
   * `sidebarColor` - string, menu sidebar color (CSS color)
   * `sidebarTextColor` - string, menu sidebar text color (CSS color) 
+  * `sidebarHoverActiveColor` - string, menu sidebar color (CSS color) for active and hovered items
   * `customCssPath` - string, relative path to custom CSS file
   
 * `widgets` - object, widget configuration exposed to user
