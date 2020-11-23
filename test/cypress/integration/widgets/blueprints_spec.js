@@ -18,6 +18,7 @@ describe('Blueprints widget', () => {
 
     function getBlueprintRow(blueprintName) {
         cy.get('input[placeholder^=Search]').clear().type(blueprintName);
+        cy.get('.blueprintsTable > tbody > tr').should('have.length', 1);
         return cy.get(`#blueprintsTable_${blueprintName}`);
     }
 

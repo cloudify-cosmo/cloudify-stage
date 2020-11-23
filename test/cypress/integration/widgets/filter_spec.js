@@ -2,7 +2,7 @@ describe('Filter', () => {
     before(() => {
         cy.activate('valid_trial_license')
             .deleteAllUsersAndTenants()
-            .usePageMock(['blueprints', 'deployments'])
+            .usePageMock(['blueprints', 'deployments'], { pollingTime: 3 })
             .login();
     });
 
