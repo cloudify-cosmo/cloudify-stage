@@ -53,7 +53,7 @@ describe('Filter', () => {
         );
 
         it('deployment creation and removal', () => {
-            cy.get('.blueprintsWidget input[placeholder^=Search]').clear().type(blueprintName);
+            cy.get('.blueprintsWidget input[placeholder^=Search]').scrollIntoView().clear().type(blueprintName);
             cy.get(`.blueprintsWidget .${blueprintName}`).parent().find('.rocket').click();
             const deploymentName = `${blueprintName}-deployment`;
             cy.get('input[name=deploymentName]').type(deploymentName);
@@ -63,7 +63,7 @@ describe('Filter', () => {
             cy.get('.modal').should('not.exist');
             cy.refreshPage();
 
-            cy.get('.blueprintsWidget input[placeholder^=Search]').clear().type(blueprintName);
+            cy.get('.blueprintsWidget input[placeholder^=Search]').scrollIntoView().clear().type(blueprintName);
 
             cy.contains('.deploymentsWidget .row', deploymentName).find('.green.checkmark');
             cy.contains('.deploymentsWidget .row', deploymentName).find('.menuAction').click();
@@ -78,7 +78,7 @@ describe('Filter', () => {
         });
 
         it('blueprint upload and removal', () => {
-            cy.get('.blueprintsWidget input[placeholder^=Search]').clear().type(blueprintName);
+            cy.get('.blueprintsWidget input[placeholder^=Search]').scrollIntoView().clear().type(blueprintName);
             cy.get(`.blueprintsWidget .${blueprintName}`).parent().find('.trash').click();
             cy.contains('Yes').click();
 

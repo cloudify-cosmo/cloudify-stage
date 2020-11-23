@@ -1,6 +1,6 @@
 describe('Login', () => {
     it('succeeds when provided credentials are valid and license is active', () => {
-        cy.activate().login();
+        cy.activate().usePageMock().login();
 
         cy.location('pathname').should('be.equal', '/console/');
     });
@@ -26,7 +26,7 @@ describe('Login', () => {
         const redirectUrl = '/console/page/logs';
         cy.visit(`/console/login?redirect=${redirectUrl}`);
 
-        cy.login();
+        cy.usePageMock().login();
 
         cy.location('pathname').should('be.equal', redirectUrl);
     });
