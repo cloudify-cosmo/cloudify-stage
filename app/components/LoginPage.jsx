@@ -133,7 +133,7 @@ export default class LoginPage extends Component {
                             color="yellow"
                             size="large"
                             type="submit"
-                            content="LOGIN"
+                            content={i18n.t('login.submit')}
                         />
                     </Form>
                 </div>
