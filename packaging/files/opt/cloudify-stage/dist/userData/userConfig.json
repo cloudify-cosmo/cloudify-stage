@@ -1,0 +1,21 @@
+{
+  "whiteLabel": {
+    "pageTitle": "Ai_Studio Conductor",
+    "logoUrl": "/console/static/images/wr-ai-studio-logo.png",
+    "mainColor": "rgb(28,28,28)",
+
+    "productName": "Conductor",
+    "headerTextColor": "rgb(166,166,166)",
+    "showVersionDetails": false,
+
+    "loginPageHeader": "",
+    "loginPageHeaderColor": "white",
+    "loginPageText": "Welcome to the Ai_Studio, please log in.",
+    "loginPageTextColor": "white",
+
+    "sidebarColor": "rgb(28,28,28)",
+    "sidebarTextColor": "rgb(166,166,166)",
+
+    "customCssPath": "style.css"
+  }
+}

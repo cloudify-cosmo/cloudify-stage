@@ -1,5 +1,5 @@
 {
-  "linksBasePath": "https://docs.cloudify.co/5.1",
+  "linksBasePath": "https://operator.windriver.com/docs/latest/",
   "rawContentBasePath": "https://raw.githubusercontent.com/cloudify-cosmo/docs.getcloudify.org/master",
   "configFile": "config.toml",
   "files": [

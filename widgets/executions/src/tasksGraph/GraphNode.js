@@ -11,9 +11,9 @@ const rx = 3;
 const stateBarHeight = 5;
 
 const colors = {
-    inProgress: 'rgb(215,227,45)',
-    succeeded: 'rgb(3,191,0)',
-    failed: 'rgb(249, 25, 25)'
+    inProgress: 'rgb(255,209,153)',
+    succeeded: 'rgb(0,183,164)',
+    failed: 'rgb(235,78,91)'
 };
 
 const GraphNode = ({ graphNode, toolbox }) => {

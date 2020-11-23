@@ -27,13 +27,17 @@ export default function AboutModal({ canLicenseManagement, license, onHide, onLi
                 <Header>License Details</Header>
                 <Divider />
                 <CurrentLicense license={license} />
-
-                <EulaLink />
             </Modal.Content>
 
             <Modal.Actions>
                 {canLicenseManagement && (
-                    <Button content="License Management" icon="key" color="yellow" onClick={onLicenseManagement} />
+                    <Button
+                        content="License Management"
+                        icon="key"
+                        color="yellow"
+                        primary
+                        onClick={onLicenseManagement}
+                    />
                 )}
                 <CancelButton content="Close" onClick={onHide} />
             </Modal.Actions>

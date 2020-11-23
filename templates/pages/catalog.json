@@ -1,5 +1,5 @@
 {
-  "name": "Cloudify Catalog",
+  "name": "Catalogs",
   "widgets": [
     {
       "name": "Plugins Catalog",

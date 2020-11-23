@@ -26,6 +26,7 @@ export default function UploadLicense({ error, isLoading, license, onChange, onE
                     content="Update"
                     icon="upload"
                     color="yellow"
+                    primary
                     labelPosition="left"
                     disabled={_.isEmpty(license)}
                     loading={isLoading}

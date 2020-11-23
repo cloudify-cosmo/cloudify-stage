@@ -1,0 +1,311 @@
+:root {
+    --primary-dark-color: rgb(0,173,164);
+    --primary-normal-color: rgb(0,210,186);
+    --primary-light-color: rgb(177,236,230);
+    --primary-text-color: rgb(255,255,255);
+    --secondary-dark-color: rgb(132,115,173);
+    --secondary-light-color: rgb(207,189,249);
+    --secondary-text-color: rgb(255,255,255);
+
+    --main-background-color: rgb(28,28,28);
+    --main-text-color: rgb(28,28,28);
+    --main-link-color: rgb(0,173,164);
+    --menu-text-color: rgb(166,166,166);
+    --menu-hover-color: var(--primary-text-color);
+    --menu-active-color: var(--primary-text-color);
+    --header-text-color: rgb(166,166,166);
+
+    --icon-dark-color: rgb(119,119,119);
+    --icon-light-color: rgb(166,166,166);
+
+    --button-background-color: var(--primary-normal-color);
+    --button-hover-color: var(--primary-dark-color);
+    --button-text-color: var(--primary-text-color);
+
+    --status-success-color: rgb(0,183,164);
+    --status-warning-color: rgb(255,209,153);
+    --status-error-color: rgb(235,78,91);
+
+    --status-success-background: rgba(0,183,164,0.5);
+    --status-warning-background: rgba(255,209,153,0.5);
+    --status-error-background: rgba(235,78,91,0.5);
+}
+
+/* Login */
+div.loginContainerExtended {
+    height: 450px !important;
+}
+
+div.loginContainer {
+    width: 400px !important;
+}
+
+div.loginContainer button {
+    background-color: var(--primary-normal-color) !important;
+    color: var(--primary-text-color) !important;
+    text-transform: capitalize !important;
+}
+
+div.loginContainer > div.logo {
+    width: 400px !important;
+    height: 200px !important;
+}
+
+div.splashPage > div.logo {
+    display: none;
+}
+
+/* Header */
+div.headerBar {
+    height: 70px !important;
+}
+
+h1.ui.header {
+    font-family: "Roboto Slab", Sans-Serif !important;
+    font-size: 1.25rem !important;
+    font-weight: 100 !important;
+    text-transform: uppercase !important;
+    color: var(--header-text-color) !important;
+}
+
+h1.ui.header > div.logo {
+    background-image: url("/console/static/images/wr-ai-studio.png") !important;
+    margin: 5px 10px !important;
+    width: 130px !important;
+    height: 60px !important;
+}
+
+h1.ui.header > span {
+    color: var(--primary-dark-color) !important;
+    display: inline-block;
+    vertical-align: top !important;
+    margin-top: 39px;
+}
+
+/* top level ui segment div of login page */
+div#app > div.ui.segment {
+    background-color: var(--main-background-color) !important;
+}
+
+/* apply background image with 30% opacity */
+div#app > div.ui.segment::before {
+    content: "";
+    background-image: url("/console/static/images/wr-ai-disk-gray.png");
+    background-size: 1600px;
+    background-repeat: no-repeat;
+    background-position: top -800px left -800px;
+    position: absolute;
+    top: 0px;
+    right: 0px;
+    bottom: 0px;
+    left: 0px;
+    opacity: 0.30;
+}
+
+/* Main */
+.main {
+    top: 70px !important;
+}
+
+/* Sidebar */
+.main .sidebar.ui.left.menu {
+    top: 70px !important;
+}
+
+.main .sidebar.ui.left.menu .link.item {
+    color: var(--menu-text-color);
+}
+
+.main .sidebar.ui.left.menu .link.item:hover {
+    color: var(--menu-hover-color);
+}
+
+.main .sidebar.ui.left.menu .link.item.active,
+.main .sidebar.ui.left.menu .link.item.active:hover {
+    color: var(--menu-active-color);
+    background-color: var(--primary-normal-color);
+}
+
+.main .sidebar.ui.left.menu .link.item:hover {
+    color: var(--menu-hover-color);
+}
+
+/* Tours */
+button#toursButton {
+    display: none;
+}
+
+/* UI elements */
+.widget .widgetItem.ui.segment:not(.inverted) {
+    border-top-color: var(--primary-dark-color) !important;
+}
+
+.ui.table a, .ui.table a:hover,
+.ui.modal a, .ui.modal a:hover,
+.ui.breadcrumb a, .ui.breadcrumb a:hover {
+    color: var(--main-link-color) !important;
+}
+
+.ui.form input:focus,
+.ui.selection.active.dropdown,
+.ui.selection.active.dropdown .menu {
+    border-color: var(--primary-dark-color) !important;
+}
+
+div.ui.toggle.checkbox input:checked~.box:before,
+div.ui.toggle.checkbox input:checked~label:before,
+div.ui.toggle.checkbox input:focus:checked~.box:before,
+div.ui.toggle.checkbox input:focus:checked~label:before {
+    background-color: var(--primary-dark-color) !important;
+}
+
+.ui.message.info,
+.ui.message.positive,
+.editModeSidebar > .ui.message {
+    color: var(--primary-text-color) !important;
+    background-color: var(--status-success-background) !important;
+    box-shadow: 0 0 0 1px var(--status-success-color) inset, 0 0 0 0 transparent !important;
+}
+
+.ui.message.positive .header,
+.editModeSidebar > .ui.message .header {
+    color: var(--primary-text-color) !important;
+}
+
+table.ui.table td.row-error,
+table.ui.table tr.row-error {
+    box-shadow: 0 0 0 var(--status-error-color) inset;
+    background: var(--status-error-background) !important;
+    color: var(--main-text-color) !important;
+}
+
+table.ui.table td.row-warning,
+table.ui.table tr.row-warning {
+    box-shadow: 0 0 0 var(--status-warning-color) inset;
+    background: var(--status-warning-background) !important;
+    color: var(--main-text-color) !important;
+}
+
+table.ui.table td.row-debug,
+table.ui.table tr.row-debug {
+    box-shadow: 0 0 0 var(--primary-normal-color) inset;
+    background: var(--primary-light-color) !important;
+    color: var(--main-text-color) !important;
+}
+
+table.ui.eventsTable i.icon {
+    color: var(--icon-light-color) !important;
+}
+
+table.ui.eventsTable i.icon.inverted {
+    background-color: var(--icon-light-color) !important;
+}
+
+.deployBlueprintModal .pretty-json-container .variable-value > div {
+    color: var(--secondary-dark-color) !important;
+}
+
+.rc-tree .rc-tree-node-selected {
+    background-color: var(--primary-normal-color) !important;
+    border-color: var(--primary-dark-color);
+}
+
+/* NOTE: color selectors for the following are required due to !important scope override */
+
+button.blue,
+button.green,
+.widget button,
+.modal button.ok,
+.modal button.primary,
+button.ui.button.primary,
+button.ui.button.editModeButton,
+button.ui.button.createPageButton,
+button.ui.button.createTemplateButton {
+    color: var(--button-text-color) !important;
+    background-color: var(--button-background-color) !important;
+}
+
+button.blue:hover,
+button.green:hover,
+.widget button:hover,
+.modal button.ok:hover,
+.modal button.primary:hover,
+button.ui.button.editModeButton:hover,
+button.ui.button.createPageButton:hover,
+button.ui.button.createTemplateButton:hover,
+#gridContainer div.toolbar button:hover:not(:disabled) {
+    color: var(--button-text-color) !important;
+    background-color: var(--button-hover-color) !important;
+}
+
+div.ui.blue.label,
+div.ui.blue.labels .label,
+div.ui.green.label,
+div.ui.green.labels .label {
+    background-color: var(--primary-dark-color) !important;
+    border-color: var(--primary-dark-color) !important;
+    color: var(--primary-text-color) !important;
+}
+
+div.ui.purple.label,
+div.ui.purple.labels .label {
+    background-color: var(--secondary-dark-color) !important;
+    color: var(--secondary-text-color) !important;
+}
+
+div.ui.red.segment:not(.inverted),
+div.ui.blue.segment:not(.inverted) {
+    border-top-color: var(--primary-dark-color) !important;
+}
+
+
+i.blue.globe.icon,
+i.green.user.icon {
+    color: var(--primary-normal-color) !important;
+}
+
+i.green.icon,
+i.green.icon.play,
+i.green.icon.checkmark,
+i.green.icon.statusIcon {
+    color: var(--status-success-color) !important;
+}
+
+i.yellow.icon,
+i.yellow.icon.spinner,
+i.yellow.icon.statusIcon {
+    color: var(--status-warning-color) !important;
+}
+
+i.orange.icon,
+i.orange.icon.ban {
+    color: var(--status-warning-color) !important;
+}
+
+i.red.icon,
+i.red.icon.stop,
+i.red.icon.remove,
+i.red.icon.statusIcon {
+    color: var(--status-error-color) !important;
+}
+
+.ui.green.progress .bar,
+.nodeState .ui.green.inverted.segment {
+    background-color: var(--status-success-color) !important;
+}
+
+.ui.yellow.progress .bar,
+.nodeState .ui.yellow.inverted.segment {
+    background-color: var(--status-warning-color) !important;
+}
+
+.ui.orange.progress .bar,
+.nodeState .ui.orange.inverted.segment {
+    background-color: var(--status-warning-color) !important;
+}
+
+.ui.red.progress .bar,
+.deploymentSegment .ui.progress.error .bar,
+.nodeState .ui.red.inverted.segment {
+    background-color: var(--status-error-color) !important;
+}

@@ -133,7 +133,7 @@ export default class LoginPage extends Component {
                             color="yellow"
                             size="large"
                             type="submit"
-                            content="LOGIN"
+                            content="login"
                         />
                     </Form>
                 </div>

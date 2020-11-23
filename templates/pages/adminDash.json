@@ -118,7 +118,7 @@
       "height": 8,
       "configuration": {
         "label": "Getting Started Walkthrough",
-        "url": "https://docs.cloudify.co/latest/trial_getting_started/examples/",
+        "url": "https://operator.windriver.com/docs/latest//trial_getting_started/examples/",
         "fullHeight": true
       },
       "definition": "buttonLink",

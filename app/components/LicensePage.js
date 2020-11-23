@@ -48,21 +48,15 @@ function DescriptionMessage({ canUploadLicense, isTrial, isEditLicenseActive, on
                         <Message.Header>No active license</Message.Header>
                         {canUploadLicense ? (
                             <SpanMessage>
-                                To activate this product, please enter the license key provided by Cloudify below and
-                                press update. Visit the Cloudify{' '}
-                                <a target="_blank" href="https://cloudify.co">
+                                To activate this product, please enter the license key provided by Wind River below and
+                                press update. Visit the Wind River{' '}
+                                <a target="_blank" href="https://www.windriver.com/">
                                     web site
-                                </a>{' '}
-                                &nbsp;to learn more and acquire a free&nbsp;
-                                <a target="_blank" href="https://cloudify.co/download/#trial">
-                                    trial license
                                 </a>
                                 .
                             </SpanMessage>
                         ) : (
-                            <SpanMessage>
-                                To activate this product, please contact your Cloudify administrator.
-                            </SpanMessage>
+                            <SpanMessage>To activate this product, please contact Wind River support.</SpanMessage>
                         )}
                     </Message.Content>
                 </Message>
@@ -83,13 +77,13 @@ function DescriptionMessage({ canUploadLicense, isTrial, isEditLicenseActive, on
                         {canUploadLicense ? (
                             <SpanMessage>
                                 Please contact{' '}
-                                <a target="_blank" href="https://cloudify.co/contact">
-                                    Cloudify
+                                <a target="_blank" href="https://www.windriver.com/company/contact/">
+                                    Wind River
                                 </a>
                                 &nbsp;to obtain a license key.
                             </SpanMessage>
                         ) : (
-                            <SpanMessage>Please contact your Cloudify administrator.</SpanMessage>
+                            <SpanMessage>Please contact Wind River support.</SpanMessage>
                         )}
                     </Message.Content>
                 </Message>
@@ -109,13 +103,13 @@ function DescriptionMessage({ canUploadLicense, isTrial, isEditLicenseActive, on
                         {canUploadLicense ? (
                             <SpanMessage>
                                 Please contact{' '}
-                                <a target="_blank" href="https://cloudify.co/support">
-                                    Cloudify support
+                                <a target="_blank" href="https://www.windriver.com/company/contact/">
+                                    Wind River
                                 </a>
                                 &nbsp;to obtain a new license key.
                             </SpanMessage>
                         ) : (
-                            <SpanMessage>Please contact your Cloudify administrator.</SpanMessage>
+                            <SpanMessage>Please contact Wind River support.</SpanMessage>
                         )}
                     </Message.Content>
                 </Message>
@@ -248,10 +242,6 @@ export default class LicensePage extends Component {
                     )}
 
                     <Grid columns="equal">
-                        <Grid.Column textAlign="left" verticalAlign="middle">
-                            <EulaLink />
-                        </Grid.Column>
-
                         <Grid.Column textAlign="right" verticalAlign="middle">
                             <Button
                                 content="Go to app"

@@ -44,7 +44,7 @@ export default function ParameterValueDescription() {
                     </List.Item>
                     <List.Item>
                         Link:&nbsp;&nbsp;
-                        <ParameterValue value="https://cloudify.co" showCopyButton={false} />
+                        <ParameterValue value="https://www.windriver.com/" showCopyButton={false} />
                     </List.Item>
                     <List.Item>
                         Null:

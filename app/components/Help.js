@@ -17,12 +17,12 @@ export default function Help({ onAbout, version }) {
                 <Dropdown.Item
                     icon="book"
                     text="Documentation"
-                    onClick={() => redirectToPage(`https://docs.cloudify.co/${version}`)}
+                    onClick={() => redirectToPage(`https://operator.windriver.com/docs/latest/`)}
                 />
                 <Dropdown.Item
                     icon="comments"
                     text="Contact Us"
-                    onClick={() => redirectToPage('https://cloudify.co/contact')}
+                    onClick={() => redirectToPage('https://www.windriver.com/company/contact/')}
                 />
                 <Dropdown.Divider />
                 <Dropdown.Item icon="info circle" text="About" onClick={onAbout} />

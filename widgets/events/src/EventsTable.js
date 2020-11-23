@@ -227,7 +227,7 @@ export default class EventsTable extends React.Component {
                                 <DataTable.Data>{item.node_instance_id}</DataTable.Data>
                                 <DataTable.Data>{item.workflow_id}</DataTable.Data>
                                 <DataTable.Data>
-                                    {this.getHighlightedText(item.operation, 'operationText', 'lawngreen')}
+                                    {this.getHighlightedText(item.operation, 'operationText', 'rgb(207,189,249)')}
                                 </DataTable.Data>
                                 <DataTable.Data>
                                     {item.message && (

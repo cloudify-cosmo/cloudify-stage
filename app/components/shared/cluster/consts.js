@@ -29,13 +29,13 @@ export const clusterServiceStatuses = _.keys(clusterServiceStatusEnum);
 export const clusterServiceBgColor = serviceStatus => {
     switch (serviceStatus) {
         case clusterServiceStatusEnum.OK:
-            return '#21ba45';
+            return 'rgba(0,183,164,0.5)';
         case clusterServiceStatusEnum.Degraded:
-            return '#fbbd08';
+            return 'rgba(255,209,153,0.5)';
         case clusterServiceStatusEnum.Fail:
-            return '#db2828';
+            return 'rgba(235,78,91,0.5)';
         default:
-            return '#aaaaaa';
+            return 'rgb(119,119,119)';
     }
 };
 
