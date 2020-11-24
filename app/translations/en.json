@@ -178,7 +178,8 @@
             "message": "Unfortunately you cannot login since your account is not associated with any tenants. Please ask the administrator to assign at least one tenant to your account."
         },
         "password": "Password",
-        "username": "Username"
+        "username": "Username",
+        "submit": "LOGIN"
     },
     "maintenanceMode": {
         "activate": "Activate Maintenance Mode",

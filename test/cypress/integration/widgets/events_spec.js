@@ -8,12 +8,17 @@ describe('Events/logs widget', () => {
             })
             .login();
 
-        cy.get('.file').click();
-
+        cy.contains('tr', 'create_snapshot').find('.file').click();
         cy.contains('Error type');
         cy.contains('Error message');
         cy.contains('Error traceback');
+        cy.contains('Close').click();
+        cy.get('.modal').should('not.exist');
 
+        cy.contains('tr', 'restore_snapshot').find('.file').click();
+        cy.contains('Error type');
+        cy.contains('Error message');
+        cy.contains('Error traceback').should('not.exist');
         cy.contains('Close').click();
         cy.get('.modal').should('not.exist');
     });
