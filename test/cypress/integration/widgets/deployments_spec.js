@@ -1,5 +1,3 @@
-import _ from 'lodash';
-
 describe('Deployments widget', () => {
     const blueprintName = 'deployments_test_hw';
     const deploymentName = 'deployments_test_hw_dep';
@@ -28,24 +26,16 @@ describe('Deployments widget', () => {
             .uploadBlueprint(blueprintUrl, blueprintName)
             .deployBlueprint(blueprintName, deploymentName, { webserver_port: 9123 })
             .createSite(site)
-            .login()
-            .visitPage('Deployments')
-            .editWidgetConfiguration('deployments', () => {
-                cy.get('input[name="pollingTime"]').clear().type(_.repeat('{uparrow}', 5));
-            });
+            .usePageMock('deployments', { pollingTime: 5, clickToDrillDown: true })
+            .login();
     });
 
     it('should be present in Deployments page', () => {
-        cy.visitPage('Deployments');
         searchForDeployment(deploymentName);
         cy.get('.deploymentSegment h3').should('have.text', deploymentName);
     });
 
-    describe('should provide display configuration', () => {
-        before(() => {
-            cy.addPage('Deployments Test').addWidget('deployments');
-        });
-
+    describe('should provide display configuration for', () => {
         /*
         Default configuration
         - clickToDrillDown = true
@@ -54,23 +44,25 @@ describe('Deployments widget', () => {
         - displayStyle = List
         */
 
-        it('to change clickToDrillDown option', () => {
+        before(cy.refreshPage);
+
+        it('clickToDrillDown option', () => {
+            searchForDeployment(deploymentName);
             cy.contains(deploymentName).click();
             cy.location('pathname').should('contain', '_deployment/deployments_test_hw_dep');
-            cy.get('.breadcrumb').should('have.text', 'Deployments Testdeployments_test_hw_dep');
+            cy.contains('.breadcrumb', 'deployments_test_hw_dep');
 
-            cy.visitPage('Deployments Test');
+            cy.refreshPage();
             cy.editWidgetConfiguration('deployments', () => {
                 cy.get('input[name="clickToDrillDown"]').parent().click();
             });
 
             cy.contains(deploymentName).click();
             cy.location('pathname').should('not.contain', '_deployment/deployments_test_hw_dep');
-            cy.get('.breadcrumb').should('have.text', 'Deployments Test');
+            cy.get('.deploymentsWidget');
         });
 
-        it('to change showExecutionStatusLabel option', () => {
-            cy.visitPage('Deployments Test');
+        it('showExecutionStatusLabel option', () => {
             searchForDeployment(deploymentName);
 
             const lastExecutionCellSelector = 'tr#deploymentsTable_deployments_test_hw_dep td:nth-child(2)';
@@ -90,11 +82,11 @@ describe('Deployments widget', () => {
             });
         });
 
-        it('to change blueprintIdFilter option', () => {
+        it('blueprintIdFilter option', () => {
             cy.server();
             cy.route('GET', `**/deployments*blueprint_id=${blueprintName}`).as('getFilteredDeployments');
 
-            cy.visitPage('Deployments Test');
+            cy.refreshPage();
 
             cy.editWidgetConfiguration('deployments', () => {
                 cy.get('input[name="blueprintIdFilter"]').clear().type(blueprintName);
@@ -103,9 +95,7 @@ describe('Deployments widget', () => {
             cy.wait('@getFilteredDeployments');
         });
 
-        it('to change displayStyle option', () => {
-            cy.visitPage('Deployments Test');
-
+        it('displayStyle option', () => {
             cy.get('table.deploymentsTable').should('be.visible');
             cy.get('div.segmentList').should('not.be.visible');
 
@@ -123,7 +113,6 @@ describe('Deployments widget', () => {
         cy.server();
         cy.route('POST', `**/executions`).as('executeWorkflow');
 
-        cy.visitPage('Deployments');
         actOnDeployment(deploymentName, 'Install');
 
         cy.get('.executeWorkflowModal button.ok').click();
@@ -136,7 +125,6 @@ describe('Deployments widget', () => {
         cy.server();
         cy.route('POST', `**/deployments/${deploymentName}/set-site`).as('setDeploymentSite');
 
-        cy.visitPage('Deployments');
         actOnDeployment(deploymentName, 'Set Site');
 
         cy.get('.modal').within(() => {
@@ -155,7 +143,6 @@ describe('Deployments widget', () => {
         cy.server();
         cy.route('PUT', `**/deployment-updates/${deploymentName}/update/initiate`).as('updateDeployment');
 
-        cy.visitPage('Deployments');
         actOnDeployment(deploymentName, 'Update');
 
         cy.get('.updateDeploymentModal').within(() => {
@@ -188,7 +175,6 @@ describe('Deployments widget', () => {
         cy.server();
         cy.route('DELETE', `**/deployments/${testDeploymentName}?force=true`).as('deleteDeployment');
 
-        cy.visitPage('Deployments');
         actOnDeployment(testDeploymentName, 'Force Delete');
 
         cy.get('.modal button.primary').click();

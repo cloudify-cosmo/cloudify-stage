@@ -8,53 +8,52 @@ describe('Executions', () => {
             .deleteSites()
             .uploadBlueprint('blueprints/simple.zip', blueprintName, 'blueprint.yaml', 'global')
             .deployBlueprint(blueprintName, blueprintName, { server_ip: 'localhost' })
+            .usePageMock('executions', { fieldsToShow: ['Status', 'Workflow'], pollingTime: 5 })
             .login()
             .executeWorkflow(blueprintName, 'install');
 
-        cy.contains('Deployments').click();
-        cy.get('.deploymentsWidget').contains(blueprintName).click();
+        cy.setDeploymentContext(blueprintName);
+        cy.get('.executionsWidget tbody tr').should('have.length', 2);
     });
 
-    it('works in table mode', () => {
-        cy.get('.tabular.menu').contains('a.item', 'History').click();
+    describe('in table mode', () => {
+        it('shows execution graph', () => {
+            cy.get('.executionsWidget').contains('tr', 'failed').contains('install').click();
 
-        cy.log('Check if Executions widget has table rows');
-        cy.get('.executionsWidget').contains('tr', 'failed').contains('install').click();
+            cy.log('Check if Task Graph is visible');
+            cy.get('.executionsWidget svg').should('be.visible');
+        });
 
-        cy.log('Check if Task Graph is visible');
-        cy.get('.executionsWidget svg').should('be.visible');
+        it('provides message when there is no Task Execution Graph', () => {
+            cy.get('.executionsWidget').contains('tr', 'create_deployment_environment').click();
+
+            cy.log('Check if message is provided');
+            cy.get('table.executionsTable').scrollIntoView();
+            cy.get('table.executionsTable .message')
+                .should('be.visible')
+                .should('have.text', 'The selected execution does not have a tasks graph');
+        });
     });
 
-    it('works in single execution mode', () => {
-        cy.get('.tabular.menu').contains('a.item', 'Last Execution').click();
+    describe('in single execution mode', () => {
+        before(() =>
+            cy.editWidgetConfiguration('executions', () => cy.get('input[name="singleExecutionView"]').parent().click())
+        );
 
-        cy.log('Check if Task Graph is visible');
-        cy.get('.executionsWidget svg').should('be.visible');
+        it('displays tasks graph', () => {
+            cy.get('.executionsWidget svg').should('be.visible');
+        });
 
-        cy.log('Check if Executions widget has Last Execution status icon');
-        cy.get('.executionsWidget').contains('.ui.label', 'install failed').as('statusLabel');
+        it('displays Last Execution popup', () => {
+            cy.log('Check if Task Graph is visible');
+            cy.get('.executionsWidget svg').should('be.visible');
 
-        cy.get('@statusLabel').trigger('mouseover');
-        cy.get('.popup .header').should('have.text', 'Last Execution');
-        cy.get('@statusLabel').trigger('mouseout');
-    });
+            cy.log('Check if Executions widget has Last Execution status icon');
+            cy.get('.executionsWidget').contains('.ui.label', 'install failed').as('statusLabel');
 
-    it('provides message when there is no Task Execution Graph', () => {
-        cy.get('.tabular.menu').contains('a.item', 'History').click();
-
-        cy.log('Check if Executions widget has table rows');
-        cy.get('.executionsWidget').contains('tr', 'create_deployment_environment').click();
-
-        cy.log('Check if message is provided');
-        cy.get('table.executionsTable').scrollIntoView();
-        cy.get('table.executionsTable .message')
-            .should('be.visible')
-            .should('have.text', 'The selected execution does not have a tasks graph');
-    });
-
-    describe('provides Task Execution Graph', () => {
-        before(() => {
-            cy.get('.tabular.menu').contains('a.item', 'Last Execution').click();
+            cy.get('@statusLabel').trigger('mouseover');
+            cy.get('.popup .header').should('have.text', 'Last Execution');
+            cy.get('@statusLabel').trigger('mouseout');
         });
 
         it('allows to start/stop focus mode', () => {

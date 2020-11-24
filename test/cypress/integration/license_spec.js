@@ -61,11 +61,11 @@ describe('License Management', () => {
     };
 
     before(() => {
-        cy.activate().login();
+        cy.activate().usePageMock().login();
     });
 
     beforeEach(() => {
-        cy.restoreState();
+        cy.usePageMock().restoreState();
     });
 
     it('is accessible from users menu', () => {

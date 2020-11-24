@@ -5,11 +5,11 @@ describe('User management widget', () => {
     before(() =>
         cy
             .activate('valid_trial_license')
+            .usePageMock('userManagement')
             .login()
             .deleteUser(username)
             .deleteUserGroup(group)
             .addUserGroup(group)
-            .visitPage('Tenant Management')
     );
 
     it('should allow to manage users', () => {
@@ -48,17 +48,21 @@ describe('User management widget', () => {
         cy.log('Verifying user groups can be edited');
         cy.contains('tr', username).find('.content').click();
         cy.contains("Edit user's groups").click();
-        cy.get('.selection').click();
-        cy.contains('.modal .item', group).click();
-        cy.contains('Save').click({ force: true });
+        cy.get('.modal').within(() => {
+            cy.get('.selection').click();
+            cy.contains('.item', group).click();
+            cy.contains('Save').click({ force: true });
+        });
         cy.contains('tr', username).contains('.label.green', '1');
 
         cy.log('Verifying user tenants can be edited');
         cy.contains('tr', username).find('.content').click();
         cy.contains("Edit user's tenants").click();
-        cy.get('.selection').click();
-        cy.contains('.modal .item', 'default_tenant').click();
-        cy.contains('Save').click({ force: true });
+        cy.get('.modal').within(() => {
+            cy.get('.selection').click();
+            cy.contains('.item', 'default_tenant').click();
+            cy.contains('Save').click({ force: true });
+        });
         cy.contains('tr', username).contains('.label.blue', '1');
 
         cy.log('Verifying user groups and tenants can be removed');

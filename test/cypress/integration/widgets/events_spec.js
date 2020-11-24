@@ -1,14 +1,12 @@
 describe('Events/logs widget', () => {
     it('should show error cause', () => {
-        cy.activate().login();
-
-        cy.server();
-        cy.route({
-            url: '/console/sp?su=/events?_sort=-timestamp&_size=15&_offset=0',
-            response: 'fixture:events/events.json'
-        });
-
-        cy.visitPage('Logs');
+        cy.activate()
+            .usePageMock('events', { fieldsToShow: ['Message', 'Workflow'], pageSize: 15 })
+            .route({
+                url: '/console/sp?su=/events?_size=15&_offset=0',
+                response: 'fixture:events/events.json'
+            })
+            .login();
 
         cy.contains('tr', 'create_snapshot').find('.file').click();
         cy.contains('Error type');

@@ -1,5 +1,5 @@
 describe('Show only my resources widget', () => {
-    before(() => cy.activate().login().addWidget('onlyMyResources'));
+    before(() => cy.activate().usePageMock('onlyMyResources').login());
 
     it('should render', () => {
         cy.contains('.onlyMyResourcesWidget', 'Show only my resources');
