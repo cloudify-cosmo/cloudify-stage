@@ -1,7 +1,7 @@
 describe('Events/logs widget', () => {
     it('should show error cause', () => {
         cy.activate()
-            .usePageMock('events', { fieldsToShow: ['Message'], pageSize: 15 })
+            .usePageMock('events', { fieldsToShow: ['Message', 'Workflow'], pageSize: 15 })
             .route({
                 url: '/console/sp?su=/events?_size=15&_offset=0',
                 response: 'fixture:events/events.json'
