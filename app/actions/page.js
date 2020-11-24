@@ -151,9 +151,14 @@ export function selectPage(pageId, isDrilldown, drilldownContext, drilldownPageN
     };
 }
 
-export function selectPageByName(pageName) {
-    const pageId = _.snakeCase(pageName);
-    return selectPage(pageId, false);
+export function selectPageByName(pageName, context) {
+    return dispatch => {
+        if (context) {
+            dispatch(clearContext());
+        }
+        const pageId = _.snakeCase(pageName);
+        dispatch(selectPage(pageId, context, context));
+    };
 }
 
 export function addPage(name) {
