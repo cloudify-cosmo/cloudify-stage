@@ -1,5 +1,5 @@
 describe('User flow', () => {
-    const resourceName = 'admin_flow_test';
+    const resourceName = 'user_flow_test';
 
     before(() =>
         cy
@@ -9,6 +9,7 @@ describe('User flow', () => {
             .deleteBlueprints(resourceName, true)
             .deletePlugins()
             .deleteSecrets('some_key_')
+            .deleteSecrets('openstack_config__lab1_tenantA')
     );
 
     function createSecret(secretName) {
@@ -35,6 +36,7 @@ describe('User flow', () => {
         createSecret('some_key_4');
         createSecret('some_key_7');
         createSecret('some_key_10');
+        createSecret('openstack_config__lab1_tenantA');
 
         cy.visitPage('Local Blueprints');
         cy.contains('Upload').click();
