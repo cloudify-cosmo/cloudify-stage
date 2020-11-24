@@ -33,8 +33,12 @@ export default function ErrorCausesModal({ errorCauses, onClose, open }) {
                         <Message info>{type}</Message>
                         <Header size="small">Message</Header>
                         <Message error>{message}</Message>
-                        <Header size="small">Traceback</Header>
-                        <HighlightText language="python">{traceback}</HighlightText>
+                        {traceback && (
+                            <>
+                                <Header size="small">Traceback</Header>
+                                <HighlightText language="python">{traceback}</HighlightText>
+                            </>
+                        )}
                     </Segment>
                 ))}
             </Modal.Content>
