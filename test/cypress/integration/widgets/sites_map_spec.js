@@ -1,12 +1,10 @@
 describe('Sites Map', () => {
     const refreshDashboardPage = () => {
-        cy.refreshPage();
-        cy.get('.sitesMapWidget .ui.text.loader').should('not.be.visible');
+        cy.visitPage('Test Page');
     };
 
+    const testSite = { name: 'Tel-Aviv', location: '32.079991, 34.767291' };
     before(() => {
-        const testSite = { name: 'Tel-Aviv', location: '32.079991, 34.767291' };
-
         cy.activate('valid_spire_license')
             .usePageMock('sitesMap')
             .login()
@@ -38,8 +36,18 @@ describe('Sites Map', () => {
         refreshDashboardPage();
         cy.log('Verify first site is present on the map');
         cy.get('.leaflet-marker-icon').should('have.length', 1).click();
-        cy.get('.leaflet-popup .leaflet-popup-content').should('be.visible');
-        cy.get('.leaflet-popup .leaflet-popup-content h5.header').should('have.text', 'Tel-Aviv');
+        cy.get('.leaflet-popup .leaflet-popup-content')
+            .should('be.visible')
+            .within(() => {
+                cy.get('h5.header').should('have.text', testSite.name).click();
+                cy.get('.deploymentState').first().click();
+            });
+        cy.location('pathname').should('be.equal', '/console/page/deployments');
+        cy.location('search').then(queryString =>
+            expect(JSON.parse(new URLSearchParams(queryString).get('c'))).to.deep.equal([
+                { context: { siteName: testSite.name } }
+            ])
+        );
 
         cy.log('Add second site');
         const secondSite = { name: 'Bergen', location: '60.389433, 5.332489', visibility: 'private' };
