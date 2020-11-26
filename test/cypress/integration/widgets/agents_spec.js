@@ -2,16 +2,15 @@ describe('Agents widget', () => {
     const blueprintName = 'agents_test_blueprint';
     const deploymentName = 'agents_test_deployment';
 
-    before(() =>
-        cy
+    before(() => {
+        cy.usePageMock('agents', { fieldsToShow: [] })
             .activate()
             .login()
             .deleteDeployments(deploymentName, true)
             .deleteBlueprints(blueprintName, true)
             .uploadBlueprint('blueprints/simple.zip', blueprintName)
-            .deployBlueprint(blueprintName, deploymentName, { server_ip: 'localhost' })
-            .visitPage('System Resources')
-    );
+            .deployBlueprint(blueprintName, deploymentName, { server_ip: 'localhost' });
+    });
 
     it('should allow to validate agent', () => {
         cy.contains('Validate').click();

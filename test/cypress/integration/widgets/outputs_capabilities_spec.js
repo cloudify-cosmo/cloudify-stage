@@ -2,13 +2,26 @@ describe('Outputs/Capabilities', () => {
     const blueprintName = 'outputs_capabilities_test';
     const deploymentName = 'outputs_capabilities_test';
 
-    before(() => cy.activate('valid_trial_license').login());
+    before(() => cy.activate('valid_trial_license').usePageMock('outputs', { showCapabilities: true }).login());
 
-    describe('presents data and export button', () => {
+    function setUpBlueprint(blueprintPackage) {
+        cy.deleteDeployments(deploymentName, true)
+            .deleteBlueprints(blueprintName, true)
+            .uploadBlueprint(`blueprints/${blueprintPackage}.zip`, blueprintName);
+    }
+
+    it('hides export button when no data is available', () => {
+        setUpBlueprint('empty');
+
+        cy.setBlueprintContext(blueprintName);
+
+        cy.contains('Export to JSON').should('not.exist');
+    });
+
+    describe('presents data and export button for', () => {
         before(() => {
-            cy.deleteDeployments(deploymentName, true)
-                .deleteBlueprints(blueprintName, true)
-                .uploadBlueprint('blueprints/outputs.zip', blueprintName);
+            setUpBlueprint('outputs');
+            cy.refreshTemplate();
         });
 
         function checkTable() {
@@ -30,38 +43,15 @@ describe('Outputs/Capabilities', () => {
             });
         }
 
-        it('in Blueprint page', () => {
-            cy.visitPage('Local Blueprints');
-
-            cy.log('Go into Blueprint page');
-            cy.get(`#blueprintsTable_${blueprintName} > td > .blueprintName`).click();
-
+        it('blueprint', () => {
+            cy.setBlueprintContext(blueprintName);
             checkTable();
         });
 
-        it('in Deployment page', () => {
+        it('deployment', () => {
             cy.deployBlueprint(blueprintName, deploymentName);
-
-            cy.visitPage('Deployments');
-
-            cy.log('Go into Deployment page');
-            cy.get(`.ui.segment.${deploymentName} > .ui > .row`).click();
-            cy.contains('Deployment Info').click();
-
+            cy.setDeploymentContext(deploymentName);
             checkTable();
         });
-    });
-
-    it('hides export button when no data is available', () => {
-        cy.deleteDeployments(deploymentName, true)
-            .deleteBlueprints(blueprintName, true)
-            .uploadBlueprint('blueprints/empty.zip', blueprintName);
-
-        cy.visitPage('Local Blueprints');
-
-        cy.log('Go into Blueprint page');
-        cy.get(`#blueprintsTable_${blueprintName} > td > .blueprintName`).click();
-
-        cy.contains('Export to JSON').should('not.exist');
     });
 });
