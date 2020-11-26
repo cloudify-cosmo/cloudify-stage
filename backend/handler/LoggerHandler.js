@@ -6,7 +6,16 @@ const winston = require('winston');
 const _ = require('lodash');
 const config = require('../config').get();
 
+require('events').EventEmitter.defaultMaxListeners = 25;
+
 const { logLevel, logsFile, errorsFile } = config.app;
+
+const logsTransport = new winston.transports.File({ filename: logsFile });
+const errorsTransport = new winston.transports.File({ filename: errorsFile, level: 'error' });
+const consoleTransport = new winston.transports.Console({
+    format: winston.format.colorize({ all: true })
+});
+const transports = [logsTransport, errorsTransport, consoleTransport];
 
 module.exports = (() => {
     function getArgsSupportedLogger(logger) {
@@ -40,13 +49,7 @@ module.exports = (() => {
 
         const logger = winston.loggers.add(category, {
             level: logLevel,
-            transports: [
-                new winston.transports.File({ filename: logsFile }),
-                new winston.transports.File({ filename: errorsFile, level: 'error' }),
-                new winston.transports.Console({
-                    format: winston.format.colorize({ all: true })
-                })
-            ],
+            transports,
 
             format: winston.format.combine(
                 winston.format.label({ label: category }),
