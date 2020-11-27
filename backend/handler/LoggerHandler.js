@@ -1,12 +1,38 @@
 /**
  * Created by jakubniezgoda on 17/07/2017.
  */
-
+const fs = require('fs');
 const winston = require('winston');
 const _ = require('lodash');
 const config = require('../config').get();
 
-const { logLevel, logsFile, errorsFile } = config.app;
+const { logsFile, errorsFile } = config.app;
+
+/**
+ * Reads log level from manager's configuration file, as specified by `logLevelConf` configuration parameter.
+ * See https://github.com/cloudify-cosmo/cloudify-manager/blob/master/packaging/mgmtworker/files/etc/cloudify/logging.conf
+ */
+function getLevelFromLoggingConf() {
+    try {
+        return _.chain(fs.readFileSync(config.app.logLevelConf))
+            .split('\n')
+            .filter(fileEntry => !fileEntry.startsWith('#'))
+            .map(fileEntry => fileEntry.split(/\s+/))
+            .find(fileEntryWords => _.last(fileEntryWords) === 'cloudify-stage')
+            .first()
+            .toLower()
+            .thru(l => (l === 'warning' ? 'warn' : l))
+            .value();
+    } catch (e) {
+        // eslint-disable-next-line no-console
+        console.warn(`Couldn't read logging level from ${config.app.logLevelConf}:`, e);
+        return null;
+    }
+}
+
+let logLevel;
+if (config.app.logLevelConf) logLevel = getLevelFromLoggingConf();
+logLevel = logLevel || config.app.logLevel;
 
 module.exports = (() => {
     function getArgsSupportedLogger(logger) {
