@@ -6,6 +6,8 @@ const winston = require('winston');
 const _ = require('lodash');
 const config = require('../config').get();
 
+require('events').EventEmitter.defaultMaxListeners = 25;
+
 const { logsFile, errorsFile } = config.app;
 
 /**
