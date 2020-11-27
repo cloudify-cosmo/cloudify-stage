@@ -4,13 +4,13 @@ The following section describes different configuration files used in cloudify-s
 
 ## Application (`app.json`)
 
-* `maintenancePollingInterval` - integer, time interval for Cloudify Manager status polling (milliseconds) 
-* `singleManager` - boolean, defines if Cloudify Manager is executed as single (depracated)
-* `db` - object, Cloudify Stage PostgreSQL DB connection configuration
+* `maintenancePollingInterval` - integer, time interval for Manager status polling (milliseconds) 
+* `singleManager` - boolean, defines if Manager is executed as single (depracated)
+* `db` - object, Stage PostgreSQL DB connection configuration
   * `url` - string or array, DB URL or array of DB URLs 
   * `options` - object, DB connection options passed to [Sequelize constructor](https://sequelize.org/master/class/lib/sequelize.js~Sequelize.html#instance-constructor-constructor)
   
-* `proxy` - object, configuration of Stage Backend proxy to Cloudify Manager 
+* `proxy` - object, configuration of Stage Backend proxy to Manager 
   * `timeouts`
     * `get` - integer, GET request timeout (milliseconds)
     * `post` - integer, POST request timeout (milliseconds)
@@ -42,16 +42,16 @@ The following section describes different configuration files used in cloudify-s
   * `portalUrl` - string, redirect URL to the organization portal
 
 * `logsFile` - string, logs file path
-
 * `errorsFile` - string, errors file path
-
+* `logLevelConf` - string, path to Manager log levels configuration file, or blank string if not applicable
+* `logLevel` - string, default log level used when `logLevelConf` is not set, file defined by `logLevelConf` does not exist, or the file exists but contains no entry for `cloudify-stage` service
 
 ## Manager (`manager.json`)
 
-* `ip` - string, Cloudify Manager IP
-* `apiVersion` - string, Cloudify Manager REST API version, eg. "v3.1" 
-* `protocol` - string, Cloudify REST API protocol type, "http" or "https" 
-* `port` - string, Cloudify REST API port number
+* `ip` - string, Manager IP
+* `apiVersion` - string, Manager REST API version, eg. "v3.1" 
+* `protocol` - string, Manager REST API protocol type, "http" or "https" 
+* `port` - string, Manager REST API port number
 
 ## User (`userConfig.json`)
 
@@ -62,9 +62,7 @@ This configuration can be overridden by: `/dist/userData/userConfig.json`.
   * `attribution` -  string, attribution data to be displayed as small text box on a map,  HTML allowed, it is required by map providers, check [Leaflet-providers preview](https://leaflet-extras.github.io/leaflet-providers/preview/) for examples and requirements from different providers
   * `accessToken` - string, API key to be passed to map tile tiles provider 
 
-* `logLevel` - string, default logging level, allowed strings are defined by [Winston](https://github.com/winstonjs/winston) logger
-
-* `whiteLabel` - object, Cloudify UI white-labelling configuration
+* `whiteLabel` - object, UI white-labelling configuration
   * `logoUrl` - string, relative URL to logo image
   * `mainColor` - string, main color (CSS color)  
   * `headerTextColor` - string, color of text in page header (CSS color)
