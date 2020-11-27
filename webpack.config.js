@@ -172,25 +172,29 @@ module.exports = (env, argv) => {
             module,
             plugins: _.flatten(
                 _.compact([
-                    new CopyWebpackPlugin([
-                        {
-                            from: 'node_modules/cloudify-ui-common/images/favicon.png',
-                            to: 'static/images'
-                        },
-                        {
-                            from: 'widgets',
-                            to: 'appData/widgets',
-                            ignore: ['**/src/**']
-                        },
-                        {
-                            from: 'templates',
-                            to: 'appData/templates'
-                        },
-                        {
-                            from: 'tours',
-                            to: 'appData/tours'
-                        }
-                    ]),
+                    new CopyWebpackPlugin({
+                        patterns: [
+                            {
+                                from: 'node_modules/cloudify-ui-common/images/favicon.png',
+                                to: 'static/images'
+                            },
+                            {
+                                from: 'widgets',
+                                to: 'appData/widgets',
+                                globOptions: {
+                                    ignore: ['**/src/**']
+                                }
+                            },
+                            {
+                                from: 'templates',
+                                to: 'appData/templates'
+                            },
+                            {
+                                from: 'tours',
+                                to: 'appData/tours'
+                            }
+                        ]
+                    }),
                     new HtmlWebpackPlugin({
                         template: 'app/index.tmpl.html',
                         inject: 'body',
@@ -225,12 +229,14 @@ module.exports = (env, argv) => {
             module,
             plugins: _.flatten(
                 _.compact([
-                    new CopyWebpackPlugin([
-                        {
-                            from: 'widgets/**/src/backend.js',
-                            to: '[path]../backend.js'
-                        }
-                    ]),
+                    new CopyWebpackPlugin({
+                        patterns: [
+                            {
+                                from: 'widgets/**/src/backend.js',
+                                to: '[path]../backend.js'
+                            }
+                        ]
+                    }),
                     isProduction && getProductionPlugins(env && env.analyse === 'widgets')
                 ])
             ),
