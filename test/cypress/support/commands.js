@@ -240,7 +240,8 @@ Cypress.Commands.add('usePageMock', (widgetIds, widgetConfiguration = {}) => {
                         }
                     ]
                 },
-                { id: 'admin_operations' }
+                { id: 'admin_operations' },
+                { id: 'deployments' }
             ]
         }
     });
