@@ -3,7 +3,7 @@
  */
 import _ from 'lodash';
 import PropTypes from 'prop-types';
-
+import i18n from 'i18next';
 import React, { Component } from 'react';
 import Consts from '../../utils/consts';
 
@@ -68,19 +68,22 @@ export default class CreateTemplateModal extends Component {
         const errors = {};
 
         if (_.isEmpty(_.trim(templateName))) {
-            errors.templateName = 'Please provide correct template name';
+            errors.templateName = i18n.t(
+                'templates.createTemplateModal.errors.templateName',
+                'Please provide correct template name'
+            );
         }
 
         if (_.isEmpty(roles)) {
-            errors.roles = 'Please select role';
+            errors.roles = i18n.t('templates.createTemplateModal.errors.role', 'Please select role');
         }
 
         if (_.isEmpty(tenants)) {
-            errors.tenants = 'Please select tenant';
+            errors.tenants = i18n.t('templates.createTemplateModal.errors.tenant', 'Please select tenant');
         }
 
         if (_.isEmpty(pages)) {
-            errors.pages = 'Please select page';
+            errors.pages = i18n.t('templates.createTemplateModal.errors.page', 'Please select page');
         }
 
         if (!_.isEmpty(errors)) {
@@ -165,7 +168,7 @@ export default class CreateTemplateModal extends Component {
             <Icon name="edit" link className="updateTemplateIcon" onClick={e => e.stopPropagation()} />
         ) : (
             <Button
-                content="Create template"
+                content={i18n.t('templates.createTemplateModal.button', 'Create template')}
                 icon="list layout"
                 labelPosition="left"
                 className="createTemplateButton"
@@ -182,7 +185,15 @@ export default class CreateTemplateModal extends Component {
             >
                 <Modal.Header>
                     <Icon name="list layout" />{' '}
-                    {editMode ? <span>Update template {templateNameProp}</span> : <span>Create template</span>}
+                    {editMode ? (
+                        <span>
+                            {i18n.t('templates.createTemplateModal.updateHeader', 'Update template {{templateName}}', {
+                                templateName: templateNameProp
+                            })}
+                        </span>
+                    ) : (
+                        <span>{i18n.t('templates.createTemplateModal.createHeader', 'Create template')}</span>
+                    )}
                 </Modal.Header>
 
                 <Modal.Content>
@@ -190,7 +201,7 @@ export default class CreateTemplateModal extends Component {
                         <Form.Field error={errors.templateName}>
                             <Form.Input
                                 name="templateName"
-                                placeholder="Template name"
+                                placeholder={i18n.t('templates.createTemplateModal.templateName', 'Template name')}
                                 value={templateName}
                                 onChange={this.handleInputChange}
                             />
@@ -198,7 +209,7 @@ export default class CreateTemplateModal extends Component {
 
                         <Form.Field error={errors.roles}>
                             <Form.Dropdown
-                                placeholder="Roles"
+                                placeholder={i18n.t('templates.createTemplateModal.roles', 'Roles')}
                                 multiple
                                 selection
                                 options={rolesOptions}
@@ -210,7 +221,7 @@ export default class CreateTemplateModal extends Component {
 
                         <Form.Field error={errors.tenants}>
                             <Form.Dropdown
-                                placeholder="Tenants"
+                                placeholder={i18n.t('templates.createTemplateModal.tenants', 'Tenants')}
                                 multiple
                                 selection
                                 options={tenantOptions}
@@ -222,7 +233,8 @@ export default class CreateTemplateModal extends Component {
 
                         <Segment.Group horizontal>
                             <Segment style={{ width: '50%' }}>
-                                <Icon name="plus" /> Available pages
+                                <Icon name="plus" />
+                                {i18n.t('templates.createTemplateModal.availablePages', 'Available pages')}
                                 <Divider />
                                 <List divided relaxed verticalAlign="middle" className="light">
                                     {availablePages.map(item => {
@@ -235,18 +247,26 @@ export default class CreateTemplateModal extends Component {
                                                     name="add"
                                                     className="right floated"
                                                     onClick={() => this.addPage(item)}
-                                                    title="Add page"
+                                                    title={i18n.t('templates.createTemplateModal.addPage', 'Add page')}
                                                 />
                                             </List.Item>
                                         );
                                     })}
 
-                                    {_.isEmpty(availablePages) && <Message content="No pages available" />}
+                                    {_.isEmpty(availablePages) && (
+                                        <Message
+                                            content={i18n.t(
+                                                'templates.createTemplateModal.noPagesAvailable',
+                                                'No pages available'
+                                            )}
+                                        />
+                                    )}
                                 </List>
                             </Segment>
 
                             <Segment style={{ width: '50%' }}>
-                                <Icon name="block layout" /> Selected pages
+                                <Icon name="block layout" />
+                                {i18n.t('templates.createTemplateModal.selectedPages', 'Selected pages')}
                                 <Divider />
                                 <List divided relaxed verticalAlign="middle" className="light" id="reorderList">
                                     {pages.map(item => {
@@ -259,15 +279,33 @@ export default class CreateTemplateModal extends Component {
                                                         link
                                                         name="minus"
                                                         onClick={() => this.removePage(item)}
-                                                        title="Remove page"
+                                                        title={i18n.t(
+                                                            'templates.createTemplateModal.removePage',
+                                                            'Remove page'
+                                                        )}
                                                     />
-                                                    <Icon link name="move" className="handle" title="Reorder page" />
+                                                    <Icon
+                                                        link
+                                                        name="move"
+                                                        className="handle"
+                                                        title={i18n.t(
+                                                            'templates.createTemplateModal.reorderPage',
+                                                            'Reorder page'
+                                                        )}
+                                                    />
                                                 </span>
                                             </List.Item>
                                         );
                                     })}
 
-                                    {_.isEmpty(pages) && <Message content="No pages selected" />}
+                                    {_.isEmpty(pages) && (
+                                        <Message
+                                            content={i18n.t(
+                                                'templates.createTemplateModal.noPagesSelected',
+                                                'No pages selected'
+                                            )}
+                                        />
+                                    )}
                                 </List>
                             </Segment>
                         </Segment.Group>
@@ -279,7 +317,11 @@ export default class CreateTemplateModal extends Component {
                     <ApproveButton
                         onClick={this.submitCreate}
                         disabled={loading}
-                        content={editMode ? 'Update' : 'Create'}
+                        content={
+                            editMode
+                                ? i18n.t('templates.createTemplateModal.update', 'Update')
+                                : i18n.t('templates.createTemplateModal.create', 'Create')
+                        }
                         icon={editMode ? 'edit' : 'checkmark'}
                         color="green"
                     />

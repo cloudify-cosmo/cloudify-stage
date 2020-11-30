@@ -1,7 +1,7 @@
 /**
  * Created by jakub.niezgoda on 15/03/2019.
  */
-
+import i18n from 'i18next';
 import _ from 'lodash';
 import React from 'react';
 import { useSelector } from 'react-redux';
@@ -12,11 +12,11 @@ export default function EulaLink() {
 
     return (
         <a
-            href={`https://cloudify.co/license${isCommunity ? '-community/' : ''}`}
+            href={i18n.t(`licenseManagement.eulaLink${isCommunity ? 'Community' : ''}`)}
             target="_blank"
             rel="noopener noreferrer"
         >
-            End User License Agreement
+            {i18n.t('licenseManagement.eula', 'End User License Agreement')}
         </a>
     );
 }

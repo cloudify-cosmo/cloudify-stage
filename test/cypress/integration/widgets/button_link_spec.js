@@ -1,11 +1,12 @@
 describe('Button link widget', () => {
-    before(() => cy.activate('valid_trial_license').login());
+    const url = 'http://wp.pl';
+    const label = 'Button link label';
+
+    before(() => cy.activate('valid_trial_license').usePageMock('buttonLink', { label, url }).login());
 
     it('should open configured link on click', () => {
-        cy.contains('Getting Started Walkthrough').click();
+        cy.contains(label).click();
 
-        cy.window()
-            .its('open')
-            .should('be.calledWith', 'https://docs.cloudify.co/latest/trial_getting_started/examples/');
+        cy.window().its('open').should('be.calledWith', url);
     });
 });

@@ -437,8 +437,8 @@ class DeployBlueprintModal extends React.Component {
                         </Form.Field>
                         {skipPluginsValidation && (
                             <Message>
-                                The recommended path is uploading plugins as wagons to Cloudify. This option is designed
-                                for plugin development and advanced users only.
+                                The recommended path is uploading plugins as wagons. This option is designed for plugin
+                                development and advanced users only.
                             </Message>
                         )}
 

@@ -11,12 +11,12 @@ describe('Community version', () => {
                 }
             });
             cy.route('/console/config', 'fixture:community/config.json');
-            cy.login();
+            cy.usePageMock().login();
         });
     });
 
     it('should have Community tag in the banner', () => {
-        cy.get('.headerBar .label').should('have.text', 'Community');
+        cy.get('.large.label').should('have.text', 'Community');
     });
 
     it('should have limited set of options in Users menu', () => {

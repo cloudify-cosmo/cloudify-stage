@@ -68,6 +68,12 @@ Cypress.Commands.add('deleteAllUsersAndTenants', () =>
         users.forEach(user => {
             const tenants = Object.keys(user.tenants);
             tenants.forEach(tenant => cy.removeUserFromTenant(user.username, tenant));
+            user.groups.forEach(groupName =>
+                cy.cfyRequest('/user-groups/users', 'DELETE', null, {
+                    group_name: groupName,
+                    ..._.pick(user, 'username')
+                })
+            );
             cy.deleteUser(user.username);
         });
         cy.cfyRequest('/tenants?_include=name').then(tenantsResponse => {

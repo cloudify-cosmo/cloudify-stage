@@ -5,7 +5,7 @@ import _ from 'lodash';
 import log from 'loglevel';
 import PropTypes from 'prop-types';
 import React from 'react';
-
+import i18n from 'i18next';
 import { Modal, Icon, ApproveButton, CancelButton, Checkbox, List, Card, Confirm } from './basic';
 
 export default class ResetPagesModal extends React.Component {
@@ -42,11 +42,14 @@ export default class ResetPagesModal extends React.Component {
         return tenants.length > 1 ? (
             <Modal className="tiny resetPagesModal" open={open} onClose={onHide}>
                 <Modal.Header>
-                    <Icon name="user" /> Reset pages for tenants
+                    <Icon name="user" /> {i18n.t('pagesResetModal.header', 'Reset pages for tenants')}
                 </Modal.Header>
 
                 <Modal.Content>
-                    Please select tenants you would like to reset pages for:
+                    {i18n.t(
+                        'pagesResetModal.selectTenants',
+                        'Please select tenants you would like to reset pages for:'
+                    )}
                     <br />
                     <Card fluid>
                         <Card.Content>
@@ -81,7 +84,10 @@ export default class ResetPagesModal extends React.Component {
             </Modal>
         ) : (
             <Confirm
-                content="Are you sure you want to reset application screens to default?"
+                content={i18n.t(
+                    'pagesResetModal.confirm',
+                    'Are you sure you want to reset application screens to default?'
+                )}
                 open={open}
                 onClose={onHide}
                 onConfirm={() => onConfirm(tenants)}

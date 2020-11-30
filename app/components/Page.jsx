@@ -5,7 +5,7 @@
 import _ from 'lodash';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
-
+import i18n from 'i18next';
 import Breadcrumbs from './Breadcrumbs';
 import EditModeBubble from './EditModeBubble';
 import { Button, EditableLabel } from './basic';
@@ -56,7 +56,7 @@ export default class Page extends Component {
                 <div>
                     <EditableLabel
                         value={page.description}
-                        placeholder="Page description"
+                        placeholder={i18n.t('page.description', 'Page description')}
                         className="pageDescription"
                         enabled={isEditMode}
                         onChange={newDesc => onPageDescriptionChange(page.id, newDesc)}
@@ -79,7 +79,12 @@ export default class Page extends Component {
                 />
                 {isEditMode && (
                     <EditModeBubble onDismiss={onEditModeExit} header="Edit mode">
-                        <Button basic content="Exit" icon="sign out" onClick={onEditModeExit} />
+                        <Button
+                            basic
+                            content={i18n.t('editMode.exit', 'Exit')}
+                            icon="sign out"
+                            onClick={onEditModeExit}
+                        />
                     </EditModeBubble>
                 )}
             </div>

@@ -1,7 +1,7 @@
 [
     {
         "name": "Main JS bundle",
-        "limit": "255 KB",
+        "limit": "269 KB",
         "gzip": false,
         "path": "dist/static/js/main.bundle.js"
     },

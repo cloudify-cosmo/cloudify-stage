@@ -70,7 +70,7 @@ module.exports = (() => {
 
     function saveDataFromUrl(url, targetDir, req) {
         return new Promise((resolve, reject) => {
-            const HEADERS = { 'User-Agent': 'Cloudify' };
+            const HEADERS = { 'User-Agent': 'Node.js' };
             const archiveUrl = decodeURIComponent(url.trim());
 
             logger.debug('Fetching file from url', archiveUrl);

@@ -5,11 +5,11 @@ describe('Snapshots list widget', () => {
     before(() =>
         cy
             .activate('valid_trial_license')
+            .usePageMock('snapshots')
             .login()
             .deletePlugins()
             .deleteSnapshot(createdSnapshotName)
             .deleteSnapshot(uploadedSnapshotName)
-            .visitPage('Admin Operations')
     );
 
     it('should allow to create and delete a snapshot', () => {

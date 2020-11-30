@@ -1,6 +1,7 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 import _ from 'lodash';
+import i18n from 'i18next';
 import WidgetsList from './WidgetsList';
 import { Confirm } from './basic';
 import AddWidget from '../containers/AddWidget';
@@ -35,13 +36,13 @@ export default function PageContent({
                 <EmptyContainerMessage isEditMode={isEditMode} containerTypeLabel="page" />
             ) : (
                 _.map(page.layout, (layoutSection, layoutSectionIdx) => (
-                    <>
+                    <React.Fragment key={layoutSectionIdx}>
                         {isEditMode && (
                             <div style={{ marginBottom: 15 }}>
                                 <EditModeButton
                                     icon="add"
                                     labelPosition="left"
-                                    content="Insert Widgets Container"
+                                    content={i18n.t('editMode.insertWidgetsContainer', 'Insert Widgets Container')}
                                     onClick={() =>
                                         onLayoutSectionAdded(
                                             { type: Consts.LAYOUT_TYPE.WIDGETS, content: [] },
@@ -52,7 +53,7 @@ export default function PageContent({
                                 <EditModeButton
                                     icon="add"
                                     labelPosition="left"
-                                    content="Insert Tabs Container"
+                                    content={i18n.t('editMode.insertTabsContainer', 'Insert Tabs Container')}
                                     onClick={() =>
                                         onLayoutSectionAdded(
                                             {
@@ -71,13 +72,19 @@ export default function PageContent({
                                     {isEditMode && (
                                         <>
                                             <AddWidget
-                                                addButtonTitle="Add widget to this widgets container"
+                                                addButtonTitle={i18n.t(
+                                                    'editMode.addWidget.addToContainerButtonTitle',
+                                                    'Add widget to this widgets container'
+                                                )}
                                                 onWidgetAdded={_.wrap(layoutSectionIdx, onWidgetAdded)}
                                             />
                                             <EditModeButton
                                                 icon="remove"
                                                 onClick={() => setLayoutSectionToRemove(layoutSectionIdx)}
-                                                title="Remove widgets container"
+                                                title={i18n.t(
+                                                    'editMode.removeWidgetsContainer',
+                                                    'Remove widgets container'
+                                                )}
                                                 style={{ float: 'right', margin: 1 }}
                                             />
                                         </>
@@ -104,7 +111,7 @@ export default function PageContent({
                                 />
                             )}
                         </div>
-                    </>
+                    </React.Fragment>
                 ))
             )}
             {isEditMode && (
@@ -112,7 +119,7 @@ export default function PageContent({
                     <EditModeButton
                         icon="add"
                         labelPosition="left"
-                        content="Add Widgets Container"
+                        content={i18n.t('editMode.addWidgetsContainer', 'Add Widgets Container')}
                         onClick={() =>
                             onLayoutSectionAdded({ type: Consts.LAYOUT_TYPE.WIDGETS, content: [] }, _.size(page.layout))
                         }
@@ -120,12 +127,15 @@ export default function PageContent({
                     <EditModeButton
                         icon="add"
                         labelPosition="left"
-                        content="Add Tabs Container"
+                        content={i18n.t('editMode.addTabsContainer', 'Add Tabs Container')}
                         onClick={() =>
                             onLayoutSectionAdded(
                                 {
                                     type: Consts.LAYOUT_TYPE.TABS,
-                                    content: _.map(new Array(2), () => ({ name: 'New Tab', widgets: [] }))
+                                    content: _.map(new Array(2), () => ({
+                                        name: i18n.t('editMode.tabs.newTab', 'New Tab'),
+                                        widgets: []
+                                    }))
                                 },
                                 _.size(page.layout)
                             )
@@ -140,8 +150,14 @@ export default function PageContent({
                     onLayoutSectionRemoved(layoutSectionToRemove);
                     resetLayoutSectionToRemove();
                 }}
-                header="Are you sure you want to remove this widgets container?"
-                content="All widgets present in this container will be removed"
+                header={i18n.t(
+                    'editMode.containerRemovalModal.header',
+                    'Are you sure you want to remove this widgets container?'
+                )}
+                content={i18n.t(
+                    'editMode.containerRemovalModal.message',
+                    'All widgets present in this container will be removed'
+                )}
             />
         </>
     );

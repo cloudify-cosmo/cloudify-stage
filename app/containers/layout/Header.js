@@ -11,8 +11,7 @@ import { toogleSidebar } from '../../actions/app';
 const mapStateToProps = state => {
     return {
         manager: state.manager || {},
-        mode: state.config.mode,
-        pageTitle: _.get(state, 'config.app.whiteLabel.pageTitle')
+        mode: state.config.mode
     };
 };
 

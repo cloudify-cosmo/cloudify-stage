@@ -7,6 +7,7 @@ import PropTypes from 'prop-types';
 import React, { useContext } from 'react';
 import { ThemeContext } from 'styled-components';
 import { HeaderBar } from 'cloudify-ui-components';
+import i18n from 'i18next';
 
 import { Button, CancelButton, Divider, Header, Modal } from './basic';
 import Banner from './banner/Banner';
@@ -25,11 +26,11 @@ export default function AboutModal({ canLicenseManagement, license, onHide, onLi
             </Modal.Header>
 
             <Modal.Content>
-                <Header>Version Details</Header>
+                <Header>{i18n.t('help.aboutModal.versionDetails', 'Version Details')}</Header>
                 <Divider />
                 <CurrentVersion version={version} />
 
-                <Header>License Details</Header>
+                <Header>{i18n.t('help.aboutModal.licenseDetails', 'License Details')}</Header>
                 <Divider />
                 <CurrentLicense license={license} />
 
@@ -38,9 +39,14 @@ export default function AboutModal({ canLicenseManagement, license, onHide, onLi
 
             <Modal.Actions>
                 {canLicenseManagement && (
-                    <Button content="License Management" icon="key" color="yellow" onClick={onLicenseManagement} />
+                    <Button
+                        content={i18n.t('help.aboutModal.licenseManagement', 'License Management')}
+                        icon="key"
+                        color="yellow"
+                        onClick={onLicenseManagement}
+                    />
                 )}
-                <CancelButton content="Close" onClick={onHide} />
+                <CancelButton content={i18n.t('help.aboutModal.close', 'Close')} onClick={onHide} />
             </Modal.Actions>
         </Modal>
     );

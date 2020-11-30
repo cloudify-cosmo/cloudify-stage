@@ -5,18 +5,18 @@ describe('Deployment Info', () => {
 
     before(() => {
         cy.activate()
+            .usePageMock('deploymentInfo', { showBlueprint: true, showCreator: true, showSite: true })
             .login()
             .deleteDeployments(deploymentName, true)
             .deleteBlueprints(blueprintName, true)
             .deleteSites()
             .uploadBlueprint('blueprints/simple.zip', blueprintName, 'blueprint.yaml', 'global')
             .deployBlueprint(blueprintName, deploymentName, { server_ip: 'localhost' })
-            .createSite({ name: siteName, visibility: 'global' });
+            .createSite({ name: siteName, visibility: 'global' })
+            .setDeploymentContext(deploymentName);
     });
 
     beforeEach(() => {
-        cy.visitPage('Deployments');
-        cy.get(`.${deploymentName}`).click();
         cy.get('div.deploymentInfoWidget')
             .should('be.visible')
             .within(() => cy.contains('Loading').should('not.be.visible'));

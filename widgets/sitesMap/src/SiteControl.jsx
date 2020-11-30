@@ -3,9 +3,7 @@ import DeploymentStatePropType from './props/DeploymentStatePropType';
 export default class SiteControl extends React.Component {
     goToDeploymentsPage(siteName) {
         const { toolbox } = this.props;
-        return new Promise(resolve => {
-            resolve(toolbox.goToPage('deployments'));
-        }).then(() => toolbox.getContext().setValue('siteName', siteName));
+        toolbox.goToPage('deployments', { siteName });
     }
 
     render() {

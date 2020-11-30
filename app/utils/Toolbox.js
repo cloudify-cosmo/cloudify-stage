@@ -50,8 +50,8 @@ class Toolbox {
         this.store.dispatch(selectParentPage());
     }
 
-    goToPage(pageName) {
-        this.store.dispatch(selectPageByName(pageName));
+    goToPage(pageName, context) {
+        this.store.dispatch(selectPageByName(pageName, context));
     }
 
     getEventBus() {

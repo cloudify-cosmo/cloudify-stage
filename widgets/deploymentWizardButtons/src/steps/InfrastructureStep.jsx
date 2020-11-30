@@ -69,7 +69,7 @@ class InfrastructureStepContent extends React.Component {
     static defaultBlueprintYaml = 'aws.yaml';
 
     static defaultInfrastractureState = {
-        blueprintUrl: Stage.Common.Consts.externalUrls.helloWorldBlueprint,
+        blueprintUrl: Stage.i18n.t('widgets.common.urls.helloWorldBlueprint'),
         blueprintFile: null,
         blueprintName: InfrastructureStepContent.defaultBlueprintName,
         blueprintFileName: InfrastructureStepContent.defaultBlueprintYaml,

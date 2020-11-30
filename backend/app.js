@@ -83,6 +83,11 @@ app.use(
     expressStaticGzip(path.resolve(__dirname, '../dist/appData'), { indexFromEmptyFile: false })
 );
 
+const translationsOverrides = 'overrides.json';
+app.use(`${contextPath}/userData/${translationsOverrides}`, (req, res) =>
+    res.sendFile(getResourcePath(translationsOverrides, true))
+);
+
 app.use(
     `${contextPath}/userData`,
     passport.authenticate('cookie', { session: false }),

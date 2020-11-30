@@ -1,7 +1,6 @@
 import log from 'loglevel';
-
 import * as types from './types';
-import { setAppLoading, setAppError } from './appState';
+import { setAppError, setAppLoading } from './appState';
 import { loadTemplates } from './templates';
 import { loadTours } from './tours';
 import { loadWidgetDefinitions } from './widgets';

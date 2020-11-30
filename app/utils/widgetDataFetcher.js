@@ -4,6 +4,7 @@
 
 import _ from 'lodash';
 import log from 'loglevel';
+import i18n from 'i18next';
 
 function getUrlRegExString(str) {
     // eslint-disable-next-line security/detect-non-literal-regexp
@@ -84,10 +85,12 @@ export default class WidgetDataFetcher {
                 );
             } catch (e) {
                 log.error('Error fetching widget data', e);
-                return Promise.reject({ error: 'Error fetching widget data' });
+                return Promise.reject({ error: i18n.t('widget.fetchError', 'Error fetching widget data') });
             }
         } else {
-            return Promise.reject({ error: 'Widget doesnt have a fetchData function' });
+            return Promise.reject({
+                error: i18n.t('widget.fetchDataFunctionError', 'Widget doesnt have a fetchData function')
+            });
         }
     }
 }

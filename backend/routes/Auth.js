@@ -52,7 +52,7 @@ router.post('/login', (req, res) =>
             if (err.error_code === 'unauthorized_error') {
                 res.status(401).send({ message: err.message || 'Invalid credentials', error: err });
             } else if (err.error_code === 'maintenance_mode_active') {
-                res.status(423).send({ message: 'Cloudify Manager is currently in maintenance mode', error: err });
+                res.status(423).send({ message: 'Manager is currently in maintenance mode', error: err });
             } else {
                 res.status(500).send({ message: `Failed to authenticate with manager: ${err.message}`, error: err });
             }

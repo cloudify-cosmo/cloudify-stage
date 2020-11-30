@@ -2,7 +2,9 @@
   "app": {
       "ssl": {
         "ca": null
-      }
+      },
+      "logLevelConf": "",
+      "logLevel": "info"
   },
   "manager": {
     "ip":"<MANAGER_IP>",

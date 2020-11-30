@@ -7,6 +7,7 @@ import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { HeaderBar } from 'cloudify-ui-components';
 
+import i18n from 'i18next';
 import Banner from './banner/Banner';
 import Consts from '../utils/consts';
 import { Button, Form, FullScreenSegment, Grid, Header, Icon, Message, MessageContainer } from './basic';
@@ -18,7 +19,11 @@ import SplashLoadingScreen from '../utils/SplashLoadingScreen';
 function LicenseSwitchButton({ color, isEditLicenseActive, onClick }) {
     return (
         <Button
-            content={isEditLicenseActive ? 'Show License' : 'Edit License'}
+            content={
+                isEditLicenseActive
+                    ? i18n.t('licenseManagement.showLicense', 'Show License')
+                    : i18n.t('licenseManagement.editLicense', 'Edit License')
+            }
             floated="right"
             icon={isEditLicenseActive ? 'text file' : 'edit'}
             color={color}
@@ -35,35 +40,31 @@ LicenseSwitchButton.propTypes = {
 };
 
 function DescriptionMessage({ canUploadLicense, isTrial, isEditLicenseActive, onLicenseButtonClick, status }) {
-    const SpanMessage = ({ children }) => <span>{children}</span>;
-    SpanMessage.propTypes = {
-        children: PropTypes.node.isRequired
-    };
-
     switch (status) {
         case Consts.LICENSE.EMPTY:
             return (
                 <Message negative icon>
                     <Icon name="ban" />
                     <Message.Content>
-                        <Message.Header>No active license</Message.Header>
+                        <Message.Header>
+                            {i18n.t('licenseManagement.subheader.noLicense', 'No active license')}
+                        </Message.Header>
                         {canUploadLicense ? (
-                            <SpanMessage>
-                                To activate this product, please enter the license key provided by Cloudify below and
-                                press update. Visit the Cloudify{' '}
-                                <a target="_blank" rel="noopener noreferrer" href="https://cloudify.co">
-                                    web site
-                                </a>{' '}
-                                &nbsp;to learn more and acquire a free&nbsp;
-                                <a target="_blank" rel="noopener noreferrer" href="https://cloudify.co/download/#trial">
-                                    trial license
-                                </a>
-                                .
-                            </SpanMessage>
+                            <span
+                                dangerouslySetInnerHTML={{
+                                    __html: i18n.t(
+                                        'licenseManagement.action.canUpload.noLicense',
+                                        'To activate this product, please enter the license key provided by Cloudify below and press update. Visit the Cloudify <a target="_blank" href="https://cloudify.co">web site</a> to learn more and acquire a free <a target="_blank" href="https://cloudify.co/download/#trial">trial license</a>.'
+                                    )
+                                }}
+                            />
                         ) : (
-                            <SpanMessage>
-                                To activate this product, please contact your Cloudify administrator.
-                            </SpanMessage>
+                            <span>
+                                {i18n.t(
+                                    'licenseManagement.action.cannotUpload.noLicense',
+                                    'To activate this product, please contact your Cloudify administrator.'
+                                )}
+                            </span>
                         )}
                     </Message.Content>
                 </Message>
@@ -80,17 +81,25 @@ function DescriptionMessage({ canUploadLicense, isTrial, isEditLicenseActive, on
                                 color="red"
                             />
                         )}
-                        <Message.Header>The trial license has expired</Message.Header>
+                        <Message.Header>
+                            {i18n.t('licenseManagement.subheader.trialLicenseExpired', 'The trial license has expired')}
+                        </Message.Header>
                         {canUploadLicense ? (
-                            <SpanMessage>
-                                Please contact{' '}
-                                <a target="_blank" rel="noopener noreferrer" href="https://cloudify.co/contact">
-                                    Cloudify
-                                </a>
-                                &nbsp;to obtain a license key.
-                            </SpanMessage>
+                            <span
+                                dangerouslySetInnerHTML={{
+                                    __html: i18n.t(
+                                        'licenseManagement.action.canUpload.trialLicenseExpired',
+                                        'Please contact <a target="_blank" href="https://cloudify.co/contact">Cloudify</a> to obtain a license key.'
+                                    )
+                                }}
+                            />
                         ) : (
-                            <SpanMessage>Please contact your Cloudify administrator.</SpanMessage>
+                            <span>
+                                {i18n.t(
+                                    'licenseManagement.action.cannotUpload.common',
+                                    'Please contact your Cloudify administrator.'
+                                )}
+                            </span>
                         )}
                     </Message.Content>
                 </Message>
@@ -106,17 +115,25 @@ function DescriptionMessage({ canUploadLicense, isTrial, isEditLicenseActive, on
                             />
                         )}
 
-                        <Message.Header>Product license has expired</Message.Header>
+                        <Message.Header>
+                            {i18n.t('licenseManagement.subheader.regularLicenseExpired', 'Product license has expired')}
+                        </Message.Header>
                         {canUploadLicense ? (
-                            <SpanMessage>
-                                Please contact{' '}
-                                <a target="_blank" rel="noopener noreferrer" href="https://cloudify.co/support">
-                                    Cloudify support
-                                </a>
-                                &nbsp;to obtain a new license key.
-                            </SpanMessage>
+                            <span
+                                dangerouslySetInnerHTML={{
+                                    __html: i18n.t(
+                                        'licenseManagement.action.canUpload.regularLicenseExpired',
+                                        'Please contact <a target="_blank" href="https://cloudify.co/support">Cloudify support</a> to obtain a new license key.'
+                                    )
+                                }}
+                            />
                         ) : (
-                            <SpanMessage>Please contact your Cloudify administrator.</SpanMessage>
+                            <span>
+                                {i18n.t(
+                                    'licenseManagement.action.cannotUpload.common',
+                                    'Please contact your Cloudify administrator.'
+                                )}
+                            </span>
                         )}
                     </Message.Content>
                 </Message>
@@ -133,8 +150,10 @@ function DescriptionMessage({ canUploadLicense, isTrial, isEditLicenseActive, on
                                 color="green"
                             />
                         )}
-                        <Message.Header>License is valid</Message.Header>
-                        <SpanMessage>No action required.</SpanMessage>
+                        <Message.Header>
+                            {i18n.t('licenseManagement.subheader.activeLicense', 'License is valid')}
+                        </Message.Header>
+                        <span>{i18n.t('licenseManagement.action.activeLicense', 'No action required.')}</span>
                     </Message.Content>
                 </Message>
             );
@@ -228,7 +247,7 @@ export default class LicensePage extends Component {
                     onRender={SplashLoadingScreen.turnOff}
                 >
                     <Header as="h2">
-                        <Icon name="key" /> License Management
+                        <Icon name="key" /> {i18n.t('licenseManagement.header', 'License Management')}
                     </Header>
 
                     <DescriptionMessage
@@ -259,7 +278,7 @@ export default class LicensePage extends Component {
 
                         <Grid.Column textAlign="right" verticalAlign="middle">
                             <Button
-                                content="Go to app"
+                                content={i18n.t('licenseManagement.goToApp', 'Go to app')}
                                 icon="arrow right"
                                 color="green"
                                 labelPosition="right"

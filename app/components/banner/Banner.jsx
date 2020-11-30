@@ -1,11 +1,11 @@
 import _ from 'lodash';
 import PropTypes from 'prop-types';
-import React from 'react';
+import React, { useContext } from 'react';
 import { Link } from 'react-router-dom';
 import { useSelector } from 'react-redux';
-import styled from 'styled-components';
+import styled, { ThemeContext } from 'styled-components';
 import { HeaderBanner } from 'cloudify-ui-components';
-
+import i18n from 'i18next';
 import Consts from '../../utils/consts';
 import LicenseTag from './LicenseTag';
 
@@ -14,10 +14,11 @@ function Banner({ className }) {
         state => _.get(state, 'manager.version.edition', Consts.EDITION.PREMIUM) === Consts.EDITION.COMMUNITY
     );
     const licenseEdition = useSelector(state => _.get(state, 'manager.license.data.license_edition', ''));
-    const productName = useSelector(state => _.get(state, 'config.app.whiteLabel.productName', 'Cloudify'));
     const productVersion = useSelector(state => _.get(state, 'manager.version.version', ''));
-    const showVersionDetails = useSelector(state => _.get(state, 'config.app.whiteLabel.showVersionDetails', true));
-    const logoUrl = useSelector(state => _.get(state, 'config.app.whiteLabel.logoUrl', ''));
+    const theme = useContext(ThemeContext) || {};
+    const showVersionDetails = _.isBoolean(theme.showVersionDetails) ? theme.showVersionDetails : true;
+
+    const productName = i18n.t('productName');
 
     return (
         <>
@@ -25,7 +26,6 @@ function Banner({ className }) {
                 <HeaderBanner
                     isCommunity={isCommunity}
                     licenseEdition={licenseEdition}
-                    logoUrl={logoUrl}
                     productName={productName}
                     productVersion={productVersion}
                     showVersionDetails={!isCommunity && showVersionDetails}

@@ -1,5 +1,5 @@
 describe('Plugins widget', () => {
-    before(() => cy.activate('valid_trial_license').login().contains('System Resources').click());
+    before(() => cy.activate('valid_trial_license').usePageMock('plugins').login());
 
     beforeEach(() => {
         cy.deletePlugins();
@@ -25,12 +25,16 @@ describe('Plugins widget', () => {
     });
 
     it('should allow to install and manage new plugin', () => {
+        cy.server();
+        cy.route(RegExp('/console/plugins/icons/')).as('pluginIcon');
+
         cy.get('.ok').click();
         cy.get('.modal').should('not.exist');
 
         cy.log('Verify plugin was uploaded');
         cy.get('.pluginsTable tbody tr').should('have.length', 1);
         cy.contains('cloudify-openstack-plugin');
+        cy.wait('@pluginIcon');
 
         cy.log('Check ID popup works');
         cy.get('.pluginsTable').contains('ID').trigger('mouseover');

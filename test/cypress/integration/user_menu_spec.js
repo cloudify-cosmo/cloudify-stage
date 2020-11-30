@@ -22,6 +22,8 @@ describe('User Menu', () => {
             .addUserToTenant(nonAdminUsername, 'default_tenant', 'viewer');
     });
 
+    beforeEach(cy.usePageMock);
+
     it('should contain options for admin users', () => {
         cy.login();
 

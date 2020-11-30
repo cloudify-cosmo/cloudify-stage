@@ -13,7 +13,7 @@ Cypress.Commands.add('uploadPluginFromCatalog', pluginName => {
     cy.route('POST', new RegExp(`console/plugins/upload.*title=${pluginName}`)).as('pluginUpload');
 
     cy.log(`Upload ${pluginName} plugin`);
-    cy.visitPage('Cloudify Catalog');
+    cy.visitPage('Plugins Catalog');
     cy.get('.pluginsCatalogWidget').within(() => {
         cy.contains('tr', pluginName).find('button').click();
     });
@@ -23,6 +23,7 @@ Cypress.Commands.add('uploadPluginFromCatalog', pluginName => {
     cy.wait('@pluginUpload', { responseTimeout: uploadPluginTimeout });
     cy.get('.modal').should('be.not.visible');
     cy.get('.pluginsCatalogWidget .message').should('have.text', `${pluginName} successfully uploaded`);
+    cy.visitPage('Test Page');
 });
 
 Cypress.Commands.add('deletePlugins', () => {

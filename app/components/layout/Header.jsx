@@ -7,6 +7,7 @@ import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { HeaderBar, MenusBar } from 'cloudify-ui-components';
 
+import i18n from 'i18next';
 import Tenants from '../../containers/Tenants';
 import Manager from '../../containers/Manager';
 import Users from '../../containers/Users';
@@ -29,8 +30,7 @@ export default class Header extends Component {
     }
 
     componentDidMount() {
-        const { pageTitle } = this.props;
-        document.title = pageTitle;
+        document.title = i18n.t('pageTitle');
     }
 
     shouldComponentUpdate(nextProps, nextState) {
@@ -98,7 +98,6 @@ export default class Header extends Component {
 Header.propTypes = {
     manager: PropTypes.shape({ tenants: PropTypes.shape({}) }).isRequired,
     mode: PropTypes.string.isRequired,
-    pageTitle: PropTypes.string.isRequired,
     onResetPages: PropTypes.func.isRequired,
     onSidebarOpen: PropTypes.func.isRequired
 };

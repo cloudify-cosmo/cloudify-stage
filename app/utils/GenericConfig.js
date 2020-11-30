@@ -2,16 +2,20 @@
  * Created by jakub.niezgoda on 05/02/2018.
  */
 
+import i18n from 'i18next';
 import { GenericField } from '../components/basic';
 
 export default class GenericConfig {
     static POLLING_TIME_CONFIG = (pollingTime = 0) => {
         return {
             id: 'pollingTime',
-            name: 'Refresh time interval',
+            name: i18n.t('widget.config.pollingTime.name', 'Refresh time interval'),
             default: pollingTime,
-            placeHolder: 'Enter time interval in seconds',
-            description: 'Data of the widget will be refreshed per provided interval time in seconds',
+            placeHolder: i18n.t('widget.config.pollingTime.placeholder', 'Enter time interval in seconds'),
+            description: i18n.t(
+                'widget.config.pollingTime.description',
+                'Data of the widget will be refreshed per provided interval time in seconds'
+            ),
             type: GenericField.NUMBER_TYPE,
             min: 0
         };

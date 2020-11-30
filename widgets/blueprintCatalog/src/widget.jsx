@@ -26,7 +26,7 @@ Stage.defineWidget({
             name: 'Blueprints Examples URL',
             placeHolder: 'Type URL to blueprint examples JSON file',
             description: 'If set, then GitHub options are not used for fetching data.',
-            default: Stage.Common.Consts.externalUrls.blueprintsCatalog,
+            default: Stage.i18n.t('widgets.common.urls.blueprintsCatalog'),
             type: Stage.Basic.GenericField.STRING_TYPE
         },
         {
