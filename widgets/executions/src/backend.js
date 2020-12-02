@@ -106,6 +106,7 @@ module.exports = r => {
         const textSizingFactor = 5.8;
         const textHeight = 18;
 
+        const isLeafNode = subGraph => _.isEmpty(subGraph.children);
         const constructSubgraphs = operationsList => {
             // All the subgraphs and leaves are in the same list for better time-complexity performance, meaning -
             // For every subgraph - instead of traversing its children until we find the desired subgraph/leaf, we simply
@@ -143,7 +144,7 @@ module.exports = r => {
                     operation: _.get(cloudifyContext.operation, 'name'),
                     children: [],
                     edges: [],
-                    containingSubgraph: null // Needed to distinguish which nodes to keep (=not null -> not root-level subgraphs -> will be removed)
+                    containingSubgraph: null
                 };
                 if (!Object.prototype.hasOwnProperty.call(allSubgraphs, task.id)) {
                     allSubgraphs[task.id] = subGraph;
@@ -193,7 +194,7 @@ module.exports = r => {
                 if (task.parameters.current_retries > 0) {
                     allSubgraphs[task.id].labels[0].retry = task.parameters.current_retries;
                 }
-                if (allSubgraphs[task.id].containingSubgraph) {
+                if (isLeafNode(allSubgraphs[task.id])) {
                     allSubgraphs[task.id].width = 270;
                     allSubgraphs[task.id].height = 40;
                 }
@@ -308,43 +309,44 @@ module.exports = r => {
                 return [textToCalculate];
             };
             _.map(allSubgraphs, subGraph => {
-                if (subGraph.containingSubgraph !== null && subGraph.labels) {
-                    subGraph.labels[0].text = _.capitalize(_.lowerCase(subGraph.labels[0].text));
-                }
-                if (subGraph.children && subGraph.children.length !== 0) {
-                    subGraph.layoutOptions = subGraphLayoutOptions;
-                }
-                if (subGraph.children && subGraph.children.length === 0) {
-                    // if leaf and not the 'edges' object
-                    const labels = subGraph.labels[0];
-                    let numberOfSplits = 0;
-                    let textToCalculate = '';
-                    if (labels.text) {
-                        textToCalculate = labels.text;
+                if (subGraph.children) {
+                    if (!isLeafNode(subGraph)) {
+                        subGraph.layoutOptions = subGraphLayoutOptions;
+                    } else {
+                        // if leaf and not the 'edges' object
+                        const labels = subGraph.labels[0];
+                        labels.text = _.capitalize(_.lowerCase(labels.text));
+                        let numberOfSplits = 0;
+                        let textToCalculate = '';
+                        if (labels.text) {
+                            textToCalculate = labels.text;
+                            textToCalculate = textSplitCalculation(subGraph.width, textToCalculate);
+                            // Each element in the resulting array will be rendered in a separate <text> element
+                            labels.displayTitle = textToCalculate;
+                            numberOfSplits += textToCalculate.length - 1;
+                        }
+                        // Description text
+                        const tempArr = [];
+                        if (labels.operation) {
+                            tempArr.push(labels.operation);
+                        }
+                        const { state } = labels;
+                        if (state) {
+                            const retriesCount = labels.retry;
+                            tempArr.push(
+                                state === 'Pending' && retriesCount ? `Pending retry (${retriesCount})` : state
+                            );
+                        }
+                        textToCalculate = tempArr.join(' - ');
                         textToCalculate = textSplitCalculation(subGraph.width, textToCalculate);
                         // Each element in the resulting array will be rendered in a separate <text> element
-                        labels.displayTitle = textToCalculate;
+                        labels.displayText = textToCalculate;
                         numberOfSplits += textToCalculate.length - 1;
+                        if (numberOfSplits > 0) {
+                            subGraph.height += textHeight * numberOfSplits;
+                        }
+                        subGraph.height += 10;
                     }
-                    // Description text
-                    const tempArr = [];
-                    if (labels.operation) {
-                        tempArr.push(labels.operation);
-                    }
-                    const { state } = labels;
-                    if (state) {
-                        const retriesCount = labels.retry;
-                        tempArr.push(state === 'Pending' && retriesCount ? `Pending retry (${retriesCount})` : state);
-                    }
-                    textToCalculate = tempArr.join(' - ');
-                    textToCalculate = textSplitCalculation(subGraph.width, textToCalculate);
-                    // Each element in the resulting array will be rendered in a separate <text> element
-                    labels.displayText = textToCalculate;
-                    numberOfSplits += textToCalculate.length - 1;
-                    if (numberOfSplits > 0) {
-                        subGraph.height += textHeight * numberOfSplits;
-                    }
-                    subGraph.height += 10;
                 }
             });
             return allSubgraphs;
@@ -355,11 +357,7 @@ module.exports = r => {
             // Removing subgraphs with 0 children
             // eslint-disable-next-line consistent-return
             allSubgraphs = _.omitBy(allSubgraphs, subGraph => {
-                if (
-                    _.isEmpty(subGraph.children) &&
-                    !_.isEmpty(subGraph.labels) &&
-                    subGraph.labels[0].type === subgraphTask
-                ) {
+                if (isLeafNode(subGraph) && !_.isEmpty(subGraph.labels) && subGraph.labels[0].type === subgraphTask) {
                     // Verify the subGraph doesn't have connected edges
                     if (subGraph.containingSubgraph !== null) {
                         let i = allSubgraphs[subGraph.containingSubgraph].edges.length;
