@@ -6,14 +6,10 @@ jest.mock('handler/AuthHandler', () => ({
 }));
 
 describe('/auth endpoint', () => {
-    it('handles manager maintenance mode', () => {
-        return new Promise(done => {
-            request(app)
-                .post('/console/auth/login')
-                .then(response => {
-                    expect(response.body.message).toStrictEqual('Manager is currently in maintenance mode');
-                    done();
-                });
-        });
-    });
+    it('handles manager maintenance mode', () =>
+        request(app)
+            .post('/console/auth/login')
+            .then(response => {
+                expect(response.body.message).toStrictEqual('Manager is currently in maintenance mode');
+            }));
 });
