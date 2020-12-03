@@ -1,0 +1,135 @@
+{
+    "metadata": { "pagination": { "total": 2, "size": 1000, "offset": 0 } },
+    "items": [
+        {
+            "id": "615c9095-8a76-455f-99a1-fc1936658998",
+            "visibility": "tenant",
+            "name": "script_runner.tasks.run",
+            "state": "pending",
+            "created_at": "2020-12-02T06:45:23.002Z",
+            "dependencies": [],
+            "type": "RemoteWorkflowTask",
+            "parameters": {
+                "on_success": null,
+                "on_failure": null,
+                "retried_task": null,
+                "current_retries": 0,
+                "send_task_events": true,
+                "retry_interval": 15,
+                "total_retries": 60,
+                "info": null,
+                "error": null,
+                "containing_subgraph": null,
+                "task_kwargs": {
+                    "kwargs": {
+                        "script_path": "scripts/empty.py",
+                        "__cloudify_context": {
+                            "__cloudify_context": "0.3",
+                            "type": "operation",
+                            "task_id": "615c9095-8a76-455f-99a1-fc1936658998",
+                            "task_name": "script_runner.tasks.run",
+                            "execution_id": "b670fccb-c85a-4748-b47c-5149100e8c29",
+                            "workflow_id": "wf",
+                            "tenant": { "name": "default_tenant" },
+                            "timeout": null,
+                            "timeout_recoverable": null,
+                            "node_id": "x_00tkm5",
+                            "node_name": "x",
+                            "plugin": {
+                                "name": "script",
+                                "package_name": null,
+                                "package_version": null,
+                                "visibility": null,
+                                "tenant_name": null,
+                                "source": null
+                            },
+                            "operation": {
+                                "name": "cloudify.interfaces.lifecycle.create",
+                                "retry_number": 0,
+                                "max_retries": 60
+                            },
+                            "has_intrinsic_functions": false,
+                            "host_id": null,
+                            "executor": "central_deployment_agent",
+                            "execution_env": {},
+                            "local": false,
+                            "bypass_maintenance": null,
+                            "execution_creator_username": "admin",
+                            "blueprint_id": "bp2",
+                            "deployment_id": "bp2"
+                        }
+                    }
+                }
+            },
+            "tenant_name": "default_tenant",
+            "created_by": "admin",
+            "resource_availability": "tenant",
+            "private_resource": false
+        },
+        {
+            "id": "55c9a5f6-48c3-45fb-b238-026bcbf3812a",
+            "visibility": "tenant",
+            "name": "script_runner.tasks.run",
+            "state": "pending",
+            "created_at": "2020-12-02T06:45:23.002Z",
+            "dependencies": ["615c9095-8a76-455f-99a1-fc1936658998"],
+            "type": "RemoteWorkflowTask",
+            "parameters": {
+                "on_success": null,
+                "on_failure": null,
+                "retried_task": null,
+                "current_retries": 0,
+                "send_task_events": true,
+                "retry_interval": 15,
+                "total_retries": 60,
+                "info": null,
+                "error": null,
+                "containing_subgraph": null,
+                "task_kwargs": {
+                    "kwargs": {
+                        "script_path": "scripts/empty.py",
+                        "__cloudify_context": {
+                            "__cloudify_context": "0.3",
+                            "type": "operation",
+                            "task_id": "55c9a5f6-48c3-45fb-b238-026bcbf3812a",
+                            "task_name": "script_runner.tasks.run",
+                            "execution_id": "b670fccb-c85a-4748-b47c-5149100e8c29",
+                            "workflow_id": "wf",
+                            "tenant": { "name": "default_tenant" },
+                            "timeout": null,
+                            "timeout_recoverable": null,
+                            "node_id": "x_00tkm5",
+                            "node_name": "x",
+                            "plugin": {
+                                "name": "script",
+                                "package_name": null,
+                                "package_version": null,
+                                "visibility": null,
+                                "tenant_name": null,
+                                "source": null
+                            },
+                            "operation": {
+                                "name": "cloudify.interfaces.lifecycle.configure",
+                                "retry_number": 0,
+                                "max_retries": 60
+                            },
+                            "has_intrinsic_functions": false,
+                            "host_id": null,
+                            "executor": "central_deployment_agent",
+                            "execution_env": {},
+                            "local": false,
+                            "bypass_maintenance": null,
+                            "execution_creator_username": "admin",
+                            "blueprint_id": "bp2",
+                            "deployment_id": "bp2"
+                        }
+                    }
+                }
+            },
+            "tenant_name": "default_tenant",
+            "created_by": "admin",
+            "resource_availability": "tenant",
+            "private_resource": false
+        }
+    ]
+}
