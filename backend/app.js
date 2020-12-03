@@ -1,3 +1,4 @@
+const fs = require('fs');
 const path = require('path');
 const expressStaticGzip = require('express-static-gzip');
 const express = require('express');
@@ -84,9 +85,11 @@ app.use(
 );
 
 const translationsOverrides = 'overrides.json';
-app.use(`${contextPath}/userData/${translationsOverrides}`, (req, res) =>
-    res.sendFile(getResourcePath(translationsOverrides, true))
-);
+app.use(`${contextPath}/userData/${translationsOverrides}`, (req, res) => {
+    const overridesPath = getResourcePath(translationsOverrides, true);
+    if (fs.existsSync(overridesPath)) res.sendFile(overridesPath);
+    else res.send({});
+});
 
 app.use(
     `${contextPath}/userData`,
