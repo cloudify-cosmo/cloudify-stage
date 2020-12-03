@@ -19,21 +19,18 @@ describe('/ua endpoint', () => {
         });
         const app = require('app');
 
-        return new Promise(done => {
-            request(app)
-                .get('/console/ua')
-                .then(response => {
-                    expect(response.statusCode).toBe(200);
-                    expect(response.body).toStrictEqual({
-                        managerIp: 'localhost',
-                        username: 'test',
-                        appDataVersion: 4,
-                        mode: 'main',
-                        tenant: 'default_tenant',
-                        appData: {}
-                    });
-                    done();
+        return request(app)
+            .get('/console/ua')
+            .then(response => {
+                expect(response.statusCode).toBe(200);
+                expect(response.body).toStrictEqual({
+                    managerIp: 'localhost',
+                    username: 'test',
+                    appDataVersion: 4,
+                    mode: 'main',
+                    tenant: 'default_tenant',
+                    appData: {}
                 });
-        });
+            });
     });
 });
