@@ -44,6 +44,7 @@ The following section describes different configuration files used in cloudify-s
 * `logsFile` - string, logs file path
 * `errorsFile` - string, errors file path
 * `logLevelConf` - string, path to Manager log levels configuration file, or blank string if not applicable
+* `serviceName` - string, service name to look for when reading file specified by `logLevelConf`
 * `logLevel` - string, default log level used when `logLevelConf` is not set, file defined by `logLevelConf` does not exist, or the file exists but contains no entry for `cloudify-stage` service
 
 ## Manager (`manager.json`)
