@@ -1,7 +1,6 @@
 const fs = require('fs-extra');
 const path = require('path');
 const _ = require('lodash');
-const Sequelize = require('sequelize');
 
 const Utils = require('../utils');
 
@@ -10,7 +9,7 @@ const userPagesFolder = path.resolve(userTemplatesFolder, 'pages');
 
 const UserApp = require('../db/UserAppModel');
 
-function migrate(queryInterface, pageProcessor) {
+function migrate(queryInterface, Sequelize, pageProcessor) {
     UserApp(queryInterface.sequelize, Sequelize)
         .findAll()
         .then(results =>
@@ -30,8 +29,8 @@ function migrate(queryInterface, pageProcessor) {
 }
 
 module.exports = {
-    up: queryInterface =>
-        migrate(queryInterface, pageData => {
+    up: (queryInterface, Sequelize) =>
+        migrate(queryInterface, Sequelize, pageData => {
             function migrateLayoutSection(layoutSection) {
                 if (pageData[layoutSection]) {
                     pageData.layout.push({ type: layoutSection, content: pageData[layoutSection] });
@@ -44,8 +43,8 @@ module.exports = {
             migrateLayoutSection('widgets');
             migrateLayoutSection('tabs');
         }),
-    down: queryInterface =>
-        migrate(queryInterface, pageData => {
+    down: (queryInterface, Sequelize) =>
+        migrate(queryInterface, Sequelize, pageData => {
             if (!_.isEmpty(pageData.layout)) {
                 let layoutSection = pageData.layout[0];
                 pageData[layoutSection.type] = layoutSection.content;
