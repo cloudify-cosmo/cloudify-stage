@@ -41,6 +41,25 @@ export default class NodeFilter extends React.Component {
         return !_.isEqual(this.props, nextProps) || !_.isEqual(this.state, nextState);
     }
 
+    handleInputChange(state, event, field, onStateChange) {
+        const { blueprintId, deploymentId, nodeId, nodeInstanceId } = this.state;
+        const { name, onChange } = this.props;
+        this.setState({ ...state, [field.name]: field.value }, () => {
+            if (_.isFunction(onStateChange)) {
+                onStateChange();
+            }
+            onChange(event, {
+                name,
+                value: {
+                    blueprintId,
+                    deploymentId,
+                    nodeId,
+                    nodeInstanceId
+                }
+            });
+        });
+    }
+
     getEmptyValueFor(resourcesName) {
         return this.isMultipleSetFor(resourcesName) ? [] : '';
     }
@@ -169,25 +188,6 @@ export default class NodeFilter extends React.Component {
             params.node_id = nodeId;
         }
         this.fetchData('/node-instances', params, 'nodeInstances');
-    }
-
-    handleInputChange(state, event, field, onStateChange) {
-        const { blueprintId, deploymentId, nodeId, nodeInstanceId } = this.state;
-        const { name, onChange } = this.props;
-        this.setState({ ...state, [field.name]: field.value }, () => {
-            if (_.isFunction(onStateChange)) {
-                onStateChange();
-            }
-            onChange(event, {
-                name,
-                value: {
-                    blueprintId,
-                    deploymentId,
-                    nodeId,
-                    nodeInstanceId
-                }
-            });
-        });
     }
 
     isMultipleSetFor(resourcesName) {

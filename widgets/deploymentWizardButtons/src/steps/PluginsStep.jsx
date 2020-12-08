@@ -261,6 +261,15 @@ class PluginsStepContent extends React.Component {
             .finally(() => onReady());
     }
 
+    handlePluginChange(pluginName) {
+        const { id, onChange, stepData: stepDataProp } = this.props;
+        return fields => {
+            const stepData = { ...stepDataProp };
+            stepData[pluginName] = { ...stepData[pluginName], ...fields };
+            return onChange(id, { ...stepData });
+        };
+    }
+
     getPluginStatus(pluginName) {
         const { stepData } = this.props;
         const status = _.get(stepData[pluginName], 'status');
@@ -395,15 +404,6 @@ class PluginsStepContent extends React.Component {
         stepData[pluginName].status = pluginStatuses.userDefinedPlugin;
         onChange(id, stepData);
     };
-
-    handlePluginChange(pluginName) {
-        const { id, onChange, stepData: stepDataProp } = this.props;
-        return fields => {
-            const stepData = { ...stepDataProp };
-            stepData[pluginName] = { ...stepData[pluginName], ...fields };
-            return onChange(id, { ...stepData });
-        };
-    }
 
     deleteUserPlugin(pluginName) {
         const { id, onChange, stepData: stepDataProp } = this.props;
