@@ -58,7 +58,7 @@ describe('Tenants menu', () => {
         installTemplate('templateForViewer', user.tenants[0]);
         installTemplate('templateForManager', user.tenants[1]);
 
-        cy.login(user.username, user.password);
+        cy.mockLogin(user.username, user.password);
 
         function verifyTemplate(tenant) {
             cy.get('.tenantsMenu').click().find('.menu').contains(tenant.name).click().waitUntilLoaded();

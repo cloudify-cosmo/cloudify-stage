@@ -1,5 +1,5 @@
 describe('Maintenance mode button widget', () => {
-    before(() => cy.activate('valid_trial_license').usePageMock('maintenanceModeButton').login());
+    before(() => cy.activate('valid_trial_license').usePageMock('maintenanceModeButton').mockLogin());
 
     it('should enter maintenance mode on click', () => {
         cy.contains('Activate Maintenance Mode').click();

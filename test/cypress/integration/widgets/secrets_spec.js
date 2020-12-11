@@ -1,7 +1,7 @@
 describe('Secret store management widget', () => {
     const secretName = 'secrets_test';
 
-    before(() => cy.activate().usePageMock('secrets').login().deleteSecrets(secretName));
+    before(() => cy.activate().usePageMock('secrets').mockLogin().deleteSecrets(secretName));
 
     it('should allow to manage secrets', () => {
         const secretValue = 'confidental';

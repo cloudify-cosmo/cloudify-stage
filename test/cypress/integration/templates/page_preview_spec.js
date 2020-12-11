@@ -5,7 +5,7 @@ describe('Page preview', () => {
         cy.fixture('page/page_with_tabs').then(testPage =>
             cy.route('/console/appData/templates/pages/adminDash.json', testPage)
         );
-        cy.login();
+        cy.mockLogin();
     });
 
     it('should allow to switch tabs and maximize widgets', () => {

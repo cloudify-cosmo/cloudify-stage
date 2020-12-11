@@ -1,5 +1,5 @@
 describe('Plugins widget', () => {
-    before(() => cy.activate('valid_trial_license').usePageMock('plugins').login());
+    before(() => cy.activate('valid_trial_license').usePageMock('plugins').mockLogin());
 
     beforeEach(() => {
         cy.deletePlugins();

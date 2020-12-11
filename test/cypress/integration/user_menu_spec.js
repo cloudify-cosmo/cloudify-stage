@@ -39,7 +39,7 @@ describe('User Menu', () => {
     });
 
     it('should contain options for non-admin users', () => {
-        cy.login(nonAdminUsername, nonAdminPassword);
+        cy.mockLogin(nonAdminUsername, nonAdminPassword);
 
         cy.get('.usersMenu').click();
         cy.get('.usersMenu .menu').within(() => {

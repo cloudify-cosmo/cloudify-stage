@@ -6,7 +6,7 @@ describe('Create Deployment Button widget', () => {
     const firstInputNthChild = 7;
 
     before(() => {
-        cy.activate('valid_trial_license').usePageMock('deploymentButton').login();
+        cy.activate('valid_trial_license').usePageMock('deploymentButton').mockLogin();
 
         cy.deleteDeployments(resourcePrefix, true)
             .deleteBlueprints(resourcePrefix, true)

@@ -3,7 +3,7 @@ describe('Filter', () => {
         cy.activate('valid_trial_license')
             .deleteAllUsersAndTenants()
             .usePageMock(['blueprints', 'deployments'], { pollingTime: 3 })
-            .login();
+            .mockLogin();
     });
 
     it('fills dropdowns with correct data', () => {

@@ -3,7 +3,7 @@ describe('Number of nodes widget', () => {
         cy
             .activate('valid_trial_license')
             .usePageMock('serversNum', { pollingTime: 1 })
-            .login()
+            .mockLogin()
             .deleteDeployments('', true)
     );
 

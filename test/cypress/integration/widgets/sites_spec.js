@@ -100,7 +100,11 @@ describe('Sites Management', () => {
     };
 
     before(() => {
-        cy.activate('valid_spire_license').deleteAllUsersAndTenants().usePageMock('sites').login().waitUntilLoaded();
+        cy.activate('valid_spire_license')
+            .deleteAllUsersAndTenants()
+            .usePageMock('sites')
+            .mockLogin()
+            .waitUntilLoaded();
     });
 
     beforeEach(() => {

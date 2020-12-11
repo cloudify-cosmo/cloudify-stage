@@ -2,7 +2,7 @@ import { styles } from '../support/cluster_status_commons';
 
 describe('Cluster Status', () => {
     before(() => {
-        cy.activate('valid_trial_license').usePageMock().login();
+        cy.activate('valid_trial_license').usePageMock().mockLogin();
     });
 
     beforeEach(() => {

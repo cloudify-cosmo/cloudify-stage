@@ -7,7 +7,7 @@ describe('Spire Manager widget', () => {
                 // pollingTime: 5,
                 fieldsToShow: ['Deployment', 'IP', 'Last Execution', 'Status', 'Actions']
             })
-            .login();
+            .mockLogin();
     });
 
     beforeEach(() => {

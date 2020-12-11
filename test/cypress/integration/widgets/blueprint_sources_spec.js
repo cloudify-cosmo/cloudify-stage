@@ -6,7 +6,7 @@ describe('Blueprint Sources widget', () => {
         cy
             .activate()
             .usePageMock('blueprintSources')
-            .login()
+            .mockLogin()
             .deleteDeployments(deploymentName, true)
             .deleteBlueprints(blueprintName, true)
             .uploadBlueprint('blueprints/empty.zip', blueprintName)

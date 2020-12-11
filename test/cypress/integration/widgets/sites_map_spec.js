@@ -7,7 +7,7 @@ describe('Sites Map', () => {
     before(() => {
         cy.activate('valid_spire_license')
             .usePageMock('sitesMap')
-            .login()
+            .mockLogin()
             .deleteSites()
             .createSite(testSite)
             .waitUntilLoaded();

@@ -27,7 +27,7 @@ describe('Deployments widget', () => {
             .deployBlueprint(blueprintName, deploymentName, { webserver_port: 9123 })
             .createSite(site)
             .usePageMock('deployments', { pollingTime: 5, clickToDrillDown: true })
-            .login();
+            .mockLogin();
     });
 
     it('should be present in Deployments page', () => {
