@@ -1,7 +1,7 @@
 describe('Page management', () => {
     before(() => {
         cy.activate().removeUserPages();
-        cy.login();
+        cy.mockLogin();
     });
 
     it('allows admin users to create and modify pages', () => {

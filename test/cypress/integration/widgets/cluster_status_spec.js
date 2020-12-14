@@ -1,7 +1,7 @@
 import { className, styles } from '../../support/cluster_status_commons';
 
 describe('Cluster Status widget', () => {
-    before(() => cy.activate('valid_trial_license').usePageMock('highAvailability').login());
+    before(() => cy.activate('valid_trial_license').usePageMock('highAvailability').mockLogin());
 
     beforeEach(cy.server);
 

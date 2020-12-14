@@ -5,7 +5,7 @@ describe('Blueprint Info widget', () => {
         cy
             .activate('valid_trial_license')
             .usePageMock('blueprintInfo')
-            .login()
+            .mockLogin()
             .deleteBlueprints(blueprintName, true)
             .uploadBlueprint('blueprints/empty.zip', blueprintName)
     );

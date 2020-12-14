@@ -5,7 +5,7 @@ describe('Agents widget', () => {
     before(() => {
         cy.usePageMock('agents', { fieldsToShow: [] })
             .activate()
-            .login()
+            .mockLogin()
             .deleteDeployments(deploymentName, true)
             .deleteBlueprints(blueprintName, true)
             .uploadBlueprint('blueprints/simple.zip', blueprintName)

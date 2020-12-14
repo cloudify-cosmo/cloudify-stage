@@ -6,7 +6,7 @@ describe('Events/logs widget', () => {
                 url: '/console/sp?su=/events?_size=15&_offset=0',
                 response: 'fixture:events/events.json'
             })
-            .login();
+            .mockLogin();
 
         cy.contains('tr', 'create_snapshot').find('.file').click();
         cy.contains('Error type');

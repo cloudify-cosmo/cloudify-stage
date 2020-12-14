@@ -9,6 +9,7 @@
 // ***********************************************
 
 import 'cypress-file-upload';
+import 'cypress-localstorage-commands';
 import _ from 'lodash';
 
 import './blueprints';
@@ -125,13 +126,14 @@ Cypress.Commands.add('cfyFileRequest', (filePath, isBinaryFile, url, method = 'P
     );
 });
 
-Cypress.Commands.add('stageRequest', (url, method = 'GET', options) => {
+Cypress.Commands.add('stageRequest', (url, method = 'GET', options, headers) => {
     cy.request({
         method,
         url,
         headers: {
             'Content-Type': 'application/json',
-            ...getCommonHeaders()
+            ...getCommonHeaders(),
+            ...headers
         },
         ...options
     });
@@ -157,6 +159,28 @@ Cypress.Commands.add('login', (username = 'admin', password = 'admin') => {
         });
 
     cy.waitUntilLoaded().then(() => cy.saveLocalStorage());
+});
+
+Cypress.Commands.add('mockLogin', (username = 'admin', password = 'admin') => {
+    cy.stageRequest('/console/auth/login', 'POST', null, {
+        Authorization: `Basic ${btoa(`${username}:${password}`)}`
+    }).then(response => {
+        const { license, rbac, role, version } = response.body;
+        cy.setLocalStorage(
+            `state-main`,
+            JSON.stringify({
+                manager: {
+                    ...rbac,
+                    auth: { role, tenantsRoles: {} },
+                    license: { data: license },
+                    tenants: {},
+                    username,
+                    version
+                }
+            })
+        );
+    });
+    cy.visit('/console').waitUntilLoaded();
 });
 
 Cypress.Commands.add('visitPage', (name, id = null) => {
