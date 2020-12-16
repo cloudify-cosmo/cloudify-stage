@@ -23,6 +23,7 @@ COMMANDS_FOR_TAR_GZ="
   ${PRE_COMMANDS}
   rm -rf cloudify-stage;
   tar xzf ${STAGE_PACKAGE};
+  sudo cp /opt/cloudify-stage/conf/manager.json cloudify-stage/conf
   sudo rm -rf /opt/cloudify-stage/;
   sudo cp -r cloudify-stage /opt/;
   sudo chown -R stage_user:stage_group /opt/cloudify-stage;
