@@ -219,20 +219,6 @@ class InstallStepContent extends React.Component {
         });
     }
 
-    updateTasksInWizard() {
-        const { id, onChange } = this.props;
-        const { tasks } = this.state;
-
-        return new Promise(resolve => {
-            const tasksStats = {
-                ...emptyTasksStats,
-                ..._.countBy(tasks, task => task.status)
-            };
-            onChange(id, { tasksStats }, false);
-            resolve({ tasksStats });
-        });
-    }
-
     handleTask(index) {
         let { tasks: stateTasks } = this.state;
         let tasks = [...stateTasks];
@@ -270,6 +256,20 @@ class InstallStepContent extends React.Component {
             // eslint-disable-next-line no-await-in-loop
             await this.handleTask(i);
         }
+    }
+
+    updateTasksInWizard() {
+        const { id, onChange } = this.props;
+        const { tasks } = this.state;
+
+        return new Promise(resolve => {
+            const tasksStats = {
+                ...emptyTasksStats,
+                ..._.countBy(tasks, task => task.status)
+            };
+            onChange(id, { tasksStats }, false);
+            resolve({ tasksStats });
+        });
     }
 
     render() {
