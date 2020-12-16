@@ -26,6 +26,10 @@ export default class CreateModal extends React.Component {
         this.handleInputChange = this.handleInputChange.bind(this);
     }
 
+    handleInputChange(proxy, field) {
+        this.setState(Stage.Basic.Form.fieldNameValue(field));
+    }
+
     onApprove() {
         this.submitCreate();
         return false;
@@ -61,10 +65,6 @@ export default class CreateModal extends React.Component {
             .catch(err => {
                 this.setState({ errors: { error: err.message }, loading: false });
             });
-    }
-
-    handleInputChange(proxy, field) {
-        this.setState(Stage.Basic.Form.fieldNameValue(field));
     }
 
     render() {
