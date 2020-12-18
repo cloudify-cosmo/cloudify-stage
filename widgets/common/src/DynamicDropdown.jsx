@@ -18,7 +18,8 @@ function DynamicDropdown({
     name,
     prefetch,
     className,
-    refreshEvent
+    refreshEvent,
+    ...rest
 }) {
     const { useState, useEffect } = React;
 
@@ -33,6 +34,14 @@ function DynamicDropdown({
     const [loaderVisible, setLoaderVisible] = useState(false);
     const [isLoading, setLoading] = useState(false);
 
+    function isSimpleValue() {
+        return valueProp === '';
+    }
+
+    function getValueProp() {
+        return valueProp || 'id';
+    }
+
     function loadMore() {
         setLoading(true);
         setLoaderVisible(null);
@@ -43,9 +52,9 @@ function DynamicDropdown({
                 .doGetFull(fetchUrl)
                 .then(data => {
                     setHasMore(false);
-                    setOptions(data.items);
-                    setLoading(false);
-                });
+                    setOptions(isSimpleValue() ? data.items.map(item => ({ id: item })) : data.items);
+                })
+                .finally(() => setLoading(false));
         } else {
             const nextPage = currentPage + 1;
 
@@ -54,9 +63,12 @@ function DynamicDropdown({
                 .doGet(fetchUrl, { _sort: valueProp, _size: pageSize, _offset: nextPage * pageSize })
                 .then(data => {
                     setHasMore(data.metadata.pagination.total > (nextPage + 1) * pageSize);
-                    setOptions([...options, ...data.items]);
-                    setLoading(false);
-                });
+                    setOptions([
+                        ...options,
+                        ...(isSimpleValue() ? data.items.map(item => ({ id: item })) : data.items)
+                    ]);
+                })
+                .finally(() => setLoading(false));
 
             setCurrentPage(nextPage);
         }
@@ -87,8 +99,8 @@ function DynamicDropdown({
             setOptions(_.reject(options, 'implicit'));
         } else {
             _.castArray(value).forEach(singleValue => {
-                if (!_.find(options, { [valueProp]: singleValue })) {
-                    setOptions([{ [valueProp]: singleValue, implicit: true }, ...options]);
+                if (!_.find(options, { [getValueProp()]: singleValue })) {
+                    setOptions([{ [getValueProp()]: singleValue, implicit: true }, ...options]);
                 }
             });
         }
@@ -100,6 +112,10 @@ function DynamicDropdown({
         }
     }, [loaderVisible]);
 
+    useEffect(() => {
+        loadMore();
+    }, [fetchUrl]);
+
     const filteredOptions = _(options)
         .filter(option =>
             _(filter)
@@ -107,7 +123,7 @@ function DynamicDropdown({
                 .map((v, k) => _.isEmpty(v) || _.isEmpty(option[k]) || _.includes(v, option[k]))
                 .every(Boolean)
         )
-        .uniqBy(valueProp)
+        .uniqBy(getValueProp())
         .value();
 
     function getDropdownValue() {
@@ -118,8 +134,9 @@ function DynamicDropdown({
         let valueArray = _.castArray(value);
 
         if (!hasMore) {
-            const filteredValueArray = _(filteredOptions).map(valueProp).intersection(valueArray).value();
-            if (filteredValueArray.length !== valueArray.length) {
+            const filteredValueArray = _(filteredOptions).map(getValueProp()).intersection(valueArray).value();
+            const { allowAdditions } = rest;
+            if (filteredValueArray.length !== valueArray.length && !allowAdditions) {
                 onChange(filteredValueArray);
                 valueArray = filteredValueArray;
             }
@@ -144,10 +161,11 @@ function DynamicDropdown({
             onChange={(proxy, field) => onChange(!_.isEmpty(field.value) ? field.value : null)}
             onSearchChange={(e, data) => setSearchQuery(data.searchQuery)}
             multiple={multiple}
+            loading={isLoading}
             options={(() => {
                 const preparedOptions = filteredOptions.map(item => ({
-                    text: (textFormatter || (i => i[valueProp]))(item),
-                    value: item[valueProp]
+                    text: (textFormatter || (i => i[getValueProp()]))(item),
+                    value: item[getValueProp()]
                 }));
                 if (hasMore) {
                     preparedOptions.push({
@@ -168,6 +186,8 @@ function DynamicDropdown({
                 }
                 return preparedOptions;
             })()}
+            /* eslint-disable-next-line react/jsx-props-no-spreading */
+            {...rest}
         />
     );
 }
