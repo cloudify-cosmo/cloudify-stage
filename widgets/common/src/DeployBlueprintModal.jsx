@@ -74,6 +74,12 @@ class DeployBlueprintModal extends React.Component {
         }
     }
 
+    handleDeploymentInputChange(proxy, field) {
+        const { deploymentInputs } = this.state;
+        const fieldNameValue = Stage.Basic.Form.fieldNameValue(field);
+        this.setState({ deploymentInputs: { ...deploymentInputs, ...fieldNameValue } });
+    }
+
     handleYamlFileChange(file) {
         if (!file) {
             return;
@@ -105,12 +111,6 @@ class DeployBlueprintModal extends React.Component {
     handleInputChange(proxy, field) {
         const fieldNameValue = Stage.Basic.Form.fieldNameValue(field);
         this.setState(fieldNameValue);
-    }
-
-    handleDeploymentInputChange(proxy, field) {
-        const { deploymentInputs } = this.state;
-        const fieldNameValue = Stage.Basic.Form.fieldNameValue(field);
-        this.setState({ deploymentInputs: { ...deploymentInputs, ...fieldNameValue } });
     }
 
     onCancel() {

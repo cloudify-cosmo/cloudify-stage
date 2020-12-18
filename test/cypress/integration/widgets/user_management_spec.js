@@ -6,7 +6,7 @@ describe('User management widget', () => {
         cy
             .activate('valid_trial_license')
             .usePageMock('userManagement')
-            .login()
+            .mockLogin()
             .deleteUser(username)
             .deleteUserGroup(group)
             .addUserGroup(group)

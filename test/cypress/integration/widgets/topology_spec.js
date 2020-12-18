@@ -7,7 +7,7 @@ describe('Topology', () => {
     const blueprintFile = 'blueprints/topology.zip';
 
     before(() => {
-        cy.activate('valid_trial_license').usePageMock('topology', { pollingTime: 5 }).login();
+        cy.activate('valid_trial_license').usePageMock('topology', { pollingTime: 5 }).mockLogin();
 
         cy.deletePlugins()
             .uploadPluginFromCatalog('Terraform')

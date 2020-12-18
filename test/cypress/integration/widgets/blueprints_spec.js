@@ -6,7 +6,7 @@ describe('Blueprints widget', () => {
         cy
             .activate('valid_trial_license')
             .usePageMock('blueprints', { displayStyle: 'table', clickToDrillDown: true })
-            .login()
+            .mockLogin()
             .deletePlugins()
             .uploadPluginFromCatalog('Utilities')
             .deleteDeployments(blueprintNamePrefix, true)
