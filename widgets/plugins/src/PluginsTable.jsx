@@ -40,6 +40,10 @@ export default class PluginsTable extends React.Component {
         toolbox.getEventBus().off('plugins:refresh', this.refreshData);
     }
 
+    handleForceChange(event, field) {
+        this.setState(Stage.Basic.Form.fieldNameValue(field));
+    }
+
     setPluginVisibility(pluginId, visibility) {
         const { toolbox } = this.props;
         const actions = new Stage.Common.PluginActions(toolbox);
@@ -135,10 +139,6 @@ export default class PluginsTable extends React.Component {
     refreshData() {
         const { toolbox } = this.props;
         toolbox.refresh();
-    }
-
-    handleForceChange(event, field) {
-        this.setState(Stage.Basic.Form.fieldNameValue(field));
     }
 
     fetchGridData(fetchParams) {
