@@ -38,8 +38,8 @@ npm run build
 # Adding stage files
 mkdir -p %{buildroot}%{stage_path}
 cp %{_builddir}/package.json %{buildroot}%{stage_path}
-rsync -avr --exclude='test/' --exclude='package-lock.json' %{_builddir}/backend %{buildroot}%{stage_path}
-rsync -avr --exclude='me.json*' %{_builddir}/conf %{buildroot}%{stage_path}
+rsync -avrq --exclude='test/' --exclude='package-lock.json' %{_builddir}/backend %{buildroot}%{stage_path}
+rsync -avrq --exclude='me.json*' %{_builddir}/conf %{buildroot}%{stage_path}
 cp -r %{_builddir}/dist %{buildroot}%{stage_path}
 
 # Adding system files
@@ -69,6 +69,8 @@ usermod -aG stage_group nginx
 /etc/logrotate.d/cloudify-stage
 /etc/sudoers.d/cloudify-stage
 %{_libdir}/systemd/system/cloudify-stage.service
+%config(noreplace) %{stage_path}/conf/manager.json
+%config(noreplace) %{stage_path}/conf/app.json
 %attr(555,root,cfyuser) /opt/cloudify/stage/restore-snapshot.py
 %attr(-,stage_user,stage_group) %{stage_path}
 %attr(-,cfyuser,cfyuser) %{stage_path}/conf

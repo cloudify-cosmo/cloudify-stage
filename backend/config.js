@@ -6,6 +6,8 @@ const flatten = require('flat');
 const Utils = require('./utils');
 
 const app = require('../conf/app.json');
+const logging = require('../conf/logging.json');
+const dbOptions = require('../conf/db.options.json');
 const manager = require('../conf/manager.json');
 let userConfig = require('../conf/userConfig.json');
 
@@ -32,7 +34,7 @@ try {
 module.exports = {
     get(mode) {
         const config = {
-            app: _.merge(app, userConfig),
+            app: _.merge(app, logging, { db: { options: dbOptions } }, userConfig),
             manager,
             mode
         };

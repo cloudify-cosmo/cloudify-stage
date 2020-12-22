@@ -4,11 +4,13 @@ The following section describes different configuration files used in cloudify-s
 
 ## Application (`app.json`)
 
+This file is meant to be updated by manager installer -
+it is not going to be installed in case of upgrade or patch.
+
 * `maintenancePollingInterval` - integer, time interval for Manager status polling (milliseconds) 
 * `singleManager` - boolean, defines if Manager is executed as single (depracated)
 * `db` - object, Stage PostgreSQL DB connection configuration
   * `url` - string or array, DB URL or array of DB URLs 
-  * `options` - object, DB connection options passed to [Sequelize constructor](https://sequelize.org/master/class/lib/sequelize.js~Sequelize.html#instance-constructor-constructor)
   
 * `proxy` - object, configuration of Stage Backend proxy to Manager 
   * `timeouts`
@@ -41,12 +43,21 @@ The following section describes different configuration files used in cloudify-s
   * `ssoUrl` - string, redirect URL to the application at the Single Sign-On identity provider
   * `portalUrl` - string, redirect URL to the organization portal
 
+## DB Options (`db.options.json`)
+
+DB connection options passed to [Sequelize constructor](https://sequelize.org/master/class/lib/sequelize.js~Sequelize.html#instance-constructor-constructor).
+
+## Logging (`logging.json`)
+
 * `logsFile` - string, logs file path
 * `errorsFile` - string, errors file path
 * `logLevelConf` - string, path to Manager log levels configuration file, or blank string if not applicable
 * `logLevel` - string, default log level used when `logLevelConf` is not set, file defined by `logLevelConf` does not exist, or the file exists but contains no entry for `cloudify-stage` service
 
 ## Manager (`manager.json`)
+
+This file is meant to be updated by manager installer -
+it is not going to be installed in case of upgrade or patch.
 
 * `ip` - string, Manager IP
 * `apiVersion` - string, Manager REST API version, eg. "v3.1" 

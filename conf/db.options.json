@@ -1,0 +1,8 @@
+{
+    "dialect": "postgres",
+    "pool": {
+        "max": 20,
+        "min": 1,
+        "idle": 10000
+    }
+}

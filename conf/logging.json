@@ -1,0 +1,6 @@
+{
+    "logsFile": "/var/log/cloudify/stage/server-output.log",
+    "errorsFile": "/var/log/cloudify/stage/server-error.log",
+    "logLevelConf": "/etc/cloudify/logging.conf",
+    "logLevel": "warn"
+}
