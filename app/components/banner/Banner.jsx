@@ -1,70 +1,61 @@
-/**
- * Created by jakub.niezgoda on 15/03/2019.
- */
-
+import _ from 'lodash';
 import PropTypes from 'prop-types';
-import React from 'react';
+import React, { useContext } from 'react';
 import { Link } from 'react-router-dom';
-
+import { useSelector } from 'react-redux';
+import styled, { ThemeContext } from 'styled-components';
+import { HeaderBanner } from 'cloudify-ui-components';
+import i18n from 'i18next';
 import Consts from '../../utils/consts';
-import { Header } from '../basic';
 import LicenseTag from './LicenseTag';
-import Logo from './Logo';
-import ProductName from './ProductName';
-import ProductVersion from './ProductVersion';
-import LicenseEdition from './LicenseEdition';
 
-export default function Banner({
-    hideOnSmallScreen,
-    isCommunity,
-    isExpired,
-    isTrial,
-    licenseEdition,
-    productName,
-    productVersion,
-    showVersionDetails
-}) {
-    const className = hideOnSmallScreen ? 'hide-on-small-screen' : '';
+function Banner({ className }) {
+    const isCommunity = useSelector(
+        state => _.get(state, 'manager.version.edition', Consts.EDITION.PREMIUM) === Consts.EDITION.COMMUNITY
+    );
+    const licenseEdition = useSelector(state => _.get(state, 'manager.license.data.license_edition', ''));
+    const productVersion = useSelector(state => _.get(state, 'manager.version.version', ''));
+    const theme = useContext(ThemeContext) || {};
+    const showVersionDetails = _.isBoolean(theme.showVersionDetails) ? theme.showVersionDetails : true;
+
+    const productName = i18n.t('productName');
 
     return (
-        <div style={{ lineHeight: '55px' }}>
-            <Link to={Consts.HOME_PAGE_PATH}>
-                <Header as="h1" style={{ textDecoration: 'none', display: 'inline-block', marginTop: 0 }}>
-                    <Logo />
-                    <ProductName name={productName} className={className} />
-                    {showVersionDetails && !isCommunity && (
-                        <>
-                            <LicenseEdition edition={licenseEdition} className={className} />
-                            <ProductVersion version={productVersion} className={className} />
-                        </>
-                    )}
-                </Header>
+        <>
+            <Link to={Consts.HOME_PAGE_PATH} className={className}>
+                <HeaderBanner
+                    isCommunity={isCommunity}
+                    licenseEdition={licenseEdition}
+                    productName={productName}
+                    productVersion={productVersion}
+                    showVersionDetails={!isCommunity && showVersionDetails}
+                />
             </Link>
-            {showVersionDetails && (
-                <LicenseTag isCommunity={isCommunity} isExpired={isExpired} isTrial={isTrial} className={className} />
-            )}
-        </div>
+            {showVersionDetails && <LicenseTag className={className} />}
+        </>
     );
 }
 
 Banner.propTypes = {
-    isCommunity: PropTypes.bool,
-    isExpired: PropTypes.bool,
-    isTrial: PropTypes.bool,
-    hideOnSmallScreen: PropTypes.bool,
-    licenseEdition: PropTypes.string,
-    productName: PropTypes.string,
-    productVersion: PropTypes.string,
-    showVersionDetails: PropTypes.bool
+    className: PropTypes.string
 };
 
 Banner.defaultProps = {
-    isCommunity: false,
-    isExpired: false,
-    isTrial: false,
-    hideOnSmallScreen: true,
-    licenseEdition: '',
-    productName: '',
-    productVersion: '',
-    showVersionDetails: true
+    className: ''
 };
+
+const StyledBanner = styled(Banner)`
+    @media (max-width: 800px) {
+        ${props => (props.hideOnSmallScreen ? 'display: none !important' : '')};
+    }
+`;
+
+StyledBanner.propTypes = {
+    hideOnSmallScreen: PropTypes.bool
+};
+
+StyledBanner.defaultProps = {
+    hideOnSmallScreen: true
+};
+
+export default StyledBanner;

@@ -11,14 +11,11 @@ describe('/bud endpoint', () => {
         });
         const app = require('app');
 
-        return new Promise(done => {
-            request(app)
-                .get('/console/bud/layout/1')
-                .then(response => {
-                    expect(response.statusCode).toBe(200);
-                    expect(response.body).toEqual({});
-                    done();
-                });
-        });
+        return request(app)
+            .get('/console/bud/layout/1')
+            .then(response => {
+                expect(response.statusCode).toBe(200);
+                expect(response.body).toEqual({});
+            });
     });
 });

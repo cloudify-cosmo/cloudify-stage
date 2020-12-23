@@ -1,11 +1,12 @@
 /**
  * Created by kinneretzin on 29/08/2016.
  */
-
+import i18n from 'i18next';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
+import { HeaderBar } from 'cloudify-ui-components';
 
-import Banner from '../../containers/banner/Banner';
+import Banner from '../banner/Banner';
 import SystemStatusHeader from '../../containers/status/SystemStatusHeader';
 import Consts from '../../utils/consts';
 import SplashLoadingScreen from '../../utils/SplashLoadingScreen';
@@ -48,12 +49,19 @@ export default class MaintenanceModePageMessage extends Component {
 
         return (
             <FullScreenSegment>
-                <Banner />
+                <HeaderBar>
+                    <Banner hideOnSmallScreen={false} />
+                </HeaderBar>
 
                 <MessageContainer wide>
-                    <Header as="h2">Maintenance mode</Header>
+                    <Header as="h2">{i18n.t('maintenanceMode.header', 'Maintenance mode')}</Header>
 
-                    <p>Server is on maintenance mode and is not available at the moment.</p>
+                    <p>
+                        {i18n.t(
+                            'maintenanceMode.message',
+                            'Server is on maintenance mode and is not available at the moment.'
+                        )}
+                    </p>
 
                     {canMaintenanceMode && (
                         <MaintenanceModeActivationButton

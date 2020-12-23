@@ -16,6 +16,7 @@
     "testCaseSwitchClassnameAndName": true
   },
   "videoUploadOnPasses": false,
+  "watchForFileChanges": false,
 
   "retries": {
     "runMode": 2,

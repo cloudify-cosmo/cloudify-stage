@@ -12,6 +12,7 @@ import { configure } from 'enzyme';
 import Adapter from 'enzyme-adapter-react-16';
 import PropTypes from 'prop-types';
 import React from 'react';
+import i18nInit from './i18n';
 
 configure({ adapter: new Adapter() });
 
@@ -42,6 +43,8 @@ global.log = log;
 global.Stage = { defineCommon: noop };
 global.PropTypes = PropTypes;
 global.React = React;
+
+i18nInit();
 
 // prevent mocha tests from breaking when trying to require non-js file
 require.extensions['.css'] = noop;

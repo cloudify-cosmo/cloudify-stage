@@ -6,7 +6,8 @@ describe('Tenants management widget', () => {
     before(() =>
         cy
             .activate('valid_trial_license')
-            .login()
+            .usePageMock('tenants')
+            .mockLogin()
             .removeUserGroupFromTenant(group, tenant)
             .removeUserFromTenant(user, tenant)
             .deleteUserGroup(group)
@@ -14,7 +15,6 @@ describe('Tenants management widget', () => {
             .deleteUser(user)
             .addUserGroup(group)
             .addUser(user, 'admin')
-            .visitPage('Tenant Management')
     );
 
     it('should allow to manage tenants', () => {

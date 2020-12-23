@@ -1,5 +1,5 @@
 # Deployment Info
-Displays the following information about a specific deployment: 
+Displays the following information about a specific deployment:
 
 * **Name**
 * **Description**
@@ -11,7 +11,7 @@ Displays the following information about a specific deployment:
 * **Creator username**
 
 
-![deployment-info](https://docs.cloudify.co/5.1/images/ui/widgets/deployment-info.png)
+![deployment-info]( /images/ui/widgets/deployment-info.png )
 
 
 ## Settings

@@ -1,10 +1,19 @@
 describe('Blueprints catalog widget', () => {
     const blueprintName = 'blueprints_catalog_test';
 
-    before(() => cy.activate('valid_trial_license').login().deleteBlueprints(blueprintName, true).deletePlugins());
+    before(() =>
+        cy
+            .activate('valid_trial_license')
+            .usePageMock('blueprintCatalog', {
+                jsonPath: 'https://repository.cloudifysource.org/cloudify/blueprints/5.1/vm-examples.json'
+            })
+            .mockLogin()
+            .deleteBlueprints(blueprintName, true)
+            .deletePlugins()
+    );
 
     beforeEach(() => {
-        cy.visitPage('Cloudify Catalog');
+        cy.refreshPage();
         cy.contains('.segment', 'AWS-Basics-VM-Setup').contains('Upload').click();
     });
 

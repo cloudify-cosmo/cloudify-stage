@@ -2,7 +2,12 @@ import { styles } from '../../support/cluster_status_commons';
 
 describe('Spire Manager widget', () => {
     before(() => {
-        cy.activate('valid_spire_license').login().addPage('Spire Manager Test').addWidget('managers');
+        cy.activate('valid_spire_license')
+            .usePageMock('managers', {
+                // pollingTime: 5,
+                fieldsToShow: ['Deployment', 'IP', 'Last Execution', 'Status', 'Actions']
+            })
+            .mockLogin();
     });
 
     beforeEach(() => {
@@ -44,7 +49,7 @@ describe('Spire Manager widget', () => {
             response: {}
         }).as('postExecutions');
 
-        cy.visitPage('Spire Manager Test');
+        cy.refreshPage();
 
         // Wait to load Spire Manager widget
         cy.wait('@getSpireDeployments');

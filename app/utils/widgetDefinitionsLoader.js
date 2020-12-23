@@ -1,10 +1,9 @@
 /**
  * Created by kinneretzin on 08/09/2016.
  */
-
+import i18n from 'i18next';
 import _ from 'lodash';
 import log from 'loglevel';
-
 import Internal from './Internal';
 import ScriptLoader from './scriptLoader';
 import StyleLoader from './StyleLoader';
@@ -23,6 +22,30 @@ import * as Hooks from './hooks';
 const ReactDOMServer = require('react-dom/server');
 
 let widgetDefinitions = [];
+
+function updateReadmeLinks(content) {
+    const linkRegex = /(\[.*?\])\(\s*(?!http)(.*?)\s*\)/gm;
+    let newContent = content;
+
+    newContent = newContent.replace(linkRegex, `$1(${i18n.t('widgets.common.readmes.linksBasePath')}$2)`);
+
+    return newContent;
+}
+
+function convertReadmeParams(content) {
+    const paramRegex = /{{<\s*param\s*(\S*)\s*>}}/gm;
+    let newContent = content;
+
+    Array.from(newContent.matchAll(paramRegex)).forEach(match => {
+        const paramName = match[1];
+        const paramValue = i18n.t(`widgets.common.readmes.params.${paramName}`);
+        if (paramValue !== undefined) {
+            newContent = newContent.replace(match[0], paramValue);
+        }
+    });
+
+    return newContent;
+}
 
 export default class WidgetDefinitionsLoader {
     static init() {
@@ -51,7 +74,9 @@ export default class WidgetDefinitionsLoader {
             Hooks,
             defineHook: def => {
                 window.Stage.Hooks = { ...window.Stage.Hooks, ...def };
-            }
+            },
+
+            i18n
         };
     }
 
@@ -117,7 +142,9 @@ export default class WidgetDefinitionsLoader {
                         widgetDefinition.isCustom
                     ).then(widgetReadme => {
                         if (widgetReadme) {
-                            widgetDefinition.readme = widgetReadme;
+                            widgetDefinition.readme = widgetDefinition.isCustom
+                                ? widgetReadme
+                                : updateReadmeLinks(convertReadmeParams(widgetReadme));
                         }
                     })
                 );
@@ -178,29 +205,58 @@ export default class WidgetDefinitionsLoader {
         const errors = [];
 
         if (_.isEmpty(widgetDefinitions)) {
-            errors.push('Widget not properly initialized. Please check if widget.js is correctly defined.');
+            errors.push(
+                i18n.t(
+                    'widget.validationErrors.noWidgetDefinition',
+                    'Widget not properly initialized. Please check if widget.js is correctly defined.'
+                )
+            );
         } else if (widgetDefinitions.length > 1) {
-            errors.push('Only single widget should be defined within widget.js');
+            errors.push(
+                i18n.t(
+                    'widget.validationErrors.multipleDefinitions',
+                    'Only single widget should be defined within widget.js'
+                )
+            );
         } else {
             const widgetDefinition = widgetDefinitions[0];
 
             if (!_.includes(_.keys(manager.permissions), widgetDefinition.permission)) {
                 errors.push(
-                    `Specified widget permission ('${widgetDefinition.permission}') not found in available permissions list.`
+                    i18n.t(
+                        'widget.validationErrors.invalidPermission',
+                        `Specified widget permission ('{{permission}}') not found in available permissions list.`,
+                        widgetDefinition
+                    )
                 );
             }
 
             if (_.isEmpty(widgetDefinition.id)) {
-                errors.push("Mandatory field - 'id' - not specified in widget definition.");
+                errors.push(
+                    i18n.t(
+                        'widget.validationErrors.idNotSpecified',
+                        "Mandatory field - 'id' - not specified in widget definition."
+                    )
+                );
             }
 
             if (_.isEmpty(widgetDefinition.name)) {
-                errors.push("Mandatory field - 'name' - not specified in widget definition.");
+                errors.push(
+                    i18n.t(
+                        'widget.validationErrors.nameNotSpecified',
+                        "Mandatory field - 'name' - not specified in widget definition."
+                    )
+                );
             }
         }
 
         if (!_.isEmpty(errors)) {
-            const errorMessage = errors.length > 1 ? `Multiple errors occured: ${_.join(errors, ' ')}` : errors[0];
+            const errorMessage =
+                errors.length > 1
+                    ? i18n.t('widget.validationErrors.multipleErrors', `Multiple errors occured: {{}}`, {
+                          errors: _.join(errors, ' ')
+                      })
+                    : errors[0];
 
             return WidgetDefinitionsLoader.uninstall(widgetId, manager).then(() => {
                 throw new Error(errorMessage);

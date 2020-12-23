@@ -5,12 +5,6 @@ describe('Tours', () => {
 
     beforeEach(() => cy.get('#toursButton').click());
 
-    function resetTemplates() {
-        cy.get('.usersMenu').click().contains('Reset Templates').click();
-        cy.contains('Yes').click();
-        cy.get('#loader');
-    }
-
     function checkTourSteps(tourName, numberOfSteps) {
         cy.contains(tourName).click();
         _.times(numberOfSteps - 1, () => cy.contains('button:not(.loading)', 'Next').click());
@@ -20,12 +14,11 @@ describe('Tours', () => {
     describe('for admin user provide', () => {
         before(() => {
             const blueprintName = 'tours_test';
-            cy.login()
+            cy.mockLogin()
                 .deleteDeployments(blueprintName)
                 .deleteBlueprints(blueprintName)
                 .uploadBlueprint('blueprints/empty.zip', blueprintName)
                 .deployBlueprint(blueprintName, blueprintName);
-            resetTemplates();
         });
 
         it('Cloudify Console Overview tour', () => {
@@ -55,8 +48,7 @@ describe('Tours', () => {
             const password = 'password';
             cy.addUser(username, password)
                 .addUserToTenant(username, 'default_tenant', 'viewer')
-                .login(username, password);
-            resetTemplates();
+                .mockLogin(username, password);
         });
 
         it('Cloudify Console Overview tour', () => {

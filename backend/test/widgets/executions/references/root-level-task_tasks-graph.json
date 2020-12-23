@@ -1,0 +1,22 @@
+{
+    "metadata": {
+        "pagination": {
+            "total": 1,
+            "size": 1000,
+            "offset": 0
+        }
+    },
+    "items": [
+        {
+            "id": "be8e09c4eaa44e3ba4efd78abcc927db",
+            "visibility": "tenant",
+            "name": "wf",
+            "created_at": "2020-12-02T06:45:22.990Z",
+            "execution_id": "b670fccb-c85a-4748-b47c-5149100e8c29",
+            "tenant_name": "default_tenant",
+            "created_by": "admin",
+            "resource_availability": "tenant",
+            "private_resource": false
+        }
+    ]
+}

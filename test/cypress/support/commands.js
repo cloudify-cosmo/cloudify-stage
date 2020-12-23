@@ -9,6 +9,8 @@
 // ***********************************************
 
 import 'cypress-file-upload';
+import 'cypress-localstorage-commands';
+import _ from 'lodash';
 
 import './blueprints';
 import './deployments';
@@ -124,13 +126,14 @@ Cypress.Commands.add('cfyFileRequest', (filePath, isBinaryFile, url, method = 'P
     );
 });
 
-Cypress.Commands.add('stageRequest', (url, method = 'GET', options) => {
+Cypress.Commands.add('stageRequest', (url, method = 'GET', options, headers) => {
     cy.request({
         method,
         url,
         headers: {
             'Content-Type': 'application/json',
-            ...getCommonHeaders()
+            ...getCommonHeaders(),
+            ...headers
         },
         ...options
     });
@@ -158,6 +161,28 @@ Cypress.Commands.add('login', (username = 'admin', password = 'admin') => {
     cy.waitUntilLoaded().then(() => cy.saveLocalStorage());
 });
 
+Cypress.Commands.add('mockLogin', (username = 'admin', password = 'admin') => {
+    cy.stageRequest('/console/auth/login', 'POST', null, {
+        Authorization: `Basic ${btoa(`${username}:${password}`)}`
+    }).then(response => {
+        const { license, rbac, role, version } = response.body;
+        cy.setLocalStorage(
+            `state-main`,
+            JSON.stringify({
+                manager: {
+                    ...rbac,
+                    auth: { role, tenantsRoles: {} },
+                    license: { data: license },
+                    tenants: {},
+                    username,
+                    version
+                }
+            })
+        );
+    });
+    cy.visit('/console').waitUntilLoaded();
+});
+
 Cypress.Commands.add('visitPage', (name, id = null) => {
     cy.log(`Switching to '${name}' page`);
     cy.get('.sidebar.menu .pages').within(() => cy.contains(name).click({ force: true }));
@@ -166,3 +191,106 @@ Cypress.Commands.add('visitPage', (name, id = null) => {
     }
     cy.waitUntilPageLoaded();
 });
+
+function toIdObj(id) {
+    return { id };
+}
+
+Cypress.Commands.add('usePageMock', (widgetIds, widgetConfiguration = {}) => {
+    const widgetIdsArray = _.castArray(widgetIds);
+    cy.server();
+    cy.route('/console/widgets/list', widgetIds ? [...widgetIdsArray, 'filter', 'pluginsCatalog'].map(toIdObj) : []);
+    cy.route('/console/templates', []);
+    // required for drill-down testing
+    cy.route('/console/templates/pages', widgetIds ? ['blueprint', 'deployment'].map(toIdObj) : []);
+    cy.route('/console/ua', {
+        appDataVersion: 4,
+        appData: {
+            pages: [
+                {
+                    name: 'Test Page',
+                    id: 'test_page',
+                    layout: widgetIds
+                        ? [
+                              {
+                                  type: 'widgets',
+                                  content: [
+                                      {
+                                          id: 'filter',
+                                          definition: 'filter',
+                                          configuration: {
+                                              filterByBlueprints: true,
+                                              filterByDeployments: true,
+                                              filterByExecutionsStatus: true,
+                                              allowMultipleSelection: true
+                                          },
+                                          height: 2,
+                                          width: 8,
+                                          x: 0,
+                                          y: 0
+                                      },
+                                      ..._.map(widgetIdsArray, (widgetId, index) => ({
+                                          id: widgetId,
+                                          definition: widgetId,
+                                          configuration: widgetConfiguration,
+                                          height: 20,
+                                          drillDownPages: {},
+                                          width: 8,
+                                          x: 0,
+                                          y: 2 + (index + 1) * 20
+                                      }))
+                                  ]
+                              }
+                          ]
+                        : []
+                },
+                // used by tests that require plugins
+                {
+                    name: 'Plugins Catalog',
+                    id: 'plugin_catalog',
+                    layout: [
+                        {
+                            type: 'widgets',
+                            content: [
+                                {
+                                    id: 'pluginsCatalog',
+                                    definition: 'pluginsCatalog',
+                                    configuration: {
+                                        jsonPath: 'http://repository.cloudifysource.org/cloudify/wagons/plugins.json'
+                                    },
+                                    height: 20
+                                }
+                            ]
+                        }
+                    ]
+                },
+                { id: 'admin_operations' },
+                { id: 'deployments' }
+            ]
+        }
+    });
+});
+
+Cypress.Commands.add('refreshPage', () => cy.get('.pageMenuItem.active').click({ force: true }));
+
+Cypress.Commands.add('refreshTemplate', () => {
+    cy.get('.tenantsMenu').click({ force: true });
+    cy.contains('.text', 'default_tenant').click({ force: true });
+});
+
+function setContext(field, value) {
+    cy.get(`.${field}FilterField`).click();
+    cy.get(`.${field}FilterField input`).clear({ force: true }).type(`${value}`, { force: true });
+    cy.waitUntilPageLoaded();
+    cy.contains('.text', value).click();
+    cy.get(`.${field}FilterField input`).type('{esc}', { force: true });
+}
+
+function clearContext(field) {
+    cy.get(`.${field}FilterField .dropdown.icon`).click();
+}
+
+Cypress.Commands.add('setBlueprintContext', _.wrap('blueprint', setContext));
+Cypress.Commands.add('clearBlueprintContext', _.wrap('blueprint', clearContext));
+Cypress.Commands.add('setDeploymentContext', _.wrap('deployment', setContext));
+Cypress.Commands.add('clearDeploymentContext', _.wrap('deployment', clearContext));

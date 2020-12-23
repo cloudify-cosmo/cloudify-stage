@@ -1,8 +1,11 @@
 describe('Text box widget', () => {
-    before(() => cy.activate('valid_trial_license').login().addWidget('text'));
+    const header = 'Header text';
+    const content = 'Content text';
+
+    before(() => cy.activate('valid_trial_license').usePageMock('text', { header, content }).mockLogin());
 
     it('should render', () => {
-        cy.contains('Header text');
-        cy.contains('Markdown supported content. Update in widget configuration.');
+        cy.contains(header);
+        cy.contains(content);
     });
 });

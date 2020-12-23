@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import i18n from 'i18next';
 import PropTypes from 'prop-types';
 import { useBoolean } from '../utils/hooks';
 import { ApproveButton, CancelButton, Form, Modal } from './basic';
@@ -19,10 +20,10 @@ export default function EditTabModal({ tab, trigger, onTabUpdate }) {
 
             <Modal.Content>
                 <Form>
-                    <Form.Field label="Tab name">
+                    <Form.Field label={i18n.t('editMode.tabs.name', 'Tab name')}>
                         <Form.Input value={name} onChange={(e, { value }) => setName(value)} />
                     </Form.Field>
-                    <Form.Field label="Default tab">
+                    <Form.Field label={i18n.t('editMode.tabs.default', 'Default tab')}>
                         <Form.Checkbox
                             label=" "
                             toggle

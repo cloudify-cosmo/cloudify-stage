@@ -15,17 +15,14 @@ describe('/applications endpoint', () => {
         });
         const app = require('app');
 
-        return new Promise(done => {
-            request(app)
-                .get('/console/applications')
-                .then(response => {
-                    expect(response.statusCode).toBe(200);
-                    expect(response.body).toStrictEqual([
-                        { id: 1, name: 'A' },
-                        { id: 2, name: 'B' }
-                    ]);
-                    done();
-                });
-        });
+        return request(app)
+            .get('/console/applications')
+            .then(response => {
+                expect(response.statusCode).toBe(200);
+                expect(response.body).toStrictEqual([
+                    { id: 1, name: 'A' },
+                    { id: 2, name: 'B' }
+                ]);
+            });
     });
 });

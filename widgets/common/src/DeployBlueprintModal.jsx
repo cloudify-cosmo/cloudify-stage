@@ -74,6 +74,45 @@ class DeployBlueprintModal extends React.Component {
         }
     }
 
+    handleDeploymentInputChange(proxy, field) {
+        const { deploymentInputs } = this.state;
+        const fieldNameValue = Stage.Basic.Form.fieldNameValue(field);
+        this.setState({ deploymentInputs: { ...deploymentInputs, ...fieldNameValue } });
+    }
+
+    handleYamlFileChange(file) {
+        if (!file) {
+            return;
+        }
+
+        const { FileActions, InputsUtils } = Stage.Common;
+        const { blueprint, deploymentInputs: deploymentInputsState } = this.state;
+        const { toolbox } = this.props;
+        const actions = new FileActions(toolbox);
+
+        this.setState({ fileLoading: true });
+
+        actions
+            .doGetYamlFileContent(file)
+            .then(yamlInputs => {
+                const deploymentInputs = InputsUtils.getUpdatedInputs(
+                    blueprint.plan.inputs,
+                    deploymentInputsState,
+                    yamlInputs
+                );
+                this.setState({ errors: {}, deploymentInputs, fileLoading: false });
+            })
+            .catch(err => {
+                const errorMessage = `Loading values from YAML file failed: ${_.isString(err) ? err : err.message}`;
+                this.setState({ errors: { yamlFile: errorMessage }, fileLoading: false });
+            });
+    }
+
+    handleInputChange(proxy, field) {
+        const fieldNameValue = Stage.Basic.Form.fieldNameValue(field);
+        this.setState(fieldNameValue);
+    }
+
     onCancel() {
         const { onHide } = this.props;
         onHide();
@@ -264,45 +303,6 @@ class DeployBlueprintModal extends React.Component {
             .catch(err => Promise.reject({ errors: `Deployment ${deploymentId} installation failed: ${err.message}` }));
     }
 
-    handleYamlFileChange(file) {
-        if (!file) {
-            return;
-        }
-
-        const { FileActions, InputsUtils } = Stage.Common;
-        const { blueprint, deploymentInputs: deploymentInputsState } = this.state;
-        const { toolbox } = this.props;
-        const actions = new FileActions(toolbox);
-
-        this.setState({ fileLoading: true });
-
-        actions
-            .doGetYamlFileContent(file)
-            .then(yamlInputs => {
-                const deploymentInputs = InputsUtils.getUpdatedInputs(
-                    blueprint.plan.inputs,
-                    deploymentInputsState,
-                    yamlInputs
-                );
-                this.setState({ errors: {}, deploymentInputs, fileLoading: false });
-            })
-            .catch(err => {
-                const errorMessage = `Loading values from YAML file failed: ${_.isString(err) ? err : err.message}`;
-                this.setState({ errors: { yamlFile: errorMessage }, fileLoading: false });
-            });
-    }
-
-    handleInputChange(proxy, field) {
-        const fieldNameValue = Stage.Basic.Form.fieldNameValue(field);
-        this.setState(fieldNameValue);
-    }
-
-    handleDeploymentInputChange(proxy, field) {
-        const { deploymentInputs } = this.state;
-        const fieldNameValue = Stage.Basic.Form.fieldNameValue(field);
-        this.setState({ deploymentInputs: { ...deploymentInputs, ...fieldNameValue } });
-    }
-
     render() {
         const {
             ApproveButton,
@@ -437,8 +437,8 @@ class DeployBlueprintModal extends React.Component {
                         </Form.Field>
                         {skipPluginsValidation && (
                             <Message>
-                                The recommended path is uploading plugins as wagons to Cloudify. This option is designed
-                                for plugin development and advanced users only.
+                                The recommended path is uploading plugins as wagons. This option is designed for plugin
+                                development and advanced users only.
                             </Message>
                         )}
 

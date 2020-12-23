@@ -4,11 +4,10 @@ describe('Blueprint Info widget', () => {
     before(() =>
         cy
             .activate('valid_trial_license')
-            .login()
+            .usePageMock('blueprintInfo')
+            .mockLogin()
             .deleteBlueprints(blueprintName, true)
             .uploadBlueprint('blueprints/empty.zip', blueprintName)
-            .addPage('Blueprint Info Test')
-            .addWidget('blueprintInfo')
     );
 
     it('should show message when no blueprint selected', () => {
@@ -16,11 +15,7 @@ describe('Blueprint Info widget', () => {
     });
 
     it('should show blueprint information when blueprint selected', () => {
-        cy.addWidget('filter');
-        cy.get('.filterWidget').within(() => {
-            cy.get('.blueprintFilterField').click();
-            cy.get('.blueprintFilterField input').type(`${blueprintName}{enter}`, { force: true });
-        });
+        cy.setBlueprintContext(blueprintName);
 
         cy.get('.blueprintInfoWidget').within(() => {
             cy.log('Verifying blueprint name');

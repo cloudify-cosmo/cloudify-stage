@@ -3,23 +3,19 @@
     "tilesUrlTemplate": "https://tiles.stadiamaps.com/tiles/osm_bright/${z}/${x}/${y}${r}.png?api_key=${accessToken}",
     "attribution": "&copy; <a href=\"https://stadiamaps.com/\">Stadia Maps</a>, &copy; <a href=\"https://openmaptiles.org/\">OpenMapTiles</a> &copy; <a href=\"http://openstreetmap.org\">OpenStreetMap</a> contributors"
   },
-  "logLevel": "warn",
   "whiteLabel": {
-    "pageTitle": "Cloudify Console",
-    "logoUrl": "/console/static/images/logo.png",
+    "logoUrl": "",
     "mainColor": "#0077FC",
 
-    "productName": "Cloudify",
-    "headerTextColor": "#d8e3e8",
+    "headerTextColor": "white",
     "showVersionDetails": true,
 
-    "loginPageHeader": "CLOUDIFY",
     "loginPageHeaderColor": "white",
-    "loginPageText": "Welcome to the Cloudify Management Console, Please log in",
     "loginPageTextColor": "white",
 
     "sidebarColor": "#E2E2E2",
     "sidebarTextColor" : "#585860",
+    "sidebarHoverActiveColor": "rgba(0,0,0,.05)",
 
     "customCssPath": ""
   },

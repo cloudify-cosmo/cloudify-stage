@@ -1,7 +1,7 @@
 # Number of running executions
 Displays the total number of executions which are currently running, i.e, in one of the following statuses: 'pending', 'started', 'cancelling', 'force_cancelling', according to the user’s permissions.
 
-![number_of_running_executions](https://docs.cloudify.co/5.1/images/ui/widgets/num_of_running_executions.png)
+![number_of_running_executions]( /images/ui/widgets/num_of_running_executions.png )
 
 
 ## Settings

@@ -16,8 +16,8 @@ const coverageTask = require('@cypress/code-coverage/task');
 module.exports = (on, config) => {
     coverageTask(on, config);
 
-    if (process.env.STAGE_E2E_MANAGER_URL) {
-        config.baseUrl = `http://${process.env.STAGE_E2E_MANAGER_URL}`;
+    if (process.env.MANAGER_IP) {
+        config.baseUrl = `http://${process.env.MANAGER_IP}`;
     }
 
     console.info(`Testing on: ${config.baseUrl}`);

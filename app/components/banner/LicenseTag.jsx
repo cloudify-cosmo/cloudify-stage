@@ -1,43 +1,60 @@
-/**
- * Created by jakub.niezgoda on 15/03/2019.
- */
-
 import _ from 'lodash';
 import PropTypes from 'prop-types';
 import React from 'react';
+import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 
 import { Label } from '../basic';
 import Consts from '../../utils/consts';
 
-const labelPropTypes = {
-    className: PropTypes.string.isRequired,
-    content: PropTypes.string
-};
-const labelDefaultProps = { content: undefined };
-
 const LicenseLabel = ({ content, className }) => (
     <Label
         content={content}
         size="large"
-        style={{ marginLeft: 15, backgroundColor: '#FFC304', color: '#000000' }}
+        style={{ marginLeft: 15, backgroundColor: '#FFC304', color: '#000000', verticalAlign: 'middle' }}
         className={className}
     />
 );
-LicenseLabel.propTypes = labelPropTypes;
-LicenseLabel.defaultProps = labelDefaultProps;
+LicenseLabel.propTypes = {
+    className: PropTypes.string.isRequired,
+    content: PropTypes.string.isRequired
+};
 
-const LinkedLicenseLabel = ({ content, className }) =>
-    !_.isEmpty(content) && (
-        <Link to={Consts.LICENSE_PAGE_PATH} className={className}>
-            <LicenseLabel content={content} className={className} />
-        </Link>
+const LicenseLabelWrapper = ({ content, className, linked }) => {
+    if (!_.isEmpty(content)) {
+        if (linked) {
+            return (
+                <Link to={Consts.LICENSE_PAGE_PATH} className={className}>
+                    <LicenseLabel content={content} className={className} />
+                </Link>
+            );
+        }
+        return (
+            <span>
+                <LicenseLabel content={content} className={className} />
+            </span>
+        );
+    }
+    return null;
+};
+LicenseLabelWrapper.propTypes = {
+    className: PropTypes.string.isRequired,
+    linked: PropTypes.bool.isRequired,
+    content: PropTypes.string
+};
+LicenseLabelWrapper.defaultProps = {
+    content: undefined
+};
+
+export default function LicenseTag({ className = '' }) {
+    const isCommunity = useSelector(
+        state => _.get(state, 'manager.version.edition', Consts.EDITION.PREMIUM) === Consts.EDITION.COMMUNITY
     );
-LinkedLicenseLabel.propTypes = labelPropTypes;
-LinkedLicenseLabel.defaultProps = labelDefaultProps;
+    const isExpired = useSelector(
+        state => _.get(state, 'manager.license.status', Consts.LICENSE.EMPTY) === Consts.LICENSE.EXPIRED
+    );
+    const isTrial = useSelector(state => _.get(state, 'manager.license.data.trial', false));
 
-export default function LicenseTag({ isCommunity, isExpired, isTrial, className = '' }) {
-    const LabelComponent = isCommunity ? LicenseLabel : LinkedLicenseLabel;
     let labelContent;
     if (isCommunity) {
         labelContent = 'Community';
@@ -49,13 +66,9 @@ export default function LicenseTag({ isCommunity, isExpired, isTrial, className 
         labelContent = undefined;
     }
 
-    return <LabelComponent content={labelContent} className={className} />;
+    return <LicenseLabelWrapper content={labelContent} className={className} linked={!isCommunity} />;
 }
-
 LicenseTag.propTypes = {
-    isCommunity: PropTypes.bool.isRequired,
-    isExpired: PropTypes.bool.isRequired,
-    isTrial: PropTypes.bool.isRequired,
     className: PropTypes.string
 };
 

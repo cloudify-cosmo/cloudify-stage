@@ -1,7 +1,7 @@
 /**
  * Created by kinneretzin on 29/08/2016.
  */
-
+import i18n from 'i18next';
 import log from 'loglevel';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
@@ -47,7 +47,7 @@ export default class Layout extends Component {
                     case UNAUTHORIZED_ERR:
                         break;
                     default:
-                        doLogout('Error initializing user data, cannot load page');
+                        doLogout(i18n.t('pageLoadError', 'Error initializing user data, cannot load page'));
                 }
             });
     }

@@ -5,6 +5,7 @@
 import _ from 'lodash';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
+import { HeaderMenu } from 'cloudify-ui-components';
 
 import EventBus from '../utils/EventBus';
 import { Dropdown, Icon, Input, Loader } from './basic';
@@ -48,45 +49,37 @@ export default class Tenants extends Component {
         const selectedTenant = tenants.selected || _.get(tenants, 'items[0].name');
 
         const tenantMenuTrigger = (
-            <span>
+            <>
                 <Icon name="male" />
-                <span>{selectedTenant || 'No Tenants'}</span>
-            </span>
+                {selectedTenant || 'No Tenants'}
+            </>
         );
 
         return (
-            <Dropdown
-                item
-                pointing="top right"
-                className="tenantsMenu"
-                trigger={tenantMenuTrigger}
-                onClose={() => this.onSearchChange('')}
-            >
-                <Dropdown.Menu>
-                    <Input
-                        icon="search"
-                        iconPosition="left"
-                        className="search"
-                        value={search}
-                        onClick={e => e.stopPropagation()}
-                        onChange={(e, { value }) => {
-                            e.stopPropagation();
-                            this.onSearchChange(value);
-                        }}
-                    />
-                    <Dropdown.Menu scrolling>
-                        {filteredTenants.map(tenant => (
-                            <Dropdown.Item
-                                key={tenant.name}
-                                text={tenant.name}
-                                selected={tenant.name === selectedTenant}
-                                active={tenant.name === selectedTenant}
-                                onClick={() => this.onTenantSelected(tenant)}
-                            />
-                        ))}
-                    </Dropdown.Menu>
+            <HeaderMenu trigger={tenantMenuTrigger} onClose={() => this.onSearchChange('')} className="tenantsMenu">
+                <Input
+                    icon="search"
+                    iconPosition="left"
+                    className="search"
+                    value={search}
+                    onClick={e => e.stopPropagation()}
+                    onChange={(e, { value }) => {
+                        e.stopPropagation();
+                        this.onSearchChange(value);
+                    }}
+                />
+                <Dropdown.Menu scrolling>
+                    {filteredTenants.map(tenant => (
+                        <Dropdown.Item
+                            key={tenant.name}
+                            text={tenant.name}
+                            selected={tenant.name === selectedTenant}
+                            active={tenant.name === selectedTenant}
+                            onClick={() => this.onTenantSelected(tenant)}
+                        />
+                    ))}
                 </Dropdown.Menu>
-            </Dropdown>
+            </HeaderMenu>
         );
     }
 }

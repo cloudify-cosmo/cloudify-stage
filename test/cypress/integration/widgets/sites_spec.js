@@ -22,8 +22,8 @@ describe('Sites Management', () => {
     const siteAlreadyExists = { name: 'Tel-Aviv', error: 'already exists', check: 'it already exists' };
     const invalidSites = [siteWithInvalidName, siteWithInvalidLocation, siteAlreadyExists];
 
-    const reloadSiteManagementPage = () => {
-        cy.visitPage('Site Management');
+    const refreshSiteManagementPage = () => {
+        cy.refreshPage();
         cy.get('.sitesWidget .ui.text.loader').should('not.be.visible');
     };
 
@@ -102,14 +102,14 @@ describe('Sites Management', () => {
     before(() => {
         cy.activate('valid_spire_license')
             .deleteAllUsersAndTenants()
-            .login()
-            .visit('/console/page/site_management')
+            .usePageMock('sites')
+            .mockLogin()
             .waitUntilLoaded();
     });
 
     beforeEach(() => {
         cy.deleteSites();
-        reloadSiteManagementPage();
+        refreshSiteManagementPage();
     });
 
     it('create new site with location', () => {
@@ -148,7 +148,7 @@ describe('Sites Management', () => {
 
     it('list all sites', () => {
         cy.createSites(sites);
-        reloadSiteManagementPage();
+        refreshSiteManagementPage();
 
         cy.get('.sitesWidget').should('be.visible', true);
 
@@ -159,16 +159,13 @@ describe('Sites Management', () => {
 
     it('update a site with location changed with text input', () => {
         cy.createSite(siteWithLocation);
-        reloadSiteManagementPage();
+        refreshSiteManagementPage();
 
         cy.get('.edit').click();
-        cy.get('form :nth-child(1) > .field > .ui > input').as('name');
-        cy.get('form :nth-child(2) > .field > .ui > input').as('location');
 
         const newName = 'new_name';
-        cy.get('@name').clear().type(newName).should('have.value', newName);
-
-        cy.get('@location').clear();
+        cy.get('.modal form :nth-child(1) > .field > .ui > input').clear().type(newName).should('have.value', newName);
+        cy.get('.modal form :nth-child(2) > .field > .ui > input').clear();
 
         // Click update
         cy.get('.actions > .green').click();
@@ -178,7 +175,7 @@ describe('Sites Management', () => {
 
     it('update a site with location changed with map', () => {
         cy.createSite(siteWithLocation);
-        reloadSiteManagementPage();
+        refreshSiteManagementPage();
 
         cy.get('.edit').click();
 
@@ -198,7 +195,7 @@ describe('Sites Management', () => {
 
     it('update the visibility of a site', () => {
         cy.createSite(siteWithPrivateVisibility);
-        reloadSiteManagementPage();
+        refreshSiteManagementPage();
 
         // Change the visibility to tenant
         cy.get('.red.lock').click();
@@ -210,7 +207,7 @@ describe('Sites Management', () => {
 
     it('cancel site delete', () => {
         cy.createSite(siteWithLocation);
-        reloadSiteManagementPage();
+        refreshSiteManagementPage();
 
         cy.get('.trash').click();
 
@@ -220,7 +217,7 @@ describe('Sites Management', () => {
 
     it('delete all sites', () => {
         cy.createSites(sites);
-        reloadSiteManagementPage();
+        refreshSiteManagementPage();
 
         for (let i = sites.length; i > 0; i -= 1) {
             deleteSite(i);

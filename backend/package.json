@@ -15,9 +15,11 @@
     "db-migrate-down-to": "node migration downTo",
     "db-migrate-reset": "node migration reset",
     "db-migrate-status": "node migration status",
-    "devDebug": "cross-env NODE_ENV=development nodemon --inspect server.js",
-    "devStart": "cross-env NODE_ENV=development nodemon server.js",
-    "devTrace": "cross-env NODE_ENV=development nodemon --trace-warnings server.js",
+    "startWithNodemon": "cross-env NODE_ENV=development nodemon --watch . --watch ../conf",
+    "devDebug": "npm run startWithNodemon -- --inspect server.js",
+    "devStart": "npm run startWithNodemon -- server.js",
+    "devTrace": "npm run startWithNodemon -- --trace-warnings server.js",
+    "postinstall": "patch-package",
     "start": "node server.js ${STAGE_BACKEND_ARGS}",
     "test": "jest",
     "wait-on-server": "wait-on tcp:localhost:8088 --timeout 5000 && echo 'Stage backend is up!'"
@@ -49,7 +51,7 @@
     "multer": "^1.3.0",
     "passport": "^0.3.2",
     "passport-cookie": "^1.0.6",
-    "passport-saml": "^0.35.0",
+    "passport-saml": "^2.0.2",
     "passport-unique-token": "^0.1.4",
     "pg": "^7.18.2",
     "pg-hstore": "^2.3.3",
@@ -63,11 +65,17 @@
     "winston": "^3.2.1"
   },
   "devDependencies": {
+    "css": "^3.0.0",
     "jest": "^26.4.2",
     "nodemon": "^2.0.2",
+    "patch-package": "^6.2.2",
     "sequelize-cli": "^5.5.1"
   },
   "engines": {
     "node": "12.x"
-  }
+  },
+  "files": [
+    "**",
+    "!test"
+  ]
 }

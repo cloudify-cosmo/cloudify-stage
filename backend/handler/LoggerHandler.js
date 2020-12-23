@@ -1,12 +1,47 @@
 /**
  * Created by jakubniezgoda on 17/07/2017.
  */
-
+const fs = require('fs');
 const winston = require('winston');
 const _ = require('lodash');
 const config = require('../config').get();
 
-const { logLevel, logsFile, errorsFile } = config.app;
+require('events').EventEmitter.defaultMaxListeners = 25;
+
+const { logsFile, errorsFile } = config.app;
+
+/**
+ * Reads log level from manager's configuration file, as specified by `logLevelConf` configuration parameter.
+ * See https://github.com/cloudify-cosmo/cloudify-manager/blob/master/packaging/mgmtworker/files/etc/cloudify/logging.conf
+ */
+function getLevelFromLoggingConf() {
+    try {
+        return _.chain(fs.readFileSync(config.app.logLevelConf))
+            .split('\n')
+            .filter(fileEntry => !fileEntry.startsWith('#'))
+            .map(fileEntry => fileEntry.split(/\s+/))
+            .find(fileEntryWords => _.last(fileEntryWords) === 'cloudify-stage')
+            .first()
+            .toLower()
+            .thru(l => (l === 'warning' ? 'warn' : l))
+            .value();
+    } catch (e) {
+        // eslint-disable-next-line no-console
+        console.warn(`Couldn't read logging level from ${config.app.logLevelConf}:`, e);
+        return null;
+    }
+}
+
+let logLevel;
+if (config.app.logLevelConf) logLevel = getLevelFromLoggingConf();
+logLevel = logLevel || config.app.logLevel;
+
+const logsTransport = new winston.transports.File({ filename: logsFile });
+const errorsTransport = new winston.transports.File({ filename: errorsFile, level: 'error' });
+const consoleTransport = new winston.transports.Console({
+    format: winston.format.colorize({ all: true })
+});
+const transports = [logsTransport, errorsTransport, consoleTransport];
 
 module.exports = (() => {
     function getArgsSupportedLogger(logger) {
@@ -40,13 +75,7 @@ module.exports = (() => {
 
         const logger = winston.loggers.add(category, {
             level: forceLogLevel || logLevel,
-            transports: [
-                new winston.transports.File({ filename: logsFile }),
-                new winston.transports.File({ filename: errorsFile, level: 'error' }),
-                new winston.transports.Console({
-                    format: winston.format.colorize({ all: true })
-                })
-            ],
+            transports,
 
             format: winston.format.combine(
                 winston.format.label({ label: category }),

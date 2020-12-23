@@ -4,6 +4,7 @@
 
 import _ from 'lodash';
 import PropTypes from 'prop-types';
+import i18n from 'i18next';
 
 import React, { useEffect, useState } from 'react';
 import { useBoolean, useResettableState } from '../utils/hooks';
@@ -110,7 +111,11 @@ function AddWidgetModal({
         _.forEach(widgetsToAdd, widgetId => {
             const widget = _.find(widgetDefinitions, widgetDefinition => widgetId === widgetDefinition.id);
             if (widget) {
-                onWidgetAdded(widget.name || `Widget_${nameIndex}`, widget);
+                onWidgetAdded(
+                    widget.name ||
+                        i18n.t('editMode.addWidget.defaultWidgetName', `Widget_{{index}}`, { index: nameIndex }),
+                    widget
+                );
                 nameIndex += 1;
             }
         });
@@ -197,7 +202,7 @@ function AddWidgetModal({
         <EditModeButton
             icon="add"
             labelPosition="left"
-            content="Add Widget"
+            content={i18n.t('editMode.addWidget.addButton', 'Add Widget')}
             className="addWidgetBtn"
             style={{ marginBottom: 15, marginLeft: 1, marginTop: 1 }}
             title={addButtonTitle}
@@ -206,23 +211,30 @@ function AddWidgetModal({
 
     const installWidgetBtn = (
         <Button animated="vertical" id="installWidgetBtn" onClick={() => {}}>
-            <Button.Content visible>Install new widget</Button.Content>
+            <Button.Content visible>{i18n.t('editMode.addWidget.installButton', 'Install new widget')}</Button.Content>
             <Button.Content hidden>
                 <Icon name="folder open" />
             </Button.Content>
         </Button>
     );
     const updateWidgetBtn = (
-        <Button floated="left" size="small" compact basic content="Update" className="updateWidgetButton" />
+        <Button
+            floated="left"
+            size="small"
+            compact
+            basic
+            content={i18n.t('editMode.addWidget.updateButton', 'Update')}
+            className="updateWidgetButton"
+        />
     );
 
     const confirmContent = !_.isEmpty(usedByList) ? (
         <Segment basic>
-            <h5>Widget is currently used by:</h5>
+            <h5>{i18n.t('editMode.removeWidget.usedBy.header', 'Widget is currently used by:')}</h5>
 
             <DataTable>
-                <DataTable.Column label="Username" />
-                <DataTable.Column label="Manager IP" />
+                <DataTable.Column label={i18n.t('editMode.removeWidget.usedBy.username', 'Username')} />
+                <DataTable.Column label={i18n.t('editMode.removeWidget.usedBy.manager', 'Manager IP')} />
 
                 {usedByList.map(item => {
                     return (
@@ -241,7 +253,7 @@ function AddWidgetModal({
     const menuContent = (
         <Menu fluid vertical tabular>
             <Menu.Item
-                name={GenericConfig.CATEGORY.ALL}
+                name={i18n.t('editMode.addWidget.category.all')}
                 active={selectedCategory === GenericConfig.CATEGORY.ALL}
                 onClick={filterByCategory}
             />
@@ -254,7 +266,7 @@ function AddWidgetModal({
                         active={selectedCategory === category.name}
                         onClick={filterByCategory}
                     >
-                        {category.name}
+                        {i18n.t(`editMode.addWidget.category.${_.camelCase(category.name)}`)}
                         <Label color={category.count ? 'green' : 'yellow'}>{category.count}</Label>
                     </Menu.Item>
                 );
@@ -283,7 +295,7 @@ function AddWidgetModal({
                         icon="search"
                         fluid
                         size="mini"
-                        placeholder="Search widgets ..."
+                        placeholder={i18n.t('editMode.addWidget.search', 'Search widgets ...')}
                         onChange={filterWidgets}
                         value={search}
                     />
@@ -307,7 +319,7 @@ function AddWidgetModal({
                                                 <Checkbox
                                                     className="addWidgetCheckbox"
                                                     readOnly
-                                                    title="Add widget to page"
+                                                    title={i18n.t('editMode.addWidget.checkbox', 'Add widget to page')}
                                                     checked={widgetsToAdd.includes(widget.id)}
                                                 />
                                                 <Item.Image
@@ -328,9 +340,15 @@ function AddWidgetModal({
                                                                 <InstallWidgetModal
                                                                     onWidgetInstalled={_.wrap(widget, updateWidget)}
                                                                     trigger={updateWidgetBtn}
-                                                                    buttonLabel="Update Widget"
+                                                                    buttonLabel={i18n.t(
+                                                                        'editMode.addWidget.updateModal.button',
+                                                                        'Update Widget'
+                                                                    )}
                                                                     className="updateWidgetModal"
-                                                                    header="Update widget definition"
+                                                                    header={i18n.t(
+                                                                        'editMode.addWidget.updateModal.header',
+                                                                        'Update widget definition'
+                                                                    )}
                                                                 />
 
                                                                 <Button
@@ -338,7 +356,10 @@ function AddWidgetModal({
                                                                     size="small"
                                                                     compact
                                                                     basic
-                                                                    content="Remove"
+                                                                    content={i18n.t(
+                                                                        'editMode.removeWidget.button',
+                                                                        'Remove'
+                                                                    )}
                                                                     onClick={e => confirmRemove(e, widget)}
                                                                     className="removeWidgetButton"
                                                                 />
@@ -352,7 +373,10 @@ function AddWidgetModal({
                                     )}
 
                                     {_.isEmpty(filteredWidgetDefinitions) && (
-                                        <Item className="alignCenter" content="No widgets available" />
+                                        <Item
+                                            className="alignCenter"
+                                            content={i18n.t('editMode.addWidget.noWidgets', 'No widgets available')}
+                                        />
                                     )}
                                 </Item.Group>
 
@@ -365,7 +389,11 @@ function AddWidgetModal({
                                         disabled={widgetsToAdd.length === 0}
                                     >
                                         <Button.Content visible>
-                                            Add selected widgets ({widgetsToAdd.length})
+                                            {i18n.t(
+                                                'editMode.addWidget.submitButton',
+                                                'Add selected widgets ({{widgetsCount}})',
+                                                { widgetsCount: widgetsToAdd.length }
+                                            )}
                                         </Button.Content>
                                         <Button.Content hidden>
                                             <Icon name="check" />
@@ -376,8 +404,14 @@ function AddWidgetModal({
                                         <InstallWidgetModal
                                             onWidgetInstalled={onWidgetInstalled}
                                             trigger={installWidgetBtn}
-                                            header="Install new widget"
-                                            buttonLabel="Install Widget"
+                                            header={i18n.t(
+                                                'editMode.addWidget.installModal.header',
+                                                'Install new widget'
+                                            )}
+                                            buttonLabel={i18n.t(
+                                                'editMode.addWidget.installModal.submitButton',
+                                                'Install Widget'
+                                            )}
                                         />
                                     )}
                                 </Button.Group>
@@ -391,7 +425,11 @@ function AddWidgetModal({
                 open={showConfirm}
                 onCancel={unsetShowConfirm}
                 onConfirm={uninstallWidget}
-                header={`Are you sure to remove widget ${widgetToRemove.name}?`}
+                header={i18n.t(
+                    'editMode.removeWidget.confirm',
+                    `Are you sure to remove widget {{name}}`,
+                    _.pick(widgetToRemove, 'name')
+                )}
                 content={confirmContent}
                 className="removeWidgetConfirm"
             />

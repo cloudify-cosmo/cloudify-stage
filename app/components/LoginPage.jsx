@@ -6,10 +6,9 @@ import _ from 'lodash';
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { parse } from 'query-string';
-
-import { Button, Input, Message, Form, FullScreenSegment } from './basic';
+import i18n from 'i18next';
+import { Button, Input, Message, Form, FullScreenSegment, Logo } from './basic';
 import SplashLoadingScreen from '../utils/SplashLoadingScreen';
-import Logo from './banner/Logo';
 
 import 'cloudify-ui-common/styles/font-JosefinSans-Bold.css';
 
@@ -30,10 +29,10 @@ export default class LoginPage extends Component {
         const errors = {};
 
         if (_.isEmpty(username)) {
-            errors.username = 'Please provide username';
+            errors.username = i18n.t('login.error.noUsername', 'Please provide username');
         }
         if (_.isEmpty(password)) {
-            errors.password = 'Please provide password';
+            errors.password = i18n.t('login.error.noPassword', 'Please provide password');
         }
         if (!_.isEmpty(errors)) {
             this.setState({ errors });
@@ -56,9 +55,9 @@ export default class LoginPage extends Component {
         const { isLoggingIn, loginError } = this.props;
         SplashLoadingScreen.turnOff();
 
-        const loginPageHeader = _.get(this.props, 'whiteLabel.loginPageHeader');
+        const loginPageHeader = i18n.t('login.header');
         const loginPageHeaderColor = _.get(this.props, 'whiteLabel.loginPageHeaderColor');
-        const loginPageText = _.get(this.props, 'whiteLabel.loginPageText');
+        const loginPageText = i18n.t('login.message');
         const loginPageTextColor = _.get(this.props, 'whiteLabel.loginPageTextColor');
         const isHeaderTextPresent = !_.isEmpty(loginPageHeader) || !_.isEmpty(loginPageText);
 
@@ -105,7 +104,7 @@ export default class LoginPage extends Component {
                             <Input
                                 name="username"
                                 type="text"
-                                placeholder="Username"
+                                placeholder={i18n.t('login.username', 'Username')}
                                 autoFocus
                                 value={username}
                                 onChange={this.handleInputChange}
@@ -116,7 +115,7 @@ export default class LoginPage extends Component {
                             <Input
                                 name="password"
                                 type="password"
-                                placeholder="Password"
+                                placeholder={i18n.t('login.password', 'Password')}
                                 value={password}
                                 onChange={this.handleInputChange}
                             />
@@ -134,7 +133,7 @@ export default class LoginPage extends Component {
                             color="yellow"
                             size="large"
                             type="submit"
-                            content="LOGIN"
+                            content={i18n.t('login.submit')}
                         />
                     </Form>
                 </div>
@@ -150,9 +149,7 @@ LoginPage.propTypes = {
     loginError: PropTypes.string,
     username: PropTypes.string,
     whiteLabel: PropTypes.shape({
-        loginPageHeader: PropTypes.string,
         loginPageHeaderColor: PropTypes.string,
-        loginPageText: PropTypes.string,
         loginPageTextColor: PropTypes.string
     })
 };
@@ -162,9 +159,7 @@ LoginPage.defaultProps = {
     loginError: null,
     username: '',
     whiteLabel: PropTypes.shape({
-        loginPageHeader: '',
         loginPageHeaderColor: '',
-        loginPageText: '',
         loginPageTextColor: ''
     })
 };

@@ -1,76 +1,73 @@
 describe('Edit mode', () => {
-    before(() => cy.activate('valid_trial_license').removeCustomWidgets());
+    before(() => cy.activate('valid_trial_license').removeCustomWidgets().usePageMock('blueprints').mockLogin());
 
     beforeEach(() => {
-        cy.fixture('page/page_with_tabs').then(testPage =>
-            cy.stageRequest('/console/ua', 'POST', {
-                body: {
-                    appData: {
-                        pages: [testPage]
-                    },
-                    version: 4
-                }
-            })
-        );
-        cy.login().enterEditMode();
+        cy.usePageMock('blueprints');
+        cy.refreshTemplate();
+        cy.enterEditMode();
+        cy.route('POST', '/console/ua').as('uaPost');
     });
 
     it('should allow to edit widget settings', () => {
         cy.get('.blueprintsWidget .setting').click({ force: true });
 
         cy.get('.pollingTime input').type(0);
+
         cy.contains('Save').click();
-
-        cy.reload();
-        cy.enterEditMode();
-
-        cy.get('.blueprintsWidget .setting').click({ force: true });
-        cy.get('.pollingTime input').should('have.value', '100');
+        cy.wait('@uaPost')
+            .its('request.body')
+            .should('have.nested.property', 'appData.pages[0].layout[0].content[1].configuration.pollingTime', 100);
     });
 
     it('should allow to remove widget', () => {
         cy.get('.blueprintsWidget .remove').click({ force: true });
-        cy.get('.blueprintsWidget').should('not.exist');
-
-        cy.reload();
-        cy.contains('.widgetName', 'Catalog').should('be.visible');
+        cy.wait('@uaPost')
+            .its('request.body')
+            .should('not.have.nested.property', 'appData.pages[0].layout[0].content[1]');
         cy.get('.blueprintsWidget').should('not.exist');
     });
 
     it('should allow to add widget', () => {
-        cy.get('.editModeButton:contains(Add Widget):eq(1)').click();
-        cy.get('*[data-id=blueprintSources]').click();
+        cy.get('.addWidgetBtn').click();
+        cy.get('*[data-id=pluginsCatalog]').click();
         cy.contains('Add selected widgets').click();
-        cy.contains('Add Widgets').click();
-        cy.get('button[title]:contains(Add Widget):last()').click();
-        cy.get('*[data-id=agents]').click();
+        cy.wait('@uaPost').its('request.body').should('have.nested.property', 'appData.pages[0].layout[0].content[2]');
+        cy.wait('@uaPost').then(({ request }) => {
+            expect(request.body).to.have.nested.property('appData.pages[0].layout[0].content[2].height');
+            expect(request.body).to.have.nested.property('appData.pages[0].layout[0].content[2].x');
+            expect(request.body).to.have.nested.property('appData.pages[0].layout[0].content[2].y');
+        });
+
+        cy.contains('Add Widgets Container').click();
+        cy.wait('@uaPost');
+        cy.get('.react-grid-layout').should('have.length', 2);
+
+        const widgetId = 'blueprints';
+        cy.get('.addWidgetBtn:last()').click();
+        cy.get(`*[data-id=${widgetId}]`).click();
         cy.contains('Add selected widgets').click();
+        cy.wait('@uaPost')
+            .its('request.body')
+            .should('have.nested.property', 'appData.pages[0].layout[1].content[0].definition', widgetId);
+        cy.wait('@uaPost').then(({ request }) => {
+            expect(request.body).to.have.nested.property('appData.pages[0].layout[1].content[0].height');
+            expect(request.body).to.have.nested.property('appData.pages[0].layout[1].content[0].x');
+            expect(request.body).to.have.nested.property('appData.pages[0].layout[1].content[0].y');
+        });
 
-        cy.contains('.message', 'Edit mode').contains('Exit').click();
-
-        cy.get('.react-grid-layout').should('have.length', 3);
-        cy.contains('.react-grid-layout:eq(1) .widgetName', 'Blueprint Sources');
-        cy.contains('.react-grid-layout:last() .widgetName', 'Agents');
-
-        cy.reload();
-        cy.get('.react-grid-layout').should('have.length', 3);
-        cy.contains('.react-grid-layout:eq(1) .widgetName', 'Blueprint Sources');
-        cy.contains('.react-grid-layout:last() .widgetName', 'Agents');
+        cy.contains('.widgetName', 'Plugins Catalog');
+        cy.contains('.react-grid-layout:last() .widgetName', 'Blueprints');
     });
 
-    it('should allow to remove and add tabs', () => {
-        cy.contains('Tab2').find('.remove').click();
-        cy.contains('Yes').click();
-        cy.contains('Tab2').should('not.exist');
-        cy.contains('Tab1').find('.remove').should('not.exist');
-
+    it('should allow to manage tabs', () => {
+        cy.contains('Add Tabs').click();
         cy.get('button[title="Remove tabs container"]').click();
         cy.contains('Yes').click();
-        cy.contains('Tab1').should('not.exist');
+        cy.contains('New Tab').should('not.exist');
 
         cy.contains('Add Tabs').click();
 
-        cy.get('.menu .remove:eq(0)').click();
+        cy.contains('New Tab').find('.remove').click();
         cy.get('.item:contains(New Tab)').should('have.length', 1);
         cy.get('.item .editModeButton .add').click();
         cy.get('.item:contains(New Tab)').should('have.length', 2);
@@ -79,10 +76,17 @@ describe('Edit mode', () => {
     });
 
     it('should allow to rename tab and set default tab', () => {
+        cy.contains('Add Tabs').click();
+        cy.wait('@uaPost');
+
         cy.get('.editModeButton .edit:eq(0)').click();
         cy.get('.modal input[type=text]').type(2);
         cy.get('.modal .toggle').click();
+
         cy.contains('Save').click();
+        cy.wait('@uaPost')
+            .its('request.body')
+            .should('have.nested.property', 'appData.pages[0].layout[1].content[0].name', 'New Tab2');
 
         cy.log('Verify default flag was set');
         cy.get('.editModeButton .edit:eq(0)').click();
@@ -92,16 +96,16 @@ describe('Edit mode', () => {
         cy.log('Set another tab as default');
         cy.get('.editModeButton .edit:eq(1)').click();
         cy.get('.modal .toggle').click();
+
         cy.contains('Save').click();
+        cy.wait('@uaPost').then(({ request }) => {
+            expect(request.body).to.have.nested.property('appData.pages[0].layout[1].content[0].isDefault', false);
+            expect(request.body).to.have.nested.property('appData.pages[0].layout[1].content[1].isDefault', true);
+        });
 
         cy.log('Verify previous tab is no longer default');
         cy.get('.editModeButton .edit:eq(0)').click();
         cy.get('.modal .toggle:not(.checked)');
-
-        cy.log('Verify updates are preserved');
-        cy.reload().waitUntilLoaded();
-        cy.contains('Tab12').should('not.have.class', 'active');
-        cy.contains('Tab2').should('have.class', 'active');
     });
 
     it('should allow to add and remove pages', () => {
@@ -124,7 +128,7 @@ describe('Edit mode', () => {
             cy.server();
             cy.route('PUT', '/console/widgets/install*').as('installWidget');
             cy.route('DELETE', '/console/widgets/*').as('deleteWidget');
-            cy.get('.editModeButton:contains(Add Widget):eq(1)').click();
+            cy.get('.addWidgetBtn').click();
             cy.contains('Install new widget').click();
         });
 
@@ -228,7 +232,7 @@ describe('Edit mode', () => {
             cy.get('.testWidgetWidget');
 
             cy.log('Verifying used widget can be uninstalled');
-            cy.get('.editModeButton:contains(Add Widget):eq(1)').click();
+            cy.get('.addWidgetBtn').click();
             cy.contains('Remove').click();
             cy.contains('Yes').click();
             cy.contains('Test widget').should('not.exist');
