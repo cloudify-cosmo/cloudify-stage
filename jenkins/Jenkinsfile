@@ -17,7 +17,7 @@ pipeline {
   options {
     checkoutToSubdirectory('cloudify-stage')
     buildDiscarder(logRotator(numToKeepStr:'30'))
-    timeout(time: 60, unit: 'MINUTES')
+    timeout(time: 80, unit: 'MINUTES')
     timestamps()
   }
 
