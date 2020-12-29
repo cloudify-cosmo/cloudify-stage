@@ -34,7 +34,9 @@ module.exports = {
         migrate(queryInterface, pageData => {
             function migrateLayoutSection(layoutSection) {
                 if (pageData[layoutSection]) {
-                    pageData.layout.push({ type: layoutSection, content: pageData[layoutSection] });
+                    if (!_.isEmpty(pageData[layoutSection])) {
+                        pageData.layout.push({ type: layoutSection, content: pageData[layoutSection] });
+                    }
                     delete pageData[layoutSection];
                 }
             }
