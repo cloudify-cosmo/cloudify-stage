@@ -3,7 +3,7 @@ const { execSync } = require('child_process');
 
 const config = require('../config').get();
 
-const latestMigration = '20201030110539-5_1_1-MigratePageLayouts.js';
+const latestMigration = '20201230113319-5_1_1-UpdateManagerIp.js';
 
 describe('Migration script', () => {
     beforeAll(() => execSync('node migration.js up'));
