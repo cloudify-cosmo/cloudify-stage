@@ -1,6 +1,6 @@
 {
   "name": "stage-backend",
-  "version": "5.1.1-.dev1",
+  "version": "5.2.0-.dev1",
   "description": "Cloudify Console Backend",
   "repository": "https://github.com/cloudify-cosmo/cloudify-stage/backend",
   "license": "Apache-2.0",
