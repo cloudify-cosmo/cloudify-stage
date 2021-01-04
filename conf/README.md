@@ -2,16 +2,11 @@
 
 The following section describes different configuration files used in cloudify-stage.
 
-## Application (`app.json`)
-
-This file is meant to be updated by manager installer -
-it is not going to be installed in case of upgrade or patch.
+## Core configuration (`config.json`)
 
 * `maintenancePollingInterval` - integer, time interval for Manager status polling (milliseconds) 
 * `singleManager` - boolean, defines if Manager is executed as single (depracated)
-* `db` - object, Stage PostgreSQL DB connection configuration
-  * `url` - string or array, DB URL or array of DB URLs 
-  
+
 * `proxy` - object, configuration of Stage Backend proxy to Manager 
   * `timeouts`
     * `get` - integer, GET request timeout (milliseconds)
@@ -42,6 +37,14 @@ it is not going to be installed in case of upgrade or patch.
   * `certPath` - string, SAML certificate path
   * `ssoUrl` - string, redirect URL to the application at the Single Sign-On identity provider
   * `portalUrl` - string, redirect URL to the organization portal
+
+## Application (`app.json`)
+
+This file is meant to be updated by manager installer -
+it is not going to be installed in case of upgrade or patch.
+
+* `db` - object, Stage PostgreSQL DB connection configuration
+  * `url` - string or array, DB URL or array of DB URLs 
 
 ## DB Options (`db.options.json`)
 
@@ -93,5 +96,5 @@ This configuration can be overridden by: `/dist/userData/userConfig.json`.
 
 This file is optional, used only in development environment.
 
-* `app` - object, overrides for Application configuration
+* `app` - object, overrides for Core, Application and Logging configurations
 * `manager` - object, overrides for Manager configuration
