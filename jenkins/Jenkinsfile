@@ -181,8 +181,8 @@ pipeline {
         build(job: 'Stage-UI-System-Test', parameters: [
           string(name: 'BRANCH', value: 'master'),
           string(name: 'STAGE_BRANCH', value: 'master'),
-          string(name: 'CENTOS_MANAGER', value: 'false'),
-          string(name: 'UPDATE_STAGE_ON_MANAGER', value: 'false')
+          booleanParam(name: 'CENTOS_MANAGER', value: false),
+          booleanParam(name: 'UPDATE_STAGE_ON_MANAGER', value: false)
         ])
       }
     }
