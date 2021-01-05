@@ -44,8 +44,8 @@ function BlueprintStepActions({
                     errors.blueprintName = 'Blueprint name';
                 }
 
-                if (_.isEmpty(stepData.blueprintFileName)) {
-                    errors.blueprintFileName = 'Blueprint YAML file';
+                if (_.isEmpty(stepData.blueprintYamlFile)) {
+                    errors.blueprintYamlFile = 'Blueprint YAML file';
                 }
 
                 if (!_.isEmpty(imageUrl) && !Stage.Utils.Url.isUrl(imageUrl)) {
@@ -65,12 +65,12 @@ function BlueprintStepActions({
                         .getInternal()
                         .doUpload(
                             'source/list/resources',
-                            { yamlFile: stepData.blueprintFileName },
+                            { yamlFile: stepData.blueprintYamlFile },
                             { archive: stepData.blueprintFile }
                         );
                 }
                 return toolbox.getInternal().doPut('source/list/resources', {
-                    yamlFile: stepData.blueprintFileName,
+                    yamlFile: stepData.blueprintYamlFile,
                     url: stepData.blueprintUrl
                 });
             })
@@ -104,7 +104,7 @@ class BlueprintStepContent extends React.Component {
         blueprintUrl: '',
         blueprintFile: null,
         blueprintName: '',
-        blueprintFileName: '',
+        blueprintYamlFile: '',
         imageUrl: '',
         imageFile: null,
         visibility: Stage.Common.Consts.defaultVisibility
@@ -138,7 +138,7 @@ class BlueprintStepContent extends React.Component {
                     blueprintUrl={stepData.blueprintUrl}
                     blueprintFile={stepData.blueprintFile}
                     blueprintName={stepData.blueprintName}
-                    blueprintFileName={stepData.blueprintFileName}
+                    blueprintFileName={stepData.blueprintYamlFile}
                     imageUrl={stepData.imageUrl}
                     imageFile={stepData.imageFile}
                     loading={loading}

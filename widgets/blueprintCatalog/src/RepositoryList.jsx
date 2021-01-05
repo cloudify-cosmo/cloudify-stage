@@ -164,7 +164,6 @@ export default class RepositoryList extends React.Component {
                     imageUrl={imageUrl}
                     onHide={this.hideModal}
                     toolbox={toolbox}
-                    actions={actions}
                 />
 
                 <ReadmeModal

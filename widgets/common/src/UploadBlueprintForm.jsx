@@ -52,15 +52,15 @@ class UploadBlueprintForm extends React.Component {
             .then(data => {
                 this.setState({ yamlFiles: data, loading: false }, () => {
                     const blueprintName = data.shift();
-                    const blueprintFileName = _.includes(data, UploadBlueprintForm.DEFAULT_BLUEPRINT_YAML_FILE)
+                    const blueprintYamlFile = _.includes(data, UploadBlueprintForm.DEFAULT_BLUEPRINT_YAML_FILE)
                         ? UploadBlueprintForm.DEFAULT_BLUEPRINT_YAML_FILE
                         : data[0];
-                    onChange({ ...UploadBlueprintForm.NO_ERRORS, blueprintName, blueprintFileName });
+                    onChange({ ...UploadBlueprintForm.NO_ERRORS, blueprintName, blueprintYamlFile });
                 });
             })
             .catch(error => {
                 this.setState({ loading: false }, () =>
-                    onChange({ errors: { error: error.message }, blueprintName: '', blueprintFileName: '' })
+                    onChange({ errors: { error: error.message }, blueprintName: '', blueprintYamlFile: '' })
                 );
             });
     };
@@ -74,7 +74,7 @@ class UploadBlueprintForm extends React.Component {
                     blueprintFile: null,
                     blueprintUrl: '',
                     blueprintName: '',
-                    blueprintFileName: ''
+                    blueprintYamlFile: ''
                 });
             }
             return;
@@ -85,7 +85,7 @@ class UploadBlueprintForm extends React.Component {
             .doListYamlFiles(null, file, true)
             .then(data => {
                 const blueprintName = data.shift();
-                const blueprintFileName = _.includes(data, UploadBlueprintForm.DEFAULT_BLUEPRINT_YAML_FILE)
+                const blueprintYamlFile = _.includes(data, UploadBlueprintForm.DEFAULT_BLUEPRINT_YAML_FILE)
                     ? UploadBlueprintForm.DEFAULT_BLUEPRINT_YAML_FILE
                     : data[0];
                 this.setState({ yamlFiles: data, loading: false }, () => {
@@ -94,13 +94,13 @@ class UploadBlueprintForm extends React.Component {
                         blueprintFile: file,
                         blueprintUrl: file.name,
                         blueprintName,
-                        blueprintFileName
+                        blueprintYamlFile
                     });
                 });
             })
             .catch(error => {
                 this.setState({ loading: false }, () =>
-                    onChange({ errors: { error: error.message }, blueprintName: '', blueprintFileName: '' })
+                    onChange({ errors: { error: error.message }, blueprintName: '', blueprintYamlFile: '' })
                 );
             });
     };
@@ -134,16 +134,30 @@ class UploadBlueprintForm extends React.Component {
 
     render() {
         const { loading: loadingState, yamlFiles } = this.state;
-        const { blueprintFileName, blueprintName, errors, loading: loadingProp, showErrorsSummary } = this.props;
+        const {
+            blueprintFileName,
+            blueprintName,
+            errors,
+            loading: loadingProp,
+            showErrorsSummary,
+            uploadState
+        } = this.props;
         const { Form } = Stage.Basic;
-        const options = _.map(yamlFiles, item => {
-            return { text: item, value: item };
-        });
+        const { UploadBlueprintBasicForm } = Stage.Common;
 
         return (
-            <Form
-                loading={loadingState || loadingProp}
-                errors={showErrorsSummary ? errors : null}
+            <UploadBlueprintBasicForm
+                errors={showErrorsSummary ? errors : {}}
+                blueprintYamlFile={blueprintFileName}
+                blueprintName={blueprintName}
+                yamlFiles={yamlFiles}
+                uploadState={uploadState}
+                formLoading={loadingState}
+                blueprintUploading={loadingProp}
+                yamlFileHelp="If you choose archive as blueprint package, you must specify
+                                  the blueprint YAML file for your environment,
+                                  because the archive can contain more than one YAML file."
+                onInputChange={this.handleInputChange}
                 onErrorsDismiss={this.resetErrors}
             >
                 <Form.Field
@@ -163,34 +177,6 @@ class UploadBlueprintForm extends React.Component {
                         onChangeFile={this.onBlueprintFileChange}
                     />
                 </Form.Field>
-
-                <Form.Field
-                    label="Blueprint name"
-                    required
-                    error={errors.blueprintName}
-                    help="The package is uploaded to the Manager as a blueprint with the name you specify here."
-                >
-                    <Form.Input name="blueprintName" value={blueprintName} onChange={this.handleInputChange} />
-                </Form.Field>
-
-                <Form.Field
-                    label="Blueprint YAML file"
-                    required
-                    error={errors.blueprintFileName}
-                    help="If you choose archive as blueprint package, you must specify
-                                  the blueprint YAML file for your environment,
-                                  because the archive can contain more than one YAML file."
-                >
-                    <Form.Dropdown
-                        name="blueprintFileName"
-                        search
-                        selection
-                        options={options}
-                        value={blueprintFileName}
-                        onChange={this.handleInputChange}
-                    />
-                </Form.Field>
-
                 <Form.Field
                     label="Blueprint icon"
                     error={errors.imageUrl}
@@ -203,7 +189,7 @@ class UploadBlueprintForm extends React.Component {
                         onChangeFile={this.onBlueprintImageChange}
                     />
                 </Form.Field>
-            </Form>
+            </UploadBlueprintBasicForm>
         );
     }
 }
@@ -224,7 +210,8 @@ UploadBlueprintForm.propTypes = {
     loading: PropTypes.bool,
     showErrorsSummary: PropTypes.bool,
     onChange: PropTypes.func.isRequired,
-    toolbox: Stage.PropTypes.Toolbox.isRequired
+    toolbox: Stage.PropTypes.Toolbox.isRequired,
+    uploadState: PropTypes.string
 };
 
 UploadBlueprintForm.defaultProps = {
@@ -236,7 +223,8 @@ UploadBlueprintForm.defaultProps = {
     imageFile: null,
     errors: {},
     loading: false,
-    showErrorsSummary: true
+    showErrorsSummary: true,
+    uploadState: null
 };
 
 Stage.defineCommon({

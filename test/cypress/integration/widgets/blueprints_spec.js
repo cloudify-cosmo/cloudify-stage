@@ -56,11 +56,12 @@ describe('Blueprints widget', () => {
         beforeEach(() => {
             cy.contains('Upload').click();
             cy.get('input[name=blueprintUrl]').type(url).blur();
+            cy.server();
         });
 
         it('with default blueprint file', () => {
             cy.get('input[name=blueprintUrl]').clear().blur();
-            cy.get('div[name=blueprintFileName] input').click();
+            cy.get('div[name=blueprintYamlFile] input').click();
             cy.contains('No results found.');
 
             cy.get('input[name=blueprintUrl]')
@@ -76,6 +77,16 @@ describe('Blueprints widget', () => {
             cy.get('input[name=blueprintName]').clear().type(blueprintName);
             cy.get('.button.ok').click();
 
+            const getBlueprint = RegExp(`/console/sp\\?su=/blueprints/${blueprintName}`);
+            cy.contains('0/4: Waiting for blueprint upload to start...');
+            cy.route(getBlueprint, { state: 'Uploading' });
+            cy.contains('1/4: Uploading blueprint...');
+            cy.route(getBlueprint, { state: 'Extracting' });
+            cy.contains('2/4: Extracting blueprint...');
+            cy.route(getBlueprint, { state: 'Parsing' });
+            cy.contains('3/4: Parsing blueprint...');
+            cy.route(getBlueprint, { state: 'Uploaded' });
+
             getBlueprintRow(blueprintName).contains('read-secret-blueprint.yaml');
         });
 
@@ -84,10 +95,25 @@ describe('Blueprints widget', () => {
             const blueprintFileName = 'write-secret-blueprint.yaml';
 
             cy.get('input[name=blueprintName]').clear().type(blueprintName);
-            cy.get('div[name=blueprintFileName] input').type(blueprintFileName);
+            cy.get('div[name=blueprintYamlFile] input').type(blueprintFileName);
             cy.get('.button.ok').click();
 
+            cy.route(RegExp(`/console/sp\\?su=/blueprints/${blueprintName}`), { state: 'Uploaded' });
+
             getBlueprintRow(blueprintName).contains(blueprintFileName);
+        });
+
+        it('and handle upload errors', () => {
+            const blueprintName = `${blueprintNamePrefix}_upload_error`;
+
+            cy.get('input[name=blueprintName]').clear().type(blueprintName).blur();
+            cy.get('.button.ok').click();
+
+            const error = 'error message';
+            cy.route(RegExp(`/console/sp\\?su=/blueprints/${blueprintName}`), { state: 'FailedUploading', error });
+
+            cy.contains('.header', 'Blueprint upload failed');
+            cy.contains('li', error);
         });
     });
 

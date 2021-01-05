@@ -220,7 +220,7 @@ class ConfirmationStepContent extends React.Component {
             new Task(`Upload blueprint ${blueprint.blueprintName}`, () =>
                 blueprintActions.doUpload(
                     blueprint.blueprintName,
-                    blueprint.blueprintFileName,
+                    blueprint.blueprintYamlFile,
                     blueprintUrl,
                     blueprint.blueprintFile,
                     imageUrl,

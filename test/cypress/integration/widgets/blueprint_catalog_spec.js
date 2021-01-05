@@ -31,5 +31,25 @@ describe('Blueprints catalog widget', () => {
         cy.contains(
             "Invalid blueprint - Plugin cloudify-aws-plugin (query: {'package_name': 'cloudify-aws-plugin'}) not found"
         );
+
+        cy.route('PUT', RegExp(`/console/sp\\?su=/blueprints/${blueprintName}`), {});
+        const error = 'error message';
+        cy.route(RegExp(`/console/sp\\?su=/blueprints/${blueprintName}`), { state: 'FailedUploading', error });
+
+        cy.get('button.green').click();
+
+        cy.contains('.header', 'Blueprint upload failed');
+        cy.contains('li', error);
+    });
+
+    it('should upload blueprint successfully', () => {
+        cy.get('input[name=blueprintName]').clear().type(blueprintName);
+
+        cy.route('PUT', RegExp(`/console/sp\\?su=/blueprints/${blueprintName}`), {});
+        cy.route(RegExp(`/console/sp\\?su=/blueprints/${blueprintName}`), { state: 'Uploaded' });
+
+        cy.get('button.green').click();
+
+        cy.get('.modal').should('not.exist');
     });
 });

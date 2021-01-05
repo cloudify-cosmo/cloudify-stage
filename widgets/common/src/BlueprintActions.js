@@ -2,7 +2,23 @@
  * Created by kinneretzin on 29/11/2016.
  */
 
-class BlueprintActions {
+export default class BlueprintActions {
+    static InProgressBlueprintStates = {
+        Pending: 'Pending',
+        Uploading: 'Uploading',
+        Extracting: 'Extracting',
+        Parsing: 'Parsing',
+        UploadingImage: 'UploadingImage'
+    };
+
+    static CompletedBlueprintStates = {
+        Uploaded: 'Uploaded',
+        FailedUploading: 'FailedUploading',
+        FailedExtracting: 'FailedExtracting',
+        FailedParsing: 'FailedParsing',
+        Invalid: 'Invalid'
+    };
+
     constructor(toolbox) {
         this.toolbox = toolbox;
     }
@@ -65,7 +81,16 @@ class BlueprintActions {
             );
     }
 
-    doUpload(blueprintName, blueprintFileName, blueprintUrl, file, imageUrl, image, visibility) {
+    doUpload(
+        blueprintName,
+        blueprintFileName,
+        blueprintUrl,
+        file,
+        imageUrl,
+        image,
+        visibility,
+        onStateChanged = _.noop
+    ) {
         const params = { visibility };
 
         if (!_.isEmpty(blueprintFileName)) {
@@ -85,7 +110,38 @@ class BlueprintActions {
             promise = this.toolbox.getManager().doPut(`/blueprints/${blueprintName}`, params);
         }
 
-        return promise.then(() => this.doUploadImage(blueprintName, imageUrl, image));
+        return promise
+            .then(() => this.waitUntilUploaded(blueprintName, onStateChanged))
+            .then(() => onStateChanged(BlueprintActions.InProgressBlueprintStates.UploadingImage))
+            .then(() => this.doUploadImage(blueprintName, imageUrl, image));
+    }
+
+    async waitUntilUploaded(blueprintName, onStateChanged, maxNumberOfRetries = 60, waitingInterval = 1000 /* ms */) {
+        let blueprint;
+        for (let i = 0; i < maxNumberOfRetries; i += 1) {
+            // eslint-disable-next-line no-await-in-loop
+            await new Promise(resolve => {
+                setTimeout(resolve, waitingInterval);
+            });
+
+            // eslint-disable-next-line no-await-in-loop
+            blueprint = await this.doGetFullBlueprintData({ id: blueprintName });
+
+            if (blueprint.state === BlueprintActions.CompletedBlueprintStates.Uploaded) {
+                return;
+            }
+
+            if (BlueprintActions.CompletedBlueprintStates[blueprint.state]) {
+                const error = Error(blueprint.error);
+                error.state = blueprint.state;
+                throw error;
+            }
+
+            onStateChanged(blueprint.state);
+        }
+
+        const timeout = Math.floor((maxNumberOfRetries * waitingInterval) / 1000);
+        throw Error(`Timeout exceeded. Blueprint was not uploaded after ${timeout} seconds.`);
     }
 
     doSetVisibility(blueprintId, visibility) {

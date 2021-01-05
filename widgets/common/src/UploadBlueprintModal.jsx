@@ -2,8 +2,10 @@
  * Created by kinneretzin on 05/10/2016.
  */
 
+const { BlueprintActions } = Stage.Common;
+
 function UploadBlueprintModal({ toolbox, open, onHide }) {
-    const { useRef } = React;
+    const { useState, useRef } = React;
     const { useBoolean, useInputs, useOpenProp, useErrors, useResettableState } = Stage.Hooks;
 
     const [isLoading, setLoading, unsetLoading] = useBoolean();
@@ -13,12 +15,13 @@ function UploadBlueprintModal({ toolbox, open, onHide }) {
         blueprintUrl: '',
         blueprintFile: null,
         blueprintName: '',
-        blueprintFileName: '',
+        blueprintYamlFile: '',
         imageUrl: '',
         imageFile: null
     });
+    const [uploadState, setUploadState] = useState();
 
-    const actions = useRef(new Stage.Common.BlueprintActions(toolbox));
+    const actions = useRef(new BlueprintActions(toolbox));
 
     useOpenProp(open, () => {
         unsetLoading();
@@ -30,7 +33,7 @@ function UploadBlueprintModal({ toolbox, open, onHide }) {
     function uploadBlueprint() {
         const {
             blueprintFile,
-            blueprintFileName,
+            blueprintYamlFile,
             blueprintName,
             imageFile,
             blueprintUrl: blueprintUrlState,
@@ -53,8 +56,8 @@ function UploadBlueprintModal({ toolbox, open, onHide }) {
             validationErrors.blueprintName = 'Please provide blueprint name';
         }
 
-        if (_.isEmpty(blueprintFileName)) {
-            validationErrors.blueprintFileName = 'Please provide blueprint YAML file';
+        if (_.isEmpty(blueprintYamlFile)) {
+            validationErrors.blueprintYamlFile = 'Please provide blueprint YAML file';
         }
 
         if (!_.isEmpty(imageUrl) && !Stage.Utils.Url.isUrl(blueprintUrl)) {
@@ -67,16 +70,29 @@ function UploadBlueprintModal({ toolbox, open, onHide }) {
         }
 
         // Disable the form
+        setUploadState(BlueprintActions.InProgressBlueprintStates.Pending);
         setLoading();
 
         actions.current
-            .doUpload(blueprintName, blueprintFileName, blueprintUrl, blueprintFile, imageUrl, imageFile, visibility)
+            .doUpload(
+                blueprintName,
+                blueprintYamlFile,
+                blueprintUrl,
+                blueprintFile,
+                imageUrl,
+                imageFile,
+                visibility,
+                setUploadState
+            )
             .then(() => {
                 clearErrors();
                 onHide();
                 toolbox.refresh();
             })
-            .catch(setMessageAsError)
+            .catch(e => {
+                setMessageAsError(e);
+                setUploadState(e.state);
+            })
             .finally(unsetLoading);
     }
 
@@ -84,7 +100,7 @@ function UploadBlueprintModal({ toolbox, open, onHide }) {
         setInputs(values);
     }
 
-    const { blueprintFile, blueprintFileName, blueprintName, blueprintUrl, imageFile, imageUrl } = inputs;
+    const { blueprintFile, blueprintYamlFile, blueprintName, blueprintUrl, imageFile, imageUrl } = inputs;
     const { ApproveButton, CancelButton, Icon, Modal, VisibilityField } = Stage.Basic;
     const { UploadBlueprintForm } = Stage.Common;
 
@@ -105,11 +121,12 @@ function UploadBlueprintModal({ toolbox, open, onHide }) {
                         blueprintUrl={blueprintUrl}
                         blueprintFile={blueprintFile}
                         blueprintName={blueprintName}
-                        blueprintFileName={blueprintFileName}
+                        blueprintFileName={blueprintYamlFile}
                         imageUrl={imageUrl}
                         imageFile={imageFile}
                         errors={errors}
                         loading={isLoading}
+                        uploadState={uploadState}
                         onChange={onFormFieldChange}
                         toolbox={toolbox}
                     />
