@@ -179,8 +179,8 @@ pipeline {
         echo 'concurrent build test'
         echo 'Trigger Stage-UI System-tests'
         build(job: 'Stage-UI-System-Test', parameters: [
-          string(name: 'BRANCH', value: "${env.BRANCH}"),
-          string(name: 'STAGE_BRANCH', value: "${env.BRANCH}"),
+          string(name: 'BRANCH', value: 'master'),
+          string(name: 'STAGE_BRANCH', value: 'master'),
           string(name: 'CENTOS_MANAGER', value: 'false'),
           string(name: 'UPDATE_STAGE_ON_MANAGER', value: 'false')
         ])
