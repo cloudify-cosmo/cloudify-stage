@@ -1,7 +1,7 @@
 const _ = require('lodash');
 const request = require('supertest');
 const app = require('app');
-const appConfig = require('conf/app.json');
+const appConfig = require('conf/config.json');
 const userConfig = require('conf/userConfig.json');
 
 describe('/config endpoint', () => {

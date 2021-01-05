@@ -1,58 +1,13 @@
 {
-  "maintenancePollingInterval": 10000,
-  "singleManager": true,
-
   "db": {
     "url": "postgres://cloudify:cloudify@localhost:5432/stage",
     "options": {
-      "dialect": "postgres",
-      "pool": {
-        "max": 20,
-        "min": 1,
-        "idle": 10000
-      },
       "dialectOptions": {
         "ssl": false
       }
     }
   },
-  "proxy": {
-    "timeouts": {
-      "get": 10000,
-      "post": 30000,
-      "put": 30000,
-      "delete": 10000,
-      "blueprintUpload": 70000
-    }
-  },
-  "github": {
-    "username": "secret(github-username)",
-    "password": "secret(github-password)"
-  },
-  "source": {
-    "browseSourcesDir": "/cloudifyBrowseSources",
-    "lookupYamlsDir": "/cloudifyLookupYamls"
-  },
-  "widgets": {
-    "ignoreFolders": ["common"],
-    "tempDir": "cloudifyWidgets",
-    "requiredFiles": ["widget.js", "widget.png"],
-    "backendFilename": "backend.js"
-  },
-  "ssl": {
-    "ca": "/etc/cloudify/ssl/cloudify_internal_ca_cert.pem"
-  },
-  "saml":{
-    "enabled": false,
-    "certPath": "",
-    "ssoUrl": "",
-    "portalUrl": ""
-  },
   "maps": {
     "accessToken": ""
-  },
-  "logsFile": "/var/log/cloudify/stage/server-output.log",
-  "errorsFile": "/var/log/cloudify/stage/server-error.log",
-  "logLevelConf": "/etc/cloudify/logging.conf",
-  "logLevel": "warn"
+  }
 }
