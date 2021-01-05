@@ -176,7 +176,7 @@ pipeline {
       //   branch "master"
       // }
       steps {
-        echo 'concurrent build testing'
+        echo 'concurrent build test'
         echo 'Trigger Stage-UI System-tests'
         build(job: 'Stage-UI-System-Test', parameters: [
           string(name: 'BRANCH', value: 'master'),
