@@ -21,7 +21,7 @@ pipeline {
   }
 
   environment {
-    branch = "${env.BRANCH_NAME}"
+    BRANCH = "${env.BRANCH_NAME}"
     workspace = "${env.WORKSPACE}"
     stage_dir = "cloudify-stage"
     cfy_manager_url = 'https://raw.githubusercontent.com/cloudify-cosmo/cloudify-manager'
@@ -64,7 +64,7 @@ pipeline {
               sh """
                 cd && mkdir rpmbuild && cd rpmbuild
                 mkdir -p BUILD && cp -rf ${workspace}/${stage_dir}/. BUILD && cd BUILD
-                curl -fO "${cfy_manager_url}/${branch}/packaging/version_info" || curl -fO "${cfy_manager_url}/master/packaging/version_info"
+                curl -fO "${cfy_manager_url}/${BRANCH}/packaging/version_info" || curl -fO "${cfy_manager_url}/master/packaging/version_info"
               """
 
               echo 'Install NodeJS & RPM development tools'
@@ -158,7 +158,7 @@ pipeline {
     }
     stage('Audit'){
       when {
-        branch "master"
+        BRANCH "master"
       }
       steps {
         catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE'){
@@ -172,12 +172,17 @@ pipeline {
       }
     }
     stage('Run Stage-UI System-tests') {
-      when {
-        branch "master"
-      }
+      // when {
+      //   BRANCH "master"
+      // }
       steps {
         echo 'Trigger Stage-UI System-tests'
-        build(job: 'Stage-UI-System-Test')
+        build(job: 'Stage-UI-System-Test', parameters: [
+          string(name: 'BRANCH', value: "${env.BRANCH}"),
+          string(name: 'STAGE_BRANCH', value: "${env.BRANCH}"),
+          string(name: 'CENTOS_MANAGER', value: 'false'),
+          string(name: 'UPDATE_STAGE_ON_MANAGER', value: 'false')
+        ])
       }
     }
   }
