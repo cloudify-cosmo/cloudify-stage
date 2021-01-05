@@ -158,7 +158,7 @@ pipeline {
     }
     stage('Audit'){
       when {
-        BRANCH "master"
+        branch "master"
       }
       steps {
         catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE'){
@@ -173,7 +173,7 @@ pipeline {
     }
     stage('Run Stage-UI System-tests') {
       // when {
-      //   BRANCH "master"
+      //   branch "master"
       // }
       steps {
         echo 'concurrent build test'
