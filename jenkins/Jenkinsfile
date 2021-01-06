@@ -172,9 +172,9 @@ pipeline {
       }
     }
     stage('Run Stage-UI System-tests') {
-      // when {
-      //   branch "master"
-      // }
+      when {
+        branch "master"
+      }
       steps {
         echo 'Trigger Stage-UI System-tests'
         build(job: 'Stage-UI-System-Test', parameters: [
