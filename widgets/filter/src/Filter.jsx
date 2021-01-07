@@ -159,13 +159,12 @@ export default class Filter extends React.Component {
             if (configuration[enabledConfigurationKey || `filterBy${joinedEntityName}s`]) {
                 const camelCaseEntityName = _.lowerFirst(joinedEntityName);
                 const { [stateProp || `${camelCaseEntityName}Id`]: value } = this.state;
+                const url = `/${fetchManagerEndpoint || `${entityName.replace(' ', '-').toLowerCase()}s`}`;
                 return (
                     <Form.Field key={entityName}>
                         <DynamicDropdown
                             multiple={configuration.allowMultipleSelection}
-                            fetchUrl={`/${
-                                fetchManagerEndpoint || `${entityName.replace(' ', '-').toLowerCase()}s`
-                            }?_include=${_(filter)
+                            fetchUrl={`${url}${url.indexOf('?') > 0 ? '&' : '?'}_include=${_(filter)
                                 .keys()
                                 .concat(valueProp || 'id')
                                 .concat(fetchIncludeExtra || [])
@@ -198,6 +197,7 @@ export default class Filter extends React.Component {
                         {[
                             createDropdown({
                                 entityName: 'Blueprint',
+                                fetchManagerEndpoint: 'blueprints?state=Uploaded',
                                 flushOnRefreshEvent: true
                             }),
                             createDropdown({
