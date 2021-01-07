@@ -1,0 +1,51 @@
+{
+    "items": [
+        {
+            "id": "uploaded",
+            "state": "Uploaded"
+        },
+        {
+            "id": "pending",
+            "state": "Pending"
+        },
+        {
+            "id": "uploading",
+            "state": "Uploading"
+        },
+        {
+            "id": "extracting",
+            "state": "Extracting"
+        },
+        {
+            "id": "parsing",
+            "state": "Parsing"
+        },
+        {
+            "id": "failed_uploading",
+            "state": "FailedUploading",
+            "error": "upload error"
+        },
+        {
+            "id": "failed_extracting",
+            "state": "FailedExtracting",
+            "error": "extract error"
+        },
+        {
+            "id": "failed_parsing",
+            "state": "FailedParsing",
+            "error": "parse error"
+        },
+        {
+            "id": "invalid",
+            "state": "Invalid",
+            "error": "invalid error"
+        }
+    ],
+    "metadata": {
+        "pagination": {
+            "total": 9,
+            "offset": 0,
+            "size": 9
+        }
+    }
+}

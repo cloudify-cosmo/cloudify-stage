@@ -41,11 +41,15 @@ export default class BlueprintList extends React.Component {
 
     selectBlueprint = item => {
         const { toolbox, widget } = this.props;
-        if (widget.configuration.clickToDrillDown) {
-            toolbox.drillDown(widget, 'blueprint', { blueprintId: item.id }, item.id);
-        } else {
-            const oldSelectedBlueprintId = toolbox.getContext().getValue('blueprintId');
-            toolbox.getContext().setValue('blueprintId', item.id === oldSelectedBlueprintId ? null : item.id);
+        const { BlueprintActions } = Stage.Common;
+
+        if (item.state === BlueprintActions.CompletedBlueprintStates.Uploaded) {
+            if (widget.configuration.clickToDrillDown) {
+                toolbox.drillDown(widget, 'blueprint', { blueprintId: item.id }, item.id);
+            } else {
+                const oldSelectedBlueprintId = toolbox.getContext().getValue('blueprintId');
+                toolbox.getContext().setValue('blueprintId', item.id === oldSelectedBlueprintId ? null : item.id);
+            }
         }
     };
 

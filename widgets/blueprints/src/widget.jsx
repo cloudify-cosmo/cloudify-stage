@@ -37,7 +37,13 @@ Stage.defineWidget({
             type: Stage.Basic.GenericField.LIST_TYPE
         },
         Stage.GenericConfig.SORT_COLUMN_CONFIG('created_at'),
-        Stage.GenericConfig.SORT_ASCENDING_CONFIG(false)
+        Stage.GenericConfig.SORT_ASCENDING_CONFIG(false),
+        {
+            id: 'hideFailedBlueprints',
+            name: 'Hide failed blueprints',
+            default: false,
+            type: Stage.Basic.GenericField.BOOLEAN_TYPE
+        }
     ],
 
     fetchData(widget, toolbox, params) {
@@ -45,6 +51,7 @@ Stage.defineWidget({
         return toolbox
             .getManager()
             .doGet(
+                // TODO: add state and error
                 '/blueprints?_include=id,updated_at,created_at,description,created_by,visibility,main_file_name',
                 params
             )
@@ -61,10 +68,19 @@ Stage.defineWidget({
                 return result;
             });
     },
-    fetchParams: (widget, toolbox) =>
-        toolbox.getContext().getValue('onlyMyResources')
-            ? { created_by: toolbox.getManager().getCurrentUsername() }
-            : {},
+    fetchParams: (widget, toolbox) => {
+        const params = {};
+
+        if (toolbox.getContext().getValue('onlyMyResources'))
+            params.created_by = toolbox.getManager().getCurrentUsername();
+
+        if (widget.configuration.hideFailedBlueprints) {
+            const { BlueprintActions } = Stage.Common;
+            params.state = BlueprintActions.CompletedBlueprintStates.Uploaded;
+        }
+
+        return params;
+    },
 
     processData(data, toolbox) {
         const blueprintsData = data.blueprints;
