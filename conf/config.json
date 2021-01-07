@@ -7,8 +7,7 @@
             "get": 10000,
             "post": 30000,
             "put": 30000,
-            "delete": 10000,
-            "blueprintUpload": 70000
+            "delete": 10000
         }
     },
     "github": {

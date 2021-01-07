@@ -20,12 +20,11 @@ describe('(Widgets common) BlueprintActions', () => {
         })
             .doUpload(null, null, null, null, null, null, null, onStateChanged)
             .then(() => {
-                expect(onStateChanged).toHaveBeenCalledTimes(5);
-                expect(onStateChanged).toHaveBeenNthCalledWith(1, InProgressBlueprintStates.Pending);
-                expect(onStateChanged).toHaveBeenNthCalledWith(2, InProgressBlueprintStates.Uploading);
-                expect(onStateChanged).toHaveBeenNthCalledWith(3, InProgressBlueprintStates.Extracting);
-                expect(onStateChanged).toHaveBeenNthCalledWith(4, InProgressBlueprintStates.Parsing);
-                expect(onStateChanged).toHaveBeenNthCalledWith(5, InProgressBlueprintStates.UploadingImage);
+                expect(onStateChanged).toHaveBeenCalledTimes(4);
+                expect(onStateChanged).toHaveBeenNthCalledWith(1, InProgressBlueprintStates.Uploading);
+                expect(onStateChanged).toHaveBeenNthCalledWith(2, InProgressBlueprintStates.Extracting);
+                expect(onStateChanged).toHaveBeenNthCalledWith(3, InProgressBlueprintStates.Parsing);
+                expect(onStateChanged).toHaveBeenNthCalledWith(4, InProgressBlueprintStates.UploadingImage);
             });
     });
 

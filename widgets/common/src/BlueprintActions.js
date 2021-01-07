@@ -117,7 +117,7 @@ export default class BlueprintActions {
     }
 
     async waitUntilUploaded(blueprintName, onStateChanged, maxNumberOfRetries = 60, waitingInterval = 1000 /* ms */) {
-        let blueprint;
+        let previousState = BlueprintActions.InProgressBlueprintStates.Pending;
         for (let i = 0; i < maxNumberOfRetries; i += 1) {
             // eslint-disable-next-line no-await-in-loop
             await new Promise(resolve => {
@@ -125,7 +125,7 @@ export default class BlueprintActions {
             });
 
             // eslint-disable-next-line no-await-in-loop
-            blueprint = await this.doGetFullBlueprintData({ id: blueprintName });
+            const blueprint = await this.doGetFullBlueprintData({ id: blueprintName });
 
             if (blueprint.state === BlueprintActions.CompletedBlueprintStates.Uploaded) {
                 return;
@@ -137,11 +137,15 @@ export default class BlueprintActions {
                 throw error;
             }
 
-            onStateChanged(blueprint.state);
+            if (blueprint.state !== previousState) {
+                i = 0;
+                onStateChanged(blueprint.state);
+                previousState = blueprint.state;
+            }
         }
 
         const timeout = Math.floor((maxNumberOfRetries * waitingInterval) / 1000);
-        throw Error(`Timeout exceeded. Blueprint was not uploaded after ${timeout} seconds.`);
+        throw Error(`Timeout exceeded. Blueprint upload state not updated for ${timeout} seconds.`);
     }
 
     doSetVisibility(blueprintId, visibility) {

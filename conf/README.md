@@ -13,7 +13,6 @@ The following section describes different configuration files used in cloudify-s
     * `post` - integer, POST request timeout (milliseconds)
     * `put` - integer, PUT request timeout (milliseconds)
     * `delete` - integer, DELETE request timeout (milliseconds)
-    * `blueprintUpload` - integer, blueprint upload request timeout (milliseconds)
 
 * `github` - object, configuration for accessing GitHub resources
   * `username` - string, GitHub username secret name, eg. "secret(github-username)"
