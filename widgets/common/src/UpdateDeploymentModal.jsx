@@ -211,7 +211,7 @@ function UpdateDeploymentModal({ deployment, open, onHide, toolbox }) {
                             value={blueprint.id}
                             placeholder="Select Blueprint"
                             name="blueprintName"
-                            fetchUrl="/blueprints?_include=id"
+                            fetchUrl="/blueprints?_include=id&state=Uploaded"
                             onChange={selectBlueprint}
                             toolbox={toolbox}
                         />

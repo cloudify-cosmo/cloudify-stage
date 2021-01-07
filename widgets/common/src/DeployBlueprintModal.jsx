@@ -391,7 +391,7 @@ class DeployBlueprintModal extends React.Component {
                                 <DynamicDropdown
                                     value={blueprint.id}
                                     name="blueprintName"
-                                    fetchUrl="/blueprints?_include=id"
+                                    fetchUrl="/blueprints?_include=id&state=Uploaded"
                                     onChange={this.selectBlueprint}
                                     toolbox={toolbox}
                                     prefetch

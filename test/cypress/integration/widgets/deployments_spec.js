@@ -146,7 +146,10 @@ describe('Deployments widget', () => {
         actOnDeployment(deploymentName, 'Update');
 
         cy.get('.updateDeploymentModal').within(() => {
-            cy.get('textarea[name="webserver_port"]').clear().type('9321');
+            cy.route(RegExp(`/console/sp\\?su=/blueprints.*&state=Uploaded`)).as('uploadedBlueprints');
+            cy.get('div[name=blueprintName]').click();
+            cy.wait('@uploadedBlueprints');
+            cy.get('textarea[name="webserver_port"]').clear({ force: true }).type('9321');
             cy.get('button.blue.ok').click();
         });
 

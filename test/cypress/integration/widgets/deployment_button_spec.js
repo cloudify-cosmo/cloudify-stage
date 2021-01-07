@@ -20,6 +20,7 @@ describe('Create Deployment Button widget', () => {
 
     beforeEach(() => {
         cy.refreshPage();
+        cy.route(RegExp(`/console/sp\\?su=/blueprints.*&state=Uploaded`)).as('uploadedBlueprints');
         cy.get('div.deploymentButtonWidget button').click();
     });
 
@@ -112,6 +113,7 @@ describe('Create Deployment Button widget', () => {
     };
 
     it('opens deployment modal', () => {
+        cy.wait('@uploadedBlueprints');
         cy.get('div.deployBlueprintModal').should('be.visible');
         cy.get('.actions > .ui:nth-child(1)').should('have.text', 'Cancel');
         cy.get('.actions > .ui:nth-child(2)').should('have.text', 'Deploy');
