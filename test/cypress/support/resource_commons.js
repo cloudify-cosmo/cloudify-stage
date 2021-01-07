@@ -6,7 +6,9 @@ export function waitUntilEmpty(resource, search, numberOfRetriesLeft = 60, waiti
         throw new Error(`Number of retries exceeded for resource=${resource}, search=${search}.`);
     }
 
-    cy.cfyRequest(`/${resource}?_search=${search}`, 'GET').then(response => {
+    let url = `/${resource}`;
+    if (search) url += `?_search=${search}`;
+    cy.cfyRequest(url, 'GET').then(response => {
         if (_.isEmpty(response.body.items)) {
             return;
         }

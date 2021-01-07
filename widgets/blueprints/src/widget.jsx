@@ -51,8 +51,7 @@ Stage.defineWidget({
         return toolbox
             .getManager()
             .doGet(
-                // TODO: add state and error
-                '/blueprints?_include=id,updated_at,created_at,description,created_by,visibility,main_file_name',
+                '/blueprints?_include=id,updated_at,created_at,description,created_by,visibility,main_file_name,state,error',
                 params
             )
             .then(data => {
