@@ -96,6 +96,7 @@ export default function BlueprintsCatalog({
                                 {_.capitalize(_.startCase(item.state))}
                                 {item.error && (
                                     <Popup
+                                        offset={[-11, 0]}
                                         trigger={<Icon link name="warning circle" color="red" />}
                                         content={item.error}
                                     />

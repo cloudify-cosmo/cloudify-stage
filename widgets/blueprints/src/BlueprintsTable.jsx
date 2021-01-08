@@ -67,7 +67,11 @@ export default function BlueprintsTable({
                     <DataTable.Data>
                         {_.capitalize(_.startCase(item.state))}
                         {item.error && (
-                            <Popup trigger={<Icon link name="warning circle" color="red" />} content={item.error} />
+                            <Popup
+                                offset={[-11, 0]}
+                                trigger={<Icon link name="warning circle" color="red" />}
+                                content={item.error}
+                            />
                         )}
                     </DataTable.Data>
                     <DataTable.Data>
