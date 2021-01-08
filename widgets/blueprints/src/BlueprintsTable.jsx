@@ -65,12 +65,13 @@ export default function BlueprintsTable({
                     <DataTable.Data>{item.created_by}</DataTable.Data>
                     <DataTable.Data>{item.main_file_name}</DataTable.Data>
                     <DataTable.Data>
-                        {_.capitalize(_.startCase(item.state))}
+                        {_.words(_.startCase(item.state))[0]}
                         {item.error && (
                             <Popup
                                 offset={[-11, 0]}
                                 trigger={<Icon link name="warning circle" color="red" />}
                                 content={item.error}
+                                header={_.capitalize(_.startCase(item.state))}
                             />
                         )}
                     </DataTable.Data>

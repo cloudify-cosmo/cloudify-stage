@@ -93,12 +93,13 @@ export default function BlueprintsCatalog({
                                 </Header>
                             </Grid.Column>
                             <Grid.Column width="9">
-                                {_.capitalize(_.startCase(item.state))}
+                                {_.words(_.startCase(item.state))[0]}
                                 {item.error && (
                                     <Popup
                                         offset={[-11, 0]}
                                         trigger={<Icon link name="warning circle" color="red" />}
                                         content={item.error}
+                                        header={_.capitalize(_.startCase(item.state))}
                                     />
                                 )}
                             </Grid.Column>

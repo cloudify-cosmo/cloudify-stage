@@ -56,28 +56,31 @@ describe('Blueprints widget', () => {
             });
 
             cy.contains('tr', 'failed_uploading').within(() => {
-                cy.contains('Failed uploading');
+                cy.contains('Failed');
                 cy.get('.trash').siblings().should('have.length', 0);
                 cy.get('.blueprintName').click();
                 cy.get('.warning').trigger('mouseover');
             });
             cy.contains('upload error');
+            cy.contains('Failed uploading');
 
             cy.contains('tr', 'failed_extracting').within(() => {
-                cy.contains('Failed extracting');
+                cy.contains('Failed');
                 cy.get('.trash').siblings().should('have.length', 0);
                 cy.get('.blueprintName').click();
                 cy.get('.warning').trigger('mouseover');
             });
             cy.contains('extract error');
+            cy.contains('Failed extracting');
 
             cy.contains('tr', 'failed_parsing').within(() => {
-                cy.contains('Failed parsing');
+                cy.contains('Failed');
                 cy.get('.trash').siblings().should('have.length', 0);
                 cy.get('.blueprintName').click();
                 cy.get('.warning').trigger('mouseover');
             });
             cy.contains('parse error');
+            cy.contains('Failed parsing');
 
             cy.contains('tr', 'invalid').within(() => {
                 cy.contains('Invalid');
@@ -149,35 +152,38 @@ describe('Blueprints widget', () => {
             cy.get('.failed_uploading')
                 .parent()
                 .within(() => {
-                    cy.contains('Failed uploading');
+                    cy.contains('Failed');
                     cy.get('.actionButtons').children().should('have.length', 1);
                     cy.get('.trash');
                     cy.get('a').click({ force: true });
                     cy.get('.warning').trigger('mouseover');
                 });
             cy.contains('upload error');
+            cy.contains('Failed uploading');
 
             cy.get('.failed_extracting')
                 .parent()
                 .within(() => {
-                    cy.contains('Failed extracting');
+                    cy.contains('Failed');
                     cy.get('.actionButtons').children().should('have.length', 1);
                     cy.get('.trash');
                     cy.get('a').click({ force: true });
                     cy.get('.warning').trigger('mouseover');
                 });
             cy.contains('extract error');
+            cy.contains('Failed extracting');
 
             cy.get('.failed_parsing')
                 .parent()
                 .within(() => {
-                    cy.contains('Failed parsing');
+                    cy.contains('Failed');
                     cy.get('.actionButtons').children().should('have.length', 1);
                     cy.get('.trash');
                     cy.get('a').click({ force: true });
                     cy.get('.warning').trigger('mouseover');
                 });
             cy.contains('parse error');
+            cy.contains('Failed parsing');
 
             cy.get('.invalid')
                 .parent()
