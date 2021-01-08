@@ -3,6 +3,7 @@
     bottom: 1rem;
     text-align: center;
     line-height: 3;
+    width: calc(100% - 14px);
 }
 
 .blueprintCatalog .segment {
@@ -15,5 +16,6 @@
 
 .uploadBlueprintButton {
     z-index: 5;
-    float: right;
+    position: absolute !important;
+    right: 12px;
 }
