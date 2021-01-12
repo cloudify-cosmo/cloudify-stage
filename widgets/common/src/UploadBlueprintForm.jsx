@@ -135,7 +135,7 @@ class UploadBlueprintForm extends React.Component {
     render() {
         const { loading: loadingState, yamlFiles } = this.state;
         const {
-            blueprintFileName,
+            blueprintYamlFile,
             blueprintName,
             errors,
             loading: loadingProp,
@@ -148,7 +148,7 @@ class UploadBlueprintForm extends React.Component {
         return (
             <UploadBlueprintBasicForm
                 errors={showErrorsSummary ? errors : {}}
-                blueprintYamlFile={blueprintFileName}
+                blueprintYamlFile={blueprintYamlFile}
                 blueprintName={blueprintName}
                 yamlFiles={yamlFiles}
                 uploadState={uploadState}
@@ -198,11 +198,11 @@ UploadBlueprintForm.propTypes = {
     blueprintUrl: PropTypes.string,
     blueprintFile: PropTypes.shape({}),
     blueprintName: PropTypes.string,
-    blueprintFileName: PropTypes.string,
+    blueprintYamlFile: PropTypes.string,
     imageUrl: PropTypes.string,
     imageFile: PropTypes.shape({}),
     errors: PropTypes.shape({
-        blueprintFileName: PropTypes.string,
+        blueprintYamlFile: PropTypes.string,
         blueprintName: PropTypes.string,
         blueprintUrl: PropTypes.string,
         imageUrl: PropTypes.string
@@ -218,7 +218,7 @@ UploadBlueprintForm.defaultProps = {
     blueprintUrl: '',
     blueprintFile: null,
     blueprintName: '',
-    blueprintFileName: '',
+    blueprintYamlFile: '',
     imageUrl: '',
     imageFile: null,
     errors: {},

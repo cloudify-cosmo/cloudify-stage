@@ -138,7 +138,7 @@ class BlueprintStepContent extends React.Component {
                     blueprintUrl={stepData.blueprintUrl}
                     blueprintFile={stepData.blueprintFile}
                     blueprintName={stepData.blueprintName}
-                    blueprintFileName={stepData.blueprintYamlFile}
+                    blueprintYamlFile={stepData.blueprintYamlFile}
                     imageUrl={stepData.imageUrl}
                     imageFile={stepData.imageFile}
                     loading={loading}

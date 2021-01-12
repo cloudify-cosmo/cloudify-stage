@@ -83,7 +83,7 @@ export default class BlueprintActions {
 
     doUpload(
         blueprintName,
-        blueprintFileName,
+        blueprintYamlFile,
         blueprintUrl,
         file,
         imageUrl,
@@ -93,8 +93,8 @@ export default class BlueprintActions {
     ) {
         const params = { visibility };
 
-        if (!_.isEmpty(blueprintFileName)) {
-            params.application_file_name = blueprintFileName;
+        if (!_.isEmpty(blueprintYamlFile)) {
+            params.application_file_name = blueprintYamlFile;
         }
         if (!_.isEmpty(blueprintUrl)) {
             params.blueprint_archive_url = blueprintUrl;

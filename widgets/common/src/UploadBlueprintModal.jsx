@@ -121,7 +121,7 @@ function UploadBlueprintModal({ toolbox, open, onHide }) {
                         blueprintUrl={blueprintUrl}
                         blueprintFile={blueprintFile}
                         blueprintName={blueprintName}
-                        blueprintFileName={blueprintYamlFile}
+                        blueprintYamlFile={blueprintYamlFile}
                         imageUrl={imageUrl}
                         imageFile={imageFile}
                         errors={errors}
