@@ -1,18 +1,19 @@
 const { InProgressBlueprintStates, CompletedBlueprintStates } = Stage.Common.BlueprintActions;
 
-const UploadLabels = {
-    [InProgressBlueprintStates.Pending]: '0/4: Waiting for blueprint upload to start...',
-    [InProgressBlueprintStates.Uploading]: '1/4: Uploading blueprint...',
-    [InProgressBlueprintStates.Extracting]: '2/4: Extracting blueprint...',
-    [InProgressBlueprintStates.Parsing]: '3/4: Parsing blueprint...',
-    [InProgressBlueprintStates.UploadingImage]: '4/4: Uploading image...'
-};
+const UploadLabels = _.mapValues(InProgressBlueprintStates, value =>
+    Stage.i18n.t(`widgets.common.blueprintUpload.uploadLabels.${_.lowerFirst(value)}`)
+);
 
-const UploadErrorHeaders = {
-    [CompletedBlueprintStates.FailedUploading]: 'Blueprint upload failed',
-    [CompletedBlueprintStates.FailedExtracting]: 'Blueprint extraction failed',
-    [CompletedBlueprintStates.FailedParsing]: 'Blueprint parsing failed'
-};
+const UploadErrorHeaders = _([
+    CompletedBlueprintStates.FailedUploading,
+    CompletedBlueprintStates.FailedExtracting,
+    CompletedBlueprintStates.FailedParsing
+])
+    .keyBy()
+    .mapValues(InProgressBlueprintStates, value =>
+        Stage.i18n.t(`widgets.common.blueprintUpload.errorHeaders.${_.lowerFirst(value)}`)
+    )
+    .value();
 
 function UploadBlueprintBasicForm({
     blueprintName,
@@ -40,15 +41,19 @@ function UploadBlueprintBasicForm({
                 {blueprintUploading && <LoadingOverlay message={UploadLabels[uploadState]} />}
                 {children && children[0]}
                 <Form.Field
-                    label="Blueprint name"
+                    label={Stage.i18n.t(`widgets.common.blueprintUpload.inputs.blueprintName.label`)}
                     required
                     error={errors.blueprintName}
-                    help="The package will be uploaded to the Manager as a Blueprint resource,
-                                              under the name you specify here."
+                    help={Stage.i18n.t(`widgets.common.blueprintUpload.inputs.blueprintName.help`)}
                 >
                     <Form.Input name="blueprintName" value={blueprintName} onChange={onInputChange} />
                 </Form.Field>
-                <Form.Field label="Blueprint YAML file" required error={errors.blueprintYamlFile} help={yamlFileHelp}>
+                <Form.Field
+                    label={Stage.i18n.t(`widgets.common.blueprintUpload.inputs.blueprintYamlFile.label`)}
+                    required
+                    error={errors.blueprintYamlFile}
+                    help={yamlFileHelp}
+                >
                     <Form.Dropdown
                         name="blueprintYamlFile"
                         search

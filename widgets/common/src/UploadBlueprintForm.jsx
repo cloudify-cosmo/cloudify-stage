@@ -154,24 +154,19 @@ class UploadBlueprintForm extends React.Component {
                 uploadState={uploadState}
                 formLoading={loadingState}
                 blueprintUploading={loadingProp}
-                yamlFileHelp="If you choose archive as blueprint package, you must specify
-                                  the blueprint YAML file for your environment,
-                                  because the archive can contain more than one YAML file."
+                yamlFileHelp={Stage.i18n.t(`widgets.common.blueprintUpload.inputs.blueprintYamlFile.label`)}
                 onInputChange={this.handleInputChange}
                 onErrorsDismiss={this.resetErrors}
             >
                 <Form.Field
-                    label="Blueprint package"
+                    label={Stage.i18n.t(`widgets.common.blueprintUpload.inputs.blueprintPackage.label`)}
                     required
                     error={errors.blueprintUrl}
-                    help="You can provide single YAML file or blueprint archive.
-                                  Supported types are: yml, yaml, zip, tar, tar.gz and tar.bz2.
-                                  The archive package must contain exactly one directory
-                                  that includes at least one YAML file."
+                    help={Stage.i18n.t(`widgets.common.blueprintUpload.inputs.blueprintPackage.help`)}
                 >
                     <Form.UrlOrFile
                         name="blueprint"
-                        placeholder="Provide the blueprint's URL or click browse to select a file"
+                        placeholder={Stage.i18n.t(`widgets.common.blueprintUpload.inputs.blueprintPackage.placeholder`)}
                         onChangeUrl={this.onBlueprintUrlChange}
                         onBlurUrl={this.onBlueprintUrlBlur}
                         onChangeFile={this.onBlueprintFileChange}
@@ -180,11 +175,11 @@ class UploadBlueprintForm extends React.Component {
                 <Form.Field
                     label="Blueprint icon"
                     error={errors.imageUrl}
-                    help="(Optional) The blueprint icon file is shown with the blueprint in the local blueprint widget."
+                    help={Stage.i18n.t(`widgets.common.blueprintUpload.inputs.blueprintIcon.help`)}
                 >
                     <Form.UrlOrFile
                         name="image"
-                        placeholder="Provide the image file URL or click browse to select a file"
+                        placeholder={Stage.i18n.t(`widgets.common.blueprintUpload.inputs.blueprintIcon.placeholder`)}
                         onChangeUrl={this.onBlueprintImageUrlChange}
                         onChangeFile={this.onBlueprintImageChange}
                     />
