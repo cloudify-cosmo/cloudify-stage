@@ -109,18 +109,17 @@ module.exports = (() => {
         return getPages(builtInPagesFolder, false);
     }
 
-    async function getRole(systemRole, groupSystemRoles, tenantsRoles, tenant, token) {
+    async function getRole(userSystemRole, groupSystemRoles, tenantsRoles, tenant, token) {
         const rbac = await AuthHandler.getRBAC(token);
         const { roles } = rbac;
-
-        logger.debug(
-            `${'Inputs for role calculation: systemRole='}${systemRole}, tenant=${tenant}, tenantsRoles=${JSON.stringify(
-                tenantsRoles
-            )}`
+        const userRoles = _.compact(
+            _.concat(_.get(tenantsRoles[tenant], 'roles', []), userSystemRole, _.keys(groupSystemRoles))
         );
 
-        const userRoles = _.compact(
-            _.concat(_.get(tenantsRoles[tenant], 'roles', []), systemRole, _.keys(groupSystemRoles))
+        logger.debug(
+            `Inputs for role calculation: systemRole=${userSystemRole}, tenant=${tenant}, tenantsRoles=${JSON.stringify(
+                tenantsRoles
+            )}, userRoles=${JSON.stringify(userRoles)}`
         );
 
         let result = null;
@@ -134,6 +133,30 @@ module.exports = (() => {
 
         logger.debug(`Calculated role: ${result}`);
         return result;
+    }
+
+    async function getSystemRole(userSystemRole, groupSystemRoles, token) {
+        const rbac = await AuthHandler.getRBAC(token);
+        const { roles } = rbac;
+
+        logger.debug(
+            `Inputs for system role calculation: userSystemRole=${userSystemRole}, groupSystemRoles=${JSON.stringify(
+                groupSystemRoles
+            )}`
+        );
+
+        const systemRoles = [userSystemRole, ..._.keys(groupSystemRoles)];
+        let systemRole = null;
+        for (let i = 0; i < roles.length; i += 1) {
+            const role = roles[i];
+            if (_.includes(systemRoles, role.name)) {
+                systemRole = role.name;
+                break;
+            }
+        }
+
+        logger.debug(`Calculated system role: ${systemRole}`);
+        return systemRole;
     }
 
     function listPages() {
@@ -282,12 +305,13 @@ module.exports = (() => {
         }).then(() => fs.writeJson(path, content, { spaces: '  ' }));
     }
 
-    async function selectTemplate(systemRole, groupSystemRoles, tenantsRoles, tenant, token) {
-        const role = await getRole(systemRole, groupSystemRoles, tenantsRoles, tenant, token);
+    async function selectTemplate(userSystemRole, groupSystemRoles, tenantsRoles, tenant, token) {
+        const role = await getRole(userSystemRole, groupSystemRoles, tenantsRoles, tenant, token);
+        const systemRole = await getSystemRole(userSystemRole, groupSystemRoles, token);
         const { mode } = ServerSettings.settings;
         let templateId = null;
 
-        logger.debug(`Template inputs: mode=${mode}, role=${role}, tenant=${tenant}`);
+        logger.debug(`Template inputs: mode=${mode}, role=${role}, systemRole=${systemRole}, tenant=${tenant}`);
 
         // Search user template
         if (mode === ServerSettings.MODE_MAIN) {
