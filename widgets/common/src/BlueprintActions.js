@@ -19,6 +19,10 @@ export default class BlueprintActions {
         Invalid: 'Invalid'
     };
 
+    static isUploaded(blueprint) {
+        return blueprint.state === BlueprintActions.CompletedBlueprintStates.Uploaded;
+    }
+
     constructor(toolbox) {
         this.toolbox = toolbox;
     }
@@ -127,7 +131,7 @@ export default class BlueprintActions {
             // eslint-disable-next-line no-await-in-loop
             const blueprint = await this.doGetFullBlueprintData({ id: blueprintName });
 
-            if (blueprint.state === BlueprintActions.CompletedBlueprintStates.Uploaded) {
+            if (BlueprintActions.isUploaded(blueprint)) {
                 return;
             }
 

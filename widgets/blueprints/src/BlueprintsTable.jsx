@@ -4,6 +4,7 @@
 
 import BlueprintsViewPropTypes from './props/BlueprintsViewPropTypes';
 import BlueprintsViewDefaultProps from './props/BlueprintsViewDefaultProps';
+import BlueprintState from './BlueprintState';
 
 export default function BlueprintsTable({
     data,
@@ -16,7 +17,7 @@ export default function BlueprintsTable({
     toolbox,
     widget
 }) {
-    const { DataTable, Icon, Image, Popup, ResourceVisibility } = Stage.Basic;
+    const { DataTable, Icon, Image, ResourceVisibility } = Stage.Basic;
     const { BlueprintActions } = Stage.Common;
     const tableName = 'blueprintsTable';
 
@@ -65,15 +66,7 @@ export default function BlueprintsTable({
                     <DataTable.Data>{item.created_by}</DataTable.Data>
                     <DataTable.Data>{item.main_file_name}</DataTable.Data>
                     <DataTable.Data>
-                        {_.words(_.startCase(item.state))[0]}
-                        {item.error && (
-                            <Popup
-                                offset={[-11, 0]}
-                                trigger={<Icon link name="warning circle" color="red" />}
-                                content={item.error}
-                                header={_.capitalize(_.startCase(item.state))}
-                            />
-                        )}
+                        <BlueprintState blueprint={item} />
                     </DataTable.Data>
                     <DataTable.Data>
                         <div className="ui green horizontal label">{item.depCount}</div>
@@ -82,7 +75,7 @@ export default function BlueprintsTable({
                     <DataTable.Data className="center aligned rowActions">
                         {BlueprintActions.CompletedBlueprintStates[item.state] && (
                             <>
-                                {item.state === BlueprintActions.CompletedBlueprintStates.Uploaded && (
+                                {BlueprintActions.isUploaded(item) && (
                                     <>
                                         {!toolbox.getManager().isCommunityEdition() && (
                                             <Icon

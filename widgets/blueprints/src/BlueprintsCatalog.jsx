@@ -3,6 +3,7 @@
  */
 import BlueprintsViewPropTypes from './props/BlueprintsViewPropTypes';
 import BlueprintsViewDefaultProps from './props/BlueprintsViewDefaultProps';
+import BlueprintState from './BlueprintState';
 
 export default function BlueprintsCatalog({
     data,
@@ -15,7 +16,7 @@ export default function BlueprintsCatalog({
     widget,
     toolbox
 }) {
-    const { DataSegment, Grid, Icon, Image, Button, Label, Popup, ResourceVisibility, Header } = Stage.Basic;
+    const { DataSegment, Grid, Image, Button, Label, ResourceVisibility, Header } = Stage.Basic;
     const { BlueprintActions } = Stage.Common;
     const manager = toolbox.getManager();
 
@@ -93,15 +94,7 @@ export default function BlueprintsCatalog({
                                 </Header>
                             </Grid.Column>
                             <Grid.Column width="9">
-                                {_.words(_.startCase(item.state))[0]}
-                                {item.error && (
-                                    <Popup
-                                        offset={[-11, 0]}
-                                        trigger={<Icon link name="warning circle" color="red" />}
-                                        content={item.error}
-                                        header={_.capitalize(_.startCase(item.state))}
-                                    />
-                                )}
+                                <BlueprintState blueprint={item} />
                             </Grid.Column>
                         </Grid.Row>
 
@@ -136,7 +129,7 @@ export default function BlueprintsCatalog({
                                 onDeleteBlueprint(item);
                             }}
                         />
-                        {item.state === BlueprintActions.CompletedBlueprintStates.Uploaded && (
+                        {BlueprintActions.isUploaded(item) && (
                             <>
                                 <Button
                                     icon="rocket"

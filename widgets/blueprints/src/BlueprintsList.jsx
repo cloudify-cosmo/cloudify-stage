@@ -43,7 +43,7 @@ export default class BlueprintList extends React.Component {
         const { toolbox, widget } = this.props;
         const { BlueprintActions } = Stage.Common;
 
-        if (item.state === BlueprintActions.CompletedBlueprintStates.Uploaded) {
+        if (BlueprintActions.isUploaded(item)) {
             if (widget.configuration.clickToDrillDown) {
                 toolbox.drillDown(widget, 'blueprint', { blueprintId: item.id }, item.id);
             } else {
