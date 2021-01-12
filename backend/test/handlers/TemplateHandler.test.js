@@ -1,3 +1,8 @@
+const mkdirp = require('mkdirp');
+const path = require('path');
+const fs = require('fs');
+const Utils = require('../../utils');
+
 const rbac = {
     roles: [
         {
@@ -30,6 +35,14 @@ const rbac = {
 
 describe('TemplateHandler', () => {
     describe('allows to select built-in template', () => {
+        const userTemplatesFolder = Utils.getResourcePath('templates', true);
+        const userPagesFolder = path.resolve(userTemplatesFolder, 'pages');
+        if (fs.existsSync(userTemplatesFolder)) {
+            fs.rmdirSync(userTemplatesFolder, { recursive: true });
+        }
+        mkdirp.sync(userTemplatesFolder);
+        mkdirp.sync(userPagesFolder);
+
         beforeEach(() => {
             jest.resetModules();
             jest.doMock('handler/AuthHandler', () => ({
