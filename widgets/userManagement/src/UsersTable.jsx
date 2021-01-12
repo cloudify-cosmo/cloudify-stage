@@ -68,7 +68,7 @@ function EnhancedIsAdminCheckbox({ user, settingUserRoleLoading, onAdminUserChan
 EnhancedIsAdminCheckbox.propTypes = {
     user: PropTypes.shape({
         username: PropTypes.string,
-        group_system_roles: PropTypes.arrayOf(PropTypes.string),
+        group_system_roles: PropTypes.shape({}),
         isAdmin: PropTypes.bool
     }).isRequired,
     settingUserRoleLoading: PropTypes.string.isRequired,
@@ -89,8 +89,8 @@ export default class UsersTable extends React.Component {
             user: UsersTable.EMPTY_USER,
             tenants: {},
             groups: {},
-            activateLoading: false,
-            settingUserRoleLoading: false
+            activateLoading: '',
+            settingUserRoleLoading: ''
         };
     }
 
@@ -162,7 +162,7 @@ export default class UsersTable extends React.Component {
         actions
             .doSetRole(user.username, Stage.Common.RolesUtil.getSystemRole(isAdmin))
             .then(() => {
-                this.setState({ error: null, settingUserRoleLoading: false });
+                this.setState({ error: null, settingUserRoleLoading: '' });
                 toolbox.loading(false);
                 if (this.isCurrentUser(user) && !isAdmin) {
                     toolbox.getEventBus().trigger('menu.users:logout');
@@ -171,7 +171,7 @@ export default class UsersTable extends React.Component {
                 }
             })
             .catch(err => {
-                this.setState({ error: err.message, settingUserRoleLoading: false });
+                this.setState({ error: err.message, settingUserRoleLoading: '' });
                 toolbox.loading(false);
             });
     }
@@ -243,7 +243,7 @@ export default class UsersTable extends React.Component {
         actions
             .doDeactivate(user.username)
             .then(() => {
-                this.setState({ error: null, activateLoading: false });
+                this.setState({ error: null, activateLoading: '' });
                 toolbox.loading(false);
                 if (this.isCurrentUser(user)) {
                     toolbox.getEventBus().trigger('menu.users:logout');
@@ -253,7 +253,7 @@ export default class UsersTable extends React.Component {
                 }
             })
             .catch(err => {
-                this.setState({ error: err.message, activateLoading: false });
+                this.setState({ error: err.message, activateLoading: '' });
                 toolbox.loading(false);
             });
     }
@@ -277,12 +277,12 @@ export default class UsersTable extends React.Component {
         actions
             .doActivate(user.username)
             .then(() => {
-                this.setState({ error: null, activateLoading: false });
+                this.setState({ error: null, activateLoading: '' });
                 toolbox.loading(false);
                 toolbox.refresh();
             })
             .catch(err => {
-                this.setState({ error: err.message, activateLoading: false });
+                this.setState({ error: err.message, activateLoading: '' });
                 toolbox.loading(false);
             });
     }
