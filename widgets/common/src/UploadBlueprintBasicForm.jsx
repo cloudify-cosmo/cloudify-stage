@@ -38,7 +38,7 @@ function UploadBlueprintBasicForm({
             onErrorsDismiss={onErrorsDismiss}
         >
             {blueprintUploading && <LoadingOverlay message={UploadLabels[uploadState]} />}
-            {children && children[0]}
+            {_.head(children)}
             <Form.Field
                 label={Stage.i18n.t(`widgets.common.blueprintUpload.inputs.blueprintName.label`)}
                 required
@@ -64,7 +64,7 @@ function UploadBlueprintBasicForm({
                     onChange={onInputChange}
                 />
             </Form.Field>
-            {children && children[1]}
+            {_.tail(children)}
         </Form>
     );
 }
