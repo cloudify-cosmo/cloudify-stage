@@ -34,12 +34,12 @@ IsAdminCheckbox.defaultProps = {
     disabled: false
 };
 
-function EnhancedIsAdminCheckbox({ user, settingUserRoleLoading, onAdminUserChange, onDefaultUserChange }) {
+function EnhancedIsAdminCheckbox({ user, usernameDuringRoleSetting, onAdminUserChange, onDefaultUserChange }) {
     const { Loader, Popup } = Stage.Basic;
     const isUserInAdminGroup = _.has(user.group_system_roles, Stage.Common.Consts.sysAdminRole);
     const isUserAnAdminUser = user.username === Stage.Common.Consts.adminUsername;
 
-    if (settingUserRoleLoading === user.username) {
+    if (usernameDuringRoleSetting === user.username) {
         return <Loader active inline size="mini" />;
     }
     if (isUserInAdminGroup && !isUserAnAdminUser) {
@@ -71,7 +71,7 @@ EnhancedIsAdminCheckbox.propTypes = {
         group_system_roles: PropTypes.shape({}),
         isAdmin: PropTypes.bool
     }).isRequired,
-    settingUserRoleLoading: PropTypes.string.isRequired,
+    usernameDuringRoleSetting: PropTypes.string.isRequired,
     onAdminUserChange: PropTypes.func.isRequired,
     onDefaultUserChange: PropTypes.func.isRequired
 };
@@ -89,8 +89,8 @@ export default class UsersTable extends React.Component {
             user: UsersTable.EMPTY_USER,
             tenants: {},
             groups: {},
-            activateLoading: '',
-            settingUserRoleLoading: ''
+            usernameDuringActivation: '',
+            usernameDuringRoleSetting: ''
         };
     }
 
@@ -156,13 +156,13 @@ export default class UsersTable extends React.Component {
     setRole(user, isAdmin) {
         const { toolbox } = this.props;
         toolbox.loading(true);
-        this.setState({ settingUserRoleLoading: user.username });
+        this.setState({ usernameDuringRoleSetting: user.username });
 
         const actions = new Actions(toolbox);
         actions
             .doSetRole(user.username, Stage.Common.RolesUtil.getSystemRole(isAdmin))
             .then(() => {
-                this.setState({ error: null, settingUserRoleLoading: '' });
+                this.setState({ error: null, usernameDuringRoleSetting: '' });
                 toolbox.loading(false);
                 if (this.isCurrentUser(user) && !isAdmin) {
                     toolbox.getEventBus().trigger('menu.users:logout');
@@ -171,7 +171,7 @@ export default class UsersTable extends React.Component {
                 }
             })
             .catch(err => {
-                this.setState({ error: err.message, settingUserRoleLoading: '' });
+                this.setState({ error: err.message, usernameDuringRoleSetting: '' });
                 toolbox.loading(false);
             });
     }
@@ -237,13 +237,13 @@ export default class UsersTable extends React.Component {
     deactivateUser(user) {
         const { toolbox } = this.props;
         toolbox.loading(true);
-        this.setState({ activateLoading: user.username });
+        this.setState({ usernameDuringActivation: user.username });
 
         const actions = new Actions(toolbox);
         actions
             .doDeactivate(user.username)
             .then(() => {
-                this.setState({ error: null, activateLoading: '' });
+                this.setState({ error: null, usernameDuringActivation: '' });
                 toolbox.loading(false);
                 if (this.isCurrentUser(user)) {
                     toolbox.getEventBus().trigger('menu.users:logout');
@@ -253,7 +253,7 @@ export default class UsersTable extends React.Component {
                 }
             })
             .catch(err => {
-                this.setState({ error: err.message, activateLoading: '' });
+                this.setState({ error: err.message, usernameDuringActivation: '' });
                 toolbox.loading(false);
             });
     }
@@ -271,32 +271,32 @@ export default class UsersTable extends React.Component {
     activateUser(user) {
         const { toolbox } = this.props;
         toolbox.loading(true);
-        this.setState({ activateLoading: user.username });
+        this.setState({ usernameDuringActivation: user.username });
 
         const actions = new Actions(toolbox);
         actions
             .doActivate(user.username)
             .then(() => {
-                this.setState({ error: null, activateLoading: '' });
+                this.setState({ error: null, usernameDuringActivation: '' });
                 toolbox.loading(false);
                 toolbox.refresh();
             })
             .catch(err => {
-                this.setState({ error: err.message, activateLoading: '' });
+                this.setState({ error: err.message, usernameDuringActivation: '' });
                 toolbox.loading(false);
             });
     }
 
     render() {
         const {
-            activateLoading,
             error,
             groups,
             modalType,
-            settingUserRoleLoading,
             showModal,
             tenants,
-            user
+            user,
+            usernameDuringActivation,
+            usernameDuringRoleSetting
         } = this.state;
         const { data, toolbox, widget } = this.props;
         const NO_DATA_MESSAGE = 'There are no Users available in manager. Click "Add" to add Users.';
@@ -344,11 +344,11 @@ export default class UsersTable extends React.Component {
                                             this.showModal(MenuAction.SET_DEFAULT_USER_ROLE_ACTION, item)
                                         }
                                         user={item}
-                                        settingUserRoleLoading={settingUserRoleLoading}
+                                        usernameDuringRoleSetting={usernameDuringRoleSetting}
                                     />
                                 </DataTable.Data>
                                 <DataTable.Data className="center aligned">
-                                    {activateLoading === item.username ? (
+                                    {usernameDuringActivation === item.username ? (
                                         <Loader active inline size="mini" />
                                     ) : (
                                         <Checkbox

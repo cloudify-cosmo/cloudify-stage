@@ -109,6 +109,14 @@ module.exports = (() => {
         return getPages(builtInPagesFolder, false);
     }
 
+    function getHighestRole(userRoles, allRoles) {
+        return _.get(
+            _.find(allRoles, role => _.includes(userRoles, role.name)),
+            'name',
+            null
+        );
+    }
+
     async function getRole(userSystemRole, groupSystemRoles, tenantsRoles, tenant, token) {
         const rbac = await AuthHandler.getRBAC(token);
         const { roles } = rbac;
@@ -122,22 +130,15 @@ module.exports = (() => {
             )}, userRoles=${JSON.stringify(userRoles)}`
         );
 
-        let result = null;
-        for (let i = 0; i < roles.length; i += 1) {
-            const role = roles[i].name;
-            if (_.includes(userRoles, role)) {
-                result = role;
-                break;
-            }
-        }
-
-        logger.debug(`Calculated role: ${result}`);
-        return result;
+        const role = getHighestRole(userRoles, roles);
+        logger.debug(`Calculated role: ${role}`);
+        return role;
     }
 
     async function getSystemRole(userSystemRole, groupSystemRoles, token) {
         const rbac = await AuthHandler.getRBAC(token);
         const { roles } = rbac;
+        const systemRoles = [userSystemRole, ..._.keys(groupSystemRoles)];
 
         logger.debug(
             `Inputs for system role calculation: userSystemRole=${userSystemRole}, groupSystemRoles=${JSON.stringify(
@@ -145,16 +146,7 @@ module.exports = (() => {
             )}`
         );
 
-        const systemRoles = [userSystemRole, ..._.keys(groupSystemRoles)];
-        let systemRole = null;
-        for (let i = 0; i < roles.length; i += 1) {
-            const role = roles[i];
-            if (_.includes(systemRoles, role.name)) {
-                systemRole = role.name;
-                break;
-            }
-        }
-
+        const systemRole = getHighestRole(systemRoles, roles);
         logger.debug(`Calculated system role: ${systemRole}`);
         return systemRole;
     }
