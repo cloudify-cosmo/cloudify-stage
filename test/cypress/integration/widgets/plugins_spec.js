@@ -2,7 +2,7 @@ describe('Plugins widget', () => {
     before(() => cy.activate('valid_trial_license').usePageMock('plugins').mockLogin());
 
     beforeEach(() => {
-        cy.deletePlugins();
+        cy.deletePlugins().refreshPage();
 
         cy.contains('Upload').click();
         cy.get('input[name=wagonUrl]').type(
