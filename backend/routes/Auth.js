@@ -18,37 +18,12 @@ router.use(bodyParser.urlencoded({ extended: true }));
 
 router.post('/login', (req, res) =>
     AuthHandler.getToken(req.headers.authorization)
-        .then(token =>
-            Promise.all([
-                AuthHandler.getTenants(token.value),
-                AuthHandler.getManagerVersion(token.value),
-                AuthHandler.getAndCacheConfig(token.value),
-                Promise.resolve(token)
-            ])
-        )
-        .then(([tenants, version, rbac, token]) => {
-            if (!!tenants && !!tenants.items && tenants.items.length > 0) {
-                res.cookie(Consts.TOKEN_COOKIE_NAME, token.value);
-
-                return AuthHandler.isProductLicensed(version)
-                    ? AuthHandler.getLicense(token.value).then(data => ({
-                          license: _.get(data, 'items[0]', {}),
-                          version,
-                          role: token.role,
-                          rbac
-                      }))
-                    : Promise.resolve({
-                          license: null,
-                          version,
-                          role: token.role,
-                          rbac
-                      });
-            }
-            return Promise.reject({ message: 'User has no tenants', error_code: 'no_tenants' });
+        .then(token => {
+            res.cookie(Consts.TOKEN_COOKIE_NAME, token.value);
+            res.send({ role: token.role });
         })
-        .then(({ license, version, role, rbac }) => res.send({ license, version, role, rbac }))
         .catch(err => {
-            logger.error(err);
+            logger.error(JSON.stringify(err));
             if (err.error_code === 'unauthorized_error') {
                 res.status(401).send({ message: err.message || 'Invalid credentials', error: err });
             } else if (err.error_code === 'maintenance_mode_active') {
@@ -60,23 +35,42 @@ router.post('/login', (req, res) =>
 );
 
 router.post('/saml/callback', passport.authenticate('saml', { session: false }), (req, res) => {
+    logger.error(JSON.stringify(req.body), JSON.stringify(req.user));
     if (!req.body || !req.body.SAMLResponse || !req.user) {
-        res.status(401).send('Invalid Request');
+        res.status(401).send({ message: 'Invalid Request' });
+    } else {
+        AuthHandler.getTokenViaSamlResponse(req.body.SAMLResponse)
+            .then(token => {
+                res.cookie(Consts.TOKEN_COOKIE_NAME, token.value);
+                res.redirect(Consts.CONTEXT_PATH);
+            })
+            .catch(err => {
+                logger.error(err);
+                res.status(500).send({ message: 'Failed to authenticate with manager' });
+            });
     }
+});
 
-    AuthHandler.getTokenViaSamlResponse(req.body.SAMLResponse)
-        .then(token =>
-            Promise.all([
-                AuthHandler.getAndCacheConfig(token.value),
-                () => {
-                    res.cookie(Consts.TOKEN_COOKIE_NAME, token.value);
-                    res.redirect(Consts.CONTEXT_PATH);
-                }
-            ])
+router.get('/manager', passport.authenticate('token', { session: false }), (req, res) => {
+    const token = req.headers['authentication-token'];
+    Promise.all([AuthHandler.getManagerVersion(token), AuthHandler.getAndCacheConfig(token)])
+        .then(([version, rbac]) =>
+            AuthHandler.isProductLicensed(version)
+                ? AuthHandler.getLicense(token).then(data => ({
+                      license: _.get(data, 'items[0]', {}),
+                      version,
+                      rbac
+                  }))
+                : Promise.resolve({
+                      license: null,
+                      version,
+                      rbac
+                  })
         )
-        .catch(err => {
-            logger.error(err);
-            res.status(500).send({ message: 'Failed to authenticate with manager', error: err });
+        .then(data => res.send(data))
+        .catch(error => {
+            logger.error(JSON.stringify(error));
+            res.status(500).send({ message: 'Failed to get manager data' });
         });
 });
 

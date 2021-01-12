@@ -4,40 +4,25 @@ import { setAppError, setAppLoading } from './appState';
 import { loadTemplates } from './templates';
 import { loadTours } from './tours';
 import { loadWidgetDefinitions } from './widgets';
-import { getTenants } from './tenants';
+
 import { getClientConfig } from './clientConfig';
 import { loadOrCreateUserAppData } from './userApp';
-import { getLdap, getUserData } from './managers';
+import { getLdap } from './managers';
 import { getClusterStatus } from './clusterStatus';
-import { NO_TENANTS_ERR } from '../utils/ErrorCodes';
 
 export function intialPageLoad() {
-    return (dispatch, getState) => {
+    return dispatch => {
         dispatch(setAppLoading(true));
-        const state = getState();
-        return dispatch(getTenants(state.manager))
-            .then(() => {
-                if (getState().manager.tenants.items.length === 0) {
-                    log.log('User is not attached to any tenant, cannot login');
-                    dispatch(setAppLoading(false));
-                    return Promise.reject(NO_TENANTS_ERR);
-                }
-                return Promise.resolve();
-            })
-            .then(() => dispatch(getUserData()))
-            .then(() => {
-                return Promise.all([
-                    dispatch(loadTemplates()),
-                    dispatch(loadTours()),
-                    dispatch(loadWidgetDefinitions()),
-                    dispatch(getClientConfig()),
-                    dispatch(getClusterStatus()),
-                    dispatch(getLdap())
-                ]);
-            })
-            .then(() => {
-                return dispatch(loadOrCreateUserAppData());
-            })
+
+        return Promise.all([
+            dispatch(loadTemplates()),
+            dispatch(loadTours()),
+            dispatch(loadWidgetDefinitions()),
+            dispatch(getClientConfig()),
+            dispatch(getClusterStatus()),
+            dispatch(getLdap())
+        ])
+            .then(() => dispatch(loadOrCreateUserAppData()))
             .then(() => {
                 dispatch(setAppLoading(false));
                 dispatch(setAppError(null));

@@ -33,14 +33,15 @@ function errorTenants(err) {
     };
 }
 
-export function getTenants(manager) {
-    const managerAccessor = new Manager(manager);
-    return dispatch => {
+export function getTenants() {
+    return (dispatch, getState) => {
         dispatch(requestTenants());
+        const managerAccessor = new Manager(getState().manager);
         return managerAccessor
             .doGet('/tenants', { _include: 'name', _get_all_results: true })
             .then(tenants => {
                 dispatch(recieveTenants(tenants));
+                return Promise.resolve(tenants);
             })
             .catch(err => {
                 log.error(err);

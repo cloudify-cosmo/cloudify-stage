@@ -12,7 +12,7 @@ import Consts from '../utils/consts';
 import Manager from '../utils/Manager';
 import ExecutionUtils from '../utils/shared/ExecutionUtils';
 import { clearContext } from './context';
-import { setLicense } from './license';
+import { setLicense, setLicenseRequired } from './license';
 import { setVersion } from './version';
 
 function requestLogin() {
@@ -21,12 +21,11 @@ function requestLogin() {
     };
 }
 
-function receiveLogin(username, role, licenseRequired) {
+function receiveLogin(username, role) {
     return {
         type: types.RES_LOGIN,
         username,
         role,
-        licenseRequired,
         receivedAt: Date.now()
     };
 }
@@ -52,13 +51,8 @@ export function login(username, password, redirect) {
     return dispatch => {
         dispatch(requestLogin());
         return Auth.login(username, password)
-            .then(({ role, version, license, rbac }) => {
-                dispatch(receiveLogin(username, role, !_.isNull(license)));
-                dispatch(setVersion(version));
-                dispatch(setLicense(license));
-                dispatch(storeRBAC(rbac));
-            })
-            .then(() => {
+            .then(({ role }) => {
+                dispatch(receiveLogin(username, role));
                 if (redirect) {
                     // eslint-disable-next-line scanjs-rules/assign_to_location
                     window.location = redirect;
@@ -68,17 +62,7 @@ export function login(username, password, redirect) {
             })
             .catch(err => {
                 log.log(err);
-                if (err.status === 403) {
-                    dispatch(errorLogin(username));
-                    dispatch(
-                        push({
-                            pathname: Consts.ERROR_NO_TENANTS_PAGE_PATH,
-                            search: redirect ? `?redirect=${redirect}` : ''
-                        })
-                    );
-                } else {
-                    dispatch(errorLogin(username, err));
-                }
+                dispatch(errorLogin(username, err));
             });
     };
 }
@@ -91,6 +75,16 @@ function responseUserData(username, systemRole, groupSystemRoles, tenantsRoles) 
         groupSystemRoles,
         tenantsRoles
     };
+}
+
+export function getManagerData() {
+    return (dispatch, getState) =>
+        Auth.getManagerData(getState().manager).then(({ version, license, rbac }) => {
+            dispatch(setVersion(version));
+            dispatch(setLicenseRequired(!_.isEqual(version.edition, Consts.EDITION.COMMUNITY)));
+            dispatch(setLicense(license));
+            dispatch(storeRBAC(rbac));
+        });
 }
 
 export function getUserData() {
@@ -125,9 +119,9 @@ function doLogout(err) {
 export function logout(err, path) {
     return (dispatch, getState) => {
         const localLogout = () => {
-            dispatch(push(path || (err ? Consts.ERROR_PAGE_PATH : Consts.LOGOUT_PAGE_PATH)));
             dispatch(clearContext());
             dispatch(doLogout(err));
+            dispatch(push(path || (err ? Consts.ERROR_PAGE_PATH : Consts.LOGOUT_PAGE_PATH)));
         };
 
         return Auth.logout(getState().manager).then(localLogout, localLogout);
