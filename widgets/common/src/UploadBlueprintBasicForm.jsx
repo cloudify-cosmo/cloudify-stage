@@ -31,43 +31,41 @@ function UploadBlueprintBasicForm({
     const { Form, LoadingOverlay } = Stage.Basic;
 
     return (
-        <>
-            <Form
-                loading={formLoading}
-                errorMessageHeader={!_.isEmpty(errors) ? UploadErrorHeaders[uploadState] : null}
-                errors={errors}
-                onErrorsDismiss={onErrorsDismiss}
+        <Form
+            loading={formLoading}
+            errorMessageHeader={!_.isEmpty(errors) ? UploadErrorHeaders[uploadState] : null}
+            errors={errors}
+            onErrorsDismiss={onErrorsDismiss}
+        >
+            {blueprintUploading && <LoadingOverlay message={UploadLabels[uploadState]} />}
+            {children && children[0]}
+            <Form.Field
+                label={Stage.i18n.t(`widgets.common.blueprintUpload.inputs.blueprintName.label`)}
+                required
+                error={errors.blueprintName}
+                help={Stage.i18n.t(`widgets.common.blueprintUpload.inputs.blueprintName.help`)}
             >
-                {blueprintUploading && <LoadingOverlay message={UploadLabels[uploadState]} />}
-                {children && children[0]}
-                <Form.Field
-                    label={Stage.i18n.t(`widgets.common.blueprintUpload.inputs.blueprintName.label`)}
-                    required
-                    error={errors.blueprintName}
-                    help={Stage.i18n.t(`widgets.common.blueprintUpload.inputs.blueprintName.help`)}
-                >
-                    <Form.Input name="blueprintName" value={blueprintName} onChange={onInputChange} />
-                </Form.Field>
-                <Form.Field
-                    label={Stage.i18n.t(`widgets.common.blueprintUpload.inputs.blueprintYamlFile.label`)}
-                    required
-                    error={errors.blueprintYamlFile}
-                    help={yamlFileHelp}
-                >
-                    <Form.Dropdown
-                        name="blueprintYamlFile"
-                        search
-                        selection
-                        options={_.map(yamlFiles, item => {
-                            return { text: item, value: item };
-                        })}
-                        value={blueprintYamlFile}
-                        onChange={onInputChange}
-                    />
-                </Form.Field>
-                {children && children[1]}
-            </Form>
-        </>
+                <Form.Input name="blueprintName" value={blueprintName} onChange={onInputChange} />
+            </Form.Field>
+            <Form.Field
+                label={Stage.i18n.t(`widgets.common.blueprintUpload.inputs.blueprintYamlFile.label`)}
+                required
+                error={errors.blueprintYamlFile}
+                help={yamlFileHelp}
+            >
+                <Form.Dropdown
+                    name="blueprintYamlFile"
+                    search
+                    selection
+                    options={_.map(yamlFiles, item => {
+                        return { text: item, value: item };
+                    })}
+                    value={blueprintYamlFile}
+                    onChange={onInputChange}
+                />
+            </Form.Field>
+            {children && children[1]}
+        </Form>
     );
 }
 
