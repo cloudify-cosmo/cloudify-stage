@@ -5,13 +5,13 @@ describe('Login', () => {
         cy.location('pathname').should('be.equal', '/console/');
     });
 
-    it('fails when provided credentials are valid, license is active but user is not authorized', () => {
+    it('fails when provided credentials are valid, license is active but user has no tenants assigned', () => {
         cy.server();
         cy.route({
-            method: 'POST',
-            url: '/console/auth/login',
-            status: 403,
-            response: ''
+            method: 'GET',
+            url: '/console/sp?su=/tenants?_include=name&_get_all_results=true',
+            status: 200,
+            response: { items: [] }
         });
 
         cy.activate().login();
@@ -23,7 +23,7 @@ describe('Login', () => {
     it('succeeds and redirects when provided credentials are valid, license is active and redirect query parameter is specified', () => {
         cy.activate();
 
-        const redirectUrl = '/console/page/logs';
+        const redirectUrl = '/console/page/deployments';
         cy.visit(`/console/login?redirect=${redirectUrl}`);
 
         cy.usePageMock().login();
