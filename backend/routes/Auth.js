@@ -44,7 +44,7 @@ router.post('/saml/callback', passport.authenticate('saml', { session: false }),
                 res.redirect(Consts.CONTEXT_PATH);
             })
             .catch(err => {
-                logger.error(err);
+                logger.error(JSON.stringify(err));
                 res.status(500).send({ message: 'Failed to authenticate with manager' });
             });
     }
@@ -91,7 +91,7 @@ router.get('/RBAC', passport.authenticate('token', { session: false }), (req, re
     AuthHandler.getRBAC(req.headers['authentication-token'])
         .then(res.send)
         .catch(err => {
-            logger.error(err);
+            logger.error(JSON.stringify(err));
             res.status(500).send({ message: 'Failed to get RBAC configuration', error: err });
         });
 });
