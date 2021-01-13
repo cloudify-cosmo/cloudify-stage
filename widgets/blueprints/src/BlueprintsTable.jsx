@@ -73,7 +73,7 @@ export default function BlueprintsTable({
                     </DataTable.Data>
 
                     <DataTable.Data className="center aligned rowActions">
-                        {BlueprintActions.CompletedBlueprintStates[item.state] && (
+                        {BlueprintActions.isCompleted(item) && (
                             <>
                                 {BlueprintActions.isUploaded(item) && (
                                     <>

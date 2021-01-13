@@ -4,23 +4,27 @@
 
 export default class BlueprintActions {
     static InProgressBlueprintStates = {
-        Pending: 'Pending',
-        Uploading: 'Uploading',
-        Extracting: 'Extracting',
-        Parsing: 'Parsing',
-        UploadingImage: 'UploadingImage'
+        Pending: 'pending',
+        Uploading: 'uploading',
+        Extracting: 'extracting',
+        Parsing: 'parsing',
+        UploadingImage: 'uploading_image'
     };
 
     static CompletedBlueprintStates = {
-        Uploaded: 'Uploaded',
-        FailedUploading: 'FailedUploading',
-        FailedExtracting: 'FailedExtracting',
-        FailedParsing: 'FailedParsing',
-        Invalid: 'Invalid'
+        Uploaded: 'uploaded',
+        FailedUploading: 'failed_uploading',
+        FailedExtracting: 'failed_extracting',
+        FailedParsing: 'failed_parsing',
+        Invalid: 'invalid'
     };
 
     static isUploaded(blueprint) {
         return blueprint.state === BlueprintActions.CompletedBlueprintStates.Uploaded;
+    }
+
+    static isCompleted(blueprint) {
+        return _.values(BlueprintActions.CompletedBlueprintStates).indexOf(blueprint.state) >= 0;
     }
 
     constructor(toolbox) {
@@ -109,7 +113,7 @@ export default class BlueprintActions {
             const compressFile = _.endsWith(file.name, '.yaml') || _.endsWith(file.name, '.yml');
             promise = this.toolbox
                 .getManager()
-                .doUpload(`/blueprints/${blueprintName}`, params, file, undefined, undefined, compressFile);
+                .doUpload(`/blueprints/${blueprintName}`, params, file, undefined, false, compressFile);
         } else {
             promise = this.toolbox.getManager().doPut(`/blueprints/${blueprintName}`, params);
         }
@@ -135,7 +139,7 @@ export default class BlueprintActions {
                 return;
             }
 
-            if (BlueprintActions.CompletedBlueprintStates[blueprint.state]) {
+            if (BlueprintActions.isCompleted(blueprint)) {
                 const error = Error(blueprint.error);
                 error.state = blueprint.state;
                 throw error;

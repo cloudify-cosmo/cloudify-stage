@@ -1,8 +1,9 @@
 const { InProgressBlueprintStates, CompletedBlueprintStates } = Stage.Common.BlueprintActions;
 
-const UploadLabels = _.mapValues(InProgressBlueprintStates, value =>
-    Stage.i18n.t(`widgets.common.blueprintUpload.uploadLabels.${_.lowerFirst(value)}`)
-);
+const UploadLabels = _(InProgressBlueprintStates)
+    .keyBy()
+    .mapValues(value => Stage.i18n.t(`widgets.common.blueprintUpload.uploadLabels.${_.camelCase(value)}`))
+    .value();
 
 const UploadErrorHeaders = _([
     CompletedBlueprintStates.FailedUploading,
@@ -10,9 +11,7 @@ const UploadErrorHeaders = _([
     CompletedBlueprintStates.FailedParsing
 ])
     .keyBy()
-    .mapValues(InProgressBlueprintStates, value =>
-        Stage.i18n.t(`widgets.common.blueprintUpload.errorHeaders.${_.lowerFirst(value)}`)
-    )
+    .mapValues(value => Stage.i18n.t(`widgets.common.blueprintUpload.errorHeaders.${_.camelCase(value)}`))
     .value();
 
 function UploadBlueprintBasicForm({

@@ -117,7 +117,7 @@ export default function BlueprintsCatalog({
                     </Grid.Column>
                 </DataSegment.Item>
 
-                {BlueprintActions.CompletedBlueprintStates[item.state] && (
+                {BlueprintActions.isCompleted(item) && (
                     <div className="actionButtons">
                         <Button
                             icon="trash"
