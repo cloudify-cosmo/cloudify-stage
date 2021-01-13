@@ -10,6 +10,11 @@ describe('Community version', () => {
                     'Set-Cookie': `XSRF-TOKEN=${token}; Path=/`
                 }
             });
+            cy.route({
+                method: 'GET',
+                url: '/console/auth/manager',
+                response: 'fixture:community/manager.json'
+            });
             cy.route('/console/config', 'fixture:community/config.json');
             cy.usePageMock().login();
         });
