@@ -4,7 +4,7 @@ import log from 'loglevel';
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Route, Redirect, Switch } from 'react-router-dom';
-import { NO_TENANTS_ERR, UNAUTHORIZED_ERR } from '../utils/ErrorCodes';
+import { NO_TENANTS_ERR } from '../utils/ErrorCodes';
 import { useBoolean } from '../utils/hooks';
 import { getTenants } from '../actions/tenants';
 
@@ -17,7 +17,8 @@ import MaintenanceMode from '../containers/maintenance/MaintenanceModePageMessag
 import SplashLoadingScreen from '../utils/SplashLoadingScreen';
 
 export default function AuthRoutes() {
-    const [isInitialized, setInitialized /* , unsetInitialized */] = useBoolean();
+    const [isManagerDataFetched, setManagerDataFetched /* , unsetManagerDataFetched */] = useBoolean();
+    const [isUserDataFetched, setUserDataFetched /* , unsetUserDataFetched */] = useBoolean();
     const isInMaintenanceMode = useSelector(
         state => _.get(state, 'manager.maintenance') === Consts.MAINTENANCE_ACTIVATED
     );
@@ -27,13 +28,13 @@ export default function AuthRoutes() {
 
     useEffect(() => {
         SplashLoadingScreen.turnOn();
-        Promise.all([dispatch(getManagerData()), dispatch(getUserData())])
+        dispatch(getManagerData())
             .then(() => dispatch(getTenants()))
             .then(tenants => {
                 if (_.size(tenants.items) === 0) {
                     return Promise.reject(NO_TENANTS_ERR);
                 }
-                setInitialized();
+                setManagerDataFetched();
                 return Promise.resolve();
             })
             .catch(error => {
@@ -41,35 +42,39 @@ export default function AuthRoutes() {
                     case NO_TENANTS_ERR:
                         dispatch(logout(null, Consts.ERROR_NO_TENANTS_PAGE_PATH));
                         break;
-                    case UNAUTHORIZED_ERR: // Handled by Interceptor
-                        break;
                     default:
                         log.error(error);
-                        dispatch(logout(i18n.t('pageLoadError')));
+                        dispatch(logout(i18n.t('managerDataError')));
                 }
             });
     }, []);
 
-    if (!isInitialized) {
-        return null;
-    }
+    useEffect(() => {
+        if (isProductOperational && isManagerDataFetched) {
+            dispatch(getUserData())
+                .then(setUserDataFetched)
+                .catch(error => {
+                    log.error(error);
+                    dispatch(logout(i18n.t('pageLoadError')));
+                });
+        }
+    }, [isManagerDataFetched]);
 
-    return (
+    return isManagerDataFetched ? (
         <Switch>
             {isLicenseRequired && <Route exact path={Consts.LICENSE_PAGE_PATH} component={LicensePage} />}
             <Route exact path={Consts.MAINTENANCE_PAGE_PATH} component={MaintenanceMode} />
+            {isInMaintenanceMode && <Redirect to={Consts.MAINTENANCE_PAGE_PATH} />}
             <Route
-                render={props => {
-                    if (isInMaintenanceMode) {
-                        return <Redirect to={Consts.MAINTENANCE_PAGE_PATH} />;
-                    }
-                    if (isProductOperational) {
+                render={props =>
+                    isProductOperational ? (
                         // eslint-disable-next-line react/jsx-props-no-spreading
-                        return <Layout {...props} />;
-                    }
-                    return <Redirect to={Consts.LICENSE_PAGE_PATH} />;
-                }}
+                        isUserDataFetched && <Layout {...props} />
+                    ) : (
+                        <Redirect to={Consts.LICENSE_PAGE_PATH} />
+                    )
+                }
             />
         </Switch>
-    );
+    ) : null;
 }

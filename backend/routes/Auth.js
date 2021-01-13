@@ -50,7 +50,7 @@ router.post('/saml/callback', passport.authenticate('saml', { session: false }),
     }
 });
 
-router.get('/manager', passport.authenticate('token', { session: false }), (req, res) => {
+router.get('/manager', (req, res) => {
     const token = req.headers['authentication-token'];
     Promise.all([AuthHandler.getManagerVersion(token), AuthHandler.getAndCacheConfig(token)])
         .then(([version, rbac]) =>
