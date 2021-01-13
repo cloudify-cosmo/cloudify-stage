@@ -41,7 +41,7 @@ export function getTenants() {
             .doGet('/tenants', { _include: 'name', _get_all_results: true })
             .then(tenants => {
                 dispatch(recieveTenants(tenants));
-                return Promise.resolve(tenants);
+                return tenants;
             })
             .catch(err => {
                 log.error(err);

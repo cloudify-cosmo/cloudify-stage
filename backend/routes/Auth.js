@@ -35,7 +35,6 @@ router.post('/login', (req, res) =>
 );
 
 router.post('/saml/callback', passport.authenticate('saml', { session: false }), (req, res) => {
-    logger.error(JSON.stringify(req.body), JSON.stringify(req.user));
     if (!req.body || !req.body.SAMLResponse || !req.user) {
         res.status(401).send({ message: 'Invalid Request' });
     } else {
@@ -61,11 +60,11 @@ router.get('/manager', passport.authenticate('token', { session: false }), (req,
                       version,
                       rbac
                   }))
-                : Promise.resolve({
+                : {
                       license: null,
                       version,
                       rbac
-                  })
+                  }
         )
         .then(data => res.send(data))
         .catch(error => {

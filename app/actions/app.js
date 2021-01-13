@@ -11,7 +11,7 @@ import { getLdap } from './managers';
 import { getClusterStatus } from './clusterStatus';
 
 export function intialPageLoad() {
-    return dispatch => {
+    return (dispatch /* , getState */) => {
         dispatch(setAppLoading(true));
 
         return Promise.all([

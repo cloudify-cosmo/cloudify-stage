@@ -6,6 +6,18 @@ describe('/auth endpoint', () => {
             jest.resetModules();
         });
 
+        it('valid token', () => {
+            jest.doMock('handler/AuthHandler', () => ({
+                getToken: () => Promise.resolve({ value: 'xyz', role: 'default' })
+            }));
+            return request(require('app'))
+                .post('/console/auth/login')
+                .expect(200)
+                .then(response => {
+                    expect(response.body).toStrictEqual({ role: 'default' });
+                });
+        });
+
         it('manager maintenance mode', () => {
             jest.doMock('handler/AuthHandler', () => ({
                 getToken: () => Promise.reject({ error_code: 'maintenance_mode_active' })

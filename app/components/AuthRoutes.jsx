@@ -1,10 +1,11 @@
 import _ from 'lodash';
 import i18n from 'i18next';
 import log from 'loglevel';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Route, Redirect, Switch } from 'react-router-dom';
 import { NO_TENANTS_ERR, UNAUTHORIZED_ERR } from '../utils/ErrorCodes';
+import { useBoolean } from '../utils/hooks';
 import { getTenants } from '../actions/tenants';
 
 import Auth from '../utils/auth';
@@ -16,7 +17,7 @@ import MaintenanceMode from '../containers/maintenance/MaintenanceModePageMessag
 import SplashLoadingScreen from '../utils/SplashLoadingScreen';
 
 export default function AuthRoutes() {
-    const [isInitialized, setInitialized] = useState(false);
+    const [isInitialized, setInitialized /* , unsetInitialized */] = useBoolean();
     const isInMaintenanceMode = useSelector(
         state => _.get(state, 'manager.maintenance') === Consts.MAINTENANCE_ACTIVATED
     );
@@ -32,7 +33,7 @@ export default function AuthRoutes() {
                 if (_.size(tenants.items) === 0) {
                     return Promise.reject(NO_TENANTS_ERR);
                 }
-                setInitialized(true);
+                setInitialized();
                 return Promise.resolve();
             })
             .catch(error => {
