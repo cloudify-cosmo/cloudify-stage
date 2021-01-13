@@ -28,7 +28,7 @@ export default function UserRoles({ tenant, user }) {
 
 UserRoles.propTypes = {
     tenant: PropTypes.shape({
-        user_roles: PropTypes.shape({ direct: PropTypes.string, groups: PropTypes.shape({}) })
+        user_roles: PropTypes.shape({ direct: PropTypes.shape({}), groups: PropTypes.shape({}) })
     }).isRequired,
     user: PropTypes.string.isRequired
 };
