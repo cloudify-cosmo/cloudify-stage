@@ -20,7 +20,8 @@ describe('Create Deployment Button widget', () => {
 
     beforeEach(() => {
         cy.refreshPage();
-        cy.route(RegExp(`/console/sp\\?su=/blueprints.*&state=Uploaded`)).as('uploadedBlueprints');
+        cy.server();
+        cy.route(RegExp(`/console/sp\\?su=/blueprints.*&state=uploaded`)).as('uploadedBlueprints');
         cy.get('div.deploymentButtonWidget button').click();
     });
 

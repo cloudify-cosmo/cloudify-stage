@@ -14,6 +14,7 @@ describe('Blueprints catalog widget', () => {
 
     beforeEach(() => {
         cy.refreshPage();
+        cy.server();
         cy.contains('.segment', 'AWS-Basics-VM-Setup').contains('Upload').click();
     });
 
@@ -34,7 +35,7 @@ describe('Blueprints catalog widget', () => {
 
         cy.route('PUT', RegExp(`/console/sp\\?su=/blueprints/${blueprintName}`), {});
         const error = 'error message';
-        cy.route(RegExp(`/console/sp\\?su=/blueprints/${blueprintName}`), { state: 'FailedUploading', error });
+        cy.route(RegExp(`/console/sp\\?su=/blueprints/${blueprintName}`), { state: 'failed_uploading', error });
 
         cy.get('button.green').click();
 
@@ -46,7 +47,7 @@ describe('Blueprints catalog widget', () => {
         cy.get('input[name=blueprintName]').clear().type(blueprintName);
 
         cy.route('PUT', RegExp(`/console/sp\\?su=/blueprints/${blueprintName}`), {});
-        cy.route(RegExp(`/console/sp\\?su=/blueprints/${blueprintName}`), { state: 'Uploaded' });
+        cy.route(RegExp(`/console/sp\\?su=/blueprints/${blueprintName}`), { state: 'uploaded' });
 
         cy.get('button.green').click();
 

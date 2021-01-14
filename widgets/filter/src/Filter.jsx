@@ -197,7 +197,7 @@ export default class Filter extends React.Component {
                         {[
                             createDropdown({
                                 entityName: 'Blueprint',
-                                fetchManagerEndpoint: 'blueprints?state=Uploaded',
+                                fetchManagerEndpoint: 'blueprints?state=uploaded',
                                 flushOnRefreshEvent: true
                             }),
                             createDropdown({

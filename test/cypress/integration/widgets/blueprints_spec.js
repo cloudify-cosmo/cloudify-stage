@@ -17,6 +17,70 @@ describe('Blueprints widget', () => {
         return cy.get(`#blueprintsTable_${blueprintName}`);
     }
 
+    describe('for specific blueprint', () => {
+        before(() =>
+            cy
+                .deleteDeployments(blueprintNamePrefix, true)
+                .deleteBlueprints(blueprintNamePrefix, true)
+                .uploadBlueprint('blueprints/simple.zip', emptyBlueprintName)
+                .refreshPage()
+        );
+
+        it('should open Composer with the blueprint imported on "Edit a copy in Composer" icon click', () => {
+            // Click the action icon
+            getBlueprintRow(emptyBlueprintName).find('.external.share').click();
+
+            cy.window()
+                .its('open')
+                .should('be.calledWith', `/composer/import/default_tenant/${emptyBlueprintName}/blueprint.yaml`);
+        });
+
+        it('should allow to deploy the blueprint', () => {
+            getBlueprintRow(emptyBlueprintName).find('.rocket').click();
+
+            const deploymentName = blueprintNamePrefix;
+
+            cy.server();
+            cy.route('PUT', `/console/sp?su=/deployments/${deploymentName}`).as('deploy');
+
+            cy.get('input[name=deploymentName]').type(deploymentName);
+            cy.contains('Show Data Types').click();
+            cy.contains('.modal button', 'Close').click();
+            const serverIp = '127.0.0.1';
+            cy.get('textarea').type(serverIp);
+            cy.contains('.modal .basic', 'Deploy').click();
+            cy.get('.modal').should('not.exist');
+
+            cy.wait('@deploy').then(({ requestBody }) => {
+                expect(requestBody).to.deep.equal({
+                    blueprint_id: emptyBlueprintName,
+                    inputs: { server_ip: serverIp },
+                    visibility: 'tenant',
+                    skip_plugins_validation: false,
+                    runtime_only_evaluation: false
+                });
+            });
+        });
+
+        it('should allow to delete the blueprint', () => {
+            const blueprintName = `${blueprintNamePrefix}_delete`;
+
+            cy.uploadBlueprint('blueprints/empty.zip', blueprintName);
+            getBlueprintRow(blueprintName).find('.trash').click();
+            cy.contains('.modal .button', 'Yes').click();
+
+            cy.contains(blueprintName).should('not.exist');
+        });
+
+        it('should do nothing on click when drill down is disabled', () => {
+            cy.editWidgetConfiguration('blueprints', () => cy.get('input[name=clickToDrillDown]').parent().click());
+
+            cy.contains(emptyBlueprintName).click();
+
+            cy.get('div.blueprintsWidget table.blueprintsTable');
+        });
+    });
+
     describe('should render blueprint items', () => {
         beforeEach(() => {
             cy.route(RegExp(`/console/sp\\?su=/blueprints`), 'fixture:blueprints/blueprints');
@@ -90,7 +154,7 @@ describe('Blueprints widget', () => {
             });
             cy.contains('invalid error');
 
-            cy.route(RegExp(`/console/sp\\?su=/blueprints.*&state=Uploaded`)).as('filteredBlueprints');
+            cy.route(RegExp(`/console/sp\\?su=/blueprints.*&state=uploaded`)).as('filteredBlueprints');
             cy.editWidgetConfiguration('blueprints', () => cy.get('input[name=hideFailedBlueprints]').parent().click());
             cy.wait('@filteredBlueprints');
 
@@ -196,7 +260,7 @@ describe('Blueprints widget', () => {
                 });
             cy.contains('invalid error');
 
-            cy.route(RegExp(`/console/sp\\?su=/blueprints.*&state=Uploaded`)).as('filteredBlueprints');
+            cy.route(RegExp(`/console/sp\\?su=/blueprints.*&state=uploaded`)).as('filteredBlueprints');
             cy.editWidgetConfiguration('blueprints', () => cy.get('input[name=hideFailedBlueprints]').parent().click());
             cy.wait('@filteredBlueprints');
 
@@ -211,70 +275,6 @@ describe('Blueprints widget', () => {
 
             cy.get('div.blueprintsWidget .segmentList').should('not.exist');
             cy.contains('.pageTitle', 'uploaded');
-        });
-    });
-
-    describe('for specific blueprint', () => {
-        before(() =>
-            cy
-                .deleteDeployments(blueprintNamePrefix, true)
-                .deleteBlueprints(blueprintNamePrefix, true)
-                .uploadBlueprint('blueprints/simple.zip', emptyBlueprintName)
-                .refreshPage()
-        );
-
-        it('should open Composer with the blueprint imported on "Edit a copy in Composer" icon click', () => {
-            // Click the action icon
-            getBlueprintRow(emptyBlueprintName).find('.external.share').click();
-
-            cy.window()
-                .its('open')
-                .should('be.calledWith', `/composer/import/default_tenant/${emptyBlueprintName}/blueprint.yaml`);
-        });
-
-        it('should allow to deploy the blueprint', () => {
-            getBlueprintRow(emptyBlueprintName).find('.rocket').click();
-
-            const deploymentName = blueprintNamePrefix;
-
-            cy.server();
-            cy.route('PUT', `/console/sp?su=/deployments/${deploymentName}`).as('deploy');
-
-            cy.get('input[name=deploymentName]').type(deploymentName);
-            cy.contains('Show Data Types').click();
-            cy.contains('.modal button', 'Close').click();
-            const serverIp = '127.0.0.1';
-            cy.get('textarea').type(serverIp);
-            cy.contains('.modal .basic', 'Deploy').click();
-            cy.get('.modal').should('not.exist');
-
-            cy.wait('@deploy').then(({ requestBody }) => {
-                expect(requestBody).to.deep.equal({
-                    blueprint_id: emptyBlueprintName,
-                    inputs: { server_ip: serverIp },
-                    visibility: 'tenant',
-                    skip_plugins_validation: false,
-                    runtime_only_evaluation: false
-                });
-            });
-        });
-
-        it('should allow to delete the blueprint', () => {
-            const blueprintName = `${blueprintNamePrefix}_delete`;
-
-            cy.uploadBlueprint('blueprints/empty.zip', blueprintName);
-            getBlueprintRow(blueprintName).find('.trash').click();
-            cy.contains('.modal .button', 'Yes').click();
-
-            cy.contains(blueprintName).should('not.exist');
-        });
-
-        it('should do nothing on click when drill down is disabled', () => {
-            cy.editWidgetConfiguration('blueprints', () => cy.get('input[name=clickToDrillDown]').parent().click());
-
-            cy.contains(emptyBlueprintName).click();
-
-            cy.get('div.blueprintsWidget table.blueprintsTable');
         });
     });
 
@@ -317,13 +317,13 @@ describe('Blueprints widget', () => {
 
                 const getBlueprint = RegExp(`/console/sp\\?su=/blueprints/${blueprintName}`);
                 cy.contains('0/4: Waiting for blueprint upload to start...');
-                cy.route(getBlueprint, { state: 'Uploading' });
+                cy.route(getBlueprint, { state: 'uploading' });
                 cy.contains('1/4: Uploading blueprint...');
-                cy.route(getBlueprint, { state: 'Extracting' });
+                cy.route(getBlueprint, { state: 'extracting' });
                 cy.contains('2/4: Extracting blueprint...');
-                cy.route(getBlueprint, { state: 'Parsing' });
+                cy.route(getBlueprint, { state: 'parsing' });
                 cy.contains('3/4: Parsing blueprint...');
-                cy.route(getBlueprint, { state: 'Uploaded' });
+                cy.route(getBlueprint, { state: 'uploaded' });
 
                 getBlueprintRow(blueprintName).contains('read-secret-blueprint.yaml');
             });
@@ -336,7 +336,7 @@ describe('Blueprints widget', () => {
                 cy.get('div[name=blueprintYamlFile] input').type(blueprintFileName);
                 cy.get('.button.ok').click();
 
-                cy.route(RegExp(`/console/sp\\?su=/blueprints/${blueprintName}`), { state: 'Uploaded' });
+                cy.route(RegExp(`/console/sp\\?su=/blueprints/${blueprintName}`), { state: 'uploaded' });
 
                 getBlueprintRow(blueprintName).contains(blueprintFileName);
             });
@@ -348,7 +348,7 @@ describe('Blueprints widget', () => {
                 cy.get('.button.ok').click();
 
                 const error = 'error message';
-                cy.route(RegExp(`/console/sp\\?su=/blueprints/${blueprintName}`), { state: 'FailedUploading', error });
+                cy.route(RegExp(`/console/sp\\?su=/blueprints/${blueprintName}`), { state: 'failed_uploading', error });
 
                 cy.contains('.header', 'Blueprint upload failed');
                 cy.contains('li', error);
