@@ -20,7 +20,7 @@ const emptyState = {
     version: {}
 };
 
-const manager = (state = {}, action) => {
+const manager = (state = emptyState, action) => {
     switch (action.type) {
         case types.REQ_LOGIN:
             return { ...state, isLoggingIn: true };

@@ -13,15 +13,7 @@ import StatePersister from './utils/StatePersister';
 import createRootReducer from './reducers';
 
 export default (history, config) => {
-    let initialState = StatePersister.load(config.mode);
-
-    const hasInitState = initialState !== undefined;
-    if (!hasInitState) {
-        initialState = {
-            context: {},
-            manager: {}
-        };
-    }
+    let initialState = StatePersister.load(config.mode) || { manager: {} };
     initialState = { ...initialState, config };
 
     // Clear login error if has any

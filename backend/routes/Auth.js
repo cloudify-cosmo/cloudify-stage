@@ -9,9 +9,12 @@ const _ = require('lodash');
 
 const AuthHandler = require('../handler/AuthHandler');
 const Consts = require('../consts');
+const config = require('../config');
 
 const router = express.Router();
 const logger = require('../handler/LoggerHandler').getLogger('Auth');
+
+const isSamlEnabled = _.get(config.get(), 'app.saml.enabled', false);
 
 router.use(bodyParser.json());
 router.use(bodyParser.urlencoded({ extended: true }));
@@ -38,9 +41,12 @@ router.post('/saml/callback', passport.authenticate('saml', { session: false }),
     if (!req.body || !req.body.SAMLResponse || !req.user) {
         res.status(401).send({ message: 'Invalid Request' });
     } else {
+        logger.debug('Received SAML Response for user', JSON.stringify(req.user));
         AuthHandler.getTokenViaSamlResponse(req.body.SAMLResponse)
             .then(token => {
                 res.cookie(Consts.TOKEN_COOKIE_NAME, token.value);
+                res.cookie(Consts.USERNAME_COOKIE_NAME, req.user.username);
+                res.cookie(Consts.ROLE_COOKIE_NAME, token.role);
                 res.redirect(Consts.CONTEXT_PATH);
             })
             .catch(err => {
@@ -52,6 +58,10 @@ router.post('/saml/callback', passport.authenticate('saml', { session: false }),
 
 router.get('/manager', (req, res) => {
     const token = req.headers['authentication-token'];
+    if (isSamlEnabled) {
+        res.clearCookie(Consts.USERNAME_COOKIE_NAME);
+        res.clearCookie(Consts.ROLE_COOKIE_NAME);
+    }
     Promise.all([AuthHandler.getManagerVersion(token), AuthHandler.getAndCacheConfig(token)])
         .then(([version, rbac]) =>
             AuthHandler.isProductLicensed(version)
