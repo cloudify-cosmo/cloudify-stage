@@ -120,9 +120,9 @@ function doLogout(err) {
 export function logout(err, path) {
     return (dispatch, getState) => {
         const localLogout = () => {
-            dispatch(push(path || (err ? Consts.ERROR_PAGE_PATH : Consts.LOGOUT_PAGE_PATH)));
             dispatch(clearContext());
             dispatch(doLogout(err));
+            dispatch(push(path || (err ? Consts.ERROR_PAGE_PATH : Consts.LOGOUT_PAGE_PATH)));
         };
 
         return Auth.logout(getState().manager).then(localLogout, localLogout);

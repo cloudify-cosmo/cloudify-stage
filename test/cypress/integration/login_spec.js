@@ -27,9 +27,9 @@ describe('Login', () => {
         cy.server();
         cy.route({
             method: 'GET',
-            url: '/console/sp?su=/tenants?_include=name&_get_all_results=true',
+            url: '/console/auth/user',
             status: 200,
-            response: { items: [] }
+            response: { username: 'test', role: 'default', groupSystemRoles: {}, tenantsRoles: {} }
         });
 
         cy.activate().login();
