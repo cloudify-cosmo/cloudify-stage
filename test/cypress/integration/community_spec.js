@@ -1,6 +1,6 @@
 describe('Community version', () => {
     before(() => {
-        cy.activate().then(token => {
+        cy.getAdminToken().then(token => {
             cy.server();
             cy.route({
                 method: 'POST',

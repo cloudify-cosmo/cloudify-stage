@@ -62,9 +62,8 @@ Cypress.Commands.add('uploadLicense', license =>
     )
 );
 
-Cypress.Commands.add('activate', (license = 'valid_trial_license') =>
+Cypress.Commands.add('getAdminToken', () =>
     cy
-        .uploadLicense(license)
         .then(() =>
             cy.request({
                 method: 'GET',
@@ -78,13 +77,19 @@ Cypress.Commands.add('activate', (license = 'valid_trial_license') =>
                 }
             })
         )
-        .then(response => {
-            token = response.body.value;
+        .then(response => response.body.value)
+);
+
+Cypress.Commands.add('activate', (license = 'valid_trial_license') =>
+    cy
+        .uploadLicense(license)
+        .getAdminToken()
+        .then(adminToken => {
+            token = adminToken;
         })
         .then(() =>
             cy.stageRequest(`/console/ua/clear-pages?tenant=default_tenant`, 'GET', { failOnStatusCode: false })
         )
-        .then(() => token)
 );
 
 Cypress.Commands.add('cfyRequest', (url, method = 'GET', headers = null, body = null, options = {}) =>
