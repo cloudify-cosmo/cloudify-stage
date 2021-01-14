@@ -43,7 +43,7 @@ export default function AuthRoutes() {
                         dispatch(logout(null, Consts.ERROR_NO_TENANTS_PAGE_PATH));
                         break;
                     default:
-                        log.error(error);
+                        log.error(i18n.t('managerDataError'), error);
                         dispatch(logout(i18n.t('managerDataError')));
                 }
             });
@@ -54,7 +54,7 @@ export default function AuthRoutes() {
             dispatch(getUserData())
                 .then(setUserDataFetched)
                 .catch(error => {
-                    log.error(error);
+                    log.error(i18n.t('pageLoadError'), error);
                     dispatch(logout(i18n.t('pageLoadError')));
                 });
         }

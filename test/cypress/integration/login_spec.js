@@ -5,21 +5,6 @@ describe('Login', () => {
         cy.location('pathname').should('be.equal', '/console/');
     });
 
-    it('fails when provided credentials are valid, license is active but user has no tenants assigned', () => {
-        cy.server();
-        cy.route({
-            method: 'GET',
-            url: '/console/sp?su=/tenants?_include=name&_get_all_results=true',
-            status: 200,
-            response: { items: [] }
-        });
-
-        cy.activate().login();
-
-        cy.location('pathname').should('be.equal', '/console/noTenants');
-        cy.contains('User is not associated with any tenants');
-    });
-
     it('succeeds and redirects when provided credentials are valid, license is active and redirect query parameter is specified', () => {
         cy.activate();
 
@@ -38,13 +23,58 @@ describe('Login', () => {
         cy.location('pathname').should('be.equal', '/console/license');
     });
 
+    it('fails when provided credentials are valid, license is active but user has no tenants assigned', () => {
+        cy.server();
+        cy.route({
+            method: 'GET',
+            url: '/console/sp?su=/tenants?_include=name&_get_all_results=true',
+            status: 200,
+            response: { items: [] }
+        });
+
+        cy.activate().login();
+
+        cy.location('pathname').should('be.equal', '/console/noTenants');
+        cy.contains('User is not associated with any tenants');
+    });
+
     it('fails when provided credentials are invalid', () => {
-        cy.login('admin', 'invalid-password');
+        cy.login('admin', 'invalid-password', false);
 
         cy.get('.error.message').should(
             'have.text',
             'User unauthorized: Authentication failed for user admin. Wrong credentials or locked account'
         );
         cy.location('pathname').should('be.equal', '/console/login');
+    });
+
+    it('fails when manager data cannot be fetched', () => {
+        cy.server();
+        cy.route({
+            method: 'GET',
+            url: '/console/auth/manager',
+            status: 500,
+            response: {}
+        });
+
+        cy.activate().login('admin', 'admin');
+
+        cy.location('pathname').should('be.equal', '/console/error');
+        cy.get('.error.message').should('have.text', 'Error getting data from the manager, cannot load page');
+    });
+
+    it('fails when user data cannot be fetched', () => {
+        cy.server();
+        cy.route({
+            method: 'GET',
+            url: '/console/auth/user',
+            status: 500,
+            response: {}
+        });
+
+        cy.activate().login('admin', 'admin');
+
+        cy.location('pathname').should('be.equal', '/console/error');
+        cy.get('.error.message').should('have.text', 'Error initializing user data, cannot load page');
     });
 });

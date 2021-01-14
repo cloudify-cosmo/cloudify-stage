@@ -139,7 +139,7 @@ Cypress.Commands.add('stageRequest', (url, method = 'GET', options, headers) => 
     });
 });
 
-Cypress.Commands.add('login', (username = 'admin', password = 'admin') => {
+Cypress.Commands.add('login', (username = 'admin', password = 'admin', expectSuccessfulLogin = true) => {
     cy.location('pathname').then(pathname => {
         if (pathname !== '/console/login') {
             cy.visit('/console/login');
@@ -152,13 +152,15 @@ Cypress.Commands.add('login', (username = 'admin', password = 'admin') => {
 
     cy.get('.form > button.loading').should('be.not.visible', true);
 
-    cy.getCookies()
-        .should('have.length', 1)
-        .then(cookies => {
-            expect(cookies[0]).to.have.property('name', 'XSRF-TOKEN');
-        });
+    if (expectSuccessfulLogin) {
+        cy.getCookies()
+            .should('have.length', 1)
+            .then(cookies => {
+                expect(cookies[0]).to.have.property('name', 'XSRF-TOKEN');
+            });
 
-    cy.waitUntilLoaded().then(() => cy.saveLocalStorage());
+        cy.waitUntilLoaded().then(() => cy.saveLocalStorage());
+    }
 });
 
 Cypress.Commands.add('mockLogin', (username = 'admin', password = 'admin') => {
