@@ -27,12 +27,13 @@ export default function AuthRoutes({ isSamlEnabled }) {
     );
     const isLicenseRequired = useSelector(state => _.get(state, 'manager.license.isRequired', false));
     const isProductOperational = useSelector(state => Auth.isProductOperational(_.get(state, 'manager.license', {})));
+    const isSamlLogin = isSamlEnabled && !!Cookies.get(Consts.ROLE_COOKIE_NAME);
     const dispatch = useDispatch();
 
     useEffect(() => {
         SplashLoadingScreen.turnOn();
 
-        if (isSamlEnabled) {
+        if (isSamlLogin) {
             const role = Cookies.get(Consts.ROLE_COOKIE_NAME);
             const username = Cookies.get(Consts.USERNAME_COOKIE_NAME);
             dispatch(receiveLogin(username, role));
