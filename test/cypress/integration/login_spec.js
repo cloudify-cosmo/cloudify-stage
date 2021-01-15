@@ -45,6 +45,9 @@ describe('Login', () => {
 
         cy.get('@loginButton').click();
         cy.window().its('open').should('be.calledWith', ssoUrl);
+
+        cy.server({ enable: false });
+        cy.reload();
     });
 
     it('fails when provided credentials are valid, license is active but user has no tenants assigned', () => {
