@@ -23,6 +23,30 @@ describe('Login', () => {
         cy.location('pathname').should('be.equal', '/console/license');
     });
 
+    it('provides Okta login button when SAML is enabled', () => {
+        cy.activate();
+
+        cy.server();
+        const ssoUrl = 'https://www.w3.org/';
+        cy.route('/console/config', {
+            app: {
+                saml: {
+                    enabled: true,
+                    ssoUrl
+                }
+            }
+        });
+
+        cy.visit('/console/login');
+        cy.get('button').as('loginButton');
+
+        cy.get('@loginButton').should('contain.text', 'LOGIN WITH OKTA');
+        cy.get('input').should('not.exist');
+
+        cy.get('@loginButton').click();
+        cy.window().its('open').should('be.calledWith', ssoUrl);
+    });
+
     it('fails when provided credentials are valid, license is active but user has no tenants assigned', () => {
         cy.server();
         cy.route({

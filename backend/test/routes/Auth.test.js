@@ -1,4 +1,24 @@
+const _ = require('lodash');
 const request = require('supertest');
+
+function mockSamlConfig() {
+    const samlConfig = {
+        app: {
+            saml: {
+                enabled: true,
+                ssoUrl: 'http://sso.url',
+                portalUrl: 'http://portal.url',
+                certPath: 'package.json'
+            }
+        }
+    };
+    jest.doMock('config', () => {
+        const originalConfig = jest.requireActual('config').get();
+        return {
+            get: () => _.merge(originalConfig, samlConfig)
+        };
+    });
+}
 
 describe('/auth endpoint', () => {
     describe('/login handles', () => {
@@ -37,6 +57,19 @@ describe('/auth endpoint', () => {
                 .post('/console/auth/login')
                 .then(response => {
                     expect(response.body.message).toStrictEqual('Invalid credentials');
+                });
+        });
+
+        it('unknown errors', () => {
+            jest.doMock('handler/AuthHandler', () => ({
+                getToken: () => Promise.reject({ error_code: 'out_of_memory', message: 'No resources available' })
+            }));
+            return request(require('app'))
+                .post('/console/auth/login')
+                .then(response => {
+                    expect(response.body.message).toStrictEqual(
+                        'Failed to authenticate with manager: No resources available'
+                    );
                 });
         });
     });
@@ -97,13 +130,33 @@ describe('/auth endpoint', () => {
                     });
                 });
         });
+
+        it('clearing cookies when SAML is enabled', () => {
+            mockAuthHandler('premium');
+            mockSamlConfig();
+            return request(require('app'))
+                .get('/console/auth/manager')
+                .then(response => {
+                    const { 'set-cookie': setCookie } = response.headers;
+                    expect(setCookie).toEqual([
+                        'USERNAME=; Path=/; Expires=Thu, 01 Jan 1970 00:00:00 GMT',
+                        'ROLE=; Path=/; Expires=Thu, 01 Jan 1970 00:00:00 GMT'
+                    ]);
+                });
+        });
     });
 
     describe('/saml/callback handles', () => {
-        const mockAuthHandler = (getTokenViaSamlResponse = () => Promise.resolve({ value: 'token-content' })) =>
+        const mockAuthHandler = (
+            getTokenViaSamlResponse = () => Promise.resolve({ value: 'token-content', role: 'sys_admin' })
+        ) =>
             jest.doMock('handler/AuthHandler', () => ({
                 getTokenViaSamlResponse
             }));
+
+        beforeAll(() => {
+            mockSamlConfig();
+        });
 
         beforeEach(() => {
             jest.resetModules();
@@ -119,7 +172,11 @@ describe('/auth endpoint', () => {
                 .then(response => {
                     const { location, 'set-cookie': setCookie } = response.headers;
                     expect(location).toEqual('/console');
-                    expect(setCookie).toEqual(['XSRF-TOKEN=token-content; Path=/']);
+                    expect(setCookie).toEqual([
+                        'XSRF-TOKEN=token-content; Path=/',
+                        'USERNAME=testuser; Path=/',
+                        'ROLE=sys_admin; Path=/'
+                    ]);
                 });
         });
 
