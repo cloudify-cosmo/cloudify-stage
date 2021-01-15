@@ -179,7 +179,8 @@
         },
         "password": "Password",
         "username": "Username",
-        "submit": "LOGIN"
+        "submit": "LOGIN",
+        "oktaSubmit": "LOGIN WITH OKTA"
     },
     "maintenanceMode": {
         "activate": "Activate Maintenance Mode",

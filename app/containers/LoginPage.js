@@ -2,6 +2,7 @@
  * Created by addihorowitz on 19/09/2016.
  */
 
+import _ from 'lodash';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 
@@ -9,12 +10,15 @@ import LoginPage from '../components/LoginPage';
 import { login } from '../actions/managers';
 
 const mapStateToProps = state => {
+    const { config, manager } = state;
     return {
-        username: state.manager ? state.manager.username : '',
-        isLoggingIn: state.manager.isLoggingIn,
-        loginError: state.manager ? state.manager.err : '',
-        mode: state.config.mode,
-        whiteLabel: state.config.app.whiteLabel
+        username: _.get(manager, 'username', ''),
+        isLoggingIn: _.get(manager, 'isLoggingIn', false),
+        loginError: _.get(manager, 'err', ''),
+        mode: _.get(config, 'mode'),
+        whiteLabel: _.get(config, 'app.whiteLabel'),
+        isSamlEnabled: _.get(config, 'app.saml.enabled', false),
+        samlSsoUrl: _.get(config, 'app.saml.ssoUrl', '')
     };
 };
 

@@ -13,7 +13,6 @@ const mapStateToProps = state => {
         isLoggedIn: Auth.isLoggedIn(),
         isSamlEnabled: _.get(state, 'config.app.saml.enabled', false),
         samlPortalUrl: _.get(state, 'config.app.saml.portalUrl', ''),
-        samlSsoUrl: _.get(state, 'config.app.saml.ssoUrl', ''),
         theme: _.get(state, 'config.app.whiteLabel', {})
     };
 };

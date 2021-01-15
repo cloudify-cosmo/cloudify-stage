@@ -6,7 +6,6 @@ import PropTypes from 'prop-types';
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Route, Redirect, Switch } from 'react-router-dom';
-import { push } from 'connected-react-router';
 
 import { NO_TENANTS_ERR } from '../utils/ErrorCodes';
 import { useBoolean } from '../utils/hooks';
@@ -61,7 +60,7 @@ export default function AuthRoutes({ isSamlEnabled }) {
                 .catch(error => {
                     switch (error) {
                         case NO_TENANTS_ERR:
-                            dispatch(push(Consts.ERROR_NO_TENANTS_PAGE_PATH));
+                            dispatch(logout(null, Consts.ERROR_NO_TENANTS_PAGE_PATH));
                             break;
                         default:
                             log.error(i18n.t('pageLoadError'), error);

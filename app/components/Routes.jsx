@@ -13,15 +13,11 @@ import LoginPage from '../containers/LoginPage';
 import ExternalRedirect from './ExternalRedirect';
 import AuthRoutes from './AuthRoutes';
 
-export default function Routes({ isLoggedIn, isSamlEnabled, samlPortalUrl, samlSsoUrl, theme }) {
+export default function Routes({ isLoggedIn, isSamlEnabled, samlPortalUrl, theme }) {
     return (
         <ThemeProvider theme={theme}>
             <Switch>
-                <Route
-                    exact
-                    path={Consts.LOGIN_PAGE_PATH}
-                    render={() => (isSamlEnabled ? <ExternalRedirect url={samlSsoUrl} /> : <LoginPage />)}
-                />
+                <Route exact path={Consts.LOGIN_PAGE_PATH} component={LoginPage} />
                 <Route
                     exact
                     path={Consts.LOGOUT_PAGE_PATH}
@@ -54,7 +50,6 @@ Routes.propTypes = {
     isLoggedIn: PropTypes.bool.isRequired,
     isSamlEnabled: PropTypes.bool.isRequired,
     samlPortalUrl: PropTypes.string.isRequired,
-    samlSsoUrl: PropTypes.string.isRequired,
     theme: PropTypes.shape({
         mainColor: PropTypes.string,
         headerTextColor: PropTypes.string
