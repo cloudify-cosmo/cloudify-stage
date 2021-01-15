@@ -3,7 +3,7 @@ import tenants from './tenantsReducer';
 import clusterStatus from './clusterStatusReducer';
 import license from './licenseReducer';
 
-const emptyState = {
+export const emptyState = {
     auth: {
         role: null,
         groupSystemRoles: {},
