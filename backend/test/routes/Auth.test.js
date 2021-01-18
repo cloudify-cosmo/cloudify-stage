@@ -44,6 +44,7 @@ describe('/auth endpoint', () => {
             }));
             return request(require('app'))
                 .post('/console/auth/login')
+                .expect(423)
                 .then(response => {
                     expect(response.body.message).toStrictEqual('Manager is currently in maintenance mode');
                 });
@@ -55,6 +56,7 @@ describe('/auth endpoint', () => {
             }));
             return request(require('app'))
                 .post('/console/auth/login')
+                .expect(401)
                 .then(response => {
                     expect(response.body.message).toStrictEqual('Invalid credentials');
                 });
@@ -66,6 +68,7 @@ describe('/auth endpoint', () => {
             }));
             return request(require('app'))
                 .post('/console/auth/login')
+                .expect(500)
                 .then(response => {
                     expect(response.body.message).toStrictEqual(
                         'Failed to authenticate with manager: No resources available'
