@@ -5,6 +5,8 @@ describe('Blueprints widget', () => {
     before(() =>
         cy
             .activate('valid_trial_license')
+            .deleteDeployments(blueprintNamePrefix, true)
+            .deleteBlueprints(blueprintNamePrefix, true)
             .usePageMock('blueprints', { displayStyle: 'table', clickToDrillDown: true })
             .mockLogin()
     );
@@ -18,13 +20,7 @@ describe('Blueprints widget', () => {
     }
 
     describe('for specific blueprint', () => {
-        before(() =>
-            cy
-                .deleteDeployments(blueprintNamePrefix, true)
-                .deleteBlueprints(blueprintNamePrefix, true)
-                .uploadBlueprint('blueprints/simple.zip', emptyBlueprintName)
-                .refreshPage()
-        );
+        before(() => cy.uploadBlueprint('blueprints/simple.zip', emptyBlueprintName).refreshPage());
 
         it('should open Composer with the blueprint imported on "Edit a copy in Composer" icon click', () => {
             // Click the action icon
@@ -335,8 +331,6 @@ describe('Blueprints widget', () => {
                 cy.get('input[name=blueprintName]').clear().type(blueprintName);
                 cy.get('div[name=blueprintYamlFile] input').type(blueprintFileName);
                 cy.get('.button.ok').click();
-
-                cy.route(RegExp(`/console/sp\\?su=/blueprints/${blueprintName}`), { state: 'uploaded' });
 
                 getBlueprintRow(blueprintName).contains(blueprintFileName);
             });
