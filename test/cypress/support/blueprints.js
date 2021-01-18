@@ -13,7 +13,7 @@ Cypress.Commands.add('uploadBlueprint', (pathOrUrl, id, yamlFile = 'blueprint.ya
             `/blueprints/${id}?visibility=${visibility}&application_file_name=${yamlFile}`
         );
 
-    waitUntilEmpty('/blueprints?state=pending&state=uploading&state=extracting&state=parsing');
+    waitUntilEmpty('blueprints?state=pending&state=uploading&state=extracting&state=parsing');
 });
 
 Cypress.Commands.add('deleteBlueprint', (blueprintId, force = false) => {
