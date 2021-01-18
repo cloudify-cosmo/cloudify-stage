@@ -23,7 +23,7 @@ describe('Login', () => {
         cy.location('pathname').should('be.equal', '/console/license');
     });
 
-    it('provides Okta login button when SAML is enabled', () => {
+    it('provides SSO login button when SAML is enabled', () => {
         cy.activate();
 
         cy.server();
@@ -40,7 +40,7 @@ describe('Login', () => {
         cy.visit('/console/login');
         cy.get('button').as('loginButton');
 
-        cy.get('@loginButton').should('contain.text', 'LOGIN WITH OKTA');
+        cy.get('@loginButton').should('contain.text', 'LOGIN WITH SSO');
         cy.get('input').should('not.exist');
 
         cy.get('@loginButton').click();

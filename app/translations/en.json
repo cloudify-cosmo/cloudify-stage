@@ -180,7 +180,7 @@
         "password": "Password",
         "username": "Username",
         "submit": "LOGIN",
-        "oktaSubmit": "LOGIN WITH OKTA"
+        "ssoSubmit": "LOGIN WITH SSO"
     },
     "maintenanceMode": {
         "activate": "Activate Maintenance Mode",
