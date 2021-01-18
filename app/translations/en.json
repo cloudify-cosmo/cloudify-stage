@@ -370,7 +370,7 @@
     "widgets": {
         "common": {
             "readmes": {
-                "linksBasePath": "https://docs.cloudify.co/latest",
+                "linksBasePath": "https://docs.cloudify.co/5.1",
                 "params": {
                     "cfy_composer_link": "/developer/composer/",
                     "cfy_composer_name": "Cloudify Composer",
