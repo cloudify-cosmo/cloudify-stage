@@ -77,11 +77,15 @@ function responseUserData(username, systemRole, groupSystemRoles, tenantsRoles) 
     };
 }
 
+function isLicenseRequired(versionEdition) {
+    return versionEdition !== Consts.EDITION.COMMUNITY;
+}
+
 export function getManagerData() {
     return (dispatch, getState) =>
         Auth.getManagerData(getState().manager).then(({ version, license, rbac }) => {
             dispatch(setVersion(version));
-            dispatch(setLicenseRequired(!_.isEqual(version.edition, Consts.EDITION.COMMUNITY)));
+            dispatch(setLicenseRequired(isLicenseRequired(version.edition)));
             dispatch(setLicense(license));
             dispatch(storeRBAC(rbac));
         });
