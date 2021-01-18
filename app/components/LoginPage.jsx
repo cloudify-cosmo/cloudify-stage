@@ -141,7 +141,7 @@ export default class LoginPage extends Component {
                             color="yellow"
                             size="large"
                             type="submit"
-                            content={isSamlEnabled ? i18n.t('login.ssoSubmit') : i18n.t('login.submit')}
+                            content={i18n.t(isSamlEnabled ? 'login.ssoSubmit' : 'login.submit')}
                         />
                     </Form>
                 </div>
