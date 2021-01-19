@@ -411,7 +411,7 @@ a:hover {
     button {
       display: block !important;
       margin: 30px auto !important;
-      width: 50% !important;
+      min-width: 50% !important;
       border-radius: 25px !important;
       color: $white !important;
     }

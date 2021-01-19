@@ -25,8 +25,13 @@ export default class LoginPage extends Component {
 
     onSubmit = () => {
         const { password, username } = this.state;
-        const { location, onLogin } = this.props;
+        const { isSamlEnabled, location, onLogin, samlSsoUrl } = this.props;
         const errors = {};
+
+        if (isSamlEnabled) {
+            // eslint-disable-next-line scanjs-rules/assign_to_location
+            window.location = samlSsoUrl;
+        }
 
         if (_.isEmpty(username)) {
             errors.username = i18n.t('login.error.noUsername', 'Please provide username');
@@ -52,7 +57,7 @@ export default class LoginPage extends Component {
 
     render() {
         const { errors, password, username } = this.state;
-        const { isLoggingIn, loginError } = this.props;
+        const { isLoggingIn, isSamlEnabled, loginError } = this.props;
         SplashLoadingScreen.turnOff();
 
         const loginPageHeader = i18n.t('login.header');
@@ -100,26 +105,30 @@ export default class LoginPage extends Component {
                     )}
 
                     <Form onSubmit={this.onSubmit}>
-                        <Form.Field required error={errors.username}>
-                            <Input
-                                name="username"
-                                type="text"
-                                placeholder={i18n.t('login.username', 'Username')}
-                                autoFocus
-                                value={username}
-                                onChange={this.handleInputChange}
-                            />
-                        </Form.Field>
+                        {!isSamlEnabled && (
+                            <>
+                                <Form.Field required error={errors.username}>
+                                    <Input
+                                        name="username"
+                                        type="text"
+                                        placeholder={i18n.t('login.username', 'Username')}
+                                        autoFocus
+                                        value={username}
+                                        onChange={this.handleInputChange}
+                                    />
+                                </Form.Field>
 
-                        <Form.Field required error={errors.password}>
-                            <Input
-                                name="password"
-                                type="password"
-                                placeholder={i18n.t('login.password', 'Password')}
-                                value={password}
-                                onChange={this.handleInputChange}
-                            />
-                        </Form.Field>
+                                <Form.Field required error={errors.password}>
+                                    <Input
+                                        name="password"
+                                        type="password"
+                                        placeholder={i18n.t('login.password', 'Password')}
+                                        value={password}
+                                        onChange={this.handleInputChange}
+                                    />
+                                </Form.Field>
+                            </>
+                        )}
 
                         {loginError && (
                             <Message error style={{ display: 'block' }}>
@@ -133,7 +142,7 @@ export default class LoginPage extends Component {
                             color="yellow"
                             size="large"
                             type="submit"
-                            content={i18n.t('login.submit')}
+                            content={i18n.t(isSamlEnabled ? 'login.ssoSubmit' : 'login.submit')}
                         />
                     </Form>
                 </div>
@@ -144,9 +153,11 @@ export default class LoginPage extends Component {
 
 LoginPage.propTypes = {
     isLoggingIn: PropTypes.bool.isRequired,
+    isSamlEnabled: PropTypes.bool.isRequired,
     onLogin: PropTypes.func.isRequired,
     location: PropTypes.shape({ search: PropTypes.string }),
     loginError: PropTypes.string,
+    samlSsoUrl: PropTypes.string,
     username: PropTypes.string,
     whiteLabel: PropTypes.shape({
         loginPageHeaderColor: PropTypes.string,
@@ -157,6 +168,7 @@ LoginPage.propTypes = {
 LoginPage.defaultProps = {
     location: { search: '' },
     loginError: null,
+    samlSsoUrl: '',
     username: '',
     whiteLabel: PropTypes.shape({
         loginPageHeaderColor: '',

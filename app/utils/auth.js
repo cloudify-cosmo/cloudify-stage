@@ -16,6 +16,11 @@ export default class Auth {
         return external.doPost(StageUtils.Url.url('/auth/login'), null, null, true, null, true);
     }
 
+    static getManagerData(managerData) {
+        const internal = new Internal(managerData);
+        return internal.doGet('/auth/manager', null, true);
+    }
+
     static getUserData(managerData) {
         const internal = new Internal(managerData);
         return internal.doGet('/auth/user', null, true);

@@ -12,14 +12,14 @@ const mapStateToProps = (state, ownProps) => {
     };
 };
 
-const mapDispatchToProps = (dispatch, ownProps) => {
+const mapDispatchToProps = dispatch => {
     return {
         onTenantChange: newTenant => {
             dispatch(changeTenant(newTenant));
         },
 
         onTenantsRefresh: () => {
-            dispatch(getTenants(ownProps.manager));
+            dispatch(getTenants());
         }
     };
 };

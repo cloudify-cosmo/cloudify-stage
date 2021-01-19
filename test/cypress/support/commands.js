@@ -62,9 +62,8 @@ Cypress.Commands.add('uploadLicense', license =>
     )
 );
 
-Cypress.Commands.add('activate', (license = 'valid_trial_license') =>
+Cypress.Commands.add('getAdminToken', () =>
     cy
-        .uploadLicense(license)
         .then(() =>
             cy.request({
                 method: 'GET',
@@ -78,13 +77,19 @@ Cypress.Commands.add('activate', (license = 'valid_trial_license') =>
                 }
             })
         )
-        .then(response => {
-            token = response.body.value;
+        .then(response => response.body.value)
+);
+
+Cypress.Commands.add('activate', (license = 'valid_trial_license') =>
+    cy
+        .uploadLicense(license)
+        .getAdminToken()
+        .then(adminToken => {
+            token = adminToken;
         })
         .then(() =>
             cy.stageRequest(`/console/ua/clear-pages?tenant=default_tenant`, 'GET', { failOnStatusCode: false })
         )
-        .then(() => token)
 );
 
 Cypress.Commands.add('cfyRequest', (url, method = 'GET', headers = null, body = null, options = {}) =>
@@ -139,7 +144,7 @@ Cypress.Commands.add('stageRequest', (url, method = 'GET', options, headers) => 
     });
 });
 
-Cypress.Commands.add('login', (username = 'admin', password = 'admin') => {
+Cypress.Commands.add('login', (username = 'admin', password = 'admin', expectSuccessfulLogin = true) => {
     cy.location('pathname').then(pathname => {
         if (pathname !== '/console/login') {
             cy.visit('/console/login');
@@ -152,13 +157,15 @@ Cypress.Commands.add('login', (username = 'admin', password = 'admin') => {
 
     cy.get('.form > button.loading').should('be.not.visible', true);
 
-    cy.getCookies()
-        .should('have.length', 1)
-        .then(cookies => {
-            expect(cookies[0]).to.have.property('name', 'XSRF-TOKEN');
-        });
+    if (expectSuccessfulLogin) {
+        cy.getCookies()
+            .should('have.length', 1)
+            .then(cookies => {
+                expect(cookies[0]).to.have.property('name', 'XSRF-TOKEN');
+            });
 
-    cy.waitUntilLoaded().then(() => cy.saveLocalStorage());
+        cy.waitUntilLoaded().then(() => cy.saveLocalStorage());
+    }
 });
 
 Cypress.Commands.add('mockLogin', (username = 'admin', password = 'admin') => {
