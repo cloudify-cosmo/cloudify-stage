@@ -1,8 +1,10 @@
 const { InProgressBlueprintStates, CompletedBlueprintStates } = Stage.Common.BlueprintActions;
 
+const { i18n } = Stage;
+
 const UploadLabels = _(InProgressBlueprintStates)
     .keyBy()
-    .mapValues(value => Stage.i18n.t(`widgets.common.blueprintUpload.uploadLabels.${_.camelCase(value)}`))
+    .mapValues(value => i18n.t(`widgets.common.blueprintUpload.uploadLabels.${_.camelCase(value)}`))
     .value();
 
 const UploadErrorHeaders = _([
@@ -11,7 +13,7 @@ const UploadErrorHeaders = _([
     CompletedBlueprintStates.FailedParsing
 ])
     .keyBy()
-    .mapValues(value => Stage.i18n.t(`widgets.common.blueprintUpload.errorHeaders.${_.camelCase(value)}`))
+    .mapValues(value => i18n.t(`widgets.common.blueprintUpload.errorHeaders.${_.camelCase(value)}`))
     .value();
 
 function UploadBlueprintBasicForm({
@@ -39,15 +41,15 @@ function UploadBlueprintBasicForm({
             {blueprintUploading && <LoadingOverlay message={UploadLabels[uploadState]} />}
             {_.head(children)}
             <Form.Field
-                label={Stage.i18n.t(`widgets.common.blueprintUpload.inputs.blueprintName.label`)}
+                label={i18n.t(`widgets.common.blueprintUpload.inputs.blueprintName.label`)}
                 required
                 error={errors.blueprintName}
-                help={Stage.i18n.t(`widgets.common.blueprintUpload.inputs.blueprintName.help`)}
+                help={i18n.t(`widgets.common.blueprintUpload.inputs.blueprintName.help`)}
             >
                 <Form.Input name="blueprintName" value={blueprintName} onChange={onInputChange} />
             </Form.Field>
             <Form.Field
-                label={Stage.i18n.t(`widgets.common.blueprintUpload.inputs.blueprintYamlFile.label`)}
+                label={i18n.t(`widgets.common.blueprintUpload.inputs.blueprintYamlFile.label`)}
                 required
                 error={errors.blueprintYamlFile}
                 help={yamlFileHelp}

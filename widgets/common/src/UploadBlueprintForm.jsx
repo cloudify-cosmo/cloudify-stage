@@ -144,6 +144,7 @@ class UploadBlueprintForm extends React.Component {
         } = this.props;
         const { Form } = Stage.Basic;
         const { UploadBlueprintBasicForm } = Stage.Common;
+        const { i18n } = Stage;
 
         return (
             <UploadBlueprintBasicForm
@@ -154,19 +155,19 @@ class UploadBlueprintForm extends React.Component {
                 uploadState={uploadState}
                 formLoading={loadingState}
                 blueprintUploading={loadingProp}
-                yamlFileHelp={Stage.i18n.t(`widgets.common.blueprintUpload.inputs.blueprintYamlFile.label`)}
+                yamlFileHelp={i18n.t(`widgets.common.blueprintUpload.inputs.blueprintYamlFile.label`)}
                 onInputChange={this.handleInputChange}
                 onErrorsDismiss={this.resetErrors}
             >
                 <Form.Field
-                    label={Stage.i18n.t(`widgets.common.blueprintUpload.inputs.blueprintPackage.label`)}
+                    label={i18n.t(`widgets.common.blueprintUpload.inputs.blueprintPackage.label`)}
                     required
                     error={errors.blueprintUrl}
-                    help={Stage.i18n.t(`widgets.common.blueprintUpload.inputs.blueprintPackage.help`)}
+                    help={i18n.t(`widgets.common.blueprintUpload.inputs.blueprintPackage.help`)}
                 >
                     <Form.UrlOrFile
                         name="blueprint"
-                        placeholder={Stage.i18n.t(`widgets.common.blueprintUpload.inputs.blueprintPackage.placeholder`)}
+                        placeholder={i18n.t(`widgets.common.blueprintUpload.inputs.blueprintPackage.placeholder`)}
                         onChangeUrl={this.onBlueprintUrlChange}
                         onBlurUrl={this.onBlueprintUrlBlur}
                         onChangeFile={this.onBlueprintFileChange}
@@ -175,11 +176,11 @@ class UploadBlueprintForm extends React.Component {
                 <Form.Field
                     label="Blueprint icon"
                     error={errors.imageUrl}
-                    help={Stage.i18n.t(`widgets.common.blueprintUpload.inputs.blueprintIcon.help`)}
+                    help={i18n.t(`widgets.common.blueprintUpload.inputs.blueprintIcon.help`)}
                 >
                     <Form.UrlOrFile
                         name="image"
-                        placeholder={Stage.i18n.t(`widgets.common.blueprintUpload.inputs.blueprintIcon.placeholder`)}
+                        placeholder={i18n.t(`widgets.common.blueprintUpload.inputs.blueprintIcon.placeholder`)}
                         onChangeUrl={this.onBlueprintImageUrlChange}
                         onChangeFile={this.onBlueprintImageChange}
                     />
