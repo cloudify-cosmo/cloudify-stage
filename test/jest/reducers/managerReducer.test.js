@@ -6,7 +6,7 @@ import { applyMiddleware, createStore } from 'redux';
 
 import { getManagerData, login, logout } from 'actions/managers';
 import * as types from 'actions/types';
-import managerReducer from 'reducers/managerReducer';
+import managerReducer, { emptyState } from 'reducers/managerReducer';
 import licenseReducer from 'reducers/licenseReducer';
 import rbac from '../resources/rbac';
 import versions from '../resources/versions';
@@ -58,7 +58,6 @@ describe('(Reducer) Manager', () => {
                         }
                     ];
 
-                    expect(actualActions).toHaveLength(expectedActions.length);
                     expect(actualActions).toEqual(expectedActions);
                 });
             });
@@ -114,7 +113,6 @@ describe('(Reducer) Manager', () => {
                         }
                     ];
 
-                    expect(actualActions).toHaveLength(expectedActions.length);
                     expect(actualActions).toEqual(expectedActions);
                 });
             });
@@ -124,21 +122,10 @@ describe('(Reducer) Manager', () => {
 
                 return store.dispatch(login(username, password)).then(() => {
                     expect(store.getState()).toEqual({
-                        auth: {
-                            groupSystemRoles: {},
-                            role: null,
-                            tenantsRoles: {}
-                        },
-                        clusterStatus: {},
+                        ...emptyState,
                         err: 'User unauthorized',
-                        isLoggingIn: false,
                         lastUpdated: Date.now(),
-                        license: {},
-                        permissions: {},
-                        roles: [],
-                        tenants: {},
-                        username,
-                        version: {}
+                        username
                     });
                 });
             });
@@ -167,7 +154,6 @@ describe('(Reducer) Manager', () => {
                     }
                 ];
 
-                expect(actualActions).toHaveLength(expectedActions.length);
                 expect(actualActions).toEqual(expectedActions);
             });
         });
@@ -177,20 +163,8 @@ describe('(Reducer) Manager', () => {
 
             return store.dispatch(logout('License expired')).then(() => {
                 expect(store.getState()).toEqual({
-                    auth: {
-                        groupSystemRoles: {},
-                        role: null,
-                        tenantsRoles: {}
-                    },
-                    clusterStatus: {},
-                    err: null,
-                    isLoggingIn: false,
-                    lastUpdated: Date.now(),
-                    license: {},
-                    permissions: {},
-                    roles: [],
-                    tenants: {},
-                    version: {}
+                    ...emptyState,
+                    lastUpdated: Date.now()
                 });
             });
         });
@@ -228,7 +202,6 @@ describe('(Reducer) Manager', () => {
                         }
                     ];
 
-                    expect(actualActions).toHaveLength(expectedActions.length);
                     expect(actualActions).toEqual(expectedActions);
                 });
             });
@@ -285,7 +258,6 @@ describe('(Reducer) Manager', () => {
                         }
                     ];
 
-                    expect(actualActions).toHaveLength(expectedActions.length);
                     expect(actualActions).toEqual(expectedActions);
                 });
             });
@@ -342,7 +314,6 @@ describe('(Reducer) Manager', () => {
                         }
                     ];
 
-                    expect(actualActions).toHaveLength(expectedActions.length);
                     expect(actualActions).toEqual(expectedActions);
                 });
             });
@@ -393,7 +364,6 @@ describe('(Reducer) Manager', () => {
                         }
                     ];
 
-                    expect(actualActions).toHaveLength(expectedActions.length);
                     expect(actualActions).toEqual(expectedActions);
                 });
             });
