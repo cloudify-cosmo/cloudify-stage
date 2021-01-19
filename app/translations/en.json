@@ -387,11 +387,11 @@
             },
             "blueprintUpload": {
                 "uploadLabels": {
-                    "pending": "0/4: Waiting for blueprint upload to start...",
-                    "uploading": "1/4: Uploading blueprint...",
-                    "extracting": "2/4: Extracting blueprint...",
-                    "parsing": "3/4: Parsing blueprint...",
-                    "uploadingImage": "4/4: Uploading image..."
+                    "pending": "1/5: Waiting for blueprint upload to start...",
+                    "uploading": "2/5: Uploading blueprint...",
+                    "extracting": "3/5: Extracting blueprint...",
+                    "parsing": "4/5: Parsing blueprint...",
+                    "uploadingImage": "5/5: Uploading image..."
                 },
                 "errorHeaders": {
                     "failedUploading": "Blueprint upload failed",
