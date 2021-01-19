@@ -179,7 +179,8 @@
         },
         "password": "Password",
         "username": "Username",
-        "submit": "LOGIN"
+        "submit": "LOGIN",
+        "ssoSubmit": "LOGIN WITH SSO"
     },
     "maintenanceMode": {
         "activate": "Activate Maintenance Mode",
@@ -193,6 +194,7 @@
         "header": "Maintenance mode",
         "message": "Server is on maintenance mode and is not available at the moment."
     },
+    "managerDataError": "Error getting data from the manager, cannot load page",
     "noLicense": "No active license",
     "noPages": "No pages available to display. Please try to reset application to the default settings.",
     "notFound": {

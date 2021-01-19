@@ -4,6 +4,9 @@
 
 const UniqueTokenStrategy = require('passport-unique-token').Strategy;
 const AuthHandler = require('../handler/AuthHandler');
+const LoggerHandler = require('../handler/LoggerHandler');
+
+const logger = LoggerHandler.getLogger('Passport');
 
 module.exports = () => {
     return new UniqueTokenStrategy(
@@ -15,8 +18,9 @@ module.exports = () => {
                 .then(user => {
                     return done(null, user);
                 })
-                .catch(err => {
-                    return done(null, false, err);
+                .catch(error => {
+                    logger.debug('Cannot get user', JSON.stringify(error));
+                    return done(null, false, error);
                 });
         }
     );

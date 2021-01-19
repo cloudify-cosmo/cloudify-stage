@@ -18,6 +18,8 @@ export default {
     APP_DATA_PATH: '/appData',
 
     TOKEN_COOKIE_NAME: 'XSRF-TOKEN',
+    ROLE_COOKIE_NAME: 'ROLE',
+    USERNAME_COOKIE_NAME: 'USERNAME',
 
     EDITION: {
         PREMIUM: 'premium',
