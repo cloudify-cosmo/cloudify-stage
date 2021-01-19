@@ -19,7 +19,7 @@ module.exports = () => {
                     return done(null, user);
                 })
                 .catch(error => {
-                    logger.debug('Cannot get user', JSON.stringify(error));
+                    logger.debug('Cannot get user', error);
                     return done(null, false, error);
                 });
         }
