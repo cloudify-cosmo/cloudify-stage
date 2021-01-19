@@ -67,21 +67,14 @@ describe('(Reducer) Manager', () => {
 
                 return store.dispatch(login(username, password)).then(() => {
                     expect(store.getState()).toEqual({
+                        ...emptyState,
                         auth: {
                             groupSystemRoles: {},
                             role,
                             tenantsRoles: {}
                         },
-                        clusterStatus: {},
-                        err: null,
-                        isLoggingIn: false,
                         lastUpdated: Date.now(),
-                        license: {},
-                        permissions: {},
-                        roles: [],
-                        tenants: {},
-                        username,
-                        version: {}
+                        username
                     });
                 });
             });
