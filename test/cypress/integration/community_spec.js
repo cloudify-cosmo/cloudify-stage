@@ -1,6 +1,6 @@
 describe('Community version', () => {
     before(() => {
-        cy.activate().then(token => {
+        cy.getAdminToken().then(token => {
             cy.server();
             cy.route({
                 method: 'POST',
@@ -10,6 +10,7 @@ describe('Community version', () => {
                     'Set-Cookie': `XSRF-TOKEN=${token}; Path=/`
                 }
             });
+            cy.route('/console/auth/manager', 'fixture:community/manager.json');
             cy.route('/console/config', 'fixture:community/config.json');
             cy.usePageMock().login();
         });
