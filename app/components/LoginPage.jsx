@@ -29,7 +29,8 @@ export default class LoginPage extends Component {
         const errors = {};
 
         if (isSamlEnabled) {
-            window.open(samlSsoUrl, '_self');
+            // eslint-disable-next-line scanjs-rules/assign_to_location
+            window.location = samlSsoUrl;
         }
 
         if (_.isEmpty(username)) {

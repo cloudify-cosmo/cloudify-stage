@@ -27,7 +27,7 @@ describe('Login', () => {
         cy.activate();
 
         cy.server();
-        const ssoUrl = 'https://www.w3.org/';
+        const ssoUrl = '/sso-redirect';
         cy.route('/console/config', {
             app: {
                 saml: {
@@ -37,14 +37,14 @@ describe('Login', () => {
             }
         });
 
-        cy.visit('/console/login');
+        cy.visit('/console/login').waitUntilLoaded();
         cy.get('button').as('loginButton');
 
         cy.get('@loginButton').should('contain.text', 'LOGIN WITH SSO');
         cy.get('input').should('not.exist');
 
         cy.get('@loginButton').click();
-        cy.window().its('open').should('be.calledWith', ssoUrl);
+        cy.url().should('include', ssoUrl);
 
         cy.server({ enable: false });
         cy.reload();
