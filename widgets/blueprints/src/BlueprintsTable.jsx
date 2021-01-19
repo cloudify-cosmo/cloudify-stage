@@ -47,7 +47,7 @@ export default function BlueprintsTable({
                     id={`${tableName}_${item.id}`}
                     key={item.id}
                     selected={item.isSelected}
-                    onClick={() => onSelectBlueprint(item)}
+                    onClick={BlueprintActions.isUploaded(item) ? () => onSelectBlueprint(item) : null}
                 >
                     <DataTable.Data>
                         <Image src={Stage.Utils.Url.url(`/ba/image/${item.id}`)} width="30px" height="auto" inline />{' '}
