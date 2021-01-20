@@ -20,9 +20,10 @@ function UploadBlueprintBasicForm({
     blueprintName,
     blueprintUploading,
     blueprintYamlFile,
-    children,
     errors,
+    firstFormField,
     formLoading,
+    lastFormField,
     onErrorsDismiss,
     onInputChange,
     uploadState,
@@ -39,7 +40,7 @@ function UploadBlueprintBasicForm({
             onErrorsDismiss={onErrorsDismiss}
         >
             {blueprintUploading && <LoadingOverlay message={UploadLabels[uploadState]} />}
-            {_.head(children)}
+            {firstFormField}
             <Form.Field
                 label={i18n.t(`widgets.common.blueprintUpload.inputs.blueprintName.label`)}
                 required
@@ -65,7 +66,7 @@ function UploadBlueprintBasicForm({
                     onChange={onInputChange}
                 />
             </Form.Field>
-            {_.tail(children)}
+            {lastFormField}
         </Form>
     );
 }
@@ -74,9 +75,10 @@ UploadBlueprintBasicForm.propTypes = {
     blueprintName: PropTypes.string,
     blueprintUploading: PropTypes.bool,
     blueprintYamlFile: PropTypes.string,
-    children: PropTypes.arrayOf(PropTypes.element),
     errors: PropTypes.shape({ blueprintName: PropTypes.string, blueprintYamlFile: PropTypes.string }),
+    firstFormField: PropTypes.element,
     formLoading: PropTypes.bool,
+    lastFormField: PropTypes.element,
     onErrorsDismiss: PropTypes.func.isRequired,
     onInputChange: PropTypes.func.isRequired,
     uploadState: PropTypes.string,
@@ -88,9 +90,10 @@ UploadBlueprintBasicForm.defaultProps = {
     blueprintName: '',
     blueprintUploading: false,
     blueprintYamlFile: '',
-    children: null,
     errors: {},
+    firstFormField: null,
     formLoading: false,
+    lastFormField: null,
     uploadState: null,
     yamlFiles: null
 };

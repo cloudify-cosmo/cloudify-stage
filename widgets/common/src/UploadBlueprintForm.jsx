@@ -158,34 +158,37 @@ class UploadBlueprintForm extends React.Component {
                 yamlFileHelp={i18n.t(`widgets.common.blueprintUpload.inputs.blueprintYamlFile.label`)}
                 onInputChange={this.handleInputChange}
                 onErrorsDismiss={this.resetErrors}
-            >
-                <Form.Field
-                    label={i18n.t(`widgets.common.blueprintUpload.inputs.blueprintPackage.label`)}
-                    required
-                    error={errors.blueprintUrl}
-                    help={i18n.t(`widgets.common.blueprintUpload.inputs.blueprintPackage.help`)}
-                >
-                    <Form.UrlOrFile
-                        name="blueprint"
-                        placeholder={i18n.t(`widgets.common.blueprintUpload.inputs.blueprintPackage.placeholder`)}
-                        onChangeUrl={this.onBlueprintUrlChange}
-                        onBlurUrl={this.onBlueprintUrlBlur}
-                        onChangeFile={this.onBlueprintFileChange}
-                    />
-                </Form.Field>
-                <Form.Field
-                    label="Blueprint icon"
-                    error={errors.imageUrl}
-                    help={i18n.t(`widgets.common.blueprintUpload.inputs.blueprintIcon.help`)}
-                >
-                    <Form.UrlOrFile
-                        name="image"
-                        placeholder={i18n.t(`widgets.common.blueprintUpload.inputs.blueprintIcon.placeholder`)}
-                        onChangeUrl={this.onBlueprintImageUrlChange}
-                        onChangeFile={this.onBlueprintImageChange}
-                    />
-                </Form.Field>
-            </UploadBlueprintBasicForm>
+                firstFormField={
+                    <Form.Field
+                        label={i18n.t(`widgets.common.blueprintUpload.inputs.blueprintPackage.label`)}
+                        required
+                        error={errors.blueprintUrl}
+                        help={i18n.t(`widgets.common.blueprintUpload.inputs.blueprintPackage.help`)}
+                    >
+                        <Form.UrlOrFile
+                            name="blueprint"
+                            placeholder={i18n.t(`widgets.common.blueprintUpload.inputs.blueprintPackage.placeholder`)}
+                            onChangeUrl={this.onBlueprintUrlChange}
+                            onBlurUrl={this.onBlueprintUrlBlur}
+                            onChangeFile={this.onBlueprintFileChange}
+                        />
+                    </Form.Field>
+                }
+                lastFormField={
+                    <Form.Field
+                        label="Blueprint icon"
+                        error={errors.imageUrl}
+                        help={i18n.t(`widgets.common.blueprintUpload.inputs.blueprintIcon.help`)}
+                    >
+                        <Form.UrlOrFile
+                            name="image"
+                            placeholder={i18n.t(`widgets.common.blueprintUpload.inputs.blueprintIcon.placeholder`)}
+                            onChangeUrl={this.onBlueprintImageUrlChange}
+                            onChangeFile={this.onBlueprintImageChange}
+                        />
+                    </Form.Field>
+                }
+            />
         );
     }
 }
