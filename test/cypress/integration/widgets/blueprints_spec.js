@@ -312,13 +312,13 @@ describe('Blueprints widget', () => {
                 cy.get('.button.ok').click();
 
                 const getBlueprint = RegExp(`/console/sp\\?su=/blueprints/${blueprintName}`);
-                cy.contains('0/4: Waiting for blueprint upload to start...');
+                cy.contains('1/5: Waiting for blueprint upload to start...');
                 cy.route(getBlueprint, { state: 'uploading' });
-                cy.contains('1/4: Uploading blueprint...');
+                cy.contains('2/5: Uploading blueprint...');
                 cy.route(getBlueprint, { state: 'extracting' });
-                cy.contains('2/4: Extracting blueprint...');
+                cy.contains('3/5: Extracting blueprint...');
                 cy.route(getBlueprint, { state: 'parsing' });
-                cy.contains('3/4: Parsing blueprint...');
+                cy.contains('4/5: Parsing blueprint...');
                 cy.route(getBlueprint, { state: 'uploaded' });
 
                 getBlueprintRow(blueprintName).contains('read-secret-blueprint.yaml');

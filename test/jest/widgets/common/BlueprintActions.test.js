@@ -3,9 +3,19 @@ import BlueprintActions from 'common/src/BlueprintActions';
 const { InProgressBlueprintStates } = BlueprintActions;
 
 describe('(Widgets common) BlueprintActions', () => {
-    it('uploads a blueprint successfully', () => {
-        jest.setTimeout(6000);
+    const wait = jest.fn(() => Promise.resolve());
+    const resetAttempts = jest.fn();
 
+    beforeEach(() => {
+        Stage.Common = {
+            PollHelper() {
+                this.wait = wait;
+                this.resetAttempts = resetAttempts;
+            }
+        };
+    });
+
+    it('uploads a blueprint successfully', () => {
         const getBlueprintData = jest.fn();
         getBlueprintData.mockResolvedValueOnce({ state: InProgressBlueprintStates.Pending });
         getBlueprintData.mockResolvedValueOnce({ state: InProgressBlueprintStates.Uploading });
@@ -25,6 +35,8 @@ describe('(Widgets common) BlueprintActions', () => {
                 expect(onStateChanged).toHaveBeenNthCalledWith(2, InProgressBlueprintStates.Extracting);
                 expect(onStateChanged).toHaveBeenNthCalledWith(3, InProgressBlueprintStates.Parsing);
                 expect(onStateChanged).toHaveBeenNthCalledWith(4, InProgressBlueprintStates.UploadingImage);
+                expect(wait).toHaveBeenCalledTimes(5);
+                expect(resetAttempts).toHaveBeenCalledTimes(3);
             });
     });
 

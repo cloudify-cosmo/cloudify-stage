@@ -2,7 +2,7 @@
  * Created by kinneretzin on 19/10/2016.
  */
 
-class DeploymentActions {
+export default class DeploymentActions {
     constructor(toolbox) {
         this.toolbox = toolbox;
     }
@@ -94,28 +94,22 @@ class DeploymentActions {
         return this.toolbox.getManager().doGet('/sites?_include=name&_sort=name');
     }
 
-    async waitUntilCreated(deploymentId, maxNumberOfRetries = 60, waitingInterval = 1000 /* ms */) {
-        const { ExecutionActions } = Stage.Common;
+    async waitUntilCreated(deploymentId, maxNumberOfRetries = 60) {
+        const { ExecutionActions, PollHelper } = Stage.Common;
 
         const executionActions = new ExecutionActions(this.toolbox);
-        let deploymentCreated = false;
-        for (let i = 0; i < maxNumberOfRetries && !deploymentCreated; i += 1) {
+        const pollHelper = new PollHelper(maxNumberOfRetries);
+        for (;;) {
             // eslint-disable-next-line no-await-in-loop
-            await new Promise(resolve => {
-                setTimeout(resolve, waitingInterval);
-            })
-                .then(() => executionActions.doGetExecutions(deploymentId))
-                // eslint-disable-next-line no-loop-func
-                .then(({ items }) => {
-                    deploymentCreated = !_.isEmpty(items) && _.isUndefined(_.find(items, { ended_at: null }));
-                });
-        }
+            await pollHelper.wait();
 
-        if (deploymentCreated) {
-            return Promise.resolve();
+            // eslint-disable-next-line no-await-in-loop
+            const { items } = await executionActions.doGetExecutions(deploymentId);
+
+            if (!_.isEmpty(items) && _.isUndefined(_.find(items, { ended_at: null }))) {
+                return;
+            }
         }
-        const timeout = Math.floor((maxNumberOfRetries * waitingInterval) / 1000);
-        return Promise.reject(`Timeout exceeded. Deployment was not created after ${timeout} seconds.`);
     }
 }
 

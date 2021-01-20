@@ -124,13 +124,14 @@ export default class BlueprintActions {
             .then(() => this.doUploadImage(blueprintName, imageUrl, image));
     }
 
-    async waitUntilUploaded(blueprintName, onStateChanged, maxNumberOfRetries = 60, waitingInterval = 1000 /* ms */) {
+    async waitUntilUploaded(blueprintName, onStateChanged, maxNumberOfRetries = 60) {
+        const { PollHelper } = Stage.Common;
+        const pollHelper = new PollHelper(maxNumberOfRetries);
+
         let previousState = BlueprintActions.InProgressBlueprintStates.Pending;
-        for (let i = 0; i < maxNumberOfRetries; i += 1) {
+        for (;;) {
             // eslint-disable-next-line no-await-in-loop
-            await new Promise(resolve => {
-                setTimeout(resolve, waitingInterval);
-            });
+            await pollHelper.wait();
 
             // eslint-disable-next-line no-await-in-loop
             const blueprint = await this.doGetFullBlueprintData({ id: blueprintName });
@@ -146,14 +147,11 @@ export default class BlueprintActions {
             }
 
             if (blueprint.state !== previousState) {
-                i = 0;
+                pollHelper.resetAttempts();
                 onStateChanged(blueprint.state);
                 previousState = blueprint.state;
             }
         }
-
-        const timeout = Math.floor((maxNumberOfRetries * waitingInterval) / 1000);
-        throw Error(`Timeout exceeded. Blueprint upload state not updated for ${timeout} seconds.`);
     }
 
     doSetVisibility(blueprintId, visibility) {
