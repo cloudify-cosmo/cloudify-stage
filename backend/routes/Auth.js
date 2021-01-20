@@ -26,7 +26,7 @@ router.post('/login', (req, res) =>
             res.send({ role: token.role });
         })
         .catch(err => {
-            logger.error(JSON.stringify(err));
+            logger.error(err);
             if (err.error_code === 'unauthorized_error') {
                 res.status(401).send({ message: err.message || 'Invalid credentials' });
             } else if (err.error_code === 'maintenance_mode_active') {
@@ -41,7 +41,7 @@ router.post('/saml/callback', passport.authenticate('saml', { session: false }),
     if (!req.body || !req.body.SAMLResponse || !req.user) {
         res.status(401).send({ message: 'Invalid Request' });
     } else {
-        logger.debug('Received SAML Response for user', JSON.stringify(req.user));
+        logger.debug('Received SAML Response for user', req.user);
         AuthHandler.getTokenViaSamlResponse(req.body.SAMLResponse)
             .then(token => {
                 res.cookie(Consts.TOKEN_COOKIE_NAME, token.value);
@@ -50,7 +50,7 @@ router.post('/saml/callback', passport.authenticate('saml', { session: false }),
                 res.redirect(Consts.CONTEXT_PATH);
             })
             .catch(err => {
-                logger.error(JSON.stringify(err));
+                logger.error(err);
                 res.status(500).send({ message: 'Failed to authenticate with manager' });
             });
     }
@@ -78,7 +78,7 @@ router.get('/manager', (req, res) => {
         )
         .then(data => res.send(data))
         .catch(error => {
-            logger.error(JSON.stringify(error));
+            logger.error(error);
             res.status(500).send({ message: 'Failed to get manager data' });
         });
 });
@@ -101,7 +101,7 @@ router.get('/RBAC', passport.authenticate('token', { session: false }), (req, re
     AuthHandler.getRBAC(req.headers['authentication-token'])
         .then(res.send)
         .catch(err => {
-            logger.error(JSON.stringify(err));
+            logger.error(err);
             res.status(500).send({ message: 'Failed to get RBAC configuration', error: err });
         });
 });
