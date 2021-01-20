@@ -16,8 +16,8 @@ describe('(Widgets common) DeploymentActions', () => {
     });
 
     it('waits for deployment to complete', () => {
-        doGetExecutions.mockResolvedValueOnce([]);
-        doGetExecutions.mockResolvedValueOnce([{}]);
+        doGetExecutions.mockResolvedValueOnce({});
+        doGetExecutions.mockResolvedValueOnce({ items: [{}] });
 
         const deploymentId = 'depId';
 
