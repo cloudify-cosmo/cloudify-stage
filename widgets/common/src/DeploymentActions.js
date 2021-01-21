@@ -94,11 +94,11 @@ export default class DeploymentActions {
         return this.toolbox.getManager().doGet('/sites?_include=name&_sort=name');
     }
 
-    async waitUntilCreated(deploymentId, maxNumberOfRetries = 60) {
+    async waitUntilCreated(deploymentId) {
         const { ExecutionActions, PollHelper } = Stage.Common;
 
         const executionActions = new ExecutionActions(this.toolbox);
-        const pollHelper = new PollHelper(maxNumberOfRetries);
+        const pollHelper = new PollHelper(60);
         for (;;) {
             // eslint-disable-next-line no-await-in-loop
             await pollHelper.wait();

@@ -124,9 +124,9 @@ export default class BlueprintActions {
             .then(() => this.doUploadImage(blueprintName, imageUrl, image));
     }
 
-    async waitUntilUploaded(blueprintName, onStateChanged, maxNumberOfRetries = 60) {
+    async waitUntilUploaded(blueprintName, onStateChanged) {
         const { PollHelper } = Stage.Common;
-        const pollHelper = new PollHelper(maxNumberOfRetries);
+        const pollHelper = new PollHelper(60);
 
         let previousState = BlueprintActions.InProgressBlueprintStates.Pending;
         for (;;) {
