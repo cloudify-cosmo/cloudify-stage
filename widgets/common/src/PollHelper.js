@@ -2,7 +2,7 @@ export default class PollHelper {
     constructor(maxAttempts) {
         this.maxAttempts = maxAttempts;
         this.attempts = 0;
-        this.waitInterval = 0;
+        this.waitInterval = 100;
     }
 
     wait() {
