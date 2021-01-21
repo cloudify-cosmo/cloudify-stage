@@ -12,6 +12,10 @@ const filterFields = [
     'siteName'
 ];
 
+function appendQueryParam(url, param, value) {
+    return `${url}${url.indexOf('?') > 0 ? '&' : '?'}${param}=${value}`;
+}
+
 export default class Filter extends React.Component {
     constructor(props, context) {
         super(props, context);
@@ -164,11 +168,15 @@ export default class Filter extends React.Component {
                     <Form.Field key={entityName}>
                         <DynamicDropdown
                             multiple={configuration.allowMultipleSelection}
-                            fetchUrl={`${url}${url.indexOf('?') > 0 ? '&' : '?'}_include=${_(filter)
-                                .keys()
-                                .concat(valueProp || 'id')
-                                .concat(fetchIncludeExtra || [])
-                                .join()}`}
+                            fetchUrl={appendQueryParam(
+                                url,
+                                '_include',
+                                _(filter)
+                                    .keys()
+                                    .concat(valueProp || 'id')
+                                    .concat(fetchIncludeExtra || [])
+                                    .join()
+                            )}
                             onChange={this[`select${joinedEntityName}`]}
                             toolbox={toolbox}
                             value={value}
