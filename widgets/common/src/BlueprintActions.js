@@ -24,7 +24,7 @@ export default class BlueprintActions {
     }
 
     static isCompleted(blueprint) {
-        return _.values(BlueprintActions.CompletedBlueprintStates).indexOf(blueprint.state) >= 0;
+        return Object.values(BlueprintActions.CompletedBlueprintStates).includes(blueprint.state);
     }
 
     constructor(toolbox) {
