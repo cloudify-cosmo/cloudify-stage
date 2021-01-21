@@ -8,7 +8,7 @@ export default class PollHelper {
     wait() {
         this.attempts += 1;
         if (this.attempts > this.maxAttempts) {
-            return Promise.reject(Error('Timeout exceeded'));
+            return Promise.reject(new Error('Timeout exceeded'));
         }
 
         this.waitInterval = Math.min(1000, this.waitInterval + 100);

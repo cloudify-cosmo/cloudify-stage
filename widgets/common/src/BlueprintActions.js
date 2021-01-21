@@ -141,7 +141,7 @@ export default class BlueprintActions {
             }
 
             if (BlueprintActions.isCompleted(blueprint)) {
-                const error = Error(blueprint.error);
+                const error = new Error(blueprint.error);
                 error.state = blueprint.state;
                 throw error;
             }
