@@ -1,3 +1,7 @@
+.blueprintsTable th:nth-child(6) {
+    min-width: 81px;
+}
+
 .blueprintCatalog .actionButtons {
     position: absolute !important;
     bottom: 1rem;

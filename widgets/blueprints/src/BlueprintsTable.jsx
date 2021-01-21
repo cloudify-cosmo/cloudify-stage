@@ -39,7 +39,7 @@ export default function BlueprintsTable({
             <DataTable.Column label="Creator" name="created_by" width="15%" />
             <DataTable.Column label="Main Blueprint File" name="main_file_name" width="15%" />
             <DataTable.Column label="State" name="state" />
-            <DataTable.Column label="# Deployments" width="10%" />
+            <DataTable.Column label="# Deployments" />
             <DataTable.Column width="10%" />
 
             {data.items.map(item => (
@@ -68,7 +68,7 @@ export default function BlueprintsTable({
                     <DataTable.Data>
                         <BlueprintState blueprint={item} />
                     </DataTable.Data>
-                    <DataTable.Data>
+                    <DataTable.Data style={{ textAlign: 'center' }}>
                         <div className="ui green horizontal label">{item.depCount}</div>
                     </DataTable.Data>
 

@@ -2,7 +2,7 @@ export default function BlueprintState({ blueprint }) {
     const { Icon, Popup } = Stage.Basic;
     return (
         <>
-            {_.words(_.startCase(blueprint.state))[0]}
+            {_.words(_.startCase(blueprint.state))[0]}{' '}
             {blueprint.error && (
                 <Popup
                     offset={[-11, 0]}
