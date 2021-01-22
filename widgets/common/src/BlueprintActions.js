@@ -99,7 +99,7 @@ export default class BlueprintActions {
         visibility,
         onStateChanged = _.noop
     ) {
-        const params = { visibility };
+        const params = { visibility, async_upload: true };
 
         if (!_.isEmpty(blueprintYamlFile)) {
             params.application_file_name = blueprintYamlFile;
