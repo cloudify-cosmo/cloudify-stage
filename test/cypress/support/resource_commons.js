@@ -1,5 +1,9 @@
 import _ from 'lodash';
 
+function appendQueryParam(url, param, value) {
+    return `${url}${url.indexOf('?') > 0 ? '&' : '?'}${param}=${value}`;
+}
+
 // eslint-disable-next-line import/prefer-default-export
 export function waitUntilEmpty(resource, search, numberOfRetriesLeft = 60, waitingInterval = 1000) {
     if (numberOfRetriesLeft <= 0) {
@@ -7,7 +11,7 @@ export function waitUntilEmpty(resource, search, numberOfRetriesLeft = 60, waiti
     }
 
     let url = `/${resource}`;
-    if (search) url += `?_search=${search}`;
+    if (search) url = appendQueryParam(url, `_search`, search);
     cy.cfyRequest(url, 'GET').then(response => {
         if (_.isEmpty(response.body.items)) {
             return;
