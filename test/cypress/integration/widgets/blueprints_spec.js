@@ -73,7 +73,7 @@ describe('Blueprints widget', () => {
 
             cy.contains(emptyBlueprintName).click();
 
-            cy.get('div.blueprintsWidget table.blueprintsTable');
+            cy.get('div.blueprintsWidget table.blueprintsTable').should('exist');
         });
     });
 
@@ -84,7 +84,7 @@ describe('Blueprints widget', () => {
         });
 
         it('as a list', () => {
-            cy.get('div.blueprintsWidget table.blueprintsTable');
+            cy.get('div.blueprintsWidget table.blueprintsTable').should('exist');
             cy.get('div.blueprintsWidget .segmentList').should('not.exist');
 
             cy.contains('tr', 'pending').within(() => {
@@ -171,7 +171,7 @@ describe('Blueprints widget', () => {
             );
 
             cy.get('div.blueprintsWidget table.blueprintsTable').should('not.exist');
-            cy.get('div.blueprintsWidget .segmentList');
+            cy.get('div.blueprintsWidget .segmentList').should('exist');
 
             cy.get('.pending')
                 .parent()
@@ -226,7 +226,7 @@ describe('Blueprints widget', () => {
                 .within(() => {
                     cy.contains('Failed');
                     cy.get('.actionButtons').children().should('have.length', 1);
-                    cy.get('.trash');
+                    cy.get('.trash').should('exist');
                     cy.get('a').click({ force: true });
                     cy.get('.warning').trigger('mouseover');
                 });
@@ -238,7 +238,7 @@ describe('Blueprints widget', () => {
                 .within(() => {
                     cy.contains('Failed');
                     cy.get('.actionButtons').children().should('have.length', 1);
-                    cy.get('.trash');
+                    cy.get('.trash').should('exist');
                     cy.get('a').click({ force: true });
                     cy.get('.warning').trigger('mouseover');
                 });
@@ -250,7 +250,7 @@ describe('Blueprints widget', () => {
                 .within(() => {
                     cy.contains('Invalid');
                     cy.get('.actionButtons').children().should('have.length', 1);
-                    cy.get('.trash');
+                    cy.get('.trash').should('exist');
                     cy.get('a').click({ force: true });
                     cy.get('.warning').trigger('mouseover');
                 });
