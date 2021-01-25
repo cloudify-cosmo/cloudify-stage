@@ -72,4 +72,6 @@ usermod -aG stage_group nginx
 %attr(555,root,cfyuser) /opt/cloudify/stage/restore-snapshot.py
 %attr(-,stage_user,stage_group) %{stage_path}
 %attr(-,cfyuser,cfyuser) %{stage_path}/conf
+%config(noreplace) %{stage_path}/conf/manager.json
+%config(noreplace) %{stage_path}/conf/app.json
 %attr(-,stage_user,stage_group) %{logs_path}
