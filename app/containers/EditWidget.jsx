@@ -42,12 +42,12 @@ class EditWidgetComponent extends React.Component {
     }
 
     render() {
-        const { configDef, configuration, onWidgetEdited, widget } = this.props;
+        const { configDef, configuration, onWidgetEdited, widget, iconSize } = this.props;
         const { showConfig } = this.state;
 
         return (
             <span>
-                <EditWidgetIcon onShowConfig={this.showConfig} />
+                <EditWidgetIcon onShowConfig={this.showConfig} size={iconSize} />
                 <EditWidgetModal
                     widget={widget}
                     configDef={configDef}
@@ -65,7 +65,10 @@ EditWidgetComponent.propTypes = {
     widget: PropTypes.shape({}).isRequired,
     onWidgetEdited: PropTypes.func.isRequired,
     configDef: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
-    configuration: PropTypes.shape({}).isRequired
+    configuration: PropTypes.shape({}).isRequired,
+    // iconSize is an optional forwarded prop
+    // eslint-disable-next-line react/require-default-props
+    iconSize: PropTypes.string
 };
 
 const EditWidget = connect(mapStateToProps, mapDispatchToProps)(EditWidgetComponent);
