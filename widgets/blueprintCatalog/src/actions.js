@@ -52,23 +52,6 @@ export default class Actions {
         return this.blueprintActions.doListYamlFiles(blueprintUrl);
     }
 
-    doUpload(blueprintName, blueprintFileName, zipUrl, imageUrl, visibility) {
-        const params = { visibility, blueprint_archive_url: zipUrl };
-
-        if (!_.isEmpty(blueprintFileName)) {
-            params.application_file_name = blueprintFileName;
-        }
-
-        return this.toolbox
-            .getManager()
-            .doPut(`/blueprints/${blueprintName}`, params)
-            .then(() =>
-                this.toolbox
-                    .getInternal()
-                    .doPost(`/ba/image/${blueprintName}`, { imageUrl: Stage.Utils.Url.url(imageUrl) })
-            );
-    }
-
     doFindImage(repo, defaultImage) {
         return this.doGetRepoTree(repo).then(tree => {
             return _.findIndex(tree.tree, { path: Consts.BLUEPRINT_IMAGE_FILENAME }) < 0

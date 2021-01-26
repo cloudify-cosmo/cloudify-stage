@@ -7,7 +7,6 @@ Cypress.Commands.add('uploadBlueprint', (pathOrUrl, id, yamlFile = 'blueprint.ya
             'PUT'
         );
     }
-
     return cy.cfyFileRequest(
         pathOrUrl,
         true,
