@@ -17,7 +17,8 @@
         "moment": true,
         "PropTypes": true,
         "React": true,
-        "Stage": true
+        "Stage": true,
+        "styled": true
     },
     "overrides": [
         {

@@ -1,7 +1,3 @@
-import React, { useRef } from 'react';
-import { Ref } from 'semantic-ui-react';
-import styled from 'styled-components';
-
 const {
     i18n,
     Hooks: { useBoolean, useResettableState }
@@ -58,6 +54,7 @@ function LabelKeyDropdown({ value, onChange, toolbox, innerRef }) {
     const [searchQuery, setSearchQuery, resetSearchQuery] = useResettableState('');
     const [showError, setShowError, unsetShowError] = useBoolean();
 
+    const { Ref } = Stage.Basic;
     const { DynamicDropdown } = Stage.Common;
 
     return (
@@ -103,6 +100,8 @@ LabelKeyDropdown.defaultProps = {
 function LabelValueDropdown({ innerRef, labelKey, onChange, toolbox, value }) {
     const [searchQuery, setSearchQuery, resetSearchQuery] = useResettableState('');
     const [showError, setShowError, unsetShowError] = useBoolean();
+
+    const { Ref } = Stage.Basic;
     const { DynamicDropdown } = Stage.Common;
 
     return (
@@ -149,7 +148,7 @@ LabelValueDropdown.defaultProps = {
 };
 
 function LabelAddButton({ disabled, innerRef, onClick }) {
-    const { Button } = Stage.Basic;
+    const { Button, Ref } = Stage.Basic;
 
     return (
         <Ref innerRef={innerRef}>
@@ -233,11 +232,16 @@ export default function LabelsInput({ initialValue, toolbox }) {
     const { Divider, Form, Icon } = Stage.Basic;
     const { RevertToDefaultIcon } = Stage.Common;
 
-    const keyDropdownRef = useRef();
-    const valueDropdownRef = useRef();
-    const addButtonRef = useRef();
+    const keyDropdownRef = React.useRef();
+    const valueDropdownRef = React.useRef();
+    const addButtonRef = React.useRef();
 
     const focusDelay = 200;
+    const iconStyle = {
+        position: 'absolute',
+        top: '.7em',
+        zIndex: 1
+    };
 
     function focusOnInput(dropdownRef) {
         const inputNode = _.get(dropdownRef, 'current.childNodes[0]');
@@ -287,22 +291,9 @@ export default function LabelsInput({ initialValue, toolbox }) {
                 value={labels}
                 defaultValue={initialValue}
                 onClick={resetLabels}
-                style={{
-                    position: 'absolute',
-                    top: '.7em',
-                    right: '2em'
-                }}
+                style={{ ...iconStyle, right: '2em' }}
             />
-            <Icon
-                name="dropdown"
-                link
-                onClick={open ? unsetOpen : setOpen}
-                style={{
-                    position: 'absolute',
-                    top: '.7em',
-                    right: '0.5em'
-                }}
-            />
+            <Icon name="dropdown" link onClick={open ? unsetOpen : setOpen} style={{ ...iconStyle, right: '0.5em' }} />
             <LabelsList labels={labels} onChangeLabels={setLabels} />
             {open && (
                 <div style={{ padding: '0 0.5em' }}>

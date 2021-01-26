@@ -30,6 +30,7 @@ import PropTypes from 'prop-types';
 import * as Leaflet from 'leaflet';
 import log from 'loglevel';
 import moment from 'moment';
+import styled from 'styled-components';
 
 import { connect, Provider } from 'react-redux';
 import { createBrowserHistory } from 'history';
@@ -77,6 +78,7 @@ export default class app {
         window.log = log;
         window.connectToStore = connect;
         window.moment = moment;
+        window.styled = styled;
 
         log.setLevel(log.levels.WARN);
 
