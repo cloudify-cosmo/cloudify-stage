@@ -27,6 +27,10 @@ function onValueChange(onChange, unsetShowError, resetSearchQuery) {
     };
 }
 
+function addSearchToUrl(url, search) {
+    return search ? `${url}?_search=${search}` : url;
+}
+
 function ValidationErrorPopup({ open }) {
     const { Popup } = Stage.Basic;
 
@@ -57,6 +61,8 @@ function LabelKeyDropdown({ value, onChange, toolbox, innerRef }) {
     const { Ref } = Stage.Basic;
     const { DynamicDropdown } = Stage.Common;
 
+    const fetchUrl = addSearchToUrl('/labels/deployments', searchQuery);
+
     return (
         <>
             <ValidationErrorPopup open={showError} />
@@ -67,7 +73,7 @@ function LabelKeyDropdown({ value, onChange, toolbox, innerRef }) {
                     allowAdditions
                     clearable={false}
                     fetchAll
-                    fetchUrl="/labels/deployments"
+                    fetchUrl={fetchUrl}
                     name="labelKey"
                     onChange={onValueChange(onChange, unsetShowError, resetSearchQuery)}
                     onSearchChange={onSearchChange(setSearchQuery, setShowError, unsetShowError)}
@@ -104,6 +110,8 @@ function LabelValueDropdown({ innerRef, labelKey, onChange, toolbox, value }) {
     const { Ref } = Stage.Basic;
     const { DynamicDropdown } = Stage.Common;
 
+    const fetchUrl = addSearchToUrl(`/labels/deployments/${labelKey}`, searchQuery);
+
     return (
         <>
             <ValidationErrorPopup open={showError} />
@@ -115,7 +123,7 @@ function LabelValueDropdown({ innerRef, labelKey, onChange, toolbox, value }) {
                     clearable={false}
                     disabled={!labelKey}
                     fetchAll
-                    fetchUrl={`/labels/deployments/${labelKey}`}
+                    fetchUrl={fetchUrl}
                     name="labelValue"
                     onChange={onValueChange(onChange, unsetShowError, resetSearchQuery)}
                     onSearchChange={onSearchChange(setSearchQuery, setShowError, unsetShowError)}
