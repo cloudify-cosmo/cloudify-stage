@@ -33,6 +33,7 @@
 
 /* Login */
 div.loginContainerExtended {
+    background-color: var(--main-background-color) !important;
     height: 450px !important;
 }
 
@@ -62,24 +63,24 @@ div.headerBar {
 
 h1.ui.header {
     font-family: "Roboto Slab", Sans-Serif !important;
-    font-size: 1.25rem !important;
+    font-size: 1.24rem !important;
     font-weight: 100 !important;
     text-transform: uppercase !important;
     color: var(--header-text-color) !important;
 }
 
 h1.ui.header > div.logo {
-    background-image: url("/console/static/images/wr-ai-studio.png") !important;
-    margin: 5px 10px !important;
-    width: 130px !important;
-    height: 60px !important;
+    background-image: url("/console/static/images/wr-studio-logo.png") !important;
+    margin: 0px 5px !important;
+    width: 205px !important;
+    height: 70px !important;
 }
 
 h1.ui.header > span {
     color: var(--primary-dark-color) !important;
     display: inline-block;
     vertical-align: top !important;
-    margin-top: 39px;
+    margin-top: 40px;
 }
 
 /* top level ui segment div of login page */
@@ -90,7 +91,7 @@ div#app > div.ui.segment {
 /* apply background image with 30% opacity */
 div#app > div.ui.segment::before {
     content: "";
-    background-image: url("/console/static/images/wr-ai-disk-gray.png");
+    background-image: url("/console/static/images/wr-rings.png");
     background-size: 1600px;
     background-repeat: no-repeat;
     background-position: top -800px left -800px;

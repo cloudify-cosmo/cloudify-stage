@@ -1,7 +1,7 @@
 {
   "whiteLabel": {
-    "pageTitle": "Ai_Studio Conductor",
-    "logoUrl": "/console/static/images/wr-ai-studio-logo.png",
+    "pageTitle": "Wind River Studio Conductor",
+    "logoUrl": "/console/static/images/wr-studio-logo.png",
     "mainColor": "rgb(28,28,28)",
 
     "productName": "Conductor",
@@ -10,7 +10,7 @@
 
     "loginPageHeader": "",
     "loginPageHeaderColor": "white",
-    "loginPageText": "Welcome to the Ai_Studio, please log in.",
+    "loginPageText": "Welcome to the Wind River Studio, please log in.",
     "loginPageTextColor": "white",
 
     "sidebarColor": "rgb(28,28,28)",

@@ -111,19 +111,6 @@
       "definition": "executionsStatus",
       "x": 8,
       "y": 38
-    },
-    {
-      "name": "Button link",
-      "width": 2,
-      "height": 8,
-      "configuration": {
-        "label": "Getting Started Walkthrough",
-        "url": "https://operator.windriver.com/docs/latest//trial_getting_started/examples/",
-        "fullHeight": true
-      },
-      "definition": "buttonLink",
-      "x": 10,
-      "y": 0
     }
   ]
 }

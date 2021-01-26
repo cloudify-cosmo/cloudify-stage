@@ -17,7 +17,7 @@ export default function Help({ onAbout, version }) {
                 <Dropdown.Item
                     icon="book"
                     text="Documentation"
-                    onClick={() => redirectToPage(`https://operator.windriver.com/docs/latest/`)}
+                    onClick={() => redirectToPage(`https://conductor.windriver.com/docs/latest/`)}
                 />
                 <Dropdown.Item
                     icon="comments"
