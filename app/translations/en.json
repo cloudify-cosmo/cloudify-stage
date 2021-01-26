@@ -179,7 +179,8 @@
         },
         "password": "Password",
         "username": "Username",
-        "submit": "LOGIN"
+        "submit": "LOGIN",
+        "ssoSubmit": "LOGIN WITH SSO"
     },
     "maintenanceMode": {
         "activate": "Activate Maintenance Mode",
@@ -193,6 +194,7 @@
         "header": "Maintenance mode",
         "message": "Server is on maintenance mode and is not available at the moment."
     },
+    "managerDataError": "Error getting data from the manager, cannot load page",
     "noLicense": "No active license",
     "noPages": "No pages available to display. Please try to reset application to the default settings.",
     "notFound": {
@@ -375,7 +377,7 @@
                 "validationError": "Allowed characters are letters, digits, hyphen and underscore."
             },
             "readmes": {
-                "linksBasePath": "https://docs.cloudify.co/latest",
+                "linksBasePath": "https://docs.cloudify.co/5.1",
                 "params": {
                     "cfy_composer_link": "/developer/composer/",
                     "cfy_composer_name": "Cloudify Composer",
@@ -391,6 +393,39 @@
                 "blueprintsCatalog": "http://repository.cloudifysource.org/cloudify/blueprints/5.1/examples.json",
                 "helloWorldBlueprint": "https://github.com/cloudify-cosmo/cloudify-hello-world-example/archive/master.zip",
                 "linkParameterExample": "https://cloudify.co"
+            },
+            "blueprintUpload": {
+                "uploadLabels": {
+                    "pending": "1/5: Waiting for blueprint upload to start...",
+                    "uploading": "2/5: Uploading blueprint...",
+                    "extracting": "3/5: Extracting blueprint...",
+                    "parsing": "4/5: Parsing blueprint...",
+                    "uploadingImage": "5/5: Uploading image..."
+                },
+                "errorHeaders": {
+                    "failedUploading": "Blueprint upload failed",
+                    "failedExtracting": "Blueprint extraction failed",
+                    "failedParsing": "Blueprint parsing failed"
+                },
+                "inputs": {
+                    "blueprintName": {
+                        "label": "Blueprint name",
+                        "help": "The package will be uploaded to the Manager as a Blueprint resource, under the name you specify here."
+                    },
+                    "blueprintYamlFile": {
+                        "label": "Blueprint YAML file",
+                        "help": "If you choose archive as blueprint package, you must specify the blueprint YAML file for your environment, because the archive can contain more than one YAML file."
+                    },
+                    "blueprintPackage": {
+                        "label": "Blueprint package",
+                        "help": "You can provide single YAML file or blueprint archive. Supported types are: yml, yaml, zip, tar, tar.gz and tar.bz2. The archive package must contain exactly one directory that includes at least one YAML file.",
+                        "placeholder": "Provide the blueprint's URL or click browse to select a file"
+                    },
+                    "blueprintIcon": {
+                        "help": "(Optional) The blueprint icon file is shown with the blueprint in the local blueprint widget.",
+                        "placeholder": "Provide the image file URL or click browse to select a file"
+                    }
+                }
             }
         }
     }

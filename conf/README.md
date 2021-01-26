@@ -2,21 +2,17 @@
 
 The following section describes different configuration files used in cloudify-stage.
 
-## Application (`app.json`)
+## Core configuration (`config.json`)
 
 * `maintenancePollingInterval` - integer, time interval for Manager status polling (milliseconds) 
 * `singleManager` - boolean, defines if Manager is executed as single (depracated)
-* `db` - object, Stage PostgreSQL DB connection configuration
-  * `url` - string or array, DB URL or array of DB URLs 
-  * `options` - object, DB connection options passed to [Sequelize constructor](https://sequelize.org/master/class/lib/sequelize.js~Sequelize.html#instance-constructor-constructor)
-  
+
 * `proxy` - object, configuration of Stage Backend proxy to Manager 
   * `timeouts`
     * `get` - integer, GET request timeout (milliseconds)
     * `post` - integer, POST request timeout (milliseconds)
     * `put` - integer, PUT request timeout (milliseconds)
     * `delete` - integer, DELETE request timeout (milliseconds)
-    * `blueprintUpload` - integer, blueprint upload request timeout (milliseconds)
 
 * `github` - object, configuration for accessing GitHub resources
   * `username` - string, GitHub username secret name, eg. "secret(github-username)"
@@ -41,12 +37,30 @@ The following section describes different configuration files used in cloudify-s
   * `ssoUrl` - string, redirect URL to the application at the Single Sign-On identity provider
   * `portalUrl` - string, redirect URL to the organization portal
 
+## Application (`app.json`)
+
+This file is meant to be updated by manager installer -
+it is not going to be installed in case of upgrade or patch.
+
+* `db` - object, Stage PostgreSQL DB connection configuration
+  * `url` - string or array, DB URL or array of DB URLs 
+
+## DB Options (`db.options.json`)
+
+DB connection options passed to [Sequelize constructor](https://sequelize.org/master/class/lib/sequelize.js~Sequelize.html#instance-constructor-constructor).
+
+## Logging (`logging.json`)
+
 * `logsFile` - string, logs file path
 * `errorsFile` - string, errors file path
 * `logLevelConf` - string, path to Manager log levels configuration file, or blank string if not applicable
+* `serviceName` - string, service name to look for when reading file specified by `logLevelConf`
 * `logLevel` - string, default log level used when `logLevelConf` is not set, file defined by `logLevelConf` does not exist, or the file exists but contains no entry for `cloudify-stage` service
 
 ## Manager (`manager.json`)
+
+This file is meant to be updated by manager installer -
+it is not going to be installed in case of upgrade or patch.
 
 * `ip` - string, Manager IP
 * `apiVersion` - string, Manager REST API version, eg. "v3.1" 
@@ -81,5 +95,5 @@ This configuration can be overridden by: `/dist/userData/userConfig.json`.
 
 This file is optional, used only in development environment.
 
-* `app` - object, overrides for Application configuration
+* `app` - object, overrides for Core, Application and Logging configurations
 * `manager` - object, overrides for Manager configuration

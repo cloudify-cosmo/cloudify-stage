@@ -109,31 +109,46 @@ module.exports = (() => {
         return getPages(builtInPagesFolder, false);
     }
 
-    async function getRole(systemRole, groupSystemRoles, tenantsRoles, tenant, token) {
+    function getHighestRole(userRoles, allRoles) {
+        return _.get(
+            _.find(allRoles, role => _.includes(userRoles, role.name)),
+            'name',
+            null
+        );
+    }
+
+    async function getRole(userSystemRole, groupSystemRoles, tenantsRoles, tenant, token) {
         const rbac = await AuthHandler.getRBAC(token);
         const { roles } = rbac;
+        const userRoles = _.compact(
+            _.concat(_.get(tenantsRoles[tenant], 'roles', []), userSystemRole, _.keys(groupSystemRoles))
+        );
 
         logger.debug(
-            `${'Inputs for role calculation: systemRole='}${systemRole}, tenant=${tenant}, tenantsRoles=${JSON.stringify(
+            `Inputs for role calculation: systemRole=${userSystemRole}, tenant=${tenant}, tenantsRoles=${JSON.stringify(
                 tenantsRoles
+            )}, userRoles=${JSON.stringify(userRoles)}`
+        );
+
+        const role = getHighestRole(userRoles, roles);
+        logger.debug(`Calculated role: ${role}`);
+        return role;
+    }
+
+    async function getSystemRole(userSystemRole, groupSystemRoles, token) {
+        const rbac = await AuthHandler.getRBAC(token);
+        const { roles } = rbac;
+        const systemRoles = [userSystemRole, ..._.keys(groupSystemRoles)];
+
+        logger.debug(
+            `Inputs for system role calculation: userSystemRole=${userSystemRole}, groupSystemRoles=${JSON.stringify(
+                groupSystemRoles
             )}`
         );
 
-        const userRoles = _.compact(
-            _.concat(_.get(tenantsRoles[tenant], 'roles', []), systemRole, _.keys(groupSystemRoles))
-        );
-
-        let result = null;
-        for (let i = 0; i < roles.length; i += 1) {
-            const role = roles[i].name;
-            if (_.includes(userRoles, role)) {
-                result = role;
-                break;
-            }
-        }
-
-        logger.debug(`Calculated role: ${result}`);
-        return result;
+        const systemRole = getHighestRole(systemRoles, roles);
+        logger.debug(`Calculated system role: ${systemRole}`);
+        return systemRole;
     }
 
     function listPages() {
@@ -282,12 +297,13 @@ module.exports = (() => {
         }).then(() => fs.writeJson(path, content, { spaces: '  ' }));
     }
 
-    async function selectTemplate(systemRole, groupSystemRoles, tenantsRoles, tenant, token) {
-        const role = await getRole(systemRole, groupSystemRoles, tenantsRoles, tenant, token);
+    async function selectTemplate(userSystemRole, groupSystemRoles, tenantsRoles, tenant, token) {
+        const role = await getRole(userSystemRole, groupSystemRoles, tenantsRoles, tenant, token);
+        const systemRole = await getSystemRole(userSystemRole, groupSystemRoles, token);
         const { mode } = ServerSettings.settings;
         let templateId = null;
 
-        logger.debug(`Template inputs: mode=${mode}, role=${role}, tenant=${tenant}`);
+        logger.debug(`Template inputs: mode=${mode}, role=${role}, systemRole=${systemRole}, tenant=${tenant}`);
 
         // Search user template
         if (mode === ServerSettings.MODE_MAIN) {

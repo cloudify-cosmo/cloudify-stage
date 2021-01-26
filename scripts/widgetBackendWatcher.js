@@ -6,7 +6,7 @@ const chokidar = require('chokidar');
 const fs = require('fs');
 const path = require('path');
 
-const appConfig = require('../conf/app.json');
+const appConfig = require('../conf/config.json');
 
 const widgetBackendFilename = appConfig.widgets.backendFilename;
 const widgetBackendFilesGlob = `./widgets/*/src/${widgetBackendFilename}`;

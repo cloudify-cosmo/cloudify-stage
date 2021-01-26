@@ -10,3 +10,10 @@ export function setLicense(license) {
         license
     };
 }
+
+export function setLicenseRequired(isRequired) {
+    return {
+        type: types.SET_LICENSE_REQUIRED,
+        isRequired
+    };
+}

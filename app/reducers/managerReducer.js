@@ -3,59 +3,49 @@ import tenants from './tenantsReducer';
 import clusterStatus from './clusterStatusReducer';
 import license from './licenseReducer';
 
-const manager = (state = {}, action) => {
+export const emptyState = {
+    auth: {
+        role: null,
+        groupSystemRoles: {},
+        tenantsRoles: {}
+    },
+    clusterStatus: {},
+    err: null,
+    isLoggingIn: false,
+    lastUpdated: null,
+    license: {},
+    permissions: {},
+    roles: [],
+    tenants: {},
+    version: {}
+};
+
+const manager = (state = emptyState, action) => {
     switch (action.type) {
         case types.REQ_LOGIN:
             return { ...state, isLoggingIn: true };
         case types.RES_LOGIN:
             return {
-                ...state,
-                isLoggingIn: false,
+                ...emptyState,
                 username: action.username,
                 auth: {
                     role: action.role,
                     groupSystemRoles: {},
                     tenantsRoles: {}
                 },
-                err: null,
-                tenants: [],
-                lastUpdated: action.receivedAt,
-                clusterStatus: {},
-                license: license(state.license, action),
-                version: action.version
+                lastUpdated: action.receivedAt
             };
         case types.LOGOUT:
             return {
-                ...state,
-                isLoggingIn: false,
-                auth: {
-                    role: null,
-                    groupSystemRoles: {},
-                    tenantsRoles: {}
-                },
-                err: null,
-                tenants: {},
-                lastUpdated: action.receivedAt,
-                clusterStatus: {},
-                license: {},
-                version: {}
+                ...emptyState,
+                lastUpdated: action.receivedAt
             };
         case types.ERR_LOGIN:
             return {
-                ...state,
-                isLoggingIn: false,
+                ...emptyState,
                 username: action.username,
-                auth: {
-                    role: null,
-                    groupSystemRoles: {},
-                    tenantsRoles: {}
-                },
-                err: action.error != null && typeof action.error === 'object' ? action.error.message : action.error,
-                tenants: {},
-                lastUpdated: action.receivedAt,
-                clusterStatus: {},
-                license: {},
-                version: {}
+                err: action.error !== null && typeof action.error === 'object' ? action.error.message : action.error,
+                lastUpdated: action.receivedAt
             };
         case types.SET_LDAP:
             return {
@@ -79,6 +69,7 @@ const manager = (state = {}, action) => {
         case types.SET_MANAGER_VERSION:
             return { ...state, version: action.version };
         case types.SET_MANAGER_LICENSE:
+        case types.SET_LICENSE_REQUIRED:
             return { ...state, license: license(state.license, action) };
         case types.SET_MAINTENANCE_STATUS:
             return { ...state, maintenance: action.maintenance };

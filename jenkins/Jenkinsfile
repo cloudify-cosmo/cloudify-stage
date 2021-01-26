@@ -8,7 +8,6 @@ def configuration = [vaultUrl: "${env.VAULT_URL}",  vaultCredentialId: 'vault-ap
 pipeline {
   agent {
     kubernetes {
-      label "stage-ui-${env.BUILD_NUMBER}"
       defaultContainer 'jnlp'
       yamlFile 'jenkins/build-pod.yaml'
     }
@@ -17,12 +16,12 @@ pipeline {
   options {
     checkoutToSubdirectory('cloudify-stage')
     buildDiscarder(logRotator(numToKeepStr:'30'))
-    timeout(time: 60, unit: 'MINUTES')
+    timeout(time: 120, unit: 'MINUTES')
     timestamps()
   }
 
   environment {
-    branch = "${env.BRANCH_NAME}"
+    BRANCH = "${env.BRANCH_NAME}"
     workspace = "${env.WORKSPACE}"
     stage_dir = "cloudify-stage"
     cfy_manager_url = 'https://raw.githubusercontent.com/cloudify-cosmo/cloudify-manager'
@@ -65,7 +64,7 @@ pipeline {
               sh """
                 cd && mkdir rpmbuild && cd rpmbuild
                 mkdir -p BUILD && cp -rf ${workspace}/${stage_dir}/. BUILD && cd BUILD
-                curl -fO "${cfy_manager_url}/${branch}/packaging/version_info" || curl -fO "${cfy_manager_url}/master/packaging/version_info"
+                curl -fO "${cfy_manager_url}/${BRANCH}/packaging/version_info" || curl -fO "${cfy_manager_url}/master/packaging/version_info"
               """
 
               echo 'Install NodeJS & RPM development tools'
@@ -162,12 +161,28 @@ pipeline {
         branch "master"
       }
       steps {
-        container('node'){
-          dir("${stage_dir}") {
-            echo 'Run npm production dependencies security audit'
-            sh 'npm run audit'
+        catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE'){
+          container('node'){
+            dir("${stage_dir}") {
+              echo 'Run npm production dependencies security audit'
+              sh 'npm run audit'
+            }
           }
         }
+      }
+    }
+    stage('Run Stage-UI System-tests') {
+      when {
+        branch "master"
+      }
+      steps {
+        echo 'Trigger Stage-UI System-tests'
+        build(job: 'Stage-UI-System-Test', parameters: [
+          string(name: 'BRANCH', value: 'master'),
+          string(name: 'STAGE_BRANCH', value: 'master'),
+          booleanParam(name: 'CENTOS_MANAGER', value: false),
+          booleanParam(name: 'UPDATE_STAGE_ON_MANAGER', value: false)
+        ])
       }
     }
   }

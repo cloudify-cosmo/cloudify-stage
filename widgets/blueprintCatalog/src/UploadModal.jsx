@@ -2,15 +2,14 @@
  * Created by pposel on 07/02/2017.
  */
 
-import ActionsPropType from './props/ActionsPropType';
-
 const initialInputValues = {
     blueprintName: '',
     blueprintYamlFile: ''
 };
 
+const { BlueprintActions, UploadBlueprintBasicForm } = Stage.Common;
+
 export default function UploadModal({
-    actions,
     imageUrl,
     toolbox,
     zipUrl,
@@ -24,6 +23,7 @@ export default function UploadModal({
 
     const [loading, setLoading] = useState(false);
     const [inputValues, setInputValues] = useState(initialInputValues);
+    const [uploadState, setUploadState] = useState();
     const [visibility, setVisibility] = useState(Stage.Common.Consts.defaultVisibility);
     const [errors, setErrors] = useState({});
 
@@ -58,17 +58,26 @@ export default function UploadModal({
 
         // Disable the form
         setLoading(true);
+        setUploadState(BlueprintActions.InProgressBlueprintStates.Pending);
 
-        actions
-            .doUpload(inputValues.blueprintName, inputValues.blueprintYamlFile, zipUrl, imageUrl, visibility)
+        new BlueprintActions(toolbox)
+            .doUpload(
+                inputValues.blueprintName,
+                inputValues.blueprintYamlFile,
+                zipUrl,
+                null,
+                Stage.Utils.Url.url(imageUrl),
+                null,
+                visibility
+            )
             .then(() => {
-                setLoading(false);
                 setErrors({});
                 toolbox.getEventBus().trigger('blueprints:refresh');
                 onHide();
             })
             .catch(err => {
                 setErrors({ error: err.message });
+                setUploadState(err.state);
             })
             .finally(() => setLoading(false));
     }
@@ -87,7 +96,7 @@ export default function UploadModal({
         setInputValues({ ...inputValues, ...Stage.Basic.Form.fieldNameValue(field) });
     }
 
-    const { Modal, CancelButton, ApproveButton, Icon, Form, VisibilityField } = Stage.Basic;
+    const { Modal, CancelButton, ApproveButton, Icon, VisibilityField } = Stage.Basic;
 
     return (
         <div>
@@ -102,39 +111,18 @@ export default function UploadModal({
                 </Modal.Header>
 
                 <Modal.Content>
-                    <Form loading={loading} errors={errors} onErrorsDismiss={() => setErrors({})}>
-                        <Form.Field
-                            label="Blueprint name"
-                            required
-                            error={errors.blueprintName}
-                            help="The package will be uploaded to the Manager as a Blueprint resource,
-                                              under the name you specify here."
-                        >
-                            <Form.Input
-                                name="blueprintName"
-                                value={inputValues.blueprintName}
-                                onChange={handleInputChange}
-                            />
-                        </Form.Field>
-                        <Form.Field
-                            label="Blueprint YAML file"
-                            required
-                            error={errors.blueprintYamlFile}
-                            help="As you can have more than one yaml file in the archive,
+                    <UploadBlueprintBasicForm
+                        yamlFileHelp="As you can have more than one yaml file in the archive,
                                               you need to specify which is the main one for your application."
-                        >
-                            <Form.Dropdown
-                                name="blueprintYamlFile"
-                                search
-                                selection
-                                options={_.map(yamlFiles, item => {
-                                    return { text: item, value: item };
-                                })}
-                                value={inputValues.blueprintYamlFile}
-                                onChange={handleInputChange}
-                            />
-                        </Form.Field>
-                    </Form>
+                        onErrorsDismiss={() => setErrors({})}
+                        onInputChange={handleInputChange}
+                        blueprintName={inputValues.blueprintName}
+                        blueprintYamlFile={inputValues.blueprintYamlFile}
+                        errors={errors}
+                        blueprintUploading={loading}
+                        uploadState={uploadState}
+                        yamlFiles={yamlFiles}
+                    />
                 </Modal.Content>
 
                 <Modal.Actions>
@@ -160,11 +148,9 @@ export default function UploadModal({
  * @property {boolean} open modal open state
  * @property {Function} onHide function called when modal is closed
  * @property {object} toolbox Toolbox object
- * @property {object} actions Actions object
  * @property {string} defaultYamlFile string name of the repository used as a blueprint name
  */
 UploadModal.propTypes = {
-    actions: ActionsPropType.isRequired,
     open: PropTypes.bool.isRequired,
     onHide: PropTypes.func.isRequired,
     repositoryName: PropTypes.string.isRequired,
