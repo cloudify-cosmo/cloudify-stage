@@ -42,7 +42,7 @@ class EditWidgetComponent extends React.Component {
     }
 
     render() {
-        const { configDef, configuration, onWidgetEdited, widget, iconSize } = this.props;
+        const { configDef, configuration, iconSize, onWidgetEdited, widget } = this.props;
         const { showConfig } = this.state;
 
         return (
