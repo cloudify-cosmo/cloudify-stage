@@ -4,73 +4,41 @@
 
 import PropTypes from 'prop-types';
 
-import React from 'react';
-import { connect } from 'react-redux';
+import React, { useState } from 'react';
 import EditWidgetIcon from './EditWidgetIcon';
 import EditWidgetModal from './EditWidgetModal';
 
-const mapStateToProps = (state, ownProps) => {
-    return {
-        configuration: ownProps.widget.configuration || {},
-        configDef: ownProps.widget.definition.initialConfiguration || [],
-        showConfig: ownProps.widget.showConfig || false
-    };
-};
+function EditWidget({ iconSize, onWidgetEdited, widget }) {
+    const [configShown, setShowConfig] = useState(false);
+    const configuration = widget.configuration || {};
+    const configDef = widget.definition.initialConfiguration || [];
 
-const mapDispatchToProps = (/* dispatch, ownProps */) => {
-    return {};
-};
-
-class EditWidgetComponent extends React.Component {
-    constructor(props, context) {
-        super(props, context);
-
-        this.state = {
-            showConfig: false
-        };
-
-        this.hideConfig = this.hideConfig.bind(this);
-        this.showConfig = this.showConfig.bind(this);
-    }
-
-    showConfig() {
-        this.setState({ showConfig: true });
-    }
-
-    hideConfig() {
-        this.setState({ showConfig: false });
-    }
-
-    render() {
-        const { configDef, configuration, iconSize, onWidgetEdited, widget } = this.props;
-        const { showConfig } = this.state;
-
-        return (
-            <span>
-                <EditWidgetIcon onShowConfig={this.showConfig} size={iconSize} />
-                <EditWidgetModal
-                    widget={widget}
-                    configDef={configDef}
-                    configuration={configuration}
-                    onWidgetEdited={onWidgetEdited}
-                    show={showConfig}
-                    onHideConfig={this.hideConfig}
-                />
-            </span>
-        );
-    }
+    return (
+        <span>
+            <EditWidgetIcon onShowConfig={() => setShowConfig(true)} size={iconSize} />
+            <EditWidgetModal
+                widget={widget}
+                configDef={configDef}
+                configuration={configuration}
+                onWidgetEdited={onWidgetEdited}
+                show={configShown}
+                onHideConfig={() => setShowConfig(false)}
+            />
+        </span>
+    );
 }
 
-EditWidgetComponent.propTypes = {
-    widget: PropTypes.shape({}).isRequired,
+EditWidget.propTypes = {
+    widget: PropTypes.shape({
+        configuration: PropTypes.shape({}),
+        definition: PropTypes.shape({
+            initialConfiguration: PropTypes.arrayOf(PropTypes.shape({}))
+        }).isRequired
+    }).isRequired,
     onWidgetEdited: PropTypes.func.isRequired,
-    configDef: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
-    configuration: PropTypes.shape({}).isRequired,
     // iconSize is an optional forwarded prop
     // eslint-disable-next-line react/require-default-props
     iconSize: PropTypes.string
 };
-
-const EditWidget = connect(mapStateToProps, mapDispatchToProps)(EditWidgetComponent);
 
 export default EditWidget;
