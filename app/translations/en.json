@@ -371,8 +371,8 @@
         "common": {
             "labels": {
                 "keyPlaceholder": "Select or type in a key",
-                "newKey": "New key: ",
-                "newValue": "New value: ",
+                "newKey": "New key",
+                "newValue": "New value",
                 "valuePlaceholder": "Select or type in a value",
                 "validationError": "Allowed characters are letters, digits, hyphen and underscore."
             },
