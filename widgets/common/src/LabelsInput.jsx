@@ -1,3 +1,5 @@
+const { useCallback, useEffect, useState } = React;
+
 const {
     i18n,
     Hooks: { useBoolean, useResettableState }
@@ -32,12 +34,19 @@ function onValueChange(onChange, unsetShowError, resetTypedValue, setSelectedVal
 }
 
 function useResetValues(value, selectedValue, typedValue, resetSelectedValue, resetTypedValue) {
-    React.useEffect(() => {
+    useEffect(() => {
         if (value === '') {
             resetSelectedValue();
             resetTypedValue();
         }
     }, [value]);
+}
+
+function useDebouncedSetValue(value, setValue, deps) {
+    const debouncedSet = useCallback(_.debounce(setValue, 500), []);
+    useEffect(() => {
+        debouncedSet(value);
+    }, deps);
 }
 
 function addSearchToUrl(url, search) {
@@ -71,11 +80,11 @@ function LabelKeyDropdown({ onChange, toolbox, value }) {
     const [selectedValue, setSelectedValue, resetSelectedValue] = useResettableState('');
     const [typedValue, setTypedValue, resetTypedValue] = useResettableState('');
     const [showError, setShowError, unsetShowError] = useBoolean();
+    const [fetchUrl, setFetchUrl] = useState('/labels/deployments');
 
     const { DynamicDropdown } = Stage.Common;
 
-    const fetchUrl = addSearchToUrl('/labels/deployments', typedValue);
-
+    useDebouncedSetValue(addSearchToUrl('/labels/deployments', typedValue), setFetchUrl, [typedValue]);
     useResetValues(value, selectedValue, typedValue, resetSelectedValue, resetTypedValue);
 
     return (
@@ -123,11 +132,15 @@ function LabelValueDropdown({ labelKey, onChange, toolbox, value }) {
     const [selectedValue, setSelectedValue, resetSelectedValue] = useResettableState('');
     const [typedValue, setTypedValue, resetTypedValue] = useResettableState('');
     const [showError, setShowError, unsetShowError] = useBoolean();
+    const [fetchUrl, setFetchUrl] = useState('');
 
     const { DynamicDropdown } = Stage.Common;
-    useResetValues(value, selectedValue, typedValue, resetSelectedValue, resetTypedValue);
 
-    const fetchUrl = addSearchToUrl(`/labels/deployments/${labelKey}`, typedValue);
+    useDebouncedSetValue(labelKey ? addSearchToUrl(`/labels/deployments/${labelKey}`, typedValue) : '', setFetchUrl, [
+        labelKey,
+        typedValue
+    ]);
+    useResetValues(value, selectedValue, typedValue, resetSelectedValue, resetTypedValue);
 
     return (
         <>

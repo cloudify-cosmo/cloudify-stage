@@ -113,7 +113,9 @@ function DynamicDropdown({
     }, [loaderVisible]);
 
     useEffect(() => {
-        loadMore();
+        if (fetchUrl) {
+            loadMore();
+        }
     }, [fetchUrl]);
 
     const filteredOptions = _(options)
@@ -135,8 +137,7 @@ function DynamicDropdown({
 
         if (!hasMore) {
             const filteredValueArray = _(filteredOptions).map(getValueProp()).intersection(valueArray).value();
-            const { allowAdditions } = rest;
-            if (filteredValueArray.length !== valueArray.length && !allowAdditions) {
+            if (filteredValueArray.length !== valueArray.length) {
                 onChange(filteredValueArray);
                 valueArray = filteredValueArray;
             }
