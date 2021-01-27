@@ -160,7 +160,10 @@ module.exports = (env, argv) => {
                 extensions: ['.js', '.jsx'],
                 alias: {
                     'jquery-ui': 'jquery-ui/ui',
-                    jquery: `${__dirname}/node_modules/jquery` // Always make sure we take jquery from the same place
+                    jquery: `${__dirname}/node_modules/jquery`, // Always make sure we take jquery from the same place
+                    // Necessary to use the same version of React when developing components locally
+                    // @see https://github.com/facebook/react/issues/13991#issuecomment-435587809
+                    react: `${__dirname}/node_modules/react`
                 }
             },
             entry: ['./app/main.js'],
