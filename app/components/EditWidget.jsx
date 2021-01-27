@@ -6,8 +6,8 @@ import PropTypes from 'prop-types';
 
 import React from 'react';
 import { connect } from 'react-redux';
-import EditWidgetIcon from '../components/EditWidgetIcon';
-import EditWidgetModal from '../components/EditWidgetModal';
+import EditWidgetIcon from './EditWidgetIcon';
+import EditWidgetModal from './EditWidgetModal';
 
 const mapStateToProps = (state, ownProps) => {
     return {

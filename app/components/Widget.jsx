@@ -9,7 +9,7 @@ import marked from 'marked';
 import i18n from 'i18next';
 import React, { Component } from 'react';
 
-import EditWidget from '../containers/EditWidget';
+import EditWidget from './EditWidget';
 import stageUtils from '../utils/stageUtils';
 import { EditableLabel, ErrorMessage, Header, Icon, Loading, Message, ReadmeModal, Segment } from './basic';
 import WidgetDynamicContent from './WidgetDynamicContent';
