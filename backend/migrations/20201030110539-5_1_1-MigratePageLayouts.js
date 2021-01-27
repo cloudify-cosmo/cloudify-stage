@@ -13,10 +13,10 @@ function migrate(queryInterface, Sequelize, pageProcessor) {
     UserApp(queryInterface.sequelize, Sequelize)
         .findAll()
         .then(results =>
-            _.each(results, userAppRow => {
+            Sequelize.Promise.each(results, userAppRow => {
                 _.each(userAppRow.appData.pages, pageProcessor);
                 userAppRow.appData = { ...userAppRow.appData };
-                userAppRow.save();
+                return userAppRow.save();
             })
         );
     if (fs.existsSync(userPagesFolder))
