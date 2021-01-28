@@ -27,11 +27,16 @@ router.get('/:z/:x/:y/:r?', (req, res) => {
 
     logger.debug(`Fetching map tiles from ${tilesUrlTemplate}, x=${x}, y=${y}, z=${z}, r='${r}'.`);
     req.pipe(
-        request(url).on('error', err => {
-            const message = 'Cannot fetch map tiles.';
-            logger.error(message, err);
-            res.status(500).send({ message });
-        })
+        request(url)
+            .on('error', err => {
+                const message = 'Cannot fetch map tiles.';
+                logger.error(message, err);
+                res.status(500).send({ message });
+            })
+            .on('response', proxiedResponse => {
+                // NOTE: Stadia enforces HSTS, but SSL is not required when using Cloudify Manager
+                delete proxiedResponse.headers['strict-transport-security'];
+            })
     ).pipe(res);
 });
 

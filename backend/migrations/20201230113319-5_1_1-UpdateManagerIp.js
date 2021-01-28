@@ -1,19 +1,12 @@
-const _ = require('lodash');
 const UserApp = require('../db/UserAppModel');
 const config = require('../config').get();
 
 module.exports = {
     up: (queryInterface, Sequelize) => {
-        UserApp(queryInterface.sequelize, Sequelize)
-            .findAll()
-            .then(results =>
-                _.each(results, userAppRow => {
-                    if (userAppRow.managerIp === '127.0.0.1') {
-                        userAppRow.managerIp = config.manager.ip;
-                        userAppRow.save();
-                    }
-                })
-            );
+        UserApp(queryInterface.sequelize, Sequelize).update(
+            { managerIp: config.manager.ip },
+            { where: { managerIp: '127.0.0.1' } }
+        );
     },
 
     down: (/* queryInterface, Sequelize */) => {}
