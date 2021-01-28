@@ -1,206 +1,12 @@
-const { useCallback, useEffect, useState } = React;
+import AddButton from './labels/AddButton';
+import LabelsList, { LabelsPropType } from './labels/LabelsList';
+import KeyDropdown from './labels/KeyDropdown';
+import ValueDropdown from './labels/ValueDropdown';
+import { addSearchToUrl } from './labels/common';
 
 const {
-    i18n,
     Hooks: { useBoolean, useResettableState }
 } = Stage;
-
-const LabelPropType = PropTypes.shape({ key: PropTypes.string, value: PropTypes.string });
-const LabelsPropType = PropTypes.arrayOf(LabelPropType);
-
-function onSearchChange(onChange, setSearchQuery, setShowError, unsetShowError, resetSelectedValue, setTypedValue) {
-    const allowedCharacters = /^[a-z0-9_-]*$/i;
-
-    return (event, { searchQuery: newTypedValue }) => {
-        const lowercasedNewTypedValue = _.toLower(newTypedValue);
-        if (allowedCharacters.test(lowercasedNewTypedValue)) {
-            resetSelectedValue();
-            setTypedValue(lowercasedNewTypedValue);
-            onChange(lowercasedNewTypedValue);
-            unsetShowError();
-        } else {
-            setShowError();
-        }
-    };
-}
-
-function onValueChange(onChange, unsetShowError, resetTypedValue, setSelectedValue) {
-    return value => {
-        resetTypedValue();
-        setSelectedValue(value);
-        onChange(value);
-        unsetShowError();
-    };
-}
-
-function useResetValues(value, selectedValue, typedValue, resetSelectedValue, resetTypedValue) {
-    useEffect(() => {
-        if (value === '') {
-            resetSelectedValue();
-            resetTypedValue();
-        }
-    }, [value]);
-}
-
-function useDebouncedSetValue(value, setValue, deps) {
-    const debouncedSet = useCallback(_.debounce(setValue, 500), []);
-    useEffect(() => {
-        debouncedSet(value);
-    }, deps);
-}
-
-function addSearchToUrl(url, search) {
-    return search ? `${url}?_search=${search}` : url;
-}
-
-function ValidationErrorPopup({ open }) {
-    const { Popup } = Stage.Basic;
-
-    return (
-        <Popup
-            open={open}
-            trigger={<div />}
-            content={i18n.t('widgets.common.labels.validationError')}
-            position="top left"
-            pinned
-            wide
-        />
-    );
-}
-
-ValidationErrorPopup.propTypes = {
-    open: PropTypes.bool
-};
-
-ValidationErrorPopup.defaultProps = {
-    open: false
-};
-
-function LabelKeyDropdown({ onChange, toolbox, value }) {
-    const [selectedValue, setSelectedValue, resetSelectedValue] = useResettableState('');
-    const [typedValue, setTypedValue, resetTypedValue] = useResettableState('');
-    const [showError, setShowError, unsetShowError] = useBoolean();
-    const [fetchUrl, setFetchUrl] = useState('/labels/deployments');
-
-    const { DynamicDropdown } = Stage.Common;
-
-    useDebouncedSetValue(addSearchToUrl('/labels/deployments', typedValue), setFetchUrl, [typedValue]);
-    useResetValues(value, selectedValue, typedValue, resetSelectedValue, resetTypedValue);
-
-    return (
-        <>
-            <ValidationErrorPopup open={showError} />
-
-            <DynamicDropdown
-                clearable={false}
-                fetchAll
-                fetchUrl={fetchUrl}
-                name="labelKey"
-                noResultsMessage={value ? i18n.t('widgets.common.labels.newKey') : undefined}
-                onChange={onValueChange(onChange, unsetShowError, resetTypedValue, setSelectedValue)}
-                onSearchChange={onSearchChange(
-                    onChange,
-                    setTypedValue,
-                    setShowError,
-                    unsetShowError,
-                    resetSelectedValue,
-                    setTypedValue
-                )}
-                placeholder={i18n.t('widgets.common.labels.keyPlaceholder')}
-                searchQuery={typedValue}
-                toolbox={toolbox}
-                value={selectedValue}
-                valueProp=""
-                tabIndex={0}
-            />
-        </>
-    );
-}
-
-LabelKeyDropdown.propTypes = {
-    onChange: PropTypes.func,
-    toolbox: Stage.PropTypes.Toolbox.isRequired,
-    value: PropTypes.string
-};
-
-LabelKeyDropdown.defaultProps = {
-    onChange: _.noop,
-    value: null
-};
-
-function LabelValueDropdown({ labelKey, onChange, toolbox, value }) {
-    const [selectedValue, setSelectedValue, resetSelectedValue] = useResettableState('');
-    const [typedValue, setTypedValue, resetTypedValue] = useResettableState('');
-    const [showError, setShowError, unsetShowError] = useBoolean();
-    const [fetchUrl, setFetchUrl] = useState('');
-
-    const { DynamicDropdown } = Stage.Common;
-
-    useDebouncedSetValue(labelKey ? addSearchToUrl(`/labels/deployments/${labelKey}`, typedValue) : '', setFetchUrl, [
-        labelKey,
-        typedValue
-    ]);
-    useResetValues(value, selectedValue, typedValue, resetSelectedValue, resetTypedValue);
-
-    return (
-        <>
-            <ValidationErrorPopup open={showError} />
-
-            <DynamicDropdown
-                clearable={false}
-                disabled={!labelKey}
-                fetchAll
-                fetchUrl={fetchUrl}
-                name="labelValue"
-                noResultsMessage={value ? i18n.t('widgets.common.labels.newValue') : undefined}
-                onChange={onValueChange(onChange, unsetShowError, resetTypedValue, setSelectedValue)}
-                onSearchChange={onSearchChange(
-                    onChange,
-                    setTypedValue,
-                    setShowError,
-                    unsetShowError,
-                    resetSelectedValue,
-                    setTypedValue
-                )}
-                placeholder={i18n.t('widgets.common.labels.valuePlaceholder')}
-                searchQuery={typedValue}
-                toolbox={toolbox}
-                value={selectedValue}
-                valueProp=""
-                tabIndex={labelKey ? 0 : -1}
-            />
-        </>
-    );
-}
-
-LabelValueDropdown.propTypes = {
-    labelKey: PropTypes.string,
-    onChange: PropTypes.func,
-    toolbox: Stage.PropTypes.Toolbox.isRequired,
-    value: PropTypes.string
-};
-
-LabelValueDropdown.defaultProps = {
-    labelKey: '',
-    onChange: _.noop,
-    value: null
-};
-
-function LabelAddButton({ disabled, onClick }) {
-    const { Button } = Stage.Basic;
-
-    return <Button icon="add" onClick={onClick} disabled={disabled} fluid />;
-}
-
-LabelAddButton.propTypes = {
-    disabled: PropTypes.bool,
-    onClick: PropTypes.func
-};
-
-LabelAddButton.defaultProps = {
-    disabled: false,
-    onClick: _.noop
-};
 
 const StyledSegment = styled(Stage.Basic.Segment)`
     padding: 0 !important;
@@ -208,61 +14,6 @@ const StyledSegment = styled(Stage.Basic.Segment)`
     box-shadow: none !important;
     -webkit-box-shadow: none !important;
 `;
-
-function LabelsList({ labels, onChangeLabels }) {
-    const { Label, Icon, Popup } = Stage.Basic;
-    const maxLength = 20;
-
-    return (
-        <div className="ui multiple dropdown" style={{ paddingRight: '4.1em', minHeight: '2em' }}>
-            {_.map(labels, ({ key, value, isUsed }) => {
-                const truncatedKey = _.truncate(key, { length: maxLength });
-                const truncatedValue = _.truncate(value, { length: maxLength });
-
-                return (
-                    <Popup
-                        key={`${key}:${value}`}
-                        open={truncatedKey === key && truncatedValue === value ? false : undefined}
-                        wide
-                    >
-                        <Popup.Trigger>
-                            <Label
-                                as="a"
-                                color={!isUsed ? 'green' : undefined}
-                                onClick={event => event.stopPropagation()}
-                            >
-                                {truncatedKey} <span style={{ fontWeight: 'lighter' }}>{truncatedValue}</span>
-                                <Icon
-                                    name="delete"
-                                    onClick={() =>
-                                        onChangeLabels(
-                                            _.differenceBy(
-                                                labels,
-                                                [{ key, value }],
-                                                label => label.key === key && label.value === value
-                                            )
-                                        )
-                                    }
-                                />
-                            </Label>
-                        </Popup.Trigger>
-                        <strong>{key}</strong> {value}
-                    </Popup>
-                );
-            })}
-        </div>
-    );
-}
-
-LabelsList.propTypes = {
-    labels: LabelsPropType,
-    onChangeLabels: PropTypes.func
-};
-
-LabelsList.defaultProps = {
-    labels: [],
-    onChangeLabels: _.noop
-};
 
 export default function LabelsInput({ initialValue, toolbox }) {
     const [newLabelKey, setNewLabelKey, resetNewLabelKey] = useResettableState('');
@@ -341,10 +92,10 @@ export default function LabelsInput({ initialValue, toolbox }) {
                     <Divider hidden={_.isEmpty(labels)} />
                     <Form.Group>
                         <Form.Field width={7}>
-                            <LabelKeyDropdown onChange={onChangeLabelKey} toolbox={toolbox} value={newLabelKey} />
+                            <KeyDropdown onChange={onChangeLabelKey} toolbox={toolbox} value={newLabelKey} />
                         </Form.Field>
                         <Form.Field width={7}>
-                            <LabelValueDropdown
+                            <ValueDropdown
                                 labelKey={newLabelKey}
                                 onChange={onChangeLabelValue}
                                 toolbox={toolbox}
@@ -352,7 +103,7 @@ export default function LabelsInput({ initialValue, toolbox }) {
                             />
                         </Form.Field>
                         <Form.Field width={2}>
-                            <LabelAddButton
+                            <AddButton
                                 onClick={onAddLabel}
                                 disabled={areNewKeyAndValueEmpty() || isNewLabelPresent()}
                             />
