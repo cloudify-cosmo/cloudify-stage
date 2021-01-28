@@ -4,6 +4,7 @@ import KeyDropdown from './labels/KeyDropdown';
 import ValueDropdown from './labels/ValueDropdown';
 import { addSearchToUrl } from './labels/common';
 
+const { useEffect } = React;
 const {
     Hooks: { useBoolean, useResettableState }
 } = Stage;
@@ -15,7 +16,7 @@ const StyledSegment = styled(Stage.Basic.Segment)`
     -webkit-box-shadow: none !important;
 `;
 
-export default function LabelsInput({ initialValue, toolbox }) {
+export default function LabelsInput({ initialValue, onChange, toolbox }) {
     const [newLabelKey, setNewLabelKey, resetNewLabelKey] = useResettableState('');
     const [newLabelValue, setNewLabelValue, resetNewLabelValue] = useResettableState('');
     const [labels, setLabels, resetLabels] = useResettableState(initialValue);
@@ -30,41 +31,42 @@ export default function LabelsInput({ initialValue, toolbox }) {
         zIndex: 1
     };
 
-    function isNewLabelPresent() {
-        return _.findIndex(labels, { key: newLabelKey, value: newLabelValue }) >= 0;
-    }
+    useEffect(() => {
+        onChange(labels);
+    }, [labels]);
 
-    function areNewKeyAndValueEmpty() {
-        return !newLabelKey || !newLabelValue;
-    }
-
-    async function isNewLabelUsed() {
-        const fetchUrl = addSearchToUrl(`/labels/deployments/${newLabelKey}`, newLabelValue);
-        return toolbox
-            .getManager()
-            .doGet(fetchUrl)
-            .then(({ items }) => !_.isEmpty(items))
-            .catch(() => false);
-    }
-
-    async function onAddLabel() {
-        if (!areNewKeyAndValueEmpty() && !isNewLabelPresent()) {
-            isNewLabelUsed().then(isUsed => {
-                const newLabels = [...labels, { key: newLabelKey, value: newLabelValue, isUsed }];
-                setLabels(newLabels);
-                resetNewLabelKey();
-                resetNewLabelValue();
-            });
-        }
+    function onChangeLabelKey(labelKey) {
+        setNewLabelKey(labelKey);
+        resetNewLabelValue();
     }
 
     function onChangeLabelValue(labelValue) {
         setNewLabelValue(labelValue);
     }
 
-    function onChangeLabelKey(labelKey) {
-        setNewLabelKey(labelKey);
-        resetNewLabelValue();
+    function isAddAllowed() {
+        const isLabelInList = _.findIndex(labels, { key: newLabelKey, value: newLabelValue }) >= 0;
+        const areKeyOrValueEmpty = !newLabelKey || !newLabelValue;
+
+        return !isLabelInList && !areKeyOrValueEmpty;
+    }
+
+    function onAddLabel() {
+        function isLabelInSystem() {
+            const fetchUrl = addSearchToUrl(`/labels/deployments/${newLabelKey}`, newLabelValue);
+            return toolbox
+                .getManager()
+                .doGet(fetchUrl)
+                .then(({ items }) => !_.isEmpty(items))
+                .catch(() => false);
+        }
+
+        isLabelInSystem().then(isInSystem => {
+            const newLabels = [...labels, { key: newLabelKey, value: newLabelValue, isInSystem }];
+            setLabels(newLabels);
+            resetNewLabelKey();
+            resetNewLabelValue();
+        });
     }
 
     return (
@@ -85,7 +87,7 @@ export default function LabelsInput({ initialValue, toolbox }) {
                     onClick={open ? unsetOpen : setOpen}
                     style={{ ...iconStyle, right: '0.5em' }}
                 />
-                <LabelsList labels={labels} onChangeLabels={setLabels} />
+                <LabelsList labels={labels} onChange={setLabels} />
             </div>
             {open && (
                 <div style={{ padding: '0 0.5em' }}>
@@ -103,10 +105,7 @@ export default function LabelsInput({ initialValue, toolbox }) {
                             />
                         </Form.Field>
                         <Form.Field width={2}>
-                            <AddButton
-                                onClick={onAddLabel}
-                                disabled={areNewKeyAndValueEmpty() || isNewLabelPresent()}
-                            />
+                            <AddButton onClick={onAddLabel} disabled={!isAddAllowed()} />
                         </Form.Field>
                     </Form.Group>
                 </div>
@@ -116,8 +115,9 @@ export default function LabelsInput({ initialValue, toolbox }) {
 }
 
 LabelsInput.propTypes = {
-    toolbox: Stage.PropTypes.Toolbox.isRequired,
-    initialValue: LabelsPropType
+    initialValue: LabelsPropType,
+    onChange: PropTypes.func.isRequired,
+    toolbox: Stage.PropTypes.Toolbox.isRequired
 };
 
 LabelsInput.defaultProps = {
