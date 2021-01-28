@@ -1,4 +1,5 @@
 /**
+/**
  * Components exposed from here are available for all widgets (built-in and custom through Stage.Basic global).
  *
  * Remember to update `widgets-components.md` file in https://github.com/cloudify-cosmo/docs.getcloudify.org
@@ -26,7 +27,6 @@ import {
     Portal,
     Progress,
     Radio,
-    Ref,
     Segment,
     Sidebar,
     Step,
@@ -137,7 +137,6 @@ export {
     Radio,
     ResourceVisibility,
     ReadmeModal,
-    Ref,
     Segment,
     Sidebar,
     Step,
