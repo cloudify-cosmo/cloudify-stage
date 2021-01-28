@@ -21,13 +21,9 @@ module.exports = (env, argv) => {
 
     const externals = {
         react: 'React',
-        'react-dom': 'ReactDOM'
+        'react-dom': 'ReactDOM',
+        lodash: '_'
     };
-
-    const babelPlugins = ['@babel/plugin-transform-runtime', '@babel/plugin-proposal-class-properties'];
-    if (env && env.coverage) {
-        babelPlugins.push('istanbul');
-    }
 
     const module = {
         rules: _.compact([
@@ -37,16 +33,11 @@ module.exports = (env, argv) => {
                 enforce: 'pre'
             },
             {
-                test: /\.js(x?)$/,
+                test: /\.(j|t)s(x?)$/,
                 exclude: /node_modules/,
                 use: [
                     {
-                        loader: 'babel-loader',
-                        options: {
-                            presets: [['@babel/preset-env', { modules: false }], '@babel/preset-react'],
-                            plugins: babelPlugins,
-                            babelrc: false
-                        }
+                        loader: 'babel-loader'
                     }
                 ]
             },
@@ -157,7 +148,7 @@ module.exports = (env, argv) => {
             context,
             devtool,
             resolve: {
-                extensions: ['.js', '.jsx'],
+                extensions: ['.js', '.jsx', '.ts', '.tsx'],
                 alias: {
                     'jquery-ui': 'jquery-ui/ui',
                     jquery: `${__dirname}/node_modules/jquery`, // Always make sure we take jquery from the same place
@@ -217,10 +208,13 @@ module.exports = (env, argv) => {
             context,
             devtool,
             resolve: {
-                extensions: ['.js', '.jsx']
+                extensions: ['.js', '.jsx', '.ts', '.tsx']
             },
-            entry: glob.sync('./widgets/*/src/widget.jsx').reduce((acc, item) => {
-                const name = item.replace('./widgets/', '').replace('/src/widget.jsx', '/widget.js');
+            entry: glob.sync('./widgets/*/src/widget.{jsx,tsx}').reduce((acc, item) => {
+                const name = item
+                    .replace('./widgets/', '')
+                    .replace('/src/widget', '/widget')
+                    .replace(/(tsx)|(jsx)/, 'js');
                 acc[name] = item;
                 return acc;
             }, {}),

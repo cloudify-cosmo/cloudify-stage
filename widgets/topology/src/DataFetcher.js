@@ -1,3 +1,5 @@
+import * as _ from 'lodash';
+
 export default class DataFetcher {
     static fetch(toolbox, blueprintId, deploymentId, fetchLayout) {
         if (!deploymentId && !blueprintId) {

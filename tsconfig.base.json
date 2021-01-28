@@ -1,0 +1,29 @@
+{
+    "compilerOptions": {
+        "strict": false,
+        "noImplicitAny": true,
+        "noImplicitReturns": true,
+        "noFallthroughCasesInSwitch": true,
+        "noUnusedLocals": false,
+        "noUnusedParameters": true,
+
+        "jsx": "react",
+        "sourceMap": true,
+        // TODO: add lib
+        "module": "ESNext",
+        "target": "ESNext",
+        "moduleResolution": "Node",
+        "resolveJsonModule": true,
+
+        "esModuleInterop": true,
+        "isolatedModules": true,
+
+        // Just for eliminating warnings about output JS files overwriting source JS files
+        "outDir": "dist",
+        "noEmit": true,
+
+        // Enabled while there are still JS files
+        "allowJs": true,
+        "checkJs": true
+    }
+}

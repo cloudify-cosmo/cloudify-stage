@@ -19,6 +19,8 @@ import WidgetDefinition from './WidgetDefinition';
 import * as PropTypes from './props';
 import * as Hooks from './hooks';
 
+// NOTE: why do we even use require here?
+// @ts-expect-error
 const ReactDOMServer = require('react-dom/server');
 
 let widgetDefinitions = [];

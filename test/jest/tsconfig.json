@@ -1,0 +1,12 @@
+{
+    "extends": "../../tsconfig.base.json",
+    "compilerOptions": {
+        "baseUrl": "../../",
+        "paths": {
+            "*": ["node_modules/*", "app/*", "widgets/*"]
+        },
+        "types": ["jest"]
+    },
+    "include": ["**/*"],
+    "files": ["../../app/typings/stage-api.d.ts"]
+}
