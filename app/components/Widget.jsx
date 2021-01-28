@@ -154,13 +154,11 @@ export default class Widget extends Component {
                             ? widget.definition.color
                             : undefined
                     }
-                    className={[
+                    className={stageUtils.combineClassNames([
                         'widgetItem',
-                        isEditMode && widget.definition && !widget.definition.showBorder ? 'borderOnHover' : '',
-                        widget.definition.showHeader ? '' : 'headerless'
-                    ]
-                        .filter(Boolean)
-                        .join(' ')}
+                        isEditMode && widget.definition && !widget.definition.showBorder && 'borderOnHover',
+                        !widget.definition.showHeader && 'headerless'
+                    ])}
                 >
                     {widget.definition && widget.definition.showHeader && (
                         <Header as="h5" dividing>

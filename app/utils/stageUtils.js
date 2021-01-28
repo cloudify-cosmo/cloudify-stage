@@ -13,6 +13,7 @@ import ExecutionUtils from './shared/ExecutionUtils';
 import JsonUtils from './shared/JsonUtils';
 import TimeUtils from './shared/TimeUtils';
 import UrlUtils from './shared/UrlUtils';
+import combineClassNames from './shared/combineClassNames';
 
 export default class StageUtils {
     static Execution = ExecutionUtils;
@@ -22,6 +23,8 @@ export default class StageUtils {
     static Time = TimeUtils;
 
     static Url = UrlUtils;
+
+    static combineClassNames = combineClassNames;
 
     static parseMarkdown = marked;
 
