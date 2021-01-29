@@ -4,26 +4,18 @@ import KeyDropdown from './labels/KeyDropdown';
 import ValueDropdown from './labels/ValueDropdown';
 import { addSearchToUrl } from './labels/common';
 
-const { useEffect } = React;
-const {
-    Hooks: { useBoolean, useResettableState }
-} = Stage;
-
-const StyledSegment = styled(Stage.Basic.Segment)`
-    padding: 0 !important;
-    border-color: ${props => (props.open ? '#96c8da !important' : 'inherit')};
-    box-shadow: none !important;
-    -webkit-box-shadow: none !important;
-`;
-
 export default function LabelsInput({ initialValue, onChange, toolbox }) {
-    const [newLabelKey, setNewLabelKey, resetNewLabelKey] = useResettableState('');
-    const [newLabelValue, setNewLabelValue, resetNewLabelValue] = useResettableState('');
+    const { useEffect } = React;
+    const {
+        Basic: { Divider, Form, Icon, Segment },
+        Common: { RevertToDefaultIcon },
+        Hooks: { useBoolean, useResettableState }
+    } = Stage;
+
     const [labels, setLabels, resetLabels] = useResettableState(initialValue);
     const [open, setOpen, unsetOpen] = useBoolean();
-
-    const { Divider, Form, Icon } = Stage.Basic;
-    const { RevertToDefaultIcon } = Stage.Common;
+    const [newLabelKey, setNewLabelKey, resetNewLabelKey] = useResettableState('');
+    const [newLabelValue, setNewLabelValue, resetNewLabelValue] = useResettableState('');
 
     const iconStyle = {
         position: 'absolute',
@@ -46,9 +38,10 @@ export default function LabelsInput({ initialValue, onChange, toolbox }) {
 
     function isAddAllowed() {
         const isLabelInList = _.findIndex(labels, { key: newLabelKey, value: newLabelValue }) >= 0;
-        const areKeyOrValueEmpty = !newLabelKey || !newLabelValue;
+        const isNewKeyProvided = newLabelKey !== '';
+        const isNewValueProvided = newLabelValue !== '';
 
-        return !isLabelInList && !areKeyOrValueEmpty;
+        return !isLabelInList && isNewKeyProvided && isNewValueProvided;
     }
 
     function onAddLabel() {
@@ -70,7 +63,7 @@ export default function LabelsInput({ initialValue, onChange, toolbox }) {
     }
 
     return (
-        <StyledSegment open={open}>
+        <Segment className={`dropdown selection fluid ${open && 'active'}`} style={{ padding: 0 }}>
             <div role="presentation" onClick={open ? unsetOpen : setOpen} style={{ cursor: 'pointer' }}>
                 <RevertToDefaultIcon
                     value={labels}
@@ -110,7 +103,7 @@ export default function LabelsInput({ initialValue, onChange, toolbox }) {
                     </Form.Group>
                 </div>
             )}
-        </StyledSegment>
+        </Segment>
     );
 }
 
