@@ -27,6 +27,10 @@ export default function LabelsInput({ initialValue, onChange, toolbox }) {
         onChange(labels);
     }, [labels]);
 
+    useEffect(() => {
+        setLabels(initialValue);
+    }, [initialValue]);
+
     function onChangeLabelKey(labelKey) {
         setNewLabelKey(labelKey);
         resetNewLabelValue();
