@@ -67,7 +67,7 @@ export default function LabelsInput({ initialValue, onChange, toolbox }) {
     }
 
     return (
-        <Segment className={`dropdown selection fluid ${open && 'active'}`} style={{ padding: 0 }}>
+        <Segment className={`dropdown selection fluid ${open && 'active'}`} style={{ padding: 0, margin: 0 }}>
             <div role="presentation" onClick={open ? unsetOpen : setOpen} style={{ cursor: 'pointer' }}>
                 <RevertToDefaultIcon
                     value={labels}
