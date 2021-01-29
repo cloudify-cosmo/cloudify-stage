@@ -12,13 +12,10 @@ export default function LabelsList({ labels, onChange }) {
             {_.map(labels, ({ key, value, isInSystem = true }) => {
                 const truncatedKey = _.truncate(key, { length: maxLength });
                 const truncatedValue = _.truncate(value, { length: maxLength });
+                const allowPopup = truncatedKey !== key || truncatedValue !== value;
 
                 return (
-                    <Popup
-                        key={`${key}:${value}`}
-                        open={truncatedKey === key && truncatedValue === value ? false : undefined}
-                        wide
-                    >
+                    <Popup key={`${key}:${value}`} open={allowPopup ? undefined : false} wide>
                         <Popup.Trigger>
                             <Label
                                 as="a"
