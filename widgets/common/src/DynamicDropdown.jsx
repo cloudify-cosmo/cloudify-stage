@@ -34,8 +34,8 @@ function DynamicDropdown({
     const [loaderVisible, setLoaderVisible] = useState(false);
     const [isLoading, setLoading] = useState(false);
 
-    function isSimpleValue() {
-        return valueProp === '';
+    function normalizeItems(items = []) {
+        return valueProp === '' ? items.map(item => ({ id: item })) : items;
     }
 
     function getValueProp() {
@@ -52,7 +52,7 @@ function DynamicDropdown({
                 .doGetFull(fetchUrl)
                 .then(data => {
                     setHasMore(false);
-                    setOptions(isSimpleValue() ? data.items.map(item => ({ id: item })) : data.items);
+                    setOptions(normalizeItems(data.items));
                 })
                 .finally(() => setLoading(false));
         } else {
@@ -63,10 +63,7 @@ function DynamicDropdown({
                 .doGet(fetchUrl, { _sort: valueProp, _size: pageSize, _offset: nextPage * pageSize })
                 .then(data => {
                     setHasMore(data.metadata.pagination.total > (nextPage + 1) * pageSize);
-                    setOptions([
-                        ...options,
-                        ...(isSimpleValue() ? data.items.map(item => ({ id: item })) : data.items)
-                    ]);
+                    setOptions([...options, ...normalizeItems(data.items)]);
                 })
                 .finally(() => setLoading(false));
 
