@@ -1,8 +1,8 @@
 import CommonDropdown from './CommonDropdown';
 
-const { i18n } = Stage;
-
 export default function ValueDropdown({ labelKey, onChange, toolbox, value }) {
+    const { i18n } = Stage;
+
     return (
         <CommonDropdown
             disabled={!labelKey}

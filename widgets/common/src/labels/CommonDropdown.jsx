@@ -1,17 +1,32 @@
 import { addSearchToUrl } from './common';
 import ValidationErrorPopup from './ValidationErrorPopup';
 
-const { useCallback, useEffect, useState } = React;
+function useDebouncedSetValue(value, setValue, deps) {
+    const { useCallback, useEffect } = React;
+    const delay = 500; // ms
+    const debouncedSet = useCallback(_.debounce(setValue, delay), []);
 
-const {
-    Hooks: { useBoolean, useResettableState }
-} = Stage;
+    useEffect(() => {
+        debouncedSet(value);
+    }, deps);
+}
 
-function onSearchChange(onChange, setSearchQuery, setShowError, unsetShowError, resetSelectedValue, setTypedValue) {
-    const allowedCharacters = /^[a-z0-9_-]*$/i;
+export default function CommonDropdown({ baseFetchUrl, onChange, toolbox, value, ...rest }) {
+    const { useEffect, useState } = React;
+    const {
+        Common: { DynamicDropdown },
+        Hooks: { useBoolean, useResettableState }
+    } = Stage;
 
-    return (event, { searchQuery: newTypedValue }) => {
+    const [selectedValue, setSelectedValue, resetSelectedValue] = useResettableState('');
+    const [typedValue, setTypedValue, resetTypedValue] = useResettableState('');
+    const [showError, setShowError, unsetShowError] = useBoolean();
+    const [fetchUrl, setFetchUrl] = useState(baseFetchUrl);
+
+    function onSearchChange(event, { searchQuery: newTypedValue }) {
+        const allowedCharacters = /^[a-z0-9_-]*$/i;
         const lowercasedNewTypedValue = _.toLower(newTypedValue);
+
         if (allowedCharacters.test(lowercasedNewTypedValue)) {
             resetSelectedValue();
             setTypedValue(lowercasedNewTypedValue);
@@ -20,48 +35,26 @@ function onSearchChange(onChange, setSearchQuery, setShowError, unsetShowError, 
         } else {
             setShowError();
         }
-    };
-}
+    }
 
-function onValueChange(onChange, unsetShowError, resetTypedValue, setSelectedValue) {
-    return value => {
+    function onValueChange(newValue) {
         resetTypedValue();
-        setSelectedValue(value);
-        onChange(value);
+        setSelectedValue(newValue);
+        onChange(newValue);
         unsetShowError();
-    };
-}
+    }
 
-function useResetValues(value, selectedValue, typedValue, resetSelectedValue, resetTypedValue) {
+    useDebouncedSetValue(baseFetchUrl ? addSearchToUrl(baseFetchUrl, typedValue) : '', setFetchUrl, [
+        baseFetchUrl,
+        typedValue
+    ]);
+
     useEffect(() => {
         if (value === '') {
             resetSelectedValue();
             resetTypedValue();
         }
     }, [value]);
-}
-
-function useDebouncedSetValue(value, setValue, deps) {
-    const delay = 500; // ms
-    const debouncedSet = useCallback(_.debounce(setValue, delay), []);
-    useEffect(() => {
-        debouncedSet(value);
-    }, deps);
-}
-
-export default function CommonDropdown({ baseFetchUrl, onChange, toolbox, value, ...rest }) {
-    const [selectedValue, setSelectedValue, resetSelectedValue] = useResettableState('');
-    const [typedValue, setTypedValue, resetTypedValue] = useResettableState('');
-    const [showError, setShowError, unsetShowError] = useBoolean();
-    const [fetchUrl, setFetchUrl] = useState(baseFetchUrl);
-
-    const { DynamicDropdown } = Stage.Common;
-
-    useDebouncedSetValue(baseFetchUrl ? addSearchToUrl(baseFetchUrl, typedValue) : '', setFetchUrl, [
-        baseFetchUrl,
-        typedValue
-    ]);
-    useResetValues(value, selectedValue, typedValue, resetSelectedValue, resetTypedValue);
 
     return (
         <>
@@ -71,15 +64,8 @@ export default function CommonDropdown({ baseFetchUrl, onChange, toolbox, value,
                 clearable={false}
                 fetchAll
                 fetchUrl={fetchUrl}
-                onChange={onValueChange(onChange, unsetShowError, resetTypedValue, setSelectedValue)}
-                onSearchChange={onSearchChange(
-                    onChange,
-                    setTypedValue,
-                    setShowError,
-                    unsetShowError,
-                    resetSelectedValue,
-                    setTypedValue
-                )}
+                onChange={onValueChange}
+                onSearchChange={onSearchChange}
                 searchQuery={typedValue}
                 toolbox={toolbox}
                 value={selectedValue}

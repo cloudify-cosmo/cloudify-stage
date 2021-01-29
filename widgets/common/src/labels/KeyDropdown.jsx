@@ -1,8 +1,8 @@
 import CommonDropdown from './CommonDropdown';
 
-const { i18n } = Stage;
-
 export default function KeyDropdown({ onChange, toolbox, value }) {
+    const { i18n } = Stage;
+
     return (
         <CommonDropdown
             baseFetchUrl="/labels/deployments"

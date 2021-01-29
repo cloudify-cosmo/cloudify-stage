@@ -1,7 +1,8 @@
-const { i18n } = Stage;
-
 export default function ValidationErrorPopup({ open }) {
-    const { Popup } = Stage.Basic;
+    const {
+        Basic: { Popup },
+        i18n
+    } = Stage;
 
     return (
         <Popup
