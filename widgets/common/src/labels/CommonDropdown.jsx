@@ -24,10 +24,10 @@ export default function CommonDropdown({ baseFetchUrl, onChange, toolbox, value,
     const [fetchUrl, setFetchUrl] = useState(baseFetchUrl);
 
     function onSearchChange(event, { searchQuery: newTypedValue }) {
-        const allowedCharacters = /^[a-z0-9_-]*$/i;
+        const allowedCharacters = /^[a-z][a-z0-9._-]*$/i;
         const lowercasedNewTypedValue = _.toLower(newTypedValue);
 
-        if (allowedCharacters.test(lowercasedNewTypedValue)) {
+        if (lowercasedNewTypedValue === '' || allowedCharacters.test(lowercasedNewTypedValue)) {
             resetSelectedValue();
             setTypedValue(lowercasedNewTypedValue);
             onChange(lowercasedNewTypedValue);
@@ -53,6 +53,7 @@ export default function CommonDropdown({ baseFetchUrl, onChange, toolbox, value,
         if (value === '') {
             resetSelectedValue();
             resetTypedValue();
+            unsetShowError();
         }
     }, [value]);
 
@@ -64,6 +65,7 @@ export default function CommonDropdown({ baseFetchUrl, onChange, toolbox, value,
                 clearable={false}
                 fetchAll
                 fetchUrl={fetchUrl}
+                onBlur={unsetShowError}
                 onChange={onValueChange}
                 onSearchChange={onSearchChange}
                 searchQuery={typedValue}

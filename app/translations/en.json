@@ -374,7 +374,7 @@
                 "newKey": "New key",
                 "newValue": "New value",
                 "valuePlaceholder": "Select or type in a value",
-                "validationError": "Allowed characters are letters, digits, hyphen and underscore."
+                "validationError": "Only letters, digits and the characters \"-\", \".\" and \"_\" are allowed and it must begin with a letter."
             },
             "readmes": {
                 "linksBasePath": "https://docs.cloudify.co/5.1",
