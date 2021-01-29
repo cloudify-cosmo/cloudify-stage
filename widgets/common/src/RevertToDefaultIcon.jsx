@@ -1,9 +1,11 @@
 function RevertToDefaultIcon({ value, defaultValue, onClick, style }) {
+    const { i18n } = Stage;
     const { Icon, Popup } = Stage.Basic;
 
     return !_.isUndefined(defaultValue) && !_.isEqual(value, defaultValue) ? (
-        // TODO: Add language support
-        <Popup trigger={<Icon name="undo" link onClick={onClick} style={style} />}>Revert to default value</Popup>
+        <Popup trigger={<Icon name="undo" link onClick={onClick} style={style} />}>
+            {i18n.t('widgets.common.revertToDefault')}
+        </Popup>
     ) : null;
 }
 

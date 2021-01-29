@@ -388,6 +388,7 @@
                     "product_name": "Cloudify"
                 }
             },
+            "revertToDefault": "Revert to default value",
             "urls": {
                 "pluginsCatalog": "http://repository.cloudifysource.org/cloudify/wagons/plugins.json",
                 "blueprintsCatalog": "http://repository.cloudifysource.org/cloudify/blueprints/5.1/examples.json",
