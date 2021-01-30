@@ -31,7 +31,7 @@ Stage.defineWidget({
     ],
     fetchUrl: '[manager]/deployments?_include=id&_size=1',
 
-    render(widget: unknown, data: { metadata: unknown }) {
+    render(widget: any, data: { metadata: unknown }) {
         const { Loading } = Stage.Basic;
 
         if (isEmpty(data)) {

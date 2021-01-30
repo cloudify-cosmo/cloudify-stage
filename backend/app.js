@@ -140,7 +140,7 @@ app.get('*', (request, response) => {
 
 // Error handling
 // eslint-disable-next-line no-unused-vars
-app.use((err, req, res, next) => {
+app.use((err, req, res) => {
     logger.error('Error has occured ', err);
 
     let { message } = err;

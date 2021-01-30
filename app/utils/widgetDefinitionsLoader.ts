@@ -18,14 +18,16 @@ import GenericConfig from './GenericConfig';
 import WidgetDefinition from './WidgetDefinition';
 import * as PropTypes from './props';
 import * as Hooks from './hooks';
+import { StageAPI } from './StageAPI';
 
 // NOTE: why do we even use require here?
-// @ts-expect-error
+// @ts-expect-error Allowed temporarily
+// eslint-disable-next-line @typescript-eslint/no-var-requires
 const ReactDOMServer = require('react-dom/server');
 
-let widgetDefinitions = [];
+let widgetDefinitions: any[] = [];
 
-function updateReadmeLinks(content) {
+function updateReadmeLinks(content: any) {
     const linkRegex = /(\[.*?\])\(\s*(?!http)(.*?)\s*\)/gm;
     let newContent = content;
 
@@ -34,11 +36,11 @@ function updateReadmeLinks(content) {
     return newContent;
 }
 
-function convertReadmeParams(content) {
+function convertReadmeParams(content: any) {
     const paramRegex = /{{<\s*param\s*(\S*)\s*>}}/gm;
     let newContent = content;
 
-    Array.from(newContent.matchAll(paramRegex)).forEach(match => {
+    Array.from(newContent.matchAll(paramRegex)).forEach((match: any) => {
         const paramName = match[1];
         const paramValue = i18n.t(`widgets.common.readmes.params.${paramName}`);
         if (paramValue !== undefined) {
@@ -51,7 +53,7 @@ function convertReadmeParams(content) {
 
 export default class WidgetDefinitionsLoader {
     static init() {
-        window.Stage = {
+        const stageAPI: StageAPI = {
             defineWidget: widgetDefinition => {
                 widgetDefinitions.push(new WidgetDefinition({ ...widgetDefinition, id: document.currentScript.id }));
             },
@@ -80,18 +82,19 @@ export default class WidgetDefinitionsLoader {
 
             i18n
         };
+        window.Stage = stageAPI;
     }
 
-    static loadWidgets(manager) {
-        log.log('Load widgets');
+    static loadWidgets(manager: any) {
+        log.debug('Load widgets');
 
         const internal = new Internal(manager);
         return Promise.all([
             new ScriptLoader(LoaderUtils.getResourceUrl('widgets/common/common.js', false)).load(), // Commons has to load before the widgets
             internal.doGet('/widgets/list') // We can load the list of widgets in the meanwhile
         ]).then(results => {
-            const data = results[1]; // widgets data
-            const promises = [];
+            const data: any[] = results[1]; // widgets data
+            const promises: Promise<any>[] = [];
             data.forEach(item => {
                 promises.push(WidgetDefinitionsLoader.loadWidget(item, false));
             });
@@ -101,15 +104,15 @@ export default class WidgetDefinitionsLoader {
         });
     }
 
-    static loadWidget(widget, rejectOnError) {
+    static loadWidget(widget: any, rejectOnError: any) {
         const scriptPath = `${LoaderUtils.getResourceUrl('widgets', widget.isCustom)}/${widget.id}/widget.js`;
         return new ScriptLoader(scriptPath).load(widget.id, rejectOnError);
     }
 
-    static loadWidgetsResources(widgets) {
-        log.log('Load widgets resources');
+    static loadWidgetsResources(widgets: any) {
+        log.debug('Load widgets resources');
 
-        const promises = [];
+        const promises: Promise<any>[] = [];
         widgetDefinitions.forEach(widgetDefinition => {
             // Mark system widgets to protect against uninstalling
             widgetDefinition.isCustom = widgets[widgetDefinition.id].isCustom;
@@ -119,7 +122,7 @@ export default class WidgetDefinitionsLoader {
                     LoaderUtils.fetchResource(
                         `widgets/${widgetDefinition.id}/widget.html`,
                         widgetDefinition.isCustom
-                    ).then(widgetHtml => {
+                    ).then((widgetHtml: any) => {
                         if (widgetHtml) {
                             widgetDefinition.template = widgetHtml;
                         }
@@ -142,7 +145,7 @@ export default class WidgetDefinitionsLoader {
                     LoaderUtils.fetchResource(
                         `widgets/${widgetDefinition.id}/README.md`,
                         widgetDefinition.isCustom
-                    ).then(widgetReadme => {
+                    ).then((widgetReadme: any) => {
                         if (widgetReadme) {
                             widgetDefinition.readme = widgetDefinition.isCustom
                                 ? widgetReadme
@@ -157,7 +160,7 @@ export default class WidgetDefinitionsLoader {
     }
 
     static initWidgets() {
-        log.log('Init widgets');
+        log.debug('Init widgets');
 
         _.each(widgetDefinitions, w => {
             if (w.init && typeof w.init === 'function') {
@@ -171,7 +174,7 @@ export default class WidgetDefinitionsLoader {
         return Promise.resolve(loadedWidgetDefinitions);
     }
 
-    static load(manager) {
+    static load(manager: any) {
         return WidgetDefinitionsLoader.loadWidgets(manager)
             .then(widgets => WidgetDefinitionsLoader.loadWidgetsResources(widgets))
             .then(() => WidgetDefinitionsLoader.initWidgets())
@@ -181,29 +184,29 @@ export default class WidgetDefinitionsLoader {
             });
     }
 
-    static installWidget(widgetFile, widgetUrl, manager) {
+    static installWidget(widgetFile: any, widgetUrl: any, manager: any) {
         const internal = new Internal(manager);
 
         if (widgetUrl) {
-            log.log('Install widget from url', widgetUrl);
+            log.debug('Install widget from url', widgetUrl);
             return internal.doPut('/widgets/install', { url: widgetUrl });
         }
-        log.log('Install widget from file');
+        log.debug('Install widget from file');
         return internal.doUpload('/widgets/install', {}, { widget: widgetFile });
     }
 
-    static updateWidget(widgetId, widgetFile, widgetUrl, manager) {
+    static updateWidget(widgetId: any, widgetFile: any, widgetUrl: any, manager: any) {
         const internal = new Internal(manager);
 
         if (widgetUrl) {
-            log.log(`Update widget ${widgetId} from url`, widgetUrl);
+            log.debug(`Update widget ${widgetId} from url`, widgetUrl);
             return internal.doPut('/widgets/update', { url: widgetUrl, id: widgetId });
         }
-        log.log(`Update widget ${widgetId} from file`);
+        log.debug(`Update widget ${widgetId} from file`);
         return internal.doUpload('/widgets/update', { id: widgetId }, { widget: widgetFile });
     }
 
-    static validateWidget(widgetId, manager) {
+    static validateWidget(widgetId: any, manager: any) {
         const errors = [];
 
         if (_.isEmpty(widgetDefinitions)) {
@@ -268,8 +271,8 @@ export default class WidgetDefinitionsLoader {
         return Promise.resolve();
     }
 
-    static install(widgetFile, widgetUrl, manager) {
-        let widgetData = {};
+    static install(widgetFile: any, widgetUrl: any, manager: any) {
+        let widgetData: any = {};
 
         return WidgetDefinitionsLoader.installWidget(widgetFile, widgetUrl, manager)
             .then(data => {
@@ -286,8 +289,8 @@ export default class WidgetDefinitionsLoader {
             });
     }
 
-    static update(widgetId, widgetFile, widgetUrl, manager) {
-        let widgetData = {};
+    static update(widgetId: any, widgetFile: any, widgetUrl: any, manager: any) {
+        let widgetData: any = {};
 
         return WidgetDefinitionsLoader.updateWidget(widgetId, widgetFile, widgetUrl, manager)
             .then(data => {
@@ -304,7 +307,7 @@ export default class WidgetDefinitionsLoader {
             });
     }
 
-    static uninstall(widgetId, manager) {
+    static uninstall(widgetId: any, manager: any) {
         const internal = new Internal(manager);
         return internal.doDelete(`/widgets/${widgetId}`);
     }
