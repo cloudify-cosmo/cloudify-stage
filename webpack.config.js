@@ -9,6 +9,7 @@ const CopyWebpackPlugin = require('copy-webpack-plugin');
 const CompressionPlugin = require('compression-webpack-plugin');
 const ImageminPlugin = require('imagemin-webpack-plugin').default;
 const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
+const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
 
 const Consts = require('./backend/consts');
 
@@ -199,6 +200,19 @@ module.exports = (env, argv) => {
                         jQuery: 'jquery',
                         d3: 'd3'
                     }),
+                    new ForkTsCheckerWebpackPlugin({
+                        eslint: {
+                            files: './app/**/*.{ts,tsx,js,tsx}'
+                        },
+                        typescript: {
+                            configFile: './app/tsconfig.json',
+                            configOverwrite: {
+                                compilerOptions: {
+                                    checkJs: false
+                                }
+                            }
+                        }
+                    }),
                     isProduction && getProductionPlugins(env && env.analyse === 'main')
                 ])
             )
@@ -233,6 +247,22 @@ module.exports = (env, argv) => {
                                 to: '[path]../backend.js'
                             }
                         ]
+                    }),
+                    new ForkTsCheckerWebpackPlugin({
+                        eslint: {
+                            files: './widgets/**/*.{js,jsx,ts,tsx}',
+                            options: {
+                                ignorePattern: 'widgets/**/backend.js'
+                            }
+                        },
+                        typescript: {
+                            configFile: './widgets/tsconfig.json',
+                            configOverwrite: {
+                                compilerOptions: {
+                                    checkJs: false
+                                }
+                            }
+                        }
                     }),
                     isProduction && getProductionPlugins(env && env.analyse === 'widgets')
                 ])
