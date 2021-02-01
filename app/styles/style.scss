@@ -226,14 +226,19 @@ a:hover {
 }
 
 .widget {
+  --widget-buttons-whitespace: 5px;
+
+  .headerless {
+    --widget-buttons-whitespace: 0;
+  }
 
   .widgetEditButtons, .widgetViewButtons {
     position: absolute;
-    top: 0;
-    right : 0;
+    top: var(--widget-buttons-whitespace);
+    right : var(--widget-buttons-whitespace);
     display: none;
     z-index: 5;
-
+    
     a {
       color: inherit !important;
     }
