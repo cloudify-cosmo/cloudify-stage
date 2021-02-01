@@ -31,7 +31,7 @@ Stage.defineWidget({
     ],
     fetchUrl: '[manager]/deployments?_include=id&_size=1',
 
-    render(widget: any, data: { metadata: unknown }) {
+    render(widget: any, data: { metadata: any }) {
         const { Loading } = Stage.Basic;
 
         if (isEmpty(data)) {
@@ -41,13 +41,12 @@ Stage.defineWidget({
         const { KeyIndicator } = Stage.Basic;
         const { Link } = Stage.Shared;
 
-        // const num = data?.metadata?.pagination?.total ?? 0;
-        const num = get(data, 'metadata.pagination.total', 0);
+        const num = data?.metadata?.pagination?.total ?? 0;
         const to = widget.configuration.page ? `/page/${widget.configuration.page}` : '/';
 
         return (
             <Link to={to}>
-                <KeyIndicator title="TypeScript!" icon="cube" number={num} />
+                <KeyIndicator title="Deployments" icon="cube" number={num} />
             </Link>
         );
     }
