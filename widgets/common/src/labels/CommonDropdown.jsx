@@ -3,8 +3,8 @@ import ValidationErrorPopup from './ValidationErrorPopup';
 
 function useDebouncedSetValue(value, setValue, deps) {
     const { useCallback, useEffect } = React;
-    const delay = 500; // ms
-    const debouncedSet = useCallback(_.debounce(setValue, delay), []);
+    const delayMs = 500;
+    const debouncedSet = useCallback(_.debounce(setValue, delayMs), []);
 
     useEffect(() => {
         debouncedSet(value);
