@@ -19,7 +19,7 @@ export default function LabelsList({ labels, onChange }) {
                         <Popup.Trigger>
                             <Label
                                 as="a"
-                                color={!isInSystem ? newLabelColor : undefined}
+                                color={isInSystem ? undefined : newLabelColor}
                                 onClick={event => event.stopPropagation()}
                             >
                                 {truncatedKey} <span style={{ fontWeight: 'lighter' }}>{truncatedValue}</span>
