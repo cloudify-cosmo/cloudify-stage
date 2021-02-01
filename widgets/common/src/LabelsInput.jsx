@@ -9,7 +9,8 @@ export default function LabelsInput({ initialValue, onChange, toolbox }) {
     const {
         Basic: { Divider, Form, Icon, Segment },
         Common: { RevertToDefaultIcon },
-        Hooks: { useResettableState, useToggle }
+        Hooks: { useResettableState, useToggle },
+        i18n
     } = Stage;
 
     const [labels, setLabels, resetLabels] = useResettableState(initialValue);
@@ -51,7 +52,10 @@ export default function LabelsInput({ initialValue, onChange, toolbox }) {
                 .getManager()
                 .doGet(fetchUrl)
                 .then(({ items }) => !_.isEmpty(items))
-                .catch(() => false);
+                .catch(error => {
+                    log.error(i18n.t('widgets.common.labels.isLabelInSystemCheckError'), error);
+                    return false;
+                });
         }
 
         isLabelInSystem().then(isInSystem => {
