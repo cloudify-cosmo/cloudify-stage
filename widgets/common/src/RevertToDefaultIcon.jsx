@@ -2,31 +2,35 @@ function RevertToDefaultIcon({ value, defaultValue, onClick, style }) {
     const { i18n } = Stage;
     const { Icon, Popup } = Stage.Basic;
 
-    return !_.isUndefined(defaultValue) && !_.isEqual(value, defaultValue) ? (
+    if (defaultValue === undefined || _.isEqual(value, defaultValue)) {
+        return null;
+    }
+
+    return (
         <Popup trigger={<Icon name="undo" link onClick={onClick} style={style} />}>
             {i18n.t('widgets.common.revertToDefault')}
         </Popup>
-    ) : null;
+    );
 }
 
 RevertToDefaultIcon.propTypes = {
     /**
-     * value typed field value
+     * field value
      */
     value: Stage.PropTypes.AnyData,
 
     /**
-     * defaultValue typed field default value
+     * field default value
      */
     defaultValue: Stage.PropTypes.AnyData,
 
     /**
-     * onClick function to be called on revert icon click
+     * function to be called on revert icon click
      */
     onClick: PropTypes.func,
 
     /**
-     * style styles to be added to revert icon
+     * styles to be added to revert icon
      */
     style: PropTypes.shape({})
 };
