@@ -25,15 +25,7 @@ export default function LabelsList({ labels, onChange }) {
                                 {truncatedKey} <span style={{ fontWeight: 'lighter' }}>{truncatedValue}</span>
                                 <Icon
                                     name="delete"
-                                    onClick={() =>
-                                        onChange(
-                                            _.differenceBy(
-                                                labels,
-                                                [{ key, value }],
-                                                label => label.key === key && label.value === value
-                                            )
-                                        )
-                                    }
+                                    onClick={() => onChange(_.differenceBy(labels, [{ key, value }], { key, value }))}
                                 />
                             </Label>
                         </Popup.Trigger>
