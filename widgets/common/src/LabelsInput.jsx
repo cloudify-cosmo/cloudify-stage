@@ -41,11 +41,7 @@ export default function LabelsInput({ initialValue, onChange, toolbox }) {
     }
 
     function isAddAllowed() {
-        const isLabelInList = _.findIndex(labels, { key: newLabelKey, value: newLabelValue }) >= 0;
-        const isNewKeyProvided = newLabelKey !== '';
-        const isNewValueProvided = newLabelValue !== '';
-
-        return !isLabelInList && isNewKeyProvided && isNewValueProvided;
+        return newLabelKey && newLabelValue && !_.find(labels, { key: newLabelKey, value: newLabelValue });
     }
 
     function onAddLabel() {
