@@ -9,11 +9,11 @@ export default function LabelsInput({ initialValue, onChange, toolbox }) {
     const {
         Basic: { Divider, Form, Icon, Segment },
         Common: { RevertToDefaultIcon },
-        Hooks: { useBoolean, useResettableState }
+        Hooks: { useResettableState, useToggle }
     } = Stage;
 
     const [labels, setLabels, resetLabels] = useResettableState(initialValue);
-    const [open, setOpen, unsetOpen] = useBoolean();
+    const [open, toggleOpen] = useToggle();
     const [newLabelKey, setNewLabelKey, resetNewLabelKey] = useResettableState('');
     const [newLabelValue, setNewLabelValue, resetNewLabelValue] = useResettableState('');
 
@@ -64,7 +64,7 @@ export default function LabelsInput({ initialValue, onChange, toolbox }) {
 
     return (
         <Segment className={`dropdown selection fluid ${open ? 'active' : ''}`} style={{ padding: 0, margin: 0 }}>
-            <div role="presentation" onClick={open ? unsetOpen : setOpen} style={{ cursor: 'pointer' }}>
+            <div role="presentation" onClick={toggleOpen} style={{ cursor: 'pointer' }}>
                 <RevertToDefaultIcon
                     value={labels}
                     defaultValue={initialValue}
@@ -74,12 +74,7 @@ export default function LabelsInput({ initialValue, onChange, toolbox }) {
                     }}
                     style={{ ...iconStyle, right: '2em' }}
                 />
-                <Icon
-                    name="dropdown"
-                    link
-                    onClick={open ? unsetOpen : setOpen}
-                    style={{ ...iconStyle, right: '0.5em' }}
-                />
+                <Icon name="dropdown" link onClick={toggleOpen} style={{ ...iconStyle, right: '0.5em' }} />
                 <LabelsList labels={labels} onChange={setLabels} />
             </div>
             {open && (
