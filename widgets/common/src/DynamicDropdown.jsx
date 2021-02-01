@@ -34,12 +34,10 @@ function DynamicDropdown({
     const [loaderVisible, setLoaderVisible] = useState(false);
     const [isLoading, setLoading] = useState(false);
 
+    const normalizedValueProp = valueProp || 'id';
+
     function normalizeItems(items = []) {
         return valueProp === '' ? items.map(item => ({ id: item })) : items;
-    }
-
-    function getValueProp() {
-        return valueProp || 'id';
     }
 
     function loadMore() {
@@ -96,8 +94,8 @@ function DynamicDropdown({
             setOptions(_.reject(options, 'implicit'));
         } else {
             _.castArray(value).forEach(singleValue => {
-                if (!_.find(options, { [getValueProp()]: singleValue })) {
-                    setOptions([{ [getValueProp()]: singleValue, implicit: true }, ...options]);
+                if (!_.find(options, { [normalizedValueProp]: singleValue })) {
+                    setOptions([{ [normalizedValueProp]: singleValue, implicit: true }, ...options]);
                 }
             });
         }
@@ -122,7 +120,7 @@ function DynamicDropdown({
                 .map((v, k) => _.isEmpty(v) || _.isEmpty(option[k]) || _.includes(v, option[k]))
                 .every(Boolean)
         )
-        .uniqBy(getValueProp())
+        .uniqBy(normalizedValueProp)
         .value();
 
     function getDropdownValue() {
@@ -133,7 +131,7 @@ function DynamicDropdown({
         let valueArray = _.castArray(value);
 
         if (!hasMore) {
-            const filteredValueArray = _(filteredOptions).map(getValueProp()).intersection(valueArray).value();
+            const filteredValueArray = _(filteredOptions).map(normalizedValueProp).intersection(valueArray).value();
             if (filteredValueArray.length !== valueArray.length) {
                 onChange(filteredValueArray);
                 valueArray = filteredValueArray;
@@ -162,8 +160,8 @@ function DynamicDropdown({
             loading={isLoading}
             options={(() => {
                 const preparedOptions = filteredOptions.map(item => ({
-                    text: (textFormatter || (i => i[getValueProp()]))(item),
-                    value: item[getValueProp()]
+                    text: (textFormatter || (i => i[normalizedValueProp]))(item),
+                    value: item[normalizedValueProp]
                 }));
                 if (hasMore) {
                     preparedOptions.push({
