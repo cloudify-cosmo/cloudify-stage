@@ -10,6 +10,7 @@ export default function LabelsInput({ initialValue, onChange, toolbox }) {
         Basic: { Divider, Form, Icon, Segment },
         Common: { RevertToDefaultIcon },
         Hooks: { useResettableState, useToggle },
+        Utils: { combineClassNames },
         i18n
     } = Stage;
 
@@ -67,7 +68,10 @@ export default function LabelsInput({ initialValue, onChange, toolbox }) {
     }
 
     return (
-        <Segment className={`dropdown selection fluid ${open ? 'active' : ''}`} style={{ padding: 0, margin: 0 }}>
+        <Segment
+            className={combineClassNames(['dropdown', 'selection', 'fluid', open && 'active'])}
+            style={{ padding: 0, margin: 0 }}
+        >
             <div role="presentation" onClick={toggleOpen} style={{ cursor: 'pointer' }}>
                 <RevertToDefaultIcon
                     value={labels}
