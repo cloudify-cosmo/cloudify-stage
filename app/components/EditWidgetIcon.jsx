@@ -5,12 +5,12 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { Icon } from './basic/index';
 
-export default function EditWidgetIcon({ onShowConfig }) {
+export default function EditWidgetIcon({ onShowConfig, size }) {
     return (
         <Icon
             name="setting"
             link
-            size="small"
+            size={size}
             className="editWidgetIcon"
             onClick={event => {
                 event.stopPropagation();
@@ -21,5 +21,11 @@ export default function EditWidgetIcon({ onShowConfig }) {
 }
 
 EditWidgetIcon.propTypes = {
-    onShowConfig: PropTypes.func.isRequired
+    onShowConfig: PropTypes.func.isRequired,
+    size: PropTypes.string
+};
+
+EditWidgetIcon.defaultProps = {
+    // Use the default icon size
+    size: undefined
 };

@@ -9,7 +9,7 @@ import marked from 'marked';
 import i18n from 'i18next';
 import React, { Component } from 'react';
 
-import EditWidget from '../containers/EditWidget';
+import EditWidget from './EditWidget';
 import stageUtils from '../utils/stageUtils';
 import { EditableLabel, ErrorMessage, Header, Icon, Loading, Message, ReadmeModal, Segment } from './basic';
 import WidgetDynamicContent from './WidgetDynamicContent';
@@ -124,16 +124,22 @@ export default class Widget extends Component {
             );
         }
 
-        const helpIcon = (
-            size = undefined // Setting size to 'undefined' means not overriding icon normal size
-        ) =>
+        // Setting size to 'undefined' means not overriding icon normal size
+        const widgetIconButtonSize = widget.definition.showHeader ? undefined : 'small';
+        const helpIcon = () =>
             widget.definition.helpUrl ? (
                 <a key="helpLink" href={widget.definition.helpUrl} target="_blank" rel="noopener noreferrer">
-                    <Icon name="help circle" size={size} link />
+                    <Icon name="help circle" size={widgetIconButtonSize} link />
                 </a>
             ) : (
                 widget.definition.readme && (
-                    <Icon key="helpIcon" name="help circle" size={size} link onClick={this.showReadmeModal} />
+                    <Icon
+                        key="helpIcon"
+                        name="help circle"
+                        size={widgetIconButtonSize}
+                        link
+                        onClick={this.showReadmeModal}
+                    />
                 )
             );
 
@@ -148,9 +154,11 @@ export default class Widget extends Component {
                             ? widget.definition.color
                             : undefined
                     }
-                    className={`widgetItem ${
-                        isEditMode && widget.definition && !widget.definition.showBorder ? 'borderOnHover ' : ''
-                    }`}
+                    className={stageUtils.combineClassNames([
+                        'widgetItem',
+                        isEditMode && widget.definition && !widget.definition.showBorder && 'borderOnHover',
+                        !widget.definition.showHeader && 'headerless'
+                    ])}
                 >
                     {widget.definition && widget.definition.showHeader && (
                         <Header as="h5" dividing>
@@ -168,37 +176,33 @@ export default class Widget extends Component {
                     <div className="widgetButtons" onMouseDown={e => e.stopPropagation()}>
                         {isEditMode && (
                             <div className="widgetEditButtons">
-                                <EditWidget widget={widget} onWidgetEdited={onWidgetUpdated} />
-                                {helpIcon('small')}
-                                <Icon name="remove" link size="small" onClick={() => onWidgetRemoved(widget.id)} />
+                                <EditWidget
+                                    widget={widget}
+                                    onWidgetEdited={onWidgetUpdated}
+                                    iconSize={widgetIconButtonSize}
+                                />
+                                {helpIcon()}
+                                <Icon
+                                    name="remove"
+                                    link
+                                    size={widgetIconButtonSize}
+                                    onClick={() => onWidgetRemoved(widget.id)}
+                                />
                             </div>
                         )}
                         {!isEditMode &&
                             (widget.definition.showHeader ? (
                                 <div className={`widgetViewButtons ${widget.maximized ? 'alwaysOnTop' : ''}`}>
-                                    {widget.maximized
-                                        ? [
-                                              helpIcon(),
-                                              <Icon
-                                                  key="compressIcon"
-                                                  name="compress"
-                                                  link
-                                                  onClick={() => onWidgetUpdated(widget.id, { maximized: false })}
-                                              />
-                                          ]
-                                        : [
-                                              helpIcon('small'),
-                                              <Icon
-                                                  key="expandIcon"
-                                                  name="expand"
-                                                  link
-                                                  size="small"
-                                                  onClick={() => onWidgetUpdated(widget.id, { maximized: true })}
-                                              />
-                                          ]}
+                                    {helpIcon()}
+                                    <Icon
+                                        name={widget.maximized ? 'compress' : 'expand'}
+                                        link
+                                        size={widgetIconButtonSize}
+                                        onClick={() => onWidgetUpdated(widget.id, { maximized: !widget.maximized })}
+                                    />
                                 </div>
                             ) : (
-                                <div className="widgetViewButtons">{helpIcon('small')}</div>
+                                <div className="widgetViewButtons">{helpIcon()}</div>
                             ))}
                     </div>
 
