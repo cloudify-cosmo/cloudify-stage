@@ -375,7 +375,7 @@
                 "newValue": "New value",
                 "valuePlaceholder": "Select or type in a value",
                 "validationError": "Only letters, digits and the characters \"-\", \".\" and \"_\" are allowed and it must begin with a letter.",
-                "isLabelInSystemCheckError": "Cannot check is label already present in the system",
+                "isLabelInSystemCheckError": "Cannot check is label already present in the system"
             },
             "readmes": {
                 "linksBasePath": "https://docs.cloudify.co/5.1",
