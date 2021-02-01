@@ -24,7 +24,7 @@ describe('Sites Management', () => {
 
     const refreshSiteManagementPage = () => {
         cy.refreshPage();
-        cy.get('.sitesWidget .ui.text.loader').should('not.be.visible');
+        cy.get('.sitesWidget .ui.text.loader').should('not.exist');
     };
 
     const createSite = site => {
@@ -47,7 +47,7 @@ describe('Sites Management', () => {
 
     const createValidSite = site => {
         createSite(site);
-        cy.get('.modal').should('not.be.visible', true);
+        cy.get('.modal').should('not.exist');
     };
 
     const createInvalidSite = site => {
@@ -184,13 +184,13 @@ describe('Sites Management', () => {
 
         cy.get('form :nth-child(2) > .field > .ui > input').should(
             'have.value',
-            '32.10118973232094, 34.80468750000001'
+            '32.10118973232094, 33.92578125000001'
         );
 
         // Click update
         cy.get('.actions > .green').click();
 
-        verifySiteRow(1, { name: siteWithLocation.name, location: '32.1011897323209, 34.8046875' });
+        verifySiteRow(1, { name: siteWithLocation.name, location: '32.1011897323209, 33.92578125' });
     });
 
     it('update the visibility of a site', () => {

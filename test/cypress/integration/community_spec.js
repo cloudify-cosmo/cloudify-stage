@@ -1,17 +1,14 @@
 describe('Community version', () => {
     before(() => {
         cy.getAdminToken().then(token => {
-            cy.server();
-            cy.route({
-                method: 'POST',
-                url: '/console/auth/login',
-                response: 'fixture:community/login.json',
+            cy.intercept('POST', '/console/auth/login', {
+                fixture: 'community/login.json',
                 headers: {
                     'Set-Cookie': `XSRF-TOKEN=${token}; Path=/`
                 }
             });
-            cy.route('/console/auth/manager', 'fixture:community/manager.json');
-            cy.route('/console/config', 'fixture:community/config.json');
+            cy.intercept('/console/auth/manager', { fixture: 'community/manager.json' });
+            cy.intercept('/console/config', { fixture: 'community/config.json' });
             cy.usePageMock().login();
         });
     });

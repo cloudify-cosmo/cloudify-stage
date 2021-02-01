@@ -2,7 +2,7 @@ describe('Authentication', () => {
     beforeEach(() => cy.clearCookie('XSRF-TOKEN'));
 
     it('fails when token is not set in cookies', () => {
-        cy.visit('/console').waitUntilLoaded();
+        cy.visit('/console');
         cy.location('pathname').should('be.equal', '/console/login');
     });
 
@@ -18,7 +18,7 @@ describe('Authentication', () => {
         cy.activate('expired_trial_license')
             .getAdminToken()
             .then(token => cy.setCookie('XSRF-TOKEN', token));
-        cy.visit('/console').waitUntilLoaded();
+        cy.visit('/console');
         cy.location('pathname').should('be.equal', '/console/license');
     });
 });

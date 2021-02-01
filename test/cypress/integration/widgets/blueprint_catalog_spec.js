@@ -14,7 +14,6 @@ describe('Blueprints catalog widget', () => {
 
     beforeEach(() => {
         cy.refreshPage();
-        cy.server();
         cy.contains('.segment', 'AWS-Basics-VM-Setup').contains('Upload').click();
     });
 
@@ -33,9 +32,9 @@ describe('Blueprints catalog widget', () => {
             "Invalid blueprint - Plugin cloudify-aws-plugin (query: {'package_name': 'cloudify-aws-plugin'}) not found"
         );
 
-        cy.route('PUT', RegExp(`/console/sp\\?su=/blueprints/${blueprintName}`), {});
+        cy.interceptSp('PUT', `/blueprints/${blueprintName}`, {});
         const error = 'error message';
-        cy.route(RegExp(`/console/sp\\?su=/blueprints/${blueprintName}`), { state: 'failed_uploading', error });
+        cy.interceptSp('GET', `/blueprints/${blueprintName}`, { state: 'failed_uploading', error });
 
         cy.get('button.green').click();
 
@@ -46,8 +45,8 @@ describe('Blueprints catalog widget', () => {
     it('should upload blueprint successfully', () => {
         cy.get('input[name=blueprintName]').clear().type(blueprintName);
 
-        cy.route('PUT', RegExp(`/console/sp\\?su=/blueprints/${blueprintName}`), {});
-        cy.route(RegExp(`/console/sp\\?su=/blueprints/${blueprintName}`), { state: 'uploaded' });
+        cy.interceptSp('PUT', `/blueprints/${blueprintName}`, {});
+        cy.interceptSp('GET', `/blueprints/${blueprintName}`, { state: 'uploaded' });
 
         cy.get('button.green').click();
 
