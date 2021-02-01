@@ -4,7 +4,13 @@ import KeyDropdown from './labels/KeyDropdown';
 import ValueDropdown from './labels/ValueDropdown';
 import { addSearchToUrl } from './labels/common';
 
-export default function LabelsInput({ initialValue, onChange, toolbox }) {
+const iconStyle = {
+    position: 'absolute',
+    top: '.7em',
+    zIndex: 1
+};
+
+export default function LabelsInput({ initialLabels, onChange, toolbox }) {
     const { useEffect } = React;
     const {
         Basic: { Divider, Form, Icon, Segment },
@@ -14,33 +20,18 @@ export default function LabelsInput({ initialValue, onChange, toolbox }) {
         i18n
     } = Stage;
 
-    const [labels, setLabels, resetLabels] = useResettableState(initialValue);
+    const [labels, setLabels, resetLabels] = useResettableState(initialLabels);
     const [open, toggleOpen] = useToggle();
     const [newLabelKey, setNewLabelKey, resetNewLabelKey] = useResettableState('');
     const [newLabelValue, setNewLabelValue, resetNewLabelValue] = useResettableState('');
-
-    const iconStyle = {
-        position: 'absolute',
-        top: '.7em',
-        zIndex: 1
-    };
 
     useEffect(() => {
         onChange(labels);
     }, [labels]);
 
     useEffect(() => {
-        setLabels(initialValue);
-    }, [initialValue]);
-
-    function onChangeLabelKey(labelKey) {
-        setNewLabelKey(labelKey);
-        resetNewLabelValue();
-    }
-
-    function onChangeLabelValue(labelValue) {
-        setNewLabelValue(labelValue);
-    }
+        setLabels(initialLabels);
+    }, [initialLabels]);
 
     function isAddAllowed() {
         return newLabelKey && newLabelValue && !_.find(labels, { key: newLabelKey, value: newLabelValue });
@@ -75,7 +66,7 @@ export default function LabelsInput({ initialValue, onChange, toolbox }) {
             <div role="presentation" onClick={toggleOpen} style={{ cursor: 'pointer' }}>
                 <RevertToDefaultIcon
                     value={labels}
-                    defaultValue={initialValue}
+                    defaultValue={initialLabels}
                     onClick={event => {
                         event.stopPropagation();
                         resetLabels();
@@ -90,12 +81,12 @@ export default function LabelsInput({ initialValue, onChange, toolbox }) {
                     <Divider hidden={_.isEmpty(labels)} />
                     <Form.Group>
                         <Form.Field width={7}>
-                            <KeyDropdown onChange={onChangeLabelKey} toolbox={toolbox} value={newLabelKey} />
+                            <KeyDropdown onChange={setNewLabelKey} toolbox={toolbox} value={newLabelKey} />
                         </Form.Field>
                         <Form.Field width={7}>
                             <ValueDropdown
                                 labelKey={newLabelKey}
-                                onChange={onChangeLabelValue}
+                                onChange={setNewLabelValue}
                                 toolbox={toolbox}
                                 value={newLabelValue}
                             />
@@ -111,13 +102,13 @@ export default function LabelsInput({ initialValue, onChange, toolbox }) {
 }
 
 LabelsInput.propTypes = {
-    initialValue: LabelsPropType,
+    initialLabels: LabelsPropType,
     onChange: PropTypes.func.isRequired,
     toolbox: Stage.PropTypes.Toolbox.isRequired
 };
 
 LabelsInput.defaultProps = {
-    initialValue: []
+    initialLabels: []
 };
 
 Stage.defineCommon({
