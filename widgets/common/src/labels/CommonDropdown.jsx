@@ -50,7 +50,7 @@ export default function CommonDropdown({ baseFetchUrl, onChange, toolbox, value,
     ]);
 
     useEffect(() => {
-        if (value === '') {
+        if (_.isEmpty(value)) {
             resetSelectedValue();
             resetTypedValue();
             unsetShowError();
