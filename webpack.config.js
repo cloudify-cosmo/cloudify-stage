@@ -274,9 +274,9 @@ module.exports = (env, argv) => {
             context,
             devtool,
             entry: glob
-                .sync('./widgets/common/src/props/*.js')
-                .concat(glob.sync('./widgets/common/src/hooks/*.js'))
-                .concat(glob.sync('./widgets/common/src/*.js*')),
+                .sync('./widgets/common/src/props/*.{js,ts}')
+                .concat(glob.sync('./widgets/common/src/hooks/*.{js,ts}'))
+                .concat(glob.sync('./widgets/common/src/*.{js,ts}*')),
             output: {
                 path: path.join(outputPath, 'appData/widgets'),
                 filename: 'common/common.js',
