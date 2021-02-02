@@ -19,6 +19,7 @@ function DynamicDropdown({
     prefetch,
     className,
     refreshEvent,
+    itemsFormatter,
     ...rest
 }) {
     const { useState, useEffect } = React;
@@ -34,12 +35,6 @@ function DynamicDropdown({
     const [loaderVisible, setLoaderVisible] = useState(false);
     const [isLoading, setLoading] = useState(false);
 
-    const normalizedValueProp = valueProp || 'id';
-
-    function normalizeItems(items = []) {
-        return valueProp === '' ? items.map(item => ({ id: item })) : items;
-    }
-
     function loadMore() {
         setLoading(true);
         setLoaderVisible(null);
@@ -50,7 +45,7 @@ function DynamicDropdown({
                 .doGetFull(fetchUrl)
                 .then(data => {
                     setHasMore(false);
-                    setOptions(normalizeItems(data.items));
+                    setOptions(itemsFormatter(data.items));
                 })
                 .finally(() => setLoading(false));
         } else {
@@ -61,7 +56,7 @@ function DynamicDropdown({
                 .doGet(fetchUrl, { _sort: valueProp, _size: pageSize, _offset: nextPage * pageSize })
                 .then(data => {
                     setHasMore(data.metadata.pagination.total > (nextPage + 1) * pageSize);
-                    setOptions([...options, ...normalizeItems(data.items)]);
+                    setOptions([...options, ...itemsFormatter(data.items)]);
                 })
                 .finally(() => setLoading(false));
 
@@ -94,8 +89,8 @@ function DynamicDropdown({
             setOptions(_.reject(options, 'implicit'));
         } else {
             _.castArray(value).forEach(singleValue => {
-                if (!_.find(options, { [normalizedValueProp]: singleValue })) {
-                    setOptions([{ [normalizedValueProp]: singleValue, implicit: true }, ...options]);
+                if (!_.find(options, { [valueProp]: singleValue })) {
+                    setOptions([{ [valueProp]: singleValue, implicit: true }, ...options]);
                 }
             });
         }
@@ -120,7 +115,7 @@ function DynamicDropdown({
                 .map((v, k) => _.isEmpty(v) || _.isEmpty(option[k]) || _.includes(v, option[k]))
                 .every(Boolean)
         )
-        .uniqBy(normalizedValueProp)
+        .uniqBy(valueProp)
         .value();
 
     function getDropdownValue() {
@@ -131,7 +126,7 @@ function DynamicDropdown({
         let valueArray = _.castArray(value);
 
         if (!hasMore) {
-            const filteredValueArray = _(filteredOptions).map(normalizedValueProp).intersection(valueArray).value();
+            const filteredValueArray = _(filteredOptions).map(valueProp).intersection(valueArray).value();
             if (filteredValueArray.length !== valueArray.length) {
                 onChange(filteredValueArray);
                 valueArray = filteredValueArray;
@@ -160,8 +155,8 @@ function DynamicDropdown({
             loading={isLoading}
             options={(() => {
                 const preparedOptions = filteredOptions.map(item => ({
-                    text: (textFormatter || (i => i[normalizedValueProp]))(item),
-                    value: item[normalizedValueProp]
+                    text: (textFormatter || (i => i[valueProp]))(item),
+                    value: item[valueProp]
                 }));
                 if (hasMore) {
                     preparedOptions.push({
@@ -203,7 +198,8 @@ DynamicDropdown.propTypes = {
     name: PropTypes.string,
     prefetch: PropTypes.bool,
     className: PropTypes.string,
-    refreshEvent: PropTypes.string
+    refreshEvent: PropTypes.string,
+    itemsFormatter: PropTypes.func
 };
 
 DynamicDropdown.defaultProps = {
@@ -218,7 +214,8 @@ DynamicDropdown.defaultProps = {
     prefetch: false,
     multiple: false,
     className: '',
-    refreshEvent: null
+    refreshEvent: null,
+    itemsFormatter: options => options
 };
 
 Stage.defineCommon({

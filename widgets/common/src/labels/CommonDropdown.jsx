@@ -65,13 +65,13 @@ export default function CommonDropdown({ baseFetchUrl, onChange, toolbox, value,
                 clearable={false}
                 fetchAll
                 fetchUrl={fetchUrl}
+                itemsFormatter={items => _.map(items, item => ({ id: item }))}
                 onBlur={unsetShowError}
                 onChange={onValueChange}
                 onSearchChange={onSearchChange}
                 searchQuery={typedValue}
                 toolbox={toolbox}
                 value={selectedValue}
-                valueProp=""
                 /* eslint-disable-next-line react/jsx-props-no-spreading */
                 {...rest}
             />
