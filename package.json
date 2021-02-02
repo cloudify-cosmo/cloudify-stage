@@ -112,7 +112,7 @@
     "compression-webpack-plugin": "^6.1.1",
     "copy-webpack-plugin": "^6.3.2",
     "css-loader": "^3.2.0",
-    "cypress": "^6.3.0",
+    "cypress": "^6.4.0",
     "cypress-file-upload": "^4.1.1",
     "cypress-localstorage-commands": "^1.2.5",
     "cypress-multi-reporters": "^1.2.3",

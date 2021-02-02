@@ -11,20 +11,21 @@ describe('Spire Manager widget', () => {
     });
 
     beforeEach(() => {
+        const delay = 500;
         cy.intercept('GET', '/console/wb/get_spire_deployments', {
             fixture: `spire_deployments/3_deployments.json`
         }).as('getSpireDeployments');
         cy.intercept('GET', '/console/wb/get_cluster_status?deploymentId=rome', {
             fixture: 'cluster_status/ok.json',
-            delayMs: 500
+            delay
         }).as('getClusterStatusForRome');
         cy.intercept('GET', '/console/wb/get_cluster_status?deploymentId=london', {
             fixture: 'cluster_status/degraded.json',
-            delayMs: 500
+            delay
         }).as('getClusterStatusForLondon');
         cy.intercept('GET', '/console/wb/get_cluster_status?deploymentId=new-york', {
             fixture: 'cluster_status/fail.json',
-            delayMs: 500
+            delay
         }).as('getClusterStatusForNewYork');
         cy.interceptSp('POST', '/executions', {}).as('postExecutions');
 

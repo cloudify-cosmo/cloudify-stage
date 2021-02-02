@@ -129,7 +129,7 @@ describe('Sites Management', () => {
         // use map to specify location
         cy.get('form :nth-child(2) > .field > .ui > button').click();
         cy.get('.leaflet-container').click();
-        cy.get('form :nth-child(2) > .field > .ui > input').should('have.value', '0, 0');
+        cy.get('form :nth-child(2) > .field > .ui > input').should('have.value', '0, -0.8789062500000001');
 
         // change visibility
         cy.get('.modal > :nth-child(1) > .green').click();
@@ -137,7 +137,7 @@ describe('Sites Management', () => {
         // submit
         cy.get('.actions > .green').click();
 
-        verifySiteRow(1, { name, location: '0.0, 0.0', visibility: 'private' });
+        verifySiteRow(1, { name, location: '0.0, -0.87890625', visibility: 'private' });
     });
 
     invalidSites.forEach(site => {
