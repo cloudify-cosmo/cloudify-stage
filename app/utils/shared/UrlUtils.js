@@ -6,6 +6,10 @@ import _ from 'lodash';
 import Const from '../consts';
 
 export default class UrlUtils {
+    static appendQueryParam(url, param, value) {
+        return `${url}${url.indexOf('?') > 0 ? '&' : '?'}${param}=${value}`;
+    }
+
     static url(path) {
         if (path === Const.HOME_PAGE_PATH) {
             return Const.CONTEXT_PATH;
