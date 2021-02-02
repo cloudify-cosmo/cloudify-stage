@@ -32,20 +32,58 @@ const getCommonHeaders = () => ({
     tenant: 'default_tenant'
 });
 
-Cypress.Commands.add('restoreState', () => cy.restoreLocalStorage());
+declare global {
+    namespace Cypress {
+        export interface Chainable {
+            restoreState(): Chainable;
+            waitUntilPageLoaded(): Chainable;
+            waitUntilLoaded(): Chainable;
+            uploadLicense(licenseName: string): Chainable;
+            getAdminToken(): Chainable;
+            activate(licenseName?: string): Chainable;
+            cfyRequest(
+                url: string,
+                method?: string,
+                headers?: any,
+                body?: any,
+                options?: Partial<RequestOptions>
+            ): Chainable<Response>;
+            cfyFileRequest(
+                filePath: string,
+                isBinaryFile: boolean,
+                url: string,
+                method?: string,
+                headers?: any
+            ): Chainable;
+            stageRequest(url: string, method?: string, options?: Partial<RequestOptions>, headers?: any): Chainable;
+            login(username?: string, password?: string, expectSuccessfulLogin?: boolean): Chainable;
+            mockLogin(username?: string, password?: string): Chainable;
+            visitPage(name: string, id?: string | null): Chainable;
+            usePageMock(widgetIds: string | string[], widgetConfiguration?: any): Chainable;
+            refreshPage(): Chainable;
+            refreshTemplate(): Chainable;
+            setBlueprintContext(field: string, value: string): Chainable;
+            clearBlueprintContext(field: string): Chainable;
+            setDeploymentContext(field: string, value: string): Chainable;
+            clearDeploymentContext(field: string): Chainable;
+        }
+    }
+}
 
-Cypress.Commands.add('waitUntilPageLoaded', () => {
+Cypress.Commands.add('restoreState', (() => cy.restoreLocalStorage()) as Cypress.Chainable['restoreState']);
+
+Cypress.Commands.add('waitUntilPageLoaded', (() => {
     cy.log('Wait for widgets loaders to disappear');
     cy.get('div.loader', { timeout: 10000 }).should('not.be.visible');
-});
+}) as Cypress.Chainable['waitUntilPageLoaded']);
 
-Cypress.Commands.add('waitUntilLoaded', () => {
+Cypress.Commands.add('waitUntilLoaded', (() => {
     cy.log('Wait for splash screen loader to disappear');
     cy.get('#loader', { timeout: 20000 }).should('be.not.visible');
     cy.waitUntilPageLoaded();
-});
+}) as Cypress.Chainable['waitUntilLoaded']);
 
-Cypress.Commands.add('uploadLicense', license =>
+Cypress.Commands.add('uploadLicense', (license =>
     cy.fixture(`license/${license}.yaml`).then(yaml =>
         cy.request({
             method: 'PUT',
@@ -59,10 +97,9 @@ Cypress.Commands.add('uploadLicense', license =>
             },
             body: yaml
         })
-    )
-);
+    )) as Cypress.Chainable['uploadLicense']);
 
-Cypress.Commands.add('getAdminToken', () =>
+Cypress.Commands.add('getAdminToken', (() =>
     cy
         .then(() =>
             cy.request({
@@ -77,10 +114,9 @@ Cypress.Commands.add('getAdminToken', () =>
                 }
             })
         )
-        .then(response => response.body.value)
-);
+        .then(response => response.body.value)) as Cypress.Chainable['getAdminToken']);
 
-Cypress.Commands.add('activate', (license = 'valid_trial_license') =>
+Cypress.Commands.add('activate', ((license = 'valid_trial_license') =>
     cy
         .uploadLicense(license)
         .getAdminToken()
@@ -89,10 +125,9 @@ Cypress.Commands.add('activate', (license = 'valid_trial_license') =>
         })
         .then(() =>
             cy.stageRequest(`/console/ua/clear-pages?tenant=default_tenant`, 'GET', { failOnStatusCode: false })
-        )
-);
+        )) as Cypress.Chainable['activate']);
 
-Cypress.Commands.add('cfyRequest', (url, method = 'GET', headers = null, body = null, options = {}) =>
+Cypress.Commands.add('cfyRequest', ((url, method = 'GET', headers = null, body = null, options = {}) =>
     cy.request({
         method,
         url: '/console/sp',
@@ -106,10 +141,9 @@ Cypress.Commands.add('cfyRequest', (url, method = 'GET', headers = null, body = 
         },
         body,
         ...options
-    })
-);
+    })) as Cypress.Chainable['cfyRequest']);
 
-Cypress.Commands.add('cfyFileRequest', (filePath, isBinaryFile, url, method = 'PUT', headers = null) => {
+Cypress.Commands.add('cfyFileRequest', ((filePath, isBinaryFile, url, method = 'PUT', headers = null) => {
     const filePromise = isBinaryFile
         ? cy.fixture(filePath, 'binary').then(binary => Cypress.Blob.binaryStringToBlob(binary))
         : cy.fixture(filePath);
@@ -123,15 +157,15 @@ Cypress.Commands.add('cfyFileRequest', (filePath, isBinaryFile, url, method = 'P
                     xhr.onload = resolve;
                     xhr.onerror = reject;
                     Object.entries({ ...getCommonHeaders(), ...headers }).forEach(([name, value]) =>
-                        xhr.setRequestHeader(name, value)
+                        xhr.setRequestHeader(name, value as string)
                     );
                     xhr.send(fileContent);
                 })
         )
     );
-});
+}) as Cypress.Chainable['cfyFileRequest']);
 
-Cypress.Commands.add('stageRequest', (url, method = 'GET', options, headers) => {
+Cypress.Commands.add('stageRequest', ((url, method = 'GET', options, headers) => {
     cy.request({
         method,
         url,
@@ -142,9 +176,9 @@ Cypress.Commands.add('stageRequest', (url, method = 'GET', options, headers) => 
         },
         ...options
     });
-});
+}) as Cypress.Chainable['stageRequest']);
 
-Cypress.Commands.add('login', (username = 'admin', password = 'admin', expectSuccessfulLogin = true) => {
+Cypress.Commands.add('login', ((username = 'admin', password = 'admin', expectSuccessfulLogin = true) => {
     cy.location('pathname').then(pathname => {
         if (pathname !== '/console/login') {
             cy.visit('/console/login');
@@ -166,10 +200,10 @@ Cypress.Commands.add('login', (username = 'admin', password = 'admin', expectSuc
 
         cy.waitUntilLoaded().then(() => cy.saveLocalStorage());
     }
-});
+}) as Cypress.Chainable['login']);
 
-Cypress.Commands.add('mockLogin', (username = 'admin', password = 'admin') => {
-    cy.stageRequest('/console/auth/login', 'POST', null, {
+Cypress.Commands.add('mockLogin', ((username = 'admin', password = 'admin') => {
+    cy.stageRequest('/console/auth/login', 'POST', undefined, {
         Authorization: `Basic ${btoa(`${username}:${password}`)}`
     }).then(response => {
         const { license, rbac, role, version } = response.body;
@@ -188,22 +222,22 @@ Cypress.Commands.add('mockLogin', (username = 'admin', password = 'admin') => {
         );
     });
     cy.visit('/console').waitUntilLoaded();
-});
+}) as Cypress.Chainable['mockLogin']);
 
-Cypress.Commands.add('visitPage', (name, id = null) => {
+Cypress.Commands.add('visitPage', ((name, id = null) => {
     cy.log(`Switching to '${name}' page`);
     cy.get('.sidebar.menu .pages').within(() => cy.contains(name).click({ force: true }));
     if (id) {
         cy.location('pathname').should('be.equal', `/console/page/${id}`);
     }
     cy.waitUntilPageLoaded();
-});
+}) as Cypress.Chainable['visitPage']);
 
-function toIdObj(id) {
+function toIdObj(id: string) {
     return { id };
 }
 
-Cypress.Commands.add('usePageMock', (widgetIds, widgetConfiguration = {}) => {
+Cypress.Commands.add('usePageMock', ((widgetIds, widgetConfiguration = {}) => {
     const widgetIdsArray = _.castArray(widgetIds);
     cy.server();
     cy.route('/console/widgets/list', widgetIds ? [...widgetIdsArray, 'filter', 'pluginsCatalog'].map(toIdObj) : []);
@@ -276,16 +310,17 @@ Cypress.Commands.add('usePageMock', (widgetIds, widgetConfiguration = {}) => {
             ]
         }
     });
-});
+}) as Cypress.Chainable['usePageMock']);
 
-Cypress.Commands.add('refreshPage', () => cy.get('.pageMenuItem.active').click({ force: true }));
+Cypress.Commands.add('refreshPage', (() =>
+    cy.get('.pageMenuItem.active').click({ force: true })) as Cypress.Chainable['refreshPage']);
 
-Cypress.Commands.add('refreshTemplate', () => {
+Cypress.Commands.add('refreshTemplate', (() => {
     cy.get('.tenantsMenu').click({ force: true });
     cy.contains('.text', 'default_tenant').click({ force: true });
-});
+}) as Cypress.Chainable['refreshTemplate']);
 
-function setContext(field, value) {
+function setContext(field: string, value: string) {
     cy.get(`.${field}FilterField`).click();
     cy.get(`.${field}FilterField input`).clear({ force: true }).type(`${value}`, { force: true });
     cy.waitUntilPageLoaded();
@@ -293,11 +328,23 @@ function setContext(field, value) {
     cy.get(`.${field}FilterField input`).type('{esc}', { force: true });
 }
 
-function clearContext(field) {
+function clearContext(field: string) {
     cy.get(`.${field}FilterField .dropdown.icon`).click();
 }
 
-Cypress.Commands.add('setBlueprintContext', _.wrap('blueprint', setContext));
-Cypress.Commands.add('clearBlueprintContext', _.wrap('blueprint', clearContext));
-Cypress.Commands.add('setDeploymentContext', _.wrap('deployment', setContext));
-Cypress.Commands.add('clearDeploymentContext', _.wrap('deployment', clearContext));
+Cypress.Commands.add(
+    'setBlueprintContext',
+    _.wrap('blueprint', setContext) as Cypress.Chainable['setBlueprintContext']
+);
+Cypress.Commands.add(
+    'clearBlueprintContext',
+    _.wrap('blueprint', clearContext) as Cypress.Chainable['clearBlueprintContext']
+);
+Cypress.Commands.add(
+    'setDeploymentContext',
+    _.wrap('deployment', setContext) as Cypress.Chainable['setDeploymentContext']
+);
+Cypress.Commands.add(
+    'clearDeploymentContext',
+    _.wrap('deployment', clearContext) as Cypress.Chainable['clearDeploymentContext']
+);
