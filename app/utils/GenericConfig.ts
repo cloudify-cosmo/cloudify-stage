@@ -56,7 +56,7 @@ export default class GenericConfig {
             SPIRE: 'Spire',
             OTHERS: 'Others',
             ALL: 'All'
-        };
+        } as const;
     }
 
     static get CUSTOM_WIDGET_PERMISSIONS() {
@@ -64,10 +64,10 @@ export default class GenericConfig {
             CUSTOM_ADMIN_ONLY: 'widget_custom_admin',
             CUSTOM_SYS_ADMIN_ONLY: 'widget_custom_sys_admin',
             CUSTOM_ALL: 'widget_custom_all'
-        };
+        } as const;
     }
 
-    static WIDGET_PERMISSION = widgetId => {
+    static WIDGET_PERMISSION = (widgetId: string) => {
         return `widget_${widgetId}`;
     };
 }
