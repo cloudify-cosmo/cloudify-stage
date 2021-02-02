@@ -55,7 +55,7 @@ export default class WidgetDefinitionsLoader {
     static init() {
         const stageAPI: StageAPI = {
             defineWidget: widgetDefinition => {
-                widgetDefinitions.push(new WidgetDefinition({ ...widgetDefinition, id: document.currentScript.id }));
+                widgetDefinitions.push(new WidgetDefinition({ ...widgetDefinition, id: document.currentScript?.id }));
             },
             Basic,
             Shared,

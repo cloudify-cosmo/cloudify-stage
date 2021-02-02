@@ -2,7 +2,7 @@
  * Created by pawelposel on 03/11/2016.
  */
 
-import { get, isEmpty } from 'lodash';
+import { isEmpty } from 'lodash';
 import React from 'react';
 
 Stage.defineWidget({
