@@ -262,7 +262,9 @@ describe('Edit mode', () => {
                 });
             const verifyResponse = text => cy.get('.widgetContent .ui.segment pre code').should('contain.text', text);
 
-            cy.intercept({ method: 'GET', pathname: '/console/wb/manager', query: { endpoint: 'version' }}).as('managerService');
+            cy.intercept({ method: 'GET', pathname: '/console/wb/manager', query: { endpoint: 'version' } }).as(
+                'managerService'
+            );
             cy.intercept({ method: 'GET', pathname: `/console/wb/request`, query: { url } }).as('requestService');
             submitWidget(widgetName, true);
             cy.exitEditMode();
