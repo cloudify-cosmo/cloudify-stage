@@ -1,6 +1,11 @@
 {
     "extends": "../../node_modules/cloudify-ui-common/configs/tsconfig.base.json",
     "compilerOptions": {
+        // Some files do not import/export anything, so cannot use isolatedModules
+        "isolatedModules": false,
+
+        // Cypress forces using inlineSourceMap
+        "sourceMap": false,
         "types": ["cypress"]
     }
 }

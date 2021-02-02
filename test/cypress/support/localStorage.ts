@@ -1,4 +1,4 @@
-const LOCAL_STORAGE_MEMORY = {};
+const LOCAL_STORAGE_MEMORY: Record<string, any> = {};
 
 Cypress.Commands.add('saveLocalStorage', () => {
     Object.keys(localStorage).forEach(key => {

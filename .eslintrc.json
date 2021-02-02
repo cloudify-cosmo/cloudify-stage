@@ -1,5 +1,5 @@
 {
-    "extends": ["./node_modules/cloudify-ui-common/configs/eslint-common.json"],
+    "extends": ["./node_modules/cloudify-ui-common/configs/eslint-common.json", "./.eslintrc.temp-overrides.json"],
     "rules": {
         "no-console": "error",
         "prefer-promise-reject-errors": "off"
