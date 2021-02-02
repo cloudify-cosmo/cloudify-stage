@@ -1,3 +1,5 @@
+import _ from 'lodash';
+
 import DeploymentStates from 'common/src/DeploymentStates';
 
 describe('(Widgets common) DeploymentStates', () => {
@@ -7,12 +9,12 @@ describe('(Widgets common) DeploymentStates', () => {
 
     it('returns in progress state', () => {
         Stage.Utils.Execution.isActiveExecution = _.constant(true);
-        expect(DeploymentStates.getDeploymentState(null, {})).toBe(DeploymentStates.IN_PROGRESS_STATE);
+        expect(DeploymentStates.getDeploymentState('', {})).toBe(DeploymentStates.IN_PROGRESS_STATE);
     });
 
     it('returns failed state', () => {
         Stage.Utils.Execution.isFailedExecution = _.constant(true);
-        expect(DeploymentStates.getDeploymentState(null, {})).toBe(DeploymentStates.FAILED_STATE);
+        expect(DeploymentStates.getDeploymentState('', {})).toBe(DeploymentStates.FAILED_STATE);
     });
 
     it('returns good state', () => {
@@ -23,6 +25,6 @@ describe('(Widgets common) DeploymentStates', () => {
     });
 
     it('return pending state', () => {
-        expect(DeploymentStates.getDeploymentState(null, {})).toBe(DeploymentStates.PENDING_STATE);
+        expect(DeploymentStates.getDeploymentState('', {})).toBe(DeploymentStates.PENDING_STATE);
     });
 });
