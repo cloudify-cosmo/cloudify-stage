@@ -215,7 +215,7 @@ DynamicDropdown.defaultProps = {
     multiple: false,
     className: '',
     refreshEvent: null,
-    itemsFormatter: options => options
+    itemsFormatter: items => items
 };
 
 Stage.defineCommon({
