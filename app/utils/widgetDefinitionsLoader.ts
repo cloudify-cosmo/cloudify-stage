@@ -65,7 +65,7 @@ export default class WidgetDefinitionsLoader {
             GenericConfig,
             Utils: StageUtils,
 
-            Common: [],
+            Common: {},
             defineCommon: def => {
                 window.Stage.Common[def.name] = def.common;
             },

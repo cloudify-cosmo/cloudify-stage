@@ -1,14 +1,74 @@
-import type { ReactNode } from 'react';
+import type { ComponentType, ReactNode } from 'react';
+import type i18n from 'i18next';
 
-import * as BasicComponents from '../components/basic';
-import * as SharedComponents from '../components/shared';
+import type * as BasicComponents from '../components/basic';
+import type * as SharedComponents from '../components/shared';
+import type * as StagePropTypes from './props';
+import type * as StageHooks from './hooks';
 import type GenericConfig from './GenericConfig';
 import type StageUtils from './stageUtils';
+import type WidgetContext from './Context';
+import type EventBus from './EventBus';
 
-type WidgetDefinition<Params = any, Data = any> = CommonWidgetDefinition<Params, Data> &
+/** @see https://docs.cloudify.co/developer/writing_widgets/widget-apis/#toolbox-object */
+export interface Toolbox {
+    drillDown(
+        widget: Widget,
+        defaultTemplate: string,
+        drilldownContext: Record<string, any>,
+        drilldownPageName?: any
+    ): void;
+    getContext(): WidgetContext;
+    getEventBus(): typeof EventBus;
+    getExternal(basicAuth: unknown): any;
+    getInternal(): any;
+    getManager(): any;
+    getManagerState(): any;
+    getNewManager(ip: unknown): any;
+    getWidget(): Widget;
+    getWidgetBackend(): any;
+    goToHomePage(): void;
+    goToPage(pageName: string, context: any): void;
+    goToParentPage(): void;
+    loading(isLoading: boolean): void;
+    refresh(): void;
+}
+
+export interface Widget {
+    id: string;
+    name: string;
+    height: number;
+    width: number;
+    x: number;
+    y: number;
+    configuration: Record<string, any>;
+    definition: WidgetDefinition;
+    drillDownPages: any[];
+    maximized: boolean;
+}
+
+/**
+ * @see https://docs.cloudify.co/developer/writing_widgets/widget-definition/
+ */
+export type WidgetDefinition<Params = any, Data = any> = CommonWidgetDefinition<Params, Data> &
     (ReactWidgetDefinitionPart<Data> | HTMLWidgetDefinitionPart<Data>);
 
 type ObjectKeys<T extends Record<string, any>> = T[keyof T];
+
+export interface WidgetConfigurationDefinition {
+    id: string;
+    name?: string;
+    description?: string;
+    // TODO: add individual interfaces for different types. Use TypeScript discriminated unions
+    type: string;
+    default: any;
+    placeHolder?: string;
+    hidden?: boolean;
+    component?: ComponentType<any>;
+
+    // TODO: add concrete types for each possible key and remove the line below
+    [key: string]: any;
+}
 
 interface CommonWidgetDefinition<Params, Data> {
     id: string;
@@ -18,80 +78,63 @@ interface CommonWidgetDefinition<Params, Data> {
     description?: string;
     /** @see https://docs.cloudify.co/developer/writing_widgets/widget-definition/#fetchurl */
     fetchUrl?: string | Record<string, string>;
-    /** @see https://docs.cloudify.co/developer/writing_widgets/widget-definition/#inclusive-params */
-    fetchParams?: (widget: any, toolbox: any) => Params;
+    /** @see https://docs.cloudify.co/developer/writing_widgets/widget-definition/#fetchparams-widget-toolbox */
+    fetchParams?: (widget: Widget, toolbox: Toolbox) => Params;
     hasReadme?: boolean;
     hasStyle?: boolean;
     hasTemplate?: boolean;
     helpUrl?: string;
     /** @see https://docs.cloudify.co/developer/writing_widgets/widget-definition/#initialconfiguration */
-    initialConfiguration?: any[];
+    initialConfiguration?: WidgetConfigurationDefinition[];
     initialHeight?: number;
     initialWidth?: number;
-    permission?: ObjectKeys<typeof GenericConfig['CUSTOM_WIDGET_PERMISSIONS']>[];
+    permission?: ObjectKeys<typeof GenericConfig['CUSTOM_WIDGET_PERMISSIONS']> | string;
     showBorder?: boolean;
     showHeader?: boolean;
     supportedEditions?: string[];
 
     init?: () => void;
+    /** @see https://docs.cloudify.co/developer/writing_widgets/widget-definition/#fetchdata-widget-toolbox-params */
     // TODO: fill in the types
-    postRender?: (container: any, widget: any, data: Data | null, toolbox: any) => void;
-    // TODO: fill in the types
-    fetchData?: (widget: any, toolbox: any, params: Params) => Promise<Data>;
+    fetchData?: (widget: Widget, toolbox: Toolbox, params: Params) => Promise<Data>;
 }
+
+type RenderCallback<Data, Output> = (widget: Widget, data: Data | null, error: any, toolbox: Toolbox) => Output;
 
 interface ReactWidgetDefinitionPart<Data> {
     isReact?: true;
-    render: (widget: any, data: Data | null, error: any, toolbox: any) => ReactNode;
+    render: RenderCallback<Data, ReactNode>;
 }
+
 interface HTMLWidgetDefinitionPart<Data> {
     isReact: false;
-    render: (widget: any, data: Data | null, error: any, toolbox: any) => string;
+    render: RenderCallback<Data, string>;
+
+    /** @see https://docs.cloudify.co/developer/writing_widgets/widget-definition/#postrender-container-widget-data-toolbox */
+    postRender?: (container: any, widget: Widget, data: Data | null, toolbox: Toolbox) => void;
 }
-function defineWidg<P, D>(def: WidgetDefinition<P, D>) {}
-defineWidg<{ param: boolean }, number>({
-    id: 'ab',
-    name: 'ab',
 
-    categories: ['All'],
-    permission: ['widget_custom_admin'],
-    isReact: false,
-    fetchParams: () => ({
-        param: true
-    }),
-    fetchData: (widget, toolbox, params): Promise<number> => {
-        return Promise.resolve(5);
-    },
-
-    render: (a, b, c, d) => {
-        return 'hi';
-    }
-});
-defineWidg({
-    id: 'ab',
-    name: 'ab',
-
-    categories: ['All'],
-    permission: ['widget_custom_admin'],
-    isReact: true,
-
-    render: (a, b, c, d) => {
-        return React.createElement('div');
-    }
-});
+interface CommonOrPropTypeDefinition {
+    name: string;
+    common: any;
+}
 
 export interface StageAPI {
     Basic: typeof BasicComponents;
-    defineWidget: (widgetConfiguration: any) => void;
+    defineWidget: <Params, Data>(widgetConfiguration: WidgetDefinition<Params, Data>) => void;
     Shared: typeof SharedComponents;
-    ComponentToHtmlString: (element: ReactNode) => void;
-    GenericConfig: GenericConfig;
-    Utils: StageUtils;
+    ComponentToHtmlString: (element: ReactNode) => string;
+    GenericConfig: typeof GenericConfig;
+    Utils: typeof StageUtils;
+
     Common: Record<string, unknown>;
-    defineCommon: (definition: any) => void;
-    PropTypes: any;
-    definePropType: (definition: any) => void;
-    Hooks: any;
+    defineCommon: (definition: CommonOrPropTypeDefinition) => void;
+
+    PropTypes: typeof StagePropTypes & Record<string, any>;
+    definePropType: (definition: CommonOrPropTypeDefinition) => void;
+
+    Hooks: typeof StageHooks & Record<string, any>;
     defineHook: (definition: any) => void;
-    i18n: any;
+
+    i18n: typeof i18n;
 }

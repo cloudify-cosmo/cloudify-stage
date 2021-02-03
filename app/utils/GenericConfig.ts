@@ -29,7 +29,7 @@ export default class GenericConfig {
         };
     };
 
-    static SORT_COLUMN_CONFIG = sortColumn => {
+    static SORT_COLUMN_CONFIG = (sortColumn: string) => {
         return {
             id: 'sortColumn',
             default: sortColumn,
@@ -37,7 +37,7 @@ export default class GenericConfig {
         };
     };
 
-    static SORT_ASCENDING_CONFIG = sortAscending => {
+    static SORT_ASCENDING_CONFIG = (sortAscending: boolean) => {
         return {
             id: 'sortAscending',
             default: sortAscending,

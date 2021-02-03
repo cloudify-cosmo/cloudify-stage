@@ -5,7 +5,15 @@
 import { isEmpty } from 'lodash';
 import React from 'react';
 
-Stage.defineWidget({
+interface WidgetData {
+    metadata?: {
+        pagination?: {
+            total?: number;
+        };
+    };
+}
+
+Stage.defineWidget<unknown, WidgetData>({
     id: 'deploymentNum',
     name: 'Number of deployments',
     description: 'Number of deployments',
@@ -31,7 +39,7 @@ Stage.defineWidget({
     ],
     fetchUrl: '[manager]/deployments?_include=id&_size=1',
 
-    render(widget: any, data: { metadata: any }) {
+    render(widget, data) {
         const { Loading } = Stage.Basic;
 
         if (isEmpty(data)) {
