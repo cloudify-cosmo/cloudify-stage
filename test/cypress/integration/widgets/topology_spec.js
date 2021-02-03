@@ -18,8 +18,7 @@ describe('Topology', () => {
     });
 
     beforeEach(() => {
-        cy.server();
-        cy.route(/console\/sp\?su=\/summary/).as('getSummary');
+        cy.interceptSp('GET', '/summary').as('getSummary');
     });
 
     describe('presents data for selected', () => {

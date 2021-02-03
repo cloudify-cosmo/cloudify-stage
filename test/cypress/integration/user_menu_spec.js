@@ -12,7 +12,7 @@ describe('User Menu', () => {
     };
 
     const verifyOptionIsNotVisible = selector => {
-        cy.get(selector).should('not.be.visible');
+        cy.get(selector).should('not.exist');
     };
 
     before(() => {

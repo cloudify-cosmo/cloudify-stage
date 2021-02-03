@@ -26,9 +26,8 @@ describe('Login', () => {
     it('provides SSO login button when SAML is enabled', () => {
         cy.activate();
 
-        cy.server();
         const ssoUrl = '/sso-redirect';
-        cy.route('/console/config', {
+        cy.intercept('/console/config', {
             app: {
                 saml: {
                     enabled: true,
@@ -46,17 +45,13 @@ describe('Login', () => {
         cy.get('@loginButton').click();
         cy.url().should('include', ssoUrl);
 
-        cy.server({ enable: false });
         cy.reload();
     });
 
     it('fails when provided credentials are valid, license is active but user has no tenants assigned', () => {
-        cy.server();
-        cy.route({
-            method: 'GET',
-            url: '/console/auth/user',
-            status: 200,
-            response: { username: 'test', role: 'default', groupSystemRoles: {}, tenantsRoles: {} }
+        cy.intercept('GET', '/console/auth/user', {
+            statusCode: 200,
+            body: { username: 'test', role: 'default', groupSystemRoles: {}, tenantsRoles: {} }
         });
 
         cy.activate().login();
@@ -76,12 +71,9 @@ describe('Login', () => {
     });
 
     it('fails when manager data cannot be fetched', () => {
-        cy.server();
-        cy.route({
-            method: 'GET',
-            url: '/console/auth/manager',
-            status: 500,
-            response: {}
+        cy.intercept('GET', '/console/auth/manager', {
+            statusCode: 500,
+            body: {}
         });
 
         cy.activate().login('admin', 'admin');
@@ -91,12 +83,9 @@ describe('Login', () => {
     });
 
     it('fails when user data cannot be fetched', () => {
-        cy.server();
-        cy.route({
-            method: 'GET',
-            url: '/console/auth/user',
-            status: 500,
-            response: {}
+        cy.intercept('GET', '/console/auth/user', {
+            statusCode: 500,
+            body: {}
         });
 
         cy.activate().login('admin', 'admin');
