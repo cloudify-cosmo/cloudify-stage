@@ -375,7 +375,12 @@
                 "newValue": "New value",
                 "valuePlaceholder": "Select or type in a value",
                 "validationError": "Only letters, digits and the characters \"-\", \".\" and \"_\" are allowed and it must begin with a letter.",
-                "isLabelInSystemCheckError": "Cannot check is label already present in the system"
+                "inputName": "Labels list",
+                "inputHelp": "A list of labels - key-value pairs - that can be assigned with a deployment",
+                "isLabelInSystemCheckError": "Cannot check is label already present in the system",
+                "fetchingLabelsError": "Cannot fetch labels for deployment '{{deploymentId}}'",
+                "modalHeader": "Manage labels for deployment '{{deploymentId}}'",
+                "modalApplyButton": "Apply"
             },
             "readmes": {
                 "linksBasePath": "https://docs.cloudify.co/5.1",

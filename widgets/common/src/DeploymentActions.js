@@ -94,6 +94,18 @@ export default class DeploymentActions {
         return this.toolbox.getManager().doGet('/sites?_include=name&_sort=name');
     }
 
+    doSetLabels(deploymentId, deploymentLabels) {
+        const labels = _.map(deploymentLabels, ({ key, value }) => ({ [key]: value }));
+        return this.toolbox.getManager().doPatch(`/deployments/${deploymentId}`, null, { labels });
+    }
+
+    doGetLabels(deploymentId) {
+        return this.toolbox
+            .getManager()
+            .doGet(`/deployments/${deploymentId}?_include=labels`)
+            .then(({ labels }) => labels);
+    }
+
     async waitUntilCreated(deploymentId) {
         const { ExecutionActions, PollHelper } = Stage.Common;
 
