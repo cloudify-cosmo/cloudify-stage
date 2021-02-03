@@ -59,14 +59,14 @@ export interface WidgetConfigurationDefinition {
     id: string;
     name?: string;
     description?: string;
-    // TODO: add individual interfaces for different types. Use TypeScript discriminated unions
+    // TODO(RD-1296): add individual interfaces for different types. Use TypeScript discriminated unions
     type: string;
     default: any;
     placeHolder?: string;
     hidden?: boolean;
     component?: ComponentType<any>;
 
-    // TODO: add concrete types for each possible key and remove the line below
+    // TODO(RD-1296): add concrete types for each possible key and remove the line below
     [key: string]: any;
 }
 
@@ -95,7 +95,6 @@ interface CommonWidgetDefinition<Params, Data> {
 
     init?: () => void;
     /** @see https://docs.cloudify.co/developer/writing_widgets/widget-definition/#fetchdata-widget-toolbox-params */
-    // TODO: fill in the types
     fetchData?: (widget: Widget, toolbox: Toolbox, params: Params) => Promise<Data>;
 }
 
