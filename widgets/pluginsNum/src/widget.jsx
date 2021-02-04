@@ -2,7 +2,7 @@
  * Created by pawelposel on 04/11/2016.
  */
 
-import * as _ from 'lodash';
+import _ from 'lodash';
 import React from 'react';
 
 Stage.defineWidget({
