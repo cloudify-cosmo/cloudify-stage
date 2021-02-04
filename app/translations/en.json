@@ -369,6 +369,19 @@
     },
     "widgets": {
         "common": {
+            "labels": {
+                "keyPlaceholder": "Select or type in a key",
+                "newKey": "New key",
+                "newValue": "New value",
+                "valuePlaceholder": "Select or type in a value",
+                "validationError": "Only letters, digits and the characters \"-\", \".\" and \"_\" are allowed and it must begin with a letter.",
+                "inputName": "Labels list",
+                "inputHelp": "A list of labels - key-value pairs - that can be assigned with a deployment",
+                "isLabelInSystemCheckError": "Cannot check is label already present in the system",
+                "fetchingLabelsError": "Cannot fetch labels for deployment '{{deploymentId}}'",
+                "modalHeader": "Manage labels for deployment '{{deploymentId}}'",
+                "modalApplyButton": "Apply"
+            },
             "readmes": {
                 "linksBasePath": "https://docs.cloudify.co/5.1",
                 "params": {
@@ -381,6 +394,7 @@
                     "product_name": "Cloudify"
                 }
             },
+            "revertToDefault": "Revert to default value",
             "urls": {
                 "pluginsCatalog": "http://repository.cloudifysource.org/cloudify/wagons/plugins.json",
                 "blueprintsCatalog": "http://repository.cloudifysource.org/cloudify/blueprints/5.1/examples.json",

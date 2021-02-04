@@ -8,9 +8,8 @@ Cypress.Commands.add('installPlugin', (wagonUrl, yamlUrl) =>
 );
 
 Cypress.Commands.add('uploadPluginFromCatalog', pluginName => {
-    cy.server();
     // eslint-disable-next-line security/detect-non-literal-regexp
-    cy.route('POST', new RegExp(`console/plugins/upload.*title=${pluginName}`)).as('pluginUpload');
+    cy.intercept('POST', new RegExp(`console/plugins/upload.*title=${pluginName}`)).as('pluginUpload');
 
     cy.log(`Upload ${pluginName} plugin`);
     cy.visitPage('Plugins Catalog');
@@ -21,7 +20,7 @@ Cypress.Commands.add('uploadPluginFromCatalog', pluginName => {
         cy.get('button.ok').click();
     });
     cy.wait('@pluginUpload', { responseTimeout: uploadPluginTimeout });
-    cy.get('.modal').should('be.not.visible');
+    cy.get('.modal').should('not.exist');
     cy.get('.pluginsCatalogWidget .message').should('have.text', `${pluginName} successfully uploaded`);
     cy.visitPage('Test Page');
 });

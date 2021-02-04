@@ -56,7 +56,7 @@ describe('License Management', () => {
                 cy.get('@updateButton').click();
             })
             .then(() => {
-                cy.get('div.loading').should('be.not.visible', true);
+                cy.get('div.loading').should('not.exist');
             });
     };
 
@@ -91,13 +91,13 @@ describe('License Management', () => {
     });
 
     it('fetches license on page load', () => {
-        cy.visit('/console/license').waitUntilLoaded();
+        cy.visit('/console/license');
 
         goToEditLicense();
         uploadLicense(expiredTrialLicense.file).then(() => verifyMessageHeader(expiredTrialLicense.header));
 
         // Update license using REST call
-        cy.activate().reload().waitUntilLoaded();
+        cy.activate().reload();
 
         verifyMessageHeader(validTrialLicense.header);
     });

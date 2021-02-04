@@ -36,7 +36,7 @@ Cypress.Commands.add('restoreState', () => cy.restoreLocalStorage());
 
 Cypress.Commands.add('waitUntilPageLoaded', () => {
     cy.log('Wait for widgets loaders to disappear');
-    cy.get('div.loader', { timeout: 10000 }).should('not.be.visible');
+    cy.get('div.loader:visible', { timeout: 10000 }).should('not.exist');
 });
 
 Cypress.Commands.add('waitUntilLoaded', () => {
@@ -155,7 +155,7 @@ Cypress.Commands.add('login', (username = 'admin', password = 'admin', expectSuc
     cy.get('.form > :nth-child(2) > .ui > input').clear().type(password);
     cy.get('.form > button').click();
 
-    cy.get('.form > button.loading').should('be.not.visible', true);
+    cy.get('.form > button.loading').should('not.exist');
 
     if (expectSuccessfulLogin) {
         cy.getCookies()
@@ -205,12 +205,15 @@ function toIdObj(id) {
 
 Cypress.Commands.add('usePageMock', (widgetIds, widgetConfiguration = {}) => {
     const widgetIdsArray = _.castArray(widgetIds);
-    cy.server();
-    cy.route('/console/widgets/list', widgetIds ? [...widgetIdsArray, 'filter', 'pluginsCatalog'].map(toIdObj) : []);
-    cy.route('/console/templates', []);
+    cy.intercept(
+        'GET',
+        '/console/widgets/list',
+        widgetIds ? [...widgetIdsArray, 'filter', 'pluginsCatalog'].map(toIdObj) : []
+    );
     // required for drill-down testing
-    cy.route('/console/templates/pages', widgetIds ? ['blueprint', 'deployment'].map(toIdObj) : []);
-    cy.route('/console/ua', {
+    cy.intercept('GET', '/console/templates/pages', widgetIds ? ['blueprint', 'deployment'].map(toIdObj) : []);
+    cy.intercept('GET', '/console/templates', []);
+    cy.intercept('GET', '/console/ua', {
         appDataVersion: 4,
         appData: {
             pages: [
@@ -301,3 +304,14 @@ Cypress.Commands.add('setBlueprintContext', _.wrap('blueprint', setContext));
 Cypress.Commands.add('clearBlueprintContext', _.wrap('blueprint', clearContext));
 Cypress.Commands.add('setDeploymentContext', _.wrap('deployment', setContext));
 Cypress.Commands.add('clearDeploymentContext', _.wrap('deployment', clearContext));
+
+Cypress.Commands.add('interceptSp', (method, su, routeHandler) =>
+    cy.intercept(
+        {
+            method,
+            pathname: '/console/sp',
+            query: { su: su instanceof RegExp ? su : RegExp(`.*${_.escapeRegExp(su)}.*`) }
+        },
+        routeHandler
+    )
+);

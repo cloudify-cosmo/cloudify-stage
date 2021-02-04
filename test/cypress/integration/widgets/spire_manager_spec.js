@@ -11,49 +11,29 @@ describe('Spire Manager widget', () => {
     });
 
     beforeEach(() => {
-        cy.server();
-        cy.fixture(`spire_deployments/3_deployments.json`).then(data => {
-            cy.route({
-                method: 'GET',
-                url: '/console/wb/get_spire_deployments',
-                response: data
-            }).as('getSpireDeployments');
-        });
-        cy.fixture('cluster_status/ok.json').then(data => {
-            cy.route({
-                method: 'GET',
-                url: '/console/wb/get_cluster_status?deploymentId=rome',
-                response: data,
-                delay: 500
-            }).as('getClusterStatusForRome');
-        });
-        cy.fixture('cluster_status/degraded.json').then(data => {
-            cy.route({
-                method: 'GET',
-                url: '/console/wb/get_cluster_status?deploymentId=london',
-                response: data,
-                delay: 500
-            }).as('getClusterStatusForLondon');
-        });
-        cy.fixture('cluster_status/fail.json').then(data => {
-            cy.route({
-                method: 'GET',
-                url: '/console/wb/get_cluster_status?deploymentId=new-york',
-                response: data,
-                delay: 500
-            }).as('getClusterStatusForNewYork');
-        });
-        cy.route({
-            method: 'POST',
-            url: '/console/sp?su=/executions',
-            response: {}
-        }).as('postExecutions');
+        const delay = 500;
+        cy.intercept('GET', '/console/wb/get_spire_deployments', {
+            fixture: `spire_deployments/3_deployments.json`
+        }).as('getSpireDeployments');
+        cy.intercept('GET', '/console/wb/get_cluster_status?deploymentId=rome', {
+            fixture: 'cluster_status/ok.json',
+            delay
+        }).as('getClusterStatusForRome');
+        cy.intercept('GET', '/console/wb/get_cluster_status?deploymentId=london', {
+            fixture: 'cluster_status/degraded.json',
+            delay
+        }).as('getClusterStatusForLondon');
+        cy.intercept('GET', '/console/wb/get_cluster_status?deploymentId=new-york', {
+            fixture: 'cluster_status/fail.json',
+            delay
+        }).as('getClusterStatusForNewYork');
+        cy.interceptSp('POST', '/executions', {}).as('postExecutions');
 
         cy.refreshPage();
 
         // Wait to load Spire Manager widget
         cy.wait('@getSpireDeployments');
-        cy.get('.managersWidget .loadingSegment').should('not.be.visible');
+        cy.get('.managersWidget .loadingSegment').should('not.exist');
 
         // Wait to load Spire Deployments status
         const waitToLoadStatus = rowNumber => {
@@ -99,7 +79,7 @@ describe('Spire Manager widget', () => {
 
     it('allows checking deployment cluster status details', () => {
         const checkServiceRow = (rowNumber, managerStatus, databaseStatus, brokerStatus) => {
-            cy.get('table.servicesData').should('not.be.visible');
+            cy.get('table.servicesData').should('not.exist');
             cy.get(`tbody > :nth-child(${rowNumber}) > :nth-child(5) i.statusIcon`).trigger('mouseover');
             cy.get('table.servicesData').should('be.visible');
             cy.get('table.servicesData').within(() => {
@@ -111,7 +91,7 @@ describe('Spire Manager widget', () => {
                 cy.get('tbody tr:nth-child(3)').should('have.attr', 'style', styles[brokerStatus]);
             });
             cy.get(`tbody > :nth-child(${rowNumber}) > :nth-child(5) i.statusIcon`).trigger('mouseout');
-            cy.get('table.servicesData').should('not.be.visible');
+            cy.get('table.servicesData').should('not.exist');
         };
 
         checkServiceRow(1, 'OK', 'OK', 'OK');
@@ -155,7 +135,7 @@ describe('Spire Manager widget', () => {
             deployment_id: 'london',
             workflow_id: 'install'
         });
-        cy.get('.modal').should('not.be.visible');
+        cy.get('.modal').should('not.exist');
     });
 
     it('allows to do bulk workflow execution on spire deployments', () => {
@@ -176,6 +156,6 @@ describe('Spire Manager widget', () => {
         waitForExecutionsRequest('london');
         waitForExecutionsRequest('new-york');
 
-        cy.get('.modal').should('not.be.visible');
+        cy.get('.modal').should('not.exist');
     });
 });
