@@ -4,7 +4,10 @@ import DeploymentStates from 'common/src/DeploymentStates';
 
 describe('(Widgets common) DeploymentStates', () => {
     beforeEach(() => {
-        Stage.Utils = { Execution: { isActiveExecution: _.noop, isFailedExecution: _.noop } };
+        Stage.Utils = {
+            Execution: { isActiveExecution: _.constant(false), isFailedExecution: _.constant(false) }
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        } as any;
     });
 
     it('returns in progress state', () => {
