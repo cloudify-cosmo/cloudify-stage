@@ -1,6 +1,8 @@
 {
     "extends": "../node_modules/cloudify-ui-common/configs/tsconfig.base.json",
     "compilerOptions": {
+        // Widgets are global scripts, not ES modules
+        "isolatedModules": false,
         "types": ["react", "react-dom", "moment", "lodash"]
     },
     "include": ["**/*"],
