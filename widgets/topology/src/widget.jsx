@@ -67,7 +67,7 @@ Stage.defineWidget({
                             );
                         })
                     )
-            ).then(componentDeploymentsData => _.merge(...componentDeploymentsData));
+            ).then(componentDeploymentsData => Object.assign({}, ...componentDeploymentsData));
         }
 
         return DataFetcher.fetch(toolbox, blueprintId, deploymentId, true)
