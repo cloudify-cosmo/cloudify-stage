@@ -71,6 +71,7 @@ export default class AgentsTable extends React.Component {
                 <DataTable
                     selectable={false}
                     className="agentsTable"
+                    searchable
                     noDataMessage={NO_DATA_MESSAGE}
                     totalSize={totalSize}
                 >
