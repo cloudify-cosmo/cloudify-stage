@@ -139,10 +139,10 @@ describe('Deployments widget', () => {
     it('should allow to update deployment', () => {
         cy.interceptSp('PUT', `/deployment-updates/${deploymentName}/update/initiate`).as('updateDeployment');
 
+        cy.interceptSp('GET', RegExp(`/blueprints.*&state=uploaded`)).as('uploadedBlueprints');
         actOnDeployment(deploymentName, 'Update');
 
         cy.get('.updateDeploymentModal').within(() => {
-            cy.interceptSp('GET', RegExp(`/blueprints.*&state=uploaded`)).as('uploadedBlueprints');
             cy.get('div[name=blueprintName]').click();
             cy.wait('@uploadedBlueprints');
             cy.get('textarea[name="webserver_port"]').clear({ force: true }).type('9321');
