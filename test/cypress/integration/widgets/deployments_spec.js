@@ -48,7 +48,7 @@ describe('Deployments widget', () => {
 
         it('clickToDrillDown option', () => {
             searchForDeployment(deploymentName);
-            cy.contains(deploymentName).click();
+            cy.get('.deploymentsWidget').contains(deploymentName).click();
             cy.location('pathname').should('contain', '_deployment/deployments_test_hw_dep');
             cy.contains('.breadcrumb', 'deployments_test_hw_dep');
 
@@ -57,7 +57,7 @@ describe('Deployments widget', () => {
                 cy.get('input[name="clickToDrillDown"]').parent().click();
             });
 
-            cy.contains(deploymentName).click();
+            cy.get('.deploymentsWidget').contains(deploymentName).click();
             cy.location('pathname').should('not.contain', '_deployment/deployments_test_hw_dep');
             cy.get('.deploymentsWidget');
         });
