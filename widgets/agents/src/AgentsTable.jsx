@@ -41,6 +41,11 @@ export default class AgentsTable extends React.Component {
         toolbox.getEventBus().off('agents:refresh', this.refreshData);
     }
 
+    fetchGridData = fetchParams => {
+        const { toolbox } = this.props;
+        return toolbox.refresh(fetchParams);
+    };
+
     hideModal = () => {
         this.setState({ showModal: false });
     };
@@ -51,6 +56,8 @@ export default class AgentsTable extends React.Component {
 
     refreshData() {
         const { toolbox } = this.props;
+        this.setState({ error: null });
+
         toolbox.refresh();
     }
 
@@ -69,6 +76,7 @@ export default class AgentsTable extends React.Component {
                 <ErrorMessage error={error} onDismiss={() => this.setState({ error: null })} autoHide />
 
                 <DataTable
+                    fetchData={this.fetchGridData}
                     selectable={false}
                     className="agentsTable"
                     searchable
