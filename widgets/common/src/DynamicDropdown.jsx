@@ -102,12 +102,6 @@ function DynamicDropdown({
         }
     }, [loaderVisible]);
 
-    useEffect(() => {
-        if (fetchUrl) {
-            loadMore();
-        }
-    }, [fetchUrl]);
-
     const filteredOptions = _(options)
         .filter(option =>
             _(filter)
