@@ -29,6 +29,6 @@ describe('Blueprint Actions widget', () => {
         cy.get('.actions > .ui:nth-child(3)').should('have.text', 'Deploy & Install');
 
         cy.get('.actions > .ui:nth-child(1)').click();
-        cy.get('div.deployBlueprintModal').should('not.be.visible');
+        cy.get('div.deployBlueprintModal').should('not.exist');
     });
 });

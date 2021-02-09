@@ -12,10 +12,6 @@ const filterFields = [
     'siteName'
 ];
 
-function appendQueryParam(url, param, value) {
-    return `${url}${url.indexOf('?') > 0 ? '&' : '?'}${param}=${value}`;
-}
-
 export default class Filter extends React.Component {
     constructor(props, context) {
         super(props, context);
@@ -157,6 +153,7 @@ export default class Filter extends React.Component {
             flushOnRefreshEvent
         }) => {
             const { DynamicDropdown } = Stage.Common;
+            const { appendQueryParam } = Stage.Utils.Url;
             const { configuration, toolbox } = this.props;
 
             const joinedEntityName = entityName.replace(' ', '');

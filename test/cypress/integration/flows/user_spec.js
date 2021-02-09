@@ -29,7 +29,7 @@ describe('User flow', () => {
         cy.get('.modal').within(() => {
             cy.get('button.ok').click();
         });
-        cy.get('.modal', { timeout: 2 * 60 * 1000 }).should('be.not.visible');
+        cy.get('.modal', { timeout: 2 * 60 * 1000 }).should('not.exist');
 
         cy.visitPage('System Resources');
         createSecret('some_key_1');

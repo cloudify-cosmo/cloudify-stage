@@ -1,17 +1,18 @@
 describe('Blueprints widget', () => {
     const blueprintNamePrefix = 'blueprints_test';
     const emptyBlueprintName = `${blueprintNamePrefix}_empty`;
+    const blueprintsWidgetConfiguration = { displayStyle: 'table', clickToDrillDown: true, pollingTime: 5 };
 
     before(() =>
         cy
             .activate('valid_trial_license')
             .deleteDeployments(blueprintNamePrefix, true)
             .deleteBlueprints(blueprintNamePrefix, true)
-            .usePageMock('blueprints', { displayStyle: 'table', clickToDrillDown: true })
+            .usePageMock('blueprints', blueprintsWidgetConfiguration)
             .mockLogin()
     );
 
-    beforeEach(() => cy.usePageMock('blueprints', { displayStyle: 'table', clickToDrillDown: true }).refreshTemplate());
+    beforeEach(() => cy.usePageMock('blueprints', blueprintsWidgetConfiguration).refreshTemplate());
 
     function getBlueprintRow(blueprintName) {
         cy.get('input[placeholder^=Search]').clear().type(blueprintName);
@@ -36,8 +37,7 @@ describe('Blueprints widget', () => {
 
             const deploymentName = blueprintNamePrefix;
 
-            cy.server();
-            cy.route('PUT', `/console/sp?su=/deployments/${deploymentName}`).as('deploy');
+            cy.interceptSp('PUT', `/deployments/${deploymentName}`).as('deploy');
 
             cy.get('input[name=deploymentName]').type(deploymentName);
             cy.contains('Show Data Types').click();
@@ -47,8 +47,8 @@ describe('Blueprints widget', () => {
             cy.contains('.modal .basic', 'Deploy').click();
             cy.get('.modal').should('not.exist');
 
-            cy.wait('@deploy').then(({ requestBody }) => {
-                expect(requestBody).to.deep.equal({
+            cy.wait('@deploy').then(({ request }) => {
+                expect(request.body).to.deep.equal({
                     blueprint_id: emptyBlueprintName,
                     inputs: { server_ip: serverIp },
                     visibility: 'tenant',
@@ -79,7 +79,8 @@ describe('Blueprints widget', () => {
 
     describe('should render blueprint items', () => {
         beforeEach(() => {
-            cy.route(RegExp(`/console/sp\\?su=/blueprints`), 'fixture:blueprints/blueprints');
+            cy.interceptSp('GET', /blueprints.*&state=uploaded/).as('filteredBlueprints');
+            cy.interceptSp('GET', `/blueprints`, { fixture: 'blueprints/blueprints' });
             cy.refreshPage();
         });
 
@@ -150,7 +151,6 @@ describe('Blueprints widget', () => {
             });
             cy.contains('invalid error');
 
-            cy.route(RegExp(`/console/sp\\?su=/blueprints.*&state=uploaded`)).as('filteredBlueprints');
             cy.editWidgetConfiguration('blueprints', () => cy.get('input[name=hideFailedBlueprints]').parent().click());
             cy.wait('@filteredBlueprints');
 
@@ -256,7 +256,6 @@ describe('Blueprints widget', () => {
                 });
             cy.contains('invalid error');
 
-            cy.route(RegExp(`/console/sp\\?su=/blueprints.*&state=uploaded`)).as('filteredBlueprints');
             cy.editWidgetConfiguration('blueprints', () => cy.get('input[name=hideFailedBlueprints]').parent().click());
             cy.wait('@filteredBlueprints');
 
@@ -288,10 +287,7 @@ describe('Blueprints widget', () => {
             const url =
                 'https://github.com/cloudify-community/blueprint-examples/releases/download/5.0.5-65/utilities-examples-cloudify_secrets.zip';
 
-            beforeEach(() => {
-                cy.get('input[name=blueprintUrl]').type(url).blur();
-                cy.server();
-            });
+            beforeEach(() => cy.get('input[name=blueprintUrl]').type(url).blur());
 
             it('with default blueprint file', () => {
                 cy.get('input[name=blueprintUrl]').clear().blur();
@@ -311,15 +307,14 @@ describe('Blueprints widget', () => {
                 cy.get('input[name=blueprintName]').clear().type(blueprintName);
                 cy.get('.button.ok').click();
 
-                const getBlueprint = RegExp(`/console/sp\\?su=/blueprints/${blueprintName}`);
+                const getBlueprint = `/blueprints/${blueprintName}`;
+                const responses = ['uploading', 'extracting', 'parsing', 'uploaded'].map(state => ({ state }));
+                cy.interceptSp('GET', getBlueprint, req => req.reply(responses.shift()));
+
                 cy.contains('1/5: Waiting for blueprint upload to start...');
-                cy.route(getBlueprint, { state: 'uploading' });
                 cy.contains('2/5: Uploading blueprint...');
-                cy.route(getBlueprint, { state: 'extracting' });
                 cy.contains('3/5: Extracting blueprint...');
-                cy.route(getBlueprint, { state: 'parsing' });
                 cy.contains('4/5: Parsing blueprint...');
-                cy.route(getBlueprint, { state: 'uploaded' });
 
                 getBlueprintRow(blueprintName).contains('read-secret-blueprint.yaml');
             });
@@ -342,7 +337,10 @@ describe('Blueprints widget', () => {
                 cy.get('.button.ok').click();
 
                 const error = 'error message';
-                cy.route(RegExp(`/console/sp\\?su=/blueprints/${blueprintName}`), { state: 'failed_uploading', error });
+                cy.interceptSp('GET', `/blueprints/${blueprintName}`, {
+                    state: 'failed_uploading',
+                    error
+                });
 
                 cy.contains('.header', 'Blueprint upload failed');
                 cy.contains('li', error);

@@ -18,7 +18,9 @@ function DynamicDropdown({
     name,
     prefetch,
     className,
-    refreshEvent
+    refreshEvent,
+    itemsFormatter,
+    ...rest
 }) {
     const { useState, useEffect } = React;
 
@@ -43,9 +45,9 @@ function DynamicDropdown({
                 .doGetFull(fetchUrl)
                 .then(data => {
                     setHasMore(false);
-                    setOptions(data.items);
-                    setLoading(false);
-                });
+                    setOptions(itemsFormatter(data.items));
+                })
+                .finally(() => setLoading(false));
         } else {
             const nextPage = currentPage + 1;
 
@@ -54,9 +56,9 @@ function DynamicDropdown({
                 .doGet(fetchUrl, { _sort: valueProp, _size: pageSize, _offset: nextPage * pageSize })
                 .then(data => {
                     setHasMore(data.metadata.pagination.total > (nextPage + 1) * pageSize);
-                    setOptions([...options, ...data.items]);
-                    setLoading(false);
-                });
+                    setOptions([...options, ...itemsFormatter(data.items)]);
+                })
+                .finally(() => setLoading(false));
 
             setCurrentPage(nextPage);
         }
@@ -144,6 +146,7 @@ function DynamicDropdown({
             onChange={(proxy, field) => onChange(!_.isEmpty(field.value) ? field.value : null)}
             onSearchChange={(e, data) => setSearchQuery(data.searchQuery)}
             multiple={multiple}
+            loading={isLoading}
             options={(() => {
                 const preparedOptions = filteredOptions.map(item => ({
                     text: (textFormatter || (i => i[valueProp]))(item),
@@ -168,6 +171,8 @@ function DynamicDropdown({
                 }
                 return preparedOptions;
             })()}
+            /* eslint-disable-next-line react/jsx-props-no-spreading */
+            {...rest}
         />
     );
 }
@@ -187,7 +192,8 @@ DynamicDropdown.propTypes = {
     name: PropTypes.string,
     prefetch: PropTypes.bool,
     className: PropTypes.string,
-    refreshEvent: PropTypes.string
+    refreshEvent: PropTypes.string,
+    itemsFormatter: PropTypes.func
 };
 
 DynamicDropdown.defaultProps = {
@@ -202,7 +208,8 @@ DynamicDropdown.defaultProps = {
     prefetch: false,
     multiple: false,
     className: '',
-    refreshEvent: null
+    refreshEvent: null,
+    itemsFormatter: _.identity
 };
 
 Stage.defineCommon({

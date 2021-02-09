@@ -2,10 +2,7 @@ describe('Events/logs widget', () => {
     it('should show error cause', () => {
         cy.activate()
             .usePageMock('events', { fieldsToShow: ['Message', 'Workflow'], pageSize: 15 })
-            .route({
-                url: '/console/sp?su=/events?_size=15&_offset=0',
-                response: 'fixture:events/events.json'
-            })
+            .interceptSp('GET', '/events?_size=15&_offset=0', { fixture: 'events/events.json' })
             .mockLogin();
 
         cy.contains('tr', 'create_snapshot').find('.file').click();

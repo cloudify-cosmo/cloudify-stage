@@ -9,7 +9,7 @@ describe('Deployments widget', () => {
     const searchForDeployment = name =>
         cy.get('.deploymentsWidget').within(() => {
             cy.get('.input input').clear().type(name);
-            cy.get('.input.loading').should('be.not.visible');
+            cy.get('.input.loading').should('not.exist');
         });
 
     const actOnDeployment = (name, action) => {
@@ -48,7 +48,7 @@ describe('Deployments widget', () => {
 
         it('clickToDrillDown option', () => {
             searchForDeployment(deploymentName);
-            cy.contains(deploymentName).click();
+            cy.get('.deploymentsWidget').contains(deploymentName).click();
             cy.location('pathname').should('contain', '_deployment/deployments_test_hw_dep');
             cy.contains('.breadcrumb', 'deployments_test_hw_dep');
 
@@ -57,7 +57,7 @@ describe('Deployments widget', () => {
                 cy.get('input[name="clickToDrillDown"]').parent().click();
             });
 
-            cy.contains(deploymentName).click();
+            cy.get('.deploymentsWidget').contains(deploymentName).click();
             cy.location('pathname').should('not.contain', '_deployment/deployments_test_hw_dep');
             cy.get('.deploymentsWidget');
         });
@@ -68,7 +68,7 @@ describe('Deployments widget', () => {
             const lastExecutionCellSelector = 'tr#deploymentsTable_deployments_test_hw_dep td:nth-child(2)';
             cy.get(lastExecutionCellSelector).within(() => {
                 cy.get('.icon').should('be.visible');
-                cy.get('.label').should('not.be.visible');
+                cy.get('.label').should('not.exist');
             });
 
             cy.editWidgetConfiguration('deployments', () => {
@@ -83,8 +83,7 @@ describe('Deployments widget', () => {
         });
 
         it('blueprintIdFilter option', () => {
-            cy.server();
-            cy.route('GET', `**/deployments*blueprint_id=${blueprintName}`).as('getFilteredDeployments');
+            cy.interceptSp('GET', RegExp(`/deployments.*blueprint_id=${blueprintName}`)).as('getFilteredDeployments');
 
             cy.refreshPage();
 
@@ -97,21 +96,20 @@ describe('Deployments widget', () => {
 
         it('displayStyle option', () => {
             cy.get('table.deploymentsTable').should('be.visible');
-            cy.get('div.segmentList').should('not.be.visible');
+            cy.get('div.segmentList').should('not.exist');
 
             cy.editWidgetConfiguration('deployments', () => {
                 cy.get('div[name="displayStyle"]').click();
                 cy.get('div[option-value="list"]').click();
             });
 
-            cy.get('table.deploymentsTable').should('not.be.visible');
+            cy.get('table.deploymentsTable').should('not.exist');
             cy.get('div.segmentList').should('be.visible');
         });
     });
 
     it('should allow to execute workflow', () => {
-        cy.server();
-        cy.route('POST', `**/executions`).as('executeWorkflow');
+        cy.interceptSp('POST', `/executions`).as('executeWorkflow');
 
         actOnDeployment(deploymentName, 'Install');
 
@@ -122,8 +120,7 @@ describe('Deployments widget', () => {
     });
 
     it('should allow to set site for deployment', () => {
-        cy.server();
-        cy.route('POST', `**/deployments/${deploymentName}/set-site`).as('setDeploymentSite');
+        cy.interceptSp('POST', `/deployments/${deploymentName}/set-site`).as('setDeploymentSite');
 
         actOnDeployment(deploymentName, 'Set Site');
 
@@ -140,13 +137,12 @@ describe('Deployments widget', () => {
     });
 
     it('should allow to update deployment', () => {
-        cy.server();
-        cy.route('PUT', `**/deployment-updates/${deploymentName}/update/initiate`).as('updateDeployment');
+        cy.interceptSp('PUT', `/deployment-updates/${deploymentName}/update/initiate`).as('updateDeployment');
 
+        cy.interceptSp('GET', RegExp(`/blueprints.*&state=uploaded`)).as('uploadedBlueprints');
         actOnDeployment(deploymentName, 'Update');
 
         cy.get('.updateDeploymentModal').within(() => {
-            cy.route(RegExp(`/console/sp\\?su=/blueprints.*&state=uploaded`)).as('uploadedBlueprints');
             cy.get('div[name=blueprintName]').click();
             cy.wait('@uploadedBlueprints');
             cy.get('textarea[name="webserver_port"]').clear({ force: true }).type('9321');
@@ -162,7 +158,7 @@ describe('Deployments widget', () => {
         });
 
         cy.wait('@updateDeployment');
-        cy.get('.updateDetailsModal').should('be.not.visible');
+        cy.get('.updateDetailsModal').should('not.exist');
 
         cy.contains('div.row', deploymentName).within(() => {
             const updateTimeout = 30000;
@@ -175,14 +171,13 @@ describe('Deployments widget', () => {
     it('should allow to remove deployment', () => {
         const testDeploymentName = `${deploymentName}_remove`;
         cy.deployBlueprint(blueprintName, testDeploymentName);
-        cy.server();
-        cy.route('DELETE', `**/deployments/${testDeploymentName}?force=true`).as('deleteDeployment');
+        cy.interceptSp('DELETE', `/deployments/${testDeploymentName}?force=true`).as('deleteDeployment');
 
         actOnDeployment(testDeploymentName, 'Force Delete');
 
         cy.get('.modal button.primary').click();
 
         cy.wait('@deleteDeployment');
-        cy.contains('div.row', testDeploymentName).should('not.be.visible');
+        cy.contains('div.row', testDeploymentName).should('not.exist');
     });
 });

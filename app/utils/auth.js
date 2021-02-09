@@ -9,10 +9,11 @@ import Consts from './consts';
 import StageUtils from './stageUtils';
 import External from './External';
 import Internal from './Internal';
+import encodeTextToBase64 from './encodeTextToBase64';
 
 export default class Auth {
     static login(username, password) {
-        const external = new External({ basicAuth: btoa(`${username}:${password}`) });
+        const external = new External({ basicAuth: encodeTextToBase64(`${username}:${password}`) });
         return external.doPost(StageUtils.Url.url('/auth/login'), null, null, true, null, true);
     }
 

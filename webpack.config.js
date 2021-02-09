@@ -273,9 +273,13 @@ module.exports = (env, argv) => {
             mode,
             context,
             devtool,
+            resolve: {
+                extensions: ['.js', '.jsx']
+            },
             entry: glob
                 .sync('./widgets/common/src/props/*.{js,ts}')
                 .concat(glob.sync('./widgets/common/src/hooks/*.{js,ts}'))
+                .concat(glob.sync('./widgets/common/src/!(props|hooks)/*.{js,ts}*'))
                 .concat(glob.sync('./widgets/common/src/*.{js,ts}*')),
             output: {
                 path: path.join(outputPath, 'appData/widgets'),

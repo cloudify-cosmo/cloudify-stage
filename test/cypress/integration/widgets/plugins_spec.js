@@ -25,8 +25,7 @@ describe('Plugins widget', () => {
     });
 
     it('should allow to install and manage new plugin', () => {
-        cy.server();
-        cy.route(RegExp('/console/plugins/icons/')).as('pluginIcon');
+        cy.intercept('/console/plugins/icons/').as('pluginIcon');
 
         cy.get('.ok').click();
         cy.get('.modal').should('not.exist');
