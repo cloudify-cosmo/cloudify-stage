@@ -369,6 +369,18 @@
     },
     "widgets": {
         "common": {
+            "deployments": {
+                "actionsMenu": {
+                    "install": "Install",
+                    "update": "Update",
+                    "setSite": "Set Site",
+                    "manageLabels": "Manage Labels",
+                    "uninstall": "Uninstall",
+                    "delete": "Delete",
+                    "forceDelete": "Force Delete",
+                    "fetchError": "Cannot fetch deployment '{{ deploymentId }}'."
+                }
+            },
             "labels": {
                 "keyPlaceholder": "Select or type in a key",
                 "newKey": "New key",

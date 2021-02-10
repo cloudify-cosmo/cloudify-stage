@@ -7,8 +7,8 @@ export default class DeploymentActions {
         this.toolbox = toolbox;
     }
 
-    doGet(deployment) {
-        return this.toolbox.getManager().doGet(`/deployments/${deployment.id}`);
+    doGet(deployment, params) {
+        return this.toolbox.getManager().doGet(`/deployments/${deployment.id}`, params);
     }
 
     doGetDeployments(params) {

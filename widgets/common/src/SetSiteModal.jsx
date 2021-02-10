@@ -132,3 +132,8 @@ SetSiteModal.propTypes = {
     open: PropTypes.bool.isRequired,
     onHide: PropTypes.func.isRequired
 };
+
+Stage.defineCommon({
+    name: 'SetSiteModal',
+    common: SetSiteModal
+});

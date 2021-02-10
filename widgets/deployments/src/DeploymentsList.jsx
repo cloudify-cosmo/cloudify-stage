@@ -5,7 +5,6 @@
 import DeploymentsSegment from './DeploymentsSegment';
 import DeploymentsTable from './DeploymentsTable';
 import MenuAction from './MenuAction';
-import SetSiteModal from './SetSiteModal';
 
 export default class DeploymentsList extends React.Component {
     static DEPLOYMENT_UPDATE_DETAILS_MODAL = 'deploymentUpdateDetailsModal';
@@ -151,7 +150,7 @@ export default class DeploymentsList extends React.Component {
         const { data, toolbox, widget } = this.props;
         const NO_DATA_MESSAGE = 'There are no Deployments available. Click "Create deployment" to add deployments.';
         const { ErrorMessage, Confirm } = Stage.Basic;
-        const { ExecuteDeploymentModal, UpdateDeploymentModal } = Stage.Common;
+        const { ExecuteDeploymentModal, UpdateDeploymentModal, SetSiteModal } = Stage.Common;
         const showTableComponent = widget.configuration.displayStyle === 'table';
 
         const DeploymentsView = showTableComponent ? DeploymentsTable : DeploymentsSegment;
