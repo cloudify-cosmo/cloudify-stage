@@ -37,7 +37,7 @@ describe('Agents widget', () => {
         cy.contains('Close').click();
     });
 
-    it('should display agents for search action', () => {
+    it('should display agents that match the search phrase', () => {
         const items = [];
         for (let i = 0; i < 15; i += 1) {
             items.push({
