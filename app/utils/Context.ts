@@ -14,9 +14,15 @@ export default class Context {
         this.context = store.getState().context;
     }
 
+    /**
+     * Sets value in the context.
+     *
+     * Keep in mind that `setValue` works like `setState` in React class components.
+     * This means that calling `getValue` after calling `setState` will keep yielding the value
+     * from before `setState` until the widget rerenders.
+     */
     public setValue(key: any, value: any) {
         this.store.dispatch(setContextValue(key, value));
-        // NOTE: should we not set this.context[key] = value too?
     }
 
     public getValue(key: any) {
