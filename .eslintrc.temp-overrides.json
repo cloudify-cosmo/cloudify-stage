@@ -1,4 +1,5 @@
 {
+    // TODO(RD-1382): remove the file after the rules below cause no violations
     "rules": {
         // NOTE: disabled during the migration to TypeScript
         "@typescript-eslint/no-explicit-any": "off",
