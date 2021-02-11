@@ -1,7 +1,3 @@
-/**
- * Created by jakub.niezgoda on 05/02/2018.
- */
-
 import i18n from 'i18next';
 import { GenericField } from '../components/basic';
 

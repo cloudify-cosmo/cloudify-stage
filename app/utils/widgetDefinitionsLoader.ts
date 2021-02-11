@@ -1,6 +1,3 @@
-/**
- * Created by kinneretzin on 08/09/2016.
- */
 import i18n from 'i18next';
 import _ from 'lodash';
 import log from 'loglevel';

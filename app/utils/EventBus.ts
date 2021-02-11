@@ -1,7 +1,3 @@
-/**
- * Created by kinneretzin on 18/10/2016.
- */
-
 import _ from 'lodash';
 
 type Callback = (...args: any[]) => void;

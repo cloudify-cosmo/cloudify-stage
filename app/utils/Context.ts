@@ -1,7 +1,3 @@
-/**
- * Created by kinneretzin on 14/11/2016.
- */
-
 import { MiddlewareAPI } from 'redux';
 import { setValue as setContextValue } from '../actions/context';
 
