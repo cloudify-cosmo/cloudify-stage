@@ -82,12 +82,16 @@ export default class DeploymentActions {
     }
 
     doSetSite(deploymentId, siteName, detachSite) {
-        const data = { detach_site: detachSite };
-        if (siteName) {
-            data.site_name = siteName;
-        }
+        const data = detachSite ? { detach_site: detachSite } : { site_name: siteName };
 
         return this.toolbox.getManager().doPost(`/deployments/${deploymentId}/set-site`, null, data);
+    }
+
+    doGetSite(deploymentId) {
+        return this.toolbox
+            .getManager()
+            .doGet(`/deployments/${deploymentId}?_include=site_name`)
+            .then(({ site_name: siteName }) => siteName);
     }
 
     doGetSites() {

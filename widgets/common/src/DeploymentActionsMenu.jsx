@@ -68,11 +68,6 @@ export default function DeploymentActionsMenu({ deploymentId, onSelectAction, to
                     setOpenModal(actions.update);
                     break;
 
-                case actions.setSite:
-                    await fetchDeployment(['id', 'site_name']);
-                    setOpenModal(actions.setSite);
-                    break;
-
                 case actions.install:
                 case actions.uninstall:
                     await fetchDeployment();
@@ -80,9 +75,10 @@ export default function DeploymentActionsMenu({ deploymentId, onSelectAction, to
                     setOpenModal(name);
                     break;
 
-                case actions.manageLabels:
                 case actions.delete:
                 case actions.forceDelete:
+                case actions.manageLabels:
+                case actions.setSite:
                     setOpenModal(name);
                     break;
 
@@ -143,7 +139,7 @@ export default function DeploymentActionsMenu({ deploymentId, onSelectAction, to
             />
 
             <SetSiteModal
-                deployment={deployment}
+                deploymentId={deploymentId}
                 onHide={onModalHide}
                 open={openModal === actions.setSite}
                 toolbox={toolbox}

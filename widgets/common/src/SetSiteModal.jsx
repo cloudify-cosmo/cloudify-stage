@@ -1,133 +1,112 @@
-export default class SetSiteModal extends React.Component {
-    static initialState = {
-        loading: false,
-        errors: {},
-        sites: { items: [] }
-    };
+function SetSiteModal({ deploymentId, onHide, open, toolbox }) {
+    const {
+        Basic: { Modal, Icon, Form, ApproveButton, CancelButton },
+        Common: { DeploymentActions },
+        Hooks: { useBoolean, useErrors, useInput, useOpenProp, useResettableState },
+        i18n
+    } = Stage;
 
-    constructor(props, context) {
-        super(props, context);
+    const [detachSite, setDetachSite, clearDetachSite] = useInput(false);
+    const { errors, clearErrors, setMessageAsError } = useErrors();
+    const [loading, setLoading, unsetLoading] = useBoolean(false);
+    const [siteName, setSiteName, clearSiteName] = useInput('');
+    const [sites, setSites, resetSites] = useResettableState({ items: [] });
 
-        this.state = SetSiteModal.initialState;
-    }
+    const siteOptions = _.map(sites.items, site => {
+        return { text: site.name, value: site.name };
+    });
 
-    componentDidUpdate(prevProps) {
-        const { deployment, open, toolbox } = this.props;
-        if (!prevProps.open && open) {
-            const actions = new Stage.Common.DeploymentActions(toolbox);
-            actions
-                .doGetSites()
-                .then(sites => {
-                    this.setState({
-                        ...SetSiteModal.initialState,
-                        siteName: deployment.site_name,
-                        detachSite: false,
-                        sites
-                    });
-                })
-                .catch(() => {
-                    this.setState({ loading: false });
-                });
-        }
-    }
+    useOpenProp(open, () => {
+        const actions = new DeploymentActions(toolbox);
 
-    onApprove = () => {
-        this.setSite();
-        return false;
-    };
+        setLoading();
+        clearDetachSite();
+        clearSiteName();
+        clearErrors();
+        resetSites();
 
-    onCancel = () => {
-        const { onHide } = this.props;
-        onHide();
-        return true;
-    };
-
-    setSite() {
-        const { detachSite, siteName } = this.state;
-        const { deployment, onHide, toolbox } = this.props;
-        // Disable the form
-        this.setState({ loading: true });
-
-        const actions = new Stage.Common.DeploymentActions(toolbox);
         actions
-            .doSetSite(deployment.id, siteName, detachSite)
+            .doGetSites()
+            .then(setSites)
+            .then(() => actions.doGetSite(deploymentId))
+            .then(setSiteName)
+            .catch(setMessageAsError)
+            .finally(unsetLoading);
+    });
+
+    function setSite() {
+        setLoading();
+
+        const actions = new DeploymentActions(toolbox);
+        actions
+            .doSetSite(deploymentId, siteName, detachSite)
             .then(() => {
-                this.setState({ errors: {}, loading: false });
-                toolbox.refresh();
+                clearErrors();
+                toolbox.getEventBus().trigger('deployments:refresh');
                 onHide();
             })
-            .catch(err => {
-                this.setState({ errors: { error: err.message }, loading: false });
-            });
+            .catch(setMessageAsError)
+            .finally(unsetLoading);
     }
 
-    handleInputChange = (proxy, field) => {
-        this.setState(Stage.Basic.Form.fieldNameValue(field));
-    };
+    return (
+        <div>
+            <Modal open={open} onClose={onHide}>
+                <Modal.Header>
+                    <Icon name="edit" />
+                    {i18n.t(`widgets.common.deployments.setSiteModal.header`, { deploymentId })}
+                </Modal.Header>
 
-    render() {
-        const { detachSite, errors, loading, siteName, sites } = this.state;
-        const { deployment, onHide, open } = this.props;
-        const { Modal, Icon, Form, ApproveButton, CancelButton } = Stage.Basic;
-        const siteOptions = _.map(sites.items, site => {
-            return { text: site.name, value: site.name };
-        });
+                <Modal.Content>
+                    <Form loading={loading} errors={errors} onErrorsDismiss={clearErrors}>
+                        <Form.Field
+                            error={errors.siteName}
+                            label={i18n.t('widgets.common.deployments.setSiteModal.siteNameLabel')}
+                        >
+                            <Form.Dropdown
+                                search
+                                selection
+                                value={siteName}
+                                name="siteName"
+                                options={siteOptions}
+                                onChange={(event, field) => setSiteName(field.value)}
+                            />
+                        </Form.Field>
+                        <Form.Field className="detachSite">
+                            <Form.Checkbox
+                                toggle
+                                label={i18n.t('widgets.common.deployments.setSiteModal.detachSiteLabel')}
+                                name="detachSite"
+                                checked={detachSite}
+                                onChange={(event, field) => setDetachSite(field.checked)}
+                            />
+                        </Form.Field>
+                    </Form>
+                </Modal.Content>
 
-        return (
-            <div>
-                <Modal open={open} onClose={() => onHide()}>
-                    <Modal.Header>
-                        <Icon name="edit" /> Set the site of deployment {deployment.id}
-                    </Modal.Header>
-
-                    <Modal.Content>
-                        <Form loading={loading} errors={errors} onErrorsDismiss={() => this.setState({ errors: {} })}>
-                            <Form.Field error={errors.siteName} label="Site name">
-                                <Form.Dropdown
-                                    search
-                                    selection
-                                    value={siteName}
-                                    name="siteName"
-                                    options={siteOptions}
-                                    onChange={this.handleInputChange}
-                                />
-                            </Form.Field>
-                            <Form.Field className="detachSite">
-                                <Form.Checkbox
-                                    toggle
-                                    label="Detach from the current site"
-                                    name="detachSite"
-                                    checked={detachSite}
-                                    onChange={this.handleInputChange}
-                                />
-                            </Form.Field>
-                        </Form>
-                    </Modal.Content>
-
-                    <Modal.Actions>
-                        <CancelButton onClick={this.onCancel} disabled={loading} />
-                        <ApproveButton
-                            onClick={this.onApprove}
-                            disabled={loading}
-                            content="Update"
-                            icon="edit"
-                            color="green"
-                        />
-                    </Modal.Actions>
-                </Modal>
-            </div>
-        );
-    }
+                <Modal.Actions>
+                    <CancelButton onClick={onHide} disabled={loading} />
+                    <ApproveButton
+                        onClick={setSite}
+                        disabled={loading}
+                        content={i18n.t('widgets.common.deployments.setSiteModal.updateButton')}
+                        icon="edit"
+                        color="green"
+                    />
+                </Modal.Actions>
+            </Modal>
+        </div>
+    );
 }
 
 /**
- * @property {object} deployment Deployment object
+ * @property {string} deploymentId Deployment ID
  * @property {object} toolbox Toolbox object
  * @property {Function} onHide function to be called when the modal is closed
  * @property {boolean} open specifies whether the update modal is displayed
  */
 SetSiteModal.propTypes = {
-    deployment: PropTypes.shape({ id: PropTypes.string, site_name: PropTypes.string }).isRequired,
+    deploymentId: PropTypes.string.isRequired,
     toolbox: Stage.PropTypes.Toolbox.isRequired,
     open: PropTypes.bool.isRequired,
     onHide: PropTypes.func.isRequired
