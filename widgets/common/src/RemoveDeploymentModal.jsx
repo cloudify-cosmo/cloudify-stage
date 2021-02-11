@@ -1,46 +1,44 @@
 function RemoveDeploymentModal({ open, deploymentId, force, onHide, toolbox }) {
     const {
-        Basic: { Confirm },
-        Common: { DeploymentActions }
+        Basic: { Confirm, ErrorMessage },
+        Common: { DeploymentActions },
+        Hooks: { useErrors, useOpenProp },
+        i18n
     } = Stage;
+
+    const { errors, setErrors, clearErrors } = useErrors(null);
+
+    useOpenProp(open, clearErrors);
+
+    const content = i18n
+        .t(`widgets.common.deployments.removeModal.${force ? 'forceDelete' : 'delete'}Description`, { deploymentId })
+        .split('\n')
+        // eslint-disable-next-line react/no-array-index-key
+        .map((line, index) => <p key={index}>{line}</p>);
 
     function deleteDeployment() {
         const actions = new DeploymentActions(toolbox);
-        const doDelete = force ? actions.doForceDelete : actions.doDelete;
+        const deleteAction = force ? 'doForceDelete' : 'doDelete';
 
-        doDelete({ id: deploymentId })
+        clearErrors();
+        actions[deleteAction]({ id: deploymentId })
             .then(() => {
-                // TODO: Refresh
-                // this.setError(null);
-                // toolbox.getEventBus().trigger('deployments:refresh');
-                // toolbox.loading(false);
+                toolbox.getEventBus().trigger('deployments:refresh');
+                onHide();
             })
-            .catch(err => {
-                // TODO: Error handling
-                // this.setError(err.message);
-                // toolbox.loading(false);
+            .catch(error => {
+                log.error(error);
+                setErrors(error.message);
             });
     }
 
     return (
         <Confirm
             content={
-                force ? (
-                    <div className="content">
-                        <p>
-                            {/* TODO: Use i18n. */}
-                            Force delete will ignore any existing live nodes, or existing deployments which depend on
-                            this deployment.
-                        </p>
-                        <p>
-                            It&apos;s recommended to first run uninstall to stop the live nodes, and make sure there are
-                            no running installations which depend on this deployment - and then run delete.
-                        </p>
-                        <p>Are you sure you want to ignore the live nodes and delete the deployment {deploymentId}?</p>
-                    </div>
-                ) : (
-                    `Are you sure you want to remove deployment ${deploymentId}?`
-                )
+                <div className="content">
+                    <ErrorMessage autoHide error={errors} onDismiss={clearErrors} />
+                    {content}
+                </div>
             }
             open={open}
             onConfirm={deleteDeployment}

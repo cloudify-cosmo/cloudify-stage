@@ -379,6 +379,10 @@
                     "delete": "Delete",
                     "forceDelete": "Force Delete",
                     "fetchError": "Cannot fetch deployment '{{ deploymentId }}'."
+                },
+                "removeModal": {
+                    "deleteDescription": "Are you sure you want to remove deployment '{{ deploymentId }}'?",
+                    "forceDeleteDescription": "Force delete will ignore any existing live nodes, or existing deployments which depend on this deployment.\nIt's recommended to first run uninstall to stop the live nodes, and make sure there are no running installations which depend on this deployment - and then run delete.\nAre you sure you want to ignore the live nodes and delete the deployment '{{ deploymentId }}'?"
                 }
             },
             "labels": {
