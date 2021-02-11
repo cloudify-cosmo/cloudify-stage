@@ -66,5 +66,6 @@ describe('Agents widget', () => {
         cy.wait('@search');
         cy.get('table.agentsTable').contains('9f13b1a1798277648adb544a2dd14fb7');
         cy.get('div.gridPagination').contains('1 to 15 of 1000 entries');
+        cy.get('div#pageSizeField').contains('15');
     });
 });
