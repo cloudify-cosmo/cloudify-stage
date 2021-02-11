@@ -20,6 +20,9 @@ Stage.defineWidget({
 
     initialConfiguration: [
         Stage.GenericConfig.POLLING_TIME_CONFIG(15),
+        Stage.GenericConfig.PAGE_SIZE_CONFIG(),
+        Stage.GenericConfig.SORT_COLUMN_CONFIG('id'),
+        Stage.GenericConfig.SORT_ASCENDING_CONFIG(true),
         {
             id: 'fieldsToShow',
             name: 'List of fields to show in the table',

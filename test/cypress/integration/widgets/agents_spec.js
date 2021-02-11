@@ -4,7 +4,8 @@ describe('Agents widget', () => {
 
     before(() => {
         cy.usePageMock('agents', {
-            fieldsToShow: ['Id', 'Node', 'Deployment', 'IP', 'Install Method', 'System', 'Version', 'Actions']
+            fieldsToShow: ['Id', 'Node', 'Deployment', 'IP', 'Install Method', 'System', 'Version', 'Actions'],
+            pageSize: 15
         })
             .activate()
             .mockLogin()
@@ -37,30 +38,33 @@ describe('Agents widget', () => {
     });
 
     it('should display agents for search action', () => {
+        const items = [];
+        for (let i = 0; i < 15; i += 1) {
+            items.push({
+                id: `test-${i + 1}`,
+                ip: '127.0.0.1',
+                deployment: '9f13b1a1798277648adb544a2dd14fb7',
+                node: 'test',
+                system: 'centos core',
+                version: '1.0.0',
+                host_id: 'test',
+                install_method: 'remote'
+            });
+        }
         cy.interceptSp('GET', '/agents?&_search=test', {
             metadata: {
                 pagination: {
-                    total: 3,
-                    size: 100,
+                    total: 1000,
+                    size: items.length,
                     offset: 0
                 },
                 filtered: null
             },
-            items: [
-                {
-                    id: 'test',
-                    ip: '127.0.0.1',
-                    deployment: '9f13b1a1798277648adb544a2dd14fb7',
-                    node: 'test',
-                    system: 'centos core',
-                    version: '1.0.0',
-                    host_id: 'test',
-                    install_method: 'remote'
-                }
-            ]
+            items
         }).as('search');
         cy.get('input[placeholder="Search..."]').type('test');
         cy.wait('@search');
         cy.get('table.agentsTable').contains('9f13b1a1798277648adb544a2dd14fb7');
+        cy.get('div.gridPagination').contains('1 to 15 of 1000 entries');
     });
 });
