@@ -1,4 +1,4 @@
-import * as _ from 'lodash';
+import _ from 'lodash';
 
 export default class DataFetcher {
     static fetch(toolbox, blueprintId, deploymentId, fetchLayout) {
