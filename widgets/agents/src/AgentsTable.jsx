@@ -85,9 +85,10 @@ export default class AgentsTable extends React.Component {
                     className="agentsTable"
                     noDataMessage={NO_DATA_MESSAGE}
                 >
-                    <DataTable.Column label="Id" show={fieldsToShow.indexOf('Id') >= 0} />
-                    <DataTable.Column label="IP" show={fieldsToShow.indexOf('IP') >= 0} />
+                    <DataTable.Column name="id" label="Id" show={fieldsToShow.indexOf('Id') >= 0} />
+                    <DataTable.Column name="ip" label="IP" show={fieldsToShow.indexOf('IP') >= 0} />
                     <DataTable.Column
+                        name="deployment"
                         label="Deployment"
                         show={
                             fieldsToShow.indexOf('Deployment') >= 0 &&
@@ -97,12 +98,13 @@ export default class AgentsTable extends React.Component {
                         }
                     />
                     <DataTable.Column
+                        name="node"
                         label="Node"
                         show={fieldsToShow.indexOf('Node') >= 0 && !data.nodeId && !data.nodeInstanceId}
                     />
-                    <DataTable.Column label="System" show={fieldsToShow.indexOf('System') >= 0} />
-                    <DataTable.Column label="Version" show={fieldsToShow.indexOf('Version') >= 0} />
-                    <DataTable.Column label="Install Method" show={fieldsToShow.indexOf('Install Method') >= 0} />
+                    <DataTable.Column name="system" label="System" show={fieldsToShow.indexOf('System') >= 0} />
+                    <DataTable.Column name="version" label="Version" show={fieldsToShow.indexOf('Version') >= 0} />
+                    <DataTable.Column name="install_method" label="Install Method" show={fieldsToShow.indexOf('Install Method') >= 0} />
 
                     {_.map(data.items, item => (
                         <DataTable.Row key={item.id}>
