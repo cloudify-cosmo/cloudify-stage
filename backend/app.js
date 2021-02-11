@@ -138,8 +138,13 @@ app.get('*', (request, response) => {
     response.sendFile(path.resolve(__dirname, '../dist/static', 'index.html'));
 });
 
-// Error handling
-app.use((err, req, res) => {
+/**
+ * Error handling
+ * NOTE: error handlers must have 4 parameters, even if the last one is unused
+ * @see https://expressjs.com/en/guide/error-handling.html
+ */
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+app.use((err, req, res, next) => {
     logger.error('Error has occured ', err);
 
     let { message } = err;
