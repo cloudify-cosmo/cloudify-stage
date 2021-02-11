@@ -4,6 +4,12 @@
         // Some files do not import/export anything, so cannot use isolatedModules
         "isolatedModules": false,
 
+        // Comes from https://github.com/tsconfig/bases/blob/master/bases/node12.json
+        // with the addition of "DOM" that is allowed in Cypress
+        "lib": ["DOM", "es2019", "es2020.promise", "es2020.bigint", "es2020.string"],
+        "module": "commonjs",
+        "target": "es2019",
+
         // Cypress forces using inlineSourceMap
         "sourceMap": false,
         "types": ["cypress"]
