@@ -51,7 +51,7 @@ describe('Agents widget', () => {
                 install_method: 'remote'
             });
         }
-        cy.interceptSp('GET', '/agents?&_search=test', {
+        cy.interceptSp('GET', RegExp(`^/agents\\b.*\\b_search=test\\b`), {
             metadata: {
                 pagination: {
                     total: 1000,
