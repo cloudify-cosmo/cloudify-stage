@@ -1,4 +1,4 @@
-import { addCommands, GetCypressChainableFromCommands } from './command-utils';
+import { addCommands, GetCypressChainableFromCommands } from 'cloudify-ui-common/cypress/support';
 
 const LOCAL_STORAGE_MEMORY: Record<string, any> = {};
 
