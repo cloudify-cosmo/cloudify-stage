@@ -38,19 +38,16 @@ describe('Agents widget', () => {
     });
 
     it('should display agents that match the search phrase', () => {
-        const items = [];
-        for (let i = 0; i < 15; i += 1) {
-            items.push({
-                id: `test-${i + 1}`,
-                ip: `127.0.0.${i + 1}`,
-                deployment: `9f13b1a1798277648adb544a2dd14fb7-${i + 1}`,
-                node: `test-${i + 1}`,
-                system: `centos core-${i + 1}`,
-                version: `1.0.${i + 1}`,
-                host_id: `test-${i + 1}`,
-                install_method: `remote-${i + 1}`
-            });
-        }
+        const items = Array.from({ length: 15 }).map((_v, i) => ({
+            id: `test-${i + 1}`,
+            ip: `127.0.0.${i + 1}`,
+            deployment: `9f13b1a1798277648adb544a2dd14fb7-${i + 1}`,
+            node: `test-${i + 1}`,
+            system: `centos core-${i + 1}`,
+            version: `1.0.${i + 1}`,
+            host_id: `test-${i + 1}`,
+            install_method: `remote-${i + 1}`
+        }));
         cy.interceptSp('GET', RegExp(`^/agents\\b.*\\b_search=test\\b`), {
             metadata: {
                 pagination: {
