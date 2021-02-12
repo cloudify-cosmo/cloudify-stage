@@ -11,14 +11,13 @@ export default class StyleLoader {
     }
 
     load() {
-        const styleLoader = this;
         return new Promise(resolve => {
             const styleObj = document.createElement('link');
             styleObj.setAttribute('rel', 'stylesheet');
             styleObj.setAttribute('type', 'text/css');
-            styleObj.setAttribute('href', styleLoader.path);
+            styleObj.setAttribute('href', this.path);
             styleObj.onload = () => {
-                styleLoader.loaded = true;
+                this.loaded = true;
                 resolve();
             };
 

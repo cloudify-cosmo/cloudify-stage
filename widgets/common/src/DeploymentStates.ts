@@ -1,3 +1,5 @@
+import _ from 'lodash';
+
 export default class DeploymentStates {
     static GOOD_STATE = 'good';
 
@@ -38,7 +40,11 @@ export default class DeploymentStates {
         }
     };
 
-    static getDeploymentState(deploymentId, nodeInstanceData, lastExecution) {
+    static getDeploymentState(
+        deploymentId: string,
+        nodeInstanceData: Record<string, { states?: any; count?: number } | undefined>,
+        lastExecution?: { status: string }
+    ) {
         const nodeStates = _.get(nodeInstanceData[deploymentId], 'states', {});
         const nodeInstanceCount = _.get(nodeInstanceData[deploymentId], 'count', 0);
 

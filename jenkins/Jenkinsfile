@@ -110,6 +110,9 @@ pipeline {
             echo 'Run static code analysis and code style check'
             sh 'npm run lint'
 
+            echo 'Check TypeScript types'
+            sh 'npm run check-types'
+
             echo 'Run frontend tests'
             sh 'npm run test:frontend'
 

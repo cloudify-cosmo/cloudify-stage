@@ -1,7 +1,3 @@
-/**
- * Created by jakub.niezgoda on 05/02/2018.
- */
-
 import i18n from 'i18next';
 import { GenericField } from '../components/basic';
 
@@ -29,7 +25,7 @@ export default class GenericConfig {
         };
     };
 
-    static SORT_COLUMN_CONFIG = sortColumn => {
+    static SORT_COLUMN_CONFIG = (sortColumn: string) => {
         return {
             id: 'sortColumn',
             default: sortColumn,
@@ -37,7 +33,7 @@ export default class GenericConfig {
         };
     };
 
-    static SORT_ASCENDING_CONFIG = sortAscending => {
+    static SORT_ASCENDING_CONFIG = (sortAscending: boolean) => {
         return {
             id: 'sortAscending',
             default: sortAscending,
@@ -56,7 +52,7 @@ export default class GenericConfig {
             SPIRE: 'Spire',
             OTHERS: 'Others',
             ALL: 'All'
-        };
+        } as const;
     }
 
     static get CUSTOM_WIDGET_PERMISSIONS() {
@@ -64,10 +60,10 @@ export default class GenericConfig {
             CUSTOM_ADMIN_ONLY: 'widget_custom_admin',
             CUSTOM_SYS_ADMIN_ONLY: 'widget_custom_sys_admin',
             CUSTOM_ALL: 'widget_custom_all'
-        };
+        } as const;
     }
 
-    static WIDGET_PERMISSION = widgetId => {
+    static WIDGET_PERMISSION = (widgetId: string) => {
         return `widget_${widgetId}`;
     };
 }

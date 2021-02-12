@@ -2,7 +2,18 @@
  * Created by pawelposel on 03/11/2016.
  */
 
-Stage.defineWidget({
+import { isEmpty } from 'lodash';
+import React from 'react';
+
+interface WidgetData {
+    metadata?: {
+        pagination?: {
+            total?: number;
+        };
+    };
+}
+
+Stage.defineWidget<unknown, WidgetData>({
     id: 'deploymentNum',
     name: 'Number of deployments',
     description: 'Number of deployments',
@@ -31,14 +42,14 @@ Stage.defineWidget({
     render(widget, data) {
         const { Loading } = Stage.Basic;
 
-        if (_.isEmpty(data)) {
+        if (isEmpty(data)) {
             return <Loading />;
         }
 
         const { KeyIndicator } = Stage.Basic;
         const { Link } = Stage.Shared;
 
-        const num = _.get(data, 'metadata.pagination.total', 0);
+        const num = data?.metadata?.pagination?.total ?? 0;
         const to = widget.configuration.page ? `/page/${widget.configuration.page}` : '/';
 
         return (
