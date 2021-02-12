@@ -1,21 +1,18 @@
-/**
- * Created by pposel on 18/01/2017.
- */
-
-function UpdateDeploymentModal({ deployment, open, onHide, toolbox }) {
+function UpdateDeploymentModal({ open, deploymentId, onHide, toolbox }) {
+    const { useEffect } = React;
     const { useInputs, useOpenProp, useBoolean, useErrors, useResettableState } = Stage.Hooks;
+    const { DeployBlueprintModal, DeploymentActions, InputsUtils } = Stage.Common;
 
     const [isLoading, setLoading, unsetLoading] = useBoolean();
     const [isFileLoading, setFileLoading, unsetFileLoading] = useBoolean();
     const [isPreviewShown, showPreview, hidePreview] = useBoolean();
     const { errors, setErrors, clearErrors, setMessageAsError } = useErrors();
 
-    const [blueprint, setBlueprint, resetBlueprint] = useResettableState(
-        Stage.Common.DeployBlueprintModal.EMPTY_BLUEPRINT
-    );
+    const [blueprint, setBlueprint, resetBlueprint] = useResettableState(DeployBlueprintModal.EMPTY_BLUEPRINT);
     const [previewData, setPreviewData, resetPreviewData] = useResettableState({});
 
-    const [deploymentInputs, setDeploymentInputs, resetDeploymentInputs] = useInputs({ ...deployment.inputs });
+    const [deployment, setDeployment, resetDeployment] = useResettableState({});
+    const [deploymentInputs, setDeploymentInputs, resetDeploymentInputs] = useInputs({});
     const [inputs, setInput, resetInputs] = useInputs({
         installWorkflow: true,
         uninstallWorkflow: true,
@@ -36,12 +33,16 @@ function UpdateDeploymentModal({ deployment, open, onHide, toolbox }) {
                 .then(fetchedBlueprint => {
                     const newDeploymentInputs = {};
                     const currentDeploymentInputs = deployment.inputs;
+                    const { data_types: dataTypes, inputs: plannedDeploymentInputs } = fetchedBlueprint.plan;
 
-                    _.forEach(fetchedBlueprint.plan.inputs, (inputObj, inputName) => {
-                        newDeploymentInputs[inputName] = Stage.Common.InputsUtils.getInputFieldInitialValue(
+                    _.forEach(plannedDeploymentInputs, (inputObj, inputName) => {
+                        const { type } = inputObj;
+                        const dataType = !_.isEmpty(dataTypes) && type ? dataTypes[type] : undefined;
+
+                        newDeploymentInputs[inputName] = InputsUtils.getInputFieldInitialValue(
                             currentDeploymentInputs[inputName],
-                            inputObj.type,
-                            fetchedBlueprint.plan.data_types
+                            type,
+                            dataType
                         );
                     });
 
@@ -60,16 +61,31 @@ function UpdateDeploymentModal({ deployment, open, onHide, toolbox }) {
         }
     }
 
+    useEffect(() => {
+        if (deployment && deployment.blueprint_id) {
+            selectBlueprint(deployment.blueprint_id);
+        }
+    }, [deployment]);
+
     useOpenProp(open, () => {
-        unsetLoading();
+        setLoading();
         unsetFileLoading();
         hidePreview();
         clearErrors();
         resetBlueprint();
+        resetDeployment();
         resetDeploymentInputs();
         resetPreviewData();
         resetInputs();
-        selectBlueprint(deployment.blueprint_id);
+
+        const actions = new DeploymentActions(toolbox);
+        actions
+            .doGet({ id: deploymentId }, { _include: _.join(['id', 'blueprint_id', 'inputs']) })
+            .then(setDeployment)
+            .catch(error => {
+                unsetLoading();
+                setMessageAsError(error);
+            });
     });
 
     function submitUpdate(preview) {
@@ -82,7 +98,6 @@ function UpdateDeploymentModal({ deployment, open, onHide, toolbox }) {
             reinstallList,
             uninstallWorkflow
         } = inputs;
-        const { InputsUtils } = Stage.Common;
         const validationErrors = {};
 
         if (_.isEmpty(blueprint.id)) {
@@ -99,7 +114,7 @@ function UpdateDeploymentModal({ deployment, open, onHide, toolbox }) {
         }
 
         const inputsPlanForUpdate = InputsUtils.getPlanForUpdate(blueprint.plan.inputs, deployment.inputs);
-        const actions = new Stage.Common.DeploymentActions(toolbox);
+        const actions = new DeploymentActions(toolbox);
         actions
             .doUpdate(
                 deployment.id,
@@ -153,7 +168,7 @@ function UpdateDeploymentModal({ deployment, open, onHide, toolbox }) {
             return;
         }
 
-        const { FileActions, InputsUtils } = Stage.Common;
+        const { FileActions } = Stage.Common;
         const actions = new FileActions(toolbox);
         setFileLoading();
 
@@ -183,7 +198,6 @@ function UpdateDeploymentModal({ deployment, open, onHide, toolbox }) {
         DataTypesButton,
         DynamicDropdown,
         InputsHeader,
-        InputsUtils,
         NodeInstancesFilter,
         YamlFileButton,
         UpdateDetailsModal
@@ -201,7 +215,7 @@ function UpdateDeploymentModal({ deployment, open, onHide, toolbox }) {
     return (
         <Modal open={open} onClose={() => onHide()} className="updateDeploymentModal">
             <Modal.Header>
-                <Icon name="edit" /> Update deployment {deployment.id}
+                <Icon name="edit" /> Update deployment {deploymentId}
             </Modal.Header>
 
             <Modal.Content>
@@ -311,7 +325,7 @@ function UpdateDeploymentModal({ deployment, open, onHide, toolbox }) {
 
                     <NodeInstancesFilter
                         name="reinstallList"
-                        deploymentId={deployment.id}
+                        deploymentId={deploymentId}
                         label="Reinstall node instances list"
                         value={reinstallList}
                         placeholder="Choose node instances to reinstall"
@@ -361,11 +375,7 @@ function UpdateDeploymentModal({ deployment, open, onHide, toolbox }) {
 UpdateDeploymentModal.propTypes = {
     toolbox: Stage.PropTypes.Toolbox.isRequired,
     open: PropTypes.bool.isRequired,
-    deployment: PropTypes.shape({
-        blueprint_id: PropTypes.string,
-        id: PropTypes.string,
-        inputs: PropTypes.shape({})
-    }).isRequired,
+    deploymentId: PropTypes.string.isRequired,
     onHide: PropTypes.func.isRequired
 };
 

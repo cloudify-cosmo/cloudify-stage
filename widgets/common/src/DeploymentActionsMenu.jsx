@@ -63,11 +63,6 @@ export default function DeploymentActionsMenu({ deploymentId, onSelectAction, to
         resetError();
         try {
             switch (name) {
-                case actions.update:
-                    await fetchDeployment(['id', 'blueprint_id', 'inputs']);
-                    setOpenModal(actions.update);
-                    break;
-
                 case actions.install:
                 case actions.uninstall:
                     await fetchDeployment();
@@ -79,6 +74,7 @@ export default function DeploymentActionsMenu({ deploymentId, onSelectAction, to
                 case actions.forceDelete:
                 case actions.manageLabels:
                 case actions.setSite:
+                case actions.update:
                     setOpenModal(name);
                     break;
 
@@ -124,7 +120,7 @@ export default function DeploymentActionsMenu({ deploymentId, onSelectAction, to
             />
 
             <UpdateDeploymentModal
-                deployment={deployment}
+                deploymentId={deploymentId}
                 onHide={onModalHide}
                 open={openModal === actions.update}
                 toolbox={toolbox}

@@ -141,12 +141,14 @@ export default class DeploymentActionButtons extends React.Component {
                     toolbox={toolbox}
                 />
 
-                <UpdateDeploymentModal
-                    open={this.isShowModal(DeploymentActionButtons.EDIT_ACTION)}
-                    deployment={deployment}
-                    onHide={this.hideModal}
-                    toolbox={toolbox}
-                />
+                {deployment.id && (
+                    <UpdateDeploymentModal
+                        open={this.isShowModal(DeploymentActionButtons.EDIT_ACTION)}
+                        deploymentId={deployment.id}
+                        onHide={this.hideModal}
+                        toolbox={toolbox}
+                    />
+                )}
             </div>
         );
     }

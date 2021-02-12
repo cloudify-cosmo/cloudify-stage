@@ -210,12 +210,14 @@ export default class DeploymentsList extends React.Component {
                     toolbox={toolbox}
                 />
 
-                <UpdateDeploymentModal
-                    open={modalType === MenuAction.UPDATE_ACTION && showModal}
-                    deployment={deployment}
-                    onHide={this.hideModal}
-                    toolbox={toolbox}
-                />
+                {deployment.id && (
+                    <UpdateDeploymentModal
+                        open={modalType === MenuAction.UPDATE_ACTION && showModal}
+                        deploymentId={deployment.id}
+                        onHide={this.hideModal}
+                        toolbox={toolbox}
+                    />
+                )}
 
                 {deployment.id && (
                     <SetSiteModal
