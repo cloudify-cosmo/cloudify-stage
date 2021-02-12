@@ -42,13 +42,13 @@ describe('Agents widget', () => {
         for (let i = 0; i < 15; i += 1) {
             items.push({
                 id: `test-${i + 1}`,
-                ip: '127.0.0.1',
-                deployment: '9f13b1a1798277648adb544a2dd14fb7',
-                node: 'test',
-                system: 'centos core',
-                version: '1.0.0',
-                host_id: 'test',
-                install_method: 'remote'
+                ip: `127.0.0.${i + 1}`,
+                deployment: `9f13b1a1798277648adb544a2dd14fb7-${i + 1}`,
+                node: `test-${i + 1}`,
+                system: `centos core-${i + 1}`,
+                version: `1.0.${i + 1}`,
+                host_id: `test-${i + 1}`,
+                install_method: `remote-${i + 1}`
             });
         }
         cy.interceptSp('GET', RegExp(`^/agents\\b.*\\b_search=test\\b`), {
@@ -65,7 +65,17 @@ describe('Agents widget', () => {
         cy.get('input[placeholder="Search..."]').type('test');
         cy.wait('@search');
         cy.get('table.agentsTable').contains('9f13b1a1798277648adb544a2dd14fb7');
+        cy.get('table.agentsTable tbody').find('tr').its('length').should('eq', items.length);
+        for (let i = 0; i < items.length; i += 1) {
+            const item = items[i];
+            for (let j = 0; j < item.length; j += 1) {
+                cy.get('table.agentsTable tbody')
+                    .find('tr')
+                    .get(`td:nth-child[${j + 1}]`)
+                    .contains(item[j]);
+            }
+        }
         cy.get('div.gridPagination').contains('1 to 15 of 1000 entries');
-        cy.get('div#pageSizeField').contains('15');
+        cy.get('div#pageSizeField').contains(String(items.length));
     });
 });
