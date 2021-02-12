@@ -62,7 +62,7 @@ describe('Agents widget', () => {
         cy.get('input[placeholder="Search..."]').type('test');
         cy.wait('@search');
         cy.get('table.agentsTable').contains('9f13b1a1798277648adb544a2dd14fb7');
-        cy.get('table.agentsTable tbody').find('tr').its('length').should('eq', items.length);
+        cy.get('table.agentsTable tbody tr').should('have.length', items.length);
         for (let i = 0; i < items.length; i += 1) {
             const item = items[i];
             for (let j = 0; j < item.length; j += 1) {
