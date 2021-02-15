@@ -66,15 +66,15 @@ describe('Agents widget', () => {
         cy.get('input[placeholder="Search..."]').type('test');
         cy.wait('@search');
         cy.get('table.agentsTable tbody tr').should('have.length', items.length);
-        cy.get('table.agentsTable tbody tr').each(($tr, i) => {
+        cy.get('table.agentsTable tbody tr').each((tr, i) => {
             const item = items[i];
-            checkCell($tr, 1, item.id);
-            checkCell($tr, 2, item.ip);
-            checkCell($tr, 3, item.deployment);
-            checkCell($tr, 4, item.node);
-            checkCell($tr, 5, item.system);
-            checkCell($tr, 6, item.version);
-            checkCell($tr, 7, item.install_method);
+            checkCell(tr, 1, item.id);
+            checkCell(tr, 2, item.ip);
+            checkCell(tr, 3, item.deployment);
+            checkCell(tr, 4, item.node);
+            checkCell(tr, 5, item.system);
+            checkCell(tr, 6, item.version);
+            checkCell(tr, 7, item.install_method);
         });
         cy.get('div.gridPagination').contains('1 to 15 of 1000 entries');
         cy.get('div#pageSizeField').contains(String(items.length));
