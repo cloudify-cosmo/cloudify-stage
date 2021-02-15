@@ -168,29 +168,43 @@ const commands = {
                     expect(cookies[0]).to.have.property('name', 'XSRF-TOKEN');
                 });
 
-            cy.waitUntilLoaded().then(() => cy.saveLocalStorage());
+            cy.waitUntilLoaded().saveLocalStorage();
         }
     },
-    mockLogin: (username = 'admin', password = 'admin') => {
+    mockLogin: (username = 'admin', password = 'admin', url = '/console') => {
+        const emptyState = {
+            auth: {
+                role: null,
+                groupSystemRoles: {},
+                tenantsRoles: {}
+            },
+            clusterStatus: {},
+            err: null,
+            isLoggingIn: false,
+            lastUpdated: null,
+            license: {},
+            permissions: {},
+            roles: [],
+            tenants: {},
+            version: {}
+        };
+
         cy.stageRequest('/console/auth/login', 'POST', undefined, {
             Authorization: `Basic ${btoa(`${username}:${password}`)}`
         }).then(response => {
-            const { license, rbac, role, version } = response.body;
+            const { role } = response.body;
             cy.setLocalStorage(
                 `state-main`,
                 JSON.stringify({
                     manager: {
-                        ...rbac,
-                        auth: { role, tenantsRoles: {} },
-                        license: { data: license },
-                        tenants: {},
-                        username,
-                        version
+                        ...emptyState,
+                        auth: { role, groupSystemRoles: {}, tenantsRoles: {} },
+                        username
                     }
                 })
             );
         });
-        cy.visit('/console').waitUntilLoaded();
+        cy.visit(url).waitUntilLoaded();
     },
     visitPage: (name: string, id: string | null = null) => {
         cy.log(`Switching to '${name}' page`);
