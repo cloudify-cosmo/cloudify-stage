@@ -133,18 +133,20 @@ export default class DeploymentActionButtons extends React.Component {
                     className="deploymentRemoveConfirm"
                 />
 
-                <ExecuteDeploymentModal
-                    open={this.isShowModal(DeploymentActionButtons.WORKFLOW_ACTION)}
-                    deployment={deployment}
-                    workflow={workflow}
-                    onHide={this.hideModal}
-                    toolbox={toolbox}
-                />
+                {deploymentId && (
+                    <ExecuteDeploymentModal
+                        open={this.isShowModal(DeploymentActionButtons.WORKFLOW_ACTION)}
+                        deploymentId={deploymentId}
+                        workflow={workflow}
+                        onHide={this.hideModal}
+                        toolbox={toolbox}
+                    />
+                )}
 
-                {deployment.id && (
+                {deploymentId && (
                     <UpdateDeploymentModal
                         open={this.isShowModal(DeploymentActionButtons.EDIT_ACTION)}
-                        deploymentId={deployment.id}
+                        deploymentId={deploymentId}
                         onHide={this.hideModal}
                         toolbox={toolbox}
                     />

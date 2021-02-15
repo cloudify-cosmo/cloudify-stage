@@ -16,9 +16,9 @@ export default class DeploymentsList extends React.Component {
             error: null,
             modalType: '',
             showModal: false,
-            deployment: {},
+            deployment: { id: '' },
             deploymentUpdateId: null,
-            workflow: {}
+            workflow: { name: '' }
         };
     }
 
@@ -154,6 +154,7 @@ export default class DeploymentsList extends React.Component {
         const showTableComponent = widget.configuration.displayStyle === 'table';
 
         const DeploymentsView = showTableComponent ? DeploymentsTable : DeploymentsSegment;
+        const deploymentId = deployment.id;
 
         return (
             <div>
@@ -174,7 +175,7 @@ export default class DeploymentsList extends React.Component {
                 />
 
                 <Confirm
-                    content={`Are you sure you want to remove deployment ${deployment.id}?`}
+                    content={`Are you sure you want to remove deployment ${deploymentId}?`}
                     open={modalType === MenuAction.DELETE_ACTION && showModal}
                     onConfirm={this.deleteDeployment}
                     onCancel={this.hideModal}
@@ -192,8 +193,7 @@ export default class DeploymentsList extends React.Component {
                                 are no running installations which depend on this deployment - and then run delete.
                             </p>
                             <p>
-                                Are you sure you want to ignore the live nodes and delete the deployment {deployment.id}
-                                ?
+                                Are you sure you want to ignore the live nodes and delete the deployment {deploymentId}?
                             </p>
                         </div>
                     }
@@ -202,27 +202,29 @@ export default class DeploymentsList extends React.Component {
                     onCancel={this.hideModal}
                 />
 
-                <ExecuteDeploymentModal
-                    open={modalType === MenuAction.WORKFLOW_ACTION && showModal}
-                    deployment={deployment}
-                    workflow={workflow}
-                    onHide={this.hideModal}
-                    toolbox={toolbox}
-                />
-
-                {deployment.id && (
-                    <UpdateDeploymentModal
-                        open={modalType === MenuAction.UPDATE_ACTION && showModal}
-                        deploymentId={deployment.id}
+                {deploymentId && (
+                    <ExecuteDeploymentModal
+                        open={modalType === MenuAction.WORKFLOW_ACTION && showModal}
+                        deploymentId={deploymentId}
+                        workflow={workflow}
                         onHide={this.hideModal}
                         toolbox={toolbox}
                     />
                 )}
 
-                {deployment.id && (
+                {deploymentId && (
+                    <UpdateDeploymentModal
+                        open={modalType === MenuAction.UPDATE_ACTION && showModal}
+                        deploymentId={deploymentId}
+                        onHide={this.hideModal}
+                        toolbox={toolbox}
+                    />
+                )}
+
+                {deploymentId && (
                     <SetSiteModal
                         open={modalType === MenuAction.SET_SITE_ACTION && showModal}
-                        deploymentId={deployment.id}
+                        deploymentId={deploymentId}
                         onHide={this.hideModal}
                         toolbox={toolbox}
                     />
