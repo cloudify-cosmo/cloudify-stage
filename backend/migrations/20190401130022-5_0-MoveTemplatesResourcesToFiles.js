@@ -30,7 +30,7 @@ module.exports = {
                     let pages = null;
 
                     try {
-                        pages = fs.readJsonSync(templateFilePath);
+                        pages = fs.readJsonSync(templateFilePath).pages;
                         logger.info('File exists. Updating it...');
                     } catch (error) {
                         pages = [];
