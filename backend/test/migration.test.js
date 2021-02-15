@@ -45,7 +45,9 @@ describe('Migration script', () => {
                 );
                 execSync('node migration.js up');
             } catch (e) {
-                console.log(e.stdout.toString());
+                console.log(`Error when migrating from ${initialMigration} for ${snapshotVersion}`);
+                console.log(e.stdout.toString(), e.stderr.toString());
+
                 throw e;
             }
         });
