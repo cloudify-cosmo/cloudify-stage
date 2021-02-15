@@ -13,6 +13,7 @@ module.exports = {
 
     getResourcePath: (path, isUserData) => {
         if (isDevelopmentOrTest) {
+            // TODO(RD-1402): use a temporary directory during tests
             return pathlib.resolve(`..${isUserData ? Consts.USER_DATA_PATH : ''}/${path}`);
         }
         return pathlib.resolve(`../dist/${isUserData ? Consts.USER_DATA_PATH : Consts.APP_DATA_PATH}/${path}`);
