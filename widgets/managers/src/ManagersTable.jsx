@@ -215,7 +215,7 @@ function ManagersTable({ data, toolbox, widget }) {
                 <ExecuteDeploymentModal
                     toolbox={toolbox}
                     open={isExecuteWorkflowModalShown}
-                    deployment={deployment.id}
+                    deploymentId={deployment.id}
                     deployments={bulkOperation ? selectedManagers : []}
                     workflow={workflow}
                     onHide={onExecuteDeploymentModalHide}
