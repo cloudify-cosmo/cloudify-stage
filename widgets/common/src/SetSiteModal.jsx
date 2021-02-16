@@ -99,12 +99,6 @@ function SetSiteModal({ deploymentId, onHide, open, toolbox }) {
     );
 }
 
-/**
- * @property {string} deploymentId Deployment ID
- * @property {object} toolbox Toolbox object
- * @property {Function} onHide function to be called when the modal is closed
- * @property {boolean} open specifies whether the update modal is displayed
- */
 SetSiteModal.propTypes = {
     deploymentId: PropTypes.string.isRequired,
     toolbox: Stage.PropTypes.Toolbox.isRequired,
