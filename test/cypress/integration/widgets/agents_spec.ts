@@ -38,8 +38,8 @@ describe('Agents widget', () => {
     });
 
     it('should display agents that match the search phrase', () => {
-        const checkCell = ($tr, number, value) => {
-            cy.wrap($tr)
+        const checkCell = (tr: JQuery<HTMLElement>, number: number, value: string) => {
+            cy.wrap(tr)
                 .find(`td:nth-child(${number})`)
                 .then($td => expect($td.text()).to.equal(value));
         };
