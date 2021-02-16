@@ -169,7 +169,7 @@ const commands = {
                     expect(cookies[0]).to.have.property('name', 'XSRF-TOKEN');
                 });
 
-            cy.waitUntilLoaded().saveLocalStorage();
+            cy.waitUntilLoaded().then(() => cy.saveLocalStorage());
         }
     },
     mockLogin: (username = 'admin', password = 'admin', url = '/console') => {
