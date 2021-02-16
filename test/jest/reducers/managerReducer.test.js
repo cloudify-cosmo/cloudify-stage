@@ -6,7 +6,8 @@ import { applyMiddleware, createStore } from 'redux';
 
 import { getManagerData, login, logout } from 'actions/managers';
 import * as types from 'actions/types';
-import managerReducer, { emptyState } from 'reducers/managerReducer';
+import managerReducer from 'reducers/managerReducer';
+import emptyState from 'reducers/managerEmptyState';
 import licenseReducer from 'reducers/licenseReducer';
 import rbac from '../resources/rbac';
 import versions from '../resources/versions';

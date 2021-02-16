@@ -26,6 +26,7 @@ import './widgets';
 import './secrets';
 import './snapshots';
 import { addCommands, GetCypressChainableFromCommands } from './command-utils';
+import emptyState from '../../../app/reducers/managerEmptyState';
 
 let token = '';
 
@@ -172,23 +173,6 @@ const commands = {
         }
     },
     mockLogin: (username = 'admin', password = 'admin', url = '/console') => {
-        const emptyState = {
-            auth: {
-                role: null,
-                groupSystemRoles: {},
-                tenantsRoles: {}
-            },
-            clusterStatus: {},
-            err: null,
-            isLoggingIn: false,
-            lastUpdated: null,
-            license: {},
-            permissions: {},
-            roles: [],
-            tenants: {},
-            version: {}
-        };
-
         cy.stageRequest('/console/auth/login', 'POST', undefined, {
             Authorization: `Basic ${btoa(`${username}:${password}`)}`
         }).then(response => {

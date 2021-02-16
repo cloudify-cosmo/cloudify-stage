@@ -2,23 +2,7 @@ import * as types from '../actions/types';
 import tenants from './tenantsReducer';
 import clusterStatus from './clusterStatusReducer';
 import license from './licenseReducer';
-
-export const emptyState = {
-    auth: {
-        role: null,
-        groupSystemRoles: {},
-        tenantsRoles: {}
-    },
-    clusterStatus: {},
-    err: null,
-    isLoggingIn: false,
-    lastUpdated: null,
-    license: {},
-    permissions: {},
-    roles: [],
-    tenants: {},
-    version: {}
-};
+import emptyState from './managerEmptyState';
 
 const manager = (state = emptyState, action) => {
     switch (action.type) {
