@@ -1,7 +1,8 @@
 {
     "extends": [
         "plugin:react/recommended",
-        "../node_modules/cloudify-ui-common/configs/eslint-common-react.json"
+        "../node_modules/cloudify-ui-common/configs/eslint-common-react.json",
+        "../.eslintrc.temp-overrides.json"
     ],
     "rules": {
         "no-console": "error",
@@ -21,23 +22,15 @@
     },
     "overrides": [
         {
-            "files": [
-                "./*/src/backend.js"
-            ],
-            "extends": [
-                "../node_modules/cloudify-ui-common/configs/eslint-common-node.json"
-            ],
+            "files": ["./*/src/backend.js"],
+            "extends": ["../node_modules/cloudify-ui-common/configs/eslint-common-node.json"],
             "rules": {
                 "global-require": "off",
                 "import/no-unresolved": "off",
                 "node/no-missing-require": [
                     "error",
                     {
-                        "allowModules": [
-                            "lodash",
-                            "body",
-                            "elkjs"
-                        ]
+                        "allowModules": ["lodash", "body", "elkjs"]
                     }
                 ]
             }

@@ -2,6 +2,8 @@
  * Created by pawelposel on 13/02/2017.
  */
 
+import type { CSSProperties } from 'react';
+
 Stage.defineWidget({
     id: 'buttonLink',
     name: 'Button link',
@@ -13,8 +15,8 @@ Stage.defineWidget({
     categories: [Stage.GenericConfig.CATEGORY.BUTTONS_AND_FILTERS],
 
     initialConfiguration: [
-        { id: 'label', name: 'Button label', default: 'Button Link', type: Stage.Basic.GenericField.STRING },
-        { id: 'url', name: 'URL address', default: '', type: Stage.Basic.GenericField.STRING },
+        { id: 'label', name: 'Button label', default: 'Button Link', type: Stage.Basic.GenericField.STRING_TYPE },
+        { id: 'url', name: 'URL address', default: '', type: Stage.Basic.GenericField.STRING_TYPE },
         { id: 'fullHeight', name: 'Full height', default: false, type: Stage.Basic.GenericField.BOOLEAN_TYPE },
         {
             id: 'color',
@@ -32,7 +34,7 @@ Stage.defineWidget({
         const { Button } = Stage.Basic;
         const { color, fullHeight, label, url } = widget.configuration;
 
-        const style = { color: 'white' };
+        const style: CSSProperties = { color: 'white' };
 
         if (fullHeight) {
             style.height = 'calc(100% + 14px)';

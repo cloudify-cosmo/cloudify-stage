@@ -1,17 +1,18 @@
 describe('Blueprints widget', () => {
     const blueprintNamePrefix = 'blueprints_test';
     const emptyBlueprintName = `${blueprintNamePrefix}_empty`;
+    const blueprintsWidgetConfiguration = { displayStyle: 'table', clickToDrillDown: true, pollingTime: 5 };
 
     before(() =>
         cy
             .activate('valid_trial_license')
             .deleteDeployments(blueprintNamePrefix, true)
             .deleteBlueprints(blueprintNamePrefix, true)
-            .usePageMock('blueprints', { displayStyle: 'table', clickToDrillDown: true })
+            .usePageMock('blueprints', blueprintsWidgetConfiguration)
             .mockLogin()
     );
 
-    beforeEach(() => cy.usePageMock('blueprints', { displayStyle: 'table', clickToDrillDown: true }).refreshTemplate());
+    beforeEach(() => cy.usePageMock('blueprints', blueprintsWidgetConfiguration).refreshTemplate());
 
     function getBlueprintRow(blueprintName) {
         cy.get('input[placeholder^=Search]').clear().type(blueprintName);

@@ -1,18 +1,16 @@
-/**
- * Created by kinneretzin on 18/10/2016.
- */
-
 import _ from 'lodash';
 
-export default class EventBus {
-    static events = {};
+type Callback = (...args: any[]) => void;
 
-    static on(event, callback, context) {
+export default class EventBus {
+    private static events: Record<string, [Callback, any][]> = {};
+
+    public static on(event: string, callback: Callback, context?: any) {
         this.events[event] = this.events[event] || [];
         this.events[event].push([callback, context]);
     }
 
-    static trigger(event, ...args) {
+    public static trigger(event: string, ...args: any[]) {
         const callbacks = this.events[event];
         if (callbacks) {
             _.each(callbacks, callback => {
@@ -23,7 +21,7 @@ export default class EventBus {
         }
     }
 
-    static off(event, offCallback) {
+    public static off(event: string, offCallback: Callback) {
         const callbacks = this.events[event];
         if (callbacks) {
             _.remove(callbacks, callback => {

@@ -51,6 +51,7 @@ function DescriptionMessage({ canUploadLicense, isTrial, isEditLicenseActive, on
                         </Message.Header>
                         {canUploadLicense ? (
                             <span
+                                // eslint-disable-next-line react/no-danger
                                 dangerouslySetInnerHTML={{
                                     __html: i18n.t(
                                         'licenseManagement.action.canUpload.noLicense',
@@ -86,6 +87,7 @@ function DescriptionMessage({ canUploadLicense, isTrial, isEditLicenseActive, on
                         </Message.Header>
                         {canUploadLicense ? (
                             <span
+                                // eslint-disable-next-line react/no-danger
                                 dangerouslySetInnerHTML={{
                                     __html: i18n.t(
                                         'licenseManagement.action.canUpload.trialLicenseExpired',
@@ -120,6 +122,7 @@ function DescriptionMessage({ canUploadLicense, isTrial, isEditLicenseActive, on
                         </Message.Header>
                         {canUploadLicense ? (
                             <span
+                                // eslint-disable-next-line react/no-danger
                                 dangerouslySetInnerHTML={{
                                     __html: i18n.t(
                                         'licenseManagement.action.canUpload.regularLicenseExpired',
