@@ -41,7 +41,7 @@ describe('Agents widget', () => {
         const checkCell = (tr: JQuery<HTMLElement>, number: number, value: string) => {
             cy.wrap(tr)
                 .find(`td:nth-child(${number})`)
-                .then($td => expect($td.text()).to.equal(value));
+                .then(td => expect(td.text()).to.equal(value));
         };
         const items = Array.from({ length: 15 }).map((_v, i) => ({
             id: `id-${i + 1}`,
