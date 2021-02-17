@@ -37,7 +37,7 @@ function UpdateDeploymentModal({ open, deploymentId, onHide, toolbox }) {
 
                     _.forEach(plannedDeploymentInputs, (inputObj, inputName) => {
                         const { type } = inputObj;
-                        const dataType = !_.isEmpty(dataTypes) && type ? dataTypes[type] : undefined;
+                        const dataType = dataTypes?.[type];
 
                         newDeploymentInputs[inputName] = InputsUtils.getInputFieldInitialValue(
                             currentDeploymentInputs[inputName],
