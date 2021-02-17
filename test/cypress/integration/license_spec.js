@@ -52,7 +52,9 @@ describe('License Management', () => {
         return cy
             .fixture(`license/${licenseFile}`)
             .then(license => {
-                cy.get('@licenseTextArea').type(license);
+                // Mimic copy-paste behavior to speed up the test
+                // Ref.: https://github.com/cypress-io/cypress/issues/1123#issuecomment-485329565
+                cy.get('@licenseTextArea').clear().invoke('val', license).trigger('input').type(' {backspace}');
                 cy.get('@updateButton').click();
             })
             .then(() => {
@@ -60,77 +62,67 @@ describe('License Management', () => {
             });
     };
 
-    before(() => {
-        cy.activate().usePageMock().login();
-    });
+    const licenseManagementUrl = '/console/license';
 
-    beforeEach(() => {
-        cy.usePageMock().restoreState();
-    });
+    before(cy.activate);
+    beforeEach(() => cy.usePageMock().mockLogin());
 
-    it('is accessible from users menu', () => {
-        cy.visit('/console').waitUntilLoaded();
+    describe('is accessible from', () => {
+        it('users menu', () => {
+            cy.get('.usersMenu').click();
+            cy.get('.usersMenu').contains('License Management').click();
 
-        cy.get('.usersMenu').click();
-        cy.get('.usersMenu').contains('License Management').click();
+            cy.location('pathname').should('be.equal', licenseManagementUrl);
+        });
 
-        cy.location('pathname').should('be.equal', '/console/license');
-    });
+        it('About modal', () => {
+            cy.get('.helpMenu').click();
+            cy.get('.helpMenu').contains('About').click();
 
-    it('is accessible from About modal', () => {
-        cy.visit('/console').waitUntilLoaded();
+            cy.get('.actions > button.yellow').should('have.text', 'License Management');
 
-        cy.get('.helpMenu').click();
-        cy.get('.helpMenu').contains('About').click();
+            cy.get('.actions > button.yellow').click();
 
-        cy.get('.actions > button.yellow').should('have.text', 'License Management');
-
-        cy.get('.actions > button.yellow').click();
-
-        cy.location('pathname').should('be.equal', '/console/license');
-    });
-
-    it('fetches license on page load', () => {
-        cy.visit('/console/license');
-
-        goToEditLicense();
-        uploadLicense(expiredTrialLicense.file).then(() => verifyMessageHeader(expiredTrialLicense.header));
-
-        // Update license using REST call
-        cy.activate().reload();
-
-        verifyMessageHeader(validTrialLicense.header);
-    });
-
-    it('shows active license', () => {
-        cy.visit('/console/license');
-
-        cy.get('tbody > :nth-child(2) > :nth-child(2)').should('have.text', 'All');
-        cy.get('tbody > :nth-child(3) > :nth-child(2)').should('have.text', 'Premium');
-        cy.get('tbody > :nth-child(4) > :nth-child(2)').should('have.text', 'Yes');
-        cy.get('tbody > :nth-child(5) > :nth-child(2)').should('have.text', 'INT-AutoTests-111111111');
-    });
-
-    it('allows going to app', () => {
-        cy.get('.right.aligned > button.ui').click();
-
-        cy.location('pathname').should('be.equal', '/console/');
-    });
-
-    validLicenses.forEach(license => {
-        it(`allows ${license.name} license upload`, () => {
-            cy.visit('/console/license');
-            goToEditLicense();
-            uploadLicense(license.file).then(() => verifyMessageHeader(license.header));
+            cy.location('pathname').should('be.equal', licenseManagementUrl);
         });
     });
 
-    invalidLicenses.forEach(license => {
-        it(`handles ${license.name} license error`, () => {
-            cy.visit('/console/license');
+    describe('is providing License Page that', () => {
+        beforeEach(() => cy.visit(licenseManagementUrl));
 
+        it('fetches license on page load', () => {
             goToEditLicense();
-            uploadLicense(license.file).then(() => verifyError(license.error));
+            uploadLicense(expiredTrialLicense.file).then(() => verifyMessageHeader(expiredTrialLicense.header));
+
+            cy.activate().reload();
+
+            verifyMessageHeader(validTrialLicense.header);
+        });
+
+        it('shows active license', () => {
+            cy.get('tbody > :nth-child(2) > :nth-child(2)').should('have.text', 'All');
+            cy.get('tbody > :nth-child(3) > :nth-child(2)').should('have.text', 'Premium');
+            cy.get('tbody > :nth-child(4) > :nth-child(2)').should('have.text', 'Yes');
+            cy.get('tbody > :nth-child(5) > :nth-child(2)').should('have.text', 'INT-AutoTests-111111111');
+        });
+
+        it('allows going to app', () => {
+            cy.get('.right.aligned > button.ui').click();
+
+            cy.location('pathname').should('be.equal', '/console/');
+        });
+        validLicenses.forEach(license => {
+            it(`allows ${license.name} license upload`, () => {
+                goToEditLicense();
+                uploadLicense(license.file).then(() => verifyMessageHeader(license.header));
+            });
+        });
+
+        invalidLicenses.forEach(license => {
+            it(`handles ${license.name} license error`, () => {
+                goToEditLicense();
+                uploadLicense(license.file).then(() => verifyError(license.error));
+            });
         });
     });
 });
