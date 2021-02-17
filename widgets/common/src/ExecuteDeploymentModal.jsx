@@ -1,5 +1,5 @@
 function isWorkflowName(workflow) {
-    return _.isString(workflow);
+    return typeof workflow === 'string';
 }
 
 function getWorkflowName(workflow) {
