@@ -67,7 +67,7 @@ SELECT pg_catalog.setval('"ClientConfigs_id_seq"', 1, true);
 --
 
 COPY "Resources" (id, "resourceId", type, creator, "createdAt", "updatedAt", data) FROM stdin;
-1	t2	template	admin	2020-09-04 09:17:11.722+00	2020-09-04 09:17:11.722+00	{"roles": ["sys_admin"], "tenants": ["*"]}
+1	test	template	admin	2020-09-04 09:17:11.722+00	2020-09-04 09:17:11.722+00	{"roles": ["sys_admin"], "tenants": ["*"]}
 2	new_test	page	admin	2020-09-04 09:17:18.171+00	2020-09-04 09:17:18.171+00	\N
 3	testWidget	widget	admin	2020-09-04 09:17:56.212+00	2020-09-04 09:17:56.212+00	\N
 \.

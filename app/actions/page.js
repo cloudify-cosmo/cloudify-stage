@@ -13,6 +13,7 @@ import { addWidget } from './widgets';
 import { clearWidgetsData } from './WidgetData';
 import Internal from '../utils/Internal';
 import Consts from '../utils/consts';
+import { NO_PAGES_FOR_TENANT_ERR } from '../utils/ErrorCodes';
 
 export function addTab(pageId, layoutSection) {
     return {
@@ -219,12 +220,16 @@ export function createPagesFromTemplate() {
 
         const internal = new Internal(manager);
         return internal.doGet('/templates/select', { tenant }).then(templateId => {
-            log.log('Selected template id', templateId);
+            log.debug('Selected template id', templateId);
 
             const storeTemplates = getState().templates;
             const { pages } = storeTemplates.templatesDef[templateId];
 
-            log.log('Create pages from selected template', pages);
+            log.debug('Create pages from selected template', pages);
+
+            if (_.isEmpty(pages)) {
+                return Promise.reject(NO_PAGES_FOR_TENANT_ERR);
+            }
 
             _.each(pages, id => {
                 const page = storeTemplates.pagesDef[id];
@@ -237,6 +242,8 @@ export function createPagesFromTemplate() {
                 dispatch(createPage(page, pageId));
                 dispatch(addLayoutToPage(page, pageId));
             });
+
+            return Promise.resolve();
         });
     };
 }
