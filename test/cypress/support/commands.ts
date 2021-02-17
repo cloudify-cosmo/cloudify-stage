@@ -24,7 +24,7 @@ import './editMode';
 import './widgets';
 import './secrets';
 import './snapshots';
-import { addCommands, GetCypressChainableFromCommands } from './command-utils';
+import { addCommands, GetCypressChainableFromCommands } from 'cloudify-ui-common/cypress/support';
 
 let token = '';
 
@@ -66,22 +66,6 @@ const commands = {
                 body: yaml
             })
         ),
-    getAdminToken: () =>
-        cy
-            .then(() =>
-                cy.request({
-                    method: 'GET',
-                    url: '/console/sp',
-                    qs: {
-                        su: '/tokens'
-                    },
-                    headers: {
-                        Authorization: `Basic ${btoa('admin:admin')}`,
-                        'Content-Type': 'application/json'
-                    }
-                })
-            )
-            .then(response => response.body.value),
     activate: (license = 'valid_trial_license') =>
         cy
             .uploadLicense(license)

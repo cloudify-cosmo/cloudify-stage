@@ -19,6 +19,8 @@ import '@cypress/code-coverage/support';
 import './commands';
 // use `Cypress` instead of `cy` so this persists across all tests
 Cypress.on('window:before:load', window => {
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore: The operand of a 'delete' operator must be optional
     delete window.fetch;
     cy.stub(window, 'open');
 });
