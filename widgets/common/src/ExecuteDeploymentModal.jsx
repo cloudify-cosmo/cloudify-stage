@@ -307,24 +307,21 @@ export default function ExecuteDeploymentModal({
     );
 }
 
-function isDeploymentIdValid(props, propName, componentName) {
-    const { [propName]: deploymentId, workflow } = props;
-
-    if (_.isString(workflow) && !(_.isString(deploymentId) && deploymentId)) {
-        return new Error(
-            `Invalid prop \`deploymentId\` supplied to \`${componentName}\`. ` +
-                `When \`workflow\` prop is specified as a string, \`deploymentId\` must be provided. ` +
-                `Validation failed.`
-        );
-    }
-    return null;
-}
-
 ExecuteDeploymentModal.propTypes = {
     toolbox: Stage.PropTypes.Toolbox.isRequired,
     open: PropTypes.bool.isRequired,
-    // eslint-disable-next-line react/require-default-props
-    deploymentId: isDeploymentIdValid,
+    deploymentId: (props, propName, componentName) => {
+        const { [propName]: deploymentId, workflow } = props;
+
+        if (_.isString(workflow) && !(_.isString(deploymentId) && deploymentId)) {
+            return new Error(
+                `Invalid prop \`deploymentId\` supplied to \`${componentName}\`. ` +
+                    `When \`workflow\` prop is specified as a string, \`deploymentId\` must be provided. ` +
+                    `Validation failed.`
+            );
+        }
+        return null;
+    },
     deployments: PropTypes.arrayOf(PropTypes.string),
     workflow: PropTypes.oneOfType([
         PropTypes.shape({ name: PropTypes.string, parameters: PropTypes.shape({}) }),
@@ -334,6 +331,7 @@ ExecuteDeploymentModal.propTypes = {
     onHide: PropTypes.func.isRequired
 };
 ExecuteDeploymentModal.defaultProps = {
+    deploymentId: '',
     deployments: [],
     onExecute: _.noop
 };
