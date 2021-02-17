@@ -25,11 +25,11 @@ function SetSiteModal({ deploymentId, onHide, open, toolbox }) {
         clearErrors();
         resetSites();
 
-        actions
-            .doGetSites()
-            .then(setSites)
-            .then(() => actions.doGetSite(deploymentId))
-            .then(setSiteName)
+        Promise.all([actions.doGetSites(), actions.doGetSiteName(deploymentId)])
+            .then(([fetchedSites, fetchedSiteName]) => {
+                setSites(fetchedSites);
+                setSiteName(fetchedSiteName);
+            })
             .catch(setMessageAsError)
             .finally(unsetLoading);
     });
@@ -50,52 +50,50 @@ function SetSiteModal({ deploymentId, onHide, open, toolbox }) {
     }
 
     return (
-        <div>
-            <Modal open={open} onClose={onHide}>
-                <Modal.Header>
-                    <Icon name="edit" />
-                    {i18n.t(`widgets.common.deployments.setSiteModal.header`, { deploymentId })}
-                </Modal.Header>
+        <Modal open={open} onClose={onHide}>
+            <Modal.Header>
+                <Icon name="edit" />
+                {i18n.t(`widgets.common.deployments.setSiteModal.header`, { deploymentId })}
+            </Modal.Header>
 
-                <Modal.Content>
-                    <Form loading={loading} errors={errors} onErrorsDismiss={clearErrors}>
-                        <Form.Field
-                            error={errors.siteName}
-                            label={i18n.t('widgets.common.deployments.setSiteModal.siteNameLabel')}
-                        >
-                            <Form.Dropdown
-                                search
-                                selection
-                                value={siteName}
-                                name="siteName"
-                                options={siteOptions}
-                                onChange={(event, field) => setSiteName(field.value)}
-                            />
-                        </Form.Field>
-                        <Form.Field className="detachSite">
-                            <Form.Checkbox
-                                toggle
-                                label={i18n.t('widgets.common.deployments.setSiteModal.detachSiteLabel')}
-                                name="detachSite"
-                                checked={detachSite}
-                                onChange={(event, field) => setDetachSite(field.checked)}
-                            />
-                        </Form.Field>
-                    </Form>
-                </Modal.Content>
+            <Modal.Content>
+                <Form loading={loading} errors={errors} onErrorsDismiss={clearErrors}>
+                    <Form.Field
+                        error={errors.siteName}
+                        label={i18n.t('widgets.common.deployments.setSiteModal.siteNameLabel')}
+                    >
+                        <Form.Dropdown
+                            search
+                            selection
+                            value={siteName}
+                            name="siteName"
+                            options={siteOptions}
+                            onChange={(event, field) => setSiteName(field.value)}
+                        />
+                    </Form.Field>
+                    <Form.Field className="detachSite">
+                        <Form.Checkbox
+                            toggle
+                            label={i18n.t('widgets.common.deployments.setSiteModal.detachSiteLabel')}
+                            name="detachSite"
+                            checked={detachSite}
+                            onChange={(event, field) => setDetachSite(field.checked)}
+                        />
+                    </Form.Field>
+                </Form>
+            </Modal.Content>
 
-                <Modal.Actions>
-                    <CancelButton onClick={onHide} disabled={loading} />
-                    <ApproveButton
-                        onClick={setSite}
-                        disabled={loading}
-                        content={i18n.t('widgets.common.deployments.setSiteModal.updateButton')}
-                        icon="edit"
-                        color="green"
-                    />
-                </Modal.Actions>
-            </Modal>
-        </div>
+            <Modal.Actions>
+                <CancelButton onClick={onHide} disabled={loading} />
+                <ApproveButton
+                    onClick={setSite}
+                    disabled={loading}
+                    content={i18n.t('widgets.common.deployments.setSiteModal.updateButton')}
+                    icon="edit"
+                    color="green"
+                />
+            </Modal.Actions>
+        </Modal>
     );
 }
 
