@@ -70,7 +70,12 @@ export default function ExecuteDeploymentModal({
                     if (selectedWorkflow) {
                         setWorkflowParams(selectedWorkflow);
                     } else {
-                        setErrors(i18n.t('widgets.common.deployments.executeModal.workflowError'));
+                        setErrors(
+                            i18n.t('widgets.common.deployments.executeModal.workflowError', {
+                                deploymentId,
+                                workflowName
+                            })
+                        );
                     }
                 })
                 .catch(setMessageAsError)
@@ -91,7 +96,7 @@ export default function ExecuteDeploymentModal({
 
         const name = getWorkflowName(workflow);
         if (!getWorkflowName(workflow)) {
-            setErrors({ error: i18n.t('widgets.common.deployments.executeModal.missingWorkflow') });
+            setErrors(i18n.t('widgets.common.deployments.executeModal.missingWorkflow'));
             return false;
         }
 
@@ -133,7 +138,7 @@ export default function ExecuteDeploymentModal({
         }
 
         if (_.isEmpty(deploymentsList)) {
-            setErrors({ error: i18n.t('widgets.common.deployments.executeModal.missingDeployment') });
+            setErrors(i18n.t('widgets.common.deployments.executeModal.missingDeployment'));
             return false;
         }
 
