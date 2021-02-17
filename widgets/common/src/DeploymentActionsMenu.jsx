@@ -1,3 +1,4 @@
+/* eslint-disable react/jsx-props-no-spreading */
 const actions = Object.freeze({
     delete: 'delete',
     forceDelete: 'forceDelete',
@@ -32,17 +33,18 @@ export default function DeploymentActionsMenu({ deploymentId, toolbox, trigger }
         Hooks: { useResettableState }
     } = Stage;
 
-    const [openModal, setOpenModal, resetOpenModal] = useResettableState('');
+    const [activeAction, setActiveAction, resetActiveAction] = useResettableState('');
+    const commonProps = { deploymentId, onHide: resetActiveAction, toolbox };
 
     let workflowName = '';
-    if (openModal === actions.install) {
+    if (activeAction === actions.install) {
         workflowName = 'install';
-    } else if (openModal === actions.uninstall) {
+    } else if (activeAction === actions.uninstall) {
         workflowName = 'uninstall';
     }
 
     function onItemClick(event, { name }) {
-        setOpenModal(name);
+        setActiveAction(name);
     }
 
     return (
@@ -52,42 +54,23 @@ export default function DeploymentActionsMenu({ deploymentId, toolbox, trigger }
                 <Menu pointing vertical onItemClick={onItemClick} items={menuItems} />
             </PopupMenu>
 
-            <ManageLabelsModal
-                deploymentId={deploymentId}
-                onHide={resetOpenModal}
-                open={openModal === actions.manageLabels}
-                toolbox={toolbox}
-            />
+            <ManageLabelsModal {...commonProps} open={activeAction === actions.manageLabels} />
 
             <ExecuteDeploymentModal
-                deploymentId={deploymentId}
-                onHide={resetOpenModal}
-                open={openModal === actions.install || openModal === actions.uninstall}
-                toolbox={toolbox}
+                {...commonProps}
+                open={activeAction === actions.install || activeAction === actions.uninstall}
                 workflow={workflowName}
             />
 
-            <UpdateDeploymentModal
-                deploymentId={deploymentId}
-                onHide={resetOpenModal}
-                open={openModal === actions.update}
-                toolbox={toolbox}
-            />
+            <UpdateDeploymentModal {...commonProps} open={activeAction === actions.update} />
 
             <RemoveDeploymentModal
-                deploymentId={deploymentId}
-                force={openModal === actions.forceDelete}
-                onHide={resetOpenModal}
-                open={openModal === actions.delete || openModal === actions.forceDelete}
-                toolbox={toolbox}
+                {...commonProps}
+                force={activeAction === actions.forceDelete}
+                open={activeAction === actions.delete || activeAction === actions.forceDelete}
             />
 
-            <SetSiteModal
-                deploymentId={deploymentId}
-                onHide={resetOpenModal}
-                open={openModal === actions.setSite}
-                toolbox={toolbox}
-            />
+            <SetSiteModal {...commonProps} open={activeAction === actions.setSite} />
         </>
     );
 }
