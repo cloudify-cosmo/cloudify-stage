@@ -41,6 +41,11 @@ export default class AgentsTable extends React.Component {
         toolbox.getEventBus().off('agents:refresh', this.refreshData);
     }
 
+    fetchGridData = fetchParams => {
+        const { toolbox } = this.props;
+        return toolbox.refresh(fetchParams);
+    };
+
     hideModal = () => {
         this.setState({ showModal: false });
     };
@@ -51,6 +56,8 @@ export default class AgentsTable extends React.Component {
 
     refreshData() {
         const { toolbox } = this.props;
+        this.setState({ error: null });
+
         toolbox.refresh();
     }
 
@@ -60,7 +67,6 @@ export default class AgentsTable extends React.Component {
         const NO_DATA_MESSAGE = 'There are no Agents available.';
         const { configuration } = widget;
         const { fieldsToShow } = configuration;
-        const totalSize = data.total > 0 ? undefined : 0;
 
         const { Button, DataTable, ErrorMessage } = Stage.Basic;
 
@@ -69,10 +75,15 @@ export default class AgentsTable extends React.Component {
                 <ErrorMessage error={error} onDismiss={() => this.setState({ error: null })} autoHide />
 
                 <DataTable
+                    fetchData={this.fetchGridData}
+                    totalSize={data.total}
+                    pageSize={widget.configuration.pageSize}
+                    sortColumn={widget.configuration.sortColumn}
+                    sortAscending={widget.configuration.sortAscending}
+                    searchable
                     selectable={false}
                     className="agentsTable"
                     noDataMessage={NO_DATA_MESSAGE}
-                    totalSize={totalSize}
                 >
                     <DataTable.Column label="Id" show={fieldsToShow.indexOf('Id') >= 0} />
                     <DataTable.Column label="IP" show={fieldsToShow.indexOf('IP') >= 0} />
