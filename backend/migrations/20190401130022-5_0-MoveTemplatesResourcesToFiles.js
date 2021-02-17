@@ -30,8 +30,8 @@ module.exports = {
                     let pages = null;
 
                     try {
-                        logger.info('File exists. Updating it...');
                         const fileContents = fs.readJsonSync(templateFilePath);
+                        logger.info('File exists. Updating it...');
                         if (Array.isArray(fileContents.pages)) {
                             pages = fileContents.pages;
                             logger.info('File followed the new template format. Retrieving only the pages');
