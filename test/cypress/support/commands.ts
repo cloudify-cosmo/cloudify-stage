@@ -19,7 +19,6 @@ import './executions';
 import './users';
 import './sites';
 import './templates';
-import './localStorage';
 import './plugins';
 import './editMode';
 import './widgets';
@@ -43,7 +42,6 @@ declare global {
 }
 
 const commands = {
-    restoreState: () => cy.restoreLocalStorage(),
     waitUntilPageLoaded: () => {
         cy.log('Wait for widgets loaders to disappear');
         cy.get('div.loader:visible', { timeout: 10000 }).should('not.exist');
