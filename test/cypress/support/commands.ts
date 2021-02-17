@@ -19,7 +19,6 @@ import './executions';
 import './users';
 import './sites';
 import './templates';
-import './localStorage';
 import './plugins';
 import './editMode';
 import './widgets';
@@ -43,7 +42,6 @@ declare global {
 }
 
 const commands = {
-    restoreState: () => cy.restoreLocalStorage(),
     waitUntilPageLoaded: () => {
         cy.log('Wait for widgets loaders to disappear');
         cy.get('div.loader:visible', { timeout: 10000 }).should('not.exist');
@@ -175,17 +173,13 @@ const commands = {
         cy.stageRequest('/console/auth/login', 'POST', undefined, {
             Authorization: `Basic ${btoa(`${username}:${password}`)}`
         }).then(response => {
-            const { license, rbac, role, version } = response.body;
+            const { role } = response.body;
             cy.setLocalStorage(
                 `state-main`,
                 JSON.stringify({
                     manager: {
-                        ...rbac,
-                        auth: { role, tenantsRoles: {} },
-                        license: { data: license },
-                        tenants: {},
-                        username,
-                        version
+                        auth: { role, groupSystemRoles: {}, tenantsRoles: {} },
+                        username
                     }
                 })
             );
