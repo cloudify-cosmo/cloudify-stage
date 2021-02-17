@@ -65,11 +65,9 @@ describe('License Management', () => {
     const licenseManagementUrl = '/console/license';
 
     before(cy.activate);
-    beforeEach(cy.usePageMock);
+    beforeEach(() => cy.usePageMock().mockLogin());
 
     describe('is accessible from', () => {
-        beforeEach(cy.mockLogin);
-
         it('users menu', () => {
             cy.get('.usersMenu').click();
             cy.get('.usersMenu').contains('License Management').click();
@@ -90,13 +88,12 @@ describe('License Management', () => {
     });
 
     describe('is providing License Page that', () => {
-        beforeEach(() => cy.mockLogin('admin', 'admin', licenseManagementUrl));
+        beforeEach(() => cy.visit(licenseManagementUrl));
 
         it('fetches license on page load', () => {
             goToEditLicense();
             uploadLicense(expiredTrialLicense.file).then(() => verifyMessageHeader(expiredTrialLicense.header));
 
-            // Update license using REST call
             cy.activate().reload();
 
             verifyMessageHeader(validTrialLicense.header);

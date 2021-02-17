@@ -26,7 +26,6 @@ import './widgets';
 import './secrets';
 import './snapshots';
 import { addCommands, GetCypressChainableFromCommands } from './command-utils';
-import emptyState from '../../../app/reducers/managerEmptyState';
 
 let token = '';
 
@@ -172,7 +171,7 @@ const commands = {
             cy.waitUntilLoaded().then(() => cy.saveLocalStorage());
         }
     },
-    mockLogin: (username = 'admin', password = 'admin', url = '/console') => {
+    mockLogin: (username = 'admin', password = 'admin') => {
         cy.stageRequest('/console/auth/login', 'POST', undefined, {
             Authorization: `Basic ${btoa(`${username}:${password}`)}`
         }).then(response => {
@@ -181,14 +180,13 @@ const commands = {
                 `state-main`,
                 JSON.stringify({
                     manager: {
-                        ...emptyState,
                         auth: { role, groupSystemRoles: {}, tenantsRoles: {} },
                         username
                     }
                 })
             );
         });
-        cy.visit(url).waitUntilLoaded();
+        cy.visit('/console').waitUntilLoaded();
     },
     visitPage: (name: string, id: string | null = null) => {
         cy.log(`Switching to '${name}' page`);

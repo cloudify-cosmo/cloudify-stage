@@ -11,7 +11,7 @@ import throttle from 'lodash/throttle';
 import StatePersister from './utils/StatePersister';
 
 import createRootReducer from './reducers';
-import emptyState from './reducers/managerEmptyState';
+import { emptyState } from './reducers/managerReducer';
 
 export default (history, config) => {
     let initialState = StatePersister.load(config.mode) || { manager: emptyState };
