@@ -8,7 +8,7 @@ function SetSiteModal({ deploymentId, onHide, open, toolbox }) {
 
     const [detachSite, setDetachSite, clearDetachSite] = useInput(false);
     const { errors, clearErrors, setMessageAsError } = useErrors();
-    const [loading, setLoading, unsetLoading] = useBoolean(false);
+    const [loading, setLoading, unsetLoading] = useBoolean();
     const [siteName, setSiteName, clearSiteName] = useInput('');
     const [sites, setSites, resetSites] = useResettableState({ items: [] });
 
