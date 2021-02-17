@@ -95,7 +95,7 @@ export default function ExecuteDeploymentModal({
         const validationErrors = {};
 
         const name = getWorkflowName(workflow);
-        if (!getWorkflowName(workflow)) {
+        if (!name) {
             setErrors(i18n.t('widgets.common.deployments.executeModal.missingWorkflow'));
             return false;
         }
