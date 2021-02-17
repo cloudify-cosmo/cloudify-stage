@@ -11,14 +11,14 @@ const actions = Object.freeze({
 
 const translate = (key, params) => Stage.i18n.t(`widgets.common.deployments.actionsMenu.${key}`, params);
 const menuItems = [
-    { key: actions.install, name: actions.install, icon: 'play' },
-    { key: actions.update, name: actions.update, icon: 'edit' },
-    { key: actions.setSite, name: actions.setSite, icon: 'building' },
-    { key: actions.manageLabels, name: actions.manageLabels, icon: 'tags' },
-    { key: actions.uninstall, name: actions.uninstall, icon: 'recycle' },
-    { key: actions.delete, name: actions.delete, icon: 'trash alternate' },
-    { key: actions.forceDelete, name: actions.forceDelete, icon: 'trash' }
-].map(item => ({ ...item, content: translate(item.name) }));
+    { name: actions.install, icon: 'play' },
+    { name: actions.update, icon: 'edit' },
+    { name: actions.setSite, icon: 'building' },
+    { name: actions.manageLabels, icon: 'tags' },
+    { name: actions.uninstall, icon: 'recycle' },
+    { name: actions.delete, icon: 'trash alternate' },
+    { name: actions.forceDelete, icon: 'trash' }
+].map(item => ({ ...item, key: item.name, content: translate(item.name) }));
 
 export default function DeploymentActionsMenu({ deploymentId, toolbox, trigger }) {
     const {
