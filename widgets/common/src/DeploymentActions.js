@@ -87,7 +87,7 @@ export default class DeploymentActions {
         return this.toolbox.getManager().doPost(`/deployments/${deploymentId}/set-site`, null, data);
     }
 
-    doGetSite(deploymentId) {
+    doGetSiteName(deploymentId) {
         return this.toolbox
             .getManager()
             .doGet(`/deployments/${deploymentId}?_include=site_name`)
