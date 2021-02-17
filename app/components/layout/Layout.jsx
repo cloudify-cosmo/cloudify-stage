@@ -5,12 +5,13 @@ import i18n from 'i18next';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { Redirect, Route, Switch } from 'react-router-dom';
-import Home from '../../containers/Home';
+import log from 'loglevel';
 
+import Home from '../../containers/Home';
 import Header from '../../containers/layout/Header';
 import PageManagement from '../templates/PageManagement';
 import Consts from '../../utils/consts';
-import { UNAUTHORIZED_ERR } from '../../utils/ErrorCodes';
+import { NO_PAGES_FOR_TENANT_ERR, UNAUTHORIZED_ERR } from '../../utils/ErrorCodes';
 import SplashLoadingScreen from '../../utils/SplashLoadingScreen';
 
 import StatusPoller from '../../utils/StatusPoller';
@@ -40,7 +41,12 @@ export default class Layout extends Component {
                 switch (e) {
                     case UNAUTHORIZED_ERR: // Handled by Interceptor
                         break;
+                    case NO_PAGES_FOR_TENANT_ERR:
+                        log.error('Cannot initialize user data because no pages were found for the current tenant');
+                        doLogout(i18n.t('noPages'));
+                        break;
                     default:
+                        log.error('Initializing user data failed', e);
                         doLogout(i18n.t('pageLoadError', 'Error initializing user data, cannot load page'));
                 }
             });
