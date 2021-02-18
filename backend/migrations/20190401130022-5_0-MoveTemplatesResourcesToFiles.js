@@ -30,12 +30,27 @@ module.exports = {
                     let pages = null;
 
                     try {
-                        pages = fs.readJsonSync(templateFilePath);
+                        const fileContents = fs.readJsonSync(templateFilePath);
                         logger.info('File exists. Updating it...');
+                        if (Array.isArray(fileContents.pages)) {
+                            pages = fileContents.pages;
+                            logger.info('File followed the new template format. Retrieving only the pages');
+                        } else if (Array.isArray(fileContents)) {
+                            pages = fileContents;
+                        } else {
+                            logger.error('Unexpected template file contents', fileContents);
+                            throw new Error(
+                                `Unexpected template file at ${templateFilePath}. Expected a whole template or just the pages array`
+                            );
+                        }
                     } catch (error) {
-                        pages = [];
-                        logger.info('File does not exist. Creating new one...');
-                        fs.mkdirSync(path.dirname(templateFilePath), { recursive: true });
+                        if (error.code === 'ENOENT') {
+                            pages = [];
+                            logger.info('File does not exist. Creating new one...');
+                            fs.mkdirSync(path.dirname(templateFilePath), { recursive: true });
+                        } else {
+                            throw error;
+                        }
                     }
 
                     templateFileContent = {

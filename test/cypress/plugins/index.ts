@@ -11,16 +11,11 @@
 // This function is called when a project is opened or re-opened (e.g. due to
 // the project's config changing)
 
-const coverageTask = require('@cypress/code-coverage/task');
+import performCommonSetup from 'cloudify-ui-common/cypress/plugins';
 
-module.exports = (on, config) => {
-    coverageTask(on, config);
-
-    if (process.env.MANAGER_IP) {
-        config.baseUrl = `http://${process.env.MANAGER_IP}`;
-    }
-
-    console.info(`Testing on: ${config.baseUrl}`);
-
-    return config;
+const setupPluginsAndConfig: Cypress.PluginConfig = (on, config) => {
+    config.baseUrl = 'http://localhost:4000';
+    return performCommonSetup(on, config);
 };
+
+export default setupPluginsAndConfig;

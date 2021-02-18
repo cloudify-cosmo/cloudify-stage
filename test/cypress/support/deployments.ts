@@ -1,4 +1,4 @@
-import { addCommands, GetCypressChainableFromCommands } from './command-utils';
+import { addCommands, GetCypressChainableFromCommands } from 'cloudify-ui-common/cypress/support';
 import { waitUntilEmpty } from './resource_commons';
 
 declare global {

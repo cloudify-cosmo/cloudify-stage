@@ -211,14 +211,16 @@ function ManagersTable({ data, toolbox, widget }) {
                 </DataTable.Action>
             </DataTable>
 
-            <ExecuteDeploymentModal
-                toolbox={toolbox}
-                open={isExecuteWorkflowModalShown}
-                deployment={deployment}
-                deployments={bulkOperation ? selectedManagers : []}
-                workflow={workflow}
-                onHide={onExecuteDeploymentModalHide}
-            />
+            {deployment.id && (
+                <ExecuteDeploymentModal
+                    toolbox={toolbox}
+                    open={isExecuteWorkflowModalShown}
+                    deploymentId={deployment.id}
+                    deployments={bulkOperation ? selectedManagers : []}
+                    workflow={workflow}
+                    onHide={onExecuteDeploymentModalHide}
+                />
+            )}
         </div>
     );
 }
