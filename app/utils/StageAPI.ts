@@ -61,10 +61,12 @@ export interface WidgetConfigurationDefinition {
     description?: string;
     // TODO(RD-1296): add individual interfaces for different types. Use TypeScript discriminated unions
     type: string;
-    default: any;
+    default?: any;
     placeHolder?: string;
     hidden?: boolean;
     component?: ComponentType<any>;
+    /** Used for lists */
+    items?: (string | { name: string; value: string })[];
 
     // TODO(RD-1296): add concrete types for each possible key and remove the line below
     [key: string]: any;
