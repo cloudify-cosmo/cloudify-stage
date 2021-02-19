@@ -9,6 +9,9 @@ import type GenericConfig from './GenericConfig';
 import type StageUtils from './stageUtils';
 import type WidgetContext from './Context';
 import type EventBus from './EventBus';
+import type Manager from './Manager';
+import type Internal from './Internal';
+import type External from './External';
 
 /** @see https://docs.cloudify.co/developer/writing_widgets/widget-apis/#toolbox-object */
 export interface Toolbox {
@@ -20,9 +23,9 @@ export interface Toolbox {
     ): void;
     getContext(): WidgetContext;
     getEventBus(): typeof EventBus;
-    getExternal(basicAuth: unknown): any;
-    getInternal(): any;
-    getManager(): any;
+    getExternal(basicAuth: unknown): External;
+    getInternal(): Internal;
+    getManager(): Manager;
     getManagerState(): any;
     getNewManager(ip: unknown): any;
     getWidget(): Widget;
@@ -31,7 +34,7 @@ export interface Toolbox {
     goToPage(pageName: string, context: any): void;
     goToParentPage(): void;
     loading(isLoading: boolean): void;
-    refresh(): void;
+    refresh(params?: any): void;
 }
 
 export interface Widget {
