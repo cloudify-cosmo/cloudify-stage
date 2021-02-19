@@ -1,5 +1,6 @@
-import { startCase } from 'lodash';
+import { mapValues, startCase } from 'lodash';
 
+// NOTE: the order in the array determines the order in the UI
 const deploymentsViewColumnIds = [
     'status',
     'name',
@@ -12,16 +13,54 @@ const deploymentsViewColumnIds = [
 
 type DeploymentsViewColumnId = typeof deploymentsViewColumnIds[number];
 
-const deploymentsViewColumnNames = deploymentsViewColumnIds.reduce((names, columnId) => {
-    names[columnId] = startCase(columnId);
-    return names;
-}, {} as Record<DeploymentsViewColumnId, string>);
+interface ColumnDefinition {
+    name: string;
+    width?: string;
+}
+
+const namelessDeploymentsViewColumnDefinitions: Record<DeploymentsViewColumnId, Partial<ColumnDefinition>> = {
+    status: {
+        // TODO: add tooltip
+        width: '5%'
+    },
+    name: {},
+    blueprintName: {},
+    environmentType: {},
+    location: {},
+    subenvironmentsCount: {
+        // TODO: add icon
+        // TODO: add tooltips for DataTable
+        name: 'Subenvironments',
+        width: '5%'
+    },
+    subservicesCount: {
+        // TODO: add icon
+        name: 'Subservices',
+        width: '5%'
+    }
+};
+
+const deploymentsViewColumnDefinitions: Record<DeploymentsViewColumnId, ColumnDefinition> = mapValues(
+    namelessDeploymentsViewColumnDefinitions,
+    (columnDefinition, columnId) => ({
+        name: startCase(columnId),
+        ...columnDefinition
+    })
+);
+
+interface GridParams {
+    _offset: number;
+    _size: number;
+    _sort: string;
+}
+
+// TODO: add a generic type for widget configuration
 
 Stage.defineWidget({
     id: 'deploymentsView',
     name: 'Deployments view',
     description: 'A complete deployments view – Deployment list, map view, and detailed deployment info',
-    initialWidth: 8,
+    initialWidth: 12,
     initialHeight: 24, // TODO: adjust height
     color: 'purple',
     categories: [Stage.GenericConfig.CATEGORY.DEPLOYMENTS],
@@ -48,7 +87,7 @@ Stage.defineWidget({
             name: 'List of fields to show in the table',
             placeHolder: 'Select fields from the list',
             items: deploymentsViewColumnIds.map(columnId => ({
-                name: deploymentsViewColumnNames[columnId],
+                name: deploymentsViewColumnDefinitions[columnId].name,
                 value: columnId
             })),
             default: Object.values(deploymentsViewColumnIds).filter(columnId => columnId !== 'environmentType'),
@@ -64,7 +103,42 @@ Stage.defineWidget({
     // TODO: use a new permissions config
     permission: Stage.GenericConfig.WIDGET_PERMISSION('deployments'),
 
-    render() {
-        return <div>Hello world</div>;
+    fetchData(_widget, toolbox, params: GridParams) {
+        // TODO: add resolving `filterRules` if they are not fetched (after RD-377)
+        return toolbox.getManager().doGet('/deployments', params);
+    },
+
+    render(widget, data: { items: any; metadata: any } | null, _error, toolbox) {
+        const { DataTable } = Stage.Basic;
+        const { fieldsToShow, pageSize } = widget.configuration;
+
+        return (
+            <DataTable fetchData={toolbox.refresh} pageSize={pageSize}>
+                {deploymentsViewColumnIds.map(columnId => (
+                    <DataTable.Column
+                        key={columnId}
+                        name={columnId}
+                        label={deploymentsViewColumnDefinitions[columnId].name}
+                        width={deploymentsViewColumnDefinitions[columnId].width}
+                        show={fieldsToShow.indexOf(columnId) !== -1}
+                    />
+                ))}
+
+                {/* TODO: add type for deployment */}
+                {data?.items.map((deployment: any) => (
+                    // TODO: add selecting rows
+                    <DataTable.Row key={deployment.id}>
+                        {/* TODO: add rendering to column configuration */}
+                        <DataTable.Data>Status (TODO)</DataTable.Data>
+                        <DataTable.Data>{deployment.id}</DataTable.Data>
+                        <DataTable.Data>{deployment.blueprint_id}</DataTable.Data>
+                        <DataTable.Data>Environment Type (TODO)</DataTable.Data>
+                        <DataTable.Data>{deployment.site_name}</DataTable.Data>
+                        <DataTable.Data>0 (TODO)</DataTable.Data>
+                        <DataTable.Data>0 (TODO)</DataTable.Data>
+                    </DataTable.Row>
+                ))}
+            </DataTable>
+        );
     }
 });
