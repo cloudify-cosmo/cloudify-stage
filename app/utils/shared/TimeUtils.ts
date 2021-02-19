@@ -2,15 +2,23 @@
  * Created by jakub.niezgoda on 06/02/2019.
  */
 
-import moment from 'moment';
+import moment, { MomentFormatSpecification, MomentInput } from 'moment';
 
 export default class TimeUtils {
-    static formatTimestamp(timestamp, outputPattern = 'DD-MM-YYYY HH:mm', inputPattern = 'YYYY-MM-DD HH:mm:ss') {
+    static formatTimestamp(
+        timestamp: MomentInput,
+        outputPattern = 'DD-MM-YYYY HH:mm',
+        inputPattern: MomentFormatSpecification = 'YYYY-MM-DD HH:mm:ss'
+    ) {
         const timestampMoment = moment.utc(timestamp, inputPattern).local();
         return timestampMoment.isValid() ? timestampMoment.format(outputPattern) : '';
     }
 
-    static formatLocalTimestamp(timestamp, outputPattern = 'DD-MM-YYYY HH:mm', inputPattern = undefined) {
+    static formatLocalTimestamp(
+        timestamp: MomentInput,
+        outputPattern = 'DD-MM-YYYY HH:mm',
+        inputPattern: MomentFormatSpecification | undefined = undefined
+    ) {
         const timestampMoment = moment(timestamp, inputPattern);
         return timestampMoment.isValid() ? timestampMoment.format(outputPattern) : '';
     }
