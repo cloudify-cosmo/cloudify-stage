@@ -103,7 +103,16 @@ interface CommonWidgetDefinition<Params, Data> {
     fetchData?: (widget: Widget, toolbox: Toolbox, params: Params) => Promise<Data>;
 }
 
-type RenderCallback<Data, Output> = (widget: Widget, data: Data | null, error: any, toolbox: Toolbox) => Output;
+/**
+ * The empty object is the default value
+ */
+type WidgetData<D> = D | Record<string, never> | undefined;
+
+export function isEmptyWidgetData<D>(data: WidgetData<D>): data is Record<string, never> | undefined {
+    return data === undefined || Object.keys(data).length === 0;
+}
+
+type RenderCallback<Data, Output> = (widget: Widget, data: WidgetData<Data>, error: any, toolbox: Toolbox) => Output;
 
 interface ReactWidgetDefinitionPart<Data> {
     isReact?: true;
@@ -115,7 +124,7 @@ interface HTMLWidgetDefinitionPart<Data> {
     render: RenderCallback<Data, string>;
 
     /** @see https://docs.cloudify.co/developer/writing_widgets/widget-definition/#postrender-container-widget-data-toolbox */
-    postRender?: (container: any, widget: Widget, data: Data | null, toolbox: Toolbox) => void;
+    postRender?: (container: any, widget: Widget, data: WidgetData<Data>, toolbox: Toolbox) => void;
 }
 
 interface CommonOrPropTypeDefinition {

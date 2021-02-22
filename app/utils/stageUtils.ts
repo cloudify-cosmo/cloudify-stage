@@ -15,7 +15,7 @@ import JsonUtils from './shared/JsonUtils';
 import TimeUtils from './shared/TimeUtils';
 import UrlUtils from './shared/UrlUtils';
 import combineClassNames from './shared/combineClassNames';
-import type { WidgetDefinition } from './StageAPI';
+import { isEmptyWidgetData, WidgetDefinition } from './StageAPI';
 
 export default class StageUtils {
     static Execution = ExecutionUtils;
@@ -180,4 +180,6 @@ export default class StageUtils {
         const licenseEdition = _.get(managerData, 'license.data.license_edition', '');
         return _.includes(widgetSupportedEditions, licenseEdition);
     }
+
+    static isEmptyWidgetData = isEmptyWidgetData;
 }
