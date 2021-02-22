@@ -55,8 +55,9 @@ interface GridParams {
 }
 
 // TODO: add a generic type for widget configuration
+// TODO: do not define the widget in production (based on process.env.NODE_ENV)
 
-Stage.defineWidget({
+Stage.defineWidget<GridParams, { items: any[]; metadata: any }>({
     id: 'deploymentsView',
     name: 'Deployments view',
     description: 'A complete deployments view – Deployment list, map view, and detailed deployment info',
@@ -108,9 +109,13 @@ Stage.defineWidget({
         return toolbox.getManager().doGet('/deployments', params);
     },
 
-    render(widget, data: { items: any; metadata: any } | null, _error, toolbox) {
-        const { DataTable } = Stage.Basic;
+    render(widget, data, _error, toolbox) {
+        const { DataTable, Loading } = Stage.Basic;
         const { fieldsToShow, pageSize } = widget.configuration;
+
+        if (Stage.Utils.isEmptyWidgetData(data)) {
+            return <Loading />;
+        }
 
         return (
             <DataTable fetchData={toolbox.refresh} pageSize={pageSize}>
@@ -125,7 +130,7 @@ Stage.defineWidget({
                 ))}
 
                 {/* TODO: add type for deployment */}
-                {data?.items.map((deployment: any) => (
+                {data.items.map((deployment: any) => (
                     // TODO: add selecting rows
                     <DataTable.Row key={deployment.id}>
                         {/* TODO: add rendering to column configuration */}
