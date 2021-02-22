@@ -1,5 +1,4 @@
-/* eslint-disable react/jsx-props-no-spreading */
-const actions = Object.freeze({
+export const actions = Object.freeze({
     delete: 'delete',
     forceDelete: 'forceDelete',
     install: 'install',
@@ -20,64 +19,25 @@ const menuItems = [
     { name: actions.forceDelete, icon: 'trash' }
 ].map(item => ({ ...item, key: item.name, content: translate(item.name) }));
 
-export default function DeploymentActionsMenu({ deploymentId, toolbox, trigger }) {
+export default function DeploymentActionsMenu({ onActionClick, trigger }) {
     const {
-        Basic: { Menu, Popup, PopupMenu },
-        Common: {
-            ExecuteDeploymentModal,
-            ManageLabelsModal,
-            UpdateDeploymentModal,
-            RemoveDeploymentModal,
-            SetSiteModal
-        },
-        Hooks: { useResettableState }
+        Basic: { Menu, Popup, PopupMenu }
     } = Stage;
 
-    const [activeAction, setActiveAction, resetActiveAction] = useResettableState('');
-    const commonProps = { deploymentId, onHide: resetActiveAction, toolbox };
-
-    let workflowName = '';
-    if (activeAction === actions.install) {
-        workflowName = 'install';
-    } else if (activeAction === actions.uninstall) {
-        workflowName = 'uninstall';
-    }
-
     function onItemClick(event, { name }) {
-        setActiveAction(name);
+        onActionClick(name);
     }
 
     return (
-        <>
-            <PopupMenu className="deploymentActionsMenu">
-                {trigger && <Popup.Trigger>{trigger}</Popup.Trigger>}
-                <Menu pointing vertical onItemClick={onItemClick} items={menuItems} />
-            </PopupMenu>
-
-            <ManageLabelsModal {...commonProps} open={activeAction === actions.manageLabels} />
-
-            <ExecuteDeploymentModal
-                {...commonProps}
-                open={activeAction === actions.install || activeAction === actions.uninstall}
-                workflow={workflowName}
-            />
-
-            <UpdateDeploymentModal {...commonProps} open={activeAction === actions.update} />
-
-            <RemoveDeploymentModal
-                {...commonProps}
-                force={activeAction === actions.forceDelete}
-                open={activeAction === actions.delete || activeAction === actions.forceDelete}
-            />
-
-            <SetSiteModal {...commonProps} open={activeAction === actions.setSite} />
-        </>
+        <PopupMenu className="deploymentActionsMenu">
+            {trigger && <Popup.Trigger>{trigger}</Popup.Trigger>}
+            <Menu pointing vertical onItemClick={onItemClick} items={menuItems} />
+        </PopupMenu>
     );
 }
 
 DeploymentActionsMenu.propTypes = {
-    deploymentId: PropTypes.string.isRequired,
-    toolbox: Stage.PropTypes.Toolbox.isRequired,
+    onActionClick: PropTypes.func.isRequired,
     trigger: PropTypes.node
 };
 
