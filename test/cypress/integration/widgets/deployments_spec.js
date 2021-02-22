@@ -14,7 +14,7 @@ describe('Deployments widget', () => {
 
     const actOnDeployment = (name, action) => {
         searchForDeployment(name);
-        cy.contains('div.row', name).find('.menuAction').click();
+        cy.contains('div.row', name).find('.deploymentActionsMenu').click();
         cy.get('.popupMenu > .menu').contains(action).click();
     };
 

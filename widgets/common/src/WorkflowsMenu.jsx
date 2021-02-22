@@ -116,8 +116,6 @@ function WorkflowsMenu({ workflows, onClick, popupMenuProps, showInPopup, trigge
         return (
             <PopupMenu
                 className="workflowAction"
-                position="bottom center"
-                offset={0}
                 icon={popupMenuProps.icon}
                 help={popupMenuProps.help}
                 bordered={popupMenuProps.bordered}

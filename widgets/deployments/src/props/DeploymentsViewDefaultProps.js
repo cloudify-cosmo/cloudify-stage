@@ -3,6 +3,7 @@ export default {
     onSelectDeployment: () => {},
     onActOnExecution: () => {},
     onMenuAction: () => {},
+    onWorkflowAction: () => {},
     onSetVisibility: () => {},
     allowedSettingTo: ['tenant', 'global'],
     noDataMessage: '',

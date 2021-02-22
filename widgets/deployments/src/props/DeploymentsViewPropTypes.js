@@ -22,6 +22,7 @@ export default {
     onSelectDeployment: PropTypes.func,
     onActOnExecution: PropTypes.func,
     onMenuAction: PropTypes.func,
+    onWorkflowAction: PropTypes.func,
     onSetVisibility: PropTypes.func,
     allowedSettingTo: PropTypes.arrayOf(PropTypes.string),
     noDataMessage: PropTypes.string,

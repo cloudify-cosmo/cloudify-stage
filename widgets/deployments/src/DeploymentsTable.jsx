@@ -1,8 +1,3 @@
-/**
- * Created by kinneretzin on 18/10/2016.
- */
-
-import MenuAction from './MenuAction';
 import DeploymentUpdatedIcon from './DeploymentUpdatedIcon';
 import DeploymentsViewPropTypes from './props/DeploymentsViewPropTypes';
 import DeploymentsViewDefaultProps from './props/DeploymentsViewDefaultProps';
@@ -15,13 +10,14 @@ export default function DeploymentsTable({
     onActOnExecution,
     onMenuAction,
     onSelectDeployment,
+    onWorkflowAction,
     onSetVisibility,
     showExecutionStatusLabel,
     toolbox,
     widget
 }) {
     const { DataTable, ResourceVisibility } = Stage.Basic;
-    const { LastExecutionStatusIcon } = Stage.Common;
+    const { DeploymentActionsMenu, LastExecutionStatusIcon, WorkflowsMenu } = Stage.Common;
     const tableName = 'deploymentsTable';
 
     return (
@@ -82,7 +78,17 @@ export default function DeploymentsTable({
                         <DataTable.Data>{item.updated_at}</DataTable.Data>
                         <DataTable.Data>{item.created_by}</DataTable.Data>
                         <DataTable.Data className="center aligned rowActions">
-                            <MenuAction item={item} onSelectAction={onMenuAction} />
+                            <WorkflowsMenu
+                                workflows={item.workflows}
+                                popupMenuProps={{ icon: 'cogs' }}
+                                onClick={workflow => onWorkflowAction(item.id, workflow.name)}
+                            />
+
+                            <DeploymentActionsMenu
+                                deploymentId={item.id}
+                                onActionClick={actionName => onMenuAction(item.id, actionName)}
+                                toolbox={toolbox}
+                            />
                         </DataTable.Data>
                     </DataTable.Row>
                 );

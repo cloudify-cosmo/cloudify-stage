@@ -1,8 +1,3 @@
-/**
- * Created by kinneretzin on 18/10/2016.
- */
-
-import MenuAction from './MenuAction';
 import ExecutionProgress from './ExecutionProgress';
 import DeploymentsViewPropTypes from './props/DeploymentsViewPropTypes';
 import DeploymentsViewDefaultProps from './props/DeploymentsViewDefaultProps';
@@ -14,13 +9,14 @@ export default function DeploymentsSegment({
     onActOnExecution,
     onMenuAction,
     onSelectDeployment,
+    onWorkflowAction,
     onSetVisibility,
     showExecutionStatusLabel,
     toolbox,
     widget
 }) {
     const { DataSegment, Divider, Header } = Stage.Basic;
-    const { DeploymentDetails, LastExecutionStatusIcon } = Stage.Common;
+    const { DeploymentActionsMenu, DeploymentDetails, LastExecutionStatusIcon, WorkflowsMenu } = Stage.Common;
 
     return (
         <DataSegment
@@ -56,7 +52,20 @@ export default function DeploymentsSegment({
                                 </Header>
                             </div>
                         }
-                        customActions={<MenuAction item={item} onSelectAction={onMenuAction} />}
+                        customActions={
+                            <div className="menuAction">
+                                <WorkflowsMenu
+                                    workflows={item.workflows}
+                                    popupMenuProps={{ icon: 'cogs' }}
+                                    onClick={workflow => onWorkflowAction(item.id, workflow.name)}
+                                />
+                                <DeploymentActionsMenu
+                                    deploymentId={item.id}
+                                    onActionClick={actionName => onMenuAction(item.id, actionName)}
+                                    toolbox={toolbox}
+                                />
+                            </div>
+                        }
                         deployment={item}
                         instancesCount={item.nodeInstancesCount}
                         instancesStates={item.nodeInstancesStates}

@@ -207,7 +207,7 @@ export default function ExecuteDeploymentModal({
     }
 
     return (
-        <Modal open={open} onClose={() => onHide()} className="executeWorkflowModal">
+        <Modal open={open} onClose={onHide} className="executeWorkflowModal">
             <Modal.Header>
                 <Icon name="cogs" /> Execute workflow {workflowName}
                 {deploymentName && ` on ${deploymentName}`}
