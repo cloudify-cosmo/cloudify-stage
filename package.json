@@ -17,7 +17,7 @@
   "scripts": {
     "audit": "npm audit --production && cd backend && npm run audit",
     "beforebuild": "npm ci --prefer-offline && (cd backend && npm ci --prefer-offline)",
-    "build": "webpack --config webpack.config.js --mode=production --bail",
+    "build": "cross-env NODE_ENV=production webpack --config webpack.config.js --mode=production --bail",
     "build:analyse:main": "npm run build -- --env.analyse=main",
     "build:analyse:widgets": "npm run build -- --env.analyse=widgets",
     "build:analyse:widgets-common": "npm run build -- --env.analyse=widgets-common",
@@ -29,7 +29,7 @@
     "check-types:widgets": "tsc -p widgets --checkJs false",
     "check-types:cypress": "tsc -p test/cypress --checkJs false",
     "coverageCheck": "cp coverage-jest/coverage-final.json .nyc_output && nyc report --reporter lcov --report-dir coverage-overall && nyc check-coverage",
-    "devServer": "node devServer.js",
+    "devServer": "cross-env NODE_ENV=development node devServer.js",
     "docCheck": "scripts/checkDocs.sh",
     "docWidgets": "node scripts/updateReadmes.js",
     "e2e": "cypress run -C node_modules/cloudify-ui-common/cypress/cypress.json",

@@ -119,6 +119,9 @@ module.exports = (env, argv) => {
                       minRatio: 0.8
                   })
               ];
+    const environmentPlugin = new webpack.EnvironmentPlugin({
+        NODE_ENV: 'development'
+    });
 
     if (isProduction && fs.existsSync(outputPath)) {
         try {
@@ -214,7 +217,8 @@ module.exports = (env, argv) => {
                         }
                     }),
                     isProduction && getProductionPlugins(env && env.analyse === 'main')
-                ])
+                ]),
+                environmentPlugin
             )
         },
         {
@@ -265,7 +269,8 @@ module.exports = (env, argv) => {
                         }
                     }),
                     isProduction && getProductionPlugins(env && env.analyse === 'widgets')
-                ])
+                ]),
+                environmentPlugin
             ),
             externals
         },
@@ -287,7 +292,10 @@ module.exports = (env, argv) => {
                 publicPath: Consts.CONTEXT_PATH
             },
             module,
-            plugins: isProduction ? getProductionPlugins(env && env.analyse === 'widgets-common') : [],
+            plugins: [
+                ...(isProduction ? getProductionPlugins(env && env.analyse === 'widgets-common') : []),
+                environmentPlugin
+            ],
             externals
         }
     ];
