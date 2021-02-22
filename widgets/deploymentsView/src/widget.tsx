@@ -1,4 +1,5 @@
 import { mapValues, startCase } from 'lodash';
+import { ReactNode } from 'react';
 
 // NOTE: the order in the array determines the order in the UI
 const deploymentsViewColumnIds = [
@@ -15,28 +16,67 @@ type DeploymentsViewColumnId = typeof deploymentsViewColumnIds[number];
 
 interface ColumnDefinition {
     name: string;
+    /**
+     * The name of the backend field to sort by
+     */
+    sortFieldName?: string;
     width?: string;
+    render(deployment: any): ReactNode;
 }
 
-const namelessDeploymentsViewColumnDefinitions: Record<DeploymentsViewColumnId, Partial<ColumnDefinition>> = {
+type WithOptionalProperties<T, OptionalProperties extends keyof T> = Omit<T, OptionalProperties> &
+    Partial<Pick<T, OptionalProperties>>;
+
+const namelessDeploymentsViewColumnDefinitions: Record<
+    DeploymentsViewColumnId,
+    WithOptionalProperties<ColumnDefinition, 'name'>
+> = {
     status: {
         // TODO: add tooltip
-        width: '5%'
+        width: '5%',
+        render() {
+            return 'Status (TODO)';
+        }
     },
-    name: {},
-    blueprintName: {},
-    environmentType: {},
-    location: {},
+    name: {
+        sortFieldName: 'id',
+        render(deployment) {
+            return deployment.id;
+        }
+    },
+    blueprintName: {
+        sortFieldName: 'blueprint_id',
+        render(deployment) {
+            return deployment.blueprint_id;
+        }
+    },
+    environmentType: {
+        render() {
+            return 'Environment Type (TODO)';
+        }
+    },
+    location: {
+        sortFieldName: 'site_name',
+        render(deployment) {
+            return deployment.site_name;
+        }
+    },
     subenvironmentsCount: {
         // TODO: add icon
         // TODO: add tooltips for DataTable
         name: 'Subenvironments',
-        width: '5%'
+        width: '5%',
+        render() {
+            return '0 (TODO)';
+        }
     },
     subservicesCount: {
         // TODO: add icon
         name: 'Subservices',
-        width: '5%'
+        width: '5%',
+        render() {
+            return '0 (TODO)';
+        }
     }
 };
 
@@ -63,7 +103,7 @@ if (process.env.NODE_ENV === 'development') {
         name: 'Deployments view',
         description: 'A complete deployments view – Deployment list, map view, and detailed deployment info',
         initialWidth: 12,
-        initialHeight: 24, // TODO: adjust height
+        initialHeight: 40,
         color: 'purple',
         categories: [Stage.GenericConfig.CATEGORY.DEPLOYMENTS],
 
@@ -119,29 +159,27 @@ if (process.env.NODE_ENV === 'development') {
             }
 
             return (
-                <DataTable fetchData={toolbox.refresh} pageSize={pageSize}>
-                    {deploymentsViewColumnIds.map(columnId => (
-                        <DataTable.Column
-                            key={columnId}
-                            name={columnId}
-                            label={deploymentsViewColumnDefinitions[columnId].name}
-                            width={deploymentsViewColumnDefinitions[columnId].width}
-                            show={fieldsToShow.indexOf(columnId) !== -1}
-                        />
-                    ))}
+                <DataTable fetchData={toolbox.refresh} pageSize={pageSize} selectable sizeMultiplier={20}>
+                    {deploymentsViewColumnIds.map(columnId => {
+                        const columnDefinition = deploymentsViewColumnDefinitions[columnId];
+                        return (
+                            <DataTable.Column
+                                key={columnId}
+                                name={columnDefinition.sortFieldName}
+                                label={columnDefinition.name}
+                                width={columnDefinition.width}
+                                show={fieldsToShow.indexOf(columnId) !== -1}
+                            />
+                        );
+                    })}
 
                     {/* TODO: add type for deployment */}
                     {data.items.map((deployment: any) => (
                         // TODO: add selecting rows
                         <DataTable.Row key={deployment.id}>
-                            {/* TODO: add rendering to column configuration */}
-                            <DataTable.Data>Status (TODO)</DataTable.Data>
-                            <DataTable.Data>{deployment.id}</DataTable.Data>
-                            <DataTable.Data>{deployment.blueprint_id}</DataTable.Data>
-                            <DataTable.Data>Environment Type (TODO)</DataTable.Data>
-                            <DataTable.Data>{deployment.site_name}</DataTable.Data>
-                            <DataTable.Data>0 (TODO)</DataTable.Data>
-                            <DataTable.Data>0 (TODO)</DataTable.Data>
+                            {Object.values(deploymentsViewColumnDefinitions).map(columnDefinition => (
+                                <DataTable.Data>{columnDefinition.render(deployment)}</DataTable.Data>
+                            ))}
                         </DataTable.Row>
                     ))}
                 </DataTable>
