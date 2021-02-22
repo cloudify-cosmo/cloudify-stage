@@ -11,8 +11,8 @@ The Cloudify Console provides User Interface for managing and analyzing [Cloudif
 
 The following requirements should be met prior starting the application:
 
-- [Node.js](https://nodejs.org) (version >= 12.16.x) installed
-    - With [NVM](https://github.com/nvm-sh/nvm) installed just execute `nvm use` to set proper version of Node.js
+- [Node.js](https://nodejs.org) (version = 12.x) installed
+    - With [NVM](https://github.com/nvm-sh/nvm) installed just execute `nvm use` to set Node.js version compatible with this project
 - [PostgreSQL](https://www.postgresql.org/) (version >= 9.5.x) installed and configured:
     - Make a database named `stage` 
     - Make a user named `cloudify` with `cloudify` as password
