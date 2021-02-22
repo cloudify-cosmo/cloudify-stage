@@ -113,10 +113,14 @@ interface GridParams {
 }
 
 // TODO: add a generic type for widget configuration
+interface DeploymentsResponse {
+    items: any[];
+    metadata: any;
+}
 
 // TODO(RD-1224): remove environment check
 if (process.env.NODE_ENV === 'development') {
-    Stage.defineWidget<GridParams, { items: any[]; metadata: any }>({
+    Stage.defineWidget<GridParams, DeploymentsResponse>({
         id: 'deploymentsView',
         name: 'Deployments view',
         description: 'A complete deployments view – Deployment list, map view, and detailed deployment info',
@@ -165,7 +169,21 @@ if (process.env.NODE_ENV === 'development') {
 
         fetchData(_widget, toolbox, params: GridParams) {
             // TODO: add resolving `filterRules` if they are not fetched (after RD-377)
-            return toolbox.getManager().doGet('/deployments', params);
+            // TODO: set deploymentId if not set
+            return toolbox
+                .getManager()
+                .doGet('/deployments', params)
+                .then((response: DeploymentsResponse) => {
+                    const context = toolbox.getContext();
+                    // TODO: detect if deploymentId is not present in the current page and reset it.
+                    // Do that only if `fetchData` was called from `DataTable`. If it's just polling,
+                    // then don't reset it (because user may be interacting with some other component)
+                    if (context.getValue('deploymentId') === undefined && response.items.length > 0) {
+                        context.setValue('deploymentId', response.items[0].id);
+                    }
+
+                    return response;
+                });
         },
 
         render(widget, data, _error, toolbox) {
@@ -175,6 +193,8 @@ if (process.env.NODE_ENV === 'development') {
             if (Stage.Utils.isEmptyWidgetData(data)) {
                 return <Loading />;
             }
+
+            const selectedDeploymentId = toolbox.getContext().getValue('deploymentId');
 
             return (
                 <DataTable fetchData={toolbox.refresh} pageSize={pageSize} selectable sizeMultiplier={20}>
@@ -198,6 +218,8 @@ if (process.env.NODE_ENV === 'development') {
                             <DataTable.Row
                                 key={deployment.id}
                                 className={progressUnderline ? undefined : 'deployment-progressless-row'}
+                                selected={deployment.id === selectedDeploymentId}
+                                onClick={() => toolbox.getContext().setValue('deploymentId', deployment.id)}
                             >
                                 {Object.values(deploymentsViewColumnDefinitions).map(columnDefinition => (
                                     <DataTable.Data>{columnDefinition.render(deployment)}</DataTable.Data>
