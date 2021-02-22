@@ -1,0 +1,42 @@
+.deploymentsViewWidget {
+    --deployment-progress-underline-height: 0.14em;
+    /* TODO(RD-1224): adjust states to match the API ones */
+    --deployment-color-good: green;
+    --deployment-color-in-progress: orange;
+    --deployment-color-failed: red;
+    --deployment-color-pending: blue;
+}
+
+.ui.table .deployment-progressless-row > td {
+    /* NOTE: 0.4em is the default in the table */
+    padding-bottom: calc(0.4em + var(--deployment-progress-underline-height));
+}
+
+.deployment-progress-row {
+    pointer-events: none;
+}
+
+.ui.table .deployment-progress-row > td.deployment-progress-row-cell {
+    padding: 0;
+    border-top: 0;
+}
+
+.deployment-progress-row .deployment-progress-bar {
+    height: var(--deployment-progress-underline-height);
+}
+
+.deployment-progress-bar.good {
+    background-color: var(--deployment-color-good);
+}
+
+.deployment-progress-bar.in-progress {
+    background-color: var(--deployment-color-in-progress);
+}
+
+.deployment-progress-bar.failed {
+    background-color: var(--deployment-color-failed);
+}
+
+.deployment-progress-bar.pending {
+    background-color: var(--deployment-color-pending);
+}

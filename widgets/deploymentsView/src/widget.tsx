@@ -88,6 +88,24 @@ const deploymentsViewColumnDefinitions: Record<DeploymentsViewColumnId, ColumnDe
     })
 );
 
+function getDeploymentProgressUnderline(deployment: any): ReactNode {
+    if (deployment.id === 'hello') {
+        // TODO(RD-1224): adjust states to match the ones returned from API
+        const deploymentStates = ['in-progress', 'pending', 'failure'];
+        // NOTE: random state for now
+        const state = deploymentStates[Math.floor(Math.random() * deploymentStates.length)];
+
+        return (
+            <div
+                style={{ width: `${50 + Math.random() * 50}%` }}
+                className={Stage.Utils.combineClassNames(['deployment-progress-bar', state])}
+            />
+        );
+    }
+
+    return null;
+}
+
 interface GridParams {
     _offset: number;
     _size: number;
@@ -141,7 +159,7 @@ if (process.env.NODE_ENV === 'development') {
         ],
         isReact: true,
         hasReadme: true,
-        hasStyle: false,
+        hasStyle: true,
         // TODO: use a new permissions config
         permission: Stage.GenericConfig.WIDGET_PERMISSION('deployments'),
 
@@ -174,14 +192,30 @@ if (process.env.NODE_ENV === 'development') {
                     })}
 
                     {/* TODO: add type for deployment */}
-                    {data.items.map((deployment: any) => (
-                        // TODO: add selecting rows
-                        <DataTable.Row key={deployment.id}>
-                            {Object.values(deploymentsViewColumnDefinitions).map(columnDefinition => (
-                                <DataTable.Data>{columnDefinition.render(deployment)}</DataTable.Data>
-                            ))}
-                        </DataTable.Row>
-                    ))}
+                    {data.items.flatMap((deployment: any) => {
+                        const progressUnderline = getDeploymentProgressUnderline(deployment);
+                        return [
+                            <DataTable.Row
+                                key={deployment.id}
+                                className={progressUnderline ? undefined : 'deployment-progressless-row'}
+                            >
+                                {Object.values(deploymentsViewColumnDefinitions).map(columnDefinition => (
+                                    <DataTable.Data>{columnDefinition.render(deployment)}</DataTable.Data>
+                                ))}
+                            </DataTable.Row>,
+                            progressUnderline && (
+                                <DataTable.Row key={`${deployment.id}-progress`} className="deployment-progress-row">
+                                    <DataTable.Data
+                                        className="deployment-progress-row-cell"
+                                        // TODO: change to colSpan
+                                        rowSpan={fieldsToShow.length}
+                                    >
+                                        {progressUnderline}
+                                    </DataTable.Data>
+                                </DataTable.Row>
+                            )
+                        ].filter(Boolean);
+                    })}
                 </DataTable>
             );
         }
