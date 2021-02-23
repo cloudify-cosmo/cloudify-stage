@@ -28,9 +28,7 @@ export default class StageUtils {
 
     static parseMarkdown = marked;
 
-    static saveAs(...args) {
-        saveAs(...args);
-    }
+    static saveAs = saveAs;
 
     static makeCancelable(promise) {
         let hasCanceled = false;
