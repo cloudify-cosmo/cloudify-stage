@@ -63,7 +63,7 @@ export default class DeploymentsList extends React.Component {
     };
 
     openExecuteModal = (deploymentId, workflowName) => {
-        this.setState({ deploymentId, workflowName }, () => this.setState({ showExecuteModal: true }));
+        this.setState({ deploymentId, showExecuteModal: true, workflowName });
     };
 
     hideExecuteModal = () => {
@@ -71,7 +71,7 @@ export default class DeploymentsList extends React.Component {
     };
 
     openActionModal = (deploymentId, actionName) => {
-        this.setState({ deploymentId }, () => this.setState({ activeAction: actionName }));
+        this.setState({ deploymentId, activeAction: actionName });
     };
 
     hideActionModal = () => {
