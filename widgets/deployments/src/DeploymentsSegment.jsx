@@ -1,3 +1,4 @@
+import ActionsMenus from './ActionsMenus';
 import ExecutionProgress from './ExecutionProgress';
 import DeploymentsViewPropTypes from './props/DeploymentsViewPropTypes';
 import DeploymentsViewDefaultProps from './props/DeploymentsViewDefaultProps';
@@ -7,7 +8,7 @@ export default function DeploymentsSegment({
     fetchData,
     noDataMessage,
     onActOnExecution,
-    onMenuAction,
+    onDeploymentAction,
     onSelectDeployment,
     onWorkflowAction,
     onSetVisibility,
@@ -16,7 +17,7 @@ export default function DeploymentsSegment({
     widget
 }) {
     const { DataSegment, Divider, Header } = Stage.Basic;
-    const { DeploymentActionsMenu, DeploymentDetails, LastExecutionStatusIcon, WorkflowsMenu } = Stage.Common;
+    const { DeploymentDetails, LastExecutionStatusIcon } = Stage.Common;
 
     return (
         <DataSegment
@@ -54,13 +55,11 @@ export default function DeploymentsSegment({
                         }
                         customActions={
                             <div className="menuAction">
-                                <WorkflowsMenu
+                                <ActionsMenus
+                                    deploymentId={item.id}
+                                    onDeploymentAction={onDeploymentAction}
+                                    onWorkflowAction={onWorkflowAction}
                                     workflows={item.workflows}
-                                    popupMenuProps={{ icon: 'cogs' }}
-                                    onClick={workflow => onWorkflowAction(item.id, workflow.name)}
-                                />
-                                <DeploymentActionsMenu
-                                    onActionClick={actionName => onMenuAction(item.id, actionName)}
                                     toolbox={toolbox}
                                 />
                             </div>

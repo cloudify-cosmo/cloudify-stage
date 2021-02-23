@@ -1,3 +1,4 @@
+import ActionsMenus from './ActionsMenus';
 import DeploymentUpdatedIcon from './DeploymentUpdatedIcon';
 import DeploymentsViewPropTypes from './props/DeploymentsViewPropTypes';
 import DeploymentsViewDefaultProps from './props/DeploymentsViewDefaultProps';
@@ -8,7 +9,7 @@ export default function DeploymentsTable({
     fetchData,
     noDataMessage,
     onActOnExecution,
-    onMenuAction,
+    onDeploymentAction,
     onSelectDeployment,
     onWorkflowAction,
     onSetVisibility,
@@ -17,7 +18,7 @@ export default function DeploymentsTable({
     widget
 }) {
     const { DataTable, ResourceVisibility } = Stage.Basic;
-    const { DeploymentActionsMenu, LastExecutionStatusIcon, WorkflowsMenu } = Stage.Common;
+    const { LastExecutionStatusIcon } = Stage.Common;
     const tableName = 'deploymentsTable';
 
     return (
@@ -78,14 +79,11 @@ export default function DeploymentsTable({
                         <DataTable.Data>{item.updated_at}</DataTable.Data>
                         <DataTable.Data>{item.created_by}</DataTable.Data>
                         <DataTable.Data className="center aligned rowActions">
-                            <WorkflowsMenu
+                            <ActionsMenus
+                                deploymentId={item.id}
+                                onDeploymentAction={onDeploymentAction}
+                                onWorkflowAction={onWorkflowAction}
                                 workflows={item.workflows}
-                                popupMenuProps={{ icon: 'cogs' }}
-                                onClick={workflow => onWorkflowAction(item.id, workflow.name)}
-                            />
-
-                            <DeploymentActionsMenu
-                                onActionClick={actionName => onMenuAction(item.id, actionName)}
                                 toolbox={toolbox}
                             />
                         </DataTable.Data>

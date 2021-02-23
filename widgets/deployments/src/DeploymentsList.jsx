@@ -106,7 +106,7 @@ export default class DeploymentsList extends React.Component {
                     data={data}
                     fetchData={this.fetchData}
                     onSelectDeployment={this.selectDeployment}
-                    onMenuAction={this.openActionModal}
+                    onDeploymentAction={this.openActionModal}
                     onWorkflowAction={this.openExecuteModal}
                     onActOnExecution={this.actOnExecution}
                     onError={this.setError}

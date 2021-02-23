@@ -2,7 +2,7 @@ export default {
     fetchData: () => {},
     onSelectDeployment: () => {},
     onActOnExecution: () => {},
-    onMenuAction: () => {},
+    onDeploymentAction: () => {},
     onWorkflowAction: () => {},
     onSetVisibility: () => {},
     allowedSettingTo: ['tenant', 'global'],
