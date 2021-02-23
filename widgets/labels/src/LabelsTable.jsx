@@ -130,8 +130,12 @@ export default function LabelsTable({ data, toolbox }) {
                 open={!!labelToDelete}
                 onCancel={unsetLabelToDelete}
                 onConfirm={() => {
-                    data.items = data.items.filter(filteredItem => filteredItem !== labelToDelete);
-                    actions.doSetLabels(data.deploymentId, data.items);
+                    actions
+                        .doSetLabels(
+                            data.deploymentId,
+                            data.items.filter(filteredItem => filteredItem !== labelToDelete)
+                        )
+                        .then(() => toolbox.refresh());
                     unsetLabelToDelete();
                 }}
                 content={
