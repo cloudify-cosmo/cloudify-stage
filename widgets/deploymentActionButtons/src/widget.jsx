@@ -20,24 +20,24 @@ Stage.defineWidget({
     permission: Stage.GenericConfig.WIDGET_PERMISSION('deploymentActionButtons'),
 
     fetchData(widget, toolbox) {
-        const deploymentId = toolbox.getContext().getValue('deploymentId');
+        const id = toolbox.getContext().getValue('deploymentId');
 
-        if (!_.isEmpty(deploymentId)) {
+        if (!_.isEmpty(id)) {
+            const { DeploymentActions, DeploymentUtils } = Stage.Common;
+            const actions = new DeploymentActions(toolbox);
+
             toolbox.loading(true);
-            return toolbox
-                .getManager()
-                .doGet(`/deployments/${deploymentId}`)
-                .then(deployment => {
-                    toolbox.loading(false);
-                    const workflows = Stage.Common.DeploymentUtils.filterWorkflows(
-                        _.sortBy(deployment.workflows, ['name'])
-                    );
 
-                    return Promise.resolve({ ...deployment, workflows });
-                });
+            return actions
+                .doGet({ id }) // FIXME: Once RD-1353 is implemented, pass { _include: ['worflows'] } to doGet
+                .then(deployment => {
+                    const workflows = DeploymentUtils.filterWorkflows(_.sortBy(deployment.workflows, ['name']));
+                    return { id, workflows };
+                })
+                .finally(() => toolbox.loading(false));
         }
 
-        return Promise.resolve(DeploymentActionButtons.EMPTY_DEPLOYMENT);
+        return Promise.resolve({ id: '', workflows: [] });
     },
 
     fetchParams(widget, toolbox) {
@@ -53,6 +53,6 @@ Stage.defineWidget({
             return <Loading />;
         }
 
-        return <DeploymentActionButtons deployment={data} widget={widget} toolbox={toolbox} />;
+        return <DeploymentActionButtons deployment={data} toolbox={toolbox} />;
     }
 });
