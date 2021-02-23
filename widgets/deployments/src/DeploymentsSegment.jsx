@@ -60,7 +60,6 @@ export default function DeploymentsSegment({
                                     onClick={workflow => onWorkflowAction(item.id, workflow.name)}
                                 />
                                 <DeploymentActionsMenu
-                                    deploymentId={item.id}
                                     onActionClick={actionName => onMenuAction(item.id, actionName)}
                                     toolbox={toolbox}
                                 />

@@ -85,7 +85,6 @@ export default function DeploymentsTable({
                             />
 
                             <DeploymentActionsMenu
-                                deploymentId={item.id}
                                 onActionClick={actionName => onMenuAction(item.id, actionName)}
                                 toolbox={toolbox}
                             />
