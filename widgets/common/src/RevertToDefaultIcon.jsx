@@ -38,7 +38,7 @@ RevertToDefaultIcon.propTypes = {
     /**
      * popup content to be shown on mouse over
      */
-    popupContent: PropTypes.string,
+    popupContent: PropTypes.node,
 
     /**
      * styles to be added to revert icon
