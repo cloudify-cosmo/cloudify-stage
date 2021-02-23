@@ -21,6 +21,7 @@ interface ColumnDefinition {
      */
     sortFieldName?: string;
     width?: string;
+    tooltip?: ReactNode;
     render(deployment: any): ReactNode;
 }
 
@@ -32,7 +33,6 @@ const namelessDeploymentsViewColumnDefinitions: Record<
     WithOptionalProperties<ColumnDefinition, 'name'>
 > = {
     status: {
-        // TODO: add tooltip
         width: '5%',
         render() {
             return 'Status (TODO)';
@@ -63,9 +63,9 @@ const namelessDeploymentsViewColumnDefinitions: Record<
     },
     subenvironmentsCount: {
         // TODO: add icon
-        // TODO: add tooltips for DataTable
         name: 'Subenvironments',
         width: '5%',
+        tooltip: 'Sub-environments (Total)',
         render() {
             return '0 (TODO)';
         }
@@ -74,6 +74,7 @@ const namelessDeploymentsViewColumnDefinitions: Record<
         // TODO: add icon
         name: 'Subservices',
         width: '5%',
+        tooltip: 'Services (Total)',
         render() {
             return '0 (TODO)';
         }
@@ -168,8 +169,7 @@ if (process.env.NODE_ENV === 'development') {
         permission: Stage.GenericConfig.WIDGET_PERMISSION('deployments'),
 
         fetchData(_widget, toolbox, params: GridParams) {
-            // TODO: add resolving `filterRules` if they are not fetched (after RD-377)
-            // TODO: set deploymentId if not set
+            // TODO(RD-1224): add resolving `filterRules` if they are not fetched (after RD-377)
             return toolbox
                 .getManager()
                 .doGet('/deployments', params)
@@ -206,6 +206,7 @@ if (process.env.NODE_ENV === 'development') {
                                 name={columnDefinition.sortFieldName}
                                 label={columnDefinition.name}
                                 width={columnDefinition.width}
+                                tooltip={columnDefinition.tooltip}
                                 show={fieldsToShow.indexOf(columnId) !== -1}
                             />
                         );
@@ -229,7 +230,6 @@ if (process.env.NODE_ENV === 'development') {
                                 <DataTable.Row key={`${deployment.id}-progress`} className="deployment-progress-row">
                                     <DataTable.Data
                                         className="deployment-progress-row-cell"
-                                        // TODO: change to colSpan
                                         colSpan={fieldsToShow.length}
                                     >
                                         {progressUnderline}
