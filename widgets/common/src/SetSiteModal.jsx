@@ -43,10 +43,13 @@ function SetSiteModal({ deploymentId, onHide, open, toolbox }) {
             .then(() => {
                 clearErrors();
                 toolbox.getEventBus().trigger('deployments:refresh');
+                unsetLoading();
                 onHide();
             })
-            .catch(setMessageAsError)
-            .finally(unsetLoading);
+            .catch(error => {
+                setMessageAsError(error);
+                unsetLoading();
+            });
     }
 
     return (

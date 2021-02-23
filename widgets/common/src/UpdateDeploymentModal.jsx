@@ -131,20 +131,23 @@ function UpdateDeploymentModal({ open, deploymentId, onHide, toolbox }) {
             )
             .then(data => {
                 clearErrors();
+                unsetLoading();
                 if (preview) {
                     showPreview();
                     setPreviewData(data);
                 } else {
                     toolbox.refresh();
-                    onHide();
                     toolbox.getEventBus().trigger('nodes:refresh');
                     toolbox.getEventBus().trigger('inputs:refresh');
                     toolbox.getEventBus().trigger('outputs:refresh');
                     toolbox.getEventBus().trigger('executions:refresh');
+                    onHide();
                 }
             })
-            .catch(err => setErrors(InputsUtils.getErrorObject(err.message)))
-            .finally(unsetLoading);
+            .catch(err => {
+                setErrors(InputsUtils.getErrorObject(err.message));
+                unsetLoading();
+            });
     }
 
     function onUpdate() {
@@ -213,7 +216,7 @@ function UpdateDeploymentModal({ open, deploymentId, onHide, toolbox }) {
         : {};
 
     return (
-        <Modal open={open} onClose={() => onHide()} className="updateDeploymentModal">
+        <Modal open={open} onClose={onHide} className="updateDeploymentModal">
             <Modal.Header>
                 <Icon name="edit" /> Update deployment {deploymentId}
             </Modal.Header>

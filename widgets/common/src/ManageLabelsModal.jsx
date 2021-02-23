@@ -38,7 +38,16 @@ function ManageLabelsModal({ deploymentId, open, onHide, toolbox }) {
         clearErrors();
         setLoading();
 
-        actions.doSetLabels(deploymentId, labels).then(onHide).catch(setMessageAsError).finally(unsetLoading);
+        actions
+            .doSetLabels(deploymentId, labels)
+            .then(() => {
+                unsetLoading();
+                onHide();
+            })
+            .catch(error => {
+                unsetLoading();
+                setMessageAsError(error);
+            });
     }
 
     return (
