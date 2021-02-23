@@ -36,7 +36,7 @@ export default function LabelsTable({ data, toolbox }) {
                 <DataTable.Column width="50%" label="Value" />
                 {hasManagePermission && <DataTable.Column width="80px" />}
 
-                {_.map(data.items, item => (
+                {data.items.map(item => (
                     <DataTable.Row key={`${item.key}:${item.value}`}>
                         <DataTable.Data>{item.key}</DataTable.Data>
                         <DataTable.Data>
