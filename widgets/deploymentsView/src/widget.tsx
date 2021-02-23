@@ -1,5 +1,6 @@
 import { mapValues, startCase } from 'lodash';
 import { ReactNode } from 'react';
+import { SemanticICONS } from 'semantic-ui-react';
 
 // NOTE: the order in the array determines the order in the UI
 const deploymentsViewColumnIds = [
@@ -33,9 +34,15 @@ const namelessDeploymentsViewColumnDefinitions: Record<
     WithOptionalProperties<ColumnDefinition, 'name'>
 > = {
     status: {
-        width: '5%',
+        name: '',
+        width: '20px',
         render() {
-            return 'Status (TODO)';
+            const { Icon } = Stage.Basic;
+            // TODO(RD-1222): render icon based on status
+            // TODO: add icon for "in-progress"
+            const iconNames: SemanticICONS[] = ['exclamation', 'pause', 'checkmark'];
+
+            return <Icon name={iconNames[Math.floor(Math.random() * iconNames.length)]} />;
         }
     },
     name: {
