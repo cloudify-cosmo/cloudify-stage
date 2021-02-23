@@ -20,6 +20,6 @@ ActionsMenus.propTypes = {
     deploymentId: PropTypes.string.isRequired,
     onDeploymentAction: PropTypes.func.isRequired,
     onWorkflowAction: PropTypes.func.isRequired,
-    workflows: PropTypes.shape({}).isRequired,
+    workflows: Stage.PropTypes.Workflows.isRequired,
     toolbox: Stage.PropTypes.Toolbox.isRequired
 };

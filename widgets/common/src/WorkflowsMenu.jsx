@@ -2,7 +2,7 @@
  * Created by jakubniezgoda on 31/01/2019.
  */
 
-const WorkflowsPropType = PropTypes.arrayOf(PropTypes.shape({ name: PropTypes.string, plugin: PropTypes.string }));
+const WorkflowsPropType = Stage.PropTypes.Workflows;
 
 function StyledTitle({ name, bold }) {
     const displayName = _.capitalize(_.lowerCase(name));
@@ -102,7 +102,7 @@ AccordionWorkflowsMenu.defaultProps = {
     onClick: _.noop
 };
 
-function WorkflowsMenu({ workflows, onClick, popupMenuProps, showInPopup, trigger }) {
+export default function WorkflowsMenu({ workflows, onClick, popupMenuProps, showInPopup, trigger }) {
     const { Menu, Popup, PopupMenu } = Stage.Basic;
 
     const workflowsGroups = _.chain(workflows)
