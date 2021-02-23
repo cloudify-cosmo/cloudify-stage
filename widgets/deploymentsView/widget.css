@@ -3,7 +3,7 @@
     /* TODO(RD-1224): adjust states to match the API ones */
     --deployment-color-good: green;
     --deployment-color-in-progress: orange;
-    --deployment-color-failed: red;
+    --deployment-color-failure: red;
     --deployment-color-pending: blue;
 }
 
@@ -33,8 +33,8 @@
     background-color: var(--deployment-color-in-progress);
 }
 
-.deployment-progress-bar.failed {
-    background-color: var(--deployment-color-failed);
+.deployment-progress-bar.failure {
+    background-color: var(--deployment-color-failure);
 }
 
 .deployment-progress-bar.pending {
