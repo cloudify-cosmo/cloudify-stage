@@ -3,7 +3,7 @@ import LabelsTable from './LabelsTable';
 Stage.defineWidget({
     id: 'labels',
     name: 'Labels',
-    description: 'This widget shows list of defined labels',
+    description: 'This widget shows a list of defined labels',
     initialWidth: 12,
     initialHeight: 24,
     color: 'olive',
