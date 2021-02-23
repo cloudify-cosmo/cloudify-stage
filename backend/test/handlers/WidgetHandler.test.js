@@ -31,6 +31,7 @@ describe('WidgetHandler', () => {
             { id: 'filter', isCustom: false },
             { id: 'highAvailability', isCustom: false },
             { id: 'inputs', isCustom: false },
+            { id: 'labels', isCustom: false },
             { id: 'maintenanceModeButton', isCustom: false },
             { id: 'managers', isCustom: false },
             { id: 'nodes', isCustom: false },
