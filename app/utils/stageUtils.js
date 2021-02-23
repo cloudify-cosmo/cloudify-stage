@@ -29,7 +29,7 @@ export default class StageUtils {
     static parseMarkdown = marked;
 
     static saveAs(...args) {
-        saveAs(args);
+        saveAs(...args);
     }
 
     static makeCancelable(promise) {
