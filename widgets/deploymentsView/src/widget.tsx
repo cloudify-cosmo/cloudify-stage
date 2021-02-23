@@ -230,7 +230,7 @@ if (process.env.NODE_ENV === 'development') {
                                     <DataTable.Data
                                         className="deployment-progress-row-cell"
                                         // TODO: change to colSpan
-                                        rowSpan={fieldsToShow.length}
+                                        colSpan={fieldsToShow.length}
                                     >
                                         {progressUnderline}
                                     </DataTable.Data>
