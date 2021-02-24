@@ -91,25 +91,23 @@ export default function LabelsTable({ data, toolbox }) {
                     </DataTable.Row>
                 ))}
 
-                {data.deploymentId && (
-                    <DataTable.Action>
-                        {hasManagePermission && (
-                            <Button content="Add" icon="add" labelPosition="left" onClick={openAddModal} />
-                        )}
-                        <Button
-                            content="Export"
-                            icon="external share"
-                            labelPosition="left"
-                            onClick={() =>
-                                Stage.Utils.saveAs(
-                                    new Blob([JSON.stringify(labels)]),
-                                    `${data.deploymentId}-Labels.json`,
-                                    true
-                                )
-                            }
-                        />
-                    </DataTable.Action>
-                )}
+                <DataTable.Action>
+                    {hasManagePermission && (
+                        <Button content="Add" icon="add" labelPosition="left" onClick={openAddModal} />
+                    )}
+                    <Button
+                        content="Export"
+                        icon="external share"
+                        labelPosition="left"
+                        onClick={() =>
+                            Stage.Utils.saveAs(
+                                new Blob([JSON.stringify(labels)]),
+                                `${data.deploymentId}-Labels.json`,
+                                true
+                            )
+                        }
+                    />
+                </DataTable.Action>
             </DataTable>
 
             <ManageLabelsModal

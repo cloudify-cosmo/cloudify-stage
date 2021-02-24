@@ -13,8 +13,14 @@ Stage.defineWidget({
     permission: Stage.GenericConfig.WIDGET_PERMISSION('labels'),
     categories: [Stage.GenericConfig.CATEGORY.DEPLOYMENTS],
 
-    fetchData(widget, toolbox) {
-        const deploymentId = toolbox.getContext().getValue('deploymentId');
+    fetchParams(widget, toolbox) {
+        return {
+            deploymentId: toolbox.getContext().getValue('deploymentId')
+        };
+    },
+
+    fetchData(widget, toolbox, params) {
+        const { deploymentId } = params;
         if (deploymentId) {
             const { DeploymentActions } = Stage.Common;
             return new DeploymentActions(toolbox).doGetLabels(deploymentId);
@@ -29,9 +35,15 @@ Stage.defineWidget({
             return <Loading />;
         }
 
+        const deploymentId = toolbox.getContext().getValue('deploymentId');
+        if (!deploymentId) {
+            const { Message } = Stage.Basic;
+            return <Message info>No deployment selected</Message>;
+        }
+
         const formattedData = {
             items: data.map(item => _.pick(item, 'key', 'value')),
-            deploymentId: toolbox.getContext().getValue('deploymentId')
+            deploymentId
         };
 
         return <LabelsTable data={formattedData} toolbox={toolbox} />;
