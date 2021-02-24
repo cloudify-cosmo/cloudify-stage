@@ -1,128 +1,5 @@
-import { mapValues, startCase } from 'lodash';
-import { ReactNode } from 'react';
-import { SemanticICONS } from 'semantic-ui-react';
-
-// NOTE: the order in the array determines the order in the UI
-const deploymentsViewColumnIds = [
-    'status',
-    'name',
-    'blueprintName',
-    'environmentType',
-    'location',
-    'subenvironmentsCount',
-    'subservicesCount'
-] as const;
-
-type DeploymentsViewColumnId = typeof deploymentsViewColumnIds[number];
-
-interface ColumnDefinition {
-    name: string;
-    /** Displayed in the table header */
-    label: ReactNode;
-    /** The name of the backend field to sort by */
-    sortFieldName?: string;
-    width?: string;
-    tooltip?: ReactNode;
-    render(deployment: any): ReactNode;
-}
-
-type WithOptionalProperties<T, OptionalProperties extends keyof T> = Omit<T, OptionalProperties> &
-    Partial<Pick<T, OptionalProperties>>;
-
-const namelessDeploymentsViewColumnDefinitions: Record<
-    DeploymentsViewColumnId,
-    WithOptionalProperties<ColumnDefinition, 'name' | 'label'>
-> = {
-    status: {
-        name: '',
-        width: '20px',
-        render() {
-            const { Icon } = Stage.Basic;
-            // TODO(RD-1222): render icon based on status
-            const iconNames: SemanticICONS[] = ['exclamation', 'pause', 'checkmark', 'spinner'];
-
-            return <Icon name={iconNames[Math.floor(Math.random() * iconNames.length)]} />;
-        }
-    },
-    name: {
-        sortFieldName: 'id',
-        render(deployment) {
-            return deployment.id;
-        }
-    },
-    blueprintName: {
-        sortFieldName: 'blueprint_id',
-        render(deployment) {
-            return deployment.blueprint_id;
-        }
-    },
-    environmentType: {
-        render(_deployment) {
-            // TODO(RD-1224): add rendering correct environment type
-            return 'Environment Type';
-        }
-    },
-    location: {
-        sortFieldName: 'site_name',
-        render(deployment) {
-            return deployment.site_name;
-        }
-    },
-    subenvironmentsCount: {
-        name: 'Subenvironments',
-        // eslint-disable-next-line react/jsx-no-undef
-        label: <Stage.Basic.Icon name="object group" />,
-        width: '5%',
-        tooltip: 'Sub-environments (Total)',
-        render() {
-            // TODO(RD-1224): display correct number of subenvironments
-            return '0';
-        }
-    },
-    subservicesCount: {
-        name: 'Subservices',
-        // eslint-disable-next-line react/jsx-no-undef
-        label: <Stage.Basic.Icon name="cube" />,
-        width: '5%',
-        tooltip: 'Services (Total)',
-        render() {
-            // TODO(RD-1224): display correct number of subservices
-            return '0';
-        }
-    }
-};
-
-const deploymentsViewColumnDefinitions: Record<DeploymentsViewColumnId, ColumnDefinition> = mapValues(
-    namelessDeploymentsViewColumnDefinitions,
-    (columnDefinition, columnId) => {
-        const name = columnDefinition.name ?? startCase(columnId);
-        const label = columnDefinition.label ?? name;
-
-        return {
-            ...columnDefinition,
-            name,
-            label
-        };
-    }
-);
-
-function getDeploymentProgressUnderline(deployment: any): ReactNode {
-    if (deployment.id === 'hello') {
-        // TODO(RD-1224): adjust states to match the ones returned from API
-        const deploymentStates = ['in-progress', 'pending', 'failure'];
-        // NOTE: random state for now
-        const state = deploymentStates[Math.floor(Math.random() * deploymentStates.length)];
-
-        return (
-            <div
-                style={{ width: `${50 + Math.random() * 50}%` }}
-                className={Stage.Utils.combineClassNames(['deployment-progress-bar', state])}
-            />
-        );
-    }
-
-    return null;
-}
+import { deploymentsViewColumnDefinitions, DeploymentsViewColumnId, deploymentsViewColumnIds } from './columns';
+import renderDeploymentRow from './renderDeploymentRow';
 
 interface GridParams {
     _offset: number;
@@ -218,8 +95,6 @@ if (process.env.NODE_ENV === 'development') {
                 return <Loading />;
             }
 
-            const selectedDeploymentId = toolbox.getContext().getValue('deploymentId');
-
             return (
                 <DataTable fetchData={toolbox.refresh} pageSize={pageSize} selectable sizeMultiplier={20}>
                     {deploymentsViewColumnIds.map(columnId => {
@@ -231,37 +106,13 @@ if (process.env.NODE_ENV === 'development') {
                                 label={columnDefinition.label}
                                 width={columnDefinition.width}
                                 tooltip={columnDefinition.tooltip}
-                                show={fieldsToShow.indexOf(columnId) !== -1}
+                                show={fieldsToShow.includes(columnId)}
                             />
                         );
                     })}
 
                     {/* TODO(RD-1224): add type for deployment */}
-                    {data.items.flatMap((deployment: any) => {
-                        const progressUnderline = getDeploymentProgressUnderline(deployment);
-                        return [
-                            <DataTable.Row
-                                key={deployment.id}
-                                className={progressUnderline ? undefined : 'deployment-progressless-row'}
-                                selected={deployment.id === selectedDeploymentId}
-                                onClick={() => toolbox.getContext().setValue('deploymentId', deployment.id)}
-                            >
-                                {Object.values(deploymentsViewColumnDefinitions).map(columnDefinition => (
-                                    <DataTable.Data>{columnDefinition.render(deployment)}</DataTable.Data>
-                                ))}
-                            </DataTable.Row>,
-                            progressUnderline && (
-                                <DataTable.Row key={`${deployment.id}-progress`} className="deployment-progress-row">
-                                    <DataTable.Data
-                                        className="deployment-progress-row-cell"
-                                        colSpan={fieldsToShow.length}
-                                    >
-                                        {progressUnderline}
-                                    </DataTable.Data>
-                                </DataTable.Row>
-                            )
-                        ].filter(Boolean);
-                    })}
+                    {data.items.flatMap(renderDeploymentRow(toolbox, fieldsToShow))}
                 </DataTable>
             );
         }
