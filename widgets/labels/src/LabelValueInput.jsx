@@ -1,4 +1,4 @@
-export default function LabelValueInput({ initialValue, onCancel, onSubmit }) {
+export default function LabelValueInput({ initialValue, onCancel, onChange, onSubmit }) {
     const { Form } = Stage.Basic;
     const { RevertToDefaultIcon } = Stage.Common;
     const { useInput } = Stage.Hooks;
@@ -9,15 +9,18 @@ export default function LabelValueInput({ initialValue, onCancel, onSubmit }) {
         <Form.Input
             className="labelValueEditInput"
             autoFocus
+            focus
             fluid
-            style={{ padding: 0 }}
+            style={{ padding: 0, marginLeft: -5, marginRight: -5 }}
             value={currentLabelValue}
-            onBlur={() => onSubmit(currentLabelValue)}
             onKeyDown={e => {
                 if (e.key === 'Escape') onCancel();
                 else if (e.key === 'Enter') onSubmit(currentLabelValue);
             }}
-            onChange={setCurrentLabelValue}
+            onChange={(e, { value }) => {
+                setCurrentLabelValue(value);
+                onChange(value);
+            }}
             icon={
                 <RevertToDefaultIcon
                     value={currentLabelValue}
@@ -36,5 +39,6 @@ export default function LabelValueInput({ initialValue, onCancel, onSubmit }) {
 LabelValueInput.propTypes = {
     initialValue: PropTypes.string.isRequired,
     onCancel: PropTypes.func.isRequired,
+    onChange: PropTypes.func.isRequired,
     onSubmit: PropTypes.func.isRequired
 };

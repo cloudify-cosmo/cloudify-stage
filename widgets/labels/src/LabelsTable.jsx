@@ -4,10 +4,11 @@ import LabelValueInput from './LabelValueInput';
 export default function LabelsTable({ data, toolbox }) {
     const { Button, Confirm, DataTable, Icon, Label } = Stage.Basic;
     const { DeploymentActions, ManageLabelsModal } = Stage.Common;
-    const { useBoolean, useResettableState } = Stage.Hooks;
+    const { useBoolean, useInput, useResettableState } = Stage.Hooks;
 
     const [isAddModalOpen, openAddModal, closeAddModal] = useBoolean();
     const [labelInEdit, setLabelInEdit, stopLabelEdit] = useResettableState();
+    const [currentLabelValue, setCurrentLabelValue] = useInput('');
     const [labelToDelete, setLabelToDelete, unsetLabelToDelete] = useResettableState();
     const [labels, setLabels] = useState(data.items);
 
@@ -15,17 +16,17 @@ export default function LabelsTable({ data, toolbox }) {
 
     useEffect(() => setLabels(data.items), [JSON.stringify(data.items)]);
 
-    function updateLabelValue(value) {
-        if (!value) return;
+    function updateLabelValue() {
+        if (!currentLabelValue) return;
 
-        if (value === labelInEdit.value) {
+        if (currentLabelValue === labelInEdit.value) {
             stopLabelEdit();
             return;
         }
 
-        if (_.find(labels, { ...labelInEdit, value })) return;
+        if (_.find(labels, { ...labelInEdit, value: currentLabelValue })) return;
 
-        labelInEdit.value = value;
+        labelInEdit.value = currentLabelValue;
         setLabels([...labels]);
         stopLabelEdit();
         actions.doSetLabels(data.deploymentId, labels);
@@ -52,20 +53,24 @@ export default function LabelsTable({ data, toolbox }) {
                                 <LabelValueInput
                                     initialValue={item.value}
                                     onCancel={stopLabelEdit}
+                                    onChange={setCurrentLabelValue}
                                     onSubmit={updateLabelValue}
                                 />
                             ) : (
                                 item.value
                             )}
                         </DataTable.Data>
-                        {hasManagePermission && (
+                        {hasManagePermission && !_.isEqual(item, labelInEdit) && (
                             <DataTable.Data>
                                 <Icon
                                     name="edit"
                                     link
                                     bordered
                                     title="Edit label"
-                                    onClick={() => setLabelInEdit(item)}
+                                    onClick={() => {
+                                        setLabelInEdit(item);
+                                        setCurrentLabelValue(item.value);
+                                    }}
                                 />
                                 <Icon
                                     name="trash"
@@ -74,6 +79,12 @@ export default function LabelsTable({ data, toolbox }) {
                                     title="Delete label"
                                     onClick={() => setLabelToDelete(item)}
                                 />
+                            </DataTable.Data>
+                        )}
+                        {_.isEqual(item, labelInEdit) && (
+                            <DataTable.Data>
+                                <Icon name="check" color="green" link bordered onClick={updateLabelValue} />
+                                <Icon name="cancel" color="red" link bordered onClick={stopLabelEdit} />
                             </DataTable.Data>
                         )}
                     </DataTable.Row>

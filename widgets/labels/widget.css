@@ -1,7 +1,5 @@
 .labelsWidget .labelValueEditInput input {
     padding: 4px;
-    position: relative;
-    left: -5px;
 }
 
 .labelsWidget .labelsTable {
