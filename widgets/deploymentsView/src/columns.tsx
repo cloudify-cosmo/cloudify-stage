@@ -72,7 +72,7 @@ const namelessDeploymentsViewColumnDefinitions: Record<
         name: 'Subenvironments',
         // eslint-disable-next-line react/jsx-no-undef
         label: <Stage.Basic.Icon name="object group" />,
-        width: '5%',
+        width: '1em',
         tooltip: 'Sub-environments (Total)',
         render() {
             // TODO(RD-1224): display correct number of subenvironments
@@ -83,7 +83,7 @@ const namelessDeploymentsViewColumnDefinitions: Record<
         name: 'Subservices',
         // eslint-disable-next-line react/jsx-no-undef
         label: <Stage.Basic.Icon name="cube" />,
-        width: '5%',
+        width: '1em',
         tooltip: 'Services (Total)',
         render() {
             // TODO(RD-1224): display correct number of subservices

@@ -96,6 +96,7 @@ if (process.env.NODE_ENV === 'development') {
                 return <Loading />;
             }
 
+            // TODO(RD-1224): add `noDataMessage`
             return (
                 <DataTable fetchData={toolbox.refresh} pageSize={pageSize} selectable sizeMultiplier={20}>
                     {deploymentsViewColumnIds.map(columnId => {
