@@ -37,14 +37,14 @@ export interface Toolbox {
     refresh(params?: any): void;
 }
 
-export interface Widget {
+export interface Widget<Configuration = Record<string, unknown>> {
     id: string;
     name: string;
     height: number;
     width: number;
     x: number;
     y: number;
-    configuration: Record<string, any>;
+    configuration: Configuration;
     definition: WidgetDefinition;
     drillDownPages: any[];
     maximized: boolean;
@@ -53,8 +53,12 @@ export interface Widget {
 /**
  * @see https://docs.cloudify.co/developer/writing_widgets/widget-definition/
  */
-export type WidgetDefinition<Params = any, Data = any> = CommonWidgetDefinition<Params, Data> &
-    (ReactWidgetDefinitionPart<Data> | HTMLWidgetDefinitionPart<Data>);
+export type WidgetDefinition<
+    Params = any,
+    Data = any,
+    Configuration = Record<string, unknown>
+> = CommonWidgetDefinition<Params, Data, Configuration> &
+    (ReactWidgetDefinitionPart<Data, Configuration> | HTMLWidgetDefinitionPart<Data, Configuration>);
 
 type ObjectKeys<T extends Record<string, any>> = T[keyof T];
 
@@ -75,7 +79,7 @@ export interface WidgetConfigurationDefinition {
     [key: string]: any;
 }
 
-interface CommonWidgetDefinition<Params, Data> {
+interface CommonWidgetDefinition<Params, Data, Configuration> {
     id: string;
     name: string;
     categories?: ObjectKeys<typeof GenericConfig['CATEGORY']>[];
@@ -84,7 +88,7 @@ interface CommonWidgetDefinition<Params, Data> {
     /** @see https://docs.cloudify.co/developer/writing_widgets/widget-definition/#fetchurl */
     fetchUrl?: string | Record<string, string>;
     /** @see https://docs.cloudify.co/developer/writing_widgets/widget-definition/#fetchparams-widget-toolbox */
-    fetchParams?: (widget: Widget, toolbox: Toolbox) => Params;
+    fetchParams?: (widget: Widget<Configuration>, toolbox: Toolbox) => Params;
     hasReadme?: boolean;
     hasStyle?: boolean;
     hasTemplate?: boolean;
@@ -100,7 +104,7 @@ interface CommonWidgetDefinition<Params, Data> {
 
     init?: () => void;
     /** @see https://docs.cloudify.co/developer/writing_widgets/widget-definition/#fetchdata-widget-toolbox-params */
-    fetchData?: (widget: Widget, toolbox: Toolbox, params: Params) => Promise<Data>;
+    fetchData?: (widget: Widget<Configuration>, toolbox: Toolbox, params: Params) => Promise<Data>;
 }
 
 /**
@@ -115,19 +119,24 @@ export function isEmptyWidgetData(data: unknown): data is Record<string, never> 
     );
 }
 
-type RenderCallback<Data, Output> = (widget: Widget, data: WidgetData<Data>, error: any, toolbox: Toolbox) => Output;
+type RenderCallback<Data, Output, Configuration> = (
+    widget: Widget<Configuration>,
+    data: WidgetData<Data>,
+    error: any,
+    toolbox: Toolbox
+) => Output;
 
-interface ReactWidgetDefinitionPart<Data> {
+interface ReactWidgetDefinitionPart<Data, Configuration> {
     isReact?: true;
-    render: RenderCallback<Data, ReactNode>;
+    render: RenderCallback<Data, ReactNode, Configuration>;
 }
 
-interface HTMLWidgetDefinitionPart<Data> {
+interface HTMLWidgetDefinitionPart<Data, Configuration> {
     isReact: false;
-    render: RenderCallback<Data, string>;
+    render: RenderCallback<Data, string, Configuration>;
 
     /** @see https://docs.cloudify.co/developer/writing_widgets/widget-definition/#postrender-container-widget-data-toolbox */
-    postRender?: (container: any, widget: Widget, data: WidgetData<Data>, toolbox: Toolbox) => void;
+    postRender?: (container: any, widget: Widget<Configuration>, data: WidgetData<Data>, toolbox: Toolbox) => void;
 }
 
 interface CommonOrPropTypeDefinition {
@@ -137,7 +146,9 @@ interface CommonOrPropTypeDefinition {
 
 export interface StageAPI {
     Basic: typeof BasicComponents;
-    defineWidget: <Params, Data>(widgetConfiguration: WidgetDefinition<Params, Data>) => void;
+    defineWidget: <Params, Data, Configuration>(
+        widgetDefinition: WidgetDefinition<Params, Data, Configuration>
+    ) => void;
     Shared: typeof SharedComponents;
     ComponentToHtmlString: (element: ReactNode) => string;
     GenericConfig: typeof GenericConfig;

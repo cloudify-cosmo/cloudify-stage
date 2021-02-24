@@ -13,7 +13,11 @@ interface WidgetData {
     };
 }
 
-Stage.defineWidget<unknown, WidgetData>({
+interface DeploymentNumWidgetConfiguration {
+    page: string;
+}
+
+Stage.defineWidget<unknown, WidgetData, DeploymentNumWidgetConfiguration>({
     id: 'deploymentNum',
     name: 'Number of deployments',
     description: 'Number of deployments',

@@ -130,15 +130,23 @@ interface GridParams {
     _sort: string;
 }
 
-// TODO: add a generic type for widget configuration
 interface DeploymentsResponse {
     items: any[];
     metadata: any;
 }
 
+interface DeploymentsViewWidgetConfiguration {
+    filterId?: string;
+    filterByParentDeployment: boolean;
+    fieldsToShow: DeploymentsViewColumnId[];
+    pageSize: number;
+    sortColumn: string;
+    sortAscending: string;
+}
+
 // TODO(RD-1224): remove environment check
 if (process.env.NODE_ENV === 'development') {
-    Stage.defineWidget<GridParams, DeploymentsResponse>({
+    Stage.defineWidget<GridParams, DeploymentsResponse, DeploymentsViewWidgetConfiguration>({
         id: 'deploymentsView',
         name: 'Deployments view',
         description: 'A complete deployments view – Deployment list, map view, and detailed deployment info',
