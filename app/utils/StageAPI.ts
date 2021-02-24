@@ -106,10 +106,13 @@ interface CommonWidgetDefinition<Params, Data> {
 /**
  * The empty object is the default value
  */
-type WidgetData<D> = D | Record<string, never> | undefined;
+export type WidgetData<D> = D | Record<string, never> | undefined;
 
-export function isEmptyWidgetData<D>(data: WidgetData<D>): data is Record<string, never> | undefined {
-    return data === undefined || Object.keys(data).length === 0;
+export function isEmptyWidgetData(data: unknown): data is Record<string, never> | undefined {
+    return (
+        data === undefined ||
+        (typeof data === 'object' && data !== null && !Array.isArray(data) && Object.keys(data).length === 0)
+    );
 }
 
 type RenderCallback<Data, Output> = (widget: Widget, data: WidgetData<Data>, error: any, toolbox: Toolbox) => Output;
