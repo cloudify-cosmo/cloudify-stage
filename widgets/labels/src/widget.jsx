@@ -34,7 +34,7 @@ Stage.defineWidget({
         }
 
         const formattedData = {
-            items: data,
+            items: data.map(item => _.pick(item, 'key', 'value')),
             deploymentId: toolbox.getContext().getValue('deploymentId')
         };
 
