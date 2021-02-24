@@ -1,3 +1,5 @@
+import { LabelsPropType } from './labels/LabelsList';
+
 function ManageLabelsModal({ deploymentId, existingLabels, header, open, onHide, toolbox }) {
     const { i18n } = Stage;
     const { ApproveButton, CancelButton, Form, Icon, Modal } = Stage.Basic;
@@ -84,7 +86,7 @@ function ManageLabelsModal({ deploymentId, existingLabels, header, open, onHide,
 
 ManageLabelsModal.propTypes = {
     deploymentId: PropTypes.string.isRequired,
-    existingLabels: PropTypes.arrayOf(),
+    existingLabels: LabelsPropType,
     header: PropTypes.string,
     open: PropTypes.bool.isRequired,
     onHide: PropTypes.func.isRequired,
