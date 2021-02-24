@@ -1,5 +1,6 @@
 import { deploymentsViewColumnDefinitions, DeploymentsViewColumnId, deploymentsViewColumnIds } from './columns';
 import renderDeploymentRow from './renderDeploymentRow';
+import './styles.scss';
 
 interface GridParams {
     _offset: number;
@@ -66,7 +67,7 @@ if (process.env.NODE_ENV === 'development') {
         ],
         isReact: true,
         hasReadme: true,
-        hasStyle: true,
+        hasStyle: false,
         permission: Stage.GenericConfig.WIDGET_PERMISSION('deploymentsView'),
 
         fetchData(_widget, toolbox, params: GridParams) {
