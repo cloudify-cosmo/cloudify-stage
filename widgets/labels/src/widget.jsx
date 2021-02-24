@@ -13,10 +13,6 @@ Stage.defineWidget({
     permission: Stage.GenericConfig.WIDGET_PERMISSION('labels'),
     categories: [Stage.GenericConfig.CATEGORY.DEPLOYMENTS],
 
-    fetchParams() {
-        return {};
-    },
-
     fetchData(widget, toolbox) {
         const deploymentId = toolbox.getContext().getValue('deploymentId');
         if (deploymentId) {
