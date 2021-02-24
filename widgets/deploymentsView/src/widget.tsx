@@ -17,9 +17,9 @@ type DeploymentsViewColumnId = typeof deploymentsViewColumnIds[number];
 
 interface ColumnDefinition {
     name: string;
-    /**
-     * The name of the backend field to sort by
-     */
+    /** Displayed in the table header */
+    label: ReactNode;
+    /** The name of the backend field to sort by */
     sortFieldName?: string;
     width?: string;
     tooltip?: ReactNode;
@@ -31,7 +31,7 @@ type WithOptionalProperties<T, OptionalProperties extends keyof T> = Omit<T, Opt
 
 const namelessDeploymentsViewColumnDefinitions: Record<
     DeploymentsViewColumnId,
-    WithOptionalProperties<ColumnDefinition, 'name'>
+    WithOptionalProperties<ColumnDefinition, 'name' | 'label'>
 > = {
     status: {
         name: '',
@@ -39,8 +39,7 @@ const namelessDeploymentsViewColumnDefinitions: Record<
         render() {
             const { Icon } = Stage.Basic;
             // TODO(RD-1222): render icon based on status
-            // TODO: add icon for "in-progress"
-            const iconNames: SemanticICONS[] = ['exclamation', 'pause', 'checkmark'];
+            const iconNames: SemanticICONS[] = ['exclamation', 'pause', 'checkmark', 'spinner'];
 
             return <Icon name={iconNames[Math.floor(Math.random() * iconNames.length)]} />;
         }
@@ -58,8 +57,9 @@ const namelessDeploymentsViewColumnDefinitions: Record<
         }
     },
     environmentType: {
-        render() {
-            return 'Environment Type (TODO)';
+        render(_deployment) {
+            // TODO(RD-1224): add rendering correct environment type
+            return 'Environment Type';
         }
     },
     location: {
@@ -69,31 +69,41 @@ const namelessDeploymentsViewColumnDefinitions: Record<
         }
     },
     subenvironmentsCount: {
-        // TODO: add icon
         name: 'Subenvironments',
+        // eslint-disable-next-line react/jsx-no-undef
+        label: <Stage.Basic.Icon name="object group" />,
         width: '5%',
         tooltip: 'Sub-environments (Total)',
         render() {
-            return '0 (TODO)';
+            // TODO(RD-1224): display correct number of subenvironments
+            return '0';
         }
     },
     subservicesCount: {
-        // TODO: add icon
         name: 'Subservices',
+        // eslint-disable-next-line react/jsx-no-undef
+        label: <Stage.Basic.Icon name="cube" />,
         width: '5%',
         tooltip: 'Services (Total)',
         render() {
-            return '0 (TODO)';
+            // TODO(RD-1224): display correct number of subservices
+            return '0';
         }
     }
 };
 
 const deploymentsViewColumnDefinitions: Record<DeploymentsViewColumnId, ColumnDefinition> = mapValues(
     namelessDeploymentsViewColumnDefinitions,
-    (columnDefinition, columnId) => ({
-        name: startCase(columnId),
-        ...columnDefinition
-    })
+    (columnDefinition, columnId) => {
+        const name = columnDefinition.name ?? startCase(columnId);
+        const label = columnDefinition.label ?? name;
+
+        return {
+            ...columnDefinition,
+            name,
+            label
+        };
+    }
 );
 
 function getDeploymentProgressUnderline(deployment: any): ReactNode {
@@ -172,8 +182,7 @@ if (process.env.NODE_ENV === 'development') {
         isReact: true,
         hasReadme: true,
         hasStyle: true,
-        // TODO: use a new permissions config
-        permission: Stage.GenericConfig.WIDGET_PERMISSION('deployments'),
+        permission: Stage.GenericConfig.WIDGET_PERMISSION('deploymentsView'),
 
         fetchData(_widget, toolbox, params: GridParams) {
             // TODO(RD-1224): add resolving `filterRules` if they are not fetched (after RD-377)
@@ -182,7 +191,7 @@ if (process.env.NODE_ENV === 'development') {
                 .doGet('/deployments', params)
                 .then((response: DeploymentsResponse) => {
                     const context = toolbox.getContext();
-                    // TODO: detect if deploymentId is not present in the current page and reset it.
+                    // TODO(RD-1224): detect if deploymentId is not present in the current page and reset it.
                     // Do that only if `fetchData` was called from `DataTable`. If it's just polling,
                     // then don't reset it (because user may be interacting with some other component)
                     if (context.getValue('deploymentId') === undefined && response.items.length > 0) {
@@ -211,7 +220,7 @@ if (process.env.NODE_ENV === 'development') {
                             <DataTable.Column
                                 key={columnId}
                                 name={columnDefinition.sortFieldName}
-                                label={columnDefinition.name}
+                                label={columnDefinition.label}
                                 width={columnDefinition.width}
                                 tooltip={columnDefinition.tooltip}
                                 show={fieldsToShow.indexOf(columnId) !== -1}
@@ -219,7 +228,7 @@ if (process.env.NODE_ENV === 'development') {
                         );
                     })}
 
-                    {/* TODO: add type for deployment */}
+                    {/* TODO(RD-1224): add type for deployment */}
                     {data.items.flatMap((deployment: any) => {
                         const progressUnderline = getDeploymentProgressUnderline(deployment);
                         return [
