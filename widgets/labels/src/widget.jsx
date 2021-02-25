@@ -42,7 +42,10 @@ Stage.defineWidget({
         }
 
         const formattedData = {
-            items: data.map(item => _.pick(item, 'key', 'value')),
+            items: _(data)
+                .map(item => _.pick(item, 'key', 'value'))
+                .sortBy('key')
+                .value(),
             deploymentId
         };
 
