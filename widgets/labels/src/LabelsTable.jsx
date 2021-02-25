@@ -12,11 +12,11 @@ export default function LabelsTable({ data, toolbox }) {
     const [labelInEdit, setLabelInEdit, stopLabelEdit] = useResettableState();
     const [currentLabelValue, setCurrentLabelValue] = useInput('');
     const [labelToDelete, setLabelToDelete, unsetLabelToDelete] = useResettableState();
-    const [labels, setLabels] = useState(data.items);
+    const [labels, setLabels] = useState(data.labels);
 
     const actions = new DeploymentActions(toolbox);
 
-    useEffect(() => setLabels(data.items), [JSON.stringify(data.items)]);
+    useEffect(() => setLabels(data.labels), [JSON.stringify(data.labels)]);
 
     function updateLabelValue() {
         if (!currentLabelValue) return;
@@ -126,7 +126,7 @@ export default function LabelsTable({ data, toolbox }) {
                 toolbox={toolbox}
                 deploymentId={data.deploymentId}
                 onHide={unsetLabelToDelete}
-                labels={data.items}
+                labels={data.labels}
                 labelToDelete={labelToDelete}
             />
         </>
@@ -136,7 +136,7 @@ export default function LabelsTable({ data, toolbox }) {
 LabelsTable.propTypes = {
     data: PropTypes.shape({
         deploymentId: PropTypes.string.isRequired,
-        items: PropTypes.arrayOf(PropTypes.object)
+        labels: PropTypes.arrayOf(PropTypes.object)
     }).isRequired,
     toolbox: Stage.PropTypes.Toolbox.isRequired
 };

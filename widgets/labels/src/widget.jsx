@@ -42,7 +42,7 @@ Stage.defineWidget({
         }
 
         const formattedData = {
-            items: _(data)
+            labels: _(data)
                 .map(item => _.pick(item, 'key', 'value'))
                 .sortBy('key')
                 .value(),
