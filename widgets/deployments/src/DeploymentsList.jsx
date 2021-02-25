@@ -94,7 +94,9 @@ export default class DeploymentsList extends React.Component {
         const NO_DATA_MESSAGE = 'There are no Deployments available. Click "Create deployment" to add deployments.';
         const { ErrorMessage } = Stage.Basic;
         const { DeploymentActionsModals, ExecuteDeploymentModal } = Stage.Common;
-        const showTableComponent = widget.configuration.displayStyle === 'table';
+
+        const { displayStyle, showExecutionStatusLabel } = widget.configuration;
+        const showTableComponent = displayStyle === 'table';
 
         const DeploymentsView = showTableComponent ? DeploymentsTable : DeploymentsSegment;
 
@@ -112,7 +114,7 @@ export default class DeploymentsList extends React.Component {
                     onError={this.setError}
                     onSetVisibility={this.setDeploymentVisibility}
                     noDataMessage={NO_DATA_MESSAGE}
-                    showExecutionStatusLabel={widget.configuration.showExecutionStatusLabel}
+                    showExecutionStatusLabel={showExecutionStatusLabel}
                     toolbox={toolbox}
                 />
                 {deploymentId && (
