@@ -31,7 +31,8 @@ export default function LabelsTable({ data, toolbox }) {
         labelInEdit.value = currentLabelValue;
         setLabels([...labels]);
         stopLabelEdit();
-        actions.doSetLabels(data.deploymentId, labels);
+        toolbox.loading(true);
+        actions.doSetLabels(data.deploymentId, labels).then(() => toolbox.loading(false));
     }
 
     function exportToJson() {
