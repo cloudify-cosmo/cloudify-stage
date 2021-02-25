@@ -31,14 +31,14 @@ Stage.defineWidget({
     render(widget, data, error, toolbox) {
         const { Loading } = Stage.Basic;
 
-        if (!Array.isArray(data)) {
-            return <Loading />;
-        }
-
         const deploymentId = toolbox.getContext().getValue('deploymentId');
         if (!deploymentId) {
             const { Message } = Stage.Basic;
             return <Message info>No deployment selected</Message>;
+        }
+
+        if (!Array.isArray(data)) {
+            return <Loading />;
         }
 
         const formattedData = {
