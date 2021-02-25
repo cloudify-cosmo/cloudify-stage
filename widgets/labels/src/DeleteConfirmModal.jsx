@@ -14,7 +14,7 @@ export default function DeleteConfirmModal({ deploymentId, labels, labelToDelete
                         deploymentId,
                         labels.filter(filteredItem => !_.isEqual(filteredItem, labelToDelete))
                     )
-                    .then(() => toolbox.refresh());
+                    .then(toolbox.refresh);
                 onHide();
             }}
             content={
