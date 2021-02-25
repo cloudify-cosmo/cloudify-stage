@@ -1,7 +1,3 @@
-/**
- * Created by jakub.niezgoda on 06/02/2019.
- */
-
 import moment, { MomentFormatSpecification, MomentInput } from 'moment';
 
 export default class TimeUtils {
