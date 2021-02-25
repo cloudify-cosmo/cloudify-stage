@@ -1,5 +1,5 @@
 import AddButton from './labels/AddButton';
-import LabelsList, { LabelsPropType } from './labels/LabelsList';
+import LabelsList from './labels/LabelsList';
 import KeyDropdown from './labels/KeyDropdown';
 import ValueDropdown from './labels/ValueDropdown';
 import { addSearchToUrl } from './labels/common';
@@ -106,7 +106,7 @@ export default function LabelsInput({ addMode, initialLabels, onChange, toolbox 
 
 LabelsInput.propTypes = {
     addMode: PropTypes.bool,
-    initialLabels: LabelsPropType,
+    initialLabels: Stage.PropTypes.Labels,
     onChange: PropTypes.func.isRequired,
     toolbox: Stage.PropTypes.Toolbox.isRequired
 };

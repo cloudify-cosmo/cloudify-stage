@@ -1,9 +1,10 @@
 import _ from 'lodash';
 import { useState, useEffect } from 'react';
 import LabelValueInput from './LabelValueInput';
+import DeleteConfirmModal from './DeleteConfirmModal';
 
 export default function LabelsTable({ data, toolbox }) {
-    const { Button, Confirm, DataTable, Icon, Label } = Stage.Basic;
+    const { Button, DataTable, Icon } = Stage.Basic;
     const { DeploymentActions, ManageLabelsModal } = Stage.Common;
     const { useBoolean, useInput, useResettableState } = Stage.Hooks;
 
@@ -122,27 +123,12 @@ export default function LabelsTable({ data, toolbox }) {
                 toolbox={toolbox}
             />
 
-            <Confirm
-                open={!!labelToDelete}
-                onCancel={unsetLabelToDelete}
-                onConfirm={() => {
-                    actions
-                        .doSetLabels(
-                            data.deploymentId,
-                            labels.filter(filteredItem => filteredItem !== labelToDelete)
-                        )
-                        .then(() => toolbox.refresh());
-                    unsetLabelToDelete();
-                }}
-                content={
-                    <div className="content">
-                        Are you sure you want to remove label &nbsp;
-                        <Label size="large">
-                            {labelToDelete?.key} <span style={{ fontWeight: 'lighter' }}>{labelToDelete?.value}</span>
-                        </Label>
-                        ?
-                    </div>
-                }
+            <DeleteConfirmModal
+                toolbox={toolbox}
+                deploymentId={data.deploymentId}
+                onHide={unsetLabelToDelete}
+                labels={data.items}
+                labelToDelete={labelToDelete}
             />
         </>
     );
