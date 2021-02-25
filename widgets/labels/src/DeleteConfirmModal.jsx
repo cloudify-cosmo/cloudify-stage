@@ -33,7 +33,9 @@ export default function DeleteConfirmModal({ deploymentId, labels, labelToDelete
 DeleteConfirmModal.propTypes = {
     deploymentId: PropTypes.string.isRequired,
     labels: Stage.PropTypes.Labels.isRequired,
-    labelToDelete: Stage.PropTypes.Label.isRequired,
+    labelToDelete: Stage.PropTypes.Label,
     onHide: PropTypes.func.isRequired,
     toolbox: Stage.PropTypes.Toolbox.isRequired
 };
+
+DeleteConfirmModal.defaultProps = { labelToDelete: null };
