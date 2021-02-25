@@ -1,4 +1,4 @@
-import { mapValues, startCase } from 'lodash';
+import { mapValues } from 'lodash';
 import type { ReactNode } from 'react';
 import type { SemanticICONS } from 'semantic-ui-react';
 
@@ -16,6 +16,7 @@ export const deploymentsViewColumnIds = [
 export type DeploymentsViewColumnId = typeof deploymentsViewColumnIds[number];
 
 export interface DeploymentsViewColumnDefinition {
+    /** Displayed in the configuration */
     name: string;
     /** Displayed in the table header */
     label: ReactNode;
@@ -29,12 +30,11 @@ export interface DeploymentsViewColumnDefinition {
 type WithOptionalProperties<T, OptionalProperties extends keyof T> = Omit<T, OptionalProperties> &
     Partial<Pick<T, OptionalProperties>>;
 
-const namelessDeploymentsViewColumnDefinitions: Record<
+const partialDeploymentsViewColumnDefinitions: Record<
     DeploymentsViewColumnId,
-    WithOptionalProperties<DeploymentsViewColumnDefinition, 'name' | 'label'>
+    Omit<WithOptionalProperties<DeploymentsViewColumnDefinition, 'label'>, 'name' | 'tooltip'>
 > = {
     status: {
-        name: '',
         width: '20px',
         render() {
             const { Icon } = Stage.Basic;
@@ -69,22 +69,18 @@ const namelessDeploymentsViewColumnDefinitions: Record<
         }
     },
     subenvironmentsCount: {
-        name: 'Subenvironments',
         // eslint-disable-next-line react/jsx-no-undef
         label: <Stage.Basic.Icon name="object group" />,
         width: '1em',
-        tooltip: 'Sub-environments (Total)',
         render() {
             // TODO(RD-1224): display correct number of subenvironments
             return '0';
         }
     },
     subservicesCount: {
-        name: 'Subservices',
         // eslint-disable-next-line react/jsx-no-undef
         label: <Stage.Basic.Icon name="cube" />,
         width: '1em',
-        tooltip: 'Services (Total)',
         render() {
             // TODO(RD-1224): display correct number of subservices
             return '0';
@@ -92,16 +88,23 @@ const namelessDeploymentsViewColumnDefinitions: Record<
     }
 };
 
+const i18nPrefix = 'widgets.deploymentsView.columns';
+
 export const deploymentsViewColumnDefinitions: Record<
     DeploymentsViewColumnId,
     DeploymentsViewColumnDefinition
-> = mapValues(namelessDeploymentsViewColumnDefinitions, (columnDefinition, columnId) => {
-    const name = columnDefinition.name ?? startCase(columnId);
-    const label = columnDefinition.label ?? name;
+> = mapValues(
+    partialDeploymentsViewColumnDefinitions,
+    (columnDefinition, columnId): DeploymentsViewColumnDefinition => {
+        const name = Stage.i18n.t(`${i18nPrefix}.${columnId}.name`);
+        const label = columnDefinition.label ?? name;
+        const tooltip: string | null = Stage.i18n.t(`${i18nPrefix}.${columnId}.tooltip`, { defaultValue: null });
 
-    return {
-        ...columnDefinition,
-        name,
-        label
-    };
-});
+        return {
+            ...columnDefinition,
+            name,
+            label,
+            tooltip
+        };
+    }
+);

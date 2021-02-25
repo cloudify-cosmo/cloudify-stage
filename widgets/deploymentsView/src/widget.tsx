@@ -22,12 +22,14 @@ interface DeploymentsViewWidgetConfiguration {
     sortAscending: string;
 }
 
+const i18nPrefix = 'widgets.deploymentsView';
+
 // TODO(RD-1224): remove environment check
 if (process.env.NODE_ENV === 'development') {
     Stage.defineWidget<GridParams, DeploymentsResponse, DeploymentsViewWidgetConfiguration>({
         id: 'deploymentsView',
-        name: 'Deployments view',
-        description: 'A complete deployments view – Deployment list, map view, and detailed deployment info',
+        name: Stage.i18n.t(`${i18nPrefix}.name`),
+        description: Stage.i18n.t(`${i18nPrefix}.description`),
         initialWidth: 12,
         initialHeight: 40,
         color: 'purple',
@@ -39,21 +41,20 @@ if (process.env.NODE_ENV === 'development') {
                 // TODO: Requires RD-377 to add support for filters
                 id: 'filterId',
                 type: Stage.Basic.GenericField.STRING_TYPE,
-                name: 'Name of the saved filter to apply'
+                name: Stage.i18n.t(`${i18nPrefix}.configuration.filterId.name`)
             },
             {
                 id: 'filterByParentDeployment',
                 type: Stage.Basic.GenericField.BOOLEAN_TYPE,
-                name: 'Filter by parent deployment',
-                description:
-                    'Only show deployments directly attached to the deployment selected on the previous page (when in drill-down).',
+                name: Stage.i18n.t(`${i18nPrefix}.configuration.filterByParentDeployment.name`),
+                description: Stage.i18n.t(`${i18nPrefix}.configuration.filterByParentDeployment.description`),
                 default: false
             },
             // TODO(RD-1225): add map configuration
             {
                 id: 'fieldsToShow',
-                name: 'List of fields to show in the table',
-                placeHolder: 'Select fields from the list',
+                name: Stage.i18n.t(`${i18nPrefix}.configuration.fieldsToShow.name`),
+                placeHolder: Stage.i18n.t(`${i18nPrefix}.configuration.fieldsToShow.placeholder`),
                 items: deploymentsViewColumnIds.map(columnId => ({
                     name: deploymentsViewColumnDefinitions[columnId].name,
                     value: columnId
