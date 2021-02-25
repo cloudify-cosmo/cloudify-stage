@@ -102,7 +102,7 @@ AccordionWorkflowsMenu.defaultProps = {
     onClick: _.noop
 };
 
-export default function WorkflowsMenu({ workflows, onClick, showInPopup, trigger }) {
+function WorkflowsMenu({ workflows, onClick, showInPopup, trigger }) {
     const {
         Basic: { Menu, Popup, PopupMenu },
         i18n
