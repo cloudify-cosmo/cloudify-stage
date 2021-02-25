@@ -1,4 +1,4 @@
-function ManageLabelsModal({ deploymentId, existingLabels, header, open, onHide, toolbox }) {
+function ManageLabelsModal({ deploymentId, existingLabels, header, applyButtonContent, open, onHide, toolbox }) {
     const { i18n } = Stage;
     const { ApproveButton, CancelButton, Form, Icon, Modal } = Stage.Basic;
     const { DeploymentActions, LabelsInput } = Stage.Common;
@@ -74,7 +74,7 @@ function ManageLabelsModal({ deploymentId, existingLabels, header, open, onHide,
                 <ApproveButton
                     onClick={onApply}
                     disabled={isLoading}
-                    content={i18n.t('widgets.common.labels.modalApplyButton')}
+                    content={applyButtonContent || i18n.t('widgets.common.labels.modalApplyButton')}
                     color="green"
                 />
             </Modal.Actions>
@@ -83,6 +83,7 @@ function ManageLabelsModal({ deploymentId, existingLabels, header, open, onHide,
 }
 
 ManageLabelsModal.propTypes = {
+    applyButtonContent: PropTypes.string,
     deploymentId: PropTypes.string.isRequired,
     existingLabels: Stage.PropTypes.Labels,
     header: PropTypes.string,
@@ -92,6 +93,7 @@ ManageLabelsModal.propTypes = {
 };
 
 ManageLabelsModal.defaultProps = {
+    applyButtonContent: null,
     existingLabels: null,
     header: null
 };

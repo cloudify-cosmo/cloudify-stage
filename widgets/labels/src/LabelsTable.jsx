@@ -113,6 +113,7 @@ export default function LabelsTable({ data, toolbox }) {
                 deploymentId={data.deploymentId}
                 existingLabels={labels}
                 header={`Add labels for deployment '${data.deploymentId}'`}
+                applyButtonContent="Add"
                 open={isAddModalOpen}
                 onHide={() => {
                     closeAddModal();
