@@ -34,6 +34,14 @@ export default function LabelsTable({ data, toolbox }) {
         actions.doSetLabels(data.deploymentId, labels);
     }
 
+    function exportToJson() {
+        Stage.Utils.saveAs(
+            new Blob([JSON.stringify(labels.map(({ key, value }) => ({ [key]: value })))]),
+            `${data.deploymentId}-Labels.json`,
+            true
+        );
+    }
+
     const hasManagePermission = Stage.Utils.isUserAuthorized('deployment_create', toolbox.getManagerState());
 
     return (
@@ -96,18 +104,7 @@ export default function LabelsTable({ data, toolbox }) {
                     {hasManagePermission && (
                         <Button content="Add" icon="add" labelPosition="left" onClick={openAddModal} />
                     )}
-                    <Button
-                        content="Export"
-                        icon="external share"
-                        labelPosition="left"
-                        onClick={() =>
-                            Stage.Utils.saveAs(
-                                new Blob([JSON.stringify(labels)]),
-                                `${data.deploymentId}-Labels.json`,
-                                true
-                            )
-                        }
-                    />
+                    <Button content="Export" icon="external share" labelPosition="left" onClick={exportToJson} />
                 </DataTable.Action>
             </DataTable>
 
