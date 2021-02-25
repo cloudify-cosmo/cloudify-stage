@@ -1,38 +1,38 @@
 export default function LabelValueInput({ initialValue, onCancel, onChange, onSubmit }) {
     const { Form } = Stage.Basic;
-    const { RevertToDefaultIcon } = Stage.Common;
-    const { useInput } = Stage.Hooks;
+    const { LabelValidationErrorPopup, RevertToDefaultIcon } = Stage.Common;
+    const { useLabelInput } = Stage.Hooks;
 
-    const [currentLabelValue, setCurrentLabelValue] = useInput(initialValue);
+    const { inputValue, isInvalidCharacterTyped, submitChange, resetInput } = useLabelInput(onChange, initialValue);
 
     return (
-        <Form.Input
-            className="labelValueEditInput"
-            autoFocus
-            focus
-            fluid
-            style={{ padding: 0, marginLeft: -5, marginRight: -5 }}
-            value={currentLabelValue}
-            onKeyDown={e => {
-                if (e.key === 'Escape') onCancel();
-                else if (e.key === 'Enter') onSubmit(currentLabelValue);
-            }}
-            onChange={(e, { value }) => {
-                setCurrentLabelValue(value);
-                onChange(value);
-            }}
-            icon={
-                <RevertToDefaultIcon
-                    value={currentLabelValue}
-                    defaultValue={initialValue}
-                    popupContent="Revert to initial value"
-                    onMouseDown={e => {
-                        e.preventDefault();
-                        setCurrentLabelValue(initialValue);
-                    }}
-                />
-            }
-        />
+        <>
+            <LabelValidationErrorPopup open={isInvalidCharacterTyped} />
+            <Form.Input
+                className="labelValueEditInput"
+                autoFocus
+                focus
+                fluid
+                style={{ padding: 0, marginLeft: -5, marginRight: -5 }}
+                value={inputValue}
+                onKeyDown={e => {
+                    if (e.key === 'Escape') onCancel();
+                    else if (e.key === 'Enter') onSubmit(inputValue);
+                }}
+                onChange={submitChange}
+                icon={
+                    <RevertToDefaultIcon
+                        value={inputValue}
+                        defaultValue={initialValue}
+                        popupContent="Revert to initial value"
+                        onMouseDown={e => {
+                            e.preventDefault();
+                            resetInput();
+                        }}
+                    />
+                }
+            />
+        </>
     );
 }
 

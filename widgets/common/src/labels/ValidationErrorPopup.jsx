@@ -1,4 +1,4 @@
-export default function ValidationErrorPopup({ open }) {
+function ValidationErrorPopup({ open }) {
     const {
         Basic: { Popup },
         i18n
@@ -19,3 +19,8 @@ export default function ValidationErrorPopup({ open }) {
 ValidationErrorPopup.propTypes = {
     open: PropTypes.bool.isRequired
 };
+
+Stage.defineCommon({
+    name: 'LabelValidationErrorPopup',
+    common: ValidationErrorPopup
+});
