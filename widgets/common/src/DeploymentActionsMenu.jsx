@@ -22,7 +22,8 @@ const menuItems = [
 export default function DeploymentActionsMenu({ onActionClick, toolbox, trigger }) {
     const {
         Basic: { Menu, Popup, PopupMenu },
-        Utils: { isUserAuthorized }
+        Utils: { isUserAuthorized },
+        i18n
     } = Stage;
 
     const managerState = toolbox.getManagerState();
@@ -32,13 +33,17 @@ export default function DeploymentActionsMenu({ onActionClick, toolbox, trigger 
         content: translate(item.name),
         disabled: !isUserAuthorized(item.permission, managerState)
     }));
+    const popupMenuProps = !trigger
+        ? { bordered: true, help: i18n.t('widgets.common.deployments.actionsMenu.tooltip'), offset: [0, 5] }
+        : {};
 
     function onItemClick(event, { name }) {
         onActionClick(name);
     }
 
     return (
-        <PopupMenu className="deploymentActionsMenu">
+        // eslint-disable-next-line react/jsx-props-no-spreading
+        <PopupMenu className="deploymentActionsMenu" {...popupMenuProps}>
             {trigger && <Popup.Trigger>{trigger}</Popup.Trigger>}
             <Menu pointing vertical onItemClick={onItemClick} items={items} />
         </PopupMenu>

@@ -102,8 +102,11 @@ AccordionWorkflowsMenu.defaultProps = {
     onClick: _.noop
 };
 
-export default function WorkflowsMenu({ workflows, onClick, popupMenuProps, showInPopup, trigger }) {
-    const { Menu, Popup, PopupMenu } = Stage.Basic;
+export default function WorkflowsMenu({ workflows, onClick, showInPopup, trigger }) {
+    const {
+        Basic: { Menu, Popup, PopupMenu },
+        i18n
+    } = Stage;
 
     const workflowsGroups = _.chain(workflows)
         .groupBy('plugin')
@@ -111,15 +114,19 @@ export default function WorkflowsMenu({ workflows, onClick, popupMenuProps, show
         .sortBy('name')
         .value();
     const showOnlyDefaultWorkflows = _.size(workflowsGroups) === 1;
+    const popupMenuProps = !trigger
+        ? {
+              bordered: true,
+              icon: 'cogs',
+              help: i18n.t('widgets.common.deployments.workflowsMenu.tooltip'),
+              offset: [0, 5]
+          }
+        : {};
 
     if (showInPopup) {
         return (
-            <PopupMenu
-                className="workflowAction"
-                icon={popupMenuProps.icon}
-                help={popupMenuProps.help}
-                bordered={popupMenuProps.bordered}
-            >
+            // eslint-disable-next-line react/jsx-props-no-spreading
+            <PopupMenu className="workflowAction" {...popupMenuProps}>
                 {!!trigger && <Popup.Trigger>{trigger}</Popup.Trigger>}
 
                 {showOnlyDefaultWorkflows ? (
@@ -143,7 +150,6 @@ export default function WorkflowsMenu({ workflows, onClick, popupMenuProps, show
 WorkflowsMenu.propTypes = {
     workflows: WorkflowsPropType.isRequired,
     onClick: PropTypes.func,
-    popupMenuProps: PropTypes.shape({ icon: PropTypes.string, help: PropTypes.string, bordered: PropTypes.bool }),
     showInPopup: PropTypes.bool,
     trigger: PropTypes.element
 };
@@ -151,7 +157,6 @@ WorkflowsMenu.propTypes = {
 WorkflowsMenu.defaultProps = {
     onClick: _.noop,
     showInPopup: true,
-    popupMenuProps: {},
     trigger: null
 };
 

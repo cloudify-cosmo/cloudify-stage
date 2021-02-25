@@ -3,11 +3,7 @@ export default function ActionsMenus({ deploymentId, onDeploymentAction, onWorkf
 
     return (
         <>
-            <WorkflowsMenu
-                workflows={workflows}
-                popupMenuProps={{ icon: 'cogs' }}
-                onClick={workflow => onWorkflowAction(deploymentId, workflow.name)}
-            />
+            <WorkflowsMenu workflows={workflows} onClick={workflow => onWorkflowAction(deploymentId, workflow.name)} />
             <DeploymentActionsMenu
                 onActionClick={actionName => onDeploymentAction(deploymentId, actionName)}
                 toolbox={toolbox}
