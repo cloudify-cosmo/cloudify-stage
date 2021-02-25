@@ -14,19 +14,13 @@ export default function DeploymentActionsModals({ activeAction, deploymentId, on
 
     const commonProps = { deploymentId, open: true, onHide, toolbox };
 
-    let workflowName = '';
-    if (activeAction === actions.install) {
-        workflowName = 'install';
-    } else if (activeAction === actions.uninstall) {
-        workflowName = 'uninstall';
-    }
-
     switch (activeAction) {
         case actions.manageLabels:
             return <ManageLabelsModal {...commonProps} />;
         case actions.install:
+            return <ExecuteDeploymentModal {...commonProps} workflow="install" />;
         case actions.uninstall:
-            return <ExecuteDeploymentModal {...commonProps} workflow={workflowName} />;
+            return <ExecuteDeploymentModal {...commonProps} workflow="uninstall" />;
         case actions.update:
             return <UpdateDeploymentModal {...commonProps} />;
         case actions.delete:
