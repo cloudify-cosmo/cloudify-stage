@@ -12,7 +12,6 @@ declare global {
 type Label = {
     [key: string]: string | string[];
 };
-type Labels = Array<Label>;
 
 const commands = {
     getDeployment: (deploymentId: string) => cy.cfyRequest(`/deployments/${deploymentId}`, 'GET'),
@@ -31,7 +30,7 @@ const commands = {
             siteName !== '' ? { site_name: siteName } : { detach_site: true }
         );
     },
-    setLabels: (deploymentId: string, labels: Labels) => {
+    setLabels: (deploymentId: string, labels: Label[]) => {
         cy.cfyRequest(`/deployments/${deploymentId}`, 'PATCH', null, { labels });
     },
     deleteDeployment: (deploymentId: string, force = false) => {
