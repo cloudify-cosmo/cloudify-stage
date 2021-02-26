@@ -12,10 +12,16 @@ describe('Deployments widget', () => {
             cy.get('.input.loading').should('not.exist');
         });
 
-    const actOnDeployment = (name, action) => {
-        searchForDeployment(name);
-        cy.contains('div.row', name).find('.deploymentActionsMenu').click();
+    const selectActionFromMenu = (deploymentId, menuClassName, action) => {
+        searchForDeployment(deploymentId);
+        cy.contains('div.row', deploymentId).find(menuClassName).click();
         cy.get('.popupMenu > .menu').contains(action).click();
+    };
+    const actOnDeployment = (name, action) => {
+        selectActionFromMenu(name, '.deploymentActionsMenu', action);
+    };
+    const executeWorkflow = (name, workflow) => {
+        selectActionFromMenu(name, '.workflowsMenu', workflow);
     };
 
     before(() => {
@@ -26,7 +32,7 @@ describe('Deployments widget', () => {
             .uploadBlueprint(blueprintUrl, blueprintName)
             .deployBlueprint(blueprintName, deploymentName, { webserver_port: 9123 })
             .createSite(site)
-            .usePageMock('deployments', { pollingTime: 5, clickToDrillDown: true })
+            .usePageMock('deployments', { pollingTime: 5, clickToDrillDown: true, showExecutionStatusLabel: false })
             .mockLogin();
     });
 
@@ -108,15 +114,36 @@ describe('Deployments widget', () => {
         });
     });
 
-    it('should allow to execute workflow', () => {
-        cy.interceptSp('POST', `/executions`).as('executeWorkflow');
+    describe('should allow to execute', () => {
+        beforeEach(() => {
+            cy.interceptSp('POST', `/executions`).as('executeWorkflow');
+        });
 
-        actOnDeployment(deploymentName, 'Install');
+        const verifyWorkflowIsStarted = () => {
+            cy.wait('@executeWorkflow');
+            cy.contains('div.row', deploymentName).find('.spinner.loading.icon').should('be.visible');
+        };
+        const waitUntilWorkflowIsFinished = () => {
+            const workflowExecutionTimeout = 20000;
+            cy.contains('div.row', deploymentName)
+                .find('.spinner.loading.icon', { timeout: workflowExecutionTimeout })
+                .should('not.exist');
+        };
+        const startAndVerifyWorkflowExecution = () => {
+            cy.get('.executeWorkflowModal button.ok').click();
+            verifyWorkflowIsStarted();
+            waitUntilWorkflowIsFinished();
+        };
 
-        cy.get('.executeWorkflowModal button.ok').click();
+        it('install workflow from deployment actions menu', () => {
+            actOnDeployment(deploymentName, 'Install');
+            startAndVerifyWorkflowExecution();
+        });
 
-        cy.wait('@executeWorkflow');
-        cy.contains('div.row', deploymentName).find('.spinner.loading.icon').should('be.visible');
+        it('any workflow from workflows menu', () => {
+            executeWorkflow(deploymentName, 'Restart');
+            startAndVerifyWorkflowExecution();
+        });
     });
 
     it('should allow to set site for deployment', () => {
@@ -165,6 +192,49 @@ describe('Deployments widget', () => {
             cy.get('div.column:nth-child(1) .spinner.loading.icon').should('be.visible');
             cy.get('div.column:nth-child(1) .green.checkmark.icon', { timeout: updateTimeout }).should('be.visible');
             cy.get('div.column:nth-child(3) h5:nth-child(2)').should('contain.text', 'Updated');
+        });
+    });
+
+    it('should allow to manage deployment labels', () => {
+        const labelKey = 'test-key';
+        const labelValue = 'test-value';
+
+        cy.setLabels(deploymentName, [{ a: 'b' }]);
+        cy.interceptSp('PATCH', `/deployments/${deploymentName}`).as('updateLabels');
+        cy.interceptSp('GET', `/deployments/${deploymentName}?_include=labels`).as('fetchLabels');
+        cy.interceptSp('GET', `/labels/deployments`).as('checkLabelPresence');
+
+        const typeInput = (name, value) => {
+            cy.get(`div[name=${name}]`).click();
+            cy.get(`div[name=${name}] input`).type(value);
+        };
+        actOnDeployment(deploymentName, 'Manage Labels');
+        cy.get('.modal').within(() => {
+            cy.wait('@fetchLabels');
+            cy.get('form.loading').should('not.exist');
+
+            cy.get('.segment.dropdown').click();
+            typeInput('labelKey', labelKey);
+            typeInput('labelValue', labelValue);
+            cy.get('button .add').click();
+
+            cy.wait('@checkLabelPresence');
+            cy.get('.blue.label').should('have.text', `${labelKey} ${labelValue}`);
+
+            cy.get('button.ok').click();
+        });
+        cy.wait('@updateLabels');
+
+        cy.getDeployment(deploymentName).then(response => {
+            const { labels } = response.body;
+            const verifyLabel = (index, key, value) => {
+                expect(labels[index]).to.have.property('key', key);
+                expect(labels[index]).to.have.property('value', value);
+            };
+
+            expect(labels).to.have.length(2);
+            verifyLabel(0, 'a', 'b');
+            verifyLabel(1, labelKey, labelValue);
         });
     });
 

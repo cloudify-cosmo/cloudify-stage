@@ -126,7 +126,7 @@ function WorkflowsMenu({ workflows, onClick, showInPopup, trigger }) {
     if (showInPopup) {
         return (
             // eslint-disable-next-line react/jsx-props-no-spreading
-            <PopupMenu className="workflowAction" {...popupMenuProps}>
+            <PopupMenu className="workflowsMenu" {...popupMenuProps}>
                 {!!trigger && <Popup.Trigger>{trigger}</Popup.Trigger>}
 
                 {showOnlyDefaultWorkflows ? (

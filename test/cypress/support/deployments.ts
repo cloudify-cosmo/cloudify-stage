@@ -9,6 +9,11 @@ declare global {
     }
 }
 
+type Label = {
+    [key: string]: string | string[];
+};
+type Labels = Array<Label>;
+
 const commands = {
     getDeployment: (deploymentId: string) => cy.cfyRequest(`/deployments/${deploymentId}`, 'GET'),
     deployBlueprint: (blueprintId: string, deploymentId: string, inputs = {}) => {
@@ -23,15 +28,11 @@ const commands = {
             `/deployments/${deploymentId}/set-site`,
             'POST',
             null,
-            siteName !== ''
-                ? {
-                      site_name: siteName,
-                      detach_site: false
-                  }
-                : {
-                      detach_site: true
-                  }
+            siteName !== '' ? { site_name: siteName } : { detach_site: true }
         );
+    },
+    setLabels: (deploymentId: string, labels: Labels) => {
+        cy.cfyRequest(`/deployments/${deploymentId}`, 'PATCH', null, { labels });
     },
     deleteDeployment: (deploymentId: string, force = false) => {
         cy.cfyRequest(`/deployments/${deploymentId}?force=${force}`, 'DELETE');
