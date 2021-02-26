@@ -13,7 +13,11 @@ describe('(Utils) StageAPI', () => {
             { description: 'an empty array', data: [], expectedResult: false },
             { description: 'an object with properties', data: { items: [] }, expectedResult: false },
             { description: 'undefined', data: undefined, expectedResult: true },
-            { description: 'null', data: null, expectedResult: false }
+            { description: 'null', data: null, expectedResult: false },
+            { description: 'false', data: false, expectedResult: false },
+            { description: 'true', data: true, expectedResult: false },
+            { description: '0', data: 0, expectedResult: false },
+            { description: 'an empty string', data: '', expectedResult: false }
         ];
 
         scenarios.forEach(({ data, description, expectedResult }) => {
