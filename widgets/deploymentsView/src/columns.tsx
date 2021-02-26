@@ -69,7 +69,6 @@ const partialDeploymentsViewColumnDefinitions: Record<
         }
     },
     subenvironmentsCount: {
-        // eslint-disable-next-line react/jsx-no-undef
         label: <Stage.Basic.Icon name="object group" />,
         width: '1em',
         render() {
@@ -78,7 +77,6 @@ const partialDeploymentsViewColumnDefinitions: Record<
         }
     },
     subservicesCount: {
-        // eslint-disable-next-line react/jsx-no-undef
         label: <Stage.Basic.Icon name="cube" />,
         width: '1em',
         render() {
