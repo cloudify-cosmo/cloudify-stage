@@ -41,6 +41,8 @@ function ManageLabelsModal({ deploymentId, open, onHide, toolbox }) {
         actions
             .doSetLabels(deploymentId, labels)
             .then(() => {
+                // State updates should be done before calling `onHide` to avoid React errors:
+                // "Warning: Can't perform a React state update on an unmounted component"
                 unsetLoading();
                 onHide();
             })

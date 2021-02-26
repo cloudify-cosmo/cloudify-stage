@@ -130,6 +130,8 @@ function UpdateDeploymentModal({ open, deploymentId, onHide, toolbox }) {
                 preview
             )
             .then(data => {
+                // State updates should be done before calling `onHide` to avoid React errors:
+                // "Warning: Can't perform a React state update on an unmounted component"
                 clearErrors();
                 unsetLoading();
                 if (preview) {

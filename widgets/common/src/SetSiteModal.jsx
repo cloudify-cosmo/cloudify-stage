@@ -41,6 +41,8 @@ function SetSiteModal({ deploymentId, onHide, open, toolbox }) {
         actions
             .doSetSite(deploymentId, siteName, detachSite)
             .then(() => {
+                // State updates should be done before calling `onHide` to avoid React errors:
+                // "Warning: Can't perform a React state update on an unmounted component"
                 clearErrors();
                 toolbox.getEventBus().trigger('deployments:refresh');
                 unsetLoading();
