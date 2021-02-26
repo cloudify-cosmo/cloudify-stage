@@ -17,11 +17,11 @@ describe('Deployments widget', () => {
         cy.contains('div.row', deploymentId).find(menuClassName).click();
         cy.get('.popupMenu > .menu').contains(action).click();
     };
-    const actOnDeployment = (name, action) => {
-        selectActionFromMenu(name, '.deploymentActionsMenu', action);
+    const executeDeploymentAction = (deploymentId, action) => {
+        selectActionFromMenu(deploymentId, '.deploymentActionsMenu', action);
     };
-    const executeWorkflow = (name, workflow) => {
-        selectActionFromMenu(name, '.workflowsMenu', workflow);
+    const executeWorkflow = (deploymentId, workflow) => {
+        selectActionFromMenu(deploymentId, '.workflowsMenu', workflow);
     };
 
     before(() => {
@@ -136,11 +136,11 @@ describe('Deployments widget', () => {
         };
 
         it('install workflow from deployment actions menu', () => {
-            actOnDeployment(deploymentName, 'Install');
+            executeDeploymentAction(deploymentName, 'Install');
             startAndVerifyWorkflowExecution();
         });
 
-        it('any workflow from workflows menu', () => {
+        it('a workflow from workflows menu', () => {
             executeWorkflow(deploymentName, 'Restart');
             startAndVerifyWorkflowExecution();
         });
@@ -149,7 +149,7 @@ describe('Deployments widget', () => {
     it('should allow to set site for deployment', () => {
         cy.interceptSp('POST', `/deployments/${deploymentName}/set-site`).as('setDeploymentSite');
 
-        actOnDeployment(deploymentName, 'Set Site');
+        executeDeploymentAction(deploymentName, 'Set Site');
 
         cy.get('.modal').within(() => {
             cy.get('div[name="siteName"]').click();
@@ -167,7 +167,7 @@ describe('Deployments widget', () => {
         cy.interceptSp('PUT', `/deployment-updates/${deploymentName}/update/initiate`).as('updateDeployment');
 
         cy.interceptSp('GET', RegExp(`/blueprints.*&state=uploaded`)).as('uploadedBlueprints');
-        actOnDeployment(deploymentName, 'Update');
+        executeDeploymentAction(deploymentName, 'Update');
 
         cy.get('.updateDeploymentModal').within(() => {
             cy.get('div[name=blueprintName]').click();
@@ -208,7 +208,7 @@ describe('Deployments widget', () => {
             cy.get(`div[name=${name}]`).click();
             cy.get(`div[name=${name}] input`).type(value);
         };
-        actOnDeployment(deploymentName, 'Manage Labels');
+        executeDeploymentAction(deploymentName, 'Manage Labels');
         cy.get('.modal').within(() => {
             cy.wait('@fetchLabels');
             cy.get('form.loading').should('not.exist');
@@ -243,7 +243,7 @@ describe('Deployments widget', () => {
         cy.deployBlueprint(blueprintName, testDeploymentName);
         cy.interceptSp('DELETE', `/deployments/${testDeploymentName}?force=true`).as('deleteDeployment');
 
-        actOnDeployment(testDeploymentName, 'Force Delete');
+        executeDeploymentAction(testDeploymentName, 'Force Delete');
 
         cy.get('.modal button.primary').click();
 
