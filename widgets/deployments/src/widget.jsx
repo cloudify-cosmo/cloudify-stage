@@ -114,7 +114,6 @@ Stage.defineWidget({
             return {
                 ...deploymentData,
                 items: _.map(deploymentData.items, item => {
-                    const workflows = Stage.Common.DeploymentUtils.filterWorkflows(_.sortBy(item.workflows, ['name']));
                     return {
                         ...item,
                         nodeInstancesCount: nodeInstanceData[item.id] ? nodeInstanceData[item.id].count : 0,
@@ -123,8 +122,7 @@ Stage.defineWidget({
                         updated_at: Stage.Utils.Time.formatTimestamp(item.updated_at),
                         isUpdated: !_.isEqual(item.created_at, item.updated_at),
                         executions: _.filter(executionsData[item.id], Stage.Utils.Execution.isActiveExecution),
-                        lastExecution: _.first(executionsData[item.id]),
-                        workflows
+                        lastExecution: _.first(executionsData[item.id])
                     };
                 }),
                 total: _.get(deploymentData, 'metadata.pagination.total', 0),

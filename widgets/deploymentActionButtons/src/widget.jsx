@@ -21,17 +21,14 @@ Stage.defineWidget({
 
     fetchData(widget, toolbox, { id }) {
         if (!_.isEmpty(id)) {
-            const { DeploymentActions, DeploymentUtils } = Stage.Common;
+            const { DeploymentActions } = Stage.Common;
             const actions = new DeploymentActions(toolbox);
 
             toolbox.loading(true);
 
             return actions
                 .doGet({ id }) // FIXME: Once RD-1353 is implemented, pass { _include: ['worflows'] } to doGet
-                .then(deployment => {
-                    const workflows = DeploymentUtils.filterWorkflows(_.sortBy(deployment.workflows, ['name']));
-                    return { id, workflows };
-                })
+                .then(deployment => ({ id, workflows: deployment.workflows }))
                 .finally(() => toolbox.loading(false));
         }
 
