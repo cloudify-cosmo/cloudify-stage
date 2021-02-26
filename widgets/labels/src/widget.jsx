@@ -13,6 +13,7 @@ Stage.defineWidget({
     permission: Stage.GenericConfig.WIDGET_PERMISSION('labels'),
     categories: [Stage.GenericConfig.CATEGORY.DEPLOYMENTS],
 
+    // ensures data refetch on deploymentId change
     fetchParams(widget, toolbox) {
         return {
             deploymentId: toolbox.getContext().getValue('deploymentId')
