@@ -19,9 +19,7 @@ Stage.defineWidget({
     hasReadme: true,
     permission: Stage.GenericConfig.WIDGET_PERMISSION('deploymentActionButtons'),
 
-    fetchData(widget, toolbox) {
-        const id = toolbox.getContext().getValue('deploymentId');
-
+    fetchData(widget, toolbox, { id }) {
         if (!_.isEmpty(id)) {
             const { DeploymentActions, DeploymentUtils } = Stage.Common;
             const actions = new DeploymentActions(toolbox);
@@ -42,8 +40,10 @@ Stage.defineWidget({
 
     fetchParams(widget, toolbox) {
         const deploymentId = toolbox.getContext().getValue('deploymentId');
+        // Deployment Actions Buttons widget does not support multiple actions, thus picking only one deploymentId
+        const firstDeploymentId = Array.isArray(deploymentId) ? deploymentId[0] : deploymentId;
 
-        return { deployment_id: deploymentId };
+        return { id: firstDeploymentId };
     },
 
     render(widget, data, error, toolbox) {
