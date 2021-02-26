@@ -9,6 +9,15 @@ import i18n from 'i18next';
 import SideBar from '../containers/SideBar';
 import Page from '../containers/Page';
 import ToursButton from '../containers/ToursButton';
+import QuickConfigurationModal from './QuickConfigurationModal';
+import quickConfigurationSchema from './QuickConfigurationModal/schema';
+
+const data = {
+    'AWS': {
+        aws_access_key_id: '123',
+        aws_secret_access_key: '321'
+    }
+};
 
 export default class Home extends Component {
     // TODO: Context handling should not be here. Currently necessary to use deprecated methods.
@@ -83,6 +92,8 @@ export default class Home extends Component {
                 <ToursButton />
 
                 <SideBar pageId={pageId} />
+
+                <QuickConfigurationModal open={true} step={1} schema={quickConfigurationSchema} data={data} />
 
                 <div className="page">
                     <div className="ui basic segment">
