@@ -45,6 +45,8 @@ export default function LabelsTable({ data, toolbox }) {
 
     const hasManagePermission = Stage.Utils.isUserAuthorized('deployment_create', toolbox.getManagerState());
 
+    const tdStyle = { textOverflow: 'ellipsis', overflow: 'hidden' };
+
     return (
         <>
             <DataTable
@@ -58,8 +60,8 @@ export default function LabelsTable({ data, toolbox }) {
 
                 {labels.map(item => (
                     <DataTable.Row key={`${item.key}:${item.value}`} onClick={null}>
-                        <DataTable.Data>{item.key}</DataTable.Data>
-                        <DataTable.Data>
+                        <DataTable.Data style={tdStyle}>{item.key}</DataTable.Data>
+                        <DataTable.Data style={tdStyle}>
                             {_.isEqual(item, labelInEdit) ? (
                                 <LabelValueInput
                                     initialValue={item.value}
