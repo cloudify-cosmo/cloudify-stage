@@ -5,8 +5,8 @@ export default function DeploymentActionButtons({ deployment, toolbox }) {
         Hooks: { useResettableState }
     } = Stage;
 
-    const [activeAction, setActiveAction, resetActiveAction] = useResettableState('');
-    const [workflow, setWorkflow, resetWorkflow] = useResettableState({});
+    const [activeAction, setActiveAction, resetActiveAction] = useResettableState(null);
+    const [workflow, setWorkflow, resetWorkflow] = useResettableState(null);
 
     const { id, workflows } = deployment;
 
@@ -42,7 +42,7 @@ export default function DeploymentActionButtons({ deployment, toolbox }) {
                 }
             />
 
-            {id && (
+            {id && workflow && (
                 <ExecuteDeploymentModal
                     open={!_.isEmpty(workflow)}
                     deploymentId={id}
@@ -52,7 +52,7 @@ export default function DeploymentActionButtons({ deployment, toolbox }) {
                 />
             )}
 
-            {id && (
+            {id && activeAction && (
                 <DeploymentActionsModals
                     activeAction={activeAction}
                     deploymentId={id}
