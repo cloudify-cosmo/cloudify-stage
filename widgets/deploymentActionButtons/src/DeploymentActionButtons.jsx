@@ -17,10 +17,9 @@ export default function DeploymentActionButtons({ deployment, toolbox }) {
                 dropdownDirection="right"
                 trigger={
                     <Button
-                        className="labeled icon"
+                        className="executeWorkflowButton labeled icon"
                         color="teal"
                         icon="cogs"
-                        id="executeWorkflowButton"
                         disabled={!id}
                         content="Execute workflow"
                     />
@@ -34,11 +33,11 @@ export default function DeploymentActionButtons({ deployment, toolbox }) {
                 toolbox={toolbox}
                 trigger={
                     <Button
-                        className="labeled icon"
+                        className="deploymentActionsButton labeled icon"
                         color="teal"
                         icon="content"
                         disabled={!id}
-                        content="Deployment Action"
+                        content="Deployment actions"
                     />
                 }
             />

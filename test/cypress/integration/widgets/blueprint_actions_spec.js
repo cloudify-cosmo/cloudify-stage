@@ -1,4 +1,4 @@
-describe('Blueprint Actions widget', () => {
+describe('Blueprint Action Buttons widget', () => {
     const blueprintName = 'blueprints_actions_test';
 
     before(() =>
