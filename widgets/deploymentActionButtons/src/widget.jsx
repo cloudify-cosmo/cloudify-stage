@@ -27,7 +27,7 @@ Stage.defineWidget({
             toolbox.loading(true);
 
             return actions
-                .doGet({ id }) // FIXME: Once RD-1353 is implemented, pass { _include: ['worflows'] } to doGet
+                .doGet({ id }) // TODO: Once RD-1353 is implemented, pass { _include: ['workflows'] } to doGet
                 .then(deployment => {
                     const workflows = DeploymentUtils.filterWorkflows(_.sortBy(deployment.workflows, ['name']));
                     return { id, workflows };
@@ -41,7 +41,7 @@ Stage.defineWidget({
     fetchParams(widget, toolbox) {
         const deploymentId = toolbox.getContext().getValue('deploymentId');
         // Deployment Actions Buttons widget does not support multiple actions, thus picking only one deploymentId
-        const firstDeploymentId = Array.isArray(deploymentId) ? deploymentId[0] : deploymentId;
+        const firstDeploymentId = _.castArray(deploymentId)[0];
 
         return { id: firstDeploymentId };
     },
