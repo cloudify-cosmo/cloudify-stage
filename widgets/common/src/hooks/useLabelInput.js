@@ -10,7 +10,7 @@ function useLabelInput(onChange, initialValue = '') {
         isInvalidCharacterTyped,
         submitChange: (event, data) => {
             // supports both dropdown as well as regular input
-            const lowercasedNewTypedValue = _.toLower(data.searchQuery ?? data.value);
+            const lowercasedNewTypedValue = _.toLower(data.searchQuery ?? data.value).substr(0, 256);
             if (lowercasedNewTypedValue === '' || allowedCharacters.test(lowercasedNewTypedValue)) {
                 setInputValue(lowercasedNewTypedValue);
                 onChange(lowercasedNewTypedValue);
