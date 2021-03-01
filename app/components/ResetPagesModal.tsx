@@ -1,39 +1,49 @@
-/**
- * Created by aleksander laktionow on 19/10/2017.
- */
 import _ from 'lodash';
 import log from 'loglevel';
-import PropTypes from 'prop-types';
 import React from 'react';
 import i18n from 'i18next';
+import { CheckboxProps } from 'semantic-ui-react';
+
 import { Modal, Icon, ApproveButton, CancelButton, Checkbox, List, Card, Confirm } from './basic';
 
-export default class ResetPagesModal extends React.Component {
-    static initialState = {
-        loading: false,
-        tenants: [],
-        errors: {}
+export interface ResetPagesModalProps {
+    onConfirm: (tenantsNamesToReset: string[]) => void;
+    onHide: () => void;
+    open: boolean;
+    tenants: {
+        items: { name: string }[];
     };
+}
 
-    constructor(props, context) {
-        super(props, context);
+interface ResetPagesModalState {
+    loading: boolean;
+    tenants: string[];
+}
 
-        this.state = ResetPagesModal.initialState;
-        this.state.tenants = props.tenants.items.map(entry => entry.name);
+export default class ResetPagesModal extends React.Component<ResetPagesModalProps, ResetPagesModalState> {
+    constructor(props: ResetPagesModalProps) {
+        super(props);
+
+        this.state = {
+            loading: false,
+            tenants: props.tenants.items.map(entry => entry.name)
+        };
     }
 
-    toggleCheckbox = (event, elem) => {
+    toggleCheckbox: CheckboxProps['onChange'] = (_event, elem) => {
         const { tenants } = this.state;
-        const clickedTenant = elem.name;
+        // NOTE: tenant names are always defined
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        const clickedTenant = elem.name!;
         let newTenants = [...tenants];
 
-        if (_.includes(tenants, clickedTenant)) {
-            newTenants = _.pull(newTenants, clickedTenant);
+        if (tenants.includes(clickedTenant)) {
+            newTenants = tenants.filter(tenant => tenant !== clickedTenant);
         } else {
             newTenants.push(clickedTenant);
         }
 
-        this.setState({ tenants: newTenants }, () => log.error(tenants));
+        this.setState({ tenants: newTenants }, () => log.debug('Updated tenants', tenants));
     };
 
     render() {
@@ -96,12 +106,3 @@ export default class ResetPagesModal extends React.Component {
         );
     }
 }
-
-ResetPagesModal.propTypes = {
-    onConfirm: PropTypes.func.isRequired,
-    onHide: PropTypes.func.isRequired,
-    open: PropTypes.bool.isRequired,
-    tenants: PropTypes.shape({
-        items: PropTypes.arrayOf(PropTypes.shape({ name: PropTypes.string }))
-    }).isRequired
-};
