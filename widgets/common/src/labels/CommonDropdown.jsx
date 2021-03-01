@@ -19,7 +19,7 @@ export default function CommonDropdown({ baseFetchUrl, onChange, toolbox, value,
 
     const [selectedValue, setSelectedValue, resetSelectedValue] = useResettableState('');
     const [fetchUrl, setFetchUrl] = useState(baseFetchUrl);
-    const { inputValue, isInvalidCharacterTyped, submitChange, resetInput, unsetInvalidCharacterTyped } = useLabelInput(
+    const { inputValue, invalidCharacterTyped, submitChange, resetInput, unsetInvalidCharacterTyped } = useLabelInput(
         newValue => {
             resetSelectedValue();
             onChange(newValue);
@@ -46,7 +46,7 @@ export default function CommonDropdown({ baseFetchUrl, onChange, toolbox, value,
 
     return (
         <>
-            <LabelValidationErrorPopup open={isInvalidCharacterTyped} />
+            <LabelValidationErrorPopup open={invalidCharacterTyped} />
 
             <DynamicDropdown
                 clearable={false}
