@@ -1,0 +1,41 @@
+/* TODO(RD-1224): adjust states to match the API ones */
+$deploymentStateColors: (
+    'good': green,
+    'in-progress': orange,
+    'failure': red,
+    'pending': blue
+);
+
+.deploymentsViewWidget {
+    --deployment-progress-underline-height: 0.14em;
+    // NOTE: use CSS custom properties to make user overrides easier
+    @each $stateName, $color in $deploymentStateColors {
+        --deployment-color-#{$stateName}: #{$color};
+    }
+
+    // NOTE: additional selectors added to increase specificity and allow overriding
+    .ui.table .deployment-progressless-row > td {
+        // NOTE: 0.4em is the default in the table
+        padding-bottom: calc(0.4em + var(--deployment-progress-underline-height));
+    }
+
+    .deployment-progress-row {
+        pointer-events: none;
+    }
+
+    // NOTE: additional selectors added to increase specificity and allow overriding
+    .ui.table .deployment-progress-row > td.deployment-progress-row-cell {
+        padding: 0;
+        border-top: 0;
+    }
+
+    .deployment-progress-bar {
+        height: var(--deployment-progress-underline-height);
+    }
+
+    @each $stateName, $color in $deploymentStateColors {
+        .deployment-progress-bar.#{$stateName} {
+            background-color: var(--deployment-color-#{$stateName});
+        }
+    }
+}
