@@ -1,9 +1,28 @@
+import { Reducer } from 'redux';
+
 import * as types from '../actions/types';
 import tenants from './tenantsReducer';
 import clusterStatus from './clusterStatusReducer';
 import license from './licenseReducer';
 
-export const emptyState = {
+export interface ManagerData {
+    auth: {
+        role: any;
+        groupSystemRoles: Record<string, any>;
+        tenantsRoles: Record<string, any>;
+    };
+    clusterStatus: Record<string, any>;
+    err: any;
+    isLoggingIn: boolean;
+    lastUpdated: any;
+    license: Record<string, any>;
+    permissions: Record<string, any>;
+    roles: any[];
+    tenants: Record<string, any>;
+    version: Record<string, any>;
+}
+
+export const emptyState: ManagerData = {
     auth: {
         role: null,
         groupSystemRoles: {},
@@ -20,7 +39,7 @@ export const emptyState = {
     version: {}
 };
 
-const manager = (state = emptyState, action) => {
+const manager: Reducer<ManagerData> = (state = emptyState, action) => {
     switch (action.type) {
         case types.REQ_LOGIN:
             return { ...state, isLoggingIn: true };
