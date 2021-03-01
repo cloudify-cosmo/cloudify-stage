@@ -57,7 +57,6 @@ router.get('/clear-pages', (req, res, next) => {
     db.UserApp.findOne({
         where: {
             managerIp: config.manager.ip,
-            username: req.user.username,
             mode: ServerSettings.settings.mode,
             tenant: req.query.tenant
         }
