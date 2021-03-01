@@ -1,7 +1,8 @@
 const schema = [
     {
-        name: 'AWS',
+        name: 'aws',
         logo: 'https://path/to/logo.svg',
+        label: 'AWS',
         plugins: ['', ''],
         secrets: [
             {
@@ -17,8 +18,9 @@ const schema = [
         ]
     },
     {
-        name: 'Terraform on AWS',
+        name: 'terraform_on_aws',
         logo: 'https://path/to/logo.svg',
+        label: 'Terraform on AWS',
         plugins: ['', ''],
         secrets: [
             {
@@ -34,8 +36,9 @@ const schema = [
         ]
     },
     {
-        name: 'Ansible on AWS',
+        name: 'ansible_on_aws',
         logo: 'https://path/to/logo.svg',
+        label: 'Ansible on AWS',
         plugins: ['', ''],
         secrets: [
             {
@@ -53,6 +56,7 @@ const schema = [
     {
         name: 'Azure',
         logo: 'https://path/to/logo.svg',
+        label: 'azure',
         plugins: ['', ''],
         secrets: [
             {
@@ -78,8 +82,9 @@ const schema = [
         ]
     },
     {
-        name: 'GCP',
+        name: 'gpc',
         logo: 'https://path/to/logo.svg',
+        label: 'GCP',
         plugins: ['', ''],
         secrets: [
             // "TODO": from https://alexmolev646772.invisionapp.com/console/Tech-Getting-Started-cklf31m3w03fc013o0agh3mf1/cklf31n0t01j90139cctpeypa/play
@@ -91,8 +96,9 @@ const schema = [
         ]
     },
     {
-        name: 'OpenStackV2',
+        name: 'openstack_v2',
         logo: 'https://path/to/logo.svg',
+        label: 'OpenStackV2',
         plugins: ['', ''],
         secrets: [
             {
@@ -123,8 +129,9 @@ const schema = [
         ]
     },
     {
-        name: 'OpenStackV3',
+        name: 'openstack_v3',
         logo: 'https://path/to/logo.svg',
+        label: 'OpenStackV3',
         plugins: ['', ''],
         secrets: [
             {
@@ -155,8 +162,9 @@ const schema = [
         ]
     },
     {
-        name: 'VCloud',
+        name: 'vcloud',
         logo: 'https://path/to/logo.svg',
+        label: 'VCloud',
         plugins: ['', ''],
         secrets: [
             {
@@ -192,8 +200,9 @@ const schema = [
         ]
     },
     {
-        name: 'VSphere',
+        name: 'vsphere',
         logo: 'https://path/to/logo.svg',
+        label: 'VSphere',
         plugins: ['', ''],
         secrets: [
             {

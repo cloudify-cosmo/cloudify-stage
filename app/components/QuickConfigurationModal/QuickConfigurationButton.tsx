@@ -5,6 +5,7 @@ import { JSONSchemaItem } from './model';
 type Props = {
     name: string;
     logo: string;
+    label: string;
     value?: boolean;
 };
 
@@ -17,7 +18,7 @@ const style: CSSProperties = {
     justifyContent: 'center'
 };
 
-const QuickConfigurationButton = memo(({ name, logo, value }: Props) => {
+const QuickConfigurationButton = memo(({ name, logo, label, value }: Props) => {
     const [localValue, setLocalValue] = useState(value);
     useEffect(() => setLocalValue(value), [value]);
     const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -35,7 +36,7 @@ const QuickConfigurationButton = memo(({ name, logo, value }: Props) => {
                 style={{ display: 'none' }}
                 onChange={handleChange}
             />
-            <img src={logo} alt={name} />
+            <img src={logo} alt={label} />
         </Form.Field>
     );
 });

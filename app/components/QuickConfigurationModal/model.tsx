@@ -7,6 +7,7 @@ export type JSONSchemaSecret = {
 export type JSONSchemaItem = {
     name: string;
     logo: string;
+    label: string;
     plugins: string[];
     secrets: JSONSchemaSecret[];
 };
