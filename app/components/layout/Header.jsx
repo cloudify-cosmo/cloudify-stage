@@ -81,7 +81,7 @@ export default class Header extends Component {
 
                 <ResetPagesModal
                     open={showResetPagesConfirm}
-                    tenants={manager.tenants}
+                    tenantNames={manager.tenants.items.map(tenant => tenant.name)}
                     onConfirm={tenantList => {
                         this.setState({ showResetPagesConfirm: false });
                         onResetPages(tenantList);

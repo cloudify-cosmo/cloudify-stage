@@ -10,14 +10,20 @@ export interface ResetPagesModalProps {
     onConfirm: (tenantsNamesToReset: string[]) => void;
     onHide: () => void;
     open: boolean;
-    tenants: {
-        items: { name: string }[];
-    };
+    tenantNames: string[];
 }
 
 interface ResetPagesModalState {
     loading: boolean;
-    tenants: string[];
+    /**
+     * NOTE: by storing the unselected tenant names, the newly added tenants will automatically
+     * appear as selected.
+     *
+     * This is compared to the solution of storing selected tenant names, in which newly added
+     * tenants will remain not selected, unless some non-trivial additional logic is added to add
+     * them automatically.
+     */
+    unselectedTenantNames: Set<string>;
 }
 
 export default class ResetPagesModal extends React.Component<ResetPagesModalProps, ResetPagesModalState> {
@@ -26,30 +32,41 @@ export default class ResetPagesModal extends React.Component<ResetPagesModalProp
 
         this.state = {
             loading: false,
-            tenants: props.tenants.items.map(entry => entry.name)
+            unselectedTenantNames: new Set()
         };
     }
 
-    toggleCheckbox: CheckboxProps['onChange'] = (_event, elem) => {
-        const { tenants } = this.state;
+    private toggleCheckbox: CheckboxProps['onChange'] = (_event, elem) => {
+        const { unselectedTenantNames } = this.state;
         // NOTE: tenant names are always defined
         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         const clickedTenant = elem.name!;
-        let newTenants = [...tenants];
+        const newUnselectedTenantNames = new Set(unselectedTenantNames);
 
-        if (tenants.includes(clickedTenant)) {
-            newTenants = tenants.filter(tenant => tenant !== clickedTenant);
+        if (unselectedTenantNames.has(clickedTenant)) {
+            newUnselectedTenantNames.delete(clickedTenant);
         } else {
-            newTenants.push(clickedTenant);
+            newUnselectedTenantNames.add(clickedTenant);
         }
 
-        this.setState({ tenants: newTenants }, () => log.debug('Updated tenants', tenants));
+        this.setState({ unselectedTenantNames: newUnselectedTenantNames }, () =>
+            log.debug('Updated tenants', this.getSelectedTenants())
+        );
+    };
+
+    private getSelectedTenants = () => {
+        const { tenantNames } = this.props;
+        const { unselectedTenantNames } = this.state;
+
+        return tenantNames.filter(name => !unselectedTenantNames.has(name));
     };
 
     render() {
-        const { loading, tenants } = this.state;
-        const { onConfirm, onHide, open } = this.props;
-        return tenants.length > 1 ? (
+        const { loading, unselectedTenantNames } = this.state;
+        const { onConfirm, onHide, open, tenantNames } = this.props;
+        const noTenantsSelected = unselectedTenantNames.size === tenantNames.length;
+
+        return tenantNames.length > 1 ? (
             <Modal className="tiny resetPagesModal" open={open} onClose={onHide}>
                 <Modal.Header>
                     <Icon name="user" /> {i18n.t('pagesResetModal.header', 'Reset pages for tenants')}
@@ -64,14 +81,14 @@ export default class ResetPagesModal extends React.Component<ResetPagesModalProp
                     <Card fluid>
                         <Card.Content>
                             <List relaxed>
-                                {tenants.map(tenant => {
+                                {tenantNames.map(tenantName => {
                                     return (
-                                        <List.Item key={tenant}>
+                                        <List.Item key={tenantName}>
                                             <Checkbox
-                                                name={tenant}
-                                                defaultChecked
+                                                name={tenantName}
+                                                checked={!unselectedTenantNames.has(tenantName)}
                                                 onChange={this.toggleCheckbox}
-                                                label={tenant}
+                                                label={tenantName}
                                             />
                                         </List.Item>
                                     );
@@ -84,8 +101,8 @@ export default class ResetPagesModal extends React.Component<ResetPagesModalProp
                 <Modal.Actions>
                     <CancelButton onClick={onHide} disabled={loading} />
                     <ApproveButton
-                        onClick={() => onConfirm(tenants)}
-                        disabled={loading || _.isEmpty(tenants)}
+                        onClick={() => onConfirm(this.getSelectedTenants())}
+                        disabled={loading || noTenantsSelected}
                         icon="undo"
                         color="green"
                         content="Reset"
@@ -100,7 +117,7 @@ export default class ResetPagesModal extends React.Component<ResetPagesModalProp
                 )}
                 open={open}
                 onClose={onHide}
-                onConfirm={() => onConfirm(tenants)}
+                onConfirm={() => onConfirm(this.getSelectedTenants())}
                 onCancel={onHide}
             />
         );
