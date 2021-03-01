@@ -13,13 +13,20 @@ import QuickConfigurationModal from './QuickConfigurationModal';
 import quickConfigurationSchema from './QuickConfigurationModal/schema';
 
 const data = {
-    'AWS': {
+    AWS: {
         aws_access_key_id: '123',
         aws_secret_access_key: '321'
     }
 };
 
 export default class Home extends Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            modalOpen: true
+        };
+    }
+
     // TODO: Context handling should not be here. Currently necessary to use deprecated methods.
     // eslint-disable-next-line camelcase
     UNSAFE_componentWillMount() {
@@ -80,8 +87,15 @@ export default class Home extends Component {
         onSetDrilldownContext(contextParams);
     }
 
+    handleModalClose = () => {
+        this.setState({
+            modalOpen: false
+        });
+    };
+
     render() {
         const { emptyPages, pageId, pageName } = this.props;
+        const { modalOpen } = this.state;
 
         if (emptyPages) {
             return null;
@@ -93,7 +107,13 @@ export default class Home extends Component {
 
                 <SideBar pageId={pageId} />
 
-                <QuickConfigurationModal open={true} step={1} schema={quickConfigurationSchema} data={data} />
+                <QuickConfigurationModal
+                    open={modalOpen}
+                    step={0}
+                    schema={quickConfigurationSchema}
+                    data={data}
+                    onClose={this.handleModalClose}
+                />
 
                 <div className="page">
                     <div className="ui basic segment">

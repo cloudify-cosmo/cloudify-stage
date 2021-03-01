@@ -10,8 +10,10 @@ import { CancelButton, Divider, Header, Modal } from '../basic';
 import { JSONSchema, JSONSchemaItem } from './model';
 
 import QuickConfigurationButton from './QuickConfigurationButton';
+import UncontrolledForm from './UncontrolledForm';
 
-type JSONData = Record<string, Record<string, string>>;
+type SecretData = Record<string, string>;
+type JSONData = Record<string, SecretData>;
 
 const getItemData = (schema: JSONSchema, data?: JSONData, step?: number) => {
     if (data && step) {
@@ -32,7 +34,7 @@ type Props = {
 };
 
 const QuickConfigurationModal = ({ open = false, step = 0, schema, data, onClose }: Props) => {
-    const formRef = useRef();
+    // const formRef = useRef<HTMLFormElement>(null);
     const [localStep, setLocalStep] = useState(step);
     const [localData, setLocalData] = useState(() => data ?? {});
     useEffect(() => setLocalStep(step), [step]);
@@ -46,8 +48,16 @@ const QuickConfigurationModal = ({ open = false, step = 0, schema, data, onClose
     const selectedItemData = localData[selectedItemSchema?.name];
     return (
         <Modal open={open} onClose={handleClose}>
-            <Form
-                onSubmit={e => {
+            <UncontrolledForm<SecretData | undefined>
+                // ref={formRef}
+                data={selectedItemData}
+                onSubmit={(newData: SecretData | undefined) => {
+                    if (selectedItemSchema) {
+                        setLocalData({ ...localData, [selectedItemSchema.name]: newData } as JSONData);
+                    } else {
+                        setLocalData(localData);
+                    }
+                    console.log(JSON.stringify(newData, null, 4));
                     if (localStep < schema.length - 1) {
                         setLocalStep(localStep + 1);
                     }
@@ -55,31 +65,37 @@ const QuickConfigurationModal = ({ open = false, step = 0, schema, data, onClose
             >
                 <Modal.Header>
                     <HeaderBar>
-                        Getting Started
-                        {/* <Banner hideOnSmallScreen={false} /> */}
+                        {selectedItemSchema ? `${selectedItemSchema.name} Secrets` : 'Getting Started'}
                     </HeaderBar>
                 </Modal.Header>
 
                 <Modal.Content>
-                    <Divider />
                     {localStep === 0 && (
-                        <div>
+                        <>
                             {schema.map(itemSchema => {
                                 const itemData = localData[itemSchema.name];
                                 return (
                                     <div key={itemSchema.name}>
                                         <QuickConfigurationButton
-                                            name={itemSchema.name}
+                                            name={`${itemSchema.name}.name`}
                                             logo={itemSchema.logo}
+                                            label={itemSchema.label}
                                             value={!!itemData}
                                         />
                                     </div>
                                 );
                             })}
-                        </div>
+                            <Form.Field>
+                                <Form.Checkbox
+                                    name="modalDisabled"
+                                    label="Don't show next time"
+                                    help="You can enable modal always in user profile."
+                                />
+                            </Form.Field>
+                        </>
                     )}
                     {localStep > 0 && (
-                        <div>
+                        <>
                             {selectedItemSchema.secrets.map(itemSecret => {
                                 const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
                                     const newItemData = { ...selectedItemData, [itemSecret.name]: e.target.value };
@@ -100,7 +116,7 @@ const QuickConfigurationModal = ({ open = false, step = 0, schema, data, onClose
                                     </div>
                                 );
                             })}
-                        </div>
+                        </>
                     )}
                     {/*
                     <Header>{i18n.t('help.aboutModal.versionDetails', 'Version Details')}</Header>
@@ -125,13 +141,20 @@ const QuickConfigurationModal = ({ open = false, step = 0, schema, data, onClose
                         />
                     )} */}
                     <CancelButton content={i18n.t('help.aboutModal.close', 'Close')} onClick={handleClose} />
-
-                    <Button type="submit">
-                        Next
-                        <Icon name="right arrow" />
-                    </Button>
+                    <Button.Group>
+                        {localStep > 0 && (
+                            <Button type="submit">
+                                Back
+                                <Icon name="left arrow" />
+                            </Button>
+                        )}
+                        <Button type="submit">
+                            Next
+                            <Icon name="right arrow" />
+                        </Button>
+                    </Button.Group>
                 </Modal.Actions>
-            </Form>
+            </UncontrolledForm>
         </Modal>
     );
 };
