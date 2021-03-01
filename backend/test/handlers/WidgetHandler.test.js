@@ -23,6 +23,7 @@ describe('WidgetHandler', () => {
             { id: 'deploymentNum', isCustom: false },
             { id: 'deploymentWizardButtons', isCustom: false },
             { id: 'deployments', isCustom: false },
+            { id: 'deploymentsView', isCustom: false },
             { id: 'events', isCustom: false },
             { id: 'eventsFilter', isCustom: false },
             { id: 'executionNum', isCustom: false },
