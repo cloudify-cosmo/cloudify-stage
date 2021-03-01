@@ -60,7 +60,7 @@ function ManageLabelsModal({ deploymentId, existingLabels, header, applyButtonCo
                         help={i18n.t('widgets.common.labels.inputHelp')}
                     >
                         <LabelsInput
-                            addMode={!!existingLabels}
+                            hideInitialLabels={!!existingLabels}
                             initialLabels={initialLabels}
                             onChange={onChange}
                             toolbox={toolbox}

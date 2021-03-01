@@ -10,7 +10,7 @@ const iconStyle = {
     zIndex: 1
 };
 
-export default function LabelsInput({ addMode, initialLabels, onChange, toolbox }) {
+export default function LabelsInput({ hideInitialLabels, initialLabels, onChange, toolbox }) {
     const { useEffect } = React;
     const {
         Basic: { Divider, Form, Icon, Segment },
@@ -20,7 +20,7 @@ export default function LabelsInput({ addMode, initialLabels, onChange, toolbox 
         i18n
     } = Stage;
 
-    const [labels, setLabels, resetLabels] = useResettableState(addMode ? [] : initialLabels);
+    const [labels, setLabels, resetLabels] = useResettableState(hideInitialLabels ? [] : initialLabels);
     const [open, toggleOpen] = useToggle();
     const [newLabelKey, setNewLabelKey, resetNewLabelKey] = useResettableState('');
     const [newLabelValue, setNewLabelValue, resetNewLabelValue] = useResettableState('');
@@ -30,12 +30,17 @@ export default function LabelsInput({ addMode, initialLabels, onChange, toolbox 
     }, [labels]);
 
     useEffect(() => {
-        if (!addMode) setLabels(initialLabels);
+        if (!hideInitialLabels) setLabels(initialLabels);
     }, [initialLabels]);
 
     function isAddAllowed() {
         const label = { key: newLabelKey, value: newLabelValue };
-        return newLabelKey && newLabelValue && !_.find(labels, label) && (!addMode || !_.find(initialLabels, label));
+        return (
+            newLabelKey &&
+            newLabelValue &&
+            !_.find(labels, label) &&
+            (!hideInitialLabels || !_.find(initialLabels, label))
+        );
     }
 
     function onAddLabel() {
@@ -65,7 +70,7 @@ export default function LabelsInput({ addMode, initialLabels, onChange, toolbox 
             style={{ padding: 0, margin: 0 }}
         >
             <div role="presentation" onClick={toggleOpen} style={{ cursor: 'pointer' }}>
-                {!addMode && (
+                {!hideInitialLabels && (
                     <RevertToDefaultIcon
                         value={labels}
                         defaultValue={initialLabels}
@@ -105,14 +110,14 @@ export default function LabelsInput({ addMode, initialLabels, onChange, toolbox 
 }
 
 LabelsInput.propTypes = {
-    addMode: PropTypes.bool,
+    hideInitialLabels: PropTypes.bool,
     initialLabels: Stage.PropTypes.Labels,
     onChange: PropTypes.func.isRequired,
     toolbox: Stage.PropTypes.Toolbox.isRequired
 };
 
 LabelsInput.defaultProps = {
-    addMode: false,
+    hideInitialLabels: false,
     initialLabels: []
 };
 
