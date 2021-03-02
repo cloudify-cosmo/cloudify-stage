@@ -49,8 +49,8 @@ RevertToDefaultIcon.propTypes = {
 RevertToDefaultIcon.defaultProps = {
     value: undefined, // value can be undefined
     defaultValue: undefined, // defaultValue can be undefined
-    onClick: _.noop,
-    onMouseDown: _.noop,
+    onClick: undefined,
+    onMouseDown: undefined,
     popupContent: i18n.t('widgets.common.revertToDefault'),
     style: {}
 };
