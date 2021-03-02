@@ -8,12 +8,14 @@ import log from 'loglevel';
 import { saveAs } from 'file-saver';
 import marked from 'marked';
 import { GenericField } from '../components/basic';
+import type { ManagerData } from '../reducers/managerReducer';
 
 import ExecutionUtils from './shared/ExecutionUtils';
 import JsonUtils from './shared/JsonUtils';
 import TimeUtils from './shared/TimeUtils';
 import UrlUtils from './shared/UrlUtils';
 import combineClassNames from './shared/combineClassNames';
+import { isEmptyWidgetData, WidgetDefinition } from './StageAPI';
 
 export default class StageUtils {
     static Execution = ExecutionUtils;
@@ -30,10 +32,10 @@ export default class StageUtils {
 
     static saveAs = saveAs;
 
-    static makeCancelable(promise) {
+    static makeCancelable<T>(promise: Promise<T>) {
         let hasCanceled = false;
 
-        const wrappedPromise = new Promise((resolve, reject) => {
+        const wrappedPromise = new Promise<T>((resolve, reject) => {
             promise
                 .then(val => (hasCanceled ? reject({ isCanceled: true }) : resolve(val)))
                 .catch(error => (hasCanceled ? reject({ isCanceled: true }) : reject(error)));
@@ -49,23 +51,13 @@ export default class StageUtils {
 
     /**
      * @deprecated use TimeUtils.formatTimestamp
-     * @param timestamp
-     * @param outputPattern
-     * @param inputPattern
      */
-    static formatTimestamp(timestamp, outputPattern = 'DD-MM-YYYY HH:mm', inputPattern = 'YYYY-MM-DD HH:mm:ss') {
-        return TimeUtils.formatTimestamp(timestamp, outputPattern, inputPattern);
-    }
+    static formatTimestamp = TimeUtils.formatTimestamp.bind(TimeUtils);
 
     /**
      * @deprecated use TimeUtils.formatLocalTimestamp
-     * @param timestamp
-     * @param outputPattern
-     * @param inputPattern
      */
-    static formatLocalTimestamp(timestamp, outputPattern = 'DD-MM-YYYY HH:mm', inputPattern = undefined) {
-        return TimeUtils.formatLocalTimestamp(timestamp, outputPattern, inputPattern);
-    }
+    static formatLocalTimestamp = TimeUtils.formatLocalTimestamp.bind(TimeUtils);
 
     /**
      * Replace all occurrences of <Tag attr1="value1" attr1="value2" ...> to "tag value1 value2 ..."
@@ -73,7 +65,7 @@ export default class StageUtils {
      * @param message
      * @returns {*}
      */
-    static resolveMessage(message) {
+    static resolveMessage(message: string) {
         const tagPattern = /<(\w+)[^<]*>/;
         const noValueAttrPattern = /[',",`]([^',^",^`]+)[',",`]/;
         const attrPattern = /(\w+)=[',",`]([^',^",^`]+)[',",`]/g;
@@ -117,58 +109,43 @@ export default class StageUtils {
         return resolvedMessage;
     }
 
-    static getMD5(str) {
+    static getMD5(str: string) {
         return md5(str);
     }
 
     /**
      * @deprecated use UrlUtils.url
-     * @param path
      */
-    static url(path) {
-        return UrlUtils.url(path);
-    }
+    static url = UrlUtils.url.bind(UrlUtils);
 
     /**
      * @deprecated use UrlUtils.isUrl
-     * @param str
      */
-    static isUrl(str) {
-        return UrlUtils.isUrl(str);
-    }
+    static isUrl = UrlUtils.isUrl.bind(UrlUtils);
 
     /**
      * @deprecated use UrlUtils.redirectToPage
-     * @param url
      */
-    static redirectToPage(url) {
-        return UrlUtils.redirectToPage(url);
-    }
+    static redirectToPage = UrlUtils.redirectToPage.bind(UrlUtils);
 
     /**
      * @deprecated use UrlUtils.widgetResourceUrl
-     * @param widgetId
-     * @param internalPath
-     * @param isCustom
-     * @param addContextPath
      */
-    static widgetResourceUrl(widgetId, internalPath, isCustom = true, addContextPath = true) {
-        return UrlUtils.widgetResourceUrl(widgetId, internalPath, isCustom, addContextPath);
-    }
+    static widgetResourceUrl = UrlUtils.widgetResourceUrl.bind(UrlUtils);
 
-    static buildConfig(widgetDefinition) {
-        const configs = {};
+    static buildConfig(widgetDefinition: WidgetDefinition) {
+        const configs: Record<string, any> = {};
 
         _.each(widgetDefinition.initialConfiguration, config => {
             if (!config.id) {
-                log.log(
+                log.debug(
                     `Cannot process config for widget :"${widgetDefinition.name}" , because it missing an Id `,
                     config
                 );
                 return;
             }
 
-            let value;
+            let value: any;
             if (config.default && !config.value) {
                 value = config.default;
             } else if (_.isUndefined(config.value)) {
@@ -183,7 +160,7 @@ export default class StageUtils {
         return configs;
     }
 
-    static isUserAuthorized(permission, managerData) {
+    static isUserAuthorized(permission: string, managerData: ManagerData) {
         const authorizedRoles = managerData.permissions[permission];
 
         const systemRole = managerData.auth.role;
@@ -194,7 +171,7 @@ export default class StageUtils {
         return _.intersection(authorizedRoles, userRoles).length > 0;
     }
 
-    static isWidgetPermitted(widgetSupportedEditions, managerData) {
+    static isWidgetPermitted(widgetSupportedEditions: WidgetDefinition['supportedEditions'], managerData: any) {
         // Don't check the supported editions and keep backwards compatibility
         if (_.isEmpty(widgetSupportedEditions)) {
             return true;
@@ -203,4 +180,6 @@ export default class StageUtils {
         const licenseEdition = _.get(managerData, 'license.data.license_edition', '');
         return _.includes(widgetSupportedEditions, licenseEdition);
     }
+
+    static isEmptyWidgetData = isEmptyWidgetData;
 }

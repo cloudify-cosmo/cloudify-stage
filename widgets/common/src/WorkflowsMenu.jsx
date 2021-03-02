@@ -2,7 +2,7 @@
  * Created by jakubniezgoda on 31/01/2019.
  */
 
-const WorkflowsPropType = PropTypes.arrayOf(PropTypes.shape({ name: PropTypes.string, plugin: PropTypes.string }));
+const WorkflowsPropType = Stage.PropTypes.Workflows;
 
 function StyledTitle({ name, bold }) {
     const displayName = _.capitalize(_.lowerCase(name));
@@ -102,8 +102,11 @@ AccordionWorkflowsMenu.defaultProps = {
     onClick: _.noop
 };
 
-function WorkflowsMenu({ workflows, onClick, popupMenuProps, showInPopup, trigger }) {
-    const { Menu, Popup, PopupMenu } = Stage.Basic;
+function WorkflowsMenu({ workflows, onClick, showInPopup, trigger }) {
+    const {
+        Basic: { Menu, Popup, PopupMenu },
+        i18n
+    } = Stage;
 
     const workflowsGroups = _.chain(workflows)
         .groupBy('plugin')
@@ -111,17 +114,19 @@ function WorkflowsMenu({ workflows, onClick, popupMenuProps, showInPopup, trigge
         .sortBy('name')
         .value();
     const showOnlyDefaultWorkflows = _.size(workflowsGroups) === 1;
+    const popupMenuProps = !trigger
+        ? {
+              bordered: true,
+              icon: 'cogs',
+              help: i18n.t('widgets.common.deployments.workflowsMenu.tooltip'),
+              offset: [0, 5]
+          }
+        : {};
 
     if (showInPopup) {
         return (
-            <PopupMenu
-                className="workflowAction"
-                position="bottom center"
-                offset={0}
-                icon={popupMenuProps.icon}
-                help={popupMenuProps.help}
-                bordered={popupMenuProps.bordered}
-            >
+            // eslint-disable-next-line react/jsx-props-no-spreading
+            <PopupMenu className="workflowsMenu" {...popupMenuProps}>
                 {!!trigger && <Popup.Trigger>{trigger}</Popup.Trigger>}
 
                 {showOnlyDefaultWorkflows ? (
@@ -145,7 +150,6 @@ function WorkflowsMenu({ workflows, onClick, popupMenuProps, showInPopup, trigge
 WorkflowsMenu.propTypes = {
     workflows: WorkflowsPropType.isRequired,
     onClick: PropTypes.func,
-    popupMenuProps: PropTypes.shape({ icon: PropTypes.string, help: PropTypes.string, bordered: PropTypes.bool }),
     showInPopup: PropTypes.bool,
     trigger: PropTypes.element
 };
@@ -153,7 +157,6 @@ WorkflowsMenu.propTypes = {
 WorkflowsMenu.defaultProps = {
     onClick: _.noop,
     showInPopup: true,
-    popupMenuProps: {},
     trigger: null
 };
 

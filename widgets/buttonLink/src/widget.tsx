@@ -4,7 +4,14 @@
 
 import type { CSSProperties } from 'react';
 
-Stage.defineWidget({
+interface ButtonLinkWidgetConfiguration {
+    color: string;
+    label: string;
+    url: string;
+    fullHeight: boolean;
+}
+
+Stage.defineWidget<unknown, unknown, ButtonLinkWidgetConfiguration>({
     id: 'buttonLink',
     name: 'Button link',
     description: 'Opens provided URL in a different tab',
