@@ -52,6 +52,12 @@ describe('Filter', () => {
         );
 
         it('deployment creation and removal', () => {
+            const searchForDeployment = name =>
+                cy.get('.deploymentsWidget').within(() => {
+                    cy.get('.input input').clear().type(name);
+                    cy.get('.input.loading').should('not.exist');
+                });
+
             cy.get('.blueprintsWidget input[placeholder^=Search]').scrollIntoView().clear().type(blueprintName);
             cy.get(`.blueprintsWidget .${blueprintName}`).parent().find('.rocket').click();
             const deploymentName = `${blueprintName}-deployment`;
@@ -64,8 +70,10 @@ describe('Filter', () => {
 
             cy.get('.blueprintsWidget input[placeholder^=Search]').scrollIntoView().clear().type(blueprintName);
 
-            cy.contains('.deploymentsWidget .row', deploymentName).find('.green.checkmark');
-            cy.contains('.deploymentsWidget .row', deploymentName).find('.deploymentActionsMenu').click();
+            searchForDeployment(deploymentName);
+            cy.get('.deploymentActionsMenu')
+                .click()
+                .trigger('mouseout'); // To hide the tooltip
             cy.contains('Force Delete').click();
             cy.contains('Yes').click();
 
