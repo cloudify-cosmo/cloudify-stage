@@ -29,6 +29,7 @@ import {
     Segment,
     Sidebar,
     Step,
+    StrictConfirmProps,
     Tab,
     Table
 } from 'semantic-ui-react';
@@ -70,6 +71,7 @@ import {
 } from 'cloudify-ui-components';
 
 import { Map, TileLayer, Marker, Popup as LeafletPopup } from 'react-leaflet';
+import type { ComponentType } from 'react';
 
 Modal.defaultProps = {
     ...Modal.defaultProps,
@@ -83,17 +85,25 @@ const Leaflet = {
     Popup: LeafletPopup
 };
 
+/**
+ * NOTE: buttons have limited props defined in their propTypes, making it hard to use in TypeScript.
+ * TODO(RD-1563): remove assertions after adding missing prop types
+ */
+const ApproveButtonWithCorrectProps = (ApproveButton as unknown) as typeof Button;
+const CancelButtonWithCorrectProps = (CancelButton as unknown) as typeof Button;
+const ConfirmWithCorrectProps = (Confirm as unknown) as ComponentType<StrictConfirmProps>;
+
 export {
     Accordion,
     Alert,
-    ApproveButton,
+    ApproveButtonWithCorrectProps as ApproveButton,
     Breadcrumb,
     Button,
-    CancelButton,
+    CancelButtonWithCorrectProps as CancelButton,
     Card,
     Checkbox,
     Checkmark,
-    Confirm,
+    ConfirmWithCorrectProps as Confirm,
     Container,
     CopyToClipboardButton,
     DateInput,

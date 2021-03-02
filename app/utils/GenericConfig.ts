@@ -1,8 +1,9 @@
 import i18n from 'i18next';
 import { GenericField } from '../components/basic';
+import { WidgetConfigurationDefinition } from './StageAPI';
 
 export default class GenericConfig {
-    static POLLING_TIME_CONFIG = (pollingTime = 0) => {
+    static POLLING_TIME_CONFIG = (pollingTime = 0): WidgetConfigurationDefinition => {
         return {
             id: 'pollingTime',
             name: i18n.t('widget.config.pollingTime.name', 'Refresh time interval'),
@@ -17,27 +18,30 @@ export default class GenericConfig {
         };
     };
 
-    static PAGE_SIZE_CONFIG = (pageSize = 5) => {
+    static PAGE_SIZE_CONFIG = (pageSize = 5): WidgetConfigurationDefinition => {
         return {
             id: 'pageSize',
             default: pageSize,
-            hidden: true
+            hidden: true,
+            type: GenericField.NUMBER_TYPE
         };
     };
 
-    static SORT_COLUMN_CONFIG = (sortColumn: string) => {
+    static SORT_COLUMN_CONFIG = (sortColumn: string): WidgetConfigurationDefinition => {
         return {
             id: 'sortColumn',
             default: sortColumn,
-            hidden: true
+            hidden: true,
+            type: GenericField.STRING_TYPE
         };
     };
 
-    static SORT_ASCENDING_CONFIG = (sortAscending: boolean) => {
+    static SORT_ASCENDING_CONFIG = (sortAscending: boolean): WidgetConfigurationDefinition => {
         return {
             id: 'sortAscending',
             default: sortAscending,
-            hidden: true
+            hidden: true,
+            type: GenericField.STRING_TYPE
         };
     };
 

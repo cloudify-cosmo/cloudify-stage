@@ -378,12 +378,16 @@
                     "uninstall": "Uninstall",
                     "delete": "Delete",
                     "forceDelete": "Force Delete",
-                    "fetchError": "Cannot fetch deployment '{{ deploymentId }}'."
+                    "fetchError": "Cannot fetch deployment '{{ deploymentId }}'.",
+                    "tooltip": "Deployment action"
+                },
+                "workflowsMenu": {
+                    "tooltip": "Execute workflow"
                 },
                 "executeModal": {
-                  "missingDeployment": "Missing deployment.",
-                  "missingWorkflow": "Missing workflow.",
-                  "workflowError": "Workflow '{{ workflowName }}' does not exist for deployment '{{ deploymentId }}'."
+                    "missingDeployment": "Missing deployment.",
+                    "missingWorkflow": "Missing workflow.",
+                    "workflowError": "Workflow '{{ workflowName }}' does not exist for deployment '{{ deploymentId }}'."
                 },
                 "removeModal": {
                     "deleteDescription": "Are you sure you want to remove deployment '{{ deploymentId }}'?",
@@ -459,6 +463,48 @@
                         "help": "(Optional) The blueprint icon file is shown with the blueprint in the local blueprint widget.",
                         "placeholder": "Provide the image file URL or click browse to select a file"
                     }
+                }
+            }
+        },
+        "deploymentsView": {
+            "name": "Deployments view",
+            "description": "A complete deployments view – Deployment list, map view, and detailed deployment info",
+            "configuration": {
+                "filterId": {
+                    "name": "Name of the saved filter to apply"
+                },
+                "filterByParentDeployment": {
+                    "name": "Filter by parent deployment",
+                    "description": "Only show deployments directly attached to the deployment selected on the previous page (when in drill-down)."
+                },
+                "fieldsToShow": {
+                    "name": "List of fields to show in the table",
+                    "placeholder": "Select fields from the list"
+                }
+            },
+            "columns": {
+                "status": {
+                    "name": ""
+                },
+                "name": {
+                    "name": "Name"
+                },
+                "blueprintName": {
+                    "name": "Blueprint Name"
+                },
+                "environmentType": {
+                    "name": "Environment Type"
+                },
+                "location": {
+                    "name": "Location"
+                },
+                "subenvironmentsCount": {
+                    "name": "Subenvironments",
+                    "tooltip": "Sub-environments (Total)"
+                },
+                "subservicesCount": {
+                    "name": "Subservices",
+                    "tooltip": "Services (Total)"
                 }
             }
         }

@@ -25,4 +25,11 @@ declare global {
         log: typeof import('loglevel');
         connectToStore: typeof import('react-redux').connect;
     }
+
+    export const process: {
+        env: {
+            NODE_ENV: string;
+            [key: string]: unknown;
+        };
+    };
 }
