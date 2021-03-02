@@ -216,7 +216,7 @@
             {
                 "title": "Install the Deployment",
                 "content": "In the deployment menu, you can run executions on the deployment. Open the menu and select the <strong>Install</strong> execution.",
-                "target": "div.deploymentsWidget i.menuAction",
+                "target": "div.deploymentsWidget i.deploymentActionsMenu",
                 "placement": "left"
             },
             {
@@ -258,7 +258,7 @@
             {
                 "title": "Deployments",
                 "content": "All of the deployed applications are listed on the deployments page. In the menu for the deployment you can execute workflows on the deployment, including heal and scale.",
-                "target": "div.deploymentsWidget i.menuAction",
+                "target": "div.deploymentsWidget i.deploymentActionsMenu",
                 "placement": "left"
             },
             {
