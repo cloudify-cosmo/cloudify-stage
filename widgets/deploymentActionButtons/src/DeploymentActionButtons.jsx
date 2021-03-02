@@ -44,7 +44,7 @@ export default function DeploymentActionButtons({ deployment, toolbox }) {
 
             {id && workflow && (
                 <ExecuteDeploymentModal
-                    open={!_.isEmpty(workflow)}
+                    open
                     deploymentId={id}
                     workflow={workflow}
                     onHide={resetWorkflow}
