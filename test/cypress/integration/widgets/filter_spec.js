@@ -65,7 +65,7 @@ describe('Filter', () => {
             cy.get('.blueprintsWidget input[placeholder^=Search]').scrollIntoView().clear().type(blueprintName);
 
             cy.contains('.deploymentsWidget .row', deploymentName).find('.green.checkmark');
-            cy.contains('.deploymentsWidget .row', deploymentName).find('.menuAction').click();
+            cy.contains('.deploymentsWidget .row', deploymentName).find('.deploymentActionsMenu').click();
             cy.contains('Force Delete').click();
             cy.contains('Yes').click();
 
