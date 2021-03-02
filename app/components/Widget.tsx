@@ -1,10 +1,9 @@
 import _ from 'lodash';
 import log from 'loglevel';
-import PropTypes from 'prop-types';
 import marked from 'marked';
 import i18n from 'i18next';
-import React, { Component } from 'react';
-import { connect } from 'react-redux';
+import React, { Component, createRef, ErrorInfo, ReactElement } from 'react';
+import { connect, ConnectedProps, MapStateToProps } from 'react-redux';
 
 import { setValue } from '../actions/context';
 import { fetchWidgetData as fetchWidgetDataThunk } from '../actions/WidgetData';
@@ -12,25 +11,43 @@ import EditWidget from './EditWidget';
 import stageUtils from '../utils/stageUtils';
 import { EditableLabel, ErrorMessage, Header, Icon, Loading, Message, ReadmeModal, Segment } from './basic';
 import WidgetDynamicContent from './WidgetDynamicContent';
+import type { ManagerData } from '../reducers/managerReducer';
+import type { ReduxState } from '../reducers';
+import type { Widget as WidgetObj } from '../utils/StageAPI';
 
-class Widget extends Component {
-    constructor(props) {
+export interface WidgetOwnProps<Configuration> {
+    isEditMode: boolean;
+    onWidgetUpdated: (widgetId: string, params: Partial<WidgetObj<Configuration>>) => void;
+    onWidgetRemoved: (widgetId: string) => void;
+    widget: WidgetObj<Configuration>;
+}
+
+type WidgetProps<Configuration> = WidgetOwnProps<Configuration> & PropsFromRedux;
+
+interface WidgetState {
+    hasError: boolean;
+    readmeContent: string;
+    showReadmeModal: boolean;
+}
+
+class Widget<Configuration> extends Component<WidgetProps<Configuration>, WidgetState> {
+    private widgetItemRef = createRef<any>();
+
+    constructor(props: WidgetProps<Configuration>) {
         super(props);
 
-        this.widgetItemRef = React.createRef();
         this.state = {
             hasError: false,
             readmeContent: '',
             showReadmeModal: false
         };
-        this.onKeyDown = this.onKeyDown.bind(this);
     }
 
     static getDerivedStateFromError() {
         return { hasError: true };
     }
 
-    shouldComponentUpdate(nextProps, nextState) {
+    shouldComponentUpdate(nextProps: WidgetProps<Configuration>, nextState: WidgetState) {
         return !_.isEqual(this.props, nextProps) || !_.isEqual(this.state, nextState);
     }
 
@@ -41,18 +58,20 @@ class Widget extends Component {
         }
     }
 
-    componentDidCatch(error, info) {
+    componentDidCatch(error: Error, info: ErrorInfo) {
         log.error(error, info);
     }
 
-    onKeyDown(event) {
+    onKeyDown = (event: any) => {
         const { onWidgetUpdated, widget } = this.props;
-        if (event.keyCode === 27) {
+        const escapeKeyCode = 27;
+
+        if (event.keyCode === escapeKeyCode) {
             onWidgetUpdated(widget.id, { maximized: false });
         }
-    }
+    };
 
-    widgetConfigUpdate = config => {
+    widgetConfigUpdate = (config: Partial<Configuration>) => {
         const { onWidgetUpdated, widget } = this.props;
         if (config) {
             onWidgetUpdated(widget.id, { configuration: { ...widget.configuration, ...config } });
@@ -68,8 +87,8 @@ class Widget extends Component {
         const { readme } = widget.definition;
         let readmeContent = '';
 
-        if (!_.isEmpty(readme)) {
-            readmeContent = marked(widget.definition.readme);
+        if (typeof readme === 'string') {
+            readmeContent = marked(readme);
         }
         this.setState({ readmeContent, showReadmeModal: true });
     };
@@ -238,34 +257,41 @@ class Widget extends Component {
     }
 }
 
-Widget.propTypes = {
-    context: PropTypes.shape({}).isRequired,
-    fetchWidgetData: PropTypes.func.isRequired,
-    isEditMode: PropTypes.bool.isRequired,
-    manager: PropTypes.shape({
-        tenants: PropTypes.shape({ selected: PropTypes.string, isFetching: PropTypes.bool })
-    }).isRequired,
-    onWidgetRemoved: PropTypes.func.isRequired,
-    onWidgetUpdated: PropTypes.func.isRequired,
-    setContextValue: PropTypes.func.isRequired,
-    widget: PropTypes.shape({
-        configuration: PropTypes.shape({}),
-        id: PropTypes.string,
-        name: PropTypes.string,
-        definition: PropTypes.shape({
-            color: PropTypes.string,
-            helpUrl: PropTypes.string,
-            permission: PropTypes.string,
-            readme: PropTypes.string,
-            showHeader: PropTypes.bool,
-            showBorder: PropTypes.bool
-        }),
-        maximized: PropTypes.bool
-    }).isRequired,
-    widgetData: PropTypes.shape({}).isRequired
-};
+// TODO(RD-1223): remove prop types
+// Widget.propTypes = {
+//     context: PropTypes.shape({}).isRequired,
+//     fetchWidgetData: PropTypes.func.isRequired,
+//     isEditMode: PropTypes.bool.isRequired,
+//     manager: PropTypes.shape({
+//         tenants: PropTypes.shape({ selected: PropTypes.string, isFetching: PropTypes.bool })
+//     }).isRequired,
+//     onWidgetRemoved: PropTypes.func.isRequired,
+//     onWidgetUpdated: PropTypes.func.isRequired,
+//     setContextValue: PropTypes.func.isRequired,
+//     widget: PropTypes.shape({
+//         configuration: PropTypes.shape({}),
+//         id: PropTypes.string,
+//         name: PropTypes.string,
+//         definition: PropTypes.shape({
+//             color: PropTypes.string,
+//             helpUrl: PropTypes.string,
+//             permission: PropTypes.string,
+//             readme: PropTypes.string,
+//             showHeader: PropTypes.bool,
+//             showBorder: PropTypes.bool
+//         }),
+//         maximized: PropTypes.bool
+//     }).isRequired,
+//     widgetData: PropTypes.shape({}).isRequired
+// };
 
-const mapStateToProps = (state, ownProps) => {
+interface ReduxStateToProps {
+    context: any;
+    manager: ManagerData;
+    widgetData: any;
+}
+
+const mapStateToProps: MapStateToProps<ReduxStateToProps, WidgetOwnProps<any>, ReduxState> = (state, ownProps) => {
     return {
         context: state.context,
         manager: state.manager || {},
@@ -278,7 +304,12 @@ const mapDispatchToProps = {
     fetchWidgetData: fetchWidgetDataThunk
 };
 
-// NOTE: connector is extracted to a separate variable to leverage type inference in TypeScript
 const connector = connect(mapStateToProps, mapDispatchToProps);
+type PropsFromRedux = ConnectedProps<typeof connector>;
 
-export default connector(Widget);
+// NOTE: necessary type asssertion for the generic parameter to work
+const ConnectedWidget = (connector(Widget) as unknown) as <Configuration>(
+    props: WidgetOwnProps<Configuration>
+) => ReactElement<WidgetProps<Configuration>>;
+
+export default ConnectedWidget;
