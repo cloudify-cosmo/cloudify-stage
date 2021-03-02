@@ -1,5 +1,6 @@
-function RevertToDefaultIcon({ value, defaultValue, onClick, style }) {
-    const { i18n } = Stage;
+const { i18n } = Stage;
+
+function RevertToDefaultIcon({ value, defaultValue, onClick, onMouseDown, popupContent, style }) {
     const { Icon, Popup } = Stage.Basic;
 
     if (defaultValue === undefined || _.isEqual(value, defaultValue)) {
@@ -7,8 +8,8 @@ function RevertToDefaultIcon({ value, defaultValue, onClick, style }) {
     }
 
     return (
-        <Popup trigger={<Icon name="undo" link onClick={onClick} style={style} />}>
-            {i18n.t('widgets.common.revertToDefault')}
+        <Popup trigger={<Icon name="undo" link onClick={onClick} onMouseDown={onMouseDown} style={style} />}>
+            {popupContent}
         </Popup>
     );
 }
@@ -30,6 +31,16 @@ RevertToDefaultIcon.propTypes = {
     onClick: PropTypes.func,
 
     /**
+     * function to be called on revert icon mouse down
+     */
+    onMouseDown: PropTypes.func,
+
+    /**
+     * popup content to be shown on mouse over
+     */
+    popupContent: PropTypes.node,
+
+    /**
      * styles to be added to revert icon
      */
     style: PropTypes.shape({})
@@ -38,7 +49,9 @@ RevertToDefaultIcon.propTypes = {
 RevertToDefaultIcon.defaultProps = {
     value: undefined, // value can be undefined
     defaultValue: undefined, // defaultValue can be undefined
-    onClick: _.noop,
+    onClick: undefined,
+    onMouseDown: undefined,
+    popupContent: i18n.t('widgets.common.revertToDefault'),
     style: {}
 };
 

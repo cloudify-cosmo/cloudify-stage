@@ -1,7 +1,3 @@
-const LabelPropType = PropTypes.shape({ key: PropTypes.string, value: PropTypes.string, isInSystem: PropTypes.bool });
-
-export const LabelsPropType = PropTypes.arrayOf(LabelPropType);
-
 export default function LabelsList({ labels, onChange }) {
     const { Label, Icon, Popup } = Stage.Basic;
     const maxLength = 20;
@@ -38,7 +34,7 @@ export default function LabelsList({ labels, onChange }) {
 }
 
 LabelsList.propTypes = {
-    labels: LabelsPropType,
+    labels: Stage.PropTypes.Labels,
     onChange: PropTypes.func.isRequired
 };
 
