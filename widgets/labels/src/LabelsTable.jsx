@@ -59,7 +59,7 @@ export default function LabelsTable({ data, toolbox }) {
                 {hasManagePermission && <DataTable.Column width="80px" />}
 
                 {labels.map(item => (
-                    <DataTable.Row key={`${item.key}:${item.value}`} onClick={null}>
+                    <DataTable.Row key={`${item.key}:${item.value}`}>
                         <DataTable.Data style={tdStyle}>{item.key}</DataTable.Data>
                         <DataTable.Data style={tdStyle}>
                             {_.isEqual(item, labelInEdit) ? (
