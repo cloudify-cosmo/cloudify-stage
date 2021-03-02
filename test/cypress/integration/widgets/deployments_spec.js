@@ -6,14 +6,8 @@ describe('Deployments widget', () => {
     const blueprintUrl =
         'https://github.com/cloudify-community/blueprint-examples/releases/download/latest/simple-hello-world-example.zip';
 
-    const searchForDeployment = name =>
-        cy.get('.deploymentsWidget').within(() => {
-            cy.get('.input input').clear().type(name);
-            cy.get('.input.loading').should('not.exist');
-        });
-
     const selectActionFromMenu = (deploymentId, menuClassName, action) => {
-        searchForDeployment(deploymentId);
+        cy.searchInDeploymentsWidget(deploymentId);
         cy.contains('div.row', deploymentId).find(menuClassName).click();
         cy.get('.popupMenu > .menu').contains(action).click();
     };
@@ -46,7 +40,7 @@ describe('Deployments widget', () => {
     });
 
     it('should be present in Deployments page', () => {
-        searchForDeployment(deploymentName);
+        cy.searchInDeploymentsWidget(deploymentName);
         cy.get('.deploymentSegment h3').should('have.text', deploymentName);
     });
 
@@ -62,7 +56,7 @@ describe('Deployments widget', () => {
         before(cy.refreshPage);
 
         it('clickToDrillDown option', () => {
-            searchForDeployment(deploymentName);
+            cy.searchInDeploymentsWidget(deploymentName);
             cy.get('.deploymentsWidget').contains(deploymentName).click();
             cy.location('pathname').should('contain', '_deployment/deployments_test_hw_dep');
             cy.contains('.breadcrumb', 'deployments_test_hw_dep');
@@ -78,7 +72,7 @@ describe('Deployments widget', () => {
         });
 
         it('showExecutionStatusLabel option', () => {
-            searchForDeployment(deploymentName);
+            cy.searchInDeploymentsWidget(deploymentName);
 
             const lastExecutionCellSelector = 'tr#deploymentsTable_deployments_test_hw_dep td:nth-child(2)';
             cy.get(lastExecutionCellSelector).within(() => {
@@ -90,7 +84,7 @@ describe('Deployments widget', () => {
                 cy.get('input[name="showExecutionStatusLabel"]').parent().click();
             });
 
-            searchForDeployment(deploymentName);
+            cy.searchInDeploymentsWidget(deploymentName);
             cy.get(lastExecutionCellSelector).within(() => {
                 cy.get('.icon').should('be.visible');
                 cy.get('.label').should('be.visible');
