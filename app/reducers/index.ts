@@ -4,6 +4,8 @@
 
 import { combineReducers } from 'redux';
 import { connectRouter } from 'connected-react-router';
+import { History } from 'history';
+
 import pages from './pageReducer';
 import widgetDefinitions from './widgetDefinitionsReducer';
 import tours from './toursReducer';
@@ -16,7 +18,7 @@ import app from './appReducer';
 import widgetData from './widgetDataReducer';
 import drilldownContext from './drilldownContextReducer';
 
-const rootReducer = history =>
+const rootReducer = (history: History) =>
     combineReducers({
         router: connectRouter(history),
         app,
@@ -31,5 +33,7 @@ const rootReducer = history =>
         config,
         widgetData
     });
+
+export type ReduxState = ReturnType<ReturnType<typeof rootReducer>>;
 
 export default rootReducer;
