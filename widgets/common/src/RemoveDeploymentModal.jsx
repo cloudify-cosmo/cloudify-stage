@@ -26,8 +26,8 @@ function RemoveDeploymentModal({ open, deploymentId, force, onHide, toolbox }) {
                 const contextDeploymentId = toolbox.getContext().getValue('deploymentId');
                 if (deploymentId === contextDeploymentId) {
                     toolbox.getContext().setValue('deploymentId', null);
+                    toolbox.goToParentPage();
                 }
-                toolbox.goToParentPage();
                 toolbox.getEventBus().trigger('deployments:refresh');
                 onHide();
             })
