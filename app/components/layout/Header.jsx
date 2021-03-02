@@ -81,7 +81,7 @@ export default class Header extends Component {
 
                 <ResetPagesModal
                     open={showResetPagesConfirm}
-                    tenants={manager.tenants}
+                    tenantNames={manager.tenants.items.map(tenant => tenant.name)}
                     onConfirm={tenantList => {
                         this.setState({ showResetPagesConfirm: false });
                         onResetPages(tenantList);
@@ -96,7 +96,9 @@ export default class Header extends Component {
 }
 
 Header.propTypes = {
-    manager: PropTypes.shape({ tenants: PropTypes.shape({}) }).isRequired,
+    manager: PropTypes.shape({
+        tenants: PropTypes.shape({ items: PropTypes.arrayOf(PropTypes.shape({ name: PropTypes.string.isRequired })) })
+    }).isRequired,
     mode: PropTypes.string.isRequired,
     onResetPages: PropTypes.func.isRequired,
     onSidebarOpen: PropTypes.func.isRequired

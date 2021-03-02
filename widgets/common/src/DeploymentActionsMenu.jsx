@@ -1,5 +1,4 @@
-/* eslint-disable react/jsx-props-no-spreading */
-const actions = Object.freeze({
+export const actions = Object.freeze({
     delete: 'delete',
     forceDelete: 'forceDelete',
     install: 'install',
@@ -11,72 +10,48 @@ const actions = Object.freeze({
 
 const translate = (key, params) => Stage.i18n.t(`widgets.common.deployments.actionsMenu.${key}`, params);
 const menuItems = [
-    { name: actions.install, icon: 'play' },
-    { name: actions.update, icon: 'edit' },
-    { name: actions.setSite, icon: 'building' },
-    { name: actions.manageLabels, icon: 'tags' },
-    { name: actions.uninstall, icon: 'recycle' },
-    { name: actions.delete, icon: 'trash alternate' },
-    { name: actions.forceDelete, icon: 'trash' }
-].map(item => ({ ...item, key: item.name, content: translate(item.name) }));
+    { name: actions.install, icon: 'play', permission: 'execution_start' },
+    { name: actions.update, icon: 'edit', permission: 'deployment_update_create' },
+    { name: actions.setSite, icon: 'building', permission: 'deployment_set_site' },
+    { name: actions.manageLabels, icon: 'tags', permission: 'deployment_create' },
+    { name: actions.uninstall, icon: 'recycle', permission: 'execution_start' },
+    { name: actions.delete, icon: 'trash alternate', permission: 'deployment_delete' },
+    { name: actions.forceDelete, icon: 'trash', permission: 'deployment_delete' }
+];
 
-export default function DeploymentActionsMenu({ deploymentId, toolbox, trigger }) {
+export default function DeploymentActionsMenu({ onActionClick, toolbox, trigger }) {
     const {
         Basic: { Menu, Popup, PopupMenu },
-        Common: {
-            ExecuteDeploymentModal,
-            ManageLabelsModal,
-            UpdateDeploymentModal,
-            RemoveDeploymentModal,
-            SetSiteModal
-        },
-        Hooks: { useResettableState }
+        Utils: { isUserAuthorized },
+        i18n
     } = Stage;
 
-    const [activeAction, setActiveAction, resetActiveAction] = useResettableState('');
-    const commonProps = { deploymentId, onHide: resetActiveAction, toolbox };
-
-    let workflowName = '';
-    if (activeAction === actions.install) {
-        workflowName = 'install';
-    } else if (activeAction === actions.uninstall) {
-        workflowName = 'uninstall';
-    }
+    const managerState = toolbox.getManagerState();
+    const items = menuItems.map(item => ({
+        ...item,
+        key: item.name,
+        content: translate(item.name),
+        disabled: !isUserAuthorized(item.permission, managerState)
+    }));
+    const popupMenuProps = !trigger
+        ? { bordered: true, help: i18n.t('widgets.common.deployments.actionsMenu.tooltip'), offset: [0, 5] }
+        : {};
 
     function onItemClick(event, { name }) {
-        setActiveAction(name);
+        onActionClick(name);
     }
 
     return (
-        <>
-            <PopupMenu className="deploymentActionsMenu">
-                {trigger && <Popup.Trigger>{trigger}</Popup.Trigger>}
-                <Menu pointing vertical onItemClick={onItemClick} items={menuItems} />
-            </PopupMenu>
-
-            <ManageLabelsModal {...commonProps} open={activeAction === actions.manageLabels} />
-
-            <ExecuteDeploymentModal
-                {...commonProps}
-                open={activeAction === actions.install || activeAction === actions.uninstall}
-                workflow={workflowName}
-            />
-
-            <UpdateDeploymentModal {...commonProps} open={activeAction === actions.update} />
-
-            <RemoveDeploymentModal
-                {...commonProps}
-                force={activeAction === actions.forceDelete}
-                open={activeAction === actions.delete || activeAction === actions.forceDelete}
-            />
-
-            <SetSiteModal {...commonProps} open={activeAction === actions.setSite} />
-        </>
+        // eslint-disable-next-line react/jsx-props-no-spreading
+        <PopupMenu className="deploymentActionsMenu" {...popupMenuProps}>
+            {trigger && <Popup.Trigger>{trigger}</Popup.Trigger>}
+            <Menu pointing vertical onItemClick={onItemClick} items={items} />
+        </PopupMenu>
     );
 }
 
 DeploymentActionsMenu.propTypes = {
-    deploymentId: PropTypes.string.isRequired,
+    onActionClick: PropTypes.func.isRequired,
     toolbox: Stage.PropTypes.Toolbox.isRequired,
     trigger: PropTypes.node
 };

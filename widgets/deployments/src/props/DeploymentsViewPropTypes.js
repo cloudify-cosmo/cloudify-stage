@@ -18,13 +18,14 @@ export default {
         total: PropTypes.number
     }).isRequired,
     widget: Stage.PropTypes.Widget.isRequired,
-    fetchData: PropTypes.func,
-    onSelectDeployment: PropTypes.func,
-    onActOnExecution: PropTypes.func,
-    onMenuAction: PropTypes.func,
-    onSetVisibility: PropTypes.func,
+    fetchData: PropTypes.func.isRequired,
+    onSelectDeployment: PropTypes.func.isRequired,
+    onActOnExecution: PropTypes.func.isRequired,
+    onDeploymentAction: PropTypes.func.isRequired,
+    onWorkflowAction: PropTypes.func.isRequired,
+    onSetVisibility: PropTypes.func.isRequired,
     allowedSettingTo: PropTypes.arrayOf(PropTypes.string),
-    noDataMessage: PropTypes.string,
-    showExecutionStatusLabel: PropTypes.bool,
+    noDataMessage: PropTypes.string.isRequired,
+    showExecutionStatusLabel: PropTypes.bool.isRequired,
     toolbox: Stage.PropTypes.Toolbox.isRequired
 };

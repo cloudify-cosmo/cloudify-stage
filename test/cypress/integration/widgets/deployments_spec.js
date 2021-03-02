@@ -12,10 +12,16 @@ describe('Deployments widget', () => {
             cy.get('.input.loading').should('not.exist');
         });
 
-    const actOnDeployment = (name, action) => {
-        searchForDeployment(name);
-        cy.contains('div.row', name).find('.menuAction').click();
+    const selectActionFromMenu = (deploymentId, menuClassName, action) => {
+        searchForDeployment(deploymentId);
+        cy.contains('div.row', deploymentId).find(menuClassName).click();
         cy.get('.popupMenu > .menu').contains(action).click();
+    };
+    const executeDeploymentAction = (deploymentId, action) => {
+        selectActionFromMenu(deploymentId, '.deploymentActionsMenu', action);
+    };
+    const executeWorkflow = (deploymentId, workflow) => {
+        selectActionFromMenu(deploymentId, '.workflowsMenu', workflow);
     };
 
     before(() => {
@@ -26,7 +32,7 @@ describe('Deployments widget', () => {
             .uploadBlueprint(blueprintUrl, blueprintName)
             .deployBlueprint(blueprintName, deploymentName, { webserver_port: 9123 })
             .createSite(site)
-            .usePageMock('deployments', { pollingTime: 5, clickToDrillDown: true })
+            .usePageMock('deployments', { pollingTime: 5, clickToDrillDown: true, showExecutionStatusLabel: false })
             .mockLogin();
     });
 
@@ -108,21 +114,42 @@ describe('Deployments widget', () => {
         });
     });
 
-    it('should allow to execute workflow', () => {
-        cy.interceptSp('POST', `/executions`).as('executeWorkflow');
+    describe('should allow to execute', () => {
+        beforeEach(() => {
+            cy.interceptSp('POST', `/executions`).as('executeWorkflow');
+        });
 
-        actOnDeployment(deploymentName, 'Install');
+        const verifyWorkflowIsStarted = () => {
+            cy.wait('@executeWorkflow');
+            cy.contains('div.row', deploymentName).find('.spinner.loading.icon').should('be.visible');
+        };
+        const waitUntilWorkflowIsFinished = () => {
+            const workflowExecutionTimeout = 20000;
+            cy.contains('div.row', deploymentName)
+                .find('.spinner.loading.icon', { timeout: workflowExecutionTimeout })
+                .should('not.exist');
+        };
+        const startAndVerifyWorkflowExecution = () => {
+            cy.get('.executeWorkflowModal button.ok').click();
+            verifyWorkflowIsStarted();
+            waitUntilWorkflowIsFinished();
+        };
 
-        cy.get('.executeWorkflowModal button.ok').click();
+        it('install workflow from deployment actions menu', () => {
+            executeDeploymentAction(deploymentName, 'Install');
+            startAndVerifyWorkflowExecution();
+        });
 
-        cy.wait('@executeWorkflow');
-        cy.contains('div.row', deploymentName).find('.spinner.loading.icon').should('be.visible');
+        it('a workflow from workflows menu', () => {
+            executeWorkflow(deploymentName, 'Restart');
+            startAndVerifyWorkflowExecution();
+        });
     });
 
     it('should allow to set site for deployment', () => {
         cy.interceptSp('POST', `/deployments/${deploymentName}/set-site`).as('setDeploymentSite');
 
-        actOnDeployment(deploymentName, 'Set Site');
+        executeDeploymentAction(deploymentName, 'Set Site');
 
         cy.get('.modal').within(() => {
             cy.get('div[name="siteName"]').click();
@@ -140,7 +167,7 @@ describe('Deployments widget', () => {
         cy.interceptSp('PUT', `/deployment-updates/${deploymentName}/update/initiate`).as('updateDeployment');
 
         cy.interceptSp('GET', RegExp(`/blueprints.*&state=uploaded`)).as('uploadedBlueprints');
-        actOnDeployment(deploymentName, 'Update');
+        executeDeploymentAction(deploymentName, 'Update');
 
         cy.get('.updateDeploymentModal').within(() => {
             cy.get('div[name=blueprintName]').click();
@@ -168,12 +195,55 @@ describe('Deployments widget', () => {
         });
     });
 
+    it('should allow to manage deployment labels', () => {
+        const labelKey = 'test-key';
+        const labelValue = 'test-value';
+
+        cy.setLabels(deploymentName, [{ a: 'b' }]);
+        cy.interceptSp('PATCH', `/deployments/${deploymentName}`).as('updateLabels');
+        cy.interceptSp('GET', `/deployments/${deploymentName}?_include=labels`).as('fetchLabels');
+        cy.interceptSp('GET', `/labels/deployments`).as('checkLabelPresence');
+
+        const typeInput = (name, value) => {
+            cy.get(`div[name=${name}]`).click();
+            cy.get(`div[name=${name}] input`).type(value);
+        };
+        executeDeploymentAction(deploymentName, 'Manage Labels');
+        cy.get('.modal').within(() => {
+            cy.wait('@fetchLabels');
+            cy.get('form.loading').should('not.exist');
+
+            cy.get('.segment.dropdown').click();
+            typeInput('labelKey', labelKey);
+            typeInput('labelValue', labelValue);
+            cy.get('button .add').click();
+
+            cy.wait('@checkLabelPresence');
+            cy.get('.blue.label').should('have.text', `${labelKey} ${labelValue}`);
+
+            cy.get('button.ok').click();
+        });
+        cy.wait('@updateLabels');
+
+        cy.getDeployment(deploymentName).then(response => {
+            const { labels } = response.body;
+            const verifyLabel = (index, key, value) => {
+                expect(labels[index]).to.have.property('key', key);
+                expect(labels[index]).to.have.property('value', value);
+            };
+
+            expect(labels).to.have.length(2);
+            verifyLabel(0, 'a', 'b');
+            verifyLabel(1, labelKey, labelValue);
+        });
+    });
+
     it('should allow to remove deployment', () => {
         const testDeploymentName = `${deploymentName}_remove`;
         cy.deployBlueprint(blueprintName, testDeploymentName);
         cy.interceptSp('DELETE', `/deployments/${testDeploymentName}?force=true`).as('deleteDeployment');
 
-        actOnDeployment(testDeploymentName, 'Force Delete');
+        executeDeploymentAction(testDeploymentName, 'Force Delete');
 
         cy.get('.modal button.primary').click();
 

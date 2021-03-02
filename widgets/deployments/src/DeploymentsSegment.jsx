@@ -1,8 +1,4 @@
-/**
- * Created by kinneretzin on 18/10/2016.
- */
-
-import MenuAction from './MenuAction';
+import ActionsMenus from './ActionsMenus';
 import ExecutionProgress from './ExecutionProgress';
 import DeploymentsViewPropTypes from './props/DeploymentsViewPropTypes';
 import DeploymentsViewDefaultProps from './props/DeploymentsViewDefaultProps';
@@ -12,8 +8,9 @@ export default function DeploymentsSegment({
     fetchData,
     noDataMessage,
     onActOnExecution,
-    onMenuAction,
+    onDeploymentAction,
     onSelectDeployment,
+    onWorkflowAction,
     onSetVisibility,
     showExecutionStatusLabel,
     toolbox,
@@ -56,7 +53,17 @@ export default function DeploymentsSegment({
                                 </Header>
                             </div>
                         }
-                        customActions={<MenuAction item={item} onSelectAction={onMenuAction} />}
+                        customActions={
+                            <div className="menuAction">
+                                <ActionsMenus
+                                    deploymentId={item.id}
+                                    onDeploymentAction={onDeploymentAction}
+                                    onWorkflowAction={onWorkflowAction}
+                                    workflows={item.workflows}
+                                    toolbox={toolbox}
+                                />
+                            </div>
+                        }
                         deployment={item}
                         instancesCount={item.nodeInstancesCount}
                         instancesStates={item.nodeInstancesStates}
