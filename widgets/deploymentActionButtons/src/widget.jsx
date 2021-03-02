@@ -20,19 +20,18 @@ Stage.defineWidget({
     permission: Stage.GenericConfig.WIDGET_PERMISSION('deploymentActionButtons'),
 
     fetchData(widget, toolbox, { id }) {
-        if (!_.isEmpty(id)) {
-            const { DeploymentActions } = Stage.Common;
-            const actions = new DeploymentActions(toolbox);
-
-            toolbox.loading(true);
-
-            return actions
-                .doGet({ id }) // TODO: Once RD-1353 is implemented, pass { _include: ['workflows'] } to doGet
-                .then(deployment => ({ id, workflows: deployment.workflows }))
-                .finally(() => toolbox.loading(false));
+        if (_.isEmpty(id)) {
+            return Promise.resolve({ id: '', workflows: [] });
         }
 
-        return Promise.resolve({ id: '', workflows: [] });
+        const { DeploymentActions } = Stage.Common;
+        const actions = new DeploymentActions(toolbox);
+
+        toolbox.loading(true);
+        return actions
+            .doGet({ id }) // TODO: Once RD-1353 is implemented, pass { _include: ['workflows'] } to doGet
+            .then(deployment => ({ id, workflows: deployment.workflows }))
+            .finally(() => toolbox.loading(false));
     },
 
     fetchParams(widget, toolbox) {
