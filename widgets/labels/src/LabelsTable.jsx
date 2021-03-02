@@ -128,7 +128,7 @@ export default function LabelsTable({ data, toolbox }) {
                 toolbox={toolbox}
                 deploymentId={data.deploymentId}
                 onHide={unsetLabelToDelete}
-                labels={data.labels}
+                labels={labels}
                 labelToDelete={labelToDelete}
             />
         </>
