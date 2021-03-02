@@ -54,9 +54,9 @@ const schema = [
         ]
     },
     {
-        name: 'Azure',
+        name: 'azure',
         logo: 'https://path/to/logo.svg',
-        label: 'azure',
+        label: 'Azure',
         plugins: ['', ''],
         secrets: [
             {
