@@ -1,9 +1,9 @@
 const schema = [
     {
         name: 'aws',
-        logo: 'https://path/to/logo.svg',
+        logo: 'https://cloudify.co/wp-content/uploads/2019/08/aws-1.png',
         label: 'AWS',
-        plugins: ['', ''],
+        plugins: ['cloudify-aws-plugin'],
         secrets: [
             {
                 name: 'aws_access_key_id',
@@ -13,79 +13,15 @@ const schema = [
             {
                 name: 'aws_secret_access_key',
                 label: 'aws_secret_access_key',
-                type: 'password'
-            }
-        ]
-    },
-    {
-        name: 'terraform_on_aws',
-        logo: 'https://path/to/logo.svg',
-        label: 'Terraform on AWS',
-        plugins: ['', ''],
-        secrets: [
-            {
-                name: 'aws_access_key_id',
-                label: 'aws_access_key_id',
-                type: 'text'
-            },
-            {
-                name: 'aws_secret_access_key',
-                label: 'aws_secret_access_key',
-                type: 'password'
-            }
-        ]
-    },
-    {
-        name: 'ansible_on_aws',
-        logo: 'https://path/to/logo.svg',
-        label: 'Ansible on AWS',
-        plugins: ['', ''],
-        secrets: [
-            {
-                name: 'aws_access_key_id',
-                label: 'aws_access_key_id',
-                type: 'text'
-            },
-            {
-                name: 'aws_secret_access_key',
-                label: 'aws_secret_access_key',
-                type: 'password'
-            }
-        ]
-    },
-    {
-        name: 'azure',
-        logo: 'https://path/to/logo.svg',
-        label: 'Azure',
-        plugins: ['', ''],
-        secrets: [
-            {
-                name: 'azure_subscription_id',
-                label: 'azure_subscription_id',
-                type: 'text'
-            },
-            {
-                name: 'azure_tenant_id',
-                label: 'azure_tenant_id',
-                type: 'text'
-            },
-            {
-                name: 'azure_client_id',
-                label: 'azure_client_id',
-                type: 'text'
-            },
-            {
-                name: 'azure_client_secret',
-                label: 'azure_client_secret',
                 type: 'password'
             }
         ]
     },
     {
         name: 'gpc',
-        logo: 'https://path/to/logo.svg',
+        logo: 'https://cloudify.co/wp-content/uploads/2019/08/gcplogo.png',
         label: 'GCP',
-        plugins: ['', ''],
+        plugins: ['cloudify-gcp-plugin'],
         secrets: [
             // "TODO": from https://alexmolev646772.invisionapp.com/console/Tech-Getting-Started-cklf31m3w03fc013o0agh3mf1/cklf31n0t01j90139cctpeypa/play
             {
@@ -97,9 +33,9 @@ const schema = [
     },
     {
         name: 'openstack_v2',
-        logo: 'https://path/to/logo.svg',
+        logo: 'https://cloudify.co/wp-content/uploads/2019/08/oslogo.png',
         label: 'OpenStackV2',
-        plugins: ['', ''],
+        plugins: ['cloudify-openstack-plugin'],
         secrets: [
             {
                 name: 'openstack_username',
@@ -130,9 +66,9 @@ const schema = [
     },
     {
         name: 'openstack_v3',
-        logo: 'https://path/to/logo.svg',
+        logo: 'https://cloudify.co/wp-content/uploads/2019/08/oslogo.png',
         label: 'OpenStackV3',
-        plugins: ['', ''],
+        plugins: ['cloudify-openstack-plugin'],
         secrets: [
             {
                 name: 'openstack_username',
@@ -162,10 +98,38 @@ const schema = [
         ]
     },
     {
+        name: 'azure',
+        logo: 'https://cloudify.co/wp-content/uploads/2019/08/azurelogo.png',
+        label: 'Azure',
+        plugins: ['cloudify-azure-plugin'],
+        secrets: [
+            {
+                name: 'azure_subscription_id',
+                label: 'azure_subscription_id',
+                type: 'text'
+            },
+            {
+                name: 'azure_tenant_id',
+                label: 'azure_tenant_id',
+                type: 'text'
+            },
+            {
+                name: 'azure_client_id',
+                label: 'azure_client_id',
+                type: 'text'
+            },
+            {
+                name: 'azure_client_secret',
+                label: 'azure_client_secret',
+                type: 'password'
+            }
+        ]
+    },
+    {
         name: 'vcloud',
-        logo: 'https://path/to/logo.svg',
+        logo: 'https://cloudify.co/wp-content/uploads/2019/08/vsphere.png',
         label: 'VCloud',
-        plugins: ['', ''],
+        plugins: ['cloudify-vcloud-plugin'],
         secrets: [
             {
                 name: 'vcloud_user',
@@ -201,9 +165,9 @@ const schema = [
     },
     {
         name: 'vsphere',
-        logo: 'https://path/to/logo.svg',
+        logo: 'https://cloudify.co/wp-content/uploads/2019/08/vsphere.png',
         label: 'VSphere',
-        plugins: ['', ''],
+        plugins: ['cloudify-vsphere-plugin'],
         secrets: [
             {
                 name: 'vsphere_username',
@@ -234,6 +198,42 @@ const schema = [
                 name: 'vsphere_auto_placement',
                 label: 'vsphere_auto_placement',
                 type: 'text'
+            }
+        ]
+    },
+    {
+        name: 'terraform_on_aws',
+        logo: 'https://cloudify.co/wp-content/uploads/2020/07/terraform-icon.png',
+        label: 'Terraform on AWS',
+        plugins: ['cloudify-terraform-plugin'],
+        secrets: [
+            {
+                name: 'aws_access_key_id',
+                label: 'aws_access_key_id',
+                type: 'text'
+            },
+            {
+                name: 'aws_secret_access_key',
+                label: 'aws_secret_access_key',
+                type: 'password'
+            }
+        ]
+    },
+    {
+        name: 'ansible_on_aws',
+        logo: 'https://cloudify.co/wp-content/uploads/2020/07/ansible-icon.png',
+        label: 'Ansible on AWS',
+        plugins: ['cloudify-ansible-plugin'],
+        secrets: [
+            {
+                name: 'aws_access_key_id',
+                label: 'aws_access_key_id',
+                type: 'text'
+            },
+            {
+                name: 'aws_secret_access_key',
+                label: 'aws_secret_access_key',
+                type: 'password'
             }
         ]
     }

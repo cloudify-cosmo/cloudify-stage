@@ -43,7 +43,8 @@ const TechnologyButton = memo(({ name, logo, label, value, onBlur }: Props) => {
                 onChange={handleChange}
                 onBlur={handleBlur}
             />
-            <img src={logo} alt={label} />
+            <img style={{ maxHeight: '80%' }} src={logo} alt={label} />
+            <span>{label}</span>
         </Form.Field>
     );
 });
