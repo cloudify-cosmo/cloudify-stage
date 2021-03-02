@@ -61,11 +61,11 @@ const QuickConfigurationModal = ({ open = false, step = 0, schema, data, onClose
     ]);
     const selectedItemSchema = selectedItemSchemas[localStep - 1];
     const handleModalClose = () => {
-        //TODO: check and save disabled modal flag
+        // TODO: check and save disabled modal flag
         onClose?.();
     };
     const handleCloseClick = () => {
-        //TODO: check and save disabled modal flag
+        // TODO: check and save disabled modal flag
         onClose?.();
     };
     const handleBackClick = () => {
@@ -121,20 +121,23 @@ const QuickConfigurationModal = ({ open = false, step = 0, schema, data, onClose
                 )}
                 {localStep > 0 && (
                     <UncontrolledForm<JSONData> ref={secretsFormRef} data={localData}>
-                        {selectedItemSchema?.secrets.map(itemSecret => {
-                            return (
-                                <Form.Field key={itemSecret.name}>
-                                    <Form.Input
-                                        name={`${selectedItemSchema.name}.${itemSecret.name}`}
-                                        type={itemSecret.type}
-                                        label={itemSecret.label}
-                                    />
-                                </Form.Field>
-                            );
-                        })}
+                        {selectedItemSchema?.secrets.map(itemSecret => (
+                            <Form.Field key={itemSecret.name}>
+                                <Form.Input
+                                    name={`${selectedItemSchema.name}.${itemSecret.name}`}
+                                    type={itemSecret.type}
+                                    label={itemSecret.label}
+                                />
+                            </Form.Field>
+                        ))}
                     </UncontrolledForm>
                 )}
-                {localStep > selectedItemSchemas.length && <div>Summary & Status body here ...</div>}
+                {localStep > selectedItemSchemas.length && (
+                    <div>
+                        <div>Summary & Status body here ...</div>
+                        <pre>{JSON.stringify(localData, null, 4)}</pre>
+                    </div>
+                )}
                 {/*
                     <Header>{i18n.t('help.aboutModal.versionDetails', 'Version Details')}</Header>
                     <Divider />
