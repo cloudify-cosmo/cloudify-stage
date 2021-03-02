@@ -18,7 +18,7 @@ export const forEachField = (form: HTMLFormElement, callback: (element: HTMLFiel
 export const getFormData = <T extends unknown>(form: HTMLFormElement): T => {
     const data = {} as T;
     forEachField(form, element => {
-        const value = 'checked' in element ? element.checked : element.value;
+        const value = element.type === 'checkbox' ? (element as HTMLInputElement).checked : element.value;
         setObjectProperty(data, element.name, value);
     });
     return data;
@@ -27,8 +27,8 @@ export const getFormData = <T extends unknown>(form: HTMLFormElement): T => {
 export const bindFormData = <T extends unknown>(form: HTMLFormElement, data: T): void => {
     forEachField(form, element => {
         const value = getObjectProperty(data, element.name);
-        if ('checked' in element) {
-            element.checked = Boolean(value ?? false);
+        if (element.type === 'checkbox') {
+            (element as HTMLInputElement).checked = Boolean(value ?? false);
         } else {
             element.value = String(value ?? '');
         }

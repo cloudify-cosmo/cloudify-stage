@@ -1,12 +1,13 @@
 import { Form, HeaderBar } from 'cloudify-ui-components';
 import React, { ChangeEvent, CSSProperties, memo, useEffect, useRef, useState } from 'react';
-import { JSONSchemaItem } from './model';
+// import { JSONSchemaItem } from './model';
 
 type Props = {
     name: string;
     logo: string;
     label: string;
     value?: boolean;
+    onBlur?: (e: ChangeEvent<HTMLInputElement>) => void;
 };
 
 const style: CSSProperties = {
@@ -18,11 +19,16 @@ const style: CSSProperties = {
     justifyContent: 'center'
 };
 
-const QuickConfigurationButton = memo(({ name, logo, label, value }: Props) => {
+const TechnologyButton = memo(({ name, logo, label, value, onBlur }: Props) => {
     const [localValue, setLocalValue] = useState(value);
     useEffect(() => setLocalValue(value), [value]);
     const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
         setLocalValue(e.target.checked);
+    };
+    const handleBlur = (e: ChangeEvent<HTMLInputElement>) => {
+        if (onBlur) {
+            onBlur(e);
+        }
     };
     const handleClick = () => {
         setLocalValue(!localValue);
@@ -33,12 +39,13 @@ const QuickConfigurationButton = memo(({ name, logo, label, value }: Props) => {
                 name={name}
                 label=" "
                 checked={localValue}
-                style={{ display: 'none' }}
+                // style={{ display: 'none' }}
                 onChange={handleChange}
+                onBlur={handleBlur}
             />
             <img src={logo} alt={label} />
         </Form.Field>
     );
 });
 
-export default QuickConfigurationButton;
+export default TechnologyButton;

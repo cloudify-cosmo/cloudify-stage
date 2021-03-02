@@ -13,7 +13,7 @@ import QuickConfigurationModal from './QuickConfigurationModal';
 import quickConfigurationSchema from './QuickConfigurationModal/schema';
 
 const data = {
-    AWS: {
+    aws: {
         aws_access_key_id: '123',
         aws_secret_access_key: '321'
     }
