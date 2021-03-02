@@ -1,6 +1,7 @@
 import { mapValues } from 'lodash';
 import type { ReactNode } from 'react';
 import type { SemanticICONS } from 'semantic-ui-react';
+import type { WithOptionalProperties } from '../../../app/utils/types';
 
 // NOTE: the order in the array determines the order in the UI
 export const deploymentsViewColumnIds = [
@@ -26,9 +27,6 @@ export interface DeploymentsViewColumnDefinition {
     tooltip?: ReactNode;
     render(deployment: any): ReactNode;
 }
-
-type WithOptionalProperties<T, OptionalProperties extends keyof T> = Omit<T, OptionalProperties> &
-    Partial<Pick<T, OptionalProperties>>;
 
 const partialDeploymentsViewColumnDefinitions: Record<
     DeploymentsViewColumnId,
