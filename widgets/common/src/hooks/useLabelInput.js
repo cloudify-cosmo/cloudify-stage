@@ -1,4 +1,5 @@
 const allowedCharacters = /^[a-z][a-z0-9._-]*$/i;
+const maxInputLength = 256;
 
 function useLabelInput(onChange, initialValue = '') {
     const { useBoolean, useResettableState } = Stage.Hooks;
@@ -10,7 +11,7 @@ function useLabelInput(onChange, initialValue = '') {
         invalidCharacterTyped,
         submitChange: (event, data) => {
             // supports both dropdown as well as regular input
-            const lowercasedNewTypedValue = _.toLower(data.searchQuery ?? data.value).substr(0, 256);
+            const lowercasedNewTypedValue = _.toLower(data.searchQuery ?? data.value).substr(0, maxInputLength);
             if (lowercasedNewTypedValue === '' || allowedCharacters.test(lowercasedNewTypedValue)) {
                 setInputValue(lowercasedNewTypedValue);
                 onChange(lowercasedNewTypedValue);
