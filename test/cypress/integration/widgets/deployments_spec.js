@@ -23,6 +23,15 @@ describe('Deployments widget', () => {
     const executeWorkflow = (deploymentId, workflow) => {
         selectActionFromMenu(deploymentId, '.workflowsMenu', workflow);
     };
+    const verifyWorkflowIsStarted = () => {
+        cy.contains('div.row', deploymentName).find('.spinner.loading.icon').should('be.visible');
+    };
+    const waitUntilWorkflowIsFinished = () => {
+        const workflowExecutionTimeout = 60000;
+        cy.contains('div.row', deploymentName)
+            .find('.spinner.loading.icon', { timeout: workflowExecutionTimeout })
+            .should('not.exist');
+    };
 
     before(() => {
         cy.activate('valid_trial_license')
@@ -119,18 +128,9 @@ describe('Deployments widget', () => {
             cy.interceptSp('POST', `/executions`).as('executeWorkflow');
         });
 
-        const verifyWorkflowIsStarted = () => {
-            cy.wait('@executeWorkflow');
-            cy.contains('div.row', deploymentName).find('.spinner.loading.icon').should('be.visible');
-        };
-        const waitUntilWorkflowIsFinished = () => {
-            const workflowExecutionTimeout = 20000;
-            cy.contains('div.row', deploymentName)
-                .find('.spinner.loading.icon', { timeout: workflowExecutionTimeout })
-                .should('not.exist');
-        };
         const startAndVerifyWorkflowExecution = () => {
             cy.get('.executeWorkflowModal button.ok').click();
+            cy.wait('@executeWorkflow');
             verifyWorkflowIsStarted();
             waitUntilWorkflowIsFinished();
         };
@@ -186,13 +186,11 @@ describe('Deployments widget', () => {
 
         cy.wait('@updateDeployment');
         cy.get('.updateDetailsModal').should('not.exist');
-
-        cy.contains('div.row', deploymentName).within(() => {
-            const updateTimeout = 30000;
-            cy.get('div.column:nth-child(1) .spinner.loading.icon').should('be.visible');
-            cy.get('div.column:nth-child(1) .green.checkmark.icon', { timeout: updateTimeout }).should('be.visible');
-            cy.get('div.column:nth-child(3) h5:nth-child(2)').should('contain.text', 'Updated');
-        });
+        verifyWorkflowIsStarted();
+        waitUntilWorkflowIsFinished();
+        cy.contains('div.row', deploymentName)
+            .get('div.column:nth-child(3) h5:nth-child(2)')
+            .should('contain.text', 'Updated');
     });
 
     it('should allow to manage deployment labels', () => {
