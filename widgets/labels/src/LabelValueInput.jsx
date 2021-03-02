@@ -2,6 +2,7 @@ export default function LabelValueInput({ initialValue, onCancel, onChange, onSu
     const { Form } = Stage.Basic;
     const { LabelValidationErrorPopup, RevertToDefaultIcon } = Stage.Common;
     const { useLabelInput } = Stage.Hooks;
+    const { i18n } = Stage;
 
     const { inputValue, invalidCharacterTyped, submitChange, resetInput } = useLabelInput(onChange, initialValue);
 
@@ -24,7 +25,7 @@ export default function LabelValueInput({ initialValue, onCancel, onChange, onSu
                     <RevertToDefaultIcon
                         value={inputValue}
                         defaultValue={initialValue}
-                        popupContent="Revert to initial value"
+                        popupContent={i18n.t('widgets.labels.revert')}
                         onMouseDown={e => {
                             e.preventDefault();
                             resetInput();

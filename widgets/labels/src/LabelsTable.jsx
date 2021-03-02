@@ -7,6 +7,7 @@ export default function LabelsTable({ data, toolbox }) {
     const { Button, DataTable, Icon } = Stage.Basic;
     const { DeploymentActions, ManageLabelsModal } = Stage.Common;
     const { useBoolean, useInput, useResettableState } = Stage.Hooks;
+    const { i18n } = Stage;
 
     const [isAddModalOpen, openAddModal, closeAddModal] = useBoolean();
     const [labelInEdit, setLabelInEdit, stopLabelEdit] = useResettableState();
@@ -52,10 +53,10 @@ export default function LabelsTable({ data, toolbox }) {
             <DataTable
                 className="labelsTable"
                 totalSize={_.size(labels) > 0 ? undefined : 0}
-                noDataMessage="There are no Labels defined"
+                noDataMessage={i18n.t('widgets.labels.noLabels')}
             >
-                <DataTable.Column width="50%" label="Key" />
-                <DataTable.Column width="50%" label="Value" />
+                <DataTable.Column width="50%" label={i18n.t('widgets.labels.columns.key')} />
+                <DataTable.Column width="50%" label={i18n.t('widgets.labels.columns.value')} />
                 {hasManagePermission && <DataTable.Column width="80px" />}
 
                 {labels.map(item => (
@@ -79,7 +80,7 @@ export default function LabelsTable({ data, toolbox }) {
                                     name="edit"
                                     link
                                     bordered
-                                    title="Edit label"
+                                    title={i18n.t('widgets.labels.columns.actions.edit')}
                                     onClick={() => {
                                         setLabelInEdit(item);
                                         setCurrentLabelValue(item.value);
@@ -89,7 +90,7 @@ export default function LabelsTable({ data, toolbox }) {
                                     name="trash"
                                     link
                                     bordered
-                                    title="Delete label"
+                                    title={i18n.t('widgets.labels.columns.actions.delete')}
                                     onClick={() => setLabelToDelete(item)}
                                 />
                             </DataTable.Data>
@@ -105,7 +106,12 @@ export default function LabelsTable({ data, toolbox }) {
 
                 <DataTable.Action>
                     {hasManagePermission && (
-                        <Button content="Add" icon="add" labelPosition="left" onClick={openAddModal} />
+                        <Button
+                            content={i18n.t('widgets.labels.add')}
+                            icon="add"
+                            labelPosition="left"
+                            onClick={openAddModal}
+                        />
                     )}
                     <Button content="Export" icon="external share" labelPosition="left" onClick={exportToJson} />
                 </DataTable.Action>
@@ -114,8 +120,8 @@ export default function LabelsTable({ data, toolbox }) {
             <ManageLabelsModal
                 deploymentId={data.deploymentId}
                 existingLabels={labels}
-                header={`Add labels for deployment '${data.deploymentId}'`}
-                applyButtonContent="Add"
+                header={i18n.t('widgets.labels.addHeader', data)}
+                applyButtonContent={i18n.t('widgets.labels.add')}
                 open={isAddModalOpen}
                 onHide={() => {
                     closeAddModal();

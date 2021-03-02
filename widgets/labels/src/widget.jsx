@@ -1,9 +1,11 @@
 import LabelsTable from './LabelsTable';
 
+const { i18n } = Stage;
+
 Stage.defineWidget({
     id: 'labels',
-    name: 'Labels',
-    description: 'This widget shows a list of defined labels',
+    name: i18n.t('widgets.labels.name'),
+    description: i18n.t('widgets.labels.description'),
     initialWidth: 12,
     initialHeight: 24,
     color: 'olive',
@@ -35,7 +37,7 @@ Stage.defineWidget({
         const deploymentId = toolbox.getContext().getValue('deploymentId');
         if (!deploymentId) {
             const { Message } = Stage.Basic;
-            return <Message info>No deployment selected</Message>;
+            return <Message info>{i18n.t('widgets.labels.noDeployment')}</Message>;
         }
 
         if (!Array.isArray(data)) {
