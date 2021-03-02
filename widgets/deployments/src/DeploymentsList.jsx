@@ -1,24 +1,16 @@
-/**
- * Created by kinneretzin on 18/10/2016.
- */
-
 import DeploymentsSegment from './DeploymentsSegment';
 import DeploymentsTable from './DeploymentsTable';
-import MenuAction from './MenuAction';
 
 export default class DeploymentsList extends React.Component {
-    static DEPLOYMENT_UPDATE_DETAILS_MODAL = 'deploymentUpdateDetailsModal';
-
     constructor(props, context) {
         super(props, context);
 
         this.state = {
+            activeAction: null,
+            deploymentId: null,
             error: null,
-            modalType: '',
-            showModal: false,
-            deployment: { id: '' },
-            deploymentUpdateId: null,
-            workflow: { name: '' }
+            executeModalOpen: false,
+            workflowName: null
         };
     }
 
@@ -66,73 +58,24 @@ export default class DeploymentsList extends React.Component {
         }
     };
 
-    deleteDeployment = () => {
-        const { deployment } = this.state;
-        const { toolbox } = this.props;
-        this.hideModal();
-
-        if (!deployment) {
-            this.setError('Something went wrong, no deployment was selected for delete');
-            return;
-        }
-
-        toolbox.loading(true);
-
-        const actions = new Stage.Common.DeploymentActions(toolbox);
-        actions
-            .doDelete(deployment)
-            .then(() => {
-                this.setError(null);
-                toolbox.getEventBus().trigger('deployments:refresh');
-                toolbox.loading(false);
-            })
-            .catch(err => {
-                this.setError(err.message);
-                toolbox.loading(false);
-            });
-    };
-
-    forceDeleteDeployment = () => {
-        const { deployment } = this.state;
-        const { toolbox } = this.props;
-        this.hideModal();
-
-        if (!deployment) {
-            this.setError('Something went wrong, no deployment was selected for delete');
-            return;
-        }
-
-        toolbox.loading(true);
-
-        const actions = new Stage.Common.DeploymentActions(toolbox);
-        actions
-            .doForceDelete(deployment)
-            .then(() => {
-                this.setError(null);
-                toolbox.getEventBus().trigger('deployments:refresh');
-                toolbox.loading(false);
-            })
-            .catch(err => {
-                this.setError(err.message);
-                toolbox.loading(false);
-            });
-    };
-
     actOnExecution = (execution, action, error) => {
         this.setError(error);
     };
 
-    showModal = (value, deployment, workflow) => {
-        this.setState({
-            deployment,
-            workflow: workflow || {},
-            modalType: workflow ? MenuAction.WORKFLOW_ACTION : value,
-            showModal: true
-        });
+    openExecuteModal = (deploymentId, workflowName) => {
+        this.setState({ deploymentId, executeModalOpen: true, workflowName });
     };
 
-    hideModal = () => {
-        this.setState({ showModal: false });
+    hideExecuteModal = () => {
+        this.setState({ executeModalOpen: false, workflowName: null });
+    };
+
+    openActionModal = (deploymentId, actionName) => {
+        this.setState({ deploymentId, activeAction: actionName });
+    };
+
+    hideActionModal = () => {
+        this.setState({ activeAction: null });
     };
 
     fetchData = fetchParams => {
@@ -146,86 +89,48 @@ export default class DeploymentsList extends React.Component {
     }
 
     render() {
-        const { deployment, error, modalType, showModal, workflow } = this.state;
+        const { activeAction, deploymentId, error, executeModalOpen, workflowName } = this.state;
         const { data, toolbox, widget } = this.props;
         const NO_DATA_MESSAGE = 'There are no Deployments available. Click "Create deployment" to add deployments.';
-        const { ErrorMessage, Confirm } = Stage.Basic;
-        const { ExecuteDeploymentModal, UpdateDeploymentModal, SetSiteModal } = Stage.Common;
-        const showTableComponent = widget.configuration.displayStyle === 'table';
+        const { ErrorMessage } = Stage.Basic;
+        const { DeploymentActionsModals, ExecuteDeploymentModal } = Stage.Common;
+
+        const { displayStyle, showExecutionStatusLabel } = widget.configuration;
+        const showTableComponent = displayStyle === 'table';
 
         const DeploymentsView = showTableComponent ? DeploymentsTable : DeploymentsSegment;
-        const deploymentId = deployment.id;
 
         return (
             <div>
                 <ErrorMessage error={error} onDismiss={() => this.setState({ error: null })} autoHide />
-
                 <DeploymentsView
                     widget={widget}
                     data={data}
                     fetchData={this.fetchData}
                     onSelectDeployment={this.selectDeployment}
-                    onMenuAction={this.showModal}
+                    onDeploymentAction={this.openActionModal}
+                    onWorkflowAction={this.openExecuteModal}
                     onActOnExecution={this.actOnExecution}
                     onError={this.setError}
                     onSetVisibility={this.setDeploymentVisibility}
                     noDataMessage={NO_DATA_MESSAGE}
-                    showExecutionStatusLabel={widget.configuration.showExecutionStatusLabel}
+                    showExecutionStatusLabel={showExecutionStatusLabel}
                     toolbox={toolbox}
                 />
-
-                <Confirm
-                    content={`Are you sure you want to remove deployment ${deploymentId}?`}
-                    open={modalType === MenuAction.DELETE_ACTION && showModal}
-                    onConfirm={this.deleteDeployment}
-                    onCancel={this.hideModal}
-                />
-
-                <Confirm
-                    content={
-                        <div className="content">
-                            <p>
-                                Force delete will ignore any existing live nodes, or existing deployments which depend
-                                on this deployment.
-                            </p>
-                            <p>
-                                It&apos;s recommended to first run uninstall to stop the live nodes, and make sure there
-                                are no running installations which depend on this deployment - and then run delete.
-                            </p>
-                            <p>
-                                Are you sure you want to ignore the live nodes and delete the deployment {deploymentId}?
-                            </p>
-                        </div>
-                    }
-                    open={modalType === MenuAction.FORCE_DELETE_ACTION && showModal}
-                    onConfirm={this.forceDeleteDeployment}
-                    onCancel={this.hideModal}
-                />
-
-                {deploymentId && (
+                {deploymentId && workflowName && (
                     <ExecuteDeploymentModal
-                        open={modalType === MenuAction.WORKFLOW_ACTION && showModal}
                         deploymentId={deploymentId}
-                        workflow={workflow}
-                        onHide={this.hideModal}
+                        onHide={this.hideExecuteModal}
+                        open={executeModalOpen}
                         toolbox={toolbox}
+                        workflow={workflowName}
                     />
                 )}
-
-                {deploymentId && (
-                    <UpdateDeploymentModal
-                        open={modalType === MenuAction.UPDATE_ACTION && showModal}
+                {activeAction && deploymentId && (
+                    <DeploymentActionsModals
+                        activeAction={activeAction}
                         deploymentId={deploymentId}
-                        onHide={this.hideModal}
-                        toolbox={toolbox}
-                    />
-                )}
-
-                {deploymentId && (
-                    <SetSiteModal
-                        open={modalType === MenuAction.SET_SITE_ACTION && showModal}
-                        deploymentId={deploymentId}
-                        onHide={this.hideModal}
+                        onHide={this.hideActionModal}
                         toolbox={toolbox}
                     />
                 )}

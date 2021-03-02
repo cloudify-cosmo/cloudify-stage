@@ -148,6 +148,8 @@ export default function ExecuteDeploymentModal({
         const executePromises = _.map(deploymentsList, id => {
             const scheduled = schedule ? moment(scheduledTime).format('YYYYMMDDHHmmZ') : undefined;
             return actions.doExecute({ id }, { name }, workflowParameters, force, dryRun, queue, scheduled).then(() => {
+                // State updates should be done before calling `onHide` to avoid React errors:
+                // "Warning: Can't perform a React state update on an unmounted component"
                 unsetLoading();
                 clearErrors();
                 onHide();
@@ -207,7 +209,7 @@ export default function ExecuteDeploymentModal({
     }
 
     return (
-        <Modal open={open} onClose={() => onHide()} className="executeWorkflowModal">
+        <Modal open={open} onClose={onHide} className="executeWorkflowModal">
             <Modal.Header>
                 <Icon name="cogs" /> Execute workflow {workflowName}
                 {deploymentName && ` on ${deploymentName}`}
