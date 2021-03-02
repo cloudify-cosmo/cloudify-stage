@@ -1,22 +1,21 @@
-/**
- * Created by kinneretzin on 30/08/2016.
- */
-
 import _ from 'lodash';
 import log from 'loglevel';
 import PropTypes from 'prop-types';
 import marked from 'marked';
 import i18n from 'i18next';
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 
+import { setValue } from '../actions/context';
+import { fetchWidgetData as fetchWidgetDataThunk } from '../actions/WidgetData';
 import EditWidget from './EditWidget';
 import stageUtils from '../utils/stageUtils';
 import { EditableLabel, ErrorMessage, Header, Icon, Loading, Message, ReadmeModal, Segment } from './basic';
 import WidgetDynamicContent from './WidgetDynamicContent';
 
-export default class Widget extends Component {
-    constructor(props, context) {
-        super(props, context);
+class Widget extends Component {
+    constructor(props) {
+        super(props);
 
         this.widgetItemRef = React.createRef();
         this.state = {
@@ -265,3 +264,21 @@ Widget.propTypes = {
     }).isRequired,
     widgetData: PropTypes.shape({}).isRequired
 };
+
+const mapStateToProps = (state, ownProps) => {
+    return {
+        context: state.context,
+        manager: state.manager || {},
+        widgetData: _.find(state.widgetData, { id: ownProps.widget.id }) || {}
+    };
+};
+
+const mapDispatchToProps = {
+    setContextValue: setValue,
+    fetchWidgetData: fetchWidgetDataThunk
+};
+
+// NOTE: connector is extracted to a separate variable to leverage type inference in TypeScript
+const connector = connect(mapStateToProps, mapDispatchToProps);
+
+export default connector(Widget);
