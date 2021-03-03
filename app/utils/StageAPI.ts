@@ -50,7 +50,7 @@ export interface Widget<Configuration = Record<string, unknown>> {
     y: number;
     configuration: Configuration;
     definition: WidgetDefinition;
-    drillDownPages: any[];
+    drillDownPages: Record<string, string>;
     maximized: boolean;
 }
 
