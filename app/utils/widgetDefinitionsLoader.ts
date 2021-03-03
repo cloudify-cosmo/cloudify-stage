@@ -12,10 +12,10 @@ import StageUtils from './stageUtils';
 import LoaderUtils from './LoaderUtils';
 
 import GenericConfig from './GenericConfig';
-import WidgetDefinition from './WidgetDefinition';
 import * as PropTypes from './props';
 import * as Hooks from './hooks';
-import { StageAPI } from './StageAPI';
+import type { StageAPI, WidgetDefinition } from './StageAPI';
+import normalizeWidgetDefinition from './normalizeWidgetDefinition';
 
 // NOTE: why do we even use require here?
 // @ts-expect-error Allowed temporarily
@@ -52,7 +52,7 @@ export default class WidgetDefinitionsLoader {
     public static init() {
         const stageAPI: StageAPI = {
             defineWidget: widgetDefinition => {
-                widgetDefinitions.push(new WidgetDefinition({ ...widgetDefinition, id: document.currentScript?.id }));
+                widgetDefinitions.push(normalizeWidgetDefinition(widgetDefinition));
             },
             Basic,
             Shared,
@@ -171,7 +171,7 @@ export default class WidgetDefinitionsLoader {
         return Promise.resolve(loadedWidgetDefinitions);
     }
 
-    public static load(manager: any): Promise<any[]> {
+    public static load(manager: any): Promise<WidgetDefinition<any, any, any>[]> {
         return WidgetDefinitionsLoader.loadWidgets(manager)
             .then(widgets => WidgetDefinitionsLoader.loadWidgetsResources(widgets))
             .then(() => WidgetDefinitionsLoader.initWidgets())

@@ -1,16 +1,20 @@
 import fetchMock from 'fetch-mock';
 
 import ScriptLoader from 'utils/scriptLoader';
+import { WidgetDefinitionForDefining } from 'utils/StageAPI';
 import WidgetDefinitionsLoader from 'utils/widgetDefinitionsLoader';
 
-const initialWidgetDefinition = {
+const initialWidgetDefinition: WidgetDefinitionForDefining<unknown, unknown, unknown> = {
     id: 'testWidget',
     name: 'Test Widget',
     isReact: false,
     render: () => 'The rendered content of the test widget'
 };
 
-function loadMockWidgetDefinition(widgetDefinition: any, widgetDirectoryName: string) {
+function loadMockWidgetDefinition(
+    widgetDefinition: WidgetDefinitionForDefining<unknown, unknown, unknown>,
+    widgetDirectoryName: string
+) {
     fetchMock.get('/console/widgets/list', {
         body: [{ id: widgetDirectoryName, isCustom: false }]
     });
@@ -47,7 +51,7 @@ describe('(Utils) widgetDefinitionsLoader', () => {
     describe('init', () => {
         describe('when currentScript id is set', () => {
             it('should execute the init function for widget', async () => {
-                const widgetDefinition = {
+                const widgetDefinition: WidgetDefinitionForDefining<unknown, unknown, unknown> = {
                     ...initialWidgetDefinition,
                     init: jest.fn()
                 };

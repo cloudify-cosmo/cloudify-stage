@@ -150,8 +150,14 @@ interface CommonOrPropTypeDefinition {
     common: any;
 }
 
-type WidgetDefinitionForDefining<Params, Data, Configuration> = WithOptionalProperties<
-    Omit<WidgetDefinition<Params, Data, Configuration>, 'readme'>,
+export type WidgetDefinitionForDefining<Params, Data, Configuration> = WithOptionalProperties<
+    /**
+     * NOTE: cannot use `WidgetDefinition` directly because `isReact` stops being a discriminant property
+     * which breaks type safety for `render`.
+     *
+     * Thus, the duplication of combining `Common`, `React`, and `HTMLWidgetDefinitionPart`s is necessary
+     */
+    Omit<CommonWidgetDefinition<Params, Data, Configuration>, 'readme'>,
     | 'color'
     | 'categories'
     | 'hasReadme'
@@ -164,7 +170,8 @@ type WidgetDefinitionForDefining<Params, Data, Configuration> = WithOptionalProp
     | 'showBorder'
     | 'showHeader'
     | 'supportedEditions'
->;
+> &
+    (ReactWidgetDefinitionPart<Data, Configuration> | HTMLWidgetDefinitionPart<Data, Configuration>);
 
 export interface StageAPI {
     Basic: typeof BasicComponents;
