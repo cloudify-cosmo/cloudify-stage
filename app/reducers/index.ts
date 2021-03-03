@@ -4,7 +4,7 @@
 
 import { combineReducers } from 'redux';
 import { connectRouter } from 'connected-react-router';
-import { History } from 'history';
+import type { History } from 'history';
 
 import pages from './pageReducer';
 import widgetDefinitions from './widgetDefinitionsReducer';
