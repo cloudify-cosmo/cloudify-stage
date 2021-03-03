@@ -4,6 +4,11 @@
 
 const WorkflowsPropType = Stage.PropTypes.Workflows;
 
+function filterWorkflows(workflows) {
+    const updateWorkflow = 'update';
+    return _.filter(workflows, workflow => workflow.name !== updateWorkflow);
+}
+
 function StyledTitle({ name, bold }) {
     const displayName = _.capitalize(_.lowerCase(name));
     return <span style={bold ? { fontWeight: 'bold' } : {}}>{displayName}</span>;
@@ -108,7 +113,8 @@ function WorkflowsMenu({ workflows, onClick, showInPopup, trigger }) {
         i18n
     } = Stage;
 
-    const workflowsGroups = _.chain(workflows)
+    const filteredAndSortedWorkflows = _.sortBy(filterWorkflows(workflows), 'name');
+    const workflowsGroups = _.chain(filteredAndSortedWorkflows)
         .groupBy('plugin')
         .map((value, key) => ({ name: key, workflows: value }))
         .sortBy('name')
@@ -131,7 +137,7 @@ function WorkflowsMenu({ workflows, onClick, showInPopup, trigger }) {
 
                 {showOnlyDefaultWorkflows ? (
                     <Menu vertical>
-                        <WorkflowsMenuItems workflows={workflows} onClick={onClick} />
+                        <WorkflowsMenuItems workflows={filteredAndSortedWorkflows} onClick={onClick} />
                     </Menu>
                 ) : (
                     <AccordionWorkflowsMenu workflowsGroups={workflowsGroups} onClick={onClick} />
@@ -141,7 +147,7 @@ function WorkflowsMenu({ workflows, onClick, showInPopup, trigger }) {
     }
 
     return showOnlyDefaultWorkflows ? (
-        <WorkflowsMenuItems workflows={workflows} onClick={onClick} />
+        <WorkflowsMenuItems workflows={filteredAndSortedWorkflows} onClick={onClick} />
     ) : (
         <AccordionWorkflowsMenu workflowsGroups={workflowsGroups} onClick={onClick} />
     );
