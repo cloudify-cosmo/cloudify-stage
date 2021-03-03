@@ -1,18 +1,14 @@
-/**
- * Created by kinneretzin on 29/08/2016.
- */
-
 import _ from 'lodash';
-import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import i18n from 'i18next';
-import { connect } from 'react-redux';
+import { connect, ConnectedProps } from 'react-redux';
+import type { ThunkDispatch } from 'redux-thunk';
+import type { AnyAction } from 'redux';
 
 import Breadcrumbs from './Breadcrumbs';
 import EditModeBubble from './EditModeBubble';
 import { Button, EditableLabel } from './basic';
 import PageContent from './PageContent';
-import LayoutPropType from '../utils/props/LayoutPropType';
 import {
     addLayoutSectionToPage,
     addTab,
@@ -29,9 +25,18 @@ import {
 import { addWidget, removeWidget, updateWidget } from '../actions/widgets';
 import { setDrilldownContext } from '../actions/drilldownContext';
 import { setEditMode } from '../actions/config';
+import type { ReduxState } from '../reducers';
+import type { Widget, WidgetDefinition } from '../utils/StageAPI';
 
-class Page extends Component {
-    shouldComponentUpdate(nextProps) {
+export interface PageOwnProps {
+    pageId: string;
+    pageName: string;
+}
+
+type PageProps = PageOwnProps & PropsFromRedux;
+
+class Page extends Component<PageProps, never> {
+    shouldComponentUpdate(nextProps: PageProps) {
         const { isEditMode, page } = this.props;
         return !_.isEqual(page, nextProps.page) || isEditMode !== nextProps.isEditMode;
     }
@@ -59,9 +64,8 @@ class Page extends Component {
             _(page.layout).flatMap('content').find({ maximized: true }) ||
             _(page.layout).flatMap('content').flatMap('widgets').find({ maximized: true });
 
-        $('body')
-            .css({ overflow: maximizeWidget ? 'hidden' : 'inherit' })
-            .scrollTop(0);
+        document.body.style.overflow = maximizeWidget ? 'hidden' : 'inherit';
+        window.scroll({ top: 0 });
 
         return (
             <div className={`fullHeight ${maximizeWidget ? 'maximizeWidget' : ''}`}>
@@ -110,35 +114,36 @@ class Page extends Component {
     }
 }
 
-Page.propTypes = {
-    page: PropTypes.shape({
-        id: PropTypes.string,
-        description: PropTypes.string,
-        layout: LayoutPropType
-    }).isRequired,
-    pagesList: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
-    onPageNameChange: PropTypes.func.isRequired,
-    onPageDescriptionChange: PropTypes.func.isRequired,
-    onWidgetUpdated: PropTypes.func.isRequired,
-    onWidgetRemoved: PropTypes.func.isRequired,
-    onWidgetAdded: PropTypes.func.isRequired,
-    onTabAdded: PropTypes.func.isRequired,
-    onTabRemoved: PropTypes.func.isRequired,
-    onTabUpdated: PropTypes.func.isRequired,
-    onTabMoved: PropTypes.func.isRequired,
-    onPageSelected: PropTypes.func.isRequired,
-    onEditModeExit: PropTypes.func.isRequired,
-    onLayoutSectionRemoved: PropTypes.func.isRequired,
-    onLayoutSectionAdded: PropTypes.func.isRequired,
-    isEditMode: PropTypes.bool.isRequired
-};
+// NOTE: these should be extracted to appropriate reducers when those are migrated to TS
+interface LayoutSection {
+    type: 'widgets' | 'tabs';
+    content: SimpleWidgetObj[];
+}
 
-const buildPagesList = (pages, drilldownContextArray, selectedPageId) => {
-    const pagesMap = createPagesMap(pages);
-    const pagesList = [];
+interface PageDefinition {
+    id: string;
+    name: string;
+    description: string;
+    layout: LayoutSection[];
+    isDrillDown: boolean;
+    parent?: string;
+}
+
+interface PageDefinitionWithContext extends PageDefinition {
+    context: any;
+}
+
+interface DrilldownContext {
+    pageName?: string;
+    context?: Record<string, any>;
+}
+
+const buildPagesList = (pages: PageDefinition[], drilldownContextArray: DrilldownContext[], selectedPageId: string) => {
+    const pagesMap: Record<string, PageDefinition> = createPagesMap(pages);
+    const pagesList: PageDefinitionWithContext[] = [];
     let index = drilldownContextArray.length - 1;
 
-    const updatePagesListWith = page => {
+    const updatePagesListWith = (page: PageDefinition) => {
         const basePage = !page ? pages[0] : page;
         const pageDrilldownContext = index >= 0 ? drilldownContextArray[index] : {};
         index -= 1;
@@ -159,7 +164,9 @@ const buildPagesList = (pages, drilldownContextArray, selectedPageId) => {
     return pagesList;
 };
 
-const mapStateToProps = (state, ownProps) => {
+type SimpleWidgetObj = Omit<Widget, 'definition'> & { definition: string };
+
+const mapStateToProps = (state: ReduxState, ownProps: PageOwnProps) => {
     const { pages } = state;
 
     const pagesMap = createPagesMap(pages);
@@ -169,10 +176,12 @@ const mapStateToProps = (state, ownProps) => {
 
     const pageData = _.cloneDeep(_.find(pages, { id: pageId }));
 
-    function assignWidgetDefinition(widget) {
-        widget.definition = _.find(state.widgetDefinitions, {
+    function assignWidgetDefinition(widget: SimpleWidgetObj) {
+        // NOTE: assume the definition is always valid
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        ((widget as unknown) as Widget).definition = _.find(state.widgetDefinitions, {
             id: widget.definition
-        });
+        })!;
         return widget;
     }
 
@@ -188,15 +197,15 @@ const mapStateToProps = (state, ownProps) => {
     };
 };
 
-const mapDispatchToProps = (dispatch, ownProps) => {
+const mapDispatchToProps = (dispatch: ThunkDispatch<ReduxState, never, AnyAction>, ownProps: PageOwnProps) => {
     return {
-        onPageNameChange: (page, newName) => {
+        onPageNameChange: (page: PageDefinition, newName: string) => {
             dispatch(changePageName(page, newName));
         },
-        onPageDescriptionChange: (pageId, newDescription) => {
+        onPageDescriptionChange: (pageId: string, newDescription: string) => {
             dispatch(changePageDescription(pageId, newDescription));
         },
-        onPageSelected: (page, pagesList, index) => {
+        onPageSelected: (page: PageDefinitionWithContext, pagesList: PageDefinitionWithContext[], index: number) => {
             const drilldownContext = [];
             // Starting from 1 cause the first page doesnt have any context and shouldnt be in the context array (only drilldown pages)
             // and also skip the last page, because we are sending the context of this one to the select page
@@ -209,30 +218,38 @@ const mapDispatchToProps = (dispatch, ownProps) => {
             dispatch(setDrilldownContext(drilldownContext));
             dispatch(selectPage(page.id, page.isDrillDown, page.context, page.name));
         },
-        onWidgetAdded: (layoutSection, name, widgetDefinition, tabIndex) => {
+        onWidgetAdded: (
+            layoutSection: LayoutSection,
+            name: string,
+            widgetDefinition: WidgetDefinition,
+            tabIndex: number
+        ) => {
             dispatch(addWidget(ownProps.pageId, layoutSection, tabIndex, { name }, widgetDefinition));
         },
-        onTabAdded: layoutSection => dispatch(addTab(ownProps.pageId, layoutSection)),
-        onTabRemoved: (layoutSection, tabIndex) => dispatch(removeTab(ownProps.pageId, layoutSection, tabIndex)),
-        onTabUpdated: (layoutSection, tabIndex, name, isDefault) =>
+        onTabAdded: (layoutSection: LayoutSection) => dispatch(addTab(ownProps.pageId, layoutSection)),
+        onTabRemoved: (layoutSection: LayoutSection, tabIndex: number) =>
+            dispatch(removeTab(ownProps.pageId, layoutSection, tabIndex)),
+        onTabUpdated: (layoutSection: LayoutSection, tabIndex: number, name: string, isDefault: boolean) =>
             dispatch(updateTab(ownProps.pageId, layoutSection, tabIndex, name, isDefault)),
-        onTabMoved: (layoutSection, oldTabIndex, newTabIndex) =>
+        onTabMoved: (layoutSection: LayoutSection, oldTabIndex: number, newTabIndex: number) =>
             dispatch(moveTab(ownProps.pageId, layoutSection, oldTabIndex, newTabIndex)),
         onEditModeExit: () => {
             dispatch(setEditMode(false));
         },
-        onWidgetUpdated: (widgetId, params) => {
+        onWidgetUpdated: (widgetId: string, params: Record<string, any>) => {
             dispatch(updateWidget(ownProps.pageId, widgetId, params));
         },
-        onWidgetRemoved: widgetId => {
+        onWidgetRemoved: (widgetId: string) => {
             dispatch(removeWidget(ownProps.pageId, widgetId));
         },
-        onLayoutSectionAdded: (layoutSection, position) =>
+        onLayoutSectionAdded: (layoutSection: LayoutSection, position: number) =>
             dispatch(addLayoutSectionToPage(ownProps.pageId, layoutSection, position)),
-        onLayoutSectionRemoved: layoutSection => dispatch(removeLayoutSectionFromPage(ownProps.pageId, layoutSection))
+        onLayoutSectionRemoved: (layoutSection: LayoutSection) =>
+            dispatch(removeLayoutSectionFromPage(ownProps.pageId, layoutSection))
     };
 };
 
-const PageW = connect(mapStateToProps, mapDispatchToProps)(Page);
+const connector = connect(mapStateToProps, mapDispatchToProps);
+type PropsFromRedux = ConnectedProps<typeof connector>;
 
-export default PageW;
+export default connector(Page);
