@@ -19,31 +19,27 @@ Stage.defineWidget({
     hasReadme: true,
     permission: Stage.GenericConfig.WIDGET_PERMISSION('deploymentActionButtons'),
 
-    fetchData(widget, toolbox) {
-        const deploymentId = toolbox.getContext().getValue('deploymentId');
-
-        if (!_.isEmpty(deploymentId)) {
-            toolbox.loading(true);
-            return toolbox
-                .getManager()
-                .doGet(`/deployments/${deploymentId}`)
-                .then(deployment => {
-                    toolbox.loading(false);
-                    const workflows = Stage.Common.DeploymentUtils.filterWorkflows(
-                        _.sortBy(deployment.workflows, ['name'])
-                    );
-
-                    return Promise.resolve({ ...deployment, workflows });
-                });
+    fetchData(widget, toolbox, { id }) {
+        if (_.isEmpty(id)) {
+            return Promise.resolve({ id: '', workflows: [] });
         }
 
-        return Promise.resolve(DeploymentActionButtons.EMPTY_DEPLOYMENT);
+        const { DeploymentActions } = Stage.Common;
+        const actions = new DeploymentActions(toolbox);
+
+        toolbox.loading(true);
+        return actions
+            .doGet({ id }) // TODO: Once RD-1353 is implemented, pass { _include: ['workflows'] } to doGet
+            .then(deployment => ({ id, workflows: deployment.workflows }))
+            .finally(() => toolbox.loading(false));
     },
 
     fetchParams(widget, toolbox) {
         const deploymentId = toolbox.getContext().getValue('deploymentId');
+        // Deployment Actions Buttons widget does not support multiple actions, thus picking only one deploymentId
+        const firstDeploymentId = _.castArray(deploymentId)[0];
 
-        return { deployment_id: deploymentId };
+        return { id: firstDeploymentId };
     },
 
     render(widget, data, error, toolbox) {
@@ -53,6 +49,6 @@ Stage.defineWidget({
             return <Loading />;
         }
 
-        return <DeploymentActionButtons deployment={data} widget={widget} toolbox={toolbox} />;
+        return <DeploymentActionButtons deployment={data} toolbox={toolbox} />;
     }
 });
