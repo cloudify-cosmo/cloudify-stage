@@ -1,5 +1,4 @@
 import _ from 'lodash';
-import PropTypes from 'prop-types';
 import React, { memo, useContext, useRef, ChangeEvent, useState, useEffect, useMemo } from 'react';
 import { ThemeContext } from 'styled-components';
 import { Form, HeaderBar } from 'cloudify-ui-components';
@@ -7,15 +6,12 @@ import i18n from 'i18next';
 
 import { Button, Icon } from 'semantic-ui-react';
 import { CancelButton, Divider, Header, Modal } from '../basic';
-import { JSONSchema, JSONSchemaItem } from './model';
+import { JSONData, JSONSchema, JSONSchemaItem, TechnologyData } from './model';
 
 import TechnologyButton from './TechnologyButton';
 import UncontrolledForm from './UncontrolledForm';
 import { getFormData } from './formUtils';
-
-type TechnologyData = Record<string, boolean>;
-type SecretData = Record<string, string>;
-type JSONData = Record<string, SecretData>;
+import PluginsStep from './steps/PluginsStep';
 
 const getHeaderText = (schema: JSONSchema, step: number) => {
     if (step === 0) {
@@ -133,10 +129,7 @@ const QuickConfigurationModal = ({ open = false, step = 0, schema, data, onClose
                     </UncontrolledForm>
                 )}
                 {localStep > selectedItemSchemas.length && (
-                    <div>
-                        <div>Summary & Status body here ...</div>
-                        <pre>{JSON.stringify(localData, null, 4)}</pre>
-                    </div>
+                    <PluginsStep schema={selectedItemSchemas} data={localData} />
                 )}
                 {/*
                     <Header>{i18n.t('help.aboutModal.versionDetails', 'Version Details')}</Header>

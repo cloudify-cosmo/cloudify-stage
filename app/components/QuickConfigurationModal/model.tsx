@@ -13,3 +13,7 @@ export type JSONSchemaItem = {
 };
 
 export type JSONSchema = JSONSchemaItem[];
+
+export type TechnologyData = Record<string, boolean>;
+export type SecretData = Record<string, string>;
+export type JSONData = Record<string, SecretData>;
