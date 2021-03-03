@@ -1,4 +1,5 @@
 import { addSearchToUrl } from './common';
+import ValidationErrorPopup from './ValidationErrorPopup';
 
 function useDebouncedSetValue(value, setValue, deps) {
     const { useCallback, useEffect } = React;
@@ -13,7 +14,7 @@ function useDebouncedSetValue(value, setValue, deps) {
 export default function CommonDropdown({ baseFetchUrl, onChange, toolbox, value, ...rest }) {
     const { useEffect, useState } = React;
     const {
-        Common: { DynamicDropdown, LabelValidationErrorPopup },
+        Common: { DynamicDropdown },
         Hooks: { useLabelInput, useResettableState }
     } = Stage;
 
@@ -46,7 +47,7 @@ export default function CommonDropdown({ baseFetchUrl, onChange, toolbox, value,
 
     return (
         <>
-            <LabelValidationErrorPopup open={invalidCharacterTyped} />
+            <ValidationErrorPopup open={invalidCharacterTyped} />
 
             <DynamicDropdown
                 clearable={false}

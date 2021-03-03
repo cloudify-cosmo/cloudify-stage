@@ -1,6 +1,7 @@
 export default function LabelValueInput({ initialValue, onCancel, onChange, onSubmit }) {
     const { Form } = Stage.Basic;
-    const { LabelValidationErrorPopup, RevertToDefaultIcon } = Stage.Common;
+    const { RevertToDefaultIcon } = Stage.Common;
+    const { ValidationErrorPopup } = Stage.Common.Labels;
     const { useLabelInput } = Stage.Hooks;
     const { i18n } = Stage;
 
@@ -8,7 +9,7 @@ export default function LabelValueInput({ initialValue, onCancel, onChange, onSu
 
     return (
         <>
-            <LabelValidationErrorPopup open={invalidCharacterTyped} />
+            <ValidationErrorPopup open={invalidCharacterTyped} />
             <Form.Input
                 className="labelValueEditInput"
                 autoFocus

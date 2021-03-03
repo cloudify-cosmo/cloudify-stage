@@ -5,7 +5,10 @@ import DeleteConfirmModal from './DeleteConfirmModal';
 
 export default function LabelsTable({ data, toolbox }) {
     const { Button, DataTable, Icon } = Stage.Basic;
-    const { DeploymentActions, ManageLabelsModal } = Stage.Common;
+    const {
+        DeploymentActions,
+        Labels: { ManageModal }
+    } = Stage.Common;
     const { useBoolean, useInput, useResettableState } = Stage.Hooks;
     const { i18n } = Stage;
 
@@ -117,7 +120,7 @@ export default function LabelsTable({ data, toolbox }) {
                 </DataTable.Action>
             </DataTable>
 
-            <ManageLabelsModal
+            <ManageModal
                 deploymentId={data.deploymentId}
                 existingLabels={labels}
                 header={i18n.t('widgets.labels.addHeader', data)}

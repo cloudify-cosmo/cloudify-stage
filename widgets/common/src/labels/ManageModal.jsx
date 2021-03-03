@@ -1,7 +1,17 @@
-function ManageLabelsModal({ deploymentId, existingLabels, header, applyButtonContent, open, onHide, toolbox }) {
+import LabelsInput from './Input';
+
+export default function ManageModal({
+    deploymentId,
+    existingLabels,
+    header,
+    applyButtonContent,
+    open,
+    onHide,
+    toolbox
+}) {
     const { i18n } = Stage;
     const { ApproveButton, CancelButton, Form, Icon, Modal } = Stage.Basic;
-    const { DeploymentActions, LabelsInput } = Stage.Common;
+    const { DeploymentActions } = Stage.Common;
     const { useBoolean, useErrors, useOpenProp, useResettableState } = Stage.Hooks;
     const actions = new DeploymentActions(toolbox);
 
@@ -89,7 +99,7 @@ function ManageLabelsModal({ deploymentId, existingLabels, header, applyButtonCo
     );
 }
 
-ManageLabelsModal.propTypes = {
+ManageModal.propTypes = {
     applyButtonContent: PropTypes.string,
     deploymentId: PropTypes.string.isRequired,
     existingLabels: Stage.PropTypes.Labels,
@@ -99,13 +109,8 @@ ManageLabelsModal.propTypes = {
     toolbox: Stage.PropTypes.Toolbox.isRequired
 };
 
-ManageLabelsModal.defaultProps = {
+ManageModal.defaultProps = {
     applyButtonContent: null,
     existingLabels: null,
     header: null
 };
-
-Stage.defineCommon({
-    name: 'ManageLabelsModal',
-    common: ManageLabelsModal
-});

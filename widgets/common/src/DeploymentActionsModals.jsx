@@ -5,10 +5,10 @@ export default function DeploymentActionsModals({ activeAction, deploymentId, on
     const {
         Common: {
             ExecuteDeploymentModal,
-            ManageLabelsModal,
             UpdateDeploymentModal,
             RemoveDeploymentModal,
-            SetSiteModal
+            SetSiteModal,
+            Labels: { ManageModal: ManageLabelsModal }
         }
     } = Stage;
 

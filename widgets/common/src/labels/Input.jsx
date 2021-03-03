@@ -1,8 +1,8 @@
-import AddButton from './labels/AddButton';
-import LabelsList from './labels/LabelsList';
-import KeyDropdown from './labels/KeyDropdown';
-import ValueDropdown from './labels/ValueDropdown';
-import { addSearchToUrl } from './labels/common';
+import AddButton from './AddButton';
+import LabelsList from './LabelsList';
+import KeyDropdown from './KeyDropdown';
+import ValueDropdown from './ValueDropdown';
+import { addSearchToUrl } from './common';
 
 const iconStyle = {
     position: 'absolute',
@@ -10,7 +10,7 @@ const iconStyle = {
     zIndex: 1
 };
 
-export default function LabelsInput({ hideInitialLabels, initialLabels, onChange, toolbox }) {
+export default function Input({ hideInitialLabels, initialLabels, onChange, toolbox }) {
     const { useEffect } = React;
     const {
         Basic: { Divider, Form, Icon, Segment },
@@ -109,19 +109,14 @@ export default function LabelsInput({ hideInitialLabels, initialLabels, onChange
     );
 }
 
-LabelsInput.propTypes = {
+Input.propTypes = {
     hideInitialLabels: PropTypes.bool,
     initialLabels: Stage.PropTypes.Labels,
     onChange: PropTypes.func.isRequired,
     toolbox: Stage.PropTypes.Toolbox.isRequired
 };
 
-LabelsInput.defaultProps = {
+Input.defaultProps = {
     hideInitialLabels: false,
     initialLabels: []
 };
-
-Stage.defineCommon({
-    name: 'LabelsInput',
-    common: LabelsInput
-});
