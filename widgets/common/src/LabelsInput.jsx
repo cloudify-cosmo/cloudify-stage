@@ -13,7 +13,7 @@ const iconStyle = {
 export default function LabelsInput({ hideInitialLabels, initialLabels, onChange, toolbox }) {
     const { useEffect } = React;
     const {
-        Basic: { Divider, Form, Icon, Segment },
+        Basic: { Divider, Form, Icon, Popup, Segment },
         Common: { RevertToDefaultIcon },
         Hooks: { useResettableState, useToggle },
         Utils: { combineClassNames },
@@ -25,6 +25,14 @@ export default function LabelsInput({ hideInitialLabels, initialLabels, onChange
     const [newLabelKey, setNewLabelKey, resetNewLabelKey] = useResettableState('');
     const [newLabelValue, setNewLabelValue, resetNewLabelValue] = useResettableState('');
 
+    const newLabelIsProvided = !!newLabelKey && !!newLabelValue;
+    const newLabelIsAlreadyPresent = (function isNewLabelAlreadyPresent() {
+        const label = { key: newLabelKey, value: newLabelValue };
+        return !!(_.find(labels, label) || (hideInitialLabels && _.find(initialLabels, label)));
+    })();
+    const addLabelNotAllowed = !newLabelIsProvided || newLabelIsAlreadyPresent;
+    const addButtonPopupOpen = newLabelIsProvided && newLabelIsAlreadyPresent;
+
     useEffect(() => {
         onChange(labels);
     }, [labels]);
@@ -32,16 +40,6 @@ export default function LabelsInput({ hideInitialLabels, initialLabels, onChange
     useEffect(() => {
         if (!hideInitialLabels) setLabels(initialLabels);
     }, [initialLabels]);
-
-    function isAddAllowed() {
-        const label = { key: newLabelKey, value: newLabelValue };
-        return (
-            newLabelKey &&
-            newLabelValue &&
-            !_.find(labels, label) &&
-            (!hideInitialLabels || !_.find(initialLabels, label))
-        );
-    }
 
     function onAddLabel() {
         function isLabelInSystem() {
@@ -100,7 +98,11 @@ export default function LabelsInput({ hideInitialLabels, initialLabels, onChange
                             />
                         </Form.Field>
                         <Form.Field width={2}>
-                            <AddButton onClick={onAddLabel} disabled={!isAddAllowed()} />
+                            <Popup
+                                open={addButtonPopupOpen}
+                                content={i18n.t('widgets.common.labels.labelDuplicationError')}
+                                trigger={<AddButton onClick={onAddLabel} disabled={addLabelNotAllowed} />}
+                            />
                         </Form.Field>
                     </Form.Group>
                 </div>
