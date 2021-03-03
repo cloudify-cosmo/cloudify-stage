@@ -9,7 +9,7 @@ export interface ConfigState extends ClientConfig {
 }
 
 // NOTE: Initial state is always provided via configureStore
-const config: Reducer<ConfigState> = (state = null as any, action) => {
+const config: Reducer<ConfigState> = (state = {} as ConfigState, action) => {
     switch (action.type) {
         case types.SET_CONFIG_EDIT_MODE:
             return { ...state, isEditMode: action.isEditMode };
