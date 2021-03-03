@@ -1,5 +1,5 @@
 import AddButton from './labels/AddButton';
-import LabelsList, { LabelsPropType } from './labels/LabelsList';
+import LabelsList from './labels/LabelsList';
 import KeyDropdown from './labels/KeyDropdown';
 import ValueDropdown from './labels/ValueDropdown';
 import { addSearchToUrl } from './labels/common';
@@ -10,7 +10,7 @@ const iconStyle = {
     zIndex: 1
 };
 
-export default function LabelsInput({ initialLabels, onChange, toolbox }) {
+export default function LabelsInput({ hideInitialLabels, initialLabels, onChange, toolbox }) {
     const { useEffect } = React;
     const {
         Basic: { Divider, Form, Icon, Segment },
@@ -20,7 +20,7 @@ export default function LabelsInput({ initialLabels, onChange, toolbox }) {
         i18n
     } = Stage;
 
-    const [labels, setLabels, resetLabels] = useResettableState(initialLabels);
+    const [labels, setLabels, resetLabels] = useResettableState(hideInitialLabels ? [] : initialLabels);
     const [open, toggleOpen] = useToggle();
     const [newLabelKey, setNewLabelKey, resetNewLabelKey] = useResettableState('');
     const [newLabelValue, setNewLabelValue, resetNewLabelValue] = useResettableState('');
@@ -30,11 +30,17 @@ export default function LabelsInput({ initialLabels, onChange, toolbox }) {
     }, [labels]);
 
     useEffect(() => {
-        setLabels(initialLabels);
+        if (!hideInitialLabels) setLabels(initialLabels);
     }, [initialLabels]);
 
     function isAddAllowed() {
-        return newLabelKey && newLabelValue && !_.find(labels, { key: newLabelKey, value: newLabelValue });
+        const label = { key: newLabelKey, value: newLabelValue };
+        return (
+            newLabelKey &&
+            newLabelValue &&
+            !_.find(labels, label) &&
+            (!hideInitialLabels || !_.find(initialLabels, label))
+        );
     }
 
     function onAddLabel() {
@@ -64,15 +70,17 @@ export default function LabelsInput({ initialLabels, onChange, toolbox }) {
             style={{ padding: 0, margin: 0 }}
         >
             <div role="presentation" onClick={toggleOpen} style={{ cursor: 'pointer' }}>
-                <RevertToDefaultIcon
-                    value={labels}
-                    defaultValue={initialLabels}
-                    onClick={event => {
-                        event.stopPropagation();
-                        resetLabels();
-                    }}
-                    style={{ ...iconStyle, right: '2em' }}
-                />
+                {!hideInitialLabels && (
+                    <RevertToDefaultIcon
+                        value={labels}
+                        defaultValue={initialLabels}
+                        onClick={event => {
+                            event.stopPropagation();
+                            resetLabels();
+                        }}
+                        style={{ ...iconStyle, right: '2em' }}
+                    />
+                )}
                 <Icon name="dropdown" link onClick={toggleOpen} style={{ ...iconStyle, right: '0.5em' }} />
                 <LabelsList labels={labels} onChange={setLabels} />
             </div>
@@ -102,12 +110,14 @@ export default function LabelsInput({ initialLabels, onChange, toolbox }) {
 }
 
 LabelsInput.propTypes = {
-    initialLabels: LabelsPropType,
+    hideInitialLabels: PropTypes.bool,
+    initialLabels: Stage.PropTypes.Labels,
     onChange: PropTypes.func.isRequired,
     toolbox: Stage.PropTypes.Toolbox.isRequired
 };
 
 LabelsInput.defaultProps = {
+    hideInitialLabels: false,
     initialLabels: []
 };
 
