@@ -4,7 +4,11 @@ export default function LabelsList({ labels, onChange }) {
     const newLabelColor = 'blue';
 
     return (
-        <div className="ui multiple dropdown" style={{ paddingRight: '4.1em', minHeight: '2em' }}>
+        <div
+            className="ui multiple dropdown"
+            /* maxHeight set to 8.2em guarantees 4 lines of labels to be visible without scroller */
+            style={{ paddingRight: '4.1em', minHeight: '2em', maxHeight: '8.2em', overflow: 'auto' }}
+        >
             {_.map(labels, ({ key, value, isInSystem = true }) => {
                 const truncatedKey = _.truncate(key, { length: maxLength });
                 const truncatedValue = _.truncate(value, { length: maxLength });
