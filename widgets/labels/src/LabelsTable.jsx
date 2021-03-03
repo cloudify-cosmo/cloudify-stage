@@ -4,7 +4,8 @@ import LabelValueInput from './LabelValueInput';
 import DeleteConfirmModal from './DeleteConfirmModal';
 
 export default function LabelsTable({ data, toolbox }) {
-    const { Button, DataTable, Icon } = Stage.Basic;
+    const { i18n } = Stage;
+    const { Button, DataTable, Icon, Popup } = Stage.Basic;
     const { DeploymentActions, ManageLabelsModal } = Stage.Common;
     const { useBoolean, useInput, useResettableState } = Stage.Hooks;
 
@@ -19,14 +20,10 @@ export default function LabelsTable({ data, toolbox }) {
     useEffect(() => setLabels(data.labels), [JSON.stringify(data.labels)]);
 
     function updateLabelValue() {
-        if (!currentLabelValue) return;
-
         if (currentLabelValue === labelInEdit.value) {
             stopLabelEdit();
             return;
         }
-
-        if (_.find(labels, { ...labelInEdit, value: currentLabelValue })) return;
 
         labelInEdit.value = currentLabelValue;
         setLabels([...labels]);
@@ -46,6 +43,12 @@ export default function LabelsTable({ data, toolbox }) {
     const hasManagePermission = Stage.Utils.isUserAuthorized('deployment_create', toolbox.getManagerState());
 
     const tdStyle = { textOverflow: 'ellipsis', overflow: 'hidden' };
+
+    const currentLabelAlreadyUsed = !!_.find(
+        labels.filter(label => label !== labelInEdit),
+        { ...labelInEdit, value: currentLabelValue }
+    );
+    const currentLabelIsValid = currentLabelValue !== '' && !currentLabelAlreadyUsed;
 
     return (
         <>
@@ -96,7 +99,21 @@ export default function LabelsTable({ data, toolbox }) {
                         )}
                         {_.isEqual(item, labelInEdit) && (
                             <DataTable.Data>
-                                <Icon name="check" color="green" link bordered onClick={updateLabelValue} />
+                                <Popup
+                                    open={currentLabelAlreadyUsed}
+                                    content={i18n.t('widgets.common.labels.labelDuplicationError')}
+                                    trigger={
+                                        <Icon
+                                            name="check"
+                                            color="green"
+                                            link={currentLabelIsValid}
+                                            bordered
+                                            onClick={updateLabelValue}
+                                            disabled={!currentLabelIsValid}
+                                        />
+                                    }
+                                />
+
                                 <Icon name="cancel" color="red" link bordered onClick={stopLabelEdit} />
                             </DataTable.Data>
                         )}
