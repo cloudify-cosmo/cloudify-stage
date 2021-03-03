@@ -107,6 +107,8 @@ interface CommonWidgetDefinition<Params, Data, Configuration> {
     supportedEditions: string[];
 
     readme?: string;
+    template?: string;
+    isCustom?: boolean;
 
     init?: () => void;
     /** @see https://docs.cloudify.co/developer/writing_widgets/widget-definition/#fetchdata-widget-toolbox-params */
@@ -158,7 +160,7 @@ export type InitialWidgetDefinition<Params, Data, Configuration> = WithOptionalP
      *
      * Thus, the duplication of combining `Common`, `React`, and `HTMLWidgetDefinitionPart`s is necessary
      */
-    Omit<CommonWidgetDefinition<Params, Data, Configuration>, 'readme'>,
+    Omit<CommonWidgetDefinition<Params, Data, Configuration>, 'readme' | 'template' | 'isCustom'>,
     | 'color'
     | 'categories'
     | 'hasReadme'
