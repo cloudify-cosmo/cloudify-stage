@@ -15,11 +15,12 @@ export default function LabelsInput({ hideInitialLabels, initialLabels, onChange
     const {
         Basic: { Divider, Form, Icon, Popup, Segment },
         Common: { RevertToDefaultIcon },
-        Hooks: { useResettableState, useToggle },
+        Hooks: { useBoolean, useResettableState, useToggle },
         Utils: { combineClassNames },
         i18n
     } = Stage;
 
+    const [addingLabel, setAddingLabel, unsetAddingLabel] = useBoolean();
     const [labels, setLabels, resetLabels] = useResettableState(hideInitialLabels ? [] : initialLabels);
     const [open, toggleOpen] = useToggle();
     const [newLabelKey, setNewLabelKey, resetNewLabelKey] = useResettableState('');
@@ -30,7 +31,7 @@ export default function LabelsInput({ hideInitialLabels, initialLabels, onChange
         const label = { key: newLabelKey, value: newLabelValue };
         return !!(_.find(labels, label) || (hideInitialLabels && _.find(initialLabels, label)));
     })();
-    const addLabelNotAllowed = !newLabelIsProvided || newLabelIsAlreadyPresent;
+    const addLabelNotAllowed = !newLabelIsProvided || newLabelIsAlreadyPresent || addingLabel;
     const addButtonPopupOpen = newLabelIsProvided && newLabelIsAlreadyPresent;
 
     useEffect(() => {
@@ -54,11 +55,13 @@ export default function LabelsInput({ hideInitialLabels, initialLabels, onChange
                 });
         }
 
+        setAddingLabel();
         isLabelInSystem().then(isInSystem => {
             const newLabels = [...labels, { key: newLabelKey, value: newLabelValue, isInSystem }];
             setLabels(newLabels);
             resetNewLabelKey();
             resetNewLabelValue();
+            unsetAddingLabel();
         });
     }
 
