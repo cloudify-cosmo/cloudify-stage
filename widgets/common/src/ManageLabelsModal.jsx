@@ -40,8 +40,9 @@ function ManageLabelsModal({ deploymentId, existingLabels, header, applyButtonCo
         clearErrors();
         setLoading();
 
+        const deploymentLabels = existingLabels ? [...existingLabels, ...labels] : labels;
         actions
-            .doSetLabels(deploymentId, [...existingLabels, ...labels])
+            .doSetLabels(deploymentId, deploymentLabels)
             .then(() => {
                 // State updates should be done before calling `onHide` to avoid React errors:
                 // "Warning: Can't perform a React state update on an unmounted component"
