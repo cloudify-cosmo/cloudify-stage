@@ -2,13 +2,11 @@ import _ from 'lodash';
 import { useState, useEffect } from 'react';
 import LabelValueInput from './LabelValueInput';
 import DeleteConfirmModal from './DeleteConfirmModal';
+import AddLabelsModal from './AddLabelsModal';
 
 export default function LabelsTable({ data, toolbox }) {
     const { Button, DataTable, Icon } = Stage.Basic;
-    const {
-        DeploymentActions,
-        Labels: { ManageModal }
-    } = Stage.Common;
+    const { DeploymentActions } = Stage.Common;
     const { useBoolean, useInput, useResettableState } = Stage.Hooks;
     const { i18n } = Stage;
 
@@ -120,11 +118,8 @@ export default function LabelsTable({ data, toolbox }) {
                 </DataTable.Action>
             </DataTable>
 
-            <ManageModal
+            <AddLabelsModal
                 deploymentId={data.deploymentId}
-                existingLabels={labels}
-                header={i18n.t('widgets.labels.addHeader', data)}
-                applyButtonContent={i18n.t('widgets.labels.add')}
                 open={isAddModalOpen}
                 onHide={() => {
                     closeAddModal();

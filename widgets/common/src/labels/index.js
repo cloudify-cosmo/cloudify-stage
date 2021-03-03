@@ -1,7 +1,9 @@
-import ManageModal from './ManageModal';
+import Modal from './LabelsModal';
+import ManageModal from './ManageLabelsModal';
 import ValidationErrorPopup from './ValidationErrorPopup';
 
 const Labels = {
+    Modal,
     ManageModal,
     ValidationErrorPopup
 };
