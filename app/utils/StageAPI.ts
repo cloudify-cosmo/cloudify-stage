@@ -1,5 +1,8 @@
-import type { ComponentType, ReactNode } from 'react';
+import type { ComponentType, ReactElement, ReactNode } from 'react';
 import type i18n from 'i18next';
+// NOTE: the file contains only types and is undetectable for ESLint
+// eslint-disable-next-line import/no-unresolved
+import type { SemanticCOLORS } from 'semantic-ui-react/dist/commonjs/generic';
 
 import type * as BasicComponents from '../components/basic';
 import type * as SharedComponents from '../components/shared';
@@ -12,6 +15,7 @@ import type EventBus from './EventBus';
 import type Manager from './Manager';
 import type Internal from './Internal';
 import type External from './External';
+import type { WithOptionalProperties } from './types';
 
 /** @see https://docs.cloudify.co/developer/writing_widgets/widget-apis/#toolbox-object */
 export interface Toolbox {
@@ -82,25 +86,27 @@ export interface WidgetConfigurationDefinition {
 interface CommonWidgetDefinition<Params, Data, Configuration> {
     id: string;
     name: string;
-    categories?: ObjectKeys<typeof GenericConfig['CATEGORY']>[];
-    color?: string;
+    categories: ObjectKeys<typeof GenericConfig['CATEGORY']>[];
+    color: SemanticCOLORS;
     description?: string;
     /** @see https://docs.cloudify.co/developer/writing_widgets/widget-definition/#fetchurl */
     fetchUrl?: string | Record<string, string>;
     /** @see https://docs.cloudify.co/developer/writing_widgets/widget-definition/#fetchparams-widget-toolbox */
     fetchParams?: (widget: Widget<Configuration>, toolbox: Toolbox) => Params;
-    hasReadme?: boolean;
-    hasStyle?: boolean;
-    hasTemplate?: boolean;
+    hasReadme: boolean;
+    hasStyle: boolean;
+    hasTemplate: boolean;
     helpUrl?: string;
     /** @see https://docs.cloudify.co/developer/writing_widgets/widget-definition/#initialconfiguration */
-    initialConfiguration?: WidgetConfigurationDefinition[];
-    initialHeight?: number;
-    initialWidth?: number;
-    permission?: ObjectKeys<typeof GenericConfig['CUSTOM_WIDGET_PERMISSIONS']> | string;
-    showBorder?: boolean;
-    showHeader?: boolean;
-    supportedEditions?: string[];
+    initialConfiguration: WidgetConfigurationDefinition[];
+    initialHeight: number;
+    initialWidth: number;
+    permission: ObjectKeys<typeof GenericConfig['CUSTOM_WIDGET_PERMISSIONS']> | string;
+    showBorder: boolean;
+    showHeader: boolean;
+    supportedEditions: string[];
+
+    readme?: string;
 
     init?: () => void;
     /** @see https://docs.cloudify.co/developer/writing_widgets/widget-definition/#fetchdata-widget-toolbox-params */
@@ -144,13 +150,37 @@ interface CommonOrPropTypeDefinition {
     common: any;
 }
 
+/** User-facing WidgetDefinition used for defining new widgets */
+export type InitialWidgetDefinition<Params, Data, Configuration> = WithOptionalProperties<
+    /**
+     * NOTE: cannot use `WidgetDefinition` directly because `isReact` stops being a discriminant property
+     * which breaks type safety for `render`.
+     *
+     * Thus, the duplication of combining `Common`, `React`, and `HTMLWidgetDefinitionPart`s is necessary
+     */
+    Omit<CommonWidgetDefinition<Params, Data, Configuration>, 'readme'>,
+    | 'color'
+    | 'categories'
+    | 'hasReadme'
+    | 'hasStyle'
+    | 'hasTemplate'
+    | 'initialConfiguration'
+    | 'initialHeight'
+    | 'initialWidth'
+    | 'permission'
+    | 'showBorder'
+    | 'showHeader'
+    | 'supportedEditions'
+> &
+    (ReactWidgetDefinitionPart<Data, Configuration> | HTMLWidgetDefinitionPart<Data, Configuration>);
+
 export interface StageAPI {
     Basic: typeof BasicComponents;
     defineWidget: <Params, Data, Configuration>(
-        widgetDefinition: WidgetDefinition<Params, Data, Configuration>
+        widgetDefinition: InitialWidgetDefinition<Params, Data, Configuration>
     ) => void;
     Shared: typeof SharedComponents;
-    ComponentToHtmlString: (element: ReactNode) => string;
+    ComponentToHtmlString: (element: ReactElement) => string;
     GenericConfig: typeof GenericConfig;
     Utils: typeof StageUtils;
 

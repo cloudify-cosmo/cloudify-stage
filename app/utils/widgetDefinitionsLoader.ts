@@ -1,6 +1,7 @@
 import i18n from 'i18next';
 import _ from 'lodash';
 import log from 'loglevel';
+import { renderToString } from 'react-dom/server';
 import Internal from './Internal';
 import ScriptLoader from './scriptLoader';
 import StyleLoader from './StyleLoader';
@@ -12,15 +13,10 @@ import StageUtils from './stageUtils';
 import LoaderUtils from './LoaderUtils';
 
 import GenericConfig from './GenericConfig';
-import WidgetDefinition from './WidgetDefinition';
 import * as PropTypes from './props';
 import * as Hooks from './hooks';
-import { StageAPI } from './StageAPI';
-
-// NOTE: why do we even use require here?
-// @ts-expect-error Allowed temporarily
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const ReactDOMServer = require('react-dom/server');
+import type { StageAPI, WidgetDefinition } from './StageAPI';
+import normalizeWidgetDefinition from './normalizeWidgetDefinition';
 
 let widgetDefinitions: any[] = [];
 
@@ -49,16 +45,14 @@ function convertReadmeParams(content: any) {
 }
 
 export default class WidgetDefinitionsLoader {
-    static init() {
+    public static init() {
         const stageAPI: StageAPI = {
             defineWidget: widgetDefinition => {
-                widgetDefinitions.push(new WidgetDefinition({ ...widgetDefinition, id: document.currentScript?.id }));
+                widgetDefinitions.push(normalizeWidgetDefinition(widgetDefinition));
             },
             Basic,
             Shared,
-            ComponentToHtmlString: component => {
-                return ReactDOMServer.renderToString(component);
-            },
+            ComponentToHtmlString: renderToString,
             GenericConfig,
             Utils: StageUtils,
 
@@ -82,7 +76,7 @@ export default class WidgetDefinitionsLoader {
         window.Stage = stageAPI;
     }
 
-    static loadWidgets(manager: any) {
+    private static loadWidgets(manager: any) {
         log.debug('Load widgets');
 
         const internal = new Internal(manager);
@@ -101,12 +95,12 @@ export default class WidgetDefinitionsLoader {
         });
     }
 
-    static loadWidget(widget: any, rejectOnError: any) {
+    private static loadWidget(widget: any, rejectOnError: any) {
         const scriptPath = `${LoaderUtils.getResourceUrl('widgets', widget.isCustom)}/${widget.id}/widget.js`;
         return new ScriptLoader(scriptPath).load(widget.id, rejectOnError);
     }
 
-    static loadWidgetsResources(widgets: any) {
+    private static loadWidgetsResources(widgets: any) {
         log.debug('Load widgets resources');
 
         const promises: Promise<any>[] = [];
@@ -156,7 +150,7 @@ export default class WidgetDefinitionsLoader {
         return Promise.all(promises);
     }
 
-    static initWidgets() {
+    private static initWidgets() {
         log.debug('Init widgets');
 
         _.each(widgetDefinitions, w => {
@@ -171,17 +165,19 @@ export default class WidgetDefinitionsLoader {
         return Promise.resolve(loadedWidgetDefinitions);
     }
 
-    static load(manager: any) {
+    public static load(manager: any): Promise<WidgetDefinition<any, any, any>[]> {
         return WidgetDefinitionsLoader.loadWidgets(manager)
             .then(widgets => WidgetDefinitionsLoader.loadWidgetsResources(widgets))
             .then(() => WidgetDefinitionsLoader.initWidgets())
             .catch(e => {
                 log.error(e);
                 widgetDefinitions = []; // Clear for next time
+
+                return Promise.resolve([]);
             });
     }
 
-    static installWidget(widgetFile: any, widgetUrl: any, manager: any) {
+    private static installWidget(widgetFile: any, widgetUrl: any, manager: any) {
         const internal = new Internal(manager);
 
         if (widgetUrl) {
@@ -192,7 +188,7 @@ export default class WidgetDefinitionsLoader {
         return internal.doUpload('/widgets/install', {}, { widget: widgetFile });
     }
 
-    static updateWidget(widgetId: any, widgetFile: any, widgetUrl: any, manager: any) {
+    private static updateWidget(widgetId: any, widgetFile: any, widgetUrl: any, manager: any) {
         const internal = new Internal(manager);
 
         if (widgetUrl) {
@@ -203,7 +199,7 @@ export default class WidgetDefinitionsLoader {
         return internal.doUpload('/widgets/update', { id: widgetId }, { widget: widgetFile });
     }
 
-    static validateWidget(widgetId: any, manager: any) {
+    private static validateWidget(widgetId: any, manager: any) {
         const errors = [];
 
         if (_.isEmpty(widgetDefinitions)) {
@@ -268,7 +264,7 @@ export default class WidgetDefinitionsLoader {
         return Promise.resolve();
     }
 
-    static install(widgetFile: any, widgetUrl: any, manager: any) {
+    public static install(widgetFile: any, widgetUrl: any, manager: any) {
         let widgetData: any = {};
 
         return WidgetDefinitionsLoader.installWidget(widgetFile, widgetUrl, manager)
@@ -286,7 +282,7 @@ export default class WidgetDefinitionsLoader {
             });
     }
 
-    static update(widgetId: any, widgetFile: any, widgetUrl: any, manager: any) {
+    public static update(widgetId: any, widgetFile: any, widgetUrl: any, manager: any) {
         let widgetData: any = {};
 
         return WidgetDefinitionsLoader.updateWidget(widgetId, widgetFile, widgetUrl, manager)
@@ -304,7 +300,7 @@ export default class WidgetDefinitionsLoader {
             });
     }
 
-    static uninstall(widgetId: any, manager: any) {
+    public static uninstall(widgetId: any, manager: any) {
         const internal = new Internal(manager);
         return internal.doDelete(`/widgets/${widgetId}`);
     }
