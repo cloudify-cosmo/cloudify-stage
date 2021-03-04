@@ -6,7 +6,7 @@ import { WidgetDefinition, InitialWidgetDefinition } from './StageAPI';
 export default function normalizeWidgetDefinition<Params, Data, Configuration>(
     initialDefinition: InitialWidgetDefinition<Params, Data, Configuration>
 ): WidgetDefinition<Params, Data, Configuration> {
-    const id = initialDefinition.id ?? document.currentScript?.id;
+    const id = document.currentScript?.id ?? '';
     if (!initialDefinition.name) {
         log.error('Missing widget name. Widget data is :', initialDefinition);
     }
