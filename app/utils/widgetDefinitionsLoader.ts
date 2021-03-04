@@ -171,13 +171,15 @@ export default class WidgetDefinitionsLoader {
         return Promise.resolve(loadedWidgetDefinitions);
     }
 
-    public static load(manager: any) {
+    public static load(manager: any): Promise<any[]> {
         return WidgetDefinitionsLoader.loadWidgets(manager)
             .then(widgets => WidgetDefinitionsLoader.loadWidgetsResources(widgets))
             .then(() => WidgetDefinitionsLoader.initWidgets())
             .catch(e => {
                 log.error(e);
                 widgetDefinitions = []; // Clear for next time
+
+                return Promise.resolve([]);
             });
     }
 
