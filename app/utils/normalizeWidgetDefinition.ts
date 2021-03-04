@@ -1,10 +1,10 @@
 import log from 'loglevel';
 
 import GenericConfig from './GenericConfig';
-import { WidgetDefinition, WidgetDefinitionForDefining } from './StageAPI';
+import { WidgetDefinition, InitialWidgetDefinition } from './StageAPI';
 
 export default function normalizeWidgetDefinition<Params, Data, Configuration>(
-    initialDefinition: WidgetDefinitionForDefining<Params, Data, Configuration>
+    initialDefinition: InitialWidgetDefinition<Params, Data, Configuration>
 ): WidgetDefinition<Params, Data, Configuration> {
     const id = initialDefinition.id ?? document.currentScript?.id;
     if (!initialDefinition.name) {

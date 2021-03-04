@@ -150,7 +150,8 @@ interface CommonOrPropTypeDefinition {
     common: any;
 }
 
-export type WidgetDefinitionForDefining<Params, Data, Configuration> = WithOptionalProperties<
+/** User-facing WidgetDefinition used for defining new widgets */
+export type InitialWidgetDefinition<Params, Data, Configuration> = WithOptionalProperties<
     /**
      * NOTE: cannot use `WidgetDefinition` directly because `isReact` stops being a discriminant property
      * which breaks type safety for `render`.
@@ -176,7 +177,7 @@ export type WidgetDefinitionForDefining<Params, Data, Configuration> = WithOptio
 export interface StageAPI {
     Basic: typeof BasicComponents;
     defineWidget: <Params, Data, Configuration>(
-        widgetDefinition: WidgetDefinitionForDefining<Params, Data, Configuration>
+        widgetDefinition: InitialWidgetDefinition<Params, Data, Configuration>
     ) => void;
     Shared: typeof SharedComponents;
     ComponentToHtmlString: (element: ReactNode) => string;
