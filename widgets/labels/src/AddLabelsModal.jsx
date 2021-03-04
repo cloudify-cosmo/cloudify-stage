@@ -3,8 +3,8 @@ export default function AddLabelsModal(props) {
     return (
         <Modal
             hideInitialLabels
-            headerKey="widgets.labels.addHeader"
-            applyKey="widgets.labels.add"
+            i18nHeaderKey="widgets.labels.addHeader"
+            i18nApplyKey="widgets.labels.add"
             // eslint-disable-next-line react/jsx-props-no-spreading
             {...props}
         />

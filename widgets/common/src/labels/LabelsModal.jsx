@@ -1,6 +1,14 @@
 import LabelsInput from './LabelsInput';
 
-export default function LabelsModal({ deploymentId, hideInitialLabels, headerKey, applyKey, open, onHide, toolbox }) {
+export default function LabelsModal({
+    deploymentId,
+    hideInitialLabels,
+    i18nHeaderKey,
+    i18nApplyKey,
+    open,
+    onHide,
+    toolbox
+}) {
     const { i18n } = Stage;
     const { ApproveButton, CancelButton, Form, Icon, Modal } = Stage.Basic;
     const { DeploymentActions } = Stage.Common;
@@ -58,7 +66,7 @@ export default function LabelsModal({ deploymentId, hideInitialLabels, headerKey
     return (
         <Modal open={open} onClose={onHide}>
             <Modal.Header>
-                <Icon name="tags" /> {i18n.t(headerKey, { deploymentId })}
+                <Icon name="tags" /> {i18n.t(i18nHeaderKey, { deploymentId })}
             </Modal.Header>
 
             <Modal.Content>
@@ -79,17 +87,17 @@ export default function LabelsModal({ deploymentId, hideInitialLabels, headerKey
 
             <Modal.Actions>
                 <CancelButton onClick={onHide} disabled={isLoading} />
-                <ApproveButton onClick={onApply} disabled={isLoading} content={i18n.t(applyKey)} color="green" />
+                <ApproveButton onClick={onApply} disabled={isLoading} content={i18n.t(i18nApplyKey)} color="green" />
             </Modal.Actions>
         </Modal>
     );
 }
 
 LabelsModal.propTypes = {
-    applyKey: PropTypes.string.isRequired,
     deploymentId: PropTypes.string.isRequired,
-    headerKey: PropTypes.string.isRequired,
     hideInitialLabels: PropTypes.bool,
+    i18nApplyKey: PropTypes.string.isRequired,
+    i18nHeaderKey: PropTypes.string.isRequired,
     open: PropTypes.bool.isRequired,
     onHide: PropTypes.func.isRequired,
     toolbox: Stage.PropTypes.Toolbox.isRequired
