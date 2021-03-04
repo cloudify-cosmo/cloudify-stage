@@ -69,4 +69,22 @@ describe('(Utils) ManagerStatePersister', () => {
 
         expect(loadedManagerState).toEqual(managerState);
     });
+
+    it('should migrate the state to the new format immediately', () => {
+        const managerState: ManagerData = {
+            ...emptyState,
+            lastUpdated: 1234
+        };
+
+        const storageKey = `state-${mainMode}`;
+        localStorage.setItem(storageKey, JSON.stringify({ manager: managerState }));
+
+        ManagerStatePersister.load(mainMode);
+        localStorage.removeItem(storageKey);
+
+        // NOTE: simulate refreshing the browser immediately and needing to load the state again
+        const loadedManagerState = ManagerStatePersister.load(mainMode);
+
+        expect(loadedManagerState).toEqual(managerState);
+    });
 });
