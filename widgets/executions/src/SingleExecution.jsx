@@ -4,17 +4,15 @@ import ExecutionWorkflowGraph from './tasksGraph/ExecutionWorkflowGraph';
 export default function SingleExecution({ execution, toolbox }) {
     const container = useRef();
     const [containerHeight, setContainerHeight] = useState(0);
+    const { useEventListener } = Stage.Hooks;
+
+    useEventListener(toolbox, 'executions:refresh');
 
     useEffect(() => {
         const newContainerHeight = _.get(container.current, 'offsetHeight');
         if (newContainerHeight && newContainerHeight !== containerHeight) {
             setContainerHeight(newContainerHeight);
         }
-        toolbox.getEventBus().on('executions:refresh', toolbox.refresh, this);
-
-        return function cleanup() {
-            toolbox.getEventBus().off('executions:refresh', toolbox.refresh);
-        };
     });
 
     return (

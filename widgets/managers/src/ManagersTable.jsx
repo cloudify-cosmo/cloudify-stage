@@ -11,7 +11,7 @@ import RefreshIcon from './RefreshIcon';
 import StatusIcon from './StatusIcon';
 
 function ManagersTable({ data, toolbox, widget }) {
-    const { useBoolean } = Stage.Hooks;
+    const { useBoolean, useEventListener } = Stage.Hooks;
     const { useState, useEffect } = React;
     const [bulkOperation, setBulkOperation] = useState(false);
     const [deployment, setDeployment] = useState({ id: '' });
@@ -31,10 +31,6 @@ function ManagersTable({ data, toolbox, widget }) {
 
     const [statuses, setStatuses] = useState(createFetchingStatuses(_.map(data.items, 'id')));
 
-    function refreshData() {
-        toolbox.refresh();
-    }
-
     function handleStatusBulkFetching(managerIds) {
         setStatuses({ ...statuses, ...createFetchingStatuses(managerIds) });
     }
@@ -49,10 +45,7 @@ function ManagersTable({ data, toolbox, widget }) {
         setError(`Status update for ${managerId} has failed.`);
     }
 
-    useEffect(() => {
-        toolbox.getEventBus().on('managers:refresh', refreshData, this);
-        return () => toolbox.getEventBus().off('managers:refresh', refreshData);
-    }, []);
+    useEventListener(toolbox, 'managers:refresh');
 
     useEffect(() => {
         const actions = new Actions(toolbox);
@@ -78,7 +71,7 @@ function ManagersTable({ data, toolbox, widget }) {
         setDeployment({ id: '' });
         setWorkflow({ name: '', parameters: {} });
         hideExecuteWorkflowModal();
-        refreshData();
+        toolbox.refresh();
     }
 
     function actOnExecution(execution, action, executionError) {
