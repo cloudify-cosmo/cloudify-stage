@@ -1,4 +1,4 @@
-import type { ComponentType, ReactNode } from 'react';
+import type { ComponentType, ReactElement, ReactNode } from 'react';
 import type i18n from 'i18next';
 // NOTE: the file contains only types and is undetectable for ESLint
 // eslint-disable-next-line import/no-unresolved
@@ -180,7 +180,7 @@ export interface StageAPI {
         widgetDefinition: InitialWidgetDefinition<Params, Data, Configuration>
     ) => void;
     Shared: typeof SharedComponents;
-    ComponentToHtmlString: (element: ReactNode) => string;
+    ComponentToHtmlString: (element: ReactElement) => string;
     GenericConfig: typeof GenericConfig;
     Utils: typeof StageUtils;
 
