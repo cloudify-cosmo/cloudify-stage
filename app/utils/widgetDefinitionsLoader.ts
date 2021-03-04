@@ -1,6 +1,7 @@
 import i18n from 'i18next';
 import _ from 'lodash';
 import log from 'loglevel';
+import { renderToString } from 'react-dom/server';
 import Internal from './Internal';
 import ScriptLoader from './scriptLoader';
 import StyleLoader from './StyleLoader';
@@ -16,11 +17,6 @@ import * as PropTypes from './props';
 import * as Hooks from './hooks';
 import type { StageAPI, WidgetDefinition } from './StageAPI';
 import normalizeWidgetDefinition from './normalizeWidgetDefinition';
-
-// NOTE: why do we even use require here?
-// @ts-expect-error Allowed temporarily
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const ReactDOMServer = require('react-dom/server');
 
 let widgetDefinitions: any[] = [];
 
@@ -56,9 +52,7 @@ export default class WidgetDefinitionsLoader {
             },
             Basic,
             Shared,
-            ComponentToHtmlString: component => {
-                return ReactDOMServer.renderToString(component);
-            },
+            ComponentToHtmlString: renderToString,
             GenericConfig,
             Utils: StageUtils,
 
