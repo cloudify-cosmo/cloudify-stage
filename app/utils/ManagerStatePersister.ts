@@ -42,14 +42,20 @@ export default class ManagerStatePersister {
      * @deprecated
      */
     private static loadWrappedManagerState(mode: string): ManagerData | undefined {
-        const serializedState = localStorage.getItem(getDeprecatedStorageKey(mode));
+        const storageKey = getDeprecatedStorageKey(mode);
+
+        const serializedState = localStorage.getItem(storageKey);
         if (serializedState === null) {
             return undefined;
         }
 
         const state: Pick<ReduxState, 'manager'> = JSON.parse(serializedState);
+        const managerState = state.manager;
 
-        return state.manager;
+        this.save(managerState, mode);
+        localStorage.removeItem(storageKey);
+
+        return managerState;
     }
 }
 
