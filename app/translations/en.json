@@ -517,7 +517,7 @@
                 "actions": {
                     "edit": "Edit label",
                     "delete": "Delete label"
-              }
+                }
             },
             "noDeployment": "No deployment selected",
             "noLabels": "There are no Labels defined",
