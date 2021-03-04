@@ -5,22 +5,15 @@ import { composeWithDevTools } from 'redux-devtools-extension';
 import type { History } from 'history';
 
 import throttle from 'lodash/throttle';
-import StatePersister from './utils/StatePersister';
+import ManagerStatePersister from './utils/ManagerStatePersister';
 import type { ClientConfig } from './utils/ConfigLoader';
 
 import createRootReducer, { ReduxState } from './reducers';
-import { emptyState } from './reducers/managerReducer';
 
 export default (history: History, config: ClientConfig) => {
-    const reduxManagerState: Required<Pick<ReduxState, 'manager'>> = StatePersister.load(config.mode) || {
-        manager: emptyState
-    };
+    const managerState = ManagerStatePersister.load(config.mode);
 
-    // Clear login error if has any
-    reduxManagerState.manager.err = null;
-    reduxManagerState.manager.isLoggingIn = false;
-
-    const initialState: Partial<ReduxState> = { ...reduxManagerState, config };
+    const initialState: Partial<ReduxState> = { manager: managerState, config };
 
     const store = createStore(
         createRootReducer(history),
@@ -31,7 +24,7 @@ export default (history: History, config: ClientConfig) => {
     // This saves the manager data in the local storage. This is good for when a user refreshes the page we can know if he is logged in or not, and save his login info - ip, username
     store.subscribe(
         throttle(() => {
-            StatePersister.save(store.getState(), config.mode);
+            ManagerStatePersister.save(store.getState().manager, config.mode);
         }, 1000)
     );
 

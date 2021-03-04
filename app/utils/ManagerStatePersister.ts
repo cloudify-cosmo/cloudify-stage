@@ -1,0 +1,57 @@
+import log from 'loglevel';
+
+import type { ReduxState } from '../reducers';
+import { emptyState, ManagerData } from '../reducers/managerReducer';
+
+export default class ManagerStatePersister {
+    public static save(managerState: ManagerData, mode: string) {
+        try {
+            const serializedManagerState = JSON.stringify(managerState);
+            localStorage.setItem(getStorageKey(mode), serializedManagerState);
+        } catch (e) {
+            log.error('Error when saving manager state', e);
+        }
+    }
+
+    public static load(mode: string): ManagerData {
+        try {
+            const managerState =
+                this.loadManagerStateDirectly(mode) ?? this.loadWrappedManagerState(mode) ?? emptyState;
+
+            // Clear login error if has any
+            managerState.err = null;
+            managerState.isLoggingIn = false;
+
+            return managerState;
+        } catch (e) {
+            log.error('Error when loading manager state', e);
+            return emptyState;
+        }
+    }
+
+    private static loadManagerStateDirectly(mode: string): ManagerData | undefined {
+        const serializedState = localStorage.getItem(getStorageKey(mode));
+        if (serializedState === null) {
+            return undefined;
+        }
+
+        return JSON.parse(serializedState);
+    }
+
+    /**
+     * @deprecated
+     */
+    private static loadWrappedManagerState(mode: string): ManagerData | undefined {
+        const serializedState = localStorage.getItem(getDeprecatedStorageKey(mode));
+        if (serializedState === null) {
+            return undefined;
+        }
+
+        const state: Pick<ReduxState, 'manager'> = JSON.parse(serializedState);
+
+        return state.manager;
+    }
+}
+
+const getStorageKey = (mode: string) => `manager-state-${mode}`;
+const getDeprecatedStorageKey = (mode: string) => `state-${mode}`;
