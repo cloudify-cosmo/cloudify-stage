@@ -15,6 +15,8 @@ Stage.defineWidget({
     permission: Stage.GenericConfig.WIDGET_PERMISSION('labels'),
     categories: [Stage.GenericConfig.CATEGORY.DEPLOYMENTS],
 
+    initialConfiguration: [Stage.GenericConfig.POLLING_TIME_CONFIG(30)],
+
     // ensures data refetch on deploymentId change
     fetchParams(widget, toolbox) {
         return {
@@ -47,7 +49,7 @@ Stage.defineWidget({
         const formattedData = {
             labels: _(data)
                 .map(item => _.pick(item, 'key', 'value'))
-                .sortBy('key')
+                .sortBy('key', 'value')
                 .value(),
             deploymentId
         };
