@@ -10,7 +10,7 @@ const iconStyle = {
     zIndex: 1
 };
 
-export default function Input({ hideInitialLabels, initialLabels, onChange, toolbox }) {
+export default function LabelsInput({ hideInitialLabels, initialLabels, onChange, toolbox }) {
     const { useEffect } = React;
     const {
         Basic: { Divider, Form, Icon, Segment },
@@ -109,14 +109,14 @@ export default function Input({ hideInitialLabels, initialLabels, onChange, tool
     );
 }
 
-Input.propTypes = {
+LabelsInput.propTypes = {
     hideInitialLabels: PropTypes.bool,
     initialLabels: Stage.PropTypes.Labels,
     onChange: PropTypes.func.isRequired,
     toolbox: Stage.PropTypes.Toolbox.isRequired
 };
 
-Input.defaultProps = {
+LabelsInput.defaultProps = {
     hideInitialLabels: false,
     initialLabels: []
 };

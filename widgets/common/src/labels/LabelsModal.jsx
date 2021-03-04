@@ -1,4 +1,4 @@
-import LabelsInput from './Input';
+import LabelsInput from './LabelsInput';
 
 export default function LabelsModal({ deploymentId, hideInitialLabels, headerKey, applyKey, open, onHide, toolbox }) {
     const { i18n } = Stage;
