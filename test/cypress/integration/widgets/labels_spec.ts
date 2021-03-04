@@ -39,6 +39,8 @@ describe('Labels widget', () => {
             cy.get('input').type('!');
         });
         cy.contains('Only letters, digits and the characters "-", "." and "_" are allowed');
+
+        cy.interceptSp('PATCH', `/deployments/${deploymentName}`).as('labelsUpdate');
         cy.contains('tr', 'existing').within(() => {
             cy.get('.undo').should('not.exist');
             cy.get('input').type('_changed');
@@ -46,6 +48,7 @@ describe('Labels widget', () => {
             cy.get('.check').click();
             cy.get('input').should('not.exist');
         });
+        cy.wait('@labelsUpdate');
         cy.contains('existing_changed');
     });
 
@@ -53,6 +56,7 @@ describe('Labels widget', () => {
         cy.get('.trash').each(deleteIcon => {
             cy.wrap(deleteIcon).click();
             cy.contains('Yes').click();
+            cy.wrap(deleteIcon).should('not.exist');
         });
         cy.contains('There are no Labels defined');
     });
