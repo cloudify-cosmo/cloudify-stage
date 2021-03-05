@@ -29,6 +29,8 @@ const TechnologyButton = memo(({ name, logo, label, value, ...other }: Props) =>
         const input = inputRef.current;
         if (input) {
             const handle = setTimeout(() => {
+                // extracting current input checked property value to set TechnologyButton internal state
+                // it is necessary to do it after component is rendered - setTimeout was used to do it
                 setLocalValue(input.checked);
             });
             return () => {

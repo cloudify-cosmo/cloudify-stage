@@ -17,7 +17,7 @@ const UncontrolledForm = <T extends unknown>({ data, children, onSubmit }: Props
                 bindFormData(form, data ?? {});
             }
         } else {
-            throw new Error('Required object reference.');
+            throw new Error('Required RefObject<HTMLFormElement> type ref property.');
         }
     }, [data]);
     const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
