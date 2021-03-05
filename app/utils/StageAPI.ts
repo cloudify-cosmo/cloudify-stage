@@ -14,7 +14,8 @@ import type EventBus from './EventBus';
 import type Manager from './Manager';
 import type Internal from './Internal';
 import type External from './External';
-import type { WithOptionalProperties } from './types';
+// NOTE: make sure the types are registered globally
+import './types';
 
 /** @see https://docs.cloudify.co/developer/writing_widgets/widget-apis/#toolbox-object */
 export interface Toolbox {
@@ -150,7 +151,7 @@ interface CommonOrPropTypeDefinition {
 }
 
 /** User-facing WidgetDefinition used for defining new widgets */
-export type InitialWidgetDefinition<Params, Data, Configuration> = WithOptionalProperties<
+export type InitialWidgetDefinition<Params, Data, Configuration> = Stage.Types.WithOptionalProperties<
     /**
      * NOTE: cannot use `WidgetDefinition` directly because `isReact` stops being a discriminant property
      * which breaks type safety for `render`.
@@ -195,5 +196,11 @@ declare global {
         const defineHook: (definition: any) => void;
 
         const i18n: typeof import('i18next').default;
+
+        /**
+         * A namespace that exists for storing reusable TypeScript types
+         */
+        // eslint-disable-next-line no-shadow, @typescript-eslint/no-namespace
+        namespace Types {}
     }
 }
