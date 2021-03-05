@@ -1,4 +1,5 @@
 import { getObjectProperty, setObjectProperty } from './propertyUtils';
+import dispatchEvent from './dispatchEvent';
 
 export type HTMLFieldElement = HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement;
 
@@ -32,5 +33,7 @@ export const bindFormData = <T extends unknown>(form: HTMLFormElement, data: T):
         } else {
             element.value = String(value ?? '');
         }
+        dispatchEvent(element, 'input');
+        dispatchEvent(element, 'change');
     });
 };

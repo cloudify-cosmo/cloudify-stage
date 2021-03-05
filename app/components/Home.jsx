@@ -23,7 +23,7 @@ export default class Home extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            modalOpen: true
+            modalOpen: localStorage.wizardModalDisabled === undefined || localStorage.wizardModalDisabled !== 'true'
         };
     }
 
@@ -87,7 +87,10 @@ export default class Home extends Component {
         onSetDrilldownContext(contextParams);
     }
 
-    handleModalClose = () => {
+    handleModalClose = permanentClose => {
+        if (permanentClose) {
+            localStorage.wizardModalDisabled = 'true';
+        }
         this.setState({
             modalOpen: false
         });

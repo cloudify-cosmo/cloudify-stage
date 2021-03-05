@@ -4,7 +4,7 @@ import { ThemeContext } from 'styled-components';
 import { Form, HeaderBar } from 'cloudify-ui-components';
 import i18n from 'i18next';
 
-import { Button, Icon } from 'semantic-ui-react';
+import { Button, Icon, Ref as SemanticRef } from 'semantic-ui-react';
 import { CancelButton, Divider, Header, Modal } from '../basic';
 import { JSONData, JSONSchema, JSONSchemaItem, TechnologyData } from './model';
 
@@ -12,6 +12,7 @@ import TechnologyButton from './TechnologyButton';
 import UncontrolledForm from './UncontrolledForm';
 import { getFormData } from './formUtils';
 import PluginsStep from './steps/PluginsStep';
+import createCheckboxRefExtractor from './createCheckboxRefExtractor';
 
 const getHeaderText = (schema: JSONSchema, step: number) => {
     if (step === 0) {
@@ -40,10 +41,11 @@ type Props = {
     step?: number;
     schema: JSONSchema;
     data?: JSONData;
-    onClose?: () => void;
+    onClose?: (permanentClose: boolean) => void;
 };
 
 const QuickConfigurationModal = ({ open = false, step = 0, schema, data, onClose }: Props) => {
+    const modalDisabledInputRef = useRef<HTMLInputElement>(null);
     const technologiesFormRef = useRef<HTMLFormElement>(null);
     const secretsFormRef = useRef<HTMLFormElement>(null);
     const [detectedTechnologies, setDetectedTechnologies] = useState<TechnologyData>(() => ({}));
@@ -58,12 +60,12 @@ const QuickConfigurationModal = ({ open = false, step = 0, schema, data, onClose
     const selectedItemSchema = selectedItemSchemas[localStep - 1];
     const handleModalClose = () => {
         // TODO: check and save disabled modal flag
-        onClose?.();
+        onClose?.(modalDisabledInputRef.current?.checked ?? false);
     };
-    const handleCloseClick = () => {
-        // TODO: check and save disabled modal flag
-        onClose?.();
-    };
+    // const handleCloseClick = () => {
+    //     // TODO: check and save disabled modal flag
+    //     onClose?.(modalDisabledInputRef.current?.checked ?? false);
+    // };
     const handleBackClick = () => {
         if (localStep > 0) {
             const newLocalData = getFormData<JSONData>(secretsFormRef.current!);
@@ -96,24 +98,18 @@ const QuickConfigurationModal = ({ open = false, step = 0, schema, data, onClose
             </Modal.Header>
             <Modal.Content>
                 {localStep === 0 && (
-                    <UncontrolledForm<TechnologyData> ref={technologiesFormRef} data={detectedTechnologies}>
-                        {schema.map(itemSchema => (
-                            <TechnologyButton
-                                key={itemSchema.name}
-                                name={itemSchema.name}
-                                logo={itemSchema.logo}
-                                label={itemSchema.label}
-                            />
-                        ))}
-                        <Form.Field>
-                            {/* TODO: save state inside component */}
-                            <Form.Checkbox
-                                name="modalDisabled"
-                                label="Don't show next time"
-                                help="You can enable modal always in user profile."
-                            />
-                        </Form.Field>
-                    </UncontrolledForm>
+                    <>
+                        <UncontrolledForm<TechnologyData> ref={technologiesFormRef} data={detectedTechnologies}>
+                            {schema.map(itemSchema => (
+                                <TechnologyButton
+                                    key={itemSchema.name}
+                                    name={itemSchema.name}
+                                    logo={itemSchema.logo}
+                                    label={itemSchema.label}
+                                />
+                            ))}
+                        </UncontrolledForm>
+                    </>
                 )}
                 {localStep > 0 && (
                     <UncontrolledForm<JSONData> ref={secretsFormRef} data={localData}>
@@ -135,9 +131,18 @@ const QuickConfigurationModal = ({ open = false, step = 0, schema, data, onClose
                     <Header>{i18n.t('help.aboutModal.versionDetails', 'Version Details')}</Header>
                     <Divider />
                 */}
+                <Divider />
+                <Form.Field>
+                    <SemanticRef innerRef={createCheckboxRefExtractor(modalDisabledInputRef)}>
+                        <Form.Checkbox
+                            label="Don't show next time"
+                            help="You can enable modal always in user profile."
+                        />
+                    </SemanticRef>
+                </Form.Field>
             </Modal.Content>
             <Modal.Actions>
-                <CancelButton content={i18n.t('help.aboutModal.close', 'Close')} onClick={handleCloseClick} />
+                <CancelButton content={i18n.t('help.aboutModal.close', 'Close')} onClick={handleModalClose} />
                 {localStep < selectedItemSchemas.length + 1 && (
                     <Button.Group>
                         {localStep > 0 && (
