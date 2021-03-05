@@ -9,7 +9,7 @@ import { JSONData, JSONSchema, JSONSchemaItem, TechnologiesData } from './model'
 import { getFormData } from './common/formUtils';
 import PluginsStep from './steps/PluginsStep';
 import createCheckboxRefExtractor from './common/createCheckboxRefExtractor';
-import TechnologiesStep from './steps/TechnologiesStep';
+import TechnologiesStep from './steps/TechnologiesStep/index';
 import SecretsStep from './steps/SecretsStep';
 
 const getHeaderText = (schema: JSONSchema, step: number) => {

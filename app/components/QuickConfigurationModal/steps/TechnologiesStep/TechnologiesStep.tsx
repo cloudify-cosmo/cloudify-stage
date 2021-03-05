@@ -1,6 +1,6 @@
 import React, { FC, forwardRef, memo, Ref } from 'react';
-import UncontrolledForm from '../common/UncontrolledForm';
-import { JSONSchema, TechnologiesData } from '../model';
+import UncontrolledForm from '../../common/UncontrolledForm';
+import { JSONSchema, TechnologiesData } from '../../model';
 import TechnologyButton from './TechnologyButton';
 
 type Props = {
