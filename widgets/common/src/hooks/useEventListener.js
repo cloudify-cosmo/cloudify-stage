@@ -8,7 +8,7 @@ function useEventListener(toolbox, event, handler = toolbox.refresh) {
         }
 
         return undefined;
-    }, []);
+    }, [event, handler]);
 }
 
 Stage.defineHook({ useEventListener });
