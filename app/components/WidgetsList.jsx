@@ -5,7 +5,7 @@
 import PropTypes from 'prop-types';
 import _ from 'lodash';
 import React from 'react';
-import Widget from '../containers/Widget';
+import Widget from './Widget';
 import Grid from './layout/Grid';
 import GridItem from './layout/GridItem';
 
