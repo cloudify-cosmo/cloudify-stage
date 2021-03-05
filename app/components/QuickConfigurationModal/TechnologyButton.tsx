@@ -10,7 +10,7 @@ type Props = {
     logo: string;
     label: string;
     value?: boolean;
-    onBlur?: (e: ChangeEvent<HTMLInputElement>) => void;
+    onChange?: (e: ChangeEvent<HTMLInputElement>) => void;
 };
 
 const style: CSSProperties = {
@@ -22,7 +22,7 @@ const style: CSSProperties = {
     justifyContent: 'center'
 };
 
-const TechnologyButton = memo(({ name, logo, label, value, onBlur }: Props) => {
+const TechnologyButton = memo(({ name, logo, label, value, ...other }: Props) => {
     const inputRef = useRef<HTMLInputElement | null>(null);
     const [localValue, setLocalValue] = useState(value);
     useEffect(() => setLocalValue(value), [value]);
@@ -41,10 +41,8 @@ const TechnologyButton = memo(({ name, logo, label, value, onBlur }: Props) => {
     const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
         const target = e.currentTarget.firstChild as HTMLInputElement;
         setLocalValue(target.checked);
-    };
-    const handleBlur = (e: ChangeEvent<HTMLInputElement>) => {
-        if (onBlur) {
-            onBlur(e);
+        if (other.onChange) {
+            other.onChange(e);
         }
     };
     const handleClick = () => {
@@ -53,7 +51,7 @@ const TechnologyButton = memo(({ name, logo, label, value, onBlur }: Props) => {
     return (
         <Form.Field className={localValue ? 'checked' : ''} style={style} onClick={handleClick}>
             <SemanticRef innerRef={createCheckboxRefExtractor(inputRef)}>
-                <Form.Checkbox name={name} label=" " checked={localValue} onChange={handleChange} onBlur={handleBlur} />
+                <Form.Checkbox name={name} label=" " checked={localValue} {...other} onChange={handleChange} />
             </SemanticRef>
             <img style={{ maxHeight: '80%' }} src={logo} alt={label} />
             <span>{label}</span>
