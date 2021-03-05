@@ -15,7 +15,7 @@ import LoaderUtils from './LoaderUtils';
 import GenericConfig from './GenericConfig';
 import * as PropTypes from './props';
 import * as Hooks from './hooks';
-import type { StageAPI, WidgetDefinition } from './StageAPI';
+import type { WidgetDefinition } from './StageAPI';
 import normalizeWidgetDefinition from './normalizeWidgetDefinition';
 
 let widgetDefinitions: any[] = [];
@@ -46,7 +46,7 @@ function convertReadmeParams(content: any) {
 
 export default class WidgetDefinitionsLoader {
     public static init() {
-        const stageAPI: StageAPI = {
+        const stageAPI: typeof Stage = {
             defineWidget: widgetDefinition => {
                 widgetDefinitions.push(normalizeWidgetDefinition(widgetDefinition));
             },
@@ -68,7 +68,7 @@ export default class WidgetDefinitionsLoader {
 
             Hooks,
             defineHook: def => {
-                window.Stage.Hooks = { ...window.Stage.Hooks, ...def };
+                Object.assign(window.Stage.Hooks, def);
             },
 
             i18n

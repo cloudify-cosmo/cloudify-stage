@@ -1,5 +1,4 @@
 import type { ComponentType, ReactElement, ReactNode } from 'react';
-import type i18n from 'i18next';
 // NOTE: the file contains only types and is undetectable for ESLint
 // eslint-disable-next-line import/no-unresolved
 import type { SemanticCOLORS } from 'semantic-ui-react/dist/commonjs/generic';
@@ -8,7 +7,7 @@ import type * as BasicComponents from '../components/basic';
 import type * as SharedComponents from '../components/shared';
 import type * as StagePropTypes from './props';
 import type * as StageHooks from './hooks';
-import type GenericConfig from './GenericConfig';
+import type GenericConfigType from './GenericConfig';
 import type StageUtils from './stageUtils';
 import type WidgetContext from './Context';
 import type EventBus from './EventBus';
@@ -86,7 +85,7 @@ export interface WidgetConfigurationDefinition {
 interface CommonWidgetDefinition<Params, Data, Configuration> {
     id: string;
     name: string;
-    categories: ObjectKeys<typeof GenericConfig['CATEGORY']>[];
+    categories: ObjectKeys<typeof GenericConfigType['CATEGORY']>[];
     color: SemanticCOLORS;
     description?: string;
     /** @see https://docs.cloudify.co/developer/writing_widgets/widget-definition/#fetchurl */
@@ -101,7 +100,7 @@ interface CommonWidgetDefinition<Params, Data, Configuration> {
     initialConfiguration: WidgetConfigurationDefinition[];
     initialHeight: number;
     initialWidth: number;
-    permission: ObjectKeys<typeof GenericConfig['CUSTOM_WIDGET_PERMISSIONS']> | string;
+    permission: ObjectKeys<typeof GenericConfigType['CUSTOM_WIDGET_PERMISSIONS']> | string;
     showBorder: boolean;
     showHeader: boolean;
     supportedEditions: string[];
@@ -174,24 +173,27 @@ export type InitialWidgetDefinition<Params, Data, Configuration> = WithOptionalP
 > &
     (ReactWidgetDefinitionPart<Data, Configuration> | HTMLWidgetDefinitionPart<Data, Configuration>);
 
-export interface StageAPI {
-    Basic: typeof BasicComponents;
-    defineWidget: <Params, Data, Configuration>(
-        widgetDefinition: InitialWidgetDefinition<Params, Data, Configuration>
-    ) => void;
-    Shared: typeof SharedComponents;
-    ComponentToHtmlString: (element: ReactElement) => string;
-    GenericConfig: typeof GenericConfig;
-    Utils: typeof StageUtils;
+declare global {
+    // eslint-disable-next-line @typescript-eslint/no-namespace
+    namespace Stage {
+        const Basic: typeof BasicComponents;
+        const defineWidget: <Params, Data, Configuration>(
+            widgetDefinition: InitialWidgetDefinition<Params, Data, Configuration>
+        ) => void;
+        const Shared: typeof SharedComponents;
+        const ComponentToHtmlString: (element: ReactElement) => string;
+        const GenericConfig: typeof GenericConfigType;
+        const Utils: typeof StageUtils;
 
-    Common: Record<string, unknown>;
-    defineCommon: (definition: CommonOrPropTypeDefinition) => void;
+        const Common: Record<string, unknown>;
+        const defineCommon: (definition: CommonOrPropTypeDefinition) => void;
 
-    PropTypes: typeof StagePropTypes & Record<string, any>;
-    definePropType: (definition: CommonOrPropTypeDefinition) => void;
+        const PropTypes: typeof StagePropTypes & Record<string, any>;
+        const definePropType: (definition: CommonOrPropTypeDefinition) => void;
 
-    Hooks: typeof StageHooks & Record<string, any>;
-    defineHook: (definition: any) => void;
+        const Hooks: typeof StageHooks & Record<string, any>;
+        const defineHook: (definition: any) => void;
 
-    i18n: typeof i18n;
+        const i18n: typeof import('i18next').default;
+    }
 }
