@@ -50,13 +50,13 @@ export default function CommonDropdown({ baseFetchUrl, onChange, toolbox, value,
 
             <DynamicDropdown
                 clearable={false}
-                fetchAll
                 fetchUrl={fetchUrl}
                 itemsFormatter={items => _.map(items, item => ({ id: item }))}
                 onBlur={unsetInvalidCharacterTyped}
                 onChange={onValueChange}
                 onSearchChange={submitChange}
                 searchQuery={inputValue}
+                selectOnNavigation={false}
                 toolbox={toolbox}
                 value={selectedValue}
                 /* eslint-disable-next-line react/jsx-props-no-spreading */

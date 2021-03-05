@@ -4,6 +4,7 @@ import './DynamicDropdown.css';
 let instanceCount = 0;
 
 function DynamicDropdown({
+    disabled,
     multiple,
     placeholder,
     fetchUrl,
@@ -23,6 +24,7 @@ function DynamicDropdown({
     ...rest
 }) {
     const { useState, useEffect } = React;
+    const { useUpdateEffect } = Stage.Hooks;
 
     const [id] = useState(() => {
         instanceCount += 1;
@@ -32,12 +34,16 @@ function DynamicDropdown({
     const [hasMore, setHasMore] = useState(true);
     const [currentPage, setCurrentPage] = useState(-1);
     const [searchQuery, setSearchQuery] = useState('');
-    const [loaderVisible, setLoaderVisible] = useState(false);
+    const [shouldLoadMore, setShouldLoadMore] = useState(false);
     const [isLoading, setLoading] = useState(false);
 
     function loadMore() {
+        if (disabled) {
+            return;
+        }
+
         setLoading(true);
-        setLoaderVisible(null);
+        setShouldLoadMore(false);
 
         if (fetchAll) {
             toolbox
@@ -64,16 +70,17 @@ function DynamicDropdown({
         }
     }
 
+    function refreshData() {
+        setOptions([]);
+        setHasMore(true);
+        setCurrentPage(-1);
+    }
+
     useEffect(() => {
         if (prefetch) loadMore();
     }, []);
 
     useEffect(() => {
-        function refreshData() {
-            setOptions([]);
-            setHasMore(true);
-            setCurrentPage(-1);
-        }
         if (refreshEvent) {
             toolbox.getEventBus().on(refreshEvent, refreshData);
             return () => {
@@ -97,10 +104,15 @@ function DynamicDropdown({
     }, [value]);
 
     useEffect(() => {
-        if (loaderVisible) {
+        if (shouldLoadMore) {
             loadMore();
         }
-    }, [loaderVisible]);
+    }, [shouldLoadMore]);
+
+    useUpdateEffect(() => {
+        refreshData();
+        setShouldLoadMore(true);
+    }, [fetchUrl]);
 
     const filteredOptions = _(options)
         .filter(option =>
@@ -134,6 +146,7 @@ function DynamicDropdown({
 
     return (
         <Form.Dropdown
+            disabled={disabled}
             className={`dynamic ${className}`}
             search
             selection
@@ -160,7 +173,7 @@ function DynamicDropdown({
                                 active={!isLoading}
                                 containment={document.querySelector(`#${id} .menu`)}
                                 partialVisibility
-                                onChange={setLoaderVisible}
+                                onChange={setShouldLoadMore}
                             >
                                 <Loading message="" />
                             </VisibilitySensor>
@@ -178,6 +191,7 @@ function DynamicDropdown({
 }
 
 DynamicDropdown.propTypes = {
+    disabled: PropTypes.bool,
     multiple: PropTypes.bool,
     placeholder: PropTypes.string,
     fetchUrl: PropTypes.string.isRequired,
@@ -197,6 +211,7 @@ DynamicDropdown.propTypes = {
 };
 
 DynamicDropdown.defaultProps = {
+    disabled: false,
     value: null,
     fetchAll: false,
     filter: {},
