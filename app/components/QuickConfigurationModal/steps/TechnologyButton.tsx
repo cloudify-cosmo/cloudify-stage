@@ -1,9 +1,8 @@
 import { Form, HeaderBar } from 'cloudify-ui-components';
 import React, { ChangeEvent, CSSProperties, memo, MutableRefObject, useEffect, useRef, useState } from 'react';
 import { Ref as SemanticRef } from 'semantic-ui-react';
-import createCheckboxRefExtractor from './createCheckboxRefExtractor';
+import createCheckboxRefExtractor from '../common/createCheckboxRefExtractor';
 // import { JSONSchemaItem } from './model';
-
 
 type Props = {
     name: string;
