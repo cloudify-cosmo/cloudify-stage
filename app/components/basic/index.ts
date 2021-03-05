@@ -72,6 +72,7 @@ import {
 
 import { Map, TileLayer, Marker, Popup as LeafletPopup } from 'react-leaflet';
 import type { ComponentType } from 'react';
+import type { InferProps } from 'prop-types';
 
 Modal.defaultProps = {
     ...Modal.defaultProps,
@@ -92,6 +93,9 @@ const Leaflet = {
 const ApproveButtonWithCorrectProps = (ApproveButton as unknown) as typeof Button;
 const CancelButtonWithCorrectProps = (CancelButton as unknown) as typeof Button;
 const ConfirmWithCorrectProps = (Confirm as unknown) as ComponentType<StrictConfirmProps>;
+const ErrorMessageWithCorrectReturnType = (ErrorMessage as unknown) as ComponentType<
+    InferProps<typeof ErrorMessage['propTypes']>
+>;
 
 export {
     Accordion,
@@ -113,7 +117,7 @@ export {
     Divider,
     Dropdown,
     EditableLabel,
-    ErrorMessage,
+    ErrorMessageWithCorrectReturnType as ErrorMessage,
     Form,
     FullScreenSegment,
     GenericField,
