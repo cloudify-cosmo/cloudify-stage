@@ -78,11 +78,19 @@
               "definition": "outputs"
             },
             {
-              "name": "Deployment Inputs",
+              "name": "Labels",
               "width": 12,
               "height": 20,
               "x": 0,
               "y": 41,
+              "definition": "labels"
+            },
+            {
+              "name": "Deployment Inputs",
+              "width": 12,
+              "height": 20,
+              "x": 0,
+              "y": 61,
               "definition": "inputs"
             },
             {
@@ -90,7 +98,7 @@
               "width": 12,
               "height": 24,
               "x": 0,
-              "y": 85,
+              "y": 105,
               "definition": "blueprintSources"
             },
             {
@@ -98,7 +106,7 @@
               "width": 12,
               "height": 24,
               "x": 0,
-              "y": 61,
+              "y": 81,
               "definition": "nodes"
             }
           ],
