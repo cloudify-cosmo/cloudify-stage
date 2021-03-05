@@ -65,7 +65,7 @@ class Page extends Component<PageProps, never> {
             _(page.layout).flatMap('content').flatMap('widgets').find({ maximized: true });
 
         document.body.style.overflow = maximizeWidget ? 'hidden' : 'inherit';
-        window.scroll({ top: 0 });
+        window.scroll(0, 0);
 
         return (
             <div className={`fullHeight ${maximizeWidget ? 'maximizeWidget' : ''}`}>
