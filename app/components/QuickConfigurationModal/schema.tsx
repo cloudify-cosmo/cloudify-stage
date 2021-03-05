@@ -25,9 +25,39 @@ const schema = [
         secrets: [
             // "TODO": from https://alexmolev646772.invisionapp.com/console/Tech-Getting-Started-cklf31m3w03fc013o0agh3mf1/cklf31n0t01j90139cctpeypa/play
             {
-                name: '',
-                label: '',
+                name: 'gpc_client_x509_cert_url',
+                label: 'gpc_client_x509_cert_url',
                 type: 'text'
+            },
+            {
+                name: 'gpc_client_email',
+                label: 'gpc_client_email',
+                type: 'text'
+            },
+            {
+                name: 'gpc_client_id',
+                label: 'gpc_client_id',
+                type: 'text'
+            },
+            {
+                name: 'gpc_project_id',
+                label: 'gpc_project_id',
+                type: 'password'
+            },
+            {
+                name: 'gpc_private_key_id',
+                label: 'gpc_private_key_id',
+                type: 'password'
+            },
+            {
+                name: 'gpc_private_key',
+                label: 'gpc_private_key',
+                type: 'password'
+            },
+            {
+                name: 'gpc_zone',
+                label: 'gpc_zone',
+                type: 'password'
             }
         ]
     },

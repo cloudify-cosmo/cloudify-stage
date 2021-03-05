@@ -1,6 +1,9 @@
 import { Form, HeaderBar } from 'cloudify-ui-components';
-import React, { ChangeEvent, CSSProperties, memo, useEffect, useRef, useState } from 'react';
+import React, { ChangeEvent, CSSProperties, memo, MutableRefObject, useEffect, useRef, useState } from 'react';
+import { Ref as SemanticRef } from 'semantic-ui-react';
+import createCheckboxRefExtractor from './createCheckboxRefExtractor';
 // import { JSONSchemaItem } from './model';
+
 
 type Props = {
     name: string;
@@ -20,10 +23,24 @@ const style: CSSProperties = {
 };
 
 const TechnologyButton = memo(({ name, logo, label, value, onBlur }: Props) => {
+    const inputRef = useRef<HTMLInputElement | null>(null);
     const [localValue, setLocalValue] = useState(value);
     useEffect(() => setLocalValue(value), [value]);
+    useEffect(() => {
+        const input = inputRef.current;
+        if (input) {
+            const handle = setTimeout(() => {
+                setLocalValue(input.checked);
+            });
+            return () => {
+                clearTimeout(handle);
+            };
+        }
+        return undefined;
+    }, [inputRef.current]);
     const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
-        setLocalValue(e.target.checked);
+        const target = e.currentTarget.firstChild as HTMLInputElement;
+        setLocalValue(target.checked);
     };
     const handleBlur = (e: ChangeEvent<HTMLInputElement>) => {
         if (onBlur) {
@@ -35,14 +52,9 @@ const TechnologyButton = memo(({ name, logo, label, value, onBlur }: Props) => {
     };
     return (
         <Form.Field className={localValue ? 'checked' : ''} style={style} onClick={handleClick}>
-            <Form.Checkbox
-                name={name}
-                label=" "
-                checked={localValue}
-                // style={{ display: 'none' }}
-                onChange={handleChange}
-                onBlur={handleBlur}
-            />
+            <SemanticRef innerRef={createCheckboxRefExtractor(inputRef)}>
+                <Form.Checkbox name={name} label=" " checked={localValue} onChange={handleChange} onBlur={handleBlur} />
+            </SemanticRef>
             <img style={{ maxHeight: '80%' }} src={logo} alt={label} />
             <span>{label}</span>
         </Form.Field>

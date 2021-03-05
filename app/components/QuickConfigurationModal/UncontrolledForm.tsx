@@ -1,4 +1,4 @@
-import React, { FormEvent, forwardRef, ReactNode, Ref, RefObject, useRef } from 'react';
+import React, { FormEvent, forwardRef, memo, ReactNode, Ref, RefObject, useRef } from 'react';
 import { Form, Ref as SemanticRef } from 'semantic-ui-react';
 import { bindFormData, getFormData } from './formUtils';
 
@@ -35,4 +35,4 @@ const UncontrolledForm = <T extends unknown>({ data, children, onSubmit }: Props
 
 type UncontrolledForm = <T extends unknown>(props: Props<T> & { ref?: Ref<HTMLFormElement> }) => JSX.Element;
 
-export default forwardRef(UncontrolledForm) as UncontrolledForm;
+export default memo(forwardRef(UncontrolledForm)) as UncontrolledForm;
