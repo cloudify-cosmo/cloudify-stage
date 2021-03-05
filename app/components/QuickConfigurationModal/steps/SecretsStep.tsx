@@ -1,7 +1,8 @@
 import { Form } from 'cloudify-ui-components';
 import React, { FC, forwardRef, memo, Ref } from 'react';
+
 import UncontrolledForm from '../common/UncontrolledForm';
-import { JSONData, JSONSchemaItem } from '../model';
+import type { JSONData, JSONSchemaItem } from '../model';
 
 type Props = {
     schema: JSONSchemaItem;

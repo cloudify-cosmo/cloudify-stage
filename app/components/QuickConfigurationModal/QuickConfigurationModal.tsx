@@ -11,6 +11,7 @@ import PluginsStep from './steps/PluginsStep';
 import createCheckboxRefExtractor from './common/createCheckboxRefExtractor';
 import TechnologiesStep from './steps/TechnologiesStep/index';
 import SecretsStep from './steps/SecretsStep';
+import SummaryStep from './steps/SummaryStep';
 
 const getHeaderText = (schema: JSONSchema, step: number) => {
     if (step === 0) {
@@ -98,7 +99,7 @@ const QuickConfigurationModal = ({ open = false, step = 0, schema, data, onClose
                     <SecretsStep ref={secretsFormRef} schema={selectedItemSchema} secrets={localData} />
                 )}
                 {localStep > selectedItemSchemas.length && (
-                    <PluginsStep schema={selectedItemSchemas} data={localData} />
+                    <SummaryStep schema={selectedItemSchemas} data={localData} />
                 )}
                 <Divider />
                 <Form.Field>
