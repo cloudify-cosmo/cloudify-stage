@@ -4,14 +4,6 @@ import { Ref as SemanticRef } from 'semantic-ui-react';
 import createCheckboxRefExtractor from '../common/createCheckboxRefExtractor';
 // import { JSONSchemaItem } from './model';
 
-type Props = {
-    name: string;
-    logo: string;
-    label: string;
-    value?: boolean;
-    onChange?: (e: ChangeEvent<HTMLInputElement>) => void;
-};
-
 const style: CSSProperties = {
     border: '1px solid silver',
     borderRadius: '5px',
@@ -19,6 +11,14 @@ const style: CSSProperties = {
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center'
+};
+
+type Props = {
+    name: string;
+    logo: string;
+    label: string;
+    value?: boolean;
+    onChange?: (e: ChangeEvent<HTMLInputElement>) => void;
 };
 
 const TechnologyButton = memo(({ name, logo, label, value, ...other }: Props) => {
