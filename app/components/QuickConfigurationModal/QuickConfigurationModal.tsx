@@ -1,18 +1,16 @@
 import _ from 'lodash';
-import React, { memo, useContext, useRef, ChangeEvent, useState, useEffect, useMemo } from 'react';
-import { ThemeContext } from 'styled-components';
+import React, { memo, useRef, useState, useEffect, useMemo } from 'react';
 import { Form, HeaderBar } from 'cloudify-ui-components';
 import i18n from 'i18next';
 
 import { Button, Icon, Ref as SemanticRef } from 'semantic-ui-react';
-import { CancelButton, Divider, Header, Modal } from '../basic';
-import { JSONData, JSONSchema, JSONSchemaItem, TechnologyData } from './model';
-
-import TechnologyButton from './TechnologyButton';
-import UncontrolledForm from './UncontrolledForm';
-import { getFormData } from './formUtils';
+import { CancelButton, Divider, Modal } from '../basic';
+import { JSONData, JSONSchema, JSONSchemaItem, TechnologiesData } from './model';
+import { getFormData } from './common/formUtils';
 import PluginsStep from './steps/PluginsStep';
-import createCheckboxRefExtractor from './createCheckboxRefExtractor';
+import createCheckboxRefExtractor from './common/createCheckboxRefExtractor';
+import TechnologiesStep from './steps/TechnologiesStep';
+import SecretsStep from './steps/SecretsStep';
 
 const getHeaderText = (schema: JSONSchema, step: number) => {
     if (step === 0) {
@@ -26,14 +24,21 @@ const getHeaderText = (schema: JSONSchema, step: number) => {
     return 'Summary & Status';
 };
 
+/**
+ * Returns information what technologies are selected using technology forms schema and data.
+ * e.g. result: { aws: true, gpc: false }
+ * @param schema schema that describes technology forms (once schema item describes secrets set for specific technology)
+ * @param data data that can be bound into form that are complies with technology forms schema
+ * @returns information about selected technologies
+ */
 const detectTechnologies = (schema: JSONSchema, data?: JSONData) => {
     if (data) {
         return schema.reduce((result, item) => {
             result[item.name] = item.name in data;
             return result;
-        }, {} as TechnologyData);
+        }, {} as TechnologiesData);
     }
-    return {} as TechnologyData;
+    return {} as TechnologiesData;
 };
 
 type Props = {
@@ -48,7 +53,7 @@ const QuickConfigurationModal = ({ open = false, step = 0, schema, data, onClose
     const modalDisabledInputRef = useRef<HTMLInputElement>(null);
     const technologiesFormRef = useRef<HTMLFormElement>(null);
     const secretsFormRef = useRef<HTMLFormElement>(null);
-    const [detectedTechnologies, setDetectedTechnologies] = useState<TechnologyData>(() => ({}));
+    const [detectedTechnologies, setDetectedTechnologies] = useState<TechnologiesData>(() => ({}));
     const [localStep, setLocalStep] = useState(step);
     const [localData, setLocalData] = useState(() => data ?? {});
     useEffect(() => setDetectedTechnologies(detectTechnologies(schema, data)), [schema, data]);
@@ -59,33 +64,22 @@ const QuickConfigurationModal = ({ open = false, step = 0, schema, data, onClose
     ]);
     const selectedItemSchema = selectedItemSchemas[localStep - 1];
     const handleModalClose = () => {
-        // TODO: check and save disabled modal flag
         onClose?.(modalDisabledInputRef.current?.checked ?? false);
     };
-    // const handleCloseClick = () => {
-    //     // TODO: check and save disabled modal flag
-    //     onClose?.(modalDisabledInputRef.current?.checked ?? false);
-    // };
     const handleBackClick = () => {
         if (localStep > 0) {
             const newLocalData = getFormData<JSONData>(secretsFormRef.current!);
             setLocalData({ ...localData, ...newLocalData });
             setLocalStep(localStep - 1);
-            // TODO: remove it
-            console.log(JSON.stringify(newLocalData, null, 4));
         }
     };
     const handleNextClick = () => {
         if (localStep === 0) {
-            const newUsedTechnologies = getFormData<TechnologyData>(technologiesFormRef.current!);
+            const newUsedTechnologies = getFormData<TechnologiesData>(technologiesFormRef.current!);
             setDetectedTechnologies(newUsedTechnologies);
-            // TODO: remove it
-            console.log(JSON.stringify(newUsedTechnologies, null, 4));
         } else {
             const newLocalData = getFormData<JSONData>(secretsFormRef.current!);
             setLocalData({ ...localData, ...newLocalData });
-            // TODO: remove it
-            console.log(JSON.stringify(newLocalData, null, 4));
         }
         if (localStep < schema.length - 1) {
             setLocalStep(localStep + 1);
@@ -98,39 +92,14 @@ const QuickConfigurationModal = ({ open = false, step = 0, schema, data, onClose
             </Modal.Header>
             <Modal.Content>
                 {localStep === 0 && (
-                    <>
-                        <UncontrolledForm<TechnologyData> ref={technologiesFormRef} data={detectedTechnologies}>
-                            {schema.map(itemSchema => (
-                                <TechnologyButton
-                                    key={itemSchema.name}
-                                    name={itemSchema.name}
-                                    logo={itemSchema.logo}
-                                    label={itemSchema.label}
-                                />
-                            ))}
-                        </UncontrolledForm>
-                    </>
+                    <TechnologiesStep ref={technologiesFormRef} schema={schema} technologies={detectedTechnologies} />
                 )}
-                {localStep > 0 && (
-                    <UncontrolledForm<JSONData> ref={secretsFormRef} data={localData}>
-                        {selectedItemSchema?.secrets.map(itemSecret => (
-                            <Form.Field key={itemSecret.name}>
-                                <Form.Input
-                                    name={`${selectedItemSchema.name}.${itemSecret.name}`}
-                                    type={itemSecret.type}
-                                    label={itemSecret.label}
-                                />
-                            </Form.Field>
-                        ))}
-                    </UncontrolledForm>
+                {localStep > 0 && localStep < selectedItemSchemas.length + 1 && (
+                    <SecretsStep ref={secretsFormRef} schema={selectedItemSchema} secrets={localData} />
                 )}
                 {localStep > selectedItemSchemas.length && (
                     <PluginsStep schema={selectedItemSchemas} data={localData} />
                 )}
-                {/*
-                    <Header>{i18n.t('help.aboutModal.versionDetails', 'Version Details')}</Header>
-                    <Divider />
-                */}
                 <Divider />
                 <Form.Field>
                     <SemanticRef innerRef={createCheckboxRefExtractor(modalDisabledInputRef)}>
@@ -161,6 +130,10 @@ const QuickConfigurationModal = ({ open = false, step = 0, schema, data, onClose
         </Modal>
     );
 };
+
+{/*
+    <Header>{i18n.t('help.aboutModal.versionDetails', 'Version Details')}</Header>
+*/}
 
 // QuickConfigurationModal.propTypes = {
 //     open: PropTypes.bool,

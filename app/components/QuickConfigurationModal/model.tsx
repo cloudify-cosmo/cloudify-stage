@@ -14,6 +14,6 @@ export type JSONSchemaItem = {
 
 export type JSONSchema = JSONSchemaItem[];
 
-export type TechnologyData = Record<string, boolean>;
-export type SecretData = Record<string, string>;
-export type JSONData = Record<string, SecretData>;
+export type TechnologiesData = Record<string, boolean | undefined>;
+export type SecretData = Record<string, string | undefined>;
+export type JSONData = Record<string, SecretData | undefined>;
