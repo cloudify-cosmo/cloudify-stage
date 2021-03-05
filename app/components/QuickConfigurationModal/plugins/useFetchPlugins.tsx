@@ -1,11 +1,13 @@
 import { useState, useEffect } from 'react';
+
 import { useInternal, useManager } from '../managerHooks';
+import type { AvailablePluginData, InstalledPluginData, InstalledPluginsData } from './model';
 
 type PluginsHook = {
     loading: boolean;
     plugins?: {
         available: AvailablePluginData[];
-        installed: InstalledPluginsData;
+        installed: InstalledPluginData[];
     };
     error?: string;
 };
@@ -17,14 +19,21 @@ const useFetchPlugins = () => {
     useEffect(() => {
         let mounted = true;
         Promise.all([
-            internal.doGet('/external/content', { url: Stage.i18n.t('widgets.common.urls.pluginsCatalog') }),
-            manager.doGet('/plugins?_include=distribution,package_name,package_version,visibility')
+            internal.doGet('/external/content', { url: Stage.i18n.t('widgets.common.urls.pluginsCatalog') }) as Promise<
+                AvailablePluginData[]
+            >,
+            manager.doGet('/plugins?_include=distribution,package_name,package_version,visibility') as Promise<
+                InstalledPluginsData
+            >
         ])
             .then(([available, installed]) => {
                 if (mounted) {
                     setState({
                         loading: false,
-                        plugins: { available, installed }
+                        plugins: {
+                            available,
+                            installed: installed.items
+                        }
                     });
                 }
             })

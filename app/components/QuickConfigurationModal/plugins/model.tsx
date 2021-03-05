@@ -1,23 +1,14 @@
-type URLString = string;
+import type { PageMetadataData } from '../model';
 
-type PaginationData = {
-    offset: number;
-    size: number;
-    total: number;
-};
+export type URLString = string;
 
-type PageMetadataData = {
-    pagination: PaginationData;
-    filtered: unknown;
-};
-
-type WagonData = {
+export type WagonData = {
     name: string;
     url: URLString;
     md5url: URLString;
 };
 
-type AvailablePluginData = {
+export type AvailablePluginData = {
     description: string;
     releases: URLString;
     title: string;
@@ -28,11 +19,14 @@ type AvailablePluginData = {
     name: string;
 };
 
-type InstalledPluginData = {
-    todo: unknown;
+export type InstalledPluginData = {
+    visibility: string;
+    distribution: string;
+    package_name: string;
+    package_version: string;
 };
 
-type InstalledPluginsData = {
+export type InstalledPluginsData = {
     metadata: PageMetadataData;
     items: InstalledPluginData[];
 };

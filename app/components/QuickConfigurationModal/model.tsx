@@ -1,3 +1,18 @@
+// from REST API
+
+export type PaginationData = {
+    offset: number;
+    size: number;
+    total: number;
+};
+
+export type PageMetadataData = {
+    pagination: PaginationData;
+    filtered: unknown;
+};
+
+// used locally
+
 export type JSONSchemaSecret = {
     label: string;
     name: string;
