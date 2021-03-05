@@ -11,7 +11,7 @@ import RefreshIcon from './RefreshIcon';
 import StatusIcon from './StatusIcon';
 
 function ManagersTable({ data, toolbox, widget }) {
-    const { useBoolean, useEventListener } = Stage.Hooks;
+    const { useBoolean, useRefreshEvent } = Stage.Hooks;
     const { useState, useEffect } = React;
     const [bulkOperation, setBulkOperation] = useState(false);
     const [deployment, setDeployment] = useState({ id: '' });
@@ -45,7 +45,7 @@ function ManagersTable({ data, toolbox, widget }) {
         setError(`Status update for ${managerId} has failed.`);
     }
 
-    useEventListener(toolbox, 'managers:refresh');
+    useRefreshEvent(toolbox, 'managers:refresh');
 
     useEffect(() => {
         const actions = new Actions(toolbox);

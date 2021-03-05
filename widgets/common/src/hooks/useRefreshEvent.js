@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 
-function useEventListener(toolbox, event, handler = toolbox.refresh) {
+function useRefreshEvent(toolbox, event, handler = toolbox.refresh) {
     useEffect(() => {
         if (event) {
             toolbox.getEventBus().on(event, handler);
@@ -11,4 +11,4 @@ function useEventListener(toolbox, event, handler = toolbox.refresh) {
     }, [event, handler]);
 }
 
-Stage.defineHook({ useEventListener });
+Stage.defineHook({ useRefreshEvent });

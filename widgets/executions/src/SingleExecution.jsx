@@ -4,9 +4,9 @@ import ExecutionWorkflowGraph from './tasksGraph/ExecutionWorkflowGraph';
 export default function SingleExecution({ execution, toolbox }) {
     const container = useRef();
     const [containerHeight, setContainerHeight] = useState(0);
-    const { useEventListener } = Stage.Hooks;
+    const { useRefreshEvent } = Stage.Hooks;
 
-    useEventListener(toolbox, 'executions:refresh');
+    useRefreshEvent(toolbox, 'executions:refresh');
 
     useEffect(() => {
         const newContainerHeight = _.get(container.current, 'offsetHeight');

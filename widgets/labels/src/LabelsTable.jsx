@@ -7,7 +7,7 @@ import AddLabelsModal from './AddLabelsModal';
 export default function LabelsTable({ data, toolbox }) {
     const { Button, DataTable, Icon } = Stage.Basic;
     const { DeploymentActions } = Stage.Common;
-    const { useBoolean, useEventListener, useInput, useResettableState } = Stage.Hooks;
+    const { useBoolean, useRefreshEvent, useInput, useResettableState } = Stage.Hooks;
     const { i18n } = Stage;
 
     const [isAddModalOpen, openAddModal, closeAddModal] = useBoolean();
@@ -16,7 +16,7 @@ export default function LabelsTable({ data, toolbox }) {
     const [labelToDelete, setLabelToDelete, unsetLabelToDelete] = useResettableState();
     const [labels, setLabels] = useState(data.labels);
 
-    useEventListener(toolbox, 'labels:refresh');
+    useRefreshEvent(toolbox, 'labels:refresh');
 
     const actions = new DeploymentActions(toolbox);
 
