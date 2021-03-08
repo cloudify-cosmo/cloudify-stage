@@ -16,10 +16,13 @@ import {
     changePageName,
     createPagesMap,
     forEachWidget,
+    LayoutSection,
     moveTab,
+    PageDefinition,
     removeLayoutSectionFromPage,
     removeTab,
     selectPage,
+    SimpleWidgetObj,
     updateTab
 } from '../actions/page';
 import { addWidget, removeWidget, updateWidget } from '../actions/widgets';
@@ -115,19 +118,6 @@ class Page extends Component<PageProps, never> {
 }
 
 // NOTE: these should be extracted to appropriate reducers when those are migrated to TS
-interface LayoutSection {
-    type: 'widgets' | 'tabs';
-    content: SimpleWidgetObj[];
-}
-
-interface PageDefinition {
-    id: string;
-    name: string;
-    description: string;
-    layout: LayoutSection[];
-    isDrillDown: boolean;
-    parent?: string;
-}
 
 interface PageDefinitionWithContext extends PageDefinition {
     context: any;
@@ -139,7 +129,7 @@ interface DrilldownContext {
 }
 
 const buildPagesList = (pages: PageDefinition[], drilldownContextArray: DrilldownContext[], selectedPageId: string) => {
-    const pagesMap: Record<string, PageDefinition> = createPagesMap(pages);
+    const pagesMap = createPagesMap(pages);
     const pagesList: PageDefinitionWithContext[] = [];
     let index = drilldownContextArray.length - 1;
 
@@ -164,8 +154,6 @@ const buildPagesList = (pages: PageDefinition[], drilldownContextArray: Drilldow
     return pagesList;
 };
 
-type SimpleWidgetObj = Omit<Widget, 'definition'> & { definition: string };
-
 const mapStateToProps = (state: ReduxState, ownProps: PageOwnProps) => {
     const { pages } = state;
 
@@ -174,7 +162,9 @@ const mapStateToProps = (state: ReduxState, ownProps: PageOwnProps) => {
     const homePageId = pages[0].id;
     const pageId = page ? page.id : homePageId;
 
-    const pageData = _.cloneDeep(_.find(pages, { id: pageId }));
+    // NOTE: assume page will always be found
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    const pageData: PageDefinition = _.cloneDeep(_.find(pages, { id: pageId })!);
 
     function assignWidgetDefinition(widget: SimpleWidgetObj) {
         // NOTE: assume the definition is always valid
@@ -218,20 +208,15 @@ const mapDispatchToProps = (dispatch: ThunkDispatch<ReduxState, never, AnyAction
             dispatch(setDrilldownContext(drilldownContext));
             dispatch(selectPage(page.id, page.isDrillDown, page.context, page.name));
         },
-        onWidgetAdded: (
-            layoutSection: LayoutSection,
-            name: string,
-            widgetDefinition: WidgetDefinition,
-            tabIndex: number
-        ) => {
+        onWidgetAdded: (layoutSection: number, name: string, widgetDefinition: WidgetDefinition, tabIndex: number) => {
             dispatch(addWidget(ownProps.pageId, layoutSection, tabIndex, { name }, widgetDefinition));
         },
-        onTabAdded: (layoutSection: LayoutSection) => dispatch(addTab(ownProps.pageId, layoutSection)),
-        onTabRemoved: (layoutSection: LayoutSection, tabIndex: number) =>
+        onTabAdded: (layoutSection: number) => dispatch(addTab(ownProps.pageId, layoutSection)),
+        onTabRemoved: (layoutSection: number, tabIndex: number) =>
             dispatch(removeTab(ownProps.pageId, layoutSection, tabIndex)),
-        onTabUpdated: (layoutSection: LayoutSection, tabIndex: number, name: string, isDefault: boolean) =>
+        onTabUpdated: (layoutSection: number, tabIndex: number, name: string, isDefault: boolean) =>
             dispatch(updateTab(ownProps.pageId, layoutSection, tabIndex, name, isDefault)),
-        onTabMoved: (layoutSection: LayoutSection, oldTabIndex: number, newTabIndex: number) =>
+        onTabMoved: (layoutSection: number, oldTabIndex: number, newTabIndex: number) =>
             dispatch(moveTab(ownProps.pageId, layoutSection, oldTabIndex, newTabIndex)),
         onEditModeExit: () => {
             dispatch(setEditMode(false));
@@ -244,7 +229,7 @@ const mapDispatchToProps = (dispatch: ThunkDispatch<ReduxState, never, AnyAction
         },
         onLayoutSectionAdded: (layoutSection: LayoutSection, position: number) =>
             dispatch(addLayoutSectionToPage(ownProps.pageId, layoutSection, position)),
-        onLayoutSectionRemoved: (layoutSection: LayoutSection) =>
+        onLayoutSectionRemoved: (layoutSection: number) =>
             dispatch(removeLayoutSectionFromPage(ownProps.pageId, layoutSection))
     };
 };
