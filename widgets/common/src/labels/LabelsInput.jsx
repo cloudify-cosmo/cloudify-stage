@@ -1,8 +1,8 @@
-import AddButton from './labels/AddButton';
-import LabelsList from './labels/LabelsList';
-import KeyDropdown from './labels/KeyDropdown';
-import ValueDropdown from './labels/ValueDropdown';
-import { addSearchToUrl } from './labels/common';
+import AddButton from './AddButton';
+import LabelsList from './LabelsList';
+import KeyDropdown from './KeyDropdown';
+import ValueDropdown from './ValueDropdown';
+import { addSearchToUrl } from './common';
 
 const iconStyle = {
     position: 'absolute',
@@ -146,8 +146,3 @@ LabelsInput.defaultProps = {
     hideInitialLabels: false,
     initialLabels: []
 };
-
-Stage.defineCommon({
-    name: 'LabelsInput',
-    common: LabelsInput
-});

@@ -159,12 +159,10 @@ const commands = {
         }).then(response => {
             const { role } = response.body;
             cy.setLocalStorage(
-                `state-main`,
+                `manager-state-main`,
                 JSON.stringify({
-                    manager: {
-                        auth: { role, groupSystemRoles: {}, tenantsRoles: {} },
-                        username
-                    }
+                    auth: { role, groupSystemRoles: {}, tenantsRoles: {} },
+                    username
                 })
             );
         });

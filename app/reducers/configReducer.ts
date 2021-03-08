@@ -1,6 +1,15 @@
-import * as types from '../actions/types';
+import type { Reducer } from 'redux';
 
-const config = (state = {}, action) => {
+import * as types from '../actions/types';
+import type { ClientConfig } from '../utils/ConfigLoader';
+
+export interface ConfigState extends ClientConfig {
+    isEditMode?: boolean;
+    clientConfig?: any;
+}
+
+// NOTE: Initial state is always provided via configureStore
+const config: Reducer<ConfigState> = (state = {} as ConfigState, action) => {
     switch (action.type) {
         case types.SET_CONFIG_EDIT_MODE:
             return { ...state, isEditMode: action.isEditMode };

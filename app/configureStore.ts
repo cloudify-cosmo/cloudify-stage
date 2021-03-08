@@ -1,25 +1,19 @@
-/**
- * Created by kinneretzin on 29/08/2016.
- */
-
 import thunkMiddleware from 'redux-thunk';
 import { routerMiddleware } from 'connected-react-router';
 import { createStore, applyMiddleware } from 'redux';
 import { composeWithDevTools } from 'redux-devtools-extension';
+import type { History } from 'history';
 
 import throttle from 'lodash/throttle';
-import StatePersister from './utils/StatePersister';
+import ManagerStatePersister from './utils/ManagerStatePersister';
+import type { ClientConfig } from './utils/ConfigLoader';
 
-import createRootReducer from './reducers';
-import { emptyState } from './reducers/managerReducer';
+import createRootReducer, { ReduxState } from './reducers';
 
-export default (history, config) => {
-    let initialState = StatePersister.load(config.mode) || { manager: emptyState };
-    initialState = { ...initialState, config };
+export default (history: History, config: ClientConfig) => {
+    const managerState = ManagerStatePersister.load(config.mode);
 
-    // Clear login error if has any
-    initialState.manager.err = null;
-    initialState.manager.isLoggingIn = false;
+    const initialState: Partial<ReduxState> = { manager: managerState, config };
 
     const store = createStore(
         createRootReducer(history),
@@ -30,7 +24,7 @@ export default (history, config) => {
     // This saves the manager data in the local storage. This is good for when a user refreshes the page we can know if he is logged in or not, and save his login info - ip, username
     store.subscribe(
         throttle(() => {
-            StatePersister.save(store.getState(), config.mode);
+            ManagerStatePersister.save(store.getState().manager, config.mode);
         }, 1000)
     );
 

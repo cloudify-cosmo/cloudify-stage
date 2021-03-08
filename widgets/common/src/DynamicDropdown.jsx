@@ -25,7 +25,7 @@ function DynamicDropdown({
     ...rest
 }) {
     const { useState, useEffect } = React;
-    const { useBoolean, useUpdateEffect } = Stage.Hooks;
+    const { useBoolean, useEventListener, useUpdateEffect } = Stage.Hooks;
 
     const [id] = useState(() => {
         instanceCount += 1;
@@ -85,16 +85,7 @@ function DynamicDropdown({
         if (prefetch) loadMore();
     }, []);
 
-    useEffect(() => {
-        if (refreshEvent) {
-            toolbox.getEventBus().on(refreshEvent, refreshData);
-            return () => {
-                toolbox.getEventBus().off(refreshEvent, refreshData);
-            };
-        }
-
-        return undefined;
-    }, []);
+    useEventListener(toolbox, refreshEvent, refreshData);
 
     useEffect(() => {
         if (_.isEmpty(value)) {
