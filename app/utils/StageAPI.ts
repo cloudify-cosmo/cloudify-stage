@@ -157,9 +157,9 @@ interface HTMLWidgetDefinitionPart<Data, Configuration> {
     ) => void;
 }
 
-interface CommonOrPropTypeDefinition {
-    name: string;
-    common: any;
+interface CommonOrPropTypeDefinition<Obj, Name extends keyof Obj> {
+    name: Name;
+    common: Obj[Name];
 }
 
 /** User-facing WidgetDefinition used for defining new widgets */
@@ -198,11 +198,15 @@ declare global {
         const GenericConfig: typeof GenericConfigType;
         const Utils: typeof StageUtils;
 
-        const Common: Record<string, unknown>;
-        const defineCommon: (definition: CommonOrPropTypeDefinition) => void;
+        // NOTE: Common items are defined in widgets
+        // eslint-disable-next-line @typescript-eslint/no-empty-interface
+        interface Common {}
+        /** Common widget utilities */
+        const Common: Common;
+        const defineCommon: <Name extends keyof Common>(definition: CommonOrPropTypeDefinition<Common, Name>) => void;
 
         const PropTypes: typeof StagePropTypes & Record<string, any>;
-        const definePropType: (definition: CommonOrPropTypeDefinition) => void;
+        const definePropType: (definition: CommonOrPropTypeDefinition<any, string>) => void;
 
         const Hooks: typeof StageHooks & Record<string, any>;
         const defineHook: (definition: any) => void;
