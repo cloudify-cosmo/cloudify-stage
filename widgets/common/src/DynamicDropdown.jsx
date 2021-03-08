@@ -25,7 +25,7 @@ function DynamicDropdown({
     ...rest
 }) {
     const { useState, useEffect } = React;
-    const { useUpdateEffect } = Stage.Hooks;
+    const { useBoolean, useUpdateEffect } = Stage.Hooks;
 
     const [id] = useState(() => {
         instanceCount += 1;
@@ -37,6 +37,7 @@ function DynamicDropdown({
     const [searchQuery, setSearchQuery] = useState('');
     const [shouldLoadMore, setShouldLoadMore] = useState(false);
     const [isLoading, setLoading] = useState(false);
+    const [overrideOptions, setOverrideOptions, resetOverrideOptions] = useBoolean();
 
     function loadMore() {
         if (disabled) {
@@ -63,7 +64,10 @@ function DynamicDropdown({
                 .doGet(fetchUrl, { _sort: valueProp, _size: pageSize, _offset: nextPage * pageSize })
                 .then(data => {
                     setHasMore(data.metadata.pagination.total > (nextPage + 1) * pageSize);
-                    setOptions([...options, ...itemsFormatter(data.items)]);
+                    setOptions(
+                        overrideOptions ? itemsFormatter(data.items) : [...options, ...itemsFormatter(data.items)]
+                    );
+                    resetOverrideOptions();
                 })
                 .finally(() => setLoading(false));
 
@@ -72,7 +76,7 @@ function DynamicDropdown({
     }
 
     function refreshData() {
-        setOptions([]);
+        setOverrideOptions();
         setHasMore(true);
         setCurrentPage(-1);
     }
@@ -158,7 +162,7 @@ function DynamicDropdown({
                 value={getDropdownValue()}
                 id={id}
                 name={name}
-                onChange={(event, field) => onChange(!_.isEmpty(field.value) ? field.value : null, event)}
+                onChange={(event, field) => onChange(!_.isEmpty(field.value) ? field.value : null)}
                 onSearchChange={(e, data) => setSearchQuery(data.searchQuery)}
                 multiple={multiple}
                 loading={isLoading}

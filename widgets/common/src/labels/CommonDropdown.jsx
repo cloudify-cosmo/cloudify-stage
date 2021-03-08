@@ -14,23 +14,13 @@ export default function CommonDropdown({ innerRef, baseFetchUrl, onChange, toolb
     const { useEffect, useState } = React;
     const {
         Common: { DynamicDropdown, LabelValidationErrorPopup },
-        Hooks: { useLabelInput, useResettableState }
+        Hooks: { useLabelInput }
     } = Stage;
 
-    const [selectedValue, setSelectedValue, resetSelectedValue] = useResettableState('');
     const [fetchUrl, setFetchUrl] = useState(baseFetchUrl);
     const { inputValue, invalidCharacterTyped, submitChange, resetInput, unsetInvalidCharacterTyped } = useLabelInput(
-        newValue => {
-            resetSelectedValue();
-            onChange(newValue);
-        }
+        onChange
     );
-
-    function onValueChange(newValue) {
-        resetInput();
-        setSelectedValue(newValue);
-        onChange(newValue);
-    }
 
     useDebouncedSetValue(baseFetchUrl ? addSearchToUrl(baseFetchUrl, inputValue) : '', setFetchUrl, [
         baseFetchUrl,
@@ -39,7 +29,6 @@ export default function CommonDropdown({ innerRef, baseFetchUrl, onChange, toolb
 
     useEffect(() => {
         if (_.isEmpty(value)) {
-            resetSelectedValue();
             resetInput();
         }
     }, [value]);
@@ -54,12 +43,11 @@ export default function CommonDropdown({ innerRef, baseFetchUrl, onChange, toolb
                 fetchUrl={fetchUrl}
                 itemsFormatter={items => _.map(items, item => ({ id: item }))}
                 onBlur={unsetInvalidCharacterTyped}
-                onChange={onValueChange}
+                onChange={newValue => submitChange(null, { value: newValue })}
                 onSearchChange={submitChange}
                 searchQuery={inputValue}
                 selectOnNavigation={false}
                 toolbox={toolbox}
-                value={selectedValue}
                 /* eslint-disable-next-line react/jsx-props-no-spreading */
                 {...rest}
             />
