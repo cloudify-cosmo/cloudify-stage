@@ -18,9 +18,9 @@ import type External from './External';
 import './types';
 
 /** @see https://docs.cloudify.co/developer/writing_widgets/widget-apis/#toolbox-object */
-export interface Toolbox {
+interface StageToolbox {
     drillDown(
-        widget: Widget,
+        widget: StageWidget,
         defaultTemplate: string,
         drilldownContext: Record<string, any>,
         drilldownPageName?: any
@@ -32,7 +32,7 @@ export interface Toolbox {
     getManager(): Manager;
     getManagerState(): any;
     getNewManager(ip: unknown): any;
-    getWidget(): Widget;
+    getWidget(): StageWidget;
     getWidgetBackend(): any;
     goToHomePage(): void;
     goToPage(pageName: string, context: any): void;
@@ -40,8 +40,9 @@ export interface Toolbox {
     loading(isLoading: boolean): void;
     refresh(params?: any): void;
 }
+export type { StageToolbox as Toolbox };
 
-export interface Widget<Configuration = Record<string, unknown>> {
+interface StageWidget<Configuration = Record<string, unknown>> {
     id: string;
     name: string;
     height: number;
@@ -49,24 +50,26 @@ export interface Widget<Configuration = Record<string, unknown>> {
     x: number;
     y: number;
     configuration: Configuration;
-    definition: WidgetDefinition;
+    definition: StageWidgetDefinition;
     drillDownPages: Record<string, string>;
     maximized: boolean;
 }
+export type { StageWidget as Widget };
 
 /**
  * @see https://docs.cloudify.co/developer/writing_widgets/widget-definition/
  */
-export type WidgetDefinition<
-    Params = any,
-    Data = any,
-    Configuration = Record<string, unknown>
-> = CommonWidgetDefinition<Params, Data, Configuration> &
+type StageWidgetDefinition<Params = any, Data = any, Configuration = Record<string, unknown>> = CommonWidgetDefinition<
+    Params,
+    Data,
+    Configuration
+> &
     (ReactWidgetDefinitionPart<Data, Configuration> | HTMLWidgetDefinitionPart<Data, Configuration>);
+export type { StageWidgetDefinition as WidgetDefinition };
 
 type ObjectKeys<T extends Record<string, any>> = T[keyof T];
 
-export interface WidgetConfigurationDefinition {
+interface StageWidgetConfigurationDefinition {
     id: string;
     name?: string;
     description?: string;
@@ -82,6 +85,7 @@ export interface WidgetConfigurationDefinition {
     // TODO(RD-1296): add concrete types for each possible key and remove the line below
     [key: string]: any;
 }
+export type { StageWidgetConfigurationDefinition as WidgetConfigurationDefinition };
 
 interface CommonWidgetDefinition<Params, Data, Configuration> {
     id: string;
@@ -92,13 +96,13 @@ interface CommonWidgetDefinition<Params, Data, Configuration> {
     /** @see https://docs.cloudify.co/developer/writing_widgets/widget-definition/#fetchurl */
     fetchUrl?: string | Record<string, string>;
     /** @see https://docs.cloudify.co/developer/writing_widgets/widget-definition/#fetchparams-widget-toolbox */
-    fetchParams?: (widget: Widget<Configuration>, toolbox: Toolbox) => Params;
+    fetchParams?: (widget: StageWidget<Configuration>, toolbox: StageToolbox) => Params;
     hasReadme: boolean;
     hasStyle: boolean;
     hasTemplate: boolean;
     helpUrl?: string;
     /** @see https://docs.cloudify.co/developer/writing_widgets/widget-definition/#initialconfiguration */
-    initialConfiguration: WidgetConfigurationDefinition[];
+    initialConfiguration: StageWidgetConfigurationDefinition[];
     initialHeight: number;
     initialWidth: number;
     permission: ObjectKeys<typeof GenericConfigType['CUSTOM_WIDGET_PERMISSIONS']> | string;
@@ -110,13 +114,14 @@ interface CommonWidgetDefinition<Params, Data, Configuration> {
 
     init?: () => void;
     /** @see https://docs.cloudify.co/developer/writing_widgets/widget-definition/#fetchdata-widget-toolbox-params */
-    fetchData?: (widget: Widget<Configuration>, toolbox: Toolbox, params: Params) => Promise<Data>;
+    fetchData?: (widget: StageWidget<Configuration>, toolbox: StageToolbox, params: Params) => Promise<Data>;
 }
 
 /**
  * The empty object is the default value
  */
-export type WidgetData<D> = D | Record<string, never> | undefined;
+type StageWidgetData<D> = D | Record<string, never> | undefined;
+export type { StageWidgetData as WidgetData };
 
 export function isEmptyWidgetData(data: unknown): data is Record<string, never> | undefined {
     return (
@@ -126,10 +131,10 @@ export function isEmptyWidgetData(data: unknown): data is Record<string, never> 
 }
 
 type RenderCallback<Data, Output, Configuration> = (
-    widget: Widget<Configuration>,
-    data: WidgetData<Data>,
+    widget: StageWidget<Configuration>,
+    data: StageWidgetData<Data>,
     error: any,
-    toolbox: Toolbox
+    toolbox: StageToolbox
 ) => Output;
 
 interface ReactWidgetDefinitionPart<Data, Configuration> {
@@ -142,7 +147,12 @@ interface HTMLWidgetDefinitionPart<Data, Configuration> {
     render: RenderCallback<Data, string, Configuration>;
 
     /** @see https://docs.cloudify.co/developer/writing_widgets/widget-definition/#postrender-container-widget-data-toolbox */
-    postRender?: (container: any, widget: Widget<Configuration>, data: WidgetData<Data>, toolbox: Toolbox) => void;
+    postRender?: (
+        container: any,
+        widget: StageWidget<Configuration>,
+        data: StageWidgetData<Data>,
+        toolbox: StageToolbox
+    ) => void;
 }
 
 interface CommonOrPropTypeDefinition {
@@ -151,7 +161,7 @@ interface CommonOrPropTypeDefinition {
 }
 
 /** User-facing WidgetDefinition used for defining new widgets */
-export type InitialWidgetDefinition<Params, Data, Configuration> = Stage.Types.WithOptionalProperties<
+type StageInitialWidgetDefinition<Params, Data, Configuration> = Stage.Types.WithOptionalProperties<
     /**
      * NOTE: cannot use `WidgetDefinition` directly because `isReact` stops being a discriminant property
      * which breaks type safety for `render`.
@@ -173,13 +183,14 @@ export type InitialWidgetDefinition<Params, Data, Configuration> = Stage.Types.W
     | 'supportedEditions'
 > &
     (ReactWidgetDefinitionPart<Data, Configuration> | HTMLWidgetDefinitionPart<Data, Configuration>);
+export type { StageInitialWidgetDefinition as InitialWidgetDefinition };
 
 declare global {
     // eslint-disable-next-line @typescript-eslint/no-namespace
     namespace Stage {
         const Basic: typeof BasicComponents;
         const defineWidget: <Params, Data, Configuration>(
-            widgetDefinition: InitialWidgetDefinition<Params, Data, Configuration>
+            widgetDefinition: StageInitialWidgetDefinition<Params, Data, Configuration>
         ) => void;
         const Shared: typeof SharedComponents;
         const ComponentToHtmlString: (element: ReactElement) => string;
@@ -201,6 +212,21 @@ declare global {
          * A namespace that exists for storing reusable TypeScript types
          */
         // eslint-disable-next-line no-shadow, @typescript-eslint/no-namespace
-        namespace Types {}
+        namespace Types {
+            type Toolbox = StageToolbox;
+            type Widget<Configuration = Record<string, unknown>> = StageWidget<Configuration>;
+            type WidgetDefinition<
+                Params = any,
+                Data = any,
+                Configuration = Record<string, unknown>
+            > = StageWidgetDefinition<Params, Data, Configuration>;
+            type WidgetConfigurationDefinition = StageWidgetConfigurationDefinition;
+            type WidgetData<D> = StageWidgetData<D>;
+            type InitialWidgetDefinition<Params, Data, Configuration> = StageInitialWidgetDefinition<
+                Params,
+                Data,
+                Configuration
+            >;
+        }
     }
 }
