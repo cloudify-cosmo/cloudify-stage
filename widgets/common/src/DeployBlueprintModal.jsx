@@ -255,7 +255,7 @@ class DeployBlueprintModal extends React.Component {
         });
     }
 
-    deployBlueprint(deploymentInputs) {
+    deployBlueprint(inputs) {
         const { BlueprintActions, InputsUtils } = Stage.Common;
         const { toolbox } = this.props;
         const {
@@ -270,16 +270,16 @@ class DeployBlueprintModal extends React.Component {
 
         const blueprintActions = new BlueprintActions(toolbox);
         return blueprintActions
-            .doDeploy(
-                blueprint,
-                deploymentName,
-                deploymentInputs,
+            .doDeploy({
+                blueprintId: blueprint.id,
+                deploymentId: deploymentName,
+                inputs,
                 visibility,
                 labels,
                 skipPluginsValidation,
                 siteName,
                 runtimeOnlyEvaluation
-            )
+            })
             .catch(err => Promise.reject(InputsUtils.getErrorObject(err.message)));
     }
 
