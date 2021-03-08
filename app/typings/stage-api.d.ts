@@ -1,8 +1,7 @@
-import type { StageAPI } from '../utils/StageAPI';
+// NOTE: necessary for Stage namespace to be registered
+import '../utils/StageAPI';
 
 declare global {
-    export const Stage: StageAPI;
-
     // External libraries
     // @see https://docs.cloudify.co/developer/writing_widgets/widget-apis/#external-libraries
     export const PropTypes: typeof import('prop-types');
@@ -15,7 +14,6 @@ declare global {
     export const connectToStore: typeof import('react-redux').connect;
 
     interface Window {
-        Stage: StageAPI;
         PropTypes: typeof import('prop-types');
         moment: typeof import('moment');
         React: typeof import('react');
