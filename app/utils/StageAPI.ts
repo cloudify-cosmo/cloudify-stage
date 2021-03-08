@@ -188,7 +188,6 @@ type StageInitialWidgetDefinition<Params, Data, Configuration> = Stage.Types.Wit
 export type { StageInitialWidgetDefinition as InitialWidgetDefinition };
 
 declare global {
-    // eslint-disable-next-line @typescript-eslint/no-namespace
     namespace Stage {
         const Basic: typeof BasicComponents;
         const defineWidget: <Params, Data, Configuration>(
@@ -213,7 +212,6 @@ declare global {
         /**
          * A namespace that exists for storing reusable TypeScript types
          */
-        // eslint-disable-next-line no-shadow, @typescript-eslint/no-namespace
         namespace Types {
             type Toolbox = StageToolbox;
             type Widget<Configuration = Record<string, unknown>> = StageWidget<Configuration>;
