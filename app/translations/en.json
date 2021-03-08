@@ -507,6 +507,25 @@
                     "tooltip": "Services (Total)"
                 }
             }
+        },
+        "labels": {
+            "name": "Labels",
+            "description": "This widget shows a list of defined labels",
+            "columns": {
+                "key": "Key",
+                "value": "Value",
+                "actions": {
+                    "edit": "Edit label",
+                    "delete": "Delete label"
+                }
+            },
+            "noDeployment": "No deployment selected",
+            "noLabels": "There are no Labels defined",
+            "add": "Add",
+            "export": "Export",
+            "addHeader": "Add labels for deployment '{{deploymentId}}'",
+            "revert": "Revert to initial value",
+            "deleteConfirm": "Are you sure you want to remove label"
         }
     }
 }
