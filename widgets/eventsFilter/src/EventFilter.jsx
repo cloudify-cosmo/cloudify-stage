@@ -37,19 +37,15 @@ const debouncedContextUpdate = _.debounce((toolbox, fields) => {
 
 function EventFilter({ toolbox }) {
     const { useState, useEffect } = React;
+    const { useEventListener } = Stage.Hooks;
 
     const [fields, setFields] = useState(toolbox.getContext().getValue('eventFilter') || initialFields);
     const [options, setOptions] = useState({ eventType: defaultEventTypeOptions, logLevel: defaultLogLevelOptions });
     const [dirty, setDirty] = useState(isDirty(fields));
 
-    function refreshFilter() {
-        setFields({ ...initialFields, ...toolbox.getContext().getValue(contextValueKey) });
-    }
-
-    useEffect(() => {
-        toolbox.getEventBus().on(refreshEvent, refreshFilter);
-        return () => toolbox.getEventBus().off(refreshEvent, refreshFilter);
-    }, []);
+    useEventListener(toolbox, refreshEvent, () =>
+        setFields({ ...initialFields, ...toolbox.getContext().getValue(contextValueKey) })
+    );
 
     useEffect(() => setDirty(isDirty(fields)), [JSON.stringify(fields)]);
 
