@@ -14,7 +14,7 @@ import { clearWidgetsData } from './WidgetData';
 import Internal from '../utils/Internal';
 import Consts from '../utils/consts';
 import { NO_PAGES_FOR_TENANT_ERR } from '../utils/ErrorCodes';
-import type { Widget } from '../utils/StageAPI';
+import type { Widget, WidgetDefinition } from '../utils/StageAPI';
 import type { ReduxState } from '../reducers';
 
 export type SimpleWidgetObj = Omit<Widget, 'definition'> & { definition: string };
@@ -130,6 +130,13 @@ export function forEachWidget(
     forAllWidgets(page, (widgets, layoutSectionIdx, tabIdx) =>
         _.map(widgets, widget => widgetModifier(widget, layoutSectionIdx, tabIdx))
     );
+}
+
+export function getWidgetDefinitionById(
+    definitionId: string,
+    definitions: ReduxState['widgetDefinitions']
+): WidgetDefinition | undefined {
+    return _.find(definitions, { id: definitionId });
 }
 
 function createPageId(name: string, pages: PageDefinition[]) {
