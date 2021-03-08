@@ -1,8 +1,9 @@
 import { ReactNode } from 'react';
-import type { Toolbox } from '../../../app/utils/StageAPI';
 import { deploymentsViewColumnDefinitions, DeploymentsViewColumnId } from './columns';
 
-const renderDeploymentRow = (toolbox: Toolbox, fieldsToShow: DeploymentsViewColumnId[]) => (deployment: any) => {
+const renderDeploymentRow = (toolbox: Stage.Types.Toolbox, fieldsToShow: DeploymentsViewColumnId[]) => (
+    deployment: any
+) => {
     const { DataTable } = Stage.Basic;
     const selectedDeploymentId = toolbox.getContext().getValue('deploymentId');
     const progressUnderline = getDeploymentProgressUnderline(deployment);

@@ -1,7 +1,6 @@
 import { mapValues } from 'lodash';
 import type { ReactNode } from 'react';
 import type { SemanticICONS } from 'semantic-ui-react';
-import type { WithOptionalProperties } from '../../../app/utils/types';
 
 // NOTE: the order in the array determines the order in the UI
 export const deploymentsViewColumnIds = [
@@ -30,7 +29,7 @@ export interface DeploymentsViewColumnDefinition {
 
 const partialDeploymentsViewColumnDefinitions: Record<
     DeploymentsViewColumnId,
-    Omit<WithOptionalProperties<DeploymentsViewColumnDefinition, 'label'>, 'name' | 'tooltip'>
+    Omit<Stage.Types.WithOptionalProperties<DeploymentsViewColumnDefinition, 'label'>, 'name' | 'tooltip'>
 > = {
     status: {
         width: '20px',
