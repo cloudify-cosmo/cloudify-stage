@@ -398,6 +398,9 @@
                     "siteNameLabel": "Site name",
                     "detachSiteLabel": "Detach from the current site",
                     "updateButton": "Update"
+                },
+                "deployModal": {
+                    "labelsLabel": "Labels"
                 }
             },
             "labels": {

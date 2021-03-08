@@ -58,6 +58,7 @@ export default class BlueprintActions {
         deploymentId,
         inputs,
         visibility,
+        labels,
         skipPluginsValidation = false,
         siteName = null,
         runtimeOnlyEvaluation = false
@@ -66,6 +67,7 @@ export default class BlueprintActions {
             blueprint_id: blueprint.id,
             inputs,
             visibility,
+            labels: _.map(labels, label => ({ [label.key]: label.value })),
             skip_plugins_validation: skipPluginsValidation,
             runtime_only_evaluation: runtimeOnlyEvaluation
         };
