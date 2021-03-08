@@ -18,7 +18,7 @@ import * as Hooks from './hooks';
 import type { WidgetDefinition } from './StageAPI';
 import normalizeWidgetDefinition from './normalizeWidgetDefinition';
 
-let widgetDefinitions: any[] = [];
+let widgetDefinitions: WidgetDefinition<any, any, any>[] = [];
 
 function updateReadmeLinks(content: any) {
     const linkRegex = /(\[.*?\])\(\s*(?!http)(.*?)\s*\)/gm;
@@ -224,7 +224,7 @@ export default class WidgetDefinitionsLoader {
                     i18n.t(
                         'widget.validationErrors.invalidPermission',
                         `Specified widget permission ('{{permission}}') not found in available permissions list.`,
-                        widgetDefinition
+                        _.pick(widgetDefinition, 'permission')
                     )
                 );
             }
