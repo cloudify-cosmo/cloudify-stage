@@ -17,6 +17,9 @@ import type External from './External';
 // NOTE: make sure the types are registered globally
 import './types';
 
+type StagePropTypes = typeof StagePropTypes;
+type StageHooks = typeof StageHooks;
+
 /** @see https://docs.cloudify.co/developer/writing_widgets/widget-apis/#toolbox-object */
 interface StageToolbox {
     drillDown(
@@ -205,11 +208,20 @@ declare global {
         const Common: Common;
         const defineCommon: <Name extends keyof Common>(definition: CommonOrPropTypeDefinition<Common, Name>) => void;
 
-        const PropTypes: typeof StagePropTypes & Record<string, any>;
-        const definePropType: (definition: CommonOrPropTypeDefinition<any, string>) => void;
+        // NOTE: Additional PropTypes are defined in widgets
+        // eslint-disable-next-line @typescript-eslint/no-empty-interface
+        interface PropTypes extends StagePropTypes {}
+        const PropTypes: PropTypes;
+        const definePropType: <Name extends keyof PropTypes>(
+            definition: CommonOrPropTypeDefinition<PropTypes, Name>
+        ) => void;
 
-        const Hooks: typeof StageHooks & Record<string, any>;
-        const defineHook: (definition: any) => void;
+        // NOTE: Additional hooks are defined in widgets
+        // eslint-disable-next-line @typescript-eslint/no-empty-interface
+        interface Hooks extends StageHooks {}
+        /** Reusable utility hooks */
+        const Hooks: Hooks;
+        const defineHook: (definition: Partial<Hooks>) => void;
 
         const i18n: typeof import('i18next').default;
 
