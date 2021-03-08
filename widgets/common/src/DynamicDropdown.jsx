@@ -4,6 +4,7 @@ import './DynamicDropdown.css';
 let instanceCount = 0;
 
 function DynamicDropdown({
+    innerRef,
     disabled,
     multiple,
     placeholder,
@@ -142,55 +143,58 @@ function DynamicDropdown({
         return multiple ? valueArray : valueArray[0];
     }
 
-    const { Form, Loading } = Stage.Basic;
+    const { Form, Loading, Ref } = Stage.Basic;
 
     return (
-        <Form.Dropdown
-            disabled={disabled}
-            className={`dynamic ${className}`}
-            search
-            selection
-            selectOnBlur={false}
-            placeholder={placeholder}
-            fluid
-            value={getDropdownValue()}
-            id={id}
-            name={name}
-            onChange={(proxy, field) => onChange(!_.isEmpty(field.value) ? field.value : null)}
-            onSearchChange={(e, data) => setSearchQuery(data.searchQuery)}
-            multiple={multiple}
-            loading={isLoading}
-            options={(() => {
-                const preparedOptions = filteredOptions.map(item => ({
-                    text: (textFormatter || (i => i[valueProp]))(item),
-                    value: item[valueProp]
-                }));
-                if (hasMore) {
-                    preparedOptions.push({
-                        disabled: true,
-                        icon: (
-                            <VisibilitySensor
-                                active={!isLoading}
-                                containment={document.querySelector(`#${id} .menu`)}
-                                partialVisibility
-                                onChange={setShouldLoadMore}
-                            >
-                                <Loading message="" />
-                            </VisibilitySensor>
-                        ),
-                        key: 'loader',
-                        text: searchQuery
-                    });
-                }
-                return preparedOptions;
-            })()}
-            /* eslint-disable-next-line react/jsx-props-no-spreading */
-            {...rest}
-        />
+        <Ref innerRef={innerRef}>
+            <Form.Dropdown
+                disabled={disabled}
+                className={`dynamic ${className}`}
+                search
+                selection
+                selectOnBlur={false}
+                placeholder={placeholder}
+                fluid
+                value={getDropdownValue()}
+                id={id}
+                name={name}
+                onChange={(event, field) => onChange(!_.isEmpty(field.value) ? field.value : null, event)}
+                onSearchChange={(e, data) => setSearchQuery(data.searchQuery)}
+                multiple={multiple}
+                loading={isLoading}
+                options={(() => {
+                    const preparedOptions = filteredOptions.map(item => ({
+                        text: (textFormatter || (i => i[valueProp]))(item),
+                        value: item[valueProp]
+                    }));
+                    if (hasMore) {
+                        preparedOptions.push({
+                            disabled: true,
+                            icon: (
+                                <VisibilitySensor
+                                    active={!isLoading}
+                                    containment={document.querySelector(`#${id} .menu`)}
+                                    partialVisibility
+                                    onChange={setShouldLoadMore}
+                                >
+                                    <Loading message="" />
+                                </VisibilitySensor>
+                            ),
+                            key: 'loader',
+                            text: searchQuery
+                        });
+                    }
+                    return preparedOptions;
+                })()}
+                /* eslint-disable-next-line react/jsx-props-no-spreading */
+                {...rest}
+            />
+        </Ref>
     );
 }
 
 DynamicDropdown.propTypes = {
+    innerRef: PropTypes.shape({ current: PropTypes.instanceOf(HTMLElement) }),
     disabled: PropTypes.bool,
     multiple: PropTypes.bool,
     placeholder: PropTypes.string,
@@ -211,6 +215,7 @@ DynamicDropdown.propTypes = {
 };
 
 DynamicDropdown.defaultProps = {
+    innerRef: null,
     disabled: false,
     value: null,
     fetchAll: false,

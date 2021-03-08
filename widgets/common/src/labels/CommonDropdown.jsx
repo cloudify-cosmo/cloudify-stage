@@ -10,7 +10,7 @@ function useDebouncedSetValue(value, setValue, deps) {
     }, deps);
 }
 
-export default function CommonDropdown({ baseFetchUrl, onChange, toolbox, value, ...rest }) {
+export default function CommonDropdown({ innerRef, baseFetchUrl, onChange, toolbox, value, ...rest }) {
     const { useEffect, useState } = React;
     const {
         Common: { DynamicDropdown, LabelValidationErrorPopup },
@@ -49,6 +49,7 @@ export default function CommonDropdown({ baseFetchUrl, onChange, toolbox, value,
             <LabelValidationErrorPopup open={invalidCharacterTyped} />
 
             <DynamicDropdown
+                innerRef={innerRef}
                 clearable={false}
                 fetchUrl={fetchUrl}
                 itemsFormatter={items => _.map(items, item => ({ id: item }))}
@@ -68,11 +69,13 @@ export default function CommonDropdown({ baseFetchUrl, onChange, toolbox, value,
 
 CommonDropdown.propTypes = {
     baseFetchUrl: PropTypes.string.isRequired,
+    innerRef: PropTypes.shape({ current: PropTypes.instanceOf(HTMLElement) }),
     onChange: PropTypes.func.isRequired,
     toolbox: Stage.PropTypes.Toolbox.isRequired,
     value: PropTypes.string
 };
 
 CommonDropdown.defaultProps = {
+    innerRef: null,
     value: null
 };

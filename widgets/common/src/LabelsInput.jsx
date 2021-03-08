@@ -11,7 +11,7 @@ const iconStyle = {
 };
 
 export default function LabelsInput({ hideInitialLabels, initialLabels, onChange, toolbox }) {
-    const { useEffect } = React;
+    const { useRef, useEffect } = React;
     const {
         Basic: { Divider, Form, Icon, Popup, Segment },
         Common: { RevertToDefaultIcon },
@@ -25,6 +25,7 @@ export default function LabelsInput({ hideInitialLabels, initialLabels, onChange
     const [open, toggleOpen] = useToggle();
     const [newLabelKey, setNewLabelKey, resetNewLabelKey] = useResettableState('');
     const [newLabelValue, setNewLabelValue, resetNewLabelValue] = useResettableState('');
+    const keyDropdownRef = useRef();
 
     const newLabelIsProvided = !!newLabelKey && !!newLabelValue;
     const newLabelIsAlreadyPresent = (function isNewLabelAlreadyPresent() {
@@ -65,6 +66,11 @@ export default function LabelsInput({ hideInitialLabels, initialLabels, onChange
         });
     }
 
+    function onEnterPressOnAddButton() {
+        onAddLabel();
+        keyDropdownRef.current.click();
+    }
+
     return (
         <Segment
             className={combineClassNames(['dropdown', 'selection', 'fluid', open && 'active'])}
@@ -90,7 +96,12 @@ export default function LabelsInput({ hideInitialLabels, initialLabels, onChange
                     <Divider hidden={_.isEmpty(labels)} />
                     <Form.Group>
                         <Form.Field width={7}>
-                            <KeyDropdown onChange={setNewLabelKey} toolbox={toolbox} value={newLabelKey} />
+                            <KeyDropdown
+                                innerRef={keyDropdownRef}
+                                onChange={setNewLabelKey}
+                                toolbox={toolbox}
+                                value={newLabelKey}
+                            />
                         </Form.Field>
                         <Form.Field width={7}>
                             <ValueDropdown
@@ -104,7 +115,13 @@ export default function LabelsInput({ hideInitialLabels, initialLabels, onChange
                             <Popup
                                 open={addButtonPopupOpen}
                                 content={i18n.t('widgets.common.labels.labelDuplicationError')}
-                                trigger={<AddButton onClick={onAddLabel} disabled={addLabelNotAllowed} />}
+                                trigger={
+                                    <AddButton
+                                        onClick={onAddLabel}
+                                        onEnterPress={onEnterPressOnAddButton}
+                                        disabled={addLabelNotAllowed}
+                                    />
+                                }
                             />
                         </Form.Field>
                     </Form.Group>

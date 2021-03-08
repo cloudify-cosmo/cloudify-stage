@@ -1,10 +1,15 @@
-export default function LabelAddButton({ disabled, onClick }) {
+export default function LabelAddButton({ disabled, onClick, onEnterPress }) {
     const { Button } = Stage.Basic;
 
-    return <Button icon="add" onClick={onClick} disabled={disabled} fluid />;
+    function handleKeyDown({ key }) {
+        if (key === 'Enter') onEnterPress();
+    }
+
+    return <Button icon="add" onClick={onClick} onKeyDown={handleKeyDown} disabled={disabled} fluid />;
 }
 
 LabelAddButton.propTypes = {
     disabled: PropTypes.bool.isRequired,
-    onClick: PropTypes.func.isRequired
+    onClick: PropTypes.func.isRequired,
+    onEnterPress: PropTypes.func.isRequired
 };
