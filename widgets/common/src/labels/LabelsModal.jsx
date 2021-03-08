@@ -1,34 +1,42 @@
-function ManageLabelsModal({ deploymentId, existingLabels, header, applyButtonContent, open, onHide, toolbox }) {
+import LabelsInput from './LabelsInput';
+
+export default function LabelsModal({
+    deploymentId,
+    hideInitialLabels,
+    i18nHeaderKey,
+    i18nApplyKey,
+    open,
+    onHide,
+    toolbox
+}) {
     const { i18n } = Stage;
     const { ApproveButton, CancelButton, Form, Icon, Modal } = Stage.Basic;
-    const { DeploymentActions, LabelsInput } = Stage.Common;
+    const { DeploymentActions } = Stage.Common;
     const { useBoolean, useErrors, useOpenProp, useResettableState } = Stage.Hooks;
     const actions = new DeploymentActions(toolbox);
 
     const [isLoading, setLoading, unsetLoading] = useBoolean();
     const { errors, clearErrors, setErrors, setMessageAsError } = useErrors();
     const [labels, setLabels, resetLabels] = useResettableState([]);
-    const [initialLabels, setInitialLabels, resetInitialLabels] = useResettableState(existingLabels || []);
+    const [initialLabels, setInitialLabels, resetInitialLabels] = useResettableState([]);
 
     useOpenProp(open, () => {
         clearErrors();
         resetLabels();
         resetInitialLabels();
 
-        if (!existingLabels) {
-            setLoading();
-            actions
-                .doGetLabels(deploymentId)
-                .then(deploymentLabels => {
-                    setLabels(deploymentLabels);
-                    setInitialLabels(deploymentLabels);
-                })
-                .catch(error => {
-                    log.error(error);
-                    setErrors(i18n.t('widgets.common.labels.fetchingLabelsError', { deploymentId }));
-                })
-                .finally(unsetLoading);
-        }
+        setLoading();
+        actions
+            .doGetLabels(deploymentId)
+            .then(deploymentLabels => {
+                if (!hideInitialLabels) setLabels(deploymentLabels);
+                setInitialLabels(deploymentLabels);
+            })
+            .catch(error => {
+                log.error(error);
+                setErrors(i18n.t('widgets.common.labels.fetchingLabelsError', { deploymentId }));
+            })
+            .finally(unsetLoading);
     });
 
     function onChange(newLabels) {
@@ -40,13 +48,14 @@ function ManageLabelsModal({ deploymentId, existingLabels, header, applyButtonCo
         clearErrors();
         setLoading();
 
-        const deploymentLabels = existingLabels ? [...existingLabels, ...labels] : labels;
+        const deploymentLabels = hideInitialLabels ? [...initialLabels, ...labels] : labels;
         actions
             .doSetLabels(deploymentId, deploymentLabels)
             .then(() => {
                 // State updates should be done before calling `onHide` to avoid React errors:
                 // "Warning: Can't perform a React state update on an unmounted component"
                 unsetLoading();
+                toolbox.getEventBus().trigger('labels:refresh');
                 onHide();
             })
             .catch(error => {
@@ -58,7 +67,7 @@ function ManageLabelsModal({ deploymentId, existingLabels, header, applyButtonCo
     return (
         <Modal open={open} onClose={onHide}>
             <Modal.Header>
-                <Icon name="tags" /> {header || i18n.t('widgets.common.labels.modalHeader', { deploymentId })}
+                <Icon name="tags" /> {i18n.t(i18nHeaderKey, { deploymentId })}
             </Modal.Header>
 
             <Modal.Content>
@@ -68,7 +77,7 @@ function ManageLabelsModal({ deploymentId, existingLabels, header, applyButtonCo
                         help={i18n.t('widgets.common.labels.inputHelp')}
                     >
                         <LabelsInput
-                            hideInitialLabels={!!existingLabels}
+                            hideInitialLabels={hideInitialLabels}
                             initialLabels={initialLabels}
                             onChange={onChange}
                             toolbox={toolbox}
@@ -79,34 +88,22 @@ function ManageLabelsModal({ deploymentId, existingLabels, header, applyButtonCo
 
             <Modal.Actions>
                 <CancelButton onClick={onHide} disabled={isLoading} />
-                <ApproveButton
-                    onClick={onApply}
-                    disabled={isLoading}
-                    content={applyButtonContent || i18n.t('widgets.common.labels.modalApplyButton')}
-                    color="green"
-                />
+                <ApproveButton onClick={onApply} disabled={isLoading} content={i18n.t(i18nApplyKey)} color="green" />
             </Modal.Actions>
         </Modal>
     );
 }
 
-ManageLabelsModal.propTypes = {
-    applyButtonContent: PropTypes.string,
+LabelsModal.propTypes = {
     deploymentId: PropTypes.string.isRequired,
-    existingLabels: Stage.PropTypes.Labels,
-    header: PropTypes.string,
+    hideInitialLabels: PropTypes.bool,
+    i18nApplyKey: PropTypes.string.isRequired,
+    i18nHeaderKey: PropTypes.string.isRequired,
     open: PropTypes.bool.isRequired,
     onHide: PropTypes.func.isRequired,
     toolbox: Stage.PropTypes.Toolbox.isRequired
 };
 
-ManageLabelsModal.defaultProps = {
-    applyButtonContent: null,
-    existingLabels: null,
-    header: null
+LabelsModal.defaultProps = {
+    hideInitialLabels: false
 };
-
-Stage.defineCommon({
-    name: 'ManageLabelsModal',
-    common: ManageLabelsModal
-});

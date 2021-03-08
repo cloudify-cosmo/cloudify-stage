@@ -1,11 +1,8 @@
 # Topology
 
-Displays the topology of a selected blueprint or deployment.
+Displays the topology of the blueprint or the deployment currently set in the context.
 
-The blueprint or deployment ID must be selected in one of the following ways:
-
-* By placing the widget in the blueprints/deployments drill-down page, meaning the blueprint/deployment has been selected before entering the page, and its id is included in the page’s context.
-* By adding to the page a widget allowing to select blueprints or deployments, such as the resources filter, the blueprints list or the blueprint deployments.  
+See [notes](/working_with/console/widgets/index.html) for more information on resource context.  
 
 ![Topology]( /images/ui/widgets/topology.png )
 

@@ -3,6 +3,7 @@ import _ from 'lodash';
 export default function DeleteConfirmModal({ deploymentId, labels, labelToDelete, onHide, toolbox }) {
     const { Confirm, Label } = Stage.Basic;
     const { DeploymentActions } = Stage.Common;
+    const { i18n } = Stage;
 
     return (
         <Confirm
@@ -19,7 +20,7 @@ export default function DeleteConfirmModal({ deploymentId, labels, labelToDelete
             }}
             content={
                 <div className="content">
-                    Are you sure you want to remove label &nbsp;
+                    {i18n.t('widgets.labels.deleteConfirm')} &nbsp;
                     <Label size="large">
                         {labelToDelete?.key} <span style={{ fontWeight: 'lighter' }}>{labelToDelete?.value}</span>
                     </Label>
