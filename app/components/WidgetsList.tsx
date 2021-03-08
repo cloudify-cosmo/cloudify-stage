@@ -8,8 +8,16 @@ import React from 'react';
 import Widget from './Widget';
 import Grid from './layout/Grid';
 import GridItem from './layout/GridItem';
+import type { SimpleWidgetObj } from '../actions/page';
 
-export default function WidgetsList({ onWidgetUpdated, onWidgetRemoved, isEditMode, widgets }) {
+export interface WidgetsListProps {
+    onWidgetUpdated: (widgetId: string, params: Record<string, any>) => void;
+    onWidgetRemoved: (widgetId: string) => void;
+    isEditMode: boolean;
+    widgets: SimpleWidgetObj[];
+}
+
+export default function WidgetsList({ onWidgetUpdated, onWidgetRemoved, isEditMode, widgets }: WidgetsListProps) {
     return (
         <Grid
             isEditMode={isEditMode}
@@ -17,7 +25,7 @@ export default function WidgetsList({ onWidgetUpdated, onWidgetRemoved, isEditMo
             style={{ zIndex: _(widgets).filter({ maximized: true }).size() }}
         >
             {widgets.map(widget => {
-                const widgetDefId = (widget.definition || {}).id;
+                const widgetDefId = widget.definition;
                 return (
                     <GridItem
                         key={widget.id}
@@ -37,7 +45,7 @@ export default function WidgetsList({ onWidgetUpdated, onWidgetRemoved, isEditMo
                         />
                     </GridItem>
                 );
-            }, this)}
+            })}
         </Grid>
     );
 }
