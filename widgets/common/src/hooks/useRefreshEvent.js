@@ -1,14 +1,6 @@
-import { useEffect } from 'react';
-
-function useRefreshEvent(toolbox, event, handler = toolbox.refresh) {
-    useEffect(() => {
-        if (event) {
-            toolbox.getEventBus().on(event, handler);
-            return () => toolbox.getEventBus().off(event, handler);
-        }
-
-        return undefined;
-    }, [event, handler]);
+function useRefreshEvent(toolbox, event) {
+    const { useEventListener } = Stage.Hooks;
+    useEventListener(toolbox, event, toolbox.refresh);
 }
 
 Stage.defineHook({ useRefreshEvent });

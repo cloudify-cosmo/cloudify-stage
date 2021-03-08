@@ -23,7 +23,7 @@ function DynamicDropdown({
     ...rest
 }) {
     const { useState, useEffect } = React;
-    const { useRefreshEvent } = Stage.Hooks;
+    const { useEventListener } = Stage.Hooks;
 
     const [id] = useState(() => {
         instanceCount += 1;
@@ -69,7 +69,7 @@ function DynamicDropdown({
         if (prefetch) loadMore();
     }, []);
 
-    useRefreshEvent(toolbox, refreshEvent, () => {
+    useEventListener(toolbox, refreshEvent, () => {
         setOptions([]);
         setHasMore(true);
         setCurrentPage(-1);
