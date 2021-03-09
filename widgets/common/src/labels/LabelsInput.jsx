@@ -1,4 +1,5 @@
 import AddButton from './AddButton';
+import DuplicationErrorPopup from './DuplicationErrorPopup';
 import LabelsList from './LabelsList';
 import KeyDropdown from './KeyDropdown';
 import ValueDropdown from './ValueDropdown';
@@ -13,7 +14,7 @@ const iconStyle = {
 export default function LabelsInput({ hideInitialLabels, initialLabels, onChange, toolbox }) {
     const { useRef, useEffect } = React;
     const {
-        Basic: { Divider, Form, Icon, Popup, Segment },
+        Basic: { Divider, Form, Icon, Segment },
         Common: { RevertToDefaultIcon },
         Hooks: { useBoolean, useResettableState, useToggle },
         Utils: { combineClassNames },
@@ -34,7 +35,7 @@ export default function LabelsInput({ hideInitialLabels, initialLabels, onChange
         return !!_.find(allLabels, newLabel);
     })();
     const addLabelNotAllowed = !newLabelIsProvided || newLabelIsAlreadyPresent || addingLabel;
-    const addButtonPopupOpen = newLabelIsProvided && newLabelIsAlreadyPresent;
+    const duplicationErrorPopupOpen = newLabelIsProvided && newLabelIsAlreadyPresent;
 
     useEffect(() => {
         onChange(labels);
@@ -109,6 +110,7 @@ export default function LabelsInput({ hideInitialLabels, initialLabels, onChange
                             />
                         </Form.Field>
                         <Form.Field width={7}>
+                            <DuplicationErrorPopup open={duplicationErrorPopupOpen} />
                             <ValueDropdown
                                 labelKey={newLabelKey}
                                 onChange={setNewLabelValue}
@@ -117,16 +119,10 @@ export default function LabelsInput({ hideInitialLabels, initialLabels, onChange
                             />
                         </Form.Field>
                         <Form.Field width={2}>
-                            <Popup
-                                open={addButtonPopupOpen}
-                                content={i18n.t('widgets.common.labels.labelDuplicationError')}
-                                trigger={
-                                    <AddButton
-                                        onClick={onAddLabel}
-                                        onEnterPress={onEnterPressOnAddButton}
-                                        disabled={addLabelNotAllowed}
-                                    />
-                                }
+                            <AddButton
+                                onClick={onAddLabel}
+                                onEnterPress={onEnterPressOnAddButton}
+                                disabled={addLabelNotAllowed}
                             />
                         </Form.Field>
                     </Form.Group>

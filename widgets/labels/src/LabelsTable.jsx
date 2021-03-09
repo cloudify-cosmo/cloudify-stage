@@ -5,7 +5,7 @@ import DeleteConfirmModal from './DeleteConfirmModal';
 import AddLabelsModal from './AddLabelsModal';
 
 export default function LabelsTable({ data, toolbox }) {
-    const { Button, DataTable, Icon, Popup } = Stage.Basic;
+    const { Button, DataTable, Icon } = Stage.Basic;
     const { DeploymentActions } = Stage.Common;
     const { useBoolean, useRefreshEvent, useInput, useResettableState } = Stage.Hooks;
     const { i18n } = Stage;
@@ -74,6 +74,7 @@ export default function LabelsTable({ data, toolbox }) {
                                     onCancel={stopLabelEdit}
                                     onChange={setCurrentLabelValue}
                                     onSubmit={updateLabelValue}
+                                    valueAlreadyUsed={currentLabelAlreadyUsed}
                                 />
                             ) : (
                                 item.value
@@ -102,21 +103,14 @@ export default function LabelsTable({ data, toolbox }) {
                         )}
                         {_.isEqual(item, labelInEdit) && (
                             <DataTable.Data>
-                                <Popup
-                                    open={currentLabelAlreadyUsed}
-                                    content={i18n.t('widgets.common.labels.labelDuplicationError')}
-                                    trigger={
-                                        <Icon
-                                            name="check"
-                                            color="green"
-                                            link={currentLabelIsValid}
-                                            bordered
-                                            onClick={updateLabelValue}
-                                            disabled={!currentLabelIsValid}
-                                        />
-                                    }
+                                <Icon
+                                    name="check"
+                                    color="green"
+                                    link={currentLabelIsValid}
+                                    bordered
+                                    onClick={updateLabelValue}
+                                    disabled={!currentLabelIsValid}
                                 />
-
                                 <Icon name="cancel" color="red" link bordered onClick={stopLabelEdit} />
                             </DataTable.Data>
                         )}

@@ -1,15 +1,17 @@
-export default function LabelValueInput({ initialValue, onCancel, onChange, onSubmit }) {
+export default function LabelValueInput({ initialValue, onCancel, onChange, onSubmit, valueAlreadyUsed }) {
     const { Form } = Stage.Basic;
     const { RevertToDefaultIcon } = Stage.Common;
-    const { ValidationErrorPopup } = Stage.Common.Labels;
+    const { DuplicationErrorPopup, ValidationErrorPopup } = Stage.Common.Labels;
     const { useLabelInput } = Stage.Hooks;
     const { i18n } = Stage;
 
     const { inputValue, invalidCharacterTyped, submitChange, resetInput } = useLabelInput(onChange, initialValue);
+    const valueIsValid = inputValue && !valueAlreadyUsed;
 
     return (
         <>
             <ValidationErrorPopup open={invalidCharacterTyped} />
+            <DuplicationErrorPopup open={valueAlreadyUsed} />
             <Form.Input
                 className="labelValueEditInput"
                 autoFocus
@@ -19,7 +21,7 @@ export default function LabelValueInput({ initialValue, onCancel, onChange, onSu
                 value={inputValue}
                 onKeyDown={e => {
                     if (e.key === 'Escape') onCancel();
-                    else if (e.key === 'Enter') onSubmit(inputValue);
+                    else if (e.key === 'Enter' && valueIsValid) onSubmit(inputValue);
                 }}
                 onChange={submitChange}
                 icon={
@@ -42,5 +44,6 @@ LabelValueInput.propTypes = {
     initialValue: PropTypes.string.isRequired,
     onCancel: PropTypes.func.isRequired,
     onChange: PropTypes.func.isRequired,
-    onSubmit: PropTypes.func.isRequired
+    onSubmit: PropTypes.func.isRequired,
+    valueAlreadyUsed: PropTypes.bool.isRequired
 };
