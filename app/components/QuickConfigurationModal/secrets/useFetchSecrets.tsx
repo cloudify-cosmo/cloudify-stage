@@ -1,10 +1,10 @@
 import { useState, useEffect } from 'react';
 import { useManager } from '../managerHooks';
-import type { SecretsData } from './model';
+import type { SecretsData, SecretData } from './model';
 
 type SecretsHook = {
     loading: boolean;
-    secrets?: SecretsData;
+    secrets?: SecretData[];
     error?: string;
 };
 
@@ -15,9 +15,9 @@ const useFetchSecrets = () => {
         let mounted = true;
         manager
             .doGet('/secrets?_include=key,visibility')
-            .then((secrets: any) => {
+            .then((secrets: SecretsData) => {
                 if (mounted) {
-                    setState({ loading: false, secrets });
+                    setState({ loading: false, secrets: secrets.items });
                 }
             })
             .catch(() => {

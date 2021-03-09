@@ -4,7 +4,7 @@ import { Form, HeaderBar } from 'cloudify-ui-components';
 import i18n from 'i18next';
 
 import { Button, Icon, Ref as SemanticRef } from 'semantic-ui-react';
-import { CancelButton, Divider, Modal } from '../basic';
+import { CancelButton, Modal } from '../basic';
 import { JSONData, JSONSchema, JSONSchemaItem, TechnologiesData } from './model';
 import { getFormData } from './common/formUtils';
 import PluginsStep from './steps/PluginsStep';
@@ -69,23 +69,28 @@ const QuickConfigurationModal = ({ open = false, step = 0, schema, data, onClose
     };
     const handleBackClick = () => {
         if (localStep > 0) {
-            const newLocalData = getFormData<JSONData>(secretsFormRef.current!);
-            setLocalData({ ...localData, ...newLocalData });
+            if (secretsFormRef.current) {
+                const newLocalData = getFormData<JSONData>(secretsFormRef.current);
+                setLocalData({ ...localData, ...newLocalData });
+            }
             setLocalStep(localStep - 1);
         }
     };
     const handleNextClick = () => {
         if (localStep === 0) {
-            const newUsedTechnologies = getFormData<TechnologiesData>(technologiesFormRef.current!);
-            setDetectedTechnologies(newUsedTechnologies);
-        } else {
-            const newLocalData = getFormData<JSONData>(secretsFormRef.current!);
+            if (technologiesFormRef.current) {
+                const newUsedTechnologies = getFormData<TechnologiesData>(technologiesFormRef.current);
+                setDetectedTechnologies(newUsedTechnologies);
+            }
+        } else if (secretsFormRef.current) {
+            const newLocalData = getFormData<JSONData>(secretsFormRef.current);
             setLocalData({ ...localData, ...newLocalData });
         }
         if (localStep < schema.length - 1) {
             setLocalStep(localStep + 1);
         }
     };
+    const { Divider } = Stage.Basic;
     return (
         <Modal open={open} onClose={handleModalClose}>
             <Modal.Header>
@@ -111,10 +116,12 @@ const QuickConfigurationModal = ({ open = false, step = 0, schema, data, onClose
                     </SemanticRef>
                 </Form.Field>
             </Modal.Content>
-            <Modal.Actions>
-                <CancelButton content={i18n.t('help.aboutModal.close', 'Close')} onClick={handleModalClose} />
-                {localStep < selectedItemSchemas.length + 1 && (
-                    <Button.Group>
+            <Modal.Actions style={{ overflow: 'hidden' }}>
+                <Button.Group floated="left">
+                    <CancelButton content={i18n.t('help.aboutModal.close', 'Close')} onClick={handleModalClose} />
+                </Button.Group>
+                {localStep < selectedItemSchemas.length + 2 && (
+                    <Button.Group floated="right">
                         {localStep > 0 && (
                             <Button onClick={handleBackClick}>
                                 <Icon name="left arrow" />
@@ -122,7 +129,7 @@ const QuickConfigurationModal = ({ open = false, step = 0, schema, data, onClose
                             </Button>
                         )}
                         <Button onClick={handleNextClick}>
-                            {localStep < selectedItemSchemas.length ? 'Next' : 'Finish'}
+                            {localStep < selectedItemSchemas.length + 1 ? 'Next' : 'Finish'}
                             <Icon name="right arrow" />
                         </Button>
                     </Button.Group>
@@ -132,9 +139,11 @@ const QuickConfigurationModal = ({ open = false, step = 0, schema, data, onClose
     );
 };
 
-{/*
+{
+    /*
     <Header>{i18n.t('help.aboutModal.versionDetails', 'Version Details')}</Header>
-*/}
+*/
+}
 
 // QuickConfigurationModal.propTypes = {
 //     open: PropTypes.bool,
