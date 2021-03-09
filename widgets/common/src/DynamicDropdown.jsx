@@ -35,7 +35,7 @@ function DynamicDropdown({
     const [hasMore, setHasMore] = useState(true);
     const [currentPage, setCurrentPage] = useState(-1);
     const [searchQuery, setSearchQuery] = useState('');
-    const [shouldLoadMore, setShouldLoadMore] = useState(false);
+    const [shouldLoadMore, setShouldLoadMore] = useState(prefetch);
     const [isLoading, setLoading] = useState(false);
     const [overrideOptions, setOverrideOptions, resetOverrideOptions] = useBoolean();
 
@@ -82,8 +82,8 @@ function DynamicDropdown({
     }
 
     useEffect(() => {
-        if (prefetch) loadMore();
-    }, []);
+        if (shouldLoadMore) loadMore();
+    }, [shouldLoadMore]);
 
     useEventListener(toolbox, refreshEvent, refreshData);
 
@@ -98,12 +98,6 @@ function DynamicDropdown({
             });
         }
     }, [value]);
-
-    useEffect(() => {
-        if (shouldLoadMore) {
-            loadMore();
-        }
-    }, [shouldLoadMore]);
 
     useUpdateEffect(() => {
         refreshData();
