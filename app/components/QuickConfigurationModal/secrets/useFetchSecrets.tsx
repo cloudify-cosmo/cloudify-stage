@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { useManager } from '../managerHooks';
 import type { SecretsData, SecretData } from './model';
 
-type SecretsHook = {
+export type SecretsHook = {
     loading: boolean;
     secrets?: SecretData[];
     error?: string;

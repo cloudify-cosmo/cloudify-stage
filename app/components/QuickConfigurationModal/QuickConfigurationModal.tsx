@@ -5,9 +5,8 @@ import i18n from 'i18next';
 
 import { Button, Icon, Ref as SemanticRef } from 'semantic-ui-react';
 import { CancelButton, Modal } from '../basic';
-import { JSONData, JSONSchema, JSONSchemaItem, TechnologiesData } from './model';
+import { JSONData, JSONSchema, TechnologiesData } from './model';
 import { getFormData } from './common/formUtils';
-import PluginsStep from './steps/PluginsStep';
 import createCheckboxRefExtractor from './common/createCheckboxRefExtractor';
 import TechnologiesStep from './steps/TechnologiesStep/index';
 import SecretsStep from './steps/SecretsStep';
@@ -60,10 +59,10 @@ const QuickConfigurationModal = ({ open = false, step = 0, schema, data, onClose
     useEffect(() => setDetectedTechnologies(detectTechnologies(schema, data)), [schema, data]);
     useEffect(() => setLocalStep(step), [step]);
     useEffect(() => setLocalData(data ?? {}), [data]);
-    const selectedItemSchemas = useMemo(() => schema.filter(items => detectedTechnologies[items.name]), [
+    const selectedSchemas = useMemo(() => schema.filter(items => detectedTechnologies[items.name]), [
         detectedTechnologies
     ]);
-    const selectedItemSchema = selectedItemSchemas[localStep - 1];
+    const selectedSchema = selectedSchemas[localStep - 1];
     const handleModalClose = () => {
         onClose?.(modalDisabledInputRef.current?.checked ?? false);
     };
@@ -94,17 +93,17 @@ const QuickConfigurationModal = ({ open = false, step = 0, schema, data, onClose
     return (
         <Modal open={open} onClose={handleModalClose}>
             <Modal.Header>
-                <HeaderBar>{getHeaderText(selectedItemSchemas, localStep)}</HeaderBar>
+                <HeaderBar>{getHeaderText(selectedSchemas, localStep)}</HeaderBar>
             </Modal.Header>
             <Modal.Content>
                 {localStep === 0 && (
                     <TechnologiesStep ref={technologiesFormRef} schema={schema} technologies={detectedTechnologies} />
                 )}
-                {localStep > 0 && localStep < selectedItemSchemas.length + 1 && (
-                    <SecretsStep ref={secretsFormRef} schema={selectedItemSchema} secrets={localData} />
+                {localStep > 0 && localStep < selectedSchemas.length + 1 && (
+                    <SecretsStep ref={secretsFormRef} selectedPlugin={selectedSchema} typedSecrets={localData} />
                 )}
-                {localStep > selectedItemSchemas.length && (
-                    <SummaryStep schema={selectedItemSchemas} data={localData} />
+                {localStep > selectedSchemas.length && (
+                    <SummaryStep selectedPlugins={selectedSchemas} typedSecrets={localData} />
                 )}
                 <Divider />
                 <Form.Field>
@@ -120,7 +119,7 @@ const QuickConfigurationModal = ({ open = false, step = 0, schema, data, onClose
                 <Button.Group floated="left">
                     <CancelButton content={i18n.t('help.aboutModal.close', 'Close')} onClick={handleModalClose} />
                 </Button.Group>
-                {localStep < selectedItemSchemas.length + 2 && (
+                {localStep < selectedSchemas.length + 2 && (
                     <Button.Group floated="right">
                         {localStep > 0 && (
                             <Button onClick={handleBackClick}>
@@ -129,7 +128,7 @@ const QuickConfigurationModal = ({ open = false, step = 0, schema, data, onClose
                             </Button>
                         )}
                         <Button onClick={handleNextClick}>
-                            {localStep < selectedItemSchemas.length + 1 ? 'Next' : 'Finish'}
+                            {localStep < selectedSchemas.length + 1 ? 'Next' : 'Finish'}
                             <Icon name="right arrow" />
                         </Button>
                     </Button.Group>
