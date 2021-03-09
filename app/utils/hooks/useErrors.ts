@@ -9,7 +9,7 @@ export default function useErrors() {
 
     return {
         errors,
-        setMessageAsError: (err: Error) => setErrors({ errors: err.message }),
+        setMessageAsError: (err: { message: string }) => setErrors({ errors: err.message }),
         clearErrors: () => setErrors({}),
         setErrors
     };
