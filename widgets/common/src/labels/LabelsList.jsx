@@ -13,7 +13,7 @@ export default function LabelsList({ labels, onChange }) {
             {sortedLabels.map(({ key, value, isInSystem = true }) => {
                 return (
                     <Label
-                        key={`${key}_${value}`}
+                        key={`${key}:${value}`}
                         as="a"
                         color={isInSystem ? undefined : newLabelColor}
                         onClick={event => event.stopPropagation()}
