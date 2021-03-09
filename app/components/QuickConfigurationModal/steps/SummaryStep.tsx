@@ -63,6 +63,49 @@ type Props = {
     onInstallationFinished?: () => void;
 };
 
+// const addPluginsTasks = (plugins, tasks) => {
+//     const { toolbox } = this.props;
+//     const pluginActions = new Stage.Common.PluginActions(toolbox);
+
+//     _.forEach(_.keys(plugins), pluginName => {
+//         const plugin = plugins[pluginName];
+
+//         const createUploadResource = name => ({
+//             [name]: { url: plugin[`${name}Url`], file: plugin[`${name}File`] }
+//         });
+
+//         tasks.push(
+//             new Task(`Upload plugin ${pluginName}`, () =>
+//                 pluginActions.doUpload(plugin.visibility, plugin.title, {
+//                     ...createUploadResource('wagon'),
+//                     ...createUploadResource('yaml'),
+//                     ...createUploadResource('icon')
+//                 })
+//             )
+//         );
+//     });
+
+//     return Promise.resolve();
+// }
+
+// const addSecretsTasks = (secrets, tasks) => {
+//     const { toolbox } = this.props;
+//     const secretActions = new Stage.Common.SecretActions(toolbox);
+
+//     _.forEach(_.keys(secrets), secret => {
+//         const secretValue = secrets[secret].value;
+//         const secretVisibility = secrets[secret].visibility;
+
+//         tasks.push(
+//             new Task(`Create secret ${secret}`, () =>
+//                 secretActions.doCreate(secret, secretValue, secretVisibility, false)
+//             )
+//         );
+//     });
+
+//     return Promise.resolve();
+// };
+
 const SummaryStep = ({
     installationMode = false,
     selectedPlugins,
@@ -76,6 +119,7 @@ const SummaryStep = ({
     const secretInstallationTasks = useSecretsInstallationTasks(selectedPlugins, typedSecrets);
     useEffect(() => {
         if (installationMode && pluginInstallationTasks.tasks && secretInstallationTasks.tasks) {
+            // const pluginActions = new Stage.Common.PluginActions(toolbox);
             console.log('Installation started...');
             handleInstallationStarted();
             return () => {
@@ -91,7 +135,7 @@ const SummaryStep = ({
             {pluginInstallationTasks.error && <div>Error: {pluginInstallationTasks.error}</div>}
             {secretInstallationTasks.loading && <div>Secrets information loading ...</div>}
             {secretInstallationTasks.error && <div>Manager error: {secretInstallationTasks.error}</div>}
-            {!pluginInstallationTasks.loading && !secretInstallationTasks.loading && (
+            {pluginInstallationTasks.tasks && secretInstallationTasks.tasks && (
                 <>
                     <div>Tasks:</div>
                     <div>
