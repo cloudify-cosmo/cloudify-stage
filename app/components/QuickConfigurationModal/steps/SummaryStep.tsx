@@ -1,6 +1,9 @@
-import React, { memo, useEffect } from 'react';
+import React, { memo, useEffect, useState } from 'react';
+import { useSelector } from 'react-redux';
+import { createToolbox } from '../../../utils/Toolbox';
 import useCurrentCallback from '../common/useCurrentCallback';
 import { usePluginInstallationTasks, useSecretsInstallationTasks } from '../installationUtils';
+import { useInternal, useManager } from '../managerHooks';
 import { JSONData, JSONSchema } from '../model';
 
 // const getPluginStatuses = (pluginsInBlueprint: any[], pluginsInCatalog: any[], pluginsInManager: any[], currentDistributionCode: string) => {
@@ -61,6 +64,7 @@ type Props = {
     typedSecrets: JSONData;
     onInstallationStarted?: () => void;
     onInstallationFinished?: () => void;
+    onInstallationCanceled?: () => void;
 };
 
 // const addPluginsTasks = (plugins, tasks) => {
@@ -111,26 +115,123 @@ const SummaryStep = ({
     selectedPlugins,
     typedSecrets,
     onInstallationStarted,
-    onInstallationFinished
+    onInstallationFinished,
+    onInstallationCanceled
 }: Props) => {
+    const manager = useManager();
+    const internal = useInternal();
     const handleInstallationStarted = useCurrentCallback(onInstallationStarted);
     const handleInstallationFinished = useCurrentCallback(onInstallationFinished);
+    const handleInstallationCanceled = useCurrentCallback(onInstallationCanceled);
     const pluginInstallationTasks = usePluginInstallationTasks(selectedPlugins);
     const secretInstallationTasks = useSecretsInstallationTasks(selectedPlugins, typedSecrets);
+    const [installationProgress, setInstallationProgress] = useState<number>();
+
     useEffect(() => {
         if (installationMode && pluginInstallationTasks.tasks && secretInstallationTasks.tasks) {
-            // const pluginActions = new Stage.Common.PluginActions(toolbox);
-            console.log('Installation started...');
-            handleInstallationStarted();
-            return () => {
-                console.log('Installation finished or canceled...');
+            let componentMounted = true;
+            let installationFinished = false;
+
+            const scheduledPlugins = pluginInstallationTasks.tasks.scheduledPlugins;
+            const updatedSecrets = secretInstallationTasks.tasks.updatedSecrets;
+            const createdSecrets = secretInstallationTasks.tasks.createdSecrets;
+
+            let stepIndex = 0;
+            const stepsCount = scheduledPlugins.length + updatedSecrets.length + createdSecrets.length;
+
+            ;(async () => {
+                if (!componentMounted) {
+                    return;
+                }
+                setInstallationProgress(0);
+                handleInstallationStarted();
+                for (const scheduledPlugin of scheduledPlugins) {
+                    const params = {
+                        visibility: 'tenant',
+                        title: scheduledPlugin.name,
+                        yamlUrl: scheduledPlugin.yamlUrl,
+                        wagonUrl: scheduledPlugin.wagonUrl
+                    };
+                    try {
+                        const response = await internal.doUpload('/plugins/upload', params, null, 'post');
+                        if (!componentMounted) {
+                            return;
+                        }
+                        //TODO: use response
+                        console.log('response');
+                    } catch (e) {
+                        console.log('error');
+                    } finally {
+                        if (!componentMounted) {
+                            return;
+                        }
+                        stepIndex += 1;
+                        setInstallationProgress(Math.round(100 * (stepIndex / stepsCount)));
+                    }
+                }
+                for (const updatedSecret of updatedSecrets) {
+                    try {
+                        const data = {
+                            value: updatedSecret.value
+                        };
+                        const response = await manager.doPatch(`/secrets/${updatedSecret.name}`, null, data); // diff
+                        if (!componentMounted) {
+                            return;
+                        }
+                        //TODO: use response
+                        console.log('response');
+                    } catch (e) {
+                        console.log('error');
+                    } finally {
+                        if (!componentMounted) {
+                            return;
+                        }
+                        stepIndex += 1;
+                        setInstallationProgress(Math.round(100 * (stepIndex / stepsCount)));
+                    }
+                }
+                for (const createdSecret of createdSecrets) {
+                    try {
+                        const data = {
+                            value: createdSecret.value,
+                            visibility: 'tenant',
+                            is_hidden_value: true
+                        };
+                        const response = await manager.doPut(`/secrets/${createdSecret.name}`, null, data); // diff
+                        if (!componentMounted) {
+                            return;
+                        }
+                        //TODO: use response
+                        console.log('response');
+                    } catch (e) {
+                        console.log('error');
+                    } finally {
+                        if (!componentMounted) {
+                            return;
+                        }
+                        stepIndex += 1;
+                        setInstallationProgress(Math.round(100 * (stepIndex / stepsCount)));
+                    }
+                }
+                installationFinished = true;
+                setInstallationProgress(100);
                 handleInstallationFinished();
+            })();
+            return () => {
+                componentMounted = false;
+                if (!installationFinished) {
+                    handleInstallationCanceled();
+                }
             };
+        } else {
+            setInstallationProgress(undefined);
+            return undefined;
         }
-        return undefined;
     }, [installationMode, pluginInstallationTasks, secretInstallationTasks]);
+
     return (
         <div>
+            {installationProgress !== undefined && <div>{installationProgress} %</div>}
             {pluginInstallationTasks.loading && <div>Plugins information loading ...</div>}
             {pluginInstallationTasks.error && <div>Error: {pluginInstallationTasks.error}</div>}
             {secretInstallationTasks.loading && <div>Secrets information loading ...</div>}
@@ -140,23 +241,23 @@ const SummaryStep = ({
                     <div>Tasks:</div>
                     <div>
                         {pluginInstallationTasks.tasks.installedPlugins.map(installedPlugin => {
-                            return <div key={installedPlugin}>{installedPlugin} plugin is already installed</div>;
+                            return <div key={installedPlugin.name}>{installedPlugin.name} plugin is already installed</div>;
                         })}
                         {pluginInstallationTasks.tasks.scheduledPlugins.map(scheduledPlugin => {
-                            return <div key={scheduledPlugin}>{scheduledPlugin} plugin will be installed</div>;
+                            return <div key={scheduledPlugin.name}>{scheduledPlugin.name} plugin will be installed</div>;
                         })}
                         {pluginInstallationTasks.tasks.rejectedPlugins.map(rejectedPlugin => {
                             return (
-                                <div key={rejectedPlugin}>
-                                    {rejectedPlugin} plugin is not found in catalog nad manager
+                                <div key={rejectedPlugin.name}>
+                                    {rejectedPlugin.name} plugin is not found in catalog nad manager
                                 </div>
                             );
                         })}
                         {secretInstallationTasks.tasks.createdSecrets.map(createdSecret => {
-                            return <div key={createdSecret}>{createdSecret} secret will be created</div>;
+                            return <div key={createdSecret.name}>{createdSecret.name} secret will be created</div>;
                         })}
                         {secretInstallationTasks.tasks.updatedSecrets.map(updatedSecret => {
-                            return <div key={updatedSecret}>{updatedSecret} secret will be updated</div>;
+                            return <div key={updatedSecret.name}>{updatedSecret.name} secret will be updated</div>;
                         })}
                     </div>
                 </>

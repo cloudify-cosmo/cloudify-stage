@@ -56,6 +56,7 @@ const QuickConfigurationModal = ({ open = false, step = 0, schema, data, onClose
     const [detectedTechnologies, setDetectedTechnologies] = useState<TechnologiesData>(() => ({}));
     const [localStep, setLocalStep] = useState(step);
     const [localData, setLocalData] = useState(() => data ?? {});
+    const [installationProcessing, setInstallationProcessing] = useState(false);
     const [currentErrors, setCurrentErrors] = useState<string[]>([]);
     useEffect(() => setDetectedTechnologies(detectTechnologies(schema, data)), [schema, data]);
     useEffect(() => setLocalStep(step), [step]);
@@ -93,9 +94,15 @@ const QuickConfigurationModal = ({ open = false, step = 0, schema, data, onClose
     };
     const handleInstallationStarted = () => {
         console.log('handleInstallationStarted: Installation started...');
+        setInstallationProcessing(true);
     };
     const handleInstallationFinished = () => {
-        console.log('handleInstallationFinished: Installation finished or canceled...');
+        console.log('handleInstallationFinished: Installation finished...');
+        setInstallationProcessing(false);
+    };
+    const handleInstallationCanceled = () => {
+        console.log('handleInstallationFinished: Installation canceled...');
+        setInstallationProcessing(false);
     };
     const handleModalClose = () => {
         onClose?.(modalDisabledInputRef.current?.checked ?? false);
@@ -146,6 +153,7 @@ const QuickConfigurationModal = ({ open = false, step = 0, schema, data, onClose
                         typedSecrets={localData}
                         onInstallationStarted={handleInstallationStarted}
                         onInstallationFinished={handleInstallationFinished}
+                        onInstallationCanceled={handleInstallationCanceled}
                     />
                 )}
                 <Divider />
@@ -160,7 +168,11 @@ const QuickConfigurationModal = ({ open = false, step = 0, schema, data, onClose
             </Modal.Content>
             <Modal.Actions style={{ overflow: 'hidden' }}>
                 <Button.Group floated="left">
-                    <CancelButton content={i18n.t('help.aboutModal.close', 'Close')} onClick={handleModalClose} />
+                    <CancelButton
+                        disabled={installationProcessing}
+                        content={i18n.t('help.aboutModal.close', 'Close')}
+                        onClick={handleModalClose}
+                    />
                 </Button.Group>
                 {localStep < selectedSchemas.length + 2 && (
                     <Button.Group floated="right">
