@@ -65,6 +65,33 @@ const QuickConfigurationModal = ({ open = false, step = 0, schema, data, onClose
         detectedTechnologies
     ]);
     const selectedSchema = selectedSchemas[localStep - 1];
+    const updateDetectedTechnologies = () => {
+        if (technologiesFormRef.current) {
+            const newUsedTechnologies = getFormData<TechnologiesData>(technologiesFormRef.current);
+            const usedTechnologiesErrors = validateTechnologyFields(newUsedTechnologies);
+            if (usedTechnologiesErrors.length > 0) {
+                setCurrentErrors(usedTechnologiesErrors);
+                return false;
+            }
+            setCurrentErrors([]);
+            setDetectedTechnologies(newUsedTechnologies);
+        }
+        return true;
+    };
+    const updateLocalData = () => {
+        if (secretsFormRef.current) {
+            const newLocalData = getFormData<JSONData>(secretsFormRef.current);
+            const newSecretsData = newLocalData[selectedSchema.name];
+            const localDataErrors = validateSecretFields(newSecretsData ?? {});
+            if (localDataErrors.length > 0) {
+                setCurrentErrors(localDataErrors);
+                return false;
+            }
+            setCurrentErrors([]);
+            setLocalData({ ...localData, ...newLocalData });
+        }
+        return true;
+    };
     const handleModalClose = () => {
         onClose?.(modalDisabledInputRef.current?.checked ?? false);
     };
@@ -79,27 +106,13 @@ const QuickConfigurationModal = ({ open = false, step = 0, schema, data, onClose
     };
     const handleNextClick = () => {
         if (localStep === 0) {
-            if (technologiesFormRef.current) {
-                const newUsedTechnologies = getFormData<TechnologiesData>(technologiesFormRef.current);
-                const usedTechnologiesErrors = validateTechnologyFields(newUsedTechnologies);
-                if (usedTechnologiesErrors.length > 0) {
-                    setCurrentErrors(usedTechnologiesErrors);
-                    return;
-                }
-                setCurrentErrors([]);
-                setDetectedTechnologies(newUsedTechnologies);
-            }
-        } else if (secretsFormRef.current) {
-            const newLocalData = getFormData<JSONData>(secretsFormRef.current);
-            const newSecretsData = newLocalData[selectedSchema.name];
-            const localDataErrors = validateSecretFields(newSecretsData ?? {});
-            if (localDataErrors.length > 0) {
-                setCurrentErrors(localDataErrors);
+            if (!updateDetectedTechnologies()) {
                 return;
             }
-            setCurrentErrors([]);
-            setLocalData({ ...localData, ...newLocalData });
-        }
+        } else {
+            if (!updateLocalData()) {
+                return;
+            }
         if (localStep < schema.length - 1) {
             setLocalStep(localStep + 1);
         }
@@ -112,7 +125,7 @@ const QuickConfigurationModal = ({ open = false, step = 0, schema, data, onClose
             </Modal.Header>
             <Modal.Content>
                 <div>
-                    {currentErrors.map((error, index) => (
+                    {currentErrors.map(error => (
                         <div key={error}>{error}</div>
                     ))}
                 </div>
@@ -122,8 +135,12 @@ const QuickConfigurationModal = ({ open = false, step = 0, schema, data, onClose
                 {localStep > 0 && localStep < selectedSchemas.length + 1 && (
                     <SecretsStep ref={secretsFormRef} selectedPlugin={selectedSchema} typedSecrets={localData} />
                 )}
-                {localStep > selectedSchemas.length && (
-                    <SummaryStep selectedPlugins={selectedSchemas} typedSecrets={localData} />
+                {(localStep === selectedSchemas.length + 1 || localStep === selectedSchemas.length + 2) && (
+                    <SummaryStep
+                        installationMode={localStep === selectedSchemas.length + 2}
+                        selectedPlugins={selectedSchemas}
+                        typedSecrets={localData}
+                    />
                 )}
                 <Divider />
                 <Form.Field>

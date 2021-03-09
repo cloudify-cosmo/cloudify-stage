@@ -105,15 +105,18 @@ export const createSecretsInstallationSummary = (
 export const useCreatePluginInstallationTasks = (selectedPlugins: JSONSchema) => {
     const currentDistribution = useCurrentDistribution();
     const currentPlugins = useFetchPlugins();
-    const pluginInstallationTasks = useMemo(
-        () => createPluginInstallationTasks(currentDistribution, currentPlugins, selectedPlugins),
-        [currentDistribution, currentPlugins, selectedPlugins]
-    );
-    return {
-        loading: currentPlugins.loading,
-        tasks: pluginInstallationTasks,
-        error: currentPlugins.error
-    };
+    return useMemo(() => {
+        if (currentPlugins.loading) {
+            return { loading: currentPlugins.loading };
+        }
+        if (currentPlugins.error) {
+            return { error: currentPlugins.error };
+        }
+        return {
+            loading: false,
+            tasks: createPluginInstallationTasks(currentDistribution, currentPlugins, selectedPlugins)
+        };
+    }, [currentDistribution, currentPlugins, selectedPlugins]);
 };
 
 export const useCreateSecretsInstallationSummary = (selectedPlugins: JSONSchema, typedSecrets: JSONData) => {
@@ -122,13 +125,16 @@ export const useCreateSecretsInstallationSummary = (selectedPlugins: JSONSchema,
         selectedPlugins,
         typedSecrets
     ]);
-    const secretInstallationTasks = useMemo(
-        () => createSecretsInstallationSummary(currentSecrets, selectedPlugins, filteredTypedSecrets),
-        [currentSecrets, selectedPlugins, filteredTypedSecrets]
-    );
-    return {
-        loading: currentSecrets.loading,
-        tasks: secretInstallationTasks,
-        error: currentSecrets.error
-    };
+    return useMemo(() => {
+        if (currentSecrets.loading) {
+            return { loading: currentSecrets.loading };
+        }
+        if (currentSecrets.error) {
+            return { error: currentSecrets.error };
+        }
+        return {
+            loading: false,
+            tasks: createSecretsInstallationSummary(currentSecrets, selectedPlugins, filteredTypedSecrets)
+        };
+    }, [currentSecrets, selectedPlugins, filteredTypedSecrets]);
 };
