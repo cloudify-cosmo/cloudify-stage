@@ -1,9 +1,6 @@
 import React, { memo, useEffect } from 'react';
 import useCurrentCallback from '../common/useCurrentCallback';
-import {
-    useCreatePluginInstallationTasks as usePluginInstallationTasks,
-    useCreateSecretsInstallationSummary as useSecretsInstallationTasks
-} from '../installationUtils';
+import { usePluginInstallationTasks, useSecretsInstallationTasks } from '../installationUtils';
 import { JSONData, JSONSchema } from '../model';
 
 // const getPluginStatuses = (pluginsInBlueprint: any[], pluginsInCatalog: any[], pluginsInManager: any[], currentDistributionCode: string) => {

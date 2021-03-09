@@ -76,7 +76,7 @@ export const createPluginInstallationTasks = (
     };
 };
 
-export const createSecretsInstallationSummary = (
+export const createSecretsInstallationTasks = (
     currentSecrets: SecretsHook,
     selectedPlugins: JSONSchema,
     typedSecrets: JSONData
@@ -102,7 +102,7 @@ export const createSecretsInstallationSummary = (
     };
 };
 
-export const useCreatePluginInstallationTasks = (selectedPlugins: JSONSchema) => {
+export const usePluginInstallationTasks = (selectedPlugins: JSONSchema) => {
     const currentDistribution = useCurrentDistribution();
     const currentPlugins = useFetchPlugins();
     return useMemo(() => {
@@ -119,7 +119,7 @@ export const useCreatePluginInstallationTasks = (selectedPlugins: JSONSchema) =>
     }, [currentDistribution, currentPlugins, selectedPlugins]);
 };
 
-export const useCreateSecretsInstallationSummary = (selectedPlugins: JSONSchema, typedSecrets: JSONData) => {
+export const useSecretsInstallationTasks = (selectedPlugins: JSONSchema, typedSecrets: JSONData) => {
     const currentSecrets = useFetchSecrets();
     const filteredTypedSecrets = useMemo(() => filterSchemaData(selectedPlugins, typedSecrets), [
         selectedPlugins,
@@ -134,7 +134,7 @@ export const useCreateSecretsInstallationSummary = (selectedPlugins: JSONSchema,
         }
         return {
             loading: false,
-            tasks: createSecretsInstallationSummary(currentSecrets, selectedPlugins, filteredTypedSecrets)
+            tasks: createSecretsInstallationTasks(currentSecrets, selectedPlugins, filteredTypedSecrets)
         };
     }, [currentSecrets, selectedPlugins, filteredTypedSecrets]);
 };
