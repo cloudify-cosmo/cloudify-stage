@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react';
 import { useInternal, useManager } from '../managerHooks';
 import type { AvailablePluginData, InstalledPluginData, InstalledPluginsData } from './model';
 
-type PluginsHook = {
+export type PluginsHook = {
     loading: boolean;
     plugins?: {
         available: AvailablePluginData[];
