@@ -7,6 +7,10 @@ export default class DeploymentActions {
         this.toolbox = toolbox;
     }
 
+    static toManagerLabels(labels) {
+        return _.map(labels, ({ key, value }) => ({ [key]: value }));
+    }
+
     doGet(deployment, params) {
         return this.toolbox.getManager().doGet(`/deployments/${deployment.id}`, params);
     }
@@ -99,7 +103,7 @@ export default class DeploymentActions {
     }
 
     doSetLabels(deploymentId, deploymentLabels) {
-        const labels = _.map(deploymentLabels, ({ key, value }) => ({ [key]: value }));
+        const labels = DeploymentActions.toManagerLabels(deploymentLabels);
         return this.toolbox.getManager().doPatch(`/deployments/${deploymentId}`, null, { labels });
     }
 

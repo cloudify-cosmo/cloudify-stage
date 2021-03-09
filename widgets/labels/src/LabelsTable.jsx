@@ -41,7 +41,7 @@ export default function LabelsTable({ data, toolbox }) {
 
     function exportToJson() {
         Stage.Utils.saveAs(
-            new Blob([JSON.stringify(labels.map(({ key, value }) => ({ [key]: value })))]),
+            new Blob([JSON.stringify(DeploymentActions.toManagerLabels(labels))]),
             `${data.deploymentId}-Labels.json`,
             true
         );

@@ -53,19 +53,22 @@ export default class BlueprintActions {
             .then(() => this.doDeleteImage(blueprintId));
     }
 
-    doDeploy(
-        blueprint,
+    doDeploy({
+        blueprintId,
         deploymentId,
         inputs,
         visibility,
+        labels = [],
         skipPluginsValidation = false,
         siteName = null,
         runtimeOnlyEvaluation = false
-    ) {
+    }) {
+        const { DeploymentActions } = Stage.Common;
         const data = {
-            blueprint_id: blueprint.id,
+            blueprint_id: blueprintId,
             inputs,
             visibility,
+            labels: DeploymentActions.toManagerLabels(labels),
             skip_plugins_validation: skipPluginsValidation,
             runtime_only_evaluation: runtimeOnlyEvaluation
         };

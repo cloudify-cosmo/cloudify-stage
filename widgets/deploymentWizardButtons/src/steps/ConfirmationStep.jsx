@@ -251,7 +251,7 @@ class ConfirmationStepContent extends React.Component {
         tasks.push(
             new Task(`Create ${deploymentId} deployment from ${blueprintId} blueprint`, () =>
                 blueprintActions
-                    .doDeploy({ id: blueprintId }, deploymentId, inputs, visibility)
+                    .doDeploy({ blueprintId, deploymentId, inputs, visibility })
                     .then(() => deploymentActions.waitUntilCreated(deploymentId))
             )
         );

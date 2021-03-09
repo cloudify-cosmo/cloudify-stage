@@ -14,7 +14,7 @@ describe('Blueprints widget', () => {
 
     beforeEach(() => cy.usePageMock('blueprints', blueprintsWidgetConfiguration).refreshTemplate());
 
-    function getBlueprintRow(blueprintName) {
+    function getBlueprintRow(blueprintName: string) {
         cy.get('input[placeholder^=Search]').clear().type(blueprintName);
         cy.get('.blueprintsTable > tbody > tr').should('have.length', 1);
         return cy.get(`#blueprintsTable_${blueprintName}`);
@@ -44,6 +44,12 @@ describe('Blueprints widget', () => {
             cy.contains('.modal button', 'Close').click();
             const serverIp = '127.0.0.1';
             cy.get('textarea').type(serverIp);
+            cy.contains('div', 'Labels').find('.selection').click();
+            cy.get('div[name=labelKey] > input').type('sample_key');
+            cy.get('div[name=labelValue] > input').type('sample_value');
+            cy.get('.add').click();
+            cy.get('a.label').should('be.visible');
+
             cy.contains('.modal .basic', 'Deploy').click();
             cy.get('.modal').should('not.exist');
 
@@ -51,6 +57,7 @@ describe('Blueprints widget', () => {
                 expect(request.body).to.deep.equal({
                     blueprint_id: emptyBlueprintName,
                     inputs: { server_ip: serverIp },
+                    labels: [{ sample_key: 'sample_value' }],
                     visibility: 'tenant',
                     skip_plugins_validation: false,
                     runtime_only_evaluation: false
@@ -309,7 +316,7 @@ describe('Blueprints widget', () => {
 
                 const getBlueprint = `/blueprints/${blueprintName}`;
                 const responses = ['uploading', 'extracting', 'parsing', 'uploaded'].map(state => ({ state }));
-                cy.interceptSp('GET', getBlueprint, req => req.reply(responses.shift()));
+                cy.interceptSp('GET', getBlueprint, req => req.reply(responses.shift() || {}));
 
                 cy.contains('1/5: Waiting for blueprint upload to start...');
                 cy.contains('2/5: Uploading blueprint...');
