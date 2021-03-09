@@ -1,6 +1,6 @@
 import { useMemo } from 'react';
 import { JSONData, JSONSchema, SecretData } from './model';
-import { AvailablePluginData, InstalledPluginData } from './plugins/model';
+import { AvailablePluginData, InstalledPluginData, URLString } from './plugins/model';
 import useFetchPlugins, { PluginsHook } from './plugins/useFetchPlugins';
 import useFetchSecrets, { SecretsHook } from './secrets/useFetchSecrets';
 import useCurrentDistribution from './useCurrentDistribution';
@@ -36,35 +36,59 @@ export const filterSchemaData = (selectedPlugins: JSONSchema, typedSecrets: JSON
     return filteredSecrets;
 };
 
+export type PluginInstallationTask = {
+    icon?: URLString;
+    name: string;
+    version: string;
+    distribution?: string;
+    yamlUrl?: URLString;
+    wagonUrl?: URLString;
+};
+
 export const createPluginInstallationTasks = (
     currentDistribution: string,
     currentPlugins: PluginsHook,
     selectedPlugins: JSONSchema
 ) => {
-    const rejectedPlugins: string[] = [];
-    const installedPlugins: string[] = [];
-    const scheduledPlugins: string[] = [];
+    const rejectedPlugins: PluginInstallationTask[] = [];
+    const installedPlugins: PluginInstallationTask[] = [];
+    const scheduledPlugins: PluginInstallationTask[] = [];
     if (currentPlugins && currentPlugins.plugins) {
         const catalogPlugins = mapAvailablePlugins(currentPlugins.plugins?.available ?? []);
         const managerPlugins = mapInstalledPlugins(currentPlugins.plugins?.installed ?? []);
         selectedPlugins.forEach(selectedPlugin => {
-            selectedPlugin.plugins.forEach(pluginItem => {
-                const installedPlugin = managerPlugins[pluginItem];
+            selectedPlugin.plugins.forEach(pluginName => {
+                const availablePlugin = catalogPlugins[pluginName];
+                const installedPlugin = managerPlugins[pluginName];
                 if (installedPlugin) {
-                    installedPlugins.push(pluginItem);
+                    installedPlugins.push({
+                        icon: availablePlugin?.icon,
+                        name: pluginName,
+                        version: installedPlugin.package_version
+                    });
                 } else {
-                    const availablePlugin = catalogPlugins[pluginItem];
                     if (availablePlugin) {
                         const matchedWagon = availablePlugin.wagons.find(wagon => {
                             const wagonName = wagon.name.toLowerCase();
                             return wagonName === currentDistribution || wagonName === 'any';
                         });
                         if (matchedWagon) {
-                            scheduledPlugins.push(pluginItem);
+                            scheduledPlugins.push({
+                                icon: availablePlugin.icon,
+                                name: pluginName,
+                                version: availablePlugin.version,
+                                distribution: matchedWagon.name,
+                                yamlUrl: availablePlugin.link,
+                                wagonUrl: matchedWagon.url
+                            });
                             return;
                         }
                     }
-                    rejectedPlugins.push(pluginItem);
+                    installedPlugins.push({
+                        icon: availablePlugin?.icon,
+                        name: pluginName,
+                        version: availablePlugin.version
+                    });
                 }
             });
         });
@@ -76,22 +100,36 @@ export const createPluginInstallationTasks = (
     };
 };
 
+export type SecretInstallationTask = {
+    name: string;
+    value: string;
+};
+
 export const createSecretsInstallationTasks = (
     currentSecrets: SecretsHook,
     selectedPlugins: JSONSchema,
     typedSecrets: JSONData
 ) => {
-    const updatedSecrets: string[] = [];
-    const createdSecrets: string[] = [];
+    const updatedSecrets: SecretInstallationTask[] = [];
+    const createdSecrets: SecretInstallationTask[] = [];
     if (currentSecrets && currentSecrets.secrets) {
         const mappedSecrets = mapDefinedSecrets(currentSecrets.secrets ?? []);
         selectedPlugins.forEach(pluginsItem => {
             pluginsItem.secrets.forEach(secretsItem => {
-                const typedSecret = typedSecrets[pluginsItem.name];
+                const pluginSecrets = typedSecrets[pluginsItem.name];
+                if (pluginSecrets == null) {
+                    return;
+                }
                 if (secretsItem.name in mappedSecrets) {
-                    updatedSecrets.push(secretsItem.name);
+                    updatedSecrets.push({
+                        name: secretsItem.name,
+                        value: pluginSecrets[secretsItem.name] ?? ''
+                    });
                 } else {
-                    createdSecrets.push(secretsItem.name);
+                    createdSecrets.push({
+                        name: secretsItem.name,
+                        value: pluginSecrets[secretsItem.name] ?? ''
+                    });
                 }
             });
         });
