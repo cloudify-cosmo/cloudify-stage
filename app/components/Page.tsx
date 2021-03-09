@@ -30,6 +30,7 @@ import { setDrilldownContext } from '../actions/drilldownContext';
 import { setEditMode } from '../actions/config';
 import type { ReduxState } from '../reducers';
 import type { Widget, WidgetDefinition } from '../utils/StageAPI';
+import type { DrilldownContext } from '../reducers/drilldownContextReducer';
 
 export interface PageOwnProps {
     pageId: string;
@@ -117,15 +118,8 @@ class Page extends Component<PageProps, never> {
     }
 }
 
-// NOTE: these should be extracted to appropriate reducers when those are migrated to TS
-
 interface PageDefinitionWithContext extends PageDefinition {
     context: any;
-}
-
-interface DrilldownContext {
-    pageName?: string;
-    context?: Record<string, any>;
 }
 
 const buildPagesList = (pages: PageDefinition[], drilldownContextArray: DrilldownContext[], selectedPageId: string) => {
@@ -135,13 +129,13 @@ const buildPagesList = (pages: PageDefinition[], drilldownContextArray: Drilldow
 
     const updatePagesListWith = (page: PageDefinition) => {
         const basePage = !page ? pages[0] : page;
-        const pageDrilldownContext = index >= 0 ? drilldownContextArray[index] : {};
+        const pageDrilldownContext = index >= 0 ? drilldownContextArray[index] : null;
         index -= 1;
 
         pagesList.push({
             ...basePage,
-            name: pageDrilldownContext.pageName || basePage.name,
-            context: pageDrilldownContext.context
+            name: pageDrilldownContext?.pageName || basePage.name,
+            context: pageDrilldownContext?.context
         });
 
         if (basePage.parent) {
@@ -196,7 +190,7 @@ const mapDispatchToProps = (dispatch: ThunkDispatch<ReduxState, never, AnyAction
             dispatch(changePageDescription(pageId, newDescription));
         },
         onPageSelected: (page: PageDefinitionWithContext, pagesList: PageDefinitionWithContext[], index: number) => {
-            const drilldownContext = [];
+            const drilldownContext: DrilldownContext[] = [];
             // Starting from 1 cause the first page doesnt have any context and shouldnt be in the context array (only drilldown pages)
             // and also skip the last page, because we are sending the context of this one to the select page
             for (let i = 1; i <= index - 1; i += 1) {
