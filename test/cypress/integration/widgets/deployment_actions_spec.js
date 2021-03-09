@@ -14,8 +14,8 @@ describe('Deployment Action Buttons widget', () => {
     );
 
     it('when deploymentId is not set in the context it should be disabled', () => {
-        cy.get('button.executeWorkflowButton').should('have.attr', 'disabled');
-        cy.get('button.deploymentActionsButton').should('have.attr', 'disabled');
+        cy.contains('button', 'Execute workflow').should('have.attr', 'disabled');
+        cy.contains('button', 'Deployment actions').should('have.attr', 'disabled');
     });
 
     describe('when deploymentId is set in the context', () => {
@@ -39,8 +39,8 @@ describe('Deployment Action Buttons widget', () => {
             cy.deleteSites(siteName).createSite({ name: siteName });
             cy.interceptSp('POST', `/deployments/${deploymentName}/set-site`).as('setSite');
 
-            cy.get('button.deploymentActionsButton').should('not.have.attr', 'disabled');
-            cy.get('button.deploymentActionsButton').click();
+            cy.contains('button', 'Deployment actions').should('not.have.attr', 'disabled');
+            cy.contains('button', 'Deployment actions').click();
 
             cy.get('.popupMenu > .menu').contains('Set Site').click();
             cy.get('.modal').within(() => {
@@ -71,9 +71,10 @@ describe('Deployment Action Buttons widget', () => {
             cy.setLabels(deploymentName, [{ existing_key: 'existing_value' }]);
             cy.setDeploymentContext(deploymentName);
             cy.interceptSp('GET', `/deployments/${deploymentName}?_include=labels`).as('fetchLabels');
-            cy.get('button.deploymentActionsButton').click();
+            cy.contains('button', 'Deployment actions').click();
             cy.get('.popupMenu > .menu').contains('Manage Labels').click();
             cy.get('.modal').within(() => {
+                cy.get('form.loading').should('be.visible');
                 cy.wait('@fetchLabels');
                 cy.get('form.loading').should('not.exist');
                 cy.get('.selection').click();
@@ -82,7 +83,7 @@ describe('Deployment Action Buttons widget', () => {
 
         beforeEach(() => {
             // NOTE: Clicking at the header to close opened dropdowns / popups
-            cy.get('.modal .tags').click();
+            cy.get('.modal .header').click();
         });
 
         it('adds new label by typing', () => {
@@ -143,7 +144,7 @@ describe('Deployment Action Buttons widget', () => {
             cy.get('.modal').within(() => {
                 const existingLabel = 'existing_key existing_value';
                 cy.contains('a.label', existingLabel).should('be.visible');
-                cy.contains('a.label', existingLabel).within(() => cy.get('.delete').click());
+                cy.contains('a.label', existingLabel).find('.delete').click();
                 cy.contains('a.label', existingLabel).should('not.exist');
             });
         });
