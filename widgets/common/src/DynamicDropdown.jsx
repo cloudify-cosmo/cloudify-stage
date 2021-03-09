@@ -37,7 +37,7 @@ function DynamicDropdown({
     const [searchQuery, setSearchQuery] = useState('');
     const [shouldLoadMore, setShouldLoadMore] = useState(prefetch);
     const [isLoading, setLoading] = useState(false);
-    const [overrideOptions, setOverrideOptions, resetOverrideOptions] = useBoolean();
+    const [overrideOptionsAfterFetch, setOverrideOptionsAfterFetch, resetOverrideOptionsAfterFetch] = useBoolean();
 
     function loadMore() {
         if (disabled) {
@@ -64,10 +64,8 @@ function DynamicDropdown({
                 .doGet(fetchUrl, { _sort: valueProp, _size: pageSize, _offset: nextPage * pageSize })
                 .then(data => {
                     setHasMore(data.metadata.pagination.total > (nextPage + 1) * pageSize);
-                    setOptions(
-                        overrideOptions ? itemsFormatter(data.items) : [...options, ...itemsFormatter(data.items)]
-                    );
-                    resetOverrideOptions();
+                    setOptions([...(overrideOptionsAfterFetch ? [] : options), ...itemsFormatter(data.items)]);
+                    resetOverrideOptionsAfterFetch();
                 })
                 .finally(() => setLoading(false));
 
@@ -76,7 +74,7 @@ function DynamicDropdown({
     }
 
     function refreshData() {
-        setOverrideOptions();
+        setOverrideOptionsAfterFetch();
         setHasMore(true);
         setCurrentPage(-1);
     }
