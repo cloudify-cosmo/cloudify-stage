@@ -7,7 +7,7 @@ import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import i18n from 'i18next';
 import SideBar from '../containers/SideBar';
-import Page from '../containers/Page';
+import Page from './Page';
 import ToursButton from '../containers/ToursButton';
 import QuickConfigurationModal from './QuickConfigurationModal';
 import quickConfigurationSchema from './QuickConfigurationModal/schema';

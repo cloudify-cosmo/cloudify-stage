@@ -130,21 +130,26 @@ function UpdateDeploymentModal({ open, deploymentId, onHide, toolbox }) {
                 preview
             )
             .then(data => {
+                // State updates should be done before calling `onHide` to avoid React errors:
+                // "Warning: Can't perform a React state update on an unmounted component"
                 clearErrors();
+                unsetLoading();
                 if (preview) {
                     showPreview();
                     setPreviewData(data);
                 } else {
                     toolbox.refresh();
-                    onHide();
                     toolbox.getEventBus().trigger('nodes:refresh');
                     toolbox.getEventBus().trigger('inputs:refresh');
                     toolbox.getEventBus().trigger('outputs:refresh');
                     toolbox.getEventBus().trigger('executions:refresh');
+                    onHide();
                 }
             })
-            .catch(err => setErrors(InputsUtils.getErrorObject(err.message)))
-            .finally(unsetLoading);
+            .catch(err => {
+                setErrors(InputsUtils.getErrorObject(err.message));
+                unsetLoading();
+            });
     }
 
     function onUpdate() {
@@ -213,7 +218,7 @@ function UpdateDeploymentModal({ open, deploymentId, onHide, toolbox }) {
         : {};
 
     return (
-        <Modal open={open} onClose={() => onHide()} className="updateDeploymentModal">
+        <Modal open={open} onClose={onHide} className="updateDeploymentModal">
             <Modal.Header>
                 <Icon name="edit" /> Update deployment {deploymentId}
             </Modal.Header>

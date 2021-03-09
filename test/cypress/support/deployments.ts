@@ -9,6 +9,10 @@ declare global {
     }
 }
 
+type Label = {
+    [key: string]: string | string[];
+};
+
 const commands = {
     getDeployment: (deploymentId: string) => cy.cfyRequest(`/deployments/${deploymentId}`, 'GET'),
     deployBlueprint: (blueprintId: string, deploymentId: string, inputs = {}) => {
@@ -23,15 +27,11 @@ const commands = {
             `/deployments/${deploymentId}/set-site`,
             'POST',
             null,
-            siteName !== ''
-                ? {
-                      site_name: siteName,
-                      detach_site: false
-                  }
-                : {
-                      detach_site: true
-                  }
+            siteName !== '' ? { site_name: siteName } : { detach_site: true }
         );
+    },
+    setLabels: (deploymentId: string, labels: Label[]) => {
+        cy.cfyRequest(`/deployments/${deploymentId}`, 'PATCH', null, { labels });
     },
     deleteDeployment: (deploymentId: string, force = false) => {
         cy.cfyRequest(`/deployments/${deploymentId}?force=${force}`, 'DELETE');
@@ -40,6 +40,12 @@ const commands = {
         cy.cfyRequest(`/deployments?_search=${search}`, 'GET')
             .then(response => response.body.items.forEach(({ id }: { id: string }) => cy.deleteDeployment(id, force)))
             .then(() => waitUntilEmpty('deployments', search));
+    },
+    searchInDeploymentsWidget: (deploymentId: string) => {
+        cy.get('.deploymentsWidget').within(() => {
+            cy.get('.input input').clear().type(deploymentId);
+            cy.get('.input.loading').should('not.exist');
+        });
     }
 };
 

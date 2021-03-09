@@ -1,8 +1,4 @@
-/**
- * Created by kinneretzin on 18/10/2016.
- */
-
-import MenuAction from './MenuAction';
+import ActionsMenus from './ActionsMenus';
 import DeploymentUpdatedIcon from './DeploymentUpdatedIcon';
 import DeploymentsViewPropTypes from './props/DeploymentsViewPropTypes';
 import DeploymentsViewDefaultProps from './props/DeploymentsViewDefaultProps';
@@ -13,8 +9,9 @@ export default function DeploymentsTable({
     fetchData,
     noDataMessage,
     onActOnExecution,
-    onMenuAction,
+    onDeploymentAction,
     onSelectDeployment,
+    onWorkflowAction,
     onSetVisibility,
     showExecutionStatusLabel,
     toolbox,
@@ -81,8 +78,14 @@ export default function DeploymentsTable({
                         </DataTable.Data>
                         <DataTable.Data>{item.updated_at}</DataTable.Data>
                         <DataTable.Data>{item.created_by}</DataTable.Data>
-                        <DataTable.Data className="center aligned rowActions">
-                            <MenuAction item={item} onSelectAction={onMenuAction} />
+                        <DataTable.Data style={{ display: 'inline-flex' }}>
+                            <ActionsMenus
+                                deploymentId={item.id}
+                                onDeploymentAction={onDeploymentAction}
+                                onWorkflowAction={onWorkflowAction}
+                                workflows={item.workflows}
+                                toolbox={toolbox}
+                            />
                         </DataTable.Data>
                     </DataTable.Row>
                 );

@@ -15,61 +15,49 @@ export default function CommonDropdown({ baseFetchUrl, onChange, toolbox, value,
     const { useEffect, useState } = React;
     const {
         Common: { DynamicDropdown },
-        Hooks: { useBoolean, useResettableState }
+        Hooks: { useLabelInput, useResettableState }
     } = Stage;
 
     const [selectedValue, setSelectedValue, resetSelectedValue] = useResettableState('');
-    const [typedValue, setTypedValue, resetTypedValue] = useResettableState('');
-    const [showError, setShowError, unsetShowError] = useBoolean();
     const [fetchUrl, setFetchUrl] = useState(baseFetchUrl);
-
-    function onSearchChange(event, { searchQuery: newTypedValue }) {
-        const allowedCharacters = /^[a-z][a-z0-9._-]*$/i;
-        const lowercasedNewTypedValue = _.toLower(newTypedValue);
-
-        if (lowercasedNewTypedValue === '' || allowedCharacters.test(lowercasedNewTypedValue)) {
+    const { inputValue, invalidCharacterTyped, submitChange, resetInput, unsetInvalidCharacterTyped } = useLabelInput(
+        newValue => {
             resetSelectedValue();
-            setTypedValue(lowercasedNewTypedValue);
-            onChange(lowercasedNewTypedValue);
-            unsetShowError();
-        } else {
-            setShowError();
+            onChange(newValue);
         }
-    }
+    );
 
     function onValueChange(newValue) {
-        resetTypedValue();
+        resetInput();
         setSelectedValue(newValue);
         onChange(newValue);
-        unsetShowError();
     }
 
-    useDebouncedSetValue(baseFetchUrl ? addSearchToUrl(baseFetchUrl, typedValue) : '', setFetchUrl, [
+    useDebouncedSetValue(baseFetchUrl ? addSearchToUrl(baseFetchUrl, inputValue) : '', setFetchUrl, [
         baseFetchUrl,
-        typedValue
+        inputValue
     ]);
 
     useEffect(() => {
         if (_.isEmpty(value)) {
             resetSelectedValue();
-            resetTypedValue();
-            unsetShowError();
+            resetInput();
         }
     }, [value]);
 
     return (
         <>
-            <ValidationErrorPopup open={showError} />
+            <ValidationErrorPopup open={invalidCharacterTyped} />
 
             <DynamicDropdown
                 clearable={false}
                 fetchAll
                 fetchUrl={fetchUrl}
                 itemsFormatter={items => _.map(items, item => ({ id: item }))}
-                onBlur={unsetShowError}
+                onBlur={unsetInvalidCharacterTyped}
                 onChange={onValueChange}
-                onSearchChange={onSearchChange}
-                searchQuery={typedValue}
+                onSearchChange={submitChange}
+                searchQuery={inputValue}
                 toolbox={toolbox}
                 value={selectedValue}
                 /* eslint-disable-next-line react/jsx-props-no-spreading */

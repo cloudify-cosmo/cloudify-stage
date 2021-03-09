@@ -68,4 +68,6 @@ describe('Tenants menu', () => {
         verifyTemplate(user.tenants[0]);
         verifyTemplate(user.tenants[1]);
     });
+
+    // TODO(RD-1565): add tests for resetting modal tenant pages
 });

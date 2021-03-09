@@ -5,6 +5,7 @@ describe('(Widgets common) DeploymentActions', () => {
     const doGetExecutions = jest.fn();
 
     beforeEach(() => {
+        // @ts-expect-error Necessary when overriding
         Stage.Common = {
             PollHelper() {
                 this.wait = wait;

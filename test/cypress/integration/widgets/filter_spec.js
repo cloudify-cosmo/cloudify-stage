@@ -64,8 +64,9 @@ describe('Filter', () => {
 
             cy.get('.blueprintsWidget input[placeholder^=Search]').scrollIntoView().clear().type(blueprintName);
 
-            cy.contains('.deploymentsWidget .row', deploymentName).find('.green.checkmark');
-            cy.contains('.deploymentsWidget .row', deploymentName).find('.menuAction').click();
+            cy.searchInDeploymentsWidget(deploymentName);
+            // Triggering mouseout event just after the click to hide the tooltip
+            cy.get('.deploymentActionsMenu').click().trigger('mouseout');
             cy.contains('Force Delete').click();
             cy.contains('Yes').click();
 

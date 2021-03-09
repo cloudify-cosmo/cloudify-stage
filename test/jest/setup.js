@@ -2,7 +2,7 @@
  * Created by kinneretzin on 17/11/2016.
  */
 
-import jsdom from 'jsdom';
+import { JSDOM } from 'jsdom';
 import _ from 'lodash';
 import $ from 'jquery';
 import d3 from 'd3';
@@ -21,8 +21,9 @@ function noop() {
 }
 
 process.env.NODE_ENV = 'test';
-global.document = jsdom.jsdom('<!doctype html><html><body></body></html>');
-global.window = document.defaultView;
+const jsdom = new JSDOM('<!doctype html><html><body></body></html>');
+global.document = jsdom.window.document;
+global.window = jsdom.window;
 global.window.open = noop;
 global.navigator = window.navigator;
 Object.keys(document.defaultView).forEach(property => {
