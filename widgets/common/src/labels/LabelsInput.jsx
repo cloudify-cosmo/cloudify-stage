@@ -59,7 +59,7 @@ export default function LabelsInput({ hideInitialLabels, initialLabels, onChange
         }
 
         setAddingLabel();
-        isLabelInSystem().then(isInSystem => {
+        return isLabelInSystem().then(isInSystem => {
             const newLabels = [...labels, { key: newLabelKey, value: newLabelValue, isInSystem }];
             setLabels(newLabels);
             resetNewLabelKey();
@@ -69,8 +69,7 @@ export default function LabelsInput({ hideInitialLabels, initialLabels, onChange
     }
 
     function onEnterPressOnAddButton() {
-        onAddLabel();
-        keyDropdownRef.current.click();
+        onAddLabel().then(() => keyDropdownRef.current.click());
     }
 
     return (
