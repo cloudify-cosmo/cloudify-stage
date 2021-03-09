@@ -11,6 +11,7 @@ import createCheckboxRefExtractor from './common/createCheckboxRefExtractor';
 import TechnologiesStep from './steps/TechnologiesStep/index';
 import SecretsStep from './steps/SecretsStep';
 import SummaryStep from './steps/SummaryStep';
+import { validateSecretFields, validateTechnologyFields } from './validationUtls';
 
 const getHeaderText = (schema: JSONSchema, step: number) => {
     if (step === 0) {
@@ -56,6 +57,7 @@ const QuickConfigurationModal = ({ open = false, step = 0, schema, data, onClose
     const [detectedTechnologies, setDetectedTechnologies] = useState<TechnologiesData>(() => ({}));
     const [localStep, setLocalStep] = useState(step);
     const [localData, setLocalData] = useState(() => data ?? {});
+    const [currentErrors, setCurrentErrors] = useState<string[]>([]);
     useEffect(() => setDetectedTechnologies(detectTechnologies(schema, data)), [schema, data]);
     useEffect(() => setLocalStep(step), [step]);
     useEffect(() => setLocalData(data ?? {}), [data]);
@@ -79,10 +81,23 @@ const QuickConfigurationModal = ({ open = false, step = 0, schema, data, onClose
         if (localStep === 0) {
             if (technologiesFormRef.current) {
                 const newUsedTechnologies = getFormData<TechnologiesData>(technologiesFormRef.current);
+                const usedTechnologiesErrors = validateTechnologyFields(newUsedTechnologies);
+                if (usedTechnologiesErrors.length > 0) {
+                    setCurrentErrors(usedTechnologiesErrors);
+                    return;
+                }
+                setCurrentErrors([]);
                 setDetectedTechnologies(newUsedTechnologies);
             }
         } else if (secretsFormRef.current) {
             const newLocalData = getFormData<JSONData>(secretsFormRef.current);
+            const newSecretsData = newLocalData[selectedSchema.name];
+            const localDataErrors = validateSecretFields(newSecretsData ?? {});
+            if (localDataErrors.length > 0) {
+                setCurrentErrors(localDataErrors);
+                return;
+            }
+            setCurrentErrors([]);
             setLocalData({ ...localData, ...newLocalData });
         }
         if (localStep < schema.length - 1) {
@@ -96,6 +111,11 @@ const QuickConfigurationModal = ({ open = false, step = 0, schema, data, onClose
                 <HeaderBar>{getHeaderText(selectedSchemas, localStep)}</HeaderBar>
             </Modal.Header>
             <Modal.Content>
+                <div>
+                    {currentErrors.map((error, index) => (
+                        <div key={error}>{error}</div>
+                    ))}
+                </div>
                 {localStep === 0 && (
                     <TechnologiesStep ref={technologiesFormRef} schema={schema} technologies={detectedTechnologies} />
                 )}

@@ -68,24 +68,32 @@ const SummaryStep = ({ selectedPlugins, typedSecrets }: Props) => {
             {pluginInstallationTasks.error && <div>Error: {pluginInstallationTasks.error}</div>}
             {secretInstallationTasks.loading && <div>Secrets information loading ...</div>}
             {secretInstallationTasks.error && <div>Manager error: {secretInstallationTasks.error}</div>}
-            <div>Tasks:</div>
-            <div>
-                {pluginInstallationTasks.tasks.installedPlugins.map(installedPlugin => {
-                    return <div key={installedPlugin}>{installedPlugin} plugin is already installed</div>;
-                })}
-                {pluginInstallationTasks.tasks.scheduledPlugins.map(scheduledPlugin => {
-                    return <div key={scheduledPlugin}>{scheduledPlugin} plugin will be installed</div>;
-                })}
-                {pluginInstallationTasks.tasks.rejectedPlugins.map(rejectedPlugin => {
-                    return <div key={rejectedPlugin}>{rejectedPlugin} plugin is not found in catalog nad manager</div>;
-                })}
-                {secretInstallationTasks.tasks.createdSecrets.map(createdSecret => {
-                    return <div key={createdSecret}>{createdSecret} secret will be created</div>;
-                })}
-                {secretInstallationTasks.tasks.updatedSecrets.map(updatedSecret => {
-                    return <div key={updatedSecret}>{updatedSecret} secret will be updated</div>;
-                })}
-            </div>
+            {!pluginInstallationTasks.loading && !secretInstallationTasks.loading && (
+                <>
+                    <div>Tasks:</div>
+                    <div>
+                        {pluginInstallationTasks.tasks.installedPlugins.map(installedPlugin => {
+                            return <div key={installedPlugin}>{installedPlugin} plugin is already installed</div>;
+                        })}
+                        {pluginInstallationTasks.tasks.scheduledPlugins.map(scheduledPlugin => {
+                            return <div key={scheduledPlugin}>{scheduledPlugin} plugin will be installed</div>;
+                        })}
+                        {pluginInstallationTasks.tasks.rejectedPlugins.map(rejectedPlugin => {
+                            return (
+                                <div key={rejectedPlugin}>
+                                    {rejectedPlugin} plugin is not found in catalog nad manager
+                                </div>
+                            );
+                        })}
+                        {secretInstallationTasks.tasks.createdSecrets.map(createdSecret => {
+                            return <div key={createdSecret}>{createdSecret} secret will be created</div>;
+                        })}
+                        {secretInstallationTasks.tasks.updatedSecrets.map(updatedSecret => {
+                            return <div key={updatedSecret}>{updatedSecret} secret will be updated</div>;
+                        })}
+                    </div>
+                </>
+            )}
         </div>
     );
 };

@@ -6,10 +6,20 @@ import createCheckboxRefExtractor from '../../common/createCheckboxRefExtractor'
 const style: CSSProperties = {
     border: '1px solid silver',
     borderRadius: '5px',
-    height: '50px',
+    height: '70px',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center'
+};
+
+const defaultStyle: CSSProperties = {
+    ...style,
+    background: 'white'
+};
+
+const selectedStyle: CSSProperties = {
+    ...style,
+    background: '#f5f5f5'
 };
 
 type Props = {
@@ -49,9 +59,20 @@ const TechnologyButton = memo(({ name, logo, label, value, ...other }: Props) =>
         setLocalValue(!localValue);
     };
     return (
-        <Form.Field className={localValue ? 'checked' : ''} style={style} onClick={handleClick}>
+        <Form.Field
+            className={localValue ? 'checked' : ''}
+            style={localValue ? selectedStyle : defaultStyle}
+            onClick={handleClick}
+        >
             <SemanticRef innerRef={createCheckboxRefExtractor(inputRef)}>
-                <Form.Checkbox name={name} label=" " checked={localValue} {...other} onChange={handleChange} />
+                <Form.Checkbox
+                    name={name}
+                    label=" "
+                    checked={localValue}
+                    style={{ display: 'none' }}
+                    {...other}
+                    onChange={handleChange}
+                />
             </SemanticRef>
             <img style={{ maxHeight: '80%' }} src={logo} alt={label} />
             <span>{label}</span>
