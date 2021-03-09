@@ -13,10 +13,10 @@ spec:
     resources:
       requests:
         cpu: 0.5
-        memory: 1Gi
+        memory: 2Gi
       limits:
         cpu: 0.5
-        memory: 1Gi
+        memory: 2Gi
     command:
     - cat
     tty: true
