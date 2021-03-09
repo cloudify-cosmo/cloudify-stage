@@ -1,19 +1,9 @@
-export default function ValidationErrorPopup({ open }) {
-    const {
-        Basic: { Popup },
-        i18n
-    } = Stage;
+import LabelErrorPopup from './LabelErrorPopup';
 
-    return (
-        <Popup
-            open={open}
-            trigger={<div />}
-            content={i18n.t('widgets.common.labels.validationError')}
-            position="top left"
-            pinned
-            wide
-        />
-    );
+export default function ValidationErrorPopup({ open }) {
+    const { i18n } = Stage;
+
+    return <LabelErrorPopup open={open} content={i18n.t('widgets.common.labels.validationError')} />;
 }
 
 ValidationErrorPopup.propTypes = {
