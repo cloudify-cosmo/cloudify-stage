@@ -91,6 +91,12 @@ const QuickConfigurationModal = ({ open = false, step = 0, schema, data, onClose
         }
         return true;
     };
+    const handleInstallationStarted = () => {
+        console.log('handleInstallationStarted: Installation started...');
+    };
+    const handleInstallationFinished = () => {
+        console.log('handleInstallationFinished: Installation finished or canceled...');
+    };
     const handleModalClose = () => {
         onClose?.(modalDisabledInputRef.current?.checked ?? false);
     };
@@ -138,6 +144,8 @@ const QuickConfigurationModal = ({ open = false, step = 0, schema, data, onClose
                         installationMode={localStep === selectedSchemas.length + 2}
                         selectedPlugins={selectedSchemas}
                         typedSecrets={localData}
+                        onInstallationStarted={handleInstallationStarted}
+                        onInstallationFinished={handleInstallationFinished}
                     />
                 )}
                 <Divider />

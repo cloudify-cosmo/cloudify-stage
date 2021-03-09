@@ -1,5 +1,9 @@
 import React, { memo, useEffect } from 'react';
-import { useCreatePluginInstallationTasks as usePluginInstallationTasks, useCreateSecretsInstallationSummary as useSecretsInstallationTasks } from '../installationUtils';
+import useCurrentCallback from '../common/useCurrentCallback';
+import {
+    useCreatePluginInstallationTasks as usePluginInstallationTasks,
+    useCreateSecretsInstallationSummary as useSecretsInstallationTasks
+} from '../installationUtils';
 import { JSONData, JSONSchema } from '../model';
 
 // const getPluginStatuses = (pluginsInBlueprint: any[], pluginsInCatalog: any[], pluginsInManager: any[], currentDistributionCode: string) => {
@@ -58,16 +62,28 @@ type Props = {
     installationMode?: boolean;
     selectedPlugins: JSONSchema;
     typedSecrets: JSONData;
+    onInstallationStarted?: () => void;
+    onInstallationFinished?: () => void;
 };
 
-const SummaryStep = ({ installationMode = false, selectedPlugins, typedSecrets }: Props) => {
+const SummaryStep = ({
+    installationMode = false,
+    selectedPlugins,
+    typedSecrets,
+    onInstallationStarted,
+    onInstallationFinished
+}: Props) => {
+    const handleInstallationStarted = useCurrentCallback(onInstallationStarted);
+    const handleInstallationFinished = useCurrentCallback(onInstallationFinished);
     const pluginInstallationTasks = usePluginInstallationTasks(selectedPlugins);
     const secretInstallationTasks = useSecretsInstallationTasks(selectedPlugins, typedSecrets);
     useEffect(() => {
         if (installationMode && pluginInstallationTasks.tasks && secretInstallationTasks.tasks) {
             console.log('Installation started...');
+            handleInstallationStarted();
             return () => {
-                console.log('Installation canceled...');
+                console.log('Installation finished or canceled...');
+                handleInstallationFinished();
             };
         }
         return undefined;
