@@ -28,9 +28,10 @@ export default function LabelsInput({ hideInitialLabels, initialLabels, onChange
     const keyDropdownRef = useRef();
 
     const newLabelIsProvided = !!newLabelKey && !!newLabelValue;
-    const newLabelIsAlreadyPresent = (function isNewLabelAlreadyPresent() {
-        const label = { key: newLabelKey, value: newLabelValue };
-        return !!(_.find(labels, label) || (hideInitialLabels && _.find(initialLabels, label)));
+    const newLabelIsAlreadyPresent = (() => {
+        const newLabel = { key: newLabelKey, value: newLabelValue };
+        const allLabels = [...labels, ...(hideInitialLabels ? initialLabels : [])];
+        return !!_.find(allLabels, newLabel);
     })();
     const addLabelNotAllowed = !newLabelIsProvided || newLabelIsAlreadyPresent || addingLabel;
     const addButtonPopupOpen = newLabelIsProvided && newLabelIsAlreadyPresent;
