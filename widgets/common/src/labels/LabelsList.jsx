@@ -1,7 +1,8 @@
 export default function LabelsList({ labels, onChange }) {
     const { Label, Icon } = Stage.Basic;
+    const { DeploymentActions } = Stage.Common;
     const newLabelColor = 'blue';
-    const sortedLabels = _.sortBy(labels, ['key', 'value']);
+    const sortedLabels = DeploymentActions.sortLabels(labels);
 
     return (
         <div

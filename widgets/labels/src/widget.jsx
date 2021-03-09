@@ -35,6 +35,7 @@ Stage.defineWidget({
 
     render(widget, data, error, toolbox) {
         const { Loading } = Stage.Basic;
+        const { DeploymentActions } = Stage.Common;
 
         const deploymentId = toolbox.getContext().getValue('deploymentId');
         if (!deploymentId) {
@@ -46,11 +47,9 @@ Stage.defineWidget({
             return <Loading />;
         }
 
+        const labels = DeploymentActions.sortLabels(_.map(data, item => _.pick(item, 'key', 'value')));
         const formattedData = {
-            labels: _(data)
-                .map(item => _.pick(item, 'key', 'value'))
-                .sortBy('key', 'value')
-                .value(),
+            labels,
             deploymentId
         };
 

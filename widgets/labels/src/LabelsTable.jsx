@@ -29,7 +29,7 @@ export default function LabelsTable({ data, toolbox }) {
         }
 
         labelInEdit.value = currentLabelValue;
-        setLabels(_.sortBy(labels, 'key', 'value'));
+        setLabels(DeploymentActions.sortLabels(labels));
         stopLabelEdit();
         toolbox.loading(true);
         actions.doSetLabels(data.deploymentId, labels).then(() => toolbox.loading(false));

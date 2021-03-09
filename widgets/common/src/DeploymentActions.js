@@ -7,6 +7,10 @@ export default class DeploymentActions {
         this.toolbox = toolbox;
     }
 
+    static sortLabels(labels) {
+        return _.sortBy(labels, ['key', 'value']);
+    }
+
     static toManagerLabels(labels) {
         return _.map(labels, ({ key, value }) => ({ [key]: value }));
     }
