@@ -64,7 +64,7 @@ describe('Deployment Action Buttons widget', () => {
         function addLabel(key, value) {
             typeLabelKey(key);
             typeLabelValue(value);
-            cy.get('button .add').click();
+            cy.get('button[aria-label=Add]').click();
         }
 
         before(() => {
@@ -106,7 +106,7 @@ describe('Deployment Action Buttons widget', () => {
                 cy.wait('@fetchValues');
 
                 typeLabelValue('sample_value');
-                cy.get('button .add').click();
+                cy.get('button[aria-label=Add]').click();
                 cy.wait('@checkIfLabelExists');
 
                 cy.contains('a.label', 'existing_key sample_value').should('be.visible');

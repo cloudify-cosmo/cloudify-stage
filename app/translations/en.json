@@ -404,6 +404,7 @@
                 }
             },
             "labels": {
+                "addButton": "Add",
                 "keyPlaceholder": "Select or type in a key",
                 "newKey": "New key",
                 "newValue": "New value",
