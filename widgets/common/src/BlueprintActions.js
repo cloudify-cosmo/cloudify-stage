@@ -63,11 +63,12 @@ export default class BlueprintActions {
         siteName = null,
         runtimeOnlyEvaluation = false
     }) {
+        const { DeploymentActions } = Stage.Common;
         const data = {
             blueprint_id: blueprintId,
             inputs,
             visibility,
-            labels: labels.map(label => ({ [label.key]: label.value })),
+            labels: DeploymentActions.toManagerLabels(labels),
             skip_plugins_validation: skipPluginsValidation,
             runtime_only_evaluation: runtimeOnlyEvaluation
         };
