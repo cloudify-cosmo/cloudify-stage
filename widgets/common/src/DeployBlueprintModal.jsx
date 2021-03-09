@@ -255,13 +255,14 @@ class DeployBlueprintModal extends React.Component {
         });
     }
 
-    deployBlueprint(deploymentInputs) {
+    deployBlueprint(inputs) {
         const { BlueprintActions, InputsUtils } = Stage.Common;
         const { toolbox } = this.props;
         const {
             blueprint,
             deploymentName,
             runtimeOnlyEvaluation,
+            labels,
             siteName,
             skipPluginsValidation,
             visibility
@@ -269,15 +270,16 @@ class DeployBlueprintModal extends React.Component {
 
         const blueprintActions = new BlueprintActions(toolbox);
         return blueprintActions
-            .doDeploy(
-                blueprint,
-                deploymentName,
-                deploymentInputs,
+            .doDeploy({
+                blueprintId: blueprint.id,
+                deploymentId: deploymentName,
+                inputs,
                 visibility,
+                labels,
                 skipPluginsValidation,
                 siteName,
                 runtimeOnlyEvaluation
-            )
+            })
             .catch(err => Promise.reject(InputsUtils.getErrorObject(err.message)));
     }
 
@@ -304,6 +306,7 @@ class DeployBlueprintModal extends React.Component {
     }
 
     render() {
+        const { i18n } = Stage;
         const {
             ApproveButton,
             CancelButton,
@@ -320,7 +323,8 @@ class DeployBlueprintModal extends React.Component {
             InputsUtils,
             YamlFileButton,
             DynamicDropdown,
-            ExecuteDeploymentModal
+            ExecuteDeploymentModal,
+            Labels: { Input: LabelsInput }
         } = Stage.Common;
         const { onHide, open, toolbox } = this.props;
         const {
@@ -425,6 +429,17 @@ class DeployBlueprintModal extends React.Component {
                             errors,
                             blueprint.plan.data_types
                         )}
+
+                        <Form.Field
+                            label={i18n.t('widgets.common.deployments.deployModal.labelsLabel')}
+                            help={i18n.t('widgets.common.labels.inputHelp')}
+                        >
+                            <LabelsInput
+                                toolbox={toolbox}
+                                hideInitialLabels
+                                onChange={labels => this.setState({ labels })}
+                            />
+                        </Form.Field>
 
                         <Form.Field className="skipPluginsValidationCheckbox">
                             <Form.Checkbox
