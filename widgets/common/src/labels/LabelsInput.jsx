@@ -45,10 +45,6 @@ export default function LabelsInput({ hideInitialLabels, initialLabels, onChange
         if (!hideInitialLabels) setLabels(initialLabels);
     }, [initialLabels]);
 
-    useEffect(() => {
-        resetNewLabelValue();
-    }, [newLabelKey]);
-
     function onAddLabel() {
         function isLabelInSystem() {
             const fetchUrl = addSearchToUrl(`/labels/deployments/${newLabelKey}`, newLabelValue);
