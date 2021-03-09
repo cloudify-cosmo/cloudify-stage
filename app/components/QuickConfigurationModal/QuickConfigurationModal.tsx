@@ -1,4 +1,3 @@
-import _ from 'lodash';
 import React, { memo, useRef, useState, useEffect, useMemo } from 'react';
 import { Form, HeaderBar } from 'cloudify-ui-components';
 import i18n from 'i18next';
@@ -109,10 +108,9 @@ const QuickConfigurationModal = ({ open = false, step = 0, schema, data, onClose
             if (!updateDetectedTechnologies()) {
                 return;
             }
-        } else {
-            if (!updateLocalData()) {
-                return;
-            }
+        } else if (!updateLocalData()) {
+            return;
+        }
         if (localStep < schema.length - 1) {
             setLocalStep(localStep + 1);
         }
@@ -175,11 +173,9 @@ const QuickConfigurationModal = ({ open = false, step = 0, schema, data, onClose
     );
 };
 
-{
-    /*
+/*
     <Header>{i18n.t('help.aboutModal.versionDetails', 'Version Details')}</Header>
 */
-}
 
 // QuickConfigurationModal.propTypes = {
 //     open: PropTypes.bool,
