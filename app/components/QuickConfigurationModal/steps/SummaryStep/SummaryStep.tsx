@@ -1,12 +1,10 @@
 import React, { memo, useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
-import { Divider, Form, Header, Icon, Label, List, Message, Progress } from 'semantic-ui-react';
-import { createToolbox } from '../../../utils/Toolbox';
-import useCurrentCallback from '../common/useCurrentCallback';
-import { PluginInstallationTask, usePluginInstallationTasks, useSecretsInstallationTasks } from '../installationUtils';
-import { useInternal, useManager } from '../managerHooks';
-import { JSONData, JSONSchema } from '../model';
-import { URLString } from '../plugins/model';
+import { Divider, Form, Header, Label, List, Message, Progress } from 'semantic-ui-react';
+import useCurrentCallback from '../../common/useCurrentCallback';
+import { usePluginInstallationTasks, useSecretsInstallationTasks } from '../../installationUtils';
+import { useInternal, useManager } from '../../managerHooks';
+import { JSONData, JSONSchema } from '../../model';
+import PluginTaskItems, { installedPluginDescription, rejectedPluginDescription } from './PluginTaskItems';
 
 type Props = {
     installationMode?: boolean;
@@ -16,69 +14,6 @@ type Props = {
     onInstallationFinished?: () => void;
     onInstallationCanceled?: () => void;
 };
-
-type PluginTaskItemProps = {
-    icon?: URLString;
-    name: string;
-    description: string | JSX.Element;
-};
-
-const PluginTaskItem = ({ icon, name, description }: PluginTaskItemProps) => {
-    return (
-        <List.Item>
-            <Label horizontal>
-                {icon && (
-                    <img
-                        style={{
-                            minWidth: '1.5em',
-                            maxHeight: '1.5em',
-                            verticalAlign: 'middle'
-                        }}
-                        src={icon}
-                        alt={name}
-                    />
-                )}
-                <span style={{ marginLeft: '1em' }}>{name}</span>
-            </Label>
-            {description}
-        </List.Item>
-    );
-};
-
-type PluginTaskItemsProps = {
-    tasks?: PluginInstallationTask[];
-    description: string | JSX.Element;
-};
-
-const PluginTaskItems = ({ tasks, description }: PluginTaskItemsProps) => (
-    <>
-        {tasks?.map(task => {
-            return <PluginTaskItem key={task.name} icon={task.icon} name={task.name} description={description} />;
-        })}
-    </>
-);
-
-const installedPluginDescription = (
-    <>
-        <span>plugin is already installed</span>
-        <Icon
-            style={{ marginLeft: '0.5em', verticalAlign: 'middle', display: 'inline-block' }}
-            color="green"
-            name="check"
-        />
-    </>
-);
-
-const rejectedPluginDescription = (
-    <>
-        <span>plugin is not found in catalog and manager</span>
-        <Icon
-            style={{ marginLeft: '0.5em', verticalAlign: 'middle', display: 'inline-block' }}
-            color="red"
-            name="remove"
-        />
-    </>
-);
 
 const SummaryStep = ({
     installationMode = false,
