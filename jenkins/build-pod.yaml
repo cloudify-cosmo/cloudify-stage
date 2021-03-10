@@ -31,7 +31,7 @@ spec:
         memory: 3Gi
         ephemeral-storage: "15Gi"
       limits:
-        cpu: 1.5
+        cpu: 3
         memory: 3Gi
         ephemeral-storage: "15Gi"
     command:
