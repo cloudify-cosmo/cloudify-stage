@@ -1,10 +1,7 @@
 /**
  * Returns a value that represents a component's open/closed state. Additionally returns `doOpen` and `doClose` functions that can be used to toggle the state.
- *
- * @param onOpen function to be triggered after each component's opening
- * @returns {*[]}
  */
-function useOpen(onOpen) {
+function useOpen(onOpen: () => void) {
     const { useEffect } = React;
     const { useBoolean } = Stage.Hooks;
 
@@ -14,7 +11,13 @@ function useOpen(onOpen) {
         if (open) onOpen();
     }, [open]);
 
-    return [open, doOpen, doClose];
+    return [open, doOpen, doClose] as const;
+}
+
+declare namespace Stage {
+    interface Hooks {
+        useOpen: typeof useOpen;
+    }
 }
 
 Stage.defineHook({ useOpen });
