@@ -74,7 +74,6 @@ describe('Deployment Action Buttons widget', () => {
             cy.contains('button', 'Deployment actions').click();
             cy.get('.popupMenu > .menu').contains('Manage Labels').click();
             cy.get('.modal').within(() => {
-                cy.get('form.loading').should('be.visible');
                 cy.wait('@fetchLabels');
                 cy.get('form.loading').should('not.exist');
                 cy.get('.selection').click();
