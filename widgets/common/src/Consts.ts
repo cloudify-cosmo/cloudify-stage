@@ -1,7 +1,3 @@
-/**
- * Created by kinneretzin on 02/03/2017.
- */
-
 const consts = {
     defaultVisibility: 'tenant',
     sysAdminRole: 'sys_admin',
@@ -25,6 +21,12 @@ const consts = {
         urlTemplate: '/maps/{z}/{x}/{y}/{r}'
     }
 };
+
+declare namespace Stage {
+    interface Common {
+        Consts: typeof consts;
+    }
+}
 
 Stage.defineCommon({
     name: 'Consts',
