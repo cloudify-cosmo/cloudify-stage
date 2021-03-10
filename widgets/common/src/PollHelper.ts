@@ -25,6 +25,14 @@ export default class PollHelper {
     }
 }
 
+declare global {
+    namespace Stage {
+        interface Common {
+            PollHelper: typeof PollHelper;
+        }
+    }
+}
+
 Stage.defineCommon({
     name: 'PollHelper',
     common: PollHelper
