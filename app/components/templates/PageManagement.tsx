@@ -17,7 +17,7 @@ import StageUtils from '../../utils/stageUtils';
 import { useErrors } from '../../utils/hooks';
 import { forEachWidget, getWidgetDefinitionById, LayoutSection, SimpleWidgetObj, TabContent } from '../../actions/page';
 import type { ReduxState } from '../../reducers';
-import type { Widget, WidgetDefinition } from '../../utils/StageAPI';
+import type { WidgetDefinition } from '../../utils/StageAPI';
 import type { TemplatePageDefinition } from '../../reducers/templatesReducer';
 
 export interface PageManagementProps {
@@ -66,8 +66,6 @@ export default function PageManagement({ pageId, isEditMode = false }: PageManag
             if (widgetDefinition) {
                 widget.id = v4();
                 widget.configuration = { ...StageUtils.buildConfig(widgetDefinition), ...widget.configuration };
-                // WARN: widget definition is being overwritten
-                ((widget as unknown) as Widget).definition = widgetDefinition;
                 widget.width = widget.width || widgetDefinition.initialWidth;
                 widget.height = widget.height || widgetDefinition.initialHeight;
                 return widget;
@@ -124,9 +122,11 @@ export default function PageManagement({ pageId, isEditMode = false }: PageManag
             width: widgetDefinition.initialWidth,
             height: widgetDefinition.initialHeight,
             configuration: StageUtils.buildConfig(widgetDefinition),
-            // @ts-expect-error Lie about the type of definition due to backwards compatibility
-            // TODO(RD-1649): disambiguate the properties
-            definition: widgetDefinition
+            definition: widgetDefinition.id,
+            x: 0,
+            y: 0,
+            drillDownPages: {},
+            maximized: false
         };
         if (!_.isNil(tabIndex)) {
             (page.layout[layoutSection].content[tabIndex] as TabContent).widgets.push(widgetInstance);
