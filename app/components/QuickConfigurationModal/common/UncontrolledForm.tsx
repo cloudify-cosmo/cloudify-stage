@@ -3,12 +3,16 @@ import { Form, Ref as SemanticRef } from 'semantic-ui-react';
 import { bindFormData, getFormData } from './formUtils';
 
 type Props<T extends unknown> = {
+    loading?: boolean;
     data?: T;
     children: ReactNode;
     onSubmit?: (data: T) => void;
 };
 
-const UncontrolledForm = <T extends unknown>({ data, children, onSubmit }: Props<T>, ref: Ref<HTMLFormElement>) => {
+const UncontrolledForm = <T extends unknown>(
+    { loading, data, children, onSubmit }: Props<T>,
+    ref: Ref<HTMLFormElement>
+) => {
     const formRef = (ref as RefObject<HTMLFormElement>) ?? useRef<HTMLFormElement>(null);
     React.useEffect(() => {
         if ('current' in formRef) {
@@ -28,7 +32,9 @@ const UncontrolledForm = <T extends unknown>({ data, children, onSubmit }: Props
     };
     return (
         <SemanticRef innerRef={formRef}>
-            <Form onSubmit={handleSubmit}>{children}</Form>
+            <Form loading={loading} onSubmit={handleSubmit}>
+                {children}
+            </Form>
         </SemanticRef>
     );
 };
