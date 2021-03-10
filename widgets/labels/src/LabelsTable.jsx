@@ -6,7 +6,7 @@ import AddLabelsModal from './AddLabelsModal';
 
 export default function LabelsTable({ data, toolbox }) {
     const { Button, DataTable, Icon } = Stage.Basic;
-    const { DeploymentActions } = Stage.Common;
+    const { DeploymentActions, Labels } = Stage.Common;
     const { useBoolean, useRefreshEvent, useInput, useResettableState } = Stage.Hooks;
     const { i18n } = Stage;
 
@@ -29,7 +29,7 @@ export default function LabelsTable({ data, toolbox }) {
         }
 
         labelInEdit.value = currentLabelValue;
-        setLabels(DeploymentActions.sortLabels(labels));
+        setLabels(Labels.sortLabels(labels));
         stopLabelEdit();
         toolbox.loading(true);
         actions.doSetLabels(data.deploymentId, labels).then(() => toolbox.loading(false));

@@ -1,8 +1,9 @@
+import { sortLabels } from './common';
+
 export default function LabelsList({ labels, onChange }) {
     const { Label, Icon } = Stage.Basic;
-    const { DeploymentActions } = Stage.Common;
     const newLabelColor = 'blue';
-    const sortedLabels = DeploymentActions.sortLabels(labels);
+    const sortedLabels = sortLabels(labels);
 
     return (
         <div
