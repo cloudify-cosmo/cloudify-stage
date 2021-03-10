@@ -108,12 +108,12 @@ export function createPagesMap(pages: PageDefinition[]) {
 }
 
 export function forAllWidgets(
-    page: PageDefinition,
+    page: Pick<PageDefinition, 'layout'>,
     widgetListModifier: (
         widget: SimpleWidgetObj[],
         layoutSectionIndex: number,
         tabIndex: number | null
-    ) => SimpleWidgetObj[]
+    ) => (SimpleWidgetObj | null | undefined)[]
 ) {
     _.each(page.layout, (layoutSection, layoutSectionIdx) => {
         if (isWidgetsSection(layoutSection))
@@ -126,8 +126,12 @@ export function forAllWidgets(
 }
 
 export function forEachWidget(
-    page: PageDefinition,
-    widgetModifier: (widget: SimpleWidgetObj, layoutSectionIndex: number, tabIndex: number | null) => SimpleWidgetObj
+    page: Pick<PageDefinition, 'layout'>,
+    widgetModifier: (
+        widget: SimpleWidgetObj,
+        layoutSectionIndex: number,
+        tabIndex: number | null
+    ) => SimpleWidgetObj | null | undefined
 ) {
     forAllWidgets(page, (widgets, layoutSectionIdx, tabIdx) =>
         _.map(widgets, widget => widgetModifier(widget, layoutSectionIdx, tabIdx))
@@ -256,7 +260,10 @@ export function removePage(page: PageDefinition): ThunkAction<void, ReduxState, 
     };
 }
 
-export function addLayoutToPage(page: PageDefinition, pageId: string): ThunkAction<void, ReduxState, never, AnyAction> {
+export function addLayoutToPage(
+    page: Pick<PageDefinition, 'layout'>,
+    pageId: string
+): ThunkAction<void, ReduxState, never, AnyAction> {
     return (dispatch, getState) => {
         const { widgetDefinitions } = getState();
         forEachWidget(page, (widget, layoutSectionIdx, tabIdx) => {
