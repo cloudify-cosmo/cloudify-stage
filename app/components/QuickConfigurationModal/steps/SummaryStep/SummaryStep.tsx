@@ -1,7 +1,8 @@
 import React, { memo, useEffect, useState } from 'react';
 import { Divider, Form, Header, Label, List, Message, Progress } from 'semantic-ui-react';
 import useCurrentCallback from '../../common/useCurrentCallback';
-import { usePluginInstallationTasks, useSecretsInstallationTasks } from '../../installationUtils';
+import { createResourcesInstaller } from '../../installationProcessUtils';
+import { usePluginInstallationTasks, useSecretsInstallationTasks } from '../../installationTasksUtils';
 import { useInternal, useManager } from '../../managerHooks';
 import { JSONData, JSONSchema } from '../../model';
 import PluginTaskItems, { installedPluginDescription, rejectedPluginDescription } from './PluginTaskItems';
@@ -30,106 +31,38 @@ const SummaryStep = ({
     const handleInstallationCanceled = useCurrentCallback(onInstallationCanceled);
     const pluginInstallationTasks = usePluginInstallationTasks(selectedPlugins);
     const secretInstallationTasks = useSecretsInstallationTasks(selectedPlugins, typedSecrets);
+    const [installationErrors, setInstallationErrors] = useState<string[]>([]);
     const [installationProgress, setInstallationProgress] = useState<number>();
 
     useEffect(() => {
+        setInstallationErrors([]);
+        setInstallationProgress(undefined);
         if (installationMode && pluginInstallationTasks.tasks && secretInstallationTasks.tasks) {
-            let componentMounted = true;
             let installationFinished = false;
-
-            const { scheduledPlugins } = pluginInstallationTasks.tasks;
-            const { updatedSecrets } = secretInstallationTasks.tasks;
-            const { createdSecrets } = secretInstallationTasks.tasks;
-
-            let stepIndex = 0;
-            const stepsCount = scheduledPlugins.length + updatedSecrets.length + createdSecrets.length;
-
-            (async () => {
-                if (!componentMounted) {
-                    return;
+            const resourcesInstaller = createResourcesInstaller(
+                manager,
+                internal,
+                () => handleInstallationStarted(),
+                (progress: number) => setInstallationProgress(progress),
+                (error: string) => setInstallationErrors([...installationErrors, error]),
+                () => {
+                    installationFinished = true;
+                    handleInstallationFinished();
                 }
-                setInstallationProgress(0);
-                handleInstallationStarted();
-                for (const scheduledPlugin of scheduledPlugins) {
-                    const params = {
-                        visibility: 'tenant',
-                        title: scheduledPlugin.name,
-                        yamlUrl: scheduledPlugin.yamlUrl,
-                        wagonUrl: scheduledPlugin.wagonUrl
-                    };
-                    try {
-                        const response = await internal.doUpload('/plugins/upload', params, null, 'post');
-                        if (!componentMounted) {
-                            return;
-                        }
-                        // TODO: use response
-                        console.log('response');
-                    } catch (e) {
-                        console.log('error');
-                    } finally {
-                        if (!componentMounted) {
-                            return;
-                        }
-                        stepIndex += 1;
-                        setInstallationProgress(Math.round(100 * (stepIndex / stepsCount)));
-                    }
-                }
-                for (const updatedSecret of updatedSecrets) {
-                    try {
-                        const data = {
-                            value: updatedSecret.value
-                        };
-                        const response = await manager.doPatch(`/secrets/${updatedSecret.name}`, null, data); // diff
-                        if (!componentMounted) {
-                            return;
-                        }
-                        // TODO: use response
-                        console.log('response');
-                    } catch (e) {
-                        console.log('error');
-                    } finally {
-                        if (!componentMounted) {
-                            return;
-                        }
-                        stepIndex += 1;
-                        setInstallationProgress(Math.round(100 * (stepIndex / stepsCount)));
-                    }
-                }
-                for (const createdSecret of createdSecrets) {
-                    try {
-                        const data = {
-                            value: createdSecret.value,
-                            visibility: 'tenant',
-                            is_hidden_value: true
-                        };
-                        const response = await manager.doPut(`/secrets/${createdSecret.name}`, null, data); // diff
-                        if (!componentMounted) {
-                            return;
-                        }
-                        // TODO: use response
-                        console.log('response');
-                    } catch (e) {
-                        console.log('error');
-                    } finally {
-                        if (!componentMounted) {
-                            return;
-                        }
-                        stepIndex += 1;
-                        setInstallationProgress(Math.round(100 * (stepIndex / stepsCount)));
-                    }
-                }
-                installationFinished = true;
-                setInstallationProgress(100);
-                handleInstallationFinished();
-            })();
+            );
+            // async installation that can be stopped with destroy method
+            resourcesInstaller.install(
+                pluginInstallationTasks.tasks.scheduledPlugins,
+                secretInstallationTasks.tasks.updatedSecrets,
+                secretInstallationTasks.tasks.createdSecrets
+            );
             return () => {
-                componentMounted = false;
+                resourcesInstaller.destroy();
                 if (!installationFinished) {
                     handleInstallationCanceled();
                 }
             };
         }
-        setInstallationProgress(undefined);
         return undefined;
     }, [installationMode, pluginInstallationTasks, secretInstallationTasks]);
 

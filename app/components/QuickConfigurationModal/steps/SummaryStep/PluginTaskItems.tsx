@@ -1,6 +1,6 @@
 import React from 'react';
 import { Icon } from 'semantic-ui-react';
-import { PluginInstallationTask } from '../../installationUtils';
+import { PluginInstallationTask } from '../../installationTasksUtils';
 import PluginTaskItem from './PluginTaskItem';
 
 export const installedPluginDescription = (
