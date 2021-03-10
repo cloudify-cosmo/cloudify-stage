@@ -22,6 +22,7 @@ function useLabelInput(onChange, initialValue = '') {
         },
         resetInput: () => {
             resetInputValue();
+            onChange(initialValue);
             unsetInvalidCharacterTyped();
         },
         unsetInvalidCharacterTyped
