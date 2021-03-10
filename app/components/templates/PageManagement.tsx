@@ -15,24 +15,35 @@ import PageContent from '../PageContent';
 import { createPageId, drillDownWarning, savePage, setActive, setPageEditMode } from '../../actions/templateManagement';
 import StageUtils from '../../utils/stageUtils';
 import { useErrors } from '../../utils/hooks';
-import { forEachWidget } from '../../actions/page';
+import { forEachWidget, getWidgetDefinitionById, SimpleWidgetObj } from '../../actions/page';
+import type { ReduxState } from '../../reducers';
+import type { Widget } from '../../utils/StageAPI';
 
-export default function PageManagement({ pageId, isEditMode }) {
+export interface PageManagementProps {
+    pageId: string;
+    isEditMode?: boolean;
+}
+
+export default function PageManagement({ pageId, isEditMode = false }: PageManagementProps) {
     const dispatch = useDispatch();
 
     useEffect(() => {
         dispatch(setActive(true));
-        return () => dispatch(setActive(false));
+        // NOTE: use void to return `undefined` from the cleanup handler (fix a type error)
+        // eslint-disable-next-line no-void
+        return () => void dispatch(setActive(false));
     }, []);
 
     useEffect(() => {
         dispatch(setPageEditMode(isEditMode));
-        return () => dispatch(setPageEditMode(false));
+        // NOTE: use void to return `undefined` from the cleanup handler (fix a type error)
+        // eslint-disable-next-line no-void
+        return () => void dispatch(setPageEditMode(false));
     }, []);
 
-    const showDrillDownWarn = useSelector(state => !!state.templateManagement.showDrillDownWarn);
-    const pageDefs = useSelector(state => state.templates.pagesDef);
-    const widgetDefinitions = useSelector(state => state.widgetDefinitions);
+    const showDrillDownWarn = useSelector((state: ReduxState) => !!state.templateManagement.showDrillDownWarn);
+    const pageDefs = useSelector((state: ReduxState) => state.templates.pagesDef);
+    const widgetDefinitions = useSelector((state: ReduxState) => state.widgetDefinitions);
 
     const [page, setPage] = useState();
     const { errors, setMessageAsError, clearErrors, setErrors } = useErrors();
@@ -41,21 +52,22 @@ export default function PageManagement({ pageId, isEditMode }) {
         const managedPage = _.cloneDeep(pageDefs[pageId]) || {};
         managedPage.id = pageId;
 
-        const invalidWidgetNames = [];
+        const invalidWidgetNames: string[] = [];
 
-        function toWidgetInstance(widget) {
-            const widgetDefinition = _.find(widgetDefinitions, { id: widget.definition });
+        function toWidgetInstance(widget: SimpleWidgetObj) {
+            const widgetDefinition = getWidgetDefinitionById(widget.definition, widgetDefinitions);
 
             if (widgetDefinition) {
                 widget.id = v4();
                 widget.configuration = { ...StageUtils.buildConfig(widgetDefinition), ...widget.configuration };
-                widget.definition = widgetDefinition;
+                // WARN: widget definition is being overwritten
+                ((widget as unknown) as Widget).definition = widgetDefinition;
                 widget.width = widget.width || widgetDefinition.initialWidth;
                 widget.height = widget.height || widgetDefinition.initialHeight;
                 return widget;
             }
             invalidWidgetNames.push(widget.name);
-            return null;
+            return null as any;
         }
 
         forEachWidget(managedPage, toWidgetInstance);
@@ -271,8 +283,4 @@ export default function PageManagement({ pageId, isEditMode }) {
 PageManagement.propTypes = {
     pageId: PropTypes.string.isRequired,
     isEditMode: PropTypes.bool
-};
-
-PageManagement.defaultProps = {
-    isEditMode: false
 };
