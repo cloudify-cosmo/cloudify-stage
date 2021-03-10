@@ -12,13 +12,6 @@ import ToursButton from '../containers/ToursButton';
 import QuickConfigurationModal from './QuickConfigurationModal';
 import quickConfigurationSchema from './QuickConfigurationModal/schema';
 
-const data = {
-    aws: {
-        aws_access_key_id: '123',
-        aws_secret_access_key: '321'
-    }
-};
-
 export default class Home extends Component {
     constructor(props) {
         super(props);
@@ -114,7 +107,6 @@ export default class Home extends Component {
                     open={modalOpen}
                     step={0}
                     schema={quickConfigurationSchema}
-                    data={data}
                     onClose={this.handleModalClose}
                 />
 
