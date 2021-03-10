@@ -16,7 +16,7 @@ spec:
         memory: 2Gi
       limits:
         cpu: 3
-        memory: 2Gi
+        memory: 3Gi
     command:
     - cat
     tty: true
@@ -32,7 +32,7 @@ spec:
         ephemeral-storage: "15Gi"
       limits:
         cpu: 3
-        memory: 3Gi
+        memory: 5Gi
         ephemeral-storage: "15Gi"
     command:
     - cat
