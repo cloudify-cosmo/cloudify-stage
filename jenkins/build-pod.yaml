@@ -15,8 +15,8 @@ spec:
         cpu: 1
         memory: 2Gi
       limits:
-        cpu: 3
-        memory: 3Gi
+        cpu: 1
+        memory: 2Gi
     command:
     - cat
     tty: true
@@ -27,11 +27,11 @@ spec:
     image: circleci/node:12.16-browsers
     resources:
       requests:
-        cpu: 1.5
-        memory: 3Gi
+        cpu: 2
+        memory: 5Gi
         ephemeral-storage: "15Gi"
       limits:
-        cpu: 3
+        cpu: 2
         memory: 5Gi
         ephemeral-storage: "15Gi"
     command:
