@@ -29,6 +29,7 @@ export interface WidgetsSection {
 export interface TabContent {
     name: string;
     widgets: SimpleWidgetObj[];
+    isDefault?: boolean;
 }
 
 export interface TabsSection {
