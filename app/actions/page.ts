@@ -1,11 +1,11 @@
-/**
- * Created by kinneretzin on 30/08/2016.
- */
-
 import _ from 'lodash';
 import log from 'loglevel';
 import { push } from 'connected-react-router';
 import { stringify } from 'query-string';
+import type { ThunkAction } from 'redux-thunk';
+import type { AnyAction } from 'redux';
+import type { LocationDescriptorObject } from 'history';
+
 import * as types from './types';
 import { clearContext } from './context';
 import { popDrilldownContext } from './drilldownContext';
@@ -14,25 +14,63 @@ import { clearWidgetsData } from './WidgetData';
 import Internal from '../utils/Internal';
 import Consts from '../utils/consts';
 import { NO_PAGES_FOR_TENANT_ERR } from '../utils/ErrorCodes';
+import type { Widget } from '../utils/StageAPI';
+import type { ReduxState } from '../reducers';
 
-export function addTab(pageId, layoutSection) {
+export type SimpleWidgetObj = Omit<Widget, 'definition'> & { definition: string };
+
+export interface WidgetsSection {
+    type: 'widgets';
+    content: SimpleWidgetObj[];
+}
+
+export interface TabContent {
+    name: string;
+    widgets: SimpleWidgetObj[];
+}
+
+export interface TabsSection {
+    type: 'tabs';
+    content: TabContent[];
+}
+
+export type LayoutSection = WidgetsSection | TabsSection;
+
+export function isWidgetsSection(layoutSection: LayoutSection): layoutSection is WidgetsSection {
+    return layoutSection.type === 'widgets';
+}
+export function isTabsSection(layoutSection: LayoutSection): layoutSection is TabsSection {
+    return layoutSection.type === 'tabs';
+}
+
+export interface PageDefinition {
+    id: string;
+    name: string;
+    description: string;
+    layout: LayoutSection[];
+    isDrillDown: boolean;
+    parent?: string;
+    children?: string[];
+}
+
+export function addTab(pageId: string, layoutSection: number) {
     return {
         type: types.ADD_TAB,
         pageId,
         layoutSection
-    };
+    } as const;
 }
 
-export function removeTab(pageId, layoutSection, tabIndex) {
+export function removeTab(pageId: string, layoutSection: number, tabIndex: number) {
     return {
         type: types.REMOVE_TAB,
         pageId,
         layoutSection,
         tabIndex
-    };
+    } as const;
 }
 
-export function updateTab(pageId, layoutSection, tabIndex, name, isDefault) {
+export function updateTab(pageId: string, layoutSection: number, tabIndex: number, name: string, isDefault: boolean) {
     return {
         type: types.UPDATE_TAB,
         pageId,
@@ -40,14 +78,14 @@ export function updateTab(pageId, layoutSection, tabIndex, name, isDefault) {
         tabIndex,
         name,
         isDefault
-    };
+    } as const;
 }
 
-export function moveTab(pageId, layoutSection, oldTabIndex, newTabIndex) {
-    return { type: types.MOVE_TAB, pageId, layoutSection, oldTabIndex, newTabIndex };
+export function moveTab(pageId: string, layoutSection: number, oldTabIndex: number, newTabIndex: number) {
+    return { type: types.MOVE_TAB, pageId, layoutSection, oldTabIndex, newTabIndex } as const;
 }
 
-export function createPage(page, newPageId) {
+export function createPage(page: Partial<PageDefinition>, newPageId: string) {
     return {
         type: types.ADD_PAGE,
         page,
@@ -55,7 +93,7 @@ export function createPage(page, newPageId) {
     };
 }
 
-export function createDrilldownPage(page, newPageId) {
+export function createDrilldownPage(page: PageDefinition, newPageId: string) {
     return {
         type: types.CREATE_DRILLDOWN_PAGE,
         page,
@@ -63,13 +101,20 @@ export function createDrilldownPage(page, newPageId) {
     };
 }
 
-export function createPagesMap(pages) {
+export function createPagesMap(pages: PageDefinition[]) {
     return _.keyBy(pages, 'id');
 }
 
-export function forAllWidgets(page, widgetListModifier) {
+export function forAllWidgets(
+    page: PageDefinition,
+    widgetListModifier: (
+        widget: SimpleWidgetObj[],
+        layoutSectionIndex: number,
+        tabIndex: number | null
+    ) => SimpleWidgetObj[]
+) {
     _.each(page.layout, (layoutSection, layoutSectionIdx) => {
-        if (layoutSection.type === Consts.LAYOUT_TYPE.WIDGETS)
+        if (isWidgetsSection(layoutSection))
             layoutSection.content = _.compact(widgetListModifier(layoutSection.content, layoutSectionIdx, null));
         else
             _.each(layoutSection.content, (tab, tabIdx) => {
@@ -78,13 +123,16 @@ export function forAllWidgets(page, widgetListModifier) {
     });
 }
 
-export function forEachWidget(page, widgetModifier) {
+export function forEachWidget(
+    page: PageDefinition,
+    widgetModifier: (widget: SimpleWidgetObj, layoutSectionIndex: number, tabIndex: number | null) => SimpleWidgetObj
+) {
     forAllWidgets(page, (widgets, layoutSectionIdx, tabIdx) =>
         _.map(widgets, widget => widgetModifier(widget, layoutSectionIdx, tabIdx))
     );
 }
 
-function createPageId(name, pages) {
+function createPageId(name: string, pages: PageDefinition[]) {
     // Add suffix to make URL unique if same page name already exists
     let newPageId = _.snakeCase(name);
     let suffix = 1;
@@ -102,7 +150,7 @@ function createPageId(name, pages) {
     return newPageId;
 }
 
-export function changePageName(page, newName) {
+export function changePageName(page: PageDefinition, newName: string) {
     return {
         type: types.RENAME_PAGE,
         pageId: page.id,
@@ -110,7 +158,7 @@ export function changePageName(page, newName) {
     };
 }
 
-export function changePageDescription(pageId, newDescription) {
+export function changePageDescription(pageId: string, newDescription: string) {
     return {
         type: types.CHANGE_PAGE_DESCRIPTION,
         pageId,
@@ -118,9 +166,14 @@ export function changePageDescription(pageId, newDescription) {
     };
 }
 
-export function selectPage(pageId, isDrilldown, drilldownContext, drilldownPageName) {
+export function selectPage(
+    pageId: string,
+    isDrilldown?: boolean,
+    drilldownContext?: any,
+    drilldownPageName?: string
+): ThunkAction<void, ReduxState, never, AnyAction> {
     return (dispatch, getState) => {
-        const location = { pathname: `/page/${pageId}` };
+        const location: LocationDescriptorObject = { pathname: `/page/${pageId}` };
         let newDrilldownContext = getState().drilldownContext || [];
 
         // Clear the widgets data since there is no point in saving data for widgets that are not in view
@@ -152,7 +205,7 @@ export function selectPage(pageId, isDrilldown, drilldownContext, drilldownPageN
     };
 }
 
-export function selectPageByName(pageName, context) {
+export function selectPageByName(pageName: string, context: any): ThunkAction<void, ReduxState, never, AnyAction> {
     return dispatch => {
         if (context) {
             dispatch(clearContext());
@@ -162,7 +215,7 @@ export function selectPageByName(pageName, context) {
     };
 }
 
-export function addPage(name) {
+export function addPage(name: string): ThunkAction<void, ReduxState, never, AnyAction> {
     return (dispatch, getState) => {
         const newPageId = createPageId(name, getState().pages);
 
@@ -171,18 +224,18 @@ export function addPage(name) {
     };
 }
 
-function removeSinglePage(pageId) {
+function removeSinglePage(pageId: string) {
     return {
         type: types.REMOVE_PAGE,
         pageId
     };
 }
 
-export function removePage(page) {
+export function removePage(page: PageDefinition): ThunkAction<void, ReduxState, never, AnyAction> {
     return (dispatch, getState) => {
         const pagesMap = createPagesMap(getState().pages);
-        const removePageWithChildren = p => {
-            if (!_.isEmpty(p.children)) {
+        const removePageWithChildren = (p: PageDefinition) => {
+            if (p.children && !_.isEmpty(p.children)) {
                 p.children.forEach(childPageId => {
                     removePageWithChildren(pagesMap[childPageId]);
                 });
@@ -194,7 +247,7 @@ export function removePage(page) {
     };
 }
 
-export function addLayoutToPage(page, pageId) {
+export function addLayoutToPage(page: PageDefinition, pageId: string): ThunkAction<void, ReduxState, never, AnyAction> {
     return (dispatch, getState) => {
         const { widgetDefinitions } = getState();
         forEachWidget(page, (widget, layoutSectionIdx, tabIdx) => {
@@ -205,15 +258,15 @@ export function addLayoutToPage(page, pageId) {
     };
 }
 
-export function addLayoutSectionToPage(pageId, layoutSection, position) {
+export function addLayoutSectionToPage(pageId: string, layoutSection: LayoutSection, position: number) {
     return { type: types.ADD_LAYOUT_SECTION, pageId, layoutSection, position };
 }
 
-export function removeLayoutSectionFromPage(pageId, layoutSection) {
+export function removeLayoutSectionFromPage(pageId: string, layoutSection: number) {
     return { type: types.REMOVE_LAYOUT_SECTION, pageId, layoutSection };
 }
 
-export function createPagesFromTemplate() {
+export function createPagesFromTemplate(): ThunkAction<void, ReduxState, never, AnyAction> {
     return (dispatch, getState) => {
         const { manager } = getState();
         const tenant = _.get(manager, 'tenants.selected', Consts.DEFAULT_ALL);
@@ -248,7 +301,7 @@ export function createPagesFromTemplate() {
     };
 }
 
-export function reorderPage(pageIndex, newPageIndex) {
+export function reorderPage(pageIndex: number, newPageIndex: number) {
     return {
         type: types.REORDER_PAGE,
         pageIndex,
@@ -256,7 +309,7 @@ export function reorderPage(pageIndex, newPageIndex) {
     };
 }
 
-export function selectHomePage() {
+export function selectHomePage(): ThunkAction<void, ReduxState, never, AnyAction> {
     return (dispatch, getState) => {
         const homePageId = getState().pages[0].id;
 
@@ -264,15 +317,18 @@ export function selectHomePage() {
     };
 }
 
-export function selectParentPage() {
+export function selectParentPage(): ThunkAction<void, ReduxState, never, AnyAction> {
     return (dispatch, getState) => {
         const state = getState();
 
+        // @ts-expect-error Missing type definitions for app reducer
         const pageId = state.app.currentPageId || state.pages[0].id;
 
         const page = _.find(state.pages, { id: pageId });
         if (page && page.parent) {
-            const parentPage = _.find(state.pages, { id: page.parent });
+            // NOTE: assume page is always found
+            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+            const parentPage: PageDefinition = _.find(state.pages, { id: page.parent })!;
             dispatch(popDrilldownContext());
             dispatch(selectPage(parentPage.id, parentPage.isDrillDown));
         }

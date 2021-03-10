@@ -1,11 +1,14 @@
-/**
- * Created by kinneretzin on 9/5/2017.
- */
+import type { Reducer } from 'redux';
 
 import * as types from '../actions/types';
 
-const drillDownContext = (state = [], action) => {
-    let newState;
+export interface DrilldownContext {
+    pageName?: string;
+    context?: Record<string, any>;
+}
+
+const drillDownContext: Reducer<DrilldownContext[]> = (state = [], action) => {
+    let newState: DrilldownContext[];
     switch (action.type) {
         case types.SET_DRILLDOWN_CONTEXT:
             return action.drilldownContext;
