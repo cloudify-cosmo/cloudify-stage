@@ -404,6 +404,7 @@
                 }
             },
             "labels": {
+                "addButton": "Add",
                 "keyPlaceholder": "Select or type in a key",
                 "newKey": "New key",
                 "newValue": "New value",
@@ -413,6 +414,7 @@
                 "inputHelp": "A list of labels - key-value pairs - that can be assigned with a deployment",
                 "isLabelInSystemCheckError": "Cannot check is label already present in the system",
                 "fetchingLabelsError": "Cannot fetch labels for deployment '{{deploymentId}}'",
+                "labelDuplicationError": "Cannot add the same label twice",
                 "modalHeader": "Manage labels for deployment '{{deploymentId}}'",
                 "modalApplyButton": "Apply"
             },

@@ -2,20 +2,24 @@
  * Returns a stateful map of values and functions to manipulate it:
  * `setInputs` which merges the given map into the values map and can be directly used as SUIR `onChange` handler,
  * `clearValue` which resets the values map back to its initial state
- *
- * @param initialValues
- * @returns {(any|(function(*, *=): void)|(function(): void))[]}
  */
-function useInputs(initialValues) {
+function useInputs<T extends Record<string, any>>(initialValues: T) {
     const { useState } = React;
 
     const [inputs, setInputs] = useState(initialValues);
 
     return [
         inputs,
-        (values, field) => setInputs({ ...inputs, ...(field ? Stage.Basic.Form.fieldNameValue(field) : values) }),
+        (values: any, field?: any) =>
+            setInputs({ ...inputs, ...(field ? Stage.Basic.Form.fieldNameValue(field) : values) }),
         () => setInputs(initialValues)
-    ];
+    ] as const;
+}
+
+declare namespace Stage {
+    interface Hooks {
+        useInputs: typeof useInputs;
+    }
 }
 
 Stage.defineHook({ useInputs });
