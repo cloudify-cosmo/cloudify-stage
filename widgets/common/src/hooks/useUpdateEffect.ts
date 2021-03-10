@@ -18,4 +18,10 @@ function useUpdateEffect(onUpdate: () => void, dependencies: React.DependencyLis
     }, dependencies);
 }
 
+declare namespace Stage {
+    interface Hooks {
+        useUpdateEffect: typeof useUpdateEffect;
+    }
+}
+
 Stage.defineHook({ useUpdateEffect });
