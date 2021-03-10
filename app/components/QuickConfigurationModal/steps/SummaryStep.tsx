@@ -1,62 +1,12 @@
 import React, { memo, useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
+import { Divider, Form, Header, Icon, Label, List, Message, Progress } from 'semantic-ui-react';
 import { createToolbox } from '../../../utils/Toolbox';
 import useCurrentCallback from '../common/useCurrentCallback';
-import { usePluginInstallationTasks, useSecretsInstallationTasks } from '../installationUtils';
+import { PluginInstallationTask, usePluginInstallationTasks, useSecretsInstallationTasks } from '../installationUtils';
 import { useInternal, useManager } from '../managerHooks';
 import { JSONData, JSONSchema } from '../model';
-
-// const getPluginStatuses = (pluginsInBlueprint: any[], pluginsInCatalog: any[], pluginsInManager: any[], currentDistributionCode: string) => {
-//     const formattedPluginsInManager = pluginsInManager.reduce((result, pluginObject) => {
-//         result[pluginObject.package_name] = {
-//             version: pluginObject.package_version,
-//             distribution: pluginObject.distribution,
-//             visibility: pluginObject.visibility
-//         };
-//         return result;
-//     }, {});
-
-//     const formattedPluginsInCatalog = pluginsInCatalog.reduce((result, { name, ...plugin }) => {
-//         result[name] = plugin;
-//         return result;
-//     }, {});
-
-//     const defaultPluginState = {
-//         yamlUrl: '',
-//         yamlFile: null,
-//         wagonUrl: '',
-//         wagonFile: null,
-//         iconUrl: '',
-//         iconFile: null,
-//         visibility: Stage.Common.Consts.defaultVisibility,
-//         status: PluginStatus.Unknown
-//     };
-
-//     const stepData = {} as Record<string, any>;
-
-//     pluginsInBlueprint.forEach(plugin => {
-//         // const pluginState = { ...defaultPluginState, ...stepDataProp[plugin] };
-//         const pluginState = { ...defaultPluginState } as any;
-//         pluginState.status = getPluginStatus(plugin, formattedPluginsInManager, formattedPluginsInCatalog);
-
-//         if (pluginState.status === PluginStatus.NotInstalledAndInCatalog) {
-//             const matchingWagon = formattedPluginsInCatalog[plugin].wagons.find((wagon: any) => {
-//                 const wagonName = wagon.name.toLowerCase();
-//                 return wagonName === currentDistributionCode || wagonName === 'any';
-//             });
-
-//             pluginState.wagonUrl = matchingWagon.url;
-//             pluginState.yamlUrl = formattedPluginsInCatalog[plugin].link;
-//             pluginState.title = formattedPluginsInCatalog[plugin].title;
-//         } else if (pluginState.status === PluginStatus.InstalledAndParametersMatched) {
-//             pluginState.visibility = formattedPluginsInManager[plugin].visibility;
-//         }
-
-//         stepData[plugin] = { ...pluginState };
-//     });
-
-//     return stepData;
-// };
+import { URLString } from '../plugins/model';
 
 type Props = {
     installationMode?: boolean;
@@ -67,48 +17,68 @@ type Props = {
     onInstallationCanceled?: () => void;
 };
 
-// const addPluginsTasks = (plugins, tasks) => {
-//     const { toolbox } = this.props;
-//     const pluginActions = new Stage.Common.PluginActions(toolbox);
+type PluginTaskItemProps = {
+    icon?: URLString;
+    name: string;
+    description: string | JSX.Element;
+};
 
-//     _.forEach(_.keys(plugins), pluginName => {
-//         const plugin = plugins[pluginName];
+const PluginTaskItem = ({ icon, name, description }: PluginTaskItemProps) => {
+    return (
+        <List.Item>
+            <Label horizontal>
+                {icon && (
+                    <img
+                        style={{
+                            minWidth: '1.5em',
+                            maxHeight: '1.5em',
+                            verticalAlign: 'middle'
+                        }}
+                        src={icon}
+                        alt={name}
+                    />
+                )}
+                <span style={{ marginLeft: '1em' }}>{name}</span>
+            </Label>
+            {description}
+        </List.Item>
+    );
+};
 
-//         const createUploadResource = name => ({
-//             [name]: { url: plugin[`${name}Url`], file: plugin[`${name}File`] }
-//         });
+type PluginTaskItemsProps = {
+    tasks?: PluginInstallationTask[];
+    description: string | JSX.Element;
+};
 
-//         tasks.push(
-//             new Task(`Upload plugin ${pluginName}`, () =>
-//                 pluginActions.doUpload(plugin.visibility, plugin.title, {
-//                     ...createUploadResource('wagon'),
-//                     ...createUploadResource('yaml'),
-//                     ...createUploadResource('icon')
-//                 })
-//             )
-//         );
-//     });
+const PluginTaskItems = ({ tasks, description }: PluginTaskItemsProps) => (
+    <>
+        {tasks?.map(task => {
+            return <PluginTaskItem key={task.name} icon={task.icon} name={task.name} description={description} />;
+        })}
+    </>
+);
 
-//     return Promise.resolve();
-// }
+const installedPluginDescription = (
+    <>
+        <span>plugin is already installed</span>
+        <Icon
+            style={{ marginLeft: '0.5em', verticalAlign: 'middle', display: 'inline-block' }}
+            color="green"
+            name="check"
+        />
+    </>
+);
 
-// const addSecretsTasks = (secrets, tasks) => {
-//     const { toolbox } = this.props;
-//     const secretActions = new Stage.Common.SecretActions(toolbox);
-
-//     _.forEach(_.keys(secrets), secret => {
-//         const secretValue = secrets[secret].value;
-//         const secretVisibility = secrets[secret].visibility;
-
-//         tasks.push(
-//             new Task(`Create secret ${secret}`, () =>
-//                 secretActions.doCreate(secret, secretValue, secretVisibility, false)
-//             )
-//         );
-//     });
-
-//     return Promise.resolve();
-// };
+const rejectedPluginDescription = (
+    <>
+        <span>plugin is not found in catalog and manager</span>
+        <Icon
+            style={{ marginLeft: '0.5em', verticalAlign: 'middle', display: 'inline-block' }}
+            color="red"
+            name="remove"
+        />
+    </>
+);
 
 const SummaryStep = ({
     installationMode = false,
@@ -132,14 +102,14 @@ const SummaryStep = ({
             let componentMounted = true;
             let installationFinished = false;
 
-            const scheduledPlugins = pluginInstallationTasks.tasks.scheduledPlugins;
-            const updatedSecrets = secretInstallationTasks.tasks.updatedSecrets;
-            const createdSecrets = secretInstallationTasks.tasks.createdSecrets;
+            const { scheduledPlugins } = pluginInstallationTasks.tasks;
+            const { updatedSecrets } = secretInstallationTasks.tasks;
+            const { createdSecrets } = secretInstallationTasks.tasks;
 
             let stepIndex = 0;
             const stepsCount = scheduledPlugins.length + updatedSecrets.length + createdSecrets.length;
 
-            ;(async () => {
+            (async () => {
                 if (!componentMounted) {
                     return;
                 }
@@ -157,7 +127,7 @@ const SummaryStep = ({
                         if (!componentMounted) {
                             return;
                         }
-                        //TODO: use response
+                        // TODO: use response
                         console.log('response');
                     } catch (e) {
                         console.log('error');
@@ -178,7 +148,7 @@ const SummaryStep = ({
                         if (!componentMounted) {
                             return;
                         }
-                        //TODO: use response
+                        // TODO: use response
                         console.log('response');
                     } catch (e) {
                         console.log('error');
@@ -201,7 +171,7 @@ const SummaryStep = ({
                         if (!componentMounted) {
                             return;
                         }
-                        //TODO: use response
+                        // TODO: use response
                         console.log('response');
                     } catch (e) {
                         console.log('error');
@@ -223,46 +193,64 @@ const SummaryStep = ({
                     handleInstallationCanceled();
                 }
             };
-        } else {
-            setInstallationProgress(undefined);
-            return undefined;
         }
+        setInstallationProgress(undefined);
+        return undefined;
     }, [installationMode, pluginInstallationTasks, secretInstallationTasks]);
 
     return (
-        <div>
-            {installationProgress !== undefined && <div>{installationProgress} %</div>}
-            {pluginInstallationTasks.loading && <div>Plugins information loading ...</div>}
-            {pluginInstallationTasks.error && <div>Error: {pluginInstallationTasks.error}</div>}
-            {secretInstallationTasks.loading && <div>Secrets information loading ...</div>}
-            {secretInstallationTasks.error && <div>Manager error: {secretInstallationTasks.error}</div>}
+        <Form
+            style={{ minHeight: '150px' }}
+            loading={pluginInstallationTasks.loading || secretInstallationTasks.loading}
+        >
+            {pluginInstallationTasks.error && secretInstallationTasks.error && (
+                <Message color="red">
+                    {pluginInstallationTasks.error && <p>{pluginInstallationTasks.error}</p>}
+                    {secretInstallationTasks.error && <p>{secretInstallationTasks.error}</p>}
+                </Message>
+            )}
             {pluginInstallationTasks.tasks && secretInstallationTasks.tasks && (
                 <>
-                    <div>Tasks:</div>
-                    <div>
-                        {pluginInstallationTasks.tasks.installedPlugins.map(installedPlugin => {
-                            return <div key={installedPlugin.name}>{installedPlugin.name} plugin is already installed</div>;
-                        })}
-                        {pluginInstallationTasks.tasks.scheduledPlugins.map(scheduledPlugin => {
-                            return <div key={scheduledPlugin.name}>{scheduledPlugin.name} plugin will be installed</div>;
-                        })}
-                        {pluginInstallationTasks.tasks.rejectedPlugins.map(rejectedPlugin => {
+                    <Header as="h4">Task list</Header>
+                    <List ordered relaxed>
+                        <PluginTaskItems
+                            tasks={pluginInstallationTasks.tasks.installedPlugins}
+                            description={installedPluginDescription}
+                        />
+                        <PluginTaskItems
+                            tasks={pluginInstallationTasks.tasks.scheduledPlugins}
+                            description="plugin will be installed"
+                        />
+                        <PluginTaskItems
+                            tasks={pluginInstallationTasks.tasks.rejectedPlugins}
+                            description={rejectedPluginDescription}
+                        />
+                        {secretInstallationTasks.tasks.createdSecrets.map(createdSecret => {
                             return (
-                                <div key={rejectedPlugin.name}>
-                                    {rejectedPlugin.name} plugin is not found in catalog nad manager
-                                </div>
+                                <List.Item key={createdSecret.name}>
+                                    <Label horizontal>{createdSecret.name}</Label> secret will be created
+                                </List.Item>
                             );
                         })}
-                        {secretInstallationTasks.tasks.createdSecrets.map(createdSecret => {
-                            return <div key={createdSecret.name}>{createdSecret.name} secret will be created</div>;
-                        })}
                         {secretInstallationTasks.tasks.updatedSecrets.map(updatedSecret => {
-                            return <div key={updatedSecret.name}>{updatedSecret.name} secret will be updated</div>;
+                            return (
+                                <List.Item key={updatedSecret.name}>
+                                    <Label horizontal>{updatedSecret.name}</Label> secret will be updated
+                                </List.Item>
+                            );
                         })}
-                    </div>
+                    </List>
+                    {installationProgress !== undefined && (
+                        <>
+                            <Divider hidden />
+                            <Progress progress size="large" percent={installationProgress} indicating>
+                                {installationProgress < 100 ? 'Installation in progress...' : 'Installation done!'}
+                            </Progress>
+                        </>
+                    )}
                 </>
             )}
-        </div>
+        </Form>
     );
 };
 

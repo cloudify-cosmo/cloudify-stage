@@ -2,7 +2,7 @@ import React, { memo, useRef, useState, useEffect, useMemo } from 'react';
 import { Form, HeaderBar } from 'cloudify-ui-components';
 import i18n from 'i18next';
 
-import { Button, Icon, Ref as SemanticRef } from 'semantic-ui-react';
+import { Button, Icon, ModalHeader, Ref as SemanticRef } from 'semantic-ui-react';
 import { CancelButton, Modal } from '../basic';
 import { JSONData, JSONSchema, TechnologiesData } from './model';
 import { getFormData } from './common/formUtils';
@@ -132,9 +132,9 @@ const QuickConfigurationModal = ({ open = false, step = 0, schema, data, onClose
     return (
         <Modal open={open} onClose={handleModalClose}>
             <Modal.Header>
-                <HeaderBar>{getHeaderText(selectedSchemas, localStep)}</HeaderBar>
+                <ModalHeader>{getHeaderText(selectedSchemas, localStep)}</ModalHeader>
             </Modal.Header>
-            <Modal.Content>
+            <Modal.Content style={{ minHeight: '220px' }}>
                 <div>
                     {currentErrors.map(error => (
                         <div key={error}>{error}</div>
@@ -156,7 +156,9 @@ const QuickConfigurationModal = ({ open = false, step = 0, schema, data, onClose
                         onInstallationCanceled={handleInstallationCanceled}
                     />
                 )}
-                <Divider />
+                {/* <Divider hidden /> */}
+            </Modal.Content>
+            <Modal.Content>
                 <Form.Field>
                     <SemanticRef innerRef={createCheckboxRefExtractor(modalDisabledInputRef)}>
                         <Form.Checkbox
@@ -168,24 +170,35 @@ const QuickConfigurationModal = ({ open = false, step = 0, schema, data, onClose
             </Modal.Content>
             <Modal.Actions style={{ overflow: 'hidden' }}>
                 <Button.Group floated="left">
-                    <CancelButton
-                        disabled={installationProcessing}
+                    <Button
+                        icon="cancel"
                         content={i18n.t('help.aboutModal.close', 'Close')}
+                        floated="left"
+                        disabled={installationProcessing}
+                        labelPosition="left"
                         onClick={handleModalClose}
                     />
                 </Button.Group>
                 {localStep < selectedSchemas.length + 2 && (
                     <Button.Group floated="right">
                         {localStep > 0 && (
-                            <Button onClick={handleBackClick}>
-                                <Icon name="left arrow" />
-                                Back
-                            </Button>
+                            <Button
+                                icon="left arrow"
+                                content={i18n.t('help.aboutModal.back', 'Back')}
+                                labelPosition="left"
+                                onClick={handleBackClick}
+                            />
                         )}
-                        <Button onClick={handleNextClick}>
-                            {localStep < selectedSchemas.length + 1 ? 'Next' : 'Finish'}
-                            <Icon name="right arrow" />
-                        </Button>
+                        <Button
+                            icon="right arrow"
+                            content={
+                                localStep < selectedSchemas.length + 1
+                                    ? i18n.t('help.aboutModal.next', 'Next')
+                                    : i18n.t('help.aboutModal.finish', 'Finish')
+                            }
+                            labelPosition="right"
+                            onClick={handleNextClick}
+                        />
                     </Button.Group>
                 )}
             </Modal.Actions>

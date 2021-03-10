@@ -9,7 +9,8 @@ const style: CSSProperties = {
     height: '70px',
     display: 'flex',
     alignItems: 'center',
-    justifyContent: 'center'
+    justifyContent: 'center',
+    cursor: 'pointer'
 };
 
 const defaultStyle: CSSProperties = {
@@ -19,7 +20,7 @@ const defaultStyle: CSSProperties = {
 
 const selectedStyle: CSSProperties = {
     ...style,
-    background: '#f5f5f5'
+    background: '#e6e6e6'
 };
 
 type Props = {
