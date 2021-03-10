@@ -10,8 +10,8 @@ export default function LabelValueInput({ initialValue, onCancel, onChange, onSu
 
     return (
         <>
-            <ValidationErrorPopup open={invalidCharacterTyped} />
-            <DuplicationErrorPopup open={valueAlreadyUsed} />
+            {invalidCharacterTyped && <ValidationErrorPopup />}
+            {valueAlreadyUsed && <DuplicationErrorPopup />}
             <Form.Input
                 className="labelValueEditInput"
                 autoFocus

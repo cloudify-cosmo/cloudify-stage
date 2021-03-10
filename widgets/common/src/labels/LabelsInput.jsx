@@ -105,7 +105,7 @@ export default function LabelsInput({ hideInitialLabels, initialLabels, onChange
                             />
                         </Form.Field>
                         <Form.Field width={7}>
-                            <DuplicationErrorPopup open={duplicationErrorPopupOpen} />
+                            {duplicationErrorPopupOpen && <DuplicationErrorPopup />}
                             <ValueDropdown
                                 labelKey={newLabelKey}
                                 onChange={setNewLabelValue}

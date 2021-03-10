@@ -36,7 +36,7 @@ export default function CommonDropdown({ innerRef, baseFetchUrl, onChange, toolb
 
     return (
         <>
-            <ValidationErrorPopup open={invalidCharacterTyped} />
+            {invalidCharacterTyped && <ValidationErrorPopup />}
 
             <DynamicDropdown
                 innerRef={innerRef}
