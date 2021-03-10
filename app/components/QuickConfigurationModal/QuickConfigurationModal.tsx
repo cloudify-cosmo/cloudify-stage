@@ -1,16 +1,16 @@
 import React, { memo, useRef, useState, useEffect, useMemo } from 'react';
-import { Form, HeaderBar } from 'cloudify-ui-components';
+import { Form } from 'cloudify-ui-components';
 import i18n from 'i18next';
 
-import { Button, Icon, ModalHeader, Ref as SemanticRef } from 'semantic-ui-react';
-import { CancelButton, Modal } from '../basic';
+import { Button, ModalHeader, Ref as SemanticRef } from 'semantic-ui-react';
+import { Modal } from '../basic';
 import { JSONData, JSONSchema, TechnologiesData } from './model';
 import { getFormData } from './common/formUtils';
 import createCheckboxRefExtractor from './common/createCheckboxRefExtractor';
 import TechnologiesStep from './steps/TechnologiesStep/index';
 import SecretsStep from './steps/SecretsStep';
-import SummaryStep from './steps/SummaryStep';
-import { validateSecretFields, validateTechnologyFields } from './validationUtls';
+import SummaryStep from './steps/SummaryStep/SummaryStep';
+import { validateSecretFields, validateTechnologyFields } from './validationUtils';
 
 const getHeaderText = (schema: JSONSchema, step: number) => {
     if (step === 0) {
@@ -20,8 +20,7 @@ const getHeaderText = (schema: JSONSchema, step: number) => {
     if (itemSchema) {
         return `${itemSchema.label} Secrets`;
     }
-    // TODO: split it
-    return 'Summary & Status';
+    return 'Summary';
 };
 
 /**
@@ -93,15 +92,12 @@ const QuickConfigurationModal = ({ open = false, step = 0, schema, data, onClose
         return true;
     };
     const handleInstallationStarted = () => {
-        console.log('handleInstallationStarted: Installation started...');
         setInstallationProcessing(true);
     };
     const handleInstallationFinished = () => {
-        console.log('handleInstallationFinished: Installation finished...');
         setInstallationProcessing(false);
     };
     const handleInstallationCanceled = () => {
-        console.log('handleInstallationFinished: Installation canceled...');
         setInstallationProcessing(false);
     };
     const handleModalClose = () => {
@@ -128,7 +124,6 @@ const QuickConfigurationModal = ({ open = false, step = 0, schema, data, onClose
             setLocalStep(localStep + 1);
         }
     };
-    const { Divider } = Stage.Basic;
     return (
         <Modal open={open} onClose={handleModalClose}>
             <Modal.Header>
@@ -156,7 +151,6 @@ const QuickConfigurationModal = ({ open = false, step = 0, schema, data, onClose
                         onInstallationCanceled={handleInstallationCanceled}
                     />
                 )}
-                {/* <Divider hidden /> */}
             </Modal.Content>
             <Modal.Content>
                 <Form.Field>
@@ -205,19 +199,5 @@ const QuickConfigurationModal = ({ open = false, step = 0, schema, data, onClose
         </Modal>
     );
 };
-
-/*
-    <Header>{i18n.t('help.aboutModal.versionDetails', 'Version Details')}</Header>
-*/
-
-// QuickConfigurationModal.propTypes = {
-//     open: PropTypes.bool,
-//     onClose: PropTypes.func
-// };
-
-// QuickConfigurationModal.defaultProps = {
-//     open: false,
-//     onClose: undefined
-// };
 
 export default memo(QuickConfigurationModal);

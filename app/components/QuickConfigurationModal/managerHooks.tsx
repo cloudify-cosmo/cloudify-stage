@@ -1,5 +1,4 @@
 import { useSelector } from 'react-redux';
-import _ from 'lodash';
 
 import Internal from '../../utils/Internal';
 import Manager from '../../utils/Manager';
