@@ -1,6 +1,3 @@
-/**
- * Created by pposel on 19/09/2017.
- */
 import i18n from 'i18next';
 import _ from 'lodash';
 import React, { useEffect, useState } from 'react';
@@ -9,15 +6,19 @@ import { useDispatch, useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
 import v4 from 'uuid/v4';
 import { arrayMove } from 'react-sortable-hoc';
+import type { ThunkDispatch } from 'redux-thunk';
+import type { AnyAction } from 'redux';
+
 import { Alert, Breadcrumb, Button, Divider, EditableLabel, ErrorMessage, Menu, Segment, Sidebar } from '../basic';
 import EditModeBubble from '../EditModeBubble';
 import PageContent from '../PageContent';
 import { createPageId, drillDownWarning, savePage, setActive, setPageEditMode } from '../../actions/templateManagement';
 import StageUtils from '../../utils/stageUtils';
 import { useErrors } from '../../utils/hooks';
-import { forEachWidget, getWidgetDefinitionById, SimpleWidgetObj } from '../../actions/page';
+import { forEachWidget, getWidgetDefinitionById, LayoutSection, SimpleWidgetObj, TabContent } from '../../actions/page';
 import type { ReduxState } from '../../reducers';
-import type { Widget } from '../../utils/StageAPI';
+import type { Widget, WidgetDefinition } from '../../utils/StageAPI';
+import type { TemplatePageDefinition } from '../../reducers/templatesReducer';
 
 export interface PageManagementProps {
     pageId: string;
@@ -25,7 +26,7 @@ export interface PageManagementProps {
 }
 
 export default function PageManagement({ pageId, isEditMode = false }: PageManagementProps) {
-    const dispatch = useDispatch();
+    const dispatch = useDispatch<ThunkDispatch<ReduxState, never, AnyAction>>();
 
     useEffect(() => {
         dispatch(setActive(true));
@@ -45,12 +46,17 @@ export default function PageManagement({ pageId, isEditMode = false }: PageManag
     const pageDefs = useSelector((state: ReduxState) => state.templates.pagesDef);
     const widgetDefinitions = useSelector((state: ReduxState) => state.widgetDefinitions);
 
-    const [page, setPage] = useState();
+    /**
+     * NOTE: page may not match `TemplatePageDefinition` exactly in 2 ways:
+     * 1. It may have an `id` property
+     * 2. Its widgets' definitions can be resolved, and not be strings
+     */
+    const [page, setPage] = useState<TemplatePageDefinition>();
     const { errors, setMessageAsError, clearErrors, setErrors } = useErrors();
 
     useEffect(() => {
         const managedPage = _.cloneDeep(pageDefs[pageId]) || {};
-        managedPage.id = pageId;
+        (managedPage as any).id = pageId;
 
         const invalidWidgetNames: string[] = [];
 
@@ -67,7 +73,7 @@ export default function PageManagement({ pageId, isEditMode = false }: PageManag
                 return widget;
             }
             invalidWidgetNames.push(widget.name);
-            return null as any;
+            return null;
         }
 
         forEachWidget(managedPage, toWidgetInstance);
@@ -89,10 +95,10 @@ export default function PageManagement({ pageId, isEditMode = false }: PageManag
         return null;
     }
 
-    function findWidget(criteria) {
+    function findWidget(criteria: any) {
         return (
-            _(page.layout).flatMap('content').find(criteria) ||
-            _(page.layout).flatMap('content').flatMap('widgets').find(criteria)
+            _(page?.layout).flatMap('content').find(criteria) ||
+            _(page?.layout).flatMap('content').flatMap('widgets').find(criteria)
         );
     }
 
@@ -100,59 +106,71 @@ export default function PageManagement({ pageId, isEditMode = false }: PageManag
         setPage(_.clone(page));
     }
 
-    const onWidgetUpdated = (id, params) => {
+    const onWidgetUpdated = (id: string, params: Partial<SimpleWidgetObj>) => {
         const widget = findWidget({ id });
         Object.assign(widget, params);
         updatePage();
     };
     const onTemplateNavigate = () => dispatch(push('/template_management'));
-    const onWidgetAdded = (layoutSection, name, widgetDefinition, tabIndex) => {
-        const widgetInstance = {
+    const onWidgetAdded = (
+        layoutSection: number,
+        name: string,
+        widgetDefinition: WidgetDefinition,
+        tabIndex: number
+    ) => {
+        const widgetInstance: SimpleWidgetObj = {
             id: v4(),
             name,
             width: widgetDefinition.initialWidth,
             height: widgetDefinition.initialHeight,
             configuration: StageUtils.buildConfig(widgetDefinition),
+            // @ts-expect-error Lie about the type of definition due to backwards compatibility
+            // TODO(RD-1649): disambiguate the properties
             definition: widgetDefinition
         };
         if (!_.isNil(tabIndex)) {
-            page.layout[layoutSection].content[tabIndex].widgets.push(widgetInstance);
+            (page.layout[layoutSection].content[tabIndex] as TabContent).widgets.push(widgetInstance);
         } else {
-            page.layout[layoutSection].content.push(widgetInstance);
+            (page.layout[layoutSection].content as SimpleWidgetObj[]).push(widgetInstance);
         }
         updatePage();
     };
-    const onWidgetRemoved = id => {
+    const onWidgetRemoved = (id: string) => {
         forEachWidget(page, widget => (widget.id === id ? null : widget));
         updatePage();
     };
     const onPageSave = () => {
         dispatch(savePage(page)).catch(setMessageAsError);
     };
-    const onPageNameChange = pageName => {
+    const onPageNameChange = (pageName: string) => {
         page.name = pageName;
-        if (!page.oldId) {
-            page.oldId = page.id;
-            page.id = createPageId(pageName, pageDefs);
+        // NOTE: a single variable of type `any` to avoid typing `as any` multiple times
+        const overridablePage: any = page;
+        if (!overridablePage.oldId) {
+            overridablePage.oldId = overridablePage.id;
+            overridablePage.id = createPageId(pageName, pageDefs);
         }
         updatePage();
     };
     const onCloseDrillDownWarning = () => {
         dispatch(drillDownWarning(false));
     };
-    const onTabAdded = layoutSection => {
-        page.layout[layoutSection].content.push({ name: i18n.t('editMode.tabs.newTab'), widgets: [] });
+    const onTabAdded = (layoutSection: number) => {
+        (page.layout[layoutSection].content as TabContent[]).push({
+            name: i18n.t('editMode.tabs.newTab'),
+            widgets: []
+        });
         updatePage();
     };
-    const onTabRemoved = (layoutSection, tabIndex) => {
+    const onTabRemoved = (layoutSection: number, tabIndex: number) => {
         page.layout[layoutSection].content = _.without(
             page.layout[layoutSection].content,
-            _.nth(page.layout[layoutSection].content, tabIndex)
-        );
+            page.layout[layoutSection].content[tabIndex]
+        ) as TabContent[] | SimpleWidgetObj[];
         updatePage();
     };
-    const onTabUpdated = (layoutSection, tabIndex, name, isDefault) => {
-        const tabs = page.layout[layoutSection].content;
+    const onTabUpdated = (layoutSection: number, tabIndex: number, name: string, isDefault: number) => {
+        const tabs = page.layout[layoutSection].content as TabContent[];
         if (isDefault) {
             _.each(tabs, tab => {
                 tab.isDefault = false;
@@ -161,24 +179,27 @@ export default function PageManagement({ pageId, isEditMode = false }: PageManag
         Object.assign(tabs[tabIndex], { name, isDefault });
         updatePage();
     };
-    const onTabMoved = (layoutSection, oldTabIndex, newTabIndex) => {
-        page.layout[layoutSection].content = arrayMove(page.layout[layoutSection].content, oldTabIndex, newTabIndex);
+    const onTabMoved = (layoutSection: number, oldTabIndex: number, newTabIndex: number) => {
+        page.layout[layoutSection].content = arrayMove(
+            page.layout[layoutSection].content as TabContent[],
+            oldTabIndex,
+            newTabIndex
+        );
         updatePage();
     };
-    const onLayoutSectionRemoved = layoutSection => {
-        page.layout = _.without(page.layout, _.nth(page.layout, layoutSection));
+    const onLayoutSectionRemoved = (layoutSection: number) => {
+        page.layout = _.without(page.layout, page.layout[layoutSection]);
         updatePage();
     };
-    const onLayoutSectionAdded = (layoutSection, position) => {
+    const onLayoutSectionAdded = (layoutSection: LayoutSection, position: number) => {
         page.layout = [..._.slice(page.layout, 0, position), layoutSection, ..._.slice(page.layout, position)];
         updatePage();
     };
 
     const isWidgetMaximized = findWidget({ maximized: true });
 
-    $('body')
-        .css({ overflow: isWidgetMaximized ? 'hidden' : 'inherit' })
-        .scrollTop(0);
+    document.body.style.overflow = isWidgetMaximized ? 'hidden' : 'inherit';
+    window.scroll(0, 0);
 
     return (
         <div className="main">
@@ -204,7 +225,7 @@ export default function PageManagement({ pageId, isEditMode = false }: PageManag
                             <Breadcrumb.Section active>
                                 <EditableLabel
                                     value={page.name}
-                                    placeHolder={i18n.t(
+                                    placeholder={i18n.t(
                                         'templates.pageManagement.pageNamePlaceholder',
                                         'You must fill a page name'
                                     )}
@@ -270,7 +291,7 @@ export default function PageManagement({ pageId, isEditMode = false }: PageManag
 
             <Alert
                 open={showDrillDownWarn}
-                content={i18n.t(
+                content={i18n.t<string>(
                     'templates.pageManagement.drillDownWarning',
                     'Drill down action is not available in the template management'
                 )}
