@@ -76,7 +76,7 @@ const TechnologyButton = memo(({ name, logo, label, value, ...other }: Props) =>
                 />
             </SemanticRef>
             <img style={{ maxHeight: '80%' }} src={logo} alt={label} />
-            <span>{label}</span>
+            <span style={{ marginLeft: '10px' }}>{label}</span>
         </Form.Field>
     );
 });
