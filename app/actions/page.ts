@@ -17,6 +17,8 @@ import { NO_PAGES_FOR_TENANT_ERR } from '../utils/ErrorCodes';
 import type { Widget, WidgetDefinition } from '../utils/StageAPI';
 import type { ReduxState } from '../reducers';
 
+// TODO(RD-1645): rename type to Widget
+// TODO(RD-1649): rename the added field to `definitionId`
 export type SimpleWidgetObj = Omit<Widget, 'definition'> & { definition: string };
 
 export interface WidgetsSection {

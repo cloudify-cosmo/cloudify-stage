@@ -50,10 +50,12 @@ interface StageWidget<Configuration = Record<string, unknown>> {
     x: number;
     y: number;
     configuration: Configuration;
+    // TODO(RD-1649): consider renaming the field to resolvedDefinition
     definition: StageWidgetDefinition;
     drillDownPages: Record<string, string>;
     maximized: boolean;
 }
+// TODO(RD-1645): rename Widget to ResolvedWidget
 export type { StageWidget as Widget };
 
 /**
@@ -216,6 +218,7 @@ declare global {
         // eslint-disable-next-line no-shadow, @typescript-eslint/no-namespace
         namespace Types {
             type Toolbox = StageToolbox;
+            // TODO(RD-1645): rename Widget to ResolvedWidget
             type Widget<Configuration = Record<string, unknown>> = StageWidget<Configuration>;
             type WidgetDefinition<
                 Params = any,
