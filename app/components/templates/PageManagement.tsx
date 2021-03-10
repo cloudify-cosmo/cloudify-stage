@@ -46,11 +46,7 @@ export default function PageManagement({ pageId, isEditMode = false }: PageManag
     const pageDefs = useSelector((state: ReduxState) => state.templates.pagesDef);
     const widgetDefinitions = useSelector((state: ReduxState) => state.widgetDefinitions);
 
-    /**
-     * NOTE: page may not match `TemplatePageDefinition` exactly in 2 ways:
-     * 1. It may have an `id` property
-     * 2. Its widgets' definitions can be resolved, and not be strings
-     */
+    /** NOTE: page may not match `TemplatePageDefinition` exactly: it may have an `id` property */
     const [page, setPage] = useState<TemplatePageDefinition>();
     const { errors, setMessageAsError, clearErrors, setErrors } = useErrors();
 
