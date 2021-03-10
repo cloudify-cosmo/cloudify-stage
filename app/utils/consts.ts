@@ -1,7 +1,3 @@
-/**
- * Created by kinneretzin on 11/01/2017.
- */
-
 export default {
     CONTEXT_PATH: '/console',
 
@@ -67,4 +63,4 @@ export default {
         WIDGETS: 'widgets',
         TABS: 'tabs'
     }
-};
+} as const;

@@ -1,21 +1,36 @@
-/**
- * Created by kinneretzin on 30/08/2016.
- */
-
 import _ from 'lodash';
 import { arrayMove } from 'react-sortable-hoc';
 import i18n from 'i18next';
+import type { AnyAction, Reducer } from 'redux';
+
 import * as types from '../actions/types';
 import widgets from './widgetsReducer';
-import { forAllWidgets, forEachWidget } from '../actions/page';
+import {
+    addTab,
+    forAllWidgets,
+    forEachWidget,
+    isWidgetsSection,
+    LayoutSection,
+    moveTab,
+    PageDefinition,
+    removeTab,
+    TabContent,
+    updateTab
+} from '../actions/page';
 import Consts from '../utils/consts';
 
-const tabs = (state, action) => {
+type TabsAction =
+    | ReturnType<typeof addTab>
+    | ReturnType<typeof removeTab>
+    | ReturnType<typeof updateTab>
+    | ReturnType<typeof moveTab>;
+
+const tabs: Reducer<TabContent[], TabsAction> = (state = [], action) => {
     switch (action.type) {
         case types.ADD_TAB:
             return [...state, { name: i18n.t('editMode.tabs.newTab'), widgets: [] }];
         case types.REMOVE_TAB:
-            return _.without(state, _.nth(state, action.tabIndex));
+            return _.without(state, state[action.tabIndex]);
         case types.UPDATE_TAB: {
             let updatedTabs = [...state];
             if (action.isDefault) {
@@ -26,20 +41,28 @@ const tabs = (state, action) => {
         }
         case types.MOVE_TAB:
             return arrayMove(state, action.oldTabIndex, action.newTabIndex);
+
+        // NOTE: widgets actions are not in TypeScript
+        /* eslint-disable @typescript-eslint/ban-ts-comment */
+        // @ts-expect-error
         case types.ADD_WIDGET: {
             const updatedTabs = [...state];
+            // @ts-expect-error
             updatedTabs[action.tab] = {
+                // @ts-expect-error
                 ...updatedTabs[action.tab],
+                // @ts-expect-error
                 widgets: widgets(updatedTabs[action.tab].widgets, action)
             };
             return updatedTabs;
         }
+        /* eslint-enable @typescript-eslint/ban-ts-comment */
         default:
             return state;
     }
 };
 
-const page = (state = {}, action) => {
+const page = (state: PageDefinition, action: AnyAction) => {
     switch (action.type) {
         case types.MINIMIZE_WIDGETS:
         case types.REMOVE_WIDGET:
@@ -55,7 +78,7 @@ const page = (state = {}, action) => {
                     if (action.layoutSection === layoutSectionIdx) {
                         return {
                             ...layoutSection,
-                            content: (_.isNil(action.tab) ? widgets : tabs)(layoutSection.content, action)
+                            content: (_.isNil(action.tab) ? widgets : tabs)(layoutSection.content as any, action as any)
                         };
                     }
                     return layoutSection;
@@ -74,21 +97,6 @@ const page = (state = {}, action) => {
         }
         case types.REMOVE_LAYOUT_SECTION:
             return { ...state, layout: _.without(state.layout, _.nth(state.layout, action.layoutSection)) };
-        case types.ADD_PAGE:
-        case types.CREATE_DRILLDOWN_PAGE:
-            return {
-                id: action.newPageId,
-                name: action.page.name,
-                description: '',
-                layout: _.map(action.page.layout, layoutSection => ({
-                    ...layoutSection,
-                    content:
-                        layoutSection.type === Consts.LAYOUT_TYPE.WIDGETS
-                            ? []
-                            : _.map(layoutSection.content, tab => ({ ...tab, widgets: [] }))
-                })),
-                isDrillDown: action.type === types.CREATE_DRILLDOWN_PAGE
-            };
         case types.ADD_DRILLDOWN_PAGE: {
             const pageData = _.cloneDeep(state);
             forAllWidgets(pageData, layoutSectionWidgets => widgets(layoutSectionWidgets, action));
@@ -115,7 +123,7 @@ const page = (state = {}, action) => {
                 ...state,
                 layout: _.map(state.layout, (layoutSection, layoutSectionIdx) => {
                     if (layoutSection.type === Consts.LAYOUT_TYPE.TABS && layoutSectionIdx === action.layoutSection)
-                        return { ...layoutSection, content: tabs(layoutSection.content, action) };
+                        return { ...layoutSection, content: tabs(layoutSection.content, action as TabsAction) };
                     return layoutSection;
                 })
             };
@@ -124,11 +132,11 @@ const page = (state = {}, action) => {
     }
 };
 
-const pages = (state = [], action) => {
+const pages: Reducer<PageDefinition[]> = (state = [], action) => {
     switch (action.type) {
         case types.ADD_PAGE:
         case types.CREATE_DRILLDOWN_PAGE:
-            return [...state, page(undefined, action)];
+            return [...state, createPage(action as any)];
         case types.MINIMIZE_WIDGETS:
             return state.map(p => page(p, action));
         case types.REMOVE_PAGE: {
@@ -210,3 +218,22 @@ const pages = (state = [], action) => {
 };
 
 export default pages;
+
+function createPage(action: { type: string; page: PageDefinition; newPageId: string }): PageDefinition {
+    return {
+        id: action.newPageId,
+        name: action.page.name,
+        description: '',
+        layout: _.map(
+            action.page.layout,
+            layoutSection =>
+                ({
+                    ...layoutSection,
+                    content: isWidgetsSection(layoutSection)
+                        ? []
+                        : _.map(layoutSection.content, tab => ({ ...tab, widgets: [] }))
+                } as LayoutSection)
+        ),
+        isDrillDown: action.type === types.CREATE_DRILLDOWN_PAGE
+    };
+}
