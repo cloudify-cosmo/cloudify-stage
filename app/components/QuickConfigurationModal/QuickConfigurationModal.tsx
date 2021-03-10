@@ -2,7 +2,7 @@ import React, { memo, useRef, useState, useEffect, useMemo } from 'react';
 import { Form } from 'cloudify-ui-components';
 import i18n from 'i18next';
 
-import { Button, ModalHeader, Ref as SemanticRef } from 'semantic-ui-react';
+import { Button, Divider, Message, ModalHeader, Ref as SemanticRef } from 'semantic-ui-react';
 import { Modal } from '../basic';
 import { JSONData, JSONSchema, TechnologiesData } from './model';
 import { getFormData } from './common/formUtils';
@@ -130,11 +130,16 @@ const QuickConfigurationModal = ({ open = false, step = 0, schema, data, onClose
                 <ModalHeader>{getHeaderText(selectedSchemas, localStep)}</ModalHeader>
             </Modal.Header>
             <Modal.Content style={{ minHeight: '220px' }}>
-                <div>
-                    {currentErrors.map(error => (
-                        <div key={error}>{error}</div>
-                    ))}
-                </div>
+                {currentErrors && currentErrors.length > 0 && (
+                    <>
+                        <Message color="red">
+                            {currentErrors.map(error => (
+                                <div key={error}>{error}</div>
+                            ))}
+                        </Message>
+                        <Divider hidden />
+                    </>
+                )}
                 {localStep === 0 && (
                     <TechnologiesStep ref={technologiesFormRef} schema={schema} technologies={detectedTechnologies} />
                 )}
