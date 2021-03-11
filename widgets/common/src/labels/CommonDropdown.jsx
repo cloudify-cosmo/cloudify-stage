@@ -11,27 +11,17 @@ function useDebouncedSetValue(value, setValue, deps) {
     }, deps);
 }
 
-export default function CommonDropdown({ baseFetchUrl, onChange, toolbox, value, ...rest }) {
+export default function CommonDropdown({ innerRef, baseFetchUrl, onChange, toolbox, value, ...rest }) {
     const { useEffect, useState } = React;
     const {
         Common: { DynamicDropdown },
-        Hooks: { useLabelInput, useResettableState }
+        Hooks: { useLabelInput }
     } = Stage;
 
-    const [selectedValue, setSelectedValue, resetSelectedValue] = useResettableState('');
     const [fetchUrl, setFetchUrl] = useState(baseFetchUrl);
     const { inputValue, invalidCharacterTyped, submitChange, resetInput, unsetInvalidCharacterTyped } = useLabelInput(
-        newValue => {
-            resetSelectedValue();
-            onChange(newValue);
-        }
+        onChange
     );
-
-    function onValueChange(newValue) {
-        resetInput();
-        setSelectedValue(newValue);
-        onChange(newValue);
-    }
 
     useDebouncedSetValue(baseFetchUrl ? addSearchToUrl(baseFetchUrl, inputValue) : '', setFetchUrl, [
         baseFetchUrl,
@@ -40,26 +30,25 @@ export default function CommonDropdown({ baseFetchUrl, onChange, toolbox, value,
 
     useEffect(() => {
         if (_.isEmpty(value)) {
-            resetSelectedValue();
             resetInput();
         }
     }, [value]);
 
     return (
         <>
-            <ValidationErrorPopup open={invalidCharacterTyped} />
+            {invalidCharacterTyped && <ValidationErrorPopup />}
 
             <DynamicDropdown
+                innerRef={innerRef}
                 clearable={false}
-                fetchAll
                 fetchUrl={fetchUrl}
                 itemsFormatter={items => _.map(items, item => ({ id: item }))}
                 onBlur={unsetInvalidCharacterTyped}
-                onChange={onValueChange}
+                onChange={newValue => submitChange(null, { value: newValue })}
                 onSearchChange={submitChange}
                 searchQuery={inputValue}
+                selectOnNavigation={false}
                 toolbox={toolbox}
-                value={selectedValue}
                 /* eslint-disable-next-line react/jsx-props-no-spreading */
                 {...rest}
             />
@@ -69,11 +58,13 @@ export default function CommonDropdown({ baseFetchUrl, onChange, toolbox, value,
 
 CommonDropdown.propTypes = {
     baseFetchUrl: PropTypes.string.isRequired,
+    innerRef: PropTypes.shape({ current: PropTypes.instanceOf(HTMLElement) }),
     onChange: PropTypes.func.isRequired,
     toolbox: Stage.PropTypes.Toolbox.isRequired,
     value: PropTypes.string
 };
 
 CommonDropdown.defaultProps = {
+    innerRef: null,
     value: null
 };

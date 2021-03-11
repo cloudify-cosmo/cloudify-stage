@@ -1,4 +1,5 @@
 import AddButton from './AddButton';
+import DuplicationErrorPopup from './DuplicationErrorPopup';
 import LabelsList from './LabelsList';
 import KeyDropdown from './KeyDropdown';
 import ValueDropdown from './ValueDropdown';
@@ -11,19 +12,30 @@ const iconStyle = {
 };
 
 export default function LabelsInput({ hideInitialLabels, initialLabels, onChange, toolbox }) {
-    const { useEffect } = React;
+    const { useRef, useEffect } = React;
     const {
         Basic: { Divider, Form, Icon, Segment },
         Common: { RevertToDefaultIcon },
-        Hooks: { useResettableState, useToggle },
+        Hooks: { useBoolean, useResettableState, useToggle },
         Utils: { combineClassNames },
         i18n
     } = Stage;
 
+    const [addingLabel, setAddingLabel, unsetAddingLabel] = useBoolean();
     const [labels, setLabels, resetLabels] = useResettableState(hideInitialLabels ? [] : initialLabels);
     const [open, toggleOpen] = useToggle();
     const [newLabelKey, setNewLabelKey, resetNewLabelKey] = useResettableState('');
     const [newLabelValue, setNewLabelValue, resetNewLabelValue] = useResettableState('');
+    const keyDropdownRef = useRef();
+
+    const newLabelIsProvided = !!newLabelKey && !!newLabelValue;
+    const newLabelIsAlreadyPresent = (() => {
+        const newLabel = { key: newLabelKey, value: newLabelValue };
+        const allLabels = [...labels, ...(hideInitialLabels ? initialLabels : [])];
+        return !!_.find(allLabels, newLabel);
+    })();
+    const addLabelNotAllowed = !newLabelIsProvided || newLabelIsAlreadyPresent || addingLabel;
+    const duplicationErrorPopupOpen = newLabelIsProvided && newLabelIsAlreadyPresent;
 
     useEffect(() => {
         onChange(labels);
@@ -32,16 +44,6 @@ export default function LabelsInput({ hideInitialLabels, initialLabels, onChange
     useEffect(() => {
         if (!hideInitialLabels) setLabels(initialLabels);
     }, [initialLabels]);
-
-    function isAddAllowed() {
-        const label = { key: newLabelKey, value: newLabelValue };
-        return (
-            newLabelKey &&
-            newLabelValue &&
-            !_.find(labels, label) &&
-            (!hideInitialLabels || !_.find(initialLabels, label))
-        );
-    }
 
     function onAddLabel() {
         function isLabelInSystem() {
@@ -56,12 +58,18 @@ export default function LabelsInput({ hideInitialLabels, initialLabels, onChange
                 });
         }
 
-        isLabelInSystem().then(isInSystem => {
+        setAddingLabel();
+        return isLabelInSystem().then(isInSystem => {
             const newLabels = [...labels, { key: newLabelKey, value: newLabelValue, isInSystem }];
             setLabels(newLabels);
             resetNewLabelKey();
             resetNewLabelValue();
+            unsetAddingLabel();
         });
+    }
+
+    function onEnterPressOnAddButton() {
+        onAddLabel().then(() => keyDropdownRef.current.click());
     }
 
     return (
@@ -89,9 +97,15 @@ export default function LabelsInput({ hideInitialLabels, initialLabels, onChange
                     <Divider hidden={_.isEmpty(labels)} />
                     <Form.Group>
                         <Form.Field width={7}>
-                            <KeyDropdown onChange={setNewLabelKey} toolbox={toolbox} value={newLabelKey} />
+                            <KeyDropdown
+                                innerRef={keyDropdownRef}
+                                onChange={setNewLabelKey}
+                                toolbox={toolbox}
+                                value={newLabelKey}
+                            />
                         </Form.Field>
                         <Form.Field width={7}>
+                            {duplicationErrorPopupOpen && <DuplicationErrorPopup />}
                             <ValueDropdown
                                 labelKey={newLabelKey}
                                 onChange={setNewLabelValue}
@@ -100,7 +114,11 @@ export default function LabelsInput({ hideInitialLabels, initialLabels, onChange
                             />
                         </Form.Field>
                         <Form.Field width={2}>
-                            <AddButton onClick={onAddLabel} disabled={!isAddAllowed()} />
+                            <AddButton
+                                onClick={onAddLabel}
+                                onEnterPress={onEnterPressOnAddButton}
+                                disabled={addLabelNotAllowed}
+                            />
                         </Form.Field>
                     </Form.Group>
                 </div>
