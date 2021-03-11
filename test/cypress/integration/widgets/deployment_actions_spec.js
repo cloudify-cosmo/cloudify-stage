@@ -75,7 +75,7 @@ describe('Deployment Action Buttons widget', () => {
             cy.get('.popup').should('not.exist');
         }
         function toggleLabelsInput() {
-            cy.get('[data-cy="labels-input-switch"]').click();
+            cy.getByTestId('labels-input-switch').click();
         }
 
         before(() => {

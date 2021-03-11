@@ -129,7 +129,7 @@ export default function LabelsInput({ hideInitialLabels, initialLabels, onChange
                     />
                 )}
                 <Icon
-                    data-cy="labels-input-switch"
+                    data-testid="labels-input-switch"
                     name="dropdown"
                     link
                     onClick={toggleOpen}
