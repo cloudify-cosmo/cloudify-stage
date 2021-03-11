@@ -1,11 +1,16 @@
-/**
- * Created by kinneretzin on 30/08/2016.
- */
-
 import _ from 'lodash';
+import type { Reducer } from 'redux';
+import type { PageDefinition } from '../actions/page';
 import * as types from '../actions/types';
 
-const templates = (state = {}, action) => {
+export type TemplatePageDefinition = Pick<PageDefinition, 'name' | 'layout'>;
+
+export interface TemplatesState {
+    templatesDef: Record<string, any>;
+    pagesDef: Record<string, TemplatePageDefinition>;
+}
+
+const templates: Reducer<TemplatesState> = (state = { templatesDef: {}, pagesDef: {} }, action) => {
     switch (action.type) {
         case types.STORE_TEMPLATES:
             return { ...action.templates };

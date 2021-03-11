@@ -3,22 +3,24 @@
  */
 
 import log from 'loglevel';
+import type { ManagerData } from '../reducers/managerReducer';
+import type { TemplatesState } from '../reducers/templatesReducer';
 import Internal from './Internal';
 import LoaderUtils from './LoaderUtils';
 
 export default class TemplateLoader {
-    static load(manager) {
-        log.log('Load templates');
+    static load(manager: ManagerData) {
+        log.debug('Load templates');
 
-        const templatesDef = {};
-        const pagesDef = {};
+        const templatesDef: TemplatesState['templatesDef'] = {};
+        const pagesDef: TemplatesState['pagesDef'] = {};
         const internal = new Internal(manager);
         return Promise.all([internal.doGet('/templates'), internal.doGet('/templates/pages')])
             .then(data => {
-                const templateList = data[0];
-                const pageList = data[1];
+                const templateList: any[] = data[0];
+                const pageList: any[] = data[1];
 
-                const promises = [];
+                const promises: Promise<void>[] = [];
                 templateList.forEach(item => {
                     promises.push(
                         LoaderUtils.fetchResource(`templates/${item.id}.json`, item.custom)
@@ -26,7 +28,7 @@ export default class TemplateLoader {
                                 templatesDef[item.id] = templateData;
                             })
                             .catch(e => {
-                                throw new Error(`Error loading template ${item.id}`, e);
+                                throw new Error(`Error loading template ${item.id}: ${e}`);
                             })
                     );
                 });
@@ -38,16 +40,18 @@ export default class TemplateLoader {
                                 pagesDef[item.id] = pageData;
                             })
                             .catch(e => {
-                                throw new Error(`Error loading page template ${item.id}`, e);
+                                throw new Error(`Error loading page template ${item.id}: ${e}`);
                             })
                     );
                 });
 
                 return Promise.all(promises);
             })
-            .then(() => {
-                return { templatesDef, pagesDef };
-            })
+            .then(
+                (): TemplatesState => {
+                    return { templatesDef, pagesDef };
+                }
+            )
             .catch(e => {
                 log.error(e);
             });
