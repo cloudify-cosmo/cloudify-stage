@@ -410,7 +410,7 @@
                 "newValue": "New value",
                 "valuePlaceholder": "Select or type in a value",
                 "validationError": "Only letters, digits and the characters \"-\", \".\" and \"_\" are allowed and it must begin with a letter.",
-                "invalidKeyError": "All labels with a `csys-` prefix are reserved for internal use. Allowed `csys-` prefixed labels are: {{ reservedKeys }}.",
+                "invalidKeyError": "All labels with a `{{ keyPrefix }}` prefix are reserved for internal use. Allowed `{{ keyPrefix }}` prefixed labels are: {{ reservedKeys }}.",
                 "inputName": "Labels list",
                 "inputHelp": "A list of labels - key-value pairs - that can be assigned with a deployment",
                 "fetchingLabelsError": "Cannot fetch labels for deployment '{{deploymentId}}'",

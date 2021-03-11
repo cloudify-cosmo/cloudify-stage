@@ -10,6 +10,7 @@ const iconStyle = {
     top: '.7em',
     zIndex: 1
 };
+const internalKeyPrefix = 'csys-';
 
 function useReservedKeys(toolbox) {
     const { useState, useEffect } = React;
@@ -57,7 +58,7 @@ export default function LabelsInput({ hideInitialLabels, initialLabels, onChange
         const allLabels = [...labels, ...(hideInitialLabels ? initialLabels : [])];
         return !!_.find(allLabels, newLabel);
     })();
-    const newLabelKeyIsNotPermitted = newLabelKey.startsWith('csys-') && !reservedKeys.includes(newLabelKey);
+    const newLabelKeyIsNotPermitted = newLabelKey.startsWith(internalKeyPrefix) && !reservedKeys.includes(newLabelKey);
     const addLabelNotAllowed =
         !newLabelIsProvided || newLabelIsAlreadyPresent || addingLabel || newLabelKeyIsNotPermitted;
     const duplicationErrorPopupOpen = newLabelIsProvided && newLabelIsAlreadyPresent;
@@ -138,7 +139,9 @@ export default function LabelsInput({ hideInitialLabels, initialLabels, onChange
                     <Divider hidden={_.isEmpty(labels)} />
                     <Form.Group>
                         <Form.Field width={7}>
-                            {newLabelKeyIsNotPermitted && <InvalidKeyErrorPopup reservedKeys={reservedKeys} />}
+                            {newLabelKeyIsNotPermitted && (
+                                <InvalidKeyErrorPopup keyPrefix={internalKeyPrefix} reservedKeys={reservedKeys} />
+                            )}
                             <KeyDropdown
                                 innerRef={keyDropdownRef}
                                 onChange={setNewLabelKey}
