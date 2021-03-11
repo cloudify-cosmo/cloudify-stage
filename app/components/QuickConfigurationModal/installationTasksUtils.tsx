@@ -1,23 +1,48 @@
 import { useMemo } from 'react';
-import { JSONData, JSONSchema, SecretData } from './model';
+import { JSONData, JSONSchema, RegExpString, SecretData } from './model';
 import { AvailablePluginData, InstalledPluginData, URLString } from './plugins/model';
 import useFetchPlugins, { PluginsHook } from './plugins/useFetchPlugins';
 import useFetchSecrets, { SecretsHook } from './secrets/useFetchSecrets';
 import useCurrentDistribution from './useCurrentDistribution';
 
-export const mapAvailablePlugins = (availablePlugins: AvailablePluginData[]) => {
-    return availablePlugins.reduce((result, { name, ...other }) => {
-        result[name] = other;
-        return result;
-    }, {} as Record<string, Omit<AvailablePluginData, 'name'>>);
+/**
+ * Validates plugin version. If version pattern is not defined, any version is accepted.
+ * @param versionPattern regular expression pattern that describes accepted version string
+ * @param pluginVersion checked plugin version
+ * @returns true means the version is accepted
+ */
+const validatePluginVersion = (versionPattern?: RegExpString, pluginVersion?: string | null) => {
+    if (versionPattern == null) {
+        return true;
+    }
+    if (pluginVersion == null) {
+        return false;
+    }
+    try {
+        // eslint-disable-next-line security/detect-non-literal-regexp
+        const versionExpression = new RegExp(versionPattern);
+        return versionExpression.test(pluginVersion);
+    } catch (e) {
+        // eslint-disable-next-line no-console
+        console.error(`Incorrect version expression: ${versionPattern}`, e);
+        return false;
+    }
 };
 
-export const mapInstalledPlugins = (catalogPlugins: InstalledPluginData[]) => {
-    return catalogPlugins.reduce((result, { package_name, ...other }) => {
-        result[package_name] = other;
-        return result;
-    }, {} as Record<string, Omit<InstalledPluginData, 'package_name'>>);
-};
+// export const mapAvailablePlugins = (availablePlugins: AvailablePluginData[]) => {
+//     return availablePlugins.reduce((result, { name, ...other }) => {
+//         result[name] = other;
+//         return result;
+//     }, {} as Record<string, Omit<AvailablePluginData, 'name'>>);
+// };
+
+// export const mapInstalledPlugins = (catalogPlugins: InstalledPluginData[]) => {
+//     // eslint-disable-next-line camelcase
+//     return catalogPlugins.reduce((result, { package_name, ...other }) => {
+//         result[package_name] = other;
+//         return result;
+//     }, {} as Record<string, Omit<InstalledPluginData, 'package_name'>>);
+// };
 
 export const mapDefinedSecrets = (definedSecrets: SecretData[]) => {
     return definedSecrets.reduce((result, { key, ...other }) => {
@@ -39,6 +64,7 @@ export const filterSchemaData = (selectedPlugins: JSONSchema, typedSecrets: JSON
 export type PluginInstallationTask = {
     icon?: URLString;
     name: string;
+    title: string;
     version: string;
     distribution?: string;
     yamlUrl?: URLString;
@@ -50,49 +76,70 @@ export const createPluginInstallationTasks = (
     currentPlugins: PluginsHook,
     selectedPlugins: JSONSchema
 ) => {
-    const usedPlugins: Record<string, boolean> = {};
+    const acceptedPlugins: Record<string, boolean> = {};
     const rejectedPlugins: PluginInstallationTask[] = [];
     const installedPlugins: PluginInstallationTask[] = [];
     const scheduledPlugins: PluginInstallationTask[] = [];
     if (currentPlugins && currentPlugins.plugins) {
-        const catalogPlugins = mapAvailablePlugins(currentPlugins.plugins?.available ?? []);
-        const managerPlugins = mapInstalledPlugins(currentPlugins.plugins?.installed ?? []);
+        const catalogPlugins = currentPlugins.plugins?.available ?? [];
+        const managerPlugins = currentPlugins.plugins?.installed ?? [];
         selectedPlugins.forEach(selectedPlugin => {
-            selectedPlugin.plugins.forEach(pluginName => {
-                if (pluginName in usedPlugins) {
+            selectedPlugin.plugins.forEach(pluginDetails => {
+                const expectedPluginName = pluginDetails.name;
+                const expectedPluginVersion = pluginDetails.version;
+                const expectedPluginKey = `${expectedPluginName} ${expectedPluginVersion}`;
+                if (expectedPluginKey in acceptedPlugins) {
                     return;
                 }
-                usedPlugins[pluginName] = true;
-                const availablePlugin = catalogPlugins[pluginName];
-                const installedPlugin = managerPlugins[pluginName];
-                if (installedPlugin) {
-                    installedPlugins.push({
-                        icon: availablePlugin?.icon,
-                        name: pluginName,
-                        version: installedPlugin.package_version
-                    });
-                } else {
-                    if (availablePlugin) {
-                        const matchedWagon = availablePlugin.wagons.find(wagon => {
+                let scheduledPluginCandidate: PluginInstallationTask | null = null;
+                for (let i = 0; i < catalogPlugins.length; i += 1) {
+                    const catalogPlugin = catalogPlugins[i];
+                    if (
+                        catalogPlugin.name === expectedPluginName &&
+                        validatePluginVersion(expectedPluginVersion, catalogPlugin.version)
+                    ) {
+                        const matchedWagon = catalogPlugin.wagons.find(wagon => {
                             const wagonName = wagon.name.toLowerCase();
                             return wagonName === currentDistribution || wagonName === 'any';
                         });
                         if (matchedWagon) {
-                            scheduledPlugins.push({
-                                icon: availablePlugin.icon,
-                                name: pluginName,
-                                version: availablePlugin.version,
+                            scheduledPluginCandidate = {
+                                icon: catalogPlugin.icon,
+                                name: expectedPluginName,
+                                title: catalogPlugin.title ?? expectedPluginName,
+                                version: catalogPlugin.version,
                                 distribution: matchedWagon.name,
-                                yamlUrl: availablePlugin.link,
+                                yamlUrl: catalogPlugin.link,
                                 wagonUrl: matchedWagon.url
-                            });
-                            return;
+                            };
+                            break;
                         }
                     }
-                    installedPlugins.push({
-                        icon: availablePlugin?.icon,
-                        name: pluginName,
-                        version: availablePlugin.version
+                }
+                for (let i = 0; i < managerPlugins.length; i += 1) {
+                    const managerPlugin = managerPlugins[i];
+                    if (
+                        managerPlugin.package_name === expectedPluginName &&
+                        validatePluginVersion(expectedPluginVersion, managerPlugin.package_version)
+                    ) {
+                        acceptedPlugins[expectedPluginKey] = true;
+                        installedPlugins.push({
+                            icon: scheduledPluginCandidate?.icon,
+                            name: expectedPluginName,
+                            title: scheduledPluginCandidate?.title ?? expectedPluginName,
+                            version: managerPlugin.package_version
+                        });
+                        return;
+                    }
+                }
+                if (scheduledPluginCandidate) {
+                    acceptedPlugins[expectedPluginKey] = true;
+                    scheduledPlugins.push(scheduledPluginCandidate);
+                } else {
+                    rejectedPlugins.push({
+                        name: expectedPluginName,
+                        title: expectedPluginName,
+                        version: 'unknown'
                     });
                 }
             });

@@ -13,6 +13,13 @@ export type PageMetadataData = {
 
 // used locally
 
+export type RegExpString = string;
+
+export type JSONSchemaPlugin = {
+    name: string;
+    version?: RegExpString;
+};
+
 export type JSONSchemaSecret = {
     label: string;
     name: string;
@@ -23,7 +30,7 @@ export type JSONSchemaItem = {
     name: string;
     logo: string;
     label: string;
-    plugins: string[];
+    plugins: JSONSchemaPlugin[];
     secrets: JSONSchemaSecret[];
 };
 

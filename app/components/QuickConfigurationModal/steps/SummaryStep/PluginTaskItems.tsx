@@ -33,7 +33,8 @@ type Props = {
 const PluginTaskItems = ({ tasks, description }: Props) => (
     <>
         {tasks?.map(task => {
-            return <PluginTaskItem key={task.name} icon={task.icon} name={task.name} description={description} />;
+            const taskName = task.version ? `${task.name} ${task.version}` : task.name;
+            return <PluginTaskItem key={taskName} icon={task.icon} name={taskName} description={description} />;
         })}
     </>
 );
