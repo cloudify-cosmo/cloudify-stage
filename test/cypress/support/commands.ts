@@ -273,7 +273,8 @@ const commands = {
                 query: { su: su instanceof RegExp ? su : RegExp(`.*${_.escapeRegExp(su)}.*`) }
             },
             routeHandler
-        )
+        ),
+    getByTestId: (id: string) => cy.get(`[data-testid=${id}]`)
 };
 
 addCommands(commands);

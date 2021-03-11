@@ -107,11 +107,22 @@ export default class DeploymentActions {
         return this.toolbox.getManager().doPatch(`/deployments/${deploymentId}`, null, { labels });
     }
 
+    doGetLabel(key, value) {
+        return this.toolbox.getManager().doGet(`/labels/deployments/${key}?_search=${value}`);
+    }
+
     doGetLabels(deploymentId) {
         return this.toolbox
             .getManager()
             .doGet(`/deployments/${deploymentId}?_include=labels`)
             .then(({ labels }) => labels);
+    }
+
+    doGetReservedLabelKeys() {
+        return this.toolbox
+            .getManager()
+            .doGet('/labels/deployments?_reserved=true')
+            .then(({ items }) => items);
     }
 
     async waitUntilCreated(deploymentId) {
