@@ -20,7 +20,7 @@ const getHeaderText = (schema: JSONSchema, step: number) => {
     if (itemSchema) {
         return `${itemSchema.label} Secrets`;
     }
-    return 'Summary';
+    return 'Summary & Status';
 };
 
 /**

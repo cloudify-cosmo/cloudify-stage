@@ -1,9 +1,11 @@
-const schema = [
+import { JSONSchema } from './model';
+
+const schema: JSONSchema = [
     {
         name: 'aws',
         logo: 'https://cloudify.co/wp-content/uploads/2019/08/aws-1.png',
         label: 'AWS',
-        plugins: ['cloudify-aws-plugin'],
+        plugins: [{ name: 'cloudify-aws-plugin' }],
         secrets: [
             {
                 name: 'aws_access_key_id',
@@ -21,7 +23,7 @@ const schema = [
         name: 'gpc',
         logo: 'https://cloudify.co/wp-content/uploads/2019/08/gcplogo.png',
         label: 'GCP',
-        plugins: ['cloudify-gcp-plugin'],
+        plugins: [{ name: 'cloudify-gcp-plugin' }],
         secrets: [
             // "TODO": from https://alexmolev646772.invisionapp.com/console/Tech-Getting-Started-cklf31m3w03fc013o0agh3mf1/cklf31n0t01j90139cctpeypa/play
             {
@@ -65,7 +67,7 @@ const schema = [
         name: 'openstack_v2',
         logo: 'https://cloudify.co/wp-content/uploads/2019/08/oslogo.png',
         label: 'OpenStackV2',
-        plugins: ['cloudify-openstack-plugin'],
+        plugins: [{ name: 'cloudify-openstack-plugin', version: '^2\\.' }],
         secrets: [
             {
                 name: 'openstack_username',
@@ -98,7 +100,7 @@ const schema = [
         name: 'openstack_v3',
         logo: 'https://cloudify.co/wp-content/uploads/2019/08/oslogo.png',
         label: 'OpenStackV3',
-        plugins: ['cloudify-openstack-plugin'],
+        plugins: [{ name: 'cloudify-openstack-plugin', version: '^3\\.' }],
         secrets: [
             {
                 name: 'openstack_username',
@@ -131,7 +133,7 @@ const schema = [
         name: 'azure',
         logo: 'https://cloudify.co/wp-content/uploads/2019/08/azurelogo.png',
         label: 'Azure',
-        plugins: ['cloudify-azure-plugin'],
+        plugins: [{ name: 'cloudify-azure-plugin' }],
         secrets: [
             {
                 name: 'azure_subscription_id',
@@ -159,7 +161,7 @@ const schema = [
         name: 'vcloud',
         logo: 'https://cloudify.co/wp-content/uploads/2019/08/vsphere.png',
         label: 'VCloud',
-        plugins: ['cloudify-vcloud-plugin'],
+        plugins: [{ name: 'cloudify-vcloud-plugin' }],
         secrets: [
             {
                 name: 'vcloud_user',
@@ -197,7 +199,7 @@ const schema = [
         name: 'vsphere',
         logo: 'https://cloudify.co/wp-content/uploads/2019/08/vsphere.png',
         label: 'VSphere',
-        plugins: ['cloudify-vsphere-plugin'],
+        plugins: [{ name: 'cloudify-vsphere-plugin' }],
         secrets: [
             {
                 name: 'vsphere_username',
@@ -235,7 +237,7 @@ const schema = [
         name: 'terraform_on_aws',
         logo: 'https://cloudify.co/wp-content/uploads/2020/07/terraform-icon.png',
         label: 'Terraform on AWS',
-        plugins: ['cloudify-terraform-plugin'],
+        plugins: [{ name: 'cloudify-terraform-plugin' }, { name: 'cloudify-aws-plugin' }],
         secrets: [
             {
                 name: 'aws_access_key_id',
@@ -253,7 +255,7 @@ const schema = [
         name: 'ansible_on_aws',
         logo: 'https://cloudify.co/wp-content/uploads/2020/07/ansible-icon.png',
         label: 'Ansible on AWS',
-        plugins: ['cloudify-ansible-plugin'],
+        plugins: [{ name: 'cloudify-ansible-plugin' }, { name: 'cloudify-aws-plugin' }],
         secrets: [
             {
                 name: 'aws_access_key_id',
