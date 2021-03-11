@@ -1,15 +1,23 @@
 import { sortLabels } from './common';
 
+const newLabelColor = 'blue';
+const labelLinesVisibleWithoutScroll = 6;
+const maxListHeight = `${labelLinesVisibleWithoutScroll * 2 + 0.2}em`;
+
 export default function LabelsList({ labels, onChange }) {
     const { Label, Icon } = Stage.Basic;
-    const newLabelColor = 'blue';
     const sortedLabels = sortLabels(labels);
 
     return (
         <div
             className="ui multiple dropdown"
-            /* maxHeight set to 8.2em guarantees 4 lines of labels to be visible without scroller */
-            style={{ paddingRight: '4.1em', minHeight: '2em', maxHeight: '8.2em', overflow: 'auto', maxWidth: '100%' }}
+            style={{
+                paddingRight: '4.1em',
+                minHeight: '2em',
+                maxHeight: maxListHeight,
+                overflow: 'auto',
+                maxWidth: '100%'
+            }}
         >
             {sortedLabels.map(({ key, value, isInSystem = true }) => {
                 return (
