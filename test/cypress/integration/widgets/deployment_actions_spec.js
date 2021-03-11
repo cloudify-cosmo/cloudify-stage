@@ -66,6 +66,17 @@ describe('Deployment Action Buttons widget', () => {
             typeLabelValue(value);
             cy.get('button[aria-label=Add]').click();
         }
+        function checkIfPopupIsDisplayed(key, popupContent) {
+            typeLabelKey(key);
+            cy.contains('.popup', popupContent).should('be.visible');
+        }
+        function checkIfPopupIsNotDisplayed(key) {
+            typeLabelKey(key);
+            cy.get('.popup').should('not.exist');
+        }
+        function toggleLabelsInput() {
+            cy.getByTestId('labels-input-switch').click();
+        }
 
         before(() => {
             cy.setLabels(deploymentName, [{ existing_key: 'existing_value' }]);
@@ -76,13 +87,14 @@ describe('Deployment Action Buttons widget', () => {
             cy.get('.modal').within(() => {
                 cy.wait('@fetchLabels');
                 cy.get('form.loading').should('not.exist');
-                cy.get('.selection').click();
+                toggleLabelsInput();
             });
         });
 
         beforeEach(() => {
-            // NOTE: Clicking at the header to close opened dropdowns / popups
-            cy.get('.modal .header').click();
+            // NOTE: Close and open labels input to reset popups and dropdowns.
+            toggleLabelsInput();
+            toggleLabelsInput();
         });
 
         it('adds new label by typing', () => {
@@ -118,25 +130,40 @@ describe('Deployment Action Buttons widget', () => {
                 typeLabelKey('existing_key');
                 typeLabelValue('existing_value');
 
-                cy.get('button.disabled').should('have.attr', 'disabled');
+                cy.get('button[aria-label=Add]').should('have.attr', 'disabled');
             });
             cy.contains('.popup', 'Cannot add the same label twice').should('be.visible');
         });
 
-        it('prevents adding invalid label', () => {
-            function validateIfNotPermitted(string) {
-                typeLabelKey(string);
-                cy.contains('.popup', 'Only letters, digits').should('be.visible');
+        it('prevents adding label with invalid characters', () => {
+            function checkIfInvalidCharactersPopupIsDisplayed(string) {
+                checkIfPopupIsDisplayed(string, 'Only letters, digits');
             }
-            function validateIfPermitted(string) {
-                typeLabelKey(string);
-                cy.get('.popup').should('not.exist');
-            }
+            checkIfPopupIsNotDisplayed('abc-._');
+            checkIfInvalidCharactersPopupIsDisplayed(' ');
+            checkIfInvalidCharactersPopupIsDisplayed('$');
+            checkIfInvalidCharactersPopupIsDisplayed('&');
+        });
 
-            validateIfPermitted('abc-._');
-            validateIfNotPermitted(' ');
-            validateIfNotPermitted('$');
-            validateIfNotPermitted('&');
+        it('prevents adding label with not permitted key', () => {
+            function checkIfInternalKeyIsNotPermitted(key) {
+                checkIfPopupIsDisplayed(
+                    key,
+                    'All other `csys-` prefixed labels are reserved for internal use and cannot be added.'
+                );
+                typeLabelValue('a');
+                cy.get('button[aria-label=Add]').should('have.attr', 'disabled');
+            }
+            function checkIfInternalKeyIsPermitted(key) {
+                checkIfPopupIsNotDisplayed(key);
+                typeLabelValue('a');
+                cy.get('button[aria-label=Add]').should('not.have.attr', 'disabled');
+            }
+            cy.getReservedLabelKeys().then(reservedKeys => {
+                reservedKeys.forEach(checkIfInternalKeyIsPermitted);
+            });
+            checkIfInternalKeyIsNotPermitted('csys-');
+            checkIfInternalKeyIsNotPermitted('csys-my-fake-key');
         });
 
         it('allows to remove label from the list', () => {
