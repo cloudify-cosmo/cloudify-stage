@@ -121,7 +121,7 @@ export default class DeploymentActions {
     doGetReservedLabelKeys() {
         return this.toolbox
             .getManager()
-            .doGet(`/labels/deployments?_reserved=true`)
+            .doGet('/labels/deployments?_reserved=true')
             .then(({ items }) => items);
     }
 
