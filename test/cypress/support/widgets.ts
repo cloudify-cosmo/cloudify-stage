@@ -19,7 +19,13 @@ const commands = {
                 }
             });
         });
-    }
+    },
+
+    interceptWidgetScript: (widgetId: string, scriptSource: string) =>
+        cy.intercept(`/console/appData/widgets/${widgetId}/widget.js`, {
+            body: scriptSource,
+            headers: { 'Content-Type': 'application/javascript' }
+        })
 };
 
 addCommands(commands);
