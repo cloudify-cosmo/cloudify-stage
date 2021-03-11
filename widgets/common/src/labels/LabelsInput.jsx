@@ -15,8 +15,7 @@ function useReservedKeys(toolbox) {
     const { useState, useEffect } = React;
     const {
         Common: { DeploymentActions },
-        Hooks: { useBoolean },
-        i18n
+        Hooks: { useBoolean }
     } = Stage;
 
     const [reservedKeys, setReservedKeys] = useState([]);
@@ -28,9 +27,7 @@ function useReservedKeys(toolbox) {
         actions
             .doGetReservedLabelKeys()
             .then(setReservedKeys)
-            .catch(error => {
-                log.error(i18n.t('widgets.common.labels.fetchingReservedKeysError'), error);
-            })
+            .catch(error => log.error('Cannot fetch reserved label keys', error))
             .finally(unsetFetchingReservedKeys);
     }, []);
 
@@ -43,8 +40,7 @@ export default function LabelsInput({ hideInitialLabels, initialLabels, onChange
         Basic: { Divider, Form, Icon, Segment },
         Common: { DeploymentActions, RevertToDefaultIcon },
         Hooks: { useBoolean, useOpenProp, useResettableState, useToggle },
-        Utils: { combineClassNames },
-        i18n
+        Utils: { combineClassNames }
     } = Stage;
 
     const [addingLabel, setAddingLabel, unsetAddingLabel] = useBoolean();
@@ -86,7 +82,7 @@ export default function LabelsInput({ hideInitialLabels, initialLabels, onChange
                 .doGetLabel(newLabelKey, newLabelValue)
                 .then(({ items }) => !_.isEmpty(items))
                 .catch(error => {
-                    log.error(i18n.t('widgets.common.labels.isLabelInSystemCheckError'), error);
+                    log.error('Cannot check is label already present in the system', error);
                     return false;
                 });
         }
