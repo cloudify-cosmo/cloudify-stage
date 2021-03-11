@@ -8,8 +8,8 @@ export default function LabelsList({ labels, onChange }) {
     return (
         <div
             className="ui multiple dropdown"
-            /* maxHeight set to 8.2em guarantees 4 lines of labels to be visible without scroller */
-            style={{ paddingRight: '4.1em', minHeight: '2em', maxHeight: '8.2em', overflow: 'auto', maxWidth: '100%' }}
+            /* maxHeight set to 12.2em guarantees 6 lines of labels to be visible without scroller */
+            style={{ paddingRight: '4.1em', minHeight: '2em', maxHeight: '12.2em', overflow: 'auto', maxWidth: '100%' }}
         >
             {sortedLabels.map(({ key, value, isInSystem = true }) => {
                 return (
