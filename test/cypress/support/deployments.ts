@@ -30,6 +30,8 @@ const commands = {
             siteName !== '' ? { site_name: siteName } : { detach_site: true }
         );
     },
+    getReservedLabelKeys: () =>
+        cy.cfyRequest('/labels/deployments?_reserved=true', 'GET', null).then(response => response.body.items),
     setLabels: (deploymentId: string, labels: Label[]) => {
         cy.cfyRequest(`/deployments/${deploymentId}`, 'PATCH', null, { labels });
     },
