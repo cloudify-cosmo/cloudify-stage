@@ -25,4 +25,24 @@ describe('User-defined widgets', () => {
             });
         });
     });
+
+    describe('Split view widget', () => {
+        before(cy.activate);
+
+        beforeEach(() => {
+            cy.compileScriptFixture('widgets/splitViewWidget.tsx').then(compiledScriptSource =>
+                cy.interceptWidgetScript('split-view-widget', compiledScriptSource)
+            );
+        });
+
+        it('should render itself and the nested Plugins Catalog widget', () => {
+            cy.usePageMock('split-view-widget').mockLogin();
+
+            cy.contains('Content on the left');
+            cy.contains('Content on the right');
+            cy.contains('Plugins Catalog');
+            // NOTE: make sure the content of the widget is rendered
+            cy.get('th').contains('Name');
+        });
+    });
 });
