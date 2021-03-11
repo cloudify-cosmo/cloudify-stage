@@ -11,8 +11,34 @@ const iconStyle = {
     zIndex: 1
 };
 
+function useReservedKeys(toolbox) {
+    const { useState, useEffect } = React;
+    const {
+        Common: { DeploymentActions },
+        Hooks: { useBoolean },
+        i18n
+    } = Stage;
+
+    const [reservedKeys, setReservedKeys] = useState([]);
+    const [fetchingReservedKeys, setFetchingReservedKeys, unsetFetchingReservedKeys] = useBoolean();
+
+    useEffect(() => {
+        const actions = new DeploymentActions(toolbox);
+        setFetchingReservedKeys();
+        actions
+            .doGetReservedLabelKeys()
+            .then(setReservedKeys)
+            .catch(error => {
+                log.error(i18n.t('widgets.common.labels.fetchingReservedKeysError'), error);
+            })
+            .finally(unsetFetchingReservedKeys);
+    }, []);
+
+    return { reservedKeys, fetchingReservedKeys };
+}
+
 export default function LabelsInput({ hideInitialLabels, initialLabels, onChange, toolbox }) {
-    const { useEffect, useRef, useState } = React;
+    const { useEffect, useRef } = React;
     const {
         Basic: { Divider, Form, Icon, Segment },
         Common: { DeploymentActions, RevertToDefaultIcon },
@@ -22,8 +48,7 @@ export default function LabelsInput({ hideInitialLabels, initialLabels, onChange
     } = Stage;
 
     const [addingLabel, setAddingLabel, unsetAddingLabel] = useBoolean();
-    const [reservedKeys, setReservedKeys] = useState([]);
-    const [fetchingReservedKeys, setFetchingReservedKeys, unsetFetchingReservedKeys] = useBoolean();
+    const { reservedKeys, fetchingReservedKeys } = useReservedKeys(toolbox);
     const [labels, setLabels, resetLabels] = useResettableState(hideInitialLabels ? [] : initialLabels);
     const [open, toggleOpen] = useToggle();
     const [newLabelKey, setNewLabelKey, resetNewLabelKey] = useResettableState('');
@@ -55,18 +80,6 @@ export default function LabelsInput({ hideInitialLabels, initialLabels, onChange
     useEffect(() => {
         if (!hideInitialLabels) setLabels(initialLabels);
     }, [initialLabels]);
-
-    useEffect(() => {
-        const actions = new DeploymentActions(toolbox);
-        setFetchingReservedKeys();
-        actions
-            .doGetReservedLabelKeys()
-            .then(setReservedKeys)
-            .catch(error => {
-                log.error(i18n.t('widgets.common.labels.fetchingReservedKeysError'), error);
-            })
-            .finally(unsetFetchingReservedKeys);
-    }, []);
 
     function onAddLabel() {
         function isLabelInSystem() {
