@@ -147,7 +147,10 @@ describe('Deployment Action Buttons widget', () => {
 
         it('prevents adding label with not permitted key', () => {
             function checkIfInternalKeyIsNotPermitted(key) {
-                checkIfPopupIsDisplayed(key, 'All labels with a `csys-` prefix are reserved for internal use');
+                checkIfPopupIsDisplayed(
+                    key,
+                    'All other `csys-` prefixed labels are reserved for internal use and cannot be added.'
+                );
                 typeLabelValue('a');
                 cy.get('button[aria-label=Add]').should('have.attr', 'disabled');
             }
