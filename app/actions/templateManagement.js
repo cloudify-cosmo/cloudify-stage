@@ -33,10 +33,7 @@ export function createPageId(name, pages) {
 export function persistPage(page) {
     return (dispatch, getState) => {
         function prepareWidgetData(widget) {
-            return {
-                ..._.pick(widget, 'name', 'width', 'height', 'x', 'y', 'configuration'),
-                definition: widget.definition.id
-            };
+            return _.pick(widget, 'name', 'width', 'height', 'x', 'y', 'configuration', 'definition');
         }
 
         const pageData = _(page).pick('id', 'oldId', 'name', 'layout').cloneDeep();

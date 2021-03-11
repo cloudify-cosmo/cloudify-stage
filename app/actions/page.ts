@@ -14,9 +14,11 @@ import { clearWidgetsData } from './WidgetData';
 import Internal from '../utils/Internal';
 import Consts from '../utils/consts';
 import { NO_PAGES_FOR_TENANT_ERR } from '../utils/ErrorCodes';
-import type { Widget } from '../utils/StageAPI';
+import type { Widget, WidgetDefinition } from '../utils/StageAPI';
 import type { ReduxState } from '../reducers';
 
+// TODO(RD-1645): rename type to Widget
+// TODO(RD-1649): rename the added field to `definitionId`
 export type SimpleWidgetObj = Omit<Widget, 'definition'> & { definition: string };
 
 export interface WidgetsSection {
@@ -27,6 +29,7 @@ export interface WidgetsSection {
 export interface TabContent {
     name: string;
     widgets: SimpleWidgetObj[];
+    isDefault?: boolean;
 }
 
 export interface TabsSection {
@@ -106,12 +109,12 @@ export function createPagesMap(pages: PageDefinition[]) {
 }
 
 export function forAllWidgets(
-    page: PageDefinition,
+    page: Pick<PageDefinition, 'layout'>,
     widgetListModifier: (
         widget: SimpleWidgetObj[],
         layoutSectionIndex: number,
         tabIndex: number | null
-    ) => SimpleWidgetObj[]
+    ) => (SimpleWidgetObj | null | undefined)[]
 ) {
     _.each(page.layout, (layoutSection, layoutSectionIdx) => {
         if (isWidgetsSection(layoutSection))
@@ -124,12 +127,23 @@ export function forAllWidgets(
 }
 
 export function forEachWidget(
-    page: PageDefinition,
-    widgetModifier: (widget: SimpleWidgetObj, layoutSectionIndex: number, tabIndex: number | null) => SimpleWidgetObj
+    page: Pick<PageDefinition, 'layout'>,
+    widgetModifier: (
+        widget: SimpleWidgetObj,
+        layoutSectionIndex: number,
+        tabIndex: number | null
+    ) => SimpleWidgetObj | null | undefined
 ) {
     forAllWidgets(page, (widgets, layoutSectionIdx, tabIdx) =>
         _.map(widgets, widget => widgetModifier(widget, layoutSectionIdx, tabIdx))
     );
+}
+
+export function getWidgetDefinitionById(
+    definitionId: string,
+    definitions: ReduxState['widgetDefinitions']
+): WidgetDefinition | undefined {
+    return _.find(definitions, { id: definitionId });
 }
 
 function createPageId(name: string, pages: PageDefinition[]) {
@@ -247,7 +261,10 @@ export function removePage(page: PageDefinition): ThunkAction<void, ReduxState, 
     };
 }
 
-export function addLayoutToPage(page: PageDefinition, pageId: string): ThunkAction<void, ReduxState, never, AnyAction> {
+export function addLayoutToPage(
+    page: Pick<PageDefinition, 'layout'>,
+    pageId: string
+): ThunkAction<void, ReduxState, never, AnyAction> {
     return (dispatch, getState) => {
         const { widgetDefinitions } = getState();
         forEachWidget(page, (widget, layoutSectionIdx, tabIdx) => {

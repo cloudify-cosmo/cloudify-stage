@@ -14,15 +14,16 @@ import WidgetDynamicContent from './WidgetDynamicContent';
 import type { ManagerData } from '../reducers/managerReducer';
 import type { ReduxState } from '../reducers';
 import type { Widget as WidgetObj } from '../utils/StageAPI';
+import { getWidgetDefinitionById, SimpleWidgetObj } from '../actions/page';
 
 export interface WidgetOwnProps<Configuration> {
     isEditMode: boolean;
     onWidgetUpdated: (widgetId: string, params: Partial<WidgetObj<Configuration>>) => void;
     onWidgetRemoved: (widgetId: string) => void;
-    widget: WidgetObj<Configuration>;
+    widget: SimpleWidgetObj;
 }
 
-type WidgetProps<Configuration> = WidgetOwnProps<Configuration> & PropsFromRedux;
+type WidgetProps<Configuration> = Omit<WidgetOwnProps<Configuration>, 'widget'> & PropsFromRedux;
 
 interface WidgetState {
     hasError: boolean;
@@ -257,45 +258,24 @@ class Widget<Configuration> extends Component<WidgetProps<Configuration>, Widget
     }
 }
 
-// TODO(RD-1223): remove prop types
-// Widget.propTypes = {
-//     context: PropTypes.shape({}).isRequired,
-//     fetchWidgetData: PropTypes.func.isRequired,
-//     isEditMode: PropTypes.bool.isRequired,
-//     manager: PropTypes.shape({
-//         tenants: PropTypes.shape({ selected: PropTypes.string, isFetching: PropTypes.bool })
-//     }).isRequired,
-//     onWidgetRemoved: PropTypes.func.isRequired,
-//     onWidgetUpdated: PropTypes.func.isRequired,
-//     setContextValue: PropTypes.func.isRequired,
-//     widget: PropTypes.shape({
-//         configuration: PropTypes.shape({}),
-//         id: PropTypes.string,
-//         name: PropTypes.string,
-//         definition: PropTypes.shape({
-//             color: PropTypes.string,
-//             helpUrl: PropTypes.string,
-//             permission: PropTypes.string,
-//             readme: PropTypes.string,
-//             showHeader: PropTypes.bool,
-//             showBorder: PropTypes.bool
-//         }),
-//         maximized: PropTypes.bool
-//     }).isRequired,
-//     widgetData: PropTypes.shape({}).isRequired
-// };
-
-interface ReduxStateToProps {
+interface ReduxStateToProps<Configuration> {
     context: any;
     manager: ManagerData;
     widgetData: any;
+    widget: WidgetObj<Configuration>;
 }
 
-const mapStateToProps: MapStateToProps<ReduxStateToProps, WidgetOwnProps<any>, ReduxState> = (state, ownProps) => {
+const mapStateToProps: MapStateToProps<ReduxStateToProps<any>, WidgetOwnProps<any>, ReduxState> = (state, ownProps) => {
     return {
         context: state.context,
         manager: state.manager || {},
-        widgetData: _.find(state.widgetData, { id: ownProps.widget.id }) || {}
+        widgetData: _.find(state.widgetData, { id: ownProps.widget.id }) || {},
+        widget: {
+            ...ownProps.widget,
+            // NOTE: assume definition will always be found
+            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+            definition: getWidgetDefinitionById(ownProps.widget.definition, state.widgetDefinitions)!
+        }
     };
 };
 

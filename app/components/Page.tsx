@@ -15,21 +15,19 @@ import {
     changePageDescription,
     changePageName,
     createPagesMap,
-    forEachWidget,
     LayoutSection,
     moveTab,
     PageDefinition,
     removeLayoutSectionFromPage,
     removeTab,
     selectPage,
-    SimpleWidgetObj,
     updateTab
 } from '../actions/page';
 import { addWidget, removeWidget, updateWidget } from '../actions/widgets';
 import { setDrilldownContext } from '../actions/drilldownContext';
 import { setEditMode } from '../actions/config';
 import type { ReduxState } from '../reducers';
-import type { Widget, WidgetDefinition } from '../utils/StageAPI';
+import type { WidgetDefinition } from '../utils/StageAPI';
 import type { DrilldownContext } from '../reducers/drilldownContextReducer';
 
 export interface PageOwnProps {
@@ -159,17 +157,6 @@ const mapStateToProps = (state: ReduxState, ownProps: PageOwnProps) => {
     // NOTE: assume page will always be found
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     const pageData: PageDefinition = _.cloneDeep(_.find(pages, { id: pageId })!);
-
-    function assignWidgetDefinition(widget: SimpleWidgetObj) {
-        // NOTE: assume the definition is always valid
-        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        ((widget as unknown) as Widget).definition = _.find(state.widgetDefinitions, {
-            id: widget.definition
-        })!;
-        return widget;
-    }
-
-    forEachWidget(pageData, assignWidgetDefinition);
 
     pageData.name = ownProps.pageName || pageData.name;
 
