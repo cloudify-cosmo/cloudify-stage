@@ -42,7 +42,7 @@ export default function LabelsInput({ hideInitialLabels, initialLabels, onChange
     const {
         Basic: { Divider, Form, Icon, Segment },
         Common: { DeploymentActions, RevertToDefaultIcon },
-        Hooks: { useBoolean, useResettableState, useToggle },
+        Hooks: { useBoolean, useOpenProp, useResettableState, useToggle },
         Utils: { combineClassNames },
         i18n
     } = Stage;
@@ -70,12 +70,10 @@ export default function LabelsInput({ hideInitialLabels, initialLabels, onChange
         onChange(labels);
     }, [labels]);
 
-    useEffect(() => {
-        if (open) {
-            resetNewLabelKey();
-            resetNewLabelValue();
-        }
-    }, [open]);
+    useOpenProp(open, () => {
+        resetNewLabelKey();
+        resetNewLabelValue();
+    });
 
     useEffect(() => {
         if (!hideInitialLabels) setLabels(initialLabels);
