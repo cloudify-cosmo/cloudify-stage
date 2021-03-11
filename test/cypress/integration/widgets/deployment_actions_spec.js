@@ -157,7 +157,7 @@ describe('Deployment Action Buttons widget', () => {
                 cy.get('button[aria-label=Add]').should('not.have.attr', 'disabled');
             }
             cy.getReservedLabelKeys().then(reservedKeys => {
-                reservedKeys.forEach(key => checkIfInternalKeyIsPermitted(key));
+                reservedKeys.forEach(checkIfInternalKeyIsPermitted);
             });
             checkIfInternalKeyIsNotPermitted('csys-');
             checkIfInternalKeyIsNotPermitted('csys-my-fake-key');
