@@ -207,6 +207,7 @@ declare global {
         interface Common {
             Widget: typeof import('../components/Widget').default;
             WidgetsList: typeof import('../components/WidgetsList').default;
+            WidgetsGrid: typeof import('../components/WidgetsGrid').default;
         }
         /** Common widget utilities */
         const Common: Common;

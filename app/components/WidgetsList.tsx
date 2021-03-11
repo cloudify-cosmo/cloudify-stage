@@ -5,17 +5,14 @@
 import PropTypes from 'prop-types';
 import _ from 'lodash';
 import React from 'react';
-import Widget from './Widget';
 import Grid from './layout/Grid';
-import GridItem from './layout/GridItem';
 import type { SimpleWidgetObj } from '../actions/page';
+import type { WidgetOwnProps } from './Widget';
+import WidgetsGrid from './WidgetsGrid';
 
-export interface WidgetsListProps {
-    onWidgetUpdated: (widgetId: string, params: Record<string, any>) => void;
-    onWidgetRemoved: (widgetId: string) => void;
-    isEditMode: boolean;
+export type WidgetsListProps = Pick<WidgetOwnProps<any>, 'onWidgetRemoved' | 'onWidgetUpdated' | 'isEditMode'> & {
     widgets: SimpleWidgetObj[];
-}
+};
 
 export default function WidgetsList({ onWidgetUpdated, onWidgetRemoved, isEditMode, widgets }: WidgetsListProps) {
     return (
@@ -24,28 +21,14 @@ export default function WidgetsList({ onWidgetUpdated, onWidgetRemoved, isEditMo
             onGridDataChange={onWidgetUpdated}
             style={{ zIndex: _(widgets).filter({ maximized: true }).size() }}
         >
-            {widgets.map(widget => {
-                const widgetDefId = widget.definition;
-                return (
-                    <GridItem
-                        key={widget.id}
-                        id={widget.id}
-                        x={widget.x}
-                        y={widget.y}
-                        height={widget.height}
-                        width={widget.width}
-                        className={`widget ${widgetDefId}Widget`}
-                        maximized={widget.maximized}
-                    >
-                        <Widget
-                            widget={widget}
-                            isEditMode={isEditMode}
-                            onWidgetUpdated={onWidgetUpdated}
-                            onWidgetRemoved={onWidgetRemoved}
-                        />
-                    </GridItem>
-                );
-            })}
+            {widgets.map(widget =>
+                WidgetsGrid.renderWidgetGridItem({
+                    isEditMode,
+                    onWidgetRemoved,
+                    onWidgetUpdated,
+                    widget
+                })
+            )}
         </Grid>
     );
 }

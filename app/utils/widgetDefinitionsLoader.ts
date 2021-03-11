@@ -11,6 +11,7 @@ import * as Basic from '../components/basic';
 import * as Shared from '../components/shared';
 import Widget from '../components/Widget';
 import WidgetsList from '../components/WidgetsList';
+import WidgetsGrid from '../components/WidgetsGrid';
 import StageUtils from './stageUtils';
 import LoaderUtils from './LoaderUtils';
 
@@ -62,7 +63,8 @@ export default class WidgetDefinitionsLoader {
             // @ts-ignore Surpress error related to missing items when compiling the widgets project
             Common: {
                 Widget,
-                WidgetsList
+                WidgetsList,
+                WidgetsGrid
             },
             defineCommon: def => {
                 window.Stage.Common[def.name] = def.common;
