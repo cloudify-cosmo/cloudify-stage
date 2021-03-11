@@ -31,7 +31,9 @@ const commands = {
         );
     },
     getReservedLabelKeys: () =>
-        cy.cfyRequest('/labels/deployments?_reserved=true', 'GET', null).then(response => response.body.items),
+        cy
+            .cfyRequest('/labels/deployments?_reserved=true', 'GET', null)
+            .then(response => response.body.items as string[]),
     setLabels: (deploymentId: string, labels: Label[]) => {
         cy.cfyRequest(`/deployments/${deploymentId}`, 'PATCH', null, { labels });
     },
