@@ -72,14 +72,7 @@ export const createResourcesInstaller = (
             return;
         }
 
-        onStarted();
-        onProgress(0);
-
-        let stepIndex = 0;
-        const stepsCount = scheduledPlugins.length + updatedSecrets.length + createdSecrets.length;
-
-        // eslint-disable-next-line no-restricted-syntax
-        for await (const scheduledPlugin of scheduledPlugins) {
+        const runInstallPluginStep = async (scheduledPlugin: PluginInstallationTask) => {
             if (scheduledPlugin.yamlUrl && scheduledPlugin.wagonUrl) {
                 const result = await installPlugin(internal, scheduledPlugin);
                 if (destroyed) return;
@@ -90,10 +83,9 @@ export const createResourcesInstaller = (
             if (destroyed) return;
             stepIndex += 1;
             onProgress(Math.round(100 * (stepIndex / stepsCount)));
-        }
+        };
 
-        // eslint-disable-next-line no-restricted-syntax
-        for await (const updatedSecret of updatedSecrets) {
+        const runUpdateSecretStep = async (updatedSecret: SecretInstallationTask) => {
             const result = await updateSecret(manager, updatedSecret);
             if (destroyed) return;
             if (!result) {
@@ -102,10 +94,9 @@ export const createResourcesInstaller = (
             if (destroyed) return;
             stepIndex += 1;
             onProgress(Math.round(100 * (stepIndex / stepsCount)));
-        }
+        };
 
-        // eslint-disable-next-line no-restricted-syntax
-        for await (const createdSecret of createdSecrets) {
+        const runCreateSecretStep = async (createdSecret: SecretInstallationTask) => {
             const result = await createSecret(manager, createdSecret);
             if (destroyed) return;
             if (!result) {
@@ -114,7 +105,20 @@ export const createResourcesInstaller = (
             if (destroyed) return;
             stepIndex += 1;
             onProgress(Math.round(100 * (stepIndex / stepsCount)));
-        }
+        };
+
+        let stepIndex = 0;
+        const stepsCount = scheduledPlugins.length + updatedSecrets.length + createdSecrets.length;
+
+        onStarted();
+        onProgress(0);
+
+        await Promise.all([
+            ...scheduledPlugins.map(runInstallPluginStep),
+            ...updatedSecrets.map(runUpdateSecretStep),
+            ...createdSecrets.map(runCreateSecretStep)
+        ]);
+
         onProgress(100);
         onFinished();
     };
