@@ -50,6 +50,10 @@ const commands = {
             cy.get('.input input').clear().type(deploymentId);
             cy.get('.input.loading').should('not.exist');
         });
+    },
+    revertToDefaultValue: () => {
+        cy.getByTestId('revert-to-default').click();
+        cy.getByTestId('revert-to-default').should('not.exist');
     }
 };
 

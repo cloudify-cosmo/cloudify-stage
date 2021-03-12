@@ -178,9 +178,8 @@ describe('Deployment Action Buttons widget', () => {
         it('allows to revert to initial value', () => {
             cy.get('.modal').within(() => {
                 addLabel('my_key', 'my_value');
-                cy.get('i.undo').click();
 
-                cy.get('i.undo').should('not.exist');
+                cy.revertToDefaultValue();
                 cy.contains('a.label', 'existing_key existing_value').should('be.visible');
             });
         });
