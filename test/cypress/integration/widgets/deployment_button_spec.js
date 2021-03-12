@@ -218,7 +218,7 @@ describe('Create Deployment Button widget', () => {
             cy.wait('@deployBlueprint');
 
             cy.get('div.error.message > ul > li').should(
-                'have.text',
+                'contain.text',
                 'Value CentOS 7.6 of input string_constraint_pattern violates ' +
                     'constraint pattern(Ubuntu \\d{2}\\.\\d{2}) operator.'
             );
