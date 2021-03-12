@@ -8,7 +8,8 @@ export const installPlugin = async (internal: Internal, plugin: PluginInstallati
     }
     const params = {
         visibility: 'tenant',
-        title: plugin.name,
+        title: plugin.title,
+        iconUrl: plugin.icon,
         yamlUrl: plugin.yamlUrl,
         wagonUrl: plugin.wagonUrl
     };
