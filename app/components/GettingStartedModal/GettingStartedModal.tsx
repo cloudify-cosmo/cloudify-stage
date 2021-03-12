@@ -12,15 +12,24 @@ import SecretsStep from './steps/SecretsStep';
 import SummaryStep from './steps/SummaryStep/SummaryStep';
 import { validateSecretFields, validateTechnologyFields } from './formValidation';
 
-const getHeaderText = (schema: GettingStartedSchema, step: number) => {
-    if (step === 0) {
-        return 'Getting Started';
+const getHeaderText = (schema: GettingStartedSchema, stepName: StepName, secretsStepIndex: number) => {
+    switch (stepName) {
+        case 'technologies':
+            return 'Getting Started';
+        case 'secrets': {
+            const schemaItem = schema[secretsStepIndex];
+            if (schemaItem) {
+                return `${schemaItem.label} Secrets`;
+            }
+            return undefined;
+        }
+        case 'summary':
+            return 'Summary';
+        case 'status':
+            return 'Status';
+        default:
+            return undefined;
     }
-    const itemSchema = schema[step - 1];
-    if (itemSchema) {
-        return `${itemSchema.label} Secrets`;
-    }
-    return 'Summary & Status';
 };
 
 /**
@@ -30,7 +39,7 @@ const getHeaderText = (schema: GettingStartedSchema, step: number) => {
  * @param data data that can be bound into form that are complies with technology forms schema
  * @returns information about selected technologies
  */
-const detectTechnologies = (schema: GettingStartedSchema, data?: GettingStartedData) => {
+const detectSelectedTechnologies = (schema: GettingStartedSchema, data?: GettingStartedData) => {
     if (data) {
         return schema.reduce((result, item) => {
             result[item.name] = item.name in data;
@@ -40,6 +49,8 @@ const detectTechnologies = (schema: GettingStartedSchema, data?: GettingStartedD
     return {} as GettingStartedTechnologiesData;
 };
 
+type StepName = 'technologies' | 'secrets' | 'summary' | 'status';
+
 type Props = {
     open?: boolean;
     step?: number;
@@ -48,112 +59,154 @@ type Props = {
     onClose?: (permanentClose: boolean) => void;
 };
 
-const QuickConfigurationModal = ({ open = false, step = 0, schema, data, onClose }: Props) => {
+const GettingStartedModal = ({ open = false, step = 0, schema, data, onClose }: Props) => {
     const modalDisabledInputRef = useRef<HTMLInputElement>(null);
     const technologiesFormRef = useRef<HTMLFormElement>(null);
     const secretsFormRef = useRef<HTMLFormElement>(null);
-    const [detectedTechnologies, setDetectedTechnologies] = useState<GettingStartedTechnologiesData>(() => ({}));
-    const [localStep, setLocalStep] = useState(step);
-    const [localData, setLocalData] = useState(() => data ?? {});
+    const [stepName, setStepName] = useState<StepName>('technologies');
+    const [stepErrors, setStepErrors] = useState<string[]>([]);
+    const [technologiesStepData, setTechnologiesStepData] = useState<GettingStartedTechnologiesData>(() => ({}));
+    const [secretsStepIndex, setSecretsStepIndex] = useState(0);
+    const [secretsStepData, setSecretsStepData] = useState(() => ({}));
     const [installationProcessing, setInstallationProcessing] = useState(false);
-    const [currentErrors, setCurrentErrors] = useState<string[]>([]);
-    useEffect(() => setDetectedTechnologies(detectTechnologies(schema, data)), [schema, data]);
-    useEffect(() => setLocalStep(step), [step]);
-    useEffect(() => setLocalData(data ?? {}), [data]);
-    const selectedSchemas = useMemo(() => schema.filter(items => detectedTechnologies[items.name]), [
-        detectedTechnologies
+    useEffect(() => setTechnologiesStepData(detectSelectedTechnologies(schema, data)), [schema, data]);
+    useEffect(() => setSecretsStepIndex(step), [step]);
+    useEffect(() => setSecretsStepData(data ?? {}), [data]);
+    const secretsStepsSchemas = useMemo(() => schema.filter(items => technologiesStepData[items.name]), [
+        technologiesStepData
     ]);
-    const selectedSchema = selectedSchemas[localStep - 1];
-    const updateDetectedTechnologies = () => {
+    const secretsStepSchema = secretsStepsSchemas[secretsStepIndex];
+    const updateTechnologiesStepData = () => {
         if (technologiesFormRef.current) {
-            const newUsedTechnologies = getFormData<GettingStartedTechnologiesData>(technologiesFormRef.current);
-            const usedTechnologiesErrors = validateTechnologyFields(newUsedTechnologies);
+            const newSelectedTechnologies = getFormData<GettingStartedTechnologiesData>(technologiesFormRef.current);
+            const usedTechnologiesErrors = validateTechnologyFields(newSelectedTechnologies);
             if (usedTechnologiesErrors.length > 0) {
-                setCurrentErrors(usedTechnologiesErrors);
+                setStepErrors(usedTechnologiesErrors);
                 return false;
             }
-            setCurrentErrors([]);
-            setDetectedTechnologies(newUsedTechnologies);
+            setStepErrors([]);
+            setTechnologiesStepData(newSelectedTechnologies);
         }
         return true;
     };
-    const updateLocalData = () => {
+    const updateSecretsStepData = (validationRequired = true) => {
         if (secretsFormRef.current) {
             const newLocalData = getFormData<GettingStartedData>(secretsFormRef.current);
-            const newSecretsData = newLocalData[selectedSchema.name];
-            const localDataErrors = validateSecretFields(newSecretsData ?? {});
-            if (localDataErrors.length > 0) {
-                setCurrentErrors(localDataErrors);
-                return false;
+            if (validationRequired) {
+                const newSecretsData = newLocalData[secretsStepSchema.name];
+                const localDataErrors = validateSecretFields(newSecretsData ?? {});
+                if (localDataErrors.length > 0) {
+                    setStepErrors(localDataErrors);
+                    return false;
+                }
             }
-            setCurrentErrors([]);
-            setLocalData({ ...localData, ...newLocalData });
+            setStepErrors([]);
+            setSecretsStepData({ ...secretsStepData, ...newLocalData });
         }
         return true;
     };
     const handleInstallationStarted = () => {
         setInstallationProcessing(true);
     };
-    const handleInstallationFinished = () => {
-        setInstallationProcessing(false);
-    };
-    const handleInstallationCanceled = () => {
+    const handleInstallationFinishedOrCanceled = () => {
         setInstallationProcessing(false);
     };
     const handleModalClose = () => {
         onClose?.(modalDisabledInputRef.current?.checked ?? false);
     };
     const handleBackClick = () => {
-        if (localStep > 0) {
-            if (secretsFormRef.current) {
-                const newLocalData = getFormData<GettingStartedData>(secretsFormRef.current);
-                setLocalData({ ...localData, ...newLocalData });
-            }
-            setLocalStep(localStep - 1);
+        switch (stepName) {
+            case 'status':
+                setStepName('summary');
+                break;
+
+            case 'summary':
+                if (secretsStepsSchemas.length > 0) {
+                    setStepName('secrets');
+                    setSecretsStepIndex(secretsStepsSchemas.length - 1);
+                } else {
+                    setStepName('technologies');
+                }
+                break;
+
+            case 'secrets':
+                updateSecretsStepData(false);
+                if (secretsStepIndex > 0) {
+                    setSecretsStepIndex(secretsStepIndex - 1);
+                } else {
+                    setStepName('technologies');
+                }
+                break;
+
+            default:
+                // eslint-disable-next-line no-console
+                console.error('Incorrect step name.');
+                break;
         }
     };
     const handleNextClick = () => {
-        if (localStep === 0) {
-            if (!updateDetectedTechnologies()) {
-                return;
-            }
-        } else if (!updateLocalData()) {
-            return;
-        }
-        if (localStep < schema.length - 1) {
-            setLocalStep(localStep + 1);
+        switch (stepName) {
+            case 'technologies':
+                if (updateTechnologiesStepData()) {
+                    setStepName('secrets');
+                    setSecretsStepIndex(0);
+                }
+                break;
+
+            case 'secrets':
+                if (updateSecretsStepData()) {
+                    if (secretsStepIndex < secretsStepsSchemas.length - 1) {
+                        setSecretsStepIndex(secretsStepIndex + 1);
+                    } else {
+                        setStepName('summary');
+                    }
+                }
+                break;
+
+            case 'summary':
+                setStepName('status');
+                break;
+
+            default:
+                // eslint-disable-next-line no-console
+                console.error('Incorrect step name.');
+                break;
         }
     };
     return (
         <Modal open={open} onClose={handleModalClose}>
             <Modal.Header>
-                <ModalHeader>{getHeaderText(selectedSchemas, localStep)}</ModalHeader>
+                <ModalHeader>{getHeaderText(secretsStepsSchemas, stepName, secretsStepIndex)}</ModalHeader>
             </Modal.Header>
             <Modal.Content style={{ minHeight: '220px' }}>
-                {currentErrors && currentErrors.length > 0 && (
+                {stepErrors && stepErrors.length > 0 && (
                     <>
                         <Message color="red">
-                            {currentErrors.map(error => (
+                            {stepErrors.map(error => (
                                 <div key={error}>{error}</div>
                             ))}
                         </Message>
                         <Divider hidden />
                     </>
                 )}
-                {localStep === 0 && (
-                    <TechnologiesStep ref={technologiesFormRef} schema={schema} technologies={detectedTechnologies} />
+                {stepName === 'technologies' && (
+                    <TechnologiesStep ref={technologiesFormRef} schema={schema} technologies={technologiesStepData} />
                 )}
-                {localStep > 0 && localStep < selectedSchemas.length + 1 && (
-                    <SecretsStep ref={secretsFormRef} selectedPlugin={selectedSchema} typedSecrets={localData} />
+                {stepName === 'secrets' && secretsStepSchema && (
+                    <SecretsStep
+                        ref={secretsFormRef}
+                        selectedPlugin={secretsStepSchema}
+                        typedSecrets={secretsStepData}
+                    />
                 )}
-                {(localStep === selectedSchemas.length + 1 || localStep === selectedSchemas.length + 2) && (
+                {(stepName === 'summary' || stepName === 'status') && (
                     <SummaryStep
-                        installationMode={localStep === selectedSchemas.length + 2}
-                        selectedPlugins={selectedSchemas}
-                        typedSecrets={localData}
+                        installationMode={stepName === 'status'}
+                        selectedPlugins={secretsStepsSchemas}
+                        typedSecrets={secretsStepData}
                         onInstallationStarted={handleInstallationStarted}
-                        onInstallationFinished={handleInstallationFinished}
-                        onInstallationCanceled={handleInstallationCanceled}
+                        onInstallationFinished={handleInstallationFinishedOrCanceled}
+                        onInstallationCanceled={handleInstallationFinishedOrCanceled}
                     />
                 )}
             </Modal.Content>
@@ -178,9 +231,9 @@ const QuickConfigurationModal = ({ open = false, step = 0, schema, data, onClose
                         onClick={handleModalClose}
                     />
                 </Button.Group>
-                {localStep < selectedSchemas.length + 2 && (
+                {stepName !== 'status' && (
                     <Button.Group floated="right">
-                        {localStep > 0 && (
+                        {stepName !== 'technologies' && (
                             <Button
                                 icon="left arrow"
                                 content={i18n.t('help.aboutModal.back', 'Back')}
@@ -191,7 +244,7 @@ const QuickConfigurationModal = ({ open = false, step = 0, schema, data, onClose
                         <Button
                             icon="right arrow"
                             content={
-                                localStep < selectedSchemas.length + 1
+                                secretsStepIndex < secretsStepsSchemas.length + 1
                                     ? i18n.t('help.aboutModal.next', 'Next')
                                     : i18n.t('help.aboutModal.finish', 'Finish')
                             }
@@ -205,4 +258,4 @@ const QuickConfigurationModal = ({ open = false, step = 0, schema, data, onClose
     );
 };
 
-export default memo(QuickConfigurationModal);
+export default memo(GettingStartedModal);
