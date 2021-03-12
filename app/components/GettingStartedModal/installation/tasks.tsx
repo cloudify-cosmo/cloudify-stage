@@ -1,9 +1,10 @@
 import { useMemo } from 'react';
-import { JSONData, JSONSchema, RegExpString, SecretData } from './model';
-import { AvailablePluginData, InstalledPluginData, URLString } from './plugins/model';
-import useFetchPlugins, { PluginsHook } from './plugins/useFetchPlugins';
-import useFetchSecrets, { SecretsHook } from './secrets/useFetchSecrets';
-import useCurrentDistribution from './useCurrentDistribution';
+
+import { GettingStartedData, GettingStartedSchema, RegExpString, GettingStartedSecretsData } from '../model';
+import { URLString } from '../plugins/model';
+import useFetchPlugins, { PluginsHook } from '../plugins/useFetchPlugins';
+import useFetchSecrets, { SecretsHook } from '../secrets/useFetchSecrets';
+import { useCurrentDistribution } from '../managerHooks';
 
 /**
  * Validates plugin version. If version pattern is not defined, any version is accepted.
@@ -29,32 +30,17 @@ const validatePluginVersion = (versionPattern?: RegExpString, pluginVersion?: st
     }
 };
 
-// export const mapAvailablePlugins = (availablePlugins: AvailablePluginData[]) => {
-//     return availablePlugins.reduce((result, { name, ...other }) => {
-//         result[name] = other;
-//         return result;
-//     }, {} as Record<string, Omit<AvailablePluginData, 'name'>>);
-// };
-
-// export const mapInstalledPlugins = (catalogPlugins: InstalledPluginData[]) => {
-//     // eslint-disable-next-line camelcase
-//     return catalogPlugins.reduce((result, { package_name, ...other }) => {
-//         result[package_name] = other;
-//         return result;
-//     }, {} as Record<string, Omit<InstalledPluginData, 'package_name'>>);
-// };
-
-export const mapDefinedSecrets = (definedSecrets: SecretData[]) => {
+export const mapDefinedSecrets = (definedSecrets: GettingStartedSecretsData[]) => {
     return definedSecrets.reduce((result, { key, ...other }) => {
         if (key) {
             result[key] = other;
         }
         return result;
-    }, {} as Record<string, Omit<SecretData, 'name'>>);
+    }, {} as Record<string, Omit<GettingStartedSecretsData, 'name'>>);
 };
 
-export const filterSchemaData = (selectedPlugins: JSONSchema, typedSecrets: JSONData) => {
-    const filteredSecrets = {} as JSONData;
+export const filterSchemaData = (selectedPlugins: GettingStartedSchema, typedSecrets: GettingStartedData) => {
+    const filteredSecrets = {} as GettingStartedData;
     selectedPlugins.forEach(selectedPlugin => {
         filteredSecrets[selectedPlugin.name] = typedSecrets[selectedPlugin.name];
     });
@@ -74,7 +60,7 @@ export type PluginInstallationTask = {
 export const createPluginInstallationTasks = (
     currentDistribution: string,
     currentPlugins: PluginsHook,
-    selectedPlugins: JSONSchema
+    selectedPlugins: GettingStartedSchema
 ) => {
     const acceptedPlugins: Record<string, boolean> = {};
     const rejectedPlugins: PluginInstallationTask[] = [];
@@ -88,6 +74,7 @@ export const createPluginInstallationTasks = (
                 const expectedPluginName = pluginDetails.name;
                 const expectedPluginVersion = pluginDetails.version;
                 const expectedPluginKey = `${expectedPluginName} ${expectedPluginVersion}`;
+                // to prevent duplicated items (accepted means: in installedPlugins or scheduledPlugins)
                 if (expectedPluginKey in acceptedPlugins) {
                     return;
                 }
@@ -159,8 +146,8 @@ export type SecretInstallationTask = {
 
 export const createSecretsInstallationTasks = (
     currentSecrets: SecretsHook,
-    selectedPlugins: JSONSchema,
-    typedSecrets: JSONData
+    selectedPlugins: GettingStartedSchema,
+    typedSecrets: GettingStartedData
 ) => {
     const usedSecrets: Record<string, boolean> = {};
     const updatedSecrets: SecretInstallationTask[] = [];
@@ -197,7 +184,7 @@ export const createSecretsInstallationTasks = (
     };
 };
 
-export const usePluginInstallationTasks = (selectedPlugins: JSONSchema) => {
+export const usePluginInstallationTasks = (selectedPlugins: GettingStartedSchema) => {
     const currentDistribution = useCurrentDistribution();
     const currentPlugins = useFetchPlugins();
     return useMemo(() => {
@@ -214,7 +201,10 @@ export const usePluginInstallationTasks = (selectedPlugins: JSONSchema) => {
     }, [currentDistribution, currentPlugins, selectedPlugins]);
 };
 
-export const useSecretsInstallationTasks = (selectedPlugins: JSONSchema, typedSecrets: JSONData) => {
+export const useSecretsInstallationTasks = (
+    selectedPlugins: GettingStartedSchema,
+    typedSecrets: GettingStartedData
+) => {
     const currentSecrets = useFetchSecrets();
     const filteredTypedSecrets = useMemo(() => filterSchemaData(selectedPlugins, typedSecrets), [
         selectedPlugins,

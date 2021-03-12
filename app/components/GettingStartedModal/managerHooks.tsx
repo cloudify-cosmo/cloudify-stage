@@ -1,3 +1,4 @@
+import { useMemo } from 'react';
 import { useSelector } from 'react-redux';
 
 import Internal from '../../utils/Internal';
@@ -13,6 +14,12 @@ const compareManagers = (a: any, b: any) => {
             isFetching: true
         }
     });
+};
+
+const getCurrentDistribution = (manager: Manager) => {
+    const currentDistributionName = manager.getDistributionName().trim();
+    const currentDistributionRelease = manager.getDistributionRelease().trim();
+    return `${currentDistributionName.toLowerCase()} ${currentDistributionRelease.toLowerCase()}`;
 };
 
 /**
@@ -31,4 +38,13 @@ export const useManager = () => {
 export const useInternal = () => {
     const manager = useSelector((state: any) => state.manager, compareManagers);
     return new Internal(manager);
+};
+
+/**
+ * Gets current distribution from manager.
+ * @returns current distribution
+ */
+export const useCurrentDistribution = () => {
+    const manager = useManager();
+    return useMemo(() => getCurrentDistribution(manager), [manager]);
 };
