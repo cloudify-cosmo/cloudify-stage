@@ -22,7 +22,9 @@ export type AvailablePluginData = {
 export type InstalledPluginData = {
     visibility: string;
     distribution: string;
+    // eslint-disable-next-line camelcase
     package_name: string;
+    // eslint-disable-next-line camelcase
     package_version: string;
 };
 
