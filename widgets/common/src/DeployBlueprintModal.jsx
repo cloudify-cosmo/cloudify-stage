@@ -27,18 +27,6 @@ const messages = Object.freeze({
     }
 });
 
-function FormSection({ header }) {
-    const { Form, Header } = Stage.Basic;
-    return (
-        <Form.Divider style={{ marginTop: 0 }}>
-            <Header size="tiny">{header}</Header>
-        </Form.Divider>
-    );
-}
-FormSection.propTypes = {
-    header: PropTypes.node.isRequired
-};
-
 class DeployBlueprintModal extends React.Component {
     static EMPTY_BLUEPRINT = { id: '', plan: { inputs: {}, workflows: { install: {} } } };
 
@@ -427,7 +415,9 @@ class DeployBlueprintModal extends React.Component {
                             blueprint.plan.data_types
                         )}
 
-                        <FormSection header={i18n.t('widgets.common.deployments.deployModal.deploymentMetadata')} />
+                        <Form.Divider>
+                            {i18n.t('widgets.common.deployments.deployModal.deploymentMetadata')}
+                        </Form.Divider>
 
                         <Form.Field
                             error={errors.siteName}
@@ -455,7 +445,9 @@ class DeployBlueprintModal extends React.Component {
                             />
                         </Form.Field>
 
-                        <FormSection header={i18n.t('widgets.common.deployments.deployModal.executionParameters')} />
+                        <Form.Divider>
+                            {i18n.t('widgets.common.deployments.deployModal.executionParameters')}
+                        </Form.Divider>
 
                         <Form.Field className="skipPluginsValidationCheckbox">
                             <Form.Checkbox
