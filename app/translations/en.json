@@ -400,9 +400,62 @@
                     "updateButton": "Update"
                 },
                 "deployModal": {
-                    "deploymentMetadata": "Deployment metadata",
-                    "executionParameters": "Execution parameters",
-                    "labelsLabel": "Labels"
+                    "inputs": {
+                        "deploymentName": {
+                            "label": "Deployment name",
+                            "help": "Specify a name for this deployment instance."
+                        },
+                        "blueprintName": {
+                            "label": "Blueprint",
+                            "help": "Select the blueprint based on which this deployment will be created."
+                        },
+                        "siteName": {
+                            "label": "Site name",
+                            "help": "Specify a site to which this deployment will be assigned."
+                        },
+                        "labels": {
+                            "label": "Labels"
+                        },
+                        "skipPluginsValidation": {
+                            "label": "Skip plugins validation",
+                            "message": "The recommended path is uploading plugins as wagons. This option is designed for plugin development and advanced users only."
+                        },
+                        "runtimeOnlyEvaluation": {
+                            "label": "Runtime only evaluation",
+                            "help": "If set, then get_property and get_input intrinsic functions will be evaluated on demand at runtime. If not set, then evaluation will be done at deployment creation time."
+                        },
+                        "deploymentInputs": {
+                            "loading": "Loading inputs...",
+                            "noInputs": "No inputs available for the blueprint"
+                        }
+                    },
+                    "sections": {
+                        "deploymentMetadata": "Deployment metadata",
+                        "executionParameters": "Execution parameters"
+                    },
+                    "buttons": {
+                        "deploy": "Deploy",
+                        "deployAndInstall": "Deploy & Install"
+                    },
+                    "steps": {
+                        "deploy": {
+                            "validatingData": "1/2: Validating data...",
+                            "deployingBlueprint": "2/2: Deploying blueprint..."
+                        },
+                        "deployAndInstall": {
+                            "validatingData": "1/4: Validating data...",
+                            "deployingBlueprint": "2/4: Deploying blueprint...",
+                            "waitingForDeployment": "3/4: Creating deployment environment...",
+                            "installingDeployment": "4/4: Installing deployment..."
+                        }
+                    },
+                    "errors": {
+                        "loadingYamlFileFailed": "Loading values from YAML file failed: {{ reason }}",
+                        "noBlueprintName": "Please select blueprint from the list",
+                        "noDeploymentName": "Please provide deployment name",
+                        "deploymentCreationFailed": "Deployment {{ deploymentId }} environment creation failed. {{ error }}",
+                        "deploymentInstallationFailed": "Deployment {{ deploymentId }} installation failed: {{ error }}"
+                    }
                 }
             },
             "labels": {
@@ -413,8 +466,10 @@
                 "valuePlaceholder": "Select or type in a value",
                 "validationError": "Only letters, digits and the characters \"-\", \".\" and \"_\" are allowed and it must begin with a letter.",
                 "invalidKeyError": "Allowed `{{ keyPrefix }}` prefixed labels are: {{ reservedKeys }}. All other `{{ keyPrefix }}` prefixed labels are reserved for internal use and cannot be added.",
-                "inputName": "Labels list",
-                "inputHelp": "A list of labels - key-value pairs - that can be assigned with a deployment",
+                "input": {
+                    "label": "Labels",
+                    "help": "A list of labels - key-value pairs - that can be assigned with a deployment"
+                },
                 "fetchingLabelsError": "Cannot fetch labels for deployment '{{deploymentId}}'",
                 "labelDuplicationError": "Cannot add the same label twice",
                 "modalHeader": "Manage labels for deployment '{{deploymentId}}'",

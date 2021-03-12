@@ -73,8 +73,8 @@ export default function LabelsModal({
             <Modal.Content>
                 <Form loading={isLoading} errors={errors} scrollToError onErrorsDismiss={clearErrors}>
                     <Form.Field
-                        label={i18n.t('widgets.common.labels.inputName')}
-                        help={i18n.t('widgets.common.labels.inputHelp')}
+                        label={i18n.t('widgets.common.labels.input.label')}
+                        help={i18n.t('widgets.common.labels.input.help')}
                     >
                         <LabelsInput
                             hideInitialLabels={hideInitialLabels}
