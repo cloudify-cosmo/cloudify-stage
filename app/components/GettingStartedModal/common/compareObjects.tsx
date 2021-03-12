@@ -1,4 +1,4 @@
-export type Ignores = { [key: string]: Ignores } | true;
+export type Ignores<T extends unknown> = { [key in keyof T]?: Ignores<T[key]> } | true;
 
 /**
  * Compares objects ignoring indicated properties.
@@ -12,7 +12,7 @@ export type Ignores = { [key: string]: Ignores } | true;
  * // aObject and bObject are compared like deep equals:
  *   compareObjects(aObject, bObject
  */
-const compareObjects = (a: any, b: any, ignores: Ignores = {}) => {
+const compareObjects = <A extends unknown, B extends unknown>(a: A, b: B, ignores: Ignores<A | B>) => {
     if (ignores === true) {
         return true; // we do not compare properties values, just returning true
     }
@@ -25,13 +25,13 @@ const compareObjects = (a: any, b: any, ignores: Ignores = {}) => {
         }
         const aKeys = Object.keys(a);
         for (let i = 0; i < aKeys.length; i += 1) {
-            const key = aKeys[i];
-            const ignore = ignores[key];
+            const key = aKeys[i] as string;
+            const ignore = (ignores as any)[key];
             if (ignore === true) {
                 return true; // we do not compare properties values, just returning true
             }
             if (key in a) {
-                if (!(key in b) || !compareObjects(a[key], b[key], ignore)) {
+                if (!(key in b) || !compareObjects((a as any)[key], (b as any)[key], ignore)) {
                     return false;
                 }
             }
@@ -39,7 +39,7 @@ const compareObjects = (a: any, b: any, ignores: Ignores = {}) => {
         const bKeys = Object.keys(b);
         for (let i = 0; i < bKeys.length; i += 1) {
             const key = aKeys[i];
-            if (ignores[key] === true) {
+            if ((ignores as any)[key] === true) {
                 return true; // we do not compare properties values, just returning true
             }
             if (key in b && !(key in a)) {
