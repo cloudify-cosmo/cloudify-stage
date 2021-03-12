@@ -196,8 +196,7 @@ describe('Create Deployment Button widget', () => {
         it('parses constraint error message from /deployments REST API', () => {
             selectBlueprintInModal('string');
 
-            const deploymentName = 'test';
-
+            const deploymentName = `${resourcePrefix}constraintError`;
             cy.interceptSp('PUT', `/deployments/${deploymentName}`).as('deployBlueprint');
 
             cy.get('input[name="deploymentName"]').type(deploymentName);
