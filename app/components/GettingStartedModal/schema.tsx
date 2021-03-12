@@ -9,12 +9,12 @@ const schema: GettingStartedSchema = [
         secrets: [
             {
                 name: 'aws_access_key_id',
-                label: 'aws_access_key_id',
+                label: 'AWS Access Key ID',
                 type: 'text'
             },
             {
                 name: 'aws_secret_access_key',
-                label: 'aws_secret_access_key',
+                label: 'AWS Secret Access Key',
                 type: 'password'
             }
         ]
@@ -71,27 +71,27 @@ const schema: GettingStartedSchema = [
         secrets: [
             {
                 name: 'openstack_username',
-                label: 'openstack_username',
+                label: 'OpenStack Username',
                 type: 'text'
             },
             {
                 name: 'openstack_password',
-                label: 'openstack_password',
+                label: 'Openstack Password',
                 type: 'password'
             },
             {
                 name: 'openstack_auth_url',
-                label: 'openstack_auth_url',
+                label: 'OpenStack Auth Url',
                 type: 'text'
             },
             {
                 name: 'openstack_project_name',
-                label: 'openstack_project_name',
+                label: 'OpenStack Project Name',
                 type: 'text'
             },
             {
                 name: 'openstack_region',
-                label: 'openstack_region',
+                label: 'Openstack Region',
                 type: 'text'
             }
         ]
@@ -104,27 +104,27 @@ const schema: GettingStartedSchema = [
         secrets: [
             {
                 name: 'openstack_username',
-                label: 'openstack_username',
+                label: 'Openstack Username',
                 type: 'text'
             },
             {
                 name: 'openstack_password',
-                label: 'openstack_password',
+                label: 'Openstack Password',
                 type: 'password'
             },
             {
                 name: 'openstack_auth_url',
-                label: 'openstack_auth_url',
+                label: 'Openstack Auth Url',
                 type: 'text'
             },
             {
                 name: 'openstack_project_name',
-                label: 'openstack_project_name',
+                label: 'Openstack Project Name',
                 type: 'text'
             },
             {
                 name: 'openstack_tenant_name',
-                label: 'openstack_tenant_name',
+                label: 'Openstack Tenant Name',
                 type: 'text'
             }
         ]
@@ -137,22 +137,22 @@ const schema: GettingStartedSchema = [
         secrets: [
             {
                 name: 'azure_subscription_id',
-                label: 'azure_subscription_id',
+                label: 'Azure Subscription ID',
                 type: 'text'
             },
             {
                 name: 'azure_tenant_id',
-                label: 'azure_tenant_id',
+                label: 'Azure Tenant ID',
                 type: 'text'
             },
             {
                 name: 'azure_client_id',
-                label: 'azure_client_id',
+                label: 'Azure Client ID',
                 type: 'text'
             },
             {
                 name: 'azure_client_secret',
-                label: 'azure_client_secret',
+                label: 'Azure Client Secret',
                 type: 'password'
             }
         ]
@@ -160,37 +160,37 @@ const schema: GettingStartedSchema = [
     {
         name: 'vcloud',
         logo: 'https://cloudify.co/wp-content/uploads/2019/08/vsphere.png',
-        label: 'VCloud',
+        label: 'vCloud',
         plugins: [{ name: 'cloudify-vcloud-plugin' }],
         secrets: [
             {
                 name: 'vcloud_user',
-                label: 'vcloud_user',
+                label: 'vCloud User',
                 type: 'text'
             },
             {
                 name: 'vcloud_password',
-                label: 'vcloud_password',
+                label: 'vCloud Password',
                 type: 'password'
             },
             {
                 name: 'vcloud_org',
-                label: 'vcloud_org',
+                label: 'vCloud Organization',
                 type: 'text'
             },
             {
                 name: 'vcloud_uri',
-                label: 'vcloud_uri',
+                label: 'vCloud URI',
                 type: 'text'
             },
             {
                 name: 'vcloud_vdc',
-                label: 'vcloud_vdc',
+                label: 'vCloud Virtual Data Center (vDC)',
                 type: 'text'
             },
             {
                 name: 'vcloud_gateway',
-                label: 'vcloud_gateway',
+                label: 'vCloud Gateway',
                 type: 'text'
             }
         ]
@@ -198,37 +198,37 @@ const schema: GettingStartedSchema = [
     {
         name: 'vsphere',
         logo: 'https://cloudify.co/wp-content/uploads/2019/08/vsphere.png',
-        label: 'VSphere',
+        label: 'vSphere',
         plugins: [{ name: 'cloudify-vsphere-plugin' }],
         secrets: [
             {
                 name: 'vsphere_username',
-                label: 'vsphere_username',
+                label: 'vSphere Username',
                 type: 'text'
             },
             {
                 name: 'vsphere_password',
-                label: 'vsphere_password',
+                label: 'vSphere Password',
                 type: 'password'
             },
             {
                 name: 'vsphere_host',
-                label: 'vsphere_host',
+                label: 'vSphere Host',
                 type: 'text'
             },
             {
                 name: 'vsphere_datacenter_nameas',
-                label: 'vsphere_datacenter_nameas',
+                label: 'vSphere Datacenter Nameas',
                 type: 'text'
             },
             {
                 name: 'vsphere_resource_pool_name',
-                label: 'vsphere_resource_pool_name',
+                label: 'vSphere Resource Pool Name',
                 type: 'text'
             },
             {
                 name: 'vsphere_auto_placement',
-                label: 'vsphere_auto_placement',
+                label: 'vSphere Auto Placement',
                 type: 'text'
             }
         ]
@@ -241,12 +241,12 @@ const schema: GettingStartedSchema = [
         secrets: [
             {
                 name: 'aws_access_key_id',
-                label: 'aws_access_key_id',
+                label: 'AWS Access Key ID',
                 type: 'text'
             },
             {
                 name: 'aws_secret_access_key',
-                label: 'aws_secret_access_key',
+                label: 'AWS Secret Access Key',
                 type: 'password'
             }
         ]
@@ -259,12 +259,12 @@ const schema: GettingStartedSchema = [
         secrets: [
             {
                 name: 'aws_access_key_id',
-                label: 'aws_access_key_id',
+                label: 'AWS Access Key ID',
                 type: 'text'
             },
             {
                 name: 'aws_secret_access_key',
-                label: 'aws_secret_access_key',
+                label: 'AWS Secret Access Key',
                 type: 'password'
             }
         ]
