@@ -3,7 +3,7 @@ describe('Create Deployment Button widget', () => {
     const testBlueprintId = `${resourcePrefix}bp`;
     const testBlueprintUrl =
         'https://github.com/cloudify-community/blueprint-examples/releases/download/latest/simple-hello-world-example.zip';
-    const firstInputNthChild = 7;
+    const firstInputNthChild = 6;
 
     before(() => {
         cy.activate('valid_trial_license').usePageMock('deploymentButton').mockLogin();
@@ -227,7 +227,7 @@ describe('Create Deployment Button widget', () => {
     });
 
     describe('handles inputs of type', () => {
-        afterEach(() => cy.get(`.actions > .ui:nth-child(1)`).click());
+        afterEach(() => cy.contains('button', 'Cancel').click());
 
         it('boolean', () => {
             selectBlueprintInModal('boolean');
