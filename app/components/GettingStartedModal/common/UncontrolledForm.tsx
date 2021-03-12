@@ -1,5 +1,6 @@
 import React, { FormEvent, forwardRef, memo, ReactNode, Ref, RefObject, useRef } from 'react';
 import { Form, Ref as SemanticRef } from 'semantic-ui-react';
+
 import { bindFormData, getFormData } from './formUtils';
 
 type Props<T extends unknown> = {

@@ -1,6 +1,6 @@
-import Internal from '../../utils/Internal';
-import Manager from '../../utils/Manager';
-import { PluginInstallationTask, SecretInstallationTask } from './installationTasksUtils';
+import Internal from '../../../utils/Internal';
+import Manager from '../../../utils/Manager';
+import { PluginInstallationTask, SecretInstallationTask } from './tasks';
 
 export const installPlugin = async (internal: Internal, plugin: PluginInstallationTask) => {
     if (!plugin.yamlUrl || !plugin.wagonUrl) {
@@ -17,6 +17,8 @@ export const installPlugin = async (internal: Internal, plugin: PluginInstallati
         await internal.doUpload('/plugins/upload', params, null, 'post');
         return true;
     } catch (e) {
+        // eslint-disable-next-line no-console
+        console.error(e);
         return false;
     }
 };
@@ -31,6 +33,8 @@ export const createSecret = async (manager: Manager, secret: SecretInstallationT
         await manager.doPut(`/secrets/${secret.name}`, null, data);
         return true;
     } catch (e) {
+        // eslint-disable-next-line no-console
+        console.error(e);
         return false;
     }
 };
@@ -43,6 +47,8 @@ export const updateSecret = async (manager: Manager, secret: SecretInstallationT
         await manager.doPatch(`/secrets/${secret.name}`, null, data);
         return true;
     } catch (e) {
+        // eslint-disable-next-line no-console
+        console.error(e);
         return false;
     }
 };

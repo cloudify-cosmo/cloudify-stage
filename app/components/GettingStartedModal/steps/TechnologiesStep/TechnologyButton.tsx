@@ -1,6 +1,7 @@
 import { Form } from 'cloudify-ui-components';
 import React, { ChangeEvent, CSSProperties, memo, useEffect, useRef, useState } from 'react';
 import { Ref as SemanticRef } from 'semantic-ui-react';
+
 import createCheckboxRefExtractor from '../../common/createCheckboxRefExtractor';
 
 const style: CSSProperties = {

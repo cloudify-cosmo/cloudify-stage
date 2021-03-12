@@ -1,11 +1,11 @@
-import React, { FC, forwardRef, memo, Ref } from 'react';
+import React, { forwardRef, memo, Ref } from 'react';
 import UncontrolledForm from '../../common/UncontrolledForm';
-import { JSONSchema, TechnologiesData } from '../../model';
+import { GettingStartedSchema, GettingStartedTechnologiesData } from '../../model';
 import TechnologyButton from './TechnologyButton';
 
 type Props = {
-    schema: JSONSchema;
-    technologies: TechnologiesData;
+    schema: GettingStartedSchema;
+    technologies: GettingStartedTechnologiesData;
 };
 
 const TechnologiesStep = ({ schema, technologies }: Props, ref: Ref<HTMLFormElement>) => {

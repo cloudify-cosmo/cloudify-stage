@@ -2,11 +2,11 @@ import { Form } from 'cloudify-ui-components';
 import React, { FC, forwardRef, memo, Ref } from 'react';
 
 import UncontrolledForm from '../common/UncontrolledForm';
-import type { JSONData, JSONSchemaItem } from '../model';
+import type { GettingStartedData, GettingStartedSchemaItem } from '../model';
 
 type Props = {
-    selectedPlugin: JSONSchemaItem;
-    typedSecrets: JSONData;
+    selectedPlugin: GettingStartedSchemaItem;
+    typedSecrets: GettingStartedData;
 };
 
 const SecretsStep = ({ selectedPlugin, typedSecrets }: Props, ref: Ref<HTMLFormElement>) => {

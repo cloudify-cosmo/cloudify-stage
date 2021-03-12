@@ -1,16 +1,16 @@
 import React, { memo, useEffect, useState } from 'react';
 import { Divider, Form, Header, Label, List, Message, Progress } from 'semantic-ui-react';
 import useCurrentCallback from '../../common/useCurrentCallback';
-import { createResourcesInstaller } from '../../installationProcessUtils';
-import { usePluginInstallationTasks, useSecretsInstallationTasks } from '../../installationTasksUtils';
+import { createResourcesInstaller } from '../../installation/process';
+import { usePluginInstallationTasks, useSecretsInstallationTasks } from '../../installation/tasks';
 import { useInternal, useManager } from '../../managerHooks';
-import { JSONData, JSONSchema } from '../../model';
+import { GettingStartedData, GettingStartedSchema } from '../../model';
 import PluginTaskItems, { installedPluginDescription, rejectedPluginDescription } from './PluginTaskItems';
 
 type Props = {
     installationMode?: boolean;
-    selectedPlugins: JSONSchema;
-    typedSecrets: JSONData;
+    selectedPlugins: GettingStartedSchema;
+    typedSecrets: GettingStartedData;
     onInstallationStarted?: () => void;
     onInstallationFinished?: () => void;
     onInstallationCanceled?: () => void;
@@ -50,7 +50,7 @@ const SummaryStep = ({
                     handleInstallationFinished();
                 }
             );
-            // async installation that can be stopped with destroy method
+            // async installation that can be stopped with destroy() method
             resourcesInstaller.install(
                 pluginInstallationTasks.tasks.scheduledPlugins,
                 secretInstallationTasks.tasks.updatedSecrets,

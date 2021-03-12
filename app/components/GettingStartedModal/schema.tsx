@@ -1,6 +1,6 @@
-import { JSONSchema } from './model';
+import { GettingStartedSchema } from './model';
 
-const schema: JSONSchema = [
+const schema: GettingStartedSchema = [
     {
         name: 'aws',
         logo: 'https://cloudify.co/wp-content/uploads/2019/08/aws-1.png',

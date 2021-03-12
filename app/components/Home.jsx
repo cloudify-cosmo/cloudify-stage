@@ -9,8 +9,8 @@ import i18n from 'i18next';
 import SideBar from '../containers/SideBar';
 import Page from './Page';
 import ToursButton from '../containers/ToursButton';
-import QuickConfigurationModal from './QuickConfigurationModal';
-import quickConfigurationSchema from './QuickConfigurationModal/schema';
+import GettingStartedModal from './GettingStartedModal';
+import gettingStartedSchema from './GettingStartedModal/schema';
 
 export default class Home extends Component {
     constructor(props) {
@@ -103,10 +103,10 @@ export default class Home extends Component {
 
                 <SideBar pageId={pageId} />
 
-                <QuickConfigurationModal
+                <GettingStartedModal
                     open={modalOpen}
                     step={0}
-                    schema={quickConfigurationSchema}
+                    schema={gettingStartedSchema}
                     onClose={this.handleModalClose}
                 />
 

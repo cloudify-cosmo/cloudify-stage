@@ -1,18 +1,18 @@
 import React, { memo, useRef, useState, useEffect, useMemo } from 'react';
 import { Form } from 'cloudify-ui-components';
 import i18n from 'i18next';
-
 import { Button, Divider, Message, ModalHeader, Ref as SemanticRef } from 'semantic-ui-react';
+
 import { Modal } from '../basic';
-import { JSONData, JSONSchema, TechnologiesData } from './model';
+import { GettingStartedData, GettingStartedSchema, GettingStartedTechnologiesData } from './model';
 import { getFormData } from './common/formUtils';
 import createCheckboxRefExtractor from './common/createCheckboxRefExtractor';
 import TechnologiesStep from './steps/TechnologiesStep/index';
 import SecretsStep from './steps/SecretsStep';
 import SummaryStep from './steps/SummaryStep/SummaryStep';
-import { validateSecretFields, validateTechnologyFields } from './validationUtils';
+import { validateSecretFields, validateTechnologyFields } from './formValidation';
 
-const getHeaderText = (schema: JSONSchema, step: number) => {
+const getHeaderText = (schema: GettingStartedSchema, step: number) => {
     if (step === 0) {
         return 'Getting Started';
     }
@@ -30,21 +30,21 @@ const getHeaderText = (schema: JSONSchema, step: number) => {
  * @param data data that can be bound into form that are complies with technology forms schema
  * @returns information about selected technologies
  */
-const detectTechnologies = (schema: JSONSchema, data?: JSONData) => {
+const detectTechnologies = (schema: GettingStartedSchema, data?: GettingStartedData) => {
     if (data) {
         return schema.reduce((result, item) => {
             result[item.name] = item.name in data;
             return result;
-        }, {} as TechnologiesData);
+        }, {} as GettingStartedTechnologiesData);
     }
-    return {} as TechnologiesData;
+    return {} as GettingStartedTechnologiesData;
 };
 
 type Props = {
     open?: boolean;
     step?: number;
-    schema: JSONSchema;
-    data?: JSONData;
+    schema: GettingStartedSchema;
+    data?: GettingStartedData;
     onClose?: (permanentClose: boolean) => void;
 };
 
@@ -52,7 +52,7 @@ const QuickConfigurationModal = ({ open = false, step = 0, schema, data, onClose
     const modalDisabledInputRef = useRef<HTMLInputElement>(null);
     const technologiesFormRef = useRef<HTMLFormElement>(null);
     const secretsFormRef = useRef<HTMLFormElement>(null);
-    const [detectedTechnologies, setDetectedTechnologies] = useState<TechnologiesData>(() => ({}));
+    const [detectedTechnologies, setDetectedTechnologies] = useState<GettingStartedTechnologiesData>(() => ({}));
     const [localStep, setLocalStep] = useState(step);
     const [localData, setLocalData] = useState(() => data ?? {});
     const [installationProcessing, setInstallationProcessing] = useState(false);
@@ -66,7 +66,7 @@ const QuickConfigurationModal = ({ open = false, step = 0, schema, data, onClose
     const selectedSchema = selectedSchemas[localStep - 1];
     const updateDetectedTechnologies = () => {
         if (technologiesFormRef.current) {
-            const newUsedTechnologies = getFormData<TechnologiesData>(technologiesFormRef.current);
+            const newUsedTechnologies = getFormData<GettingStartedTechnologiesData>(technologiesFormRef.current);
             const usedTechnologiesErrors = validateTechnologyFields(newUsedTechnologies);
             if (usedTechnologiesErrors.length > 0) {
                 setCurrentErrors(usedTechnologiesErrors);
@@ -79,7 +79,7 @@ const QuickConfigurationModal = ({ open = false, step = 0, schema, data, onClose
     };
     const updateLocalData = () => {
         if (secretsFormRef.current) {
-            const newLocalData = getFormData<JSONData>(secretsFormRef.current);
+            const newLocalData = getFormData<GettingStartedData>(secretsFormRef.current);
             const newSecretsData = newLocalData[selectedSchema.name];
             const localDataErrors = validateSecretFields(newSecretsData ?? {});
             if (localDataErrors.length > 0) {
@@ -106,7 +106,7 @@ const QuickConfigurationModal = ({ open = false, step = 0, schema, data, onClose
     const handleBackClick = () => {
         if (localStep > 0) {
             if (secretsFormRef.current) {
-                const newLocalData = getFormData<JSONData>(secretsFormRef.current);
+                const newLocalData = getFormData<GettingStartedData>(secretsFormRef.current);
                 setLocalData({ ...localData, ...newLocalData });
             }
             setLocalStep(localStep - 1);
