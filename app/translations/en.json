@@ -400,6 +400,8 @@
                     "updateButton": "Update"
                 },
                 "deployModal": {
+                    "deploymentMetadata": "Deployment metadata",
+                    "executionParameters": "Execution parameters",
                     "labelsLabel": "Labels"
                 }
             },

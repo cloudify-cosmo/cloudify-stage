@@ -370,21 +370,6 @@ class DeployBlueprintModal extends React.Component {
                             />
                         </Form.Field>
 
-                        <Form.Field
-                            error={errors.siteName}
-                            label="Site name"
-                            help="(Optional) Specify a site to which this deployment will be assigned."
-                        >
-                            <DynamicDropdown
-                                value={siteName}
-                                onChange={value => this.setState({ siteName: value })}
-                                name="siteName"
-                                fetchUrl="/sites?_include=name"
-                                valueProp="name"
-                                toolbox={toolbox}
-                            />
-                        </Form.Field>
-
                         {this.isBlueprintSelectable() && (
                             <Form.Field
                                 error={errors.blueprintName}
@@ -430,6 +415,25 @@ class DeployBlueprintModal extends React.Component {
                             blueprint.plan.data_types
                         )}
 
+                        <Form.Divider>
+                            {i18n.t('widgets.common.deployments.deployModal.deploymentMetadata')}
+                        </Form.Divider>
+
+                        <Form.Field
+                            error={errors.siteName}
+                            label="Site name"
+                            help="Specify a site to which this deployment will be assigned."
+                        >
+                            <DynamicDropdown
+                                value={siteName}
+                                onChange={value => this.setState({ siteName: value })}
+                                name="siteName"
+                                fetchUrl="/sites?_include=name"
+                                valueProp="name"
+                                toolbox={toolbox}
+                            />
+                        </Form.Field>
+
                         <Form.Field
                             label={i18n.t('widgets.common.deployments.deployModal.labelsLabel')}
                             help={i18n.t('widgets.common.labels.inputHelp')}
@@ -440,6 +444,10 @@ class DeployBlueprintModal extends React.Component {
                                 onChange={labels => this.setState({ labels })}
                             />
                         </Form.Field>
+
+                        <Form.Divider>
+                            {i18n.t('widgets.common.deployments.deployModal.executionParameters')}
+                        </Form.Divider>
 
                         <Form.Field className="skipPluginsValidationCheckbox">
                             <Form.Checkbox
@@ -511,11 +519,7 @@ DeployBlueprintModal.propTypes = {
     /**
      * Toolbox object
      */
-    toolbox: PropTypes.shape({
-        drillDown: PropTypes.func.isRequired,
-        getEventBus: PropTypes.func.isRequired,
-        getWidget: PropTypes.func.isRequired
-    }).isRequired,
+    toolbox: Stage.PropTypes.Toolbox.isRequired,
 
     /**
      * blueprintId, if set then Blueprint selection dropdown is not displayed

@@ -50,6 +50,10 @@ const commands = {
             cy.get('.input input').clear().type(deploymentId);
             cy.get('.input.loading').should('not.exist');
         });
+    },
+    revertToDefaultValue: () => {
+        const revertToDefaultAriaLabel = '[aria-label="Revert value to default"]';
+        cy.get(revertToDefaultAriaLabel).click().should('not.exist');
     }
 };
 

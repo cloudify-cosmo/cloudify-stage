@@ -3,7 +3,7 @@ describe('Create Deployment Button widget', () => {
     const testBlueprintId = `${resourcePrefix}bp`;
     const testBlueprintUrl =
         'https://github.com/cloudify-community/blueprint-examples/releases/download/latest/simple-hello-world-example.zip';
-    const firstInputNthChild = 7;
+    const firstInputNthChild = 6;
 
     before(() => {
         cy.activate('valid_trial_license').usePageMock('deploymentButton').mockLogin();
@@ -227,7 +227,7 @@ describe('Create Deployment Button widget', () => {
     });
 
     describe('handles inputs of type', () => {
-        afterEach(() => cy.get(`.actions > .ui:nth-child(1)`).click());
+        afterEach(() => cy.contains('button', 'Cancel').click());
 
         it('boolean', () => {
             selectBlueprintInModal('boolean');
@@ -254,11 +254,9 @@ describe('Create Deployment Button widget', () => {
                     cy.get('input[type="checkbox"]').should('not.have.attr', 'checked');
 
                     cy.get('@toggle').click();
-                    cy.get('i.undo.link.icon').as('revertToDefaultValue').should('be.visible');
                     cy.get('@toggle').should('have.class', 'checked');
 
-                    cy.get('@revertToDefaultValue').click();
-                    cy.get('@revertToDefaultValue').should('not.exist');
+                    cy.revertToDefaultValue();
                     cy.get('@toggle').should('not.have.class', 'checked');
                 });
 
@@ -270,11 +268,9 @@ describe('Create Deployment Button widget', () => {
                     cy.get('input[type="checkbox"]').should('have.attr', 'checked');
 
                     cy.get('@toggle').click();
-                    cy.get('i.undo.link.icon').as('revertToDefaultValue').should('be.visible');
                     cy.get('@toggle').should('not.have.class', 'checked');
 
-                    cy.get('@revertToDefaultValue').click();
-                    cy.get('@revertToDefaultValue').should('not.exist');
+                    cy.revertToDefaultValue();
                     cy.get('@toggle').should('have.class', 'checked');
                 });
         });
@@ -324,11 +320,9 @@ describe('Create Deployment Button widget', () => {
                     cy.get('input').as('inputField').clear().type('123').blur();
 
                     verifyNumberInput(null, null, 123);
-                    cy.get('i.undo.link.icon').as('revertToDefaultValue').should('be.visible');
 
-                    cy.get('@revertToDefaultValue').click();
+                    cy.revertToDefaultValue();
                     verifyNumberInput(null, null, 50);
-                    cy.get('@revertToDefaultValue').should('not.exist');
                 });
         });
 
@@ -347,11 +341,9 @@ describe('Create Deployment Button widget', () => {
                     cy.get('input').as('inputField').clear().type('2.71').blur();
 
                     verifyNumberInput(null, null, 2.71, 'any');
-                    cy.get('i.undo.link.icon').as('revertToDefaultValue').should('be.visible');
 
-                    cy.get('@revertToDefaultValue').click();
+                    cy.revertToDefaultValue();
                     verifyNumberInput(null, null, 3.14, 'any');
-                    cy.get('@revertToDefaultValue').should('not.exist');
                 });
         });
 
@@ -388,7 +380,7 @@ describe('Create Deployment Button widget', () => {
                     cy.get('@switchIcon').click();
 
                     cy.get('@reactJsonView').should('have.text', '{}0 items');
-                    cy.get('.icon.undo.link').as('revertToDefaultIcon').click();
+                    cy.revertToDefaultValue();
 
                     cy.get('@reactJsonView').trigger('mouseover');
                     cy.get('@switchIcon').click();
@@ -453,9 +445,7 @@ describe('Create Deployment Button widget', () => {
                     verifyTextInput('Ubuntu 18.04');
                     cy.get('input').clear().type('Something').blur();
                     verifyTextInput('Something');
-                    cy.get('i.undo.link.icon').as('revertToDefaultValue').should('be.visible');
-                    cy.get('@revertToDefaultValue').click();
-                    cy.get('@revertToDefaultValue').should('not.exist');
+                    cy.revertToDefaultValue();
                     verifyTextInput('Ubuntu 18.04');
                 });
 
@@ -471,10 +461,7 @@ describe('Create Deployment Button widget', () => {
                     cy.get('div[name="pl"]').click();
                     cy.get('@text').should('have.text', 'pl');
 
-                    cy.get('i.undo.link.icon').as('revertToDefaultValue').should('be.visible');
-                    cy.get('@revertToDefaultValue').click();
-
-                    cy.get('@revertToDefaultValue').should('not.exist');
+                    cy.revertToDefaultValue();
                     cy.get('@text').should('have.text', 'en');
 
                     cy.get('i.dropdown.icon')
@@ -484,8 +471,10 @@ describe('Create Deployment Button widget', () => {
                     cy.get('@dropdownOrClearIcon').click();
 
                     cy.get('@text').should('not.exist');
-                    cy.get('@revertToDefaultValue').should('be.visible');
                     cy.get('@dropdownOrClearIcon').should('not.have.class', 'clear');
+
+                    cy.revertToDefaultValue();
+                    cy.get('@text').should('have.text', 'en');
                 });
 
             cy.get(`form :nth-child(${firstInputNthChild + 3}).field`)
