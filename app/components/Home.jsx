@@ -15,8 +15,9 @@ import gettingStartedSchema from './GettingStartedModal/schema';
 export default class Home extends Component {
     constructor(props) {
         super(props);
+        const gettingStartedModalDisabled = localStorage.getItem('getting-started-modal-disabled');
         this.state = {
-            modalOpen: localStorage.wizardModalDisabled === undefined || localStorage.wizardModalDisabled !== 'true'
+            modalOpen: gettingStartedModalDisabled === undefined || gettingStartedModalDisabled !== 'true'
         };
     }
 
@@ -82,7 +83,7 @@ export default class Home extends Component {
 
     handleModalClose = permanentClose => {
         if (permanentClose) {
-            localStorage.wizardModalDisabled = 'true';
+            localStorage.setItem('getting-started-modal-disabled', 'true');
         }
         this.setState({
             modalOpen: false
