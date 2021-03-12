@@ -52,9 +52,8 @@ const commands = {
         });
     },
     revertToDefaultValue: () => {
-        const revertToDefaultAriaLabel = '[aria-label="revert-to-default"]';
-        cy.get(revertToDefaultAriaLabel).click();
-        cy.get(revertToDefaultAriaLabel).should('not.exist');
+        const revertToDefaultAriaLabel = '[aria-label="Revert value to default"]';
+        cy.get(revertToDefaultAriaLabel).click().should('not.exist');
     }
 };
 
