@@ -11,7 +11,7 @@ function RevertToDefaultIcon({ value, defaultValue, onClick, onMouseDown, popupC
         <Popup
             trigger={
                 <Icon
-                    data-testid="revert-to-default"
+                    aria-label="revert-to-default"
                     name="undo"
                     link
                     onClick={onClick}
