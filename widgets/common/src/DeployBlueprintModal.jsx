@@ -519,11 +519,7 @@ DeployBlueprintModal.propTypes = {
     /**
      * Toolbox object
      */
-    toolbox: PropTypes.shape({
-        drillDown: PropTypes.func.isRequired,
-        getEventBus: PropTypes.func.isRequired,
-        getWidget: PropTypes.func.isRequired
-    }).isRequired,
+    toolbox: Stage.PropTypes.Toolbox.isRequired,
 
     /**
      * blueprintId, if set then Blueprint selection dropdown is not displayed
