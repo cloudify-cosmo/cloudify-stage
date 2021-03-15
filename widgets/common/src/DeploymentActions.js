@@ -125,6 +125,10 @@ export default class DeploymentActions {
             .then(({ items }) => items);
     }
 
+    doGetWorkflows(deploymentId) {
+        return this.toolbox.getManager().doGet(`/deployments/${deploymentId}?_include=id,workflows`);
+    }
+
     async waitUntilCreated(deploymentId) {
         const { ExecutionActions, PollHelper } = Stage.Common;
 
