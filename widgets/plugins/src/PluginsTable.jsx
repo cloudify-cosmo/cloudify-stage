@@ -199,13 +199,17 @@ export default class PluginsTable extends React.Component {
                                     <PluginIcon src={item.icon} />
                                 </DataTable.Data>
                                 <DataTable.Data>
-                                    {item.title || item.package_name}
-                                    <ResourceVisibility
-                                        visibility={item.visibility}
-                                        onSetVisibility={visibility => this.setPluginVisibility(item.id, visibility)}
-                                        allowedSettingTo={['tenant', 'global']}
-                                        className="rightFloated"
-                                    />
+                                    <div className="verticallyAlignedCell">
+                                        {item.title || item.package_name}
+                                        <ResourceVisibility
+                                            visibility={item.visibility}
+                                            onSetVisibility={visibility =>
+                                                this.setPluginVisibility(item.id, visibility)
+                                            }
+                                            allowedSettingTo={['tenant', 'global']}
+                                            className="rightFloated"
+                                        />
+                                    </div>
                                 </DataTable.Data>
                                 <DataTable.Data>{item.package_name}</DataTable.Data>
                                 <DataTable.Data>{item.package_version}</DataTable.Data>
