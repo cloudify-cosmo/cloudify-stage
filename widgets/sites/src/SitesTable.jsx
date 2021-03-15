@@ -101,6 +101,7 @@ export default class SitesTable extends React.Component {
         const NO_DATA_MESSAGE = 'There are no Sites available. Click "Create" to create Sites.';
         const { DataTable, ErrorMessage, Icon, ResourceVisibility, Label, Popup } = Stage.Basic;
         const DeleteModal = Stage.Basic.Confirm;
+        const { VerticallyAlignedCell } = Stage.Shared;
         const { data, toolbox, widget } = this.props;
         let latitude;
         let longitude = null;
@@ -135,15 +136,17 @@ export default class SitesTable extends React.Component {
                         return (
                             <DataTable.Row key={item.name}>
                                 <DataTable.Data>
-                                    {item.name}
-                                    <ResourceVisibility
-                                        visibility={item.visibility}
-                                        onSetVisibility={visibility => {
-                                            this.setSiteVisibility(item.name, visibility);
-                                        }}
-                                        allowedSettingTo={['tenant', 'global']}
-                                        className="rightFloated"
-                                    />
+                                    <VerticallyAlignedCell>
+                                        {item.name}
+                                        <ResourceVisibility
+                                            visibility={item.visibility}
+                                            onSetVisibility={visibility => {
+                                                this.setSiteVisibility(item.name, visibility);
+                                            }}
+                                            allowedSettingTo={['tenant', 'global']}
+                                            className="rightFloated"
+                                        />
+                                    </VerticallyAlignedCell>
                                 </DataTable.Data>
                                 <DataTable.Data>
                                     {item.location && (
