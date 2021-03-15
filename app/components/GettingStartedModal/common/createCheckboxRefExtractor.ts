@@ -1,4 +1,4 @@
-import type { MutableRefObject } from 'react';
+import type { MutableRefObject, Ref } from 'react';
 
 /**
  * Creates function that lets to extract semantic-ui-react checkbox input reference.
@@ -9,8 +9,8 @@ import type { MutableRefObject } from 'react';
  *   </SemanticRef>
  * @param inputRef extracted input reference.
  */
-const createCheckboxRefExtractor = (inputRef: MutableRefObject<HTMLInputElement | null>) => {
-    return (ref: HTMLDivElement) => {
+const createCheckboxRefExtractor = (inputRef: MutableRefObject<HTMLInputElement | null>): Ref<HTMLElement> => {
+    return (ref: HTMLElement) => {
         if (ref) {
             inputRef.current = ref.firstChild as HTMLInputElement;
         } else {
