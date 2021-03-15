@@ -115,7 +115,7 @@ export default class SnapshotsTable extends React.Component {
         const { data, toolbox, widget } = this.props;
         const NO_DATA_MESSAGE = 'There are no Snapshots available. Click "Create" to create Snapshots.';
         const { Confirm, ErrorMessage, DataTable, Icon, ResourceVisibility } = Stage.Basic;
-        const { VerticallyAlignedCell } = Stage.Common;
+        const { VerticallyAlignedCell } = Stage.Shared;
 
         return (
             <div className="snapshotsTableDiv">

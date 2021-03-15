@@ -151,8 +151,8 @@ export default class PluginsTable extends React.Component {
         const { data, toolbox, widget } = this.props;
         const NO_DATA_MESSAGE = 'There are no Plugins available. Click "Upload" to add Plugins.';
         const { Button, DataTable, ErrorMessage, Icon, ResourceVisibility } = Stage.Basic;
-        const { IdPopup } = Stage.Shared;
-        const { DeleteConfirm, UploadPluginModal, PluginIcon, VerticallyAlignedCell } = Stage.Common;
+        const { IdPopup, VerticallyAlignedCell } = Stage.Shared;
+        const { DeleteConfirm, UploadPluginModal, PluginIcon } = Stage.Common;
 
         return (
             <div>

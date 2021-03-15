@@ -101,7 +101,7 @@ export default class SitesTable extends React.Component {
         const NO_DATA_MESSAGE = 'There are no Sites available. Click "Create" to create Sites.';
         const { DataTable, ErrorMessage, Icon, ResourceVisibility, Label, Popup } = Stage.Basic;
         const DeleteModal = Stage.Basic.Confirm;
-        const { VerticallyAlignedCell } = Stage.Common;
+        const { VerticallyAlignedCell } = Stage.Shared;
         const { data, toolbox, widget } = this.props;
         let latitude;
         let longitude = null;
