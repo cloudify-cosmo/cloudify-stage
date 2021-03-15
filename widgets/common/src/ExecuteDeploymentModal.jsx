@@ -62,8 +62,7 @@ export default function ExecuteDeploymentModal({
         if (isWorkflowName(workflow)) {
             setLoading();
             actions
-                // FIXME: Once RD-1353 is implemented, { _include: ['worflows'] } should be passed as params to doGet
-                .doGet({ id: deploymentId })
+                .doGetWorkflows(deploymentId)
                 .then(({ workflows }) => {
                     const selectedWorkflow = _.find(workflows, { name: workflowName });
 
