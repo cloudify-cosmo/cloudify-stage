@@ -135,15 +135,17 @@ export default class SitesTable extends React.Component {
                         return (
                             <DataTable.Row key={item.name}>
                                 <DataTable.Data>
-                                    {item.name}
-                                    <ResourceVisibility
-                                        visibility={item.visibility}
-                                        onSetVisibility={visibility => {
-                                            this.setSiteVisibility(item.name, visibility);
-                                        }}
-                                        allowedSettingTo={['tenant', 'global']}
-                                        className="rightFloated"
-                                    />
+                                    <div className="verticallyAlignedCell">
+                                        {item.name}
+                                        <ResourceVisibility
+                                            visibility={item.visibility}
+                                            onSetVisibility={visibility => {
+                                                this.setSiteVisibility(item.name, visibility);
+                                            }}
+                                            allowedSettingTo={['tenant', 'global']}
+                                            className="rightFloated"
+                                        />
+                                    </div>
                                 </DataTable.Data>
                                 <DataTable.Data>
                                     {item.location && (
