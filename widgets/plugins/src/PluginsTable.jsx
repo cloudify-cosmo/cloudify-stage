@@ -152,7 +152,7 @@ export default class PluginsTable extends React.Component {
         const NO_DATA_MESSAGE = 'There are no Plugins available. Click "Upload" to add Plugins.';
         const { Button, DataTable, ErrorMessage, Icon, ResourceVisibility } = Stage.Basic;
         const { IdPopup } = Stage.Shared;
-        const { DeleteConfirm, UploadPluginModal, PluginIcon } = Stage.Common;
+        const { DeleteConfirm, UploadPluginModal, PluginIcon, VerticallyAlignedCell } = Stage.Common;
 
         return (
             <div>
@@ -199,7 +199,7 @@ export default class PluginsTable extends React.Component {
                                     <PluginIcon src={item.icon} />
                                 </DataTable.Data>
                                 <DataTable.Data>
-                                    <div className="verticallyAlignedCell">
+                                    <VerticallyAlignedCell>
                                         {item.title || item.package_name}
                                         <ResourceVisibility
                                             visibility={item.visibility}
@@ -209,7 +209,7 @@ export default class PluginsTable extends React.Component {
                                             allowedSettingTo={['tenant', 'global']}
                                             className="rightFloated"
                                         />
-                                    </div>
+                                    </VerticallyAlignedCell>
                                 </DataTable.Data>
                                 <DataTable.Data>{item.package_name}</DataTable.Data>
                                 <DataTable.Data>{item.package_version}</DataTable.Data>

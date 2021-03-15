@@ -101,6 +101,7 @@ export default class SitesTable extends React.Component {
         const NO_DATA_MESSAGE = 'There are no Sites available. Click "Create" to create Sites.';
         const { DataTable, ErrorMessage, Icon, ResourceVisibility, Label, Popup } = Stage.Basic;
         const DeleteModal = Stage.Basic.Confirm;
+        const { VerticallyAlignedCell } = Stage.Common;
         const { data, toolbox, widget } = this.props;
         let latitude;
         let longitude = null;
@@ -135,7 +136,7 @@ export default class SitesTable extends React.Component {
                         return (
                             <DataTable.Row key={item.name}>
                                 <DataTable.Data>
-                                    <div className="verticallyAlignedCell">
+                                    <VerticallyAlignedCell>
                                         {item.name}
                                         <ResourceVisibility
                                             visibility={item.visibility}
@@ -145,7 +146,7 @@ export default class SitesTable extends React.Component {
                                             allowedSettingTo={['tenant', 'global']}
                                             className="rightFloated"
                                         />
-                                    </div>
+                                    </VerticallyAlignedCell>
                                 </DataTable.Data>
                                 <DataTable.Data>
                                     {item.location && (
