@@ -72,6 +72,7 @@ const TechnologyButton = memo(({ name, logo, label, value, ...other }: Props) =>
                     label=" "
                     checked={localValue}
                     style={{ display: 'none' }}
+                    // eslint-disable-next-line react/jsx-props-no-spreading
                     {...other}
                     onChange={handleChange}
                 />
