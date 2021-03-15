@@ -4,19 +4,14 @@ import i18n from 'i18next';
 import { Button, Divider, Message, ModalHeader, Ref as SemanticRef } from 'semantic-ui-react';
 
 import { Modal } from '../basic';
-import {
-    GettingStartedData,
-    GettingStartedSchema,
-    GettingStartedSchemaItem,
-    GettingStartedSchemaPlugin,
-    GettingStartedTechnologiesData
-} from './model';
+import { GettingStartedData, GettingStartedSchema, GettingStartedTechnologiesData } from './model';
 import { getFormData } from './common/formUtils';
 import createCheckboxRefExtractor from './common/createCheckboxRefExtractor';
 import TechnologiesStep from './steps/TechnologiesStep/index';
 import SecretsStep from './steps/SecretsStep';
 import SummaryStep from './steps/SummaryStep/SummaryStep';
 import { validateSecretFields, validateTechnologyFields } from './formValidation';
+import createTechnologiesGroups from './createTechnologiesGroups';
 
 const getHeaderText = (schema: GettingStartedSchema, stepName: StepName, secretsStepIndex: number) => {
     switch (stepName) {
@@ -78,53 +73,10 @@ const GettingStartedModal = ({ open = false, step = 0, schema, data, onClose }: 
     useEffect(() => setTechnologiesStepData(detectSelectedTechnologies(schema, data)), [schema, data]);
     useEffect(() => setSecretsStepIndex(step), [step]);
     useEffect(() => setSecretsStepData(data ?? {}), [data]);
-    // const secretsStepsSchemas = useMemo(() => schema.filter(items => technologiesStepData[items.name]), [
-    //     technologiesStepData
-    // ]);
-    const secretsStepsSchemas = useMemo(() => {
-        const tmp = schema.filter(items => technologiesStepData[items.name]);
-        // const res = [];
-        const groups: any = {};
-        // eslint-disable-next-line no-restricted-syntax
-        for (const entry of tmp) {
-            const { secrets } = entry;
-            // eslint-disable-next-line no-restricted-syntax
-            for (const secret of secrets) {
-                // const group = groups[secret.name] ?? (groups[secret.name] = { secret, technologies: {} } as any);
-                // group.technologies[entry.name] = entry;
-                const group = groups[secret.name] ?? (groups[secret.name] = { secret, technologies: [] } as any);
-                group.technologies.push(entry);
-            }
-        }
-        const groupedTechnologies = {} as any;
-        // eslint-disable-next-line no-restricted-syntax
-        for (const { secret, technologies } of Object.values(groups) as any) {
-            // eslint-disable-next-line no-restricted-syntax
-            const technologyNames: string[] = [];
-            const technologyLabels: string[] = [];
-            const technologyPlugins: GettingStartedSchemaPlugin[] = [];
-            // eslint-disable-next-line no-restricted-syntax
-            for (const technology of technologies) {
-                technologyNames.push(technology.name);
-                technologyLabels.push(technology.label);
-                technologyPlugins.push(...technology.plugins);
-            }
-            const technologyName = _.uniq(technologyNames)
-                .map(name => encodeURIComponent(name))
-                .join('+');
-            const groupedTechnology =
-                groupedTechnologies[technologyName] ??
-                (groupedTechnologies[technologyName] = {
-                    name: technologyName,
-                    logo: '',
-                    label: _.uniq(technologyLabels).join(' + '),
-                    plugins: _.uniqBy(technologyPlugins, plugin => `${plugin.name} ${plugin.value}`),
-                    secrets: []
-                });
-            groupedTechnology.secrets.push(secret);
-        }
-        return Object.values(groupedTechnologies);
-    }, [technologiesStepData]);
+    const secretsStepsSchemas = useMemo(
+        () => createTechnologiesGroups(schema.filter(items => technologiesStepData[items.name])), // steps with unique secrets for selected technologies
+        [technologiesStepData]
+    );
     const secretsStepSchema = secretsStepsSchemas[secretsStepIndex];
     const updateTechnologiesStepData = () => {
         if (technologiesFormRef.current) {
