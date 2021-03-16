@@ -3,14 +3,16 @@ export type Ignores<T extends unknown> = { [key in keyof T]?: Ignores<T[key]> } 
 /**
  * Compares objects ignoring indicated properties.
  * e.g.
+ * ```ts
  * // aObject and bObject are compared with omitting tenants.isFetching in both:
- *   compareObjects(aObject, bObject, {
- *      tenants: {
- *          isFetching: true
- *      }
- *   })
+ * compareObjects(aObject, bObject, {
+ *    tenants: {
+ *        isFetching: true
+ *    }
+ * })
  * // aObject and bObject are compared like deep equals:
- *   compareObjects(aObject, bObject
+ * compareObjects(aObject, bObject
+ * ```
  */
 const compareObjects = <A extends unknown, B extends unknown>(a: A, b: B, ignores: Ignores<A | B>) => {
     if (ignores === true) {
