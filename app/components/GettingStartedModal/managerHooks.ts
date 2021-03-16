@@ -5,6 +5,8 @@ import _ from 'lodash';
 import Internal from '../../utils/Internal';
 import Manager from '../../utils/Manager';
 
+import type { ReduxState } from '../../reducers';
+
 const ignoredManagerFields = ['tenants.isFetching', 'clusterStatus.isFetching'];
 
 const compareManagers = (a: any, b: any) => _.isEqual(_.omit(a, ignoredManagerFields), _.omit(b, ignoredManagerFields));
@@ -20,7 +22,7 @@ const getCurrentDistribution = (manager: Manager) => {
  * @returns current manager object
  */
 export const useManager = () => {
-    const manager = useSelector((state: any) => state.manager, compareManagers);
+    const manager = useSelector((state: ReduxState) => state.manager, compareManagers);
     return new Manager(manager);
 };
 
@@ -29,7 +31,7 @@ export const useManager = () => {
  * @returns current internal object
  */
 export const useInternal = () => {
-    const manager = useSelector((state: any) => state.manager, compareManagers);
+    const manager = useSelector((state: ReduxState) => state.manager, compareManagers);
     return new Internal(manager);
 };
 
