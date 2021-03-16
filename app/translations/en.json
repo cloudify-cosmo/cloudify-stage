@@ -22,6 +22,33 @@
         "servicesStatus": "Services Status",
         "systemStatus": "System Status"
     },
+    "gettingStartedModal" : {
+        "modal": {
+            "disableModalLabel": "Don't show next time",
+            "enableModalHelp": "You can enable modal always in user profile.",
+            "closeModal": "Close",
+            "stepBack": "Back",
+            "stepNext": "Next",
+            "stepFinish": "Finish"
+        },
+        "initialization": {
+            "pluginsLoadingError": "Plugins information loading error.",
+            "secretsLoadingError": "Secrets information loading error."
+        },
+        "summary": {
+            "taskListTitle": "Task List",
+            "pluginInstallationMessageSuffix": "plugin will be installed.",
+            "secretCreateMessageSuffix": "secret will be created",
+            "secretUpdateMessageSuffix": "secret will be updated"
+        },
+        "installation": {
+            "pluginInstallError": "{{scheduledPlugin.name}} plugin installation error.",
+            "secretUpdateError": "{{updatedSecret.name}} secret update operation error.",
+            "secretCreateError": "{{createdSecret.name}} secret create operation error.",
+            "progressMessage": "Installation in progress...",
+            "doneMessage": "Installation done!"
+        }
+    },
     "editMode": {
         "addPage": "Add Page",
         "addTabsContainer": "Add Tabs Container",
