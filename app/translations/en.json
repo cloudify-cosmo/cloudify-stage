@@ -35,6 +35,10 @@
             "pluginsLoadingError": "Plugins information loading error.",
             "secretsLoadingError": "Secrets information loading error."
         },
+        "validation": {
+            "someTechnologyRequiredError": "Please select some technology.",
+            "allSecretsRequiredError": "Please type all secrets."
+        },
         "summary": {
             "taskListTitle": "Task List",
             "pluginInstallationMessageSuffix": "plugin will be installed.",
