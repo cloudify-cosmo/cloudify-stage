@@ -20,7 +20,7 @@ const useFetchPlugins = () => {
     useEffect(() => {
         let mounted = true;
         Promise.all([
-            internal.doGet('/external/content', { url: Stage.i18n.t('widgets.common.urls.pluginsCatalog') }) as Promise<
+            internal.doGet('/external/content', { url: Stage.i18n.t('urls.pluginsCatalog') }) as Promise<
                 AvailablePluginData[]
             >,
             manager.doGet('/plugins?_include=distribution,package_name,package_version,visibility') as Promise<

@@ -13,13 +13,15 @@ const SecretsStep = ({ selectedPlugin, typedSecrets }: Props, ref: Ref<HTMLFormE
     return (
         <UncontrolledForm ref={ref} data={typedSecrets}>
             {selectedPlugin.secrets.map(itemSecret => (
-                <Form.Field key={itemSecret.name}>
-                    <Form.Input
-                        name={`${selectedPlugin.name}.${itemSecret.name}`}
-                        type={itemSecret.type}
-                        label={itemSecret.label}
-                    />
-                </Form.Field>
+                <div key={itemSecret.name}>
+                    <Form.Field>
+                        <Form.Input
+                            name={`${selectedPlugin.name}.${itemSecret.name}`}
+                            type={itemSecret.type}
+                            label={itemSecret.label}
+                        />
+                    </Form.Field>
+                </div>
             ))}
         </UncontrolledForm>
     );

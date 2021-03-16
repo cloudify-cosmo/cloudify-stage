@@ -1,6 +1,9 @@
 {
     "backToApps": "Back to apps",
     "backToLogin": "Back to login",
+    "urls": {
+        "pluginsCatalog": "http://repository.cloudifysource.org/cloudify/wagons/plugins.json"
+    },
     "cluster": {
         "manager": "Manager",
         "db": "Database",
@@ -461,7 +464,6 @@
             },
             "revertToDefault": "Revert to default value",
             "urls": {
-                "pluginsCatalog": "http://repository.cloudifysource.org/cloudify/wagons/plugins.json",
                 "blueprintsCatalog": "http://repository.cloudifysource.org/cloudify/blueprints/5.1/examples.json",
                 "helloWorldBlueprint": "https://github.com/cloudify-cosmo/cloudify-hello-world-example/archive/master.zip",
                 "linkParameterExample": "https://cloudify.co"
