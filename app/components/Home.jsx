@@ -10,15 +10,11 @@ import SideBar from '../containers/SideBar';
 import Page from './Page';
 import ToursButton from '../containers/ToursButton';
 import GettingStartedModal from './GettingStartedModal';
-import gettingStartedSchema from './GettingStartedModal/schema';
 
 export default class Home extends Component {
     constructor(props) {
         super(props);
-        const gettingStartedModalDisabled = localStorage.getItem('getting-started-modal-disabled');
-        this.state = {
-            modalOpen: gettingStartedModalDisabled === undefined || gettingStartedModalDisabled !== 'true'
-        };
+        this.state = {};
     }
 
     // TODO: Context handling should not be here. Currently necessary to use deprecated methods.
@@ -81,18 +77,8 @@ export default class Home extends Component {
         onSetDrilldownContext(contextParams);
     }
 
-    handleModalClose = permanentClose => {
-        if (permanentClose) {
-            localStorage.setItem('getting-started-modal-disabled', 'true');
-        }
-        this.setState({
-            modalOpen: false
-        });
-    };
-
     render() {
         const { emptyPages, pageId, pageName } = this.props;
-        const { modalOpen } = this.state;
 
         if (emptyPages) {
             return null;
@@ -103,13 +89,7 @@ export default class Home extends Component {
                 <ToursButton />
 
                 <SideBar pageId={pageId} />
-
-                <GettingStartedModal
-                    open={modalOpen}
-                    step={0}
-                    schema={gettingStartedSchema}
-                    onClose={this.handleModalClose}
-                />
+                <GettingStartedModal />
 
                 <div className="page">
                     <div className="ui basic segment">

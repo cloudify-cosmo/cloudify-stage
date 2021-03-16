@@ -60,7 +60,7 @@ type Props = {
     onClose?: (permanentClose: boolean) => void;
 };
 
-const GettingStartedModal = ({ open = false, step = 0, schema, data, onClose }: Props) => {
+const ControlledGettingStartedModal = ({ open = false, step = 0, schema, data, onClose }: Props) => {
     const modalDisabledInputRef = useRef<HTMLInputElement>(null);
     const technologiesFormRef = useRef<HTMLFormElement>(null);
     const secretsFormRef = useRef<HTMLFormElement>(null);
@@ -263,4 +263,4 @@ const GettingStartedModal = ({ open = false, step = 0, schema, data, onClose }: 
     );
 };
 
-export default memo(GettingStartedModal);
+export default memo(ControlledGettingStartedModal);
