@@ -23,7 +23,7 @@ const getCurrentDistribution = (manager: Manager) => {
  */
 export const useManager = () => {
     const manager = useSelector((state: ReduxState) => state.manager, compareManagers);
-    return new Manager(manager);
+    return useMemo(() => new Manager(manager), [manager]);
 };
 
 /**
@@ -32,7 +32,7 @@ export const useManager = () => {
  */
 export const useInternal = () => {
     const manager = useSelector((state: ReduxState) => state.manager, compareManagers);
-    return new Internal(manager);
+    return useMemo(() => new Internal(manager), [manager]);
 };
 
 /**
