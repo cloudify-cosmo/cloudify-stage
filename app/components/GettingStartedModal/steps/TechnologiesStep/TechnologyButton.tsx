@@ -16,15 +16,7 @@ const TechnologyButton = memo(({ name, logo, label, value, onChange }: Props) =>
             {(checked, handleChange) => {
                 const handleClick = () => handleChange(!checked);
                 return (
-                    <Button
-                        fluid
-                        basic
-                        size="huge"
-                        name={name}
-                        active={checked}
-                        style={{ height: '70px' }}
-                        onClick={handleClick}
-                    >
+                    <Button fluid basic size="huge" active={checked} style={{ height: '70px' }} onClick={handleClick}>
                         <Image src={logo} inline style={{ maxHeight: '100%', cursor: 'pointer' }} />
                         <span style={{ marginLeft: '10px' }}>{label}</span>
                     </Button>
