@@ -1,3 +1,6 @@
+/* eslint-disable no-lone-blocks */
+import i18n from 'i18next';
+
 import Internal from '../../../utils/Internal';
 import Manager from '../../../utils/Manager';
 import { PluginInstallationTask, SecretInstallationTask } from './tasks';
@@ -77,7 +80,14 @@ export const createResourcesInstaller = (
                 const result = await installPlugin(internal, scheduledPlugin);
                 if (destroyed) return;
                 if (!result) {
-                    onError(`${scheduledPlugin.name} plugin installation error.`);
+                    onError(
+                        i18n.t(
+                            'gettingStartedModal.installation.pluginInstallError',
+                            '{{scheduledPlugin.name}} plugin installation error.',
+                            { scheduledPlugin }
+                        )
+                    );
+                    // onError(`${scheduledPlugin.name} plugin installation error.`);
                 }
             }
             if (destroyed) return;
@@ -89,7 +99,13 @@ export const createResourcesInstaller = (
             const result = await updateSecret(manager, updatedSecret);
             if (destroyed) return;
             if (!result) {
-                onError(`${updatedSecret.name} secret update operation error.`);
+                onError(
+                    i18n.t(
+                        'gettingStartedModal.installation.secretUpdateError',
+                        '{{updatedSecret.name}} secret update operation error.',
+                        { updatedSecret }
+                    )
+                );
             }
             if (destroyed) return;
             stepIndex += 1;
@@ -100,7 +116,13 @@ export const createResourcesInstaller = (
             const result = await createSecret(manager, createdSecret);
             if (destroyed) return;
             if (!result) {
-                onError(`${createdSecret.name} secret create operation error.`);
+                onError(
+                    i18n.t(
+                        'gettingStartedModal.installation.secretCreateError',
+                        '{{createdSecret.name}} secret create operation error.',
+                        { createdSecret }
+                    )
+                );
             }
             if (destroyed) return;
             stepIndex += 1;

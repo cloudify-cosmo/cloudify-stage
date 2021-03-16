@@ -1,3 +1,4 @@
+import i18n from 'i18next';
 import { useState, useEffect } from 'react';
 import { useManager } from '../managerHooks';
 import type { SecretsData, SecretData } from './model';
@@ -23,7 +24,10 @@ const useFetchSecrets = () => {
             .catch(() => {
                 setState({
                     loading: false,
-                    error: 'Secrets information loading error.'
+                    error: i18n.t(
+                        'gettingStartedModal.initialization.secretsLoadingError',
+                        'Secrets information loading error.'
+                    )
                 });
             });
         return () => {

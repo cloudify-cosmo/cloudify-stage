@@ -216,8 +216,11 @@ const GettingStartedModal = ({ open = false, step = 0, schema, data, onClose }: 
                 <Form.Field>
                     <SemanticRef innerRef={createCheckboxRefExtractor(modalDisabledInputRef)}>
                         <Form.Checkbox
-                            label="Don't show next time"
-                            help="You can enable modal always in user profile."
+                            label={i18n.t('gettingStartedModal.modal.disableModalLabel', "Don't show next time")}
+                            help={i18n.t(
+                                'gettingStartedModal.modal.enableModalHelp',
+                                'You can enable modal always in user profile.'
+                            )}
                         />
                     </SemanticRef>
                 </Form.Field>
@@ -226,7 +229,7 @@ const GettingStartedModal = ({ open = false, step = 0, schema, data, onClose }: 
                 <Button.Group floated="left">
                     <Button
                         icon="cancel"
-                        content={i18n.t('help.aboutModal.close', 'Close')}
+                        content={i18n.t('gettingStartedModal.modal.closeModal', 'Close')}
                         floated="left"
                         disabled={installationProcessing}
                         labelPosition="left"
@@ -238,7 +241,7 @@ const GettingStartedModal = ({ open = false, step = 0, schema, data, onClose }: 
                         {stepName !== 'technologies' && (
                             <Button
                                 icon="left arrow"
-                                content={i18n.t('help.aboutModal.back', 'Back')}
+                                content={i18n.t('gettingStartedModal.modal.stepBack', 'Back')}
                                 labelPosition="left"
                                 onClick={handleBackClick}
                             />
@@ -247,8 +250,8 @@ const GettingStartedModal = ({ open = false, step = 0, schema, data, onClose }: 
                             icon="right arrow"
                             content={
                                 secretsStepIndex < secretsStepsSchemas.length + 1
-                                    ? i18n.t('help.aboutModal.next', 'Next')
-                                    : i18n.t('help.aboutModal.finish', 'Finish')
+                                    ? i18n.t('gettingStartedModal.modal.stepNext', 'Next')
+                                    : i18n.t('gettingStartedModal.modal.stepFinish', 'Finish')
                             }
                             labelPosition="right"
                             onClick={handleNextClick}

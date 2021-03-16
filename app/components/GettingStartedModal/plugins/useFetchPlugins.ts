@@ -1,3 +1,4 @@
+import i18n from 'i18next';
 import { useState, useEffect } from 'react';
 
 import { useInternal, useManager } from '../managerHooks';
@@ -40,7 +41,10 @@ const useFetchPlugins = () => {
             .catch(() => {
                 setState({
                     loading: false,
-                    error: 'Plugins information loading error.'
+                    error: i18n.t(
+                        'gettingStartedModal.initialization.pluginsLoadingError',
+                        'Plugins information loading error.'
+                    )
                 });
             });
         return () => {

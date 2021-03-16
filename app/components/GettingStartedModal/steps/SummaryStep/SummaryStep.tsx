@@ -1,3 +1,4 @@
+import i18n from 'i18next';
 import React, { memo, useEffect, useState } from 'react';
 import { Divider, Form, Header, Label, List, Message, Progress } from 'semantic-ui-react';
 import useCurrentCallback from '../../common/useCurrentCallback';
@@ -79,7 +80,7 @@ const SummaryStep = ({
             )}
             {pluginInstallationTasks.tasks && secretInstallationTasks.tasks && (
                 <>
-                    <Header as="h4">Task list</Header>
+                    <Header as="h4">{i18n.t('gettingStartedModal.summary.taskListTitle', 'Task List')}</Header>
                     <List ordered relaxed>
                         <PluginTaskItems
                             tasks={pluginInstallationTasks.tasks.installedPlugins}
@@ -87,7 +88,10 @@ const SummaryStep = ({
                         />
                         <PluginTaskItems
                             tasks={pluginInstallationTasks.tasks.scheduledPlugins}
-                            description="plugin will be installed"
+                            description={i18n.t(
+                                'gettingStartedModal.summary.pluginInstallationMessageSuffix',
+                                'plugin will be installed.'
+                            )}
                         />
                         <PluginTaskItems
                             tasks={pluginInstallationTasks.tasks.rejectedPlugins}
@@ -96,14 +100,22 @@ const SummaryStep = ({
                         {secretInstallationTasks.tasks.createdSecrets.map(createdSecret => {
                             return (
                                 <List.Item key={createdSecret.name}>
-                                    <Label horizontal>{createdSecret.name}</Label> secret will be created
+                                    <Label horizontal>{createdSecret.name}</Label>{' '}
+                                    {i18n.t(
+                                        'gettingStartedModal.summary.secretCreateMessageSuffix',
+                                        'secret will be created'
+                                    )}
                                 </List.Item>
                             );
                         })}
                         {secretInstallationTasks.tasks.updatedSecrets.map(updatedSecret => {
                             return (
                                 <List.Item key={updatedSecret.name}>
-                                    <Label horizontal>{updatedSecret.name}</Label> secret will be updated
+                                    <Label horizontal>{updatedSecret.name}</Label>{' '}
+                                    {i18n.t(
+                                        'gettingStartedModal.summary.secretUpdateMessageSuffix',
+                                        'secret will be updated'
+                                    )}
                                 </List.Item>
                             );
                         })}
@@ -112,7 +124,12 @@ const SummaryStep = ({
                         <>
                             <Divider hidden />
                             <Progress progress size="large" percent={installationProgress} indicating>
-                                {installationProgress < 100 ? 'Installation in progress...' : 'Installation done!'}
+                                {installationProgress < 100
+                                    ? i18n.t(
+                                          'gettingStartedModal.installation.progressMessage',
+                                          'Installation in progress...'
+                                      )
+                                    : i18n.t('gettingStartedModal.installation.doneMessage', 'Installation done!')}
                             </Progress>
                         </>
                     )}
