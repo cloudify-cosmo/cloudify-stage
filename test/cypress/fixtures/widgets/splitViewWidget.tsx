@@ -3,7 +3,7 @@ Stage.defineWidget({
     name: 'Split view widget',
     isReact: true,
     render: () => {
-        const { WidgetsGrid } = Stage.Common;
+        const { WidgetsGrid } = Stage.Shared.Widgets;
 
         return (
             <div>
