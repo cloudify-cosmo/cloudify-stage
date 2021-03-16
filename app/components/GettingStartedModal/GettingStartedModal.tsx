@@ -5,8 +5,8 @@ import { Button, Divider, Message, ModalHeader, Ref as SemanticRef } from 'seman
 
 import { Modal } from '../basic';
 import { GettingStartedData, GettingStartedSchema, GettingStartedTechnologiesData } from './model';
-import { getFormData } from './common/formUtils';
-import createCheckboxRefExtractor from './common/createCheckboxRefExtractor';
+import { getFormData } from './common/UncontrolledForm/formUtils';
+import createCheckboxRefExtractor from './common/UncontrolledForm/createCheckboxRefExtractor';
 import TechnologiesStep from './steps/TechnologiesStep/index';
 import SecretsStep from './steps/SecretsStep';
 import SummaryStep from './steps/SummaryStep/SummaryStep';
@@ -212,7 +212,7 @@ const GettingStartedModal = ({ open = false, step = 0, schema, data, onClose }: 
                     />
                 )}
             </Modal.Content>
-            <Modal.Content>
+            <Modal.Content style={{ minHeight: '50px' }}>
                 <Form.Field>
                     <SemanticRef innerRef={createCheckboxRefExtractor(modalDisabledInputRef)}>
                         <Form.Checkbox

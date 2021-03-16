@@ -25,7 +25,7 @@ const compareObjects = <A extends unknown, B extends unknown>(a: A, b: B, ignore
         }
         const aKeys = Object.keys(a);
         for (let i = 0; i < aKeys.length; i += 1) {
-            const key = aKeys[i] as string;
+            const key = aKeys[i];
             const ignore = (ignores as any)[key];
             if (ignore === true) {
                 return true; // we do not compare properties values, just returning true

@@ -1,5 +1,5 @@
 import React, { ChangeEvent, memo } from 'react';
-import BooleanFieldHandler from '../../common/BooleanFieldHandler';
+import BooleanFieldHandler from '../../common/UncontrolledForm/BooleanFieldHandler';
 
 type Props = {
     name: string;
