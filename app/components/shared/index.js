@@ -10,6 +10,7 @@ import MaintenanceModeActivationButton from './MaintenanceModeActivationButton';
 import MaintenanceModeModal from './MaintenanceModeModal';
 import PageFilter from './PageFilter';
 import PasswordModal from './PasswordModal';
+import VerticallyAlignedCell from './VerticallyAlignedCell';
 
 export {
     ClusterServicesList,
@@ -23,5 +24,6 @@ export {
     MaintenanceModeModal,
     PageFilter,
     PasswordModal,
-    PieGraph
+    PieGraph,
+    VerticallyAlignedCell
 };
