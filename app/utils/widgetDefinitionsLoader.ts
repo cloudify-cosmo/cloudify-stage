@@ -9,9 +9,6 @@ import 'd3';
 
 import * as Basic from '../components/basic';
 import * as Shared from '../components/shared';
-import Widget from '../components/Widget';
-import WidgetsList from '../components/WidgetsList';
-import WidgetsGrid from '../components/WidgetsGrid';
 import StageUtils from './stageUtils';
 import LoaderUtils from './LoaderUtils';
 
@@ -61,11 +58,7 @@ export default class WidgetDefinitionsLoader {
 
             // eslint-disable-next-line @typescript-eslint/ban-ts-comment
             // @ts-ignore Surpress error related to missing items when compiling the widgets project
-            Common: {
-                Widget,
-                WidgetsList,
-                WidgetsGrid
-            },
+            Common: {},
             defineCommon: def => {
                 window.Stage.Common[def.name] = def.common;
             },

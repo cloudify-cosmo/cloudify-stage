@@ -1,12 +1,8 @@
-/**
- * Created by kinneretzin on 01/09/2016.
- */
-
 import PropTypes from 'prop-types';
 import _ from 'lodash';
 import React from 'react';
-import Grid from './layout/Grid';
-import type { SimpleWidgetObj } from '../actions/page';
+import Grid from '../../layout/Grid';
+import type { SimpleWidgetObj } from '../../../actions/page';
 import type { WidgetOwnProps } from './Widget';
 import WidgetsGrid from './WidgetsGrid';
 

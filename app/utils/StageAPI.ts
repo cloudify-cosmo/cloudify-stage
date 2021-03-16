@@ -204,11 +204,8 @@ declare global {
         const Utils: typeof StageUtils;
 
         // NOTE: Common items are mostly defined in widgets
-        interface Common {
-            Widget: typeof import('../components/Widget').default;
-            WidgetsList: typeof import('../components/WidgetsList').default;
-            WidgetsGrid: typeof import('../components/WidgetsGrid').default;
-        }
+        // eslint-disable-next-line @typescript-eslint/no-empty-interface
+        interface Common {}
         /** Common widget utilities */
         const Common: Common;
         const defineCommon: <Name extends keyof Common>(definition: CommonOrPropTypeDefinition<Common, Name>) => void;
