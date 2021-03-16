@@ -2,7 +2,7 @@ import type { PageMetadataData } from '../model';
 
 export type SecretData = {
     key: string;
-    visibility: string; // TODO: tenant, etc.
+    visibility: string;
 };
 
 export type SecretsData = {
