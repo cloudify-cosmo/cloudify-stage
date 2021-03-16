@@ -1,9 +1,9 @@
 /* eslint-disable no-lone-blocks */
 import i18n from 'i18next';
 
-import Internal from '../../../utils/Internal';
-import Manager from '../../../utils/Manager';
-import { PluginInstallationTask, SecretInstallationTask } from './tasks';
+import type Internal from '../../../utils/Internal';
+import type Manager from '../../../utils/Manager';
+import type { PluginInstallationTask, SecretInstallationTask } from './tasks';
 
 export const installPlugin = async (internal: Internal, plugin: PluginInstallationTask) => {
     if (!plugin.yamlUrl || !plugin.wagonUrl) {

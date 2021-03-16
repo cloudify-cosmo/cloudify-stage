@@ -1,6 +1,7 @@
 import React from 'react';
 import { Label, List } from 'semantic-ui-react';
-import { URLString } from '../../plugins/model';
+
+import type { URLString } from '../../plugins/model';
 
 type Props = {
     icon?: URLString;

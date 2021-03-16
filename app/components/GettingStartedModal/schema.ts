@@ -1,4 +1,4 @@
-import { GettingStartedSchema } from './model';
+import type { GettingStartedSchema } from './model';
 
 const schema: GettingStartedSchema = [
     {

@@ -1,7 +1,10 @@
+import React, { forwardRef, memo } from 'react';
 import { Form } from 'cloudify-ui-components';
-import React, { FC, forwardRef, memo, Ref } from 'react';
+
+import type { FC, Ref } from 'react';
 
 import UncontrolledForm from '../common/UncontrolledForm';
+
 import type { GettingStartedData, GettingStartedSchemaItem } from '../model';
 
 type Props = {

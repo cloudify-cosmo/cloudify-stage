@@ -1,6 +1,7 @@
 import i18n from 'i18next';
 import { useState, useEffect } from 'react';
 import { useManager } from '../managerHooks';
+
 import type { SecretsData, SecretData } from './model';
 
 export type SecretsHook = {

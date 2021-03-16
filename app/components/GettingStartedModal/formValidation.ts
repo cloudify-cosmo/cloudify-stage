@@ -1,5 +1,6 @@
 import i18n from 'i18next';
-import { GettingStartedSecretsData, GettingStartedTechnologiesData } from './model';
+
+import type { GettingStartedSecretsData, GettingStartedTechnologiesData } from './model';
 
 export const validateTechnologyFields = (data: GettingStartedTechnologiesData) => {
     const errors: string[] = [];

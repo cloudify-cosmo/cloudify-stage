@@ -1,4 +1,4 @@
-import { PageMetadataData } from '../model';
+import type { PageMetadataData } from '../model';
 
 export type SecretData = {
     key: string;

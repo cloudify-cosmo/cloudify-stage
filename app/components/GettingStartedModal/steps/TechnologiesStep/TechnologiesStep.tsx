@@ -1,7 +1,11 @@
-import React, { forwardRef, memo, Ref } from 'react';
+import React, { forwardRef, memo } from 'react';
+
+import type { Ref } from 'react';
+
 import UncontrolledForm from '../../common/UncontrolledForm';
-import { GettingStartedSchema, GettingStartedTechnologiesData } from '../../model';
 import TechnologyButton from './TechnologyButton';
+
+import type { GettingStartedSchema, GettingStartedTechnologiesData } from '../../model';
 
 type Props = {
     schema: GettingStartedSchema;

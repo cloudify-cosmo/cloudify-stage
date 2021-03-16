@@ -5,8 +5,9 @@ import useCurrentCallback from '../../common/useCurrentCallback';
 import { createResourcesInstaller } from '../../installation/process';
 import { usePluginInstallationTasks, useSecretsInstallationTasks } from '../../installation/tasks';
 import { useInternal, useManager } from '../../managerHooks';
-import { GettingStartedData, GettingStartedSchema } from '../../model';
 import PluginTaskItems, { installedPluginDescription, rejectedPluginDescription } from './PluginTaskItems';
+
+import type { GettingStartedData, GettingStartedSchema } from '../../model';
 
 type Props = {
     installationMode?: boolean;

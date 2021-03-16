@@ -1,10 +1,13 @@
 import { useMemo } from 'react';
 
-import { GettingStartedData, GettingStartedSchema, RegExpString, GettingStartedSecretsData } from '../model';
-import { URLString } from '../plugins/model';
-import useFetchPlugins, { PluginsHook } from '../plugins/useFetchPlugins';
-import useFetchSecrets, { SecretsHook } from '../secrets/useFetchSecrets';
+import useFetchPlugins from '../plugins/useFetchPlugins';
+import useFetchSecrets from '../secrets/useFetchSecrets';
 import { useCurrentDistribution } from '../managerHooks';
+
+import type { GettingStartedData, GettingStartedSchema, RegExpString, GettingStartedSecretsData } from '../model';
+import type { URLString } from '../plugins/model';
+import type { PluginsHook } from '../plugins/useFetchPlugins';
+import type { SecretsHook } from '../secrets/useFetchSecrets';
 
 /**
  * Validates plugin version. If version pattern is not defined, any version is accepted.

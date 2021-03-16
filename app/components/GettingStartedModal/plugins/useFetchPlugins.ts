@@ -2,6 +2,7 @@ import i18n from 'i18next';
 import { useState, useEffect } from 'react';
 
 import { useInternal, useManager } from '../managerHooks';
+
 import type { AvailablePluginData, InstalledPluginData, InstalledPluginsData } from './model';
 
 export type PluginsHook = {

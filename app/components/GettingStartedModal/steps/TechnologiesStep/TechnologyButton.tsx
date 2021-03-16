@@ -1,4 +1,7 @@
-import React, { ChangeEvent, memo } from 'react';
+import React, { memo } from 'react';
+
+import type { ChangeEvent } from 'react';
+
 import BooleanFieldHandler from '../../common/UncontrolledForm/BooleanFieldHandler';
 
 type Props = {

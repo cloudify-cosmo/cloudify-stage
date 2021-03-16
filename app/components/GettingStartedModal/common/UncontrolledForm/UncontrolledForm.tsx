@@ -1,5 +1,7 @@
-import React, { FormEvent, forwardRef, memo, ReactNode, Ref, RefObject, useRef } from 'react';
+import React, { forwardRef, memo, useRef } from 'react';
 import { Form, Ref as SemanticRef } from 'semantic-ui-react';
+
+import type { FormEvent, ReactNode, Ref, RefObject } from 'react';
 
 import { bindFormData, getFormData } from './formUtils';
 
