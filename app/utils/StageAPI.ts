@@ -203,7 +203,7 @@ declare global {
         const GenericConfig: typeof GenericConfigType;
         const Utils: typeof StageUtils;
 
-        // NOTE: Common items are mostly defined in widgets
+        // NOTE: Common items are defined in widgets
         // eslint-disable-next-line @typescript-eslint/no-empty-interface
         interface Common {}
         /** Common widget utilities */
