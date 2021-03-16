@@ -2,22 +2,21 @@ describe('User-defined widgets', () => {
     before(cy.activate);
 
     describe('Fibonacci sequence widget', () => {
-        beforeEach(() => {
-            cy.compileScriptFixture('widgets/fibonacciSequenceWidget.tsx').then(compiledScriptSource =>
-                cy.interceptWidgetScript('fibonacci-sequence-widget', compiledScriptSource)
-            );
-        });
         const initialSequence = [1, 1];
+        const widgetFixturePath = 'widgets/fibonacciSequenceWidget.tsx';
+        const widgetId = 'fibonacci-sequence-widget';
 
         it('render itself once with the initial sequence', () => {
-            cy.usePageMock('fibonacci-sequence-widget', { targetSequenceLength: initialSequence.length }).mockLogin();
+            const widgetConfiguration = { targetSequenceLength: initialSequence.length };
+            useMockWidgetFixture(widgetFixturePath, widgetId, widgetConfiguration);
 
             cy.contains(`Current sequence: ${JSON.stringify(initialSequence)}`);
         });
 
         it('render itself recursively with intermediate sequences', () => {
             const sequence = [1, 1, 2, 3, 5, 8, 13, 21, 34];
-            cy.usePageMock('fibonacci-sequence-widget', { targetSequenceLength: sequence.length }).mockLogin();
+            const widgetConfiguration = { targetSequenceLength: sequence.length };
+            useMockWidgetFixture(widgetFixturePath, widgetId, widgetConfiguration);
             const initialSequenceLength = initialSequence.length;
 
             Array.from({ length: sequence.length - initialSequenceLength }).forEach((_, index) => {
@@ -27,14 +26,11 @@ describe('User-defined widgets', () => {
     });
 
     describe('Split view widget', () => {
-        beforeEach(() => {
-            cy.compileScriptFixture('widgets/splitViewWidget.tsx').then(compiledScriptSource =>
-                cy.interceptWidgetScript('split-view-widget', compiledScriptSource)
-            );
-        });
+        const widgetFixturePath = 'widgets/splitViewWidget.tsx';
+        const widgetId = 'split-view-widget';
 
         it('should render itself and the nested Plugins Catalog widget', () => {
-            cy.usePageMock('split-view-widget').mockLogin();
+            useMockWidgetFixture(widgetFixturePath, widgetId);
 
             cy.contains('Content on the left');
             cy.contains('Content on the right');
@@ -44,3 +40,10 @@ describe('User-defined widgets', () => {
         });
     });
 });
+
+function useMockWidgetFixture(widgetFixturePath: string, widgetId: string, widgetConfiguration?: Record<string, any>) {
+    cy.compileScriptFixture(widgetFixturePath).then(compiledScriptSource =>
+        cy.interceptWidgetScript(widgetId, compiledScriptSource)
+    );
+    cy.usePageMock(widgetId, widgetConfiguration).mockLogin();
+}
