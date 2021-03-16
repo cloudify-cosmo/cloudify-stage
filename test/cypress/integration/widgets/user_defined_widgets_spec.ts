@@ -1,7 +1,7 @@
 describe('User-defined widgets', () => {
-    describe('Fibonacci sequence widget', () => {
-        before(cy.activate);
+    before(cy.activate);
 
+    describe('Fibonacci sequence widget', () => {
         beforeEach(() => {
             cy.compileScriptFixture('widgets/fibonacciSequenceWidget.tsx').then(compiledScriptSource =>
                 cy.interceptWidgetScript('fibonacci-sequence-widget', compiledScriptSource)
@@ -27,8 +27,6 @@ describe('User-defined widgets', () => {
     });
 
     describe('Split view widget', () => {
-        before(cy.activate);
-
         beforeEach(() => {
             cy.compileScriptFixture('widgets/splitViewWidget.tsx').then(compiledScriptSource =>
                 cy.interceptWidgetScript('split-view-widget', compiledScriptSource)
