@@ -6,12 +6,9 @@ export type HTMLFieldElement = HTMLInputElement | HTMLSelectElement | HTMLTextAr
 export const forEachField = (form: HTMLFormElement, callback: (element: HTMLFieldElement) => void) => {
     const { elements } = form;
     for (let i = 0; i < elements.length; i += 1) {
-        const element = elements[i];
-        if (element.tagName === 'INPUT' || element.tagName === 'SELECT' || element.tagName === 'TEXTAREA') {
-            const field = element as HTMLFieldElement;
-            if (field.name) {
-                callback(field);
-            }
+        const element = elements[i] as HTMLFieldElement;
+        if (element.name) {
+            callback(element);
         }
     }
 };
