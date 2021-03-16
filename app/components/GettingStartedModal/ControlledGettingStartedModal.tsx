@@ -35,7 +35,7 @@ const getHeaderText = (schema: GettingStartedSchema, stepName: StepName, secrets
 
 /**
  * Returns information what technologies are selected using technology forms schema and data.
- * e.g. result: { aws: true, gpc: false }
+ * e.g. result: `{ aws: true, gpc: false }`
  * @param schema schema that describes technology forms (once schema item describes secrets set for specific technology)
  * @param data data that can be bound into form that are complies with technology forms schema
  * @returns information about selected technologies
