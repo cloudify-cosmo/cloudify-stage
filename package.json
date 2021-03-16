@@ -120,6 +120,7 @@
     "@types/react-leaflet": "^2.5.1",
     "@types/react-redux": "^7.1.7",
     "@types/request": "^2.48.4",
+    "@types/styled-components": "^5.1.8",
     "@types/uuid": "^3.4.9",
     "@typescript-eslint/eslint-plugin": "^4.14.1",
     "@typescript-eslint/parser": "^4.14.1",

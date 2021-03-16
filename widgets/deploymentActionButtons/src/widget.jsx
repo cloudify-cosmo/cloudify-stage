@@ -28,10 +28,7 @@ Stage.defineWidget({
         const actions = new DeploymentActions(toolbox);
 
         toolbox.loading(true);
-        return actions
-            .doGet({ id }) // TODO: Once RD-1353 is implemented, pass { _include: ['workflows'] } to doGet
-            .then(deployment => ({ id, workflows: deployment.workflows }))
-            .finally(() => toolbox.loading(false));
+        return actions.doGetWorkflows(id).finally(() => toolbox.loading(false));
     },
 
     fetchParams(widget, toolbox) {

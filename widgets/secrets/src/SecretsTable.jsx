@@ -220,6 +220,7 @@ export default class SecretsTable extends React.Component {
         const NO_DATA_MESSAGE = 'There are no Secrets available. Click "Create" to create Secrets.';
         const { Checkbox, DataTable, ErrorMessage, Icon, ResourceVisibility } = Stage.Basic;
         const DeleteModal = Stage.Basic.Confirm;
+        const { VerticallyAlignedCell } = Stage.Shared;
         const { data, toolbox, widget } = this.props;
 
         return (
@@ -249,15 +250,17 @@ export default class SecretsTable extends React.Component {
                         return (
                             <DataTable.Row key={item.key}>
                                 <DataTable.Data>
-                                    {item.key}
-                                    <ResourceVisibility
-                                        visibility={item.visibility}
-                                        onSetVisibility={visibility => {
-                                            this.setSecretVisibility(item.key, visibility);
-                                        }}
-                                        allowedSettingTo={['tenant', 'global']}
-                                        className="rightFloated"
-                                    />
+                                    <VerticallyAlignedCell>
+                                        {item.key}
+                                        <ResourceVisibility
+                                            visibility={item.visibility}
+                                            onSetVisibility={visibility => {
+                                                this.setSecretVisibility(item.key, visibility);
+                                            }}
+                                            allowedSettingTo={['tenant', 'global']}
+                                            className="rightFloated"
+                                        />
+                                    </VerticallyAlignedCell>
                                 </DataTable.Data>
                                 <DataTable.Data className="center aligned rowActions">
                                     <SecretValue
