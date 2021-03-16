@@ -1,8 +1,8 @@
 import React, { memo, useReducer } from 'react';
 
-import ControlledGettingStartedModal from './ControlledGettingStartedModal';
-import { getGettingStartedModalDisabled, setGettingStartedModalDisabled } from './localStorage';
 import gettingStartedSchema from './schema';
+import { getGettingStartedModalDisabled, setGettingStartedModalDisabled } from './localStorage';
+import ControlledGettingStartedModal from './ControlledGettingStartedModal';
 
 type ModalState = {
     modalOpen: boolean;
