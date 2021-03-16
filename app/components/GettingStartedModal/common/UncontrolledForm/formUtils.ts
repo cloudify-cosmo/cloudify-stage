@@ -1,4 +1,5 @@
-import { getObjectProperty, setObjectProperty } from './propertyUtils';
+import _ from 'lodash';
+
 import dispatchEvent from './dispatchEvent';
 
 export type HTMLFieldElement = HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement;
@@ -17,14 +18,14 @@ export const getFormData = <T extends unknown>(form: HTMLFormElement): T => {
     const data = {} as T;
     forEachField(form, element => {
         const value = element.type === 'checkbox' ? (element as HTMLInputElement).checked : element.value;
-        setObjectProperty(data, element.name, value);
+        _.set(data as any, element.name, value);
     });
     return data;
 };
 
 export const bindFormData = <T extends unknown>(form: HTMLFormElement, data: T): void => {
     forEachField(form, element => {
-        const value = getObjectProperty(data, element.name);
+        const value = _.get(data, element.name);
         if (element.type === 'checkbox') {
             (element as HTMLInputElement).checked = Boolean(value ?? false);
         } else {
