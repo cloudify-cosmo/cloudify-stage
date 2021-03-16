@@ -1,20 +1,13 @@
 import { useMemo } from 'react';
 import { useSelector } from 'react-redux';
+import _ from 'lodash';
 
 import Internal from '../../utils/Internal';
 import Manager from '../../utils/Manager';
-import compareObjects from './common/compareObjects';
 
-const compareManagers = (a: any, b: any) => {
-    return compareObjects(a, b, {
-        tenants: {
-            isFetching: true
-        },
-        clusterStatus: {
-            isFetching: true
-        }
-    });
-};
+const ignoredManagerFields = ['tenants.isFetching', 'clusterStatus.isFetching'];
+
+const compareManagers = (a: any, b: any) => _.isEqual(_.omit(a, ignoredManagerFields), _.omit(b, ignoredManagerFields));
 
 const getCurrentDistribution = (manager: Manager) => {
     const currentDistributionName = manager.getDistributionName().trim();
