@@ -1,8 +1,8 @@
 Cypress.Commands.add('getWidgets', () => cy.stageRequest('/console/widgets/list'));
 
 Cypress.Commands.add('removeCustomWidgets', () => {
-    cy.getWidgets().then(response => {
-        response.body.forEach(widget => {
+    (cy as any).getWidgets().then((response: any) => {
+        response.body.forEach((widget: any) => {
             if (widget.isCustom) {
                 cy.stageRequest(`/console/widgets/${widget.id}`, 'DELETE');
             }
