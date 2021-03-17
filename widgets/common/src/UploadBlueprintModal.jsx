@@ -1,12 +1,12 @@
-/**
- * Created by kinneretzin on 05/10/2016.
- */
-
 const { BlueprintActions } = Stage.Common;
+const i18nPrefix = 'widgets.common.blueprintUpload';
 
 function UploadBlueprintModal({ toolbox, open, onHide }) {
     const { useState, useRef } = React;
-    const { useBoolean, useInputs, useOpenProp, useErrors, useResettableState } = Stage.Hooks;
+    const {
+        i18n: { t },
+        Hooks: { useBoolean, useInputs, useOpenProp, useErrors, useResettableState }
+    } = Stage;
 
     const [isLoading, setLoading, unsetLoading] = useBoolean();
     const { errors, setErrors, clearErrors, setMessageAsError } = useErrors();
@@ -46,22 +46,22 @@ function UploadBlueprintModal({ toolbox, open, onHide }) {
 
         if (!blueprintFile) {
             if (_.isEmpty(blueprintUrl)) {
-                validationErrors.blueprintUrl = 'Please select blueprint package';
+                validationErrors.blueprintUrl = t(`${i18nPrefix}.validationErrors.noBlueprintPackage`);
             } else if (!Stage.Utils.Url.isUrl(blueprintUrl)) {
-                validationErrors.blueprintUrl = 'Please provide valid URL for blueprint package';
+                validationErrors.blueprintUrl = t(`${i18nPrefix}.validationErrors.invalidBlueprintUrl`);
             }
         }
 
         if (_.isEmpty(blueprintName)) {
-            validationErrors.blueprintName = 'Please provide blueprint name';
+            validationErrors.blueprintName = t(`${i18nPrefix}.validationErrors.noBlueprintName`);
         }
 
         if (_.isEmpty(blueprintYamlFile)) {
-            validationErrors.blueprintYamlFile = 'Please provide blueprint YAML file';
+            validationErrors.blueprintYamlFile = t(`${i18nPrefix}.validationErrors.noBlueprintYamlFile`);
         }
 
-        if (!_.isEmpty(imageUrl) && !Stage.Utils.Url.isUrl(blueprintUrl)) {
-            validationErrors.imageUrl = 'Please provide valid URL for blueprint icon';
+        if (!_.isEmpty(imageUrl) && !Stage.Utils.Url.isUrl(imageUrl)) {
+            validationErrors.imageUrl = t(`${i18nPrefix}.validationErrors.invalidImageUrl`);
         }
 
         if (!_.isEmpty(validationErrors)) {
@@ -108,7 +108,7 @@ function UploadBlueprintModal({ toolbox, open, onHide }) {
         <div>
             <Modal open={open} onClose={onHide} className="uploadBlueprintModal">
                 <Modal.Header>
-                    <Icon name="upload" /> Upload blueprint
+                    <Icon name="upload" /> {t(`${i18nPrefix}.modal.header`)}
                     <VisibilityField
                         visibility={visibility}
                         className="rightFloated"
@@ -137,7 +137,7 @@ function UploadBlueprintModal({ toolbox, open, onHide }) {
                     <ApproveButton
                         onClick={uploadBlueprint}
                         disabled={isLoading}
-                        content="Upload"
+                        content={t(`${i18nPrefix}.modal.uploadButton`)}
                         icon="upload"
                         color="green"
                     />
