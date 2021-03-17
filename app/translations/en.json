@@ -502,10 +502,21 @@
                     "parsing": "4/5: Parsing blueprint...",
                     "uploadingImage": "5/5: Uploading image..."
                 },
+                "modal": {
+                    "header": "Upload blueprint",
+                    "uploadButton": "Upload"
+                },
                 "errorHeaders": {
                     "failedUploading": "Blueprint upload failed",
                     "failedExtracting": "Blueprint extraction failed",
                     "failedParsing": "Blueprint parsing failed"
+                },
+                "validationErrors": {
+                    "invalidBlueprintUrl": "Please provide valid URL for blueprint package",
+                    "invalidImageUrl": "Please provide valid URL for blueprint icon",
+                    "noBlueprintPackage": "Please select blueprint package",
+                    "noBlueprintName": "Please provide blueprint name",
+                    "noBlueprintYamlFile": "Please provide blueprint YAML file"
                 },
                 "inputs": {
                     "blueprintName": {
