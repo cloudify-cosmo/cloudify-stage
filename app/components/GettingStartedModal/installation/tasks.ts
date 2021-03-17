@@ -195,7 +195,7 @@ export const usePluginInstallationTasks = (selectedPlugins: GettingStartedSchema
             return { loading: currentPlugins.loading };
         }
         if (currentPlugins.error) {
-            return { error: currentPlugins.error };
+            return { loading: false, error: currentPlugins.error };
         }
         return {
             loading: false,
@@ -218,7 +218,7 @@ export const useSecretsInstallationTasks = (
             return { loading: currentSecrets.loading };
         }
         if (currentSecrets.error) {
-            return { error: currentSecrets.error };
+            return { loading: false, error: currentSecrets.error };
         }
         return {
             loading: false,
