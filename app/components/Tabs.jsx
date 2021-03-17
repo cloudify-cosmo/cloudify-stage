@@ -7,7 +7,7 @@ import EditTabModal from './EditTabModal';
 import EditModeButton from './EditModeButton';
 import { Confirm, Menu } from './basic';
 import AddWidget from '../containers/AddWidget';
-import WidgetsList from './WidgetsList';
+import { WidgetsList } from './shared/widgets';
 import useWidgetsFilter from './useWidgetsFilter';
 import { useBoolean } from '../utils/hooks';
 import EmptyContainerMessage from './EmptyContainerMessage';
