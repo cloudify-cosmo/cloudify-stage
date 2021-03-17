@@ -28,6 +28,8 @@ export interface DeploymentsViewColumnDefinition {
     render(deployment: Deployment): ReactNode;
 }
 
+const i18nPrefix = 'widgets.deploymentsView.columns';
+
 const partialDeploymentsViewColumnDefinitions: Record<
     DeploymentsViewColumnId,
     Omit<Stage.Types.WithOptionalProperties<DeploymentsViewColumnDefinition, 'label'>, 'name' | 'tooltip'>
@@ -35,9 +37,9 @@ const partialDeploymentsViewColumnDefinitions: Record<
     status: {
         width: '20px',
         render(deployment) {
-            const { Icon } = Stage.Basic;
+            const { Icon, Popup } = Stage.Basic;
             const deploymentStatusIconProps: Record<DeploymentStatus, Pick<IconProps, 'name' | 'color'> | undefined> = {
-                [DeploymentStatus.Good]: {},
+                [DeploymentStatus.Good]: undefined,
                 [DeploymentStatus.InProgress]: { name: 'spinner', color: 'orange' },
                 [DeploymentStatus.RequiresAttention]: { name: 'exclamation', color: 'red' }
             };
@@ -45,9 +47,14 @@ const partialDeploymentsViewColumnDefinitions: Record<
             if (!iconProps) {
                 return null;
             }
+            const label = Stage.i18n.t(`${i18nPrefix}.status.iconLabels.${deployment.deployment_status}`);
 
-            // eslint-disable-next-line react/jsx-props-no-spreading
-            return <Icon {...iconProps} />;
+            return (
+                // eslint-disable-next-line react/jsx-props-no-spreading
+                <Popup trigger={<Icon aria-label={label} {...iconProps} />} position="top center">
+                    {label}
+                </Popup>
+            );
         }
     },
     name: {
@@ -91,8 +98,6 @@ const partialDeploymentsViewColumnDefinitions: Record<
         }
     }
 };
-
-const i18nPrefix = 'widgets.deploymentsView.columns';
 
 export const deploymentsViewColumnDefinitions: Record<
     DeploymentsViewColumnId,
