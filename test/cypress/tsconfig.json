@@ -13,5 +13,7 @@
         // Cypress forces using inlineSourceMap
         "sourceMap": false,
         "types": ["cypress"]
-    }
+    },
+    "include": ["**/*"],
+    "files": ["../../app/typings/stage-api.d.ts"]
 }

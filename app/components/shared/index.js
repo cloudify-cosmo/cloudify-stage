@@ -11,6 +11,7 @@ import MaintenanceModeModal from './MaintenanceModeModal';
 import PageFilter from './PageFilter';
 import PasswordModal from './PasswordModal';
 import VerticallyAlignedCell from './VerticallyAlignedCell';
+import * as Widgets from './widgets';
 
 export {
     ClusterServicesList,
@@ -25,5 +26,6 @@ export {
     PageFilter,
     PasswordModal,
     PieGraph,
-    VerticallyAlignedCell
+    VerticallyAlignedCell,
+    Widgets
 };
