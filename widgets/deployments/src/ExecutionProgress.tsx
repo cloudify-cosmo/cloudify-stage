@@ -1,3 +1,7 @@
+// NOTE: the file contains only types and is undetectable for ESLint
+// eslint-disable-next-line import/no-unresolved
+import type { SemanticCOLORS } from 'semantic-ui-react/dist/commonjs/generic';
+
 interface ExecutionProgressProps {
     execution: {
         status: string;
@@ -12,14 +16,11 @@ const ExecutionProgress: React.FunctionComponent<ExecutionProgressProps> = ({ ex
     const { Progress } = Stage.Basic;
     const { Execution } = Stage.Utils;
 
-    const color = Execution.isActiveExecution(execution) ? 'yellow' : 'green';
-    const error = Execution.isFailedExecution(execution);
+    const color: SemanticCOLORS = Execution.isActiveExecution(execution) ? 'yellow' : 'green';
+    const error: boolean = Execution.isFailedExecution(execution);
+    const progress: number = Execution.getProgress(execution);
 
-    const { finished_operations: finishedOperations, total_operations: totalOperations } = execution;
-    const ratio = finishedOperations / totalOperations;
-    const percent = Number.isFinite(ratio) ? Math.round(ratio * 100) : 0;
-
-    return <Progress percent={percent} error={error} attached="bottom" color={color} />;
+    return <Progress percent={progress} error={error} attached="bottom" color={color} />;
 };
 export default ExecutionProgress;
 
