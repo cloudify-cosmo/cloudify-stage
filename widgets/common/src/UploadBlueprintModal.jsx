@@ -60,7 +60,7 @@ function UploadBlueprintModal({ toolbox, open, onHide }) {
             validationErrors.blueprintYamlFile = 'Please provide blueprint YAML file';
         }
 
-        if (!_.isEmpty(imageUrl) && !Stage.Utils.Url.isUrl(blueprintUrl)) {
+        if (!_.isEmpty(imageUrl) && !Stage.Utils.Url.isUrl(imageUrl)) {
             validationErrors.imageUrl = 'Please provide valid URL for blueprint icon';
         }
 
