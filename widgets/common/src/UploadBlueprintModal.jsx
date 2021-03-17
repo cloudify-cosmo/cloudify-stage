@@ -4,7 +4,7 @@ const i18nPrefix = 'widgets.common.blueprintUpload';
 function UploadBlueprintModal({ toolbox, open, onHide }) {
     const { useState, useRef } = React;
     const {
-        i18n: { t },
+        i18n,
         Hooks: { useBoolean, useInputs, useOpenProp, useErrors, useResettableState }
     } = Stage;
 
@@ -46,22 +46,22 @@ function UploadBlueprintModal({ toolbox, open, onHide }) {
 
         if (!blueprintFile) {
             if (_.isEmpty(blueprintUrl)) {
-                validationErrors.blueprintUrl = t(`${i18nPrefix}.validationErrors.noBlueprintPackage`);
+                validationErrors.blueprintUrl = i18n.t(`${i18nPrefix}.validationErrors.noBlueprintPackage`);
             } else if (!Stage.Utils.Url.isUrl(blueprintUrl)) {
-                validationErrors.blueprintUrl = t(`${i18nPrefix}.validationErrors.invalidBlueprintUrl`);
+                validationErrors.blueprintUrl = i18n.t(`${i18nPrefix}.validationErrors.invalidBlueprintUrl`);
             }
         }
 
         if (_.isEmpty(blueprintName)) {
-            validationErrors.blueprintName = t(`${i18nPrefix}.validationErrors.noBlueprintName`);
+            validationErrors.blueprintName = i18n.t(`${i18nPrefix}.validationErrors.noBlueprintName`);
         }
 
         if (_.isEmpty(blueprintYamlFile)) {
-            validationErrors.blueprintYamlFile = t(`${i18nPrefix}.validationErrors.noBlueprintYamlFile`);
+            validationErrors.blueprintYamlFile = i18n.t(`${i18nPrefix}.validationErrors.noBlueprintYamlFile`);
         }
 
         if (!_.isEmpty(imageUrl) && !Stage.Utils.Url.isUrl(imageUrl)) {
-            validationErrors.imageUrl = t(`${i18nPrefix}.validationErrors.invalidImageUrl`);
+            validationErrors.imageUrl = i18n.t(`${i18nPrefix}.validationErrors.invalidImageUrl`);
         }
 
         if (!_.isEmpty(validationErrors)) {
@@ -108,7 +108,7 @@ function UploadBlueprintModal({ toolbox, open, onHide }) {
         <div>
             <Modal open={open} onClose={onHide} className="uploadBlueprintModal">
                 <Modal.Header>
-                    <Icon name="upload" /> {t(`${i18nPrefix}.modal.header`)}
+                    <Icon name="upload" /> {i18n.t(`${i18nPrefix}.modal.header`)}
                     <VisibilityField
                         visibility={visibility}
                         className="rightFloated"
@@ -137,7 +137,7 @@ function UploadBlueprintModal({ toolbox, open, onHide }) {
                     <ApproveButton
                         onClick={uploadBlueprint}
                         disabled={isLoading}
-                        content={t(`${i18nPrefix}.modal.uploadButton`)}
+                        content={i18n.t(`${i18nPrefix}.modal.uploadButton`)}
                         icon="upload"
                         color="green"
                     />
