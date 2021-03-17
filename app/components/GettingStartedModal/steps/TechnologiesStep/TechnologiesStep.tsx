@@ -1,30 +1,39 @@
-import React, { forwardRef, memo } from 'react';
+import React, { memo, useEffect, useState } from 'react';
 
-import type { Ref } from 'react';
-
-import UncontrolledForm from '../../common/UncontrolledForm';
+import { Form } from 'semantic-ui-react';
 import TechnologyButton from './TechnologyButton';
 
 import type { GettingStartedSchema, GettingStartedTechnologiesData } from '../../model';
 
 type Props = {
     schema: GettingStartedSchema;
-    technologies: GettingStartedTechnologiesData;
+    selectedTechnologies?: GettingStartedTechnologiesData;
+    onChange?: (technologies: GettingStartedTechnologiesData) => void;
 };
 
-const TechnologiesStep = ({ schema, technologies }: Props, ref: Ref<HTMLFormElement>) => {
+const TechnologiesStep = ({ schema, selectedTechnologies, onChange }: Props) => {
+    const [localSelectedTechnologies, setLocalSelectedTechnologies] = useState(() => selectedTechnologies ?? {});
+    useEffect(() => setLocalSelectedTechnologies(selectedTechnologies ?? {}), [selectedTechnologies]);
     return (
-        <UncontrolledForm ref={ref} data={technologies}>
-            {schema.map(itemSchema => (
-                <TechnologyButton
-                    key={itemSchema.name}
-                    name={itemSchema.name}
-                    logo={itemSchema.logo}
-                    label={itemSchema.label}
-                />
-            ))}
-        </UncontrolledForm>
+        <Form>
+            {schema.map(({ name, logo, label }) => {
+                const handleChange = (value: boolean) => {
+                    const newLocalSelectedTechnologies = { ...localSelectedTechnologies, [name]: value };
+                    setLocalSelectedTechnologies(newLocalSelectedTechnologies);
+                    onChange?.(newLocalSelectedTechnologies);
+                };
+                return (
+                    <TechnologyButton
+                        key={name}
+                        logo={logo}
+                        label={label}
+                        value={localSelectedTechnologies[name]}
+                        onChange={handleChange}
+                    />
+                );
+            })}
+        </Form>
     );
 };
 
-export default memo(forwardRef(TechnologiesStep));
+export default memo(TechnologiesStep);

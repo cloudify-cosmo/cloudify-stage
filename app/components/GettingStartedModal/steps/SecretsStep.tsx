@@ -1,35 +1,42 @@
-import React, { forwardRef, memo } from 'react';
+import React, { memo, useEffect, useState } from 'react';
 import { Form } from 'cloudify-ui-components';
 
-import type { FC, Ref } from 'react';
+import type { ChangeEvent } from 'react';
 
-import UncontrolledForm from '../common/UncontrolledForm';
-
-import type { GettingStartedData, GettingStartedSchemaItem } from '../model';
+import type { GettingStartedSecretsData, GettingStartedSchemaItem } from '../model';
 
 type Props = {
-    selectedPlugin: GettingStartedSchemaItem;
-    typedSecrets: GettingStartedData;
+    selectedTechnology: GettingStartedSchemaItem;
+    typedSecrets?: GettingStartedSecretsData;
+    onChange?: (typedSecrets: GettingStartedSecretsData) => void;
 };
 
-const SecretsStep = ({ selectedPlugin, typedSecrets }: Props, ref: Ref<HTMLFormElement>) => {
+const SecretsStep = ({ selectedTechnology, typedSecrets, onChange }: Props) => {
+    const [localTypedSecrets, setLocalTypedSecrets] = useState(() => typedSecrets ?? {});
+    useEffect(() => setLocalTypedSecrets(typedSecrets ?? {}), [typedSecrets]);
     return (
-        <UncontrolledForm ref={ref} data={typedSecrets}>
-            {selectedPlugin.secrets.map(itemSecret => (
-                <div key={itemSecret.name}>
-                    <Form.Field>
+        <Form>
+            {selectedTechnology.secrets.map(({ name, label, type }) => {
+                const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
+                    setLocalTypedSecrets({ ...localTypedSecrets, [name]: e.target.value });
+                };
+                const handleBlur = () => {
+                    onChange?.(localTypedSecrets);
+                };
+                return (
+                    <Form.Field key={name}>
                         <Form.Input
-                            name={`${selectedPlugin.name}.${itemSecret.name}`}
-                            type={itemSecret.type}
-                            label={itemSecret.label}
+                            type={type}
+                            label={label}
+                            value={localTypedSecrets[name] ?? ''}
+                            onChange={handleChange}
+                            onBlur={handleBlur}
                         />
                     </Form.Field>
-                </div>
-            ))}
-        </UncontrolledForm>
+                );
+            })}
+        </Form>
     );
 };
 
-type SecretsStep = FC<Props | { ref: Ref<HTMLFormElement> }>;
-
-export default memo(forwardRef(SecretsStep)) as SecretsStep;
+export default memo(SecretsStep);

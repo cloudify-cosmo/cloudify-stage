@@ -1,18 +1,23 @@
-import React, { memo, useRef, useState, useEffect, useMemo } from 'react';
+import React, { memo, useState, useEffect, useMemo } from 'react';
 import { Form } from 'cloudify-ui-components';
 import i18n from 'i18next';
-import { Button, Divider, Message, ModalHeader, Ref as SemanticRef } from 'semantic-ui-react';
+import { Button, Divider, Message, ModalHeader } from 'semantic-ui-react';
+
+import type { ChangeEvent } from 'react';
 
 import { Modal } from '../basic';
-import { getFormData } from './common/UncontrolledForm/formUtils';
-import createCheckboxRefExtractor from './common/UncontrolledForm/createCheckboxRefExtractor';
 import TechnologiesStep from './steps/TechnologiesStep/index';
 import SecretsStep from './steps/SecretsStep';
 import SummaryStep from './steps/SummaryStep';
 import { validateSecretFields, validateTechnologyFields } from './formValidation';
 import createTechnologiesGroups from './createTechnologiesGroups';
 
-import type { GettingStartedData, GettingStartedSchema, GettingStartedTechnologiesData } from './model';
+import type {
+    GettingStartedData,
+    GettingStartedSchema,
+    GettingStartedSecretsData,
+    GettingStartedTechnologiesData
+} from './model';
 
 const getHeaderText = (schema: GettingStartedSchema, stepName: StepName, secretsStepIndex: number) => {
     switch (stepName) {
@@ -62,51 +67,45 @@ type Props = {
 };
 
 const ControlledGettingStartedModal = ({ open = false, step = 0, schema, data, onClose }: Props) => {
-    const modalDisabledInputRef = useRef<HTMLInputElement>(null);
-    const technologiesFormRef = useRef<HTMLFormElement>(null);
-    const secretsFormRef = useRef<HTMLFormElement>(null);
     const [stepName, setStepName] = useState<StepName>('technologies');
     const [stepErrors, setStepErrors] = useState<string[]>([]);
     const [technologiesStepData, setTechnologiesStepData] = useState<GettingStartedTechnologiesData>(() => ({}));
     const [secretsStepIndex, setSecretsStepIndex] = useState(0);
-    const [secretsStepData, setSecretsStepData] = useState(() => ({}));
+    const [secretsStepsData, setSecretsStepsData] = useState(() => data ?? {});
     const [installationProcessing, setInstallationProcessing] = useState(false);
+    const [modalDisabled, setModalDisabled] = useState(false);
     useEffect(() => setTechnologiesStepData(detectSelectedTechnologies(schema, data)), [schema, data]);
     useEffect(() => setSecretsStepIndex(step), [step]);
-    useEffect(() => setSecretsStepData(data ?? {}), [data]);
+    useEffect(() => setSecretsStepsData(data ?? {}), [data]);
     const secretsStepsSchemas = useMemo(
         () => createTechnologiesGroups(schema.filter(items => technologiesStepData[items.name])), // steps with unique secrets for selected technologies
-        [technologiesStepData]
+        [schema, technologiesStepData]
     );
     const secretsStepSchema = secretsStepsSchemas[secretsStepIndex];
-    const updateTechnologiesStepData = () => {
-        if (technologiesFormRef.current) {
-            const newSelectedTechnologies = getFormData<GettingStartedTechnologiesData>(technologiesFormRef.current);
-            const usedTechnologiesErrors = validateTechnologyFields(newSelectedTechnologies);
-            if (usedTechnologiesErrors.length > 0) {
-                setStepErrors(usedTechnologiesErrors);
-                return false;
-            }
-            setStepErrors([]);
-            setTechnologiesStepData(newSelectedTechnologies);
+    const secretsStepData = secretsStepsData[secretsStepSchema?.name];
+    const checkTechnologiesStepDataErrors = () => {
+        const usedTechnologiesErrors = validateTechnologyFields(technologiesStepData);
+        if (usedTechnologiesErrors.length > 0) {
+            setStepErrors(usedTechnologiesErrors);
+            return false;
         }
+        setStepErrors([]);
         return true;
     };
-    const updateSecretsStepData = (validationRequired = true) => {
-        if (secretsFormRef.current) {
-            const newLocalData = getFormData<GettingStartedData>(secretsFormRef.current);
-            if (validationRequired) {
-                const newSecretsData = newLocalData[secretsStepSchema.name];
-                const localDataErrors = validateSecretFields(newSecretsData ?? {});
-                if (localDataErrors.length > 0) {
-                    setStepErrors(localDataErrors);
-                    return false;
-                }
-            }
-            setStepErrors([]);
-            setSecretsStepData({ ...secretsStepData, ...newLocalData });
+    const checkSecretsStepDataErrors = () => {
+        const localDataErrors = validateSecretFields(secretsStepSchema.secrets, secretsStepData ?? {});
+        if (localDataErrors.length > 0) {
+            setStepErrors(localDataErrors);
+            return false;
         }
+        setStepErrors([]);
         return true;
+    };
+    const handleTechnologiesStepChange = (selectedTechnologies: GettingStartedTechnologiesData) => {
+        setTechnologiesStepData(selectedTechnologies);
+    };
+    const handleSecretsStepChange = (typedSecrets: GettingStartedSecretsData) => {
+        setSecretsStepsData({ ...secretsStepsData, [secretsStepSchema.name]: typedSecrets });
     };
     const handleInstallationStarted = () => {
         setInstallationProcessing(true);
@@ -114,8 +113,12 @@ const ControlledGettingStartedModal = ({ open = false, step = 0, schema, data, o
     const handleInstallationFinishedOrCanceled = () => {
         setInstallationProcessing(false);
     };
+    const handleModalDisabledChange = (e: ChangeEvent) => {
+        const input = e.target.parentElement?.firstChild as HTMLInputElement | null | undefined;
+        setModalDisabled(!input?.checked);
+    };
     const handleModalClose = () => {
-        onClose?.(modalDisabledInputRef.current?.checked ?? false);
+        onClose?.(modalDisabled);
     };
     const handleBackClick = () => {
         switch (stepName) {
@@ -133,7 +136,7 @@ const ControlledGettingStartedModal = ({ open = false, step = 0, schema, data, o
                 break;
 
             case 'secrets':
-                updateSecretsStepData(false);
+                setStepErrors([]);
                 if (secretsStepIndex > 0) {
                     setSecretsStepIndex(secretsStepIndex - 1);
                 } else {
@@ -150,14 +153,14 @@ const ControlledGettingStartedModal = ({ open = false, step = 0, schema, data, o
     const handleNextClick = () => {
         switch (stepName) {
             case 'technologies':
-                if (updateTechnologiesStepData()) {
+                if (checkTechnologiesStepDataErrors()) {
                     setStepName('secrets');
                     setSecretsStepIndex(0);
                 }
                 break;
 
             case 'secrets':
-                if (updateSecretsStepData()) {
+                if (checkSecretsStepDataErrors()) {
                     if (secretsStepIndex < secretsStepsSchemas.length - 1) {
                         setSecretsStepIndex(secretsStepIndex + 1);
                     } else {
@@ -193,20 +196,24 @@ const ControlledGettingStartedModal = ({ open = false, step = 0, schema, data, o
                     </>
                 )}
                 {stepName === 'technologies' && (
-                    <TechnologiesStep ref={technologiesFormRef} schema={schema} technologies={technologiesStepData} />
+                    <TechnologiesStep
+                        schema={schema}
+                        selectedTechnologies={technologiesStepData}
+                        onChange={handleTechnologiesStepChange}
+                    />
                 )}
                 {stepName === 'secrets' && secretsStepSchema && (
                     <SecretsStep
-                        ref={secretsFormRef}
-                        selectedPlugin={secretsStepSchema}
+                        selectedTechnology={secretsStepSchema}
                         typedSecrets={secretsStepData}
+                        onChange={handleSecretsStepChange}
                     />
                 )}
                 {(stepName === 'summary' || stepName === 'status') && (
                     <SummaryStep
                         installationMode={stepName === 'status'}
                         selectedPlugins={secretsStepsSchemas}
-                        typedSecrets={secretsStepData}
+                        typedSecrets={secretsStepsData}
                         onInstallationStarted={handleInstallationStarted}
                         onInstallationFinished={handleInstallationFinishedOrCanceled}
                         onInstallationCanceled={handleInstallationFinishedOrCanceled}
@@ -215,15 +222,15 @@ const ControlledGettingStartedModal = ({ open = false, step = 0, schema, data, o
             </Modal.Content>
             <Modal.Content style={{ minHeight: '50px' }}>
                 <Form.Field>
-                    <SemanticRef innerRef={createCheckboxRefExtractor(modalDisabledInputRef)}>
-                        <Form.Checkbox
-                            label={i18n.t('gettingStartedModal.modal.disableModalLabel', "Don't show next time")}
-                            help={i18n.t(
-                                'gettingStartedModal.modal.enableModalHelp',
-                                'You can enable modal always in user profile.'
-                            )}
-                        />
-                    </SemanticRef>
+                    <Form.Checkbox
+                        label={i18n.t('gettingStartedModal.modal.disableModalLabel', "Don't show next time")}
+                        help={i18n.t(
+                            'gettingStartedModal.modal.enableModalHelp',
+                            'You can enable modal always in user profile.'
+                        )}
+                        checked={modalDisabled}
+                        onChange={handleModalDisabledChange}
+                    />
                 </Form.Field>
             </Modal.Content>
             <Modal.Actions style={{ overflow: 'hidden' }}>
@@ -250,9 +257,9 @@ const ControlledGettingStartedModal = ({ open = false, step = 0, schema, data, o
                         <Button
                             icon="right arrow"
                             content={
-                                secretsStepIndex < secretsStepsSchemas.length + 1
-                                    ? i18n.t('gettingStartedModal.modal.stepNext', 'Next')
-                                    : i18n.t('gettingStartedModal.modal.stepFinish', 'Finish')
+                                stepName === 'summary'
+                                    ? i18n.t('gettingStartedModal.modal.stepFinish', 'Finish')
+                                    : i18n.t('gettingStartedModal.modal.stepNext', 'Next')
                             }
                             labelPosition="right"
                             onClick={handleNextClick}

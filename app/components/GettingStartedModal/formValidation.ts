@@ -1,6 +1,6 @@
 import i18n from 'i18next';
 
-import type { GettingStartedSecretsData, GettingStartedTechnologiesData } from './model';
+import type { GettingStartedSchemaSecret, GettingStartedSecretsData, GettingStartedTechnologiesData } from './model';
 
 export const validateTechnologyFields = (data: GettingStartedTechnologiesData) => {
     const errors: string[] = [];
@@ -10,9 +10,9 @@ export const validateTechnologyFields = (data: GettingStartedTechnologiesData) =
     return errors;
 };
 
-export const validateSecretFields = (data: GettingStartedSecretsData) => {
+export const validateSecretFields = (schema: GettingStartedSchemaSecret[], data: GettingStartedSecretsData) => {
     const errors: string[] = [];
-    if (_.some(data, item => !item)) {
+    if (_.some(schema, item => !data[item.name])) {
         errors.push(i18n.t('gettingStartedModal.modal.allSecretsRequiredError', 'Please type all secrets.'));
     }
     return errors;
