@@ -123,4 +123,10 @@ export default class ExecutionUtils {
     static getExecutionStatusIconParams(execution) {
         return ExecutionUtils.STATUS_ICON_PARAMS[ExecutionUtils.getExecutionStatusGroup(execution)];
     }
+
+    static getProgress(execution) {
+        const { finished_operations: finishedOperations, total_operations: totalOperations } = execution;
+        const ratio = finishedOperations / totalOperations;
+        return Number.isFinite(ratio) ? Math.round(ratio * 100) : 0;
+    }
 }
