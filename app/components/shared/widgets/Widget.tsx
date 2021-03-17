@@ -5,16 +5,16 @@ import i18n from 'i18next';
 import React, { Component, createRef, ErrorInfo, ReactElement } from 'react';
 import { connect, ConnectedProps, MapStateToProps } from 'react-redux';
 
-import { setValue } from '../actions/context';
-import { fetchWidgetData as fetchWidgetDataThunk } from '../actions/WidgetData';
-import EditWidget from './EditWidget';
-import stageUtils from '../utils/stageUtils';
-import { EditableLabel, ErrorMessage, Header, Icon, Loading, Message, ReadmeModal, Segment } from './basic';
-import WidgetDynamicContent from './WidgetDynamicContent';
-import type { ManagerData } from '../reducers/managerReducer';
-import type { ReduxState } from '../reducers';
-import type { Widget as WidgetObj } from '../utils/StageAPI';
-import { getWidgetDefinitionById, SimpleWidgetObj } from '../actions/page';
+import { setValue } from '../../../actions/context';
+import { fetchWidgetData as fetchWidgetDataThunk } from '../../../actions/WidgetData';
+import EditWidget from '../../EditWidget';
+import stageUtils from '../../../utils/stageUtils';
+import { EditableLabel, ErrorMessage, Header, Icon, Loading, Message, ReadmeModal, Segment } from '../../basic';
+import WidgetDynamicContent from '../../WidgetDynamicContent';
+import type { ManagerData } from '../../../reducers/managerReducer';
+import type { ReduxState } from '../../../reducers';
+import type { Widget as WidgetObj } from '../../../utils/StageAPI';
+import { getWidgetDefinitionById, SimpleWidgetObj } from '../../../actions/page';
 
 export interface WidgetOwnProps<Configuration> {
     isEditMode: boolean;
