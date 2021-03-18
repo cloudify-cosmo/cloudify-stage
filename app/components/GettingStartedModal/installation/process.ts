@@ -56,24 +56,19 @@ export const updateSecret = async (manager: Manager, secret: SecretInstallationT
     }
 };
 
-export const uploadBlueprint = async (
-    manager: Manager,
-    blueprintName: string,
-    blueprintUrl: string,
-    applicationName: string
-) => {
+// TODO(RD-1874): use common api for backend requests
+export const uploadBlueprint = async (manager: Manager, blueprint: BlueprintInstallationTask) => {
     const data = {
         visibility: 'tenant',
         async_upload: false,
-        application_file_name: applicationName,
-        blueprint_archive_url: blueprintUrl
+        application_file_name: blueprint.applicationName,
+        blueprint_archive_url: blueprint.blueprintUrl
     };
     try {
-        await manager.doPut(`/blueprints/${blueprintName}`, data);
+        await manager.doPut(`/blueprints/${blueprint.blueprintName}`, data);
         return true;
     } catch (e) {
-        // eslint-disable-next-line no-console
-        console.error(e);
+        log.error(e);
         return false;
     }
 };
@@ -99,7 +94,8 @@ export const createResourcesInstaller = (
         }
 
         let stepIndex = 0;
-        const stepsCount = scheduledPlugins.length + updatedSecrets.length + createdSecrets.length;
+        const stepsCount =
+            scheduledPlugins.length + updatedSecrets.length + createdSecrets.length + scheduledBlueprints.length;
 
         const updateStepIndex = () => {
             stepIndex += 1;
@@ -150,6 +146,22 @@ export const createResourcesInstaller = (
             updateStepIndex();
         };
 
+        const runUploadBlueprintStep = async (scheduledBlueprint: BlueprintInstallationTask) => {
+            const result = await uploadBlueprint(manager, scheduledBlueprint);
+            if (destroyed) return;
+            if (!result) {
+                onError(
+                    i18n.t(
+                        'gettingStartedModal.installation.blueprintUploadError',
+                        '{{scheduledBlueprint.blueprintName}} blueprint upload error.',
+                        { scheduledBlueprint }
+                    )
+                );
+            }
+            if (destroyed) return;
+            updateStepIndex();
+        };
+
         onStarted();
         onProgress(0);
 
@@ -158,6 +170,8 @@ export const createResourcesInstaller = (
             ...updatedSecrets.map(runUpdateSecretStep),
             ...createdSecrets.map(runCreateSecretStep)
         ]);
+
+        await Promise.all(scheduledBlueprints.map(runUploadBlueprintStep));
 
         onProgress(100);
         onFinished();
