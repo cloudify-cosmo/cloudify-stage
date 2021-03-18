@@ -3,7 +3,11 @@ import React, { memo, useEffect, useState } from 'react';
 import { Divider, Form, Header, Label, List, Message, Progress } from 'semantic-ui-react';
 import useCurrentCallback from '../../common/useCurrentCallback';
 import { createResourcesInstaller } from '../../installation/process';
-import { useBlueprintsInstallationTasks, usePluginsInstallationTasks as usePluginsInstallationTasks, useSecretsInstallationTasks } from '../../installation/tasks';
+import {
+    useBlueprintsInstallationTasks,
+    usePluginsInstallationTasks,
+    useSecretsInstallationTasks
+} from '../../installation/tasks';
 import { useInternal, useManager } from '../../managerHooks';
 import PluginTaskItems, { installedPluginDescription, rejectedPluginDescription } from './PluginTaskItems';
 
@@ -11,7 +15,7 @@ import type { GettingStartedData, GettingStartedSchema } from '../../model';
 
 type Props = {
     installationMode?: boolean;
-    selectedPlugins: GettingStartedSchema;
+    selectedTechnologies: GettingStartedSchema;
     typedSecrets: GettingStartedData;
     onInstallationStarted?: () => void;
     onInstallationFinished?: () => void;
@@ -20,7 +24,7 @@ type Props = {
 
 const SummaryStep = ({
     installationMode = false,
-    selectedPlugins,
+    selectedTechnologies,
     typedSecrets,
     onInstallationStarted,
     onInstallationFinished,
@@ -31,23 +35,28 @@ const SummaryStep = ({
     const handleInstallationStarted = useCurrentCallback(onInstallationStarted);
     const handleInstallationFinished = useCurrentCallback(onInstallationFinished);
     const handleInstallationCanceled = useCurrentCallback(onInstallationCanceled);
-    const pluginsInstallationTasks = usePluginsInstallationTasks(selectedPlugins);
-    const secretsInstallationTasks = useSecretsInstallationTasks(selectedPlugins, typedSecrets);
-    const blueprintsInstallationTasks = useBlueprintsInstallationTasks();
+    const pluginsInstallationTasks = usePluginsInstallationTasks(selectedTechnologies);
+    const secretsInstallationTasks = useSecretsInstallationTasks(selectedTechnologies, typedSecrets);
+    const blueprintsInstallationTasks = useBlueprintsInstallationTasks(selectedTechnologies);
     const [installationErrors, setInstallationErrors] = useState<string[]>([]);
     const [installationProgress, setInstallationProgress] = useState<number>();
 
     useEffect(() => {
         setInstallationErrors([]);
         setInstallationProgress(undefined);
-        if (installationMode && pluginsInstallationTasks.tasks && secretsInstallationTasks.tasks) {
+        if (
+            installationMode &&
+            pluginsInstallationTasks.tasks &&
+            secretsInstallationTasks.tasks &&
+            blueprintsInstallationTasks.tasks
+        ) {
             let installationFinished = false;
             const resourcesInstaller = createResourcesInstaller(
                 manager,
                 internal,
                 () => handleInstallationStarted(),
                 (progress: number) => setInstallationProgress(progress),
-                (error: string) => setInstallationErrors([...installationErrors, error]),
+                (error: string) => setInstallationErrors(status => [...status, error]),
                 () => {
                     installationFinished = true;
                     handleInstallationFinished();
@@ -57,7 +66,8 @@ const SummaryStep = ({
             resourcesInstaller.install(
                 pluginsInstallationTasks.tasks.scheduledPlugins,
                 secretsInstallationTasks.tasks.updatedSecrets,
-                secretsInstallationTasks.tasks.createdSecrets
+                secretsInstallationTasks.tasks.createdSecrets,
+                blueprintsInstallationTasks.tasks
             );
             return () => {
                 resourcesInstaller.destroy();
@@ -67,20 +77,28 @@ const SummaryStep = ({
             };
         }
         return undefined;
-    }, [installationMode, pluginsInstallationTasks, secretsInstallationTasks]);
+    }, [installationMode, pluginsInstallationTasks, secretsInstallationTasks, blueprintsInstallationTasks]);
 
     return (
         <Form
             style={{ minHeight: '150px' }}
             loading={pluginsInstallationTasks.loading || secretsInstallationTasks.loading}
         >
-            {pluginsInstallationTasks.error && secretsInstallationTasks.error && (
+            {(pluginsInstallationTasks.error ||
+                secretsInstallationTasks.error ||
+                blueprintsInstallationTasks.error ||
+                installationErrors.length > 0) && (
                 <Message color="red">
                     {pluginsInstallationTasks.error && <p>{pluginsInstallationTasks.error}</p>}
                     {secretsInstallationTasks.error && <p>{secretsInstallationTasks.error}</p>}
+                    {blueprintsInstallationTasks.error && <p>{blueprintsInstallationTasks.error}</p>}
+                    {installationErrors.map((error, index) => (
+                        // eslint-disable-next-line react/no-array-index-key
+                        <p key={index}>{error}</p>
+                    ))}
                 </Message>
             )}
-            {pluginsInstallationTasks.tasks && secretsInstallationTasks.tasks && (
+            {pluginsInstallationTasks.tasks && secretsInstallationTasks.tasks && blueprintsInstallationTasks.tasks && (
                 <>
                     <Header as="h4">{i18n.t('gettingStartedModal.summary.taskListTitle', 'Task List')}</Header>
                     <List ordered relaxed>
@@ -117,6 +135,17 @@ const SummaryStep = ({
                                     {i18n.t(
                                         'gettingStartedModal.summary.secretUpdateMessageSuffix',
                                         'secret will be updated'
+                                    )}
+                                </List.Item>
+                            );
+                        })}
+                        {blueprintsInstallationTasks.tasks.map(blueprint => {
+                            return (
+                                <List.Item key={blueprint.blueprintName}>
+                                    <Label horizontal>{blueprint.blueprintName}</Label>{' '}
+                                    {i18n.t(
+                                        'gettingStartedModal.summary.blueprintUploadMessageSuffix',
+                                        'blueprint will be uploaded'
                                     )}
                                 </List.Item>
                             );

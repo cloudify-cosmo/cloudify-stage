@@ -1,5 +1,6 @@
 import type {
     GettingStartedSchema,
+    GettingStartedSchemaBlueprint,
     GettingStartedSchemaItem,
     GettingStartedSchemaPlugin,
     GettingStartedSchemaSecret
@@ -10,10 +11,10 @@ type SecretGroup = {
     technologies: GettingStartedSchemaItem[];
 };
 
-const mapSecretsByName = (secretSchemas: GettingStartedSchema) => {
+const mapSecretsByName = (technologiesSchemas: GettingStartedSchema) => {
     const groupedSecrets = {} as Record<string, SecretGroup>;
     // eslint-disable-next-line no-restricted-syntax
-    for (const entry of secretSchemas) {
+    for (const entry of technologiesSchemas) {
         // eslint-disable-next-line no-restricted-syntax
         for (const secret of entry.secrets) {
             const group = groupedSecrets[secret.name] ?? (groupedSecrets[secret.name] = { secret, technologies: [] });
@@ -31,11 +32,13 @@ const mapTechnologiesByName = (groupedSecrets: SecretGroup[]) => {
         const technologyNames: string[] = [];
         const technologyLabels: string[] = [];
         const technologyPlugins: GettingStartedSchemaPlugin[] = [];
+        const technologyBlueprints: GettingStartedSchemaBlueprint[] = [];
         // eslint-disable-next-line no-restricted-syntax
         for (const technology of technologies) {
             technologyNames.push(technology.name);
             technologyLabels.push(technology.label);
             technologyPlugins.push(...technology.plugins);
+            technologyBlueprints.push(...technology.blueprints);
         }
         const technologyName = _.uniq(technologyNames)
             .map(name => encodeURIComponent(name))
@@ -47,7 +50,8 @@ const mapTechnologiesByName = (groupedSecrets: SecretGroup[]) => {
                 logo: '',
                 label: _.uniq(technologyLabels).join(' + '),
                 plugins: _.uniqBy(technologyPlugins, plugin => `${plugin.name} ${plugin.version}`),
-                secrets: []
+                secrets: [],
+                blueprints: technologyBlueprints
             });
         groupedTechnology.secrets.push(secret);
     }

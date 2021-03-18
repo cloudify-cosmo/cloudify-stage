@@ -56,20 +56,15 @@ export const updateSecret = async (manager: Manager, secret: SecretInstallationT
     }
 };
 
-export const uploadBlueprint = async (
-    manager: Manager,
-    blueprintName: string,
-    blueprintUrl: string,
-    applicationName: string
-) => {
+export const uploadBlueprint = async (manager: Manager, blueprint: BlueprintInstallationTask) => {
     const data = {
         visibility: 'tenant',
         async_upload: false,
-        application_file_name: applicationName,
-        blueprint_archive_url: blueprintUrl
+        application_file_name: blueprint.applicationName,
+        blueprint_archive_url: blueprint.blueprintUrl
     };
     try {
-        await manager.doPut(`/blueprints/${blueprintName}`, data);
+        await manager.doPut(`/blueprints/${blueprint.blueprintName}`, data);
         return true;
     } catch (e) {
         // eslint-disable-next-line no-console
@@ -110,7 +105,6 @@ export const createResourcesInstaller = (
                             { scheduledPlugin }
                         )
                     );
-                    // onError(`${scheduledPlugin.name} plugin installation error.`);
                 }
             }
             if (destroyed) return;
@@ -152,10 +146,26 @@ export const createResourcesInstaller = (
             onProgress(Math.round(100 * (stepIndex / stepsCount)));
         };
 
-        //scheduledBlueprints
+        const runUploadBlueprintStep = async (scheduledBlueprint: BlueprintInstallationTask) => {
+            const result = await uploadBlueprint(manager, scheduledBlueprint);
+            if (destroyed) return;
+            if (!result) {
+                onError(
+                    i18n.t(
+                        'gettingStartedModal.installation.blueprintUploadError',
+                        '{{scheduledBlueprint.blueprintName}} blueprint upload error.',
+                        { scheduledBlueprint }
+                    )
+                );
+            }
+            if (destroyed) return;
+            stepIndex += 1;
+            onProgress(Math.round(100 * (stepIndex / stepsCount)));
+        };
 
         let stepIndex = 0;
-        const stepsCount = scheduledPlugins.length + updatedSecrets.length + createdSecrets.length;
+        const stepsCount =
+            scheduledPlugins.length + updatedSecrets.length + createdSecrets.length + scheduledBlueprints.length;
 
         onStarted();
         onProgress(0);
@@ -165,6 +175,9 @@ export const createResourcesInstaller = (
             ...updatedSecrets.map(runUpdateSecretStep),
             ...createdSecrets.map(runCreateSecretStep)
         ]);
+
+        // TODO: check if plugin and secrets are installed before
+        await Promise.all(scheduledBlueprints.map(runUploadBlueprintStep));
 
         onProgress(100);
         onFinished();

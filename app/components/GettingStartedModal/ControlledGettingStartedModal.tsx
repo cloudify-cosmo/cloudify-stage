@@ -15,7 +15,6 @@ import createTechnologiesGroups from './createTechnologiesGroups';
 import type {
     GettingStartedData,
     GettingStartedSchema,
-    GettingStartedSchemaItem,
     GettingStartedSecretsData,
     GettingStartedTechnologiesData
 } from './model';
@@ -233,7 +232,7 @@ const ControlledGettingStartedModal = ({ open = false, step = 0, schema, data, o
                 {(stepName === 'summary' || stepName === 'status') && (
                     <SummaryStep
                         installationMode={stepName === 'status'}
-                        selectedPlugins={summaryStepSchemas}
+                        selectedTechnologies={summaryStepSchemas}
                         typedSecrets={secretsStepsData}
                         onInstallationStarted={handleInstallationStarted}
                         onInstallationFinished={handleInstallationFinishedOrCanceled}
