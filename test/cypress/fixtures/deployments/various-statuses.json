@@ -1,0 +1,1460 @@
+{
+    "metadata": {
+        "pagination": {
+            "total": 3,
+            "size": 100,
+            "offset": 0
+        },
+        "filtered": null
+    },
+    "items": [
+        {
+            "id": "deployments_view_test_deployment",
+            "visibility": "tenant",
+            "created_at": "2021-03-18T16:40:42.323Z",
+            "description": null,
+            "inputs": {
+                "webserver_port": 9123
+            },
+            "groups": {},
+            "permalink": null,
+            "policy_triggers": {
+                "cloudify.policies.triggers.execute_workflow": {
+                    "parameters": {
+                        "workflow": {
+                            "description": "Workflow name to execute"
+                        },
+                        "workflow_parameters": {
+                            "default": {},
+                            "description": "Workflow paramters"
+                        },
+                        "force": {
+                            "default": false,
+                            "description": "Should the workflow be executed even when another execution\nfor the same workflow is currently in progress\n"
+                        },
+                        "allow_custom_parameters": {
+                            "default": false,
+                            "description": "Should parameters not defined in the workflow parameters\nschema be accepted\n"
+                        },
+                        "socket_timeout": {
+                            "default": 1000,
+                            "description": "Socket timeout when making request to manager REST in ms"
+                        },
+                        "conn_timeout": {
+                            "default": 1000,
+                            "description": "Connection timeout when making request to manager REST in ms"
+                        }
+                    },
+                    "source": "file:///opt/manager/resources/cloudify/triggers/execute_workflow.clj"
+                }
+            },
+            "policy_types": {
+                "cloudify.policies.types.host_failure": {
+                    "properties": {
+                        "policy_operates_on_group": {
+                            "default": false,
+                            "description": "If the policy should maintain its state for the whole group\nor each node instance individually.\n"
+                        },
+                        "is_node_started_before_workflow": {
+                            "default": true,
+                            "description": "Before triggering workflow, check if the node state is started"
+                        },
+                        "interval_between_workflows": {
+                            "default": 300,
+                            "description": "Trigger workflow only if the last workflow was triggered earlier than interval-between-workflows seconds ago.\nif < 0  workflows can run concurrently.\n"
+                        },
+                        "service": {
+                            "default": ["service"],
+                            "description": "Service names whose events should be taken into consideration"
+                        }
+                    },
+                    "source": "file:///opt/manager/resources/cloudify/policies/host_failure.clj"
+                },
+                "cloudify.policies.types.threshold": {
+                    "properties": {
+                        "policy_operates_on_group": {
+                            "default": false,
+                            "description": "If the policy should maintain its state for the whole group\nor each node instance individually.\n"
+                        },
+                        "is_node_started_before_workflow": {
+                            "default": true,
+                            "description": "Before triggering workflow, check if the node state is started"
+                        },
+                        "interval_between_workflows": {
+                            "default": 300,
+                            "description": "Trigger workflow only if the last workflow was triggered earlier than interval-between-workflows seconds ago.\nif < 0  workflows can run concurrently.\n"
+                        },
+                        "service": {
+                            "default": "service",
+                            "description": "The service name"
+                        },
+                        "threshold": {
+                            "description": "The metric threshold value"
+                        },
+                        "upper_bound": {
+                            "default": true,
+                            "description": "boolean value for describing the semantics of the threshold.\nif 'true': metrics whose value is bigger than the threshold will cause the triggers to be processed.\nif 'false': metrics with values lower than the threshold will do so.\n"
+                        },
+                        "stability_time": {
+                            "default": 0,
+                            "description": "How long a threshold must be breached before the triggers will be processed"
+                        }
+                    },
+                    "source": "file:///opt/manager/resources/cloudify/policies/threshold.clj"
+                },
+                "cloudify.policies.types.ewma_stabilized": {
+                    "properties": {
+                        "policy_operates_on_group": {
+                            "default": false,
+                            "description": "If the policy should maintain its state for the whole group\nor each node instance individually.\n"
+                        },
+                        "is_node_started_before_workflow": {
+                            "default": true,
+                            "description": "Before triggering workflow, check if the node state is started"
+                        },
+                        "interval_between_workflows": {
+                            "default": 300,
+                            "description": "Trigger workflow only if the last workflow was triggered earlier than interval-between-workflows seconds ago.\nif < 0  workflows can run concurrently.\n"
+                        },
+                        "service": {
+                            "default": "service",
+                            "description": "The service name"
+                        },
+                        "threshold": {
+                            "description": "The metric threshold value"
+                        },
+                        "upper_bound": {
+                            "default": true,
+                            "description": "boolean value for describing the semantics of the threshold.\nif 'true': metrics whose value is bigger than the threshold will cause the triggers to be processed.\nif 'false': metrics with values lower than the threshold will do so.\n"
+                        },
+                        "stability_time": {
+                            "default": 0,
+                            "description": "How long a threshold must be breached before the triggers will be processed"
+                        },
+                        "ewma_timeless_r": {
+                            "default": 0.5,
+                            "description": "r is the ratio between successive events. The smaller it is, the smaller impact on the computed value the most recent event has.\n"
+                        }
+                    },
+                    "source": "file:///opt/manager/resources/cloudify/policies/ewma_stabilized.clj"
+                }
+            },
+            "outputs": {
+                "application_endpoint": {
+                    "description": "The external endpoint of the application.",
+                    "value": {
+                        "concat": [
+                            "http://",
+                            {
+                                "get_attribute": ["http_web_server", "ip"]
+                            },
+                            ":",
+                            9123
+                        ]
+                    }
+                }
+            },
+            "capabilities": {},
+            "scaling_groups": {},
+            "updated_at": "2021-03-18T16:40:42.323Z",
+            "workflows": [
+                {
+                    "name": "install",
+                    "created_at": null,
+                    "plugin": "default_workflows",
+                    "operation": "cloudify.plugins.workflows.install",
+                    "parameters": {}
+                },
+                {
+                    "name": "update",
+                    "created_at": null,
+                    "plugin": "default_workflows",
+                    "operation": "cloudify.plugins.workflows.update",
+                    "parameters": {
+                        "update_id": {
+                            "default": ""
+                        },
+                        "skip_install": {
+                            "default": false
+                        },
+                        "skip_uninstall": {
+                            "default": false
+                        },
+                        "added_instance_ids": {
+                            "default": [],
+                            "type": "list"
+                        },
+                        "added_target_instances_ids": {
+                            "default": [],
+                            "type": "list"
+                        },
+                        "removed_instance_ids": {
+                            "default": [],
+                            "type": "list"
+                        },
+                        "remove_target_instance_ids": {
+                            "default": [],
+                            "type": "list"
+                        },
+                        "modified_entity_ids": {
+                            "default": [],
+                            "type": "list"
+                        },
+                        "extended_instance_ids": {
+                            "default": [],
+                            "type": "list"
+                        },
+                        "extend_target_instance_ids": {
+                            "default": [],
+                            "type": "list"
+                        },
+                        "reduced_instance_ids": {
+                            "default": [],
+                            "type": "list"
+                        },
+                        "reduce_target_instance_ids": {
+                            "default": [],
+                            "type": "list"
+                        },
+                        "ignore_failure": {
+                            "default": false,
+                            "type": "boolean"
+                        },
+                        "install_first": {
+                            "default": false,
+                            "type": "boolean"
+                        },
+                        "node_instances_to_reinstall": {
+                            "default": [],
+                            "type": "list"
+                        },
+                        "central_plugins_to_install": {
+                            "default": [],
+                            "type": "list"
+                        },
+                        "central_plugins_to_uninstall": {
+                            "default": [],
+                            "type": "list"
+                        },
+                        "update_plugins": {
+                            "default": true,
+                            "type": "boolean"
+                        }
+                    }
+                },
+                {
+                    "name": "uninstall",
+                    "created_at": null,
+                    "plugin": "default_workflows",
+                    "operation": "cloudify.plugins.workflows.uninstall",
+                    "parameters": {
+                        "ignore_failure": {
+                            "default": false,
+                            "type": "boolean"
+                        }
+                    }
+                },
+                {
+                    "name": "start",
+                    "created_at": null,
+                    "plugin": "default_workflows",
+                    "operation": "cloudify.plugins.workflows.start",
+                    "parameters": {
+                        "operation_parms": {
+                            "default": {}
+                        },
+                        "run_by_dependency_order": {
+                            "default": true
+                        },
+                        "type_names": {
+                            "default": []
+                        },
+                        "node_ids": {
+                            "default": []
+                        },
+                        "node_instance_ids": {
+                            "default": []
+                        }
+                    }
+                },
+                {
+                    "name": "stop",
+                    "created_at": null,
+                    "plugin": "default_workflows",
+                    "operation": "cloudify.plugins.workflows.stop",
+                    "parameters": {
+                        "operation_parms": {
+                            "default": {}
+                        },
+                        "run_by_dependency_order": {
+                            "default": true
+                        },
+                        "type_names": {
+                            "default": []
+                        },
+                        "node_ids": {
+                            "default": []
+                        },
+                        "node_instance_ids": {
+                            "default": []
+                        }
+                    }
+                },
+                {
+                    "name": "restart",
+                    "created_at": null,
+                    "plugin": "default_workflows",
+                    "operation": "cloudify.plugins.workflows.restart",
+                    "parameters": {
+                        "stop_parms": {
+                            "default": {}
+                        },
+                        "start_parms": {
+                            "default": {}
+                        },
+                        "run_by_dependency_order": {
+                            "default": true
+                        },
+                        "type_names": {
+                            "default": []
+                        },
+                        "node_ids": {
+                            "default": []
+                        },
+                        "node_instance_ids": {
+                            "default": []
+                        }
+                    }
+                },
+                {
+                    "name": "execute_operation",
+                    "created_at": null,
+                    "plugin": "default_workflows",
+                    "operation": "cloudify.plugins.workflows.execute_operation",
+                    "parameters": {
+                        "operation": {},
+                        "operation_kwargs": {
+                            "default": {}
+                        },
+                        "allow_kwargs_override": {
+                            "default": null
+                        },
+                        "run_by_dependency_order": {
+                            "default": false
+                        },
+                        "type_names": {
+                            "default": []
+                        },
+                        "node_ids": {
+                            "default": []
+                        },
+                        "node_instance_ids": {
+                            "default": []
+                        }
+                    }
+                },
+                {
+                    "name": "heal",
+                    "created_at": null,
+                    "plugin": "default_workflows",
+                    "operation": "cloudify.plugins.workflows.auto_heal_reinstall_node_subgraph",
+                    "parameters": {
+                        "node_instance_id": {
+                            "description": "Which node instance has failed"
+                        },
+                        "diagnose_value": {
+                            "default": "Not provided",
+                            "description": "Diagnosed reason of failure"
+                        },
+                        "ignore_failure": {
+                            "default": true,
+                            "type": "boolean"
+                        }
+                    }
+                },
+                {
+                    "name": "scale",
+                    "created_at": null,
+                    "plugin": "default_workflows",
+                    "operation": "cloudify.plugins.workflows.scale_entity",
+                    "parameters": {
+                        "scalable_entity_name": {
+                            "description": "Which node/group to scale. Note that the parameter specified should denote the node/group name and NOT the node/group instance id.\n"
+                        },
+                        "delta": {
+                            "default": 1,
+                            "description": "How many node/group instances should be added/removed. A positive number denotes increase of instances. A negative number denotes decrease of instances.\n",
+                            "type": "integer"
+                        },
+                        "scale_compute": {
+                            "default": false,
+                            "description": "If a node name is passed as the `scalable_entity_name` parameter and that node is contained (transitively) within a compute node and this property is 'true', operate on the compute node instead of the specified node.\n"
+                        },
+                        "include_instances": {
+                            "default": null,
+                            "description": "A node instance ID or list of node instance IDs to prioritise for scaling down. If a larger amount of included instances are provided than the delta then one of the included instances will be scaled down while the others will be ignored. If a smaller amount of included instances are provided than the delta then the remaining instances will be selected arbitrarily. This is only valid for scaling down and cannot be used with scale_compute set to true.\n"
+                        },
+                        "exclude_instances": {
+                            "default": null,
+                            "description": "A node instance ID or list of node instance IDs which must not be removed when scaling down. If the amount of excluded instances plus the absolute delta is equal to or greater than the total amount of instances then the scaling operation will fail and no nodes will be scaled down. This is only valid for scaling down and cannot be used with scale_compute set to true.\n"
+                        },
+                        "ignore_failure": {
+                            "default": false,
+                            "type": "boolean"
+                        },
+                        "rollback_if_failed": {
+                            "default": true,
+                            "description": "If this is False then no rollback will be triggered when an error occurs during the workflow, otherwise the rollback will be triggered.\n"
+                        },
+                        "abort_started": {
+                            "default": false,
+                            "description": "Remove any started deployment modifications created prior to the scaling workflow.\n",
+                            "type": "boolean"
+                        }
+                    }
+                },
+                {
+                    "name": "install_new_agents",
+                    "created_at": null,
+                    "plugin": "default_workflows",
+                    "operation": "cloudify.plugins.workflows.install_new_agents",
+                    "parameters": {
+                        "install_agent_timeout": {
+                            "default": 300
+                        },
+                        "node_ids": {
+                            "default": []
+                        },
+                        "node_instance_ids": {
+                            "default": []
+                        },
+                        "install_methods": {
+                            "default": null
+                        },
+                        "validate": {
+                            "default": true,
+                            "type": "boolean"
+                        },
+                        "install": {
+                            "default": true,
+                            "type": "boolean"
+                        },
+                        "install_script": {
+                            "default": ""
+                        },
+                        "manager_ip": {
+                            "default": "",
+                            "description": "The private ip of the new manager"
+                        },
+                        "manager_certificate": {
+                            "default": "",
+                            "description": "The cloudify_internal_ca_cert.pem of the new manager"
+                        },
+                        "stop_old_agent": {
+                            "default": false,
+                            "description": "Stop the old agent after the new agent is installed",
+                            "type": "boolean"
+                        }
+                    }
+                },
+                {
+                    "name": "validate_agents",
+                    "created_at": null,
+                    "plugin": "default_workflows",
+                    "operation": "cloudify.plugins.workflows.validate_agents",
+                    "parameters": {
+                        "node_ids": {
+                            "default": []
+                        },
+                        "node_instance_ids": {
+                            "default": []
+                        },
+                        "install_methods": {
+                            "default": null
+                        }
+                    }
+                }
+            ],
+            "runtime_only_evaluation": false,
+            "installation_status": "inactive",
+            "deployment_status": "requires_attention",
+            "blueprint_id": "deployments_view_test_blueprint",
+            "site_name": "Olsztyn",
+            "tenant_name": "default_tenant",
+            "created_by": "admin",
+            "resource_availability": "tenant",
+            "private_resource": false,
+            "labels": [],
+            "deployment_groups": [],
+            "latest_execution_status": "completed"
+        },
+
+        {
+            "id": "one-in-warsaw",
+            "visibility": "tenant",
+            "created_at": "2021-03-17T09:26:58.116Z",
+            "description": null,
+            "inputs": {
+                "webserver_port": 8000
+            },
+            "groups": {},
+            "permalink": null,
+            "policy_triggers": {
+                "cloudify.policies.triggers.execute_workflow": {
+                    "parameters": {
+                        "workflow": {
+                            "description": "Workflow name to execute"
+                        },
+                        "workflow_parameters": {
+                            "default": {},
+                            "description": "Workflow paramters"
+                        },
+                        "force": {
+                            "default": false,
+                            "description": "Should the workflow be executed even when another execution\nfor the same workflow is currently in progress\n"
+                        },
+                        "allow_custom_parameters": {
+                            "default": false,
+                            "description": "Should parameters not defined in the workflow parameters\nschema be accepted\n"
+                        },
+                        "socket_timeout": {
+                            "default": 1000,
+                            "description": "Socket timeout when making request to manager REST in ms"
+                        },
+                        "conn_timeout": {
+                            "default": 1000,
+                            "description": "Connection timeout when making request to manager REST in ms"
+                        }
+                    },
+                    "source": "file:///opt/manager/resources/cloudify/triggers/execute_workflow.clj"
+                }
+            },
+            "policy_types": {
+                "cloudify.policies.types.host_failure": {
+                    "properties": {
+                        "policy_operates_on_group": {
+                            "default": false,
+                            "description": "If the policy should maintain its state for the whole group\nor each node instance individually.\n"
+                        },
+                        "is_node_started_before_workflow": {
+                            "default": true,
+                            "description": "Before triggering workflow, check if the node state is started"
+                        },
+                        "interval_between_workflows": {
+                            "default": 300,
+                            "description": "Trigger workflow only if the last workflow was triggered earlier than interval-between-workflows seconds ago.\nif < 0  workflows can run concurrently.\n"
+                        },
+                        "service": {
+                            "default": ["service"],
+                            "description": "Service names whose events should be taken into consideration"
+                        }
+                    },
+                    "source": "file:///opt/manager/resources/cloudify/policies/host_failure.clj"
+                },
+                "cloudify.policies.types.threshold": {
+                    "properties": {
+                        "policy_operates_on_group": {
+                            "default": false,
+                            "description": "If the policy should maintain its state for the whole group\nor each node instance individually.\n"
+                        },
+                        "is_node_started_before_workflow": {
+                            "default": true,
+                            "description": "Before triggering workflow, check if the node state is started"
+                        },
+                        "interval_between_workflows": {
+                            "default": 300,
+                            "description": "Trigger workflow only if the last workflow was triggered earlier than interval-between-workflows seconds ago.\nif < 0  workflows can run concurrently.\n"
+                        },
+                        "service": {
+                            "default": "service",
+                            "description": "The service name"
+                        },
+                        "threshold": {
+                            "description": "The metric threshold value"
+                        },
+                        "upper_bound": {
+                            "default": true,
+                            "description": "boolean value for describing the semantics of the threshold.\nif 'true': metrics whose value is bigger than the threshold will cause the triggers to be processed.\nif 'false': metrics with values lower than the threshold will do so.\n"
+                        },
+                        "stability_time": {
+                            "default": 0,
+                            "description": "How long a threshold must be breached before the triggers will be processed"
+                        }
+                    },
+                    "source": "file:///opt/manager/resources/cloudify/policies/threshold.clj"
+                },
+                "cloudify.policies.types.ewma_stabilized": {
+                    "properties": {
+                        "policy_operates_on_group": {
+                            "default": false,
+                            "description": "If the policy should maintain its state for the whole group\nor each node instance individually.\n"
+                        },
+                        "is_node_started_before_workflow": {
+                            "default": true,
+                            "description": "Before triggering workflow, check if the node state is started"
+                        },
+                        "interval_between_workflows": {
+                            "default": 300,
+                            "description": "Trigger workflow only if the last workflow was triggered earlier than interval-between-workflows seconds ago.\nif < 0  workflows can run concurrently.\n"
+                        },
+                        "service": {
+                            "default": "service",
+                            "description": "The service name"
+                        },
+                        "threshold": {
+                            "description": "The metric threshold value"
+                        },
+                        "upper_bound": {
+                            "default": true,
+                            "description": "boolean value for describing the semantics of the threshold.\nif 'true': metrics whose value is bigger than the threshold will cause the triggers to be processed.\nif 'false': metrics with values lower than the threshold will do so.\n"
+                        },
+                        "stability_time": {
+                            "default": 0,
+                            "description": "How long a threshold must be breached before the triggers will be processed"
+                        },
+                        "ewma_timeless_r": {
+                            "default": 0.5,
+                            "description": "r is the ratio between successive events. The smaller it is, the smaller impact on the computed value the most recent event has.\n"
+                        }
+                    },
+                    "source": "file:///opt/manager/resources/cloudify/policies/ewma_stabilized.clj"
+                }
+            },
+            "outputs": {
+                "application_endpoint": {
+                    "description": "The external endpoint of the application.",
+                    "value": {
+                        "concat": [
+                            "http://",
+                            {
+                                "get_attribute": ["http_web_server", "ip"]
+                            },
+                            ":",
+                            8000
+                        ]
+                    }
+                }
+            },
+            "capabilities": {},
+            "scaling_groups": {},
+            "updated_at": "2021-03-17T09:26:58.116Z",
+            "workflows": [
+                {
+                    "name": "install",
+                    "created_at": null,
+                    "plugin": "default_workflows",
+                    "operation": "cloudify.plugins.workflows.install",
+                    "parameters": {}
+                },
+                {
+                    "name": "update",
+                    "created_at": null,
+                    "plugin": "default_workflows",
+                    "operation": "cloudify.plugins.workflows.update",
+                    "parameters": {
+                        "update_id": {
+                            "default": ""
+                        },
+                        "skip_install": {
+                            "default": false
+                        },
+                        "skip_uninstall": {
+                            "default": false
+                        },
+                        "added_instance_ids": {
+                            "default": [],
+                            "type": "list"
+                        },
+                        "added_target_instances_ids": {
+                            "default": [],
+                            "type": "list"
+                        },
+                        "removed_instance_ids": {
+                            "default": [],
+                            "type": "list"
+                        },
+                        "remove_target_instance_ids": {
+                            "default": [],
+                            "type": "list"
+                        },
+                        "modified_entity_ids": {
+                            "default": [],
+                            "type": "list"
+                        },
+                        "extended_instance_ids": {
+                            "default": [],
+                            "type": "list"
+                        },
+                        "extend_target_instance_ids": {
+                            "default": [],
+                            "type": "list"
+                        },
+                        "reduced_instance_ids": {
+                            "default": [],
+                            "type": "list"
+                        },
+                        "reduce_target_instance_ids": {
+                            "default": [],
+                            "type": "list"
+                        },
+                        "ignore_failure": {
+                            "default": false,
+                            "type": "boolean"
+                        },
+                        "install_first": {
+                            "default": false,
+                            "type": "boolean"
+                        },
+                        "node_instances_to_reinstall": {
+                            "default": [],
+                            "type": "list"
+                        },
+                        "central_plugins_to_install": {
+                            "default": [],
+                            "type": "list"
+                        },
+                        "central_plugins_to_uninstall": {
+                            "default": [],
+                            "type": "list"
+                        },
+                        "update_plugins": {
+                            "default": true,
+                            "type": "boolean"
+                        }
+                    }
+                },
+                {
+                    "name": "uninstall",
+                    "created_at": null,
+                    "plugin": "default_workflows",
+                    "operation": "cloudify.plugins.workflows.uninstall",
+                    "parameters": {
+                        "ignore_failure": {
+                            "default": false,
+                            "type": "boolean"
+                        }
+                    }
+                },
+                {
+                    "name": "start",
+                    "created_at": null,
+                    "plugin": "default_workflows",
+                    "operation": "cloudify.plugins.workflows.start",
+                    "parameters": {
+                        "operation_parms": {
+                            "default": {}
+                        },
+                        "run_by_dependency_order": {
+                            "default": true
+                        },
+                        "type_names": {
+                            "default": []
+                        },
+                        "node_ids": {
+                            "default": []
+                        },
+                        "node_instance_ids": {
+                            "default": []
+                        }
+                    }
+                },
+                {
+                    "name": "stop",
+                    "created_at": null,
+                    "plugin": "default_workflows",
+                    "operation": "cloudify.plugins.workflows.stop",
+                    "parameters": {
+                        "operation_parms": {
+                            "default": {}
+                        },
+                        "run_by_dependency_order": {
+                            "default": true
+                        },
+                        "type_names": {
+                            "default": []
+                        },
+                        "node_ids": {
+                            "default": []
+                        },
+                        "node_instance_ids": {
+                            "default": []
+                        }
+                    }
+                },
+                {
+                    "name": "restart",
+                    "created_at": null,
+                    "plugin": "default_workflows",
+                    "operation": "cloudify.plugins.workflows.restart",
+                    "parameters": {
+                        "stop_parms": {
+                            "default": {}
+                        },
+                        "start_parms": {
+                            "default": {}
+                        },
+                        "run_by_dependency_order": {
+                            "default": true
+                        },
+                        "type_names": {
+                            "default": []
+                        },
+                        "node_ids": {
+                            "default": []
+                        },
+                        "node_instance_ids": {
+                            "default": []
+                        }
+                    }
+                },
+                {
+                    "name": "execute_operation",
+                    "created_at": null,
+                    "plugin": "default_workflows",
+                    "operation": "cloudify.plugins.workflows.execute_operation",
+                    "parameters": {
+                        "operation": {},
+                        "operation_kwargs": {
+                            "default": {}
+                        },
+                        "allow_kwargs_override": {
+                            "default": null
+                        },
+                        "run_by_dependency_order": {
+                            "default": false
+                        },
+                        "type_names": {
+                            "default": []
+                        },
+                        "node_ids": {
+                            "default": []
+                        },
+                        "node_instance_ids": {
+                            "default": []
+                        }
+                    }
+                },
+                {
+                    "name": "heal",
+                    "created_at": null,
+                    "plugin": "default_workflows",
+                    "operation": "cloudify.plugins.workflows.auto_heal_reinstall_node_subgraph",
+                    "parameters": {
+                        "node_instance_id": {
+                            "description": "Which node instance has failed"
+                        },
+                        "diagnose_value": {
+                            "default": "Not provided",
+                            "description": "Diagnosed reason of failure"
+                        },
+                        "ignore_failure": {
+                            "default": true,
+                            "type": "boolean"
+                        }
+                    }
+                },
+                {
+                    "name": "scale",
+                    "created_at": null,
+                    "plugin": "default_workflows",
+                    "operation": "cloudify.plugins.workflows.scale_entity",
+                    "parameters": {
+                        "scalable_entity_name": {
+                            "description": "Which node/group to scale. Note that the parameter specified should denote the node/group name and NOT the node/group instance id.\n"
+                        },
+                        "delta": {
+                            "default": 1,
+                            "description": "How many node/group instances should be added/removed. A positive number denotes increase of instances. A negative number denotes decrease of instances.\n",
+                            "type": "integer"
+                        },
+                        "scale_compute": {
+                            "default": false,
+                            "description": "If a node name is passed as the `scalable_entity_name` parameter and that node is contained (transitively) within a compute node and this property is 'true', operate on the compute node instead of the specified node.\n"
+                        },
+                        "include_instances": {
+                            "default": null,
+                            "description": "A node instance ID or list of node instance IDs to prioritise for scaling down. If a larger amount of included instances are provided than the delta then one of the included instances will be scaled down while the others will be ignored. If a smaller amount of included instances are provided than the delta then the remaining instances will be selected arbitrarily. This is only valid for scaling down and cannot be used with scale_compute set to true.\n"
+                        },
+                        "exclude_instances": {
+                            "default": null,
+                            "description": "A node instance ID or list of node instance IDs which must not be removed when scaling down. If the amount of excluded instances plus the absolute delta is equal to or greater than the total amount of instances then the scaling operation will fail and no nodes will be scaled down. This is only valid for scaling down and cannot be used with scale_compute set to true.\n"
+                        },
+                        "ignore_failure": {
+                            "default": false,
+                            "type": "boolean"
+                        },
+                        "rollback_if_failed": {
+                            "default": true,
+                            "description": "If this is False then no rollback will be triggered when an error occurs during the workflow, otherwise the rollback will be triggered.\n"
+                        },
+                        "abort_started": {
+                            "default": false,
+                            "description": "Remove any started deployment modifications created prior to the scaling workflow.\n",
+                            "type": "boolean"
+                        }
+                    }
+                },
+                {
+                    "name": "install_new_agents",
+                    "created_at": null,
+                    "plugin": "default_workflows",
+                    "operation": "cloudify.plugins.workflows.install_new_agents",
+                    "parameters": {
+                        "install_agent_timeout": {
+                            "default": 300
+                        },
+                        "node_ids": {
+                            "default": []
+                        },
+                        "node_instance_ids": {
+                            "default": []
+                        },
+                        "install_methods": {
+                            "default": null
+                        },
+                        "validate": {
+                            "default": true,
+                            "type": "boolean"
+                        },
+                        "install": {
+                            "default": true,
+                            "type": "boolean"
+                        },
+                        "install_script": {
+                            "default": ""
+                        },
+                        "manager_ip": {
+                            "default": "",
+                            "description": "The private ip of the new manager"
+                        },
+                        "manager_certificate": {
+                            "default": "",
+                            "description": "The cloudify_internal_ca_cert.pem of the new manager"
+                        },
+                        "stop_old_agent": {
+                            "default": false,
+                            "description": "Stop the old agent after the new agent is installed",
+                            "type": "boolean"
+                        }
+                    }
+                },
+                {
+                    "name": "validate_agents",
+                    "created_at": null,
+                    "plugin": "default_workflows",
+                    "operation": "cloudify.plugins.workflows.validate_agents",
+                    "parameters": {
+                        "node_ids": {
+                            "default": []
+                        },
+                        "node_instance_ids": {
+                            "default": []
+                        },
+                        "install_methods": {
+                            "default": null
+                        }
+                    }
+                }
+            ],
+            "runtime_only_evaluation": false,
+            "installation_status": "active",
+            "deployment_status": "good",
+            "blueprint_id": "Cloudify-Hello-World",
+            "site_name": null,
+            "tenant_name": "default_tenant",
+            "created_by": "admin",
+            "resource_availability": "tenant",
+            "private_resource": false,
+            "labels": [
+                {
+                    "key": "abc",
+                    "value": "value",
+                    "created_at": "2021-03-17T09:26:58.136Z",
+                    "creator_id": 0
+                }
+            ],
+            "deployment_groups": [],
+            "latest_execution_status": "completed"
+        },
+        {
+            "id": "hello-world-one",
+            "visibility": "tenant",
+            "created_at": "2021-03-17T09:20:26.103Z",
+            "description": null,
+            "inputs": {
+                "webserver_port": 8000
+            },
+            "groups": {},
+            "permalink": null,
+            "policy_triggers": {
+                "cloudify.policies.triggers.execute_workflow": {
+                    "parameters": {
+                        "workflow": {
+                            "description": "Workflow name to execute"
+                        },
+                        "workflow_parameters": {
+                            "default": {},
+                            "description": "Workflow paramters"
+                        },
+                        "force": {
+                            "default": false,
+                            "description": "Should the workflow be executed even when another execution\nfor the same workflow is currently in progress\n"
+                        },
+                        "allow_custom_parameters": {
+                            "default": false,
+                            "description": "Should parameters not defined in the workflow parameters\nschema be accepted\n"
+                        },
+                        "socket_timeout": {
+                            "default": 1000,
+                            "description": "Socket timeout when making request to manager REST in ms"
+                        },
+                        "conn_timeout": {
+                            "default": 1000,
+                            "description": "Connection timeout when making request to manager REST in ms"
+                        }
+                    },
+                    "source": "file:///opt/manager/resources/cloudify/triggers/execute_workflow.clj"
+                }
+            },
+            "policy_types": {
+                "cloudify.policies.types.host_failure": {
+                    "properties": {
+                        "policy_operates_on_group": {
+                            "default": false,
+                            "description": "If the policy should maintain its state for the whole group\nor each node instance individually.\n"
+                        },
+                        "is_node_started_before_workflow": {
+                            "default": true,
+                            "description": "Before triggering workflow, check if the node state is started"
+                        },
+                        "interval_between_workflows": {
+                            "default": 300,
+                            "description": "Trigger workflow only if the last workflow was triggered earlier than interval-between-workflows seconds ago.\nif < 0  workflows can run concurrently.\n"
+                        },
+                        "service": {
+                            "default": ["service"],
+                            "description": "Service names whose events should be taken into consideration"
+                        }
+                    },
+                    "source": "file:///opt/manager/resources/cloudify/policies/host_failure.clj"
+                },
+                "cloudify.policies.types.threshold": {
+                    "properties": {
+                        "policy_operates_on_group": {
+                            "default": false,
+                            "description": "If the policy should maintain its state for the whole group\nor each node instance individually.\n"
+                        },
+                        "is_node_started_before_workflow": {
+                            "default": true,
+                            "description": "Before triggering workflow, check if the node state is started"
+                        },
+                        "interval_between_workflows": {
+                            "default": 300,
+                            "description": "Trigger workflow only if the last workflow was triggered earlier than interval-between-workflows seconds ago.\nif < 0  workflows can run concurrently.\n"
+                        },
+                        "service": {
+                            "default": "service",
+                            "description": "The service name"
+                        },
+                        "threshold": {
+                            "description": "The metric threshold value"
+                        },
+                        "upper_bound": {
+                            "default": true,
+                            "description": "boolean value for describing the semantics of the threshold.\nif 'true': metrics whose value is bigger than the threshold will cause the triggers to be processed.\nif 'false': metrics with values lower than the threshold will do so.\n"
+                        },
+                        "stability_time": {
+                            "default": 0,
+                            "description": "How long a threshold must be breached before the triggers will be processed"
+                        }
+                    },
+                    "source": "file:///opt/manager/resources/cloudify/policies/threshold.clj"
+                },
+                "cloudify.policies.types.ewma_stabilized": {
+                    "properties": {
+                        "policy_operates_on_group": {
+                            "default": false,
+                            "description": "If the policy should maintain its state for the whole group\nor each node instance individually.\n"
+                        },
+                        "is_node_started_before_workflow": {
+                            "default": true,
+                            "description": "Before triggering workflow, check if the node state is started"
+                        },
+                        "interval_between_workflows": {
+                            "default": 300,
+                            "description": "Trigger workflow only if the last workflow was triggered earlier than interval-between-workflows seconds ago.\nif < 0  workflows can run concurrently.\n"
+                        },
+                        "service": {
+                            "default": "service",
+                            "description": "The service name"
+                        },
+                        "threshold": {
+                            "description": "The metric threshold value"
+                        },
+                        "upper_bound": {
+                            "default": true,
+                            "description": "boolean value for describing the semantics of the threshold.\nif 'true': metrics whose value is bigger than the threshold will cause the triggers to be processed.\nif 'false': metrics with values lower than the threshold will do so.\n"
+                        },
+                        "stability_time": {
+                            "default": 0,
+                            "description": "How long a threshold must be breached before the triggers will be processed"
+                        },
+                        "ewma_timeless_r": {
+                            "default": 0.5,
+                            "description": "r is the ratio between successive events. The smaller it is, the smaller impact on the computed value the most recent event has.\n"
+                        }
+                    },
+                    "source": "file:///opt/manager/resources/cloudify/policies/ewma_stabilized.clj"
+                }
+            },
+            "outputs": {
+                "application_endpoint": {
+                    "description": "The external endpoint of the application.",
+                    "value": {
+                        "concat": [
+                            "http://",
+                            {
+                                "get_attribute": ["http_web_server", "ip"]
+                            },
+                            ":",
+                            8000
+                        ]
+                    }
+                }
+            },
+            "capabilities": {},
+            "scaling_groups": {},
+            "updated_at": "2021-03-17T09:20:26.103Z",
+            "workflows": [
+                {
+                    "name": "install",
+                    "created_at": null,
+                    "plugin": "default_workflows",
+                    "operation": "cloudify.plugins.workflows.install",
+                    "parameters": {}
+                },
+                {
+                    "name": "update",
+                    "created_at": null,
+                    "plugin": "default_workflows",
+                    "operation": "cloudify.plugins.workflows.update",
+                    "parameters": {
+                        "update_id": {
+                            "default": ""
+                        },
+                        "skip_install": {
+                            "default": false
+                        },
+                        "skip_uninstall": {
+                            "default": false
+                        },
+                        "added_instance_ids": {
+                            "default": [],
+                            "type": "list"
+                        },
+                        "added_target_instances_ids": {
+                            "default": [],
+                            "type": "list"
+                        },
+                        "removed_instance_ids": {
+                            "default": [],
+                            "type": "list"
+                        },
+                        "remove_target_instance_ids": {
+                            "default": [],
+                            "type": "list"
+                        },
+                        "modified_entity_ids": {
+                            "default": [],
+                            "type": "list"
+                        },
+                        "extended_instance_ids": {
+                            "default": [],
+                            "type": "list"
+                        },
+                        "extend_target_instance_ids": {
+                            "default": [],
+                            "type": "list"
+                        },
+                        "reduced_instance_ids": {
+                            "default": [],
+                            "type": "list"
+                        },
+                        "reduce_target_instance_ids": {
+                            "default": [],
+                            "type": "list"
+                        },
+                        "ignore_failure": {
+                            "default": false,
+                            "type": "boolean"
+                        },
+                        "install_first": {
+                            "default": false,
+                            "type": "boolean"
+                        },
+                        "node_instances_to_reinstall": {
+                            "default": [],
+                            "type": "list"
+                        },
+                        "central_plugins_to_install": {
+                            "default": [],
+                            "type": "list"
+                        },
+                        "central_plugins_to_uninstall": {
+                            "default": [],
+                            "type": "list"
+                        },
+                        "update_plugins": {
+                            "default": true,
+                            "type": "boolean"
+                        }
+                    }
+                },
+                {
+                    "name": "uninstall",
+                    "created_at": null,
+                    "plugin": "default_workflows",
+                    "operation": "cloudify.plugins.workflows.uninstall",
+                    "parameters": {
+                        "ignore_failure": {
+                            "default": false,
+                            "type": "boolean"
+                        }
+                    }
+                },
+                {
+                    "name": "start",
+                    "created_at": null,
+                    "plugin": "default_workflows",
+                    "operation": "cloudify.plugins.workflows.start",
+                    "parameters": {
+                        "operation_parms": {
+                            "default": {}
+                        },
+                        "run_by_dependency_order": {
+                            "default": true
+                        },
+                        "type_names": {
+                            "default": []
+                        },
+                        "node_ids": {
+                            "default": []
+                        },
+                        "node_instance_ids": {
+                            "default": []
+                        }
+                    }
+                },
+                {
+                    "name": "stop",
+                    "created_at": null,
+                    "plugin": "default_workflows",
+                    "operation": "cloudify.plugins.workflows.stop",
+                    "parameters": {
+                        "operation_parms": {
+                            "default": {}
+                        },
+                        "run_by_dependency_order": {
+                            "default": true
+                        },
+                        "type_names": {
+                            "default": []
+                        },
+                        "node_ids": {
+                            "default": []
+                        },
+                        "node_instance_ids": {
+                            "default": []
+                        }
+                    }
+                },
+                {
+                    "name": "restart",
+                    "created_at": null,
+                    "plugin": "default_workflows",
+                    "operation": "cloudify.plugins.workflows.restart",
+                    "parameters": {
+                        "stop_parms": {
+                            "default": {}
+                        },
+                        "start_parms": {
+                            "default": {}
+                        },
+                        "run_by_dependency_order": {
+                            "default": true
+                        },
+                        "type_names": {
+                            "default": []
+                        },
+                        "node_ids": {
+                            "default": []
+                        },
+                        "node_instance_ids": {
+                            "default": []
+                        }
+                    }
+                },
+                {
+                    "name": "execute_operation",
+                    "created_at": null,
+                    "plugin": "default_workflows",
+                    "operation": "cloudify.plugins.workflows.execute_operation",
+                    "parameters": {
+                        "operation": {},
+                        "operation_kwargs": {
+                            "default": {}
+                        },
+                        "allow_kwargs_override": {
+                            "default": null
+                        },
+                        "run_by_dependency_order": {
+                            "default": false
+                        },
+                        "type_names": {
+                            "default": []
+                        },
+                        "node_ids": {
+                            "default": []
+                        },
+                        "node_instance_ids": {
+                            "default": []
+                        }
+                    }
+                },
+                {
+                    "name": "heal",
+                    "created_at": null,
+                    "plugin": "default_workflows",
+                    "operation": "cloudify.plugins.workflows.auto_heal_reinstall_node_subgraph",
+                    "parameters": {
+                        "node_instance_id": {
+                            "description": "Which node instance has failed"
+                        },
+                        "diagnose_value": {
+                            "default": "Not provided",
+                            "description": "Diagnosed reason of failure"
+                        },
+                        "ignore_failure": {
+                            "default": true,
+                            "type": "boolean"
+                        }
+                    }
+                },
+                {
+                    "name": "scale",
+                    "created_at": null,
+                    "plugin": "default_workflows",
+                    "operation": "cloudify.plugins.workflows.scale_entity",
+                    "parameters": {
+                        "scalable_entity_name": {
+                            "description": "Which node/group to scale. Note that the parameter specified should denote the node/group name and NOT the node/group instance id.\n"
+                        },
+                        "delta": {
+                            "default": 1,
+                            "description": "How many node/group instances should be added/removed. A positive number denotes increase of instances. A negative number denotes decrease of instances.\n",
+                            "type": "integer"
+                        },
+                        "scale_compute": {
+                            "default": false,
+                            "description": "If a node name is passed as the `scalable_entity_name` parameter and that node is contained (transitively) within a compute node and this property is 'true', operate on the compute node instead of the specified node.\n"
+                        },
+                        "include_instances": {
+                            "default": null,
+                            "description": "A node instance ID or list of node instance IDs to prioritise for scaling down. If a larger amount of included instances are provided than the delta then one of the included instances will be scaled down while the others will be ignored. If a smaller amount of included instances are provided than the delta then the remaining instances will be selected arbitrarily. This is only valid for scaling down and cannot be used with scale_compute set to true.\n"
+                        },
+                        "exclude_instances": {
+                            "default": null,
+                            "description": "A node instance ID or list of node instance IDs which must not be removed when scaling down. If the amount of excluded instances plus the absolute delta is equal to or greater than the total amount of instances then the scaling operation will fail and no nodes will be scaled down. This is only valid for scaling down and cannot be used with scale_compute set to true.\n"
+                        },
+                        "ignore_failure": {
+                            "default": false,
+                            "type": "boolean"
+                        },
+                        "rollback_if_failed": {
+                            "default": true,
+                            "description": "If this is False then no rollback will be triggered when an error occurs during the workflow, otherwise the rollback will be triggered.\n"
+                        },
+                        "abort_started": {
+                            "default": false,
+                            "description": "Remove any started deployment modifications created prior to the scaling workflow.\n",
+                            "type": "boolean"
+                        }
+                    }
+                },
+                {
+                    "name": "install_new_agents",
+                    "created_at": null,
+                    "plugin": "default_workflows",
+                    "operation": "cloudify.plugins.workflows.install_new_agents",
+                    "parameters": {
+                        "install_agent_timeout": {
+                            "default": 300
+                        },
+                        "node_ids": {
+                            "default": []
+                        },
+                        "node_instance_ids": {
+                            "default": []
+                        },
+                        "install_methods": {
+                            "default": null
+                        },
+                        "validate": {
+                            "default": true,
+                            "type": "boolean"
+                        },
+                        "install": {
+                            "default": true,
+                            "type": "boolean"
+                        },
+                        "install_script": {
+                            "default": ""
+                        },
+                        "manager_ip": {
+                            "default": "",
+                            "description": "The private ip of the new manager"
+                        },
+                        "manager_certificate": {
+                            "default": "",
+                            "description": "The cloudify_internal_ca_cert.pem of the new manager"
+                        },
+                        "stop_old_agent": {
+                            "default": false,
+                            "description": "Stop the old agent after the new agent is installed",
+                            "type": "boolean"
+                        }
+                    }
+                },
+                {
+                    "name": "validate_agents",
+                    "created_at": null,
+                    "plugin": "default_workflows",
+                    "operation": "cloudify.plugins.workflows.validate_agents",
+                    "parameters": {
+                        "node_ids": {
+                            "default": []
+                        },
+                        "node_instance_ids": {
+                            "default": []
+                        },
+                        "install_methods": {
+                            "default": null
+                        }
+                    }
+                }
+            ],
+            "runtime_only_evaluation": false,
+            "installation_status": "active",
+            "deployment_status": "in_progress",
+            "blueprint_id": "Cloudify-Hello-World",
+            "site_name": null,
+            "tenant_name": "default_tenant",
+            "created_by": "admin",
+            "resource_availability": "tenant",
+            "private_resource": false,
+            "labels": [],
+            "deployment_groups": [],
+            "latest_execution_status": "completed"
+        }
+    ]
+}
