@@ -1,6 +1,9 @@
+import type { RouteHandler } from 'cypress/types/net-stubbing';
+
 describe('Deployments View widget', () => {
-    const blueprintName = 'deployments_view_test';
-    const deploymentName = 'deployments_view_test_dep';
+    const widgetId = 'deploymentsView';
+    const blueprintName = 'deployments_view_test_blueprint';
+    const deploymentName = 'deployments_view_test_deployment';
     const siteName = 'Olsztyn';
     const blueprintUrl =
         'https://github.com/cloudify-community/blueprint-examples/releases/download/latest/simple-hello-world-example.zip';
@@ -16,21 +19,63 @@ describe('Deployments View widget', () => {
             .setSite(deploymentName, siteName);
     });
 
-    beforeEach(() => {
-        cy.interceptSp('GET', 'deployments').as('deployments');
+    const useDeploymentsViewWidget = (routeHandler?: RouteHandler) => {
+        cy.interceptSp('GET', 'deployments', routeHandler).as('deployments');
         // NOTE: add widget through Edit Mode to apply default configuration automatically
-        cy.usePageMock([], {}, ['deploymentsView']).mockLogin().addWidget('deploymentsView');
+        cy.usePageMock([], {}, [widgetId]).mockLogin().addWidget(widgetId);
+        cy.wait('@deployments');
+    };
+
+    const getDeploymentsViewTable = () => cy.contains('Deployments view').parents('.widgetItem');
+
+    describe('configuration', () => {
+        const getFieldsDropdown = () =>
+            cy.contains('List of fields to show in the table').parent().find('[role="listbox"]');
+        const toggleFieldsDropdown = () => getFieldsDropdown().find('.dropdown.icon').click();
+
+        it('should allow changing displayed columns', () => {
+            useDeploymentsViewWidget();
+
+            cy.log('Hide some columns');
+            cy.editWidgetConfiguration(widgetId, () => {
+                getFieldsDropdown().within(() => {
+                    cy.contains('Blueprint Name').find('.delete.icon').click();
+                    cy.contains('Location').find('.delete.icon').click();
+                });
+            });
+
+            getDeploymentsViewTable().within(() => {
+                cy.contains(deploymentName);
+                cy.contains(blueprintName).should('not.exist');
+                cy.contains(siteName).should('not.exist');
+            });
+
+            cy.log('Show some columns');
+            cy.editWidgetConfiguration(widgetId, () => {
+                toggleFieldsDropdown();
+                getFieldsDropdown().within(() => {
+                    cy.get('[role="option"]').contains('Blueprint Name').click();
+                });
+                toggleFieldsDropdown();
+            });
+
+            getDeploymentsViewTable().within(() => {
+                cy.contains(deploymentName);
+                cy.contains(blueprintName);
+                cy.contains(siteName).should('not.exist');
+            });
+        });
     });
 
-    // TODO: test changing the visible columns in the configuration
-
     it('should display the deployments', () => {
-        cy.wait('@deployments');
+        useDeploymentsViewWidget();
 
-        cy.get('tr').within(() => {
+        getDeploymentsViewTable().within(() => {
             cy.contains(deploymentName);
             cy.contains(blueprintName);
             cy.contains(siteName);
         });
     });
+
+    it('should display various deployment statuses', () => {});
 });
