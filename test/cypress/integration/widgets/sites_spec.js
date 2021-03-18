@@ -66,29 +66,32 @@ describe('Sites Management', () => {
     };
 
     const verifySiteRow = (index, site) => {
-        const siteRow = `tbody > :nth-child(${index})`;
-        cy.get(`${siteRow} > :nth-child(1)`).should('have.text', site.name);
+        const siteRow = `tbody > tr:nth-child(${index})`;
+        cy.get(`${siteRow} > td:nth-child(1)`).should('have.text', site.name);
 
         let visibilityColor = 'green';
         if (site.visibility === 'private') {
             visibilityColor = 'red';
         }
-        cy.get(`${siteRow} > :nth-child(1) > span > .${visibilityColor}`).should('be.visible', true);
+        cy.get(`${siteRow} > td:nth-child(1) span > .${visibilityColor}`).should('be.visible', true);
 
         if (site.location) {
             const [latitude, longitude] = site.location.split(',');
-            cy.get(`${siteRow} > :nth-child(2)`).should('have.text', `Latitude: ${latitude}, Longitude: ${longitude}`);
-            cy.get(`${siteRow} > :nth-child(2) i`).trigger('mouseover');
+            cy.get(`${siteRow} > td:nth-child(2)`).should(
+                'have.text',
+                `Latitude: ${latitude}, Longitude: ${longitude}`
+            );
+            cy.get(`${siteRow} > td:nth-child(2) i`).trigger('mouseover');
             cy.get('.popup .leaflet-marker-icon').should('have.length', 1);
-            cy.get(`${siteRow} > :nth-child(2) i`).trigger('mouseout');
+            cy.get(`${siteRow} > td:nth-child(2) i`).trigger('mouseout');
             cy.get('.popup').should('not.exist');
         } else {
-            cy.get(`${siteRow} > :nth-child(2)`).should('have.text', '');
-            cy.get(`${siteRow} > :nth-child(2) i`).should('not.exist');
+            cy.get(`${siteRow} > td:nth-child(2)`).should('have.text', '');
+            cy.get(`${siteRow} > td:nth-child(2) i`).should('not.exist');
         }
 
-        cy.get(`${siteRow} > :nth-child(5)`).should('have.text', 'default_tenant');
-        cy.get(`${siteRow} > :nth-child(6)`).should('have.text', '0');
+        cy.get(`${siteRow} > td:nth-child(5)`).should('have.text', 'default_tenant');
+        cy.get(`${siteRow} > td:nth-child(6)`).should('have.text', '0');
     };
 
     const deleteSite = index => {
