@@ -3,7 +3,7 @@ import i18n from 'i18next';
 
 import type Internal from '../../../utils/Internal';
 import type Manager from '../../../utils/Manager';
-import type { PluginInstallationTask, SecretInstallationTask } from './tasks';
+import type { BlueprintInstallationTask, PluginInstallationTask, SecretInstallationTask } from './tasks';
 
 export const installPlugin = async (internal: Internal, plugin: PluginInstallationTask) => {
     if (!plugin.yamlUrl || !plugin.wagonUrl) {
@@ -56,6 +56,28 @@ export const updateSecret = async (manager: Manager, secret: SecretInstallationT
     }
 };
 
+export const uploadBlueprint = async (
+    manager: Manager,
+    blueprintName: string,
+    blueprintUrl: string,
+    applicationName: string
+) => {
+    const data = {
+        visibility: 'tenant',
+        async_upload: false,
+        application_file_name: applicationName,
+        blueprint_archive_url: blueprintUrl
+    };
+    try {
+        await manager.doPut(`/blueprints/${blueprintName}`, data);
+        return true;
+    } catch (e) {
+        // eslint-disable-next-line no-console
+        console.error(e);
+        return false;
+    }
+};
+
 export const createResourcesInstaller = (
     manager: Manager,
     internal: Internal,
@@ -69,7 +91,8 @@ export const createResourcesInstaller = (
     const install = async (
         scheduledPlugins: PluginInstallationTask[],
         updatedSecrets: SecretInstallationTask[],
-        createdSecrets: SecretInstallationTask[]
+        createdSecrets: SecretInstallationTask[],
+        scheduledBlueprints: BlueprintInstallationTask[]
     ) => {
         if (destroyed) {
             return;
@@ -128,6 +151,8 @@ export const createResourcesInstaller = (
             stepIndex += 1;
             onProgress(Math.round(100 * (stepIndex / stepsCount)));
         };
+
+        //scheduledBlueprints
 
         let stepIndex = 0;
         const stepsCount = scheduledPlugins.length + updatedSecrets.length + createdSecrets.length;

@@ -3,7 +3,7 @@ import React, { memo, useEffect, useState } from 'react';
 import { Divider, Form, Header, Label, List, Message, Progress } from 'semantic-ui-react';
 import useCurrentCallback from '../../common/useCurrentCallback';
 import { createResourcesInstaller } from '../../installation/process';
-import { usePluginInstallationTasks, useSecretsInstallationTasks } from '../../installation/tasks';
+import { useBlueprintsInstallationTasks, usePluginsInstallationTasks as usePluginsInstallationTasks, useSecretsInstallationTasks } from '../../installation/tasks';
 import { useInternal, useManager } from '../../managerHooks';
 import PluginTaskItems, { installedPluginDescription, rejectedPluginDescription } from './PluginTaskItems';
 
@@ -31,15 +31,16 @@ const SummaryStep = ({
     const handleInstallationStarted = useCurrentCallback(onInstallationStarted);
     const handleInstallationFinished = useCurrentCallback(onInstallationFinished);
     const handleInstallationCanceled = useCurrentCallback(onInstallationCanceled);
-    const pluginInstallationTasks = usePluginInstallationTasks(selectedPlugins);
-    const secretInstallationTasks = useSecretsInstallationTasks(selectedPlugins, typedSecrets);
+    const pluginsInstallationTasks = usePluginsInstallationTasks(selectedPlugins);
+    const secretsInstallationTasks = useSecretsInstallationTasks(selectedPlugins, typedSecrets);
+    const blueprintsInstallationTasks = useBlueprintsInstallationTasks();
     const [installationErrors, setInstallationErrors] = useState<string[]>([]);
     const [installationProgress, setInstallationProgress] = useState<number>();
 
     useEffect(() => {
         setInstallationErrors([]);
         setInstallationProgress(undefined);
-        if (installationMode && pluginInstallationTasks.tasks && secretInstallationTasks.tasks) {
+        if (installationMode && pluginsInstallationTasks.tasks && secretsInstallationTasks.tasks) {
             let installationFinished = false;
             const resourcesInstaller = createResourcesInstaller(
                 manager,
@@ -54,9 +55,9 @@ const SummaryStep = ({
             );
             // async installation that can be stopped with destroy() method
             resourcesInstaller.install(
-                pluginInstallationTasks.tasks.scheduledPlugins,
-                secretInstallationTasks.tasks.updatedSecrets,
-                secretInstallationTasks.tasks.createdSecrets
+                pluginsInstallationTasks.tasks.scheduledPlugins,
+                secretsInstallationTasks.tasks.updatedSecrets,
+                secretsInstallationTasks.tasks.createdSecrets
             );
             return () => {
                 resourcesInstaller.destroy();
@@ -66,39 +67,39 @@ const SummaryStep = ({
             };
         }
         return undefined;
-    }, [installationMode, pluginInstallationTasks, secretInstallationTasks]);
+    }, [installationMode, pluginsInstallationTasks, secretsInstallationTasks]);
 
     return (
         <Form
             style={{ minHeight: '150px' }}
-            loading={pluginInstallationTasks.loading || secretInstallationTasks.loading}
+            loading={pluginsInstallationTasks.loading || secretsInstallationTasks.loading}
         >
-            {pluginInstallationTasks.error && secretInstallationTasks.error && (
+            {pluginsInstallationTasks.error && secretsInstallationTasks.error && (
                 <Message color="red">
-                    {pluginInstallationTasks.error && <p>{pluginInstallationTasks.error}</p>}
-                    {secretInstallationTasks.error && <p>{secretInstallationTasks.error}</p>}
+                    {pluginsInstallationTasks.error && <p>{pluginsInstallationTasks.error}</p>}
+                    {secretsInstallationTasks.error && <p>{secretsInstallationTasks.error}</p>}
                 </Message>
             )}
-            {pluginInstallationTasks.tasks && secretInstallationTasks.tasks && (
+            {pluginsInstallationTasks.tasks && secretsInstallationTasks.tasks && (
                 <>
                     <Header as="h4">{i18n.t('gettingStartedModal.summary.taskListTitle', 'Task List')}</Header>
                     <List ordered relaxed>
                         <PluginTaskItems
-                            tasks={pluginInstallationTasks.tasks.installedPlugins}
+                            tasks={pluginsInstallationTasks.tasks.installedPlugins}
                             description={installedPluginDescription}
                         />
                         <PluginTaskItems
-                            tasks={pluginInstallationTasks.tasks.scheduledPlugins}
+                            tasks={pluginsInstallationTasks.tasks.scheduledPlugins}
                             description={i18n.t(
                                 'gettingStartedModal.summary.pluginInstallationMessageSuffix',
                                 'plugin will be installed.'
                             )}
                         />
                         <PluginTaskItems
-                            tasks={pluginInstallationTasks.tasks.rejectedPlugins}
+                            tasks={pluginsInstallationTasks.tasks.rejectedPlugins}
                             description={rejectedPluginDescription}
                         />
-                        {secretInstallationTasks.tasks.createdSecrets.map(createdSecret => {
+                        {secretsInstallationTasks.tasks.createdSecrets.map(createdSecret => {
                             return (
                                 <List.Item key={createdSecret.name}>
                                     <Label horizontal>{createdSecret.name}</Label>{' '}
@@ -109,7 +110,7 @@ const SummaryStep = ({
                                 </List.Item>
                             );
                         })}
-                        {secretInstallationTasks.tasks.updatedSecrets.map(updatedSecret => {
+                        {secretsInstallationTasks.tasks.updatedSecrets.map(updatedSecret => {
                             return (
                                 <List.Item key={updatedSecret.name}>
                                     <Label horizontal>{updatedSecret.name}</Label>{' '}

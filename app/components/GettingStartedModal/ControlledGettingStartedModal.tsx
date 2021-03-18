@@ -15,6 +15,7 @@ import createTechnologiesGroups from './createTechnologiesGroups';
 import type {
     GettingStartedData,
     GettingStartedSchema,
+    GettingStartedSchemaItem,
     GettingStartedSecretsData,
     GettingStartedTechnologiesData
 } from './model';
@@ -77,10 +78,26 @@ const ControlledGettingStartedModal = ({ open = false, step = 0, schema, data, o
     useEffect(() => setTechnologiesStepData(detectSelectedTechnologies(schema, data)), [schema, data]);
     useEffect(() => setSecretsStepIndex(step), [step]);
     useEffect(() => setSecretsStepsData(data ?? {}), [data]);
-    const secretsStepsSchemas = useMemo(
-        () => createTechnologiesGroups(schema.filter(items => technologiesStepData[items.name])), // steps with unique secrets for selected technologies
-        [schema, technologiesStepData]
-    );
+    // only selected technologies schemas
+    const commonStepsSchemas = useMemo(() => schema.filter(item => technologiesStepData[item.name]), [
+        schema,
+        technologiesStepData
+    ]);
+    // selected technologies schemas grouped by common secrets that are used to create secret steps
+    const secretsStepsSchemas = useMemo(() => createTechnologiesGroups(commonStepsSchemas), [technologiesStepData]);
+    // some technologies schemas details that doesn't have defined secrets should be sent to installation process too
+    // because of plugins and blueprints can be defined there
+    const summaryStepSchemas = useMemo(() => {
+        return commonStepsSchemas.reduce(
+            (result, item) => {
+                if (item.secrets.length === 0) {
+                    result.push(item);
+                }
+                return result;
+            },
+            [...secretsStepsSchemas]
+        );
+    }, [commonStepsSchemas, secretsStepsSchemas]);
     const secretsStepSchema = secretsStepsSchemas[secretsStepIndex];
     const secretsStepData = secretsStepsData[secretsStepSchema?.name];
     const checkTechnologiesStepDataErrors = () => {
@@ -154,8 +171,12 @@ const ControlledGettingStartedModal = ({ open = false, step = 0, schema, data, o
         switch (stepName) {
             case 'technologies':
                 if (checkTechnologiesStepDataErrors()) {
-                    setStepName('secrets');
-                    setSecretsStepIndex(0);
+                    if (secretsStepsSchemas.length > 0) {
+                        setStepName('secrets');
+                        setSecretsStepIndex(0);
+                    } else {
+                        setStepName('summary');
+                    }
                 }
                 break;
 
@@ -212,7 +233,7 @@ const ControlledGettingStartedModal = ({ open = false, step = 0, schema, data, o
                 {(stepName === 'summary' || stepName === 'status') && (
                     <SummaryStep
                         installationMode={stepName === 'status'}
-                        selectedPlugins={secretsStepsSchemas}
+                        selectedPlugins={summaryStepSchemas}
                         typedSecrets={secretsStepsData}
                         onInstallationStarted={handleInstallationStarted}
                         onInstallationFinished={handleInstallationFinishedOrCanceled}
@@ -220,7 +241,7 @@ const ControlledGettingStartedModal = ({ open = false, step = 0, schema, data, o
                     />
                 )}
             </Modal.Content>
-            <Modal.Content style={{ minHeight: '50px' }}>
+            <Modal.Content style={{ minHeight: '50px', overflow: 'hidden' }}>
                 <Form.Field>
                     <Form.Checkbox
                         label={i18n.t('gettingStartedModal.modal.disableModalLabel', "Don't show next time")}
