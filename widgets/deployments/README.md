@@ -40,38 +40,18 @@ The status of the deployments' node instances is indicated as follows:
 * **Black** - the number of node instances that are deleted
 
 
-### Deployment actions
+### Executing an action
 
-The hamburger menu on the right of every deployment allows performing the following operations:
+The hamburger menu (![list icon]( /images/ui/icons/list-icon.png )) 
+on the right of every deployment allows performing the following operations:
 
-* Execute workflow on deployment
 * Install/Uninstall deployment
 * Update deployment
 * Set site for deployment
-* Delete deployment
+* Manage deployment labels
+* Delete or Force Delete deployment
 
 ![Deployment actions menu]( /images/ui/widgets/blueprint-deployments_action-menu.png )
-
-
-#### Executing a Workflow
-
-1. Go to **Execute workflow** section in the menu and click the workflow you want to execute.
-2. Provide values for workflow parameters.
-3. Click **Execute**.
-
-You can also use **Install** or **Uninstall** menu options to execute those specific workflows.
-For these two workflows you will also be able to track the progress of the execution as at the bottom of the deployment row there will be thin line visible. Progress is calculated based on number of node instances installed (in case of install workflow) or deleted (in case of uninstall workflow).
-
-![Deployment progress]( /images/ui/widgets/blueprint-deployments_progress-bar.png )
-
-The color of the line indicates the status of the execution:
-
-* **Green** - succeeded
-* **Yellow** - in progress
-* **Red** - failed
-
-
-Each of the default workflows are described in detail [here](/working_with/workflows/built-in-workflows).
 
 
 #### Updating a Deployment
@@ -98,11 +78,49 @@ For detaching the current site, leave the `Site name` input empty and toggle the
 ![Set Site]( /images/ui/widgets/blueprint-deployments_set-site.png )
 
 
+#### Managing Labels
+
+1. Click **Manage Labels** in the action menu.
+2. Add/Remove labels to/from the deployment. 
+   NOTE: New labels (not existing in the system) are marked with blue color.
+3. Click **Apply**.
+
+![Manage Labels]( /images/ui/widgets/blueprint-deployments_manage-labels.png )
+
+You can learn more about labels [here](/cli/orch_cli/deployments#labels).
+
+
 #### Deleting a Deployment
 
 1. Click **Delete** or **Force Delete** in the action menu.
 2. When prompted for deployment removal confirmation, click **Yes**.
 
+
+### Executing a workflow
+
+1. Click the cogs icon (![cogs icon]( /images/ui/icons/execute-workflow-icon.png ))  
+   and select the workflow you want to execute.
+2. Provide values for workflow parameters.
+3. Click **Execute**.
+
+![Execute workflows menu]( /images/ui/widgets/blueprint-deployments_workflows-menu.png )
+
+You will also be able to track the progress of the execution as
+at the bottom of the deployment row, there will be a thin line visible. 
+Progress is calculated based on the number of execution operations finished.
+Check [workflow execution model](/developer/execution_model) 
+to get more details about workflows execution. 
+
+![Deployment progress]( /images/ui/widgets/blueprint-deployments_progress-bar.png )
+
+The color of the line indicates the status of the execution:
+
+* **Green** - succeeded
+* **Yellow** - in progress
+* **Red** - failed
+
+
+Each of the default workflows is described in detail [here](/working_with/workflows/built-in-workflows).
 
 ### Deployments details
 
@@ -123,6 +141,7 @@ By default, that page displays the following:
   2. **Deployment Info** tab with the following widgets:
       * [Deployment Topology](/working_with/console/widgets/topology)
       * [Deployment Outputs/Capabilities](/working_with/console/widgets/outputs)
+      * [Deployment Labels](/working_with/console/widgets/labels)
       * [Deployment Inputs](/working_with/console/widgets/inputs)
       * [Deployment Nodes](/working_with/console/widgets/nodes)
       * [Deployment Sources](/working_with/console/widgets/blueprintSources)
