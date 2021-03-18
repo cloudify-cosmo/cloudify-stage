@@ -66,29 +66,42 @@ describe('Sites Management', () => {
     };
 
     const verifySiteRow = (index, site) => {
-        const siteRow = `tbody > :nth-child(${index})`;
-        cy.get(`${siteRow} > :nth-child(1)`).should('have.text', site.name);
+        const siteRow = `tbody > tr:nth-child(${index})`;
 
-        let visibilityColor = 'green';
-        if (site.visibility === 'private') {
-            visibilityColor = 'red';
-        }
-        cy.get(`${siteRow} > :nth-child(1) > span > .${visibilityColor}`).should('be.visible', true);
+        cy.get(siteRow).within(() => {
+            const getCell = columnNumber => cy.get(`td:nth-child(${columnNumber})`);
 
-        if (site.location) {
-            const [latitude, longitude] = site.location.split(',');
-            cy.get(`${siteRow} > :nth-child(2)`).should('have.text', `Latitude: ${latitude}, Longitude: ${longitude}`);
-            cy.get(`${siteRow} > :nth-child(2) i`).trigger('mouseover');
-            cy.get('.popup .leaflet-marker-icon').should('have.length', 1);
-            cy.get(`${siteRow} > :nth-child(2) i`).trigger('mouseout');
-            cy.get('.popup').should('not.exist');
-        } else {
-            cy.get(`${siteRow} > :nth-child(2)`).should('have.text', '');
-            cy.get(`${siteRow} > :nth-child(2) i`).should('not.exist');
-        }
+            getCell(1).within(() => {
+                cy.root().should('have.text', site.name);
 
-        cy.get(`${siteRow} > :nth-child(5)`).should('have.text', 'default_tenant');
-        cy.get(`${siteRow} > :nth-child(6)`).should('have.text', '0');
+                let visibilityColor = 'green';
+                if (site.visibility === 'private') {
+                    visibilityColor = 'red';
+                }
+
+                cy.get(`span > .${visibilityColor}`).should('be.visible', true);
+            });
+
+            if (site.location) {
+                const [latitude, longitude] = site.location.split(',');
+                getCell(2).within(() => {
+                    cy.root().should('have.text', `Latitude: ${latitude}, Longitude: ${longitude}`);
+                    cy.get('i').trigger('mouseover');
+                });
+                const getMapPopup = () => cy.root().parents('body').find('.popup');
+                getMapPopup().find('.leaflet-marker-icon').should('have.length', 1);
+                getCell(2).find('i').trigger('mouseout');
+                getMapPopup().should('not.exist');
+            } else {
+                getCell(2).within(() => {
+                    cy.root().should('have.text', '');
+                    cy.get('i').should('not.exist');
+                });
+            }
+
+            getCell(5).should('have.text', 'default_tenant');
+            getCell(6).should('have.text', '0');
+        });
     };
 
     const deleteSite = index => {
@@ -97,6 +110,11 @@ describe('Sites Management', () => {
 
         // Click the Yes button
         cy.get('.primary').click();
+    };
+
+    const waitForSitesToRefresh = () => {
+        cy.interceptSp('GET', '/sites').as('sites');
+        cy.wait('@sites');
     };
 
     before(() => {
@@ -120,7 +138,7 @@ describe('Sites Management', () => {
         createValidSite(siteWithNoLocation);
     });
 
-    it('create new site with private visibility using map', () => {
+    it.only('create new site with private visibility using map', () => {
         cy.get('.actionField > .ui').click();
 
         const name = 'Rome';
@@ -136,6 +154,7 @@ describe('Sites Management', () => {
 
         // submit
         cy.get('.actions > .green').click();
+        waitForSitesToRefresh();
 
         verifySiteRow(1, { name, location: '0.0, -0.87890625', visibility: 'private' });
     });
