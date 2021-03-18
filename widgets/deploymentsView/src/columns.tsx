@@ -1,4 +1,4 @@
-import { mapValues } from 'lodash';
+import { camelCase, mapValues } from 'lodash';
 import type { ReactNode } from 'react';
 import type { IconProps } from 'semantic-ui-react';
 import { Deployment, DeploymentStatus } from './types';
@@ -47,7 +47,7 @@ const partialDeploymentsViewColumnDefinitions: Record<
             if (!iconProps) {
                 return null;
             }
-            const label = Stage.i18n.t(`${i18nPrefix}.status.iconLabels.${deployment.deployment_status}`);
+            const label = Stage.i18n.t(`${i18nPrefix}.status.iconLabels.${camelCase(deployment.deployment_status)}`);
 
             return (
                 // eslint-disable-next-line react/jsx-props-no-spreading

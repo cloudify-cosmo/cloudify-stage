@@ -559,8 +559,8 @@
                 "status": {
                     "name": "",
                     "iconLabels": {
-                        "in_progress": "In progress",
-                        "requires_attention": "Requires attention"
+                        "inProgress": "In progress",
+                        "requiresAttention": "Requires attention"
                     }
                 },
                 "name": {
