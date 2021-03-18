@@ -4,7 +4,11 @@ import React, { memo, useEffect } from 'react';
 import { Divider, Header, Label, List, Message, Progress } from '../../../basic';
 import useCurrentCallback from '../../common/useCurrentCallback';
 import { createResourcesInstaller } from '../../installation/process';
-import { usePluginInstallationTasks, useSecretsInstallationTasks } from '../../installation/tasks';
+import {
+    usePluginsInstallationTasks,
+    useSecretsInstallationTasks,
+    useBlueprintsInstallationTasks
+} from '../../installation/tasks';
 import { useInternal, useManager } from '../../common/managerHooks';
 import PluginTaskItems, { InstalledPluginDescription, RejectedPluginDescription } from './PluginTaskItems';
 import { UnsafelyTypedForm } from '../../unsafelyTypedForm';
@@ -34,8 +38,9 @@ const SummaryStep = ({
     const handleInstallationStarted = useCurrentCallback(onInstallationStarted);
     const handleInstallationFinished = useCurrentCallback(onInstallationFinished);
     const handleInstallationCanceled = useCurrentCallback(onInstallationCanceled);
-    const pluginInstallationTasks = usePluginInstallationTasks(selectedPlugins);
-    const secretInstallationTasks = useSecretsInstallationTasks(selectedPlugins, typedSecrets);
+    const pluginsInstallationTasks = usePluginsInstallationTasks(selectedPlugins);
+    const secretsInstallationTasks = useSecretsInstallationTasks(selectedPlugins, typedSecrets);
+    const blueprintsInstallationTasks = useBlueprintsInstallationTasks();
     const [installationErrors, setInstallationErrors, resetInstallationErrors] = useResettableState<string[]>([]);
     const [installationProgress, setInstallationProgress, resetInstallationProgress] = useResettableState<
         number | undefined
@@ -44,7 +49,7 @@ const SummaryStep = ({
     useEffect(() => {
         resetInstallationErrors();
         resetInstallationProgress();
-        if (installationMode && pluginInstallationTasks.tasks && secretInstallationTasks.tasks) {
+        if (installationMode && pluginsInstallationTasks.tasks && secretsInstallationTasks.tasks) {
             let installationFinished = false;
             const resourcesInstaller = createResourcesInstaller(
                 manager,
@@ -59,9 +64,10 @@ const SummaryStep = ({
             );
             // async installation that can be stopped with destroy() method
             resourcesInstaller.install(
-                pluginInstallationTasks.tasks.scheduledPlugins,
-                secretInstallationTasks.tasks.updatedSecrets,
-                secretInstallationTasks.tasks.createdSecrets
+                pluginsInstallationTasks.tasks.scheduledPlugins,
+                secretsInstallationTasks.tasks.updatedSecrets,
+                secretsInstallationTasks.tasks.createdSecrets,
+                blueprintsInstallationTasks
             );
             return () => {
                 resourcesInstaller.destroy();
@@ -71,40 +77,40 @@ const SummaryStep = ({
             };
         }
         return undefined;
-    }, [installationMode, pluginInstallationTasks, secretInstallationTasks]);
+    }, [installationMode, pluginsInstallationTasks, secretsInstallationTasks]);
 
     return (
         <UnsafelyTypedForm
             style={{ minHeight: 150 }}
-            loading={pluginInstallationTasks.loading || secretInstallationTasks.loading}
+            loading={pluginsInstallationTasks.loading || secretsInstallationTasks.loading}
         >
-            {(pluginInstallationTasks.error || secretInstallationTasks.error) && (
+            {(pluginsInstallationTasks.error || secretsInstallationTasks.error) && (
                 <Message color="red">
-                    {pluginInstallationTasks.error && <p>{pluginInstallationTasks.error}</p>}
-                    {secretInstallationTasks.error && <p>{secretInstallationTasks.error}</p>}
+                    {pluginsInstallationTasks.error && <p>{pluginsInstallationTasks.error}</p>}
+                    {secretsInstallationTasks.error && <p>{secretsInstallationTasks.error}</p>}
                 </Message>
             )}
-            {(pluginInstallationTasks.tasks || secretInstallationTasks.tasks) && (
+            {(pluginsInstallationTasks.tasks || secretsInstallationTasks.tasks) && (
                 <>
                     <Header as="h4">{i18n.t('gettingStartedModal.summary.taskListTitle')}</Header>
                     <List ordered relaxed>
-                        {pluginInstallationTasks.tasks && (
+                        {pluginsInstallationTasks.tasks && (
                             <>
                                 <PluginTaskItems
-                                    tasks={pluginInstallationTasks.tasks.installedPlugins}
+                                    tasks={pluginsInstallationTasks.tasks.installedPlugins}
                                     description={<InstalledPluginDescription />}
                                 />
                                 <PluginTaskItems
-                                    tasks={pluginInstallationTasks.tasks.scheduledPlugins}
+                                    tasks={pluginsInstallationTasks.tasks.scheduledPlugins}
                                     description={i18n.t('gettingStartedModal.summary.pluginInstalMessageSuffix')}
                                 />
                                 <PluginTaskItems
-                                    tasks={pluginInstallationTasks.tasks.rejectedPlugins}
+                                    tasks={pluginsInstallationTasks.tasks.rejectedPlugins}
                                     description={<RejectedPluginDescription />}
                                 />
                             </>
                         )}
-                        {secretInstallationTasks.tasks?.createdSecrets.map(createdSecret => {
+                        {secretsInstallationTasks.tasks?.createdSecrets.map(createdSecret => {
                             return (
                                 <List.Item key={createdSecret.name}>
                                     <Label horizontal>{createdSecret.name}</Label>{' '}
@@ -112,7 +118,7 @@ const SummaryStep = ({
                                 </List.Item>
                             );
                         })}
-                        {secretInstallationTasks.tasks?.updatedSecrets.map(updatedSecret => {
+                        {secretsInstallationTasks.tasks?.updatedSecrets.map(updatedSecret => {
                             return (
                                 <List.Item key={updatedSecret.name}>
                                     <Label horizontal>{updatedSecret.name}</Label>{' '}

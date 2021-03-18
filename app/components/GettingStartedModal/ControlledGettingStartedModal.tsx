@@ -36,10 +36,26 @@ const GettingStartedModal = () => {
     const [installationProcessing, setInstallationProcessing] = useState(false);
     const [modalDisabledChecked, setModalDisabledChange] = useInput(false);
 
-    const secretsStepsSchemas = useMemo(
-        () => createTechnologiesGroups(castedGettingStartedSchema.filter(items => technologiesStepData[items.name])), // steps with unique secrets for selected technologies
+    // only selected technologies schemas
+    const commonStepsSchemas = useMemo(
+        () => castedGettingStartedSchema.filter(item => technologiesStepData[item.name]),
         [technologiesStepData]
     );
+
+    const secretsStepsSchemas = useMemo(() => createTechnologiesGroups(commonStepsSchemas), [technologiesStepData]);
+    // some technologies schemas details that doesn't have defined secrets should be sent to installation process too
+    // because of plugins and blueprints can be defined there
+    const summaryStepSchemas = useMemo(() => {
+        return commonStepsSchemas.reduce(
+            (result, item) => {
+                if (item.secrets.length === 0) {
+                    result.push(item);
+                }
+                return result;
+            },
+            [...secretsStepsSchemas]
+        );
+    }, [commonStepsSchemas, secretsStepsSchemas]);
 
     const secretsStepSchema = secretsStepsSchemas[secretsStepIndex] as GettingStartedSchemaItem | undefined;
     const secretsStepData = secretsStepSchema ? secretsStepsData[secretsStepSchema.name] : undefined;
@@ -125,8 +141,12 @@ const GettingStartedModal = () => {
         switch (stepName) {
             case StepName.Technologies:
                 if (checkTechnologiesStepDataErrors()) {
-                    setStepName(StepName.Secrets);
-                    setSecretsStepIndex(0);
+                    if (secretsStepsSchemas.length > 0) {
+                        setStepName(StepName.Secrets);
+                        setSecretsStepIndex(0);
+                    } else {
+                        setStepName(StepName.Summary);
+                    }
                 }
                 break;
 

@@ -33,12 +33,26 @@ export type GettingStartedSchemaSecret = {
     type: 'text' | 'password';
 };
 
+export type GettingStartedSchemaBlueprint = {
+    id: string;
+    name: string;
+    description: string;
+    htmlUrl: string;
+    zipUrl: string;
+    readmeUrl: string;
+    mainBlueprint?: string;
+    imageUrl: string;
+    createdAt: string;
+    updatedAt: string;
+};
+
 export type GettingStartedSchemaItem = {
     name: string;
     logo: string;
     label: string;
     plugins: GettingStartedSchemaPlugin[];
     secrets: GettingStartedSchemaSecret[];
+    blueprints: GettingStartedSchemaBlueprint[];
 };
 
 export type GettingStartedSchema = GettingStartedSchemaItem[];

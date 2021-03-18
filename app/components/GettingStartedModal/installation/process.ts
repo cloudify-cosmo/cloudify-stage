@@ -3,7 +3,7 @@ import log from 'loglevel';
 
 import type Internal from '../../../utils/Internal';
 import type Manager from '../../../utils/Manager';
-import type { PluginInstallationTask, SecretInstallationTask } from './tasks';
+import type { BlueprintInstallationTask, PluginInstallationTask, SecretInstallationTask } from './tasks';
 
 // TODO(RD-1874): use common api for backend requests
 export const installPlugin = async (internal: Internal, plugin: PluginInstallationTask) => {
@@ -56,6 +56,28 @@ export const updateSecret = async (manager: Manager, secret: SecretInstallationT
     }
 };
 
+export const uploadBlueprint = async (
+    manager: Manager,
+    blueprintName: string,
+    blueprintUrl: string,
+    applicationName: string
+) => {
+    const data = {
+        visibility: 'tenant',
+        async_upload: false,
+        application_file_name: applicationName,
+        blueprint_archive_url: blueprintUrl
+    };
+    try {
+        await manager.doPut(`/blueprints/${blueprintName}`, data);
+        return true;
+    } catch (e) {
+        // eslint-disable-next-line no-console
+        console.error(e);
+        return false;
+    }
+};
+
 export const createResourcesInstaller = (
     manager: Manager,
     internal: Internal,
@@ -69,7 +91,8 @@ export const createResourcesInstaller = (
     const install = async (
         scheduledPlugins: PluginInstallationTask[],
         updatedSecrets: SecretInstallationTask[],
-        createdSecrets: SecretInstallationTask[]
+        createdSecrets: SecretInstallationTask[],
+        scheduledBlueprints: BlueprintInstallationTask[]
     ) => {
         if (destroyed) {
             return;

@@ -215,7 +215,19 @@ export const createSecretsInstallationTasks = (
     };
 };
 
-export const usePluginInstallationTasks = (selectedPlugins: GettingStartedSchema) => {
+export type BlueprintInstallationTask = {
+    blueprintName: string;
+    blueprintUrl: string;
+    applicationName: string;
+};
+
+export const createBlueprintsInstallationTasks = () => {
+    const scheduledBlueprints: BlueprintInstallationTask[] = [];
+    //TODO: logics
+    return scheduledBlueprints;
+};
+
+export const usePluginsInstallationTasks = (selectedPlugins: GettingStartedSchema) => {
     const currentDistribution = useCurrentDistribution();
     const currentPlugins = useFetchPlugins();
     return useMemo(() => {
@@ -253,4 +265,9 @@ export const useSecretsInstallationTasks = (
             tasks: createSecretsInstallationTasks(currentSecrets, selectedPlugins, filteredTypedSecrets)
         };
     }, [currentSecrets, selectedPlugins, filteredTypedSecrets]);
+};
+
+export const useBlueprintsInstallationTasks = () => {
+    //TODO: 
+    return createBlueprintsInstallationTasks();
 };
