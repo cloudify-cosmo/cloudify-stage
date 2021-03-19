@@ -557,7 +557,7 @@
             },
             "columns": {
                 "status": {
-                    "name": "",
+                    "name": "Status",
                     "iconLabels": {
                         "inProgress": "In progress",
                         "requiresAttention": "Requires attention"

@@ -55,7 +55,9 @@ const partialDeploymentsViewColumnDefinitions: Record<
                     {label}
                 </Popup>
             );
-        }
+        },
+        // NOTE: do not show the column label
+        label: ''
     },
     name: {
         sortFieldName: 'id',
