@@ -105,32 +105,35 @@ if (process.env.NODE_ENV === 'development' || process.env.TEST) {
             }
 
             return (
-                <DataTable
-                    fetchData={toolbox.refresh}
-                    pageSize={pageSize}
-                    selectable
-                    sizeMultiplier={20}
-                    // TODO(RD-1787): adjust `noDataMessage` to show the image
-                    noDataMessage={Stage.i18n.t(`${i18nPrefix}.noDataMessage`)}
-                    totalSize={data.metadata.pagination.total}
-                    searchable
-                >
-                    {deploymentsViewColumnIds.map(columnId => {
-                        const columnDefinition = deploymentsViewColumnDefinitions[columnId];
-                        return (
-                            <DataTable.Column
-                                key={columnId}
-                                name={columnDefinition.sortFieldName}
-                                label={columnDefinition.label}
-                                width={columnDefinition.width}
-                                tooltip={columnDefinition.tooltip}
-                                show={fieldsToShow.includes(columnId)}
-                            />
-                        );
-                    })}
+                <div className="grid">
+                    <DataTable
+                        fetchData={toolbox.refresh}
+                        pageSize={pageSize}
+                        selectable
+                        sizeMultiplier={20}
+                        // TODO(RD-1787): adjust `noDataMessage` to show the image
+                        noDataMessage={Stage.i18n.t(`${i18nPrefix}.noDataMessage`)}
+                        totalSize={data.metadata.pagination.total}
+                        searchable
+                    >
+                        {deploymentsViewColumnIds.map(columnId => {
+                            const columnDefinition = deploymentsViewColumnDefinitions[columnId];
+                            return (
+                                <DataTable.Column
+                                    key={columnId}
+                                    name={columnDefinition.sortFieldName}
+                                    label={columnDefinition.label}
+                                    width={columnDefinition.width}
+                                    tooltip={columnDefinition.tooltip}
+                                    show={fieldsToShow.includes(columnId)}
+                                />
+                            );
+                        })}
 
-                    {data.items.flatMap(renderDeploymentRow(toolbox, fieldsToShow))}
-                </DataTable>
+                        {data.items.flatMap(renderDeploymentRow(toolbox, fieldsToShow))}
+                    </DataTable>
+                    <div>Right pane</div>
+                </div>
             );
         }
     });
