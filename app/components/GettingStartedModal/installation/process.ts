@@ -60,7 +60,7 @@ export const updateSecret = async (manager: Manager, secret: SecretInstallationT
 
 // TODO(RD-1874): use common api for backend requests
 export const uploadBlueprint = async (manager: Manager, blueprint: BlueprintInstallationTask) => {
-    const waitingTimeout = 120; // ~120s = 5s sleeps + requests
+    const waitingTimeout = 5 * 60; // ~5 min = (N x 5s sleeps) + requests
     const stepSleep = 5; // 5s
     const requestData = {
         visibility: 'tenant',
