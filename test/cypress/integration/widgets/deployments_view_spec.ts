@@ -39,11 +39,12 @@ describe('Deployments View widget', () => {
 
     const getDeploymentsViewTable = () => cy.get('.deploymentsViewWidget .widgetItem');
 
-    describe('configuration', () => {
-        const getFieldsDropdown = () =>
-            cy.contains('List of fields to show in the table').parent().find('[role="listbox"]');
-        const toggleFieldsDropdown = () => getFieldsDropdown().find('.dropdown.icon').click();
+    const widgetConfigurationHelpers = {
+        getFieldsDropdown: () => cy.contains('List of fields to show in the table').parent().find('[role="listbox"]'),
+        toggleFieldsDropdown: () => widgetConfigurationHelpers.getFieldsDropdown().find('.dropdown.icon').click()
+    };
 
+    describe('configuration', () => {
         it('should allow changing displayed columns', () => {
             useDeploymentsViewWidget({
                 configurationOverrides: {
@@ -59,11 +60,11 @@ describe('Deployments View widget', () => {
 
             cy.log('Show some columns');
             cy.editWidgetConfiguration(widgetId, () => {
-                toggleFieldsDropdown();
-                getFieldsDropdown().within(() => {
+                widgetConfigurationHelpers.toggleFieldsDropdown();
+                widgetConfigurationHelpers.getFieldsDropdown().within(() => {
                     cy.get('[role="option"]').contains('Blueprint Name').click();
                 });
-                toggleFieldsDropdown();
+                widgetConfigurationHelpers.toggleFieldsDropdown();
             });
 
             getDeploymentsViewTable().within(() => {
