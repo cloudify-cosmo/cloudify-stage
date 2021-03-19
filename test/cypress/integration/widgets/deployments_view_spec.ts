@@ -92,6 +92,15 @@ describe('Deployments View widget', () => {
             }
         });
 
+        cy.log('Show all columns');
+        cy.editWidgetConfiguration(widgetId, () => {
+            widgetConfiguration.toggleFieldsDropdown();
+            widgetConfiguration.getFieldsDropdown().within(() => {
+                cy.get('[role="option"]').contains('Environment Type').click();
+            });
+            widgetConfiguration.toggleFieldsDropdown();
+        });
+
         getDeploymentsViewTable().within(() => {
             cy.contains('deployments_view_test_deployment')
                 .parents('tr')
@@ -110,6 +119,24 @@ describe('Deployments View widget', () => {
             cy.get('@inProgressIcon').trigger('mouseout');
 
             cy.contains('one-in-warsaw').parents('tr').find('td:nth-child(1) i').should('not.exist');
+        });
+
+        getDeploymentsViewTable().within(() => {
+            cy.contains('deployments_view_test_deployment')
+                .parents('tr')
+                .within(() => {
+                    cy.contains('controller');
+                });
+            cy.contains('one-in-warsaw')
+                .parents('tr')
+                .within(() => {
+                    cy.contains('subcloud');
+                });
+            cy.contains('hello-world-one')
+                .parents('tr')
+                .within(() => {
+                    cy.contains('acidic');
+                });
         });
     });
 });
