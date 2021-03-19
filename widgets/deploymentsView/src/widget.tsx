@@ -113,6 +113,7 @@ if (process.env.NODE_ENV === 'development' || process.env.TEST) {
                     // TODO(RD-1787): adjust `noDataMessage` to show the image
                     noDataMessage={Stage.i18n.t(`${i18nPrefix}.noDataMessage`)}
                     totalSize={data.metadata.pagination.total}
+                    searchable
                 >
                     {deploymentsViewColumnIds.map(columnId => {
                         const columnDefinition = deploymentsViewColumnDefinitions[columnId];
