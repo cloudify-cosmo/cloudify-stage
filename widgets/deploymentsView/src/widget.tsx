@@ -24,8 +24,8 @@ interface DeploymentsViewWidgetConfiguration {
 
 const i18nPrefix = 'widgets.deploymentsView';
 
-// TODO(RD-1224): remove environment check
-if (process.env.NODE_ENV === 'development') {
+// TODO(RD-1226): remove environment check
+if (process.env.NODE_ENV === 'development' || process.env.TEST) {
     Stage.defineWidget<GridParams, DeploymentsResponse, DeploymentsViewWidgetConfiguration>({
         id: 'deploymentsView',
         name: Stage.i18n.t(`${i18nPrefix}.name`),
