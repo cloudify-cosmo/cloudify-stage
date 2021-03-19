@@ -213,8 +213,8 @@ export const createBlueprintsInstallationTasks = (selectedTechnologies: GettingS
         selectedTechnology.blueprints.forEach(blueprint => {
             scheduledBlueprints.push({
                 blueprintName: `${blueprint.name}-${formatDate()}`,
-                blueprintUrl: blueprint.mainBlueprint ?? '',
-                applicationName: blueprint.zipUrl
+                blueprintUrl: blueprint.zipUrl,
+                applicationName: blueprint.mainBlueprint ?? ''
             });
         });
     });
@@ -262,13 +262,13 @@ export const useSecretsInstallationTasks = (
 };
 
 export const useBlueprintsInstallationTasks = (selectedTechnologies: GettingStartedSchema) => {
-    // TODO: fetch blueprints
+    // TODO: fetch blueprints and select better names for blueprints
     return useMemo(() => {
-        // if (currentSecrets.loading) {
-        //     return { loading: currentSecrets.loading };
+        // if (currentBlueprints.loading) {
+        //     return { loading: true };
         // }
-        // if (currentSecrets.error) {
-        //     return { loading: false, error: currentSecrets.error };
+        // if (currentBlueprints.error) {
+        //     return { loading: false, error: currentBlueprints.error };
         // }
         return {
             loading: false,
