@@ -59,7 +59,7 @@ export const updateSecret = async (manager: Manager, secret: SecretInstallationT
 };
 
 export const uploadBlueprint = async (manager: Manager, blueprint: BlueprintInstallationTask) => {
-    const waitingTimeout = 120; // ~120s = 5s sleeps + requests
+    const waitingTimeout = 5 * 60; // ~5 min = (N x 5s sleeps) + requests
     const stepSleep = 5; // 5s
     const requestData = {
         visibility: 'tenant',
