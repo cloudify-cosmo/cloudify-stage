@@ -87,7 +87,7 @@ const partialDeploymentsViewColumnDefinitions: Record<
         label: <Stage.Basic.Icon name="object group" />,
         width: '1em',
         render() {
-            // TODO(RD-1224): display correct number of subenvironments
+            // TODO(RD-1742): display correct number of subenvironments and their status
             return '0';
         }
     },
@@ -95,7 +95,7 @@ const partialDeploymentsViewColumnDefinitions: Record<
         label: <Stage.Basic.Icon name="cube" />,
         width: '1em',
         render() {
-            // TODO(RD-1224): display correct number of subservices
+            // TODO(RD-1742): display correct number of subservices and their status
             return '0';
         }
     }

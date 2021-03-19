@@ -32,7 +32,7 @@ export default renderDeploymentRow;
 
 function getDeploymentProgressUnderline(_deployment: any): ReactNode {
     if (Math.random() < 0.5) {
-        // TODO(RD-1224): adjust states to match the ones returned from API
+        // TODO(RD-1741): adjust states to match the ones returned from API
         const deploymentStates = ['in-progress', 'pending', 'failure'];
         // NOTE: random state for now
         const state = deploymentStates[Math.floor(Math.random() * deploymentStates.length)];

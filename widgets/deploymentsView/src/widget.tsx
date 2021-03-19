@@ -73,7 +73,7 @@ if (process.env.NODE_ENV === 'development' || process.env.TEST) {
         permission: Stage.GenericConfig.WIDGET_PERMISSION('deploymentsView'),
 
         fetchData(_widget, toolbox, params: GridParams) {
-            // TODO(RD-1224): add resolving `filterRules` if they are not fetched (after RD-377)
+            // TODO(RD-1530): add resolving `filterRules` if they are not fetched (after RD-377)
             return toolbox
                 .getManager()
                 .doGet('/deployments', params)
