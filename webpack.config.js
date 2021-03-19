@@ -120,7 +120,8 @@ module.exports = (env, argv) => {
                   })
               ];
     const environmentPlugin = new webpack.EnvironmentPlugin({
-        NODE_ENV: 'development'
+        NODE_ENV: 'production',
+        TEST: ''
     });
 
     if (isProduction && fs.existsSync(outputPath)) {
