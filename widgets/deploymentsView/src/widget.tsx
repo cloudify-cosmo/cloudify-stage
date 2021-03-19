@@ -1,3 +1,4 @@
+import { noop } from 'lodash';
 import { deploymentsViewColumnDefinitions, DeploymentsViewColumnId, deploymentsViewColumnIds } from './columns';
 import renderDeploymentRow from './renderDeploymentRow';
 import './styles.scss';
@@ -98,6 +99,7 @@ if (process.env.NODE_ENV === 'development' || process.env.TEST) {
 
         render(widget, data, _error, toolbox) {
             const { DataTable, Loading } = Stage.Basic;
+            const { WidgetsList } = Stage.Shared.Widgets;
             const { fieldsToShow, pageSize } = widget.configuration;
 
             if (Stage.Utils.isEmptyWidgetData(data)) {
@@ -132,7 +134,54 @@ if (process.env.NODE_ENV === 'development' || process.env.TEST) {
 
                         {data.items.flatMap(renderDeploymentRow(toolbox, fieldsToShow))}
                     </DataTable>
-                    <div>Right pane</div>
+                    <div className="deploymentDetails">
+                        <WidgetsList
+                            isEditMode={false}
+                            onWidgetRemoved={noop}
+                            onWidgetUpdated={noop}
+                            widgets={[
+                                {
+                                    name: 'Execution Task Graph',
+                                    width: 12,
+                                    height: 24,
+                                    x: 0,
+                                    y: 0,
+                                    configuration: {
+                                        showSystemExecutions: false,
+                                        singleExecutionView: true
+                                    },
+                                    definition: 'executions',
+                                    id: 'task graph',
+                                    maximized: false,
+                                    drillDownPages: {}
+                                },
+                                {
+                                    name: 'Events/Logs Filter',
+                                    width: 12,
+                                    height: 5,
+                                    x: 0,
+                                    y: 24,
+                                    definition: 'eventsFilter',
+                                    id: 'filter',
+                                    maximized: false,
+                                    drillDownPages: {},
+                                    configuration: {}
+                                },
+                                {
+                                    name: 'Deployment Events/Logs',
+                                    width: 12,
+                                    height: 18,
+                                    x: 0,
+                                    y: 29,
+                                    definition: 'events',
+                                    configuration: {},
+                                    id: 'logs',
+                                    maximized: false,
+                                    drillDownPages: {}
+                                }
+                            ]}
+                        />
+                    </div>
                 </div>
             );
         }

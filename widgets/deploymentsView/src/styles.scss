@@ -42,9 +42,14 @@ $deploymentStateColors: (
     .grid {
         display: grid;
         grid-template-columns: minmax(50%, 1fr) 1fr;
+        height: 100%;
 
         // NOTE: scroll only the table, not the searchbox
         .gridTable > div:nth-child(2) {
+            overflow: auto;
+        }
+
+        .deploymentDetails {
             overflow: auto;
         }
     }
