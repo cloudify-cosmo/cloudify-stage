@@ -85,7 +85,7 @@ describe('Deployments View widget', () => {
         });
     });
 
-    it('should display various deployment statuses', () => {
+    it('should display various deployment information', () => {
         useDeploymentsViewWidget({
             routeHandler: {
                 fixture: 'deployments/various-statuses.json'
@@ -101,41 +101,45 @@ describe('Deployments View widget', () => {
             widgetConfiguration.toggleFieldsDropdown();
         });
 
-        getDeploymentsViewTable().within(() => {
-            cy.contains('deployments_view_test_deployment')
-                .parents('tr')
-                .find('i.exclamation[aria-label="Requires attention"]')
-                .as('requiresAttentionIcon')
-                .trigger('mouseover');
-            cy.root().parents('body').find('.popup').contains('Requires attention');
-            cy.get('@requiresAttentionIcon').trigger('mouseout');
-
-            cy.contains('hello-world-one')
-                .parents('tr')
-                .find('i.spinner[aria-label="In progress"]')
-                .as('inProgressIcon')
-                .trigger('mouseover');
-            cy.root().parents('body').find('.popup').contains('In progress');
-            cy.get('@inProgressIcon').trigger('mouseout');
-
-            cy.contains('one-in-warsaw').parents('tr').find('td:nth-child(1) i').should('not.exist');
-        });
+        const verifyDeploymentInformation = ({ environmentType }: { environmentType: string }) => {
+            cy.contains(environmentType);
+        };
 
         getDeploymentsViewTable().within(() => {
             cy.contains('deployments_view_test_deployment')
                 .parents('tr')
                 .within(() => {
-                    cy.contains('controller');
+                    cy.get('i.exclamation[aria-label="Requires attention"]')
+                        .as('requiresAttentionIcon')
+                        .trigger('mouseover');
+                    cy.root().parents('body').find('.popup').contains('Requires attention');
+                    cy.get('@requiresAttentionIcon').trigger('mouseout');
+
+                    verifyDeploymentInformation({
+                        environmentType: 'controller'
+                    });
                 });
+
+            cy.contains('hello-world-one')
+                .parents('tr')
+                .within(() => {
+                    cy.get('i.spinner[aria-label="In progress"]').as('inProgressIcon').trigger('mouseover');
+                    cy.root().parents('body').find('.popup').contains('In progress');
+                    cy.get('@inProgressIcon').trigger('mouseout');
+
+                    verifyDeploymentInformation({
+                        environmentType: 'acidic'
+                    });
+                });
+
             cy.contains('one-in-warsaw')
                 .parents('tr')
                 .within(() => {
-                    cy.contains('subcloud');
-                });
-            cy.contains('hello-world-one')
-                .parents('tr')
-                .within(() => {
-                    cy.contains('acidic');
+                    cy.get('td:nth-child(1) i').should('not.exist');
+
+                    verifyDeploymentInformation({
+                        environmentType: 'subcloud'
+                    });
                 });
         });
     });
