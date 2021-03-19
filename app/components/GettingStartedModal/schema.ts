@@ -5,7 +5,11 @@ const schema: GettingStartedSchema = [
         name: 'aws',
         logo: 'https://cloudify.co/wp-content/uploads/2019/08/aws-1.png',
         label: 'AWS',
-        plugins: [{ name: 'cloudify-aws-plugin' }],
+        plugins: [
+            { name: 'cloudify-aws-plugin' },
+            { name: 'cloudify-utilities-plugin' },
+            { name: 'cloudify-kubernetes-plugin' }
+        ],
         secrets: [
             {
                 name: 'aws_access_key_id',
@@ -34,20 +38,6 @@ const schema: GettingStartedSchema = [
                 updatedAt: '2020-05-21T14:25:37Z'
             },
             {
-                id: 'AWS-Simple-Services-Setup',
-                name: 'AWS-Basics-Simple-Service-Setup',
-                description: 'Service examples: AWS simple service setup',
-                htmlUrl: 'https://github.com/cloudify-community/blueprint-examples/tree/master/hello-world-example',
-                zipUrl:
-                    'https://github.com/cloudify-community/blueprint-examples/releases/download/latest/hello-world-example.zip',
-                readmeUrl:
-                    'https://raw.githubusercontent.com/cloudify-community/blueprint-examples/master/hello-world-example/README.md',
-                mainBlueprint: 'aws.yaml',
-                imageUrl: 'https://repository.cloudifysource.org/cloudify/blueprints/5.1/images/aws.png',
-                createdAt: '2019-05-11T19:32:13Z',
-                updatedAt: '2020-07-21T14:25:37Z'
-            },
-            {
                 id: 'AWS-VM-Setup-CloudFormation',
                 name: 'AWS-VM-Setup-using-CloudFormation',
                 description: 'Orchestrate via other tools - Setup a VM in AWS using CloudFormation',
@@ -62,6 +52,7 @@ const schema: GettingStartedSchema = [
                 updatedAt: '2020-07-21T14:25:37Z'
             },
             {
+                // requires: cloudify-kubernetes-plugin
                 id: 'Kubernetes-AWS-EKS',
                 name: 'Kubernetes-AWS-EKS',
                 description: 'Kubernetes: Setup a Kubernetes cluster in AWS leveraging EKS',
@@ -81,7 +72,12 @@ const schema: GettingStartedSchema = [
         name: 'gpc',
         logo: 'https://cloudify.co/wp-content/uploads/2019/08/gcplogo.png',
         label: 'GCP',
-        plugins: [{ name: 'cloudify-gcp-plugin' }],
+        plugins: [
+            { name: 'cloudify-gcp-plugin' },
+            { name: 'cloudify-utilities-plugin' },
+            { name: 'cloudify-ansible-plugin' },
+            { name: 'cloudify-kubernetes-plugin' }
+        ],
         secrets: [
             {
                 name: 'gpc_client_x509_cert_url',
@@ -135,6 +131,7 @@ const schema: GettingStartedSchema = [
                 updatedAt: '2020-05-21T14:25:37Z'
             },
             {
+                // requires: cloudify-ansible-plugin
                 id: 'GCP-Simple-Services-Setup',
                 name: 'GCP-Basics-Simple-Service-Setup',
                 description: 'Service examples: GCP simple service setup',
@@ -149,6 +146,7 @@ const schema: GettingStartedSchema = [
                 updatedAt: '2020-07-21T14:25:37Z'
             },
             {
+                // requires cloudify-kubernetes-plugin
                 id: 'Kubernetes-GCP-GKE',
                 name: 'Kubernetes-GCP-GKE',
                 description: 'Kubernetes: Setup a Kubernetes cluster in GCP leveraging GKE',
@@ -164,45 +162,49 @@ const schema: GettingStartedSchema = [
             }
         ]
     },
-    {
-        name: 'openstack_v2',
-        logo: 'https://cloudify.co/wp-content/uploads/2019/08/oslogo.png',
-        label: 'OpenStackV2',
-        plugins: [{ name: 'cloudify-openstack-plugin', version: '^2\\.' }],
-        secrets: [
-            {
-                name: 'openstack_username',
-                label: 'OpenStack Username',
-                type: 'text'
-            },
-            {
-                name: 'openstack_password',
-                label: 'Openstack Password',
-                type: 'password'
-            },
-            {
-                name: 'openstack_auth_url',
-                label: 'OpenStack Auth Url',
-                type: 'text'
-            },
-            {
-                name: 'openstack_project_name',
-                label: 'OpenStack Project Name',
-                type: 'text'
-            },
-            {
-                name: 'openstack_region',
-                label: 'Openstack Region',
-                type: 'text'
-            }
-        ],
-        blueprints: []
-    },
+    // {
+    //     name: 'openstack_v2',
+    //     logo: 'https://cloudify.co/wp-content/uploads/2019/08/oslogo.png',
+    //     label: 'OpenStackV2',
+    //     plugins: [{ name: 'cloudify-openstack-plugin', version: '^2\\.' }],
+    //     secrets: [
+    //         {
+    //             name: 'openstack_username',
+    //             label: 'OpenStack Username',
+    //             type: 'text'
+    //         },
+    //         {
+    //             name: 'openstack_password',
+    //             label: 'Openstack Password',
+    //             type: 'password'
+    //         },
+    //         {
+    //             name: 'openstack_auth_url',
+    //             label: 'OpenStack Auth Url',
+    //             type: 'text'
+    //         },
+    //         {
+    //             name: 'openstack_project_name',
+    //             label: 'OpenStack Project Name',
+    //             type: 'text'
+    //         },
+    //         {
+    //             name: 'openstack_region',
+    //             label: 'Openstack Region',
+    //             type: 'text'
+    //         }
+    //     ],
+    //     blueprints: []
+    // },
     {
         name: 'openstack_v3',
         logo: 'https://cloudify.co/wp-content/uploads/2019/08/oslogo.png',
         label: 'OpenStackV3',
-        plugins: [{ name: 'cloudify-openstack-plugin', version: '^3\\.' }],
+        plugins: [
+            { name: 'cloudify-openstack-plugin', version: '^3\\.' },
+            { name: 'cloudify-utilities-plugin' },
+            { name: 'cloudify-ansible-plugin' }
+        ],
         secrets: [
             {
                 name: 'openstack_username',
@@ -246,6 +248,7 @@ const schema: GettingStartedSchema = [
                 updatedAt: '2020-05-21T14:25:37Z'
             },
             {
+                // requires cloudify-ansible-plugin
                 id: 'OpenStack-Simple-Services-Setup',
                 name: 'OpenStack-Basics-Simple-Service-Setup',
                 description: 'Service examples: OpenStack simple service setup',
@@ -265,7 +268,12 @@ const schema: GettingStartedSchema = [
         name: 'azure',
         logo: 'https://cloudify.co/wp-content/uploads/2019/08/azurelogo.png',
         label: 'Azure',
-        plugins: [{ name: 'cloudify-azure-plugin' }],
+        plugins: [
+            { name: 'cloudify-azure-plugin' },
+            { name: 'cloudify-utilities-plugin' },
+            { name: 'cloudify-ansible-plugin' },
+            { name: 'cloudify-kubernetes-plugin' }
+        ],
         secrets: [
             {
                 name: 'azure_subscription_id',
@@ -304,6 +312,7 @@ const schema: GettingStartedSchema = [
                 updatedAt: '2020-05-21T14:25:37Z'
             },
             {
+                // requires cloudify-ansible-plugin
                 id: 'Azure-Simple-Services-Setup',
                 name: 'Azure-Basics-Simple-Service-Setup',
                 description: 'Service examples: Azure simple service setup',
@@ -318,6 +327,7 @@ const schema: GettingStartedSchema = [
                 updatedAt: '2020-07-21T14:25:37Z'
             },
             {
+                // requires cloudify-utilities-plugin'
                 id: 'Azure-VM-Setup-ARM',
                 name: 'Azure-VM-Setup-using-ARM',
                 description: 'Orchestrate via other tools - Setup a VM in Azure using Azure ARM',
@@ -332,6 +342,7 @@ const schema: GettingStartedSchema = [
                 updatedAt: '2020-07-21T14:25:37Z'
             },
             {
+                // requires cloudify-kubernetes-plugin
                 id: 'Kubernetes-Azure-AKS',
                 name: 'Kubernetes-Azure-AKS',
                 description: 'Kubernetes: Setup a Kubernetes cluster in Azure leveraging AKS',
@@ -429,7 +440,11 @@ const schema: GettingStartedSchema = [
         name: 'terraform_on_aws',
         logo: 'https://cloudify.co/wp-content/uploads/2020/07/terraform-icon.png',
         label: 'Terraform on AWS',
-        plugins: [{ name: 'cloudify-terraform-plugin' }, { name: 'cloudify-aws-plugin' }],
+        plugins: [
+            { name: 'cloudify-terraform-plugin' },
+            { name: 'cloudify-aws-plugin' },
+            { name: 'cloudify-utilities-plugin' }
+        ],
         secrets: [
             {
                 name: 'aws_access_key_id',
@@ -463,7 +478,11 @@ const schema: GettingStartedSchema = [
         name: 'ansible_on_aws',
         logo: 'https://cloudify.co/wp-content/uploads/2020/07/ansible-icon.png',
         label: 'Ansible on AWS',
-        plugins: [{ name: 'cloudify-ansible-plugin' }, { name: 'cloudify-aws-plugin' }],
+        plugins: [
+            { name: 'cloudify-ansible-plugin' },
+            { name: 'cloudify-aws-plugin' },
+            { name: 'cloudify-utilities-plugin' }
+        ],
         secrets: [
             {
                 name: 'aws_access_key_id',
@@ -476,7 +495,23 @@ const schema: GettingStartedSchema = [
                 type: 'password'
             }
         ],
-        blueprints: []
+        blueprints: [
+            // moved from AWS
+            {
+                id: 'AWS-Simple-Services-Setup',
+                name: 'AWS-Basics-Simple-Service-Setup',
+                description: 'Service examples: AWS simple service setup',
+                htmlUrl: 'https://github.com/cloudify-community/blueprint-examples/tree/master/hello-world-example',
+                zipUrl:
+                    'https://github.com/cloudify-community/blueprint-examples/releases/download/latest/hello-world-example.zip',
+                readmeUrl:
+                    'https://raw.githubusercontent.com/cloudify-community/blueprint-examples/master/hello-world-example/README.md',
+                mainBlueprint: 'aws.yaml',
+                imageUrl: 'https://repository.cloudifysource.org/cloudify/blueprints/5.1/images/aws.png',
+                createdAt: '2019-05-11T19:32:13Z',
+                updatedAt: '2020-07-21T14:25:37Z'
+            }
+        ]
     },
     {
         name: 'kubernetes',

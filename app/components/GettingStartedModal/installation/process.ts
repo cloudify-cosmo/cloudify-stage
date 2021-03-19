@@ -5,6 +5,8 @@ import type Internal from '../../../utils/Internal';
 import type Manager from '../../../utils/Manager';
 import type { BlueprintInstallationTask, PluginInstallationTask, SecretInstallationTask } from './tasks';
 
+const sleep = async (milliseconds: number) => new Promise(resolve => setTimeout(resolve, milliseconds));
+
 // TODO(RD-1874): use common api for backend requests
 export const installPlugin = async (internal: Internal, plugin: PluginInstallationTask) => {
     if (!plugin.yamlUrl || !plugin.wagonUrl) {
@@ -34,7 +36,7 @@ export const createSecret = async (manager: Manager, secret: SecretInstallationT
         is_hidden_value: true
     };
     try {
-        await manager.doPut(`/secrets/${secret.name}`, null, data);
+        await manager.doPut(`/secrets/${encodeURIComponent(secret.name)}`, null, data);
         return true;
     } catch (e) {
         log.error(e);
@@ -48,7 +50,7 @@ export const updateSecret = async (manager: Manager, secret: SecretInstallationT
         value: secret.value
     };
     try {
-        await manager.doPatch(`/secrets/${secret.name}`, null, data);
+        await manager.doPatch(`/secrets/${encodeURIComponent(secret.name)}`, null, data);
         return true;
     } catch (e) {
         log.error(e);
@@ -58,19 +60,47 @@ export const updateSecret = async (manager: Manager, secret: SecretInstallationT
 
 // TODO(RD-1874): use common api for backend requests
 export const uploadBlueprint = async (manager: Manager, blueprint: BlueprintInstallationTask) => {
-    const data = {
+    const waitingTimeout = 120; // ~120s = 5s sleeps + requests
+    const stepSleep = 5; // 5s
+    const requestData = {
         visibility: 'tenant',
-        async_upload: false,
+        async_upload: true,
         application_file_name: blueprint.applicationName,
         blueprint_archive_url: blueprint.blueprintUrl
     };
     try {
-        await manager.doPut(`/blueprints/${blueprint.blueprintName}`, data);
-        return true;
+        const uploadResponse = await manager.doPut(
+            `/blueprints/${encodeURIComponent(blueprint.blueprintName)}`,
+            requestData
+        );
+        if (uploadResponse.error) {
+            return `${blueprint.blueprintName} blueprint uploading error: ${uploadResponse.error}.`;
+        }
     } catch (e) {
         log.error(e);
         return false;
     }
+    const iterationsCount = Math.round(waitingTimeout / stepSleep);
+    for (let i = 0; i < iterationsCount; i += 1) {
+        // eslint-disable-next-line no-await-in-loop
+        await sleep(1000 * stepSleep);
+        try {
+            // eslint-disable-next-line no-await-in-loop
+            const statusResponse = await manager.doGet(`/blueprints/${encodeURIComponent(blueprint.blueprintName)}`);
+            if (statusResponse) {
+                if (statusResponse.error) {
+                    return `${blueprint.blueprintName} blueprint uploading error:\n${statusResponse.error}.`;
+                }
+                if (statusResponse.state === 'uploaded') {
+                    return null;
+                }
+            }
+        } catch (e) {
+            // eslint-disable-next-line no-console
+            console.error(e);
+        }
+    }
+    return `${blueprint.blueprintName} blueprint uploading error: Timeout exceed.`;
 };
 
 export const createResourcesInstaller = (
@@ -147,16 +177,17 @@ export const createResourcesInstaller = (
         };
 
         const runUploadBlueprintStep = async (scheduledBlueprint: BlueprintInstallationTask) => {
-            const result = await uploadBlueprint(manager, scheduledBlueprint);
+            const uploadError = await uploadBlueprint(manager, scheduledBlueprint);
             if (destroyed) return;
-            if (!result) {
-                onError(
-                    i18n.t(
-                        'gettingStartedModal.installation.blueprintUploadError',
-                        '{{scheduledBlueprint.blueprintName}} blueprint upload error.',
-                        { scheduledBlueprint }
-                    )
-                );
+            if (uploadError) {
+                onError(uploadError);
+                // onError(
+                //     i18n.t(
+                //         'gettingStartedModal.installation.blueprintUploadError',
+                //         '{{scheduledBlueprint.blueprintName}} blueprint upload error.',
+                //         { scheduledBlueprint }
+                //     )
+                // );
             }
             if (destroyed) return;
             updateStepIndex();
