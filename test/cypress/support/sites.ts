@@ -1,5 +1,5 @@
 Cypress.Commands.add('createSite', site => {
-    const data = { name: site.name };
+    const data: any = { name: site.name };
     if (site.location) {
         // eslint-disable-next-line scanjs-rules/assign_to_location
         data.location = site.location;
@@ -12,7 +12,7 @@ Cypress.Commands.add('createSite', site => {
 });
 
 Cypress.Commands.add('createSites', sites => {
-    sites.forEach(cy.createSite);
+    sites.forEach((cy as any).createSite);
 });
 
 Cypress.Commands.add('deleteSite', siteName => {
@@ -22,6 +22,6 @@ Cypress.Commands.add('deleteSite', siteName => {
 Cypress.Commands.add('deleteSites', (search = '') => {
     cy.cfyRequest(`/sites?_search=${search}`, 'GET').then(response => {
         const sites = response.body.items;
-        sites.forEach(site => cy.deleteSite(site.name));
+        sites.forEach((site: any) => (cy as any).deleteSite(site.name));
     });
 });
