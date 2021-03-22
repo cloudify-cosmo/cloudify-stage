@@ -59,6 +59,8 @@
             "pluginInstallError": "{{pluginName}} plugin installation error.",
             "secretUpdateError": "{{secretName}} secret update operation error.",
             "secretCreateError": "{{secretName}} secret create operation error.",
+            "blueprintUploadError": "{{blueprintName}} blueprint upload error:\n{{uploadError}}",
+            "timeoutExceedError": "Timeout exceed.",
             "progressMessage": "Installation in progress...",
             "doneMessage": "Installation done!"
         }
