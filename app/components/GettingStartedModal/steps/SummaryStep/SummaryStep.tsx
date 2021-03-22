@@ -142,16 +142,10 @@ const SummaryStep = ({
                             );
                         })}
                         {blueprintsInstallationTasks.tasks?.uploadedBlueprints.map(blueprint => {
-                            // TODO: i18n
                             return (
                                 <List.Item key={blueprint.blueprintName}>
                                     <Label horizontal>{blueprint.blueprintName}</Label>{' '}
-                                    <span>
-                                        {i18n.t(
-                                            'gettingStartedModal.summary.blueprintUploadedMessageSuffix',
-                                            'blueprint is already uploaded'
-                                        )}
-                                    </span>
+                                    <span>{i18n.t('gettingStartedModal.summary.blueprintReadyMessageSuffix')}</span>
                                     <Icon
                                         style={{
                                             marginLeft: '0.5em',
@@ -165,7 +159,6 @@ const SummaryStep = ({
                             );
                         })}
                         {blueprintsInstallationTasks.tasks?.scheduledBlueprints.map(blueprint => {
-                            // TODO: i18n
                             return (
                                 <List.Item key={blueprint.blueprintName}>
                                     <Label horizontal>{blueprint.blueprintName}</Label>{' '}
