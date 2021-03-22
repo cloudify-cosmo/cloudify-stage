@@ -63,39 +63,6 @@ const schema: GettingStartedSchema = [
         ]
     },
     {
-        name: 'openstack_v2',
-        logo: 'https://cloudify.co/wp-content/uploads/2019/08/oslogo.png',
-        label: 'OpenStackV2',
-        plugins: [{ name: 'cloudify-openstack-plugin', version: '^2\\.' }],
-        secrets: [
-            {
-                name: 'openstack_username',
-                label: 'OpenStack Username',
-                type: 'text'
-            },
-            {
-                name: 'openstack_password',
-                label: 'Openstack Password',
-                type: 'password'
-            },
-            {
-                name: 'openstack_auth_url',
-                label: 'OpenStack Auth Url',
-                type: 'text'
-            },
-            {
-                name: 'openstack_project_name',
-                label: 'OpenStack Project Name',
-                type: 'text'
-            },
-            {
-                name: 'openstack_region',
-                label: 'Openstack Region',
-                type: 'text'
-            }
-        ]
-    },
-    {
         name: 'openstack_v3',
         logo: 'https://cloudify.co/wp-content/uploads/2019/08/oslogo.png',
         label: 'OpenStackV3',
