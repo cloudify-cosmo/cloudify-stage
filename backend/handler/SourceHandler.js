@@ -17,6 +17,8 @@ const logger = require('./LoggerHandler').getLogger('SourceHandler');
 const browseSourcesDir = pathlib.join(os.tmpdir(), config.app.source.browseSourcesDir);
 const lookupYamlsDir = pathlib.join(os.tmpdir(), config.app.source.lookupYamlsDir);
 
+const blueprintExtractDir = 'extracted';
+
 module.exports = (() => {
     function isUnixHiddenPath(path) {
         // eslint-disable-next-line no-useless-escape
@@ -64,21 +66,25 @@ module.exports = (() => {
 
     function scanArchive(archivePath) {
         logger.debug('scaning archive', archivePath);
-        return scanRecursive(browseSourcesDir, archivePath);
+        return scanRecursive(archivePath, archivePath);
     }
 
-    function browseArchiveTree(req) {
-        const archiveUrl = `/blueprints/${req.params.blueprintId}/archive`;
+    function browseArchiveTree(req, timestamp = Date.now()) {
+        const { blueprintId } = req.params;
+        const archiveUrl = `/blueprints/${blueprintId}/archive`;
         logger.debug('download archive from url', archiveUrl);
 
-        const archiveFolder = pathlib.join(browseSourcesDir, `source${Date.now()}`);
+        const archiveFolder = pathlib.join(browseSourcesDir, `${blueprintId}${timestamp}`);
         return ArchiveHelper.removeOldExtracts(browseSourcesDir)
             .then(() => ArchiveHelper.saveDataFromUrl(archiveUrl, archiveFolder, req))
             .then(data => {
                 const archivePath = pathlib.join(data.archiveFolder, data.archiveFile);
-                const extractedDir = pathlib.join(data.archiveFolder, 'extracted');
+                const extractedDir = pathlib.join(data.archiveFolder, blueprintExtractDir);
 
-                return ArchiveHelper.decompressArchive(archivePath, extractedDir).then(() => scanArchive(extractedDir));
+                return ArchiveHelper.decompressArchive(archivePath, extractedDir).then(() => ({
+                    ...scanArchive(extractedDir),
+                    timestamp
+                }));
             });
     }
 
@@ -86,15 +92,20 @@ module.exports = (() => {
         return absCandidate.substring(0, absPrefix.length) === absPrefix;
     }
 
-    function browseArchiveFile(path) {
-        return new Promise((resolve, reject) => {
-            const absolutePath = pathlib.resolve(browseSourcesDir, path);
-            if (!checkPrefix(absolutePath, browseSourcesDir)) {
-                reject('Wrong path');
-            } else {
-                fs.readFile(absolutePath, 'utf-8', (err, data) => (err ? reject(err) : resolve(data)));
-            }
-        });
+    async function browseArchiveFile(req, timestamp, path) {
+        const { blueprintId } = req.params;
+        const absolutePath = pathlib.resolve(browseSourcesDir, `${blueprintId}${timestamp}`, blueprintExtractDir, path);
+
+        if (!checkPrefix(absolutePath, browseSourcesDir)) {
+            throw new Error('Wrong path');
+        }
+
+        if (!fs.existsSync(absolutePath)) {
+            // Cluster node may have changed, so fetch and extract blueprint archive if requested file does not exist
+            await browseArchiveTree(req, timestamp);
+        }
+
+        return fs.readFile(absolutePath, 'utf-8');
     }
 
     function saveMultipartData(req) {

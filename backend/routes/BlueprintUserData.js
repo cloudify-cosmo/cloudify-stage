@@ -15,17 +15,16 @@ router.get('/layout/:blueprintId', (req, res) => {
         if (blueprintData) {
             res.send(blueprintData.layout);
         } else {
-            SourceHandler.browseArchiveTree(req)
-                .then(data => _.chain(data).get('children[0].children').find({ title: 'info.yaml' }).get('key').value())
-                .then(path => {
-                    if (path) {
-                        SourceHandler.browseArchiveFile(path)
-                            .then(yaml.safeLoad)
-                            .then(layout => res.send(layout));
-                    } else {
-                        res.status(404).send({});
-                    }
-                });
+            SourceHandler.browseArchiveTree(req).then(data => {
+                const path = _.chain(data).get('children[0].children').find({ title: 'info.yaml' }).get('key').value();
+                if (path) {
+                    SourceHandler.browseArchiveFile(req, data.timestamp, path)
+                        .then(yaml.safeLoad)
+                        .then(layout => res.send(layout));
+                } else {
+                    res.status(404).send({});
+                }
+            });
         }
     });
 });

@@ -10,13 +10,13 @@ const router = express.Router();
 
 router.use(passport.authenticate('token', { session: false }));
 
-router.get('/browse/file', (req, res, next) => {
-    const { path } = req.query;
+router.get('/browse/:blueprintId/file/:timestamp/:path(.*)', (req, res, next) => {
+    const { timestamp, path } = req.params;
 
     if (!path) {
         next('no file path passed [path]');
     } else {
-        SourceHandler.browseArchiveFile(path)
+        SourceHandler.browseArchiveFile(req, timestamp, path)
             .then(content => res.contentType('application/text').send(content))
             .catch(next);
     }
