@@ -1,6 +1,6 @@
 import i18n from 'i18next';
 import React, { memo, useEffect, useState } from 'react';
-import { Divider, Form, Header, Label, List, Message, Progress } from 'semantic-ui-react';
+import { Divider, Form, Header, Label, List, Message, Progress, Icon } from 'semantic-ui-react';
 import useCurrentCallback from '../../common/useCurrentCallback';
 import { createResourcesInstaller } from '../../installation/process';
 import {
@@ -67,7 +67,7 @@ const SummaryStep = ({
                 pluginsInstallationTasks.tasks.scheduledPlugins,
                 secretsInstallationTasks.tasks.updatedSecrets,
                 secretsInstallationTasks.tasks.createdSecrets,
-                blueprintsInstallationTasks.tasks
+                blueprintsInstallationTasks.tasks.scheduledBlueprints
             );
             return () => {
                 resourcesInstaller.destroy();
@@ -139,12 +139,36 @@ const SummaryStep = ({
                                 </List.Item>
                             );
                         })}
-                        {blueprintsInstallationTasks.tasks.map(blueprint => {
+                        {blueprintsInstallationTasks.tasks.uploadedBlueprints.map(blueprint => {
+                            // TODO: i18n
+                            return (
+                                <List.Item key={blueprint.blueprintName}>
+                                    <Label horizontal>{blueprint.blueprintName}</Label>{' '}
+                                    <span>
+                                        {i18n.t(
+                                            'gettingStartedModal.summary.blueprintUploadedMessageSuffix',
+                                            'blueprint is already uploaded'
+                                        )}
+                                    </span>
+                                    <Icon
+                                        style={{
+                                            marginLeft: '0.5em',
+                                            verticalAlign: 'middle',
+                                            display: 'inline-block'
+                                        }}
+                                        color="green"
+                                        name="check"
+                                    />
+                                </List.Item>
+                            );
+                        })}
+                        {blueprintsInstallationTasks.tasks.scheduledBlueprints.map(blueprint => {
+                            // TODO: i18n
                             return (
                                 <List.Item key={blueprint.blueprintName}>
                                     <Label horizontal>{blueprint.blueprintName}</Label>{' '}
                                     {i18n.t(
-                                        'gettingStartedModal.summary.blueprintUploadMessageSuffix',
+                                        'gettingStartedModal.summary.blueprintScheduledMessageSuffix',
                                         'blueprint will be uploaded'
                                     )}
                                 </List.Item>

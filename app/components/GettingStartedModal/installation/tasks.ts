@@ -8,6 +8,8 @@ import type { GettingStartedData, GettingStartedSchema, RegExpString, GettingSta
 import type { URLString } from '../plugins/model';
 import type { PluginsHook } from '../plugins/useFetchPlugins';
 import type { SecretsHook } from '../secrets/useFetchSecrets';
+import useFetchBlueprints, { BlueprintsHook } from '../blueprints/useFetchBlueprints';
+import { BlueprintData } from '../blueprints/model';
 
 /**
  * Validates plugin version. If version pattern is not defined, any version is accepted.
@@ -31,6 +33,15 @@ const validatePluginVersion = (versionPattern?: RegExpString, pluginVersion?: st
         console.error(`Incorrect version expression: ${versionPattern}`, e);
         return false;
     }
+};
+
+export const mapCurrentBlueprints = (currentBlueprints: BlueprintData[]) => {
+    return currentBlueprints.reduce((result, { id, ...other }) => {
+        if (id) {
+            result[id] = other;
+        }
+        return result;
+    }, {} as Record<string, Omit<BlueprintData, 'id'>>);
 };
 
 export const mapDefinedSecrets = (definedSecrets: GettingStartedSecretsData[]) => {
@@ -207,18 +218,38 @@ export type BlueprintInstallationTask = {
     applicationName: string;
 };
 
-export const createBlueprintsInstallationTasks = (selectedTechnologies: GettingStartedSchema) => {
+export const createBlueprintsInstallationTasks = (
+    currentBlueprints: BlueprintsHook,
+    selectedTechnologies: GettingStartedSchema
+) => {
+    const usedBlueprints: Record<string, boolean> = {};
+    const uploadedBlueprints: BlueprintInstallationTask[] = [];
     const scheduledBlueprints: BlueprintInstallationTask[] = [];
-    selectedTechnologies.forEach(selectedTechnology => {
-        selectedTechnology.blueprints.forEach(blueprint => {
-            scheduledBlueprints.push({
-                blueprintName: `${blueprint.name}-${formatDate()}`,
-                blueprintUrl: blueprint.zipUrl,
-                applicationName: blueprint.mainBlueprint ?? ''
+    if (currentBlueprints && currentBlueprints.blueprints) {
+        const mappedBlueprints = mapCurrentBlueprints(currentBlueprints.blueprints);
+        selectedTechnologies.forEach(selectedTechnology => {
+            selectedTechnology.blueprints.forEach(blueprintItem => {
+                if (blueprintItem.id in usedBlueprints) {
+                    return;
+                }
+                usedBlueprints[blueprintItem.name] = true;
+                if (blueprintItem.name in mappedBlueprints) {
+                    uploadedBlueprints.push({
+                        blueprintName: blueprintItem.name,
+                        blueprintUrl: blueprintItem.zipUrl,
+                        applicationName: blueprintItem.mainBlueprint ?? ''
+                    });
+                } else {
+                    scheduledBlueprints.push({
+                        blueprintName: blueprintItem.name,
+                        blueprintUrl: blueprintItem.zipUrl,
+                        applicationName: blueprintItem.mainBlueprint ?? ''
+                    });
+                }
             });
         });
-    });
-    return scheduledBlueprints;
+    }
+    return { uploadedBlueprints, scheduledBlueprints };
 };
 
 export const usePluginsInstallationTasks = (selectedTechnologies: GettingStartedSchema) => {
@@ -262,18 +293,18 @@ export const useSecretsInstallationTasks = (
 };
 
 export const useBlueprintsInstallationTasks = (selectedTechnologies: GettingStartedSchema) => {
-    // TODO: fetch blueprints and select better names for blueprints
+    const currentBlueprints = useFetchBlueprints();
     return useMemo(() => {
-        // if (currentBlueprints.loading) {
-        //     return { loading: true };
-        // }
-        // if (currentBlueprints.error) {
-        //     return { loading: false, error: currentBlueprints.error };
-        // }
+        if (currentBlueprints.loading) {
+            return { loading: true };
+        }
+        if (currentBlueprints.error) {
+            return { loading: false, error: currentBlueprints.error };
+        }
         return {
             loading: false,
-            tasks: createBlueprintsInstallationTasks(selectedTechnologies),
+            tasks: createBlueprintsInstallationTasks(currentBlueprints, selectedTechnologies),
             error: undefined
         };
-    }, [selectedTechnologies]);
+    }, [currentBlueprints, selectedTechnologies]);
 };

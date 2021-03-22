@@ -36,7 +36,8 @@
         },
         "initialization": {
             "pluginsLoadingError": "Plugins information loading error.",
-            "secretsLoadingError": "Secrets information loading error."
+            "secretsLoadingError": "Secrets information loading error.",
+            "blueprintsLoadingError": "Blueprints information loading error"
         },
         "validation": {
             "someTechnologyRequiredError": "Please select some technology.",
