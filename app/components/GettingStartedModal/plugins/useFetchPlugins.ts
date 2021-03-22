@@ -40,13 +40,15 @@ const useFetchPlugins = () => {
                 }
             })
             .catch(() => {
-                setState({
-                    loading: false,
-                    error: i18n.t(
-                        'gettingStartedModal.initialization.pluginsLoadingError',
-                        'Plugins information loading error.'
-                    )
-                });
+                if (mounted) {
+                    setState({
+                        loading: false,
+                        error: i18n.t(
+                            'gettingStartedModal.initialization.pluginsLoadingError',
+                            'Plugins information loading error.'
+                        )
+                    });
+                }
             });
         return () => {
             mounted = false;

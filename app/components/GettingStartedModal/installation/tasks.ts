@@ -1,4 +1,5 @@
 import { useMemo } from 'react';
+import log from 'loglevel';
 
 import useFetchPlugins from '../plugins/useFetchPlugins';
 import useFetchSecrets from '../secrets/useFetchSecrets';
@@ -27,8 +28,7 @@ const validatePluginVersion = (versionPattern?: RegExpString, pluginVersion?: st
         const versionExpression = new RegExp(versionPattern);
         return versionExpression.test(pluginVersion);
     } catch (e) {
-        // eslint-disable-next-line no-console
-        console.error(`Incorrect version expression: ${versionPattern}`, e);
+        log.error(`Incorrect version expression: ${versionPattern}`, e);
         return false;
     }
 };

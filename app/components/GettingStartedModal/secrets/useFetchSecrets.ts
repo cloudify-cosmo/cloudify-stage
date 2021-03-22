@@ -23,13 +23,15 @@ const useFetchSecrets = () => {
                 }
             })
             .catch(() => {
-                setState({
-                    loading: false,
-                    error: i18n.t(
-                        'gettingStartedModal.initialization.secretsLoadingError',
-                        'Secrets information loading error.'
-                    )
-                });
+                if (mounted) {
+                    setState({
+                        loading: false,
+                        error: i18n.t(
+                            'gettingStartedModal.initialization.secretsLoadingError',
+                            'Secrets information loading error.'
+                        )
+                    });
+                }
             });
         return () => {
             mounted = false;

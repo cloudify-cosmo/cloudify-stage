@@ -1,12 +1,12 @@
 import React, { memo, useState, useEffect, useMemo } from 'react';
 import { Form } from 'cloudify-ui-components';
 import i18n from 'i18next';
-import { Button, Divider, Message, ModalHeader } from 'semantic-ui-react';
+import log from 'loglevel';
 
 import type { ChangeEvent } from 'react';
 
-import { Modal } from '../basic';
-import TechnologiesStep from './steps/TechnologiesStep/index';
+import { Button, Divider, Message, Modal } from '../basic';
+import TechnologiesStep from './steps/TechnologiesStep';
 import SecretsStep from './steps/SecretsStep';
 import SummaryStep from './steps/SummaryStep';
 import { validateSecretFields, validateTechnologyFields } from './formValidation';
@@ -84,18 +84,18 @@ const ControlledGettingStartedModal = ({ open = false, step = 0, schema, data, o
     const secretsStepSchema = secretsStepsSchemas[secretsStepIndex];
     const secretsStepData = secretsStepsData[secretsStepSchema?.name];
     const checkTechnologiesStepDataErrors = () => {
-        const usedTechnologiesErrors = validateTechnologyFields(technologiesStepData);
-        if (usedTechnologiesErrors.length > 0) {
-            setStepErrors(usedTechnologiesErrors);
+        const usedTechnologiesError = validateTechnologyFields(technologiesStepData);
+        if (usedTechnologiesError) {
+            setStepErrors([usedTechnologiesError]);
             return false;
         }
         setStepErrors([]);
         return true;
     };
     const checkSecretsStepDataErrors = () => {
-        const localDataErrors = validateSecretFields(secretsStepSchema.secrets, secretsStepData ?? {});
-        if (localDataErrors.length > 0) {
-            setStepErrors(localDataErrors);
+        const localDataError = validateSecretFields(secretsStepSchema.secrets, secretsStepData ?? {});
+        if (localDataError) {
+            setStepErrors([localDataError]);
             return false;
         }
         setStepErrors([]);
@@ -145,8 +145,7 @@ const ControlledGettingStartedModal = ({ open = false, step = 0, schema, data, o
                 break;
 
             default:
-                // eslint-disable-next-line no-console
-                console.error('Incorrect step name.');
+                log.error('Incorrect step name.');
                 break;
         }
     };
@@ -174,16 +173,13 @@ const ControlledGettingStartedModal = ({ open = false, step = 0, schema, data, o
                 break;
 
             default:
-                // eslint-disable-next-line no-console
-                console.error('Incorrect step name.');
+                log.error('Incorrect step name.');
                 break;
         }
     };
     return (
         <Modal open={open} onClose={handleModalClose}>
-            <Modal.Header>
-                <ModalHeader>{getHeaderText(secretsStepsSchemas, stepName, secretsStepIndex)}</ModalHeader>
-            </Modal.Header>
+            <Modal.Header>{getHeaderText(secretsStepsSchemas, stepName, secretsStepIndex)}</Modal.Header>
             <Modal.Content style={{ minHeight: '220px' }}>
                 {stepErrors && stepErrors.length > 0 && (
                     <>
