@@ -73,7 +73,11 @@ export const uploadBlueprint = async (manager: Manager, blueprint: BlueprintInst
             requestData
         );
         if (uploadResponse.error) {
-            return `${blueprint.blueprintName} blueprint uploading error: ${uploadResponse.error}.`;
+            return i18n.t(
+                'gettingStartedModal.installation.blueprintUploadError',
+                '{{blueprint.blueprintName}} blueprint upload error:\n{{uploadError}}.',
+                { blueprint, uploadError: uploadResponse.error }
+            );
         }
     } catch (e) {
         // eslint-disable-next-line no-console
@@ -88,7 +92,11 @@ export const uploadBlueprint = async (manager: Manager, blueprint: BlueprintInst
             const statusResponse = await manager.doGet(`/blueprints/${encodeURIComponent(blueprint.blueprintName)}`);
             if (statusResponse) {
                 if (statusResponse.error) {
-                    return `${blueprint.blueprintName} blueprint uploading error:\n${statusResponse.error}.`;
+                    return i18n.t(
+                        'gettingStartedModal.installation.blueprintUploadError',
+                        '{{blueprint.blueprintName}} blueprint upload error:\n{{uploadError}}.',
+                        { blueprint, uploadError: statusResponse.error }
+                    );
                 }
                 if (statusResponse.state === 'uploaded') {
                     return null;
@@ -99,7 +107,14 @@ export const uploadBlueprint = async (manager: Manager, blueprint: BlueprintInst
             console.error(e);
         }
     }
-    return `${blueprint.blueprintName} blueprint uploading error: Timeout exceed.`;
+    return i18n.t(
+        'gettingStartedModal.installation.blueprintUploadError',
+        '{{blueprint.blueprintName}} blueprint upload error:\n{{uploadError}}.',
+        {
+            blueprint,
+            uploadError: i18n.t('gettingStartedModal.installation.timeoutExceedError', 'Timeout exceed.')
+        }
+    );
 };
 
 export const createResourcesInstaller = (
@@ -180,13 +195,6 @@ export const createResourcesInstaller = (
             if (destroyed) return;
             if (uploadError) {
                 onError(uploadError);
-                // onError(
-                //     i18n.t(
-                //         'gettingStartedModal.installation.blueprintUploadError',
-                //         '{{scheduledBlueprint.blueprintName}} blueprint upload error.',
-                //         { scheduledBlueprint }
-                //     )
-                // );
             }
             if (destroyed) return;
             stepIndex += 1;
@@ -206,7 +214,6 @@ export const createResourcesInstaller = (
             ...createdSecrets.map(runCreateSecretStep)
         ]);
 
-        // TODO: check if plugin and secrets are installed before
         await Promise.all(scheduledBlueprints.map(runUploadBlueprintStep));
 
         onProgress(100);
