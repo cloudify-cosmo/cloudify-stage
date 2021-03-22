@@ -189,7 +189,10 @@ export default function BlueprintSources({ data, toolbox, widget }) {
 BlueprintSources.propTypes = {
     data: PropTypes.shape({
         blueprintId: PropTypes.string,
-        blueprintTree: PropTypes.shape({ children: PropTypes.arrayOf(PropTypes.shape({})) }),
+        blueprintTree: PropTypes.shape({
+            children: PropTypes.arrayOf(PropTypes.shape({})),
+            timestamp: PropTypes.number
+        }),
         importedBlueprintIds: PropTypes.arrayOf(PropTypes.string),
         importedBlueprintTrees: PropTypes.arrayOf(PropTypes.shape({})),
         yamlFileName: PropTypes.string
