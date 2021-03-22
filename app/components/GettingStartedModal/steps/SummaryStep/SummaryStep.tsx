@@ -2,8 +2,9 @@ import i18n from 'i18next';
 import React, { memo, useEffect } from 'react';
 
 import { useResettableState } from '../../../../utils/hooks';
-import { Divider, Header, Icon, Label, List, Message, Progress } from '../../../basic';
+import { Divider, Header, Label, List, Message, Progress } from '../../../basic';
 import useCurrentCallback from '../../common/useCurrentCallback';
+import { SuccessIcon } from '../../common/icons';
 import { createResourcesInstaller } from '../../installation/process';
 import {
     usePluginsInstallationTasks,
@@ -146,15 +147,7 @@ const SummaryStep = ({
                                 <List.Item key={blueprint.blueprintName}>
                                     <Label horizontal>{blueprint.blueprintName}</Label>{' '}
                                     <span>{i18n.t('gettingStartedModal.summary.blueprintReadyMessageSuffix')}</span>
-                                    <Icon
-                                        style={{
-                                            marginLeft: '0.5em',
-                                            verticalAlign: 'middle',
-                                            display: 'inline-block'
-                                        }}
-                                        color="green"
-                                        name="check"
-                                    />
+                                    <SuccessIcon />
                                 </List.Item>
                             );
                         })}
