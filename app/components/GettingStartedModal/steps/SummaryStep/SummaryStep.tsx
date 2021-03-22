@@ -109,7 +109,7 @@ const SummaryStep = ({
                         <PluginTaskItems
                             tasks={pluginsInstallationTasks.tasks.scheduledPlugins}
                             description={i18n.t(
-                                'gettingStartedModal.summary.pluginInstallationMessageSuffix',
+                                'gettingStartedModal.summary.pluginInstallMessageSuffix',
                                 'plugin will be installed.'
                             )}
                         />
@@ -140,13 +140,12 @@ const SummaryStep = ({
                             );
                         })}
                         {blueprintsInstallationTasks.tasks.uploadedBlueprints.map(blueprint => {
-                            // TODO: i18n
                             return (
                                 <List.Item key={blueprint.blueprintName}>
                                     <Label horizontal>{blueprint.blueprintName}</Label>{' '}
                                     <span>
                                         {i18n.t(
-                                            'gettingStartedModal.summary.blueprintUploadedMessageSuffix',
+                                            'gettingStartedModal.summary.blueprintReadyMessageSuffix',
                                             'blueprint is already uploaded'
                                         )}
                                     </span>
@@ -163,12 +162,11 @@ const SummaryStep = ({
                             );
                         })}
                         {blueprintsInstallationTasks.tasks.scheduledBlueprints.map(blueprint => {
-                            // TODO: i18n
                             return (
                                 <List.Item key={blueprint.blueprintName}>
                                     <Label horizontal>{blueprint.blueprintName}</Label>{' '}
                                     {i18n.t(
-                                        'gettingStartedModal.summary.blueprintScheduledMessageSuffix',
+                                        'gettingStartedModal.summary.blueprintUploadMessageSuffix',
                                         'blueprint will be uploaded'
                                     )}
                                 </List.Item>

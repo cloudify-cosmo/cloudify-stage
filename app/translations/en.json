@@ -45,9 +45,11 @@
         },
         "summary": {
             "taskListTitle": "Task List",
-            "pluginInstallationMessageSuffix": "plugin will be installed.",
+            "pluginInstallMessageSuffix": "plugin will be installed.",
             "secretCreateMessageSuffix": "secret will be created",
-            "secretUpdateMessageSuffix": "secret will be updated"
+            "secretUpdateMessageSuffix": "secret will be updated",
+            "blueprintReadyMessageSuffix": "blueprint is already uploaded",
+            "blueprintUploadMessageSuffix": "blueprint will be uploaded"
         },
         "installation": {
             "pluginInstallError": "{{scheduledPlugin.name}} plugin installation error.",
