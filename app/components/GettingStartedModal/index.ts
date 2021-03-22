@@ -1,3 +1,3 @@
-import StandaloneGettingStartedModal from './StandaloneGettingStartedModal';
+import GettingStartedModal from './GettingStartedModal';
 
-export default StandaloneGettingStartedModal;
+export default GettingStartedModal;
