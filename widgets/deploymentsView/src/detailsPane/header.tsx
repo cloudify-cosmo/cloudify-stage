@@ -1,5 +1,5 @@
 import { noop } from 'lodash';
-import type { FunctionComponent } from 'react';
+import { ComponentProps, FunctionComponent, useMemo, useRef } from 'react';
 
 import './header.scss';
 
@@ -10,24 +10,29 @@ export interface DetailsPaneHeaderProps {
 const DetailsPaneHeader: FunctionComponent<DetailsPaneHeaderProps> = ({ deploymentName }) => {
     const { Header } = Stage.Basic;
     const { Widget } = Stage.Shared.Widgets;
+    const uuidRef = useRef(Stage.Utils.uuid);
+    const deploymentActionButtonsWidgetDescription = useMemo(
+        (): ComponentProps<typeof Widget>['widget'] => ({
+            id: `${uuidRef.current}-${deploymentName}`,
+            name: 'Deployment Action Buttons',
+            // NOTE: arbitrary position, as it is not used
+            x: 0,
+            y: 0,
+            width: 1,
+            height: 1,
+            definition: 'deploymentActionButtons',
+            configuration: {},
+            drillDownPages: {},
+            maximized: false
+        }),
+        [deploymentName]
+    );
 
     return (
         <div className="detailsPaneHeader">
             <Header>{deploymentName}</Header>
             <Widget
-                widget={{
-                    id: 'bf9c126b-9bb7-4ec8-827d-f5dbf2c7e938',
-                    name: 'Deployment Action Buttons',
-                    // NOTE: arbitrary position, as it is not used
-                    x: 0,
-                    y: 0,
-                    width: 1,
-                    height: 1,
-                    definition: 'deploymentActionButtons',
-                    configuration: {},
-                    drillDownPages: {},
-                    maximized: false
-                }}
+                widget={deploymentActionButtonsWidgetDescription}
                 isEditMode={false}
                 onWidgetRemoved={noop}
                 onWidgetUpdated={noop}
