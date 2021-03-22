@@ -1,5 +1,6 @@
-import { noop } from 'lodash';
+import { find, noop } from 'lodash';
 import { deploymentsViewColumnDefinitions, DeploymentsViewColumnId, deploymentsViewColumnIds } from './columns';
+import DetailsPane from './detailsPane';
 import renderDeploymentRow from './renderDeploymentRow';
 import './styles.scss';
 import type { Deployment } from './types';
@@ -106,6 +107,8 @@ if (process.env.NODE_ENV === 'development' || process.env.TEST) {
                 return <Loading />;
             }
 
+            const deployment = find(data.items, { id: toolbox.getContext().getValue('deploymentId') });
+
             return (
                 <div className="grid">
                     <DataTable
@@ -134,7 +137,8 @@ if (process.env.NODE_ENV === 'development' || process.env.TEST) {
 
                         {data.items.flatMap(renderDeploymentRow(toolbox, fieldsToShow))}
                     </DataTable>
-                    <div className="deploymentDetails">
+                    <div className="detailsPane">
+                        <DetailsPane deployment={deployment} />
                         <WidgetsList
                             isEditMode={false}
                             onWidgetRemoved={noop}
