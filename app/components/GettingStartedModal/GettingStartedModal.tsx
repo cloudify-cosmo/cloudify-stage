@@ -5,6 +5,8 @@ import log from 'loglevel';
 
 import type { ChangeEvent } from 'react';
 
+import gettingStartedSchema from './schema';
+import { getGettingStartedModalDisabled, setGettingStartedModalDisabled } from './localStorage';
 import { Button, Divider, Message, Modal } from '../basic';
 import TechnologiesStep from './steps/TechnologiesStep';
 import SecretsStep from './steps/SecretsStep';
@@ -39,47 +41,20 @@ const getHeaderText = (schema: GettingStartedSchema, stepName: StepName, secrets
     }
 };
 
-/**
- * Returns information what technologies are selected using technology forms schema and data.
- * e.g. result: `{ aws: true, gpc: false }`
- * @param schema schema that describes technology forms (once schema item describes secrets set for specific technology)
- * @param data data that can be bound into form that are complies with technology forms schema
- * @returns information about selected technologies
- */
-const detectSelectedTechnologies = (schema: GettingStartedSchema, data?: GettingStartedData) => {
-    if (data) {
-        return schema.reduce((result, item) => {
-            result[item.name] = item.name in data;
-            return result;
-        }, {} as GettingStartedTechnologiesData);
-    }
-    return {} as GettingStartedTechnologiesData;
-};
-
 type StepName = 'technologies' | 'secrets' | 'summary' | 'status';
 
-type Props = {
-    open?: boolean;
-    step?: number;
-    schema: GettingStartedSchema;
-    data?: GettingStartedData;
-    onClose?: (permanentClose: boolean) => void;
-};
-
-const ControlledGettingStartedModal = ({ open = false, step = 0, schema, data, onClose }: Props) => {
+const GettingStartedModal = () => {
+    const [modalOpen, setModalOpen] = useState(() => getGettingStartedModalDisabled());
     const [stepName, setStepName] = useState<StepName>('technologies');
     const [stepErrors, setStepErrors] = useState<string[]>([]);
     const [technologiesStepData, setTechnologiesStepData] = useState<GettingStartedTechnologiesData>(() => ({}));
     const [secretsStepIndex, setSecretsStepIndex] = useState(0);
-    const [secretsStepsData, setSecretsStepsData] = useState(() => data ?? {});
+    const [secretsStepsData, setSecretsStepsData] = useState<GettingStartedData>(() => ({}));
     const [installationProcessing, setInstallationProcessing] = useState(false);
-    const [modalDisabled, setModalDisabled] = useState(false);
-    useEffect(() => setTechnologiesStepData(detectSelectedTechnologies(schema, data)), [schema, data]);
-    useEffect(() => setSecretsStepIndex(step), [step]);
-    useEffect(() => setSecretsStepsData(data ?? {}), [data]);
+    const [modalDisabledChecked, setModalDisabledChecked] = useState(false);
     const secretsStepsSchemas = useMemo(
-        () => createTechnologiesGroups(schema.filter(items => technologiesStepData[items.name])), // steps with unique secrets for selected technologies
-        [schema, technologiesStepData]
+        () => createTechnologiesGroups(gettingStartedSchema.filter(items => technologiesStepData[items.name])), // steps with unique secrets for selected technologies
+        [technologiesStepData]
     );
     const secretsStepSchema = secretsStepsSchemas[secretsStepIndex];
     const secretsStepData = secretsStepsData[secretsStepSchema?.name];
@@ -115,10 +90,13 @@ const ControlledGettingStartedModal = ({ open = false, step = 0, schema, data, o
     };
     const handleModalDisabledChange = (e: ChangeEvent) => {
         const input = e.target.parentElement?.firstChild as HTMLInputElement | null | undefined;
-        setModalDisabled(!input?.checked);
+        setModalDisabledChecked(!input?.checked);
     };
     const handleModalClose = () => {
-        onClose?.(modalDisabled);
+        setModalOpen(false);
+        if (modalDisabledChecked) {
+            setGettingStartedModalDisabled(true);
+        }
     };
     const handleBackClick = () => {
         switch (stepName) {
@@ -178,7 +156,7 @@ const ControlledGettingStartedModal = ({ open = false, step = 0, schema, data, o
         }
     };
     return (
-        <Modal open={open} onClose={handleModalClose}>
+        <Modal open={modalOpen} onClose={handleModalClose}>
             <Modal.Header>{getHeaderText(secretsStepsSchemas, stepName, secretsStepIndex)}</Modal.Header>
             <Modal.Content style={{ minHeight: '220px' }}>
                 {stepErrors && stepErrors.length > 0 && (
@@ -193,7 +171,7 @@ const ControlledGettingStartedModal = ({ open = false, step = 0, schema, data, o
                 )}
                 {stepName === 'technologies' && (
                     <TechnologiesStep
-                        schema={schema}
+                        schema={gettingStartedSchema}
                         selectedTechnologies={technologiesStepData}
                         onChange={handleTechnologiesStepChange}
                     />
@@ -224,7 +202,7 @@ const ControlledGettingStartedModal = ({ open = false, step = 0, schema, data, o
                             'gettingStartedModal.modal.enableModalHelp',
                             'You can enable modal always in user profile.'
                         )}
-                        checked={modalDisabled}
+                        checked={modalDisabledChecked}
                         onChange={handleModalDisabledChange}
                     />
                 </Form.Field>
@@ -267,4 +245,4 @@ const ControlledGettingStartedModal = ({ open = false, step = 0, schema, data, o
     );
 };
 
-export default memo(ControlledGettingStartedModal);
+export default memo(GettingStartedModal);
