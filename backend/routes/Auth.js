@@ -22,7 +22,7 @@ router.use(bodyParser.urlencoded({ extended: true }));
 router.post('/login', (req, res) =>
     AuthHandler.getToken(req.headers.authorization)
         .then(token => {
-            res.cookie(Consts.TOKEN_COOKIE_NAME, token.value);
+            res.cookie(Consts.TOKEN_COOKIE_NAME, token.value, { sameSite: 'strict' });
             res.send({ role: token.role });
         })
         .catch(err => {
@@ -44,9 +44,9 @@ router.post('/saml/callback', passport.authenticate('saml', { session: false }),
         logger.debug('Received SAML Response for user', req.user);
         AuthHandler.getTokenViaSamlResponse(req.body.SAMLResponse)
             .then(token => {
-                res.cookie(Consts.TOKEN_COOKIE_NAME, token.value);
-                res.cookie(Consts.USERNAME_COOKIE_NAME, req.user.username);
-                res.cookie(Consts.ROLE_COOKIE_NAME, token.role);
+                res.cookie(Consts.TOKEN_COOKIE_NAME, token.value, { sameSite: 'strict' });
+                res.cookie(Consts.USERNAME_COOKIE_NAME, req.user.username, { sameSite: 'strict' });
+                res.cookie(Consts.ROLE_COOKIE_NAME, token.role, { sameSite: 'strict' });
                 res.redirect(Consts.CONTEXT_PATH);
             })
             .catch(err => {
