@@ -162,6 +162,7 @@ const schema: GettingStartedSchema = [
             }
         ]
     },
+    // temporarily not used
     // {
     //     name: 'openstack_v2',
     //     logo: 'https://cloudify.co/wp-content/uploads/2019/08/oslogo.png',
@@ -512,43 +513,44 @@ const schema: GettingStartedSchema = [
                 updatedAt: '2020-07-21T14:25:37Z'
             }
         ]
-    },
-    {
-        name: 'kubernetes',
-        logo: 'https://cloudify.co/wp-content/uploads/2020/07/kube-icon.png',
-        label: 'Kubernetes',
-        plugins: [{ name: 'cloudify-kubernetes-plugin' }],
-        secrets: [],
-        blueprints: [
-            {
-                id: 'Kubernetes-Kubespray',
-                name: 'kubernetes-Kubespray',
-                description:
-                    'Kubernetes: Setup a Kubernetes cluster in AWS, Azure, GCP or OpenStack using the Ansible Kubespray playbook.',
-                htmlUrl: 'https://github.com/cloudify-community/blueprint-examples/tree/master/kubernetes',
-                zipUrl:
-                    'https://github.com/cloudify-community/blueprint-examples/releases/download/latest/kubernetes-kubespray.zip',
-                readmeUrl:
-                    'https://raw.githubusercontent.com/cloudify-community/blueprint-examples/master/kubernetes/README.md',
-                imageUrl: 'https://repository.cloudifysource.org/cloudify/blueprints/5.1/images/k8s.png',
-                createdAt: '2019-10-19T12:44:56Z',
-                updatedAt: '2020-07-16T17:26:16Z'
-            },
-            {
-                id: 'kubernetes-plugin-example',
-                name: 'kubernetes-plugin-example',
-                description: 'Deploy Sample Kubernetes Application',
-                htmlUrl: 'https://github.com/cloudify-community/blueprint-examples/tree/master/kubernetes',
-                zipUrl:
-                    'https://github.com/cloudify-community/blueprint-examples/releases/download/latest/kubernetes-plugin-examples-file-resource.zip',
-                readmeUrl:
-                    'https://raw.githubusercontent.com/cloudify-community/blueprint-examples/master/kubernetes/README.md',
-                imageUrl: 'https://repository.cloudifysource.org/cloudify/blueprints/5.1/images/k8s.png',
-                createdAt: '2019-10-19T12:44:56Z',
-                updatedAt: '2020-05-16T17:26:16Z'
-            }
-        ]
     }
+    // in future will be enabled (requires blueprints)
+    // {
+    //     name: 'kubernetes',
+    //     logo: 'https://cloudify.co/wp-content/uploads/2020/07/kube-icon.png',
+    //     label: 'Kubernetes',
+    //     plugins: [{ name: 'cloudify-kubernetes-plugin' }],
+    //     secrets: [],
+    //     blueprints: [
+    //         {
+    //             id: 'Kubernetes-Kubespray',
+    //             name: 'kubernetes-Kubespray',
+    //             description:
+    //                 'Kubernetes: Setup a Kubernetes cluster in AWS, Azure, GCP or OpenStack using the Ansible Kubespray playbook.',
+    //             htmlUrl: 'https://github.com/cloudify-community/blueprint-examples/tree/master/kubernetes',
+    //             zipUrl:
+    //                 'https://github.com/cloudify-community/blueprint-examples/releases/download/latest/kubernetes-kubespray.zip',
+    //             readmeUrl:
+    //                 'https://raw.githubusercontent.com/cloudify-community/blueprint-examples/master/kubernetes/README.md',
+    //             imageUrl: 'https://repository.cloudifysource.org/cloudify/blueprints/5.1/images/k8s.png',
+    //             createdAt: '2019-10-19T12:44:56Z',
+    //             updatedAt: '2020-07-16T17:26:16Z'
+    //         },
+    //         {
+    //             id: 'kubernetes-plugin-example',
+    //             name: 'kubernetes-plugin-example',
+    //             description: 'Deploy Sample Kubernetes Application',
+    //             htmlUrl: 'https://github.com/cloudify-community/blueprint-examples/tree/master/kubernetes',
+    //             zipUrl:
+    //                 'https://github.com/cloudify-community/blueprint-examples/releases/download/latest/kubernetes-plugin-examples-file-resource.zip',
+    //             readmeUrl:
+    //                 'https://raw.githubusercontent.com/cloudify-community/blueprint-examples/master/kubernetes/README.md',
+    //             imageUrl: 'https://repository.cloudifysource.org/cloudify/blueprints/5.1/images/k8s.png',
+    //             createdAt: '2019-10-19T12:44:56Z',
+    //             updatedAt: '2020-05-16T17:26:16Z'
+    //         }
+    //     ]
+    // }
 ];
 
 export default schema;

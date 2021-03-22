@@ -2,7 +2,7 @@ import i18n from 'i18next';
 import React, { memo, useEffect } from 'react';
 
 import { useResettableState } from '../../../../utils/hooks';
-import { Divider, Header, Label, List, Message, Progress } from '../../../basic';
+import { Divider, Header, Icon, Label, List, Message, Progress } from '../../../basic';
 import useCurrentCallback from '../../common/useCurrentCallback';
 import { createResourcesInstaller } from '../../installation/process';
 import {
@@ -72,7 +72,7 @@ const SummaryStep = ({
                 pluginsInstallationTasks.tasks.scheduledPlugins,
                 secretsInstallationTasks.tasks.updatedSecrets,
                 secretsInstallationTasks.tasks.createdSecrets,
-                blueprintsInstallationTasks.tasks
+                blueprintsInstallationTasks.tasks.scheduledBlueprints
             );
             return () => {
                 resourcesInstaller.destroy();
@@ -141,7 +141,31 @@ const SummaryStep = ({
                                 </List.Item>
                             );
                         })}
-                        {blueprintsInstallationTasks.tasks.map(blueprint => {
+                        {blueprintsInstallationTasks.tasks?.uploadedBlueprints.map(blueprint => {
+                            // TODO: i18n
+                            return (
+                                <List.Item key={blueprint.blueprintName}>
+                                    <Label horizontal>{blueprint.blueprintName}</Label>{' '}
+                                    <span>
+                                        {i18n.t(
+                                            'gettingStartedModal.summary.blueprintUploadedMessageSuffix',
+                                            'blueprint is already uploaded'
+                                        )}
+                                    </span>
+                                    <Icon
+                                        style={{
+                                            marginLeft: '0.5em',
+                                            verticalAlign: 'middle',
+                                            display: 'inline-block'
+                                        }}
+                                        color="green"
+                                        name="check"
+                                    />
+                                </List.Item>
+                            );
+                        })}
+                        {blueprintsInstallationTasks.tasks?.scheduledBlueprints.map(blueprint => {
+                            // TODO: i18n
                             return (
                                 <List.Item key={blueprint.blueprintName}>
                                     <Label horizontal>{blueprint.blueprintName}</Label>{' '}
