@@ -1,6 +1,7 @@
-import { mapValues } from 'lodash';
+import { camelCase, mapValues } from 'lodash';
 import type { ReactNode } from 'react';
-import type { SemanticICONS } from 'semantic-ui-react';
+import type { IconProps } from 'semantic-ui-react';
+import { Deployment, DeploymentStatus } from './types';
 
 // NOTE: the order in the array determines the order in the UI
 export const deploymentsViewColumnIds = [
@@ -24,8 +25,10 @@ export interface DeploymentsViewColumnDefinition {
     sortFieldName?: string;
     width?: string;
     tooltip?: ReactNode;
-    render(deployment: any): ReactNode;
+    render(deployment: Deployment): ReactNode;
 }
+
+const i18nPrefix = 'widgets.deploymentsView.columns';
 
 const partialDeploymentsViewColumnDefinitions: Record<
     DeploymentsViewColumnId,
@@ -33,12 +36,25 @@ const partialDeploymentsViewColumnDefinitions: Record<
 > = {
     status: {
         width: '20px',
-        render() {
-            const { Icon } = Stage.Basic;
-            // TODO(RD-1222): render icon based on status
-            const iconNames: SemanticICONS[] = ['exclamation', 'pause', 'checkmark', 'spinner'];
+        render(deployment) {
+            const { Icon, Popup } = Stage.Basic;
+            const deploymentStatusIconProps: Record<DeploymentStatus, Pick<IconProps, 'name' | 'color'> | undefined> = {
+                [DeploymentStatus.Good]: undefined,
+                [DeploymentStatus.InProgress]: { name: 'spinner', color: 'orange' },
+                [DeploymentStatus.RequiresAttention]: { name: 'exclamation', color: 'red' }
+            };
+            const iconProps = deploymentStatusIconProps[deployment.deployment_status];
+            if (!iconProps) {
+                return null;
+            }
+            const label = Stage.i18n.t(`${i18nPrefix}.status.iconLabels.${camelCase(deployment.deployment_status)}`);
 
-            return <Icon name={iconNames[Math.floor(Math.random() * iconNames.length)]} />;
+            return (
+                // eslint-disable-next-line react/jsx-props-no-spreading
+                <Popup trigger={<Icon aria-label={label} {...iconProps} />} position="top center">
+                    {label}
+                </Popup>
+            );
         }
     },
     name: {
@@ -82,8 +98,6 @@ const partialDeploymentsViewColumnDefinitions: Record<
         }
     }
 };
-
-const i18nPrefix = 'widgets.deploymentsView.columns';
 
 export const deploymentsViewColumnDefinitions: Record<
     DeploymentsViewColumnId,
