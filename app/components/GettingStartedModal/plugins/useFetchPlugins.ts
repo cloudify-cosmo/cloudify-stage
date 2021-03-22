@@ -12,7 +12,7 @@ export type PluginsHook = FetchHook<{
 
 const useFetchPlugins = () => {
     const pluginsCatalogUrl = i18n.t('urls.pluginsCatalog');
-    // params for memo moved outside of the hook to prevent each time fetching on rendering
+    // params for internal hook moved inside memo to prevent each time fetching on rendering
     const pluginsCatalogParams = useMemo(() => ({ url: pluginsCatalogUrl }), [pluginsCatalogUrl]);
     const catalogPlugins = useInternalFetch<CatalogPluginResponse[]>('/external/content', pluginsCatalogParams);
     const managerPlugins = useManagerFetch<ManagerPluginsResponse>(
