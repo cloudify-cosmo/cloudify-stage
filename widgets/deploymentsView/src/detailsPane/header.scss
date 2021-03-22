@@ -1,9 +1,20 @@
-.detailsPane .detailsPaneHeader {
-    // NOTE: 10px margin to have the same whitespace as the widgets below
+.detailsPane {
     margin: 0 10px;
-
     display: flex;
-    justify-content: space-between;
-    align-items: baseline;
-    flex-wrap: wrap;
+    flex-direction: column;
+    overflow: auto;
+
+    .detailsPaneHeader {
+        display: flex;
+        justify-content: space-between;
+        align-items: baseline;
+        flex-wrap: wrap;
+
+        // NOTE: adds a gap between the tabs headers when the items in the header wrap
+        margin-bottom: 10px;
+    }
+
+    .detailsPaneWidgets {
+        overflow: auto;
+    }
 }
