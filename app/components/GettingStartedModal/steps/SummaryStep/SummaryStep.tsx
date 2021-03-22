@@ -1,6 +1,9 @@
 import i18n from 'i18next';
 import React, { memo, useEffect, useState } from 'react';
 import { Divider, Form, Header, Label, List, Message, Progress, Icon } from 'semantic-ui-react';
+
+import { SuccessIcon } from '../../common/icons';
+import { useInternal, useManager } from '../../managerHooks';
 import useCurrentCallback from '../../common/useCurrentCallback';
 import { createResourcesInstaller } from '../../installation/process';
 import {
@@ -8,7 +11,6 @@ import {
     usePluginsInstallationTasks,
     useSecretsInstallationTasks
 } from '../../installation/tasks';
-import { useInternal, useManager } from '../../managerHooks';
 import PluginTaskItems, { installedPluginDescription, rejectedPluginDescription } from './PluginTaskItems';
 
 import type { GettingStartedData, GettingStartedSchema } from '../../model';
@@ -149,15 +151,7 @@ const SummaryStep = ({
                                             'blueprint is already uploaded'
                                         )}
                                     </span>
-                                    <Icon
-                                        style={{
-                                            marginLeft: '0.5em',
-                                            verticalAlign: 'middle',
-                                            display: 'inline-block'
-                                        }}
-                                        color="green"
-                                        name="check"
-                                    />
+                                    <SuccessIcon />
                                 </List.Item>
                             );
                         })}

@@ -1,28 +1,21 @@
 import React from 'react';
-import { Icon } from 'semantic-ui-react';
 import PluginTaskItem from './PluginTaskItem';
+
+import { SuccessIcon, ErrorIcon } from '../../common/icons';
 
 import type { PluginInstallationTask } from '../../installation/tasks';
 
 export const installedPluginDescription = (
     <>
         <span>plugin is already installed</span>
-        <Icon
-            style={{ marginLeft: '0.5em', verticalAlign: 'middle', display: 'inline-block' }}
-            color="green"
-            name="check"
-        />
+        <SuccessIcon />
     </>
 );
 
 export const rejectedPluginDescription = (
     <>
         <span>plugin is not found in catalog and manager</span>
-        <Icon
-            style={{ marginLeft: '0.5em', verticalAlign: 'middle', display: 'inline-block' }}
-            color="red"
-            name="remove"
-        />
+        <ErrorIcon />
     </>
 );
 
