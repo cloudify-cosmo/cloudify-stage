@@ -465,7 +465,7 @@
                 "newValue": "New value",
                 "valuePlaceholder": "Select or type in a value",
                 "validationError": "Only letters, digits and the characters \"-\", \".\" and \"_\" are allowed and it must begin with a letter.",
-                "invalidKeyError": "Allowed `{{ keyPrefix }}` prefixed labels are: {{ reservedKeys }}. All other `{{ keyPrefix }}` prefixed labels are reserved for internal use and cannot be added.",
+                "invalidKeyError": "All labels starting with `{{ keyPrefix }}` are reserved for internal usage and should not be used unless there is a need to override default functionality. The following labels are allowed for such override: {{ reservedKeys }}.",
                 "input": {
                     "label": "Labels",
                     "help": "A list of labels - key-value pairs - that can be assigned with a deployment"
