@@ -27,6 +27,10 @@
     },
     "gettingStartedModal" : {
         "modal": {
+            "technologiesStepTitle": "Getting Started",
+            "secretsStepTitle": "Secrets",
+            "summaryStepTitle": "Summary",
+            "statusStepTitle": "Status",
             "disableModalLabel": "Don't show next time",
             "enableModalHelp": "You can enable modal always in user profile.",
             "closeModal": "Close",
@@ -39,8 +43,8 @@
             "secretsLoadingError": "Secrets information loading error."
         },
         "validation": {
-            "someTechnologyRequiredError": "Please select some technology.",
-            "allSecretsRequiredError": "Please type all secrets."
+            "someTechnologyRequiredError": "At least one technology needs to be selected.",
+            "allSecretsRequiredError": "All secret values need to be specified."
         },
         "summary": {
             "taskListTitle": "Task List",

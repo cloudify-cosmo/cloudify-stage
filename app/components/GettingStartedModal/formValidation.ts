@@ -4,14 +4,17 @@ import type { GettingStartedSchemaSecret, GettingStartedSecretsData, GettingStar
 
 export const validateTechnologyFields = (data: GettingStartedTechnologiesData) => {
     if (!_.some(data, item => item === true)) {
-        return i18n.t('gettingStartedModal.modal.someTechnologyRequiredError', 'Please select some technology.');
+        return i18n.t(
+            'gettingStartedModal.modal.someTechnologyRequiredError',
+            'At least one technology needs to be selected.'
+        );
     }
     return null;
 };
 
 export const validateSecretFields = (schema: GettingStartedSchemaSecret[], data: GettingStartedSecretsData) => {
     if (_.some(schema, item => !data[item.name])) {
-        return i18n.t('gettingStartedModal.modal.allSecretsRequiredError', 'Please type all secrets.');
+        return i18n.t('gettingStartedModal.modal.allSecretsRequiredError', 'All secret values need to be specified.');
     }
     return null;
 };

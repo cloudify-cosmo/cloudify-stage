@@ -1,9 +1,9 @@
 import React, { memo, useState, useMemo } from 'react';
-import { Form } from 'cloudify-ui-components';
+// import { Form } from 'cloudify-ui-components';
 import i18n from 'i18next';
 import log from 'loglevel';
 
-import type { ChangeEvent } from 'react';
+// import type { ChangeEvent } from 'react';
 
 import EventBus from '../../utils/EventBus';
 import gettingStartedSchema from './schema';
@@ -21,22 +21,23 @@ import type {
     GettingStartedSecretsData,
     GettingStartedTechnologiesData
 } from './model';
+import useInput from '../../utils/hooks/useInput';
 
 const getHeaderText = (schema: GettingStartedSchema, stepName: StepName, secretsStepIndex: number) => {
     switch (stepName) {
         case 'technologies':
-            return 'Getting Started';
+            return i18n.t('gettingStartedModal.modal.technologiesStepTitle', 'Getting Started');
         case 'secrets': {
             const schemaItem = schema[secretsStepIndex];
             if (schemaItem) {
-                return `${schemaItem.label} Secrets`;
+                return `${schemaItem.label} ${i18n.t('gettingStartedModal.modal.secretsStepTitle', 'Secrets')}`;
             }
             return undefined;
         }
         case 'summary':
-            return 'Summary';
+            return i18n.t('gettingStartedModal.modal.summaryStepTitle', 'Summary');
         case 'status':
-            return 'Status';
+            return i18n.t('gettingStartedModal.modal.statusStepTitle', 'Status');
         default:
             return undefined;
     }
@@ -45,20 +46,27 @@ const getHeaderText = (schema: GettingStartedSchema, stepName: StepName, secrets
 type StepName = 'technologies' | 'secrets' | 'summary' | 'status';
 
 const GettingStartedModal = () => {
+    const { Form } = Stage.Basic;
+
     const [modalOpen, setModalOpen] = useState(() => getGettingStartedModalDisabled());
+
     const [stepName, setStepName] = useState<StepName>('technologies');
     const [stepErrors, setStepErrors] = useState<string[]>([]);
-    const [technologiesStepData, setTechnologiesStepData] = useState<GettingStartedTechnologiesData>(() => ({}));
+    const [technologiesStepData, setTechnologiesStepData] = useState<GettingStartedTechnologiesData>({});
     const [secretsStepIndex, setSecretsStepIndex] = useState(0);
-    const [secretsStepsData, setSecretsStepsData] = useState<GettingStartedData>(() => ({}));
+    const [secretsStepsData, setSecretsStepsData] = useState<GettingStartedData>({});
+
     const [installationProcessing, setInstallationProcessing] = useState(false);
-    const [modalDisabledChecked, setModalDisabledChecked] = useState(false);
+    const [modalDisabledChecked, handleModalDisabledChange] = useInput(false);
+
     const secretsStepsSchemas = useMemo(
         () => createTechnologiesGroups(gettingStartedSchema.filter(items => technologiesStepData[items.name])), // steps with unique secrets for selected technologies
         [technologiesStepData]
     );
+
     const secretsStepSchema = secretsStepsSchemas[secretsStepIndex];
     const secretsStepData = secretsStepsData[secretsStepSchema?.name];
+
     const checkTechnologiesStepDataErrors = () => {
         const usedTechnologiesError = validateTechnologyFields(technologiesStepData);
         if (usedTechnologiesError) {
@@ -77,6 +85,7 @@ const GettingStartedModal = () => {
         setStepErrors([]);
         return true;
     };
+
     const handleStepErrorsDismiss = () => {
         setStepErrors([]);
     };
@@ -94,16 +103,13 @@ const GettingStartedModal = () => {
         EventBus.trigger('secrets:refresh');
         setInstallationProcessing(false);
     };
-    const handleModalDisabledChange = (e: ChangeEvent) => {
-        const input = e.target.parentElement?.firstChild as HTMLInputElement | null | undefined;
-        setModalDisabledChecked(!input?.checked);
-    };
     const handleModalClose = () => {
         setModalOpen(false);
         if (modalDisabledChecked) {
             setGettingStartedModalDisabled(true);
         }
     };
+
     const handleBackClick = () => {
         switch (stepName) {
             case 'status':
@@ -161,10 +167,11 @@ const GettingStartedModal = () => {
                 break;
         }
     };
+
     return (
         <Modal open={modalOpen} onClose={handleModalClose}>
             <Modal.Header>{getHeaderText(secretsStepsSchemas, stepName, secretsStepIndex)}</Modal.Header>
-            <Modal.Content style={{ minHeight: '220px' }}>
+            <Modal.Content style={{ minHeight: 220 }}>
                 {stepErrors && stepErrors.length > 0 && (
                     <>
                         <ErrorMessage error={stepErrors} onDismiss={handleStepErrorsDismiss} />
@@ -196,9 +203,10 @@ const GettingStartedModal = () => {
                     />
                 )}
             </Modal.Content>
-            <Modal.Content style={{ minHeight: '60px', overflow: 'hidden' }}>
+            <Modal.Content style={{ minHeight: 60, overflow: 'hidden' }}>
                 <Form.Field>
                     <Form.Checkbox
+                        name="modalDisabledChecked"
                         label={i18n.t('gettingStartedModal.modal.disableModalLabel', "Don't show next time")}
                         help=""
                         checked={modalDisabledChecked}
@@ -206,7 +214,7 @@ const GettingStartedModal = () => {
                     />
                 </Form.Field>
             </Modal.Content>
-            <Modal.Actions style={{ minHeight: '60px', overflow: 'hidden' }}>
+            <Modal.Actions style={{ minHeight: 60 }}>
                 <Button.Group floated="left">
                     <Button
                         icon="cancel"
