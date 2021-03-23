@@ -138,18 +138,20 @@ pipeline {
         }
         stage('Docs'){
           steps {
-            container('node'){
-              sh 'rm -rf ${workspace}/test && rm -rf ${workspace}/backend'
-              sh "mkdir -p ${workspace}/docs && cp -rf ${workspace}/${stage_dir}/. ${workspace}/docs"
-              dir("docs") {
-                echo 'Generate widgets documentation'
-                sh 'npm run docWidgets'
+            catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE'){
+              container('node'){
+                sh 'rm -rf ${workspace}/test && rm -rf ${workspace}/backend'
+                sh "mkdir -p ${workspace}/docs && cp -rf ${workspace}/${stage_dir}/. ${workspace}/docs"
+                dir("docs") {
+                  echo 'Generate widgets documentation'
+                  sh 'npm run docWidgets'
 
-                echo 'Check if widgets documentation is up to date'
-                sh 'git diff --exit-code ./widgets'
+                  echo 'Check if widgets documentation is up to date'
+                  sh 'git diff --exit-code ./widgets'
 
-                echo 'Check if cloudify-ui-components version is the same as in official documentation'
-                sh 'npm run docCheck'
+                  echo 'Check if cloudify-ui-components version is the same as in official documentation'
+                  sh 'npm run docCheck'
+                }
               }
             }
           }
