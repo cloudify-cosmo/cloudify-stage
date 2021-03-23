@@ -6,6 +6,7 @@ const _ = require('lodash');
 const os = require('os');
 const fs = require('fs-extra');
 const pathlib = require('path');
+const url = require('url');
 const yaml = require('js-yaml');
 
 const config = require('../config').get();
@@ -25,16 +26,18 @@ module.exports = (() => {
         return /(^|.\/)\.+[^\/\.]/g.test(path);
     }
 
-    function scanRecursive(root, archivePath) {
-        const stats = fs.statSync(archivePath);
-        const name = pathlib.basename(archivePath);
+    function scanRecursive(rootDir, scannedFileOrDirPath) {
+        const stats = fs.statSync(scannedFileOrDirPath);
+        const name = pathlib.basename(scannedFileOrDirPath);
 
         if (stats.isSymbolicLink() || isUnixHiddenPath(name)) {
             return null;
         }
 
         const item = {
-            key: archivePath.replace(pathlib.join(root, pathlib.sep), ''),
+            key: url
+                .pathToFileURL(pathlib.relative(rootDir, scannedFileOrDirPath))
+                .pathname.substring(url.pathToFileURL('').pathname.length + 1),
             title: name,
             isDir: false
         };
@@ -43,10 +46,11 @@ module.exports = (() => {
             return item;
         }
         if (stats.isDirectory()) {
+            const scannedDir = scannedFileOrDirPath;
             try {
                 const children = fs
-                    .readdirSync(archivePath)
-                    .map(child => scanRecursive(root, pathlib.join(archivePath, child)))
+                    .readdirSync(scannedDir)
+                    .map(child => scanRecursive(rootDir, pathlib.join(scannedDir, child)))
                     .filter(e => !!e);
 
                 item.isDir = true;

@@ -62,9 +62,11 @@ export default function BlueprintSources({ data, toolbox, widget }) {
 
     const loop = (blueprintId, timestamp, items) => {
         return items.map(item => {
+            const key = `${blueprintId}/file/${timestamp}/${item.key}`;
             if (item.children) {
                 return (
                     <NodesTree.Node
+                        key={key}
                         title={
                             <span>
                                 <Icon className="treeIcon" name="folder open outline" />
@@ -89,7 +91,7 @@ export default function BlueprintSources({ data, toolbox, widget }) {
                 );
             return (
                 <NodesTree.Node
-                    key={`${blueprintId}/file/${timestamp}/${item.key}`}
+                    key={key}
                     title={
                         <span>
                             <Icon className="treeIcon" name="file outline" />
