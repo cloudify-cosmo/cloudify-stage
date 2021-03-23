@@ -26,6 +26,12 @@ module.exports = (() => {
         return /(^|.\/)\.+[^\/\.]/g.test(path);
     }
 
+    function toRelativeUrl(relativePath) {
+        const absoluteUrl = url.pathToFileURL(relativePath);
+        const relativeUrl = absoluteUrl.pathname.substring(url.pathToFileURL('').pathname.length + 1);
+        return relativeUrl;
+    }
+
     function scanRecursive(rootDir, scannedFileOrDirPath) {
         const stats = fs.statSync(scannedFileOrDirPath);
         const name = pathlib.basename(scannedFileOrDirPath);
@@ -35,9 +41,7 @@ module.exports = (() => {
         }
 
         const item = {
-            key: url
-                .pathToFileURL(pathlib.relative(rootDir, scannedFileOrDirPath))
-                .pathname.substring(url.pathToFileURL('').pathname.length + 1),
+            key: toRelativeUrl(pathlib.relative(rootDir, scannedFileOrDirPath)),
             title: name,
             isDir: false
         };
