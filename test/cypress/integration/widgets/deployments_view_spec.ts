@@ -10,8 +10,8 @@ describe('Deployments View widget', () => {
 
     before(() => {
         cy.activate()
-            .deleteSites(siteName)
             .deleteDeployments(deploymentName, true)
+            .deleteSites(siteName)
             .deleteBlueprints(blueprintName, true)
             .uploadBlueprint(blueprintUrl, blueprintName)
             .deployBlueprint(blueprintName, deploymentName, { webserver_port: 9123 })
