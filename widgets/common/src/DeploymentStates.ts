@@ -61,6 +61,14 @@ export default class DeploymentStates {
     }
 }
 
+declare global {
+    namespace Stage {
+        interface Common {
+            DeploymentStates: typeof DeploymentStates;
+        }
+    }
+}
+
 Stage.defineCommon({
     name: 'DeploymentStates',
     common: DeploymentStates

@@ -1,5 +1,5 @@
 import React, { memo, useEffect, useState } from 'react';
-import { Form } from 'cloudify-ui-components';
+import { Form } from 'semantic-ui-react';
 
 import type { ChangeEvent } from 'react';
 
@@ -16,25 +16,27 @@ const SecretsStep = ({ selectedTechnology, typedSecrets, onChange }: Props) => {
     useEffect(() => setLocalTypedSecrets(typedSecrets ?? {}), [typedSecrets]);
     return (
         <Form>
-            {selectedTechnology.secrets.map(({ name, label, type }) => {
-                const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
-                    setLocalTypedSecrets({ ...localTypedSecrets, [name]: e.target.value });
-                };
-                const handleBlur = () => {
-                    onChange?.(localTypedSecrets);
-                };
-                return (
-                    <Form.Field key={name}>
-                        <Form.Input
-                            type={type}
-                            label={label}
-                            value={localTypedSecrets[name] ?? ''}
-                            onChange={handleChange}
-                            onBlur={handleBlur}
-                        />
-                    </Form.Field>
-                );
-            })}
+            <div>
+                {selectedTechnology.secrets.map(({ name, label, type }) => {
+                    const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
+                        setLocalTypedSecrets({ ...localTypedSecrets, [name]: e.target.value });
+                    };
+                    const handleBlur = () => {
+                        onChange?.(localTypedSecrets);
+                    };
+                    return (
+                        <Form.Field key={name}>
+                            <Form.Input
+                                type={type}
+                                label={label}
+                                value={localTypedSecrets[name] ?? ''}
+                                onChange={handleChange}
+                                onBlur={handleBlur}
+                            />
+                        </Form.Field>
+                    );
+                })}
+            </div>
         </Form>
     );
 };

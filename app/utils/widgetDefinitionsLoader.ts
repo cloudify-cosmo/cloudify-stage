@@ -56,16 +56,22 @@ export default class WidgetDefinitionsLoader {
             GenericConfig,
             Utils: StageUtils,
 
+            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+            // @ts-ignore Surpress error related to missing items when compiling the widgets project
             Common: {},
             defineCommon: def => {
                 window.Stage.Common[def.name] = def.common;
             },
 
+            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+            // @ts-ignore Surpress error related to missing items when compiling the widgets project
             PropTypes,
             definePropType: def => {
                 window.Stage.PropTypes[def.name] = def.common;
             },
 
+            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+            // @ts-ignore Surpress error related to missing items when compiling the widgets project
             Hooks,
             defineHook: def => {
                 Object.assign(window.Stage.Hooks, def);

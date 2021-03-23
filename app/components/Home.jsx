@@ -12,10 +12,6 @@ import ToursButton from '../containers/ToursButton';
 import GettingStartedModal from './GettingStartedModal';
 
 export default class Home extends Component {
-    constructor(props) {
-        super(props);
-        this.state = {};
-    }
 
     // TODO: Context handling should not be here. Currently necessary to use deprecated methods.
     // eslint-disable-next-line camelcase

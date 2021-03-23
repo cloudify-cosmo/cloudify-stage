@@ -14,8 +14,8 @@ describe('Deployment Action Buttons widget', () => {
     );
 
     it('when deploymentId is not set in the context it should be disabled', () => {
-        cy.get('button.executeWorkflowButton').should('have.attr', 'disabled');
-        cy.get('button.deploymentActionsButton').should('have.attr', 'disabled');
+        cy.contains('button', 'Execute workflow').should('have.attr', 'disabled');
+        cy.contains('button', 'Deployment actions').should('have.attr', 'disabled');
     });
 
     describe('when deploymentId is set in the context', () => {
@@ -39,8 +39,8 @@ describe('Deployment Action Buttons widget', () => {
             cy.deleteSites(siteName).createSite({ name: siteName });
             cy.interceptSp('POST', `/deployments/${deploymentName}/set-site`).as('setSite');
 
-            cy.get('button.deploymentActionsButton').should('not.have.attr', 'disabled');
-            cy.get('button.deploymentActionsButton').click();
+            cy.contains('button', 'Deployment actions').should('not.have.attr', 'disabled');
+            cy.contains('button', 'Deployment actions').click();
 
             cy.get('.popupMenu > .menu').contains('Set Site').click();
             cy.get('.modal').within(() => {
@@ -51,6 +51,137 @@ describe('Deployment Action Buttons widget', () => {
 
             cy.wait('@setSite');
             cy.get('.modal').should('not.exist');
+        });
+    });
+
+    describe('should allow to manage deployment labels', () => {
+        function typeLabelKey(key) {
+            cy.get('div[name=labelKey] > input').clear().type(key);
+        }
+        function typeLabelValue(value) {
+            cy.get('div[name=labelValue] > input').clear().type(value);
+        }
+        function addLabel(key, value) {
+            typeLabelKey(key);
+            typeLabelValue(value);
+            cy.get('button[aria-label=Add]').click();
+        }
+        function checkIfPopupIsDisplayed(key, popupContent) {
+            typeLabelKey(key);
+            cy.contains('.popup', popupContent).should('be.visible');
+        }
+        function checkIfPopupIsNotDisplayed(key) {
+            typeLabelKey(key);
+            cy.get('.popup').should('not.exist');
+        }
+        function toggleLabelsInput() {
+            cy.getByTestId('labels-input-switch').click();
+        }
+
+        before(() => {
+            cy.setLabels(deploymentName, [{ existing_key: 'existing_value' }]);
+            cy.setDeploymentContext(deploymentName);
+            cy.interceptSp('GET', `/deployments/${deploymentName}?_include=labels`).as('fetchLabels');
+            cy.contains('button', 'Deployment actions').click();
+            cy.get('.popupMenu > .menu').contains('Manage Labels').click();
+            cy.get('.modal').within(() => {
+                cy.wait('@fetchLabels');
+                cy.get('form.loading').should('not.exist');
+                toggleLabelsInput();
+            });
+        });
+
+        beforeEach(() => {
+            // NOTE: Close and open labels input to reset popups and dropdowns.
+            toggleLabelsInput();
+            toggleLabelsInput();
+        });
+
+        it('adds new label by typing', () => {
+            cy.get('.modal').within(() => {
+                addLabel('sample_key', 'sample_value');
+
+                cy.contains('a.label', 'sample_key sample_value').should('be.visible');
+            });
+        });
+
+        it('adds new label by dropdown selection', () => {
+            cy.interceptSp('GET', '/labels/deployments?_search=exist').as('fetchFilteredKeys');
+            cy.interceptSp('GET', '/labels/deployments/existing_key').as('fetchValues');
+            cy.interceptSp('GET', '/labels/deployments/existing_key?_search=sample_value').as('checkIfLabelExists');
+
+            cy.get('.modal').within(() => {
+                cy.get('div[name=labelKey]').click();
+                typeLabelKey('exist');
+                cy.wait('@fetchFilteredKeys');
+                cy.get('div[option-value=existing_key]').click();
+                cy.wait('@fetchValues');
+
+                typeLabelValue('sample_value');
+                cy.get('button[aria-label=Add]').click();
+                cy.wait('@checkIfLabelExists');
+
+                cy.contains('a.label', 'existing_key sample_value').should('be.visible');
+            });
+        });
+
+        it('prevents adding existing label', () => {
+            cy.get('.modal').within(() => {
+                typeLabelKey('existing_key');
+                typeLabelValue('existing_value');
+
+                cy.get('button[aria-label=Add]').should('have.attr', 'disabled');
+            });
+            cy.contains('.popup', 'Cannot add the same label twice').should('be.visible');
+        });
+
+        it('prevents adding label with invalid characters', () => {
+            function checkIfInvalidCharactersPopupIsDisplayed(string) {
+                checkIfPopupIsDisplayed(string, 'Only letters, digits');
+            }
+            checkIfPopupIsNotDisplayed('abc-._');
+            checkIfInvalidCharactersPopupIsDisplayed(' ');
+            checkIfInvalidCharactersPopupIsDisplayed('$');
+            checkIfInvalidCharactersPopupIsDisplayed('&');
+        });
+
+        it('prevents adding label with not permitted key', () => {
+            function checkIfInternalKeyIsNotPermitted(key) {
+                checkIfPopupIsDisplayed(
+                    key,
+                    'All other `csys-` prefixed labels are reserved for internal use and cannot be added.'
+                );
+                typeLabelValue('a');
+                cy.get('button[aria-label=Add]').should('have.attr', 'disabled');
+            }
+            function checkIfInternalKeyIsPermitted(key) {
+                checkIfPopupIsNotDisplayed(key);
+                typeLabelValue('a');
+                cy.get('button[aria-label=Add]').should('not.have.attr', 'disabled');
+            }
+            cy.getReservedLabelKeys().then(reservedKeys => {
+                reservedKeys.forEach(checkIfInternalKeyIsPermitted);
+            });
+            checkIfInternalKeyIsNotPermitted('csys-');
+            checkIfInternalKeyIsNotPermitted('csys-my-fake-key');
+        });
+
+        it('allows to remove label from the list', () => {
+            cy.get('.modal').within(() => {
+                const existingLabel = 'existing_key existing_value';
+                cy.contains('a.label', existingLabel).should('be.visible');
+                cy.contains('a.label', existingLabel).find('.delete').click();
+                cy.contains('a.label', existingLabel).should('not.exist');
+            });
+        });
+
+        it('allows to revert to initial value', () => {
+            cy.get('.modal').within(() => {
+                addLabel('my_key', 'my_value');
+
+                cy.revertToDefaultValue();
+                cy.contains('a.label', 'existing_key existing_value').should('be.visible');
+            });
         });
     });
 });

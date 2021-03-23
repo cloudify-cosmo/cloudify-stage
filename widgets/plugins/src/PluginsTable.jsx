@@ -151,7 +151,7 @@ export default class PluginsTable extends React.Component {
         const { data, toolbox, widget } = this.props;
         const NO_DATA_MESSAGE = 'There are no Plugins available. Click "Upload" to add Plugins.';
         const { Button, DataTable, ErrorMessage, Icon, ResourceVisibility } = Stage.Basic;
-        const { IdPopup } = Stage.Shared;
+        const { IdPopup, VerticallyAlignedCell } = Stage.Shared;
         const { DeleteConfirm, UploadPluginModal, PluginIcon } = Stage.Common;
 
         return (
@@ -199,13 +199,17 @@ export default class PluginsTable extends React.Component {
                                     <PluginIcon src={item.icon} />
                                 </DataTable.Data>
                                 <DataTable.Data>
-                                    {item.title || item.package_name}
-                                    <ResourceVisibility
-                                        visibility={item.visibility}
-                                        onSetVisibility={visibility => this.setPluginVisibility(item.id, visibility)}
-                                        allowedSettingTo={['tenant', 'global']}
-                                        className="rightFloated"
-                                    />
+                                    <VerticallyAlignedCell>
+                                        {item.title || item.package_name}
+                                        <ResourceVisibility
+                                            visibility={item.visibility}
+                                            onSetVisibility={visibility =>
+                                                this.setPluginVisibility(item.id, visibility)
+                                            }
+                                            allowedSettingTo={['tenant', 'global']}
+                                            className="rightFloated"
+                                        />
+                                    </VerticallyAlignedCell>
                                 </DataTable.Data>
                                 <DataTable.Data>{item.package_name}</DataTable.Data>
                                 <DataTable.Data>{item.package_version}</DataTable.Data>

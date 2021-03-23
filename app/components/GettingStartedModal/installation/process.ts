@@ -1,5 +1,5 @@
-/* eslint-disable no-lone-blocks */
 import i18n from 'i18next';
+import log from 'loglevel';
 
 import type Internal from '../../../utils/Internal';
 import type Manager from '../../../utils/Manager';
@@ -22,8 +22,7 @@ export const installPlugin = async (internal: Internal, plugin: PluginInstallati
         await internal.doUpload('/plugins/upload', params, null, 'post');
         return true;
     } catch (e) {
-        // eslint-disable-next-line no-console
-        console.error(e);
+        log.error(e);
         return false;
     }
 };
@@ -38,8 +37,7 @@ export const createSecret = async (manager: Manager, secret: SecretInstallationT
         await manager.doPut(`/secrets/${encodeURIComponent(secret.name)}`, null, data);
         return true;
     } catch (e) {
-        // eslint-disable-next-line no-console
-        console.error(e);
+        log.error(e);
         return false;
     }
 };
@@ -52,8 +50,7 @@ export const updateSecret = async (manager: Manager, secret: SecretInstallationT
         await manager.doPatch(`/secrets/${encodeURIComponent(secret.name)}`, null, data);
         return true;
     } catch (e) {
-        // eslint-disable-next-line no-console
-        console.error(e);
+        log.error(e);
         return false;
     }
 };

@@ -1,6 +1,6 @@
 import i18n from 'i18next';
 import React, { memo, useEffect, useState } from 'react';
-import { Divider, Form, Header, Label, List, Message, Progress, Icon } from 'semantic-ui-react';
+import { Divider, Form, Header, Label, List, Message, Progress } from 'semantic-ui-react';
 
 import { SuccessIcon } from '../../common/icons';
 import { useInternal, useManager } from '../../managerHooks';

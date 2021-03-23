@@ -27,6 +27,10 @@
     },
     "gettingStartedModal" : {
         "modal": {
+            "technologiesStepTitle": "Getting Started",
+            "secretsStepTitle": "Secrets",
+            "summaryStepTitle": "Summary",
+            "statusStepTitle": "Status",
             "disableModalLabel": "Don't show next time",
             "enableModalHelp": "You can enable modal always in user profile.",
             "closeModal": "Close",
@@ -37,19 +41,19 @@
         "initialization": {
             "pluginsLoadingError": "Plugins information loading error.",
             "secretsLoadingError": "Secrets information loading error.",
-            "blueprintsLoadingError": "Blueprints information loading error"
+            "blueprintsLoadingError": "Blueprints information loading error."
         },
         "validation": {
-            "someTechnologyRequiredError": "Please select some technology.",
-            "allSecretsRequiredError": "Please type all secrets."
+            "someTechnologyRequiredError": "At least one technology needs to be selected.",
+            "allSecretsRequiredError": "All secret values need to be specified."
         },
         "summary": {
             "taskListTitle": "Task List",
             "pluginInstallMessageSuffix": "plugin will be installed.",
-            "secretCreateMessageSuffix": "secret will be created",
-            "secretUpdateMessageSuffix": "secret will be updated",
-            "blueprintReadyMessageSuffix": "blueprint is already uploaded",
-            "blueprintUploadMessageSuffix": "blueprint will be uploaded"
+            "secretCreateMessageSuffix": "secret will be created.",
+            "secretUpdateMessageSuffix": "secret will be updated.",
+            "blueprintReadyMessageSuffix": "blueprint is already uploaded.",
+            "blueprintUploadMessageSuffix": "blueprint will be uploaded."
         },
         "installation": {
             "pluginInstallError": "{{scheduledPlugin.name}} plugin installation error.",
@@ -439,19 +443,78 @@
                     "updateButton": "Update"
                 },
                 "deployModal": {
-                    "labelsLabel": "Labels"
+                    "inputs": {
+                        "deploymentName": {
+                            "label": "Deployment name",
+                            "help": "Specify a name for this deployment instance."
+                        },
+                        "blueprintName": {
+                            "label": "Blueprint",
+                            "help": "Select the blueprint based on which this deployment will be created."
+                        },
+                        "siteName": {
+                            "label": "Site name",
+                            "help": "Specify a site to which this deployment will be assigned."
+                        },
+                        "labels": {
+                            "label": "Labels"
+                        },
+                        "skipPluginsValidation": {
+                            "label": "Skip plugins validation",
+                            "message": "The recommended path is uploading plugins as wagons. This option is designed for plugin development and advanced users only."
+                        },
+                        "runtimeOnlyEvaluation": {
+                            "label": "Runtime only evaluation",
+                            "help": "If set, then get_property and get_input intrinsic functions will be evaluated on demand at runtime. If not set, then evaluation will be done at deployment creation time."
+                        },
+                        "deploymentInputs": {
+                            "loading": "Loading inputs...",
+                            "noInputs": "No inputs available for the blueprint"
+                        }
+                    },
+                    "sections": {
+                        "deploymentMetadata": "Deployment metadata",
+                        "executionParameters": "Execution parameters"
+                    },
+                    "buttons": {
+                        "deploy": "Deploy",
+                        "deployAndInstall": "Deploy & Install"
+                    },
+                    "steps": {
+                        "deploy": {
+                            "validatingData": "1/2: Validating data...",
+                            "deployingBlueprint": "2/2: Deploying blueprint..."
+                        },
+                        "deployAndInstall": {
+                            "validatingData": "1/4: Validating data...",
+                            "deployingBlueprint": "2/4: Deploying blueprint...",
+                            "waitingForDeployment": "3/4: Creating deployment environment...",
+                            "installingDeployment": "4/4: Installing deployment..."
+                        }
+                    },
+                    "errors": {
+                        "loadingYamlFileFailed": "Loading values from YAML file failed: {{ reason }}",
+                        "noBlueprintName": "Please select blueprint from the list",
+                        "noDeploymentName": "Please provide deployment name",
+                        "deploymentCreationFailed": "Deployment {{ deploymentId }} environment creation failed. {{ error }}",
+                        "deploymentInstallationFailed": "Deployment {{ deploymentId }} installation failed: {{ error }}"
+                    }
                 }
             },
             "labels": {
+                "addButton": "Add",
                 "keyPlaceholder": "Select or type in a key",
                 "newKey": "New key",
                 "newValue": "New value",
                 "valuePlaceholder": "Select or type in a value",
                 "validationError": "Only letters, digits and the characters \"-\", \".\" and \"_\" are allowed and it must begin with a letter.",
-                "inputName": "Labels list",
-                "inputHelp": "A list of labels - key-value pairs - that can be assigned with a deployment",
-                "isLabelInSystemCheckError": "Cannot check is label already present in the system",
+                "invalidKeyError": "All labels starting with `{{ keyPrefix }}` are reserved for internal usage and should not be used unless there is a need to override default functionality. The following labels are allowed for such override: {{ reservedKeys }}.",
+                "input": {
+                    "label": "Labels",
+                    "help": "A list of labels - key-value pairs - that can be assigned with a deployment"
+                },
                 "fetchingLabelsError": "Cannot fetch labels for deployment '{{deploymentId}}'",
+                "labelDuplicationError": "Cannot add the same label twice",
                 "modalHeader": "Manage labels for deployment '{{deploymentId}}'",
                 "modalApplyButton": "Apply"
             },
@@ -481,10 +544,21 @@
                     "parsing": "4/5: Parsing blueprint...",
                     "uploadingImage": "5/5: Uploading image..."
                 },
+                "modal": {
+                    "header": "Upload blueprint",
+                    "uploadButton": "Upload"
+                },
                 "errorHeaders": {
                     "failedUploading": "Blueprint upload failed",
                     "failedExtracting": "Blueprint extraction failed",
                     "failedParsing": "Blueprint parsing failed"
+                },
+                "validationErrors": {
+                    "invalidBlueprintUrl": "Please provide valid URL for blueprint package",
+                    "invalidImageUrl": "Please provide valid URL for blueprint icon",
+                    "noBlueprintPackage": "Please select blueprint package",
+                    "noBlueprintName": "Please provide blueprint name",
+                    "noBlueprintYamlFile": "Please provide blueprint YAML file"
                 },
                 "inputs": {
                     "blueprintName": {
@@ -525,7 +599,11 @@
             },
             "columns": {
                 "status": {
-                    "name": ""
+                    "name": "",
+                    "iconLabels": {
+                        "inProgress": "In progress",
+                        "requiresAttention": "Requires attention"
+                    }
                 },
                 "name": {
                     "name": "Name"

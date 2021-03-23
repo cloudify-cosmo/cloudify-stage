@@ -6,7 +6,7 @@ import AddLabelsModal from './AddLabelsModal';
 
 export default function LabelsTable({ data, toolbox }) {
     const { Button, DataTable, Icon } = Stage.Basic;
-    const { DeploymentActions } = Stage.Common;
+    const { DeploymentActions, Labels } = Stage.Common;
     const { useBoolean, useRefreshEvent, useInput, useResettableState } = Stage.Hooks;
     const { i18n } = Stage;
 
@@ -23,17 +23,13 @@ export default function LabelsTable({ data, toolbox }) {
     useEffect(() => setLabels(data.labels), [JSON.stringify(data.labels)]);
 
     function updateLabelValue() {
-        if (!currentLabelValue) return;
-
         if (currentLabelValue === labelInEdit.value) {
             stopLabelEdit();
             return;
         }
 
-        if (_.find(labels, { ...labelInEdit, value: currentLabelValue })) return;
-
         labelInEdit.value = currentLabelValue;
-        setLabels(_.sortBy(labels, 'key', 'value'));
+        setLabels(Labels.sortLabels(labels));
         stopLabelEdit();
         toolbox.loading(true);
         actions.doSetLabels(data.deploymentId, labels).then(() => toolbox.loading(false));
@@ -50,6 +46,12 @@ export default function LabelsTable({ data, toolbox }) {
     const hasManagePermission = Stage.Utils.isUserAuthorized('deployment_create', toolbox.getManagerState());
 
     const tdStyle = { textOverflow: 'ellipsis', overflow: 'hidden' };
+
+    const currentLabelAlreadyUsed = !!_.find(
+        labels.filter(label => label !== labelInEdit),
+        { ...labelInEdit, value: currentLabelValue }
+    );
+    const currentLabelIsValid = currentLabelValue !== '' && !currentLabelAlreadyUsed;
 
     return (
         <>
@@ -72,6 +74,7 @@ export default function LabelsTable({ data, toolbox }) {
                                     onCancel={stopLabelEdit}
                                     onChange={setCurrentLabelValue}
                                     onSubmit={updateLabelValue}
+                                    valueAlreadyUsed={currentLabelAlreadyUsed}
                                 />
                             ) : (
                                 item.value
@@ -100,7 +103,14 @@ export default function LabelsTable({ data, toolbox }) {
                         )}
                         {_.isEqual(item, labelInEdit) && (
                             <DataTable.Data>
-                                <Icon name="check" color="green" link bordered onClick={updateLabelValue} />
+                                <Icon
+                                    name="check"
+                                    color="green"
+                                    link={currentLabelIsValid}
+                                    bordered
+                                    onClick={updateLabelValue}
+                                    disabled={!currentLabelIsValid}
+                                />
                                 <Icon name="cancel" color="red" link bordered onClick={stopLabelEdit} />
                             </DataTable.Data>
                         )}

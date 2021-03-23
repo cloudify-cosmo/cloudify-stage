@@ -3,17 +3,18 @@ import i18n from 'i18next';
 import type { GettingStartedSchemaSecret, GettingStartedSecretsData, GettingStartedTechnologiesData } from './model';
 
 export const validateTechnologyFields = (data: GettingStartedTechnologiesData) => {
-    const errors: string[] = [];
     if (!_.some(data, item => item === true)) {
-        errors.push(i18n.t('gettingStartedModal.modal.someTechnologyRequiredError', 'Please select some technology.'));
+        return i18n.t(
+            'gettingStartedModal.modal.someTechnologyRequiredError',
+            'At least one technology needs to be selected.'
+        );
     }
-    return errors;
+    return null;
 };
 
 export const validateSecretFields = (schema: GettingStartedSchemaSecret[], data: GettingStartedSecretsData) => {
-    const errors: string[] = [];
     if (_.some(schema, item => !data[item.name])) {
-        errors.push(i18n.t('gettingStartedModal.modal.allSecretsRequiredError', 'Please type all secrets.'));
+        return i18n.t('gettingStartedModal.modal.allSecretsRequiredError', 'All secret values need to be specified.');
     }
-    return errors;
+    return null;
 };

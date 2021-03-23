@@ -2,11 +2,21 @@ apiVersion: v1
 kind: Pod
 spec:
   containers:
+  - name: jnlp
+    image: jenkins/inbound-agent:4.3-4
+    resources:
+      limits:
+        cpu: 0.3
+        memory: 256Mi
   - name: rpmbuild
     image: rpmbuild/centos7
     resources:
       requests:
         cpu: 1.5
+        memory: 3Gi
+      limits:
+        cpu: 1.5
+        memory: 3Gi
     command:
     - cat
     tty: true
@@ -18,8 +28,11 @@ spec:
     resources:
       requests:
         cpu: 1.5
-        ephemeral-storage: "12Gi"
+        memory: 5Gi
+        ephemeral-storage: "15Gi"
       limits:
+        cpu: 1.5
+        memory: 5Gi
         ephemeral-storage: "15Gi"
     command:
     - cat
@@ -38,5 +51,9 @@ spec:
       value: cloudify
     - name: POSTGRES_DB
       value: stage
+    resources:
+      limits:
+        cpu: 0.2
+        memory: 256Mi
   nodeSelector:
     instance-type: spot-xlarge

@@ -11,35 +11,32 @@ type SecretGroup = {
     technologies: GettingStartedSchemaItem[];
 };
 
-const mapSecretsByName = (technologiesSchemas: GettingStartedSchema) => {
+const mapTechnologiesBySecretName = (technologiesSchema: GettingStartedSchema) => {
     const groupedSecrets = {} as Record<string, SecretGroup>;
-    // eslint-disable-next-line no-restricted-syntax
-    for (const entry of technologiesSchemas) {
-        // eslint-disable-next-line no-restricted-syntax
-        for (const secret of entry.secrets) {
-            const group = groupedSecrets[secret.name] ?? (groupedSecrets[secret.name] = { secret, technologies: [] });
-            group.technologies.push(entry);
-        }
-    }
+    technologiesSchema.forEach(technologySchema => {
+        technologySchema.secrets.forEach(secretSchema => {
+            const group =
+                groupedSecrets[secretSchema.name] ??
+                (groupedSecrets[secretSchema.name] = { secret: secretSchema, technologies: [] });
+            group.technologies.push(technologySchema);
+        });
+    });
     return groupedSecrets;
 };
 
-const mapTechnologiesByName = (groupedSecrets: SecretGroup[]) => {
+const mapSecretsByTechnologyName = (groupedSecrets: SecretGroup[]) => {
     const groupedTechnologies = {} as Record<string, GettingStartedSchemaItem>;
-    // eslint-disable-next-line no-restricted-syntax
-    for (const { secret, technologies } of groupedSecrets) {
-        // eslint-disable-next-line no-restricted-syntax
+    groupedSecrets.forEach(({ secret, technologies }) => {
         const technologyNames: string[] = [];
         const technologyLabels: string[] = [];
         const technologyPlugins: GettingStartedSchemaPlugin[] = [];
         const technologyBlueprints: GettingStartedSchemaBlueprint[] = [];
-        // eslint-disable-next-line no-restricted-syntax
-        for (const technology of technologies) {
+        technologies.forEach(technology => {
             technologyNames.push(technology.name);
             technologyLabels.push(technology.label);
             technologyPlugins.push(...technology.plugins);
             technologyBlueprints.push(...technology.blueprints);
-        }
+        });
         const technologyName = _.uniq(technologyNames)
             .map(name => encodeURIComponent(name))
             .join('+');
@@ -54,7 +51,7 @@ const mapTechnologiesByName = (groupedSecrets: SecretGroup[]) => {
                 blueprints: technologyBlueprints
             });
         groupedTechnology.secrets.push(secret);
-    }
+    });
     return groupedTechnologies;
 };
 
@@ -67,9 +64,9 @@ const mapTechnologiesByName = (groupedSecrets: SecretGroup[]) => {
  * @returns technology groups with unique field names
  */
 const createTechnologiesGroups = (technologiesSchema: GettingStartedSchema) => {
-    const groupedSecretsMap = mapSecretsByName(technologiesSchema);
+    const groupedSecretsMap = mapTechnologiesBySecretName(technologiesSchema);
     const groupedSecretsArray = Object.values(groupedSecretsMap);
-    const groupedTechnologiesMap = mapTechnologiesByName(groupedSecretsArray);
+    const groupedTechnologiesMap = mapSecretsByTechnologyName(groupedSecretsArray);
     const groupedTechnologiesArray = Object.values(groupedTechnologiesMap);
     return groupedTechnologiesArray;
 };
