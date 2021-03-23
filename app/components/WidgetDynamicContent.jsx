@@ -296,7 +296,7 @@ export default class WidgetDynamicContent extends Component {
         const { loading } = this.state;
         const baseWidgetContentClassName = combineClassNames([
             'widgetContent',
-            widget.definition.showHeader ? '' : 'noHeader'
+            !widget.definition.showHeader && 'noHeader'
         ]);
 
         return (
@@ -313,7 +313,7 @@ export default class WidgetDynamicContent extends Component {
                     <div
                         className={combineClassNames([
                             baseWidgetContentClassName,
-                            widget.definition.showBorder ? '' : 'noBorder'
+                            !widget.definition.showBorder && 'noBorder'
                         ])}
                     >
                         {this.renderReact()}
