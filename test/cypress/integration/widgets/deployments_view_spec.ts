@@ -1,4 +1,5 @@
 import type { RouteHandler } from 'cypress/types/net-stubbing';
+import { without } from 'lodash';
 
 describe('Deployments View widget', () => {
     const widgetId = 'deploymentsView';
@@ -27,9 +28,12 @@ describe('Deployments View widget', () => {
             .setSite(deploymentName, siteName);
     });
 
-    const useDeploymentsViewWidget = (routeHandler?: RouteHandler) => {
+    const useDeploymentsViewWidget = ({
+        routeHandler,
+        configurationOverrides = {}
+    }: { routeHandler?: RouteHandler; configurationOverrides?: Record<string, any> } = {}) => {
         cy.interceptSp('GET', 'deployments', routeHandler).as('deployments');
-        cy.usePageMock([widgetId], widgetConfiguration).mockLogin();
+        cy.usePageMock([widgetId], { ...widgetConfiguration, ...configurationOverrides }).mockLogin();
         cy.wait('@deployments');
     };
 
@@ -41,14 +45,10 @@ describe('Deployments View widget', () => {
         const toggleFieldsDropdown = () => getFieldsDropdown().find('.dropdown.icon').click();
 
         it('should allow changing displayed columns', () => {
-            useDeploymentsViewWidget();
-
-            cy.log('Hide some columns');
-            cy.editWidgetConfiguration(widgetId, () => {
-                getFieldsDropdown().within(() => {
-                    cy.contains('Blueprint Name').find('.delete.icon').click();
-                    cy.contains('Location').find('.delete.icon').click();
-                });
+            useDeploymentsViewWidget({
+                configurationOverrides: {
+                    fieldsToShow: without(widgetConfiguration.fieldsToShow, 'blueprintName', 'location')
+                }
             });
 
             getDeploymentsViewTable().within(() => {
@@ -86,7 +86,9 @@ describe('Deployments View widget', () => {
 
     it('should display various deployment statuses', () => {
         useDeploymentsViewWidget({
-            fixture: 'deployments/various-statuses.json'
+            routeHandler: {
+                fixture: 'deployments/various-statuses.json'
+            }
         });
 
         getDeploymentsViewTable().within(() => {
