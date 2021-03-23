@@ -1,4 +1,5 @@
 import React, { memo, useState, useMemo } from 'react';
+<<<<<<< HEAD
 import i18n from 'i18next';
 import log from 'loglevel';
 
@@ -8,6 +9,21 @@ import useResettableState from '../../utils/hooks/useResettableState';
 import { Form, Modal } from '../basic';
 import gettingStartedSchema from './schema.json';
 import { isGettingStartedModalDisabledInLocalStorage, disableGettingStartedModalInLocalStorage } from './localStorage';
+=======
+import { Form } from 'cloudify-ui-components';
+import i18n from 'i18next';
+import log from 'loglevel';
+
+import type { ChangeEvent } from 'react';
+
+import EventBus from '../../utils/EventBus';
+import gettingStartedSchema from './schema';
+import { getGettingStartedModalDisabled, setGettingStartedModalDisabled } from './localStorage';
+import { Button, Divider, ErrorMessage, Modal } from '../basic';
+import TechnologiesStep from './steps/TechnologiesStep';
+import SecretsStep from './steps/SecretsStep';
+import SummaryStep from './steps/SummaryStep';
+>>>>>>> RD-1442 - refresh plugins and secrets trigger call on event bus after installation
 import { validateSecretFields, validateTechnologyFields } from './formValidation';
 import createTechnologiesGroups from './createTechnologiesGroups';
 import { GettingStartedSchemaItem, StepName } from './model';
