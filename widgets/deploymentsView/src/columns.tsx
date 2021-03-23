@@ -1,7 +1,7 @@
 import { camelCase, mapValues } from 'lodash';
-import type { ReactNode } from 'react';
+import type { ReactElement, ReactNode } from 'react';
 import type { IconProps } from 'semantic-ui-react';
-import { Deployment, DeploymentStatus } from './types';
+import { Deployment, DeploymentStatus, SubdeploymentStatus } from './types';
 
 // NOTE: the order in the array determines the order in the UI
 export const deploymentsViewColumnIds = [
@@ -30,6 +30,9 @@ export interface DeploymentsViewColumnDefinition {
 
 const i18nPrefix = 'widgets.deploymentsView.columns';
 
+const inProgressIconProps: IconProps = { name: 'spinner', color: 'orange' };
+const requiresAttentionIconProps: IconProps = { name: 'exclamation', color: 'red' };
+
 const partialDeploymentsViewColumnDefinitions: Record<
     DeploymentsViewColumnId,
     Omit<Stage.Types.WithOptionalProperties<DeploymentsViewColumnDefinition, 'label'>, 'name' | 'tooltip'>
@@ -38,10 +41,10 @@ const partialDeploymentsViewColumnDefinitions: Record<
         width: '20px',
         render(deployment) {
             const { Icon, Popup } = Stage.Basic;
-            const deploymentStatusIconProps: Record<DeploymentStatus, Pick<IconProps, 'name' | 'color'> | undefined> = {
+            const deploymentStatusIconProps: Record<DeploymentStatus, IconProps | undefined> = {
                 [DeploymentStatus.Good]: undefined,
-                [DeploymentStatus.InProgress]: { name: 'spinner', color: 'orange' },
-                [DeploymentStatus.RequiresAttention]: { name: 'exclamation', color: 'red' }
+                [DeploymentStatus.InProgress]: inProgressIconProps,
+                [DeploymentStatus.RequiresAttention]: requiresAttentionIconProps
             };
             const iconProps = deploymentStatusIconProps[deployment.deployment_status];
             if (!iconProps) {
@@ -86,19 +89,39 @@ const partialDeploymentsViewColumnDefinitions: Record<
     subenvironmentsCount: {
         label: <Stage.Basic.Icon name="object group" />,
         width: '1em',
-        render() {
-            // TODO(RD-1742): display correct number of subenvironments and their status
-            return '0';
+        // NOTE: properties come from the API. They are not prop-types (false-positive)
+        /* eslint-disable camelcase, react/prop-types */
+        render({ sub_environments_count = 0, sub_environments_status = SubdeploymentStatus.Good }) {
+            const icon = subdeploymentStatusToIconMapping[sub_environments_status];
+            return (
+                <>
+                    {sub_environments_count} {icon}
+                </>
+            );
         }
     },
     subservicesCount: {
         label: <Stage.Basic.Icon name="cube" />,
         width: '1em',
-        render() {
-            // TODO(RD-1742): display correct number of subservices and their status
-            return '0';
+        render({ sub_services_count = 0, sub_services_status = SubdeploymentStatus.Good }) {
+            const icon = subdeploymentStatusToIconMapping[sub_services_status];
+            return (
+                <>
+                    {sub_services_count} {icon}
+                </>
+            );
         }
+        /* eslint-enable camelcase, react/prop-types */
     }
+};
+
+const subdeploymentStatusToIconMapping: Record<SubdeploymentStatus, ReactNode> = {
+    // eslint-disable-next-line react/jsx-props-no-spreading
+    [SubdeploymentStatus.InProgress]: <Stage.Basic.Icon {...inProgressIconProps} />,
+    [SubdeploymentStatus.Good]: null,
+    // eslint-disable-next-line react/jsx-props-no-spreading
+    [SubdeploymentStatus.Failed]: <Stage.Basic.Icon {...requiresAttentionIconProps} />,
+    [SubdeploymentStatus.Pending]: null
 };
 
 export const deploymentsViewColumnDefinitions: Record<
