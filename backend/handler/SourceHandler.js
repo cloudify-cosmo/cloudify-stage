@@ -6,6 +6,7 @@ const _ = require('lodash');
 const os = require('os');
 const fs = require('fs-extra');
 const pathlib = require('path');
+const url = require('url');
 const yaml = require('js-yaml');
 
 const config = require('../config').get();
@@ -17,22 +18,30 @@ const logger = require('./LoggerHandler').getLogger('SourceHandler');
 const browseSourcesDir = pathlib.join(os.tmpdir(), config.app.source.browseSourcesDir);
 const lookupYamlsDir = pathlib.join(os.tmpdir(), config.app.source.lookupYamlsDir);
 
+const blueprintExtractDir = 'extracted';
+
 module.exports = (() => {
     function isUnixHiddenPath(path) {
         // eslint-disable-next-line no-useless-escape
         return /(^|.\/)\.+[^\/\.]/g.test(path);
     }
 
-    function scanRecursive(root, archivePath) {
-        const stats = fs.statSync(archivePath);
-        const name = pathlib.basename(archivePath);
+    function toRelativeUrl(relativePath) {
+        const absoluteUrl = url.pathToFileURL(relativePath);
+        const relativeUrl = absoluteUrl.pathname.substring(url.pathToFileURL('').pathname.length + 1);
+        return relativeUrl;
+    }
+
+    function scanRecursive(rootDir, scannedFileOrDirPath) {
+        const stats = fs.statSync(scannedFileOrDirPath);
+        const name = pathlib.basename(scannedFileOrDirPath);
 
         if (stats.isSymbolicLink() || isUnixHiddenPath(name)) {
             return null;
         }
 
         const item = {
-            key: archivePath.replace(pathlib.join(root, pathlib.sep), ''),
+            key: toRelativeUrl(pathlib.relative(rootDir, scannedFileOrDirPath)),
             title: name,
             isDir: false
         };
@@ -41,10 +50,11 @@ module.exports = (() => {
             return item;
         }
         if (stats.isDirectory()) {
+            const scannedDir = scannedFileOrDirPath;
             try {
                 const children = fs
-                    .readdirSync(archivePath)
-                    .map(child => scanRecursive(root, pathlib.join(archivePath, child)))
+                    .readdirSync(scannedDir)
+                    .map(child => scanRecursive(rootDir, pathlib.join(scannedDir, child)))
                     .filter(e => !!e);
 
                 item.isDir = true;
@@ -64,21 +74,25 @@ module.exports = (() => {
 
     function scanArchive(archivePath) {
         logger.debug('scaning archive', archivePath);
-        return scanRecursive(browseSourcesDir, archivePath);
+        return scanRecursive(archivePath, archivePath);
     }
 
-    function browseArchiveTree(req) {
-        const archiveUrl = `/blueprints/${req.params.blueprintId}/archive`;
+    function browseArchiveTree(req, timestamp = Date.now()) {
+        const { blueprintId } = req.params;
+        const archiveUrl = `/blueprints/${blueprintId}/archive`;
         logger.debug('download archive from url', archiveUrl);
 
-        const archiveFolder = pathlib.join(browseSourcesDir, `source${Date.now()}`);
+        const archiveFolder = pathlib.join(browseSourcesDir, `${blueprintId}${timestamp}`);
         return ArchiveHelper.removeOldExtracts(browseSourcesDir)
             .then(() => ArchiveHelper.saveDataFromUrl(archiveUrl, archiveFolder, req))
             .then(data => {
                 const archivePath = pathlib.join(data.archiveFolder, data.archiveFile);
-                const extractedDir = pathlib.join(data.archiveFolder, 'extracted');
+                const extractedDir = pathlib.join(data.archiveFolder, blueprintExtractDir);
 
-                return ArchiveHelper.decompressArchive(archivePath, extractedDir).then(() => scanArchive(extractedDir));
+                return ArchiveHelper.decompressArchive(archivePath, extractedDir).then(() => ({
+                    ...scanArchive(extractedDir),
+                    timestamp
+                }));
             });
     }
 
@@ -86,15 +100,20 @@ module.exports = (() => {
         return absCandidate.substring(0, absPrefix.length) === absPrefix;
     }
 
-    function browseArchiveFile(path) {
-        return new Promise((resolve, reject) => {
-            const absolutePath = pathlib.resolve(browseSourcesDir, path);
-            if (!checkPrefix(absolutePath, browseSourcesDir)) {
-                reject('Wrong path');
-            } else {
-                fs.readFile(absolutePath, 'utf-8', (err, data) => (err ? reject(err) : resolve(data)));
-            }
-        });
+    async function browseArchiveFile(req, timestamp, path) {
+        const { blueprintId } = req.params;
+        const absolutePath = pathlib.resolve(browseSourcesDir, `${blueprintId}${timestamp}`, blueprintExtractDir, path);
+
+        if (!checkPrefix(absolutePath, browseSourcesDir)) {
+            throw new Error('Wrong path');
+        }
+
+        if (!fs.existsSync(absolutePath)) {
+            // Cluster node may have changed, so fetch and extract blueprint archive if requested file does not exist
+            await browseArchiveTree(req, timestamp);
+        }
+
+        return fs.readFile(absolutePath, 'utf-8');
     }
 
     function saveMultipartData(req) {
