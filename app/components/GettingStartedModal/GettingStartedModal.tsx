@@ -7,7 +7,7 @@ import type { ChangeEvent } from 'react';
 
 import gettingStartedSchema from './schema';
 import { getGettingStartedModalDisabled, setGettingStartedModalDisabled } from './localStorage';
-import { Button, Divider, Message, Modal } from '../basic';
+import { Button, Divider, ErrorMessage, Modal } from '../basic';
 import TechnologiesStep from './steps/TechnologiesStep';
 import SecretsStep from './steps/SecretsStep';
 import SummaryStep from './steps/SummaryStep';
@@ -75,6 +75,9 @@ const GettingStartedModal = () => {
         }
         setStepErrors([]);
         return true;
+    };
+    const handleStepErrorsDismiss = () => {
+        setStepErrors([]);
     };
     const handleTechnologiesStepChange = (selectedTechnologies: GettingStartedTechnologiesData) => {
         setTechnologiesStepData(selectedTechnologies);
@@ -161,11 +164,7 @@ const GettingStartedModal = () => {
             <Modal.Content style={{ minHeight: '220px' }}>
                 {stepErrors && stepErrors.length > 0 && (
                     <>
-                        <Message color="red">
-                            {stepErrors.map(error => (
-                                <div key={error}>{error}</div>
-                            ))}
-                        </Message>
+                        <ErrorMessage error={stepErrors} onDismiss={handleStepErrorsDismiss} />
                         <Divider hidden />
                     </>
                 )}
