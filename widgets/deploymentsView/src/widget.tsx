@@ -59,7 +59,7 @@ if (process.env.NODE_ENV === 'development' || process.env.TEST) {
                     name: deploymentsViewColumnDefinitions[columnId].name,
                     value: columnId
                 })),
-                default: Object.values(deploymentsViewColumnIds).filter(columnId => columnId !== 'environmentType'),
+                default: deploymentsViewColumnIds.filter(columnId => columnId !== 'environmentType'),
                 type: Stage.Basic.GenericField.MULTI_SELECT_LIST_TYPE
             },
             Stage.GenericConfig.PAGE_SIZE_CONFIG(100),
