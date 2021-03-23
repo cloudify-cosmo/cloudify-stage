@@ -73,7 +73,7 @@ const SummaryStep = ({
             style={{ minHeight: '150px' }}
             loading={pluginInstallationTasks.loading || secretInstallationTasks.loading}
         >
-            {pluginInstallationTasks.error && secretInstallationTasks.error && (
+            {(pluginInstallationTasks.error || secretInstallationTasks.error) && (
                 <Message color="red">
                     {pluginInstallationTasks.error && <p>{pluginInstallationTasks.error}</p>}
                     {secretInstallationTasks.error && <p>{secretInstallationTasks.error}</p>}
