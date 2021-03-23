@@ -53,10 +53,10 @@
             "pluginInstallMessageSuffix": "plugin will be installed.",
             "pluginInstalledMessageSuffix": "plugin is already installed.",
             "pluginNotFoundMessageSuffix": "plugin is not found in catalog and manager.",
-            "secretCreateMessageSuffix": "secret will be created",
-            "secretUpdateMessageSuffix": "secret will be updated",
-            "blueprintReadyMessageSuffix": "blueprint is already uploaded",
-            "blueprintUploadMessageSuffix": "blueprint will be uploaded"
+            "secretCreateMessageSuffix": "secret will be created.",
+            "secretUpdateMessageSuffix": "secret will be updated.",
+            "blueprintReadyMessageSuffix": "blueprint is already uploaded.",
+            "blueprintUploadMessageSuffix": "blueprint will be uploaded."
         },
         "installation": {
             "pluginInstallError": "{{pluginName}} plugin installation error.",
