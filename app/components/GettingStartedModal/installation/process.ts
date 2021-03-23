@@ -74,11 +74,10 @@ export const uploadBlueprint = async (manager: Manager, blueprint: BlueprintInst
             requestData
         );
         if (uploadResponse.error) {
-            return i18n.t(
-                'gettingStartedModal.installation.blueprintUploadError',
-                '{{blueprint.blueprintName}} blueprint upload error:\n{{uploadError}}.',
-                { blueprint, uploadError: uploadResponse.error }
-            );
+            return i18n.t('gettingStartedModal.installation.blueprintUploadError', undefined, {
+                blueprintName: blueprint.blueprintName,
+                uploadError: uploadResponse.error
+            });
         }
     } catch (e) {
         log.error(e);
@@ -93,29 +92,23 @@ export const uploadBlueprint = async (manager: Manager, blueprint: BlueprintInst
             const statusResponse = await manager.doGet(`/blueprints/${encodeURIComponent(blueprint.blueprintName)}`);
             if (statusResponse) {
                 if (statusResponse.error) {
-                    return i18n.t(
-                        'gettingStartedModal.installation.blueprintUploadError',
-                        '{{blueprint.blueprintName}} blueprint upload error:\n{{uploadError}}.',
-                        { blueprint, uploadError: statusResponse.error }
-                    );
+                    return i18n.t('gettingStartedModal.installation.blueprintUploadError', undefined, {
+                        blueprintName: blueprint.blueprintName,
+                        uploadError: statusResponse.error
+                    });
                 }
                 if (statusResponse.state === 'uploaded') {
                     return null;
                 }
             }
         } catch (e) {
-            // eslint-disable-next-line no-console
-            console.error(e);
+            log.error(e);
         }
     }
-    return i18n.t(
-        'gettingStartedModal.installation.blueprintUploadError',
-        '{{blueprint.blueprintName}} blueprint upload error:\n{{uploadError}}.',
-        {
-            blueprint,
-            uploadError: i18n.t('gettingStartedModal.installation.timeoutExceedError', 'Timeout exceed.')
-        }
-    );
+    return i18n.t('gettingStartedModal.installation.blueprintUploadError', undefined, {
+        blueprintName: blueprint.blueprintName,
+        uploadError: i18n.t('gettingStartedModal.installation.timeoutExceedError', 'Timeout exceed.')
+    });
 };
 
 export const createResourcesInstaller = (
