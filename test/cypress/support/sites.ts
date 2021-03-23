@@ -1,27 +1,47 @@
-Cypress.Commands.add('createSite', site => {
-    const data: any = { name: site.name };
-    if (site.location) {
-        // eslint-disable-next-line scanjs-rules/assign_to_location
-        data.location = site.location;
+import { addCommands, GetCypressChainableFromCommands } from 'cloudify-ui-common/cypress/support';
+
+declare global {
+    namespace Cypress {
+        // NOTE: necessary for extending the Cypress API
+        // eslint-disable-next-line @typescript-eslint/no-empty-interface
+        export interface Chainable extends GetCypressChainableFromCommands<typeof commands> {}
     }
-    if (site.visibility) {
-        data.visibility = site.visibility;
+}
+
+export interface Site {
+    name: string;
+    location?: string;
+    visibility?: string;
+}
+
+const commands = {
+    createSite: (site: Site) => {
+        const data: Site = { name: site.name };
+        if (site.location) {
+            // eslint-disable-next-line scanjs-rules/assign_to_location
+            data.location = site.location;
+        }
+        if (site.visibility) {
+            data.visibility = site.visibility;
+        }
+
+        cy.cfyRequest(`/sites/${site.name}`, 'PUT', null, data);
+    },
+
+    createSites: (sites: Site[]) => {
+        sites.forEach(cy.createSite);
+    },
+
+    deleteSite: (siteName: string) => {
+        cy.cfyRequest(`/sites/${siteName}`, 'DELETE');
+    },
+
+    deleteSites: (search = '') => {
+        cy.cfyRequest(`/sites?_search=${search}`, 'GET').then(response => {
+            const sites = response.body.items;
+            sites.forEach((site: any) => (cy as any).deleteSite(site.name));
+        });
     }
+};
 
-    cy.cfyRequest(`/sites/${site.name}`, 'PUT', null, data);
-});
-
-Cypress.Commands.add('createSites', sites => {
-    sites.forEach((cy as any).createSite);
-});
-
-Cypress.Commands.add('deleteSite', siteName => {
-    cy.cfyRequest(`/sites/${siteName}`, 'DELETE');
-});
-
-Cypress.Commands.add('deleteSites', (search = '') => {
-    cy.cfyRequest(`/sites?_search=${search}`, 'GET').then(response => {
-        const sites = response.body.items;
-        sites.forEach((site: any) => (cy as any).deleteSite(site.name));
-    });
-});
+addCommands(commands);

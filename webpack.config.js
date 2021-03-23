@@ -120,7 +120,8 @@ module.exports = (env, argv) => {
                   })
               ];
     const environmentPlugin = new webpack.EnvironmentPlugin({
-        NODE_ENV: 'development'
+        NODE_ENV: 'production',
+        TEST: ''
     });
 
     if (isProduction && fs.existsSync(outputPath)) {
@@ -216,9 +217,9 @@ module.exports = (env, argv) => {
                             }
                         }
                     }),
+                    environmentPlugin,
                     isProduction && getProductionPlugins(env && env.analyse === 'main')
-                ]),
-                environmentPlugin
+                ])
             )
         },
         {
@@ -268,9 +269,9 @@ module.exports = (env, argv) => {
                             }
                         }
                     }),
+                    environmentPlugin,
                     isProduction && getProductionPlugins(env && env.analyse === 'widgets')
-                ]),
-                environmentPlugin
+                ])
             ),
             externals
         },
@@ -293,8 +294,8 @@ module.exports = (env, argv) => {
             },
             module,
             plugins: [
-                ...(isProduction ? getProductionPlugins(env && env.analyse === 'widgets-common') : []),
-                environmentPlugin
+                environmentPlugin,
+                ...(isProduction ? getProductionPlugins(env && env.analyse === 'widgets-common') : [])
             ],
             externals
         }
