@@ -1,11 +1,14 @@
+import { pick } from 'lodash';
 import { ReactNode } from 'react';
+
 import { deploymentsViewColumnDefinitions, DeploymentsViewColumnId } from './columns';
+import { Deployment, LatestExecutionStatus } from './types';
 
 const renderDeploymentRow = (toolbox: Stage.Types.Toolbox, fieldsToShow: DeploymentsViewColumnId[]) => (
-    deployment: any
+    deployment: Deployment
 ) => {
     const { DataTable } = Stage.Basic;
-    const selectedDeploymentId = toolbox.getContext().getValue('deploymentId');
+    const selectedDeploymentId: string | string[] | null | undefined = toolbox.getContext().getValue('deploymentId');
     const progressUnderline = getDeploymentProgressUnderline(deployment);
 
     return [
@@ -30,20 +33,26 @@ const renderDeploymentRow = (toolbox: Stage.Types.Toolbox, fieldsToShow: Deploym
 };
 export default renderDeploymentRow;
 
-function getDeploymentProgressUnderline(_deployment: any): ReactNode {
-    if (Math.random() < 0.5) {
-        // TODO(RD-1741): adjust states to match the ones returned from API
-        const deploymentStates = ['in-progress', 'pending', 'failure'];
-        // NOTE: random state for now
-        const state = deploymentStates[Math.floor(Math.random() * deploymentStates.length)];
-
-        return (
-            <div
-                style={{ width: `${50 + Math.random() * 50}%` }}
-                className={Stage.Utils.combineClassNames(['deployment-progress-bar', state])}
-            />
-        );
+const executionStatusToClassNameMapping: Record<LatestExecutionStatus, string | undefined> = {
+    [LatestExecutionStatus.Failed]: 'failed',
+    [LatestExecutionStatus.InProgress]: 'in-progress',
+    [LatestExecutionStatus.Cancelled]: undefined,
+    [LatestExecutionStatus.Completed]: undefined
+};
+function getDeploymentProgressUnderline(deployment: Deployment): ReactNode {
+    const progressClassName = executionStatusToClassNameMapping[deployment.latest_execution_status];
+    if (!progressClassName) {
+        return null;
     }
 
-    return null;
+    const progressValue = Stage.Utils.Execution.getProgress(
+        pick(deployment, 'total_operations', 'finished_operations')
+    );
+
+    return (
+        <div
+            style={{ width: `${progressValue}%` }}
+            className={Stage.Utils.combineClassNames(['deployment-progress-bar', progressClassName])}
+        />
+    );
 }
