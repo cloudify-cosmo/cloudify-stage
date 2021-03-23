@@ -7,6 +7,14 @@ describe('Deployments View widget', () => {
     const siteName = 'Olsztyn';
     const blueprintUrl =
         'https://github.com/cloudify-community/blueprint-examples/releases/download/latest/simple-hello-world-example.zip';
+    const widgetConfiguration = {
+        filterByParentDeployment: false,
+        fieldsToShow: ['status', 'name', 'blueprintName', 'location', 'subenvironmentsCount', 'subservicesCount'],
+        pageSize: 100,
+        pollingTime: 10,
+        sortColumn: 'created_at',
+        sortAscending: false
+    };
 
     before(() => {
         cy.activate()
@@ -21,12 +29,11 @@ describe('Deployments View widget', () => {
 
     const useDeploymentsViewWidget = (routeHandler?: RouteHandler) => {
         cy.interceptSp('GET', 'deployments', routeHandler).as('deployments');
-        // NOTE: add widget through Edit Mode to apply default configuration automatically
-        cy.usePageMock([], {}, [widgetId]).mockLogin().addWidget(widgetId);
+        cy.usePageMock([widgetId], widgetConfiguration).mockLogin();
         cy.wait('@deployments');
     };
 
-    const getDeploymentsViewTable = () => cy.contains('Deployments view').parents('.widgetItem');
+    const getDeploymentsViewTable = () => cy.get('.deploymentsViewWidget .widgetItem');
 
     describe('configuration', () => {
         const getFieldsDropdown = () =>
