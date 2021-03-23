@@ -1,10 +1,11 @@
-import React, { memo, useState, useEffect, useMemo } from 'react';
+import React, { memo, useState, useMemo } from 'react';
 import { Form } from 'cloudify-ui-components';
 import i18n from 'i18next';
 import log from 'loglevel';
 
 import type { ChangeEvent } from 'react';
 
+import EventBus from '../../utils/EventBus';
 import gettingStartedSchema from './schema';
 import { getGettingStartedModalDisabled, setGettingStartedModalDisabled } from './localStorage';
 import { Button, Divider, ErrorMessage, Modal } from '../basic';
@@ -89,6 +90,8 @@ const GettingStartedModal = () => {
         setInstallationProcessing(true);
     };
     const handleInstallationFinishedOrCanceled = () => {
+        EventBus.trigger('plugins:refresh');
+        EventBus.trigger('secrets:refresh');
         setInstallationProcessing(false);
     };
     const handleModalDisabledChange = (e: ChangeEvent) => {
