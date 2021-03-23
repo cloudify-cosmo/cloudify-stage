@@ -200,10 +200,7 @@ const GettingStartedModal = () => {
                 <Form.Field>
                     <Form.Checkbox
                         label={i18n.t('gettingStartedModal.modal.disableModalLabel', "Don't show next time")}
-                        help={i18n.t(
-                            'gettingStartedModal.modal.enableModalHelp',
-                            'You can enable modal always in user profile.'
-                        )}
+                        help=""
                         checked={modalDisabledChecked}
                         onChange={handleModalDisabledChange}
                     />
