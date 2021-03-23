@@ -49,8 +49,8 @@
         "summary": {
             "taskListTitle": "Task List",
             "pluginInstallationMessageSuffix": "plugin will be installed.",
-            "secretCreateMessageSuffix": "secret will be created",
-            "secretUpdateMessageSuffix": "secret will be updated"
+            "secretCreateMessageSuffix": "secret will be created.",
+            "secretUpdateMessageSuffix": "secret will be updated."
         },
         "installation": {
             "pluginInstallError": "{{scheduledPlugin.name}} plugin installation error.",

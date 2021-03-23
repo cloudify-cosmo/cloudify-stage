@@ -9,14 +9,17 @@ type Props = {
 };
 
 const TechnologyButton = memo(({ logo, label, value, onChange }: Props) => {
+    const { Button, Image } = Stage.Basic;
+
     const [localValue, setLocalValue] = useState(value);
     useEffect(() => setLocalValue(value), [value]);
-    const { Button, Image } = Stage.Basic;
+
     const handleClick = () => {
         const newLocalValue = !localValue;
         setLocalValue(newLocalValue);
         onChange?.(newLocalValue);
     };
+
     return (
         <Form.Field>
             <Button fluid basic size="huge" active={localValue} style={{ height: '70px' }} onClick={handleClick}>
