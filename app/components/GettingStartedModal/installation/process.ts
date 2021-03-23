@@ -77,8 +77,7 @@ export const uploadBlueprint = async (manager: Manager, blueprint: BlueprintInst
             );
         }
     } catch (e) {
-        // eslint-disable-next-line no-console
-        console.error(e);
+        log.error(e);
     }
     const iterationsCount = Math.round(waitingTimeout / stepSleep);
     for (let i = 0; i < iterationsCount; i += 1) {
@@ -100,8 +99,7 @@ export const uploadBlueprint = async (manager: Manager, blueprint: BlueprintInst
                 }
             }
         } catch (e) {
-            // eslint-disable-next-line no-console
-            console.error(e);
+            log.error(e);
         }
     }
     return i18n.t(
