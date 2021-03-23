@@ -193,7 +193,7 @@ const GettingStartedModal = () => {
                     />
                 )}
             </Modal.Content>
-            <Modal.Content style={{ minHeight: '50px' }}>
+            <Modal.Content style={{ minHeight: '60px', overflow: 'hidden' }}>
                 <Form.Field>
                     <Form.Checkbox
                         label={i18n.t('gettingStartedModal.modal.disableModalLabel', "Don't show next time")}
@@ -206,7 +206,7 @@ const GettingStartedModal = () => {
                     />
                 </Form.Field>
             </Modal.Content>
-            <Modal.Actions style={{ overflow: 'hidden' }}>
+            <Modal.Actions style={{ minHeight: '60px', overflow: 'hidden' }}>
                 <Button.Group floated="left">
                     <Button
                         icon="cancel"
