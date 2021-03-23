@@ -17,6 +17,9 @@ import type External from './External';
 // NOTE: make sure the types are registered globally
 import './types';
 
+type StagePropTypes = typeof StagePropTypes;
+type StageHooks = typeof StageHooks;
+
 /** @see https://docs.cloudify.co/developer/writing_widgets/widget-apis/#toolbox-object */
 interface StageToolbox {
     drillDown(
@@ -50,10 +53,12 @@ interface StageWidget<Configuration = Record<string, unknown>> {
     x: number;
     y: number;
     configuration: Configuration;
+    // TODO(RD-1649): consider renaming the field to resolvedDefinition
     definition: StageWidgetDefinition;
     drillDownPages: Record<string, string>;
     maximized: boolean;
 }
+// TODO(RD-1645): rename Widget to ResolvedWidget
 export type { StageWidget as Widget };
 
 /**
@@ -157,9 +162,9 @@ interface HTMLWidgetDefinitionPart<Data, Configuration> {
     ) => void;
 }
 
-interface CommonOrPropTypeDefinition {
-    name: string;
-    common: any;
+interface CommonOrPropTypeDefinition<Obj, Name extends keyof Obj> {
+    name: Name;
+    common: Obj[Name];
 }
 
 /** User-facing WidgetDefinition used for defining new widgets */
@@ -188,7 +193,6 @@ type StageInitialWidgetDefinition<Params, Data, Configuration> = Stage.Types.Wit
 export type { StageInitialWidgetDefinition as InitialWidgetDefinition };
 
 declare global {
-    // eslint-disable-next-line @typescript-eslint/no-namespace
     namespace Stage {
         const Basic: typeof BasicComponents;
         const defineWidget: <Params, Data, Configuration>(
@@ -199,23 +203,36 @@ declare global {
         const GenericConfig: typeof GenericConfigType;
         const Utils: typeof StageUtils;
 
-        const Common: Record<string, unknown>;
-        const defineCommon: (definition: CommonOrPropTypeDefinition) => void;
+        // NOTE: Common items are defined in widgets
+        // eslint-disable-next-line @typescript-eslint/no-empty-interface
+        interface Common {}
+        /** Common widget utilities */
+        const Common: Common;
+        const defineCommon: <Name extends keyof Common>(definition: CommonOrPropTypeDefinition<Common, Name>) => void;
 
-        const PropTypes: typeof StagePropTypes & Record<string, any>;
-        const definePropType: (definition: CommonOrPropTypeDefinition) => void;
+        // NOTE: Additional PropTypes are defined in widgets
+        // eslint-disable-next-line @typescript-eslint/no-empty-interface
+        interface PropTypes extends StagePropTypes {}
+        const PropTypes: PropTypes;
+        const definePropType: <Name extends keyof PropTypes>(
+            definition: CommonOrPropTypeDefinition<PropTypes, Name>
+        ) => void;
 
-        const Hooks: typeof StageHooks & Record<string, any>;
-        const defineHook: (definition: any) => void;
+        // NOTE: Additional hooks are defined in widgets
+        // eslint-disable-next-line @typescript-eslint/no-empty-interface
+        interface Hooks extends StageHooks {}
+        /** Reusable utility hooks */
+        const Hooks: Hooks;
+        const defineHook: (definition: Partial<Hooks>) => void;
 
         const i18n: typeof import('i18next').default;
 
         /**
          * A namespace that exists for storing reusable TypeScript types
          */
-        // eslint-disable-next-line no-shadow, @typescript-eslint/no-namespace
         namespace Types {
             type Toolbox = StageToolbox;
+            // TODO(RD-1645): rename Widget to ResolvedWidget
             type Widget<Configuration = Record<string, unknown>> = StageWidget<Configuration>;
             type WidgetDefinition<
                 Params = any,

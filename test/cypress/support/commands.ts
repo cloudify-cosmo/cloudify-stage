@@ -273,7 +273,24 @@ const commands = {
                 query: { su: su instanceof RegExp ? su : RegExp(`.*${_.escapeRegExp(su)}.*`) }
             },
             routeHandler
-        )
+        ),
+    getByTestId: (id: string) => cy.get(`[data-testid=${id}]`),
+
+    /**
+     * Compiles a script in the fixtures directory using babel
+     *
+     * @param fixturePath Path to script in the fixtures directory
+     * @returns The compiled source
+     */
+    compileScriptFixture: (fixturePath: string) => {
+        const { fixturesFolder } = Cypress.config();
+        const scriptPath = `${fixturesFolder}/${fixturePath}`;
+        const babelConfigPath = `${fixturesFolder}/babel.config.js`;
+
+        return cy
+            .exec(`./node_modules/.bin/babel --config-file ${babelConfigPath} ${scriptPath}`)
+            .then(commandResult => commandResult.stdout);
+    }
 };
 
 addCommands(commands);

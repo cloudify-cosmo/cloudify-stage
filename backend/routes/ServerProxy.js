@@ -26,7 +26,9 @@ function errorHandler(url, res, err) {
     }
 
     logger.error(`${urlMsg} ${exMsg}`, err);
-    res.status(500).send({ message: `${urlMsg} ${exMsg}` });
+    if (!res.headersSent) {
+        res.status(500).send({ message: `${urlMsg} ${exMsg}` });
+    }
 }
 
 function buildManagerUrl(req, res, next) {

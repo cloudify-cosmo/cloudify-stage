@@ -4,6 +4,8 @@ import './DynamicDropdown.css';
 let instanceCount = 0;
 
 function DynamicDropdown({
+    innerRef,
+    disabled,
     multiple,
     placeholder,
     fetchUrl,
@@ -23,7 +25,7 @@ function DynamicDropdown({
     ...rest
 }) {
     const { useState, useEffect } = React;
-    const { useEventListener } = Stage.Hooks;
+    const { useBoolean, useEventListener, useUpdateEffect } = Stage.Hooks;
 
     const [id] = useState(() => {
         instanceCount += 1;
@@ -33,12 +35,17 @@ function DynamicDropdown({
     const [hasMore, setHasMore] = useState(true);
     const [currentPage, setCurrentPage] = useState(-1);
     const [searchQuery, setSearchQuery] = useState('');
-    const [loaderVisible, setLoaderVisible] = useState(false);
+    const [shouldLoadMore, setShouldLoadMore] = useState(prefetch);
     const [isLoading, setLoading] = useState(false);
+    const [overrideOptionsAfterFetch, setOverrideOptionsAfterFetch, resetOverrideOptionsAfterFetch] = useBoolean();
 
     function loadMore() {
+        if (disabled) {
+            return;
+        }
+
         setLoading(true);
-        setLoaderVisible(null);
+        setShouldLoadMore(false);
 
         if (fetchAll) {
             toolbox
@@ -57,7 +64,8 @@ function DynamicDropdown({
                 .doGet(fetchUrl, { _sort: valueProp, _size: pageSize, _offset: nextPage * pageSize })
                 .then(data => {
                     setHasMore(data.metadata.pagination.total > (nextPage + 1) * pageSize);
-                    setOptions([...options, ...itemsFormatter(data.items)]);
+                    setOptions([...(overrideOptionsAfterFetch ? [] : options), ...itemsFormatter(data.items)]);
+                    resetOverrideOptionsAfterFetch();
                 })
                 .finally(() => setLoading(false));
 
@@ -65,15 +73,17 @@ function DynamicDropdown({
         }
     }
 
-    useEffect(() => {
-        if (prefetch) loadMore();
-    }, []);
-
-    useEventListener(toolbox, refreshEvent, () => {
-        setOptions([]);
+    function refreshData() {
+        setOverrideOptionsAfterFetch();
         setHasMore(true);
         setCurrentPage(-1);
-    });
+    }
+
+    useEffect(() => {
+        if (shouldLoadMore) loadMore();
+    }, [shouldLoadMore]);
+
+    useEventListener(toolbox, refreshEvent, refreshData);
 
     useEffect(() => {
         if (_.isEmpty(value)) {
@@ -87,11 +97,10 @@ function DynamicDropdown({
         }
     }, [value]);
 
-    useEffect(() => {
-        if (loaderVisible) {
-            loadMore();
-        }
-    }, [loaderVisible]);
+    useUpdateEffect(() => {
+        refreshData();
+        setShouldLoadMore(true);
+    }, [fetchUrl]);
 
     const filteredOptions = _(options)
         .filter(option =>
@@ -121,54 +130,59 @@ function DynamicDropdown({
         return multiple ? valueArray : valueArray[0];
     }
 
-    const { Form, Loading } = Stage.Basic;
+    const { Form, Loading, Ref } = Stage.Basic;
 
     return (
-        <Form.Dropdown
-            className={`dynamic ${className}`}
-            search
-            selection
-            selectOnBlur={false}
-            placeholder={placeholder}
-            fluid
-            value={getDropdownValue()}
-            id={id}
-            name={name}
-            onChange={(proxy, field) => onChange(!_.isEmpty(field.value) ? field.value : null)}
-            onSearchChange={(e, data) => setSearchQuery(data.searchQuery)}
-            multiple={multiple}
-            loading={isLoading}
-            options={(() => {
-                const preparedOptions = filteredOptions.map(item => ({
-                    text: (textFormatter || (i => i[valueProp]))(item),
-                    value: item[valueProp]
-                }));
-                if (hasMore) {
-                    preparedOptions.push({
-                        disabled: true,
-                        icon: (
-                            <VisibilitySensor
-                                active={!isLoading}
-                                containment={document.querySelector(`#${id} .menu`)}
-                                partialVisibility
-                                onChange={setLoaderVisible}
-                            >
-                                <Loading message="" />
-                            </VisibilitySensor>
-                        ),
-                        key: 'loader',
-                        text: searchQuery
-                    });
-                }
-                return preparedOptions;
-            })()}
-            /* eslint-disable-next-line react/jsx-props-no-spreading */
-            {...rest}
-        />
+        <Ref innerRef={innerRef}>
+            <Form.Dropdown
+                disabled={disabled}
+                className={`dynamic ${className}`}
+                search
+                selection
+                selectOnBlur={false}
+                placeholder={placeholder}
+                fluid
+                value={getDropdownValue()}
+                id={id}
+                name={name}
+                onChange={(event, field) => onChange(!_.isEmpty(field.value) ? field.value : null)}
+                onSearchChange={(e, data) => setSearchQuery(data.searchQuery)}
+                multiple={multiple}
+                loading={isLoading}
+                options={(() => {
+                    const preparedOptions = filteredOptions.map(item => ({
+                        text: (textFormatter || (i => i[valueProp]))(item),
+                        value: item[valueProp]
+                    }));
+                    if (hasMore) {
+                        preparedOptions.push({
+                            disabled: true,
+                            icon: (
+                                <VisibilitySensor
+                                    active={!isLoading}
+                                    containment={document.querySelector(`#${id} .menu`)}
+                                    partialVisibility
+                                    onChange={setShouldLoadMore}
+                                >
+                                    <Loading message="" />
+                                </VisibilitySensor>
+                            ),
+                            key: 'loader',
+                            text: searchQuery
+                        });
+                    }
+                    return preparedOptions;
+                })()}
+                /* eslint-disable-next-line react/jsx-props-no-spreading */
+                {...rest}
+            />
+        </Ref>
     );
 }
 
 DynamicDropdown.propTypes = {
+    innerRef: PropTypes.shape({ current: PropTypes.instanceOf(HTMLElement) }),
+    disabled: PropTypes.bool,
     multiple: PropTypes.bool,
     placeholder: PropTypes.string,
     fetchUrl: PropTypes.string.isRequired,
@@ -188,6 +202,8 @@ DynamicDropdown.propTypes = {
 };
 
 DynamicDropdown.defaultProps = {
+    innerRef: null,
+    disabled: false,
     value: null,
     fetchAll: false,
     filter: {},
