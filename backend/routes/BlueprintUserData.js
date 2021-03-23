@@ -16,9 +16,13 @@ router.get('/layout/:blueprintId', (req, res) => {
             res.send(blueprintData.layout);
         } else {
             SourceHandler.browseArchiveTree(req).then(data => {
-                const path = _.chain(data).get('children[0].children').find({ title: 'info.yaml' }).get('key').value();
-                if (path) {
-                    SourceHandler.browseArchiveFile(req, data.timestamp, path)
+                const layoutFilePath = _.chain(data)
+                    .get('children[0].children')
+                    .find({ title: 'info.yaml' })
+                    .get('key')
+                    .value();
+                if (layoutFilePath) {
+                    SourceHandler.browseArchiveFile(req, data.timestamp, layoutFilePath)
                         .then(yaml.safeLoad)
                         .then(layout => res.send(layout));
                 } else {
