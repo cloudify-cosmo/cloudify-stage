@@ -20,7 +20,7 @@ router.use(bodyParser.json());
 router.use(bodyParser.urlencoded({ extended: true }));
 
 function getCookieOptions(req) {
-    const httpsUsed = req.headers['X-Scheme'] === 'https';
+    const httpsUsed = req.header('X-Scheme') === 'https';
     return { sameSite: 'strict', secure: httpsUsed };
 }
 
