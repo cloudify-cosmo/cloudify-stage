@@ -19,10 +19,16 @@ const isSamlEnabled = _.get(config.get(), 'app.saml.enabled', false);
 router.use(bodyParser.json());
 router.use(bodyParser.urlencoded({ extended: true }));
 
+function getCookieOptions(req) {
+    const httpsUsed = req.header('X-Scheme') === 'https';
+    return { sameSite: 'strict', secure: httpsUsed };
+}
+
 router.post('/login', (req, res) =>
     AuthHandler.getToken(req.headers.authorization)
         .then(token => {
-            res.cookie(Consts.TOKEN_COOKIE_NAME, token.value);
+            const cookieOptions = getCookieOptions(req);
+            res.cookie(Consts.TOKEN_COOKIE_NAME, token.value, cookieOptions);
             res.send({ role: token.role });
         })
         .catch(err => {
@@ -44,9 +50,10 @@ router.post('/saml/callback', passport.authenticate('saml', { session: false }),
         logger.debug('Received SAML Response for user', req.user);
         AuthHandler.getTokenViaSamlResponse(req.body.SAMLResponse)
             .then(token => {
-                res.cookie(Consts.TOKEN_COOKIE_NAME, token.value);
-                res.cookie(Consts.USERNAME_COOKIE_NAME, req.user.username);
-                res.cookie(Consts.ROLE_COOKIE_NAME, token.role);
+                const cookieOptions = getCookieOptions(req);
+                res.cookie(Consts.TOKEN_COOKIE_NAME, token.value, cookieOptions);
+                res.cookie(Consts.USERNAME_COOKIE_NAME, req.user.username, cookieOptions);
+                res.cookie(Consts.ROLE_COOKIE_NAME, token.role, cookieOptions);
                 res.redirect(Consts.CONTEXT_PATH);
             })
             .catch(err => {
