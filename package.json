@@ -34,7 +34,7 @@
     "docWidgets": "node scripts/updateReadmes.js",
     "e2e": "cypress run -C node_modules/cloudify-ui-common/cypress/cypress.json",
     "e2e:open": "cypress open -C node_modules/cloudify-ui-common/cypress/cypress.json",
-    "e2e:ci": "npm run beforebuild && run-system-tests ${TEST_SPEC}",
+    "e2e:ci": "npm run beforebuild && cross-env TEST=1 run-system-tests ${TEST_SPEC}",
     "lint": "eslint --cache --ignore-path .gitignore --ext js,jsx,ts,tsx --max-warnings 10 .",
     "size": "[ -d \"dist\" ] && size-limit",
     "test": "npm run test:frontend && npm run test:backend",
@@ -47,7 +47,7 @@
   "dependencies": {
     "better-console": "^0.2.4",
     "blueimp-md5": "^2.7.0",
-    "cloudify-blueprint-topology": "^2.4.2",
+    "cloudify-blueprint-topology": "^2.4.3",
     "cloudify-ui-common": "^3.1.3",
     "cloudify-ui-components": "^2.4.4",
     "connected-react-router": "^6.5.2",
