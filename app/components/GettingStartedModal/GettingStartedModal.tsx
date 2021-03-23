@@ -1,5 +1,4 @@
 import React, { memo, useState, useMemo } from 'react';
-<<<<<<< HEAD
 import i18n from 'i18next';
 import log from 'loglevel';
 
@@ -9,21 +8,6 @@ import useResettableState from '../../utils/hooks/useResettableState';
 import { Form, Modal } from '../basic';
 import gettingStartedSchema from './schema.json';
 import { isGettingStartedModalDisabledInLocalStorage, disableGettingStartedModalInLocalStorage } from './localStorage';
-=======
-import { Form } from 'cloudify-ui-components';
-import i18n from 'i18next';
-import log from 'loglevel';
-
-import type { ChangeEvent } from 'react';
-
-import EventBus from '../../utils/EventBus';
-import gettingStartedSchema from './schema';
-import { getGettingStartedModalDisabled, setGettingStartedModalDisabled } from './localStorage';
-import { Button, Divider, ErrorMessage, Modal } from '../basic';
-import TechnologiesStep from './steps/TechnologiesStep';
-import SecretsStep from './steps/SecretsStep';
-import SummaryStep from './steps/SummaryStep';
->>>>>>> RD-1442 - refresh plugins and secrets trigger call on event bus after installation
 import { validateSecretFields, validateTechnologyFields } from './formValidation';
 import createTechnologiesGroups from './createTechnologiesGroups';
 import { GettingStartedSchemaItem, StepName } from './model';
@@ -217,7 +201,6 @@ const GettingStartedModal = () => {
                     />
                 </Form.Field>
             </Modal.Content>
-<<<<<<< HEAD
             <ModalActions
                 stepName={stepName}
                 installationProcessing={installationProcessing}
@@ -225,42 +208,6 @@ const GettingStartedModal = () => {
                 onNextClick={handleNextClick}
                 onModalClose={handleModalClose}
             />
-=======
-            <Modal.Actions style={{ minHeight: '60px', overflow: 'hidden' }}>
-                <Button.Group floated="left">
-                    <Button
-                        icon="cancel"
-                        content={i18n.t('gettingStartedModal.modal.closeModal', 'Close')}
-                        floated="left"
-                        disabled={installationProcessing}
-                        labelPosition="left"
-                        onClick={handleModalClose}
-                    />
-                </Button.Group>
-                {stepName !== 'status' && (
-                    <Button.Group floated="right">
-                        {stepName !== 'technologies' && (
-                            <Button
-                                icon="left arrow"
-                                content={i18n.t('gettingStartedModal.modal.stepBack', 'Back')}
-                                labelPosition="left"
-                                onClick={handleBackClick}
-                            />
-                        )}
-                        <Button
-                            icon="right arrow"
-                            content={
-                                stepName === 'summary'
-                                    ? i18n.t('gettingStartedModal.modal.stepFinish', 'Finish')
-                                    : i18n.t('gettingStartedModal.modal.stepNext', 'Next')
-                            }
-                            labelPosition="right"
-                            onClick={handleNextClick}
-                        />
-                    </Button.Group>
-                )}
-            </Modal.Actions>
->>>>>>> RD-1442 - modal bottom actions layout fix
         </Modal>
     );
 };
