@@ -176,13 +176,14 @@ const commands = {
         }
         cy.waitUntilPageLoaded();
     },
-    usePageMock: (widgetIds?: string | string[], widgetConfiguration: any = {}) => {
+    usePageMock: (
+        widgetIds?: string | string[],
+        widgetConfiguration: any = {},
+        additionalWidgetIdsToLoad: string[] = []
+    ) => {
         const widgetIdsArray = _.castArray(widgetIds);
-        cy.intercept(
-            'GET',
-            '/console/widgets/list',
-            widgetIds ? [...widgetIdsArray, 'filter', 'pluginsCatalog'].map(toIdObj) : []
-        );
+        const widgetIdsToLoad = [...widgetIdsArray, 'filter', 'pluginsCatalog', ...additionalWidgetIdsToLoad];
+        cy.intercept('GET', '/console/widgets/list', widgetIdsToLoad.map(toIdObj));
         // required for drill-down testing
         cy.intercept('GET', '/console/templates/pages', widgetIds ? ['blueprint', 'deployment'].map(toIdObj) : []);
         cy.intercept('GET', '/console/templates', []);
