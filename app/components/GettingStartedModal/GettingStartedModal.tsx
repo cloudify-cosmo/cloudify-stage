@@ -201,6 +201,7 @@ const GettingStartedModal = () => {
                     />
                 </Form.Field>
             </Modal.Content>
+<<<<<<< HEAD
             <ModalActions
                 stepName={stepName}
                 installationProcessing={installationProcessing}
@@ -208,6 +209,42 @@ const GettingStartedModal = () => {
                 onNextClick={handleNextClick}
                 onModalClose={handleModalClose}
             />
+=======
+            <Modal.Actions style={{ minHeight: '60px', overflow: 'hidden' }}>
+                <Button.Group floated="left">
+                    <Button
+                        icon="cancel"
+                        content={i18n.t('gettingStartedModal.modal.closeModal', 'Close')}
+                        floated="left"
+                        disabled={installationProcessing}
+                        labelPosition="left"
+                        onClick={handleModalClose}
+                    />
+                </Button.Group>
+                {stepName !== 'status' && (
+                    <Button.Group floated="right">
+                        {stepName !== 'technologies' && (
+                            <Button
+                                icon="left arrow"
+                                content={i18n.t('gettingStartedModal.modal.stepBack', 'Back')}
+                                labelPosition="left"
+                                onClick={handleBackClick}
+                            />
+                        )}
+                        <Button
+                            icon="right arrow"
+                            content={
+                                stepName === 'summary'
+                                    ? i18n.t('gettingStartedModal.modal.stepFinish', 'Finish')
+                                    : i18n.t('gettingStartedModal.modal.stepNext', 'Next')
+                            }
+                            labelPosition="right"
+                            onClick={handleNextClick}
+                        />
+                    </Button.Group>
+                )}
+            </Modal.Actions>
+>>>>>>> RD-1442 - modal bottom actions layout fix
         </Modal>
     );
 };
