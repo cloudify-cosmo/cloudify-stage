@@ -176,9 +176,9 @@ describe('/auth endpoint', () => {
                     const { location, 'set-cookie': setCookie } = response.headers;
                     expect(location).toEqual('/console');
                     expect(setCookie).toEqual([
-                        'XSRF-TOKEN=token-content; Path=/',
-                        'USERNAME=testuser; Path=/',
-                        'ROLE=sys_admin; Path=/'
+                        'XSRF-TOKEN=token-content; Path=/; SameSite=Strict',
+                        'USERNAME=testuser; Path=/; SameSite=Strict',
+                        'ROLE=sys_admin; Path=/; SameSite=Strict'
                     ]);
                 });
         });
