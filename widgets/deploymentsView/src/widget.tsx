@@ -87,7 +87,7 @@ if (process.env.NODE_ENV === 'development' || process.env.TEST) {
                 .doGet('/deployments', params)
                 .then((response: DeploymentsResponse) => {
                     const context = toolbox.getContext();
-                    // TODO(RD-1224): detect if deploymentId is not present in the current page and reset it.
+                    // TODO(RD-1830): detect if deploymentId is not present in the current page and reset it.
                     // Do that only if `fetchData` was called from `DataTable`. If it's just polling,
                     // then don't reset it (because user may be interacting with some other component)
                     if (context.getValue('deploymentId') === undefined && response.items.length > 0) {
