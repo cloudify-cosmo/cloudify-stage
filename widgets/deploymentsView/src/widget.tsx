@@ -11,7 +11,13 @@ interface GridParams {
 
 interface DeploymentsResponse {
     items: Deployment[];
-    metadata: any;
+    metadata: {
+        pagination: {
+            offset: number;
+            size: number;
+            total: number;
+        };
+    };
 }
 
 interface DeploymentsViewWidgetConfiguration {
@@ -73,7 +79,7 @@ if (process.env.NODE_ENV === 'development' || process.env.TEST) {
         permission: Stage.GenericConfig.WIDGET_PERMISSION('deploymentsView'),
 
         fetchData(_widget, toolbox, params: GridParams) {
-            // TODO(RD-1224): add resolving `filterRules` if they are not fetched (after RD-377)
+            // TODO(RD-1530): add resolving `filterRules` if they are not fetched (after RD-377)
             return toolbox
                 .getManager()
                 .doGet('/deployments', params)
@@ -98,9 +104,17 @@ if (process.env.NODE_ENV === 'development' || process.env.TEST) {
                 return <Loading />;
             }
 
-            // TODO(RD-1224): add `noDataMessage`
             return (
-                <DataTable fetchData={toolbox.refresh} pageSize={pageSize} selectable sizeMultiplier={20}>
+                <DataTable
+                    fetchData={toolbox.refresh}
+                    pageSize={pageSize}
+                    selectable
+                    sizeMultiplier={20}
+                    // TODO(RD-1787): adjust `noDataMessage` to show the image
+                    noDataMessage={Stage.i18n.t(`${i18nPrefix}.noDataMessage`)}
+                    totalSize={data.metadata.pagination.total}
+                    searchable
+                >
                     {deploymentsViewColumnIds.map(columnId => {
                         const columnDefinition = deploymentsViewColumnDefinitions[columnId];
                         return (
