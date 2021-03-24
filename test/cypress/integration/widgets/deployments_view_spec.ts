@@ -39,11 +39,12 @@ describe('Deployments View widget', () => {
 
     const getDeploymentsViewTable = () => cy.get('.deploymentsViewWidget .widgetItem');
 
-    describe('configuration', () => {
-        const getFieldsDropdown = () =>
-            cy.contains('List of fields to show in the table').parent().find('[role="listbox"]');
-        const toggleFieldsDropdown = () => getFieldsDropdown().find('.dropdown.icon').click();
+    const widgetConfigurationHelpers = {
+        getFieldsDropdown: () => cy.contains('List of fields to show in the table').parent().find('[role="listbox"]'),
+        toggleFieldsDropdown: () => widgetConfigurationHelpers.getFieldsDropdown().find('.dropdown.icon').click()
+    };
 
+    describe('configuration', () => {
         it('should allow changing displayed columns', () => {
             useDeploymentsViewWidget({
                 configurationOverrides: {
@@ -59,11 +60,11 @@ describe('Deployments View widget', () => {
 
             cy.log('Show some columns');
             cy.editWidgetConfiguration(widgetId, () => {
-                toggleFieldsDropdown();
-                getFieldsDropdown().within(() => {
+                widgetConfigurationHelpers.toggleFieldsDropdown();
+                widgetConfigurationHelpers.getFieldsDropdown().within(() => {
                     cy.get('[role="option"]').contains('Blueprint Name').click();
                 });
-                toggleFieldsDropdown();
+                widgetConfigurationHelpers.toggleFieldsDropdown();
             });
 
             getDeploymentsViewTable().within(() => {
@@ -84,31 +85,62 @@ describe('Deployments View widget', () => {
         });
     });
 
-    it('should display various deployment statuses', () => {
+    it('should display various deployment information', () => {
         useDeploymentsViewWidget({
             routeHandler: {
                 fixture: 'deployments/various-statuses.json'
             }
         });
 
+        cy.log('Show all columns');
+        cy.editWidgetConfiguration(widgetId, () => {
+            widgetConfigurationHelpers.toggleFieldsDropdown();
+            widgetConfigurationHelpers.getFieldsDropdown().within(() => {
+                cy.get('[role="option"]').contains('Environment Type').click();
+            });
+            widgetConfigurationHelpers.toggleFieldsDropdown();
+        });
+
+        const verifyDeploymentInformation = ({ environmentType }: { environmentType: string }) => {
+            cy.contains(environmentType);
+        };
+
         getDeploymentsViewTable().within(() => {
             cy.contains('deployments_view_test_deployment')
                 .parents('tr')
-                .find('i.exclamation[aria-label="Requires attention"]')
-                .as('requiresAttentionIcon')
-                .trigger('mouseover');
-            cy.root().parents('body').find('.popup').contains('Requires attention');
-            cy.get('@requiresAttentionIcon').trigger('mouseout');
+                .within(() => {
+                    cy.get('i.exclamation[aria-label="Requires attention"]')
+                        .as('requiresAttentionIcon')
+                        .trigger('mouseover');
+                    cy.root().parents('body').find('.popup').contains('Requires attention');
+                    cy.get('@requiresAttentionIcon').trigger('mouseout');
+
+                    verifyDeploymentInformation({
+                        environmentType: 'controller'
+                    });
+                });
 
             cy.contains('hello-world-one')
                 .parents('tr')
-                .find('i.spinner[aria-label="In progress"]')
-                .as('inProgressIcon')
-                .trigger('mouseover');
-            cy.root().parents('body').find('.popup').contains('In progress');
-            cy.get('@inProgressIcon').trigger('mouseout');
+                .within(() => {
+                    cy.get('i.spinner[aria-label="In progress"]').as('inProgressIcon').trigger('mouseover');
+                    cy.root().parents('body').find('.popup').contains('In progress');
+                    cy.get('@inProgressIcon').trigger('mouseout');
 
-            cy.contains('one-in-warsaw').parents('tr').find('td:nth-child(1) i').should('not.exist');
+                    verifyDeploymentInformation({
+                        environmentType: 'acidic'
+                    });
+                });
+
+            cy.contains('one-in-warsaw')
+                .parents('tr')
+                .within(() => {
+                    cy.get('td:nth-child(1) i').should('not.exist');
+
+                    verifyDeploymentInformation({
+                        environmentType: 'subcloud'
+                    });
+                });
         });
     });
 });

@@ -55,7 +55,9 @@ const partialDeploymentsViewColumnDefinitions: Record<
                     {label}
                 </Popup>
             );
-        }
+        },
+        // NOTE: do not show the column label
+        label: ''
     },
     name: {
         sortFieldName: 'id',
@@ -70,9 +72,9 @@ const partialDeploymentsViewColumnDefinitions: Record<
         }
     },
     environmentType: {
-        render(_deployment) {
-            // TODO(RD-1224): add rendering correct environment type
-            return 'Environment Type';
+        sortFieldName: 'environment_type',
+        render(deployment) {
+            return deployment.environment_type;
         }
     },
     location: {
