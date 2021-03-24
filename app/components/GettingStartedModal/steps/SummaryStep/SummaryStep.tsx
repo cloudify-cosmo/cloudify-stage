@@ -3,9 +3,8 @@ import React, { memo, useEffect, useState } from 'react';
 
 import type { FC } from 'react';
 
-import { Divider, Form, Header, Label, List, Message, Progress } from '../../../basic';
+import { Divider, Form, Header, List, Message, Progress } from '../../../basic';
 import { useInternal, useManager } from '../../managerHooks';
-import { SuccessIcon } from '../../common/icons';
 import useCurrentCallback from '../../common/useCurrentCallback';
 import {
     useBlueprintsInstallationTasks,
@@ -13,7 +12,9 @@ import {
     useSecretsInstallationTasks
 } from '../../installation/tasks';
 import { createResourcesInstaller } from '../../installation/process';
-import PluginTaskItems, { installedPluginDescription, rejectedPluginDescription } from './PluginTaskItems';
+import PluginsInstallationTasks from './PluginsInstallationTasks';
+import SecretsInstallationTasks from './SecretsInstallationTasks';
+import BlueprintsInstallationTasks from './BlueprintsInstallationTasks';
 
 import type { GettingStartedData, GettingStartedSchema } from '../../model';
 
@@ -86,16 +87,18 @@ const SummaryStep = ({
         return undefined;
     }, [installationMode, pluginsInstallationTasks, secretsInstallationTasks, blueprintsInstallationTasks]);
 
+    const tasksLoading =
+        pluginsInstallationTasks.loading || secretsInstallationTasks.loading || blueprintsInstallationTasks.loading;
+    const errorDetected =
+        pluginsInstallationTasks.error ||
+        secretsInstallationTasks.error ||
+        blueprintsInstallationTasks.error ||
+        installationErrors.length > 0;
+
     return (
         // TODO(RD-1837): change to <From ...> after forms will be changed to tsx version
-        <UnsafelyTypedForm
-            style={{ minHeight: '150px' }}
-            loading={pluginsInstallationTasks.loading || secretsInstallationTasks.loading}
-        >
-            {(pluginsInstallationTasks.error ||
-                secretsInstallationTasks.error ||
-                blueprintsInstallationTasks.error ||
-                installationErrors.length > 0) && (
+        <UnsafelyTypedForm style={{ minHeight: '150px' }} loading={tasksLoading}>
+            {errorDetected && (
                 <Message color="red">
                     {pluginsInstallationTasks.error && <p>{pluginsInstallationTasks.error}</p>}
                     {secretsInstallationTasks.error && <p>{secretsInstallationTasks.error}</p>}
@@ -110,68 +113,9 @@ const SummaryStep = ({
                 <>
                     <Header as="h4">{i18n.t('gettingStartedModal.summary.taskListTitle', 'Task List')}</Header>
                     <List ordered relaxed>
-                        <PluginTaskItems
-                            tasks={pluginsInstallationTasks.tasks.installedPlugins}
-                            description={installedPluginDescription}
-                        />
-                        <PluginTaskItems
-                            tasks={pluginsInstallationTasks.tasks.scheduledPlugins}
-                            description={i18n.t(
-                                'gettingStartedModal.summary.pluginInstallMessageSuffix',
-                                'plugin will be installed.'
-                            )}
-                        />
-                        <PluginTaskItems
-                            tasks={pluginsInstallationTasks.tasks.rejectedPlugins}
-                            description={rejectedPluginDescription}
-                        />
-                        {secretsInstallationTasks.tasks.createdSecrets.map(createdSecret => {
-                            return (
-                                <List.Item key={createdSecret.name}>
-                                    <Label horizontal>{createdSecret.name}</Label>{' '}
-                                    {i18n.t(
-                                        'gettingStartedModal.summary.secretCreateMessageSuffix',
-                                        'secret will be created'
-                                    )}
-                                </List.Item>
-                            );
-                        })}
-                        {secretsInstallationTasks.tasks.updatedSecrets.map(updatedSecret => {
-                            return (
-                                <List.Item key={updatedSecret.name}>
-                                    <Label horizontal>{updatedSecret.name}</Label>{' '}
-                                    {i18n.t(
-                                        'gettingStartedModal.summary.secretUpdateMessageSuffix',
-                                        'secret will be updated'
-                                    )}
-                                </List.Item>
-                            );
-                        })}
-                        {blueprintsInstallationTasks.tasks.uploadedBlueprints.map(blueprint => {
-                            return (
-                                <List.Item key={blueprint.blueprintName}>
-                                    <Label horizontal>{blueprint.blueprintName}</Label>{' '}
-                                    <span>
-                                        {i18n.t(
-                                            'gettingStartedModal.summary.blueprintReadyMessageSuffix',
-                                            'blueprint is already uploaded'
-                                        )}
-                                    </span>
-                                    <SuccessIcon />
-                                </List.Item>
-                            );
-                        })}
-                        {blueprintsInstallationTasks.tasks.scheduledBlueprints.map(blueprint => {
-                            return (
-                                <List.Item key={blueprint.blueprintName}>
-                                    <Label horizontal>{blueprint.blueprintName}</Label>{' '}
-                                    {i18n.t(
-                                        'gettingStartedModal.summary.blueprintUploadMessageSuffix',
-                                        'blueprint will be uploaded'
-                                    )}
-                                </List.Item>
-                            );
-                        })}
+                        <PluginsInstallationTasks tasks={pluginsInstallationTasks.tasks} />
+                        <SecretsInstallationTasks tasks={secretsInstallationTasks.tasks} />
+                        <BlueprintsInstallationTasks tasks={blueprintsInstallationTasks.tasks} />
                     </List>
                     {installationProgress !== undefined && (
                         <>
