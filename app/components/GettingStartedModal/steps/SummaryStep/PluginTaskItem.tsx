@@ -1,5 +1,6 @@
 import React from 'react';
-import { Label, List } from 'semantic-ui-react';
+
+import { Label, List } from '../../../basic';
 
 import type { URLString } from '../../plugins/model';
 

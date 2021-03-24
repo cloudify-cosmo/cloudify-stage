@@ -1,5 +1,6 @@
 import React, { memo, useEffect, useState } from 'react';
-import { Form } from 'semantic-ui-react';
+
+import { Form } from '../../../basic';
 
 type Props = {
     logo: string;

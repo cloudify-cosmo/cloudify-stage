@@ -1,6 +1,9 @@
 import i18n from 'i18next';
 import React, { memo, useEffect, useState } from 'react';
-import { Divider, Form, Header, Label, List, Message, Progress } from 'semantic-ui-react';
+
+import type { FC } from 'react';
+
+import { Divider, Form, Header, Label, List, Message, Progress } from '../../../basic';
 import useCurrentCallback from '../../common/useCurrentCallback';
 import { createResourcesInstaller } from '../../installation/process';
 import { usePluginInstallationTasks, useSecretsInstallationTasks } from '../../installation/tasks';
@@ -8,6 +11,9 @@ import { useInternal, useManager } from '../../managerHooks';
 import PluginTaskItems, { installedPluginDescription, rejectedPluginDescription } from './PluginTaskItems';
 
 import type { GettingStartedData, GettingStartedSchema } from '../../model';
+
+// TODO(RD-1837): remove it after after forms will be changed to tsx version
+const UnsafelyTypedForm = (Form as unknown) as FC<{ [x: string]: any }>;
 
 type Props = {
     installationMode?: boolean;
@@ -69,7 +75,8 @@ const SummaryStep = ({
     }, [installationMode, pluginInstallationTasks, secretInstallationTasks]);
 
     return (
-        <Form
+        // TODO(RD-1837): change to <From ...> after forms will be changed to tsx version
+        <UnsafelyTypedForm
             style={{ minHeight: '150px' }}
             loading={pluginInstallationTasks.loading || secretInstallationTasks.loading}
         >
@@ -136,7 +143,8 @@ const SummaryStep = ({
                     )}
                 </>
             )}
-        </Form>
+            {/* TODO(RD-1837): change to </From> after forms will be changed to tsx version  */}
+        </UnsafelyTypedForm>
     );
 };
 
