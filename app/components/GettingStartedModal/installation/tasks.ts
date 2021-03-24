@@ -61,20 +61,6 @@ export const filterSchemaData = (selectedTechnologies: GettingStartedSchema, typ
     return filteredSecrets;
 };
 
-const formatDate = (date = new Date()) => {
-    const year = String(date.getFullYear());
-    const month = String(date.getMonth() + 1);
-    const day = String(date.getDate());
-    const hours = String(date.getHours());
-    const minutes = String(date.getMinutes());
-    const seconds = String(date.getSeconds());
-    return (
-        `${year.padStart(4, '0')}.${month.padStart(2, '0')}.${day.padStart(2, '0')}` +
-        `_` +
-        `${hours.padStart(2, '0')}.${minutes.padStart(2, '0')}.${seconds.padStart(2, '0')}`
-    );
-};
-
 export type PluginInstallationTask = {
     icon?: URLString;
     name: string;

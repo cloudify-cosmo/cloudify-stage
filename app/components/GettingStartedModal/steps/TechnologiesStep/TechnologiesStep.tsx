@@ -1,9 +1,14 @@
 import React, { memo, useEffect, useState } from 'react';
 
-import { Form } from 'semantic-ui-react';
+import type { FC } from 'react';
+
+import { Form } from '../../../basic';
 import TechnologyButton from './TechnologyButton';
 
 import type { GettingStartedSchema, GettingStartedTechnologiesData } from '../../model';
+
+// TODO(RD-1837): remove it after after forms will be changed to tsx version
+const UnsafelyTypedForm = (Form as unknown) as FC<{ [x: string]: any }>;
 
 type Props = {
     schema: GettingStartedSchema;
@@ -15,7 +20,8 @@ const TechnologiesStep = ({ schema, selectedTechnologies, onChange }: Props) => 
     const [localSelectedTechnologies, setLocalSelectedTechnologies] = useState(() => selectedTechnologies ?? {});
     useEffect(() => setLocalSelectedTechnologies(selectedTechnologies ?? {}), [selectedTechnologies]);
     return (
-        <Form>
+        // TODO(RD-1837): change to <From ...> after forms will be changed to tsx version
+        <UnsafelyTypedForm>
             {schema.map(({ name, logo, label }) => {
                 const handleChange = (value: boolean) => {
                     const newLocalSelectedTechnologies = { ...localSelectedTechnologies, [name]: value };
@@ -32,7 +38,8 @@ const TechnologiesStep = ({ schema, selectedTechnologies, onChange }: Props) => 
                     />
                 );
             })}
-        </Form>
+            {/* TODO(RD-1837): change to </From> after forms will be changed to tsx version  */}
+        </UnsafelyTypedForm>
     );
 };
 

@@ -22,32 +22,37 @@ import useInput from '../../utils/hooks/useInput';
 
 const getHeaderText = (schema: GettingStartedSchema, stepName: StepName, secretsStepIndex: number) => {
     switch (stepName) {
-        case 'technologies':
+        case StepName.Technologies:
             return i18n.t('gettingStartedModal.modal.technologiesStepTitle', 'Getting Started');
-        case 'secrets': {
+        case StepName.Secrets: {
             const schemaItem = schema[secretsStepIndex];
             if (schemaItem) {
                 return `${schemaItem.label} ${i18n.t('gettingStartedModal.modal.secretsStepTitle', 'Secrets')}`;
             }
             return undefined;
         }
-        case 'summary':
+        case StepName.Summary:
             return i18n.t('gettingStartedModal.modal.summaryStepTitle', 'Summary');
-        case 'status':
+        case StepName.Status:
             return i18n.t('gettingStartedModal.modal.statusStepTitle', 'Status');
         default:
             return undefined;
     }
 };
 
-type StepName = 'technologies' | 'secrets' | 'summary' | 'status';
+enum StepName {
+    Technologies,
+    Secrets,
+    Summary,
+    Status
+}
 
 const GettingStartedModal = () => {
     const { Form } = Stage.Basic;
 
     const [modalOpen, setModalOpen] = useState(() => getGettingStartedModalDisabled());
 
-    const [stepName, setStepName] = useState<StepName>('technologies');
+    const [stepName, setStepName] = useState(StepName.Technologies);
     const [stepErrors, setStepErrors] = useState<string[]>([]);
     const [technologiesStepData, setTechnologiesStepData] = useState<GettingStartedTechnologiesData>({});
     const [secretsStepIndex, setSecretsStepIndex] = useState(0);
@@ -125,25 +130,25 @@ const GettingStartedModal = () => {
 
     const handleBackClick = () => {
         switch (stepName) {
-            case 'status':
-                setStepName('summary');
+            case StepName.Status:
+                setStepName(StepName.Summary);
                 break;
 
-            case 'summary':
+            case StepName.Summary:
                 if (secretsStepsSchemas.length > 0) {
-                    setStepName('secrets');
+                    setStepName(StepName.Secrets);
                     setSecretsStepIndex(secretsStepsSchemas.length - 1);
                 } else {
-                    setStepName('technologies');
+                    setStepName(StepName.Technologies);
                 }
                 break;
 
-            case 'secrets':
+            case StepName.Secrets:
                 setStepErrors([]);
                 if (secretsStepIndex > 0) {
                     setSecretsStepIndex(secretsStepIndex - 1);
                 } else {
-                    setStepName('technologies');
+                    setStepName(StepName.Technologies);
                 }
                 break;
 
@@ -154,29 +159,29 @@ const GettingStartedModal = () => {
     };
     const handleNextClick = () => {
         switch (stepName) {
-            case 'technologies':
+            case StepName.Technologies:
                 if (checkTechnologiesStepDataErrors()) {
                     if (secretsStepsSchemas.length > 0) {
-                        setStepName('secrets');
+                        setStepName(StepName.Secrets);
                         setSecretsStepIndex(0);
                     } else {
-                        setStepName('summary');
+                        setStepName(StepName.Summary);
                     }
                 }
                 break;
 
-            case 'secrets':
+            case StepName.Secrets:
                 if (checkSecretsStepDataErrors()) {
                     if (secretsStepIndex < secretsStepsSchemas.length - 1) {
                         setSecretsStepIndex(secretsStepIndex + 1);
                     } else {
-                        setStepName('summary');
+                        setStepName(StepName.Summary);
                     }
                 }
                 break;
 
-            case 'summary':
-                setStepName('status');
+            case StepName.Summary:
+                setStepName(StepName.Status);
                 break;
 
             default:
@@ -195,23 +200,23 @@ const GettingStartedModal = () => {
                         <Divider hidden />
                     </>
                 )}
-                {stepName === 'technologies' && (
+                {stepName === StepName.Technologies && (
                     <TechnologiesStep
                         schema={gettingStartedSchema}
                         selectedTechnologies={technologiesStepData}
                         onChange={handleTechnologiesStepChange}
                     />
                 )}
-                {stepName === 'secrets' && secretsStepSchema && (
+                {stepName === StepName.Secrets && secretsStepSchema && (
                     <SecretsStep
                         selectedTechnology={secretsStepSchema}
                         typedSecrets={secretsStepData}
                         onChange={handleSecretsStepChange}
                     />
                 )}
-                {(stepName === 'summary' || stepName === 'status') && (
+                {(stepName === StepName.Summary || stepName === StepName.Status) && (
                     <SummaryStep
-                        installationMode={stepName === 'status'}
+                        installationMode={stepName === StepName.Status}
                         selectedTechnologies={summaryStepSchemas}
                         typedSecrets={secretsStepsData}
                         onInstallationStarted={handleInstallationStarted}
@@ -242,9 +247,9 @@ const GettingStartedModal = () => {
                         onClick={handleModalClose}
                     />
                 </Button.Group>
-                {stepName !== 'status' && (
+                {stepName !== StepName.Status && (
                     <Button.Group floated="right">
-                        {stepName !== 'technologies' && (
+                        {stepName !== StepName.Technologies && (
                             <Button
                                 icon="left arrow"
                                 content={i18n.t('gettingStartedModal.modal.stepBack', 'Back')}
@@ -255,7 +260,7 @@ const GettingStartedModal = () => {
                         <Button
                             icon="right arrow"
                             content={
-                                stepName === 'summary'
+                                stepName === StepName.Summary
                                     ? i18n.t('gettingStartedModal.modal.stepFinish', 'Finish')
                                     : i18n.t('gettingStartedModal.modal.stepNext', 'Next')
                             }
