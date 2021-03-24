@@ -69,7 +69,7 @@ export const createPluginInstallationTasks = (
     const rejectedPlugins: PluginInstallationTask[] = [];
     const installedPlugins: PluginInstallationTask[] = [];
     const scheduledPlugins: PluginInstallationTask[] = [];
-    if (currentPlugins && currentPlugins.plugins) {
+    if (currentPlugins.plugins) {
         const catalogPlugins = currentPlugins.plugins?.available ?? [];
         const managerPlugins = currentPlugins.plugins?.installed ?? [];
         selectedPlugins.forEach(selectedPlugin => {

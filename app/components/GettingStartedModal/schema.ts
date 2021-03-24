@@ -27,37 +27,37 @@ const schema: GettingStartedSchema = [
         secrets: [
             {
                 name: 'gpc_client_x509_cert_url',
-                label: 'gpc_client_x509_cert_url',
+                label: 'GCP Client_x509 Certificate URL',
                 type: 'text'
             },
             {
                 name: 'gpc_client_email',
-                label: 'gpc_client_email',
+                label: 'GCP Client E-mail',
                 type: 'text'
             },
             {
                 name: 'gpc_client_id',
-                label: 'gpc_client_id',
+                label: 'GCP Client ID',
                 type: 'text'
             },
             {
                 name: 'gpc_project_id',
-                label: 'gpc_project_id',
+                label: 'GCP Project ID',
                 type: 'password'
             },
             {
                 name: 'gpc_private_key_id',
-                label: 'gpc_private_key_id',
+                label: 'GCP Private Key ID',
                 type: 'password'
             },
             {
                 name: 'gpc_private_key',
-                label: 'gpc_private_key',
+                label: 'GCP Private Key',
                 type: 'password'
             },
             {
                 name: 'gpc_zone',
-                label: 'gpc_zone',
+                label: 'GCP Zone',
                 type: 'password'
             }
         ]

@@ -17,11 +17,11 @@ export type PluginsHook = {
 const useFetchPlugins = () => {
     const manager = useManager();
     const internal = useInternal();
-    const [state, setState] = useState<PluginsHook>(() => ({ loading: true }));
+    const [state, setState] = useState<PluginsHook>({ loading: true });
     useEffect(() => {
         let mounted = true;
         Promise.all([
-            internal.doGet('/external/content', { url: Stage.i18n.t('urls.pluginsCatalog') }) as Promise<
+            internal.doGet('/external/content', { url: i18n.t('urls.pluginsCatalog') }) as Promise<
                 AvailablePluginData[]
             >,
             manager.doGet('/plugins?_include=distribution,package_name,package_version,visibility') as Promise<

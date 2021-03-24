@@ -4,7 +4,7 @@ import log from 'loglevel';
 
 import EventBus from '../../utils/EventBus';
 import gettingStartedSchema from './schema';
-import { getGettingStartedModalDisabled, setGettingStartedModalDisabled } from './localStorage';
+import { isGettingStartedModalDisabled, disableGettingStartedModal } from './localStorage';
 import { Button, Divider, ErrorMessage, Modal } from '../basic';
 import TechnologiesStep from './steps/TechnologiesStep';
 import SecretsStep from './steps/SecretsStep';
@@ -50,7 +50,7 @@ enum StepName {
 const GettingStartedModal = () => {
     const { Form } = Stage.Basic;
 
-    const [modalOpen, setModalOpen] = useState(() => getGettingStartedModalDisabled());
+    const [modalOpen, setModalOpen] = useState(() => isGettingStartedModalDisabled());
 
     const [stepName, setStepName] = useState(StepName.Technologies);
     const [stepErrors, setStepErrors] = useState<string[]>([]);
@@ -108,7 +108,7 @@ const GettingStartedModal = () => {
     const handleModalClose = () => {
         setModalOpen(false);
         if (modalDisabledChecked) {
-            setGettingStartedModalDisabled(true);
+            disableGettingStartedModal();
         }
     };
 

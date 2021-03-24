@@ -7,10 +7,6 @@ import Manager from '../../utils/Manager';
 
 import type { ReduxState } from '../../reducers';
 
-const ignoredManagerFields = ['tenants.isFetching', 'clusterStatus.isFetching'];
-
-const compareManagers = (a: any, b: any) => _.isEqual(_.omit(a, ignoredManagerFields), _.omit(b, ignoredManagerFields));
-
 const getCurrentDistribution = (manager: Manager) => {
     const currentDistributionName = manager.getDistributionName().trim();
     const currentDistributionRelease = manager.getDistributionRelease().trim();
@@ -22,7 +18,7 @@ const getCurrentDistribution = (manager: Manager) => {
  * @returns current manager object
  */
 export const useManager = () => {
-    const manager = useSelector((state: ReduxState) => state.manager, compareManagers);
+    const manager = useSelector((state: ReduxState) => state.manager);
     return useMemo(() => new Manager(manager), [manager]);
 };
 
@@ -31,7 +27,7 @@ export const useManager = () => {
  * @returns current internal object
  */
 export const useInternal = () => {
-    const manager = useSelector((state: ReduxState) => state.manager, compareManagers);
+    const manager = useSelector((state: ReduxState) => state.manager);
     return useMemo(() => new Internal(manager), [manager]);
 };
 
