@@ -121,9 +121,9 @@ const partialDeploymentsViewColumnDefinitions: Record<
             const icon = iconName && renderStatusIcon(iconName);
 
             return (
-                <>
+                <div className="subdeploymentColumn">
                     {sub_environments_count} {icon}
-                </>
+                </div>
             );
         }
     },
@@ -135,9 +135,9 @@ const partialDeploymentsViewColumnDefinitions: Record<
             const icon = iconName && renderStatusIcon(iconName);
 
             return (
-                <>
+                <div className="subdeploymentColumn">
                     {sub_services_count} {icon}
-                </>
+                </div>
             );
         }
         /* eslint-enable camelcase, react/prop-types */
