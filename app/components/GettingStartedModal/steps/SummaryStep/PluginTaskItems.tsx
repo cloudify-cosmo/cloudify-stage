@@ -1,6 +1,8 @@
 import React from 'react';
 import i18n from 'i18next';
 
+import type { ReactNode } from 'react';
+
 import PluginTaskItem from './PluginTaskItem';
 import { SuccessIcon, ErrorIcon } from '../../common/icons';
 
@@ -22,7 +24,7 @@ export const RejectedPluginDescription = () => (
 
 type Props = {
     tasks?: PluginInstallationTask[];
-    description: string | JSX.Element;
+    description: string | ReactNode;
 };
 
 const PluginTaskItems = ({ tasks, description }: Props) => (
