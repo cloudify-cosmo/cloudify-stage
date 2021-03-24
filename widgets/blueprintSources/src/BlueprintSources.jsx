@@ -60,12 +60,13 @@ export default function BlueprintSources({ data, toolbox, widget }) {
 
     const { CancelButton, NodesTree, Message, Label, Modal, HighlightText, ErrorMessage, Icon } = Stage.Basic;
 
-    const loop = items => {
+    const loop = (blueprintId, timestamp, items) => {
         return items.map(item => {
+            const key = `${blueprintId}/file/${timestamp}/${item.key}`;
             if (item.children) {
                 return (
                     <NodesTree.Node
-                        key={item.key}
+                        key={key}
                         title={
                             <span>
                                 <Icon className="treeIcon" name="folder open outline" />
@@ -73,7 +74,7 @@ export default function BlueprintSources({ data, toolbox, widget }) {
                             </span>
                         }
                     >
-                        {loop(item.children)}
+                        {loop(blueprintId, timestamp, item.children)}
                     </NodesTree.Node>
                 );
             }
@@ -90,7 +91,7 @@ export default function BlueprintSources({ data, toolbox, widget }) {
                 );
             return (
                 <NodesTree.Node
-                    key={item.key}
+                    key={key}
                     title={
                         <span>
                             <Icon className="treeIcon" name="file outline" />
@@ -121,7 +122,7 @@ export default function BlueprintSources({ data, toolbox, widget }) {
                                     </Label>
                                 }
                             >
-                                {loop(data.blueprintTree.children)}
+                                {loop(data.blueprintId, data.blueprintTree.timestamp, data.blueprintTree.children)}
                             </NodesTree.Node>
                             {_.size(data.importedBlueprintIds) > 0 && (
                                 <NodesTree.Node
@@ -146,7 +147,7 @@ export default function BlueprintSources({ data, toolbox, widget }) {
                                                 </Label>
                                             }
                                         >
-                                            {loop(tree.children)}
+                                            {loop(data.importedBlueprintIds[index], tree.timestamp, tree.children)}
                                         </NodesTree.Node>
                                     ))}
                                 </NodesTree.Node>
@@ -190,7 +191,10 @@ export default function BlueprintSources({ data, toolbox, widget }) {
 BlueprintSources.propTypes = {
     data: PropTypes.shape({
         blueprintId: PropTypes.string,
-        blueprintTree: PropTypes.shape({ children: PropTypes.arrayOf(PropTypes.shape({})) }),
+        blueprintTree: PropTypes.shape({
+            children: PropTypes.arrayOf(PropTypes.shape({})),
+            timestamp: PropTypes.number
+        }),
         importedBlueprintIds: PropTypes.arrayOf(PropTypes.string),
         importedBlueprintTrees: PropTypes.arrayOf(PropTypes.shape({})),
         yamlFileName: PropTypes.string
