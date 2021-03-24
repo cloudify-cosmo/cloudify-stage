@@ -140,6 +140,7 @@ export default class SnapshotsTable extends React.Component {
 
                     {data.items.map(item => {
                         const isUseful = isSnapshotUseful(item);
+                        const isRemovable = isUseful || item.status === 'failed';
                         return (
                             <DataTable.Row
                                 key={item.id}
@@ -174,8 +175,9 @@ export default class SnapshotsTable extends React.Component {
                                     />
                                     <Icon
                                         name="trash"
-                                        link
                                         bordered
+                                        disabled={!isRemovable}
+                                        link={isRemovable}
                                         title="Delete"
                                         onClick={_.wrap(item, this.deleteSnapshotConfirm)}
                                     />
