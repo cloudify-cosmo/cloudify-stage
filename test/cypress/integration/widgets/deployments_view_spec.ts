@@ -94,11 +94,11 @@ describe('Deployments View widget', () => {
 
         cy.log('Show all columns');
         cy.editWidgetConfiguration(widgetId, () => {
-            widgetConfiguration.toggleFieldsDropdown();
-            widgetConfiguration.getFieldsDropdown().within(() => {
+            widgetConfigurationHelpers.toggleFieldsDropdown();
+            widgetConfigurationHelpers.getFieldsDropdown().within(() => {
                 cy.get('[role="option"]').contains('Environment Type').click();
             });
-            widgetConfiguration.toggleFieldsDropdown();
+            widgetConfigurationHelpers.toggleFieldsDropdown();
         });
 
         const verifyDeploymentInformation = ({ environmentType }: { environmentType: string }) => {
