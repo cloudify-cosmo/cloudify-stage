@@ -7,10 +7,6 @@ import RestoreModal from './RestoreSnapshotModal';
 import UploadModal from './UploadSnapshotModal';
 import SnapshotPropType from './props/SnapshotPropType';
 
-function isSnapshotUseful(snapshot) {
-    return snapshot.status === 'created' || snapshot.status === 'uploaded';
-}
-
 export default class SnapshotsTable extends React.Component {
     constructor(props, context) {
         super(props, context);
@@ -139,8 +135,8 @@ export default class SnapshotsTable extends React.Component {
                     <DataTable.Column width="10%" />
 
                     {data.items.map(item => {
-                        const isUseful = isSnapshotUseful(item);
-                        const isRemovable = isUseful || item.status === 'failed';
+                        const isUsable = item.status === 'created' || item.status === 'uploaded';
+                        const isRemovable = isUsable || item.status === 'failed';
                         return (
                             <DataTable.Row
                                 key={item.id}
@@ -161,16 +157,16 @@ export default class SnapshotsTable extends React.Component {
                                         name="undo"
                                         title="Restore"
                                         bordered
-                                        disabled={!isUseful}
-                                        link={isUseful}
+                                        disabled={!isUsable}
+                                        link={isUsable}
                                         onClick={_.wrap(item, this.restoreSnapshot)}
                                     />
                                     <Icon
                                         name="download"
                                         title="Download"
                                         bordered
-                                        disabled={!isUseful}
-                                        link={isUseful}
+                                        disabled={!isUsable}
+                                        link={isUsable}
                                         onClick={_.wrap(item, this.downloadSnapshot)}
                                     />
                                     <Icon
