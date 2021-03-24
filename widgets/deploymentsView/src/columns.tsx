@@ -116,6 +116,7 @@ const partialDeploymentsViewColumnDefinitions: Record<
         width: '1em',
         // NOTE: properties come from the API. They are not prop-types (false-positive)
         /* eslint-disable camelcase, react/prop-types */
+        // TODO(RD-1839): remove default values
         render({ sub_environments_count = 0, sub_environments_status = SubdeploymentStatus.Good }) {
             const iconName = subdeploymentStatusToIconMapping[sub_environments_status];
             const icon = iconName && renderStatusIcon(iconName);
@@ -130,6 +131,7 @@ const partialDeploymentsViewColumnDefinitions: Record<
     subservicesCount: {
         label: <Stage.Basic.Icon name="cube" />,
         width: '1em',
+        // TODO(RD-1839): remove default values
         render({ sub_services_count = 0, sub_services_status = SubdeploymentStatus.Good }) {
             const iconName = subdeploymentStatusToIconMapping[sub_services_status];
             const icon = iconName && renderStatusIcon(iconName);
