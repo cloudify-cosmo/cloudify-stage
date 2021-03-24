@@ -106,7 +106,10 @@ if (process.env.NODE_ENV === 'development' || process.env.TEST) {
                 return <Loading />;
             }
 
-            const deployment = find(data.items, { id: toolbox.getContext().getValue('deploymentId') });
+            const deployment = find(data.items, {
+                // NOTE: type assertion since lodash has problems receiving string[] in the object
+                id: toolbox.getContext().getValue('deploymentId') as string | undefined
+            });
 
             return (
                 <div className="grid">

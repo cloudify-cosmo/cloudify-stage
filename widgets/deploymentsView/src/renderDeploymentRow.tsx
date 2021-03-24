@@ -8,7 +8,7 @@ const renderDeploymentRow = (toolbox: Stage.Types.Toolbox, fieldsToShow: Deploym
     deployment: Deployment
 ) => {
     const { DataTable } = Stage.Basic;
-    const selectedDeploymentId: string | string[] | null | undefined = toolbox.getContext().getValue('deploymentId');
+    const selectedDeploymentId = toolbox.getContext().getValue('deploymentId');
     const progressUnderline = getDeploymentProgressUnderline(deployment);
 
     return [
