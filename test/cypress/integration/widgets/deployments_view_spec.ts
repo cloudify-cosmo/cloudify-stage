@@ -30,6 +30,10 @@ describe('Deployments View widget', () => {
         'executions',
         'deploymentActionButtons'
     ];
+    /** Column numbers as they appear in the table */
+    const columnNumbers = {
+        environmentType: 4
+    };
 
     before(() => {
         cy.activate()
@@ -144,8 +148,8 @@ describe('Deployments View widget', () => {
             }
         });
 
-        const verifyDeploymentInformation = ({ environmentType }: { environmentType: string }) => {
-            cy.contains(environmentType);
+        const verifyEnvironmentType = (environmentType: string) => {
+            cy.get(`td:nth-of-type(${columnNumbers.environmentType})`).contains(environmentType);
         };
         const verifyProgressBar = (className: string, width: string) => {
             cy.root()
@@ -168,9 +172,7 @@ describe('Deployments View widget', () => {
                     cy.root().parents('body').find('.popup').contains('Requires attention');
                     cy.get('@requiresAttentionIcon').trigger('mouseout');
 
-                    verifyDeploymentInformation({
-                        environmentType: 'controller'
-                    });
+                    verifyEnvironmentType('controller');
                     verifyProgressBar('failed', '60%');
                 });
 
@@ -181,9 +183,7 @@ describe('Deployments View widget', () => {
                     cy.root().parents('body').find('.popup').contains('In progress');
                     cy.get('@inProgressIcon').trigger('mouseout');
 
-                    verifyDeploymentInformation({
-                        environmentType: 'acidic'
-                    });
+                    verifyEnvironmentType('acidic');
                     verifyProgressBar('in-progress', '30%');
                 });
 
@@ -192,9 +192,7 @@ describe('Deployments View widget', () => {
                 .within(() => {
                     cy.get('td:nth-child(1) i').should('not.exist');
 
-                    verifyDeploymentInformation({
-                        environmentType: 'subcloud'
-                    });
+                    verifyEnvironmentType('subcloud');
 
                     // NOTE: ensure no progress bar
                     cy.root()
