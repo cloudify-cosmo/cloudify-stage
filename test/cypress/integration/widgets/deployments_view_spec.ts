@@ -32,7 +32,9 @@ describe('Deployments View widget', () => {
     ];
     /** Column numbers as they appear in the table */
     const columnNumbers = {
-        environmentType: 4
+        environmentType: 4,
+        subenvironments: 6,
+        subservices: 7
     };
 
     before(() => {
@@ -151,6 +153,27 @@ describe('Deployments View widget', () => {
         const verifyEnvironmentType = (environmentType: string) => {
             cy.get(`td:nth-of-type(${columnNumbers.environmentType})`).contains(environmentType);
         };
+        const verifySubdeployments = ({
+            columnNumber,
+            count,
+            iconName
+        }: {
+            columnNumber: number;
+            count: number;
+            iconName?: string;
+        }) => {
+            cy.log(`Verify subdeployments in column ${columnNumber}`);
+            cy.get(`td:nth-of-type(${columnNumber})`).within(() => {
+                cy.contains(count);
+
+                if (iconName) {
+                    // TODO: use the aria-label
+                    cy.get(`i.${iconName}`);
+                } else {
+                    cy.get('i').should('not.exist');
+                }
+            });
+        };
         const verifyProgressBar = (className: string, width: string) => {
             cy.root()
                 .next('tr.deployment-progress-row')
@@ -173,6 +196,16 @@ describe('Deployments View widget', () => {
                     cy.get('@requiresAttentionIcon').trigger('mouseout');
 
                     verifyEnvironmentType('controller');
+                    verifySubdeployments({
+                        columnNumber: columnNumbers.subenvironments,
+                        count: 1,
+                        iconName: 'spinner'
+                    });
+                    verifySubdeployments({
+                        columnNumber: columnNumbers.subservices,
+                        count: 3,
+                        iconName: 'exclamation'
+                    });
                     verifyProgressBar('failed', '60%');
                 });
 
@@ -184,6 +217,15 @@ describe('Deployments View widget', () => {
                     cy.get('@inProgressIcon').trigger('mouseout');
 
                     verifyEnvironmentType('acidic');
+                    verifySubdeployments({
+                        columnNumber: columnNumbers.subenvironments,
+                        count: 5
+                    });
+                    verifySubdeployments({
+                        columnNumber: columnNumbers.subservices,
+                        count: 80,
+                        iconName: 'spinner'
+                    });
                     verifyProgressBar('in-progress', '30%');
                 });
 
@@ -193,6 +235,14 @@ describe('Deployments View widget', () => {
                     cy.get('td:nth-child(1) i').should('not.exist');
 
                     verifyEnvironmentType('subcloud');
+                    verifySubdeployments({
+                        columnNumber: columnNumbers.subenvironments,
+                        count: 10
+                    });
+                    verifySubdeployments({
+                        columnNumber: columnNumbers.subservices,
+                        count: 8
+                    });
 
                     // NOTE: ensure no progress bar
                     cy.root()
