@@ -1,6 +1,7 @@
 import { deploymentsViewColumnDefinitions, DeploymentsViewColumnId, deploymentsViewColumnIds } from './columns';
 import renderDeploymentRow from './renderDeploymentRow';
 import './styles.scss';
+import type { Deployment } from './types';
 
 interface GridParams {
     _offset: number;
@@ -9,7 +10,7 @@ interface GridParams {
 }
 
 interface DeploymentsResponse {
-    items: any[];
+    items: Deployment[];
     metadata: any;
 }
 
@@ -114,7 +115,6 @@ if (process.env.NODE_ENV === 'development' || process.env.TEST) {
                         );
                     })}
 
-                    {/* TODO(RD-1224): add type for deployment */}
                     {data.items.flatMap(renderDeploymentRow(toolbox, fieldsToShow))}
                 </DataTable>
             );
