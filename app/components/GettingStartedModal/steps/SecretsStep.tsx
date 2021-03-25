@@ -21,7 +21,7 @@ const SecretsStep = ({ selectedTechnology, typedSecrets, onChange }: Props) => {
     const [localTypedSecrets, setLocalTypedSecrets] = useState(typedSecrets ?? {});
     useEffect(() => setLocalTypedSecrets(typedSecrets ?? {}), [typedSecrets]);
     return (
-        // TODO(RD-1837): change to <From> after forms will be changed to tsx version
+        // TODO(RD-1837): change to <Form> after forms will be changed to tsx version
         <UnsafelyTypedForm>
             {selectedTechnology.secrets.map(({ name, label, type }) => {
                 const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -44,7 +44,7 @@ const SecretsStep = ({ selectedTechnology, typedSecrets, onChange }: Props) => {
                     </UnsafelyTypedFormField>
                 );
             })}
-            {/* TODO(RD-1837): change to </From> after forms will be changed to tsx version  */}
+            {/* TODO(RD-1837): change to </Form> after forms will be changed to tsx version  */}
         </UnsafelyTypedForm>
     );
 };

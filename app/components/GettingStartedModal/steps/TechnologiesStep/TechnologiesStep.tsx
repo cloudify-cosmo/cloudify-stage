@@ -20,7 +20,7 @@ const TechnologiesStep = ({ schema, selectedTechnologies, onChange }: Props) => 
     const [localSelectedTechnologies, setLocalSelectedTechnologies] = useState(() => selectedTechnologies ?? {});
     useEffect(() => setLocalSelectedTechnologies(selectedTechnologies ?? {}), [selectedTechnologies]);
     return (
-        // TODO(RD-1837): change to <From ...> after forms will be changed to tsx version
+        // TODO(RD-1837): change to <Form ...> after forms will be changed to tsx version
         <UnsafelyTypedForm>
             {schema.map(({ name, logo, label }) => {
                 const handleChange = (value: boolean) => {
@@ -38,7 +38,7 @@ const TechnologiesStep = ({ schema, selectedTechnologies, onChange }: Props) => 
                     />
                 );
             })}
-            {/* TODO(RD-1837): change to </From> after forms will be changed to tsx version  */}
+            {/* TODO(RD-1837): change to </Form> after forms will be changed to tsx version  */}
         </UnsafelyTypedForm>
     );
 };
