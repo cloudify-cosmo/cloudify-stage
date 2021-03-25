@@ -1,11 +1,13 @@
-import type { PageMetadataData } from '../model';
+import type { MetadataResponse } from '../model';
 
-export type SecretData = {
+// from REST API
+
+export type SecretResponse = {
     key: string;
     visibility: string;
 };
 
-export type SecretsData = {
-    metadata: PageMetadataData;
-    items: SecretData[];
+export type SecretsResponse = {
+    metadata: MetadataResponse;
+    items: SecretResponse[];
 };

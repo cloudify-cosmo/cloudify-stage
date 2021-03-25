@@ -18,7 +18,7 @@ type Props = {
 };
 
 const SecretsStep = ({ selectedTechnology, typedSecrets, onChange }: Props) => {
-    const [localTypedSecrets, setLocalTypedSecrets] = useState(() => typedSecrets ?? {});
+    const [localTypedSecrets, setLocalTypedSecrets] = useState(typedSecrets ?? {});
     useEffect(() => setLocalTypedSecrets(typedSecrets ?? {}), [typedSecrets]);
     return (
         // TODO(RD-1837): change to <From> after forms will be changed to tsx version

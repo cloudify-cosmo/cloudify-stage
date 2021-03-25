@@ -1,13 +1,13 @@
 // from REST API
 
-export type PaginationData = {
+export type PaginationResponse = {
     offset: number;
     size: number;
     total: number;
 };
 
-export type PageMetadataData = {
-    pagination: PaginationData;
+export type MetadataResponse = {
+    pagination: PaginationResponse;
     filtered: unknown;
 };
 

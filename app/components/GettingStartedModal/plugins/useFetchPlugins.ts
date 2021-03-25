@@ -3,13 +3,13 @@ import { useState, useEffect } from 'react';
 
 import { useInternal, useManager } from '../managerHooks';
 
-import type { AvailablePluginData, InstalledPluginData, InstalledPluginsData } from './model';
+import type { CatalogPluginResponse, ManagerPluginResponse, ManagerPluginsResponse } from './model';
 
 export type PluginsHook = {
     loading: boolean;
     plugins?: {
-        available: AvailablePluginData[];
-        installed: InstalledPluginData[];
+        available: CatalogPluginResponse[];
+        installed: ManagerPluginResponse[];
     };
     error?: string;
 };
@@ -22,10 +22,10 @@ const useFetchPlugins = () => {
         let mounted = true;
         Promise.all([
             internal.doGet('/external/content', { url: i18n.t('urls.pluginsCatalog') }) as Promise<
-                AvailablePluginData[]
+                CatalogPluginResponse[]
             >,
             manager.doGet('/plugins?_include=distribution,package_name,package_version,visibility') as Promise<
-                InstalledPluginsData
+                ManagerPluginsResponse
             >
         ])
             .then(([available, installed]) => {

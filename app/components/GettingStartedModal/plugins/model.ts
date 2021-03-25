@@ -1,25 +1,27 @@
-import type { PageMetadataData } from '../model';
+import type { MetadataResponse } from '../model';
 
 export type URLString = string;
 
-export type WagonData = {
+// from REST API
+
+export type WagonResponse = {
     name: string;
     url: URLString;
     md5url: URLString;
 };
 
-export type AvailablePluginData = {
+export type CatalogPluginResponse = {
     description: string;
     releases: URLString;
     title: string;
     version: string;
     link: URLString;
-    wagons: WagonData[];
+    wagons: WagonResponse[];
     icon: URLString;
     name: string;
 };
 
-export type InstalledPluginData = {
+export type ManagerPluginResponse = {
     visibility: string;
     distribution: string;
     // eslint-disable-next-line camelcase
@@ -28,7 +30,7 @@ export type InstalledPluginData = {
     package_version: string;
 };
 
-export type InstalledPluginsData = {
-    metadata: PageMetadataData;
-    items: InstalledPluginData[];
+export type ManagerPluginsResponse = {
+    metadata: MetadataResponse;
+    items: ManagerPluginResponse[];
 };

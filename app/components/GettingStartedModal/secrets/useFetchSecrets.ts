@@ -2,11 +2,11 @@ import i18n from 'i18next';
 import { useState, useEffect } from 'react';
 import { useManager } from '../managerHooks';
 
-import type { SecretsData, SecretData } from './model';
+import type { SecretsResponse, SecretResponse } from './model';
 
 export type SecretsHook = {
     loading: boolean;
-    secrets?: SecretData[];
+    secrets?: SecretResponse[];
     error?: string;
 };
 
@@ -17,7 +17,7 @@ const useFetchSecrets = () => {
         let mounted = true;
         manager
             .doGet('/secrets?_include=key,visibility')
-            .then((secrets: SecretsData) => {
+            .then((secrets: SecretsResponse) => {
                 if (mounted) {
                     setState({ loading: false, secrets: secrets.items });
                 }
