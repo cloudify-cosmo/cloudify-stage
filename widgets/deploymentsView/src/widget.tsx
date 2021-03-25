@@ -1,4 +1,6 @@
+import { find } from 'lodash';
 import { deploymentsViewColumnDefinitions, DeploymentsViewColumnId, deploymentsViewColumnIds } from './columns';
+import DetailsPane from './detailsPane';
 import renderDeploymentRow from './renderDeploymentRow';
 import './styles.scss';
 import type { Deployment } from './types';
@@ -95,33 +97,38 @@ if (process.env.NODE_ENV === 'development' || process.env.TEST) {
                 return <Loading />;
             }
 
-            return (
-                <DataTable
-                    fetchData={toolbox.refresh}
-                    pageSize={pageSize}
-                    selectable
-                    sizeMultiplier={20}
-                    // TODO(RD-1787): adjust `noDataMessage` to show the image
-                    noDataMessage={Stage.i18n.t(`${i18nPrefix}.noDataMessage`)}
-                    totalSize={data.metadata.pagination.total}
-                    searchable
-                >
-                    {deploymentsViewColumnIds.map(columnId => {
-                        const columnDefinition = deploymentsViewColumnDefinitions[columnId];
-                        return (
-                            <DataTable.Column
-                                key={columnId}
-                                name={columnDefinition.sortFieldName}
-                                label={columnDefinition.label}
-                                width={columnDefinition.width}
-                                tooltip={columnDefinition.tooltip}
-                                show={fieldsToShow.includes(columnId)}
-                            />
-                        );
-                    })}
+            const deployment = find(data.items, { id: toolbox.getContext().getValue('deploymentId') });
 
-                    {data.items.flatMap(renderDeploymentRow(toolbox, fieldsToShow))}
-                </DataTable>
+            return (
+                <div className="grid">
+                    <DataTable
+                        fetchData={toolbox.refresh}
+                        pageSize={pageSize}
+                        selectable
+                        sizeMultiplier={20}
+                        // TODO(RD-1787): adjust `noDataMessage` to show the image
+                        noDataMessage={Stage.i18n.t(`${i18nPrefix}.noDataMessage`)}
+                        totalSize={data.metadata.pagination.total}
+                        searchable
+                    >
+                        {deploymentsViewColumnIds.map(columnId => {
+                            const columnDefinition = deploymentsViewColumnDefinitions[columnId];
+                            return (
+                                <DataTable.Column
+                                    key={columnId}
+                                    name={columnDefinition.sortFieldName}
+                                    label={columnDefinition.label}
+                                    width={columnDefinition.width}
+                                    tooltip={columnDefinition.tooltip}
+                                    show={fieldsToShow.includes(columnId)}
+                                />
+                            );
+                        })}
+
+                        {data.items.flatMap(renderDeploymentRow(toolbox, fieldsToShow))}
+                    </DataTable>
+                    <DetailsPane deployment={deployment} />
+                </div>
             );
         }
     });

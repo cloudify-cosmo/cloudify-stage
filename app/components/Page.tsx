@@ -8,7 +8,7 @@ import type { AnyAction } from 'redux';
 import Breadcrumbs from './Breadcrumbs';
 import EditModeBubble from './EditModeBubble';
 import { Button, EditableLabel } from './basic';
-import PageContent from './PageContent';
+import { PageContent } from './shared/widgets';
 import {
     addLayoutSectionToPage,
     addTab,
