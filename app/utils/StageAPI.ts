@@ -246,6 +246,16 @@ declare global {
                 Data,
                 Configuration
             >;
+            interface PaginatedResponse<ResponseItem> {
+                items: ResponseItem[];
+                metadata: {
+                    pagination: {
+                        offset: number;
+                        size: number;
+                        total: number;
+                    };
+                };
+            }
         }
     }
 }
