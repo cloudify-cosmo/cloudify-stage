@@ -72,6 +72,14 @@ export const createResourcesInstaller = (
             return;
         }
 
+        let stepIndex = 0;
+        const stepsCount = scheduledPlugins.length + updatedSecrets.length + createdSecrets.length;
+
+        const updateStepIndex = () => {
+            stepIndex += 1;
+            onProgress(Math.round(100 * (stepIndex / stepsCount)));
+        };
+
         const runInstallPluginStep = async (scheduledPlugin: PluginInstallationTask) => {
             if (scheduledPlugin.yamlUrl && scheduledPlugin.wagonUrl) {
                 const result = await installPlugin(internal, scheduledPlugin);
@@ -84,12 +92,10 @@ export const createResourcesInstaller = (
                             { scheduledPlugin }
                         )
                     );
-                    // onError(`${scheduledPlugin.name} plugin installation error.`);
                 }
             }
             if (destroyed) return;
-            stepIndex += 1;
-            onProgress(Math.round(100 * (stepIndex / stepsCount)));
+            updateStepIndex();
         };
 
         const runUpdateSecretStep = async (updatedSecret: SecretInstallationTask) => {
@@ -105,8 +111,7 @@ export const createResourcesInstaller = (
                 );
             }
             if (destroyed) return;
-            stepIndex += 1;
-            onProgress(Math.round(100 * (stepIndex / stepsCount)));
+            updateStepIndex();
         };
 
         const runCreateSecretStep = async (createdSecret: SecretInstallationTask) => {
@@ -122,12 +127,8 @@ export const createResourcesInstaller = (
                 );
             }
             if (destroyed) return;
-            stepIndex += 1;
-            onProgress(Math.round(100 * (stepIndex / stepsCount)));
+            updateStepIndex();
         };
-
-        let stepIndex = 0;
-        const stepsCount = scheduledPlugins.length + updatedSecrets.length + createdSecrets.length;
 
         onStarted();
         onProgress(0);
