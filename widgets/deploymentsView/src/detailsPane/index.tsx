@@ -3,7 +3,6 @@ import type { FunctionComponent } from 'react';
 import type { Deployment } from '../types';
 import DetailsPaneHeader from './header';
 import DetailsPaneWidgets from './widgets';
-import './index.scss';
 
 export interface DetailsPaneProps {
     /**
@@ -22,7 +21,8 @@ const DetailsPane: FunctionComponent<DetailsPaneProps> = ({ deployment }) => {
         const { Message } = Stage.Basic;
 
         return (
-            <div className="unknownDeploymentMessage">
+            // NOTE: 48px to align with the table
+            <div style={{ margin: '48px 10px 0' }}>
                 <Message warning>
                     <Message.Header>Unknown deployment selected</Message.Header>
                     <p>
