@@ -86,26 +86,30 @@ const SummaryStep = ({
                     {secretInstallationTasks.error && <p>{secretInstallationTasks.error}</p>}
                 </Message>
             )}
-            {pluginInstallationTasks.tasks && secretInstallationTasks.tasks && (
+            {(pluginInstallationTasks.tasks || secretInstallationTasks.tasks) && (
                 <>
                     <Header as="h4">{i18n.t('gettingStartedModal.summary.taskListTitle', 'Task List')}</Header>
                     <List ordered relaxed>
-                        <PluginTaskItems
-                            tasks={pluginInstallationTasks.tasks.installedPlugins}
-                            description={installedPluginDescription}
-                        />
-                        <PluginTaskItems
-                            tasks={pluginInstallationTasks.tasks.scheduledPlugins}
-                            description={i18n.t(
-                                'gettingStartedModal.summary.pluginInstallationMessageSuffix',
-                                'plugin will be installed.'
-                            )}
-                        />
-                        <PluginTaskItems
-                            tasks={pluginInstallationTasks.tasks.rejectedPlugins}
-                            description={rejectedPluginDescription}
-                        />
-                        {secretInstallationTasks.tasks.createdSecrets.map(createdSecret => {
+                        {pluginInstallationTasks.tasks && (
+                            <>
+                                <PluginTaskItems
+                                    tasks={pluginInstallationTasks.tasks.installedPlugins}
+                                    description={installedPluginDescription}
+                                />
+                                <PluginTaskItems
+                                    tasks={pluginInstallationTasks.tasks.scheduledPlugins}
+                                    description={i18n.t(
+                                        'gettingStartedModal.summary.pluginInstallationMessageSuffix',
+                                        'plugin will be installed.'
+                                    )}
+                                />
+                                <PluginTaskItems
+                                    tasks={pluginInstallationTasks.tasks.rejectedPlugins}
+                                    description={rejectedPluginDescription}
+                                />
+                            </>
+                        )}
+                        {secretInstallationTasks.tasks?.createdSecrets.map(createdSecret => {
                             return (
                                 <List.Item key={createdSecret.name}>
                                     <Label horizontal>{createdSecret.name}</Label>{' '}
@@ -116,7 +120,7 @@ const SummaryStep = ({
                                 </List.Item>
                             );
                         })}
-                        {secretInstallationTasks.tasks.updatedSecrets.map(updatedSecret => {
+                        {secretInstallationTasks.tasks?.updatedSecrets.map(updatedSecret => {
                             return (
                                 <List.Item key={updatedSecret.name}>
                                     <Label horizontal>{updatedSecret.name}</Label>{' '}
