@@ -23,9 +23,9 @@ const TechnologyButton = memo(({ logo, label, value, onChange }: Props) => {
 
     return (
         <Form.Field>
-            <Button fluid basic size="huge" active={localValue} style={{ height: '70px' }} onClick={handleClick}>
+            <Button fluid basic size="huge" active={localValue} style={{ height: 70 }} onClick={handleClick}>
                 <Image src={logo} inline style={{ maxHeight: '100%', cursor: 'pointer' }} />
-                <span style={{ marginLeft: '10px' }}>{label}</span>
+                <span style={{ marginLeft: 10 }}>{label}</span>
             </Button>
         </Form.Field>
     );
