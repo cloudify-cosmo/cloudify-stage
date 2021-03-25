@@ -1,7 +1,7 @@
 import { noop } from 'lodash';
 import type { FunctionComponent } from 'react';
 
-import page from './widgets.json';
+import pageLayout from './pageLayout.json';
 
 const DetailsPaneWidgets: FunctionComponent = () => {
     const { PageContent } = Stage.Shared.Widgets;
@@ -10,7 +10,7 @@ const DetailsPaneWidgets: FunctionComponent = () => {
         <div className="detailsPaneWidgets">
             <PageContent
                 isEditMode={false}
-                page={page as any}
+                page={pageLayout as any}
                 // NOTE: No need to handle the events below since edit mode is always off
                 onWidgetRemoved={noop}
                 onWidgetUpdated={noop}
