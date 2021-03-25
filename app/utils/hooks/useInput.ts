@@ -10,7 +10,7 @@ function useInput<T>(initialValue: T) {
 
     return [
         input,
-        (value: any, field?: { value?: string; checked?: boolean }) =>
+        (value: any, field?: { value?: string | number | boolean; checked?: boolean }) =>
             setInput(field ? field.value ?? field.checked : value),
         clearInput
     ] as const;
