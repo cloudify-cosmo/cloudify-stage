@@ -55,9 +55,9 @@
             "secretUpdateMessageSuffix": "secret will be updated."
         },
         "installation": {
-            "pluginInstallError": "{{scheduledPlugin.name}} plugin installation error.",
-            "secretUpdateError": "{{updatedSecret.name}} secret update operation error.",
-            "secretCreateError": "{{createdSecret.name}} secret create operation error.",
+            "pluginInstallError": "{{pluginName}} plugin installation error.",
+            "secretUpdateError": "{{secretName}} secret update operation error.",
+            "secretCreateError": "{{secretName}} secret create operation error.",
             "progressMessage": "Installation in progress...",
             "doneMessage": "Installation done!"
         }
