@@ -192,13 +192,13 @@ export const usePluginInstallationTasks = (selectedPlugins: GettingStartedSchema
     const currentPlugins = useFetchPlugins();
     return useMemo(() => {
         if (currentPlugins.loading) {
-            return { loading: currentPlugins.loading };
+            return { loading: true as const };
         }
         if (currentPlugins.error) {
-            return { loading: false, error: currentPlugins.error };
+            return { loading: false as const, error: currentPlugins.error as string };
         }
         return {
-            loading: false,
+            loading: false as const,
             tasks: createPluginInstallationTasks(currentDistribution, currentPlugins, selectedPlugins)
         };
     }, [currentDistribution, currentPlugins, selectedPlugins]);
@@ -215,13 +215,13 @@ export const useSecretsInstallationTasks = (
     ]);
     return useMemo(() => {
         if (currentSecrets.loading) {
-            return { loading: currentSecrets.loading };
+            return { loading: true as const };
         }
         if (currentSecrets.error) {
-            return { loading: false, error: currentSecrets.error };
+            return { loading: false as const, error: currentSecrets.error as string };
         }
         return {
-            loading: false,
+            loading: false as const,
             tasks: createSecretsInstallationTasks(currentSecrets, selectedPlugins, filteredTypedSecrets)
         };
     }, [currentSecrets, selectedPlugins, filteredTypedSecrets]);
