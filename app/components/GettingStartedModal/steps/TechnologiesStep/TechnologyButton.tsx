@@ -1,6 +1,6 @@
 import React, { memo, useEffect, useState } from 'react';
 
-import { Form } from '../../../basic';
+import { Form, Button, Image } from '../../../basic';
 
 type Props = {
     logo: string;
@@ -10,8 +10,6 @@ type Props = {
 };
 
 const TechnologyButton = memo(({ logo, label, value, onChange }: Props) => {
-    const { Button, Image } = Stage.Basic;
-
     const [localValue, setLocalValue] = useState(value);
     useEffect(() => setLocalValue(value), [value]);
 
