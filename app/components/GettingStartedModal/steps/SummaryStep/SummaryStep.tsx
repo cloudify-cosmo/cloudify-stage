@@ -1,19 +1,15 @@
 import i18n from 'i18next';
 import React, { memo, useEffect, useState } from 'react';
 
-import type { FC } from 'react';
-
-import { Divider, Form, Header, Label, List, Message, Progress } from '../../../basic';
+import { Divider, Header, Label, List, Message, Progress } from '../../../basic';
 import useCurrentCallback from '../../common/useCurrentCallback';
 import { createResourcesInstaller } from '../../installation/process';
 import { usePluginInstallationTasks, useSecretsInstallationTasks } from '../../installation/tasks';
 import { useInternal, useManager } from '../../managerHooks';
 import PluginTaskItems, { installedPluginDescription, rejectedPluginDescription } from './PluginTaskItems';
+import { UnsafelyTypedForm } from '../../UnsafelyTypedForm';
 
 import type { GettingStartedData, GettingStartedSchema } from '../../model';
-
-// TODO(RD-1837): remove it after after forms will be changed to tsx version
-const UnsafelyTypedForm = (Form as unknown) as FC<{ [x: string]: any }>;
 
 type Props = {
     installationMode?: boolean;

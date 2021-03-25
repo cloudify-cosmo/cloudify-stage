@@ -1,14 +1,9 @@
 import React, { memo, useEffect, useState } from 'react';
 
-import type { FC } from 'react';
-
-import { Form } from '../../../basic';
+import { UnsafelyTypedForm } from '../../UnsafelyTypedForm';
 import TechnologyButton from './TechnologyButton';
 
 import type { GettingStartedSchema, GettingStartedTechnologiesData } from '../../model';
-
-// TODO(RD-1837): remove it after after forms will be changed to tsx version
-const UnsafelyTypedForm = (Form as unknown) as FC<{ [x: string]: any }>;
 
 type Props = {
     schema: GettingStartedSchema;
