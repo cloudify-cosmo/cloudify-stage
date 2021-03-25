@@ -23,18 +23,18 @@ import useInput from '../../utils/hooks/useInput';
 const getHeaderText = (schema: GettingStartedSchema, stepName: StepName, secretsStepIndex: number) => {
     switch (stepName) {
         case StepName.Technologies:
-            return i18n.t('gettingStartedModal.modal.technologiesStepTitle', 'Getting Started');
+            return i18n.t('gettingStartedModal.titles.technologiesStep', 'Getting Started');
         case StepName.Secrets: {
             const schemaItem = schema[secretsStepIndex];
             if (schemaItem) {
-                return `${schemaItem.label} ${i18n.t('gettingStartedModal.modal.secretsStepTitle', 'Secrets')}`;
+                return `${schemaItem.label} ${i18n.t('gettingStartedModal.titles.secretsStep', 'Secrets')}`;
             }
             return undefined;
         }
         case StepName.Summary:
-            return i18n.t('gettingStartedModal.modal.summaryStepTitle', 'Summary');
+            return i18n.t('gettingStartedModal.titles.summaryStep', 'Summary');
         case StepName.Status:
-            return i18n.t('gettingStartedModal.modal.statusStepTitle', 'Status');
+            return i18n.t('gettingStartedModal.titles.statusStep', 'Status');
         default:
             return undefined;
     }
@@ -209,7 +209,7 @@ const GettingStartedModal = () => {
                 <Form.Field>
                     <Form.Checkbox
                         name="modalDisabledChecked"
-                        label={i18n.t('gettingStartedModal.modal.disableModalLabel', "Don't show next time")}
+                        label={i18n.t('gettingStartedModal.disableModalLabel', "Don't show next time")}
                         help=""
                         checked={modalDisabledChecked}
                         onChange={handleModalDisabledChange}
@@ -220,7 +220,7 @@ const GettingStartedModal = () => {
                 <Button.Group floated="left">
                     <Button
                         icon="cancel"
-                        content={i18n.t('gettingStartedModal.modal.closeModal', 'Close')}
+                        content={i18n.t('gettingStartedModal.buttons.closeModal', 'Close')}
                         floated="left"
                         disabled={installationProcessing}
                         labelPosition="left"
@@ -232,7 +232,7 @@ const GettingStartedModal = () => {
                         {stepName !== StepName.Technologies && (
                             <Button
                                 icon="left arrow"
-                                content={i18n.t('gettingStartedModal.modal.stepBack', 'Back')}
+                                content={i18n.t('gettingStartedModal.buttons.stepBack', 'Back')}
                                 labelPosition="left"
                                 onClick={handleBackClick}
                             />
@@ -241,8 +241,8 @@ const GettingStartedModal = () => {
                             icon="right arrow"
                             content={
                                 stepName === StepName.Summary
-                                    ? i18n.t('gettingStartedModal.modal.stepFinish', 'Finish')
-                                    : i18n.t('gettingStartedModal.modal.stepNext', 'Next')
+                                    ? i18n.t('gettingStartedModal.buttons.stepFinish', 'Finish')
+                                    : i18n.t('gettingStartedModal.buttons.stepNext', 'Next')
                             }
                             labelPosition="right"
                             onClick={handleNextClick}

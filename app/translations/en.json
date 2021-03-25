@@ -26,13 +26,15 @@
         "systemStatus": "System Status"
     },
     "gettingStartedModal" : {
-        "modal": {
-            "technologiesStepTitle": "Getting Started",
-            "secretsStepTitle": "Secrets",
-            "summaryStepTitle": "Summary",
-            "statusStepTitle": "Status",
-            "disableModalLabel": "Don't show next time",
-            "enableModalHelp": "You can enable modal always in user profile.",
+        "disableModalLabel": "Don't show next time",
+        "enableModalHelp": "You can enable modal always in user profile.",
+        "titles": {
+            "technologiesStep": "Getting Started",
+            "secretsStep": "Secrets",
+            "summaryStep": "Summary",
+            "statusStep": "Status"
+        },
+        "buttons": {
             "closeModal": "Close",
             "stepBack": "Back",
             "stepNext": "Next",
