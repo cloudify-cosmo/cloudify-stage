@@ -1,5 +1,6 @@
-import React, { memo, useEffect, useState } from 'react';
+import React, { memo, useEffect } from 'react';
 
+import useResettableState from '../../../../utils/hooks/useResettableState';
 import { Form, Button, Image } from '../../../basic';
 
 type Props = {
@@ -10,8 +11,8 @@ type Props = {
 };
 
 const TechnologyButton = memo(({ logo, label, value, onChange }: Props) => {
-    const [localValue, setLocalValue] = useState(value);
-    useEffect(() => setLocalValue(value), [value]);
+    const [localValue, setLocalValue, resetLocalValue] = useResettableState(value);
+    useEffect(() => resetLocalValue(), [value]);
 
     const handleClick = () => {
         const newLocalValue = !localValue;
