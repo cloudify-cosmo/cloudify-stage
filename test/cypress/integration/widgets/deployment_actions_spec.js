@@ -62,9 +62,14 @@ describe('Deployment Action Buttons widget', () => {
             cy.get('div[name=labelValue] > input').clear().type(value);
         }
         function addLabel(key, value) {
+            cy.interceptSp('GET', `/labels/deployments/${key}?_search=${value}`).as('fetchLabel');
+
             typeLabelKey(key);
             typeLabelValue(value);
             cy.get('button[aria-label=Add]').click();
+
+            cy.wait('@fetchLabel');
+            cy.contains('a.label', `${key} ${value}`).should('exist');
         }
         function checkIfPopupIsDisplayed(key, popupContent) {
             typeLabelKey(key);
@@ -100,8 +105,6 @@ describe('Deployment Action Buttons widget', () => {
         it('adds new label by typing', () => {
             cy.get('.modal').within(() => {
                 addLabel('sample_key', 'sample_value');
-
-                cy.contains('a.label', 'sample_key sample_value').should('be.visible');
             });
         });
 
