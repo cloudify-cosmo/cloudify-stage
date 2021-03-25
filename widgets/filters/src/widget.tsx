@@ -22,7 +22,7 @@ Stage.defineWidget<unknown, Stage.Types.PaginatedResponse<Filter>, WidgetConfigu
     },
 
     render(widget, data, _error, toolbox) {
-        if (!data?.items) {
+        if (Stage.Utils.isEmptyWidgetData(data)) {
             const { Loading } = Stage.Basic;
             return <Loading />;
         }
