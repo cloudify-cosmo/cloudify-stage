@@ -3,6 +3,7 @@ import i18n from 'i18next';
 import log from 'loglevel';
 
 import EventBus from '../../utils/EventBus';
+import useInput from '../../utils/hooks/useInput';
 import gettingStartedSchema from './schema';
 import { isGettingStartedModalDisabled, disableGettingStartedModal } from './localStorage';
 import { Button, Divider, ErrorMessage, Modal } from '../basic';
@@ -18,7 +19,6 @@ import type {
     GettingStartedSecretsData,
     GettingStartedTechnologiesData
 } from './model';
-import useInput from '../../utils/hooks/useInput';
 
 const getHeaderText = (schema: GettingStartedSchema, stepName: StepName, secretsStepIndex: number) => {
     switch (stepName) {
