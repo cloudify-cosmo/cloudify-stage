@@ -27,7 +27,6 @@
     },
     "gettingStartedModal" : {
         "disableModalLabel": "Don't show next time",
-        "enableModalHelp": "You can enable modal always in user profile.",
         "titles": {
             "technologiesStep": "Getting Started",
             "secretsStep": "Secrets",
