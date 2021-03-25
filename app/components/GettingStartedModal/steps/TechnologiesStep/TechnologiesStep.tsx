@@ -1,6 +1,6 @@
 import React, { memo, useEffect, useState } from 'react';
 
-import { UnsafelyTypedForm } from '../../UnsafelyTypedForm';
+import { UnsafelyTypedForm } from '../../unsafelyTypedForm';
 import TechnologyButton from './TechnologyButton';
 
 import type { GettingStartedSchema, GettingStartedTechnologiesData } from '../../model';

@@ -3,7 +3,7 @@ import React, { memo, useEffect, useState } from 'react';
 import type { ChangeEvent } from 'react';
 
 import { Form } from '../../basic';
-import { UnsafelyTypedForm, UnsafelyTypedFormField } from '../UnsafelyTypedForm';
+import { UnsafelyTypedForm, UnsafelyTypedFormField } from '../unsafelyTypedForm';
 
 import type { GettingStartedSecretsData, GettingStartedSchemaItem } from '../model';
 

@@ -7,7 +7,7 @@ import { createResourcesInstaller } from '../../installation/process';
 import { usePluginInstallationTasks, useSecretsInstallationTasks } from '../../installation/tasks';
 import { useInternal, useManager } from '../../managerHooks';
 import PluginTaskItems, { installedPluginDescription, rejectedPluginDescription } from './PluginTaskItems';
-import { UnsafelyTypedForm } from '../../UnsafelyTypedForm';
+import { UnsafelyTypedForm } from '../../unsafelyTypedForm';
 
 import type { GettingStartedData, GettingStartedSchema } from '../../model';
 
