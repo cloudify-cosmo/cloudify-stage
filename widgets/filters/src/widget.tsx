@@ -12,7 +12,7 @@ Stage.defineWidget<unknown, Stage.Types.PaginatedResponse<Filter>, WidgetConfigu
     isReact: true,
     hasStyle: false,
     hasReadme: false,
-    permission: Stage.GenericConfig.WIDGET_PERMISSION('agents'),
+    permission: Stage.GenericConfig.WIDGET_PERMISSION('filters'),
     categories: [Stage.GenericConfig.CATEGORY.SYSTEM_RESOURCES],
 
     initialConfiguration: [Stage.GenericConfig.POLLING_TIME_CONFIG(30), Stage.GenericConfig.PAGE_SIZE_CONFIG(10)],
