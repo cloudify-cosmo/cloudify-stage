@@ -179,7 +179,10 @@ const commands = {
     usePageMock: (
         widgetIds?: string | string[],
         widgetConfiguration: any = {},
-        additionalWidgetIdsToLoad: string[] = []
+        {
+            widgetsWidth = 8,
+            additionalWidgetIdsToLoad = []
+        }: { widgetsWidth?: number; additionalWidgetIdsToLoad?: string[] } = {}
     ) => {
         const widgetIdsArray = _.castArray(widgetIds);
         const widgetIdsToLoad = [...widgetIdsArray, 'filter', 'pluginsCatalog', ...additionalWidgetIdsToLoad];
@@ -209,7 +212,7 @@ const commands = {
                                                   allowMultipleSelection: true
                                               },
                                               height: 2,
-                                              width: 8,
+                                              width: widgetsWidth,
                                               x: 0,
                                               y: 0
                                           },
@@ -219,7 +222,7 @@ const commands = {
                                               configuration: widgetConfiguration,
                                               height: 20,
                                               drillDownPages: {},
-                                              width: 8,
+                                              width: widgetsWidth,
                                               x: 0,
                                               y: 2 + (index + 1) * 20
                                           }))

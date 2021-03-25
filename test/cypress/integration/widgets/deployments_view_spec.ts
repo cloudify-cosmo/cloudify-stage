@@ -16,6 +16,20 @@ describe('Deployments View widget', () => {
         sortColumn: 'created_at',
         sortAscending: false
     };
+    // NOTE: widgets below are shown in the details pane
+    const additionalWidgetIdsToLoad = [
+        'executions',
+        'eventsFilter',
+        'events',
+        'topology',
+        'outputs',
+        'labels',
+        'inputs',
+        'blueprintSources',
+        'nodes',
+        'executions',
+        'deploymentActionButtons'
+    ];
 
     before(() => {
         cy.activate()
@@ -25,19 +39,29 @@ describe('Deployments View widget', () => {
             .uploadBlueprint(blueprintUrl, blueprintName)
             .deployBlueprint(blueprintName, deploymentName, { webserver_port: 9123 })
             .createSite({ name: siteName })
-            .setSite(deploymentName, siteName);
+            .setSite(deploymentName, siteName)
+            .setLabels(deploymentName, [{ 'rendered-inside': 'details-panel' }]);
     });
 
     const useDeploymentsViewWidget = ({
         routeHandler,
         configurationOverrides = {}
     }: { routeHandler?: RouteHandler; configurationOverrides?: Record<string, any> } = {}) => {
-        cy.interceptSp('GET', 'deployments', routeHandler).as('deployments');
-        cy.usePageMock([widgetId], { ...widgetConfiguration, ...configurationOverrides }).mockLogin();
+        cy.interceptSp('GET', /^\/deployments/, routeHandler).as('deployments');
+        // NOTE: larger viewport since the widget requires more width to be comfortable to use
+        cy.viewport(1600, 900)
+            .usePageMock(
+                [widgetId],
+                { ...widgetConfiguration, ...configurationOverrides },
+                { additionalWidgetIdsToLoad, widgetsWidth: 12 }
+            )
+            .mockLogin();
         cy.wait('@deployments');
     };
 
-    const getDeploymentsViewTable = () => cy.get('.deploymentsViewWidget .widgetItem');
+    const getDeploymentsViewWidget = () => cy.get('.deploymentsViewWidget .widgetItem');
+    const getDeploymentsViewTable = () => getDeploymentsViewWidget().get('.gridTable');
+    const getDeploymentsViewDetailsPane = () => getDeploymentsViewWidget().get('.detailsPane');
 
     const widgetConfigurationHelpers = {
         getFieldsDropdown: () => cy.contains('List of fields to show in the table').parent().find('[role="listbox"]'),
@@ -75,13 +99,33 @@ describe('Deployments View widget', () => {
         });
     });
 
-    it('should display the deployments', () => {
+    it('should display the deployments and content in the details pane', () => {
         useDeploymentsViewWidget();
 
         getDeploymentsViewTable().within(() => {
-            cy.contains(deploymentName);
-            cy.contains(blueprintName);
-            cy.contains(siteName);
+            cy.contains(deploymentName)
+                .click()
+                .parents('tr')
+                .within(() => {
+                    cy.contains(blueprintName);
+                    cy.contains(siteName);
+                });
+        });
+
+        cy.log('Verify details pane');
+        getDeploymentsViewDetailsPane().within(() => {
+            cy.contains('Deployment Info').click();
+            cy.contains('rendered-inside').parents('tr').contains('details-pane');
+
+            cy.contains('button', 'Execute workflow').click();
+            // NOTE: actual workflow execution is not necessary
+            cy.interceptSp('POST', /^\/executions/, {
+                statusCode: 201,
+                body: {}
+            }).as('restartDeployment');
+            cy.root().parents('body').contains('a', 'Restart').click();
+            cy.root().parents('body').find('.modal').contains('button', 'Execute').click();
+            cy.wait('@restartDeployment');
         });
     });
 

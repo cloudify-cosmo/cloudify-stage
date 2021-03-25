@@ -292,11 +292,12 @@ export default class WidgetDynamicContent extends Component {
     }
 
     render() {
-        const { widget } = this.props;
+        const { widget, standalone } = this.props;
         const { loading } = this.state;
         const baseWidgetContentClassName = combineClassNames([
             'widgetContent',
-            !widget.definition.showHeader && 'noHeader'
+            !widget.definition.showHeader && 'noHeader',
+            standalone && 'standalone'
         ]);
 
         return (
@@ -338,5 +339,6 @@ WidgetDynamicContent.propTypes = {
     fetchWidgetData: PropTypes.func.isRequired,
     onWidgetConfigUpdate: PropTypes.func.isRequired,
     manager: PropTypes.shape({ tenants: PropTypes.shape({ selected: PropTypes.string }) }).isRequired,
-    widget: WidgetPropType.isRequired
+    widget: WidgetPropType.isRequired,
+    standalone: PropTypes.bool.isRequired
 };
