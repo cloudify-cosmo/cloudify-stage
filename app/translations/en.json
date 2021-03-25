@@ -557,7 +557,7 @@
             },
             "columns": {
                 "status": {
-                    "name": "",
+                    "name": "Status",
                     "iconLabels": {
                         "inProgress": "In progress",
                         "requiresAttention": "Requires attention"
@@ -583,7 +583,8 @@
                     "name": "Subservices",
                     "tooltip": "Services (Total)"
                 }
-            }
+            },
+            "noDataMessage": "No Results Found. Try changing the filter's parameters"
         },
         "labels": {
             "name": "Labels",
