@@ -1,9 +1,6 @@
 export default class FilterActions {
-    private toolbox: Stage.Types.Toolbox;
-
-    constructor(toolbox: Stage.Types.Toolbox) {
-        this.toolbox = toolbox;
-    }
+    // eslint-disable-next-line no-useless-constructor
+    constructor(private toolbox: Stage.Types.Toolbox) {}
 
     doList(params: unknown) {
         return this.toolbox.getManager().doGet(`/filters?_include=id,created_at,created_by`, params);
