@@ -6,6 +6,6 @@ export default class FilterActions {
     }
 
     doList(params: unknown) {
-        return this.toolbox.getManager().doGet(`/filters`, params);
+        return this.toolbox.getManager().doGet(`/filters?_include=id,created_at,created_by`, params);
     }
 }
