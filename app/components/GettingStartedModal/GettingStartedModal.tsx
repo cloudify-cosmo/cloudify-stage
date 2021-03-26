@@ -225,7 +225,7 @@ const GettingStartedModal = () => {
                     labelPosition="left"
                     onClick={handleModalClose}
                 />
-                {stepName !== StepName.Status && (
+                {!statusStepActive && (
                     <Button.Group floated="right">
                         {stepName !== StepName.Technologies && (
                             <Button
