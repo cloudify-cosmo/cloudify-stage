@@ -27,7 +27,7 @@ Stage.defineWidget<unknown, Stage.Types.PaginatedResponse<Filter>, WidgetConfigu
             return <Loading />;
         }
 
-        const formattedData = {
+        const formattedData: ComponentProps<typeof FiltersTable>['data'] = {
             filters: data.items,
             total: data.metadata.pagination.total
         };
