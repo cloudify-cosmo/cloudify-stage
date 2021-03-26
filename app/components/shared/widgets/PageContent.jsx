@@ -2,17 +2,17 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import _ from 'lodash';
 import i18n from 'i18next';
-import { WidgetsList } from './shared/widgets';
-import { Confirm } from './basic';
-import AddWidget from '../containers/AddWidget';
+import WidgetsList from './WidgetsList';
+import { Confirm } from '../../basic';
+import AddWidget from '../../../containers/AddWidget';
 import './PageContent.css';
-import Tabs from './Tabs';
-import useWidgetsFilter from './useWidgetsFilter';
-import EditModeButton from './EditModeButton';
-import { useResettableState } from '../utils/hooks';
-import LayoutPropType from '../utils/props/LayoutPropType';
-import Consts from '../utils/consts';
-import EmptyContainerMessage from './EmptyContainerMessage';
+import Tabs from '../../Tabs';
+import useWidgetsFilter from '../../useWidgetsFilter';
+import EditModeButton from '../../EditModeButton';
+import { useResettableState } from '../../../utils/hooks';
+import LayoutPropType from '../../../utils/props/LayoutPropType';
+import Consts from '../../../utils/consts';
+import EmptyContainerMessage from '../../EmptyContainerMessage';
 
 export default function PageContent({
     onWidgetUpdated,

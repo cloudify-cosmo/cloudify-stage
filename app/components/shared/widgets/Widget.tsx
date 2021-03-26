@@ -21,6 +21,11 @@ export interface WidgetOwnProps<Configuration> {
     onWidgetUpdated: (widgetId: string, params: Partial<WidgetObj<Configuration>>) => void;
     onWidgetRemoved: (widgetId: string) => void;
     widget: SimpleWidgetObj;
+    /**
+     * Whether the widget is rendered as a single item (standalone), or inside a grid.
+     * Depending on this prop, the widget will have different style for its position.
+     */
+    standalone?: boolean;
 }
 
 type WidgetProps<Configuration> = Omit<WidgetOwnProps<Configuration>, 'widget'> & PropsFromRedux;
@@ -110,7 +115,8 @@ class Widget<Configuration> extends Component<WidgetProps<Configuration>, Widget
             onWidgetRemoved,
             setContextValue,
             widget,
-            widgetData
+            widgetData,
+            standalone = false
         } = this.props;
         if (!widget.definition) {
             return (
@@ -176,7 +182,8 @@ class Widget<Configuration> extends Component<WidgetProps<Configuration>, Widget
                     className={stageUtils.combineClassNames([
                         'widgetItem',
                         isEditMode && widget.definition && !widget.definition.showBorder && 'borderOnHover',
-                        !widget.definition.showHeader && 'headerless'
+                        !widget.definition.showHeader && 'headerless',
+                        standalone && 'standalone'
                     ])}
                 >
                     {widget.definition && widget.definition.showHeader && (
@@ -246,6 +253,7 @@ class Widget<Configuration> extends Component<WidgetProps<Configuration>, Widget
                                 setContextValue={setContextValue}
                                 onWidgetConfigUpdate={this.widgetConfigUpdate}
                                 fetchWidgetData={fetchWidgetData}
+                                standalone={standalone}
                             />
                         ) : (
                             <Loading />

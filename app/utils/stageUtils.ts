@@ -7,6 +7,7 @@ import _ from 'lodash';
 import log from 'loglevel';
 import { saveAs } from 'file-saver';
 import marked from 'marked';
+import { v4 } from 'uuid';
 import { GenericField } from '../components/basic';
 import type { ManagerData } from '../reducers/managerReducer';
 
@@ -182,4 +183,6 @@ export default class StageUtils {
     }
 
     static isEmptyWidgetData = isEmptyWidgetData;
+
+    static uuid = v4;
 }
