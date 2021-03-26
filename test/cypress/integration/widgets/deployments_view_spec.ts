@@ -138,6 +138,7 @@ describe('Deployments View widget', () => {
             cy.root().parents('body').contains('a', 'Restart').click();
             cy.root().parents('body').find('.modal').contains('button', 'Execute').click();
             cy.wait('@restartDeployment');
+            cy.contains('Last Execution');
         });
     });
 
