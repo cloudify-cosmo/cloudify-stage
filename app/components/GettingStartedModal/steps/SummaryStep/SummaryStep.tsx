@@ -10,6 +10,7 @@ import PluginTaskItems, { installedPluginDescription, rejectedPluginDescription 
 import { UnsafelyTypedForm } from '../../unsafelyTypedForm';
 
 import type { GettingStartedData, GettingStartedSchema } from '../../model';
+import { useResettableState } from '../../../../utils/hooks';
 
 type Props = {
     installationMode?: boolean;
@@ -35,12 +36,14 @@ const SummaryStep = ({
     const handleInstallationCanceled = useCurrentCallback(onInstallationCanceled);
     const pluginInstallationTasks = usePluginInstallationTasks(selectedPlugins);
     const secretInstallationTasks = useSecretsInstallationTasks(selectedPlugins, typedSecrets);
-    const [installationErrors, setInstallationErrors] = useState<string[]>([]);
-    const [installationProgress, setInstallationProgress] = useState<number>();
+    const [installationErrors, setInstallationErrors, resetInstallationErrors] = useResettableState<string[]>([]);
+    const [installationProgress, setInstallationProgress, resetInstallationProgress] = useResettableState<
+        number | undefined
+    >(undefined);
 
     useEffect(() => {
-        setInstallationErrors([]);
-        setInstallationProgress(undefined);
+        resetInstallationErrors();
+        resetInstallationProgress();
         if (installationMode && pluginInstallationTasks.tasks && secretInstallationTasks.tasks) {
             let installationFinished = false;
             const resourcesInstaller = createResourcesInstaller(
