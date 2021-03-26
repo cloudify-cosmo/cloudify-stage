@@ -1,8 +1,9 @@
+import { ComponentProps } from 'react';
 import FilterActions from './FilterActions';
 import FiltersTable from './FiltersTable';
-import type { Filter, WidgetConfiguration } from './types';
+import type { Filter, FilterWidgetConfiguration } from './types';
 
-Stage.defineWidget<unknown, Stage.Types.PaginatedResponse<Filter>, WidgetConfiguration>({
+Stage.defineWidget<unknown, Stage.Types.PaginatedResponse<Filter>, FilterWidgetConfiguration>({
     id: 'filters',
     name: Stage.i18n.t('widgets.filters.name'),
     description: Stage.i18n.t('widgets.filters.description'),

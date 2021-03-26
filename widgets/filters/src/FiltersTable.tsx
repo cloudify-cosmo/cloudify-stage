@@ -1,7 +1,7 @@
 import _ from 'lodash';
 
 import { FunctionComponent } from 'react';
-import type { Filter, Widget } from './types';
+import type { Filter, FilterWidget } from './types';
 
 interface FiltersTableData {
     filters: Filter[];
@@ -11,7 +11,7 @@ interface FiltersTableData {
 interface FiltersTableProps {
     data: FiltersTableData;
     toolbox: Stage.Types.Toolbox;
-    widget: Widget;
+    widget: FilterWidget;
 }
 
 const FiltersTable: FunctionComponent<FiltersTableProps> = ({ data, toolbox, widget }) => {

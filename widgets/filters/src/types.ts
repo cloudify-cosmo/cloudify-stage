@@ -6,8 +6,8 @@ export interface Filter {
     created_at: string;
 }
 
-export interface WidgetConfiguration {
+export interface FilterWidgetConfiguration {
     pageSize: number;
 }
 
-export type Widget = Stage.Types.Widget<WidgetConfiguration>;
+export type FilterWidget = Stage.Types.Widget<FilterWidgetConfiguration>;
