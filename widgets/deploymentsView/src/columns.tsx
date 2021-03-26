@@ -31,35 +31,25 @@ export interface DeploymentsViewColumnDefinition {
 const i18nPrefix = 'widgets.deploymentsView';
 const i18nColumnsPrefix = `${i18nPrefix}.columns`;
 
-interface IconDescription {
-    labelI18nKey: string;
-    props: IconProps;
-}
 /**
  * A CID (Constrained Identity Function)
  * See https://kentcdodds.com/blog/how-to-write-a-constrained-identity-function-in-typescript
  */
-const createIconDescriptions = <T extends Record<string, IconDescription>>(iconDescriptions: T) => iconDescriptions;
+const createIconDescriptions = <T extends Record<string, IconProps>>(iconDescriptions: T) => iconDescriptions;
 
-const statusIconDescriptions = createIconDescriptions({
-    inProgress: {
-        labelI18nKey: 'inProgress',
-        props: { name: 'spinner', color: 'orange' }
-    },
-    requiresAttention: {
-        labelI18nKey: 'requiresAttention',
-        props: { name: 'exclamation', color: 'red' }
-    }
+const statusIconPropsMapping = createIconDescriptions({
+    inProgress: { name: 'spinner', color: 'orange' },
+    requiresAttention: { name: 'exclamation', color: 'red' }
 });
-type StatusIconName = keyof typeof statusIconDescriptions;
+type StatusIconName = keyof typeof statusIconPropsMapping;
 const renderStatusIcon = (iconName: StatusIconName) => {
     const { Icon, Popup } = Stage.Basic;
-    const iconDescription = statusIconDescriptions[iconName];
-    const label = Stage.i18n.t(`${i18nPrefix}.iconLabels.${iconDescription.labelI18nKey}`);
+    const iconProps = statusIconPropsMapping[iconName];
+    const label = Stage.i18n.t(`${i18nPrefix}.iconLabels.${iconName}`);
 
     return (
         // eslint-disable-next-line react/jsx-props-no-spreading
-        <Popup trigger={<Icon aria-label={label} {...iconDescription.props} />} position="top center">
+        <Popup trigger={<Icon aria-label={label} {...iconProps} />} position="top center">
             {label}
         </Popup>
     );
