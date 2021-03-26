@@ -1,4 +1,5 @@
 import React from 'react';
+import i18n from 'i18next';
 
 import { Icon } from '../../../basic';
 import PluginTaskItem from './PluginTaskItem';
@@ -7,7 +8,9 @@ import type { PluginInstallationTask } from '../../installation/tasks';
 
 export const installedPluginDescription = (
     <>
-        <span>plugin is already installed</span>
+        <span>
+            {i18n.t('gettingStartedModal.summary.pluginInstalledMessageSuffix', 'plugin is already installed.')}
+        </span>
         <Icon
             style={{ marginLeft: '0.5em', verticalAlign: 'middle', display: 'inline-block' }}
             color="green"
@@ -18,7 +21,12 @@ export const installedPluginDescription = (
 
 export const rejectedPluginDescription = (
     <>
-        <span>plugin is not found in catalog and manager</span>
+        <span>
+            {i18n.t(
+                'gettingStartedModal.summary.pluginNotFoundMessageSuffix',
+                'plugin is not found in catalog and manager.'
+            )}
+        </span>
         <Icon
             style={{ marginLeft: '0.5em', verticalAlign: 'middle', display: 'inline-block' }}
             color="red"

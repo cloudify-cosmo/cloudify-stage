@@ -95,7 +95,7 @@ const SummaryStep = ({
                                 <PluginTaskItems
                                     tasks={pluginInstallationTasks.tasks.scheduledPlugins}
                                     description={i18n.t(
-                                        'gettingStartedModal.summary.pluginInstallationMessageSuffix',
+                                        'gettingStartedModal.summary.pluginInstalMessageSuffix',
                                         'plugin will be installed.'
                                     )}
                                 />

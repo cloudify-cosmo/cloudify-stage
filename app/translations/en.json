@@ -49,7 +49,9 @@
         },
         "summary": {
             "taskListTitle": "Task List",
-            "pluginInstallationMessageSuffix": "plugin will be installed.",
+            "pluginInstalMessageSuffix": "plugin will be installed.",
+            "pluginInstalledMessageSuffix": "plugin is already installed.",
+            "pluginNotFoundMessageSuffix": "plugin is not found in catalog and manager.",
             "secretCreateMessageSuffix": "secret will be created.",
             "secretUpdateMessageSuffix": "secret will be updated."
         },
