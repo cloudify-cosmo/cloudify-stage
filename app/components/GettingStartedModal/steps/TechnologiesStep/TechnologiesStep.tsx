@@ -1,5 +1,6 @@
-import React, { memo, useEffect, useState } from 'react';
+import React, { memo, useEffect } from 'react';
 
+import { useResettableState } from '../../../../utils/hooks';
 import { UnsafelyTypedForm } from '../../unsafelyTypedForm';
 import TechnologyButton from './TechnologyButton';
 
@@ -12,8 +13,12 @@ type Props = {
 };
 
 const TechnologiesStep = ({ schema, selectedTechnologies, onChange }: Props) => {
-    const [localSelectedTechnologies, setLocalSelectedTechnologies] = useState(() => selectedTechnologies ?? {});
-    useEffect(() => setLocalSelectedTechnologies(selectedTechnologies ?? {}), [selectedTechnologies]);
+    const [
+        localSelectedTechnologies,
+        setLocalSelectedTechnologies,
+        resetLocalSelectedTechnologies
+    ] = useResettableState(selectedTechnologies ?? {});
+    useEffect(() => resetLocalSelectedTechnologies(), [selectedTechnologies]);
     return (
         // TODO(RD-1837): change to <Form ...> after forms will be changed to tsx version
         <UnsafelyTypedForm>
