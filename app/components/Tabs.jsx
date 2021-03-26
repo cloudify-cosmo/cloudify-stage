@@ -162,7 +162,7 @@ export default function Tabs({
 
 Tabs.propTypes = {
     tabs: PropTypes.arrayOf(PropTypes.shape({ widgets: PropTypes.arrayOf(PropTypes.shape({})) })).isRequired,
-    onWidgetUpdated: PropTypes.func.isRequired,
+    onWidgetUpdated: PropTypes.func,
     onWidgetRemoved: PropTypes.func.isRequired,
     onWidgetAdded: PropTypes.func.isRequired,
     onTabAdded: PropTypes.func.isRequired,
@@ -171,4 +171,8 @@ Tabs.propTypes = {
     onTabMoved: PropTypes.func.isRequired,
     onLayoutSectionRemoved: PropTypes.func.isRequired,
     isEditMode: PropTypes.bool.isRequired
+};
+
+Tabs.defaultProps = {
+    onWidgetUpdated: undefined
 };
