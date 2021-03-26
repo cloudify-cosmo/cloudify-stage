@@ -486,8 +486,10 @@
             "private_resource": false,
             "labels": [],
             "deployment_groups": [],
-            "latest_execution_status": "completed",
-            "environment_type": "controller"
+            "latest_execution_status": "failed",
+            "environment_type": "controller",
+            "total_operations": 10,
+            "finished_operations": 6
         },
 
         {
@@ -976,7 +978,9 @@
             ],
             "deployment_groups": [],
             "latest_execution_status": "completed",
-            "environment_type": "subcloud"
+            "environment_type": "subcloud",
+            "total_operations": 10,
+            "finished_operations": 10
         },
         {
             "id": "hello-world-one",
@@ -1456,8 +1460,10 @@
             "private_resource": false,
             "labels": [],
             "deployment_groups": [],
-            "latest_execution_status": "completed",
-            "environment_type": "acidic"
+            "latest_execution_status": "in_progress",
+            "environment_type": "acidic",
+            "total_operations": 10,
+            "finished_operations": 3
         }
     ]
 }
