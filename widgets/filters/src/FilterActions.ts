@@ -1,5 +1,5 @@
 export default class FilterActions {
-    toolbox: Stage.Types.Toolbox;
+    private toolbox: Stage.Types.Toolbox;
 
     constructor(toolbox: Stage.Types.Toolbox) {
         this.toolbox = toolbox;
