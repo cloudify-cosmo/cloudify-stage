@@ -225,6 +225,19 @@ declare global {
         const Hooks: Hooks;
         const defineHook: (definition: Partial<Hooks>) => void;
 
+        /**
+         * Well-known entries that can be stored in the widgets' context.
+         */
+        interface ContextEntries {
+            deploymentId: string | string[] | null;
+            blueprintId: any;
+            nodeId: any;
+            executionId: any;
+            nodeInstanceId: any;
+            executionStatus: any;
+            siteName: any;
+        }
+
         const i18n: typeof import('i18next').default;
 
         /**

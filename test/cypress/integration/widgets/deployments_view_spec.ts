@@ -138,20 +138,24 @@ describe('Deployments View widget', () => {
         useDeploymentsViewWidget({
             routeHandler: {
                 fixture: 'deployments/various-statuses.json'
+            },
+            configurationOverrides: {
+                fieldsToShow: [...widgetConfiguration.fieldsToShow, 'environmentType']
             }
-        });
-
-        cy.log('Show all columns');
-        cy.editWidgetConfiguration(widgetId, () => {
-            widgetConfigurationHelpers.toggleFieldsDropdown();
-            widgetConfigurationHelpers.getFieldsDropdown().within(() => {
-                cy.get('[role="option"]').contains('Environment Type').click();
-            });
-            widgetConfigurationHelpers.toggleFieldsDropdown();
         });
 
         const verifyDeploymentInformation = ({ environmentType }: { environmentType: string }) => {
             cy.contains(environmentType);
+        };
+        const verifyProgressBar = (className: string, width: string) => {
+            cy.root()
+                .next('tr.deployment-progress-row')
+                .find('.deployment-progress-bar')
+                .should('have.class', className)
+                // NOTE: cannot use have.css since it returns the computed width in px, not the percentage
+                // See https://github.com/cypress-io/cypress/issues/6309#issuecomment-656554907
+                .should('have.attr', 'style')
+                .and('include', `width: ${width}`);
         };
 
         getDeploymentsViewTable().within(() => {
@@ -167,6 +171,7 @@ describe('Deployments View widget', () => {
                     verifyDeploymentInformation({
                         environmentType: 'controller'
                     });
+                    verifyProgressBar('failed', '60%');
                 });
 
             cy.contains('hello-world-one')
@@ -179,6 +184,7 @@ describe('Deployments View widget', () => {
                     verifyDeploymentInformation({
                         environmentType: 'acidic'
                     });
+                    verifyProgressBar('in-progress', '30%');
                 });
 
             cy.contains('one-in-warsaw')
@@ -189,6 +195,12 @@ describe('Deployments View widget', () => {
                     verifyDeploymentInformation({
                         environmentType: 'subcloud'
                     });
+
+                    // NOTE: ensure no progress bar
+                    cy.root()
+                        .should('have.class', 'deployment-progressless-row')
+                        .next('tr')
+                        .should('not.have.class', 'deployment-progress-row');
                 });
         });
     });
