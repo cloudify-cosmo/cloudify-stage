@@ -1,6 +1,6 @@
 import i18n from 'i18next';
-import { useState, useEffect } from 'react';
-import { useManager } from '../common/managerHooks';
+import { useMemo } from 'react';
+import { useManagerFetch } from '../common/fetchHooks';
 
 import type { SecretsResponse, SecretResponse } from './model';
 
@@ -11,33 +11,16 @@ export type SecretsHook = {
 };
 
 const useFetchSecrets = () => {
-    const manager = useManager();
-    const [state, setState] = useState<SecretsHook>(() => ({ loading: true }));
-    useEffect(() => {
-        let mounted = true;
-        manager
-            .doGet('/secrets?_include=key,visibility')
-            .then((secrets: SecretsResponse) => {
-                if (mounted) {
-                    setState({ loading: false, secrets: secrets.items });
-                }
-            })
-            .catch(() => {
-                if (mounted) {
-                    setState({
-                        loading: false,
-                        error: i18n.t(
-                            'gettingStartedModal.initialization.secretsLoadingError',
-                            'Secrets information loading error.'
-                        )
-                    });
-                }
-            });
-        return () => {
-            mounted = false;
+    const managerSecrets = useManagerFetch<SecretsResponse>('/secrets?_include=key,visibility');
+    return useMemo<SecretsHook>(() => {
+        return {
+            loading: managerSecrets.loading,
+            secrets: managerSecrets.response?.items,
+            error: managerSecrets.error
+                ? i18n.t('gettingStartedModal.initialization.secretsLoadingError', 'Secrets information loading error.')
+                : undefined
         };
-    }, []);
-    return state;
+    }, [managerSecrets]);
 };
 
 export default useFetchSecrets;
