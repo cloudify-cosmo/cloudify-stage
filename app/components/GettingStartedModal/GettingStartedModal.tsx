@@ -4,9 +4,9 @@ import log from 'loglevel';
 
 import EventBus from '../../utils/EventBus';
 import useInput from '../../utils/hooks/useInput';
-import gettingStartedSchema from './schema';
-import { isGettingStartedModalDisabled, disableGettingStartedModal } from './localStorage';
 import { Form, Button, Divider, ErrorMessage, Modal } from '../basic';
+import gettingStartedSchema from './schema.json';
+import { isGettingStartedModalDisabled, disableGettingStartedModal } from './localStorage';
 import TechnologiesStep from './steps/TechnologiesStep';
 import SecretsStep from './steps/SecretsStep';
 import SummaryStep from './steps/SummaryStep';
@@ -19,6 +19,8 @@ import type {
     GettingStartedSecretsData,
     GettingStartedTechnologiesData
 } from './model';
+
+const castedGettingStartedSchema = gettingStartedSchema as GettingStartedSchema;
 
 const getHeaderText = (schema: GettingStartedSchema, stepName: StepName, secretsStepIndex: number) => {
     switch (stepName) {
@@ -60,7 +62,7 @@ const GettingStartedModal = () => {
     const [modalDisabledChecked, handleModalDisabledChange] = useInput(false);
 
     const secretsStepsSchemas = useMemo(
-        () => createTechnologiesGroups(gettingStartedSchema.filter(items => technologiesStepData[items.name])), // steps with unique secrets for selected technologies
+        () => createTechnologiesGroups(castedGettingStartedSchema.filter(items => technologiesStepData[items.name])), // steps with unique secrets for selected technologies
         [technologiesStepData]
     );
 
@@ -180,7 +182,7 @@ const GettingStartedModal = () => {
                 )}
                 {stepName === StepName.Technologies && (
                     <TechnologiesStep
-                        schema={gettingStartedSchema}
+                        schema={castedGettingStartedSchema}
                         selectedTechnologies={technologiesStepData}
                         onChange={handleTechnologiesStepChange}
                     />
