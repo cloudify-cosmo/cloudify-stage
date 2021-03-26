@@ -32,6 +32,7 @@ export interface Deployment {
     latest_execution_status: LatestExecutionStatus;
     deployment_status: DeploymentStatus;
     installation_status: InstallationStatus;
+    // TODO(RD-1839): make properties required after they are stable in the backend
     environment_type?: string;
     total_operations?: number;
     finished_operations?: number;

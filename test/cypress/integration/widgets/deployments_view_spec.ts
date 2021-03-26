@@ -30,6 +30,13 @@ describe('Deployments View widget', () => {
         'executions',
         'deploymentActionButtons'
     ];
+    /** Column numbers as they appear in the table */
+    const columnNumbers = {
+        status: 1,
+        environmentType: 4,
+        subenvironments: 6,
+        subservices: 7
+    };
 
     before(() => {
         cy.activate()
@@ -145,8 +152,28 @@ describe('Deployments View widget', () => {
             }
         });
 
-        const verifyDeploymentInformation = ({ environmentType }: { environmentType: string }) => {
-            cy.contains(environmentType);
+        const verifyEnvironmentType = (environmentType: string) => {
+            cy.get(`td:nth-of-type(${columnNumbers.environmentType})`).contains(environmentType);
+        };
+        const verifySubdeployments = ({
+            columnNumber,
+            count,
+            iconLabel
+        }: {
+            columnNumber: number;
+            count: number;
+            iconLabel?: string;
+        }) => {
+            cy.log(`Verify subdeployments in column ${columnNumber}`);
+            cy.get(`td:nth-of-type(${columnNumber})`).within(() => {
+                cy.contains(count);
+
+                if (iconLabel) {
+                    cy.get(`i[aria-label="${iconLabel}"]`);
+                } else {
+                    cy.get('i').should('not.exist');
+                }
+            });
         };
         const verifyProgressBar = (className: string, width: string) => {
             cy.root()
@@ -163,14 +190,22 @@ describe('Deployments View widget', () => {
             cy.contains('deployments_view_test_deployment')
                 .parents('tr')
                 .within(() => {
-                    cy.get('i.exclamation[aria-label="Requires attention"]')
+                    cy.get(`td:nth-of-type(${columnNumbers.status}) i.exclamation[aria-label="Requires attention"]`)
                         .as('requiresAttentionIcon')
                         .trigger('mouseover');
                     cy.root().parents('body').find('.popup').contains('Requires attention');
                     cy.get('@requiresAttentionIcon').trigger('mouseout');
 
-                    verifyDeploymentInformation({
-                        environmentType: 'controller'
+                    verifyEnvironmentType('controller');
+                    verifySubdeployments({
+                        columnNumber: columnNumbers.subenvironments,
+                        count: 1,
+                        iconLabel: 'In progress'
+                    });
+                    verifySubdeployments({
+                        columnNumber: columnNumbers.subservices,
+                        count: 3,
+                        iconLabel: 'Requires attention'
                     });
                     verifyProgressBar('failed', '60%');
                 });
@@ -178,12 +213,21 @@ describe('Deployments View widget', () => {
             cy.contains('hello-world-one')
                 .parents('tr')
                 .within(() => {
-                    cy.get('i.spinner[aria-label="In progress"]').as('inProgressIcon').trigger('mouseover');
+                    cy.get(`td:nth-of-type(${columnNumbers.status}) i.spinner[aria-label="In progress"]`)
+                        .as('inProgressIcon')
+                        .trigger('mouseover');
                     cy.root().parents('body').find('.popup').contains('In progress');
                     cy.get('@inProgressIcon').trigger('mouseout');
 
-                    verifyDeploymentInformation({
-                        environmentType: 'acidic'
+                    verifyEnvironmentType('acidic');
+                    verifySubdeployments({
+                        columnNumber: columnNumbers.subenvironments,
+                        count: 5
+                    });
+                    verifySubdeployments({
+                        columnNumber: columnNumbers.subservices,
+                        count: 80,
+                        iconLabel: 'In progress'
                     });
                     verifyProgressBar('in-progress', '30%');
                 });
@@ -193,8 +237,14 @@ describe('Deployments View widget', () => {
                 .within(() => {
                     cy.get('td:nth-child(1) i').should('not.exist');
 
-                    verifyDeploymentInformation({
-                        environmentType: 'subcloud'
+                    verifyEnvironmentType('subcloud');
+                    verifySubdeployments({
+                        columnNumber: columnNumbers.subenvironments,
+                        count: 10
+                    });
+                    verifySubdeployments({
+                        columnNumber: columnNumbers.subservices,
+                        count: 8
                     });
 
                     // NOTE: ensure no progress bar
