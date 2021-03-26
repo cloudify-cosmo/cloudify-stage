@@ -68,6 +68,7 @@ const GettingStartedModal = () => {
 
     const secretsStepSchema = secretsStepsSchemas[secretsStepIndex];
     const secretsStepData = secretsStepsData[secretsStepSchema?.name];
+    const statusStepActive = stepName === StepName.Status;
 
     const checkTechnologiesStepDataErrors = () => {
         const usedTechnologiesError = validateTechnologyFields(technologiesStepData);
@@ -174,7 +175,7 @@ const GettingStartedModal = () => {
         <Modal open={modalOpen} onClose={handleModalClose}>
             <Modal.Header>{getHeaderText(secretsStepsSchemas, stepName, secretsStepIndex)}</Modal.Header>
             <Modal.Content style={{ minHeight: 220 }}>
-                {stepErrors && stepErrors.length > 0 && (
+                {!_.isEmpty(stepErrors) && (
                     <>
                         <ErrorMessage error={stepErrors} onDismiss={handleStepErrorsDismiss} />
                         <Divider hidden />
@@ -194,9 +195,9 @@ const GettingStartedModal = () => {
                         onChange={handleSecretsStepChange}
                     />
                 )}
-                {(stepName === StepName.Summary || stepName === StepName.Status) && (
+                {(stepName === StepName.Summary || statusStepActive) && (
                     <SummaryStep
-                        installationMode={stepName === StepName.Status}
+                        installationMode={statusStepActive}
                         selectedPlugins={secretsStepsSchemas}
                         typedSecrets={secretsStepsData}
                         onInstallationStarted={handleInstallationStarted}
