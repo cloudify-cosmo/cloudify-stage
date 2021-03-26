@@ -206,7 +206,6 @@ const GettingStartedModal = () => {
             <Modal.Content style={{ minHeight: 60, overflow: 'hidden' }}>
                 <Form.Field>
                     <Form.Checkbox
-                        name="modalDisabledChecked"
                         label={i18n.t('gettingStartedModal.disableModalLabel', "Don't show next time")}
                         help=""
                         checked={modalDisabledChecked}
@@ -215,16 +214,14 @@ const GettingStartedModal = () => {
                 </Form.Field>
             </Modal.Content>
             <Modal.Actions style={{ minHeight: 60 }}>
-                <Button.Group floated="left">
-                    <Button
-                        icon="cancel"
-                        content={i18n.t('gettingStartedModal.buttons.closeModal', 'Close')}
-                        floated="left"
-                        disabled={installationProcessing}
-                        labelPosition="left"
-                        onClick={handleModalClose}
-                    />
-                </Button.Group>
+                <Button
+                    icon="cancel"
+                    content={i18n.t('gettingStartedModal.buttons.closeModal', 'Close')}
+                    floated="left"
+                    disabled={installationProcessing}
+                    labelPosition="left"
+                    onClick={handleModalClose}
+                />
                 {stepName !== StepName.Status && (
                     <Button.Group floated="right">
                         {stepName !== StepName.Technologies && (
