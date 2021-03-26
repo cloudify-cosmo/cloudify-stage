@@ -1,7 +1,7 @@
 import i18n from 'i18next';
-import { useState, useEffect } from 'react';
+import { useMemo } from 'react';
 
-import { useInternal, useManager } from '../managerHooks';
+import { useInternalFetch, useManagerFetch } from '../common/fetchHooks';
 
 import type { CatalogPluginResponse, ManagerPluginResponse, ManagerPluginsResponse } from './model';
 
@@ -15,46 +15,40 @@ export type PluginsHook = {
 };
 
 const useFetchPlugins = () => {
-    const manager = useManager();
-    const internal = useInternal();
-    const [state, setState] = useState<PluginsHook>({ loading: true });
-    useEffect(() => {
-        let mounted = true;
-        Promise.all([
-            internal.doGet('/external/content', { url: i18n.t('urls.pluginsCatalog') }) as Promise<
-                CatalogPluginResponse[]
-            >,
-            manager.doGet('/plugins?_include=distribution,package_name,package_version,visibility') as Promise<
-                ManagerPluginsResponse
-            >
-        ])
-            .then(([available, installed]) => {
-                if (mounted) {
-                    setState({
-                        loading: false,
-                        plugins: {
-                            available,
-                            installed: installed.items
-                        }
-                    });
-                }
-            })
-            .catch(() => {
-                if (mounted) {
-                    setState({
-                        loading: false,
-                        error: i18n.t(
-                            'gettingStartedModal.initialization.pluginsLoadingError',
-                            'Plugins information loading error.'
-                        )
-                    });
-                }
-            });
-        return () => {
-            mounted = false;
+    const pluginsCatalogUrl = i18n.t('urls.pluginsCatalog');
+    // params from memo to prevent fetching on rendering
+    const pluginsCatalogParams = useMemo(() => {
+        return {
+            url: pluginsCatalogUrl
         };
-    }, []);
-    return state;
+    }, [pluginsCatalogUrl]);
+    const catalogPlugins = useInternalFetch<CatalogPluginResponse[]>('/external/content', pluginsCatalogParams);
+    const managerPlugins = useManagerFetch<ManagerPluginsResponse>(
+        '/plugins?_include=distribution,package_name,package_version,visibility'
+    );
+    return useMemo<PluginsHook>(() => {
+        if (catalogPlugins.response && managerPlugins.response) {
+            return {
+                loading: false,
+                plugins: {
+                    available: catalogPlugins.response,
+                    installed: managerPlugins.response.items
+                }
+            };
+        }
+        if (catalogPlugins.error || managerPlugins.error) {
+            return {
+                loading: false,
+                error: i18n.t(
+                    'gettingStartedModal.initialization.pluginsLoadingError',
+                    'Plugins information loading error.'
+                )
+            };
+        }
+        return {
+            loading: catalogPlugins.loading || managerPlugins.loading
+        };
+    }, [catalogPlugins, managerPlugins]);
 };
 
 export default useFetchPlugins;

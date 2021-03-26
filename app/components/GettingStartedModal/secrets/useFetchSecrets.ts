@@ -1,6 +1,6 @@
 import i18n from 'i18next';
 import { useState, useEffect } from 'react';
-import { useManager } from '../managerHooks';
+import { useManager } from '../common/managerHooks';
 
 import type { SecretsResponse, SecretResponse } from './model';
 

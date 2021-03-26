@@ -3,7 +3,7 @@ import log from 'loglevel';
 
 import useFetchPlugins from '../plugins/useFetchPlugins';
 import useFetchSecrets from '../secrets/useFetchSecrets';
-import { useCurrentDistribution } from '../managerHooks';
+import { useCurrentDistribution } from '../common/managerHooks';
 
 import type { GettingStartedData, GettingStartedSchema, RegExpString, GettingStartedSecretsData } from '../model';
 import type { CatalogPluginResponse, ManagerPluginResponse, URLString } from '../plugins/model';

@@ -5,7 +5,7 @@ import { Divider, Header, Label, List, Message, Progress } from '../../../basic'
 import useCurrentCallback from '../../common/useCurrentCallback';
 import { createResourcesInstaller } from '../../installation/process';
 import { usePluginInstallationTasks, useSecretsInstallationTasks } from '../../installation/tasks';
-import { useInternal, useManager } from '../../managerHooks';
+import { useInternal, useManager } from '../../common/managerHooks';
 import PluginTaskItems, { installedPluginDescription, rejectedPluginDescription } from './PluginTaskItems';
 import { UnsafelyTypedForm } from '../../unsafelyTypedForm';
 

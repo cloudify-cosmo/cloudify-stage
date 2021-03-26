@@ -2,10 +2,10 @@ import { useMemo } from 'react';
 import { useSelector } from 'react-redux';
 import _ from 'lodash';
 
-import Internal from '../../utils/Internal';
-import Manager from '../../utils/Manager';
+import Internal from '../../../utils/Internal';
+import Manager from '../../../utils/Manager';
 
-import type { ReduxState } from '../../reducers';
+import type { ReduxState } from '../../../reducers';
 
 const getCurrentDistribution = (manager: Manager) => {
     const currentDistributionName = manager.getDistributionName().trim();
