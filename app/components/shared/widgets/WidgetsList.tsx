@@ -14,7 +14,12 @@ export default function WidgetsList({ onWidgetUpdated, onWidgetRemoved, isEditMo
     return (
         <Grid
             isEditMode={isEditMode}
-            onGridDataChange={onWidgetUpdated}
+            onGridDataChange={
+                onWidgetUpdated ??
+                (() => {
+                    throw new Error('onWidgetUpdated must be provided in edit mode');
+                })
+            }
             style={{ zIndex: _(widgets).filter({ maximized: true }).size() }}
         >
             {widgets.map(widget =>
