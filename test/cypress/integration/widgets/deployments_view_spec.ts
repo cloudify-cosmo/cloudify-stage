@@ -112,6 +112,11 @@ describe('Deployments View widget', () => {
                 });
         });
 
+        cy.log('Check for maximization buttons');
+        // NOTE: there should be only the maximization button for the main widget.
+        // Widgets in the details pane should not have them, since they would be noops.
+        getDeploymentsViewWidget().find('i.expand').should('have.length', 1);
+
         cy.log('Verify details pane');
         getDeploymentsViewDetailsPane().within(() => {
             cy.contains('Deployment Info').click();
