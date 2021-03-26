@@ -10,5 +10,14 @@
     },
     "env": {
         "jquery": true
-    }
+    },
+    "overrides": [
+        {
+            // NOTE: disable globally once TS migration is done
+            "files": ["**/*.tsx"],
+            "rules": {
+                "react/prop-types": "off"
+            }
+        }
+    ]
 }

@@ -1,5 +1,6 @@
 import _ from 'lodash';
 
+import { FunctionComponent } from 'react';
 import type { Filter, Widget } from './types';
 
 interface FiltersTableData {
@@ -13,7 +14,7 @@ interface FiltersTableProps {
     widget: Widget;
 }
 
-export default function FiltersTable({ data, toolbox, widget }: FiltersTableProps) {
+const FiltersTable: FunctionComponent<FiltersTableProps> = ({ data, toolbox, widget }) => {
     const { i18n } = Stage;
     const { DataTable } = Stage.Basic;
     const { Time } = Stage.Utils;
@@ -41,4 +42,6 @@ export default function FiltersTable({ data, toolbox, widget }: FiltersTableProp
             </DataTable>
         </>
     );
-}
+};
+
+export default FiltersTable;
