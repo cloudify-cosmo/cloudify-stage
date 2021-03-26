@@ -13,7 +13,6 @@ const DetailsPaneWidgets: FunctionComponent = () => {
                 page={pageLayout as any}
                 // NOTE: No need to handle the events below since edit mode is always off
                 onWidgetRemoved={noop}
-                onWidgetUpdated={noop}
                 onTabAdded={noop}
                 onTabRemoved={noop}
                 onTabUpdated={noop}
