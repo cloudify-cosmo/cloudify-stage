@@ -6,7 +6,7 @@ import useFetchSecrets from '../secrets/useFetchSecrets';
 import { useCurrentDistribution } from '../managerHooks';
 
 import type { GettingStartedData, GettingStartedSchema, RegExpString, GettingStartedSecretsData } from '../model';
-import type { URLString } from '../plugins/model';
+import type { CatalogPluginResponse, ManagerPluginResponse, URLString } from '../plugins/model';
 import type { PluginsHook } from '../plugins/useFetchPlugins';
 import type { SecretsHook } from '../secrets/useFetchSecrets';
 
@@ -50,6 +50,63 @@ export const filterSchemaData = (selectedPlugins: GettingStartedSchema, typedSec
     return filteredSecrets;
 };
 
+const findScheduledPluginCandidate = (
+    catalogPlugins: CatalogPluginResponse[],
+    currentDistribution: string,
+    expectedPluginName: string,
+    expectedPluginVersion?: RegExpString
+) => {
+    let scheduledPluginCandidate: PluginInstallationTask | null = null;
+    for (let i = 0; i < catalogPlugins.length; i += 1) {
+        const catalogPlugin = catalogPlugins[i];
+        if (
+            catalogPlugin.name === expectedPluginName &&
+            validatePluginVersion(expectedPluginVersion, catalogPlugin.version)
+        ) {
+            const matchedWagon = catalogPlugin.wagons.find(wagon => {
+                const wagonName = wagon.name.toLowerCase();
+                return wagonName === currentDistribution || wagonName === 'any';
+            });
+            if (matchedWagon) {
+                scheduledPluginCandidate = {
+                    icon: catalogPlugin.icon,
+                    name: expectedPluginName,
+                    title: catalogPlugin.title ?? expectedPluginName,
+                    version: catalogPlugin.version,
+                    distribution: matchedWagon.name,
+                    yamlUrl: catalogPlugin.link,
+                    wagonUrl: matchedWagon.url
+                };
+                break;
+            }
+        }
+    }
+    return scheduledPluginCandidate;
+};
+
+const findInstalledPluginCandidate = (
+    managerPlugins: ManagerPluginResponse[],
+    scheduledPluginCandidate: PluginInstallationTask | undefined | null,
+    expectedPluginName: string,
+    expectedPluginVersion?: RegExpString
+) => {
+    for (let i = 0; i < managerPlugins.length; i += 1) {
+        const managerPlugin = managerPlugins[i];
+        if (
+            managerPlugin.package_name === expectedPluginName &&
+            validatePluginVersion(expectedPluginVersion, managerPlugin.package_version)
+        ) {
+            return {
+                icon: scheduledPluginCandidate?.icon,
+                name: expectedPluginName,
+                title: scheduledPluginCandidate?.title ?? expectedPluginName,
+                version: managerPlugin.package_version
+            };
+        }
+    }
+    return null;
+};
+
 export type PluginInstallationTask = {
     icon?: URLString;
     name: string;
@@ -81,48 +138,22 @@ export const createPluginInstallationTasks = (
                 if (expectedPluginKey in acceptedPlugins) {
                     return;
                 }
-                let scheduledPluginCandidate: PluginInstallationTask | null = null;
-                for (let i = 0; i < catalogPlugins.length; i += 1) {
-                    const catalogPlugin = catalogPlugins[i];
-                    if (
-                        catalogPlugin.name === expectedPluginName &&
-                        validatePluginVersion(expectedPluginVersion, catalogPlugin.version)
-                    ) {
-                        const matchedWagon = catalogPlugin.wagons.find(wagon => {
-                            const wagonName = wagon.name.toLowerCase();
-                            return wagonName === currentDistribution || wagonName === 'any';
-                        });
-                        if (matchedWagon) {
-                            scheduledPluginCandidate = {
-                                icon: catalogPlugin.icon,
-                                name: expectedPluginName,
-                                title: catalogPlugin.title ?? expectedPluginName,
-                                version: catalogPlugin.version,
-                                distribution: matchedWagon.name,
-                                yamlUrl: catalogPlugin.link,
-                                wagonUrl: matchedWagon.url
-                            };
-                            break;
-                        }
-                    }
-                }
-                for (let i = 0; i < managerPlugins.length; i += 1) {
-                    const managerPlugin = managerPlugins[i];
-                    if (
-                        managerPlugin.package_name === expectedPluginName &&
-                        validatePluginVersion(expectedPluginVersion, managerPlugin.package_version)
-                    ) {
-                        acceptedPlugins[expectedPluginKey] = true;
-                        installedPlugins.push({
-                            icon: scheduledPluginCandidate?.icon,
-                            name: expectedPluginName,
-                            title: scheduledPluginCandidate?.title ?? expectedPluginName,
-                            version: managerPlugin.package_version
-                        });
-                        return;
-                    }
-                }
-                if (scheduledPluginCandidate) {
+                const scheduledPluginCandidate = findScheduledPluginCandidate(
+                    catalogPlugins,
+                    currentDistribution,
+                    expectedPluginName,
+                    expectedPluginVersion
+                );
+                const installedPluginCandidate = findInstalledPluginCandidate(
+                    managerPlugins,
+                    scheduledPluginCandidate,
+                    expectedPluginName,
+                    expectedPluginVersion
+                );
+                if (installedPluginCandidate) {
+                    acceptedPlugins[expectedPluginKey] = true;
+                    installedPlugins.push(installedPluginCandidate);
+                } else if (scheduledPluginCandidate) {
                     acceptedPlugins[expectedPluginKey] = true;
                     scheduledPlugins.push(scheduledPluginCandidate);
                 } else {
