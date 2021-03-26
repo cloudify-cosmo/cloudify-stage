@@ -164,7 +164,7 @@ export default function PageContent({
 }
 
 PageContent.propTypes = {
-    onWidgetUpdated: PropTypes.func.isRequired,
+    onWidgetUpdated: PropTypes.func,
     onWidgetRemoved: PropTypes.func.isRequired,
     onWidgetAdded: PropTypes.func.isRequired,
     onTabAdded: PropTypes.func.isRequired,
@@ -178,4 +178,8 @@ PageContent.propTypes = {
         layout: LayoutPropType
     }).isRequired,
     isEditMode: PropTypes.bool.isRequired
+};
+
+PageContent.defaultProps = {
+    onWidgetUpdated: undefined
 };
