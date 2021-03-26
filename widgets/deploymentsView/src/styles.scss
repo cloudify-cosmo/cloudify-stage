@@ -28,6 +28,10 @@ $deploymentProgressBarColors: (
         border-top: 0;
     }
 
+    .subdeploymentColumn {
+        white-space: nowrap;
+    }
+
     .deployment-progress-bar {
         height: var(--deployment-progress-underline-height);
     }

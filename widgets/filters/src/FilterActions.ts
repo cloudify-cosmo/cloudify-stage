@@ -1,4 +1,4 @@
-import { Filter } from './types';
+import type { Filter } from './types';
 
 export default class FilterActions {
     // eslint-disable-next-line no-useless-constructor

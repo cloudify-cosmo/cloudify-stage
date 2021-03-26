@@ -19,7 +19,7 @@ describe('Deployment Action Buttons widget', () => {
     });
 
     describe('when deploymentId is set in the context', () => {
-        beforeEach(() => cy.setDeploymentContext(deploymentName));
+        beforeEach(() => cy.clearDeploymentContext().setDeploymentContext(deploymentName));
 
         it('should allow to execute a workflow', () => {
             cy.interceptSp('POST', `/executions`).as('executeWorkflow');
