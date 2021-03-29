@@ -27,8 +27,8 @@ type Props = {
     onTechnologiesStepChange: (technologies: GettingStartedTechnologiesData) => void;
     onSecretsStepChange: (secrets: GettingStartedSecretsData) => void;
     onInstallationStarted: () => void;
-    handleInstallationFinished: () => void;
-    handleInstallationCanceled: () => void;
+    onInstallationFinished: () => void;
+    onInstallationCanceled: () => void;
 };
 
 const ModalContent = ({
@@ -42,8 +42,8 @@ const ModalContent = ({
     onTechnologiesStepChange,
     onSecretsStepChange,
     onInstallationStarted,
-    handleInstallationFinished,
-    handleInstallationCanceled
+    onInstallationFinished,
+    onInstallationCanceled
 }: Props) => {
     const secretsStepSchema = secretsStepsSchemas[secretsStepIndex];
     const secretsStepData = secretsStepsData[secretsStepSchema?.name];
@@ -76,8 +76,8 @@ const ModalContent = ({
                     selectedPlugins={secretsStepsSchemas}
                     typedSecrets={secretsStepsData}
                     onInstallationStarted={onInstallationStarted}
-                    onInstallationFinished={handleInstallationFinished}
-                    onInstallationCanceled={handleInstallationCanceled}
+                    onInstallationFinished={onInstallationFinished}
+                    onInstallationCanceled={onInstallationCanceled}
                 />
             )}
         </Modal.Content>

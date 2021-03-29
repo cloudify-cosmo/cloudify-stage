@@ -162,8 +162,8 @@ const GettingStartedModal = () => {
                 onTechnologiesStepChange={handleTechnologiesStepChange}
                 onSecretsStepChange={handleSecretsStepChange}
                 onInstallationStarted={handleInstallationStarted}
-                handleInstallationFinished={handleInstallationFinishedOrCanceled}
-                handleInstallationCanceled={handleInstallationFinishedOrCanceled}
+                onInstallationFinished={handleInstallationFinishedOrCanceled}
+                onInstallationCanceled={handleInstallationFinishedOrCanceled}
             />
             <Modal.Content style={{ minHeight: 60, overflow: 'hidden' }}>
                 <Form.Field>
