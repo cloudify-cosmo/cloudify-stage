@@ -38,12 +38,13 @@ if (process.env.NODE_ENV === 'development' || process.env.TEST) {
         initialConfiguration: [
             Stage.GenericConfig.POLLING_TIME_CONFIG(10),
             {
-                // TODO: Requires RD-377 to add support for filters
                 id: 'filterId',
+                // TODO(RD-1851): add autocomplete instead of plain text input
                 type: Stage.Basic.GenericField.STRING_TYPE,
                 name: Stage.i18n.t(`${i18nPrefix}.configuration.filterId.name`)
             },
             {
+                // TODO(RD-1853): handle filtering by parent deployment
                 id: 'filterByParentDeployment',
                 type: Stage.Basic.GenericField.BOOLEAN_TYPE,
                 name: Stage.i18n.t(`${i18nPrefix}.configuration.filterByParentDeployment.name`),
