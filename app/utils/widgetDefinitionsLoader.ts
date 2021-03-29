@@ -2,16 +2,16 @@ import i18n from 'i18next';
 import _ from 'lodash';
 import log from 'loglevel';
 import { renderToString } from 'react-dom/server';
+import styled from 'styled-components';
+import 'd3';
+
 import Internal from './Internal';
 import ScriptLoader from './scriptLoader';
 import StyleLoader from './StyleLoader';
-import 'd3';
-
 import * as Basic from '../components/basic';
 import * as Shared from '../components/shared';
 import StageUtils from './stageUtils';
 import LoaderUtils from './LoaderUtils';
-
 import GenericConfig from './GenericConfig';
 import * as PropTypes from './props';
 import * as Hooks from './hooks';
@@ -77,7 +77,8 @@ export default class WidgetDefinitionsLoader {
                 Object.assign(window.Stage.Hooks, def);
             },
 
-            i18n
+            i18n,
+            styled
         };
         window.Stage = stageAPI;
     }
