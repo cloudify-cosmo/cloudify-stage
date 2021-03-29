@@ -1,5 +1,5 @@
 import i18n from 'i18next';
-import React, { memo, useEffect, useState } from 'react';
+import React, { memo, useEffect } from 'react';
 
 import { Divider, Header, Label, List, Message, Progress } from '../../../basic';
 import useCurrentCallback from '../../common/useCurrentCallback';

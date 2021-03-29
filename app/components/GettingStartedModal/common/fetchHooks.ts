@@ -35,7 +35,7 @@ export const useFetch = <T extends unknown>(fetcher: Manager | Internal, url: st
         return () => {
             mounted = false;
         };
-    }, [fetcher, url, params]);
+    }, [url, params]);
     return state;
 };
 
