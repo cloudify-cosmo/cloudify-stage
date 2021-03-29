@@ -4,13 +4,14 @@ import log from 'loglevel';
 
 import EventBus from '../../utils/EventBus';
 import useInput from '../../utils/hooks/useInput';
-import { Form, Button, Modal } from '../basic';
+import { Form, Modal } from '../basic';
 import gettingStartedSchema from './schema.json';
 import { isGettingStartedModalDisabled, disableGettingStartedModal } from './localStorage';
 import { validateSecretFields, validateTechnologyFields } from './formValidation';
 import createTechnologiesGroups from './createTechnologiesGroups';
 import { StepName } from './model';
 import ModalHeader from './ModalHeader';
+import ModalContent from './ModalContent';
 
 import type {
     GettingStartedData,
@@ -18,7 +19,7 @@ import type {
     GettingStartedSecretsData,
     GettingStartedTechnologiesData
 } from './model';
-import ModalContent from './ModalContent';
+import ModalActions from './ModalActions';
 
 const castedGettingStartedSchema = gettingStartedSchema as GettingStartedSchema;
 
@@ -41,7 +42,6 @@ const GettingStartedModal = () => {
 
     const secretsStepSchema = secretsStepsSchemas[secretsStepIndex];
     const secretsStepData = secretsStepsData[secretsStepSchema?.name];
-    const statusStepActive = stepName === StepName.Status;
 
     const checkTechnologiesStepDataErrors = () => {
         const usedTechnologiesError = validateTechnologyFields(technologiesStepData);
@@ -175,38 +175,13 @@ const GettingStartedModal = () => {
                     />
                 </Form.Field>
             </Modal.Content>
-            <Modal.Actions style={{ minHeight: 60 }}>
-                <Button
-                    icon="cancel"
-                    content={i18n.t('gettingStartedModal.buttons.closeModal', 'Close')}
-                    floated="left"
-                    disabled={installationProcessing}
-                    labelPosition="left"
-                    onClick={handleModalClose}
-                />
-                {!statusStepActive && (
-                    <Button.Group floated="right">
-                        {stepName !== StepName.Technologies && (
-                            <Button
-                                icon="left arrow"
-                                content={i18n.t('gettingStartedModal.buttons.stepBack', 'Back')}
-                                labelPosition="left"
-                                onClick={handleBackClick}
-                            />
-                        )}
-                        <Button
-                            icon="right arrow"
-                            content={
-                                stepName === StepName.Summary
-                                    ? i18n.t('gettingStartedModal.buttons.stepFinish', 'Finish')
-                                    : i18n.t('gettingStartedModal.buttons.stepNext', 'Next')
-                            }
-                            labelPosition="right"
-                            onClick={handleNextClick}
-                        />
-                    </Button.Group>
-                )}
-            </Modal.Actions>
+            <ModalActions
+                stepName={stepName}
+                installationProcessing={installationProcessing}
+                onBackClick={handleBackClick}
+                onNextClick={handleNextClick}
+                onModalClose={handleModalClose}
+            />
         </Modal>
     );
 };
