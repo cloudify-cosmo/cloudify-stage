@@ -1,4 +1,4 @@
-import React, { ReactNode } from 'react';
+import React from 'react';
 import i18n from 'i18next';
 
 import { Modal } from '../basic';

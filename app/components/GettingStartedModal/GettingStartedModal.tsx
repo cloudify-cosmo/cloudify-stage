@@ -4,12 +4,9 @@ import log from 'loglevel';
 
 import EventBus from '../../utils/EventBus';
 import useInput from '../../utils/hooks/useInput';
-import { Form, Button, Divider, ErrorMessage, Modal } from '../basic';
+import { Form, Button, Modal } from '../basic';
 import gettingStartedSchema from './schema.json';
 import { isGettingStartedModalDisabled, disableGettingStartedModal } from './localStorage';
-import TechnologiesStep from './steps/TechnologiesStep';
-import SecretsStep from './steps/SecretsStep';
-import SummaryStep from './steps/SummaryStep';
 import { validateSecretFields, validateTechnologyFields } from './formValidation';
 import createTechnologiesGroups from './createTechnologiesGroups';
 import { StepName } from './model';
@@ -21,6 +18,7 @@ import type {
     GettingStartedSecretsData,
     GettingStartedTechnologiesData
 } from './model';
+import ModalContent from './ModalContent';
 
 const castedGettingStartedSchema = gettingStartedSchema as GettingStartedSchema;
 
@@ -153,38 +151,20 @@ const GettingStartedModal = () => {
                 secretsStepIndex={secretsStepIndex}
                 secretsStepsSchemas={secretsStepsSchemas}
             />
-            <Modal.Content style={{ minHeight: 220 }}>
-                {!_.isEmpty(stepErrors) && (
-                    <>
-                        <ErrorMessage error={stepErrors} onDismiss={handleStepErrorsDismiss} />
-                        <Divider hidden />
-                    </>
-                )}
-                {stepName === StepName.Technologies && (
-                    <TechnologiesStep
-                        schema={castedGettingStartedSchema}
-                        selectedTechnologies={technologiesStepData}
-                        onChange={handleTechnologiesStepChange}
-                    />
-                )}
-                {stepName === StepName.Secrets && secretsStepSchema && (
-                    <SecretsStep
-                        selectedTechnology={secretsStepSchema}
-                        typedSecrets={secretsStepData}
-                        onChange={handleSecretsStepChange}
-                    />
-                )}
-                {(stepName === StepName.Summary || statusStepActive) && (
-                    <SummaryStep
-                        installationMode={statusStepActive}
-                        selectedPlugins={secretsStepsSchemas}
-                        typedSecrets={secretsStepsData}
-                        onInstallationStarted={handleInstallationStarted}
-                        onInstallationFinished={handleInstallationFinishedOrCanceled}
-                        onInstallationCanceled={handleInstallationFinishedOrCanceled}
-                    />
-                )}
-            </Modal.Content>
+            <ModalContent
+                stepErrors={stepErrors}
+                stepName={stepName}
+                technologiesStepData={technologiesStepData}
+                secretsStepsSchemas={secretsStepsSchemas}
+                secretsStepsData={secretsStepsData}
+                secretsStepIndex={secretsStepIndex}
+                onStepErrorsDismiss={handleStepErrorsDismiss}
+                onTechnologiesStepChange={handleTechnologiesStepChange}
+                onSecretsStepChange={handleSecretsStepChange}
+                onInstallationStarted={handleInstallationStarted}
+                handleInstallationFinished={handleInstallationFinishedOrCanceled}
+                handleInstallationCanceled={handleInstallationFinishedOrCanceled}
+            />
             <Modal.Content style={{ minHeight: 60, overflow: 'hidden' }}>
                 <Form.Field>
                     <Form.Checkbox
