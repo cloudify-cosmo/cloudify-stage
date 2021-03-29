@@ -239,6 +239,7 @@ declare global {
         }
 
         const i18n: typeof import('i18next').default;
+        const styled: typeof import('styled-components').default;
 
         /**
          * A namespace that exists for storing reusable TypeScript types
