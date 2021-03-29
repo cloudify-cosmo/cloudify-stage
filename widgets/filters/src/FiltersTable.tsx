@@ -1,6 +1,6 @@
 import _ from 'lodash';
 
-import { FunctionComponent } from 'react';
+import type { FunctionComponent } from 'react';
 import type { Filter, FilterWidget } from './types';
 
 interface FiltersTableData {
