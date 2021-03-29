@@ -12,6 +12,7 @@ import createTechnologiesGroups from './createTechnologiesGroups';
 import { StepName } from './model';
 import ModalHeader from './ModalHeader';
 import ModalContent from './ModalContent';
+import ModalActions from './ModalActions';
 
 import type {
     GettingStartedData,
@@ -19,7 +20,6 @@ import type {
     GettingStartedSecretsData,
     GettingStartedTechnologiesData
 } from './model';
-import ModalActions from './ModalActions';
 
 const castedGettingStartedSchema = gettingStartedSchema as GettingStartedSchema;
 
