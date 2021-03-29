@@ -37,7 +37,7 @@ export default function WidgetsList({ onWidgetUpdated, onWidgetRemoved, isEditMo
 WidgetsList.propTypes = {
     widgets: PropTypes.arrayOf(PropTypes.shape({})),
     onWidgetRemoved: PropTypes.func.isRequired,
-    onWidgetUpdated: PropTypes.func.isRequired,
+    onWidgetUpdated: PropTypes.func,
     isEditMode: PropTypes.bool.isRequired
 };
 
