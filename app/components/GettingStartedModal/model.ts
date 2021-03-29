@@ -15,6 +15,13 @@ export type MetadataResponse = {
 
 export type RegExpString = string;
 
+export enum StepName {
+    Technologies,
+    Secrets,
+    Summary,
+    Status
+}
+
 export type GettingStartedSchemaPlugin = {
     name: string;
     version?: RegExpString;

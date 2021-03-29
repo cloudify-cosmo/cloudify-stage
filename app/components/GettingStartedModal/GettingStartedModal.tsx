@@ -12,6 +12,8 @@ import SecretsStep from './steps/SecretsStep';
 import SummaryStep from './steps/SummaryStep';
 import { validateSecretFields, validateTechnologyFields } from './formValidation';
 import createTechnologiesGroups from './createTechnologiesGroups';
+import { StepName } from './model';
+import ModalHeader from './ModalHeader';
 
 import type {
     GettingStartedData,
@@ -21,33 +23,6 @@ import type {
 } from './model';
 
 const castedGettingStartedSchema = gettingStartedSchema as GettingStartedSchema;
-
-const getHeaderText = (schema: GettingStartedSchema, stepName: StepName, secretsStepIndex: number) => {
-    switch (stepName) {
-        case StepName.Technologies:
-            return i18n.t('gettingStartedModal.titles.technologiesStep', 'Getting Started');
-        case StepName.Secrets: {
-            const schemaItem = schema[secretsStepIndex];
-            if (schemaItem) {
-                return `${schemaItem.label} ${i18n.t('gettingStartedModal.titles.secretsStep', 'Secrets')}`;
-            }
-            return undefined;
-        }
-        case StepName.Summary:
-            return i18n.t('gettingStartedModal.titles.summaryStep', 'Summary');
-        case StepName.Status:
-            return i18n.t('gettingStartedModal.titles.statusStep', 'Status');
-        default:
-            return undefined;
-    }
-};
-
-enum StepName {
-    Technologies,
-    Secrets,
-    Summary,
-    Status
-}
 
 const GettingStartedModal = () => {
     const [modalOpen, setModalOpen] = useState(() => isGettingStartedModalDisabled());
@@ -173,7 +148,11 @@ const GettingStartedModal = () => {
 
     return (
         <Modal open={modalOpen} onClose={handleModalClose}>
-            <Modal.Header>{getHeaderText(secretsStepsSchemas, stepName, secretsStepIndex)}</Modal.Header>
+            <ModalHeader
+                stepName={stepName}
+                secretsStepIndex={secretsStepIndex}
+                secretsStepsSchemas={secretsStepsSchemas}
+            />
             <Modal.Content style={{ minHeight: 220 }}>
                 {!_.isEmpty(stepErrors) && (
                     <>
