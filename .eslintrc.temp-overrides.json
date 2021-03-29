@@ -4,5 +4,14 @@
         // NOTE: disabled during the migration to TypeScript
         "@typescript-eslint/no-explicit-any": "off",
         "@typescript-eslint/explicit-module-boundary-types": "off"
-    }
+    },
+    "overrides": [
+        {
+            // NOTE: disable globally once TS migration is done
+            "files": ["**/*.tsx"],
+            "rules": {
+                "react/prop-types": "off"
+            }
+        }
+    ]
 }
