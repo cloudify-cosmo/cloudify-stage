@@ -26,6 +26,6 @@ export default class {
     }
 
     doGetFileContent(path) {
-        return this.toolbox.getInternal().doGet('/source/browse/file', { path });
+        return this.toolbox.getInternal().doGet(`/source/browse/${path}`);
     }
 }

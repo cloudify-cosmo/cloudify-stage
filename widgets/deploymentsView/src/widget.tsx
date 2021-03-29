@@ -1,6 +1,9 @@
+import { find } from 'lodash';
 import { deploymentsViewColumnDefinitions, DeploymentsViewColumnId, deploymentsViewColumnIds } from './columns';
+import DetailsPane from './detailsPane';
 import renderDeploymentRow from './renderDeploymentRow';
 import './styles.scss';
+import type { Deployment } from './types';
 
 interface GridParams {
     _offset: number;
@@ -9,8 +12,14 @@ interface GridParams {
 }
 
 interface DeploymentsResponse {
-    items: any[];
-    metadata: any;
+    items: Deployment[];
+    metadata: {
+        pagination: {
+            offset: number;
+            size: number;
+            total: number;
+        };
+    };
 }
 
 interface DeploymentsViewWidgetConfiguration {
@@ -24,8 +33,8 @@ interface DeploymentsViewWidgetConfiguration {
 
 const i18nPrefix = 'widgets.deploymentsView';
 
-// TODO(RD-1224): remove environment check
-if (process.env.NODE_ENV === 'development') {
+// TODO(RD-1226): remove environment check
+if (process.env.NODE_ENV === 'development' || process.env.TEST) {
     Stage.defineWidget<GridParams, DeploymentsResponse, DeploymentsViewWidgetConfiguration>({
         id: 'deploymentsView',
         name: Stage.i18n.t(`${i18nPrefix}.name`),
@@ -59,7 +68,7 @@ if (process.env.NODE_ENV === 'development') {
                     name: deploymentsViewColumnDefinitions[columnId].name,
                     value: columnId
                 })),
-                default: Object.values(deploymentsViewColumnIds).filter(columnId => columnId !== 'environmentType'),
+                default: deploymentsViewColumnIds.filter(columnId => columnId !== 'environmentType'),
                 type: Stage.Basic.GenericField.MULTI_SELECT_LIST_TYPE
             },
             Stage.GenericConfig.PAGE_SIZE_CONFIG(100),
@@ -72,13 +81,13 @@ if (process.env.NODE_ENV === 'development') {
         permission: Stage.GenericConfig.WIDGET_PERMISSION('deploymentsView'),
 
         fetchData(_widget, toolbox, params: GridParams) {
-            // TODO(RD-1224): add resolving `filterRules` if they are not fetched (after RD-377)
+            // TODO(RD-1530): add resolving `filterRules` if they are not fetched (after RD-377)
             return toolbox
                 .getManager()
                 .doGet('/deployments', params)
                 .then((response: DeploymentsResponse) => {
                     const context = toolbox.getContext();
-                    // TODO(RD-1224): detect if deploymentId is not present in the current page and reset it.
+                    // TODO(RD-1830): detect if deploymentId is not present in the current page and reset it.
                     // Do that only if `fetchData` was called from `DataTable`. If it's just polling,
                     // then don't reset it (because user may be interacting with some other component)
                     if (context.getValue('deploymentId') === undefined && response.items.length > 0) {
@@ -97,26 +106,41 @@ if (process.env.NODE_ENV === 'development') {
                 return <Loading />;
             }
 
-            // TODO(RD-1224): add `noDataMessage`
-            return (
-                <DataTable fetchData={toolbox.refresh} pageSize={pageSize} selectable sizeMultiplier={20}>
-                    {deploymentsViewColumnIds.map(columnId => {
-                        const columnDefinition = deploymentsViewColumnDefinitions[columnId];
-                        return (
-                            <DataTable.Column
-                                key={columnId}
-                                name={columnDefinition.sortFieldName}
-                                label={columnDefinition.label}
-                                width={columnDefinition.width}
-                                tooltip={columnDefinition.tooltip}
-                                show={fieldsToShow.includes(columnId)}
-                            />
-                        );
-                    })}
+            const deployment = find(data.items, {
+                // NOTE: type assertion since lodash has problems receiving string[] in the object
+                id: toolbox.getContext().getValue('deploymentId') as string | undefined
+            });
 
-                    {/* TODO(RD-1224): add type for deployment */}
-                    {data.items.flatMap(renderDeploymentRow(toolbox, fieldsToShow))}
-                </DataTable>
+            return (
+                <div className="grid">
+                    <DataTable
+                        fetchData={toolbox.refresh}
+                        pageSize={pageSize}
+                        selectable
+                        sizeMultiplier={20}
+                        // TODO(RD-1787): adjust `noDataMessage` to show the image
+                        noDataMessage={Stage.i18n.t(`${i18nPrefix}.noDataMessage`)}
+                        totalSize={data.metadata.pagination.total}
+                        searchable
+                    >
+                        {deploymentsViewColumnIds.map(columnId => {
+                            const columnDefinition = deploymentsViewColumnDefinitions[columnId];
+                            return (
+                                <DataTable.Column
+                                    key={columnId}
+                                    name={columnDefinition.sortFieldName}
+                                    label={columnDefinition.label}
+                                    width={columnDefinition.width}
+                                    tooltip={columnDefinition.tooltip}
+                                    show={fieldsToShow.includes(columnId)}
+                                />
+                            );
+                        })}
+
+                        {data.items.flatMap(renderDeploymentRow(toolbox, fieldsToShow))}
+                    </DataTable>
+                    <DetailsPane deployment={deployment} />
+                </div>
             );
         }
     });

@@ -18,9 +18,17 @@ import { getWidgetDefinitionById, SimpleWidgetObj } from '../../../actions/page'
 
 export interface WidgetOwnProps<Configuration> {
     isEditMode: boolean;
-    onWidgetUpdated: (widgetId: string, params: Partial<WidgetObj<Configuration>>) => void;
+    /**
+     * Called when the widget configuration is changed or the widget is maximized or minimized.
+     */
+    onWidgetUpdated?: (widgetId: string, params: Partial<WidgetObj<Configuration>>) => void;
     onWidgetRemoved: (widgetId: string) => void;
     widget: SimpleWidgetObj;
+    /**
+     * Whether the widget is rendered as a single item (standalone), or inside a grid.
+     * Depending on this prop, the widget will have different style for its position.
+     */
+    standalone?: boolean;
 }
 
 type WidgetProps<Configuration> = Omit<WidgetOwnProps<Configuration>, 'widget'> & PropsFromRedux;
@@ -68,14 +76,14 @@ class Widget<Configuration> extends Component<WidgetProps<Configuration>, Widget
         const escapeKeyCode = 27;
 
         if (event.keyCode === escapeKeyCode) {
-            onWidgetUpdated(widget.id, { maximized: false });
+            onWidgetUpdated?.(widget.id, { maximized: false });
         }
     };
 
     widgetConfigUpdate = (config: Partial<Configuration>) => {
         const { onWidgetUpdated, widget } = this.props;
         if (config) {
-            onWidgetUpdated(widget.id, { configuration: { ...widget.configuration, ...config } });
+            onWidgetUpdated?.(widget.id, { configuration: { ...widget.configuration, ...config } });
         }
     };
 
@@ -110,7 +118,8 @@ class Widget<Configuration> extends Component<WidgetProps<Configuration>, Widget
             onWidgetRemoved,
             setContextValue,
             widget,
-            widgetData
+            widgetData,
+            standalone = false
         } = this.props;
         if (!widget.definition) {
             return (
@@ -176,7 +185,8 @@ class Widget<Configuration> extends Component<WidgetProps<Configuration>, Widget
                     className={stageUtils.combineClassNames([
                         'widgetItem',
                         isEditMode && widget.definition && !widget.definition.showBorder && 'borderOnHover',
-                        !widget.definition.showHeader && 'headerless'
+                        !widget.definition.showHeader && 'headerless',
+                        standalone && 'standalone'
                     ])}
                 >
                     {widget.definition && widget.definition.showHeader && (
@@ -186,7 +196,7 @@ class Widget<Configuration> extends Component<WidgetProps<Configuration>, Widget
                                 placeholder="Widget header"
                                 enabled={isEditMode}
                                 className="widgetName"
-                                onChange={name => onWidgetUpdated(widget.id, { name })}
+                                onChange={name => onWidgetUpdated?.(widget.id, { name })}
                             />
                         </Header>
                     )}
@@ -195,11 +205,13 @@ class Widget<Configuration> extends Component<WidgetProps<Configuration>, Widget
                     <div className="widgetButtons" onMouseDown={e => e.stopPropagation()}>
                         {isEditMode && (
                             <div className="widgetEditButtons">
-                                <EditWidget
-                                    widget={widget}
-                                    onWidgetEdited={onWidgetUpdated}
-                                    iconSize={widgetIconButtonSize}
-                                />
+                                {onWidgetUpdated && (
+                                    <EditWidget
+                                        widget={widget}
+                                        onWidgetEdited={onWidgetUpdated}
+                                        iconSize={widgetIconButtonSize}
+                                    />
+                                )}
                                 {helpIcon()}
                                 <Icon
                                     name="remove"
@@ -213,12 +225,14 @@ class Widget<Configuration> extends Component<WidgetProps<Configuration>, Widget
                             (widget.definition.showHeader ? (
                                 <div className={`widgetViewButtons ${widget.maximized ? 'alwaysOnTop' : ''}`}>
                                     {helpIcon()}
-                                    <Icon
-                                        name={widget.maximized ? 'compress' : 'expand'}
-                                        link
-                                        size={widgetIconButtonSize}
-                                        onClick={() => onWidgetUpdated(widget.id, { maximized: !widget.maximized })}
-                                    />
+                                    {onWidgetUpdated && (
+                                        <Icon
+                                            name={widget.maximized ? 'compress' : 'expand'}
+                                            link
+                                            size={widgetIconButtonSize}
+                                            onClick={() => onWidgetUpdated(widget.id, { maximized: !widget.maximized })}
+                                        />
+                                    )}
                                 </div>
                             ) : (
                                 <div className="widgetViewButtons">{helpIcon()}</div>
@@ -246,6 +260,7 @@ class Widget<Configuration> extends Component<WidgetProps<Configuration>, Widget
                                 setContextValue={setContextValue}
                                 onWidgetConfigUpdate={this.widgetConfigUpdate}
                                 fetchWidgetData={fetchWidgetData}
+                                standalone={standalone}
                             />
                         ) : (
                             <Loading />

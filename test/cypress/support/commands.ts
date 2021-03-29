@@ -176,13 +176,17 @@ const commands = {
         }
         cy.waitUntilPageLoaded();
     },
-    usePageMock: (widgetIds?: string | string[], widgetConfiguration: any = {}) => {
+    usePageMock: (
+        widgetIds?: string | string[],
+        widgetConfiguration: any = {},
+        {
+            widgetsWidth = 8,
+            additionalWidgetIdsToLoad = []
+        }: { widgetsWidth?: number; additionalWidgetIdsToLoad?: string[] } = {}
+    ) => {
         const widgetIdsArray = _.castArray(widgetIds);
-        cy.intercept(
-            'GET',
-            '/console/widgets/list',
-            widgetIds ? [...widgetIdsArray, 'filter', 'pluginsCatalog'].map(toIdObj) : []
-        );
+        const widgetIdsToLoad = [...widgetIdsArray, 'filter', 'pluginsCatalog', ...additionalWidgetIdsToLoad];
+        cy.intercept('GET', '/console/widgets/list', widgetIdsToLoad.map(toIdObj));
         // required for drill-down testing
         cy.intercept('GET', '/console/templates/pages', widgetIds ? ['blueprint', 'deployment'].map(toIdObj) : []);
         cy.intercept('GET', '/console/templates', []);
@@ -208,7 +212,7 @@ const commands = {
                                                   allowMultipleSelection: true
                                               },
                                               height: 2,
-                                              width: 8,
+                                              width: widgetsWidth,
                                               x: 0,
                                               y: 0
                                           },
@@ -218,7 +222,7 @@ const commands = {
                                               configuration: widgetConfiguration,
                                               height: 20,
                                               drillDownPages: {},
-                                              width: 8,
+                                              width: widgetsWidth,
                                               x: 0,
                                               y: 2 + (index + 1) * 20
                                           }))

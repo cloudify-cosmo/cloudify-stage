@@ -5,11 +5,11 @@ describe('Snapshots list widget', () => {
     before(() =>
         cy
             .activate('valid_trial_license')
-            .usePageMock('snapshots')
-            .mockLogin()
+            .usePageMock('snapshots', { pollingTime: 5 })
             .deletePlugins()
             .deleteSnapshot(createdSnapshotName)
             .deleteSnapshot(uploadedSnapshotName)
+            .mockLogin()
     );
 
     it('should allow to create and delete a snapshot', () => {
@@ -19,7 +19,9 @@ describe('Snapshots list widget', () => {
             cy.get('.green').click();
         });
         cy.contains('.snapshotsWidget tr', createdSnapshotName).within(() => {
-            cy.contains('created');
+            cy.contains('creating');
+            cy.get('.trash.disabled');
+            cy.contains('creating').should('not.exist');
             cy.get('.trash').click();
         });
         cy.contains('Yes').click();

@@ -11,7 +11,7 @@ import type { AnyAction } from 'redux';
 
 import { Alert, Breadcrumb, Button, Divider, EditableLabel, ErrorMessage, Menu, Segment, Sidebar } from '../basic';
 import EditModeBubble from '../EditModeBubble';
-import PageContent from '../PageContent';
+import { PageContent } from '../shared/widgets';
 import { createPageId, drillDownWarning, savePage, setActive, setPageEditMode } from '../../actions/templateManagement';
 import StageUtils from '../../utils/stageUtils';
 import { useErrors } from '../../utils/hooks';

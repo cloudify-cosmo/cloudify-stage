@@ -1,7 +1,7 @@
-import { camelCase, mapValues } from 'lodash';
+import { mapValues } from 'lodash';
 import type { ReactNode } from 'react';
 import type { IconProps } from 'semantic-ui-react';
-import { Deployment, DeploymentStatus } from './types';
+import { Deployment, DeploymentStatus, SubdeploymentStatus } from './types';
 
 // NOTE: the order in the array determines the order in the UI
 export const deploymentsViewColumnIds = [
@@ -28,7 +28,32 @@ export interface DeploymentsViewColumnDefinition {
     render(deployment: Deployment): ReactNode;
 }
 
-const i18nPrefix = 'widgets.deploymentsView.columns';
+const i18nPrefix = 'widgets.deploymentsView';
+const i18nColumnsPrefix = `${i18nPrefix}.columns`;
+
+/**
+ * A CID (Constrained Identity Function)
+ * See https://kentcdodds.com/blog/how-to-write-a-constrained-identity-function-in-typescript
+ */
+const createIconDescriptions = <T extends Record<string, IconProps>>(iconDescriptions: T) => iconDescriptions;
+
+const statusIconPropsMapping = createIconDescriptions({
+    inProgress: { name: 'spinner', color: 'orange' },
+    requiresAttention: { name: 'exclamation', color: 'red' }
+});
+type StatusIconName = keyof typeof statusIconPropsMapping;
+const renderStatusIcon = (iconName: StatusIconName) => {
+    const { Icon, Popup } = Stage.Basic;
+    const iconProps = statusIconPropsMapping[iconName];
+    const label = Stage.i18n.t(`${i18nPrefix}.iconLabels.${iconName}`);
+
+    return (
+        // eslint-disable-next-line react/jsx-props-no-spreading
+        <Popup trigger={<Icon aria-label={label} {...iconProps} />} position="top center">
+            {label}
+        </Popup>
+    );
+};
 
 const partialDeploymentsViewColumnDefinitions: Record<
     DeploymentsViewColumnId,
@@ -37,25 +62,20 @@ const partialDeploymentsViewColumnDefinitions: Record<
     status: {
         width: '20px',
         render(deployment) {
-            const { Icon, Popup } = Stage.Basic;
-            const deploymentStatusIconProps: Record<DeploymentStatus, Pick<IconProps, 'name' | 'color'> | undefined> = {
+            const deploymentStatusIconProps: Record<DeploymentStatus, StatusIconName | undefined> = {
                 [DeploymentStatus.Good]: undefined,
-                [DeploymentStatus.InProgress]: { name: 'spinner', color: 'orange' },
-                [DeploymentStatus.RequiresAttention]: { name: 'exclamation', color: 'red' }
+                [DeploymentStatus.InProgress]: 'inProgress',
+                [DeploymentStatus.RequiresAttention]: 'requiresAttention'
             };
-            const iconProps = deploymentStatusIconProps[deployment.deployment_status];
-            if (!iconProps) {
+            const iconName = deploymentStatusIconProps[deployment.deployment_status];
+            if (!iconName) {
                 return null;
             }
-            const label = Stage.i18n.t(`${i18nPrefix}.status.iconLabels.${camelCase(deployment.deployment_status)}`);
 
-            return (
-                // eslint-disable-next-line react/jsx-props-no-spreading
-                <Popup trigger={<Icon aria-label={label} {...iconProps} />} position="top center">
-                    {label}
-                </Popup>
-            );
-        }
+            return renderStatusIcon(iconName);
+        },
+        // NOTE: do not show the column label
+        label: ''
     },
     name: {
         sortFieldName: 'id',
@@ -70,9 +90,9 @@ const partialDeploymentsViewColumnDefinitions: Record<
         }
     },
     environmentType: {
-        render(_deployment) {
-            // TODO(RD-1224): add rendering correct environment type
-            return 'Environment Type';
+        sortFieldName: 'environment_type',
+        render(deployment) {
+            return deployment.environment_type;
         }
     },
     location: {
@@ -84,19 +104,43 @@ const partialDeploymentsViewColumnDefinitions: Record<
     subenvironmentsCount: {
         label: <Stage.Basic.Icon name="object group" />,
         width: '1em',
-        render() {
-            // TODO(RD-1224): display correct number of subenvironments
-            return '0';
+        // NOTE: properties come from the API. They are not prop-types (false-positive)
+        /* eslint-disable camelcase, react/prop-types */
+        // TODO(RD-1839): remove default values
+        render({ sub_environments_count = 0, sub_environments_status = SubdeploymentStatus.Good }) {
+            const iconName = subdeploymentStatusToIconMapping[sub_environments_status];
+            const icon = iconName && renderStatusIcon(iconName);
+
+            return (
+                <div className="subdeploymentColumn">
+                    {sub_environments_count} {icon}
+                </div>
+            );
         }
     },
     subservicesCount: {
         label: <Stage.Basic.Icon name="cube" />,
         width: '1em',
-        render() {
-            // TODO(RD-1224): display correct number of subservices
-            return '0';
+        // TODO(RD-1839): remove default values
+        render({ sub_services_count = 0, sub_services_status = SubdeploymentStatus.Good }) {
+            const iconName = subdeploymentStatusToIconMapping[sub_services_status];
+            const icon = iconName && renderStatusIcon(iconName);
+
+            return (
+                <div className="subdeploymentColumn">
+                    {sub_services_count} {icon}
+                </div>
+            );
         }
+        /* eslint-enable camelcase, react/prop-types */
     }
+};
+
+const subdeploymentStatusToIconMapping: Record<SubdeploymentStatus, StatusIconName | undefined> = {
+    [SubdeploymentStatus.InProgress]: 'inProgress',
+    [SubdeploymentStatus.Good]: undefined,
+    [SubdeploymentStatus.Failed]: 'requiresAttention',
+    [SubdeploymentStatus.Pending]: undefined
 };
 
 export const deploymentsViewColumnDefinitions: Record<
@@ -105,9 +149,9 @@ export const deploymentsViewColumnDefinitions: Record<
 > = mapValues(
     partialDeploymentsViewColumnDefinitions,
     (columnDefinition, columnId): DeploymentsViewColumnDefinition => {
-        const name = Stage.i18n.t(`${i18nPrefix}.${columnId}.name`);
+        const name = Stage.i18n.t(`${i18nColumnsPrefix}.${columnId}.name`);
         const label = columnDefinition.label ?? name;
-        const tooltip: string | null = Stage.i18n.t(`${i18nPrefix}.${columnId}.tooltip`, { defaultValue: null });
+        const tooltip: string | null = Stage.i18n.t(`${i18nColumnsPrefix}.${columnId}.tooltip`, { defaultValue: null });
 
         return {
             ...columnDefinition,

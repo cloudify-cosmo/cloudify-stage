@@ -278,11 +278,16 @@ a:hover {
   }
 
   .ui.segment.widgetItem {
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
+    &:not(.standalone) {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+    }
+    &.standalone {
+      padding: 0;
+    }
 
     .widgetName {
       padding-left: 0;
@@ -302,16 +307,24 @@ a:hover {
   }
 
   .widgetContent {
-    position: absolute;
-    top: 35px;
-    bottom: 15px;
-    left: 0;
-    right: 0;
-    overflow: auto;
-    padding: 15px;
+    &:not(.standalone) {
+      position: absolute;
+      top: 35px;
+      bottom: 15px;
+      left: 0;
+      right: 0;
+      overflow: auto;
+      padding: 15px;
+    }
 
     &.noHeader {
       top: 0;
+    }
+
+    &.standalone.noHeader {
+      // NOTE: margin so the help modal icon does appears to the side of the
+      // widget, instead of on top
+      margin-right: 15px;
     }
 
     &.noBorder {

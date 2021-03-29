@@ -26,7 +26,8 @@ declare global {
 
     export const process: {
         env: {
-            NODE_ENV: string;
+            NODE_ENV: 'production' | 'development';
+            TEST: string;
             [key: string]: unknown;
         };
     };

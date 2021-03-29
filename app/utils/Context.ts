@@ -21,11 +21,19 @@ export default class Context {
      * This means that calling `getValue` after calling `setState` will keep yielding the value
      * from before `setState` until the widget rerenders.
      */
-    public setValue(key: any, value: any) {
+    public setValue<K extends keyof Stage.ContextEntries>(key: K, value: Stage.ContextEntries[K] | undefined): void;
+
+    public setValue(key: string, value: any): void;
+
+    public setValue(key: string, value: any) {
         this.store.dispatch(setContextValue(key, value));
     }
 
-    public getValue(key: any) {
+    public getValue<K extends keyof Stage.ContextEntries>(key: K): Stage.ContextEntries[K] | undefined;
+
+    public getValue(key: string): any;
+
+    public getValue(key: string) {
         return this.context[key];
     }
 }

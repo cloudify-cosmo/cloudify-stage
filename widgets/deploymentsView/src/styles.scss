@@ -1,16 +1,15 @@
-/* TODO(RD-1224): adjust states to match the API ones */
-$deploymentStateColors: (
-    'good': green,
-    'in-progress': orange,
-    'failure': red,
-    'pending': blue
+$deploymentProgressBarColors: (
+    // NOTE: use Semantic UI colors
+    // See https://semantic-ui.com/usage/theming.html
+    'in-progress': #f2711c,
+    'failed': #db2828
 );
 
 .deploymentsViewWidget {
     --deployment-progress-underline-height: 0.14em;
     // NOTE: use CSS custom properties to make user overrides easier
-    @each $stateName, $color in $deploymentStateColors {
-        --deployment-color-#{$stateName}: #{$color};
+    @each $stateName, $color in $deploymentProgressBarColors {
+        --deployment-progress-bar-color-#{$stateName}: #{$color};
     }
 
     // NOTE: additional selectors added to increase specificity and allow overriding
@@ -29,13 +28,28 @@ $deploymentStateColors: (
         border-top: 0;
     }
 
+    .subdeploymentColumn {
+        white-space: nowrap;
+    }
+
     .deployment-progress-bar {
         height: var(--deployment-progress-underline-height);
     }
 
-    @each $stateName, $color in $deploymentStateColors {
+    @each $stateName, $color in $deploymentProgressBarColors {
         .deployment-progress-bar.#{$stateName} {
-            background-color: var(--deployment-color-#{$stateName});
+            background-color: var(--deployment-progress-bar-color-#{$stateName});
+        }
+    }
+
+    .grid {
+        display: grid;
+        grid-template-columns: minmax(50%, 1fr) 1fr;
+        height: 100%;
+
+        // NOTE: scroll only the table, not the searchbox
+        .gridTable > div:nth-child(2) {
+            overflow: auto;
         }
     }
 }

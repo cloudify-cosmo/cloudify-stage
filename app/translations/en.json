@@ -595,13 +595,13 @@
                     "placeholder": "Select fields from the list"
                 }
             },
+            "iconLabels": {
+                "inProgress": "In progress",
+                "requiresAttention": "Requires attention"
+            },
             "columns": {
                 "status": {
-                    "name": "",
-                    "iconLabels": {
-                        "inProgress": "In progress",
-                        "requiresAttention": "Requires attention"
-                    }
+                    "name": "Status"
                 },
                 "name": {
                     "name": "Name"
@@ -623,7 +623,8 @@
                     "name": "Subservices",
                     "tooltip": "Services (Total)"
                 }
-            }
+            },
+            "noDataMessage": "No Results Found. Try changing the filter's parameters"
         },
         "labels": {
             "name": "Labels",

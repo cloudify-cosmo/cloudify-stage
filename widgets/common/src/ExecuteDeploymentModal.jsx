@@ -153,7 +153,8 @@ export default function ExecuteDeploymentModal({
                 clearErrors();
                 onHide();
                 toolbox.getEventBus().trigger('executions:refresh');
-                toolbox.getEventBus().trigger('deployments:refresh');
+                // NOTE: pass id to keep the current deployment selected
+                toolbox.getEventBus().trigger('deployments:refresh', id);
             });
         });
 
