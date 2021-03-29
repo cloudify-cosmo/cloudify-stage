@@ -54,7 +54,7 @@ describe('Deployments View widget', () => {
         routeHandler,
         configurationOverrides = {}
     }: { routeHandler?: RouteHandler; configurationOverrides?: Record<string, any> } = {}) => {
-        cy.interceptSp('GET', /^\/deployments/, routeHandler).as('deployments');
+        cy.interceptSp('POST', /^\/searches\/deployments/, routeHandler).as('deployments');
         // NOTE: larger viewport since the widget requires more width to be comfortable to use
         cy.viewport(1600, 900)
             .usePageMock(
