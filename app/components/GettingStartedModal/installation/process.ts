@@ -5,6 +5,7 @@ import type Internal from '../../../utils/Internal';
 import type Manager from '../../../utils/Manager';
 import type { PluginInstallationTask, SecretInstallationTask } from './tasks';
 
+// TODO(RD-1874): use common api for backend requests
 export const installPlugin = async (internal: Internal, plugin: PluginInstallationTask) => {
     if (!plugin.yamlUrl || !plugin.wagonUrl) {
         return false;
@@ -25,6 +26,7 @@ export const installPlugin = async (internal: Internal, plugin: PluginInstallati
     }
 };
 
+// TODO(RD-1874): use common api for backend requests
 export const createSecret = async (manager: Manager, secret: SecretInstallationTask) => {
     const data = {
         value: secret.value,
@@ -40,6 +42,7 @@ export const createSecret = async (manager: Manager, secret: SecretInstallationT
     }
 };
 
+// TODO(RD-1874): use common api for backend requests
 export const updateSecret = async (manager: Manager, secret: SecretInstallationTask) => {
     const data = {
         value: secret.value
