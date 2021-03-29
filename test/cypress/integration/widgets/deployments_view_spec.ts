@@ -162,7 +162,7 @@ describe('Deployments View widget', () => {
         const getFilterIdInput = () =>
             cy.contains('Name of the saved filter to apply').parent().get('input[type="text"]');
 
-        it('should take the fiter into account when displaying deployments', () => {
+        it('should take the filter into account when displaying deployments', () => {
             useDeploymentsViewWidget({ configurationOverrides: { filterId } });
 
             cy.log('Show only precious deployments');
