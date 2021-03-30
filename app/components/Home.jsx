@@ -81,8 +81,6 @@ export default class Home extends Component {
             return null;
         }
 
-        // stageUtils.isUserAuthorized('', manager);
-
         return (
             <div className="main">
                 <ToursButton />
