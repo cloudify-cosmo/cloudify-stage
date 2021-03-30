@@ -38,12 +38,13 @@ if (process.env.NODE_ENV === 'development' || process.env.TEST) {
         initialConfiguration: [
             Stage.GenericConfig.POLLING_TIME_CONFIG(10),
             {
-                // TODO: Requires RD-377 to add support for filters
                 id: 'filterId',
+                // TODO(RD-1851): add autocomplete instead of plain text input
                 type: Stage.Basic.GenericField.STRING_TYPE,
                 name: Stage.i18n.t(`${i18nPrefix}.configuration.filterId.name`)
             },
             {
+                // TODO(RD-1853): handle filtering by parent deployment
                 id: 'filterByParentDeployment',
                 type: Stage.Basic.GenericField.BOOLEAN_TYPE,
                 name: Stage.i18n.t(`${i18nPrefix}.configuration.filterByParentDeployment.name`),
@@ -71,22 +72,26 @@ if (process.env.NODE_ENV === 'development' || process.env.TEST) {
         hasStyle: false,
         permission: Stage.GenericConfig.WIDGET_PERMISSION('deploymentsView'),
 
-        fetchData(_widget, toolbox, params: GridParams) {
-            // TODO(RD-1530): add resolving `filterRules` if they are not fetched (after RD-377)
-            return toolbox
-                .getManager()
-                .doGet('/deployments', params)
-                .then((response: DeploymentsResponse) => {
-                    const context = toolbox.getContext();
-                    // TODO(RD-1830): detect if deploymentId is not present in the current page and reset it.
-                    // Do that only if `fetchData` was called from `DataTable`. If it's just polling,
-                    // then don't reset it (because user may be interacting with some other component)
-                    if (context.getValue('deploymentId') === undefined && response.items.length > 0) {
-                        context.setValue('deploymentId', response.items[0].id);
-                    }
+        async fetchData(widget, toolbox, params: GridParams) {
+            const manager = toolbox.getManager();
+            const filterRules = await (async () => {
+                const { filterId } = widget.configuration;
+                if (!filterId) {
+                    return [];
+                }
 
-                    return response;
-                });
+                return manager.doGet(`/filters/deployments/${filterId}`).then(filtersResponse => filtersResponse.value);
+            })();
+
+            const response = await manager.doPost('/searches/deployments', params, { filter_rules: filterRules });
+            const context = toolbox.getContext();
+            // TODO(RD-1830): detect if deploymentId is not present in the current page and reset it.
+            // Do that only if `fetchData` was called from `DataTable`. If it's just polling,
+            // then don't reset it (because user may be interacting with some other component)
+            if (context.getValue('deploymentId') === undefined && response.items.length > 0) {
+                context.setValue('deploymentId', response.items[0].id);
+            }
+            return response;
         },
 
         render(widget, data, _error, toolbox) {

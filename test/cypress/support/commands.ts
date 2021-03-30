@@ -24,6 +24,7 @@ import './editMode';
 import './widgets';
 import './secrets';
 import './snapshots';
+import './filters';
 import { addCommands, GetCypressChainableFromCommands } from 'cloudify-ui-common/cypress/support';
 
 let token = '';
