@@ -158,7 +158,7 @@ export const createPluginInstallationTasks = (
                     rejectedPlugins.push({
                         name: expectedPluginName,
                         title: expectedPluginName,
-                        version: 'unknown'
+                        version: String(expectedPluginVersion)
                     });
                 }
             });
