@@ -1,6 +1,6 @@
 /* eslint-disable react/prop-types */
 import { find } from 'lodash';
-import { FunctionComponent, useState } from 'react';
+import { FunctionComponent, useEffect, useState } from 'react';
 import { useQuery } from 'react-query';
 
 import { deploymentsViewColumnDefinitions, DeploymentsViewColumnId, deploymentsViewColumnIds } from './columns';
@@ -18,6 +18,8 @@ interface GridParams {
 type DeploymentsResponse = Stage.Types.PaginatedResponse<Deployment>;
 
 interface DeploymentsViewWidgetConfiguration {
+    /** In milliseconds */
+    customPollingTime: number;
     filterId?: string;
     filterByParentDeployment: boolean;
     fieldsToShow: DeploymentsViewColumnId[];
@@ -40,7 +42,11 @@ if (process.env.NODE_ENV === 'development' || process.env.TEST) {
         categories: [Stage.GenericConfig.CATEGORY.DEPLOYMENTS],
 
         initialConfiguration: [
-            Stage.GenericConfig.POLLING_TIME_CONFIG(10),
+            {
+                ...Stage.GenericConfig.POLLING_TIME_CONFIG(10),
+                // NOTE: polling is handled by react-query, thus, use a different ID
+                id: 'customPollingTime'
+            },
             {
                 id: 'filterId',
                 // TODO(RD-1851): add autocomplete instead of plain text input
@@ -88,21 +94,24 @@ interface DeploymentsViewProps {
 }
 
 const DeploymentsView: FunctionComponent<DeploymentsViewProps> = ({ widget, toolbox }) => {
-    const { DataTable, Loading } = Stage.Basic;
-    const { fieldsToShow, pageSize, filterId } = widget.configuration;
+    const { DataTable, Loading, ErrorMessage } = Stage.Basic;
+    const { fieldsToShow, pageSize, filterId, customPollingTime } = widget.configuration;
     const manager = toolbox.getManager();
     const filterRulesUrl = `/filters/deployments/${filterId}`;
-    const filterRulesResult = useQuery(filterRulesUrl, ({ queryKey: url }) =>
-        filterId ? manager.doGet(url).then(filtersResponse => filtersResponse.value as unknown[]) : []
+    const filterRulesResult = useQuery(
+        filterRulesUrl,
+        ({ queryKey: url }) =>
+            filterId ? manager.doGet(url).then(filtersResponse => filtersResponse.value as unknown[]) : [],
+        { refetchOnWindowFocus: false }
     );
-    const [gridParams] = useState<GridParams>();
+    const [gridParams, setGridParams] = useState<GridParams>();
     const deploymentsUrl = '/searches/deployments';
     const deploymentsResult = useQuery(
-        [deploymentsUrl, gridParams],
+        [deploymentsUrl, gridParams, filterRulesResult.data],
         (): Promise<DeploymentsResponse> =>
             manager.doPost(deploymentsUrl, gridParams, { filter_rules: filterRulesResult.data }),
         {
-            enabled: filterRulesResult.status === 'success',
+            enabled: filterRulesResult.isSuccess,
             onSuccess: data => {
                 const context = toolbox.getContext();
                 // TODO(RD-1830): detect if deploymentId is not present in the current page and reset it.
@@ -111,15 +120,37 @@ const DeploymentsView: FunctionComponent<DeploymentsViewProps> = ({ widget, tool
                 if (context.getValue('deploymentId') === undefined && data.items.length > 0) {
                     context.setValue('deploymentId', data.items[0].id);
                 }
-            }
+            },
+            refetchInterval: customPollingTime * 1000
         }
     );
 
+    // NOTE: only show the spinner when refetching (polling) deployments
+    // TODO: move spinner closer to the table
+    const shouldShowSpinner = deploymentsResult.isFetching && !deploymentsResult.isLoading;
+    useEffect(() => {
+        if (!shouldShowSpinner) {
+            return undefined;
+        }
+
+        toolbox.loading(true);
+        return () => toolbox.loading(false);
+    }, [shouldShowSpinner]);
+
+    // TODO: extract messages to en.json
+    if (filterRulesResult.isFetching) {
+        return <Loading message="Loading filter rules" />;
+    }
+    if (filterRulesResult.isError) {
+        log.error(filterRulesResult.error);
+        return <ErrorMessage header="Error loading data" error="Cannot fetch filter rules" />;
+    }
+
     if (deploymentsResult.isLoading || deploymentsResult.isIdle) {
-        return <Loading />;
+        return <Loading message="Loading deployments" />;
     }
     if (deploymentsResult.isError) {
-        return null;
+        return <ErrorMessage header="Error loading data" error="Cannot fetch deployments" />;
     }
 
     const deployment = find(deploymentsResult.data.items, {
@@ -130,7 +161,7 @@ const DeploymentsView: FunctionComponent<DeploymentsViewProps> = ({ widget, tool
     return (
         <div className="grid">
             <DataTable
-                fetchData={toolbox.refresh}
+                fetchData={setGridParams}
                 pageSize={pageSize}
                 selectable
                 sizeMultiplier={20}
