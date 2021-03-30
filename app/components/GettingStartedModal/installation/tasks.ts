@@ -124,9 +124,9 @@ export const createPluginInstallationTasks = (
     const rejectedPlugins: PluginInstallationTask[] = [];
     const installedPlugins: PluginInstallationTask[] = [];
     const scheduledPlugins: PluginInstallationTask[] = [];
-    if (currentPlugins.plugins) {
-        const catalogPlugins = currentPlugins.plugins?.available ?? [];
-        const managerPlugins = currentPlugins.plugins?.installed ?? [];
+    if (currentPlugins.response) {
+        const catalogPlugins = currentPlugins.response?.available ?? [];
+        const managerPlugins = currentPlugins.response?.installed ?? [];
         selectedPlugins.forEach(selectedPlugin => {
             selectedPlugin.plugins.forEach(pluginDetails => {
                 const expectedPluginName = pluginDetails.name;
@@ -184,8 +184,8 @@ export const createSecretsInstallationTasks = (
     const usedSecrets: Record<string, boolean> = {};
     const updatedSecrets: SecretInstallationTask[] = [];
     const createdSecrets: SecretInstallationTask[] = [];
-    if (currentSecrets.secrets) {
-        const mappedSecrets = mapDefinedSecrets(currentSecrets.secrets ?? []);
+    if (currentSecrets.response) {
+        const mappedSecrets = mapDefinedSecrets(currentSecrets.response ?? []);
         selectedPlugins.forEach(pluginsItem => {
             pluginsItem.secrets.forEach(secretsItem => {
                 if (secretsItem.name in usedSecrets) {
