@@ -1,6 +1,5 @@
 import type { RouteHandler } from 'cypress/types/net-stubbing';
 import { without } from 'lodash';
-import { FilterResource } from '../../support/filters';
 
 describe('Deployments View widget', () => {
     const widgetId = 'deploymentsView';
@@ -148,8 +147,8 @@ describe('Deployments View widget', () => {
     describe('with filters', () => {
         const filterId = 'only-precious';
         before(() => {
-            cy.deleteFilter(FilterResource.Deployments, filterId, { ignoreFailure: true })
-                .createFilter(FilterResource.Deployments, filterId, [
+            cy.deleteDeploymentsFilter(filterId, { ignoreFailure: true })
+                .createDeploymentsFilter(filterId, [
                     { type: 'label', key: 'precious', values: ['yes'], operator: 'any_of' }
                 ])
                 .deployBlueprint(blueprintName, deploymentNameThatMatchesFilter, { webserver_port: 9124 })

@@ -16,17 +16,12 @@ export interface FilterRule {
     type: 'label' | 'attribute';
 }
 
-export enum FilterResource {
-    Deployments = 'deployments',
-    Blueprints = 'blueprints'
-}
-
 const commands = {
-    createFilter: (resource: FilterResource, id: string, rules: FilterRule[]) =>
-        cy.cfyRequest(`/filters/${resource}/${id}`, 'PUT', null, { filter_rules: rules }),
+    createDeploymentsFilter: (id: string, rules: FilterRule[]) =>
+        cy.cfyRequest(`/filters/deployments/${id}`, 'PUT', null, { filter_rules: rules }),
 
-    deleteFilter: (resource: FilterResource, filterId: string, { ignoreFailure }: { ignoreFailure?: boolean } = {}) =>
-        cy.cfyRequest(`/filters/${resource}/${filterId}`, 'DELETE', undefined, undefined, {
+    deleteDeploymentsFilter: (filterId: string, { ignoreFailure }: { ignoreFailure?: boolean } = {}) =>
+        cy.cfyRequest(`/filters/deployments/${filterId}`, 'DELETE', undefined, undefined, {
             failOnStatusCode: !ignoreFailure
         })
 };
