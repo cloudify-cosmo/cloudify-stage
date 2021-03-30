@@ -74,7 +74,6 @@ const SummaryStep = ({
     }, [installationMode, pluginInstallationTasks, secretInstallationTasks]);
 
     return (
-        // TODO(RD-1837): change to <Form ...> after forms will be changed to tsx version
         <UnsafelyTypedForm
             style={{ minHeight: 150 }}
             loading={pluginInstallationTasks.loading || secretInstallationTasks.loading}
@@ -146,7 +145,6 @@ const SummaryStep = ({
                     )}
                 </>
             )}
-            {/* TODO(RD-1837): change to </Form> after forms will be changed to tsx version  */}
         </UnsafelyTypedForm>
     );
 };

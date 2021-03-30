@@ -20,7 +20,6 @@ const TechnologiesStep = ({ schema, selectedTechnologies, onChange }: Props) => 
     ] = useResettableState(selectedTechnologies ?? {});
     useEffect(() => resetLocalSelectedTechnologies(), [selectedTechnologies]);
     return (
-        // TODO(RD-1837): change to <Form ...> after forms will be changed to tsx version
         <UnsafelyTypedForm>
             {schema.map(({ name, logo, label }) => {
                 const handleChange = (value: boolean) => {
@@ -38,7 +37,6 @@ const TechnologiesStep = ({ schema, selectedTechnologies, onChange }: Props) => 
                     />
                 );
             })}
-            {/* TODO(RD-1837): change to </Form> after forms will be changed to tsx version  */}
         </UnsafelyTypedForm>
     );
 };
