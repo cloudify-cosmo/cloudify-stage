@@ -1,5 +1,6 @@
 import type { RouteHandler } from 'cypress/types/net-stubbing';
 import { without } from 'lodash';
+import { FilterResource } from '../../support/filters';
 
 describe('Deployments View widget', () => {
     const widgetId = 'deploymentsView';
@@ -42,7 +43,6 @@ describe('Deployments View widget', () => {
 
     before(() => {
         cy.activate()
-            // NOTE: will remove all deployments used in this test spec
             .deleteDeployments(specPrefix, true)
             .deleteSites(siteName)
             .deleteBlueprints(blueprintName, true)
@@ -148,13 +148,10 @@ describe('Deployments View widget', () => {
     describe('with filters', () => {
         const filterId = 'only-precious';
         before(() => {
-            cy.deleteFilter('deployments', filterId, { ignoreFailure: true })
-                .createFilter({
-                    id: filterId,
-                    rules: [{ type: 'label', key: 'precious', values: ['yes'], operator: 'any_of' }],
-                    resource: 'deployments'
-                })
-                .deleteDeployments(deploymentNameThatMatchesFilter, true)
+            cy.deleteFilter(FilterResource.Deployments, filterId, { ignoreFailure: true })
+                .createFilter(FilterResource.Deployments, filterId, [
+                    { type: 'label', key: 'precious', values: ['yes'], operator: 'any_of' }
+                ])
                 .deployBlueprint(blueprintName, deploymentNameThatMatchesFilter, { webserver_port: 9124 })
                 .setLabels(deploymentNameThatMatchesFilter, [{ precious: 'yes' }]);
         });
