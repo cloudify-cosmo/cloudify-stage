@@ -555,13 +555,13 @@
                     "placeholder": "Select fields from the list"
                 }
             },
+            "iconLabels": {
+                "inProgress": "In progress",
+                "requiresAttention": "Requires attention"
+            },
             "columns": {
                 "status": {
-                    "name": "Status",
-                    "iconLabels": {
-                        "inProgress": "In progress",
-                        "requiresAttention": "Requires attention"
-                    }
+                    "name": "Status"
                 },
                 "name": {
                     "name": "Name"
