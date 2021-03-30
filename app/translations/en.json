@@ -555,13 +555,13 @@
                     "placeholder": "Select fields from the list"
                 }
             },
-            "iconLabels": {
-                "inProgress": "In progress",
-                "requiresAttention": "Requires attention"
-            },
             "columns": {
                 "status": {
-                    "name": "Status"
+                    "name": "Status",
+                    "iconLabels": {
+                        "inProgress": "In progress",
+                        "requiresAttention": "Requires attention"
+                    }
                 },
                 "name": {
                     "name": "Name"
@@ -589,12 +589,18 @@
         "filters": {
             "name": "Filters",
             "description": "This widget shows a list of defined filters",
-            "noFilters": "There are no filters defined,",
+            "noFilters": "There are no filters defined",
             "columns": {
                 "name": "Filter name",
                 "creator": "Creator",
-                "created": "Created"
-            }
+                "created": "Created",
+                "actions": {
+                    "delete": "Delete filter",
+                    "edit": "Edit filter",
+                    "clone": "Clone filter"
+                }
+            },
+            "deleteConfirm": "Are you sure you want to remove filter '{{filterId}}'?"
         },
         "labels": {
             "name": "Labels",
