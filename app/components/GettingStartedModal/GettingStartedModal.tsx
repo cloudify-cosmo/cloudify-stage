@@ -174,7 +174,7 @@ const GettingStartedModal = () => {
             <Modal.Content style={{ minHeight: 60, overflow: 'hidden' }}>
                 <Form.Field>
                     <Form.Checkbox
-                        label={i18n.t('gettingStartedModal.disableModalLabel', "Don't show next time")}
+                        label={i18n.t('gettingStartedModal.disableModalLabel')}
                         help=""
                         checked={modalDisabledChecked}
                         onChange={setModalDisabledChange}

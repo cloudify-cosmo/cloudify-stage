@@ -29,10 +29,7 @@ const useFetchPlugins = () => {
             };
         }
         if (catalogPlugins.error || managerPlugins.error) {
-            hook.error = i18n.t(
-                'gettingStartedModal.initialization.pluginsLoadingError',
-                'Plugins information loading error.'
-            );
+            hook.error = i18n.t('gettingStartedModal.initialization.pluginsLoadingError');
         }
         return hook;
     }, [catalogPlugins, managerPlugins]);

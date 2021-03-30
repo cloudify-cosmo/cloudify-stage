@@ -13,9 +13,7 @@ const useFetchSecrets = () => {
         return {
             loading: managerSecrets.loading,
             response: managerSecrets.response?.items,
-            error: managerSecrets.error
-                ? i18n.t('gettingStartedModal.initialization.secretsLoadingError', 'Secrets information loading error.')
-                : undefined
+            error: managerSecrets.error ? i18n.t('gettingStartedModal.initialization.secretsLoadingError') : undefined
         } as SecretsHook;
     }, [managerSecrets]);
 };

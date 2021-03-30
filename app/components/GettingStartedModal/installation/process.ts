@@ -89,11 +89,9 @@ export const createResourcesInstaller = (
                 if (destroyed) return;
                 if (!result) {
                     onError(
-                        i18n.t(
-                            'gettingStartedModal.installation.pluginInstallError',
-                            '{{pluginName}} plugin installation error.',
-                            { pluginName: scheduledPlugin.name }
-                        )
+                        i18n.t('gettingStartedModal.installation.pluginInstallError', undefined, {
+                            pluginName: scheduledPlugin.name
+                        })
                     );
                 }
             }
@@ -106,11 +104,9 @@ export const createResourcesInstaller = (
             if (destroyed) return;
             if (!result) {
                 onError(
-                    i18n.t(
-                        'gettingStartedModal.installation.secretUpdateError',
-                        '{{secretName}} secret update operation error.',
-                        { secretName: updatedSecret.name }
-                    )
+                    i18n.t('gettingStartedModal.installation.secretUpdateError', undefined, {
+                        secretName: updatedSecret.name
+                    })
                 );
             }
             if (destroyed) return;
@@ -122,11 +118,9 @@ export const createResourcesInstaller = (
             if (destroyed) return;
             if (!result) {
                 onError(
-                    i18n.t(
-                        'gettingStartedModal.installation.secretCreateError',
-                        '{{secretName}} secret create operation error.',
-                        { secretName: createdSecret.name }
-                    )
+                    i18n.t('gettingStartedModal.installation.secretCreateError', undefined, {
+                        secretName: createdSecret.name
+                    })
                 );
             }
             if (destroyed) return;

@@ -18,7 +18,7 @@ const ModalActions = ({ stepName, installationProcessing, onBackClick, onNextCli
         <Modal.Actions style={{ minHeight: 60 }}>
             <Button
                 icon="cancel"
-                content={i18n.t('gettingStartedModal.buttons.closeModal', 'Close')}
+                content={i18n.t('gettingStartedModal.buttons.closeModal')}
                 floated="left"
                 disabled={installationProcessing}
                 labelPosition="left"
@@ -29,7 +29,7 @@ const ModalActions = ({ stepName, installationProcessing, onBackClick, onNextCli
                     {stepName !== StepName.Technologies && (
                         <Button
                             icon="left arrow"
-                            content={i18n.t('gettingStartedModal.buttons.stepBack', 'Back')}
+                            content={i18n.t('gettingStartedModal.buttons.stepBack')}
                             labelPosition="left"
                             onClick={onBackClick}
                         />
@@ -38,8 +38,8 @@ const ModalActions = ({ stepName, installationProcessing, onBackClick, onNextCli
                         icon="right arrow"
                         content={
                             stepName === StepName.Summary
-                                ? i18n.t('gettingStartedModal.buttons.stepFinish', 'Finish')
-                                : i18n.t('gettingStartedModal.buttons.stepNext', 'Next')
+                                ? i18n.t('gettingStartedModal.buttons.stepFinish')
+                                : i18n.t('gettingStartedModal.buttons.stepNext')
                         }
                         labelPosition="right"
                         onClick={onNextClick}

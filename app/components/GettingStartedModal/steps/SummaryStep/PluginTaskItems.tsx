@@ -6,11 +6,9 @@ import PluginTaskItem from './PluginTaskItem';
 
 import type { PluginInstallationTask } from '../../installation/tasks';
 
-export const installedPluginDescription = (
+export const InstalledPluginDescription = () => (
     <>
-        <span>
-            {i18n.t('gettingStartedModal.summary.pluginInstalledMessageSuffix', 'plugin is already installed.')}
-        </span>
+        <span>{i18n.t('gettingStartedModal.summary.pluginInstalledMessageSuffix')}</span>
         <Icon
             style={{ marginLeft: '0.5em', verticalAlign: 'middle', display: 'inline-block' }}
             color="green"
@@ -19,14 +17,9 @@ export const installedPluginDescription = (
     </>
 );
 
-export const rejectedPluginDescription = (
+export const RejectedPluginDescription = () => (
     <>
-        <span>
-            {i18n.t(
-                'gettingStartedModal.summary.pluginNotFoundMessageSuffix',
-                'plugin is not found in catalog and manager.'
-            )}
-        </span>
+        <span>{i18n.t('gettingStartedModal.summary.pluginNotFoundMessageSuffix')}</span>
         <Icon
             style={{ marginLeft: '0.5em', verticalAlign: 'middle', display: 'inline-block' }}
             color="red"

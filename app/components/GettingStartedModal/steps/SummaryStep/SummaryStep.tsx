@@ -6,7 +6,7 @@ import useCurrentCallback from '../../common/useCurrentCallback';
 import { createResourcesInstaller } from '../../installation/process';
 import { usePluginInstallationTasks, useSecretsInstallationTasks } from '../../installation/tasks';
 import { useInternal, useManager } from '../../common/managerHooks';
-import PluginTaskItems, { installedPluginDescription, rejectedPluginDescription } from './PluginTaskItems';
+import PluginTaskItems, { InstalledPluginDescription, RejectedPluginDescription } from './PluginTaskItems';
 import { UnsafelyTypedForm } from '../../unsafelyTypedForm';
 
 import type { GettingStartedData, GettingStartedSchema } from '../../model';
@@ -86,24 +86,21 @@ const SummaryStep = ({
             )}
             {(pluginInstallationTasks.tasks || secretInstallationTasks.tasks) && (
                 <>
-                    <Header as="h4">{i18n.t('gettingStartedModal.summary.taskListTitle', 'Task List')}</Header>
+                    <Header as="h4">{i18n.t('gettingStartedModal.summary.taskListTitle')}</Header>
                     <List ordered relaxed>
                         {pluginInstallationTasks.tasks && (
                             <>
                                 <PluginTaskItems
                                     tasks={pluginInstallationTasks.tasks.installedPlugins}
-                                    description={installedPluginDescription}
+                                    description={<InstalledPluginDescription />}
                                 />
                                 <PluginTaskItems
                                     tasks={pluginInstallationTasks.tasks.scheduledPlugins}
-                                    description={i18n.t(
-                                        'gettingStartedModal.summary.pluginInstalMessageSuffix',
-                                        'plugin will be installed.'
-                                    )}
+                                    description={i18n.t('gettingStartedModal.summary.pluginInstalMessageSuffix')}
                                 />
                                 <PluginTaskItems
                                     tasks={pluginInstallationTasks.tasks.rejectedPlugins}
-                                    description={rejectedPluginDescription}
+                                    description={<RejectedPluginDescription />}
                                 />
                             </>
                         )}
@@ -111,10 +108,7 @@ const SummaryStep = ({
                             return (
                                 <List.Item key={createdSecret.name}>
                                     <Label horizontal>{createdSecret.name}</Label>{' '}
-                                    {i18n.t(
-                                        'gettingStartedModal.summary.secretCreateMessageSuffix',
-                                        'secret will be created'
-                                    )}
+                                    {i18n.t('gettingStartedModal.summary.secretCreateMessageSuffix')}
                                 </List.Item>
                             );
                         })}
@@ -122,10 +116,7 @@ const SummaryStep = ({
                             return (
                                 <List.Item key={updatedSecret.name}>
                                     <Label horizontal>{updatedSecret.name}</Label>{' '}
-                                    {i18n.t(
-                                        'gettingStartedModal.summary.secretUpdateMessageSuffix',
-                                        'secret will be updated'
-                                    )}
+                                    {i18n.t('gettingStartedModal.summary.secretUpdateMessageSuffix')}
                                 </List.Item>
                             );
                         })}
@@ -135,11 +126,8 @@ const SummaryStep = ({
                             <Divider hidden />
                             <Progress progress size="large" percent={installationProgress} indicating>
                                 {installationProgress < 100
-                                    ? i18n.t(
-                                          'gettingStartedModal.installation.progressMessage',
-                                          'Installation in progress...'
-                                      )
-                                    : i18n.t('gettingStartedModal.installation.doneMessage', 'Installation done!')}
+                                    ? i18n.t('gettingStartedModal.installation.progressMessage')
+                                    : i18n.t('gettingStartedModal.installation.doneMessage')}
                             </Progress>
                         </>
                     )}
