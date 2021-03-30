@@ -11,16 +11,7 @@ interface GridParams {
     _sort: string;
 }
 
-interface DeploymentsResponse {
-    items: Deployment[];
-    metadata: {
-        pagination: {
-            offset: number;
-            size: number;
-            total: number;
-        };
-    };
-}
+type DeploymentsResponse = Stage.Types.PaginatedResponse<Deployment>;
 
 interface DeploymentsViewWidgetConfiguration {
     filterId?: string;
