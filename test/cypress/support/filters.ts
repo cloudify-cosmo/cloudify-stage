@@ -8,9 +8,7 @@ declare global {
     }
 }
 
-/**
- * @see https://cloudifysource.atlassian.net/wiki/spaces/WR/pages/1657405459/Complex+Filters+Design+Document
- */
+/** @see https://docs.cloudify.co/api/v3.1/#the-filter-resource */
 export interface FilterRule {
     key: string;
     values: string[];
