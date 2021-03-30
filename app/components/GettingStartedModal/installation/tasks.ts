@@ -56,30 +56,29 @@ const findScheduledPluginCandidate = (
     expectedPluginName: string,
     expectedPluginVersion?: RegExpString
 ): PluginInstallationTask | null => {
-    for (let i = 0; i < catalogPlugins.length; i += 1) {
-        const catalogPlugin = catalogPlugins[i];
-        if (
-            catalogPlugin.name === expectedPluginName &&
-            validatePluginVersion(expectedPluginVersion, catalogPlugin.version)
-        ) {
-            const matchedWagon = catalogPlugin.wagons.find(wagon => {
-                const wagonName = wagon.name.toLowerCase();
-                return wagonName === currentDistribution || wagonName === 'any';
-            });
-            if (matchedWagon) {
-                return {
-                    icon: catalogPlugin.icon,
-                    name: expectedPluginName,
-                    title: catalogPlugin.title ?? expectedPluginName,
-                    version: catalogPlugin.version,
-                    distribution: matchedWagon.name,
-                    yamlUrl: catalogPlugin.link,
-                    wagonUrl: matchedWagon.url
-                };
-            }
-        }
+    const catalogPlugin = _.find(
+        catalogPlugins,
+        plugin => plugin.name === expectedPluginName && validatePluginVersion(expectedPluginVersion, plugin.version)
+    );
+    if (!catalogPlugin) {
+        return null;
     }
-    return null;
+    const matchedWagon = _.find(catalogPlugin.wagons, wagon => {
+        const wagonName = wagon.name.toLowerCase();
+        return wagonName === currentDistribution || wagonName === 'any';
+    });
+    if (!matchedWagon) {
+        return null;
+    }
+    return {
+        icon: catalogPlugin.icon,
+        name: expectedPluginName,
+        title: catalogPlugin.title ?? expectedPluginName,
+        version: catalogPlugin.version,
+        distribution: matchedWagon.name,
+        yamlUrl: catalogPlugin.link,
+        wagonUrl: matchedWagon.url
+    };
 };
 
 const findInstalledPluginCandidate = (
