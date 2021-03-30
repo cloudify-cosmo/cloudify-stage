@@ -34,7 +34,7 @@ const GettingStartedModal = () => {
     const [secretsStepsData, setSecretsStepsData] = useState<GettingStartedData>({});
 
     const [installationProcessing, setInstallationProcessing] = useState(false);
-    const [modalDisabledChecked, handleModalDisabledChange] = useInput(false);
+    const [modalDisabledChecked, setModalDisabledChange] = useInput(false);
 
     const secretsStepsSchemas = useMemo(
         () => createTechnologiesGroups(castedGettingStartedSchema.filter(items => technologiesStepData[items.name])), // steps with unique secrets for selected technologies
@@ -42,7 +42,7 @@ const GettingStartedModal = () => {
     );
 
     const secretsStepSchema = secretsStepsSchemas[secretsStepIndex];
-    const secretsStepData = secretsStepsData[secretsStepSchema?.name];
+    const secretsStepData = secretsStepsData[secretsStepSchema.name];
 
     const checkTechnologiesStepDataErrors = () => {
         const usedTechnologiesError = validateTechnologyFields(technologiesStepData);
@@ -112,7 +112,7 @@ const GettingStartedModal = () => {
                 break;
 
             default:
-                log.error('Incorrect step name.');
+                log.error('Incorrect step name');
                 break;
         }
     };
@@ -140,7 +140,7 @@ const GettingStartedModal = () => {
                 break;
 
             default:
-                log.error('Incorrect step name.');
+                log.error('Incorrect step name');
                 break;
         }
     };
@@ -172,7 +172,7 @@ const GettingStartedModal = () => {
                         label={i18n.t('gettingStartedModal.disableModalLabel', "Don't show next time")}
                         help=""
                         checked={modalDisabledChecked}
-                        onChange={handleModalDisabledChange}
+                        onChange={setModalDisabledChange}
                     />
                 </Form.Field>
             </Modal.Content>
