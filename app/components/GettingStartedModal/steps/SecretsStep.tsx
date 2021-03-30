@@ -20,7 +20,6 @@ const SecretsStep = ({ selectedTechnology, typedSecrets, onChange }: Props) => {
         <UnsafelyTypedForm>
             {selectedTechnology.secrets.map(({ name, label, type }) => {
                 const handleBlur = () => {
-                    // onChange?.(localTypedSecrets);
                     onChange?.(secretInputs);
                 };
                 return (
