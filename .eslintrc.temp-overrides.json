@@ -7,15 +7,10 @@
     },
     "overrides": [
         {
-            "files": ["**/*.tsx"],
-            "rules": {
-                "react/prop-types": "off"
-            }
-        },
-        {
             "files": ["**/*.ts", "**/*.tsx"],
             "rules": {
-                "no-useless-constructor": "off"
+                "no-useless-constructor": "off",
+                "react/prop-types": "off"
             }
         }
     ]
