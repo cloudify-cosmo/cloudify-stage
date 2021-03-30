@@ -21,7 +21,7 @@ export default function DeleteConfirmModal({ deploymentId, labels, labelToDelete
             content={
                 <div className="content">
                     {i18n.t('widgets.labels.deleteConfirm')} &nbsp;
-                    <Label size="large">
+                    <Label size="large" style={{ wordBreak: 'break-all' }}>
                         {labelToDelete?.key} <span style={{ fontWeight: 'lighter' }}>{labelToDelete?.value}</span>
                     </Label>
                     ?
