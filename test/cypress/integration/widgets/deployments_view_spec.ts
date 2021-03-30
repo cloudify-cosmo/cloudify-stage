@@ -3,8 +3,10 @@ import { without } from 'lodash';
 
 describe('Deployments View widget', () => {
     const widgetId = 'deploymentsView';
-    const blueprintName = 'deployments_view_test_blueprint';
-    const deploymentName = 'deployments_view_test_deployment';
+    const specPrefix = 'deployments_view_test_';
+    const blueprintName = `${specPrefix}blueprint`;
+    const deploymentName = `${specPrefix}deployment`;
+    const deploymentNameThatMatchesFilter = `${specPrefix}precious_deployment`;
     const siteName = 'Olsztyn';
     const blueprintUrl =
         'https://github.com/cloudify-community/blueprint-examples/releases/download/latest/simple-hello-world-example.zip';
@@ -40,7 +42,7 @@ describe('Deployments View widget', () => {
 
     before(() => {
         cy.activate()
-            .deleteDeployments(deploymentName, true)
+            .deleteDeployments(specPrefix, true)
             .deleteSites(siteName)
             .deleteBlueprints(blueprintName, true)
             .uploadBlueprint(blueprintUrl, blueprintName)
@@ -54,7 +56,7 @@ describe('Deployments View widget', () => {
         routeHandler,
         configurationOverrides = {}
     }: { routeHandler?: RouteHandler; configurationOverrides?: Record<string, any> } = {}) => {
-        cy.interceptSp('GET', /^\/deployments/, routeHandler).as('deployments');
+        cy.interceptSp('POST', /^\/searches\/deployments/, routeHandler).as('deployments');
         // NOTE: larger viewport since the widget requires more width to be comfortable to use
         cy.viewport(1600, 900)
             .usePageMock(
@@ -139,6 +141,44 @@ describe('Deployments View widget', () => {
             cy.root().parents('body').find('.modal').contains('button', 'Execute').click();
             cy.wait('@restartDeployment');
             cy.contains('Last Execution');
+        });
+    });
+
+    describe('with filters', () => {
+        const filterId = 'only-precious';
+        before(() => {
+            cy.deleteDeploymentsFilter(filterId, { ignoreFailure: true })
+                .createDeploymentsFilter(filterId, [
+                    { type: 'label', key: 'precious', values: ['yes'], operator: 'any_of' }
+                ])
+                .deployBlueprint(blueprintName, deploymentNameThatMatchesFilter, { webserver_port: 9124 })
+                .setLabels(deploymentNameThatMatchesFilter, [{ precious: 'yes' }]);
+        });
+
+        const getFilterIdInput = () =>
+            cy.contains('Name of the saved filter to apply').parent().get('input[type="text"]');
+
+        it('should take the filter into account when displaying deployments', () => {
+            useDeploymentsViewWidget({ configurationOverrides: { filterId } });
+
+            cy.log('Show only precious deployments');
+            cy.contains(deploymentNameThatMatchesFilter);
+            cy.contains(deploymentName).should('not.exist');
+
+            cy.log('Show all deployments');
+            cy.editWidgetConfiguration(widgetId, () => {
+                getFilterIdInput().clear();
+            });
+
+            cy.contains(deploymentNameThatMatchesFilter);
+            cy.contains(deploymentName);
+
+            cy.log('Invalid filter id');
+            cy.editWidgetConfiguration(widgetId, () => {
+                getFilterIdInput().type('some-very-gibberish-filter-id');
+            });
+
+            cy.contains(/with ID .* was not found/);
         });
     });
 
