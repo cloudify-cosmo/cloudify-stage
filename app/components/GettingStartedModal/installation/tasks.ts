@@ -88,21 +88,21 @@ const findInstalledPluginCandidate = (
     expectedPluginName: string,
     expectedPluginVersion?: RegExpString
 ) => {
-    for (let i = 0; i < managerPlugins.length; i += 1) {
-        const managerPlugin = managerPlugins[i];
-        if (
-            managerPlugin.package_name === expectedPluginName &&
-            validatePluginVersion(expectedPluginVersion, managerPlugin.package_version)
-        ) {
-            return {
-                icon: scheduledPluginCandidate?.icon,
-                name: expectedPluginName,
-                title: scheduledPluginCandidate?.title ?? expectedPluginName,
-                version: managerPlugin.package_version
-            };
-        }
+    const managerPlugin = _.find(
+        managerPlugins,
+        plugin =>
+            plugin.package_name === expectedPluginName &&
+            validatePluginVersion(expectedPluginVersion, plugin.package_version)
+    );
+    if (!managerPlugin) {
+        return null;
     }
-    return null;
+    return {
+        icon: scheduledPluginCandidate?.icon,
+        name: expectedPluginName,
+        title: scheduledPluginCandidate?.title ?? expectedPluginName,
+        version: managerPlugin.package_version
+    };
 };
 
 export type PluginInstallationTask = {
