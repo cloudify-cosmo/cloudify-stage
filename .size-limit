@@ -13,7 +13,7 @@
     },
     {
         "name": "Widgets",
-        "limit": "2.5 MB",
+        "limit": "2.6 MB",
         "gzip": false,
         "running": false,
         "path": ["dist/appData/widgets", "!dist/appData/widgets/**/*.gz"]
