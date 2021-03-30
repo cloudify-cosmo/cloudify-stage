@@ -12,6 +12,7 @@ declare global {
     export const L: typeof import('leaflet');
     export const log: typeof import('loglevel');
     export const connectToStore: typeof import('react-redux').connect;
+    export const ReactQuery: typeof import('react-query');
 
     interface Window {
         PropTypes: typeof import('prop-types');
@@ -22,6 +23,7 @@ declare global {
         L: typeof import('leaflet');
         log: typeof import('loglevel');
         connectToStore: typeof import('react-redux').connect;
+        ReactQuery: typeof import('react-query');
     }
 
     export const process: {

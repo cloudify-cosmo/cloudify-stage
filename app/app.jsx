@@ -30,6 +30,7 @@ import PropTypes from 'prop-types';
 import * as Leaflet from 'leaflet';
 import log from 'loglevel';
 import moment from 'moment';
+import * as ReactQuery from 'react-query';
 
 import { connect, Provider } from 'react-redux';
 import { createBrowserHistory } from 'history';
@@ -58,6 +59,8 @@ const browserHistory = createBrowserHistory({
     basename: Consts.CONTEXT_PATH
 });
 
+const queryClient = new ReactQuery.QueryClient();
+
 export default class app {
     static load() {
         i18n.init({
@@ -77,6 +80,7 @@ export default class app {
         window.log = log;
         window.connectToStore = connect;
         window.moment = moment;
+        window.ReactQuery = ReactQuery;
 
         log.setLevel(log.levels.WARN);
 
@@ -107,11 +111,13 @@ export default class app {
     static start(store) {
         ReactDOM.render(
             <Provider store={store}>
-                <ConnectedRouter history={browserHistory}>
-                    <Switch>
-                        <Routes />
-                    </Switch>
-                </ConnectedRouter>
+                <ReactQuery.QueryClientProvider client={queryClient}>
+                    <ConnectedRouter history={browserHistory}>
+                        <Switch>
+                            <Routes />
+                        </Switch>
+                    </ConnectedRouter>
+                </ReactQuery.QueryClientProvider>
             </Provider>,
             document.getElementById('app')
         );

@@ -23,7 +23,8 @@ module.exports = (env, argv) => {
     const externals = {
         react: 'React',
         'react-dom': 'ReactDOM',
-        lodash: '_'
+        lodash: '_',
+        'react-query': 'ReactQuery'
     };
 
     const module = {
