@@ -10,7 +10,7 @@ import gettingStartedSchema from './schema.json';
 import { isGettingStartedModalDisabled, disableGettingStartedModal } from './localStorage';
 import { validateSecretFields, validateTechnologyFields } from './formValidation';
 import createTechnologiesGroups from './createTechnologiesGroups';
-import { StepName } from './model';
+import { GettingStartedSchemaItem, StepName } from './model';
 import ModalHeader from './ModalHeader';
 import ModalContent from './ModalContent';
 import ModalActions from './ModalActions';
@@ -41,8 +41,8 @@ const GettingStartedModal = () => {
         [technologiesStepData]
     );
 
-    const secretsStepSchema = secretsStepsSchemas[secretsStepIndex];
-    const secretsStepData = secretsStepsData[secretsStepSchema.name];
+    const secretsStepSchema = secretsStepsSchemas[secretsStepIndex] as GettingStartedSchemaItem | undefined;
+    const secretsStepData = secretsStepSchema ? secretsStepsData[secretsStepSchema.name] : undefined;
 
     const checkTechnologiesStepDataErrors = () => {
         const usedTechnologiesError = validateTechnologyFields(technologiesStepData);
@@ -54,6 +54,9 @@ const GettingStartedModal = () => {
         return true;
     };
     const checkSecretsStepDataErrors = () => {
+        if (!secretsStepSchema) {
+            return false;
+        }
         const localDataError = validateSecretFields(secretsStepSchema.secrets, secretsStepData ?? {});
         if (localDataError) {
             setStepErrors([localDataError]);
@@ -70,7 +73,9 @@ const GettingStartedModal = () => {
         setTechnologiesStepData(selectedTechnologies);
     };
     const handleSecretsStepChange = (typedSecrets: GettingStartedSecretsData) => {
-        setSecretsStepsData({ ...secretsStepsData, [secretsStepSchema.name]: typedSecrets });
+        if (secretsStepSchema) {
+            setSecretsStepsData({ ...secretsStepsData, [secretsStepSchema.name]: typedSecrets });
+        }
     };
     const handleInstallationStarted = () => {
         setInstallationProcessing(true);
