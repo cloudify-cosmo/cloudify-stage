@@ -1,4 +1,8 @@
+/* eslint-disable react/prop-types */
 import { find } from 'lodash';
+import { FunctionComponent, useState } from 'react';
+import { useQuery } from 'react-query';
+
 import { deploymentsViewColumnDefinitions, DeploymentsViewColumnId, deploymentsViewColumnIds } from './columns';
 import DetailsPane from './detailsPane';
 import renderDeploymentRow from './renderDeploymentRow';
@@ -26,7 +30,7 @@ const i18nPrefix = 'widgets.deploymentsView';
 
 // TODO(RD-1226): remove environment check
 if (process.env.NODE_ENV === 'development' || process.env.TEST) {
-    Stage.defineWidget<GridParams, DeploymentsResponse, DeploymentsViewWidgetConfiguration>({
+    Stage.defineWidget<GridParams, never, DeploymentsViewWidgetConfiguration>({
         id: 'deploymentsView',
         name: Stage.i18n.t(`${i18nPrefix}.name`),
         description: Stage.i18n.t(`${i18nPrefix}.description`),
@@ -72,72 +76,86 @@ if (process.env.NODE_ENV === 'development' || process.env.TEST) {
         hasStyle: false,
         permission: Stage.GenericConfig.WIDGET_PERMISSION('deploymentsView'),
 
-        async fetchData(widget, toolbox, params: GridParams) {
-            const manager = toolbox.getManager();
-            const filterRules = await (async () => {
-                const { filterId } = widget.configuration;
-                if (!filterId) {
-                    return [];
-                }
-
-                return manager.doGet(`/filters/deployments/${filterId}`).then(filtersResponse => filtersResponse.value);
-            })();
-
-            const response = await manager.doPost('/searches/deployments', params, { filter_rules: filterRules });
-            const context = toolbox.getContext();
-            // TODO(RD-1830): detect if deploymentId is not present in the current page and reset it.
-            // Do that only if `fetchData` was called from `DataTable`. If it's just polling,
-            // then don't reset it (because user may be interacting with some other component)
-            if (context.getValue('deploymentId') === undefined && response.items.length > 0) {
-                context.setValue('deploymentId', response.items[0].id);
-            }
-            return response;
-        },
-
-        render(widget, data, _error, toolbox) {
-            const { DataTable, Loading } = Stage.Basic;
-            const { fieldsToShow, pageSize } = widget.configuration;
-
-            if (Stage.Utils.isEmptyWidgetData(data)) {
-                return <Loading />;
-            }
-
-            const deployment = find(data.items, {
-                // NOTE: type assertion since lodash has problems receiving string[] in the object
-                id: toolbox.getContext().getValue('deploymentId') as string | undefined
-            });
-
-            return (
-                <div className="grid">
-                    <DataTable
-                        fetchData={toolbox.refresh}
-                        pageSize={pageSize}
-                        selectable
-                        sizeMultiplier={20}
-                        // TODO(RD-1787): adjust `noDataMessage` to show the image
-                        noDataMessage={Stage.i18n.t(`${i18nPrefix}.noDataMessage`)}
-                        totalSize={data.metadata.pagination.total}
-                        searchable
-                    >
-                        {deploymentsViewColumnIds.map(columnId => {
-                            const columnDefinition = deploymentsViewColumnDefinitions[columnId];
-                            return (
-                                <DataTable.Column
-                                    key={columnId}
-                                    name={columnDefinition.sortFieldName}
-                                    label={columnDefinition.label}
-                                    width={columnDefinition.width}
-                                    tooltip={columnDefinition.tooltip}
-                                    show={fieldsToShow.includes(columnId)}
-                                />
-                            );
-                        })}
-
-                        {data.items.flatMap(renderDeploymentRow(toolbox, fieldsToShow))}
-                    </DataTable>
-                    <DetailsPane deployment={deployment} />
-                </div>
-            );
+        render(widget, _data, _error, toolbox) {
+            return <DeploymentsView widget={widget} toolbox={toolbox} />;
         }
     });
 }
+
+interface DeploymentsViewProps {
+    widget: Stage.Types.Widget<DeploymentsViewWidgetConfiguration>;
+    toolbox: Stage.Types.Toolbox;
+}
+
+const DeploymentsView: FunctionComponent<DeploymentsViewProps> = ({ widget, toolbox }) => {
+    const { DataTable, Loading } = Stage.Basic;
+    const { fieldsToShow, pageSize, filterId } = widget.configuration;
+    const manager = toolbox.getManager();
+    const filterRulesUrl = `/filters/deployments/${filterId}`;
+    const filterRulesResult = useQuery(filterRulesUrl, ({ queryKey: url }) =>
+        filterId ? manager.doGet(url).then(filtersResponse => filtersResponse.value as unknown[]) : []
+    );
+    const [gridParams] = useState<GridParams>();
+    const deploymentsUrl = '/searches/deployments';
+    const deploymentsResult = useQuery(
+        [deploymentsUrl, gridParams],
+        (): Promise<DeploymentsResponse> =>
+            manager.doPost(deploymentsUrl, gridParams, { filter_rules: filterRulesResult.data }),
+        {
+            enabled: filterRulesResult.status === 'success',
+            onSuccess: data => {
+                const context = toolbox.getContext();
+                // TODO(RD-1830): detect if deploymentId is not present in the current page and reset it.
+                // Do that only if `fetchData` was called from `DataTable`. If it's just polling,
+                // then don't reset it (because user may be interacting with some other component)
+                if (context.getValue('deploymentId') === undefined && data.items.length > 0) {
+                    context.setValue('deploymentId', data.items[0].id);
+                }
+            }
+        }
+    );
+
+    if (deploymentsResult.isLoading || deploymentsResult.isIdle) {
+        return <Loading />;
+    }
+    if (deploymentsResult.isError) {
+        return null;
+    }
+
+    const deployment = find(deploymentsResult.data.items, {
+        // NOTE: type assertion since lodash has problems receiving string[] in the object
+        id: toolbox.getContext().getValue('deploymentId') as string | undefined
+    });
+
+    return (
+        <div className="grid">
+            <DataTable
+                fetchData={toolbox.refresh}
+                pageSize={pageSize}
+                selectable
+                sizeMultiplier={20}
+                // TODO(RD-1787): adjust `noDataMessage` to show the image
+                noDataMessage={Stage.i18n.t(`${i18nPrefix}.noDataMessage`)}
+                totalSize={deploymentsResult.data.metadata.pagination.total}
+                searchable
+            >
+                {deploymentsViewColumnIds.map(columnId => {
+                    const columnDefinition = deploymentsViewColumnDefinitions[columnId];
+                    return (
+                        <DataTable.Column
+                            key={columnId}
+                            name={columnDefinition.sortFieldName}
+                            label={columnDefinition.label}
+                            width={columnDefinition.width}
+                            tooltip={columnDefinition.tooltip}
+                            show={fieldsToShow.includes(columnId)}
+                        />
+                    );
+                })}
+
+                {deploymentsResult.data.items.flatMap(renderDeploymentRow(toolbox, fieldsToShow))}
+            </DataTable>
+            <DetailsPane deployment={deployment} />
+        </div>
+    );
+};
