@@ -184,7 +184,7 @@ export const createSecretsInstallationTasks = (
     const usedSecrets: Record<string, boolean> = {};
     const updatedSecrets: SecretInstallationTask[] = [];
     const createdSecrets: SecretInstallationTask[] = [];
-    if (currentSecrets && currentSecrets.secrets) {
+    if (currentSecrets.secrets) {
         const mappedSecrets = mapDefinedSecrets(currentSecrets.secrets ?? []);
         selectedPlugins.forEach(pluginsItem => {
             pluginsItem.secrets.forEach(secretsItem => {
