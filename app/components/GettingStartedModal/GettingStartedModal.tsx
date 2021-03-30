@@ -4,6 +4,7 @@ import log from 'loglevel';
 
 import EventBus from '../../utils/EventBus';
 import useInput from '../../utils/hooks/useInput';
+import useResettableState from '../../utils/hooks/useResettableState';
 import { Form, Modal } from '../basic';
 import gettingStartedSchema from './schema.json';
 import { isGettingStartedModalDisabled, disableGettingStartedModal } from './localStorage';
@@ -27,7 +28,7 @@ const GettingStartedModal = () => {
     const [modalOpen, setModalOpen] = useState(() => isGettingStartedModalDisabled());
 
     const [stepName, setStepName] = useState(StepName.Technologies);
-    const [stepErrors, setStepErrors] = useState<string[]>([]);
+    const [stepErrors, setStepErrors, resetStepErrors] = useResettableState<string[]>([]);
     const [technologiesStepData, setTechnologiesStepData] = useState<GettingStartedTechnologiesData>({});
     const [secretsStepIndex, setSecretsStepIndex] = useState(0);
     const [secretsStepsData, setSecretsStepsData] = useState<GettingStartedData>({});
@@ -49,7 +50,7 @@ const GettingStartedModal = () => {
             setStepErrors([usedTechnologiesError]);
             return false;
         }
-        setStepErrors([]);
+        resetStepErrors();
         return true;
     };
     const checkSecretsStepDataErrors = () => {
@@ -58,12 +59,12 @@ const GettingStartedModal = () => {
             setStepErrors([localDataError]);
             return false;
         }
-        setStepErrors([]);
+        resetStepErrors();
         return true;
     };
 
     const handleStepErrorsDismiss = () => {
-        setStepErrors([]);
+        resetStepErrors();
     };
     const handleTechnologiesStepChange = (selectedTechnologies: GettingStartedTechnologiesData) => {
         setTechnologiesStepData(selectedTechnologies);
@@ -102,7 +103,7 @@ const GettingStartedModal = () => {
                 break;
 
             case StepName.Secrets:
-                setStepErrors([]);
+                resetStepErrors();
                 if (secretsStepIndex > 0) {
                     setSecretsStepIndex(secretsStepIndex - 1);
                 } else {

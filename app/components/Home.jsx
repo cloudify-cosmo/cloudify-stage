@@ -6,6 +6,8 @@ import _ from 'lodash';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import i18n from 'i18next';
+
+import stageUtils from '../utils/stageUtils';
 import SideBar from '../containers/SideBar';
 import Page from './Page';
 import ToursButton from '../containers/ToursButton';
@@ -78,6 +80,8 @@ export default class Home extends Component {
         if (emptyPages) {
             return null;
         }
+
+        // stageUtils.isUserAuthorized('', manager);
 
         return (
             <div className="main">
