@@ -9,12 +9,6 @@ import renderDeploymentRow from './renderDeploymentRow';
 import './styles.scss';
 import type { Deployment } from './types';
 
-interface GridParams {
-    _offset: number;
-    _size: number;
-    _sort: string;
-}
-
 type DeploymentsResponse = Stage.Types.PaginatedResponse<Deployment>;
 
 interface DeploymentsViewWidgetConfiguration {
@@ -32,7 +26,7 @@ const i18nPrefix = 'widgets.deploymentsView';
 
 // TODO(RD-1226): remove environment check
 if (process.env.NODE_ENV === 'development' || process.env.TEST) {
-    Stage.defineWidget<GridParams, never, DeploymentsViewWidgetConfiguration>({
+    Stage.defineWidget<never, never, DeploymentsViewWidgetConfiguration>({
         id: 'deploymentsView',
         name: Stage.i18n.t(`${i18nPrefix}.name`),
         description: Stage.i18n.t(`${i18nPrefix}.description`),
@@ -104,7 +98,7 @@ const DeploymentsView: FunctionComponent<DeploymentsViewProps> = ({ widget, tool
             filterId ? manager.doGet(url).then(filtersResponse => filtersResponse.value as unknown[]) : [],
         { refetchOnWindowFocus: false }
     );
-    const [gridParams, setGridParams] = useState<GridParams>();
+    const [gridParams, setGridParams] = useState<Stage.Types.ManagerGridParams>();
     const deploymentsUrl = '/searches/deployments';
     const deploymentsResult = useQuery(
         [deploymentsUrl, gridParams, filterRulesResult.data],
@@ -161,7 +155,9 @@ const DeploymentsView: FunctionComponent<DeploymentsViewProps> = ({ widget, tool
     return (
         <div className="grid">
             <DataTable
-                fetchData={setGridParams}
+                fetchData={(params: { gridParams: Stage.Types.GridParams }) =>
+                    setGridParams(Stage.Utils.mapGridParamsToManagerGridParams(params.gridParams))
+                }
                 pageSize={pageSize}
                 selectable
                 sizeMultiplier={20}
