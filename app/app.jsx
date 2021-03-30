@@ -59,7 +59,13 @@ const browserHistory = createBrowserHistory({
     basename: Consts.CONTEXT_PATH
 });
 
-const queryClient = new ReactQuery.QueryClient();
+const queryClient = new ReactQuery.QueryClient({
+    defaultOptions: {
+        queries: {
+            retry: false
+        }
+    }
+});
 
 export default class app {
     static load() {
