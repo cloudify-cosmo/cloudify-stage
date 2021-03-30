@@ -55,8 +55,7 @@ const findScheduledPluginCandidate = (
     currentDistribution: string,
     expectedPluginName: string,
     expectedPluginVersion?: RegExpString
-) => {
-    let scheduledPluginCandidate: PluginInstallationTask | null = null;
+): PluginInstallationTask | null => {
     for (let i = 0; i < catalogPlugins.length; i += 1) {
         const catalogPlugin = catalogPlugins[i];
         if (
@@ -68,7 +67,7 @@ const findScheduledPluginCandidate = (
                 return wagonName === currentDistribution || wagonName === 'any';
             });
             if (matchedWagon) {
-                scheduledPluginCandidate = {
+                return {
                     icon: catalogPlugin.icon,
                     name: expectedPluginName,
                     title: catalogPlugin.title ?? expectedPluginName,
@@ -77,11 +76,10 @@ const findScheduledPluginCandidate = (
                     yamlUrl: catalogPlugin.link,
                     wagonUrl: matchedWagon.url
                 };
-                break;
             }
         }
     }
-    return scheduledPluginCandidate;
+    return null;
 };
 
 const findInstalledPluginCandidate = (
