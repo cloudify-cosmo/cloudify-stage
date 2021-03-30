@@ -30,6 +30,7 @@ describe('WidgetHandler', () => {
             { id: 'executions', isCustom: false },
             { id: 'executionsStatus', isCustom: false },
             { id: 'filter', isCustom: false },
+            { id: 'filters', isCustom: false },
             { id: 'highAvailability', isCustom: false },
             { id: 'inputs', isCustom: false },
             { id: 'labels', isCustom: false },
