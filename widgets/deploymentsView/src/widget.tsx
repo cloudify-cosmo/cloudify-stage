@@ -115,13 +115,18 @@ const DeploymentsView: FunctionComponent<DeploymentsViewProps> = ({ widget, tool
                     context.setValue('deploymentId', data.items[0].id);
                 }
             },
-            refetchInterval: customPollingTime * 1000
+            refetchInterval: customPollingTime * 1000,
+            keepPreviousData: true
         }
     );
 
-    // NOTE: only show the spinner when refetching (polling) deployments
+    // NOTE: do not show the spinner on initial fetch
     // TODO: move spinner closer to the table
-    const shouldShowSpinner = deploymentsResult.isFetching && !deploymentsResult.isLoading;
+    const shouldShowSpinner =
+        deploymentsResult.isFetching &&
+        !deploymentsResult.isLoading &&
+        filterRulesResult.isFetching &&
+        !filterRulesResult.isLoading;
     useEffect(() => {
         if (!shouldShowSpinner) {
             return undefined;
@@ -132,7 +137,7 @@ const DeploymentsView: FunctionComponent<DeploymentsViewProps> = ({ widget, tool
     }, [shouldShowSpinner]);
 
     // TODO: extract messages to en.json
-    if (filterRulesResult.isFetching) {
+    if (filterRulesResult.isLoading) {
         return <Loading message="Loading filter rules" />;
     }
     if (filterRulesResult.isError) {
