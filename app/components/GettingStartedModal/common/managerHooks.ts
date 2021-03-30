@@ -14,7 +14,7 @@ const getCurrentDistribution = (manager: Manager) => {
 };
 
 /**
- * Gets current manager from context with changes ignoring for tenants.isFetching and clusterStatus.isFetching properties.
+ * Gets current manager from context.
  * @returns current manager object
  */
 export const useManager = () => {
@@ -23,7 +23,7 @@ export const useManager = () => {
 };
 
 /**
- * Gets current internal from context with changes ignoring for tenants.isFetching and clusterStatus.isFetching properties.
+ * Gets current internal from context.
  * @returns current internal object
  */
 export const useInternal = () => {
