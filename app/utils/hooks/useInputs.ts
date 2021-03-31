@@ -16,10 +16,4 @@ function useInputs<T extends Record<string, any>>(initialValues: T) {
     ] as const;
 }
 
-declare namespace Stage {
-    interface Hooks {
-        useInputs: typeof useInputs;
-    }
-}
-
-Stage.defineHook({ useInputs });
+export default useInputs;
