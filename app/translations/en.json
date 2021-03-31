@@ -516,6 +516,14 @@
                 "modalHeader": "Manage labels for deployment '{{deploymentId}}'",
                 "modalApplyButton": "Apply"
             },
+            "filters": {
+                "form": {
+                    "buttons": {
+                        "addRule": "Add new rule",
+                        "removeRule": "Remove rule"
+                    }
+                }
+            },
             "readmes": {
                 "linksBasePath": "https://docs.cloudify.co/5.1",
                 "params": {
