@@ -1,7 +1,10 @@
 import React, { memo, useState, useMemo } from 'react';
 import i18n from 'i18next';
 import log from 'loglevel';
+import { useSelector } from 'react-redux';
 
+import { ReduxState } from '../../reducers';
+import stageUtils from '../../utils/stageUtils';
 import EventBus from '../../utils/EventBus';
 import useInput from '../../utils/hooks/useInput';
 import useResettableState from '../../utils/hooks/useResettableState';
@@ -27,6 +30,7 @@ const castedGettingStartedSchema = gettingStartedSchema as GettingStartedSchema;
 const GettingStartedModal = () => {
     const [modalOpen, setModalOpen] = useState(() => isGettingStartedModalDisabledInLocalStorage());
 
+    const manager = useSelector((state: ReduxState) => state.manager);
     const [stepName, setStepName] = useState(StepName.Technologies);
     const [stepErrors, setStepErrors, resetStepErrors] = useResettableState<string[]>([]);
     const [technologiesStepData, setTechnologiesStepData] = useState<GettingStartedTechnologiesData>({});
@@ -40,6 +44,10 @@ const GettingStartedModal = () => {
         () => createTechnologiesGroups(castedGettingStartedSchema.filter(items => technologiesStepData[items.name])), // steps with unique secrets for selected technologies
         [technologiesStepData]
     );
+
+    if (!stageUtils.isUserAuthorized('getting_started', manager)) {
+        return null;
+    }
 
     const secretsStepSchema = secretsStepsSchemas[secretsStepIndex] as GettingStartedSchemaItem | undefined;
     const secretsStepData = secretsStepSchema ? secretsStepsData[secretsStepSchema.name] : undefined;
