@@ -42,3 +42,5 @@ export interface Deployment {
     sub_environments_status?: SubdeploymentStatus;
     /* eslint-enable camelcase */
 }
+
+export type DeploymentsResponse = Stage.Types.PaginatedResponse<Deployment>;

@@ -9,9 +9,7 @@ import { i18nPrefix } from './common';
 import DetailsPane from './detailsPane';
 import renderDeploymentRow from './renderDeploymentRow';
 import './styles.scss';
-import type { Deployment } from './types';
-
-type DeploymentsResponse = Stage.Types.PaginatedResponse<Deployment>;
+import type { DeploymentsResponse } from './types';
 
 interface DeploymentsViewWidgetConfiguration {
     /** In milliseconds */
