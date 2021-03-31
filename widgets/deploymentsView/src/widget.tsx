@@ -3,9 +3,13 @@ import { find } from 'lodash';
 import { FunctionComponent, useState } from 'react';
 import { useQuery } from 'react-query';
 
-import { deploymentsViewColumnDefinitions, DeploymentsViewColumnId, deploymentsViewColumnIds } from './columns';
+import {
+    deploymentsViewColumnDefinitions,
+    DeploymentsViewColumnId,
+    deploymentsViewColumnIds,
+    DeploymentsTable
+} from './table';
 import { i18nPrefix } from './common';
-import DeploymentsTable from './DeploymentsTable';
 import DetailsPane from './detailsPane';
 import './styles.scss';
 import type { DeploymentsResponse } from './types';

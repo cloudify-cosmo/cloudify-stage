@@ -2,7 +2,7 @@ import { pick } from 'lodash';
 import { ReactNode } from 'react';
 
 import { deploymentsViewColumnDefinitions, DeploymentsViewColumnId } from './columns';
-import { Deployment, LatestExecutionStatus } from './types';
+import { Deployment, LatestExecutionStatus } from '../types';
 
 const renderDeploymentRow = (toolbox: Stage.Types.Toolbox, fieldsToShow: DeploymentsViewColumnId[]) => (
     deployment: Deployment

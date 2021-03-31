@@ -3,9 +3,9 @@ import { FunctionComponent } from 'react';
 import styled from 'styled-components';
 
 import { deploymentsViewColumnDefinitions, DeploymentsViewColumnId, deploymentsViewColumnIds } from './columns';
-import { i18nPrefix } from './common';
+import { i18nPrefix } from '../common';
 import renderDeploymentRow from './renderDeploymentRow';
-import type { Deployment } from './types';
+import type { Deployment } from '../types';
 
 const TableContainer = styled.div`
     position: relative;
