@@ -24,7 +24,8 @@ module.exports = (env, argv) => {
         react: 'React',
         'react-dom': 'ReactDOM',
         lodash: '_',
-        'react-query': 'ReactQuery'
+        'react-query': 'ReactQuery',
+        'styled-components': 'Stage.styled'
     };
 
     const module = {
