@@ -1,6 +1,4 @@
 const fs = require('fs-extra');
-const os = require('os');
-const path = require('path');
 const archiveHelper = require('../../handler/ArchiveHelper');
 
 jest.mock('../../handler/ArchiveHelper');
