@@ -2,12 +2,11 @@
 import { find } from 'lodash';
 import { FunctionComponent, useState } from 'react';
 import { useQuery } from 'react-query';
-import styled from 'styled-components';
 
 import { deploymentsViewColumnDefinitions, DeploymentsViewColumnId, deploymentsViewColumnIds } from './columns';
 import { i18nPrefix } from './common';
+import DeploymentsTable from './DeploymentsTable';
 import DetailsPane from './detailsPane';
-import renderDeploymentRow from './renderDeploymentRow';
 import './styles.scss';
 import type { DeploymentsResponse } from './types';
 
@@ -85,22 +84,8 @@ interface DeploymentsViewProps {
     toolbox: Stage.Types.Toolbox;
 }
 
-const TableContainer = styled.div`
-    position: relative;
-`;
-const TableLoadingIndicator = styled(Stage.Basic.Loader)`
-    // Increase specificity to override existing styling
-    // See https://styled-components.com/docs/faqs#how-can-i-override-styles-with-higher-specificity
-    && {
-        right: 0;
-        top: 0;
-        left: unset;
-        transform: translate(-50%, 0);
-    }
-`;
-
 const DeploymentsView: FunctionComponent<DeploymentsViewProps> = ({ widget, toolbox }) => {
-    const { DataTable, Loading, ErrorMessage } = Stage.Basic;
+    const { Loading, ErrorMessage } = Stage.Basic;
     const { fieldsToShow, pageSize, filterId, customPollingTime } = widget.configuration;
     const manager = toolbox.getManager();
     const filterRulesUrl = `/filters/deployments/${filterId}`;
@@ -148,45 +133,23 @@ const DeploymentsView: FunctionComponent<DeploymentsViewProps> = ({ widget, tool
         return <ErrorMessage header="Error loading data" error="Cannot fetch deployments" />;
     }
 
-    const deployment = find(deploymentsResult.data.items, {
+    const selectedDeployment = find(deploymentsResult.data.items, {
         // NOTE: type assertion since lodash has problems receiving string[] in the object
         id: toolbox.getContext().getValue('deploymentId') as string | undefined
     });
 
     return (
         <div className="grid">
-            <TableContainer>
-                <TableLoadingIndicator active={filterRulesResult.isFetching || deploymentsResult.isFetching} />
-                <DataTable
-                    fetchData={(params: { gridParams: Stage.Types.GridParams }) =>
-                        setGridParams(Stage.Utils.mapGridParamsToManagerGridParams(params.gridParams))
-                    }
-                    pageSize={pageSize}
-                    selectable
-                    sizeMultiplier={20}
-                    // TODO(RD-1787): adjust `noDataMessage` to show the image
-                    noDataMessage={Stage.i18n.t(`${i18nPrefix}.noDataMessage`)}
-                    totalSize={deploymentsResult.data.metadata.pagination.total}
-                    searchable
-                >
-                    {deploymentsViewColumnIds.map(columnId => {
-                        const columnDefinition = deploymentsViewColumnDefinitions[columnId];
-                        return (
-                            <DataTable.Column
-                                key={columnId}
-                                name={columnDefinition.sortFieldName}
-                                label={columnDefinition.label}
-                                width={columnDefinition.width}
-                                tooltip={columnDefinition.tooltip}
-                                show={fieldsToShow.includes(columnId)}
-                            />
-                        );
-                    })}
-
-                    {deploymentsResult.data.items.flatMap(renderDeploymentRow(toolbox, fieldsToShow))}
-                </DataTable>
-            </TableContainer>
-            <DetailsPane deployment={deployment} />
+            <DeploymentsTable
+                setGridParams={setGridParams}
+                toolbox={toolbox}
+                loadingIndicatorVisible={filterRulesResult.isFetching || deploymentsResult.isFetching}
+                pageSize={pageSize}
+                totalSize={deploymentsResult.data.metadata.pagination.total}
+                deployments={deploymentsResult.data.items}
+                fieldsToShow={fieldsToShow}
+            />
+            <DetailsPane deployment={selectedDeployment} />
         </div>
     );
 };
