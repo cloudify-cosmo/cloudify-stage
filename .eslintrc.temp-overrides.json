@@ -7,7 +7,7 @@
     },
     "overrides": [
         {
-            "files": ["**/*.ts", "**/*.tsx"],
+            "files": ["*.ts", "*.tsx"],
             "rules": {
                 "no-useless-constructor": "off",
                 "react/prop-types": "off"
