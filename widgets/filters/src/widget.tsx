@@ -11,7 +11,7 @@ Stage.defineWidget<unknown, Stage.Types.PaginatedResponse<Filter>, FilterWidgetC
     initialHeight: 22,
     color: 'olive',
     isReact: true,
-    hasStyle: true,
+    hasStyle: false,
     hasReadme: false,
     permission: Stage.GenericConfig.WIDGET_PERMISSION('filters'),
     categories: [Stage.GenericConfig.CATEGORY.SYSTEM_RESOURCES],

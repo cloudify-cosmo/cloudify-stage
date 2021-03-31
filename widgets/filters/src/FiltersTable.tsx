@@ -15,6 +15,10 @@ interface FiltersTableProps {
     widget: FilterWidget;
 }
 
+const FixedLayoutDataTable = Stage.styled(Stage.Basic.DataTable)`
+    table-layout: fixed;
+`;
+
 const FiltersTable: FunctionComponent<FiltersTableProps> = ({ data, toolbox, widget }) => {
     const { i18n } = Stage;
     const { Confirm, DataTable, Icon } = Stage.Basic;
@@ -27,8 +31,7 @@ const FiltersTable: FunctionComponent<FiltersTableProps> = ({ data, toolbox, wid
 
     return (
         <>
-            <DataTable
-                className="filtersTable"
+            <FixedLayoutDataTable
                 noDataMessage={i18n.t('widgets.filters.noFilters')}
                 fetchData={toolbox.refresh}
                 totalSize={data.total}
@@ -68,7 +71,7 @@ const FiltersTable: FunctionComponent<FiltersTableProps> = ({ data, toolbox, wid
                         </DataTable.Data>
                     </DataTable.Row>
                 ))}
-            </DataTable>
+            </FixedLayoutDataTable>
 
             <Confirm
                 open={!!filterIdToDelete}
