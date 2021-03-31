@@ -1,7 +1,8 @@
 /* eslint-disable react/prop-types */
 import { find } from 'lodash';
-import { FunctionComponent, useEffect, useState } from 'react';
+import { FunctionComponent, useState } from 'react';
 import { useQuery } from 'react-query';
+import styled from 'styled-components';
 
 import { deploymentsViewColumnDefinitions, DeploymentsViewColumnId, deploymentsViewColumnIds } from './columns';
 import DetailsPane from './detailsPane';
@@ -87,6 +88,20 @@ interface DeploymentsViewProps {
     toolbox: Stage.Types.Toolbox;
 }
 
+const TableContainer = styled.div`
+    position: relative;
+`;
+const TableLoadingIndicator = styled(Stage.Basic.Loader)`
+    // Increase specificity to override existing styling
+    // See https://styled-components.com/docs/faqs#how-can-i-override-styles-with-higher-specificity
+    && {
+        right: 0;
+        top: 0;
+        left: unset;
+        transform: translate(-50%, 0);
+    }
+`;
+
 const DeploymentsView: FunctionComponent<DeploymentsViewProps> = ({ widget, toolbox }) => {
     const { DataTable, Loading, ErrorMessage } = Stage.Basic;
     const { fieldsToShow, pageSize, filterId, customPollingTime } = widget.configuration;
@@ -120,22 +135,6 @@ const DeploymentsView: FunctionComponent<DeploymentsViewProps> = ({ widget, tool
         }
     );
 
-    // NOTE: do not show the spinner on initial fetch
-    // TODO: move spinner closer to the table
-    const shouldShowSpinner =
-        deploymentsResult.isFetching &&
-        !deploymentsResult.isLoading &&
-        filterRulesResult.isFetching &&
-        !filterRulesResult.isLoading;
-    useEffect(() => {
-        if (!shouldShowSpinner) {
-            return undefined;
-        }
-
-        toolbox.loading(true);
-        return () => toolbox.loading(false);
-    }, [shouldShowSpinner]);
-
     // TODO: extract messages to en.json
     if (filterRulesResult.isLoading) {
         return <Loading message="Loading filter rules" />;
@@ -159,34 +158,37 @@ const DeploymentsView: FunctionComponent<DeploymentsViewProps> = ({ widget, tool
 
     return (
         <div className="grid">
-            <DataTable
-                fetchData={(params: { gridParams: Stage.Types.GridParams }) =>
-                    setGridParams(Stage.Utils.mapGridParamsToManagerGridParams(params.gridParams))
-                }
-                pageSize={pageSize}
-                selectable
-                sizeMultiplier={20}
-                // TODO(RD-1787): adjust `noDataMessage` to show the image
-                noDataMessage={Stage.i18n.t(`${i18nPrefix}.noDataMessage`)}
-                totalSize={deploymentsResult.data.metadata.pagination.total}
-                searchable
-            >
-                {deploymentsViewColumnIds.map(columnId => {
-                    const columnDefinition = deploymentsViewColumnDefinitions[columnId];
-                    return (
-                        <DataTable.Column
-                            key={columnId}
-                            name={columnDefinition.sortFieldName}
-                            label={columnDefinition.label}
-                            width={columnDefinition.width}
-                            tooltip={columnDefinition.tooltip}
-                            show={fieldsToShow.includes(columnId)}
-                        />
-                    );
-                })}
+            <TableContainer>
+                <TableLoadingIndicator active={filterRulesResult.isFetching || deploymentsResult.isFetching} />
+                <DataTable
+                    fetchData={(params: { gridParams: Stage.Types.GridParams }) =>
+                        setGridParams(Stage.Utils.mapGridParamsToManagerGridParams(params.gridParams))
+                    }
+                    pageSize={pageSize}
+                    selectable
+                    sizeMultiplier={20}
+                    // TODO(RD-1787): adjust `noDataMessage` to show the image
+                    noDataMessage={Stage.i18n.t(`${i18nPrefix}.noDataMessage`)}
+                    totalSize={deploymentsResult.data.metadata.pagination.total}
+                    searchable
+                >
+                    {deploymentsViewColumnIds.map(columnId => {
+                        const columnDefinition = deploymentsViewColumnDefinitions[columnId];
+                        return (
+                            <DataTable.Column
+                                key={columnId}
+                                name={columnDefinition.sortFieldName}
+                                label={columnDefinition.label}
+                                width={columnDefinition.width}
+                                tooltip={columnDefinition.tooltip}
+                                show={fieldsToShow.includes(columnId)}
+                            />
+                        );
+                    })}
 
-                {deploymentsResult.data.items.flatMap(renderDeploymentRow(toolbox, fieldsToShow))}
-            </DataTable>
+                    {deploymentsResult.data.items.flatMap(renderDeploymentRow(toolbox, fieldsToShow))}
+                </DataTable>
+            </TableContainer>
             <DetailsPane deployment={deployment} />
         </div>
     );
