@@ -7,7 +7,6 @@ import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import i18n from 'i18next';
 
-import stageUtils from '../utils/stageUtils';
 import SideBar from '../containers/SideBar';
 import Page from './Page';
 import ToursButton from '../containers/ToursButton';
