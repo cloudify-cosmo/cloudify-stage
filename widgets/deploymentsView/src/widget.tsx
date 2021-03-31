@@ -83,6 +83,8 @@ if (process.env.NODE_ENV === 'development' || process.env.TEST) {
     });
 }
 
+const i18nMessagesPrefix = `${i18nPrefix}.messages`;
+
 interface DeploymentsViewProps {
     widget: Stage.Types.Widget<DeploymentsViewWidgetConfiguration>;
     toolbox: Stage.Types.Toolbox;
@@ -123,24 +125,24 @@ const DeploymentsView: FunctionComponent<DeploymentsViewProps> = ({ widget, tool
     );
 
     if (filterRulesResult.isLoading) {
-        return <Loading message={i18n.t(`${i18nPrefix}.messages.loadingFilterRules`)} />;
+        return <Loading message={i18n.t(`${i18nMessagesPrefix}.loadingFilterRules`)} />;
     }
     if (filterRulesResult.isError) {
         return (
             <ErrorMessage
-                header={i18n.t(`${i18nPrefix}.messages.errorLoadingFilterRules`)}
+                header={i18n.t(`${i18nMessagesPrefix}.errorLoadingFilterRules`)}
                 error={i18n.t('widget.renderError')}
             />
         );
     }
 
     if (deploymentsResult.isLoading || deploymentsResult.isIdle) {
-        return <Loading message={i18n.t(`${i18nPrefix}.messages.loadingDeployments`)} />;
+        return <Loading message={i18n.t(`${i18nMessagesPrefix}.loadingDeployments`)} />;
     }
     if (deploymentsResult.isError) {
         return (
             <ErrorMessage
-                header={i18n.t(`${i18nPrefix}.messages.errorLoadingDeployments`)}
+                header={i18n.t(`${i18nMessagesPrefix}.errorLoadingDeployments`)}
                 error={i18n.t('widget.renderError')}
             />
         );
