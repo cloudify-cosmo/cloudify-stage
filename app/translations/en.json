@@ -626,6 +626,16 @@
             },
             "noDataMessage": "No Results Found. Try changing the filter's parameters"
         },
+        "filters": {
+            "name": "Filters",
+            "description": "This widget shows a list of defined filters",
+            "noFilters": "There are no filters defined,",
+            "columns": {
+                "name": "Filter name",
+                "creator": "Creator",
+                "created": "Created"
+            }
+        },
         "labels": {
             "name": "Labels",
             "description": "This widget shows a list of defined labels",

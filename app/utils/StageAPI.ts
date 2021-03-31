@@ -239,6 +239,7 @@ declare global {
         }
 
         const i18n: typeof import('i18next').default;
+        const styled: typeof import('styled-components').default;
 
         /**
          * A namespace that exists for storing reusable TypeScript types
@@ -259,6 +260,16 @@ declare global {
                 Data,
                 Configuration
             >;
+            interface PaginatedResponse<ResponseItem> {
+                items: ResponseItem[];
+                metadata: {
+                    pagination: {
+                        offset: number;
+                        size: number;
+                        total: number;
+                    };
+                };
+            }
         }
     }
 }
