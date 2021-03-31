@@ -131,7 +131,7 @@ const DeploymentsView: FunctionComponent<DeploymentsViewProps> = ({ widget, tool
         return (
             <ErrorMessage
                 header={i18n.t(`${i18nMessagesPrefix}.errorLoadingFilterRules`)}
-                error={i18n.t('widget.renderError')}
+                error={filterRulesResult.error as { message: string }}
             />
         );
     }
@@ -143,7 +143,7 @@ const DeploymentsView: FunctionComponent<DeploymentsViewProps> = ({ widget, tool
         return (
             <ErrorMessage
                 header={i18n.t(`${i18nMessagesPrefix}.errorLoadingDeployments`)}
-                error={i18n.t('widget.renderError')}
+                error={deploymentsResult.error as { message: string }}
             />
         );
     }
