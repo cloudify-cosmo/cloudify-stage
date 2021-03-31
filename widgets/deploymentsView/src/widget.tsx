@@ -93,7 +93,7 @@ const DeploymentsView: FunctionComponent<DeploymentsViewProps> = ({ widget, tool
         filterRulesUrl,
         ({ queryKey: url }) =>
             filterId ? manager.doGet(url).then(filtersResponse => filtersResponse.value as unknown[]) : [],
-        { refetchOnWindowFocus: false }
+        { refetchOnWindowFocus: false, keepPreviousData: true }
     );
     const [gridParams, setGridParams] = useState<Stage.Types.ManagerGridParams>();
     const deploymentsUrl = '/searches/deployments';
