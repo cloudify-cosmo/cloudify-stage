@@ -90,6 +90,7 @@ interface DeploymentsViewProps {
 
 const DeploymentsView: FunctionComponent<DeploymentsViewProps> = ({ widget, toolbox }) => {
     const { Loading, ErrorMessage } = Stage.Basic;
+    const { i18n } = Stage;
     const { fieldsToShow, pageSize, filterId, customPollingTime } = widget.configuration;
     const manager = toolbox.getManager();
     const filterRulesUrl = `/filters/deployments/${filterId}`;
@@ -121,20 +122,28 @@ const DeploymentsView: FunctionComponent<DeploymentsViewProps> = ({ widget, tool
         }
     );
 
-    // TODO: extract messages to en.json
     if (filterRulesResult.isLoading) {
-        return <Loading message="Loading filter rules" />;
+        return <Loading message={i18n.t(`${i18nPrefix}.messages.loadingFilterRules`)} />;
     }
     if (filterRulesResult.isError) {
-        log.error(filterRulesResult.error);
-        return <ErrorMessage header="Error loading data" error="Cannot fetch filter rules" />;
+        return (
+            <ErrorMessage
+                header={i18n.t(`${i18nPrefix}.messages.errorLoadingFilterRules`)}
+                error={i18n.t('widget.renderError')}
+            />
+        );
     }
 
     if (deploymentsResult.isLoading || deploymentsResult.isIdle) {
-        return <Loading message="Loading deployments" />;
+        return <Loading message={i18n.t(`${i18nPrefix}.messages.loadingDeployments`)} />;
     }
     if (deploymentsResult.isError) {
-        return <ErrorMessage header="Error loading data" error="Cannot fetch deployments" />;
+        return (
+            <ErrorMessage
+                header={i18n.t(`${i18nPrefix}.messages.errorLoadingDeployments`)}
+                error={i18n.t('widget.renderError')}
+            />
+        );
     }
 
     const selectedDeployment = find(deploymentsResult.data.items, {

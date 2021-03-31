@@ -53,7 +53,7 @@ const DeploymentsTable: FunctionComponent<DeploymentsTableProps> = ({
                 selectable
                 sizeMultiplier={20}
                 // TODO(RD-1787): adjust `noDataMessage` to show the image
-                noDataMessage={Stage.i18n.t(`${i18nPrefix}.noDataMessage`)}
+                noDataMessage={Stage.i18n.t(`${i18nPrefix}.messages.noData`)}
                 totalSize={totalSize}
                 searchable
             >

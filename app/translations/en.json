@@ -624,7 +624,13 @@
                     "tooltip": "Services (Total)"
                 }
             },
-            "noDataMessage": "No Results Found. Try changing the filter's parameters"
+            "messages": {
+                "noData": "No Results Found. Try changing the filter's parameters",
+                "loadingFilterRules": "Loading filter rules",
+                "errorLoadingFilterRules": "Error when loading filter rules",
+                "loadingDeployments": "Loading deployments",
+                "errorLoadingDeployments": "Error when loading deployments"
+            }
         },
         "filters": {
             "name": "Filters",
