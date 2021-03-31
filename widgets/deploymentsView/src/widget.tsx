@@ -5,6 +5,7 @@ import { useQuery } from 'react-query';
 import styled from 'styled-components';
 
 import { deploymentsViewColumnDefinitions, DeploymentsViewColumnId, deploymentsViewColumnIds } from './columns';
+import { i18nPrefix } from './common';
 import DetailsPane from './detailsPane';
 import renderDeploymentRow from './renderDeploymentRow';
 import './styles.scss';
@@ -22,8 +23,6 @@ interface DeploymentsViewWidgetConfiguration {
     sortColumn: string;
     sortAscending: string;
 }
-
-const i18nPrefix = 'widgets.deploymentsView';
 
 // TODO(RD-1226): remove environment check
 if (process.env.NODE_ENV === 'development' || process.env.TEST) {

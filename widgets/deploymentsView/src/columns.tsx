@@ -1,6 +1,8 @@
 import { mapValues } from 'lodash';
 import type { ReactNode } from 'react';
 import type { IconProps } from 'semantic-ui-react';
+
+import { i18nPrefix } from './common';
 import { Deployment, DeploymentStatus, SubdeploymentStatus } from './types';
 
 // NOTE: the order in the array determines the order in the UI
@@ -28,7 +30,6 @@ export interface DeploymentsViewColumnDefinition {
     render(deployment: Deployment): ReactNode;
 }
 
-const i18nPrefix = 'widgets.deploymentsView';
 const i18nColumnsPrefix = `${i18nPrefix}.columns`;
 
 /**
