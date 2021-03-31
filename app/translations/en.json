@@ -1,6 +1,9 @@
 {
     "backToApps": "Back to apps",
     "backToLogin": "Back to login",
+    "urls": {
+        "pluginsCatalog": "http://repository.cloudifysource.org/cloudify/wagons/plugins.json"
+    },
     "cluster": {
         "manager": "Manager",
         "db": "Database",
@@ -21,6 +24,44 @@
         },
         "servicesStatus": "Services Status",
         "systemStatus": "System Status"
+    },
+    "gettingStartedModal" : {
+        "disableModalLabel": "Don't show next time",
+        "titles": {
+            "technologiesStep": "Getting Started",
+            "secretsStep": "Secrets",
+            "summaryStep": "Summary",
+            "statusStep": "Status"
+        },
+        "buttons": {
+            "closeModal": "Close",
+            "stepBack": "Back",
+            "stepNext": "Next",
+            "stepFinish": "Finish"
+        },
+        "initialization": {
+            "pluginsLoadingError": "Plugins information loading error.",
+            "secretsLoadingError": "Secrets information loading error."
+        },
+        "validation": {
+            "someTechnologyRequiredError": "At least one technology needs to be selected.",
+            "allSecretsRequiredError": "All secret values need to be specified."
+        },
+        "summary": {
+            "taskListTitle": "Task List",
+            "pluginInstalMessageSuffix": "plugin will be installed.",
+            "pluginInstalledMessageSuffix": "plugin is already installed.",
+            "pluginNotFoundMessageSuffix": "plugin is not found in catalog and manager.",
+            "secretCreateMessageSuffix": "secret will be created.",
+            "secretUpdateMessageSuffix": "secret will be updated."
+        },
+        "installation": {
+            "pluginInstallError": "{{pluginName}} plugin installation error.",
+            "secretUpdateError": "{{secretName}} secret update operation error.",
+            "secretCreateError": "{{secretName}} secret create operation error.",
+            "progressMessage": "Installation in progress...",
+            "doneMessage": "Installation done!"
+        }
     },
     "editMode": {
         "addPage": "Add Page",
@@ -489,7 +530,6 @@
             },
             "revertToDefault": "Revert to default value",
             "urls": {
-                "pluginsCatalog": "http://repository.cloudifysource.org/cloudify/wagons/plugins.json",
                 "blueprintsCatalog": "http://repository.cloudifysource.org/cloudify/blueprints/5.1/examples.json",
                 "helloWorldBlueprint": "https://github.com/cloudify-cosmo/cloudify-hello-world-example/archive/master.zip",
                 "linkParameterExample": "https://cloudify.co"
