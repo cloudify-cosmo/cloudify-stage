@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 
-function useEventListener(toolbox, event, handler) {
+function useEventListener(toolbox: Stage.Types.Toolbox, event: string, handler: (...args: any[]) => void) {
     useEffect(() => {
         if (event) {
             toolbox.getEventBus().on(event, handler);
@@ -11,4 +11,11 @@ function useEventListener(toolbox, event, handler) {
     }, [event, handler]);
 }
 
+declare global {
+    namespace Stage {
+        interface Hooks {
+            useEventListener: typeof useEventListener;
+        }
+    }
+}
 Stage.defineHook({ useEventListener });
