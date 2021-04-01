@@ -3,7 +3,6 @@ import i18n from 'i18next';
 import log from 'loglevel';
 import { useSelector } from 'react-redux';
 
-import { ReduxState } from '../../reducers';
 import stageUtils from '../../utils/stageUtils';
 import EventBus from '../../utils/EventBus';
 import useInput from '../../utils/hooks/useInput';
@@ -18,6 +17,7 @@ import ModalHeader from './ModalHeader';
 import ModalContent from './ModalContent';
 import ModalActions from './ModalActions';
 
+import type { ReduxState } from '../../reducers';
 import type {
     GettingStartedData,
     GettingStartedSchema,
@@ -28,7 +28,7 @@ import type {
 const castedGettingStartedSchema = gettingStartedSchema as GettingStartedSchema;
 
 const GettingStartedModal = () => {
-    const [modalOpen, setModalOpen] = useState(() => isGettingStartedModalDisabledInLocalStorage());
+    const [modalOpen, setModalOpen] = useState(() => !isGettingStartedModalDisabledInLocalStorage());
 
     const manager = useSelector((state: ReduxState) => state.manager);
     const [stepName, setStepName] = useState(StepName.Technologies);
