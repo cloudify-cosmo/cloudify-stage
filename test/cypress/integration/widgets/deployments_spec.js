@@ -4,7 +4,7 @@ describe('Deployments widget', () => {
     const siteName = 'Zakopane';
     const site = { name: siteName };
     const blueprintUrl =
-        'https://github.com/cloudify-community/blueprint-examples/releases/download/latest/simple-hello-world-example.zip';
+        'https://github.com/cloudify-community/blueprint-examples/releases/latest/download/simple-hello-world-example.zip';
 
     const selectActionFromMenu = (deploymentId, menuClassName, action) => {
         cy.searchInDeploymentsWidget(deploymentId);

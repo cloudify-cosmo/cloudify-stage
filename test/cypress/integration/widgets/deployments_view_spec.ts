@@ -9,7 +9,7 @@ describe('Deployments View widget', () => {
     const deploymentNameThatMatchesFilter = `${specPrefix}precious_deployment`;
     const siteName = 'Olsztyn';
     const blueprintUrl =
-        'https://github.com/cloudify-community/blueprint-examples/releases/download/latest/simple-hello-world-example.zip';
+        'https://github.com/cloudify-community/blueprint-examples/releases/latest/download/simple-hello-world-example.zip';
     const widgetConfiguration = {
         filterByParentDeployment: false,
         fieldsToShow: ['status', 'name', 'blueprintName', 'location', 'subenvironmentsCount', 'subservicesCount'],
