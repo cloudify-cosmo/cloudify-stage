@@ -35,6 +35,7 @@ const Tours = require('./routes/Tours');
 const UserApp = require('./routes/UserApp');
 const WidgetBackend = require('./routes/WidgetBackend');
 const Widgets = require('./routes/Widgets');
+const Filters = require('./routes/Filters');
 
 const logger = LoggerHandler.getLogger('App');
 const contextPath = Consts.CONTEXT_PATH;
@@ -109,6 +110,7 @@ app.use(`${contextPath}/ba`, BlueprintAdditions);
 app.use(`${contextPath}/bud`, BlueprintUserData);
 app.use(`${contextPath}/style`, Style);
 app.use(`${contextPath}/widgets`, Widgets);
+app.use(`${contextPath}/filters`, Filters);
 app.use(`${contextPath}/templates`, Templates);
 app.use(`${contextPath}/tours`, Tours);
 app.use(`${contextPath}/clientConfig`, ClientConfig);
