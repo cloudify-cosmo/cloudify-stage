@@ -106,7 +106,7 @@ const partialDeploymentsViewColumnDefinitions: Record<
         label: <Stage.Basic.Icon name="object group" />,
         width: '1em',
         // NOTE: properties come from the API. They are not prop-types (false-positive)
-        /* eslint-disable camelcase, react/prop-types */
+        /* eslint-disable camelcase */
         // TODO(RD-1839): remove default values
         render({ sub_environments_count = 0, sub_environments_status = SubdeploymentStatus.Good }) {
             const iconName = subdeploymentStatusToIconMapping[sub_environments_status];

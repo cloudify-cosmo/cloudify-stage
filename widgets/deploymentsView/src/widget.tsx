@@ -1,4 +1,3 @@
-/* eslint-disable react/prop-types */
 import { find } from 'lodash';
 import { FunctionComponent, useState } from 'react';
 import { useQuery } from 'react-query';
