@@ -9,7 +9,7 @@ import useInput from '../../utils/hooks/useInput';
 import useResettableState from '../../utils/hooks/useResettableState';
 import { Form, Modal } from '../basic';
 import gettingStartedSchema from './schema.json';
-import { isGettingStartedModalDisabledInLocalStorage, disableGettingStartedModalInLocalStorage } from './localStorage';
+import { isGettingStartedModalDisabled, disableGettingStartedModal } from './localStorage';
 import { validateSecretFields, validateTechnologyFields } from './formValidation';
 import createTechnologiesGroups from './createTechnologiesGroups';
 import { GettingStartedSchemaItem, StepName } from './model';
@@ -28,7 +28,7 @@ import type {
 const castedGettingStartedSchema = gettingStartedSchema as GettingStartedSchema;
 
 const GettingStartedModal = () => {
-    const [modalOpen, setModalOpen] = useState(() => !isGettingStartedModalDisabledInLocalStorage());
+    const [modalOpen, setModalOpen] = useState(() => !isGettingStartedModalDisabled());
 
     const manager = useSelector((state: ReduxState) => state.manager);
     const [stepName, setStepName] = useState(StepName.Technologies);
@@ -96,7 +96,7 @@ const GettingStartedModal = () => {
     const handleModalClose = () => {
         setModalOpen(false);
         if (modalDisabledChecked) {
-            disableGettingStartedModalInLocalStorage();
+            disableGettingStartedModal();
         }
     };
 
