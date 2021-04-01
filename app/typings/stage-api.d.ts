@@ -15,15 +15,15 @@ declare global {
     export const ReactQuery: typeof import('react-query');
 
     interface Window {
-        PropTypes: typeof import('prop-types');
-        moment: typeof import('moment');
-        React: typeof import('react');
-        ReactDOM: typeof import('react-dom');
-        _: typeof import('lodash');
-        L: typeof import('leaflet');
-        log: typeof import('loglevel');
-        connectToStore: typeof import('react-redux').connect;
-        ReactQuery: typeof import('react-query');
+        PropTypes: typeof PropTypes;
+        moment: typeof moment;
+        React: typeof React;
+        ReactDOM: typeof ReactDOM;
+        _: typeof _;
+        L: typeof L;
+        log: typeof log;
+        connectToStore: typeof connectToStore;
+        ReactQuery: typeof ReactQuery;
     }
 
     export const process: {
