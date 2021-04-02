@@ -239,8 +239,8 @@ export const createBlueprintsInstallationTasks = (
     const usedBlueprints: Record<string, boolean> = {};
     const uploadedBlueprints: BlueprintInstallationTask[] = [];
     const scheduledBlueprints: BlueprintInstallationTask[] = [];
-    if (currentBlueprints.blueprints) {
-        const mappedBlueprints = mapCurrentBlueprints(currentBlueprints.blueprints);
+    if (currentBlueprints.response) {
+        const mappedBlueprints = mapCurrentBlueprints(currentBlueprints.response);
         selectedTechnologies.forEach(selectedTechnology => {
             selectedTechnology.blueprints.forEach(blueprintItem => {
                 if (blueprintItem.id in usedBlueprints) {
