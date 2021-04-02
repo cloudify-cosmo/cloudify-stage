@@ -18,10 +18,7 @@ const PluginsInstallationTasks = ({ tasks }: Props) => {
             <PluginTaskItems tasks={tasks.installedPlugins} description={InstalledPluginDescription} />
             <PluginTaskItems
                 tasks={tasks.scheduledPlugins}
-                description={i18n.t(
-                    'gettingStartedModal.summary.pluginInstallMessageSuffix',
-                    'plugin will be installed.'
-                )}
+                description={i18n.t('gettingStartedModal.summary.pluginInstallMessageSuffix')}
             />
             <PluginTaskItems tasks={tasks.rejectedPlugins} description={RejectedPluginDescription} />
         </>
