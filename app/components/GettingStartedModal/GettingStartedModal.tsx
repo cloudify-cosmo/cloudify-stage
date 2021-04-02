@@ -6,7 +6,7 @@ import EventBus from '../../utils/EventBus';
 import useInput from '../../utils/hooks/useInput';
 import useResettableState from '../../utils/hooks/useResettableState';
 import { Form, Modal } from '../basic';
-import gettingStartedSchema from './schema';
+import gettingStartedSchema from './schema.json';
 import { isGettingStartedModalDisabled, disableGettingStartedModal } from './localStorage';
 import { validateSecretFields, validateTechnologyFields } from './formValidation';
 import createTechnologiesGroups from './createTechnologiesGroups';
