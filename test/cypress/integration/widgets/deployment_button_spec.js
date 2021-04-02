@@ -1,8 +1,9 @@
+import { exampleBlueprintUrl } from '../../support/resource_urls';
+
 describe('Create Deployment Button widget', () => {
     const resourcePrefix = 'deploy_test_';
     const testBlueprintId = `${resourcePrefix}bp`;
-    const testBlueprintUrl =
-        'https://github.com/cloudify-community/blueprint-examples/releases/latest/download/simple-hello-world-example.zip';
+    const testBlueprintUrl = exampleBlueprintUrl;
     const firstInputNthChild = 6;
 
     before(() => {
