@@ -36,15 +36,11 @@ const GettingStartedModal = () => {
     const [installationProcessing, setInstallationProcessing] = useState(false);
     const [modalDisabledChecked, setModalDisabledChange] = useInput(false);
 
-    // only selected technologies schemas
     const commonStepsSchemas = useMemo(
         () => castedGettingStartedSchema.filter(item => technologiesStepData[item.name]),
         [technologiesStepData]
     );
-
     const secretsStepsSchemas = useMemo(() => createTechnologiesGroups(commonStepsSchemas), [technologiesStepData]);
-    // some technologies schemas details that doesn't have defined secrets should be sent to installation process too
-    // because of plugins and blueprints can be defined there
     const summaryStepSchemas = useMemo(() => {
         return commonStepsSchemas.reduce(
             (result, item) => {
@@ -184,6 +180,7 @@ const GettingStartedModal = () => {
                 secretsStepsSchemas={secretsStepsSchemas}
                 secretsStepsData={secretsStepsData}
                 secretsStepIndex={secretsStepIndex}
+                summaryStepSchemas={summaryStepSchemas}
                 onStepErrorsDismiss={handleStepErrorsDismiss}
                 onTechnologiesStepChange={handleTechnologiesStepChange}
                 onSecretsStepChange={handleSecretsStepChange}

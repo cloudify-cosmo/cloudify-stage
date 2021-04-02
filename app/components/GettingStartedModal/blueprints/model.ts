@@ -1,4 +1,4 @@
-import type { PageMetadataData } from '../model';
+import type { MetadataResponse } from '../model';
 
 export type BlueprintData = {
     id: string;
@@ -19,6 +19,6 @@ export type BlueprintData = {
 };
 
 export type BlueprintsData = {
-    metadata: PageMetadataData;
+    metadata: MetadataResponse;
     items: BlueprintData[];
 };
