@@ -1,6 +1,8 @@
 import type { RouteHandler } from 'cypress/types/net-stubbing';
 import { without } from 'lodash';
 
+import { exampleBlueprintUrl } from '../../support/resource_urls';
+
 describe('Deployments View widget', () => {
     const widgetId = 'deploymentsView';
     const specPrefix = 'deployments_view_test_';
@@ -8,8 +10,7 @@ describe('Deployments View widget', () => {
     const deploymentName = `${specPrefix}deployment`;
     const deploymentNameThatMatchesFilter = `${specPrefix}precious_deployment`;
     const siteName = 'Olsztyn';
-    const blueprintUrl =
-        'https://github.com/cloudify-community/blueprint-examples/releases/download/latest/simple-hello-world-example.zip';
+    const blueprintUrl = exampleBlueprintUrl;
     const widgetConfiguration = {
         filterByParentDeployment: false,
         fieldsToShow: ['status', 'name', 'blueprintName', 'location', 'subenvironmentsCount', 'subservicesCount'],
