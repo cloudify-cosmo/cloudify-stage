@@ -21,12 +21,7 @@ const BlueprintsInstallationTasks = ({ tasks }: Props) => {
                 return (
                     <List.Item key={blueprint.blueprintName}>
                         <Label horizontal>{blueprint.blueprintName}</Label>{' '}
-                        <span>
-                            {i18n.t(
-                                'gettingStartedModal.summary.blueprintReadyMessageSuffix',
-                                'blueprint is already uploaded'
-                            )}
-                        </span>
+                        <span>{i18n.t('gettingStartedModal.summary.blueprintReadyMessageSuffix')}</span>
                         <SuccessIcon />
                     </List.Item>
                 );
@@ -35,10 +30,7 @@ const BlueprintsInstallationTasks = ({ tasks }: Props) => {
                 return (
                     <List.Item key={blueprint.blueprintName}>
                         <Label horizontal>{blueprint.blueprintName}</Label>{' '}
-                        {i18n.t(
-                            'gettingStartedModal.summary.blueprintUploadMessageSuffix',
-                            'blueprint will be uploaded'
-                        )}
+                        {i18n.t('gettingStartedModal.summary.blueprintUploadMessageSuffix')}
                     </List.Item>
                 );
             })}

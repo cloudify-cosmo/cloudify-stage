@@ -1,7 +1,7 @@
 import React from 'react';
 
 import { Divider, ErrorMessage, Modal } from '../basic';
-import gettingStartedSchema from './schema.json';
+import gettingStartedSchema from './schema';
 import TechnologiesStep from './steps/TechnologiesStep';
 import SecretsStep from './steps/SecretsStep';
 import SummaryStep from './steps/SummaryStep';
