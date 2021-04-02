@@ -247,18 +247,15 @@ export const createBlueprintsInstallationTasks = (
                     return;
                 }
                 usedBlueprints[blueprintItem.name] = true;
+                const blueprintTask = {
+                    blueprintName: blueprintItem.name,
+                    blueprintUrl: blueprintItem.zipUrl,
+                    applicationName: blueprintItem.mainBlueprint ?? ''
+                };
                 if (blueprintItem.name in mappedBlueprints) {
-                    uploadedBlueprints.push({
-                        blueprintName: blueprintItem.name,
-                        blueprintUrl: blueprintItem.zipUrl,
-                        applicationName: blueprintItem.mainBlueprint ?? ''
-                    });
+                    uploadedBlueprints.push(blueprintTask);
                 } else {
-                    scheduledBlueprints.push({
-                        blueprintName: blueprintItem.name,
-                        blueprintUrl: blueprintItem.zipUrl,
-                        applicationName: blueprintItem.mainBlueprint ?? ''
-                    });
+                    scheduledBlueprints.push(blueprintTask);
                 }
             });
         });
