@@ -101,9 +101,8 @@ const SummaryStep = ({
                     {pluginsInstallationTasks.error && <p>{pluginsInstallationTasks.error}</p>}
                     {secretsInstallationTasks.error && <p>{secretsInstallationTasks.error}</p>}
                     {blueprintsInstallationTasks.error && <p>{blueprintsInstallationTasks.error}</p>}
-                    {installationErrors.map((error, index) => (
-                        // eslint-disable-next-line react/no-array-index-key
-                        <p key={index}>{error}</p>
+                    {installationErrors.map(error => (
+                        <p key={error}>{error}</p>
                     ))}
                 </Message>
             )}
