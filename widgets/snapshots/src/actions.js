@@ -14,7 +14,6 @@ export default class {
     doRestore(snapshot, shouldForceRestore, ignorePluginFailure) {
         return this.toolbox.getManager().doPost(`/snapshots/${snapshot.id}/restore`, null, {
             force: shouldForceRestore,
-            recreate_deployments_envs: false,
             tenant_name: '',
             ignore_plugin_failure: ignorePluginFailure
         });
