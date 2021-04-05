@@ -1,10 +1,12 @@
-/**
- * Created by kinneretzin on 05/10/2016.
- */
+const { BlueprintActions } = Stage.Common;
+const i18nPrefix = 'widgets.common.blueprintUpload';
 
 function UploadBlueprintModal({ toolbox, open, onHide }) {
-    const { useRef } = React;
-    const { useBoolean, useInputs, useOpenProp, useErrors, useResettableState } = Stage.Hooks;
+    const { useState, useRef } = React;
+    const {
+        i18n,
+        Hooks: { useBoolean, useInputs, useOpenProp, useErrors, useResettableState }
+    } = Stage;
 
     const [isLoading, setLoading, unsetLoading] = useBoolean();
     const { errors, setErrors, clearErrors, setMessageAsError } = useErrors();
@@ -13,12 +15,13 @@ function UploadBlueprintModal({ toolbox, open, onHide }) {
         blueprintUrl: '',
         blueprintFile: null,
         blueprintName: '',
-        blueprintFileName: '',
+        blueprintYamlFile: '',
         imageUrl: '',
         imageFile: null
     });
+    const [uploadState, setUploadState] = useState();
 
-    const actions = useRef(new Stage.Common.BlueprintActions(toolbox));
+    const actions = useRef(new BlueprintActions(toolbox));
 
     useOpenProp(open, () => {
         unsetLoading();
@@ -30,7 +33,7 @@ function UploadBlueprintModal({ toolbox, open, onHide }) {
     function uploadBlueprint() {
         const {
             blueprintFile,
-            blueprintFileName,
+            blueprintYamlFile,
             blueprintName,
             imageFile,
             blueprintUrl: blueprintUrlState,
@@ -43,22 +46,22 @@ function UploadBlueprintModal({ toolbox, open, onHide }) {
 
         if (!blueprintFile) {
             if (_.isEmpty(blueprintUrl)) {
-                validationErrors.blueprintUrl = 'Please select blueprint package';
+                validationErrors.blueprintUrl = i18n.t(`${i18nPrefix}.validationErrors.noBlueprintPackage`);
             } else if (!Stage.Utils.Url.isUrl(blueprintUrl)) {
-                validationErrors.blueprintUrl = 'Please provide valid URL for blueprint package';
+                validationErrors.blueprintUrl = i18n.t(`${i18nPrefix}.validationErrors.invalidBlueprintUrl`);
             }
         }
 
         if (_.isEmpty(blueprintName)) {
-            validationErrors.blueprintName = 'Please provide blueprint name';
+            validationErrors.blueprintName = i18n.t(`${i18nPrefix}.validationErrors.noBlueprintName`);
         }
 
-        if (_.isEmpty(blueprintFileName)) {
-            validationErrors.blueprintFileName = 'Please provide blueprint YAML file';
+        if (_.isEmpty(blueprintYamlFile)) {
+            validationErrors.blueprintYamlFile = i18n.t(`${i18nPrefix}.validationErrors.noBlueprintYamlFile`);
         }
 
-        if (!_.isEmpty(imageUrl) && !Stage.Utils.Url.isUrl(blueprintUrl)) {
-            validationErrors.imageUrl = 'Please provide valid URL for blueprint icon';
+        if (!_.isEmpty(imageUrl) && !Stage.Utils.Url.isUrl(imageUrl)) {
+            validationErrors.imageUrl = i18n.t(`${i18nPrefix}.validationErrors.invalidImageUrl`);
         }
 
         if (!_.isEmpty(validationErrors)) {
@@ -67,16 +70,29 @@ function UploadBlueprintModal({ toolbox, open, onHide }) {
         }
 
         // Disable the form
+        setUploadState(BlueprintActions.InProgressBlueprintStates.Pending);
         setLoading();
 
         actions.current
-            .doUpload(blueprintName, blueprintFileName, blueprintUrl, blueprintFile, imageUrl, imageFile, visibility)
+            .doUpload(
+                blueprintName,
+                blueprintYamlFile,
+                blueprintUrl,
+                blueprintFile,
+                imageUrl,
+                imageFile,
+                visibility,
+                setUploadState
+            )
             .then(() => {
                 clearErrors();
                 onHide();
                 toolbox.refresh();
             })
-            .catch(setMessageAsError)
+            .catch(e => {
+                setMessageAsError(e);
+                setUploadState(e.state);
+            })
             .finally(unsetLoading);
     }
 
@@ -84,7 +100,7 @@ function UploadBlueprintModal({ toolbox, open, onHide }) {
         setInputs(values);
     }
 
-    const { blueprintFile, blueprintFileName, blueprintName, blueprintUrl, imageFile, imageUrl } = inputs;
+    const { blueprintFile, blueprintYamlFile, blueprintName, blueprintUrl, imageFile, imageUrl } = inputs;
     const { ApproveButton, CancelButton, Icon, Modal, VisibilityField } = Stage.Basic;
     const { UploadBlueprintForm } = Stage.Common;
 
@@ -92,7 +108,7 @@ function UploadBlueprintModal({ toolbox, open, onHide }) {
         <div>
             <Modal open={open} onClose={onHide} className="uploadBlueprintModal">
                 <Modal.Header>
-                    <Icon name="upload" /> Upload blueprint
+                    <Icon name="upload" /> {i18n.t(`${i18nPrefix}.modal.header`)}
                     <VisibilityField
                         visibility={visibility}
                         className="rightFloated"
@@ -105,11 +121,12 @@ function UploadBlueprintModal({ toolbox, open, onHide }) {
                         blueprintUrl={blueprintUrl}
                         blueprintFile={blueprintFile}
                         blueprintName={blueprintName}
-                        blueprintFileName={blueprintFileName}
+                        blueprintYamlFile={blueprintYamlFile}
                         imageUrl={imageUrl}
                         imageFile={imageFile}
                         errors={errors}
                         loading={isLoading}
+                        uploadState={uploadState}
                         onChange={onFormFieldChange}
                         toolbox={toolbox}
                     />
@@ -120,7 +137,7 @@ function UploadBlueprintModal({ toolbox, open, onHide }) {
                     <ApproveButton
                         onClick={uploadBlueprint}
                         disabled={isLoading}
-                        content="Upload"
+                        content={i18n.t(`${i18nPrefix}.modal.uploadButton`)}
                         icon="upload"
                         color="green"
                     />

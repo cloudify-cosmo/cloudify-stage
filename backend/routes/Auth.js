@@ -9,74 +9,84 @@ const _ = require('lodash');
 
 const AuthHandler = require('../handler/AuthHandler');
 const Consts = require('../consts');
+const config = require('../config');
 
 const router = express.Router();
 const logger = require('../handler/LoggerHandler').getLogger('Auth');
 
+const isSamlEnabled = _.get(config.get(), 'app.saml.enabled', false);
+
 router.use(bodyParser.json());
 router.use(bodyParser.urlencoded({ extended: true }));
 
+function getCookieOptions(req) {
+    const httpsUsed = req.header('X-Scheme') === 'https';
+    return { sameSite: 'strict', secure: httpsUsed };
+}
+
 router.post('/login', (req, res) =>
     AuthHandler.getToken(req.headers.authorization)
-        .then(token =>
-            Promise.all([
-                AuthHandler.getTenants(token.value),
-                AuthHandler.getManagerVersion(token.value),
-                AuthHandler.getAndCacheConfig(token.value),
-                Promise.resolve(token)
-            ])
-        )
-        .then(([tenants, version, rbac, token]) => {
-            if (!!tenants && !!tenants.items && tenants.items.length > 0) {
-                res.cookie(Consts.TOKEN_COOKIE_NAME, token.value);
-
-                return AuthHandler.isProductLicensed(version)
-                    ? AuthHandler.getLicense(token.value).then(data => ({
-                          license: _.get(data, 'items[0]', {}),
-                          version,
-                          role: token.role,
-                          rbac
-                      }))
-                    : Promise.resolve({
-                          license: null,
-                          version,
-                          role: token.role,
-                          rbac
-                      });
-            }
-            return Promise.reject({ message: 'User has no tenants', error_code: 'no_tenants' });
+        .then(token => {
+            const cookieOptions = getCookieOptions(req);
+            res.cookie(Consts.TOKEN_COOKIE_NAME, token.value, cookieOptions);
+            res.send({ role: token.role });
         })
-        .then(({ license, version, role, rbac }) => res.send({ license, version, role, rbac }))
         .catch(err => {
             logger.error(err);
             if (err.error_code === 'unauthorized_error') {
-                res.status(401).send({ message: err.message || 'Invalid credentials', error: err });
+                res.status(401).send({ message: err.message || 'Invalid credentials' });
             } else if (err.error_code === 'maintenance_mode_active') {
-                res.status(423).send({ message: 'Manager is currently in maintenance mode', error: err });
+                res.status(423).send({ message: 'Manager is currently in maintenance mode' });
             } else {
-                res.status(500).send({ message: `Failed to authenticate with manager: ${err.message}`, error: err });
+                res.status(500).send({ message: `Failed to authenticate with manager: ${err.message}` });
             }
         })
 );
 
 router.post('/saml/callback', passport.authenticate('saml', { session: false }), (req, res) => {
     if (!req.body || !req.body.SAMLResponse || !req.user) {
-        res.status(401).send('Invalid Request');
+        res.status(401).send({ message: 'Invalid Request' });
+    } else {
+        logger.debug('Received SAML Response for user', req.user);
+        AuthHandler.getTokenViaSamlResponse(req.body.SAMLResponse)
+            .then(token => {
+                const cookieOptions = getCookieOptions(req);
+                res.cookie(Consts.TOKEN_COOKIE_NAME, token.value, cookieOptions);
+                res.cookie(Consts.USERNAME_COOKIE_NAME, req.user.username, cookieOptions);
+                res.cookie(Consts.ROLE_COOKIE_NAME, token.role, cookieOptions);
+                res.redirect(Consts.CONTEXT_PATH);
+            })
+            .catch(err => {
+                logger.error(err);
+                res.status(500).send({ message: 'Failed to authenticate with manager' });
+            });
     }
+});
 
-    AuthHandler.getTokenViaSamlResponse(req.body.SAMLResponse)
-        .then(token =>
-            Promise.all([
-                AuthHandler.getAndCacheConfig(token.value),
-                () => {
-                    res.cookie(Consts.TOKEN_COOKIE_NAME, token.value);
-                    res.redirect(Consts.CONTEXT_PATH);
-                }
-            ])
+router.get('/manager', (req, res) => {
+    const token = req.headers['authentication-token'];
+    if (isSamlEnabled) {
+        res.clearCookie(Consts.USERNAME_COOKIE_NAME);
+        res.clearCookie(Consts.ROLE_COOKIE_NAME);
+    }
+    Promise.all([AuthHandler.getManagerVersion(token), AuthHandler.getAndCacheConfig(token)])
+        .then(([version, rbac]) =>
+            AuthHandler.isProductLicensed(version)
+                ? AuthHandler.getLicense(token).then(data => ({
+                      license: _.get(data, 'items[0]', {}),
+                      version,
+                      rbac
+                  }))
+                : {
+                      license: null,
+                      version,
+                      rbac
+                  }
         )
-        .catch(err => {
-            logger.error(err);
-            res.status(500).send({ message: 'Failed to authenticate with manager', error: err });
+        .then(data => res.send(data))
+        .catch(error => {
+            logger.error(error);
+            res.status(500).send({ message: 'Failed to get manager data' });
         });
 });
 

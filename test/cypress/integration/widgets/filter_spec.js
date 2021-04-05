@@ -3,15 +3,14 @@ describe('Filter', () => {
         cy.activate('valid_trial_license')
             .deleteAllUsersAndTenants()
             .usePageMock(['blueprints', 'deployments'], { pollingTime: 3 })
-            .login();
+            .mockLogin();
     });
 
     it('fills dropdowns with correct data', () => {
-        cy.server();
-        cy.route(/console\/sp\?su=\/blueprints/, 'fixture:filter/blueprints.json');
-        cy.route(/console\/sp\?su=\/deployments.*offset=0/, 'fixture:filter/deployments0.json');
-        cy.route(/console\/sp\?su=\/deployments.*offset=20/, 'fixture:filter/deployments1.json');
-        cy.route(/console\/sp\?su=\/executions/, 'fixture:filter/executions.json');
+        cy.interceptSp('GET', /blueprints.*state=uploaded/, { fixture: 'filter/blueprints.json' });
+        cy.interceptSp('GET', /deployments.*offset=0/, { fixture: 'filter/deployments0.json' });
+        cy.interceptSp('GET', /deployments.*offset=20/, { fixture: 'filter/deployments1.json' });
+        cy.interceptSp('GET', '/executions', { fixture: 'filter/executions.json' });
 
         cy.get('#dynamicDropdown1').click();
         cy.contains('app2.2-clickme').click();
@@ -65,8 +64,9 @@ describe('Filter', () => {
 
             cy.get('.blueprintsWidget input[placeholder^=Search]').scrollIntoView().clear().type(blueprintName);
 
-            cy.contains('.deploymentsWidget .row', deploymentName).find('.green.checkmark');
-            cy.contains('.deploymentsWidget .row', deploymentName).find('.menuAction').click();
+            cy.searchInDeploymentsWidget(deploymentName);
+            // Triggering mouseout event just after the click to hide the tooltip
+            cy.get('.deploymentActionsMenu').click().trigger('mouseout');
             cy.contains('Force Delete').click();
             cy.contains('Yes').click();
 

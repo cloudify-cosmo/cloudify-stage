@@ -1,12 +1,13 @@
+import { exampleBlueprintUrl } from '../../support/resource_urls';
+
 describe('Create Deployment Button widget', () => {
     const resourcePrefix = 'deploy_test_';
     const testBlueprintId = `${resourcePrefix}bp`;
-    const testBlueprintUrl =
-        'https://github.com/cloudify-community/blueprint-examples/releases/download/latest/simple-hello-world-example.zip';
-    const firstInputNthChild = 7;
+    const testBlueprintUrl = exampleBlueprintUrl;
+    const firstInputNthChild = 6;
 
     before(() => {
-        cy.activate('valid_trial_license').usePageMock('deploymentButton').login();
+        cy.activate('valid_trial_license').usePageMock('deploymentButton').mockLogin();
 
         cy.deleteDeployments(resourcePrefix, true)
             .deleteBlueprints(resourcePrefix, true)
@@ -20,6 +21,7 @@ describe('Create Deployment Button widget', () => {
 
     beforeEach(() => {
         cy.refreshPage();
+        cy.interceptSp('GET', RegExp(`/blueprints.*&state=uploaded`)).as('uploadedBlueprints');
         cy.get('div.deploymentButtonWidget button').click();
     });
 
@@ -65,7 +67,7 @@ describe('Create Deployment Button widget', () => {
 
         cy.get('div.deployBlueprintModal div.ui.text.loader').as('loader');
         cy.get('@loader').should('be.visible');
-        cy.get('@loader', { timeout: install ? deployAndInstallTimeout : deployTimeout }).should('not.be.visible');
+        cy.get('@loader', { timeout: install ? deployAndInstallTimeout : deployTimeout }).should('not.exist');
     };
 
     const fillDeployBlueprintModal = (deploymentName, blueprintId) => {
@@ -112,13 +114,14 @@ describe('Create Deployment Button widget', () => {
     };
 
     it('opens deployment modal', () => {
+        cy.wait('@uploadedBlueprints');
         cy.get('div.deployBlueprintModal').should('be.visible');
         cy.get('.actions > .ui:nth-child(1)').should('have.text', 'Cancel');
         cy.get('.actions > .ui:nth-child(2)').should('have.text', 'Deploy');
         cy.get('.actions > .ui:nth-child(3)').should('have.text', 'Deploy & Install');
 
         cy.get('.actions > .ui:nth-child(1)').click();
-        cy.get('div.deployBlueprintModal').should('not.be.visible');
+        cy.get('div.deployBlueprintModal').should('not.exist');
     });
 
     it('allows to deploy a blueprint', () => {
@@ -137,12 +140,7 @@ describe('Create Deployment Button widget', () => {
     });
 
     describe('handles errors during deploy & install process', () => {
-        beforeEach(() => {
-            cy.server();
-        });
-
         afterEach(() => {
-            cy.server({ enable: false });
             cy.get(`.actions > .ui:nth-child(1)`).click();
         });
 
@@ -160,11 +158,9 @@ describe('Create Deployment Button widget', () => {
             const deploymentName = `${resourcePrefix}deployError`;
             fillDeployBlueprintModal(deploymentName, testBlueprintId);
 
-            cy.route({
-                method: 'PUT',
-                url: `console/sp?su=/deployments/${deploymentName}`,
-                status: 400,
-                response: {
+            cy.interceptSp('PUT', `/deployments/${deploymentName}`, {
+                statusCode: 400,
+                body: {
                     message: 'Cannot deploy blueprint'
                 }
             });
@@ -179,11 +175,9 @@ describe('Create Deployment Button widget', () => {
             const deploymentName = `${resourcePrefix}installError`;
             fillDeployBlueprintModal(deploymentName, testBlueprintId);
 
-            cy.route({
-                method: 'POST',
-                url: '/console/sp?su=/executions',
-                status: 400,
-                response: {
+            cy.interceptSp('POST', '/executions', {
+                statusCode: 400,
+                body: {
                     message: 'Cannot start install workflow'
                 }
             }).as('installDeployment');
@@ -203,12 +197,8 @@ describe('Create Deployment Button widget', () => {
         it('parses constraint error message from /deployments REST API', () => {
             selectBlueprintInModal('string');
 
-            const deploymentName = 'test';
-
-            cy.route({
-                method: 'PUT',
-                url: `/console/sp?su=/deployments/${deploymentName}`
-            }).as('deployBlueprint');
+            const deploymentName = `${resourcePrefix}constraintError`;
+            cy.interceptSp('PUT', `/deployments/${deploymentName}`).as('deployBlueprint');
 
             cy.get('input[name="deploymentName"]').type(deploymentName);
             cy.get(`form :nth-child(${firstInputNthChild}).field`)
@@ -222,13 +212,13 @@ describe('Create Deployment Button widget', () => {
                 .within(() => {
                     cy.get('input').clear().type('CentOS 7.6').blur();
                 });
-            cy.get('string_constraint_pattern').should('not.have.class', 'error');
+            cy.get('@string_constraint_pattern').should('not.have.class', 'error');
 
             cy.get(`.actions > .ui:nth-child(2)`).click();
             cy.wait('@deployBlueprint');
 
             cy.get('div.error.message > ul > li').should(
-                'have.text',
+                'contain.text',
                 'Value CentOS 7.6 of input string_constraint_pattern violates ' +
                     'constraint pattern(Ubuntu \\d{2}\\.\\d{2}) operator.'
             );
@@ -237,7 +227,7 @@ describe('Create Deployment Button widget', () => {
     });
 
     describe('handles inputs of type', () => {
-        afterEach(() => cy.get(`.actions > .ui:nth-child(1)`).click());
+        afterEach(() => cy.contains('button', 'Cancel').click());
 
         it('boolean', () => {
             selectBlueprintInModal('boolean');
@@ -264,11 +254,9 @@ describe('Create Deployment Button widget', () => {
                     cy.get('input[type="checkbox"]').should('not.have.attr', 'checked');
 
                     cy.get('@toggle').click();
-                    cy.get('i.undo.link.icon').as('revertToDefaultValue').should('be.visible');
                     cy.get('@toggle').should('have.class', 'checked');
 
-                    cy.get('@revertToDefaultValue').click();
-                    cy.get('@revertToDefaultValue').should('not.be.visible');
+                    cy.revertToDefaultValue();
                     cy.get('@toggle').should('not.have.class', 'checked');
                 });
 
@@ -280,11 +268,9 @@ describe('Create Deployment Button widget', () => {
                     cy.get('input[type="checkbox"]').should('have.attr', 'checked');
 
                     cy.get('@toggle').click();
-                    cy.get('i.undo.link.icon').as('revertToDefaultValue').should('be.visible');
                     cy.get('@toggle').should('not.have.class', 'checked');
 
-                    cy.get('@revertToDefaultValue').click();
-                    cy.get('@revertToDefaultValue').should('not.be.visible');
+                    cy.revertToDefaultValue();
                     cy.get('@toggle').should('have.class', 'checked');
                 });
         });
@@ -334,11 +320,9 @@ describe('Create Deployment Button widget', () => {
                     cy.get('input').as('inputField').clear().type('123').blur();
 
                     verifyNumberInput(null, null, 123);
-                    cy.get('i.undo.link.icon').as('revertToDefaultValue').should('be.visible');
 
-                    cy.get('@revertToDefaultValue').click();
+                    cy.revertToDefaultValue();
                     verifyNumberInput(null, null, 50);
-                    cy.get('@revertToDefaultValue').should('not.be.visible');
                 });
         });
 
@@ -357,11 +341,9 @@ describe('Create Deployment Button widget', () => {
                     cy.get('input').as('inputField').clear().type('2.71').blur();
 
                     verifyNumberInput(null, null, 2.71, 'any');
-                    cy.get('i.undo.link.icon').as('revertToDefaultValue').should('be.visible');
 
-                    cy.get('@revertToDefaultValue').click();
+                    cy.revertToDefaultValue();
                     verifyNumberInput(null, null, 3.14, 'any');
-                    cy.get('@revertToDefaultValue').should('not.be.visible');
                 });
         });
 
@@ -379,8 +361,8 @@ describe('Create Deployment Button widget', () => {
                     cy.get('.icon.info').as('infoIcon').should('be.visible');
 
                     cy.get('@reactJsonView').trigger('mouseout');
-                    cy.get('@switchIcon').should('not.be.visible');
-                    cy.get('@infoIcon').should('not.be.visible');
+                    cy.get('@switchIcon').should('not.exist');
+                    cy.get('@infoIcon').should('not.exist');
 
                     cy.get('@reactJsonView').trigger('mouseover');
                     cy.get('@switchIcon').click();
@@ -398,7 +380,7 @@ describe('Create Deployment Button widget', () => {
                     cy.get('@switchIcon').click();
 
                     cy.get('@reactJsonView').should('have.text', '{}0 items');
-                    cy.get('.icon.undo.link').as('revertToDefaultIcon').click();
+                    cy.revertToDefaultValue();
 
                     cy.get('@reactJsonView').trigger('mouseover');
                     cy.get('@switchIcon').click();
@@ -426,8 +408,8 @@ describe('Create Deployment Button widget', () => {
 
                     cy.get('@reactJsonView').should('have.text', '[]0 items');
                     cy.get('@reactJsonView').trigger('mouseover');
-                    cy.get('.icon.edit.link').as('switchIcon').should('be.visible');
-                    cy.get('.icon.info').as('infoIcon').should('be.visible');
+                    cy.get('.icon.edit.link').should('be.visible');
+                    cy.get('.icon.info').should('be.visible');
                 });
 
             cy.get(`form :nth-child(${firstInputNthChild + 1}).field`)
@@ -463,9 +445,7 @@ describe('Create Deployment Button widget', () => {
                     verifyTextInput('Ubuntu 18.04');
                     cy.get('input').clear().type('Something').blur();
                     verifyTextInput('Something');
-                    cy.get('i.undo.link.icon').as('revertToDefaultValue').should('be.visible');
-                    cy.get('@revertToDefaultValue').click();
-                    cy.get('@revertToDefaultValue').should('not.be.visible');
+                    cy.revertToDefaultValue();
                     verifyTextInput('Ubuntu 18.04');
                 });
 
@@ -481,10 +461,7 @@ describe('Create Deployment Button widget', () => {
                     cy.get('div[name="pl"]').click();
                     cy.get('@text').should('have.text', 'pl');
 
-                    cy.get('i.undo.link.icon').as('revertToDefaultValue').should('be.visible');
-                    cy.get('@revertToDefaultValue').click();
-
-                    cy.get('@revertToDefaultValue').should('not.be.visible');
+                    cy.revertToDefaultValue();
                     cy.get('@text').should('have.text', 'en');
 
                     cy.get('i.dropdown.icon')
@@ -493,9 +470,11 @@ describe('Create Deployment Button widget', () => {
                         .should('have.class', 'clear');
                     cy.get('@dropdownOrClearIcon').click();
 
-                    cy.get('@text').should('not.be.visible');
-                    cy.get('@revertToDefaultValue').should('be.visible');
+                    cy.get('@text').should('not.exist');
                     cy.get('@dropdownOrClearIcon').should('not.have.class', 'clear');
+
+                    cy.revertToDefaultValue();
+                    cy.get('@text').should('have.text', 'en');
                 });
 
             cy.get(`form :nth-child(${firstInputNthChild + 3}).field`)

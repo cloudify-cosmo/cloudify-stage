@@ -1,3 +1,4 @@
+const fs = require('fs');
 const path = require('path');
 const expressStaticGzip = require('express-static-gzip');
 const express = require('express');
@@ -84,9 +85,11 @@ app.use(
 );
 
 const translationsOverrides = 'overrides.json';
-app.use(`${contextPath}/userData/${translationsOverrides}`, (req, res) =>
-    res.sendFile(getResourcePath(translationsOverrides, true))
-);
+app.use(`${contextPath}/userData/${translationsOverrides}`, (req, res) => {
+    const overridesPath = getResourcePath(translationsOverrides, true);
+    if (fs.existsSync(overridesPath)) res.sendFile(overridesPath);
+    else res.send({});
+});
 
 app.use(
     `${contextPath}/userData`,
@@ -135,10 +138,14 @@ app.get('*', (request, response) => {
     response.sendFile(path.resolve(__dirname, '../dist/static', 'index.html'));
 });
 
-// Error handling
-// eslint-disable-next-line no-unused-vars
+/**
+ * Error handling
+ * NOTE: error handlers must have 4 parameters, even if the last one is unused
+ * @see https://expressjs.com/en/guide/error-handling.html
+ */
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 app.use((err, req, res, next) => {
-    logger.error('Error has occured ', JSON.stringify(err));
+    logger.error('Error has occured ', err);
 
     let { message } = err;
     if (err.status === 500) {

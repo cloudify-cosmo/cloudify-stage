@@ -11,6 +11,7 @@ import { getToolbox } from '../utils/Toolbox';
 import WidgetParamsHandler from '../utils/WidgetParamsHandler';
 import { ErrorMessage } from './basic';
 import WidgetPropType from '../utils/props/WidgetPropType';
+import combineClassNames from '../utils/shared/combineClassNames';
 
 export default class WidgetDynamicContent extends Component {
     constructor(props) {
@@ -291,27 +292,36 @@ export default class WidgetDynamicContent extends Component {
     }
 
     render() {
-        const { widget } = this.props;
+        const { widget, standalone } = this.props;
         const { loading } = this.state;
+        const baseWidgetContentClassName = combineClassNames([
+            'widgetContent',
+            !widget.definition.showHeader && 'noHeader',
+            standalone && 'standalone'
+        ]);
+
         return (
             <div>
                 <div
-                    className={`ui ${loading ? 'active' : ''} small inline loader widgetLoader ${
+                    className={combineClassNames([
+                        'ui small inline loader widgetLoader',
+                        loading && 'active',
                         widget.definition.showHeader ? 'header' : 'noheader'
-                    }`}
+                    ])}
                 />
 
                 {widget.definition.isReact ? (
                     <div
-                        className={`widgetContent${widget.definition.showHeader ? '' : ' noHeader '}${
-                            widget.definition.showBorder ? '' : ' noBorder '
-                        }`}
+                        className={combineClassNames([
+                            baseWidgetContentClassName,
+                            !widget.definition.showBorder && 'noBorder'
+                        ])}
                     >
                         {this.renderReact()}
                     </div>
                 ) : (
                     <div
-                        className={`widgetContent${widget.definition.showHeader ? '' : ' noHeader'}`}
+                        className={baseWidgetContentClassName}
                         /* eslint-disable-next-line react/no-danger */
                         dangerouslySetInnerHTML={this.renderWidget()}
                         ref={container => this.attachEvents(container)}
@@ -329,5 +339,6 @@ WidgetDynamicContent.propTypes = {
     fetchWidgetData: PropTypes.func.isRequired,
     onWidgetConfigUpdate: PropTypes.func.isRequired,
     manager: PropTypes.shape({ tenants: PropTypes.shape({ selected: PropTypes.string }) }).isRequired,
-    widget: WidgetPropType.isRequired
+    widget: WidgetPropType.isRequired,
+    standalone: PropTypes.bool.isRequired
 };

@@ -1,0 +1,6 @@
+{
+    "extends": "../node_modules/cloudify-ui-common/configs/tsconfig.base.json",
+    "compilerOptions": {
+        "types": []
+    }
+}

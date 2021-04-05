@@ -1,11 +1,11 @@
 describe('Edit mode', () => {
-    before(() => cy.activate('valid_trial_license').removeCustomWidgets().usePageMock('blueprints').login());
+    before(() => cy.activate('valid_trial_license').removeCustomWidgets().usePageMock('blueprints').mockLogin());
 
     beforeEach(() => {
         cy.usePageMock('blueprints');
         cy.refreshTemplate();
         cy.enterEditMode();
-        cy.route('POST', '/console/ua').as('uaPost');
+        cy.intercept('POST', '/console/ua').as('uaPost');
     });
 
     it('should allow to edit widget settings', () => {
@@ -125,9 +125,8 @@ describe('Edit mode', () => {
 
     describe('should open widget install modal and', () => {
         beforeEach(() => {
-            cy.server();
-            cy.route('PUT', '/console/widgets/install*').as('installWidget');
-            cy.route('DELETE', '/console/widgets/*').as('deleteWidget');
+            cy.intercept('PUT', '/console/widgets/install*').as('installWidget');
+            cy.intercept('DELETE', '/console/widgets/*').as('deleteWidget');
             cy.get('.addWidgetBtn').click();
             cy.contains('Install new widget').click();
         });
@@ -153,10 +152,10 @@ describe('Edit mode', () => {
         function submitInvalidWidget(widgetName, expectedError, expectedStatus, expectedDelete = false) {
             submitWidget(widgetName);
 
-            cy.wait('@installWidget').its('status').should('equal', expectedStatus);
+            cy.wait('@installWidget').its('response.statusCode').should('equal', expectedStatus);
 
             if (expectedDelete) {
-                cy.wait('@deleteWidget').its('status').should('equal', 200);
+                cy.wait('@deleteWidget').its('response.statusCode').should('equal', 200);
             }
 
             cy.get('.modal .message ul').should('have.text', expectedError);
@@ -240,14 +239,14 @@ describe('Edit mode', () => {
         });
 
         it('install and use a widget with broken backend service', () => {
-            cy.route('GET', '/console/wb/manager?endpoint=version').as('managerService');
+            cy.intercept('GET', '/console/wb/manager?endpoint=version').as('managerService');
             submitWidget('ModuleNotAllowedInService', true);
             cy.exitEditMode();
 
             cy.get('input[name="endpoint"]').type('version');
             cy.contains('Fire').click();
 
-            cy.wait('@managerService').its('status').should('equal', 404);
+            cy.wait('@managerService').its('response.statusCode').should('equal', 404);
 
             cy.get('.message .content').should('have.text', "404 - The module 'fs-extra' is not whitelisted in VM.");
         });
@@ -257,14 +256,16 @@ describe('Edit mode', () => {
             const widgetId = `testWidget${widgetName}`;
             const url = 'https://this-page-intentionally-left-blank.org/';
             const verifyRequest = service =>
-                cy.wait(service).then(xhr => {
-                    expect(xhr.requestHeaders).contain({ 'widget-id': widgetId });
-                    expect(xhr.status).equals(200);
+                cy.wait(service).then(({ request, response }) => {
+                    expect(request.headers).contain({ 'widget-id': widgetId });
+                    expect(response.statusCode).equals(200);
                 });
             const verifyResponse = text => cy.get('.widgetContent .ui.segment pre code').should('contain.text', text);
 
-            cy.route('GET', '/console/wb/manager?endpoint=version').as('managerService');
-            cy.route('GET', `/console/wb/request?url=${url}`).as('requestService');
+            cy.intercept({ method: 'GET', pathname: '/console/wb/manager', query: { endpoint: 'version' } }).as(
+                'managerService'
+            );
+            cy.intercept({ method: 'GET', pathname: `/console/wb/request`, query: { url } }).as('requestService');
             submitWidget(widgetName, true);
             cy.exitEditMode();
 

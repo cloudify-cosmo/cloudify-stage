@@ -19,7 +19,7 @@ describe('Page', () => {
                 }
             })
         );
-        cy.login();
+        cy.mockLogin();
     });
 
     it('should allow to switch tabs and maximize widgets', () => {

@@ -1,9 +1,7 @@
 import { className, styles } from '../../support/cluster_status_commons';
 
 describe('Cluster Status widget', () => {
-    before(() => cy.activate('valid_trial_license').usePageMock('highAvailability').login());
-
-    beforeEach(cy.server);
+    before(() => cy.activate('valid_trial_license').usePageMock('highAvailability').mockLogin());
 
     const clusterStatusFetchTimeout = { timeout: 12000 };
 
@@ -67,7 +65,7 @@ describe('Cluster Status widget', () => {
             cy.get('.popup').should('not.exist');
         };
 
-        cy.route(/cluster-status\?summary=false/, 'fixture:cluster_status/fail_with_services.json').as(
+        cy.interceptSp('GET', 'cluster-status?summary=false', { fixture: 'cluster_status/fail_with_services.json' }).as(
             'clusterStatusFailWithServices'
         );
         cy.wait('@clusterStatusFailWithServices', clusterStatusFetchTimeout);
@@ -105,15 +103,20 @@ describe('Cluster Status widget', () => {
     });
 
     it('shows correct status', () => {
-        cy.route(/cluster-status\?summary=false/, 'fixture:cluster_status/degraded.json').as('clusterStatusFull');
+        const responses = [
+            'cluster_status/degraded.json',
+            'cluster_status/ok.json',
+            'cluster_status/fail.json'
+        ].map(fixture => ({ fixture }));
+        cy.interceptSp('GET', 'cluster-status?summary=false', req => req.reply(responses.shift())).as(
+            'clusterStatusFull'
+        );
         cy.wait('@clusterStatusFull', clusterStatusFetchTimeout);
         checkServicesStatus('Degraded', 'OK', 'OK');
 
-        cy.route(/cluster-status\?summary=false/, 'fixture:cluster_status/ok.json').as('clusterStatusFull');
         cy.wait('@clusterStatusFull', clusterStatusFetchTimeout);
         checkServicesStatus('OK', 'OK', 'OK');
 
-        cy.route(/cluster-status\?summary=false/, 'fixture:cluster_status/fail.json').as('clusterStatusFull');
         cy.wait('@clusterStatusFull', clusterStatusFetchTimeout);
         checkServicesStatus('Fail', 'OK', 'Fail');
     });

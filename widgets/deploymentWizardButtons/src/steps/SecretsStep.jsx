@@ -138,6 +138,14 @@ class SecretsStepContent extends React.Component {
             .finally(() => onReady());
     }
 
+    handleChange(secretKey, fieldName, fieldValue) {
+        const { id, onChange, stepData } = this.props;
+        const secret = { ...stepData[secretKey] };
+        secret[fieldName] = fieldValue;
+
+        onChange(id, { ...stepData, [secretKey]: secret });
+    }
+
     getSecretStatus(secretKey) {
         const { stepData } = this.props;
         const secret = stepData[secretKey];
@@ -208,14 +216,6 @@ class SecretsStepContent extends React.Component {
             default:
                 return null;
         }
-    }
-
-    handleChange(secretKey, fieldName, fieldValue) {
-        const { id, onChange, stepData } = this.props;
-        const secret = { ...stepData[secretKey] };
-        secret[fieldName] = fieldValue;
-
-        onChange(id, { ...stepData, [secretKey]: secret });
     }
 
     render() {

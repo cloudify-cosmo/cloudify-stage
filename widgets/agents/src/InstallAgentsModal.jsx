@@ -162,7 +162,7 @@ export default function InstallAgentsModal({
                                     multiple
                                     selection
                                     options={Consts.installMethodsOptions}
-                                    value={installMethods}
+                                    value={inputValues.installMethods}
                                     onChange={handleInputChange}
                                 />
                             </Form.Field>

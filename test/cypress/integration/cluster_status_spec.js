@@ -2,16 +2,21 @@ import { styles } from '../support/cluster_status_commons';
 
 describe('Cluster Status', () => {
     before(() => {
-        cy.activate('valid_trial_license').usePageMock().login();
+        cy.activate('valid_trial_license').usePageMock().mockLogin();
     });
 
     beforeEach(() => {
-        cy.server();
-        cy.route(/cluster-status\?summary=false/, 'fixture:cluster_status/degraded.json').as('clusterStatusFull');
-        cy.route(/cluster-status\?summary=true/, 'fixture:cluster_status/summary-degraded.json').as(
+        cy.interceptSp('GET', '/cluster-status?summary=true', { fixture: 'cluster_status/summary-degraded.json' }).as(
             'clusterStatusSummary'
         );
     });
+
+    function interceptFullStatus(responseFixtures) {
+        const responses = responseFixtures.map(fixture => ({ fixture }));
+        cy.interceptSp('GET', '/cluster-status?summary=false', req => req.reply(responses.shift())).as(
+            'clusterStatusFull'
+        );
+    }
 
     const clusterStatusFetchTimeout = { timeout: 12000 };
 
@@ -36,6 +41,8 @@ describe('Cluster Status', () => {
     });
 
     it('is presented on hovering status icon in header', () => {
+        interceptFullStatus(['cluster_status/degraded.json']);
+
         cy.wait('@clusterStatusSummary', clusterStatusFetchTimeout);
         cy.get('.menu i.heartbeat.statusIcon').should('have.class', 'yellow');
 
@@ -77,12 +84,12 @@ describe('Cluster Status', () => {
             cy.get('.menu i.heartbeat.statusIcon').trigger('mouseout');
         };
 
+        interceptFullStatus(['cluster_status/degraded.json', 'cluster_status/ok.json', 'cluster_status/fail.json']);
+
         checkOverallStatus('Degraded', 'Degraded', 'OK', 'OK');
 
-        cy.route(/cluster-status\?summary=false/, 'fixture:cluster_status/ok.json').as('clusterStatusFull');
         checkOverallStatus('OK', 'OK', 'OK', 'OK');
 
-        cy.route(/cluster-status\?summary=false/, 'fixture:cluster_status/fail.json').as('clusterStatusFull');
         checkOverallStatus('Fail', 'Fail', 'OK', 'Fail');
     });
 });

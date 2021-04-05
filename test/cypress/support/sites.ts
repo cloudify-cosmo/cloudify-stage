@@ -1,0 +1,47 @@
+import { addCommands, GetCypressChainableFromCommands } from 'cloudify-ui-common/cypress/support';
+
+declare global {
+    namespace Cypress {
+        // NOTE: necessary for extending the Cypress API
+        // eslint-disable-next-line @typescript-eslint/no-empty-interface
+        export interface Chainable extends GetCypressChainableFromCommands<typeof commands> {}
+    }
+}
+
+export interface Site {
+    name: string;
+    location?: string;
+    visibility?: string;
+}
+
+const commands = {
+    createSite: (site: Site) => {
+        const data: Site = { name: site.name };
+        if (site.location) {
+            // eslint-disable-next-line scanjs-rules/assign_to_location
+            data.location = site.location;
+        }
+        if (site.visibility) {
+            data.visibility = site.visibility;
+        }
+
+        cy.cfyRequest(`/sites/${site.name}`, 'PUT', null, data);
+    },
+
+    createSites: (sites: Site[]) => {
+        sites.forEach(cy.createSite);
+    },
+
+    deleteSite: (siteName: string) => {
+        cy.cfyRequest(`/sites/${siteName}`, 'DELETE');
+    },
+
+    deleteSites: (search = '') => {
+        cy.cfyRequest(`/sites?_search=${search}`, 'GET').then(response => {
+            const sites = response.body.items;
+            sites.forEach((site: any) => (cy as any).deleteSite(site.name));
+        });
+    }
+};
+
+addCommands(commands);

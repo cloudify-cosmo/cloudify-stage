@@ -1,10 +1,3 @@
 {
-    "extends": [
-        "plugin:chai-friendly/recommended",
-        "plugin:cypress/recommended"
-    ],
-    "env": {
-        "cypress/globals": true,
-        "mocha": true
-    }
+    "extends": ["../../node_modules/cloudify-ui-common/configs/eslint-common-cypress.json"]
 }

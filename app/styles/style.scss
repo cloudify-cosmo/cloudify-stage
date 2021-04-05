@@ -226,14 +226,19 @@ a:hover {
 }
 
 .widget {
+  --widget-buttons-whitespace: 5px;
+
+  .headerless {
+    --widget-buttons-whitespace: 0;
+  }
 
   .widgetEditButtons, .widgetViewButtons {
     position: absolute;
-    top: 0;
-    right : 0;
+    top: var(--widget-buttons-whitespace);
+    right : var(--widget-buttons-whitespace);
     display: none;
     z-index: 5;
-
+    
     a {
       color: inherit !important;
     }
@@ -273,11 +278,16 @@ a:hover {
   }
 
   .ui.segment.widgetItem {
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
+    &:not(.standalone) {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+    }
+    &.standalone {
+      padding: 0;
+    }
 
     .widgetName {
       padding-left: 0;
@@ -297,16 +307,24 @@ a:hover {
   }
 
   .widgetContent {
-    position: absolute;
-    top: 35px;
-    bottom: 15px;
-    left: 0;
-    right: 0;
-    overflow: auto;
-    padding: 15px;
+    &:not(.standalone) {
+      position: absolute;
+      top: 35px;
+      bottom: 15px;
+      left: 0;
+      right: 0;
+      overflow: auto;
+      padding: 15px;
+    }
 
     &.noHeader {
       top: 0;
+    }
+
+    &.standalone.noHeader {
+      // NOTE: margin so the help modal icon does appears to the side of the
+      // widget, instead of on top
+      margin-right: 15px;
     }
 
     &.noBorder {
@@ -411,7 +429,7 @@ a:hover {
     button {
       display: block !important;
       margin: 30px auto !important;
-      width: 50% !important;
+      min-width: 50% !important;
       border-radius: 25px !important;
       color: $white !important;
     }

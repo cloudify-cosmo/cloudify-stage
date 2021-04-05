@@ -6,7 +6,7 @@ describe('Nodes statistics widget', () => {
         cy
             .activate('valid_trial_license')
             .usePageMock('nodesStats')
-            .login()
+            .mockLogin()
             .deleteDeployments(deploymentName, true)
             .deleteBlueprints(blueprintName, true)
             .uploadBlueprint('blueprints/simple.zip', blueprintName)

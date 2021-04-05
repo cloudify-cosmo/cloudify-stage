@@ -10,7 +10,7 @@ describe('Change Password modal', () => {
                 .addUser(username, password, true)
                 .addUserToTenant(username, 'default_tenant', 'manager')
                 .usePageMock()
-                .login(username, password);
+                .mockLogin(username, password);
         });
 
         const openChangePasswordModal = () => {
@@ -21,7 +21,7 @@ describe('Change Password modal', () => {
             openChangePasswordModal();
 
             cy.get('.userPasswordModal').within(() => {
-                cy.get('.error.message').should('not.be.visible');
+                cy.get('.error.message').should('not.exist');
 
                 cy.get('button.ok').click();
                 cy.get('.error.message')
@@ -65,32 +65,25 @@ describe('Change Password modal', () => {
                 cy.get('input[name=confirmPassword]').clear().type('new-pass');
                 cy.get('button.ok').click();
             });
-            cy.get('.userPasswordModal').should('not.be.visible');
+            cy.get('.userPasswordModal').should('not.exist');
 
             cy.log('Logout');
             cy.get('.usersMenu').click().contains('Logout').click();
 
             cy.log('Login with new password');
-            cy.usePageMock().login(username, 'new-pass');
+            cy.usePageMock().mockLogin(username, 'new-pass');
 
-            cy.get('.error.message').should('not.be.visible');
+            cy.get('.error.message').should('not.exist');
             cy.waitUntilLoaded();
         });
     });
 
     it('should not be available when LDAP is enabled', () => {
-        cy.server();
-        cy.route({
-            method: 'GET',
-            url: `/console/sp?su=/ldap`,
-            response: 'enabled'
-        }).as('ldap');
+        cy.interceptSp('GET', `/ldap`, 'enabled').as('ldap');
 
-        cy.usePageMock().login();
+        cy.usePageMock().mockLogin();
 
         cy.get('.usersMenu').click();
         cy.get('#changePasswordMenuItem').should('have.class', 'disabled');
-
-        cy.server({ enable: false });
     });
 });

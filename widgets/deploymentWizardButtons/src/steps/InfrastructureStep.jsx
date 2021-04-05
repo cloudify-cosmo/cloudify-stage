@@ -34,7 +34,7 @@ function InfrastructureStepActions({
             })
             .then(stepData =>
                 toolbox.getInternal().doPut('source/list/resources', {
-                    yamlFile: stepData.blueprintFileName,
+                    yamlFile: stepData.blueprintYamlFile,
                     url: stepData.blueprintUrl
                 })
             )
@@ -72,7 +72,7 @@ class InfrastructureStepContent extends React.Component {
         blueprintUrl: Stage.i18n.t('widgets.common.urls.helloWorldBlueprint'),
         blueprintFile: null,
         blueprintName: InfrastructureStepContent.defaultBlueprintName,
-        blueprintFileName: InfrastructureStepContent.defaultBlueprintYaml,
+        blueprintYamlFile: InfrastructureStepContent.defaultBlueprintYaml,
         imageUrl: '',
         imageFile: null,
         visibility: Stage.Common.Consts.defaultVisibility
@@ -83,9 +83,9 @@ class InfrastructureStepContent extends React.Component {
         onChange(id, { ...InfrastructureStepContent.defaultInfrastractureState, ...stepData });
     }
 
-    handleBlueprintChange(blueprintFileName) {
+    handleBlueprintChange(blueprintYamlFile) {
         const { id, onChange, stepData } = this.props;
-        onChange(id, { ...stepData, blueprintFileName });
+        onChange(id, { ...stepData, blueprintYamlFile });
     }
 
     render() {
@@ -119,7 +119,7 @@ class InfrastructureStepContent extends React.Component {
                     <Form.Group key={`platformGroup${index}`} widths="equal">
                         {_.map(group, yaml => (
                             <Form.Field key={yaml}>
-                                <PlatformButton value={yaml} active={stepData.blueprintFileName === yaml} />
+                                <PlatformButton value={yaml} active={stepData.blueprintYamlFile === yaml} />
                             </Form.Field>
                         ))}
                     </Form.Group>

@@ -1,9 +1,13 @@
-/**
- * Created by kinneretzin on 19/10/2016.
- */
+function isWorkflowName(workflow) {
+    return typeof workflow === 'string';
+}
+
+function getWorkflowName(workflow) {
+    return isWorkflowName(workflow) ? workflow : workflow.name;
+}
 
 export default function ExecuteDeploymentModal({
-    deployment,
+    deploymentId,
     deployments,
     onExecute,
     onHide,
@@ -11,8 +15,11 @@ export default function ExecuteDeploymentModal({
     workflow,
     open
 }) {
-    const { useErrors, useBoolean, useOpenProp, useInput } = Stage.Hooks;
-    const { useState, useEffect } = React;
+    const {
+        i18n,
+        Hooks: { useErrors, useBoolean, useOpenProp, useInput, useResettableState }
+    } = Stage;
+    const { useEffect } = React;
 
     const { errors, setMessageAsError, clearErrors, setErrors } = useErrors();
     const [isLoading, setLoading, unsetLoading] = useBoolean();
@@ -22,10 +29,23 @@ export default function ExecuteDeploymentModal({
     const [queue, setQueue, clearQueue] = useInput(false);
     const [schedule, setSchedule, clearSchedule] = useInput(false);
     const [scheduledTime, setScheduledTime, clearScheduleTime] = useInput('');
-    const [params, setParams] = useState({});
+    const [baseWorkflowParams, setBaseWorkflowParams, resetBaseWorkflowParams] = useResettableState({});
+    const [userWorkflowParams, setUserWorkflowParams, resetUserWorkflowParams] = useResettableState({});
+
+    const workflowName = getWorkflowName(workflow);
+
+    function setWorkflowParams(workflowResource) {
+        const { InputsUtils } = Stage.Common;
+        setBaseWorkflowParams(workflowResource.parameters);
+        setUserWorkflowParams(
+            _.mapValues(workflowResource.parameters, parameterData =>
+                InputsUtils.getInputFieldInitialValue(parameterData.default, parameterData.type)
+            )
+        );
+    }
 
     useOpenProp(open, () => {
-        const { InputsUtils } = Stage.Common;
+        const { DeploymentActions } = Stage.Common;
 
         clearErrors();
         unsetLoading();
@@ -35,11 +55,33 @@ export default function ExecuteDeploymentModal({
         clearQueue();
         clearSchedule();
         clearScheduleTime();
-        setParams(
-            _.mapValues(_.get(workflow, 'parameters', {}), parameterData =>
-                InputsUtils.getInputFieldInitialValue(parameterData.default, parameterData.type)
-            )
-        );
+        resetUserWorkflowParams();
+        resetBaseWorkflowParams();
+
+        const actions = new DeploymentActions(toolbox);
+        if (isWorkflowName(workflow)) {
+            setLoading();
+            actions
+                .doGetWorkflows(deploymentId)
+                .then(({ workflows }) => {
+                    const selectedWorkflow = _.find(workflows, { name: workflowName });
+
+                    if (selectedWorkflow) {
+                        setWorkflowParams(selectedWorkflow);
+                    } else {
+                        setErrors(
+                            i18n.t('widgets.common.deployments.executeModal.workflowError', {
+                                deploymentId,
+                                workflowName
+                            })
+                        );
+                    }
+                })
+                .catch(setMessageAsError)
+                .finally(unsetLoading);
+        } else {
+            setWorkflowParams(workflow);
+        }
     });
 
     useEffect(() => {
@@ -51,13 +93,18 @@ export default function ExecuteDeploymentModal({
         const { InputsUtils, DeploymentActions } = Stage.Common;
         const validationErrors = {};
 
-        if (!deployment || !workflow) {
-            setErrors({ error: 'Missing workflow or deployment' });
+        const name = getWorkflowName(workflow);
+        if (!name) {
+            setErrors(i18n.t('widgets.common.deployments.executeModal.missingWorkflow'));
             return false;
         }
 
         const inputsWithoutValue = {};
-        const workflowParameters = InputsUtils.getInputsToSend(workflow.parameters, params, inputsWithoutValue);
+        const workflowParameters = InputsUtils.getInputsToSend(
+            baseWorkflowParams,
+            userWorkflowParams,
+            inputsWithoutValue
+        );
         InputsUtils.addErrors(inputsWithoutValue, validationErrors);
 
         if (schedule) {
@@ -84,25 +131,31 @@ export default function ExecuteDeploymentModal({
             return true;
         }
 
+        let deploymentsList = deployments;
+        if (_.isEmpty(deployments)) {
+            deploymentsList = _.compact([deploymentId]);
+        }
+
+        if (_.isEmpty(deploymentsList)) {
+            setErrors(i18n.t('widgets.common.deployments.executeModal.missingDeployment'));
+            return false;
+        }
+
         setLoading();
         const actions = new DeploymentActions(toolbox);
 
-        let deploymentsList = deployments;
-        if (_.isEmpty(deployments)) {
-            deploymentsList = [deployment.id];
-        }
-
-        const executePromises = _.map(deploymentsList, deploymentId => {
+        const executePromises = _.map(deploymentsList, id => {
             const scheduled = schedule ? moment(scheduledTime).format('YYYYMMDDHHmmZ') : undefined;
-            return actions
-                .doExecute({ id: deploymentId }, workflow, workflowParameters, force, dryRun, queue, scheduled)
-                .then(() => {
-                    unsetLoading();
-                    clearErrors();
-                    onHide();
-                    toolbox.getEventBus().trigger('executions:refresh');
-                    toolbox.getEventBus().trigger('deployments:refresh');
-                });
+            return actions.doExecute({ id }, { name }, workflowParameters, force, dryRun, queue, scheduled).then(() => {
+                // State updates should be done before calling `onHide` to avoid React errors:
+                // "Warning: Can't perform a React state update on an unmounted component"
+                unsetLoading();
+                clearErrors();
+                onHide();
+                toolbox.getEventBus().trigger('executions:refresh');
+                // NOTE: pass id to keep the current deployment selected
+                toolbox.getEventBus().trigger('deployments:refresh', id);
+            });
         });
 
         return Promise.all(executePromises).catch(err => {
@@ -129,7 +182,7 @@ export default function ExecuteDeploymentModal({
             .doGetYamlFileContent(file)
             .then(yamlInputs => {
                 clearErrors();
-                setParams(InputsUtils.getUpdatedInputs(workflow.parameters, params, yamlInputs));
+                setUserWorkflowParams(InputsUtils.getUpdatedInputs(baseWorkflowParams, userWorkflowParams, yamlInputs));
             })
             .catch(err =>
                 setErrors({ yamlFile: `Loading values from YAML file failed: ${_.isString(err) ? err : err.message}` })
@@ -138,14 +191,12 @@ export default function ExecuteDeploymentModal({
     }
 
     function handleInputChange(event, field) {
-        setParams({ ...params, ...Stage.Basic.Form.fieldNameValue(field) });
+        setUserWorkflowParams({ ...userWorkflowParams, ...Stage.Basic.Form.fieldNameValue(field) });
     }
 
     const { ApproveButton, CancelButton, DateInput, Divider, Form, Header, Icon, Modal, Message } = Stage.Basic;
     const { InputsHeader, InputsUtils, YamlFileButton } = Stage.Common;
 
-    const enhancedWorkflow = { name: '', parameters: [], ...workflow };
-    const enhancedDeployment = { id: '', ...deployment };
     let deploymentName;
     if (!_.isEmpty(deployments)) {
         if (_.size(deployments) > 1) {
@@ -154,19 +205,19 @@ export default function ExecuteDeploymentModal({
             [deploymentName] = deployments;
         }
     } else {
-        deploymentName = enhancedDeployment.id;
+        deploymentName = deploymentId;
     }
 
     return (
-        <Modal open={open} onClose={() => onHide()} className="executeWorkflowModal">
+        <Modal open={open} onClose={onHide} className="executeWorkflowModal">
             <Modal.Header>
-                <Icon name="cogs" /> Execute workflow {enhancedWorkflow.name}
+                <Icon name="cogs" /> Execute workflow {workflowName}
                 {deploymentName && ` on ${deploymentName}`}
             </Modal.Header>
 
             <Modal.Content>
                 <Form loading={isLoading} errors={errors} scrollToError onErrorsDismiss={clearErrors}>
-                    {!_.isEmpty(enhancedWorkflow.parameters) && (
+                    {!_.isEmpty(baseWorkflowParams) && (
                         <YamlFileButton
                             onChange={handleYamlFileChange}
                             dataType="execution parameters"
@@ -176,11 +227,9 @@ export default function ExecuteDeploymentModal({
 
                     <InputsHeader header="Parameters" compact />
 
-                    {_.isEmpty(enhancedWorkflow.parameters) && (
-                        <Message content="No parameters available for the execution" />
-                    )}
+                    {_.isEmpty(baseWorkflowParams) && <Message content="No parameters available for the execution" />}
 
-                    {InputsUtils.getInputFields(enhancedWorkflow.parameters, handleInputChange, params, errors)}
+                    {InputsUtils.getInputFields(baseWorkflowParams, handleInputChange, userWorkflowParams, errors)}
 
                     <Form.Divider>
                         <Header size="tiny">Actions</Header>
@@ -268,15 +317,28 @@ export default function ExecuteDeploymentModal({
 ExecuteDeploymentModal.propTypes = {
     toolbox: Stage.PropTypes.Toolbox.isRequired,
     open: PropTypes.bool.isRequired,
-    deployment: PropTypes.shape({ id: PropTypes.string }),
+    deploymentId: (props, propName, componentName) => {
+        const { [propName]: deploymentId, workflow } = props;
+
+        if (_.isString(workflow) && !(_.isString(deploymentId) && deploymentId)) {
+            return new Error(
+                `Invalid prop \`deploymentId\` supplied to \`${componentName}\`. ` +
+                    `When \`workflow\` prop is specified as a string, \`deploymentId\` must be provided. ` +
+                    `Validation failed.`
+            );
+        }
+        return null;
+    },
     deployments: PropTypes.arrayOf(PropTypes.string),
-    workflow: PropTypes.shape({ parameters: PropTypes.shape({}) }).isRequired,
+    workflow: PropTypes.oneOfType([
+        PropTypes.shape({ name: PropTypes.string, parameters: PropTypes.shape({}) }),
+        PropTypes.string
+    ]).isRequired,
     onExecute: PropTypes.func,
     onHide: PropTypes.func.isRequired
 };
-
 ExecuteDeploymentModal.defaultProps = {
-    deployment: {},
+    deploymentId: '',
     deployments: [],
     onExecute: _.noop
 };

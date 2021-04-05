@@ -63,7 +63,7 @@ Stage.defineWidget({
 
     fetchData(widget, toolbox) {
         return Promise.all(
-            [i18n.t('widgets.common.urls.pluginsCatalog'), i18n.t('widgets.common.urls.helloWorldBlueprint')].map(url =>
+            [i18n.t('urls.pluginsCatalog'), i18n.t('widgets.common.urls.helloWorldBlueprint')].map(url =>
                 toolbox
                     .getInternal()
                     .doGet('/external/content', {

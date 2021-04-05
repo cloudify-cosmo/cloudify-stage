@@ -1,7 +1,7 @@
 describe('Page management', () => {
     before(() => {
         cy.activate().removeUserPages();
-        cy.login();
+        cy.mockLogin();
     });
 
     it('allows admin users to create and modify pages', () => {
@@ -74,7 +74,7 @@ describe('Page management', () => {
         cy.log('Removing page');
         cy.contains('.segment', 'Pages').find('.remove').click();
         cy.get('.popup button.green').click();
-        cy.get('.main .loading').should('be.not.visible', true);
+        cy.get('.main .loading').should('not.exist');
 
         cy.log('Verifying page was removed');
         cy.getPages().then(data => expect(data.body.filter(page => page.id.startsWith('page'))).to.be.empty);

@@ -1,12 +1,27 @@
 // eslint-disable-next-line security/detect-child-process
 const { execSync } = require('child_process');
+const { mkdirSync, renameSync, rmdirSync } = require('fs');
 
+const Utils = require('../utils');
 const config = require('../config').get();
 
-const latestMigration = '20201030110539-5_1_1-MigratePageLayouts.js';
+const latestMigration = '20201230113319-5_1_1-UpdateManagerIp.js';
+const userTemplatesFolder = Utils.getResourcePath('templates', true);
+const userTemplatesBackupFolder = `${userTemplatesFolder}-backup`;
 
 describe('Migration script', () => {
     beforeAll(() => execSync('node migration.js up'));
+
+    // Backup user templates for tests to restore later
+    beforeAll(() => {
+        // NOTE: make the directory just to ensure the rest of the backup code completes anyway
+        mkdirSync(userTemplatesFolder, { recursive: true });
+        renameSync(userTemplatesFolder, userTemplatesBackupFolder);
+    });
+    afterAll(() => {
+        rmdirSync(userTemplatesFolder, { recursive: true });
+        renameSync(userTemplatesBackupFolder, userTemplatesFolder);
+    });
 
     beforeEach(() => execSync('node migration.js clear'));
 
@@ -30,7 +45,9 @@ describe('Migration script', () => {
                 );
                 execSync('node migration.js up');
             } catch (e) {
-                console.log(e.stdout.toString());
+                console.log(`Error when migrating from ${initialMigration} for ${snapshotVersion}`);
+                console.log(e.stdout.toString(), e.stderr.toString());
+
                 throw e;
             }
         });

@@ -1,0 +1,11 @@
+{
+    "extends": "../../node_modules/cloudify-ui-common/configs/tsconfig.base.json",
+    "compilerOptions": {
+        "types": ["jest"],
+        "baseUrl": ".",
+        "paths": {
+            "*": ["../*", "../node_modules/*"]
+        }
+    },
+    "include": ["../**/*"]
+}

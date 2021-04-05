@@ -6,9 +6,12 @@ import _ from 'lodash';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import i18n from 'i18next';
+
+import stageUtils from '../utils/stageUtils';
 import SideBar from '../containers/SideBar';
-import Page from '../containers/Page';
+import Page from './Page';
 import ToursButton from '../containers/ToursButton';
+import GettingStartedModal from './GettingStartedModal';
 
 export default class Home extends Component {
     // TODO: Context handling should not be here. Currently necessary to use deprecated methods.
@@ -83,6 +86,7 @@ export default class Home extends Component {
                 <ToursButton />
 
                 <SideBar pageId={pageId} />
+                <GettingStartedModal />
 
                 <div className="page">
                     <div className="ui basic segment">

@@ -6,7 +6,7 @@ describe('Blueprint Sources widget', () => {
         cy
             .activate()
             .usePageMock('blueprintSources')
-            .login()
+            .mockLogin()
             .deleteDeployments(deploymentName, true)
             .deleteBlueprints(blueprintName, true)
             .uploadBlueprint('blueprints/empty.zip', blueprintName)
@@ -21,7 +21,7 @@ describe('Blueprint Sources widget', () => {
         it('blueprint is selected', () => {
             cy.setBlueprintContext(blueprintName);
 
-            cy.get('.message').should('not.be.visible');
+            cy.get('.message').should('not.exist');
 
             cy.get('.blueprintSourcesWidget .widgetItem')
                 .scrollIntoView()
@@ -35,7 +35,7 @@ describe('Blueprint Sources widget', () => {
                         cy.contains('blueprint.yaml').should('be.visible');
                     });
                     cy.get('@rightPane').within(() => {
-                        cy.get('pre').should('not.be.visible');
+                        cy.get('pre').should('not.exist');
                         cy.get('i.grey.file.icon').should('be.visible');
                     });
 
@@ -55,7 +55,7 @@ describe('Blueprint Sources widget', () => {
                     cy.get('.content').should('contain.text', 'tosca_definitions_version: cloudify_dsl_1_3');
                     cy.get('.actions .button').click();
                 });
-            cy.get('.modal').should('not.be.visible');
+            cy.get('.modal').should('not.exist');
         });
 
         it('deployment is selected', () => {
@@ -63,7 +63,7 @@ describe('Blueprint Sources widget', () => {
             cy.setDeploymentContext(deploymentName);
 
             cy.get('.blueprintSourcesWidget').contains(blueprintName).should('be.visible');
-            cy.get('.message').should('not.be.visible');
+            cy.get('.message').should('not.exist');
         });
     });
 });

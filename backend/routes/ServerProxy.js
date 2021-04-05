@@ -4,7 +4,6 @@
 
 const express = require('express');
 const request = require('request');
-const config = require('../config').get();
 
 const router = express.Router();
 const AuthHandler = require('../handler/AuthHandler');
@@ -27,7 +26,9 @@ function errorHandler(url, res, err) {
     }
 
     logger.error(`${urlMsg} ${exMsg}`, err);
-    res.status(500).send({ message: `${urlMsg} ${exMsg}` });
+    if (!res.headersSent) {
+        res.status(500).send({ message: `${urlMsg} ${exMsg}` });
+    }
 }
 
 function buildManagerUrl(req, res, next) {
@@ -43,18 +44,13 @@ function buildManagerUrl(req, res, next) {
 
 async function proxyRequest(req, res) {
     const options = {};
-    let timeout;
 
-    // if is a blueprint upload request = set higher timeout
-    if (!!req.query.su.match(/\/blueprints/) && req.method === 'PUT') {
-        timeout = config.app.proxy.timeouts.blueprintUpload;
-    }
     // if is a maintenance status fetch then update RBAC cache if empty
-    else if (!!req.query.su.match(/^\/maintenance$/) && req.method === 'GET' && !AuthHandler.isRbacInCache()) {
+    if (!!req.query.su.match(/^\/maintenance$/) && req.method === 'GET' && !AuthHandler.isRbacInCache()) {
         await AuthHandler.getAndCacheConfig(req.headers['authentication-token']);
     }
 
-    ManagerHandler.updateOptions(options, req.method, timeout);
+    ManagerHandler.updateOptions(options, req.method);
 
     req.pipe(
         request(req.su, options).on('error', err => {

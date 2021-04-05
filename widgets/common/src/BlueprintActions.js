@@ -2,7 +2,31 @@
  * Created by kinneretzin on 29/11/2016.
  */
 
-class BlueprintActions {
+export default class BlueprintActions {
+    static InProgressBlueprintStates = {
+        Pending: 'pending',
+        Uploading: 'uploading',
+        Extracting: 'extracting',
+        Parsing: 'parsing',
+        UploadingImage: 'uploading_image'
+    };
+
+    static CompletedBlueprintStates = {
+        Uploaded: 'uploaded',
+        FailedUploading: 'failed_uploading',
+        FailedExtracting: 'failed_extracting',
+        FailedParsing: 'failed_parsing',
+        Invalid: 'invalid'
+    };
+
+    static isUploaded(blueprint) {
+        return blueprint.state === BlueprintActions.CompletedBlueprintStates.Uploaded;
+    }
+
+    static isCompleted(blueprint) {
+        return Object.values(BlueprintActions.CompletedBlueprintStates).includes(blueprint.state);
+    }
+
     constructor(toolbox) {
         this.toolbox = toolbox;
     }
@@ -29,19 +53,22 @@ class BlueprintActions {
             .then(() => this.doDeleteImage(blueprintId));
     }
 
-    doDeploy(
-        blueprint,
+    doDeploy({
+        blueprintId,
         deploymentId,
         inputs,
         visibility,
+        labels = [],
         skipPluginsValidation = false,
         siteName = null,
         runtimeOnlyEvaluation = false
-    ) {
+    }) {
+        const { DeploymentActions } = Stage.Common;
         const data = {
-            blueprint_id: blueprint.id,
+            blueprint_id: blueprintId,
             inputs,
             visibility,
+            labels: DeploymentActions.toManagerLabels(labels),
             skip_plugins_validation: skipPluginsValidation,
             runtime_only_evaluation: runtimeOnlyEvaluation
         };
@@ -65,11 +92,20 @@ class BlueprintActions {
             );
     }
 
-    doUpload(blueprintName, blueprintFileName, blueprintUrl, file, imageUrl, image, visibility) {
-        const params = { visibility };
+    doUpload(
+        blueprintName,
+        blueprintYamlFile,
+        blueprintUrl,
+        file,
+        imageUrl,
+        image,
+        visibility,
+        onStateChanged = _.noop
+    ) {
+        const params = { visibility, async_upload: true };
 
-        if (!_.isEmpty(blueprintFileName)) {
-            params.application_file_name = blueprintFileName;
+        if (!_.isEmpty(blueprintYamlFile)) {
+            params.application_file_name = blueprintYamlFile;
         }
         if (!_.isEmpty(blueprintUrl)) {
             params.blueprint_archive_url = blueprintUrl;
@@ -80,12 +116,45 @@ class BlueprintActions {
             const compressFile = _.endsWith(file.name, '.yaml') || _.endsWith(file.name, '.yml');
             promise = this.toolbox
                 .getManager()
-                .doUpload(`/blueprints/${blueprintName}`, params, file, undefined, undefined, compressFile);
+                .doUpload(`/blueprints/${blueprintName}`, params, file, undefined, false, compressFile);
         } else {
             promise = this.toolbox.getManager().doPut(`/blueprints/${blueprintName}`, params);
         }
 
-        return promise.then(() => this.doUploadImage(blueprintName, imageUrl, image));
+        return promise
+            .then(() => this.waitUntilUploaded(blueprintName, onStateChanged))
+            .then(() => onStateChanged(BlueprintActions.InProgressBlueprintStates.UploadingImage))
+            .then(() => this.doUploadImage(blueprintName, imageUrl, image));
+    }
+
+    async waitUntilUploaded(blueprintName, onStateChanged) {
+        const { PollHelper } = Stage.Common;
+        const pollHelper = new PollHelper(60);
+
+        let previousState = BlueprintActions.InProgressBlueprintStates.Pending;
+        for (;;) {
+            // eslint-disable-next-line no-await-in-loop
+            await pollHelper.wait();
+
+            // eslint-disable-next-line no-await-in-loop
+            const blueprint = await this.doGetFullBlueprintData({ id: blueprintName });
+
+            if (BlueprintActions.isUploaded(blueprint)) {
+                return;
+            }
+
+            if (BlueprintActions.isCompleted(blueprint)) {
+                const error = new Error(blueprint.error);
+                error.state = blueprint.state;
+                throw error;
+            }
+
+            if (blueprint.state !== previousState) {
+                pollHelper.resetAttempts();
+                onStateChanged(blueprint.state);
+                previousState = blueprint.state;
+            }
+        }
     }
 
     doSetVisibility(blueprintId, visibility) {

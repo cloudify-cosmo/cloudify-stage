@@ -5,11 +5,11 @@ SSH_KEY_PATH=${SSH_KEY_PATH:-~/.ssh/cloudify.key}
 STAGE_PACKAGE=${STAGE_PACKAGE:-stage.tar.gz}
 
 PRE_COMMANDS="
-  sudo service cloudify-stage stop;"
+  sudo supervisorctl stop cloudify-stage;"
 
 POST_COMMANDS="
   sudo -u stage_user /usr/bin/npm run db-migrate --prefix /opt/cloudify-stage/backend;
-  sudo service cloudify-stage restart;
+  sudo supervisorctl start cloudify-stage;
   sudo -u stage_user /usr/bin/npm run wait-on-server --prefix /opt/cloudify-stage/backend;"
 
 COMMANDS_FOR_RPM="
@@ -23,6 +23,7 @@ COMMANDS_FOR_TAR_GZ="
   ${PRE_COMMANDS}
   rm -rf cloudify-stage;
   tar xzf ${STAGE_PACKAGE};
+  sudo cp /opt/cloudify-stage/conf/{app.json,manager.json} cloudify-stage/conf;
   sudo rm -rf /opt/cloudify-stage/;
   sudo cp -r cloudify-stage /opt/;
   sudo chown -R stage_user:stage_group /opt/cloudify-stage;

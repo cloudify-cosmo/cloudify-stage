@@ -1,8 +1,13 @@
+.blueprintsTable th:nth-child(6) {
+    min-width: 81px;
+}
+
 .blueprintCatalog .actionButtons {
     position: absolute !important;
     bottom: 1rem;
     text-align: center;
     line-height: 3;
+    width: calc(100% - 14px);
 }
 
 .blueprintCatalog .segment {
@@ -15,5 +20,6 @@
 
 .uploadBlueprintButton {
     z-index: 5;
-    float: right;
+    position: absolute !important;
+    right: 12px;
 }

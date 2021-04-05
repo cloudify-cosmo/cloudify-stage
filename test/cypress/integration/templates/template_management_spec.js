@@ -89,7 +89,7 @@ describe('Template Management', () => {
     });
 
     it('is available for admin users', () => {
-        cy.login();
+        cy.mockLogin();
 
         cy.get('.loader').should('be.not.visible');
 
@@ -114,18 +114,18 @@ describe('Template Management', () => {
     });
 
     it('is not available for non-admin users', () => {
-        cy.login(defaultUser.username, defaultUser.password);
+        cy.mockLogin(defaultUser.username, defaultUser.password);
 
         cy.get('.usersMenu').click();
         cy.get('.usersMenu').should('not.contain', 'Template Management');
 
-        cy.visit('/console/template_management').waitUntilLoaded();
+        cy.visit('/console/template_management');
         cy.get('div > h2').should('have.text', '404 Page Not Found');
     });
 
     it('allows admin users to create and modify templates', () => {
         const clickOnHeader = () => cy.get('.modal > .header').click();
-        cy.removeUserTemplates().login();
+        cy.removeUserTemplates().mockLogin();
 
         cy.get('.usersMenu').click();
         cy.get('.usersMenu').contains('Template Management').click();
@@ -149,7 +149,7 @@ describe('Template Management', () => {
 
         cy.log('Create template');
         cy.get('.actions > .ok').click();
-        cy.get('.modal').should('not.be.visible', true);
+        cy.get('.modal').should('not.exist');
 
         cy.log('Verify template');
         verifyTemplateRow(
@@ -192,7 +192,7 @@ describe('Template Management', () => {
 
         cy.log('Save template');
         cy.get('.actions > .ok').click();
-        cy.get('.modal').should('not.be.visible', true);
+        cy.get('.modal').should('not.exist');
 
         cy.log('Verify template changes');
         verifyTemplateRow(
@@ -207,7 +207,7 @@ describe('Template Management', () => {
         cy.get('.blue.segment');
         getTemplateRow('Another Template').within(() => cy.get('.remove').click());
         cy.get('.popup button.green').click();
-        cy.get('.main .loading').should('be.not.visible', true);
+        cy.get('.main .loading').should('not.exist');
 
         cy.log('Verify template was removed');
         cy.getTemplates().then(

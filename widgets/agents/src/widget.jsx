@@ -12,7 +12,7 @@ Stage.defineWidget({
     initialWidth: 12,
     initialHeight: 24,
     color: 'olive',
-    fetchUrl: '[manager]/agents?[params:deployment_id,node_ids,node_instance_ids,install_methods]',
+    fetchUrl: '[manager]/agents?[params:gridParams,deployment_id,node_ids,node_instance_ids,install_methods,state]',
     isReact: true,
     hasReadme: true,
     permission: Stage.GenericConfig.WIDGET_PERMISSION('agents'),
@@ -20,6 +20,9 @@ Stage.defineWidget({
 
     initialConfiguration: [
         Stage.GenericConfig.POLLING_TIME_CONFIG(15),
+        Stage.GenericConfig.PAGE_SIZE_CONFIG(),
+        Stage.GenericConfig.SORT_COLUMN_CONFIG('id'),
+        Stage.GenericConfig.SORT_ASCENDING_CONFIG(true),
         {
             id: 'fieldsToShow',
             name: 'List of fields to show in the table',
@@ -44,13 +47,16 @@ Stage.defineWidget({
     ],
 
     fetchParams(widget, toolbox) {
+        const agentStartedState = 'started';
+
         return {
             deployment_id: toolbox.getContext().getValue('deploymentId'),
             node_ids: toolbox.getContext().getValue('nodeId'),
             node_instance_ids: toolbox.getContext().getValue('nodeInstanceId'),
             install_methods: !_.isEmpty(widget.configuration.installMethods)
                 ? _.reject(widget.configuration.installMethods, _.isEmpty)
-                : undefined
+                : undefined,
+            state: agentStartedState
         };
     },
 

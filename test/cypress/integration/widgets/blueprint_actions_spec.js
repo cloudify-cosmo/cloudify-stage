@@ -1,11 +1,11 @@
-describe('Blueprint Actions widget', () => {
+describe('Blueprint Action Buttons widget', () => {
     const blueprintName = 'blueprints_actions_test';
 
     before(() =>
         cy
             .usePageMock('blueprintActionButtons')
             .activate('valid_trial_license')
-            .login()
+            .mockLogin()
             .deleteBlueprints(blueprintName, true)
             .uploadBlueprint('blueprints/empty.zip', blueprintName)
     );
@@ -29,6 +29,6 @@ describe('Blueprint Actions widget', () => {
         cy.get('.actions > .ui:nth-child(3)').should('have.text', 'Deploy & Install');
 
         cy.get('.actions > .ui:nth-child(1)').click();
-        cy.get('div.deployBlueprintModal').should('not.be.visible');
+        cy.get('div.deployBlueprintModal').should('not.exist');
     });
 });

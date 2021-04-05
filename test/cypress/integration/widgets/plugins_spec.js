@@ -1,8 +1,8 @@
 describe('Plugins widget', () => {
-    before(() => cy.activate('valid_trial_license').usePageMock('plugins').login());
+    before(() => cy.activate('valid_trial_license').usePageMock('plugins').mockLogin());
 
     beforeEach(() => {
-        cy.deletePlugins();
+        cy.deletePlugins().refreshPage();
 
         cy.contains('Upload').click();
         cy.get('input[name=wagonUrl]').type(
@@ -25,8 +25,7 @@ describe('Plugins widget', () => {
     });
 
     it('should allow to install and manage new plugin', () => {
-        cy.server();
-        cy.route(RegExp('/console/plugins/icons/')).as('pluginIcon');
+        cy.intercept('/console/plugins/icons/').as('pluginIcon');
 
         cy.get('.ok').click();
         cy.get('.modal').should('not.exist');

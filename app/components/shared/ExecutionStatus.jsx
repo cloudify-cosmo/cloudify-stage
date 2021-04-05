@@ -68,6 +68,7 @@ export default function ExecutionStatus({
             </Popup.Trigger>
             {showPopup ? (
                 <span
+                    // eslint-disable-next-line react/no-danger
                     dangerouslySetInnerHTML={{
                         __html: i18n.t(
                             'shared.executionStatus.scheduledFor',

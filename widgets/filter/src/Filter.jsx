@@ -153,23 +153,27 @@ export default class Filter extends React.Component {
             flushOnRefreshEvent
         }) => {
             const { DynamicDropdown } = Stage.Common;
+            const { appendQueryParam } = Stage.Utils.Url;
             const { configuration, toolbox } = this.props;
 
             const joinedEntityName = entityName.replace(' ', '');
             if (configuration[enabledConfigurationKey || `filterBy${joinedEntityName}s`]) {
                 const camelCaseEntityName = _.lowerFirst(joinedEntityName);
                 const { [stateProp || `${camelCaseEntityName}Id`]: value } = this.state;
+                const url = `/${fetchManagerEndpoint || `${entityName.replace(' ', '-').toLowerCase()}s`}`;
                 return (
                     <Form.Field key={entityName}>
                         <DynamicDropdown
                             multiple={configuration.allowMultipleSelection}
-                            fetchUrl={`/${
-                                fetchManagerEndpoint || `${entityName.replace(' ', '-').toLowerCase()}s`
-                            }?_include=${_(filter)
-                                .keys()
-                                .concat(valueProp || 'id')
-                                .concat(fetchIncludeExtra || [])
-                                .join()}`}
+                            fetchUrl={appendQueryParam(
+                                url,
+                                '_include',
+                                _(filter)
+                                    .keys()
+                                    .concat(valueProp || 'id')
+                                    .concat(fetchIncludeExtra || [])
+                                    .join()
+                            )}
                             onChange={this[`select${joinedEntityName}`]}
                             toolbox={toolbox}
                             value={value}
@@ -198,6 +202,7 @@ export default class Filter extends React.Component {
                         {[
                             createDropdown({
                                 entityName: 'Blueprint',
+                                fetchManagerEndpoint: 'blueprints?state=uploaded',
                                 flushOnRefreshEvent: true
                             }),
                             createDropdown({

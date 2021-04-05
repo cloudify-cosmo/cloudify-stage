@@ -27,6 +27,9 @@ module.exports = {
             statements: 1
         }
     },
+    moduleNameMapper: {
+        elkjs: '<rootDir>/node_modules/elkjs'
+    },
     coverageReporters: ['text'],
     moduleDirectories: ['node_modules', '..']
 };

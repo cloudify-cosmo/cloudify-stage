@@ -7,23 +7,20 @@ describe('Sites Map', () => {
     before(() => {
         cy.activate('valid_spire_license')
             .usePageMock('sitesMap')
-            .login()
+            .mockLogin()
             .deleteSites()
             .createSite(testSite)
             .waitUntilLoaded();
     });
 
     it('is not displayed when there is no connection to map tiles provider', () => {
-        cy.server();
-        cy.route({
-            method: 'GET',
-            url: /maps\/0\/0\/0\//,
-            status: 500,
-            response: {}
+        cy.intercept('GET', 'maps/0/0/0/', {
+            statusCode: 500,
+            body: {}
         }).as('mapsRoute');
 
         refreshDashboardPage();
-        cy.get('div.sites-map div.leaflet-layer > div.leaflet-tile-container').should('not.have.descendants', 'img');
+        cy.get('div.sites-map div.leaflet-layer > div.leaflet-tile-container').should('not.exist');
         cy.get('.sitesMapWidget .ui.message').should('contain.text', 'widget content cannot be displayed');
     });
 

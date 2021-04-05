@@ -6,7 +6,7 @@ describe('Deployment Info', () => {
     before(() => {
         cy.activate()
             .usePageMock('deploymentInfo', { showBlueprint: true, showCreator: true, showSite: true })
-            .login()
+            .mockLogin()
             .deleteDeployments(deploymentName, true)
             .deleteBlueprints(blueprintName, true)
             .deleteSites()
@@ -19,7 +19,7 @@ describe('Deployment Info', () => {
     beforeEach(() => {
         cy.get('div.deploymentInfoWidget')
             .should('be.visible')
-            .within(() => cy.contains('Loading').should('not.be.visible'));
+            .within(() => cy.contains('Loading').should('not.exist'));
     });
 
     it('provides basic information about deployment', () => {
@@ -29,9 +29,9 @@ describe('Deployment Info', () => {
             cy.get('i.green.user.link.icon').should('be.visible'); // Visibility Icon
             cy.contains('h3.header', 'Blueprint').should('be.visible');
             cy.contains('h3.header div.sub.header', blueprintName).should('be.visible');
-            cy.contains('h3.header', 'Site Name').should('not.be.visible');
+            cy.contains('h3.header', 'Site Name').should('not.exist');
             cy.contains('h3.header', 'Created').should('be.visible');
-            cy.contains('h3.header', 'Updated').should('not.be.visible');
+            cy.contains('h3.header', 'Updated').should('not.exist');
             cy.contains('h3.header', 'Creator').should('be.visible');
             cy.contains('h3.header', 'Node Instances').should('be.visible');
         });
@@ -65,7 +65,7 @@ describe('Deployment Info', () => {
         cy.get('div#editModeMenuItem').click();
 
         // Verify that changes were applied
-        cy.contains('h3.header', 'Blueprint').should('not.be.visible');
+        cy.contains('h3.header', 'Blueprint').should('not.exist');
     });
 
     it('shows Site Name only when it is not empty', () => {
@@ -73,7 +73,7 @@ describe('Deployment Info', () => {
         cy.setSite(deploymentName, '');
 
         // Verify that Site Name is not displayed
-        cy.contains('h3.header', 'Site Name', { timeout: 12000 }).should('not.be.visible');
+        cy.contains('h3.header', 'Site Name', { timeout: 12000 }).should('not.exist');
 
         // Set site for deployment
         cy.setSite(deploymentName, siteName);

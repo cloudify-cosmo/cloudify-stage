@@ -2,16 +2,16 @@
  * Created by kinneretzin on 29/08/2016.
  */
 import i18n from 'i18next';
-import log from 'loglevel';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { Redirect, Route, Switch } from 'react-router-dom';
-import Home from '../../containers/Home';
+import log from 'loglevel';
 
+import Home from '../../containers/Home';
 import Header from '../../containers/layout/Header';
 import PageManagement from '../templates/PageManagement';
 import Consts from '../../utils/consts';
-import { NO_TENANTS_ERR, UNAUTHORIZED_ERR } from '../../utils/ErrorCodes';
+import { NO_PAGES_FOR_TENANT_ERR, UNAUTHORIZED_ERR } from '../../utils/ErrorCodes';
 import SplashLoadingScreen from '../../utils/SplashLoadingScreen';
 
 import StatusPoller from '../../utils/StatusPoller';
@@ -31,8 +31,6 @@ export default class Layout extends Component {
 
     componentDidMount() {
         const { doLogout, initialPageLoad } = this.props;
-        log.log('First time logging in , fetching stuff');
-
         initialPageLoad()
             .then(() => {
                 StatusPoller.getPoller().start();
@@ -41,12 +39,14 @@ export default class Layout extends Component {
             })
             .catch(e => {
                 switch (e) {
-                    case NO_TENANTS_ERR:
-                        doLogout(null, 'noTenants');
+                    case UNAUTHORIZED_ERR: // Handled by Interceptor
                         break;
-                    case UNAUTHORIZED_ERR:
+                    case NO_PAGES_FOR_TENANT_ERR:
+                        log.error('Cannot initialize user data because no pages were found for the current tenant');
+                        doLogout(i18n.t('noPages'));
                         break;
                     default:
+                        log.error('Initializing user data failed', e);
                         doLogout(i18n.t('pageLoadError', 'Error initializing user data, cannot load page'));
                 }
             });

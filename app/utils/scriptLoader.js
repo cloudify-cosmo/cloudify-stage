@@ -13,17 +13,16 @@ export default class ScriptLoader {
     load(id, rejectOnError) {
         log.log(`Loading javascript from ${this.path}...`);
 
-        const scriptLoader = this;
         return new Promise((resolve, reject) => {
             const scriptObj = document.createElement('script');
             scriptObj.setAttribute('type', 'text/javascript');
-            scriptObj.setAttribute('src', scriptLoader.path);
+            scriptObj.setAttribute('src', this.path);
             if (id) {
                 scriptObj.setAttribute('id', id);
             }
             scriptObj.onload = () => {
                 log.log(this.path, 'loaded');
-                scriptLoader.loaded = true;
+                this.loaded = true;
                 resolve();
             };
             scriptObj.onerror = () => {

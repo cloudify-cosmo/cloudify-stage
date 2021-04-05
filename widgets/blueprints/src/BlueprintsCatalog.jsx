@@ -3,6 +3,7 @@
  */
 import BlueprintsViewPropTypes from './props/BlueprintsViewPropTypes';
 import BlueprintsViewDefaultProps from './props/BlueprintsViewDefaultProps';
+import BlueprintState from './BlueprintState';
 
 export default function BlueprintsCatalog({
     data,
@@ -16,6 +17,7 @@ export default function BlueprintsCatalog({
     toolbox
 }) {
     const { DataSegment, Grid, Image, Button, Label, ResourceVisibility, Header } = Stage.Basic;
+    const { BlueprintActions } = Stage.Common;
     const manager = toolbox.getManager();
 
     const blueprintsItems = data.items.map(item => {
@@ -51,35 +53,56 @@ export default function BlueprintsCatalog({
 
                         <Grid.Row className="noPadded">
                             <Grid.Column width="7">
-                                <h5 className="ui icon header">Created</h5>
+                                <Header as="h5" icon textAlign="left">
+                                    Created
+                                </Header>
                             </Grid.Column>
                             <Grid.Column width="9">{item.created_at}</Grid.Column>
                         </Grid.Row>
 
                         <Grid.Row className="noPadded">
                             <Grid.Column width="7">
-                                <h5 className="ui icon header">Updated</h5>
+                                <Header as="h5" icon textAlign="left">
+                                    Updated
+                                </Header>
                             </Grid.Column>
                             <Grid.Column width="9">{item.updated_at}</Grid.Column>
                         </Grid.Row>
 
                         <Grid.Row className="noPadded">
                             <Grid.Column width="7">
-                                <h5 className="ui icon header">Creator</h5>
+                                <Header as="h5" icon textAlign="left">
+                                    Creator
+                                </Header>
                             </Grid.Column>
                             <Grid.Column width="9">{item.created_by}</Grid.Column>
                         </Grid.Row>
 
                         <Grid.Row className="noPadded">
                             <Grid.Column width="7">
-                                <h5 className="ui icon header">Main Blueprint File</h5>
+                                <Header as="h5" icon textAlign="left">
+                                    Main Blueprint File
+                                </Header>
                             </Grid.Column>
                             <Grid.Column width="9">{item.main_file_name}</Grid.Column>
                         </Grid.Row>
 
                         <Grid.Row className="noPadded">
                             <Grid.Column width="7">
-                                <h5 className="ui icon header"># Deployments</h5>
+                                <Header as="h5" icon textAlign="left">
+                                    State
+                                </Header>
+                            </Grid.Column>
+                            <Grid.Column width="9">
+                                <BlueprintState blueprint={item} />
+                            </Grid.Column>
+                        </Grid.Row>
+
+                        <Grid.Row className="noPadded">
+                            <Grid.Column width="7">
+                                <Header as="h5" icon textAlign="left">
+                                    # Deployments
+                                </Header>
                             </Grid.Column>
                             <Grid.Column width="9">
                                 <Label color="green" horizontal>
@@ -94,43 +117,48 @@ export default function BlueprintsCatalog({
                     </Grid.Column>
                 </DataSegment.Item>
 
-                <div className="actionButtons">
-                    <Button
-                        icon="trash"
-                        content="Delete"
-                        basic
-                        labelPosition="left"
-                        onClick={event => {
-                            event.stopPropagation();
-                            onDeleteBlueprint(item);
-                        }}
-                    />
-
-                    <Button
-                        icon="rocket"
-                        content="Deploy"
-                        labelPosition="left"
-                        onClick={event => {
-                            event.stopPropagation();
-                            onCreateDeployment(item);
-                        }}
-                    />
-
-                    {!manager.isCommunityEdition() && (
+                {BlueprintActions.isCompleted(item) && (
+                    <div className="actionButtons">
                         <Button
-                            icon="external share"
-                            content="Edit a copy in Composer"
+                            icon="trash"
+                            content="Delete"
+                            basic
                             labelPosition="left"
                             onClick={event => {
                                 event.stopPropagation();
-                                new Stage.Common.BlueprintActions(toolbox).doEditInComposer(
-                                    item.id,
-                                    item.main_file_name
-                                );
+                                onDeleteBlueprint(item);
                             }}
                         />
-                    )}
-                </div>
+                        {BlueprintActions.isUploaded(item) && (
+                            <>
+                                <Button
+                                    icon="rocket"
+                                    content="Deploy"
+                                    labelPosition="left"
+                                    onClick={event => {
+                                        event.stopPropagation();
+                                        onCreateDeployment(item);
+                                    }}
+                                />
+
+                                {!manager.isCommunityEdition() && (
+                                    <Button
+                                        icon="external share"
+                                        content="Edit a copy in Composer"
+                                        labelPosition="left"
+                                        onClick={event => {
+                                            event.stopPropagation();
+                                            new Stage.Common.BlueprintActions(toolbox).doEditInComposer(
+                                                item.id,
+                                                item.main_file_name
+                                            );
+                                        }}
+                                    />
+                                )}
+                            </>
+                        )}
+                    </div>
+                )}
             </Grid.Column>
         );
     });

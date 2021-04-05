@@ -1,5 +1,5 @@
 describe('Deployment Wizard Buttons widget', () => {
-    before(() => cy.activate('valid_trial_license').usePageMock('deploymentWizardButtons').login());
+    before(() => cy.activate('valid_trial_license').usePageMock('deploymentWizardButtons').mockLogin());
 
     function next() {
         cy.contains('Next').click();
@@ -92,16 +92,16 @@ describe('Deployment Wizard Buttons widget', () => {
                 'Blueprint package, Blueprint name, Blueprint YAML file.'
         );
         cy.get('input[name=blueprintFile]').attachFile('blueprints/empty.zip');
-        cy.contains('blueprint.yaml');
+        cy.contains('blueprint.yaml').should('be.visible');
         cy.contains('.field', 'Blueprint package').find('.remove').click();
         cy.get('input[name=blueprintFile]').attachFile('blueprints/custom_plugin.zip');
-        cy.contains('ec2-blueprint.yaml');
+        cy.contains('ec2-blueprint.yaml').should('be.visible');
 
         next();
         cy.contains('You can go to the next step.');
         cy.contains('Back').click();
         next();
-        cy.get('.loading').should('not.exist');
+        cy.get('.loader').should('not.be.visible');
         next();
         cy.contains('You can go to the next step.');
         next();

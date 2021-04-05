@@ -11,14 +11,11 @@ describe('/ba endpoint', () => {
         });
         const app = require('app');
 
-        return new Promise(done => {
-            request(app)
-                .get('/console/ba/image/1')
-                .then(response => {
-                    expect(response.statusCode).toBe(302);
-                    expect(response.text).toEqual('Found. Redirecting to http://test.url/image1.png');
-                    done();
-                });
-        });
+        return request(app)
+            .get('/console/ba/image/1')
+            .then(response => {
+                expect(response.statusCode).toBe(302);
+                expect(response.text).toEqual('Found. Redirecting to http://test.url/image1.png');
+            });
     });
 });

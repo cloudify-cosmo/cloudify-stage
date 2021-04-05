@@ -89,7 +89,7 @@ Stage.defineWidget({
         const executionsDataPromise = deploymentIdsPromise.then(ids =>
             toolbox.getManager().doGet('/executions', {
                 _include:
-                    'id,deployment_id,workflow_id,status,status_display,created_at,scheduled_for,ended_at,parameters,error',
+                    'id,deployment_id,workflow_id,status,status_display,created_at,scheduled_for,ended_at,parameters,error,total_operations,finished_operations',
                 _sort: '-ended_at',
                 deployment_id: ids
             })
@@ -114,7 +114,6 @@ Stage.defineWidget({
             return {
                 ...deploymentData,
                 items: _.map(deploymentData.items, item => {
-                    const workflows = Stage.Common.DeploymentUtils.filterWorkflows(_.sortBy(item.workflows, ['name']));
                     return {
                         ...item,
                         nodeInstancesCount: nodeInstanceData[item.id] ? nodeInstanceData[item.id].count : 0,
@@ -123,8 +122,7 @@ Stage.defineWidget({
                         updated_at: Stage.Utils.Time.formatTimestamp(item.updated_at),
                         isUpdated: !_.isEqual(item.created_at, item.updated_at),
                         executions: _.filter(executionsData[item.id], Stage.Utils.Execution.isActiveExecution),
-                        lastExecution: _.first(executionsData[item.id]),
-                        workflows
+                        lastExecution: _.first(executionsData[item.id])
                     };
                 }),
                 total: _.get(deploymentData, 'metadata.pagination.total', 0),

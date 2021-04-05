@@ -1,6 +1,9 @@
 {
     "backToApps": "Back to apps",
     "backToLogin": "Back to login",
+    "urls": {
+        "pluginsCatalog": "http://repository.cloudifysource.org/cloudify/wagons/plugins.json"
+    },
     "cluster": {
         "manager": "Manager",
         "db": "Database",
@@ -21,6 +24,44 @@
         },
         "servicesStatus": "Services Status",
         "systemStatus": "System Status"
+    },
+    "gettingStartedModal" : {
+        "disableModalLabel": "Don't show next time",
+        "titles": {
+            "technologiesStep": "Getting Started",
+            "secretsStep": "Secrets",
+            "summaryStep": "Summary",
+            "statusStep": "Status"
+        },
+        "buttons": {
+            "closeModal": "Close",
+            "stepBack": "Back",
+            "stepNext": "Next",
+            "stepFinish": "Finish"
+        },
+        "initialization": {
+            "pluginsLoadingError": "Plugins information loading error.",
+            "secretsLoadingError": "Secrets information loading error."
+        },
+        "validation": {
+            "someTechnologyRequiredError": "At least one technology needs to be selected.",
+            "allSecretsRequiredError": "All secret values need to be specified."
+        },
+        "summary": {
+            "taskListTitle": "Task List",
+            "pluginInstalMessageSuffix": "plugin will be installed.",
+            "pluginInstalledMessageSuffix": "plugin is already installed.",
+            "pluginNotFoundMessageSuffix": "plugin is not found in catalog and manager.",
+            "secretCreateMessageSuffix": "secret will be created.",
+            "secretUpdateMessageSuffix": "secret will be updated."
+        },
+        "installation": {
+            "pluginInstallError": "{{pluginName}} plugin installation error.",
+            "secretUpdateError": "{{secretName}} secret update operation error.",
+            "secretCreateError": "{{secretName}} secret create operation error.",
+            "progressMessage": "Installation in progress...",
+            "doneMessage": "Installation done!"
+        }
     },
     "editMode": {
         "addPage": "Add Page",
@@ -179,7 +220,8 @@
         },
         "password": "Password",
         "username": "Username",
-        "submit": "LOGIN"
+        "submit": "LOGIN",
+        "ssoSubmit": "LOGIN WITH SSO"
     },
     "maintenanceMode": {
         "activate": "Activate Maintenance Mode",
@@ -193,6 +235,7 @@
         "header": "Maintenance mode",
         "message": "Server is on maintenance mode and is not available at the moment."
     },
+    "managerDataError": "Error getting data from the manager, cannot load page",
     "noLicense": "No active license",
     "noPages": "No pages available to display. Please try to reset application to the default settings.",
     "notFound": {
@@ -367,8 +410,114 @@
     },
     "widgets": {
         "common": {
+            "deployments": {
+                "actionsMenu": {
+                    "install": "Install",
+                    "update": "Update",
+                    "setSite": "Set Site",
+                    "manageLabels": "Manage Labels",
+                    "uninstall": "Uninstall",
+                    "delete": "Delete",
+                    "forceDelete": "Force Delete",
+                    "fetchError": "Cannot fetch deployment '{{ deploymentId }}'.",
+                    "tooltip": "Deployment action"
+                },
+                "workflowsMenu": {
+                    "tooltip": "Execute workflow"
+                },
+                "executeModal": {
+                    "missingDeployment": "Missing deployment.",
+                    "missingWorkflow": "Missing workflow.",
+                    "workflowError": "Workflow '{{ workflowName }}' does not exist for deployment '{{ deploymentId }}'."
+                },
+                "removeModal": {
+                    "deleteDescription": "Are you sure you want to remove deployment '{{ deploymentId }}'?",
+                    "forceDeleteDescription": "Force delete will ignore any existing live nodes, or existing deployments which depend on this deployment.\nIt's recommended to first run uninstall to stop the live nodes, and make sure there are no running installations which depend on this deployment - and then run delete.\nAre you sure you want to ignore the live nodes and delete the deployment '{{ deploymentId }}'?"
+                },
+                "setSiteModal": {
+                    "header": "Set the site of deployment '{{ deploymentId }}'",
+                    "siteNameLabel": "Site name",
+                    "detachSiteLabel": "Detach from the current site",
+                    "updateButton": "Update"
+                },
+                "deployModal": {
+                    "inputs": {
+                        "deploymentName": {
+                            "label": "Deployment name",
+                            "help": "Specify a name for this deployment instance."
+                        },
+                        "blueprintName": {
+                            "label": "Blueprint",
+                            "help": "Select the blueprint based on which this deployment will be created."
+                        },
+                        "siteName": {
+                            "label": "Site name",
+                            "help": "Specify a site to which this deployment will be assigned."
+                        },
+                        "labels": {
+                            "label": "Labels"
+                        },
+                        "skipPluginsValidation": {
+                            "label": "Skip plugins validation",
+                            "message": "The recommended path is uploading plugins as wagons. This option is designed for plugin development and advanced users only."
+                        },
+                        "runtimeOnlyEvaluation": {
+                            "label": "Runtime only evaluation",
+                            "help": "If set, then get_property and get_input intrinsic functions will be evaluated on demand at runtime. If not set, then evaluation will be done at deployment creation time."
+                        },
+                        "deploymentInputs": {
+                            "loading": "Loading inputs...",
+                            "noInputs": "No inputs available for the blueprint"
+                        }
+                    },
+                    "sections": {
+                        "deploymentMetadata": "Deployment metadata",
+                        "executionParameters": "Execution parameters"
+                    },
+                    "buttons": {
+                        "deploy": "Deploy",
+                        "deployAndInstall": "Deploy & Install"
+                    },
+                    "steps": {
+                        "deploy": {
+                            "validatingData": "1/2: Validating data...",
+                            "deployingBlueprint": "2/2: Deploying blueprint..."
+                        },
+                        "deployAndInstall": {
+                            "validatingData": "1/4: Validating data...",
+                            "deployingBlueprint": "2/4: Deploying blueprint...",
+                            "waitingForDeployment": "3/4: Creating deployment environment...",
+                            "installingDeployment": "4/4: Installing deployment..."
+                        }
+                    },
+                    "errors": {
+                        "loadingYamlFileFailed": "Loading values from YAML file failed: {{ reason }}",
+                        "noBlueprintName": "Please select blueprint from the list",
+                        "noDeploymentName": "Please provide deployment name",
+                        "deploymentCreationFailed": "Deployment {{ deploymentId }} environment creation failed. {{ error }}",
+                        "deploymentInstallationFailed": "Deployment {{ deploymentId }} installation failed: {{ error }}"
+                    }
+                }
+            },
+            "labels": {
+                "addButton": "Add",
+                "keyPlaceholder": "Select or type in a key",
+                "newKey": "New key",
+                "newValue": "New value",
+                "valuePlaceholder": "Select or type in a value",
+                "validationError": "Only letters, digits and the characters \"-\", \".\" and \"_\" are allowed and it must begin with a letter.",
+                "invalidKeyError": "All labels starting with `{{ keyPrefix }}` are reserved for internal usage and should not be used unless there is a need to override default functionality. The following labels are allowed for such override: {{ reservedKeys }}.",
+                "input": {
+                    "label": "Labels",
+                    "help": "A list of labels - key-value pairs - that can be assigned with a deployment"
+                },
+                "fetchingLabelsError": "Cannot fetch labels for deployment '{{deploymentId}}'",
+                "labelDuplicationError": "Cannot add the same label twice",
+                "modalHeader": "Manage labels for deployment '{{deploymentId}}'",
+                "modalApplyButton": "Apply"
+            },
             "readmes": {
-                "linksBasePath": "https://docs.cloudify.co/latest",
+                "linksBasePath": "https://docs.cloudify.co/5.1",
                 "params": {
                     "cfy_composer_link": "/developer/composer/",
                     "cfy_composer_name": "Cloudify Composer",
@@ -379,12 +528,138 @@
                     "product_name": "Cloudify"
                 }
             },
+            "revertToDefault": "Revert to default value",
             "urls": {
-                "pluginsCatalog": "http://repository.cloudifysource.org/cloudify/wagons/plugins.json",
                 "blueprintsCatalog": "http://repository.cloudifysource.org/cloudify/blueprints/5.1/examples.json",
                 "helloWorldBlueprint": "https://github.com/cloudify-cosmo/cloudify-hello-world-example/archive/master.zip",
                 "linkParameterExample": "https://cloudify.co"
+            },
+            "blueprintUpload": {
+                "uploadLabels": {
+                    "pending": "1/5: Waiting for blueprint upload to start...",
+                    "uploading": "2/5: Uploading blueprint...",
+                    "extracting": "3/5: Extracting blueprint...",
+                    "parsing": "4/5: Parsing blueprint...",
+                    "uploadingImage": "5/5: Uploading image..."
+                },
+                "modal": {
+                    "header": "Upload blueprint",
+                    "uploadButton": "Upload"
+                },
+                "errorHeaders": {
+                    "failedUploading": "Blueprint upload failed",
+                    "failedExtracting": "Blueprint extraction failed",
+                    "failedParsing": "Blueprint parsing failed"
+                },
+                "validationErrors": {
+                    "invalidBlueprintUrl": "Please provide valid URL for blueprint package",
+                    "invalidImageUrl": "Please provide valid URL for blueprint icon",
+                    "noBlueprintPackage": "Please select blueprint package",
+                    "noBlueprintName": "Please provide blueprint name",
+                    "noBlueprintYamlFile": "Please provide blueprint YAML file"
+                },
+                "inputs": {
+                    "blueprintName": {
+                        "label": "Blueprint name",
+                        "help": "The package will be uploaded to the Manager as a Blueprint resource, under the name you specify here."
+                    },
+                    "blueprintYamlFile": {
+                        "label": "Blueprint YAML file",
+                        "help": "If you choose archive as blueprint package, you must specify the blueprint YAML file for your environment, because the archive can contain more than one YAML file."
+                    },
+                    "blueprintPackage": {
+                        "label": "Blueprint package",
+                        "help": "You can provide single YAML file or blueprint archive. Supported types are: yml, yaml, zip, tar, tar.gz and tar.bz2. The archive package must contain exactly one directory that includes at least one YAML file.",
+                        "placeholder": "Provide the blueprint's URL or click browse to select a file"
+                    },
+                    "blueprintIcon": {
+                        "help": "(Optional) The blueprint icon file is shown with the blueprint in the local blueprint widget.",
+                        "placeholder": "Provide the image file URL or click browse to select a file"
+                    }
+                }
             }
+        },
+        "deploymentsView": {
+            "name": "Deployments view",
+            "description": "A complete deployments view – Deployment list, map view, and detailed deployment info",
+            "configuration": {
+                "filterId": {
+                    "name": "Name of the saved filter to apply"
+                },
+                "filterByParentDeployment": {
+                    "name": "Filter by parent deployment",
+                    "description": "Only show deployments directly attached to the deployment selected on the previous page (when in drill-down)."
+                },
+                "fieldsToShow": {
+                    "name": "List of fields to show in the table",
+                    "placeholder": "Select fields from the list"
+                }
+            },
+            "iconLabels": {
+                "inProgress": "In progress",
+                "requiresAttention": "Requires attention"
+            },
+            "columns": {
+                "status": {
+                    "name": "Status"
+                },
+                "name": {
+                    "name": "Name"
+                },
+                "blueprintName": {
+                    "name": "Blueprint Name"
+                },
+                "environmentType": {
+                    "name": "Environment Type"
+                },
+                "location": {
+                    "name": "Location"
+                },
+                "subenvironmentsCount": {
+                    "name": "Subenvironments",
+                    "tooltip": "Sub-environments (Total)"
+                },
+                "subservicesCount": {
+                    "name": "Subservices",
+                    "tooltip": "Services (Total)"
+                }
+            },
+            "noDataMessage": "No Results Found. Try changing the filter's parameters"
+        },
+        "filters": {
+            "name": "Filters",
+            "description": "This widget shows a list of defined filters",
+            "noFilters": "There are no filters defined",
+            "columns": {
+                "name": "Filter name",
+                "creator": "Creator",
+                "created": "Created",
+                "actions": {
+                    "delete": "Delete filter",
+                    "edit": "Edit filter",
+                    "clone": "Clone filter"
+                }
+            },
+            "deleteConfirm": "Are you sure you want to remove filter '{{filterId}}'?"
+        },
+        "labels": {
+            "name": "Labels",
+            "description": "This widget shows a list of defined labels",
+            "columns": {
+                "key": "Key",
+                "value": "Value",
+                "actions": {
+                    "edit": "Edit label",
+                    "delete": "Delete label"
+                }
+            },
+            "noDeployment": "No deployment selected",
+            "noLabels": "There are no Labels defined",
+            "add": "Add",
+            "export": "Export",
+            "addHeader": "Add labels for deployment '{{deploymentId}}'",
+            "revert": "Revert to initial value",
+            "deleteConfirm": "Are you sure you want to remove label"
         }
     }
 }

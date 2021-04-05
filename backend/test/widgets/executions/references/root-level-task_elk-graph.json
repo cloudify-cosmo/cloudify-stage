@@ -1,0 +1,84 @@
+{
+    "$H": 12,
+    "children": [
+        {
+            "$H": 276,
+            "children": [],
+            "edges": [],
+            "height": 50,
+            "id": "615c9095-8a76-455f-99a1-fc1936658998",
+            "labels": [
+                {
+                    "displayText": ["Pending"],
+                    "displayTitle": ["Script runner tasks run"],
+                    "height": 0,
+                    "operation": "",
+                    "retry": 0,
+                    "state": "Pending",
+                    "text": "Script runner tasks run",
+                    "type": "RemoteWorkflowTask",
+                    "width": 0,
+                    "x": 0,
+                    "y": 0
+                }
+            ],
+            "nodeInstanceId": "x_00tkm5",
+            "operation": "cloudify.interfaces.lifecycle.create",
+            "width": 270,
+            "x": 12,
+            "y": 12
+        },
+        {
+            "$H": 280,
+            "children": [],
+            "edges": [],
+            "height": 50,
+            "id": "55c9a5f6-48c3-45fb-b238-026bcbf3812a",
+            "labels": [
+                {
+                    "displayText": ["Pending"],
+                    "displayTitle": ["Script runner tasks run"],
+                    "height": 0,
+                    "operation": "",
+                    "retry": 0,
+                    "state": "Pending",
+                    "text": "Script runner tasks run",
+                    "type": "RemoteWorkflowTask",
+                    "width": 0,
+                    "x": 0,
+                    "y": 0
+                }
+            ],
+            "nodeInstanceId": "x_00tkm5",
+            "operation": "cloudify.interfaces.lifecycle.configure",
+            "width": 270,
+            "x": 332,
+            "y": 12
+        }
+    ],
+    "edges": [
+        {
+            "id": "615c9095-8a76-455f-99a1-fc1936658998_55c9a5f6-48c3-45fb-b238-026bcbf3812a",
+            "sections": [
+                {
+                    "endPoint": { "x": 332, "y": 37 },
+                    "id": "615c9095-8a76-455f-99a1-fc1936658998_55c9a5f6-48c3-45fb-b238-026bcbf3812a_s0",
+                    "startPoint": { "x": 282, "y": 37 }
+                }
+            ],
+            "sources": ["615c9095-8a76-455f-99a1-fc1936658998"],
+            "targets": ["55c9a5f6-48c3-45fb-b238-026bcbf3812a"]
+        }
+    ],
+    "height": 74,
+    "id": "tasksGraph",
+    "layoutOptions": {
+        "elk.algorithm": "layered",
+        "elk.spacing.nodeNode": "30f",
+        "hierarchyHandling": "INCLUDE_CHILDREN",
+        "layered.spacing.nodeNodeBetweenLayers": "50f"
+    },
+    "width": 614,
+    "x": 0,
+    "y": 0
+}

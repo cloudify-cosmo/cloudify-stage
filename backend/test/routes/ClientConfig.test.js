@@ -17,18 +17,15 @@ describe('/clientConfig endpoint', () => {
         });
         const app = require('app');
 
-        return new Promise(done => {
-            request(app)
-                .get('/console/clientConfig')
-                .then(response => {
-                    expect(response.type).toContain('json');
-                    expect(response.statusCode).toBe(200);
-                    expect(response.body).toStrictEqual({
-                        managerIp: 'localhost',
-                        config: { str: 'value', int: 5 }
-                    });
-                    done();
+        return request(app)
+            .get('/console/clientConfig')
+            .then(response => {
+                expect(response.type).toContain('json');
+                expect(response.statusCode).toBe(200);
+                expect(response.body).toStrictEqual({
+                    managerIp: 'localhost',
+                    config: { str: 'value', int: 5 }
                 });
-        });
+            });
     });
 });

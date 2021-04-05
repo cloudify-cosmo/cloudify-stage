@@ -25,6 +25,7 @@
     {"widget": "filter", "link": "/content/working_with/console/widgets/filter.md"},
     {"widget": "highAvailability", "link": "/content/working_with/console/widgets/highAvailability.md"},
     {"widget": "inputs", "link": "/content/working_with/console/widgets/inputs.md"},
+    {"widget": "labels", "link": "/content/working_with/console/widgets/labels.md"},
     {"widget": "maintenanceModeButton", "link": "/content/working_with/console/widgets/maintenanceModeButton.md"},
     {"widget": "managers", "link": "/content/working_with/console/widgets/managers.md"},
     {"widget": "nodes", "link": "/content/working_with/console/widgets/nodes.md"},

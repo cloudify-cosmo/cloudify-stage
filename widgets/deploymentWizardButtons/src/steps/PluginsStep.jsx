@@ -176,9 +176,7 @@ class PluginsStepContent extends React.Component {
                     toolbox
                         .getManager()
                         .doGet('/plugins?_include=distribution,package_name,package_version,visibility'),
-                    toolbox
-                        .getInternal()
-                        .doGet('/external/content', { url: Stage.i18n.t('widgets.common.urls.pluginsCatalog') })
+                    toolbox.getInternal().doGet('/external/content', { url: Stage.i18n.t('urls.pluginsCatalog') })
                 ])
             )
             .then(([pluginsInManager, pluginsInCatalog]) => {
@@ -259,6 +257,15 @@ class PluginsStepContent extends React.Component {
             )
             .catch(error => onError(id, error))
             .finally(() => onReady());
+    }
+
+    handlePluginChange(pluginName) {
+        const { id, onChange, stepData: stepDataProp } = this.props;
+        return fields => {
+            const stepData = { ...stepDataProp };
+            stepData[pluginName] = { ...stepData[pluginName], ...fields };
+            return onChange(id, { ...stepData });
+        };
     }
 
     getPluginStatus(pluginName) {
@@ -395,15 +402,6 @@ class PluginsStepContent extends React.Component {
         stepData[pluginName].status = pluginStatuses.userDefinedPlugin;
         onChange(id, stepData);
     };
-
-    handlePluginChange(pluginName) {
-        const { id, onChange, stepData: stepDataProp } = this.props;
-        return fields => {
-            const stepData = { ...stepDataProp };
-            stepData[pluginName] = { ...stepData[pluginName], ...fields };
-            return onChange(id, { ...stepData });
-        };
-    }
 
     deleteUserPlugin(pluginName) {
         const { id, onChange, stepData: stepDataProp } = this.props;

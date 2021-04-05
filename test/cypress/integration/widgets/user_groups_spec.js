@@ -1,7 +1,7 @@
 describe('User group management widget', () => {
     const groupName = 'user_groups_test';
 
-    before(() => cy.activate('valid_trial_license').usePageMock('userGroups').login().deleteUserGroup(groupName));
+    before(() => cy.activate('valid_trial_license').usePageMock('userGroups').mockLogin().deleteUserGroup(groupName));
 
     it('should allow to manage a group', () => {
         cy.log('Creating new group');

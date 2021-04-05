@@ -1,11 +1,8 @@
 describe('Page preview', () => {
     before(() => {
         cy.activate('valid_trial_license');
-        cy.server();
-        cy.fixture('page/page_with_tabs').then(testPage =>
-            cy.route('/console/appData/templates/pages/adminDash.json', testPage)
-        );
-        cy.login();
+        cy.intercept('/console/appData/templates/pages/adminDash.json', { fixture: 'page/page_with_tabs' });
+        cy.mockLogin();
     });
 
     it('should allow to switch tabs and maximize widgets', () => {
