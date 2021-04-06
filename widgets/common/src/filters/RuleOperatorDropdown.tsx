@@ -1,4 +1,5 @@
 import type { FunctionComponent } from 'react';
+import type { DropdownItemProps } from 'semantic-ui-react/dist/commonjs/modules/Dropdown/DropdownItem';
 
 const { i18n } = Stage;
 const i18nPrefix = 'widgets.common.filters.form.operatorsLabels';
@@ -15,7 +16,9 @@ const operators = [
 
 const RuleOperatorDropdown: FunctionComponent = () => {
     const { Dropdown } = Stage.Basic;
-    const operatorsOptions = _.map(operators, operator => ({ text: operator.label, value: operator.name }));
+    const operatorsOptions = operators.map(
+        (operator): DropdownItemProps => ({ text: operator.label, value: operator.name })
+    );
 
     return <Dropdown search selection name="ruleOperator" options={operatorsOptions} />;
 };
