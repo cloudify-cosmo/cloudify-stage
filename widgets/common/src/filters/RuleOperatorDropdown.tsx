@@ -1,15 +1,17 @@
 import type { FunctionComponent } from 'react';
 
+const { i18n } = Stage;
+const i18nPrefix = 'widgets.common.filters.form.operatorsLabels';
 const operators = [
-    { name: 'any_of', label: 'is one of' },
-    { name: 'not_any_of', label: 'is not one of' },
-    { name: 'is_null', label: 'key is not' },
-    { name: 'is_not_null', label: 'key is' },
-    { name: 'contain', label: 'contains' },
-    { name: 'not_contain', label: 'does not contain' },
-    { name: 'start_with', label: 'starts with' },
-    { name: 'end_with', label: 'ends with' }
-];
+    'any_of',
+    'not_any_of',
+    'is_null',
+    'is_not_null',
+    'contain',
+    'not_contain',
+    'start_with',
+    'end_with'
+].map(operator => ({ name: operator, label: i18n.t(`${i18nPrefix}.${operator}`) }));
 
 const RuleOperatorDropdown: FunctionComponent = () => {
     const { Dropdown } = Stage.Basic;

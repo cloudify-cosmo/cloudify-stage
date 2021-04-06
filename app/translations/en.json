@@ -521,6 +521,16 @@
                     "buttons": {
                         "addRule": "Add new rule",
                         "removeRule": "Remove rule"
+                    },
+                    "operatorsLabels": {
+                        "any_of": "is one of",
+                        "not_any_of": "is not one of",
+                        "is_null": "key is not",
+                        "is_not_null": "key is",
+                        "contain": "contains",
+                        "not_contain": "does not contain",
+                        "start_with": "starts with",
+                        "end_with": "ends with"
                     }
                 }
             },
