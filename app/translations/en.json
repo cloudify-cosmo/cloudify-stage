@@ -25,7 +25,7 @@
         "servicesStatus": "Services Status",
         "systemStatus": "System Status"
     },
-    "gettingStartedModal" : {
+    "gettingStartedModal": {
         "disableModalLabel": "Don't show next time",
         "titles": {
             "technologiesStep": "Getting Started",
@@ -629,7 +629,11 @@
                 "loadingFilterRules": "Loading filter rules",
                 "errorLoadingFilterRules": "Error when loading filter rules",
                 "loadingDeployments": "Loading deployments",
-                "errorLoadingDeployments": "Error when loading deployments"
+                "errorLoadingDeployments": "Error when loading deployments",
+                "missingParentDeploymentId": {
+                    "header": "Cannot filter by parent deployment",
+                    "message": "A selected deployment cannot be found in the parent page. Turn off the option in the configuration."
+                }
             }
         },
         "filters": {

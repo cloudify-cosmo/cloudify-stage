@@ -146,6 +146,17 @@ const DeploymentsView: FunctionComponent<DeploymentsViewProps> = ({ widget, tool
         }
     );
 
+    if (filterByParentDeployment && !parentDeploymentId) {
+        const i18nMissingParentDeploymentPrefix = `${i18nMessagesPrefix}.missingParentDeploymentId`;
+
+        return (
+            <ErrorMessage
+                header={i18n.t(`${i18nMissingParentDeploymentPrefix}.header`)}
+                error={i18n.t(`${i18nMissingParentDeploymentPrefix}.message`)}
+            />
+        );
+    }
+
     if (filterRulesResult.isLoading) {
         return <Loading message={i18n.t(`${i18nMessagesPrefix}.loadingFilterRules`)} />;
     }
