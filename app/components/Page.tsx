@@ -184,14 +184,14 @@ const mapDispatchToProps = (dispatch: ThunkDispatch<ReduxState, never, AnyAction
         },
         onPageSelected: (page: PageDefinitionWithContext, pagesList: PageDefinitionWithContext[], index: number) => {
             // NOTE: the pagesList are from outermost to innermost
-            const drilldownContext: DrilldownContext[] = [];
-            // Skip the last page, because we are sending the context of this one to the select page
-            for (let i = 0; i <= index - 1; i += 1) {
-                drilldownContext.push({
-                    pageName: pagesList[i].name,
-                    context: pagesList[i].context
-                });
-            }
+            // Skip the last page (copy up to index-1), because we are sending
+            // the context of this one to the select page
+            const drilldownContext = pagesList.slice(0, Math.max(0, index - 2)).map(
+                (pageInList): DrilldownContext => ({
+                    pageName: pageInList.name,
+                    context: pageInList.context
+                })
+            );
             dispatch(setDrilldownContext(drilldownContext));
             dispatch(selectPage(page.id, page.isDrillDown, page.context, page.name));
         },
