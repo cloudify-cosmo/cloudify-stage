@@ -188,7 +188,6 @@ export function selectPage(
 ): ThunkAction<void, ReduxState, never, AnyAction> {
     return (dispatch, getState) => {
         const location: LocationDescriptorObject = { pathname: `/page/${pageId}` };
-        let newDrilldownContext = getState().drilldownContext || [];
 
         // Clear the widgets data since there is no point in saving data for widgets that are not in view
         dispatch(clearWidgetsData());
@@ -201,14 +200,23 @@ export function selectPage(
                 // eslint-disable-next-line scanjs-rules/assign_to_pathname
                 location.pathname += `/${drilldownPageName}`;
             }
+
+            const newDrilldownContext = (getState().drilldownContext || []).slice();
+
+            // Refresh the drilldown context for the current page
+            const currentPageDrilldownContext = newDrilldownContext.pop() || {};
+            newDrilldownContext.push({
+                ...currentPageDrilldownContext,
+                context: getState().context
+            });
+
             if (drilldownPageName || drilldownContext) {
-                newDrilldownContext = [
-                    ...newDrilldownContext,
-                    {
-                        context: drilldownContext || {},
-                        pageName: drilldownPageName
-                    }
-                ];
+                newDrilldownContext.push({
+                    context: drilldownContext || {},
+                    pageName: drilldownPageName
+                });
+            } else {
+                throw new Error('Drilldown page name and context not provided while doing a drilldown');
             }
 
             // eslint-disable-next-line scanjs-rules/assign_to_search
@@ -346,6 +354,7 @@ export function selectParentPage(): ThunkAction<void, ReduxState, never, AnyActi
             // NOTE: assume page is always found
             // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
             const parentPage: PageDefinition = _.find(state.pages, { id: page.parent })!;
+            // NOTE: investigate. However, popping should not really matter
             dispatch(popDrilldownContext());
             dispatch(selectPage(parentPage.id, parentPage.isDrillDown));
         }
