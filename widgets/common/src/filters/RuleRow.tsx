@@ -3,7 +3,6 @@ import RuleAttributeDropdown from './RuleAttributeDropdown';
 import RuleOperatorDropdown from './RuleOperatorDropdown';
 import RuleInput from './RuleInput';
 import RuleRemoveButton from './RuleRemoveButton';
-import { FormField, FormGroup } from './FormWrapper';
 
 interface RuleRowProps {
     id: number;
@@ -11,6 +10,7 @@ interface RuleRowProps {
 }
 
 const RuleRow: FunctionComponent<RuleRowProps> = ({ id, onRemove }) => {
+    const { UnsafelyTypedFormField: FormField, UnsafelyTypedFormGroup: FormGroup } = Stage.Basic;
     return (
         <FormGroup widths="equal">
             <FormField>

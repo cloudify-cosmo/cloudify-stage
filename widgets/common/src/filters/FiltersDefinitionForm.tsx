@@ -1,13 +1,13 @@
 import { useState } from 'react';
 import type { FunctionComponent } from 'react';
 
-import Form from './FormWrapper';
 import RuleRow from './RuleRow';
 import AddRuleButton from './AddRuleButton';
 
 const defaultRow = { attribute: '', operator: '', input: '' };
 
 const FiltersDefinitionForm: FunctionComponent = () => {
+    const { UnsafelyTypedForm: Form } = Stage.Basic;
     const [rows, setRows] = useState([defaultRow]);
 
     function addRule() {
