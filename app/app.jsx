@@ -31,8 +31,9 @@ import * as Leaflet from 'leaflet';
 import log from 'loglevel';
 import moment from 'moment';
 import * as ReactQuery from 'react-query';
+import { pick } from 'lodash';
 
-import { connect, Provider } from 'react-redux';
+import * as ReactRedux from 'react-redux';
 import { createBrowserHistory } from 'history';
 import { ConnectedRouter } from 'connected-react-router';
 import { Switch } from 'react-router-dom';
@@ -84,8 +85,9 @@ export default class app {
         window.PropTypes = PropTypes;
         window.L = Leaflet;
         window.log = log;
-        window.connectToStore = connect;
+        window.connectToStore = ReactRedux.connect;
         window.moment = moment;
+        window.ReactRedux = pick(ReactRedux, 'useSelector');
         window.ReactQuery = ReactQuery;
 
         log.setLevel(log.levels.WARN);
@@ -115,6 +117,8 @@ export default class app {
     }
 
     static start(store) {
+        const { Provider } = ReactRedux;
+
         ReactDOM.render(
             <Provider store={store}>
                 <ReactQuery.QueryClientProvider client={queryClient}>
