@@ -1,6 +1,6 @@
 const _ = require('lodash');
 const { db } = require('../db/Connection');
-
+const { LAYOUT } = require('../consts');
 const logger = require('./LoggerHandler').getLogger('FilterHandler');
 
 async function getFilterUsage(filterId) {
@@ -20,9 +20,9 @@ async function getFilterUsage(filterId) {
             }
 
             _.forEach(page.layout, ({ type, content }) => {
-                if (type === 'widgets') {
+                if (type === LAYOUT.WIDGETS) {
                     checkWidgets(content);
-                } else if (type === 'tabs') {
+                } else if (type === LAYOUT.TABS) {
                     _.forEach(content, tab => checkWidgets(tab.widgets));
                 } else {
                     logger.warn('Unsupported layout type:', type);
