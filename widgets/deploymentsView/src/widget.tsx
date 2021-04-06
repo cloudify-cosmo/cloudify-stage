@@ -1,5 +1,5 @@
 import { find } from 'lodash';
-import { FunctionComponent, useState } from 'react';
+import { FunctionComponent, useMemo, useState } from 'react';
 import { useQuery } from 'react-query';
 
 import {
@@ -92,7 +92,7 @@ interface DeploymentsViewProps {
 const DeploymentsView: FunctionComponent<DeploymentsViewProps> = ({ widget, toolbox }) => {
     const { Loading, ErrorMessage } = Stage.Basic;
     const { i18n } = Stage;
-    const { fieldsToShow, pageSize, filterId, customPollingTime } = widget.configuration;
+    const { fieldsToShow, pageSize, filterId, filterByParentDeployment, customPollingTime } = widget.configuration;
     const manager = toolbox.getManager();
     const filterRulesUrl = `/filters/deployments/${filterId}`;
     const filterRulesResult = useQuery(
@@ -101,12 +101,35 @@ const DeploymentsView: FunctionComponent<DeploymentsViewProps> = ({ widget, tool
             filterId ? manager.doGet(url).then(filtersResponse => filtersResponse.value as unknown[]) : [],
         { refetchOnWindowFocus: false, keepPreviousData: true }
     );
+    const drilldownContext = ReactRedux.useSelector((state: Stage.Types.ReduxState) => state.drilldownContext);
+    const parentDeploymentId = useMemo(() => {
+        if (drilldownContext.length < 2) {
+            return undefined;
+        }
+
+        const parentPageContext = drilldownContext[drilldownContext.length - 2].context;
+
+        return parentPageContext?.deploymentId as string | undefined;
+    }, [drilldownContext]);
+    const finalFilterRules = useMemo(() => {
+        const finalRules = filterRulesResult.data?.slice() || [];
+        if (filterByParentDeployment && parentDeploymentId) {
+            finalRules.push({
+                type: 'label',
+                key: 'csys-obj-parent',
+                operator: 'any_of',
+                values: [parentDeploymentId]
+            });
+        }
+
+        return finalRules;
+    }, [filterByParentDeployment, filterRulesResult.data, parentDeploymentId]);
     const [gridParams, setGridParams] = useState<Stage.Types.ManagerGridParams>();
     const deploymentsUrl = '/searches/deployments';
     const deploymentsResult = useQuery(
         [deploymentsUrl, gridParams, filterRulesResult.data],
         (): Promise<DeploymentsResponse> =>
-            manager.doPost(deploymentsUrl, gridParams, { filter_rules: filterRulesResult.data }),
+            manager.doPost(deploymentsUrl, gridParams, { filter_rules: finalFilterRules }),
         {
             enabled: filterRulesResult.isSuccess,
             onSuccess: data => {
