@@ -11,9 +11,9 @@ async function getFilterUsage(filterId) {
         _.forEach(appData.pages, page => {
             function checkWidgets(widgets) {
                 _.forEach(widgets, widget => {
-                    const filteUsed =
+                    const filterUsed =
                         widget.definition === 'deploymentsView' && widget.configuration.filterId === filterId;
-                    if (filteUsed) {
+                    if (filterUsed) {
                         filterUses.push({ pageName: page.name, widgetName: widget.name, username });
                     }
                 });
