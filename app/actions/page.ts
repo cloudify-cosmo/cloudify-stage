@@ -209,13 +209,6 @@ export function selectPage(
 
             const newDrilldownContext = (getState().drilldownContext || []).slice();
 
-            // Refresh the drilldown context for the current page
-            const currentPageDrilldownContext = newDrilldownContext.pop() || {};
-            newDrilldownContext.push({
-                ...currentPageDrilldownContext,
-                context: getState().context
-            });
-
             if (drilldownPageName || drilldownContext) {
                 newDrilldownContext.push({
                     context: drilldownContext || {},
