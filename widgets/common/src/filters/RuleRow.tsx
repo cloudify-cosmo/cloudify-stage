@@ -1,11 +1,11 @@
-import type { FunctionComponent } from 'react';
+import type { ComponentProps, FunctionComponent } from 'react';
 import RuleAttributeDropdown from './RuleAttributeDropdown';
 import RuleOperatorDropdown from './RuleOperatorDropdown';
 import RuleInput from './RuleInput';
 import RuleRemoveButton from './RuleRemoveButton';
 
 interface RuleRowProps {
-    onRemove: () => void;
+    onRemove: ComponentProps<typeof Button>['onClick'];
 }
 
 const RuleRow: FunctionComponent<RuleRowProps> = ({ onRemove }) => {
