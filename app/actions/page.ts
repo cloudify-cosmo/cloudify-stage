@@ -356,7 +356,6 @@ export function selectParentPage(): ThunkAction<void, ReduxState, never, AnyActi
             // NOTE: assume page is always found
             // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
             const parentPage: PageDefinition = _.find(state.pages, { id: page.parent })!;
-            // NOTE: investigate. However, popping should not really matter
             dispatch(popDrilldownContext());
             dispatch(selectPage(parentPage.id, parentPage.isDrillDown));
         }
