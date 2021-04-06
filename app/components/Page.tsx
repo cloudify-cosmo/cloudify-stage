@@ -184,9 +184,7 @@ const mapDispatchToProps = (dispatch: ThunkDispatch<ReduxState, never, AnyAction
         },
         onPageSelected: (page: PageDefinitionWithContext, pagesList: PageDefinitionWithContext[], index: number) => {
             // NOTE: the pagesList are from outermost to innermost
-            // Skip the last page (copy up to index-1), because we are sending
-            // the context of this one to the select page
-            const drilldownContext = pagesList.slice(0, Math.max(0, index - 2)).map(
+            const drilldownContext = pagesList.slice(0, index).map(
                 (pageInList): DrilldownContext => ({
                     pageName: pageInList.name,
                     context: pageInList.context
