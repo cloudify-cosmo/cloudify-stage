@@ -233,13 +233,16 @@ export function selectPage(
     };
 }
 
-export function selectPageByName(pageName: string, context: any): ThunkAction<void, ReduxState, never, AnyAction> {
+export function selectPageByName(
+    pageName: string,
+    context: Record<string, any>
+): ThunkAction<void, ReduxState, never, AnyAction> {
     return dispatch => {
         if (context) {
             dispatch(clearContext());
         }
         const pageId = _.snakeCase(pageName);
-        dispatch(selectPage(pageId, context, context));
+        dispatch(selectPage(pageId, false, context));
     };
 }
 
