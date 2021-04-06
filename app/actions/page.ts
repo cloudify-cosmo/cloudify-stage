@@ -16,6 +16,7 @@ import Consts from '../utils/consts';
 import { NO_PAGES_FOR_TENANT_ERR } from '../utils/ErrorCodes';
 import type { Widget, WidgetDefinition } from '../utils/StageAPI';
 import type { ReduxState } from '../reducers';
+import type { DrilldownContext } from '../reducers/drilldownContextReducer';
 
 // TODO(RD-1645): rename type to Widget
 // TODO(RD-1649): rename the added field to `definitionId`
@@ -183,7 +184,7 @@ export function changePageDescription(pageId: string, newDescription: string) {
 export function selectPage(
     pageId: string,
     isDrilldown?: boolean,
-    drilldownContext?: any,
+    drilldownContext?: Record<string, any>,
     drilldownPageName?: string
 ): ThunkAction<void, ReduxState, never, AnyAction> {
     return (dispatch, getState) => {
@@ -195,6 +196,11 @@ export function selectPage(
         // Update context and location depending on page is drilldown
         if (!isDrilldown) {
             dispatch(clearContext());
+            if (drilldownContext) {
+                const newDrilldownContext: DrilldownContext[] = [{ context: drilldownContext }];
+                // eslint-disable-next-line scanjs-rules/assign_to_search
+                location.search = stringify({ c: JSON.stringify(newDrilldownContext) });
+            }
         } else {
             if (!_.isEmpty(drilldownPageName)) {
                 // eslint-disable-next-line scanjs-rules/assign_to_pathname
