@@ -4,28 +4,27 @@ import type { FunctionComponent } from 'react';
 import RuleRow from './RuleRow';
 import AddRuleButton from './AddRuleButton';
 
-const defaultRow = { attribute: '', operator: '', input: '' };
+const defaultRow = { id: '', attribute: '', operator: '', input: '' };
 
 const FiltersDefinitionForm: FunctionComponent = () => {
     const { UnsafelyTypedForm: Form } = Stage.Basic;
     const [rows, setRows] = useState([defaultRow]);
 
     function addRule() {
-        const newRows = [...rows, defaultRow];
+        const { uuid } = Stage.Utils;
+        const newRows = [...rows, { ...defaultRow, id: uuid() }];
         setRows(newRows);
     }
 
-    function removeRule(id: number) {
-        const newRows = _.filter(rows, (_rowObject, rowId) => rowId !== id);
+    function removeRule(id: string) {
+        const newRows = rows.filter(row => row.id !== id);
         setRows(newRows);
     }
 
     return (
         <Form>
-            {rows.map((_row, index) => (
-                // TODO: Change key not to use index
-                // eslint-disable-next-line react/no-array-index-key
-                <RuleRow key={index} id={index} onRemove={removeRule} />
+            {rows.map(row => (
+                <RuleRow key={row.id} onRemove={() => removeRule(row.id)} />
             ))}
             <AddRuleButton onClick={addRule} />
         </Form>
