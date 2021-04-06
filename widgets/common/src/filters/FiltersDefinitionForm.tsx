@@ -12,13 +12,11 @@ const FiltersDefinitionForm: FunctionComponent = () => {
 
     function addRule() {
         const { uuid } = Stage.Utils;
-        const newRows = [...rows, { ...defaultRow, id: uuid() }];
-        setRows(newRows);
+        setRows(() => [...rows, { ...defaultRow, id: uuid() }]);
     }
 
     function removeRule(id: string) {
-        const newRows = rows.filter(row => row.id !== id);
-        setRows(newRows);
+        setRows(() => rows.filter(row => row.id !== id));
     }
 
     return (
