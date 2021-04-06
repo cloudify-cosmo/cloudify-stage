@@ -24,63 +24,61 @@ interface DeploymentsViewWidgetConfiguration {
     sortAscending: string;
 }
 
-// TODO(RD-1226): remove environment check
-if (process.env.NODE_ENV === 'development' || process.env.TEST) {
-    Stage.defineWidget<never, never, DeploymentsViewWidgetConfiguration>({
-        id: 'deploymentsView',
-        name: Stage.i18n.t(`${i18nPrefix}.name`),
-        description: Stage.i18n.t(`${i18nPrefix}.description`),
-        initialWidth: 12,
-        initialHeight: 28,
-        color: 'purple',
-        categories: [Stage.GenericConfig.CATEGORY.DEPLOYMENTS],
+Stage.defineWidget<never, never, DeploymentsViewWidgetConfiguration>({
+    id: 'deploymentsView',
+    name: Stage.i18n.t(`${i18nPrefix}.name`),
+    description: Stage.i18n.t(`${i18nPrefix}.description`),
+    initialWidth: 12,
+    initialHeight: 28,
+    color: 'purple',
+    categories: [Stage.GenericConfig.CATEGORY.DEPLOYMENTS],
 
-        initialConfiguration: [
-            {
-                ...Stage.GenericConfig.POLLING_TIME_CONFIG(10),
-                // NOTE: polling is handled by react-query, thus, use a different ID
-                id: 'customPollingTime'
-            },
-            {
-                id: 'filterId',
-                // TODO(RD-1851): add autocomplete instead of plain text input
-                type: Stage.Basic.GenericField.STRING_TYPE,
-                name: Stage.i18n.t(`${i18nPrefix}.configuration.filterId.name`)
-            },
-            {
-                // TODO(RD-1853): handle filtering by parent deployment
-                id: 'filterByParentDeployment',
-                type: Stage.Basic.GenericField.BOOLEAN_TYPE,
-                name: Stage.i18n.t(`${i18nPrefix}.configuration.filterByParentDeployment.name`),
-                description: Stage.i18n.t(`${i18nPrefix}.configuration.filterByParentDeployment.description`),
-                default: false
-            },
-            // TODO(RD-1225): add map configuration
-            {
-                id: 'fieldsToShow',
-                name: Stage.i18n.t(`${i18nPrefix}.configuration.fieldsToShow.name`),
-                placeHolder: Stage.i18n.t(`${i18nPrefix}.configuration.fieldsToShow.placeholder`),
-                items: deploymentsViewColumnIds.map(columnId => ({
-                    name: deploymentsViewColumnDefinitions[columnId].name,
-                    value: columnId
-                })),
-                default: deploymentsViewColumnIds.filter(columnId => columnId !== 'environmentType'),
-                type: Stage.Basic.GenericField.MULTI_SELECT_LIST_TYPE
-            },
-            Stage.GenericConfig.PAGE_SIZE_CONFIG(100),
-            Stage.GenericConfig.SORT_COLUMN_CONFIG('created_at'),
-            Stage.GenericConfig.SORT_ASCENDING_CONFIG(false)
-        ],
-        isReact: true,
-        hasReadme: true,
-        hasStyle: false,
-        permission: Stage.GenericConfig.WIDGET_PERMISSION('deploymentsView'),
+    initialConfiguration: [
+        {
+            ...Stage.GenericConfig.POLLING_TIME_CONFIG(10),
+            // NOTE: polling is handled by react-query, thus, use a different ID
+            id: 'customPollingTime'
+        },
+        {
+            id: 'filterId',
+            // TODO(RD-1851): add autocomplete instead of plain text input
+            type: Stage.Basic.GenericField.STRING_TYPE,
+            name: Stage.i18n.t(`${i18nPrefix}.configuration.filterId.name`)
+        },
+        {
+            // TODO(RD-1853): handle filtering by parent deployment
+            id: 'filterByParentDeployment',
+            type: Stage.Basic.GenericField.BOOLEAN_TYPE,
+            name: Stage.i18n.t(`${i18nPrefix}.configuration.filterByParentDeployment.name`),
+            description: Stage.i18n.t(`${i18nPrefix}.configuration.filterByParentDeployment.description`),
+            default: false
+        },
+        // TODO(RD-1225): add map configuration
+        {
+            id: 'fieldsToShow',
+            name: Stage.i18n.t(`${i18nPrefix}.configuration.fieldsToShow.name`),
+            placeHolder: Stage.i18n.t(`${i18nPrefix}.configuration.fieldsToShow.placeholder`),
+            items: deploymentsViewColumnIds.map(columnId => ({
+                name: deploymentsViewColumnDefinitions[columnId].name,
+                value: columnId
+            })),
+            default: deploymentsViewColumnIds.filter(columnId => columnId !== 'environmentType'),
+            type: Stage.Basic.GenericField.MULTI_SELECT_LIST_TYPE
+        },
+        Stage.GenericConfig.PAGE_SIZE_CONFIG(100),
+        Stage.GenericConfig.SORT_COLUMN_CONFIG('created_at'),
+        Stage.GenericConfig.SORT_ASCENDING_CONFIG(false)
+    ],
+    isReact: true,
+    // TOOD(RD-1532): enable readme after filling it in
+    hasReadme: false,
+    hasStyle: false,
+    permission: Stage.GenericConfig.WIDGET_PERMISSION('deploymentsView'),
 
-        render(widget, _data, _error, toolbox) {
-            return <DeploymentsView widget={widget} toolbox={toolbox} />;
-        }
-    });
-}
+    render(widget, _data, _error, toolbox) {
+        return <DeploymentsView widget={widget} toolbox={toolbox} />;
+    }
+});
 
 const i18nMessagesPrefix = `${i18nPrefix}.messages`;
 
