@@ -99,37 +99,27 @@ const DeploymentsView: FunctionComponent<DeploymentsViewProps> = ({ widget, tool
             filterId ? manager.doGet(url).then(filtersResponse => filtersResponse.value as unknown[]) : [],
         { refetchOnWindowFocus: false, keepPreviousData: true }
     );
-    const drilldownContext = ReactRedux.useSelector((state: Stage.Types.ReduxState) => state.drilldownContext);
-    const parentDeploymentId = useMemo(() => {
-        if (drilldownContext.length < 2) {
+    const [gridParams, setGridParams] = useState<Stage.Types.ManagerGridParams>();
+    const filteringByParentDeploymentResult = useFilteringByParentDeployment({ filterByParentDeployment });
+    const finalFilterRules = useMemo(() => {
+        if (!filterRulesResult.isSuccess) {
             return undefined;
         }
-
-        const parentPageContext = drilldownContext[drilldownContext.length - 2].context;
-
-        return parentPageContext?.deploymentId as string | undefined;
-    }, [drilldownContext]);
-    const finalFilterRules = useMemo(() => {
-        const finalRules = filterRulesResult.data?.slice() || [];
-        if (filterByParentDeployment && parentDeploymentId) {
-            finalRules.push({
-                type: 'label',
-                key: 'csys-obj-parent',
-                operator: 'any_of',
-                values: [parentDeploymentId]
-            });
+        if (!filteringByParentDeploymentResult.parentDeploymentRule) {
+            return filterRulesResult.data;
         }
 
-        return finalRules;
-    }, [filterByParentDeployment, filterRulesResult.data, parentDeploymentId]);
-    const [gridParams, setGridParams] = useState<Stage.Types.ManagerGridParams>();
+        return [...filterRulesResult.data, filteringByParentDeploymentResult.parentDeploymentRule];
+    }, [filterRulesResult.isSuccess, filterRulesResult.data, filteringByParentDeploymentResult.parentDeploymentRule]);
     const deploymentsUrl = '/searches/deployments';
     const deploymentsResult = useQuery(
-        [deploymentsUrl, gridParams, filterRulesResult.data],
+        [deploymentsUrl, gridParams, finalFilterRules],
         (): Promise<DeploymentsResponse> =>
-            manager.doPost(deploymentsUrl, gridParams, { filter_rules: finalFilterRules }),
+            manager.doPost(deploymentsUrl, gridParams, {
+                filter_rules: finalFilterRules
+            }),
         {
-            enabled: filterRulesResult.isSuccess,
+            enabled: filterRulesResult.isSuccess && filteringByParentDeploymentResult.filterable,
             onSuccess: data => {
                 const context = toolbox.getContext();
                 // TODO(RD-1830): detect if deploymentId is not present in the current page and reset it.
@@ -144,7 +134,7 @@ const DeploymentsView: FunctionComponent<DeploymentsViewProps> = ({ widget, tool
         }
     );
 
-    if (filterByParentDeployment && !parentDeploymentId) {
+    if (filteringByParentDeploymentResult.missingParentDeploymentId) {
         const i18nMissingParentDeploymentPrefix = `${i18nMessagesPrefix}.missingParentDeploymentId`;
 
         return (
@@ -198,4 +188,38 @@ const DeploymentsView: FunctionComponent<DeploymentsViewProps> = ({ widget, tool
             <DetailsPane deployment={selectedDeployment} />
         </div>
     );
+};
+
+const useFilteringByParentDeployment = ({ filterByParentDeployment }: { filterByParentDeployment: boolean }) => {
+    const drilldownContext = ReactRedux.useSelector((state: Stage.Types.ReduxState) => state.drilldownContext);
+    const parentDeploymentId = useMemo(() => {
+        if (drilldownContext.length < 2) {
+            return undefined;
+        }
+
+        const parentPageContext = drilldownContext[drilldownContext.length - 2].context;
+
+        return parentPageContext?.deploymentId as string | undefined;
+    }, [drilldownContext]);
+
+    if (!filterByParentDeployment) {
+        return { filterable: true } as const;
+    }
+
+    if (!parentDeploymentId) {
+        return {
+            filterable: false,
+            missingParentDeploymentId: true
+        } as const;
+    }
+
+    return {
+        filterable: true,
+        parentDeploymentRule: {
+            type: 'label',
+            key: 'csys-obj-parent',
+            operator: 'any_of',
+            values: [parentDeploymentId]
+        }
+    } as const;
 };
