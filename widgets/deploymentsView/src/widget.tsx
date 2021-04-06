@@ -31,7 +31,7 @@ if (process.env.NODE_ENV === 'development' || process.env.TEST) {
         name: Stage.i18n.t(`${i18nPrefix}.name`),
         description: Stage.i18n.t(`${i18nPrefix}.description`),
         initialWidth: 12,
-        initialHeight: 40,
+        initialHeight: 28,
         color: 'purple',
         categories: [Stage.GenericConfig.CATEGORY.DEPLOYMENTS],
 
