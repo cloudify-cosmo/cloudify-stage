@@ -129,6 +129,7 @@ const buildPagesList = (pages: PageDefinition[], drilldownContextArray: Drilldow
      * pagesList should be from innermost to outermost pages.
      * Thus, the order is reversed.
      */
+    // TODO(RD-1982): build the pages list in the same order as drilldownContextArray
 
     const updatePagesListWith = (page: PageDefinition) => {
         const basePage = !page ? pages[0] : page;
