@@ -124,6 +124,9 @@ export default class ExecutionUtils {
         return ExecutionUtils.STATUS_ICON_PARAMS[ExecutionUtils.getExecutionStatusGroup(execution)];
     }
 
+    /**
+     * @param {{ total_operations: number, finished_operations: number }} execution
+     */
     static getProgress(execution) {
         const { finished_operations: finishedOperations, total_operations: totalOperations } = execution;
         const ratio = finishedOperations / totalOperations;
