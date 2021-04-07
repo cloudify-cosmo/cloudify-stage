@@ -4,6 +4,7 @@
 
   "pages": [
     "adminDash",
+    "marketplace",
     "blueprints",
     "deploy",
     "secrets",
