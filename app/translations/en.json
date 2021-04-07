@@ -673,7 +673,7 @@
             },
             "modal": {
                 "id": "Filter id",
-                "idMissing": "Please provide filter id",
+                "idMissing": "Please provide the filter id",
                 "header": {
                     "add": "Add filter",
                     "edit": "Edit filter '{{filterId}}'",
