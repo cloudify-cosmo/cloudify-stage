@@ -34,6 +34,7 @@ const options = {
         [`${contextPath}/config`]: proxyOptions,
         [`${contextPath}/external`]: proxyOptions,
         [`${contextPath}/file`]: proxyOptions,
+        [`${contextPath}/filters`]: proxyOptions,
         [`${contextPath}/github`]: proxyOptions,
         [`${contextPath}/maps`]: proxyOptions,
         [`${contextPath}/plugins`]: proxyOptions,

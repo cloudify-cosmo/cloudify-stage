@@ -1,7 +1,7 @@
-import _ from 'lodash';
+import { isEmpty } from 'lodash';
 
 import type { FunctionComponent } from 'react';
-import type { Filter, FilterWidget } from './types';
+import type { Filter, FilterWidget, FilterUsage } from './types';
 import FilterActions from './FilterActions';
 
 interface FiltersTableData {
@@ -21,11 +21,12 @@ const FixedLayoutDataTable = Stage.styled(Stage.Basic.DataTable)`
 
 const FiltersTable: FunctionComponent<FiltersTableProps> = ({ data, toolbox, widget }) => {
     const { i18n } = Stage;
-    const { Confirm, DataTable, Icon } = Stage.Basic;
+    const { Alert, Confirm, DataTable, Icon, List } = Stage.Basic;
     const { Time } = Stage.Utils;
     const { useResettableState, useRefreshEvent } = Stage.Hooks;
 
     const [filterIdToDelete, setFilterIdToDelete, clearFilterIdToDelete] = useResettableState('');
+    const [filterUsage, setFilterUsage, clearFilterUsage] = useResettableState<FilterUsage[]>([]);
 
     useRefreshEvent(toolbox, 'filters:refresh');
 
@@ -77,11 +78,36 @@ const FiltersTable: FunctionComponent<FiltersTableProps> = ({ data, toolbox, wid
                 open={!!filterIdToDelete}
                 onCancel={clearFilterIdToDelete}
                 onConfirm={() => {
-                    clearFilterIdToDelete();
-                    toolbox.loading(true);
-                    new FilterActions(toolbox).doDelete(filterIdToDelete).then(toolbox.refresh);
+                    const filterActions = new FilterActions(toolbox);
+                    filterActions.doGetFilterUsage(filterIdToDelete).then(resolvedFilterUsage => {
+                        if (isEmpty(resolvedFilterUsage)) {
+                            clearFilterIdToDelete();
+                            toolbox.loading(true);
+                            filterActions.doDelete(filterIdToDelete).then(toolbox.refresh);
+                        } else {
+                            setFilterUsage(resolvedFilterUsage);
+                        }
+                    });
                 }}
                 content={i18n.t('widgets.filters.deleteConfirm', { filterId: filterIdToDelete })}
+            />
+
+            <Alert
+                open={!isEmpty(filterUsage)}
+                onDismiss={() => {
+                    clearFilterUsage();
+                    clearFilterIdToDelete();
+                }}
+                content={
+                    <span style={{ lineHeight: '3em', fontSize: '0.9em' }}>
+                        {i18n.t('widgets.filters.filterInUse.heading', { filterId: filterIdToDelete })}
+                        <List bulleted>
+                            {filterUsage.map(usageInfo => (
+                                <List.Item>{i18n.t('widgets.filters.filterInUse.usageInfo', usageInfo)}</List.Item>
+                            ))}
+                        </List>
+                    </span>
+                }
             />
         </>
     );

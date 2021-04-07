@@ -3,7 +3,8 @@
     "compilerOptions": {
         // Widgets are global scripts, not ES modules
         "isolatedModules": false,
-        "types": ["react", "react-dom", "moment", "lodash"]
+        "types": ["react", "react-dom", "moment", "lodash"],
+        "plugins": [{ "name": "typescript-styled-plugin" }]
     },
     "include": ["**/*"],
     "files": ["../app/typings/stage-api.d.ts"]

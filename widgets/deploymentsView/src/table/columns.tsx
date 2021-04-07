@@ -1,7 +1,9 @@
 import { mapValues } from 'lodash';
 import type { ReactNode } from 'react';
 import type { IconProps } from 'semantic-ui-react';
-import { Deployment, DeploymentStatus, SubdeploymentStatus } from './types';
+
+import { i18nPrefix } from '../common';
+import { Deployment, DeploymentStatus, SubdeploymentStatus } from '../types';
 
 // NOTE: the order in the array determines the order in the UI
 export const deploymentsViewColumnIds = [
@@ -28,7 +30,6 @@ export interface DeploymentsViewColumnDefinition {
     render(deployment: Deployment): ReactNode;
 }
 
-const i18nPrefix = 'widgets.deploymentsView';
 const i18nColumnsPrefix = `${i18nPrefix}.columns`;
 
 /**
@@ -105,7 +106,7 @@ const partialDeploymentsViewColumnDefinitions: Record<
         label: <Stage.Basic.Icon name="object group" />,
         width: '1em',
         // NOTE: properties come from the API. They are not prop-types (false-positive)
-        /* eslint-disable camelcase, react/prop-types */
+        /* eslint-disable camelcase */
         // TODO(RD-1839): remove default values
         render({ sub_environments_count = 0, sub_environments_status = SubdeploymentStatus.Good }) {
             const iconName = subdeploymentStatusToIconMapping[sub_environments_status];
