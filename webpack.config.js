@@ -19,6 +19,9 @@ module.exports = (env, argv) => {
     const context = path.join(__dirname);
     const devtool = isProduction ? undefined : 'eval-source-map';
     const outputPath = path.join(__dirname, 'dist');
+    const extensions = ['js', 'jsx', 'ts', 'tsx'];
+    const resolveExtensions = extensions.map(extension => `.${extension}`);
+    const globExtensions = `{${extensions.map(extension => `${extension}`).join(',')}}`;
 
     const externals = {
         react: 'React',
@@ -155,7 +158,7 @@ module.exports = (env, argv) => {
             context,
             devtool,
             resolve: {
-                extensions: ['.js', '.jsx', '.ts', '.tsx'],
+                extensions: resolveExtensions,
                 alias: {
                     'jquery-ui': 'jquery-ui/ui',
                     jquery: `${__dirname}/node_modules/jquery`, // Always make sure we take jquery from the same place
@@ -229,9 +232,9 @@ module.exports = (env, argv) => {
             context,
             devtool,
             resolve: {
-                extensions: ['.js', '.jsx', '.ts', '.tsx']
+                extensions: resolveExtensions
             },
-            entry: glob.sync('./widgets/*/src/widget.{jsx,tsx}').reduce((acc, item) => {
+            entry: glob.sync(`./widgets/*/src/widget.${globExtensions}`).reduce((acc, item) => {
                 const name = item
                     .replace('./widgets/', '')
                     .replace('/src/widget', '/widget')
@@ -257,7 +260,7 @@ module.exports = (env, argv) => {
                     }),
                     new ForkTsCheckerWebpackPlugin({
                         eslint: {
-                            files: './widgets/**/*.{js,jsx,ts,tsx}',
+                            files: `./widgets/**/*.${globExtensions}`,
                             options: {
                                 ignorePattern: 'widgets/**/backend.js'
                             }
@@ -282,13 +285,13 @@ module.exports = (env, argv) => {
             context,
             devtool,
             resolve: {
-                extensions: ['.js', '.jsx']
+                extensions: resolveExtensions
             },
             entry: glob
-                .sync('./widgets/common/src/props/*.{js,ts}')
-                .concat(glob.sync('./widgets/common/src/hooks/*.{js,ts}'))
-                .concat(glob.sync('./widgets/common/src/!(props|hooks)/*.{js,ts}*'))
-                .concat(glob.sync('./widgets/common/src/*.{js,ts}*')),
+                .sync(`./widgets/common/src/props/*.${globExtensions}`)
+                .concat(glob.sync(`./widgets/common/src/hooks/*.${globExtensions}`))
+                .concat(glob.sync(`./widgets/common/src/!(props|hooks)/*.${globExtensions}`))
+                .concat(glob.sync(`./widgets/common/src/*.${globExtensions}`)),
             output: {
                 path: path.join(outputPath, 'appData/widgets'),
                 filename: 'common/common.js',
