@@ -5,10 +5,11 @@ import RuleInput from './RuleInput';
 import RuleRemoveButton from './RuleRemoveButton';
 
 interface RuleRowProps {
+    allowRemove: boolean;
     onRemove: ComponentProps<typeof Button>['onClick'];
 }
 
-const RuleRow: FunctionComponent<RuleRowProps> = ({ onRemove }) => {
+const RuleRow: FunctionComponent<RuleRowProps> = ({ allowRemove = true, onRemove }) => {
     const { UnsafelyTypedFormField: FormField, UnsafelyTypedFormGroup: FormGroup } = Stage.Basic;
     return (
         <FormGroup widths="equal">
@@ -21,9 +22,7 @@ const RuleRow: FunctionComponent<RuleRowProps> = ({ onRemove }) => {
             <FormField>
                 <RuleInput />
             </FormField>
-            <FormField>
-                <RuleRemoveButton onClick={onRemove} />
-            </FormField>
+            <FormField>{allowRemove && <RuleRemoveButton onClick={onRemove} />}</FormField>
         </FormGroup>
     );
 };

@@ -31,7 +31,7 @@ const FiltersDefinitionForm: FunctionComponent = () => {
     return (
         <Form>
             {rows.map(row => (
-                <RuleRow key={row.id} onRemove={() => removeRule(row.id)} />
+                <RuleRow key={row.id} allowRemove={rows.length > 1} onRemove={() => removeRule(row.id)} />
             ))}
             <AddRuleButton onClick={addRule} />
         </Form>
