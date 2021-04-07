@@ -22,11 +22,7 @@ const RuleRow: FunctionComponent<RuleRowProps> = ({ removable, onRemove }) => {
             <FormField>
                 <RuleInput />
             </FormField>
-            {removable && (
-                <FormField>
-                    <RuleRemoveButton onClick={onRemove} />
-                </FormField>
-            )}
+            <FormField>{removable && <RuleRemoveButton onClick={onRemove} />}</FormField>
         </FormGroup>
     );
 };
