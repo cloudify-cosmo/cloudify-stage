@@ -3,16 +3,25 @@ import type { FunctionComponent } from 'react';
 
 import RuleRow from './RuleRow';
 import AddRuleButton from './AddRuleButton';
+import type { FilterRule } from './types';
 
-const defaultRow = { id: '', attribute: '', operator: '', input: '' };
+interface FilterRuleRow extends FilterRule {
+    id: string;
+}
+
+function getNewRow() {
+    const { uuid } = Stage.Utils;
+    const defaultRow: FilterRuleRow = { id: '', type: 'label', key: '', operator: '', values: [] };
+
+    return { ...defaultRow, id: uuid() };
+}
 
 const FiltersDefinitionForm: FunctionComponent = () => {
     const { UnsafelyTypedForm: Form } = Stage.Basic;
-    const [rows, setRows] = useState([defaultRow]);
+    const [rows, setRows] = useState([getNewRow()]);
 
     function addRule() {
-        const { uuid } = Stage.Utils;
-        setRows(() => [...rows, { ...defaultRow, id: uuid() }]);
+        setRows(() => [...rows, getNewRow()]);
     }
 
     function removeRule(id: string) {
