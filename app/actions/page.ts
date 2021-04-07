@@ -215,7 +215,7 @@ export function selectPage(
                     pageName: drilldownPageName
                 });
             } else {
-                throw new Error('Drilldown page name and context not provided while doing a drilldown');
+                throw new Error('Either drilldown page name or context have to be provided while doing a drilldown');
             }
 
             // eslint-disable-next-line scanjs-rules/assign_to_search
