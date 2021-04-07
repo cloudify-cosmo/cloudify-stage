@@ -648,7 +648,13 @@
                     "tooltip": "Services (Total)"
                 }
             },
-            "noDataMessage": "No Results Found. Try changing the filter's parameters"
+            "messages": {
+                "noData": "No Results Found. Try changing the filter's parameters",
+                "loadingFilterRules": "Loading filter rules",
+                "errorLoadingFilterRules": "Error when loading filter rules",
+                "loadingDeployments": "Loading deployments",
+                "errorLoadingDeployments": "Error when loading deployments"
+            }
         },
         "filters": {
             "name": "Filters",
@@ -664,7 +670,11 @@
                     "clone": "Clone filter"
                 }
             },
-            "deleteConfirm": "Are you sure you want to remove filter '{{filterId}}'?"
+            "deleteConfirm": "Are you sure you want to remove filter '{{filterId}}'?",
+            "filterInUse": {
+                "heading": "Filter '{{filterId}}' cannot be removed:",
+                "usageInfo": "Used as default filter in '{{widgetName}}' widget in '{{pageName}}' page by user '{{username}}'"
+            }
         },
         "labels": {
             "name": "Labels",

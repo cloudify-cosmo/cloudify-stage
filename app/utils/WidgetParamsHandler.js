@@ -1,7 +1,7 @@
-/* eslint no-underscore-dangle: ["error", { "allow": ["_sort", "_search", "_size", "_offset"] }] */
-
 import _ from 'lodash';
 import log from 'loglevel';
+
+import mapGridParamsToManagerGridParams from './shared/mapGridParamsToManagerGridParams';
 
 export default class WidgetParamsHandler {
     constructor(widget, toolbox) {
@@ -102,24 +102,7 @@ export default class WidgetParamsHandler {
                 throw new Error('Error processing match grid params', e);
             }
         } else {
-            // If not this is the default mapping
-            if (this.fetchParams.gridParams.sortColumn) {
-                params._sort = `${this.fetchParams.gridParams.sortAscending ? '' : '-'}${
-                    this.fetchParams.gridParams.sortColumn
-                }`;
-            }
-
-            if (this.fetchParams.gridParams._search) {
-                params._search = this.fetchParams.gridParams._search;
-            }
-
-            if (this.fetchParams.gridParams.pageSize) {
-                params._size = this.fetchParams.gridParams.pageSize;
-            }
-
-            if (this.fetchParams.gridParams.currentPage && this.fetchParams.gridParams.pageSize) {
-                params._offset = (this.fetchParams.gridParams.currentPage - 1) * this.fetchParams.gridParams.pageSize;
-            }
+            params = mapGridParamsToManagerGridParams(this.fetchParams.gridParams);
         }
 
         return params;
