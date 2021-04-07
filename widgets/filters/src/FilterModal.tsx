@@ -10,11 +10,7 @@ export interface FilterModalProps {
     onCancel: () => void;
 }
 
-const { Form } = Stage.Basic;
-
-// TODO: RD-1837
-const UnsafeForm = (Form as unknown) as FunctionComponent<{ [x: string]: any }>;
-const UnsafeField = (Form.Field as unknown) as FunctionComponent<{ [x: string]: any }>;
+const { Form, UnsafelyTypedForm, UnsafelyTypedFormField } = Stage.Basic;
 
 const FilterModal: FunctionComponent<FilterModalProps> = ({
     i18nHeaderKey,
@@ -51,11 +47,11 @@ const FilterModal: FunctionComponent<FilterModalProps> = ({
 
             <Modal.Content>
                 {filterId !== undefined && (
-                    <UnsafeForm errors={errors} onErrorsDismiss={clearErrors}>
-                        <UnsafeField label={i18n.t('widgets.filters.modal.id')}>
+                    <UnsafelyTypedForm errors={errors} onErrorsDismiss={clearErrors}>
+                        <UnsafelyTypedFormField label={i18n.t('widgets.filters.modal.id')}>
                             <Form.Input value={filterId} required onChange={setFilterId} error={errors.filterId} />
-                        </UnsafeField>
-                    </UnsafeForm>
+                        </UnsafelyTypedFormField>
+                    </UnsafelyTypedForm>
                 )}
             </Modal.Content>
 
