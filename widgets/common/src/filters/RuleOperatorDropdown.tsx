@@ -1,3 +1,4 @@
+import { camelCase } from 'lodash';
 import type { FunctionComponent } from 'react';
 import type { DropdownItemProps } from 'semantic-ui-react/dist/commonjs/modules/Dropdown/DropdownItem';
 import { i18nPrefix } from './consts';
@@ -14,7 +15,7 @@ const operatorsOptions = [
     'end_with'
 ].map(
     (operator): DropdownItemProps => ({
-        text: i18n.t(`${i18nPrefix}.operatorsLabels.${operator}`),
+        text: i18n.t(`${i18nPrefix}.operatorsLabels.${camelCase(operator)}`),
         value: operator
     })
 );
