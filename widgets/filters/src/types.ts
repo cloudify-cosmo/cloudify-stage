@@ -6,6 +6,12 @@ export interface Filter {
     created_at: string;
 }
 
+export interface FilterUsage {
+    pageName: string;
+    widgetName: string;
+    username: string;
+}
+
 export interface FilterWidgetConfiguration {
     pageSize: number;
 }
