@@ -524,19 +524,19 @@
                     },
                     "attributesLabels": {
                         "label": "Label",
-                        "blueprint_id": "Blueprint",
-                        "site_name": "Site name",
-                        "created_by": "Creator"
+                        "blueprintId": "Blueprint",
+                        "siteName": "Site name",
+                        "createdBy": "Creator"
                     },
                     "operatorsLabels": {
-                        "any_of": "is one of",
-                        "not_any_of": "is not one of",
-                        "is_null": "key is not",
-                        "is_not_null": "key is",
+                        "anyOf": "is one of",
+                        "notAnyOf": "is not one of",
+                        "isNull": "key is not",
+                        "isNotNull": "key is",
                         "contain": "contains",
-                        "not_contain": "does not contain",
-                        "start_with": "starts with",
-                        "end_with": "ends with"
+                        "notContain": "does not contain",
+                        "startWith": "starts with",
+                        "endWith": "ends with"
                     }
                 }
             },
