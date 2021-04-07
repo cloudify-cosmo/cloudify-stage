@@ -1,4 +1,5 @@
 import { addCommands, GetCypressChainableFromCommands } from 'cloudify-ui-common/cypress/support';
+import type { FilterRule } from '../../../widgets/common/src/filters/types';
 
 declare global {
     namespace Cypress {
@@ -6,14 +7,6 @@ declare global {
         // eslint-disable-next-line @typescript-eslint/no-empty-interface
         export interface Chainable extends GetCypressChainableFromCommands<typeof commands> {}
     }
-}
-
-/** @see https://docs.cloudify.co/api/v3.1/#the-filter-resource */
-export interface FilterRule {
-    key: string;
-    values: string[];
-    operator: string;
-    type: 'label' | 'attribute';
 }
 
 const commands = {
