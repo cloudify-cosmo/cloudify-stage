@@ -1,4 +1,3 @@
-import { pick } from 'lodash';
 import { ReactNode } from 'react';
 
 import { deploymentsViewColumnDefinitions, DeploymentsViewColumnId } from './columns';
@@ -45,9 +44,10 @@ function getDeploymentProgressUnderline(deployment: Deployment): ReactNode {
         return null;
     }
 
-    const progressValue = Stage.Utils.Execution.getProgress(
-        pick(deployment, 'total_operations', 'finished_operations')
-    );
+    const progressValue = Stage.Utils.Execution.getProgress({
+        total_operations: deployment.latest_execution_total_operations,
+        finished_operations: deployment.latest_execution_finished_operations
+    });
 
     return (
         <div
