@@ -630,6 +630,7 @@
             "name": "Filters",
             "description": "This widget shows a list of defined filters",
             "noFilters": "There are no filters defined",
+            "add": "Add",
             "columns": {
                 "name": "Filter name",
                 "creator": "Creator",
@@ -638,6 +639,15 @@
                     "delete": "Delete filter",
                     "edit": "Edit filter",
                     "clone": "Clone filter"
+                }
+            },
+            "modal": {
+                "id": "Filter id",
+                "idMissing": "Please provide filter id",
+                "header": {
+                    "add": "Add filter",
+                    "edit": "Edit filter '{{filterId}}'",
+                    "clone": "Clone filter '{{filterId}}'"
                 }
             },
             "deleteConfirm": "Are you sure you want to remove filter '{{filterId}}'?",
