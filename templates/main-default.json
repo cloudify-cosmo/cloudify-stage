@@ -4,11 +4,10 @@
 
   "pages": [
     "adminDash",
-    "catalog",
     "blueprints",
     "deploy",
-    "sites",
-    "systemResources",
-    "logs"
+    "secrets",
+    "sites"
   ]
 }
+
