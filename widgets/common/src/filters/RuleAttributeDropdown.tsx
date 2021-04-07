@@ -1,11 +1,17 @@
 import type { FunctionComponent } from 'react';
 import type { DropdownItemProps } from 'semantic-ui-react/dist/commonjs/modules/Dropdown/DropdownItem';
+import { i18nPrefix } from './consts';
 
-const attributes = ['Label', 'Blueprint', 'Site name', 'Creator'];
+const { i18n } = Stage;
+const attributeOptions = ['label', 'blueprint_id', 'site_name', 'created_by'].map(
+    (attribute): DropdownItemProps => ({
+        text: i18n.t(`${i18nPrefix}.attributesLabels.${attribute}`),
+        value: attribute
+    })
+);
 
 const RuleAttributeDropdown: FunctionComponent = () => {
     const { Dropdown } = Stage.Basic;
-    const attributeOptions = attributes.map((attribute): DropdownItemProps => ({ text: attribute, value: attribute }));
 
     return <Dropdown search selection name="ruleAttribute" options={attributeOptions} />;
 };

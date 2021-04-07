@@ -522,6 +522,12 @@
                         "addRule": "Add new rule",
                         "removeRule": "Remove rule"
                     },
+                    "attributesLabels": {
+                        "label": "Label",
+                        "blueprint_id": "Blueprint",
+                        "site_name": "Site name",
+                        "created_by": "Creator"
+                    },
                     "operatorsLabels": {
                         "any_of": "is one of",
                         "not_any_of": "is not one of",
