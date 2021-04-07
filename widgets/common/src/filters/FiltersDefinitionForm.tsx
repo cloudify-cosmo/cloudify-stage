@@ -18,20 +18,20 @@ function getNewRow() {
 
 const FiltersDefinitionForm: FunctionComponent = () => {
     const { UnsafelyTypedForm: Form } = Stage.Basic;
-    const [rows, setRows] = useState([getNewRow()]);
+    const [rows, setRows] = useState(() => [getNewRow()]);
 
     function addRule() {
-        setRows(() => [...rows, getNewRow()]);
+        setRows(latestRows => [...latestRows, getNewRow()]);
     }
 
     function removeRule(id: string) {
-        setRows(() => rows.filter(row => row.id !== id));
+        setRows(latestRows => latestRows.filter(row => row.id !== id));
     }
 
     return (
         <Form>
             {rows.map(row => (
-                <RuleRow key={row.id} allowRemove={rows.length > 1} onRemove={() => removeRule(row.id)} />
+                <RuleRow key={row.id} removable={rows.length > 1} onRemove={() => removeRule(row.id)} />
             ))}
             <AddRuleButton onClick={addRule} />
         </Form>
