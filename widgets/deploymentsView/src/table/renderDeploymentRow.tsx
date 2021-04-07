@@ -1,4 +1,3 @@
-import { pick } from 'lodash';
 import { ReactNode } from 'react';
 
 import { deploymentsViewColumnDefinitions, DeploymentsViewColumnId } from './columns';
