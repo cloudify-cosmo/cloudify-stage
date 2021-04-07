@@ -1,4 +1,5 @@
 import type { Filter, FilterUsage } from './types';
+import type { FilterRule } from '../../common/src/filters/types';
 
 export default class FilterActions {
     constructor(private toolbox: Stage.Types.Toolbox) {}
@@ -15,11 +16,11 @@ export default class FilterActions {
         return this.toolbox.getInternal().doGet(`/filters/usage/${filterId}`);
     }
 
-    doCreate(filterId: string, filterRules: []) {
+    doCreate(filterId: string, filterRules: FilterRule[]) {
         return this.toolbox.getManager().doPut(`/filters/deployments/${filterId}`, null, { filter_rules: filterRules });
     }
 
-    doUpdate(filterId: string, filterRules: []) {
+    doUpdate(filterId: string, filterRules: FilterRule[]) {
         return this.toolbox
             .getManager()
             .doPatch(`/filters/deployments/${filterId}`, null, { filter_rules: filterRules });

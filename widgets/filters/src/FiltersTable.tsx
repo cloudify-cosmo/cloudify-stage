@@ -6,6 +6,7 @@ import FilterActions from './FilterActions';
 import FilterAddModal from './FilterAddModal';
 import FilterCloneModal from './FilterCloneModal';
 import FilterEditModal from './FilterEditModal';
+import type { FilterRule } from '../../common/src/filters/types';
 
 interface FiltersTableData {
     filters: Filter[];
@@ -37,7 +38,7 @@ const FiltersTable: FunctionComponent<FiltersTableProps> = ({ data, toolbox, wid
 
     useRefreshEvent(toolbox, 'filters:refresh');
 
-    function handleAddFilter(filterId: string, filterRules: []) {
+    function handleAddFilter(filterId: string, filterRules: FilterRule[]) {
         return new FilterActions(toolbox)
             .doCreate(filterId, filterRules)
             .then(closeAddModal)
@@ -45,7 +46,7 @@ const FiltersTable: FunctionComponent<FiltersTableProps> = ({ data, toolbox, wid
             .then(toolbox.refresh);
     }
 
-    function handleEditFilter(filterId: string, filterRules: []) {
+    function handleEditFilter(filterId: string, filterRules: FilterRule[]) {
         return new FilterActions(toolbox).doUpdate(filterId, filterRules).then(unsetFilterToEdit);
     }
 

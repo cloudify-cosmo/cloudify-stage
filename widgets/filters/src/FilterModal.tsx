@@ -1,11 +1,12 @@
 import { FunctionComponent } from 'react';
 import { Filter } from './types';
+import type { FilterRule } from '../../common/src/filters/types';
 
 export interface FilterModalProps {
     initialFilter?: Filter;
     filterId?: string;
     i18nHeaderKey: string;
-    onSubmit: (filterId: string, filterRules: []) => Promise<void>;
+    onSubmit: (filterId: string, filterRules: FilterRule[]) => Promise<void>;
     onCancel: () => void;
 }
 
