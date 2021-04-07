@@ -1,8 +1,8 @@
 import type { FunctionComponent } from 'react';
 import type { DropdownItemProps } from 'semantic-ui-react/dist/commonjs/modules/Dropdown/DropdownItem';
+import { i18nPrefix } from './consts';
 
 const { i18n } = Stage;
-const i18nPrefix = 'widgets.common.filters.form.operatorsLabels';
 const operators = [
     'any_of',
     'not_any_of',
@@ -12,7 +12,7 @@ const operators = [
     'not_contain',
     'start_with',
     'end_with'
-].map(operator => ({ name: operator, label: i18n.t(`${i18nPrefix}.${operator}`) }));
+].map(operator => ({ name: operator, label: i18n.t(`${i18nPrefix}.operatorsLabels.${operator}`) }));
 
 const RuleOperatorDropdown: FunctionComponent = () => {
     const { Dropdown } = Stage.Basic;
