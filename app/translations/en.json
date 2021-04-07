@@ -646,7 +646,11 @@
                     "clone": "Clone filter"
                 }
             },
-            "deleteConfirm": "Are you sure you want to remove filter '{{filterId}}'?"
+            "deleteConfirm": "Are you sure you want to remove filter '{{filterId}}'?",
+            "filterInUse": {
+                "heading": "Filter '{{filterId}}' cannot be removed:",
+                "usageInfo": "Used as default filter in '{{widgetName}}' widget in '{{pageName}}' page by user '{{username}}'"
+            }
         },
         "labels": {
             "name": "Labels",
