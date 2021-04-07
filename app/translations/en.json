@@ -516,6 +516,30 @@
                 "modalHeader": "Manage labels for deployment '{{deploymentId}}'",
                 "modalApplyButton": "Apply"
             },
+            "filters": {
+                "form": {
+                    "buttons": {
+                        "addRule": "Add new rule",
+                        "removeRule": "Remove rule"
+                    },
+                    "attributesLabels": {
+                        "label": "Label",
+                        "blueprintId": "Blueprint",
+                        "siteName": "Site name",
+                        "createdBy": "Creator"
+                    },
+                    "operatorsLabels": {
+                        "anyOf": "is one of",
+                        "notAnyOf": "is not one of",
+                        "isNull": "key is not",
+                        "isNotNull": "key is",
+                        "contain": "contains",
+                        "notContain": "does not contain",
+                        "startWith": "starts with",
+                        "endWith": "ends with"
+                    }
+                }
+            },
             "readmes": {
                 "linksBasePath": "https://docs.cloudify.co/5.1",
                 "params": {
@@ -624,7 +648,13 @@
                     "tooltip": "Services (Total)"
                 }
             },
-            "noDataMessage": "No Results Found. Try changing the filter's parameters"
+            "messages": {
+                "noData": "No Results Found. Try changing the filter's parameters",
+                "loadingFilterRules": "Loading filter rules",
+                "errorLoadingFilterRules": "Error when loading filter rules",
+                "loadingDeployments": "Loading deployments",
+                "errorLoadingDeployments": "Error when loading deployments"
+            }
         },
         "filters": {
             "name": "Filters",
