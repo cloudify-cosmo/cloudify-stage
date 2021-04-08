@@ -5,7 +5,7 @@ type FilterAddModalProps = Pick<FilterModalProps, 'onCancel' | 'onSubmit'>;
 
 const FilterAddModal: FunctionComponent<FilterAddModalProps> = props => {
     // eslint-disable-next-line react/jsx-props-no-spreading
-    return <FilterModal {...props} i18nHeaderKey="widgets.filters.modal.header.add" filterId="" />;
+    return <FilterModal {...props} i18nHeaderKey="widgets.filters.modal.header.add" showFilterIdInput />;
 };
 
 export default FilterAddModal;
