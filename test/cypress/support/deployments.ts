@@ -9,7 +9,18 @@ declare global {
     }
 }
 
-type Label = {
+type SystemLabelKeys =
+    | 'csys-obj-parent'
+    | 'csys-obj-type'
+    | 'csys-env-type'
+    | 'csys-location-long'
+    | 'csys-location-name'
+    | 'csys-obj-name'
+    | 'csys-wrcp-services'
+    | 'csys-location-lat';
+
+export type SystemLabel = Partial<Record<SystemLabelKeys, string | string[]>>;
+export type Label = SystemLabel & {
     [key: string]: string | string[];
 };
 
