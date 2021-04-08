@@ -1,6 +1,8 @@
 import { noop } from 'lodash';
 import { ComponentProps, FunctionComponent, useMemo, useRef } from 'react';
 
+import DrilldownButtons from './DrilldownButtons';
+
 import './header.scss';
 
 export interface DetailsPaneHeaderProps {
@@ -31,6 +33,7 @@ const DetailsPaneHeader: FunctionComponent<DetailsPaneHeaderProps> = ({ deployme
     return (
         <div className="detailsPaneHeader">
             <Header>{deploymentName}</Header>
+            <DrilldownButtons subservicesCount={0} subenvironmentsCount={0} />
             <Widget
                 widget={deploymentActionButtonsWidgetDescription}
                 isEditMode={false}
