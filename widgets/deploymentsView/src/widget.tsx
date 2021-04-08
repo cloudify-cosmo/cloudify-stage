@@ -185,7 +185,7 @@ const DeploymentsView: FunctionComponent<DeploymentsViewProps> = ({ widget, tool
                 deployments={deploymentsResult.data.items}
                 fieldsToShow={fieldsToShow}
             />
-            <DetailsPane deployment={selectedDeployment} />
+            <DetailsPane deployment={selectedDeployment} widget={widget} toolbox={toolbox} />
         </div>
     );
 };
