@@ -536,7 +536,7 @@
                         "contain": "contains",
                         "notContain": "does not contain",
                         "startsWith": "starts with",
-                        "endWith": "ends with"
+                        "endsWith": "ends with"
                     }
                 }
             },

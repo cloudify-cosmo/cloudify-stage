@@ -31,7 +31,7 @@ enum AttributesOnlyRuleOperator {
     Contain = 'contain',
     NotContain = 'not_contain',
     StartsWith = 'starts_with',
-    EndWith = 'end_with'
+    EndsWith = 'ends_with'
 }
 
 export const RuleOperator = { ...CommonRuleOperator, ...LabelsOnlyRuleOperator, ...AttributesOnlyRuleOperator };
