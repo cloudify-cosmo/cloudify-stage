@@ -24,6 +24,8 @@ const DrilldownButtons: FunctionComponent<DrilldownButtonsProps> = ({ drillDown,
         sub_environments_count: subenvironmentsCount
     } = deployment;
 
+    // TODO: use i18n for all texts
+
     const drilldownToSubenvironments = () => {
         // TODO(RD-2004): add filter rules in context to only show environments
         drillDown(subdeploymentsDrilldownTemplateName, {}, `${deploymentName} [Environments]`);
@@ -35,11 +37,23 @@ const DrilldownButtons: FunctionComponent<DrilldownButtonsProps> = ({ drillDown,
 
     return (
         <ButtonsContainer>
-            <Button basic color="blue" onClick={drilldownToSubenvironments} disabled={subenvironmentsCount === 0}>
+            <Button
+                basic
+                color="blue"
+                onClick={drilldownToSubenvironments}
+                disabled={subenvironmentsCount === 0}
+                title="Drill down to subenvironments"
+            >
                 <Icon name={subenvironmentsIcon} />
                 Subenvironments ({subenvironmentsCount}){/* TODO(RD-2005): add icons depending on children state */}
             </Button>
-            <Button basic color="blue" onClick={drilldownToSubservices} disabled={subservicesCount === 0}>
+            <Button
+                basic
+                color="blue"
+                onClick={drilldownToSubservices}
+                disabled={subservicesCount === 0}
+                title="Drill down to subservices"
+            >
                 <Icon name={subservicesIcon} />
                 Services ({subservicesCount}){/* TODO(RD-2005): add icons depending on children state */}
             </Button>
