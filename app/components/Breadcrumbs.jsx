@@ -10,6 +10,7 @@ import { Breadcrumb, EditableLabel } from './basic';
 
 export default function Breadcrumbs({ isEditMode, onPageNameChange, onPageSelected, pagesList }) {
     const breadcrumbElements = [];
+    // TODO(RD-1982): use the regular, unreversed list
     const reversedPagesList = _([...pagesList])
         .reverse()
         .value();

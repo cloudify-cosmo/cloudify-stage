@@ -9,6 +9,7 @@ import thunk from 'redux-thunk';
 import { applyMiddleware, combineReducers, createStore } from 'redux';
 
 import pageReducer from 'reducers/pageReducer';
+import drilldownContextReducer from 'reducers/drilldownContextReducer';
 
 import { drillDownToPage } from 'actions/drilldownPage';
 import { changePageName, changePageDescription, removePage } from 'actions/page';
@@ -20,7 +21,7 @@ const mockStore = configureMockStore([thunk]);
 describe('(Reducer) Pages', () => {
     describe('Drilldown to page actions', () => {
         it('create a drilldown page if it doesnt exist', () => {
-            const initialState = { widgetDefinitions: [{ id: 'widget1' }] };
+            const initialState = { widgetDefinitions: [{ id: 'widget1' }], drilldownContext: [] };
 
             const store = mockStore(initialState);
 
@@ -65,6 +66,7 @@ describe('(Reducer) Pages', () => {
                     widgetId: '1',
                     drillDownName: 'tmp1'
                 },
+                { type: types.SET_DRILLDOWN_CONTEXT, drilldownContext: [{ context: undefined }] },
                 { type: types.WIDGET_DATA_CLEAR },
                 { type: 'router action' }
             ];
@@ -93,7 +95,7 @@ describe('(Reducer) Pages', () => {
                     }
                 ]
             };
-            store.dispatch(drillDownToPage(widget, pageDef));
+            store.dispatch(drillDownToPage(widget, pageDef, {}));
 
             const storeActions = store.getActions();
 
@@ -172,12 +174,16 @@ describe('(Reducer) Pages', () => {
 
             const store = mockStore(initialState);
 
-            const expectedActions = [{ type: types.WIDGET_DATA_CLEAR }, { type: 'router action' }];
+            const expectedActions = [
+                { type: types.WIDGET_DATA_CLEAR },
+                { type: types.SET_DRILLDOWN_CONTEXT, drilldownContext: [{ context: undefined }] },
+                { type: 'router action' }
+            ];
 
             const widget = initialState.pages[0].widgets[0];
             const defaultTemplate = initialState.templates.templatesDef.tmp1;
 
-            store.dispatch(drillDownToPage(widget, defaultTemplate));
+            store.dispatch(drillDownToPage(widget, defaultTemplate, {}));
 
             const storeActions = store.getActions();
 
@@ -255,7 +261,7 @@ describe('(Reducer) Pages', () => {
             );
 
             const storeActions = store.getActions();
-            const routeAction = storeActions[1];
+            const routeAction = storeActions[2];
 
             expect(routeAction.payload.args).toHaveLength(1);
             const query = parse(routeAction.payload.args[0].search);
@@ -284,12 +290,14 @@ describe('(Reducer) Pages', () => {
                         }
                     ]
                 }
-            ]
+            ],
+            drilldownContext: []
         };
 
         const store = createStore(
             combineReducers({
                 pages: pageReducer,
+                drilldownContext: drilldownContextReducer,
                 widgetDefinitions: pageReducer
             }),
             initialState,
@@ -316,7 +324,7 @@ describe('(Reducer) Pages', () => {
             ]
         };
 
-        store.dispatch(drillDownToPage(widget, pageDef));
+        store.dispatch(drillDownToPage(widget, pageDef, {}));
 
         const { pages } = store.getState();
         const parentPage = pages[0];
@@ -392,10 +400,15 @@ describe('(Reducer) Pages', () => {
                         }
                     ]
                 }
-            ]
+            ],
+            drilldownContext: []
         };
 
-        const store = createStore(combineReducers({ pages: pageReducer }), initialState, applyMiddleware(thunk));
+        const store = createStore(
+            combineReducers({ pages: pageReducer, drilldownContext: drilldownContextReducer }),
+            initialState,
+            applyMiddleware(thunk)
+        );
 
         const widget = initialState.pages[0].layout[0].content[0];
         const pageDef1 = {
@@ -434,8 +447,8 @@ describe('(Reducer) Pages', () => {
                 }
             ]
         };
-        store.dispatch(drillDownToPage(widget, pageDef1));
-        store.dispatch(drillDownToPage(widget, pageDef2));
+        store.dispatch(drillDownToPage(widget, pageDef1, {}));
+        store.dispatch(drillDownToPage(widget, pageDef2, {}));
 
         const { pages } = store.getState();
         const parentPage = pages[0];

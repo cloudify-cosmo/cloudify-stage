@@ -16,6 +16,7 @@ import Consts from '../utils/consts';
 import { NO_PAGES_FOR_TENANT_ERR } from '../utils/ErrorCodes';
 import type { Widget, WidgetDefinition } from '../utils/StageAPI';
 import type { ReduxState } from '../reducers';
+import type { DrilldownContext } from '../reducers/drilldownContextReducer';
 
 // TODO(RD-1645): rename type to Widget
 // TODO(RD-1649): rename the added field to `definitionId`
@@ -183,12 +184,11 @@ export function changePageDescription(pageId: string, newDescription: string) {
 export function selectPage(
     pageId: string,
     isDrilldown?: boolean,
-    drilldownContext?: any,
+    drilldownContext?: Record<string, any>,
     drilldownPageName?: string
 ): ThunkAction<void, ReduxState, never, AnyAction> {
     return (dispatch, getState) => {
         const location: LocationDescriptorObject = { pathname: `/page/${pageId}` };
-        let newDrilldownContext = getState().drilldownContext || [];
 
         // Clear the widgets data since there is no point in saving data for widgets that are not in view
         dispatch(clearWidgetsData());
@@ -196,19 +196,26 @@ export function selectPage(
         // Update context and location depending on page is drilldown
         if (!isDrilldown) {
             dispatch(clearContext());
+            if (drilldownContext) {
+                const newDrilldownContext: DrilldownContext[] = [{ context: drilldownContext }];
+                // eslint-disable-next-line scanjs-rules/assign_to_search
+                location.search = stringify({ c: JSON.stringify(newDrilldownContext) });
+            }
         } else {
             if (!_.isEmpty(drilldownPageName)) {
                 // eslint-disable-next-line scanjs-rules/assign_to_pathname
                 location.pathname += `/${drilldownPageName}`;
             }
+
+            const newDrilldownContext = (getState().drilldownContext || []).slice();
+
             if (drilldownPageName || drilldownContext) {
-                newDrilldownContext = [
-                    ...newDrilldownContext,
-                    {
-                        context: drilldownContext || {},
-                        pageName: drilldownPageName
-                    }
-                ];
+                newDrilldownContext.push({
+                    context: drilldownContext || {},
+                    pageName: drilldownPageName
+                });
+            } else {
+                throw new Error('Either drilldown page name or context have to be provided while doing a drilldown');
             }
 
             // eslint-disable-next-line scanjs-rules/assign_to_search
@@ -219,13 +226,16 @@ export function selectPage(
     };
 }
 
-export function selectPageByName(pageName: string, context: any): ThunkAction<void, ReduxState, never, AnyAction> {
+export function selectPageByName(
+    pageName: string,
+    context: Record<string, any>
+): ThunkAction<void, ReduxState, never, AnyAction> {
     return dispatch => {
         if (context) {
             dispatch(clearContext());
         }
         const pageId = _.snakeCase(pageName);
-        dispatch(selectPage(pageId, context, context));
+        dispatch(selectPage(pageId, false, context));
     };
 }
 
