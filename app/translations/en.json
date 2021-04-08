@@ -672,8 +672,8 @@
                 }
             },
             "modal": {
-                "id": "Filter id",
-                "idMissing": "Please provide the filter id",
+                "id": "Filter ID",
+                "idMissing": "Please provide the filter ID",
                 "header": {
                     "add": "Add filter",
                     "edit": "Edit filter '{{filterId}}'",
