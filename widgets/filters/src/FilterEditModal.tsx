@@ -1,7 +1,7 @@
 import { FunctionComponent } from 'react';
 import FilterModal, { FilterModalProps } from './FilterModal';
 
-type FilterEditModalProps = Pick<FilterModalProps, 'initialFilter', 'onSubmit', 'onCancel'>;
+type FilterEditModalProps = Pick<FilterModalProps, 'initialFilter' | 'onSubmit' | 'onCancel'>;
 
 const FilterEditModal: FunctionComponent<FilterEditModalProps> = props => {
     return (
