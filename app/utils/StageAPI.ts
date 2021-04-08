@@ -270,6 +270,7 @@ declare global {
                     };
                 };
             }
+            type ReduxState = import('../reducers').ReduxState;
         }
     }
 }
