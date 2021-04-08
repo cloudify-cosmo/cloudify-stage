@@ -1,28 +1,50 @@
 import { camelCase } from 'lodash';
-import type { FunctionComponent } from 'react';
+import { FunctionComponent, useEffect, useState } from 'react';
 import type { DropdownItemProps } from 'semantic-ui-react/dist/commonjs/modules/Dropdown/DropdownItem';
+
 import { i18nPrefix } from './consts';
+import { RuleType, LabelsRuleOperator, AttributesRuleOperator } from './types';
+import type { RuleOperator } from './types';
 
-const { i18n } = Stage;
-const operatorsOptions = [
-    'any_of',
-    'not_any_of',
-    'is_null',
-    'is_not_null',
-    'contain',
-    'not_contain',
-    'start_with',
-    'end_with'
-].map(
-    (operator): DropdownItemProps => ({
-        text: i18n.t(`${i18nPrefix}.operatorsLabels.${camelCase(operator)}`),
-        value: operator
-    })
-);
+interface RuleOperatorDropdownProps {
+    ruleType: RuleType;
+    onChange: (value: RuleOperator) => void;
+    operator: RuleOperator;
+}
 
-const RuleOperatorDropdown: FunctionComponent = () => {
+function getDropdownOptions(operators: string[]) {
+    const { i18n } = Stage;
+    return operators.map(
+        (operator): DropdownItemProps => ({
+            text: i18n.t(`${i18nPrefix}.operatorsLabels.${camelCase(operator as string)}`),
+            value: operator
+        })
+    );
+}
+
+const RuleOperatorDropdown: FunctionComponent<RuleOperatorDropdownProps> = ({ ruleType, onChange, operator }) => {
     const { Dropdown } = Stage.Basic;
 
-    return <Dropdown search selection name="ruleOperator" options={operatorsOptions} />;
+    const [options, setOptions] = useState([] as DropdownItemProps[]);
+
+    useEffect(() => {
+        const operators = Object.values(ruleType === RuleType.Label ? LabelsRuleOperator : AttributesRuleOperator);
+        const dropdownOptions = getDropdownOptions(operators);
+
+        setOptions(dropdownOptions);
+    }, [ruleType]);
+
+    return (
+        <Dropdown
+            clearable={false}
+            search
+            selection
+            selectOnNavigation
+            name="ruleOperator"
+            options={options}
+            onChange={(_event, { value }) => onChange(value as RuleOperator)}
+            value={operator}
+        />
+    );
 };
 export default RuleOperatorDropdown;
