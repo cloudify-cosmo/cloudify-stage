@@ -11,11 +11,11 @@ describe('Deployments View widget', () => {
     const deploymentNameThatMatchesFilter = `${specPrefix}precious_deployment`;
     const siteName = 'Olsztyn';
     const blueprintUrl = exampleBlueprintUrl;
-    const widgetConfiguration = {
+    const widgetConfiguration: import('../../../../widgets/deploymentsView/src/widget').DeploymentsViewWidgetConfiguration = {
         filterByParentDeployment: false,
         fieldsToShow: ['status', 'name', 'blueprintName', 'location', 'subenvironmentsCount', 'subservicesCount'],
         pageSize: 100,
-        pollingTime: 10,
+        customPollingTime: 10,
         sortColumn: 'created_at',
         sortAscending: false
     };
