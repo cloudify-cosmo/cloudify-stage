@@ -648,6 +648,22 @@
                     "tooltip": "Services (Total)"
                 }
             },
+            "drillDown": {
+                "breadcrumbs": {
+                    "environments": "Environments",
+                    "services": "Services"
+                },
+                "buttons": {
+                    "subenvironments": {
+                        "label": "Subenvironments",
+                        "title": "Drill down to subenvironments"
+                    },
+                    "subservices": {
+                        "label": "Services",
+                        "title": "Drill down to subservices"
+                    }
+                }
+            },
             "messages": {
                 "noData": "No Results Found. Try changing the filter's parameters",
                 "loadingFilterRules": "Loading filter rules",
