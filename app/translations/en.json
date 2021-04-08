@@ -654,11 +654,11 @@
                     "services": "Services"
                 },
                 "buttons": {
-                    "subenvironments": {
+                    "environments": {
                         "label": "Subenvironments",
                         "title": "Drill down to subenvironments"
                     },
-                    "subservices": {
+                    "services": {
                         "label": "Services",
                         "title": "Drill down to subservices"
                     }
