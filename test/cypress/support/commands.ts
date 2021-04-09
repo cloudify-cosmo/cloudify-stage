@@ -10,6 +10,7 @@
 
 import 'cypress-file-upload';
 import 'cypress-localstorage-commands';
+import 'cypress-get-table';
 import _ from 'lodash';
 import type { RouteHandler, StringMatcher } from 'cypress/types/net-stubbing';
 
@@ -37,8 +38,14 @@ const getCommonHeaders = () => ({
 declare global {
     namespace Cypress {
         // NOTE: necessary for extending the Cypress API
-        // eslint-disable-next-line @typescript-eslint/no-empty-interface
-        export interface Chainable extends GetCypressChainableFromCommands<typeof commands> {}
+        export interface Chainable extends GetCypressChainableFromCommands<typeof commands> {
+            /**
+             * Returns the table data
+             *
+             * @see {@link https://www.npmjs.com/package/cypress-get-table}
+             */
+            getTable: () => Cypress.Chainable<Record<string, any>[]>;
+        }
     }
 }
 
