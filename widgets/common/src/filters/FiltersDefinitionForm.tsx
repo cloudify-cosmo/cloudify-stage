@@ -70,7 +70,7 @@ const FiltersDefinitionForm: FunctionComponent<FiltersDefinitionFormProps> = ({
                     key={row.id}
                     rule={getFilterRule(row)}
                     removable={rows.length > 1}
-                    onChange={(value: FilterRule) => updateRule(row.id, value)}
+                    onChange={rule => updateRule(row.id, rule)}
                     onRemove={() => removeRule(row.id)}
                     toolbox={toolbox}
                 />

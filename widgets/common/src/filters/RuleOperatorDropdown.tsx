@@ -16,7 +16,7 @@ function getDropdownOptions(operators: string[]) {
     const { i18n } = Stage;
     return operators.map(
         (operator): DropdownItemProps => ({
-            text: i18n.t(`${i18nPrefix}.operatorsLabels.${camelCase(operator as string)}`),
+            text: i18n.t(`${i18nPrefix}.operatorsLabels.${camelCase(operator)}`),
             value: operator
         })
     );

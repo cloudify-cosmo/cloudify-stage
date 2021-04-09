@@ -15,7 +15,7 @@ const ruleRowTypeOptions = (() => {
     return Object.values(FilterRuleRowType).map(
         (ruleType): DropdownItemProps => ({
             text: i18n.t(`${i18nPrefix}.ruleTypesLabels.${camelCase(ruleType)}`),
-            value: ruleType as FilterRuleRowType
+            value: ruleType
         })
     );
 })();
