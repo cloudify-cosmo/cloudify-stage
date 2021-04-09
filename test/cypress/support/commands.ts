@@ -189,14 +189,19 @@ const commands = {
         widgetConfiguration: any = {},
         {
             widgetsWidth = 8,
-            additionalWidgetIdsToLoad = []
-        }: { widgetsWidth?: number; additionalWidgetIdsToLoad?: string[] } = {}
+            additionalWidgetIdsToLoad = [],
+            additionalPageTemplates = []
+        }: { widgetsWidth?: number; additionalWidgetIdsToLoad?: string[]; additionalPageTemplates?: string[] } = {}
     ) => {
         const widgetIdsArray = _.castArray(widgetIds);
         const widgetIdsToLoad = [...widgetIdsArray, 'filter', 'pluginsCatalog', ...additionalWidgetIdsToLoad];
         cy.intercept('GET', '/console/widgets/list', widgetIdsToLoad.map(toIdObj));
         // required for drill-down testing
-        cy.intercept('GET', '/console/templates/pages', widgetIds ? ['blueprint', 'deployment'].map(toIdObj) : []);
+        cy.intercept(
+            'GET',
+            '/console/templates/pages',
+            widgetIds ? ['blueprint', 'deployment', ...additionalPageTemplates].map(toIdObj) : []
+        );
         cy.intercept('GET', '/console/templates', []);
         cy.intercept('GET', '/console/ua', {
             appDataVersion: 4,

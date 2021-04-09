@@ -9,7 +9,24 @@ declare global {
     }
 }
 
-type Label = {
+/**
+ * Reserved system label keys. The list may be outdated, as it is defined in the Manager
+ * (`/labels/deployments?_reserved=true`)
+ *
+ * @link https://docs.cloudify.co/api/v3.1/#list-filters
+ */
+type SystemLabelKeys =
+    | 'csys-obj-parent'
+    | 'csys-obj-type'
+    | 'csys-env-type'
+    | 'csys-location-long'
+    | 'csys-location-name'
+    | 'csys-obj-name'
+    | 'csys-wrcp-services'
+    | 'csys-location-lat';
+
+export type SystemLabel = Partial<Record<SystemLabelKeys, string | string[]>>;
+export type Label = SystemLabel & {
     [key: string]: string | string[];
 };
 
