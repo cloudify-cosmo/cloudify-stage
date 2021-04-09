@@ -1,13 +1,14 @@
 import { noop } from 'lodash';
-import { ComponentProps, FunctionComponent, useMemo, useRef } from 'react';
+import { ComponentProps, FunctionComponent, ReactNode, useMemo, useRef } from 'react';
 
 import './header.scss';
 
 export interface DetailsPaneHeaderProps {
     deploymentName: string;
+    drilldownButtons: ReactNode;
 }
 
-const DetailsPaneHeader: FunctionComponent<DetailsPaneHeaderProps> = ({ deploymentName }) => {
+const DetailsPaneHeader: FunctionComponent<DetailsPaneHeaderProps> = ({ deploymentName, drilldownButtons }) => {
     const { Header } = Stage.Basic;
     const { Widget } = Stage.Shared.Widgets;
     const uuidRef = useRef(Stage.Utils.uuid);
@@ -31,6 +32,7 @@ const DetailsPaneHeader: FunctionComponent<DetailsPaneHeaderProps> = ({ deployme
     return (
         <div className="detailsPaneHeader">
             <Header>{deploymentName}</Header>
+            {drilldownButtons}
             <Widget
                 widget={deploymentActionButtonsWidgetDescription}
                 isEditMode={false}

@@ -1,6 +1,8 @@
 import type { RouteHandler } from 'cypress/types/net-stubbing';
 import { without } from 'lodash';
 
+import type { SystemLabel } from '../../support/deployments';
+
 import { exampleBlueprintUrl } from '../../support/resource_urls';
 import { FilterRuleOperators, FilterRuleType } from '../../../../widgets/common/src/filters/types';
 
@@ -12,11 +14,11 @@ describe('Deployments View widget', () => {
     const deploymentNameThatMatchesFilter = `${specPrefix}precious_deployment`;
     const siteName = 'Olsztyn';
     const blueprintUrl = exampleBlueprintUrl;
-    const widgetConfiguration = {
+    const widgetConfiguration: import('../../../../widgets/deploymentsView/src/widget').DeploymentsViewWidgetConfiguration = {
         filterByParentDeployment: false,
         fieldsToShow: ['status', 'name', 'blueprintName', 'location', 'subenvironmentsCount', 'subservicesCount'],
         pageSize: 100,
-        pollingTime: 10,
+        customPollingTime: 10,
         sortColumn: 'created_at',
         sortAscending: false
     };
@@ -64,7 +66,7 @@ describe('Deployments View widget', () => {
             .usePageMock(
                 [widgetId],
                 { ...widgetConfiguration, ...configurationOverrides },
-                { additionalWidgetIdsToLoad, widgetsWidth: 12 }
+                { additionalWidgetIdsToLoad, widgetsWidth: 12, additionalPageTemplates: ['drilldownDeployments'] }
             )
             .mockLogin();
         cy.wait('@deployments');
@@ -300,6 +302,113 @@ describe('Deployments View widget', () => {
                         .next('tr')
                         .should('not.have.class', 'deployment-progress-row');
                 });
+        });
+    });
+
+    describe('drill-down functionality', () => {
+        // Graph of deployments used in the tests
+        // Generated using https://textik.com/
+        //
+        // All names are prefixed with `specPrefix`
+        //
+        //                app-env
+        //                  - -
+        //                -/   \-
+        //               /       \-
+        //             -/          \-
+        //            /              \
+        //         db-env           web-app
+        //          ---
+        //        -/   \-
+        //      -/       \
+        //   db-1        db-2
+
+        type DrilldownDeploymentName = 'app-env' | 'db-env' | 'db-1' | 'db-2' | 'web-app';
+        const getDeploymentFullName = (name: DrilldownDeploymentName) => `${specPrefix}_${name}`;
+        // NOTE: the order matters, because the deployments will be created in this order
+        const deployments: Record<DrilldownDeploymentName, SystemLabel[]> = {
+            'app-env': [{ 'csys-obj-type': 'environment' }],
+            'db-env': [{ 'csys-obj-type': 'environment' }, { 'csys-obj-parent': getDeploymentFullName('app-env') }],
+            'db-1': [{ 'csys-obj-parent': getDeploymentFullName('db-env') }],
+            'db-2': [{ 'csys-obj-parent': getDeploymentFullName('db-env') }],
+            'web-app': [{ 'csys-obj-parent': getDeploymentFullName('app-env') }]
+        };
+
+        before(() => {
+            cy.log('Creating multiple deployments for the drill-down tests');
+            Object.entries(deployments).forEach(([deploymentShortName, labels], index) => {
+                const deploymentFullName = getDeploymentFullName(deploymentShortName as keyof typeof deployments);
+                cy.deployBlueprint(blueprintName, deploymentFullName, { webserver_port: 9122 - index }).setLabels(
+                    deploymentFullName,
+                    labels
+                );
+            });
+        });
+
+        it('should support the drill-down workflow', () => {
+            useDeploymentsViewWidget({
+                configurationOverrides: {
+                    filterId: 'csys-environment-filter'
+                }
+            });
+
+            getDeploymentsViewTable().within(() => {
+                cy.log('Only top-level environments should be visible');
+                cy.contains('app-env').click();
+                cy.contains('db-env').should('not.exist');
+                cy.contains('db-1').should('not.exist');
+                cy.contains('db-2').should('not.exist');
+                cy.contains('web-app').should('not.exist');
+            });
+
+            const getSubenvironmentsButton = () => cy.get('button').contains('Subenvironments');
+            const getSubservicesButton = () => cy.get('button').contains('Services');
+            const getBreadcrumbs = () => cy.get('.breadcrumb');
+
+            getDeploymentsViewDetailsPane().within(() => {
+                // TODO(RD-2003): uncomment the line below
+                // getSubservicesButton().contains('1');
+                cy.log('Drill down to subenvironments of app-env');
+                getSubenvironmentsButton().contains('1').click();
+            });
+
+            getBreadcrumbs().contains('app-env [Environments]');
+
+            const verifySubdeploymentsOfAppEnv = () => {
+                getDeploymentsViewTable().within(() => {
+                    cy.log('Subenvironments of app-env should be visible (only db-env)');
+                    cy.contains('db-env').click();
+                    cy.contains('app-env').should('not.exist');
+                    cy.contains('db-1').should('not.exist');
+                    // TODO(RD-2004): uncomment the line below
+                    // cy.contains('web-app').should('not.exist');
+                });
+            };
+            verifySubdeploymentsOfAppEnv();
+
+            getDeploymentsViewDetailsPane().within(() => {
+                getSubenvironmentsButton().contains('0').should('be.disabled');
+                cy.log('Drill down to subservices of db-env');
+                getSubservicesButton().contains('2').click();
+            });
+
+            getBreadcrumbs().contains('db-env [Services]');
+            getBreadcrumbs().contains('app-env [Environments]');
+            getDeploymentsViewTable().within(() => {
+                cy.log('Subservices of db-env should be visible (db-1, db-2)');
+                cy.contains('db-1').click();
+                cy.contains('db-2');
+                cy.contains('db-env').should('not.exist');
+            });
+
+            getDeploymentsViewDetailsPane().within(() => {
+                getSubenvironmentsButton().contains('0').should('be.disabled');
+                getSubservicesButton().contains('0').should('be.disabled');
+            });
+
+            cy.log('Go back to the parent environment');
+            getBreadcrumbs().contains('app-env').click();
+            verifySubdeploymentsOfAppEnv();
         });
     });
 });
