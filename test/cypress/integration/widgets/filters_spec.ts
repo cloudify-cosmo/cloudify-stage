@@ -1,4 +1,4 @@
-import { FilterRule } from '../../../../widgets/common/src/filters/types';
+import type { FilterRule } from '../../../../widgets/common/src/filters/types';
 
 describe('Filters widget', () => {
     before(() => {
