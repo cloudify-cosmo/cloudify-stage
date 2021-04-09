@@ -1,17 +1,16 @@
 import { camelCase } from 'lodash';
-import type { FunctionComponent, SyntheticEvent } from 'react';
+import type { FunctionComponent } from 'react';
 import type { DropdownItemProps } from 'semantic-ui-react/dist/commonjs/modules/Dropdown/DropdownItem';
-import type { DropdownProps } from 'semantic-ui-react/dist/commonjs/modules/Dropdown/Dropdown';
 
 import { i18nPrefix } from './consts';
 import { FilterRuleRowType } from './types';
 
-interface RuleTypeDropdownProps {
+interface RuleRowTypeDropdownProps {
     onChange: (value: FilterRuleRowType) => void;
     ruleType: FilterRuleRowType;
 }
 
-const ruleTypeOptions = (() => {
+const ruleRowTypeOptions = (() => {
     const { i18n } = Stage;
     return Object.values(FilterRuleRowType).map(
         (ruleType): DropdownItemProps => ({
@@ -21,7 +20,7 @@ const ruleTypeOptions = (() => {
     );
 })();
 
-const RuleTypeDropdown: FunctionComponent<RuleTypeDropdownProps> = ({ onChange, ruleType }) => {
+const RuleRowTypeDropdown: FunctionComponent<RuleRowTypeDropdownProps> = ({ onChange, ruleType }) => {
     const { Dropdown } = Stage.Basic;
 
     return (
@@ -30,11 +29,11 @@ const RuleTypeDropdown: FunctionComponent<RuleTypeDropdownProps> = ({ onChange, 
             search
             selection
             selectOnNavigation
-            name="ruleType"
-            options={ruleTypeOptions}
+            name="ruleRowType"
+            options={ruleRowTypeOptions}
+            onChange={(_event, { value }) => onChange(value as FilterRuleRowType)}
             value={ruleType}
-            onChange={(_event: SyntheticEvent, data: DropdownProps) => onChange(data.value as FilterRuleRowType)}
         />
     );
 };
-export default RuleTypeDropdown;
+export default RuleRowTypeDropdown;
