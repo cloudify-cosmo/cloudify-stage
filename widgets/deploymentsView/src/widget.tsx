@@ -4,16 +4,10 @@ import { useQuery } from 'react-query';
 // NOTE: workaround for Cypress TS project to pick up the common types
 import type {} from '../../common/src/deploymentsView';
 
-export interface DeploymentsViewWidgetConfiguration {
-    /** In milliseconds */
-    customPollingTime: number;
+export interface DeploymentsViewWidgetConfiguration
+    extends Stage.Common.DeploymentsView.Types.SharedDeploymentsViewWidgetConfiguration {
     filterId?: string;
     filterByParentDeployment: boolean;
-    // TODO: use the type for column IDs
-    fieldsToShow: string[];
-    pageSize: number;
-    sortColumn: string;
-    sortAscending: boolean;
 }
 
 const {
@@ -181,8 +175,7 @@ const DeploymentsView: FunctionComponent<DeploymentsViewProps> = ({ widget, tool
                 pageSize={pageSize}
                 totalSize={deploymentsResult.data.metadata.pagination.total}
                 deployments={deploymentsResult.data.items}
-                // TODO: remove the type assertion
-                fieldsToShow={fieldsToShow as any}
+                fieldsToShow={fieldsToShow}
             />
             <DetailsPane deployment={selectedDeployment} widget={widget} toolbox={toolbox} />
         </div>
