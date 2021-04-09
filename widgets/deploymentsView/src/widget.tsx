@@ -13,7 +13,7 @@ import DetailsPane from './detailsPane';
 import './styles.scss';
 import type { DeploymentsResponse } from './types';
 
-interface DeploymentsViewWidgetConfiguration {
+export interface DeploymentsViewWidgetConfiguration {
     /** In milliseconds */
     customPollingTime: number;
     filterId?: string;
@@ -21,7 +21,7 @@ interface DeploymentsViewWidgetConfiguration {
     fieldsToShow: DeploymentsViewColumnId[];
     pageSize: number;
     sortColumn: string;
-    sortAscending: string;
+    sortAscending: boolean;
 }
 
 Stage.defineWidget<never, never, DeploymentsViewWidgetConfiguration>({
@@ -185,7 +185,7 @@ const DeploymentsView: FunctionComponent<DeploymentsViewProps> = ({ widget, tool
                 deployments={deploymentsResult.data.items}
                 fieldsToShow={fieldsToShow}
             />
-            <DetailsPane deployment={selectedDeployment} />
+            <DetailsPane deployment={selectedDeployment} widget={widget} toolbox={toolbox} />
         </div>
     );
 };

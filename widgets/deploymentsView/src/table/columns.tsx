@@ -2,7 +2,7 @@ import { mapValues } from 'lodash';
 import type { ReactNode } from 'react';
 import type { IconProps } from 'semantic-ui-react';
 
-import { i18nPrefix } from '../common';
+import { i18nPrefix, subenvironmentsIcon, subservicesIcon } from '../common';
 import { Deployment, DeploymentStatus, SubdeploymentStatus } from '../types';
 
 // NOTE: the order in the array determines the order in the UI
@@ -103,7 +103,7 @@ const partialDeploymentsViewColumnDefinitions: Record<
         }
     },
     subenvironmentsCount: {
-        label: <Stage.Basic.Icon name="object group" />,
+        label: <Stage.Basic.Icon name={subenvironmentsIcon} />,
         width: '1em',
         // NOTE: properties come from the API. They are not prop-types (false-positive)
         /* eslint-disable camelcase */
@@ -121,7 +121,7 @@ const partialDeploymentsViewColumnDefinitions: Record<
         }
     },
     subservicesCount: {
-        label: <Stage.Basic.Icon name="cube" />,
+        label: <Stage.Basic.Icon name={subservicesIcon} />,
         width: '1em',
         render({ sub_services_count, sub_services_status }) {
             // NOTE: handle possible `null`s

@@ -34,6 +34,7 @@ describe('Template Management', () => {
         { id: 'catalog', name: 'Cloudify Catalog' },
         { id: 'deploy', name: 'Deployments' },
         { id: 'deployment', name: 'Deployment' },
+        { id: 'drilldownDeployments', name: 'Subdeployments' },
         { id: 'execution', name: 'Logs' },
         { id: 'ha', name: 'Admin Operations' },
         { id: 'logs', name: 'Logs' },

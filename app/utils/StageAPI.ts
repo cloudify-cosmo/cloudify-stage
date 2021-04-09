@@ -55,6 +55,14 @@ interface StageWidget<Configuration = Record<string, unknown>> {
     configuration: Configuration;
     // TODO(RD-1649): consider renaming the field to resolvedDefinition
     definition: StageWidgetDefinition;
+    /**
+     * A mapping between the names (keys) and the IDs (values) of the pages
+     * that are possible to drill-down to from the widget.
+     *
+     * Added automatically when calling `toolbox.drillDown`
+     *
+     * @see {StageToolbox}
+     */
     drillDownPages: Record<string, string>;
     maximized: boolean;
 }
