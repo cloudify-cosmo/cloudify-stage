@@ -3,13 +3,13 @@ import { FunctionComponent, useEffect, useState } from 'react';
 import type { DropdownItemProps } from 'semantic-ui-react/dist/commonjs/modules/Dropdown/DropdownItem';
 
 import { i18nPrefix } from './consts';
-import { RuleType, LabelsRuleOperator, AttributesRuleOperator } from './types';
-import type { RuleOperator } from './types';
+import { FilterRuleRowType, LabelsFilterRuleOperators, AttributesFilterRuleOperators } from './types';
+import type { FilterRuleOperator } from './types';
 
 interface RuleOperatorDropdownProps {
-    ruleType: RuleType;
-    onChange: (value: RuleOperator) => void;
-    operator: RuleOperator;
+    ruleType: FilterRuleRowType;
+    onChange: (value: FilterRuleOperator) => void;
+    operator: FilterRuleOperator;
 }
 
 function getDropdownOptions(operators: string[]) {
@@ -28,7 +28,9 @@ const RuleOperatorDropdown: FunctionComponent<RuleOperatorDropdownProps> = ({ ru
     const [options, setOptions] = useState([] as DropdownItemProps[]);
 
     useEffect(() => {
-        const operators = Object.values(ruleType === RuleType.Label ? LabelsRuleOperator : AttributesRuleOperator);
+        const operators = Object.values(
+            ruleType === FilterRuleRowType.Label ? LabelsFilterRuleOperators : AttributesFilterRuleOperators
+        );
         const dropdownOptions = getDropdownOptions(operators);
 
         setOptions(dropdownOptions);
@@ -42,7 +44,7 @@ const RuleOperatorDropdown: FunctionComponent<RuleOperatorDropdownProps> = ({ ru
             selectOnNavigation
             name="ruleOperator"
             options={options}
-            onChange={(_event, { value }) => onChange(value as RuleOperator)}
+            onChange={(_event, { value }) => onChange(value as FilterRuleOperator)}
             value={operator}
         />
     );

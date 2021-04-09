@@ -1,14 +1,14 @@
 import type { FunctionComponent } from 'react';
 import { useEffect, useRef } from 'react';
 
-import { CommonRuleOperator, LabelsOnlyRuleOperator, RuleType, RuleOperator } from './types';
+import { LabelsFilterRuleOperators, FilterRuleRowType, FilterRuleOperator } from './types';
 import LabelKeyDropdown from '../labels/KeyDropdown';
 import LabelValueDropdown from '../labels/ValueDropdown';
 
 interface RuleOperatorDropdownProps {
     onChange: (value: string[]) => void;
-    operator: RuleOperator;
-    ruleType: RuleType;
+    operator: FilterRuleOperator;
+    ruleType: FilterRuleRowType;
     toolbox: Stage.Types.Toolbox;
     values: string[];
 }
@@ -20,14 +20,14 @@ const RuleInput: FunctionComponent<RuleOperatorDropdownProps> = ({ onChange, ope
 
     useEffect(() => {
         if (
-            ruleType === RuleType.Label &&
-            (operator === LabelsOnlyRuleOperator.IsNull || operator === LabelsOnlyRuleOperator.IsNotNull)
+            ruleType === FilterRuleRowType.Label &&
+            (operator === LabelsFilterRuleOperators.IsNull || operator === LabelsFilterRuleOperators.IsNotNull)
         ) {
             onChange([labelKey]);
         }
     }, [ruleType, operator]);
 
-    if (ruleType === RuleType.Label) {
+    if (ruleType === FilterRuleRowType.Label) {
         return (
             // TODO(RD-2007): Add better styling
             <>
@@ -37,7 +37,7 @@ const RuleInput: FunctionComponent<RuleOperatorDropdownProps> = ({ onChange, ope
                     toolbox={toolbox}
                     value={labelKey}
                 />
-                {(operator === CommonRuleOperator.AnyOf || operator === CommonRuleOperator.NotAnyOf) && (
+                {(operator === LabelsFilterRuleOperators.AnyOf || operator === LabelsFilterRuleOperators.NotAnyOf) && (
                     // TODO(RD-2006): Add support for multiple additions
                     <LabelValueDropdown
                         labelKey={labelKey}
@@ -49,6 +49,7 @@ const RuleInput: FunctionComponent<RuleOperatorDropdownProps> = ({ onChange, ope
             </>
         );
     }
+
     // TODO(RD-1761, RD-1762, RD-1764): Provide multiple selection dropdowns with autocompletion
     const textValue = values[0] || '';
     return <Input type="text" onChange={(_event, { value }) => onChange([value])} value={textValue} />;

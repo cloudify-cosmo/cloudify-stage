@@ -5,16 +5,16 @@ import type { FunctionComponent } from 'react';
 import RuleRow from './RuleRow';
 import AddRuleButton from './AddRuleButton';
 import type { FilterRule, FilterRuleRow } from './types';
-import { CommonRuleOperator } from './types';
+import { FilterRuleType, FilterRuleOperators } from './types';
 
 function getNewRow() {
     const { uuid } = Stage.Utils;
 
     const emptyRow: FilterRuleRow = {
         id: '',
-        type: 'label',
+        type: FilterRuleType.Label,
         key: '',
-        operator: CommonRuleOperator.AnyOf,
+        operator: FilterRuleOperators.AnyOf,
         values: []
     };
 

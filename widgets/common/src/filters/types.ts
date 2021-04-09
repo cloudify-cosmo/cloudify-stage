@@ -2,27 +2,16 @@
 export interface FilterRule {
     key: string;
     values: string[];
-    operator: RuleOperator;
-    type: 'label' | 'attribute';
+    operator: FilterRuleOperator;
+    type: FilterRuleType;
 }
 
-export interface FilterRuleRow extends FilterRule {
-    id: string;
-}
-
-export enum RuleType {
-    Label = 'label',
-    Blueprint = 'blueprint_id',
-    SiteName = 'site_name',
-    Creator = 'created_by'
-}
-
-export enum CommonRuleOperator {
+enum CommonRuleOperator {
     AnyOf = 'any_of',
     NotAnyOf = 'not_any_of'
 }
 
-export enum LabelsOnlyRuleOperator {
+enum LabelsOnlyRuleOperator {
     IsNull = 'is_null',
     IsNotNull = 'is_not_null'
 }
@@ -34,11 +23,24 @@ enum AttributesOnlyRuleOperator {
     EndsWith = 'ends_with'
 }
 
-export const RuleOperator = { ...CommonRuleOperator, ...LabelsOnlyRuleOperator, ...AttributesOnlyRuleOperator };
-export type RuleOperator = CommonRuleOperator | LabelsOnlyRuleOperator | AttributesOnlyRuleOperator;
+export type FilterRuleOperator = CommonRuleOperator | LabelsOnlyRuleOperator | AttributesOnlyRuleOperator;
 
-export const LabelsRuleOperator = { ...CommonRuleOperator, ...LabelsOnlyRuleOperator };
-export type LabelsRuleOperator = CommonRuleOperator | LabelsOnlyRuleOperator;
+export enum FilterRuleType {
+    Label = 'label',
+    Attribute = 'attribute'
+}
 
-export const AttributesRuleOperator = { ...CommonRuleOperator, ...AttributesOnlyRuleOperator };
-export type AttributesRuleOperator = CommonRuleOperator | AttributesOnlyRuleOperator;
+export interface FilterRuleRow extends FilterRule {
+    id: string;
+}
+
+export enum FilterRuleRowType {
+    Label = 'label',
+    Blueprint = 'blueprint_id',
+    SiteName = 'site_name',
+    Creator = 'created_by'
+}
+
+export const FilterRuleOperators = { ...CommonRuleOperator, ...LabelsOnlyRuleOperator, ...AttributesOnlyRuleOperator };
+export const LabelsFilterRuleOperators = { ...CommonRuleOperator, ...LabelsOnlyRuleOperator };
+export const AttributesFilterRuleOperators = { ...CommonRuleOperator, ...AttributesOnlyRuleOperator };

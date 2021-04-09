@@ -4,19 +4,19 @@ import type { DropdownItemProps } from 'semantic-ui-react/dist/commonjs/modules/
 import type { DropdownProps } from 'semantic-ui-react/dist/commonjs/modules/Dropdown/Dropdown';
 
 import { i18nPrefix } from './consts';
-import { RuleType } from './types';
+import { FilterRuleRowType } from './types';
 
 interface RuleTypeDropdownProps {
-    onChange: (value: RuleType) => void;
-    ruleType: RuleType;
+    onChange: (value: FilterRuleRowType) => void;
+    ruleType: FilterRuleRowType;
 }
 
 const ruleTypeOptions = (() => {
     const { i18n } = Stage;
-    return Object.values(RuleType).map(
+    return Object.values(FilterRuleRowType).map(
         (ruleType): DropdownItemProps => ({
             text: i18n.t(`${i18nPrefix}.ruleTypesLabels.${camelCase(ruleType)}`),
-            value: ruleType as RuleType
+            value: ruleType as FilterRuleRowType
         })
     );
 })();
@@ -33,7 +33,7 @@ const RuleTypeDropdown: FunctionComponent<RuleTypeDropdownProps> = ({ onChange, 
             name="ruleType"
             options={ruleTypeOptions}
             value={ruleType}
-            onChange={(_event: SyntheticEvent, data: DropdownProps) => onChange(data.value as RuleType)}
+            onChange={(_event: SyntheticEvent, data: DropdownProps) => onChange(data.value as FilterRuleRowType)}
         />
     );
 };

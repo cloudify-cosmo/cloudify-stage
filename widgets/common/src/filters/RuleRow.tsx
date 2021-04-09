@@ -4,8 +4,8 @@ import RuleTypeDropdown from './RuleTypeDropdown';
 import RuleOperatorDropdown from './RuleOperatorDropdown';
 import RuleInput from './RuleInput';
 import RuleRemoveButton from './RuleRemoveButton';
-import { RuleType } from './types';
-import type { FilterRule, RuleOperator } from './types';
+import type { FilterRule, FilterRuleOperator } from './types';
+import { FilterRuleType, FilterRuleRowType } from './types';
 
 interface RuleRowProps {
     onRemove: ComponentProps<typeof Button>['onClick'];
@@ -18,17 +18,17 @@ interface RuleRowProps {
 const RuleRow: FunctionComponent<RuleRowProps> = ({ onChange, onRemove, removable, rule, toolbox }) => {
     const { UnsafelyTypedFormField: FormField, UnsafelyTypedFormGroup: FormGroup } = Stage.Basic;
     const { key, operator, type, values } = rule;
-    const ruleType = type === RuleType.Label ? RuleType.Label : (key as RuleType);
+    const ruleType = type === FilterRuleType.Label ? FilterRuleRowType.Label : (key as FilterRuleRowType);
 
-    function onRuleTypeChange(newRuleType: RuleType) {
-        if (newRuleType === RuleType.Label) {
-            onChange({ ...rule, type: 'label', key: '' });
+    function onRuleTypeChange(newRuleType: FilterRuleRowType) {
+        if (newRuleType === FilterRuleRowType.Label) {
+            onChange({ ...rule, type: FilterRuleType.Label, key: '' });
         } else {
-            onChange({ ...rule, type: 'attribute', key: newRuleType });
+            onChange({ ...rule, type: FilterRuleType.Attribute, key: newRuleType });
         }
     }
 
-    function onOperatorChange(newOperator: RuleOperator) {
+    function onOperatorChange(newOperator: FilterRuleOperator) {
         onChange({ ...rule, operator: newOperator });
     }
 
