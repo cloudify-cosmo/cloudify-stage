@@ -1,8 +1,7 @@
 import { find } from 'lodash';
 import { FunctionComponent, useMemo, useState } from 'react';
 import { useQuery } from 'react-query';
-// NOTE: temporary workaround for Cypress TS project to pick up the common types
-// TODO: remove the type import
+// NOTE: workaround for Cypress TS project to pick up the common types
 import type {} from '../../common/src/deploymentsView';
 
 export interface DeploymentsViewWidgetConfiguration {
@@ -113,8 +112,7 @@ const DeploymentsView: FunctionComponent<DeploymentsViewProps> = ({ widget, tool
     const deploymentsUrl = '/searches/deployments';
     const deploymentsResult = useQuery(
         [deploymentsUrl, gridParams, finalFilterRules],
-        // TODO: use DeploymentsResponse type
-        (): Promise<any> =>
+        (): Promise<Stage.Common.DeploymentsView.Types.DeploymentsResponse> =>
             manager.doPost(deploymentsUrl, gridParams, {
                 filter_rules: finalFilterRules
             }),

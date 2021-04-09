@@ -1,26 +1,27 @@
-import * as Table from './table';
-import * as Common from './common';
-import * as Types from './types';
-import DetailsPane from './detailsPane';
+// NOTE: names prefixed with D so they can be exported inside namespace with a different name
+import * as DTable from './table';
+import * as DCommon from './common';
+import DDetailsPane from './detailsPane';
+import type { Deployment, DeploymentsResponse, SharedDeploymentsViewWidgetConfiguration } from './types';
 import './styles.scss';
 
-const DeploymentsView = {
-    Table,
-    Common,
-    Types,
-    DetailsPane
-};
-
 declare global {
-    namespace Stage {
-        // TODO: use namespace instead of interface for Common for more convenient imports of types
-        interface Common {
-            DeploymentsView: typeof DeploymentsView;
+    namespace Stage.Common.DeploymentsView {
+        const Table: typeof DTable;
+        const Common: typeof DCommon;
+        const DetailsPane: typeof DDetailsPane;
+        namespace Types {
+            export { Deployment, DeploymentsResponse, SharedDeploymentsViewWidgetConfiguration };
         }
     }
 }
 
 Stage.defineCommon({
     name: 'DeploymentsView',
-    common: DeploymentsView
+    common: {
+        DetailsPane: DDetailsPane,
+        Common: DCommon,
+        Table: DTable,
+        Types: {}
+    }
 });

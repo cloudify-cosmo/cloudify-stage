@@ -61,11 +61,11 @@ export default class DeploymentStates {
     }
 }
 
+// NOTE: alias name to avoid name shadowing inside the namespace
+const DeploymentsStatesAlias = DeploymentStates;
 declare global {
-    namespace Stage {
-        interface Common {
-            DeploymentStates: typeof DeploymentStates;
-        }
+    namespace Stage.Common {
+        const DeploymentStates: typeof DeploymentsStatesAlias;
     }
 }
 
