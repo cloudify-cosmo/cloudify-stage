@@ -40,7 +40,7 @@ declare global {
         // NOTE: necessary for extending the Cypress API
         export interface Chainable extends GetCypressChainableFromCommands<typeof commands> {
             // typing for cypress-get-table
-            getTable: () => Cypress.Chainable;
+            getTable: () => Cypress.Chainable<Record<string, any>[]>;
         }
     }
 }
