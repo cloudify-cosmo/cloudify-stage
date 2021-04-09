@@ -36,10 +36,10 @@ export interface FilterRuleRow {
 }
 
 export enum FilterRuleRowType {
-    Label = 'label',
     Blueprint = 'blueprint_id',
     SiteName = 'site_name',
-    Creator = 'created_by'
+    Creator = 'created_by',
+    Label = 'label'
 }
 
 export const FilterRuleOperators = { ...CommonRuleOperator, ...LabelsOnlyRuleOperator, ...AttributesOnlyRuleOperator };
