@@ -39,7 +39,11 @@ declare global {
     namespace Cypress {
         // NOTE: necessary for extending the Cypress API
         export interface Chainable extends GetCypressChainableFromCommands<typeof commands> {
-            // typing for cypress-get-table
+            /**
+             * Returns the table data
+             *
+             * @see {@link https://www.npmjs.com/package/cypress-get-table}
+             */
             getTable: () => Cypress.Chainable<Record<string, any>[]>;
         }
     }
