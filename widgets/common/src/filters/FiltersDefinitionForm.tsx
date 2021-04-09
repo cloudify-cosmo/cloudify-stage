@@ -11,14 +11,14 @@ function getNewRow() {
     const { uuid } = Stage.Utils;
 
     const emptyRow: FilterRuleRow = {
-        id: '',
+        id: uuid(),
         type: FilterRuleType.Label,
         key: '',
         operator: FilterRuleOperators.AnyOf,
         values: []
     };
 
-    return { ...emptyRow, id: uuid() };
+    return emptyRow;
 }
 
 function getFilterRuleRows(filterRules: FilterRule[]): FilterRuleRow[] {
