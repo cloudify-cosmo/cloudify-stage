@@ -5,32 +5,28 @@ import { useQuery } from 'react-query';
 import type {} from '../../common/src/deploymentsView';
 
 export interface DeploymentsViewWidgetConfiguration
-    extends Stage.Common.DeploymentsView.Types.SharedDeploymentsViewWidgetConfiguration {
+    extends Stage.Common.DeploymentsView.Configuration.SharedDeploymentsViewWidgetConfiguration {
     filterId?: string;
     filterByParentDeployment: boolean;
 }
 
 const {
     Common: { i18nPrefix },
-    Table: { deploymentsViewColumnIds, deploymentsViewColumnDefinitions, DeploymentsTable },
-    DetailsPane
+    Table: { DeploymentsTable },
+    Configuration: { sharedConfiguration },
+    DetailsPane,
+    sharedDefinition
 } = Stage.Common.DeploymentsView;
 
 Stage.defineWidget<never, never, DeploymentsViewWidgetConfiguration>({
+    ...sharedDefinition,
+
     id: 'deploymentsView',
     name: Stage.i18n.t(`${i18nPrefix}.name`),
     description: Stage.i18n.t(`${i18nPrefix}.description`),
-    initialWidth: 12,
-    initialHeight: 28,
-    color: 'purple',
-    categories: [Stage.GenericConfig.CATEGORY.DEPLOYMENTS],
 
     initialConfiguration: [
-        {
-            ...Stage.GenericConfig.POLLING_TIME_CONFIG(10),
-            // NOTE: polling is handled by react-query, thus, use a different ID
-            id: 'customPollingTime'
-        },
+        ...sharedConfiguration,
         {
             id: 'filterId',
             // TODO(RD-1851): add autocomplete instead of plain text input
@@ -43,28 +39,8 @@ Stage.defineWidget<never, never, DeploymentsViewWidgetConfiguration>({
             name: Stage.i18n.t(`${i18nPrefix}.configuration.filterByParentDeployment.name`),
             description: Stage.i18n.t(`${i18nPrefix}.configuration.filterByParentDeployment.description`),
             default: false
-        },
-        // TODO(RD-1225): add map configuration
-        {
-            id: 'fieldsToShow',
-            name: Stage.i18n.t(`${i18nPrefix}.configuration.fieldsToShow.name`),
-            placeHolder: Stage.i18n.t(`${i18nPrefix}.configuration.fieldsToShow.placeholder`),
-            items: deploymentsViewColumnIds.map(columnId => ({
-                name: deploymentsViewColumnDefinitions[columnId].name,
-                value: columnId
-            })),
-            default: deploymentsViewColumnIds.filter(columnId => columnId !== 'environmentType'),
-            type: Stage.Basic.GenericField.MULTI_SELECT_LIST_TYPE
-        },
-        Stage.GenericConfig.PAGE_SIZE_CONFIG(100),
-        Stage.GenericConfig.SORT_COLUMN_CONFIG('created_at'),
-        Stage.GenericConfig.SORT_ASCENDING_CONFIG(false)
+        }
     ],
-    isReact: true,
-    // TOOD(RD-1532): enable readme after filling it in
-    hasReadme: false,
-    hasStyle: false,
-    permission: Stage.GenericConfig.WIDGET_PERMISSION('deploymentsView'),
 
     render(widget, _data, _error, toolbox) {
         return <DeploymentsView widget={widget} toolbox={toolbox} />;
