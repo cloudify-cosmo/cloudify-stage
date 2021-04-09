@@ -38,7 +38,6 @@ Stage.defineWidget<never, never, DeploymentsViewWidgetConfiguration>({
             name: Stage.i18n.t(`${i18nPrefix}.configuration.filterId.name`)
         },
         {
-            // TODO(RD-1853): handle filtering by parent deployment
             id: 'filterByParentDeployment',
             type: Stage.Basic.GenericField.BOOLEAN_TYPE,
             name: Stage.i18n.t(`${i18nPrefix}.configuration.filterByParentDeployment.name`),
