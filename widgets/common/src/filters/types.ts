@@ -30,8 +30,9 @@ export enum FilterRuleType {
     Attribute = 'attribute'
 }
 
-export interface FilterRuleRow extends FilterRule {
+export interface FilterRuleRow {
     id: string;
+    rule: FilterRule;
 }
 
 export enum FilterRuleRowType {

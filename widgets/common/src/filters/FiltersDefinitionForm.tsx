@@ -1,34 +1,33 @@
-import { omit } from 'lodash';
 import { useState } from 'react';
 import type { FunctionComponent } from 'react';
 
 import RuleRow from './RuleRow';
 import AddRuleButton from './AddRuleButton';
 import type { FilterRule, FilterRuleRow } from './types';
-import { FilterRuleType, FilterRuleOperators } from './types';
+import { FilterRuleType, FilterRuleOperators, FilterRuleRowType } from './types';
 
-function getNewRow() {
+function getNewRow(): FilterRuleRow {
     const { uuid } = Stage.Utils;
 
-    const emptyRow: FilterRuleRow = {
+    return {
         id: uuid(),
-        type: FilterRuleType.Label,
-        key: '',
-        operator: FilterRuleOperators.AnyOf,
-        values: []
+        rule: {
+            type: FilterRuleType.Attribute,
+            key: FilterRuleRowType.Blueprint,
+            operator: FilterRuleOperators.Contain,
+            values: []
+        }
     };
-
-    return emptyRow;
 }
 
 function getFilterRuleRows(filterRules: FilterRule[]): FilterRuleRow[] {
     const { uuid } = Stage.Utils;
 
-    return filterRules.length > 0 ? filterRules.map(filterRule => ({ ...filterRule, id: uuid() })) : [getNewRow()];
+    return filterRules.length > 0 ? filterRules.map(rule => ({ id: uuid(), rule })) : [getNewRow()];
 }
 
 function getFilterRule(filterRuleRow: FilterRuleRow): FilterRule {
-    return omit(filterRuleRow, 'id');
+    return filterRuleRow.rule;
 }
 
 interface FiltersDefinitionFormProps {
@@ -57,7 +56,7 @@ const FiltersDefinitionForm: FunctionComponent<FiltersDefinitionFormProps> = ({
     }
 
     function updateRule(id: string, newRule: FilterRule) {
-        setRows(latestRows => latestRows.map(row => (row.id === id ? { ...row, ...newRule } : row)));
+        setRows(latestRows => latestRows.map(row => (row.id === id ? { id: row.id, rule: newRule } : row)));
     }
 
     useUpdateEffect(() => {
