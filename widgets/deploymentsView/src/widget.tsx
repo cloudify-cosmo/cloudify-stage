@@ -1,28 +1,27 @@
 import { find } from 'lodash';
 import { FunctionComponent, useMemo, useState } from 'react';
 import { useQuery } from 'react-query';
-
-import {
-    deploymentsViewColumnDefinitions,
-    DeploymentsViewColumnId,
-    deploymentsViewColumnIds,
-    DeploymentsTable
-} from './table';
-import { i18nPrefix } from './common';
-import DetailsPane from './detailsPane';
-import './styles.scss';
-import type { DeploymentsResponse } from './types';
+// NOTE: temporary workaround for Cypress TS project to pick up the common types
+// TODO: remove the type import
+import type {} from '../../common/src/deploymentsView';
 
 export interface DeploymentsViewWidgetConfiguration {
     /** In milliseconds */
     customPollingTime: number;
     filterId?: string;
     filterByParentDeployment: boolean;
-    fieldsToShow: DeploymentsViewColumnId[];
+    // TODO: use the type for column IDs
+    fieldsToShow: string[];
     pageSize: number;
     sortColumn: string;
     sortAscending: boolean;
 }
+
+const {
+    Common: { i18nPrefix },
+    Table: { deploymentsViewColumnIds, deploymentsViewColumnDefinitions, DeploymentsTable },
+    DetailsPane
+} = Stage.Common.DeploymentsView;
 
 Stage.defineWidget<never, never, DeploymentsViewWidgetConfiguration>({
     id: 'deploymentsView',
@@ -114,7 +113,8 @@ const DeploymentsView: FunctionComponent<DeploymentsViewProps> = ({ widget, tool
     const deploymentsUrl = '/searches/deployments';
     const deploymentsResult = useQuery(
         [deploymentsUrl, gridParams, finalFilterRules],
-        (): Promise<DeploymentsResponse> =>
+        // TODO: use DeploymentsResponse type
+        (): Promise<any> =>
             manager.doPost(deploymentsUrl, gridParams, {
                 filter_rules: finalFilterRules
             }),
@@ -183,7 +183,8 @@ const DeploymentsView: FunctionComponent<DeploymentsViewProps> = ({ widget, tool
                 pageSize={pageSize}
                 totalSize={deploymentsResult.data.metadata.pagination.total}
                 deployments={deploymentsResult.data.items}
-                fieldsToShow={fieldsToShow}
+                // TODO: remove the type assertion
+                fieldsToShow={fieldsToShow as any}
             />
             <DetailsPane deployment={selectedDeployment} widget={widget} toolbox={toolbox} />
         </div>
