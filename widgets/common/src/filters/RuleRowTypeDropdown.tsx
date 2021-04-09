@@ -7,7 +7,7 @@ import { FilterRuleRowType } from './types';
 
 interface RuleRowTypeDropdownProps {
     onChange: (value: FilterRuleRowType) => void;
-    ruleType: FilterRuleRowType;
+    value: FilterRuleRowType;
 }
 
 const ruleRowTypeOptions = (() => {
@@ -20,7 +20,7 @@ const ruleRowTypeOptions = (() => {
     );
 })();
 
-const RuleRowTypeDropdown: FunctionComponent<RuleRowTypeDropdownProps> = ({ onChange, ruleType }) => {
+const RuleRowTypeDropdown: FunctionComponent<RuleRowTypeDropdownProps> = ({ onChange, value }) => {
     const { Dropdown } = Stage.Basic;
 
     return (
@@ -31,8 +31,8 @@ const RuleRowTypeDropdown: FunctionComponent<RuleRowTypeDropdownProps> = ({ onCh
             selectOnNavigation
             name="ruleRowType"
             options={ruleRowTypeOptions}
-            onChange={(_event, { value }) => onChange(value as FilterRuleRowType)}
-            value={ruleType}
+            onChange={(_event, data) => onChange(data.value as FilterRuleRowType)}
+            value={value}
         />
     );
 };

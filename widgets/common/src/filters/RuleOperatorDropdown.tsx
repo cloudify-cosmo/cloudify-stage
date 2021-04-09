@@ -9,7 +9,7 @@ import type { FilterRuleOperator } from './types';
 interface RuleOperatorDropdownProps {
     ruleType: FilterRuleRowType;
     onChange: (value: FilterRuleOperator) => void;
-    operator: FilterRuleOperator;
+    value: FilterRuleOperator;
 }
 
 function getDropdownOptions(operators: string[]) {
@@ -22,7 +22,7 @@ function getDropdownOptions(operators: string[]) {
     );
 }
 
-const RuleOperatorDropdown: FunctionComponent<RuleOperatorDropdownProps> = ({ ruleType, onChange, operator }) => {
+const RuleOperatorDropdown: FunctionComponent<RuleOperatorDropdownProps> = ({ ruleType, onChange, value }) => {
     const { Dropdown } = Stage.Basic;
 
     const [options, setOptions] = useState([] as DropdownItemProps[]);
@@ -44,8 +44,8 @@ const RuleOperatorDropdown: FunctionComponent<RuleOperatorDropdownProps> = ({ ru
             selectOnNavigation
             name="ruleOperator"
             options={options}
-            onChange={(_event, { value }) => onChange(value as FilterRuleOperator)}
-            value={operator}
+            onChange={(_event, data) => onChange(data.value as FilterRuleOperator)}
+            value={value}
         />
     );
 };

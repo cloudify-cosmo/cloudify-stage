@@ -39,10 +39,10 @@ const RuleRow: FunctionComponent<RuleRowProps> = ({ onChange, onRemove, removabl
     return (
         <FormGroup widths="equal">
             <FormField>
-                <RuleRowTypeDropdown onChange={onRuleTypeChange} ruleType={ruleType} />
+                <RuleRowTypeDropdown onChange={onRuleTypeChange} value={ruleType} />
             </FormField>
             <FormField>
-                <RuleOperatorDropdown onChange={onOperatorChange} operator={operator} ruleType={ruleType} />
+                <RuleOperatorDropdown onChange={onOperatorChange} value={operator} ruleType={ruleType} />
             </FormField>
             <FormField>
                 <RuleValueInput
