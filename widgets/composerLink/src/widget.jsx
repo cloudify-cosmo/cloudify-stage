@@ -1,8 +1,3 @@
-/**
- * Created by Alex on 29/06/2017.
- */
-const { Button } = Stage.Basic;
-
 Stage.defineWidget({
     id: 'composerLink',
     name: 'Composer link',
@@ -17,6 +12,8 @@ Stage.defineWidget({
     categories: [Stage.GenericConfig.CATEGORY.BUTTONS_AND_FILTERS],
 
     render() {
+        const { Button } = Stage.Basic;
+
         return (
             <Button
                 labelPosition="left"

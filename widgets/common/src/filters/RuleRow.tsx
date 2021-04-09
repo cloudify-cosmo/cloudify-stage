@@ -6,7 +6,7 @@ import RuleRemoveButton from './RuleRemoveButton';
 
 interface RuleRowProps {
     removable: boolean;
-    onRemove: ComponentProps<typeof Button>['onClick'];
+    onRemove: ComponentProps<typeof RuleRemoveButton>['onClick'];
 }
 
 const RuleRow: FunctionComponent<RuleRowProps> = ({ removable, onRemove }) => {
