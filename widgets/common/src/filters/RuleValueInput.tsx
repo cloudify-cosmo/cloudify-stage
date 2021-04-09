@@ -21,7 +21,7 @@ const RuleValueInput: FunctionComponent<RuleOperatorDropdownProps> = ({
     values
 }) => {
     const { Input } = Stage.Basic;
-    const keyDropdownRef = useRef();
+    const keyDropdownRef = useRef<HTMLElement>();
     const [labelKey, labelValue] = values;
 
     useEffect(() => {
