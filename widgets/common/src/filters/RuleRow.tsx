@@ -2,7 +2,7 @@ import type { ComponentProps, FunctionComponent } from 'react';
 
 import RuleTypeDropdown from './RuleTypeDropdown';
 import RuleOperatorDropdown from './RuleOperatorDropdown';
-import RuleInput from './RuleInput';
+import RuleValueInput from './RuleValueInput';
 import RuleRemoveButton from './RuleRemoveButton';
 import type { FilterRule, FilterRuleOperator } from './types';
 import { FilterRuleType, FilterRuleRowType } from './types';
@@ -45,7 +45,7 @@ const RuleRow: FunctionComponent<RuleRowProps> = ({ onChange, onRemove, removabl
                 <RuleOperatorDropdown onChange={onOperatorChange} operator={operator} ruleType={ruleType} />
             </FormField>
             <FormField>
-                <RuleInput
+                <RuleValueInput
                     onChange={onValuesChange}
                     operator={operator}
                     ruleType={ruleType}

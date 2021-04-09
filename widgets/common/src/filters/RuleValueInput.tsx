@@ -13,7 +13,13 @@ interface RuleOperatorDropdownProps {
     values: string[];
 }
 
-const RuleInput: FunctionComponent<RuleOperatorDropdownProps> = ({ onChange, operator, ruleType, toolbox, values }) => {
+const RuleValueInput: FunctionComponent<RuleOperatorDropdownProps> = ({
+    onChange,
+    operator,
+    ruleType,
+    toolbox,
+    values
+}) => {
     const { Input } = Stage.Basic;
     const keyDropdownRef = useRef();
     const [labelKey, labelValue] = values;
@@ -54,4 +60,4 @@ const RuleInput: FunctionComponent<RuleOperatorDropdownProps> = ({ onChange, ope
     const textValue = values[0] || '';
     return <Input type="text" onChange={(_event, { value }) => onChange([value])} value={textValue} />;
 };
-export default RuleInput;
+export default RuleValueInput;
