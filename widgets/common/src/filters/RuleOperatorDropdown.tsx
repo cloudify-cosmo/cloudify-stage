@@ -1,5 +1,5 @@
 import { camelCase } from 'lodash';
-import { FunctionComponent, useEffect, useState } from 'react';
+import { FunctionComponent, useMemo } from 'react';
 import type { DropdownItemProps } from 'semantic-ui-react/dist/commonjs/modules/Dropdown/DropdownItem';
 
 import { i18nPrefix } from './consts';
@@ -25,15 +25,11 @@ function getDropdownOptions(operators: string[]) {
 const RuleOperatorDropdown: FunctionComponent<RuleOperatorDropdownProps> = ({ ruleType, onChange, value }) => {
     const { Dropdown } = Stage.Basic;
 
-    const [options, setOptions] = useState([] as DropdownItemProps[]);
-
-    useEffect(() => {
+    const options = useMemo(() => {
         const operators = Object.values(
             ruleType === FilterRuleRowType.Label ? LabelsFilterRuleOperators : AttributesFilterRuleOperators
         );
-        const dropdownOptions = getDropdownOptions(operators);
-
-        setOptions(dropdownOptions);
+        return getDropdownOptions(operators);
     }, [ruleType]);
 
     return (
