@@ -73,8 +73,8 @@ describe('Deployments View widget', () => {
         cy.wait('@deployments');
     };
 
-    // NOTE: matches both deploymentsViewWidget and deploymentsViewDrilledDownWidget
-    const getDeploymentsViewWidget = () => cy.get('.widget').filter('[class*="deploymentsView"]').find('.widgetItem');
+    const getDeploymentsViewWidget = () =>
+        cy.get('.widget').filter('.deploymentsViewWidget, .deploymentsViewDrilledDownWidget').find('.widgetItem');
     const getDeploymentsViewTable = () => getDeploymentsViewWidget().get('.gridTable');
     const getDeploymentsViewDetailsPane = () => getDeploymentsViewWidget().get('.detailsPane');
 
