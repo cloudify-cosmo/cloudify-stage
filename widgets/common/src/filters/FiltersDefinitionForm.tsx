@@ -42,7 +42,6 @@ const FiltersDefinitionForm: FunctionComponent<FiltersDefinitionFormProps> = ({
     toolbox
 }) => {
     const {
-        Basic: { UnsafelyTypedForm: Form },
         Hooks: { useUpdateEffect }
     } = Stage;
     const [rows, setRows] = useState(() => getFilterRuleRows(initialFilters));
@@ -64,7 +63,7 @@ const FiltersDefinitionForm: FunctionComponent<FiltersDefinitionFormProps> = ({
     }, [rows]);
 
     return (
-        <Form>
+        <>
             {rows.map(row => (
                 <RuleRow
                     key={row.id}
@@ -76,7 +75,7 @@ const FiltersDefinitionForm: FunctionComponent<FiltersDefinitionFormProps> = ({
                 />
             ))}
             <AddRuleButton onClick={addRule} />
-        </Form>
+        </>
     );
 };
 export default FiltersDefinitionForm;
