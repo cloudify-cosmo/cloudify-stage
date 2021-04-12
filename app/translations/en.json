@@ -522,7 +522,7 @@
                         "addRule": "Add new rule",
                         "removeRule": "Remove rule"
                     },
-                    "attributesLabels": {
+                    "ruleTypesLabels": {
                         "label": "Label",
                         "blueprintId": "Blueprint",
                         "siteName": "Site name",
@@ -535,8 +535,8 @@
                         "isNotNull": "key is",
                         "contain": "contains",
                         "notContain": "does not contain",
-                        "startWith": "starts with",
-                        "endWith": "ends with"
+                        "startsWith": "starts with",
+                        "endsWith": "ends with"
                     }
                 }
             },

@@ -1,4 +1,5 @@
 import type { FilterRule } from '../../../../widgets/common/src/filters/types';
+import { FilterRuleOperators, FilterRuleType } from '../../../../widgets/common/src/filters/types';
 
 describe('Filters widget', () => {
     before(() => {
@@ -7,8 +8,8 @@ describe('Filters widget', () => {
 
     const filterName = 'filters_test_filter';
     const filterRules: FilterRule[] = [
-        { type: 'attribute', key: 'blueprint_id', values: ['bpid'], operator: 'any_of' },
-        { type: 'label', key: 'precious', values: ['yes'], operator: 'any_of' }
+        { type: FilterRuleType.Attribute, key: 'blueprint_id', values: ['bpid'], operator: FilterRuleOperators.AnyOf },
+        { type: FilterRuleType.Label, key: 'precious', values: ['yes'], operator: FilterRuleOperators.AnyOf }
     ];
 
     beforeEach(() => {
