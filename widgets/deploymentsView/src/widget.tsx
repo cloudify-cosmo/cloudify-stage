@@ -1,28 +1,20 @@
 import { find } from 'lodash';
 import { FunctionComponent, useMemo, useState } from 'react';
 import { useQuery } from 'react-query';
+// NOTE: workaround for Cypress TS project to pick up the common types
+import type {} from '../../common/src/deploymentsView';
 
-import {
-    deploymentsViewColumnDefinitions,
-    DeploymentsViewColumnId,
-    deploymentsViewColumnIds,
-    DeploymentsTable
-} from './table';
-import { i18nPrefix } from './common';
-import DetailsPane from './detailsPane';
-import './styles.scss';
-import type { DeploymentsResponse } from './types';
-
-export interface DeploymentsViewWidgetConfiguration {
-    /** In milliseconds */
-    customPollingTime: number;
+export interface DeploymentsViewWidgetConfiguration
+    extends Stage.Common.DeploymentsView.Types.SharedDeploymentsViewWidgetConfiguration {
     filterId?: string;
     filterByParentDeployment: boolean;
-    fieldsToShow: DeploymentsViewColumnId[];
-    pageSize: number;
-    sortColumn: string;
-    sortAscending: boolean;
 }
+
+const {
+    Common: { i18nPrefix },
+    Table: { deploymentsViewColumnIds, deploymentsViewColumnDefinitions, DeploymentsTable },
+    DetailsPane
+} = Stage.Common.DeploymentsView;
 
 Stage.defineWidget<never, never, DeploymentsViewWidgetConfiguration>({
     id: 'deploymentsView',
@@ -114,7 +106,7 @@ const DeploymentsView: FunctionComponent<DeploymentsViewProps> = ({ widget, tool
     const deploymentsUrl = '/searches/deployments';
     const deploymentsResult = useQuery(
         [deploymentsUrl, gridParams, finalFilterRules],
-        (): Promise<DeploymentsResponse> =>
+        (): Promise<Stage.Common.DeploymentsView.Types.DeploymentsResponse> =>
             manager.doPost(deploymentsUrl, gridParams, {
                 filter_rules: finalFilterRules
             }),

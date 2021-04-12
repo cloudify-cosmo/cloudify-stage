@@ -22,11 +22,13 @@ const consts = {
     }
 };
 
-declare namespace Stage {
-    interface Common {
-        Consts: typeof consts;
+declare global {
+    namespace Stage.Common {
+        const Consts: typeof consts;
     }
 }
+// NOTE: prevents exposing `consts` as a global variable in TS
+export {};
 
 Stage.defineCommon({
     name: 'Consts',

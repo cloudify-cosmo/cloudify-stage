@@ -14,10 +14,14 @@ function useOpen(onOpen: () => void) {
     return [open, doOpen, doClose] as const;
 }
 
-declare namespace Stage {
-    interface Hooks {
-        useOpen: typeof useOpen;
+declare global {
+    namespace Stage {
+        interface Hooks {
+            useOpen: typeof useOpen;
+        }
     }
 }
+// NOTE: prevents leaking variables as global in TS
+export {};
 
 Stage.defineHook({ useOpen });

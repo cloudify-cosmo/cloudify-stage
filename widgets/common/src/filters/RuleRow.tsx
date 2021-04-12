@@ -8,7 +8,7 @@ import type { FilterRule, FilterRuleOperator } from './types';
 import { FilterRuleType, FilterRuleRowType } from './types';
 
 interface RuleRowProps {
-    onRemove: ComponentProps<typeof Button>['onClick'];
+    onRemove: ComponentProps<typeof RuleRemoveButton>['onClick'];
     onChange: (rule: FilterRule) => void;
     removable: boolean;
     rule: FilterRule;
