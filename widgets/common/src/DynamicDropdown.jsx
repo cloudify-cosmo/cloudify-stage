@@ -45,10 +45,6 @@ function DynamicDropdown({
     }
 
     function loadMore() {
-        if (disabled) {
-            return;
-        }
-
         setLoading(true);
 
         if (fetchAll) {
@@ -84,8 +80,8 @@ function DynamicDropdown({
     }
 
     useEffect(() => {
-        if (shouldLoadMore) loadMore();
-    }, [shouldLoadMore]);
+        if (shouldLoadMore && !disabled) loadMore();
+    }, [shouldLoadMore, disabled]);
 
     useEventListener(toolbox, refreshEvent, refreshData);
 
