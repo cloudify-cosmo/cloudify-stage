@@ -11,7 +11,7 @@ function useDebouncedSetValue(value, setValue, deps) {
     }, deps);
 }
 
-export default function CommonDropdown({ innerRef, baseFetchUrl, onChange, toolbox, value, ...rest }) {
+export default function CommonDropdown({ innerRef, baseFetchUrl, onChange, toolbox, readOnly, value, ...rest }) {
     const { useEffect, useState } = React;
     const {
         Common: { DynamicDropdown },
@@ -19,13 +19,18 @@ export default function CommonDropdown({ innerRef, baseFetchUrl, onChange, toolb
     } = Stage;
 
     const [fetchUrl, setFetchUrl] = useState(baseFetchUrl);
-    const { inputValue, invalidCharacterTyped, submitChange, resetInput, unsetInvalidCharacterTyped } = useLabelInput(
-        onChange
-    );
+    const {
+        inputValue,
+        invalidCharacterTyped,
+        submitChange,
+        resetInput,
+        unsetInvalidCharacterTyped
+    } = useLabelInput(onChange, { readOnly });
 
-    useDebouncedSetValue(baseFetchUrl ? addSearchToUrl(baseFetchUrl, inputValue) : '', setFetchUrl, [
+    useDebouncedSetValue(readOnly ? baseFetchUrl : addSearchToUrl(baseFetchUrl, inputValue), setFetchUrl, [
         baseFetchUrl,
-        inputValue
+        inputValue,
+        readOnly
     ]);
 
     useEffect(() => {
@@ -45,10 +50,11 @@ export default function CommonDropdown({ innerRef, baseFetchUrl, onChange, toolb
                 itemsFormatter={items => _.map(items, item => ({ id: item }))}
                 onBlur={unsetInvalidCharacterTyped}
                 onChange={newValue => submitChange(null, { value: newValue })}
-                onSearchChange={submitChange}
-                searchQuery={inputValue}
-                selectOnNavigation={false}
+                onSearchChange={readOnly ? undefined : submitChange}
+                searchQuery={readOnly ? undefined : inputValue}
+                selectOnNavigation={readOnly}
                 toolbox={toolbox}
+                value={readOnly ? value : undefined}
                 /* eslint-disable-next-line react/jsx-props-no-spreading */
                 {...rest}
             />
@@ -61,10 +67,12 @@ CommonDropdown.propTypes = {
     innerRef: PropTypes.shape({ current: PropTypes.instanceOf(HTMLElement) }),
     onChange: PropTypes.func.isRequired,
     toolbox: Stage.PropTypes.Toolbox.isRequired,
-    value: PropTypes.string
+    readOnly: PropTypes.bool,
+    value: PropTypes.oneOfType([PropTypes.string, PropTypes.arrayOf(PropTypes.string)])
 };
 
 CommonDropdown.defaultProps = {
     innerRef: null,
+    readOnly: false,
     value: null
 };
