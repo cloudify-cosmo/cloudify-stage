@@ -11,10 +11,14 @@ function useOpenProp(openProp: boolean, onOpen: () => void) {
     }, [openProp]);
 }
 
-declare namespace Stage {
-    interface Hooks {
-        useOpenProp: typeof useOpenProp;
+declare global {
+    namespace Stage {
+        interface Hooks {
+            useOpenProp: typeof useOpenProp;
+        }
     }
 }
+// NOTE: prevents leaking variables as global in TS
+export {};
 
 Stage.defineHook({ useOpenProp });
