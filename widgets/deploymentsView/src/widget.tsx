@@ -1,5 +1,4 @@
-import { find } from 'lodash';
-import { FunctionComponent, useMemo, useState } from 'react';
+import type { FunctionComponent } from 'react';
 import { useQuery } from 'react-query';
 
 export interface DeploymentsViewWidgetConfiguration
@@ -9,10 +8,8 @@ export interface DeploymentsViewWidgetConfiguration
 }
 
 const {
-    Common: { i18nPrefix },
-    Table: { DeploymentsTable },
+    Common: { i18nPrefix, i18nMessagesPrefix },
     Configuration: { sharedConfiguration },
-    DetailsPane,
     sharedDefinition
 } = Stage.Common.DeploymentsView;
 
@@ -41,74 +38,28 @@ Stage.defineWidget<never, never, DeploymentsViewWidgetConfiguration>({
     ],
 
     render(widget, _data, _error, toolbox) {
-        return <DeploymentsView widget={widget} toolbox={toolbox} />;
+        return <TopLevelDeploymentsView widget={widget} toolbox={toolbox} />;
     }
 });
 
-const i18nMessagesPrefix = `${i18nPrefix}.messages`;
-
-interface DeploymentsViewProps {
+interface TopLevelDeploymentsViewProps {
     widget: Stage.Types.Widget<DeploymentsViewWidgetConfiguration>;
     toolbox: Stage.Types.Toolbox;
 }
 
-const DeploymentsView: FunctionComponent<DeploymentsViewProps> = ({ widget, toolbox }) => {
-    const { Loading, ErrorMessage } = Stage.Basic;
-    const { i18n } = Stage;
-    const { fieldsToShow, pageSize, filterId, filterByParentDeployment, customPollingTime } = widget.configuration;
+const TopLevelDeploymentsView: FunctionComponent<TopLevelDeploymentsViewProps> = ({ widget, toolbox }) => {
+    const { filterId, filterByParentDeployment } = widget.configuration;
     const manager = toolbox.getManager();
+
     const filterRulesUrl = `/filters/deployments/${filterId}`;
-    const filterRulesResult = useQuery(
+    const filterRulesResult = useQuery<Stage.Common.Filters.Rule[]>(
         filterRulesUrl,
-        ({ queryKey: url }) =>
-            filterId ? manager.doGet(url).then(filtersResponse => filtersResponse.value as unknown[]) : [],
+        ({ queryKey: url }) => (filterId ? manager.doGet(url).then(filtersResponse => filtersResponse.value) : []),
         { refetchOnWindowFocus: false, keepPreviousData: true }
     );
-    const [gridParams, setGridParams] = useState<Stage.Types.ManagerGridParams>();
-    const filteringByParentDeploymentResult = useFilteringByParentDeployment({ filterByParentDeployment });
-    const finalFilterRules = useMemo(() => {
-        if (!filterRulesResult.isSuccess) {
-            return undefined;
-        }
-        if (!filteringByParentDeploymentResult.parentDeploymentRule) {
-            return filterRulesResult.data;
-        }
 
-        return [...filterRulesResult.data, filteringByParentDeploymentResult.parentDeploymentRule];
-    }, [filterRulesResult.isSuccess, filterRulesResult.data, filteringByParentDeploymentResult.parentDeploymentRule]);
-    const deploymentsUrl = '/searches/deployments';
-    const deploymentsResult = useQuery(
-        [deploymentsUrl, gridParams, finalFilterRules],
-        (): Promise<Stage.Common.DeploymentsView.Types.DeploymentsResponse> =>
-            manager.doPost(deploymentsUrl, gridParams, {
-                filter_rules: finalFilterRules
-            }),
-        {
-            enabled: filterRulesResult.isSuccess && filteringByParentDeploymentResult.filterable,
-            onSuccess: data => {
-                const context = toolbox.getContext();
-                // TODO(RD-1830): detect if deploymentId is not present in the current page and reset it.
-                // Do that only if `fetchData` was called from `DataTable`. If it's just polling,
-                // then don't reset it (because user may be interacting with some other component)
-                if (context.getValue('deploymentId') === undefined && data.items.length > 0) {
-                    context.setValue('deploymentId', data.items[0].id);
-                }
-            },
-            refetchInterval: customPollingTime * 1000,
-            keepPreviousData: true
-        }
-    );
-
-    if (filteringByParentDeploymentResult.missingParentDeploymentId) {
-        const i18nMissingParentDeploymentPrefix = `${i18nMessagesPrefix}.missingParentDeploymentId`;
-
-        return (
-            <ErrorMessage
-                header={i18n.t(`${i18nMissingParentDeploymentPrefix}.header`)}
-                error={i18n.t(`${i18nMissingParentDeploymentPrefix}.message`)}
-            />
-        );
-    }
+    const { Loading, ErrorMessage } = Stage.Basic;
+    const { i18n } = Stage;
 
     if (filterRulesResult.isLoading) {
         return <Loading message={i18n.t(`${i18nMessagesPrefix}.loadingFilterRules`)} />;
@@ -122,69 +73,20 @@ const DeploymentsView: FunctionComponent<DeploymentsViewProps> = ({ widget, tool
         );
     }
 
-    if (deploymentsResult.isLoading || deploymentsResult.isIdle) {
-        return <Loading message={i18n.t(`${i18nMessagesPrefix}.loadingDeployments`)} />;
-    }
-    if (deploymentsResult.isError) {
-        return (
-            <ErrorMessage
-                header={i18n.t(`${i18nMessagesPrefix}.errorLoadingDeployments`)}
-                error={deploymentsResult.error as { message: string }}
-            />
+    if (filterRulesResult.isIdle) {
+        throw new Error(
+            'Fetching filter rules is disabled without explicitly handling this scenario. Those rules should always be fetched.'
         );
     }
 
-    const selectedDeployment = find(deploymentsResult.data.items, {
-        // NOTE: type assertion since lodash has problems receiving string[] in the object
-        id: toolbox.getContext().getValue('deploymentId') as string | undefined
-    });
-
+    const { DeploymentsView } = Stage.Common.DeploymentsView;
     return (
-        <div className="grid">
-            <DeploymentsTable
-                setGridParams={setGridParams}
-                toolbox={toolbox}
-                loadingIndicatorVisible={filterRulesResult.isFetching || deploymentsResult.isFetching}
-                pageSize={pageSize}
-                totalSize={deploymentsResult.data.metadata.pagination.total}
-                deployments={deploymentsResult.data.items}
-                fieldsToShow={fieldsToShow}
-            />
-            <DetailsPane deployment={selectedDeployment} widget={widget} toolbox={toolbox} />
-        </div>
+        <DeploymentsView
+            toolbox={toolbox}
+            widget={widget}
+            filterByParentDeployment={filterByParentDeployment}
+            filterRules={filterRulesResult.data}
+            fetchingRules={filterRulesResult.isFetching}
+        />
     );
-};
-
-const useFilteringByParentDeployment = ({ filterByParentDeployment }: { filterByParentDeployment: boolean }) => {
-    const drilldownContext = ReactRedux.useSelector((state: Stage.Types.ReduxState) => state.drilldownContext);
-    const parentDeploymentId = useMemo(() => {
-        if (drilldownContext.length < 2) {
-            return undefined;
-        }
-
-        const parentPageContext = drilldownContext[drilldownContext.length - 2].context;
-
-        return parentPageContext?.deploymentId as string | undefined;
-    }, [drilldownContext]);
-
-    if (!filterByParentDeployment) {
-        return { filterable: true } as const;
-    }
-
-    if (!parentDeploymentId) {
-        return {
-            filterable: false,
-            missingParentDeploymentId: true
-        } as const;
-    }
-
-    return {
-        filterable: true,
-        parentDeploymentRule: {
-            type: 'label',
-            key: 'csys-obj-parent',
-            operator: 'any_of',
-            values: [parentDeploymentId]
-        }
-    } as const;
 };
