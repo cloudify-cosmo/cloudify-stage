@@ -1,8 +1,6 @@
 import { find } from 'lodash';
 import { FunctionComponent, useMemo, useState } from 'react';
 import { useQuery } from 'react-query';
-// NOTE: workaround for Cypress TS project to pick up the common types
-import type {} from '../../common/src/deploymentsView';
 
 export interface DeploymentsViewWidgetConfiguration
     extends Stage.Common.DeploymentsView.Configuration.SharedDeploymentsViewWidgetConfiguration {
