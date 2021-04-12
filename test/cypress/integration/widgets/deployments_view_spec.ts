@@ -57,19 +57,21 @@ describe('Deployments View widget', () => {
             .setLabels(deploymentName, [{ 'rendered-inside': 'details-panel' }]);
     });
 
+    beforeEach(() => {
+        // NOTE: larger viewport since the widget requires more width to be comfortable to use
+        cy.viewport(1600, 900);
+    });
+
     const useDeploymentsViewWidget = ({
         routeHandler,
         configurationOverrides = {}
     }: { routeHandler?: RouteHandler; configurationOverrides?: Record<string, any> } = {}) => {
         cy.interceptSp('POST', /^\/searches\/deployments/, routeHandler).as('deployments');
-        // NOTE: larger viewport since the widget requires more width to be comfortable to use
-        cy.viewport(1600, 900)
-            .usePageMock(
-                [widgetId],
-                { ...widgetConfiguration, ...configurationOverrides },
-                { additionalWidgetIdsToLoad, widgetsWidth: 12, additionalPageTemplates: ['drilldownDeployments'] }
-            )
-            .mockLogin();
+        cy.usePageMock(
+            [widgetId],
+            { ...widgetConfiguration, ...configurationOverrides },
+            { additionalWidgetIdsToLoad, widgetsWidth: 12, additionalPageTemplates: ['drilldownDeployments'] }
+        ).mockLogin();
         cy.wait('@deployments');
     };
 
@@ -424,5 +426,11 @@ describe('Deployments View widget', () => {
                 cy.contains('db-env').should('not.exist');
             });
         });
+    });
+
+    it('should display an error message when using the drilled-down widget on a top-level page', () => {
+        cy.usePageMock([`${widgetId}DrilledDown`]).mockLogin();
+
+        cy.contains('Unexpected widget usage');
     });
 });

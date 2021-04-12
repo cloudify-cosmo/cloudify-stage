@@ -1,4 +1,4 @@
-export {};
+import type { FunctionComponent } from 'react';
 
 const {
     Common: { i18nDrillDownPrefix },
@@ -18,34 +18,58 @@ Stage.defineWidget<never, never, DrilledDownWidgetConfiguration>({
     initialConfiguration: sharedConfiguration,
 
     render(widget, _data, _error, toolbox) {
-        const {
-            DeploymentsView,
-            Common: { i18nMessagesPrefix, filterRulesContextKey }
-        } = Stage.Common.DeploymentsView;
-        const filterRules: Stage.Common.Filters.Rule[] | undefined = toolbox
-            .getContext()
-            .getValue(filterRulesContextKey);
-        const { ErrorMessage } = Stage.Basic;
+        return <DrilledDownDeploymentsViewWidget widget={widget} toolbox={toolbox} />;
+    }
+});
 
-        if (!filterRules || !Array.isArray(filterRules)) {
-            const i18nMissingFilterRulesPrefix = `${i18nMessagesPrefix}.missingFilterRules`;
+interface DrilledDownDeploymentsViewWidgetProps {
+    widget: Stage.Types.Widget<DrilledDownWidgetConfiguration>;
+    toolbox: Stage.Types.Toolbox;
+}
 
-            return (
-                <ErrorMessage
-                    header={Stage.i18n.t(`${i18nMissingFilterRulesPrefix}.header`)}
-                    error={Stage.i18n.t(`${i18nMissingFilterRulesPrefix}.message`)}
-                />
-            );
-        }
+const DrilledDownDeploymentsViewWidget: FunctionComponent<DrilledDownDeploymentsViewWidgetProps> = ({
+    widget,
+    toolbox
+}) => {
+    const {
+        DeploymentsView,
+        Common: { i18nMessagesPrefix, filterRulesContextKey }
+    } = Stage.Common.DeploymentsView;
+    const filterRules: Stage.Common.Filters.Rule[] | undefined = toolbox.getContext().getValue(filterRulesContextKey);
+    const { ErrorMessage } = Stage.Basic;
+
+    const drilldownContext = ReactRedux.useSelector((state: Stage.Types.ReduxState) => state.drilldownContext);
+    const isTopLevelPage = drilldownContext.length < 2;
+
+    if (isTopLevelPage) {
+        const i18nTopLevelPagePrefix = `${i18nMessagesPrefix}.unexpectedWidgetUsage`;
 
         return (
-            <DeploymentsView
-                toolbox={toolbox}
-                widget={widget}
-                filterByParentDeployment
-                filterRules={filterRules}
-                fetchingRules={false}
+            <ErrorMessage
+                header={Stage.i18n.t(`${i18nTopLevelPagePrefix}.header`)}
+                error={Stage.i18n.t(`${i18nTopLevelPagePrefix}.message`)}
             />
         );
     }
-});
+
+    if (!filterRules || !Array.isArray(filterRules)) {
+        const i18nMissingFilterRulesPrefix = `${i18nMessagesPrefix}.missingFilterRules`;
+
+        return (
+            <ErrorMessage
+                header={Stage.i18n.t(`${i18nMissingFilterRulesPrefix}.header`)}
+                error={Stage.i18n.t(`${i18nMissingFilterRulesPrefix}.message`)}
+            />
+        );
+    }
+
+    return (
+        <DeploymentsView
+            toolbox={toolbox}
+            widget={widget}
+            filterByParentDeployment
+            filterRules={filterRules}
+            fetchingRules={false}
+        />
+    );
+};
