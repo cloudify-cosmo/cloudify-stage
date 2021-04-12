@@ -6,6 +6,7 @@ import { i18nMessagesPrefix } from './common';
 import type { SharedDeploymentsViewWidgetConfiguration } from './configuration';
 import DetailsPane from './detailsPane';
 import { DeploymentsTable } from './table';
+import { FilterRuleOperators, FilterRuleType } from '../filters/types';
 
 export interface DeploymentsViewProps {
     widget: Stage.Types.Widget<SharedDeploymentsViewWidgetConfiguration>;
@@ -123,11 +124,11 @@ const useFilteringByParentDeployment = ({ filterByParentDeployment }: { filterBy
     return {
         filterable: true,
         parentDeploymentRule: {
-            type: 'label',
+            type: FilterRuleType.Label,
             key: 'csys-obj-parent',
-            operator: 'any_of',
+            operator: FilterRuleOperators.AnyOf,
             values: [parentDeploymentId]
-        }
+        } as Stage.Common.Filters.Rule
     } as const;
 };
 
