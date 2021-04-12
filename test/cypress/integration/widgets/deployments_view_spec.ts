@@ -4,6 +4,7 @@ import { without } from 'lodash';
 import type { SystemLabel } from '../../support/deployments';
 
 import { exampleBlueprintUrl } from '../../support/resource_urls';
+import { FilterRuleOperators, FilterRuleType } from '../../../../widgets/common/src/filters/types';
 
 describe('Deployments View widget', () => {
     const widgetId = 'deploymentsView';
@@ -152,7 +153,12 @@ describe('Deployments View widget', () => {
         before(() => {
             cy.deleteDeploymentsFilter(filterId, { ignoreFailure: true })
                 .createDeploymentsFilter(filterId, [
-                    { type: 'label', key: 'precious', values: ['yes'], operator: 'any_of' }
+                    {
+                        type: FilterRuleType.Label,
+                        key: 'precious',
+                        values: ['yes'],
+                        operator: FilterRuleOperators.AnyOf
+                    }
                 ])
                 .deployBlueprint(blueprintName, deploymentNameThatMatchesFilter, { webserver_port: 9124 })
                 .setLabels(deploymentNameThatMatchesFilter, [{ precious: 'yes' }]);

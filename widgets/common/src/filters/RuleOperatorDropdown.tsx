@@ -1,28 +1,48 @@
 import { camelCase } from 'lodash';
-import type { FunctionComponent } from 'react';
+import { FunctionComponent, useMemo } from 'react';
 import type { DropdownItemProps } from 'semantic-ui-react/dist/commonjs/modules/Dropdown/DropdownItem';
+
 import { i18nPrefix } from './consts';
+import { FilterRuleRowType, LabelsFilterRuleOperators, AttributesFilterRuleOperators } from './types';
+import type { FilterRuleOperator } from './types';
 
-const { i18n } = Stage;
-const operatorsOptions = [
-    'any_of',
-    'not_any_of',
-    'is_null',
-    'is_not_null',
-    'contain',
-    'not_contain',
-    'start_with',
-    'end_with'
-].map(
-    (operator): DropdownItemProps => ({
-        text: i18n.t(`${i18nPrefix}.operatorsLabels.${camelCase(operator)}`),
-        value: operator
-    })
-);
+interface RuleOperatorDropdownProps {
+    ruleType: FilterRuleRowType;
+    onChange: (value: FilterRuleOperator) => void;
+    value: FilterRuleOperator;
+}
 
-const RuleOperatorDropdown: FunctionComponent = () => {
+function getDropdownOptions(operators: string[]) {
+    const { i18n } = Stage;
+    return operators.map(
+        (operator): DropdownItemProps => ({
+            text: i18n.t(`${i18nPrefix}.operatorsLabels.${camelCase(operator)}`),
+            value: operator
+        })
+    );
+}
+
+const RuleOperatorDropdown: FunctionComponent<RuleOperatorDropdownProps> = ({ ruleType, onChange, value }) => {
     const { Dropdown } = Stage.Basic;
 
-    return <Dropdown search selection name="ruleOperator" options={operatorsOptions} />;
+    const options = useMemo(() => {
+        const operators = Object.values(
+            ruleType === FilterRuleRowType.Label ? LabelsFilterRuleOperators : AttributesFilterRuleOperators
+        );
+        return getDropdownOptions(operators);
+    }, [ruleType]);
+
+    return (
+        <Dropdown
+            clearable={false}
+            search
+            selection
+            selectOnNavigation
+            name="ruleOperator"
+            options={options}
+            onChange={(_event, data) => onChange(data.value as FilterRuleOperator)}
+            value={value}
+        />
+    );
 };
 export default RuleOperatorDropdown;
