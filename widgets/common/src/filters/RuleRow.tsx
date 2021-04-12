@@ -5,7 +5,7 @@ import RuleOperatorDropdown from './RuleOperatorDropdown';
 import RuleValueInput from './RuleValueInput';
 import RuleRemoveButton from './RuleRemoveButton';
 import type { FilterRule, FilterRuleOperator } from './types';
-import { FilterRuleType, FilterRuleRowType } from './types';
+import { FilterRuleType, FilterRuleRowType, FilterRuleOperators } from './types';
 
 interface RuleRowProps {
     onRemove: ComponentProps<typeof Button>['onClick'];
@@ -15,21 +15,29 @@ interface RuleRowProps {
     toolbox: Stage.Types.Toolbox;
 }
 
+const defaultOperator = FilterRuleOperators.AnyOf;
+const defaultValues: string[] = [];
+const defaultOperatorAndValues = { operator: defaultOperator, values: defaultValues };
+
 const RuleRow: FunctionComponent<RuleRowProps> = ({ onChange, onRemove, removable, rule, toolbox }) => {
     const { UnsafelyTypedFormField: FormField, UnsafelyTypedFormGroup: FormGroup } = Stage.Basic;
-    const { key, operator, type, values } = rule;
+    const { key, operator, type } = rule;
     const ruleType = type === FilterRuleType.Label ? FilterRuleRowType.Label : (key as FilterRuleRowType);
 
     function onRuleTypeChange(newRuleType: FilterRuleRowType) {
         if (newRuleType === FilterRuleRowType.Label) {
-            onChange({ ...rule, type: FilterRuleType.Label, key: '' });
+            onChange({ ...rule, type: FilterRuleType.Label, ...defaultOperatorAndValues, key: '' });
         } else {
-            onChange({ ...rule, type: FilterRuleType.Attribute, key: newRuleType });
+            onChange({ ...rule, type: FilterRuleType.Attribute, ...defaultOperatorAndValues, key: newRuleType });
         }
     }
 
     function onOperatorChange(newOperator: FilterRuleOperator) {
-        onChange({ ...rule, operator: newOperator });
+        onChange({ ...rule, operator: newOperator, values: defaultValues });
+    }
+
+    function onKeyChange(newKey: string) {
+        onChange({ ...rule, key: newKey, values: defaultValues });
     }
 
     function onValuesChange(newValues: string[]) {
@@ -46,10 +54,10 @@ const RuleRow: FunctionComponent<RuleRowProps> = ({ onChange, onRemove, removabl
             </FormField>
             <FormField>
                 <RuleValueInput
-                    onChange={onValuesChange}
-                    operator={operator}
+                    onKeyChange={onKeyChange}
+                    onValuesChange={onValuesChange}
                     ruleType={ruleType}
-                    values={values}
+                    rule={rule}
                     toolbox={toolbox}
                 />
             </FormField>
