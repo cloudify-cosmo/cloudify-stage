@@ -3,7 +3,7 @@ import './DynamicDropdown.css';
 
 let instanceCount = 0;
 
-function DynamicDropdown({
+export default function DynamicDropdown({
     innerRef,
     disabled,
     multiple,
