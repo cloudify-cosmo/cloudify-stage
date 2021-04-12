@@ -10,11 +10,8 @@
           "height": 28,
           "x": 0,
           "y": 0,
-          "TODO(RD-2002)": "use the new drilled down widget",
-          "definition": "deploymentsView",
-          "configuration": {
-            "filterByParentDeployment": true
-          }
+          "definition": "deploymentsViewDrilledDown",
+          "configuration": {}
         }
       ]
     }

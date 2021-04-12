@@ -649,6 +649,8 @@
                 }
             },
             "drillDown": {
+                "name": "Deployments view (drilled-down)",
+                "description": "A complete deployments view in a drilled-down context – Deployment list, map view, and detailed deployment info",
                 "breadcrumbs": {
                     "environments": "Environments",
                     "services": "Services"
