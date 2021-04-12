@@ -501,10 +501,16 @@
             },
             "labels": {
                 "addButton": "Add",
-                "keyPlaceholder": "Select or type in a key",
+                "keyPlaceholder": {
+                    "readOnly": "Select a key",
+                    "readWrite": "Select or type in a key"
+                },
                 "newKey": "New key",
                 "newValue": "New value",
-                "valuePlaceholder": "Select or type in a value",
+                "valuePlaceholder": {
+                    "readOnly": "Select a value",
+                    "readWrite": "Select or type in a value"
+                },
                 "validationError": "Only letters, digits and the characters \"-\", \".\" and \"_\" are allowed and it must begin with a letter.",
                 "invalidKeyError": "All labels starting with `{{ keyPrefix }}` are reserved for internal usage and should not be used unless there is a need to override default functionality. The following labels are allowed for such override: {{ reservedKeys }}.",
                 "input": {

@@ -8,7 +8,7 @@ export default function ValueDropdown({ labelKey, onChange, toolbox, multiple, r
             disabled={!labelKey}
             baseFetchUrl={labelKey ? `/labels/deployments/${labelKey}` : ''}
             noResultsMessage={value && !readOnly ? i18n.t('widgets.common.labels.newValue') : undefined}
-            placeholder={i18n.t('widgets.common.labels.valuePlaceholder')}
+            placeholder={i18n.t(`widgets.common.labels.valuePlaceholder.${readOnly ? 'readOnly' : 'readWrite'}`)}
             name="labelValue"
             tabIndex={labelKey ? 0 : -1}
             onChange={onChange}

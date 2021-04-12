@@ -8,7 +8,7 @@ export default function KeyDropdown({ innerRef, onChange, toolbox, readOnly, val
             innerRef={innerRef}
             baseFetchUrl="/labels/deployments"
             noResultsMessage={value && !readOnly ? i18n.t('widgets.common.labels.newKey') : undefined}
-            placeholder={i18n.t('widgets.common.labels.keyPlaceholder')}
+            placeholder={i18n.t(`widgets.common.labels.keyPlaceholder.${readOnly ? 'readOnly' : 'readWrite'}`)}
             name="labelKey"
             tabIndex={0}
             onChange={onChange}
