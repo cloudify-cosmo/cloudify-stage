@@ -4,11 +4,11 @@ const Filters = {
     Form: FiltersDefinitionForm
 };
 
+// NOTE: alias name to avoid name shadowing inside the namespace
+const FiltersAlias = Filters;
 declare global {
-    namespace Stage {
-        interface Common {
-            Filters: typeof Filters;
-        }
+    namespace Stage.Common {
+        const Filters: typeof FiltersAlias;
     }
 }
 
