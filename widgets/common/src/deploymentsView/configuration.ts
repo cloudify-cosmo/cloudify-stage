@@ -28,7 +28,7 @@ export const sharedConfiguration: Stage.Types.WidgetConfigurationDefinition[] = 
         default: deploymentsViewColumnIds.filter(columnId => columnId !== 'environmentType'),
         type: Stage.Basic.GenericField.MULTI_SELECT_LIST_TYPE
     },
-    Stage.GenericConfig.PAGE_SIZE_CONFIG(100),
+    Stage.GenericConfig.PAGE_SIZE_CONFIG(50),
     Stage.GenericConfig.SORT_COLUMN_CONFIG('created_at'),
     Stage.GenericConfig.SORT_ASCENDING_CONFIG(false)
 ];
