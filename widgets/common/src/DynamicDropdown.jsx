@@ -39,13 +39,17 @@ function DynamicDropdown({
     const [isLoading, setLoading] = useState(false);
     const [overrideOptionsAfterFetch, setOverrideOptionsAfterFetch, resetOverrideOptionsAfterFetch] = useBoolean();
 
+    function unsetLoadingAndShouldLoadMore() {
+        setLoading(false);
+        setShouldLoadMore(false);
+    }
+
     function loadMore() {
         if (disabled) {
             return;
         }
 
         setLoading(true);
-        setShouldLoadMore(false);
 
         if (fetchAll) {
             toolbox
@@ -55,7 +59,7 @@ function DynamicDropdown({
                     setHasMore(false);
                     setOptions(itemsFormatter(data.items));
                 })
-                .finally(() => setLoading(false));
+                .finally(unsetLoadingAndShouldLoadMore);
         } else {
             const nextPage = currentPage + 1;
 
@@ -67,7 +71,7 @@ function DynamicDropdown({
                     setOptions([...(overrideOptionsAfterFetch ? [] : options), ...itemsFormatter(data.items)]);
                     resetOverrideOptionsAfterFetch();
                 })
-                .finally(() => setLoading(false));
+                .finally(unsetLoadingAndShouldLoadMore);
 
             setCurrentPage(nextPage);
         }
