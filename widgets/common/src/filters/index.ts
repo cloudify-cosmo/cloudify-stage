@@ -1,4 +1,5 @@
 import FiltersDefinitionForm from './FiltersDefinitionForm';
+import { FilterRule } from './types';
 
 const Filters = {
     Form: FiltersDefinitionForm
@@ -8,6 +9,10 @@ const Filters = {
 const FiltersAlias = Filters;
 declare global {
     namespace Stage.Common {
+        // eslint-disable-next-line @typescript-eslint/no-namespace
+        namespace Filters {
+            export type Rule = FilterRule;
+        }
         const Filters: typeof FiltersAlias;
     }
 }
