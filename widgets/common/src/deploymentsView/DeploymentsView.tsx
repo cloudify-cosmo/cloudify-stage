@@ -107,15 +107,7 @@ export const DeploymentsView: FunctionComponent<DeploymentsViewProps> = ({
 
 const useFilteringByParentDeployment = ({ filterByParentDeployment }: { filterByParentDeployment: boolean }) => {
     const drilldownContext = ReactRedux.useSelector((state: Stage.Types.ReduxState) => state.drilldownContext);
-    const parentDeploymentId = useMemo(() => {
-        if (drilldownContext.length < 2) {
-            return undefined;
-        }
-
-        const parentPageContext = drilldownContext[drilldownContext.length - 2].context;
-
-        return parentPageContext?.deploymentId as string | undefined;
-    }, [drilldownContext]);
+    const parentDeploymentId = useMemo(() => getParentDeploymentId(drilldownContext), [drilldownContext]);
 
     if (!filterByParentDeployment) {
         return { filterable: true } as const;
@@ -137,4 +129,22 @@ const useFilteringByParentDeployment = ({ filterByParentDeployment }: { filterBy
             values: [parentDeploymentId]
         }
     } as const;
+};
+
+const getParentDeploymentId = (drilldownContext: Stage.Types.ReduxState['drilldownContext']) => {
+    /**
+     * NOTE: drilldownContext contains contexts for each page, starting with
+     * the top-level page, and ending with the current page's initial context.
+     *
+     * Thus, the current page's parent context will be the penultimate entry in the array.
+     *
+     * It may happen, that the array only contains a single item (if we are on the top-level page).
+     */
+    if (drilldownContext.length < 2) {
+        return undefined;
+    }
+
+    const parentPageContext = drilldownContext[drilldownContext.length - 2].context;
+
+    return parentPageContext?.deploymentId as string | undefined;
 };
