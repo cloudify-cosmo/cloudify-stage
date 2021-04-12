@@ -6,3 +6,5 @@ export const i18nDrillDownPrefix = `${i18nPrefix}.drillDown`;
 
 export const subenvironmentsIcon: SemanticICONS = 'object group';
 export const subservicesIcon: SemanticICONS = 'cube';
+
+export const filterRulesContextKey = 'filterRules';

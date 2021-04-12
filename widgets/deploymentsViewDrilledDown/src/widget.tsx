@@ -18,15 +18,32 @@ Stage.defineWidget<never, never, DrilledDownWidgetConfiguration>({
     initialConfiguration: sharedConfiguration,
 
     render(widget, _data, _error, toolbox) {
-        // TODO(RD-2004): get filter rules from context
+        const {
+            DeploymentsView,
+            Common: { i18nMessagesPrefix, filterRulesContextKey }
+        } = Stage.Common.DeploymentsView;
+        const filterRules: Stage.Common.Filters.Rule[] | undefined = toolbox
+            .getContext()
+            .getValue(filterRulesContextKey);
+        const { ErrorMessage } = Stage.Basic;
 
-        const { DeploymentsView } = Stage.Common.DeploymentsView;
+        if (!filterRules || !Array.isArray(filterRules)) {
+            const i18nMissingFilterRulesPrefix = `${i18nMessagesPrefix}.missingFilterRules`;
+
+            return (
+                <ErrorMessage
+                    header={Stage.i18n.t(`${i18nMissingFilterRulesPrefix}.header`)}
+                    error={Stage.i18n.t(`${i18nMissingFilterRulesPrefix}.message`)}
+                />
+            );
+        }
+
         return (
             <DeploymentsView
                 toolbox={toolbox}
                 widget={widget}
                 filterByParentDeployment
-                filterRules={[]}
+                filterRules={filterRules}
                 fetchingRules={false}
             />
         );

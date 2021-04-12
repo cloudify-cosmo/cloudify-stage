@@ -680,6 +680,10 @@
                 "missingParentDeploymentId": {
                     "header": "Cannot filter by parent deployment",
                     "message": "A selected deployment cannot be found in the parent page. Turn off the option in the configuration."
+                },
+                "missingFilterRules": {
+                    "header": "Internal error occurred",
+                    "message": "Try going to the home page and drill down again."
                 }
             }
         },

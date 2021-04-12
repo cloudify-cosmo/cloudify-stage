@@ -331,9 +331,9 @@ describe('Deployments View widget', () => {
         const deployments: Record<DrilldownDeploymentName, SystemLabel[]> = {
             'app-env': [{ 'csys-obj-type': 'environment' }],
             'db-env': [{ 'csys-obj-type': 'environment' }, { 'csys-obj-parent': getDeploymentFullName('app-env') }],
-            'db-1': [{ 'csys-obj-parent': getDeploymentFullName('db-env') }],
-            'db-2': [{ 'csys-obj-parent': getDeploymentFullName('db-env') }],
-            'web-app': [{ 'csys-obj-parent': getDeploymentFullName('app-env') }]
+            'db-1': [{ 'csys-obj-type': 'service' }, { 'csys-obj-parent': getDeploymentFullName('db-env') }],
+            'db-2': [{ 'csys-obj-type': 'service' }, { 'csys-obj-parent': getDeploymentFullName('db-env') }],
+            'web-app': [{ 'csys-obj-type': 'service' }, { 'csys-obj-parent': getDeploymentFullName('app-env') }]
         };
 
         before(() => {
@@ -382,8 +382,7 @@ describe('Deployments View widget', () => {
                     cy.contains('db-env').click();
                     cy.contains('app-env').should('not.exist');
                     cy.contains('db-1').should('not.exist');
-                    // TODO(RD-2004): uncomment the line below
-                    // cy.contains('web-app').should('not.exist');
+                    cy.contains('web-app').should('not.exist');
                 });
             };
             verifySubdeploymentsOfAppEnv();
@@ -411,6 +410,19 @@ describe('Deployments View widget', () => {
             cy.log('Go back to the parent environment');
             getBreadcrumbs().contains('app-env').click();
             verifySubdeploymentsOfAppEnv();
+
+            cy.log('Go back to top-level page');
+            getBreadcrumbs().contains('Test Page').click();
+            getDeploymentsViewDetailsPane().within(() => {
+                cy.log('Drill down to subservices of app-env');
+                // TODO(RD-2003): expect 1, not 3 directly attached subservices
+                getSubservicesButton().contains('3').click();
+            });
+            getDeploymentsViewTable().within(() => {
+                cy.log('Subservices of app-end should be visible (web-app)');
+                cy.contains('web-app');
+                cy.contains('db-env').should('not.exist');
+            });
         });
     });
 });
