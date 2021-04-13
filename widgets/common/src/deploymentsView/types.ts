@@ -1,5 +1,3 @@
-import type { DeploymentsViewColumnId } from './table';
-
 export enum LatestExecutionStatus {
     Completed = 'completed',
     Failed = 'failed',
@@ -45,12 +43,3 @@ export interface Deployment {
 }
 
 export type DeploymentsResponse = Stage.Types.PaginatedResponse<Deployment>;
-
-export interface SharedDeploymentsViewWidgetConfiguration {
-    /** In milliseconds */
-    customPollingTime: number;
-    fieldsToShow: DeploymentsViewColumnId[];
-    pageSize: number;
-    sortColumn: string;
-    sortAscending: boolean;
-}

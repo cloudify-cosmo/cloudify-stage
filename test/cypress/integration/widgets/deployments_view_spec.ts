@@ -34,7 +34,8 @@ describe('Deployments View widget', () => {
         'blueprintSources',
         'nodes',
         'executions',
-        'deploymentActionButtons'
+        'deploymentActionButtons',
+        'deploymentsViewDrilledDown'
     ];
     /** Column numbers as they appear in the table */
     const columnNumbers = {
@@ -72,7 +73,8 @@ describe('Deployments View widget', () => {
         cy.wait('@deployments');
     };
 
-    const getDeploymentsViewWidget = () => cy.get('.deploymentsViewWidget .widgetItem');
+    const getDeploymentsViewWidget = () =>
+        cy.get('.widget').filter('.deploymentsViewWidget, .deploymentsViewDrilledDownWidget').find('.widgetItem');
     const getDeploymentsViewTable = () => getDeploymentsViewWidget().get('.gridTable');
     const getDeploymentsViewDetailsPane = () => getDeploymentsViewWidget().get('.detailsPane');
 

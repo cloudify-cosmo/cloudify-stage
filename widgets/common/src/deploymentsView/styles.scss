@@ -5,7 +5,8 @@ $deploymentProgressBarColors: (
     'failed': #db2828
 );
 
-.deploymentsViewWidget {
+.deploymentsViewWidget,
+.deploymentsViewDrilledDownWidget {
     --deployment-progress-underline-height: 0.14em;
     // NOTE: use CSS custom properties to make user overrides easier
     @each $stateName, $color in $deploymentProgressBarColors {
