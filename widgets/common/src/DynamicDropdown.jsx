@@ -1,5 +1,7 @@
 // NOTE: Disabling react/require-default-props as default values are provided in component's definition
 /* eslint-disable react/require-default-props */
+import { useCallback } from 'react';
+import { isFunction } from 'lodash';
 import VisibilitySensor from 'react-visibility-sensor';
 import './DynamicDropdown.css';
 
@@ -17,6 +19,7 @@ export default function DynamicDropdown({
     itemsFormatter = _.identity,
     multiple = false,
     name = null,
+    onSearchChange = undefined,
     pageSize = 10,
     placeholder = null,
     prefetch = false,
@@ -63,7 +66,12 @@ export default function DynamicDropdown({
 
             toolbox
                 .getManager()
-                .doGet(fetchUrl, { _sort: valueProp, _size: pageSize, _offset: nextPage * pageSize })
+                .doGet(fetchUrl, {
+                    _search: searchQuery,
+                    _sort: valueProp,
+                    _size: pageSize,
+                    _offset: nextPage * pageSize
+                })
                 .then(data => {
                     setHasMore(data.metadata.pagination.total > (nextPage + 1) * pageSize);
                     setOptions([...(overrideOptionsAfterFetch ? [] : options), ...itemsFormatter(data.items)]);
@@ -76,9 +84,9 @@ export default function DynamicDropdown({
     }
 
     function refreshData() {
-        setOverrideOptionsAfterFetch();
-        setHasMore(true);
+        if (!multiple) setOverrideOptionsAfterFetch();
         setCurrentPage(-1);
+        setHasMore(true);
     }
 
     useEffect(() => {
@@ -99,10 +107,17 @@ export default function DynamicDropdown({
         }
     }, [value]);
 
+    const delayMs = 500;
+    const delayedSetShouldLoadMore = useCallback(
+        _.debounce(() => {
+            refreshData();
+            setShouldLoadMore(true);
+        }, delayMs),
+        []
+    );
     useUpdateEffect(() => {
-        refreshData();
-        setShouldLoadMore(true);
-    }, [fetchUrl]);
+        delayedSetShouldLoadMore();
+    }, [searchQuery, fetchUrl]);
 
     const filteredOptions = _(options)
         .filter(option =>
@@ -147,10 +162,12 @@ export default function DynamicDropdown({
                 value={getDropdownValue()}
                 id={id}
                 name={name}
-                onChange={(event, field) => onChange(!_.isEmpty(field.value) ? field.value : null)}
-                onSearchChange={(e, data) => setSearchQuery(data.searchQuery)}
+                onChange={(event, data) => onChange(!_.isEmpty(data.value) ? data.value : null)}
+                onSearchChange={(event, data) => {
+                    setSearchQuery(data.searchQuery);
+                    if (isFunction(onSearchChange)) onSearchChange(event, data);
+                }}
                 multiple={multiple}
-                loading={isLoading}
                 options={(() => {
                     const preparedOptions = filteredOptions.map(item => ({
                         text: (textFormatter || (i => i[valueProp]))(item),
@@ -191,6 +208,7 @@ DynamicDropdown.propTypes = {
     fetchAll: PropTypes.bool,
     value: PropTypes.oneOfType([PropTypes.string, PropTypes.array]),
     onChange: PropTypes.func.isRequired,
+    onSearchChange: PropTypes.func,
     toolbox: Stage.PropTypes.Toolbox.isRequired,
     filter: PropTypes.shape({}),
     valueProp: PropTypes.string,
