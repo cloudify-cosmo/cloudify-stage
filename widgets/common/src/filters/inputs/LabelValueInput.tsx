@@ -1,7 +1,7 @@
 import type { FunctionComponent } from 'react';
 import { useRef } from 'react';
 
-import { LabelsFilterRuleOperators } from '../types';
+import { FilterRuleOperator, LabelsFilterRuleOperators } from '../types';
 import LabelKeyDropdown from '../../labels/KeyDropdown';
 import LabelValueDropdown from '../../labels/ValueDropdown';
 import { CommonAttributeValueInputProps } from './types';
@@ -12,6 +12,9 @@ export interface LabelValueInputProps extends Omit<CommonAttributeValueInputProp
     onKeyChange: (key: string) => void;
     onValueChange: (value: string[]) => void;
 }
+
+const operatorsWithValues: FilterRuleOperator[] = [LabelsFilterRuleOperators.AnyOf, LabelsFilterRuleOperators.NotAnyOf];
+
 const LabelValueInput: FunctionComponent<LabelValueInputProps> = ({
     onKeyChange,
     onValueChange,
@@ -27,7 +30,7 @@ const LabelValueInput: FunctionComponent<LabelValueInputProps> = ({
         // TODO(RD-2007): Add better styling
         <>
             <LabelKeyDropdown innerRef={keyDropdownRef} onChange={onKeyChange} toolbox={toolbox} value={labelKey} />
-            {(operator === LabelsFilterRuleOperators.AnyOf || operator === LabelsFilterRuleOperators.NotAnyOf) && (
+            {operatorsWithValues.includes(operator) && (
                 // TODO(RD-2006): Add support for multiple additions
                 <LabelValueDropdown
                     labelKey={labelKey}
