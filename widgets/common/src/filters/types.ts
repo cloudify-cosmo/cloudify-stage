@@ -17,8 +17,8 @@ enum LabelsOnlyRuleOperator {
 }
 
 enum AttributesOnlyRuleOperator {
-    Contain = 'contains',
-    NotContain = 'not_contains',
+    Contains = 'contains',
+    NotContains = 'not_contains',
     StartsWith = 'starts_with',
     EndsWith = 'ends_with'
 }

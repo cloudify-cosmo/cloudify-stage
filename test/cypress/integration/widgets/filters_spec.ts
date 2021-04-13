@@ -69,7 +69,7 @@ describe('Filters widget', () => {
                     type: FilterRuleType.Attribute,
                     key: 'blueprint_id',
                     values: [blueprintId],
-                    operator: FilterRuleOperators.Contain
+                    operator: FilterRuleOperators.Contains
                 });
                 expect(requestRules[1]).to.deep.equal({
                     type: FilterRuleType.Label,
@@ -124,7 +124,7 @@ describe('Filters widget', () => {
                     type: FilterRuleType.Attribute,
                     key: 'blueprint_id',
                     values: [newBlueprintId],
-                    operator: FilterRuleOperators.Contain
+                    operator: FilterRuleOperators.Contains
                 });
                 expect(requestRules[1]).to.deep.equal(filterRules[1]);
             });
@@ -164,7 +164,7 @@ describe('Filters widget', () => {
                     type: FilterRuleType.Attribute,
                     key: 'blueprint_id',
                     values: [newBlueprintId],
-                    operator: FilterRuleOperators.Contain
+                    operator: FilterRuleOperators.Contains
                 });
                 expect(requestRules[1]).to.deep.equal(filterRules[1]);
             });
