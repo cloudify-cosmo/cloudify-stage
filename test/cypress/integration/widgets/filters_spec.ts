@@ -18,6 +18,44 @@ describe('Filters widget', () => {
         cy.get('.loading').should('not.exist');
     });
 
+    function checkExistingRules() {
+        cy.get('.fields:eq(0)').within(() => {
+            cy.contains('Blueprint');
+            cy.contains('is one of');
+            cy.contains('bpid');
+        });
+
+        cy.get('.fields:eq(1)').within(() => {
+            cy.contains('Label');
+            cy.contains('is one of');
+            cy.contains('precious');
+            cy.contains('yes');
+        });
+    }
+
+    const newBlueprintRuleValue = 'newBlueprintId';
+    function modifyBlueprintRule() {
+        cy.get('.fields:eq(0)').within(() => {
+            cy.contains('is one of').click();
+            cy.contains('contains').click();
+            cy.get('.input input').type(newBlueprintRuleValue);
+        });
+    }
+
+    function checkRequestRules() {
+        cy.wait('@rulesRequest').then(({ request }) => {
+            const requestRules = request.body.filter_rules;
+            expect(requestRules).to.have.length(2);
+            expect(requestRules[0]).to.deep.equal({
+                type: FilterRuleType.Attribute,
+                key: 'blueprint_id',
+                values: [newBlueprintRuleValue],
+                operator: FilterRuleOperators.Contains
+            });
+            expect(requestRules[1]).to.deep.equal(filterRules[1]);
+        });
+    }
+
     it('should list existing filters', () => {
         cy.get('table')
             .getTable()
@@ -99,35 +137,12 @@ describe('Filters widget', () => {
         cy.get('.modal').within(() => {
             cy.contains(`Edit filter '${filterName}'`);
 
-            const newBlueprintId = 'newBlueprintId';
-            cy.get('.fields:eq(0)').within(() => {
-                cy.contains('Blueprint');
-                cy.contains('bpid');
-                cy.contains('is one of').click();
-                cy.contains('contains').click();
-                cy.get('.input input').type(newBlueprintId);
-            });
+            checkExistingRules();
+            modifyBlueprintRule();
 
-            cy.get('.fields:eq(1)').within(() => {
-                cy.contains('Label');
-                cy.contains('is one of');
-                cy.contains('precious');
-                cy.contains('yes');
-            });
-
-            cy.interceptSp('PATCH', `/filters/deployments/${filterName}`).as('updateRequest');
+            cy.interceptSp('PATCH', `/filters/deployments/${filterName}`).as('rulesRequest');
             cy.contains('Save').click();
-            cy.wait('@updateRequest').then(({ request }) => {
-                const requestRules = request.body.filter_rules;
-                expect(requestRules).to.have.length(2);
-                expect(requestRules[0]).to.deep.equal({
-                    type: FilterRuleType.Attribute,
-                    key: 'blueprint_id',
-                    values: [newBlueprintId],
-                    operator: FilterRuleOperators.Contains
-                });
-                expect(requestRules[1]).to.deep.equal(filterRules[1]);
-            });
+            checkRequestRules();
         });
 
         cy.get('.modal').should('not.exist');
@@ -139,35 +154,12 @@ describe('Filters widget', () => {
         cy.get('.modal').within(() => {
             cy.contains(`Clone filter '${filterName}'`);
 
-            const newBlueprintId = 'newBlueprintId';
-            cy.get('.fields:eq(0)').within(() => {
-                cy.contains('Blueprint');
-                cy.contains('bpid');
-                cy.contains('is one of').click();
-                cy.contains('contains').click();
-                cy.get('.input input').type(newBlueprintId);
-            });
+            checkExistingRules();
+            modifyBlueprintRule();
 
-            cy.get('.fields:eq(1)').within(() => {
-                cy.contains('Label');
-                cy.contains('is one of');
-                cy.contains('precious');
-                cy.contains('yes');
-            });
-
-            cy.interceptSp('PUT', `/filters/deployments/${filterName}_clone`).as('createRequest');
+            cy.interceptSp('PUT', `/filters/deployments/${filterName}_clone`).as('rulesRequest');
             cy.contains('Save').click();
-            cy.wait('@createRequest').then(({ request }) => {
-                const requestRules = request.body.filter_rules;
-                expect(requestRules).to.have.length(2);
-                expect(requestRules[0]).to.deep.equal({
-                    type: FilterRuleType.Attribute,
-                    key: 'blueprint_id',
-                    values: [newBlueprintId],
-                    operator: FilterRuleOperators.Contains
-                });
-                expect(requestRules[1]).to.deep.equal(filterRules[1]);
-            });
+            checkRequestRules();
         });
 
         cy.get('.modal').should('not.exist');
