@@ -1,3 +1,5 @@
+// NOTE: Disabling react/require-default-props as default values are provided in component's definition
+/* eslint-disable react/require-default-props */
 import VisibilitySensor from 'react-visibility-sensor';
 import './DynamicDropdown.css';
 
@@ -199,24 +201,6 @@ DynamicDropdown.propTypes = {
     className: PropTypes.string,
     refreshEvent: PropTypes.string,
     itemsFormatter: PropTypes.func
-};
-
-DynamicDropdown.defaultProps = {
-    innerRef: null,
-    disabled: false,
-    value: null,
-    fetchAll: false,
-    filter: {},
-    valueProp: 'id',
-    textFormatter: null,
-    pageSize: 10,
-    placeholder: null,
-    name: null,
-    prefetch: false,
-    multiple: false,
-    className: '',
-    refreshEvent: null,
-    itemsFormatter: _.identity
 };
 
 Stage.defineCommon({
