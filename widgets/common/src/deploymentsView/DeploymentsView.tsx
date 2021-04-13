@@ -50,6 +50,8 @@ export const DeploymentsView: FunctionComponent<DeploymentsViewProps> = ({
         }
     );
 
+    Stage.Hooks.useEventListener(toolbox, 'deployments:refresh', deploymentsResult.refetch);
+
     const { Loading, ErrorMessage } = Stage.Basic;
     const { i18n } = Stage;
 
