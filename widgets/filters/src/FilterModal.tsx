@@ -9,6 +9,7 @@ export interface FilterModalProps {
     i18nHeaderKey: string;
     onSubmit: (filterId: string, filterRules: FilterRule[]) => Promise<void>;
     onCancel: () => void;
+    toolbox: Stage.Types.Toolbox;
 }
 
 const { Form, UnsafelyTypedForm, UnsafelyTypedFormField } = Stage.Basic;
@@ -19,10 +20,14 @@ const FilterModal: FunctionComponent<FilterModalProps> = ({
     initialFilterIdSuffix = '',
     showFilterIdInput,
     onCancel,
-    onSubmit
+    onSubmit,
+    toolbox
 }) => {
     const { useInput, useErrors } = Stage.Hooks;
     const [filterId, setFilterId] = useInput((initialFilter?.id ?? '') + initialFilterIdSuffix);
+    const [filterRules, setFilterRules] = useInput(
+        initialFilter ? [...initialFilter.attrs_filter_rules, ...initialFilter.labels_filter_rules] : []
+    );
     const { errors, setErrors, clearErrors, setMessageAsError } = useErrors();
     const { i18n } = Stage;
 
@@ -34,13 +39,11 @@ const FilterModal: FunctionComponent<FilterModalProps> = ({
             return;
         }
 
-        onSubmit(
-            filterId,
-            initialFilter ? [...initialFilter.attrs_filter_rules, ...initialFilter.labels_filter_rules] : []
-        ).catch(setMessageAsError);
+        onSubmit(filterId, filterRules).catch(setMessageAsError);
     }
 
     const { ApproveButton, CancelButton, Icon, Modal } = Stage.Basic;
+    const { Form: RulesForm } = Stage.Common.Filters;
     return (
         <Modal open onClose={onCancel}>
             <Modal.Header>
@@ -48,13 +51,16 @@ const FilterModal: FunctionComponent<FilterModalProps> = ({
             </Modal.Header>
 
             <Modal.Content>
-                {showFilterIdInput && (
-                    <UnsafelyTypedForm errors={errors} onErrorsDismiss={clearErrors}>
+                <UnsafelyTypedForm errors={errors} onErrorsDismiss={clearErrors}>
+                    {showFilterIdInput && (
                         <UnsafelyTypedFormField label={i18n.t('widgets.filters.modal.id')}>
                             <Form.Input value={filterId} required onChange={setFilterId} error={errors.filterId} />
                         </UnsafelyTypedFormField>
-                    </UnsafelyTypedForm>
-                )}
+                    )}
+                    <UnsafelyTypedFormField label={i18n.t('widgets.filters.modal.rules')}>
+                        <RulesForm initialFilters={filterRules} toolbox={toolbox} onChange={setFilterRules} />
+                    </UnsafelyTypedFormField>
+                </UnsafelyTypedForm>
             </Modal.Content>
 
             <Modal.Actions>

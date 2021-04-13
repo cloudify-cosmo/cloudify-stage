@@ -30,19 +30,53 @@ describe('Filters widget', () => {
     });
 
     it('should allow to add new filter', () => {
+        const blueprintId = 'filters_test_blueprint';
+        const deploymentId = 'filters_test_deployment';
+        const labelKey = 'label_key';
+
+        cy.deleteDeployments(deploymentId)
+            .deleteBlueprints(blueprintId)
+            .uploadBlueprint('blueprints/empty.zip', blueprintId)
+            .deployBlueprint(blueprintId, deploymentId)
+            .setLabels(deploymentId, [{ [labelKey]: 'label_value' }]);
+
         cy.contains('Add').click();
 
         cy.contains('Save').click();
         cy.contains('Please provide the filter ID');
 
         const newFilterName = `${filterName}_added`;
-        cy.contains('.field', 'Filter ID').find('input').type(newFilterName);
-        // TODO: RD-1985 Define some filter rules once rules form is available here
-        cy.interceptSp('PUT', `/filters/deployments/${newFilterName}`).as('createRequest');
-        cy.contains('Save').click();
-        cy.wait('@createRequest').then(({ request }) => {
-            expect(request.body).to.deep.equal({
-                filter_rules: []
+
+        cy.get('.modal').within(() => {
+            cy.contains('.field', 'Filter ID').find('input').type(newFilterName);
+            cy.get('.fields:eq(0) .input input').type(blueprintId);
+            cy.contains('Add new rule').click();
+            cy.get('.fields:eq(1)').within(() => {
+                cy.get('[name=ruleRowType]').click();
+                cy.contains('Label').click();
+                cy.get('[name=ruleOperator]').click();
+                cy.contains('key is not').click();
+                cy.get('[name=labelKey]').click();
+                cy.get(`[option-value=${labelKey}]`).click();
+            });
+
+            cy.interceptSp('PUT', `/filters/deployments/${newFilterName}`).as('createRequest');
+            cy.contains('Save').click();
+            cy.wait('@createRequest').then(({ request }) => {
+                const requestRules = request.body.filter_rules;
+                expect(requestRules).to.have.length(2);
+                expect(requestRules[0]).to.deep.equal({
+                    type: FilterRuleType.Attribute,
+                    key: 'blueprint_id',
+                    values: [blueprintId],
+                    operator: FilterRuleOperators.Contain
+                });
+                expect(requestRules[1]).to.deep.equal({
+                    type: FilterRuleType.Label,
+                    key: labelKey,
+                    values: [],
+                    operator: FilterRuleOperators.IsNull
+                });
             });
         });
 
@@ -61,14 +95,38 @@ describe('Filters widget', () => {
 
     it('should allow to edit existing filter', () => {
         cy.get('.edit').click();
-        cy.contains(`Edit filter '${filterName}'`);
 
-        // TODO: RD-1985 Change some filter rules once rules form is available here
-        cy.interceptSp('PATCH', `/filters/deployments/${filterName}`).as('updateRequest');
-        cy.contains('Save').click();
-        cy.wait('@updateRequest').then(({ request }) => {
-            expect(request.body).to.deep.equal({
-                filter_rules: filterRules
+        cy.get('.modal').within(() => {
+            cy.contains(`Edit filter '${filterName}'`);
+
+            const newBlueprintId = 'newBlueprintId';
+            cy.get('.fields:eq(0)').within(() => {
+                cy.contains('Blueprint');
+                cy.contains('bpid');
+                cy.contains('is one of').click();
+                cy.contains('contains').click();
+                cy.get('.input input').type(newBlueprintId);
+            });
+
+            cy.get('.fields:eq(1)').within(() => {
+                cy.contains('Label');
+                cy.contains('is one of');
+                cy.contains('precious');
+                cy.contains('yes');
+            });
+
+            cy.interceptSp('PATCH', `/filters/deployments/${filterName}`).as('updateRequest');
+            cy.contains('Save').click();
+            cy.wait('@updateRequest').then(({ request }) => {
+                const requestRules = request.body.filter_rules;
+                expect(requestRules).to.have.length(2);
+                expect(requestRules[0]).to.deep.equal({
+                    type: FilterRuleType.Attribute,
+                    key: 'blueprint_id',
+                    values: [newBlueprintId],
+                    operator: FilterRuleOperators.Contain
+                });
+                expect(requestRules[1]).to.deep.equal(filterRules[1]);
             });
         });
 
@@ -77,14 +135,38 @@ describe('Filters widget', () => {
 
     it('should allow to clone existing filter', () => {
         cy.get('.clone').click();
-        cy.contains(`Clone filter '${filterName}'`);
 
-        // TODO: RD-1985 Change some filter rules once rules form is available here
-        cy.interceptSp('PUT', `/filters/deployments/${filterName}_clone`).as('updateRequest');
-        cy.contains('Save').click();
-        cy.wait('@updateRequest').then(({ request }) => {
-            expect(request.body).to.deep.equal({
-                filter_rules: filterRules
+        cy.get('.modal').within(() => {
+            cy.contains(`Clone filter '${filterName}'`);
+
+            const newBlueprintId = 'newBlueprintId';
+            cy.get('.fields:eq(0)').within(() => {
+                cy.contains('Blueprint');
+                cy.contains('bpid');
+                cy.contains('is one of').click();
+                cy.contains('contains').click();
+                cy.get('.input input').type(newBlueprintId);
+            });
+
+            cy.get('.fields:eq(1)').within(() => {
+                cy.contains('Label');
+                cy.contains('is one of');
+                cy.contains('precious');
+                cy.contains('yes');
+            });
+
+            cy.interceptSp('PUT', `/filters/deployments/${filterName}_clone`).as('createRequest');
+            cy.contains('Save').click();
+            cy.wait('@createRequest').then(({ request }) => {
+                const requestRules = request.body.filter_rules;
+                expect(requestRules).to.have.length(2);
+                expect(requestRules[0]).to.deep.equal({
+                    type: FilterRuleType.Attribute,
+                    key: 'blueprint_id',
+                    values: [newBlueprintId],
+                    operator: FilterRuleOperators.Contain
+                });
+                expect(requestRules[1]).to.deep.equal(filterRules[1]);
             });
         });
 
