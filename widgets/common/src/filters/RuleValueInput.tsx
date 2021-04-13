@@ -41,7 +41,7 @@ const RuleValueInput: FunctionComponent<RuleValueInputProps> = ({
                 />
             );
         default:
-            return null;
+            throw new Error('Unsupported filter rule row type was passed to RuleValueInput component.');
     }
 };
 export default RuleValueInput;
