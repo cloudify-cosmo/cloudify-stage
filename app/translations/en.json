@@ -661,6 +661,7 @@
                     "services": "Services"
                 },
                 "buttons": {
+                    "detailsFetchingError": "Could not fetch deployment details",
                     "environments": {
                         "label": "Subenvironments",
                         "title": "Drill down to subenvironments"
