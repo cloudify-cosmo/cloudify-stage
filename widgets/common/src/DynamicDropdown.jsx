@@ -1,7 +1,7 @@
 // NOTE: Disabling react/require-default-props as default values are provided in component's definition
 /* eslint-disable react/require-default-props */
 import { useCallback } from 'react';
-import { isFunction } from 'lodash';
+import { debounce, isFunction } from 'lodash';
 import VisibilitySensor from 'react-visibility-sensor';
 import './DynamicDropdown.css';
 
@@ -109,7 +109,7 @@ export default function DynamicDropdown({
 
     const delayMs = 500;
     const delayedSetShouldLoadMore = useCallback(
-        _.debounce(() => {
+        debounce(() => {
             refreshData();
             setShouldLoadMore(true);
         }, delayMs),
