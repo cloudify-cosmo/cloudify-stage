@@ -1,6 +1,7 @@
 import type { FunctionComponent } from 'react';
 import styled from 'styled-components';
 
+import { FilterRuleOperators, FilterRuleType } from '../../filters/types';
 import { filterRulesContextKey, i18nDrillDownPrefix, subenvironmentsIcon, subservicesIcon } from '../common';
 import type { Deployment } from '../types';
 
@@ -61,10 +62,9 @@ const DrilldownButton: FunctionComponent<DrilldownButtonProps> = ({
 
     const drilldownToSubdeployments = () => {
         const deploymentTypeRule: Stage.Common.Filters.Rule = {
-            // NOTE: cannot use enums as they are not exported
-            type: 'label' as any,
+            type: FilterRuleType.Label,
             key: 'csys-obj-type',
-            operator: 'any_of' as any,
+            operator: FilterRuleOperators.AnyOf,
             values: [type === 'services' ? 'service' : 'environment']
         };
 
