@@ -1,7 +1,7 @@
 import type { FunctionComponent } from 'react';
 import styled from 'styled-components';
 
-import { i18nPrefix, subenvironmentsIcon, subservicesIcon } from '../common';
+import { i18nDrillDownPrefix, subenvironmentsIcon, subservicesIcon } from '../common';
 import type { Deployment } from '../types';
 
 export interface DrilldownButtonsProps {
@@ -48,7 +48,6 @@ interface DrilldownButtonProps {
 }
 
 const subdeploymentsDrilldownTemplateName = 'drilldownDeployments';
-const i18nDrillDownPrefix = `${i18nPrefix}.drillDown`;
 
 const DrilldownButton: FunctionComponent<DrilldownButtonProps> = ({
     subdeploymentsCount,
