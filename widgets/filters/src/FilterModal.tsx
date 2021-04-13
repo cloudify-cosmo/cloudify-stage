@@ -43,7 +43,7 @@ const FilterModal: FunctionComponent<FilterModalProps> = ({
     }
 
     const { ApproveButton, CancelButton, Icon, Modal } = Stage.Basic;
-    const { Form: RulesForm } = Stage.Common.Filters;
+    const { RulesForm } = Stage.Common.Filters;
     return (
         <Modal open onClose={onCancel}>
             <Modal.Header>
