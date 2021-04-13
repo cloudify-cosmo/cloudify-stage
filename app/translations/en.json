@@ -522,6 +522,11 @@
                         "addRule": "Add new rule",
                         "removeRule": "Remove rule"
                     },
+                    "inputsPlaceholders": {
+                        "blueprintId": "Select blueprints",
+                        "siteName": "Select site names",
+                        "createdBy": "Select usernames"
+                    },
                     "ruleTypesLabels": {
                         "label": "Label",
                         "blueprintId": "Blueprint",
