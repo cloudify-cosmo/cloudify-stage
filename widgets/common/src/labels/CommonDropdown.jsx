@@ -1,24 +1,12 @@
-import { addSearchToUrl } from './common';
 import ValidationErrorPopup from './ValidationErrorPopup';
 
-function useDebouncedSetValue(value, setValue, deps) {
-    const { useCallback, useEffect } = React;
-    const delayMs = 500;
-    const debouncedSet = useCallback(_.debounce(setValue, delayMs), []);
-
-    useEffect(() => {
-        debouncedSet(value);
-    }, deps);
-}
-
-export default function CommonDropdown({ innerRef, baseFetchUrl, onChange, toolbox, allowKnownOnly, value, ...rest }) {
-    const { useEffect, useState } = React;
+export default function CommonDropdown({ innerRef, fetchUrl, onChange, toolbox, allowKnownOnly, value, ...rest }) {
+    const { useEffect } = React;
     const {
         Common: { DynamicDropdown },
         Hooks: { useLabelInput }
     } = Stage;
 
-    const [fetchUrl, setFetchUrl] = useState(baseFetchUrl);
     const {
         inputValue,
         invalidCharacterTyped,
@@ -26,12 +14,6 @@ export default function CommonDropdown({ innerRef, baseFetchUrl, onChange, toolb
         resetInput,
         unsetInvalidCharacterTyped
     } = useLabelInput(onChange, { allowKnownOnly });
-
-    useDebouncedSetValue(allowKnownOnly ? baseFetchUrl : addSearchToUrl(baseFetchUrl, inputValue), setFetchUrl, [
-        baseFetchUrl,
-        inputValue,
-        allowKnownOnly
-    ]);
 
     useEffect(() => {
         if (_.isEmpty(value)) {
@@ -63,7 +45,7 @@ export default function CommonDropdown({ innerRef, baseFetchUrl, onChange, toolb
 }
 
 CommonDropdown.propTypes = {
-    baseFetchUrl: PropTypes.string.isRequired,
+    fetchUrl: PropTypes.string.isRequired,
     innerRef: PropTypes.shape({ current: PropTypes.instanceOf(HTMLElement) }),
     onChange: PropTypes.func.isRequired,
     toolbox: Stage.PropTypes.Toolbox.isRequired,

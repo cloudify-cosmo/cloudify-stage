@@ -6,7 +6,7 @@ export default function ValueDropdown({ labelKey, onChange, toolbox, multiple, a
     return (
         <CommonDropdown
             disabled={!labelKey}
-            baseFetchUrl={labelKey ? `/labels/deployments/${labelKey}` : ''}
+            fetchUrl={labelKey ? `/labels/deployments/${labelKey}` : ''}
             noResultsMessage={value && !allowKnownOnly ? i18n.t('widgets.common.labels.newValue') : undefined}
             placeholder={i18n.t(
                 `widgets.common.labels.valuePlaceholder.${allowKnownOnly ? 'knownOnly' : 'knownOrNew'}`

@@ -1,8 +1,4 @@
-export function addSearchToUrl(url, search) {
-    const { appendQueryParam } = Stage.Utils.Url;
-    return search ? appendQueryParam(url, '_search', search) : url;
-}
-
+// eslint-disable-next-line import/prefer-default-export
 export function sortLabels(labels) {
     return _.sortBy(labels, 'key', 'value');
 }

@@ -6,7 +6,7 @@ export default function KeyDropdown({ innerRef, onChange, toolbox, allowKnownOnl
     return (
         <CommonDropdown
             innerRef={innerRef}
-            baseFetchUrl="/labels/deployments"
+            fetchUrl="/labels/deployments"
             noResultsMessage={value && !allowKnownOnly ? i18n.t('widgets.common.labels.newKey') : undefined}
             placeholder={i18n.t(`widgets.common.labels.keyPlaceholder.${allowKnownOnly ? 'knownOnly' : 'knownOrNew'}`)}
             name="labelKey"
