@@ -149,6 +149,9 @@ describe('Deployments View widget', () => {
             cy.root().parents('body').find('.modal').contains('button', 'Execute').click();
             cy.wait('@restartDeployment');
             cy.contains('Last Execution');
+
+            cy.log('Deployments should be refetched after executing a workflow');
+            cy.wait('@deployments');
         });
     });
 
