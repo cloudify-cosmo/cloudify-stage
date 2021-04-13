@@ -1,16 +1,14 @@
 import { castArray } from 'lodash';
 import type { FunctionComponent } from 'react';
-import { FilterRuleOperator, LabelsFilterRuleOperators } from '../types';
-import DynamicDropdown from '../../DynamicDropdown';
 
-interface AttributeValueInputProps {
-    onChange: (value: string[]) => void;
+import DynamicDropdown from '../../DynamicDropdown';
+import { LabelsFilterRuleOperators } from '../types';
+import { CommonAttributeValueInputProps } from './types';
+
+interface AttributeValueInputProps extends CommonAttributeValueInputProps {
     fetchUrl: string;
     placeholder: string;
     valueProp: string;
-    operator: FilterRuleOperator;
-    toolbox: Stage.Types.Toolbox;
-    value: string[];
 }
 
 const AttributeValueInput: FunctionComponent<AttributeValueInputProps> = ({
