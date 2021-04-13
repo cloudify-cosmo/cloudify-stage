@@ -12,6 +12,7 @@ function useLabelInput(onChange, { allowKnownOnly = false, initialValue = '' }) 
         submitChange: (event, data) => {
             if (allowKnownOnly) {
                 onChange(data.value);
+                resetInputValue();
                 return;
             }
 
@@ -28,7 +29,7 @@ function useLabelInput(onChange, { allowKnownOnly = false, initialValue = '' }) 
         resetInput: () => {
             resetInputValue();
             onChange(initialValue);
-            unsetInvalidCharacterTyped();
+            if (!allowKnownOnly) unsetInvalidCharacterTyped();
         },
         unsetInvalidCharacterTyped
     };
