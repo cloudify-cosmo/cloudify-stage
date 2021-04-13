@@ -74,9 +74,14 @@ const TopLevelDeploymentsView: FunctionComponent<TopLevelDeploymentsViewProps> =
     }
 
     if (filterRulesResult.isIdle) {
-        throw new Error(
-            'Fetching filter rules is disabled without explicitly handling this scenario. Those rules should always be fetched.'
-        );
+        /**
+         * NOTE: handling the `isIdle` state is necessary for TypeScript's type-narrowing to exclude `undefined` from
+         * the possible values of `filterRulesResult.data`.
+         *
+         * Such a case should not happen naturally, unless an `enabled` option is added to `useQuery`. If it is added,
+         * it should be here.
+         */
+        throw new Error('Idle state for fetching filter rules is not implemented.');
     }
 
     const { DeploymentsView } = Stage.Common.DeploymentsView;
