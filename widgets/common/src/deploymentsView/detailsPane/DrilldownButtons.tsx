@@ -64,12 +64,8 @@ const DrilldownButton: FunctionComponent<DrilldownButtonProps> = ({
             // NOTE: cannot use enums as they are not exported
             type: 'label' as any,
             key: 'csys-obj-type',
-            /**
-             * NOTE: services may not have a `csys-obj-type=service` label.
-             * Thus, need to rely only on the `csys-obj-type=environment` label
-             */
-            operator: (type === 'services' ? 'not_any_of' : 'any_of') as any,
-            values: ['environment']
+            operator: 'any_of' as any,
+            values: [type === 'services' ? 'service' : 'environment']
         };
 
         drillDown(
