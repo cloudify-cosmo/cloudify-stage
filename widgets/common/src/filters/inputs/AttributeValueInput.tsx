@@ -1,3 +1,4 @@
+import { castArray } from 'lodash';
 import type { FunctionComponent } from 'react';
 import { FilterRuleOperator, LabelsFilterRuleOperators } from '../types';
 import DynamicDropdown from '../../DynamicDropdown';
@@ -39,7 +40,7 @@ const AttributeValueInput: FunctionComponent<AttributeValueInputProps> = ({
     }
 
     // TODO(RD-1762): Add support for type 'attribute' and operators different from 'any_of' and 'not_any_of'
-    const textValue = _.castArray(value)[0] || '';
+    const textValue = castArray(value)[0] || '';
     return <Input type="text" onChange={(_event, { value: newValue }) => onChange([newValue])} value={textValue} />;
 };
 
