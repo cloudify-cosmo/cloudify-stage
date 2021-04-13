@@ -2,7 +2,7 @@ import React, { FunctionComponent, useMemo, useState } from 'react';
 import { find } from 'lodash';
 import { useQuery } from 'react-query';
 
-import { i18nMessagesPrefix } from './common';
+import { getParentPageContext, i18nMessagesPrefix, isTopLevelPage } from './common';
 import type { SharedDeploymentsViewWidgetConfiguration } from './configuration';
 import DetailsPane from './detailsPane';
 import { DeploymentsTable } from './table';
@@ -134,19 +134,9 @@ const useFilteringByParentDeployment = ({ filterByParentDeployment }: { filterBy
 };
 
 const getParentDeploymentId = (drilldownContext: Stage.Types.ReduxState['drilldownContext']) => {
-    /**
-     * NOTE: drilldownContext contains contexts for each page, starting with
-     * the top-level page, and ending with the current page's initial context.
-     *
-     * Thus, the current page's parent context will be the penultimate entry in the array.
-     *
-     * It may happen, that the array only contains a single item (if we are on the top-level page).
-     */
-    if (drilldownContext.length < 2) {
+    if (isTopLevelPage(drilldownContext)) {
         return undefined;
     }
 
-    const parentPageContext = drilldownContext[drilldownContext.length - 2].context;
-
-    return parentPageContext?.deploymentId as string | undefined;
+    return getParentPageContext(drilldownContext)?.deploymentId as string | undefined;
 };
