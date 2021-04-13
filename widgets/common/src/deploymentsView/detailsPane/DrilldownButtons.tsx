@@ -1,7 +1,8 @@
 import type { FunctionComponent } from 'react';
 import styled from 'styled-components';
 
-import { i18nDrillDownPrefix, subenvironmentsIcon, subservicesIcon } from '../common';
+import { FilterRuleOperators, FilterRuleType } from '../../filters/types';
+import { filterRulesContextKey, i18nDrillDownPrefix, subenvironmentsIcon, subservicesIcon } from '../common';
 import type { Deployment } from '../types';
 
 export interface DrilldownButtonsProps {
@@ -60,10 +61,16 @@ const DrilldownButton: FunctionComponent<DrilldownButtonProps> = ({
     const icon = type === 'services' ? subservicesIcon : subenvironmentsIcon;
 
     const drilldownToSubdeployments = () => {
+        const deploymentTypeRule: Stage.Common.Filters.Rule = {
+            type: FilterRuleType.Label,
+            key: 'csys-obj-type',
+            operator: FilterRuleOperators.AnyOf,
+            values: [type === 'services' ? 'service' : 'environment']
+        };
+
         drillDown(
             subdeploymentsDrilldownTemplateName,
-            // TODO(RD-2004): add filter rules in context to only show specific subdeployments type
-            {},
+            { [filterRulesContextKey]: [deploymentTypeRule] },
             `${deploymentName} [${i18n.t(`${i18nDrillDownPrefix}.breadcrumbs.${type}`)}]`
         );
     };
