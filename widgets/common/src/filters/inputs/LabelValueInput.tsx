@@ -33,7 +33,7 @@ const LabelValueInput: FunctionComponent<LabelValueInputProps> = ({
                 onChange={onKeyChange}
                 toolbox={toolbox}
                 value={labelKey}
-                readOnly
+                allowKnownOnly
             />
             {operatorsWithValues.includes(operator) && (
                 <LabelValueDropdown
@@ -42,7 +42,7 @@ const LabelValueInput: FunctionComponent<LabelValueInputProps> = ({
                     toolbox={toolbox}
                     value={labelValue}
                     multiple
-                    readOnly
+                    allowKnownOnly
                 />
             )}
         </>

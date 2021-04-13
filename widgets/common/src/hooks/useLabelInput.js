@@ -1,7 +1,7 @@
 const allowedCharacters = /^[a-z][a-z0-9._-]*$/i;
 const maxInputLength = 256;
 
-function useLabelInput(onChange, { readOnly = false, initialValue = '' }) {
+function useLabelInput(onChange, { allowKnownOnly = false, initialValue = '' }) {
     const { useBoolean, useResettableState } = Stage.Hooks;
     const [inputValue, setInputValue, resetInputValue] = useResettableState(initialValue);
     const [invalidCharacterTyped, setInvalidCharacterTyped, unsetInvalidCharacterTyped] = useBoolean();
@@ -10,7 +10,7 @@ function useLabelInput(onChange, { readOnly = false, initialValue = '' }) {
         inputValue,
         invalidCharacterTyped,
         submitChange: (event, data) => {
-            if (readOnly) {
+            if (allowKnownOnly) {
                 onChange(data.value);
                 return;
             }
