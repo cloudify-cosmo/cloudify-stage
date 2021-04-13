@@ -26,17 +26,23 @@ const LabelValueInput: FunctionComponent<LabelValueInputProps> = ({
     const keyDropdownRef = useRef<HTMLElement>();
 
     return (
-        // TODO(RD-2012): Adapt label key and value dropdowns to disallow free text
         // TODO(RD-2007): Add better styling
         <>
-            <LabelKeyDropdown innerRef={keyDropdownRef} onChange={onKeyChange} toolbox={toolbox} value={labelKey} />
+            <LabelKeyDropdown
+                innerRef={keyDropdownRef}
+                onChange={onKeyChange}
+                toolbox={toolbox}
+                value={labelKey}
+                readOnly
+            />
             {operatorsWithValues.includes(operator) && (
-                // TODO(RD-2006): Add support for multiple additions
                 <LabelValueDropdown
                     labelKey={labelKey}
-                    onChange={newValue => onValueChange([newValue])}
+                    onChange={onValueChange}
                     toolbox={toolbox}
-                    value={labelValue[0]}
+                    value={labelValue}
+                    multiple
+                    readOnly
                 />
             )}
         </>
