@@ -3,7 +3,7 @@ import type { FunctionComponent } from 'react';
 
 import DynamicDropdown from '../../DynamicDropdown';
 import { LabelsFilterRuleOperators } from '../types';
-import { CommonAttributeValueInputProps } from './types';
+import type { CommonAttributeValueInputProps } from './types';
 
 interface AttributeValueInputProps extends CommonAttributeValueInputProps {
     fetchUrl: string;
