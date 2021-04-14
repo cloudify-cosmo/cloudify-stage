@@ -2,7 +2,7 @@ import FiltersDefinitionForm from './FiltersDefinitionForm';
 import { FilterRule } from './types';
 
 const Filters = {
-    Form: FiltersDefinitionForm
+    RulesForm: FiltersDefinitionForm
 };
 
 // NOTE: alias name to avoid name shadowing inside the namespace
