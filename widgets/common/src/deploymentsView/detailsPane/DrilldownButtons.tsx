@@ -1,83 +1,122 @@
 import type { FunctionComponent } from 'react';
+import { QueryObserverLoadingResult, QueryObserverSuccessResult, useQuery } from 'react-query';
 import styled from 'styled-components';
 
-import { i18nDrillDownPrefix, subenvironmentsIcon, subservicesIcon } from '../common';
+import { FilterRuleOperators, FilterRuleType } from '../../filters/types';
+import { filterRulesContextKey, i18nDrillDownPrefix, subenvironmentsIcon, subservicesIcon } from '../common';
 import type { Deployment } from '../types';
 
 export interface DrilldownButtonsProps {
-    deployment: Deployment;
+    deploymentId: string;
     drillDown: (templateName: string, drilldownContext: Record<string, any>, drilldownPageName: string) => void;
+    toolbox: Stage.Types.Toolbox;
 }
 
 const ButtonsContainer = styled.div`
     margin: 0 1em;
 `;
 
-const DrilldownButtons: FunctionComponent<DrilldownButtonsProps> = ({ drillDown, deployment }) => {
-    const {
-        id: deploymentName,
-        // TODO(RD-2003): fetch the number of only the immediate children
-        sub_services_count: subservicesCount,
-        sub_environments_count: subenvironmentsCount
-    } = deployment;
+const i18nDrillDownButtonsPrefix = `${i18nDrillDownPrefix}.buttons`;
+const getDeploymentUrl = (id: string) => `/deployments/${id}?all_sub_deployments=false`;
+
+const DrilldownButtons: FunctionComponent<DrilldownButtonsProps> = ({ drillDown, deploymentId, toolbox }) => {
+    const deploymentDetailsResult = useQuery(
+        getDeploymentUrl(deploymentId),
+        ({ queryKey: url }): Promise<Deployment> => toolbox.getManager().doGet(url)
+    );
+
+    if (deploymentDetailsResult.isIdle || deploymentDetailsResult.isError) {
+        const { ErrorMessage } = Stage.Basic;
+        return (
+            <ErrorMessage
+                error={Stage.i18n.t(`${i18nDrillDownButtonsPrefix}.detailsFetchingError`)}
+                header=""
+                onDismiss={null}
+            />
+        );
+    }
+
+    const subdeploymentResults = getSubdeploymentResults(deploymentDetailsResult);
 
     return (
         <ButtonsContainer>
             <DrilldownButton
                 type="environments"
-                subdeploymentsCount={subenvironmentsCount}
                 drillDown={drillDown}
-                deploymentName={deploymentName}
+                deploymentName={deploymentId}
+                result={subdeploymentResults.subenvironments}
             />
             <DrilldownButton
                 type="services"
-                subdeploymentsCount={subservicesCount}
                 drillDown={drillDown}
-                deploymentName={deploymentName}
+                deploymentName={deploymentId}
+                result={subdeploymentResults.subservices}
             />
         </ButtonsContainer>
     );
 };
 export default DrilldownButtons;
 
+const getSubdeploymentResults = (
+    deploymentDetailsResult: QueryObserverLoadingResult<Deployment> | QueryObserverSuccessResult<Deployment>
+): { subservices: SubdeploymentsResult; subenvironments: SubdeploymentsResult } => {
+    if (deploymentDetailsResult.isLoading) {
+        return {
+            subservices: { loading: true },
+            subenvironments: { loading: true }
+        };
+    }
+
+    return {
+        subservices: { loading: false, count: deploymentDetailsResult.data.sub_services_count },
+        subenvironments: { loading: false, count: deploymentDetailsResult.data.sub_environments_count }
+    };
+};
+
+type SubdeploymentsResult = { loading: true } | { loading: false; count: number };
+
 interface DrilldownButtonProps {
-    subdeploymentsCount: number;
     type: 'environments' | 'services';
     drillDown: DrilldownButtonsProps['drillDown'];
     deploymentName: string;
+    result: SubdeploymentsResult;
 }
 
 const subdeploymentsDrilldownTemplateName = 'drilldownDeployments';
 
-const DrilldownButton: FunctionComponent<DrilldownButtonProps> = ({
-    subdeploymentsCount,
-    type,
-    drillDown,
-    deploymentName
-}) => {
-    const { Button, Icon } = Stage.Basic;
+const DrilldownButton: FunctionComponent<DrilldownButtonProps> = ({ type, drillDown, deploymentName, result }) => {
     const { i18n } = Stage;
     const icon = type === 'services' ? subservicesIcon : subenvironmentsIcon;
 
     const drilldownToSubdeployments = () => {
+        const deploymentTypeRule: Stage.Common.Filters.Rule = {
+            type: FilterRuleType.Label,
+            key: 'csys-obj-type',
+            operator: FilterRuleOperators.AnyOf,
+            values: [type === 'services' ? 'service' : 'environment']
+        };
+
         drillDown(
             subdeploymentsDrilldownTemplateName,
-            // TODO(RD-2004): add filter rules in context to only show specific subdeployments type
-            {},
+            { [filterRulesContextKey]: [deploymentTypeRule] },
             `${deploymentName} [${i18n.t(`${i18nDrillDownPrefix}.breadcrumbs.${type}`)}]`
         );
     };
+
+    const { Button, Icon } = Stage.Basic;
 
     return (
         <Button
             basic
             color="blue"
             onClick={drilldownToSubdeployments}
-            disabled={subdeploymentsCount === 0}
-            title={i18n.t(`${i18nDrillDownPrefix}.buttons.${type}.title`)}
+            disabled={result.loading || result.count === 0}
+            loading={result.loading}
+            title={i18n.t(`${i18nDrillDownButtonsPrefix}.${type}.title`)}
         >
             <Icon name={icon} />
-            {i18n.t(`${i18nDrillDownPrefix}.buttons.${type}.label`)} ({subdeploymentsCount})
+            {i18n.t(`${i18nDrillDownButtonsPrefix}.${type}.label`)}
+            {!result.loading && <> ({result.count})</>}
             {/* TODO(RD-2005): add icons depending on children state */}
         </Button>
     );

@@ -2,7 +2,7 @@ import React, { FunctionComponent, useMemo, useState } from 'react';
 import { find } from 'lodash';
 import { useQuery } from 'react-query';
 
-import { i18nMessagesPrefix } from './common';
+import { getParentPageContext, i18nMessagesPrefix, isTopLevelPage } from './common';
 import type { SharedDeploymentsViewWidgetConfiguration } from './configuration';
 import DetailsPane from './detailsPane';
 import { DeploymentsTable } from './table';
@@ -45,15 +45,6 @@ export const DeploymentsView: FunctionComponent<DeploymentsViewProps> = ({
             }),
         {
             enabled: filteringByParentDeploymentResult.filterable,
-            onSuccess: data => {
-                const context = toolbox.getContext();
-                // TODO(RD-1830): detect if deploymentId is not present in the current page and reset it.
-                // Do that only if `fetchData` was called from `DataTable`. If it's just polling,
-                // then don't reset it (because user may be interacting with some other component)
-                if (context.getValue('deploymentId') === undefined && data.items.length > 0) {
-                    context.setValue('deploymentId', data.items[0].id);
-                }
-            },
             refetchInterval: widget.configuration.customPollingTime * 1000,
             keepPreviousData: true
         }
@@ -87,10 +78,18 @@ export const DeploymentsView: FunctionComponent<DeploymentsViewProps> = ({
         );
     }
 
-    const selectedDeployment = find(deploymentsResult.data.items, {
+    const context = toolbox.getContext();
+    const deployments = deploymentsResult.data.items;
+    const selectedDeployment = find(deployments, {
         // NOTE: type assertion since lodash has problems receiving string[] in the object
-        id: toolbox.getContext().getValue('deploymentId') as string | undefined
+        // eslint-disable-next-line react/destructuring-assignment
+        id: context.getValue('deploymentId') as string | undefined
     });
+
+    if (!selectedDeployment && deployments.length > 0) {
+        // NOTE: always select the first visible item
+        context.setValue('deploymentId', deployments[0].id);
+    }
 
     return (
         <div className="grid">
@@ -135,19 +134,9 @@ const useFilteringByParentDeployment = ({ filterByParentDeployment }: { filterBy
 };
 
 const getParentDeploymentId = (drilldownContext: Stage.Types.ReduxState['drilldownContext']) => {
-    /**
-     * NOTE: drilldownContext contains contexts for each page, starting with
-     * the top-level page, and ending with the current page's initial context.
-     *
-     * Thus, the current page's parent context will be the penultimate entry in the array.
-     *
-     * It may happen, that the array only contains a single item (if we are on the top-level page).
-     */
-    if (drilldownContext.length < 2) {
+    if (isTopLevelPage(drilldownContext)) {
         return undefined;
     }
 
-    const parentPageContext = drilldownContext[drilldownContext.length - 2].context;
-
-    return parentPageContext?.deploymentId as string | undefined;
+    return getParentPageContext(drilldownContext)?.deploymentId as string | undefined;
 };

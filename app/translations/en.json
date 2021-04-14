@@ -544,8 +544,8 @@
                         "notAnyOf": "is not one of",
                         "isNull": "key is not",
                         "isNotNull": "key is",
-                        "contain": "contains",
-                        "notContain": "does not contain",
+                        "contains": "contains",
+                        "notContains": "does not contain",
                         "startsWith": "starts with",
                         "endsWith": "ends with"
                     }
@@ -667,6 +667,7 @@
                     "services": "Services"
                 },
                 "buttons": {
+                    "detailsFetchingError": "Could not fetch deployment details",
                     "environments": {
                         "label": "Subenvironments",
                         "title": "Drill down to subenvironments"
@@ -686,6 +687,14 @@
                 "missingParentDeploymentId": {
                     "header": "Cannot filter by parent deployment",
                     "message": "A selected deployment cannot be found in the parent page. Turn off the option in the configuration."
+                },
+                "missingFilterRules": {
+                    "header": "Internal error occurred",
+                    "message": "Try going to the home page and drill down again."
+                },
+                "unexpectedWidgetUsage": {
+                    "header": "Unexpected widget usage",
+                    "message": "The drilled-down widget should not be used on a top-level page, only in drill-down pages. Most of the time you do not need to add it manually, as it is present on the drill-down Environments/Services page automatically. You may be looking for a regular Deployments View widget."
                 }
             }
         },
@@ -706,6 +715,7 @@
             },
             "modal": {
                 "id": "Filter ID",
+                "rules": "Filter rules",
                 "idMissing": "Please provide the filter ID",
                 "header": {
                     "add": "Add filter",
