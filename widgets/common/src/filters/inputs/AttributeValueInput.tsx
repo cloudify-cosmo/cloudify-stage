@@ -2,7 +2,7 @@ import type { FunctionComponent } from 'react';
 
 import DynamicDropdown from '../../DynamicDropdown';
 import type { CommonAttributeValueInputProps } from './types';
-import { isAnyOfOrNotAnyOfOperator } from './common';
+import { isAnyOperator } from './common';
 import { i18n, i18nPlaceholdersPrefix } from '../consts';
 import MultipleStringValuesInput from './MultipleStringValuesInput';
 
@@ -21,7 +21,7 @@ const AttributeValueInput: FunctionComponent<AttributeValueInputProps> = ({
     toolbox,
     value
 }) => {
-    if (isAnyOfOrNotAnyOfOperator(operator)) {
+    if (isAnyOperator(operator)) {
         return (
             <DynamicDropdown
                 name="ruleValue"

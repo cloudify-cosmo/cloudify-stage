@@ -4,7 +4,7 @@ import { useRef } from 'react';
 import LabelKeyDropdown from '../../labels/KeyDropdown';
 import LabelValueDropdown from '../../labels/ValueDropdown';
 import { CommonAttributeValueInputProps } from './types';
-import { isAnyOfOrNotAnyOfOperator } from './common';
+import { isAnyOperator } from './common';
 
 export interface LabelValueInputProps extends Omit<CommonAttributeValueInputProps, 'onChange' | 'value'> {
     labelKey: string;
@@ -33,7 +33,7 @@ const LabelValueInput: FunctionComponent<LabelValueInputProps> = ({
                 value={labelKey}
                 allowKnownOnly
             />
-            {isAnyOfOrNotAnyOfOperator(operator) && (
+            {isAnyOperator(operator) && (
                 <LabelValueDropdown
                     labelKey={labelKey}
                     onChange={onValueChange}
