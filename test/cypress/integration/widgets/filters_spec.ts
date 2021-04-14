@@ -1,4 +1,11 @@
-import { FilterRuleOperators, FilterRuleType } from '../../../../widgets/common/src/filters/types';
+import {
+    FilterRule,
+    FilterRuleOperator,
+    FilterRuleOperators,
+    FilterRuleRowType,
+    FilterRuleType
+} from '../../../../widgets/common/src/filters/types';
+import { isAnyOfOrNotAnyOfOperator } from '../../../../widgets/common/src/filters/inputs/common';
 
 describe('Filters widget', () => {
     before(() => {
@@ -112,5 +119,146 @@ describe('Filters widget', () => {
 
         cy.contains('OK').click();
         cy.get('.modal').should('not.exist');
+    });
+
+    describe.only('should allow to define filter rules', () => {
+        function withinTheLastRuleRow(fn: (currentSubject: JQuery<HTMLElement>) => void) {
+            cy.get('.fields:last-of-type').within(fn);
+        }
+
+        function selectRuleRowType(ruleRowType: FilterRuleRowType) {
+            withinTheLastRuleRow(() => {
+                cy.get('div[name="ruleRowType"]').click();
+                cy.get(`div[option-value="${ruleRowType}"]`).click();
+            });
+        }
+        function selectRuleOperator(operator: FilterRuleOperator) {
+            withinTheLastRuleRow(() => {
+                cy.get('div[name="ruleOperator"]').click();
+                cy.get(`div[option-value="${operator}"]`).click();
+            });
+        }
+        function selectRuleAttributeValues(values: string[]) {
+            withinTheLastRuleRow(() => {
+                cy.get('div[name="ruleValue"]').click();
+                values.forEach(value => {
+                    cy.get('div[name="ruleValue"] input').type(`${value}{enter}`);
+                });
+            });
+        }
+        function selectRuleLabelKey(value: string) {
+            withinTheLastRuleRow(() => {
+                cy.get('div[name="labelKey"] input').type(value);
+            });
+        }
+        function selectRuleLabelValues(values: string[]) {
+            withinTheLastRuleRow(() => {
+                cy.get('div[name="labelValue"]').click();
+                values.forEach(value => {
+                    cy.get('div[name="labelValue"] input').type(`${value}{enter}`);
+                });
+            });
+        }
+
+        function populateFilterRuleRow(rule: FilterRule) {
+            const ruleRowType =
+                rule.type === FilterRuleType.Label ? FilterRuleRowType.Label : (rule.key as FilterRuleRowType);
+
+            selectRuleRowType(ruleRowType);
+            selectRuleOperator(rule.operator);
+            if (ruleRowType === FilterRuleRowType.Label) {
+                if (isAnyOfOrNotAnyOfOperator(rule.operator)) {
+                    selectRuleLabelKey(rule.key);
+                    selectRuleLabelValues(rule.values);
+                } else {
+                    selectRuleLabelKey(rule.key);
+                }
+            } else {
+                selectRuleAttributeValues(rule.values);
+            }
+        }
+
+        function populateFilterRuleRows(filterId: string, rules: FilterRule[]) {
+            cy.contains('Add').click();
+            cy.get('.modal').within(() => {
+                cy.contains('.field', 'Filter ID').find('input').type(filterId);
+                rules.forEach((rule, index) => {
+                    if (index > 0) cy.contains('Add new rule').click();
+                    populateFilterRuleRow(rule);
+                });
+            });
+        }
+
+        function saveAndVerifyFilter(filterId: string, testRules: FilterRule[]) {
+            cy.interceptSp('PUT', `/filters/deployments/${filterId}`).as('createRequest');
+            cy.contains('Save').click();
+            cy.wait('@createRequest').then(({ request }) => {
+                const requestRules = request.body.filter_rules;
+                expect(requestRules).to.have.length(testRules.length);
+                testRules.forEach((_rule, index: number) => {
+                    expect(requestRules[index]).to.deep.equal(testRules[index]);
+                });
+            });
+        }
+
+        type RuleRowTest = {
+            name: string;
+            setup: () => void;
+            testFilterName: string;
+            testFilterRules: FilterRule[];
+        };
+        const ruleRowTests: RuleRowTest[] = [
+            {
+                name: 'of type "label" with operators "any_of" and "not_any_of"',
+                setup: _.noop,
+                testFilterName: `${filterName}_label_1`,
+                testFilterRules: [
+                    {
+                        type: FilterRuleType.Attribute,
+                        key: 'blueprint_id',
+                        values: ['hello-world'],
+                        operator: FilterRuleOperators.Contains
+                    },
+
+                    {
+                        type: FilterRuleType.Attribute,
+                        key: 'blueprint_id',
+                        values: ['nodecellar'],
+                        operator: FilterRuleOperators.Contains
+                    }
+                ]
+            },
+            {
+                name: 'of type "label" with operators "is_null" and "is_not_null"',
+                setup: _.noop,
+                testFilterName: `${filterName}_label_2`,
+                testFilterRules: []
+            },
+            {
+                name: 'of type "attribute" with operators "any_of" and "not_any_of"',
+                setup: _.noop,
+                testFilterName: `${filterName}_attribute_1`,
+                testFilterRules: []
+            },
+            {
+                name: 'of type "attribute" with operators "contains", "not_contains", "starts_with" and "ends_with"',
+                setup: _.noop,
+                testFilterName: `${filterName}_attribute_2`,
+                testFilterRules: []
+            }
+        ];
+
+        before(() => {});
+
+        beforeEach(() => {});
+
+        ruleRowTests.map(ruleRowTest => {
+            const { name, setup, testFilterName, testFilterRules } = ruleRowTest;
+            return it(name, () => {
+                setup();
+                populateFilterRuleRows(testFilterName, testFilterRules);
+                saveAndVerifyFilter(testFilterName, testFilterRules);
+            });
+        });
     });
 });
