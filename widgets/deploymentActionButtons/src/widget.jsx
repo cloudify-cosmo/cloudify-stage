@@ -42,6 +42,7 @@ Stage.defineWidget({
     render(widget, data, error, toolbox) {
         const { Loading } = Stage.Basic;
 
+        // TODO(RD-1827): move the loading indicator to the individual buttons, so they are always shown
         if (_.isEmpty(data)) {
             return <Loading />;
         }
