@@ -361,7 +361,7 @@ describe('Deployments View widget', () => {
 
             getDeploymentsViewTable().within(() => {
                 cy.log('Only top-level environments should be visible');
-                cy.contains('app-env').click();
+                cy.contains('app-env');
                 cy.contains('db-env').should('not.exist');
                 cy.contains('db-1').should('not.exist');
                 cy.contains('db-2').should('not.exist');
@@ -384,7 +384,7 @@ describe('Deployments View widget', () => {
             const verifySubdeploymentsOfAppEnv = () => {
                 getDeploymentsViewTable().within(() => {
                     cy.log('Subenvironments of app-env should be visible (only db-env)');
-                    cy.contains('db-env').click();
+                    cy.contains('db-env');
                     cy.contains('app-env').should('not.exist');
                     cy.contains('db-1').should('not.exist');
                     cy.contains('web-app').should('not.exist');
