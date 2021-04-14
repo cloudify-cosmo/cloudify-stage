@@ -532,7 +532,7 @@
                         "blueprintId": "Select blueprints",
                         "siteName": "Select site names",
                         "createdBy": "Select usernames",
-                        "multipleStrings": "Type in texts"
+                        "multipleStrings": "Type in values"
                     },
                     "ruleTypesLabels": {
                         "label": "Label",
