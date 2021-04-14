@@ -195,7 +195,24 @@ describe('Filters widget', () => {
         cy.get('.modal').should('not.exist');
     });
 
-    describe.only('should allow to define filter rules', () => {
+    describe('should allow to define filter rules', () => {
+        before(() => {
+            const blueprintId = 'filters_test_form_blueprint';
+            const deploymentId = 'filters_test_form_deployment';
+
+            cy.deleteDeployments(deploymentId)
+                .deleteBlueprints(blueprintId)
+                .uploadBlueprint('blueprints/empty.zip', blueprintId)
+                .deployBlueprint(blueprintId, deploymentId)
+                .setLabels(deploymentId, [
+                    { os: 'linux' },
+                    { os: 'windows' },
+                    { infra: 'aws' },
+                    { infra: 'gcp' },
+                    { infra: 'azure' }
+                ]);
+        });
+
         function withinTheLastRuleRow(fn: (currentSubject: JQuery<HTMLElement>) => void) {
             cy.get('.fields:last-of-type').within(fn);
         }
@@ -223,13 +240,15 @@ describe('Filters widget', () => {
         function selectRuleLabelKey(value: string) {
             withinTheLastRuleRow(() => {
                 cy.get('div[name="labelKey"] input').type(value);
+                cy.get(`div[name="labelKey"] div[option-value="${value}"]`).click();
             });
         }
         function selectRuleLabelValues(values: string[]) {
             withinTheLastRuleRow(() => {
                 cy.get('div[name="labelValue"]').click();
                 values.forEach(value => {
-                    cy.get('div[name="labelValue"] input').type(`${value}{enter}`);
+                    cy.get('div[name="labelValue"] input').type(`${value}`);
+                    cy.get(`div[option-value="${value}"]`).click();
                 });
             });
         }
@@ -277,61 +296,67 @@ describe('Filters widget', () => {
 
         type RuleRowTest = {
             name: string;
-            setup: () => void;
             testFilterName: string;
             testFilterRules: FilterRule[];
         };
+
         const ruleRowTests: RuleRowTest[] = [
             {
                 name: 'of type "label" with operators "any_of" and "not_any_of"',
-                setup: _.noop,
                 testFilterName: `${filterName}_label_1`,
                 testFilterRules: [
                     {
-                        type: FilterRuleType.Attribute,
-                        key: 'blueprint_id',
-                        values: ['hello-world'],
-                        operator: FilterRuleOperators.Contains
+                        type: FilterRuleType.Label,
+                        key: 'os',
+                        values: ['windows', 'linux'],
+                        operator: FilterRuleOperators.AnyOf
                     },
 
                     {
-                        type: FilterRuleType.Attribute,
-                        key: 'blueprint_id',
-                        values: ['nodecellar'],
-                        operator: FilterRuleOperators.Contains
+                        type: FilterRuleType.Label,
+                        key: 'infra',
+                        values: ['aws'],
+                        operator: FilterRuleOperators.NotAnyOf
                     }
                 ]
             },
             {
                 name: 'of type "label" with operators "is_null" and "is_not_null"',
-                setup: _.noop,
                 testFilterName: `${filterName}_label_2`,
-                testFilterRules: []
+                testFilterRules: [
+                    {
+                        type: FilterRuleType.Label,
+                        key: 'os',
+                        values: [],
+                        operator: FilterRuleOperators.IsNull
+                    },
+
+                    {
+                        type: FilterRuleType.Label,
+                        key: 'infra',
+                        values: [],
+                        operator: FilterRuleOperators.IsNotNull
+                    }
+                ]
             },
             {
                 name: 'of type "attribute" with operators "any_of" and "not_any_of"',
-                setup: _.noop,
                 testFilterName: `${filterName}_attribute_1`,
-                testFilterRules: []
+                testFilterRules: [] // TODO: Add rules
             },
             {
                 name: 'of type "attribute" with operators "contains", "not_contains", "starts_with" and "ends_with"',
-                setup: _.noop,
                 testFilterName: `${filterName}_attribute_2`,
-                testFilterRules: []
+                testFilterRules: [] // TODO: Add rules
             }
         ];
 
-        before(() => {});
-
-        beforeEach(() => {});
-
         ruleRowTests.map(ruleRowTest => {
-            const { name, setup, testFilterName, testFilterRules } = ruleRowTest;
+            const { name, testFilterName, testFilterRules } = ruleRowTest;
             return it(name, () => {
-                setup();
                 populateFilterRuleRows(testFilterName, testFilterRules);
                 saveAndVerifyFilter(testFilterName, testFilterRules);
+                // TODO: Optional verify that filter rule rows get populated properly
             });
         });
     });
