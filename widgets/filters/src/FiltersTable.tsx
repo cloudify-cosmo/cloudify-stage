@@ -134,20 +134,23 @@ const FiltersTable: FunctionComponent<FiltersTableProps> = ({ data, toolbox, wid
                         {i18n.t('widgets.filters.filterInUse.heading', { filterId: filterIdToDelete })}
                         <List bulleted>
                             {filterUsage.map(usageInfo => (
-                                <List.Item>{i18n.t('widgets.filters.filterInUse.usageInfo', usageInfo)}</List.Item>
+                                <List.Item key={JSON.stringify(usageInfo)}>
+                                    {i18n.t('widgets.filters.filterInUse.usageInfo', usageInfo)}
+                                </List.Item>
                             ))}
                         </List>
                     </span>
                 }
             />
 
-            {addModalOpen && <FilterAddModal onSubmit={handleAddFilter} onCancel={closeAddModal} />}
+            {addModalOpen && <FilterAddModal onSubmit={handleAddFilter} onCancel={closeAddModal} toolbox={toolbox} />}
 
             {filterToClone && (
                 <FilterCloneModal
                     initialFilter={filterToClone}
                     onSubmit={handleAddFilter}
                     onCancel={unsetFilterToClone}
+                    toolbox={toolbox}
                 />
             )}
 
@@ -156,6 +159,7 @@ const FiltersTable: FunctionComponent<FiltersTableProps> = ({ data, toolbox, wid
                     initialFilter={filterToEdit}
                     onSubmit={handleEditFilter}
                     onCancel={unsetFilterToEdit}
+                    toolbox={toolbox}
                 />
             )}
         </>
