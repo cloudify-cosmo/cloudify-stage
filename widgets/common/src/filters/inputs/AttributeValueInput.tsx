@@ -2,8 +2,8 @@ import { castArray } from 'lodash';
 import type { FunctionComponent } from 'react';
 
 import DynamicDropdown from '../../DynamicDropdown';
-import { LabelsFilterRuleOperators } from '../types';
 import type { CommonAttributeValueInputProps } from './types';
+import { isAnyOfOrNotAnyOfOperator } from './common';
 
 interface AttributeValueInputProps extends CommonAttributeValueInputProps {
     fetchUrl: string;
@@ -20,9 +20,7 @@ const AttributeValueInput: FunctionComponent<AttributeValueInputProps> = ({
     toolbox,
     value
 }) => {
-    const { Input } = Stage.Basic;
-
-    if (operator === LabelsFilterRuleOperators.AnyOf || operator === LabelsFilterRuleOperators.NotAnyOf) {
+    if (isAnyOfOrNotAnyOfOperator(operator)) {
         return (
             <DynamicDropdown
                 fetchUrl={fetchUrl}
