@@ -2,8 +2,7 @@ import type { FunctionComponent } from 'react';
 
 import DynamicDropdown from '../../DynamicDropdown';
 import type { CommonAttributeValueInputProps } from './types';
-import { isAnyOperator } from './common';
-import { i18n, i18nPlaceholdersPrefix } from '../consts';
+import { isAnyOperator, getPlaceholderTranslation } from './common';
 import MultipleStringValuesInput from './MultipleStringValuesInput';
 
 interface AttributeValueInputProps extends CommonAttributeValueInputProps {
@@ -42,7 +41,7 @@ const AttributeValueInput: FunctionComponent<AttributeValueInputProps> = ({
             name="ruleValue"
             value={value}
             onChange={onChange}
-            placeholder={i18n.t(`${i18nPlaceholdersPrefix}.multipleStrings`)}
+            placeholder={getPlaceholderTranslation('multipleStrings')}
         />
     );
 };

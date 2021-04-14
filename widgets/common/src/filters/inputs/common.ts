@@ -1,7 +1,11 @@
 import type { FilterRuleOperator } from '../types';
 import { FilterRuleOperators } from '../types';
+import { getTranslation } from '../common';
 
-// eslint-disable-next-line import/prefer-default-export
 export function isAnyOperator(operator: FilterRuleOperator) {
     return ([FilterRuleOperators.AnyOf, FilterRuleOperators.NotAnyOf] as FilterRuleOperator[]).includes(operator);
+}
+
+export function getPlaceholderTranslation(key: string) {
+    return getTranslation(`inputsPlaceholders.${key}`);
 }
