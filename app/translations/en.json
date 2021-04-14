@@ -544,8 +544,8 @@
                         "notAnyOf": "is not one of",
                         "isNull": "key is not",
                         "isNotNull": "key is",
-                        "contain": "contains",
-                        "notContain": "does not contain",
+                        "contains": "contains",
+                        "notContains": "does not contain",
                         "startsWith": "starts with",
                         "endsWith": "ends with"
                     }
@@ -714,6 +714,7 @@
             },
             "modal": {
                 "id": "Filter ID",
+                "rules": "Filter rules",
                 "idMissing": "Please provide the filter ID",
                 "header": {
                     "add": "Add filter",
