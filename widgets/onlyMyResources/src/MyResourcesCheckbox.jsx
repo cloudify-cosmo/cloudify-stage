@@ -9,6 +9,7 @@ export default function MyResourcesCheckbox({ toolbox }) {
         toolbox.getEventBus().trigger('snapshots:refresh');
         toolbox.getEventBus().trigger('blueprints:refresh');
         toolbox.getEventBus().trigger('deployments:refresh');
+        toolbox.getEventBus().trigger('filters:refresh');
     }
 
     const { Checkbox } = Stage.Basic;
