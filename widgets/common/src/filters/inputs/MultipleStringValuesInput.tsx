@@ -1,21 +1,30 @@
 import { FunctionComponent, useMemo } from 'react';
 
 interface MultipleStringValuesInputProps {
-    value: string[];
+    name: string;
     onChange: (newValue: string[]) => void;
+    placeholder: string;
+    value: string[];
 }
 
-const MultipleStringValuesInput: FunctionComponent<MultipleStringValuesInputProps> = ({ onChange, value }) => {
+const MultipleStringValuesInput: FunctionComponent<MultipleStringValuesInputProps> = ({
+    name,
+    onChange,
+    placeholder,
+    value
+}) => {
     const { Dropdown } = Stage.Basic;
     const options = useMemo(() => value.map(element => ({ text: element, value: element })), [value]);
 
     return (
         <Dropdown
+            name={name}
             allowAdditions
             clearable
             fluid
             multiple
             options={options}
+            placeholder={placeholder}
             search
             selection
             onChange={(_event, data) => onChange(data.value as string[])}
