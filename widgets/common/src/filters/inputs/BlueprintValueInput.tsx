@@ -2,12 +2,12 @@
 import type { FunctionComponent } from 'react';
 import type { CommonAttributeValueInputProps } from './types';
 import AttributeValueInput from './AttributeValueInput';
-import { i18n, i18nPlaceholdersPrefix } from '../consts';
+import { getPlaceholderTranslation } from './common';
 
 const BlueprintValueInput: FunctionComponent<CommonAttributeValueInputProps> = props => (
     <AttributeValueInput
         fetchUrl="/blueprints?state=uploaded&_include=id"
-        placeholder={i18n.t(`${i18nPlaceholdersPrefix}.blueprintId`)}
+        placeholder={getPlaceholderTranslation('blueprintId')}
         valueProp="id"
         {...props}
     />

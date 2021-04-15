@@ -17,6 +17,10 @@ describe('Filters widget', () => {
         cy.get('.loading').should('not.exist');
     });
 
+    function typeAttributeRuleValue(value: string) {
+        cy.get('[name=ruleValue]').click().find('input').type(`${value}{enter}`).blur();
+    }
+
     function checkExistingRules() {
         cy.get('.fields:eq(0)').within(() => {
             cy.contains('Blueprint');
@@ -37,7 +41,7 @@ describe('Filters widget', () => {
         cy.get('.fields:eq(0)').within(() => {
             cy.contains('is one of').click();
             cy.contains('contains').click();
-            cy.get('.input input').type(newBlueprintRuleValue);
+            typeAttributeRuleValue(newBlueprintRuleValue);
         });
     }
 
@@ -86,7 +90,8 @@ describe('Filters widget', () => {
 
         cy.get('.modal').within(() => {
             cy.contains('.field', 'Filter ID').find('input').type(newFilterName);
-            cy.get('.fields:eq(0) .input input').type(blueprintId);
+
+            cy.get('.fields:eq(0)').within(() => typeAttributeRuleValue(blueprintId));
             cy.contains('Add new rule').click();
             cy.get('.fields:eq(1)').within(() => {
                 cy.get('[name=ruleRowType]').click();

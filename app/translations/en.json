@@ -531,7 +531,8 @@
                     "inputsPlaceholders": {
                         "blueprintId": "Select blueprints",
                         "siteName": "Select site names",
-                        "createdBy": "Select usernames"
+                        "createdBy": "Select usernames",
+                        "multipleStrings": "Type in values"
                     },
                     "ruleTypesLabels": {
                         "label": "Label",

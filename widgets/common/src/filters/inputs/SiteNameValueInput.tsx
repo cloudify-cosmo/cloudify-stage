@@ -2,12 +2,12 @@
 import type { FunctionComponent } from 'react';
 import type { CommonAttributeValueInputProps } from './types';
 import AttributeValueInput from './AttributeValueInput';
-import { i18n, i18nPlaceholdersPrefix } from '../consts';
+import { getPlaceholderTranslation } from './common';
 
 const SiteNameValueInput: FunctionComponent<CommonAttributeValueInputProps> = props => (
     <AttributeValueInput
         fetchUrl="/sites?_include=name"
-        placeholder={i18n.t(`${i18nPlaceholdersPrefix}.siteName`)}
+        placeholder={getPlaceholderTranslation('siteName')}
         valueProp="name"
         {...props}
     />
