@@ -152,7 +152,7 @@ describe('Filters widget', () => {
 
         cy.get('.modal').should('not.exist');
         cy.log('Verify filters list is refetched immediatelly');
-        cy.wait('@filtersRequest', { timeout: 1000 });
+        cy.wait('@filtersRequest', { requestTimeout: 1000 });
     });
 
     it('should allow to clone existing filter', () => {
