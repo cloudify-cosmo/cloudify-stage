@@ -430,6 +430,31 @@ describe('Deployments View widget', () => {
                 cy.contains('db-env').should('not.exist');
             });
         });
+
+        it('should allow deleting a deployment without redirecting to the parent page', () => {
+            const tempDeploymentId = `${specPrefix}_temp_deployment_to_remove`;
+            const parentDeploymentId = getDeploymentFullName('app-env');
+            cy.deployBlueprint(blueprintName, tempDeploymentId).setLabels(tempDeploymentId, [
+                { 'csys-obj-type': 'service' },
+                { 'csys-obj-parent': parentDeploymentId }
+            ]);
+
+            useEnvironmentsWidget();
+
+            getDeploymentsViewDetailsPane().within(() => getSubservicesButton().click());
+
+            getBreadcrumbs().contains(parentDeploymentId);
+
+            getDeploymentsViewTable().within(() => cy.contains(tempDeploymentId).click());
+
+            cy.log('Delete the deployment');
+            getDeploymentsViewDetailsPane().contains('Deployment actions').click();
+            cy.get('.popup').contains('Delete').click();
+            cy.get('.modal').contains('Yes').click();
+
+            getDeploymentsViewTable().within(() => cy.contains(tempDeploymentId).should('not.exist'));
+            getBreadcrumbs().contains(parentDeploymentId);
+        });
     });
 
     it('should display an error message when using the drilled-down widget on a top-level page', () => {

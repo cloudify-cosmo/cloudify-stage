@@ -7,13 +7,15 @@ interface DeploymentActionsModalsProps {
     deploymentId: string;
     onHide: () => void;
     toolbox: Stage.Types.Toolbox;
+    redirectToParentPageAfterDelete: boolean;
 }
 
 const DeploymentActionsModals: FunctionComponent<DeploymentActionsModalsProps> = ({
     activeAction,
     deploymentId,
     onHide,
-    toolbox
+    toolbox,
+    redirectToParentPageAfterDelete
 }) => {
     const {
         Common: {
@@ -43,7 +45,13 @@ const DeploymentActionsModals: FunctionComponent<DeploymentActionsModalsProps> =
             return <UpdateDeploymentModal {...commonProps} />;
         case actions.delete:
         case actions.forceDelete:
-            return <RemoveDeploymentModal {...commonProps} force={activeAction === actions.forceDelete} />;
+            return (
+                <RemoveDeploymentModal
+                    {...commonProps}
+                    force={activeAction === actions.forceDelete}
+                    redirectToParentPageAfterDelete={redirectToParentPageAfterDelete}
+                />
+            );
         case actions.setSite:
             return <SetSiteModal {...commonProps} />;
         default:
@@ -56,7 +64,8 @@ DeploymentActionsModals.propTypes = {
     deploymentId: PropTypes.string.isRequired,
     onHide: PropTypes.func.isRequired,
     // NOTE: `as any` assertion since Toolbox from PropTypes and TS slightly differ
-    toolbox: Stage.PropTypes.Toolbox.isRequired as any
+    toolbox: Stage.PropTypes.Toolbox.isRequired as any,
+    redirectToParentPageAfterDelete: PropTypes.bool.isRequired
 };
 
 declare global {

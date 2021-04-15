@@ -1,12 +1,15 @@
 import type { ComponentProps } from 'react';
 import DeploymentActionButtons from './DeploymentActionButtons';
 
-interface DeploymentActionsWidgetParams {
+interface WidgetParams {
     id: string | null | undefined;
 }
-type DeploymentActionsWidgetData = ComponentProps<typeof DeploymentActionButtons>['deployment'];
+type WidgetData = ComponentProps<typeof DeploymentActionButtons>['deployment'];
+interface WidgetConfiguration {
+    preventRedirectToParentPageAfterDelete?: boolean;
+}
 
-Stage.defineWidget<DeploymentActionsWidgetParams, DeploymentActionsWidgetData, Record<never, any>>({
+Stage.defineWidget<WidgetParams, WidgetData, WidgetConfiguration>({
     id: 'deploymentActionButtons',
     name: 'Deployment action buttons',
     description: 'Provides set of action buttons for deployment',
@@ -16,7 +19,15 @@ Stage.defineWidget<DeploymentActionsWidgetParams, DeploymentActionsWidgetData, R
     showBorder: false,
     categories: [Stage.GenericConfig.CATEGORY.DEPLOYMENTS, Stage.GenericConfig.CATEGORY.BUTTONS_AND_FILTERS],
 
-    initialConfiguration: [],
+    initialConfiguration: [
+        {
+            // NOTE: for programmatic use only, not exposed in the UI
+            type: Stage.Basic.GenericField.BOOLEAN_TYPE,
+            hidden: true,
+            id: 'preventRedirectToParentPageAfterDelete',
+            default: false
+        }
+    ],
     isReact: true,
     hasReadme: true,
     permission: Stage.GenericConfig.WIDGET_PERMISSION('deploymentActionButtons'),
@@ -41,7 +52,7 @@ Stage.defineWidget<DeploymentActionsWidgetParams, DeploymentActionsWidgetData, R
         return { id: firstDeploymentId };
     },
 
-    render(_widget, data, _error, toolbox) {
+    render(widget, data, _error, toolbox) {
         const { Loading } = Stage.Basic;
 
         // TODO(RD-1827): move the loading indicator to the individual buttons, so they are always shown
@@ -49,6 +60,12 @@ Stage.defineWidget<DeploymentActionsWidgetParams, DeploymentActionsWidgetData, R
             return <Loading />;
         }
 
-        return <DeploymentActionButtons deployment={data} toolbox={toolbox} />;
+        return (
+            <DeploymentActionButtons
+                deployment={data}
+                toolbox={toolbox}
+                redirectToParentPageAfterDelete={!widget.configuration.preventRedirectToParentPageAfterDelete}
+            />
+        );
     }
 });

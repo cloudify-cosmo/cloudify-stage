@@ -6,6 +6,7 @@ interface RemoveDeploymentModalProps {
     force: boolean;
     onHide: () => void;
     toolbox: Stage.Types.Toolbox;
+    redirectToParentPageAfterDelete: boolean;
 }
 
 const RemoveDeploymentModal: FunctionComponent<RemoveDeploymentModalProps> = ({
@@ -13,7 +14,8 @@ const RemoveDeploymentModal: FunctionComponent<RemoveDeploymentModalProps> = ({
     deploymentId,
     force,
     onHide,
-    toolbox
+    toolbox,
+    redirectToParentPageAfterDelete
 }) => {
     const {
         Basic: { Confirm, ErrorMessage },
@@ -42,8 +44,10 @@ const RemoveDeploymentModal: FunctionComponent<RemoveDeploymentModalProps> = ({
                 const contextDeploymentId = toolbox.getContext().getValue('deploymentId');
                 if (deploymentId === contextDeploymentId) {
                     toolbox.getContext().setValue('deploymentId', null);
-                    // TODO(RD-1824): do not go to parent page
-                    toolbox.goToParentPage();
+
+                    if (redirectToParentPageAfterDelete) {
+                        toolbox.goToParentPage();
+                    }
                 }
                 toolbox.getEventBus().trigger('deployments:refresh');
                 onHide();
@@ -75,7 +79,8 @@ RemoveDeploymentModal.propTypes = {
     open: PropTypes.bool.isRequired,
     onHide: PropTypes.func.isRequired,
     // NOTE: `as any` assertion since Toolbox from PropTypes and TS slightly differ
-    toolbox: Stage.PropTypes.Toolbox.isRequired as any
+    toolbox: Stage.PropTypes.Toolbox.isRequired as any,
+    redirectToParentPageAfterDelete: PropTypes.bool.isRequired
 };
 
 declare global {

@@ -3,9 +3,14 @@ import type { FunctionComponent } from 'react';
 interface DeploymentActionButtonsProps {
     deployment: { id: string; workflows: unknown[] };
     toolbox: Stage.Types.Toolbox;
+    redirectToParentPageAfterDelete: boolean;
 }
 
-const DeploymentActionButtons: FunctionComponent<DeploymentActionButtonsProps> = ({ deployment, toolbox }) => {
+const DeploymentActionButtons: FunctionComponent<DeploymentActionButtonsProps> = ({
+    deployment,
+    toolbox,
+    redirectToParentPageAfterDelete
+}) => {
     const {
         Basic: { Button },
         // @ts-expect-error Those commons are not migrated to TS yet
@@ -66,6 +71,7 @@ const DeploymentActionButtons: FunctionComponent<DeploymentActionButtonsProps> =
                     deploymentId={id}
                     onHide={resetActiveAction}
                     toolbox={toolbox}
+                    redirectToParentPageAfterDelete={redirectToParentPageAfterDelete}
                 />
             )}
         </div>
