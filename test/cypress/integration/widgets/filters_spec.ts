@@ -145,11 +145,14 @@ describe('Filters widget', () => {
             modifyBlueprintRule();
 
             cy.interceptSp('PATCH', `/filters/deployments/${filterName}`).as('rulesRequest');
+            cy.interceptSp('GET', `/filters/deployments`).as('filtersRequest');
             cy.contains('Save').click();
             checkRequestRules();
         });
 
         cy.get('.modal').should('not.exist');
+        cy.log('Verify filters list is refetched immediatelly');
+        cy.wait('@filtersRequest', { requestTimeout: 1000 });
     });
 
     it('should allow to clone existing filter', () => {
