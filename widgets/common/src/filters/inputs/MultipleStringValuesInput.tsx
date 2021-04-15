@@ -1,4 +1,5 @@
 import { FunctionComponent, useMemo } from 'react';
+import { DropdownItemProps } from 'semantic-ui-react';
 
 interface MultipleStringValuesInputProps {
     name: string;
@@ -14,7 +15,9 @@ const MultipleStringValuesInput: FunctionComponent<MultipleStringValuesInputProp
     value
 }) => {
     const { Dropdown } = Stage.Basic;
-    const options = useMemo(() => value.map(element => ({ text: element, value: element })), [value]);
+    const options = useMemo(() => value.map((element): DropdownItemProps => ({ text: element, value: element })), [
+        value
+    ]);
 
     return (
         <Dropdown
