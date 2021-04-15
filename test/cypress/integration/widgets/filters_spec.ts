@@ -2,7 +2,7 @@ import { FilterRuleOperators, FilterRuleType } from '../../../../widgets/common/
 
 describe('Filters widget', () => {
     before(() => {
-        cy.usePageMock('filters').activate().mockLogin();
+        cy.usePageMock(['filters', 'onlyMyResources']).activate().mockLogin();
     });
 
     const filterName = 'filters_test_filter';
@@ -16,6 +16,10 @@ describe('Filters widget', () => {
         cy.get('input[placeholder="Search..."]').type(filterName);
         cy.get('.loading').should('not.exist');
     });
+
+    function typeAttributeRuleValue(value: string) {
+        cy.get('[name=ruleValue]').click().find('input').type(`${value}{enter}`).blur();
+    }
 
     function checkExistingRules() {
         cy.get('.fields:eq(0)').within(() => {
@@ -37,7 +41,7 @@ describe('Filters widget', () => {
         cy.get('.fields:eq(0)').within(() => {
             cy.contains('is one of').click();
             cy.contains('contains').click();
-            cy.get('.input input').type(newBlueprintRuleValue);
+            typeAttributeRuleValue(newBlueprintRuleValue);
         });
     }
 
@@ -86,7 +90,8 @@ describe('Filters widget', () => {
 
         cy.get('.modal').within(() => {
             cy.contains('.field', 'Filter ID').find('input').type(newFilterName);
-            cy.get('.fields:eq(0) .input input').type(blueprintId);
+
+            cy.get('.fields:eq(0)').within(() => typeAttributeRuleValue(blueprintId));
             cy.contains('Add new rule').click();
             cy.get('.fields:eq(1)').within(() => {
                 cy.get('[name=ruleRowType]').click();
@@ -186,5 +191,13 @@ describe('Filters widget', () => {
 
         cy.contains('OK').click();
         cy.get('.modal').should('not.exist');
+    });
+
+    it('should support "Only my resources" setting', () => {
+        cy.interceptSp('GET', new RegExp('/filters/deployments\\?.*created_by=admin.*')).as('getRequest');
+
+        cy.contains('Show only my resources').click();
+
+        cy.wait('@getRequest');
     });
 });
