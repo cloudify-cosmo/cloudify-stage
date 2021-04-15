@@ -6,6 +6,11 @@ import LabelValueDropdown from '../../labels/ValueDropdown';
 import { CommonAttributeValueInputProps } from './types';
 import { isAnyOperator } from './common';
 
+const LabelDropdownsDivider: FunctionComponent = () => {
+    const { Divider } = Stage.Basic;
+    return <Divider hidden style={{ margin: '0.2rem' }} />;
+};
+
 export interface LabelValueInputProps extends Omit<CommonAttributeValueInputProps, 'onChange' | 'value'> {
     labelKey: string;
     labelValue: string[];
@@ -24,7 +29,6 @@ const LabelValueInput: FunctionComponent<LabelValueInputProps> = ({
     const keyDropdownRef = useRef<HTMLElement>();
 
     return (
-        // TODO(RD-2007): Add better styling
         <>
             <LabelKeyDropdown
                 innerRef={keyDropdownRef}
@@ -34,14 +38,17 @@ const LabelValueInput: FunctionComponent<LabelValueInputProps> = ({
                 allowKnownOnly
             />
             {isAnyOperator(operator) && (
-                <LabelValueDropdown
-                    labelKey={labelKey}
-                    onChange={onValueChange}
-                    toolbox={toolbox}
-                    value={labelValue}
-                    multiple
-                    allowKnownOnly
-                />
+                <>
+                    <LabelDropdownsDivider />
+                    <LabelValueDropdown
+                        labelKey={labelKey}
+                        onChange={onValueChange}
+                        toolbox={toolbox}
+                        value={labelValue}
+                        multiple
+                        allowKnownOnly
+                    />
+                </>
             )}
         </>
     );
