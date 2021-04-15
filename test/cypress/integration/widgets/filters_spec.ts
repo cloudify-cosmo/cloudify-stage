@@ -2,7 +2,7 @@ import { FilterRuleOperators, FilterRuleType } from '../../../../widgets/common/
 
 describe('Filters widget', () => {
     before(() => {
-        cy.usePageMock('filters').activate().mockLogin();
+        cy.usePageMock(['filters', 'onlyMyResources']).activate().mockLogin();
     });
 
     const filterName = 'filters_test_filter';
@@ -186,5 +186,13 @@ describe('Filters widget', () => {
 
         cy.contains('OK').click();
         cy.get('.modal').should('not.exist');
+    });
+
+    it('should support "Only my resources" setting', () => {
+        cy.interceptSp('GET', new RegExp('/filters/deployments\\?.*created_by=admin.*')).as('getRequest');
+
+        cy.contains('Show only my resources').click();
+
+        cy.wait('@getRequest');
     });
 });
