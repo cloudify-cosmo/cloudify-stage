@@ -7,6 +7,29 @@ import './DynamicDropdown.css';
 
 let instanceCount = 0;
 
+/**
+ * Creates two `useUpdateEffect` hooks, one calls fetchTrigger with debouncing
+ * on delayedFetchDeps change and the second calls immediately fetchTrigger
+ * on immediateFetchDeps change
+ *
+ * @param {React.DependencyList} delayedFetchDeps
+ * @param {React.DependencyList} immediateFetchDeps
+ * @param {function(boolean)} fetchTrigger function to be called to trigger data fetching
+ */
+function useFetchTrigger(delayedFetchDeps, immediateFetchDeps, fetchTrigger) {
+    const { useUpdateEffect } = Stage.Hooks;
+    const delayMs = 500;
+    const delayedFetchTrigger = useCallback(debounce(fetchTrigger, delayMs), []);
+
+    useUpdateEffect(() => {
+        delayedFetchTrigger();
+    }, delayedFetchDeps);
+
+    useUpdateEffect(() => {
+        fetchTrigger(true);
+    }, immediateFetchDeps);
+}
+
 export default function DynamicDropdown({
     fetchUrl,
     onChange,
@@ -30,7 +53,7 @@ export default function DynamicDropdown({
     ...rest
 }) {
     const { useState, useEffect } = React;
-    const { useBoolean, useEventListener, useUpdateEffect } = Stage.Hooks;
+    const { useBoolean, useEventListener } = Stage.Hooks;
 
     const [id] = useState(() => {
         instanceCount += 1;
@@ -44,12 +67,23 @@ export default function DynamicDropdown({
     const [isLoading, setLoading] = useState(false);
     const [overrideOptionsAfterFetch, setOverrideOptionsAfterFetch, resetOverrideOptionsAfterFetch] = useBoolean();
 
-    function unsetLoadingAndShouldLoadMore() {
-        setLoading(false);
-        setShouldLoadMore(false);
+    function refreshData() {
+        setCurrentPage(-1);
+        setHasMore(true);
+    }
+
+    function triggerFetch(resetOptions = false) {
+        if (resetOptions) setOverrideOptionsAfterFetch();
+        refreshData();
+        setShouldLoadMore(true);
     }
 
     function loadMore() {
+        const onFetchFinished = useCallback(() => {
+            setLoading(false);
+            setShouldLoadMore(false);
+        }, []);
+
         setLoading(true);
 
         if (fetchAll) {
@@ -60,7 +94,7 @@ export default function DynamicDropdown({
                     setHasMore(false);
                     setOptions(itemsFormatter(data.items));
                 })
-                .finally(unsetLoadingAndShouldLoadMore);
+                .finally(onFetchFinished);
         } else {
             const nextPage = currentPage + 1;
 
@@ -77,16 +111,10 @@ export default function DynamicDropdown({
                     setOptions([...(overrideOptionsAfterFetch ? [] : options), ...itemsFormatter(data.items)]);
                     resetOverrideOptionsAfterFetch();
                 })
-                .finally(unsetLoadingAndShouldLoadMore);
+                .finally(onFetchFinished);
 
             setCurrentPage(nextPage);
         }
-    }
-
-    function refreshData() {
-        if (!multiple) setOverrideOptionsAfterFetch();
-        setCurrentPage(-1);
-        setHasMore(true);
     }
 
     useEffect(() => {
@@ -107,17 +135,7 @@ export default function DynamicDropdown({
         }
     }, [value]);
 
-    const delayMs = 500;
-    const delayedSetShouldLoadMore = useCallback(
-        debounce(() => {
-            refreshData();
-            setShouldLoadMore(true);
-        }, delayMs),
-        []
-    );
-    useUpdateEffect(() => {
-        delayedSetShouldLoadMore();
-    }, [searchQuery, fetchUrl]);
+    useFetchTrigger([searchQuery], [fetchUrl], triggerFetch);
 
     const filteredOptions = _(options)
         .filter(option =>
