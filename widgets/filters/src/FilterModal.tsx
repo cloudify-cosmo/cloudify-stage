@@ -39,12 +39,7 @@ const FilterModal: FunctionComponent<FilterModalProps> = ({
             return;
         }
 
-        onSubmit(filterId, filterRules)
-            .then(() => {
-                toolbox.loading(true);
-                toolbox.refresh();
-            })
-            .catch(setMessageAsError);
+        onSubmit(filterId, filterRules).then(toolbox.refresh).catch(setMessageAsError);
     }
 
     const { ApproveButton, CancelButton, Icon, Modal } = Stage.Basic;
