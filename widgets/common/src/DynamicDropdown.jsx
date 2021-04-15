@@ -30,7 +30,7 @@ export default function DynamicDropdown({
     ...rest
 }) {
     const { useState, useEffect } = React;
-    const { useEventListener, useUpdateEffect } = Stage.Hooks;
+    const { useBoolean, useEventListener, useUpdateEffect } = Stage.Hooks;
 
     const [id] = useState(() => {
         instanceCount += 1;
@@ -42,6 +42,7 @@ export default function DynamicDropdown({
     const [searchQuery, setSearchQuery] = useState('');
     const [shouldLoadMore, setShouldLoadMore] = useState(prefetch);
     const [isLoading, setLoading] = useState(false);
+    const [overrideOptionsAfterFetch, setOverrideOptionsAfterFetch, resetOverrideOptionsAfterFetch] = useBoolean();
 
     function unsetLoadingAndShouldLoadMore() {
         setLoading(false);
@@ -73,7 +74,8 @@ export default function DynamicDropdown({
                 })
                 .then(data => {
                     setHasMore(data.metadata.pagination.total > (nextPage + 1) * pageSize);
-                    setOptions([...options, ...itemsFormatter(data.items)]);
+                    setOptions([...(overrideOptionsAfterFetch ? [] : options), ...itemsFormatter(data.items)]);
+                    resetOverrideOptionsAfterFetch();
                 })
                 .finally(unsetLoadingAndShouldLoadMore);
 
@@ -82,6 +84,7 @@ export default function DynamicDropdown({
     }
 
     function refreshData() {
+        if (!multiple) setOverrideOptionsAfterFetch();
         setCurrentPage(-1);
         setHasMore(true);
     }
