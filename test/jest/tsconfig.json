@@ -7,5 +7,6 @@
         },
         "types": ["jest"]
     },
-    "include": ["**/*", "../../app/**/*"]
+    // Some Stage.Common types used in tests are defined in widgets/common
+    "include": ["**/*", "../../app/**/*", "../../widgets/common/**/*"]
 }
