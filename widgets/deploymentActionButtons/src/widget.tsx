@@ -1,10 +1,12 @@
-/**
- * Created by jakubniezgoda on 01/03/2017.
- */
-
+import type { ComponentProps } from 'react';
 import DeploymentActionButtons from './DeploymentActionButtons';
 
-Stage.defineWidget({
+interface DeploymentActionsWidgetParams {
+    id: string | null | undefined;
+}
+type DeploymentActionsWidgetData = ComponentProps<typeof DeploymentActionButtons>['deployment'];
+
+Stage.defineWidget<DeploymentActionsWidgetParams, DeploymentActionsWidgetData, Record<never, any>>({
     id: 'deploymentActionButtons',
     name: 'Deployment action buttons',
     description: 'Provides set of action buttons for deployment',
@@ -19,8 +21,8 @@ Stage.defineWidget({
     hasReadme: true,
     permission: Stage.GenericConfig.WIDGET_PERMISSION('deploymentActionButtons'),
 
-    fetchData(widget, toolbox, { id }) {
-        if (_.isEmpty(id)) {
+    fetchData(_widget, toolbox, { id }) {
+        if (!id) {
             return Promise.resolve({ id: '', workflows: [] });
         }
 
@@ -31,19 +33,19 @@ Stage.defineWidget({
         return actions.doGetWorkflows(id).finally(() => toolbox.loading(false));
     },
 
-    fetchParams(widget, toolbox) {
+    fetchParams(_widget, toolbox): { id: string | null } {
         const deploymentId = toolbox.getContext().getValue('deploymentId');
         // Deployment Actions Buttons widget does not support multiple actions, thus picking only one deploymentId
-        const firstDeploymentId = _.castArray(deploymentId)[0];
+        const firstDeploymentId: string | undefined | null = _.castArray(deploymentId)[0];
 
         return { id: firstDeploymentId };
     },
 
-    render(widget, data, error, toolbox) {
+    render(_widget, data, _error, toolbox) {
         const { Loading } = Stage.Basic;
 
         // TODO(RD-1827): move the loading indicator to the individual buttons, so they are always shown
-        if (_.isEmpty(data)) {
+        if (Stage.Utils.isEmptyWidgetData(data)) {
             return <Loading />;
         }
 
