@@ -18,6 +18,8 @@ interface RuleRowProps {
 const defaultOperator = FilterRuleOperators.AnyOf;
 const defaultValues: string[] = [];
 const defaultOperatorAndValues = { operator: defaultOperator, values: defaultValues };
+const dropdownFieldsWidth = 5;
+const removeButtonFieldWidth = 1;
 
 const RuleRow: FunctionComponent<RuleRowProps> = ({ onChange, onRemove, removable, rule, toolbox }) => {
     const { UnsafelyTypedFormField: FormField, UnsafelyTypedFormGroup: FormGroup } = Stage.Basic;
@@ -46,13 +48,13 @@ const RuleRow: FunctionComponent<RuleRowProps> = ({ onChange, onRemove, removabl
 
     return (
         <FormGroup widths="equal">
-            <FormField>
+            <FormField width={dropdownFieldsWidth}>
                 <RuleRowTypeDropdown onChange={onRuleTypeChange} value={ruleType} />
             </FormField>
-            <FormField>
+            <FormField width={dropdownFieldsWidth}>
                 <RuleOperatorDropdown onChange={onOperatorChange} value={operator} ruleType={ruleType} />
             </FormField>
-            <FormField>
+            <FormField width={dropdownFieldsWidth}>
                 <RuleValueInput
                     onKeyChange={onKeyChange}
                     onValuesChange={onValuesChange}
@@ -61,7 +63,7 @@ const RuleRow: FunctionComponent<RuleRowProps> = ({ onChange, onRemove, removabl
                     toolbox={toolbox}
                 />
             </FormField>
-            <FormField>{removable && <RuleRemoveButton onClick={onRemove} />}</FormField>
+            <FormField width={removeButtonFieldWidth}>{removable && <RuleRemoveButton onClick={onRemove} />}</FormField>
         </FormGroup>
     );
 };
