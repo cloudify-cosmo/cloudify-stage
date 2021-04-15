@@ -3,7 +3,8 @@ import { FilterRuleOperators } from '../types';
 import { getTranslation } from '../common';
 
 export function isAnyOperator(operator: FilterRuleOperator) {
-    return ([FilterRuleOperators.AnyOf, FilterRuleOperators.NotAnyOf] as FilterRuleOperator[]).includes(operator);
+    const anyOperators: FilterRuleOperator[] = [FilterRuleOperators.AnyOf, FilterRuleOperators.NotAnyOf];
+    return anyOperators.includes(operator);
 }
 
 export function getPlaceholderTranslation(key: string) {
