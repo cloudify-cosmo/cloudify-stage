@@ -352,12 +352,19 @@ describe('Deployments View widget', () => {
             });
         });
 
-        it('should support the drill-down workflow', () => {
+        const useEnvironmentsWidget = () => {
             useDeploymentsViewWidget({
                 configurationOverrides: {
                     filterId: 'csys-environment-filter'
                 }
             });
+        };
+        const getSubenvironmentsButton = () => cy.get('button').contains('Subenvironments');
+        const getSubservicesButton = () => cy.get('button').contains('Services');
+        const getBreadcrumbs = () => cy.get('.breadcrumb');
+
+        it('should support the drill-down workflow', () => {
+            useEnvironmentsWidget();
 
             getDeploymentsViewTable().within(() => {
                 cy.log('Only top-level environments should be visible');
@@ -367,10 +374,6 @@ describe('Deployments View widget', () => {
                 cy.contains('db-2').should('not.exist');
                 cy.contains('web-app').should('not.exist');
             });
-
-            const getSubenvironmentsButton = () => cy.get('button').contains('Subenvironments');
-            const getSubservicesButton = () => cy.get('button').contains('Services');
-            const getBreadcrumbs = () => cy.get('.breadcrumb');
 
             getDeploymentsViewDetailsPane().within(() => {
                 getSubservicesButton().contains('1');
