@@ -18,9 +18,7 @@ describe('Filters widget', () => {
     });
 
     function typeAttributeRuleValue(value: string) {
-        cy.get('[name=ruleValue]')
-            .click()
-            .within(() => cy.get('input').type(`${value}{enter}`).blur());
+        cy.get('[name=ruleValue]').click().find('input').type(`${value}{enter}`).blur();
     }
 
     function checkExistingRules() {
