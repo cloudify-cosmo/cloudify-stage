@@ -72,19 +72,13 @@ export default function DynamicDropdown({
         setHasMore(true);
     }
 
-    function triggerFetch(resetOptions = false) {
-        if (resetOptions) setOverrideOptionsAfterFetch();
-        refreshData();
-        setShouldLoadMore(true);
-    }
-
     function loadMore() {
-        const onFetchFinished = useCallback(() => {
+        setLoading(true);
+
+        function onFetchFinished() {
             setLoading(false);
             setShouldLoadMore(false);
-        }, []);
-
-        setLoading(true);
+        }
 
         if (fetchAll) {
             toolbox
@@ -135,6 +129,11 @@ export default function DynamicDropdown({
         }
     }, [value]);
 
+    function triggerFetch(resetOptions = false) {
+        if (resetOptions) setOverrideOptionsAfterFetch();
+        refreshData();
+        setShouldLoadMore(true);
+    }
     useFetchTrigger([searchQuery], [fetchUrl], triggerFetch);
 
     const filteredOptions = _(options)
