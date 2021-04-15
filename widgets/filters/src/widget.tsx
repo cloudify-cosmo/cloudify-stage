@@ -3,7 +3,7 @@ import FilterActions from './FilterActions';
 import FiltersTable from './FiltersTable';
 import type { Filter, FilterWidgetConfiguration } from './types';
 
-Stage.defineWidget<unknown, Stage.Types.PaginatedResponse<Filter>, FilterWidgetConfiguration>({
+Stage.defineWidget<Filter, Stage.Types.PaginatedResponse<Filter>, FilterWidgetConfiguration>({
     id: 'filters',
     name: Stage.i18n.t('widgets.filters.name'),
     description: Stage.i18n.t('widgets.filters.description'),
@@ -24,6 +24,9 @@ Stage.defineWidget<unknown, Stage.Types.PaginatedResponse<Filter>, FilterWidgetC
     ],
 
     fetchData(_widget, toolbox, params) {
+        if (toolbox.getContext().getValue('onlyMyResources')) {
+            params.created_by = toolbox.getManager().getCurrentUsername();
+        }
         return new FilterActions(toolbox).doList(params);
     },
 
