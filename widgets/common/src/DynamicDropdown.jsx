@@ -12,14 +12,17 @@ let instanceCount = 0;
  * on delayedFetchDeps change and the second calls immediately fetchTrigger
  * on immediateFetchDeps change
  *
- * @param {React.DependencyList} delayedFetchDeps
- * @param {React.DependencyList} immediateFetchDeps
- * @param {function(boolean)} fetchTrigger function to be called to trigger data fetching
+ * @param {function(immediateFetch: boolean)} fetchTrigger function to be called to trigger data fetching
+ * @param {React.DependencyList} delayedFetchDeps list of dependencies for delayed fetch
+ * @param {React.DependencyList} immediateFetchDeps list of dependencies for immediate fetch
  */
-function useFetchTrigger(delayedFetchDeps, immediateFetchDeps, fetchTrigger) {
+function useFetchTrigger(fetchTrigger, delayedFetchDeps, immediateFetchDeps) {
     const { useUpdateEffect } = Stage.Hooks;
     const delayMs = 500;
-    const delayedFetchTrigger = useCallback(debounce(fetchTrigger, delayMs), []);
+    const delayedFetchTrigger = useCallback(
+        debounce(() => fetchTrigger(false), delayMs),
+        []
+    );
 
     useUpdateEffect(() => {
         delayedFetchTrigger();
@@ -129,12 +132,15 @@ export default function DynamicDropdown({
         }
     }, [value]);
 
-    function triggerFetch(resetOptions = false) {
-        if (resetOptions) setOverrideOptionsAfterFetch();
-        refreshData();
-        setShouldLoadMore(true);
-    }
-    useFetchTrigger([searchQuery], [fetchUrl], triggerFetch);
+    useFetchTrigger(
+        resetOptions => {
+            if (resetOptions) setOverrideOptionsAfterFetch();
+            refreshData();
+            setShouldLoadMore(true);
+        },
+        [searchQuery],
+        [fetchUrl]
+    );
 
     const filteredOptions = _(options)
         .filter(option =>
