@@ -45,15 +45,6 @@ export const DeploymentsView: FunctionComponent<DeploymentsViewProps> = ({
             }),
         {
             enabled: filteringByParentDeploymentResult.filterable,
-            onSuccess: data => {
-                const context = toolbox.getContext();
-                // TODO(RD-1830): detect if deploymentId is not present in the current page and reset it.
-                // Do that only if `fetchData` was called from `DataTable`. If it's just polling,
-                // then don't reset it (because user may be interacting with some other component)
-                if (context.getValue('deploymentId') === undefined && data.items.length > 0) {
-                    context.setValue('deploymentId', data.items[0].id);
-                }
-            },
             refetchInterval: widget.configuration.customPollingTime * 1000,
             keepPreviousData: true
         }
@@ -87,10 +78,18 @@ export const DeploymentsView: FunctionComponent<DeploymentsViewProps> = ({
         );
     }
 
-    const selectedDeployment = find(deploymentsResult.data.items, {
+    const context = toolbox.getContext();
+    const deployments = deploymentsResult.data.items;
+    const selectedDeployment = find(deployments, {
         // NOTE: type assertion since lodash has problems receiving string[] in the object
-        id: toolbox.getContext().getValue('deploymentId') as string | undefined
+        // eslint-disable-next-line react/destructuring-assignment
+        id: context.getValue('deploymentId') as string | undefined
     });
+
+    if (!selectedDeployment && deployments.length > 0) {
+        // NOTE: always select the first visible item
+        context.setValue('deploymentId', deployments[0].id);
+    }
 
     return (
         <div className="grid">
