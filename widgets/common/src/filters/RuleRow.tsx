@@ -18,7 +18,8 @@ interface RuleRowProps {
 const defaultOperator = FilterRuleOperators.AnyOf;
 const defaultValues: string[] = [];
 const defaultOperatorAndValues = { operator: defaultOperator, values: defaultValues };
-const dropdownFieldsWidth = 5;
+const staticDropdownFieldsWidth = 4;
+const valueInputFieldWidth = 7;
 const removeButtonFieldWidth = 1;
 
 const RuleRow: FunctionComponent<RuleRowProps> = ({ onChange, onRemove, removable, rule, toolbox }) => {
@@ -48,13 +49,13 @@ const RuleRow: FunctionComponent<RuleRowProps> = ({ onChange, onRemove, removabl
 
     return (
         <FormGroup widths="equal">
-            <FormField width={dropdownFieldsWidth}>
+            <FormField width={staticDropdownFieldsWidth}>
                 <RuleRowTypeDropdown onChange={onRuleTypeChange} value={ruleType} />
             </FormField>
-            <FormField width={dropdownFieldsWidth}>
+            <FormField width={staticDropdownFieldsWidth}>
                 <RuleOperatorDropdown onChange={onOperatorChange} value={operator} ruleType={ruleType} />
             </FormField>
-            <FormField width={dropdownFieldsWidth}>
+            <FormField width={valueInputFieldWidth}>
                 <RuleValueInput
                     onKeyChange={onKeyChange}
                     onValuesChange={onValuesChange}
