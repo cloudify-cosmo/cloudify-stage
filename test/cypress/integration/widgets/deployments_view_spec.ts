@@ -361,7 +361,7 @@ describe('Deployments View widget', () => {
 
             getDeploymentsViewTable().within(() => {
                 cy.log('Only top-level environments should be visible');
-                cy.contains('app-env').click();
+                cy.contains('app-env');
                 cy.contains('db-env').should('not.exist');
                 cy.contains('db-1').should('not.exist');
                 cy.contains('db-2').should('not.exist');
@@ -373,8 +373,7 @@ describe('Deployments View widget', () => {
             const getBreadcrumbs = () => cy.get('.breadcrumb');
 
             getDeploymentsViewDetailsPane().within(() => {
-                // TODO(RD-2003): uncomment the line below
-                // getSubservicesButton().contains('1');
+                getSubservicesButton().contains('1');
                 cy.log('Drill down to subenvironments of app-env');
                 getSubenvironmentsButton().contains('1').click();
             });
@@ -384,7 +383,7 @@ describe('Deployments View widget', () => {
             const verifySubdeploymentsOfAppEnv = () => {
                 getDeploymentsViewTable().within(() => {
                     cy.log('Subenvironments of app-env should be visible (only db-env)');
-                    cy.contains('db-env').click();
+                    cy.contains('db-env');
                     cy.contains('app-env').should('not.exist');
                     cy.contains('db-1').should('not.exist');
                     cy.contains('web-app').should('not.exist');
@@ -420,8 +419,7 @@ describe('Deployments View widget', () => {
             getBreadcrumbs().contains('Test Page').click();
             getDeploymentsViewDetailsPane().within(() => {
                 cy.log('Drill down to subservices of app-env');
-                // TODO(RD-2003): expect 1, not 3 directly attached subservices
-                getSubservicesButton().contains('3').click();
+                getSubservicesButton().contains('1').click();
             });
             getDeploymentsViewTable().within(() => {
                 cy.log('Subservices of app-end should be visible (web-app)');

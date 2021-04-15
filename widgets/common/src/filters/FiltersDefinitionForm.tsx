@@ -14,7 +14,7 @@ function getNewRow(): FilterRuleRow {
         rule: {
             type: FilterRuleType.Attribute,
             key: FilterRuleRowType.Blueprint,
-            operator: FilterRuleOperators.Contain,
+            operator: FilterRuleOperators.Contains,
             values: []
         }
     };

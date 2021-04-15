@@ -1,7 +1,7 @@
 import type { FunctionComponent } from 'react';
 import FilterModal, { FilterModalProps } from './FilterModal';
 
-type FilterAddModalProps = Pick<FilterModalProps, 'onCancel' | 'onSubmit'>;
+type FilterAddModalProps = Pick<FilterModalProps, 'onCancel' | 'onSubmit' | 'toolbox'>;
 
 const FilterAddModal: FunctionComponent<FilterAddModalProps> = props => {
     // eslint-disable-next-line react/jsx-props-no-spreading
