@@ -359,8 +359,8 @@ describe('Deployments View widget', () => {
                 }
             });
         };
-        const getSubenvironmentsButton = () => cy.get('button').contains('Subenvironments');
-        const getSubservicesButton = () => cy.get('button').contains('Services');
+        const getSubenvironmentsButton = () => cy.contains('button', 'Subenvironments');
+        const getSubservicesButton = () => cy.contains('button', 'Services');
         const getBreadcrumbs = () => cy.get('.breadcrumb');
 
         it('should support the drill-down workflow', () => {
