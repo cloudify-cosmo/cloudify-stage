@@ -43,10 +43,10 @@ Stage.defineWidget<WidgetParams, WidgetData, WidgetConfiguration>({
         return actions.doGetWorkflows(id);
     },
 
-    fetchParams(_widget, toolbox): { id: string | null } {
+    fetchParams(_widget, toolbox): WidgetParams {
         const deploymentId = toolbox.getContext().getValue('deploymentId');
         // Deployment Actions Buttons widget does not support multiple actions, thus picking only one deploymentId
-        const firstDeploymentId: string | undefined | null = _.castArray(deploymentId)[0];
+        const firstDeploymentId = _.castArray(deploymentId)[0] as WidgetParams['id'];
 
         return { id: firstDeploymentId };
     },
