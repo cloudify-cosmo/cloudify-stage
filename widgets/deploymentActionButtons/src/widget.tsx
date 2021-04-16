@@ -40,8 +40,7 @@ Stage.defineWidget<WidgetParams, WidgetData, WidgetConfiguration>({
         const { DeploymentActions } = Stage.Common;
         const actions = new DeploymentActions(toolbox);
 
-        toolbox.loading(true);
-        return actions.doGetWorkflows(id).finally(() => toolbox.loading(false));
+        return actions.doGetWorkflows(id);
     },
 
     fetchParams(_widget, toolbox): { id: string | null } {
