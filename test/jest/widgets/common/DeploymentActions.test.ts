@@ -22,7 +22,8 @@ describe('(Widgets common) DeploymentActions', () => {
 
         const deploymentId = 'depId';
 
-        return new DeploymentActions().waitUntilCreated(deploymentId).then(() => {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        return new DeploymentActions(undefined as any).waitUntilCreated(deploymentId).then(() => {
             expect(wait).toHaveReturnedTimes(2);
             expect(doGetExecutions).toHaveBeenCalledWith(deploymentId);
             expect(doGetExecutions).toHaveBeenCalledTimes(2);

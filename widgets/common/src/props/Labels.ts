@@ -7,6 +7,13 @@ declare global {
             Label: typeof LabelPropType;
             Labels: typeof LabelsPropType;
         }
+        namespace Common.Labels {
+            export interface Label {
+                key: string;
+                value: string;
+                isInSystem?: boolean;
+            }
+        }
     }
 }
 // NOTE: prevents leaking variables as global in TS
