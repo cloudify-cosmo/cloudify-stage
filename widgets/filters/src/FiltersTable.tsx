@@ -56,9 +56,10 @@ const FiltersTable: FunctionComponent<FiltersTableProps> = ({ data, toolbox, wid
                 searchable
                 sortable
             >
-                <DataTable.Column width="33%" label={i18n.t('widgets.filters.columns.name')} name="id" />
-                <DataTable.Column width="33%" label={i18n.t('widgets.filters.columns.creator')} name="created_by" />
-                <DataTable.Column width="33%" label={i18n.t('widgets.filters.columns.created')} name="created_at" />
+                <DataTable.Column width="60%" label={i18n.t('widgets.filters.columns.name')} name="id" />
+                <DataTable.Column width="40%" label={i18n.t('widgets.filters.columns.creator')} name="created_by" />
+                <DataTable.Column width="134px" label={i18n.t('widgets.filters.columns.created')} name="created_at" />
+                <DataTable.Column width="60px" label={i18n.t('widgets.filters.columns.type')} name="is_system_filter" />
                 <DataTable.Column width="112px" />
                 {data.filters.map(filter => (
                     <DataTable.Row key={filter.id}>
@@ -66,13 +67,9 @@ const FiltersTable: FunctionComponent<FiltersTableProps> = ({ data, toolbox, wid
                         <DataTable.Data>{filter.created_by}</DataTable.Data>
                         <DataTable.Data>{Time.formatTimestamp(filter.created_at)}</DataTable.Data>
                         <DataTable.Data>
-                            <Icon
-                                name="edit"
-                                link
-                                bordered
-                                title={i18n.t('widgets.filters.columns.actions.edit')}
-                                onClick={() => setFilterToEdit(filter)}
-                            />
+                            {i18n.t(`widgets.filters.type.${filter.is_system_filter ? 'system' : 'user'}`)}
+                        </DataTable.Data>
+                        <DataTable.Data>
                             <Icon
                                 name="clone"
                                 link
@@ -81,10 +78,27 @@ const FiltersTable: FunctionComponent<FiltersTableProps> = ({ data, toolbox, wid
                                 onClick={() => setFilterToClone(filter)}
                             />
                             <Icon
-                                name="trash"
-                                link
+                                name="edit"
+                                link={!filter.is_system_filter}
                                 bordered
-                                title={i18n.t('widgets.filters.columns.actions.delete')}
+                                disabled={filter.is_system_filter}
+                                title={i18n.t(
+                                    `widgets.filters.columns.actions.${
+                                        filter.is_system_filter ? 'systemFilter' : 'edit'
+                                    }`
+                                )}
+                                onClick={() => setFilterToEdit(filter)}
+                            />
+                            <Icon
+                                name="trash"
+                                link={!filter.is_system_filter}
+                                bordered
+                                disabled={filter.is_system_filter}
+                                title={i18n.t(
+                                    `widgets.filters.columns.actions.${
+                                        filter.is_system_filter ? 'systemFilter' : 'delete'
+                                    }`
+                                )}
                                 onClick={() => setFilterIdToDelete(filter.id)}
                             />
                         </DataTable.Data>

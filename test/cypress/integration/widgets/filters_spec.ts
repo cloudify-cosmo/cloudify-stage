@@ -21,6 +21,10 @@ describe('Filters widget', () => {
         cy.get('[name=ruleValue]').click().find('input').type(`${value}{enter}`).blur();
     }
 
+    function getFilterIdInput() {
+        return cy.contains('.field', 'Filter ID').find('input');
+    }
+
     function checkExistingRules() {
         cy.get('.fields:eq(0)').within(() => {
             cy.contains('Blueprint');
@@ -67,7 +71,28 @@ describe('Filters widget', () => {
                 expect(tableData[0]['Filter name']).to.eq(filterName);
                 expect(tableData[0].Creator).to.eq('admin');
                 expect(tableData[0].Created).not.to.be.null;
+                expect(tableData[0].Type).to.eq('user');
             });
+
+        const systemFilterName = 'csys-environment-filter';
+        cy.get('input[placeholder="Search..."]').clear().type(systemFilterName);
+        cy.get('.loading').should('not.exist');
+
+        cy.get('table')
+            .getTable()
+            .should(tableData => {
+                expect(tableData).to.have.length(1);
+                expect(tableData[0]['Filter name']).to.eq(systemFilterName);
+                expect(tableData[0].Creator).to.eq('admin');
+                expect(tableData[0].Created).not.to.be.null;
+                expect(tableData[0].Type).to.eq('system');
+            });
+
+        const disabledIconTitle = "System filter can't be edited or deleted";
+        cy.get('.edit').should('have.class', 'disabled');
+        cy.get('.edit').should('have.prop', 'title', disabledIconTitle);
+        cy.get('.trash').should('have.class', 'disabled');
+        cy.get('.trash').should('have.prop', 'title', disabledIconTitle);
     });
 
     it('should allow to add new filter', () => {
@@ -81,15 +106,18 @@ describe('Filters widget', () => {
             .deployBlueprint(blueprintId, deploymentId)
             .setLabels(deploymentId, [{ [labelKey]: 'label_value' }]);
 
+        const newFilterName = `${filterName}_added`;
         cy.contains('Add').click();
 
-        cy.contains('Save').click();
-        cy.contains('Please provide the filter ID');
-
-        const newFilterName = `${filterName}_added`;
-
         cy.get('.modal').within(() => {
-            cy.contains('.field', 'Filter ID').find('input').type(newFilterName);
+            cy.contains('Save').click();
+            cy.contains('Please provide the filter ID');
+
+            getFilterIdInput().type('csys-invalid');
+            cy.contains('Save').click();
+            cy.contains('All filters with a `csys-` prefix are reserved for internal use');
+
+            getFilterIdInput().clear().type(newFilterName);
 
             cy.get('.fields:eq(0)').within(() => typeAttributeRuleValue(blueprintId));
             cy.contains('Add new rule').click();
@@ -132,6 +160,7 @@ describe('Filters widget', () => {
                 expect(tableData[1]['Filter name']).to.eq(newFilterName);
                 expect(tableData[1].Creator).to.eq('admin');
                 expect(tableData[1].Created).not.to.be.null;
+                expect(tableData[0].Type).to.eq('user');
             });
     });
 
@@ -161,10 +190,18 @@ describe('Filters widget', () => {
         cy.get('.modal').within(() => {
             cy.contains(`Clone filter '${filterName}'`);
 
+            getFilterIdInput().should('have.value', `${filterName}_clone`);
+
+            getFilterIdInput().clear().type('csys-invalid');
+            cy.contains('Save').click();
+            cy.contains('All filters with a `csys-` prefix are reserved for internal use');
+
+            getFilterIdInput().clear().type(`${filterName}_2`);
+
             checkExistingRules();
             modifyBlueprintRule();
 
-            cy.interceptSp('PUT', `/filters/deployments/${filterName}_clone`).as('rulesRequest');
+            cy.interceptSp('PUT', `/filters/deployments/${filterName}_2`).as('rulesRequest');
             cy.contains('Save').click();
             checkRequestRules();
         });
