@@ -292,6 +292,7 @@ const commands = {
             routeHandler
         ),
     getByTestId: (id: string) => cy.get(`[data-testid=${id}]`),
+    getSearchInput: () => cy.get('input[placeholder="Search..."]'),
 
     /**
      * Compiles a script in the fixtures directory using babel
