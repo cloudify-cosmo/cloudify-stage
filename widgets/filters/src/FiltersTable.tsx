@@ -23,6 +23,10 @@ const FixedLayoutDataTable = Stage.styled(Stage.Basic.DataTable)`
     table-layout: fixed;
 `;
 
+function tColumn(columnKey: string) {
+    return Stage.i18n.t(`widgets.filters.columns.${columnKey}`);
+}
+
 const FiltersTable: FunctionComponent<FiltersTableProps> = ({ data, toolbox, widget }) => {
     const { i18n } = Stage;
     const { Alert, Button, Confirm, DataTable, Icon, List } = Stage.Basic;
@@ -56,10 +60,10 @@ const FiltersTable: FunctionComponent<FiltersTableProps> = ({ data, toolbox, wid
                 searchable
                 sortable
             >
-                <DataTable.Column width="60%" label={i18n.t('widgets.filters.columns.name')} name="id" />
-                <DataTable.Column width="40%" label={i18n.t('widgets.filters.columns.creator')} name="created_by" />
-                <DataTable.Column width="134px" label={i18n.t('widgets.filters.columns.created')} name="created_at" />
-                <DataTable.Column width="60px" label={i18n.t('widgets.filters.columns.type')} name="is_system_filter" />
+                <DataTable.Column width="60%" label={tColumn('name')} name="id" />
+                <DataTable.Column width="40%" label={tColumn('creator')} name="created_by" />
+                <DataTable.Column width="134px" label={tColumn('created')} name="created_at" />
+                <DataTable.Column width="60px" label={tColumn('type')} name="is_system_filter" />
                 <DataTable.Column width="112px" />
                 {data.filters.map(filter => (
                     <DataTable.Row key={filter.id}>
@@ -74,7 +78,7 @@ const FiltersTable: FunctionComponent<FiltersTableProps> = ({ data, toolbox, wid
                                 name="clone"
                                 link
                                 bordered
-                                title={i18n.t('widgets.filters.columns.actions.clone')}
+                                title={tColumn('actions.clone')}
                                 onClick={() => setFilterToClone(filter)}
                             />
                             <Icon
@@ -82,11 +86,7 @@ const FiltersTable: FunctionComponent<FiltersTableProps> = ({ data, toolbox, wid
                                 link={!filter.is_system_filter}
                                 bordered
                                 disabled={filter.is_system_filter}
-                                title={i18n.t(
-                                    `widgets.filters.columns.actions.${
-                                        filter.is_system_filter ? 'systemFilter' : 'edit'
-                                    }`
-                                )}
+                                title={tColumn(`actions.${filter.is_system_filter ? 'systemFilter' : 'edit'}`)}
                                 onClick={() => setFilterToEdit(filter)}
                             />
                             <Icon
@@ -94,11 +94,7 @@ const FiltersTable: FunctionComponent<FiltersTableProps> = ({ data, toolbox, wid
                                 link={!filter.is_system_filter}
                                 bordered
                                 disabled={filter.is_system_filter}
-                                title={i18n.t(
-                                    `widgets.filters.columns.actions.${
-                                        filter.is_system_filter ? 'systemFilter' : 'delete'
-                                    }`
-                                )}
+                                title={tColumn(`actions.${filter.is_system_filter ? 'systemFilter' : 'delete'}`)}
                                 onClick={() => setFilterIdToDelete(filter.id)}
                             />
                         </DataTable.Data>
