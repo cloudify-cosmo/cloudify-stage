@@ -38,9 +38,8 @@ const DeploymentActionsModals: FunctionComponent<DeploymentActionsModalsProps> =
         case actions.manageLabels:
             return <ManageLabelsModal {...commonProps} />;
         case actions.install:
-            return <ExecuteDeploymentModal {...commonProps} workflow="install" />;
         case actions.uninstall:
-            return <ExecuteDeploymentModal {...commonProps} workflow="uninstall" />;
+            return <ExecuteDeploymentModal {...commonProps} workflow={activeAction} />;
         case actions.update:
             return <UpdateDeploymentModal {...commonProps} />;
         case actions.delete:
