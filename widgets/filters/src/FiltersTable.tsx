@@ -39,11 +39,7 @@ const FiltersTable: FunctionComponent<FiltersTableProps> = ({ data, toolbox, wid
     useRefreshEvent(toolbox, 'filters:refresh');
 
     function handleAddFilter(filterId: string, filterRules: FilterRule[]) {
-        return new FilterActions(toolbox)
-            .doCreate(filterId, filterRules)
-            .then(closeAddModal)
-            .then(unsetFilterToClone)
-            .then(toolbox.refresh);
+        return new FilterActions(toolbox).doCreate(filterId, filterRules).then(closeAddModal).then(unsetFilterToClone);
     }
 
     function handleEditFilter(filterId: string, filterRules: FilterRule[]) {
