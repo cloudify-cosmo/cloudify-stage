@@ -64,7 +64,7 @@ const commands = {
     },
     searchInDeploymentsWidget: (deploymentId: string) => {
         cy.get('.deploymentsWidget').within(() => {
-            cy.get('.input input').clear().type(deploymentId);
+            cy.getSearchInput().clear().type(deploymentId);
             cy.get('.input.loading').should('not.exist');
         });
     },

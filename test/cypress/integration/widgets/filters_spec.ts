@@ -13,7 +13,7 @@ describe('Filters widget', () => {
 
     beforeEach(() => {
         cy.deleteDeploymentsFilters(filterName).createDeploymentsFilter(filterName, filterRules).refreshPage();
-        cy.get('input[placeholder="Search..."]').type(filterName);
+        cy.getSearchInput().type(filterName);
         cy.get('.loading').should('not.exist');
     });
 
@@ -75,7 +75,7 @@ describe('Filters widget', () => {
             });
 
         const systemFilterName = 'csys-environment-filter';
-        cy.get('input[placeholder="Search..."]').clear().type(systemFilterName);
+        cy.getSearchInput().clear().type(systemFilterName);
         cy.get('.loading').should('not.exist');
 
         cy.get('table')
@@ -93,6 +93,7 @@ describe('Filters widget', () => {
         cy.get('.edit').should('have.prop', 'title', disabledIconTitle);
         cy.get('.trash').should('have.class', 'disabled');
         cy.get('.trash').should('have.prop', 'title', disabledIconTitle);
+        cy.get('.clone').should('not.have.class', 'disabled');
     });
 
     it('should allow to add new filter', () => {
