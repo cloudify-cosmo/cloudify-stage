@@ -20,7 +20,7 @@ const SecretsInstallationTasks = ({ tasks }: Props) => {
                 return (
                     <List.Item key={createdSecret.name}>
                         <Label horizontal>{createdSecret.name}</Label>{' '}
-                        {i18n.t('gettingStartedModal.summary.secretCreateMessageSuffix', 'secret will be created')}
+                        {i18n.t('gettingStartedModal.summary.secretCreateMessageSuffix')}
                     </List.Item>
                 );
             })}
@@ -28,7 +28,7 @@ const SecretsInstallationTasks = ({ tasks }: Props) => {
                 return (
                     <List.Item key={updatedSecret.name}>
                         <Label horizontal>{updatedSecret.name}</Label>{' '}
-                        {i18n.t('gettingStartedModal.summary.secretUpdateMessageSuffix', 'secret will be updated')}
+                        {i18n.t('gettingStartedModal.summary.secretUpdateMessageSuffix')}
                     </List.Item>
                 );
             })}
