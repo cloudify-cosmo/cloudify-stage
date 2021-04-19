@@ -13,6 +13,9 @@ export const DeploymentsViewContainer = styled.div`
 
 export const DeploymentsViewHeaderContainer = styled.div`
     grid-area: header;
+    margin-bottom: 1em;
+    display: flex;
+    justify-content: flex-end;
 `;
 
 export const DeploymentsMapContainer = styled.div`

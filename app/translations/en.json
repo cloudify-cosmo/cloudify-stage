@@ -631,6 +631,13 @@
                     "placeholder": "Select fields from the list"
                 }
             },
+            "header": {
+              "map": {
+                "label": "Map",
+                "openMap": "Open map",
+                "closeMap": "Close map"
+              }
+            },
             "iconLabels": {
                 "inProgress": "In progress",
                 "requiresAttention": "Requires attention"

@@ -14,6 +14,7 @@ import {
     DeploymentsViewContainer,
     DeploymentsViewHeaderContainer
 } from './layout';
+import DeploymentsViewHeader from './header';
 
 export interface DeploymentsViewProps {
     widget: Stage.Types.Widget<SharedDeploymentsViewWidgetConfiguration>;
@@ -59,6 +60,8 @@ export const DeploymentsView: FunctionComponent<DeploymentsViewProps> = ({
 
     Stage.Hooks.useEventListener(toolbox, 'deployments:refresh', deploymentsResult.refetch);
 
+    const [mapOpen, toggleMap] = Stage.Hooks.useToggle(false);
+
     const { Loading, ErrorMessage } = Stage.Basic;
     const { i18n } = Stage;
 
@@ -100,8 +103,12 @@ export const DeploymentsView: FunctionComponent<DeploymentsViewProps> = ({
 
     return (
         <DeploymentsViewContainer>
-            <DeploymentsViewHeaderContainer>Map toggle goes here</DeploymentsViewHeaderContainer>
-            <DeploymentsMapContainer>Hey, I am a map</DeploymentsMapContainer>
+            <DeploymentsViewHeaderContainer>
+                <DeploymentsViewHeader mapOpen={mapOpen} toggleMap={toggleMap} />
+            </DeploymentsViewHeaderContainer>
+
+            {mapOpen && <DeploymentsMapContainer>Hey, I am a map</DeploymentsMapContainer>}
+
             <DeploymentsTableContainer>
                 <DeploymentsTable
                     setGridParams={setGridParams}
