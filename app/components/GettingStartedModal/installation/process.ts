@@ -58,7 +58,7 @@ export const updateSecret = async (manager: Manager, secret: SecretInstallationT
     }
 };
 
-// TODO(RD-1874): use common api for backend requests
+// TODO(RD-2086): use common functions to upload blueprints
 export const uploadBlueprint = async (manager: Manager, blueprint: BlueprintInstallationTask) => {
     const waitingTimeout = 5 * 60; // ~5 min = (N x 5s sleeps) + requests
     const stepSleep = 5; // 5s
