@@ -116,6 +116,10 @@ describe('Deployments View widget', () => {
                 cy.contains(siteName).should('not.exist');
             });
         });
+
+        it('should affect the map', () => {
+            // TODO:
+        });
     });
 
     it('should display the deployments and content in the details pane', () => {
@@ -463,5 +467,12 @@ describe('Deployments View widget', () => {
         cy.usePageMock([`${widgetId}DrilledDown`]).mockLogin();
 
         cy.contains('Unexpected widget usage');
+    });
+
+    describe('map', () => {
+        // TODO(RD-2090): make the test more meaningful
+        it('should be toggled upon clicking the button', () => {
+            // TODO:
+        });
     });
 });
