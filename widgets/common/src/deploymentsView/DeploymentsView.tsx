@@ -7,7 +7,13 @@ import type { SharedDeploymentsViewWidgetConfiguration } from './configuration';
 import DetailsPane from './detailsPane';
 import { DeploymentsTable } from './table';
 import { FilterRuleOperators, FilterRuleType } from '../filters/types';
-import { DeploymentDetailsContainer, DeploymentsTableContainer, DeploymentsViewContainer } from './layout';
+import {
+    DeploymentDetailsContainer,
+    DeploymentsMapContainer,
+    DeploymentsTableContainer,
+    DeploymentsViewContainer,
+    DeploymentsViewHeaderContainer
+} from './layout';
 
 export interface DeploymentsViewProps {
     widget: Stage.Types.Widget<SharedDeploymentsViewWidgetConfiguration>;
@@ -94,6 +100,8 @@ export const DeploymentsView: FunctionComponent<DeploymentsViewProps> = ({
 
     return (
         <DeploymentsViewContainer>
+            <DeploymentsViewHeaderContainer>Map toggle goes here</DeploymentsViewHeaderContainer>
+            <DeploymentsMapContainer>Hey, I am a map</DeploymentsMapContainer>
             <DeploymentsTableContainer>
                 <DeploymentsTable
                     setGridParams={setGridParams}
