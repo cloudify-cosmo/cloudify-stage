@@ -65,8 +65,8 @@ export const uploadBlueprint = async (manager: Manager, blueprint: BlueprintInst
     const requestData = {
         visibility: 'tenant',
         async_upload: true,
-        application_file_name: blueprint.applicationName,
-        blueprint_archive_url: blueprint.blueprintUrl
+        application_file_name: blueprint.blueprintYamlFile,
+        blueprint_archive_url: blueprint.blueprintZipUrl
     };
     try {
         const uploadResponse = await manager.doPut(

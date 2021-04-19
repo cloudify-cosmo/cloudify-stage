@@ -228,8 +228,8 @@ export const createSecretsInstallationTasks = (
 
 export type BlueprintInstallationTask = {
     blueprintName: string;
-    blueprintUrl: string;
-    applicationName: string;
+    blueprintZipUrl: string;
+    blueprintYamlFile: string;
 };
 
 export const createBlueprintsInstallationTasks = (
@@ -249,8 +249,8 @@ export const createBlueprintsInstallationTasks = (
                 usedBlueprints.add(blueprintItem.id);
                 const blueprintTask = {
                     blueprintName: blueprintItem.name,
-                    blueprintUrl: blueprintItem.zipUrl,
-                    applicationName: blueprintItem.mainBlueprint ?? ''
+                    blueprintZipUrl: blueprintItem.zipUrl,
+                    blueprintYamlFile: blueprintItem.yamlFile ?? ''
                 };
                 if (blueprintItem.name in mappedBlueprints) {
                     uploadedBlueprints.push(blueprintTask);

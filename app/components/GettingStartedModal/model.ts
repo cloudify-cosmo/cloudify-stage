@@ -32,7 +32,7 @@ export type GettingStartedSchemaBlueprint = {
     id: string;
     name: string;
     zipUrl: string;
-    mainBlueprint?: string;
+    yamlFile?: string;
 };
 
 export type GettingStartedSchemaItem = {
