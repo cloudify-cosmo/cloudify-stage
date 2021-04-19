@@ -4,5 +4,5 @@ export const isGettingStartedModalDisabled = (): boolean => {
 };
 
 export const disableGettingStartedModal = (): void => {
-    localStorage.setItem('getting-started-modal-disabled', 'true');
+    localStorage.setItem('getting-started-modal-disabled', JSON.stringify(true));
 };
