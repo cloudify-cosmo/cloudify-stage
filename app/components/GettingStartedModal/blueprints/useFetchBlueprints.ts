@@ -22,7 +22,7 @@ const useFetchBlueprints = () => {
             loading: managerSecrets.loading,
             response: managerSecrets.response?.items,
             error: managerSecrets.error
-                ? i18n.t('gettingStartedModal.initialization.blueprintsLoadingError')
+                ? i18n.t('gettingStartedModal.initialization.blueprintsMetadataLoadingError')
                 : undefined
         } as BlueprintsHook;
     }, [managerSecrets]);

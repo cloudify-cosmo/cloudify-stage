@@ -40,9 +40,9 @@
             "stepFinish": "Finish"
         },
         "initialization": {
-            "pluginsLoadingError": "Plugins information loading error.",
+            "pluginsMetadataLoadingError": "Plugins information loading error.",
             "secretsLoadingError": "Secrets information loading error.",
-            "blueprintsLoadingError": "Blueprints information loading error"
+            "blueprintsMetadataLoadingError": "Blueprints information loading error"
         },
         "validation": {
             "someTechnologyRequiredError": "At least one technology needs to be selected.",
@@ -50,12 +50,12 @@
         },
         "summary": {
             "taskListTitle": "Task List",
+            "pluginExistsMessageSuffix": "plugin is already installed.",
             "pluginInstallMessageSuffix": "plugin will be installed.",
-            "pluginInstalledMessageSuffix": "plugin is already installed.",
             "pluginNotFoundMessageSuffix": "plugin is not found in catalog and manager.",
             "secretCreateMessageSuffix": "secret will be created.",
             "secretUpdateMessageSuffix": "secret will be updated.",
-            "blueprintReadyMessageSuffix": "blueprint is already uploaded.",
+            "blueprintExistsMessageSuffix": "blueprint is already uploaded.",
             "blueprintUploadMessageSuffix": "blueprint will be uploaded."
         },
         "installation": {

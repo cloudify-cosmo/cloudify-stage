@@ -29,7 +29,7 @@ const useFetchPlugins = () => {
             };
         }
         if (catalogPlugins.error || managerPlugins.error) {
-            hook.error = i18n.t('gettingStartedModal.initialization.pluginsLoadingError');
+            hook.error = i18n.t('gettingStartedModal.initialization.pluginsMetadataLoadingError');
         }
         return hook;
     }, [catalogPlugins, managerPlugins]);

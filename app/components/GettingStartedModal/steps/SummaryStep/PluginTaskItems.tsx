@@ -10,7 +10,7 @@ import type { PluginInstallationTask } from '../../installation/tasks';
 
 export const InstalledPluginDescription = () => (
     <>
-        <span>{i18n.t('gettingStartedModal.summary.pluginInstalledMessageSuffix')}</span>
+        <span>{i18n.t('gettingStartedModal.summary.pluginExistsMessageSuffix')}</span>
         <SuccessIcon />
     </>
 );

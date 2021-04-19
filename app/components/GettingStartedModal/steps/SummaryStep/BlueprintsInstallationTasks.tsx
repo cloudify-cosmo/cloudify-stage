@@ -21,7 +21,7 @@ const BlueprintsInstallationTasks = ({ tasks }: Props) => {
                 return (
                     <List.Item key={blueprint.blueprintName}>
                         <Label horizontal>{blueprint.blueprintName}</Label>{' '}
-                        <span>{i18n.t('gettingStartedModal.summary.blueprintReadyMessageSuffix')}</span>
+                        <span>{i18n.t('gettingStartedModal.summary.blueprintExistsMessageSuffix')}</span>
                         <SuccessIcon />
                     </List.Item>
                 );
