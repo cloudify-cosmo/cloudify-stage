@@ -7,6 +7,7 @@ import type { SharedDeploymentsViewWidgetConfiguration } from './configuration';
 import DetailsPane from './detailsPane';
 import { DeploymentsTable } from './table';
 import { FilterRuleOperators, FilterRuleType } from '../filters/types';
+import { DeploymentDetailsContainer, DeploymentsTableContainer, DeploymentsViewContainer } from './layout';
 
 export interface DeploymentsViewProps {
     widget: Stage.Types.Widget<SharedDeploymentsViewWidgetConfiguration>;
@@ -92,18 +93,22 @@ export const DeploymentsView: FunctionComponent<DeploymentsViewProps> = ({
     }
 
     return (
-        <div className="grid">
-            <DeploymentsTable
-                setGridParams={setGridParams}
-                toolbox={toolbox}
-                loadingIndicatorVisible={fetchingRules || deploymentsResult.isFetching}
-                pageSize={widget.configuration.pageSize}
-                totalSize={deploymentsResult.data.metadata.pagination.total}
-                deployments={deploymentsResult.data.items}
-                fieldsToShow={widget.configuration.fieldsToShow}
-            />
-            <DetailsPane deployment={selectedDeployment} widget={widget} toolbox={toolbox} />
-        </div>
+        <DeploymentsViewContainer>
+            <DeploymentsTableContainer>
+                <DeploymentsTable
+                    setGridParams={setGridParams}
+                    toolbox={toolbox}
+                    loadingIndicatorVisible={fetchingRules || deploymentsResult.isFetching}
+                    pageSize={widget.configuration.pageSize}
+                    totalSize={deploymentsResult.data.metadata.pagination.total}
+                    deployments={deploymentsResult.data.items}
+                    fieldsToShow={widget.configuration.fieldsToShow}
+                />
+            </DeploymentsTableContainer>
+            <DeploymentDetailsContainer>
+                <DetailsPane deployment={selectedDeployment} widget={widget} toolbox={toolbox} />
+            </DeploymentDetailsContainer>
+        </DeploymentsViewContainer>
     );
 };
 
