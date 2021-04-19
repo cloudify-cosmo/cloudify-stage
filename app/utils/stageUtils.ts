@@ -16,6 +16,7 @@ import JsonUtils from './shared/JsonUtils';
 import TimeUtils from './shared/TimeUtils';
 import UrlUtils from './shared/UrlUtils';
 import combineClassNames from './shared/combineClassNames';
+import mapGridParamsToManagerGridParams from './shared/mapGridParamsToManagerGridParams';
 import { isEmptyWidgetData, WidgetDefinition } from './StageAPI';
 
 export default class StageUtils {
@@ -28,6 +29,8 @@ export default class StageUtils {
     static Url = UrlUtils;
 
     static combineClassNames = combineClassNames;
+
+    static mapGridParamsToManagerGridParams = mapGridParamsToManagerGridParams;
 
     static parseMarkdown = marked;
 

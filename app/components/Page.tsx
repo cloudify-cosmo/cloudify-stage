@@ -124,6 +124,12 @@ const buildPagesList = (pages: PageDefinition[], drilldownContextArray: Drilldow
     const pagesMap = createPagesMap(pages);
     const pagesList: PageDefinitionWithContext[] = [];
     let index = drilldownContextArray.length - 1;
+    /**
+     * NOTE: drilldownContextArray is from outermost to innermost pages
+     * pagesList should be from innermost to outermost pages.
+     * Thus, the order is reversed.
+     */
+    // TODO(RD-1982): build the pages list in the same order as drilldownContextArray
 
     const updatePagesListWith = (page: PageDefinition) => {
         const basePage = !page ? pages[0] : page;
@@ -177,15 +183,13 @@ const mapDispatchToProps = (dispatch: ThunkDispatch<ReduxState, never, AnyAction
             dispatch(changePageDescription(pageId, newDescription));
         },
         onPageSelected: (page: PageDefinitionWithContext, pagesList: PageDefinitionWithContext[], index: number) => {
-            const drilldownContext: DrilldownContext[] = [];
-            // Starting from 1 cause the first page doesnt have any context and shouldnt be in the context array (only drilldown pages)
-            // and also skip the last page, because we are sending the context of this one to the select page
-            for (let i = 1; i <= index - 1; i += 1) {
-                drilldownContext.push({
-                    pageName: pagesList[i].name,
-                    context: pagesList[i].context
-                });
-            }
+            // NOTE: the pagesList are from outermost to innermost
+            const drilldownContext = pagesList.slice(0, index).map(
+                (pageInList): DrilldownContext => ({
+                    pageName: pageInList.name,
+                    context: pageInList.context
+                })
+            );
             dispatch(setDrilldownContext(drilldownContext));
             dispatch(selectPage(page.id, page.isDrillDown, page.context, page.name));
         },

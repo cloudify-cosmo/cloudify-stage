@@ -1,10 +1,11 @@
+import { exampleBlueprintUrl } from '../../support/resource_urls';
+
 describe('Deployments widget', () => {
     const blueprintName = 'deployments_test_hw';
     const deploymentName = 'deployments_test_hw_dep';
     const siteName = 'Zakopane';
     const site = { name: siteName };
-    const blueprintUrl =
-        'https://github.com/cloudify-community/blueprint-examples/releases/download/latest/simple-hello-world-example.zip';
+    const blueprintUrl = exampleBlueprintUrl;
 
     const selectActionFromMenu = (deploymentId, menuClassName, action) => {
         cy.searchInDeploymentsWidget(deploymentId);

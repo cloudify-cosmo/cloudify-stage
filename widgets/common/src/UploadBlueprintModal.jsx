@@ -1,6 +1,9 @@
 const { BlueprintActions } = Stage.Common;
 const i18nPrefix = 'widgets.common.blueprintUpload';
 
+// NOTE: prevents leaking variables as global in TypeScript
+export {};
+
 function UploadBlueprintModal({ toolbox, open, onHide }) {
     const { useState, useRef } = React;
     const {

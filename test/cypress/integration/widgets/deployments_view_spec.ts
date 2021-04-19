@@ -1,6 +1,11 @@
 import type { RouteHandler } from 'cypress/types/net-stubbing';
 import { without } from 'lodash';
 
+import type { SystemLabel } from '../../support/deployments';
+
+import { exampleBlueprintUrl } from '../../support/resource_urls';
+import { FilterRuleOperators, FilterRuleType } from '../../../../widgets/common/src/filters/types';
+
 describe('Deployments View widget', () => {
     const widgetId = 'deploymentsView';
     const specPrefix = 'deployments_view_test_';
@@ -8,13 +13,12 @@ describe('Deployments View widget', () => {
     const deploymentName = `${specPrefix}deployment`;
     const deploymentNameThatMatchesFilter = `${specPrefix}precious_deployment`;
     const siteName = 'Olsztyn';
-    const blueprintUrl =
-        'https://github.com/cloudify-community/blueprint-examples/releases/download/latest/simple-hello-world-example.zip';
-    const widgetConfiguration = {
+    const blueprintUrl = exampleBlueprintUrl;
+    const widgetConfiguration: import('../../../../widgets/deploymentsView/src/widget').DeploymentsViewWidgetConfiguration = {
         filterByParentDeployment: false,
         fieldsToShow: ['status', 'name', 'blueprintName', 'location', 'subenvironmentsCount', 'subservicesCount'],
         pageSize: 100,
-        pollingTime: 10,
+        customPollingTime: 10,
         sortColumn: 'created_at',
         sortAscending: false
     };
@@ -30,7 +34,8 @@ describe('Deployments View widget', () => {
         'blueprintSources',
         'nodes',
         'executions',
-        'deploymentActionButtons'
+        'deploymentActionButtons',
+        'deploymentsViewDrilledDown'
     ];
     /** Column numbers as they appear in the table */
     const columnNumbers = {
@@ -52,23 +57,26 @@ describe('Deployments View widget', () => {
             .setLabels(deploymentName, [{ 'rendered-inside': 'details-panel' }]);
     });
 
+    beforeEach(() => {
+        // NOTE: larger viewport since the widget requires more width to be comfortable to use
+        cy.viewport(1600, 900);
+    });
+
     const useDeploymentsViewWidget = ({
         routeHandler,
         configurationOverrides = {}
     }: { routeHandler?: RouteHandler; configurationOverrides?: Record<string, any> } = {}) => {
         cy.interceptSp('POST', /^\/searches\/deployments/, routeHandler).as('deployments');
-        // NOTE: larger viewport since the widget requires more width to be comfortable to use
-        cy.viewport(1600, 900)
-            .usePageMock(
-                [widgetId],
-                { ...widgetConfiguration, ...configurationOverrides },
-                { additionalWidgetIdsToLoad, widgetsWidth: 12 }
-            )
-            .mockLogin();
+        cy.usePageMock(
+            [widgetId],
+            { ...widgetConfiguration, ...configurationOverrides },
+            { additionalWidgetIdsToLoad, widgetsWidth: 12, additionalPageTemplates: ['drilldownDeployments'] }
+        ).mockLogin();
         cy.wait('@deployments');
     };
 
-    const getDeploymentsViewWidget = () => cy.get('.deploymentsViewWidget .widgetItem');
+    const getDeploymentsViewWidget = () =>
+        cy.get('.widget').filter('.deploymentsViewWidget, .deploymentsViewDrilledDownWidget').find('.widgetItem');
     const getDeploymentsViewTable = () => getDeploymentsViewWidget().get('.gridTable');
     const getDeploymentsViewDetailsPane = () => getDeploymentsViewWidget().get('.detailsPane');
 
@@ -141,6 +149,9 @@ describe('Deployments View widget', () => {
             cy.root().parents('body').find('.modal').contains('button', 'Execute').click();
             cy.wait('@restartDeployment');
             cy.contains('Last Execution');
+
+            cy.log('Deployments should be refetched after executing a workflow');
+            cy.wait('@deployments');
         });
     });
 
@@ -149,7 +160,12 @@ describe('Deployments View widget', () => {
         before(() => {
             cy.deleteDeploymentsFilter(filterId, { ignoreFailure: true })
                 .createDeploymentsFilter(filterId, [
-                    { type: 'label', key: 'precious', values: ['yes'], operator: 'any_of' }
+                    {
+                        type: FilterRuleType.Label,
+                        key: 'precious',
+                        values: ['yes'],
+                        operator: FilterRuleOperators.AnyOf
+                    }
                 ])
                 .deployBlueprint(blueprintName, deploymentNameThatMatchesFilter, { webserver_port: 9124 })
                 .setLabels(deploymentNameThatMatchesFilter, [{ precious: 'yes' }]);
@@ -294,5 +310,156 @@ describe('Deployments View widget', () => {
                         .should('not.have.class', 'deployment-progress-row');
                 });
         });
+    });
+
+    describe('drill-down functionality', () => {
+        // Graph of deployments used in the tests
+        // Generated using https://textik.com/
+        //
+        // All names are prefixed with `specPrefix`
+        //
+        //                app-env
+        //                  - -
+        //                -/   \-
+        //               /       \-
+        //             -/          \-
+        //            /              \
+        //         db-env           web-app
+        //          ---
+        //        -/   \-
+        //      -/       \
+        //   db-1        db-2
+
+        type DrilldownDeploymentName = 'app-env' | 'db-env' | 'db-1' | 'db-2' | 'web-app';
+        const getDeploymentFullName = (name: DrilldownDeploymentName) => `${specPrefix}_${name}`;
+        // NOTE: the order matters, because the deployments will be created in this order
+        const deployments: Record<DrilldownDeploymentName, SystemLabel[]> = {
+            'app-env': [{ 'csys-obj-type': 'environment' }],
+            'db-env': [{ 'csys-obj-type': 'environment' }, { 'csys-obj-parent': getDeploymentFullName('app-env') }],
+            'db-1': [{ 'csys-obj-type': 'service' }, { 'csys-obj-parent': getDeploymentFullName('db-env') }],
+            'db-2': [{ 'csys-obj-type': 'service' }, { 'csys-obj-parent': getDeploymentFullName('db-env') }],
+            'web-app': [{ 'csys-obj-type': 'service' }, { 'csys-obj-parent': getDeploymentFullName('app-env') }]
+        };
+
+        before(() => {
+            cy.log('Creating multiple deployments for the drill-down tests');
+            Object.entries(deployments).forEach(([deploymentShortName, labels], index) => {
+                const deploymentFullName = getDeploymentFullName(deploymentShortName as keyof typeof deployments);
+                cy.deployBlueprint(blueprintName, deploymentFullName, { webserver_port: 9122 - index }).setLabels(
+                    deploymentFullName,
+                    labels
+                );
+            });
+        });
+
+        const useEnvironmentsWidget = () => {
+            useDeploymentsViewWidget({
+                configurationOverrides: {
+                    filterId: 'csys-environment-filter'
+                }
+            });
+        };
+        const getSubenvironmentsButton = () => cy.contains('button', 'Subenvironments');
+        const getSubservicesButton = () => cy.contains('button', 'Services');
+        const getBreadcrumbs = () => cy.get('.breadcrumb');
+
+        it('should support the drill-down workflow', () => {
+            useEnvironmentsWidget();
+
+            getDeploymentsViewTable().within(() => {
+                cy.log('Only top-level environments should be visible');
+                cy.contains('app-env');
+                cy.contains('db-env').should('not.exist');
+                cy.contains('db-1').should('not.exist');
+                cy.contains('db-2').should('not.exist');
+                cy.contains('web-app').should('not.exist');
+            });
+
+            getDeploymentsViewDetailsPane().within(() => {
+                getSubservicesButton().contains('1');
+                cy.log('Drill down to subenvironments of app-env');
+                getSubenvironmentsButton().contains('1').click();
+            });
+
+            getBreadcrumbs().contains('app-env [Environments]');
+
+            const verifySubdeploymentsOfAppEnv = () => {
+                getDeploymentsViewTable().within(() => {
+                    cy.log('Subenvironments of app-env should be visible (only db-env)');
+                    cy.contains('db-env');
+                    cy.contains('app-env').should('not.exist');
+                    cy.contains('db-1').should('not.exist');
+                    cy.contains('web-app').should('not.exist');
+                });
+            };
+            verifySubdeploymentsOfAppEnv();
+
+            getDeploymentsViewDetailsPane().within(() => {
+                getSubenvironmentsButton().contains('0').should('be.disabled');
+                cy.log('Drill down to subservices of db-env');
+                getSubservicesButton().contains('2').click();
+            });
+
+            getBreadcrumbs().contains('db-env [Services]');
+            getBreadcrumbs().contains('app-env [Environments]');
+            getDeploymentsViewTable().within(() => {
+                cy.log('Subservices of db-env should be visible (db-1, db-2)');
+                cy.contains('db-1').click();
+                cy.contains('db-2');
+                cy.contains('db-env').should('not.exist');
+            });
+
+            getDeploymentsViewDetailsPane().within(() => {
+                getSubenvironmentsButton().contains('0').should('be.disabled');
+                getSubservicesButton().contains('0').should('be.disabled');
+            });
+
+            cy.log('Go back to the parent environment');
+            getBreadcrumbs().contains('app-env').click();
+            verifySubdeploymentsOfAppEnv();
+
+            cy.log('Go back to top-level page');
+            getBreadcrumbs().contains('Test Page').click();
+            getDeploymentsViewDetailsPane().within(() => {
+                cy.log('Drill down to subservices of app-env');
+                getSubservicesButton().contains('1').click();
+            });
+            getDeploymentsViewTable().within(() => {
+                cy.log('Subservices of app-end should be visible (web-app)');
+                cy.contains('web-app');
+                cy.contains('db-env').should('not.exist');
+            });
+        });
+
+        it('should allow deleting a deployment without redirecting to the parent page', () => {
+            const tempDeploymentId = `${specPrefix}_temp_deployment_to_remove`;
+            const parentDeploymentId = getDeploymentFullName('app-env');
+            cy.deployBlueprint(blueprintName, tempDeploymentId).setLabels(tempDeploymentId, [
+                { 'csys-obj-type': 'service' },
+                { 'csys-obj-parent': parentDeploymentId }
+            ]);
+
+            useEnvironmentsWidget();
+
+            getDeploymentsViewDetailsPane().within(() => getSubservicesButton().click());
+
+            getBreadcrumbs().contains(parentDeploymentId);
+
+            getDeploymentsViewTable().within(() => cy.contains(tempDeploymentId).click());
+
+            cy.log('Delete the deployment');
+            getDeploymentsViewDetailsPane().contains('Deployment actions').click();
+            cy.get('.popup').contains('Delete').click();
+            cy.get('.modal').contains('Yes').click();
+
+            getDeploymentsViewTable().within(() => cy.contains(tempDeploymentId).should('not.exist'));
+            getBreadcrumbs().contains(parentDeploymentId);
+        });
+    });
+
+    it('should display an error message when using the drilled-down widget on a top-level page', () => {
+        cy.usePageMock([`${widgetId}DrilledDown`]).mockLogin();
+
+        cy.contains('Unexpected widget usage');
     });
 });

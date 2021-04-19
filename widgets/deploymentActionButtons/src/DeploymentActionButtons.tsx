@@ -1,11 +1,24 @@
-export default function DeploymentActionButtons({ deployment, toolbox }) {
+import type { FunctionComponent } from 'react';
+
+interface DeploymentActionButtonsProps {
+    deployment: { id: string; workflows: unknown[] };
+    toolbox: Stage.Types.Toolbox;
+    redirectToParentPageAfterDelete: boolean;
+}
+
+const DeploymentActionButtons: FunctionComponent<DeploymentActionButtonsProps> = ({
+    deployment,
+    toolbox,
+    redirectToParentPageAfterDelete
+}) => {
     const {
         Basic: { Button },
+        // @ts-expect-error Those commons are not migrated to TS yet
         Common: { DeploymentActionsMenu, DeploymentActionsModals, ExecuteDeploymentModal, WorkflowsMenu },
         Hooks: { useResettableState }
     } = Stage;
 
-    const [activeAction, setActiveAction, resetActiveAction] = useResettableState(null);
+    const [activeAction, setActiveAction, resetActiveAction] = useResettableState<string | null>(null);
     const [workflow, setWorkflow, resetWorkflow] = useResettableState(null);
 
     const { id, workflows } = deployment;
@@ -58,13 +71,10 @@ export default function DeploymentActionButtons({ deployment, toolbox }) {
                     deploymentId={id}
                     onHide={resetActiveAction}
                     toolbox={toolbox}
+                    redirectToParentPageAfterDelete={redirectToParentPageAfterDelete}
                 />
             )}
         </div>
     );
-}
-
-DeploymentActionButtons.propTypes = {
-    deployment: PropTypes.shape({ id: PropTypes.string, workflows: PropTypes.arrayOf(PropTypes.shape({})) }).isRequired,
-    toolbox: Stage.PropTypes.Toolbox.isRequired
 };
+export default DeploymentActionButtons;

@@ -2,6 +2,7 @@ import _ from 'lodash';
 import * as types from './types';
 import { drillDownWarning } from './templateManagement';
 import { createDrilldownPage, selectPage, addLayoutToPage } from './page';
+import { setDrilldownContext } from './drilldownContext';
 
 export function addWidgetDrilldownPage(widgetId, drillDownName, drillDownPageId) {
     return {
@@ -33,6 +34,15 @@ export function drillDownToPage(widget, defaultTemplate, drilldownContext, drill
             dispatch(addWidgetDrilldownPage(widget.id, defaultTemplate.name, newPageId));
             pageId = newPageId;
         }
+
+        // Refresh the drilldown context for the current page
+        const updatedDrilldownContext = getState().drilldownContext.slice();
+        const currentPageDrilldownContext = updatedDrilldownContext.pop() || {};
+        updatedDrilldownContext.push({
+            ...currentPageDrilldownContext,
+            context: getState().context
+        });
+        dispatch(setDrilldownContext(updatedDrilldownContext));
 
         return dispatch(selectPage(pageId, true, drilldownContext, drilldownPageName));
     };

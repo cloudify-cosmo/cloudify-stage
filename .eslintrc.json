@@ -9,6 +9,14 @@
             {
                 "allowDeclarations": true
             }
+        ],
+
+        // TODO(RD-1690) extract the rule to cloudify-ui-common
+        "@typescript-eslint/ban-ts-comment": [
+            "error",
+            {
+                "ts-ignore": "allow-with-description"
+            }
         ]
     },
     "overrides": [

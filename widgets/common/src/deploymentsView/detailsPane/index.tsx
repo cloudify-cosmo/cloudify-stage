@@ -1,6 +1,7 @@
 import type { FunctionComponent } from 'react';
 
 import type { Deployment } from '../types';
+import DrilldownButtons, { DrilldownButtonsProps } from './DrilldownButtons';
 import DetailsPaneHeader from './header';
 import DetailsPaneWidgets from './widgets';
 
@@ -14,9 +15,11 @@ export interface DetailsPaneProps {
      *    selected)
      */
     deployment: Deployment | undefined;
+    toolbox: Stage.Types.Toolbox;
+    widget: Stage.Types.Widget<any>;
 }
 
-const DetailsPane: FunctionComponent<DetailsPaneProps> = ({ deployment }) => {
+const DetailsPane: FunctionComponent<DetailsPaneProps> = ({ deployment, widget, toolbox }) => {
     if (!deployment) {
         const { Message } = Stage.Basic;
 
@@ -35,9 +38,17 @@ const DetailsPane: FunctionComponent<DetailsPaneProps> = ({ deployment }) => {
         );
     }
 
+    const drillDown: DrilldownButtonsProps['drillDown'] = (templateName, drilldownContext, drilldownPageName) =>
+        toolbox.drillDown(widget, templateName, drilldownContext, drilldownPageName);
+
     return (
         <div className="detailsPane">
-            <DetailsPaneHeader deploymentName={deployment.id} />
+            <DetailsPaneHeader
+                deploymentName={deployment.id}
+                drilldownButtons={
+                    <DrilldownButtons deploymentId={deployment.id} drillDown={drillDown} toolbox={toolbox} />
+                }
+            />
             <DetailsPaneWidgets />
         </div>
     );

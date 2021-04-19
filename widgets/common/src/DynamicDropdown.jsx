@@ -1,27 +1,29 @@
+// NOTE: Disabling react/require-default-props as default values are provided in component's definition
+/* eslint-disable react/require-default-props */
 import VisibilitySensor from 'react-visibility-sensor';
 import './DynamicDropdown.css';
 
 let instanceCount = 0;
 
-function DynamicDropdown({
-    innerRef,
-    disabled,
-    multiple,
-    placeholder,
+export default function DynamicDropdown({
     fetchUrl,
-    fetchAll,
-    value,
     onChange,
     toolbox,
-    filter,
-    valueProp,
-    textFormatter,
-    pageSize,
-    name,
-    prefetch,
-    className,
-    refreshEvent,
-    itemsFormatter,
+    className = '',
+    disabled = false,
+    fetchAll = false,
+    filter = {},
+    innerRef = null,
+    itemsFormatter = _.identity,
+    multiple = false,
+    name = null,
+    pageSize = 10,
+    placeholder = null,
+    prefetch = false,
+    refreshEvent = null,
+    textFormatter = null,
+    value = null,
+    valueProp = 'id',
     ...rest
 }) {
     const { useState, useEffect } = React;
@@ -39,13 +41,13 @@ function DynamicDropdown({
     const [isLoading, setLoading] = useState(false);
     const [overrideOptionsAfterFetch, setOverrideOptionsAfterFetch, resetOverrideOptionsAfterFetch] = useBoolean();
 
-    function loadMore() {
-        if (disabled) {
-            return;
-        }
-
-        setLoading(true);
+    function unsetLoadingAndShouldLoadMore() {
+        setLoading(false);
         setShouldLoadMore(false);
+    }
+
+    function loadMore() {
+        setLoading(true);
 
         if (fetchAll) {
             toolbox
@@ -55,7 +57,7 @@ function DynamicDropdown({
                     setHasMore(false);
                     setOptions(itemsFormatter(data.items));
                 })
-                .finally(() => setLoading(false));
+                .finally(unsetLoadingAndShouldLoadMore);
         } else {
             const nextPage = currentPage + 1;
 
@@ -67,7 +69,7 @@ function DynamicDropdown({
                     setOptions([...(overrideOptionsAfterFetch ? [] : options), ...itemsFormatter(data.items)]);
                     resetOverrideOptionsAfterFetch();
                 })
-                .finally(() => setLoading(false));
+                .finally(unsetLoadingAndShouldLoadMore);
 
             setCurrentPage(nextPage);
         }
@@ -80,8 +82,8 @@ function DynamicDropdown({
     }
 
     useEffect(() => {
-        if (shouldLoadMore) loadMore();
-    }, [shouldLoadMore]);
+        if (shouldLoadMore && !disabled) loadMore();
+    }, [shouldLoadMore, disabled]);
 
     useEventListener(toolbox, refreshEvent, refreshData);
 
@@ -199,24 +201,6 @@ DynamicDropdown.propTypes = {
     className: PropTypes.string,
     refreshEvent: PropTypes.string,
     itemsFormatter: PropTypes.func
-};
-
-DynamicDropdown.defaultProps = {
-    innerRef: null,
-    disabled: false,
-    value: null,
-    fetchAll: false,
-    filter: {},
-    valueProp: 'id',
-    textFormatter: null,
-    pageSize: 10,
-    placeholder: null,
-    name: null,
-    prefetch: false,
-    multiple: false,
-    className: '',
-    refreshEvent: null,
-    itemsFormatter: _.identity
 };
 
 Stage.defineCommon({

@@ -1,40 +1,43 @@
-/**
- * Created by kinneretzin on 19/10/2016.
- */
-
 export default class DeploymentActions {
-    constructor(toolbox) {
-        this.toolbox = toolbox;
-    }
+    constructor(private toolbox: Stage.Types.Toolbox) {}
 
-    static toManagerLabels(labels) {
+    static toManagerLabels(labels: Stage.Common.Labels.Label[]) {
         return _.map(labels, ({ key, value }) => ({ [key]: value }));
     }
 
-    doGet(deployment, params) {
+    doGet(deployment: { id: string }, params: any) {
         return this.toolbox.getManager().doGet(`/deployments/${deployment.id}`, params);
     }
 
-    doGetDeployments(params) {
+    doGetDeployments(params: any) {
         return this.toolbox.getManager().doGet('/deployments?_include=id', params);
     }
 
-    doDelete(deployment) {
+    doDelete(deployment: { id: string }) {
         return this.toolbox.getManager().doDelete(`/deployments/${deployment.id}`);
     }
 
-    doForceDelete(deployment) {
+    doForceDelete(deployment: { id: string }) {
         return this.toolbox.getManager().doDelete(`/deployments/${deployment.id}`, { force: 'true' });
     }
 
-    doCancel(execution, action) {
+    // eslint-disable-next-line camelcase
+    doCancel(execution: { id: string; deployment_id: string }, action: string) {
         return this.toolbox.getManager().doPost(`/executions/${execution.id}`, null, {
             deployment_id: execution.deployment_id,
             action
         });
     }
 
-    doExecute(deployment, workflow, params, force, dry_run = false, queue = false, scheduled_time = undefined) {
+    doExecute(
+        deployment: { id: string },
+        workflow: { name: string },
+        params: any,
+        force: boolean,
+        dry_run = false,
+        queue = false,
+        scheduled_time = undefined
+    ) {
         return this.toolbox.getManager().doPost('/executions', null, {
             deployment_id: deployment.id,
             workflow_id: workflow.name,
@@ -47,19 +50,19 @@ export default class DeploymentActions {
     }
 
     doUpdate(
-        deploymentName,
-        blueprintName,
-        deploymentInputs,
-        shouldRunInstallWorkflow,
-        shouldRunUninstallWorkflow,
-        installWorkflowFirst,
-        ignoreFailure,
-        shouldRunReinstall,
-        reinstallList,
-        forceUpdate,
-        preview
+        deploymentName: string,
+        blueprintName: string,
+        deploymentInputs: any,
+        shouldRunInstallWorkflow: boolean,
+        shouldRunUninstallWorkflow: boolean,
+        installWorkflowFirst: boolean,
+        ignoreFailure: boolean,
+        shouldRunReinstall: boolean,
+        reinstallList: any,
+        forceUpdate: boolean,
+        preview: boolean
     ) {
-        const data = {};
+        const data: Record<string, any> = {};
 
         if (!_.isEmpty(blueprintName)) {
             data.blueprint_id = blueprintName;
@@ -81,17 +84,17 @@ export default class DeploymentActions {
         return this.toolbox.getManager().doPut(`/deployment-updates/${deploymentName}/update/initiate`, null, data);
     }
 
-    doSetVisibility(deploymentId, visibility) {
+    doSetVisibility(deploymentId: string, visibility: any) {
         return this.toolbox.getManager().doPatch(`/deployments/${deploymentId}/set-visibility`, null, { visibility });
     }
 
-    doSetSite(deploymentId, siteName, detachSite) {
+    doSetSite(deploymentId: string, siteName: string, detachSite: any) {
         const data = detachSite ? { detach_site: detachSite } : { site_name: siteName };
 
         return this.toolbox.getManager().doPost(`/deployments/${deploymentId}/set-site`, null, data);
     }
 
-    doGetSiteName(deploymentId) {
+    doGetSiteName(deploymentId: string) {
         return this.toolbox
             .getManager()
             .doGet(`/deployments/${deploymentId}?_include=site_name`)
@@ -102,16 +105,16 @@ export default class DeploymentActions {
         return this.toolbox.getManager().doGet('/sites?_include=name&_sort=name');
     }
 
-    doSetLabels(deploymentId, deploymentLabels) {
+    doSetLabels(deploymentId: string, deploymentLabels: Stage.Common.Labels.Label[]) {
         const labels = DeploymentActions.toManagerLabels(deploymentLabels);
         return this.toolbox.getManager().doPatch(`/deployments/${deploymentId}`, null, { labels });
     }
 
-    doGetLabel(key, value) {
+    doGetLabel(key: string, value: string) {
         return this.toolbox.getManager().doGet(`/labels/deployments/${key}?_search=${value}`);
     }
 
-    doGetLabels(deploymentId) {
+    doGetLabels(deploymentId: string) {
         return this.toolbox
             .getManager()
             .doGet(`/deployments/${deploymentId}?_include=labels`)
@@ -125,11 +128,11 @@ export default class DeploymentActions {
             .then(({ items }) => items);
     }
 
-    doGetWorkflows(deploymentId) {
+    doGetWorkflows(deploymentId: string) {
         return this.toolbox.getManager().doGet(`/deployments/${deploymentId}?_include=id,workflows`);
     }
 
-    async waitUntilCreated(deploymentId) {
+    async waitUntilCreated(deploymentId: string) {
         const { ExecutionActions, PollHelper } = Stage.Common;
 
         const executionActions = new ExecutionActions(this.toolbox);
@@ -145,6 +148,12 @@ export default class DeploymentActions {
                 return;
             }
         }
+    }
+}
+
+declare global {
+    namespace Stage.Common {
+        export { DeploymentActions };
     }
 }
 
