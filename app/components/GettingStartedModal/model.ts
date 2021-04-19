@@ -36,14 +36,8 @@ export type GettingStartedSchemaSecret = {
 export type GettingStartedSchemaBlueprint = {
     id: string;
     name: string;
-    description: string;
-    htmlUrl: string;
     zipUrl: string;
-    readmeUrl: string;
     mainBlueprint?: string;
-    imageUrl: string;
-    createdAt: string;
-    updatedAt: string;
 };
 
 export type GettingStartedSchemaItem = {
