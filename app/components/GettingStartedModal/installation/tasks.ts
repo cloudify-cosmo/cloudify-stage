@@ -10,7 +10,7 @@ import type { CatalogPluginResponse, ManagerPluginResponse, URLString } from '..
 import type { PluginsHook } from '../plugins/useFetchPlugins';
 import type { SecretsHook } from '../secrets/useFetchSecrets';
 import useFetchBlueprints, { BlueprintsHook } from '../blueprints/useFetchBlueprints';
-import { BlueprintData } from '../blueprints/model';
+import { BlueprintResponse } from '../blueprints/model';
 
 /**
  * Validates plugin version. If version pattern is not defined, any version is accepted.
@@ -35,13 +35,13 @@ const validatePluginVersion = (versionPattern?: RegExpString, pluginVersion?: st
     }
 };
 
-export const mapCurrentBlueprints = (currentBlueprints: BlueprintData[]) => {
+export const mapCurrentBlueprints = (currentBlueprints: BlueprintResponse[]) => {
     return currentBlueprints.reduce((result, { id, ...other }) => {
         if (id) {
             result[id] = other;
         }
         return result;
-    }, {} as Record<string, Omit<BlueprintData, 'id'>>);
+    }, {} as Record<string, Omit<BlueprintResponse, 'id'>>);
 };
 
 export const mapDefinedSecrets = (definedSecrets: GettingStartedSecretsData[]) => {

@@ -6,11 +6,6 @@ export type PaginationResponse = {
     total: number;
 };
 
-export type MetadataResponse = {
-    pagination: PaginationResponse;
-    filtered: unknown;
-};
-
 // used locally
 
 export type RegExpString = string;

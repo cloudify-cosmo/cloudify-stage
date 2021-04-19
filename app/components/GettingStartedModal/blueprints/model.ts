@@ -1,6 +1,4 @@
-import type { MetadataResponse } from '../model';
-
-export type BlueprintData = {
+export type BlueprintResponse = {
     id: string;
     description: string;
     // eslint-disable-next-line camelcase
@@ -18,7 +16,4 @@ export type BlueprintData = {
     visibility: string;
 };
 
-export type BlueprintsData = {
-    metadata: MetadataResponse;
-    items: BlueprintData[];
-};
+export type BlueprintsResponse = Stage.Types.PaginatedResponse<BlueprintResponse>;

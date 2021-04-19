@@ -3,7 +3,7 @@ import { useMemo } from 'react';
 
 import { useManagerFetch } from '../common/fetchHooks';
 
-import type { BlueprintsData, BlueprintData } from './model';
+import type { BlueprintsResponse, BlueprintResponse } from './model';
 import type { FetchHook } from '../common/fetchHooks';
 
 const defaultParams = {
@@ -13,10 +13,10 @@ const defaultParams = {
     _offset: 0
 };
 
-export type BlueprintsHook = FetchHook<BlueprintData[]>;
+export type BlueprintsHook = FetchHook<BlueprintResponse[]>;
 
 const useFetchBlueprints = () => {
-    const managerSecrets = useManagerFetch<BlueprintsData>('/blueprints', defaultParams);
+    const managerSecrets = useManagerFetch<BlueprintsResponse>('/blueprints', defaultParams);
     return useMemo(() => {
         return {
             loading: managerSecrets.loading,
