@@ -71,8 +71,8 @@ describe('Filters widget', () => {
                 expect(tableData[0]['Filter name']).to.eq(filterName);
                 expect(tableData[0].Creator).to.eq('admin');
                 expect(tableData[0].Created).not.to.be.null;
-                expect(tableData[0].Type).to.eq('user');
             });
+        cy.get('.filtersWidget .checkbox:not(.checked)');
 
         const systemFilterName = 'csys-environment-filter';
         cy.getSearchInput().clear().type(systemFilterName);
@@ -85,8 +85,9 @@ describe('Filters widget', () => {
                 expect(tableData[0]['Filter name']).to.eq(systemFilterName);
                 expect(tableData[0].Creator).to.eq('admin');
                 expect(tableData[0].Created).not.to.be.null;
-                expect(tableData[0].Type).to.eq('system');
             });
+
+        cy.get('.filtersWidget .checkbox.checked');
 
         const disabledIconTitle = "System filter can't be edited or deleted";
         cy.get('.edit').should('have.class', 'disabled');
@@ -161,8 +162,8 @@ describe('Filters widget', () => {
                 expect(tableData[1]['Filter name']).to.eq(newFilterName);
                 expect(tableData[1].Creator).to.eq('admin');
                 expect(tableData[1].Created).not.to.be.null;
-                expect(tableData[0].Type).to.eq('user');
             });
+        cy.get('.filtersWidget .checkbox:not(.checked)').should('have.length', 2);
     });
 
     it('should allow to edit existing filter', () => {
