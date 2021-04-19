@@ -708,17 +708,13 @@
                 "name": "Filter name",
                 "creator": "Creator",
                 "created": "Created",
-                "type": "Type",
+                "system": "System",
                 "actions": {
                     "delete": "Delete filter",
                     "edit": "Edit filter",
                     "clone": "Clone filter",
                     "systemFilter": "System filter can't be edited or deleted"
                 }
-            },
-            "type": {
-                "system": "system",
-                "user": "user"
             },
             "modal": {
                 "id": "Filter ID",
