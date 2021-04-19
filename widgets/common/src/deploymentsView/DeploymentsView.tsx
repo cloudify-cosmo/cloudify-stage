@@ -60,7 +60,7 @@ export const DeploymentsView: FunctionComponent<DeploymentsViewProps> = ({
 
     Stage.Hooks.useEventListener(toolbox, 'deployments:refresh', deploymentsResult.refetch);
 
-    const [mapOpen, toggleMap] = Stage.Hooks.useToggle(false);
+    const [mapOpen, toggleMap] = Stage.Hooks.useToggle(widget.configuration.mapOpenByDefault);
 
     const { Loading, ErrorMessage } = Stage.Basic;
     const { i18n } = Stage;
@@ -107,7 +107,11 @@ export const DeploymentsView: FunctionComponent<DeploymentsViewProps> = ({
                 <DeploymentsViewHeader mapOpen={mapOpen} toggleMap={toggleMap} />
             </DeploymentsViewHeaderContainer>
 
-            {mapOpen && <DeploymentsMapContainer>Hey, I am a map</DeploymentsMapContainer>}
+            {mapOpen && (
+                <DeploymentsMapContainer height={widget.configuration.mapHeight}>
+                    Hey, I am a map
+                </DeploymentsMapContainer>
+            )}
 
             <DeploymentsTableContainer>
                 <DeploymentsTable

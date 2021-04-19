@@ -20,7 +20,9 @@ describe('Deployments View widget', () => {
         pageSize: 100,
         customPollingTime: 10,
         sortColumn: 'created_at',
-        sortAscending: false
+        sortAscending: false,
+        mapHeight: 300,
+        mapOpenByDefault: false
     };
     // NOTE: widgets below are shown in the details pane
     const additionalWidgetIdsToLoad = [
