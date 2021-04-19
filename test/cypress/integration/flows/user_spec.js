@@ -48,7 +48,7 @@ describe('User flow', () => {
         cy.get('input[name=blueprintName]').clear().type(resourceName);
         cy.get('.button.ok').click();
 
-        cy.get('input[placeholder^=Search]').clear().type(resourceName);
+        cy.getSearchInput().clear().type(resourceName);
         cy.get('.blueprintsTable > tbody > tr').should('have.length', 1);
         cy.get('.rocket').click();
         cy.get('input[name=deploymentName]').type(resourceName);

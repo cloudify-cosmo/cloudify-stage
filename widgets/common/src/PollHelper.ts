@@ -25,11 +25,11 @@ export default class PollHelper {
     }
 }
 
+// NOTE: alias name to avoid name shadowing inside the namespace
+const PH = PollHelper;
 declare global {
-    namespace Stage {
-        interface Common {
-            PollHelper: typeof PollHelper;
-        }
+    namespace Stage.Common {
+        const PollHelper: typeof PH;
     }
 }
 

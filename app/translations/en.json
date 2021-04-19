@@ -25,7 +25,7 @@
         "servicesStatus": "Services Status",
         "systemStatus": "System Status"
     },
-    "gettingStartedModal" : {
+    "gettingStartedModal": {
         "disableModalLabel": "Don't show next time",
         "titles": {
             "technologiesStep": "Getting Started",
@@ -501,10 +501,16 @@
             },
             "labels": {
                 "addButton": "Add",
-                "keyPlaceholder": "Select or type in a key",
+                "keyPlaceholder": {
+                    "knownOnly": "Select a key",
+                    "knownOrNew": "Select or type in a key"
+                },
                 "newKey": "New key",
                 "newValue": "New value",
-                "valuePlaceholder": "Select or type in a value",
+                "valuePlaceholder": {
+                    "knownOnly": "Select a value",
+                    "knownOrNew": "Select or type in a value"
+                },
                 "validationError": "Only letters, digits and the characters \"-\", \".\" and \"_\" are allowed and it must begin with a letter.",
                 "invalidKeyError": "All labels starting with `{{ keyPrefix }}` are reserved for internal usage and should not be used unless there is a need to override default functionality. The following labels are allowed for such override: {{ reservedKeys }}.",
                 "input": {
@@ -515,6 +521,36 @@
                 "labelDuplicationError": "Cannot add the same label twice",
                 "modalHeader": "Manage labels for deployment '{{deploymentId}}'",
                 "modalApplyButton": "Apply"
+            },
+            "filters": {
+                "form": {
+                    "buttons": {
+                        "addRule": "Add new rule",
+                        "removeRule": "Remove rule"
+                    },
+                    "inputsPlaceholders": {
+                        "blueprintId": "Select blueprints",
+                        "siteName": "Select site names",
+                        "createdBy": "Select usernames",
+                        "multipleStrings": "Type in values"
+                    },
+                    "ruleTypesLabels": {
+                        "label": "Label",
+                        "blueprintId": "Blueprint",
+                        "siteName": "Site name",
+                        "createdBy": "Creator"
+                    },
+                    "operatorsLabels": {
+                        "anyOf": "is one of",
+                        "notAnyOf": "is not one of",
+                        "isNull": "key is not",
+                        "isNotNull": "key is",
+                        "contains": "contains",
+                        "notContains": "does not contain",
+                        "startsWith": "starts with",
+                        "endsWith": "ends with"
+                    }
+                }
             },
             "readmes": {
                 "linksBasePath": "https://docs.cloudify.co/5.1",
@@ -624,23 +660,81 @@
                     "tooltip": "Services (Total)"
                 }
             },
-            "noDataMessage": "No Results Found. Try changing the filter's parameters"
+            "drillDown": {
+                "name": "Deployments view (drilled-down)",
+                "description": "A complete deployments view in a drilled-down context – Deployment list, map view, and detailed deployment info",
+                "breadcrumbs": {
+                    "environments": "Environments",
+                    "services": "Services"
+                },
+                "buttons": {
+                    "detailsFetchingError": "Could not fetch deployment details",
+                    "environments": {
+                        "label": "Subenvironments",
+                        "title": "Drill down to subenvironments"
+                    },
+                    "services": {
+                        "label": "Services",
+                        "title": "Drill down to subservices"
+                    }
+                }
+            },
+            "messages": {
+                "noData": "No Results Found. Try changing the filter's parameters",
+                "loadingFilterRules": "Loading filter rules",
+                "errorLoadingFilterRules": "Error when loading filter rules",
+                "loadingDeployments": "Loading deployments",
+                "errorLoadingDeployments": "Error when loading deployments",
+                "missingParentDeploymentId": {
+                    "header": "Cannot filter by parent deployment",
+                    "message": "A selected deployment cannot be found in the parent page. Turn off the option in the configuration."
+                },
+                "missingFilterRules": {
+                    "header": "Internal error occurred",
+                    "message": "Try going to the home page and drill down again."
+                },
+                "unexpectedWidgetUsage": {
+                    "header": "Unexpected widget usage",
+                    "message": "The drilled-down widget should not be used on a top-level page, only in drill-down pages. Most of the time you do not need to add it manually, as it is present on the drill-down Environments/Services page automatically. You may be looking for a regular Deployments View widget."
+                }
+            }
         },
         "filters": {
             "name": "Filters",
             "description": "This widget shows a list of defined filters",
             "noFilters": "There are no filters defined",
+            "add": "Add",
             "columns": {
                 "name": "Filter name",
                 "creator": "Creator",
                 "created": "Created",
+                "type": "Type",
                 "actions": {
                     "delete": "Delete filter",
                     "edit": "Edit filter",
-                    "clone": "Clone filter"
+                    "clone": "Clone filter",
+                    "systemFilter": "System filter can't be edited or deleted"
                 }
             },
-            "deleteConfirm": "Are you sure you want to remove filter '{{filterId}}'?"
+            "type": {
+                "system": "system",
+                "user": "user"
+            },
+            "modal": {
+                "id": "Filter ID",
+                "rules": "Filter rules",
+                "idMissing": "Please provide the filter ID",
+                "header": {
+                    "add": "Add filter",
+                    "edit": "Edit filter '{{filterId}}'",
+                    "clone": "Clone filter '{{filterId}}'"
+                }
+            },
+            "deleteConfirm": "Are you sure you want to remove filter '{{filterId}}'?",
+            "filterInUse": {
+                "heading": "Filter '{{filterId}}' cannot be removed:",
+                "usageInfo": "Used as default filter in '{{widgetName}}' widget in '{{pageName}}' page by user '{{username}}'"
+            }
         },
         "labels": {
             "name": "Labels",

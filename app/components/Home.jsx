@@ -63,12 +63,13 @@ export default class Home extends Component {
         // Always clear the context. Whatever is relevant to the drilldown should be passed as drilldown context
         onClearContext();
 
-        // Go over all the drilldown context and set it all (from top down)
-        _.each(contextParams, cp => {
-            _.each(cp.context, (value, key) => {
+        if (contextParams) {
+            /** @type {import('../reducers/drilldownContextReducer').DrilldownContext} */
+            const currentPageContext = contextParams[contextParams.length - 1] || {};
+            _.each(currentPageContext.context, (value, key) => {
                 onSetContextValue(key, value);
             });
-        });
+        }
 
         onSetDrilldownContext(contextParams);
     }

@@ -2,6 +2,7 @@ const fs = require('fs-extra');
 const path = require('path');
 const _ = require('lodash');
 
+const { LAYOUT } = require('../consts');
 const Utils = require('../utils');
 
 const userTemplatesFolder = Utils.getResourcePath('templates', true);
@@ -42,8 +43,8 @@ module.exports = {
 
             pageData.layout = [];
 
-            migrateLayoutSection('widgets');
-            migrateLayoutSection('tabs');
+            migrateLayoutSection(LAYOUT.WIDGETS);
+            migrateLayoutSection(LAYOUT.TABS);
         }),
     down: (queryInterface, Sequelize) =>
         migrate(queryInterface, Sequelize, pageData => {
@@ -51,9 +52,9 @@ module.exports = {
                 let layoutSection = pageData.layout[0];
                 pageData[layoutSection.type] = layoutSection.content;
 
-                if (layoutSection.type === 'widgets') {
+                if (layoutSection.type === LAYOUT.WIDGETS) {
                     layoutSection = _.nth(pageData.layout, 1) || {};
-                    if (layoutSection.type === 'tabs') pageData[layoutSection.type] = layoutSection.content;
+                    if (layoutSection.type === LAYOUT.TABS) pageData[layoutSection.type] = layoutSection.content;
                 }
             }
 

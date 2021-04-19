@@ -5,7 +5,7 @@ export default function LabelValueInput({ initialValue, onCancel, onChange, onSu
     const { useLabelInput } = Stage.Hooks;
     const { i18n } = Stage;
 
-    const { inputValue, invalidCharacterTyped, submitChange, resetInput } = useLabelInput(onChange, initialValue);
+    const { inputValue, invalidCharacterTyped, submitChange, resetInput } = useLabelInput(onChange, { initialValue });
     const valueIsValid = inputValue && !valueAlreadyUsed;
 
     return (

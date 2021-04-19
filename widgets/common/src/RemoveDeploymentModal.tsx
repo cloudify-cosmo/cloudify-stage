@@ -1,4 +1,22 @@
-function RemoveDeploymentModal({ open, deploymentId, force, onHide, toolbox }) {
+import type { FunctionComponent } from 'react';
+
+interface RemoveDeploymentModalProps {
+    open: boolean;
+    deploymentId: string;
+    force: boolean;
+    onHide: () => void;
+    toolbox: Stage.Types.Toolbox;
+    redirectToParentPageAfterDelete: boolean;
+}
+
+const RemoveDeploymentModal: FunctionComponent<RemoveDeploymentModalProps> = ({
+    open,
+    deploymentId,
+    force,
+    onHide,
+    toolbox,
+    redirectToParentPageAfterDelete
+}) => {
     const {
         Basic: { Confirm, ErrorMessage },
         Common: { DeploymentActions },
@@ -6,7 +24,7 @@ function RemoveDeploymentModal({ open, deploymentId, force, onHide, toolbox }) {
         i18n
     } = Stage;
 
-    const { errors, setErrors, clearErrors } = useErrors(null);
+    const { errors, setErrors, clearErrors } = useErrors();
 
     useOpenProp(open, clearErrors);
 
@@ -26,12 +44,15 @@ function RemoveDeploymentModal({ open, deploymentId, force, onHide, toolbox }) {
                 const contextDeploymentId = toolbox.getContext().getValue('deploymentId');
                 if (deploymentId === contextDeploymentId) {
                     toolbox.getContext().setValue('deploymentId', null);
-                    toolbox.goToParentPage();
+
+                    if (redirectToParentPageAfterDelete) {
+                        toolbox.goToParentPage();
+                    }
                 }
                 toolbox.getEventBus().trigger('deployments:refresh');
                 onHide();
             })
-            .catch(error => {
+            .catch((error: any) => {
                 log.error(error);
                 setErrors(error.message);
             });
@@ -50,15 +71,24 @@ function RemoveDeploymentModal({ open, deploymentId, force, onHide, toolbox }) {
             onCancel={onHide}
         />
     );
-}
+};
 
 RemoveDeploymentModal.propTypes = {
     deploymentId: PropTypes.string.isRequired,
     force: PropTypes.bool.isRequired,
     open: PropTypes.bool.isRequired,
     onHide: PropTypes.func.isRequired,
-    toolbox: Stage.PropTypes.Toolbox.isRequired
+    // NOTE: `as any` assertion since Toolbox from PropTypes and TS slightly differ
+    toolbox: Stage.PropTypes.Toolbox.isRequired as any,
+    redirectToParentPageAfterDelete: PropTypes.bool.isRequired
 };
+
+declare global {
+    namespace Stage.Common {
+        // eslint-disable-next-line import/prefer-default-export
+        export { RemoveDeploymentModal };
+    }
+}
 
 Stage.defineCommon({
     name: 'RemoveDeploymentModal',

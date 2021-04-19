@@ -14,7 +14,7 @@ describe('Secret store management widget', () => {
         });
 
         cy.get('.secretsWidget').within(() => {
-            cy.get('input[placeholder="Search..."]').type(secretName);
+            cy.getSearchInput().type(secretName);
             cy.get('tbody tr').should('have.length', 1);
         });
 

@@ -10,6 +10,7 @@
 
 import 'cypress-file-upload';
 import 'cypress-localstorage-commands';
+import 'cypress-get-table';
 import _ from 'lodash';
 import type { RouteHandler, StringMatcher } from 'cypress/types/net-stubbing';
 
@@ -37,8 +38,14 @@ const getCommonHeaders = () => ({
 declare global {
     namespace Cypress {
         // NOTE: necessary for extending the Cypress API
-        // eslint-disable-next-line @typescript-eslint/no-empty-interface
-        export interface Chainable extends GetCypressChainableFromCommands<typeof commands> {}
+        export interface Chainable extends GetCypressChainableFromCommands<typeof commands> {
+            /**
+             * Returns the table data
+             *
+             * @see {@link https://www.npmjs.com/package/cypress-get-table}
+             */
+            getTable: () => Cypress.Chainable<Record<string, any>[]>;
+        }
     }
 }
 
@@ -182,14 +189,19 @@ const commands = {
         widgetConfiguration: any = {},
         {
             widgetsWidth = 8,
-            additionalWidgetIdsToLoad = []
-        }: { widgetsWidth?: number; additionalWidgetIdsToLoad?: string[] } = {}
+            additionalWidgetIdsToLoad = [],
+            additionalPageTemplates = []
+        }: { widgetsWidth?: number; additionalWidgetIdsToLoad?: string[]; additionalPageTemplates?: string[] } = {}
     ) => {
         const widgetIdsArray = _.castArray(widgetIds);
         const widgetIdsToLoad = [...widgetIdsArray, 'filter', 'pluginsCatalog', ...additionalWidgetIdsToLoad];
         cy.intercept('GET', '/console/widgets/list', widgetIdsToLoad.map(toIdObj));
         // required for drill-down testing
-        cy.intercept('GET', '/console/templates/pages', widgetIds ? ['blueprint', 'deployment'].map(toIdObj) : []);
+        cy.intercept(
+            'GET',
+            '/console/templates/pages',
+            widgetIds ? ['blueprint', 'deployment', ...additionalPageTemplates].map(toIdObj) : []
+        );
         cy.intercept('GET', '/console/templates', []);
         cy.intercept('GET', '/console/ua', {
             appDataVersion: 4,
@@ -280,6 +292,7 @@ const commands = {
             routeHandler
         ),
     getByTestId: (id: string) => cy.get(`[data-testid=${id}]`),
+    getSearchInput: () => cy.get('input[placeholder="Search..."]'),
 
     /**
      * Compiles a script in the fixtures directory using babel

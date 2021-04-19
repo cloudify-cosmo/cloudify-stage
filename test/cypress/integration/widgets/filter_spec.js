@@ -52,8 +52,10 @@ describe('Filter', () => {
         );
 
         it('deployment creation and removal', () => {
-            cy.get('.blueprintsWidget input[placeholder^=Search]').scrollIntoView().clear().type(blueprintName);
-            cy.get(`.blueprintsWidget .${blueprintName}`).parent().find('.rocket').click();
+            cy.get('.blueprintsWidget').within(() => {
+                cy.getSearchInput().scrollIntoView().clear().type(blueprintName);
+                cy.get(`.${blueprintName}`).parent().find('.rocket').click();
+            });
             const deploymentName = `${blueprintName}-deployment`;
             cy.get('input[name=deploymentName]').type(deploymentName);
             cy.contains('Runtime only evaluation').click();
@@ -62,7 +64,7 @@ describe('Filter', () => {
             cy.get('.modal').should('not.exist');
             cy.refreshPage();
 
-            cy.get('.blueprintsWidget input[placeholder^=Search]').scrollIntoView().clear().type(blueprintName);
+            cy.get('.blueprintsWidget').within(() => cy.getSearchInput().scrollIntoView().clear().type(blueprintName));
 
             cy.searchInDeploymentsWidget(deploymentName);
             // Triggering mouseout event just after the click to hide the tooltip
@@ -78,8 +80,10 @@ describe('Filter', () => {
         });
 
         it('blueprint upload and removal', () => {
-            cy.get('.blueprintsWidget input[placeholder^=Search]').scrollIntoView().clear().type(blueprintName);
-            cy.get(`.blueprintsWidget .${blueprintName}`).parent().find('.trash').click();
+            cy.get('.blueprintsWidget').within(() => {
+                cy.getSearchInput().scrollIntoView().clear().type(blueprintName);
+                cy.get(`.${blueprintName}`).parent().find('.trash').click();
+            });
             cy.contains('Yes').click();
 
             cy.get('.blueprintFilterField > .label').should('not.exist');

@@ -1,8 +1,12 @@
-import _ from 'lodash';
+import { isEmpty } from 'lodash';
 
 import type { FunctionComponent } from 'react';
-import type { Filter, FilterWidget } from './types';
+import type { Filter, FilterWidget, FilterUsage } from './types';
 import FilterActions from './FilterActions';
+import FilterAddModal from './FilterAddModal';
+import FilterCloneModal from './FilterCloneModal';
+import FilterEditModal from './FilterEditModal';
+import type { FilterRule } from '../../common/src/filters/types';
 
 interface FiltersTableData {
     filters: Filter[];
@@ -19,15 +23,32 @@ const FixedLayoutDataTable = Stage.styled(Stage.Basic.DataTable)`
     table-layout: fixed;
 `;
 
+function tColumn(columnKey: string) {
+    return Stage.i18n.t(`widgets.filters.columns.${columnKey}`);
+}
+
 const FiltersTable: FunctionComponent<FiltersTableProps> = ({ data, toolbox, widget }) => {
     const { i18n } = Stage;
-    const { Confirm, DataTable, Icon } = Stage.Basic;
+    const { Alert, Button, Confirm, DataTable, Icon, List } = Stage.Basic;
     const { Time } = Stage.Utils;
-    const { useResettableState, useRefreshEvent } = Stage.Hooks;
+    const { useResettableState, useRefreshEvent, useBoolean } = Stage.Hooks;
 
     const [filterIdToDelete, setFilterIdToDelete, clearFilterIdToDelete] = useResettableState('');
+    const [filterUsage, setFilterUsage, clearFilterUsage] = useResettableState<FilterUsage[]>([]);
+
+    const [addModalOpen, openAddModal, closeAddModal] = useBoolean();
+    const [filterToClone, setFilterToClone, unsetFilterToClone] = useResettableState<Filter | undefined>(undefined);
+    const [filterToEdit, setFilterToEdit, unsetFilterToEdit] = useResettableState<Filter | undefined>(undefined);
 
     useRefreshEvent(toolbox, 'filters:refresh');
+
+    function handleAddFilter(filterId: string, filterRules: FilterRule[]) {
+        return new FilterActions(toolbox).doCreate(filterId, filterRules).then(closeAddModal).then(unsetFilterToClone);
+    }
+
+    function handleEditFilter(filterId: string, filterRules: FilterRule[]) {
+        return new FilterActions(toolbox).doUpdate(filterId, filterRules).then(unsetFilterToEdit);
+    }
 
     return (
         <>
@@ -39,9 +60,10 @@ const FiltersTable: FunctionComponent<FiltersTableProps> = ({ data, toolbox, wid
                 searchable
                 sortable
             >
-                <DataTable.Column width="33%" label={i18n.t('widgets.filters.columns.name')} name="id" />
-                <DataTable.Column width="33%" label={i18n.t('widgets.filters.columns.creator')} name="created_by" />
-                <DataTable.Column width="33%" label={i18n.t('widgets.filters.columns.created')} name="created_at" />
+                <DataTable.Column width="60%" label={tColumn('name')} name="id" />
+                <DataTable.Column width="40%" label={tColumn('creator')} name="created_by" />
+                <DataTable.Column width="134px" label={tColumn('created')} name="created_at" />
+                <DataTable.Column width="60px" label={tColumn('type')} name="is_system_filter" />
                 <DataTable.Column width="112px" />
                 {data.filters.map(filter => (
                     <DataTable.Row key={filter.id}>
@@ -49,40 +71,103 @@ const FiltersTable: FunctionComponent<FiltersTableProps> = ({ data, toolbox, wid
                         <DataTable.Data>{filter.created_by}</DataTable.Data>
                         <DataTable.Data>{Time.formatTimestamp(filter.created_at)}</DataTable.Data>
                         <DataTable.Data>
-                            <Icon
-                                name="edit"
-                                disabled
-                                bordered
-                                title={i18n.t('widgets.filters.columns.actions.edit')}
-                            />
+                            {i18n.t(`widgets.filters.type.${filter.is_system_filter ? 'system' : 'user'}`)}
+                        </DataTable.Data>
+                        <DataTable.Data>
                             <Icon
                                 name="clone"
-                                disabled
+                                link
                                 bordered
-                                title={i18n.t('widgets.filters.columns.actions.clone')}
+                                title={tColumn('actions.clone')}
+                                onClick={() => setFilterToClone(filter)}
+                            />
+                            <Icon
+                                name="edit"
+                                link={!filter.is_system_filter}
+                                bordered
+                                disabled={filter.is_system_filter}
+                                title={tColumn(`actions.${filter.is_system_filter ? 'systemFilter' : 'edit'}`)}
+                                onClick={() => setFilterToEdit(filter)}
                             />
                             <Icon
                                 name="trash"
-                                link
+                                link={!filter.is_system_filter}
                                 bordered
-                                title={i18n.t('widgets.filters.columns.actions.delete')}
+                                disabled={filter.is_system_filter}
+                                title={tColumn(`actions.${filter.is_system_filter ? 'systemFilter' : 'delete'}`)}
                                 onClick={() => setFilterIdToDelete(filter.id)}
                             />
                         </DataTable.Data>
                     </DataTable.Row>
                 ))}
+
+                <DataTable.Action>
+                    <Button
+                        content={i18n.t('widgets.filters.add')}
+                        icon="add"
+                        labelPosition="left"
+                        onClick={openAddModal}
+                    />
+                </DataTable.Action>
             </FixedLayoutDataTable>
 
             <Confirm
                 open={!!filterIdToDelete}
                 onCancel={clearFilterIdToDelete}
                 onConfirm={() => {
-                    clearFilterIdToDelete();
-                    toolbox.loading(true);
-                    new FilterActions(toolbox).doDelete(filterIdToDelete).then(toolbox.refresh);
+                    const filterActions = new FilterActions(toolbox);
+                    filterActions.doGetFilterUsage(filterIdToDelete).then(resolvedFilterUsage => {
+                        if (isEmpty(resolvedFilterUsage)) {
+                            clearFilterIdToDelete();
+                            toolbox.loading(true);
+                            filterActions.doDelete(filterIdToDelete).then(toolbox.refresh);
+                        } else {
+                            setFilterUsage(resolvedFilterUsage);
+                        }
+                    });
                 }}
                 content={i18n.t('widgets.filters.deleteConfirm', { filterId: filterIdToDelete })}
             />
+
+            <Alert
+                open={!isEmpty(filterUsage)}
+                onDismiss={() => {
+                    clearFilterUsage();
+                    clearFilterIdToDelete();
+                }}
+                content={
+                    <span style={{ lineHeight: '3em', fontSize: '0.9em' }}>
+                        {i18n.t('widgets.filters.filterInUse.heading', { filterId: filterIdToDelete })}
+                        <List bulleted>
+                            {filterUsage.map(usageInfo => (
+                                <List.Item key={JSON.stringify(usageInfo)}>
+                                    {i18n.t('widgets.filters.filterInUse.usageInfo', usageInfo)}
+                                </List.Item>
+                            ))}
+                        </List>
+                    </span>
+                }
+            />
+
+            {addModalOpen && <FilterAddModal onSubmit={handleAddFilter} onCancel={closeAddModal} toolbox={toolbox} />}
+
+            {filterToClone && (
+                <FilterCloneModal
+                    initialFilter={filterToClone}
+                    onSubmit={handleAddFilter}
+                    onCancel={unsetFilterToClone}
+                    toolbox={toolbox}
+                />
+            )}
+
+            {filterToEdit && (
+                <FilterEditModal
+                    initialFilter={filterToEdit}
+                    onSubmit={handleEditFilter}
+                    onCancel={unsetFilterToEdit}
+                    toolbox={toolbox}
+                />
+            )}
         </>
     );
 };

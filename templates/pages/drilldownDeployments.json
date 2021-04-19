@@ -1,0 +1,19 @@
+{
+  "name": "Subdeployments",
+  "layout": [
+    {
+      "type": "widgets",
+      "content": [
+        {
+          "name": "Deployments view",
+          "width": 12,
+          "height": 28,
+          "x": 0,
+          "y": 0,
+          "definition": "deploymentsViewDrilledDown",
+          "configuration": {}
+        }
+      ]
+    }
+  ]
+}
