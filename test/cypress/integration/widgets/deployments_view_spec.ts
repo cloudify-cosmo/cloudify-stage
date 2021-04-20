@@ -20,7 +20,9 @@ describe('Deployments View widget', () => {
         pageSize: 100,
         customPollingTime: 10,
         sortColumn: 'created_at',
-        sortAscending: false
+        sortAscending: false,
+        mapHeight: 300,
+        mapOpenByDefault: false
     };
     // NOTE: widgets below are shown in the details pane
     const additionalWidgetIdsToLoad = [
@@ -79,10 +81,17 @@ describe('Deployments View widget', () => {
         cy.get('.widget').filter('.deploymentsViewWidget, .deploymentsViewDrilledDownWidget').find('.widgetItem');
     const getDeploymentsViewTable = () => getDeploymentsViewWidget().get('.gridTable');
     const getDeploymentsViewDetailsPane = () => getDeploymentsViewWidget().get('.detailsPane');
+    // TODO(RD-2090): use a better selector for the map
+    const getDeploymentsViewMap = () => getDeploymentsViewWidget().contains('I am a map');
+    const getDeploymentsMapToggleButton = () => getDeploymentsViewWidget().contains('button', 'Map');
+
+    const verifyMapHeight = (expectedHeight: number) =>
+        getDeploymentsViewMap().invoke('height').should('eq', expectedHeight);
 
     const widgetConfigurationHelpers = {
         getFieldsDropdown: () => cy.contains('List of fields to show in the table').parent().find('[role="listbox"]'),
-        toggleFieldsDropdown: () => widgetConfigurationHelpers.getFieldsDropdown().find('.dropdown.icon').click()
+        toggleFieldsDropdown: () => widgetConfigurationHelpers.getFieldsDropdown().find('.dropdown.icon').click(),
+        mapHeightInput: () => cy.contains('Map height').parent().find('input[type="number"]')
     };
 
     describe('configuration', () => {
@@ -113,6 +122,23 @@ describe('Deployments View widget', () => {
                 cy.contains(blueprintName);
                 cy.contains(siteName).should('not.exist');
             });
+        });
+
+        it('should affect the map', () => {
+            useDeploymentsViewWidget({
+                configurationOverrides: { mapOpenByDefault: true }
+            });
+
+            verifyMapHeight(widgetConfiguration.mapHeight);
+
+            const newHeight = 100;
+
+            cy.editWidgetConfiguration(widgetId, () => {
+                // NOTE: after clearing the input, 0 is automatically inserted. {home}{del} removes the leading 0
+                widgetConfigurationHelpers.mapHeightInput().clear().type(`${newHeight}{home}{del}`);
+            });
+
+            verifyMapHeight(newHeight);
         });
     });
 
@@ -461,5 +487,26 @@ describe('Deployments View widget', () => {
         cy.usePageMock([`${widgetId}DrilledDown`]).mockLogin();
 
         cy.contains('Unexpected widget usage');
+    });
+
+    describe('map', () => {
+        // TODO(RD-2090): make the test more meaningful
+        it('should be toggled upon clicking the button', () => {
+            useDeploymentsViewWidget();
+
+            getDeploymentsViewMap().should('not.exist');
+
+            getDeploymentsMapToggleButton()
+                .click()
+                .should('have.class', 'active')
+                .should('have.attr', 'title', 'Close map');
+            getDeploymentsViewMap();
+
+            getDeploymentsMapToggleButton()
+                .click()
+                .should('not.have.class', 'active')
+                .should('have.attr', 'title', 'Open map');
+            getDeploymentsViewMap().should('not.exist');
+        });
     });
 });

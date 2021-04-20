@@ -4,11 +4,17 @@ import { deploymentsViewColumnDefinitions, DeploymentsViewColumnId, deploymentsV
 export interface SharedDeploymentsViewWidgetConfiguration {
     /** In milliseconds */
     customPollingTime: number;
+    mapOpenByDefault: boolean;
+    mapHeight: number;
     fieldsToShow: DeploymentsViewColumnId[];
     pageSize: number;
     sortColumn: string;
     sortAscending: boolean;
 }
+
+const configurationT = (suffix: string) => Stage.i18n.t(`${i18nPrefix}.configuration.${suffix}`);
+
+const defaultMapHeight = 300;
 
 export const sharedConfiguration: Stage.Types.WidgetConfigurationDefinition[] = [
     {
@@ -16,11 +22,23 @@ export const sharedConfiguration: Stage.Types.WidgetConfigurationDefinition[] = 
         // NOTE: polling is handled by react-query, thus, use a different ID
         id: 'customPollingTime'
     },
-    // TODO(RD-1225): add map configuration
+    {
+        id: 'mapOpenByDefault',
+        type: Stage.Basic.GenericField.BOOLEAN_TYPE,
+        name: configurationT('mapOpenByDefault.name'),
+        default: false
+    },
+    {
+        id: 'mapHeight',
+        type: Stage.Basic.GenericField.NUMBER_TYPE,
+        name: configurationT('mapHeight.name'),
+        description: configurationT('mapHeight.description'),
+        default: defaultMapHeight
+    },
     {
         id: 'fieldsToShow',
-        name: Stage.i18n.t(`${i18nPrefix}.configuration.fieldsToShow.name`),
-        placeHolder: Stage.i18n.t(`${i18nPrefix}.configuration.fieldsToShow.placeholder`),
+        name: configurationT('fieldsToShow.name'),
+        placeHolder: configurationT('fieldsToShow.placeholder'),
         items: deploymentsViewColumnIds.map(columnId => ({
             name: deploymentsViewColumnDefinitions[columnId].name,
             value: columnId

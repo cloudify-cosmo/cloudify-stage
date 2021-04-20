@@ -629,7 +629,21 @@
                 "fieldsToShow": {
                     "name": "List of fields to show in the table",
                     "placeholder": "Select fields from the list"
+                },
+                "mapOpenByDefault": {
+                    "name": "Show map by default"
+                },
+                "mapHeight": {
+                    "name": "Map height",
+                    "description": "The height of the map in pixels"
                 }
+            },
+            "header": {
+              "map": {
+                "label": "Map",
+                "openMap": "Open map",
+                "closeMap": "Close map"
+              }
             },
             "iconLabels": {
                 "inProgress": "In progress",
