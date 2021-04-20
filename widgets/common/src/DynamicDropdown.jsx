@@ -9,7 +9,7 @@ let instanceCount = 0;
 const defaultFetchState = { hasMore: true, currentPage: -1, shouldLoadMore: false };
 
 /**
- * Creates two `useUpdateEffect` hooks to call fetchTrigger with debouncing.
+ * Creates two `useUpdateEffect` hooks to call `fetchTrigger` function with debouncing.
  * First hook calls `fetchTrigger` with `reset` argument set to false on `withoutResetFetchDeps` change.
  * The second calls `fetchTrigger` with `reset` argument set to true on `withResetFetchDeps` change
  *
