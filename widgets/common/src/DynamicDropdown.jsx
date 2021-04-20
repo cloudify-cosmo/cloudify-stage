@@ -37,6 +37,7 @@ export default function DynamicDropdown({
     fetchUrl,
     onChange,
     toolbox,
+    allowAdditions = false,
     className = '',
     disabled = false,
     fetchAll = false,
@@ -124,11 +125,15 @@ export default function DynamicDropdown({
         if (_.isEmpty(value)) {
             setOptions(_.reject(options, 'implicit'));
         } else {
+            const optionsToAdd = [];
             _.castArray(value).forEach(singleValue => {
                 if (!_.find(options, { [valueProp]: singleValue })) {
-                    setOptions([{ [valueProp]: singleValue, implicit: true }, ...options]);
+                    optionsToAdd.push({ [valueProp]: singleValue, implicit: true });
                 }
             });
+            if (optionsToAdd.length > 0) {
+                setOptions([...optionsToAdd, ...options]);
+            }
         }
     }, [value]);
 
@@ -185,6 +190,10 @@ export default function DynamicDropdown({
                 value={getDropdownValue()}
                 id={id}
                 name={name}
+                allowAdditions={allowAdditions}
+                onAddItem={(event, data) => {
+                    if (allowAdditions) setOptions([{ [valueProp]: data.value }, ...options]);
+                }}
                 onChange={(event, data) => onChange(!_.isEmpty(data.value) ? data.value : null)}
                 onSearchChange={(event, data) => {
                     setSearchQuery(data.searchQuery);
@@ -223,6 +232,7 @@ export default function DynamicDropdown({
 }
 
 DynamicDropdown.propTypes = {
+    allowAdditions: PropTypes.bool,
     innerRef: PropTypes.shape({ current: PropTypes.instanceOf(HTMLElement) }),
     disabled: PropTypes.bool,
     multiple: PropTypes.bool,
