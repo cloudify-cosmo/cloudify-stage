@@ -1,6 +1,6 @@
 import ValidationErrorPopup from './ValidationErrorPopup';
 
-export default function CommonDropdown({ innerRef, fetchUrl, onChange, toolbox, allowKnownOnly, value, ...rest }) {
+export default function CommonDropdown({ innerRef, fetchUrl, onChange, toolbox, allowAdditions, value, ...rest }) {
     const { useEffect } = React;
     const {
         Common: { DynamicDropdown },
@@ -13,7 +13,7 @@ export default function CommonDropdown({ innerRef, fetchUrl, onChange, toolbox, 
         submitChange,
         resetInput,
         unsetInvalidCharacterTyped
-    } = useLabelInput(onChange, { allowKnownOnly });
+    } = useLabelInput(onChange, { allowAdditions });
 
     useEffect(() => {
         if (_.isEmpty(value)) {
@@ -26,17 +26,18 @@ export default function CommonDropdown({ innerRef, fetchUrl, onChange, toolbox, 
             {invalidCharacterTyped && <ValidationErrorPopup />}
 
             <DynamicDropdown
+                allowAdditions={allowAdditions}
                 innerRef={innerRef}
                 clearable={false}
                 fetchUrl={fetchUrl}
                 itemsFormatter={items => _.map(items, item => ({ id: item }))}
                 onBlur={unsetInvalidCharacterTyped}
                 onChange={newValue => submitChange(null, { value: newValue })}
-                onSearchChange={allowKnownOnly ? undefined : submitChange}
-                searchQuery={allowKnownOnly ? undefined : inputValue}
-                selectOnNavigation={allowKnownOnly}
+                onSearchChange={allowAdditions ? undefined : submitChange}
+                searchQuery={allowAdditions ? undefined : inputValue}
+                selectOnNavigation={allowAdditions}
                 toolbox={toolbox}
-                value={allowKnownOnly ? value : undefined}
+                value={allowAdditions ? value : undefined}
                 /* eslint-disable-next-line react/jsx-props-no-spreading */
                 {...rest}
             />
@@ -49,12 +50,12 @@ CommonDropdown.propTypes = {
     innerRef: PropTypes.shape({ current: PropTypes.instanceOf(HTMLElement) }),
     onChange: PropTypes.func.isRequired,
     toolbox: Stage.PropTypes.Toolbox.isRequired,
-    allowKnownOnly: PropTypes.bool,
+    allowAdditions: PropTypes.bool,
     value: PropTypes.oneOfType([PropTypes.string, PropTypes.arrayOf(PropTypes.string)])
 };
 
 CommonDropdown.defaultProps = {
     innerRef: null,
-    allowKnownOnly: false,
+    allowAdditions: false,
     value: null
 };
