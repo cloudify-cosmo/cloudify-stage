@@ -15,6 +15,7 @@ import {
     DeploymentsViewHeaderContainer
 } from './layout';
 import DeploymentsViewHeader from './header';
+import DeploymentsMap from './map';
 
 export interface DeploymentsViewProps {
     widget: Stage.Types.Widget<SharedDeploymentsViewWidgetConfiguration>;
@@ -109,7 +110,7 @@ export const DeploymentsView: FunctionComponent<DeploymentsViewProps> = ({
 
             {mapOpen && (
                 <DeploymentsMapContainer height={widget.configuration.mapHeight}>
-                    Hey, I am a map
+                    <DeploymentsMap deployments={deploymentsResult.data.items} toolbox={toolbox} />
                 </DeploymentsMapContainer>
             )}
 

@@ -679,6 +679,10 @@
                     "tooltip": "Services (Total)"
                 }
             },
+            "map": {
+                "loadingSites": "Loading sites",
+                "errorLoadingSites": "Error loading sites"
+            },
             "drillDown": {
                 "name": "Deployments view (drilled-down)",
                 "description": "A complete deployments view in a drilled-down context – Deployment list, map view, and detailed deployment info",
