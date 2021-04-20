@@ -6,31 +6,32 @@ import VisibilitySensor from 'react-visibility-sensor';
 import './DynamicDropdown.css';
 
 let instanceCount = 0;
+const defaultFetchState = { hasMore: true, currentPage: -1, shouldLoadMore: false };
 
 /**
- * Creates two `useUpdateEffect` hooks, one calls fetchTrigger with debouncing
- * on delayedFetchDeps change and the second calls immediately fetchTrigger
- * on immediateFetchDeps change
+ * Creates two `useUpdateEffect` hooks to call fetchTrigger with debouncing,
+ * one to call fetchTrigger with false argument on withoutResetFetchDeps change and the second to call fetchTrigger
+ * with true argument  on withResetFetchDeps change
  *
- * @param {function(immediateFetch: boolean)} fetchTrigger function to be called to trigger data fetching
- * @param {React.DependencyList} delayedFetchDeps list of dependencies for delayed fetch
- * @param {React.DependencyList} immediateFetchDeps list of dependencies for immediate fetch
+ * @param {function(reset: boolean)} fetchTrigger function to be called to trigger data fetching
+ * @param {React.DependencyList} withoutResetFetchDeps list of dependencies for delayed fetch without reset
+ * @param {React.DependencyList} withResetFetchDeps list of dependencies for delayed fetch with reset
  */
-function useFetchTrigger(fetchTrigger, delayedFetchDeps, immediateFetchDeps) {
+function useFetchTrigger(fetchTrigger, withoutResetFetchDeps, withResetFetchDeps) {
     const { useUpdateEffect } = Stage.Hooks;
     const delayMs = 500;
     const delayedFetchTrigger = useCallback(
-        debounce(() => fetchTrigger(false), delayMs),
+        debounce(reset => fetchTrigger(reset), delayMs),
         []
     );
 
     useUpdateEffect(() => {
-        delayedFetchTrigger();
-    }, delayedFetchDeps);
+        delayedFetchTrigger(false);
+    }, withoutResetFetchDeps);
 
     useUpdateEffect(() => {
-        fetchTrigger(true);
-    }, immediateFetchDeps);
+        delayedFetchTrigger(true);
+    }, withResetFetchDeps);
 }
 
 export default function DynamicDropdown({
@@ -64,24 +65,36 @@ export default function DynamicDropdown({
         return `dynamicDropdown${instanceCount}`;
     });
     const [options, setOptions] = useState([]);
-    const [hasMore, setHasMore] = useState(true);
-    const [currentPage, setCurrentPage] = useState(-1);
+    const [fetchState, setFetchState] = useState({ ...defaultFetchState, shouldLoadMore: prefetch });
     const [searchQuery, setSearchQuery] = useState('');
-    const [shouldLoadMore, setShouldLoadMore] = useState(prefetch);
     const [isLoading, setLoading] = useState(false);
     const [overrideOptionsAfterFetch, setOverrideOptionsAfterFetch, resetOverrideOptionsAfterFetch] = useBoolean();
 
-    function refreshData() {
-        setCurrentPage(-1);
-        setHasMore(true);
+    function refreshData(triggerFetch = false) {
+        setFetchState(previousFetchState => ({
+            ...defaultFetchState,
+            shouldLoadMore: triggerFetch ? true : previousFetchState.shouldLoadMore
+        }));
     }
 
     function loadMore() {
         setLoading(true);
 
+        function resetFetchState() {
+            setFetchState(currentFetchState => ({
+                ...currentFetchState,
+                hasMore: false,
+                shouldLoadMore: false
+            }));
+        }
+
+        function onFetchFailed(error) {
+            resetFetchState();
+            log.error(error);
+        }
+
         function onFetchFinished() {
             setLoading(false);
-            setShouldLoadMore(false);
         }
 
         if (fetchAll) {
@@ -89,12 +102,13 @@ export default function DynamicDropdown({
                 .getManager()
                 .doGetFull(fetchUrl)
                 .then(data => {
-                    setHasMore(false);
+                    resetFetchState();
                     setOptions(itemsFormatter(data.items));
                 })
+                .catch(onFetchFailed)
                 .finally(onFetchFinished);
         } else {
-            const nextPage = currentPage + 1;
+            const nextPage = fetchState.currentPage + 1;
 
             toolbox
                 .getManager()
@@ -105,19 +119,22 @@ export default function DynamicDropdown({
                     _offset: nextPage * pageSize
                 })
                 .then(data => {
-                    setHasMore(data.metadata.pagination.total > (nextPage + 1) * pageSize);
+                    setFetchState({
+                        currentPage: nextPage,
+                        hasMore: data.metadata.pagination.total > (nextPage + 1) * pageSize,
+                        shouldLoadMore: false
+                    });
                     setOptions([...(overrideOptionsAfterFetch ? [] : options), ...itemsFormatter(data.items)]);
                     resetOverrideOptionsAfterFetch();
                 })
+                .catch(onFetchFailed)
                 .finally(onFetchFinished);
-
-            setCurrentPage(nextPage);
         }
     }
 
     useEffect(() => {
-        if (shouldLoadMore && !disabled) loadMore();
-    }, [shouldLoadMore, disabled]);
+        if (fetchState.shouldLoadMore && !disabled) loadMore();
+    }, [fetchState.shouldLoadMore, disabled]);
 
     useEventListener(toolbox, refreshEvent, refreshData);
 
@@ -140,8 +157,7 @@ export default function DynamicDropdown({
     useFetchTrigger(
         resetOptions => {
             if (resetOptions) setOverrideOptionsAfterFetch();
-            refreshData();
-            setShouldLoadMore(true);
+            refreshData(true);
         },
         [searchQuery],
         [fetchUrl]
@@ -164,7 +180,7 @@ export default function DynamicDropdown({
 
         let valueArray = _.castArray(value);
 
-        if (!hasMore) {
+        if (!fetchState.hasMore) {
             const filteredValueArray = _(filteredOptions).map(valueProp).intersection(valueArray).value();
             if (filteredValueArray.length !== valueArray.length) {
                 onChange(filteredValueArray);
@@ -205,7 +221,7 @@ export default function DynamicDropdown({
                         text: (textFormatter || (i => i[valueProp]))(item),
                         value: item[valueProp]
                     }));
-                    if (hasMore) {
+                    if (fetchState.hasMore) {
                         preparedOptions.push({
                             disabled: true,
                             icon: (
@@ -213,7 +229,12 @@ export default function DynamicDropdown({
                                     active={!isLoading}
                                     containment={document.querySelector(`#${id} .menu`)}
                                     partialVisibility
-                                    onChange={setShouldLoadMore}
+                                    onChange={isVisible =>
+                                        setFetchState(currentFetchState => ({
+                                            ...currentFetchState,
+                                            shouldLoadMore: isVisible
+                                        }))
+                                    }
                                 >
                                     <Loading message="" />
                                 </VisibilitySensor>
