@@ -708,10 +708,12 @@
                 "name": "Filter name",
                 "creator": "Creator",
                 "created": "Created",
+                "system": "System",
                 "actions": {
                     "delete": "Delete filter",
                     "edit": "Edit filter",
-                    "clone": "Clone filter"
+                    "clone": "Clone filter",
+                    "systemFilter": "System filter can't be edited or deleted"
                 }
             },
             "modal": {

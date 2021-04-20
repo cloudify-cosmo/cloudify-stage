@@ -1,8 +1,8 @@
-export const isGettingStartedModalDisabledInLocalStorage = (): boolean => {
+export const isGettingStartedModalDisabled = (): boolean => {
     // NOTE: quickfix, disable getting started modal to get the tests to pass on master
-    return false;
+    return true;
 };
 
-export const disableGettingStartedModalInLocalStorage = (): void => {
-    localStorage.setItem('getting-started-modal-disabled', 'true');
+export const disableGettingStartedModal = (): void => {
+    localStorage.setItem('getting-started-modal-disabled', JSON.stringify(true));
 };

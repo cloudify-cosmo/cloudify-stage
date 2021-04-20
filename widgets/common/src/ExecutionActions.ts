@@ -1,27 +1,31 @@
-/**
- * Created by jakubniezgoda on 27/01/2017.
- */
+export {};
 
 class ExecutionActions {
-    constructor(toolbox) {
-        this.toolbox = toolbox;
-    }
+    constructor(private toolbox: Stage.Types.Toolbox) {}
 
-    doGetExecutions(deploymentId) {
+    doGetExecutions(deploymentId: string) {
         return this.toolbox
             .getManager()
             .doGet('/executions?_include=id,status,ended_at', { deployment_id: deploymentId });
     }
 
-    doGetStatus(executionId) {
+    doGetStatus(executionId: string) {
         return this.toolbox.getManager().doGet('/executions?_include=id,status', { id: executionId });
     }
 
-    doAct(execution, action) {
+    // eslint-disable-next-line camelcase
+    doAct(execution: { id: string; deployment_id: string }, action: any) {
         return this.toolbox.getManager().doPost(`/executions/${execution.id}`, null, {
             deployment_id: execution.deployment_id,
             action
         });
+    }
+}
+
+declare global {
+    namespace Stage.Common {
+        // eslint-disable-next-line import/prefer-default-export
+        export { ExecutionActions };
     }
 }
 

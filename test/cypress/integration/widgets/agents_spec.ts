@@ -63,7 +63,7 @@ describe('Agents widget', () => {
             },
             items
         }).as('search');
-        cy.get('input[placeholder="Search..."]').type('test');
+        cy.getSearchInput().type('test');
         cy.wait('@search');
         cy.get('table.agentsTable tbody tr').should('have.length', items.length);
         cy.get('table.agentsTable tbody tr').each((tr, i) => {
