@@ -8,7 +8,7 @@ export const DeploymentsViewContainer = styled.div`
         'map map'
         'table details';
     grid-template-rows: min-content min-content minmax(250px, 1fr);
-    grid-template-columns: minmax(50%, 1fr) 1fr;
+    grid-template-columns: 1fr 1fr;
 `;
 
 export const DeploymentsViewHeaderContainer = styled.div`
