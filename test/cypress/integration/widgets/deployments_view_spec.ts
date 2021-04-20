@@ -83,6 +83,7 @@ describe('Deployments View widget', () => {
     const getDeploymentsViewDetailsPane = () => getDeploymentsViewWidget().get('.detailsPane');
     // TODO(RD-2090): use a better selector for the map
     const getDeploymentsViewMap = () => getDeploymentsViewWidget().contains('I am a map');
+    const getDeploymentsMapToggleButton = () => getDeploymentsViewWidget().contains('button', 'Map');
 
     const verifyMapHeight = (expectedHeight: number) =>
         getDeploymentsViewMap().invoke('height').should('eq', expectedHeight);
@@ -491,7 +492,21 @@ describe('Deployments View widget', () => {
     describe('map', () => {
         // TODO(RD-2090): make the test more meaningful
         it('should be toggled upon clicking the button', () => {
-            // TODO:
+            useDeploymentsViewWidget();
+
+            getDeploymentsViewMap().should('not.exist');
+
+            getDeploymentsMapToggleButton()
+                .click()
+                .should('have.class', 'active')
+                .should('have.attr', 'title', 'Close map');
+            getDeploymentsViewMap();
+
+            getDeploymentsMapToggleButton()
+                .click()
+                .should('not.have.class', 'active')
+                .should('have.attr', 'title', 'Open map');
+            getDeploymentsViewMap().should('not.exist');
         });
     });
 });
