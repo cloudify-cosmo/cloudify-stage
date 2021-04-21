@@ -18,7 +18,7 @@ export const DeploymentsViewHeaderContainer = styled.div`
     justify-content: flex-end;
 `;
 
-export const DeploymentsMapContainer = styled.div<{ height: number }>`
+export const DeploymentsMapLayoutContainer = styled.div<{ height: number }>`
     height: ${props => props.height}px;
     grid-area: map;
 `;

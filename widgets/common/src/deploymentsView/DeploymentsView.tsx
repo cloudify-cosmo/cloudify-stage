@@ -9,13 +9,13 @@ import { DeploymentsTable } from './table';
 import { FilterRuleOperators, FilterRuleType } from '../filters/types';
 import {
     DeploymentDetailsContainer,
-    DeploymentsMapContainer,
+    DeploymentsMapLayoutContainer,
     DeploymentsTableContainer,
     DeploymentsViewContainer,
     DeploymentsViewHeaderContainer
 } from './layout';
 import DeploymentsViewHeader from './header';
-import DeploymentsMap from './map';
+import DeploymentsMapContainer from './map';
 
 export interface DeploymentsViewProps {
     widget: Stage.Types.Widget<SharedDeploymentsViewWidgetConfiguration>;
@@ -109,9 +109,9 @@ export const DeploymentsView: FunctionComponent<DeploymentsViewProps> = ({
             </DeploymentsViewHeaderContainer>
 
             {mapOpen && (
-                <DeploymentsMapContainer height={widget.configuration.mapHeight}>
-                    <DeploymentsMap deployments={deploymentsResult.data.items} toolbox={toolbox} />
-                </DeploymentsMapContainer>
+                <DeploymentsMapLayoutContainer height={widget.configuration.mapHeight}>
+                    <DeploymentsMapContainer deployments={deploymentsResult.data.items} toolbox={toolbox} />
+                </DeploymentsMapLayoutContainer>
             )}
 
             <DeploymentsTableContainer>
