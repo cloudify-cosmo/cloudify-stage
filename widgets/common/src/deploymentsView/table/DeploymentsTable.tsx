@@ -8,6 +8,7 @@ import type { Deployment } from '../types';
 
 const TableContainer = styled.div`
     position: relative;
+    height: 100%;
 `;
 const TableLoadingIndicator = styled(Stage.Basic.Loader)`
     // Increase specificity to override existing styling
