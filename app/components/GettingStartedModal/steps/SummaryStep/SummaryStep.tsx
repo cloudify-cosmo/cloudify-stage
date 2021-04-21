@@ -98,12 +98,16 @@ const SummaryStep = ({
         <UnsafelyTypedForm style={{ minHeight: 150 }} loading={tasksLoading}>
             {errorDetected && (
                 <Message color="red">
-                    {pluginsInstallationTasks.error && <p>{pluginsInstallationTasks.error}</p>}
-                    {secretsInstallationTasks.error && <p>{secretsInstallationTasks.error}</p>}
-                    {blueprintsInstallationTasks.error && <p>{blueprintsInstallationTasks.error}</p>}
-                    {installationErrors.map(error => (
-                        <p key={error}>{error}</p>
-                    ))}
+                    <List relaxed>
+                        {pluginsInstallationTasks.error && <List.Item>{pluginsInstallationTasks.error}</List.Item>}
+                        {secretsInstallationTasks.error && <List.Item>{secretsInstallationTasks.error}</List.Item>}
+                        {blueprintsInstallationTasks.error && (
+                            <List.Item>{blueprintsInstallationTasks.error}</List.Item>
+                        )}
+                        {installationErrors.map(error => (
+                            <List.Item key={error}>{error}</List.Item>
+                        ))}
+                    </List>
                 </Message>
             )}
             {(pluginsInstallationTasks.tasks ||
