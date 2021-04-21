@@ -316,7 +316,12 @@ export default class UsersTable extends React.Component {
     renderMultilineText = text => {
         const lines = text.split('\n');
         if (lines.length > 0) {
-            return lines.map((line, index) => <div key={index}>{line}</div>);
+            return lines.map((line, index) => (
+                // eslint-disable-next-line react/no-array-index-key
+                <div key={index} style={{ textAlign: 'center' }}>
+                    {line}
+                </div>
+            ));
         }
         return text;
     };
