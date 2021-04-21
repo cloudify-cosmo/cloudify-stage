@@ -63,7 +63,7 @@
             "secretUpdateError": "{{secretName}} secret update operation error.",
             "secretCreateError": "{{secretName}} secret create operation error.",
             "blueprintUploadError": "{{blueprintName}} blueprint upload error:\n{{uploadError}}",
-            "timeoutExceedError": "Timeout exceed.",
+            "timeoutExceededError": "Timeout exceeded.",
             "progressMessage": "Installation in progress...",
             "doneMessage": "Installation done!"
         }

@@ -107,7 +107,7 @@ export const uploadBlueprint = async (manager: Manager, blueprint: BlueprintInst
     }
     return i18n.t('gettingStartedModal.installation.blueprintUploadError', undefined, {
         blueprintName: blueprint.blueprintName,
-        uploadError: i18n.t('gettingStartedModal.installation.timeoutExceedError', 'Timeout exceed.')
+        uploadError: i18n.t('gettingStartedModal.installation.timeoutExceededError')
     });
 };
 
