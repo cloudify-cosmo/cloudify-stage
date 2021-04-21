@@ -1,12 +1,12 @@
 // NOTE: Disabling react/require-default-props as default values are provided in component's definition
 /* eslint-disable react/require-default-props */
-import { useCallback } from 'react';
+import { useCallback, useReducer } from 'react';
 import { debounce, isFunction } from 'lodash';
 import VisibilitySensor from 'react-visibility-sensor';
 import './DynamicDropdown.css';
 
 let instanceCount = 0;
-const defaultFetchState = { hasMore: false, currentPage: -1, shouldLoadMore: false };
+const defaultFetchState = { hasMore: true, currentPage: -1, shouldLoadMore: false };
 
 /**
  * Creates two `useUpdateEffect` hooks to call `fetchTrigger` function with debouncing.
@@ -32,6 +32,31 @@ function useFetchTrigger(fetchTrigger, withoutResetFetchDeps, withResetFetchDeps
     useUpdateEffect(() => {
         delayedFetchTrigger(true);
     }, withResetFetchDeps);
+}
+
+const fetchActionType = {
+    PREPARE_FOR_INITIAL_FETCH: 'prepareForInitialFetch',
+    PREPARE_FOR_NEXT_PAGE_FETCH: 'prepareForNextPageFetch',
+    TRIGGER_FETCH: 'triggerFetch',
+    END_FETCH: 'endFetch'
+};
+function fetchReducer(state, action) {
+    switch (action.type) {
+        case fetchActionType.PREPARE_FOR_INITIAL_FETCH:
+            return { ...defaultFetchState };
+        case fetchActionType.PREPARE_FOR_NEXT_PAGE_FETCH:
+            return {
+                currentPage: action.currentPage,
+                hasMore: action.hasMore,
+                shouldLoadMore: false
+            };
+        case fetchActionType.TRIGGER_FETCH:
+            return { ...state, shouldLoadMore: true };
+        case fetchActionType.END_FETCH:
+            return { ...defaultFetchState, hasMore: false };
+        default:
+            throw new Error(`Unknown action type: ${action.type}.`);
+    }
 }
 
 export default function DynamicDropdown({
@@ -65,33 +90,23 @@ export default function DynamicDropdown({
         return `dynamicDropdown${instanceCount}`;
     });
     const [options, setOptions] = useState([]);
-    // NOTE: Setting `hasMore` to true to trigger fetching on first time open of the dropdown
-    const initialFetchState = { ...defaultFetchState, hasMore: true, shouldLoadMore: prefetch };
-    const [fetchState, setFetchState] = useState(initialFetchState);
+    const [fetchState, dispatchFetchAction] = useReducer(fetchReducer, {
+        ...defaultFetchState,
+        shouldLoadMore: prefetch
+    });
     const [searchQuery, setSearchQuery] = useState('');
     const [isLoading, setLoading] = useState(false);
     const [overrideOptionsAfterFetch, setOverrideOptionsAfterFetch, resetOverrideOptionsAfterFetch] = useBoolean();
 
-    function refreshData(triggerFetch = false) {
-        setFetchState(previousFetchState => ({
-            ...defaultFetchState,
-            shouldLoadMore: triggerFetch ? true : previousFetchState.shouldLoadMore
-        }));
-    }
-
     function loadMore() {
         setLoading(true);
 
-        function resetFetchState() {
-            setFetchState(currentFetchState => ({
-                ...currentFetchState,
-                hasMore: false,
-                shouldLoadMore: false
-            }));
+        function dispatchEndFetchAction() {
+            dispatchFetchAction({ type: fetchActionType.END_FETCH });
         }
 
         function onFetchFailed(error) {
-            resetFetchState();
+            dispatchEndFetchAction();
             log.error(error);
         }
 
@@ -104,7 +119,7 @@ export default function DynamicDropdown({
                 .getManager()
                 .doGetFull(fetchUrl)
                 .then(data => {
-                    resetFetchState();
+                    dispatchEndFetchAction();
                     setOptions(itemsFormatter(data.items));
                 })
                 .catch(onFetchFailed)
@@ -121,11 +136,17 @@ export default function DynamicDropdown({
                     _offset: nextPage * pageSize
                 })
                 .then(data => {
-                    setFetchState({
-                        currentPage: nextPage,
-                        hasMore: data.metadata.pagination.total > (nextPage + 1) * pageSize,
-                        shouldLoadMore: false
-                    });
+                    const isMoreDataAvailable = data.metadata.pagination.total > (nextPage + 1) * pageSize;
+                    if (isMoreDataAvailable) {
+                        dispatchFetchAction({
+                            type: fetchActionType.PREPARE_FOR_NEXT_PAGE_FETCH,
+                            currentPage: nextPage,
+                            hasMore: true
+                        });
+                    } else {
+                        dispatchEndFetchAction();
+                    }
+
                     setOptions([...(overrideOptionsAfterFetch ? [] : options), ...itemsFormatter(data.items)]);
                     resetOverrideOptionsAfterFetch();
                 })
@@ -138,7 +159,9 @@ export default function DynamicDropdown({
         if (fetchState.shouldLoadMore && !disabled) loadMore();
     }, [fetchState.shouldLoadMore, disabled]);
 
-    useEventListener(toolbox, refreshEvent, refreshData);
+    useEventListener(toolbox, refreshEvent, () =>
+        dispatchFetchAction({ type: fetchActionType.PREPARE_FOR_INITIAL_FETCH })
+    );
 
     useEffect(() => {
         if (_.isEmpty(value)) {
@@ -159,7 +182,7 @@ export default function DynamicDropdown({
     useFetchTrigger(
         resetOptions => {
             if (resetOptions) setOverrideOptionsAfterFetch();
-            refreshData(true);
+            dispatchFetchAction({ type: fetchActionType.TRIGGER_FETCH });
         },
         [searchQuery],
         [fetchUrl]
@@ -232,12 +255,9 @@ export default function DynamicDropdown({
                                     active={!isLoading}
                                     containment={document.querySelector(`#${id} .menu`)}
                                     partialVisibility
-                                    onChange={isVisible =>
-                                        setFetchState(currentFetchState => ({
-                                            ...currentFetchState,
-                                            shouldLoadMore: isVisible
-                                        }))
-                                    }
+                                    onChange={isVisible => {
+                                        if (isVisible) dispatchFetchAction({ type: fetchActionType.TRIGGER_FETCH });
+                                    }}
                                 >
                                     <Loading message="" />
                                 </VisibilitySensor>
