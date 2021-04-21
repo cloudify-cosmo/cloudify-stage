@@ -6,7 +6,7 @@ import VisibilitySensor from 'react-visibility-sensor';
 import './DynamicDropdown.css';
 
 let instanceCount = 0;
-const defaultFetchState = { hasMore: true, currentPage: -1, shouldLoadMore: false };
+const defaultFetchState = { hasMore: false, currentPage: -1, shouldLoadMore: false };
 
 /**
  * Creates two `useUpdateEffect` hooks to call `fetchTrigger` function with debouncing.
@@ -65,7 +65,9 @@ export default function DynamicDropdown({
         return `dynamicDropdown${instanceCount}`;
     });
     const [options, setOptions] = useState([]);
-    const [fetchState, setFetchState] = useState({ ...defaultFetchState, shouldLoadMore: prefetch });
+    // NOTE: Setting `hasMore` to true to trigger fetching on first time open of the dropdown
+    const initialFetchState = { ...defaultFetchState, hasMore: true, shouldLoadMore: prefetch };
+    const [fetchState, setFetchState] = useState(initialFetchState);
     const [searchQuery, setSearchQuery] = useState('');
     const [isLoading, setLoading] = useState(false);
     const [overrideOptionsAfterFetch, setOverrideOptionsAfterFetch, resetOverrideOptionsAfterFetch] = useBoolean();
