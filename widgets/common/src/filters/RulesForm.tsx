@@ -30,17 +30,13 @@ function getFilterRule(filterRuleRow: FilterRuleRow): FilterRule {
     return filterRuleRow.rule;
 }
 
-interface FiltersDefinitionFormProps {
+interface RulesFormProps {
     initialFilters: FilterRule[];
     onChange: (filterRules: FilterRule[]) => void;
     toolbox: Stage.Types.Toolbox;
 }
 
-const FiltersDefinitionForm: FunctionComponent<FiltersDefinitionFormProps> = ({
-    initialFilters,
-    onChange,
-    toolbox
-}) => {
+const RulesForm: FunctionComponent<RulesFormProps> = ({ initialFilters, onChange, toolbox }) => {
     const {
         Hooks: { useUpdateEffect }
     } = Stage;
@@ -78,4 +74,4 @@ const FiltersDefinitionForm: FunctionComponent<FiltersDefinitionFormProps> = ({
         </>
     );
 };
-export default FiltersDefinitionForm;
+export default RulesForm;
