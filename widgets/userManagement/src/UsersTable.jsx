@@ -9,6 +9,8 @@ import TenantModal from './TenantModal';
 import UserDetails from './UserDetails';
 import UserPropType from './props/UserPropType';
 
+const { i18n } = Stage;
+const t = (key, options) => i18n.t(`widgets.userManagement.${key}`, options);
 function IsAdminCheckbox({ user, disabled, onAdminUserChange, onDefaultUserChange }) {
     const { Checkbox } = Stage.Basic;
     return (
@@ -357,17 +359,25 @@ export default class UsersTable extends React.Component {
                     className={tableName}
                     noDataMessage={NO_DATA_MESSAGE}
                 >
-                    <DataTable.Column label={this.renderMultilineText('Username')} name="username" width="37%" />
-                    <DataTable.Column label={this.renderMultilineText('Last login')} name="last_login_at" width="18%" />
-                    <DataTable.Column label={this.renderMultilineText('Admin')} width="10%" />
-                    <DataTable.Column label={this.renderMultilineText('Active')} name="active" width="10%" />
                     <DataTable.Column
-                        label={this.renderMultilineText('Getting\nstarted')}
+                        label={this.renderMultilineText(t('columns.username'))}
+                        name="username"
+                        width="37%"
+                    />
+                    <DataTable.Column
+                        label={this.renderMultilineText(t('columns.last_login_at'))}
+                        name="last_login_at"
+                        width="18%"
+                    />
+                    <DataTable.Column label={this.renderMultilineText(t('columns.isAdmin'))} width="10%" />
+                    <DataTable.Column label={this.renderMultilineText(t('columns.active'))} name="active" width="10%" />
+                    <DataTable.Column
+                        label={this.renderMultilineText(t('columns.show_getting_started'))}
                         name="show_getting_started"
                         width="10%"
                     />
-                    <DataTable.Column label={this.renderMultilineText('# Groups')} width="10%" />
-                    <DataTable.Column label={this.renderMultilineText('# Tenants')} width="10%" />
+                    <DataTable.Column label={this.renderMultilineText(t('columns.groupCount'))} width="10%" />
+                    <DataTable.Column label={this.renderMultilineText(t('columns.tenantCount'))} width="10%" />
                     <DataTable.Column label="" width="5%" />
                     {data.items.map(item => (
                         <DataTable.RowExpandable key={item.username} expanded={item.isSelected}>
