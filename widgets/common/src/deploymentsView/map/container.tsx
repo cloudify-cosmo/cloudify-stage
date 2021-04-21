@@ -8,13 +8,18 @@ import DeploymentsMap from './map';
 interface DeploymentsMapContainerProps {
     deployments: Deployment[];
     toolbox: Stage.Types.Toolbox;
+    widgetDimensions: Stage.Common.Map.WidgetDimensions;
 }
 
-const DeploymentsMapContainer: FunctionComponent<DeploymentsMapContainerProps> = ({ deployments, toolbox }) => {
+const DeploymentsMapContainer: FunctionComponent<DeploymentsMapContainerProps> = ({
+    deployments,
+    toolbox,
+    widgetDimensions
+}) => {
     // TODO: extract fetching to a new component for using `useMemo` only when data is available
     const sitesResult = useQuery(
         'all-sites',
-        (): Promise<Stage.Types.PaginatedResponse<Site>> =>
+        (): Promise<Stage.Types.PaginatedResponse<Stage.Common.Map.Site>> =>
             toolbox.getManager().doGet('/sites', {
                 _include: 'name,latitude,longitude',
                 _get_all_results: true
@@ -48,6 +53,12 @@ const DeploymentsMapContainer: FunctionComponent<DeploymentsMapContainerProps> =
         return <Stage.Common.NoDataMessage repositoryName="maps" />;
     }
 
-    return <DeploymentsMap deployments={deploymentsWithSites} sites={sitesResult.data.items} />;
+    return (
+        <DeploymentsMap
+            deployments={deploymentsWithSites}
+            sites={sitesResult.data.items}
+            widgetDimensions={widgetDimensions}
+        />
+    );
 };
 export default DeploymentsMapContainer;

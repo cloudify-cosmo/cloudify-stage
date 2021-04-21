@@ -24,6 +24,7 @@ export interface DeploymentsViewProps {
     filterByParentDeployment: boolean;
     filterRules: Stage.Common.Filters.Rule[];
     fetchingRules: boolean;
+    // TODO: pass down widget dimensions
 }
 
 export const DeploymentsView: FunctionComponent<DeploymentsViewProps> = ({

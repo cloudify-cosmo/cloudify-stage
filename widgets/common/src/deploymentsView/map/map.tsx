@@ -1,5 +1,6 @@
 import { Dictionary, keyBy } from 'lodash';
-import { FunctionComponent, useMemo } from 'react';
+import { FunctionComponent, useEffect, useMemo, useRef } from 'react';
+import type { Map } from 'react-leaflet';
 
 import type { Deployment } from '../types';
 
@@ -8,20 +9,31 @@ type Site = Stage.Common.Map.Site;
 interface DeploymentsMapProps {
     deployments: Deployment[];
     sites: Site[];
+    widgetDimensions: Stage.Common.Map.WidgetDimensions;
 }
 
-const DeploymentsMap: FunctionComponent<DeploymentsMapProps> = ({ deployments, sites }) => {
-    const sitesLookupTable = useMemo(() => getSitesLookupTable(sites), [sites]);
+const DeploymentsMap: FunctionComponent<DeploymentsMapProps> = ({ deployments, sites, widgetDimensions }) => {
+    const sitesWithPositions = useMemo(() => sites.filter(Stage.Common.Map.isSiteWithPosition), [sites]);
+    const sitesLookupTable = useMemo(() => keyBy(sitesWithPositions, 'name'), [sitesWithPositions]);
     const deploymentSitePairs = useMemo(() => getDeploymentSitePairs(sitesLookupTable, deployments), [
         sitesLookupTable,
         deployments
     ]);
+    const { Map: MapComponent } = Stage.Basic.Leaflet;
 
-    console.log(deploymentSitePairs);
+    const mapRef = useRef<Map | null>(null);
 
-    /** TODO: Create markers and display the map */
+    useEffect(() => Stage.Common.Map.invalidateSizeAfterDimensionsChange(mapRef), [
+        widgetDimensions.height,
+        widgetDimensions.width,
+        widgetDimensions.maximized
+    ]);
 
-    return <>Hey I am a map</>;
+    // TODO: add DefaultTileLayer
+    // TODO: Create markers and display the map
+    const { options, bounds } = Stage.Common.Map.getMapOptions(sitesWithPositions);
+
+    return <MapComponent bounds={bounds} center={options.center} zoom={options.zoom} ref={mapRef}></MapComponent>;
 };
 export default DeploymentsMap;
 
