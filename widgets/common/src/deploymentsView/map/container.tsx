@@ -20,23 +20,32 @@ const DeploymentsMapContainer: FunctionComponent<DeploymentsMapContainerProps> =
                 _get_all_results: true
             })
     );
+    const mapAvailableResult = useQuery(
+        'map-available',
+        (): Promise<boolean> => new Stage.Common.MapsActions(toolbox).isAvailable()
+    );
 
     const deploymentsWithSites = useMemo(() => deployments.filter(deployment => deployment.site_name), [deployments]);
 
-    if (sitesResult.isLoading) {
+    if (sitesResult.isLoading || mapAvailableResult.isLoading) {
         const { Loading } = Stage.Basic;
 
         return <Loading message={mapT('loadingSites')} />;
     }
 
-    if (sitesResult.isError) {
+    if (sitesResult.isError || mapAvailableResult.isError) {
         const { ErrorMessage } = Stage.Basic;
 
         return <ErrorMessage header={mapT('errorLoadingSites')} error={sitesResult.error as { message: string }} />;
     }
 
-    if (sitesResult.isIdle) {
-        throw new Error('Idle state for fetching all sites is not handled');
+    if (sitesResult.isIdle || mapAvailableResult.isIdle) {
+        throw new Error('Idle state for fetching map data is not handled');
+    }
+
+    const mapAvailable = mapAvailableResult.data;
+    if (!mapAvailable) {
+        return <Stage.Common.NoDataMessage repositoryName="maps" />;
     }
 
     return <DeploymentsMap deployments={deploymentsWithSites} sites={sitesResult.data.items} />;
