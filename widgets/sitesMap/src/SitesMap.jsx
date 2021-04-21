@@ -9,10 +9,6 @@ function openPopup(marker) {
     }
 }
 
-function mapToLatLng(site) {
-    return [site.latitude, site.longitude];
-}
-
 class SitesMap extends React.Component {
     constructor(props) {
         super(props);
@@ -47,13 +43,7 @@ class SitesMap extends React.Component {
     componentDidUpdate(prevProps) {
         const { dimensions } = this.props;
         if (prevProps.dimensions !== dimensions) {
-            // Widget properties change doesn't affect immediately DOM changes,
-            // so it's necessary to wait a bit till DOM is updated.
-            const refreshAfterDimensionChangeTimeout = 500;
-            setTimeout(() => {
-                const { current } = this.mapRef;
-                if (current && current.leafletElement) current.leafletElement.invalidateSize();
-            }, refreshAfterDimensionChangeTimeout);
+            Stage.Common.Map.invalidateSizeAfterDimensionsChange(this.mapRef);
         }
     }
 
@@ -106,25 +96,21 @@ class SitesMap extends React.Component {
             return <NoSitesDataMessage sitesAreDefined={sitesAreDefined} />;
         }
 
-        const { initialZoom, mapOptions, urlTemplate } = Stage.Common.Consts.leaflet;
+        const { urlTemplate } = Stage.Common.Consts.leaflet;
         const url = Stage.Utils.Url.url(urlTemplate);
 
         const sites = _.values(data);
-        if (sites.length > 1) {
-            mapOptions.bounds = L.latLngBounds(sites.map(mapToLatLng)).pad(0.05);
-        } else {
-            mapOptions.center = mapToLatLng(sites[0]);
-            mapOptions.zoom = initialZoom;
-        }
+        const { options: mapOptions, bounds } = Stage.Common.Map.getMapOptions(sites);
 
         return (
             <Map
                 ref={this.mapRef}
                 className="sites-map"
-                bounds={mapOptions.bounds}
+                bounds={bounds}
                 center={mapOptions.center}
                 zoom={mapOptions.zoom}
             >
+                {/* TODO: Extract TileLayer to a DefaultTileLayer component */}
                 <TileLayer attribution={attribution} url={url} />
                 {markers}
             </Map>
@@ -143,6 +129,7 @@ SitesMap.propTypes = {
             deploymentStates: DeploymentStatePropType.isRequired
         })
     ).isRequired,
+    /* @see {Stage.Common.Map.WidgetDimensions} */
     dimensions: PropTypes.shape({
         height: PropTypes.number.isRequired,
         width: PropTypes.number.isRequired,

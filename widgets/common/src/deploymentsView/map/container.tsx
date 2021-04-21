@@ -2,7 +2,7 @@ import { FunctionComponent, useMemo } from 'react';
 import { useQuery } from 'react-query';
 
 import type { Deployment } from '../types';
-import { mapT, Site } from './common';
+import { mapT } from './common';
 import DeploymentsMap from './map';
 
 interface DeploymentsMapContainerProps {

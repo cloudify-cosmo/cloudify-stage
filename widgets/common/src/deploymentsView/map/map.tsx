@@ -2,7 +2,8 @@ import { Dictionary, keyBy } from 'lodash';
 import { FunctionComponent, useMemo } from 'react';
 
 import type { Deployment } from '../types';
-import type { Site } from './common';
+
+type Site = Stage.Common.Map.Site;
 
 interface DeploymentsMapProps {
     deployments: Deployment[];
@@ -23,12 +24,6 @@ const DeploymentsMap: FunctionComponent<DeploymentsMapProps> = ({ deployments, s
     return <>Hey I am a map</>;
 };
 export default DeploymentsMap;
-
-const getSitesLookupTable = (sites: Site[]) =>
-    keyBy(
-        sites.filter(site => site.latitude),
-        'name'
-    );
 
 interface DeploymentSitePair {
     deployment: Deployment;
