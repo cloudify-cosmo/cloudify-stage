@@ -13,7 +13,7 @@ export default function CommonDropdown({ innerRef, fetchUrl, onChange, toolbox, 
         submitChange,
         resetInput,
         unsetInvalidCharacterTyped
-    } = useLabelInput(onChange, { allowAdditions });
+    } = useLabelInput(onChange, { allowAnyValue: allowAdditions });
 
     useEffect(() => {
         if (_.isEmpty(value)) {

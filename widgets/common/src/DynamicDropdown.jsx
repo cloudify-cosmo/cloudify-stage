@@ -6,12 +6,11 @@ import VisibilitySensor from 'react-visibility-sensor';
 import './DynamicDropdown.css';
 
 let instanceCount = 0;
-const defaultFetchState = { hasMore: true, currentPage: -1, shouldLoadMore: false };
 
 /**
  * Creates two `useUpdateEffect` hooks to call `fetchTrigger` function with debouncing.
  *
- * @param {function(shouldReset: boolean): void} fetchTrigger function to be called to trigger data fetching,
+ * @param {function({ shouldReset: boolean }): void} fetchTrigger function to be called to trigger data fetching,
  * accepts single boolean argument
  * @param {React.DependencyList} withoutResetFetchDeps list of dependencies for delayed `fetchTrigger` call with
 `shouldReset` argument set to false
@@ -21,10 +20,7 @@ const defaultFetchState = { hasMore: true, currentPage: -1, shouldLoadMore: fals
 function useFetchTrigger(fetchTrigger, withoutResetFetchDeps, withResetFetchDeps) {
     const { useUpdateEffect } = Stage.Hooks;
     const delayMs = 500;
-    const delayedFetchTrigger = useCallback(
-        debounce(shouldReset => fetchTrigger(shouldReset), delayMs),
-        []
-    );
+    const delayedFetchTrigger = useCallback(debounce(fetchTrigger, delayMs), []);
 
     useUpdateEffect(() => {
         delayedFetchTrigger(false);
@@ -41,6 +37,7 @@ const fetchActionType = {
     TRIGGER_FETCH: 'triggerFetch',
     END_FETCH: 'endFetch'
 };
+const defaultFetchState = { hasMore: true, currentPage: -1, shouldLoadMore: false };
 function fetchReducer(state, action) {
     switch (action.type) {
         case fetchActionType.PREPARE_FOR_INITIAL_FETCH:
@@ -181,8 +178,8 @@ export default function DynamicDropdown({
     }, [value]);
 
     useFetchTrigger(
-        resetOptions => {
-            if (resetOptions) setOverrideOptionsAfterFetch();
+        ({ shouldReset: shouldResetOptions }) => {
+            if (shouldResetOptions) setOverrideOptionsAfterFetch();
             dispatchFetchAction({ type: fetchActionType.TRIGGER_FETCH });
         },
         [searchQuery],
@@ -233,9 +230,7 @@ export default function DynamicDropdown({
                 id={id}
                 name={name}
                 allowAdditions={allowAdditions}
-                onAddItem={(event, data) => {
-                    if (allowAdditions) setOptions([{ [valueProp]: data.value }, ...options]);
-                }}
+                onAddItem={(event, data) => setOptions([{ [valueProp]: data.value }, ...options])}
                 onChange={(event, data) => onChange(!_.isEmpty(data.value) ? data.value : null)}
                 onSearchChange={(event, data) => {
                     setSearchQuery(data.searchQuery);
