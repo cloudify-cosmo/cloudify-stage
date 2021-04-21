@@ -218,6 +218,7 @@ export default function DynamicDropdown({
                     if (isFunction(onSearchChange)) onSearchChange(event, data);
                 }}
                 multiple={multiple}
+                loading={isLoading}
                 options={(() => {
                     const preparedOptions = filteredOptions.map(item => ({
                         text: (textFormatter || (i => i[valueProp]))(item),
