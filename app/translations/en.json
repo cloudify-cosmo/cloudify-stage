@@ -643,7 +643,13 @@
                 "label": "Map",
                 "openMap": "Open map",
                 "closeMap": "Close map"
-              }
+              },
+                "filter": {
+                    "button": "Filter",
+                    "modal": {
+                        "header": "Select a filter"
+                    }
+                }
             },
             "iconLabels": {
                 "inProgress": "In progress",
