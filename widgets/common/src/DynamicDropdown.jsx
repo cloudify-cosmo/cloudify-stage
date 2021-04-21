@@ -10,18 +10,19 @@ const defaultFetchState = { hasMore: true, currentPage: -1, shouldLoadMore: fals
 
 /**
  * Creates two `useUpdateEffect` hooks to call `fetchTrigger` function with debouncing.
- * First hook calls `fetchTrigger` with `reset` argument set to false on `withoutResetFetchDeps` change.
- * The second calls `fetchTrigger` with `reset` argument set to true on `withResetFetchDeps` change
  *
- * @param {function(reset: boolean)} fetchTrigger function to be called to trigger data fetching
- * @param {React.DependencyList} withoutResetFetchDeps list of dependencies for delayed fetch without reset
- * @param {React.DependencyList} withResetFetchDeps list of dependencies for delayed fetch with reset
+ * @param {function(shouldReset: boolean): void} fetchTrigger function to be called to trigger data fetching,
+ * accepts single boolean argument
+ * @param {React.DependencyList} withoutResetFetchDeps list of dependencies for delayed `fetchTrigger` call with
+`shouldReset` argument set to false
+ * @param {React.DependencyList} withResetFetchDeps list of dependencies for delayed `fetchTrigger` call with
+ * `shouldReset` argument set to true
  */
 function useFetchTrigger(fetchTrigger, withoutResetFetchDeps, withResetFetchDeps) {
     const { useUpdateEffect } = Stage.Hooks;
     const delayMs = 500;
     const delayedFetchTrigger = useCallback(
-        debounce(reset => fetchTrigger(reset), delayMs),
+        debounce(shouldReset => fetchTrigger(shouldReset), delayMs),
         []
     );
 
