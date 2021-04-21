@@ -4,7 +4,7 @@ import { useRef } from 'react';
 import LabelKeyDropdown from '../../labels/KeyDropdown';
 import LabelValueDropdown from '../../labels/ValueDropdown';
 import { CommonAttributeValueInputProps } from './types';
-import { isAnyOperator } from './common';
+import { isAnyOperator } from '../common';
 
 const LabelDropdownsDivider: FunctionComponent = () => {
     const { Divider } = Stage.Basic;

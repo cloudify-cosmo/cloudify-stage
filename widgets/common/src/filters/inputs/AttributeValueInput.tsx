@@ -2,7 +2,8 @@ import type { FunctionComponent } from 'react';
 
 import DynamicDropdown from '../../DynamicDropdown';
 import type { CommonAttributeValueInputProps } from './types';
-import { isAnyOperator, getPlaceholderTranslation } from './common';
+import { isAnyOperator } from '../common';
+import { getPlaceholderTranslation } from './common';
 import MultipleStringValuesInput from './MultipleStringValuesInput';
 
 interface AttributeValueInputProps extends CommonAttributeValueInputProps {

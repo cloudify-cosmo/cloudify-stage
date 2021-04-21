@@ -1,10 +1,11 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import type { FunctionComponent } from 'react';
 
 import RuleRow from './RuleRow';
 import AddRuleButton from './AddRuleButton';
-import type { FilterRule, FilterRuleRow } from './types';
+import type { FilterRule, FilterRuleRow, FilterRuleRowErrors } from './types';
 import { FilterRuleType, FilterRuleOperators, FilterRuleRowType } from './types';
+import { isAnyOperator } from './common';
 
 function getNewRow(): FilterRuleRow {
     const { uuid } = Stage.Utils;
@@ -33,14 +34,35 @@ function getFilterRule(filterRuleRow: FilterRuleRow): FilterRule {
 interface RulesFormProps {
     initialFilters: FilterRule[];
     onChange: (filterRules: FilterRule[]) => void;
+    onErrors: (errors: FilterRuleRowErrors) => void;
     toolbox: Stage.Types.Toolbox;
 }
 
-const RulesForm: FunctionComponent<RulesFormProps> = ({ initialFilters, onChange, toolbox }) => {
-    const {
-        Hooks: { useUpdateEffect }
-    } = Stage;
+const RulesForm: FunctionComponent<RulesFormProps> = ({ initialFilters, onChange, onErrors, toolbox }) => {
     const [rows, setRows] = useState(() => getFilterRuleRows(initialFilters));
+
+    function validateRows() {
+        const errors: FilterRuleRowErrors = {};
+
+        rows.forEach((row: FilterRuleRow, index: number) => {
+            const { type, key, operator, values } = row.rule;
+            const ruleHasNoValuesSet = values.length === 0;
+            const rowNumber = index + 1;
+
+            if (type === FilterRuleType.Label) {
+                if (!key) {
+                    errors[`row${rowNumber}LabelKey`] = `Please provide label key in row ${rowNumber}`;
+                }
+                if (isAnyOperator(operator) && ruleHasNoValuesSet) {
+                    errors[`row${rowNumber}LabelValue`] = `Please provide label values in row ${rowNumber}`;
+                }
+            } else if (ruleHasNoValuesSet) {
+                errors[`row${rowNumber}Value`] = `Please provide values in row ${rowNumber}`;
+            }
+        });
+
+        onErrors(errors);
+    }
 
     function addRule() {
         setRows(latestRows => [...latestRows, getNewRow()]);
@@ -54,8 +76,9 @@ const RulesForm: FunctionComponent<RulesFormProps> = ({ initialFilters, onChange
         setRows(latestRows => latestRows.map(row => (row.id === id ? { id: row.id, rule: newRule } : row)));
     }
 
-    useUpdateEffect(() => {
+    useEffect(() => {
         onChange(rows.map(getFilterRule));
+        validateRows();
     }, [rows]);
 
     return (

@@ -42,6 +42,8 @@ export enum FilterRuleRowType {
     Label = 'label'
 }
 
+export type FilterRuleRowErrors = Record<string, string>;
+
 export const FilterRuleOperators = { ...CommonRuleOperator, ...LabelsOnlyRuleOperator, ...AttributesOnlyRuleOperator };
 export const LabelsFilterRuleOperators = { ...CommonRuleOperator, ...LabelsOnlyRuleOperator };
 export const AttributesFilterRuleOperators = { ...CommonRuleOperator, ...AttributesOnlyRuleOperator };

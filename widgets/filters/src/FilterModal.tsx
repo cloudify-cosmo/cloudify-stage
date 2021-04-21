@@ -23,19 +23,32 @@ const FilterModal: FunctionComponent<FilterModalProps> = ({
     onSubmit,
     toolbox
 }) => {
-    const { useInput, useErrors } = Stage.Hooks;
+    const { useInput, useErrors, useResettableState } = Stage.Hooks;
     const [filterId, setFilterId] = useInput((initialFilter?.id ?? '') + initialFilterIdSuffix);
     const [filterRules, setFilterRules] = useInput(
         initialFilter ? [...initialFilter.attrs_filter_rules, ...initialFilter.labels_filter_rules] : []
     );
     const { errors, setErrors, clearErrors, setMessageAsError } = useErrors();
+    const [rulesFormErrors, setRulesFormErrors, clearRulesFormErrors] = useResettableState(
+        {} as Record<string, string>
+    );
     const { i18n } = Stage;
 
     function handleSubmit() {
         clearErrors();
+        clearRulesFormErrors();
 
+        let detectedErrors = {};
         if (showFilterIdInput && !filterId) {
-            setErrors({ filterId: i18n.t('widgets.filters.modal.idMissing') });
+            detectedErrors = { filterId: i18n.t('widgets.filters.modal.idMissing') };
+        }
+
+        if (Object.keys(rulesFormErrors).length > 0) {
+            detectedErrors = { ...detectedErrors, ...rulesFormErrors };
+        }
+
+        if (Object.keys(detectedErrors).length > 0) {
+            setErrors(detectedErrors);
             return;
         }
 
@@ -58,7 +71,12 @@ const FilterModal: FunctionComponent<FilterModalProps> = ({
                         </UnsafelyTypedFormField>
                     )}
                     <UnsafelyTypedFormField label={i18n.t('widgets.filters.modal.rules')}>
-                        <RulesForm initialFilters={filterRules} toolbox={toolbox} onChange={setFilterRules} />
+                        <RulesForm
+                            initialFilters={filterRules}
+                            toolbox={toolbox}
+                            onChange={setFilterRules}
+                            onErrors={setRulesFormErrors}
+                        />
                     </UnsafelyTypedFormField>
                 </UnsafelyTypedForm>
             </Modal.Content>
