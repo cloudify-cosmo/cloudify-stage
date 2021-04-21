@@ -313,6 +313,14 @@ export default class UsersTable extends React.Component {
             });
     }
 
+    renderMultilineText = text => {
+        const lines = text.split('\n');
+        if (lines.length > 0) {
+            return lines.map((line, index) => <div key={index}>{line}</div>);
+        }
+        return text;
+    };
+
     render() {
         const {
             error,
@@ -344,13 +352,17 @@ export default class UsersTable extends React.Component {
                     className={tableName}
                     noDataMessage={NO_DATA_MESSAGE}
                 >
-                    <DataTable.Column label="Username" name="username" width="37%" />
-                    <DataTable.Column label="Last login" name="last_login_at" width="18%" />
-                    <DataTable.Column label="Admin" width="10%" />
-                    <DataTable.Column label="Active" name="active" width="10%" />
-                    <DataTable.Column label="Getting started modal" name="show_getting_started" width="10%" />
-                    <DataTable.Column label="# Groups" width="10%" />
-                    <DataTable.Column label="# Tenants" width="10%" />
+                    <DataTable.Column label={this.renderMultilineText('Username')} name="username" width="37%" />
+                    <DataTable.Column label={this.renderMultilineText('Last login')} name="last_login_at" width="18%" />
+                    <DataTable.Column label={this.renderMultilineText('Admin')} width="10%" />
+                    <DataTable.Column label={this.renderMultilineText('Active')} name="active" width="10%" />
+                    <DataTable.Column
+                        label={this.renderMultilineText('Getting\nstarted')}
+                        name="show_getting_started"
+                        width="10%"
+                    />
+                    <DataTable.Column label={this.renderMultilineText('# Groups')} width="10%" />
+                    <DataTable.Column label={this.renderMultilineText('# Tenants')} width="10%" />
                     <DataTable.Column label="" width="5%" />
                     {data.items.map(item => (
                         <DataTable.RowExpandable key={item.username} expanded={item.isSelected}>
