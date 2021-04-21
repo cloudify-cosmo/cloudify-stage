@@ -176,6 +176,23 @@ export default class UsersTable extends React.Component {
             });
     }
 
+    setGettingStartedModalEnabled(user, modalEnabled) {
+        const { toolbox } = this.props;
+        toolbox.loading(true);
+
+        const actions = new Actions(toolbox);
+        actions
+            .doSetGettingStartedModalEnabled(user.username, modalEnabled)
+            .then(() => {
+                toolbox.loading(false);
+                toolbox.refresh();
+            })
+            .catch(err => {
+                this.setState({ error: err.message });
+                toolbox.loading(false);
+            });
+    }
+
     fetchData = fetchParams => {
         const { toolbox } = this.props;
         return toolbox.refresh(fetchParams);
@@ -194,6 +211,10 @@ export default class UsersTable extends React.Component {
             this.setRole(user, true);
         } else if (value === MenuAction.SET_DEFAULT_USER_ROLE_ACTION && !this.isCurrentUser(user)) {
             this.setRole(user, false);
+        } else if (value === MenuAction.SET_GETTING_STARTED_MODAL_ENABLED_ACTION) {
+            this.setGettingStartedModalEnabled(user, true);
+        } else if (value === MenuAction.SET_GETTING_STARTED_MODAL_DISABLED_ACTION) {
+            this.setGettingStartedModalEnabled(user, false);
         } else {
             this.setState({ user, modalType: value, showModal: true });
         }
@@ -268,6 +289,11 @@ export default class UsersTable extends React.Component {
         return toolbox.getManager().getCurrentUsername() === user.username;
     }
 
+    hasAdminRole() {
+        const { toolbox } = this.props;
+        return toolbox.getManager().getCurrentUserRole() === Stage.Common.Consts.sysAdminRole;
+    }
+
     activateUser(user) {
         const { toolbox } = this.props;
         toolbox.loading(true);
@@ -322,6 +348,7 @@ export default class UsersTable extends React.Component {
                     <DataTable.Column label="Last login" name="last_login_at" width="18%" />
                     <DataTable.Column label="Admin" width="10%" />
                     <DataTable.Column label="Active" name="active" width="10%" />
+                    <DataTable.Column label="Getting started modal" name="show_getting_started" width="10%" />
                     <DataTable.Column label="# Groups" width="10%" />
                     <DataTable.Column label="# Tenants" width="10%" />
                     <DataTable.Column label="" width="5%" />
@@ -363,6 +390,24 @@ export default class UsersTable extends React.Component {
                                             }}
                                         />
                                     )}
+                                </DataTable.Data>
+                                <DataTable.Data className="center aligned">
+                                    <Checkbox
+                                        checked={item.show_getting_started}
+                                        disabled={!this.hasAdminRole()}
+                                        onChange={() =>
+                                            item.show_getting_started
+                                                ? this.showModal(
+                                                      MenuAction.SET_GETTING_STARTED_MODAL_DISABLED_ACTION,
+                                                      item
+                                                  )
+                                                : this.showModal(
+                                                      MenuAction.SET_GETTING_STARTED_MODAL_ENABLED_ACTION,
+                                                      item
+                                                  )
+                                        }
+                                        onClick={e => e.stopPropagation()}
+                                    />
                                 </DataTable.Data>
                                 <DataTable.Data>
                                     <Label className="green" horizontal>

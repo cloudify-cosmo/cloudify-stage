@@ -20,6 +20,10 @@ export default class MenuAction extends React.Component {
 
     static SET_ADMIN_USER_ROLE_ACTION = 'set-admin-role';
 
+    static SET_GETTING_STARTED_MODAL_ENABLED_ACTION = 'set-getting-started-modal-enabled';
+
+    static SET_GETTING_STARTED_MODAL_DISABLED_ACTION = 'set-getting-started-modal-disabled';
+
     actionClick = (proxy, { name }) => {
         const { item, onSelectAction } = this.props;
         onSelectAction(name, item);
