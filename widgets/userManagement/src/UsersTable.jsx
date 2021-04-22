@@ -382,6 +382,7 @@ export default class UsersTable extends React.Component {
                                     />
                                 </DataTable.Data>
                                 <DataTable.Data className="center aligned">
+                                    {/* TODO (RD-2100): create better way to block current user state change */}
                                     {usernameDuringActivation === item.username ? (
                                         <Loader active inline size="mini" />
                                     ) : (
@@ -399,6 +400,7 @@ export default class UsersTable extends React.Component {
                                     )}
                                 </DataTable.Data>
                                 <DataTable.Data className="center aligned">
+                                    {/* TODO (RD-2100): propose way to block current user state change */}
                                     <Checkbox
                                         checked={item.show_getting_started}
                                         disabled={!this.hasAdminRole()}
