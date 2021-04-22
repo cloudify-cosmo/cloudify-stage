@@ -96,7 +96,7 @@ const GettingStartedModal = () => {
     const handleModalClose = async () => {
         await modalOpenState.closeModal(modalDisabledChecked);
         if (modalDisabledChecked) {
-            EventBus.trigger('plugins:refresh');
+            EventBus.trigger('users:refresh');
         }
     };
 
