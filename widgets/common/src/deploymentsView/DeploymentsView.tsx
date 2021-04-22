@@ -7,6 +7,14 @@ import type { SharedDeploymentsViewWidgetConfiguration } from './configuration';
 import DetailsPane from './detailsPane';
 import { DeploymentsTable } from './table';
 import { FilterRuleOperators, FilterRuleType } from '../filters/types';
+import {
+    DeploymentDetailsContainer,
+    DeploymentsMapContainer,
+    DeploymentsTableContainer,
+    DeploymentsViewContainer,
+    DeploymentsViewHeaderContainer
+} from './layout';
+import DeploymentsViewHeader from './header';
 
 export interface DeploymentsViewProps {
     widget: Stage.Types.Widget<SharedDeploymentsViewWidgetConfiguration>;
@@ -52,6 +60,8 @@ export const DeploymentsView: FunctionComponent<DeploymentsViewProps> = ({
 
     Stage.Hooks.useEventListener(toolbox, 'deployments:refresh', deploymentsResult.refetch);
 
+    const [mapOpen, toggleMap] = Stage.Hooks.useToggle(widget.configuration.mapOpenByDefault);
+
     const { Loading, ErrorMessage } = Stage.Basic;
     const { i18n } = Stage;
 
@@ -92,18 +102,32 @@ export const DeploymentsView: FunctionComponent<DeploymentsViewProps> = ({
     }
 
     return (
-        <div className="grid">
-            <DeploymentsTable
-                setGridParams={setGridParams}
-                toolbox={toolbox}
-                loadingIndicatorVisible={fetchingRules || deploymentsResult.isFetching}
-                pageSize={widget.configuration.pageSize}
-                totalSize={deploymentsResult.data.metadata.pagination.total}
-                deployments={deploymentsResult.data.items}
-                fieldsToShow={widget.configuration.fieldsToShow}
-            />
-            <DetailsPane deployment={selectedDeployment} widget={widget} toolbox={toolbox} />
-        </div>
+        <DeploymentsViewContainer>
+            <DeploymentsViewHeaderContainer>
+                <DeploymentsViewHeader mapOpen={mapOpen} toggleMap={toggleMap} />
+            </DeploymentsViewHeaderContainer>
+
+            {mapOpen && (
+                <DeploymentsMapContainer height={widget.configuration.mapHeight}>
+                    Hey, I am a map
+                </DeploymentsMapContainer>
+            )}
+
+            <DeploymentsTableContainer>
+                <DeploymentsTable
+                    setGridParams={setGridParams}
+                    toolbox={toolbox}
+                    loadingIndicatorVisible={fetchingRules || deploymentsResult.isFetching}
+                    pageSize={widget.configuration.pageSize}
+                    totalSize={deploymentsResult.data.metadata.pagination.total}
+                    deployments={deploymentsResult.data.items}
+                    fieldsToShow={widget.configuration.fieldsToShow}
+                />
+            </DeploymentsTableContainer>
+            <DeploymentDetailsContainer>
+                <DetailsPane deployment={selectedDeployment} widget={widget} toolbox={toolbox} />
+            </DeploymentDetailsContainer>
+        </DeploymentsViewContainer>
     );
 };
 

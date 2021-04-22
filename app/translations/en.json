@@ -634,7 +634,21 @@
                 "fieldsToShow": {
                     "name": "List of fields to show in the table",
                     "placeholder": "Select fields from the list"
+                },
+                "mapOpenByDefault": {
+                    "name": "Show map by default"
+                },
+                "mapHeight": {
+                    "name": "Map height",
+                    "description": "The height of the map in pixels"
                 }
+            },
+            "header": {
+              "map": {
+                "label": "Map",
+                "openMap": "Open map",
+                "closeMap": "Close map"
+              }
             },
             "iconLabels": {
                 "inProgress": "In progress",
@@ -713,17 +727,13 @@
                 "name": "Filter name",
                 "creator": "Creator",
                 "created": "Created",
-                "type": "Type",
+                "system": "System",
                 "actions": {
                     "delete": "Delete filter",
                     "edit": "Edit filter",
                     "clone": "Clone filter",
                     "systemFilter": "System filter can't be edited or deleted"
                 }
-            },
-            "type": {
-                "system": "system",
-                "user": "user"
             },
             "modal": {
                 "id": "Filter ID",

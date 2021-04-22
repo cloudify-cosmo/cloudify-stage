@@ -1,7 +1,9 @@
 import React, { memo, useState, useMemo } from 'react';
 import i18n from 'i18next';
 import log from 'loglevel';
+import { useSelector } from 'react-redux';
 
+import stageUtils from '../../utils/stageUtils';
 import EventBus from '../../utils/EventBus';
 import useInput from '../../utils/hooks/useInput';
 import useResettableState from '../../utils/hooks/useResettableState';
@@ -15,6 +17,7 @@ import ModalHeader from './ModalHeader';
 import ModalContent from './ModalContent';
 import ModalActions from './ModalActions';
 
+import type { ReduxState } from '../../reducers';
 import type {
     GettingStartedData,
     GettingStartedSchema,
@@ -27,6 +30,7 @@ const castedGettingStartedSchema = gettingStartedSchema as GettingStartedSchema;
 const GettingStartedModal = () => {
     const [modalOpen, setModalOpen] = useState(() => !isGettingStartedModalDisabled());
 
+    const manager = useSelector((state: ReduxState) => state.manager);
     const [stepName, setStepName] = useState(StepName.Technologies);
     const [stepErrors, setStepErrors, resetStepErrors] = useResettableState<string[]>([]);
     const [technologiesStepData, setTechnologiesStepData] = useState<GettingStartedTechnologiesData>({});
@@ -52,6 +56,10 @@ const GettingStartedModal = () => {
             [...secretsStepsSchemas]
         );
     }, [commonStepsSchemas, secretsStepsSchemas]);
+
+    if (!stageUtils.isUserAuthorized('getting_started', manager)) {
+        return null;
+    }
 
     const secretsStepSchema = secretsStepsSchemas[secretsStepIndex] as GettingStartedSchemaItem | undefined;
     const secretsStepData = secretsStepSchema ? secretsStepsData[secretsStepSchema.name] : undefined;
