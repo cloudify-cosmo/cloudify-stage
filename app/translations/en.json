@@ -647,7 +647,9 @@
                 "filter": {
                     "button": "Filter",
                     "modal": {
-                        "header": "Select a filter"
+                        "header": "Select a filter",
+                        "submit": "OK",
+                        "noFilterError": "Please select a filter"
                     }
                 }
             },

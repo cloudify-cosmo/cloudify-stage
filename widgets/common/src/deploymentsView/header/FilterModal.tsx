@@ -37,6 +37,17 @@ const FilterModal: FunctionComponent<FilterModalProps> = ({
         onSubmit(filterId);
     }
 
+    function handleCancel() {
+        onCancel();
+        resetFilterId();
+        clearErrors();
+    }
+
+    function handleChange(value: string) {
+        setFilterId(value);
+        clearErrors();
+    }
+
     return (
         <Modal open={open} onClose={onCancel}>
             <Modal.Header>
@@ -48,7 +59,7 @@ const FilterModal: FunctionComponent<FilterModalProps> = ({
                     <UnsafelyTypedFormField>
                         <DynamicDropdown
                             toolbox={toolbox}
-                            onChange={setFilterId}
+                            onChange={handleChange}
                             fetchUrl="/filters/deployments?_include=id"
                             prefetch
                             value={filterId}
@@ -58,8 +69,12 @@ const FilterModal: FunctionComponent<FilterModalProps> = ({
             </Modal.Content>
 
             <Modal.Actions>
-                <CancelButton onClick={onCancel} />
-                <ApproveButton onClick={handleSubmit} color="green" />
+                <CancelButton onClick={handleCancel} />
+                <ApproveButton
+                    onClick={handleSubmit}
+                    color="green"
+                    content={i18n.t(`${i18nPrefix}.header.filter.modal.submit`)}
+                />
             </Modal.Actions>
         </Modal>
     );

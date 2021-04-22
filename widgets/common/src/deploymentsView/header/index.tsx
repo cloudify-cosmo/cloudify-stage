@@ -24,7 +24,7 @@ const DeploymentsViewHeader: FunctionComponent<DeploymentsViewHeaderProps> = ({
     const [filterModalOpen, openFilterModal, closeFilterModal] = Stage.Hooks.useBoolean();
     const [filterId, setFilterId] = useState<string>();
 
-    const { Button, Icon } = Stage.Basic;
+    const { Button } = Stage.Basic;
 
     function handleFilterChange(newFilterId: string | undefined) {
         setFilterId(newFilterId);
