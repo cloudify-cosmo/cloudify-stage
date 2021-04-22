@@ -9,7 +9,7 @@ import TenantModal from './TenantModal';
 import UserDetails from './UserDetails';
 import UserPropType from './props/UserPropType';
 
-const t = key => Stage.i18n.t(`widgets.userManagement.${key}`);
+const columnT = key => Stage.i18n.t(`widgets.userManagement.columns.${key}`);
 function IsAdminCheckbox({ user, disabled, onAdminUserChange, onDefaultUserChange }) {
     const { Checkbox } = Stage.Basic;
     return (
@@ -347,17 +347,17 @@ export default class UsersTable extends React.Component {
                     className={tableName}
                     noDataMessage={NO_DATA_MESSAGE}
                 >
-                    <DataTable.Column label={t('columns.username')} name="username" width="37%" />
-                    <DataTable.Column label={t('columns.last_login_at')} name="last_login_at" width="18%" />
-                    <DataTable.Column label={t('columns.isAdmin')} width="10%" />
-                    <DataTable.Column label={t('columns.active')} name="active" width="10%" />
+                    <DataTable.Column label={columnT('username')} name="username" width="37%" />
+                    <DataTable.Column label={columnT('last_login_at')} name="last_login_at" width="18%" />
+                    <DataTable.Column label={columnT('isAdmin')} width="10%" />
+                    <DataTable.Column label={columnT('active')} name="active" width="10%" />
                     <DataTable.Column
-                        label={this.renderMultilineText(t('columns.show_getting_started'))}
+                        label={this.renderMultilineText(columnT('show_getting_started'))}
                         name="show_getting_started"
                         width="10%"
                     />
-                    <DataTable.Column label={t('columns.groupCount')} width="10%" />
-                    <DataTable.Column label={t('columns.tenantCount')} width="10%" />
+                    <DataTable.Column label={columnT('groupCount')} width="10%" />
+                    <DataTable.Column label={columnT('tenantCount')} width="10%" />
                     <DataTable.Column label="" width="5%" />
                     {data.items.map(item => (
                         <DataTable.RowExpandable key={item.username} expanded={item.isSelected}>
