@@ -22,6 +22,9 @@ export interface DeploymentsViewProps {
 
     filterByParentDeployment: boolean;
     defaultFilterId?: string;
+    /**
+     * Rules that will be always appended to the rules from `defaultFilterId` or from the filter chosen by the user
+     */
     additionalFilterRules?: Stage.Common.Filters.Rule[];
 }
 
