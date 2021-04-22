@@ -21,7 +21,7 @@ export interface DeploymentsViewProps {
     toolbox: Stage.Types.Toolbox;
 
     filterByParentDeployment: boolean;
-    defaultFilterId?: string | undefined;
+    defaultFilterId?: string;
     additionalFilterRules?: Stage.Common.Filters.Rule[];
 }
 
