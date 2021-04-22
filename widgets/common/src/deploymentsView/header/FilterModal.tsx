@@ -51,6 +51,7 @@ const FilterModal: FunctionComponent<FilterModalProps> = ({
                             onChange={setFilterId}
                             fetchUrl="/filters/deployments?_include=id"
                             prefetch
+                            value={filterId}
                         />
                     </UnsafelyTypedFormField>
                 </UnsafelyTypedForm>

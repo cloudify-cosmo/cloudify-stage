@@ -42,7 +42,13 @@ const DeploymentsViewHeader: FunctionComponent<DeploymentsViewHeaderProps> = ({
             )}
             {filterId ? (
                 <Button.Group color="blue">
-                    <Button icon="filter" labelPosition="left" content={filterId} onClick={openFilterModal} />
+                    <Button
+                        icon="filter"
+                        labelPosition="left"
+                        content={filterId}
+                        onClick={openFilterModal}
+                        style={{ whiteSpace: 'nowrap', maxWidth: 200, textOverflow: 'ellipsis', overflow: 'hidden' }}
+                    />
                     <Button icon="delete" onClick={() => handleFilterChange(undefined)} />
                 </Button.Group>
             ) : (

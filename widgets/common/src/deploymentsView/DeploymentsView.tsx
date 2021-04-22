@@ -59,23 +59,7 @@ export const DeploymentsView: FunctionComponent<DeploymentsViewProps> = ({
         return result;
     })();
 
-    const { Loading, ErrorMessage } = Stage.Basic;
-    const { i18n } = Stage;
-
-    if (filterRulesResult.isLoading) {
-        return <Loading message={i18n.t(`${i18nMessagesPrefix}.loadingFilterRules`)} />;
-    }
-    if (filterRulesResult.isError) {
-        return (
-            <ErrorMessage
-                header={i18n.t(`${i18nMessagesPrefix}.errorLoadingFilterRules`)}
-                error={filterRulesResult.error as { message: string }}
-            />
-        );
-    }
-
-    const filterRules = filterRulesResult.data;
-
+    const filterRules = filterRulesResult.data ?? [];
     const filteringByParentDeploymentResult = useFilteringByParentDeployment({ filterByParentDeployment });
     const finalFilterRules = useMemo(() => {
         if (!filteringByParentDeploymentResult.parentDeploymentRule) {
@@ -102,6 +86,21 @@ export const DeploymentsView: FunctionComponent<DeploymentsViewProps> = ({
     Stage.Hooks.useEventListener(toolbox, 'deployments:refresh', deploymentsResult.refetch);
 
     const [mapOpen, toggleMap] = Stage.Hooks.useToggle(widget.configuration.mapOpenByDefault);
+
+    const { Loading, ErrorMessage } = Stage.Basic;
+    const { i18n } = Stage;
+
+    if (filterRulesResult.isLoading) {
+        return <Loading message={i18n.t(`${i18nMessagesPrefix}.loadingFilterRules`)} />;
+    }
+    if (filterRulesResult.isError) {
+        return (
+            <ErrorMessage
+                header={i18n.t(`${i18nMessagesPrefix}.errorLoadingFilterRules`)}
+                error={filterRulesResult.error as { message: string }}
+            />
+        );
+    }
 
     if (filteringByParentDeploymentResult.missingParentDeploymentId) {
         const i18nMissingParentDeploymentPrefix = `${i18nMessagesPrefix}.missingParentDeploymentId`;
