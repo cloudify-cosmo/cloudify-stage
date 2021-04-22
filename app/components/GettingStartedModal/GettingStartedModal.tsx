@@ -40,10 +40,22 @@ const GettingStartedModal = () => {
     const [installationProcessing, setInstallationProcessing] = useState(false);
     const [modalDisabledChecked, setModalDisabledChange] = useInput(false);
 
-    const secretsStepsSchemas = useMemo(
-        () => createTechnologiesGroups(castedGettingStartedSchema.filter(items => technologiesStepData[items.name])), // steps with unique secrets for selected technologies
+    const commonStepsSchemas = useMemo(
+        () => castedGettingStartedSchema.filter(item => technologiesStepData[item.name]),
         [technologiesStepData]
     );
+    const secretsStepsSchemas = useMemo(() => createTechnologiesGroups(commonStepsSchemas), [technologiesStepData]);
+    const summaryStepSchemas = useMemo(() => {
+        return commonStepsSchemas.reduce(
+            (result, item) => {
+                if (item.secrets.length === 0) {
+                    result.push(item);
+                }
+                return result;
+            },
+            [...secretsStepsSchemas]
+        );
+    }, [commonStepsSchemas, secretsStepsSchemas]);
 
     if (!stageUtils.isUserAuthorized('getting_started', manager)) {
         return null;
@@ -133,8 +145,12 @@ const GettingStartedModal = () => {
         switch (stepName) {
             case StepName.Technologies:
                 if (checkTechnologiesStepDataErrors()) {
-                    setStepName(StepName.Secrets);
-                    setSecretsStepIndex(0);
+                    if (secretsStepsSchemas.length > 0) {
+                        setStepName(StepName.Secrets);
+                        setSecretsStepIndex(0);
+                    } else {
+                        setStepName(StepName.Summary);
+                    }
                 }
                 break;
 
@@ -172,6 +188,7 @@ const GettingStartedModal = () => {
                 secretsStepsSchemas={secretsStepsSchemas}
                 secretsStepsData={secretsStepsData}
                 secretsStepIndex={secretsStepIndex}
+                summaryStepSchemas={summaryStepSchemas}
                 onStepErrorsDismiss={handleStepErrorsDismiss}
                 onTechnologiesStepChange={handleTechnologiesStepChange}
                 onSecretsStepChange={handleSecretsStepChange}

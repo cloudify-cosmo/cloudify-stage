@@ -23,6 +23,7 @@ type Props = {
     secretsStepsSchemas: GettingStartedSchemaItem[];
     secretsStepsData: GettingStartedData;
     secretsStepIndex: number;
+    summaryStepSchemas: GettingStartedSchemaItem[];
     onStepErrorsDismiss: () => void;
     onTechnologiesStepChange: (technologies: GettingStartedTechnologiesData) => void;
     onSecretsStepChange: (secrets: GettingStartedSecretsData) => void;
@@ -38,6 +39,7 @@ const ModalContent = ({
     secretsStepsSchemas,
     secretsStepsData,
     secretsStepIndex,
+    summaryStepSchemas,
     onStepErrorsDismiss,
     onTechnologiesStepChange,
     onSecretsStepChange,
@@ -73,7 +75,7 @@ const ModalContent = ({
             {(stepName === StepName.Summary || statusStepActive) && (
                 <SummaryStep
                     installationMode={statusStepActive}
-                    selectedPlugins={secretsStepsSchemas}
+                    selectedTechnologies={summaryStepSchemas}
                     typedSecrets={secretsStepsData}
                     onInstallationStarted={onInstallationStarted}
                     onInstallationFinished={onInstallationFinished}
