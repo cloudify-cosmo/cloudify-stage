@@ -21,6 +21,7 @@ export const DeploymentsViewHeaderContainer = styled.div`
 export const DeploymentsMapLayoutContainer = styled.div<{ height: number }>`
     height: ${props => props.height}px;
     grid-area: map;
+    margin-bottom: 1em;
 `;
 
 export const DeploymentsTableContainer = styled.div`

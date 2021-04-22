@@ -19,7 +19,6 @@ const DeploymentsMap: FunctionComponent<DeploymentsMapProps> = ({ deployments, s
         sitesLookupTable,
         deployments
     ]);
-    const { Map: MapComponent } = Stage.Basic.Leaflet;
 
     const mapRef = useRef<Map | null>(null);
 
@@ -29,11 +28,22 @@ const DeploymentsMap: FunctionComponent<DeploymentsMapProps> = ({ deployments, s
         widgetDimensions.maximized
     ]);
 
-    // TODO: add DefaultTileLayer
     // TODO: Create markers and display the map
     const { options, bounds } = Stage.Common.Map.getMapOptions(sitesWithPositions);
+    const { Map: MapComponent } = Stage.Basic.Leaflet;
+    const { DefaultTileLayer } = Stage.Common.Map;
 
-    return <MapComponent bounds={bounds} center={options.center} zoom={options.zoom} ref={mapRef}></MapComponent>;
+    return (
+        <MapComponent
+            bounds={bounds}
+            center={options.center}
+            zoom={options.zoom}
+            ref={mapRef}
+            style={{ height: '100%' }}
+        >
+            <DefaultTileLayer />
+        </MapComponent>
+    );
 };
 export default DeploymentsMap;
 
