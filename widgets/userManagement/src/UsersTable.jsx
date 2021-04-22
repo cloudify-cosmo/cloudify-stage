@@ -200,7 +200,7 @@ export default class UsersTable extends React.Component {
         return toolbox.refresh(fetchParams);
     };
 
-    showModal = (value, user) => {
+    invokeAction = (value, user) => {
         if (value === MenuAction.EDIT_TENANTS_ACTION) {
             this.getAvailableTenants(value, user);
         } else if (value === MenuAction.EDIT_GROUPS_ACTION) {
@@ -373,10 +373,10 @@ export default class UsersTable extends React.Component {
                                 <DataTable.Data className="center aligned">
                                     <EnhancedIsAdminCheckbox
                                         onAdminUserChange={() =>
-                                            this.showModal(MenuAction.SET_ADMIN_USER_ROLE_ACTION, item)
+                                            this.invokeAction(MenuAction.SET_ADMIN_USER_ROLE_ACTION, item)
                                         }
                                         onDefaultUserChange={() =>
-                                            this.showModal(MenuAction.SET_DEFAULT_USER_ROLE_ACTION, item)
+                                            this.invokeAction(MenuAction.SET_DEFAULT_USER_ROLE_ACTION, item)
                                         }
                                         user={item}
                                         usernameDuringRoleSetting={usernameDuringRoleSetting}
@@ -391,8 +391,8 @@ export default class UsersTable extends React.Component {
                                             checked={item.active}
                                             onChange={() =>
                                                 item.active
-                                                    ? this.showModal(MenuAction.DEACTIVATE_ACTION, item)
-                                                    : this.showModal(MenuAction.ACTIVATE_ACTION, item)
+                                                    ? this.invokeAction(MenuAction.DEACTIVATE_ACTION, item)
+                                                    : this.invokeAction(MenuAction.ACTIVATE_ACTION, item)
                                             }
                                             onClick={e => {
                                                 e.stopPropagation();
@@ -407,8 +407,8 @@ export default class UsersTable extends React.Component {
                                         disabled={!this.hasAdminRole()}
                                         onChange={() =>
                                             item.show_getting_started
-                                                ? this.showModal(MenuAction.DISABLE_GETTING_STARTED_MODAL_ACTION, item)
-                                                : this.showModal(MenuAction.ENABLE_GETTING_STARTED_MODAL_ACTION, item)
+                                                ? this.invokeAction(MenuAction.DISABLE_GETTING_STARTED_MODAL_ACTION, item)
+                                                : this.invokeAction(MenuAction.ENABLE_GETTING_STARTED_MODAL_ACTION, item)
                                         }
                                         onClick={e => e.stopPropagation()}
                                     />
@@ -424,7 +424,7 @@ export default class UsersTable extends React.Component {
                                     </Label>
                                 </DataTable.Data>
                                 <DataTable.Data className="center aligned">
-                                    <MenuAction item={item} onSelectAction={this.showModal} />
+                                    <MenuAction item={item} onSelectAction={this.invokeAction} />
                                 </DataTable.Data>
                             </DataTable.Row>
                             <DataTable.DataExpandable key={item.username}>
