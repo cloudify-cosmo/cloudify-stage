@@ -10,7 +10,7 @@ import UserDetails from './UserDetails';
 import UserPropType from './props/UserPropType';
 
 const { i18n } = Stage;
-const t = (key, options) => i18n.t(`widgets.userManagement.${key}`, options);
+const t = key => i18n.t(`widgets.userManagement.${key}`);
 function IsAdminCheckbox({ user, disabled, onAdminUserChange, onDefaultUserChange }) {
     const { Checkbox } = Stage.Basic;
     return (
