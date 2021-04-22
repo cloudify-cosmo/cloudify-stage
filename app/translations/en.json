@@ -702,10 +702,10 @@
         "userManagement": {
             "columns": {
                 "username": "Username",
-                "last_login_at": "Last login",
+                "lastLoginAt": "Last login",
                 "isAdmin": "Admin",
                 "active": "Active",
-                "show_getting_started": "Getting\nstarted",
+                "showGettingStarted": "Getting\nstarted",
                 "groupCount": "# Groups",
                 "tenantCount": "# Tenants"
             }

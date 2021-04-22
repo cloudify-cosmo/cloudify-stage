@@ -349,11 +349,11 @@ export default class UsersTable extends React.Component {
                     noDataMessage={NO_DATA_MESSAGE}
                 >
                     <DataTable.Column label={columnT('username')} name="username" width="37%" />
-                    <DataTable.Column label={columnT('last_login_at')} name="last_login_at" width="18%" />
+                    <DataTable.Column label={columnT('lastLoginAt')} name="last_login_at" width="18%" />
                     <DataTable.Column label={columnT('isAdmin')} width="10%" />
                     <DataTable.Column label={columnT('active')} name="active" width="10%" />
                     <DataTable.Column
-                        label={this.renderMultilineText(columnT('show_getting_started'))}
+                        label={this.renderMultilineText(columnT('showGettingStarted'))}
                         name="show_getting_started"
                         width="10%"
                     />
