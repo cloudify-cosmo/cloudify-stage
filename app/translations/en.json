@@ -639,11 +639,11 @@
                 }
             },
             "header": {
-              "map": {
-                "label": "Map",
-                "openMap": "Open map",
-                "closeMap": "Close map"
-              },
+                "map": {
+                    "label": "Map",
+                    "openMap": "Open map",
+                    "closeMap": "Close map"
+                },
                 "filter": {
                     "button": "Filter",
                     "modal": {
