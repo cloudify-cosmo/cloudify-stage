@@ -1,5 +1,7 @@
 import React from 'react';
 
+import type { ReactNode } from 'react';
+
 import { Label, List } from '../../../basic';
 
 import type { URLString } from '../../plugins/model';
@@ -7,7 +9,7 @@ import type { URLString } from '../../plugins/model';
 type Props = {
     icon?: URLString;
     name: string;
-    description: string | JSX.Element;
+    description: string | ReactNode;
 };
 
 const PluginTaskItem = ({ icon, name, description }: Props) => {
