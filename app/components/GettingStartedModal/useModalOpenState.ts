@@ -9,7 +9,7 @@ type UserResponse = {
     show_getting_started: boolean;
 };
 
-const useModalState = () => {
+const useModalOpenState = () => {
     const manager = useManager();
     const { response } = useFetch<UserResponse>(manager, `/users/${manager.getCurrentUsername()}`);
     const [modalOpen, setModalOpen] = useState(false);
@@ -32,4 +32,4 @@ const useModalState = () => {
     return { modalOpen, closeModal };
 };
 
-export default useModalState;
+export default useModalOpenState;
