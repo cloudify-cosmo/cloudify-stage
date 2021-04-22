@@ -1,5 +1,5 @@
 import { getMapOptions } from './options';
-import { isSiteWithPosition, Site, SiteWithPosition } from './site';
+import { isSiteWithPosition, Site, siteToLatLng, SiteWithPosition } from './site';
 import { invalidateSizeAfterDimensionsChange, WidgetDimensions } from './widget-dimensions';
 
 declare global {
@@ -10,7 +10,8 @@ declare global {
             invalidateSizeAfterDimensionsChange,
             getMapOptions,
             isSiteWithPosition,
-            SiteWithPosition
+            SiteWithPosition,
+            siteToLatLng
         };
     }
 }
@@ -20,6 +21,7 @@ Stage.defineCommon({
     common: {
         invalidateSizeAfterDimensionsChange,
         getMapOptions,
-        isSiteWithPosition
+        isSiteWithPosition,
+        siteToLatLng
     }
 });

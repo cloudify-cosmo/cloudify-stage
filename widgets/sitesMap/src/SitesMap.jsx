@@ -59,7 +59,7 @@ class SitesMap extends React.Component {
             const { Marker, Popup } = Stage.Basic.Leaflet;
             markers.push(
                 <Marker
-                    position={mapToLatLng(site)}
+                    position={Stage.Common.Map.siteToLatLng(site)}
                     ref={showLabels}
                     key={`siteMarker${site.name}`}
                     riseOnHover
