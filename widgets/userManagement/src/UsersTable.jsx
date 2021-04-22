@@ -394,9 +394,8 @@ export default class UsersTable extends React.Component {
                                                     ? this.invokeAction(MenuAction.DEACTIVATE_ACTION, item)
                                                     : this.invokeAction(MenuAction.ACTIVATE_ACTION, item)
                                             }
-                                            onClick={e => {
-                                                e.stopPropagation();
-                                            }}
+                                            // stop propagation call required to prevent row expanding/collapsing on click to checkbox
+                                            onClick={e => e.stopPropagation()}
                                         />
                                     )}
                                 </DataTable.Data>
@@ -407,9 +406,16 @@ export default class UsersTable extends React.Component {
                                         disabled={!this.hasAdminRole()}
                                         onChange={() =>
                                             item.show_getting_started
-                                                ? this.invokeAction(MenuAction.DISABLE_GETTING_STARTED_MODAL_ACTION, item)
-                                                : this.invokeAction(MenuAction.ENABLE_GETTING_STARTED_MODAL_ACTION, item)
+                                                ? this.invokeAction(
+                                                      MenuAction.DISABLE_GETTING_STARTED_MODAL_ACTION,
+                                                      item
+                                                  )
+                                                : this.invokeAction(
+                                                      MenuAction.ENABLE_GETTING_STARTED_MODAL_ACTION,
+                                                      item
+                                                  )
                                         }
+                                        // stop propagation call required to prevent row expanding/collapsing on click to checkbox
                                         onClick={e => e.stopPropagation()}
                                     />
                                 </DataTable.Data>
