@@ -36,9 +36,14 @@ const DeploymentsViewHeader: FunctionComponent<DeploymentsViewHeaderProps> = ({
         <>
             {/* TODO(RD-1225): enable the map in production */}
             {!production && (
-                <Button active={mapOpen} onClick={toggleMap} title={mapT(mapOpen ? 'closeMap' : 'openMap')}>
-                    <Icon name="map" /> {mapT('label')}
-                </Button>
+                <Button
+                    labelPosition="left"
+                    icon="map"
+                    active={mapOpen}
+                    onClick={toggleMap}
+                    title={mapT(mapOpen ? 'closeMap' : 'openMap')}
+                    content={mapT('label')}
+                />
             )}
             {filterId ? (
                 <Button.Group color="blue">
