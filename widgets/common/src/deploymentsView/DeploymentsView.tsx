@@ -69,7 +69,7 @@ export const DeploymentsView: FunctionComponent<DeploymentsViewProps> = ({
             return [...filterRules, ...additionalFilterRules];
         }
 
-        return [...filterRules, filteringByParentDeploymentResult.parentDeploymentRule];
+        return [...filterRules, ...additionalFilterRules, filteringByParentDeploymentResult.parentDeploymentRule];
     }, [filterRules, filteringByParentDeploymentResult.parentDeploymentRule, additionalFilterRules]);
 
     const deploymentsUrl = '/searches/deployments';
