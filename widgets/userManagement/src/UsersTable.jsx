@@ -9,8 +9,7 @@ import TenantModal from './TenantModal';
 import UserDetails from './UserDetails';
 import UserPropType from './props/UserPropType';
 
-const { i18n } = Stage;
-const t = key => i18n.t(`widgets.userManagement.${key}`);
+const t = key => Stage.i18n.t(`widgets.userManagement.${key}`);
 function IsAdminCheckbox({ user, disabled, onAdminUserChange, onDefaultUserChange }) {
     const { Checkbox } = Stage.Basic;
     return (
