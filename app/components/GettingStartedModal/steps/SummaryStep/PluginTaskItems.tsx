@@ -1,36 +1,30 @@
 import React from 'react';
 import i18n from 'i18next';
 
-import { Icon } from '../../../basic';
+import type { ReactNode } from 'react';
+
 import PluginTaskItem from './PluginTaskItem';
+import { SuccessIcon, ErrorIcon } from '../../common/icons';
 
 import type { PluginInstallationTask } from '../../installation/tasks';
 
 export const InstalledPluginDescription = () => (
     <>
-        <span>{i18n.t('gettingStartedModal.summary.pluginInstalledMessageSuffix')}</span>
-        <Icon
-            style={{ marginLeft: '0.5em', verticalAlign: 'middle', display: 'inline-block' }}
-            color="green"
-            name="check"
-        />
+        <span>{i18n.t('gettingStartedModal.summary.pluginExistsMessageSuffix')}</span>
+        <SuccessIcon />
     </>
 );
 
 export const RejectedPluginDescription = () => (
     <>
         <span>{i18n.t('gettingStartedModal.summary.pluginNotFoundMessageSuffix')}</span>
-        <Icon
-            style={{ marginLeft: '0.5em', verticalAlign: 'middle', display: 'inline-block' }}
-            color="red"
-            name="remove"
-        />
+        <ErrorIcon />
     </>
 );
 
 type Props = {
     tasks?: PluginInstallationTask[];
-    description: string | JSX.Element;
+    description: string | ReactNode;
 };
 
 const PluginTaskItems = ({ tasks, description }: Props) => (

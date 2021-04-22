@@ -6,11 +6,6 @@ export type PaginationResponse = {
     total: number;
 };
 
-export type MetadataResponse = {
-    pagination: PaginationResponse;
-    filtered: unknown;
-};
-
 // used locally
 
 export type RegExpString = string;
@@ -33,12 +28,20 @@ export type GettingStartedSchemaSecret = {
     type: 'text' | 'password';
 };
 
+export type GettingStartedSchemaBlueprint = {
+    id: string;
+    name: string;
+    zipUrl: string;
+    yamlFile?: string;
+};
+
 export type GettingStartedSchemaItem = {
     name: string;
     logo: string;
     label: string;
     plugins: GettingStartedSchemaPlugin[];
     secrets: GettingStartedSchemaSecret[];
+    blueprints: GettingStartedSchemaBlueprint[];
 };
 
 export type GettingStartedSchema = GettingStartedSchemaItem[];
