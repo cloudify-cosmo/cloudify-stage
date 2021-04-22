@@ -60,8 +60,8 @@ export const updateSecret = async (manager: Manager, secret: SecretInstallationT
 
 // TODO(RD-2086): use common functions to upload blueprints
 export const uploadBlueprint = async (manager: Manager, blueprint: BlueprintInstallationTask) => {
-    const waitingTimeout = 5 * 60; // ~5 minutes
-    const stepSleep = 5; // 5 seconds
+    const waitingTimeoutSecs = 5 * 60;
+    const stepSleepSecs = 5;
     const requestData = {
         visibility: 'tenant',
         async_upload: true,
@@ -83,10 +83,10 @@ export const uploadBlueprint = async (manager: Manager, blueprint: BlueprintInst
         log.error(e);
         return false;
     }
-    const iterationsCount = Math.round(waitingTimeout / stepSleep);
+    const iterationsCount = Math.round(waitingTimeoutSecs / stepSleepSecs);
     for (let i = 0; i < iterationsCount; i += 1) {
         // eslint-disable-next-line no-await-in-loop
-        await sleep(1000 * stepSleep);
+        await sleep(1000 * stepSleepSecs);
         try {
             // eslint-disable-next-line no-await-in-loop
             const statusResponse = await manager.doGet(`/blueprints/${encodeURIComponent(blueprint.blueprintName)}`);
