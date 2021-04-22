@@ -24,7 +24,6 @@ export interface DeploymentsViewProps {
     filterByParentDeployment: boolean;
     filterRules: Stage.Common.Filters.Rule[];
     fetchingRules: boolean;
-    // TODO: pass down widget dimensions
 }
 
 export const DeploymentsView: FunctionComponent<DeploymentsViewProps> = ({
@@ -62,6 +61,7 @@ export const DeploymentsView: FunctionComponent<DeploymentsViewProps> = ({
 
     Stage.Hooks.useEventListener(toolbox, 'deployments:refresh', deploymentsResult.refetch);
 
+    const widgetDimensions = Stage.Common.Map.useWidgetDimensions(widget);
     const [mapOpen, toggleMap] = Stage.Hooks.useToggle(widget.configuration.mapOpenByDefault);
 
     const { Loading, ErrorMessage } = Stage.Basic;
@@ -111,7 +111,11 @@ export const DeploymentsView: FunctionComponent<DeploymentsViewProps> = ({
 
             {mapOpen && (
                 <DeploymentsMapLayoutContainer height={widget.configuration.mapHeight}>
-                    <DeploymentsMapContainer deployments={deploymentsResult.data.items} toolbox={toolbox} />
+                    <DeploymentsMapContainer
+                        deployments={deploymentsResult.data.items}
+                        toolbox={toolbox}
+                        widgetDimensions={widgetDimensions}
+                    />
                 </DeploymentsMapLayoutContainer>
             )}
 

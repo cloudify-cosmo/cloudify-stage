@@ -1,10 +1,23 @@
-import type { RefObject } from 'react';
+import { RefObject, useMemo } from 'react';
 import type { Map } from 'react-leaflet';
 
 export interface WidgetDimensions {
     width: number;
     height: number;
     maximized: boolean;
+}
+
+export function getWidgetDimensions(widget: Stage.Types.Widget<unknown>): WidgetDimensions {
+    return {
+        width: widget.width,
+        height: widget.height,
+        maximized: widget.maximized
+    };
+}
+
+/** @returns Memoized widget dimensions. When changed, map size should be invalidated */
+export function useWidgetDimensions(widget: Stage.Types.Widget<unknown>): WidgetDimensions {
+    return useMemo(() => getWidgetDimensions(widget), [widget.width, widget.height, widget.maximized]);
 }
 
 /**
