@@ -1,3 +1,4 @@
+import DefaultTileLayer from './DefaultTileLayer';
 import { getMapOptions } from './options';
 import { isSiteWithPosition, Site, siteToLatLng, SiteWithPosition } from './site';
 import { invalidateSizeAfterDimensionsChange, WidgetDimensions } from './widget-dimensions';
@@ -11,7 +12,8 @@ declare global {
             getMapOptions,
             isSiteWithPosition,
             SiteWithPosition,
-            siteToLatLng
+            siteToLatLng,
+            DefaultTileLayer
         };
     }
 }
@@ -22,6 +24,7 @@ Stage.defineCommon({
         invalidateSizeAfterDimensionsChange,
         getMapOptions,
         isSiteWithPosition,
-        siteToLatLng
+        siteToLatLng,
+        DefaultTileLayer
     }
 });

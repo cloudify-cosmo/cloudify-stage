@@ -27,11 +27,10 @@ class SitesMap extends React.Component {
     }
 
     shouldComponentUpdate(nextProps, nextState) {
-        const { attribution, data, dimensions, showAllLabels, sitesAreDefined } = this.props;
+        const { data, dimensions, showAllLabels, sitesAreDefined } = this.props;
         const { isMapAvailable } = this.state;
 
         return (
-            !_.isEqual(attribution, nextProps.attribution) ||
             !_.isEqual(data, nextProps.data) ||
             !_.isEqual(dimensions, nextProps.dimensions) ||
             !_.isEqual(showAllLabels, nextProps.showAllLabels) ||
@@ -77,9 +76,9 @@ class SitesMap extends React.Component {
 
     render() {
         const { Leaflet, Loading } = Stage.Basic;
-        const { Map, TileLayer } = Leaflet;
+        const { Map } = Leaflet;
 
-        const { attribution, data, sitesAreDefined } = this.props;
+        const { data, sitesAreDefined } = this.props;
         const { isMapAvailable } = this.state;
 
         if (isMapAvailable === null) {
@@ -96,8 +95,7 @@ class SitesMap extends React.Component {
             return <NoSitesDataMessage sitesAreDefined={sitesAreDefined} />;
         }
 
-        const { urlTemplate } = Stage.Common.Consts.leaflet;
-        const url = Stage.Utils.Url.url(urlTemplate);
+        const { DefaultTileLayer } = Stage.Common.Map;
 
         const sites = _.values(data);
         const { options: mapOptions, bounds } = Stage.Common.Map.getMapOptions(sites);
@@ -110,8 +108,7 @@ class SitesMap extends React.Component {
                 center={mapOptions.center}
                 zoom={mapOptions.zoom}
             >
-                {/* TODO: Extract TileLayer to a DefaultTileLayer component */}
-                <TileLayer attribution={attribution} url={url} />
+                <DefaultTileLayer />
                 {markers}
             </Map>
         );
@@ -119,7 +116,6 @@ class SitesMap extends React.Component {
 }
 
 SitesMap.propTypes = {
-    attribution: PropTypes.string.isRequired,
     data: PropTypes.objectOf(
         PropTypes.shape({
             name: PropTypes.string.isRequired,
