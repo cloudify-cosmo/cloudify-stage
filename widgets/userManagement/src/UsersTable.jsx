@@ -213,9 +213,9 @@ export default class UsersTable extends React.Component {
             this.setRole(user, true);
         } else if (value === MenuAction.SET_DEFAULT_USER_ROLE_ACTION && !this.isCurrentUser(user)) {
             this.setRole(user, false);
-        } else if (value === MenuAction.SET_GETTING_STARTED_MODAL_ENABLED_ACTION) {
+        } else if (value === MenuAction.ENABLE_GETTING_STARTED_MODAL_ACTION) {
             this.setGettingStartedModalEnabled(user, true);
-        } else if (value === MenuAction.SET_GETTING_STARTED_MODAL_DISABLED_ACTION) {
+        } else if (value === MenuAction.DISABLE_GETTING_STARTED_MODAL_ACTION) {
             this.setGettingStartedModalEnabled(user, false);
         } else {
             this.setState({ user, modalType: value, showModal: true });
@@ -413,14 +413,8 @@ export default class UsersTable extends React.Component {
                                         disabled={!this.hasAdminRole()}
                                         onChange={() =>
                                             item.show_getting_started
-                                                ? this.showModal(
-                                                      MenuAction.SET_GETTING_STARTED_MODAL_DISABLED_ACTION,
-                                                      item
-                                                  )
-                                                : this.showModal(
-                                                      MenuAction.SET_GETTING_STARTED_MODAL_ENABLED_ACTION,
-                                                      item
-                                                  )
+                                                ? this.showModal(MenuAction.DISABLE_GETTING_STARTED_MODAL_ACTION, item)
+                                                : this.showModal(MenuAction.ENABLE_GETTING_STARTED_MODAL_ACTION, item)
                                         }
                                         onClick={e => e.stopPropagation()}
                                     />
