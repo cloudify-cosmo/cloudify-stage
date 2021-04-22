@@ -57,7 +57,10 @@ const getDeploymentSitePairs = (
     sitesLookupTable: Dictionary<Stage.Common.Map.SiteWithPosition>,
     deployments: Deployment[]
 ): DeploymentSitePair[] =>
-    deployments.map((deployment): DeploymentSitePair => ({ deployment, site: sitesLookupTable[deployment.site_name] }));
+    deployments
+        .map((deployment): DeploymentSitePair => ({ deployment, site: sitesLookupTable[deployment.site_name] }))
+        // NOTE: additional filtering, since the site may not have a position, and thus not be in the lookup table
+        .filter(({ site }) => !!site);
 
 const deploymentStatusToIconColorMapping: Record<DeploymentStatus, Stage.Common.MarkerIconColor> = {
     [DeploymentStatus.Good]: 'blue',
