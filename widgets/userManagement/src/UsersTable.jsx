@@ -10,6 +10,7 @@ import UserDetails from './UserDetails';
 import UserPropType from './props/UserPropType';
 
 const columnT = key => Stage.i18n.t(`widgets.userManagement.columns.${key}`);
+
 function IsAdminCheckbox({ user, disabled, onAdminUserChange, onDefaultUserChange }) {
     const { Checkbox } = Stage.Basic;
     return (
