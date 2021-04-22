@@ -11,13 +11,13 @@ type UserResponse = {
 
 const useModalState = () => {
     const manager = useManager();
-    const { loading, response } = useFetch<UserResponse>(manager, `/users/${manager.getCurrentUsername()}`);
+    const { response } = useFetch<UserResponse>(manager, `/users/${manager.getCurrentUsername()}`);
     const [modalOpen, setModalOpen] = useState(false);
     useEffect(() => {
         if (response?.show_getting_started) {
             setModalOpen(true);
         }
-    }, [loading, response]);
+    }, [response]);
     const closeModal = async (disabled: boolean) => {
         try {
             if (disabled) {
