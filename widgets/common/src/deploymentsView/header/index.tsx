@@ -54,7 +54,11 @@ const DeploymentsViewHeader: FunctionComponent<DeploymentsViewHeaderProps> = ({
                         onClick={openFilterModal}
                         style={{ whiteSpace: 'nowrap', maxWidth: 200, textOverflow: 'ellipsis', overflow: 'hidden' }}
                     />
-                    <Button icon="delete" onClick={() => handleFilterChange(undefined)} />
+                    <Button
+                        icon="delete"
+                        onClick={() => handleFilterChange(undefined)}
+                        title={headerT('filter.clearButton')}
+                    />
                 </Button.Group>
             ) : (
                 <Button

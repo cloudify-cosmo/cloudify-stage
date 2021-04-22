@@ -651,6 +651,7 @@
                 },
                 "filter": {
                     "button": "Filter",
+                    "clearButton": "Clear selected filter",
                     "modal": {
                         "header": "Select a filter",
                         "submit": "OK",
