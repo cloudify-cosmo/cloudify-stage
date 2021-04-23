@@ -7,11 +7,20 @@ export function getMapOptions(sites: SiteWithPosition[]): { options: MapOptions;
     const mapOptions: MapOptions = { ...defaultMapOptions };
     let bounds: LatLngBounds | undefined;
 
-    if (sites.length > 1) {
-        bounds = L.latLngBounds(sites.map(siteToLatLng)).pad(0.05);
-    } else {
-        mapOptions.center = siteToLatLng(sites[0]);
-        mapOptions.zoom = initialZoom;
+    switch (sites.length) {
+        case 0:
+            mapOptions.center = [0, 0];
+            mapOptions.zoom = initialZoom;
+            break;
+
+        case 1:
+            mapOptions.center = siteToLatLng(sites[0]);
+            mapOptions.zoom = initialZoom;
+            break;
+
+        default:
+            bounds = L.latLngBounds(sites.map(siteToLatLng)).pad(0.05);
+            break;
     }
 
     return {
