@@ -16,7 +16,6 @@ const DeploymentsMapContainer: FunctionComponent<DeploymentsMapContainerProps> =
     toolbox,
     widgetDimensions
 }) => {
-    // TODO: extract fetching to a new component for using `useMemo` only when data is available
     const sitesResult = useQuery(
         'all-sites',
         (): Promise<Stage.Types.PaginatedResponse<Stage.Common.Map.Site>> =>

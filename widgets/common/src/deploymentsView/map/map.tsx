@@ -26,7 +26,6 @@ const DeploymentsMap: FunctionComponent<DeploymentsMapProps> = ({ deployments, s
         widgetDimensions.maximized
     ]);
 
-    // TODO: Create markers and display the map
     const { options, bounds } = Stage.Common.Map.getMapOptions(sitesWithPositions);
     const { Map: MapComponent } = Stage.Basic.Leaflet;
     const { DefaultTileLayer } = Stage.Common.Map;
