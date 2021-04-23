@@ -10,10 +10,10 @@ import { isAnyOperator } from './common';
 function hasError({ type, key, operator, values }: FilterRule) {
     const ruleHasValuesDefined = values?.length > 0;
     const ruleHasKeyDefined = !!key;
-    const isLabelRuleValid = ruleHasKeyDefined && (ruleHasValuesDefined || !isAnyOperator(operator));
-    const isAttributeRuleValid = ruleHasValuesDefined;
+    const isLabelRuleInvalid = !ruleHasKeyDefined || (isAnyOperator(operator) && !ruleHasValuesDefined);
+    const isAttributeRuleInvalid = !ruleHasValuesDefined;
 
-    return type === FilterRuleType.Label ? isLabelRuleValid : isAttributeRuleValid;
+    return type === FilterRuleType.Label ? isLabelRuleInvalid : isAttributeRuleInvalid;
 }
 
 function getNewRow(): FilterRuleRow {
