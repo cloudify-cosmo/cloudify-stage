@@ -107,9 +107,6 @@ const GettingStartedModal = () => {
     };
     const handleModalClose = async () => {
         await modalOpenState.closeModal(modalDisabledChecked);
-        if (modalDisabledChecked) {
-            EventBus.trigger('users:refresh');
-        }
     };
 
     const handleBackClick = () => {

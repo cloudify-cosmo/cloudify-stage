@@ -3,6 +3,7 @@ import log from 'loglevel';
 
 import { useFetch } from './common/fetchHooks';
 import { useManager } from './common/managerHooks';
+import EventBus from '../../utils/EventBus';
 
 type UserResponse = {
     // eslint-disable-next-line camelcase
@@ -24,6 +25,7 @@ const useModalOpenState = () => {
             if (disabled) {
                 // TODO(RD-1874): use common api for backend requests
                 await manager.doPost(`/users/${manager.getCurrentUsername()}`, null, { show_getting_started: false });
+                EventBus.trigger('users:refresh');
             }
             setModalOpen(false);
         } catch (error) {
