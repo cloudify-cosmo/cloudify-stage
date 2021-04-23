@@ -49,6 +49,15 @@ declare global {
     }
 }
 
+/** See `fixtures/license` directory */
+type License =
+    | 'expired_trial_license'
+    | 'invalid_license'
+    | 'tampered_paying_license'
+    /** Use valid_spire_license for testing maps */
+    | 'valid_spire_license'
+    | 'valid_trial_license';
+
 const commands = {
     waitUntilPageLoaded: () => {
         cy.log('Wait for widgets loaders to disappear');
@@ -59,7 +68,7 @@ const commands = {
         cy.get('#loader', { timeout: 20000 }).should('be.not.visible');
         cy.waitUntilPageLoaded();
     },
-    uploadLicense: (license: string) =>
+    uploadLicense: (license: License) =>
         cy.fixture(`license/${license}.yaml`).then(yaml =>
             cy.request({
                 method: 'PUT',
@@ -74,7 +83,7 @@ const commands = {
                 body: yaml
             })
         ),
-    activate: (license = 'valid_trial_license') =>
+    activate: (license: License = 'valid_trial_license') =>
         cy
             .uploadLicense(license)
             .getAdminToken()
