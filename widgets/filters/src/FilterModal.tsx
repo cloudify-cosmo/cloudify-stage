@@ -1,4 +1,5 @@
 import { FunctionComponent, useState } from 'react';
+import { isEmpty } from 'lodash';
 import { Filter } from './types';
 import type { FilterRule } from '../../common/src/filters/types';
 
@@ -43,7 +44,7 @@ const FilterModal: FunctionComponent<FilterModalProps> = ({
             detectedErrors.filterRules = i18n.t('widgets.filters.modal.errors.filterRulesInvalid');
         }
 
-        if (detectedErrors.filterId || detectedErrors.filterRules) {
+        if (!isEmpty(detectedErrors)) {
             setErrors(detectedErrors);
             return;
         }
@@ -53,7 +54,7 @@ const FilterModal: FunctionComponent<FilterModalProps> = ({
 
     const { ApproveButton, CancelButton, Icon, Modal } = Stage.Basic;
     const { RulesForm } = Stage.Common.Filters;
-    const markRulesFormErrors = Object.keys(errors).length > 0;
+    const markRulesFormErrors = !isEmpty(errors);
 
     return (
         <Modal open onClose={onCancel}>
