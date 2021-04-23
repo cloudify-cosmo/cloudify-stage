@@ -28,6 +28,7 @@ const AttributeValueInput: FunctionComponent<AttributeValueInputProps> = ({
                 fetchUrl={fetchUrl}
                 onChange={onChange}
                 toolbox={toolbox}
+                allowAdditions
                 clearable={false}
                 multiple
                 placeholder={placeholder}
