@@ -76,10 +76,28 @@ const deploymentStatusToIconColorMapping: Record<DeploymentStatus, Stage.Common.
 };
 const DeploymentSiteMarker: FunctionComponent<DeploymentSitePair> = ({ deployment, site }) => {
     const icon = Stage.Common.createMarkerIcon(deploymentStatusToIconColorMapping[deployment.deployment_status]);
-    const { Marker, Popup } = Stage.Basic.Leaflet;
+    const { Marker, Popup, FeatureGroup, CircleMarker } = Stage.Basic.Leaflet;
+    const selected = deployment.id === 'deployments_view_test_deployment';
+    const position = Stage.Common.Map.siteToLatLng(site);
+
+    // TODO:
+    // 1. Change the popup into a tooltip
+    // 2. Get actual selected deployment
+    // 3. Change the selected deployment when clicking a marker
+
+    if (selected) {
+        return (
+            <FeatureGroup>
+                <CircleMarker center={position} radius={10} color="black" fillOpacity={0.5} />
+                <Popup>I am active!</Popup>
+
+                <Marker icon={icon} position={position} riseOnHover />
+            </FeatureGroup>
+        );
+    }
 
     return (
-        <Marker icon={icon} position={Stage.Common.Map.siteToLatLng(site)}>
+        <Marker icon={icon} position={position} riseOnHover>
             {/* TODO(RD-1526): add more information in marker popups */}
             <Popup>{deployment.id}</Popup>
         </Marker>
