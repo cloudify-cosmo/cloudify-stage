@@ -53,7 +53,7 @@ describe('Deployments View widget', () => {
             .deleteBlueprints(blueprintName, true)
             .uploadBlueprint(blueprintUrl, blueprintName)
             .deployBlueprint(blueprintName, deploymentName, { webserver_port: 9123 })
-            .createSite({ name: siteName })
+            .createSite({ name: siteName, location: '53.77509462534224, 20.473709106445316' })
             .setSite(deploymentName, siteName)
             .setLabels(deploymentName, [{ 'rendered-inside': 'details-panel' }]);
     });
@@ -80,7 +80,6 @@ describe('Deployments View widget', () => {
         cy.get('.widget').filter('.deploymentsViewWidget, .deploymentsViewDrilledDownWidget').find('.widgetItem');
     const getDeploymentsViewTable = () => getDeploymentsViewWidget().get('.gridTable');
     const getDeploymentsViewDetailsPane = () => getDeploymentsViewWidget().get('.detailsPane');
-    // TODO(RD-2090): use a better selector for the map
     const getDeploymentsViewMap = () => getDeploymentsViewWidget().find('.leaflet-container');
     const getDeploymentsMapToggleButton = () => getDeploymentsViewWidget().contains('button', 'Map');
 
@@ -527,7 +526,10 @@ describe('Deployments View widget', () => {
     });
 
     describe('map', () => {
-        // TODO(RD-2090): make the test more meaningful
+        const getDeploymentsMapPopup = () => cy.get('.leaflet-popup');
+        const getMarkerByImageSrcSuffix = (srcSuffix: string) =>
+            cy.get(`.leaflet-marker-pane img[src$="${srcSuffix}"]`);
+
         it('should be toggled upon clicking the button', () => {
             useDeploymentsViewWidget();
 
@@ -537,13 +539,77 @@ describe('Deployments View widget', () => {
                 .click()
                 .should('have.class', 'active')
                 .should('have.attr', 'title', 'Close map');
-            getDeploymentsViewMap();
+            getDeploymentsViewMap().within(() => {
+                cy.get('.leaflet-marker-icon').should('have.length', 1);
+                getMarkerByImageSrcSuffix('red.png').click();
+                getDeploymentsMapPopup().contains(deploymentName);
+            });
 
             getDeploymentsMapToggleButton()
                 .click()
                 .should('not.have.class', 'active')
                 .should('have.attr', 'title', 'Open map');
             getDeploymentsViewMap().should('not.exist');
+        });
+
+        it('should render markers for various deployment states', () => {
+            cy.interceptSp('GET', /^\/sites.*_get_all_results=true/, {
+                statusCode: 200,
+                body: {
+                    items: [
+                        {
+                            name: 'Olsztyn',
+                            latitude: 53.7795,
+                            longitude: 20.49499
+                        },
+                        {
+                            name: 'Tel Aviv',
+                            latitude: 32.066667,
+                            longitude: 34.783333
+                        },
+                        {
+                            name: 'London',
+                            latitude: 51.509865,
+                            longitude: -0.118092
+                        },
+                        {
+                            name: 'Warsaw',
+                            latitude: 52.229676,
+                            longitude: 21.012229
+                        }
+                    ],
+                    metadata: {
+                        pagination: {
+                            offset: 0,
+                            size: 1000,
+                            total: 4
+                        }
+                    }
+                } as Stage.Types.PaginatedResponse<unknown>
+            });
+
+            useDeploymentsViewWidget({
+                routeHandler: {
+                    fixture: 'deployments/various-statuses.json'
+                },
+                configurationOverrides: {
+                    mapOpenByDefault: true
+                }
+            });
+
+            getDeploymentsViewMap().within(() => {
+                cy.get('.leaflet-marker-icon').should('have.length', 3).and('be.visible');
+
+                getMarkerByImageSrcSuffix('yellow.png').click();
+                getDeploymentsMapPopup().contains('hello-world-one');
+
+                // NOTE: the blue marker is on top of the red marker, thus force the click
+                getMarkerByImageSrcSuffix('red.png').click({ force: true });
+                getDeploymentsMapPopup().contains('deployments_view_test_deployment');
+
+                getMarkerByImageSrcSuffix('blue.png').click();
+                getDeploymentsMapPopup().contains('one-in-warsaw');
+            });
         });
     });
 });
