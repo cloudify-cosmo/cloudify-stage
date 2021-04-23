@@ -67,8 +67,7 @@ const DrilledDownDeploymentsViewWidget: FunctionComponent<DrilledDownDeployments
             toolbox={toolbox}
             widget={widget}
             filterByParentDeployment
-            filterRules={filterRules}
-            fetchingRules={false}
+            additionalFilterRules={filterRules}
         />
     );
 };
