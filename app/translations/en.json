@@ -638,11 +638,20 @@
                 }
             },
             "header": {
-              "map": {
-                "label": "Map",
-                "openMap": "Open map",
-                "closeMap": "Close map"
-              }
+                "map": {
+                    "label": "Map",
+                    "openMap": "Open map",
+                    "closeMap": "Close map"
+                },
+                "filter": {
+                    "button": "Filter",
+                    "clearButton": "Clear selected filter",
+                    "modal": {
+                        "header": "Select a filter",
+                        "submit": "OK",
+                        "noFilterError": "Please select a filter"
+                    }
+                }
             },
             "iconLabels": {
                 "inProgress": "In progress",
