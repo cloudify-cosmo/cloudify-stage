@@ -9,7 +9,7 @@ import useInput from '../../utils/hooks/useInput';
 import useResettableState from '../../utils/hooks/useResettableState';
 import { Form, Modal } from '../basic';
 import gettingStartedSchema from './schema.json';
-import { isGettingStartedModalDisabled, disableGettingStartedModal } from './localStorage';
+import useModalOpenState from './useModalOpenState';
 import { validateSecretFields, validateTechnologyFields } from './formValidation';
 import createTechnologiesGroups from './createTechnologiesGroups';
 import { GettingStartedSchemaItem, StepName } from './model';
@@ -28,7 +28,7 @@ import type {
 const castedGettingStartedSchema = gettingStartedSchema as GettingStartedSchema;
 
 const GettingStartedModal = () => {
-    const [modalOpen, setModalOpen] = useState(() => !isGettingStartedModalDisabled());
+    const modalOpenState = useModalOpenState();
 
     const manager = useSelector((state: ReduxState) => state.manager);
     const [stepName, setStepName] = useState(StepName.Technologies);
@@ -105,11 +105,8 @@ const GettingStartedModal = () => {
         EventBus.trigger('secrets:refresh');
         setInstallationProcessing(false);
     };
-    const handleModalClose = () => {
-        setModalOpen(false);
-        if (modalDisabledChecked) {
-            disableGettingStartedModal();
-        }
+    const handleModalClose = async () => {
+        await modalOpenState.closeModal(modalDisabledChecked);
     };
 
     const handleBackClick = () => {
@@ -175,7 +172,7 @@ const GettingStartedModal = () => {
     };
 
     return (
-        <Modal open={modalOpen} onClose={handleModalClose}>
+        <Modal open={modalOpenState.modalOpen} onClose={handleModalClose}>
             <ModalHeader
                 stepName={stepName}
                 secretsStepIndex={secretsStepIndex}
