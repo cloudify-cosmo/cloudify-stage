@@ -1,5 +1,3 @@
-import type { MetadataResponse } from '../model';
-
 // from REST API
 
 export type SecretResponse = {
@@ -7,7 +5,4 @@ export type SecretResponse = {
     visibility: string;
 };
 
-export type SecretsResponse = {
-    metadata: MetadataResponse;
-    items: SecretResponse[];
-};
+export type SecretsResponse = Stage.Types.PaginatedResponse<SecretResponse>;

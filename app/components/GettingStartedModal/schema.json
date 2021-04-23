@@ -6,6 +6,12 @@
        "plugins": [
           {
              "name": "cloudify-aws-plugin"
+          },
+          {
+             "name": "cloudify-utilities-plugin"
+          },
+          {
+             "name": "cloudify-kubernetes-plugin"
           }
        ],
        "secrets": [
@@ -19,6 +25,26 @@
              "label": "AWS Secret Access Key",
              "type": "password"
           }
+       ],
+       "blueprints": [
+          {
+             "id": "AWS-VM-Setup",
+             "name": "AWS-Basics-VM-Setup",
+             "zipUrl": "https://github.com/cloudify-community/blueprint-examples/releases/download/latest/virtual-machine.zip",
+             "yamlFile": "aws.yaml"
+          },
+          {
+             "id": "AWS-VM-Setup-CloudFormation",
+             "name": "AWS-VM-Setup-using-CloudFormation",
+             "zipUrl": "https://github.com/cloudify-community/blueprint-examples/releases/download/latest/virtual-machine.zip",
+             "yamlFile": "aws-cloudformation.yaml"
+          },
+          {
+             "id": "Kubernetes-AWS-EKS",
+             "name": "Kubernetes-AWS-EKS",
+             "zipUrl": "https://github.com/cloudify-community/blueprint-examples/releases/download/latest/kubernetes-aws-eks.zip",
+             "yamlFile": "blueprint.yaml"
+          }
        ]
     },
     {
@@ -28,6 +54,15 @@
        "plugins": [
           {
              "name": "cloudify-gcp-plugin"
+          },
+          {
+             "name": "cloudify-utilities-plugin"
+          },
+          {
+             "name": "cloudify-ansible-plugin"
+          },
+          {
+             "name": "cloudify-kubernetes-plugin"
           }
        ],
        "secrets": [
@@ -66,6 +101,26 @@
              "label": "GCP Zone",
              "type": "password"
           }
+       ],
+       "blueprints": [
+          {
+             "id": "GCP-VM-Setup",
+             "name": "GCP-Basics-VM-Setup",
+             "zipUrl": "https://github.com/cloudify-community/blueprint-examples/releases/download/latest/virtual-machine.zip",
+             "yamlFile": "gcp.yaml"
+          },
+          {
+             "id": "GCP-Simple-Services-Setup",
+             "name": "GCP-Basics-Simple-Service-Setup",
+             "zipUrl": "https://github.com/cloudify-community/blueprint-examples/releases/download/latest/hello-world-example.zip",
+             "yamlFile": "gcp.yaml"
+          },
+          {
+             "id": "Kubernetes-GCP-GKE",
+             "name": "Kubernetes-GCP-GKE",
+             "zipUrl": "https://github.com/cloudify-community/blueprint-examples/releases/download/latest/kubernetes-gcp-gke.zip",
+             "yamlFile": "blueprint.yaml"
+          }
        ]
     },
     {
@@ -76,6 +131,12 @@
           {
              "name": "cloudify-openstack-plugin",
              "version": "^3\\."
+          },
+          {
+             "name": "cloudify-utilities-plugin"
+          },
+          {
+             "name": "cloudify-ansible-plugin"
           }
        ],
        "secrets": [
@@ -104,6 +165,20 @@
              "label": "Openstack Tenant Name",
              "type": "text"
           }
+       ],
+       "blueprints": [
+          {
+             "id": "OpenStack-VM-Setup",
+             "name": "OpenStack-Basics-VM-Setup",
+             "zipUrl": "https://github.com/cloudify-community/blueprint-examples/releases/download/latest/virtual-machine.zip",
+             "yamlFile": "openstack.yaml"
+          },
+          {
+             "id": "OpenStack-Simple-Services-Setup",
+             "name": "OpenStack-Basics-Simple-Service-Setup",
+             "zipUrl": "https://github.com/cloudify-community/blueprint-examples/releases/download/latest/hello-world-example.zip",
+             "yamlFile": "openstack.yaml"
+          }
        ]
     },
     {
@@ -113,6 +188,15 @@
        "plugins": [
           {
              "name": "cloudify-azure-plugin"
+          },
+          {
+             "name": "cloudify-utilities-plugin"
+          },
+          {
+             "name": "cloudify-ansible-plugin"
+          },
+          {
+             "name": "cloudify-kubernetes-plugin"
           }
        ],
        "secrets": [
@@ -135,6 +219,32 @@
              "name": "azure_client_secret",
              "label": "Azure Client Secret",
              "type": "password"
+          }
+       ],
+       "blueprints": [
+          {
+             "id": "Azure-VM-Setup",
+             "name": "Azure-Basics-VM-Setup",
+             "zipUrl": "https://github.com/cloudify-community/blueprint-examples/releases/download/latest/virtual-machine.zip",
+             "yamlFile": "azure.yaml"
+          },
+          {
+             "id": "Azure-Simple-Services-Setup",
+             "name": "Azure-Basics-Simple-Service-Setup",
+             "zipUrl": "https://github.com/cloudify-community/blueprint-examples/releases/download/latest/hello-world-example.zip",
+             "yamlFile": "azure.yaml"
+          },
+          {
+             "id": "Azure-VM-Setup-ARM",
+             "name": "Azure-VM-Setup-using-ARM",
+             "zipUrl": "https://github.com/cloudify-community/blueprint-examples/releases/download/latest/virtual-machine.zip",
+             "yamlFile": "azure-arm.yaml"
+          },
+          {
+             "id": "Kubernetes-Azure-AKS",
+             "name": "Kubernetes-Azure-AKS",
+             "zipUrl": "https://github.com/cloudify-community/blueprint-examples/releases/download/latest/kubernetes-azure-aks.zip",
+             "yamlFile": "blueprint.yaml"
           }
        ]
     },
@@ -178,6 +288,9 @@
              "label": "vCloud Gateway",
              "type": "text"
           }
+       ],
+       "blueprints": [
+ 
        ]
     },
     {
@@ -220,6 +333,9 @@
              "label": "vSphere Auto Placement",
              "type": "text"
           }
+       ],
+       "blueprints": [
+ 
        ]
     },
     {
@@ -232,6 +348,9 @@
           },
           {
              "name": "cloudify-aws-plugin"
+          },
+          {
+             "name": "cloudify-utilities-plugin"
           }
        ],
        "secrets": [
@@ -244,6 +363,14 @@
              "name": "aws_secret_access_key",
              "label": "AWS Secret Access Key",
              "type": "password"
+          }
+       ],
+       "blueprints": [
+          {
+             "id": "AWS-VM-Setup-Terraform",
+             "name": "AWS-VM-Setup-using-Terraform",
+             "zipUrl": "https://github.com/cloudify-community/blueprint-examples/releases/download/latest/virtual-machine.zip",
+             "yamlFile": "aws-terraform.yaml"
           }
        ]
     },
@@ -257,6 +384,9 @@
           },
           {
              "name": "cloudify-aws-plugin"
+          },
+          {
+             "name": "cloudify-utilities-plugin"
           }
        ],
        "secrets": [
@@ -269,6 +399,14 @@
              "name": "aws_secret_access_key",
              "label": "AWS Secret Access Key",
              "type": "password"
+          }
+       ],
+       "blueprints": [
+          {
+             "id": "AWS-Simple-Services-Setup",
+             "name": "AWS-Basics-Simple-Service-Setup",
+             "zipUrl": "https://github.com/cloudify-community/blueprint-examples/releases/download/latest/hello-world-example.zip",
+             "yamlFile": "aws.yaml"
           }
        ]
     }
