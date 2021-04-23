@@ -33,6 +33,7 @@ export enum FilterRuleType {
 export interface FilterRuleRow {
     id: string;
     rule: FilterRule;
+    hasError: boolean;
 }
 
 export enum FilterRuleRowType {
@@ -41,8 +42,6 @@ export enum FilterRuleRowType {
     Creator = 'created_by',
     Label = 'label'
 }
-
-export type FilterRuleRowErrors = Record<string, string>;
 
 export const FilterRuleOperators = { ...CommonRuleOperator, ...LabelsOnlyRuleOperator, ...AttributesOnlyRuleOperator };
 export const LabelsFilterRuleOperators = { ...CommonRuleOperator, ...LabelsOnlyRuleOperator };

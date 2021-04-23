@@ -528,9 +528,9 @@
                         "removeRule": "Remove rule"
                     },
                     "inputsPlaceholders": {
-                        "blueprintId": "Select blueprints",
-                        "siteName": "Select site names",
-                        "createdBy": "Select usernames",
+                        "blueprintId": "Select or type in blueprints",
+                        "siteName": "Select or type in site names",
+                        "createdBy": "Select or type in usernames",
                         "multipleStrings": "Type in values"
                     },
                     "ruleTypesLabels": {
@@ -732,7 +732,10 @@
             "modal": {
                 "id": "Filter ID",
                 "rules": "Filter rules",
-                "idMissing": "Please provide the filter ID",
+                "errors": {
+                    "idMissing": "Please provide the filter ID",
+                    "filterRulesInvalid": "Please provide all the values in filter rules section"
+                },
                 "header": {
                     "add": "Add filter",
                     "edit": "Edit filter '{{filterId}}'",

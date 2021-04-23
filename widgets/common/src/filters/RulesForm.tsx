@@ -3,28 +3,41 @@ import type { FunctionComponent } from 'react';
 
 import RuleRow from './RuleRow';
 import AddRuleButton from './AddRuleButton';
-import type { FilterRule, FilterRuleRow, FilterRuleRowErrors } from './types';
+import type { FilterRule, FilterRuleRow } from './types';
 import { FilterRuleType, FilterRuleOperators, FilterRuleRowType } from './types';
 import { isAnyOperator } from './common';
 
+function hasError({ type, key, operator, values }: FilterRule) {
+    const ruleHasValuesDefined = values?.length > 0;
+    const ruleHasKeyDefined = !!key;
+    const isLabelRuleValid = ruleHasKeyDefined && (ruleHasValuesDefined || !isAnyOperator(operator));
+    const isAttributeRuleValid = ruleHasValuesDefined;
+
+    return type === FilterRuleType.Label ? isLabelRuleValid : isAttributeRuleValid;
+}
+
 function getNewRow(): FilterRuleRow {
     const { uuid } = Stage.Utils;
+    const emptyRule = {
+        type: FilterRuleType.Attribute,
+        key: FilterRuleRowType.Blueprint,
+        operator: FilterRuleOperators.Contains,
+        values: []
+    };
 
     return {
         id: uuid(),
-        rule: {
-            type: FilterRuleType.Attribute,
-            key: FilterRuleRowType.Blueprint,
-            operator: FilterRuleOperators.Contains,
-            values: []
-        }
+        rule: emptyRule,
+        hasError: hasError(emptyRule)
     };
 }
 
 function getFilterRuleRows(filterRules: FilterRule[]): FilterRuleRow[] {
     const { uuid } = Stage.Utils;
 
-    return filterRules.length > 0 ? filterRules.map(rule => ({ id: uuid(), rule })) : [getNewRow()];
+    return filterRules.length > 0
+        ? filterRules.map(rule => ({ id: uuid(), rule, hasError: hasError(rule) }))
+        : [getNewRow()];
 }
 
 function getFilterRule(filterRuleRow: FilterRuleRow): FilterRule {
@@ -33,36 +46,13 @@ function getFilterRule(filterRuleRow: FilterRuleRow): FilterRule {
 
 interface RulesFormProps {
     initialFilters: FilterRule[];
-    onChange: (filterRules: FilterRule[]) => void;
-    onErrors: (errors: FilterRuleRowErrors) => void;
+    onChange: (filterRules: FilterRule[], hasErrors: boolean) => void;
+    markErrors: boolean;
     toolbox: Stage.Types.Toolbox;
 }
 
-const RulesForm: FunctionComponent<RulesFormProps> = ({ initialFilters, onChange, onErrors, toolbox }) => {
+const RulesForm: FunctionComponent<RulesFormProps> = ({ initialFilters, onChange, markErrors, toolbox }) => {
     const [rows, setRows] = useState(() => getFilterRuleRows(initialFilters));
-
-    function validateRows() {
-        const errors: FilterRuleRowErrors = {};
-
-        rows.forEach((row: FilterRuleRow, index: number) => {
-            const { type, key, operator, values } = row.rule;
-            const ruleHasNoValuesSet = values.length === 0;
-            const rowNumber = index + 1;
-
-            if (type === FilterRuleType.Label) {
-                if (!key) {
-                    errors[`row${rowNumber}LabelKey`] = `Please provide label key in row ${rowNumber}`;
-                }
-                if (isAnyOperator(operator) && ruleHasNoValuesSet) {
-                    errors[`row${rowNumber}LabelValue`] = `Please provide label values in row ${rowNumber}`;
-                }
-            } else if (ruleHasNoValuesSet) {
-                errors[`row${rowNumber}Value`] = `Please provide values in row ${rowNumber}`;
-            }
-        });
-
-        onErrors(errors);
-    }
 
     function addRule() {
         setRows(latestRows => [...latestRows, getNewRow()]);
@@ -73,12 +63,13 @@ const RulesForm: FunctionComponent<RulesFormProps> = ({ initialFilters, onChange
     }
 
     function updateRule(id: string, newRule: FilterRule) {
-        setRows(latestRows => latestRows.map(row => (row.id === id ? { id: row.id, rule: newRule } : row)));
+        setRows(latestRows =>
+            latestRows.map(row => (row.id === id ? { id: row.id, rule: newRule, hasError: hasError(newRule) } : row))
+        );
     }
 
     useEffect(() => {
-        onChange(rows.map(getFilterRule));
-        validateRows();
+        onChange(rows.map(getFilterRule), rows.filter(row => row.hasError).length > 0);
     }, [rows]);
 
     return (
@@ -86,6 +77,7 @@ const RulesForm: FunctionComponent<RulesFormProps> = ({ initialFilters, onChange
             {rows.map(row => (
                 <RuleRow
                     key={row.id}
+                    error={markErrors && !!row.hasError}
                     rule={getFilterRule(row)}
                     removable={rows.length > 1}
                     onChange={rule => updateRule(row.id, rule)}

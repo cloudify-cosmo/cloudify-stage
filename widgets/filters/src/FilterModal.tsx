@@ -1,4 +1,4 @@
-import { FunctionComponent } from 'react';
+import { FunctionComponent, useState } from 'react';
 import { Filter } from './types';
 import type { FilterRule } from '../../common/src/filters/types';
 
@@ -23,28 +23,25 @@ const FilterModal: FunctionComponent<FilterModalProps> = ({
     onSubmit,
     toolbox
 }) => {
-    const { useInput, useErrors, useResettableState } = Stage.Hooks;
+    const { useInput, useErrors } = Stage.Hooks;
     const [filterId, setFilterId] = useInput((initialFilter?.id ?? '') + initialFilterIdSuffix);
     const [filterRules, setFilterRules] = useInput(
         initialFilter ? [...initialFilter.attrs_filter_rules, ...initialFilter.labels_filter_rules] : []
     );
     const { errors, setErrors, clearErrors, setMessageAsError } = useErrors();
-    const [rulesFormErrors, setRulesFormErrors, clearRulesFormErrors] = useResettableState(
-        {} as Record<string, string>
-    );
+    const [rulesFormErrors, setRulesFormErrors] = useState<boolean>(false);
     const { i18n } = Stage;
 
     function handleSubmit() {
         clearErrors();
-        clearRulesFormErrors();
 
-        let detectedErrors = {};
+        const detectedErrors: { filterId?: string; filterRules?: string } = {};
         if (showFilterIdInput && !filterId) {
-            detectedErrors = { filterId: i18n.t('widgets.filters.modal.idMissing') };
+            detectedErrors.filterId = i18n.t('widgets.filters.modal.errors.idMissing');
         }
 
-        if (Object.keys(rulesFormErrors).length > 0) {
-            detectedErrors = { ...detectedErrors, ...rulesFormErrors };
+        if (rulesFormErrors) {
+            detectedErrors.filterRules = i18n.t('widgets.filters.modal.errors.filterRulesInvalid');
         }
 
         if (Object.keys(detectedErrors).length > 0) {
@@ -57,6 +54,8 @@ const FilterModal: FunctionComponent<FilterModalProps> = ({
 
     const { ApproveButton, CancelButton, Icon, Modal } = Stage.Basic;
     const { RulesForm } = Stage.Common.Filters;
+    const markRulesFormErrors = Object.keys(errors).length > 0;
+
     return (
         <Modal open onClose={onCancel}>
             <Modal.Header>
@@ -74,8 +73,11 @@ const FilterModal: FunctionComponent<FilterModalProps> = ({
                         <RulesForm
                             initialFilters={filterRules}
                             toolbox={toolbox}
-                            onChange={setFilterRules}
-                            onErrors={setRulesFormErrors}
+                            onChange={(newFilterRules, hasErrors) => {
+                                setFilterRules(newFilterRules);
+                                setRulesFormErrors(hasErrors);
+                            }}
+                            markErrors={markRulesFormErrors}
                         />
                     </UnsafelyTypedFormField>
                 </UnsafelyTypedForm>
