@@ -71,4 +71,9 @@ export default class Actions {
     doDeactivate(username) {
         return this.toolbox.getManager().doPost(`/users/active/${username}`, null, { action: 'deactivate' });
     }
+
+    doSetGettingStartedModalEnabled(username, modalEnabled) {
+        // TODO(RD-1874): use common api for backend requests
+        return this.toolbox.getManager().doPost(`/users/${username}`, null, { show_getting_started: modalEnabled });
+    }
 }

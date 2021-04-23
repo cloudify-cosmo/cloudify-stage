@@ -721,6 +721,17 @@
                 }
             }
         },
+        "userManagement": {
+            "columns": {
+                "username": "Username",
+                "lastLoginAt": "Last login",
+                "isAdmin": "Admin",
+                "active": "Active",
+                "showGettingStarted": "Getting\nstarted",
+                "groupCount": "# Groups",
+                "tenantCount": "# Tenants"
+            }
+        },
         "filters": {
             "name": "Filters",
             "description": "This widget shows a list of defined filters",
