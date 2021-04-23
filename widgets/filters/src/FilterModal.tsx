@@ -29,7 +29,7 @@ const FilterModal: FunctionComponent<FilterModalProps> = ({
         initialFilter ? [...initialFilter.attrs_filter_rules, ...initialFilter.labels_filter_rules] : []
     );
     const { errors, setErrors, clearErrors, setMessageAsError } = useErrors();
-    const [rulesFormErrors, setRulesFormErrors] = useState<boolean>(false);
+    const [filterRulesInvalid, setFilterRulesInvalid] = useState<boolean>(false);
     const { i18n } = Stage;
 
     function handleSubmit() {
@@ -39,12 +39,11 @@ const FilterModal: FunctionComponent<FilterModalProps> = ({
         if (showFilterIdInput && !filterId) {
             detectedErrors.filterId = i18n.t('widgets.filters.modal.errors.idMissing');
         }
-
-        if (rulesFormErrors) {
+        if (filterRulesInvalid) {
             detectedErrors.filterRules = i18n.t('widgets.filters.modal.errors.filterRulesInvalid');
         }
 
-        if (Object.keys(detectedErrors).length > 0) {
+        if (detectedErrors.filterId || detectedErrors.filterRules) {
             setErrors(detectedErrors);
             return;
         }
@@ -75,7 +74,7 @@ const FilterModal: FunctionComponent<FilterModalProps> = ({
                             toolbox={toolbox}
                             onChange={(newFilterRules, hasErrors) => {
                                 setFilterRules(newFilterRules);
-                                setRulesFormErrors(hasErrors);
+                                setFilterRulesInvalid(hasErrors);
                             }}
                             markErrors={markRulesFormErrors}
                         />
