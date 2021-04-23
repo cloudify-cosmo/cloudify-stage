@@ -1,22 +1,21 @@
 import CommonDropdown from './CommonDropdown';
 
-export default function ValueDropdown({ labelKey, onChange, toolbox, multiple, allowKnownOnly, value }) {
+export default function ValueDropdown({ labelKey, onChange, toolbox, multiple, allowAdditions, value }) {
     const { i18n } = Stage;
 
     return (
         <CommonDropdown
             disabled={!labelKey}
-            baseFetchUrl={labelKey ? `/labels/deployments/${labelKey}` : ''}
-            noResultsMessage={value && !allowKnownOnly ? i18n.t('widgets.common.labels.newValue') : undefined}
-            placeholder={i18n.t(
-                `widgets.common.labels.valuePlaceholder.${allowKnownOnly ? 'knownOnly' : 'knownOrNew'}`
-            )}
+            fetchUrl={labelKey ? `/labels/deployments/${labelKey}` : ''}
+            noResultsMessage={value && !allowAdditions ? i18n.t('widgets.common.labels.newValue') : undefined}
+            placeholder={i18n.t('widgets.common.labels.valuePlaceholder')}
             name="labelValue"
             tabIndex={labelKey ? 0 : -1}
             onChange={onChange}
             toolbox={toolbox}
             multiple={multiple}
-            allowKnownOnly={allowKnownOnly}
+            additionLabel={`${i18n.t('widgets.common.labels.newValue')} `}
+            allowAdditions={allowAdditions}
             value={value}
         />
     );
@@ -27,13 +26,13 @@ ValueDropdown.propTypes = {
     onChange: PropTypes.func.isRequired,
     toolbox: Stage.PropTypes.Toolbox.isRequired,
     multiple: PropTypes.bool,
-    allowKnownOnly: PropTypes.bool,
+    allowAdditions: PropTypes.bool,
     value: PropTypes.oneOfType([PropTypes.string, PropTypes.arrayOf(PropTypes.string)])
 };
 
 ValueDropdown.defaultProps = {
     labelKey: '',
     multiple: false,
-    allowKnownOnly: false,
+    allowAdditions: false,
     value: null
 };
