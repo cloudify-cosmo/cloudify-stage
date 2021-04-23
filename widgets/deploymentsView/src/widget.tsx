@@ -1,5 +1,4 @@
 import type { FunctionComponent } from 'react';
-import { useQuery } from 'react-query';
 
 export interface DeploymentsViewWidgetConfiguration
     extends Stage.Common.DeploymentsView.Configuration.SharedDeploymentsViewWidgetConfiguration {
@@ -8,7 +7,7 @@ export interface DeploymentsViewWidgetConfiguration
 }
 
 const {
-    Common: { i18nPrefix, i18nMessagesPrefix },
+    Common: { i18nPrefix },
     Configuration: { sharedConfiguration },
     sharedDefinition
 } = Stage.Common.DeploymentsView;
@@ -49,49 +48,13 @@ interface TopLevelDeploymentsViewProps {
 
 const TopLevelDeploymentsView: FunctionComponent<TopLevelDeploymentsViewProps> = ({ widget, toolbox }) => {
     const { filterId, filterByParentDeployment } = widget.configuration;
-    const manager = toolbox.getManager();
-
-    const filterRulesUrl = `/filters/deployments/${filterId}`;
-    const filterRulesResult = useQuery<Stage.Common.Filters.Rule[]>(
-        filterRulesUrl,
-        ({ queryKey: url }) => (filterId ? manager.doGet(url).then(filtersResponse => filtersResponse.value) : []),
-        { refetchOnWindowFocus: false, keepPreviousData: true }
-    );
-
-    const { Loading, ErrorMessage } = Stage.Basic;
-    const { i18n } = Stage;
-
-    if (filterRulesResult.isLoading) {
-        return <Loading message={i18n.t(`${i18nMessagesPrefix}.loadingFilterRules`)} />;
-    }
-    if (filterRulesResult.isError) {
-        return (
-            <ErrorMessage
-                header={i18n.t(`${i18nMessagesPrefix}.errorLoadingFilterRules`)}
-                error={filterRulesResult.error as { message: string }}
-            />
-        );
-    }
-
-    if (filterRulesResult.isIdle) {
-        /**
-         * NOTE: handling the `isIdle` state is necessary for TypeScript's type-narrowing to exclude `undefined` from
-         * the possible values of `filterRulesResult.data`.
-         *
-         * Such a case should not happen naturally, unless an `enabled` option is added to `useQuery`. If it is added,
-         * it should be here.
-         */
-        throw new Error('Idle state for fetching filter rules is not implemented.');
-    }
-
     const { DeploymentsView } = Stage.Common.DeploymentsView;
     return (
         <DeploymentsView
             toolbox={toolbox}
             widget={widget}
             filterByParentDeployment={filterByParentDeployment}
-            filterRules={filterRulesResult.data}
-            fetchingRules={filterRulesResult.isFetching}
+            defaultFilterId={filterId}
         />
     );
 };
