@@ -66,7 +66,6 @@ describe('Topology', () => {
                     expect(parsedData.instances.length).to.equal(2);
                     parsedData.instances.forEach((instance, i) => {
                         expect(_.omit(instance, 'attributes')).to.deep.equal({
-                            private: 'bnVsbA==',
                             schema_version: 0,
                             dependencies: ['null_resource.foo2'],
                             index_key: i
@@ -88,7 +87,6 @@ describe('Topology', () => {
                     });
                     expect(parsedData.instances.length).to.equal(1);
                     expect(_.omit(parsedData.instances[0], 'attributes')).to.deep.equal({
-                        private: 'bnVsbA==',
                         schema_version: 0
                     });
                     expect(_.size(parsedData.instances[0].attributes)).to.equal(2);
