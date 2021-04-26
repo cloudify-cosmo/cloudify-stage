@@ -5,19 +5,22 @@ import type { Map } from 'react-leaflet';
 import { Deployment } from '../types';
 import { DeploymentSitePair } from './common';
 import DeploymentSiteMarker from './marker';
+import { selectDeployment } from '../common';
 
 interface DeploymentsMapProps {
     deployments: Deployment[];
     selectedDeployment: Deployment | undefined;
     sites: Stage.Common.Map.Site[];
     widgetDimensions: Stage.Common.Map.WidgetDimensions;
+    toolbox: Stage.Types.Toolbox;
 }
 
 const DeploymentsMap: FunctionComponent<DeploymentsMapProps> = ({
     deployments,
     sites,
     widgetDimensions,
-    selectedDeployment
+    selectedDeployment,
+    toolbox
 }) => {
     const sitesWithPositions = useMemo(() => sites.filter(Stage.Common.Map.isSiteWithPosition), [sites]);
     const sitesLookupTable = useMemo(() => keyBy(sitesWithPositions, 'name'), [sitesWithPositions]);
@@ -61,6 +64,7 @@ const DeploymentsMap: FunctionComponent<DeploymentsMapProps> = ({
                     site={site}
                     key={`${deployment.id}-${site.name}`}
                     selected={deployment.id === selectedDeployment?.id}
+                    onClick={() => selectDeployment(toolbox, deployment.id)}
                 />
             ))}
         </MapComponent>

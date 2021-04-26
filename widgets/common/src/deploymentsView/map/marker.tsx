@@ -9,10 +9,13 @@ const deploymentStatusToIconColorMapping: Record<DeploymentStatus, Stage.Common.
     [DeploymentStatus.RequiresAttention]: 'red'
 };
 
-const DeploymentSiteMarker: FunctionComponent<DeploymentSitePair & { selected: boolean }> = ({
+type DeploymentSiteMarkerProps = DeploymentSitePair & { selected: boolean; onClick: () => void };
+
+const DeploymentSiteMarker: FunctionComponent<DeploymentSiteMarkerProps> = ({
     deployment,
     site,
-    selected
+    selected,
+    onClick
 }) => {
     const { FeatureGroup, CircleMarker } = Stage.Basic.Leaflet;
     const position = Stage.Common.Map.siteToLatLng(site);
@@ -20,11 +23,10 @@ const DeploymentSiteMarker: FunctionComponent<DeploymentSitePair & { selected: b
 
     // TODO:
     // 1. Change the popup into a tooltip
-    // 3. Change the selected deployment when clicking a marker
 
     if (selected) {
         return (
-            <FeatureGroup>
+            <FeatureGroup onclick={onClick}>
                 <CircleMarker center={position} radius={10} color="black" fillOpacity={0.5} />
                 {popup}
 
@@ -34,23 +36,23 @@ const DeploymentSiteMarker: FunctionComponent<DeploymentSitePair & { selected: b
     }
 
     return (
-        <BareDeploymentSiteMarker status={deployment.deployment_status} position={position}>
+        <BareDeploymentSiteMarker status={deployment.deployment_status} position={position} onClick={onClick}>
             {popup}
         </BareDeploymentSiteMarker>
     );
 };
 export default DeploymentSiteMarker;
 
-const BareDeploymentSiteMarker: FunctionComponent<{ status: DeploymentStatus; position: [number, number] }> = ({
-    status,
-    position,
-    children
-}) => {
+const BareDeploymentSiteMarker: FunctionComponent<{
+    status: DeploymentStatus;
+    position: [number, number];
+    onClick?: () => void;
+}> = ({ status, position, children, onClick }) => {
     const { Marker } = Stage.Basic.Leaflet;
     const icon = Stage.Common.createMarkerIcon(deploymentStatusToIconColorMapping[status]);
 
     return (
-        <Marker icon={icon} position={position} riseOnHover>
+        <Marker icon={icon} position={position} riseOnHover onclick={onClick}>
             {children}
         </Marker>
     );

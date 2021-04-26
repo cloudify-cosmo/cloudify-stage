@@ -60,6 +60,7 @@ const DeploymentsMapContainer: FunctionComponent<DeploymentsMapContainerProps> =
             selectedDeployment={selectedDeployment}
             sites={sitesResult.data.items}
             widgetDimensions={widgetDimensions}
+            toolbox={toolbox}
         />
     );
 };
