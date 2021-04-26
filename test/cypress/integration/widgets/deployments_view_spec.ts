@@ -11,7 +11,6 @@ describe('Deployments View widget', () => {
     const specPrefix = 'deployments_view_test_';
     const blueprintName = `${specPrefix}blueprint`;
     const deploymentName = `${specPrefix}deployment`;
-    const deploymentNameThatMatchesFilter = `${specPrefix}precious_deployment`;
     const siteName = 'Olsztyn';
     const blueprintUrl = exampleBlueprintUrl;
     const widgetConfiguration: import('../../../../widgets/deploymentsView/src/widget').DeploymentsViewWidgetConfiguration = {
@@ -182,25 +181,28 @@ describe('Deployments View widget', () => {
     });
 
     describe('with filters', () => {
+        const deploymentNameThatMatchesFilter = `${specPrefix}precious_deployment`;
         const filterId = 'only-precious';
+        const filterRules: Stage.Common.Filters.Rule[] = [
+            {
+                type: FilterRuleType.Label,
+                key: 'precious',
+                values: ['yes'],
+                operator: FilterRuleOperators.AnyOf
+            }
+        ];
+
         before(() => {
             cy.deleteDeploymentsFilter(filterId, { ignoreFailure: true })
-                .createDeploymentsFilter(filterId, [
-                    {
-                        type: FilterRuleType.Label,
-                        key: 'precious',
-                        values: ['yes'],
-                        operator: FilterRuleOperators.AnyOf
-                    }
-                ])
+                .createDeploymentsFilter(filterId, filterRules)
                 .deployBlueprint(blueprintName, deploymentNameThatMatchesFilter, { webserver_port: 9124 })
                 .setLabels(deploymentNameThatMatchesFilter, [{ precious: 'yes' }]);
         });
 
-        const getFilterIdInput = () =>
-            cy.contains('Name of the saved filter to apply').parent().get('input[type="text"]');
+        it('should take the configured filter into account when displaying deployments', () => {
+            const getFilterIdInput = () =>
+                cy.contains('Name of the saved filter to apply').parent().get('input[type="text"]');
 
-        it('should take the filter into account when displaying deployments', () => {
             useDeploymentsViewWidget({ configurationOverrides: { filterId } });
 
             cy.log('Show only precious deployments');
@@ -221,6 +223,41 @@ describe('Deployments View widget', () => {
             });
 
             cy.contains(/with ID .* was not found/);
+        });
+
+        it.only('should take the selected filter into account when displaying deployments', () => {
+            useDeploymentsViewWidget();
+
+            cy.contains(deploymentNameThatMatchesFilter);
+            cy.contains(deploymentName);
+
+            cy.contains('button', 'Filter').click();
+
+            cy.interceptSp('POST', '/searches/deployments').as('deploymentsSearchRequest');
+
+            cy.get('.modal').within(() => {
+                cy.get('input').type(`${filterId}{enter}`);
+                cy.contains('OK').click();
+            });
+
+            cy.get('.modal').should('not.exist');
+            cy.contains('button', 'Filter').should('not.exist');
+            cy.contains('button', filterId);
+
+            cy.wait('@deploymentsSearchRequest').then(({ request }) => {
+                const requestRules = request.body.filter_rules;
+                expect(requestRules).to.deep.equal(filterRules);
+            });
+
+            cy.contains(deploymentName).should('not.exist');
+            cy.contains(deploymentNameThatMatchesFilter);
+
+            cy.get('[title="Clear selected filter"]').click().should('not.exist');
+            cy.contains('button', 'Filter');
+            cy.contains('button', filterId).should('not.exist');
+
+            cy.contains(deploymentName);
+            cy.contains(deploymentNameThatMatchesFilter);
         });
     });
 
