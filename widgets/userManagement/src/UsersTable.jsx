@@ -9,6 +9,8 @@ import TenantModal from './TenantModal';
 import UserDetails from './UserDetails';
 import UserPropType from './props/UserPropType';
 
+const columnT = key => Stage.i18n.t(`widgets.userManagement.columns.${key}`);
+
 function IsAdminCheckbox({ user, disabled, onAdminUserChange, onDefaultUserChange }) {
     const { Checkbox } = Stage.Basic;
     return (
@@ -176,12 +178,29 @@ export default class UsersTable extends React.Component {
             });
     }
 
+    setGettingStartedModalEnabled(user, modalEnabled) {
+        const { toolbox } = this.props;
+        toolbox.loading(true);
+
+        const actions = new Actions(toolbox);
+        actions
+            .doSetGettingStartedModalEnabled(user.username, modalEnabled)
+            .then(() => {
+                toolbox.loading(false);
+                toolbox.refresh();
+            })
+            .catch(err => {
+                this.setState({ error: err.message });
+                toolbox.loading(false);
+            });
+    }
+
     fetchData = fetchParams => {
         const { toolbox } = this.props;
         return toolbox.refresh(fetchParams);
     };
 
-    showModal = (value, user) => {
+    invokeAction = (value, user) => {
         if (value === MenuAction.EDIT_TENANTS_ACTION) {
             this.getAvailableTenants(value, user);
         } else if (value === MenuAction.EDIT_GROUPS_ACTION) {
@@ -194,6 +213,10 @@ export default class UsersTable extends React.Component {
             this.setRole(user, true);
         } else if (value === MenuAction.SET_DEFAULT_USER_ROLE_ACTION && !this.isCurrentUser(user)) {
             this.setRole(user, false);
+        } else if (value === MenuAction.ENABLE_GETTING_STARTED_MODAL_ACTION) {
+            this.setGettingStartedModalEnabled(user, true);
+        } else if (value === MenuAction.DISABLE_GETTING_STARTED_MODAL_ACTION) {
+            this.setGettingStartedModalEnabled(user, false);
         } else {
             this.setState({ user, modalType: value, showModal: true });
         }
@@ -268,6 +291,11 @@ export default class UsersTable extends React.Component {
         return toolbox.getManager().getCurrentUsername() === user.username;
     }
 
+    hasAdminRole() {
+        const { toolbox } = this.props;
+        return toolbox.getManager().getCurrentUserRole() === Stage.Common.Consts.sysAdminRole;
+    }
+
     activateUser(user) {
         const { toolbox } = this.props;
         toolbox.loading(true);
@@ -286,6 +314,8 @@ export default class UsersTable extends React.Component {
                 toolbox.loading(false);
             });
     }
+
+    renderMultilineText = text => <span style={{ whiteSpace: 'pre' }}>{text}</span>;
 
     render() {
         const {
@@ -318,12 +348,17 @@ export default class UsersTable extends React.Component {
                     className={tableName}
                     noDataMessage={NO_DATA_MESSAGE}
                 >
-                    <DataTable.Column label="Username" name="username" width="37%" />
-                    <DataTable.Column label="Last login" name="last_login_at" width="18%" />
-                    <DataTable.Column label="Admin" width="10%" />
-                    <DataTable.Column label="Active" name="active" width="10%" />
-                    <DataTable.Column label="# Groups" width="10%" />
-                    <DataTable.Column label="# Tenants" width="10%" />
+                    <DataTable.Column label={columnT('username')} name="username" width="37%" />
+                    <DataTable.Column label={columnT('lastLoginAt')} name="last_login_at" width="18%" />
+                    <DataTable.Column label={columnT('isAdmin')} width="10%" />
+                    <DataTable.Column label={columnT('active')} name="active" width="10%" />
+                    <DataTable.Column
+                        label={this.renderMultilineText(columnT('showGettingStarted'))}
+                        name="show_getting_started"
+                        width="10%"
+                    />
+                    <DataTable.Column label={columnT('groupCount')} width="10%" />
+                    <DataTable.Column label={columnT('tenantCount')} width="10%" />
                     <DataTable.Column label="" width="5%" />
                     {data.items.map(item => (
                         <DataTable.RowExpandable key={item.username} expanded={item.isSelected}>
@@ -338,16 +373,17 @@ export default class UsersTable extends React.Component {
                                 <DataTable.Data className="center aligned">
                                     <EnhancedIsAdminCheckbox
                                         onAdminUserChange={() =>
-                                            this.showModal(MenuAction.SET_ADMIN_USER_ROLE_ACTION, item)
+                                            this.invokeAction(MenuAction.SET_ADMIN_USER_ROLE_ACTION, item)
                                         }
                                         onDefaultUserChange={() =>
-                                            this.showModal(MenuAction.SET_DEFAULT_USER_ROLE_ACTION, item)
+                                            this.invokeAction(MenuAction.SET_DEFAULT_USER_ROLE_ACTION, item)
                                         }
                                         user={item}
                                         usernameDuringRoleSetting={usernameDuringRoleSetting}
                                     />
                                 </DataTable.Data>
                                 <DataTable.Data className="center aligned">
+                                    {/* TODO (RD-2100): create better way to block current user state change */}
                                     {usernameDuringActivation === item.username ? (
                                         <Loader active inline size="mini" />
                                     ) : (
@@ -355,14 +391,33 @@ export default class UsersTable extends React.Component {
                                             checked={item.active}
                                             onChange={() =>
                                                 item.active
-                                                    ? this.showModal(MenuAction.DEACTIVATE_ACTION, item)
-                                                    : this.showModal(MenuAction.ACTIVATE_ACTION, item)
+                                                    ? this.invokeAction(MenuAction.DEACTIVATE_ACTION, item)
+                                                    : this.invokeAction(MenuAction.ACTIVATE_ACTION, item)
                                             }
-                                            onClick={e => {
-                                                e.stopPropagation();
-                                            }}
+                                            // stop propagation call required to prevent row expanding/collapsing on click to checkbox
+                                            onClick={e => e.stopPropagation()}
                                         />
                                     )}
+                                </DataTable.Data>
+                                <DataTable.Data className="center aligned">
+                                    {/* TODO (RD-2100): propose way to block current user state change */}
+                                    <Checkbox
+                                        checked={item.show_getting_started}
+                                        disabled={!this.hasAdminRole()}
+                                        onChange={() =>
+                                            item.show_getting_started
+                                                ? this.invokeAction(
+                                                      MenuAction.DISABLE_GETTING_STARTED_MODAL_ACTION,
+                                                      item
+                                                  )
+                                                : this.invokeAction(
+                                                      MenuAction.ENABLE_GETTING_STARTED_MODAL_ACTION,
+                                                      item
+                                                  )
+                                        }
+                                        // stop propagation call required to prevent row expanding/collapsing on click to checkbox
+                                        onClick={e => e.stopPropagation()}
+                                    />
                                 </DataTable.Data>
                                 <DataTable.Data>
                                     <Label className="green" horizontal>
@@ -375,7 +430,7 @@ export default class UsersTable extends React.Component {
                                     </Label>
                                 </DataTable.Data>
                                 <DataTable.Data className="center aligned">
-                                    <MenuAction item={item} onSelectAction={this.showModal} />
+                                    <MenuAction item={item} onSelectAction={this.invokeAction} />
                                 </DataTable.Data>
                             </DataTable.Row>
                             <DataTable.DataExpandable key={item.username}>
