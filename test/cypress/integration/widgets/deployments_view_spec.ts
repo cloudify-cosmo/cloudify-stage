@@ -183,17 +183,18 @@ describe('Deployments View widget', () => {
     describe('with filters', () => {
         const deploymentNameThatMatchesFilter = `${specPrefix}precious_deployment`;
         const filterId = 'only-precious';
+        const filterRules = [
+            {
+                type: FilterRuleType.Label,
+                key: 'precious',
+                values: ['yes'],
+                operator: FilterRuleOperators.AnyOf
+            }
+        ];
 
         before(() => {
             cy.deleteDeploymentsFilter(filterId, { ignoreFailure: true })
-                .createDeploymentsFilter(filterId, [
-                    {
-                        type: FilterRuleType.Label,
-                        key: 'precious',
-                        values: ['yes'],
-                        operator: FilterRuleOperators.AnyOf
-                    }
-                ])
+                .createDeploymentsFilter(filterId, filterRules)
                 .deployBlueprint(blueprintName, deploymentNameThatMatchesFilter, { webserver_port: 9124 })
                 .setLabels(deploymentNameThatMatchesFilter, [{ precious: 'yes' }]);
         });
@@ -224,21 +225,39 @@ describe('Deployments View widget', () => {
             cy.contains(/with ID .* was not found/);
         });
 
-        it('should take the selected filter into account when displaying deployments', () => {
-            useDeploymentsViewWidget({});
+        it.only('should take the selected filter into account when displaying deployments', () => {
+            useDeploymentsViewWidget();
 
             cy.contains(deploymentNameThatMatchesFilter);
             cy.contains(deploymentName);
 
-            cy.contains('Filter').click();
+            cy.contains('button', 'Filter').click();
+
+            cy.interceptSp('POST', '/searches/deployments').as('deploymentsSearchRequest');
 
             cy.get('.modal').within(() => {
                 cy.get('input').type(`${filterId}{enter}`);
                 cy.contains('OK').click();
             });
 
-            cy.contains(deploymentNameThatMatchesFilter);
+            cy.get('.modal').should('not.exist');
+            cy.contains('button', 'Filter').should('not.exist');
+            cy.contains('button', filterId);
+
+            cy.wait('@deploymentsSearchRequest').then(({ request }) => {
+                const requestRules = request.body.filter_rules;
+                expect(requestRules).to.deep.equal(filterRules);
+            });
+
             cy.contains(deploymentName).should('not.exist');
+            cy.contains(deploymentNameThatMatchesFilter);
+
+            cy.get('[title="Clear selected filter"]').click().should('not.exist');
+            cy.contains('button', 'Filter');
+            cy.contains('button', filterId).should('not.exist');
+
+            cy.contains(deploymentName);
+            cy.contains(deploymentNameThatMatchesFilter);
         });
     });
 
