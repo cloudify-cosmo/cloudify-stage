@@ -146,8 +146,9 @@ Stage.defineWidget({
             icons
         } = _.isEmpty(data) ? { rawBlueprintData: { data: { id: '' }, layout: {} } } : data;
 
-        const deploymentId = toolbox.getContext().getValue('deploymentId');
-        const blueprintId = deploymentId ? id : toolbox.getContext().getValue('blueprintId');
+        const contextUtils = new Stage.Common.ContextUtils(toolbox);
+        const deploymentId = contextUtils.getFirstValue('deploymentId');
+        const blueprintId = deploymentId ? id : contextUtils.getFirstValue('blueprintId');
         const formattedData = {
             blueprintDeploymentData,
             componentDeploymentsData,

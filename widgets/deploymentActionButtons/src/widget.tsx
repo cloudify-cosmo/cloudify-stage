@@ -1,4 +1,3 @@
-import { castArray } from 'lodash';
 import type { ComponentProps } from 'react';
 import DeploymentActionButtons from './DeploymentActionButtons';
 
@@ -45,9 +44,9 @@ Stage.defineWidget<WidgetParams, WidgetData, WidgetConfiguration>({
     },
 
     fetchParams(_widget, toolbox): WidgetParams {
-        const deploymentId = toolbox.getContext().getValue('deploymentId');
-        // Deployment Actions Buttons widget does not support multiple actions, thus picking only one deploymentId
-        const firstDeploymentId = castArray(deploymentId)[0] as WidgetParams['id'];
+        const firstDeploymentId = new Stage.Common.ContextUtils(toolbox).getFirstValue(
+            'deploymentId'
+        )[0] as WidgetParams['id'];
 
         return { id: firstDeploymentId };
     },
