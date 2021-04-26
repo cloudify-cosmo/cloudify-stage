@@ -3,23 +3,21 @@ import type { FunctionComponent, ReactElement } from 'react';
 type NoDataMessageProps =
     | {
           children: ReactElement;
-          repositoryName: never;
-          error: never;
+          error?: never;
+          repositoryName?: never;
       }
-    | { error?: { name: string }; repositoryName: string };
+    | { children?: never; error?: { name: string }; repositoryName: string };
 
-// NOTE: cannot destructure props due to using a type union
-/* eslint-disable react/destructuring-assignment */
-const NoDataMessage: FunctionComponent<NoDataMessageProps> = props => {
+const NoDataMessage: FunctionComponent<NoDataMessageProps> = ({ children, error, repositoryName }) => {
     const { Message } = Stage.Basic;
     const { MessageContainer } = Stage.Basic;
     return (
         <MessageContainer wide margin="30px auto">
             <Message>
-                {props.children ||
-                    (((props.error as Record<string, any>) || {}).name === 'SyntaxError'
-                        ? `The widget content cannot be displayed because configured URL does not point to a valid ${props.repositoryName} repository JSON data. Please check widget's configuration.`
-                        : `The widget content cannot be displayed because there is no connection to ${props.repositoryName} repository. Please check network connection and widget's configuration.`)}
+                {children ||
+                    (((error as Record<string, any>) || {}).name === 'SyntaxError'
+                        ? `The widget content cannot be displayed because configured URL does not point to a valid ${repositoryName} repository JSON data. Please check widget's configuration.`
+                        : `The widget content cannot be displayed because there is no connection to ${repositoryName} repository. Please check network connection and widget's configuration.`)}
             </Message>
         </MessageContainer>
     );
