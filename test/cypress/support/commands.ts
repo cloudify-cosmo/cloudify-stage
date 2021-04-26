@@ -54,7 +54,6 @@ type License =
     | 'expired_trial_license'
     | 'invalid_license'
     | 'tampered_paying_license'
-    /** Use valid_spire_license for testing maps */
     | 'valid_spire_license'
     | 'valid_trial_license';
 
