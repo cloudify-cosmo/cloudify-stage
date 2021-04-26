@@ -1,7 +1,4 @@
-/**
- * Created by kinneretzin on 07/09/2016.
- */
-
+import { isEmpty } from 'lodash';
 import EventsTable from './EventsTable';
 
 Stage.defineWidget({
@@ -60,50 +57,52 @@ Stage.defineWidget({
     fetchParams(widget, toolbox) {
         const params = {};
 
-        const eventFilter = toolbox.getContext().getValue('eventFilter') || {};
+        const contextUtils = new Stage.Common.ContextUtils(toolbox);
 
-        const blueprintId = toolbox.getContext().getValue('blueprintId');
-        if (!_.isEmpty(blueprintId)) {
-            params.blueprint_id = _.castArray(blueprintId);
+        const eventFilter = contextUtils.getValue('eventFilter') || {};
+
+        const blueprintId = contextUtils.getArrayValue('blueprintId');
+        if (!isEmpty(blueprintId)) {
+            params.blueprint_id = blueprintId;
         }
 
-        const deploymentId = toolbox.getContext().getValue('deploymentId');
-        if (!_.isEmpty(deploymentId)) {
-            params.deployment_id = _.castArray(deploymentId);
+        const deploymentId = contextUtils.getArrayValue('deploymentId');
+        if (!isEmpty(deploymentId)) {
+            params.deployment_id = deploymentId;
         }
 
-        const nodeId = toolbox.getContext().getValue('nodeId');
-        if (!_.isEmpty(nodeId)) {
-            params.node_id = _.castArray(nodeId);
+        const nodeId = contextUtils.getArrayValue('nodeId');
+        if (!isEmpty(nodeId)) {
+            params.node_id = nodeId;
         }
 
-        const nodeInstanceId = toolbox.getContext().getValue('nodeInstanceId');
-        if (!_.isEmpty(nodeInstanceId)) {
-            params.node_instance_id = _.castArray(nodeInstanceId);
+        const nodeInstanceId = contextUtils.getArrayValue('nodeInstanceId');
+        if (!isEmpty(nodeInstanceId)) {
+            params.node_instance_id = nodeInstanceId;
         }
 
-        const executionId = toolbox.getContext().getValue('executionId');
-        if (!_.isEmpty(executionId)) {
-            params.execution_id = _.castArray(executionId);
+        const executionId = contextUtils.getArrayValue('executionId');
+        if (!isEmpty(executionId)) {
+            params.execution_id = executionId;
         }
 
         const { messageText } = eventFilter;
-        if (!_.isEmpty(messageText)) {
+        if (!isEmpty(messageText)) {
             params.message = `%${messageText}%`;
         }
 
         const { operationText } = eventFilter;
-        if (!_.isEmpty(operationText)) {
+        if (!isEmpty(operationText)) {
             params.operation = `%${operationText}%`;
         }
 
         const { logLevel } = eventFilter;
-        if (!_.isEmpty(logLevel)) {
+        if (!isEmpty(logLevel)) {
             params.level = logLevel;
         }
 
         const { eventType } = eventFilter;
-        if (!_.isEmpty(eventType)) {
+        if (!isEmpty(eventType)) {
             params.event_type = eventType;
         }
 
@@ -124,7 +123,7 @@ Stage.defineWidget({
     render(widget, data, error, toolbox) {
         const { Loading } = Stage.Basic;
 
-        if (_.isEmpty(data)) {
+        if (isEmpty(data)) {
             return <Loading />;
         }
 
