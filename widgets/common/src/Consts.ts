@@ -1,3 +1,5 @@
+import type { MapOptions } from 'leaflet';
+
 const consts = {
     defaultVisibility: 'tenant',
     sysAdminRole: 'sys_admin',
@@ -16,7 +18,7 @@ const consts = {
                 [90, 180]
             ],
             maxBoundsViscosity: 0.75
-        },
+        } as MapOptions,
         initialZoom: 2.5,
         urlTemplate: '/maps/{z}/{x}/{y}/{r}'
     }

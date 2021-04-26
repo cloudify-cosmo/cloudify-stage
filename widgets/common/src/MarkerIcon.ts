@@ -1,4 +1,7 @@
-function createMarkerIcon(color) {
+export {};
+
+type MarkerIconColor = 'blue' | 'green' | 'grey' | 'red' | 'yellow';
+function createMarkerIcon(color: MarkerIconColor) {
     const widgetId = 'common';
 
     return new L.Icon({
@@ -7,6 +10,12 @@ function createMarkerIcon(color) {
         iconAnchor: [12, 41],
         popupAnchor: [1, -34]
     });
+}
+
+declare global {
+    namespace Stage.Common {
+        export { createMarkerIcon, MarkerIconColor };
+    }
 }
 
 Stage.defineCommon({

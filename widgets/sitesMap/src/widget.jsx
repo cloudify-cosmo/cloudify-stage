@@ -141,7 +141,7 @@ Stage.defineWidget({
         return (
             <SitesMap
                 data={siteStatuses}
-                dimensions={{ height: widget.height, width: widget.width, maximized: widget.maximized || false }}
+                dimensions={Stage.Common.Map.getWidgetDimensions(widget)}
                 showAllLabels={widget.configuration.showAllLabels}
                 sitesAreDefined={sitesAreDefined}
                 toolbox={toolbox}

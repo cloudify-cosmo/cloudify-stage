@@ -81,7 +81,7 @@ describe('Deployments View widget', () => {
     const getDeploymentsViewTable = () => getDeploymentsViewWidget().get('.gridTable');
     const getDeploymentsViewDetailsPane = () => getDeploymentsViewWidget().get('.detailsPane');
     // TODO(RD-2090): use a better selector for the map
-    const getDeploymentsViewMap = () => getDeploymentsViewWidget().contains('I am a map');
+    const getDeploymentsViewMap = () => getDeploymentsViewWidget().find('.leaflet-container');
     const getDeploymentsMapToggleButton = () => getDeploymentsViewWidget().contains('button', 'Map');
 
     const verifyMapHeight = (expectedHeight: number) =>

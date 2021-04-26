@@ -9,10 +9,6 @@ function openPopup(marker) {
     }
 }
 
-function mapToLatLng(site) {
-    return [site.latitude, site.longitude];
-}
-
 class SitesMap extends React.Component {
     constructor(props) {
         super(props);
@@ -31,11 +27,10 @@ class SitesMap extends React.Component {
     }
 
     shouldComponentUpdate(nextProps, nextState) {
-        const { attribution, data, dimensions, showAllLabels, sitesAreDefined } = this.props;
+        const { data, dimensions, showAllLabels, sitesAreDefined } = this.props;
         const { isMapAvailable } = this.state;
 
         return (
-            !_.isEqual(attribution, nextProps.attribution) ||
             !_.isEqual(data, nextProps.data) ||
             !_.isEqual(dimensions, nextProps.dimensions) ||
             !_.isEqual(showAllLabels, nextProps.showAllLabels) ||
@@ -47,13 +42,7 @@ class SitesMap extends React.Component {
     componentDidUpdate(prevProps) {
         const { dimensions } = this.props;
         if (prevProps.dimensions !== dimensions) {
-            // Widget properties change doesn't affect immediately DOM changes,
-            // so it's necessary to wait a bit till DOM is updated.
-            const refreshAfterDimensionChangeTimeout = 500;
-            setTimeout(() => {
-                const { current } = this.mapRef;
-                if (current && current.leafletElement) current.leafletElement.invalidateSize();
-            }, refreshAfterDimensionChangeTimeout);
+            Stage.Common.Map.invalidateSizeAfterDimensionsChange(this.mapRef);
         }
     }
 
@@ -69,7 +58,7 @@ class SitesMap extends React.Component {
             const { Marker, Popup } = Stage.Basic.Leaflet;
             markers.push(
                 <Marker
-                    position={mapToLatLng(site)}
+                    position={Stage.Common.Map.siteToLatLng(site)}
                     ref={showLabels}
                     key={`siteMarker${site.name}`}
                     riseOnHover
@@ -87,9 +76,9 @@ class SitesMap extends React.Component {
 
     render() {
         const { Leaflet, Loading } = Stage.Basic;
-        const { Map, TileLayer } = Leaflet;
+        const { Map } = Leaflet;
 
-        const { attribution, data, sitesAreDefined } = this.props;
+        const { data, sitesAreDefined } = this.props;
         const { isMapAvailable } = this.state;
 
         if (isMapAvailable === null) {
@@ -106,26 +95,20 @@ class SitesMap extends React.Component {
             return <NoSitesDataMessage sitesAreDefined={sitesAreDefined} />;
         }
 
-        const { initialZoom, mapOptions, urlTemplate } = Stage.Common.Consts.leaflet;
-        const url = Stage.Utils.Url.url(urlTemplate);
+        const { DefaultTileLayer } = Stage.Common.Map;
 
         const sites = _.values(data);
-        if (sites.length > 1) {
-            mapOptions.bounds = L.latLngBounds(sites.map(mapToLatLng)).pad(0.05);
-        } else {
-            mapOptions.center = mapToLatLng(sites[0]);
-            mapOptions.zoom = initialZoom;
-        }
+        const { options: mapOptions, bounds } = Stage.Common.Map.getMapOptions(sites);
 
         return (
             <Map
                 ref={this.mapRef}
                 className="sites-map"
-                bounds={mapOptions.bounds}
+                bounds={bounds}
                 center={mapOptions.center}
                 zoom={mapOptions.zoom}
             >
-                <TileLayer attribution={attribution} url={url} />
+                <DefaultTileLayer />
                 {markers}
             </Map>
         );
@@ -133,7 +116,6 @@ class SitesMap extends React.Component {
 }
 
 SitesMap.propTypes = {
-    attribution: PropTypes.string.isRequired,
     data: PropTypes.objectOf(
         PropTypes.shape({
             name: PropTypes.string.isRequired,
@@ -143,6 +125,7 @@ SitesMap.propTypes = {
             deploymentStates: DeploymentStatePropType.isRequired
         })
     ).isRequired,
+    /* @see {Stage.Common.Map.WidgetDimensions} */
     dimensions: PropTypes.shape({
         height: PropTypes.number.isRequired,
         width: PropTypes.number.isRequired,
