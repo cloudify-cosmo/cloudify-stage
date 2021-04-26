@@ -23,16 +23,16 @@ function useFetchTrigger(fetchTrigger, withoutResetFetchDeps, withResetFetchDeps
     const delayedFetchTrigger = useCallback(debounce(fetchTrigger, delayMs), []);
 
     useUpdateEffect(() => {
-        delayedFetchTrigger(false);
+        delayedFetchTrigger({ shouldReset: false });
     }, withoutResetFetchDeps);
 
     useUpdateEffect(() => {
-        delayedFetchTrigger(true);
+        delayedFetchTrigger({ shouldReset: true });
     }, withResetFetchDeps);
 }
 
 const fetchActionType = {
-    PREPARE_FOR_INITIAL_FETCH: 'prepareForInitialFetch',
+    PREPARE_FOR_FIRST_PAGE_FETCH: 'prepareForFirstPageFetch',
     PREPARE_FOR_NEXT_PAGE_FETCH: 'prepareForNextPageFetch',
     TRIGGER_FETCH: 'triggerFetch',
     END_FETCH: 'endFetch'
@@ -40,7 +40,7 @@ const fetchActionType = {
 const defaultFetchState = { hasMore: true, currentPage: -1, shouldLoadMore: false };
 function fetchReducer(state, action) {
     switch (action.type) {
-        case fetchActionType.PREPARE_FOR_INITIAL_FETCH:
+        case fetchActionType.PREPARE_FOR_FIRST_PAGE_FETCH:
             return { ...defaultFetchState };
         case fetchActionType.PREPARE_FOR_NEXT_PAGE_FETCH:
             return {
@@ -158,7 +158,7 @@ export default function DynamicDropdown({
     }, [fetchState.shouldLoadMore, disabled]);
 
     useEventListener(toolbox, refreshEvent, () =>
-        dispatchFetchAction({ type: fetchActionType.PREPARE_FOR_INITIAL_FETCH })
+        dispatchFetchAction({ type: fetchActionType.PREPARE_FOR_FIRST_PAGE_FETCH })
     );
 
     useEffect(() => {
