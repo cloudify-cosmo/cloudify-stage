@@ -20,7 +20,7 @@ function hasError({ type, key, operator, values }: FilterRule) {
 
 function getNewRow(): FilterRuleRow {
     const { uuid } = Stage.Utils;
-    const emptyRule = {
+    const emptyRule: FilterRule = {
         type: FilterRuleType.Attribute,
         key: FilterRuleRowType.Blueprint,
         operator: FilterRuleOperators.Contains,
@@ -79,7 +79,7 @@ const RulesForm: FunctionComponent<RulesFormProps> = ({ initialFilters, onChange
             {rows.map(row => (
                 <RuleRow
                     key={row.id}
-                    error={markErrors && !!row.hasError}
+                    error={markErrors && row.hasError}
                     rule={getFilterRule(row)}
                     removable={rows.length > 1}
                     onChange={rule => updateRule(row.id, rule)}
