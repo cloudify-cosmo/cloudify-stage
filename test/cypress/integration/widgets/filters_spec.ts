@@ -195,6 +195,7 @@ describe('Filters widget', () => {
             getFilterIdInput().should('have.value', `${filterName}_clone`);
 
             getFilterIdInput().clear().type('csys-invalid');
+            typeAttributeRuleValue('test');
             cy.contains('Save').click();
             cy.contains('All filters with a `csys-` prefix are reserved for internal use');
 
