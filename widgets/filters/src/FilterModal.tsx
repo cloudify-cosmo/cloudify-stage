@@ -1,4 +1,5 @@
-import { FunctionComponent } from 'react';
+import { FunctionComponent, useState } from 'react';
+import { isEmpty } from 'lodash';
 import { Filter } from './types';
 import type { FilterRule } from '../../common/src/filters/types';
 
@@ -29,13 +30,22 @@ const FilterModal: FunctionComponent<FilterModalProps> = ({
         initialFilter ? [...initialFilter.attrs_filter_rules, ...initialFilter.labels_filter_rules] : []
     );
     const { errors, setErrors, clearErrors, setMessageAsError } = useErrors();
+    const [filterRulesInvalid, setFilterRulesInvalid] = useState(false);
     const { i18n } = Stage;
 
     function handleSubmit() {
         clearErrors();
 
+        const detectedErrors: { filterId?: string; filterRules?: string } = {};
         if (showFilterIdInput && !filterId) {
-            setErrors({ filterId: i18n.t('widgets.filters.modal.idMissing') });
+            detectedErrors.filterId = i18n.t('widgets.filters.modal.errors.idMissing');
+        }
+        if (filterRulesInvalid) {
+            detectedErrors.filterRules = i18n.t('widgets.filters.modal.errors.filterRulesInvalid');
+        }
+
+        if (!isEmpty(detectedErrors)) {
+            setErrors(detectedErrors);
             return;
         }
 
@@ -44,6 +54,8 @@ const FilterModal: FunctionComponent<FilterModalProps> = ({
 
     const { ApproveButton, CancelButton, Icon, Modal } = Stage.Basic;
     const { RulesForm } = Stage.Common.Filters;
+    const markRulesFormErrors = !isEmpty(errors);
+
     return (
         <Modal open onClose={onCancel}>
             <Modal.Header>
@@ -58,7 +70,15 @@ const FilterModal: FunctionComponent<FilterModalProps> = ({
                         </UnsafelyTypedFormField>
                     )}
                     <UnsafelyTypedFormField label={i18n.t('widgets.filters.modal.rules')}>
-                        <RulesForm initialFilters={filterRules} toolbox={toolbox} onChange={setFilterRules} />
+                        <RulesForm
+                            initialFilters={filterRules}
+                            toolbox={toolbox}
+                            onChange={(newFilterRules, hasErrors) => {
+                                setFilterRules(newFilterRules);
+                                setFilterRulesInvalid(hasErrors);
+                            }}
+                            markErrors={markRulesFormErrors}
+                        />
                     </UnsafelyTypedFormField>
                 </UnsafelyTypedForm>
             </Modal.Content>
