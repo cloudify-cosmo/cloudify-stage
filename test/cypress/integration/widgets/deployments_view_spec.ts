@@ -66,7 +66,7 @@ describe('Deployments View widget', () => {
     const useDeploymentsViewWidget = ({
         routeHandler,
         configurationOverrides = {}
-    }: { routeHandler?: RouteHandler; configurationOverrides?: Record<string, any> } = {}) => {
+    }: { routeHandler?: RouteHandler; configurationOverrides?: Partial<typeof widgetConfiguration> } = {}) => {
         cy.interceptSp('POST', /^\/searches\/deployments/, routeHandler).as('deployments');
         cy.usePageMock(
             [widgetId],
