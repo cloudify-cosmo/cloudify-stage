@@ -39,8 +39,7 @@ const DeploymentsMap: FunctionComponent<DeploymentsMapProps> = ({
 
     const sitesDisplayed = useMemo(() => deploymentSitePairs.map(({ site }) => site), [deploymentSitePairs]);
 
-    // TODO(RD-2093): consider auto-panning to fit all `sitesDisplayed` when they change
-    // (based on answer in JIRA)
+    // TODO(RD-2135): auto-pan the map when the selectedDeployment changes
 
     // NOTE: those options are only relevant during the initial render, since the MapComponent
     // does not declare them as mutable. Thus, no need to recalculate them.
