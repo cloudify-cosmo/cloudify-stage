@@ -7,12 +7,14 @@ import DeploymentsMap from './DeploymentsMap';
 
 interface DeploymentsMapContainerProps {
     deployments: Deployment[];
+    selectedDeployment: Deployment | undefined;
     toolbox: Stage.Types.Toolbox;
     widgetDimensions: ComponentProps<typeof DeploymentsMap>['widgetDimensions'];
 }
 
 const DeploymentsMapContainer: FunctionComponent<DeploymentsMapContainerProps> = ({
     deployments,
+    selectedDeployment,
     toolbox,
     widgetDimensions
 }) => {
@@ -55,6 +57,7 @@ const DeploymentsMapContainer: FunctionComponent<DeploymentsMapContainerProps> =
     return (
         <DeploymentsMap
             deployments={deploymentsWithSites}
+            selectedDeployment={selectedDeployment}
             sites={sitesResult.data.items}
             widgetDimensions={widgetDimensions}
         />

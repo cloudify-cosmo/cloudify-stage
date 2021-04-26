@@ -2,15 +2,23 @@ import { Dictionary, keyBy } from 'lodash';
 import { FunctionComponent, useEffect, useMemo, useRef } from 'react';
 import type { Map } from 'react-leaflet';
 
-import { Deployment, DeploymentStatus } from '../types';
+import { Deployment } from '../types';
+import { DeploymentSitePair } from './common';
+import DeploymentSiteMarker from './marker';
 
 interface DeploymentsMapProps {
     deployments: Deployment[];
+    selectedDeployment: Deployment | undefined;
     sites: Stage.Common.Map.Site[];
     widgetDimensions: Stage.Common.Map.WidgetDimensions;
 }
 
-const DeploymentsMap: FunctionComponent<DeploymentsMapProps> = ({ deployments, sites, widgetDimensions }) => {
+const DeploymentsMap: FunctionComponent<DeploymentsMapProps> = ({
+    deployments,
+    sites,
+    widgetDimensions,
+    selectedDeployment
+}) => {
     const sitesWithPositions = useMemo(() => sites.filter(Stage.Common.Map.isSiteWithPosition), [sites]);
     const sitesLookupTable = useMemo(() => keyBy(sitesWithPositions, 'name'), [sitesWithPositions]);
     const deploymentSitePairs = useMemo(() => getDeploymentSitePairs(sitesLookupTable, deployments), [
@@ -48,17 +56,17 @@ const DeploymentsMap: FunctionComponent<DeploymentsMapProps> = ({ deployments, s
         >
             <DefaultTileLayer />
             {deploymentSitePairs.map(({ deployment, site }) => (
-                <DeploymentSiteMarker deployment={deployment} site={site} key={`${deployment.id}-${site.name}`} />
+                <DeploymentSiteMarker
+                    deployment={deployment}
+                    site={site}
+                    key={`${deployment.id}-${site.name}`}
+                    selected={deployment.id === selectedDeployment?.id}
+                />
             ))}
         </MapComponent>
     );
 };
 export default DeploymentsMap;
-
-interface DeploymentSitePair {
-    deployment: Deployment;
-    site: Stage.Common.Map.SiteWithPosition;
-}
 
 const getDeploymentSitePairs = (
     sitesLookupTable: Dictionary<Stage.Common.Map.SiteWithPosition>,
@@ -68,38 +76,3 @@ const getDeploymentSitePairs = (
         .map((deployment): DeploymentSitePair => ({ deployment, site: sitesLookupTable[deployment.site_name] }))
         // NOTE: additional filtering, since the site may not have a position, and thus not be in the lookup table
         .filter(({ site }) => !!site);
-
-const deploymentStatusToIconColorMapping: Record<DeploymentStatus, Stage.Common.MarkerIconColor> = {
-    [DeploymentStatus.Good]: 'blue',
-    [DeploymentStatus.InProgress]: 'yellow',
-    [DeploymentStatus.RequiresAttention]: 'red'
-};
-const DeploymentSiteMarker: FunctionComponent<DeploymentSitePair> = ({ deployment, site }) => {
-    const icon = Stage.Common.createMarkerIcon(deploymentStatusToIconColorMapping[deployment.deployment_status]);
-    const { Marker, Popup, FeatureGroup, CircleMarker } = Stage.Basic.Leaflet;
-    const selected = deployment.id === 'deployments_view_test_deployment';
-    const position = Stage.Common.Map.siteToLatLng(site);
-
-    // TODO:
-    // 1. Change the popup into a tooltip
-    // 2. Get actual selected deployment
-    // 3. Change the selected deployment when clicking a marker
-
-    if (selected) {
-        return (
-            <FeatureGroup>
-                <CircleMarker center={position} radius={10} color="black" fillOpacity={0.5} />
-                <Popup>I am active!</Popup>
-
-                <Marker icon={icon} position={position} riseOnHover />
-            </FeatureGroup>
-        );
-    }
-
-    return (
-        <Marker icon={icon} position={position} riseOnHover>
-            {/* TODO(RD-1526): add more information in marker popups */}
-            <Popup>{deployment.id}</Popup>
-        </Marker>
-    );
-};
