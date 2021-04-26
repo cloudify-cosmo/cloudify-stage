@@ -35,7 +35,7 @@ const LabelValueInput: FunctionComponent<LabelValueInputProps> = ({
                 onChange={onKeyChange}
                 toolbox={toolbox}
                 value={labelKey}
-                allowKnownOnly
+                allowAdditions
             />
             {isAnyOperator(operator) && (
                 <>
@@ -46,7 +46,7 @@ const LabelValueInput: FunctionComponent<LabelValueInputProps> = ({
                         toolbox={toolbox}
                         value={labelValue}
                         multiple
-                        allowKnownOnly
+                        allowAdditions
                     />
                 </>
             )}

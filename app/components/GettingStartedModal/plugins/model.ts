@@ -1,5 +1,3 @@
-import type { MetadataResponse } from '../model';
-
 export type URLString = string;
 
 // from REST API
@@ -30,7 +28,4 @@ export type ManagerPluginResponse = {
     package_version: string;
 };
 
-export type ManagerPluginsResponse = {
-    metadata: MetadataResponse;
-    items: ManagerPluginResponse[];
-};
+export type ManagerPluginsResponse = Stage.Types.PaginatedResponse<ManagerPluginResponse>;

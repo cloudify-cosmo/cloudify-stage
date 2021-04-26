@@ -9,7 +9,7 @@ import useInput from '../../utils/hooks/useInput';
 import useResettableState from '../../utils/hooks/useResettableState';
 import { Form, Modal } from '../basic';
 import gettingStartedSchema from './schema.json';
-import { isGettingStartedModalDisabled, disableGettingStartedModal } from './localStorage';
+import useModalOpenState from './useModalOpenState';
 import { validateSecretFields, validateTechnologyFields } from './formValidation';
 import createTechnologiesGroups from './createTechnologiesGroups';
 import { GettingStartedSchemaItem, StepName } from './model';
@@ -28,7 +28,7 @@ import type {
 const castedGettingStartedSchema = gettingStartedSchema as GettingStartedSchema;
 
 const GettingStartedModal = () => {
-    const [modalOpen, setModalOpen] = useState(() => !isGettingStartedModalDisabled());
+    const modalOpenState = useModalOpenState();
 
     const manager = useSelector((state: ReduxState) => state.manager);
     const [stepName, setStepName] = useState(StepName.Technologies);
@@ -40,10 +40,22 @@ const GettingStartedModal = () => {
     const [installationProcessing, setInstallationProcessing] = useState(false);
     const [modalDisabledChecked, setModalDisabledChange] = useInput(false);
 
-    const secretsStepsSchemas = useMemo(
-        () => createTechnologiesGroups(castedGettingStartedSchema.filter(items => technologiesStepData[items.name])), // steps with unique secrets for selected technologies
+    const commonStepsSchemas = useMemo(
+        () => castedGettingStartedSchema.filter(item => technologiesStepData[item.name]),
         [technologiesStepData]
     );
+    const secretsStepsSchemas = useMemo(() => createTechnologiesGroups(commonStepsSchemas), [technologiesStepData]);
+    const summaryStepSchemas = useMemo(() => {
+        return commonStepsSchemas.reduce(
+            (result, item) => {
+                if (item.secrets.length === 0) {
+                    result.push(item);
+                }
+                return result;
+            },
+            [...secretsStepsSchemas]
+        );
+    }, [commonStepsSchemas, secretsStepsSchemas]);
 
     if (!stageUtils.isUserAuthorized('getting_started', manager)) {
         return null;
@@ -93,11 +105,8 @@ const GettingStartedModal = () => {
         EventBus.trigger('secrets:refresh');
         setInstallationProcessing(false);
     };
-    const handleModalClose = () => {
-        setModalOpen(false);
-        if (modalDisabledChecked) {
-            disableGettingStartedModal();
-        }
+    const handleModalClose = async () => {
+        await modalOpenState.closeModal(modalDisabledChecked);
     };
 
     const handleBackClick = () => {
@@ -133,8 +142,12 @@ const GettingStartedModal = () => {
         switch (stepName) {
             case StepName.Technologies:
                 if (checkTechnologiesStepDataErrors()) {
-                    setStepName(StepName.Secrets);
-                    setSecretsStepIndex(0);
+                    if (secretsStepsSchemas.length > 0) {
+                        setStepName(StepName.Secrets);
+                        setSecretsStepIndex(0);
+                    } else {
+                        setStepName(StepName.Summary);
+                    }
                 }
                 break;
 
@@ -159,7 +172,7 @@ const GettingStartedModal = () => {
     };
 
     return (
-        <Modal open={modalOpen} onClose={handleModalClose}>
+        <Modal open={modalOpenState.modalOpen} onClose={handleModalClose}>
             <ModalHeader
                 stepName={stepName}
                 secretsStepIndex={secretsStepIndex}
@@ -172,6 +185,7 @@ const GettingStartedModal = () => {
                 secretsStepsSchemas={secretsStepsSchemas}
                 secretsStepsData={secretsStepsData}
                 secretsStepIndex={secretsStepIndex}
+                summaryStepSchemas={summaryStepSchemas}
                 onStepErrorsDismiss={handleStepErrorsDismiss}
                 onTechnologiesStepChange={handleTechnologiesStepChange}
                 onSecretsStepChange={handleSecretsStepChange}

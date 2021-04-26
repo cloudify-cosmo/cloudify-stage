@@ -1,5 +1,6 @@
 import type {
     GettingStartedSchema,
+    GettingStartedSchemaBlueprint,
     GettingStartedSchemaItem,
     GettingStartedSchemaPlugin,
     GettingStartedSchemaSecret
@@ -29,10 +30,12 @@ const mapSecretsByTechnologyName = (groupedSecrets: SecretGroup[]) => {
         const technologyNames: string[] = [];
         const technologyLabels: string[] = [];
         const technologyPlugins: GettingStartedSchemaPlugin[] = [];
+        const technologyBlueprints: GettingStartedSchemaBlueprint[] = [];
         technologies.forEach(technology => {
             technologyNames.push(technology.name);
             technologyLabels.push(technology.label);
             technologyPlugins.push(...technology.plugins);
+            technologyBlueprints.push(...technology.blueprints);
         });
         const technologyName = _.uniq(technologyNames)
             .map(name => encodeURIComponent(name))
@@ -44,7 +47,8 @@ const mapSecretsByTechnologyName = (groupedSecrets: SecretGroup[]) => {
                 logo: '',
                 label: _.uniq(technologyLabels).join(' + '),
                 plugins: _.uniqBy(technologyPlugins, plugin => `${plugin.name} ${plugin.version}`),
-                secrets: []
+                secrets: [],
+                blueprints: technologyBlueprints
             });
         groupedTechnology.secrets.push(secret);
     });
