@@ -3,7 +3,7 @@ import { useQuery } from 'react-query';
 
 import type { Deployment } from '../types';
 import { mapT } from './common';
-import DeploymentsMap from './map';
+import DeploymentsMap from './DeploymentsMap';
 
 interface DeploymentsMapContainerProps {
     deployments: Deployment[];
