@@ -532,8 +532,9 @@ describe('Deployments View widget', () => {
             london: 'London',
             warsaw: 'Warsaw'
         } as const;
+        const mapDeploymentsPrefix = `${deploymentName}_map`;
         const getSiteDeploymentName = (siteName: Stage.Types.ObjectKeys<typeof siteNames>) =>
-            `${deploymentName}_map_${siteName}`;
+            `${mapDeploymentsPrefix}_${siteName}`;
 
         before(() => {
             Object.values(siteNames)
@@ -567,10 +568,14 @@ describe('Deployments View widget', () => {
         const getDeploymentsMapTooltip = () => cy.get('.leaflet-tooltip');
         const getMarkerByImageSrcSuffix = (srcSuffix: string) =>
             cy.get(`.leaflet-marker-pane img[src$="${srcSuffix}"]`);
-        const withinMarkerTooltip = (getMarker: () => Cypress.Chainable, callback: () => void) => {
-            getMarker().trigger('mouseover');
+        const withinMarkerTooltip = (
+            getMarker: () => Cypress.Chainable,
+            callback: (currentSubject: JQuery<HTMLElement>) => void,
+            { force = false }: { force?: boolean } = {}
+        ) => {
+            getMarker().trigger('mouseover', { force });
             getDeploymentsMapTooltip().within(callback);
-            getMarker().trigger('mouseout');
+            getMarker().trigger('mouseout', { force });
         };
 
         it('should be toggled upon clicking the button', () => {
@@ -626,6 +631,59 @@ describe('Deployments View widget', () => {
                     () => cy.contains('one-in-warsaw')
                 );
             });
+        });
+
+        it('should highlight the selected deployment', () => {
+            useDeploymentsViewWidget({
+                configurationOverrides: { mapOpenByDefault: true }
+            });
+
+            const getSelectedMarker = () => cy.get('path.test__map-selected-marker');
+
+            cy.getSearchInput().type(mapDeploymentsPrefix);
+
+            function selectDeploymentInTableAndVerifyMapSelection(name: string) {
+                getDeploymentsViewTable().within(() => {
+                    cy.contains(name).click();
+                });
+                getDeploymentsViewMap().within(() => {
+                    // NOTE: need to `force` events, since the selection circle is covered by a marker image
+                    // and Cypress would not interact with the circle underneath
+                    withinMarkerTooltip(getSelectedMarker, () => cy.contains(name), { force: true });
+                });
+            }
+
+            selectDeploymentInTableAndVerifyMapSelection(getSiteDeploymentName(siteNames.london));
+
+            /**
+             * NOTE: there is no information in the DOM about which deployment a given marker is for.
+             * Thus, the test goes through all markers and inspects the tooltips that are shown
+             * for those markers.
+             */
+            cy.log('Click markers on the map and verify selection in the table');
+            cy.get('.leaflet-marker-pane img')
+                .as('markers')
+                .should('have.length', 3)
+                .each((_, index) => {
+                    // NOTE: need to query the DOM for markers again to get
+                    // latest elements, since the DOM structure changes during
+                    // the test and previous elements are removed from the DOM.
+                    cy.get('@markers')
+                        .then(markers => markers[index])
+                        .then(marker => {
+                            let currentDeploymentName = '';
+                            withinMarkerTooltip(
+                                () => cy.wrap(marker),
+                                element => {
+                                    currentDeploymentName = element.text();
+                                }
+                            );
+                            cy.wrap(marker).click();
+                            getDeploymentsViewTable().within(() => {
+                                cy.get('tr.active').contains(currentDeploymentName);
+                            });
+                        });
+                });
         });
     });
 });

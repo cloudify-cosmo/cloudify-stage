@@ -25,7 +25,14 @@ const DeploymentSiteMarker: FunctionComponent<DeploymentSiteMarkerProps> = ({
         // NOTE: only render FeatureGroup when necessary to avoid adding additional Leaflet elements
         return (
             <FeatureGroup onclick={onClick}>
-                <CircleMarker center={position} radius={10} color="black" fillOpacity={0.5} />
+                <CircleMarker
+                    center={position}
+                    radius={10}
+                    color="black"
+                    fillOpacity={0.5}
+                    // NOTE: data-testid has no effect, so using className to target the element in tests
+                    className="test__map-selected-marker"
+                />
                 {tooltip}
 
                 <BareDeploymentSiteMarker status={deployment.deployment_status} position={position} />
