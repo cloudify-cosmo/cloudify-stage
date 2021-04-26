@@ -8,12 +8,14 @@ import { FilterRuleType, FilterRuleOperators, FilterRuleRowType } from './types'
 import { isAnyOperator } from './common';
 
 function hasError({ type, key, operator, values }: FilterRule) {
-    const ruleHasValuesDefined = values?.length > 0;
-    const ruleHasKeyDefined = !!key;
-    const isLabelRuleInvalid = !ruleHasKeyDefined || (isAnyOperator(operator) && !ruleHasValuesDefined);
-    const isAttributeRuleInvalid = !ruleHasValuesDefined;
+    const noValuesDefined = !values?.length;
 
-    return type === FilterRuleType.Label ? isLabelRuleInvalid : isAttributeRuleInvalid;
+    if (type === FilterRuleType.Label) {
+        const noKeyDefined = !key;
+        return noKeyDefined || (isAnyOperator(operator) && noValuesDefined);
+    }
+
+    return noValuesDefined;
 }
 
 function getNewRow(): FilterRuleRow {
