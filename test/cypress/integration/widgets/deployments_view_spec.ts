@@ -11,7 +11,6 @@ describe('Deployments View widget', () => {
     const specPrefix = 'deployments_view_test_';
     const blueprintName = `${specPrefix}blueprint`;
     const deploymentName = `${specPrefix}deployment`;
-    const deploymentNameThatMatchesFilter = `${specPrefix}precious_deployment`;
     const siteName = 'Olsztyn';
     const blueprintUrl = exampleBlueprintUrl;
     const widgetConfiguration: import('../../../../widgets/deploymentsView/src/widget').DeploymentsViewWidgetConfiguration = {
@@ -182,7 +181,9 @@ describe('Deployments View widget', () => {
     });
 
     describe('with filters', () => {
+        const deploymentNameThatMatchesFilter = `${specPrefix}precious_deployment`;
         const filterId = 'only-precious';
+
         before(() => {
             cy.deleteDeploymentsFilter(filterId, { ignoreFailure: true })
                 .createDeploymentsFilter(filterId, [
@@ -195,14 +196,14 @@ describe('Deployments View widget', () => {
                 ])
                 .deployBlueprint(blueprintName, deploymentNameThatMatchesFilter, { webserver_port: 9124 })
                 .setLabels(deploymentNameThatMatchesFilter, [{ precious: 'yes' }]);
+
+            useDeploymentsViewWidget({ configurationOverrides: { filterId } });
         });
 
         const getFilterIdInput = () =>
             cy.contains('Name of the saved filter to apply').parent().get('input[type="text"]');
 
-        it('should take the filter into account when displaying deployments', () => {
-            useDeploymentsViewWidget({ configurationOverrides: { filterId } });
-
+        it('should take the configured filter into account when displaying deployments', () => {
             cy.log('Show only precious deployments');
             cy.contains(deploymentNameThatMatchesFilter);
             cy.contains(deploymentName).should('not.exist');
@@ -221,6 +222,23 @@ describe('Deployments View widget', () => {
             });
 
             cy.contains(/with ID .* was not found/);
+        });
+
+        it('should take the selected filter into account when displaying deployments', () => {
+            useDeploymentsViewWidget({});
+
+            cy.contains(deploymentNameThatMatchesFilter);
+            cy.contains(deploymentName);
+
+            cy.contains('Filter').click();
+
+            cy.get('.modal').within(() => {
+                cy.get('input').type(`${filterId}{enter}`);
+                cy.contains('OK').click();
+            });
+
+            cy.contains(deploymentNameThatMatchesFilter);
+            cy.contains(deploymentName).should('not.exist');
         });
     });
 
