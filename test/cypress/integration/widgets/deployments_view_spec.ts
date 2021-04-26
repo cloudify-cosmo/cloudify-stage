@@ -196,14 +196,14 @@ describe('Deployments View widget', () => {
                 ])
                 .deployBlueprint(blueprintName, deploymentNameThatMatchesFilter, { webserver_port: 9124 })
                 .setLabels(deploymentNameThatMatchesFilter, [{ precious: 'yes' }]);
-
-            useDeploymentsViewWidget({ configurationOverrides: { filterId } });
         });
 
-        const getFilterIdInput = () =>
-            cy.contains('Name of the saved filter to apply').parent().get('input[type="text"]');
-
         it('should take the configured filter into account when displaying deployments', () => {
+            const getFilterIdInput = () =>
+                cy.contains('Name of the saved filter to apply').parent().get('input[type="text"]');
+
+            useDeploymentsViewWidget({ configurationOverrides: { filterId } });
+
             cy.log('Show only precious deployments');
             cy.contains(deploymentNameThatMatchesFilter);
             cy.contains(deploymentName).should('not.exist');
