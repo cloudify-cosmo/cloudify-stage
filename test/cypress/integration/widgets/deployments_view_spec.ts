@@ -598,7 +598,7 @@ describe('Deployments View widget', () => {
             });
 
             getDeploymentsViewMap().within(() => {
-                cy.get('.leaflet-marker-icon').should('have.length', 3).and('be.visible');
+                cy.get('.leaflet-marker-icon').should('be.visible').and('have.length', 3);
 
                 getMarkerByImageSrcSuffix('yellow.png').click();
                 getDeploymentsMapPopup().contains('hello-world-one');
