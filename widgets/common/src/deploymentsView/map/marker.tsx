@@ -19,16 +19,14 @@ const DeploymentSiteMarker: FunctionComponent<DeploymentSiteMarkerProps> = ({
 }) => {
     const { FeatureGroup, CircleMarker } = Stage.Basic.Leaflet;
     const position = Stage.Common.Map.siteToLatLng(site);
-    const popup = <DeploymentSitePopup deployment={deployment} />;
-
-    // TODO:
-    // 1. Change the popup into a tooltip
+    const tooltip = <DeploymentSiteTooltip deployment={deployment} />;
 
     if (selected) {
+        // NOTE: only render FeatureGroup when necessary to avoid adding additional Leaflet elements
         return (
             <FeatureGroup onclick={onClick}>
                 <CircleMarker center={position} radius={10} color="black" fillOpacity={0.5} />
-                {popup}
+                {tooltip}
 
                 <BareDeploymentSiteMarker status={deployment.deployment_status} position={position} />
             </FeatureGroup>
@@ -37,7 +35,7 @@ const DeploymentSiteMarker: FunctionComponent<DeploymentSiteMarkerProps> = ({
 
     return (
         <BareDeploymentSiteMarker status={deployment.deployment_status} position={position} onClick={onClick}>
-            {popup}
+            {tooltip}
         </BareDeploymentSiteMarker>
     );
 };
@@ -58,9 +56,14 @@ const BareDeploymentSiteMarker: FunctionComponent<{
     );
 };
 
-const DeploymentSitePopup: FunctionComponent<{ deployment: Deployment }> = ({ deployment }) => {
-    const { Popup } = Stage.Basic.Leaflet;
+const tooltipOffset = L.point(0, -40);
+const DeploymentSiteTooltip: FunctionComponent<{ deployment: Deployment }> = ({ deployment }) => {
+    const { Tooltip } = Stage.Basic.Leaflet;
 
-    // TODO(RD-1526): add more information in marker popups
-    return <Popup>{deployment.id}</Popup>;
+    // TODO(RD-1526): add more information in marker tooltips
+    return (
+        <Tooltip direction="top" offset={tooltipOffset}>
+            {deployment.id}
+        </Tooltip>
+    );
 };

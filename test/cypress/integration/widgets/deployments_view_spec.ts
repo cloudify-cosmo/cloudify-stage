@@ -564,9 +564,14 @@ describe('Deployments View widget', () => {
             });
         });
 
-        const getDeploymentsMapPopup = () => cy.get('.leaflet-popup');
+        const getDeploymentsMapTooltip = () => cy.get('.leaflet-tooltip');
         const getMarkerByImageSrcSuffix = (srcSuffix: string) =>
             cy.get(`.leaflet-marker-pane img[src$="${srcSuffix}"]`);
+        const withinMarkerTooltip = (getMarker: () => Cypress.Chainable, callback: () => void) => {
+            getMarker().trigger('mouseover');
+            getDeploymentsMapTooltip().within(callback);
+            getMarker().trigger('mouseout');
+        };
 
         it('should be toggled upon clicking the button', () => {
             useDeploymentsViewWidget();
@@ -580,8 +585,10 @@ describe('Deployments View widget', () => {
             cy.getSearchInput().type(siteNames.london);
             getDeploymentsViewMap().within(() => {
                 cy.get('.leaflet-marker-icon').should('have.length', 1);
-                getMarkerByImageSrcSuffix('red.png').click();
-                getDeploymentsMapPopup().contains(getSiteDeploymentName(siteNames.london));
+                withinMarkerTooltip(
+                    () => getMarkerByImageSrcSuffix('red.png'),
+                    () => cy.contains(getSiteDeploymentName(siteNames.london))
+                );
             });
 
             getDeploymentsMapToggleButton()
@@ -604,15 +611,20 @@ describe('Deployments View widget', () => {
             getDeploymentsViewMap().within(() => {
                 cy.get('.leaflet-marker-icon').should('be.visible').and('have.length', 3);
 
-                getMarkerByImageSrcSuffix('yellow.png').click();
-                getDeploymentsMapPopup().contains('hello-world-one');
+                withinMarkerTooltip(
+                    () => getMarkerByImageSrcSuffix('yellow.png'),
+                    () => cy.contains('hello-world-one')
+                );
 
-                // NOTE: the blue marker is on top of the red marker, thus force the click
-                getMarkerByImageSrcSuffix('red.png').click({ force: true });
-                getDeploymentsMapPopup().contains('deployments_view_test_deployment');
+                withinMarkerTooltip(
+                    () => getMarkerByImageSrcSuffix('red.png'),
+                    () => cy.contains('deployments_view_test_deployment')
+                );
 
-                getMarkerByImageSrcSuffix('blue.png').click();
-                getDeploymentsMapPopup().contains('one-in-warsaw');
+                withinMarkerTooltip(
+                    () => getMarkerByImageSrcSuffix('blue.png'),
+                    () => cy.contains('one-in-warsaw')
+                );
             });
         });
     });
