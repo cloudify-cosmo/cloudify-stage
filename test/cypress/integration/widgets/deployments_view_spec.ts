@@ -11,7 +11,7 @@ describe('Deployments View widget', () => {
     const specPrefix = 'deployments_view_test_';
     const blueprintName = `${specPrefix}blueprint`;
     const deploymentName = `${specPrefix}deployment`;
-    const siteName = 'Olsztyn';
+    const exampleSiteName = 'Olsztyn';
     const blueprintUrl = exampleBlueprintUrl;
     const widgetConfiguration: import('../../../../widgets/deploymentsView/src/widget').DeploymentsViewWidgetConfiguration = {
         filterByParentDeployment: false,
@@ -49,12 +49,12 @@ describe('Deployments View widget', () => {
     before(() => {
         cy.activate()
             .deleteDeployments(specPrefix, true)
-            .deleteSites(siteName)
+            .deleteSites(exampleSiteName)
             .deleteBlueprints(blueprintName, true)
             .uploadBlueprint(blueprintUrl, blueprintName)
             .deployBlueprint(blueprintName, deploymentName, { webserver_port: 9123 })
-            .createSite({ name: siteName, location: '53.77509462534224, 20.473709106445316' })
-            .setSite(deploymentName, siteName)
+            .createSite({ name: exampleSiteName, location: '53.77509462534224, 20.473709106445316' })
+            .setSite(deploymentName, exampleSiteName)
             .setLabels(deploymentName, [{ 'rendered-inside': 'details-panel' }]);
     });
 
@@ -103,7 +103,7 @@ describe('Deployments View widget', () => {
             getDeploymentsViewTable().within(() => {
                 cy.contains(deploymentName);
                 cy.contains(blueprintName).should('not.exist');
-                cy.contains(siteName).should('not.exist');
+                cy.contains(exampleSiteName).should('not.exist');
             });
 
             cy.log('Show some columns');
@@ -118,7 +118,7 @@ describe('Deployments View widget', () => {
             getDeploymentsViewTable().within(() => {
                 cy.contains(deploymentName);
                 cy.contains(blueprintName);
-                cy.contains(siteName).should('not.exist');
+                cy.contains(exampleSiteName).should('not.exist');
             });
         });
 
@@ -149,7 +149,7 @@ describe('Deployments View widget', () => {
                 .parents('tr')
                 .within(() => {
                     cy.contains(blueprintName);
-                    cy.contains(siteName);
+                    cy.contains(exampleSiteName);
                 });
         });
 
@@ -526,6 +526,44 @@ describe('Deployments View widget', () => {
     });
 
     describe('map', () => {
+        const siteNames = {
+            olsztyn: exampleSiteName,
+            telAviv: 'Tel-Aviv',
+            london: 'London',
+            warsaw: 'Warsaw'
+        } as const;
+        const getSiteDeploymentName = (siteName: Stage.Types.ObjectKeys<typeof siteNames>) =>
+            `${deploymentName}_map_${siteName}`;
+
+        before(() => {
+            Object.values(siteNames)
+                // NOTE: the exampleSiteName is used in other tests, so it cannot be removed here
+                .filter(siteName => siteName !== exampleSiteName)
+                .forEach(siteName => {
+                    cy.deleteSite(siteName, { ignoreFailure: true });
+                });
+
+            cy.createSites([
+                {
+                    name: siteNames.telAviv,
+                    location: '32.066667,34.783333'
+                },
+                {
+                    name: siteNames.london,
+                    location: '51.509865,-0.118092'
+                },
+                {
+                    name: siteNames.warsaw,
+                    location: '52.229676,21.012229'
+                }
+            ]);
+
+            [siteNames.olsztyn, siteNames.london, siteNames.warsaw].forEach(siteName => {
+                const currentDeploymentId = getSiteDeploymentName(siteName);
+                cy.deployBlueprint(blueprintName, currentDeploymentId).setSite(currentDeploymentId, siteName);
+            });
+        });
+
         const getDeploymentsMapPopup = () => cy.get('.leaflet-popup');
         const getMarkerByImageSrcSuffix = (srcSuffix: string) =>
             cy.get(`.leaflet-marker-pane img[src$="${srcSuffix}"]`);
@@ -539,10 +577,11 @@ describe('Deployments View widget', () => {
                 .click()
                 .should('have.class', 'active')
                 .should('have.attr', 'title', 'Close map');
+            cy.getSearchInput().type(siteNames.london);
             getDeploymentsViewMap().within(() => {
                 cy.get('.leaflet-marker-icon').should('have.length', 1);
                 getMarkerByImageSrcSuffix('red.png').click();
-                getDeploymentsMapPopup().contains(deploymentName);
+                getDeploymentsMapPopup().contains(getSiteDeploymentName(siteNames.london));
             });
 
             getDeploymentsMapToggleButton()
@@ -553,41 +592,6 @@ describe('Deployments View widget', () => {
         });
 
         it('should render markers for various deployment states', () => {
-            cy.interceptSp('GET', /^\/sites.*_get_all_results=true/, {
-                statusCode: 200,
-                body: {
-                    items: [
-                        {
-                            name: 'Olsztyn',
-                            latitude: 53.7795,
-                            longitude: 20.49499
-                        },
-                        {
-                            name: 'Tel Aviv',
-                            latitude: 32.066667,
-                            longitude: 34.783333
-                        },
-                        {
-                            name: 'London',
-                            latitude: 51.509865,
-                            longitude: -0.118092
-                        },
-                        {
-                            name: 'Warsaw',
-                            latitude: 52.229676,
-                            longitude: 21.012229
-                        }
-                    ],
-                    metadata: {
-                        pagination: {
-                            offset: 0,
-                            size: 1000,
-                            total: 4
-                        }
-                    }
-                } as Stage.Types.PaginatedResponse<unknown>
-            });
-
             useDeploymentsViewWidget({
                 routeHandler: {
                     fixture: 'deployments/various-statuses.json'
