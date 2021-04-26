@@ -11,7 +11,7 @@ export interface SiteWithPosition {
 }
 
 export function isSiteWithPosition(site: Site): site is SiteWithPosition {
-    return !!site.latitude && !!site.longitude;
+    return typeof site.latitude === 'number' && typeof site.longitude === 'number';
 }
 
 export function siteToLatLng(site: SiteWithPosition): [number, number] {
