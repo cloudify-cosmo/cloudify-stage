@@ -183,7 +183,7 @@ describe('Deployments View widget', () => {
     describe('with filters', () => {
         const deploymentNameThatMatchesFilter = `${specPrefix}precious_deployment`;
         const filterId = 'only-precious';
-        const filterRules = [
+        const filterRules: Stage.Common.Filters.Rule[] = [
             {
                 type: FilterRuleType.Label,
                 key: 'precious',
