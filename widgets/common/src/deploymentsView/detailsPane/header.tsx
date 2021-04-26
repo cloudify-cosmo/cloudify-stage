@@ -22,7 +22,7 @@ const DetailsPaneHeader: FunctionComponent<DetailsPaneHeaderProps> = ({ deployme
             width: 1,
             height: 1,
             definition: 'deploymentActionButtons',
-            configuration: {},
+            configuration: { preventRedirectToParentPageAfterDelete: true },
             drillDownPages: {},
             maximized: false
         }),

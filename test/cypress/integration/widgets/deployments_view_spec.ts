@@ -20,7 +20,9 @@ describe('Deployments View widget', () => {
         pageSize: 100,
         customPollingTime: 10,
         sortColumn: 'created_at',
-        sortAscending: false
+        sortAscending: false,
+        mapHeight: 300,
+        mapOpenByDefault: false
     };
     // NOTE: widgets below are shown in the details pane
     const additionalWidgetIdsToLoad = [
@@ -79,10 +81,17 @@ describe('Deployments View widget', () => {
         cy.get('.widget').filter('.deploymentsViewWidget, .deploymentsViewDrilledDownWidget').find('.widgetItem');
     const getDeploymentsViewTable = () => getDeploymentsViewWidget().get('.gridTable');
     const getDeploymentsViewDetailsPane = () => getDeploymentsViewWidget().get('.detailsPane');
+    // TODO(RD-2090): use a better selector for the map
+    const getDeploymentsViewMap = () => getDeploymentsViewWidget().contains('I am a map');
+    const getDeploymentsMapToggleButton = () => getDeploymentsViewWidget().contains('button', 'Map');
+
+    const verifyMapHeight = (expectedHeight: number) =>
+        getDeploymentsViewMap().invoke('height').should('eq', expectedHeight);
 
     const widgetConfigurationHelpers = {
         getFieldsDropdown: () => cy.contains('List of fields to show in the table').parent().find('[role="listbox"]'),
-        toggleFieldsDropdown: () => widgetConfigurationHelpers.getFieldsDropdown().find('.dropdown.icon').click()
+        toggleFieldsDropdown: () => widgetConfigurationHelpers.getFieldsDropdown().find('.dropdown.icon').click(),
+        mapHeightInput: () => cy.contains('Map height').parent().find('input[type="number"]')
     };
 
     describe('configuration', () => {
@@ -113,6 +122,23 @@ describe('Deployments View widget', () => {
                 cy.contains(blueprintName);
                 cy.contains(siteName).should('not.exist');
             });
+        });
+
+        it('should affect the map', () => {
+            useDeploymentsViewWidget({
+                configurationOverrides: { mapOpenByDefault: true }
+            });
+
+            verifyMapHeight(widgetConfiguration.mapHeight);
+
+            const newHeight = 100;
+
+            cy.editWidgetConfiguration(widgetId, () => {
+                // NOTE: after clearing the input, 0 is automatically inserted. {home}{del} removes the leading 0
+                widgetConfigurationHelpers.mapHeightInput().clear().type(`${newHeight}{home}{del}`);
+            });
+
+            verifyMapHeight(newHeight);
         });
     });
 
@@ -352,12 +378,19 @@ describe('Deployments View widget', () => {
             });
         });
 
-        it('should support the drill-down workflow', () => {
+        const useEnvironmentsWidget = () => {
             useDeploymentsViewWidget({
                 configurationOverrides: {
                     filterId: 'csys-environment-filter'
                 }
             });
+        };
+        const getSubenvironmentsButton = () => cy.contains('button', 'Subenvironments');
+        const getSubservicesButton = () => cy.contains('button', 'Services');
+        const getBreadcrumbs = () => cy.get('.breadcrumb');
+
+        it('should support the drill-down workflow', () => {
+            useEnvironmentsWidget();
 
             getDeploymentsViewTable().within(() => {
                 cy.log('Only top-level environments should be visible');
@@ -367,10 +400,6 @@ describe('Deployments View widget', () => {
                 cy.contains('db-2').should('not.exist');
                 cy.contains('web-app').should('not.exist');
             });
-
-            const getSubenvironmentsButton = () => cy.get('button').contains('Subenvironments');
-            const getSubservicesButton = () => cy.get('button').contains('Services');
-            const getBreadcrumbs = () => cy.get('.breadcrumb');
 
             getDeploymentsViewDetailsPane().within(() => {
                 getSubservicesButton().contains('1');
@@ -427,11 +456,57 @@ describe('Deployments View widget', () => {
                 cy.contains('db-env').should('not.exist');
             });
         });
+
+        it('should allow deleting a deployment without redirecting to the parent page', () => {
+            const tempDeploymentId = `${specPrefix}_temp_deployment_to_remove`;
+            const parentDeploymentId = getDeploymentFullName('app-env');
+            cy.deployBlueprint(blueprintName, tempDeploymentId).setLabels(tempDeploymentId, [
+                { 'csys-obj-type': 'service' },
+                { 'csys-obj-parent': parentDeploymentId }
+            ]);
+
+            useEnvironmentsWidget();
+
+            getDeploymentsViewDetailsPane().within(() => getSubservicesButton().click());
+
+            getBreadcrumbs().contains(parentDeploymentId);
+
+            getDeploymentsViewTable().within(() => cy.contains(tempDeploymentId).click());
+
+            cy.log('Delete the deployment');
+            getDeploymentsViewDetailsPane().contains('Deployment actions').click();
+            cy.get('.popup').contains('Delete').click();
+            cy.get('.modal').contains('Yes').click();
+
+            getDeploymentsViewTable().within(() => cy.contains(tempDeploymentId).should('not.exist'));
+            getBreadcrumbs().contains(parentDeploymentId);
+        });
     });
 
     it('should display an error message when using the drilled-down widget on a top-level page', () => {
         cy.usePageMock([`${widgetId}DrilledDown`]).mockLogin();
 
         cy.contains('Unexpected widget usage');
+    });
+
+    describe('map', () => {
+        // TODO(RD-2090): make the test more meaningful
+        it('should be toggled upon clicking the button', () => {
+            useDeploymentsViewWidget();
+
+            getDeploymentsViewMap().should('not.exist');
+
+            getDeploymentsMapToggleButton()
+                .click()
+                .should('have.class', 'active')
+                .should('have.attr', 'title', 'Close map');
+            getDeploymentsViewMap();
+
+            getDeploymentsMapToggleButton()
+                .click()
+                .should('not.have.class', 'active')
+                .should('have.attr', 'title', 'Open map');
+            getDeploymentsViewMap().should('not.exist');
+        });
     });
 });

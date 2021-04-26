@@ -292,6 +292,7 @@ const commands = {
             routeHandler
         ),
     getByTestId: (id: string) => cy.get(`[data-testid=${id}]`),
+    getSearchInput: () => cy.get('input[placeholder="Search..."]'),
 
     /**
      * Compiles a script in the fixtures directory using babel
@@ -317,11 +318,14 @@ function toIdObj(id: string) {
 }
 
 function setContext(field: string, value: string) {
-    cy.get(`.${field}FilterField`).click();
-    cy.get(`.${field}FilterField input`).clear({ force: true }).type(`${value}`, { force: true });
-    cy.waitUntilPageLoaded();
-    cy.contains('.text', value).click();
-    cy.get(`.${field}FilterField input`).type('{esc}', { force: true });
+    cy.get(`.${field}FilterField`)
+        .click()
+        .within(() => {
+            cy.get('input').clear({ force: true }).type(`${value}`, { force: true });
+            cy.waitUntilPageLoaded();
+            cy.get(`[option-value="${value}"]`).click();
+            cy.get('input').type('{esc}', { force: true });
+        });
 }
 
 function clearContext(field: string) {

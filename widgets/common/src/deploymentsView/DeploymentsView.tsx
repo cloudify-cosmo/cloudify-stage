@@ -7,34 +7,70 @@ import type { SharedDeploymentsViewWidgetConfiguration } from './configuration';
 import DetailsPane from './detailsPane';
 import { DeploymentsTable } from './table';
 import { FilterRuleOperators, FilterRuleType } from '../filters/types';
+import {
+    DeploymentDetailsContainer,
+    DeploymentsMapContainer,
+    DeploymentsTableContainer,
+    DeploymentsViewContainer,
+    DeploymentsViewHeaderContainer
+} from './layout';
+import DeploymentsViewHeader from './header';
 
 export interface DeploymentsViewProps {
     widget: Stage.Types.Widget<SharedDeploymentsViewWidgetConfiguration>;
     toolbox: Stage.Types.Toolbox;
 
     filterByParentDeployment: boolean;
-    filterRules: Stage.Common.Filters.Rule[];
-    fetchingRules: boolean;
+    defaultFilterId?: string;
+    /**
+     * Rules that will be always appended to the rules from `defaultFilterId` or from the filter chosen by the user
+     */
+    additionalFilterRules?: Stage.Common.Filters.Rule[];
 }
 
 export const DeploymentsView: FunctionComponent<DeploymentsViewProps> = ({
     toolbox,
     widget,
     filterByParentDeployment,
-    filterRules,
-    fetchingRules
+    additionalFilterRules = [],
+    defaultFilterId
 }) => {
     const manager = toolbox.getManager();
     const [gridParams, setGridParams] = useState<Stage.Types.ManagerGridParams>();
+    const [userFilterId, setUserFilterId] = useState<string>();
 
+    const filterRulesResult = (() => {
+        const filterId = userFilterId ?? defaultFilterId;
+        const filterRulesUrl = `/filters/deployments/${filterId}`;
+        const result = useQuery<Stage.Common.Filters.Rule[]>(
+            filterRulesUrl,
+            ({ queryKey: url }) => (filterId ? manager.doGet(url).then(filtersResponse => filtersResponse.value) : []),
+            { refetchOnWindowFocus: false, keepPreviousData: true }
+        );
+
+        if (result.isIdle) {
+            /**
+             * NOTE: handling the `isIdle` state is necessary for TypeScript's type-narrowing to exclude `undefined` from
+             * the possible values of `result.data`.
+             *
+             * Such a case should not happen naturally, unless an `enabled` option is added to `useQuery`. If it is added,
+             * it should be here.
+             */
+            throw new Error('Idle state for fetching filter rules is not implemented.');
+        }
+
+        return result;
+    })();
+
+    const filterRules = filterRulesResult.data ?? [];
     const filteringByParentDeploymentResult = useFilteringByParentDeployment({ filterByParentDeployment });
     const finalFilterRules = useMemo(() => {
         if (!filteringByParentDeploymentResult.parentDeploymentRule) {
-            return filterRules;
+            return [...filterRules, ...additionalFilterRules];
         }
 
-        return [...filterRules, filteringByParentDeploymentResult.parentDeploymentRule];
-    }, [filterRules, filteringByParentDeploymentResult.parentDeploymentRule]);
+        return [...filterRules, ...additionalFilterRules, filteringByParentDeploymentResult.parentDeploymentRule];
+    }, [filterRules, filteringByParentDeploymentResult.parentDeploymentRule, additionalFilterRules]);
 
     const deploymentsUrl = '/searches/deployments';
     const deploymentsResult = useQuery(
@@ -52,8 +88,22 @@ export const DeploymentsView: FunctionComponent<DeploymentsViewProps> = ({
 
     Stage.Hooks.useEventListener(toolbox, 'deployments:refresh', deploymentsResult.refetch);
 
+    const [mapOpen, toggleMap] = Stage.Hooks.useToggle(widget.configuration.mapOpenByDefault);
+
     const { Loading, ErrorMessage } = Stage.Basic;
     const { i18n } = Stage;
+
+    if (filterRulesResult.isLoading) {
+        return <Loading message={i18n.t(`${i18nMessagesPrefix}.loadingFilterRules`)} />;
+    }
+    if (filterRulesResult.isError) {
+        return (
+            <ErrorMessage
+                header={i18n.t(`${i18nMessagesPrefix}.errorLoadingFilterRules`)}
+                error={filterRulesResult.error as { message: string }}
+            />
+        );
+    }
 
     if (filteringByParentDeploymentResult.missingParentDeploymentId) {
         const i18nMissingParentDeploymentPrefix = `${i18nMessagesPrefix}.missingParentDeploymentId`;
@@ -92,18 +142,37 @@ export const DeploymentsView: FunctionComponent<DeploymentsViewProps> = ({
     }
 
     return (
-        <div className="grid">
-            <DeploymentsTable
-                setGridParams={setGridParams}
-                toolbox={toolbox}
-                loadingIndicatorVisible={fetchingRules || deploymentsResult.isFetching}
-                pageSize={widget.configuration.pageSize}
-                totalSize={deploymentsResult.data.metadata.pagination.total}
-                deployments={deploymentsResult.data.items}
-                fieldsToShow={widget.configuration.fieldsToShow}
-            />
-            <DetailsPane deployment={selectedDeployment} widget={widget} toolbox={toolbox} />
-        </div>
+        <DeploymentsViewContainer>
+            <DeploymentsViewHeaderContainer>
+                <DeploymentsViewHeader
+                    mapOpen={mapOpen}
+                    toggleMap={toggleMap}
+                    toolbox={toolbox}
+                    onFilterChange={setUserFilterId}
+                />
+            </DeploymentsViewHeaderContainer>
+
+            {mapOpen && (
+                <DeploymentsMapContainer height={widget.configuration.mapHeight}>
+                    Hey, I am a map
+                </DeploymentsMapContainer>
+            )}
+
+            <DeploymentsTableContainer>
+                <DeploymentsTable
+                    setGridParams={setGridParams}
+                    toolbox={toolbox}
+                    loadingIndicatorVisible={filterRulesResult.isFetching || deploymentsResult.isFetching}
+                    pageSize={widget.configuration.pageSize}
+                    totalSize={deploymentsResult.data.metadata.pagination.total}
+                    deployments={deploymentsResult.data.items}
+                    fieldsToShow={widget.configuration.fieldsToShow}
+                />
+            </DeploymentsTableContainer>
+            <DeploymentDetailsContainer>
+                <DetailsPane deployment={selectedDeployment} widget={widget} toolbox={toolbox} />
+            </DeploymentDetailsContainer>
+        </DeploymentsViewContainer>
     );
 };
 

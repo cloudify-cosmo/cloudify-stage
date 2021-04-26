@@ -10,6 +10,8 @@ export interface Filter {
     labels_filter_rules: FilterRule[];
     // eslint-disable-next-line camelcase
     attrs_filter_rules: FilterRule[];
+    // eslint-disable-next-line camelcase
+    is_system_filter: boolean;
 }
 
 export interface FilterUsage {

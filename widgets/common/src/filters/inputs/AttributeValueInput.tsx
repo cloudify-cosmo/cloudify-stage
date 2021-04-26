@@ -1,9 +1,9 @@
-import { castArray } from 'lodash';
 import type { FunctionComponent } from 'react';
 
 import DynamicDropdown from '../../DynamicDropdown';
-import { LabelsFilterRuleOperators } from '../types';
 import type { CommonAttributeValueInputProps } from './types';
+import { isAnyOperator, getPlaceholderTranslation } from './common';
+import MultipleStringValuesInput from './MultipleStringValuesInput';
 
 interface AttributeValueInputProps extends CommonAttributeValueInputProps {
     fetchUrl: string;
@@ -20,14 +20,14 @@ const AttributeValueInput: FunctionComponent<AttributeValueInputProps> = ({
     toolbox,
     value
 }) => {
-    const { Input } = Stage.Basic;
-
-    if (operator === LabelsFilterRuleOperators.AnyOf || operator === LabelsFilterRuleOperators.NotAnyOf) {
+    if (isAnyOperator(operator)) {
         return (
             <DynamicDropdown
+                name="ruleValue"
                 fetchUrl={fetchUrl}
                 onChange={onChange}
                 toolbox={toolbox}
+                allowAdditions
                 clearable={false}
                 multiple
                 placeholder={placeholder}
@@ -37,9 +37,14 @@ const AttributeValueInput: FunctionComponent<AttributeValueInputProps> = ({
         );
     }
 
-    // TODO(RD-1762): Add support for type 'attribute' and operators different from 'any_of' and 'not_any_of'
-    const textValue = castArray(value)[0] || '';
-    return <Input type="text" onChange={(_event, { value: newValue }) => onChange([newValue])} value={textValue} />;
+    return (
+        <MultipleStringValuesInput
+            name="ruleValue"
+            value={value}
+            onChange={onChange}
+            placeholder={getPlaceholderTranslation('multipleStrings')}
+        />
+    );
 };
 
 export default AttributeValueInput;

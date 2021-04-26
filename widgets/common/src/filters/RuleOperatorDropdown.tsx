@@ -2,7 +2,7 @@ import { camelCase } from 'lodash';
 import { FunctionComponent, useMemo } from 'react';
 import type { DropdownItemProps } from 'semantic-ui-react/dist/commonjs/modules/Dropdown/DropdownItem';
 
-import { i18n, i18nPrefix } from './consts';
+import { getTranslation } from './common';
 import { FilterRuleRowType, LabelsFilterRuleOperators, AttributesFilterRuleOperators } from './types';
 import type { FilterRuleOperator } from './types';
 
@@ -15,7 +15,7 @@ interface RuleOperatorDropdownProps {
 function getDropdownOptions(operators: string[]) {
     return operators.map(
         (operator): DropdownItemProps => ({
-            text: i18n.t(`${i18nPrefix}.operatorsLabels.${camelCase(operator)}`),
+            text: getTranslation(`operatorsLabels.${camelCase(operator)}`),
             value: operator
         })
     );

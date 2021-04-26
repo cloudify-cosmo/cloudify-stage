@@ -40,8 +40,9 @@
             "stepFinish": "Finish"
         },
         "initialization": {
-            "pluginsLoadingError": "Plugins information loading error.",
-            "secretsLoadingError": "Secrets information loading error."
+            "pluginsMetadataLoadingError": "Plugins information loading error.",
+            "secretsLoadingError": "Secrets information loading error.",
+            "blueprintsMetadataLoadingError": "Blueprints information loading error"
         },
         "validation": {
             "someTechnologyRequiredError": "At least one technology needs to be selected.",
@@ -49,16 +50,20 @@
         },
         "summary": {
             "taskListTitle": "Task List",
-            "pluginInstalMessageSuffix": "plugin will be installed.",
-            "pluginInstalledMessageSuffix": "plugin is already installed.",
+            "pluginExistsMessageSuffix": "plugin is already installed.",
+            "pluginInstallMessageSuffix": "plugin will be installed.",
             "pluginNotFoundMessageSuffix": "plugin is not found in catalog and manager.",
             "secretCreateMessageSuffix": "secret will be created.",
-            "secretUpdateMessageSuffix": "secret will be updated."
+            "secretUpdateMessageSuffix": "secret will be updated.",
+            "blueprintExistsMessageSuffix": "blueprint is already uploaded.",
+            "blueprintUploadMessageSuffix": "blueprint will be uploaded."
         },
         "installation": {
             "pluginInstallError": "{{pluginName}} plugin installation error.",
             "secretUpdateError": "{{secretName}} secret update operation error.",
             "secretCreateError": "{{secretName}} secret create operation error.",
+            "blueprintUploadError": "{{blueprintName}} blueprint upload error:\n{{uploadError}}",
+            "timeoutExceededError": "Timeout exceeded.",
             "progressMessage": "Installation in progress...",
             "doneMessage": "Installation done!"
         }
@@ -501,16 +506,10 @@
             },
             "labels": {
                 "addButton": "Add",
-                "keyPlaceholder": {
-                    "knownOnly": "Select a key",
-                    "knownOrNew": "Select or type in a key"
-                },
+                "keyPlaceholder": "Select or type in a key",
                 "newKey": "New key",
                 "newValue": "New value",
-                "valuePlaceholder": {
-                    "knownOnly": "Select a value",
-                    "knownOrNew": "Select or type in a value"
-                },
+                "valuePlaceholder": "Select or type in a value",
                 "validationError": "Only letters, digits and the characters \"-\", \".\" and \"_\" are allowed and it must begin with a letter.",
                 "invalidKeyError": "All labels starting with `{{ keyPrefix }}` are reserved for internal usage and should not be used unless there is a need to override default functionality. The following labels are allowed for such override: {{ reservedKeys }}.",
                 "input": {
@@ -531,7 +530,8 @@
                     "inputsPlaceholders": {
                         "blueprintId": "Select blueprints",
                         "siteName": "Select site names",
-                        "createdBy": "Select usernames"
+                        "createdBy": "Select usernames",
+                        "multipleStrings": "Type in values"
                     },
                     "ruleTypesLabels": {
                         "label": "Label",
@@ -628,6 +628,29 @@
                 "fieldsToShow": {
                     "name": "List of fields to show in the table",
                     "placeholder": "Select fields from the list"
+                },
+                "mapOpenByDefault": {
+                    "name": "Show map by default"
+                },
+                "mapHeight": {
+                    "name": "Map height",
+                    "description": "The height of the map in pixels"
+                }
+            },
+            "header": {
+                "map": {
+                    "label": "Map",
+                    "openMap": "Open map",
+                    "closeMap": "Close map"
+                },
+                "filter": {
+                    "button": "Filter",
+                    "clearButton": "Clear selected filter",
+                    "modal": {
+                        "header": "Select a filter",
+                        "submit": "OK",
+                        "noFilterError": "Please select a filter"
+                    }
                 }
             },
             "iconLabels": {
@@ -698,6 +721,17 @@
                 }
             }
         },
+        "userManagement": {
+            "columns": {
+                "username": "Username",
+                "lastLoginAt": "Last login",
+                "isAdmin": "Admin",
+                "active": "Active",
+                "showGettingStarted": "Getting\nstarted",
+                "groupCount": "# Groups",
+                "tenantCount": "# Tenants"
+            }
+        },
         "filters": {
             "name": "Filters",
             "description": "This widget shows a list of defined filters",
@@ -707,10 +741,12 @@
                 "name": "Filter name",
                 "creator": "Creator",
                 "created": "Created",
+                "system": "System",
                 "actions": {
                     "delete": "Delete filter",
                     "edit": "Edit filter",
-                    "clone": "Clone filter"
+                    "clone": "Clone filter",
+                    "systemFilter": "System filter can't be edited or deleted"
                 }
             },
             "modal": {
