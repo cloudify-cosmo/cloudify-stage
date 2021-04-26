@@ -30,7 +30,7 @@ const FilterModal: FunctionComponent<FilterModalProps> = ({
         initialFilter ? [...initialFilter.attrs_filter_rules, ...initialFilter.labels_filter_rules] : []
     );
     const { errors, setErrors, clearErrors, setMessageAsError } = useErrors();
-    const [filterRulesInvalid, setFilterRulesInvalid] = useState<boolean>(false);
+    const [filterRulesInvalid, setFilterRulesInvalid] = useState(false);
     const { i18n } = Stage;
 
     function handleSubmit() {
