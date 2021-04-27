@@ -63,7 +63,8 @@ const BareDeploymentSiteMarker: FunctionComponent<{
     );
 };
 
-const tooltipOffset = L.point(0, -40);
+// NOTE: 41px is the height of the marker icon
+const tooltipOffset = L.point(0, -41);
 const DeploymentSiteTooltip: FunctionComponent<{ deployment: Deployment }> = ({ deployment }) => {
     const { Tooltip } = Stage.Basic.Leaflet;
 
