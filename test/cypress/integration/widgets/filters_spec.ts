@@ -428,28 +428,24 @@ describe('Filters widget', () => {
         ) {
             if (values.length > 0) {
                 withinTheLastRuleRow(() => {
-                    const endpoint = ((rowType: FilterRuleRowType) => {
-                        switch (rowType) {
-                            case 'blueprint_id':
-                                return 'blueprints';
-                            case 'site_name':
-                                return 'sites';
-                            case 'created_by':
-                                return 'users';
-                            default:
-                                throw new Error('Unknown rule row type.');
-                        }
-                    })(ruleRowType);
+                    const searchEndpoint: Record<FilterRuleRowType, string> = {
+                        blueprint_id: 'blueprints',
+                        site_name: 'sites',
+                        created_by: 'users',
+                        label: '' // NOTE: Only endpoints for attribute rules are necessary
+                    };
                     cy.get('div[name="ruleValue"]')
                         .click()
                         .within(() => {
                             values.forEach(value => {
-                                if (withAutocomplete)
-                                    cy.interceptSp('GET', RegExp(`${endpoint}.*_search=${value}`)).as(
-                                        `value_${value}_Search`
+                                if (withAutocomplete) {
+                                    const searchEndpointRegExp = RegExp(
+                                        `${searchEndpoint[ruleRowType]}.*_search=${value}`
                                     );
+                                    cy.interceptSp('GET', searchEndpointRegExp).as(`valueSearch_${value}`);
+                                }
                                 cy.get('input').type(`${value}`);
-                                if (withAutocomplete) cy.wait(`@value_${value}_Search`);
+                                if (withAutocomplete) cy.wait(`@valueSearch_${value}`);
                                 if (newValues.includes(value)) cy.contains('[role="option"]', 'Add ').click();
                                 else cy.get(`div[option-value="${value}"]`).click();
                                 cy.get(`.label[value="${value}"]`).should('exist');
