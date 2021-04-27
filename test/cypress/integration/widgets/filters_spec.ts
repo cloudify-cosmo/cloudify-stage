@@ -6,21 +6,6 @@ import {
     FilterRuleType
 } from '../../../../widgets/common/src/filters/types';
 
-// TODO: Temporary solution. We should import isAnyOperator from '../../../../widgets/common/src/filters/common'
-function isAnyOperator(operator: FilterRuleOperator) {
-    const anyOperators: FilterRuleOperator[] = [FilterRuleOperators.AnyOf, FilterRuleOperators.NotAnyOf];
-    return anyOperators.includes(operator);
-}
-function isFreeTextOperator(operator: FilterRuleOperator) {
-    const freeTextOperator: FilterRuleOperator[] = [
-        FilterRuleOperators.Contains,
-        FilterRuleOperators.NotContains,
-        FilterRuleOperators.StartsWith,
-        FilterRuleOperators.EndsWith
-    ];
-    return freeTextOperator.includes(operator);
-}
-
 describe('Filters widget', () => {
     before(() => {
         cy.usePageMock(['filters', 'onlyMyResources']).activate().mockLogin();
@@ -489,6 +474,19 @@ describe('Filters widget', () => {
             }
         }
 
+        function isLabelValueOperator(operator: FilterRuleOperator) {
+            const anyOperators: FilterRuleOperator[] = [FilterRuleOperators.AnyOf, FilterRuleOperators.NotAnyOf];
+            return anyOperators.includes(operator);
+        }
+        function isFreeTextValueOperator(operator: FilterRuleOperator) {
+            const freeTextOperator: FilterRuleOperator[] = [
+                FilterRuleOperators.Contains,
+                FilterRuleOperators.NotContains,
+                FilterRuleOperators.StartsWith,
+                FilterRuleOperators.EndsWith
+            ];
+            return freeTextOperator.includes(operator);
+        }
         function populateFilterRuleRow(rule: ExtendedFilterRule) {
             const ruleRowType =
                 rule.type === FilterRuleType.Label ? FilterRuleRowType.Label : (rule.key as FilterRuleRowType);
@@ -497,11 +495,16 @@ describe('Filters widget', () => {
             selectRuleOperator(rule.operator);
             if (ruleRowType === FilterRuleRowType.Label) {
                 selectRuleLabelKey(rule.key, rule.newKey);
-                if (isAnyOperator(rule.operator)) {
+                if (isLabelValueOperator(rule.operator)) {
                     selectRuleLabelValues(rule.values, rule.newValues);
                 }
             } else {
-                selectRuleAttributeValues(ruleRowType, rule.values, rule.newValues, !isFreeTextOperator(rule.operator));
+                selectRuleAttributeValues(
+                    ruleRowType,
+                    rule.values,
+                    rule.newValues,
+                    !isFreeTextValueOperator(rule.operator)
+                );
             }
         }
 
