@@ -38,6 +38,30 @@ describe('Filters widget', () => {
         cy.get('.loading').should('not.exist');
     });
 
+    function openAddFilterModal() {
+        cy.contains('Add').click();
+    }
+
+    function openCloneFilterModal() {
+        cy.get('.clone').click();
+    }
+
+    function openEditFilterModal() {
+        cy.get('.edit').click();
+    }
+
+    function saveFilter() {
+        cy.contains('Save').click();
+    }
+
+    function addNewRule() {
+        cy.contains('Add new rule').click();
+    }
+
+    function removeLastRule() {
+        withinTheLastRuleRow(() => cy.get('button[aria-label="Remove rule"]').click());
+    }
+
     function typeAttributeRuleValue(value: string) {
         cy.get('[name=ruleValue]').click().find('input').type(`${value}{enter}`).blur();
     }
@@ -46,14 +70,22 @@ describe('Filters widget', () => {
         return cy.contains('.field', 'Filter ID').find('input');
     }
 
+    function withinTheLastRuleRow(fn: (currentSubject: JQuery<HTMLElement>) => void) {
+        cy.get('.fields:last-of-type').within(fn);
+    }
+
+    function withinNthRuleRow(rowNumber: number, fn: (currentSubject: JQuery<HTMLElement>) => void) {
+        cy.get(`.fields:eq(${rowNumber})`).within(fn);
+    }
+
     function checkExistingRules() {
-        cy.get('.fields:eq(0)').within(() => {
+        withinNthRuleRow(0, () => {
             cy.contains('Blueprint');
             cy.contains('is one of');
             cy.contains('bpid');
         });
 
-        cy.get('.fields:eq(1)').within(() => {
+        withinNthRuleRow(1, () => {
             cy.contains('Label');
             cy.contains('is one of');
             cy.contains('precious');
@@ -63,7 +95,7 @@ describe('Filters widget', () => {
 
     const newBlueprintRuleValue = 'newBlueprintId';
     function modifyBlueprintRule() {
-        cy.get('.fields:eq(0)').within(() => {
+        withinNthRuleRow(0, () => {
             cy.contains('is one of').click();
             cy.contains('contains').click();
             typeAttributeRuleValue(newBlueprintRuleValue);
@@ -118,57 +150,6 @@ describe('Filters widget', () => {
         cy.get('.clone').should('not.have.class', 'disabled');
     });
 
-    it('should handle errors when adding new filter', () => {
-        type FilterModalError = {
-            name: string;
-            prepare?: () => void;
-            verify: () => void;
-            clean?: () => void;
-        };
-        const errors: FilterModalError[] = [
-            {
-                name: 'empty form',
-                verify: () => {
-                    cy.contains('Please provide the filter ID');
-                    cy.contains('Please provide all the values in filter rules section');
-                }
-            },
-            {
-                name: 'not all values provided',
-                prepare: () => getFilterIdInput().type('no_values'),
-                verify: () => {
-                    cy.contains('Please provide all the values in filter rules section');
-                    cy.get('[name="ruleValue"]').parent().should('have.class', 'error');
-                },
-                clean: () => getFilterIdInput().clear()
-            },
-            {
-                name: 'reserved filter ID provided',
-                prepare: () => {
-                    getFilterIdInput().type('csys-invalid');
-                    typeAttributeRuleValue('csys');
-                },
-                verify: () => cy.contains('All filters with a `csys-` prefix are reserved for internal use'),
-                clean: () => {
-                    cy.get('.label[value="csys"] .delete').click();
-                    getFilterIdInput().clear();
-                }
-            }
-        ];
-
-        cy.contains('Add').click();
-        cy.get('.modal').within(() => {
-            errors.forEach(error => {
-                cy.log(`Verify error handling - ${error.name}`);
-                if (typeof error.prepare === 'function') error.prepare();
-                cy.contains('Save').click();
-                error.verify();
-                if (typeof error.clean === 'function') error.clean();
-                cy.get('.error.message .close').click();
-            });
-        });
-    });
-
     it('should allow to add new filter', () => {
         const blueprintId = 'filters_test_blueprint';
         const deploymentId = 'filters_test_deployment';
@@ -181,13 +162,13 @@ describe('Filters widget', () => {
             .setLabels(deploymentId, [{ [labelKey]: 'label_value' }]);
 
         const newFilterName = `${filterName}_added`;
-        cy.contains('Add').click();
+        openAddFilterModal();
 
         cy.get('.modal').within(() => {
             getFilterIdInput().type(newFilterName);
-            cy.get('.fields:eq(0)').within(() => typeAttributeRuleValue(blueprintId));
-            cy.contains('Add new rule').click();
-            cy.get('.fields:eq(1)').within(() => {
+            withinTheLastRuleRow(() => typeAttributeRuleValue(blueprintId));
+            addNewRule();
+            withinTheLastRuleRow(() => {
                 cy.get('[name=ruleRowType]').click();
                 cy.contains('Label').click();
                 cy.get('[name=ruleOperator]').click();
@@ -198,7 +179,7 @@ describe('Filters widget', () => {
             });
 
             cy.interceptSp('PUT', `/filters/deployments/${newFilterName}`).as('createRequest');
-            cy.contains('Save').click();
+            saveFilter();
             cy.wait('@createRequest').then(({ request }) => {
                 const requestRules = request.body.filter_rules;
                 expect(requestRules).to.have.length(2);
@@ -232,7 +213,7 @@ describe('Filters widget', () => {
     });
 
     it('should allow to edit existing filter', () => {
-        cy.get('.edit').click();
+        openEditFilterModal();
 
         cy.get('.modal').within(() => {
             cy.contains(`Edit filter '${filterName}'`);
@@ -242,7 +223,7 @@ describe('Filters widget', () => {
 
             cy.interceptSp('PATCH', `/filters/deployments/${filterName}`).as('rulesRequest');
             cy.interceptSp('GET', `/filters/deployments`).as('filtersRequest');
-            cy.contains('Save').click();
+            saveFilter();
             checkRequestRules();
         });
 
@@ -252,7 +233,7 @@ describe('Filters widget', () => {
     });
 
     it('should allow to clone existing filter', () => {
-        cy.get('.clone').click();
+        openCloneFilterModal();
 
         cy.get('.modal').within(() => {
             cy.contains(`Clone filter '${filterName}'`);
@@ -261,7 +242,7 @@ describe('Filters widget', () => {
 
             getFilterIdInput().clear().type('csys-invalid');
             typeAttributeRuleValue('test');
-            cy.contains('Save').click();
+            saveFilter();
             cy.contains('All filters with a `csys-` prefix are reserved for internal use');
 
             getFilterIdInput().clear().type(`${filterName}_2`);
@@ -270,7 +251,7 @@ describe('Filters widget', () => {
             modifyBlueprintRule();
 
             cy.interceptSp('PUT', `/filters/deployments/${filterName}_2`).as('rulesRequest');
-            cy.contains('Save').click();
+            saveFilter();
             checkRequestRules();
         });
 
@@ -309,6 +290,95 @@ describe('Filters widget', () => {
         cy.wait('@getRequest');
     });
 
+    describe('should handle errors', () => {
+        type FilterModalError = {
+            name: string;
+            prepare?: () => void;
+            verify: () => void;
+            clean?: () => void;
+        };
+
+        const commonModalErrors: FilterModalError[] = [
+            {
+                name: 'not all values provided',
+                prepare: () => addNewRule(),
+                verify: () => {
+                    cy.contains('Please provide all the values in filter rules section');
+                    withinTheLastRuleRow(() => cy.get('[name="ruleValue"]').parent().should('have.class', 'error'));
+                },
+                clean: () => removeLastRule()
+            }
+        ];
+
+        function verifyErrorHandling(error: FilterModalError) {
+            cy.log(`Verify error handling - ${error.name}`);
+
+            if (typeof error.prepare === 'function') error.prepare();
+            saveFilter();
+            error.verify();
+            if (typeof error.clean === 'function') error.clean();
+
+            cy.get('.error.message .close').click();
+        }
+
+        it('when adding new filter', () => {
+            const addModalOnlyErrors: FilterModalError[] = [
+                {
+                    name: 'empty form',
+                    prepare: () => {
+                        getFilterIdInput().clear();
+                        addNewRule();
+                    },
+                    verify: () => {
+                        cy.contains('Please provide the filter ID');
+                        cy.contains('Please provide all the values in filter rules section');
+                    },
+                    clean: () => removeLastRule()
+                },
+                {
+                    name: 'reserved filter ID provided',
+                    prepare: () => {
+                        getFilterIdInput().clear().type('csys-invalid');
+                        withinTheLastRuleRow(() => typeAttributeRuleValue('csys'));
+                    },
+                    verify: () => cy.contains('All filters with a `csys-` prefix are reserved for internal use'),
+                    clean: () => withinTheLastRuleRow(() => cy.get('.label[value="csys"] .delete').click())
+                }
+            ];
+
+            openAddFilterModal();
+            cy.get('.modal').within(() => {
+                const addModalErrors = [...addModalOnlyErrors, ...commonModalErrors];
+                addModalErrors.forEach(verifyErrorHandling);
+            });
+        });
+
+        it('when editing existing filter', () => {
+            openEditFilterModal();
+            cy.get('.modal').within(() => {
+                const editModalErrors = commonModalErrors;
+                editModalErrors.forEach(verifyErrorHandling);
+            });
+        });
+
+        it('should handle errors when cloning existing filter', () => {
+            const cloneModalOnlyErrors: FilterModalError[] = [
+                {
+                    name: 'reserved filter ID provided',
+                    prepare: () => {
+                        getFilterIdInput().clear().type('csys-invalid');
+                    },
+                    verify: () => cy.contains('All filters with a `csys-` prefix are reserved for internal use')
+                }
+            ];
+
+            openCloneFilterModal();
+            cy.get('.modal').within(() => {
+                const cloneModalErrors = [...cloneModalOnlyErrors, ...commonModalErrors];
+                cloneModalErrors.forEach(verifyErrorHandling);
+            });
+        });
+    });
     describe('should allow to define all kinds of filter rules', () => {
         const testPrefix = 'filters_test_form';
         const blueprintId = `${testPrefix}_blueprint`;
@@ -333,10 +403,6 @@ describe('Filters widget', () => {
                     { name: `${testPrefix}_TelAviv` }
                 ]);
         });
-
-        function withinTheLastRuleRow(fn: (currentSubject: JQuery<HTMLElement>) => void) {
-            cy.get('.fields:last-of-type').within(fn);
-        }
 
         function selectRuleRowType(ruleRowType: FilterRuleRowType) {
             withinTheLastRuleRow(() => {
@@ -442,11 +508,10 @@ describe('Filters widget', () => {
         }
 
         function populateFilterRuleRows(filterId: string, rules: ExtendedFilterRule[]) {
-            cy.contains('Add').click();
             cy.get('.modal').within(() => {
                 cy.contains('.field', 'Filter ID').find('input').type(filterId);
                 rules.forEach((rule, index) => {
-                    if (index > 0) cy.contains('Add new rule').click();
+                    if (index > 0) addNewRule();
                     populateFilterRuleRow(rule);
                 });
             });
@@ -454,7 +519,7 @@ describe('Filters widget', () => {
 
         function saveAndVerifyFilter(filterId: string, testRules: ExtendedFilterRule[]) {
             cy.interceptSp('PUT', `/filters/deployments/${filterId}`).as('createRequest');
-            cy.contains('Save').click();
+            saveFilter();
 
             cy.log('Filter creation request verification');
             cy.wait('@createRequest').then(({ request }) => {
@@ -468,10 +533,10 @@ describe('Filters widget', () => {
             cy.log('Filter rules form population verification');
             cy.getSearchInput().clear().type(filterId);
             cy.get('.loading').should('not.exist');
-            cy.get('.edit').click();
+            openEditFilterModal();
             cy.get('.modal').within(() => {
-                testRules.forEach((rule, index) => {
-                    cy.get(`div.fields:nth-of-type(${index + 1})`).within(() => {
+                testRules.forEach((rule, ruleIndex) => {
+                    withinNthRuleRow(ruleIndex, () => {
                         cy.get(
                             `div[name="ruleRowType"] [option-value="${
                                 rule.type === FilterRuleType.Label ? FilterRuleType.Label : rule.key
@@ -634,6 +699,7 @@ describe('Filters widget', () => {
         ruleRowTests.map(ruleRowTest => {
             const { name, testFilterName, testFilterRules } = ruleRowTest;
             return it(name, () => {
+                openAddFilterModal();
                 populateFilterRuleRows(testFilterName, testFilterRules);
                 saveAndVerifyFilter(testFilterName, testFilterRules);
             });
