@@ -643,9 +643,7 @@ describe('Deployments View widget', () => {
             cy.getSearchInput().type(mapDeploymentsPrefix);
 
             function selectDeploymentInTableAndVerifyMapSelection(name: string) {
-                getDeploymentsViewTable().within(() => {
-                    cy.contains(name).click();
-                });
+                getDeploymentsViewTable().contains(name).click();
                 getDeploymentsViewMap().within(() => {
                     // NOTE: need to `force` events, since the selection circle is covered by a marker image
                     // and Cypress would not interact with the circle underneath
