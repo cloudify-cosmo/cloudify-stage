@@ -145,7 +145,10 @@ export default function DynamicDropdown({
                         dispatchEndFetchAction();
                     }
 
-                    setOptions([...(overrideOptionsAfterFetch ? [] : options), ...itemsFormatter(data.items)]);
+                    setOptions(latestOptions => [
+                        ...(overrideOptionsAfterFetch ? [] : latestOptions),
+                        ...itemsFormatter(data.items)
+                    ]);
                     resetOverrideOptionsAfterFetch();
                 })
                 .catch(onFetchFailed)
@@ -163,7 +166,7 @@ export default function DynamicDropdown({
 
     useEffect(() => {
         if (_.isEmpty(value)) {
-            setOptions(_.reject(options, 'implicit'));
+            setOptions(latestOptions => _.reject(latestOptions, 'implicit'));
         } else {
             const optionsToAdd = [];
             _.castArray(value).forEach(singleValue => {
@@ -172,7 +175,7 @@ export default function DynamicDropdown({
                 }
             });
             if (optionsToAdd.length > 0) {
-                setOptions([...optionsToAdd, ...options]);
+                setOptions(latestOptions => [...optionsToAdd, ...latestOptions]);
             }
         }
     }, [value]);
@@ -231,7 +234,9 @@ export default function DynamicDropdown({
                 id={id}
                 name={name}
                 allowAdditions={allowAdditions}
-                onAddItem={(event, data) => setOptions([{ [valueProp]: data.value }, ...options])}
+                onAddItem={(event, data) =>
+                    setOptions(latestOptions => [{ [valueProp]: data.value }, ...latestOptions])
+                }
                 onChange={(event, data) => onChange(!_.isEmpty(data.value) ? data.value : null)}
                 onSearchChange={(event, data) => {
                     setSearchQuery(data.searchQuery);
