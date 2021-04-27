@@ -15,13 +15,24 @@ describe('Template Management', () => {
     const builtInTemplates = [
         {
             id: 'main-default',
-            pages: ['adminDash', 'catalog', 'blueprints', 'deploy', 'sites', 'systemResources', 'logs'],
+            pages: ['adminDash', 'catalog', 'blueprints', 'deploy', 'executions', 'sites', 'systemResources', 'logs'],
             roles: 'default',
             tenants: ['all']
         },
         {
             id: 'main-sys_admin',
-            pages: ['adminDash', 'catalog', 'blueprints', 'deploy', 'sites', 'tmm', 'ha', 'systemResources', 'logs'],
+            pages: [
+                'adminDash',
+                'catalog',
+                'blueprints',
+                'deploy',
+                'executions',
+                'sites',
+                'tmm',
+                'ha',
+                'systemResources',
+                'logs'
+            ],
             roles: 'sys_admin',
             tenants: ['all']
         }
@@ -36,6 +47,7 @@ describe('Template Management', () => {
         { id: 'deployment', name: 'Deployment' },
         { id: 'drilldownDeployments', name: 'Subdeployments' },
         { id: 'execution', name: 'Logs' },
+        { id: 'executions', name: 'Executions' },
         { id: 'ha', name: 'Admin Operations' },
         { id: 'logs', name: 'Logs' },
         { id: 'plugins', name: 'Plugins' },
