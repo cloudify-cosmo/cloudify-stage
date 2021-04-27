@@ -259,8 +259,7 @@ export default function DynamicDropdown({
                                     <Loading message="" />
                                 </VisibilitySensor>
                             ),
-                            key: 'loader',
-                            text: searchQuery
+                            key: 'loader'
                         });
                     }
                     return preparedOptions;
