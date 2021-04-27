@@ -1,9 +1,9 @@
 import { mapValues } from 'lodash';
 import type { ReactNode } from 'react';
-import type { IconProps } from 'semantic-ui-react';
 
 import { i18nPrefix, subenvironmentsIcon, subservicesIcon } from '../common';
-import { Deployment, DeploymentStatus, SubdeploymentStatus } from '../types';
+import { DeploymentStatusIcon, SubdeploymentStatusIcon } from '../StatusIcon';
+import type { Deployment } from '../types';
 
 // NOTE: the order in the array determines the order in the UI
 export const deploymentsViewColumnIds = [
@@ -32,30 +32,6 @@ export interface DeploymentsViewColumnDefinition {
 
 const i18nColumnsPrefix = `${i18nPrefix}.columns`;
 
-/**
- * A CID (Constrained Identity Function)
- * See https://kentcdodds.com/blog/how-to-write-a-constrained-identity-function-in-typescript
- */
-const createIconDescriptions = <T extends Record<string, IconProps>>(iconDescriptions: T) => iconDescriptions;
-
-const statusIconPropsMapping = createIconDescriptions({
-    inProgress: { name: 'spinner', color: 'orange' },
-    requiresAttention: { name: 'exclamation', color: 'red' }
-});
-type StatusIconName = keyof typeof statusIconPropsMapping;
-const renderStatusIcon = (iconName: StatusIconName) => {
-    const { Icon, Popup } = Stage.Basic;
-    const iconProps = statusIconPropsMapping[iconName];
-    const label = Stage.i18n.t(`${i18nPrefix}.iconLabels.${iconName}`);
-
-    return (
-        // eslint-disable-next-line react/jsx-props-no-spreading
-        <Popup trigger={<Icon aria-label={label} {...iconProps} />} position="top center">
-            {label}
-        </Popup>
-    );
-};
-
 const partialDeploymentsViewColumnDefinitions: Record<
     DeploymentsViewColumnId,
     Omit<Stage.Types.WithOptionalProperties<DeploymentsViewColumnDefinition, 'label'>, 'name' | 'tooltip'>
@@ -63,17 +39,7 @@ const partialDeploymentsViewColumnDefinitions: Record<
     status: {
         width: '20px',
         render(deployment) {
-            const deploymentStatusIconProps: Record<DeploymentStatus, StatusIconName | undefined> = {
-                [DeploymentStatus.Good]: undefined,
-                [DeploymentStatus.InProgress]: 'inProgress',
-                [DeploymentStatus.RequiresAttention]: 'requiresAttention'
-            };
-            const iconName = deploymentStatusIconProps[deployment.deployment_status];
-            if (!iconName) {
-                return null;
-            }
-
-            return renderStatusIcon(iconName);
+            return <DeploymentStatusIcon status={deployment.deployment_status} />;
         },
         // NOTE: do not show the column label
         label: ''
@@ -108,14 +74,9 @@ const partialDeploymentsViewColumnDefinitions: Record<
         // NOTE: properties come from the API. They are not prop-types (false-positive)
         /* eslint-disable camelcase */
         render({ sub_environments_count, sub_environments_status }) {
-            // NOTE: handle possible `null`s
-            const status = sub_environments_status ?? SubdeploymentStatus.Good;
-            const iconName = subdeploymentStatusToIconMapping[status];
-            const icon = iconName && renderStatusIcon(iconName);
-
             return (
                 <div className="subdeploymentColumn">
-                    {sub_environments_count} {icon}
+                    {sub_environments_count} <SubdeploymentStatusIcon status={sub_environments_status} />
                 </div>
             );
         }
@@ -124,26 +85,14 @@ const partialDeploymentsViewColumnDefinitions: Record<
         label: <Stage.Basic.Icon name={subservicesIcon} />,
         width: '1em',
         render({ sub_services_count, sub_services_status }) {
-            // NOTE: handle possible `null`s
-            const status = sub_services_status ?? SubdeploymentStatus.Good;
-            const iconName = subdeploymentStatusToIconMapping[status];
-            const icon = iconName && renderStatusIcon(iconName);
-
             return (
                 <div className="subdeploymentColumn">
-                    {sub_services_count} {icon}
+                    {sub_services_count} <SubdeploymentStatusIcon status={sub_services_status} />
                 </div>
             );
         }
         /* eslint-enable camelcase, react/prop-types */
     }
-};
-
-const subdeploymentStatusToIconMapping: Record<SubdeploymentStatus, StatusIconName | undefined> = {
-    [SubdeploymentStatus.InProgress]: 'inProgress',
-    [SubdeploymentStatus.Good]: undefined,
-    [SubdeploymentStatus.Failed]: 'requiresAttention',
-    [SubdeploymentStatus.Pending]: undefined
 };
 
 export const deploymentsViewColumnDefinitions: Record<
