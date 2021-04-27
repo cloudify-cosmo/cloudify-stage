@@ -61,7 +61,7 @@ const DeploymentsMap: FunctionComponent<DeploymentsMapProps> = ({
                 <DeploymentSiteMarker
                     deployment={deployment}
                     site={site}
-                    key={`${deployment.id}-${site.name}`}
+                    key={`${deployment.id}\n${site.name}`}
                     selected={deployment.id === selectedDeployment?.id}
                     onClick={() => selectDeployment(toolbox, deployment.id)}
                 />
