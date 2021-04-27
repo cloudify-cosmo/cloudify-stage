@@ -5,6 +5,7 @@ describe('Nodes statistics widget', () => {
     before(() =>
         cy
             .activate('valid_trial_license')
+            .disableGettingStarted()
             .usePageMock('nodesStats')
             .mockLogin()
             .deleteDeployments(deploymentName, true)

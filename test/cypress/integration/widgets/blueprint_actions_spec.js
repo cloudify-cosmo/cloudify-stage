@@ -3,6 +3,7 @@ describe('Blueprint Action Buttons widget', () => {
 
     before(() =>
         cy
+            .disableGettingStarted()
             .usePageMock('blueprintActionButtons')
             .activate('valid_trial_license')
             .mockLogin()

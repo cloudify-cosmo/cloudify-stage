@@ -5,6 +5,7 @@ describe('Blueprint Sources widget', () => {
     before(() =>
         cy
             .activate()
+            .disableGettingStarted()
             .usePageMock('blueprintSources')
             .mockLogin()
             .deleteDeployments(deploymentName, true)

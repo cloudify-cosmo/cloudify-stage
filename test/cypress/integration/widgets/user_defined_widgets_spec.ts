@@ -45,5 +45,5 @@ function useMockWidgetFixture(widgetFixturePath: string, widgetId: string, widge
     cy.compileScriptFixture(widgetFixturePath).then(compiledScriptSource =>
         cy.interceptWidgetScript(widgetId, compiledScriptSource)
     );
-    cy.usePageMock(widgetId, widgetConfiguration).mockLogin();
+    cy.disableGettingStarted().usePageMock(widgetId, widgetConfiguration).mockLogin();
 }

@@ -1,7 +1,9 @@
 import { className, styles } from '../../support/cluster_status_commons';
 
 describe('Cluster Status widget', () => {
-    before(() => cy.activate('valid_trial_license').usePageMock('highAvailability').mockLogin());
+    before(() =>
+        cy.activate('valid_trial_license').disableGettingStarted().usePageMock('highAvailability').mockLogin()
+    );
 
     const clusterStatusFetchTimeout = { timeout: 12000 };
 

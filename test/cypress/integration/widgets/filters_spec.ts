@@ -2,7 +2,7 @@ import { FilterRuleOperators, FilterRuleType } from '../../../../widgets/common/
 
 describe('Filters widget', () => {
     before(() => {
-        cy.usePageMock(['filters', 'onlyMyResources']).activate().mockLogin();
+        cy.disableGettingStarted().usePageMock(['filters', 'onlyMyResources']).activate().mockLogin();
     });
 
     const filterName = 'filters_test_filter';

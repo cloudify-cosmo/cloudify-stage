@@ -105,6 +105,7 @@ describe('Sites Management', () => {
     before(() => {
         cy.activate('valid_spire_license')
             .deleteAllUsersAndTenants()
+            .disableGettingStarted()
             .usePageMock('sites')
             .mockLogin()
             .waitUntilLoaded();

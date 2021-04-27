@@ -5,6 +5,7 @@ describe('User management widget', () => {
     before(() =>
         cy
             .activate('valid_trial_license')
+            .disableGettingStarted()
             .usePageMock('userManagement')
             .mockLogin()
             .deleteUser(username)

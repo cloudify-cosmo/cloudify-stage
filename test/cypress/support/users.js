@@ -10,6 +10,12 @@ Cypress.Commands.add('deleteTenant', tenant => {
     }
 });
 
+// Cypress.Commands.add('getUser', username =>
+//     cy.cfyRequest(`/users/${username}`, 'GET', null, {
+//         show_getting_started: false
+//     })
+// );
+
 Cypress.Commands.add('addUser', (username, password, isAdmin) =>
     cy.cfyRequest('/users', 'PUT', null, {
         username,

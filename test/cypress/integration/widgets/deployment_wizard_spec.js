@@ -1,5 +1,7 @@
 describe('Deployment Wizard Buttons widget', () => {
-    before(() => cy.activate('valid_trial_license').usePageMock('deploymentWizardButtons').mockLogin());
+    before(() =>
+        cy.activate('valid_trial_license').disableGettingStarted().usePageMock('deploymentWizardButtons').mockLogin()
+    );
 
     function next() {
         cy.contains('Next').click();

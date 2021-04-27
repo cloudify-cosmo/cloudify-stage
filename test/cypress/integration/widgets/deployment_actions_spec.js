@@ -4,6 +4,7 @@ describe('Deployment Action Buttons widget', () => {
 
     before(() =>
         cy
+            .disableGettingStarted()
             .usePageMock('deploymentActionButtons')
             .activate()
             .mockLogin()

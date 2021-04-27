@@ -25,7 +25,7 @@ describe('User Menu', () => {
     beforeEach(cy.usePageMock);
 
     it('should contain options for admin users', () => {
-        cy.login();
+        cy.disableGettingStarted().login();
 
         cy.get('.usersMenu').click();
         cy.get('.usersMenu .menu').within(() => {
@@ -39,7 +39,7 @@ describe('User Menu', () => {
     });
 
     it('should contain options for non-admin users', () => {
-        cy.mockLogin(nonAdminUsername, nonAdminPassword);
+        cy.disableGettingStarted().mockLogin(nonAdminUsername, nonAdminPassword);
 
         cy.get('.usersMenu').click();
         cy.get('.usersMenu .menu').within(() => {

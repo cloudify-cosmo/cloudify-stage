@@ -40,6 +40,7 @@ describe('Tenants menu', () => {
         user.tenants.forEach(tenant => cy.addUserToTenant(user.username, tenant.name, tenant.role));
 
         cy.intercept('/console/widgets/list', []);
+        cy.disableGettingStarted();
     });
 
     it('should switch template on tenant change', () => {
@@ -57,7 +58,7 @@ describe('Tenants menu', () => {
         installTemplate('templateForViewer', user.tenants[0]);
         installTemplate('templateForManager', user.tenants[1]);
 
-        cy.mockLogin(user.username, user.password);
+        cy.disableGettingStarted().mockLogin(user.username, user.password);
 
         function verifyTemplate(tenant) {
             cy.get('.tenantsMenu').click().find('.menu').contains(tenant.name).click().waitUntilLoaded();

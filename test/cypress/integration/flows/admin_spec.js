@@ -3,7 +3,7 @@ describe('Admin flow', () => {
     const groupName = `admin_flow_test_group`;
     const userName = `admin_flow_test_user`;
 
-    before(() => cy.activate().login().deleteAllUsersAndTenants().deleteUserGroup(groupName));
+    before(() => cy.activate().disableGettingStarted().login().deleteAllUsersAndTenants().deleteUserGroup(groupName));
 
     it('manages groups, tenants and users', () => {
         cy.visitPage('Tenant Management');
@@ -36,6 +36,7 @@ describe('Admin flow', () => {
         cy.get('.modal').within(() => {
             cy.get('div[name=groups]').click();
             cy.contains(groupName).click();
+            cy.contains('Edit user groups').click(); // sometimes it is required to disable focus from `div[name=groups]` that covers `Save` action
             cy.contains('Save').click();
         });
         cy.get('.modal').should('not.exist');

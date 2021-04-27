@@ -1,6 +1,7 @@
 describe('Events/logs widget', () => {
     it('should show error cause', () => {
         cy.activate()
+            .disableGettingStarted()
             .usePageMock('events', { fieldsToShow: ['Message', 'Workflow'], pageSize: 15 })
             .interceptSp('GET', '/events?_size=15&_offset=0', { fixture: 'events/events.json' })
             .mockLogin();

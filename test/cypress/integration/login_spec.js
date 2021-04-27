@@ -1,4 +1,6 @@
 describe('Login', () => {
+    beforeEach(() => cy.disableGettingStarted());
+
     it('succeeds when provided credentials are valid and license is active', () => {
         cy.activate().usePageMock().login();
 

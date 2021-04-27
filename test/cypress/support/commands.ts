@@ -145,6 +145,10 @@ const commands = {
             }
         });
 
+        // cy.interceptSp('GET', `/users/`, req => {
+        //     req.reply('test');
+        // });
+
         cy.get('.form > :nth-child(1) > .ui > input').clear().type(username);
         cy.get('.form > :nth-child(2) > .ui > input').clear().type(password);
         cy.get('.form > button').click();
@@ -174,13 +178,7 @@ const commands = {
                 })
             );
         });
-        cy.visit('/console')
-            .waitUntilLoaded()
-            .get('.modal')
-            .contains('Getting Started')
-            .get('button')
-            .contains('Close')
-            .click();
+        cy.visit('/console').waitUntilLoaded();
     },
     visitPage: (name: string, id: string | null = null) => {
         cy.log(`Switching to '${name}' page`);
@@ -188,13 +186,7 @@ const commands = {
         if (id) {
             cy.location('pathname').should('be.equal', `/console/page/${id}`);
         }
-        cy.waitUntilPageLoaded()
-            .waitUntilLoaded()
-            .get('.modal')
-            .contains('Getting Started')
-            .get('button')
-            .contains('Close')
-            .click();
+        cy.waitUntilPageLoaded();
     },
     usePageMock: (
         widgetIds?: string | string[],
@@ -287,7 +279,6 @@ const commands = {
     refreshTemplate: () => {
         cy.get('.tenantsMenu').click({ force: true });
         cy.contains('.text', 'default_tenant').click({ force: true });
-        cy.get('.modal').contains('Getting Started').get('button').contains('Close').click();
     },
     setBlueprintContext: (value: string) => setContext('blueprint', value),
     clearBlueprintContext: () => clearContext('blueprint'),
@@ -323,8 +314,10 @@ const commands = {
             .then(commandResult => commandResult.stdout);
     },
 
-    closeGettingStartedModal: () => {
-        cy.get('.modal').contains('Getting Started').parent().get('button').contains('Close').click();
+    disableGettingStarted: () => {
+        cy.interceptSp('GET', `/users/`, req => {
+            req.reply('test');
+        });
     }
 };
 

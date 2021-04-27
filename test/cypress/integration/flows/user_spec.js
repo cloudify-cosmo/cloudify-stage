@@ -4,6 +4,7 @@ describe('User flow', () => {
     before(() =>
         cy
             .activate()
+            .disableGettingStarted()
             .login()
             .deleteDeployments(resourceName, true)
             .deleteBlueprints(resourceName, true)

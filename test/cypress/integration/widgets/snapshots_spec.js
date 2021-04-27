@@ -5,6 +5,7 @@ describe('Snapshots list widget', () => {
     before(() =>
         cy
             .activate('valid_trial_license')
+            .disableGettingStarted()
             .usePageMock('snapshots', { pollingTime: 5 })
             .deletePlugins()
             .deleteSnapshot(createdSnapshotName)

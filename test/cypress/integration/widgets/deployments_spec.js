@@ -36,6 +36,7 @@ describe('Deployments widget', () => {
             .uploadBlueprint(blueprintUrl, blueprintName)
             .deployBlueprint(blueprintName, deploymentName, { webserver_port: 9123 })
             .createSite(site)
+            .disableGettingStarted()
             .usePageMock('deployments', { pollingTime: 5, clickToDrillDown: true, showExecutionStatusLabel: false })
             .mockLogin();
     });
