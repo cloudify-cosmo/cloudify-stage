@@ -316,7 +316,7 @@ const commands = {
 
     disableGettingStarted: () => {
         cy.interceptSp('GET', `/users/`, req => {
-            req.reply('test');
+            req.reply({ show_getting_started: false });
         });
     }
 };
