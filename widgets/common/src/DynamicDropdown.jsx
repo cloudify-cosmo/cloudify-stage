@@ -180,6 +180,7 @@ export default function DynamicDropdown({
     useFetchTrigger(
         ({ shouldReset: shouldResetOptions }) => {
             if (shouldResetOptions) setOverrideOptionsAfterFetch();
+            dispatchFetchAction({ type: fetchActionType.PREPARE_FOR_FIRST_PAGE_FETCH });
             dispatchFetchAction({ type: fetchActionType.TRIGGER_FETCH });
         },
         [searchQuery],
