@@ -1,3 +1,4 @@
+import { CyHttpMessages } from 'cypress/types/net-stubbing';
 import {
     FilterRule,
     FilterRuleOperator,
@@ -518,50 +519,47 @@ describe('Filters widget', () => {
             });
         }
 
+        function verifyRequestRules(request: CyHttpMessages.IncomingRequest, testRules: ExtendedFilterRule[]) {
+            const requestRules = request.body.filter_rules;
+            expect(requestRules).to.have.length(testRules.length);
+            testRules.forEach((_rule, index: number) => {
+                expect(requestRules[index]).to.deep.equal(_.omit(testRules[index], ['newKey', 'newValues']));
+            });
+        }
+        function verifyRulesForm(testRules: ExtendedFilterRule[]) {
+            const verifySingleValueDropdown = (name: string, value: string) =>
+                cy.get(`div[name="${name}"] [option-value="${value}"][aria-selected="true"]`).should('exist');
+            const verifyMultipleValuesDropdown = (name: string, values: string[]) =>
+                values.forEach(value => {
+                    cy.get(`div[name="${name}"] .label[value="${value}"]`).should('exist');
+                });
+
+            testRules.forEach((rule, ruleIndex) => {
+                withinNthRuleRow(ruleIndex, () => {
+                    const ruleRowType = rule.type === FilterRuleType.Label ? FilterRuleType.Label : rule.key;
+                    verifySingleValueDropdown('ruleRowType', ruleRowType);
+
+                    verifySingleValueDropdown('ruleOperator', rule.operator);
+
+                    if (rule.type === FilterRuleType.Label) verifySingleValueDropdown('labelKey', rule.key);
+
+                    const ruleValuesDropdownName = rule.type === FilterRuleType.Label ? 'labelValue' : 'ruleValue';
+                    verifyMultipleValuesDropdown(ruleValuesDropdownName, rule.values);
+                });
+            });
+        }
         function saveAndVerifyFilter(filterId: string, testRules: ExtendedFilterRule[]) {
             cy.interceptSp('PUT', `/filters/deployments/${filterId}`).as('createRequest');
             saveFilter();
 
             cy.log('Filter creation request verification');
-            cy.wait('@createRequest').then(({ request }) => {
-                const requestRules = request.body.filter_rules;
-                expect(requestRules).to.have.length(testRules.length);
-                testRules.forEach((_rule, index: number) => {
-                    expect(requestRules[index]).to.deep.equal(_.omit(testRules[index], ['newKey', 'newValues']));
-                });
-            });
+            cy.wait('@createRequest').then(({ request }) => verifyRequestRules(request, testRules));
 
             cy.log('Filter rules form population verification');
             cy.getSearchInput().clear().type(filterId);
             cy.get('.loading').should('not.exist');
             openEditFilterModal();
-            cy.get('.modal').within(() => {
-                testRules.forEach((rule, ruleIndex) => {
-                    withinNthRuleRow(ruleIndex, () => {
-                        cy.get(
-                            `div[name="ruleRowType"] [option-value="${
-                                rule.type === FilterRuleType.Label ? FilterRuleType.Label : rule.key
-                            }"][aria-selected="true"]`
-                        ).should('exist');
-                        cy.get(
-                            `div[name="ruleOperator"] [option-value="${rule.operator}"][aria-selected="true"]`
-                        ).should('exist');
-
-                        if (rule.type === FilterRuleType.Label) {
-                            cy.get(`div[name="labelKey"] [option-value="${rule.key}"][aria-selected="true"]`).should(
-                                'exist'
-                            );
-                        }
-                        rule.values.forEach(value => {
-                            cy.get(
-                                `div[name="${
-                                    rule.type === FilterRuleType.Label ? 'labelValue' : 'ruleValue'
-                                }"] .label[value="${value}"]`
-                            ).should('exist');
-                        });
-                    });
-                });
-            });
+            cy.get('.modal').within(() => verifyRulesForm(testRules));
         }
 
         interface ExtendedFilterRule extends FilterRule {
