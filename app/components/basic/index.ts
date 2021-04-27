@@ -73,13 +73,23 @@ import {
     VisibilityIcon
 } from 'cloudify-ui-components';
 
-import * as Leaflet from 'react-leaflet';
+import { Map, TileLayer, Marker, Popup as LeafletPopup, Tooltip, FeatureGroup, CircleMarker } from 'react-leaflet';
 import type { ComponentType } from 'react';
 import type { InferProps } from 'prop-types';
 
 Modal.defaultProps = {
     ...Modal.defaultProps,
     closeOnDimmerClick: false
+};
+
+const Leaflet = {
+    Map,
+    TileLayer,
+    Marker,
+    Popup: LeafletPopup,
+    Tooltip,
+    FeatureGroup,
+    CircleMarker
 };
 
 /**
