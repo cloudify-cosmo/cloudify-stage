@@ -655,6 +655,12 @@
                         "submit": "OK",
                         "noFilterError": "Please select a filter"
                     }
+                },
+                "bulkActions": {
+                    "button": "Bulk Actions",
+                    "menu": {
+                        "deployOn": "Deploy On"
+                    }
                 }
             },
             "iconLabels": {
