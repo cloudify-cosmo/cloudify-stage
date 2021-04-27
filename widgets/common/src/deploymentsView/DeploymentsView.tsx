@@ -9,12 +9,13 @@ import { DeploymentsTable } from './table';
 import { FilterRuleOperators, FilterRuleType } from '../filters/types';
 import {
     DeploymentDetailsContainer,
-    DeploymentsMapContainer,
+    DeploymentsMapLayoutContainer,
     DeploymentsTableContainer,
     DeploymentsViewContainer,
     DeploymentsViewHeaderContainer
 } from './layout';
 import DeploymentsViewHeader from './header';
+import DeploymentsMapContainer from './map';
 
 export interface DeploymentsViewProps {
     widget: Stage.Types.Widget<SharedDeploymentsViewWidgetConfiguration>;
@@ -88,6 +89,7 @@ export const DeploymentsView: FunctionComponent<DeploymentsViewProps> = ({
 
     Stage.Hooks.useEventListener(toolbox, 'deployments:refresh', deploymentsResult.refetch);
 
+    const widgetDimensions = Stage.Common.Map.useWidgetDimensions(widget);
     const [mapOpen, toggleMap] = Stage.Hooks.useToggle(widget.configuration.mapOpenByDefault);
 
     const { Loading, ErrorMessage } = Stage.Basic;
@@ -153,9 +155,13 @@ export const DeploymentsView: FunctionComponent<DeploymentsViewProps> = ({
             </DeploymentsViewHeaderContainer>
 
             {mapOpen && (
-                <DeploymentsMapContainer height={widget.configuration.mapHeight}>
-                    Hey, I am a map
-                </DeploymentsMapContainer>
+                <DeploymentsMapLayoutContainer height={widget.configuration.mapHeight}>
+                    <DeploymentsMapContainer
+                        deployments={deploymentsResult.data.items}
+                        toolbox={toolbox}
+                        widgetDimensions={widgetDimensions}
+                    />
+                </DeploymentsMapLayoutContainer>
             )}
 
             <DeploymentsTableContainer>

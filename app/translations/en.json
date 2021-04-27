@@ -569,6 +569,10 @@
                 "helloWorldBlueprint": "https://github.com/cloudify-cosmo/cloudify-hello-world-example/archive/master.zip",
                 "linkParameterExample": "https://cloudify.co"
             },
+            "noDataMessage": {
+                "invalidUrl": "The widget content cannot be displayed because configured URL does not point to a valid {{repositoryName}} repository JSON data. Please check widget's configuration.",
+                "noConnection": "The widget content cannot be displayed because there is no connection to {{repositoryName}} repository. Please check network connection and widget's configuration."
+            },
             "blueprintUpload": {
                 "uploadLabels": {
                     "pending": "1/5: Waiting for blueprint upload to start...",
@@ -681,6 +685,10 @@
                     "name": "Subservices",
                     "tooltip": "Services (Total)"
                 }
+            },
+            "map": {
+                "loadingSites": "Loading sites",
+                "errorLoadingSites": "Error loading sites"
             },
             "drillDown": {
                 "name": "Deployments view (drilled-down)",

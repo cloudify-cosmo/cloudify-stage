@@ -13,8 +13,6 @@ interface DeploymentsViewHeaderProps {
 const headerT = (suffix: string) => Stage.i18n.t(`${i18nPrefix}.header.${suffix}`);
 const mapT = (suffix: string) => headerT(`map.${suffix}`);
 
-const production = process.env.NODE_ENV === 'production' && !process.env.TEST;
-
 const DeploymentsViewHeader: FunctionComponent<DeploymentsViewHeaderProps> = ({
     mapOpen,
     toggleMap,
@@ -34,17 +32,14 @@ const DeploymentsViewHeader: FunctionComponent<DeploymentsViewHeaderProps> = ({
 
     return (
         <>
-            {/* TODO(RD-1225): enable the map in production */}
-            {!production && (
-                <Button
-                    labelPosition="left"
-                    icon="map"
-                    active={mapOpen}
-                    onClick={toggleMap}
-                    title={mapT(mapOpen ? 'closeMap' : 'openMap')}
-                    content={mapT('label')}
-                />
-            )}
+            <Button
+                labelPosition="left"
+                icon="map"
+                active={mapOpen}
+                onClick={toggleMap}
+                title={mapT(mapOpen ? 'closeMap' : 'openMap')}
+                content={mapT('label')}
+            />
             {filterId ? (
                 <Button.Group color="blue">
                     <Button
