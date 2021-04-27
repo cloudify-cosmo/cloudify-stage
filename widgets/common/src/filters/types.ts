@@ -33,6 +33,7 @@ export enum FilterRuleType {
 export interface FilterRuleRow {
     id: string;
     rule: FilterRule;
+    hasError: boolean;
 }
 
 export enum FilterRuleRowType {

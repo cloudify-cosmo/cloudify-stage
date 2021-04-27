@@ -528,9 +528,9 @@
                         "removeRule": "Remove rule"
                     },
                     "inputsPlaceholders": {
-                        "blueprintId": "Select blueprints",
-                        "siteName": "Select site names",
-                        "createdBy": "Select usernames",
+                        "blueprintId": "Select or type in blueprints",
+                        "siteName": "Select or type in site names",
+                        "createdBy": "Select or type in usernames",
                         "multipleStrings": "Type in values"
                     },
                     "ruleTypesLabels": {
@@ -568,6 +568,10 @@
                 "blueprintsCatalog": "http://repository.cloudifysource.org/cloudify/blueprints/5.1/examples.json",
                 "helloWorldBlueprint": "https://github.com/cloudify-cosmo/cloudify-hello-world-example/archive/master.zip",
                 "linkParameterExample": "https://cloudify.co"
+            },
+            "noDataMessage": {
+                "invalidUrl": "The widget content cannot be displayed because configured URL does not point to a valid {{repositoryName}} repository JSON data. Please check widget's configuration.",
+                "noConnection": "The widget content cannot be displayed because there is no connection to {{repositoryName}} repository. Please check network connection and widget's configuration."
             },
             "blueprintUpload": {
                 "uploadLabels": {
@@ -682,6 +686,10 @@
                     "tooltip": "Services (Total)"
                 }
             },
+            "map": {
+                "loadingSites": "Loading sites",
+                "errorLoadingSites": "Error loading sites"
+            },
             "drillDown": {
                 "name": "Deployments view (drilled-down)",
                 "description": "A complete deployments view in a drilled-down context – Deployment list, map view, and detailed deployment info",
@@ -752,7 +760,10 @@
             "modal": {
                 "id": "Filter ID",
                 "rules": "Filter rules",
-                "idMissing": "Please provide the filter ID",
+                "errors": {
+                    "idMissing": "Please provide the filter ID",
+                    "filterRulesInvalid": "Please provide all the values in filter rules section"
+                },
                 "header": {
                     "add": "Add filter",
                     "edit": "Edit filter '{{filterId}}'",

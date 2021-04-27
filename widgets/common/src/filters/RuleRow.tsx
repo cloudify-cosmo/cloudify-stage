@@ -11,6 +11,7 @@ interface RuleRowProps {
     onRemove: ComponentProps<typeof RuleRemoveButton>['onClick'];
     onChange: (rule: FilterRule) => void;
     removable: boolean;
+    error: boolean;
     rule: FilterRule;
     toolbox: Stage.Types.Toolbox;
 }
@@ -19,7 +20,7 @@ const defaultOperator = FilterRuleOperators.AnyOf;
 const defaultValues: string[] = [];
 const defaultOperatorAndValues = { operator: defaultOperator, values: defaultValues };
 
-const RuleRow: FunctionComponent<RuleRowProps> = ({ onChange, onRemove, removable, rule, toolbox }) => {
+const RuleRow: FunctionComponent<RuleRowProps> = ({ onChange, onRemove, removable, error, rule, toolbox }) => {
     const { UnsafelyTypedFormField: FormField, UnsafelyTypedFormGroup: FormGroup } = Stage.Basic;
     const { key, operator, type } = rule;
     const ruleType = type === FilterRuleType.Label ? FilterRuleRowType.Label : (key as FilterRuleRowType);
@@ -52,7 +53,7 @@ const RuleRow: FunctionComponent<RuleRowProps> = ({ onChange, onRemove, removabl
             <FormField width={4}>
                 <RuleOperatorDropdown onChange={onOperatorChange} value={operator} ruleType={ruleType} />
             </FormField>
-            <FormField width={7}>
+            <FormField width={7} error={error}>
                 <RuleValueInput
                     onKeyChange={onKeyChange}
                     onValuesChange={onValuesChange}

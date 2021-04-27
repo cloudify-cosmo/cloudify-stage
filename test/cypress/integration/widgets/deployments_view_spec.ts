@@ -11,7 +11,6 @@ describe('Deployments View widget', () => {
     const specPrefix = 'deployments_view_test_';
     const blueprintName = `${specPrefix}blueprint`;
     const deploymentName = `${specPrefix}deployment`;
-    const deploymentNameThatMatchesFilter = `${specPrefix}precious_deployment`;
     const siteName = 'Olsztyn';
     const blueprintUrl = exampleBlueprintUrl;
     const widgetConfiguration: import('../../../../widgets/deploymentsView/src/widget').DeploymentsViewWidgetConfiguration = {
@@ -54,7 +53,7 @@ describe('Deployments View widget', () => {
             .deleteBlueprints(blueprintName, true)
             .uploadBlueprint(blueprintUrl, blueprintName)
             .deployBlueprint(blueprintName, deploymentName, { webserver_port: 9123 })
-            .createSite({ name: siteName })
+            .createSite({ name: siteName, location: '53.77509462534224, 20.473709106445316' })
             .setSite(deploymentName, siteName)
             .setLabels(deploymentName, [{ 'rendered-inside': 'details-panel' }]);
     });
@@ -83,8 +82,7 @@ describe('Deployments View widget', () => {
         cy.get('.widget').filter('.deploymentsViewWidget, .deploymentsViewDrilledDownWidget').find('.widgetItem');
     const getDeploymentsViewTable = () => getDeploymentsViewWidget().get('.gridTable');
     const getDeploymentsViewDetailsPane = () => getDeploymentsViewWidget().get('.detailsPane');
-    // TODO(RD-2090): use a better selector for the map
-    const getDeploymentsViewMap = () => getDeploymentsViewWidget().contains('I am a map');
+    const getDeploymentsViewMap = () => getDeploymentsViewWidget().find('.leaflet-container');
     const getDeploymentsMapToggleButton = () => getDeploymentsViewWidget().contains('button', 'Map');
 
     const verifyMapHeight = (expectedHeight: number) =>
@@ -184,25 +182,28 @@ describe('Deployments View widget', () => {
     });
 
     describe('with filters', () => {
+        const deploymentNameThatMatchesFilter = `${specPrefix}precious_deployment`;
         const filterId = 'only-precious';
+        const filterRules: Stage.Common.Filters.Rule[] = [
+            {
+                type: FilterRuleType.Label,
+                key: 'precious',
+                values: ['yes'],
+                operator: FilterRuleOperators.AnyOf
+            }
+        ];
+
         before(() => {
             cy.deleteDeploymentsFilter(filterId, { ignoreFailure: true })
-                .createDeploymentsFilter(filterId, [
-                    {
-                        type: FilterRuleType.Label,
-                        key: 'precious',
-                        values: ['yes'],
-                        operator: FilterRuleOperators.AnyOf
-                    }
-                ])
+                .createDeploymentsFilter(filterId, filterRules)
                 .deployBlueprint(blueprintName, deploymentNameThatMatchesFilter, { webserver_port: 9124 })
                 .setLabels(deploymentNameThatMatchesFilter, [{ precious: 'yes' }]);
         });
 
-        const getFilterIdInput = () =>
-            cy.contains('Name of the saved filter to apply').parent().get('input[type="text"]');
+        it('should take the configured filter into account when displaying deployments', () => {
+            const getFilterIdInput = () =>
+                cy.contains('Name of the saved filter to apply').parent().get('input[type="text"]');
 
-        it('should take the filter into account when displaying deployments', () => {
             useDeploymentsViewWidget({ configurationOverrides: { filterId } });
 
             cy.log('Show only precious deployments');
@@ -223,6 +224,41 @@ describe('Deployments View widget', () => {
             });
 
             cy.contains(/with ID .* was not found/);
+        });
+
+        it('should take the selected filter into account when displaying deployments', () => {
+            useDeploymentsViewWidget();
+
+            cy.contains(deploymentNameThatMatchesFilter);
+            cy.contains(deploymentName);
+
+            cy.contains('button', 'Filter').click();
+
+            cy.interceptSp('POST', '/searches/deployments').as('deploymentsSearchRequest');
+
+            cy.get('.modal').within(() => {
+                cy.get('input').type(`${filterId}{enter}`);
+                cy.contains('OK').click();
+            });
+
+            cy.get('.modal').should('not.exist');
+            cy.contains('button', 'Filter').should('not.exist');
+            cy.contains('button', filterId);
+
+            cy.wait('@deploymentsSearchRequest').then(({ request }) => {
+                const requestRules = request.body.filter_rules;
+                expect(requestRules).to.deep.equal(filterRules);
+            });
+
+            cy.contains(deploymentName).should('not.exist');
+            cy.contains(deploymentNameThatMatchesFilter);
+
+            cy.get('[title="Clear selected filter"]').click().should('not.exist');
+            cy.contains('button', 'Filter');
+            cy.contains('button', filterId).should('not.exist');
+
+            cy.contains(deploymentName);
+            cy.contains(deploymentNameThatMatchesFilter);
         });
     });
 
@@ -492,7 +528,10 @@ describe('Deployments View widget', () => {
     });
 
     describe('map', () => {
-        // TODO(RD-2090): make the test more meaningful
+        const getDeploymentsMapPopup = () => cy.get('.leaflet-popup');
+        const getMarkerByImageSrcSuffix = (srcSuffix: string) =>
+            cy.get(`.leaflet-marker-pane img[src$="${srcSuffix}"]`);
+
         it('should be toggled upon clicking the button', () => {
             useDeploymentsViewWidget();
 
@@ -502,13 +541,77 @@ describe('Deployments View widget', () => {
                 .click()
                 .should('have.class', 'active')
                 .should('have.attr', 'title', 'Close map');
-            getDeploymentsViewMap();
+            getDeploymentsViewMap().within(() => {
+                cy.get('.leaflet-marker-icon').should('have.length', 1);
+                getMarkerByImageSrcSuffix('red.png').click();
+                getDeploymentsMapPopup().contains(deploymentName);
+            });
 
             getDeploymentsMapToggleButton()
                 .click()
                 .should('not.have.class', 'active')
                 .should('have.attr', 'title', 'Open map');
             getDeploymentsViewMap().should('not.exist');
+        });
+
+        it('should render markers for various deployment states', () => {
+            cy.interceptSp('GET', /^\/sites.*_get_all_results=true/, {
+                statusCode: 200,
+                body: {
+                    items: [
+                        {
+                            name: 'Olsztyn',
+                            latitude: 53.7795,
+                            longitude: 20.49499
+                        },
+                        {
+                            name: 'Tel Aviv',
+                            latitude: 32.066667,
+                            longitude: 34.783333
+                        },
+                        {
+                            name: 'London',
+                            latitude: 51.509865,
+                            longitude: -0.118092
+                        },
+                        {
+                            name: 'Warsaw',
+                            latitude: 52.229676,
+                            longitude: 21.012229
+                        }
+                    ],
+                    metadata: {
+                        pagination: {
+                            offset: 0,
+                            size: 1000,
+                            total: 4
+                        }
+                    }
+                } as Stage.Types.PaginatedResponse<unknown>
+            });
+
+            useDeploymentsViewWidget({
+                routeHandler: {
+                    fixture: 'deployments/various-statuses.json'
+                },
+                configurationOverrides: {
+                    mapOpenByDefault: true
+                }
+            });
+
+            getDeploymentsViewMap().within(() => {
+                cy.get('.leaflet-marker-icon').should('be.visible').and('have.length', 3);
+
+                getMarkerByImageSrcSuffix('yellow.png').click();
+                getDeploymentsMapPopup().contains('hello-world-one');
+
+                // NOTE: the blue marker is on top of the red marker, thus force the click
+                getMarkerByImageSrcSuffix('red.png').click({ force: true });
+                getDeploymentsMapPopup().contains('deployments_view_test_deployment');
+
+                getMarkerByImageSrcSuffix('blue.png').click();
+                getDeploymentsMapPopup().contains('one-in-warsaw');
+            });
         });
     });
 });
