@@ -118,6 +118,57 @@ describe('Filters widget', () => {
         cy.get('.clone').should('not.have.class', 'disabled');
     });
 
+    it('should handle errors when adding new filter', () => {
+        type FilterModalError = {
+            name: string;
+            prepare?: () => void;
+            verify: () => void;
+            clean?: () => void;
+        };
+        const errors: FilterModalError[] = [
+            {
+                name: 'empty form',
+                verify: () => {
+                    cy.contains('Please provide the filter ID');
+                    cy.contains('Please provide all the values in filter rules section');
+                }
+            },
+            {
+                name: 'not all values provided',
+                prepare: () => getFilterIdInput().type('no_values'),
+                verify: () => {
+                    cy.contains('Please provide all the values in filter rules section');
+                    cy.get('[name="ruleValue"]').parent().should('have.class', 'error');
+                },
+                clean: () => getFilterIdInput().clear()
+            },
+            {
+                name: 'reserved filter ID provided',
+                prepare: () => {
+                    getFilterIdInput().type('csys-invalid');
+                    typeAttributeRuleValue('csys');
+                },
+                verify: () => cy.contains('All filters with a `csys-` prefix are reserved for internal use'),
+                clean: () => {
+                    cy.get('.label[value="csys"] .delete').click();
+                    getFilterIdInput().clear();
+                }
+            }
+        ];
+
+        cy.contains('Add').click();
+        cy.get('.modal').within(() => {
+            errors.forEach(error => {
+                cy.log(`Verify error handling - ${error.name}`);
+                if (typeof error.prepare === 'function') error.prepare();
+                cy.contains('Save').click();
+                error.verify();
+                if (typeof error.clean === 'function') error.clean();
+                cy.get('.error.message .close').click();
+            });
+        });
+    });
+
     it('should allow to add new filter', () => {
         const blueprintId = 'filters_test_blueprint';
         const deploymentId = 'filters_test_deployment';
@@ -133,15 +184,7 @@ describe('Filters widget', () => {
         cy.contains('Add').click();
 
         cy.get('.modal').within(() => {
-            cy.contains('Save').click();
-            cy.contains('Please provide the filter ID');
-
-            getFilterIdInput().type('csys-invalid');
-            cy.contains('Save').click();
-            cy.contains('All filters with a `csys-` prefix are reserved for internal use');
-
-            getFilterIdInput().clear().type(newFilterName);
-
+            getFilterIdInput().type(newFilterName);
             cy.get('.fields:eq(0)').within(() => typeAttributeRuleValue(blueprintId));
             cy.contains('Add new rule').click();
             cy.get('.fields:eq(1)').within(() => {
@@ -150,6 +193,7 @@ describe('Filters widget', () => {
                 cy.get('[name=ruleOperator]').click();
                 cy.contains('key is not').click();
                 cy.get('[name=labelKey]').click();
+                cy.get('[name=labelKey] input').type(labelKey);
                 cy.get(`[option-value=${labelKey}]`).click();
             });
 
@@ -265,7 +309,7 @@ describe('Filters widget', () => {
         cy.wait('@getRequest');
     });
 
-    describe('should allow to define filter rules', () => {
+    describe('should allow to define all kinds of filter rules', () => {
         const testPrefix = 'filters_test_form';
         const blueprintId = `${testPrefix}_blueprint`;
         const deploymentId = `${testPrefix}_deployment`;
