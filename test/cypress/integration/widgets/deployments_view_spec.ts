@@ -669,6 +669,10 @@ describe('Deployments View widget', () => {
                     cy.get('@markers')
                         .then(markers => markers[index])
                         .then(marker => {
+                            /*
+                             * NOTE: the variable is set asynchronously. Be careful when using the variable
+                             * in the current scope. Try to use it in some nested scope, e.g. by using `within`
+                             */
                             let currentDeploymentName = '';
                             withinMarkerTooltip(
                                 () => cy.wrap(marker),
