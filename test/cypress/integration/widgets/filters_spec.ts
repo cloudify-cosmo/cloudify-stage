@@ -314,57 +314,69 @@ describe('Filters widget', () => {
             newValues = [] as string[],
             withAutocomplete = false
         ) {
-            withinTheLastRuleRow(() => {
-                const endpoint = ((rowType: FilterRuleRowType) => {
-                    switch (rowType) {
-                        case 'blueprint_id':
-                            return 'blueprints';
-                        case 'site_name':
-                            return 'sites';
-                        case 'created_by':
-                            return 'users';
-                        default:
-                            throw new Error('Unknown rule row type.');
-                    }
-                })(ruleRowType);
-                cy.get('div[name="ruleValue"]').click();
-                values.forEach(value => {
-                    if (withAutocomplete)
-                        cy.interceptSp('GET', RegExp(`${endpoint}.*_search=${value}`)).as(`value_${value}_Search`);
-                    cy.get('div[name="ruleValue"] input').type(`${value}`);
-                    if (withAutocomplete) cy.wait(`@value_${value}_Search`);
-                    if (newValues.includes(value)) cy.get('[data-additional="true"]').click();
-                    else cy.get(`div[name="ruleValue"] div[option-value="${value}"]`).click();
-                    cy.get(`.label[value="${value}"]`).should('exist');
+            if (values.length > 0) {
+                withinTheLastRuleRow(() => {
+                    const endpoint = ((rowType: FilterRuleRowType) => {
+                        switch (rowType) {
+                            case 'blueprint_id':
+                                return 'blueprints';
+                            case 'site_name':
+                                return 'sites';
+                            case 'created_by':
+                                return 'users';
+                            default:
+                                throw new Error('Unknown rule row type.');
+                        }
+                    })(ruleRowType);
+                    cy.get('div[name="ruleValue"]')
+                        .click()
+                        .within(() => {
+                            values.forEach(value => {
+                                if (withAutocomplete)
+                                    cy.interceptSp('GET', RegExp(`${endpoint}.*_search=${value}`)).as(
+                                        `value_${value}_Search`
+                                    );
+                                cy.get('input').type(`${value}`);
+                                if (withAutocomplete) cy.wait(`@value_${value}_Search`);
+                                if (newValues.includes(value)) cy.contains('[role="option"]', 'Add ').click();
+                                else cy.get(`div[option-value="${value}"]`).click();
+                                cy.get(`.label[value="${value}"]`).should('exist');
+                            });
+                        });
                 });
-            });
+            }
         }
 
         function selectRuleLabelKey(key: string, newKey = false) {
             withinTheLastRuleRow(() => {
-                cy.interceptSp('GET', `/labels/deployments?_search=${key}`).as('keySearch');
-                cy.get('div[name="labelKey"] input').type(key);
-                cy.wait('@keySearch');
-                if (newKey) cy.get('[data-additional="true"]').click();
-                else cy.get(`div[name="labelKey"] div[option-value="${key}"]`).click();
-                cy.get(`input.search`).should('not.have.value');
+                cy.interceptSp('GET', `/labels/deployments?_search=${key}`).as(`keySearch_${key}`);
+                cy.get('div[name="labelKey"]').within(() => {
+                    cy.get('input').type(key);
+                    cy.wait(`@keySearch_${key}`);
+                    if (newKey) cy.contains('[role="option"]', 'New key ').click();
+                    else cy.get(`div[option-value="${key}"]`).click();
+                    cy.get(`input.search`).should('not.have.value');
+                });
             });
         }
 
         function selectRuleLabelValues(values: string[], newValues = [] as string[]) {
             if (values.length > 0) {
                 withinTheLastRuleRow(() => {
-                    cy.get('div[name="labelValue"]').click();
-                    values.forEach(value => {
-                        cy.interceptSp('GET', RegExp(`/labels/deployments/.*?_search=${value}`)).as(
-                            `value_${value}_Search`
-                        );
-                        cy.get('div[name="labelValue"] input').type(`${value}`);
-                        cy.wait(`@value_${value}_Search`);
-                        if (newValues.includes(value)) cy.get('[data-additional="true"]').click();
-                        else cy.get(`div[name="labelValue"] div[option-value="${value}"]`).click();
-                        cy.get(`.label[value="${value}"]`).should('exist');
-                    });
+                    cy.get('div[name="labelValue"]')
+                        .click()
+                        .within(() => {
+                            values.forEach(value => {
+                                cy.interceptSp('GET', RegExp(`/labels/deployments/.*?_search=${value}`)).as(
+                                    `valueSearch_${value}`
+                                );
+                                cy.get('input').type(`${value}`);
+                                cy.wait(`@valueSearch_${value}`);
+                                if (newValues.includes(value)) cy.contains('[role="option"]', 'New value ').click();
+                                else cy.get(`div[option-value="${value}"]`).click();
+                                cy.get(`.label[value="${value}"]`).should('exist');
+                            });
+                        });
                 });
             }
         }
@@ -376,11 +388,9 @@ describe('Filters widget', () => {
             selectRuleRowType(ruleRowType);
             selectRuleOperator(rule.operator);
             if (ruleRowType === FilterRuleRowType.Label) {
+                selectRuleLabelKey(rule.key, rule.newKey);
                 if (isAnyOperator(rule.operator)) {
-                    selectRuleLabelKey(rule.key, rule.newKey);
                     selectRuleLabelValues(rule.values, rule.newValues);
-                } else {
-                    selectRuleLabelKey(rule.key, rule.newKey);
                 }
             } else {
                 selectRuleAttributeValues(ruleRowType, rule.values, rule.newValues, !isFreeTextOperator(rule.operator));
@@ -401,11 +411,45 @@ describe('Filters widget', () => {
         function saveAndVerifyFilter(filterId: string, testRules: ExtendedFilterRule[]) {
             cy.interceptSp('PUT', `/filters/deployments/${filterId}`).as('createRequest');
             cy.contains('Save').click();
+
+            cy.log('Filter creation request verification');
             cy.wait('@createRequest').then(({ request }) => {
                 const requestRules = request.body.filter_rules;
                 expect(requestRules).to.have.length(testRules.length);
                 testRules.forEach((_rule, index: number) => {
                     expect(requestRules[index]).to.deep.equal(_.omit(testRules[index], ['newKey', 'newValues']));
+                });
+            });
+
+            cy.log('Filter rules form population verification');
+            cy.getSearchInput().clear().type(filterId);
+            cy.get('.loading').should('not.exist');
+            cy.get('.edit').click();
+            cy.get('.modal').within(() => {
+                testRules.forEach((rule, index) => {
+                    cy.get(`div.fields:nth-of-type(${index + 1})`).within(() => {
+                        cy.get(
+                            `div[name="ruleRowType"] [option-value="${
+                                rule.type === FilterRuleType.Label ? FilterRuleType.Label : rule.key
+                            }"][aria-selected="true"]`
+                        ).should('exist');
+                        cy.get(
+                            `div[name="ruleOperator"] [option-value="${rule.operator}"][aria-selected="true"]`
+                        ).should('exist');
+
+                        if (rule.type === FilterRuleType.Label) {
+                            cy.get(`div[name="labelKey"] [option-value="${rule.key}"][aria-selected="true"]`).should(
+                                'exist'
+                            );
+                        }
+                        rule.values.forEach(value => {
+                            cy.get(
+                                `div[name="${
+                                    rule.type === FilterRuleType.Label ? 'labelValue' : 'ruleValue'
+                                }"] .label[value="${value}"]`
+                            ).should('exist');
+                        });
+                    });
                 });
             });
         }
@@ -548,7 +592,6 @@ describe('Filters widget', () => {
             return it(name, () => {
                 populateFilterRuleRows(testFilterName, testFilterRules);
                 saveAndVerifyFilter(testFilterName, testFilterRules);
-                // TODO: Optional verify that filter rule rows get populated properly
             });
         });
     });
