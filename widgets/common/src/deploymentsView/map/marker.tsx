@@ -11,17 +11,22 @@ const deploymentStatusToIconColorMapping: Record<DeploymentStatus, Stage.Common.
     [DeploymentStatus.RequiresAttention]: 'red'
 };
 
-type DeploymentSiteMarkerProps = DeploymentSitePair & { selected: boolean; onClick: () => void };
+type DeploymentSiteMarkerProps = DeploymentSitePair & {
+    selected: boolean;
+    onClick: () => void;
+    environmentTypeVisible: boolean;
+};
 
 const DeploymentSiteMarker: FunctionComponent<DeploymentSiteMarkerProps> = ({
     deployment,
     site,
     selected,
-    onClick
+    onClick,
+    environmentTypeVisible
 }) => {
     const { FeatureGroup, CircleMarker } = Stage.Basic.Leaflet;
     const position = Stage.Common.Map.siteToLatLng(site);
-    const tooltip = <DeploymentSiteTooltip deployment={deployment} />;
+    const tooltip = <DeploymentSiteTooltip deployment={deployment} environmentTypeVisible={environmentTypeVisible} />;
 
     if (selected) {
         // NOTE: only render FeatureGroup when necessary to avoid adding additional Leaflet elements
@@ -68,7 +73,10 @@ const BareDeploymentSiteMarker: FunctionComponent<{
 const tooltipStatusT = (suffix: string) => mapT(`tooltip.status.${suffix}`);
 const markerIconHeight = 41;
 const tooltipOffset = L.point(0, -markerIconHeight);
-const DeploymentSiteTooltip: FunctionComponent<{ deployment: Deployment }> = ({ deployment }) => {
+const DeploymentSiteTooltip: FunctionComponent<{ deployment: Deployment; environmentTypeVisible: boolean }> = ({
+    deployment,
+    environmentTypeVisible
+}) => {
     const {
         Leaflet: { Tooltip },
         Header
@@ -79,6 +87,7 @@ const DeploymentSiteTooltip: FunctionComponent<{ deployment: Deployment }> = ({ 
             <Header as="h4">{deployment.id}</Header>
             <div>{deployment.blueprint_id}</div>
             <div>{deployment.site_name}</div>
+            {environmentTypeVisible && <div>{deployment.environment_type}</div>}
             <div>
                 <DeploymentStatusIcon status={deployment.deployment_status} />
                 {tooltipStatusT(camelCase(deployment.deployment_status))}
