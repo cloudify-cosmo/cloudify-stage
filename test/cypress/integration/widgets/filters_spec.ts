@@ -293,9 +293,9 @@ describe('Filters widget', () => {
     describe('should handle errors', () => {
         type FilterModalError = {
             name: string;
-            prepare?: () => void;
+            prepare: () => void;
             verify: () => void;
-            clean?: () => void;
+            clean: () => void;
         };
 
         const commonModalErrors: FilterModalError[] = [
@@ -313,10 +313,10 @@ describe('Filters widget', () => {
         function verifyErrorHandling(error: FilterModalError) {
             cy.log(`Verify error handling - ${error.name}`);
 
-            if (typeof error.prepare === 'function') error.prepare();
+            error.prepare();
             saveFilter();
             error.verify();
-            if (typeof error.clean === 'function') error.clean();
+            error.clean();
 
             cy.get('.error.message .close').click();
         }
@@ -368,7 +368,8 @@ describe('Filters widget', () => {
                     prepare: () => {
                         getFilterIdInput().clear().type('csys-invalid');
                     },
-                    verify: () => cy.contains('All filters with a `csys-` prefix are reserved for internal use')
+                    verify: () => cy.contains('All filters with a `csys-` prefix are reserved for internal use'),
+                    clean: () => {}
                 }
             ];
 
@@ -379,6 +380,7 @@ describe('Filters widget', () => {
             });
         });
     });
+
     describe('should allow to define all kinds of filter rules', () => {
         const testPrefix = 'filters_test_form';
         const blueprintId = `${testPrefix}_blueprint`;
