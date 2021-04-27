@@ -677,7 +677,7 @@ describe('Deployments View widget', () => {
                             withinMarkerTooltip(
                                 () => cy.wrap(marker),
                                 element => {
-                                    currentDeploymentName = element.text();
+                                    currentDeploymentName = element.find('h4').text();
                                 }
                             );
                             cy.wrap(marker).click();

@@ -1,7 +1,9 @@
+import { camelCase } from 'lodash';
 import type { FunctionComponent } from 'react';
 
 import { Deployment, DeploymentStatus } from '../types';
-import type { DeploymentSitePair } from './common';
+import { DeploymentSitePair, mapT } from './common';
+import { DeploymentStatusIcon } from '../StatusIcon';
 
 const deploymentStatusToIconColorMapping: Record<DeploymentStatus, Stage.Common.MarkerIconColor> = {
     [DeploymentStatus.Good]: 'blue',
@@ -63,15 +65,24 @@ const BareDeploymentSiteMarker: FunctionComponent<{
     );
 };
 
+const tooltipStatusT = (suffix: string) => mapT(`tooltip.status.${suffix}`);
 const markerIconHeight = 41;
 const tooltipOffset = L.point(0, -markerIconHeight);
 const DeploymentSiteTooltip: FunctionComponent<{ deployment: Deployment }> = ({ deployment }) => {
-    const { Tooltip } = Stage.Basic.Leaflet;
+    const {
+        Leaflet: { Tooltip },
+        Header
+    } = Stage.Basic;
 
-    // TODO(RD-1526): add more information in marker tooltips
     return (
         <Tooltip direction="top" offset={tooltipOffset}>
-            {deployment.id}
+            <Header as="h4">{deployment.id}</Header>
+            <div>{deployment.blueprint_id}</div>
+            <div>{deployment.site_name}</div>
+            <div>
+                <DeploymentStatusIcon status={deployment.deployment_status} />
+                {tooltipStatusT(camelCase(deployment.deployment_status))}
+            </div>
         </Tooltip>
     );
 };
