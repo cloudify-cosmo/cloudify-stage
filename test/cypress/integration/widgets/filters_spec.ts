@@ -361,7 +361,7 @@ describe('Filters widget', () => {
             });
         });
 
-        it('should handle errors when cloning existing filter', () => {
+        it('when cloning existing filter', () => {
             const cloneModalOnlyErrors: FilterModalError[] = [
                 {
                     name: 'reserved filter ID provided',
