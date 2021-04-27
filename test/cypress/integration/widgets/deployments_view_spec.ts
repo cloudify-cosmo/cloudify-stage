@@ -571,11 +571,11 @@ describe('Deployments View widget', () => {
         const withinMarkerTooltip = (
             getMarker: () => Cypress.Chainable,
             callback: (currentSubject: JQuery<HTMLElement>) => void,
-            { force = false }: { force?: boolean } = {}
+            { ignoreMarkerNotInView = false }: { ignoreMarkerNotInView?: boolean } = {}
         ) => {
-            getMarker().trigger('mouseover', { force });
+            getMarker().trigger('mouseover', { force: ignoreMarkerNotInView });
             getDeploymentsMapTooltip().within(callback);
-            getMarker().trigger('mouseout', { force });
+            getMarker().trigger('mouseout', { force: ignoreMarkerNotInView });
         };
 
         it('should be toggled upon clicking the button', () => {
@@ -647,7 +647,7 @@ describe('Deployments View widget', () => {
                 getDeploymentsViewMap().within(() => {
                     // NOTE: need to `force` events, since the selection circle is covered by a marker image
                     // and Cypress would not interact with the circle underneath
-                    withinMarkerTooltip(getSelectedMarker, () => cy.contains(name), { force: true });
+                    withinMarkerTooltip(getSelectedMarker, () => cy.contains(name), { ignoreMarkerNotInView: true });
                 });
             }
 
