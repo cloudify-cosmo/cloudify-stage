@@ -45,7 +45,7 @@ describe('Filters widget', () => {
     }
 
     function removeLastRule() {
-        withinTheLastRuleRow(() => cy.get('button[title="Remove rule"]').click());
+        withinLastRuleRow(() => cy.get('button[title="Remove rule"]').click());
     }
 
     function typeAttributeRuleValue(value: string) {
@@ -56,7 +56,7 @@ describe('Filters widget', () => {
         return cy.contains('.field', 'Filter ID').find('input');
     }
 
-    function withinTheLastRuleRow(fn: (currentSubject: JQuery<HTMLElement>) => void) {
+    function withinLastRuleRow(fn: (currentSubject: JQuery<HTMLElement>) => void) {
         cy.get('.fields:last-of-type').within(fn);
     }
 
@@ -152,9 +152,9 @@ describe('Filters widget', () => {
 
         cy.get('.modal').within(() => {
             getFilterIdInput().type(newFilterName);
-            withinTheLastRuleRow(() => typeAttributeRuleValue(blueprintId));
+            withinLastRuleRow(() => typeAttributeRuleValue(blueprintId));
             addNewRule();
-            withinTheLastRuleRow(() => {
+            withinLastRuleRow(() => {
                 cy.get('[name=ruleRowType]').click();
                 cy.contains('Label').click();
                 cy.get('[name=ruleOperator]').click();
@@ -284,7 +284,7 @@ describe('Filters widget', () => {
                 prepare: () => addNewRule(),
                 verify: () => {
                     cy.contains('Please provide all the values in filter rules section');
-                    withinTheLastRuleRow(() => cy.get('[name="ruleValue"]').parent().should('have.class', 'error'));
+                    withinLastRuleRow(() => cy.get('[name="ruleValue"]').parent().should('have.class', 'error'));
                 },
                 clean: () => removeLastRule()
             }
@@ -319,10 +319,10 @@ describe('Filters widget', () => {
                     name: 'reserved filter ID provided',
                     prepare: () => {
                         getFilterIdInput().clear().type('csys-invalid');
-                        withinTheLastRuleRow(() => typeAttributeRuleValue('csys'));
+                        withinLastRuleRow(() => typeAttributeRuleValue('csys'));
                     },
                     verify: () => cy.contains('All filters with a `csys-` prefix are reserved for internal use'),
-                    clean: () => withinTheLastRuleRow(() => cy.get('.label[value="csys"] .delete').click())
+                    clean: () => withinLastRuleRow(() => cy.get('.label[value="csys"] .delete').click())
                 }
             ];
 
@@ -387,14 +387,14 @@ describe('Filters widget', () => {
         });
 
         function selectRuleRowType(ruleRowType: FilterRuleRowType) {
-            withinTheLastRuleRow(() => {
+            withinLastRuleRow(() => {
                 cy.get('div[name="ruleRowType"]').click();
                 cy.get(`div[option-value="${ruleRowType}"]`).click();
             });
         }
 
         function selectRuleOperator(operator: FilterRuleOperator) {
-            withinTheLastRuleRow(() => {
+            withinLastRuleRow(() => {
                 cy.get('div[name="ruleOperator"]').click();
                 cy.get(`div[option-value="${operator}"]`).click();
             });
@@ -407,7 +407,7 @@ describe('Filters widget', () => {
             withAutocomplete = false
         ) {
             if (values.length > 0) {
-                withinTheLastRuleRow(() => {
+                withinLastRuleRow(() => {
                     const searchEndpoint: Record<FilterRuleRowType, string> = {
                         blueprint_id: 'blueprints',
                         site_name: 'sites',
@@ -436,7 +436,7 @@ describe('Filters widget', () => {
         }
 
         function selectRuleLabelKey(key: string, newKey = false) {
-            withinTheLastRuleRow(() => {
+            withinLastRuleRow(() => {
                 cy.interceptSp('GET', `/labels/deployments?_search=${key}`).as(`keySearch_${key}`);
                 cy.get('div[name="labelKey"]').within(() => {
                     cy.get('input').type(key);
@@ -450,7 +450,7 @@ describe('Filters widget', () => {
 
         function selectRuleLabelValues(values: string[], newValues = [] as string[]) {
             if (values.length > 0) {
-                withinTheLastRuleRow(() => {
+                withinLastRuleRow(() => {
                     cy.get('div[name="labelValue"]')
                         .click()
                         .within(() => {
