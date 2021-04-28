@@ -22,7 +22,9 @@ const DeploymentsViewHeader: FunctionComponent<DeploymentsViewHeaderProps> = ({
     const [filterModalOpen, openFilterModal, closeFilterModal] = Stage.Hooks.useBoolean();
     const [filterId, setFilterId] = useState<string>();
 
-    const { Button } = Stage.Basic;
+    const { Button, Dropdown } = Stage.Basic;
+    // @ts-ignore Properties does not exist on type 'typeof Dropdown'
+    const { Menu, Item } = Dropdown;
 
     function handleFilterChange(newFilterId: string | undefined) {
         setFilterId(newFilterId);
@@ -63,6 +65,11 @@ const DeploymentsViewHeader: FunctionComponent<DeploymentsViewHeaderProps> = ({
                     onClick={openFilterModal}
                 />
             )}
+            <Dropdown button text={headerT('bulkActions.button')}>
+                <Menu>
+                    <Item text={headerT('bulkActions.menu.deployOn')} />
+                </Menu>
+            </Dropdown>
 
             <FilterModal
                 filterId={filterId}
