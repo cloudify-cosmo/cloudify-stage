@@ -5,7 +5,6 @@ describe('Deployment Info', () => {
 
     before(() => {
         cy.activate()
-            .disableGettingStarted()
             .usePageMock('deploymentInfo', { showBlueprint: true, showCreator: true, showSite: true })
             .mockLogin()
             .deleteDeployments(deploymentName, true)

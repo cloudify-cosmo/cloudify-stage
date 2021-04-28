@@ -4,7 +4,6 @@ describe('Blueprint Info widget', () => {
     before(() =>
         cy
             .activate('valid_trial_license')
-            .disableGettingStarted()
             .usePageMock('blueprintInfo')
             .mockLogin()
             .deleteBlueprints(blueprintName, true)

@@ -3,8 +3,7 @@ describe('Labels widget', () => {
     const deploymentName = 'labels_test_deployment';
 
     before(() => {
-        cy.disableGettingStarted()
-            .usePageMock('labels')
+        cy.usePageMock('labels')
             .activate()
             .mockLogin()
             .deleteDeployments(deploymentName, true)

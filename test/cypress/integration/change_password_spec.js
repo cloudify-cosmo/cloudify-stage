@@ -9,7 +9,6 @@ describe('Change Password modal', () => {
             cy.deleteAllUsersAndTenants()
                 .addUser(username, password, true)
                 .addUserToTenant(username, 'default_tenant', 'manager')
-                .disableGettingStarted()
                 .usePageMock()
                 .mockLogin(username, password);
         });
@@ -72,7 +71,7 @@ describe('Change Password modal', () => {
             cy.get('.usersMenu').click().contains('Logout').click();
 
             cy.log('Login with new password');
-            cy.disableGettingStarted().usePageMock().mockLogin(username, 'new-pass');
+            cy.usePageMock().mockLogin(username, 'new-pass');
 
             cy.get('.error.message').should('not.exist');
             cy.waitUntilLoaded();
@@ -82,7 +81,7 @@ describe('Change Password modal', () => {
     it('should not be available when LDAP is enabled', () => {
         cy.interceptSp('GET', `/ldap`, 'enabled').as('ldap');
 
-        cy.disableGettingStarted().usePageMock().mockLogin();
+        cy.usePageMock().mockLogin();
 
         cy.get('.usersMenu').click();
         cy.get('#changePasswordMenuItem').should('have.class', 'disabled');

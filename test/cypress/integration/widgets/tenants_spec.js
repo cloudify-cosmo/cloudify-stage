@@ -6,7 +6,6 @@ describe('Tenants management widget', () => {
     before(() =>
         cy
             .activate('valid_trial_license')
-            .disableGettingStarted()
             .usePageMock('tenants')
             .mockLogin()
             .removeUserGroupFromTenant(group, tenant)

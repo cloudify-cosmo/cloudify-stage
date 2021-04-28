@@ -3,7 +3,6 @@ import { styles } from '../../support/cluster_status_commons';
 describe('Spire Manager widget', () => {
     before(() => {
         cy.activate('valid_spire_license')
-            .disableGettingStarted()
             .usePageMock('managers', {
                 // pollingTime: 5,
                 fieldsToShow: ['Deployment', 'IP', 'Last Execution', 'Status', 'Actions']

@@ -2,7 +2,6 @@ describe('Filter', () => {
     before(() => {
         cy.activate('valid_trial_license')
             .deleteAllUsersAndTenants()
-            .disableGettingStarted()
             .usePageMock(['blueprints', 'deployments'], { pollingTime: 3 })
             .mockLogin();
     });
@@ -45,6 +44,7 @@ describe('Filter', () => {
 
         before(() =>
             cy
+                .disableGettingStarted()
                 .deleteDeployments(blueprintName)
                 .deleteBlueprints(blueprintName)
                 .uploadBlueprint('blueprints/empty.zip', blueprintName)

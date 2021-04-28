@@ -1,15 +1,7 @@
 describe('Edit mode', () => {
-    before(() =>
-        cy
-            .activate('valid_trial_license')
-            .removeCustomWidgets()
-            .disableGettingStarted()
-            .usePageMock('blueprints')
-            .mockLogin()
-    );
+    before(() => cy.activate('valid_trial_license').removeCustomWidgets().usePageMock('blueprints').mockLogin());
 
     beforeEach(() => {
-        cy.disableGettingStarted();
         cy.usePageMock('blueprints');
         cy.refreshTemplate();
         cy.enterEditMode();

@@ -153,9 +153,7 @@ const commands = {
             }
         });
 
-        // cy.interceptSp('GET', `/users/`, req => {
-        //     req.reply('test');
-        // });
+        cy.disableGettingStarted();
 
         cy.get('.form > :nth-child(1) > .ui > input').clear().type(username);
         cy.get('.form > :nth-child(2) > .ui > input').clear().type(password);
@@ -185,6 +183,7 @@ const commands = {
                     username
                 })
             );
+            cy.disableGettingStarted();
         });
         cy.visit('/console').waitUntilLoaded();
     },
@@ -207,6 +206,7 @@ const commands = {
     ) => {
         const widgetIdsArray = _.castArray(widgetIds);
         const widgetIdsToLoad = [...widgetIdsArray, 'filter', 'pluginsCatalog', ...additionalWidgetIdsToLoad];
+        cy.disableGettingStarted();
         cy.intercept('GET', '/console/widgets/list', widgetIdsToLoad.map(toIdObj));
         // required for drill-down testing
         cy.intercept(

@@ -3,11 +3,10 @@ describe('Agents widget', () => {
     const deploymentName = 'agents_test_deployment';
 
     before(() => {
-        cy.disableGettingStarted()
-            .usePageMock('agents', {
-                fieldsToShow: ['Id', 'Node', 'Deployment', 'IP', 'Install Method', 'System', 'Version', 'Actions'],
-                pageSize: 15
-            })
+        cy.usePageMock('agents', {
+            fieldsToShow: ['Id', 'Node', 'Deployment', 'IP', 'Install Method', 'System', 'Version', 'Actions'],
+            pageSize: 15
+        })
             .activate()
             .mockLogin()
             .deleteDeployments(deploymentName, true)

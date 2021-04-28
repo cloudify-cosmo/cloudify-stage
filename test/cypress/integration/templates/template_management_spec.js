@@ -90,7 +90,7 @@ describe('Template Management', () => {
     });
 
     it('is available for admin users', () => {
-        cy.disableGettingStarted().mockLogin();
+        cy.mockLogin();
 
         cy.get('.loader').should('be.not.visible');
 
@@ -115,7 +115,7 @@ describe('Template Management', () => {
     });
 
     it('is not available for non-admin users', () => {
-        cy.disableGettingStarted().mockLogin(defaultUser.username, defaultUser.password);
+        cy.mockLogin(defaultUser.username, defaultUser.password);
 
         cy.get('.usersMenu').click();
         cy.get('.usersMenu').should('not.contain', 'Template Management');
@@ -126,7 +126,7 @@ describe('Template Management', () => {
 
     it('allows admin users to create and modify templates', () => {
         const clickOnHeader = () => cy.get('.modal > .header').click();
-        cy.disableGettingStarted().removeUserTemplates().mockLogin();
+        cy.removeUserTemplates().mockLogin();
 
         cy.get('.usersMenu').click();
         cy.get('.usersMenu').contains('Template Management').click();

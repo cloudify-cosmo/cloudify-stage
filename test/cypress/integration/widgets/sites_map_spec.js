@@ -6,7 +6,6 @@ describe('Sites Map', () => {
     const testSite = { name: 'Tel-Aviv', location: '32.079991, 34.767291' };
     before(() => {
         cy.activate('valid_spire_license')
-            .disableGettingStarted()
             .usePageMock('sitesMap')
             .mockLogin()
             .deleteSites()

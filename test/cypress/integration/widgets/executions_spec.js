@@ -8,7 +8,6 @@ describe('Executions', () => {
             .deleteSites()
             .uploadBlueprint('blueprints/simple.zip', blueprintName, 'blueprint.yaml', 'global')
             .deployBlueprint(blueprintName, blueprintName, { server_ip: 'localhost' })
-            .disableGettingStarted()
             .usePageMock('executions', { fieldsToShow: ['Status', 'Workflow'], pollingTime: 5 })
             .mockLogin()
             .executeWorkflow(blueprintName, 'install');

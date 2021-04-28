@@ -2,7 +2,6 @@ describe('Number of nodes widget', () => {
     before(() =>
         cy
             .activate('valid_trial_license')
-            .disableGettingStarted()
             .usePageMock('serversNum', { pollingTime: 1 })
             .mockLogin()
             .deleteDeployments('', true)

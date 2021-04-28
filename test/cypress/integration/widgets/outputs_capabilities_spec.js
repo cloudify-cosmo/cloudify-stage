@@ -2,13 +2,7 @@ describe('Outputs/Capabilities', () => {
     const blueprintName = 'outputs_capabilities_test';
     const deploymentName = 'outputs_capabilities_test';
 
-    before(() =>
-        cy
-            .activate('valid_trial_license')
-            .disableGettingStarted()
-            .usePageMock('outputs', { showCapabilities: true })
-            .mockLogin()
-    );
+    before(() => cy.activate('valid_trial_license').usePageMock('outputs', { showCapabilities: true }).mockLogin());
 
     function setUpBlueprint(blueprintPackage) {
         cy.deleteDeployments(deploymentName, true)
@@ -27,6 +21,7 @@ describe('Outputs/Capabilities', () => {
     describe('presents data and export button for', () => {
         before(() => {
             setUpBlueprint('outputs');
+            cy.disableGettingStarted();
             cy.refreshTemplate();
         });
 

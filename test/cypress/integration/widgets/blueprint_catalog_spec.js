@@ -4,7 +4,6 @@ describe('Blueprints catalog widget', () => {
     before(() =>
         cy
             .activate('valid_trial_license')
-            .disableGettingStarted()
             .usePageMock('blueprintCatalog', {
                 jsonPath: 'https://repository.cloudifysource.org/cloudify/blueprints/5.1/vm-examples.json'
             })

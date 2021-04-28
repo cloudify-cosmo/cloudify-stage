@@ -8,14 +8,11 @@ describe('Blueprints widget', () => {
             .activate('valid_trial_license')
             .deleteDeployments(blueprintNamePrefix, true)
             .deleteBlueprints(blueprintNamePrefix, true)
-            .disableGettingStarted()
             .usePageMock('blueprints', blueprintsWidgetConfiguration)
             .mockLogin()
     );
 
-    beforeEach(() =>
-        cy.disableGettingStarted().usePageMock('blueprints', blueprintsWidgetConfiguration).refreshTemplate()
-    );
+    beforeEach(() => cy.usePageMock('blueprints', blueprintsWidgetConfiguration).refreshTemplate());
 
     function getBlueprintRow(blueprintName: string) {
         cy.getSearchInput().clear().type(blueprintName);

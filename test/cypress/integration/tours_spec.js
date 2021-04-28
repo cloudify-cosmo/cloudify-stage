@@ -14,8 +14,7 @@ describe('Tours', () => {
     describe('for admin user provide', () => {
         before(() => {
             const blueprintName = 'tours_test';
-            cy.disableGettingStarted()
-                .mockLogin()
+            cy.mockLogin()
                 .deleteDeployments(blueprintName)
                 .deleteBlueprints(blueprintName)
                 .uploadBlueprint('blueprints/empty.zip', blueprintName)
@@ -49,7 +48,6 @@ describe('Tours', () => {
             const password = 'password';
             cy.addUser(username, password)
                 .addUserToTenant(username, 'default_tenant', 'viewer')
-                .disableGettingStarted()
                 .mockLogin(username, password);
         });
 
