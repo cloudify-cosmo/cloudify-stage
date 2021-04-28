@@ -40,7 +40,6 @@ describe('Tenants menu', () => {
         user.tenants.forEach(tenant => cy.addUserToTenant(user.username, tenant.name, tenant.role));
 
         cy.intercept('/console/widgets/list', []);
-        cy.disableGettingStarted();
     });
 
     it('should switch template on tenant change', () => {
