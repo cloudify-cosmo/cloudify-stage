@@ -2,6 +2,8 @@ Cypress.Commands.add('getPages', () => cy.stageRequest('/console/templates/pages
 
 Cypress.Commands.add('getTemplates', () => cy.stageRequest('/console/templates'));
 
+Cypress.Commands.add('getBuiltInTemplate', name => cy.stageRequest(`/console/appData/templates/${name}.json`));
+
 Cypress.Commands.add('removeUserPages', () => {
     cy.getPages().then(response => {
         const pages = response.body;

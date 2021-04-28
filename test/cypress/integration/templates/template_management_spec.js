@@ -12,67 +12,24 @@ describe('Template Management', () => {
         pages: ['catalog', 'blueprints']
     };
     const users = [defaultUser];
-    const builtInTemplates = [
-        {
-            id: 'main-default',
-            pages: ['adminDash', 'catalog', 'blueprints', 'deploy', 'executions', 'sites', 'systemResources', 'logs'],
-            roles: 'default',
-            tenants: ['all']
-        },
-        {
-            id: 'main-sys_admin',
-            pages: [
-                'adminDash',
-                'catalog',
-                'blueprints',
-                'deploy',
-                'executions',
-                'sites',
-                'tmm',
-                'ha',
-                'systemResources',
-                'logs'
-            ],
-            roles: 'sys_admin',
-            tenants: ['all']
-        }
-    ];
-    const builtInPages = [
-        { id: 'adminDash', name: 'Dashboard' },
-        { id: 'blueprint', name: 'Blueprint' },
-        { id: 'blueprints-community', name: 'Local Blueprints' },
-        { id: 'blueprints', name: 'Local Blueprints' },
-        { id: 'catalog', name: 'Cloudify Catalog' },
-        { id: 'deploy', name: 'Deployments' },
-        { id: 'deployment', name: 'Deployment' },
-        { id: 'drilldownDeployments', name: 'Subdeployments' },
-        { id: 'execution', name: 'Logs' },
-        { id: 'executions', name: 'Executions' },
-        { id: 'ha', name: 'Admin Operations' },
-        { id: 'logs', name: 'Logs' },
-        { id: 'plugins', name: 'Plugins' },
-        { id: 'sites', name: 'Site Management' },
-        { id: 'systemResources', name: 'System Resources' },
-        { id: 'tmm', name: 'Tenant Management' }
-    ];
 
-    const verifyTemplateRow = (index, id, pages, roles, tenants) => {
-        const templateRow = `.blue.segment > .gridTable > :nth-child(2) > .very > tbody > :nth-child(${index})`;
-        cy.get(`${templateRow} > :nth-child(1)`).should('have.text', id);
-        cy.get(`${templateRow} > :nth-child(2)`).should('have.text', roles);
+    const verifyTemplateRow = (id, pages, roles, tenants) => {
+        cy.contains('tr', id).as('templateRow');
+        cy.get('@templateRow').within(() => {
+            roles.forEach(role => cy.get(`td:nth-of-type(2)`).should('contain.text', role));
+        });
 
-        cy.get(`${templateRow} > :nth-child(1)`).click();
-        cy.get('.horizontal > :nth-child(1)').within(() => {
-            for (let i = 0; i < pages.length; i += 1) {
-                cy.get(`.divided > :nth-child(${i + 1})`).should('have.text', pages[i]);
-            }
-        });
-        cy.get('.horizontal > :nth-child(3)').within(() => {
-            for (let i = 0; i < tenants.length; i += 1) {
-                cy.get(`.divided > :nth-child(${i + 1})`).should('have.text', tenants[i]);
-            }
-        });
-        cy.get(`${templateRow} > :nth-child(1)`).click();
+        cy.get('@templateRow').click();
+        cy.get('.horizontal > :nth-child(1)').within(() =>
+            pages.forEach((page, index) => cy.get(`.divided > :nth-child(${index + 1})`).should('have.text', page))
+        );
+        cy.get('.horizontal > :nth-child(3)').within(() =>
+            tenants.forEach((tenant, index) =>
+                cy.get(`.divided > :nth-child(${index + 1})`).should('have.text', tenant === '*' ? 'all' : tenant)
+            )
+        );
+
+        cy.get('@templateRow').click();
     };
     const verifyPageRow = (index, id, name) => {
         const pageRow = `.red.segment > .gridTable > :nth-child(2) > .very > tbody > :nth-child(${index})`;
@@ -111,19 +68,29 @@ describe('Template Management', () => {
 
         cy.location('pathname').should('be.equal', '/console/template_management');
 
-        for (let i = 0; i < builtInTemplates.length; i += 1) {
-            verifyTemplateRow(
-                i + 1,
-                builtInTemplates[i].id,
-                builtInTemplates[i].pages,
-                builtInTemplates[i].roles,
-                builtInTemplates[i].tenants
-            );
-        }
+        cy.getTemplates().then(templatesData => {
+            const builtInTemplates = templatesData.body.filter(template => !template.custom);
 
-        for (let i = 0; i < builtInPages.length; i += 1) {
-            verifyPageRow(i + 1, builtInPages[i].id, builtInPages[i].name);
-        }
+            builtInTemplates.forEach(template => {
+                cy.getBuiltInTemplate(template.id).then(templateData => {
+                    const builtInTemplate = templateData.body;
+                    verifyTemplateRow(
+                        template.id,
+                        builtInTemplate.pages,
+                        builtInTemplate.roles,
+                        builtInTemplate.tenants
+                    );
+                });
+            });
+        });
+
+        cy.getPages().then(pagesData => {
+            const builtInPages = pagesData.body.filter(page => !page.custom);
+
+            builtInPages.forEach((builtInPage, index) => {
+                verifyPageRow(index + 1, builtInPage.id, builtInPage.name);
+            });
+        });
     });
 
     it('is not available for non-admin users', () => {
@@ -165,13 +132,7 @@ describe('Template Management', () => {
         cy.get('.modal').should('not.exist');
 
         cy.log('Verify template');
-        verifyTemplateRow(
-            builtInTemplates.length + 1,
-            'Template 1',
-            ['deployment', 'plugins', 'logs'],
-            'user, viewer',
-            ['all']
-        );
+        verifyTemplateRow('Template 1', ['deployment', 'plugins', 'logs'], ['user', 'viewer'], ['all']);
 
         cy.log('Edit template');
         getTemplateRow('Template 1').within(() => cy.get('.edit').click());
@@ -209,10 +170,9 @@ describe('Template Management', () => {
 
         cy.log('Verify template changes');
         verifyTemplateRow(
-            builtInTemplates.length + 1,
             'Another Template',
             ['deployment', 'plugins', 'tmm'],
-            'manager, operations',
+            ['manager', 'operations'],
             ['T1', 'T2']
         );
 
