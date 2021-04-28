@@ -21,3 +21,6 @@ export const isTopLevelPage = (drilldownContext: Stage.Types.ReduxState['drilldo
     drilldownContext.length < 2;
 export const getParentPageContext = (drilldownContext: Stage.Types.ReduxState['drilldownContext']) =>
     drilldownContext[drilldownContext.length - 2].context;
+
+export const selectDeployment = (toolbox: Stage.Types.Toolbox, deploymentId: string) =>
+    toolbox.getContext().setValue('deploymentId', deploymentId);
