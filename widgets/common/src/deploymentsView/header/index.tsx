@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { useQuery } from 'react-query';
 import { i18nPrefix } from '../common';
 import FilterModal from './FilterModal';
+import ExecuteDeploymentModal from '../../ExecuteDeploymentModal';
 
 interface DeploymentsViewHeaderProps {
     mapOpen: boolean;
@@ -10,6 +11,11 @@ interface DeploymentsViewHeaderProps {
     onFilterChange: (filterId: string | undefined) => void;
     toolbox: Stage.Types.Toolbox;
 }
+
+type Workflow = {
+    name: string;
+    parameters: Record<string, string>;
+};
 
 const headerT = (suffix: string) => Stage.i18n.t(`${i18nPrefix}.header.${suffix}`);
 const mapT = (suffix: string) => headerT(`map.${suffix}`);
@@ -20,7 +26,10 @@ const DeploymentsViewHeader: FunctionComponent<DeploymentsViewHeaderProps> = ({
     onFilterChange,
     toolbox
 }) => {
-    const [filterModalOpen, openFilterModal, closeFilterModal] = Stage.Hooks.useBoolean();
+    const { useBoolean } = Stage.Hooks;
+    const [filterModalOpen, openFilterModal, closeFilterModal] = useBoolean();
+    const [executeModalOpen, openExecuteModal, closeExecuteModal] = useBoolean();
+    const [selectedWorkflow, selectWorkflow] = useState<Workflow | null>(null);
     const [filterId, setFilterId] = useState<string>();
 
     const { Button, Dropdown } = Stage.Basic;
@@ -61,7 +70,17 @@ const DeploymentsViewHeader: FunctionComponent<DeploymentsViewHeaderProps> = ({
         if (workflowsResult.isIdle) {
             throw new Error('Idle state for fetching workflows data is not handled');
         }
-        return workflowsResult.data.items.map(workflow => <Item key={workflow.name}>{workflow.name}</Item>);
+        return workflowsResult.data.items.map((workflow: Workflow) => (
+            <Item
+                key={workflow.name}
+                onClick={() => {
+                    selectWorkflow(workflow);
+                    openExecuteModal();
+                }}
+            >
+                {workflow.name}
+            </Item>
+        ));
     })();
 
     return (
@@ -115,6 +134,16 @@ const DeploymentsViewHeader: FunctionComponent<DeploymentsViewHeaderProps> = ({
                 onSubmit={handleFilterChange}
                 toolbox={toolbox}
             />
+
+            {!_.isEmpty(selectedWorkflow) && (
+                <ExecuteDeploymentModal
+                    open={executeModalOpen}
+                    workflow={selectedWorkflow}
+                    onExecute={_.noop} // TODO
+                    onHide={closeExecuteModal}
+                    toolbox={toolbox}
+                />
+            )}
         </>
     );
 };
