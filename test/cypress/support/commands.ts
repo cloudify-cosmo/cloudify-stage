@@ -206,7 +206,6 @@ const commands = {
     ) => {
         const widgetIdsArray = _.castArray(widgetIds);
         const widgetIdsToLoad = [...widgetIdsArray, 'filter', 'pluginsCatalog', ...additionalWidgetIdsToLoad];
-        cy.disableGettingStarted();
         cy.intercept('GET', '/console/widgets/list', widgetIdsToLoad.map(toIdObj));
         // required for drill-down testing
         cy.intercept(
@@ -283,8 +282,12 @@ const commands = {
             }
         });
     },
-    refreshPage: () => cy.get('.pageMenuItem.active').click({ force: true }),
+    refreshPage: () => {
+        cy.disableGettingStarted();
+        cy.get('.pageMenuItem.active').click({ force: true });
+    },
     refreshTemplate: () => {
+        cy.disableGettingStarted();
         cy.get('.tenantsMenu').click({ force: true });
         cy.contains('.text', 'default_tenant').click({ force: true });
     },
