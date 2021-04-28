@@ -45,7 +45,7 @@ describe('Filters widget', () => {
     }
 
     function removeLastRule() {
-        withinTheLastRuleRow(() => cy.get('button[aria-label="Remove rule"]').click());
+        withinTheLastRuleRow(() => cy.get('button[title="Remove rule"]').click());
     }
 
     function typeAttributeRuleValue(value: string) {
