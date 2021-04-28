@@ -18,12 +18,6 @@ describe('Filters widget', () => {
         { type: FilterRuleType.Label, key: 'precious', values: ['yes'], operator: FilterRuleOperators.AnyOf }
     ];
 
-    beforeEach(() => {
-        cy.deleteDeploymentsFilters(filterName).createDeploymentsFilter(filterName, filterRules).refreshPage();
-        cy.getSearchInput().type(filterName);
-        cy.get('.loading').should('not.exist');
-    });
-
     function openAddFilterModal() {
         cy.contains('Add').click();
     }
@@ -40,12 +34,12 @@ describe('Filters widget', () => {
         cy.contains('Save').click();
     }
 
-    function addNewRule() {
-        cy.contains('Add new rule').click();
+    function closeFilterModal() {
+        cy.contains('Cancel').click();
     }
 
-    function removeLastRule() {
-        withinLastRuleRow(() => cy.get('button[title="Remove rule"]').click());
+    function addNewRule() {
+        cy.contains('Add new rule').click();
     }
 
     function typeAttributeRuleValue(value: string) {
@@ -102,164 +96,175 @@ describe('Filters widget', () => {
         });
     }
 
-    it('should list existing filters', () => {
-        cy.get('table')
-            .getTable()
-            .should(tableData => {
-                expect(tableData).to.have.length(1);
-                expect(tableData[0]['Filter name']).to.eq(filterName);
-                expect(tableData[0].Creator).to.eq('admin');
-                expect(tableData[0].Created).not.to.be.null;
-            });
-        cy.get('.filtersWidget .checkbox:not(.checked)');
-
-        const systemFilterName = 'csys-environment-filter';
-        cy.getSearchInput().clear().type(systemFilterName);
+    function searchFilter(name: string) {
+        cy.getSearchInput().clear().type(name);
         cy.get('.loading').should('not.exist');
+    }
 
-        cy.get('table')
-            .getTable()
-            .should(tableData => {
-                expect(tableData).to.have.length(1);
-                expect(tableData[0]['Filter name']).to.eq(systemFilterName);
-                expect(tableData[0].Creator).to.eq('admin');
-                expect(tableData[0].Created).not.to.be.null;
-            });
+    describe('should provide basic functionality:', () => {
+        beforeEach(() => {
+            cy.deleteDeploymentsFilters(filterName).createDeploymentsFilter(filterName, filterRules).refreshPage();
+            searchFilter(filterName);
+        });
 
-        cy.get('.filtersWidget .checkbox.checked');
-
-        const disabledIconTitle = "System filter can't be edited or deleted";
-        cy.get('.edit').should('have.class', 'disabled');
-        cy.get('.edit').should('have.prop', 'title', disabledIconTitle);
-        cy.get('.trash').should('have.class', 'disabled');
-        cy.get('.trash').should('have.prop', 'title', disabledIconTitle);
-        cy.get('.clone').should('not.have.class', 'disabled');
-    });
-
-    it('should allow to add new filter', () => {
-        const blueprintId = 'filters_test_blueprint';
-        const deploymentId = 'filters_test_deployment';
-        const labelKey = 'label_key';
-
-        cy.deleteDeployments(deploymentId)
-            .deleteBlueprints(blueprintId)
-            .uploadBlueprint('blueprints/empty.zip', blueprintId)
-            .deployBlueprint(blueprintId, deploymentId)
-            .setLabels(deploymentId, [{ [labelKey]: 'label_value' }]);
-
-        const newFilterName = `${filterName}_added`;
-        openAddFilterModal();
-
-        cy.get('.modal').within(() => {
-            getFilterIdInput().type(newFilterName);
-            withinLastRuleRow(() => typeAttributeRuleValue(blueprintId));
-            addNewRule();
-            withinLastRuleRow(() => {
-                cy.get('[name=ruleRowType]').click();
-                cy.contains('Label').click();
-                cy.get('[name=ruleOperator]').click();
-                cy.contains('key is not').click();
-                cy.get('[name=labelKey]').click();
-                cy.get('[name=labelKey] input').type(labelKey);
-                cy.get(`[option-value=${labelKey}]`).click();
-            });
-
-            cy.interceptSp('PUT', `/filters/deployments/${newFilterName}`).as('createRequest');
-            saveFilter();
-            cy.wait('@createRequest').then(({ request }) => {
-                const requestRules = request.body.filter_rules;
-                expect(requestRules).to.have.length(2);
-                expect(requestRules[0]).to.deep.equal({
-                    type: FilterRuleType.Attribute,
-                    key: 'blueprint_id',
-                    values: [blueprintId],
-                    operator: FilterRuleOperators.Contains
+        it('list existing filters', () => {
+            cy.get('table')
+                .getTable()
+                .should(tableData => {
+                    expect(tableData).to.have.length(1);
+                    expect(tableData[0]['Filter name']).to.eq(filterName);
+                    expect(tableData[0].Creator).to.eq('admin');
+                    expect(tableData[0].Created).not.to.be.null;
                 });
-                expect(requestRules[1]).to.deep.equal({
-                    type: FilterRuleType.Label,
-                    key: labelKey,
-                    values: [],
-                    operator: FilterRuleOperators.IsNull
+            cy.get('.filtersWidget .checkbox:not(.checked)');
+
+            const systemFilterName = 'csys-environment-filter';
+            searchFilter(systemFilterName);
+
+            cy.get('table')
+                .getTable()
+                .should(tableData => {
+                    expect(tableData).to.have.length(1);
+                    expect(tableData[0]['Filter name']).to.eq(systemFilterName);
+                    expect(tableData[0].Creator).to.eq('admin');
+                    expect(tableData[0].Created).not.to.be.null;
+                });
+
+            cy.get('.filtersWidget .checkbox.checked');
+
+            const disabledIconTitle = "System filter can't be edited or deleted";
+            cy.get('.edit').should('have.class', 'disabled');
+            cy.get('.edit').should('have.prop', 'title', disabledIconTitle);
+            cy.get('.trash').should('have.class', 'disabled');
+            cy.get('.trash').should('have.prop', 'title', disabledIconTitle);
+            cy.get('.clone').should('not.have.class', 'disabled');
+        });
+
+        it('allow to add new filter', () => {
+            const blueprintId = 'filters_test_blueprint';
+            const deploymentId = 'filters_test_deployment';
+            const labelKey = 'label_key';
+
+            cy.deleteDeployments(deploymentId)
+                .deleteBlueprints(blueprintId)
+                .uploadBlueprint('blueprints/empty.zip', blueprintId)
+                .deployBlueprint(blueprintId, deploymentId)
+                .setLabels(deploymentId, [{ [labelKey]: 'label_value' }]);
+
+            const newFilterName = `${filterName}_added`;
+            openAddFilterModal();
+
+            cy.get('.modal').within(() => {
+                getFilterIdInput().type(newFilterName);
+                withinLastRuleRow(() => typeAttributeRuleValue(blueprintId));
+                addNewRule();
+                withinLastRuleRow(() => {
+                    cy.get('[name=ruleRowType]').click();
+                    cy.contains('Label').click();
+                    cy.get('[name=ruleOperator]').click();
+                    cy.contains('key is not').click();
+                    cy.get('[name=labelKey]').click();
+                    cy.get('[name=labelKey] input').type(labelKey);
+                    cy.get(`[option-value=${labelKey}]`).click();
+                });
+
+                cy.interceptSp('PUT', `/filters/deployments/${newFilterName}`).as('createRequest');
+                saveFilter();
+                cy.wait('@createRequest').then(({ request }) => {
+                    const requestRules = request.body.filter_rules;
+                    expect(requestRules).to.have.length(2);
+                    expect(requestRules[0]).to.deep.equal({
+                        type: FilterRuleType.Attribute,
+                        key: 'blueprint_id',
+                        values: [blueprintId],
+                        operator: FilterRuleOperators.Contains
+                    });
+                    expect(requestRules[1]).to.deep.equal({
+                        type: FilterRuleType.Label,
+                        key: labelKey,
+                        values: [],
+                        operator: FilterRuleOperators.IsNull
+                    });
                 });
             });
+
+            cy.get('.modal').should('not.exist');
+            cy.contains(newFilterName);
+
+            cy.get('table')
+                .getTable()
+                .should(tableData => {
+                    expect(tableData).to.have.length(2);
+                    expect(tableData[1]['Filter name']).to.eq(newFilterName);
+                    expect(tableData[1].Creator).to.eq('admin');
+                    expect(tableData[1].Created).not.to.be.null;
+                });
+            cy.get('.filtersWidget .checkbox:not(.checked)').should('have.length', 2);
         });
 
-        cy.get('.modal').should('not.exist');
-        cy.contains(newFilterName);
+        it('allow to edit existing filter', () => {
+            openEditFilterModal();
 
-        cy.get('table')
-            .getTable()
-            .should(tableData => {
-                expect(tableData).to.have.length(2);
-                expect(tableData[1]['Filter name']).to.eq(newFilterName);
-                expect(tableData[1].Creator).to.eq('admin');
-                expect(tableData[1].Created).not.to.be.null;
+            cy.get('.modal').within(() => {
+                cy.contains(`Edit filter '${filterName}'`);
+
+                checkExistingRules();
+                modifyBlueprintRule();
+
+                cy.interceptSp('PATCH', `/filters/deployments/${filterName}`).as('rulesRequest');
+                cy.interceptSp('GET', `/filters/deployments`).as('filtersRequest');
+                saveFilter();
+                checkRequestRules();
             });
-        cy.get('.filtersWidget .checkbox:not(.checked)').should('have.length', 2);
-    });
 
-    it('should allow to edit existing filter', () => {
-        openEditFilterModal();
-
-        cy.get('.modal').within(() => {
-            cy.contains(`Edit filter '${filterName}'`);
-
-            checkExistingRules();
-            modifyBlueprintRule();
-
-            cy.interceptSp('PATCH', `/filters/deployments/${filterName}`).as('rulesRequest');
-            cy.interceptSp('GET', `/filters/deployments`).as('filtersRequest');
-            saveFilter();
-            checkRequestRules();
+            cy.get('.modal').should('not.exist');
+            cy.log('Verify filters list is refetched immediatelly');
+            cy.wait('@filtersRequest', { requestTimeout: 1000 });
         });
 
-        cy.get('.modal').should('not.exist');
-        cy.log('Verify filters list is refetched immediatelly');
-        cy.wait('@filtersRequest', { requestTimeout: 1000 });
-    });
+        it('allow to clone existing filter', () => {
+            openCloneFilterModal();
 
-    it('should allow to clone existing filter', () => {
-        openCloneFilterModal();
+            cy.get('.modal').within(() => {
+                cy.contains(`Clone filter '${filterName}'`);
 
-        cy.get('.modal').within(() => {
-            cy.contains(`Clone filter '${filterName}'`);
+                getFilterIdInput().should('have.value', `${filterName}_clone`);
+                getFilterIdInput().clear().type(`${filterName}_2`);
 
-            getFilterIdInput().should('have.value', `${filterName}_clone`);
-            getFilterIdInput().clear().type(`${filterName}_2`);
+                checkExistingRules();
+                modifyBlueprintRule();
 
-            checkExistingRules();
-            modifyBlueprintRule();
+                cy.interceptSp('PUT', `/filters/deployments/${filterName}_2`).as('rulesRequest');
+                saveFilter();
+                checkRequestRules();
+            });
 
-            cy.interceptSp('PUT', `/filters/deployments/${filterName}_2`).as('rulesRequest');
-            saveFilter();
-            checkRequestRules();
+            cy.get('.modal').should('not.exist');
         });
 
-        cy.get('.modal').should('not.exist');
-    });
+        it('allow to remove existing filter', () => {
+            cy.get('.trash').click();
+            cy.contains('Yes').click();
 
-    it('should allow to remove existing filter', () => {
-        cy.get('.trash').click();
-        cy.contains('Yes').click();
+            cy.contains('There are no filters defined');
+        });
 
-        cy.contains('There are no filters defined');
-    });
+        it('prevent filter used as default from being removed', () => {
+            cy.intercept('GET', `/console/filters/usage/${filterName}`, [
+                { pageName: 'Dashboard', widgetName: 'Deployments View', username: 'admin' }
+            ]).as('usageRequest');
 
-    it('should prevent filter used as default from being removed', () => {
-        cy.intercept('GET', `/console/filters/usage/${filterName}`, [
-            { pageName: 'Dashboard', widgetName: 'Deployments View', username: 'admin' }
-        ]).as('usageRequest');
+            cy.get('.trash').click();
+            cy.contains('Yes').click();
 
-        cy.get('.trash').click();
-        cy.contains('Yes').click();
+            cy.wait('@usageRequest');
 
-        cy.wait('@usageRequest');
+            cy.contains("Filter 'filters_test_filter' cannot be removed");
+            cy.contains("Used as default filter in 'Deployments View' widget in 'Dashboard' page by user 'admin'");
 
-        cy.contains("Filter 'filters_test_filter' cannot be removed");
-        cy.contains("Used as default filter in 'Deployments View' widget in 'Dashboard' page by user 'admin'");
-
-        cy.contains('OK').click();
-        cy.get('.modal').should('not.exist');
+            cy.contains('OK').click();
+            cy.get('.modal').should('not.exist');
+        });
     });
 
     it('should support "Only my resources" setting', () => {
@@ -271,97 +276,94 @@ describe('Filters widget', () => {
     });
 
     describe('should handle errors', () => {
-        type FilterModalError = {
-            name: string;
-            prepare: () => void;
-            verify: () => void;
-            clean: () => void;
-        };
+        const missingFilterIdAndValuesTestName = 'detects missing filter ID and filter rule values';
+        const missingValuesTestName = 'detects missing filter rule values';
+        const invalidFilterIdTestName = 'detects invalid filter ID';
 
-        const commonModalErrors: FilterModalError[] = [
-            {
-                name: 'not all values provided',
-                prepare: () => addNewRule(),
-                verify: () => {
-                    cy.contains('Please provide all the values in filter rules section');
-                    withinLastRuleRow(() => cy.get('[name="ruleValue"]').parent().should('have.class', 'error'));
-                },
-                clean: () => removeLastRule()
-            }
-        ];
-
-        function verifyErrorHandling(error: FilterModalError) {
-            cy.log(`Verify error handling - ${error.name}`);
-
-            error.prepare();
-            saveFilter();
-            error.verify();
-            error.clean();
-
-            cy.get('.error.message .close').click();
+        function verifyMissingFilterIdError() {
+            cy.contains('Please provide the filter ID');
+        }
+        function verifyMissingValuesError() {
+            cy.contains('Please provide all the values in filter rules section');
+            withinLastRuleRow(() => cy.get('[name="ruleValue"]').parent().should('have.class', 'error'));
+        }
+        function verifyInvalidFilterIdError() {
+            cy.contains('All filters with a `csys-` prefix are reserved for internal use');
         }
 
-        it('when adding new filter', () => {
-            const addModalOnlyErrors: FilterModalError[] = [
-                {
-                    name: 'empty form',
-                    prepare: () => {
-                        getFilterIdInput().clear();
-                        addNewRule();
-                    },
-                    verify: () => {
-                        cy.contains('Please provide the filter ID');
-                        cy.contains('Please provide all the values in filter rules section');
-                    },
-                    clean: () => removeLastRule()
-                },
-                {
-                    name: 'reserved filter ID provided',
-                    prepare: () => {
-                        getFilterIdInput().clear().type('csys-invalid');
-                        withinLastRuleRow(() => typeAttributeRuleValue('csys'));
-                    },
-                    verify: () => cy.contains('All filters with a `csys-` prefix are reserved for internal use'),
-                    clean: () => withinLastRuleRow(() => cy.get('.label[value="csys"] .delete').click())
-                }
-            ];
+        describe('when adding new filter', () => {
+            beforeEach(openAddFilterModal);
+            afterEach(closeFilterModal);
 
-            openAddFilterModal();
-            cy.get('.modal').within(() => {
-                const addModalErrors = [...addModalOnlyErrors, ...commonModalErrors];
-                addModalErrors.forEach(verifyErrorHandling);
+            it(missingFilterIdAndValuesTestName, () => {
+                saveFilter();
+
+                verifyMissingFilterIdError();
+                verifyMissingValuesError();
+            });
+
+            it(missingValuesTestName, () => {
+                getFilterIdInput().type('valid-id');
+                saveFilter();
+
+                verifyMissingValuesError();
+            });
+
+            it(invalidFilterIdTestName, () => {
+                getFilterIdInput().type('csys-invalid');
+                typeAttributeRuleValue('value');
+                saveFilter();
+
+                verifyInvalidFilterIdError();
             });
         });
 
-        it('when editing existing filter', () => {
-            openEditFilterModal();
-            cy.get('.modal').within(() => {
-                const editModalErrors = commonModalErrors;
-                editModalErrors.forEach(verifyErrorHandling);
+        describe('when editing existing filter', () => {
+            before(() => searchFilter(filterName));
+
+            beforeEach(openEditFilterModal);
+            afterEach(closeFilterModal);
+
+            it(missingValuesTestName, () => {
+                addNewRule();
+                saveFilter();
+
+                verifyMissingValuesError();
             });
         });
 
-        it('when cloning existing filter', () => {
-            const cloneModalOnlyErrors: FilterModalError[] = [
-                {
-                    name: 'reserved filter ID provided',
-                    prepare: () => {
-                        getFilterIdInput().clear().type('csys-invalid');
-                    },
-                    verify: () => cy.contains('All filters with a `csys-` prefix are reserved for internal use'),
-                    clean: () => {}
-                }
-            ];
+        describe('when cloning existing filter', () => {
+            before(() => searchFilter(filterName));
 
-            openCloneFilterModal();
-            cy.get('.modal').within(() => {
-                const cloneModalErrors = [...cloneModalOnlyErrors, ...commonModalErrors];
-                cloneModalErrors.forEach(verifyErrorHandling);
+            beforeEach(openCloneFilterModal);
+            afterEach(closeFilterModal);
+
+            it(missingFilterIdAndValuesTestName, () => {
+                getFilterIdInput().clear();
+                addNewRule();
+                saveFilter();
+
+                verifyMissingFilterIdError();
+                verifyMissingValuesError();
+            });
+
+            it(missingValuesTestName, () => {
+                addNewRule();
+                saveFilter();
+
+                verifyMissingValuesError();
+            });
+
+            it(invalidFilterIdTestName, () => {
+                getFilterIdInput().clear().type('csys-invalid');
+                saveFilter();
+
+                verifyInvalidFilterIdError();
             });
         });
     });
 
-    describe('should allow to define all kinds of filter rules', () => {
+    describe('should allow to define a filter rule', () => {
         const testPrefix = 'filters_test_form';
         const blueprintId = `${testPrefix}_blueprint`;
         const deploymentId = `${testPrefix}_deployment`;
@@ -385,6 +387,9 @@ describe('Filters widget', () => {
                     { name: `${testPrefix}_TelAviv` }
                 ]);
         });
+
+        beforeEach(openAddFilterModal);
+        afterEach(closeFilterModal);
 
         function selectRuleRowType(ruleRowType: FilterRuleRowType) {
             withinLastRuleRow(() => {
@@ -692,7 +697,6 @@ describe('Filters widget', () => {
         ruleRowTests.map(ruleRowTest => {
             const { name, testFilterName, testFilterRules } = ruleRowTest;
             return it(name, () => {
-                openAddFilterModal();
                 populateFilterRuleRows(testFilterName, testFilterRules);
                 saveAndVerifyFilter(testFilterName, testFilterRules);
             });
