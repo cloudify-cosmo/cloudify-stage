@@ -1,5 +1,6 @@
 import type { FunctionComponent } from 'react';
 import { useState } from 'react';
+import { useQuery } from 'react-query';
 import { i18nPrefix } from '../common';
 import FilterModal from './FilterModal';
 
@@ -31,6 +32,37 @@ const DeploymentsViewHeader: FunctionComponent<DeploymentsViewHeaderProps> = ({
         onFilterChange(newFilterId);
         closeFilterModal();
     }
+
+    const workflowsResult = useQuery('filtered-workflows', () =>
+        toolbox.getManager().doGet('/workflows', {
+            _filter_id: filterId
+        })
+    );
+
+    const workflowsMenu = (() => {
+        if (workflowsResult.isLoading) {
+            const { Loading } = Stage.Basic;
+
+            return (
+                <Item>
+                    <Loading />
+                </Item>
+            );
+        }
+
+        if (workflowsResult.isError) {
+            const { ErrorMessage } = Stage.Basic;
+
+            return (
+                <ErrorMessage header={mapT('errorLoadingSites')} error={workflowsResult.error as { message: string }} />
+            );
+        }
+
+        if (workflowsResult.isIdle) {
+            throw new Error('Idle state for fetching workflows data is not handled');
+        }
+        return workflowsResult.data.items.map(workflow => <Item key={workflow.name}>{workflow.name}</Item>);
+    })();
 
     return (
         <>
@@ -68,6 +100,11 @@ const DeploymentsViewHeader: FunctionComponent<DeploymentsViewHeaderProps> = ({
             <Dropdown button text={headerT('bulkActions.button')}>
                 <Menu>
                     <Item text={headerT('bulkActions.menu.deployOn')} />
+                    <Item>
+                        <Dropdown text={headerT('bulkActions.menu.runWorkflow')} direction="left">
+                            <Menu>{workflowsMenu}</Menu>
+                        </Dropdown>
+                    </Item>
                 </Menu>
             </Dropdown>
 

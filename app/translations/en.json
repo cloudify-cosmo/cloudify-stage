@@ -659,7 +659,8 @@
                 "bulkActions": {
                     "button": "Bulk Actions",
                     "menu": {
-                        "deployOn": "Deploy On"
+                        "deployOn": "Deploy On",
+                        "runWorkflow": "Run Workflow"
                     }
                 }
             },
