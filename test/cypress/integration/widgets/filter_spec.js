@@ -44,7 +44,6 @@ describe('Filter', () => {
 
         before(() =>
             cy
-                .disableGettingStarted()
                 .deleteDeployments(blueprintName)
                 .deleteBlueprints(blueprintName)
                 .uploadBlueprint('blueprints/empty.zip', blueprintName)
