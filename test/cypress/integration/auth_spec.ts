@@ -1,5 +1,5 @@
 describe('Authentication', () => {
-    beforeEach(() => cy.clearCookie('XSRF-TOKEN').disableGettingStarted());
+    beforeEach(() => cy.clearCookie('XSRF-TOKEN'));
 
     it('fails when token is not set in cookies', () => {
         cy.visit('/console');
