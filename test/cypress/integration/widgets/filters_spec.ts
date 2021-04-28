@@ -23,11 +23,16 @@ describe('Filters widget', () => {
     }
 
     function openCloneFilterModal() {
-        cy.get('.clone').click();
+        cy.get('[title="Clone filter"]').click();
     }
 
     function openEditFilterModal() {
-        cy.get('.edit').click();
+        cy.get('[title="Edit filter"]').click();
+    }
+
+    function deleteFilter() {
+        cy.get('[title="Delete filter"]').click();
+        cy.contains('Yes').click();
     }
 
     function saveFilter() {
@@ -243,8 +248,7 @@ describe('Filters widget', () => {
         });
 
         it('allow to remove existing filter', () => {
-            cy.get('.trash').click();
-            cy.contains('Yes').click();
+            deleteFilter();
 
             cy.contains('There are no filters defined');
         });
@@ -254,8 +258,7 @@ describe('Filters widget', () => {
                 { pageName: 'Dashboard', widgetName: 'Deployments View', username: 'admin' }
             ]).as('usageRequest');
 
-            cy.get('.trash').click();
-            cy.contains('Yes').click();
+            deleteFilter();
 
             cy.wait('@usageRequest');
 
