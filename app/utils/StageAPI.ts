@@ -80,8 +80,6 @@ type StageWidgetDefinition<Params = any, Data = any, Configuration = Record<stri
     (ReactWidgetDefinitionPart<Data, Configuration> | HTMLWidgetDefinitionPart<Data, Configuration>);
 export type { StageWidgetDefinition as WidgetDefinition };
 
-type ObjectKeys<T extends Record<string, any>> = T[keyof T];
-
 interface StageWidgetConfigurationDefinition {
     id: string;
     name?: string;
@@ -103,7 +101,7 @@ export type { StageWidgetConfigurationDefinition as WidgetConfigurationDefinitio
 interface CommonWidgetDefinition<Params, Data, Configuration> {
     id: string;
     name: string;
-    categories: ObjectKeys<typeof GenericConfigType['CATEGORY']>[];
+    categories: Stage.Types.ObjectKeys<typeof GenericConfigType['CATEGORY']>[];
     color: SemanticCOLORS;
     description?: string;
     /** @see https://docs.cloudify.co/developer/writing_widgets/widget-definition/#fetchurl */
@@ -118,7 +116,7 @@ interface CommonWidgetDefinition<Params, Data, Configuration> {
     initialConfiguration: StageWidgetConfigurationDefinition[];
     initialHeight: number;
     initialWidth: number;
-    permission: ObjectKeys<typeof GenericConfigType['CUSTOM_WIDGET_PERMISSIONS']> | string;
+    permission: Stage.Types.ObjectKeys<typeof GenericConfigType['CUSTOM_WIDGET_PERMISSIONS']> | string;
     showBorder: boolean;
     showHeader: boolean;
     supportedEditions: string[];
@@ -281,6 +279,8 @@ declare global {
                 };
             }
             type ReduxState = import('../reducers').ReduxState;
+
+            type ObjectKeys<T extends Record<string, any>> = T[keyof T];
         }
     }
 }

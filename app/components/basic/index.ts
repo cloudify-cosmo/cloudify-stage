@@ -73,7 +73,7 @@ import {
     VisibilityIcon
 } from 'cloudify-ui-components';
 
-import { Map, TileLayer, Marker, Popup as LeafletPopup } from 'react-leaflet';
+import { Map, TileLayer, Marker, Popup as LeafletPopup, Tooltip, FeatureGroup, CircleMarker } from 'react-leaflet';
 import type { ComponentType } from 'react';
 import type { InferProps } from 'prop-types';
 
@@ -86,7 +86,10 @@ const Leaflet = {
     Map,
     TileLayer,
     Marker,
-    Popup: LeafletPopup
+    Popup: LeafletPopup,
+    Tooltip,
+    FeatureGroup,
+    CircleMarker
 };
 
 /**
