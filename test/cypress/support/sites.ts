@@ -32,14 +32,14 @@ const commands = {
         sites.forEach(cy.createSite);
     },
 
-    deleteSite: (siteName: string) => {
-        cy.cfyRequest(`/sites/${siteName}`, 'DELETE');
+    deleteSite: (siteName: string, { ignoreFailure = false }: { ignoreFailure?: boolean } = {}) => {
+        cy.cfyRequest(`/sites/${siteName}`, 'DELETE', null, null, { failOnStatusCode: !ignoreFailure });
     },
 
     deleteSites: (search = '') => {
         cy.cfyRequest(`/sites?_search=${search}`, 'GET').then(response => {
             const sites = response.body.items;
-            sites.forEach((site: any) => (cy as any).deleteSite(site.name));
+            sites.forEach((site: any) => cy.deleteSite(site.name));
         });
     }
 };

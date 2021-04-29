@@ -147,6 +147,8 @@ const commands = {
         });
     },
     login: (username = 'admin', password = 'admin', expectSuccessfulLogin = true) => {
+        cy.disableGettingStarted();
+
         cy.location('pathname').then(pathname => {
             if (pathname !== '/console/login') {
                 cy.visit('/console/login');
@@ -181,6 +183,7 @@ const commands = {
                     username
                 })
             );
+            cy.disableGettingStarted();
         });
         cy.visit('/console').waitUntilLoaded();
     },
@@ -279,8 +282,12 @@ const commands = {
             }
         });
     },
-    refreshPage: () => cy.get('.pageMenuItem.active').click({ force: true }),
+    refreshPage: () => {
+        cy.disableGettingStarted();
+        cy.get('.pageMenuItem.active').click({ force: true });
+    },
     refreshTemplate: () => {
+        cy.disableGettingStarted();
         cy.get('.tenantsMenu').click({ force: true });
         cy.contains('.text', 'default_tenant').click({ force: true });
     },
@@ -316,6 +323,12 @@ const commands = {
         return cy
             .exec(`./node_modules/.bin/babel --config-file ${babelConfigPath} ${scriptPath}`)
             .then(commandResult => commandResult.stdout);
+    },
+
+    disableGettingStarted: () => {
+        cy.interceptSp('GET', `/users/`, {
+            body: { show_getting_started: false }
+        });
     }
 };
 

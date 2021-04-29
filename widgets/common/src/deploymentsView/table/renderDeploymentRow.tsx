@@ -2,6 +2,7 @@ import { ReactNode } from 'react';
 
 import { deploymentsViewColumnDefinitions, DeploymentsViewColumnId } from './columns';
 import { Deployment, LatestExecutionStatus } from '../types';
+import { selectDeployment } from '../common';
 
 const renderDeploymentRow = (toolbox: Stage.Types.Toolbox, fieldsToShow: DeploymentsViewColumnId[]) => (
     deployment: Deployment
@@ -15,7 +16,7 @@ const renderDeploymentRow = (toolbox: Stage.Types.Toolbox, fieldsToShow: Deploym
             key={deployment.id}
             className={progressUnderline ? undefined : 'deployment-progressless-row'}
             selected={deployment.id === selectedDeploymentId}
-            onClick={() => toolbox.getContext().setValue('deploymentId', deployment.id)}
+            onClick={() => selectDeployment(toolbox, deployment.id)}
         >
             {Object.entries(deploymentsViewColumnDefinitions).map(([columnId, columnDefinition]) => (
                 <DataTable.Data key={columnId}>{columnDefinition.render(deployment)}</DataTable.Data>
