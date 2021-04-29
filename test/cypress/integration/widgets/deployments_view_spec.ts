@@ -566,8 +566,13 @@ describe('Deployments View widget', () => {
         });
 
         const getDeploymentsMapTooltip = () => cy.get('.leaflet-tooltip');
-        const getMarkerByImageSrcSuffix = (srcSuffix: string) =>
-            cy.get(`.leaflet-marker-pane img[src$="${srcSuffix}"]`);
+        enum MarkerImageSuffix {
+            Red = 'red.png',
+            Yellow = 'yellow.png',
+            Blue = 'blue.png'
+        }
+        const getMarkerByImageSuffix = (markerImageSuffix: MarkerImageSuffix) =>
+            cy.get(`.leaflet-marker-pane img[src$="${markerImageSuffix}"]`);
         const withinMarkerTooltip = (
             getMarker: () => Cypress.Chainable,
             callback: (currentSubject: JQuery<HTMLElement>) => void,
@@ -591,7 +596,7 @@ describe('Deployments View widget', () => {
             getDeploymentsViewMap().within(() => {
                 cy.get('.leaflet-marker-icon').should('have.length', 1);
                 withinMarkerTooltip(
-                    () => getMarkerByImageSrcSuffix('red.png'),
+                    () => getMarkerByImageSuffix(MarkerImageSuffix.Red),
                     () => cy.contains(getSiteDeploymentName(siteNames.london))
                 );
             });
@@ -619,7 +624,7 @@ describe('Deployments View widget', () => {
                 const getTooltipSubenvironments = () => cy.get('i.icon.object.group').parent();
                 const getTooltipSubservices = () => cy.get('i.icon.cube').parent();
                 withinMarkerTooltip(
-                    () => getMarkerByImageSrcSuffix('yellow.png'),
+                    () => getMarkerByImageSuffix(MarkerImageSuffix.Yellow),
                     () => {
                         cy.contains('hello-world-one');
                         cy.contains('Cloudify-Hello-World');
@@ -634,7 +639,7 @@ describe('Deployments View widget', () => {
                 );
 
                 withinMarkerTooltip(
-                    () => getMarkerByImageSrcSuffix('red.png'),
+                    () => getMarkerByImageSuffix(MarkerImageSuffix.Red),
                     () => {
                         cy.contains('deployments_view_test_deployment');
                         cy.contains(blueprintName);
@@ -652,7 +657,7 @@ describe('Deployments View widget', () => {
                 );
 
                 withinMarkerTooltip(
-                    () => getMarkerByImageSrcSuffix('blue.png'),
+                    () => getMarkerByImageSuffix(MarkerImageSuffix.Blue),
                     () => {
                         cy.contains('one-in-warsaw');
                         cy.contains('Cloudify-Hello-World');
