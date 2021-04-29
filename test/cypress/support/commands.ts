@@ -147,13 +147,13 @@ const commands = {
         });
     },
     login: (username = 'admin', password = 'admin', expectSuccessfulLogin = true) => {
+        cy.disableGettingStarted();
+
         cy.location('pathname').then(pathname => {
             if (pathname !== '/console/login') {
                 cy.visit('/console/login');
             }
         });
-
-        cy.disableGettingStarted();
 
         cy.get('.form > :nth-child(1) > .ui > input').clear().type(username);
         cy.get('.form > :nth-child(2) > .ui > input').clear().type(password);
@@ -326,8 +326,8 @@ const commands = {
     },
 
     disableGettingStarted: () => {
-        cy.interceptSp('GET', `/users/`, req => {
-            req.reply({ show_getting_started: false });
+        cy.interceptSp('GET', `/users/`, {
+            body: { show_getting_started: false }
         });
     }
 };
