@@ -616,19 +616,51 @@ describe('Deployments View widget', () => {
             getDeploymentsViewMap().within(() => {
                 cy.get('.leaflet-marker-icon').should('be.visible').and('have.length', 3);
 
+                const getTooltipSubenvironments = () => cy.get('i.icon.object.group').parent();
+                const getTooltipSubservices = () => cy.get('i.icon.cube').parent();
                 withinMarkerTooltip(
                     () => getMarkerByImageSrcSuffix('yellow.png'),
-                    () => cy.contains('hello-world-one')
+                    () => {
+                        cy.contains('hello-world-one');
+                        cy.contains('Cloudify-Hello-World');
+                        cy.contains(siteNames.london);
+                        cy.contains('In progress').parent().find('i.orange.spinner');
+                        getTooltipSubenvironments().contains('5');
+                        getTooltipSubservices().within(() => {
+                            cy.contains('80');
+                            cy.get('[aria-label="In progress"]');
+                        });
+                    }
                 );
 
                 withinMarkerTooltip(
                     () => getMarkerByImageSrcSuffix('red.png'),
-                    () => cy.contains('deployments_view_test_deployment')
+                    () => {
+                        cy.contains('deployments_view_test_deployment');
+                        cy.contains(blueprintName);
+                        cy.contains(siteNames.olsztyn);
+                        cy.contains('Requires attention').parent().find('i.red.exclamation');
+                        getTooltipSubenvironments().within(() => {
+                            cy.contains('1');
+                            cy.get('[aria-label="In progress"]');
+                        });
+                        getTooltipSubservices().within(() => {
+                            cy.contains('3');
+                            cy.get('[aria-label="Requires attention"]');
+                        });
+                    }
                 );
 
                 withinMarkerTooltip(
                     () => getMarkerByImageSrcSuffix('blue.png'),
-                    () => cy.contains('one-in-warsaw')
+                    () => {
+                        cy.contains('one-in-warsaw');
+                        cy.contains('Cloudify-Hello-World');
+                        cy.contains(siteNames.warsaw);
+                        cy.contains('Good');
+                        getTooltipSubenvironments().contains('10');
+                        getTooltipSubservices().contains('8');
+                    }
                 );
             });
         });
