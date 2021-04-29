@@ -114,6 +114,8 @@ export default function LabelsInput({ hideInitialLabels, initialLabels, onChange
             // NOTE: z-index is overridden as for a div element with `active` and `dropdown` classes
             // it is by default set to 10, which makes LabelsInput to overlap opened dropdown
             style={{ padding: 0, margin: 0, zIndex: 1 }}
+            onFocus={!open ? toggleOpen : undefined}
+            tabIndex={0}
         >
             <div role="presentation" onClick={toggleOpen} style={{ cursor: 'pointer' }}>
                 {!hideInitialLabels && (
