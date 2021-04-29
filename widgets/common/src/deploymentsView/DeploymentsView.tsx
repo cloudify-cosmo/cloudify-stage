@@ -158,6 +158,7 @@ export const DeploymentsView: FunctionComponent<DeploymentsViewProps> = ({
                 <DeploymentsMapLayoutContainer height={widget.configuration.mapHeight}>
                     <DeploymentsMapContainer
                         deployments={deploymentsResult.data.items}
+                        selectedDeployment={selectedDeployment}
                         toolbox={toolbox}
                         widgetDimensions={widgetDimensions}
                     />

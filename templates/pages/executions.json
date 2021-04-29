@@ -1,0 +1,47 @@
+{
+  "name": "Executions",
+  "layout": [{
+    "type": "widgets",
+    "content": [
+      {
+        "name": "Resource filter",
+        "width": 12,
+        "height": 3,
+        "definition": "filter",
+        "x": 0,
+        "y": 0,
+        "configuration": {
+          "filterByBlueprints": true,
+          "filterByDeployments": true,
+          "filterByExecutions": false,
+          "filterByExecutionsStatus": true,
+          "allowMultipleSelection": true
+        }
+      },
+      {
+        "name": "Number of running executions",
+        "width": 3,
+        "height": 14,
+        "definition": "executionNum",
+        "x": 0,
+        "y": 3
+      },
+      {
+        "name": "Executions Statuses Graph",
+        "width": 9,
+        "height": 14,
+        "definition": "executionsStatus",
+        "x": 3,
+        "y": 3
+      },
+      {
+        "name": "Executions",
+        "width": 12,
+        "height": 24,
+        "definition": "executions",
+        "x": 0,
+        "y": 17
+      }
+    ]
+  }]
+}
