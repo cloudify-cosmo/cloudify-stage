@@ -49,6 +49,5 @@ const subdeploymentStatusToIconMapping: Record<SubdeploymentStatus, StatusIconNa
     [SubdeploymentStatus.Pending]: undefined
 };
 export const SubdeploymentStatusIcon: FunctionComponent<{ status: SubdeploymentStatus | null }> = ({ status }) => (
-    // NOTE: handle possible `null`s
     <BaseDeploymentStatusIcon iconName={subdeploymentStatusToIconMapping[status ?? SubdeploymentStatus.Good]} />
 );
