@@ -15,10 +15,10 @@ const TooltipContentContainer = styled.div`
     display: flex;
 `;
 
+const leafletTooltipPaddingAndBorder = '7px';
 const StatusesContainer = styled.div`
     margin-left: 1em;
-    // NOTE: 7px = leaflet's tooltip padding&border
-    padding: calc(1em - 7px);
+    padding: calc(1em - ${leafletTooltipPaddingAndBorder});
     padding-left: 1em;
     border-left: 1px solid;
     display: flex;
