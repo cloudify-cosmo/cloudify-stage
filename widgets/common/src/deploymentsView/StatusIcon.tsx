@@ -2,7 +2,7 @@ import type { FunctionComponent } from 'react';
 import type { IconProps } from 'semantic-ui-react';
 
 import { i18nPrefix } from './common';
-import { DeploymentStatus, SubdeploymentStatus } from './types';
+import { DeploymentStatus } from './types';
 
 /**
  * A CID (Constrained Identity Function)
@@ -42,12 +42,6 @@ export const DeploymentStatusIcon: FunctionComponent<{ status: DeploymentStatus 
     <BaseDeploymentStatusIcon iconName={deploymentStatusIconNameMapping[status]} />
 );
 
-const subdeploymentStatusToIconMapping: Record<SubdeploymentStatus, StatusIconName | undefined> = {
-    [SubdeploymentStatus.InProgress]: 'inProgress',
-    [SubdeploymentStatus.Good]: undefined,
-    [SubdeploymentStatus.Failed]: 'requiresAttention',
-    [SubdeploymentStatus.Pending]: undefined
-};
-export const SubdeploymentStatusIcon: FunctionComponent<{ status: SubdeploymentStatus | null }> = ({ status }) => (
-    <BaseDeploymentStatusIcon iconName={subdeploymentStatusToIconMapping[status ?? SubdeploymentStatus.Good]} />
+export const SubdeploymentStatusIcon: FunctionComponent<{ status: DeploymentStatus | null }> = ({ status }) => (
+    <BaseDeploymentStatusIcon iconName={deploymentStatusIconNameMapping[status ?? DeploymentStatus.Good]} />
 );
