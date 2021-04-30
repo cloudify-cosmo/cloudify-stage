@@ -2,6 +2,7 @@ import type { FunctionComponent } from 'react';
 import { useState } from 'react';
 import { i18nPrefix } from '../common';
 import FilterModal from './FilterModal';
+import DeployOnModal from './DeployOnModal';
 
 interface DeploymentsViewHeaderProps {
     mapOpen: boolean;
@@ -21,6 +22,8 @@ const DeploymentsViewHeader: FunctionComponent<DeploymentsViewHeaderProps> = ({
 }) => {
     const [filterModalOpen, openFilterModal, closeFilterModal] = Stage.Hooks.useBoolean();
     const [filterId, setFilterId] = useState<string>();
+
+    const [deployOnModalOpen, openDeployOnModal, closeDeployOnModal] = Stage.Hooks.useBoolean();
 
     const { Button, Dropdown } = Stage.Basic;
     // @ts-ignore Properties does not exist on type 'typeof Dropdown'
@@ -66,8 +69,9 @@ const DeploymentsViewHeader: FunctionComponent<DeploymentsViewHeaderProps> = ({
                 />
             )}
             <Dropdown button text={headerT('bulkActions.button')}>
-                <Menu>
-                    <Item text={headerT('bulkActions.menu.deployOn')} />
+                {/* Display the menu above all leaflet components, see https://leafletjs.com/reference-1.7.1.html#map-pane */}
+                <Menu style={{ zIndex: 1000 }}>
+                    <Item text={headerT('bulkActions.deployOn.title')} onClick={openDeployOnModal} />
                 </Menu>
             </Dropdown>
 
@@ -78,6 +82,8 @@ const DeploymentsViewHeader: FunctionComponent<DeploymentsViewHeaderProps> = ({
                 onSubmit={handleFilterChange}
                 toolbox={toolbox}
             />
+
+            {deployOnModalOpen && <DeployOnModal onHide={closeDeployOnModal} toolbox={toolbox} />}
         </>
     );
 };

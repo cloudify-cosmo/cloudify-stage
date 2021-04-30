@@ -446,6 +446,7 @@
                     "updateButton": "Update"
                 },
                 "deployModal": {
+                    "header": "Deploy blueprint {{blueprintId}}",
                     "inputs": {
                         "deploymentName": {
                             "label": "Deployment name",
@@ -658,8 +659,11 @@
                 },
                 "bulkActions": {
                     "button": "Bulk Actions",
-                    "menu": {
-                        "deployOn": "Deploy On"
+                    "deployOn": {
+                        "title": "Deploy On",
+                        "modal": {
+                            "header": "Deploy on"
+                        }
                     }
                 }
             },

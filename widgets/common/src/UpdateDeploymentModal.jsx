@@ -29,7 +29,7 @@ function UpdateDeploymentModal({ open, deploymentId, onHide, toolbox }) {
 
             const actions = new Stage.Common.BlueprintActions(toolbox);
             actions
-                .doGetFullBlueprintData({ id })
+                .doGetFullBlueprintData(id)
                 .then(fetchedBlueprint => {
                     const newDeploymentInputs = {};
                     const currentDeploymentInputs = deployment.inputs;

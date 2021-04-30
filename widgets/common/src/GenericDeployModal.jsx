@@ -1,36 +1,13 @@
+import Consts from './Consts';
+
 const { i18n } = Stage;
 const t = (key, options) => i18n.t(`widgets.common.deployments.deployModal.${key}`, options);
 
-const steps = Object.freeze({
-    validateData: 'validateData',
-    deployBlueprint: 'deployBlueprint',
-    waitForDeployment: 'waitForDeployment',
-    installDeployment: 'installDeployment'
-});
-
-const paths = Object.freeze({
-    deploy: 'deploy',
-    deployAndInstall: 'deployAndInstall'
-});
-
-const messages = Object.freeze({
-    [paths.deploy]: {
-        [steps.validateData]: t('steps.deploy.validatingData'),
-        [steps.deployBlueprint]: t('steps.deploy.deployingBlueprint')
-    },
-    [paths.deployAndInstall]: {
-        [steps.validateData]: t('steps.deployAndInstall.validatingData'),
-        [steps.deployBlueprint]: t('steps.deployAndInstall.deployingBlueprint'),
-        [steps.waitForDeployment]: t('steps.deployAndInstall.waitingForDeployment'),
-        [steps.installDeployment]: t('steps.deployAndInstall.installingDeployment')
-    }
-});
-
-class DeployBlueprintModal extends React.Component {
+class GenericDeployModal extends React.Component {
     static EMPTY_BLUEPRINT = { id: '', plan: { inputs: {}, workflows: { install: {} } } };
 
     static initialState = {
-        blueprint: DeployBlueprintModal.EMPTY_BLUEPRINT,
+        blueprint: GenericDeployModal.EMPTY_BLUEPRINT,
         deploymentInputs: [],
         deploymentName: '',
         errors: {},
@@ -41,7 +18,7 @@ class DeployBlueprintModal extends React.Component {
         showInstallModal: false,
         siteName: '',
         skipPluginsValidation: false,
-        visibility: Stage.Common.Consts.defaultVisibility,
+        visibility: Consts.defaultVisibility,
         workflow: {},
         yamlFile: null
     };
@@ -49,7 +26,7 @@ class DeployBlueprintModal extends React.Component {
     constructor(props) {
         super(props);
 
-        this.state = DeployBlueprintModal.initialState;
+        this.state = GenericDeployModal.initialState;
 
         this.selectBlueprint = this.selectBlueprint.bind(this);
 
@@ -69,7 +46,7 @@ class DeployBlueprintModal extends React.Component {
         const { blueprintId, open } = this.props;
         if (!prevProps.open && open) {
             // eslint-disable-next-line react/no-did-update-set-state
-            this.setState(DeployBlueprintModal.initialState, () => this.selectBlueprint(blueprintId));
+            this.setState(GenericDeployModal.initialState, () => this.selectBlueprint(blueprintId));
         }
     }
 
@@ -120,67 +97,73 @@ class DeployBlueprintModal extends React.Component {
         return true;
     }
 
+    onSubmit(validationMessage, steps, installWorkflowParameters, installWorkflowOptions) {
+        this.setState({ loading: true, errors: {} });
+        this.setLoadingMessage(validationMessage);
+
+        let stepPromise = this.validateInputs();
+
+        const deploymentParameters = this.getDeploymentParams();
+
+        steps.forEach(step => {
+            stepPromise = stepPromise.then(previousStepOutcome => {
+                this.setLoadingMessage(step.message);
+                return step.executeStep(
+                    previousStepOutcome,
+                    deploymentParameters,
+                    installWorkflowParameters,
+                    installWorkflowOptions
+                );
+            });
+        });
+
+        return stepPromise.catch(errors => {
+            this.setState({ loading: false, errors });
+        });
+    }
+
     onDeploy() {
-        const { onHide, toolbox } = this.props;
-
-        this.setState({ loading: true, errors: {} });
-        this.setLoadingMessage(paths.deploy, steps.validateData);
-        return this.validateInputs()
-            .then(deploymentInputs => {
-                this.setLoadingMessage(paths.deploy, steps.deployBlueprint);
-                return this.deployBlueprint(deploymentInputs);
-            })
-            .then(({ id }) => {
-                this.setState({ loading: false, errors: {} });
-                toolbox.getEventBus().trigger('deployments:refresh');
-                onHide();
-                this.openDeploymentPage(id);
-            })
-            .catch(errors => {
-                this.setState({ loading: false, errors });
-            });
+        const { deployValidationMessage, deploySteps } = this.props;
+        return this.onSubmit(deployValidationMessage, deploySteps);
     }
 
-    onDeployAndInstall(workflowParameters, force, dryRun, queue, scheduledTime) {
-        const { onHide, toolbox } = this.props;
-
-        this.setState({ loading: true, errors: {} });
-        let deploymentId = null;
-        this.setLoadingMessage(paths.deployAndInstall, steps.validateData);
-        return this.validateInputs()
-            .then(deploymentInputs => {
-                this.setLoadingMessage(paths.deployAndInstall, steps.deployBlueprint);
-                return this.deployBlueprint(deploymentInputs);
-            })
-            .then(deployment => {
-                deploymentId = deployment.id;
-                this.setLoadingMessage(paths.deployAndInstall, steps.waitForDeployment);
-                return this.waitForDeploymentIsCreated(deploymentId);
-            })
-            .then(() => {
-                this.setLoadingMessage(paths.deployAndInstall, steps.installDeployment);
-                return this.installDeployment(deploymentId, workflowParameters, force, dryRun, queue, scheduledTime);
-            })
-            .then(({ deployment_id: id }) => {
-                this.setState({ loading: false, errors: {} });
-                toolbox.getEventBus().trigger('deployments:refresh');
-                toolbox.getEventBus().trigger('executions:refresh');
-                onHide();
-                this.openDeploymentPage(id);
-            })
-            .catch(errors => {
-                this.setState({ loading: false, errors });
-            });
+    onDeployAndInstall(installWorkflowParameters, installWorkflowOptions) {
+        const { deployAndInstallValidationMessage, deployAndInstallSteps } = this.props;
+        return this.onSubmit(
+            deployAndInstallValidationMessage,
+            deployAndInstallSteps,
+            installWorkflowParameters,
+            installWorkflowOptions
+        );
     }
 
-    setLoadingMessage(path, step) {
-        // eslint-disable-next-line security/detect-object-injection
-        this.setState({ loadingMessage: messages[path][step] });
+    getDeploymentParams() {
+        const { InputsUtils } = Stage.Common;
+        const {
+            blueprint,
+            deploymentName,
+            runtimeOnlyEvaluation,
+            labels,
+            siteName,
+            skipPluginsValidation,
+            visibility,
+            deploymentInputs
+        } = this.state;
+
+        return {
+            blueprintId: blueprint.id,
+            deploymentId: deploymentName,
+            inputs: InputsUtils.getInputsMap(blueprint.plan.inputs, deploymentInputs),
+            visibility,
+            labels,
+            skipPluginsValidation,
+            siteName,
+            runtimeOnlyEvaluation
+        };
     }
 
-    openDeploymentPage(deploymentId) {
-        const { toolbox } = this.props;
-        toolbox.drillDown(toolbox.getWidget(), 'deployment', { deploymentId }, deploymentId);
+    setLoadingMessage(message) {
+        this.setState({ loadingMessage: message });
     }
 
     showInstallModal() {
@@ -209,20 +192,20 @@ class DeployBlueprintModal extends React.Component {
 
             const actions = new BlueprintActions(toolbox);
             actions
-                .doGetFullBlueprintData({ id })
+                .doGetFullBlueprintData(id)
                 .then(blueprint => {
                     const deploymentInputs = InputsUtils.getInputsInitialValuesFrom(blueprint.plan);
                     this.setState({ deploymentInputs, blueprint, errors: {}, loading: false });
                 })
                 .catch(err => {
                     this.setState({
-                        blueprint: DeployBlueprintModal.EMPTY_BLUEPRINT,
+                        blueprint: GenericDeployModal.EMPTY_BLUEPRINT,
                         loading: false,
                         errors: { error: err.message }
                     });
                 });
         } else {
-            this.setState({ blueprint: DeployBlueprintModal.EMPTY_BLUEPRINT, errors: {} });
+            this.setState({ blueprint: GenericDeployModal.EMPTY_BLUEPRINT, errors: {} });
         }
     }
 
@@ -230,87 +213,26 @@ class DeployBlueprintModal extends React.Component {
         return new Promise((resolve, reject) => {
             const { InputsUtils } = Stage.Common;
             const { blueprint, deploymentName, deploymentInputs: stateDeploymentInputs } = this.state;
+            const { showDeployemntNameInput } = this.props;
             const errors = {};
 
             if (_.isEmpty(blueprint.id)) {
                 errors.blueprintName = t('errors.noBlueprintName');
             }
 
-            if (_.isEmpty(deploymentName)) {
+            if (showDeployemntNameInput && _.isEmpty(deploymentName)) {
                 errors.deploymentName = t('errors.noDeploymentName');
             }
 
-            const inputsWithoutValue = {};
-            const deploymentInputs = InputsUtils.getInputsToSend(
-                blueprint.plan.inputs,
-                stateDeploymentInputs,
-                inputsWithoutValue
-            );
+            const inputsWithoutValue = InputsUtils.getInputsWithoutValues(blueprint.plan.inputs, stateDeploymentInputs);
             InputsUtils.addErrors(inputsWithoutValue, errors);
 
             if (!_.isEmpty(errors)) {
                 reject(errors);
             } else {
-                resolve(deploymentInputs);
+                resolve();
             }
         });
-    }
-
-    deployBlueprint(inputs) {
-        const { BlueprintActions, InputsUtils } = Stage.Common;
-        const { toolbox } = this.props;
-        const {
-            blueprint,
-            deploymentName,
-            runtimeOnlyEvaluation,
-            labels,
-            siteName,
-            skipPluginsValidation,
-            visibility
-        } = this.state;
-
-        const blueprintActions = new BlueprintActions(toolbox);
-        return blueprintActions
-            .doDeploy({
-                blueprintId: blueprint.id,
-                deploymentId: deploymentName,
-                inputs,
-                visibility,
-                labels,
-                skipPluginsValidation,
-                siteName,
-                runtimeOnlyEvaluation
-            })
-            .catch(err => Promise.reject(InputsUtils.getErrorObject(err.message)));
-    }
-
-    waitForDeploymentIsCreated(deploymentId) {
-        const { DeploymentActions } = Stage.Common;
-        const { toolbox } = this.props;
-
-        const deploymentActions = new DeploymentActions(toolbox);
-
-        return deploymentActions
-            .waitUntilCreated(deploymentId)
-            .catch(error => Promise.reject(t('errors.deploymentCreationFailed', { deploymentId, error })));
-    }
-
-    installDeployment(deploymentId, parameters, force, dryRun, queue, scheduledTime) {
-        const { DeploymentActions } = Stage.Common;
-        const { toolbox } = this.props;
-
-        const deploymentActions = new DeploymentActions(toolbox);
-
-        return deploymentActions
-            .doExecute({ id: deploymentId }, { name: 'install' }, parameters, force, dryRun, queue, scheduledTime)
-            .catch(error =>
-                Promise.reject({
-                    errors: t('errors.deploymentInstallationFailed', {
-                        deploymentId,
-                        error: error.message
-                    })
-                })
-            );
     }
 
     render() {
@@ -333,7 +255,7 @@ class DeployBlueprintModal extends React.Component {
             ExecuteDeploymentModal,
             Labels: { Input: LabelsInput }
         } = Stage.Common;
-        const { onHide, open, toolbox } = this.props;
+        const { onHide, open, toolbox, i18nHeaderKey, showDeployemntNameInput, showDeployButton } = this.props;
         const {
             blueprint,
             deploymentInputs,
@@ -353,7 +275,7 @@ class DeployBlueprintModal extends React.Component {
         return (
             <Modal open={open} onClose={() => onHide()} className="deployBlueprintModal">
                 <Modal.Header>
-                    <Icon name="rocket" /> Deploy blueprint {blueprint.id}
+                    <Icon name="rocket" /> {i18n.t(i18nHeaderKey, { blueprintId: blueprint.id })}
                     <VisibilityField
                         visibility={visibility}
                         className="rightFloated"
@@ -364,18 +286,20 @@ class DeployBlueprintModal extends React.Component {
                 <Modal.Content>
                     <Form errors={errors} scrollToError onErrorsDismiss={() => this.setState({ errors: {} })}>
                         {loading && <LoadingOverlay message={loadingMessage} />}
-                        <Form.Field
-                            error={errors.deploymentName}
-                            label={t('inputs.deploymentName.label')}
-                            required
-                            help={t('inputs.deploymentName.help')}
-                        >
-                            <Form.Input
-                                name="deploymentName"
-                                value={deploymentName}
-                                onChange={this.handleInputChange}
-                            />
-                        </Form.Field>
+                        {showDeployemntNameInput && (
+                            <Form.Field
+                                error={errors.deploymentName}
+                                label={t('inputs.deploymentName.label')}
+                                required
+                                help={t('inputs.deploymentName.help')}
+                            >
+                                <Form.Input
+                                    name="deploymentName"
+                                    value={deploymentName}
+                                    onChange={this.handleInputChange}
+                                />
+                            </Form.Field>
+                        )}
 
                         {this.isBlueprintSelectable() && (
                             <Form.Field
@@ -485,13 +409,15 @@ class DeployBlueprintModal extends React.Component {
 
                 <Modal.Actions>
                     <CancelButton onClick={this.onCancel} disabled={loading} />
-                    <ApproveButton
-                        onClick={this.onDeploy}
-                        disabled={loading}
-                        content={t('buttons.deploy')}
-                        icon="rocket"
-                        className="basic"
-                    />
+                    {showDeployButton && (
+                        <ApproveButton
+                            onClick={this.onDeploy}
+                            disabled={loading}
+                            content={t('buttons.deploy')}
+                            icon="rocket"
+                            className="basic"
+                        />
+                    )}
                     <ApproveButton
                         onClick={this.showInstallModal}
                         disabled={loading}
@@ -505,7 +431,22 @@ class DeployBlueprintModal extends React.Component {
     }
 }
 
-DeployBlueprintModal.propTypes = {
+const StepsPropType = PropTypes.arrayOf(
+    PropTypes.shape({
+        /**
+         * Message to be displayed during step execution
+         */
+        message: PropTypes.string,
+
+        /**
+         * Function receiving previous step outcome and deployment parameters. In case of deploy & install flow install
+         * workflow parameters and install workflow options are also passed to the function
+         */
+        executeStep: PropTypes.func
+    })
+);
+
+GenericDeployModal.propTypes = {
     /**
      * specifies whether the deploy modal is displayed
      */
@@ -524,15 +465,49 @@ DeployBlueprintModal.propTypes = {
     /**
      * function to be called when the modal is closed
      */
-    onHide: PropTypes.func
+    onHide: PropTypes.func,
+
+    i18nHeaderKey: PropTypes.string.isRequired,
+
+    /**
+     * Whether to show deployment name input
+     */
+    showDeployemntNameInput: PropTypes.bool,
+
+    /**
+     * Whether to show 'Deploy' button, if not set only 'Deploy & Install' button is shown
+     */
+    showDeployButton: PropTypes.bool,
+
+    /**
+     * Steps to be executed on 'Deploy' button press, needs to be specified only when `showDeployButton` is enabled
+     */
+    deploySteps: StepsPropType,
+
+    /**
+     * Message to be displayed during inputs validation, before steps defined by `deploySteps` are executed, needs to be
+     * specified only when `showDeployButton` is enabled
+     */
+    deployValidationMessage: PropTypes.string,
+
+    /**
+     * Steps to be executed on 'Deploy & Install' button press
+     */
+    deployAndInstallSteps: StepsPropType.isRequired,
+
+    /**
+     * Message to be displayed during inputs validation, before steps defined by `deployAndInstallSteps` are executed
+     */
+    deployAndInstallValidationMessage: PropTypes.string.isRequired
 };
 
-DeployBlueprintModal.defaultProps = {
+GenericDeployModal.defaultProps = {
     blueprintId: '',
-    onHide: _.noop
+    onHide: _.noop,
+    showDeployemntNameInput: false,
+    showDeployButton: false,
+    deploySteps: null,
+    deployValidationMessage: null
 };
 
-Stage.defineCommon({
-    name: 'DeployBlueprintModal',
-    common: DeployBlueprintModal
-});
+export default GenericDeployModal;
