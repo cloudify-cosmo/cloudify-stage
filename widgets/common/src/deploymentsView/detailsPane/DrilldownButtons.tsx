@@ -89,16 +89,9 @@ const DrilldownButton: FunctionComponent<DrilldownButtonProps> = ({ type, drillD
     const icon = type === 'services' ? subservicesIcon : subenvironmentsIcon;
 
     const drilldownToSubdeployments = () => {
-        const deploymentTypeRule: Stage.Common.Filters.Rule = {
-            type: FilterRuleType.Label,
-            key: 'csys-obj-type',
-            operator: FilterRuleOperators.AnyOf,
-            values: [type === 'services' ? 'service' : 'environment']
-        };
-
         drillDown(
             subdeploymentsDrilldownTemplateName,
-            { [filterRulesContextKey]: [deploymentTypeRule] },
+            { [filterRulesContextKey]: [deploymentTypeRule[type]] },
             `${deploymentName} [${i18n.t(`${i18nDrillDownPrefix}.breadcrumbs.${type}`)}]`
         );
     };
@@ -120,4 +113,20 @@ const DrilldownButton: FunctionComponent<DrilldownButtonProps> = ({ type, drillD
             {/* TODO(RD-2005): add icons depending on children state */}
         </Button>
     );
+};
+
+const deploymentTypeRule: Record<DrilldownButtonProps['type'], Stage.Common.Filters.Rule> = {
+    environments: {
+        type: FilterRuleType.Label,
+        key: 'csys-obj-type',
+        operator: FilterRuleOperators.AnyOf,
+        values: ['environment']
+    },
+    services: {
+        type: FilterRuleType.Label,
+        key: 'csys-obj-type',
+        // TODO(RD-2145): use FilterRuleOperators enum after adding the `not_in` member in it
+        operator: 'not_in' as any,
+        values: ['environment']
+    }
 };

@@ -398,9 +398,9 @@ describe('Deployments View widget', () => {
         const deployments: Record<DrilldownDeploymentName, SystemLabel[]> = {
             'app-env': [{ 'csys-obj-type': 'environment' }],
             'db-env': [{ 'csys-obj-type': 'environment' }, { 'csys-obj-parent': getDeploymentFullName('app-env') }],
-            'db-1': [{ 'csys-obj-type': 'service' }, { 'csys-obj-parent': getDeploymentFullName('db-env') }],
-            'db-2': [{ 'csys-obj-type': 'service' }, { 'csys-obj-parent': getDeploymentFullName('db-env') }],
-            'web-app': [{ 'csys-obj-type': 'service' }, { 'csys-obj-parent': getDeploymentFullName('app-env') }]
+            'db-1': [{ 'csys-obj-parent': getDeploymentFullName('db-env') }],
+            'db-2': [{ 'csys-obj-parent': getDeploymentFullName('db-env') }],
+            'web-app': [{ 'csys-obj-parent': getDeploymentFullName('app-env') }]
         };
 
         before(() => {
@@ -497,7 +497,6 @@ describe('Deployments View widget', () => {
             const tempDeploymentId = `${specPrefix}_temp_deployment_to_remove`;
             const parentDeploymentId = getDeploymentFullName('app-env');
             cy.deployBlueprint(blueprintName, tempDeploymentId).setLabels(tempDeploymentId, [
-                { 'csys-obj-type': 'service' },
                 { 'csys-obj-parent': parentDeploymentId }
             ]);
 
