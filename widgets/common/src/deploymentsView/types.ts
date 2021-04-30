@@ -16,13 +16,6 @@ export enum DeploymentStatus {
     RequiresAttention = 'requires_attention'
 }
 
-export enum SubdeploymentStatus {
-    Good = 'good',
-    InProgress = 'in_progress',
-    Failed = 'failed',
-    Pending = 'pending'
-}
-
 export interface Deployment {
     id: string;
     // NOTE: the property names come from the backend
@@ -36,9 +29,11 @@ export interface Deployment {
     latest_execution_total_operations: number;
     latest_execution_finished_operations: number;
     sub_services_count: number;
-    sub_services_status: SubdeploymentStatus | null;
+    /** Can be null when there are no subservices */
+    sub_services_status: DeploymentStatus | null;
     sub_environments_count: number;
-    sub_environments_status: SubdeploymentStatus | null;
+    /** Can be null when there are no subenvironments */
+    sub_environments_status: DeploymentStatus | null;
     /* eslint-enable camelcase */
 }
 

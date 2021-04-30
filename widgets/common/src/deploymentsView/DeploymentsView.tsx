@@ -161,6 +161,7 @@ export const DeploymentsView: FunctionComponent<DeploymentsViewProps> = ({
                         selectedDeployment={selectedDeployment}
                         toolbox={toolbox}
                         widgetDimensions={widgetDimensions}
+                        environmentTypeVisible={widget.configuration.fieldsToShow.includes('environmentType')}
                     />
                 </DeploymentsMapLayoutContainer>
             )}

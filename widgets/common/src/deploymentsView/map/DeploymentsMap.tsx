@@ -13,6 +13,7 @@ interface DeploymentsMapProps {
     sites: Stage.Common.Map.Site[];
     widgetDimensions: Stage.Common.Map.WidgetDimensions;
     toolbox: Stage.Types.Toolbox;
+    environmentTypeVisible: boolean;
 }
 
 const DeploymentsMap: FunctionComponent<DeploymentsMapProps> = ({
@@ -20,7 +21,8 @@ const DeploymentsMap: FunctionComponent<DeploymentsMapProps> = ({
     sites,
     widgetDimensions,
     selectedDeployment,
-    toolbox
+    toolbox,
+    environmentTypeVisible
 }) => {
     const sitesWithPositions = useMemo(() => sites.filter(Stage.Common.Map.isSiteWithPosition), [sites]);
     const sitesLookupTable = useMemo(() => keyBy(sitesWithPositions, 'name'), [sitesWithPositions]);
@@ -64,6 +66,7 @@ const DeploymentsMap: FunctionComponent<DeploymentsMapProps> = ({
                     key={`${deployment.id}\n${site.name}`}
                     selected={deployment.id === selectedDeployment?.id}
                     onClick={() => selectDeployment(toolbox, deployment.id)}
+                    environmentTypeVisible={environmentTypeVisible}
                 />
             ))}
         </MapComponent>

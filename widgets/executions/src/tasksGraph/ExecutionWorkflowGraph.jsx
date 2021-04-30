@@ -65,7 +65,11 @@ export default function ExecutionWorkflowGraph({ containerHeight, selectedExecut
                     setGraphData(tasksGraph);
                     clearError();
                 })
-                .catch(({ message, status }) => {
+                .catch(({ message, status, isCanceled }) => {
+                    if (isCanceled) {
+                        return;
+                    }
+
                     clearGraphData();
                     setError(status === 404 ? NO_TASKS_GRAPH_MESSAGE : message);
                 });

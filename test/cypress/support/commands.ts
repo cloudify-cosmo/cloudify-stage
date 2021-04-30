@@ -147,6 +147,8 @@ const commands = {
         });
     },
     login: (username = 'admin', password = 'admin', expectSuccessfulLogin = true) => {
+        cy.disableGettingStarted();
+
         cy.location('pathname').then(pathname => {
             if (pathname !== '/console/login') {
                 cy.visit('/console/login');
@@ -326,8 +328,8 @@ const commands = {
     },
 
     disableGettingStarted: () => {
-        cy.interceptSp('GET', `/users/`, req => {
-            req.reply({ show_getting_started: false });
+        cy.interceptSp('GET', `/users/`, {
+            body: { show_getting_started: false }
         });
     }
 };
