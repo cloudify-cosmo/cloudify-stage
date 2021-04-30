@@ -125,8 +125,8 @@ const deploymentTypeRule: Record<DrilldownButtonProps['type'], Stage.Common.Filt
     services: {
         type: FilterRuleType.Label,
         key: 'csys-obj-type',
-        // TODO(RD-2145): use FilterRuleOperators enum after adding the `not_in` member in it
-        operator: 'not_in' as any,
+        // TODO(RD-2145): use FilterRuleOperators enum after adding the `is_not` member in it
+        operator: 'is_not' as any,
         values: ['environment']
     }
 };
