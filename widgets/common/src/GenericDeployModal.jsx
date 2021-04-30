@@ -213,14 +213,14 @@ class GenericDeployModal extends React.Component {
         return new Promise((resolve, reject) => {
             const { InputsUtils } = Stage.Common;
             const { blueprint, deploymentName, deploymentInputs: stateDeploymentInputs } = this.state;
-            const { showDeployemntNameInput } = this.props;
+            const { showDeploymentNameInput } = this.props;
             const errors = {};
 
             if (_.isEmpty(blueprint.id)) {
                 errors.blueprintName = t('errors.noBlueprintName');
             }
 
-            if (showDeployemntNameInput && _.isEmpty(deploymentName)) {
+            if (showDeploymentNameInput && _.isEmpty(deploymentName)) {
                 errors.deploymentName = t('errors.noDeploymentName');
             }
 
@@ -255,7 +255,7 @@ class GenericDeployModal extends React.Component {
             ExecuteDeploymentModal,
             Labels: { Input: LabelsInput }
         } = Stage.Common;
-        const { onHide, open, toolbox, i18nHeaderKey, showDeployemntNameInput, showDeployButton } = this.props;
+        const { onHide, open, toolbox, i18nHeaderKey, showDeploymentNameInput, showDeployButton } = this.props;
         const {
             blueprint,
             deploymentInputs,
@@ -286,7 +286,7 @@ class GenericDeployModal extends React.Component {
                 <Modal.Content>
                     <Form errors={errors} scrollToError onErrorsDismiss={() => this.setState({ errors: {} })}>
                         {loading && <LoadingOverlay message={loadingMessage} />}
-                        {showDeployemntNameInput && (
+                        {showDeploymentNameInput && (
                             <Form.Field
                                 error={errors.deploymentName}
                                 label={t('inputs.deploymentName.label')}
@@ -472,7 +472,7 @@ GenericDeployModal.propTypes = {
     /**
      * Whether to show deployment name input
      */
-    showDeployemntNameInput: PropTypes.bool,
+    showDeploymentNameInput: PropTypes.bool,
 
     /**
      * Whether to show 'Deploy' button, if not set only 'Deploy & Install' button is shown
@@ -504,7 +504,7 @@ GenericDeployModal.propTypes = {
 GenericDeployModal.defaultProps = {
     blueprintId: '',
     onHide: _.noop,
-    showDeployemntNameInput: false,
+    showDeploymentNameInput: false,
     showDeployButton: false,
     deploySteps: null,
     deployValidationMessage: null

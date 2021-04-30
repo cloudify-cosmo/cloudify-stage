@@ -75,7 +75,7 @@ const DeployBlueprintModal: FunctionComponent<DeployBlueprintModalProps> = ({ to
             toolbox={toolbox}
             onHide={onHide}
             i18nHeaderKey="widgets.common.deployments.deployModal.header"
-            showDeployemntNameInput
+            showDeploymentNameInput
             showDeployButton
             deployValidationMessage={t('steps.deploy.validatingData')}
             deploySteps={[
