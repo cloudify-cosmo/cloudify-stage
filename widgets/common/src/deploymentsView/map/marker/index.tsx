@@ -1,7 +1,8 @@
 import type { FunctionComponent } from 'react';
 
-import { Deployment, DeploymentStatus } from '../types';
-import type { DeploymentSitePair } from './common';
+import { DeploymentStatus } from '../../types';
+import type { DeploymentSitePair } from '../common';
+import DeploymentSiteTooltip from './tooltip';
 
 const deploymentStatusToIconColorMapping: Record<DeploymentStatus, Stage.Common.MarkerIconColor> = {
     [DeploymentStatus.Good]: 'blue',
@@ -9,17 +10,22 @@ const deploymentStatusToIconColorMapping: Record<DeploymentStatus, Stage.Common.
     [DeploymentStatus.RequiresAttention]: 'red'
 };
 
-type DeploymentSiteMarkerProps = DeploymentSitePair & { selected: boolean; onClick: () => void };
+type DeploymentSiteMarkerProps = DeploymentSitePair & {
+    selected: boolean;
+    onClick: () => void;
+    environmentTypeVisible: boolean;
+};
 
 const DeploymentSiteMarker: FunctionComponent<DeploymentSiteMarkerProps> = ({
     deployment,
     site,
     selected,
-    onClick
+    onClick,
+    environmentTypeVisible
 }) => {
     const { FeatureGroup, CircleMarker } = Stage.Basic.Leaflet;
     const position = Stage.Common.Map.siteToLatLng(site);
-    const tooltip = <DeploymentSiteTooltip deployment={deployment} />;
+    const tooltip = <DeploymentSiteTooltip deployment={deployment} environmentTypeVisible={environmentTypeVisible} />;
 
     if (selected) {
         // NOTE: only render FeatureGroup when necessary to avoid adding additional Leaflet elements
@@ -60,18 +66,5 @@ const BareDeploymentSiteMarker: FunctionComponent<{
         <Marker icon={icon} position={position} riseOnHover onclick={onClick}>
             {children}
         </Marker>
-    );
-};
-
-const markerIconHeight = 41;
-const tooltipOffset = L.point(0, -markerIconHeight);
-const DeploymentSiteTooltip: FunctionComponent<{ deployment: Deployment }> = ({ deployment }) => {
-    const { Tooltip } = Stage.Basic.Leaflet;
-
-    // TODO(RD-1526): add more information in marker tooltips
-    return (
-        <Tooltip direction="top" offset={tooltipOffset}>
-            {deployment.id}
-        </Tooltip>
     );
 };

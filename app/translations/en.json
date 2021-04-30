@@ -694,7 +694,14 @@
             },
             "map": {
                 "loadingSites": "Loading sites",
-                "errorLoadingSites": "Error loading sites"
+                "errorLoadingSites": "Error loading sites",
+                "tooltip": {
+                  "status": {
+                    "good": "Good",
+                    "inProgress": "In progress",
+                    "requiresAttention": "Requires attention"
+                  }
+                }
             },
             "drillDown": {
                 "name": "Deployments view (drilled-down)",

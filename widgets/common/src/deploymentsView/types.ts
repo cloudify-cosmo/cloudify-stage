@@ -36,8 +36,10 @@ export interface Deployment {
     latest_execution_total_operations: number;
     latest_execution_finished_operations: number;
     sub_services_count: number;
+    /** Can be null when there are no subservices */
     sub_services_status: SubdeploymentStatus | null;
     sub_environments_count: number;
+    /** Can be null when there are no subenvironments */
     sub_environments_status: SubdeploymentStatus | null;
     /* eslint-enable camelcase */
 }
