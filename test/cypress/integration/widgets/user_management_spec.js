@@ -35,6 +35,13 @@ describe('User management widget', () => {
                 cy.get('.checkbox:not(.checked)').click();
                 cy.get('.checkbox.checked');
             });
+
+            cy.log('Verifying Getting started checkbox is working');
+            cy.get('td:eq(4)').within(() => {
+                cy.get('.checkbox').click();
+                cy.get('.checkbox:not(.checked)').click();
+                cy.get('.checkbox.checked');
+            });
         });
 
         cy.log('Verifying password can be changed');
