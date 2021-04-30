@@ -1,10 +1,13 @@
 import { CyHttpMessages } from 'cypress/types/net-stubbing';
 import {
+    AttributesFilterRuleOperators,
     FilterRule,
+    FilterRuleAttributes,
     FilterRuleOperator,
     FilterRuleOperators,
     FilterRuleRowType,
-    FilterRuleType
+    FilterRuleType,
+    LabelsFilterRuleOperators
 } from '../../../../widgets/common/src/filters/types';
 
 describe('Filters widget', () => {
@@ -706,6 +709,46 @@ describe('Filters widget', () => {
             return it(name, () => {
                 populateFilterRuleRows(testFilterName, testFilterRules);
                 saveAndVerifyFilter(testFilterName, testFilterRules);
+            });
+        });
+    });
+
+    it.only('should handle all filter parameters', () => {
+        enum RuleParameters {
+            RuleAttributes = 'attributes',
+            RuleAttributesOperators = 'attributesOperators',
+            RuleLabelsOperators = 'labelsOperators',
+            RuleTypes = 'types'
+        }
+        type SupportedByObject = Record<RuleParameters, string[]>;
+
+        function getEnumValues(enumType: any) {
+            return Object.keys(enumType).map(v => enumType[v]);
+        }
+
+        cy.cfyRequest('/searches/deployments.help.json').then(response => {
+            const {
+                operations: [operations]
+            } = response.body;
+
+            const supportedByApi: SupportedByObject = {
+                [RuleParameters.RuleAttributes]: operations.allowed_filter_rules_attrs,
+                [RuleParameters.RuleAttributesOperators]: operations.filter_rules_attributes_operators,
+                [RuleParameters.RuleLabelsOperators]: operations.filter_rules_labels_operators,
+                [RuleParameters.RuleTypes]: operations.filter_rules_types
+            };
+
+            const supportedByUi: SupportedByObject = {
+                [RuleParameters.RuleAttributes]: getEnumValues(FilterRuleAttributes),
+                [RuleParameters.RuleAttributesOperators]: getEnumValues(AttributesFilterRuleOperators),
+                [RuleParameters.RuleLabelsOperators]: getEnumValues(LabelsFilterRuleOperators),
+                [RuleParameters.RuleTypes]: getEnumValues(FilterRuleType)
+            };
+
+            getEnumValues(RuleParameters).forEach(parameter => {
+                expect(supportedByApi[parameter as RuleParameters]).to.include.all.members(
+                    supportedByUi[parameter as RuleParameters]
+                );
             });
         });
     });

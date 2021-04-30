@@ -1,9 +1,15 @@
 /** @see https://docs.cloudify.co/api/v3.1/#the-filter-resource */
 export interface FilterRule {
-    key: string;
+    key: FilterRuleAttributes | string;
     values: string[];
     operator: FilterRuleOperator;
     type: FilterRuleType;
+}
+
+export enum FilterRuleAttributes {
+    Blueprint = 'blueprint_id',
+    SiteName = 'site_name',
+    Creator = 'created_by'
 }
 
 enum CommonRuleOperator {
