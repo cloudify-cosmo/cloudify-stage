@@ -12,7 +12,7 @@
           "x": 0,
           "y": 0,
           "configuration":{
-            "page": "local_blueprints"
+            "page": "blueprints"
           }
         },
         {
@@ -27,22 +27,11 @@
           }
         },
         {
-          "name": "Number of plugins",
-          "width": 2,
-          "height": 8,
-          "definition": "pluginsNum",
-          "x": 4,
-          "y": 0,
-          "configuration":{
-            "page": "system_resources"
-          }
-        },
-        {
           "name": "Number of compute nodes",
           "width": 2,
           "height": 8,
           "definition": "nodesComputeNum",
-          "x": 6,
+          "x": 4,
           "y": 0
         },
         {
@@ -50,7 +39,7 @@
           "width": 2,
           "height": 8,
           "definition": "executionNum",
-          "x": 8,
+          "x": 6,
           "y": 0
         },
         {
@@ -67,14 +56,6 @@
           "height": 3,
           "definition": "deploymentButton",
           "x": 2,
-          "y": 8
-        },
-        {
-          "name": "Plugin Upload Button",
-          "width": 2,
-          "height": 3,
-          "definition": "pluginUploadButton",
-          "x": 4,
           "y": 8
         },
         {
@@ -125,7 +106,7 @@
             "fullHeight": true
           },
           "definition": "buttonLink",
-          "x": 10,
+          "x": 8,
           "y": 0
         }
       ]
