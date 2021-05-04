@@ -4,6 +4,7 @@ import { useQuery, QueryObserverResult } from 'react-query';
 import { i18nPrefix } from '../common';
 import FilterModal from './FilterModal';
 import ExecuteDeploymentModal from '../../ExecuteDeploymentModal';
+import WorkflowsMenu from '../../WorkflowsMenu';
 
 interface DeploymentsViewHeaderProps {
     mapOpen: boolean;
@@ -15,6 +16,7 @@ interface DeploymentsViewHeaderProps {
 type Workflow = {
     name: string;
     parameters: Record<string, string>;
+    plugin: string;
 };
 
 type WorkflowsResponse = Stage.Types.PaginatedResponse<Workflow>;
@@ -29,8 +31,6 @@ function getWorkflowMenuItems(
     const { Dropdown, Loading, Message } = Stage.Basic;
     // @ts-ignore Properties does not exist on type 'typeof Dropdown'
     const { Item, Menu } = Dropdown;
-    // @ts-ignore WorkflowsMenu is not TS component
-    const { WorkflowsMenu } = Stage.Common;
 
     if (workflowsResult.isLoading) {
         return <Item icon={<Loading message="" />} disabled />;

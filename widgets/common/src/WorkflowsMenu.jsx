@@ -1,6 +1,4 @@
-/**
- * Created by jakubniezgoda on 31/01/2019.
- */
+import styled from 'styled-components';
 
 const WorkflowsPropType = Stage.PropTypes.Workflows;
 
@@ -23,11 +21,15 @@ StyledTitle.defaultProps = {
     bold: false
 };
 
-function WorkflowsMenuItems({ onClick, workflows }) {
-    const { Menu } = Stage.Basic;
+const StyledMenuItem = styled(Stage.Basic.Menu.Item)`
+    &&:hover {
+        text-decoration: none !important;
+    }
+`;
 
+function WorkflowsMenuItems({ onClick, workflows }) {
     return _.map(workflows, workflow => (
-        <Menu.Item
+        <StyledMenuItem
             name={workflow.name}
             content={<StyledTitle name={workflow.name} />}
             key={workflow.name}
@@ -107,7 +109,7 @@ AccordionWorkflowsMenu.defaultProps = {
     onClick: _.noop
 };
 
-function WorkflowsMenu({ workflows, onClick, showInPopup, trigger }) {
+export default function WorkflowsMenu({ workflows, onClick, showInPopup, trigger }) {
     const {
         Basic: { Menu, Popup, PopupMenu },
         i18n
