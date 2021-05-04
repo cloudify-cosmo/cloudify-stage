@@ -41,7 +41,7 @@ function getWorkflowMenuItems(
             log.error(workflowsResult.error as { message: string });
         }
 
-        return <Message error header="Error occurred when fetching workflows" />;
+        return <Message error header={headerT('bulkActions.errors.workflowsFetchFailed')} />;
     }
 
     return <WorkflowsMenu workflows={workflowsResult.data.items} onClick={onClick} showInPopup={false} />;

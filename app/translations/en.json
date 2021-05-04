@@ -661,6 +661,9 @@
                     "menu": {
                         "deployOn": "Deploy On",
                         "runWorkflow": "Run Workflow"
+                    },
+                    "errors": {
+                        "workflowsFetchFailed": "Error occurred when fetching workflows"
                     }
                 }
             },
