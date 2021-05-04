@@ -161,6 +161,8 @@ const DeploymentsViewHeader: FunctionComponent<DeploymentsViewHeaderProps> = ({
                     onExecute={startExecutionGroup}
                     onHide={closeExecuteModal}
                     toolbox={toolbox}
+                    showParameters={false}
+                    showActions={false}
                 />
             )}
         </>
