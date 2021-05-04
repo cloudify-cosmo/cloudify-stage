@@ -36,6 +36,7 @@ describe('Admin flow', () => {
         cy.get('.modal').within(() => {
             cy.get('div[name=groups]').click();
             cy.contains(groupName).click();
+            cy.get('div[name=groups]').blur(); // sometimes it is required to disable focus from `div[name=groups]` that covers `Save` action
             cy.contains('Save').click();
         });
         cy.get('.modal').should('not.exist');

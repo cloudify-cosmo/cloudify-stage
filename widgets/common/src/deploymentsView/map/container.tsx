@@ -7,14 +7,18 @@ import DeploymentsMap from './DeploymentsMap';
 
 interface DeploymentsMapContainerProps {
     deployments: Deployment[];
+    selectedDeployment: Deployment | undefined;
     toolbox: Stage.Types.Toolbox;
     widgetDimensions: ComponentProps<typeof DeploymentsMap>['widgetDimensions'];
+    environmentTypeVisible: boolean;
 }
 
 const DeploymentsMapContainer: FunctionComponent<DeploymentsMapContainerProps> = ({
     deployments,
+    selectedDeployment,
     toolbox,
-    widgetDimensions
+    widgetDimensions,
+    environmentTypeVisible
 }) => {
     const sitesResult = useQuery(
         'all-sites',
@@ -55,8 +59,11 @@ const DeploymentsMapContainer: FunctionComponent<DeploymentsMapContainerProps> =
     return (
         <DeploymentsMap
             deployments={deploymentsWithSites}
+            selectedDeployment={selectedDeployment}
             sites={sitesResult.data.items}
             widgetDimensions={widgetDimensions}
+            toolbox={toolbox}
+            environmentTypeVisible={environmentTypeVisible}
         />
     );
 };
