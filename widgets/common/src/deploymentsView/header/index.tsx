@@ -44,7 +44,14 @@ function getWorkflowMenuItems(
         return <Message error header={headerT('bulkActions.errors.workflowsFetchFailed')} />;
     }
 
-    return <WorkflowsMenu workflows={workflowsResult.data.items} onClick={onClick} showInPopup={false} />;
+    return (
+        <WorkflowsMenu
+            workflows={workflowsResult.data.items}
+            onClick={onClick}
+            showInPopup={false}
+            groupWorkflows={false}
+        />
+    );
 }
 
 const DeploymentsViewHeader: FunctionComponent<DeploymentsViewHeaderProps> = ({

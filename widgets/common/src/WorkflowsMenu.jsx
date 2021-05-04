@@ -109,7 +109,7 @@ AccordionWorkflowsMenu.defaultProps = {
     onClick: _.noop
 };
 
-export default function WorkflowsMenu({ workflows, onClick, showInPopup, trigger }) {
+export default function WorkflowsMenu({ workflows, onClick, showInPopup, groupWorkflows, trigger }) {
     const {
         Basic: { Menu, Popup, PopupMenu },
         i18n
@@ -148,7 +148,7 @@ export default function WorkflowsMenu({ workflows, onClick, showInPopup, trigger
         );
     }
 
-    return showOnlyDefaultWorkflows ? (
+    return !groupWorkflows || showOnlyDefaultWorkflows ? (
         <WorkflowsMenuItems workflows={filteredAndSortedWorkflows} onClick={onClick} />
     ) : (
         <AccordionWorkflowsMenu workflowsGroups={workflowsGroups} onClick={onClick} />
@@ -159,12 +159,14 @@ WorkflowsMenu.propTypes = {
     workflows: WorkflowsPropType.isRequired,
     onClick: PropTypes.func,
     showInPopup: PropTypes.bool,
+    groupWorkflows: PropTypes.bool,
     trigger: PropTypes.element
 };
 
 WorkflowsMenu.defaultProps = {
     onClick: _.noop,
     showInPopup: true,
+    groupWorkflows: true,
     trigger: null
 };
 
