@@ -1,6 +1,6 @@
 import type { FunctionComponent } from 'react';
 import { useState } from 'react';
-import { useQuery } from 'react-query';
+import { useQuery, QueryObserverResult } from 'react-query';
 import { i18nPrefix } from '../common';
 import FilterModal from './FilterModal';
 import ExecuteDeploymentModal from '../../ExecuteDeploymentModal';
@@ -17,8 +17,35 @@ type Workflow = {
     parameters: Record<string, string>;
 };
 
+type WorkflowsResponse = Stage.Types.PaginatedResponse<Workflow>;
+
 const headerT = (suffix: string) => Stage.i18n.t(`${i18nPrefix}.header.${suffix}`);
 const mapT = (suffix: string) => headerT(`map.${suffix}`);
+
+function getWorkflowMenuItems(
+    workflowsResult: QueryObserverResult<WorkflowsResponse>,
+    onClick: (workflow: Workflow) => void
+) {
+    const { Dropdown, Loading, Message } = Stage.Basic;
+    // @ts-ignore Properties does not exist on type 'typeof Dropdown'
+    const { Item, Menu } = Dropdown;
+    // @ts-ignore WorkflowsMenu is not TS component
+    const { WorkflowsMenu } = Stage.Common;
+
+    if (workflowsResult.isLoading) {
+        return <Item icon={<Loading message="" />} disabled />;
+    }
+
+    if (workflowsResult.isError || workflowsResult.isIdle) {
+        if (workflowsResult.isError) {
+            log.error(workflowsResult.error as { message: string });
+        }
+
+        return <Message error header="Error occurred when fetching workflows" />;
+    }
+
+    return <WorkflowsMenu workflows={workflowsResult.data.items} onClick={onClick} showInPopup={false} />;
+}
 
 const DeploymentsViewHeader: FunctionComponent<DeploymentsViewHeaderProps> = ({
     mapOpen,
@@ -29,7 +56,7 @@ const DeploymentsViewHeader: FunctionComponent<DeploymentsViewHeaderProps> = ({
     const { useBoolean } = Stage.Hooks;
     const [filterModalOpen, openFilterModal, closeFilterModal] = useBoolean();
     const [executeModalOpen, openExecuteModal, closeExecuteModal] = useBoolean();
-    const [selectedWorkflow, selectWorkflow] = useState<Workflow | null>(null);
+    const [selectedWorkflow, selectWorkflow] = useState<Workflow | undefined>();
     const [filterId, setFilterId] = useState<string>();
 
     const { Button, Dropdown } = Stage.Basic;
@@ -42,46 +69,26 @@ const DeploymentsViewHeader: FunctionComponent<DeploymentsViewHeaderProps> = ({
         closeFilterModal();
     }
 
-    const workflowsResult = useQuery('filtered-workflows', () =>
+    function startExecutionGroup(workflowParameters: Record<string, any>) {
+        const deploymentGroupsActions = new Stage.Common.DeploymentGroupsActions(toolbox);
+        const groupId = `BATCH_ACTION_${new Date().toISOString()}`;
+        const workflowId = selectedWorkflow?.name;
+
+        deploymentGroupsActions.doCreate(groupId, filterId!).then(_deploymentGroup => {
+            const executionGroupsActions = new Stage.Common.ExecutionGroupsActions(toolbox);
+
+            return executionGroupsActions.doStart(workflowId!, groupId, workflowParameters).then(_executionGroup => {
+                toolbox.getEventBus().trigger('deployments:refresh');
+                toolbox.getEventBus().trigger('executions:refresh');
+            });
+        });
+    }
+
+    const workflowsResult = useQuery<WorkflowsResponse>([filterId], () =>
         toolbox.getManager().doGet('/workflows', {
             _filter_id: filterId
         })
     );
-
-    const workflowsMenu = (() => {
-        if (workflowsResult.isLoading) {
-            const { Loading } = Stage.Basic;
-
-            return (
-                <Item>
-                    <Loading />
-                </Item>
-            );
-        }
-
-        if (workflowsResult.isError) {
-            const { ErrorMessage } = Stage.Basic;
-
-            return (
-                <ErrorMessage header={mapT('errorLoadingSites')} error={workflowsResult.error as { message: string }} />
-            );
-        }
-
-        if (workflowsResult.isIdle) {
-            throw new Error('Idle state for fetching workflows data is not handled');
-        }
-        return workflowsResult.data.items.map((workflow: Workflow) => (
-            <Item
-                key={workflow.name}
-                onClick={() => {
-                    selectWorkflow(workflow);
-                    openExecuteModal();
-                }}
-            >
-                {workflow.name}
-            </Item>
-        ));
-    })();
 
     return (
         <>
@@ -116,12 +123,17 @@ const DeploymentsViewHeader: FunctionComponent<DeploymentsViewHeaderProps> = ({
                     onClick={openFilterModal}
                 />
             )}
-            <Dropdown button text={headerT('bulkActions.button')}>
+            <Dropdown button disabled={!filterId} text={headerT('bulkActions.button')}>
                 <Menu>
                     <Item text={headerT('bulkActions.menu.deployOn')} />
                     <Item>
-                        <Dropdown text={headerT('bulkActions.menu.runWorkflow')} direction="left">
-                            <Menu>{workflowsMenu}</Menu>
+                        <Dropdown text={headerT('bulkActions.menu.runWorkflow')} direction="left" scrolling>
+                            <Menu>
+                                {getWorkflowMenuItems(workflowsResult, workflow => {
+                                    selectWorkflow(workflow);
+                                    openExecuteModal();
+                                })}
+                            </Menu>
                         </Dropdown>
                     </Item>
                 </Menu>
@@ -135,11 +147,11 @@ const DeploymentsViewHeader: FunctionComponent<DeploymentsViewHeaderProps> = ({
                 toolbox={toolbox}
             />
 
-            {!_.isEmpty(selectedWorkflow) && (
+            {selectedWorkflow && (
                 <ExecuteDeploymentModal
                     open={executeModalOpen}
                     workflow={selectedWorkflow}
-                    onExecute={_.noop} // TODO
+                    onExecute={startExecutionGroup}
                     onHide={closeExecuteModal}
                     toolbox={toolbox}
                 />
