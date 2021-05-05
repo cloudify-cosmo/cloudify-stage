@@ -127,8 +127,12 @@ export default function ExecuteDeploymentModal({
         }
 
         if (_.isFunction(onExecute) && onExecute !== _.noop) {
-            const scheduled = schedule ? moment(scheduledTime).format('YYYYMMDDHHmmZ') : undefined;
-            onExecute(workflowParameters, force, dryRun, queue, scheduled);
+            onExecute(workflowParameters, {
+                force,
+                dryRun,
+                queue,
+                scheduledTime: schedule ? moment(scheduledTime).format('YYYYMMDDHHmmZ') : undefined
+            });
             onHide();
             return true;
         }
@@ -147,17 +151,23 @@ export default function ExecuteDeploymentModal({
         const actions = new DeploymentActions(toolbox);
 
         const executePromises = _.map(deploymentsList, id => {
-            const scheduled = schedule ? moment(scheduledTime).format('YYYYMMDDHHmmZ') : undefined;
-            return actions.doExecute({ id }, { name }, workflowParameters, force, dryRun, queue, scheduled).then(() => {
-                // State updates should be done before calling `onHide` to avoid React errors:
-                // "Warning: Can't perform a React state update on an unmounted component"
-                unsetLoading();
-                clearErrors();
-                onHide();
-                toolbox.getEventBus().trigger('executions:refresh');
-                // NOTE: pass id to keep the current deployment selected
-                toolbox.getEventBus().trigger('deployments:refresh', id);
-            });
+            return actions
+                .doExecute(id, name, workflowParameters, {
+                    force,
+                    dryRun,
+                    queue,
+                    scheduledTime: schedule ? moment(scheduledTime).format('YYYYMMDDHHmmZ') : undefined
+                })
+                .then(() => {
+                    // State updates should be done before calling `onHide` to avoid React errors:
+                    // "Warning: Can't perform a React state update on an unmounted component"
+                    unsetLoading();
+                    clearErrors();
+                    onHide();
+                    toolbox.getEventBus().trigger('executions:refresh');
+                    // NOTE: pass id to keep the current deployment selected
+                    toolbox.getEventBus().trigger('deployments:refresh', id);
+                });
         });
 
         return Promise.all(executePromises).catch(err => {

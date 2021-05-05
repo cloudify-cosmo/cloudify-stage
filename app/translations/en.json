@@ -446,6 +446,7 @@
                     "updateButton": "Update"
                 },
                 "deployModal": {
+                    "header": "Deploy blueprint {{blueprintId}}",
                     "inputs": {
                         "deploymentName": {
                             "label": "Deployment name",
@@ -658,12 +659,11 @@
                 },
                 "bulkActions": {
                     "button": "Bulk Actions",
-                    "menu": {
-                        "deployOn": "Deploy On",
-                        "runWorkflow": "Run Workflow"
-                    },
-                    "errors": {
-                        "workflowsFetchFailed": "Error occurred when fetching workflows"
+                    "deployOn": {
+                        "title": "Deploy On",
+                        "modal": {
+                            "header": "Deploy on"
+                        }
                     }
                 }
             },

@@ -1,3 +1,10 @@
+export interface WorkflowOptions {
+    force: boolean;
+    dryRun: boolean;
+    queue: boolean;
+    scheduledTime: any;
+}
+
 export default class DeploymentActions {
     constructor(private toolbox: Stage.Types.Toolbox) {}
 
@@ -30,22 +37,19 @@ export default class DeploymentActions {
     }
 
     doExecute(
-        deployment: { id: string },
-        workflow: { name: string },
-        params: any,
-        force: boolean,
-        dry_run = false,
-        queue = false,
-        scheduled_time = undefined
+        deploymentId: string,
+        workflowId: string,
+        workflowParameters: any,
+        { force = false, dryRun = false, queue = false, scheduledTime }: WorkflowOptions
     ) {
         return this.toolbox.getManager().doPost('/executions', null, {
-            deployment_id: deployment.id,
-            workflow_id: workflow.name,
-            dry_run,
+            deployment_id: deploymentId,
+            workflow_id: workflowId,
+            dry_run: dryRun,
             force,
             queue,
-            scheduled_time,
-            parameters: params
+            scheduled_time: scheduledTime,
+            parameters: workflowParameters
         });
     }
 
