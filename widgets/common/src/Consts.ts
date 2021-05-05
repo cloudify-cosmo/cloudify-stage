@@ -29,8 +29,8 @@ declare global {
         const Consts: typeof consts;
     }
 }
-// NOTE: prevents exposing `consts` as a global variable in TS
-export {};
+
+export default consts;
 
 Stage.defineCommon({
     name: 'Consts',
