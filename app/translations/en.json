@@ -662,7 +662,13 @@
                     "deployOn": {
                         "title": "Deploy On",
                         "modal": {
-                            "header": "Deploy on"
+                            "header": "Deploy on",
+                            "steps": {
+                                "validatingData": "1/4: Validating data...",
+                                "fetchingEnvironments": "2/4: Fetching environments list...",
+                                "creatingDeployments": "3/4: Creating deployments...",
+                                "installingDeployments": "4/4: Installing deployments..."
+                            }
                         }
                     }
                 }
