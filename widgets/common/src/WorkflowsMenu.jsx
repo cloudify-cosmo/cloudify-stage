@@ -1,4 +1,6 @@
-import styled from 'styled-components';
+/**
+ * Created by jakubniezgoda on 31/01/2019.
+ */
 
 const WorkflowsPropType = Stage.PropTypes.Workflows;
 
@@ -21,15 +23,11 @@ StyledTitle.defaultProps = {
     bold: false
 };
 
-const StyledMenuItem = styled(Stage.Basic.Menu.Item)`
-    &&:hover {
-        text-decoration: none !important;
-    }
-`;
-
 function WorkflowsMenuItems({ onClick, workflows }) {
+    const { Menu } = Stage.Basic;
+
     return _.map(workflows, workflow => (
-        <StyledMenuItem
+        <Menu.Item
             name={workflow.name}
             content={<StyledTitle name={workflow.name} />}
             key={workflow.name}
@@ -109,7 +107,7 @@ AccordionWorkflowsMenu.defaultProps = {
     onClick: _.noop
 };
 
-export default function WorkflowsMenu({ workflows, onClick, showInPopup, groupWorkflows, trigger }) {
+function WorkflowsMenu({ workflows, onClick, showInPopup, trigger }) {
     const {
         Basic: { Menu, Popup, PopupMenu },
         i18n
@@ -148,7 +146,7 @@ export default function WorkflowsMenu({ workflows, onClick, showInPopup, groupWo
         );
     }
 
-    return !groupWorkflows || showOnlyDefaultWorkflows ? (
+    return showOnlyDefaultWorkflows ? (
         <WorkflowsMenuItems workflows={filteredAndSortedWorkflows} onClick={onClick} />
     ) : (
         <AccordionWorkflowsMenu workflowsGroups={workflowsGroups} onClick={onClick} />
@@ -159,14 +157,12 @@ WorkflowsMenu.propTypes = {
     workflows: WorkflowsPropType.isRequired,
     onClick: PropTypes.func,
     showInPopup: PropTypes.bool,
-    groupWorkflows: PropTypes.bool,
     trigger: PropTypes.element
 };
 
 WorkflowsMenu.defaultProps = {
     onClick: _.noop,
     showInPopup: true,
-    groupWorkflows: true,
     trigger: null
 };
 
