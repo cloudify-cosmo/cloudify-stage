@@ -1,8 +1,17 @@
+type CreateDeploymentGroupData = {
+    // eslint-disable-next-line camelcase
+    filter_id?: string;
+    // eslint-disable-next-line camelcase
+    deployment_ids?: string[];
+    // eslint-disable-next-line camelcase
+    deployments_from_group?: string;
+};
+
 export default class DeploymentGroupsActions {
     constructor(private toolbox: Stage.Types.Toolbox) {}
 
-    doCreate(id: string, filterId: string) {
-        return this.toolbox.getManager().doPut(`/deployment-groups/${id}`, null, { filter_id: filterId });
+    doCreate(id: string, data: CreateDeploymentGroupData) {
+        return this.toolbox.getManager().doPut(`/deployment-groups/${id}`, null, data);
     }
 }
 

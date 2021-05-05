@@ -1,9 +1,10 @@
 import type { FunctionComponent } from 'react';
 import { useEffect, useMemo } from 'react';
 import { i18nPrefix } from '../common';
+import { FilterRule } from '../../filters/types';
 
 interface RunWorkflowModalProps {
-    filterId: string | undefined;
+    filterRules: FilterRule[];
     onHide: () => void;
     toolbox: Stage.Types.Toolbox;
 }
@@ -28,7 +29,7 @@ const getWorkflowsOptions = (workflows: Workflow[]) => {
         .value();
 };
 
-const RunWorkflowModal: FunctionComponent<RunWorkflowModalProps> = ({ filterId, onHide, toolbox }) => {
+const RunWorkflowModal: FunctionComponent<RunWorkflowModalProps> = ({ filterRules, onHide, toolbox }) => {
     const {
         ApproveButton,
         CancelButton,
@@ -51,6 +52,8 @@ const RunWorkflowModal: FunctionComponent<RunWorkflowModalProps> = ({ filterId, 
     const [loadingMessage, setLoadingMessage, resetLoadingMessage] = useResettableState('');
     const workflowsOptions = useMemo(() => getWorkflowsOptions(workflows), [workflows]);
 
+    const searchActions = new Stage.Common.SearchActions(toolbox);
+
     useEffect(() => {
         clearErrors();
         resetWorkflowId();
@@ -58,15 +61,12 @@ const RunWorkflowModal: FunctionComponent<RunWorkflowModalProps> = ({ filterId, 
         unsetExecutionGroupStarted();
         setLoadingMessage(modalT('messages.fetchingWorkflows'));
 
-        toolbox
-            .getManager()
-            .doGet('/workflows', {
-                _filter_id: filterId
-            })
+        searchActions
+            .doListWorkflows(filterRules)
             .then((data: WorkflowsResponse) => setWorkflows(data.items))
             .catch(setMessageAsError)
             .finally(resetLoadingMessage);
-    }, [filterId]);
+    }, []);
 
     function runWorkflow() {
         if (!workflowId) {
@@ -74,21 +74,30 @@ const RunWorkflowModal: FunctionComponent<RunWorkflowModalProps> = ({ filterId, 
             return;
         }
 
-        setLoadingMessage(modalT('messages.creatingDeploymentGroup'));
-        const deploymentGroupsActions = new Stage.Common.DeploymentGroupsActions(toolbox);
-        const groupId = `BATCH_ACTION_${new Date().toISOString()}`;
+        setLoadingMessage(modalT('messages.listingDeployments'));
 
-        deploymentGroupsActions.doCreate(groupId, filterId!).then(_deploymentGroup => {
-            setLoadingMessage(modalT('messages.startingExecutionGroup'));
-            const executionGroupsActions = new Stage.Common.ExecutionGroupsActions(toolbox);
+        // TODO: Add error handling
+        searchActions
+            .doListDeployments(filterRules, { _include: 'id' })
+            .then((deployments: Stage.Types.PaginatedResponse<{ id: string }>) => {
+                setLoadingMessage(modalT('messages.creatingDeploymentGroup'));
 
-            return executionGroupsActions.doStart(workflowId!, groupId).then(_executionGroup => {
-                toolbox.getEventBus().trigger('deployments:refresh');
-                toolbox.getEventBus().trigger('executions:refresh');
-                resetLoadingMessage();
-                setExecutionGroupStarted();
+                const deploymentGroupsActions = new Stage.Common.DeploymentGroupsActions(toolbox);
+                const groupId = `BATCH_ACTION_${new Date().toISOString()}`;
+                const deploymentIds: string[] = deployments.items.map(deployment => deployment.id);
+
+                deploymentGroupsActions.doCreate(groupId, { deployment_ids: deploymentIds }).then(_deploymentGroup => {
+                    setLoadingMessage(modalT('messages.startingExecutionGroup'));
+                    const executionGroupsActions = new Stage.Common.ExecutionGroupsActions(toolbox);
+
+                    return executionGroupsActions.doStart(workflowId!, groupId).then(_executionGroup => {
+                        toolbox.getEventBus().trigger('deployments:refresh');
+                        toolbox.getEventBus().trigger('executions:refresh');
+                        resetLoadingMessage();
+                        setExecutionGroupStarted();
+                    });
+                });
             });
-        });
     }
 
     function goToExecutionsPage() {
@@ -98,7 +107,7 @@ const RunWorkflowModal: FunctionComponent<RunWorkflowModalProps> = ({ filterId, 
     return (
         <Modal open onClose={onHide}>
             <Modal.Header>
-                <Icon name="cogs" /> {modalT('header', { filterId })}
+                <Icon name="cogs" /> {modalT('header')}
             </Modal.Header>
 
             <Modal.Content>

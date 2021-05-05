@@ -4,11 +4,13 @@ import { i18nPrefix } from '../common';
 import FilterModal from './FilterModal';
 import RunWorkflowModal from './RunWorkflowModal';
 import DeployOnModal from './DeployOnModal';
+import { FilterRule } from '../../filters/types';
 
 interface DeploymentsViewHeaderProps {
     mapOpen: boolean;
     toggleMap: () => void;
     onFilterChange: (filterId: string | undefined) => void;
+    filterRules: FilterRule[];
     toolbox: Stage.Types.Toolbox;
 }
 
@@ -19,6 +21,7 @@ const DeploymentsViewHeader: FunctionComponent<DeploymentsViewHeaderProps> = ({
     mapOpen,
     toggleMap,
     onFilterChange,
+    filterRules,
     toolbox
 }) => {
     const { useBoolean } = Stage.Hooks;
@@ -74,11 +77,7 @@ const DeploymentsViewHeader: FunctionComponent<DeploymentsViewHeaderProps> = ({
                 {/* Display the menu above all leaflet components, see https://leafletjs.com/reference-1.7.1.html#map-pane */}
                 <Menu style={{ zIndex: 1000 }}>
                     <Item text={headerT('bulkActions.deployOn.title')} onClick={openDeployOnModal} />
-                    <Item
-                        text={headerT('bulkActions.runWorkflow.title')}
-                        disabled={!filterId}
-                        onClick={openRunWorkflowModal}
-                    />
+                    <Item text={headerT('bulkActions.runWorkflow.title')} onClick={openRunWorkflowModal} />
                 </Menu>
             </Dropdown>
 
@@ -93,7 +92,7 @@ const DeploymentsViewHeader: FunctionComponent<DeploymentsViewHeaderProps> = ({
             {deployOnModalOpen && <DeployOnModal onHide={closeDeployOnModal} toolbox={toolbox} />}
 
             {runWorkflowModalOpen && (
-                <RunWorkflowModal filterId={filterId} onHide={closeRunWorkflowModal} toolbox={toolbox} />
+                <RunWorkflowModal filterRules={filterRules} onHide={closeRunWorkflowModal} toolbox={toolbox} />
             )}
         </>
     );

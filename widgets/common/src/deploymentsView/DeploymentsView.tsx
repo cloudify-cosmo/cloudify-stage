@@ -16,6 +16,7 @@ import {
 } from './layout';
 import DeploymentsViewHeader from './header';
 import DeploymentsMapContainer from './map';
+import SearchActions from '../SearchActions';
 
 export interface DeploymentsViewProps {
     widget: Stage.Types.Widget<SharedDeploymentsViewWidgetConfiguration>;
@@ -37,6 +38,7 @@ export const DeploymentsView: FunctionComponent<DeploymentsViewProps> = ({
     defaultFilterId
 }) => {
     const manager = toolbox.getManager();
+    const searchActions = new SearchActions(toolbox);
     const [gridParams, setGridParams] = useState<Stage.Types.ManagerGridParams>();
     const [userFilterId, setUserFilterId] = useState<string>();
 
@@ -73,13 +75,10 @@ export const DeploymentsView: FunctionComponent<DeploymentsViewProps> = ({
         return [...filterRules, ...additionalFilterRules, filteringByParentDeploymentResult.parentDeploymentRule];
     }, [filterRules, filteringByParentDeploymentResult.parentDeploymentRule, additionalFilterRules]);
 
-    const deploymentsUrl = '/searches/deployments';
     const deploymentsResult = useQuery(
-        [deploymentsUrl, gridParams, finalFilterRules],
+        ['deployments', gridParams, finalFilterRules],
         (): Promise<Stage.Common.DeploymentsView.Types.DeploymentsResponse> =>
-            manager.doPost(deploymentsUrl, gridParams, {
-                filter_rules: finalFilterRules
-            }),
+            searchActions.doListDeployments(finalFilterRules, gridParams),
         {
             enabled: filteringByParentDeploymentResult.filterable,
             refetchInterval: widget.configuration.customPollingTime * 1000,
@@ -150,6 +149,7 @@ export const DeploymentsView: FunctionComponent<DeploymentsViewProps> = ({
                     mapOpen={mapOpen}
                     toggleMap={toggleMap}
                     toolbox={toolbox}
+                    filterRules={finalFilterRules}
                     onFilterChange={setUserFilterId}
                 />
             </DeploymentsViewHeaderContainer>

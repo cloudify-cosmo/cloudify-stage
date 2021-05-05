@@ -668,7 +668,7 @@
                     "runWorkflow": {
                         "title": "Run Workflow",
                         "modal": {
-                            "header": "Run workflow on deployments filtered by '{{ filterId }}' filter",
+                            "header": "Run workflow on filtered deployments",
                             "inputs": {
                                 "workflowId": {
                                     "label": "Workflow",
@@ -684,8 +684,9 @@
                                 "limitations": "The workflow will run with default parameters and without any special workflow flags such as 'Force', 'Dry run' or 'Queue'.",
                                 "executionGroupStarted": "Workflow has been started.",
                                 "fetchingWorkflows": "Fetching workflows...",
-                                "creatingDeploymentGroup": "1/2: Creating deployment group...",
-                                "startingExecutionGroup": "2/2: Starting execution group..."
+                                "listingDeployments": "1/3: Getting list of deployments...",
+                                "creatingDeploymentGroup": "2/3: Creating deployment group...",
+                                "startingExecutionGroup": "3/3: Starting execution group..."
                             },
                             "errors": {
                                 "noWorkflowError": "Please select a workflow",
