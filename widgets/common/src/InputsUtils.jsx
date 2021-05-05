@@ -494,35 +494,6 @@ class InputsUtils {
         return inputsWithoutValues;
     }
 
-    /**
-     * @deprecated Use `getInputsWithoutValues` and `getInputsMap` instead
-     */
-    static getInputsToSend(inputs, inputsValues, inputsWithoutValues) {
-        const { Json } = Stage.Utils;
-        const deploymentInputs = {};
-
-        _.forEach(inputs, (inputObj, inputName) => {
-            const stringInputValue = Json.getStringValue(inputsValues[inputName]);
-            let typedInputValue = Json.getTypedValue(inputsValues[inputName]);
-
-            if (_.isEmpty(stringInputValue) && _.isUndefined(inputObj.default)) {
-                inputsWithoutValues[inputName] = true;
-            } else if (
-                _.startsWith(stringInputValue, InputsUtils.STRING_VALUE_SURROUND_CHAR) &&
-                _.endsWith(stringInputValue, InputsUtils.STRING_VALUE_SURROUND_CHAR) &&
-                _.size(stringInputValue) > 1
-            ) {
-                typedInputValue = stringInputValue.slice(1, -1);
-            }
-
-            if (!_.isEqual(typedInputValue, inputObj.default)) {
-                deploymentInputs[inputName] = typedInputValue;
-            }
-        });
-
-        return deploymentInputs;
-    }
-
     static addErrors(inputsWithoutValues, errors) {
         _.forEach(_.keys(inputsWithoutValues), inputName => {
             errors[inputName] = `Please provide ${inputName}`;
