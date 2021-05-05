@@ -2,6 +2,7 @@ import type { FunctionComponent } from 'react';
 import { useState } from 'react';
 import { i18nPrefix } from '../common';
 import FilterModal from './FilterModal';
+import RunWorkflowModal from './RunWorkflowModal';
 import DeployOnModal from './DeployOnModal';
 
 interface DeploymentsViewHeaderProps {
@@ -20,10 +21,11 @@ const DeploymentsViewHeader: FunctionComponent<DeploymentsViewHeaderProps> = ({
     onFilterChange,
     toolbox
 }) => {
-    const [filterModalOpen, openFilterModal, closeFilterModal] = Stage.Hooks.useBoolean();
+    const { useBoolean } = Stage.Hooks;
+    const [filterModalOpen, openFilterModal, closeFilterModal] = useBoolean();
+    const [deployOnModalOpen, openDeployOnModal, closeDeployOnModal] = useBoolean();
+    const [runWorkflowModalOpen, openRunWorkflowModal, closeRunWorkflowModal] = useBoolean();
     const [filterId, setFilterId] = useState<string>();
-
-    const [deployOnModalOpen, openDeployOnModal, closeDeployOnModal] = Stage.Hooks.useBoolean();
 
     const { Button, Dropdown } = Stage.Basic;
     // @ts-ignore Properties does not exist on type 'typeof Dropdown'
@@ -72,6 +74,11 @@ const DeploymentsViewHeader: FunctionComponent<DeploymentsViewHeaderProps> = ({
                 {/* Display the menu above all leaflet components, see https://leafletjs.com/reference-1.7.1.html#map-pane */}
                 <Menu style={{ zIndex: 1000 }}>
                     <Item text={headerT('bulkActions.deployOn.title')} onClick={openDeployOnModal} />
+                    <Item
+                        text={headerT('bulkActions.runWorkflow.title')}
+                        disabled={!filterId}
+                        onClick={openRunWorkflowModal}
+                    />
                 </Menu>
             </Dropdown>
 
@@ -84,6 +91,10 @@ const DeploymentsViewHeader: FunctionComponent<DeploymentsViewHeaderProps> = ({
             />
 
             {deployOnModalOpen && <DeployOnModal onHide={closeDeployOnModal} toolbox={toolbox} />}
+
+            {runWorkflowModalOpen && (
+                <RunWorkflowModal filterId={filterId} onHide={closeRunWorkflowModal} toolbox={toolbox} />
+            )}
         </>
     );
 };

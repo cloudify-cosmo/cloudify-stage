@@ -664,6 +664,34 @@
                         "modal": {
                             "header": "Deploy on"
                         }
+                    },
+                    "runWorkflow": {
+                        "title": "Run Workflow",
+                        "modal": {
+                            "header": "Run workflow on deployments filtered by '{{ filterId }}' filter",
+                            "inputs": {
+                                "workflowId": {
+                                    "label": "Workflow",
+                                    "help": "Name of the workflow to be started on the filtered deployments. Only workflows without mandatory parameters are listed."
+                                }
+                            },
+                            "buttons": {
+                                "run": "Run",
+                                "close": "Close",
+                                "goToExecutionsPage": "Go to Executions page"
+                            },
+                            "messages": {
+                                "limitations": "The workflow will run with default parameters and without any special workflow flags such as 'Force', 'Dry run' or 'Queue'.",
+                                "executionGroupStarted": "Workflow has been started.",
+                                "fetchingWorkflows": "Fetching workflows...",
+                                "creatingDeploymentGroup": "1/2: Creating deployment group...",
+                                "startingExecutionGroup": "2/2: Starting execution group..."
+                            },
+                            "errors": {
+                                "noWorkflowError": "Please select a workflow",
+                                "workflowsFetchFailed": "Error occurred when fetching workflows"
+                            }
+                        }
                     }
                 }
             },

@@ -13,9 +13,7 @@ export default function ExecuteDeploymentModal({
     onHide,
     toolbox,
     workflow,
-    open,
-    showParameters,
-    showActions
+    open
 }) {
     const {
         i18n,
@@ -229,107 +227,92 @@ export default function ExecuteDeploymentModal({
 
             <Modal.Content>
                 <Form loading={isLoading} errors={errors} scrollToError onErrorsDismiss={clearErrors}>
-                    {showParameters && (
-                        <>
-                            {!_.isEmpty(baseWorkflowParams) && (
-                                <YamlFileButton
-                                    onChange={handleYamlFileChange}
-                                    dataType="execution parameters"
-                                    fileLoading={isFileLoading}
-                                />
-                            )}
-
-                            <InputsHeader header="Parameters" compact />
-
-                            {_.isEmpty(baseWorkflowParams) && (
-                                <Message content="No parameters available for the execution" />
-                            )}
-
-                            {InputsUtils.getInputFields(
-                                baseWorkflowParams,
-                                handleInputChange,
-                                userWorkflowParams,
-                                errors
-                            )}
-                        </>
+                    {!_.isEmpty(baseWorkflowParams) && (
+                        <YamlFileButton
+                            onChange={handleYamlFileChange}
+                            dataType="execution parameters"
+                            fileLoading={isFileLoading}
+                        />
                     )}
 
-                    {showActions && (
-                        <>
-                            <Form.Divider>
-                                <Header size="tiny">Actions</Header>
-                            </Form.Divider>
+                    <InputsHeader header="Parameters" compact />
 
-                            <Form.Field>
-                                <Form.Checkbox
-                                    name="force"
-                                    toggle
-                                    label="Force"
-                                    help='Execute the workflow even if there is an ongoing
+                    {_.isEmpty(baseWorkflowParams) && <Message content="No parameters available for the execution" />}
+
+                    {InputsUtils.getInputFields(baseWorkflowParams, handleInputChange, userWorkflowParams, errors)}
+
+                    <Form.Divider>
+                        <Header size="tiny">Actions</Header>
+                    </Form.Divider>
+
+                    <Form.Field>
+                        <Form.Checkbox
+                            name="force"
+                            toggle
+                            label="Force"
+                            help='Execute the workflow even if there is an ongoing
                                                  execution for the given deployment.
                                                  You cannot use this option with "Queue".'
-                                    checked={force}
-                                    onChange={(event, field) => setForce(field.checked)}
-                                />
-                            </Form.Field>
+                            checked={force}
+                            onChange={(event, field) => setForce(field.checked)}
+                        />
+                    </Form.Field>
 
-                            <Form.Field>
-                                <Form.Checkbox
-                                    name="dryRun"
-                                    toggle
-                                    label="Dry run"
-                                    help='If set, no actual operations will be performed.
+                    <Form.Field>
+                        <Form.Checkbox
+                            name="dryRun"
+                            toggle
+                            label="Dry run"
+                            help='If set, no actual operations will be performed.
                                                  Executed tasks will be logged without side effects.
                                                  You cannot use this option with "Queue".'
-                                    checked={dryRun}
-                                    onChange={(event, field) => setDryRun(field.checked)}
-                                />
-                            </Form.Field>
+                            checked={dryRun}
+                            onChange={(event, field) => setDryRun(field.checked)}
+                        />
+                    </Form.Field>
 
-                            <Form.Field>
-                                <Form.Checkbox
-                                    name="queue"
-                                    toggle
-                                    label="Queue"
-                                    help='If set, executions that can`t currently run will
+                    <Form.Field>
+                        <Form.Checkbox
+                            name="queue"
+                            toggle
+                            label="Queue"
+                            help='If set, executions that can`t currently run will
                                                  be queued and run automatically when possible.
                                                  You cannot use this option with "Force" and "Dry run".'
-                                    checked={queue}
-                                    onChange={(event, field) => {
-                                        setQueue(field.checked);
-                                        clearForce();
-                                        clearDryRun();
-                                        clearSchedule();
-                                        clearScheduleTime();
-                                        clearErrors();
-                                    }}
-                                />
-                            </Form.Field>
+                            checked={queue}
+                            onChange={(event, field) => {
+                                setQueue(field.checked);
+                                clearForce();
+                                clearDryRun();
+                                clearSchedule();
+                                clearScheduleTime();
+                                clearErrors();
+                            }}
+                        />
+                    </Form.Field>
 
-                            <Form.Field error={!!errors.scheduledTime}>
-                                <Form.Checkbox
-                                    name="schedule"
-                                    toggle
-                                    label="Schedule"
-                                    help='If set, workflow will be executed at specific time (local timezone)
+                    <Form.Field error={!!errors.scheduledTime}>
+                        <Form.Checkbox
+                            name="schedule"
+                            toggle
+                            label="Schedule"
+                            help='If set, workflow will be executed at specific time (local timezone)
                                                  provided below. You cannot use this option with "Queue".'
-                                    checked={schedule}
-                                    onChange={(event, field) => setSchedule(field.checked)}
-                                />
-                                {schedule && <Divider hidden />}
-                                {schedule && (
-                                    <DateInput
-                                        name="scheduledTime"
-                                        value={scheduledTime}
-                                        defaultValue=""
-                                        minDate={moment()}
-                                        maxDate={moment().add(1, 'Y')}
-                                        onChange={(event, field) => setScheduledTime(field.value)}
-                                    />
-                                )}
-                            </Form.Field>
-                        </>
-                    )}
+                            checked={schedule}
+                            onChange={(event, field) => setSchedule(field.checked)}
+                        />
+                        {schedule && <Divider hidden />}
+                        {schedule && (
+                            <DateInput
+                                name="scheduledTime"
+                                value={scheduledTime}
+                                defaultValue=""
+                                minDate={moment()}
+                                maxDate={moment().add(1, 'Y')}
+                                onChange={(event, field) => setScheduledTime(field.value)}
+                            />
+                        )}
+                    </Form.Field>
                 </Form>
             </Modal.Content>
 
@@ -362,16 +345,12 @@ ExecuteDeploymentModal.propTypes = {
         PropTypes.string
     ]).isRequired,
     onExecute: PropTypes.func,
-    showParameters: PropTypes.bool,
-    showActions: PropTypes.bool,
     onHide: PropTypes.func.isRequired
 };
 ExecuteDeploymentModal.defaultProps = {
     deploymentId: '',
     deployments: [],
-    onExecute: _.noop,
-    showParameters: true,
-    showActions: true
+    onExecute: _.noop
 };
 
 Stage.defineCommon({
