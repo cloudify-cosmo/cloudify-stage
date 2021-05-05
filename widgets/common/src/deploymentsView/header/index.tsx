@@ -4,8 +4,10 @@ import { i18nPrefix } from '../common';
 import FilterModal from './FilterModal';
 import RunWorkflowModal from './RunWorkflowModal';
 import DeployOnModal from './DeployOnModal';
+import { FilterRule } from '../../filters/types';
 
 interface DeploymentsViewHeaderProps {
+    filterRules: FilterRule[];
     mapOpen: boolean;
     toggleMap: () => void;
     onFilterChange: (filterId: string | undefined) => void;
@@ -19,7 +21,8 @@ const DeploymentsViewHeader: FunctionComponent<DeploymentsViewHeaderProps> = ({
     mapOpen,
     toggleMap,
     onFilterChange,
-    toolbox
+    toolbox,
+    filterRules
 }) => {
     const { useBoolean } = Stage.Hooks;
     const [filterModalOpen, openFilterModal, closeFilterModal] = useBoolean();
@@ -90,7 +93,9 @@ const DeploymentsViewHeader: FunctionComponent<DeploymentsViewHeaderProps> = ({
                 toolbox={toolbox}
             />
 
-            {deployOnModalOpen && <DeployOnModal onHide={closeDeployOnModal} toolbox={toolbox} />}
+            {deployOnModalOpen && (
+                <DeployOnModal filterRules={filterRules} onHide={closeDeployOnModal} toolbox={toolbox} />
+            )}
 
             {runWorkflowModalOpen && (
                 <RunWorkflowModal filterId={filterId} onHide={closeRunWorkflowModal} toolbox={toolbox} />

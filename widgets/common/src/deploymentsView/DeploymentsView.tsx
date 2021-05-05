@@ -151,6 +151,7 @@ export const DeploymentsView: FunctionComponent<DeploymentsViewProps> = ({
                     toggleMap={toggleMap}
                     toolbox={toolbox}
                     onFilterChange={setUserFilterId}
+                    filterRules={finalFilterRules}
                 />
             </DeploymentsViewHeaderContainer>
 
