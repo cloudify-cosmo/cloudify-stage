@@ -51,7 +51,7 @@ export default class DeploymentActions {
             force = defaultWorkflowOptions.force,
             dryRun = defaultWorkflowOptions.dryRun,
             queue = defaultWorkflowOptions.queue,
-            scheduledTime
+            scheduledTime = defaultWorkflowOptions.scheduledTime
         }: WorkflowOptions = defaultWorkflowOptions
     ) {
         return this.toolbox.getManager().doPost('/executions', null, {
