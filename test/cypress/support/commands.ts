@@ -26,6 +26,7 @@ import './widgets';
 import './secrets';
 import './snapshots';
 import './filters';
+import './gettingStarted';
 import { addCommands, GetCypressChainableFromCommands } from 'cloudify-ui-common/cypress/support';
 
 let token = '';
@@ -146,16 +147,21 @@ const commands = {
             ...options
         });
     },
-    login: (username = 'admin', password = 'admin', expectSuccessfulLogin = true) => {
-        cy.disableGettingStarted();
+    login: (
+        username = 'admin',
+        password = 'admin',
+        expectSuccessfulLogin = true,
+        mockDisabledGettingStarted = true
+    ) => {
+        if (mockDisabledGettingStarted) {
+            cy.mockDisabledGettingStarted();
+        }
 
         cy.location('pathname').then(pathname => {
             if (pathname !== '/console/login') {
                 cy.visit('/console/login');
             }
         });
-
-        cy.disableGettingStarted();
 
         cy.get('.form > :nth-child(1) > .ui > input').clear().type(username);
         cy.get('.form > :nth-child(2) > .ui > input').clear().type(password);
@@ -173,7 +179,7 @@ const commands = {
             cy.waitUntilLoaded().then(() => cy.saveLocalStorage());
         }
     },
-    mockLogin: (username = 'admin', password = 'admin') => {
+    mockLogin: (username = 'admin', password = 'admin', mockDisabledGettingStarted = true) => {
         cy.stageRequest('/console/auth/login', 'POST', undefined, {
             Authorization: `Basic ${btoa(`${username}:${password}`)}`
         }).then(response => {
@@ -185,7 +191,9 @@ const commands = {
                     username
                 })
             );
-            cy.disableGettingStarted();
+            if (mockDisabledGettingStarted) {
+                cy.mockDisabledGettingStarted();
+            }
         });
         cy.visit('/console').waitUntilLoaded();
     },
@@ -284,12 +292,16 @@ const commands = {
             }
         });
     },
-    refreshPage: () => {
-        cy.disableGettingStarted();
+    refreshPage: (mockDisabledGettingStarted = true) => {
+        if (mockDisabledGettingStarted) {
+            cy.mockDisabledGettingStarted();
+        }
         cy.get('.pageMenuItem.active').click({ force: true });
     },
-    refreshTemplate: () => {
-        cy.disableGettingStarted();
+    refreshTemplate: (mockDisabledGettingStarted = true) => {
+        if (mockDisabledGettingStarted) {
+            cy.mockDisabledGettingStarted();
+        }
         cy.get('.tenantsMenu').click({ force: true });
         cy.contains('.text', 'default_tenant').click({ force: true });
     },
@@ -327,7 +339,7 @@ const commands = {
             .then(commandResult => commandResult.stdout);
     },
 
-    disableGettingStarted: () => {
+    mockDisabledGettingStarted: () => {
         cy.interceptSp('GET', `/users/`, {
             body: { show_getting_started: false }
         });
