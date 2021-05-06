@@ -5,6 +5,13 @@ export interface WorkflowOptions {
     scheduledTime: any;
 }
 
+const defaultWorkflowOptions: WorkflowOptions = {
+    force: false,
+    dryRun: false,
+    queue: false,
+    scheduledTime: null
+};
+
 export default class DeploymentActions {
     constructor(private toolbox: Stage.Types.Toolbox) {}
 
@@ -40,7 +47,12 @@ export default class DeploymentActions {
         deploymentId: string,
         workflowId: string,
         workflowParameters: any,
-        { force = false, dryRun = false, queue = false, scheduledTime }: WorkflowOptions
+        {
+            force = defaultWorkflowOptions.force,
+            dryRun = defaultWorkflowOptions.dryRun,
+            queue = defaultWorkflowOptions.queue,
+            scheduledTime
+        }: WorkflowOptions = defaultWorkflowOptions
     ) {
         return this.toolbox.getManager().doPost('/executions', null, {
             deployment_id: deploymentId,
