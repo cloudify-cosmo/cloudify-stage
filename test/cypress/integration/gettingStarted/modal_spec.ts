@@ -972,4 +972,53 @@ describe('Getting started modal', () => {
 
         cy.get('.modal .header').contains('Summary');
     });
+
+    it('should diplay information about not available plugins', () => {
+        cy.interceptSp('GET', /^\/users\/\w+/, req => {
+            req.reply({
+                show_getting_started: true
+            });
+        });
+
+        cy.intercept(
+            'GET',
+            '/console/external/content?url=http%3A%2F%2Frepository.cloudifysource.org%2Fcloudify%2Fwagons%2Fplugins.json',
+            req => {
+                req.reply([]);
+            }
+        );
+
+        // mocks listing: current plugins, secrets and blueprints
+
+        cy.interceptSp('GET', '/plugins?_include=distribution,package_name,package_version,visibility', req => {
+            req.reply({ metadata: { pagination: { total: 0, size: 1000, offset: 0 }, filtered: null }, items: [] });
+        });
+
+        cy.interceptSp('GET', '/secrets?_include=key,visibility', req => {
+            req.reply({ metadata: { pagination: { total: 0, size: 1000, offset: 0 }, filtered: null }, items: [] });
+        });
+
+        cy.interceptSp(
+            'GET',
+            '/blueprints?_include=id%2Cdescription%2Cmain_file_name%2Ctenant_name%2Ccreated_at%2Cupdated_at%2Ccreated_by%2Cprivate_resource%2Cvisibility',
+            req => {
+                req.reply({ metadata: { pagination: { total: 0, size: 1000, offset: 0 }, filtered: null }, items: [] });
+            }
+        );
+
+        const gotoNextStep = () => cy.get('.modal button').contains('Next').click();
+
+        cy.get('.modal button').contains('AWS').click();
+        cy.get('.modal button').contains('Next').click();
+
+        cy.get('.modal .header').contains('AWS Secrets');
+        cy.get('.modal [name="aws_access_key_id"]').type('some_aws_access_key_id');
+        cy.get('.modal [name="aws_secret_access_key"]').type('some_aws_secret_access_key');
+        gotoNextStep();
+
+        cy.get('.modal .header').contains('Summary');
+        cy.get('.modal .item').contains(/cloudify-aws-plugin.*plugin is not found in catalog and manager/);
+        cy.get('.modal .item').contains(/cloudify-utilities-plugin.*plugin is not found in catalog and manager/);
+        cy.get('.modal .item').contains(/cloudify-kubernetes-plugin.*plugin is not found in catalog and manager/);
+    });
 });
