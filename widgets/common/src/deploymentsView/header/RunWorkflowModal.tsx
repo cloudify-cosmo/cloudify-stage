@@ -114,6 +114,7 @@ const RunWorkflowModal: FunctionComponent<RunWorkflowModalProps> = ({ filterRule
                                 help={modalT('inputs.workflowId.help')}
                             >
                                 <Dropdown
+                                    search
                                     selection
                                     options={workflowsOptions}
                                     onChange={(_event, { value }) => setWorkflowId(value as string)}
