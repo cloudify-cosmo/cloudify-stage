@@ -49,7 +49,7 @@ const RunWorkflowModal: FunctionComponent<RunWorkflowModalProps> = ({ filterRule
 
     const [executionGroupStarted, setExecutionGroupStarted, unsetExecutionGroupStarted] = useBoolean();
     const { errors, setErrors, clearErrors, setMessageAsError } = useErrors();
-    const [workflowId, setWorkflowId, resetWorkflowId] = useResettableState<string>('');
+    const [workflowId, setWorkflowId, resetWorkflowId] = useResettableState('');
     const [workflows, setWorkflows, resetWorkflows] = useResettableState<Workflow[]>([]);
     const [loadingMessage, setLoadingMessage, turnOffLoading] = useResettableState('');
     const workflowsOptions = useMemo(() => getWorkflowsOptions(workflows), [workflows]);
