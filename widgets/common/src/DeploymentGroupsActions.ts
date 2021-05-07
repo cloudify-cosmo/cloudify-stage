@@ -1,6 +1,10 @@
+import { FilterRule } from './filters/types';
+
 type CreateDeploymentGroupData = {
     // eslint-disable-next-line camelcase
     filter_id?: string;
+    // eslint-disable-next-line camelcase
+    filter_rules?: FilterRule[];
     // eslint-disable-next-line camelcase
     deployment_ids?: string[];
     // eslint-disable-next-line camelcase

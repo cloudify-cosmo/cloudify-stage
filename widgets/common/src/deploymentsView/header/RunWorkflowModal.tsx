@@ -74,30 +74,23 @@ const RunWorkflowModal: FunctionComponent<RunWorkflowModalProps> = ({ filterRule
             return;
         }
 
-        setLoadingMessage(modalT('messages.listingDeployments'));
+        setLoadingMessage(modalT('messages.creatingDeploymentGroup'));
+
+        const deploymentGroupsActions = new Stage.Common.DeploymentGroupsActions(toolbox);
+        const groupId = `BATCH_ACTION_${new Date().toISOString()}`;
 
         // TODO: Add error handling
-        searchActions
-            .doListDeployments(filterRules, { _include: 'id' })
-            .then((deployments: Stage.Types.PaginatedResponse<{ id: string }>) => {
-                setLoadingMessage(modalT('messages.creatingDeploymentGroup'));
+        deploymentGroupsActions.doCreate(groupId, { filter_rules: filterRules }).then(_deploymentGroup => {
+            setLoadingMessage(modalT('messages.startingExecutionGroup'));
+            const executionGroupsActions = new Stage.Common.ExecutionGroupsActions(toolbox);
 
-                const deploymentGroupsActions = new Stage.Common.DeploymentGroupsActions(toolbox);
-                const groupId = `BATCH_ACTION_${new Date().toISOString()}`;
-                const deploymentIds: string[] = deployments.items.map(deployment => deployment.id);
-
-                deploymentGroupsActions.doCreate(groupId, { deployment_ids: deploymentIds }).then(_deploymentGroup => {
-                    setLoadingMessage(modalT('messages.startingExecutionGroup'));
-                    const executionGroupsActions = new Stage.Common.ExecutionGroupsActions(toolbox);
-
-                    return executionGroupsActions.doStart(workflowId!, groupId).then(_executionGroup => {
-                        toolbox.getEventBus().trigger('deployments:refresh');
-                        toolbox.getEventBus().trigger('executions:refresh');
-                        resetLoadingMessage();
-                        setExecutionGroupStarted();
-                    });
-                });
+            return executionGroupsActions.doStart(workflowId!, groupId).then(_executionGroup => {
+                toolbox.getEventBus().trigger('deployments:refresh');
+                toolbox.getEventBus().trigger('executions:refresh');
+                resetLoadingMessage();
+                setExecutionGroupStarted();
             });
+        });
     }
 
     function goToExecutionsPage() {
