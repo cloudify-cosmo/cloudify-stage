@@ -47,9 +47,9 @@
   "dependencies": {
     "better-console": "^0.2.4",
     "blueimp-md5": "^2.7.0",
-    "cloudify-blueprint-topology": "^2.4.3",
-    "cloudify-ui-common": "^3.2.0",
-    "cloudify-ui-components": "^2.4.4",
+    "cloudify-blueprint-topology": "^2.4.4",
+    "cloudify-ui-common": "^3.2.1",
+    "cloudify-ui-components": "^2.4.5",
     "connected-react-router": "^6.5.2",
     "d3": "^3.5.17",
     "d3-format": "^1.3.2",
