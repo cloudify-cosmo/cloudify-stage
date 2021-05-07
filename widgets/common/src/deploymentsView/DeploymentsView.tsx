@@ -149,7 +149,6 @@ export const DeploymentsView: FunctionComponent<DeploymentsViewProps> = ({
                     mapOpen={mapOpen}
                     toggleMap={toggleMap}
                     toolbox={toolbox}
-                    filterRules={finalFilterRules}
                     onFilterChange={setUserFilterId}
                     filterRules={finalFilterRules}
                 />

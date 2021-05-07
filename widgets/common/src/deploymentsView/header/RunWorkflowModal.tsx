@@ -85,7 +85,7 @@ const RunWorkflowModal: FunctionComponent<RunWorkflowModalProps> = ({ filterRule
             setLoadingMessage(modalT('messages.startingExecutionGroup'));
             const executionGroupsActions = new Stage.Common.ExecutionGroupsActions(toolbox);
 
-            return executionGroupsActions.doStart(workflowId!, groupId).then(_executionGroup => {
+            return executionGroupsActions.doStart(workflowId, groupId).then(_executionGroup => {
                 toolbox.getEventBus().trigger('deployments:refresh');
                 toolbox.getEventBus().trigger('executions:refresh');
                 resetLoadingMessage();
