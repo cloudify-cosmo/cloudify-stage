@@ -2,6 +2,7 @@ import type { FunctionComponent } from 'react';
 import { useEffect, useMemo } from 'react';
 import { i18nPrefix } from '../common';
 import { FilterRule } from '../../filters/types';
+import GoToExecutionsPageButton from './GoToExecutionsPageButton';
 
 interface RunWorkflowModalProps {
     filterRules: FilterRule[];
@@ -93,10 +94,6 @@ const RunWorkflowModal: FunctionComponent<RunWorkflowModalProps> = ({ filterRule
         });
     }
 
-    function goToExecutionsPage() {
-        toolbox.goToPage('executions', {});
-    }
-
     return (
         <Modal open onClose={onHide}>
             <Modal.Header>
@@ -131,11 +128,7 @@ const RunWorkflowModal: FunctionComponent<RunWorkflowModalProps> = ({ filterRule
                 {executionGroupStarted ? (
                     <>
                         <CancelButton onClick={onHide} content={modalT('buttons.close')} />
-                        <ApproveButton
-                            onClick={goToExecutionsPage}
-                            color="green"
-                            content={modalT('buttons.goToExecutionsPage')}
-                        />
+                        <GoToExecutionsPageButton toolbox={toolbox} />
                     </>
                 ) : (
                     <>

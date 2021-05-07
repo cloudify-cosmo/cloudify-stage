@@ -677,8 +677,7 @@
                             },
                             "buttons": {
                                 "run": "Run",
-                                "close": "Close",
-                                "goToExecutionsPage": "Go to Executions page"
+                                "close": "Close"
                             },
                             "messages": {
                                 "limitations": "The workflow will run with default parameters and without any special workflow flags such as 'Force', 'Dry run' or 'Queue'.",
@@ -692,6 +691,9 @@
                                 "workflowsFetchFailed": "Error occurred when fetching workflows"
                             }
                         }
+                    },
+                    "common": {
+                        "goToExecutionsPageButton": "Go to Executions page"
                     }
                 }
             },
