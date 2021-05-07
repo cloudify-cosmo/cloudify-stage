@@ -3,6 +3,7 @@ import { useEffect, useMemo } from 'react';
 import { i18nPrefix } from '../common';
 import { FilterRule } from '../../filters/types';
 import GoToExecutionsPageButton from './GoToExecutionsPageButton';
+import { getGroupIdForBatchAction } from './common';
 
 interface RunWorkflowModalProps {
     filterRules: FilterRule[];
@@ -50,7 +51,7 @@ const RunWorkflowModal: FunctionComponent<RunWorkflowModalProps> = ({ filterRule
     const { errors, setErrors, clearErrors, setMessageAsError } = useErrors();
     const [workflowId, setWorkflowId, resetWorkflowId] = useResettableState<string>('');
     const [workflows, setWorkflows, resetWorkflows] = useResettableState<Workflow[]>([]);
-    const [loadingMessage, setLoadingMessage, resetLoadingMessage] = useResettableState('');
+    const [loadingMessage, setLoadingMessage, turnOffLoading] = useResettableState('');
     const workflowsOptions = useMemo(() => getWorkflowsOptions(workflows), [workflows]);
 
     const searchActions = new Stage.Common.SearchActions(toolbox);
@@ -66,32 +67,33 @@ const RunWorkflowModal: FunctionComponent<RunWorkflowModalProps> = ({ filterRule
             .doListWorkflows(filterRules)
             .then((data: WorkflowsResponse) => setWorkflows(data.items))
             .catch(setMessageAsError)
-            .finally(resetLoadingMessage);
+            .finally(turnOffLoading);
     }, []);
 
-    function runWorkflow() {
+    async function runWorkflow() {
         if (!workflowId) {
             setErrors({ error: modalT('errors.noWorkflowError') });
             return;
         }
 
-        setLoadingMessage(modalT('messages.creatingDeploymentGroup'));
+        try {
+            setLoadingMessage(modalT('messages.creatingDeploymentGroup'));
+            const groupId = getGroupIdForBatchAction();
+            const deploymentGroupsActions = new Stage.Common.DeploymentGroupsActions(toolbox);
+            await deploymentGroupsActions.doCreate(groupId, { filter_rules: filterRules });
 
-        const deploymentGroupsActions = new Stage.Common.DeploymentGroupsActions(toolbox);
-        const groupId = `BATCH_ACTION_${new Date().toISOString()}`;
-
-        // TODO: Add error handling
-        deploymentGroupsActions.doCreate(groupId, { filter_rules: filterRules }).then(_deploymentGroup => {
             setLoadingMessage(modalT('messages.startingExecutionGroup'));
             const executionGroupsActions = new Stage.Common.ExecutionGroupsActions(toolbox);
+            await executionGroupsActions.doStart(workflowId, groupId);
 
-            return executionGroupsActions.doStart(workflowId, groupId).then(_executionGroup => {
-                toolbox.getEventBus().trigger('deployments:refresh');
-                toolbox.getEventBus().trigger('executions:refresh');
-                resetLoadingMessage();
-                setExecutionGroupStarted();
-            });
-        });
+            toolbox.getEventBus().trigger('deployments:refresh');
+            toolbox.getEventBus().trigger('executions:refresh');
+            setExecutionGroupStarted();
+        } catch (error) {
+            setMessageAsError(error);
+        }
+
+        turnOffLoading();
     }
 
     return (
