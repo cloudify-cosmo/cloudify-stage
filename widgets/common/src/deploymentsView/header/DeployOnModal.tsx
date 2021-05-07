@@ -5,6 +5,7 @@ import { DeploymentsResponse } from '../types';
 import { BlueprintDeployParams } from '../../BlueprintActions';
 import { i18nPrefix } from '../common';
 import ExecutionGroupsActions from '../../ExecutionGroupsActions';
+import DeploymentActions from '../../DeploymentActions';
 
 interface DeployOnModalProps {
     filterRules: FilterRule[];
@@ -31,19 +32,26 @@ const DeployOnModal: FunctionComponent<DeployOnModalProps> = ({ filterRules, too
                 {
                     blueprint_id: deploymentParameters.blueprintId,
                     default_inputs: deploymentParameters.inputs,
-                    labels: deploymentParameters.labels,
+                    labels: DeploymentActions.toManagerLabels(deploymentParameters.labels),
                     visibility: deploymentParameters.visibility,
                     new_deployments: environments.map(environmentId => ({
                         id: `${environmentId}-${deploymentParameters.blueprintId}-{uuid}`,
-                        labels: [{ 'csys-obj-parent': environmentId }]
+                        labels: [{ 'csys-obj-parent': environmentId }],
+                        site_name: deploymentParameters.siteName,
+                        runtime_only_evaluation: deploymentParameters.runtimeOnlyEvaluation,
+                        skip_plugins_validation: deploymentParameters.skipPluginsValidation
                     }))
                 }
             )
             .then((response: { id: string }) => response.id);
     }
 
-    function startInstallWorkflow(deploymentGroupId: string) {
-        return new ExecutionGroupsActions(toolbox).doStart('install', deploymentGroupId);
+    function startInstallWorkflow(
+        deploymentGroupId: string,
+        _deploymentParameters: BlueprintDeployParams,
+        installWorkflowParameters: Record<string, any>
+    ) {
+        return new ExecutionGroupsActions(toolbox).doStart('install', deploymentGroupId, installWorkflowParameters);
     }
 
     function finalize() {
