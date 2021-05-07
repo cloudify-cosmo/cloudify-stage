@@ -11,9 +11,9 @@ export interface BlueprintDeployParams {
     inputs: Record<string, any>;
     visibility: string;
     labels: Stage.Common.Labels.Label[];
-    skipPluginsValidation: boolean;
+    skipPluginsValidation?: boolean;
     siteName?: string;
-    runtimeOnlyEvaluation: boolean;
+    runtimeOnlyEvaluation?: boolean;
 }
 
 export default class BlueprintActions {

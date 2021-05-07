@@ -106,9 +106,6 @@ function UpdateDeploymentModal({ open, deploymentId, onHide, toolbox }) {
             validationErrors.blueprintName = 'Please select blueprint';
         }
 
-        const inputsWithoutValue = {};
-        InputsUtils.addErrors(inputsWithoutValue, validationErrors);
-
         if (!_.isEmpty(validationErrors)) {
             setErrors(validationErrors);
             unsetLoading();
@@ -121,7 +118,7 @@ function UpdateDeploymentModal({ open, deploymentId, onHide, toolbox }) {
             .doUpdate(
                 deployment.id,
                 blueprint.id,
-                InputsUtils.getInputsToSend(inputsPlanForUpdate, deploymentInputs, inputsWithoutValue),
+                InputsUtils.getInputsMap(inputsPlanForUpdate, deploymentInputs),
                 installWorkflow,
                 uninstallWorkflow,
                 installWorkflowFirst,

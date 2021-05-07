@@ -99,12 +99,7 @@ export default function ExecuteDeploymentModal({
             return false;
         }
 
-        const inputsWithoutValue = {};
-        const workflowParameters = InputsUtils.getInputsToSend(
-            baseWorkflowParams,
-            userWorkflowParams,
-            inputsWithoutValue
-        );
+        const inputsWithoutValue = InputsUtils.getInputsWithoutValues(baseWorkflowParams, userWorkflowParams);
         InputsUtils.addErrors(inputsWithoutValue, validationErrors);
 
         if (schedule) {
@@ -123,6 +118,8 @@ export default function ExecuteDeploymentModal({
             setErrors(validationErrors);
             return false;
         }
+
+        const workflowParameters = InputsUtils.getInputsMap(baseWorkflowParams, userWorkflowParams);
 
         if (_.isFunction(onExecute) && onExecute !== _.noop) {
             onExecute(workflowParameters, {

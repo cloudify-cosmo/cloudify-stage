@@ -4,6 +4,7 @@ import { FilterRule } from '../../filters/types';
 import { DeploymentsResponse } from '../types';
 import { BlueprintDeployParams } from '../../BlueprintActions';
 import { i18nPrefix } from '../common';
+import ExecutionGroupsActions from '../../ExecutionGroupsActions';
 
 interface DeployOnModalProps {
     filterRules: FilterRule[];
@@ -21,7 +22,7 @@ const DeployOnModal: FunctionComponent<DeployOnModalProps> = ({ filterRules, too
             .then((response: DeploymentsResponse) => response.items.map(item => item.id));
     }
 
-    function createDeploymentGroup(environements: string[], deploymentParameters: BlueprintDeployParams) {
+    function createDeploymentGroup(environments: string[], deploymentParameters: BlueprintDeployParams) {
         return toolbox
             .getManager()
             .doPut(
@@ -32,7 +33,7 @@ const DeployOnModal: FunctionComponent<DeployOnModalProps> = ({ filterRules, too
                     default_inputs: deploymentParameters.inputs,
                     labels: deploymentParameters.labels,
                     visibility: deploymentParameters.visibility,
-                    new_deployments: environements.map(environmentId => ({
+                    new_deployments: environments.map(environmentId => ({
                         id: `${environmentId}-${deploymentParameters.blueprintId}-{uuid}`,
                         labels: [{ 'csys-obj-parent': environmentId }]
                     }))
@@ -42,18 +43,11 @@ const DeployOnModal: FunctionComponent<DeployOnModalProps> = ({ filterRules, too
     }
 
     function startInstallWorkflow(deploymentGroupId: string) {
-        return toolbox.getManager().doPost(
-            '/execution-groups',
-            {},
-            {
-                deployment_group_id: deploymentGroupId,
-                workflow_id: 'install'
-            }
-        );
+        return new ExecutionGroupsActions(toolbox).doStart('install', deploymentGroupId);
     }
 
     function finalize() {
-        toolbox.getEventBus().trigger('deployments:refresh');
+        toolbox.getEventBus().trigger('deployments:refresh').trigger('executions:refresh');
         onHide();
     }
 
@@ -62,7 +56,7 @@ const DeployOnModal: FunctionComponent<DeployOnModalProps> = ({ filterRules, too
             toolbox={toolbox}
             open
             onHide={onHide}
-            i18nHeaderKey="widgets.deploymentsView.header.bulkActions.deployOn.modal.header"
+            i18nHeaderKey={`${i18nPrefix}.header.bulkActions.deployOn.modal.header`}
             deployValidationMessage={headerT('bulkActions.deployOn.modal.steps.validatingData')}
             deployAndInstallSteps={[
                 {
