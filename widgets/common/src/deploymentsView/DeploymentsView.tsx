@@ -151,6 +151,7 @@ export const DeploymentsView: FunctionComponent<DeploymentsViewProps> = ({
                     toolbox={toolbox}
                     filterRules={finalFilterRules}
                     onFilterChange={setUserFilterId}
+                    filterRules={finalFilterRules}
                 />
             </DeploymentsViewHeaderContainer>
 
