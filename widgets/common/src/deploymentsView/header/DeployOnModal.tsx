@@ -62,7 +62,7 @@ const DeployOnModal: FunctionComponent<DeployOnModalProps> = ({ filterRules, too
             toolbox={toolbox}
             open
             onHide={onHide}
-            i18nHeaderKey="widgets.deploymentsView.header.bulkActions.deployOn.modal.header"
+            i18nHeaderKey={`${i18nPrefix}.header.bulkActions.deployOn.modal.header`}
             deployValidationMessage={headerT('bulkActions.deployOn.modal.steps.validatingData')}
             deployAndInstallSteps={[
                 {
