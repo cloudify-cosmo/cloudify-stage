@@ -1021,4 +1021,67 @@ describe('Getting started modal', () => {
         cy.get('.modal .item').contains(/cloudify-utilities-plugin.*plugin is not found in catalog and manager/);
         cy.get('.modal .item').contains(/cloudify-kubernetes-plugin.*plugin is not found in catalog and manager/);
     });
+
+    it('should keep button and field states for navigating beetwen steps', () => {
+        cy.interceptSp('GET', /^\/users\/\w+/, req => {
+            req.reply({
+                show_getting_started: true
+            });
+        });
+
+        cy.intercept(
+            'GET',
+            '/console/external/content?url=http%3A%2F%2Frepository.cloudifysource.org%2Fcloudify%2Fwagons%2Fplugins.json',
+            req => {
+                req.reply([]);
+            }
+        );
+
+        const gotoBackStep = () => cy.get('.modal button').contains('Back').click();
+        const gotoNextStep = () => cy.get('.modal button').contains('Next').click();
+
+        cy.get('.modal button').contains('AWS').click();
+        cy.get('.modal button.active').contains('AWS');
+        gotoNextStep();
+
+        cy.get('.modal .header').contains('AWS Secrets');
+        cy.get('.modal [name="aws_access_key_id"]').type('some_aws_access_key_id');
+        cy.get('.modal [name="aws_secret_access_key"]').type('some_aws_secret_access_key');
+        gotoBackStep();
+
+        cy.get('.modal .header').contains('Getting Started');
+        cy.get('.modal button').contains('GCP').click();
+        cy.get('.modal button.active').contains('AWS');
+        cy.get('.modal button.active').contains('GCP');
+        gotoNextStep();
+
+        cy.get('.modal .header').contains('AWS Secrets');
+        cy.get('.modal [name="aws_access_key_id"]').should('have.value', 'some_aws_access_key_id');
+        cy.get('.modal [name="aws_secret_access_key"]').should('have.value', 'some_aws_secret_access_key');
+        gotoNextStep();
+
+        cy.get('.modal .header').contains('GCP Secrets');
+        cy.get('.modal [name="gpc_client_x509_cert_url"]').type('some_gpc_client_x509_cert_url');
+        cy.get('.modal [name="gpc_client_email"]').type('some_gpc_client_email');
+        cy.get('.modal [name="gpc_client_id"]').type('some_gpc_client_id');
+        cy.get('.modal [name="gpc_project_id"]').type('some_gpc_project_id');
+        cy.get('.modal [name="gpc_private_key_id"]').type('some_gpc_private_key_id');
+        cy.get('.modal [name="gpc_private_key"]').type('some_gpc_private_key');
+        cy.get('.modal [name="gpc_zone"]').type('some_gpc_zone');
+        gotoBackStep();
+
+        cy.get('.modal .header').contains('AWS Secrets');
+        cy.get('.modal [name="aws_access_key_id"]').should('have.value', 'some_aws_access_key_id');
+        cy.get('.modal [name="aws_secret_access_key"]').should('have.value', 'some_aws_secret_access_key');
+        gotoNextStep();
+
+        cy.get('.modal .header').contains('GCP Secrets');
+        cy.get('.modal [name="gpc_client_x509_cert_url"]').should('have.value', 'some_gpc_client_x509_cert_url');
+        cy.get('.modal [name="gpc_client_email"]').should('have.value', 'some_gpc_client_email');
+        cy.get('.modal [name="gpc_client_id"]').should('have.value', 'some_gpc_client_id');
+        cy.get('.modal [name="gpc_project_id"]').should('have.value', 'some_gpc_project_id');
+        cy.get('.modal [name="gpc_private_key_id"]').should('have.value', 'some_gpc_private_key_id');
+        cy.get('.modal [name="gpc_private_key"]').should('have.value', 'some_gpc_private_key');
+        cy.get('.modal [name="gpc_zone"]').should('have.value', 'some_gpc_zone');
+    });
 });
