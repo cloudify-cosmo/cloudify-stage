@@ -1,14 +1,16 @@
+import GenericDeployModal from './GenericDeployModal';
+
 function UpdateDeploymentModal({ open, deploymentId, onHide, toolbox }) {
     const { useEffect } = React;
     const { useInputs, useOpenProp, useBoolean, useErrors, useResettableState } = Stage.Hooks;
-    const { DeployBlueprintModal, DeploymentActions, InputsUtils } = Stage.Common;
+    const { DeploymentActions, InputsUtils } = Stage.Common;
 
     const [isLoading, setLoading, unsetLoading] = useBoolean();
     const [isFileLoading, setFileLoading, unsetFileLoading] = useBoolean();
     const [isPreviewShown, showPreview, hidePreview] = useBoolean();
     const { errors, setErrors, clearErrors, setMessageAsError } = useErrors();
 
-    const [blueprint, setBlueprint, resetBlueprint] = useResettableState(DeployBlueprintModal.EMPTY_BLUEPRINT);
+    const [blueprint, setBlueprint, resetBlueprint] = useResettableState(GenericDeployModal.EMPTY_BLUEPRINT);
     const [previewData, setPreviewData, resetPreviewData] = useResettableState({});
 
     const [deployment, setDeployment, resetDeployment] = useResettableState({});
@@ -29,7 +31,7 @@ function UpdateDeploymentModal({ open, deploymentId, onHide, toolbox }) {
 
             const actions = new Stage.Common.BlueprintActions(toolbox);
             actions
-                .doGetFullBlueprintData({ id })
+                .doGetFullBlueprintData(id)
                 .then(fetchedBlueprint => {
                     const newDeploymentInputs = {};
                     const currentDeploymentInputs = deployment.inputs;
@@ -104,9 +106,6 @@ function UpdateDeploymentModal({ open, deploymentId, onHide, toolbox }) {
             validationErrors.blueprintName = 'Please select blueprint';
         }
 
-        const inputsWithoutValue = {};
-        InputsUtils.addErrors(inputsWithoutValue, validationErrors);
-
         if (!_.isEmpty(validationErrors)) {
             setErrors(validationErrors);
             unsetLoading();
@@ -119,7 +118,7 @@ function UpdateDeploymentModal({ open, deploymentId, onHide, toolbox }) {
             .doUpdate(
                 deployment.id,
                 blueprint.id,
-                InputsUtils.getInputsToSend(inputsPlanForUpdate, deploymentInputs, inputsWithoutValue),
+                InputsUtils.getInputsMap(inputsPlanForUpdate, deploymentInputs),
                 installWorkflow,
                 uninstallWorkflow,
                 installWorkflowFirst,

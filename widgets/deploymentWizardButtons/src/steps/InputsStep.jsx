@@ -57,13 +57,8 @@ function InputsStepActions({
         return onLoading()
             .then(fetchData)
             .then(({ stepData }) => {
-                const inputsWithoutValues = {};
                 const blueprintInputsPlan = _.get(wizardData, inputsDataPath, {});
-                const deploymentInputs = InputsUtils.getInputsToSend(
-                    blueprintInputsPlan,
-                    stepData,
-                    inputsWithoutValues
-                );
+                const inputsWithoutValues = InputsUtils.getInputsWithoutValues(blueprintInputsPlan, stepData);
 
                 if (!_.isEmpty(inputsWithoutValues)) {
                     return Promise.reject({
@@ -71,6 +66,8 @@ function InputsStepActions({
                         errors: inputsWithoutValues
                     });
                 }
+
+                const deploymentInputs = InputsUtils.getInputsMap(blueprintInputsPlan, stepData);
                 return onNext(stepId, { inputs: { ...deploymentInputs } });
             })
             .catch(error => onError(stepId, error.message, error.errors));

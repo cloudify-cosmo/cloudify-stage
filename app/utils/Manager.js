@@ -65,11 +65,14 @@ export default class Manager extends Internal {
         return StageUtils.Url.url(`/sp?su=${urlInServer}`);
     }
 
-    doGetFull(url, params = {}, parseResponse = true, fullData = { items: [] }, size = 0) {
-        params._size = 1000;
-        params._offset = size;
+    doFetchFull(fetcher, params = {}, fullData = { items: [] }, size = 0) {
+        const fetchParams = {
+            ...params,
+            _size: 1000,
+            _offset: size
+        };
 
-        const pr = this.doGet(url, params, parseResponse);
+        const pr = fetcher(fetchParams);
 
         return pr.then(data => {
             const cumulativeSize = size + data.items.length;
@@ -78,9 +81,17 @@ export default class Manager extends Internal {
             fullData.items = _.concat(fullData.items, data.items);
 
             if (totalSize > cumulativeSize) {
-                return this.doGetFull(url, params, parseResponse, fullData, cumulativeSize);
+                return this.doFetchFull(fetcher, fetchParams, fullData, cumulativeSize);
             }
             return fullData;
         });
+    }
+
+    doPostFull(url, params, requestBody) {
+        return this.doFetchFull(currentParams => this.doPost(url, currentParams, requestBody), params);
+    }
+
+    doGetFull(url, params) {
+        return this.doFetchFull(currentParams => this.doGet(url, currentParams), params);
     }
 }

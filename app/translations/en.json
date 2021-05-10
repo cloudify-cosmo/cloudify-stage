@@ -446,6 +446,7 @@
                     "updateButton": "Update"
                 },
                 "deployModal": {
+                    "header": "Deploy blueprint {{blueprintId}}",
                     "inputs": {
                         "deploymentName": {
                             "label": "Deployment name",
@@ -658,8 +659,47 @@
                 },
                 "bulkActions": {
                     "button": "Bulk Actions",
-                    "menu": {
-                        "deployOn": "Deploy On"
+                    "deployOn": {
+                        "title": "Deploy On",
+                        "modal": {
+                            "header": "Deploy on",
+                            "steps": {
+                                "validatingData": "1/4: Validating data...",
+                                "fetchingEnvironments": "2/4: Fetching environments list...",
+                                "creatingDeployments": "3/4: Creating deployments...",
+                                "installingDeployments": "4/4: Installing deployments..."
+                            }
+                        }
+                    },
+                    "runWorkflow": {
+                        "title": "Run Workflow",
+                        "modal": {
+                            "header": "Run workflow on filtered deployments",
+                            "inputs": {
+                                "workflowId": {
+                                    "label": "Workflow",
+                                    "help": "Name of the workflow to be started on the filtered deployments. Only workflows without mandatory parameters are listed."
+                                }
+                            },
+                            "buttons": {
+                                "run": "Run",
+                                "close": "Close"
+                            },
+                            "messages": {
+                                "limitations": "The workflow will run with default parameters and without any special workflow flags such as 'Force', 'Dry run' or 'Queue'.",
+                                "executionGroupStarted": "Workflow has been started.",
+                                "fetchingWorkflows": "Fetching workflows...",
+                                "creatingDeploymentGroup": "1/2: Creating deployment group...",
+                                "startingExecutionGroup": "2/2: Starting execution group..."
+                            },
+                            "errors": {
+                                "noWorkflowError": "Please select a workflow",
+                                "workflowsFetchFailed": "Error occurred when fetching workflows"
+                            }
+                        }
+                    },
+                    "common": {
+                        "goToExecutionsPageButton": "Go to Executions page"
                     }
                 }
             },

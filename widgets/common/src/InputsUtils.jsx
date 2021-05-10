@@ -454,7 +454,7 @@ class InputsUtils {
         return newPlan;
     }
 
-    static getInputsToSend(inputs, inputsValues, inputsWithoutValues) {
+    static getInputsMap(inputs, inputsValues) {
         const { Json } = Stage.Utils;
         const deploymentInputs = {};
 
@@ -462,9 +462,8 @@ class InputsUtils {
             const stringInputValue = Json.getStringValue(inputsValues[inputName]);
             let typedInputValue = Json.getTypedValue(inputsValues[inputName]);
 
-            if (_.isEmpty(stringInputValue) && _.isUndefined(inputObj.default)) {
-                inputsWithoutValues[inputName] = true;
-            } else if (
+            if (
+                (!_.isEmpty(stringInputValue) || !_.isUndefined(inputObj.default)) &&
                 _.startsWith(stringInputValue, InputsUtils.STRING_VALUE_SURROUND_CHAR) &&
                 _.endsWith(stringInputValue, InputsUtils.STRING_VALUE_SURROUND_CHAR) &&
                 _.size(stringInputValue) > 1
@@ -478,6 +477,21 @@ class InputsUtils {
         });
 
         return deploymentInputs;
+    }
+
+    static getInputsWithoutValues(inputs, inputsValues) {
+        const { Json } = Stage.Utils;
+        const inputsWithoutValues = {};
+
+        _.forEach(inputs, (inputObj, inputName) => {
+            const stringInputValue = Json.getStringValue(inputsValues[inputName]);
+
+            if (_.isEmpty(stringInputValue) && _.isUndefined(inputObj.default)) {
+                inputsWithoutValues[inputName] = true;
+            }
+        });
+
+        return inputsWithoutValues;
     }
 
     static addErrors(inputsWithoutValues, errors) {

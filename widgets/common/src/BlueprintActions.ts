@@ -1,6 +1,20 @@
-/**
- * Created by kinneretzin on 29/11/2016.
- */
+// eslint-disable-next-line max-classes-per-file
+class BlueprintUploadError extends Error {
+    constructor(message: string, public state: string) {
+        super(message);
+    }
+}
+
+export interface BlueprintDeployParams {
+    blueprintId: string;
+    deploymentId: string;
+    inputs: Record<string, any>;
+    visibility: string;
+    labels: Stage.Common.Labels.Label[];
+    skipPluginsValidation?: boolean;
+    siteName?: string;
+    runtimeOnlyEvaluation?: boolean;
+}
 
 export default class BlueprintActions {
     static InProgressBlueprintStates = {
@@ -19,19 +33,17 @@ export default class BlueprintActions {
         Invalid: 'invalid'
     };
 
-    static isUploaded(blueprint) {
+    static isUploaded(blueprint: { state: string }) {
         return blueprint.state === BlueprintActions.CompletedBlueprintStates.Uploaded;
     }
 
-    static isCompleted(blueprint) {
+    static isCompleted(blueprint: { state: string }) {
         return Object.values(BlueprintActions.CompletedBlueprintStates).includes(blueprint.state);
     }
 
-    constructor(toolbox) {
-        this.toolbox = toolbox;
-    }
+    constructor(private toolbox: Stage.Types.Toolbox) {}
 
-    doEditInComposer(blueprintId, mainFileName) {
+    doEditInComposer(blueprintId: string, mainFileName: string) {
         window.open(
             `/composer/import/${this.toolbox.getManager().getSelectedTenant()}/${blueprintId}/${mainFileName}`,
             '_blank'
@@ -42,11 +54,11 @@ export default class BlueprintActions {
         return this.toolbox.getManager().doGet('/blueprints?_include=id', params);
     }
 
-    doGetFullBlueprintData(blueprint) {
-        return this.toolbox.getManager().doGet(`/blueprints/${blueprint.id}`);
+    doGetFullBlueprintData(blueprintId: string) {
+        return this.toolbox.getManager().doGet(`/blueprints/${blueprintId}`);
     }
 
-    doDelete(blueprintId, force = false) {
+    doDelete(blueprintId: string, force = false) {
         return this.toolbox
             .getManager()
             .doDelete(`/blueprints/${blueprintId}`, { force })
@@ -60,11 +72,11 @@ export default class BlueprintActions {
         visibility,
         labels = [],
         skipPluginsValidation = false,
-        siteName = null,
+        siteName,
         runtimeOnlyEvaluation = false
-    }) {
+    }: BlueprintDeployParams) {
         const { DeploymentActions } = Stage.Common;
-        const data = {
+        const data: Record<string, any> = {
             blueprint_id: blueprintId,
             inputs,
             visibility,
@@ -93,16 +105,16 @@ export default class BlueprintActions {
     }
 
     doUpload(
-        blueprintName,
-        blueprintYamlFile,
-        blueprintUrl,
-        file,
-        imageUrl,
-        image,
-        visibility,
+        blueprintName: string,
+        blueprintYamlFile: string,
+        blueprintUrl: string,
+        file: any,
+        imageUrl: string,
+        image: any,
+        visibility: string,
         onStateChanged = _.noop
     ) {
-        const params = { visibility, async_upload: true };
+        const params: Record<string, any> = { visibility, async_upload: true };
 
         if (!_.isEmpty(blueprintYamlFile)) {
             params.application_file_name = blueprintYamlFile;
@@ -127,7 +139,7 @@ export default class BlueprintActions {
             .then(() => this.doUploadImage(blueprintName, imageUrl, image));
     }
 
-    async waitUntilUploaded(blueprintName, onStateChanged) {
+    async waitUntilUploaded(blueprintName: string, onStateChanged: (state: string) => void) {
         const { PollHelper } = Stage.Common;
         const pollHelper = new PollHelper(60);
 
@@ -137,16 +149,14 @@ export default class BlueprintActions {
             await pollHelper.wait();
 
             // eslint-disable-next-line no-await-in-loop
-            const blueprint = await this.doGetFullBlueprintData({ id: blueprintName });
+            const blueprint = await this.doGetFullBlueprintData(blueprintName);
 
             if (BlueprintActions.isUploaded(blueprint)) {
                 return;
             }
 
             if (BlueprintActions.isCompleted(blueprint)) {
-                const error = new Error(blueprint.error);
-                error.state = blueprint.state;
-                throw error;
+                throw new BlueprintUploadError(blueprint.error, blueprint.state);
             }
 
             if (blueprint.state !== previousState) {
@@ -157,18 +167,18 @@ export default class BlueprintActions {
         }
     }
 
-    doSetVisibility(blueprintId, visibility) {
+    doSetVisibility(blueprintId: string, visibility: string) {
         return this.toolbox.getManager().doPatch(`/blueprints/${blueprintId}/set-visibility`, null, { visibility });
     }
 
-    doListYamlFiles(blueprintUrl, file = null, includeFilename = false) {
+    doListYamlFiles(blueprintUrl: string, file = null, includeFilename = false) {
         if (file) {
             return this.toolbox.getInternal().doUpload('/source/list/yaml', { includeFilename }, { archive: file });
         }
         return this.toolbox.getInternal().doPut('/source/list/yaml', { url: blueprintUrl, includeFilename });
     }
 
-    doUploadImage(blueprintId, imageUrl, image) {
+    doUploadImage(blueprintId: string, imageUrl: string, image: any) {
         if (_.isEmpty(imageUrl) && !image) {
             return Promise.resolve();
         }
@@ -180,8 +190,15 @@ export default class BlueprintActions {
         return this.toolbox.getInternal().doPost(`/ba/image/${blueprintId}`, params);
     }
 
-    doDeleteImage(blueprintId) {
+    doDeleteImage(blueprintId: string) {
         return this.toolbox.getInternal().doDelete(`/ba/image/${blueprintId}`);
+    }
+}
+
+declare global {
+    namespace Stage.Common {
+        // eslint-disable-next-line import/prefer-default-export
+        export { BlueprintActions };
     }
 }
 
