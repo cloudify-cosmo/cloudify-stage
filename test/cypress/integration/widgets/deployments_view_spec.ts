@@ -753,9 +753,9 @@ describe('Deployments View widget', () => {
         });
 
         it('should allow to run workflow on filtered deployments', () => {
-            cy.interceptSp('POST', /^\/searches\/workflows/).as('searchWorkflows');
-            cy.interceptSp('PUT', /^\/deployment-groups\/BATCH_ACTION_.*/).as('createDeploymentGroup');
-            cy.interceptSp('POST', /^\/execution-groups/).as('startExecutionGroup');
+            cy.interceptSp('POST', 'searches/workflows').as('searchWorkflows');
+            cy.interceptSp('PUT', 'deployment-groups/BATCH_ACTION_').as('createDeploymentGroup');
+            cy.interceptSp('POST', 'execution-groups').as('startExecutionGroup');
 
             useDeploymentsViewWidget();
             widgetHeader.setFilter(siteFilterName);
