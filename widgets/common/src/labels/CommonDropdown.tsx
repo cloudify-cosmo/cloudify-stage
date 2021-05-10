@@ -1,8 +1,39 @@
+import { ComponentProps, FunctionComponent, MutableRefObject } from 'react';
+import { Dropdown } from 'semantic-ui-react';
 import ValidationErrorPopup from './ValidationErrorPopup';
 
-export default function CommonDropdown({ innerRef, fetchUrl, onChange, toolbox, allowAdditions, value, ...rest }) {
+type CommonDropdownValue = string | string[];
+type CommonDropdownOnChange = ((value: string) => void) | ((value: string[]) => void);
+
+export interface KeyAndValueDropdownProps {
+    allowAdditions?: ComponentProps<typeof Dropdown>['allowAdditions'];
+    innerRef?: MutableRefObject<HTMLElement | undefined>;
+    onChange: CommonDropdownOnChange;
+    toolbox: Stage.Types.Toolbox;
+}
+
+interface CommonDropdownProps extends KeyAndValueDropdownProps {
+    additionLabel: ComponentProps<typeof Dropdown>['additionLabel'];
+    disabled?: ComponentProps<typeof Dropdown>['disabled'];
+    fetchUrl: string;
+    name: ComponentProps<typeof Dropdown>['name'];
+    multiple?: ComponentProps<typeof Dropdown>['multiple'];
+    noResultsMessage?: ComponentProps<typeof Dropdown>['noResultsMessage'];
+    placeholder: ComponentProps<typeof Dropdown>['placeholder'];
+    tabIndex: ComponentProps<typeof Dropdown>['tabIndex'];
+    value: CommonDropdownValue;
+}
+
+const CommonDropdown: FunctionComponent<CommonDropdownProps> = ({
+    allowAdditions = false,
+    innerRef = null,
+    onChange,
+    value = null,
+    ...rest
+}) => {
     const { useEffect } = React;
     const {
+        // @ts-ignore Property 'DynamicDropdown' does not exist on type 'typeof Common'
         Common: { DynamicDropdown },
         Hooks: { useLabelInput }
     } = Stage;
@@ -29,33 +60,17 @@ export default function CommonDropdown({ innerRef, fetchUrl, onChange, toolbox, 
                 allowAdditions={allowAdditions}
                 innerRef={innerRef}
                 clearable={false}
-                fetchUrl={fetchUrl}
-                itemsFormatter={items => _.map(items, item => ({ id: item }))}
+                itemsFormatter={(items: string[]) => _.map(items, item => ({ id: item }))}
                 onBlur={unsetInvalidCharacterTyped}
-                onChange={newValue => submitChange(null, { value: newValue })}
+                onChange={(newValue: CommonDropdownValue) => submitChange(null, { value: newValue })}
                 onSearchChange={allowAdditions ? undefined : submitChange}
                 searchQuery={allowAdditions ? undefined : inputValue}
                 selectOnNavigation={allowAdditions}
-                toolbox={toolbox}
                 value={allowAdditions ? value : undefined}
                 /* eslint-disable-next-line react/jsx-props-no-spreading */
                 {...rest}
             />
         </>
     );
-}
-
-CommonDropdown.propTypes = {
-    fetchUrl: PropTypes.string.isRequired,
-    innerRef: PropTypes.shape({ current: PropTypes.instanceOf(HTMLElement) }),
-    onChange: PropTypes.func.isRequired,
-    toolbox: Stage.PropTypes.Toolbox.isRequired,
-    allowAdditions: PropTypes.bool,
-    value: PropTypes.oneOfType([PropTypes.string, PropTypes.arrayOf(PropTypes.string)])
 };
-
-CommonDropdown.defaultProps = {
-    innerRef: null,
-    allowAdditions: false,
-    value: null
-};
+export default CommonDropdown;

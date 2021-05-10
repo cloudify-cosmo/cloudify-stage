@@ -1,10 +1,17 @@
-export default function LabelAddButton({ disabled, onClick, onEnterPress }) {
-    const {
-        Basic: { Button },
-        i18n
-    } = Stage;
+import type { ComponentProps, FunctionComponent } from 'react';
 
-    function handleKeyDown({ key }) {
+const { Button } = Stage.Basic;
+
+interface LabelAddButtonProps {
+    disabled: ComponentProps<typeof Button>['disabled'];
+    onClick: ComponentProps<typeof Button>['onClick'];
+    onEnterPress: () => void;
+}
+
+const LabelAddButton: FunctionComponent<LabelAddButtonProps> = ({ disabled, onClick, onEnterPress }) => {
+    const { i18n } = Stage;
+
+    function handleKeyDown({ key }: { key: string }) {
         if (key === 'Enter') onEnterPress();
     }
 
@@ -18,10 +25,5 @@ export default function LabelAddButton({ disabled, onClick, onEnterPress }) {
             fluid
         />
     );
-}
-
-LabelAddButton.propTypes = {
-    disabled: PropTypes.bool.isRequired,
-    onClick: PropTypes.func.isRequired,
-    onEnterPress: PropTypes.func.isRequired
 };
+export default LabelAddButton;

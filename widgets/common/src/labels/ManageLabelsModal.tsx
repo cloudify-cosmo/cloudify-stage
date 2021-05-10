@@ -1,6 +1,9 @@
-import LabelsModal from './LabelsModal';
+import { FunctionComponent } from 'react';
+import LabelsModal, { LabelsModalProps } from './LabelsModal';
 
-export default function ManageLabelsModal(props) {
+type ManageLabelsModalProps = Omit<LabelsModalProps, 'i18nHeaderKey' | 'i18nApplyKey'>;
+
+const ManageLabelsModal: FunctionComponent<ManageLabelsModalProps> = props => {
     return (
         <LabelsModal
             i18nHeaderKey="widgets.common.labels.modalHeader"
@@ -9,4 +12,5 @@ export default function ManageLabelsModal(props) {
             {...props}
         />
     );
-}
+};
+export default ManageLabelsModal;

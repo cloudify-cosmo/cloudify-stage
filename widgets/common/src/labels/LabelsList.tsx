@@ -1,11 +1,18 @@
+import { FunctionComponent } from 'react';
+import type { Label } from './types';
 import { sortLabels } from './common';
 
 const newLabelColor = 'blue';
 const labelLinesVisibleWithoutScroll = 6;
 const maxListHeight = `${labelLinesVisibleWithoutScroll * 2 + 0.2}em`;
 
-export default function LabelsList({ labels, onChange }) {
-    const { Label, Icon } = Stage.Basic;
+interface LabelsListProps {
+    labels: Label[];
+    onChange: (labels: Label[]) => void;
+}
+
+const LabelsList: FunctionComponent<LabelsListProps> = ({ labels = [], onChange }) => {
+    const { Label: LabelComponent, Icon } = Stage.Basic;
     const sortedLabels = sortLabels(labels);
 
     return (
@@ -21,7 +28,7 @@ export default function LabelsList({ labels, onChange }) {
         >
             {sortedLabels.map(({ key, value, isInSystem = true }) => {
                 return (
-                    <Label
+                    <LabelComponent
                         key={`${key}:${value}`}
                         as="a"
                         color={isInSystem ? undefined : newLabelColor}
@@ -32,18 +39,10 @@ export default function LabelsList({ labels, onChange }) {
                             name="delete"
                             onClick={() => onChange(_.differenceBy(labels, [{ key, value }], { key, value }))}
                         />
-                    </Label>
+                    </LabelComponent>
                 );
             })}
         </div>
     );
-}
-
-LabelsList.propTypes = {
-    labels: Stage.PropTypes.Labels,
-    onChange: PropTypes.func.isRequired
 };
-
-LabelsList.defaultProps = {
-    labels: []
-};
+export default LabelsList;

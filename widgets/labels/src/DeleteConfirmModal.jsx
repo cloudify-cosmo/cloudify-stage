@@ -31,10 +31,13 @@ export default function DeleteConfirmModal({ deploymentId, labels, labelToDelete
     );
 }
 
+const LabelPropType = PropTypes.shape({ key: PropTypes.string, value: PropTypes.string, isInSystem: PropTypes.bool });
+const LabelsPropType = PropTypes.arrayOf(LabelPropType);
+
 DeleteConfirmModal.propTypes = {
     deploymentId: PropTypes.string.isRequired,
-    labels: Stage.PropTypes.Labels.isRequired,
-    labelToDelete: Stage.PropTypes.Label,
+    labels: LabelsPropType.isRequired,
+    labelToDelete: LabelPropType,
     onHide: PropTypes.func.isRequired,
     toolbox: Stage.PropTypes.Toolbox.isRequired
 };
