@@ -75,8 +75,9 @@ export const DeploymentsView: FunctionComponent<DeploymentsViewProps> = ({
         return [...filterRules, ...additionalFilterRules, filteringByParentDeploymentResult.parentDeploymentRule];
     }, [filterRules, filteringByParentDeploymentResult.parentDeploymentRule, additionalFilterRules]);
 
+    const deploymentsUrl = '/searches/deployments';
     const deploymentsResult = useQuery(
-        ['deployments', gridParams, finalFilterRules],
+        [deploymentsUrl, gridParams, finalFilterRules],
         (): Promise<Stage.Common.DeploymentsView.Types.DeploymentsResponse> =>
             searchActions.doListDeployments(finalFilterRules, gridParams),
         {
