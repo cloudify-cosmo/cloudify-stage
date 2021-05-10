@@ -91,7 +91,7 @@ export default function ExecuteDeploymentModal({
                         setWorkflowParams(selectedWorkflow);
                     } else {
                         setErrors(
-                            t('workflowError', {
+                            t('errors.workflowError', {
                                 deploymentId,
                                 workflowName
                             })
@@ -116,7 +116,7 @@ export default function ExecuteDeploymentModal({
 
         const name = getWorkflowName(workflow);
         if (!name) {
-            setErrors(t('missingWorkflow'));
+            setErrors(t('errors.missingWorkflow'));
             return false;
         }
 
@@ -130,7 +130,7 @@ export default function ExecuteDeploymentModal({
                 !_.isEqual(scheduledTimeMoment.format('YYYY-MM-DD HH:mm'), scheduledTime) ||
                 scheduledTimeMoment.isBefore(moment())
             ) {
-                validationErrors.scheduledTime = t('scheduleTimeError');
+                validationErrors.scheduledTime = t('errors.scheduleTimeError');
             }
         }
 
@@ -158,7 +158,7 @@ export default function ExecuteDeploymentModal({
         }
 
         if (_.isEmpty(deploymentsList)) {
-            setErrors(t('missingDeployment'));
+            setErrors(t('errors.missingDeployment'));
             return false;
         }
 
@@ -211,7 +211,9 @@ export default function ExecuteDeploymentModal({
                 clearErrors();
                 setUserWorkflowParams(InputsUtils.getUpdatedInputs(baseWorkflowParams, userWorkflowParams, yamlInputs));
             })
-            .catch(err => setErrors({ yamlFile: t('yamlFileError', { message: _.isString(err) ? err : err.message }) }))
+            .catch(err =>
+                setErrors({ yamlFile: t('errors.yamlFileError', { message: _.isString(err) ? err : err.message }) })
+            )
             .finally(unsetFileLoading);
     }
 
