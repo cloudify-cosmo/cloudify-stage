@@ -8,6 +8,25 @@ function getWorkflowName(workflow) {
 
 const t = Stage.Utils.getT('widgets.common.deployments.executeModal');
 
+function renderActionCheckbox(name, checked, onChange) {
+    const { Checkbox } = Stage.Basic.Form;
+    return (
+        <Checkbox
+            name={name}
+            toggle
+            label={t(`actions.${name}.label`)}
+            help={t(`actions.${name}.help`)}
+            checked={checked}
+            onChange={onChange}
+        />
+    );
+}
+
+function renderActionField(name, checked, onChange) {
+    const { Field } = Stage.Basic.Form;
+    return <Field>{renderActionCheckbox(name, checked, onChange)}</Field>;
+}
+
 export default function ExecuteDeploymentModal({
     deploymentId,
     deployments,
@@ -19,7 +38,6 @@ export default function ExecuteDeploymentModal({
     open
 }) {
     const {
-        i18n,
         Hooks: { useErrors, useBoolean, useOpenProp, useInput, useResettableState }
     } = Stage;
     const { useEffect } = React;
@@ -215,23 +233,6 @@ export default function ExecuteDeploymentModal({
         headerKey += 'noDeployment';
     }
 
-    function renderActionCheckbox(name, checked, onChange) {
-        return (
-            <Form.Checkbox
-                name={name}
-                toggle
-                label={t(`actions.${name}.label`)}
-                help={t(`actions.${name}.help`)}
-                checked={checked}
-                onChange={onChange}
-            />
-        );
-    }
-
-    function renderActionField(name, checked, onChange) {
-        return <Form.Field>{renderActionCheckbox(name, checked, onChange)}</Form.Field>;
-    }
-
     return (
         <Modal open={open} onClose={onHide} className="executeWorkflowModal">
             <Modal.Header>
@@ -275,16 +276,18 @@ export default function ExecuteDeploymentModal({
                                 {renderActionCheckbox('schedule', schedule, (event, field) =>
                                     setSchedule(field.checked)
                                 )}
-                                {schedule && <Divider hidden />}
                                 {schedule && (
-                                    <DateInput
-                                        name="scheduledTime"
-                                        value={scheduledTime}
-                                        defaultValue=""
-                                        minDate={moment()}
-                                        maxDate={moment().add(1, 'Y')}
-                                        onChange={(event, field) => setScheduledTime(field.value)}
-                                    />
+                                    <>
+                                        <Divider hidden />
+                                        <DateInput
+                                            name="scheduledTime"
+                                            value={scheduledTime}
+                                            defaultValue=""
+                                            minDate={moment()}
+                                            maxDate={moment().add(1, 'Y')}
+                                            onChange={(event, field) => setScheduledTime(field.value)}
+                                        />
+                                    </>
                                 )}
                             </Form.Field>
                         </>
