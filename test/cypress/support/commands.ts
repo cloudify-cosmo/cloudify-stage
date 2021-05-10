@@ -339,6 +339,12 @@ const commands = {
             .then(commandResult => commandResult.stdout);
     },
 
+    mockEnabledGettingStarted: () => {
+        cy.interceptSp('GET', `/users/`, {
+            body: { show_getting_started: true }
+        });
+    },
+
     mockDisabledGettingStarted: () => {
         cy.interceptSp('GET', `/users/`, {
             body: { show_getting_started: false }
