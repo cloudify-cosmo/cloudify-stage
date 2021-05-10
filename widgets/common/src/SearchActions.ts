@@ -1,21 +1,29 @@
 import { FilterRule } from './filters/types';
 
 type ResourceName = 'blueprints' | 'deployments' | 'workflows';
-type Params = Record<string, any> | null;
+type Params = Record<string, any>;
 
 export default class SearchActions {
     constructor(private toolbox: Stage.Types.Toolbox) {}
 
-    private doList(resourceName: ResourceName, filterRules: FilterRule[], params: Params = null) {
+    private doList(resourceName: ResourceName, filterRules: FilterRule[], params?: Params) {
+        return this.toolbox.getManager().doPost(`/searches/${resourceName}`, params, { filter_rules: filterRules });
+    }
+
+    private doListAll(resourceName: ResourceName, filterRules: FilterRule[], params?: Params) {
         return this.toolbox.getManager().doPostFull(`/searches/${resourceName}`, params, { filter_rules: filterRules });
     }
 
-    doListDeployments(filterRules: FilterRule[], params: Params = null) {
+    doListDeployments(filterRules: FilterRule[], params?: Params) {
         return this.doList('deployments', filterRules, params);
     }
 
-    doListWorkflows(filterRules: FilterRule[], params: Params = null) {
-        return this.doList('workflows', filterRules, params);
+    doListAllDeployments(filterRules: FilterRule[], params?: Params) {
+        return this.doListAll('deployments', filterRules, params);
+    }
+
+    doListAllWorkflows(filterRules: FilterRule[], params?: Params) {
+        return this.doListAll('workflows', filterRules, params);
     }
 }
 

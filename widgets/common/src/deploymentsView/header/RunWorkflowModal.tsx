@@ -64,7 +64,7 @@ const RunWorkflowModal: FunctionComponent<RunWorkflowModalProps> = ({ filterRule
         setLoadingMessage(modalT('messages.fetchingWorkflows'));
 
         searchActions
-            .doListWorkflows(filterRules)
+            .doListAllWorkflows(filterRules)
             .then((data: WorkflowsResponse) => setWorkflows(data.items))
             .catch(setMessageAsError)
             .finally(turnOffLoading);

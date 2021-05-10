@@ -21,7 +21,7 @@ const headerT = (suffix: string) => Stage.i18n.t(`${i18nPrefix}.header.${suffix}
 const DeployOnModal: FunctionComponent<DeployOnModalProps> = ({ filterRules, toolbox, onHide }) => {
     function fetchEnvironments() {
         return new SearchActions(toolbox)
-            .doListDeployments(filterRules, { _include: 'id' })
+            .doListAllDeployments(filterRules, { _include: 'id' })
             .then((response: DeploymentsResponse) => response.items.map(item => item.id));
     }
 
