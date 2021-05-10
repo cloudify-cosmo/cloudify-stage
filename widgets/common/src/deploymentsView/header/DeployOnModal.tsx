@@ -4,7 +4,11 @@ import { FilterRule } from '../../filters/types';
 import { DeploymentsResponse } from '../types';
 import { BlueprintDeployParams } from '../../BlueprintActions';
 import { i18nPrefix } from '../common';
+import { getGroupIdForBatchAction } from './common';
 import ExecutionGroupsActions from '../../ExecutionGroupsActions';
+import DeploymentGroupsActions from '../../DeploymentGroupsActions';
+import SearchActions from '../../SearchActions';
+import DeploymentActions from '../../DeploymentActions';
 
 interface DeployOnModalProps {
     filterRules: FilterRule[];
@@ -16,34 +20,29 @@ const headerT = (suffix: string) => Stage.i18n.t(`${i18nPrefix}.header.${suffix}
 
 const DeployOnModal: FunctionComponent<DeployOnModalProps> = ({ filterRules, toolbox, onHide }) => {
     function fetchEnvironments() {
-        return toolbox
-            .getManager()
-            .doPostFull('/searches/deployments', { _include: 'id' }, { filter_rules: filterRules })
+        return new SearchActions(toolbox)
+            .doListDeployments(filterRules, { _include: 'id' })
             .then((response: DeploymentsResponse) => response.items.map(item => item.id));
     }
 
     function createDeploymentGroup(environments: string[], deploymentParameters: BlueprintDeployParams) {
-        return toolbox
-            .getManager()
-            .doPut(
-                `/deployment-groups/BATCH_ACTION_${moment().format('YYYY-MM-DD-HH-mm-ss-SS')}`,
-                {},
-                {
-                    blueprint_id: deploymentParameters.blueprintId,
-                    default_inputs: deploymentParameters.inputs,
-                    labels: deploymentParameters.labels,
-                    visibility: deploymentParameters.visibility,
-                    new_deployments: environments.map(environmentId => ({
-                        id: `${environmentId}-${deploymentParameters.blueprintId}-{uuid}`,
-                        labels: [{ 'csys-obj-parent': environmentId }]
-                    }))
-                }
-            )
+        const groupId = getGroupIdForBatchAction();
+        return new DeploymentGroupsActions(toolbox)
+            .doCreateNewDeployments(groupId, {
+                blueprint_id: deploymentParameters.blueprintId,
+                default_inputs: deploymentParameters.inputs,
+                labels: DeploymentActions.toManagerLabels(deploymentParameters.labels),
+                visibility: deploymentParameters.visibility,
+                new_deployments: environments.map(environmentId => ({
+                    id: `${environmentId}-${deploymentParameters.blueprintId}-{uuid}`,
+                    labels: [{ 'csys-obj-parent': environmentId }]
+                }))
+            })
             .then((response: { id: string }) => response.id);
     }
 
     function startInstallWorkflow(deploymentGroupId: string) {
-        return new ExecutionGroupsActions(toolbox).doStart('install', deploymentGroupId);
+        return new ExecutionGroupsActions(toolbox).doStart(deploymentGroupId, 'install');
     }
 
     function finalize() {

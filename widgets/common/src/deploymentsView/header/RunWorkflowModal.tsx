@@ -80,14 +80,13 @@ const RunWorkflowModal: FunctionComponent<RunWorkflowModalProps> = ({ filterRule
             setLoadingMessage(modalT('messages.creatingDeploymentGroup'));
             const groupId = getGroupIdForBatchAction();
             const deploymentGroupsActions = new Stage.Common.DeploymentGroupsActions(toolbox);
-            await deploymentGroupsActions.doCreate(groupId, { filter_rules: filterRules });
+            await deploymentGroupsActions.doCreateGroup(groupId, { filter_rules: filterRules });
 
             setLoadingMessage(modalT('messages.startingExecutionGroup'));
             const executionGroupsActions = new Stage.Common.ExecutionGroupsActions(toolbox);
-            await executionGroupsActions.doStart(workflowId, groupId);
+            await executionGroupsActions.doStart(groupId, workflowId);
 
-            toolbox.getEventBus().trigger('deployments:refresh');
-            toolbox.getEventBus().trigger('executions:refresh');
+            toolbox.getEventBus().trigger('deployments:refresh').trigger('executions:refresh');
             setExecutionGroupStarted();
         } catch (error) {
             setMessageAsError(error);

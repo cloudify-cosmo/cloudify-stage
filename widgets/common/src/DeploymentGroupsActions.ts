@@ -1,20 +1,36 @@
 import { FilterRule } from './filters/types';
 
-type CreateDeploymentGroupData = {
-    // eslint-disable-next-line camelcase
-    filter_id?: string;
-    // eslint-disable-next-line camelcase
-    filter_rules?: FilterRule[];
-    // eslint-disable-next-line camelcase
-    deployment_ids?: string[];
-    // eslint-disable-next-line camelcase
-    deployments_from_group?: string;
+type NewDeploymentsData = {
+    id: string;
+    labels: Record<string, string>[];
 };
+
+/* eslint-disable camelcase */
+interface CreateDeploymentGroupData {
+    filter_id?: string;
+    filter_rules?: FilterRule[];
+    deployment_ids?: string[];
+    deployments_from_group?: string;
+}
+
+interface CreateNewDeploymentsData {
+    new_deployments: NewDeploymentsData[];
+
+    blueprint_id?: string;
+    default_inputs?: Record<string, any>;
+    visibility?: string;
+    labels?: Record<string, string>[];
+}
+/* eslint-enable camelcase */
 
 export default class DeploymentGroupsActions {
     constructor(private toolbox: Stage.Types.Toolbox) {}
 
-    doCreate(id: string, data: CreateDeploymentGroupData) {
+    doCreateGroup(id: string, data: CreateDeploymentGroupData) {
+        return this.toolbox.getManager().doPut(`/deployment-groups/${id}`, null, data);
+    }
+
+    doCreateNewDeployments(id: string, data: CreateNewDeploymentsData) {
         return this.toolbox.getManager().doPut(`/deployment-groups/${id}`, null, data);
     }
 }
