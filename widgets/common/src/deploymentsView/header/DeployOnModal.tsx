@@ -28,7 +28,7 @@ const DeployOnModal: FunctionComponent<DeployOnModalProps> = ({ filterRules, too
     function createDeploymentGroup(environments: string[], deploymentParameters: BlueprintDeployParams) {
         const groupId = getGroupIdForBatchAction();
         return new DeploymentGroupsActions(toolbox)
-            .doCreateNewDeployments(groupId, {
+            .doCreate(groupId, {
                 blueprint_id: deploymentParameters.blueprintId,
                 default_inputs: deploymentParameters.inputs,
                 labels: DeploymentActions.toManagerLabels(deploymentParameters.labels),

@@ -26,11 +26,7 @@ interface CreateNewDeploymentsData {
 export default class DeploymentGroupsActions {
     constructor(private toolbox: Stage.Types.Toolbox) {}
 
-    doCreateGroup(id: string, data: CreateDeploymentGroupData) {
-        return this.toolbox.getManager().doPut(`/deployment-groups/${id}`, null, data);
-    }
-
-    doCreateNewDeployments(id: string, data: CreateNewDeploymentsData) {
+    doCreate(id: string, data: CreateDeploymentGroupData | CreateNewDeploymentsData) {
         return this.toolbox.getManager().doPut(`/deployment-groups/${id}`, null, data);
     }
 }
