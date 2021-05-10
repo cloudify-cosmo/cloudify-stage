@@ -66,10 +66,13 @@ export default class Manager extends Internal {
     }
 
     doFetchFull(fetcher, params = {}, fullData = { items: [] }, size = 0) {
-        params._size = 1000;
-        params._offset = size;
+        const fetchParams = {
+            ...params,
+            _size: 1000,
+            _offset: size
+        };
 
-        const pr = fetcher(params);
+        const pr = fetcher(fetchParams);
 
         return pr.then(data => {
             const cumulativeSize = size + data.items.length;
@@ -78,7 +81,7 @@ export default class Manager extends Internal {
             fullData.items = _.concat(fullData.items, data.items);
 
             if (totalSize > cumulativeSize) {
-                return this.doFetchFull(fetcher, params, fullData, cumulativeSize);
+                return this.doFetchFull(fetcher, fetchParams, fullData, cumulativeSize);
             }
             return fullData;
         });
