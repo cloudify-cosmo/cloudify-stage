@@ -35,14 +35,21 @@ const DeployOnModal: FunctionComponent<DeployOnModalProps> = ({ filterRules, too
                 visibility: deploymentParameters.visibility,
                 new_deployments: environments.map(environmentId => ({
                     id: `${environmentId}-${deploymentParameters.blueprintId}-{uuid}`,
-                    labels: [{ 'csys-obj-parent': environmentId }]
+                    labels: [{ 'csys-obj-parent': environmentId }],
+                    site_name: deploymentParameters.siteName,
+                    runtime_only_evaluation: deploymentParameters.runtimeOnlyEvaluation,
+                    skip_plugins_validation: deploymentParameters.skipPluginsValidation
                 }))
             })
             .then((response: { id: string }) => response.id);
     }
 
-    function startInstallWorkflow(deploymentGroupId: string) {
-        return new ExecutionGroupsActions(toolbox).doStart(deploymentGroupId, 'install');
+    function startInstallWorkflow(
+        deploymentGroupId: string,
+        _deploymentParameters: BlueprintDeployParams,
+        installWorkflowParameters: Record<string, any>
+    ) {
+        return new ExecutionGroupsActions(toolbox).doStart(deploymentGroupId, 'install', installWorkflowParameters);
     }
 
     function finalize() {
