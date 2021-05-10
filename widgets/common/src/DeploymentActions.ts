@@ -39,7 +39,7 @@ export default class DeploymentActions {
     doExecute(
         deploymentId: string,
         workflowId: string,
-        workflowParameters: any = {},
+        workflowParameters: Record<string, any> = {},
         { force, dryRun, queue, scheduledTime }: WorkflowOptions = {
             force: false,
             dryRun: false,

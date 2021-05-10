@@ -255,7 +255,15 @@ class GenericDeployModal extends React.Component {
             ExecuteDeploymentModal,
             Labels: { Input: LabelsInput }
         } = Stage.Common;
-        const { onHide, open, toolbox, i18nHeaderKey, showDeploymentNameInput, showDeployButton } = this.props;
+        const {
+            onHide,
+            open,
+            toolbox,
+            i18nHeaderKey,
+            showInstallOptions,
+            showDeploymentNameInput,
+            showDeployButton
+        } = this.props;
         const {
             blueprint,
             deploymentInputs,
@@ -404,6 +412,7 @@ class GenericDeployModal extends React.Component {
                         onExecute={this.onDeployAndInstall}
                         onHide={this.hideInstallModal}
                         toolbox={toolbox}
+                        hideOptions={!showInstallOptions}
                     />
                 </Modal.Content>
 
@@ -480,6 +489,11 @@ GenericDeployModal.propTypes = {
     showDeployButton: PropTypes.bool,
 
     /**
+     * Whether to show install workflow options (force, dry run, queue, schedule)
+     */
+    showInstallOptions: PropTypes.bool,
+
+    /**
      * Steps to be executed on 'Deploy' button press, needs to be specified only when `showDeployButton` is enabled
      */
     deploySteps: StepsPropType,
@@ -506,6 +520,7 @@ GenericDeployModal.defaultProps = {
     onHide: _.noop,
     showDeploymentNameInput: false,
     showDeployButton: false,
+    showInstallOptions: false,
     deploySteps: null,
     deployValidationMessage: null
 };
