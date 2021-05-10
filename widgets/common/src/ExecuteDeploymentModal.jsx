@@ -262,10 +262,19 @@ export default function ExecuteDeploymentModal({
 
                             {renderActionField('force', force, (event, field) => setForce(field.checked))}
                             {renderActionField('dryRun', dryRun, (event, field) => setDryRun(field.checked))}
-                            {renderActionField('queue', queue, (event, field) => setSchedule(field.checked))}
+                            {renderActionField('queue', queue, (event, field) => {
+                                setQueue(field.checked);
+                                clearForce();
+                                clearDryRun();
+                                clearSchedule();
+                                clearScheduleTime();
+                                clearErrors();
+                            })}
 
                             <Form.Field error={!!errors.scheduledTime}>
-                                {renderActionCheckbox('schedule', schedule, (event, field) => setForce(field.checked))}
+                                {renderActionCheckbox('schedule', schedule, (event, field) =>
+                                    setSchedule(field.checked)
+                                )}
                                 {schedule && <Divider hidden />}
                                 {schedule && (
                                     <DateInput
