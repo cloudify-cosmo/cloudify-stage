@@ -77,11 +77,7 @@ const DeploymentsViewHeader: FunctionComponent<DeploymentsViewHeaderProps> = ({
                 {/* Display the menu above all leaflet components, see https://leafletjs.com/reference-1.7.1.html#map-pane */}
                 <Menu style={{ zIndex: 1000 }}>
                     <Item text={headerT('bulkActions.deployOn.title')} onClick={openDeployOnModal} />
-                    <Item
-                        text={headerT('bulkActions.runWorkflow.title')}
-                        disabled={!filterId}
-                        onClick={openRunWorkflowModal}
-                    />
+                    <Item text={headerT('bulkActions.runWorkflow.title')} onClick={openRunWorkflowModal} />
                 </Menu>
             </Dropdown>
 
@@ -98,7 +94,7 @@ const DeploymentsViewHeader: FunctionComponent<DeploymentsViewHeaderProps> = ({
             )}
 
             {runWorkflowModalOpen && (
-                <RunWorkflowModal filterId={filterId} onHide={closeRunWorkflowModal} toolbox={toolbox} />
+                <RunWorkflowModal filterRules={filterRules} onHide={closeRunWorkflowModal} toolbox={toolbox} />
             )}
         </>
     );
