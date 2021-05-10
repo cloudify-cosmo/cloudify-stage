@@ -39,8 +39,13 @@ export default class DeploymentActions {
     doExecute(
         deploymentId: string,
         workflowId: string,
-        workflowParameters: any,
-        { force = false, dryRun = false, queue = false, scheduledTime }: WorkflowOptions
+        workflowParameters: any = {},
+        { force, dryRun, queue, scheduledTime }: WorkflowOptions = {
+            force: false,
+            dryRun: false,
+            queue: false,
+            scheduledTime: undefined
+        }
     ) {
         return this.toolbox.getManager().doPost('/executions', null, {
             deployment_id: deploymentId,
