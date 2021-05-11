@@ -108,6 +108,10 @@ describe('Deployments View widget', () => {
         openRunWorkflowModal: () => {
             cy.contains('Bulk Actions').click();
             cy.contains('Run Workflow').click();
+        },
+        openDeployOnModal: () => {
+            cy.contains('Bulk Actions').click();
+            cy.contains('Deploy On').click();
         }
     };
 
@@ -772,6 +776,59 @@ describe('Deployments View widget', () => {
                     .should('include.members', [deploymentName, secondDeploymentWithExampleSiteName]);
                 cy.wait('@startExecutionGroup').its('response.body.workflow_id').should('be.equal', 'restart');
             });
+
+            cy.contains('.modal', 'Group execution started').within(() => {
+                cy.contains('Go to Executions page');
+                cy.contains('Close').click();
+            });
+        });
+
+        it('should allow to create child deployments on filtered deployments', () => {
+            cy.interceptSp('POST', '/searches/deployments').as('searchDeployments');
+            cy.interceptSp('PUT', '/deployment-groups/BATCH_ACTION_').as('createDeploymentGroup');
+            cy.interceptSp('POST', '/execution-groups').as('startExecutionGroup');
+
+            useDeploymentsViewWidget({ configurationOverrides: { filterId: siteFilterName } });
+            widgetHeader.openDeployOnModal();
+
+            const labelKey = 'label_key';
+            const labelValue = 'label_value';
+            cy.get('.modal').within(() => {
+                cy.contains('.field', 'Blueprint').find('input').type(`${blueprintName}{enter}`);
+
+                cy.contains('.field', 'Labels').find('.selection').click();
+                cy.get('div[name=labelKey] > input').type(labelKey);
+                cy.get('div[name=labelValue] > input').type(labelValue);
+                cy.get('.add').click();
+                cy.get('a.label').should('be.visible');
+
+                cy.contains('Deploy & Install').click();
+            });
+
+            cy.contains('.modal button', 'Execute').click();
+
+            cy.wait('@searchDeployments');
+            cy.wait('@createDeploymentGroup').then(({ request }) => {
+                expect(request.body.blueprint_id).to.eq(blueprintName);
+                expect(request.body.labels).to.deep.equal([{ [labelKey]: labelValue }]);
+                expect(request.body.new_deployments).to.deep.equal([
+                    {
+                        id: '{uuid}',
+                        display_name: '{blueprint_id}-{uuid}',
+                        labels: [{ 'csys-obj-parent': deploymentName }],
+                        runtime_only_evaluation: false,
+                        skip_plugins_validation: false
+                    },
+                    {
+                        id: '{uuid}',
+                        display_name: '{blueprint_id}-{uuid}',
+                        labels: [{ 'csys-obj-parent': secondDeploymentWithExampleSiteName }],
+                        runtime_only_evaluation: false,
+                        skip_plugins_validation: false
+                    }
+                ]);
+            });
+            cy.wait('@startExecutionGroup').its('response.body.workflow_id').should('be.equal', 'install');
 
             cy.contains('.modal', 'Group execution started').within(() => {
                 cy.contains('Go to Executions page');
