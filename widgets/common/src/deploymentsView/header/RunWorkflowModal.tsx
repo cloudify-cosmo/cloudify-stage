@@ -96,7 +96,7 @@ const RunWorkflowModal: FunctionComponent<RunWorkflowModalProps> = ({ filterRule
     }
 
     return executionGroupStarted ? (
-        <ExecutionStartedModal toolbox={toolbox} onCancel={onHide} />
+        <ExecutionStartedModal toolbox={toolbox} onClose={onHide} />
     ) : (
         <Modal open onClose={onHide}>
             <Modal.Header>

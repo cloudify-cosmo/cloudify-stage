@@ -3,7 +3,7 @@ import GenericDeployModal from '../../GenericDeployModal';
 import { FilterRule } from '../../filters/types';
 import { DeploymentsResponse } from '../types';
 import { BlueprintDeployParams } from '../../BlueprintActions';
-import { i18nPrefix } from '../common';
+import { i18nPrefix, parentDeploymentLabelKey } from '../common';
 import { getGroupIdForBatchAction } from './common';
 import ExecutionGroupsActions from '../../ExecutionGroupsActions';
 import DeploymentGroupsActions from '../../DeploymentGroupsActions';
@@ -39,7 +39,7 @@ const DeployOnModal: FunctionComponent<DeployOnModalProps> = ({ filterRules, too
                 new_deployments: environments.map(environmentId => ({
                     id: '{uuid}',
                     display_name: `${deploymentParameters.blueprintId}-${Stage.Utils.uuid()}`,
-                    labels: [{ 'csys-obj-parent': environmentId }],
+                    labels: [{ [parentDeploymentLabelKey]: environmentId }],
                     runtime_only_evaluation: deploymentParameters.runtimeOnlyEvaluation,
                     skip_plugins_validation: deploymentParameters.skipPluginsValidation
                 }))
@@ -55,13 +55,13 @@ const DeployOnModal: FunctionComponent<DeployOnModalProps> = ({ filterRules, too
         return new ExecutionGroupsActions(toolbox).doStart(deploymentGroupId, 'install', installWorkflowParameters);
     }
 
-    function cancel() {
+    function closeModal() {
         toolbox.getEventBus().trigger('deployments:refresh').trigger('executions:refresh');
         onHide();
     }
 
     return executionStarted ? (
-        <ExecutionStartedModal toolbox={toolbox} onCancel={cancel} />
+        <ExecutionStartedModal toolbox={toolbox} onClose={closeModal} />
     ) : (
         <GenericDeployModal
             toolbox={toolbox}
