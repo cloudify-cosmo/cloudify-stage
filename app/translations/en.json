@@ -479,6 +479,10 @@
                 "deployModal": {
                     "header": "Deploy blueprint {{blueprintId}}",
                     "inputs": {
+                        "deploymentId": {
+                            "label": "Deployment ID",
+                            "help": "Specify an ID for this deployment instance."
+                        },
                         "deploymentName": {
                             "label": "Deployment name",
                             "help": "Specify a name for this deployment instance."
@@ -531,8 +535,9 @@
                         "loadingYamlFileFailed": "Loading values from YAML file failed: {{ reason }}",
                         "noBlueprintName": "Please select blueprint from the list",
                         "noDeploymentName": "Please provide deployment name",
-                        "deploymentCreationFailed": "Deployment {{ deploymentId }} environment creation failed. {{ error }}",
-                        "deploymentInstallationFailed": "Deployment {{ deploymentId }} installation failed: {{ error }}"
+                        "noDeploymentId": "Please provide deployment ID",
+                        "deploymentCreationFailed": "Deployment {{ deploymentName }} environment creation failed. {{ error }}",
+                        "deploymentInstallationFailed": "Deployment {{ deploymentName }} installation failed: {{ error }}"
                     }
                 }
             },

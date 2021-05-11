@@ -23,18 +23,18 @@ const DeployBlueprintModal: FunctionComponent<DeployBlueprintModalProps> = ({ to
             .catch((err: { message: string }) => Promise.reject(InputsUtils.getErrorObject(err.message)));
     }
 
-    function waitForDeploymentIsCreated(deploymentId: string) {
+    function waitForDeploymentIsCreated(deploymentId: string, { displayName: deploymentName }: BlueprintDeployParams) {
         const deploymentActions = new DeploymentActions(toolbox);
 
         return deploymentActions
             .waitUntilCreated(deploymentId)
             .then(() => deploymentId)
-            .catch(error => Promise.reject(t('errors.deploymentCreationFailed', { deploymentId, error })));
+            .catch(error => Promise.reject(t('errors.deploymentCreationFailed', { deploymentName, error })));
     }
 
     function installDeployment(
         deploymentId: string,
-        _deploymentParameters: BlueprintDeployParams,
+        { displayName: deploymentName }: BlueprintDeployParams,
         installWorkflowParameters: Record<string, any>,
         installWorkflowOptions: WorkflowOptions
     ) {
@@ -46,7 +46,7 @@ const DeployBlueprintModal: FunctionComponent<DeployBlueprintModalProps> = ({ to
             .catch(error =>
                 Promise.reject({
                     errors: t('errors.deploymentInstallationFailed', {
-                        deploymentId,
+                        deploymentName,
                         error: error.message
                     })
                 })
