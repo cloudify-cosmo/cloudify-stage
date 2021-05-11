@@ -9,6 +9,8 @@ export const subservicesIcon: SemanticICONS = 'cube';
 
 export const filterRulesContextKey = 'filterRules';
 
+export const parentDeploymentLabelKey = 'csys-obj-parent';
+
 /**
  * NOTE: drilldownContext contains contexts for each page, starting with
  * the top-level page, and ending with the current page's initial context.

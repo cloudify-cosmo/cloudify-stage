@@ -2,7 +2,7 @@ import React, { FunctionComponent, useMemo, useState } from 'react';
 import { find } from 'lodash';
 import { useQuery } from 'react-query';
 
-import { getParentPageContext, i18nMessagesPrefix, isTopLevelPage } from './common';
+import { getParentPageContext, i18nMessagesPrefix, isTopLevelPage, parentDeploymentLabelKey } from './common';
 import type { SharedDeploymentsViewWidgetConfiguration } from './configuration';
 import DetailsPane from './detailsPane';
 import { DeploymentsTable } from './table';
@@ -204,7 +204,7 @@ const useFilteringByParentDeployment = ({ filterByParentDeployment }: { filterBy
         filterable: true,
         parentDeploymentRule: {
             type: FilterRuleType.Label,
-            key: 'csys-obj-parent',
+            key: parentDeploymentLabelKey,
             operator: FilterRuleOperators.AnyOf,
             values: [parentDeploymentId]
         } as Stage.Common.Filters.Rule

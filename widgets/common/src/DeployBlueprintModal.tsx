@@ -78,6 +78,7 @@ const DeployBlueprintModal: FunctionComponent<DeployBlueprintModalProps> = ({ to
             showDeploymentNameInput
             showDeployButton
             showInstallOptions
+            showSitesInput
             deployValidationMessage={t('steps.deploy.validatingData')}
             deploySteps={[
                 { message: t('steps.deploy.deployingBlueprint'), executeStep: deployBlueprint },

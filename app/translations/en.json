@@ -699,7 +699,8 @@
                                 "fetchingEnvironments": "2/4: Fetching environments list...",
                                 "creatingDeployments": "3/4: Creating deployments...",
                                 "installingDeployments": "4/4: Installing deployments..."
-                            }
+                            },
+                            "executionStarted": "Group execution started"
                         }
                     },
                     "runWorkflow": {
@@ -730,7 +731,14 @@
                         }
                     },
                     "common": {
-                        "goToExecutionsPageButton": "Go to Executions page"
+                        "executionStartedModal": {
+                            "header": "Group execution started",
+                            "message": "Click on 'Go to Executions page' button to track the progress",
+                            "buttons": {
+                                "goToExecutionsPage": "Go to Executions page",
+                                "close": "Close"
+                            }
+                        }
                     }
                 }
             },
