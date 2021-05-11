@@ -6,10 +6,11 @@ import createTaskDescriptionGetter from './createTaskDescriptionGetter';
 import { SuccessDescription } from './descriptions';
 
 import type { createBlueprintsInstallationTasks } from '../../installation/tasks';
+import type { TaskStatus } from '../../installation/process';
 
 type Props = {
     tasks?: ReturnType<typeof createBlueprintsInstallationTasks>;
-    statuses?: Record<string, string>;
+    statuses?: Record<string, TaskStatus>;
 };
 
 const BlueprintsInstallationTasks = ({ tasks, statuses }: Props) => {

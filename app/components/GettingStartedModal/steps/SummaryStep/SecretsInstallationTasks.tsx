@@ -5,10 +5,11 @@ import createTaskDescriptionGetter from './createTaskDescriptionGetter';
 import { Divider, Label, List } from '../../../basic';
 
 import type { createSecretsInstallationTasks } from '../../installation/tasks';
+import type { TaskStatus } from '../../installation/process';
 
 type Props = {
     tasks?: ReturnType<typeof createSecretsInstallationTasks>;
-    statuses?: Record<string, string>;
+    statuses?: Record<string, TaskStatus>;
 };
 
 const SecretsInstallationTasks = ({ tasks, statuses }: Props) => {

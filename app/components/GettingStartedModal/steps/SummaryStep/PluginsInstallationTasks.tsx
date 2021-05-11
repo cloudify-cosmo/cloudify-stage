@@ -4,10 +4,11 @@ import React from 'react';
 import PluginTaskItems, { PluginExistsDescription, RejectedPluginDescription } from './PluginTaskItems';
 
 import type { createPluginInstallationTasks } from '../../installation/tasks';
+import type { TaskStatus } from '../../installation/process';
 
 type Props = {
     tasks?: ReturnType<typeof createPluginInstallationTasks>;
-    statuses?: Record<string, string>;
+    statuses?: Record<string, TaskStatus>;
 };
 
 const PluginsInstallationTasks = ({ tasks, statuses }: Props) => {

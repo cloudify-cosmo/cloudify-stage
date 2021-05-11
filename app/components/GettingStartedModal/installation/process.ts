@@ -5,6 +5,18 @@ import type Internal from '../../../utils/Internal';
 import type Manager from '../../../utils/Manager';
 import type { BlueprintInstallationTask, PluginInstallationTask, SecretInstallationTask } from './tasks';
 
+export enum TaskType {
+    Plugin = 'plugin',
+    Secret = 'secret',
+    Blueprint = 'blueprint'
+}
+
+export enum TaskStatus {
+    InstallationProgress = 'installation-progress',
+    InstallationDone = 'installation-done',
+    InstallationError = 'installation-error'
+}
+
 const sleep = async (milliseconds: number) => new Promise(resolve => setTimeout(resolve, milliseconds));
 
 // TODO(RD-1874): use common api for backend requests
@@ -115,7 +127,7 @@ export const createResourcesInstaller = (
     manager: Manager,
     internal: Internal,
     onStarted: () => void,
-    onProgress: (installationProgress: number, taskType?: string, taskName?: string, taskSuccess?: string) => void,
+    onProgress: (installationProgress: number, taskType?: TaskType, taskName?: string, taskStatus?: TaskStatus) => void,
     onError: (error: string) => void,
     onFinished: () => void
 ) => {
@@ -135,18 +147,18 @@ export const createResourcesInstaller = (
         const stepsCount =
             scheduledPlugins.length + updatedSecrets.length + createdSecrets.length + scheduledBlueprints.length;
 
-        const fireProgressEvent = (taskType: string, taskName: string, taskSuccess: string) =>
-            onProgress(Math.round(100 * (stepIndex / stepsCount)), taskType, taskName, taskSuccess);
+        const fireProgressEvent = (taskType: TaskType, taskName: string, taskStatus: TaskStatus) =>
+            onProgress(Math.round(100 * (stepIndex / stepsCount)), taskType, taskName, taskStatus);
 
-        const updateStepIndex = (taskType: string, taskName: string, taskSuccess: string) => {
+        const updateStepIndex = (taskType: TaskType, taskName: string, taskStatus: TaskStatus) => {
             stepIndex += 1;
-            fireProgressEvent(taskType, taskName, taskSuccess);
+            fireProgressEvent(taskType, taskName, taskStatus);
         };
 
         const runInstallPluginStep = async (scheduledPlugin: PluginInstallationTask) => {
             let result = false;
             if (scheduledPlugin.yamlUrl && scheduledPlugin.wagonUrl) {
-                fireProgressEvent('plugin', scheduledPlugin.name, 'installation-progress');
+                fireProgressEvent(TaskType.Plugin, scheduledPlugin.name, TaskStatus.InstallationProgress);
                 result = await installPlugin(internal, scheduledPlugin);
                 if (destroyed) return;
                 if (!result) {
@@ -158,11 +170,15 @@ export const createResourcesInstaller = (
                 }
             }
             if (destroyed) return;
-            updateStepIndex('plugin', scheduledPlugin.name, result ? 'installation-done' : 'installation-error');
+            updateStepIndex(
+                TaskType.Plugin,
+                scheduledPlugin.name,
+                result ? TaskStatus.InstallationDone : TaskStatus.InstallationError
+            );
         };
 
         const runUpdateSecretStep = async (updatedSecret: SecretInstallationTask) => {
-            fireProgressEvent('plugin', updatedSecret.name, 'installation-progress');
+            fireProgressEvent(TaskType.Plugin, updatedSecret.name, TaskStatus.InstallationProgress);
             const result = await updateSecret(manager, updatedSecret);
             if (destroyed) return;
             if (!result) {
@@ -173,11 +189,15 @@ export const createResourcesInstaller = (
                 );
             }
             if (destroyed) return;
-            updateStepIndex('secret', updatedSecret.name, result ? 'installation-done' : 'installation-error');
+            updateStepIndex(
+                TaskType.Secret,
+                updatedSecret.name,
+                result ? TaskStatus.InstallationDone : TaskStatus.InstallationError
+            );
         };
 
         const runCreateSecretStep = async (createdSecret: SecretInstallationTask) => {
-            fireProgressEvent('plugin', createdSecret.name, 'installation-progress');
+            fireProgressEvent(TaskType.Plugin, createdSecret.name, TaskStatus.InstallationProgress);
             const result = await createSecret(manager, createdSecret);
             if (destroyed) return;
             if (!result) {
@@ -188,11 +208,15 @@ export const createResourcesInstaller = (
                 );
             }
             if (destroyed) return;
-            updateStepIndex('secret', createdSecret.name, result ? 'installation-done' : 'installation-error');
+            updateStepIndex(
+                TaskType.Secret,
+                createdSecret.name,
+                result ? TaskStatus.InstallationDone : TaskStatus.InstallationError
+            );
         };
 
         const runUploadBlueprintStep = async (scheduledBlueprint: BlueprintInstallationTask) => {
-            fireProgressEvent('blueprint', scheduledBlueprint.blueprintName, 'installation-progress');
+            fireProgressEvent(TaskType.Blueprint, scheduledBlueprint.blueprintName, TaskStatus.InstallationProgress);
             const uploadError = await uploadBlueprint(manager, scheduledBlueprint);
             if (destroyed) return;
             if (uploadError) {
@@ -200,9 +224,9 @@ export const createResourcesInstaller = (
             }
             if (destroyed) return;
             updateStepIndex(
-                'blueprint',
+                TaskType.Blueprint,
                 scheduledBlueprint.blueprintName,
-                uploadError ? 'installation-error' : 'installation-done'
+                uploadError ? TaskStatus.InstallationError : TaskStatus.InstallationDone
             );
         };
 

@@ -8,6 +8,7 @@ import createTaskDescriptionGetter from './createTaskDescriptionGetter';
 import { ErrorDescription, SuccessDescription } from './descriptions';
 
 import type { PluginInstallationTask } from '../../installation/tasks';
+import type { TaskStatus } from '../../installation/process';
 
 export const PluginExistsDescription = () => (
     <SuccessDescription message={i18n.t('gettingStartedModal.summary.plugin.alreadyInstalledMessageSuffix')} />
@@ -19,7 +20,7 @@ export const RejectedPluginDescription = () => (
 
 type Props = {
     tasks?: PluginInstallationTask[];
-    statuses?: Record<string, string>;
+    statuses?: Record<string, TaskStatus>;
     description: string | ReactNode;
 };
 

@@ -11,7 +11,7 @@ import {
 } from '../../installation/tasks';
 import { useInternal, useManager } from '../../common/managerHooks';
 import { UnsafelyTypedForm } from '../../unsafelyTypedForm';
-import { createResourcesInstaller } from '../../installation/process';
+import { createResourcesInstaller, TaskStatus, TaskType } from '../../installation/process';
 import PluginsInstallationTasks from './PluginsInstallationTasks';
 import SecretsInstallationTasks from './SecretsInstallationTasks';
 import BlueprintsInstallationTasks from './BlueprintsInstallationTasks';
@@ -44,9 +44,9 @@ const SummaryStep = ({
     const secretsInstallationTasks = useSecretsInstallationTasks(selectedTechnologies, typedSecrets);
     const blueprintsInstallationTasks = useBlueprintsInstallationTasks(selectedTechnologies);
     const [installationErrors, setInstallationErrors, resetInstallationErrors] = useResettableState<string[]>([]);
-    const [installationStatuses, setInstallationStatuses, resetInstallationStatuses] = useResettableState<
-        Record<string, Record<string, string>>
-    >({});
+    const [installationStatuses, setInstallationStatuses, resetInstallationStatuses] = useResettableState(
+        {} as Record<TaskType, Record<string, TaskStatus>>
+    );
     const [installationProgress, setInstallationProgress, resetInstallationProgress] = useResettableState<
         number | undefined
     >(undefined);
@@ -63,16 +63,16 @@ const SummaryStep = ({
         ) {
             let installationFinished = false;
             // eslint-disable-next-line @typescript-eslint/no-shadow
-            let installationStatuses: Record<string, Record<string, string>> = {};
+            let installationStatuses = {} as Record<TaskType, Record<string, TaskStatus>>;
             const resourcesInstaller = createResourcesInstaller(
                 manager,
                 internal,
                 () => handleInstallationStarted(),
-                (progress: number, taskType?: string, taskName?: string, taskSuccess?: string) => {
-                    if (taskType != null && taskName != null && taskSuccess != null) {
+                (progress: number, taskType?: TaskType, taskName?: string, taskStatus?: TaskStatus) => {
+                    if (taskType != null && taskName != null && taskStatus != null) {
                         installationStatuses = {
                             ...installationStatuses,
-                            [taskType]: { ...installationStatuses[taskType], [taskName]: taskSuccess }
+                            [taskType]: { ...installationStatuses[taskType], [taskName]: taskStatus }
                         };
                         setInstallationStatuses(installationStatuses);
                     }
