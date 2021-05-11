@@ -1,15 +1,48 @@
 import i18n from 'i18next';
 import React from 'react';
 
+import type { ReactNode } from 'react';
+
 import { Divider, Label, List } from '../../../basic';
+import { ErrorDescription, ProcessingDescription, SuccessDescription } from './descriptions';
 
 import type { createSecretsInstallationTasks } from '../../installation/tasks';
 
-type Props = {
-    tasks?: ReturnType<typeof createSecretsInstallationTasks>;
+const getSecretTaskDescription = (
+    taskName: string,
+    taskStatuses?: Record<string, string>,
+    defaultDescription?: ReactNode
+) => {
+    switch (taskStatuses?.[taskName]) {
+        case 'installation-progress':
+            return (
+                <ProcessingDescription
+                    message={i18n.t('gettingStartedModal.summary.secretInstallationProgressMessageSuffix')}
+                />
+            );
+        case 'installation-done':
+            return (
+                <SuccessDescription
+                    message={i18n.t('gettingStartedModal.summary.secretInstallationDoneMessageSuffix')}
+                />
+            );
+        case 'installation-error':
+            return (
+                <ErrorDescription
+                    message={i18n.t('gettingStartedModal.summary.secretInstallationErrorMessageSuffix')}
+                />
+            );
+        default:
+            return defaultDescription;
+    }
 };
 
-const SecretsInstallationTasks = ({ tasks }: Props) => {
+type Props = {
+    tasks?: ReturnType<typeof createSecretsInstallationTasks>;
+    statuses?: Record<string, string>;
+};
+
+const SecretsInstallationTasks = ({ tasks, statuses }: Props) => {
     if (tasks == null || (_.isEmpty(tasks.createdSecrets) && _.isEmpty(tasks.updatedSecrets))) {
         return null;
     }
@@ -20,7 +53,11 @@ const SecretsInstallationTasks = ({ tasks }: Props) => {
                 return (
                     <List.Item key={createdSecret.name}>
                         <Label horizontal>{createdSecret.name}</Label>{' '}
-                        {i18n.t('gettingStartedModal.summary.secretCreateMessageSuffix')}
+                        {getSecretTaskDescription(
+                            createdSecret.name,
+                            statuses,
+                            i18n.t('gettingStartedModal.summary.secretCreateMessageSuffix')
+                        )}
                     </List.Item>
                 );
             })}
@@ -28,7 +65,11 @@ const SecretsInstallationTasks = ({ tasks }: Props) => {
                 return (
                     <List.Item key={updatedSecret.name}>
                         <Label horizontal>{updatedSecret.name}</Label>{' '}
-                        {i18n.t('gettingStartedModal.summary.secretUpdateMessageSuffix')}
+                        {getSecretTaskDescription(
+                            updatedSecret.name,
+                            statuses,
+                            i18n.t('gettingStartedModal.summary.secretUpdateMessageSuffix')
+                        )}
                     </List.Item>
                 );
             })}

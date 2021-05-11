@@ -50,13 +50,25 @@
         },
         "summary": {
             "taskListTitle": "Task List",
+
             "pluginExistsMessageSuffix": "plugin is already installed.",
             "pluginInstallMessageSuffix": "plugin will be installed.",
             "pluginNotFoundMessageSuffix": "plugin is not found in catalog and manager.",
+            "pluginInstallationProgressMessageSuffix": "plugin installation in progress",
+            "pluginInstallationDoneMessageSuffix": "plugin installation done",
+            "pluginInstallationErrorMessageSuffix": "plugin installation error",
+
             "secretCreateMessageSuffix": "secret will be created.",
             "secretUpdateMessageSuffix": "secret will be updated.",
+            "secretInstallationProgressMessageSuffix": "secret installation in progress",
+            "secretInstallationDoneMessageSuffix": "secret installation done",
+            "secretInstallationErrorMessageSuffix": "secret installation error",
+
             "blueprintExistsMessageSuffix": "blueprint is already uploaded.",
-            "blueprintUploadMessageSuffix": "blueprint will be uploaded."
+            "blueprintUploadMessageSuffix": "blueprint will be uploaded.",
+            "blueprintInstallationProgressMessageSuffix": "blueprint uploading in progress",
+            "blueprintInstallationDoneMessageSuffix": "blueprint uploading done",
+            "blueprintInstallationErrorMessageSuffix": "blueprint uploading error"
         },
         "installation": {
             "pluginInstallError": "{{pluginName}} plugin installation error.",

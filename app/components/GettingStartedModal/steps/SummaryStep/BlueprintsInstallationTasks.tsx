@@ -1,16 +1,48 @@
 import i18n from 'i18next';
 import React from 'react';
 
+import type { ReactNode } from 'react';
+
 import { Divider, Label, List } from '../../../basic';
-import { SuccessIcon } from '../../common/icons';
+import { ErrorDescription, ProcessingDescription, SuccessDescription } from './descriptions';
 
 import type { createBlueprintsInstallationTasks } from '../../installation/tasks';
 
-type Props = {
-    tasks?: ReturnType<typeof createBlueprintsInstallationTasks>;
+const getBlueprintTaskDescription = (
+    taskName: string,
+    taskStatuses?: Record<string, string>,
+    defaultDescription?: ReactNode
+) => {
+    switch (taskStatuses?.[taskName]) {
+        case 'installation-progress':
+            return (
+                <ProcessingDescription
+                    message={i18n.t('gettingStartedModal.summary.blueprintInstallationProgressMessageSuffix')}
+                />
+            );
+        case 'installation-done':
+            return (
+                <SuccessDescription
+                    message={i18n.t('gettingStartedModal.summary.blueprintInstallationDoneMessageSuffix')}
+                />
+            );
+        case 'installation-error':
+            return (
+                <ErrorDescription
+                    message={i18n.t('gettingStartedModal.summary.blueprintInstallationErrorMessageSuffix')}
+                />
+            );
+        default:
+            return defaultDescription;
+    }
 };
 
-const BlueprintsInstallationTasks = ({ tasks }: Props) => {
+type Props = {
+    tasks?: ReturnType<typeof createBlueprintsInstallationTasks>;
+    statuses?: Record<string, string>;
+};
+
+const BlueprintsInstallationTasks = ({ tasks, statuses }: Props) => {
     if (tasks == null || (_.isEmpty(tasks.uploadedBlueprints) && _.isEmpty(tasks.scheduledBlueprints))) {
         return null;
     }
@@ -21,8 +53,9 @@ const BlueprintsInstallationTasks = ({ tasks }: Props) => {
                 return (
                     <List.Item key={blueprint.blueprintName}>
                         <Label horizontal>{blueprint.blueprintName}</Label>{' '}
-                        <span>{i18n.t('gettingStartedModal.summary.blueprintExistsMessageSuffix')}</span>
-                        <SuccessIcon />
+                        <SuccessDescription
+                            message={i18n.t('gettingStartedModal.summary.blueprintExistsMessageSuffix')}
+                        />
                     </List.Item>
                 );
             })}
@@ -30,7 +63,11 @@ const BlueprintsInstallationTasks = ({ tasks }: Props) => {
                 return (
                     <List.Item key={blueprint.blueprintName}>
                         <Label horizontal>{blueprint.blueprintName}</Label>{' '}
-                        {i18n.t('gettingStartedModal.summary.blueprintUploadMessageSuffix')}
+                        {getBlueprintTaskDescription(
+                            blueprint.blueprintName,
+                            statuses,
+                            i18n.t('gettingStartedModal.summary.blueprintUploadMessageSuffix')
+                        )}
                     </List.Item>
                 );
             })}

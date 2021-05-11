@@ -44,12 +44,16 @@ const SummaryStep = ({
     const secretsInstallationTasks = useSecretsInstallationTasks(selectedTechnologies, typedSecrets);
     const blueprintsInstallationTasks = useBlueprintsInstallationTasks(selectedTechnologies);
     const [installationErrors, setInstallationErrors, resetInstallationErrors] = useResettableState<string[]>([]);
+    const [installationStatuses, setInstallationStatuses, resetInstallationStatuses] = useResettableState<
+        Record<string, Record<string, string>>
+    >({});
     const [installationProgress, setInstallationProgress, resetInstallationProgress] = useResettableState<
         number | undefined
     >(undefined);
 
     useEffect(() => {
         resetInstallationErrors();
+        resetInstallationStatuses();
         resetInstallationProgress();
         if (
             installationMode &&
@@ -58,11 +62,22 @@ const SummaryStep = ({
             blueprintsInstallationTasks.tasks
         ) {
             let installationFinished = false;
+            // eslint-disable-next-line @typescript-eslint/no-shadow
+            let installationStatuses: Record<string, Record<string, string>> = {};
             const resourcesInstaller = createResourcesInstaller(
                 manager,
                 internal,
                 () => handleInstallationStarted(),
-                (progress: number) => setInstallationProgress(progress),
+                (progress: number, taskType?: string, taskName?: string, taskSuccess?: string) => {
+                    if (taskType != null && taskName != null && taskSuccess != null) {
+                        installationStatuses = {
+                            ...installationStatuses,
+                            [taskType]: { ...installationStatuses[taskType], [taskName]: taskSuccess }
+                        };
+                        setInstallationStatuses(installationStatuses);
+                    }
+                    setInstallationProgress(progress);
+                },
                 (error: string) => setInstallationErrors(status => [...status, error]),
                 () => {
                     installationFinished = true;
@@ -116,9 +131,18 @@ const SummaryStep = ({
                 <>
                     <Header as="h4">{i18n.t('gettingStartedModal.summary.taskListTitle')}</Header>
                     <List ordered relaxed>
-                        <PluginsInstallationTasks tasks={pluginsInstallationTasks.tasks} />
-                        <SecretsInstallationTasks tasks={secretsInstallationTasks.tasks} />
-                        <BlueprintsInstallationTasks tasks={blueprintsInstallationTasks.tasks} />
+                        <PluginsInstallationTasks
+                            tasks={pluginsInstallationTasks.tasks}
+                            statuses={installationStatuses.plugin}
+                        />
+                        <SecretsInstallationTasks
+                            tasks={secretsInstallationTasks.tasks}
+                            statuses={installationStatuses.secret}
+                        />
+                        <BlueprintsInstallationTasks
+                            tasks={blueprintsInstallationTasks.tasks}
+                            statuses={installationStatuses.blueprint}
+                        />
                     </List>
                     {installationProgress !== undefined && (
                         <>
