@@ -1,37 +1,10 @@
 import i18n from 'i18next';
 import React from 'react';
 
-import type { ReactNode } from 'react';
-
+import createTaskDescriptionGetter from './createTaskDescriptionGetter';
 import { Divider, Label, List } from '../../../basic';
-import { ErrorDescription, ProcessingDescription, SuccessDescription } from './descriptions';
 
 import type { createSecretsInstallationTasks } from '../../installation/tasks';
-
-const getSecretTaskDescription = (
-    taskName: string,
-    taskStatuses?: Record<string, string>,
-    defaultDescription?: ReactNode
-) => {
-    switch (taskStatuses?.[taskName]) {
-        case 'installation-progress':
-            return (
-                <ProcessingDescription
-                    message={i18n.t('gettingStartedModal.summary.secret.settingProgressMessageSuffix')}
-                />
-            );
-        case 'installation-done':
-            return (
-                <SuccessDescription message={i18n.t('gettingStartedModal.summary.secret.settingDoneMessageSuffix')} />
-            );
-        case 'installation-error':
-            return (
-                <ErrorDescription message={i18n.t('gettingStartedModal.summary.secret.settingErrorMessageSuffix')} />
-            );
-        default:
-            return defaultDescription;
-    }
-};
 
 type Props = {
     tasks?: ReturnType<typeof createSecretsInstallationTasks>;
@@ -42,6 +15,11 @@ const SecretsInstallationTasks = ({ tasks, statuses }: Props) => {
     if (tasks == null || (_.isEmpty(tasks.createdSecrets) && _.isEmpty(tasks.updatedSecrets))) {
         return null;
     }
+    const getSecretTaskDescription = createTaskDescriptionGetter(
+        i18n.t('gettingStartedModal.summary.secret.settingProgressMessageSuffix'),
+        i18n.t('gettingStartedModal.summary.secret.settingDoneMessageSuffix'),
+        i18n.t('gettingStartedModal.summary.secret.settingErrorMessageSuffix')
+    );
     return (
         <>
             <Divider hidden style={{ margin: '0.5rem 0' }} />

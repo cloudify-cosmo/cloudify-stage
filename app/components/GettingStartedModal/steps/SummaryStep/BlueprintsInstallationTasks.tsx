@@ -1,41 +1,11 @@
 import i18n from 'i18next';
 import React from 'react';
 
-import type { ReactNode } from 'react';
-
 import { Divider, Label, List } from '../../../basic';
-import { ErrorDescription, ProcessingDescription, SuccessDescription } from './descriptions';
+import createTaskDescriptionGetter from './createTaskDescriptionGetter';
+import { SuccessDescription } from './descriptions';
 
 import type { createBlueprintsInstallationTasks } from '../../installation/tasks';
-
-const getBlueprintTaskDescription = (
-    taskName: string,
-    taskStatuses?: Record<string, string>,
-    defaultDescription?: ReactNode
-) => {
-    switch (taskStatuses?.[taskName]) {
-        case 'installation-progress':
-            return (
-                <ProcessingDescription
-                    message={i18n.t('gettingStartedModal.summary.blueprint.uploadingProgressMessageSuffix')}
-                />
-            );
-        case 'installation-done':
-            return (
-                <SuccessDescription
-                    message={i18n.t('gettingStartedModal.summary.blueprint.uploadingDoneMessageSuffix')}
-                />
-            );
-        case 'installation-error':
-            return (
-                <ErrorDescription
-                    message={i18n.t('gettingStartedModal.summary.blueprint.uploadingErrorMessageSuffix')}
-                />
-            );
-        default:
-            return defaultDescription;
-    }
-};
 
 type Props = {
     tasks?: ReturnType<typeof createBlueprintsInstallationTasks>;
@@ -46,6 +16,11 @@ const BlueprintsInstallationTasks = ({ tasks, statuses }: Props) => {
     if (tasks == null || (_.isEmpty(tasks.uploadedBlueprints) && _.isEmpty(tasks.scheduledBlueprints))) {
         return null;
     }
+    const getBlueprintTaskDescription = createTaskDescriptionGetter(
+        i18n.t('gettingStartedModal.summary.blueprint.uploadingProgressMessageSuffix'),
+        i18n.t('gettingStartedModal.summary.blueprint.uploadingDoneMessageSuffix'),
+        i18n.t('gettingStartedModal.summary.blueprint.uploadingErrorMessageSuffix')
+    );
     return (
         <>
             <Divider hidden style={{ margin: '0.5rem 0' }} />
