@@ -17,20 +17,16 @@ const getSecretTaskDescription = (
         case 'installation-progress':
             return (
                 <ProcessingDescription
-                    message={i18n.t('gettingStartedModal.summary.secretInstallationProgressMessageSuffix')}
+                    message={i18n.t('gettingStartedModal.summary.secret.settingProgressMessageSuffix')}
                 />
             );
         case 'installation-done':
             return (
-                <SuccessDescription
-                    message={i18n.t('gettingStartedModal.summary.secretInstallationDoneMessageSuffix')}
-                />
+                <SuccessDescription message={i18n.t('gettingStartedModal.summary.secret.settingDoneMessageSuffix')} />
             );
         case 'installation-error':
             return (
-                <ErrorDescription
-                    message={i18n.t('gettingStartedModal.summary.secretInstallationErrorMessageSuffix')}
-                />
+                <ErrorDescription message={i18n.t('gettingStartedModal.summary.secret.settingErrorMessageSuffix')} />
             );
         default:
             return defaultDescription;
@@ -56,7 +52,7 @@ const SecretsInstallationTasks = ({ tasks, statuses }: Props) => {
                         {getSecretTaskDescription(
                             createdSecret.name,
                             statuses,
-                            i18n.t('gettingStartedModal.summary.secretCreateMessageSuffix')
+                            i18n.t('gettingStartedModal.summary.secret.creationScheduledMessageSuffix')
                         )}
                     </List.Item>
                 );
@@ -68,7 +64,7 @@ const SecretsInstallationTasks = ({ tasks, statuses }: Props) => {
                         {getSecretTaskDescription(
                             updatedSecret.name,
                             statuses,
-                            i18n.t('gettingStartedModal.summary.secretUpdateMessageSuffix')
+                            i18n.t('gettingStartedModal.summary.secret.updateScheduledMessageSuffix')
                         )}
                     </List.Item>
                 );

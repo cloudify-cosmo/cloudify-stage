@@ -149,8 +149,8 @@ const SummaryStep = ({
                             <Divider hidden />
                             <Progress progress size="large" percent={installationProgress} indicating>
                                 {installationProgress < 100
-                                    ? i18n.t('gettingStartedModal.installation.progressMessage')
-                                    : i18n.t('gettingStartedModal.installation.doneMessage')}
+                                    ? i18n.t('gettingStartedModal.messages.progressMessage')
+                                    : i18n.t('gettingStartedModal.messages.doneMessage')}
                             </Progress>
                         </>
                     )}

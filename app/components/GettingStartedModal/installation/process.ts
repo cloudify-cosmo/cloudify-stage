@@ -74,7 +74,7 @@ export const uploadBlueprint = async (manager: Manager, blueprint: BlueprintInst
             requestData
         );
         if (uploadResponse.error) {
-            return i18n.t('gettingStartedModal.installation.blueprintUploadError', undefined, {
+            return i18n.t('gettingStartedModal.messages.blueprintUploadError', undefined, {
                 blueprintName: blueprint.blueprintName,
                 uploadError: uploadResponse.error
             });
@@ -92,7 +92,7 @@ export const uploadBlueprint = async (manager: Manager, blueprint: BlueprintInst
             const statusResponse = await manager.doGet(`/blueprints/${encodeURIComponent(blueprint.blueprintName)}`);
             if (statusResponse) {
                 if (statusResponse.error) {
-                    return i18n.t('gettingStartedModal.installation.blueprintUploadError', undefined, {
+                    return i18n.t('gettingStartedModal.messages.blueprintUploadError', undefined, {
                         blueprintName: blueprint.blueprintName,
                         uploadError: statusResponse.error
                     });
@@ -105,9 +105,9 @@ export const uploadBlueprint = async (manager: Manager, blueprint: BlueprintInst
             log.error(e);
         }
     }
-    return i18n.t('gettingStartedModal.installation.blueprintUploadError', undefined, {
+    return i18n.t('gettingStartedModal.messages.blueprintUploadError', undefined, {
         blueprintName: blueprint.blueprintName,
-        uploadError: i18n.t('gettingStartedModal.installation.timeoutExceededError')
+        uploadError: i18n.t('gettingStartedModal.messages.timeoutExceededError')
     });
 };
 
@@ -151,7 +151,7 @@ export const createResourcesInstaller = (
                 if (destroyed) return;
                 if (!result) {
                     onError(
-                        i18n.t('gettingStartedModal.installation.pluginInstallError', undefined, {
+                        i18n.t('gettingStartedModal.messages.pluginInstallError', undefined, {
                             pluginName: scheduledPlugin.name
                         })
                     );
@@ -167,7 +167,7 @@ export const createResourcesInstaller = (
             if (destroyed) return;
             if (!result) {
                 onError(
-                    i18n.t('gettingStartedModal.installation.secretUpdateError', undefined, {
+                    i18n.t('gettingStartedModal.messages.secretUpdateError', undefined, {
                         secretName: updatedSecret.name
                     })
                 );
@@ -182,7 +182,7 @@ export const createResourcesInstaller = (
             if (destroyed) return;
             if (!result) {
                 onError(
-                    i18n.t('gettingStartedModal.installation.secretCreateError', undefined, {
+                    i18n.t('gettingStartedModal.messages.secretCreateError', undefined, {
                         secretName: createdSecret.name
                     })
                 );

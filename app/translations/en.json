@@ -50,27 +50,30 @@
         },
         "summary": {
             "taskListTitle": "Task List",
-
-            "pluginExistsMessageSuffix": "plugin is already installed.",
-            "pluginInstallMessageSuffix": "plugin will be installed.",
-            "pluginNotFoundMessageSuffix": "plugin is not found in catalog and manager.",
-            "pluginInstallationProgressMessageSuffix": "plugin installation in progress",
-            "pluginInstallationDoneMessageSuffix": "plugin installation done",
-            "pluginInstallationErrorMessageSuffix": "plugin installation error",
-
-            "secretCreateMessageSuffix": "secret will be created.",
-            "secretUpdateMessageSuffix": "secret will be updated.",
-            "secretInstallationProgressMessageSuffix": "secret installation in progress",
-            "secretInstallationDoneMessageSuffix": "secret installation done",
-            "secretInstallationErrorMessageSuffix": "secret installation error",
-
-            "blueprintExistsMessageSuffix": "blueprint is already uploaded.",
-            "blueprintUploadMessageSuffix": "blueprint will be uploaded.",
-            "blueprintInstallationProgressMessageSuffix": "blueprint uploading in progress",
-            "blueprintInstallationDoneMessageSuffix": "blueprint uploading done",
-            "blueprintInstallationErrorMessageSuffix": "blueprint uploading error"
+            "plugin": {
+                "alreadyInstalledMessageSuffix": "plugin is already installed.",
+                "installationScheduledMessageSuffix": "plugin will be installed.",
+                "notFoundMessageSuffix": "plugin is not found in catalog and manager.",
+                "installationProgressMessageSuffix": "plugin installation in progress",
+                "installationDoneMessageSuffix": "plugin installation done",
+                "installationErrorMessageSuffix": "plugin installation error"
+            },
+            "secret": {
+                "creationScheduledMessageSuffix": "secret will be created.",
+                "updateScheduledMessageSuffix": "secret will be updated.",
+                "settingProgressMessageSuffix": "secret setting in progress",
+                "settingDoneMessageSuffix": "secret setting done",
+                "settingErrorMessageSuffix": "secret setting error"
+            },
+            "blueprint": {
+                "alreadyUploadedMessageSuffix": "blueprint is already uploaded.",
+                "uploadScheduledMessageSuffix": "blueprint will be uploaded.",
+                "uploadingProgressMessageSuffix": "blueprint uploading in progress",
+                "uploadingDoneMessageSuffix": "blueprint uploading done",
+                "uploadingErrorMessageSuffix": "blueprint uploading error"
+            }
         },
-        "installation": {
+        "messages": {
             "pluginInstallError": "{{pluginName}} plugin installation error.",
             "secretUpdateError": "{{secretName}} secret update operation error.",
             "secretCreateError": "{{secretName}} secret create operation error.",

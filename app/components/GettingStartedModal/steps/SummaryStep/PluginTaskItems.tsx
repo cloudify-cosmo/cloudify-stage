@@ -9,11 +9,11 @@ import type { PluginInstallationTask } from '../../installation/tasks';
 import { ErrorDescription, ProcessingDescription, SuccessDescription } from './descriptions';
 
 export const PluginExistsDescription = () => (
-    <SuccessDescription message={i18n.t('gettingStartedModal.summary.pluginExistsMessageSuffix')} />
+    <SuccessDescription message={i18n.t('gettingStartedModal.summary.plugin.alreadyInstalledMessageSuffix')} />
 );
 
 export const RejectedPluginDescription = () => (
-    <ErrorDescription message={i18n.t('gettingStartedModal.summary.pluginNotFoundMessageSuffix')} />
+    <ErrorDescription message={i18n.t('gettingStartedModal.summary.plugin.notFoundMessageSuffix')} />
 );
 
 const getPluginTaskDescription = (
@@ -25,19 +25,19 @@ const getPluginTaskDescription = (
         case 'installation-progress':
             return (
                 <ProcessingDescription
-                    message={i18n.t('gettingStartedModal.summary.pluginInstallationProgressMessageSuffix')}
+                    message={i18n.t('gettingStartedModal.summary.plugin.installationProgressMessageSuffix')}
                 />
             );
         case 'installation-done':
             return (
                 <SuccessDescription
-                    message={i18n.t('gettingStartedModal.summary.pluginInstallationDoneMessageSuffix')}
+                    message={i18n.t('gettingStartedModal.summary.plugin.installationDoneMessageSuffix')}
                 />
             );
         case 'installation-error':
             return (
                 <ErrorDescription
-                    message={i18n.t('gettingStartedModal.summary.pluginInstallationErrorMessageSuffix')}
+                    message={i18n.t('gettingStartedModal.summary.plugin.installationErrorMessageSuffix')}
                 />
             );
         default:
