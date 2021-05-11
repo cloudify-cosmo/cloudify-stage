@@ -47,7 +47,7 @@ const DeploymentsMap: FunctionComponent<DeploymentsMapProps> = ({
     // does not declare them as mutable. Thus, no need to recalculate them.
     // See https://react-leaflet.js.org/docs/api-map
     const { options, bounds } = useMemo(() => Stage.Common.Map.getMapOptions(sitesDisplayed), []);
-    const { Map: MapComponent } = Stage.Basic.Leaflet;
+    const { Map: MapComponent, MarkerClusterGroup } = Stage.Basic.Leaflet;
     const { DefaultTileLayer } = Stage.Common.Map;
 
     return (
@@ -59,16 +59,18 @@ const DeploymentsMap: FunctionComponent<DeploymentsMapProps> = ({
             style={{ height: '100%' }}
         >
             <DefaultTileLayer />
-            {deploymentSitePairs.map(({ deployment, site }) => (
-                <DeploymentSiteMarker
-                    deployment={deployment}
-                    site={site}
-                    key={`${deployment.id}\n${site.name}`}
-                    selected={deployment.id === selectedDeployment?.id}
-                    onClick={() => selectDeployment(toolbox, deployment.id)}
-                    environmentTypeVisible={environmentTypeVisible}
-                />
-            ))}
+            <MarkerClusterGroup>
+                {deploymentSitePairs.map(({ deployment, site }) => (
+                    <DeploymentSiteMarker
+                        deployment={deployment}
+                        site={site}
+                        key={`${deployment.id}\n${site.name}`}
+                        selected={deployment.id === selectedDeployment?.id}
+                        onClick={() => selectDeployment(toolbox, deployment.id)}
+                        environmentTypeVisible={environmentTypeVisible}
+                    />
+                ))}
+            </MarkerClusterGroup>
         </MapComponent>
     );
 };
