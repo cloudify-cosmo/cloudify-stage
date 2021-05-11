@@ -771,8 +771,9 @@ describe('Deployments View widget', () => {
                     .its('response.body.deployment_ids')
                     .should('include.members', [deploymentName, secondDeploymentWithExampleSiteName]);
                 cy.wait('@startExecutionGroup').its('response.body.workflow_id').should('be.equal', 'restart');
+            });
 
-                cy.contains('Workflow has been started.');
+            cy.contains('.modal', 'Group execution started').within(() => {
                 cy.contains('Go to Executions page');
                 cy.contains('Close').click();
             });

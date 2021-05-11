@@ -2,8 +2,8 @@ import type { FunctionComponent } from 'react';
 import { useEffect, useMemo } from 'react';
 import { i18nPrefix } from '../common';
 import { FilterRule } from '../../filters/types';
-import GoToExecutionsPageButton from './GoToExecutionsPageButton';
 import { getGroupIdForBatchAction } from './common';
+import ExecutionStartedModal from './ExecutionStartedModal';
 
 interface RunWorkflowModalProps {
     filterRules: FilterRule[];
@@ -18,8 +18,8 @@ type Workflow = {
 };
 type WorkflowsResponse = Stage.Types.PaginatedResponse<Workflow>;
 
-const modalT = (key: string, params?: Record<string, string | undefined>) =>
-    Stage.i18n.t(`${i18nPrefix}.header.bulkActions.runWorkflow.modal.${key}`, params);
+const modalT = Stage.Utils.getT(`${i18nPrefix}.header.bulkActions.runWorkflow.modal`);
+
 const getWorkflowsOptions = (workflows: Workflow[]) => {
     return _.chain(workflows)
         .sortBy('name')
@@ -95,7 +95,9 @@ const RunWorkflowModal: FunctionComponent<RunWorkflowModalProps> = ({ filterRule
         turnOffLoading();
     }
 
-    return (
+    return executionGroupStarted ? (
+        <ExecutionStartedModal toolbox={toolbox} onClose={onHide} />
+    ) : (
         <Modal open onClose={onHide}>
             <Modal.Header>
                 <Icon name="cogs" /> {modalT('header')}
@@ -104,45 +106,30 @@ const RunWorkflowModal: FunctionComponent<RunWorkflowModalProps> = ({ filterRule
             <Modal.Content>
                 <UnsafelyTypedForm errors={errors} onErrorsDismiss={clearErrors}>
                     {loadingMessage && <LoadingOverlay message={loadingMessage} />}
-                    {executionGroupStarted ? (
-                        <Message positive>{modalT('messages.executionGroupStarted')}</Message>
-                    ) : (
-                        <>
-                            <UnsafelyTypedFormField
-                                label={modalT('inputs.workflowId.label')}
-                                help={modalT('inputs.workflowId.help')}
-                            >
-                                <Dropdown
-                                    search
-                                    selection
-                                    options={workflowsOptions}
-                                    onChange={(_event, { value }) => setWorkflowId(value as string)}
-                                    value={workflowId}
-                                />
-                            </UnsafelyTypedFormField>
-                            <Message>{modalT('messages.limitations')}</Message>
-                        </>
-                    )}
+                    <UnsafelyTypedFormField
+                        label={modalT('inputs.workflowId.label')}
+                        help={modalT('inputs.workflowId.help')}
+                    >
+                        <Dropdown
+                            search
+                            selection
+                            options={workflowsOptions}
+                            onChange={(_event, { value }) => setWorkflowId(value as string)}
+                            value={workflowId}
+                        />
+                    </UnsafelyTypedFormField>
+                    <Message>{modalT('messages.limitations')}</Message>
                 </UnsafelyTypedForm>
             </Modal.Content>
 
             <Modal.Actions>
-                {executionGroupStarted ? (
-                    <>
-                        <CancelButton onClick={onHide} content={modalT('buttons.close')} />
-                        <GoToExecutionsPageButton toolbox={toolbox} />
-                    </>
-                ) : (
-                    <>
-                        <CancelButton onClick={onHide} />
-                        <ApproveButton
-                            onClick={runWorkflow}
-                            color="green"
-                            content={modalT('buttons.run')}
-                            disabled={!workflowId}
-                        />
-                    </>
-                )}
+                <CancelButton onClick={onHide} />
+                <ApproveButton
+                    onClick={runWorkflow}
+                    color="green"
+                    content={modalT('buttons.run')}
+                    disabled={!workflowId}
+                />
             </Modal.Actions>
         </Modal>
     );

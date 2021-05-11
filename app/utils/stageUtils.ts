@@ -187,7 +187,7 @@ export default class StageUtils {
     }
 
     static getT(keyPrefix: string) {
-        return (keySuffix: string, params: Record<string, any>) => i18n.t(`${keyPrefix}.${keySuffix}`, params);
+        return (keySuffix: string, params?: Record<string, any>) => i18n.t(`${keyPrefix}.${keySuffix}`, params);
     }
 
     static isEmptyWidgetData = isEmptyWidgetData;

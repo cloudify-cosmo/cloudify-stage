@@ -12,7 +12,9 @@ const GoToExecutionsPageButton: FunctionComponent<GoToExecutionsPageButtonProps>
         <ApproveButton
             onClick={() => toolbox.goToPage('executions', null)}
             color="green"
-            content={Stage.i18n.t(`${i18nPrefix}.header.bulkActions.common.goToExecutionsPageButton`)}
+            content={Stage.i18n.t(
+                `${i18nPrefix}.header.bulkActions.common.executionStartedModal.buttons.goToExecutionsPage`
+            )}
         />
     );
 };
