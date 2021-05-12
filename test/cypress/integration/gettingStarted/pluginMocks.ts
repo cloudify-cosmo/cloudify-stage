@@ -185,37 +185,36 @@ export const mockAwsAndGcpPluginsCatalog = () =>
         createCloudifyAnsiblePluginItem()
     ]);
 
-export const mockEmptyPluginsManager = () =>
-    cy.interceptSp('GET', '/plugins?_include=distribution,package_name,package_version,visibility', {
-        body: { metadata: { pagination: { total: 0, size: 1000, offset: 0 }, filtered: null }, items: [] }
-    });
+export const mockPluginsManager = (items: any[]) =>
+    cy.interceptSp(
+        'GET',
+        /^\/plugins\?.*\b_include=(\bdistribution\b|\bpackage_name\b|\bpackage_version\b|\bvisibility\b|,)+/,
+        { body: { metadata: { pagination: { total: items.length, size: 1000, offset: 0 }, filtered: null }, items } }
+    );
+
+export const mockEmptyPluginsManager = () => mockPluginsManager([]);
 
 export const mockAwsPluginsManager = () =>
-    cy.interceptSp('GET', '/plugins?_include=distribution,package_name,package_version,visibility', {
-        body: {
-            metadata: { pagination: { total: 3, size: 1000, offset: 0 }, filtered: null },
-            items: [
-                {
-                    visibility: 'tenant',
-                    distribution: 'centos',
-                    package_name: 'cloudify-kubernetes-plugin',
-                    package_version: '2.12.1'
-                },
-                {
-                    visibility: 'tenant',
-                    distribution: 'centos',
-                    package_name: 'cloudify-utilities-plugin',
-                    package_version: '1.24.4'
-                },
-                {
-                    visibility: 'tenant',
-                    distribution: 'centos',
-                    package_name: 'cloudify-aws-plugin',
-                    package_version: '2.8.0'
-                }
-            ]
+    mockPluginsManager([
+        {
+            visibility: 'tenant',
+            distribution: 'centos',
+            package_name: 'cloudify-kubernetes-plugin',
+            package_version: '2.12.1'
+        },
+        {
+            visibility: 'tenant',
+            distribution: 'centos',
+            package_name: 'cloudify-utilities-plugin',
+            package_version: '1.24.4'
+        },
+        {
+            visibility: 'tenant',
+            distribution: 'centos',
+            package_name: 'cloudify-aws-plugin',
+            package_version: '2.8.0'
         }
-    });
+    ]);
 
 export const mockCloudifyAwsPluginUpload = () =>
     cy.intercept(
