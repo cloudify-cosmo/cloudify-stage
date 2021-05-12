@@ -156,15 +156,25 @@ const createCloudifyAnsiblePluginItem = () => ({
 
 export const mockEmptyPluginsCatalog = () =>
     cy.intercept(
-        'GET',
-        '/console/external/content?url=http%3A%2F%2Frepository.cloudifysource.org%2Fcloudify%2Fwagons%2Fplugins.json',
+        {
+            method: 'GET',
+            pathname: '/console/external/content',
+            query: {
+                url: 'http://repository.cloudifysource.org/cloudify/wagons/plugins.json'
+            }
+        },
         { body: [] }
     );
 
 export const mockAwsPluginsCatalog = () =>
     cy.intercept(
-        'GET',
-        '/console/external/content?url=http%3A%2F%2Frepository.cloudifysource.org%2Fcloudify%2Fwagons%2Fplugins.json',
+        {
+            method: 'GET',
+            pathname: '/console/external/content',
+            query: {
+                url: 'http://repository.cloudifysource.org/cloudify/wagons/plugins.json'
+            }
+        },
         {
             body: [
                 createCloudifyAwsPluginItem(),
@@ -176,8 +186,13 @@ export const mockAwsPluginsCatalog = () =>
 
 export const mockAwsAndGcpPluginsCatalog = () =>
     cy.intercept(
-        'GET',
-        '/console/external/content?url=http%3A%2F%2Frepository.cloudifysource.org%2Fcloudify%2Fwagons%2Fplugins.json',
+        {
+            method: 'GET',
+            pathname: '/console/external/content',
+            query: {
+                url: 'http://repository.cloudifysource.org/cloudify/wagons/plugins.json'
+            }
+        },
         {
             body: [
                 createCloudifyAwsPluginItem(),

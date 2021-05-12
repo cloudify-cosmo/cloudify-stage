@@ -44,65 +44,79 @@ export const mockAwsBlueprintsManager = () =>
         }
     );
 
-export const mockAwsBasicsVMSetupBlueprintUpload = () =>
-    cy.interceptSp(
-        'PUT',
-        '/blueprints/AWS-Basics-VM-Setup?visibility=tenant&async_upload=true&application_file_name=aws.yaml&blueprint_archive_url=https%3A%2F%2Fgithub.com%2Fcloudify-community%2Fblueprint-examples%2Freleases%2Fdownload%2Flatest%2Fvirtual-machine.zip',
-        { body: { id: 'AWS-Basics-VM-Setup', state: 'pending' } }
-    );
-
-export const mockAwsVMSetupUsingCloudFormationBlueprintUpload = () =>
-    cy.interceptSp(
-        'PUT',
-        '/blueprints/AWS-VM-Setup-using-CloudFormation?visibility=tenant&async_upload=true&application_file_name=aws-cloudformation.yaml&blueprint_archive_url=https%3A%2F%2Fgithub.com%2Fcloudify-community%2Fblueprint-examples%2Freleases%2Fdownload%2Flatest%2Fvirtual-machine.zip',
-        { body: { id: 'AWS-VM-Setup-using-CloudFormation', state: 'pending' } }
-    );
-
-export const mockKubernetesAwsEksBlueprintUpload = () =>
-    cy.interceptSp(
-        'PUT',
-        '/blueprints/Kubernetes-AWS-EKS?visibility=tenant&async_upload=true&application_file_name=blueprint.yaml&blueprint_archive_url=https%3A%2F%2Fgithub.com%2Fcloudify-community%2Fblueprint-examples%2Freleases%2Fdownload%2Flatest%2Fkubernetes-aws-eks.zip',
-        { body: { id: 'Kubernetes-AWS-EKS', state: 'pending' } }
-    );
-
-export const mockAwsVMSetupUsingTerraformBlueprintUpload = () =>
-    cy.interceptSp(
-        'PUT',
-        '/blueprints/AWS-VM-Setup-using-Terraform?visibility=tenant&async_upload=true&application_file_name=aws-terraform.yaml&blueprint_archive_url=https%3A%2F%2Fgithub.com%2Fcloudify-community%2Fblueprint-examples%2Freleases%2Fdownload%2Flatest%2Fvirtual-machine.zip',
-        { body: { id: '', state: 'pending' } }
-    );
-
-export const mockGcpBasicsVMSetupBlueprintUpload = () =>
-    cy.interceptSp(
-        'PUT',
-        '/blueprints/GCP-Basics-VM-Setup?visibility=tenant&async_upload=true&application_file_name=gcp.yaml&blueprint_archive_url=https%3A%2F%2Fgithub.com%2Fcloudify-community%2Fblueprint-examples%2Freleases%2Fdownload%2Flatest%2Fvirtual-machine.zip',
-        { body: { id: '', state: 'pending' } }
-    );
-
-export const mockGcpBasicsSimpleServiceSetupBlueprintUpload = () =>
-    cy.interceptSp(
-        'PUT',
-        '/blueprints/GCP-Basics-Simple-Service-Setup?visibility=tenant&async_upload=true&application_file_name=gcp.yaml&blueprint_archive_url=https%3A%2F%2Fgithub.com%2Fcloudify-community%2Fblueprint-examples%2Freleases%2Fdownload%2Flatest%2Fhello-world-example.zip',
-        { body: { id: '', state: 'pending' } }
-    );
-
-export const mockKubernetesGcpGkeBlueprintUpload = () =>
-    cy.interceptSp(
-        'PUT',
-        '/blueprints/Kubernetes-GCP-GKE?visibility=tenant&async_upload=true&application_file_name=blueprint.yaml&blueprint_archive_url=https%3A%2F%2Fgithub.com%2Fcloudify-community%2Fblueprint-examples%2Freleases%2Fdownload%2Flatest%2Fkubernetes-gcp-gke.zip',
-        { body: { id: '', state: 'pending' } }
-    );
-
 export const mockEmptyBlueprintsManager = () =>
     cy.interceptSp(
         'GET',
-        '/blueprints?_include=id%2Cdescription%2Cmain_file_name%2Ctenant_name%2Ccreated_at%2Cupdated_at%2Ccreated_by%2Cprivate_resource%2Cvisibility',
+        /^\/blueprints\?.*\b_include=(\bid\b|\bdescription\b|\bmain_file_name\b|\btenant_name\b|\bcreated_at\b|\bupdated_at\b|\bcreated_by\b|\bprivate_resource\b|\bvisibility\b|,)+/,
         {
             body: {
                 metadata: { pagination: { total: 0, size: 1000, offset: 0 }, filtered: null },
                 items: []
             }
         }
+    );
+
+export const mockBlueprintUpload = (
+    blueprintName: string,
+    applicationFileName: string,
+    blueprintArchiveUrl: string
+) => {
+    const pathname = `/blueprints/${blueprintName}`;
+    const query =
+        `visibility=tenant&` +
+        `async_upload=true&` +
+        `application_file_name=${encodeURIComponent(applicationFileName)}&` +
+        `blueprint_archive_url=${encodeURIComponent(blueprintArchiveUrl)}`;
+    return cy.interceptSp('PUT', `${pathname}?${query}`, { body: { id: blueprintName, state: 'pending' } });
+};
+
+export const mockAwsBasicsVMSetupBlueprintUpload = () =>
+    mockBlueprintUpload(
+        'AWS-Basics-VM-Setup',
+        'aws.yaml',
+        'https://github.com/cloudify-community/blueprint-examples/releases/download/latest/virtual-machine.zip'
+    );
+
+export const mockAwsVMSetupUsingCloudFormationBlueprintUpload = () =>
+    mockBlueprintUpload(
+        'AWS-VM-Setup-using-CloudFormation',
+        'aws-cloudformation.yaml',
+        'https://github.com/cloudify-community/blueprint-examples/releases/download/latest/virtual-machine.zip'
+    );
+
+export const mockKubernetesAwsEksBlueprintUpload = () =>
+    mockBlueprintUpload(
+        'Kubernetes-AWS-EKS',
+        'blueprint.yaml',
+        'https://github.com/cloudify-community/blueprint-examples/releases/download/latest/kubernetes-aws-eks.zip'
+    );
+
+export const mockAwsVMSetupUsingTerraformBlueprintUpload = () =>
+    mockBlueprintUpload(
+        'AWS-VM-Setup-using-Terraform',
+        'aws-terraform.yaml',
+        'https://github.com/cloudify-community/blueprint-examples/releases/download/latest/virtual-machine.zip'
+    );
+
+export const mockGcpBasicsVMSetupBlueprintUpload = () =>
+    mockBlueprintUpload(
+        'GCP-Basics-VM-Setup',
+        'gcp.yaml',
+        'https://github.com/cloudify-community/blueprint-examples/releases/download/latest/virtual-machine.zip'
+    );
+
+export const mockGcpBasicsSimpleServiceSetupBlueprintUpload = () =>
+    mockBlueprintUpload(
+        'GCP-Basics-Simple-Service-Setup',
+        'gcp.yaml',
+        'https://github.com/cloudify-community/blueprint-examples/releases/download/latest/hello-world-example.zip'
+    );
+
+export const mockKubernetesGcpGkeBlueprintUpload = () =>
+    mockBlueprintUpload(
+        'Kubernetes-GCP-GKE',
+        'blueprint.yaml',
+        'https://github.com/cloudify-community/blueprint-examples/releases/download/latest/kubernetes-gcp-gke.zip'
     );
 
 export const mockBlueprintUploaded = (blueprintName: string) =>
