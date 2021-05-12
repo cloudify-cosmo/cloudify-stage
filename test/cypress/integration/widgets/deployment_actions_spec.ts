@@ -55,13 +55,13 @@ describe('Deployment Action Buttons widget', () => {
     });
 
     describe('should allow to manage deployment labels', () => {
-        function typeLabelKey(key) {
+        function typeLabelKey(key: string) {
             cy.get('div[name=labelKey] > input').clear().type(key);
         }
-        function typeLabelValue(value) {
+        function typeLabelValue(value: string) {
             cy.get('div[name=labelValue] > input').clear().type(value);
         }
-        function addLabel(key, value) {
+        function addLabel(key: string, value: string) {
             cy.interceptSp('GET', `/labels/deployments/${key}?_search=${value}`).as('fetchLabel');
 
             typeLabelKey(key);
@@ -71,11 +71,11 @@ describe('Deployment Action Buttons widget', () => {
             cy.wait('@fetchLabel');
             cy.contains('a.label', `${key} ${value}`).should('exist');
         }
-        function checkIfPopupIsDisplayed(key, popupContent) {
+        function checkIfPopupIsDisplayed(key: string, popupContent: string) {
             typeLabelKey(key);
             cy.contains('.popup', popupContent).should('be.visible');
         }
-        function checkIfPopupIsNotDisplayed(key) {
+        function checkIfPopupIsNotDisplayed(key: string) {
             typeLabelKey(key);
             cy.get('.popup').should('not.exist');
         }
@@ -139,8 +139,8 @@ describe('Deployment Action Buttons widget', () => {
         });
 
         it('prevents adding label with invalid characters', () => {
-            function checkIfInvalidCharactersPopupIsDisplayed(string) {
-                checkIfPopupIsDisplayed(string, 'Only letters, digits');
+            function checkIfInvalidCharactersPopupIsDisplayed(key: string) {
+                checkIfPopupIsDisplayed(key, 'Only letters, digits');
             }
             checkIfPopupIsNotDisplayed('abc-._');
             checkIfInvalidCharactersPopupIsDisplayed(' ');
@@ -149,12 +149,12 @@ describe('Deployment Action Buttons widget', () => {
         });
 
         it('prevents adding label with not permitted key', () => {
-            function checkIfInternalKeyIsNotPermitted(key) {
+            function checkIfInternalKeyIsNotPermitted(key: string) {
                 checkIfPopupIsDisplayed(key, 'All labels starting with `csys-` are reserved for internal usage');
                 typeLabelValue('a');
                 cy.get('button[aria-label=Add]').should('have.attr', 'disabled');
             }
-            function checkIfInternalKeyIsPermitted(key) {
+            function checkIfInternalKeyIsPermitted(key: string) {
                 checkIfPopupIsNotDisplayed(key);
                 typeLabelValue('a');
                 cy.get('button[aria-label=Add]').should('not.have.attr', 'disabled');
