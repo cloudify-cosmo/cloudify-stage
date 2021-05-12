@@ -6,7 +6,11 @@ const i18nPrefix = 'widgets.common.filters.form';
 export const getTranslation = (key: string) => i18n.t(`${i18nPrefix}.${key}`);
 export const getPlaceholderTranslation = (key: string) => getTranslation(`inputsPlaceholders.${key}`);
 
-const anyOperators: FilterRuleOperator[] = [FilterRuleOperators.AnyOf, FilterRuleOperators.NotAnyOf];
-export function isAnyOperator(operator: FilterRuleOperator) {
-    return anyOperators.includes(operator);
+const multipleValuesOperators: FilterRuleOperator[] = [
+    FilterRuleOperators.AnyOf,
+    FilterRuleOperators.NotAnyOf,
+    FilterRuleOperators.IsNot
+];
+export function isMultipleValueOperator(operator: FilterRuleOperator) {
+    return multipleValuesOperators.includes(operator);
 }
