@@ -17,6 +17,7 @@ const KeyDropdown: FunctionComponent<KeyDropdownProps> = ({
 
     return (
         <CommonDropdown
+            type="key"
             innerRef={innerRef}
             fetchUrl="/labels/deployments"
             noResultsMessage={value && !allowAdditions ? i18n.t('widgets.common.labels.newKey') : undefined}
