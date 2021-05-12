@@ -152,6 +152,7 @@ const commands = {
             ...options
         });
     },
+    // TODO(RD-2314): object instead of multiple optional parameters
     login: (username = 'admin', password = 'admin', expectSuccessfulLogin = true, disableGettingStarted = true) => {
         mockGettingStarted(!disableGettingStarted);
 
