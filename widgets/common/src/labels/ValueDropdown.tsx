@@ -1,6 +1,20 @@
-import CommonDropdown from './CommonDropdown';
+import { ComponentProps, FunctionComponent } from 'react';
+import CommonDropdown, { KeyAndValueDropdownProps } from './CommonDropdown';
 
-export default function ValueDropdown({ labelKey, onChange, toolbox, multiple, allowAdditions, value }) {
+interface ValueDropdownProps extends KeyAndValueDropdownProps {
+    labelKey: string;
+    multiple?: boolean;
+    value: ComponentProps<typeof CommonDropdown>['value'];
+}
+
+const ValueDropdown: FunctionComponent<ValueDropdownProps> = ({
+    allowAdditions = false,
+    labelKey = '',
+    multiple = false,
+    onChange,
+    toolbox,
+    value
+}) => {
     const { i18n } = Stage;
 
     return (
@@ -19,20 +33,5 @@ export default function ValueDropdown({ labelKey, onChange, toolbox, multiple, a
             value={value}
         />
     );
-}
-
-ValueDropdown.propTypes = {
-    labelKey: PropTypes.string,
-    onChange: PropTypes.func.isRequired,
-    toolbox: Stage.PropTypes.Toolbox.isRequired,
-    multiple: PropTypes.bool,
-    allowAdditions: PropTypes.bool,
-    value: PropTypes.oneOfType([PropTypes.string, PropTypes.arrayOf(PropTypes.string)])
 };
-
-ValueDropdown.defaultProps = {
-    labelKey: '',
-    multiple: false,
-    allowAdditions: false,
-    value: null
-};
+export default ValueDropdown;
