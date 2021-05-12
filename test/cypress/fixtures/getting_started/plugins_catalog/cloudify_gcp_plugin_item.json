@@ -1,0 +1,21 @@
+{
+    "description": "A Cloudify Plugin that provisions resources in Google Cloud Platform",
+    "releases": "https://github.com/cloudify-cosmo/cloudify-gcp-plugin/releases",
+    "title": "GCP",
+    "version": "1.7.0",
+    "link": "http://repository.cloudifysource.org/cloudify/wagons/cloudify-gcp-plugin/1.7.0/plugin.yaml",
+    "wagons": [
+       {
+          "url": "http://repository.cloudifysource.org/cloudify/wagons/cloudify-gcp-plugin/1.7.0/cloudify_gcp_plugin-1.7.0-centos-Core-py36-none-linux_x86_64.wgn",
+          "md5url": "http://repository.cloudifysource.org/cloudify/wagons/cloudify-gcp-plugin/1.7.0/cloudify_gcp_plugin-1.7.0-centos-Core-py36-none-linux_x86_64.wgn.md5",
+          "name": "Centos Core"
+       },
+       {
+          "url": "http://repository.cloudifysource.org/cloudify/wagons/cloudify-gcp-plugin/1.7.0/cloudify_gcp_plugin-1.7.0-redhat-Maipo-py36-none-linux_x86_64.wgn",
+          "md5url": "http://repository.cloudifysource.org/cloudify/wagons/cloudify-gcp-plugin/1.7.0/cloudify_gcp_plugin-1.7.0-redhat-Maipo-py36-none-linux_x86_64.wgn.md5",
+          "name": "Redhat Maipo"
+       }
+    ],
+    "icon": "https://cloudify.co/wp-content/uploads/2019/08/gcplogo.png",
+    "name": "cloudify-gcp-plugin"
+ }

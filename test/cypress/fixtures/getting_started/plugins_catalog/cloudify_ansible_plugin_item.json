@@ -1,0 +1,21 @@
+{
+    "description": "The Ansible plugin can be used to run Ansible Playbooks",
+    "releases": "https://github.com/cloudify-cosmo/cloudify-ansible-plugin/releases",
+    "title": "Ansible",
+    "version": "2.10.1",
+    "link": "http://repository.cloudifysource.org/cloudify/wagons/cloudify-ansible-plugin/2.10.1/plugin.yaml",
+    "wagons": [
+       {
+          "url": "http://repository.cloudifysource.org/cloudify/wagons/cloudify-ansible-plugin/2.10.1/cloudify_ansible_plugin-2.10.1-centos-Core-py27.py36-none-linux_x86_64.wgn",
+          "md5url": "http://repository.cloudifysource.org/cloudify/wagons/cloudify-ansible-plugin/2.10.1/cloudify_ansible_plugin-2.10.1-centos-Core-py27.py36-none-linux_x86_64.wgn.md5",
+          "name": "Centos Core"
+       },
+       {
+          "url": "http://repository.cloudifysource.org/cloudify/wagons/cloudify-ansible-plugin/2.10.1/cloudify_ansible_plugin-2.10.1-redhat-Maipo-py27.py36-none-linux_x86_64.wgn",
+          "md5url": "http://repository.cloudifysource.org/cloudify/wagons/cloudify-ansible-plugin/2.10.1/cloudify_ansible_plugin-2.10.1-redhat-Maipo-py27.py36-none-linux_x86_64.wgn.md5",
+          "name": "Redhat Maipo"
+       }
+    ],
+    "icon": "https://cloudify.co/wp-content/uploads/2020/07/ansible-icon.png",
+    "name": "cloudify-ansible-plugin"
+ }

@@ -1,3 +1,5 @@
+import awsBlueprintsManager from '../../fixtures/getting_started/aws_blueprints_manager.json';
+
 export const mockBlueprintsManager = (items: any[]) =>
     cy.interceptSp(
         'GET',
@@ -10,43 +12,7 @@ export const mockBlueprintsManager = (items: any[]) =>
         }
     );
 
-export const mockAwsBlueprintsManager = () =>
-    mockBlueprintsManager([
-        {
-            id: 'AWS-VM-Setup-using-CloudFormation',
-            visibility: 'tenant',
-            created_at: '2021-05-07T10:06:31.799Z',
-            main_file_name: 'aws-cloudformation.yaml',
-            updated_at: '2021-05-07T10:07:56.697Z',
-            description: null,
-            tenant_name: 'default_tenant',
-            created_by: 'admin',
-            private_resource: false
-        },
-        {
-            id: 'AWS-Basics-VM-Setup',
-            visibility: 'tenant',
-            created_at: '2021-05-07T10:06:31.792Z',
-            main_file_name: 'aws.yaml',
-            updated_at: '2021-05-07T10:07:54.715Z',
-            description: 'This blueprint creates an AWS infrastructure environment.\n',
-            tenant_name: 'default_tenant',
-            created_by: 'admin',
-            private_resource: false
-        },
-        {
-            id: 'Kubernetes-AWS-EKS',
-            visibility: 'tenant',
-            created_at: '2021-05-07T10:06:31.785Z',
-            main_file_name: 'blueprint.yaml',
-            updated_at: '2021-05-07T10:08:04.632Z',
-            description: null,
-            tenant_name: 'default_tenant',
-            created_by: 'admin',
-            private_resource: false
-        }
-    ]);
-
+export const mockAwsBlueprintsManager = () => mockBlueprintsManager(awsBlueprintsManager);
 export const mockEmptyBlueprintsManager = () => mockBlueprintsManager([]);
 
 export const mockBlueprintUpload = (

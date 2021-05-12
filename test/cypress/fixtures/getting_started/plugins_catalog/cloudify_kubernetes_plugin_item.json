@@ -1,0 +1,21 @@
+{
+    "description": "Cloudify plugin for packaging Kubernetes microservices in Cloudify blueprints",
+    "releases": "https://github.com/cloudify-cosmo/cloudify-kubernetes-plugin/releases",
+    "title": "Kubernetes",
+    "version": "2.12.1",
+    "link": "http://repository.cloudifysource.org/cloudify/wagons/cloudify-kubernetes-plugin/2.12.1/plugin.yaml",
+    "wagons": [
+       {
+          "url": "http://repository.cloudifysource.org/cloudify/wagons/cloudify-kubernetes-plugin/2.12.1/cloudify_kubernetes_plugin-2.12.1-centos-Core-py36-none-linux_x86_64.wgn",
+          "md5url": "http://repository.cloudifysource.org/cloudify/wagons/cloudify-kubernetes-plugin/2.12.1/cloudify_kubernetes_plugin-2.12.1-centos-Core-py36-none-linux_x86_64.wgn.md5",
+          "name": "Centos Core"
+       },
+       {
+          "url": "http://repository.cloudifysource.org/cloudify/wagons/cloudify-kubernetes-plugin/2.12.1/cloudify_kubernetes_plugin-2.12.1-redhat-Maipo-py36-none-linux_x86_64.wgn",
+          "md5url": "http://repository.cloudifysource.org/cloudify/wagons/cloudify-kubernetes-plugin/2.12.1/cloudify_kubernetes_plugin-2.12.1-redhat-Maipo-py36-none-linux_x86_64.wgn.md5",
+          "name": "Redhat Maipo"
+       }
+    ],
+    "icon": "https://cloudify.co/wp-content/uploads/2020/07/kube-icon.png",
+    "name": "cloudify-kubernetes-plugin"
+ }

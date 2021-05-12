@@ -1,0 +1,21 @@
+{
+    "description": "Deploy and manage Cloud resources with Terraform.",
+    "releases": "https://github.com/cloudify-cosmo/cloudify-terraform-plugin/releases",
+    "title": "Terraform",
+    "version": "0.16.0",
+    "link": "http://repository.cloudifysource.org/cloudify/wagons/cloudify-terraform-plugin/0.16.0/plugin.yaml",
+    "wagons": [
+       {
+          "url": "http://repository.cloudifysource.org/cloudify/wagons/cloudify-terraform-plugin/0.16.0/cloudify_terraform_plugin-0.16.0-centos-Core-py27.py36-none-linux_x86_64.wgn",
+          "md5url": "http://repository.cloudifysource.org/cloudify/wagons/cloudify-terraform-plugin/0.16.0/cloudify_terraform_plugin-0.16.0-centos-Core-py27.py36-none-linux_x86_64.wgn.md5",
+          "name": "Centos Core"
+       },
+       {
+          "url": "http://repository.cloudifysource.org/cloudify/wagons/cloudify-terraform-plugin/0.16.0/cloudify_terraform_plugin-0.16.0-redhat-Maipo-py27.py36-none-linux_x86_64.wgn",
+          "md5url": "http://repository.cloudifysource.org/cloudify/wagons/cloudify-terraform-plugin/0.16.0/cloudify_terraform_plugin-0.16.0-redhat-Maipo-py27.py36-none-linux_x86_64.wgn.md5",
+          "name": "Redhat Maipo"
+       }
+    ],
+    "icon": "https://cloudify.co/wp-content/uploads/2020/07/terraform-icon.png",
+    "name": "cloudify-terraform-plugin"
+ }

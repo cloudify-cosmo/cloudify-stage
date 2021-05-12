@@ -1,0 +1,21 @@
+{
+    "description": "Various extension utilities, including REST API",
+    "releases": "https://github.com/cloudify-incubator/cloudify-utilities-plugin/releases",
+    "title": "Utilities",
+    "version": "1.24.4",
+    "link": "http://repository.cloudifysource.org/cloudify/wagons/cloudify-utilities-plugin/1.24.4/plugin.yaml",
+    "wagons": [
+       {
+          "url": "http://repository.cloudifysource.org/cloudify/wagons/cloudify-utilities-plugin/1.24.4/cloudify_utilities_plugin-1.24.4-centos-Core-py27.py36-none-linux_x86_64.wgn",
+          "md5url": "http://repository.cloudifysource.org/cloudify/wagons/cloudify-utilities-plugin/1.24.4/cloudify_utilities_plugin-1.24.4-centos-Core-py27.py36-none-linux_x86_64.wgn.md5",
+          "name": "Centos Core"
+       },
+       {
+          "url": "http://repository.cloudifysource.org/cloudify/wagons/cloudify-utilities-plugin/1.24.4/cloudify_utilities_plugin-1.24.4-redhat-Maipo-py27.py36-none-linux_x86_64.wgn",
+          "md5url": "http://repository.cloudifysource.org/cloudify/wagons/cloudify-utilities-plugin/1.24.4/cloudify_utilities_plugin-1.24.4-redhat-Maipo-py27.py36-none-linux_x86_64.wgn.md5",
+          "name": "Redhat Maipo"
+       }
+    ],
+    "icon": "https://cloudify.co/wp-content/uploads/2019/08/pluginlogo.png",
+    "name": "cloudify-utilities-plugin"
+ }
