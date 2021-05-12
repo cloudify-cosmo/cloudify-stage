@@ -25,10 +25,10 @@ import {
 } from './pluginMocks';
 import { mockAwsSecretsManager, mockEmptySecretsManager, mockSecretCreation, mockSecretUpdate } from './secretMocks';
 
-const gotoBackStep = () => cy.get('.modal button').contains('Back').click();
-const gotoNextStep = () => cy.get('.modal button').contains('Next').click();
-const gotoFinishStep = () => cy.get('.modal button').contains('Finish').click();
-const closeModal = () => cy.get('button:not([disabled])').contains('Close').click();
+const gotoBackStep = () => cy.contains('.modal button', 'Back').click();
+const gotoNextStep = () => cy.contains('.modal button', 'Next').click();
+const gotoFinishStep = () => cy.contains('.modal button', 'Finish').click();
+const closeModal = () => cy.contains('button:not([disabled])', 'Close').click();
 
 describe('Getting started modal', () => {
     before(() => {
@@ -38,10 +38,10 @@ describe('Getting started modal', () => {
     it('should provide option to disable popup', () => {
         cy.enableGettingStarted();
         cy.reload();
-        cy.get('label').contains("Don't show next time").click();
-        cy.get('button').contains('Close').click();
+        cy.contains('label', "Don't show next time").click();
+        cy.contains('button', 'Close').click();
         cy.reload();
-        cy.get('div').contains('This page is empty').click(); // the way to check if modal is not visible
+        cy.contains('div', 'This page is empty').click(); // the way to check if modal is not visible
     });
 
     it('should install selected technology', () => {
@@ -79,27 +79,27 @@ describe('Getting started modal', () => {
 
         cy.reload();
 
-        cy.get('.modal button').contains('AWS').click();
+        cy.contains('.modal button', 'AWS').click();
         gotoNextStep();
 
-        cy.get('.modal .header').contains('AWS Secrets');
+        cy.contains('.modal .header', 'AWS Secrets');
         cy.get('.modal [name="aws_access_key_id"]').type('some_aws_access_key_id');
         cy.get('.modal [name="aws_secret_access_key"]').type('some_aws_secret_access_key');
         gotoNextStep();
 
-        cy.get('.modal .header').contains('Summary');
-        cy.get('.modal').contains(/cloudify-utilities-plugin.*plugin will be installed/);
-        cy.get('.modal').contains(/cloudify-kubernetes-plugin.*plugin will be installed/);
-        cy.get('.modal').contains(/cloudify-aws-plugin.*plugin will be installed/);
-        cy.get('.modal').contains(/aws_access_key_id.*secret will be created/);
-        cy.get('.modal').contains(/aws_secret_access_key.*secret will be created/);
-        cy.get('.modal').contains(/AWS-Basics-VM-Setup.*blueprint will be uploaded/);
-        cy.get('.modal').contains(/AWS-VM-Setup-using-CloudFormation.*blueprint will be uploaded/);
-        cy.get('.modal').contains(/Kubernetes-AWS-EKS.*blueprint will be uploaded/);
+        cy.contains('.modal .header', 'Summary');
+        cy.contains('.modal', /cloudify-utilities-plugin.*plugin will be installed/);
+        cy.contains('.modal', /cloudify-kubernetes-plugin.*plugin will be installed/);
+        cy.contains('.modal', /cloudify-aws-plugin.*plugin will be installed/);
+        cy.contains('.modal', /aws_access_key_id.*secret will be created/);
+        cy.contains('.modal', /aws_secret_access_key.*secret will be created/);
+        cy.contains('.modal', /AWS-Basics-VM-Setup.*blueprint will be uploaded/);
+        cy.contains('.modal', /AWS-VM-Setup-using-CloudFormation.*blueprint will be uploaded/);
+        cy.contains('.modal', /Kubernetes-AWS-EKS.*blueprint will be uploaded/);
         gotoFinishStep();
 
-        cy.get('.modal .progress .progress').contains('100%');
-        cy.get('.modal .progress .label').contains('Installation done!');
+        cy.contains('.modal .progress .progress', '100%');
+        cy.contains('.modal .progress .label', 'Installation done!');
         cy.get('.modal .ui.red.message', { timeout: 0 }).should('not.exist'); // there shouldn't be visible error messages
         closeModal();
     });
@@ -187,27 +187,27 @@ describe('Getting started modal', () => {
 
         cy.reload();
 
-        cy.get('.modal button').contains('AWS').click();
+        cy.contains('.modal button', 'AWS').click();
         gotoNextStep();
 
-        cy.get('.modal .header').contains('AWS Secrets');
+        cy.contains('.modal .header', 'AWS Secrets');
         cy.get('.modal [name="aws_access_key_id"]').type('some_aws_access_key_id');
         cy.get('.modal [name="aws_secret_access_key"]').type('some_aws_secret_access_key');
         gotoNextStep();
 
-        cy.get('.modal .header').contains('Summary');
-        cy.get('.modal').contains(/cloudify-utilities-plugin.*plugin is already installed/);
-        cy.get('.modal').contains(/cloudify-kubernetes-plugin.*plugin is already installed/);
-        cy.get('.modal').contains(/cloudify-aws-plugin.*plugin is already installed/);
-        cy.get('.modal').contains(/aws_access_key_id.*secret will be updated/);
-        cy.get('.modal').contains(/aws_secret_access_key.*secret will be updated/);
-        cy.get('.modal').contains(/AWS-Basics-VM-Setup.*blueprint is already uploaded/);
-        cy.get('.modal').contains(/AWS-VM-Setup-using-CloudFormation.*blueprint is already uploaded/);
-        cy.get('.modal').contains(/Kubernetes-AWS-EKS.*blueprint is already uploaded/);
+        cy.contains('.modal .header', 'Summary');
+        cy.contains('.modal', /cloudify-utilities-plugin.*plugin is already installed/);
+        cy.contains('.modal', /cloudify-kubernetes-plugin.*plugin is already installed/);
+        cy.contains('.modal', /cloudify-aws-plugin.*plugin is already installed/);
+        cy.contains('.modal', /aws_access_key_id.*secret will be updated/);
+        cy.contains('.modal', /aws_secret_access_key.*secret will be updated/);
+        cy.contains('.modal', /AWS-Basics-VM-Setup.*blueprint is already uploaded/);
+        cy.contains('.modal', /AWS-VM-Setup-using-CloudFormation.*blueprint is already uploaded/);
+        cy.contains('.modal', /Kubernetes-AWS-EKS.*blueprint is already uploaded/);
         gotoFinishStep();
 
-        cy.get('.modal .progress .progress').contains('100%');
-        cy.get('.modal .progress .label').contains('Installation done!');
+        cy.contains('.modal .progress .progress', '100%');
+        cy.contains('.modal .progress .label', 'Installation done!');
         cy.get('.modal .ui.red.message', { timeout: 0 }).should('not.exist'); // there shouldn't be visible error messages
         closeModal();
     });
@@ -265,17 +265,17 @@ describe('Getting started modal', () => {
 
         cy.reload();
 
-        cy.get('.modal button').contains('AWS').click();
-        cy.get('.modal button').contains('GCP').click();
-        cy.get('.modal button').contains('Terraform on AWS').click();
+        cy.contains('.modal button', 'AWS').click();
+        cy.contains('.modal button', 'GCP').click();
+        cy.contains('.modal button', 'Terraform on AWS').click();
         gotoNextStep();
 
-        cy.get('.modal .header').contains('AWS + Terraform on AWS Secrets');
+        cy.contains('.modal .header', 'AWS + Terraform on AWS Secrets');
         cy.get('.modal [name="aws_access_key_id"]').type('some_aws_access_key_id');
         cy.get('.modal [name="aws_secret_access_key"]').type('some_aws_secret_access_key');
         gotoNextStep();
 
-        cy.get('.modal .header').contains('GCP Secrets');
+        cy.contains('.modal .header', 'GCP Secrets');
         cy.get('.modal [name="gpc_client_x509_cert_url"]').type('some_gpc_client_x509_cert_url');
         cy.get('.modal [name="gpc_client_email"]').type('some_gpc_client_email');
         cy.get('.modal [name="gpc_client_id"]').type('some_gpc_client_id');
@@ -285,37 +285,37 @@ describe('Getting started modal', () => {
         cy.get('.modal [name="gpc_zone"]').type('some_gpc_zone');
         gotoNextStep();
 
-        cy.get('.modal .header').contains('Summary');
+        cy.contains('.modal .header', 'Summary');
 
-        cy.get('.modal').contains(/cloudify-aws-plugin.*plugin will be installed/);
-        cy.get('.modal').contains(/cloudify-utilities-plugin.*plugin will be installed/);
-        cy.get('.modal').contains(/cloudify-kubernetes-plugin.*plugin will be installed/);
-        cy.get('.modal').contains(/cloudify-terraform-plugin.*plugin will be installed/);
-        cy.get('.modal').contains(/cloudify-gcp-plugin.*plugin will be installed/);
-        cy.get('.modal').contains(/cloudify-ansible-plugin.*plugin will be installed/);
+        cy.contains('.modal', /cloudify-aws-plugin.*plugin will be installed/);
+        cy.contains('.modal', /cloudify-utilities-plugin.*plugin will be installed/);
+        cy.contains('.modal', /cloudify-kubernetes-plugin.*plugin will be installed/);
+        cy.contains('.modal', /cloudify-terraform-plugin.*plugin will be installed/);
+        cy.contains('.modal', /cloudify-gcp-plugin.*plugin will be installed/);
+        cy.contains('.modal', /cloudify-ansible-plugin.*plugin will be installed/);
 
-        cy.get('.modal').contains(/gpc_client_x509_cert_url.*secret will be created/);
-        cy.get('.modal').contains(/gpc_client_email.*secret will be created/);
-        cy.get('.modal').contains(/gpc_client_id.*secret will be created/);
-        cy.get('.modal').contains(/gpc_project_id.*secret will be created/);
-        cy.get('.modal').contains(/gpc_private_key_id.*secret will be created/);
-        cy.get('.modal').contains(/gpc_private_key.*secret will be created/);
-        cy.get('.modal').contains(/gpc_zone.*secret will be created/);
-        cy.get('.modal').contains(/aws_access_key_id.*secret will be created/);
-        cy.get('.modal').contains(/aws_secret_access_key.*secret will be created/);
+        cy.contains('.modal', /gpc_client_x509_cert_url.*secret will be created/);
+        cy.contains('.modal', /gpc_client_email.*secret will be created/);
+        cy.contains('.modal', /gpc_client_id.*secret will be created/);
+        cy.contains('.modal', /gpc_project_id.*secret will be created/);
+        cy.contains('.modal', /gpc_private_key_id.*secret will be created/);
+        cy.contains('.modal', /gpc_private_key.*secret will be created/);
+        cy.contains('.modal', /gpc_zone.*secret will be created/);
+        cy.contains('.modal', /aws_access_key_id.*secret will be created/);
+        cy.contains('.modal', /aws_secret_access_key.*secret will be created/);
 
-        cy.get('.modal').contains(/AWS-Basics-VM-Setup.*blueprint will be uploaded/);
-        cy.get('.modal').contains(/AWS-VM-Setup-using-CloudFormation.*blueprint will be uploaded/);
-        cy.get('.modal').contains(/Kubernetes-AWS-EKS.*blueprint will be uploaded/);
-        cy.get('.modal').contains(/AWS-VM-Setup-using-Terraform.*blueprint will be uploaded/);
-        cy.get('.modal').contains(/GCP-Basics-VM-Setup.*blueprint will be uploaded/);
-        cy.get('.modal').contains(/GCP-Basics-Simple-Service-Setup.*blueprint will be uploaded/);
-        cy.get('.modal').contains(/Kubernetes-GCP-GKE.*blueprint will be uploaded/);
+        cy.contains('.modal', /AWS-Basics-VM-Setup.*blueprint will be uploaded/);
+        cy.contains('.modal', /AWS-VM-Setup-using-CloudFormation.*blueprint will be uploaded/);
+        cy.contains('.modal', /Kubernetes-AWS-EKS.*blueprint will be uploaded/);
+        cy.contains('.modal', /AWS-VM-Setup-using-Terraform.*blueprint will be uploaded/);
+        cy.contains('.modal', /GCP-Basics-VM-Setup.*blueprint will be uploaded/);
+        cy.contains('.modal', /GCP-Basics-Simple-Service-Setup.*blueprint will be uploaded/);
+        cy.contains('.modal', /Kubernetes-GCP-GKE.*blueprint will be uploaded/);
 
         gotoFinishStep();
 
-        cy.get('.modal .progress .progress').contains('100%');
-        cy.get('.modal .progress .label').contains('Installation done!');
+        cy.contains('.modal .progress .progress', '100%');
+        cy.contains('.modal .progress .label', 'Installation done!');
         cy.get('.modal .ui.red.message', { timeout: 0 }).should('not.exist'); // there shouldn't be visible error messages
         closeModal();
     });
@@ -332,23 +332,23 @@ describe('Getting started modal', () => {
 
         const checkErrorMessage = () => {
             gotoNextStep();
-            cy.get('.modal .message').contains('All secret values need to be specified');
+            cy.contains('.modal .message', 'All secret values need to be specified');
         };
 
         cy.reload();
 
-        cy.get('.modal button').contains('AWS').click();
-        cy.get('.modal button').contains('GCP').click();
+        cy.contains('.modal button', 'AWS').click();
+        cy.contains('.modal button', 'GCP').click();
         gotoNextStep();
 
-        cy.get('.modal .header').contains('AWS Secrets');
+        cy.contains('.modal .header', 'AWS Secrets');
         checkErrorMessage();
         cy.get('.modal [name="aws_access_key_id"]').type('some_aws_access_key_id');
         checkErrorMessage();
         cy.get('.modal [name="aws_secret_access_key"]').type('some_aws_secret_access_key');
         gotoNextStep();
 
-        cy.get('.modal .header').contains('GCP Secrets');
+        cy.contains('.modal .header', 'GCP Secrets');
         checkErrorMessage();
         cy.get('.modal [name="gpc_client_x509_cert_url"]').type('some_gpc_client_x509_cert_url');
         checkErrorMessage();
@@ -365,7 +365,7 @@ describe('Getting started modal', () => {
         cy.get('.modal [name="gpc_zone"]').type('some_gpc_zone');
         gotoNextStep();
 
-        cy.get('.modal .header').contains('Summary');
+        cy.contains('.modal .header', 'Summary');
     });
 
     it('should display information about not available plugins', () => {
@@ -380,18 +380,18 @@ describe('Getting started modal', () => {
 
         cy.reload();
 
-        cy.get('.modal button').contains('AWS').click();
+        cy.contains('.modal button', 'AWS').click();
         gotoNextStep();
 
-        cy.get('.modal .header').contains('AWS Secrets');
+        cy.contains('.modal .header', 'AWS Secrets');
         cy.get('.modal [name="aws_access_key_id"]').type('some_aws_access_key_id');
         cy.get('.modal [name="aws_secret_access_key"]').type('some_aws_secret_access_key');
         gotoNextStep();
 
-        cy.get('.modal .header').contains('Summary');
-        cy.get('.modal').contains(/cloudify-aws-plugin.*plugin is not found in catalog and manager/);
-        cy.get('.modal').contains(/cloudify-utilities-plugin.*plugin is not found in catalog and manager/);
-        cy.get('.modal').contains(/cloudify-kubernetes-plugin.*plugin is not found in catalog and manager/);
+        cy.contains('.modal .header', 'Summary');
+        cy.contains('.modal', /cloudify-aws-plugin.*plugin is not found in catalog and manager/);
+        cy.contains('.modal', /cloudify-utilities-plugin.*plugin is not found in catalog and manager/);
+        cy.contains('.modal', /cloudify-kubernetes-plugin.*plugin is not found in catalog and manager/);
     });
 
     it('should keep button and field states for navigating beetwen steps', () => {
@@ -401,27 +401,27 @@ describe('Getting started modal', () => {
 
         cy.reload();
 
-        cy.get('.modal button').contains('AWS').click();
-        cy.get('.modal button.active').contains('AWS');
+        cy.contains('.modal button', 'AWS').click();
+        cy.contains('.modal button.active', 'AWS');
         gotoNextStep();
 
-        cy.get('.modal .header').contains('AWS Secrets');
+        cy.contains('.modal .header', 'AWS Secrets');
         cy.get('.modal [name="aws_access_key_id"]').type('some_aws_access_key_id');
         cy.get('.modal [name="aws_secret_access_key"]').type('some_aws_secret_access_key');
         gotoBackStep();
 
-        cy.get('.modal .header').contains('Getting Started');
-        cy.get('.modal button').contains('GCP').click();
-        cy.get('.modal button.active').contains('AWS');
-        cy.get('.modal button.active').contains('GCP');
+        cy.contains('.modal .header', 'Getting Started');
+        cy.contains('.modal button', 'GCP').click();
+        cy.contains('.modal button.active', 'AWS');
+        cy.contains('.modal button.active', 'GCP');
         gotoNextStep();
 
-        cy.get('.modal .header').contains('AWS Secrets');
+        cy.contains('.modal .header', 'AWS Secrets');
         cy.get('.modal [name="aws_access_key_id"]').should('have.value', 'some_aws_access_key_id');
         cy.get('.modal [name="aws_secret_access_key"]').should('have.value', 'some_aws_secret_access_key');
         gotoNextStep();
 
-        cy.get('.modal .header').contains('GCP Secrets');
+        cy.contains('.modal .header', 'GCP Secrets');
         cy.get('.modal [name="gpc_client_x509_cert_url"]').type('some_gpc_client_x509_cert_url');
         cy.get('.modal [name="gpc_client_email"]').type('some_gpc_client_email');
         cy.get('.modal [name="gpc_client_id"]').type('some_gpc_client_id');
@@ -431,12 +431,12 @@ describe('Getting started modal', () => {
         cy.get('.modal [name="gpc_zone"]').type('some_gpc_zone');
         gotoBackStep();
 
-        cy.get('.modal .header').contains('AWS Secrets');
+        cy.contains('.modal .header', 'AWS Secrets');
         cy.get('.modal [name="aws_access_key_id"]').should('have.value', 'some_aws_access_key_id');
         cy.get('.modal [name="aws_secret_access_key"]').should('have.value', 'some_aws_secret_access_key');
         gotoNextStep();
 
-        cy.get('.modal .header').contains('GCP Secrets');
+        cy.contains('.modal .header', 'GCP Secrets');
         cy.get('.modal [name="gpc_client_x509_cert_url"]').should('have.value', 'some_gpc_client_x509_cert_url');
         cy.get('.modal [name="gpc_client_email"]').should('have.value', 'some_gpc_client_email');
         cy.get('.modal [name="gpc_client_id"]').should('have.value', 'some_gpc_client_id');
