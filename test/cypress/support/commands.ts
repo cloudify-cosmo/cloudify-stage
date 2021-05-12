@@ -152,13 +152,8 @@ const commands = {
             ...options
         });
     },
-    login: (
-        username = 'admin',
-        password = 'admin',
-        expectSuccessfulLogin = true,
-        mockDisabledGettingStarted = true
-    ) => {
-        if (mockDisabledGettingStarted) {
+    login: (username = 'admin', password = 'admin', expectSuccessfulLogin = true, disableGettingStarted = true) => {
+        if (disableGettingStarted) {
             cy.mockDisabledGettingStarted();
         }
 
@@ -184,7 +179,7 @@ const commands = {
             cy.waitUntilLoaded().then(() => cy.saveLocalStorage());
         }
     },
-    mockLogin: (username = 'admin', password = 'admin', mockDisabledGettingStarted = true) => {
+    mockLogin: (username = 'admin', password = 'admin', disableGettingStarted = true) => {
         cy.stageRequest('/console/auth/login', 'POST', undefined, {
             Authorization: `Basic ${btoa(`${username}:${password}`)}`
         }).then(response => {
@@ -196,7 +191,7 @@ const commands = {
                     username
                 })
             );
-            if (mockDisabledGettingStarted) {
+            if (disableGettingStarted) {
                 cy.mockDisabledGettingStarted();
             }
         });
@@ -297,14 +292,14 @@ const commands = {
             }
         });
     },
-    refreshPage: (mockDisabledGettingStarted = true) => {
-        if (mockDisabledGettingStarted) {
+    refreshPage: (disableGettingStarted = true) => {
+        if (disableGettingStarted) {
             cy.mockDisabledGettingStarted();
         }
         cy.get('.pageMenuItem.active').click({ force: true });
     },
-    refreshTemplate: (mockDisabledGettingStarted = true) => {
-        if (mockDisabledGettingStarted) {
+    refreshTemplate: (disableGettingStarted = true) => {
+        if (disableGettingStarted) {
             cy.mockDisabledGettingStarted();
         }
         cy.get('.tenantsMenu').click({ force: true });
