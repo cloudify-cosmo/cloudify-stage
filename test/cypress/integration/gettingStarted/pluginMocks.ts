@@ -216,108 +216,60 @@ export const mockAwsPluginsManager = () =>
         }
     ]);
 
-export const mockCloudifyAwsPluginUpload = () =>
+export const mockPluginUpload = (pluginTitle: string, iconUrl: string, yamlUrl: string, wagonUrl: string) =>
     cy.intercept(
         {
             method: 'POST',
             pathname: '/console/plugins/upload',
-            query: {
-                visibility: 'tenant',
-                title: 'AWS',
-                iconUrl: 'https://cloudify.co/wp-content/uploads/2019/08/aws-1.png',
-                yamlUrl: 'http://repository.cloudifysource.org/cloudify/wagons/cloudify-aws-plugin/2.8.0/plugin.yaml',
-                wagonUrl:
-                    'http://repository.cloudifysource.org/cloudify/wagons/cloudify-aws-plugin/2.8.0/cloudify_aws_plugin-2.8.0-centos-Core-py27.py36-none-linux_x86_64.wgn'
-            }
+            query: { visibility: 'tenant', title: pluginTitle, iconUrl, yamlUrl, wagonUrl }
         },
-        { body: { id: '471ba867-5188-4ecc-b4f9-0a30883ef9f6' } }
+        { body: {} }
+    );
+
+export const mockCloudifyAwsPluginUpload = () =>
+    mockPluginUpload(
+        'AWS',
+        'https://cloudify.co/wp-content/uploads/2019/08/aws-1.png',
+        'http://repository.cloudifysource.org/cloudify/wagons/cloudify-aws-plugin/2.8.0/plugin.yaml',
+        'http://repository.cloudifysource.org/cloudify/wagons/cloudify-aws-plugin/2.8.0/cloudify_aws_plugin-2.8.0-centos-Core-py27.py36-none-linux_x86_64.wgn'
     );
 
 export const mockCloudifyUtilitiesPluginUpload = () =>
-    cy.intercept(
-        {
-            method: 'POST',
-            pathname: '/console/plugins/upload',
-            query: {
-                visibility: 'tenant',
-                title: 'Utilities',
-                iconUrl: 'https://cloudify.co/wp-content/uploads/2019/08/pluginlogo.png',
-                yamlUrl:
-                    'http://repository.cloudifysource.org/cloudify/wagons/cloudify-utilities-plugin/1.24.4/plugin.yaml',
-                wagonUrl:
-                    'http://repository.cloudifysource.org/cloudify/wagons/cloudify-utilities-plugin/1.24.4/cloudify_utilities_plugin-1.24.4-centos-Core-py27.py36-none-linux_x86_64.wgn'
-            }
-        },
-        { body: { id: '7be1e257-1f8f-48f6-9b6b-5447a3432018' } }
+    mockPluginUpload(
+        'Utilities',
+        'https://cloudify.co/wp-content/uploads/2019/08/pluginlogo.png',
+        'http://repository.cloudifysource.org/cloudify/wagons/cloudify-utilities-plugin/1.24.4/plugin.yaml',
+        'http://repository.cloudifysource.org/cloudify/wagons/cloudify-utilities-plugin/1.24.4/cloudify_utilities_plugin-1.24.4-centos-Core-py27.py36-none-linux_x86_64.wgn'
     );
 
 export const mockCloudifyKubernetesPluginUpload = () =>
-    cy.intercept(
-        {
-            method: 'POST',
-            pathname: '/console/plugins/upload',
-            query: {
-                visibility: 'tenant',
-                title: 'Kubernetes',
-                iconUrl: 'https://cloudify.co/wp-content/uploads/2020/07/kube-icon.png',
-                yamlUrl:
-                    'http://repository.cloudifysource.org/cloudify/wagons/cloudify-kubernetes-plugin/2.12.1/plugin.yaml',
-                wagonUrl:
-                    'http://repository.cloudifysource.org/cloudify/wagons/cloudify-kubernetes-plugin/2.12.1/cloudify_kubernetes_plugin-2.12.1-centos-Core-py36-none-linux_x86_64.wgn'
-            }
-        },
-        { body: { id: 'b3ae9933-32f3-4440-b121-5b3a44588442' } }
+    mockPluginUpload(
+        'Kubernetes',
+        'https://cloudify.co/wp-content/uploads/2020/07/kube-icon.png',
+        'http://repository.cloudifysource.org/cloudify/wagons/cloudify-kubernetes-plugin/2.12.1/plugin.yaml',
+        'http://repository.cloudifysource.org/cloudify/wagons/cloudify-kubernetes-plugin/2.12.1/cloudify_kubernetes_plugin-2.12.1-centos-Core-py36-none-linux_x86_64.wgn'
     );
 
 export const mockCloudifyTerraformPluginUpload = () =>
-    cy.intercept(
-        {
-            method: 'POST',
-            pathname: '/console/plugins/upload',
-            query: {
-                visibility: 'tenant',
-                title: 'Terraform',
-                iconUrl: 'https://cloudify.co/wp-content/uploads/2020/07/terraform-icon.png',
-                yamlUrl:
-                    'http://repository.cloudifysource.org/cloudify/wagons/cloudify-terraform-plugin/0.16.0/plugin.yaml',
-                wagonUrl:
-                    'http://repository.cloudifysource.org/cloudify/wagons/cloudify-terraform-plugin/0.16.0/cloudify_terraform_plugin-0.16.0-centos-Core-py27.py36-none-linux_x86_64.wgn'
-            }
-        },
-        { body: { id: '44d6e242-35d1-4e44-850f-6b2a922fd220' } }
+    mockPluginUpload(
+        'Terraform',
+        'https://cloudify.co/wp-content/uploads/2020/07/terraform-icon.png',
+        'http://repository.cloudifysource.org/cloudify/wagons/cloudify-terraform-plugin/0.16.0/plugin.yaml',
+        'http://repository.cloudifysource.org/cloudify/wagons/cloudify-terraform-plugin/0.16.0/cloudify_terraform_plugin-0.16.0-centos-Core-py27.py36-none-linux_x86_64.wgn'
     );
 
 export const mockCloudifyGcpPluginUpload = () =>
-    cy.intercept(
-        {
-            method: 'POST',
-            pathname: '/console/plugins/upload',
-            query: {
-                visibility: 'tenant',
-                title: 'GCP',
-                iconUrl: 'https://cloudify.co/wp-content/uploads/2019/08/gcplogo.png',
-                yamlUrl: 'http://repository.cloudifysource.org/cloudify/wagons/cloudify-gcp-plugin/1.7.0/plugin.yaml',
-                wagonUrl:
-                    'http://repository.cloudifysource.org/cloudify/wagons/cloudify-gcp-plugin/1.7.0/cloudify_gcp_plugin-1.7.0-centos-Core-py36-none-linux_x86_64.wgn'
-            }
-        },
-        { body: { id: 'b96b35be-77e4-4ff6-b66b-b342f11565fb' } }
+    mockPluginUpload(
+        'GCP',
+        'https://cloudify.co/wp-content/uploads/2019/08/gcplogo.png',
+        'http://repository.cloudifysource.org/cloudify/wagons/cloudify-gcp-plugin/1.7.0/plugin.yaml',
+        'http://repository.cloudifysource.org/cloudify/wagons/cloudify-gcp-plugin/1.7.0/cloudify_gcp_plugin-1.7.0-centos-Core-py36-none-linux_x86_64.wgn'
     );
 
 export const mockCloudifyAnsiblePluginUpload = () =>
-    cy.intercept(
-        {
-            method: 'POST',
-            pathname: '/console/plugins/upload',
-            query: {
-                visibility: 'tenant',
-                title: 'Ansible',
-                iconUrl: 'https://cloudify.co/wp-content/uploads/2020/07/ansible-icon.png',
-                yamlUrl:
-                    'http://repository.cloudifysource.org/cloudify/wagons/cloudify-ansible-plugin/2.10.1/plugin.yaml',
-                wagonUrl:
-                    'http://repository.cloudifysource.org/cloudify/wagons/cloudify-ansible-plugin/2.10.1/cloudify_ansible_plugin-2.10.1-centos-Core-py27.py36-none-linux_x86_64.wgn'
-            }
-        },
-        { body: { id: '07790312-9e3b-4072-84a6-5898a2e8d9b0' } }
+    mockPluginUpload(
+        'Ansible',
+        'https://cloudify.co/wp-content/uploads/2020/07/ansible-icon.png',
+        'http://repository.cloudifysource.org/cloudify/wagons/cloudify-ansible-plugin/2.10.1/plugin.yaml',
+        'http://repository.cloudifysource.org/cloudify/wagons/cloudify-ansible-plugin/2.10.1/cloudify_ansible_plugin-2.10.1-centos-Core-py27.py36-none-linux_x86_64.wgn'
     );
