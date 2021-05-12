@@ -23,7 +23,7 @@ const DeployBlueprintModal: FunctionComponent<DeployBlueprintModalProps> = ({ to
             .catch((err: { message: string }) => Promise.reject(InputsUtils.getErrorObject(err.message)));
     }
 
-    function waitForDeploymentIsCreated(deploymentId: string, { deploymentName: deploymentName }: BlueprintDeployParams) {
+    function waitForDeploymentIsCreated(deploymentId: string, { deploymentName }: BlueprintDeployParams) {
         const deploymentActions = new DeploymentActions(toolbox);
 
         return deploymentActions
@@ -34,7 +34,7 @@ const DeployBlueprintModal: FunctionComponent<DeployBlueprintModalProps> = ({ to
 
     function installDeployment(
         deploymentId: string,
-        { deploymentName: deploymentName }: BlueprintDeployParams,
+        { deploymentName }: BlueprintDeployParams,
         installWorkflowParameters: Record<string, any>,
         installWorkflowOptions: WorkflowOptions
     ) {
