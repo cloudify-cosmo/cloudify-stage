@@ -31,22 +31,24 @@ const gotoFinishStep = () => cy.contains('.modal button', 'Finish').click();
 const closeModal = () => cy.contains('button:not([disabled])', 'Close').click();
 
 describe('Getting started modal', () => {
-    before(() => {
-        cy.usePageMock().activate().login(undefined, undefined, true, false);
-    });
-
     it('should provide option to disable popup', () => {
-        cy.enableGettingStarted();
+        cy.usePageMock().activate().login(undefined, undefined, true, false).enableGettingStarted();
         cy.reload();
         cy.contains('label', "Don't show next time").click();
         cy.contains('button', 'Close').click();
         cy.reload();
         cy.contains('div', 'This page is empty').click(); // the way to check if modal is not visible
     });
+});
+
+describe('Mocked getting started modal', () => {
+    before(() => {
+        cy.usePageMock().activate().login(undefined, undefined, true, false);
+    });
+
+    beforeEach(() => cy.mockEnabledGettingStarted().reload());
 
     it('should install selected technology', () => {
-        cy.mockEnabledGettingStarted();
-
         // mocks listing
 
         mockAwsPluginsCatalog();
@@ -77,8 +79,6 @@ describe('Getting started modal', () => {
         mockBlueprintUploaded('AWS-VM-Setup-using-CloudFormation');
         mockBlueprintUploaded('Kubernetes-AWS-EKS');
 
-        cy.reload();
-
         cy.contains('.modal button', 'AWS').click();
         gotoNextStep();
 
@@ -105,8 +105,6 @@ describe('Getting started modal', () => {
     });
 
     it('should omit uploaded plugins and blueprints updating existing secrets', () => {
-        cy.mockEnabledGettingStarted();
-
         // mocks listing
 
         mockAwsPluginsCatalog();
@@ -185,8 +183,6 @@ describe('Getting started modal', () => {
             throw new Error('This case should not occur.');
         });
 
-        cy.reload();
-
         cy.contains('.modal button', 'AWS').click();
         gotoNextStep();
 
@@ -213,8 +209,6 @@ describe('Getting started modal', () => {
     });
 
     it('should group common plugins and secrets', () => {
-        cy.mockEnabledGettingStarted();
-
         // mocks listing
 
         mockAwsAndGcpPluginsCatalog();
@@ -262,8 +256,6 @@ describe('Getting started modal', () => {
         mockBlueprintUploaded('GCP-Basics-VM-Setup');
         mockBlueprintUploaded('GCP-Basics-Simple-Service-Setup');
         mockBlueprintUploaded('Kubernetes-GCP-GKE');
-
-        cy.reload();
 
         cy.contains('.modal button', 'AWS').click();
         cy.contains('.modal button', 'GCP').click();
@@ -321,8 +313,6 @@ describe('Getting started modal', () => {
     });
 
     it('requires all secrets to go to next step', () => {
-        cy.mockEnabledGettingStarted();
-
         // mocks listing
 
         mockEmptyPluginsCatalog();
@@ -334,8 +324,6 @@ describe('Getting started modal', () => {
             gotoNextStep();
             cy.contains('.modal .message', 'All secret values need to be specified');
         };
-
-        cy.reload();
 
         cy.contains('.modal button', 'AWS').click();
         cy.contains('.modal button', 'GCP').click();
@@ -369,16 +357,12 @@ describe('Getting started modal', () => {
     });
 
     it('should display information about not available plugins', () => {
-        cy.mockEnabledGettingStarted();
-
         // mocks listing
 
         mockEmptyPluginsCatalog();
         mockEmptyPluginsManager();
         mockEmptySecretsManager();
         mockEmptyBlueprintsManager();
-
-        cy.reload();
 
         cy.contains('.modal button', 'AWS').click();
         gotoNextStep();
@@ -395,11 +379,9 @@ describe('Getting started modal', () => {
     });
 
     it('should keep button and field states for navigating beetwen steps', () => {
-        cy.mockEnabledGettingStarted();
-
         mockEmptyPluginsCatalog();
 
-        cy.reload();
+        // cy.reload();
 
         cy.contains('.modal button', 'AWS').click();
         cy.contains('.modal button.active', 'AWS');
