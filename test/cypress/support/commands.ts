@@ -153,9 +153,7 @@ const commands = {
         });
     },
     login: (username = 'admin', password = 'admin', expectSuccessfulLogin = true, disableGettingStarted = true) => {
-        if (disableGettingStarted) {
-            cy.mockDisabledGettingStarted();
-        }
+        mockGettingStarted(!disableGettingStarted);
 
         cy.location('pathname').then(pathname => {
             if (pathname !== '/console/login') {
@@ -191,9 +189,7 @@ const commands = {
                     username
                 })
             );
-            if (disableGettingStarted) {
-                cy.mockDisabledGettingStarted();
-            }
+            mockGettingStarted(!disableGettingStarted);
         });
         cy.visit('/console').waitUntilLoaded();
     },
@@ -293,15 +289,11 @@ const commands = {
         });
     },
     refreshPage: (disableGettingStarted = true) => {
-        if (disableGettingStarted) {
-            cy.mockDisabledGettingStarted();
-        }
+        mockGettingStarted(!disableGettingStarted);
         cy.get('.pageMenuItem.active').click({ force: true });
     },
     refreshTemplate: (disableGettingStarted = true) => {
-        if (disableGettingStarted) {
-            cy.mockDisabledGettingStarted();
-        }
+        mockGettingStarted(!disableGettingStarted);
         cy.get('.tenantsMenu').click({ force: true });
         cy.contains('.text', 'default_tenant').click({ force: true });
     },
