@@ -24,6 +24,14 @@ const DeploymentSiteMarker: FunctionComponent<DeploymentSiteMarkerProps> = ({
     environmentTypeVisible
 }) => {
     const { FeatureGroup, CircleMarker } = Stage.Basic.Leaflet;
+    /**
+     * The `position` object must maintain the same reference. Otherwise, if it is a new reference,
+     * the markercluster library will assume that the marker has moved and will recreate the clusters,
+     * resulting in unnecessary UI operations and losing UI state (e.g. whether the cluster marker is spiderfied).
+     *
+     * @see https://github.com/Leaflet/Leaflet.markercluster/blob/499f71caa1fe8a4efcf91b85e42553f9a90306f1/src/MarkerClusterGroup.js#L715-L721
+     * @see https://github.com/PaulLeCam/react-leaflet/blob/d9f18e527495105bab1df65a8829422514daefd7/src/Marker.js#L27-L29
+     */
     const position = Stage.Common.Map.siteToLatLng(site);
     const tooltip = <DeploymentSiteTooltip deployment={deployment} environmentTypeVisible={environmentTypeVisible} />;
 
