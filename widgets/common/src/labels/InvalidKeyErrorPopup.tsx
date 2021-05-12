@@ -1,6 +1,12 @@
+import type { FunctionComponent } from 'react';
 import LabelErrorPopup from './LabelErrorPopup';
 
-export default function InvalidKeyErrorPopup({ keyPrefix, reservedKeys }) {
+interface InvalidKeyErrorPopupProps {
+    keyPrefix: string;
+    reservedKeys: string[];
+}
+
+const InvalidKeyErrorPopup: FunctionComponent<InvalidKeyErrorPopupProps> = ({ keyPrefix, reservedKeys }) => {
     const { i18n } = Stage;
 
     return (
@@ -11,9 +17,5 @@ export default function InvalidKeyErrorPopup({ keyPrefix, reservedKeys }) {
             })}
         />
     );
-}
-
-InvalidKeyErrorPopup.propTypes = {
-    keyPrefix: PropTypes.string.isRequired,
-    reservedKeys: PropTypes.arrayOf(PropTypes.string).isRequired
 };
+export default InvalidKeyErrorPopup;
