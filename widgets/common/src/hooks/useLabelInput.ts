@@ -21,10 +21,8 @@ function useLabelInput(onChange: (value: any) => void, { allowAnyValue = false, 
             }
 
             // supports both dropdown as well as regular input
-            const lowercasedNewTypedValue = _.toLower((data.searchQuery as string) ?? (data.value as string)).substr(
-                0,
-                maxInputLength
-            );
+            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+            const lowercasedNewTypedValue = _.toLower(data.searchQuery! ?? data.value!).substr(0, maxInputLength);
             if (lowercasedNewTypedValue === '' || allowedCharacters.test(lowercasedNewTypedValue)) {
                 setInputValue(lowercasedNewTypedValue);
                 onChange(lowercasedNewTypedValue);
