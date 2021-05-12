@@ -36,6 +36,11 @@ const getCommonHeaders = () => ({
     tenant: 'default_tenant'
 });
 
+const mockGettingStarted = (modalEnabled: boolean) =>
+    cy.interceptSp('GET', `/users/`, {
+        body: { show_getting_started: modalEnabled }
+    });
+
 declare global {
     namespace Cypress {
         // NOTE: necessary for extending the Cypress API
@@ -339,17 +344,9 @@ const commands = {
             .then(commandResult => commandResult.stdout);
     },
 
-    mockEnabledGettingStarted: () => {
-        cy.interceptSp('GET', `/users/`, {
-            body: { show_getting_started: true }
-        });
-    },
+    mockEnabledGettingStarted: () => mockGettingStarted(true),
 
-    mockDisabledGettingStarted: () => {
-        cy.interceptSp('GET', `/users/`, {
-            body: { show_getting_started: false }
-        });
-    }
+    mockDisabledGettingStarted: () => mockGettingStarted(false)
 };
 
 addCommands(commands);
