@@ -4,7 +4,7 @@ describe('Create Deployment Button widget', () => {
     const resourcePrefix = 'deploy_test_';
     const testBlueprintId = `${resourcePrefix}bp`;
     const testBlueprintUrl = exampleBlueprintUrl;
-    const firstInputNthChild = 6;
+    const firstInputNthChild = 7;
 
     before(() => {
         cy.activate('valid_trial_license').usePageMock('deploymentButton').mockLogin();
@@ -70,7 +70,7 @@ describe('Create Deployment Button widget', () => {
         cy.get('@loader', { timeout: install ? deployAndInstallTimeout : deployTimeout }).should('not.exist');
     };
 
-    const fillDeployBlueprintModal = (deploymentName, blueprintId) => {
+    const fillDeployBlueprintModal = (deploymentId, deploymentName, blueprintId) => {
         cy.get('div.deployBlueprintModal').within(() => {
             cy.get('div[name="blueprintName"]')
                 .click()
@@ -80,11 +80,12 @@ describe('Create Deployment Button widget', () => {
                 });
 
             cy.get('input[name="deploymentName"]').click().type(deploymentName);
+            cy.get('input[name="deploymentId"]').clear().type(deploymentId);
         });
     };
 
-    const deployBlueprint = (deploymentName, install = false) => {
-        fillDeployBlueprintModal(deploymentName, testBlueprintId);
+    const deployBlueprint = (deploymentId, deploymentName, install = false) => {
+        fillDeployBlueprintModal(deploymentId, deploymentName, testBlueprintId);
 
         cy.get(`div.deployBlueprintModal .actions > .ui:nth-child(${install ? '3' : '2'})`).click();
 
@@ -95,22 +96,22 @@ describe('Create Deployment Button widget', () => {
         waitForDeployBlueprintModal(install);
     };
 
-    const verifyBlueprintDeployed = (blueprintId, deploymentName) => {
-        cy.getDeployment(deploymentName).then(response => {
-            expect(response.body.id).to.be.equal(deploymentName);
+    const verifyBlueprintDeployed = (blueprintId, deploymentId) => {
+        cy.getDeployment(deploymentId).then(response => {
+            expect(response.body.id).to.be.equal(deploymentId);
             expect(response.body.blueprint_id).to.be.equal(blueprintId);
         });
     };
 
-    const verifyDeploymentInstallStarted = deploymentName => {
-        cy.getExecutions(`deployment_id=${deploymentName}&_sort=-ended_at`).then(response => {
+    const verifyDeploymentInstallStarted = deploymentId => {
+        cy.getExecutions(`deployment_id=${deploymentId}&_sort=-ended_at`).then(response => {
             expect(response.body.items[0].workflow_id).to.be.equal('install');
         });
     };
 
-    const verifyRedirectionToDeploymentPage = deploymentName => {
-        cy.location('pathname').should('have.string', `deployment/${deploymentName}`);
-        cy.get('.breadcrumb .pageTitle').should('have.text', deploymentName);
+    const verifyRedirectionToDeploymentPage = deploymentId => {
+        cy.location('pathname').should('have.string', `deployment/${deploymentId}`);
+        cy.get('.breadcrumb .pageTitle').should('have.text', deploymentId);
     };
 
     it('opens deployment modal', () => {
@@ -125,18 +126,20 @@ describe('Create Deployment Button widget', () => {
     });
 
     it('allows to deploy a blueprint', () => {
-        const deploymentNameWithoutInstall = `${resourcePrefix}onlyDeploy`;
-        deployBlueprint(deploymentNameWithoutInstall, false);
-        verifyRedirectionToDeploymentPage(deploymentNameWithoutInstall);
-        verifyBlueprintDeployed(testBlueprintId, deploymentNameWithoutInstall);
+        const deploymentName = `${resourcePrefix}onlyDeploy`;
+        const deploymentId = `${deploymentName}Id`;
+        deployBlueprint(deploymentId, deploymentName, false);
+        verifyRedirectionToDeploymentPage(deploymentId);
+        verifyBlueprintDeployed(testBlueprintId, deploymentId);
     });
 
     it('allows to deploy and install a blueprint', () => {
-        const deploymentNameWithInstall = `${resourcePrefix}deployAndInstall`;
-        deployBlueprint(deploymentNameWithInstall, true);
-        verifyBlueprintDeployed(testBlueprintId, deploymentNameWithInstall);
-        verifyRedirectionToDeploymentPage(deploymentNameWithInstall);
-        verifyDeploymentInstallStarted(deploymentNameWithInstall);
+        const deploymentName = `${resourcePrefix}deployAndInstall`;
+        const deploymentId = `${deploymentName}Id`;
+        deployBlueprint(deploymentId, deploymentName, true);
+        verifyBlueprintDeployed(testBlueprintId, deploymentId);
+        verifyRedirectionToDeploymentPage(deploymentId);
+        verifyDeploymentInstallStarted(deploymentId);
     });
 
     describe('handles errors during deploy & install process', () => {
@@ -155,10 +158,10 @@ describe('Create Deployment Button widget', () => {
         });
 
         it('handles deployment errors', () => {
-            const deploymentName = `${resourcePrefix}deployError`;
-            fillDeployBlueprintModal(deploymentName, testBlueprintId);
+            const deploymentId = `${resourcePrefix}deployError`;
+            fillDeployBlueprintModal(deploymentId, deploymentId, testBlueprintId);
 
-            cy.interceptSp('PUT', `/deployments/${deploymentName}`, {
+            cy.interceptSp('PUT', `/deployments/${deploymentId}`, {
                 statusCode: 400,
                 body: {
                     message: 'Cannot deploy blueprint'
@@ -172,8 +175,8 @@ describe('Create Deployment Button widget', () => {
         });
 
         it('handles installation errors', () => {
-            const deploymentName = `${resourcePrefix}installError`;
-            fillDeployBlueprintModal(deploymentName, testBlueprintId);
+            const deploymentId = `${resourcePrefix}installError`;
+            fillDeployBlueprintModal(deploymentId, deploymentId, testBlueprintId);
 
             cy.interceptSp('POST', '/executions', {
                 statusCode: 400,
@@ -189,7 +192,7 @@ describe('Create Deployment Button widget', () => {
             cy.get('div.deployBlueprintModal div.error.message').within(() => {
                 cy.get('li:nth-child(1)').should(
                     'have.text',
-                    `Deployment ${deploymentName} installation failed: Cannot start install workflow`
+                    `Deployment ${deploymentId} installation failed: Cannot start install workflow`
                 );
             });
         });
@@ -201,13 +204,10 @@ describe('Create Deployment Button widget', () => {
             cy.interceptSp('PUT', `/deployments/${deploymentName}`).as('deployBlueprint');
 
             cy.get('input[name="deploymentName"]').type(deploymentName);
-            cy.get(`form :nth-child(${firstInputNthChild}).field`)
-                .as('string_no_default')
-                .within(() => {
-                    cy.get('input').clear().type('Something');
-                });
+            cy.get('input[name="deploymentId"]').clear().type(deploymentName);
+            cy.get('input[name=string_no_default]').clear().type('Something');
 
-            cy.get(`form :nth-child(${firstInputNthChild + 1}).field`)
+            cy.contains('.field', 'string_constraint_pattern')
                 .as('string_constraint_pattern')
                 .within(() => {
                     cy.get('input').clear().type('CentOS 7.6').blur();
