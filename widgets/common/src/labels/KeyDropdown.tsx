@@ -1,6 +1,18 @@
-import CommonDropdown from './CommonDropdown';
+import { FunctionComponent } from 'react';
+import CommonDropdown, { KeyAndValueDropdownProps } from './CommonDropdown';
 
-export default function KeyDropdown({ innerRef, onChange, toolbox, allowAdditions, value }) {
+interface KeyDropdownProps extends KeyAndValueDropdownProps {
+    onChange: (value: string) => void;
+    value: string;
+}
+
+const KeyDropdown: FunctionComponent<KeyDropdownProps> = ({
+    allowAdditions = false,
+    innerRef,
+    onChange,
+    toolbox,
+    value
+}) => {
     const { i18n } = Stage;
 
     return (
@@ -18,17 +30,5 @@ export default function KeyDropdown({ innerRef, onChange, toolbox, allowAddition
             value={value}
         />
     );
-}
-
-KeyDropdown.propTypes = {
-    innerRef: PropTypes.shape({ current: PropTypes.instanceOf(HTMLElement) }).isRequired,
-    onChange: PropTypes.func.isRequired,
-    toolbox: Stage.PropTypes.Toolbox.isRequired,
-    allowAdditions: PropTypes.bool,
-    value: PropTypes.string
 };
-
-KeyDropdown.defaultProps = {
-    allowAdditions: false,
-    value: null
-};
+export default KeyDropdown;
