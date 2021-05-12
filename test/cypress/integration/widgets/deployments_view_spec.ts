@@ -92,6 +92,25 @@ describe('Deployments View widget', () => {
         mapHeightInput: () => cy.contains('Map height').parent().find('input[type="number"]')
     };
 
+    const widgetHeader = {
+        setFilter: (filterId: string) => {
+            cy.contains('button', 'Filter').click();
+
+            cy.get('.modal').within(() => {
+                cy.get('input').type(`${filterId}{enter}`);
+                cy.contains('OK').click();
+            });
+
+            cy.get('.modal').should('not.exist');
+            cy.contains('button', 'Filter').should('not.exist');
+            cy.contains('button', filterId);
+        },
+        openRunWorkflowModal: () => {
+            cy.contains('Bulk Actions').click();
+            cy.contains('Run Workflow').click();
+        }
+    };
+
     describe('configuration', () => {
         it('should allow changing displayed columns', () => {
             useDeploymentsViewWidget({
@@ -229,19 +248,9 @@ describe('Deployments View widget', () => {
 
             cy.contains(deploymentNameThatMatchesFilter);
             cy.contains(deploymentName);
-
-            cy.contains('button', 'Filter').click();
-
             cy.interceptSp('POST', '/searches/deployments').as('deploymentsSearchRequest');
 
-            cy.get('.modal').within(() => {
-                cy.get('input').type(`${filterId}{enter}`);
-                cy.contains('OK').click();
-            });
-
-            cy.get('.modal').should('not.exist');
-            cy.contains('button', 'Filter').should('not.exist');
-            cy.contains('button', filterId);
+            widgetHeader.setFilter(filterId);
 
             cy.wait('@deploymentsSearchRequest').then(({ request }) => {
                 const requestRules = request.body.filter_rules;
@@ -722,6 +731,52 @@ describe('Deployments View widget', () => {
                             });
                         });
                 });
+        });
+    });
+
+    describe('bulk actions', () => {
+        const siteFilterName = `in-${exampleSiteName}`;
+        const secondDeploymentWithExampleSiteName = `${specPrefix}deployment_2`;
+
+        before(() => {
+            cy.deleteDeploymentsFilter(siteFilterName, { ignoreFailure: true })
+                .deployBlueprint(blueprintName, secondDeploymentWithExampleSiteName, { webserver_port: 9124 })
+                .setSite(secondDeploymentWithExampleSiteName, exampleSiteName)
+                .createDeploymentsFilter(siteFilterName, [
+                    {
+                        type: FilterRuleType.Attribute,
+                        key: 'site_name',
+                        operator: FilterRuleOperators.AnyOf,
+                        values: [exampleSiteName]
+                    }
+                ]);
+        });
+
+        it('should allow to run workflow on filtered deployments', () => {
+            cy.interceptSp('POST', '/searches/workflows').as('searchWorkflows');
+            cy.interceptSp('PUT', '/deployment-groups/BATCH_ACTION_').as('createDeploymentGroup');
+            cy.interceptSp('POST', '/execution-groups').as('startExecutionGroup');
+
+            useDeploymentsViewWidget();
+            widgetHeader.setFilter(siteFilterName);
+            widgetHeader.openRunWorkflowModal();
+
+            cy.get('.modal').within(() => {
+                cy.wait('@searchWorkflows');
+
+                cy.get('.selection.dropdown').click().find('input').type('restart{enter}');
+                cy.contains('button', 'Run').click();
+
+                cy.wait('@createDeploymentGroup')
+                    .its('response.body.deployment_ids')
+                    .should('include.members', [deploymentName, secondDeploymentWithExampleSiteName]);
+                cy.wait('@startExecutionGroup').its('response.body.workflow_id').should('be.equal', 'restart');
+            });
+
+            cy.contains('.modal', 'Group execution started').within(() => {
+                cy.contains('Go to Executions page');
+                cy.contains('Close').click();
+            });
         });
     });
 });

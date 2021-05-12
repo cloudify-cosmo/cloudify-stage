@@ -255,7 +255,16 @@ class GenericDeployModal extends React.Component {
             ExecuteDeploymentModal,
             Labels: { Input: LabelsInput }
         } = Stage.Common;
-        const { onHide, open, toolbox, i18nHeaderKey, showDeploymentNameInput, showDeployButton } = this.props;
+        const {
+            onHide,
+            open,
+            toolbox,
+            i18nHeaderKey,
+            showInstallOptions,
+            showDeploymentNameInput,
+            showDeployButton,
+            showSitesInput
+        } = this.props;
         const {
             blueprint,
             deploymentInputs,
@@ -348,20 +357,22 @@ class GenericDeployModal extends React.Component {
 
                         <Form.Divider>{t('sections.deploymentMetadata')}</Form.Divider>
 
-                        <Form.Field
-                            error={errors.siteName}
-                            label={t('inputs.siteName.label')}
-                            help={t('inputs.siteName.help')}
-                        >
-                            <DynamicDropdown
-                                value={siteName}
-                                onChange={value => this.setState({ siteName: value })}
-                                name="siteName"
-                                fetchUrl="/sites?_include=name"
-                                valueProp="name"
-                                toolbox={toolbox}
-                            />
-                        </Form.Field>
+                        {showSitesInput && (
+                            <Form.Field
+                                error={errors.siteName}
+                                label={t('inputs.siteName.label')}
+                                help={t('inputs.siteName.help')}
+                            >
+                                <DynamicDropdown
+                                    value={siteName}
+                                    onChange={value => this.setState({ siteName: value })}
+                                    name="siteName"
+                                    fetchUrl="/sites?_include=name"
+                                    valueProp="name"
+                                    toolbox={toolbox}
+                                />
+                            </Form.Field>
+                        )}
 
                         <Form.Field
                             label={i18n.t('widgets.common.labels.input.label')}
@@ -404,6 +415,7 @@ class GenericDeployModal extends React.Component {
                         onExecute={this.onDeployAndInstall}
                         onHide={this.hideInstallModal}
                         toolbox={toolbox}
+                        hideOptions={!showInstallOptions}
                     />
                 </Modal.Content>
 
@@ -480,6 +492,16 @@ GenericDeployModal.propTypes = {
     showDeployButton: PropTypes.bool,
 
     /**
+     * Whether to show install workflow options (force, dry run, queue, schedule)
+     */
+    showInstallOptions: PropTypes.bool,
+
+    /**
+     * Whether to show site selection input
+     */
+    showSitesInput: PropTypes.bool,
+
+    /**
      * Steps to be executed on 'Deploy' button press, needs to be specified only when `showDeployButton` is enabled
      */
     deploySteps: StepsPropType,
@@ -498,7 +520,7 @@ GenericDeployModal.propTypes = {
     /**
      * Message to be displayed during inputs validation, before steps defined by `deployAndInstallSteps` are executed
      */
-    deployAndInstallValidationMessage: PropTypes.string.isRequired
+    deployAndInstallValidationMessage: PropTypes.string
 };
 
 GenericDeployModal.defaultProps = {
@@ -506,8 +528,11 @@ GenericDeployModal.defaultProps = {
     onHide: _.noop,
     showDeploymentNameInput: false,
     showDeployButton: false,
+    showInstallOptions: false,
+    showSitesInput: false,
     deploySteps: null,
-    deployValidationMessage: null
+    deployValidationMessage: null,
+    deployAndInstallValidationMessage: null
 };
 
 export default GenericDeployModal;

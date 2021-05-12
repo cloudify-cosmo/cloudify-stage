@@ -8,6 +8,7 @@ import log from 'loglevel';
 import { saveAs } from 'file-saver';
 import marked from 'marked';
 import { v4 } from 'uuid';
+import i18n from 'i18next';
 import { GenericField } from '../components/basic';
 import type { ManagerData } from '../reducers/managerReducer';
 
@@ -183,6 +184,10 @@ export default class StageUtils {
 
         const licenseEdition = _.get(managerData, 'license.data.license_edition', '');
         return _.includes(widgetSupportedEditions, licenseEdition);
+    }
+
+    static getT(keyPrefix: string) {
+        return (keySuffix: string, params?: Record<string, any>) => i18n.t(`${keyPrefix}.${keySuffix}`, params);
     }
 
     static isEmptyWidgetData = isEmptyWidgetData;

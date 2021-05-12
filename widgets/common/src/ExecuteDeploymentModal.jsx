@@ -6,9 +6,31 @@ function getWorkflowName(workflow) {
     return isWorkflowName(workflow) ? workflow : workflow.name;
 }
 
+const t = Stage.Utils.getT('widgets.common.deployments.executeModal');
+
+function renderActionCheckbox(name, checked, onChange) {
+    const { Checkbox } = Stage.Basic.Form;
+    return (
+        <Checkbox
+            name={name}
+            toggle
+            label={t(`actions.${name}.label`)}
+            help={t(`actions.${name}.help`)}
+            checked={checked}
+            onChange={onChange}
+        />
+    );
+}
+
+function renderActionField(name, checked, onChange) {
+    const { Field } = Stage.Basic.Form;
+    return <Field>{renderActionCheckbox(name, checked, onChange)}</Field>;
+}
+
 export default function ExecuteDeploymentModal({
     deploymentId,
     deployments,
+    hideOptions,
     onExecute,
     onHide,
     toolbox,
@@ -16,7 +38,6 @@ export default function ExecuteDeploymentModal({
     open
 }) {
     const {
-        i18n,
         Hooks: { useErrors, useBoolean, useOpenProp, useInput, useResettableState }
     } = Stage;
     const { useEffect } = React;
@@ -70,7 +91,7 @@ export default function ExecuteDeploymentModal({
                         setWorkflowParams(selectedWorkflow);
                     } else {
                         setErrors(
-                            i18n.t('widgets.common.deployments.executeModal.workflowError', {
+                            t('errors.workflowError', {
                                 deploymentId,
                                 workflowName
                             })
@@ -95,7 +116,7 @@ export default function ExecuteDeploymentModal({
 
         const name = getWorkflowName(workflow);
         if (!name) {
-            setErrors(i18n.t('widgets.common.deployments.executeModal.missingWorkflow'));
+            setErrors(t('errors.missingWorkflow'));
             return false;
         }
 
@@ -109,8 +130,7 @@ export default function ExecuteDeploymentModal({
                 !_.isEqual(scheduledTimeMoment.format('YYYY-MM-DD HH:mm'), scheduledTime) ||
                 scheduledTimeMoment.isBefore(moment())
             ) {
-                validationErrors.scheduledTime =
-                    'Please provide valid scheduled time (in the future, using format: YYYY-MM-DD HH:mm)';
+                validationErrors.scheduledTime = t('errors.scheduleTimeError');
             }
         }
 
@@ -138,7 +158,7 @@ export default function ExecuteDeploymentModal({
         }
 
         if (_.isEmpty(deploymentsList)) {
-            setErrors(i18n.t('widgets.common.deployments.executeModal.missingDeployment'));
+            setErrors(t('errors.missingDeployment'));
             return false;
         }
 
@@ -192,7 +212,7 @@ export default function ExecuteDeploymentModal({
                 setUserWorkflowParams(InputsUtils.getUpdatedInputs(baseWorkflowParams, userWorkflowParams, yamlInputs));
             })
             .catch(err =>
-                setErrors({ yamlFile: `Loading values from YAML file failed: ${_.isString(err) ? err : err.message}` })
+                setErrors({ yamlFile: t('errors.yamlFileError', { message: _.isString(err) ? err : err.message }) })
             )
             .finally(unsetFileLoading);
     }
@@ -204,22 +224,21 @@ export default function ExecuteDeploymentModal({
     const { ApproveButton, CancelButton, DateInput, Divider, Form, Header, Icon, Modal, Message } = Stage.Basic;
     const { InputsHeader, InputsUtils, YamlFileButton } = Stage.Common;
 
-    let deploymentName;
+    let headerKey = 'header.';
     if (!_.isEmpty(deployments)) {
         if (_.size(deployments) > 1) {
-            deploymentName = 'multiple deployments';
+            headerKey += 'multipleDeployments';
         } else {
-            [deploymentName] = deployments;
+            headerKey += 'singleDeployemnt';
         }
     } else {
-        deploymentName = deploymentId;
+        headerKey += 'noDeployment';
     }
 
     return (
         <Modal open={open} onClose={onHide} className="executeWorkflowModal">
             <Modal.Header>
-                <Icon name="cogs" /> Execute workflow {workflowName}
-                {deploymentName && ` on ${deploymentName}`}
+                <Icon name="cogs" /> {t(headerKey, { workflowName, deploymentName: _.head(deployments) })}
             </Modal.Header>
 
             <Modal.Content>
@@ -232,90 +251,61 @@ export default function ExecuteDeploymentModal({
                         />
                     )}
 
-                    <InputsHeader header="Parameters" compact />
+                    <InputsHeader header={t('paramsHeader')} compact />
 
-                    {_.isEmpty(baseWorkflowParams) && <Message content="No parameters available for the execution" />}
+                    {_.isEmpty(baseWorkflowParams) && <Message content={t('noParams')} />}
 
                     {InputsUtils.getInputFields(baseWorkflowParams, handleInputChange, userWorkflowParams, errors)}
 
-                    <Form.Divider>
-                        <Header size="tiny">Actions</Header>
-                    </Form.Divider>
+                    {!hideOptions && (
+                        <>
+                            <Form.Divider>
+                                <Header size="tiny">{t('actionsHeader')}</Header>
+                            </Form.Divider>
 
-                    <Form.Field>
-                        <Form.Checkbox
-                            name="force"
-                            toggle
-                            label="Force"
-                            help='Execute the workflow even if there is an ongoing
-                                                 execution for the given deployment.
-                                                 You cannot use this option with "Queue".'
-                            checked={force}
-                            onChange={(event, field) => setForce(field.checked)}
-                        />
-                    </Form.Field>
-
-                    <Form.Field>
-                        <Form.Checkbox
-                            name="dryRun"
-                            toggle
-                            label="Dry run"
-                            help='If set, no actual operations will be performed.
-                                                 Executed tasks will be logged without side effects.
-                                                 You cannot use this option with "Queue".'
-                            checked={dryRun}
-                            onChange={(event, field) => setDryRun(field.checked)}
-                        />
-                    </Form.Field>
-
-                    <Form.Field>
-                        <Form.Checkbox
-                            name="queue"
-                            toggle
-                            label="Queue"
-                            help='If set, executions that can`t currently run will
-                                                 be queued and run automatically when possible.
-                                                 You cannot use this option with "Force" and "Dry run".'
-                            checked={queue}
-                            onChange={(event, field) => {
+                            {renderActionField('force', force, (event, field) => setForce(field.checked))}
+                            {renderActionField('dryRun', dryRun, (event, field) => setDryRun(field.checked))}
+                            {renderActionField('queue', queue, (event, field) => {
                                 setQueue(field.checked);
                                 clearForce();
                                 clearDryRun();
                                 clearSchedule();
                                 clearScheduleTime();
                                 clearErrors();
-                            }}
-                        />
-                    </Form.Field>
+                            })}
 
-                    <Form.Field error={!!errors.scheduledTime}>
-                        <Form.Checkbox
-                            name="schedule"
-                            toggle
-                            label="Schedule"
-                            help='If set, workflow will be executed at specific time (local timezone)
-                                                 provided below. You cannot use this option with "Queue".'
-                            checked={schedule}
-                            onChange={(event, field) => setSchedule(field.checked)}
-                        />
-                        {schedule && <Divider hidden />}
-                        {schedule && (
-                            <DateInput
-                                name="scheduledTime"
-                                value={scheduledTime}
-                                defaultValue=""
-                                minDate={moment()}
-                                maxDate={moment().add(1, 'Y')}
-                                onChange={(event, field) => setScheduledTime(field.value)}
-                            />
-                        )}
-                    </Form.Field>
+                            <Form.Field error={!!errors.scheduledTime}>
+                                {renderActionCheckbox('schedule', schedule, (event, field) =>
+                                    setSchedule(field.checked)
+                                )}
+                                {schedule && (
+                                    <>
+                                        <Divider hidden />
+                                        <DateInput
+                                            name="scheduledTime"
+                                            value={scheduledTime}
+                                            defaultValue=""
+                                            minDate={moment()}
+                                            maxDate={moment().add(1, 'Y')}
+                                            onChange={(event, field) => setScheduledTime(field.value)}
+                                        />
+                                    </>
+                                )}
+                            </Form.Field>
+                        </>
+                    )}
                 </Form>
             </Modal.Content>
 
             <Modal.Actions>
                 <CancelButton onClick={onHide} disabled={isLoading} />
-                <ApproveButton onClick={onApprove} disabled={isLoading} content="Execute" icon="cogs" color="green" />
+                <ApproveButton
+                    onClick={onApprove}
+                    disabled={isLoading}
+                    content={t('execute')}
+                    icon="cogs"
+                    color="green"
+                />
             </Modal.Actions>
         </Modal>
     );
@@ -342,11 +332,13 @@ ExecuteDeploymentModal.propTypes = {
         PropTypes.string
     ]).isRequired,
     onExecute: PropTypes.func,
-    onHide: PropTypes.func.isRequired
+    onHide: PropTypes.func.isRequired,
+    hideOptions: PropTypes.bool
 };
 ExecuteDeploymentModal.defaultProps = {
     deploymentId: '',
     deployments: [],
+    hideOptions: false,
     onExecute: _.noop
 };
 

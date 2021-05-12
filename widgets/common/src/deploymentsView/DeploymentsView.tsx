@@ -2,7 +2,7 @@ import React, { FunctionComponent, useMemo, useState } from 'react';
 import { find } from 'lodash';
 import { useQuery } from 'react-query';
 
-import { getParentPageContext, i18nMessagesPrefix, isTopLevelPage } from './common';
+import { getParentPageContext, i18nMessagesPrefix, isTopLevelPage, parentDeploymentLabelKey } from './common';
 import type { SharedDeploymentsViewWidgetConfiguration } from './configuration';
 import DetailsPane from './detailsPane';
 import { DeploymentsTable } from './table';
@@ -16,6 +16,7 @@ import {
 } from './layout';
 import DeploymentsViewHeader from './header';
 import DeploymentsMapContainer from './map';
+import SearchActions from '../SearchActions';
 
 export interface DeploymentsViewProps {
     widget: Stage.Types.Widget<SharedDeploymentsViewWidgetConfiguration>;
@@ -37,6 +38,7 @@ export const DeploymentsView: FunctionComponent<DeploymentsViewProps> = ({
     defaultFilterId
 }) => {
     const manager = toolbox.getManager();
+    const searchActions = new SearchActions(toolbox);
     const [gridParams, setGridParams] = useState<Stage.Types.ManagerGridParams>();
     const [userFilterId, setUserFilterId] = useState<string>();
 
@@ -77,9 +79,7 @@ export const DeploymentsView: FunctionComponent<DeploymentsViewProps> = ({
     const deploymentsResult = useQuery(
         [deploymentsUrl, gridParams, finalFilterRules],
         (): Promise<Stage.Common.DeploymentsView.Types.DeploymentsResponse> =>
-            manager.doPost(deploymentsUrl, gridParams, {
-                filter_rules: finalFilterRules
-            }),
+            searchActions.doListDeployments(finalFilterRules, gridParams),
         {
             enabled: filteringByParentDeploymentResult.filterable,
             refetchInterval: widget.configuration.customPollingTime * 1000,
@@ -204,7 +204,7 @@ const useFilteringByParentDeployment = ({ filterByParentDeployment }: { filterBy
         filterable: true,
         parentDeploymentRule: {
             type: FilterRuleType.Label,
-            key: 'csys-obj-parent',
+            key: parentDeploymentLabelKey,
             operator: FilterRuleOperators.AnyOf,
             values: [parentDeploymentId]
         } as Stage.Common.Filters.Rule
