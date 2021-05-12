@@ -1,4 +1,4 @@
-import type { FunctionComponent } from 'react';
+import { FunctionComponent, RefObject, useEffect, useRef } from 'react';
 
 import { DeploymentStatus } from '../../types';
 import type { DeploymentSitePair } from '../common';
@@ -62,6 +62,8 @@ const DeploymentSiteMarker: FunctionComponent<DeploymentSiteMarkerProps> = ({
 };
 export default DeploymentSiteMarker;
 
+export type DeploymentMarkerWithStatus = import('leaflet').Marker & { status: DeploymentStatus };
+
 const BareDeploymentSiteMarker: FunctionComponent<{
     status: DeploymentStatus;
     position: [number, number];
@@ -69,9 +71,27 @@ const BareDeploymentSiteMarker: FunctionComponent<{
 }> = ({ status, position, children, onClick }) => {
     const { Marker } = Stage.Basic.Leaflet;
     const icon = Stage.Common.createMarkerIcon(deploymentStatusToIconColorMapping[status]);
+    const markerRef = useRef<
+        import('react-leaflet').Marker<import('react-leaflet').MarkerProps, DeploymentMarkerWithStatus>
+    >();
+
+    useEffect(() => {
+        if (!markerRef.current) {
+            return;
+        }
+
+        markerRef.current.leafletElement.status = status;
+    }, [status]);
 
     return (
-        <Marker icon={icon} position={position} riseOnHover onclick={onClick}>
+        <Marker
+            icon={icon}
+            position={position}
+            riseOnHover
+            onclick={onClick}
+            // NOTE: TS does not like the additional `status` marker property
+            ref={markerRef as RefObject<import('react-leaflet').Marker>}
+        >
             {children}
         </Marker>
     );

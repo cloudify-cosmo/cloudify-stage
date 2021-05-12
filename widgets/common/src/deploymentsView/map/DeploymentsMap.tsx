@@ -4,7 +4,7 @@ import type { Map } from 'react-leaflet';
 
 import { Deployment } from '../types';
 import { DeploymentSitePair } from './common';
-import DeploymentSiteMarker from './marker';
+import { DeploymentSiteMarker, DeploymentMarkerClusterGroup } from './marker';
 import { selectDeployment } from '../common';
 
 interface DeploymentsMapProps {
@@ -37,7 +37,7 @@ const DeploymentsMap: FunctionComponent<DeploymentsMapProps> = ({
         [deploymentSitePairs, selectedDeployment?.id]
     );
 
-    const mapRef = useRef<Map | null>(null);
+    const mapRef = useRef<Map>(null);
 
     useEffect(() => Stage.Common.Map.invalidateSizeAfterDimensionsChange(mapRef), [
         widgetDimensions.height,
@@ -53,7 +53,7 @@ const DeploymentsMap: FunctionComponent<DeploymentsMapProps> = ({
     // does not declare them as mutable. Thus, no need to recalculate them.
     // See https://react-leaflet.js.org/docs/api-map
     const { options, bounds } = useMemo(() => Stage.Common.Map.getMapOptions(sitesDisplayed), []);
-    const { Map: MapComponent, MarkerClusterGroup } = Stage.Basic.Leaflet;
+    const { Map: MapComponent } = Stage.Basic.Leaflet;
     const { DefaultTileLayer } = Stage.Common.Map;
 
     function renderDeploymentSiteMarker({ deployment, site }: DeploymentSitePair) {
@@ -78,7 +78,9 @@ const DeploymentsMap: FunctionComponent<DeploymentsMapProps> = ({
             style={{ height: '100%' }}
         >
             <DefaultTileLayer />
-            <MarkerClusterGroup>{notSelectedDeploymentSitePairs.map(renderDeploymentSiteMarker)}</MarkerClusterGroup>
+            <DeploymentMarkerClusterGroup deploymentSitePairs={deploymentSitePairs}>
+                {notSelectedDeploymentSitePairs.map(renderDeploymentSiteMarker)}
+            </DeploymentMarkerClusterGroup>
 
             {selectedDeploymentSitePairs.map(renderDeploymentSiteMarker)}
         </MapComponent>
