@@ -55,7 +55,7 @@ const LabelsInput: FunctionComponent<LabelsInputProps> = ({
         Basic: { Divider, Form, Icon, Segment, UnsafelyTypedFormField },
         Common: {
             DeploymentActions,
-            // @ts-ignore Property 'RevertToDefaultIcon' does not exist on type 'typeof Common'
+            // @ts-expect-error RevertToDefaultIcon is not converted to TS yet
             RevertToDefaultIcon
         },
         Hooks: { useBoolean, useOpenProp, useResettableState, useToggle },

@@ -33,7 +33,7 @@ const CommonDropdown: FunctionComponent<CommonDropdownProps> = ({
 }) => {
     const { useEffect } = React;
     const {
-        // @ts-ignore Property 'DynamicDropdown' does not exist on type 'typeof Common'
+        // @ts-expect-error DynamicDropdown is not converted to TS yet
         Common: { DynamicDropdown },
         Hooks: { useLabelInput }
     } = Stage;
