@@ -50,7 +50,4 @@ declare global {
     }
 }
 
-// NOTE: prevents leaking variables as global in TS
-export {};
-
 Stage.defineHook({ useLabelInput });
