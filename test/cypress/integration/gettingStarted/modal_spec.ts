@@ -100,6 +100,7 @@ describe('Getting started modal', () => {
 
         cy.get('.modal .progress .progress').contains('100%');
         cy.get('.modal .progress .label').contains('Installation done!');
+        cy.get('.modal .ui.red.message', { timeout: 0 }).should('not.exist'); // there shouldn't be visible error messages
         closeModal();
     });
 
@@ -207,6 +208,7 @@ describe('Getting started modal', () => {
 
         cy.get('.modal .progress .progress').contains('100%');
         cy.get('.modal .progress .label').contains('Installation done!');
+        cy.get('.modal .ui.red.message', { timeout: 0 }).should('not.exist'); // there shouldn't be visible error messages
         closeModal();
     });
 
@@ -314,6 +316,7 @@ describe('Getting started modal', () => {
 
         cy.get('.modal .progress .progress').contains('100%');
         cy.get('.modal .progress .label').contains('Installation done!');
+        cy.get('.modal .ui.red.message', { timeout: 0 }).should('not.exist'); // there shouldn't be visible error messages
         closeModal();
     });
 
