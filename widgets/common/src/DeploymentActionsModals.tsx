@@ -26,7 +26,6 @@ const DeploymentActionsModals: FunctionComponent<DeploymentActionsModalsProps> =
             RemoveDeploymentModal,
             // @ts-expect-error Not migrated to TS yet
             SetSiteModal,
-            // @ts-expect-error Not migrated to TS yet
             Labels: { ManageModal: ManageLabelsModal }
         }
         // NOTE: `as any` since the commons are not migrated to TS yet

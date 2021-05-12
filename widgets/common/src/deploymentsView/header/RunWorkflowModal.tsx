@@ -43,7 +43,7 @@ const RunWorkflowModal: FunctionComponent<RunWorkflowModalProps> = ({ filterRule
         UnsafelyTypedForm,
         UnsafelyTypedFormField
     } = Stage.Basic;
-    // @ts-ignore Property 'DynamicDropdown' does not exist on type 'typeof Common'
+    // @ts-expect-error DynamicDropdown is not converted to TS yet
     const { DynamicDropdown } = Stage.Common;
     const { useBoolean, useErrors, useResettableState } = Stage.Hooks;
 

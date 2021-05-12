@@ -1,23 +1,35 @@
+import { FunctionComponent } from 'react';
 import LabelsInput from './LabelsInput';
+import type { Label } from './types';
 
-export default function LabelsModal({
+export interface LabelsModalProps {
+    deploymentId: string;
+    hideInitialLabels?: boolean;
+    i18nHeaderKey: string;
+    i18nApplyKey: string;
+    open: boolean;
+    onHide: () => void;
+    toolbox: Stage.Types.Toolbox;
+}
+
+const LabelsModal: FunctionComponent<LabelsModalProps> = ({
     deploymentId,
-    hideInitialLabels,
+    hideInitialLabels = false,
     i18nHeaderKey,
     i18nApplyKey,
     open,
     onHide,
     toolbox
-}) {
+}) => {
     const { i18n } = Stage;
-    const { ApproveButton, CancelButton, Form, Icon, Modal } = Stage.Basic;
+    const { ApproveButton, CancelButton, Icon, Modal, UnsafelyTypedForm, UnsafelyTypedFormField } = Stage.Basic;
     const { DeploymentActions } = Stage.Common;
     const { useBoolean, useErrors, useOpenProp, useResettableState } = Stage.Hooks;
     const actions = new DeploymentActions(toolbox);
 
     const [isLoading, setLoading, unsetLoading] = useBoolean();
     const { errors, clearErrors, setErrors, setMessageAsError } = useErrors();
-    const [labels, setLabels, resetLabels] = useResettableState([]);
+    const [labels, setLabels, resetLabels] = useResettableState<Label[]>([]);
     const [initialLabels, setInitialLabels, resetInitialLabels] = useResettableState([]);
 
     useOpenProp(open, () => {
@@ -39,7 +51,7 @@ export default function LabelsModal({
             .finally(unsetLoading);
     });
 
-    function onChange(newLabels) {
+    function onChange(newLabels: Label[]) {
         clearErrors();
         setLabels(newLabels);
     }
@@ -71,8 +83,8 @@ export default function LabelsModal({
             </Modal.Header>
 
             <Modal.Content>
-                <Form loading={isLoading} errors={errors} scrollToError onErrorsDismiss={clearErrors}>
-                    <Form.Field
+                <UnsafelyTypedForm loading={isLoading} errors={errors} scrollToError onErrorsDismiss={clearErrors}>
+                    <UnsafelyTypedFormField
                         label={i18n.t('widgets.common.labels.input.label')}
                         help={i18n.t('widgets.common.labels.input.help')}
                     >
@@ -82,8 +94,8 @@ export default function LabelsModal({
                             onChange={onChange}
                             toolbox={toolbox}
                         />
-                    </Form.Field>
-                </Form>
+                    </UnsafelyTypedFormField>
+                </UnsafelyTypedForm>
             </Modal.Content>
 
             <Modal.Actions>
@@ -92,18 +104,5 @@ export default function LabelsModal({
             </Modal.Actions>
         </Modal>
     );
-}
-
-LabelsModal.propTypes = {
-    deploymentId: PropTypes.string.isRequired,
-    hideInitialLabels: PropTypes.bool,
-    i18nApplyKey: PropTypes.string.isRequired,
-    i18nHeaderKey: PropTypes.string.isRequired,
-    open: PropTypes.bool.isRequired,
-    onHide: PropTypes.func.isRequired,
-    toolbox: Stage.PropTypes.Toolbox.isRequired
 };
-
-LabelsModal.defaultProps = {
-    hideInitialLabels: false
-};
+export default LabelsModal;

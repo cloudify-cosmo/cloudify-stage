@@ -1,9 +1,11 @@
+import { FunctionComponent, SyntheticEvent } from 'react';
 import AddButton from './AddButton';
 import DuplicationErrorPopup from './DuplicationErrorPopup';
 import InvalidKeyErrorPopup from './InvalidKeyErrorPopup';
 import LabelsList from './LabelsList';
 import KeyDropdown from './KeyDropdown';
 import ValueDropdown from './ValueDropdown';
+import { Label } from './types';
 
 const iconStyle = {
     position: 'absolute',
@@ -12,14 +14,14 @@ const iconStyle = {
 };
 const internalKeyPrefix = 'csys-';
 
-function useReservedKeys(toolbox) {
+function useReservedKeys(toolbox: Stage.Types.Toolbox) {
     const { useState, useEffect } = React;
     const {
         Common: { DeploymentActions },
         Hooks: { useBoolean }
     } = Stage;
 
-    const [reservedKeys, setReservedKeys] = useState([]);
+    const [reservedKeys, setReservedKeys] = useState<string[]>([]);
     const [fetchingReservedKeys, setFetchingReservedKeys, unsetFetchingReservedKeys] = useBoolean();
 
     useEffect(() => {
@@ -35,11 +37,27 @@ function useReservedKeys(toolbox) {
     return { reservedKeys, fetchingReservedKeys };
 }
 
-export default function LabelsInput({ hideInitialLabels, initialLabels, onChange, toolbox }) {
+interface LabelsInputProps {
+    hideInitialLabels?: boolean;
+    initialLabels?: Label[];
+    onChange: (labels: Label[]) => void;
+    toolbox: Stage.Types.Toolbox;
+}
+
+const LabelsInput: FunctionComponent<LabelsInputProps> = ({
+    hideInitialLabels = false,
+    initialLabels = [],
+    onChange,
+    toolbox
+}) => {
     const { useEffect, useRef } = React;
     const {
-        Basic: { Divider, Form, Icon, Segment },
-        Common: { DeploymentActions, RevertToDefaultIcon },
+        Basic: { Divider, Form, Icon, Segment, UnsafelyTypedFormField },
+        Common: {
+            DeploymentActions,
+            // @ts-expect-error RevertToDefaultIcon is not converted to TS yet
+            RevertToDefaultIcon
+        },
         Hooks: { useBoolean, useOpenProp, useResettableState, useToggle },
         Utils: { combineClassNames }
     } = Stage;
@@ -50,7 +68,7 @@ export default function LabelsInput({ hideInitialLabels, initialLabels, onChange
     const [open, toggleOpen] = useToggle();
     const [newLabelKey, setNewLabelKey, resetNewLabelKey] = useResettableState('');
     const [newLabelValue, setNewLabelValue, resetNewLabelValue] = useResettableState('');
-    const keyDropdownRef = useRef();
+    const keyDropdownRef = useRef<HTMLElement>();
 
     const newLabelIsProvided = !!newLabelKey && !!newLabelValue;
     const newLabelIsAlreadyPresent = (() => {
@@ -99,7 +117,9 @@ export default function LabelsInput({ hideInitialLabels, initialLabels, onChange
     }
 
     function onEnterPressOnAddButton() {
-        onAddLabel().then(() => keyDropdownRef.current.click());
+        onAddLabel().then(() => {
+            keyDropdownRef.current?.click();
+        });
     }
 
     return (
@@ -121,7 +141,7 @@ export default function LabelsInput({ hideInitialLabels, initialLabels, onChange
                     <RevertToDefaultIcon
                         value={labels}
                         defaultValue={initialLabels}
-                        onClick={event => {
+                        onClick={(event: SyntheticEvent) => {
                             event.stopPropagation();
                             resetLabels();
                         }}
@@ -141,7 +161,7 @@ export default function LabelsInput({ hideInitialLabels, initialLabels, onChange
                 <div style={{ padding: '0 0.5em' }}>
                     <Divider hidden={_.isEmpty(labels)} />
                     <Form.Group>
-                        <Form.Field width={7}>
+                        <UnsafelyTypedFormField width={7}>
                             {newLabelKeyIsNotPermitted && (
                                 <InvalidKeyErrorPopup keyPrefix={internalKeyPrefix} reservedKeys={reservedKeys} />
                             )}
@@ -151,8 +171,8 @@ export default function LabelsInput({ hideInitialLabels, initialLabels, onChange
                                 toolbox={toolbox}
                                 value={newLabelKey}
                             />
-                        </Form.Field>
-                        <Form.Field width={7}>
+                        </UnsafelyTypedFormField>
+                        <UnsafelyTypedFormField width={7}>
                             {duplicationErrorPopupOpen && <DuplicationErrorPopup />}
                             <ValueDropdown
                                 labelKey={newLabelKey}
@@ -160,29 +180,18 @@ export default function LabelsInput({ hideInitialLabels, initialLabels, onChange
                                 toolbox={toolbox}
                                 value={newLabelValue}
                             />
-                        </Form.Field>
-                        <Form.Field width={2}>
+                        </UnsafelyTypedFormField>
+                        <UnsafelyTypedFormField width={2}>
                             <AddButton
                                 onClick={onAddLabel}
                                 onEnterPress={onEnterPressOnAddButton}
                                 disabled={addLabelNotAllowed}
                             />
-                        </Form.Field>
+                        </UnsafelyTypedFormField>
                     </Form.Group>
                 </div>
             )}
         </Segment>
     );
-}
-
-LabelsInput.propTypes = {
-    hideInitialLabels: PropTypes.bool,
-    initialLabels: Stage.PropTypes.Labels,
-    onChange: PropTypes.func.isRequired,
-    toolbox: Stage.PropTypes.Toolbox.isRequired
 };
-
-LabelsInput.defaultProps = {
-    hideInitialLabels: false,
-    initialLabels: []
-};
+export default LabelsInput;
