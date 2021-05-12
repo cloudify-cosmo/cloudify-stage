@@ -43,10 +43,10 @@ describe('Getting started modal', () => {
 
 describe('Mocked getting started modal', () => {
     before(() => {
-        cy.usePageMock().activate().login(undefined, undefined, true, false);
+        cy.usePageMock().activate();
     });
 
-    beforeEach(() => cy.mockEnabledGettingStarted().reload());
+    beforeEach(() => cy.mockLogin(undefined, undefined, false).reload());
 
     it('should install selected technology', () => {
         // mocks listing
