@@ -756,10 +756,13 @@ describe('Deployments View widget', () => {
                 ]);
         });
 
-        it('should allow to run workflow on filtered deployments', () => {
-            cy.interceptSp('POST', '/searches/workflows').as('searchWorkflows');
+        beforeEach(() => {
             cy.interceptSp('PUT', '/deployment-groups/BATCH_ACTION_').as('createDeploymentGroup');
             cy.interceptSp('POST', '/execution-groups').as('startExecutionGroup');
+        });
+
+        it('should allow to run workflow on filtered deployments', () => {
+            cy.interceptSp('POST', '/searches/workflows').as('searchWorkflows');
 
             useDeploymentsViewWidget();
             widgetHeader.setFilter(siteFilterName);
@@ -785,8 +788,6 @@ describe('Deployments View widget', () => {
 
         it('should allow to create child deployments on filtered deployments', () => {
             cy.interceptSp('POST', '/searches/deployments').as('searchDeployments');
-            cy.interceptSp('PUT', '/deployment-groups/BATCH_ACTION_').as('createDeploymentGroup');
-            cy.interceptSp('POST', '/execution-groups').as('startExecutionGroup');
 
             useDeploymentsViewWidget({ configurationOverrides: { filterId: siteFilterName } });
             widgetHeader.openDeployOnModal();
@@ -799,7 +800,7 @@ describe('Deployments View widget', () => {
                 cy.contains('.field', 'Labels').find('.selection').click();
                 cy.get('div[name=labelKey] > input').type(labelKey);
                 cy.get('div[name=labelValue] > input').type(labelValue);
-                cy.get('.add').click();
+                cy.get('[aria-label=Add]').click();
                 cy.get('a.label').should('be.visible');
 
                 cy.contains('Deploy & Install').click();
