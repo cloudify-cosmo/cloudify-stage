@@ -26,10 +26,10 @@ interface CommonDropdownProps
 
 const CommonDropdown: FunctionComponent<CommonDropdownProps> = ({ allowAdditions = false, ...rest }) =>
     // eslint-disable-next-line react/jsx-props-no-spreading
-    allowAdditions ? <MultipleValuesDynamicDropdown {...rest} /> : <SingleValueDynamicDropdown {...rest} />;
+    allowAdditions ? <CommonDropdownWithAdditions {...rest} /> : <CommonDropdownWithoutAdditions {...rest} />;
 export default CommonDropdown;
 
-const MultipleValuesDynamicDropdown: FunctionComponent<CommonDropdownProps> = ({
+const CommonDropdownWithAdditions: FunctionComponent<CommonDropdownProps> = ({
     innerRef = null,
     onChange,
     value = null,
@@ -56,7 +56,7 @@ const MultipleValuesDynamicDropdown: FunctionComponent<CommonDropdownProps> = ({
     );
 };
 
-const SingleValueDynamicDropdown: FunctionComponent<CommonDropdownProps> = ({
+const CommonDropdownWithoutAdditions: FunctionComponent<CommonDropdownProps> = ({
     innerRef = null,
     onChange,
     type,
