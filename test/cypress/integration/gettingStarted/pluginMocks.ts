@@ -154,7 +154,7 @@ const createCloudifyAnsiblePluginItem = () => ({
     name: 'cloudify-ansible-plugin'
 });
 
-export const mockEmptyPluginsCatalog = () =>
+export const mockPluginsCatalog = (body: any[]) =>
     cy.intercept(
         {
             method: 'GET',
@@ -163,47 +163,27 @@ export const mockEmptyPluginsCatalog = () =>
                 url: 'http://repository.cloudifysource.org/cloudify/wagons/plugins.json'
             }
         },
-        { body: [] }
+        { body }
     );
+
+export const mockEmptyPluginsCatalog = () => mockPluginsCatalog([]);
 
 export const mockAwsPluginsCatalog = () =>
-    cy.intercept(
-        {
-            method: 'GET',
-            pathname: '/console/external/content',
-            query: {
-                url: 'http://repository.cloudifysource.org/cloudify/wagons/plugins.json'
-            }
-        },
-        {
-            body: [
-                createCloudifyAwsPluginItem(),
-                createCloudifyUtilitiesPluginItem(),
-                createCloudifyKubernetesPluginItem()
-            ]
-        }
-    );
+    mockPluginsCatalog([
+        createCloudifyAwsPluginItem(),
+        createCloudifyUtilitiesPluginItem(),
+        createCloudifyKubernetesPluginItem()
+    ]);
 
 export const mockAwsAndGcpPluginsCatalog = () =>
-    cy.intercept(
-        {
-            method: 'GET',
-            pathname: '/console/external/content',
-            query: {
-                url: 'http://repository.cloudifysource.org/cloudify/wagons/plugins.json'
-            }
-        },
-        {
-            body: [
-                createCloudifyAwsPluginItem(),
-                createCloudifyUtilitiesPluginItem(),
-                createCloudifyKubernetesPluginItem(),
-                createCloudifyTerraformPluginItem(),
-                createCloudifyGcpPluginItem(),
-                createCloudifyAnsiblePluginItem()
-            ]
-        }
-    );
+    mockPluginsCatalog([
+        createCloudifyAwsPluginItem(),
+        createCloudifyUtilitiesPluginItem(),
+        createCloudifyKubernetesPluginItem(),
+        createCloudifyTerraformPluginItem(),
+        createCloudifyGcpPluginItem(),
+        createCloudifyAnsiblePluginItem()
+    ]);
 
 export const mockEmptyPluginsManager = () =>
     cy.interceptSp('GET', '/plugins?_include=distribution,package_name,package_version,visibility', {
