@@ -175,8 +175,9 @@ describe('Create Deployment Button widget', () => {
         });
 
         it('handles installation errors', () => {
-            const deploymentId = `${resourcePrefix}installError`;
-            fillDeployBlueprintModal(deploymentId, deploymentId, testBlueprintId);
+            const deploymentName = `${resourcePrefix}installError`;
+            const deploymentId = `${deploymentName}Id`;
+            fillDeployBlueprintModal(deploymentId, deploymentName, testBlueprintId);
 
             cy.interceptSp('POST', '/executions', {
                 statusCode: 400,
@@ -192,7 +193,7 @@ describe('Create Deployment Button widget', () => {
             cy.get('div.deployBlueprintModal div.error.message').within(() => {
                 cy.get('li:nth-child(1)').should(
                     'have.text',
-                    `Deployment ${deploymentId} installation failed: Cannot start install workflow`
+                    `Deployment ${deploymentName} installation failed: Cannot start install workflow`
                 );
             });
         });
