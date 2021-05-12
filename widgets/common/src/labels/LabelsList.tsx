@@ -11,7 +11,7 @@ interface LabelsListProps {
     onChange: (labels: Label[]) => void;
 }
 
-const LabelsList: FunctionComponent<LabelsListProps> = ({ labels = [], onChange }) => {
+const LabelsList: FunctionComponent<LabelsListProps> = ({ labels, onChange }) => {
     const { Label: LabelComponent, Icon } = Stage.Basic;
     const sortedLabels = sortLabels(labels);
 
