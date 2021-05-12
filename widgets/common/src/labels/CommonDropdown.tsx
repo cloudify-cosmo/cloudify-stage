@@ -12,16 +12,14 @@ export interface KeyAndValueDropdownProps {
     toolbox: Stage.Types.Toolbox;
 }
 
-interface CommonDropdownProps extends KeyAndValueDropdownProps {
-    additionLabel: ComponentProps<typeof Dropdown>['additionLabel'];
-    disabled?: ComponentProps<typeof Dropdown>['disabled'];
+interface CommonDropdownProps
+    extends KeyAndValueDropdownProps,
+        Pick<
+            ComponentProps<typeof Dropdown>,
+            'additionLabel' | 'disabled' | 'multiple' | 'name' | 'noResultsMessage' | 'placeholder' | 'tabIndex'
+        > {
     fetchUrl: string;
-    name: ComponentProps<typeof Dropdown>['name'];
-    multiple?: ComponentProps<typeof Dropdown>['multiple'];
-    noResultsMessage?: ComponentProps<typeof Dropdown>['noResultsMessage'];
-    placeholder: ComponentProps<typeof Dropdown>['placeholder'];
-    tabIndex: ComponentProps<typeof Dropdown>['tabIndex'];
-    value: CommonDropdownValue;
+    value?: CommonDropdownValue;
 }
 
 const CommonDropdown: FunctionComponent<CommonDropdownProps> = ({
