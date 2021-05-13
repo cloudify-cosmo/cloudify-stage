@@ -11,6 +11,6 @@ const multipleValuesOperators: FilterRuleOperator[] = [
     FilterRuleOperators.NotAnyOf,
     FilterRuleOperators.IsNot
 ];
-export function isMultipleValueOperator(operator: FilterRuleOperator) {
+export function isMultipleValuesOperator(operator: FilterRuleOperator) {
     return multipleValuesOperators.includes(operator);
 }

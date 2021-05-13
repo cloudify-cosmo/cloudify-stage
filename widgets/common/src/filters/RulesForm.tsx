@@ -5,14 +5,14 @@ import RuleRow from './RuleRow';
 import AddRuleButton from './AddRuleButton';
 import type { FilterRule, FilterRuleRow } from './types';
 import { FilterRuleType, FilterRuleOperators, FilterRuleRowType } from './types';
-import { isMultipleValueOperator } from './common';
+import { isMultipleValuesOperator } from './common';
 
 function hasError({ type, key, operator, values }: FilterRule) {
     const noValuesDefined = !values?.length;
 
     if (type === FilterRuleType.Label) {
         const noKeyDefined = !key;
-        return noKeyDefined || (isMultipleValueOperator(operator) && noValuesDefined);
+        return noKeyDefined || (isMultipleValuesOperator(operator) && noValuesDefined);
     }
 
     return noValuesDefined;
