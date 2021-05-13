@@ -7,21 +7,21 @@ type Props = {
 
 export const SuccessDescription = ({ message }: Props) => (
     <>
-        <span>{message}</span>
+        {message}
         <SuccessIcon />
     </>
 );
 
 export const ProcessingDescription = ({ message }: Props) => (
     <>
-        <span>{message}</span>
+        {message}
         <ProcessingIcon />
     </>
 );
 
 export const ErrorDescription = ({ message }: Props) => (
     <>
-        <span>{message}</span>
+        {message}
         <ErrorIcon />
     </>
 );
