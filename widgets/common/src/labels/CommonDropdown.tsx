@@ -37,7 +37,7 @@ const CommonDropdownWithAdditions: FunctionComponent<CommonDropdownProps> = ({
     ...rest
 }) => {
     const {
-        // @ts-ignore Property 'DynamicDropdown' does not exist on type 'typeof Common'
+        // @ts-expect-error DynamicDropdown is not converted to TS yet
         Common: { DynamicDropdown }
     } = Stage;
 
