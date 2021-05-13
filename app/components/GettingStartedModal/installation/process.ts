@@ -1,6 +1,6 @@
-import i18n from 'i18next';
 import log from 'loglevel';
 
+import StageUtils from '../../../utils/stageUtils';
 import type Internal from '../../../utils/Internal';
 import type Manager from '../../../utils/Manager';
 import type { BlueprintInstallationTask, PluginInstallationTask, SecretInstallationTask } from './tasks';
@@ -17,6 +17,7 @@ export enum TaskStatus {
     InstallationError = 'installation-error'
 }
 
+const t = StageUtils.getT('gettingStartedModal.messages');
 const sleep = async (milliseconds: number) => new Promise(resolve => setTimeout(resolve, milliseconds));
 
 // TODO(RD-1874): use common api for backend requests
@@ -86,7 +87,7 @@ export const uploadBlueprint = async (manager: Manager, blueprint: BlueprintInst
             requestData
         );
         if (uploadResponse.error) {
-            return i18n.t('gettingStartedModal.messages.blueprintUploadError', undefined, {
+            return t('blueprintUploadError', {
                 blueprintName: blueprint.blueprintName,
                 uploadError: uploadResponse.error
             });
@@ -104,7 +105,7 @@ export const uploadBlueprint = async (manager: Manager, blueprint: BlueprintInst
             const statusResponse = await manager.doGet(`/blueprints/${encodeURIComponent(blueprint.blueprintName)}`);
             if (statusResponse) {
                 if (statusResponse.error) {
-                    return i18n.t('gettingStartedModal.messages.blueprintUploadError', undefined, {
+                    return t('blueprintUploadError', {
                         blueprintName: blueprint.blueprintName,
                         uploadError: statusResponse.error
                     });
@@ -117,9 +118,9 @@ export const uploadBlueprint = async (manager: Manager, blueprint: BlueprintInst
             log.error(e);
         }
     }
-    return i18n.t('gettingStartedModal.messages.blueprintUploadError', undefined, {
+    return t('blueprintUploadError', {
         blueprintName: blueprint.blueprintName,
-        uploadError: i18n.t('gettingStartedModal.messages.timeoutExceededError')
+        uploadError: t('timeoutExceededError')
     });
 };
 
@@ -163,7 +164,7 @@ export const createResourcesInstaller = (
                 if (destroyed) return;
                 if (!result) {
                     onError(
-                        i18n.t('gettingStartedModal.messages.pluginInstallError', undefined, {
+                        t('pluginInstallError', {
                             pluginName: scheduledPlugin.name
                         })
                     );
@@ -183,7 +184,7 @@ export const createResourcesInstaller = (
             if (destroyed) return;
             if (!result) {
                 onError(
-                    i18n.t('gettingStartedModal.messages.secretUpdateError', undefined, {
+                    t('secretUpdateError', {
                         secretName: updatedSecret.name
                     })
                 );
@@ -202,7 +203,7 @@ export const createResourcesInstaller = (
             if (destroyed) return;
             if (!result) {
                 onError(
-                    i18n.t('gettingStartedModal.messages.secretCreateError', undefined, {
+                    t('secretCreateError', {
                         secretName: createdSecret.name
                     })
                 );

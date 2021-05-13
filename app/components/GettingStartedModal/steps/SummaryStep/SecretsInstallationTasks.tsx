@@ -1,11 +1,13 @@
-import i18n from 'i18next';
 import React from 'react';
 
+import StageUtils from '../../../../utils/stageUtils';
 import createTaskDescriptionGetter from './createTaskDescriptionGetter';
 import { Divider, Label, List } from '../../../basic';
 
 import type { createSecretsInstallationTasks } from '../../installation/tasks';
 import type { TaskStatus } from '../../installation/process';
+
+const t = StageUtils.getT('gettingStartedModal.summary.secret');
 
 type Props = {
     tasks?: ReturnType<typeof createSecretsInstallationTasks>;
@@ -17,9 +19,9 @@ const SecretsInstallationTasks = ({ tasks, statuses }: Props) => {
         return null;
     }
     const getSecretTaskDescription = createTaskDescriptionGetter(
-        i18n.t('gettingStartedModal.summary.secret.settingProgressMessageSuffix'),
-        i18n.t('gettingStartedModal.summary.secret.settingDoneMessageSuffix'),
-        i18n.t('gettingStartedModal.summary.secret.settingErrorMessageSuffix')
+        t('settingProgressMessageSuffix'),
+        t('settingDoneMessageSuffix'),
+        t('settingErrorMessageSuffix')
     );
     return (
         <>
@@ -28,11 +30,7 @@ const SecretsInstallationTasks = ({ tasks, statuses }: Props) => {
                 return (
                     <List.Item key={createdSecret.name}>
                         <Label horizontal>{createdSecret.name}</Label>{' '}
-                        {getSecretTaskDescription(
-                            createdSecret.name,
-                            statuses,
-                            i18n.t('gettingStartedModal.summary.secret.creationScheduledMessageSuffix')
-                        )}
+                        {getSecretTaskDescription(createdSecret.name, statuses, t('creationScheduledMessageSuffix'))}
                     </List.Item>
                 );
             })}
@@ -40,11 +38,7 @@ const SecretsInstallationTasks = ({ tasks, statuses }: Props) => {
                 return (
                     <List.Item key={updatedSecret.name}>
                         <Label horizontal>{updatedSecret.name}</Label>{' '}
-                        {getSecretTaskDescription(
-                            updatedSecret.name,
-                            statuses,
-                            i18n.t('gettingStartedModal.summary.secret.updateScheduledMessageSuffix')
-                        )}
+                        {getSecretTaskDescription(updatedSecret.name, statuses, t('updateScheduledMessageSuffix'))}
                     </List.Item>
                 );
             })}

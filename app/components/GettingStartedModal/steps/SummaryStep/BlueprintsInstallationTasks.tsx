@@ -1,12 +1,14 @@
-import i18n from 'i18next';
 import React from 'react';
 
+import StageUtils from '../../../../utils/stageUtils';
 import { Divider, Label, List } from '../../../basic';
 import createTaskDescriptionGetter from './createTaskDescriptionGetter';
 import { SuccessDescription } from './descriptions';
 
 import type { createBlueprintsInstallationTasks } from '../../installation/tasks';
 import type { TaskStatus } from '../../installation/process';
+
+const t = StageUtils.getT('gettingStartedModal.summary.blueprint');
 
 type Props = {
     tasks?: ReturnType<typeof createBlueprintsInstallationTasks>;
@@ -18,9 +20,9 @@ const BlueprintsInstallationTasks = ({ tasks, statuses }: Props) => {
         return null;
     }
     const getBlueprintTaskDescription = createTaskDescriptionGetter(
-        i18n.t('gettingStartedModal.summary.blueprint.uploadingProgressMessageSuffix'),
-        i18n.t('gettingStartedModal.summary.blueprint.uploadingDoneMessageSuffix'),
-        i18n.t('gettingStartedModal.summary.blueprint.uploadingErrorMessageSuffix')
+        t('uploadingProgressMessageSuffix'),
+        t('uploadingDoneMessageSuffix'),
+        t('uploadingErrorMessageSuffix')
     );
     return (
         <>
@@ -29,9 +31,7 @@ const BlueprintsInstallationTasks = ({ tasks, statuses }: Props) => {
                 return (
                     <List.Item key={blueprint.blueprintName}>
                         <Label horizontal>{blueprint.blueprintName}</Label>{' '}
-                        <SuccessDescription
-                            message={i18n.t('gettingStartedModal.summary.blueprint.alreadyUploadedMessageSuffix')}
-                        />
+                        <SuccessDescription message={t('alreadyUploadedMessageSuffix')} />
                     </List.Item>
                 );
             })}
@@ -42,7 +42,7 @@ const BlueprintsInstallationTasks = ({ tasks, statuses }: Props) => {
                         {getBlueprintTaskDescription(
                             blueprint.blueprintName,
                             statuses,
-                            i18n.t('gettingStartedModal.summary.blueprint.uploadScheduledMessageSuffix')
+                            t('uploadScheduledMessageSuffix')
                         )}
                     </List.Item>
                 );

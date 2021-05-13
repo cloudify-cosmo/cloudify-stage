@@ -1,17 +1,19 @@
-import i18n from 'i18next';
+import StageUtils from '../../utils/stageUtils';
 
 import type { GettingStartedSchemaSecret, GettingStartedSecretsData, GettingStartedTechnologiesData } from './model';
 
+const t = StageUtils.getT('gettingStartedModal.validation');
+
 export const validateTechnologyFields = (data: GettingStartedTechnologiesData) => {
     if (!_.some(data)) {
-        return i18n.t('gettingStartedModal.validation.someTechnologyRequiredError');
+        return t('someTechnologyRequiredError');
     }
     return null;
 };
 
 export const validateSecretFields = (schema: GettingStartedSchemaSecret[], data: GettingStartedSecretsData) => {
     if (_.some(schema, ({ name }) => !data[name])) {
-        return i18n.t('gettingStartedModal.validation.allSecretsRequiredError');
+        return t('allSecretsRequiredError');
     }
     return null;
 };

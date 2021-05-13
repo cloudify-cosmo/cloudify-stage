@@ -1,6 +1,7 @@
 import i18n from 'i18next';
 import React, { memo, useEffect } from 'react';
 
+import StageUtils from '../../../../utils/stageUtils';
 import { useResettableState } from '../../../../utils/hooks';
 import { Divider, Header, List, Message, Progress } from '../../../basic';
 import useCurrentCallback from '../../common/useCurrentCallback';
@@ -17,6 +18,8 @@ import SecretsInstallationTasks from './SecretsInstallationTasks';
 import BlueprintsInstallationTasks from './BlueprintsInstallationTasks';
 
 import type { GettingStartedData, GettingStartedSchema } from '../../model';
+
+const tMessages = StageUtils.getT('gettingStartedModal.messages');
 
 type Props = {
     installationMode?: boolean;
@@ -148,9 +151,7 @@ const SummaryStep = ({
                         <>
                             <Divider hidden />
                             <Progress progress size="large" percent={installationProgress} indicating>
-                                {installationProgress < 100
-                                    ? i18n.t('gettingStartedModal.messages.progressMessage')
-                                    : i18n.t('gettingStartedModal.messages.doneMessage')}
+                                {installationProgress < 100 ? tMessages('progressMessage') : tMessages('doneMessage')}
                             </Progress>
                         </>
                     )}
