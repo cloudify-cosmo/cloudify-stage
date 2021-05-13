@@ -220,17 +220,17 @@ class GenericDeployModal extends React.Component {
             const { showDeploymentNameInput } = this.props;
             const errors = {};
 
-            if (_.isEmpty(blueprint.id)) {
-                errors.blueprintName = t('errors.noBlueprintName');
-            }
-
             if (showDeploymentNameInput) {
-                if (_.isEmpty(deploymentId)) {
-                    errors.deploymentId = t('errors.noDeploymentId');
-                }
                 if (_.isEmpty(deploymentName)) {
                     errors.deploymentName = t('errors.noDeploymentName');
                 }
+                if (_.isEmpty(deploymentId)) {
+                    errors.deploymentId = t('errors.noDeploymentId');
+                }
+            }
+
+            if (_.isEmpty(blueprint.id)) {
+                errors.blueprintName = t('errors.noBlueprintName');
             }
 
             const inputsWithoutValue = InputsUtils.getInputsWithoutValues(blueprint.plan.inputs, stateDeploymentInputs);
