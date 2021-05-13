@@ -1,9 +1,9 @@
-import cloudifyAwsPluginItem from '../../fixtures/getting_started/plugins_catalog/cloudify_aws_plugin_item.json';
-import cloudifyUtilitiesPluginItem from '../../fixtures/getting_started/plugins_catalog/cloudify_utilities_plugin_item.json';
-import cloudifyKubernetesPluginItem from '../../fixtures/getting_started/plugins_catalog/cloudify_kubernetes_plugin_item.json';
-import cloudifyTerraformPluginItem from '../../fixtures/getting_started/plugins_catalog/cloudify_terraform_plugin_item.json';
-import cloudifyGcpPluginItem from '../../fixtures/getting_started/plugins_catalog/cloudify_gcp_plugin_item.json';
-import cloudifyAnsiblePluginItem from '../../fixtures/getting_started/plugins_catalog/cloudify_ansible_plugin_item.json';
+import cloudifyAwsPluginItemInCatalog from '../../fixtures/getting_started/plugins_catalog/cloudify_aws_plugin_item_in_manager.json';
+import cloudifyUtilitiesPluginItemInCatalog from '../../fixtures/getting_started/plugins_catalog/cloudify_utilities_plugin_item_in_manager.json';
+import cloudifyKubernetesPluginItemInCatalog from '../../fixtures/getting_started/plugins_catalog/cloudify_kubernetes_plugin_item_in_manager.json';
+import cloudifyTerraformPluginItemInCatalog from '../../fixtures/getting_started/plugins_catalog/cloudify_terraform_plugin_item_in_manager.json';
+import cloudifyGcpPluginItemInCatalog from '../../fixtures/getting_started/plugins_catalog/cloudify_gcp_plugin_item_in_manager.json';
+import cloudifyAnsiblePluginItemInCatalog from '../../fixtures/getting_started/plugins_catalog/cloudify_ansible_plugin_item_in_manager.json';
 
 export const mockPluginsCatalog = (body: any[]) =>
     cy.intercept(
@@ -20,16 +20,20 @@ export const mockPluginsCatalog = (body: any[]) =>
 export const mockEmptyPluginsCatalog = () => mockPluginsCatalog([]);
 
 export const mockAwsPluginsCatalog = () =>
-    mockPluginsCatalog([cloudifyAwsPluginItem, cloudifyUtilitiesPluginItem, cloudifyKubernetesPluginItem]);
+    mockPluginsCatalog([
+        cloudifyAwsPluginItemInCatalog,
+        cloudifyUtilitiesPluginItemInCatalog,
+        cloudifyKubernetesPluginItemInCatalog
+    ]);
 
 export const mockAwsAndGcpPluginsCatalog = () =>
     mockPluginsCatalog([
-        cloudifyAwsPluginItem,
-        cloudifyUtilitiesPluginItem,
-        cloudifyKubernetesPluginItem,
-        cloudifyTerraformPluginItem,
-        cloudifyGcpPluginItem,
-        cloudifyAnsiblePluginItem
+        cloudifyAwsPluginItemInCatalog,
+        cloudifyUtilitiesPluginItemInCatalog,
+        cloudifyKubernetesPluginItemInCatalog,
+        cloudifyTerraformPluginItemInCatalog,
+        cloudifyGcpPluginItemInCatalog,
+        cloudifyAnsiblePluginItemInCatalog
     ]);
 
 export const mockPluginsManager = (items: any[]) =>

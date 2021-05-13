@@ -1,4 +1,4 @@
-import awsSecretsManager from '../../fixtures/getting_started/aws_secrets_manager.json';
+import awsSecretsInManager from '../../fixtures/getting_started/aws_secrets_in_manager.json';
 
 export const mockSecretsManager = (items: any[]) =>
     cy.interceptSp('GET', /^\/secrets\?.*\b_include=(\bkey\b|\bvisibility\b|,)+/, {
@@ -6,6 +6,6 @@ export const mockSecretsManager = (items: any[]) =>
     });
 
 export const mockEmptySecretsManager = () => mockSecretsManager([]);
-export const mockAwsSecretsManager = () => mockSecretsManager(awsSecretsManager);
+export const mockAwsSecretsManager = () => mockSecretsManager(awsSecretsInManager);
 export const mockSecretCreation = (secretName: string) => cy.interceptSp('PUT', `/secrets/${secretName}`, { body: {} });
 export const mockSecretUpdate = (secretName: string) => cy.interceptSp('PATCH', `/secrets/${secretName}`, { body: {} });
