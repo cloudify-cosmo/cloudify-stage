@@ -32,12 +32,21 @@ const closeModal = () => cy.contains('button:not([disabled])', 'Close').click();
 
 describe('Getting started modal', () => {
     it('should provide option to disable popup', () => {
-        cy.usePageMock().activate().login(undefined, undefined, true, false).enableGettingStarted();
-        cy.reload();
+        let showGettingStarted = true;
+        cy.usePageMock()
+            .activate()
+            .interceptSp('GET', `/users/`, res => {
+                res.reply({ show_getting_started: showGettingStarted });
+            })
+            .interceptSp('POST', `/users/`, res => {
+                showGettingStarted = res.body.show_getting_started;
+                res.reply({ show_getting_started: showGettingStarted });
+            })
+            .mockLogin();
         cy.contains('label', "Don't show next time").click();
         cy.contains('button', 'Close').click();
         cy.reload();
-        cy.contains('div', 'This page is empty').click(); // the way to check if modal is not visible
+        cy.get('.modal').should('not.exist'); // the way to check if modal is not visible
     });
 });
 
