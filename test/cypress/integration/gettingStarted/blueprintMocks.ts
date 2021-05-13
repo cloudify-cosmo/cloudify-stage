@@ -1,6 +1,6 @@
 import awsBlueprintsInManager from '../../fixtures/getting_started/aws_blueprints_in_manager.json';
 
-export const mockBlueprintsManager = (items: any[]) =>
+export const mockBlueprintsInManager = (items: any[]) =>
     cy.interceptSp(
         'GET',
         /^\/blueprints\?.*\b_include=(\bid\b|\bdescription\b|\bmain_file_name\b|\btenant_name\b|\bcreated_at\b|\bupdated_at\b|\bcreated_by\b|\bprivate_resource\b|\bvisibility\b|,)+/,
@@ -12,8 +12,8 @@ export const mockBlueprintsManager = (items: any[]) =>
         }
     );
 
-export const mockAwsBlueprintsManager = () => mockBlueprintsManager(awsBlueprintsInManager);
-export const mockEmptyBlueprintsManager = () => mockBlueprintsManager([]);
+export const mockAwsBlueprintsInManager = () => mockBlueprintsInManager(awsBlueprintsInManager);
+export const mockEmptyBlueprintsInManager = () => mockBlueprintsInManager([]);
 
 export const mockBlueprintUpload = (
     blueprintName: string,

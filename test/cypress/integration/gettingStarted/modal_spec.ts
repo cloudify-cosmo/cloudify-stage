@@ -1,29 +1,34 @@
 import {
     mockAwsBasicsVMSetupBlueprintUpload,
-    mockAwsBlueprintsManager,
+    mockAwsBlueprintsInManager,
     mockAwsVMSetupUsingCloudFormationBlueprintUpload,
     mockAwsVMSetupUsingTerraformBlueprintUpload,
     mockBlueprintUploaded,
-    mockEmptyBlueprintsManager,
+    mockEmptyBlueprintsInManager,
     mockGcpBasicsSimpleServiceSetupBlueprintUpload,
     mockGcpBasicsVMSetupBlueprintUpload,
     mockKubernetesAwsEksBlueprintUpload,
     mockKubernetesGcpGkeBlueprintUpload
 } from './blueprintMocks';
 import {
-    mockAwsAndGcpPluginsCatalog,
+    mockAwsAndGcpPluginsInCatalog,
     mockAwsPluginsCatalog,
-    mockAwsPluginsManager,
+    mockAwsPluginsInManager,
     mockCloudifyAnsiblePluginUpload,
     mockCloudifyAwsPluginUpload,
     mockCloudifyGcpPluginUpload,
     mockCloudifyKubernetesPluginUpload,
     mockCloudifyTerraformPluginUpload,
     mockCloudifyUtilitiesPluginUpload,
-    mockEmptyPluginsCatalog,
-    mockEmptyPluginsManager
+    mockEmptyPluginsInCatalog,
+    mockEmptyPluginsInManager
 } from './pluginMocks';
-import { mockAwsSecretsManager, mockEmptySecretsManager, mockSecretCreation, mockSecretUpdate } from './secretMocks';
+import {
+    mockAwsSecretsInManager,
+    mockEmptySecretsInManager,
+    mockSecretCreation,
+    mockSecretUpdate
+} from './secretMocks';
 
 const gotoBackStep = () => cy.contains('.modal button', 'Back').click();
 const gotoNextStep = () => cy.contains('.modal button', 'Next').click();
@@ -61,9 +66,9 @@ describe('Mocked getting started modal', () => {
         // mocks listing
 
         mockAwsPluginsCatalog();
-        mockEmptyPluginsManager();
-        mockEmptySecretsManager();
-        mockEmptyBlueprintsManager();
+        mockEmptyPluginsInManager();
+        mockEmptySecretsInManager();
+        mockEmptyBlueprintsInManager();
 
         // mocks plugins uploading
 
@@ -117,9 +122,9 @@ describe('Mocked getting started modal', () => {
         // mocks listing
 
         mockAwsPluginsCatalog();
-        mockAwsPluginsManager();
-        mockAwsSecretsManager();
-        mockAwsBlueprintsManager();
+        mockAwsPluginsInManager();
+        mockAwsSecretsInManager();
+        mockAwsBlueprintsInManager();
 
         // mocks plugins uploading
 
@@ -220,10 +225,10 @@ describe('Mocked getting started modal', () => {
     it('should group common plugins and secrets', () => {
         // mocks listing
 
-        mockAwsAndGcpPluginsCatalog();
-        mockEmptyPluginsManager();
-        mockEmptySecretsManager();
-        mockEmptyBlueprintsManager();
+        mockAwsAndGcpPluginsInCatalog();
+        mockEmptyPluginsInManager();
+        mockEmptySecretsInManager();
+        mockEmptyBlueprintsInManager();
 
         // mocks plugins uploading
 
@@ -324,10 +329,10 @@ describe('Mocked getting started modal', () => {
     it('requires all secrets to go to next step', () => {
         // mocks listing
 
-        mockEmptyPluginsCatalog();
-        mockEmptyPluginsManager();
-        mockEmptySecretsManager();
-        mockEmptyBlueprintsManager();
+        mockEmptyPluginsInCatalog();
+        mockEmptyPluginsInManager();
+        mockEmptySecretsInManager();
+        mockEmptyBlueprintsInManager();
 
         const checkErrorMessage = () => {
             gotoNextStep();
@@ -368,10 +373,10 @@ describe('Mocked getting started modal', () => {
     it('should display information about not available plugins', () => {
         // mocks listing
 
-        mockEmptyPluginsCatalog();
-        mockEmptyPluginsManager();
-        mockEmptySecretsManager();
-        mockEmptyBlueprintsManager();
+        mockEmptyPluginsInCatalog();
+        mockEmptyPluginsInManager();
+        mockEmptySecretsInManager();
+        mockEmptyBlueprintsInManager();
 
         cy.contains('.modal button', 'AWS').click();
         gotoNextStep();
@@ -388,7 +393,7 @@ describe('Mocked getting started modal', () => {
     });
 
     it('should keep button and field states for navigating beetwen steps', () => {
-        mockEmptyPluginsCatalog();
+        mockEmptyPluginsInCatalog();
 
         // cy.reload();
 

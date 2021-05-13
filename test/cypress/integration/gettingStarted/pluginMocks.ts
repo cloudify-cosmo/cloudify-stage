@@ -5,7 +5,7 @@ import cloudifyTerraformPluginItemInCatalog from '../../fixtures/getting_started
 import cloudifyGcpPluginItemInCatalog from '../../fixtures/getting_started/plugins_catalog/cloudify_gcp_plugin_item_in_manager.json';
 import cloudifyAnsiblePluginItemInCatalog from '../../fixtures/getting_started/plugins_catalog/cloudify_ansible_plugin_item_in_manager.json';
 
-export const mockPluginsCatalog = (body: any[]) =>
+export const mockPluginsInCatalog = (body: any[]) =>
     cy.intercept(
         {
             method: 'GET',
@@ -17,17 +17,17 @@ export const mockPluginsCatalog = (body: any[]) =>
         { body }
     );
 
-export const mockEmptyPluginsCatalog = () => mockPluginsCatalog([]);
+export const mockEmptyPluginsInCatalog = () => mockPluginsInCatalog([]);
 
 export const mockAwsPluginsCatalog = () =>
-    mockPluginsCatalog([
+    mockPluginsInCatalog([
         cloudifyAwsPluginItemInCatalog,
         cloudifyUtilitiesPluginItemInCatalog,
         cloudifyKubernetesPluginItemInCatalog
     ]);
 
-export const mockAwsAndGcpPluginsCatalog = () =>
-    mockPluginsCatalog([
+export const mockAwsAndGcpPluginsInCatalog = () =>
+    mockPluginsInCatalog([
         cloudifyAwsPluginItemInCatalog,
         cloudifyUtilitiesPluginItemInCatalog,
         cloudifyKubernetesPluginItemInCatalog,
@@ -36,17 +36,17 @@ export const mockAwsAndGcpPluginsCatalog = () =>
         cloudifyAnsiblePluginItemInCatalog
     ]);
 
-export const mockPluginsManager = (items: any[]) =>
+export const mockPluginsInManager = (items: any[]) =>
     cy.interceptSp(
         'GET',
         /^\/plugins\?.*\b_include=(\bdistribution\b|\bpackage_name\b|\bpackage_version\b|\bvisibility\b|,)+/,
         { body: { metadata: { pagination: { total: items.length, size: 1000, offset: 0 }, filtered: null }, items } }
     );
 
-export const mockEmptyPluginsManager = () => mockPluginsManager([]);
+export const mockEmptyPluginsInManager = () => mockPluginsInManager([]);
 
-export const mockAwsPluginsManager = () =>
-    mockPluginsManager([
+export const mockAwsPluginsInManager = () =>
+    mockPluginsInManager([
         {
             visibility: 'tenant',
             distribution: 'centos',
