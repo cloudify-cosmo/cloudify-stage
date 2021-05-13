@@ -19,6 +19,7 @@ const ValueDropdown: FunctionComponent<ValueDropdownProps> = ({
 
     return (
         <CommonDropdown
+            type="value"
             disabled={!labelKey}
             fetchUrl={labelKey ? `/labels/deployments/${labelKey}` : ''}
             noResultsMessage={value && !allowAdditions ? i18n.t('widgets.common.labels.newValue') : undefined}

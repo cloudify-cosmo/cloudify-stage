@@ -3,3 +3,5 @@ export interface Label {
     value: string;
     isInSystem?: boolean;
 }
+
+export type LabelInputType = 'key' | 'value';
