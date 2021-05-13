@@ -49,7 +49,7 @@ const FilterModal: FunctionComponent<FilterModalProps> = ({
     }
 
     return (
-        <Modal open={open} onClose={onCancel}>
+        <Modal open={open} onClose={onCancel} size="large">
             <Modal.Header>
                 <Icon name="filter" /> {i18n.t(`${i18nPrefix}.header.filter.modal.header`)}
             </Modal.Header>
