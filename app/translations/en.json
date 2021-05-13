@@ -431,9 +431,40 @@
                     "tooltip": "Execute workflow"
                 },
                 "executeModal": {
-                    "missingDeployment": "Missing deployment.",
-                    "missingWorkflow": "Missing workflow.",
-                    "workflowError": "Workflow '{{ workflowName }}' does not exist for deployment '{{ deploymentId }}'."
+                    "header": {
+                        "noDeployment": "Execute workflow {{workflowName}}",
+                        "singleDeployemnt": "Execute workflow {{workflowName}} on {{deploymentName}}",
+                        "multipleDeployments": "Execute workflow {{workflowName}} on multiple deployments"
+                    },
+                    "errors": {
+                        "missingDeployment": "Missing deployment.",
+                        "missingWorkflow": "Missing workflow.",
+                        "workflowError": "Workflow '{{ workflowName }}' does not exist for deployment '{{ deploymentId }}'.",
+                        "scheduleTimeError": "Please provide valid scheduled time (in the future, using format: YYYY-MM-DD HH:mm)",
+                        "yamlFileError": "Loading values from YAML file failed: {{errorMessage}}"
+                    },
+                    "paramsHeader": "Parameters",
+                    "noParams": "No parameters available for the execution",
+                    "execute": "Execute",
+                    "actionsHeader": "Actions",
+                    "actions": {
+                        "force": {
+                            "label": "Force",
+                            "help": "Execute the workflow even if there is an ongoing execution for the given deployment. You cannot use this option with \"Queue\"."
+                        },
+                        "dryRun": {
+                            "label": "Dry run",
+                            "help": "If set, no actual operations will be performed. Executed tasks will be logged without side effects. You cannot use this option with \"Queue\"."
+                        },
+                        "queue": {
+                            "label": "Queue",
+                            "help": "If set, executions that can`t currently run will be queued and run automatically when possible. You cannot use this option with \"Force\" and \"Dry run\"."
+                        },
+                        "schedule": {
+                            "label": "Schedule",
+                            "help": "If set, workflow will be executed at specific time (local timezone) provided below. You cannot use this option with \"Queue\"."
+                        }
+                    }
                 },
                 "removeModal": {
                     "deleteDescription": "Are you sure you want to remove deployment '{{ deploymentId }}'?",
@@ -668,7 +699,8 @@
                                 "fetchingEnvironments": "2/4: Fetching environments list...",
                                 "creatingDeployments": "3/4: Creating deployments...",
                                 "installingDeployments": "4/4: Installing deployments..."
-                            }
+                            },
+                            "executionStarted": "Group execution started"
                         }
                     },
                     "runWorkflow": {
@@ -699,7 +731,14 @@
                         }
                     },
                     "common": {
-                        "goToExecutionsPageButton": "Go to Executions page"
+                        "executionStartedModal": {
+                            "header": "Group execution started",
+                            "message": "Click on 'Go to Executions page' button to track the progress",
+                            "buttons": {
+                                "goToExecutionsPage": "Go to Executions page",
+                                "close": "Close"
+                            }
+                        }
                     }
                 }
             },

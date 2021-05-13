@@ -35,7 +35,7 @@ const DeployBlueprintModal: FunctionComponent<DeployBlueprintModalProps> = ({ to
     function installDeployment(
         deploymentId: string,
         _deploymentParameters: BlueprintDeployParams,
-        installWorkflowParameters: any,
+        installWorkflowParameters: Record<string, any>,
         installWorkflowOptions: WorkflowOptions
     ) {
         const deploymentActions = new DeploymentActions(toolbox);
@@ -77,6 +77,8 @@ const DeployBlueprintModal: FunctionComponent<DeployBlueprintModalProps> = ({ to
             i18nHeaderKey="widgets.common.deployments.deployModal.header"
             showDeploymentNameInput
             showDeployButton
+            showInstallOptions
+            showSitesInput
             deployValidationMessage={t('steps.deploy.validatingData')}
             deploySteps={[
                 { message: t('steps.deploy.deployingBlueprint'), executeStep: deployBlueprint },
