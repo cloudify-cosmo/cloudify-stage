@@ -1,6 +1,7 @@
-import { ComponentProps, FunctionComponent, MutableRefObject } from 'react';
+import type { ComponentProps, FunctionComponent, MutableRefObject } from 'react';
 import { Dropdown } from 'semantic-ui-react';
 import ValidationErrorPopup from './ValidationErrorPopup';
+import type { LabelInputType } from './types';
 
 type CommonDropdownValue = string | string[];
 type CommonDropdownOnChange = ((value: string) => void) | ((value: string[]) => void);
@@ -19,13 +20,46 @@ interface CommonDropdownProps
             'additionLabel' | 'disabled' | 'multiple' | 'name' | 'noResultsMessage' | 'placeholder' | 'tabIndex'
         > {
     fetchUrl: string;
+    type: LabelInputType;
     value?: CommonDropdownValue;
 }
 
-const CommonDropdown: FunctionComponent<CommonDropdownProps> = ({
-    allowAdditions = false,
+const CommonDropdown: FunctionComponent<CommonDropdownProps> = ({ allowAdditions = false, ...rest }) =>
+    // eslint-disable-next-line react/jsx-props-no-spreading
+    allowAdditions ? <CommonDropdownWithAdditions {...rest} /> : <CommonDropdownWithoutAdditions {...rest} />;
+export default CommonDropdown;
+
+const CommonDropdownWithAdditions: FunctionComponent<CommonDropdownProps> = ({
     innerRef = null,
     onChange,
+    value = null,
+    type,
+    ...rest
+}) => {
+    const {
+        // @ts-expect-error DynamicDropdown is not converted to TS yet
+        Common: { DynamicDropdown }
+    } = Stage;
+
+    return (
+        <DynamicDropdown
+            allowAdditions
+            clearable
+            innerRef={innerRef}
+            itemsFormatter={(items: string[]) => _.map(items, item => ({ id: item }))}
+            onChange={onChange}
+            selectOnNavigation
+            value={value}
+            /* eslint-disable-next-line react/jsx-props-no-spreading */
+            {...rest}
+        />
+    );
+};
+
+const CommonDropdownWithoutAdditions: FunctionComponent<CommonDropdownProps> = ({
+    innerRef = null,
+    onChange,
+    type,
     value = null,
     ...rest
 }) => {
@@ -36,13 +70,10 @@ const CommonDropdown: FunctionComponent<CommonDropdownProps> = ({
         Hooks: { useLabelInput }
     } = Stage;
 
-    const {
-        inputValue,
-        invalidCharacterTyped,
-        submitChange,
-        resetInput,
-        unsetInvalidCharacterTyped
-    } = useLabelInput(onChange, { allowAnyValue: allowAdditions });
+    const { inputValue, invalidCharacterTyped, submitChange, resetInput, unsetInvalidCharacterTyped } = useLabelInput(
+        onChange as (value: string) => void,
+        type
+    );
 
     useEffect(() => {
         if (_.isEmpty(value)) {
@@ -52,23 +83,19 @@ const CommonDropdown: FunctionComponent<CommonDropdownProps> = ({
 
     return (
         <>
-            {invalidCharacterTyped && <ValidationErrorPopup />}
+            {invalidCharacterTyped && <ValidationErrorPopup type={type} />}
 
             <DynamicDropdown
-                allowAdditions={allowAdditions}
-                innerRef={innerRef}
                 clearable={false}
+                innerRef={innerRef}
                 itemsFormatter={(items: string[]) => _.map(items, item => ({ id: item }))}
                 onBlur={unsetInvalidCharacterTyped}
-                onChange={(newValue: CommonDropdownValue) => submitChange(null, { value: newValue })}
-                onSearchChange={allowAdditions ? undefined : submitChange}
-                searchQuery={allowAdditions ? undefined : inputValue}
-                selectOnNavigation={allowAdditions}
-                value={allowAdditions ? value : undefined}
+                onChange={(newValue: any) => submitChange(null, { value: newValue })}
+                onSearchChange={submitChange}
+                searchQuery={inputValue}
                 /* eslint-disable-next-line react/jsx-props-no-spreading */
                 {...rest}
             />
         </>
     );
 };
-export default CommonDropdown;

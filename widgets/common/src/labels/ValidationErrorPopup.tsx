@@ -1,9 +1,14 @@
 import type { FunctionComponent } from 'react';
 import LabelErrorPopup from './LabelErrorPopup';
+import type { LabelInputType } from './types';
 
-const ValidationErrorPopup: FunctionComponent = () => {
+interface ValidationErrorPopupProps {
+    type: LabelInputType;
+}
+
+const ValidationErrorPopup: FunctionComponent<ValidationErrorPopupProps> = ({ type }) => {
     const { i18n } = Stage;
 
-    return <LabelErrorPopup content={i18n.t('widgets.common.labels.validationError')} />;
+    return <LabelErrorPopup content={i18n.t(`widgets.common.labels.${type}ValidationError`)} />;
 };
 export default ValidationErrorPopup;

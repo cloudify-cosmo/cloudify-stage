@@ -1,31 +1,37 @@
 import { SyntheticEvent } from 'react';
-import type { DropdownProps } from 'semantic-ui-react';
+import type { LabelInputType } from '../labels/types';
 
-const allowedCharacters = /^[a-z][a-z0-9._-]*$/i;
+const allowedCharactersForLabelKey = /^[a-z0-9._-]*$/i;
+const allowedCharactersForLabelValue = /^[^\p{C}"]*$/u;
 const maxInputLength = 256;
 
-// TODO: Add proper typing for onChange function
-function useLabelInput(onChange: (value: any) => void, { allowAnyValue = false, initialValue = '' }) {
+function removeControlCharacters(value: string) {
+    return value.replace(/\p{C}/gu, '');
+}
+
+function formatNewValue(type: LabelInputType, newValue: string) {
+    const truncatedNewValue = newValue.substr(0, maxInputLength);
+    return type === 'key' ? truncatedNewValue.toLowerCase() : removeControlCharacters(truncatedNewValue);
+}
+
+function useLabelInput(onChange: (value: string) => void, type: LabelInputType, { initialValue = '' } = {}) {
     const { useBoolean, useResettableState } = Stage.Hooks;
     const [inputValue, setInputValue, resetInputValue] = useResettableState(initialValue);
     const [invalidCharacterTyped, setInvalidCharacterTyped, unsetInvalidCharacterTyped] = useBoolean();
 
+    const allowedCharacters = type === 'key' ? allowedCharactersForLabelKey : allowedCharactersForLabelValue;
+
     return {
         inputValue,
         invalidCharacterTyped,
-        submitChange: (_event: SyntheticEvent | null, data: DropdownProps) => {
-            if (allowAnyValue) {
-                onChange(data.value);
-                resetInputValue();
-                return;
-            }
-
+        submitChange: (_event: SyntheticEvent | null, data: { value: string; searchQuery?: string }) => {
             // supports both dropdown as well as regular input
             // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-            const lowercasedNewTypedValue = _.toLower(data.searchQuery! ?? data.value!).substr(0, maxInputLength);
-            if (lowercasedNewTypedValue === '' || allowedCharacters.test(lowercasedNewTypedValue)) {
-                setInputValue(lowercasedNewTypedValue);
-                onChange(lowercasedNewTypedValue);
+            const formattedNewValue = formatNewValue(type, data.searchQuery! ?? data.value);
+
+            if (formattedNewValue === '' || allowedCharacters.test(formattedNewValue)) {
+                setInputValue(formattedNewValue);
+                onChange(formattedNewValue);
                 unsetInvalidCharacterTyped();
             } else {
                 setInvalidCharacterTyped();
@@ -34,7 +40,7 @@ function useLabelInput(onChange: (value: any) => void, { allowAnyValue = false, 
         resetInput: () => {
             resetInputValue();
             onChange(initialValue);
-            if (!allowAnyValue) unsetInvalidCharacterTyped();
+            unsetInvalidCharacterTyped();
         },
         unsetInvalidCharacterTyped
     };

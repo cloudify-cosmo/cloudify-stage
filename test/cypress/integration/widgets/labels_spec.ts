@@ -36,9 +36,9 @@ describe('Labels widget', () => {
             cy.get('.edit').click();
             cy.get('.cancel').click();
             cy.get('.edit').click();
-            cy.get('input').type('!');
+            cy.get('input').type('"');
         });
-        cy.contains('Only letters, digits and the characters "-", "." and "_" are allowed');
+        cy.contains('The " character and control characters are not allowed.');
 
         cy.interceptSp('PATCH', `/deployments/${deploymentName}`).as('labelsUpdate');
         cy.contains('tr', 'existing').within(() => {
