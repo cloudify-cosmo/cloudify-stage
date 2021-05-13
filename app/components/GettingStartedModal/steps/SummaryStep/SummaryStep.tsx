@@ -72,7 +72,7 @@ const SummaryStep = ({
                 internal,
                 () => handleInstallationStarted(),
                 (progress: number, taskType?: TaskType, taskName?: string, taskStatus?: TaskStatus) => {
-                    if (taskType != null && taskName != null && taskStatus != null) {
+                    if (taskType && taskName && taskStatus) {
                         installationStatuses = {
                             ...installationStatuses,
                             [taskType]: { ...installationStatuses[taskType], [taskName]: taskStatus }
