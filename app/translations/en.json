@@ -53,7 +53,7 @@
             "plugin": {
                 "alreadyInstalledMessageSuffix": "plugin is already installed",
                 "installationScheduledMessageSuffix": "plugin will be installed",
-                "notFoundMessageSuffix": "plugin is not found in catalog and manager",
+                "notFoundMessageSuffix": "plugin not found in the catalog or on the manager",
                 "installationProgressMessageSuffix": "plugin installation in progress",
                 "installationDoneMessageSuffix": "plugin installation done",
                 "installationErrorMessageSuffix": "plugin installation error"
