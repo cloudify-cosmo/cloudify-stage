@@ -35,11 +35,13 @@ describe('Blueprints widget', () => {
         it('should allow to deploy the blueprint', () => {
             getBlueprintRow(emptyBlueprintName).find('.rocket').click();
 
-            const deploymentName = blueprintNamePrefix;
+            const deploymentId = blueprintNamePrefix;
+            const deploymentName = `${deploymentId}_name`;
 
-            cy.interceptSp('PUT', `/deployments/${deploymentName}`).as('deploy');
+            cy.interceptSp('PUT', `/deployments/${deploymentId}`).as('deploy');
 
             cy.get('input[name=deploymentName]').type(deploymentName);
+            cy.get('input[name=deploymentId]').clear().type(deploymentId);
             cy.contains('Show Data Types').click();
             cy.contains('.modal button', 'Close').click();
             const serverIp = '127.0.0.1';
@@ -56,6 +58,7 @@ describe('Blueprints widget', () => {
             cy.wait('@deploy').then(({ request }) => {
                 expect(request.body).to.deep.equal({
                     blueprint_id: emptyBlueprintName,
+                    display_name: deploymentName,
                     inputs: { server_ip: serverIp },
                     labels: [{ sample_key: 'sample_value' }],
                     visibility: 'tenant',

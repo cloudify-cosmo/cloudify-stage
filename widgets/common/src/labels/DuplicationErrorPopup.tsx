@@ -1,7 +1,10 @@
+import type { FunctionComponent } from 'react';
 import LabelErrorPopup from './LabelErrorPopup';
 
-export default function DuplicationErrorPopup() {
+const DuplicationErrorPopup: FunctionComponent = () => {
     const { i18n } = Stage;
 
     return <LabelErrorPopup content={i18n.t('widgets.common.labels.labelDuplicationError')} />;
-}
+};
+
+export default DuplicationErrorPopup;

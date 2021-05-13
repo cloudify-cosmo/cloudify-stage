@@ -8,6 +8,7 @@ class BlueprintUploadError extends Error {
 export interface BlueprintDeployParams {
     blueprintId: string;
     deploymentId: string;
+    deploymentName: string;
     inputs: Record<string, any>;
     visibility: string;
     labels: Stage.Common.Labels.Label[];
@@ -68,6 +69,7 @@ export default class BlueprintActions {
     doDeploy({
         blueprintId,
         deploymentId,
+        deploymentName,
         inputs,
         visibility,
         labels = [],
@@ -78,6 +80,7 @@ export default class BlueprintActions {
         const { DeploymentActions } = Stage.Common;
         const data: Record<string, any> = {
             blueprint_id: blueprintId,
+            display_name: deploymentName,
             inputs,
             visibility,
             labels: DeploymentActions.toManagerLabels(labels),
