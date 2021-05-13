@@ -68,9 +68,9 @@
             "blueprint": {
                 "alreadyUploadedMessageSuffix": "blueprint is already uploaded",
                 "uploadScheduledMessageSuffix": "blueprint will be uploaded",
-                "uploadingProgressMessageSuffix": "blueprint uploading in progress",
-                "uploadingDoneMessageSuffix": "blueprint uploading done",
-                "uploadingErrorMessageSuffix": "blueprint uploading error"
+                "uploadingProgressMessageSuffix": "blueprint upload in progress",
+                "uploadingDoneMessageSuffix": "blueprint upload done",
+                "uploadingErrorMessageSuffix": "blueprint upload error"
             }
         },
         "messages": {
