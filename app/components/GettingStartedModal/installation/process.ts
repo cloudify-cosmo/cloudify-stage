@@ -11,6 +11,13 @@ export enum TaskType {
     Blueprint = 'blueprint'
 }
 
+export type TasksProgress = {
+    tasksProgress: number;
+    taskType?: TaskType;
+    taskName?: string;
+    taskStatus?: TaskStatus;
+};
+
 export enum TaskStatus {
     InstallationProgress = 'installation-progress',
     InstallationDone = 'installation-done',
@@ -128,7 +135,7 @@ export const createResourcesInstaller = (
     manager: Manager,
     internal: Internal,
     onStarted: () => void,
-    onProgress: (installationProgress: number, taskType?: TaskType, taskName?: string, taskStatus?: TaskStatus) => void,
+    onProgress: (progress: TasksProgress) => void,
     onError: (error: string) => void,
     onFinished: () => void
 ) => {
@@ -148,8 +155,14 @@ export const createResourcesInstaller = (
         const stepsCount =
             scheduledPlugins.length + updatedSecrets.length + createdSecrets.length + scheduledBlueprints.length;
 
-        const triggerProgressEvent = (taskType: TaskType, taskName: string, taskStatus: TaskStatus) =>
-            onProgress(Math.round(100 * (stepIndex / stepsCount)), taskType, taskName, taskStatus);
+        const triggerProgressEvent = (taskType: TaskType, taskName: string, taskStatus: TaskStatus) => {
+            onProgress({
+                tasksProgress: Math.round(100 * (stepIndex / stepsCount)),
+                taskType,
+                taskName,
+                taskStatus
+            });
+        };
 
         const updateStepIndex = (taskType: TaskType, taskName: string, taskStatus: TaskStatus) => {
             stepIndex += 1;
@@ -232,7 +245,7 @@ export const createResourcesInstaller = (
         };
 
         onStarted();
-        onProgress(0);
+        onProgress({ tasksProgress: 0 });
 
         await Promise.all([
             ...scheduledPlugins.map(runInstallPluginStep),
@@ -242,7 +255,7 @@ export const createResourcesInstaller = (
 
         await Promise.all(scheduledBlueprints.map(runUploadBlueprintStep));
 
-        onProgress(100);
+        onProgress({ tasksProgress: 100 });
         onFinished();
     };
 
