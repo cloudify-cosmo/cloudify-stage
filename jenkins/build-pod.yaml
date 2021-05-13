@@ -59,4 +59,3 @@ spec:
     - name: dockerhub
   nodeSelector:
     instance-type: spot-xlarge
-    
