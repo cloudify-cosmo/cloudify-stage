@@ -65,19 +65,18 @@ const SummaryStep = ({
             blueprintsInstallationTasks.tasks
         ) {
             let installationFinished = false;
-            // eslint-disable-next-line @typescript-eslint/no-shadow
-            let installationStatuses = {} as Record<TaskType, Record<string, TaskStatus>>;
+            let calculatedInstallationStatuses = {} as Record<TaskType, Record<string, TaskStatus>>;
             const resourcesInstaller = createResourcesInstaller(
                 manager,
                 internal,
                 () => handleInstallationStarted(),
                 (progress: number, taskType?: TaskType, taskName?: string, taskStatus?: TaskStatus) => {
                     if (taskType && taskName && taskStatus) {
-                        installationStatuses = {
-                            ...installationStatuses,
-                            [taskType]: { ...installationStatuses[taskType], [taskName]: taskStatus }
+                        calculatedInstallationStatuses = {
+                            ...calculatedInstallationStatuses,
+                            [taskType]: { ...calculatedInstallationStatuses[taskType], [taskName]: taskStatus }
                         };
-                        setInstallationStatuses(installationStatuses);
+                        setInstallationStatuses(calculatedInstallationStatuses);
                     }
                     setInstallationProgress(progress);
                 },
