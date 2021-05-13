@@ -12,7 +12,7 @@ import {
 } from '../../installation/tasks';
 import { useInternal, useManager } from '../../common/managerHooks';
 import { UnsafelyTypedForm } from '../../unsafelyTypedForm';
-import { createResourcesInstaller, TasksProgress, TaskStatus, TaskType } from '../../installation/process';
+import { createResourcesInstaller, TaskDetails, TaskStatus, TaskType } from '../../installation/process';
 import PluginsInstallationTasks from './PluginsInstallationTasks';
 import SecretsInstallationTasks from './SecretsInstallationTasks';
 import BlueprintsInstallationTasks from './BlueprintsInstallationTasks';
@@ -70,15 +70,18 @@ const SummaryStep = ({
                 manager,
                 internal,
                 () => handleInstallationStarted(),
-                ({ tasksProgress, taskType, taskName, taskStatus }: TasksProgress) => {
-                    if (taskType && taskName && taskStatus) {
+                (calculatedInstallationProgress: number, currentTask?: TaskDetails) => {
+                    if (currentTask) {
                         calculatedInstallationStatuses = {
                             ...calculatedInstallationStatuses,
-                            [taskType]: { ...calculatedInstallationStatuses[taskType], [taskName]: taskStatus }
+                            [currentTask.type]: {
+                                ...calculatedInstallationStatuses[currentTask.type],
+                                [currentTask.name]: currentTask.status
+                            }
                         };
                         setInstallationStatuses(calculatedInstallationStatuses);
                     }
-                    setInstallationProgress(tasksProgress);
+                    setInstallationProgress(calculatedInstallationProgress);
                 },
                 (error: string) => setInstallationErrors(status => [...status, error]),
                 () => {

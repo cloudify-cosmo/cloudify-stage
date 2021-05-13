@@ -11,11 +11,10 @@ export enum TaskType {
     Blueprint = 'blueprint'
 }
 
-export type TasksProgress = {
-    tasksProgress: number;
-    taskType?: TaskType;
-    taskName?: string;
-    taskStatus?: TaskStatus;
+export type TaskDetails = {
+    type: TaskType;
+    name: string;
+    status: TaskStatus;
 };
 
 export enum TaskStatus {
@@ -135,7 +134,7 @@ export const createResourcesInstaller = (
     manager: Manager,
     internal: Internal,
     onStarted: () => void,
-    onProgress: (progress: TasksProgress) => void,
+    onProgress: (installationProgress: number, currentTask?: TaskDetails) => void,
     onError: (error: string) => void,
     onFinished: () => void
 ) => {
@@ -156,12 +155,9 @@ export const createResourcesInstaller = (
             scheduledPlugins.length + updatedSecrets.length + createdSecrets.length + scheduledBlueprints.length;
 
         const triggerProgressEvent = (taskType: TaskType, taskName: string, taskStatus: TaskStatus) => {
-            onProgress({
-                tasksProgress: Math.round(100 * (stepIndex / stepsCount)),
-                taskType,
-                taskName,
-                taskStatus
-            });
+            const installationProgress = Math.round(100 * (stepIndex / stepsCount));
+            const currentTask = { type: taskType, name: taskName, status: taskStatus };
+            onProgress(installationProgress, currentTask);
         };
 
         const updateStepIndex = (taskType: TaskType, taskName: string, taskStatus: TaskStatus) => {
@@ -245,7 +241,7 @@ export const createResourcesInstaller = (
         };
 
         onStarted();
-        onProgress({ tasksProgress: 0 });
+        onProgress(0);
 
         await Promise.all([
             ...scheduledPlugins.map(runInstallPluginStep),
@@ -255,7 +251,7 @@ export const createResourcesInstaller = (
 
         await Promise.all(scheduledBlueprints.map(runUploadBlueprintStep));
 
-        onProgress({ tasksProgress: 100 });
+        onProgress(100);
         onFinished();
     };
 
