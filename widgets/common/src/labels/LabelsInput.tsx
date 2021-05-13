@@ -132,8 +132,10 @@ const LabelsInput: FunctionComponent<LabelsInputProps> = ({
                 open && 'active'
             ])}
             // NOTE: z-index is overridden as for a div element with `active` and `dropdown` classes
-            // it is by default set to 10, which makes LabelsInput to overlap opened dropdown
-            style={{ padding: 0, margin: 0, zIndex: 1 }}
+            // it is by default set to 10, which makes LabelsInput to overlap opened dropdown,
+            // it should be lesser than 10 not to overlap opened dropdowns (see style for: ".ui.dropdown .menu"),
+            // it should be greater than 2 not to be hidden by checkbox fields (see style for: ".ui.checkbox input.hidden")
+            style={{ padding: 0, margin: 0, zIndex: 3 }}
             tabIndex={0}
         >
             <div role="presentation" onClick={toggleOpen} style={{ cursor: 'pointer' }}>
