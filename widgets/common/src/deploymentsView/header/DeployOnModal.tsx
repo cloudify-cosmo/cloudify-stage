@@ -38,7 +38,7 @@ const DeployOnModal: FunctionComponent<DeployOnModalProps> = ({ filterRules, too
                 visibility: deploymentParameters.visibility,
                 new_deployments: environments.map(environmentId => ({
                     id: '{uuid}',
-                    display_name: `${deploymentParameters.blueprintId}-${Stage.Utils.uuid()}`,
+                    display_name: '{blueprint_id}-{uuid}',
                     labels: [{ [parentDeploymentLabelKey]: environmentId }],
                     runtime_only_evaluation: deploymentParameters.runtimeOnlyEvaluation,
                     skip_plugins_validation: deploymentParameters.skipPluginsValidation
