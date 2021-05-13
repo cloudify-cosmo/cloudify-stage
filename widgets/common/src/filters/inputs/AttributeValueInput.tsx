@@ -2,7 +2,7 @@ import type { FunctionComponent } from 'react';
 
 import DynamicDropdown from '../../DynamicDropdown';
 import type { CommonAttributeValueInputProps } from './types';
-import { getPlaceholderTranslation, isAnyOperator } from '../common';
+import { getPlaceholderTranslation, isMultipleValuesOperator } from '../common';
 import MultipleStringValuesInput from './MultipleStringValuesInput';
 
 interface AttributeValueInputProps extends CommonAttributeValueInputProps {
@@ -20,7 +20,7 @@ const AttributeValueInput: FunctionComponent<AttributeValueInputProps> = ({
     toolbox,
     value
 }) => {
-    if (isAnyOperator(operator)) {
+    if (isMultipleValuesOperator(operator)) {
         return (
             <DynamicDropdown
                 name="ruleValue"
