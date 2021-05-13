@@ -153,7 +153,7 @@ describe('Deployment Action Buttons widget', () => {
                 checkIfPopupIsDisplayed('key', key, 'Only letters, digits');
             }
             function checkIfInvalidCharactersPopupIsDisplayedForValue(value: string) {
-                checkIfPopupIsDisplayed('value', value, 'All characters except');
+                checkIfPopupIsDisplayed('value', value, 'The " character and control characters');
             }
 
             checkIfPopupIsNotDisplayed('key', 'abc-._');
