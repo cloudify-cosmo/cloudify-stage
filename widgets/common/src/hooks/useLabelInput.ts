@@ -9,16 +9,12 @@ function removeControlCharacters(value: string) {
     return value.replace(/\p{C}/gu, '');
 }
 
-function formatNewValue(type: 'key' | 'value', newValue: string) {
+function formatNewValue(type: LabelInputType, newValue: string) {
     const truncatedNewValue = newValue.substr(0, maxInputLength);
     return type === 'key' ? truncatedNewValue.toLowerCase() : removeControlCharacters(truncatedNewValue);
 }
 
-function useLabelInput(
-    onChange: (value: string) => void,
-    type: LabelInputType,
-    { initialValue } = { initialValue: '' }
-) {
+function useLabelInput(onChange: (value: string) => void, type: LabelInputType, { initialValue = '' } = {}) {
     const { useBoolean, useResettableState } = Stage.Hooks;
     const [inputValue, setInputValue, resetInputValue] = useResettableState(initialValue);
     const [invalidCharacterTyped, setInvalidCharacterTyped, unsetInvalidCharacterTyped] = useBoolean();
@@ -31,7 +27,7 @@ function useLabelInput(
         submitChange: (_event: SyntheticEvent | null, data: { value: string; searchQuery?: string }) => {
             // supports both dropdown as well as regular input
             // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-            const formattedNewValue = formatNewValue(type, data.searchQuery! ?? data.value!);
+            const formattedNewValue = formatNewValue(type, data.searchQuery! ?? data.value);
 
             if (formattedNewValue === '' || allowedCharacters.test(formattedNewValue)) {
                 setInputValue(formattedNewValue);
