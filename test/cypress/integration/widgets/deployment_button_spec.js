@@ -4,7 +4,6 @@ describe('Create Deployment Button widget', () => {
     const resourcePrefix = 'deploy_test_';
     const testBlueprintId = `${resourcePrefix}bp`;
     const testBlueprintUrl = exampleBlueprintUrl;
-    const firstInputNthChild = 7;
 
     before(() => {
         cy.activate('valid_trial_license').usePageMock('deploymentButton').mockLogin();
@@ -151,8 +150,8 @@ describe('Create Deployment Button widget', () => {
             cy.get('div.deployBlueprintModal').within(() => {
                 cy.get(`.actions > .ui:nth-child(3)`).click();
                 cy.get('div.error.message').within(() => {
-                    cy.get('li:nth-child(1)').should('have.text', 'Please select blueprint from the list');
-                    cy.get('li:nth-child(2)').should('have.text', 'Please provide deployment name');
+                    cy.get('li:nth-child(1)').should('have.text', 'Please provide deployment name');
+                    cy.get('li:nth-child(2)').should('have.text', 'Please select blueprint from the list');
                 });
             });
         });
@@ -233,262 +232,209 @@ describe('Create Deployment Button widget', () => {
         it('boolean', () => {
             selectBlueprintInModal('boolean');
 
-            cy.get(`form :nth-child(${firstInputNthChild}).field`)
-                .as('boolean_no_default')
-                .within(() => {
-                    cy.get('div.toggle.checkbox').as('toggle').should('not.have.class', 'checked');
-                    cy.get('@toggle').should('have.class', 'indeterminate');
-                    cy.get('input[type="checkbox"]').should('not.have.attr', 'checked');
+            cy.contains('.field', 'bool_no_default').within(() => {
+                cy.get('div.toggle.checkbox').as('toggle').should('not.have.class', 'checked');
+                cy.get('@toggle').should('have.class', 'indeterminate');
+                cy.get('input[type="checkbox"]').should('not.have.attr', 'checked');
 
-                    cy.get('@toggle').click();
-                    cy.get('@toggle').should('have.class', 'checked');
+                cy.get('@toggle').click();
+                cy.get('@toggle').should('have.class', 'checked');
 
-                    cy.get('@toggle').click();
-                    cy.get('@toggle').should('not.have.class', 'checked');
-                });
+                cy.get('@toggle').click();
+                cy.get('@toggle').should('not.have.class', 'checked');
+            });
 
-            cy.get(`form :nth-child(${firstInputNthChild + 1}).field`)
-                .as('boolean_default_false')
-                .within(() => {
-                    cy.get('div.toggle.checkbox').as('toggle').should('not.have.class', 'checked');
-                    cy.get('@toggle').should('not.have.class', 'indeterminate');
-                    cy.get('input[type="checkbox"]').should('not.have.attr', 'checked');
+            cy.contains('.field', 'bool_default_false').within(() => {
+                cy.get('div.toggle.checkbox').as('toggle').should('not.have.class', 'checked');
+                cy.get('@toggle').should('not.have.class', 'indeterminate');
+                cy.get('input[type="checkbox"]').should('not.have.attr', 'checked');
 
-                    cy.get('@toggle').click();
-                    cy.get('@toggle').should('have.class', 'checked');
+                cy.get('@toggle').click();
+                cy.get('@toggle').should('have.class', 'checked');
 
-                    cy.revertToDefaultValue();
-                    cy.get('@toggle').should('not.have.class', 'checked');
-                });
+                cy.revertToDefaultValue();
+                cy.get('@toggle').should('not.have.class', 'checked');
+            });
 
-            cy.get(`form :nth-child(${firstInputNthChild + 2}).field`)
-                .as('boolean_default_true')
-                .within(() => {
-                    cy.get('div.toggle.checkbox').as('toggle').should('have.class', 'checked');
-                    cy.get('@toggle').should('not.have.class', 'indeterminate');
-                    cy.get('input[type="checkbox"]').should('have.attr', 'checked');
+            cy.contains('.field', 'bool_default_true').within(() => {
+                cy.get('div.toggle.checkbox').as('toggle').should('have.class', 'checked');
+                cy.get('@toggle').should('not.have.class', 'indeterminate');
+                cy.get('input[type="checkbox"]').should('have.attr', 'checked');
 
-                    cy.get('@toggle').click();
-                    cy.get('@toggle').should('not.have.class', 'checked');
+                cy.get('@toggle').click();
+                cy.get('@toggle').should('not.have.class', 'checked');
 
-                    cy.revertToDefaultValue();
-                    cy.get('@toggle').should('have.class', 'checked');
-                });
+                cy.revertToDefaultValue();
+                cy.get('@toggle').should('have.class', 'checked');
+            });
         });
 
         it('integer', () => {
             selectBlueprintInModal('integer');
 
-            cy.get(`form :nth-child(${firstInputNthChild}).field`)
-                .as('integer_constraint_max_1')
-                .within(() => verifyNumberInput(null, 50));
-            cy.get(`form :nth-child(${firstInputNthChild + 1}).field`)
-                .as('integer_constraint_max_2')
-                .within(() => verifyNumberInput(null, 60));
-            cy.get(`form :nth-child(${firstInputNthChild + 2}).field`)
-                .as('integer_constraint_max_3')
-                .within(() => verifyNumberInput(null, 50));
-            cy.get(`form :nth-child(${firstInputNthChild + 3}).field`)
-                .as('integer_constraint_max_4')
-                .within(() => verifyNumberInput(5, 15));
+            cy.contains('.field', 'integer_constraint_max_1').within(() => verifyNumberInput(null, 50));
+            cy.contains('.field', 'integer_constraint_max_2').within(() => verifyNumberInput(null, 60));
+            cy.contains('.field', 'integer_constraint_max_3').within(() => verifyNumberInput(null, 50));
+            cy.contains('.field', 'integer_constraint_max_4').within(() => verifyNumberInput(5, 15));
 
-            cy.get(`form :nth-child(${firstInputNthChild + 4}).field`)
-                .as('integer_constraint_min_1')
-                .within(() => verifyNumberInput(2));
-            cy.get(`form :nth-child(${firstInputNthChild + 5}).field`)
-                .as('integer_constraint_min_2')
-                .within(() => verifyNumberInput(4));
-            cy.get(`form :nth-child(${firstInputNthChild + 6}).field`)
-                .as('integer_constraint_min_3')
-                .within(() => verifyNumberInput(4));
-            cy.get(`form :nth-child(${firstInputNthChild + 7}).field`)
-                .as('integer_constraint_min_4')
-                .within(() => verifyNumberInput(5, 8));
+            cy.contains('.field', 'integer_constraint_min_1').within(() => verifyNumberInput(2));
+            cy.contains('.field', 'integer_constraint_min_2').within(() => verifyNumberInput(4));
+            cy.contains('.field', 'integer_constraint_min_3').within(() => verifyNumberInput(4));
+            cy.contains('.field', 'integer_constraint_min_4').within(() => verifyNumberInput(5, 8));
 
-            cy.get(`form :nth-child(${firstInputNthChild + 9}).field`)
-                .as('integer_constraint_min_max')
-                .within(() => verifyNumberInput(5, 15, 10));
+            cy.contains('.field', 'integer_constraint_min_max').within(() => verifyNumberInput(5, 15, 10));
 
-            cy.get(`form :nth-child(${firstInputNthChild + 8}).field`)
-                .as('integer_no_default')
-                .within(() => verifyNumberInput());
+            cy.contains('.field', 'integer_no_default').within(() => verifyNumberInput());
 
-            cy.get(`form :nth-child(${firstInputNthChild + 10}).field`)
-                .as('integer_default')
-                .within(() => {
-                    verifyNumberInput(null, null, 50);
+            cy.contains('.field', 'integer_default').within(() => {
+                verifyNumberInput(null, null, 50);
 
-                    cy.get('input').as('inputField').clear().type('123').blur();
+                cy.get('input').as('inputField').clear().type('123').blur();
 
-                    verifyNumberInput(null, null, 123);
+                verifyNumberInput(null, null, 123);
 
-                    cy.revertToDefaultValue();
-                    verifyNumberInput(null, null, 50);
-                });
+                cy.revertToDefaultValue();
+                verifyNumberInput(null, null, 50);
+            });
         });
 
         it('float', () => {
             selectBlueprintInModal('float');
 
-            cy.get(`form :nth-child(${firstInputNthChild}).field`)
-                .as('float_no_default')
-                .within(() => verifyNumberInput(null, null, '', 'any'));
+            cy.contains('.field', 'float_no_default').within(() => verifyNumberInput(null, null, '', 'any'));
 
-            cy.get(`form :nth-child(${firstInputNthChild + 1}).field`)
-                .as('float_default')
-                .within(() => {
-                    verifyNumberInput(null, null, 3.14, 'any');
+            cy.contains('.field', 'float_default').within(() => {
+                verifyNumberInput(null, null, 3.14, 'any');
 
-                    cy.get('input').as('inputField').clear().type('2.71').blur();
+                cy.get('input').as('inputField').clear().type('2.71').blur();
 
-                    verifyNumberInput(null, null, 2.71, 'any');
+                verifyNumberInput(null, null, 2.71, 'any');
 
-                    cy.revertToDefaultValue();
-                    verifyNumberInput(null, null, 3.14, 'any');
-                });
+                cy.revertToDefaultValue();
+                verifyNumberInput(null, null, 3.14, 'any');
+            });
         });
 
         it('dict', () => {
             selectBlueprintInModal('dict');
 
-            cy.get(`form :nth-child(${firstInputNthChild}).field`)
-                .as('dict_no_default')
-                .within(() => {
-                    cy.get('div.react-json-view').as('reactJsonView');
+            cy.contains('.field', 'dict_no_default').within(() => {
+                cy.get('div.react-json-view').as('reactJsonView');
 
-                    cy.get('@reactJsonView').should('have.text', '{}0 items');
-                    cy.get('@reactJsonView').trigger('mouseover');
-                    cy.get('.icon.edit.link').as('switchIcon').should('be.visible');
-                    cy.get('.icon.info').as('infoIcon').should('be.visible');
+                cy.get('@reactJsonView').should('have.text', '{}0 items');
+                cy.get('@reactJsonView').trigger('mouseover');
+                cy.get('.icon.edit.link').as('switchIcon').should('be.visible');
+                cy.get('.icon.info').as('infoIcon').should('be.visible');
 
-                    cy.get('@reactJsonView').trigger('mouseout');
-                    cy.get('@switchIcon').should('not.exist');
-                    cy.get('@infoIcon').should('not.exist');
+                cy.get('@reactJsonView').trigger('mouseout');
+                cy.get('@switchIcon').should('not.exist');
+                cy.get('@infoIcon').should('not.exist');
 
-                    cy.get('@reactJsonView').trigger('mouseover');
-                    cy.get('@switchIcon').click();
-                    cy.get('textarea').should('have.text', '{}');
-                });
+                cy.get('@reactJsonView').trigger('mouseover');
+                cy.get('@switchIcon').click();
+                cy.get('textarea').should('have.text', '{}');
+            });
 
-            cy.get(`form :nth-child(${firstInputNthChild + 1}).field`)
-                .as('dict_default')
-                .within(() => {
-                    cy.get('div.react-json-view').as('reactJsonView');
+            cy.contains('.field', 'dict_default').within(() => {
+                cy.get('div.react-json-view').as('reactJsonView');
 
-                    cy.get('@reactJsonView').trigger('mouseover');
-                    cy.get('.icon.edit.link').as('switchIcon').click();
-                    cy.get('textarea').as('rawTextArea').clear().type('{}');
-                    cy.get('@switchIcon').click();
+                cy.get('@reactJsonView').trigger('mouseover');
+                cy.get('.icon.edit.link').as('switchIcon').click();
+                cy.get('textarea').as('rawTextArea').clear().type('{}');
+                cy.get('@switchIcon').click();
 
-                    cy.get('@reactJsonView').should('have.text', '{}0 items');
-                    cy.revertToDefaultValue();
+                cy.get('@reactJsonView').should('have.text', '{}0 items');
+                cy.revertToDefaultValue();
 
-                    cy.get('@reactJsonView').trigger('mouseover');
-                    cy.get('@switchIcon').click();
-                    cy.get('@rawTextArea')
-                        .invoke('text')
-                        .then(text =>
-                            expect(JSON.parse(text)).to.deep.equal({
-                                a: 1,
-                                b: 3.14,
-                                c: [1, 2, 3],
-                                d: { e: 1, f: null },
-                                g: 'abc'
-                            })
-                        );
-                });
+                cy.get('@reactJsonView').trigger('mouseover');
+                cy.get('@switchIcon').click();
+                cy.get('@rawTextArea')
+                    .invoke('text')
+                    .then(text =>
+                        expect(JSON.parse(text)).to.deep.equal({
+                            a: 1,
+                            b: 3.14,
+                            c: [1, 2, 3],
+                            d: { e: 1, f: null },
+                            g: 'abc'
+                        })
+                    );
+            });
         });
 
         it('list', () => {
             selectBlueprintInModal('list');
 
-            cy.get(`form :nth-child(${firstInputNthChild}).field`)
-                .as('list_no_default')
-                .within(() => {
-                    cy.get('div.react-json-view').as('reactJsonView');
+            cy.contains('.field', 'list_no_default').within(() => {
+                cy.get('div.react-json-view').as('reactJsonView');
 
-                    cy.get('@reactJsonView').should('have.text', '[]0 items');
-                    cy.get('@reactJsonView').trigger('mouseover');
-                    cy.get('.icon.edit.link').should('be.visible');
-                    cy.get('.icon.info').should('be.visible');
-                });
+                cy.get('@reactJsonView').should('have.text', '[]0 items');
+                cy.get('@reactJsonView').trigger('mouseover');
+                cy.get('.icon.edit.link').should('be.visible');
+                cy.get('.icon.info').should('be.visible');
+            });
 
-            cy.get(`form :nth-child(${firstInputNthChild + 1}).field`)
-                .as('list_default')
-                .within(() => {
-                    cy.get('div.react-json-view').as('reactJsonView');
+            cy.contains('.field', 'list_default').within(() => {
+                cy.get('div.react-json-view').as('reactJsonView');
 
-                    cy.get('@reactJsonView').should(
-                        'have.text',
-                        '[5 items0:int11:{1 item"a":string"b"}2:string"test"3:[3 items0:int11:int22:int3]4:float3.14]'
-                    );
-                    cy.get('@reactJsonView').trigger('mouseover');
-                    cy.get('.icon.edit').should('have.class', 'link').click();
+                cy.get('@reactJsonView').should(
+                    'have.text',
+                    '[5 items0:int11:{1 item"a":string"b"}2:string"test"3:[3 items0:int11:int22:int3]4:float3.14]'
+                );
+                cy.get('@reactJsonView').trigger('mouseover');
+                cy.get('.icon.edit').should('have.class', 'link').click();
 
-                    cy.get('textarea').clear().type('invalidValue');
+                cy.get('textarea').clear().type('invalidValue');
 
-                    cy.get('.icon.edit').should('have.class', 'disabled');
-                });
+                cy.get('.icon.edit').should('have.class', 'disabled');
+            });
         });
 
         it('string', () => {
             selectBlueprintInModal('string');
 
-            cy.get(`form :nth-child(${firstInputNthChild}).field`)
-                .as('string_no_default')
-                .within(() => {
-                    verifyTextInput();
-                });
+            cy.contains('.field', 'string_no_default').within(() => {
+                verifyTextInput();
+            });
 
-            cy.get(`form :nth-child(${firstInputNthChild + 1}).field`)
-                .as('string_constraint_pattern')
-                .within(() => {
-                    verifyTextInput('Ubuntu 18.04');
-                    cy.get('input').clear().type('Something').blur();
-                    verifyTextInput('Something');
-                    cy.revertToDefaultValue();
-                    verifyTextInput('Ubuntu 18.04');
-                });
+            cy.contains('.field', 'string_constraint_pattern').within(() => {
+                verifyTextInput('Ubuntu 18.04');
+                cy.get('input').clear().type('Something').blur();
+                verifyTextInput('Something');
+                cy.revertToDefaultValue();
+                verifyTextInput('Ubuntu 18.04');
+            });
 
-            cy.get(`form :nth-child(${firstInputNthChild + 2}).field`)
-                .as('string_constraint_valid_values')
-                .within(() => {
-                    cy.get('div.text').as('text').should('have.text', 'en');
-                    cy.get('div.dropdown').click();
+            cy.contains('.field', 'string_constraint_valid_values').within(() => {
+                cy.get('div.text').as('text').should('have.text', 'en');
+                cy.get('div.dropdown').click();
 
-                    cy.get('div[name="pl"]').should('be.visible');
-                    cy.get('div[name="en"]').should('be.visible');
-                    cy.get('div[name="fr"]').should('be.visible');
-                    cy.get('div[name="pl"]').click();
-                    cy.get('@text').should('have.text', 'pl');
+                cy.get('div[name="pl"]').should('be.visible');
+                cy.get('div[name="en"]').should('be.visible');
+                cy.get('div[name="fr"]').should('be.visible');
+                cy.get('div[name="pl"]').click();
+                cy.get('@text').should('have.text', 'pl');
 
-                    cy.revertToDefaultValue();
-                    cy.get('@text').should('have.text', 'en');
+                cy.revertToDefaultValue();
+                cy.get('@text').should('have.text', 'en');
 
-                    cy.get('i.dropdown.icon')
-                        .as('dropdownOrClearIcon')
-                        .should('be.visible')
-                        .should('have.class', 'clear');
-                    cy.get('@dropdownOrClearIcon').click();
+                cy.get('i.dropdown.icon').as('dropdownOrClearIcon').should('be.visible').should('have.class', 'clear');
+                cy.get('@dropdownOrClearIcon').click();
 
-                    cy.get('@text').should('not.exist');
-                    cy.get('@dropdownOrClearIcon').should('not.have.class', 'clear');
+                cy.get('@text').should('not.exist');
+                cy.get('@dropdownOrClearIcon').should('not.have.class', 'clear');
 
-                    cy.revertToDefaultValue();
-                    cy.get('@text').should('have.text', 'en');
-                });
+                cy.revertToDefaultValue();
+                cy.get('@text').should('have.text', 'en');
+            });
 
-            cy.get(`form :nth-child(${firstInputNthChild + 3}).field`)
-                .as('string_default')
-                .within(() => {
-                    verifyTextInput('Some default string');
-                });
+            cy.contains('.field', 'string_default').within(() => {
+                verifyTextInput('Some default string');
+            });
 
-            cy.get(`form :nth-child(${firstInputNthChild + 4}).field`)
-                .as('string_default_null')
-                .within(() => {
-                    verifyTextInput('null');
-                });
+            cy.contains('.field', 'string_default_null').within(() => {
+                verifyTextInput('null');
+            });
         });
     });
 });
