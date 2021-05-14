@@ -44,7 +44,7 @@ const DeploymentSiteTooltip: FunctionComponent<{ deployment: Deployment; environ
         <Tooltip direction="top" offset={tooltipOffset}>
             <TooltipContentContainer>
                 <div>
-                    <Header as="h4">{deployment.id}</Header>
+                    <Header as="h4">{deployment.display_name}</Header>
                     <div>{deployment.blueprint_id}</div>
                     <div>{deployment.site_name}</div>
                     {environmentTypeVisible && <div>{deployment.environment_type}</div>}

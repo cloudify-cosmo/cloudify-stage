@@ -48,9 +48,9 @@ describe('Deployments View widget', () => {
 
     before(() => {
         cy.activate()
-            .deleteDeployments(specPrefix, true)
+            // .deleteDeployments(specPrefix, true)
             .deleteSites(exampleSiteName)
-            .deleteBlueprints(blueprintName, true)
+            .deleteBlueprint(blueprintName, true)
             .uploadBlueprint(blueprintUrl, blueprintName)
             .deployBlueprint(blueprintName, deploymentName, { webserver_port: 9123 })
             .createSite({ name: exampleSiteName, location: '53.77509462534224, 20.473709106445316' })

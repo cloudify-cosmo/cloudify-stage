@@ -44,10 +44,8 @@ const DetailsPane: FunctionComponent<DetailsPaneProps> = ({ deployment, widget, 
     return (
         <div className="detailsPane">
             <DetailsPaneHeader
-                deploymentName={deployment.id}
-                drilldownButtons={
-                    <DrilldownButtons deploymentId={deployment.id} drillDown={drillDown} toolbox={toolbox} />
-                }
+                deployment={deployment}
+                drilldownButtons={<DrilldownButtons deployment={deployment} drillDown={drillDown} toolbox={toolbox} />}
             />
             <DetailsPaneWidgets />
         </div>

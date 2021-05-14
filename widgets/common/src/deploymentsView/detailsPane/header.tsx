@@ -2,19 +2,20 @@ import { noop } from 'lodash';
 import { ComponentProps, FunctionComponent, ReactNode, useMemo, useRef } from 'react';
 
 import './header.scss';
+import { Deployment } from '../types';
 
 export interface DetailsPaneHeaderProps {
-    deploymentName: string;
+    deployment: Deployment;
     drilldownButtons: ReactNode;
 }
 
-const DetailsPaneHeader: FunctionComponent<DetailsPaneHeaderProps> = ({ deploymentName, drilldownButtons }) => {
+const DetailsPaneHeader: FunctionComponent<DetailsPaneHeaderProps> = ({ deployment, drilldownButtons }) => {
     const { Header } = Stage.Basic;
     const { Widget } = Stage.Shared.Widgets;
     const uuidRef = useRef(Stage.Utils.uuid);
     const deploymentActionButtonsWidgetDescription = useMemo(
         (): ComponentProps<typeof Widget>['widget'] => ({
-            id: `${uuidRef.current}-${deploymentName}`,
+            id: `${uuidRef.current}-${deployment.id}`,
             name: 'Deployment Action Buttons',
             // NOTE: arbitrary position, as it is not used
             x: 0,
@@ -26,12 +27,12 @@ const DetailsPaneHeader: FunctionComponent<DetailsPaneHeaderProps> = ({ deployme
             drillDownPages: {},
             maximized: false
         }),
-        [deploymentName]
+        [deployment.id]
     );
 
     return (
         <div className="detailsPaneHeader">
-            <Header>{deploymentName}</Header>
+            <Header>{deployment.display_name}</Header>
             {drilldownButtons}
             <Widget
                 widget={deploymentActionButtonsWidgetDescription}
@@ -44,7 +45,3 @@ const DetailsPaneHeader: FunctionComponent<DetailsPaneHeaderProps> = ({ deployme
     );
 };
 export default DetailsPaneHeader;
-
-DetailsPaneHeader.propTypes = {
-    deploymentName: PropTypes.string.isRequired
-};

@@ -7,7 +7,7 @@ import { filterRulesContextKey, i18nDrillDownPrefix, subenvironmentsIcon, subser
 import type { Deployment } from '../types';
 
 export interface DrilldownButtonsProps {
-    deploymentId: string;
+    deployment: Deployment;
     drillDown: (templateName: string, drilldownContext: Record<string, any>, drilldownPageName: string) => void;
     toolbox: Stage.Types.Toolbox;
 }
@@ -19,9 +19,9 @@ const ButtonsContainer = styled.div`
 const i18nDrillDownButtonsPrefix = `${i18nDrillDownPrefix}.buttons`;
 const getDeploymentUrl = (id: string) => `/deployments/${id}?all_sub_deployments=false`;
 
-const DrilldownButtons: FunctionComponent<DrilldownButtonsProps> = ({ drillDown, deploymentId, toolbox }) => {
+const DrilldownButtons: FunctionComponent<DrilldownButtonsProps> = ({ drillDown, deployment, toolbox }) => {
     const deploymentDetailsResult = useQuery(
-        getDeploymentUrl(deploymentId),
+        getDeploymentUrl(deployment.id),
         ({ queryKey: url }): Promise<Deployment> => toolbox.getManager().doGet(url)
     );
 
@@ -43,13 +43,13 @@ const DrilldownButtons: FunctionComponent<DrilldownButtonsProps> = ({ drillDown,
             <DrilldownButton
                 type="environments"
                 drillDown={drillDown}
-                deploymentName={deploymentId}
+                deploymentName={deployment.display_name}
                 result={subdeploymentResults.subenvironments}
             />
             <DrilldownButton
                 type="services"
                 drillDown={drillDown}
-                deploymentName={deploymentId}
+                deploymentName={deployment.display_name}
                 result={subdeploymentResults.subservices}
             />
         </ButtonsContainer>
