@@ -736,6 +736,33 @@ describe('Deployments View widget', () => {
                         });
                 });
         });
+
+        it('should cluster markers and always show the selected deployment marker outside the cluster', () => {
+            useDeploymentsViewWidget({
+                configurationOverrides: { mapOpenByDefault: true }
+            });
+
+            const zoomOut = () => cy.get('[aria-label="Zoom out"]').click();
+            cy.getSearchInput().type(mapDeploymentsPrefix);
+
+            selectDeploymentInTableAndVerifyMapSelection(getSiteDeploymentName(siteNames.london));
+            cy.log('Check if there is a cluster');
+            getDeploymentsViewMap().within(() => {
+                zoomOut();
+                getDeploymentMarkerIcons().should('have.length', 2);
+                cy.contains('.leaflet-marker-icon', 2).click();
+                cy.log('Check that the cluster is zoomed-in into');
+                getDeploymentMarkerIcons().should('have.length', 3);
+                zoomOut();
+                getDeploymentMarkerIcons().should('have.length', 2);
+            });
+
+            selectDeploymentInTableAndVerifyMapSelection(getSiteDeploymentName(siteNames.warsaw));
+            cy.log('Check that the selected deployment is not clustered');
+            getDeploymentsViewMap().within(() => {
+                getDeploymentMarkerIcons().should('have.length', 3);
+            });
+        });
     });
 
     describe('bulk actions', () => {
