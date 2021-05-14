@@ -33,7 +33,7 @@ import {
 const gotoBackStep = () => cy.contains('button', 'Back').click();
 const gotoNextStep = () => cy.contains('button', 'Next').click();
 const gotoFinishStep = () => cy.contains('button', 'Finish').click();
-const closeModal = () => cy.contains('button:not([disabled])', 'Close').click();
+const closeModal = () => cy.contains('button', 'Close').click();
 
 describe('Getting started modal', () => {
     it('should provide option to disable popup', () => {
