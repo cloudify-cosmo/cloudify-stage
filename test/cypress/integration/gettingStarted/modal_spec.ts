@@ -35,6 +35,12 @@ const gotoNextStep = () => cy.contains('button', 'Next').click();
 const gotoFinishStep = () => cy.contains('button', 'Finish').click();
 const closeModal = () => cy.contains('button', 'Close').click();
 
+const verifyIfInstallationSucceed = () => {
+    cy.contains('.progress .progress', '100%');
+    cy.contains('.progress .label', 'Installation done!');
+    cy.get('.ui.red.message', { timeout: 0 }).should('not.exist'); // there shouldn't be visible error messages
+};
+
 describe('Getting started modal', () => {
     before(() => cy.usePageMock().activate());
 
@@ -116,9 +122,7 @@ describe('Getting started modal', () => {
                 cy.contains(/Kubernetes-AWS-EKS.*blueprint will be uploaded/);
                 gotoFinishStep();
 
-                cy.contains('.progress .progress', '100%');
-                cy.contains('.progress .label', 'Installation done!');
-                cy.get('.ui.red.message', { timeout: 0 }).should('not.exist'); // there shouldn't be visible error messages
+                verifyIfInstallationSucceed();
                 closeModal();
             });
         });
@@ -247,9 +251,7 @@ describe('Getting started modal', () => {
                 cy.contains(/Kubernetes-AWS-EKS.*blueprint is already uploaded/);
                 gotoFinishStep();
 
-                cy.contains('.progress .progress', '100%');
-                cy.contains('.progress .label', 'Installation done!');
-                cy.get('.ui.red.message', { timeout: 0 }).should('not.exist'); // there shouldn't be visible error messages
+                verifyIfInstallationSucceed();
                 closeModal();
             });
         });
@@ -353,9 +355,7 @@ describe('Getting started modal', () => {
 
                 gotoFinishStep();
 
-                cy.contains('.progress .progress', '100%');
-                cy.contains('.progress .label', 'Installation done!');
-                cy.get('.ui.red.message', { timeout: 0 }).should('not.exist'); // there shouldn't be visible error messages
+                verifyIfInstallationSucceed();
                 closeModal();
             });
         });
