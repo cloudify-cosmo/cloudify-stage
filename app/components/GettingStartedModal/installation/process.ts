@@ -1,10 +1,29 @@
-import i18n from 'i18next';
 import log from 'loglevel';
 
+import StageUtils from '../../../utils/stageUtils';
 import type Internal from '../../../utils/Internal';
 import type Manager from '../../../utils/Manager';
 import type { BlueprintInstallationTask, PluginInstallationTask, SecretInstallationTask } from './tasks';
 
+export enum TaskType {
+    Plugin = 'plugin',
+    Secret = 'secret',
+    Blueprint = 'blueprint'
+}
+
+export type TaskDetails = {
+    type: TaskType;
+    name: string;
+    status: TaskStatus;
+};
+
+export enum TaskStatus {
+    InstallationProgress = 'installation-progress',
+    InstallationDone = 'installation-done',
+    InstallationError = 'installation-error'
+}
+
+const t = StageUtils.getT('gettingStartedModal.messages');
 const sleep = async (milliseconds: number) => new Promise(resolve => setTimeout(resolve, milliseconds));
 
 // TODO(RD-1874): use common api for backend requests
@@ -74,7 +93,7 @@ export const uploadBlueprint = async (manager: Manager, blueprint: BlueprintInst
             requestData
         );
         if (uploadResponse.error) {
-            return i18n.t('gettingStartedModal.installation.blueprintUploadError', undefined, {
+            return t('blueprintUploadError', {
                 blueprintName: blueprint.blueprintName,
                 uploadError: uploadResponse.error
             });
@@ -92,7 +111,7 @@ export const uploadBlueprint = async (manager: Manager, blueprint: BlueprintInst
             const statusResponse = await manager.doGet(`/blueprints/${encodeURIComponent(blueprint.blueprintName)}`);
             if (statusResponse) {
                 if (statusResponse.error) {
-                    return i18n.t('gettingStartedModal.installation.blueprintUploadError', undefined, {
+                    return t('blueprintUploadError', {
                         blueprintName: blueprint.blueprintName,
                         uploadError: statusResponse.error
                     });
@@ -105,9 +124,9 @@ export const uploadBlueprint = async (manager: Manager, blueprint: BlueprintInst
             log.error(e);
         }
     }
-    return i18n.t('gettingStartedModal.installation.blueprintUploadError', undefined, {
+    return t('blueprintUploadError', {
         blueprintName: blueprint.blueprintName,
-        uploadError: i18n.t('gettingStartedModal.installation.timeoutExceededError')
+        uploadError: t('timeoutExceededError')
     });
 };
 
@@ -115,7 +134,7 @@ export const createResourcesInstaller = (
     manager: Manager,
     internal: Internal,
     onStarted: () => void,
-    onProgress: (progress: number) => void,
+    onProgress: (installationProgress: number, currentTask?: TaskDetails) => void,
     onError: (error: string) => void,
     onFinished: () => void
 ) => {
@@ -135,63 +154,90 @@ export const createResourcesInstaller = (
         const stepsCount =
             scheduledPlugins.length + updatedSecrets.length + createdSecrets.length + scheduledBlueprints.length;
 
-        const updateStepIndex = () => {
+        const triggerProgressEvent = (taskType: TaskType, taskName: string, taskStatus: TaskStatus) => {
+            const installationProgress = Math.round(100 * (stepIndex / stepsCount));
+            const currentTask = { type: taskType, name: taskName, status: taskStatus };
+            onProgress(installationProgress, currentTask);
+        };
+
+        const updateStepIndex = (taskType: TaskType, taskName: string, taskStatus: TaskStatus) => {
             stepIndex += 1;
-            onProgress(Math.round(100 * (stepIndex / stepsCount)));
+            triggerProgressEvent(taskType, taskName, taskStatus);
         };
 
         const runInstallPluginStep = async (scheduledPlugin: PluginInstallationTask) => {
+            let result = false;
             if (scheduledPlugin.yamlUrl && scheduledPlugin.wagonUrl) {
-                const result = await installPlugin(internal, scheduledPlugin);
+                triggerProgressEvent(TaskType.Plugin, scheduledPlugin.name, TaskStatus.InstallationProgress);
+                result = await installPlugin(internal, scheduledPlugin);
                 if (destroyed) return;
                 if (!result) {
                     onError(
-                        i18n.t('gettingStartedModal.installation.pluginInstallError', undefined, {
+                        t('pluginInstallError', {
                             pluginName: scheduledPlugin.name
                         })
                     );
                 }
             }
             if (destroyed) return;
-            updateStepIndex();
+            updateStepIndex(
+                TaskType.Plugin,
+                scheduledPlugin.name,
+                result ? TaskStatus.InstallationDone : TaskStatus.InstallationError
+            );
         };
 
         const runUpdateSecretStep = async (updatedSecret: SecretInstallationTask) => {
+            triggerProgressEvent(TaskType.Plugin, updatedSecret.name, TaskStatus.InstallationProgress);
             const result = await updateSecret(manager, updatedSecret);
             if (destroyed) return;
             if (!result) {
                 onError(
-                    i18n.t('gettingStartedModal.installation.secretUpdateError', undefined, {
+                    t('secretUpdateError', {
                         secretName: updatedSecret.name
                     })
                 );
             }
             if (destroyed) return;
-            updateStepIndex();
+            updateStepIndex(
+                TaskType.Secret,
+                updatedSecret.name,
+                result ? TaskStatus.InstallationDone : TaskStatus.InstallationError
+            );
         };
 
         const runCreateSecretStep = async (createdSecret: SecretInstallationTask) => {
+            triggerProgressEvent(TaskType.Plugin, createdSecret.name, TaskStatus.InstallationProgress);
             const result = await createSecret(manager, createdSecret);
             if (destroyed) return;
             if (!result) {
                 onError(
-                    i18n.t('gettingStartedModal.installation.secretCreateError', undefined, {
+                    t('secretCreateError', {
                         secretName: createdSecret.name
                     })
                 );
             }
             if (destroyed) return;
-            updateStepIndex();
+            updateStepIndex(
+                TaskType.Secret,
+                createdSecret.name,
+                result ? TaskStatus.InstallationDone : TaskStatus.InstallationError
+            );
         };
 
         const runUploadBlueprintStep = async (scheduledBlueprint: BlueprintInstallationTask) => {
+            triggerProgressEvent(TaskType.Blueprint, scheduledBlueprint.blueprintName, TaskStatus.InstallationProgress);
             const uploadError = await uploadBlueprint(manager, scheduledBlueprint);
             if (destroyed) return;
             if (uploadError) {
                 onError(uploadError);
             }
             if (destroyed) return;
-            updateStepIndex();
+            updateStepIndex(
+                TaskType.Blueprint,
+                scheduledBlueprint.blueprintName,
+                uploadError ? TaskStatus.InstallationError : TaskStatus.InstallationDone
+            );
         };
 
         onStarted();

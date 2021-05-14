@@ -61,7 +61,8 @@ const RemoveDeploymentModal: FunctionComponent<RemoveDeploymentModalProps> = ({
     return (
         <Confirm
             content={
-                <div className="content">
+                // TODO(RD-2255): Once generic fix for long names is ready, the `style` prop should be removed
+                <div className="content" style={{ wordBreak: 'break-word' }}>
                     <ErrorMessage autoHide error={errors} onDismiss={clearErrors} />
                     {content}
                 </div>
