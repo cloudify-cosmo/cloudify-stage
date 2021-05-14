@@ -48,7 +48,6 @@ describe('Deployments View widget', () => {
 
     before(() => {
         cy.activate()
-            // .deleteDeployments(specPrefix, true)
             .deleteSites(exampleSiteName)
             .deleteBlueprint(blueprintName, true)
             .uploadBlueprint(blueprintUrl, blueprintName)

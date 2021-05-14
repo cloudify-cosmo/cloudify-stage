@@ -27,7 +27,7 @@ const commands = {
         cy.cfyRequest(`/deployments?blueprint_id=${blueprintId}`, 'GET')
             .then(response => response.body.items.forEach(({ id }: { id: string }) => cy.deleteDeployment(id, force)))
             .then(() => waitUntilEmpty(`deployments?blueprint_id=${blueprintId}`));
-        cy.cfyRequest(`/blueprints/${blueprintId}?force=${force}`, 'DELETE');
+        cy.cfyRequest(`/blueprints/${blueprintId}?force=${force}`, 'DELETE', null, null, { failOnStatusCode: false });
     },
     deleteBlueprints: (search: string, force = false) => {
         cy.cfyRequest(`/blueprints?_search=${search}`, 'GET')
