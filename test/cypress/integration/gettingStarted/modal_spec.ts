@@ -131,28 +131,37 @@ describe('Getting started modal', () => {
 
         // mocks plugins uploading
 
-        cy.intercept(
-            'POST',
-            '/console/plugins/upload?visibility=tenant&title=AWS&iconUrl=https%3A%2F%2Fcloudify.co%2Fwp-content%2Fuploads%2F2019%2F08%2Faws-1.png&yamlUrl=http%3A%2F%2Frepository.cloudifysource.org%2Fcloudify%2Fwagons%2Fcloudify-aws-plugin%2F2.8.0%2Fplugin.yaml&wagonUrl=http%3A%2F%2Frepository.cloudifysource.org%2Fcloudify%2Fwagons%2Fcloudify-aws-plugin%2F2.8.0%2Fcloudify_aws_plugin-2.8.0-centos-Core-py27.py36-none-linux_x86_64.wgn',
-            () => {
-                throw new Error('This case should not occur.');
-            }
+        const mockForbiddenPluginUpload = (pluginTitle: string, iconUrl: string, yamlUrl: string, wagonUrl: string) =>
+            cy.intercept(
+                {
+                    method: 'POST',
+                    pathname: '/console/plugins/upload',
+                    query: { visibility: 'tenant', title: pluginTitle, iconUrl, yamlUrl, wagonUrl }
+                },
+                () => {
+                    throw new Error('This case should not occur.');
+                }
+            );
+
+        mockForbiddenPluginUpload(
+            'AWS',
+            'https://cloudify.co/wp-content/uploads/2019/08/aws-1.png',
+            'http://repository.cloudifysource.org/cloudify/wagons/cloudify-aws-plugin/2.8.0/plugin.yaml',
+            'http://repository.cloudifysource.org/cloudify/wagons/cloudify-aws-plugin/2.8.0/cloudify_aws_plugin-2.8.0-centos-Core-py27.py36-none-linux_x86_64.wgn'
         );
 
-        cy.intercept(
-            'POST',
-            '/console/plugins/upload?visibility=tenant&title=Utilities&iconUrl=https%3A%2F%2Fcloudify.co%2Fwp-content%2Fuploads%2F2019%2F08%2Fpluginlogo.png&yamlUrl=http%3A%2F%2Frepository.cloudifysource.org%2Fcloudify%2Fwagons%2Fcloudify-utilities-plugin%2F1.24.4%2Fplugin.yaml&wagonUrl=http%3A%2F%2Frepository.cloudifysource.org%2Fcloudify%2Fwagons%2Fcloudify-utilities-plugin%2F1.24.4%2Fcloudify_utilities_plugin-1.24.4-centos-Core-py27.py36-none-linux_x86_64.wgn',
-            () => {
-                throw new Error('This case should not occur.');
-            }
+        mockForbiddenPluginUpload(
+            'Utilities',
+            'https://cloudify.co/wp-content/uploads/2019/08/pluginlogo.png',
+            'http://repository.cloudifysource.org/cloudify/wagons/cloudify-utilities-plugin/1.24.4/plugin.yaml',
+            'http://repository.cloudifysource.org/cloudify/wagons/cloudify-utilities-plugin/1.24.4/cloudify_utilities_plugin-1.24.4-centos-Core-py27.py36-none-linux_x86_64.wgn'
         );
 
-        cy.intercept(
-            'POST',
-            '/console/plugins/upload?visibility=tenant&title=Kubernetes&iconUrl=https%3A%2F%2Fcloudify.co%2Fwp-content%2Fuploads%2F2020%2F07%2Fkube-icon.png&yamlUrl=http%3A%2F%2Frepository.cloudifysource.org%2Fcloudify%2Fwagons%2Fcloudify-kubernetes-plugin%2F2.12.1%2Fplugin.yaml&wagonUrl=http%3A%2F%2Frepository.cloudifysource.org%2Fcloudify%2Fwagons%2Fcloudify-kubernetes-plugin%2F2.12.1%2Fcloudify_kubernetes_plugin-2.12.1-centos-Core-py36-none-linux_x86_64.wgn',
-            () => {
-                throw new Error('This case should not occur.');
-            }
+        mockForbiddenPluginUpload(
+            'Kubernetes',
+            'https://cloudify.co/wp-content/uploads/2020/07/kube-icon.png',
+            'http://repository.cloudifysource.org/cloudify/wagons/cloudify-kubernetes-plugin/2.12.1/plugin.yaml',
+            'http://repository.cloudifysource.org/cloudify/wagons/cloudify-kubernetes-plugin/2.12.1/cloudify_kubernetes_plugin-2.12.1-centos-Core-py36-none-linux_x86_64.wgn'
         );
 
         // mocks secrets creating
@@ -162,43 +171,54 @@ describe('Getting started modal', () => {
 
         // mocks blueprints uploading
 
-        cy.interceptSp(
-            'PUT',
-            '/blueprints/AWS-Basics-VM-Setup?visibility=tenant&async_upload=true&application_file_name=aws.yaml&blueprint_archive_url=https%3A%2F%2Fgithub.com%2Fcloudify-community%2Fblueprint-examples%2Freleases%2Fdownload%2Flatest%2Fvirtual-machine.zip',
-            () => {
-                throw new Error('This case should not occur.');
-            }
+        const mockForbiddenBlueprintUpload = (
+            blueprintName: string,
+            applicationFileName: string,
+            blueprintArchiveUrl: string
+        ) =>
+            cy.intercept(
+                {
+                    method: 'PUT',
+                    pathname: `/blueprints/${blueprintName}?async_upload=true`, // async_upload must be directly in the path
+                    query: {
+                        visibility: 'tenant',
+                        application_file_name: applicationFileName,
+                        blueprint_archive_url: blueprintArchiveUrl
+                    }
+                },
+                () => {
+                    throw new Error('This case should not occur.');
+                }
+            );
+
+        mockForbiddenBlueprintUpload(
+            'AWS-Basics-VM-Setup',
+            'aws.yaml',
+            'https://github.com/cloudify-community/blueprint-examples/releases/download/latest/virtual-machine.zip'
         );
 
-        cy.interceptSp(
-            'PUT',
-            '/blueprints/AWS-VM-Setup-using-CloudFormation?visibility=tenant&async_upload=true&application_file_name=aws-cloudformation.yaml&blueprint_archive_url=https%3A%2F%2Fgithub.com%2Fcloudify-community%2Fblueprint-examples%2Freleases%2Fdownload%2Flatest%2Fvirtual-machine.zip',
-            () => {
-                throw new Error('This case should not occur.');
-            }
+        mockForbiddenBlueprintUpload(
+            'AWS-VM-Setup-using-CloudFormation',
+            'aws-cloudformation.yaml',
+            'https://github.com/cloudify-community/blueprint-examples/releases/download/latest/virtual-machine.zip'
         );
 
-        cy.interceptSp(
-            'PUT',
-            '/blueprints/Kubernetes-AWS-EKS?visibility=tenant&async_upload=true&application_file_name=blueprint.yaml&blueprint_archive_url=https%3A%2F%2Fgithub.com%2Fcloudify-community%2Fblueprint-examples%2Freleases%2Fdownload%2Flatest%2Fkubernetes-aws-eks.zip',
-            () => {
-                throw new Error('This case should not occur.');
-            }
+        mockForbiddenBlueprintUpload(
+            'Kubernetes-AWS-EKS',
+            'blueprint.yaml',
+            'https://github.com/cloudify-community/blueprint-examples/releases/download/latest/kubernetes-aws-eks.zip'
         );
 
         // mocks blueprints status
 
-        cy.interceptSp('GET', '/blueprints/AWS-Basics-VM-Setup', () => {
-            throw new Error('This case should not occur.');
-        });
+        const mockForbiddenSecretGetting = (secretName: string) =>
+            cy.interceptSp('GET', `/blueprints/${secretName}`, () => {
+                throw new Error('This case should not occur.');
+            });
 
-        cy.interceptSp('GET', '/blueprints/AWS-VM-Setup-using-CloudFormation', () => {
-            throw new Error('This case should not occur.');
-        });
-
-        cy.interceptSp('GET', '/blueprints/Kubernetes-AWS-EKS', () => {
-            throw new Error('This case should not occur.');
-        });
+        mockForbiddenSecretGetting('AWS-Basics-VM-Setup');
+        mockForbiddenSecretGetting('AWS-VM-Setup-using-CloudFormation');
+        mockForbiddenSecretGetting('Kubernetes-AWS-EKS');
 
         cy.get('.modal').within(() => {
             cy.contains('button', 'AWS').click();
