@@ -48,25 +48,18 @@ function useSelfRefreshingMarkerClusterGroupRef(deploymentSitePairs: DeploymentS
     return markerClusterGroupRef;
 }
 
-// TODO: extract the common logic for creating caching WeakMaps
-const clusterIcons = new WeakMap<MarkerCluster, HTMLElement>();
-function getClusterIconContainer(cluster: MarkerCluster) {
-    const existingIcon = clusterIcons.get(cluster);
-    if (existingIcon) {
-        return existingIcon;
-    }
-
+function getClusterIconContainer() {
     const newIcon = document.createElement('div');
     // NOTE: necessary to maintain the dimensions of the icon
     newIcon.style.width = '100%';
     newIcon.style.height = '100%';
-    clusterIcons.set(cluster, newIcon);
     return newIcon;
 }
+const memoizedGetClusterIconContainer = Stage.Utils.memoizeWithWeakMap(getClusterIconContainer);
 
 const createClusterIcon: MarkerClusterGroupOptions['iconCreateFunction'] = cluster => {
     // TODO(RD-2305): add cluster tooltip (`cluster.bindTooltip`)
-    const icon = getClusterIconContainer(cluster);
+    const icon = memoizedGetClusterIconContainer(cluster);
     ReactDOM.render(<ClusterMarkerIcon cluster={cluster} />, icon);
 
     const iconSize = 40; // px
