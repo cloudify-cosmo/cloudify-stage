@@ -12,7 +12,7 @@ import {
 } from './blueprintMocks';
 import {
     mockAwsAndGcpPluginsInCatalog,
-    mockAwsPluginsCatalog,
+    mockAwsPluginsInCatalog,
     mockAwsPluginsInManager,
     mockCloudifyAnsiblePluginUpload,
     mockCloudifyAwsPluginUpload,
@@ -65,7 +65,7 @@ describe('Mocked getting started modal', () => {
     it('should install selected technology', () => {
         // mocks listing
 
-        mockAwsPluginsCatalog();
+        mockAwsPluginsInCatalog();
         mockEmptyPluginsInManager();
         mockEmptySecretsInManager();
         mockEmptyBlueprintsInManager();
@@ -121,7 +121,7 @@ describe('Mocked getting started modal', () => {
     it('should omit uploaded plugins and blueprints updating existing secrets', () => {
         // mocks listing
 
-        mockAwsPluginsCatalog();
+        mockAwsPluginsInCatalog();
         mockAwsPluginsInManager();
         mockAwsSecretsInManager();
         mockAwsBlueprintsInManager();
