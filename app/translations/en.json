@@ -50,15 +50,30 @@
         },
         "summary": {
             "taskListTitle": "Task List",
-            "pluginExistsMessageSuffix": "plugin is already installed.",
-            "pluginInstallMessageSuffix": "plugin will be installed.",
-            "pluginNotFoundMessageSuffix": "plugin is not found in catalog and manager.",
-            "secretCreateMessageSuffix": "secret will be created.",
-            "secretUpdateMessageSuffix": "secret will be updated.",
-            "blueprintExistsMessageSuffix": "blueprint is already uploaded.",
-            "blueprintUploadMessageSuffix": "blueprint will be uploaded."
+            "plugin": {
+                "alreadyInstalledMessageSuffix": "plugin is already installed",
+                "installationScheduledMessageSuffix": "plugin will be installed",
+                "notFoundMessageSuffix": "plugin not found in the catalog or on the manager",
+                "installationProgressMessageSuffix": "plugin installation in progress",
+                "installationDoneMessageSuffix": "plugin installation done",
+                "installationErrorMessageSuffix": "plugin installation error"
+            },
+            "secret": {
+                "creationScheduledMessageSuffix": "secret will be created",
+                "updateScheduledMessageSuffix": "secret will be updated",
+                "settingProgressMessageSuffix": "secret setting in progress",
+                "settingDoneMessageSuffix": "secret setting done",
+                "settingErrorMessageSuffix": "secret setting error"
+            },
+            "blueprint": {
+                "alreadyUploadedMessageSuffix": "blueprint is already uploaded",
+                "uploadScheduledMessageSuffix": "blueprint will be uploaded",
+                "uploadingProgressMessageSuffix": "blueprint upload in progress",
+                "uploadingDoneMessageSuffix": "blueprint upload done",
+                "uploadingErrorMessageSuffix": "blueprint upload error"
+            }
         },
-        "installation": {
+        "messages": {
             "pluginInstallError": "{{pluginName}} plugin installation error.",
             "secretUpdateError": "{{secretName}} secret update operation error.",
             "secretCreateError": "{{secretName}} secret create operation error.",
