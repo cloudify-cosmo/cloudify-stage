@@ -594,6 +594,17 @@ describe('Deployments View widget', () => {
             getDeploymentsMapTooltip().within(callback);
             getMarker().trigger('mouseout', { force: ignoreMarkerNotInView });
         };
+        function selectDeploymentInTableAndVerifyMapSelection(name: string) {
+            const getSelectedMarker = () => cy.get('path.test__map-selected-marker');
+
+            getDeploymentsViewTable().contains(name).click();
+            getDeploymentsViewMap().within(() => {
+                // NOTE: need to `force` events, since the selection circle is covered by a marker image
+                // and Cypress would not interact with the circle underneath
+                withinMarkerTooltip(getSelectedMarker, () => cy.contains(name), { ignoreMarkerNotInView: true });
+            });
+        }
+        const getDeploymentMarkerIcons = () => cy.get('.leaflet-marker-icon');
 
         it('should be toggled upon clicking the button', () => {
             useDeploymentsViewWidget();
@@ -606,7 +617,7 @@ describe('Deployments View widget', () => {
                 .should('have.attr', 'title', 'Close map');
             cy.getSearchInput().type(siteNames.london);
             getDeploymentsViewMap().within(() => {
-                cy.get('.leaflet-marker-icon').should('have.length', 1);
+                getDeploymentMarkerIcons().should('have.length', 1);
                 withinMarkerTooltip(
                     () => getMarkerByImageSuffix(MarkerImageSuffix.Red),
                     () => cy.contains(getSiteDeploymentName(siteNames.london))
@@ -631,7 +642,7 @@ describe('Deployments View widget', () => {
             });
 
             getDeploymentsViewMap().within(() => {
-                cy.get('.leaflet-marker-icon').should('be.visible').and('have.length', 3);
+                getDeploymentMarkerIcons().should('be.visible').and('have.length', 3);
 
                 const getTooltipSubenvironments = () => cy.get('i.icon.object.group').parent();
                 const getTooltipSubservices = () => cy.get('i.icon.cube').parent();
@@ -687,18 +698,7 @@ describe('Deployments View widget', () => {
                 configurationOverrides: { mapOpenByDefault: true }
             });
 
-            const getSelectedMarker = () => cy.get('path.test__map-selected-marker');
-
             cy.getSearchInput().type(mapDeploymentsPrefix);
-
-            function selectDeploymentInTableAndVerifyMapSelection(name: string) {
-                getDeploymentsViewTable().contains(name).click();
-                getDeploymentsViewMap().within(() => {
-                    // NOTE: need to `force` events, since the selection circle is covered by a marker image
-                    // and Cypress would not interact with the circle underneath
-                    withinMarkerTooltip(getSelectedMarker, () => cy.contains(name), { ignoreMarkerNotInView: true });
-                });
-            }
 
             selectDeploymentInTableAndVerifyMapSelection(getSiteDeploymentName(siteNames.london));
 
