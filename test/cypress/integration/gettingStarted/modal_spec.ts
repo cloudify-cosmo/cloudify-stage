@@ -53,7 +53,8 @@ describe('Getting started modal', () => {
             closeModal();
         });
         cy.reload();
-        cy.get('.modal').should('not.exist'); // the way to check if modal is not visible
+        // eslint-disable-next-line cypress/no-unnecessary-waiting
+        cy.wait(7000).get('.modal', { timeout: 0 }).should('not.exist'); // the way to check if modal is not visible
     });
 });
 
