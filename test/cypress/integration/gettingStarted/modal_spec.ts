@@ -40,10 +40,10 @@ describe('Getting started modal', () => {
         let showGettingStarted = true;
         cy.usePageMock()
             .activate()
-            .interceptSp('GET', `/users/`, res => {
+            .interceptSp('GET', `/users/admin`, res => {
                 res.reply({ show_getting_started: showGettingStarted });
             })
-            .interceptSp('POST', `/users/`, res => {
+            .interceptSp('POST', `/users/admin`, res => {
                 showGettingStarted = res.body.show_getting_started;
                 res.reply({ show_getting_started: showGettingStarted });
             })
