@@ -35,30 +35,28 @@ const gotoNextStep = () => cy.contains('button', 'Next').click();
 const gotoFinishStep = () => cy.contains('button', 'Finish').click();
 const closeModal = () => cy.contains('button', 'Close').click();
 
-describe('Getting started modal', () => {
-    it('should provide option to disable popup', () => {
-        let showGettingStarted = true;
-        cy.usePageMock()
-            .activate()
-            .interceptSp('GET', `/users/admin`, res => {
-                res.reply({ show_getting_started: showGettingStarted });
-            })
-            .interceptSp('POST', `/users/admin`, res => {
-                showGettingStarted = res.body.show_getting_started;
-                res.reply({ show_getting_started: showGettingStarted });
-            })
-            .mockLogin();
-        cy.get('.modal').within(() => {
-            cy.contains('label', "Don't show next time").click();
-            closeModal();
-        });
-        cy.reload();
-        // eslint-disable-next-line cypress/no-unnecessary-waiting
-        cy.wait(7000).get('.modal', { timeout: 0 }).should('not.exist'); // the way to check if modal is not visible
+it('Getting started modal should provide option to disable popup', () => {
+    let showGettingStarted = true;
+    cy.usePageMock()
+        .activate()
+        .interceptSp('GET', `/users/admin`, res => {
+            res.reply({ show_getting_started: showGettingStarted });
+        })
+        .interceptSp('POST', `/users/admin`, res => {
+            showGettingStarted = res.body.show_getting_started;
+            res.reply({ show_getting_started: showGettingStarted });
+        })
+        .mockLogin();
+    cy.get('.modal').within(() => {
+        cy.contains('label', "Don't show next time").click();
+        closeModal();
     });
+    cy.reload();
+    // eslint-disable-next-line cypress/no-unnecessary-waiting
+    cy.wait(7000).get('.modal', { timeout: 0 }).should('not.exist'); // the way to check if modal is not visible
 });
 
-describe('Mocked getting started modal', () => {
+describe('Getting started modal', () => {
     before(() => {
         cy.usePageMock().activate();
     });
