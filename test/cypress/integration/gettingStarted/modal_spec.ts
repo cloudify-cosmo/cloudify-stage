@@ -387,9 +387,9 @@ describe('Mocked getting started modal', () => {
         gotoNextStep();
 
         cy.contains('.modal .header', 'Summary');
-        cy.contains('.modal', /cloudify-aws-plugin.*plugin is not found in catalog and manager/);
-        cy.contains('.modal', /cloudify-utilities-plugin.*plugin is not found in catalog and manager/);
-        cy.contains('.modal', /cloudify-kubernetes-plugin.*plugin is not found in catalog and manager/);
+        cy.contains('.modal', /cloudify-aws-plugin.*plugin not found in the catalog or on the manager/);
+        cy.contains('.modal', /cloudify-utilities-plugin.*plugin not found in the catalog or on the manager/);
+        cy.contains('.modal', /cloudify-kubernetes-plugin.*plugin not found in the catalog or on the manager/);
     });
 
     it('should keep button and field states for navigating beetwen steps', () => {
