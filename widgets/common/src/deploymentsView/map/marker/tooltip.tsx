@@ -9,7 +9,7 @@ import { subenvironmentsIcon, subservicesIcon } from '../../common';
 
 const tooltipStatusT = (suffix: string) => mapT(`tooltip.status.${suffix}`);
 const markerIconHeight = 41;
-const tooltipOffset = L.point(0, -markerIconHeight);
+const tooltipOffset = window.L.point(0, -markerIconHeight);
 
 const TooltipContentContainer = styled.div`
     display: flex;

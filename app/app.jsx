@@ -1,7 +1,3 @@
-/**
- * Created by kinneretzin on 29/08/2016.
- */
-
 import 'jquery-ui/ui/core';
 import 'jquery-ui/ui/widget';
 import 'jquery-ui/ui/widgets/mouse';
@@ -23,11 +19,13 @@ import 'hopscotch/dist/css/hopscotch.css';
 
 // Import leaflet
 import 'leaflet/dist/leaflet.css';
+import 'react-leaflet-markercluster/dist/styles.min.css';
+import * as Leaflet from 'leaflet';
+import 'leaflet.markercluster';
 
 import React from 'react';
 import ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
-import * as Leaflet from 'leaflet';
 import log from 'loglevel';
 import moment from 'moment';
 import * as ReactQuery from 'react-query';
