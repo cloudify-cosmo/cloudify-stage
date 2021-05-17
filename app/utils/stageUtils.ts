@@ -193,4 +193,25 @@ export default class StageUtils {
     static isEmptyWidgetData = isEmptyWidgetData;
 
     static uuid = v4;
+
+    /**
+     * Similar to lodash's `memoize`, but uses a `WeakMap` for cache.
+     * Reduces the risk of a memory leak as the keys are held weakly.
+     */
+    // NOTE: the `object` type is required by `WeakMap`
+    // eslint-disable-next-line @typescript-eslint/ban-types
+    static memoizeWithWeakMap = <K extends object, V>(fn: (key: K) => V) => {
+        const cache = new WeakMap<K, V>();
+
+        return (key: K): V => {
+            const existingValue = cache.get(key);
+            if (existingValue) {
+                return existingValue;
+            }
+
+            const newValue = fn(key);
+            cache.set(key, newValue);
+            return newValue;
+        };
+    };
 }
