@@ -1,13 +1,9 @@
-/**
- * Created by kinneretzin on 21/02/2017.
- */
-
 import _ from 'lodash';
 import { push } from 'connected-react-router';
 import * as types from './types';
 import { createPagesFromTemplate } from './page';
 import { setAppLoading, setAppError } from './appState';
-import { saveUserAppData, CURRENT_APP_DATA_VERSION } from './userAppCommon';
+import { saveUserAppData } from './userAppCommon';
 import Internal from '../utils/Internal';
 import Consts from '../utils/consts';
 import UserAppDataAutoSaver from '../utils/UserAppDataAutoSaver';
@@ -65,7 +61,7 @@ export function loadOrCreateUserAppData() {
         return internal.doGet('/ua').then(userApp => {
             if (
                 userApp &&
-                userApp.appDataVersion === CURRENT_APP_DATA_VERSION &&
+                userApp.appDataVersion === Consts.APP_VERSION &&
                 userApp.appData.pages &&
                 userApp.appData.pages.length > 0
             ) {
