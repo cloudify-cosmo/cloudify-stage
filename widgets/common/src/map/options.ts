@@ -19,7 +19,7 @@ export function getMapOptions(sites: SiteWithPosition[]): { options: MapOptions;
             break;
 
         default:
-            bounds = L.latLngBounds(sites.map(siteToLatLng)).pad(0.05);
+            bounds = window.L.latLngBounds(sites.map(siteToLatLng)).pad(0.05);
             break;
     }
 
