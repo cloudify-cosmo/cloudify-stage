@@ -11,7 +11,7 @@ export interface SiteWithPosition {
 }
 
 export function isSiteWithPosition(site: Site): site is SiteWithPosition {
-    return typeof site.latitude === 'number' && typeof site.longitude === 'number';
+    return Number.isFinite(site.latitude) && Number.isFinite(site.longitude);
 }
 
 function pureSiteToLatLng(site: SiteWithPosition): [number, number] {
