@@ -19,7 +19,7 @@ export const mockPluginsInCatalog = (body: any[]) =>
 
 export const mockEmptyPluginsInCatalog = () => mockPluginsInCatalog([]);
 
-export const mockAwsPluginsCatalog = () =>
+export const mockAwsPluginsInCatalog = () =>
     mockPluginsInCatalog([
         cloudifyAwsPluginItemInCatalog,
         cloudifyUtilitiesPluginItemInCatalog,
