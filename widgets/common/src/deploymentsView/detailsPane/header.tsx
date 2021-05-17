@@ -10,12 +10,13 @@ export interface DetailsPaneHeaderProps {
 }
 
 const DetailsPaneHeader: FunctionComponent<DetailsPaneHeaderProps> = ({ deployment, drilldownButtons }) => {
+    const { id, display_name: displayName } = deployment;
     const { Header } = Stage.Basic;
     const { Widget } = Stage.Shared.Widgets;
     const uuidRef = useRef(Stage.Utils.uuid);
     const deploymentActionButtonsWidgetDescription = useMemo(
         (): ComponentProps<typeof Widget>['widget'] => ({
-            id: `${uuidRef.current}-${deployment.id}`,
+            id: `${uuidRef.current}-${id}`,
             name: 'Deployment Action Buttons',
             // NOTE: arbitrary position, as it is not used
             x: 0,
@@ -27,12 +28,12 @@ const DetailsPaneHeader: FunctionComponent<DetailsPaneHeaderProps> = ({ deployme
             drillDownPages: {},
             maximized: false
         }),
-        [deployment.id]
+        [id]
     );
 
     return (
         <div className="detailsPaneHeader">
-            <Header>{deployment.display_name}</Header>
+            <Header>{displayName}</Header>
             {drilldownButtons}
             <Widget
                 widget={deploymentActionButtonsWidgetDescription}

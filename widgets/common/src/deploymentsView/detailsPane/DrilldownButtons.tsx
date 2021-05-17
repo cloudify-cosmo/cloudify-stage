@@ -20,8 +20,10 @@ const i18nDrillDownButtonsPrefix = `${i18nDrillDownPrefix}.buttons`;
 const getDeploymentUrl = (id: string) => `/deployments/${id}?all_sub_deployments=false`;
 
 const DrilldownButtons: FunctionComponent<DrilldownButtonsProps> = ({ drillDown, deployment, toolbox }) => {
+    const { id, display_name: displayName } = deployment;
+
     const deploymentDetailsResult = useQuery(
-        getDeploymentUrl(deployment.id),
+        getDeploymentUrl(id),
         ({ queryKey: url }): Promise<Deployment> => toolbox.getManager().doGet(url)
     );
 
@@ -43,13 +45,13 @@ const DrilldownButtons: FunctionComponent<DrilldownButtonsProps> = ({ drillDown,
             <DrilldownButton
                 type="environments"
                 drillDown={drillDown}
-                deploymentName={deployment.display_name}
+                deploymentName={displayName}
                 result={subdeploymentResults.subenvironments}
             />
             <DrilldownButton
                 type="services"
                 drillDown={drillDown}
-                deploymentName={deployment.display_name}
+                deploymentName={displayName}
                 result={subdeploymentResults.subservices}
             />
         </ButtonsContainer>
