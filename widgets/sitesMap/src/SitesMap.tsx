@@ -1,5 +1,7 @@
-import DeploymentStatePropType from './props/DeploymentStatePropType';
+import type { FunctionComponent, ReactNode, RefObject } from 'react';
+import type { Map as LeafletMap } from 'react-leaflet';
 import SiteControl from './SiteControl';
+import type { SitesMapWidgetData } from './types';
 
 function openPopup(marker) {
     if (marker && marker.leafletElement) {
@@ -9,11 +11,37 @@ function openPopup(marker) {
     }
 }
 
-class SitesMap extends React.Component {
-    constructor(props) {
+function getMarkerColor(deploymentStates: Record<Stage.Common.DeploymentsView.Types.DeploymentStatus, number>) {
+    const { DeploymentStatus } = Stage.Common.DeploymentsView.Types;
+    let color: Stage.Common.MarkerIconColor = 'grey';
+
+    if (deploymentStates[DeploymentStatus.RequiresAttention] > 0) {
+        color = 'red';
+    } else if (deploymentStates[DeploymentStatus.InProgress] > 0) {
+        color = 'yellow';
+    } else if (deploymentStates[DeploymentStatus.Good] > 0) {
+        color = 'green';
+    }
+
+    return color;
+}
+
+type SitesMapState = {
+    isMapAvailable: boolean | null;
+};
+interface SitesMapProps {
+    data: SitesMapWidgetData;
+    dimensions: Stage.Common.Map.WidgetDimensions;
+    showAllLabels: boolean;
+    sitesAreDefined: boolean;
+    toolbox: Stage.Types.Toolbox;
+}
+class SitesMap extends React.Component<SitesMapProps, SitesMapState> {
+    private mapRef: RefObject<LeafletMap> = React.createRef();
+
+    constructor(props: SitesMapProps) {
         super(props);
 
-        this.mapRef = React.createRef();
         this.state = {
             isMapAvailable: null
         };
@@ -26,7 +54,7 @@ class SitesMap extends React.Component {
         return new MapsActions(toolbox).isAvailable().then(isMapAvailable => this.setState({ isMapAvailable }));
     }
 
-    shouldComponentUpdate(nextProps, nextState) {
+    shouldComponentUpdate(nextProps: SitesMapProps, nextState: SitesMapState) {
         const { data, dimensions, showAllLabels, sitesAreDefined } = this.props;
         const { isMapAvailable } = this.state;
 
@@ -39,7 +67,7 @@ class SitesMap extends React.Component {
         );
     }
 
-    componentDidUpdate(prevProps) {
+    componentDidUpdate(prevProps: SitesMapProps) {
         const { dimensions } = this.props;
         if (prevProps.dimensions !== dimensions) {
             Stage.Common.Map.invalidateSizeAfterDimensionsChange(this.mapRef);
@@ -47,25 +75,27 @@ class SitesMap extends React.Component {
     }
 
     createMarkers() {
-        const markers = [];
+        const markers: ReactNode[] = [];
         const { data, showAllLabels, toolbox } = this.props;
         const showLabels = showAllLabels ? openPopup : undefined;
 
-        _.forEach(data, site => {
+        _.forEach(data, (site, name) => {
             const { createMarkerIcon } = Stage.Common;
-            const icon = createMarkerIcon(site.color);
+            const { deploymentStates } = site;
+            const color = getMarkerColor(deploymentStates);
+            const icon = createMarkerIcon(color);
 
             const { Marker, Popup } = Stage.Basic.Leaflet;
             markers.push(
                 <Marker
                     position={Stage.Common.Map.siteToLatLng(site)}
                     ref={showLabels}
-                    key={`siteMarker${site.name}`}
+                    key={`siteMarker${name}`}
                     riseOnHover
                     icon={icon}
                 >
                     <Popup interactive autoClose={false} closeOnClick={false}>
-                        <SiteControl site={site} toolbox={toolbox} />
+                        <SiteControl site={{ name, deploymentStates }} toolbox={toolbox} />
                     </Popup>
                 </Marker>
             );
@@ -115,30 +145,12 @@ class SitesMap extends React.Component {
     }
 }
 
-SitesMap.propTypes = {
-    data: PropTypes.objectOf(
-        PropTypes.shape({
-            name: PropTypes.string.isRequired,
-            color: PropTypes.string.isRequired,
-            latitude: PropTypes.number.isRequired,
-            longitude: PropTypes.number.isRequired,
-            deploymentStates: DeploymentStatePropType.isRequired
-        })
-    ).isRequired,
-    /* @see {Stage.Common.Map.WidgetDimensions} */
-    dimensions: PropTypes.shape({
-        height: PropTypes.number.isRequired,
-        width: PropTypes.number.isRequired,
-        maximized: PropTypes.bool
-    }).isRequired,
-    showAllLabels: PropTypes.bool.isRequired,
-    sitesAreDefined: PropTypes.bool.isRequired,
-    toolbox: Stage.PropTypes.Toolbox.isRequired
-};
-
 export default connectToStore(state => _.get(state, 'config.app.maps', () => ({})), {})(SitesMap);
 
-function NoSitesDataMessage({ sitesAreDefined }) {
+interface NoSitesDataMessageProps {
+    sitesAreDefined: boolean;
+}
+const NoSitesDataMessage: FunctionComponent<NoSitesDataMessageProps> = ({ sitesAreDefined }) => {
     const { NoDataMessage } = Stage.Common;
     const { Link } = Stage.Shared;
     const REASON = sitesAreDefined ? 'the defined sites have no location' : 'no sites are defined';
@@ -146,11 +158,9 @@ function NoSitesDataMessage({ sitesAreDefined }) {
                              There is no data to display because ${REASON}. Sites can be added in the `;
     return (
         <NoDataMessage>
-            {NO_DATA_MESSAGE} <Link to="/page/site_management">Site Management page.</Link>
+            <>
+                {NO_DATA_MESSAGE} <Link to="/page/site_management">Site Management page</Link>.
+            </>
         </NoDataMessage>
     );
-}
-
-NoSitesDataMessage.propTypes = {
-    sitesAreDefined: PropTypes.bool.isRequired
 };
