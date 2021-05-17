@@ -61,7 +61,7 @@ export function loadOrCreateUserAppData() {
         return internal.doGet('/ua').then(userApp => {
             if (
                 userApp &&
-                userApp.appDataVersion === Consts.CURRENT_APP_DATA_VERSION &&
+                userApp.appDataVersion === Consts.APP_VERSION &&
                 userApp.appData.pages &&
                 userApp.appData.pages.length > 0
             ) {

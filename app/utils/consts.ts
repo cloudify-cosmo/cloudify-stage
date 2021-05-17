@@ -3,7 +3,7 @@ import { version } from '../../package.json';
 const convertVersionStringToNumber = (versionString: string) => Number(versionString.replace(/[^\d]/g, ''));
 
 export default {
-    CURRENT_APP_DATA_VERSION: convertVersionStringToNumber(version),
+    APP_VERSION: convertVersionStringToNumber(version),
 
     CONTEXT_PATH: '/console',
 
