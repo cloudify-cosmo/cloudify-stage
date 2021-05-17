@@ -14,7 +14,8 @@ export interface DrilldownButtonsProps {
 }
 
 const ButtonsContainer = styled.div`
-    margin: 0 1em;
+    margin-right: 1rem;
+    margin-bottom: 1rem;
     position: relative;
 `;
 
