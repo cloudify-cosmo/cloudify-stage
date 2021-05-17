@@ -1,17 +1,34 @@
-$deploymentProgressBarColors: (
+$deploymentStatusColors: (
     // NOTE: use Semantic UI colors
     // See https://semantic-ui.com/usage/theming.html
+    'good': #21ba45,
     'in-progress': #f2711c,
-    'failed': #db2828
+    'requires-attention': #db2828
+);
+
+$deploymentStatusForegroundColors: (
+    // NOTE: picked to improve the contrast
+    'good': black,
+    'in-progress': black,
+    'requires-attention': white
+);
+
+$deploymentProgressBarColors: (
+    'in-progress': map-get($deploymentStatusColors, 'in-progress'),
+    'failed': map-get($deploymentStatusColors, 'requires-attention')
 );
 
 .deploymentsViewWidget,
 .deploymentsViewDrilledDownWidget {
-    --deployment-progress-underline-height: 0.14em;
     // NOTE: use CSS custom properties to make user overrides easier
-    @each $stateName, $color in $deploymentProgressBarColors {
-        --deployment-progress-bar-color-#{$stateName}: #{$color};
+    @each $status, $color in $deploymentStatusColors {
+        --deployment-status-color-#{$status}: #{$color};
     }
+    @each $status, $color in $deploymentStatusForegroundColors {
+        --deployment-status-foreground-color-#{$status}: #{$color};
+    }
+
+    --deployment-progress-underline-height: 0.14em;
 
     // NOTE: additional selectors added to increase specificity and allow overriding
     .ui.table .deployment-progressless-row > td {
@@ -38,8 +55,11 @@ $deploymentProgressBarColors: (
     }
 
     @each $stateName, $color in $deploymentProgressBarColors {
-        .deployment-progress-bar.#{$stateName} {
-            background-color: var(--deployment-progress-bar-color-#{$stateName});
+        --deployment-progress-bar-color-#{$stateName}: #{$color};
+    }
+    @each $status, $color in $deploymentProgressBarColors {
+        .deployment-progress-bar.#{$status} {
+            background-color: var(--deployment-progress-bar-color-#{$status});
         }
     }
 }
