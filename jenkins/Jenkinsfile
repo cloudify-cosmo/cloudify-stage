@@ -161,7 +161,7 @@ pipeline {
     }
     stage('Audit'){
       when {
-        branch "master"
+        branch "6.0.0-build"
       }
       steps {
         catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE'){
