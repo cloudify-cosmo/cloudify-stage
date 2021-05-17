@@ -35,12 +35,107 @@ Add, edit and clone operation modals share a common component for defining filte
 The component presents a list of rows, each representing a single filter rule. Each row contains three inputs:
 
 * Rule type selection dropdown - selecting the context of the rule which can be based on labels or supported deployment attributes such as blueprint ID, site name, or creator.
-* Rule operator dropdown. The set of available operators to choose from depends on the selected rule type.
+* Rule operator dropdown. The set of available operators to choose from depends on the selected rule type. See **Table 1.** and **Table 2.** below for details.
 * Value input (for attribute rules) or key/value input(s) (for label rules). 
+
+<table>
+  <thead>
+    <th width="20%">UI</th>
+    <th width="15%">API</th>
+    <th width="15%">CLI</th>
+    <th width="50%">Applied logic</th>
+  </thead>
+  <tbody>
+    <tr>
+      <td>is one of</td>
+      <td>any_of</td>
+      <td>=</td>
+      <td>The label key matches the specified key and the label value matches one of the specified values.</td>
+    </tr>
+    <tr>
+      <td>is not one of</td>
+      <td>not_any_of</td>
+      <td>!=</td>
+      <td>The label key matches the specified key and the label value does not match any of the specified values.</td>
+    </tr>
+    <tr>
+      <td>is not one of (or no such key)</td>
+      <td>is_not</td>
+      <td>is-not</td>
+      <td>No label key matches the specified key, or the label key matches the specified key and the label value does not match any of the specified values.</td>
+    </tr>
+    <tr>
+      <td>key is not</td>
+      <td>is_null</td>
+      <td>is null</td>
+      <td>No label key matches the specified key.</td>
+    </tr>
+    <tr>
+      <td>key is</td>
+      <td>is_not_null</td>
+      <td>is not null</td>
+      <td>The label key matches the specified key.</td>
+    </tr>
+  </tbody>
+  <caption style="caption-side: bottom; text-align: left"><strong>Table 1.</strong> Labels operators mapping</caption>
+</table>
+
+
+<table>
+  <thead>
+    <th width="20%">UI</th>
+    <th width="15%">API</th>
+    <th width="15%">CLI</th>
+    <th width="50%">Applied logic</th>
+  </thead>
+  <tbody>
+    <tr>
+      <td>is one of</td>
+      <td>any_of</td>
+      <td>=</td>
+      <td>The deployment attribute matches one of the specified values.</td>
+    </tr>
+    <tr>
+      <td>is not one of</td>
+      <td>not_any_of</td>
+      <td>!=</td>
+      <td>The deployment attribute does not match any of the specified values.</td>
+    </tr>
+    <tr>
+      <td>contains</td>
+      <td>contains</td>
+      <td>contains</td>
+      <td>The deployment attribute contains the specified value.</td>
+    </tr>
+    <tr>
+      <td>does not contain</td>
+      <td>not_contains</td>
+      <td>does-not-contain</td>
+      <td>The deployment attribute does not contain the specified value.</td>
+    </tr>
+    <tr>
+      <td>starts with</td>
+      <td>starts_with</td>
+      <td>starts-with</td>
+      <td>The deployment attribute starts with the specified value.</td>
+    </tr>
+    <tr>
+      <td>ends with</td>
+      <td>ends_with</td>
+      <td>ends-with</td>
+      <td>The deployment attribute ends with the specified value.</td>
+    </tr>
+  </tbody>
+  <caption style="caption-side: bottom; text-align: left"><strong>Table 2.</strong> Attributes (Blueprint, Site name, Creator) operators 
+mapping</caption>
+</table>
 
 At any given time it is possible to append a new rule to the list of already defined rules (by clicking `Add new rule` button) or to remove any rule by clicking the trash icon in the corresponding rule row (unless there is only single rule defined).
 
 You can learn more about filters and filter rules [here](/cli/orch_cli/filter-rules).
+
+You can learn more about deployment labels [here](/cli/orch_cli/deployments#labels).
+
 
 ## Settings
 
