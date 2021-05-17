@@ -176,13 +176,13 @@ pipeline {
     }
     stage('Run Stage-UI System-tests') {
       when {
-        branch "master"
+        branch "6.0.0-build"
       }
       steps {
         echo 'Trigger Stage-UI System-tests'
         build(job: 'Stage-UI-System-Test', parameters: [
-          string(name: 'BRANCH', value: 'master'),
-          string(name: 'STAGE_BRANCH', value: 'master'),
+          string(name: 'BRANCH', value: '6.0.0-build'),
+          string(name: 'STAGE_BRANCH', value: '6.0.0-build'),
           booleanParam(name: 'CENTOS_MANAGER', value: false),
           booleanParam(name: 'UPDATE_STAGE_ON_MANAGER', value: false)
         ])
