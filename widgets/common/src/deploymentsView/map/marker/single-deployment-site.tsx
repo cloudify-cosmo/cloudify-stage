@@ -1,4 +1,4 @@
-import type { FunctionComponent } from 'react';
+import { FunctionComponent, RefObject, useEffect, useRef } from 'react';
 
 import { DeploymentStatus } from '../../types';
 import type { DeploymentSitePair } from '../common';
@@ -24,6 +24,14 @@ const DeploymentSiteMarker: FunctionComponent<DeploymentSiteMarkerProps> = ({
     environmentTypeVisible
 }) => {
     const { FeatureGroup, CircleMarker } = Stage.Basic.Leaflet;
+    /**
+     * The `position` object must maintain the same reference. Otherwise, if it is a new reference,
+     * the markercluster library will assume that the marker has moved and will recreate the clusters,
+     * resulting in unnecessary UI operations and losing UI state (e.g. whether the cluster marker is spiderfied).
+     *
+     * @see https://github.com/Leaflet/Leaflet.markercluster/blob/499f71caa1fe8a4efcf91b85e42553f9a90306f1/src/MarkerClusterGroup.js#L715-L721
+     * @see https://github.com/PaulLeCam/react-leaflet/blob/d9f18e527495105bab1df65a8829422514daefd7/src/Marker.js#L27-L29
+     */
     const position = Stage.Common.Map.siteToLatLng(site);
     const tooltip = <DeploymentSiteTooltip deployment={deployment} environmentTypeVisible={environmentTypeVisible} />;
 
@@ -54,6 +62,8 @@ const DeploymentSiteMarker: FunctionComponent<DeploymentSiteMarkerProps> = ({
 };
 export default DeploymentSiteMarker;
 
+export type DeploymentMarkerWithStatus = import('leaflet').Marker & { status: DeploymentStatus };
+
 const BareDeploymentSiteMarker: FunctionComponent<{
     status: DeploymentStatus;
     position: [number, number];
@@ -61,9 +71,27 @@ const BareDeploymentSiteMarker: FunctionComponent<{
 }> = ({ status, position, children, onClick }) => {
     const { Marker } = Stage.Basic.Leaflet;
     const icon = Stage.Common.createMarkerIcon(deploymentStatusToIconColorMapping[status]);
+    const markerRef = useRef<
+        import('react-leaflet').Marker<import('react-leaflet').MarkerProps, DeploymentMarkerWithStatus>
+    >();
+
+    useEffect(() => {
+        if (!markerRef.current) {
+            return;
+        }
+
+        markerRef.current.leafletElement.status = status;
+    }, [status]);
 
     return (
-        <Marker icon={icon} position={position} riseOnHover onclick={onClick}>
+        <Marker
+            icon={icon}
+            position={position}
+            riseOnHover
+            onclick={onClick}
+            // NOTE: TS does not like the additional `status` marker property
+            ref={markerRef as RefObject<import('react-leaflet').Marker>}
+        >
             {children}
         </Marker>
     );
