@@ -7,7 +7,7 @@ import { filterRulesContextKey, i18nDrillDownPrefix, subenvironmentsIcon, subser
 import type { Deployment } from '../types';
 
 export interface DrilldownButtonsProps {
-    deploymentId: string;
+    deployment: Deployment;
     drillDown: (templateName: string, drilldownContext: Record<string, any>, drilldownPageName: string) => void;
     toolbox: Stage.Types.Toolbox;
     refetchInterval: number;
@@ -24,12 +24,14 @@ const getDeploymentUrl = (id: string) => `/deployments/${id}?all_sub_deployments
 
 const DrilldownButtons: FunctionComponent<DrilldownButtonsProps> = ({
     drillDown,
-    deploymentId,
+    deployment,
     toolbox,
     refetchInterval
 }) => {
+    const { id, display_name: displayName } = deployment;
+
     const deploymentDetailsResult = useQuery(
-        getDeploymentUrl(deploymentId),
+        getDeploymentUrl(id),
         ({ queryKey: url }): Promise<Deployment> => toolbox.getManager().doGet(url),
         { refetchInterval }
     );
@@ -56,13 +58,13 @@ const DrilldownButtons: FunctionComponent<DrilldownButtonsProps> = ({
             <DrilldownButton
                 type="environments"
                 drillDown={drillDown}
-                deploymentName={deploymentId}
+                deploymentName={displayName}
                 result={subdeploymentResults.subenvironments}
             />
             <DrilldownButton
                 type="services"
                 drillDown={drillDown}
-                deploymentName={deploymentId}
+                deploymentName={displayName}
                 result={subdeploymentResults.subservices}
             />
         </ButtonsContainer>
