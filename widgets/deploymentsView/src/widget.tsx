@@ -4,6 +4,7 @@ export interface DeploymentsViewWidgetConfiguration
     extends Stage.Common.DeploymentsView.Configuration.SharedDeploymentsViewWidgetConfiguration {
     filterId?: string;
     filterByParentDeployment: boolean;
+    mapOpenByDefault?: boolean;
 }
 
 const {
@@ -21,6 +22,12 @@ Stage.defineWidget<never, never, DeploymentsViewWidgetConfiguration>({
 
     initialConfiguration: [
         ...sharedConfiguration,
+        {
+            id: 'mapOpenByDefault',
+            type: Stage.Basic.GenericField.BOOLEAN_TYPE,
+            name: Stage.i18n.t(`${i18nPrefix}.configuration.mapOpenByDefault.name`),
+            default: false
+        },
         {
             id: 'filterId',
             // TODO(RD-1851): add autocomplete instead of plain text input
@@ -47,7 +54,7 @@ interface TopLevelDeploymentsViewProps {
 }
 
 const TopLevelDeploymentsView: FunctionComponent<TopLevelDeploymentsViewProps> = ({ widget, toolbox }) => {
-    const { filterId, filterByParentDeployment } = widget.configuration;
+    const { filterId, filterByParentDeployment, mapOpenByDefault } = widget.configuration;
     const { DeploymentsView } = Stage.Common.DeploymentsView;
     return (
         <DeploymentsView
@@ -55,6 +62,7 @@ const TopLevelDeploymentsView: FunctionComponent<TopLevelDeploymentsViewProps> =
             widget={widget}
             filterByParentDeployment={filterByParentDeployment}
             defaultFilterId={filterId}
+            mapOpenByDefault={mapOpenByDefault ?? false}
         />
     );
 };

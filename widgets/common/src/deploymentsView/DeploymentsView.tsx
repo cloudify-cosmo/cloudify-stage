@@ -28,6 +28,7 @@ export interface DeploymentsViewProps {
      * Rules that will be always appended to the rules from `defaultFilterId` or from the filter chosen by the user
      */
     additionalFilterRules?: Stage.Common.Filters.Rule[];
+    mapOpenByDefault: boolean;
 }
 
 export const DeploymentsView: FunctionComponent<DeploymentsViewProps> = ({
@@ -35,7 +36,8 @@ export const DeploymentsView: FunctionComponent<DeploymentsViewProps> = ({
     widget,
     filterByParentDeployment,
     additionalFilterRules = [],
-    defaultFilterId
+    defaultFilterId,
+    mapOpenByDefault
 }) => {
     const manager = toolbox.getManager();
     const searchActions = new SearchActions(toolbox);
@@ -90,7 +92,7 @@ export const DeploymentsView: FunctionComponent<DeploymentsViewProps> = ({
     Stage.Hooks.useEventListener(toolbox, 'deployments:refresh', deploymentsResult.refetch);
 
     const widgetDimensions = Stage.Common.Map.useWidgetDimensions(widget);
-    const [mapOpen, toggleMap] = Stage.Hooks.useToggle(widget.configuration.mapOpenByDefault);
+    const [mapOpen, toggleMap] = Stage.Hooks.useToggle(mapOpenByDefault);
 
     const { Loading, ErrorMessage } = Stage.Basic;
     const { i18n } = Stage;
@@ -179,7 +181,7 @@ export const DeploymentsView: FunctionComponent<DeploymentsViewProps> = ({
                 />
             </DeploymentsTableContainer>
             <DeploymentDetailsContainer>
-                <DetailsPane deployment={selectedDeployment} widget={widget} toolbox={toolbox} />
+                <DetailsPane deployment={selectedDeployment} widget={widget} toolbox={toolbox} mapOpen={mapOpen} />
             </DeploymentDetailsContainer>
         </DeploymentsViewContainer>
     );

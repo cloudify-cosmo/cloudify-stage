@@ -1,4 +1,5 @@
 import type { FunctionComponent } from 'react';
+import { mapOpenByDefaultContextKey } from '../../common/src/deploymentsView/common';
 
 const {
     Common: { i18nDrillDownPrefix },
@@ -35,7 +36,8 @@ const DrilledDownDeploymentsViewWidget: FunctionComponent<DrilledDownDeployments
         DeploymentsView,
         Common: { i18nMessagesPrefix, filterRulesContextKey, isTopLevelPage }
     } = Stage.Common.DeploymentsView;
-    const filterRules: Stage.Common.Filters.Rule[] | undefined = toolbox.getContext().getValue(filterRulesContextKey);
+    const toolboxContext = toolbox.getContext();
+    const filterRules: Stage.Common.Filters.Rule[] | undefined = toolboxContext.getValue(filterRulesContextKey);
     const { ErrorMessage } = Stage.Basic;
 
     const drilldownContext = ReactRedux.useSelector((state: Stage.Types.ReduxState) => state.drilldownContext);
@@ -68,6 +70,7 @@ const DrilledDownDeploymentsViewWidget: FunctionComponent<DrilledDownDeployments
             widget={widget}
             filterByParentDeployment
             additionalFilterRules={filterRules}
+            mapOpenByDefault={(toolboxContext.getValue(mapOpenByDefaultContextKey) as boolean | undefined) ?? false}
         />
     );
 };

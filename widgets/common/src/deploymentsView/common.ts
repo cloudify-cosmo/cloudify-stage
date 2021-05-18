@@ -8,6 +8,7 @@ export const subenvironmentsIcon: SemanticICONS = 'object group';
 export const subservicesIcon: SemanticICONS = 'cube';
 
 export const filterRulesContextKey = 'filterRules';
+export const mapOpenByDefaultContextKey = 'mapOpenByDefault';
 
 export const parentDeploymentLabelKey = 'csys-obj-parent';
 
