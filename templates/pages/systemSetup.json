@@ -1,0 +1,154 @@
+{
+  "name": "System Setup",
+  "layout": [
+    {
+      "type": "tabs",
+      "content": [
+        {
+          "name": "Users",
+          "widgets": [
+            {
+              "name": "User management",
+              "width": 12,
+              "height": 17,
+              "definition": "userManagement",
+              "configuration": {
+                "pollingTime": 30,
+                "pageSize": 5,
+                "sortColumn": "username",
+                "sortAscending": true
+              },
+              "drillDownPages": {
+              },
+              "x": 0,
+              "y": 0
+            }
+          ]
+        },
+        {
+          "name": "Groups",
+          "widgets": [
+            {
+              "name": "User group management",
+              "width": 12,
+              "height": 19,
+              "definition": "userGroups",
+              "configuration": {
+                "pollingTime": 30,
+                "pageSize": 5,
+                "sortColumn": "name",
+                "sortAscending": true
+              },
+              "drillDownPages": {
+              },
+              "x": 0,
+              "y": 0
+            }
+          ]
+        },
+        {
+          "name": "Tenant Management",
+          "widgets": [
+            {
+              "name": "Tenants management",
+              "width": 12,
+              "height": 21,
+              "definition": "tenants",
+              "configuration": {
+                "pollingTime": 30,
+                "pageSize": 5,
+                "sortColumn": "name",
+                "sortAscending": true
+              },
+              "drillDownPages": {
+              },
+              "x": 0,
+              "y": 0
+            }
+          ]
+        },
+        {
+          "name": "System Health",
+          "widgets": [
+            {
+              "name": "Cluster Status",
+              "width": 12,
+              "height": 25,
+              "definition": "highAvailability",
+              "configuration": {
+              },
+              "drillDownPages": {
+              },
+              "x": 0,
+              "y": 0
+            }
+          ]
+        },
+        {
+          "name": "System Logs",
+          "widgets": [
+            {
+              "name": "Resource filter",
+              "width": 12,
+              "height": 3,
+              "definition": "filter",
+              "configuration": {
+                "pollingTime": 10,
+                "filterByBlueprints": true,
+                "filterByDeployments": true,
+                "filterByExecutions": true,
+                "filterByNodes": false,
+                "filterByNodeInstances": false,
+                "filterByExecutionsStatus": false,
+                "filterBySiteName": false,
+                "allowMultipleSelection": false
+              },
+              "drillDownPages": {
+              },
+              "x": 0,
+              "y": 0
+            },
+            {
+              "name": "Events/logs filter widget",
+              "definition": "eventsFilter",
+              "x": 0,
+              "y": 5
+            },
+            {
+              "name": "Events and logs",
+              "width": 12,
+              "height": 40,
+              "definition": "events",
+              "x": 0,
+              "y": 10,
+              "configuration": {
+                "pageSize": 15
+              }
+            }
+          ]
+        },
+        {
+          "name": "Snapshots",
+          "widgets": [
+            {
+              "name": "Snapshots list",
+              "width": 12,
+              "height": 21,
+              "definition": "snapshots",
+              "configuration": {
+                "pollingTime": 30,
+                "pageSize": 5,
+                "sortColumn": "created_at",
+                "sortAscending": null
+              },
+              "drillDownPages": {
+              },
+              "x": 0,
+              "y": 0
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

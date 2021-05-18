@@ -4,12 +4,12 @@
 
   "pages": [
     "adminDash",
-    "catalog",
+    "marketplace",
     "blueprints",
-    "deploy",
+    "service",
+    "environment",
     "executions",
-    "sites",
-    "systemResources",
-    "logs"
+    "resource",
+    "systemSetup"
   ]
 }

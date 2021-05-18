@@ -1,0 +1,126 @@
+{
+  "name": "Resource",
+  "layout": [
+    {
+      "type": "tabs",
+      "content": [
+        {
+          "name": "Secrets",
+          "widgets": [
+            {
+              "name": "Secret Store Management",
+              "width": 12,
+              "height": 17,
+              "definition": "secrets",
+              "configuration": {
+                "pollingTime": 30,
+                "pageSize": 5,
+                "sortColumn": "key",
+                "sortAscending": true
+              },
+              "drillDownPages": {
+              },
+              "x": 0,
+              "y": 0
+            }
+          ]
+        },
+        {
+          "name": "Plugins",
+          "widgets": [
+            {
+              "name": "Plugins list",
+              "width": 12,
+              "height": 21,
+              "definition": "plugins",
+              "configuration": {
+                "pollingTime": 30,
+                "pageSize": 5
+              },
+              "drillDownPages": {
+              },
+              "x": 0,
+              "y": 0
+            }
+          ]
+        },
+        {
+          "name": "Sites",
+          "widgets": [
+            {
+              "name": "Sites",
+              "width": 12,
+              "height": 20,
+              "definition": "sites",
+              "configuration": {
+                "pollingTime": 30,
+                "pageSize": 5,
+                "sortColumn": "name",
+                "sortAscending": true
+              },
+              "drillDownPages": {
+              },
+              "x": 0,
+              "y": 0
+            }
+          ]
+        },
+        {
+          "name": "Agents",
+          "widgets": [
+            {
+              "name": "Agents",
+              "width": 12,
+              "height": 24,
+              "definition": "agents",
+              "configuration": {
+                "pollingTime": 15,
+                "pageSize": 5,
+                "sortColumn": "id",
+                "sortAscending": true,
+                "fieldsToShow": [
+                  "Id",
+                  "Node",
+                  "Deployment",
+                  "IP",
+                  "Install Method",
+                  "System",
+                  "Version",
+                  "Actions"
+                ],
+                "installMethods": [
+                  ""
+                ]
+              },
+              "drillDownPages": {
+              },
+              "x": 0,
+              "y": 0
+            }
+          ]
+        },
+        {
+          "name": "Filters",
+          "widgets": [
+            {
+              "name": "Filters",
+              "width": 12,
+              "height": 22,
+              "definition": "filters",
+              "configuration": {
+                "pollingTime": 30,
+                "pageSize": 5,
+                "sortColumn": "id",
+                "sortAscending": true
+              },
+              "drillDownPages": {
+              },
+              "x": 0,
+              "y": 0
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
