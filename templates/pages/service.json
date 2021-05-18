@@ -10,11 +10,7 @@
           "y": 0,
           "width": 3,
           "height": 3,
-          "definition": "deploymentButton",
-          "configuration": {
-          },
-          "drillDownPages": {
-          }
+          "definition": "deploymentButton"
         },
         {
           "name": "Deployments view",
@@ -38,8 +34,6 @@
             "sortAscending": null,
             "filterId": "csys-service-filter",
             "filterByParentDeployment": false
-          },
-          "drillDownPages": {
           },
           "x": 0,
           "y": 3
