@@ -45,10 +45,10 @@ const DetailsPane: FunctionComponent<DetailsPaneProps> = ({ deployment, widget, 
     return (
         <div className="detailsPane">
             <DetailsPaneHeader
-                deploymentName={deployment.id}
+                deployment={deployment}
                 drilldownButtons={
                     <DrilldownButtons
-                        deploymentId={deployment.id}
+                        deployment={deployment}
                         drillDown={drillDown}
                         toolbox={toolbox}
                         refetchInterval={widget.configuration.customPollingTime * 1000}

@@ -772,6 +772,9 @@
                 "status": {
                     "name": "Status"
                 },
+                "id": {
+                    "name": "ID"
+                },
                 "name": {
                     "name": "Name"
                 },
