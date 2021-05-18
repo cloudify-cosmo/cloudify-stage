@@ -13,13 +13,13 @@ const groupStates: Record<DeploymentStatus, GroupState> = {
     [DeploymentStatuses.InProgress]: {
         name: 'in progress',
         icon: 'spinner',
-        colorSUI: 'yellow',
+        colorSUI: 'orange',
         severity: 2,
         description: ''
     },
     [DeploymentStatuses.RequiresAttention]: {
         name: 'failed',
-        icon: 'close',
+        icon: 'exclamation',
         colorSUI: 'red',
         severity: 4,
         description: ''
