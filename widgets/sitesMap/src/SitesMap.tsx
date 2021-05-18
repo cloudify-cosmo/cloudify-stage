@@ -1,7 +1,8 @@
 import type { FunctionComponent, ReactNode, RefObject } from 'react';
 import type { Map as LeafletMap } from 'react-leaflet';
 import SiteControl from './SiteControl';
-import type { SitesMapWidgetData } from './types';
+import type { DeploymentStatusesSummary, SitesData } from './types';
+import { DeploymentStatuses } from './types';
 
 function openPopup(marker) {
     if (marker && marker.leafletElement) {
@@ -11,15 +12,14 @@ function openPopup(marker) {
     }
 }
 
-function getMarkerColor(deploymentStates: Record<Stage.Common.DeploymentsView.Types.DeploymentStatus, number>) {
-    const { DeploymentStatus } = Stage.Common.DeploymentsView.Types;
+function getMarkerColor(statusesSummary: DeploymentStatusesSummary) {
     let color: Stage.Common.MarkerIconColor = 'grey';
 
-    if (deploymentStates[DeploymentStatus.RequiresAttention] > 0) {
+    if (statusesSummary[DeploymentStatuses.RequiresAttention] > 0) {
         color = 'red';
-    } else if (deploymentStates[DeploymentStatus.InProgress] > 0) {
+    } else if (statusesSummary[DeploymentStatuses.InProgress] > 0) {
         color = 'yellow';
-    } else if (deploymentStates[DeploymentStatus.Good] > 0) {
+    } else if (statusesSummary[DeploymentStatuses.Good] > 0) {
         color = 'green';
     }
 
@@ -30,7 +30,7 @@ type SitesMapState = {
     isMapAvailable: boolean | null;
 };
 interface SitesMapProps {
-    data: SitesMapWidgetData;
+    data: SitesData;
     dimensions: Stage.Common.Map.WidgetDimensions;
     showAllLabels: boolean;
     sitesAreDefined: boolean;
@@ -81,8 +81,8 @@ class SitesMap extends React.Component<SitesMapProps, SitesMapState> {
 
         _.forEach(data, (site, name) => {
             const { createMarkerIcon } = Stage.Common;
-            const { deploymentStates } = site;
-            const color = getMarkerColor(deploymentStates);
+            const { statusesSummary } = site;
+            const color = getMarkerColor(statusesSummary);
             const icon = createMarkerIcon(color);
 
             const { Marker, Popup } = Stage.Basic.Leaflet;
@@ -95,7 +95,7 @@ class SitesMap extends React.Component<SitesMapProps, SitesMapState> {
                     icon={icon}
                 >
                     <Popup interactive autoClose={false} closeOnClick={false}>
-                        <SiteControl site={{ name, deploymentStates }} toolbox={toolbox} />
+                        <SiteControl site={{ name, statusesSummary }} toolbox={toolbox} />
                     </Popup>
                 </Marker>
             );

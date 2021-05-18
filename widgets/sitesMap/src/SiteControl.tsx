@@ -1,10 +1,11 @@
 import { FunctionComponent } from 'react';
-import type { DeploymentStates } from './types';
+import type { DeploymentStatus, DeploymentStatusesSummary } from './types';
+import { DeploymentStatuses } from './types';
 
 interface SiteControlProps {
     site: {
         name: string;
-        deploymentStates: DeploymentStates;
+        statusesSummary: DeploymentStatusesSummary;
     };
     toolbox: Stage.Types.Toolbox;
 }
@@ -22,8 +23,8 @@ const SiteControl: FunctionComponent<SiteControlProps> = ({ site, toolbox }) => 
             <SiteName name={site.name} />
             <Grid columns={3} container>
                 <Grid.Row>
-                    {_.map(groupStates, (state, stateKey: Stage.Common.DeploymentsView.Types.DeploymentStatus) => {
-                        const value = site.deploymentStates[stateKey];
+                    {_.map(groupStates, (state, stateKey: DeploymentStatus) => {
+                        const value = site.statusesSummary[stateKey];
                         const description = <StateDescription description={state.description} value={value} />;
                         return (
                             <Grid.Column key={state.name} textAlign="center" className="deploymentState">
@@ -74,28 +75,27 @@ const StateDescription: FunctionComponent<StateDescriptionProps> = ({ descriptio
     );
 };
 
-const { DeploymentStatus } = Stage.Common.DeploymentsView.Types;
 type GroupState = { name: string; icon: string; colorSUI: string; severity: number; description: string };
-const groupStates: Record<Stage.Common.DeploymentsView.Types.DeploymentStatus, GroupState> = {
-    [DeploymentStatus.Good]: {
+const groupStates: Record<DeploymentStatus, GroupState> = {
+    [DeploymentStatuses.Good]: {
         name: 'good',
         icon: 'checkmark',
         colorSUI: 'green',
         severity: 1,
-        description: 'deployments with all nodes successfully started' // TODO: Update description
+        description: ''
     },
-    [DeploymentStatus.InProgress]: {
+    [DeploymentStatuses.InProgress]: {
         name: 'in progress',
         icon: 'spinner',
         colorSUI: 'yellow',
         severity: 2,
-        description: 'deployments in which active workflow execution is performed' // TODO: Update description
+        description: ''
     },
-    [DeploymentStatus.RequiresAttention]: {
+    [DeploymentStatuses.RequiresAttention]: {
         name: 'failed',
         icon: 'close',
         colorSUI: 'red',
         severity: 4,
-        description: 'deployments with failed workflow execution' // TODO: Update description
+        description: ''
     }
 };

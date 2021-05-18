@@ -1,5 +1,49 @@
+import { isFinite } from 'lodash';
 import SitesMap from './SitesMap';
-import type { SitesMapWidgetConfiguration, SitesMapWidgetData, SitesMapWidgetParams } from './types';
+import type { DeploymentStatusesSummary, DeploymentStatus, SitesData } from './types';
+
+const emptyDeploymentStatusesSummary: DeploymentStatusesSummary = {
+    good: 0,
+    in_progress: 0,
+    requires_attention: 0
+};
+/* eslint-disable camelcase */
+interface SiteSummary {
+    deployments: number;
+    site_name: string;
+    'by deployment_status': {
+        deployment_status: DeploymentStatus;
+        deployments: number;
+    }[];
+}
+/* eslint-enable camelcase */
+function getDeploymentStatusesSummary(siteSummary: SiteSummary) {
+    const { 'by deployment_status': statusObjects } = siteSummary;
+
+    const deploymentStatuses: DeploymentStatusesSummary = { ...emptyDeploymentStatusesSummary };
+
+    statusObjects.forEach(statusObject => {
+        deploymentStatuses[statusObject.deployment_status] = statusObject.deployments;
+    });
+
+    return deploymentStatuses;
+}
+
+interface SitesMapWidgetParams {
+    // eslint-disable-next-line camelcase
+    blueprint_id: string | string[] | null;
+    id?: string | string[] | null;
+}
+
+type SitesMapWidgetData = {
+    sitesData: SitesData;
+    sitesAreDefined: boolean;
+};
+
+interface SitesMapWidgetConfiguration {
+    pollingTime: number;
+    showAllLabels: boolean;
+}
 
 Stage.defineWidget<SitesMapWidgetParams, SitesMapWidgetData, SitesMapWidgetConfiguration>({
     id: 'sitesMap',
@@ -32,78 +76,54 @@ Stage.defineWidget<SitesMapWidgetParams, SitesMapWidgetData, SitesMapWidgetConfi
     },
 
     fetchData(_widget, toolbox, params) {
-        const sitesWithLocation = toolbox
-            .getManager()
-            .doGet('/sites', {
-                _include: 'name,latitude,longitude',
-                _get_all_results: true
-            })
-            .then(data => _.filter(data.items, site => !_.isNil(site.latitude)));
+        const { DeploymentActions, SummaryActions } = Stage.Common;
+        const sitesWithNamesAndLocations: Promise<Stage.Types.PaginatedResponse<
+            Stage.Common.Map.SiteWithPosition
+        >> = new DeploymentActions(toolbox).doGetSitesNamesAndLocations();
 
-        const sitesSummaries = toolbox
-            .getManager()
-            .doGet('/summary/deployments', {
-                _include: 'id,site_name,deployment_status',
-                _target_field: 'site_name',
-                _sub_field: 'deployment_status',
-                ...params
-            })
-            .then(data => _.filter(data.items, item => item.site_name));
+        const sitesSummary: Promise<Stage.Types.PaginatedResponse<SiteSummary>> = new SummaryActions(
+            toolbox
+        ).doGetDeployments('site_name', {
+            _include: 'id,site_name,deployment_status',
+            _sub_field: 'deployment_status',
+            ...params
+        });
 
-        return Promise.all([sitesWithLocation, sitesSummaries]).then(([sites, summaries]) => {
-            const sitesMapWidgetData: SitesMapWidgetData = {};
+        return Promise.all([sitesWithNamesAndLocations, sitesSummary]).then(([sites, summary]) => {
+            const statusesSummaryLookupMap: Record<string, DeploymentStatusesSummary> = {};
+            const sitesData: SitesData = {};
 
-            sites.forEach(site => {
-                sitesMapWidgetData[site.name] = {
+            const deploymentsWithSitesSummary = summary.items.filter(item => item.site_name);
+            deploymentsWithSitesSummary.forEach(siteSummary => {
+                statusesSummaryLookupMap[siteSummary.site_name] = getDeploymentStatusesSummary(siteSummary);
+            });
+
+            const sitesWithLocation = sites.items.filter(site => isFinite(site.latitude) && isFinite(site.longitude));
+            sitesWithLocation.forEach(site => {
+                sitesData[site.name] = {
                     ...site,
-                    deploymentStates: {
-                        good: 0,
-                        in_progress: 0,
-                        requires_attention: 0
-                    }
+                    statusesSummary: statusesSummaryLookupMap[site.name] || emptyDeploymentStatusesSummary
                 };
             });
 
-            summaries.forEach(summary => {
-                const { site_name: siteName, 'by deployment_status': deploymentsByStatus } = summary;
-
-                function getDeploymentStatuses(
-                    statusObjects: {
-                        // eslint-disable-next-line camelcase
-                        deployment_status: Stage.Common.DeploymentsView.Types.DeploymentStatus;
-                        deployments: number;
-                    }[]
-                ) {
-                    const deploymentStatuses: Record<string, number> = {};
-
-                    statusObjects.forEach(statusObject => {
-                        deploymentStatuses[statusObject.deployment_status] = statusObject.deployments;
-                    });
-
-                    return deploymentStatuses;
-                }
-
-                const deploymentStates = getDeploymentStatuses(deploymentsByStatus);
-                sitesMapWidgetData[siteName].deploymentStates = deploymentStates;
-            });
-
-            return sitesMapWidgetData;
+            return { sitesData, sitesAreDefined: sites.items.length > 0 };
         });
     },
 
     render(widget, data, _error, toolbox) {
         const { Loading } = Stage.Basic;
 
-        if (!data || _.isEmpty(data)) {
+        if (_.isEmpty(data)) {
             return <Loading />;
         }
 
+        const formattedData = data || { sitesData: {}, sitesAreDefined: false };
         return (
             <SitesMap
-                data={data}
+                data={formattedData.sitesData}
                 dimensions={Stage.Common.Map.getWidgetDimensions(widget)}
                 showAllLabels={widget.configuration.showAllLabels}
-                sitesAreDefined={Object.keys(data).length > 0}
+                sitesAreDefined={formattedData.sitesAreDefined}
                 toolbox={toolbox}
             />
         );

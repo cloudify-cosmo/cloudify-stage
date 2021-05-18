@@ -1,22 +1,16 @@
-export type DeploymentStates = Record<Stage.Common.DeploymentsView.Types.DeploymentStatus, number>;
+export type DeploymentStatus = Stage.Common.DeploymentsView.Types.DeploymentStatus;
 
-export interface SitesMapWidgetParams {
-    // eslint-disable-next-line camelcase
-    blueprint_id: string | string[] | null;
-    id?: string | string[] | null;
-}
+export type DeploymentStatusesSummary = Record<DeploymentStatus, number>;
 
-export type SitesMapWidgetData = Record<
+export type SitesData = Record<
     string,
     {
         name: string;
         latitude: number;
         longitude: number;
-        deploymentStates: DeploymentStates;
+        statusesSummary: DeploymentStatusesSummary;
     }
 >;
 
-export interface SitesMapWidgetConfiguration {
-    pollingTime: number;
-    showAllLabels: boolean;
-}
+const { DeploymentStatus } = Stage.Common.DeploymentsView.Types;
+export const DeploymentStatuses = DeploymentStatus;
