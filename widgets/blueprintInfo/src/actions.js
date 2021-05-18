@@ -20,8 +20,8 @@ export default class Actions {
     }
 
     doGetBlueprintDeployments(blueprintId) {
-        return this.toolbox
-            .getManager()
-            .doGet('/summary/deployments', { blueprint_id: blueprintId, _target_field: 'blueprint_id' });
+        return new Stage.Common.SummaryActions(this.toolbox).doGetDeployments('blueprint_id', {
+            blueprint_id: blueprintId
+        });
     }
 }
