@@ -1,4 +1,4 @@
-import type { FunctionComponent } from 'react';
+import { FunctionComponent, useEffect } from 'react';
 
 export interface DeploymentsViewWidgetConfiguration
     extends Stage.Common.DeploymentsView.Configuration.SharedDeploymentsViewWidgetConfiguration {
@@ -55,14 +55,26 @@ interface TopLevelDeploymentsViewProps {
 
 const TopLevelDeploymentsView: FunctionComponent<TopLevelDeploymentsViewProps> = ({ widget, toolbox }) => {
     const { filterId, filterByParentDeployment, mapOpenByDefault } = widget.configuration;
-    const { DeploymentsView } = Stage.Common.DeploymentsView;
+    const {
+        DeploymentsView,
+        Common: { mapOpenContextKey }
+    } = Stage.Common.DeploymentsView;
+
+    useEffect(() => {
+        const context = toolbox.getContext();
+
+        // NOTE: do not overwrite the map open state when coming back from a drilled-down page to the parent
+        if (context.getValue(mapOpenContextKey) === undefined) {
+            context.setValue(mapOpenContextKey, mapOpenByDefault);
+        }
+    }, [mapOpenByDefault]);
+
     return (
         <DeploymentsView
             toolbox={toolbox}
             widget={widget}
             filterByParentDeployment={filterByParentDeployment}
             defaultFilterId={filterId}
-            mapOpenByDefault={mapOpenByDefault ?? false}
         />
     );
 };

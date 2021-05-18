@@ -1,5 +1,4 @@
 import type { FunctionComponent } from 'react';
-import { mapOpenByDefaultContextKey } from '../../common/src/deploymentsView/common';
 
 const {
     Common: { i18nDrillDownPrefix },
@@ -70,7 +69,6 @@ const DrilledDownDeploymentsViewWidget: FunctionComponent<DrilledDownDeployments
             widget={widget}
             filterByParentDeployment
             additionalFilterRules={filterRules}
-            mapOpenByDefault={(toolboxContext.getValue(mapOpenByDefaultContextKey) as boolean | undefined) ?? false}
         />
     );
 };

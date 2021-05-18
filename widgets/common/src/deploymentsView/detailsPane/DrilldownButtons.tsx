@@ -6,7 +6,7 @@ import { FilterRuleOperators, FilterRuleType } from '../../filters/types';
 import {
     filterRulesContextKey,
     i18nDrillDownPrefix,
-    mapOpenByDefaultContextKey,
+    mapOpenContextKey,
     subenvironmentsIcon,
     subservicesIcon
 } from '../common';
@@ -123,7 +123,7 @@ const DrilldownButton: FunctionComponent<DrilldownButtonProps> = ({
     const drilldownToSubdeployments = () => {
         drillDown(
             subdeploymentsDrilldownTemplateName,
-            { [filterRulesContextKey]: [deploymentTypeRule[type]], [mapOpenByDefaultContextKey]: mapOpen },
+            { [filterRulesContextKey]: [deploymentTypeRule[type]], [mapOpenContextKey]: mapOpen },
             `${deploymentName} [${i18n.t(`${i18nDrillDownPrefix}.breadcrumbs.${type}`)}]`
         );
     };

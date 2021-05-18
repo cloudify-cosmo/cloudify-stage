@@ -2,7 +2,13 @@ import React, { FunctionComponent, useMemo, useState } from 'react';
 import { find } from 'lodash';
 import { useQuery } from 'react-query';
 
-import { getParentPageContext, i18nMessagesPrefix, isTopLevelPage, parentDeploymentLabelKey } from './common';
+import {
+    getParentPageContext,
+    i18nMessagesPrefix,
+    isTopLevelPage,
+    mapOpenContextKey,
+    parentDeploymentLabelKey
+} from './common';
 import type { SharedDeploymentsViewWidgetConfiguration } from './configuration';
 import DetailsPane from './detailsPane';
 import { DeploymentsTable } from './table';
@@ -28,7 +34,6 @@ export interface DeploymentsViewProps {
      * Rules that will be always appended to the rules from `defaultFilterId` or from the filter chosen by the user
      */
     additionalFilterRules?: Stage.Common.Filters.Rule[];
-    mapOpenByDefault: boolean;
 }
 
 export const DeploymentsView: FunctionComponent<DeploymentsViewProps> = ({
@@ -36,8 +41,7 @@ export const DeploymentsView: FunctionComponent<DeploymentsViewProps> = ({
     widget,
     filterByParentDeployment,
     additionalFilterRules = [],
-    defaultFilterId,
-    mapOpenByDefault
+    defaultFilterId
 }) => {
     const manager = toolbox.getManager();
     const searchActions = new SearchActions(toolbox);
@@ -92,7 +96,6 @@ export const DeploymentsView: FunctionComponent<DeploymentsViewProps> = ({
     Stage.Hooks.useEventListener(toolbox, 'deployments:refresh', deploymentsResult.refetch);
 
     const widgetDimensions = Stage.Common.Map.useWidgetDimensions(widget);
-    const [mapOpen, toggleMap] = Stage.Hooks.useToggle(mapOpenByDefault);
 
     const { Loading, ErrorMessage } = Stage.Basic;
     const { i18n } = Stage;
@@ -144,6 +147,10 @@ export const DeploymentsView: FunctionComponent<DeploymentsViewProps> = ({
         // NOTE: always select the first visible item
         context.setValue('deploymentId', deployments[0].id);
     }
+
+    // eslint-disable-next-line react/destructuring-assignment
+    const mapOpen = (context.getValue(mapOpenContextKey) as boolean | undefined) ?? false;
+    const toggleMap = () => context.setValue(mapOpenContextKey, !mapOpen);
 
     return (
         <DeploymentsViewContainer>
