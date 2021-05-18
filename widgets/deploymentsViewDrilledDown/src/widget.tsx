@@ -35,8 +35,7 @@ const DrilledDownDeploymentsViewWidget: FunctionComponent<DrilledDownDeployments
         DeploymentsView,
         Common: { i18nMessagesPrefix, filterRulesContextKey, isTopLevelPage }
     } = Stage.Common.DeploymentsView;
-    const toolboxContext = toolbox.getContext();
-    const filterRules: Stage.Common.Filters.Rule[] | undefined = toolboxContext.getValue(filterRulesContextKey);
+    const filterRules: Stage.Common.Filters.Rule[] | undefined = toolbox.getContext().getValue(filterRulesContextKey);
     const { ErrorMessage } = Stage.Basic;
 
     const drilldownContext = ReactRedux.useSelector((state: Stage.Types.ReduxState) => state.drilldownContext);
