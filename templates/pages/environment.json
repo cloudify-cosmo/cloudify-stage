@@ -32,7 +32,7 @@
             "pageSize": 50,
             "sortColumn": "created_at",
             "sortAscending": null,
-            "filterId": "csys-service-filter",
+            "filterId": "csys-environment-filter",
             "filterByParentDeployment": false
           },
           "x": 0,
