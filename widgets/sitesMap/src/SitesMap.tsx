@@ -1,4 +1,4 @@
-import type { FunctionComponent, ReactNode, RefObject } from 'react';
+import type { FunctionComponent, RefObject } from 'react';
 import type { Map as LeafletMap } from 'react-leaflet';
 import SiteControl from './SiteControl';
 import type { DeploymentStatusesSummary, SitesData } from './types';
@@ -75,18 +75,17 @@ class SitesMap extends React.Component<SitesMapProps, SitesMapState> {
     }
 
     createMarkers() {
-        const markers: ReactNode[] = [];
         const { data, showAllLabels, toolbox } = this.props;
         const showLabels = showAllLabels ? openPopup : undefined;
+        const { createMarkerIcon } = Stage.Common;
+        const { Marker, Popup } = Stage.Basic.Leaflet;
 
-        _.forEach(data, (site, name) => {
-            const { createMarkerIcon } = Stage.Common;
+        return _.map(data, (site, name) => {
             const { statusesSummary } = site;
             const color = getMarkerColor(statusesSummary);
             const icon = createMarkerIcon(color);
 
-            const { Marker, Popup } = Stage.Basic.Leaflet;
-            markers.push(
+            return (
                 <Marker
                     position={Stage.Common.Map.siteToLatLng(site)}
                     ref={showLabels}
@@ -100,8 +99,6 @@ class SitesMap extends React.Component<SitesMapProps, SitesMapState> {
                 </Marker>
             );
         });
-
-        return markers;
     }
 
     render() {
