@@ -4,7 +4,7 @@ import SiteControl from './SiteControl';
 import type { DeploymentStatusesSummary, SitesData } from './types';
 import { DeploymentStatuses } from './types';
 
-function openPopup(marker) {
+function openPopup(marker: any) {
     if (marker && marker.leafletElement) {
         window.setTimeout(() => {
             marker.leafletElement.openPopup();
