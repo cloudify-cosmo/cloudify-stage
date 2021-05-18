@@ -2,7 +2,7 @@ import { i18nPrefix } from './common';
 import { deploymentsViewColumnDefinitions, DeploymentsViewColumnId, deploymentsViewColumnIds } from './table';
 
 export interface SharedDeploymentsViewWidgetConfiguration {
-    /** In milliseconds */
+    /** In seconds */
     customPollingTime: number;
     mapOpenByDefault: boolean;
     mapHeight: number;

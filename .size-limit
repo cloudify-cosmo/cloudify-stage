@@ -20,7 +20,7 @@
     },
     {
         "name": "Application package",
-        "limit": "13.39 MB",
+        "limit": "13.45 MB",
         "gzip": false,
         "running": false,
         "path": ["dist", "!dist/**/*.gz"]

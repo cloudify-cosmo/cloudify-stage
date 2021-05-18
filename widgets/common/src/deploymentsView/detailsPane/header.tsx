@@ -33,7 +33,9 @@ const DetailsPaneHeader: FunctionComponent<DetailsPaneHeaderProps> = ({ deployme
 
     return (
         <div className="detailsPaneHeader">
-            <Header>{displayName}</Header>
+            <div style={{ marginRight: '1rem', marginBottom: '1rem' }}>
+                <Header>{displayName}</Header>
+            </div>
             {drilldownButtons}
             <Widget
                 widget={deploymentActionButtonsWidgetDescription}
