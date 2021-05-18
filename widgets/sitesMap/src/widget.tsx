@@ -1,11 +1,11 @@
-import { isFinite } from 'lodash';
 import SitesMap from './SitesMap';
 import type { DeploymentStatusesSummary, DeploymentStatus, SitesData } from './types';
+import { DeploymentStatuses } from './types';
 
 const emptyDeploymentStatusesSummary: DeploymentStatusesSummary = {
-    good: 0,
-    in_progress: 0,
-    requires_attention: 0
+    [DeploymentStatuses.Good]: 0,
+    [DeploymentStatuses.InProgress]: 0,
+    [DeploymentStatuses.RequiresAttention]: 0
 };
 /* eslint-disable camelcase */
 interface SiteSummary {
@@ -77,9 +77,7 @@ Stage.defineWidget<SitesMapWidgetParams, SitesMapWidgetData, SitesMapWidgetConfi
 
     fetchData(_widget, toolbox, params) {
         const { DeploymentActions, SummaryActions } = Stage.Common;
-        const sitesWithNamesAndLocations: Promise<Stage.Types.PaginatedResponse<
-            Stage.Common.Map.SiteWithPosition
-        >> = new DeploymentActions(toolbox).doGetSitesNamesAndLocations();
+        const sitesWithNamesAndLocations = new DeploymentActions(toolbox).doGetSitesNamesAndLocations();
 
         const sitesSummary: Promise<Stage.Types.PaginatedResponse<SiteSummary>> = new SummaryActions(
             toolbox
@@ -98,7 +96,9 @@ Stage.defineWidget<SitesMapWidgetParams, SitesMapWidgetData, SitesMapWidgetConfi
                 statusesSummaryLookupMap[siteSummary.site_name] = getDeploymentStatusesSummary(siteSummary);
             });
 
-            const sitesWithLocation = sites.items.filter(site => isFinite(site.latitude) && isFinite(site.longitude));
+            const sitesWithLocation = sites.items.filter(
+                site => Number.isFinite(site.latitude) && Number.isFinite(site.longitude)
+            ) as Stage.Common.Map.SiteWithPosition[];
             sitesWithLocation.forEach(site => {
                 sitesData[site.name] = {
                     ...site,
@@ -113,17 +113,16 @@ Stage.defineWidget<SitesMapWidgetParams, SitesMapWidgetData, SitesMapWidgetConfi
     render(widget, data, _error, toolbox) {
         const { Loading } = Stage.Basic;
 
-        if (_.isEmpty(data)) {
+        if (Stage.Utils.isEmptyWidgetData(data)) {
             return <Loading />;
         }
 
-        const formattedData = data || { sitesData: {}, sitesAreDefined: false };
         return (
             <SitesMap
-                data={formattedData.sitesData}
+                data={data.sitesData}
                 dimensions={Stage.Common.Map.getWidgetDimensions(widget)}
                 showAllLabels={widget.configuration.showAllLabels}
-                sitesAreDefined={formattedData.sitesAreDefined}
+                sitesAreDefined={data.sitesAreDefined}
                 toolbox={toolbox}
             />
         );
