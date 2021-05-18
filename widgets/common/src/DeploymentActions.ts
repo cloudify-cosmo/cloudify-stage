@@ -110,8 +110,19 @@ export default class DeploymentActions {
             .then(({ site_name: siteName }) => siteName);
     }
 
-    doGetSites() {
-        return this.toolbox.getManager().doGet('/sites?_include=name&_sort=name');
+    private doGetSites(include: string) {
+        return this.toolbox.getManager().doGet('/sites', {
+            _include: include,
+            _get_all_results: true
+        });
+    }
+
+    doGetSitesNames() {
+        return this.doGetSites('name');
+    }
+
+    doGetSitesNamesAndLocations() {
+        return this.doGetSites('name,latitude,longitude');
     }
 
     doSetLabels(deploymentId: string, deploymentLabels: Stage.Common.Labels.Label[]) {
