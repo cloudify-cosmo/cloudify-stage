@@ -52,7 +52,7 @@ const partialDeploymentsViewColumnDefinitions: Record<
         }
     },
     name: {
-        sortFieldName: 'id',
+        sortFieldName: 'display_name',
         render(deployment) {
             return deployment.display_name;
         }
