@@ -17,9 +17,7 @@
                 "pageSize": 5,
                 "sortColumn": "username",
                 "sortAscending": true
-              },
-              "x": 0,
-              "y": 0
+              }
             }
           ]
         },
@@ -36,9 +34,7 @@
                 "pageSize": 5,
                 "sortColumn": "name",
                 "sortAscending": true
-              },
-              "x": 0,
-              "y": 0
+              }
             }
           ]
         },
@@ -55,9 +51,7 @@
                 "pageSize": 5,
                 "sortColumn": "name",
                 "sortAscending": true
-              },
-              "x": 0,
-              "y": 0
+              }
             }
           ]
         },
@@ -68,9 +62,7 @@
               "name": "Cluster Status",
               "width": 12,
               "height": 25,
-              "definition": "highAvailability",
-              "x": 0,
-              "y": 0
+              "definition": "highAvailability"
             }
           ]
         },
@@ -128,9 +120,7 @@
                 "pageSize": 5,
                 "sortColumn": "created_at",
                 "sortAscending": null
-              },
-              "x": 0,
-              "y": 0
+              }
             }
           ]
         }

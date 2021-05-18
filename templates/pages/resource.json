@@ -17,9 +17,7 @@
                 "pageSize": 5,
                 "sortColumn": "key",
                 "sortAscending": true
-              },
-              "x": 0,
-              "y": 0
+              }
             }
           ]
         },
@@ -34,9 +32,7 @@
               "configuration": {
                 "pollingTime": 30,
                 "pageSize": 5
-              },
-              "x": 0,
-              "y": 0
+              }
             }
           ]
         },
@@ -53,9 +49,7 @@
                 "pageSize": 5,
                 "sortColumn": "name",
                 "sortAscending": true
-              },
-              "x": 0,
-              "y": 0
+              }
             }
           ]
         },
@@ -82,9 +76,7 @@
                   "Version",
                   "Actions"
                 ]
-              },
-              "x": 0,
-              "y": 0
+              }
             }
           ]
         },
@@ -101,9 +93,7 @@
                 "pageSize": 5,
                 "sortColumn": "id",
                 "sortAscending": true
-              },
-              "x": 0,
-              "y": 0
+              }
             }
           ]
         }
