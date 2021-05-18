@@ -4,6 +4,7 @@ import type { Deployment } from '../types';
 import DrilldownButtons, { DrilldownButtonsProps } from './DrilldownButtons';
 import DetailsPaneHeader from './header';
 import DetailsPaneWidgets from './widgets';
+import type { SharedDeploymentsViewWidgetConfiguration } from '../configuration';
 
 export interface DetailsPaneProps {
     /**
@@ -16,7 +17,7 @@ export interface DetailsPaneProps {
      */
     deployment: Deployment | undefined;
     toolbox: Stage.Types.Toolbox;
-    widget: Stage.Types.Widget<any>;
+    widget: Stage.Types.Widget<SharedDeploymentsViewWidgetConfiguration>;
 }
 
 const DetailsPane: FunctionComponent<DetailsPaneProps> = ({ deployment, widget, toolbox }) => {
@@ -46,7 +47,12 @@ const DetailsPane: FunctionComponent<DetailsPaneProps> = ({ deployment, widget, 
             <DetailsPaneHeader
                 deploymentName={deployment.id}
                 drilldownButtons={
-                    <DrilldownButtons deploymentId={deployment.id} drillDown={drillDown} toolbox={toolbox} />
+                    <DrilldownButtons
+                        deploymentId={deployment.id}
+                        drillDown={drillDown}
+                        toolbox={toolbox}
+                        refetchInterval={widget.configuration.customPollingTime * 1000}
+                    />
                 }
             />
             <DetailsPaneWidgets />

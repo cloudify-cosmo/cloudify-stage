@@ -529,6 +529,25 @@ describe('Deployments View widget', () => {
             getDeploymentsViewTable().within(() => cy.contains(tempDeploymentId).should('not.exist'));
             getBreadcrumbs().contains(parentDeploymentId);
         });
+
+        it('should refresh the drill-down buttons on an interval', () => {
+            useDeploymentsViewWidget({ configurationOverrides: { customPollingTime: 1 } });
+
+            cy.getSearchInput().type(deploymentName);
+
+            getDeploymentsViewDetailsPane().within(() => {
+                getSubservicesButton().contains('0');
+
+                cy.interceptSp('GET', `${deploymentName}?all_sub_deployments=false`, req =>
+                    req.reply(res => {
+                        res.body.sub_services_count = 50;
+                    })
+                ).as('deploymentDetails');
+                cy.wait('@deploymentDetails');
+
+                getSubservicesButton().contains('50');
+            });
+        });
     });
 
     it('should display an error message when using the drilled-down widget on a top-level page', () => {
