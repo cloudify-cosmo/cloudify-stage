@@ -9,7 +9,6 @@
     "service",
     "environment",
     "executions",
-    "resource",
-    "systemSetup"
+    "resource"
   ]
 }
