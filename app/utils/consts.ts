@@ -1,4 +1,10 @@
+import { version } from '../../package.json';
+
+const convertVersionStringToNumber = (versionString: string) => Number(versionString.replace(/[^\d]/g, ''));
+
 export default {
+    APP_VERSION: convertVersionStringToNumber(version),
+
     CONTEXT_PATH: '/console',
 
     ERROR_404_PAGE_PATH: '/404',

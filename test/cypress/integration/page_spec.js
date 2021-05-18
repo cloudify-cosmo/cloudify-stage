@@ -1,3 +1,5 @@
+import { getCurrentAppVersion } from '../support/app_commons';
+
 describe('Page', () => {
     before(() => {
         cy.activate('valid_trial_license');
@@ -15,7 +17,7 @@ describe('Page', () => {
                             }
                         ]
                     },
-                    appDataVersion: 4
+                    appDataVersion: getCurrentAppVersion()
                 }
             })
         );

@@ -1,3 +1,5 @@
+import { getCurrentAppVersion } from '../support/app_commons';
+
 describe('Login', () => {
     it('succeeds when provided credentials are valid and license is active', () => {
         cy.activate().usePageMock().login();
@@ -14,6 +16,30 @@ describe('Login', () => {
         cy.usePageMock().login();
 
         cy.location('pathname').should('be.equal', redirectUrl);
+    });
+
+    it('succeeds and resets user pages when application version is different than the one stored in the DB', () => {
+        const currentAppDataVersion = getCurrentAppVersion();
+        const fetchUserAppsTimeout = 15000;
+
+        cy.intercept('GET', '/console/ua', req => {
+            req.reply(res => {
+                res.body.appDataVersion = currentAppDataVersion - 1;
+                res.send(res.body);
+            });
+        }).as('fetchUserApps');
+        cy.intercept('GET', '/console/templates/select').as('fetchTemplateId');
+        cy.intercept('POST', '/console/ua').as('updateUserApps');
+
+        cy.activate().login('admin', 'admin', false);
+
+        cy.wait('@fetchUserApps', { timeout: fetchUserAppsTimeout });
+        cy.wait('@fetchTemplateId').then(({ response }) => {
+            expect(response.body).to.equal('main-sys_admin');
+        });
+        cy.wait('@updateUserApps').then(({ response }) => {
+            expect(response.body.appDataVersion).to.equal(currentAppDataVersion);
+        });
     });
 
     it('succeeds when provided credentials are valid and license is not active', () => {

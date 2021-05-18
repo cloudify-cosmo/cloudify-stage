@@ -13,6 +13,7 @@ import 'cypress-localstorage-commands';
 import 'cypress-get-table';
 import _ from 'lodash';
 import type { RouteHandler, StringMatcher } from 'cypress/types/net-stubbing';
+import { addCommands, GetCypressChainableFromCommands } from 'cloudify-ui-common/cypress/support';
 
 import './blueprints';
 import './deployments';
@@ -26,7 +27,7 @@ import './widgets';
 import './secrets';
 import './snapshots';
 import './filters';
-import { addCommands, GetCypressChainableFromCommands } from 'cloudify-ui-common/cypress/support';
+import { getCurrentAppVersion } from './app_commons';
 
 let token = '';
 
@@ -215,7 +216,7 @@ const commands = {
         );
         cy.intercept('GET', '/console/templates', []);
         cy.intercept('GET', '/console/ua', {
-            appDataVersion: 4,
+            appDataVersion: getCurrentAppVersion(),
             appData: {
                 pages: [
                     {
