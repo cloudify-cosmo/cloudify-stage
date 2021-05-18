@@ -23,7 +23,7 @@ type StageHooks = typeof StageHooks;
 /** @see https://docs.cloudify.co/developer/writing_widgets/widget-apis/#toolbox-object */
 interface StageToolbox {
     drillDown(
-        widget: StageWidget,
+        widget: StageWidget<unknown>,
         defaultTemplate: string,
         drilldownContext: Record<string, any>,
         drilldownPageName?: any

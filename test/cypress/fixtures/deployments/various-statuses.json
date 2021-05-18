@@ -9,7 +9,8 @@
     },
     "items": [
         {
-            "id": "deployments_view_test_deployment",
+            "id": "deployments_view_test_id",
+            "display_name": "deployments_view_test_deployment",
             "visibility": "tenant",
             "created_at": "2021-03-18T16:40:42.323Z",
             "description": null,
@@ -497,7 +498,8 @@
         },
 
         {
-            "id": "one-in-warsaw",
+            "id": "one-in-id",
+            "display_name": "one-in-warsaw",
             "visibility": "tenant",
             "created_at": "2021-03-17T09:26:58.116Z",
             "description": null,
@@ -991,7 +993,8 @@
             "latest_execution_finished_operations": 10
         },
         {
-            "id": "hello-world-one",
+            "id": "hello-world-id",
+            "display_name": "hello-world-one",
             "visibility": "tenant",
             "created_at": "2021-03-17T09:20:26.103Z",
             "description": null,

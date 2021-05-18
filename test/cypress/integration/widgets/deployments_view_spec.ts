@@ -48,9 +48,8 @@ describe('Deployments View widget', () => {
 
     before(() => {
         cy.activate()
-            .deleteDeployments(specPrefix, true)
             .deleteSites(exampleSiteName)
-            .deleteBlueprints(blueprintName, true)
+            .deleteBlueprint(blueprintName, true)
             .uploadBlueprint(blueprintUrl, blueprintName)
             .deployBlueprint(blueprintName, deploymentName, { webserver_port: 9123 })
             .createSite({ name: exampleSiteName, location: '53.77509462534224, 20.473709106445316' })
@@ -529,6 +528,25 @@ describe('Deployments View widget', () => {
             getDeploymentsViewTable().within(() => cy.contains(tempDeploymentId).should('not.exist'));
             getBreadcrumbs().contains(parentDeploymentId);
         });
+
+        it('should refresh the drill-down buttons on an interval', () => {
+            useDeploymentsViewWidget({ configurationOverrides: { customPollingTime: 1 } });
+
+            cy.getSearchInput().type(deploymentName);
+
+            getDeploymentsViewDetailsPane().within(() => {
+                getSubservicesButton().contains('0');
+
+                cy.interceptSp('GET', `${deploymentName}?all_sub_deployments=false`, req =>
+                    req.reply(res => {
+                        res.body.sub_services_count = 50;
+                    })
+                ).as('deploymentDetails');
+                cy.wait('@deploymentDetails');
+
+                getSubservicesButton().contains('50');
+            });
+        });
     });
 
     it('should display an error message when using the drilled-down widget on a top-level page', () => {
@@ -766,21 +784,27 @@ describe('Deployments View widget', () => {
     });
 
     describe('bulk actions', () => {
-        const siteFilterName = `in-${exampleSiteName}`;
-        const secondDeploymentWithExampleSiteName = `${specPrefix}deployment_2`;
+        const siteName = 'Krakow';
+        const siteFilterName = `in-${siteName}`;
+        const deploymentIds = [`${specPrefix}_${siteName}_deployment_1`, `${specPrefix}_${siteName}_deployment_2`];
 
         before(() => {
-            cy.deleteDeploymentsFilter(siteFilterName, { ignoreFailure: true })
-                .deployBlueprint(blueprintName, secondDeploymentWithExampleSiteName, { webserver_port: 9124 })
-                .setSite(secondDeploymentWithExampleSiteName, exampleSiteName)
+            cy.deleteSite(siteName, { ignoreFailure: true })
+                .createSite({ name: siteName })
+                .deleteDeploymentsFilter(siteFilterName, { ignoreFailure: true })
                 .createDeploymentsFilter(siteFilterName, [
                     {
                         type: FilterRuleType.Attribute,
                         key: 'site_name',
                         operator: FilterRuleOperators.AnyOf,
-                        values: [exampleSiteName]
+                        values: [siteName]
                     }
                 ]);
+            deploymentIds.forEach(deploymentId =>
+                cy
+                    .deployBlueprint(blueprintName, deploymentId, { webserver_port: 9124 })
+                    .setSite(deploymentId, siteName)
+            );
         });
 
         beforeEach(() => {
@@ -791,8 +815,7 @@ describe('Deployments View widget', () => {
         it('should allow to run workflow on filtered deployments', () => {
             cy.interceptSp('POST', '/searches/workflows').as('searchWorkflows');
 
-            useDeploymentsViewWidget();
-            widgetHeader.setFilter(siteFilterName);
+            useDeploymentsViewWidget({ configurationOverrides: { filterId: siteFilterName } });
             widgetHeader.openRunWorkflowModal();
 
             cy.get('.modal').within(() => {
@@ -803,7 +826,7 @@ describe('Deployments View widget', () => {
 
                 cy.wait('@createDeploymentGroup')
                     .its('response.body.deployment_ids')
-                    .should('include.members', [deploymentName, secondDeploymentWithExampleSiteName]);
+                    .should('include.members', deploymentIds);
                 cy.wait('@startExecutionGroup').its('response.body.workflow_id').should('be.equal', 'restart');
             });
 
@@ -839,22 +862,15 @@ describe('Deployments View widget', () => {
             cy.wait('@createDeploymentGroup').then(({ request }) => {
                 expect(request.body.blueprint_id).to.eq(blueprintName);
                 expect(request.body.labels).to.deep.equal([{ [labelKey]: labelValue }]);
-                expect(request.body.new_deployments).to.deep.equal([
-                    {
+                expect(request.body.new_deployments).to.deep.equal(
+                    deploymentIds.map(deploymentId => ({
                         id: '{uuid}',
                         display_name: '{blueprint_id}-{uuid}',
-                        labels: [{ 'csys-obj-parent': deploymentName }],
+                        labels: [{ 'csys-obj-parent': deploymentId }],
                         runtime_only_evaluation: false,
                         skip_plugins_validation: false
-                    },
-                    {
-                        id: '{uuid}',
-                        display_name: '{blueprint_id}-{uuid}',
-                        labels: [{ 'csys-obj-parent': secondDeploymentWithExampleSiteName }],
-                        runtime_only_evaluation: false,
-                        skip_plugins_validation: false
-                    }
-                ]);
+                    }))
+                );
             });
             cy.wait('@startExecutionGroup').its('response.body.workflow_id').should('be.equal', 'install');
 
