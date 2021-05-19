@@ -786,7 +786,7 @@ describe('Deployments View widget', () => {
     describe('bulk actions', () => {
         const siteName = 'Krakow';
         const siteFilterName = `in-${siteName}`;
-        const deploymentIds = [`${specPrefix}_${siteName}_deployment_1`, `${specPrefix}_${siteName}_deployment_2`];
+        const deploymentIds = Array.from({ length: 2 }).map((_, i) => `${specPrefix}_${siteName}_deployment_${i + 1}`);
 
         before(() => {
             cy.deleteSite(siteName, { ignoreFailure: true })
