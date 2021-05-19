@@ -6,10 +6,10 @@
     "adminDash",
     "marketplace",
     "blueprints",
-    "service",
-    "environment",
+    "services",
+    "environments",
     "executions",
-    "resource",
+    "resources",
     "systemSetup"
   ]
 }
