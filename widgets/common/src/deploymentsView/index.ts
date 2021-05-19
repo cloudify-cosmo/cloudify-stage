@@ -3,6 +3,7 @@ import type { DeploymentsResponse } from './types';
 import { SharedDeploymentsViewWidgetConfiguration, sharedConfiguration, sharedDefinition } from './configuration';
 import './styles.scss';
 import { DeploymentsView as DDeploymentsView } from './DeploymentsView';
+import { DeploymentStatus } from './types';
 
 declare global {
     namespace Stage.Common {
@@ -17,7 +18,7 @@ declare global {
                 export { SharedDeploymentsViewWidgetConfiguration, sharedConfiguration };
             }
             export namespace Types {
-                export { DeploymentsResponse };
+                export { DeploymentsResponse, DeploymentStatus };
             }
         }
     }
@@ -30,6 +31,6 @@ Stage.defineCommon({
         Common: DCommon,
         Configuration: { sharedConfiguration },
         DeploymentsView: DDeploymentsView,
-        Types: {}
+        Types: { DeploymentStatus }
     }
 });
