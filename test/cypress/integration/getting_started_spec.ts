@@ -20,8 +20,8 @@ const goToNextStep = () => cy.contains('button', 'Next').click();
 const goToFinishStep = () => cy.contains('button', 'Finish').click();
 const closeModal = () => cy.contains('button', 'Close').click();
 
-function verifyInstallationSucceed() {
-    cy.contains('.progress .progress', '100%', { timeout: 2 * 60 * 1000 });
+function verifyInstallationSucceed(blueprints: string[]) {
+    cy.contains('.progress .progress', '100%', { timeout: blueprints.length * 2 * 60 * 1000 });
     cy.contains('.progress .label', 'Installation done!');
     cy.get('.ui.red.message').should('not.exist'); // there shouldn't be visible error messages
 }
@@ -154,7 +154,7 @@ describe('Getting started modal', () => {
             cy.wait(toAliasReferences(awsPlugins), { responseTimeout: awsPlugins.length * 2 * 60 * 1000 });
             cy.wait(toAliasReferences(awsBlueprints));
 
-            verifyInstallationSucceed();
+            verifyInstallationSucceed(awsBlueprints);
             closeModal();
         });
     });
@@ -193,7 +193,7 @@ describe('Getting started modal', () => {
 
             cy.wait(toAliasReferences(awsSecrets));
 
-            verifyInstallationSucceed();
+            verifyInstallationSucceed(awsBlueprints);
             closeModal();
         });
     });
@@ -247,7 +247,7 @@ describe('Getting started modal', () => {
             cy.wait(toAliasReferences(gcpSecrets));
             cy.wait(toAliasReferences(blueprints));
 
-            verifyInstallationSucceed();
+            verifyInstallationSucceed(blueprints);
             closeModal();
         });
     });
