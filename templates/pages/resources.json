@@ -11,7 +11,7 @@
               "name": "Secret Store Management",
               "width": 12,
               "height": 24,
-              "definition": "secrets",
+              "definition": "secrets"
             }
           ]
         },

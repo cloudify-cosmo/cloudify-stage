@@ -11,7 +11,7 @@
               "name": "User management",
               "width": 12,
               "height": 24,
-              "definition": "userManagement",
+              "definition": "userManagement"
             }
           ]
         },
@@ -108,7 +108,7 @@
               "name": "Snapshots list",
               "width": 12,
               "height": 21,
-              "definition": "snapshots",
+              "definition": "snapshots"
             }
           ]
         }
