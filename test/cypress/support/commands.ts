@@ -27,7 +27,7 @@ import './widgets';
 import './secrets';
 import './snapshots';
 import './filters';
-import './gettingStarted';
+import './getting_started';
 import { getCurrentAppVersion } from './app_commons';
 
 let token = '';
@@ -191,7 +191,7 @@ const commands = {
                     username
                 })
             );
-            mockGettingStarted(!disableGettingStarted);
+            if (disableGettingStarted) mockGettingStarted(false);
         });
         cy.visit('/console').waitUntilLoaded();
     },
