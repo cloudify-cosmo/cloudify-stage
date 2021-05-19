@@ -23,12 +23,6 @@
               "width": 12,
               "height": 24,
               "definition": "userGroups",
-              "configuration": {
-                "pollingTime": 30,
-                "pageSize": 5,
-                "sortColumn": "name",
-                "sortAscending": true
-              }
             }
           ]
         },
@@ -40,12 +34,6 @@
               "width": 12,
               "height": 24,
               "definition": "tenants",
-              "configuration": {
-                "pollingTime": 30,
-                "pageSize": 5,
-                "sortColumn": "name",
-                "sortAscending": true
-              }
             }
           ]
         },
@@ -73,11 +61,11 @@
                 "filterByBlueprints": true,
                 "filterByDeployments": true,
                 "filterByExecutions": true,
-                "filterByNodes": false,
-                "filterByNodeInstances": false,
+                "filterByNodes": true,
+                "filterByNodeInstances": true,
                 "filterByExecutionsStatus": false,
                 "filterBySiteName": false,
-                "allowMultipleSelection": false
+                "allowMultipleSelection": true
               },
               "x": 0,
               "y": 0
