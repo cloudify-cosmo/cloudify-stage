@@ -139,7 +139,6 @@ export const DeploymentsView: FunctionComponent<DeploymentsViewProps> = ({
     const deployments = deploymentsResult.data.items;
     const selectedDeployment = find(deployments, {
         // NOTE: type assertion since lodash has problems receiving string[] in the object
-        // eslint-disable-next-line react/destructuring-assignment
         id: toolboxContext.getValue('deploymentId') as string | undefined
     });
 
