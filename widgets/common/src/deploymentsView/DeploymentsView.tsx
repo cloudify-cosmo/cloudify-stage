@@ -180,7 +180,8 @@ export const DeploymentsView: FunctionComponent<DeploymentsViewProps> = ({
                     setGridParams={setGridParams}
                     toolbox={toolbox}
                     loadingIndicatorVisible={filterRulesResult.isFetching || deploymentsResult.isFetching}
-                    pageSize={widget.configuration.pageSize}
+                    // eslint-disable-next-line no-underscore-dangle
+                    pageSize={gridParams?._size ?? widget.configuration.pageSize}
                     totalSize={deploymentsResult.data.metadata.pagination.total}
                     deployments={deploymentsResult.data.items}
                     fieldsToShow={widget.configuration.fieldsToShow}
