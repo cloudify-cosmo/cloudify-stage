@@ -9,12 +9,9 @@ declare global {
     }
 }
 
-const switchGettingStarted = (username = 'admin', modalEnabled: boolean) =>
-    cy.cfyRequest(`/users/${username}`, 'POST', undefined, { show_getting_started: modalEnabled });
-
 const commands = {
-    enableGettingStarted: (username?: string) => switchGettingStarted(username, true),
-    disableGettingStarted: (username?: string) => switchGettingStarted(username, false)
+    enableGettingStarted: (username?: string) =>
+        cy.cfyRequest(`/users/${username}`, 'POST', undefined, { show_getting_started: true })
 };
 
 addCommands(commands);
