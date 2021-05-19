@@ -18,9 +18,10 @@ export interface DetailsPaneProps {
     deployment: Deployment | undefined;
     toolbox: Stage.Types.Toolbox;
     widget: Stage.Types.Widget<SharedDeploymentsViewWidgetConfiguration>;
+    mapOpen: boolean;
 }
 
-const DetailsPane: FunctionComponent<DetailsPaneProps> = ({ deployment, widget, toolbox }) => {
+const DetailsPane: FunctionComponent<DetailsPaneProps> = ({ deployment, widget, toolbox, mapOpen }) => {
     if (!deployment) {
         const { Message } = Stage.Basic;
 
@@ -52,6 +53,7 @@ const DetailsPane: FunctionComponent<DetailsPaneProps> = ({ deployment, widget, 
                         drillDown={drillDown}
                         toolbox={toolbox}
                         refetchInterval={widget.configuration.customPollingTime * 1000}
+                        mapOpen={mapOpen}
                     />
                 }
             />
