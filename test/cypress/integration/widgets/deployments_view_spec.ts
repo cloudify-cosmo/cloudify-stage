@@ -110,7 +110,12 @@ describe('Deployments View widget', () => {
         },
         openDeployOnModal: () => {
             cy.contains('Bulk Actions').click();
+
+            cy.interceptSp('GET', '/blueprints').as('blueprintsRequest');
+
             cy.contains('Deploy On').click();
+
+            cy.wait('@blueprintsRequest');
         }
     };
 
@@ -836,7 +841,7 @@ describe('Deployments View widget', () => {
             });
         });
 
-        it('should allow to create child deployments on filtered deployments', () => {
+        it.only('should allow to create child deployments on filtered deployments', () => {
             cy.interceptSp('POST', '/searches/deployments').as('searchDeployments');
 
             useDeploymentsViewWidget({ configurationOverrides: { filterId: siteFilterName } });
