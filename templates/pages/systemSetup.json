@@ -10,7 +10,7 @@
             {
               "name": "User management",
               "width": 12,
-              "height": 17,
+              "height": 24,
               "definition": "userManagement",
             }
           ]
@@ -21,7 +21,7 @@
             {
               "name": "User group management",
               "width": 12,
-              "height": 19,
+              "height": 24,
               "definition": "userGroups",
               "configuration": {
                 "pollingTime": 30,
@@ -38,7 +38,7 @@
             {
               "name": "Tenants management",
               "width": 12,
-              "height": 21,
+              "height": 24,
               "definition": "tenants",
               "configuration": {
                 "pollingTime": 30,
@@ -55,7 +55,7 @@
             {
               "name": "Cluster Status",
               "width": 12,
-              "height": 25,
+              "height": 24,
               "definition": "highAvailability"
             }
           ]

@@ -10,7 +10,7 @@
             {
               "name": "Secret Store Management",
               "width": 12,
-              "height": 17,
+              "height": 24,
               "definition": "secrets",
             }
           ]
@@ -21,7 +21,7 @@
             {
               "name": "Plugins list",
               "width": 12,
-              "height": 21,
+              "height": 24,
               "definition": "plugins",
               "configuration": {
                 "pollingTime": 30,
@@ -36,7 +36,7 @@
             {
               "name": "Sites",
               "width": 12,
-              "height": 20,
+              "height": 24,
               "definition": "sites",
               "configuration": {
                 "pollingTime": 30,
@@ -80,7 +80,7 @@
             {
               "name": "Filters",
               "width": 12,
-              "height": 22,
+              "height": 24,
               "definition": "filters",
               "configuration": {
                 "pollingTime": 30,
