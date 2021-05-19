@@ -61,11 +61,11 @@
                 "filterByBlueprints": true,
                 "filterByDeployments": true,
                 "filterByExecutions": true,
-                "filterByNodes": false,
-                "filterByNodeInstances": false,
+                "filterByNodes": true,
+                "filterByNodeInstances": true,
                 "filterByExecutionsStatus": false,
                 "filterBySiteName": false,
-                "allowMultipleSelection": false
+                "allowMultipleSelection": true
               },
               "x": 0,
               "y": 0
