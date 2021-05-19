@@ -110,12 +110,7 @@ describe('Deployments View widget', () => {
         },
         openDeployOnModal: () => {
             cy.contains('Bulk Actions').click();
-
-            cy.interceptSp('GET', '/blueprints').as('blueprintsRequest');
-
             cy.contains('Deploy On').click();
-
-            cy.wait('@blueprintsRequest');
         }
     };
 
@@ -850,7 +845,10 @@ describe('Deployments View widget', () => {
             const labelKey = 'label_key';
             const labelValue = 'label_value';
             cy.get('.modal').within(() => {
-                cy.contains('.field', 'Blueprint').find('input').type(`${blueprintName}{enter}`);
+                cy.contains('.field', 'Blueprint').within(() => {
+                    cy.get('.loading').should('not.exist');
+                    cy.get('input').type(`${blueprintName}{enter}`);
+                });
 
                 cy.contains('.field', 'Labels').find('.selection').click();
                 cy.get('div[name=labelKey] > input').type(labelKey);
