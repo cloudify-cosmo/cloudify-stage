@@ -841,7 +841,7 @@ describe('Deployments View widget', () => {
             });
         });
 
-        it.only('should allow to create child deployments on filtered deployments', () => {
+        it('should allow to create child deployments on filtered deployments', () => {
             cy.interceptSp('POST', '/searches/deployments').as('searchDeployments');
 
             useDeploymentsViewWidget({ configurationOverrides: { filterId: siteFilterName } });
