@@ -135,22 +135,21 @@ export const DeploymentsView: FunctionComponent<DeploymentsViewProps> = ({
         );
     }
 
-    const context = toolbox.getContext();
+    const toolboxContext = toolbox.getContext();
     const deployments = deploymentsResult.data.items;
     const selectedDeployment = find(deployments, {
         // NOTE: type assertion since lodash has problems receiving string[] in the object
         // eslint-disable-next-line react/destructuring-assignment
-        id: context.getValue('deploymentId') as string | undefined
+        id: toolboxContext.getValue('deploymentId') as string | undefined
     });
 
     if (!selectedDeployment && deployments.length > 0) {
         // NOTE: always select the first visible item
-        context.setValue('deploymentId', deployments[0].id);
+        toolboxContext.setValue('deploymentId', deployments[0].id);
     }
 
-    // eslint-disable-next-line react/destructuring-assignment
-    const mapOpen = (context.getValue(mapOpenContextKey) as boolean | undefined) ?? false;
-    const toggleMap = () => context.setValue(mapOpenContextKey, !mapOpen);
+    const mapOpen = !!(toolboxContext.getValue(mapOpenContextKey) as boolean | undefined);
+    const toggleMap = () => toolboxContext.setValue(mapOpenContextKey, !mapOpen);
 
     return (
         <DeploymentsViewContainer>
