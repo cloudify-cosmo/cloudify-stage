@@ -25,7 +25,7 @@ function SetSiteModal({ deploymentId, onHide, open, toolbox }) {
         clearErrors();
         resetSites();
 
-        Promise.all([actions.doGetSites(), actions.doGetSiteName(deploymentId)])
+        Promise.all([actions.doGetSitesNames(), actions.doGetSiteName(deploymentId)])
             .then(([fetchedSites, fetchedSiteName]) => {
                 setSites(fetchedSites);
                 setSiteName(fetchedSiteName);
