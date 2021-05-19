@@ -1,9 +1,10 @@
-import type { FunctionComponent } from 'react';
+import { FunctionComponent, useEffect } from 'react';
 
 export interface DeploymentsViewWidgetConfiguration
     extends Stage.Common.DeploymentsView.Configuration.SharedDeploymentsViewWidgetConfiguration {
     filterId?: string;
     filterByParentDeployment: boolean;
+    mapOpenByDefault?: boolean;
 }
 
 const {
@@ -21,6 +22,12 @@ Stage.defineWidget<never, never, DeploymentsViewWidgetConfiguration>({
 
     initialConfiguration: [
         ...sharedConfiguration,
+        {
+            id: 'mapOpenByDefault',
+            type: Stage.Basic.GenericField.BOOLEAN_TYPE,
+            name: Stage.i18n.t(`${i18nPrefix}.configuration.mapOpenByDefault.name`),
+            default: false
+        },
         {
             id: 'filterId',
             // TODO(RD-1851): add autocomplete instead of plain text input
@@ -47,8 +54,21 @@ interface TopLevelDeploymentsViewProps {
 }
 
 const TopLevelDeploymentsView: FunctionComponent<TopLevelDeploymentsViewProps> = ({ widget, toolbox }) => {
-    const { filterId, filterByParentDeployment } = widget.configuration;
-    const { DeploymentsView } = Stage.Common.DeploymentsView;
+    const { filterId, filterByParentDeployment, mapOpenByDefault } = widget.configuration;
+    const {
+        DeploymentsView,
+        Common: { mapOpenContextKey }
+    } = Stage.Common.DeploymentsView;
+
+    useEffect(() => {
+        const context = toolbox.getContext();
+
+        // NOTE: do not overwrite the map open state when coming back from a drilled-down page to the parent
+        if (context.getValue(mapOpenContextKey) === undefined) {
+            context.setValue(mapOpenContextKey, mapOpenByDefault);
+        }
+    }, [mapOpenByDefault]);
+
     return (
         <DeploymentsView
             toolbox={toolbox}
