@@ -100,8 +100,7 @@ Stage.defineWidget({
                 });
 
             const nodeInstancesSummary = configuration.showNodeInstances
-                ? await manager.doGet('/summary/node_instances', {
-                      _target_field: 'deployment_id',
+                ? await new Stage.Common.SummaryActions(toolbox).doGetNodeInstances('deployment_id', {
                       _sub_field: 'state',
                       deployment_id: deploymentId
                   })
