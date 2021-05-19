@@ -18,10 +18,9 @@ After clicking the site marker on the map, the user is presented with a popup wi
 
 Site details contain information about deployments' statuses, indicated as follows:
 
-* **Green** - the number of deployments with all nodes successfully started.
-* **Yellow** - the number of deployments in which active workflow execution is performed.
-* **Blue** - the number of deployments with non-started nodes.
-* **Red** - the number of deployments with failed workflow execution.
+* **Green** - the number of deployments with all nodes in active state, and a successful last workflow execution.
+* **Orange** - the number of deployments in which active workflow execution is performed.
+* **Red** - the number of deployments with inactive nodes or a failed last workflow execution.
 
 
 ## Map provider
