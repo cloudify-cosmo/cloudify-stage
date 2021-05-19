@@ -18,22 +18,7 @@
           "height": 28,
           "definition": "deploymentsView",
           "configuration": {
-            "customPollingTime": 10,
-            "mapOpenByDefault": false,
-            "mapHeight": 300,
-            "fieldsToShow": [
-              "status",
-              "name",
-              "blueprintName",
-              "location",
-              "subenvironmentsCount",
-              "subservicesCount"
-            ],
-            "pageSize": 50,
-            "sortColumn": "created_at",
-            "sortAscending": null,
-            "filterId": "csys-service-filter",
-            "filterByParentDeployment": false
+            "filterId": "csys-service-filter"
           },
           "x": 0,
           "y": 3
