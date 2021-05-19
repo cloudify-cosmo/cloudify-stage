@@ -8,6 +8,7 @@ import type { Deployment } from '../types';
 // NOTE: the order in the array determines the order in the UI
 export const deploymentsViewColumnIds = [
     'status',
+    'id',
     'name',
     'blueprintName',
     'environmentType',
@@ -44,10 +45,16 @@ const partialDeploymentsViewColumnDefinitions: Record<
         // NOTE: do not show the column label
         label: ''
     },
-    name: {
-        sortFieldName: 'id',
+    id: {
+        width: '20px',
         render(deployment) {
-            return deployment.id;
+            return <Stage.Shared.IdPopup id={deployment.id} />;
+        }
+    },
+    name: {
+        sortFieldName: 'display_name',
+        render(deployment) {
+            return deployment.display_name;
         }
     },
     blueprintName: {

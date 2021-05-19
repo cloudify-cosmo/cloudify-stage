@@ -23,10 +23,7 @@ const DeploymentsMapContainer: FunctionComponent<DeploymentsMapContainerProps> =
     const sitesResult = useQuery(
         'all-sites',
         (): Promise<Stage.Types.PaginatedResponse<Stage.Common.Map.Site>> =>
-            toolbox.getManager().doGet('/sites', {
-                _include: 'name,latitude,longitude',
-                _get_all_results: true
-            })
+            new Stage.Common.DeploymentActions(toolbox).doGetSitesNamesAndLocations()
     );
     const mapAvailableResult = useQuery(
         'map-available',

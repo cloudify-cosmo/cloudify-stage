@@ -7,22 +7,33 @@ import { filterRulesContextKey, i18nDrillDownPrefix, subenvironmentsIcon, subser
 import type { Deployment } from '../types';
 
 export interface DrilldownButtonsProps {
-    deploymentId: string;
+    deployment: Deployment;
     drillDown: (templateName: string, drilldownContext: Record<string, any>, drilldownPageName: string) => void;
     toolbox: Stage.Types.Toolbox;
+    refetchInterval: number;
 }
 
 const ButtonsContainer = styled.div`
-    margin: 0 1em;
+    margin-right: 1rem;
+    margin-bottom: 1rem;
+    position: relative;
 `;
 
 const i18nDrillDownButtonsPrefix = `${i18nDrillDownPrefix}.buttons`;
 const getDeploymentUrl = (id: string) => `/deployments/${id}?all_sub_deployments=false`;
 
-const DrilldownButtons: FunctionComponent<DrilldownButtonsProps> = ({ drillDown, deploymentId, toolbox }) => {
+const DrilldownButtons: FunctionComponent<DrilldownButtonsProps> = ({
+    drillDown,
+    deployment,
+    toolbox,
+    refetchInterval
+}) => {
+    const { id, display_name: displayName } = deployment;
+
     const deploymentDetailsResult = useQuery(
-        getDeploymentUrl(deploymentId),
-        ({ queryKey: url }): Promise<Deployment> => toolbox.getManager().doGet(url)
+        getDeploymentUrl(id),
+        ({ queryKey: url }): Promise<Deployment> => toolbox.getManager().doGet(url),
+        { refetchInterval }
     );
 
     if (deploymentDetailsResult.isIdle || deploymentDetailsResult.isError) {
@@ -37,19 +48,23 @@ const DrilldownButtons: FunctionComponent<DrilldownButtonsProps> = ({ drillDown,
     }
 
     const subdeploymentResults = getSubdeploymentResults(deploymentDetailsResult);
+    const { LoadingOverlay } = Stage.Basic;
 
     return (
         <ButtonsContainer>
+            {/* NOTE: Show a spinner only when refetching. During the initial fetch there are spinners inside the buttons. */}
+            {deploymentDetailsResult.isFetching && !deploymentDetailsResult.isLoading && <LoadingOverlay />}
+
             <DrilldownButton
                 type="environments"
                 drillDown={drillDown}
-                deploymentName={deploymentId}
+                deploymentName={displayName}
                 result={subdeploymentResults.subenvironments}
             />
             <DrilldownButton
                 type="services"
                 drillDown={drillDown}
-                deploymentName={deploymentId}
+                deploymentName={displayName}
                 result={subdeploymentResults.subservices}
             />
         </ButtonsContainer>
