@@ -22,7 +22,7 @@
               "name": "User group management",
               "width": 12,
               "height": 24,
-              "definition": "userGroups",
+              "definition": "userGroups"
             }
           ]
         },
@@ -33,7 +33,7 @@
               "name": "Tenants management",
               "width": 12,
               "height": 24,
-              "definition": "tenants",
+              "definition": "tenants"
             }
           ]
         },
