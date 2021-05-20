@@ -69,7 +69,7 @@ export default function DeploymentDetails({
                             name={
                                 <div>
                                     <span style={{ fontSize: 14 }}>{resourceVisibility}</span>
-                                    {deployment.id}
+                                    {deployment.display_name}
                                 </div>
                             }
                             value={deployment.description}
@@ -129,6 +129,7 @@ export default function DeploymentDetails({
 DeploymentDetails.propTypes = {
     deployment: PropTypes.shape({
         id: PropTypes.string.isRequired,
+        display_name: PropTypes.string,
         visibility: PropTypes.string.isRequired,
         blueprint_id: PropTypes.string,
         description: PropTypes.string,
