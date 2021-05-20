@@ -95,7 +95,7 @@
             {
               "name": "Snapshots list",
               "width": 12,
-              "height": 21,
+              "height": 24,
               "definition": "snapshots"
             }
           ]
