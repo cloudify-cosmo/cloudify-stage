@@ -179,6 +179,7 @@ const commands = {
             cy.waitUntilLoaded().then(() => cy.saveLocalStorage());
         }
     },
+    // TODO(RD-2314): object instead of multiple optional parameters
     mockLogin: (username = 'admin', password = 'admin', disableGettingStarted = true) => {
         cy.stageRequest('/console/auth/login', 'POST', undefined, {
             Authorization: `Basic ${btoa(`${username}:${password}`)}`
