@@ -22,11 +22,7 @@
               "name": "Plugins list",
               "width": 12,
               "height": 24,
-              "definition": "plugins",
-              "configuration": {
-                "pollingTime": 30,
-                "pageSize": 5
-              }
+              "definition": "plugins"
             }
           ]
         },
@@ -37,13 +33,7 @@
               "name": "Sites",
               "width": 12,
               "height": 24,
-              "definition": "sites",
-              "configuration": {
-                "pollingTime": 30,
-                "pageSize": 5,
-                "sortColumn": "name",
-                "sortAscending": true
-              }
+              "definition": "sites"
             }
           ]
         },
@@ -54,23 +44,7 @@
               "name": "Agents",
               "width": 12,
               "height": 24,
-              "definition": "agents",
-              "configuration": {
-                "pollingTime": 15,
-                "pageSize": 5,
-                "sortColumn": "id",
-                "sortAscending": true,
-                "fieldsToShow": [
-                  "Id",
-                  "Node",
-                  "Deployment",
-                  "IP",
-                  "Install Method",
-                  "System",
-                  "Version",
-                  "Actions"
-                ]
-              }
+              "definition": "agents"
             }
           ]
         },
@@ -81,13 +55,7 @@
               "name": "Filters",
               "width": 12,
               "height": 24,
-              "definition": "filters",
-              "configuration": {
-                "pollingTime": 30,
-                "pageSize": 5,
-                "sortColumn": "id",
-                "sortAscending": true
-              }
+              "definition": "filters"
             }
           ]
         }
