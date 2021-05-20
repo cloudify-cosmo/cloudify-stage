@@ -724,7 +724,7 @@ describe('Filters widget', () => {
         });
     });
 
-    it.only('should handle all filter parameters', () => {
+    it('should handle all filter parameters', () => {
         enum RuleParameters {
             RuleAttributes = 'attributes',
             RuleAttributesOperators = 'attributesOperators',
@@ -734,7 +734,7 @@ describe('Filters widget', () => {
         type SupportedByObject = Record<RuleParameters, string[]>;
 
         function getEnumValues(enumType: any) {
-            return Object.keys(enumType).map(v => enumType[v]);
+            return Object.keys(enumType).map(enumValue => enumType[enumValue]);
         }
 
         cy.cfyRequest('/searches/deployments.help.json').then(response => {
