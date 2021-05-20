@@ -44,13 +44,7 @@
               "name": "Agents",
               "width": 12,
               "height": 24,
-              "definition": "agents",
-              "configuration": {
-                "pollingTime": 15,
-                "pageSize": 5,
-                "sortColumn": "id",
-                "sortAscending": true
-              }
+              "definition": "agents"
             }
           ]
         },
