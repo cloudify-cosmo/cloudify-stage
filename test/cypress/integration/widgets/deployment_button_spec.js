@@ -48,16 +48,14 @@ describe('Create Deployment Button widget', () => {
     };
 
     const selectBlueprintInModal = type => {
-        const blueprintName = `${resourcePrefix}${type}_type`;
-        cy.log(`Selecting blueprint: ${blueprintName}.`);
-        cy.get('.modal form div[name="blueprintName"]')
-            .click()
-            .within(() => {
-                cy.get('input').type(`${blueprintName}`);
-                cy.get(`div[option-value="${blueprintName}"]`).click();
-            });
-        cy.log('Waiting for blueprint to load and modal to be operational.');
-        cy.contains('Deployment inputs').should('be.visible');
+        cy.get('.modal').within(() => {
+            const blueprintName = `${resourcePrefix}${type}_type`;
+            cy.log(`Selecting blueprint: ${blueprintName}.`);
+            cy.setDropdownValue('Blueprint', blueprintName);
+
+            cy.log('Waiting for blueprint to load and modal to be operational.');
+            cy.contains('Deployment inputs').should('be.visible');
+        });
     };
 
     const waitForDeployBlueprintModal = (install = false) => {
@@ -71,13 +69,7 @@ describe('Create Deployment Button widget', () => {
 
     const fillDeployBlueprintModal = (deploymentId, deploymentName, blueprintId) => {
         cy.get('div.deployBlueprintModal').within(() => {
-            cy.get('div[name="blueprintName"]')
-                .click()
-                .within(() => {
-                    cy.get('input').type(resourcePrefix);
-                    cy.get(`div[option-value=${blueprintId}]`).click();
-                });
-
+            cy.setDropdownValue('Blueprint', blueprintId);
             cy.get('input[name="deploymentName"]').click().type(deploymentName);
             cy.get('input[name="deploymentId"]').clear().type(deploymentId);
         });

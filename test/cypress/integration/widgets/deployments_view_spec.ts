@@ -845,10 +845,7 @@ describe('Deployments View widget', () => {
             const labelKey = 'label_key';
             const labelValue = 'label_value';
             cy.get('.modal').within(() => {
-                cy.contains('.field', 'Blueprint').within(() => {
-                    cy.get('.loading').should('not.exist');
-                    cy.get('input').type(`${blueprintName}{enter}`);
-                });
+                cy.setDropdownValue('Blueprint', blueprintName);
 
                 cy.contains('.field', 'Labels').find('.selection').click();
                 cy.get('div[name=labelKey] > input').type(labelKey);

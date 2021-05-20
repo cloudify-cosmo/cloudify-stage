@@ -330,6 +330,13 @@ const commands = {
         cy.interceptSp('GET', `/users/`, {
             body: { show_getting_started: false }
         });
+    },
+
+    setDropdownValue: (fieldName: string, value: string) => {
+        cy.contains('.field', fieldName).within(() => {
+            cy.get('input').type(value);
+            cy.get(`div[option-value="${value}"]`).click();
+        });
     }
 };
 
