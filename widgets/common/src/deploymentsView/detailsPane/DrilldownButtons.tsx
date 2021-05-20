@@ -3,7 +3,13 @@ import { QueryObserverLoadingResult, QueryObserverSuccessResult, useQuery } from
 import styled from 'styled-components';
 
 import { FilterRuleOperators, FilterRuleType } from '../../filters/types';
-import { filterRulesContextKey, i18nDrillDownPrefix, subenvironmentsIcon, subservicesIcon } from '../common';
+import {
+    filterRulesContextKey,
+    i18nDrillDownPrefix,
+    mapOpenContextKey,
+    subenvironmentsIcon,
+    subservicesIcon
+} from '../common';
 import type { Deployment } from '../types';
 
 export interface DrilldownButtonsProps {
@@ -11,6 +17,7 @@ export interface DrilldownButtonsProps {
     drillDown: (templateName: string, drilldownContext: Record<string, any>, drilldownPageName: string) => void;
     toolbox: Stage.Types.Toolbox;
     refetchInterval: number;
+    mapOpen: boolean;
 }
 
 const ButtonsContainer = styled.div`
@@ -26,7 +33,8 @@ const DrilldownButtons: FunctionComponent<DrilldownButtonsProps> = ({
     drillDown,
     deployment,
     toolbox,
-    refetchInterval
+    refetchInterval,
+    mapOpen
 }) => {
     const { id, display_name: displayName } = deployment;
 
@@ -60,12 +68,14 @@ const DrilldownButtons: FunctionComponent<DrilldownButtonsProps> = ({
                 drillDown={drillDown}
                 deploymentName={displayName}
                 result={subdeploymentResults.subenvironments}
+                mapOpen={mapOpen}
             />
             <DrilldownButton
                 type="services"
                 drillDown={drillDown}
                 deploymentName={displayName}
                 result={subdeploymentResults.subservices}
+                mapOpen={mapOpen}
             />
         </ButtonsContainer>
     );
@@ -95,18 +105,25 @@ interface DrilldownButtonProps {
     drillDown: DrilldownButtonsProps['drillDown'];
     deploymentName: string;
     result: SubdeploymentsResult;
+    mapOpen: boolean;
 }
 
 const subdeploymentsDrilldownTemplateName = 'drilldownDeployments';
 
-const DrilldownButton: FunctionComponent<DrilldownButtonProps> = ({ type, drillDown, deploymentName, result }) => {
+const DrilldownButton: FunctionComponent<DrilldownButtonProps> = ({
+    type,
+    drillDown,
+    deploymentName,
+    result,
+    mapOpen
+}) => {
     const { i18n } = Stage;
     const icon = type === 'services' ? subservicesIcon : subenvironmentsIcon;
 
     const drilldownToSubdeployments = () => {
         drillDown(
             subdeploymentsDrilldownTemplateName,
-            { [filterRulesContextKey]: [deploymentTypeRule[type]] },
+            { [filterRulesContextKey]: [deploymentTypeRule[type]], [mapOpenContextKey]: mapOpen },
             `${deploymentName} [${i18n.t(`${i18nDrillDownPrefix}.breadcrumbs.${type}`)}]`
         );
     };

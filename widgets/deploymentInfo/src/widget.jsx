@@ -76,6 +76,7 @@ Stage.defineWidget({
                     _include: _.join(
                         _.compact([
                             'id',
+                            'display_name',
                             'description',
                             'visibility',
                             configuration.showBlueprint && 'blueprint_id',
