@@ -724,7 +724,7 @@ describe('Filters widget', () => {
         });
     });
 
-    it('should handle all filter parameters', () => {
+    it('should use only filter parameters supported by the API', () => {
         enum RuleParameters {
             RuleAttributes = 'attributes',
             RuleAttributesOperators = 'attributesOperators',
