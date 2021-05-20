@@ -45,7 +45,13 @@ export const DeploymentsView: FunctionComponent<DeploymentsViewProps> = ({
 }) => {
     const manager = toolbox.getManager();
     const searchActions = new SearchActions(toolbox);
-    const [gridParams, setGridParams] = useState<Stage.Types.ManagerGridParams>();
+    const [gridParams, setGridParams] = useState<Stage.Types.ManagerGridParams>(() =>
+        Stage.Utils.mapGridParamsToManagerGridParams({
+            sortColumn: widget.configuration.sortColumn,
+            sortAscending: widget.configuration.sortAscending,
+            pageSize: widget.configuration.pageSize
+        })
+    );
     const [userFilterId, setUserFilterId] = useState<string>();
 
     const filterRulesResult = (() => {
@@ -180,7 +186,7 @@ export const DeploymentsView: FunctionComponent<DeploymentsViewProps> = ({
                     toolbox={toolbox}
                     loadingIndicatorVisible={filterRulesResult.isFetching || deploymentsResult.isFetching}
                     // eslint-disable-next-line no-underscore-dangle
-                    pageSize={gridParams?._size ?? widget.configuration.pageSize}
+                    pageSize={gridParams._size ?? widget.configuration.pageSize}
                     totalSize={deploymentsResult.data.metadata.pagination.total}
                     deployments={deploymentsResult.data.items}
                     fieldsToShow={widget.configuration.fieldsToShow}
