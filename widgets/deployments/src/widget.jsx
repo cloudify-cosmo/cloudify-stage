@@ -73,7 +73,8 @@ Stage.defineWidget({
 
     fetchData(widget, toolbox, params) {
         const deploymentDataPromise = toolbox.getManager().doGet('/deployments', {
-            _include: 'id,blueprint_id,visibility,created_at,created_by,updated_at,inputs,workflows,site_name',
+            _include:
+                'id,display_name,blueprint_id,visibility,created_at,created_by,updated_at,inputs,workflows,site_name',
             ...params
         });
         const deploymentIdsPromise = deploymentDataPromise.then(data => _.map(data.items, item => item.id));
