@@ -8,6 +8,7 @@ import log from 'loglevel';
 import { saveAs } from 'file-saver';
 import marked from 'marked';
 import { v4 } from 'uuid';
+import i18n from 'i18next';
 import { GenericField } from '../components/basic';
 import type { ManagerData } from '../reducers/managerReducer';
 
@@ -185,7 +186,32 @@ export default class StageUtils {
         return _.includes(widgetSupportedEditions, licenseEdition);
     }
 
+    static getT(keyPrefix: string) {
+        return (keySuffix: string, params?: Record<string, any>) => i18n.t(`${keyPrefix}.${keySuffix}`, params);
+    }
+
     static isEmptyWidgetData = isEmptyWidgetData;
 
     static uuid = v4;
+
+    /**
+     * Similar to lodash's `memoize`, but uses a `WeakMap` for cache.
+     * Reduces the risk of a memory leak as the keys are held weakly.
+     */
+    // NOTE: the `object` type is required by `WeakMap`
+    // eslint-disable-next-line @typescript-eslint/ban-types
+    static memoizeWithWeakMap = <K extends object, V>(fn: (key: K) => V) => {
+        const cache = new WeakMap<K, V>();
+
+        return (key: K): V => {
+            const existingValue = cache.get(key);
+            if (existingValue) {
+                return existingValue;
+            }
+
+            const newValue = fn(key);
+            cache.set(key, newValue);
+            return newValue;
+        };
+    };
 }

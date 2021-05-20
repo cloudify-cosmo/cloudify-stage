@@ -19,6 +19,7 @@ export default class EventBus {
                 currCallback.apply(context, args);
             });
         }
+        return EventBus;
     }
 
     public static off(event: string, offCallback: Callback) {

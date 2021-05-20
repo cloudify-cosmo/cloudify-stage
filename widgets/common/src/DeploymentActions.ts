@@ -1,3 +1,10 @@
+export interface WorkflowOptions {
+    force: boolean;
+    dryRun: boolean;
+    queue: boolean;
+    scheduledTime: any;
+}
+
 export default class DeploymentActions {
     constructor(private toolbox: Stage.Types.Toolbox) {}
 
@@ -30,22 +37,24 @@ export default class DeploymentActions {
     }
 
     doExecute(
-        deployment: { id: string },
-        workflow: { name: string },
-        params: any,
-        force: boolean,
-        dry_run = false,
-        queue = false,
-        scheduled_time = undefined
+        deploymentId: string,
+        workflowId: string,
+        workflowParameters: Record<string, any> = {},
+        { force, dryRun, queue, scheduledTime }: WorkflowOptions = {
+            force: false,
+            dryRun: false,
+            queue: false,
+            scheduledTime: undefined
+        }
     ) {
         return this.toolbox.getManager().doPost('/executions', null, {
-            deployment_id: deployment.id,
-            workflow_id: workflow.name,
-            dry_run,
+            deployment_id: deploymentId,
+            workflow_id: workflowId,
+            dry_run: dryRun,
             force,
             queue,
-            scheduled_time,
-            parameters: params
+            scheduled_time: scheduledTime,
+            parameters: workflowParameters
         });
     }
 
@@ -101,8 +110,20 @@ export default class DeploymentActions {
             .then(({ site_name: siteName }) => siteName);
     }
 
-    doGetSites() {
-        return this.toolbox.getManager().doGet('/sites?_include=name&_sort=name');
+    private doGetSites(include: string, params: Record<string, any> = {}) {
+        return this.toolbox.getManager().doGet('/sites', {
+            _include: include,
+            _get_all_results: true,
+            ...params
+        });
+    }
+
+    doGetSitesNames(): Promise<Stage.Types.PaginatedResponse<Pick<Stage.Common.Map.Site, 'name'>>> {
+        return this.doGetSites('name', { _sort: 'name' });
+    }
+
+    doGetSitesNamesAndLocations(): Promise<Stage.Types.PaginatedResponse<Stage.Common.Map.Site>> {
+        return this.doGetSites('name,latitude,longitude');
     }
 
     doSetLabels(deploymentId: string, deploymentLabels: Stage.Common.Labels.Label[]) {

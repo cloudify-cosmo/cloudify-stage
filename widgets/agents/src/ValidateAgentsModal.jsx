@@ -84,7 +84,7 @@ export default function ValidateAgentsModal({
 
         const actions = new Stage.Common.DeploymentActions(toolbox);
         actions
-            .doExecute({ id: nodeFilter.deploymentId }, { name: 'validate_agents' }, params, false)
+            .doExecute(nodeFilter.deploymentId, 'validate_agents', params)
             .then(data => {
                 setErrors({});
                 setExecutionStarted(true);

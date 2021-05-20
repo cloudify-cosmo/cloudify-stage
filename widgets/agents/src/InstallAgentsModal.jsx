@@ -90,7 +90,7 @@ export default function InstallAgentsModal({
 
         const actions = new Stage.Common.DeploymentActions(toolbox);
         actions
-            .doExecute({ id: nodeFilter.deploymentId }, { name: 'install_new_agents' }, params, false)
+            .doExecute(nodeFilter.deploymentId, 'install_new_agents', params)
             .then(data => {
                 setErrors({});
                 setExecutionStarted(true);

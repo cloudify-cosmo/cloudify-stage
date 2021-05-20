@@ -9,7 +9,6 @@ declare global {
     export const React: typeof import('react');
     export const ReactDOM: typeof import('react-dom');
     export const _: typeof import('lodash');
-    export const L: typeof import('leaflet');
     export const log: typeof import('loglevel');
     export const connectToStore: typeof import('react-redux').connect;
     export const ReactRedux: Pick<typeof import('react-redux'), 'useSelector'>;
@@ -21,7 +20,6 @@ declare global {
         React: typeof React;
         ReactDOM: typeof ReactDOM;
         _: typeof _;
-        L: typeof L;
         log: typeof log;
         connectToStore: typeof connectToStore;
         ReactRedux: typeof ReactRedux;

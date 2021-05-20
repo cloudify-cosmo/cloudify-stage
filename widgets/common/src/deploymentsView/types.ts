@@ -20,6 +20,7 @@ export interface Deployment {
     id: string;
     // NOTE: the property names come from the backend
     /* eslint-disable camelcase */
+    display_name: string;
     site_name: string;
     blueprint_id: string;
     latest_execution_status: LatestExecutionStatus;

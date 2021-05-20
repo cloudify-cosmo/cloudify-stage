@@ -18,6 +18,7 @@ enum CommonRuleOperator {
 }
 
 enum LabelsOnlyRuleOperator {
+    IsNot = 'is_not',
     IsNull = 'is_null',
     IsNotNull = 'is_not_null'
 }

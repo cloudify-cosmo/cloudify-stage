@@ -265,7 +265,7 @@ class ConfirmationStepContent extends React.Component {
 
         tasks.push(
             new Task(`Execute install workflow on ${deploymentId} deployment`, () =>
-                deploymentActions.doExecute({ id: deploymentId }, { name: 'install' }, {}, false)
+                deploymentActions.doExecute(deploymentId, 'install')
             )
         );
 

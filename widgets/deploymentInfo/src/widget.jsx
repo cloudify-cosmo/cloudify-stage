@@ -76,6 +76,7 @@ Stage.defineWidget({
                     _include: _.join(
                         _.compact([
                             'id',
+                            'display_name',
                             'description',
                             'visibility',
                             configuration.showBlueprint && 'blueprint_id',
@@ -100,8 +101,7 @@ Stage.defineWidget({
                 });
 
             const nodeInstancesSummary = configuration.showNodeInstances
-                ? await manager.doGet('/summary/node_instances', {
-                      _target_field: 'deployment_id',
+                ? await new Stage.Common.SummaryActions(toolbox).doGetNodeInstances('deployment_id', {
                       _sub_field: 'state',
                       deployment_id: deploymentId
                   })

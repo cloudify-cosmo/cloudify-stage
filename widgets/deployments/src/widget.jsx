@@ -73,14 +73,14 @@ Stage.defineWidget({
 
     fetchData(widget, toolbox, params) {
         const deploymentDataPromise = toolbox.getManager().doGet('/deployments', {
-            _include: 'id,blueprint_id,visibility,created_at,created_by,updated_at,inputs,workflows,site_name',
+            _include:
+                'id,display_name,blueprint_id,visibility,created_at,created_by,updated_at,inputs,workflows,site_name',
             ...params
         });
         const deploymentIdsPromise = deploymentDataPromise.then(data => _.map(data.items, item => item.id));
 
         const nodeInstanceDataPromise = deploymentIdsPromise.then(ids =>
-            toolbox.getManager().doGet('/summary/node_instances', {
-                _target_field: 'deployment_id',
+            new Stage.Common.SummaryActions(toolbox).doGetNodeInstances('deployment_id', {
                 _sub_field: 'state',
                 deployment_id: ids
             })

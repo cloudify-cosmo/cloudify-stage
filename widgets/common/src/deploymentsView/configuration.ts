@@ -2,9 +2,8 @@ import { i18nPrefix } from './common';
 import { deploymentsViewColumnDefinitions, DeploymentsViewColumnId, deploymentsViewColumnIds } from './table';
 
 export interface SharedDeploymentsViewWidgetConfiguration {
-    /** In milliseconds */
+    /** In seconds */
     customPollingTime: number;
-    mapOpenByDefault: boolean;
     mapHeight: number;
     fieldsToShow: DeploymentsViewColumnId[];
     pageSize: number;
@@ -21,12 +20,6 @@ export const sharedConfiguration: Stage.Types.WidgetConfigurationDefinition[] = 
         ...Stage.GenericConfig.POLLING_TIME_CONFIG(10),
         // NOTE: polling is handled by react-query, thus, use a different ID
         id: 'customPollingTime'
-    },
-    {
-        id: 'mapOpenByDefault',
-        type: Stage.Basic.GenericField.BOOLEAN_TYPE,
-        name: configurationT('mapOpenByDefault.name'),
-        default: false
     },
     {
         id: 'mapHeight',

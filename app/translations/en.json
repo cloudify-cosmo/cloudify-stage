@@ -50,15 +50,30 @@
         },
         "summary": {
             "taskListTitle": "Task List",
-            "pluginExistsMessageSuffix": "plugin is already installed.",
-            "pluginInstallMessageSuffix": "plugin will be installed.",
-            "pluginNotFoundMessageSuffix": "plugin is not found in catalog and manager.",
-            "secretCreateMessageSuffix": "secret will be created.",
-            "secretUpdateMessageSuffix": "secret will be updated.",
-            "blueprintExistsMessageSuffix": "blueprint is already uploaded.",
-            "blueprintUploadMessageSuffix": "blueprint will be uploaded."
+            "plugin": {
+                "alreadyInstalledMessageSuffix": "plugin is already installed",
+                "installationScheduledMessageSuffix": "plugin will be installed",
+                "notFoundMessageSuffix": "plugin not found in the catalog or on the manager",
+                "installationProgressMessageSuffix": "plugin installation in progress",
+                "installationDoneMessageSuffix": "plugin installation done",
+                "installationErrorMessageSuffix": "plugin installation error"
+            },
+            "secret": {
+                "creationScheduledMessageSuffix": "secret will be created",
+                "updateScheduledMessageSuffix": "secret will be updated",
+                "settingProgressMessageSuffix": "secret setting in progress",
+                "settingDoneMessageSuffix": "secret setting done",
+                "settingErrorMessageSuffix": "secret setting error"
+            },
+            "blueprint": {
+                "alreadyUploadedMessageSuffix": "blueprint is already uploaded",
+                "uploadScheduledMessageSuffix": "blueprint will be uploaded",
+                "uploadingProgressMessageSuffix": "blueprint upload in progress",
+                "uploadingDoneMessageSuffix": "blueprint upload done",
+                "uploadingErrorMessageSuffix": "blueprint upload error"
+            }
         },
-        "installation": {
+        "messages": {
             "pluginInstallError": "{{pluginName}} plugin installation error.",
             "secretUpdateError": "{{secretName}} secret update operation error.",
             "secretCreateError": "{{secretName}} secret create operation error.",
@@ -431,9 +446,40 @@
                     "tooltip": "Execute workflow"
                 },
                 "executeModal": {
-                    "missingDeployment": "Missing deployment.",
-                    "missingWorkflow": "Missing workflow.",
-                    "workflowError": "Workflow '{{ workflowName }}' does not exist for deployment '{{ deploymentId }}'."
+                    "header": {
+                        "noDeployment": "Execute workflow {{workflowName}}",
+                        "singleDeployemnt": "Execute workflow {{workflowName}} on {{deploymentName}}",
+                        "multipleDeployments": "Execute workflow {{workflowName}} on multiple deployments"
+                    },
+                    "errors": {
+                        "missingDeployment": "Missing deployment.",
+                        "missingWorkflow": "Missing workflow.",
+                        "workflowError": "Workflow '{{ workflowName }}' does not exist for deployment '{{ deploymentId }}'.",
+                        "scheduleTimeError": "Please provide valid scheduled time (in the future, using format: YYYY-MM-DD HH:mm)",
+                        "yamlFileError": "Loading values from YAML file failed: {{errorMessage}}"
+                    },
+                    "paramsHeader": "Parameters",
+                    "noParams": "No parameters available for the execution",
+                    "execute": "Execute",
+                    "actionsHeader": "Actions",
+                    "actions": {
+                        "force": {
+                            "label": "Force",
+                            "help": "Execute the workflow even if there is an ongoing execution for the given deployment. You cannot use this option with \"Queue\"."
+                        },
+                        "dryRun": {
+                            "label": "Dry run",
+                            "help": "If set, no actual operations will be performed. Executed tasks will be logged without side effects. You cannot use this option with \"Queue\"."
+                        },
+                        "queue": {
+                            "label": "Queue",
+                            "help": "If set, executions that can`t currently run will be queued and run automatically when possible. You cannot use this option with \"Force\" and \"Dry run\"."
+                        },
+                        "schedule": {
+                            "label": "Schedule",
+                            "help": "If set, workflow will be executed at specific time (local timezone) provided below. You cannot use this option with \"Queue\"."
+                        }
+                    }
                 },
                 "removeModal": {
                     "deleteDescription": "Are you sure you want to remove deployment '{{ deploymentId }}'?",
@@ -446,7 +492,12 @@
                     "updateButton": "Update"
                 },
                 "deployModal": {
+                    "header": "Deploy blueprint {{blueprintId}}",
                     "inputs": {
+                        "deploymentId": {
+                            "label": "Deployment ID",
+                            "help": "Specify an ID for this deployment instance."
+                        },
                         "deploymentName": {
                             "label": "Deployment name",
                             "help": "Specify a name for this deployment instance."
@@ -499,8 +550,9 @@
                         "loadingYamlFileFailed": "Loading values from YAML file failed: {{ reason }}",
                         "noBlueprintName": "Please select blueprint from the list",
                         "noDeploymentName": "Please provide deployment name",
-                        "deploymentCreationFailed": "Deployment {{ deploymentId }} environment creation failed. {{ error }}",
-                        "deploymentInstallationFailed": "Deployment {{ deploymentId }} installation failed: {{ error }}"
+                        "noDeploymentId": "Please provide deployment ID",
+                        "deploymentCreationFailed": "Deployment {{ deploymentName }} environment creation failed. {{ error }}",
+                        "deploymentInstallationFailed": "Deployment {{ deploymentName }} installation failed: {{ error }}"
                     }
                 }
             },
@@ -510,7 +562,8 @@
                 "newKey": "New key",
                 "newValue": "New value",
                 "valuePlaceholder": "Select or type in a value",
-                "validationError": "Only letters, digits and the characters \"-\", \".\" and \"_\" are allowed and it must begin with a letter.",
+                "keyValidationError": "Only letters, digits and the characters \"-\", \".\" and \"_\" are allowed.",
+                "valueValidationError": "The \" character and control characters are not allowed.",
                 "invalidKeyError": "All labels starting with `{{ keyPrefix }}` are reserved for internal usage and should not be used unless there is a need to override default functionality. The following labels are allowed for such override: {{ reservedKeys }}.",
                 "input": {
                     "label": "Labels",
@@ -542,6 +595,7 @@
                     "operatorsLabels": {
                         "anyOf": "is one of",
                         "notAnyOf": "is not one of",
+                        "isNot": "is not one of (or no such key)",
                         "isNull": "key is not",
                         "isNotNull": "key is",
                         "contains": "contains",
@@ -658,8 +712,55 @@
                 },
                 "bulkActions": {
                     "button": "Bulk Actions",
-                    "menu": {
-                        "deployOn": "Deploy On"
+                    "deployOn": {
+                        "title": "Deploy On",
+                        "modal": {
+                            "header": "Deploy on",
+                            "steps": {
+                                "validatingData": "1/4: Validating data...",
+                                "fetchingEnvironments": "2/4: Fetching environments list...",
+                                "creatingDeployments": "3/4: Creating deployments...",
+                                "installingDeployments": "4/4: Installing deployments..."
+                            },
+                            "executionStarted": "Group execution started"
+                        }
+                    },
+                    "runWorkflow": {
+                        "title": "Run Workflow",
+                        "modal": {
+                            "header": "Run workflow on filtered deployments",
+                            "inputs": {
+                                "workflowId": {
+                                    "label": "Workflow",
+                                    "help": "Name of the workflow to be started on the filtered deployments. Only workflows without mandatory parameters are listed."
+                                }
+                            },
+                            "buttons": {
+                                "run": "Run",
+                                "close": "Close"
+                            },
+                            "messages": {
+                                "limitations": "The workflow will run with default parameters and without any special workflow flags such as 'Force', 'Dry run' or 'Queue'.",
+                                "executionGroupStarted": "Workflow has been started.",
+                                "fetchingWorkflows": "Fetching workflows...",
+                                "creatingDeploymentGroup": "1/2: Creating deployment group...",
+                                "startingExecutionGroup": "2/2: Starting execution group..."
+                            },
+                            "errors": {
+                                "noWorkflowError": "Please select a workflow",
+                                "workflowsFetchFailed": "Error occurred when fetching workflows"
+                            }
+                        }
+                    },
+                    "common": {
+                        "executionStartedModal": {
+                            "header": "Group execution started",
+                            "message": "Click on 'Go to Executions page' button to track the progress",
+                            "buttons": {
+                                "goToExecutionsPage": "Go to Executions page",
+                                "close": "Close"
+                            }
+                        }
                     }
                 }
             },
@@ -670,6 +771,9 @@
             "columns": {
                 "status": {
                     "name": "Status"
+                },
+                "id": {
+                    "name": "ID"
                 },
                 "name": {
                     "name": "Name"
