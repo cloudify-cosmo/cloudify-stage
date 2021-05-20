@@ -23,7 +23,7 @@ const closeModal = () => cy.contains('button', 'Close').click();
 function verifyInstallationSucceeded(blueprints: string[]) {
     cy.contains('.progress .progress', '100%', { timeout: blueprints.length * 2 * 60 * 1000 });
     cy.contains('.progress .label', 'Installation done!');
-    cy.get('.ui.red.message').should('not.exist'); // there shouldn't be visible error messages
+    cy.get('.ui.red.message').should('not.exist');
 }
 
 function verifySummaryItem(label: string, action: string) {
