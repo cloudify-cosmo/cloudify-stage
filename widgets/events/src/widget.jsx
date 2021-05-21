@@ -142,20 +142,8 @@ Stage.defineWidget({
 
         const formattedData = {
             items: _.map(data.items, item => {
-                const id = Stage.Utils.getMD5(
-                    item.node_instance_id +
-                        item.operation +
-                        item.blueprint_id +
-                        item.timestamp +
-                        item.message +
-                        item.level +
-                        item.node_name +
-                        item.workflow_id +
-                        item.reported_timestamp +
-                        item.deployment_id +
-                        item.type +
-                        item.execution_id
-                );
+                // eslint-disable-next-line no-underscore-dangle
+                const id = item._storage_id;
                 return {
                     ...item,
                     id,
