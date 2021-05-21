@@ -841,7 +841,7 @@ describe('Deployments View widget', () => {
             cy.get('.modal').within(() => {
                 cy.wait('@searchWorkflows');
 
-                cy.get('.selection.dropdown').click().find('input').type('restart{enter}');
+                cy.setDropdownValue('Workflow', 'restart');
                 cy.contains('button', 'Run').click();
 
                 cy.wait('@createDeploymentGroup')
