@@ -7,7 +7,6 @@ module.exports = (sequelize, DataTypes) => {
     const UserApp = sequelize.define(
         'UserApp',
         {
-            managerIp: { type: DataTypes.STRING, allowNull: false },
             username: { type: DataTypes.STRING, allowNull: false },
             appDataVersion: { type: DataTypes.INTEGER, allowNull: false },
             mode: {
@@ -23,7 +22,7 @@ module.exports = (sequelize, DataTypes) => {
             indexes: [
                 {
                     unique: true,
-                    fields: ['managerIp', 'username', 'mode', 'tenant']
+                    fields: ['username', 'mode', 'tenant']
                 }
             ]
         }

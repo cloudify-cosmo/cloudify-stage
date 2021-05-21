@@ -20,7 +20,6 @@ router.use(bodyParser.json());
 router.get('/', (req, res, next) => {
     db.UserApp.findOne({
         where: {
-            managerIp: config.manager.ip,
             username: req.user.username,
             mode: ServerSettings.settings.mode,
             tenant: req.headers.tenant
@@ -35,7 +34,6 @@ router.get('/', (req, res, next) => {
 router.post('/', (req, res, next) => {
     db.UserApp.findOrCreate({
         where: {
-            managerIp: config.manager.ip,
             username: req.user.username,
             mode: ServerSettings.settings.mode,
             tenant: req.headers.tenant
@@ -56,7 +54,6 @@ router.post('/', (req, res, next) => {
 router.get('/clear-pages', (req, res, next) => {
     db.UserApp.findOne({
         where: {
-            managerIp: config.manager.ip,
             username: req.user.username,
             mode: ServerSettings.settings.mode,
             tenant: req.query.tenant
