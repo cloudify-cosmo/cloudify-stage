@@ -1,4 +1,4 @@
-# Deployments View 
+# Deployments View (drilled-down)
 
 The _Deployments View (drilled-down)_ widget is a drilled-down version of
 [the regular Deployments View widget](/working_with/console/widgets/deploymentsView).
