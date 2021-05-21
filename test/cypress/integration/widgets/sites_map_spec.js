@@ -5,12 +5,7 @@ describe('Sites Map', () => {
 
     const testSite = { name: 'Tel-Aviv', location: '32.079991, 34.767291' };
     before(() => {
-        cy.activate('valid_spire_license')
-            .usePageMock('sitesMap')
-            .mockLogin()
-            .deleteSites()
-            .createSite(testSite)
-            .waitUntilLoaded();
+        cy.activate().usePageMock('sitesMap').mockLogin().deleteSites().createSite(testSite).waitUntilLoaded();
     });
 
     it('is not displayed when there is no connection to map tiles provider', () => {

@@ -1,0 +1,29 @@
+{
+  "name": "Environments",
+  "layout": [
+    {
+      "type": "widgets",
+      "content": [
+        {
+          "name": "Deployment Button",
+          "x": 0,
+          "y": 0,
+          "width": 3,
+          "height": 3,
+          "definition": "deploymentButton"
+        },
+        {
+          "name": "Environments",
+          "width": 12,
+          "height": 28,
+          "definition": "deploymentsView",
+          "configuration": {
+            "filterId": "csys-environment-filter"
+          },
+          "x": 0,
+          "y": 3
+        }
+      ]
+    }
+  ]
+}

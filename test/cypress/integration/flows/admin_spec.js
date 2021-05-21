@@ -6,20 +6,21 @@ describe('Admin flow', () => {
     before(() => cy.activate().login().deleteAllUsersAndTenants().deleteUserGroup(groupName));
 
     it('manages groups, tenants and users', () => {
-        cy.visitPage('Tenant Management');
-
         cy.log('Creating tenant');
+        cy.visitPage('System Setup').openTab('Tenant Management');
         cy.contains('.tenantsWidget button', 'Add').click();
         cy.get('.modal input').type(tenantName);
         cy.contains('.modal button', 'Add').click();
         cy.get('.modal').should('not.exist');
 
         cy.log('Creating group');
+        cy.openTab('Groups');
         cy.contains('.userGroupsWidget button', 'Add').click();
         cy.get('input[name=groupName]').type(groupName);
         cy.contains('.modal button', 'Add').click();
 
         cy.log('Creating user');
+        cy.openTab('Users');
         cy.contains('.userManagementWidget button', 'Add').click();
         cy.get('.modal').within(() => {
             cy.get('input[name=username]').type(userName);
@@ -42,10 +43,12 @@ describe('Admin flow', () => {
         cy.get('.modal').should('not.exist');
 
         cy.log('Verifying change is visible across widgets');
+        cy.openTab('Tenant Management');
         cy.get('.tenantsWidget').within(() => {
             cy.contains(tenantName).click();
             cy.contains(userName);
         });
+        cy.openTab('Groups');
         cy.get('.userGroupsWidget').within(() => {
             cy.contains(groupName).click();
             cy.contains(userName);
