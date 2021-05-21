@@ -5,7 +5,7 @@ const { mkdirSync, renameSync, rmdirSync } = require('fs');
 const Utils = require('../utils');
 const config = require('../config').get();
 
-const latestMigration = '20201230113319-5_1_1-UpdateManagerIp.js';
+const latestMigration = '20210519093609-6_0-UserAppsManagerIpColumnRemoval.js';
 const userTemplatesFolder = Utils.getResourcePath('templates', true);
 const userTemplatesBackupFolder = `${userTemplatesFolder}-backup`;
 
@@ -57,4 +57,5 @@ describe('Migration script', () => {
     testMigrationUp('4.6', '20171011082922-4_2-UserAppsRoleColumnRemoval.js');
     testMigrationUp('5.0.5', '20190423064931-5_0-CreateWidgetBackendTable.js');
     testMigrationUp('5.1', '20200123095213-5_1-CreateBlueprintUserData.js');
+    testMigrationUp('6.0', '20210519093609-6_0-UserAppsManagerIpColumnRemoval.js');
 });
