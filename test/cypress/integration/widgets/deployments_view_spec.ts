@@ -505,6 +505,26 @@ describe('Deployments View widget', () => {
             });
         });
 
+        it('should keep the map open when drilling down and going back up', () => {
+            useEnvironmentsWidget();
+
+            getDeploymentsMapToggleButton().click();
+            getDeploymentsViewMap().should('exist');
+
+            cy.log('Drill down to the environments of app-env');
+            getDeploymentsViewTable().contains('app-env').click();
+            getDeploymentsViewDetailsPane().within(() => {
+                getSubenvironmentsButton().click();
+            });
+            getBreadcrumbs().contains('app-env [Environments]');
+            getDeploymentsViewMap().should('exist');
+
+            cy.log('Go back to the parent environment');
+            getBreadcrumbs().contains('Test Page').click();
+            getDeploymentsViewTable().contains('app-env').click();
+            getDeploymentsViewMap().should('exist');
+        });
+
         it('should allow deleting a deployment without redirecting to the parent page', () => {
             const tempDeploymentId = `${specPrefix}_temp_deployment_to_remove`;
             const parentDeploymentId = getDeploymentFullName('app-env');

@@ -27,6 +27,7 @@ import './widgets';
 import './secrets';
 import './snapshots';
 import './filters';
+import './getting_started';
 import { getCurrentAppVersion } from './app_commons';
 
 let token = '';
@@ -35,6 +36,11 @@ const getCommonHeaders = () => ({
     'Authentication-Token': token,
     tenant: 'default_tenant'
 });
+
+const mockGettingStarted = (modalEnabled: boolean) =>
+    cy.interceptSp('GET', `/users/`, {
+        body: { show_getting_started: modalEnabled }
+    });
 
 declare global {
     namespace Cypress {
@@ -147,8 +153,9 @@ const commands = {
             ...options
         });
     },
-    login: (username = 'admin', password = 'admin', expectSuccessfulLogin = true) => {
-        cy.disableGettingStarted();
+    // TODO(RD-2314): object instead of multiple optional parameters
+    login: (username = 'admin', password = 'admin', expectSuccessfulLogin = true, disableGettingStarted = true) => {
+        mockGettingStarted(!disableGettingStarted);
 
         cy.location('pathname').then(pathname => {
             if (pathname !== '/console/login') {
@@ -172,7 +179,8 @@ const commands = {
             cy.waitUntilLoaded().then(() => cy.saveLocalStorage());
         }
     },
-    mockLogin: (username = 'admin', password = 'admin') => {
+    // TODO(RD-2314): object instead of multiple optional parameters
+    mockLogin: (username = 'admin', password = 'admin', disableGettingStarted = true) => {
         cy.stageRequest('/console/auth/login', 'POST', undefined, {
             Authorization: `Basic ${btoa(`${username}:${password}`)}`
         }).then(response => {
@@ -184,7 +192,7 @@ const commands = {
                     username
                 })
             );
-            cy.disableGettingStarted();
+            if (disableGettingStarted) mockGettingStarted(false);
         });
         cy.visit('/console').waitUntilLoaded();
     },
@@ -283,12 +291,12 @@ const commands = {
             }
         });
     },
-    refreshPage: () => {
-        cy.disableGettingStarted();
+    refreshPage: (disableGettingStarted = true) => {
+        mockGettingStarted(!disableGettingStarted);
         cy.get('.pageMenuItem.active').click({ force: true });
     },
-    refreshTemplate: () => {
-        cy.disableGettingStarted();
+    refreshTemplate: (disableGettingStarted = true) => {
+        mockGettingStarted(!disableGettingStarted);
         cy.get('.tenantsMenu').click({ force: true });
         cy.contains('.text', 'default_tenant').click({ force: true });
     },
@@ -326,18 +334,16 @@ const commands = {
             .then(commandResult => commandResult.stdout);
     },
 
-    disableGettingStarted: () => {
-        cy.interceptSp('GET', `/users/`, {
-            body: { show_getting_started: false }
-        });
-    },
-
     setDropdownValue: (fieldName: string, value: string) => {
         cy.contains('.field', fieldName).within(() => {
             cy.get('input').type(value);
             cy.get(`div[option-value="${value}"]`).click();
         });
-    }
+    },
+
+    mockEnabledGettingStarted: () => mockGettingStarted(true),
+
+    mockDisabledGettingStarted: () => mockGettingStarted(false)
 };
 
 addCommands(commands);
