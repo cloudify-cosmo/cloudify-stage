@@ -8,9 +8,8 @@ describe('/ua endpoint', () => {
             UserApp: {
                 findOne: () =>
                     Promise.resolve({
-                        managerIp: 'localhost',
                         username: 'test',
-                        appDataVersion: 4,
+                        appDataVersion: 600,
                         mode: 'main',
                         tenant: 'default_tenant',
                         appData: {}
@@ -24,9 +23,8 @@ describe('/ua endpoint', () => {
             .then(response => {
                 expect(response.statusCode).toBe(200);
                 expect(response.body).toStrictEqual({
-                    managerIp: 'localhost',
                     username: 'test',
-                    appDataVersion: 4,
+                    appDataVersion: 600,
                     mode: 'main',
                     tenant: 'default_tenant',
                     appData: {}
