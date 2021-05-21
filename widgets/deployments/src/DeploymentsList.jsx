@@ -51,7 +51,7 @@ export default class DeploymentsList extends React.Component {
     selectDeployment = item => {
         const { toolbox, widget } = this.props;
         if (widget.configuration.clickToDrillDown) {
-            toolbox.drillDown(widget, 'deployment', { deploymentId: item.id }, item.id);
+            toolbox.drillDown(widget, 'deployment', { deploymentId: item.id }, item.display_name);
         } else {
             const oldSelectedDeploymentId = toolbox.getContext().getValue('deploymentId');
             toolbox.getContext().setValue('deploymentId', item.id === oldSelectedDeploymentId ? null : item.id);

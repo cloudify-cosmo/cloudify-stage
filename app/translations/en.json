@@ -672,6 +672,9 @@
                 }
             }
         },
+        "executions": {
+            "noExecutionFound": "There are no executions that could be shown."
+        },
         "deploymentsView": {
             "name": "Deployments view",
             "description": "A complete deployments view – Deployment list, map view, and detailed deployment info",
@@ -800,11 +803,11 @@
                 "loadingSites": "Loading sites",
                 "errorLoadingSites": "Error loading sites",
                 "tooltip": {
-                  "status": {
-                    "good": "Good",
-                    "inProgress": "In progress",
-                    "requiresAttention": "Requires attention"
-                  }
+                    "status": {
+                        "good": "Good",
+                        "inProgress": "In progress",
+                        "requiresAttention": "Requires attention"
+                    }
                 }
             },
             "drillDown": {
