@@ -3,7 +3,7 @@ import { CyHttpMessages } from 'cypress/types/net-stubbing';
 import {
     AttributesFilterRuleOperators,
     FilterRule,
-    FilterRuleAttributes,
+    FilterRuleAttribute,
     FilterRuleOperator,
     FilterRuleOperators,
     FilterRuleRowType,
@@ -738,7 +738,7 @@ describe('Filters widget', () => {
                 expect(Object.values(valuesSupportedByUi)).to.include.all.members(valuesAvailableInAPI);
             }
 
-            verifyValuesAreSupported(FilterRuleAttributes, without(operations.allowed_filter_rules_attrs, 'schedules'));
+            verifyValuesAreSupported(FilterRuleAttribute, without(operations.allowed_filter_rules_attrs, 'schedules'));
             verifyValuesAreSupported(
                 AttributesFilterRuleOperators,
                 without(operations.filter_rules_attributes_operators, 'is_not_empty')
