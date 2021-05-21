@@ -80,6 +80,10 @@ Stage.defineWidget({
 
         if (singleExecutionView) {
             const lastExecution = _.chain(data.items).sortBy('started_at').last().value();
+            if (!lastExecution) {
+                const { ErrorMessage } = Stage.Basic;
+                return <ErrorMessage error={Stage.i18n.t('widgets.executions.noExecutionFound')} />;
+            }
             return <SingleExecution execution={lastExecution} toolbox={toolbox} />;
         }
 
