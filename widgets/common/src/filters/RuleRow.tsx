@@ -34,7 +34,7 @@ const RuleRow: FunctionComponent<RuleRowProps> = ({ onChange, onRemove, removabl
     }
 
     function onOperatorChange(newOperator: FilterRuleOperator) {
-        onChange({ ...rule, operator: newOperator, values: defaultValues });
+        onChange({ ...rule, operator: newOperator, values: defaultValues } as FilterRule);
     }
 
     function onKeyChange(newKey: string) {

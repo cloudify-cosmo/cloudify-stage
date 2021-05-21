@@ -1,17 +1,21 @@
 /** @see https://docs.cloudify.co/api/v3.1/#the-filter-resource */
-export interface FilterRule {
-    key: FilterRuleAttribute | LabelKey;
+interface LabelFilterRule {
+    key: LabelKey;
     values: string[];
-    operator: FilterRuleOperator;
-    type: FilterRuleType;
-}
-
-export enum FilterRuleAttribute {
-    Blueprint = 'blueprint_id',
-    SiteName = 'site_name',
-    Creator = 'created_by'
+    operator: LabelRuleOperator;
+    type: FilterRuleType.Label;
 }
 type LabelKey = string;
+
+interface AttributeFilterRule {
+    key: FilterRuleAttribute;
+    values: string[];
+    operator: AttributeRuleOperator;
+    type: FilterRuleType.Attribute;
+}
+export type FilterRuleAttribute = Omit<FilterRuleRowType, FilterRuleRowType.Label>;
+
+export type FilterRule = LabelFilterRule | AttributeFilterRule;
 
 enum CommonRuleOperator {
     AnyOf = 'any_of',
@@ -31,7 +35,9 @@ enum AttributesOnlyRuleOperator {
     EndsWith = 'ends_with'
 }
 
-export type FilterRuleOperator = CommonRuleOperator | LabelsOnlyRuleOperator | AttributesOnlyRuleOperator;
+type LabelRuleOperator = CommonRuleOperator | LabelsOnlyRuleOperator;
+type AttributeRuleOperator = CommonRuleOperator | AttributesOnlyRuleOperator;
+export type FilterRuleOperator = LabelRuleOperator | AttributeRuleOperator;
 
 export enum FilterRuleType {
     Label = 'label',
