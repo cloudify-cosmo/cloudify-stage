@@ -4,10 +4,11 @@
 
   "pages": [
     "adminDash",
-    "catalog",
+    "marketplace",
     "blueprints-community",
-    "deploy",
-    "systemResources",
-    "logs"
+    "services",
+    "environments",
+    "executions",
+    "resources"
   ]
 }
