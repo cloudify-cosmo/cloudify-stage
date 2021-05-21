@@ -13,7 +13,7 @@
             },
             {
                 "title": "Console pages",
-                "content": "Here you can click on a page to work with a specific group of Cloudify actions, such as <strong>Local Blueprints</strong> or <strong>Deployments</strong>. Administrators can customize the pages to help streamline your work.",
+                "content": "Here you can click on a page to work with a specific group of Cloudify actions, such as <strong>Blueprints</strong>. Administrators can customize the pages to help streamline your work.",
                 "target": ".pages .pageMenuItem",
                 "placement": "right"
             },
@@ -66,6 +66,7 @@
     {
         "name": "Cloudify Console Dashboard",
         "id": "dashboard",
+        "startAt": "/page/dashboard",
         "steps": [
             {
                 "title": "The Cloudify Console Dashboard",
@@ -96,14 +97,6 @@
                 "content": "These are the executions that the tenant is implementing currently.",
                 "target": ".widget.executionsWidget",
                 "placement": "top"
-            },
-            {
-                "title": "Check out another tour",
-                "content": "Now that you know how to use the dashboard, <strong>check out another tour</strong> to see what else you can do with the Cloudify Console.",
-                "target": "button#toursButton",
-                "placement": "top",
-                "xOffset": -270,
-                "arrowOffset": 270
             }
         ]
     }
