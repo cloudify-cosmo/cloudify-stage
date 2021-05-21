@@ -108,9 +108,11 @@ describe('Create Deployment Button widget', () => {
         });
     };
 
-    const verifyRedirectionToDeploymentPage = deploymentId => {
-        cy.location('pathname').should('have.string', `deployment/${deploymentId}`);
-        cy.get('.breadcrumb .pageTitle').should('have.text', deploymentId);
+    const verifyRedirectionToDeploymentPage = (deploymentId, deploymentName) => {
+        cy.location('href').then(url =>
+            expect(JSON.parse(new URL(url).searchParams.get('c'))[1].context.deploymentId).to.eq(deploymentId)
+        );
+        cy.get('.breadcrumb .pageTitle').should('have.text', deploymentName);
     };
 
     it('opens deployment modal', () => {
@@ -128,7 +130,7 @@ describe('Create Deployment Button widget', () => {
         const deploymentName = `${resourcePrefix}onlyDeploy`;
         const deploymentId = `${deploymentName}Id`;
         deployBlueprint(deploymentId, deploymentName, false);
-        verifyRedirectionToDeploymentPage(deploymentId);
+        verifyRedirectionToDeploymentPage(deploymentId, deploymentName);
         verifyBlueprintDeployed(testBlueprintId, deploymentId);
     });
 
@@ -137,7 +139,7 @@ describe('Create Deployment Button widget', () => {
         const deploymentId = `${deploymentName}Id`;
         deployBlueprint(deploymentId, deploymentName, true);
         verifyBlueprintDeployed(testBlueprintId, deploymentId);
-        verifyRedirectionToDeploymentPage(deploymentId);
+        verifyRedirectionToDeploymentPage(deploymentId, deploymentName);
         verifyDeploymentInstallStarted(deploymentId);
     });
 
