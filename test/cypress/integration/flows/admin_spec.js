@@ -7,7 +7,7 @@ describe('Admin flow', () => {
 
     it('manages groups, tenants and users', () => {
         cy.log('Creating tenant');
-        cy.openTab('Tenant Management', 'System Setup');
+        cy.visitPage('System Setup').openTab('Tenant Management');
         cy.contains('.tenantsWidget button', 'Add').click();
         cy.get('.modal input').type(tenantName);
         cy.contains('.modal button', 'Add').click();

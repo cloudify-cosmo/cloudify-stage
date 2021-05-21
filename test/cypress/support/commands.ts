@@ -341,8 +341,7 @@ const commands = {
         });
     },
 
-    openTab: (tabName: string, pageName?: string) => {
-        if (pageName) cy.visitPage(pageName);
+    openTab: (tabName: string) => {
         cy.get('.tabular.menu').contains(tabName).click();
     },
 

@@ -31,7 +31,7 @@ describe('User flow', () => {
         });
         cy.get('.modal', { timeout: 2 * 60 * 1000 }).should('not.exist');
 
-        cy.openTab('Secrets', 'Resources');
+        cy.visitPage('Resources').openTab('Secrets');
         createSecret('some_key_1');
         createSecret('some_key_4');
         createSecret('some_key_7');
