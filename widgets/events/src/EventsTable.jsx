@@ -286,7 +286,7 @@ EventsTable.propTypes = {
                 deployment_id: PropTypes.string,
                 error_causes: ErrorCausesPropType,
                 event_type: PropTypes.string,
-                id: PropTypes.string,
+                id: PropTypes.number,
                 isSelected: PropTypes.bool,
                 level: PropTypes.string,
                 message: PropTypes.string,
