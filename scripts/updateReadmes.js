@@ -40,7 +40,8 @@ function downloadFile(widget, url) {
 
 function updateTitle(widget, content) {
     return new Promise(resolve => {
-        const titleRegex = /---[^]*title: ([\w ]*)[^]*---/m;
+        // NOTE: [^]* are used instead of .* to capture line breaks
+        const titleRegex = /---[^]*title: ([^\n]*)[^]*---/m;
         let newContent = content;
 
         log(widget, 'Updating title:');
