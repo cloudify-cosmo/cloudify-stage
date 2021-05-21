@@ -334,6 +334,13 @@ const commands = {
             .then(commandResult => commandResult.stdout);
     },
 
+    setDropdownValue: (fieldName: string, value: string) => {
+        cy.contains('.field', fieldName).within(() => {
+            cy.get('input').type(value);
+            cy.get(`div[option-value="${value}"]`).click();
+        });
+    },
+
     mockEnabledGettingStarted: () => mockGettingStarted(true),
 
     mockDisabledGettingStarted: () => mockGettingStarted(false)
