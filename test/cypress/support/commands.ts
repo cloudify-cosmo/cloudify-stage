@@ -334,6 +334,13 @@ const commands = {
             .then(commandResult => commandResult.stdout);
     },
 
+    setDropdownValue: (fieldName: string, value: string) => {
+        cy.contains('.field', fieldName).within(() => {
+            cy.get('input').type(value);
+            cy.get(`div[option-value="${value}"]`).click();
+        });
+    },
+
     openTab: (tabName: string, pageName?: string) => {
         if (pageName) cy.visitPage(pageName);
         cy.get('.tabular.menu').contains(tabName).click();
