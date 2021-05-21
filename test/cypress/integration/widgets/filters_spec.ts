@@ -1,10 +1,14 @@
+import { without } from 'lodash';
 import { CyHttpMessages } from 'cypress/types/net-stubbing';
 import {
+    AttributesFilterRuleOperators,
     FilterRule,
+    FilterRuleAttribute,
     FilterRuleOperator,
     FilterRuleOperators,
     FilterRuleRowType,
-    FilterRuleType
+    FilterRuleType,
+    LabelsFilterRuleOperators
 } from '../../../../widgets/common/src/filters/types';
 
 describe('Filters widget', () => {
@@ -718,6 +722,29 @@ describe('Filters widget', () => {
                 populateFilterRuleRows(testFilterName, testFilterRules);
                 saveAndVerifyFilter(testFilterName, testFilterRules);
             });
+        });
+    });
+
+    it('should use only filter parameters supported by the API', () => {
+        cy.cfyRequest('/searches/deployments.help.json').then(response => {
+            const {
+                operations: [operations]
+            } = response.body;
+
+            function verifyValuesAreSupported(
+                valuesSupportedByUi: Record<string, any>,
+                valuesAvailableInAPI: string[]
+            ) {
+                expect(Object.values(valuesSupportedByUi)).to.include.all.members(valuesAvailableInAPI);
+            }
+
+            verifyValuesAreSupported(FilterRuleAttribute, without(operations.allowed_filter_rules_attrs, 'schedules'));
+            verifyValuesAreSupported(
+                AttributesFilterRuleOperators,
+                without(operations.filter_rules_attributes_operators, 'is_not_empty')
+            );
+            verifyValuesAreSupported(LabelsFilterRuleOperators, operations.filter_rules_labels_operators);
+            verifyValuesAreSupported(FilterRuleType, operations.filter_rules_types);
         });
     });
 });
