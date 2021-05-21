@@ -28,18 +28,6 @@ describe('Tours', () => {
         it('Cloudify Console Dashboard tour', () => {
             checkTourSteps('Cloudify Console Dashboard', 6);
         });
-
-        it('Initial Manager Setup tour', () => {
-            checkTourSteps('Initial Manager Setup', 10);
-        });
-
-        it('From Blueprint to Execution tour', () => {
-            checkTourSteps('From Blueprint to Execution', 8);
-        });
-
-        it('Day-two Processes tour', () => {
-            checkTourSteps('Day-two Processes', 7);
-        });
     });
 
     describe('for non-admin users provide', () => {
