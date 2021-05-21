@@ -841,7 +841,7 @@ describe('Deployments View widget', () => {
             cy.get('.modal').within(() => {
                 cy.wait('@searchWorkflows');
 
-                cy.get('.selection.dropdown').click().find('input').type('restart{enter}');
+                cy.setDropdownValue('Workflow', 'restart');
                 cy.contains('button', 'Run').click();
 
                 cy.wait('@createDeploymentGroup')
@@ -865,7 +865,7 @@ describe('Deployments View widget', () => {
             const labelKey = 'label_key';
             const labelValue = 'label_value';
             cy.get('.modal').within(() => {
-                cy.contains('.field', 'Blueprint').find('input').type(`${blueprintName}{enter}`);
+                cy.setDropdownValue('Blueprint', blueprintName);
 
                 cy.contains('.field', 'Labels').find('.selection').click();
                 cy.get('div[name=labelKey] > input').type(labelKey);
