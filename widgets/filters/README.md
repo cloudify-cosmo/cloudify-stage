@@ -18,7 +18,9 @@ The actions column contains the following action icons:
 * **Edit filter** available only to `user` filters, opens the **filter rules edit** modal (see [defining filter rules](/#defining-filter-rules) for details on rule definition)
 * **Delete filter** available only to non-`system` filters, removes the selected filter (see note below)
 
-Filters used as a default filter in the Deployments View widget cannot be deleted.
+Filters used as a default filter in
+[the Deployments View widget](/working_with/console/widgets/deploymentsView)
+cannot be deleted.
 When trying to delete such a filter a modal shows up describing where (on which page and in which widget) and by whom (by which user) the filter is used.
 
 ![filters delete]( /images/ui/widgets/filters-delete.png ) 
