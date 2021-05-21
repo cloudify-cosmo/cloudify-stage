@@ -22,7 +22,7 @@ describe('User flow', () => {
     }
 
     it('installs deployment from scratch', () => {
-        cy.visitPage('Cloudify Catalog');
+        cy.visitPage('Marketplace');
         cy.get('.pluginsCatalogWidget').within(() => {
             cy.contains('tr', 'Utilities').find('button').click();
         });
@@ -31,14 +31,14 @@ describe('User flow', () => {
         });
         cy.get('.modal', { timeout: 2 * 60 * 1000 }).should('not.exist');
 
-        cy.visitPage('System Resources');
+        cy.openTab('Secrets', 'Resources');
         createSecret('some_key_1');
         createSecret('some_key_4');
         createSecret('some_key_7');
         createSecret('some_key_10');
         createSecret('openstack_config__lab1_tenantA');
 
-        cy.visitPage('Local Blueprints');
+        cy.visitPage('Blueprints');
         cy.contains('Upload').click();
         cy.get('input[name=blueprintUrl]')
             .type(

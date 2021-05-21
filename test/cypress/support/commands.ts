@@ -334,6 +334,11 @@ const commands = {
             .then(commandResult => commandResult.stdout);
     },
 
+    openTab: (tabName: string, pageName?: string) => {
+        if (pageName) cy.visitPage(pageName);
+        cy.get('.tabular.menu').contains(tabName).click();
+    },
+
     mockEnabledGettingStarted: () => mockGettingStarted(true),
 
     mockDisabledGettingStarted: () => mockGettingStarted(false)
