@@ -36,7 +36,7 @@ const RuleValueInput: FunctionComponent<RuleValueInputProps> = ({
                     {...commonProps}
                     onKeyChange={onKeyChange}
                     onValueChange={onValuesChange}
-                    labelKey={rule.key}
+                    labelKey={rule.key as string}
                     labelValue={rule.values}
                 />
             );
