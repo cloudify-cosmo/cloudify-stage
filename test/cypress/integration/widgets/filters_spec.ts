@@ -1,3 +1,4 @@
+import { without } from 'lodash';
 import { CyHttpMessages } from 'cypress/types/net-stubbing';
 import {
     AttributesFilterRuleOperators,
@@ -725,42 +726,25 @@ describe('Filters widget', () => {
     });
 
     it('should use only filter parameters supported by the API', () => {
-        enum RuleParameters {
-            RuleAttributes = 'attributes',
-            RuleAttributesOperators = 'attributesOperators',
-            RuleLabelsOperators = 'labelsOperators',
-            RuleTypes = 'types'
-        }
-        type SupportedByObject = Record<RuleParameters, string[]>;
-
-        function getEnumValues(enumType: any) {
-            return Object.keys(enumType).map(enumValue => enumType[enumValue]);
-        }
-
         cy.cfyRequest('/searches/deployments.help.json').then(response => {
             const {
                 operations: [operations]
             } = response.body;
 
-            const supportedByApi: SupportedByObject = {
-                [RuleParameters.RuleAttributes]: operations.allowed_filter_rules_attrs,
-                [RuleParameters.RuleAttributesOperators]: operations.filter_rules_attributes_operators,
-                [RuleParameters.RuleLabelsOperators]: operations.filter_rules_labels_operators,
-                [RuleParameters.RuleTypes]: operations.filter_rules_types
-            };
+            function verifyValuesAreSupported(
+                valuesSupportedByUi: Record<string, any>,
+                valuesAvailableInAPI: string[]
+            ) {
+                expect(Object.values(valuesSupportedByUi)).to.include.all.members(valuesAvailableInAPI);
+            }
 
-            const supportedByUi: SupportedByObject = {
-                [RuleParameters.RuleAttributes]: getEnumValues(FilterRuleAttributes),
-                [RuleParameters.RuleAttributesOperators]: getEnumValues(AttributesFilterRuleOperators),
-                [RuleParameters.RuleLabelsOperators]: getEnumValues(LabelsFilterRuleOperators),
-                [RuleParameters.RuleTypes]: getEnumValues(FilterRuleType)
-            };
-
-            getEnumValues(RuleParameters).forEach(parameter => {
-                expect(supportedByApi[parameter as RuleParameters]).to.include.all.members(
-                    supportedByUi[parameter as RuleParameters]
-                );
-            });
+            verifyValuesAreSupported(FilterRuleAttributes, without(operations.allowed_filter_rules_attrs, 'schedules'));
+            verifyValuesAreSupported(
+                AttributesFilterRuleOperators,
+                without(operations.filter_rules_attributes_operators, 'is_not_empty')
+            );
+            verifyValuesAreSupported(LabelsFilterRuleOperators, operations.filter_rules_labels_operators);
+            verifyValuesAreSupported(FilterRuleType, operations.filter_rules_types);
         });
     });
 });
