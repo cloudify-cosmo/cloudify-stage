@@ -14,12 +14,11 @@ const commands = {
         cy.location('pathname').should('be.equal', pathname);
 
         cy.location('search').then(queryString => {
-            const urlSearchParams = new URLSearchParams(queryString).get('c');
-            if (urlSearchParams)
-                expect(last(JSON.parse(urlSearchParams))).to.deep.equal({
-                    context,
-                    pageName
-                });
+            const urlSearchParams = new URLSearchParams(queryString).get('c') as string;
+            expect(last(JSON.parse(urlSearchParams))).to.deep.equal({
+                context,
+                pageName
+            });
         });
     }
 };
