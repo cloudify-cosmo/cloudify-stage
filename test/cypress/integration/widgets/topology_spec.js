@@ -1,27 +1,32 @@
 import _ from 'lodash';
+import { waitUntilEmpty } from '../../support/resource_commons';
 
 describe('Topology', () => {
     const resourcePrefix = 'topology_test_';
-    const blueprintId = `${resourcePrefix}bp`;
-    const deploymentId = `${resourcePrefix}dep`;
-    const blueprintFile = 'blueprints/topology.zip';
 
     before(() => {
-        cy.activate('valid_trial_license').usePageMock('topology', { pollingTime: 5 }).mockLogin();
-
-        cy.deletePlugins()
-            .uploadPluginFromCatalog('Terraform')
-            .deleteDeployments(resourcePrefix, true)
-            .deleteBlueprints(resourcePrefix, true)
-            .uploadBlueprint(blueprintFile, blueprintId)
-            .then(() => cy.deployBlueprint(blueprintId, deploymentId));
-    });
-
-    beforeEach(() => {
-        cy.interceptSp('GET', '/summary').as('getSummary');
+        cy.activate('valid_trial_license').usePageMock('topology', { pollingTime: 5 });
     });
 
     describe('presents data for selected', () => {
+        const blueprintId = `${resourcePrefix}bp`;
+        const deploymentId = `${resourcePrefix}dep`;
+        const blueprintFile = 'blueprints/topology.zip';
+
+        before(() => {
+            cy.mockLogin()
+                .deletePlugins()
+                .uploadPluginFromCatalog('Terraform')
+                .deleteDeployments(resourcePrefix, true)
+                .deleteBlueprints(resourcePrefix, true)
+                .uploadBlueprint(blueprintFile, blueprintId)
+                .then(() => cy.deployBlueprint(blueprintId, deploymentId));
+        });
+
+        beforeEach(() => {
+            cy.interceptSp('GET', '/summary').as('getSummary');
+        });
+
         it('blueprint', () => {
             cy.setBlueprintContext(blueprintId);
 
@@ -104,6 +109,64 @@ describe('Topology', () => {
             cy.contains('foo1').should('not.exist');
             cy.contains('foo2').should('not.exist');
             cy.get('.connectorContainer').should('have.length', 1);
+        });
+    });
+
+    describe('provides support for component nodes', () => {
+        const appDeployment = 'app';
+        const componentDeployment = 'component';
+
+        before(() => {
+            const blueprintFile = 'blueprints/component_app.zip';
+            const componentBlueprint = 'component';
+            const componentBlueprintYamlFile = 'component.yaml';
+            const appBlueprint = 'app';
+            const appBlueprintYamlFile = 'app.yaml';
+
+            // NOTE: Do not mock login to load all currently available pages and test drill-down to site
+            cy.login()
+                .deleteDeployments('component', true)
+                .deleteDeployments('app', true)
+                .deleteBlueprints(componentBlueprint, true)
+                .deleteBlueprints(appBlueprint, true)
+                .uploadBlueprint(blueprintFile, componentBlueprint, componentBlueprintYamlFile)
+                .uploadBlueprint(blueprintFile, appBlueprint, appBlueprintYamlFile)
+                .then(() => cy.deployBlueprint(appBlueprint, appDeployment))
+                .then(() => cy.executeWorkflow('app', 'install'));
+        });
+
+        beforeEach(() => {
+            cy.interceptSp('GET', '/nodes').as('fetchNodes');
+            cy.interceptSp('GET', '/node-instances').as('fetchNodeInstances');
+            cy.interceptSp('GET', '/deployments').as('fetchDeployments');
+
+            cy.visitPage('Test Page');
+            cy.setDeploymentContext('app');
+            waitUntilEmpty(`deployments?id=${appDeployment}&deployment_status=in_progress`);
+
+            cy.wait('@fetchNodes');
+            cy.wait('@fetchNodeInstances');
+            cy.wait('@fetchDeployments');
+            cy.waitUntilPageLoaded();
+
+            cy.get('.scrollGlass').click();
+        });
+
+        it('allows to open component deployment page', () => {
+            cy.get('.nodeTopologyButton').eq(0).as('goToDeploymentPageIcon').click();
+
+            cy.location('pathname').should('be.equal', `/console/page/test_page_deployment/${componentDeployment}`);
+            cy.location('search').then(queryString =>
+                expect(JSON.parse(new URLSearchParams(queryString).get('c'))[1]).to.deep.equal({
+                    context: { deploymentId: componentDeployment },
+                    pageName: componentDeployment
+                })
+            );
+        });
+
+        it('allows to expand component node', () => {
+            cy.get('.nodeTopologyButton').eq(1).as('expandCollapseComponentIcon').click({ force: true });
+            cy.contains('host(component').should('be.visible');
         });
     });
 });
