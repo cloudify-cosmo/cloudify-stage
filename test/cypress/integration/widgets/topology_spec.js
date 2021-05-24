@@ -135,7 +135,7 @@ describe('Topology', () => {
 
         beforeEach(() => {
             cy.visitPage('Test Page');
-            cy.setDeploymentContext('app');
+            cy.setDeploymentContext(appDeploymentId);
             waitUntilEmpty(`deployments?id=${appDeploymentId}&deployment_status=in_progress`);
             cy.waitUntilPageLoaded();
 
