@@ -125,8 +125,6 @@ describe('Topology', () => {
 
             // NOTE: Do not mock login to load all currently available pages and test drill-down to site
             cy.login()
-                .deleteDeployment(componentDeploymentId, true)
-                .deleteDeployment(appDeploymentId, true)
                 .deleteBlueprint(componentBlueprintId, true)
                 .deleteBlueprint(appBlueprintId, true)
                 .uploadBlueprint(blueprintFile, componentBlueprintId, componentBlueprintYamlFile)
