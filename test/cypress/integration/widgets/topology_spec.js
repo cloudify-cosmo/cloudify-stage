@@ -113,40 +113,32 @@ describe('Topology', () => {
     });
 
     describe('provides support for component nodes', () => {
-        const appDeployment = 'app';
-        const componentDeployment = 'component';
+        const appDeploymentId = 'app';
+        const componentDeploymentId = 'component';
 
         before(() => {
             const blueprintFile = 'blueprints/component_app.zip';
-            const componentBlueprint = 'component';
+            const componentBlueprintId = 'component';
             const componentBlueprintYamlFile = 'component.yaml';
-            const appBlueprint = 'app';
+            const appBlueprintId = 'app';
             const appBlueprintYamlFile = 'app.yaml';
 
             // NOTE: Do not mock login to load all currently available pages and test drill-down to site
             cy.login()
-                .deleteDeployments('component', true)
-                .deleteDeployments('app', true)
-                .deleteBlueprints(componentBlueprint, true)
-                .deleteBlueprints(appBlueprint, true)
-                .uploadBlueprint(blueprintFile, componentBlueprint, componentBlueprintYamlFile)
-                .uploadBlueprint(blueprintFile, appBlueprint, appBlueprintYamlFile)
-                .then(() => cy.deployBlueprint(appBlueprint, appDeployment))
-                .then(() => cy.executeWorkflow('app', 'install'));
+                .deleteDeployment(componentDeploymentId, true)
+                .deleteDeployment(appDeploymentId, true)
+                .deleteBlueprint(componentBlueprintId, true)
+                .deleteBlueprint(appBlueprintId, true)
+                .uploadBlueprint(blueprintFile, componentBlueprintId, componentBlueprintYamlFile)
+                .uploadBlueprint(blueprintFile, appBlueprintId, appBlueprintYamlFile)
+                .then(() => cy.deployBlueprint(appBlueprintId, appDeploymentId))
+                .then(() => cy.executeWorkflow(appDeploymentId, 'install'));
         });
 
         beforeEach(() => {
-            cy.interceptSp('GET', '/nodes').as('fetchNodes');
-            cy.interceptSp('GET', '/node-instances').as('fetchNodeInstances');
-            cy.interceptSp('GET', '/deployments').as('fetchDeployments');
-
             cy.visitPage('Test Page');
             cy.setDeploymentContext('app');
-            waitUntilEmpty(`deployments?id=${appDeployment}&deployment_status=in_progress`);
-
-            cy.wait('@fetchNodes');
-            cy.wait('@fetchNodeInstances');
-            cy.wait('@fetchDeployments');
+            waitUntilEmpty(`deployments?id=${appDeploymentId}&deployment_status=in_progress`);
             cy.waitUntilPageLoaded();
 
             cy.get('.scrollGlass').click();
@@ -155,18 +147,18 @@ describe('Topology', () => {
         it('allows to open component deployment page', () => {
             cy.get('.nodeTopologyButton').eq(0).as('goToDeploymentPageIcon').click();
 
-            cy.location('pathname').should('be.equal', `/console/page/test_page_deployment/${componentDeployment}`);
+            cy.location('pathname').should('be.equal', `/console/page/test_page_deployment/${componentDeploymentId}`);
             cy.location('search').then(queryString =>
                 expect(JSON.parse(new URLSearchParams(queryString).get('c'))[1]).to.deep.equal({
-                    context: { deploymentId: componentDeployment },
-                    pageName: componentDeployment
+                    context: { deploymentId: componentDeploymentId },
+                    pageName: componentDeploymentId
                 })
             );
         });
 
         it('allows to expand component node', () => {
             cy.get('.nodeTopologyButton').eq(1).as('expandCollapseComponentIcon').click({ force: true });
-            cy.contains('host(component').should('be.visible');
+            cy.contains(`host(${componentDeploymentId}`).should('be.visible');
         });
     });
 });
