@@ -284,9 +284,7 @@ const commands = {
                                 ]
                             }
                         ]
-                    },
-                    { id: 'admin_operations' },
-                    { id: 'deployments' }
+                    }
                 ]
             }
         });

@@ -52,11 +52,7 @@ describe('Cluster Status', () => {
         cy.get('table.servicesData').within(() => {
             cy.get('button.refreshButton').should('not.have.class', 'loading');
             checkServicesStatus('Degraded', 'OK', 'OK');
-
-            cy.get('tbody tr:nth-child(1)').click();
         });
-
-        cy.location('pathname').should('be.equal', '/console/page/admin_operations');
     });
 
     it('shows correct data', () => {

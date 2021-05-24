@@ -20,7 +20,7 @@ function getMarkerColor(statusesSummary: DeploymentStatusesSummary) {
     } else if (statusesSummary[DeploymentStatuses.InProgress] > 0) {
         color = 'yellow';
     } else if (statusesSummary[DeploymentStatuses.Good] > 0) {
-        color = 'green';
+        color = 'blue';
     }
 
     return color;
