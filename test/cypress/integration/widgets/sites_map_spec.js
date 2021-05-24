@@ -30,16 +30,8 @@ describe('Sites Map', () => {
         cy.get('.leaflet-marker-icon').should('have.length', 1).click();
         cy.get('.leaflet-popup .leaflet-popup-content')
             .should('be.visible')
-            .within(() => {
-                cy.get('h5.header').should('have.text', testSite.name).click();
-                cy.get('.deploymentState').first().click();
-            });
-        cy.location('pathname').should('be.equal', '/console/page/deployments');
-        cy.location('search').then(queryString =>
-            expect(JSON.parse(new URLSearchParams(queryString).get('c'))).to.deep.equal([
-                { context: { siteName: testSite.name } }
-            ])
-        );
+            .find('h5.header')
+            .should('have.text', testSite.name);
 
         cy.log('Add second site');
         const secondSite = { name: 'Bergen', location: '60.389433, 5.332489', visibility: 'private' };
@@ -48,5 +40,20 @@ describe('Sites Map', () => {
 
         cy.log('Verify second site is present on the map');
         cy.get('.leaflet-marker-icon').should('have.length', 2);
+    });
+
+    it('opens a page showing list of deployments per selected site', () => {
+        // NOTE: Do not mock login to load all currently available pages and test drill-down to site
+        cy.login();
+        cy.get('.leaflet-marker-icon:nth-of-type(1)').click();
+        cy.get('.leaflet-popup .leaflet-popup-content').find('.deploymentState').first().click();
+
+        cy.location('pathname').should('be.equal', `/console/page/console_deployments/Site:%20${testSite.name}`);
+        cy.location('search').then(queryString =>
+            expect(JSON.parse(new URLSearchParams(queryString).get('c'))).to.deep.equal([
+                { context: {} },
+                { context: { siteName: testSite.name }, pageName: `Site: ${testSite.name}` }
+            ])
+        );
     });
 });
