@@ -10,12 +10,16 @@ declare global {
 }
 
 const commands = {
-    verifyLocation: (pathname: string, context: Record<string, any>[]) => {
+    verifyLocation: (pathname: string, context: Record<string, any>[], pageName: string) => {
         cy.location('pathname').should('be.equal', pathname);
 
         cy.location('search').then(queryString => {
             const urlSearchParams = new URLSearchParams(queryString).get('c');
-            if (urlSearchParams) expect(last(JSON.parse(urlSearchParams))).to.deep.equal(context);
+            if (urlSearchParams)
+                expect(last(JSON.parse(urlSearchParams))).to.deep.equal({
+                    context,
+                    pageName
+                });
         });
     }
 };

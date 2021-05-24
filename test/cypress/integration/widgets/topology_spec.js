@@ -129,8 +129,8 @@ describe('Topology', () => {
                 .deleteBlueprint(appBlueprintId, true)
                 .uploadBlueprint(blueprintFile, componentBlueprintId, componentBlueprintYamlFile)
                 .uploadBlueprint(blueprintFile, appBlueprintId, appBlueprintYamlFile)
-                .then(() => cy.deployBlueprint(appBlueprintId, appDeploymentId))
-                .then(() => cy.executeWorkflow(appDeploymentId, 'install'));
+                .deployBlueprint(appBlueprintId, appDeploymentId)
+                .executeWorkflow(appDeploymentId, 'install');
         });
 
         beforeEach(() => {
@@ -145,14 +145,15 @@ describe('Topology', () => {
         it('allows to open component deployment page', () => {
             cy.get('.nodeTopologyButton').eq(0).as('goToDeploymentPageIcon').click();
 
-            cy.verifyLocation(`/console/page/test_page_deployment/${componentDeploymentId}`, {
-                context: { deploymentId: componentDeploymentId },
-                pageName: componentDeploymentId
-            });
+            cy.verifyLocation(
+                `/console/page/test_page_deployment/${componentDeploymentId}`,
+                { deploymentId: componentDeploymentId },
+                componentDeploymentId
+            );
         });
 
         it('allows to expand component node', () => {
-            cy.get('.nodeTopologyButton').eq(1).as('expandCollapseComponentIcon').click({ force: true });
+            cy.get('.nodeTopologyButton').eq(1).as('expandCollapseComponentIcon').click();
             cy.contains(`host(${componentDeploymentId}`).should('be.visible');
         });
     });

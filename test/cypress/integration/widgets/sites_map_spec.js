@@ -34,7 +34,8 @@ describe('Sites Map', () => {
                 cy.get('h5.header').should('have.text', testSite.name).click();
                 cy.get('.deploymentState').first().click();
             });
-        cy.verifyLocation('/console/page/deployments', { context: { siteName: testSite.name } });
+        // TODO(RD-2440): This verification will be moved within RD-2440
+        cy.verifyLocation('/console/page/deployments', { siteName: testSite.name }, testSite.name);
 
         cy.log('Add second site');
         const secondSite = { name: 'Bergen', location: '60.389433, 5.332489', visibility: 'private' };
