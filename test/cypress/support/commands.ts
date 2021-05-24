@@ -15,6 +15,7 @@ import _ from 'lodash';
 import type { RouteHandler, StringMatcher } from 'cypress/types/net-stubbing';
 import { addCommands, GetCypressChainableFromCommands } from 'cloudify-ui-common/cypress/support';
 
+import './asserts';
 import './blueprints';
 import './deployments';
 import './executions';

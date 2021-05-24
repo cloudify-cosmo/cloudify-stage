@@ -112,7 +112,7 @@ describe('Topology', () => {
         });
     });
 
-    describe('provides support for component nodes', () => {
+    describe.only('provides support for component nodes', () => {
         const appDeploymentId = 'app';
         const componentDeploymentId = 'component';
 
@@ -145,13 +145,10 @@ describe('Topology', () => {
         it('allows to open component deployment page', () => {
             cy.get('.nodeTopologyButton').eq(0).as('goToDeploymentPageIcon').click();
 
-            cy.location('pathname').should('be.equal', `/console/page/test_page_deployment/${componentDeploymentId}`);
-            cy.location('search').then(queryString =>
-                expect(JSON.parse(new URLSearchParams(queryString).get('c'))[1]).to.deep.equal({
-                    context: { deploymentId: componentDeploymentId },
-                    pageName: componentDeploymentId
-                })
-            );
+            cy.verifyLocation(`/console/page/test_page_deployment/${componentDeploymentId}`, {
+                context: { deploymentId: componentDeploymentId },
+                pageName: componentDeploymentId
+            });
         });
 
         it('allows to expand component node', () => {
