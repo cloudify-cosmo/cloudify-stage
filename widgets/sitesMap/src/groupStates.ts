@@ -18,7 +18,7 @@ const groupStates: Record<DeploymentStatus, GroupState> = {
         description: 'deployments in which active workflow execution is performed'
     },
     [DeploymentStatuses.RequiresAttention]: {
-        name: 'failed',
+        name: 'requires attention',
         icon: 'exclamation',
         colorSUI: 'red',
         severity: 4,
