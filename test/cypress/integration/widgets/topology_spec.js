@@ -112,7 +112,7 @@ describe('Topology', () => {
         });
     });
 
-    describe.only('provides support for component nodes', () => {
+    describe('provides support for component nodes', () => {
         const appDeploymentId = 'app';
         const componentDeploymentId = 'component';
 
