@@ -49,6 +49,10 @@ describe('Sites Map', () => {
         cy.get('.leaflet-marker-icon:nth-of-type(1)').click();
         cy.get('.leaflet-popup .leaflet-popup-content').find('.deploymentState').first().click();
 
-        cy.verifyLocation(`/console/page/console_deployments/Site:%20${testSite.name}`, { siteName: testSite.name }, `Site: ${testSite.name}`);
+        cy.verifyLocation(
+            `/console/page/console_deployments/Site:%20${testSite.name}`,
+            { siteName: testSite.name },
+            `Site: ${testSite.name}`
+        );
     });
 });
