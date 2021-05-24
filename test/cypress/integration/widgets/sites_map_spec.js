@@ -36,7 +36,8 @@ describe('Sites Map', () => {
         cy.log('Add second site');
         const secondSite = { name: 'Bergen', location: '60.389433, 5.332489', visibility: 'private' };
         cy.createSite(secondSite);
-        refreshDashboardPage();
+        // NOTE: In the CI for some reason refreshDashboardPage does not work here
+        cy.reload();
 
         cy.log('Verify second site is present on the map');
         cy.get('.leaflet-marker-icon').should('have.length', 2);
