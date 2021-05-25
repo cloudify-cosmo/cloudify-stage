@@ -9,7 +9,6 @@ const passport = require('passport');
 const { db } = require('../db/Connection');
 
 const ServerSettings = require('../serverSettings');
-const config = require('../config').get();
 
 router.use(passport.authenticate('token', { session: false }));
 router.use(bodyParser.json());
