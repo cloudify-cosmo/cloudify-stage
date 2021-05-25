@@ -2,7 +2,6 @@ Cypress.Commands.add('getExecutions', (filter = '') => {
     cy.cfyRequest(`/executions${filter ? `?${filter}` : ''}`, 'GET');
 });
 
-// NOTE: This function was not tested. Remove this comment once tested and used in test cases.
 Cypress.Commands.add('executeWorkflow', (deploymentId, workflowId, parameters = {}, force = false) => {
     cy.cfyRequest('/executions', 'POST', null, {
         deployment_id: deploymentId,

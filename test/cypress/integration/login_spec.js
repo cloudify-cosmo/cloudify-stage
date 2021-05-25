@@ -10,7 +10,7 @@ describe('Login', () => {
     it('succeeds and redirects when provided credentials are valid, license is active and redirect query parameter is specified', () => {
         cy.activate();
 
-        const redirectUrl = '/console/page/deployments';
+        const redirectUrl = '/console/page/test_page';
         cy.visit(`/console/login?redirect=${redirectUrl}`);
 
         cy.usePageMock().login();

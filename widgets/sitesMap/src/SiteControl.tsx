@@ -11,7 +11,7 @@ interface SiteControlProps {
 }
 const SiteControl: FunctionComponent<SiteControlProps> = ({ site, toolbox }) => {
     function goToDeploymentsPage(siteName: string) {
-        toolbox.goToPage('deployments', { siteName });
+        toolbox.drillDown(toolbox.getWidget(), 'deploy', { siteName }, `Site: ${siteName}`);
     }
 
     const { Grid } = Stage.Basic;

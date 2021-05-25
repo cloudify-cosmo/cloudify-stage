@@ -1,4 +1,4 @@
-# Deployment Outputs
+# Deployment Outputs/Capabilities
 
 Presents the names and values of the outputs and capabilities of the deployment currently set in the context.
 
