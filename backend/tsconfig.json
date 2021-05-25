@@ -1,4 +1,11 @@
 {
     "extends": "../node_modules/cloudify-ui-common/configs/tsconfig.base.json",
-    "exclude": ["node_modules", "test"]
+    "exclude": ["node_modules", "test", "dist"],
+    "include": ["**/*", "../conf/**/*.json"],
+    "compilerOptions": {
+        "rootDir": "..",
+        "composite": true,
+        "outDir": "dist",
+        "noEmit": false
+    }
 }
