@@ -1,9 +1,12 @@
 {
-    "extends": "../node_modules/cloudify-ui-common/configs/tsconfig.base.json",
+    "extends": "../node_modules/cloudify-ui-common/configs/tsconfig.composite.json",
     "compilerOptions": {
         "types": ["react", "react-dom", "moment", "lodash"],
-        "plugins": [{ "name": "typescript-styled-plugin" }]
+        "plugins": [{ "name": "typescript-styled-plugin" }],
+        "outDir": "dist",
+        "composite": true
     },
-    "include": ["**/*"],
-    "files": ["../app/typings/stage-api.d.ts"]
+    "files": ["../app/typings/stage-api.d.ts"],
+    "include": ["**/*", "**/*.json"],
+    "references": [{ "path": "../app" }]
 }

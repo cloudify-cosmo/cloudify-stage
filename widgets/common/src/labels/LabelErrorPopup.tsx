@@ -3,7 +3,7 @@ import type { ComponentProps, FunctionComponent } from 'react';
 const { Popup } = Stage.Basic;
 
 interface LabelsErrorPopupProps {
-    content: ComponentProps<typeof Popup>['content'];
+    content: ComponentProps<typeof Stage.Basic.Popup>['content'];
 }
 
 const LabelsErrorPopup: FunctionComponent<LabelsErrorPopupProps> = ({ content }) => {

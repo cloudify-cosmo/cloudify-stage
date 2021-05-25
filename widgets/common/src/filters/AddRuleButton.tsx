@@ -4,7 +4,7 @@ import { getTranslation } from './common';
 const { Button } = Stage.Basic;
 
 interface AddRuleButtonProps {
-    onClick: ComponentProps<typeof Button>['onClick'];
+    onClick: ComponentProps<typeof Stage.Basic.Button>['onClick'];
 }
 
 const AddRuleButton: FunctionComponent<AddRuleButtonProps> = ({ onClick }) => {

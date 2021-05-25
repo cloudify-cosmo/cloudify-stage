@@ -3,8 +3,8 @@ import type { ComponentProps, FunctionComponent } from 'react';
 const { Button } = Stage.Basic;
 
 interface LabelAddButtonProps {
-    disabled: ComponentProps<typeof Button>['disabled'];
-    onClick: ComponentProps<typeof Button>['onClick'];
+    disabled: ComponentProps<typeof Stage.Basic.Button>['disabled'];
+    onClick: ComponentProps<typeof Stage.Basic.Button>['onClick'];
     onEnterPress: () => void;
 }
 

@@ -1,6 +1,4 @@
-/**
- * Created by jakubniezgoda on 15/04/2019.
- */
+export {};
 
 const PropertiesPropType = PropTypes.objectOf(
     PropTypes.shape({

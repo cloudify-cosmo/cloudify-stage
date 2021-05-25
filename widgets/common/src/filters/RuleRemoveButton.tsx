@@ -4,7 +4,7 @@ import { getTranslation } from './common';
 const { Button } = Stage.Basic;
 
 interface RuleRemoveButtonProps {
-    onClick: ComponentProps<typeof Button>['onClick'];
+    onClick: ComponentProps<typeof Stage.Basic.Button>['onClick'];
 }
 
 const removeButtonLabel = getTranslation('buttons.removeRule');
