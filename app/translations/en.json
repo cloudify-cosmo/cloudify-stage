@@ -606,7 +606,7 @@
                 }
             },
             "readmes": {
-                "linksBasePath": "https://docs.cloudify.co/5.1",
+                "linksBasePath": "https://docs.cloudify.co/6.0.0",
                 "params": {
                     "cfy_composer_link": "/developer/composer/",
                     "cfy_composer_name": "Cloudify Composer",
