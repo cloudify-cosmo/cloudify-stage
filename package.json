@@ -24,7 +24,7 @@
     "build:coverage": "cross-env COVERAGE_CHECK=1 npm run build",
     "check-types": "npm run check-types:backend && npm run check-types:frontend && npm run check-types:widgets && npm run check-types:cypress",
     "//": "The backend and app directories are type-checked when compiling their respective test projects, so there's no need to type-check them individually",
-    "check-types:backend": "tsc -p backend/test --checkJs false",
+    "check-types:backend": "tsc --build backend backend/test",
     "check-types:frontend": "tsc -p test/jest --checkJs false",
     "check-types:widgets": "tsc -p widgets --checkJs false",
     "check-types:cypress": "tsc -p test/cypress --checkJs false",
