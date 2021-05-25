@@ -78,9 +78,10 @@ function validateHugoParams(widget, content) {
 
 function convertHugoShortcodes(widget, content) {
     return new Promise(resolve => {
-        const noteRegex = /{{%\s*note.*%}}([^]*){{%\s*\/note\s*%}}/gm;
-        const tipRegex = /{{%\s*tip.*%}}([^]*){{%\s*\/tip\s*%}}/gm;
-        const warningRegex = /{{%\s*warning.*%}}([^]*){{%\s*\/warning\s*%}}/gm;
+        // NOTE: See http://www.regular-expressions.info/repeat.html#lazy for an explanation of `*?`
+        const noteRegex = /{{%\s*note.*%}}([^]*?){{%\s*\/note\s*%}}/gm;
+        const tipRegex = /{{%\s*tip.*%}}([^]*?){{%\s*\/tip\s*%}}/gm;
+        const warningRegex = /{{%\s*warning.*%}}([^]*?){{%\s*\/warning\s*%}}/gm;
 
         // relref
         const relrefRegex = /{{<\s*relref\s*"(\S*)"\s*>}}/gm;
