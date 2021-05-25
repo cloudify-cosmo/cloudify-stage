@@ -1,7 +1,5 @@
-/**
- * Created by pposel on 09/02/2017.
- */
-
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-nocheck Not converted to TS yet
 import _ from 'lodash';
 import log from 'loglevel';
 import 'isomorphic-fetch';
@@ -29,23 +27,23 @@ export default class External {
         this.data = data;
     }
 
-    doGet(url, params, parseResponse, headers) {
+    doGet(url, params?: any, parseResponse?: any, headers?: any) {
         return this.ajaxCall(url, 'get', params, null, parseResponse, headers);
     }
 
-    doPost(url, params, data, parseResponse, headers, withCredentials) {
+    doPost(url, params, data?: any, parseResponse?: any, headers?: any, withCredentials?: any) {
         return this.ajaxCall(url, 'post', params, data, parseResponse, headers, null, withCredentials);
     }
 
-    doDelete(url, params, data, parseResponse, headers) {
+    doDelete(url, params?: any, data?: any, parseResponse?: any, headers?: any) {
         return this.ajaxCall(url, 'delete', params, data, parseResponse, headers);
     }
 
-    doPut(url, params, data, parseResponse, headers) {
+    doPut(url, params, data?: any, parseResponse?: any, headers?: any) {
         return this.ajaxCall(url, 'put', params, data, parseResponse, headers);
     }
 
-    doPatch(url, params, data, parseResponse, headers) {
+    doPatch(url, params, data, parseResponse?: any, headers?: any) {
         return this.ajaxCall(url, 'PATCH', params, data, parseResponse, headers);
     }
 
@@ -53,7 +51,7 @@ export default class External {
         return this.ajaxCall(url, 'get', null, null, null, null, fileName);
     }
 
-    doUpload(url, params, files, method, parseResponse = true, compressFile = false) {
+    doUpload(url, params, files, method?: any, parseResponse = true, compressFile = false) {
         const actualUrl = this.buildActualUrl(url, params);
 
         log.debug(`Uploading file for url: ${url}`);
@@ -257,12 +255,12 @@ export default class External {
     }
 
     // eslint-disable-next-line class-methods-use-this
-    buildActualUrl(url, data) {
+    protected buildActualUrl(url, data) {
         const queryString = data ? (url.indexOf('?') > 0 ? '&' : '?') + $.param(data, true) : '';
         return `${url}${queryString}`;
     }
 
-    buildHeaders() {
+    protected buildHeaders() {
         if (!this.data) {
             return {};
         }
