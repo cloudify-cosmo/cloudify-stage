@@ -3,7 +3,9 @@ import { waitUntilEmpty } from '../../support/resource_commons';
 
 describe('Topology', () => {
     const resourcePrefix = 'topology_test_';
-    const getNodeTopologyButton = (index, options = {}) => cy.get(`.nodeTopologyButton:eq(${index})`, options);
+    const getNodeTopologyButton = index => cy.get(`.nodeTopologyButton:eq(${index})`);
+    const waitForDeploymentToBeInstalled = deploymentId =>
+        waitUntilEmpty(`deployments?id=${deploymentId}&deployment_status=in_progress`);
 
     before(() => {
         cy.activate('valid_trial_license').usePageMock('topology', { pollingTime: 5 });
@@ -21,7 +23,8 @@ describe('Topology', () => {
                 .deleteDeployments(resourcePrefix, true)
                 .deleteBlueprints(resourcePrefix, true)
                 .uploadBlueprint(blueprintFile, blueprintId)
-                .then(() => cy.deployBlueprint(blueprintId, deploymentId));
+                .deployBlueprint(blueprintId, deploymentId)
+                .executeWorkflow(deploymentId, 'install');
         });
 
         beforeEach(() => {
@@ -38,7 +41,7 @@ describe('Topology', () => {
         });
 
         it('deployment', () => {
-            const getTerraformDetailsButton = (options = {}) => getNodeTopologyButton(0, options);
+            const getTerraformDetailsButton = () => getNodeTopologyButton(0);
             const getTerraformNodeExpandButton = () => getNodeTopologyButton(1);
             cy.setDeploymentContext(deploymentId);
 
@@ -46,17 +49,11 @@ describe('Topology', () => {
             cy.contains('#gridContainer > #gridSvg > #gridContent > .nodeContainer > .title', 'terraform');
             cy.contains('#gridContainer > #gridSvg > #gridContent > .nodeContainer > .title', 'cloud_resources');
 
-            cy.log('Install the deployment');
-            cy.executeWorkflow(deploymentId, 'install');
-
-            const installDeploymentTimeout = 60 * 1000;
-
             cy.log('Check terraform module details');
+            waitForDeploymentToBeInstalled(deploymentId);
             cy.contains('#gridContainer > #gridSvg > #gridContent > .nodeContainer > .title', 'terraform');
             cy.contains('#gridContainer > #gridSvg > #gridContent > .nodeContainer > .title', 'cloud_resources');
-            getTerraformDetailsButton({ timeout: installDeploymentTimeout })
-                .should('not.have.css', 'visibility', 'hidden')
-                .click({ force: true });
+            getTerraformDetailsButton().should('not.have.css', 'visibility', 'hidden').click({ force: true });
             cy.get('.modal td:eq(0)').should('have.text', 'null_resource');
             cy.get('.modal td:eq(2)').should('have.text', 'provider["registry.terraform.io/hashicorp/null"]');
             cy.get('.modal tr:eq(1) td:eq(1)').should('have.text', 'foo1');
@@ -141,9 +138,8 @@ describe('Topology', () => {
         beforeEach(() => {
             cy.visitPage('Test Page');
             cy.setDeploymentContext(appDeploymentId);
-            waitUntilEmpty(`deployments?id=${appDeploymentId}&deployment_status=in_progress`);
+            waitForDeploymentToBeInstalled(appDeploymentId);
             cy.waitUntilPageLoaded();
-
             cy.get('.scrollGlass').click();
         });
 
@@ -159,6 +155,7 @@ describe('Topology', () => {
 
         it('allows to expand component node', () => {
             getComponentNodeExpandButton().click({ force: true });
+
             cy.contains(`host(${componentDeploymentId}`).should('be.visible');
         });
     });
