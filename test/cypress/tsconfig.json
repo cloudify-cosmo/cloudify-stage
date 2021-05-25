@@ -1,5 +1,5 @@
 {
-    "extends": "../../node_modules/cloudify-ui-common/configs/tsconfig.base.json",
+    "extends": "../../node_modules/cloudify-ui-common/configs/tsconfig.composite.json",
     "compilerOptions": {
         // Some files do not import/export anything, so cannot use isolatedModules
         "isolatedModules": false,
@@ -12,9 +12,13 @@
 
         // Cypress forces using inlineSourceMap
         "sourceMap": false,
-        "types": ["cypress"]
+        "types": ["cypress"],
+        "rootDir": "../..",
+        "outDir": "dist",
+        "composite": true
     },
+    "include": ["**/*", "**/*.json"],
+    "files": ["../../app/typings/stage-api.d.ts", "../../babel.config.js"],
     // Some Stage.Common types used in tests are defined in widgets/common
-    "include": ["**/*", "../../widgets/common/**/*"],
-    "files": ["../../app/typings/stage-api.d.ts"]
+    "references": [{ "path": "../../app" }, { "path": "../../widgets" }]
 }

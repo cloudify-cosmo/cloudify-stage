@@ -27,7 +27,7 @@
     "check-types:backend": "tsc --build backend backend/test",
     "check-types:frontend": "tsc --build app test/jest",
     "check-types:widgets": "tsc --build widgets",
-    "check-types:cypress": "tsc -p test/cypress --checkJs false",
+    "check-types:cypress": "tsc --build test/cypress",
     "coverageCheck": "cp coverage-jest/coverage-final.json .nyc_output && nyc report --reporter lcov --report-dir coverage-overall && nyc check-coverage",
     "devServer": "cross-env NODE_ENV=development node devServer.js",
     "docCheck": "scripts/checkDocs.sh",

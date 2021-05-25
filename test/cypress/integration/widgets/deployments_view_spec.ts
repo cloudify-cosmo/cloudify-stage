@@ -5,6 +5,7 @@ import type { SystemLabel } from '../../support/deployments';
 
 import { exampleBlueprintUrl } from '../../support/resource_urls';
 import { FilterRuleOperators, FilterRuleType } from '../../../../widgets/common/src/filters/types';
+import '../../../../widgets/common/src/deploymentsView';
 
 describe('Deployments View widget', () => {
     const widgetId = 'deploymentsView';
