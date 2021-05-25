@@ -1,11 +1,10 @@
 {
-    "extends": "../../node_modules/cloudify-ui-common/configs/tsconfig.base.json",
+    "extends": "../../node_modules/cloudify-ui-common/configs/tsconfig.composite.json",
     "compilerOptions": {
         "types": ["jest"],
         "baseUrl": "..",
         "outDir": "../dist/backend/test",
-        "composite": true,
-        "noEmit": false
+        "composite": true
     },
     "references": [{ "path": "../" }]
 }
