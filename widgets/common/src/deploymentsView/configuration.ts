@@ -53,8 +53,7 @@ export const sharedDefinition = getSharedDefinition({
     categories: [Stage.GenericConfig.CATEGORY.DEPLOYMENTS],
 
     isReact: true,
-    // TODO(RD-1532): enable readme after filling it in
-    hasReadme: false,
+    hasReadme: true,
     hasStyle: false,
     permission: Stage.GenericConfig.WIDGET_PERMISSION('deploymentsView')
 });
