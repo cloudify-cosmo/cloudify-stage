@@ -184,6 +184,12 @@ Deployments visible in the table can be filtered in 3 ways:
     default filter picked in the widget's configuration. The local filter will be
     reset when viewing the widget again.
 
+
+<div class="ui message info">
+[The Resource Filter widget](/working_with/console/widgets/filter)
+does not influence the filtering performed in the Deployments View widget.
+</div>
+
 ### Deployments Map
 
 Clicking the _Map_ button in the top part of the widget will open an additional
