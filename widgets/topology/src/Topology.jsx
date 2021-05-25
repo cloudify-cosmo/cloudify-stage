@@ -314,7 +314,6 @@ export default class Topology extends React.Component {
     goToDeploymentPage(nodeDeploymentId) {
         const { toolbox } = this.props;
         toolbox.getContext().setValue('deploymentId', nodeDeploymentId);
-        toolbox.goToPage('deployments');
         toolbox.drillDown(toolbox.getWidget(), 'deployment', { deploymentId: nodeDeploymentId }, nodeDeploymentId);
     }
 

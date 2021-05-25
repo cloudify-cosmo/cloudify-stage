@@ -49,12 +49,10 @@ describe('Sites Map', () => {
         cy.get('.leaflet-marker-icon:nth-of-type(1)').click();
         cy.get('.leaflet-popup .leaflet-popup-content').find('.deploymentState').first().click();
 
-        cy.location('pathname').should('be.equal', `/console/page/console_deployments/Site:%20${testSite.name}`);
-        cy.location('search').then(queryString =>
-            expect(JSON.parse(new URLSearchParams(queryString).get('c'))).to.deep.equal([
-                { context: {} },
-                { context: { siteName: testSite.name }, pageName: `Site: ${testSite.name}` }
-            ])
+        cy.verifyLocation(
+            `/console/page/console_deployments/Site:%20${testSite.name}`,
+            { siteName: testSite.name },
+            `Site: ${testSite.name}`
         );
     });
 });
