@@ -3,6 +3,7 @@ import { waitUntilEmpty } from '../../support/resource_commons';
 
 describe('Topology', () => {
     const resourcePrefix = 'topology_test_';
+    const getNodeTopologyButton = (index, options = {}) => cy.get(`.nodeTopologyButton:eq(${index})`, options);
 
     before(() => {
         cy.activate('valid_trial_license').usePageMock('topology', { pollingTime: 5 });
@@ -37,6 +38,8 @@ describe('Topology', () => {
         });
 
         it('deployment', () => {
+            const getTerraformDetailsButton = (options = {}) => getNodeTopologyButton(0, options);
+            const getTerraformNodeExpandButton = () => getNodeTopologyButton(1);
             cy.setDeploymentContext(deploymentId);
 
             cy.log('Check Topology widget');
@@ -51,7 +54,7 @@ describe('Topology', () => {
             cy.log('Check terraform module details');
             cy.contains('#gridContainer > #gridSvg > #gridContent > .nodeContainer > .title', 'terraform');
             cy.contains('#gridContainer > #gridSvg > #gridContent > .nodeContainer > .title', 'cloud_resources');
-            cy.get('.nodeTopologyButton:eq(0)', { timeout: installDeploymentTimeout })
+            getTerraformDetailsButton({ timeout: installDeploymentTimeout })
                 .should('not.have.css', 'visibility', 'hidden')
                 .click({ force: true });
             cy.get('.modal td:eq(0)').should('have.text', 'null_resource');
@@ -100,12 +103,12 @@ describe('Topology', () => {
                 });
             cy.contains('Close').click();
 
-            cy.get('.nodeTopologyButton:eq(1)').click({ force: true });
+            getTerraformNodeExpandButton().click({ force: true });
             cy.contains('.nodeContainer', 'foo1').contains('.plannedInstances', 2);
             cy.contains('.nodeContainer', 'foo2').contains('.plannedInstances', 1);
             cy.get('.connectorContainer').should('have.length', 2);
 
-            cy.get('.nodeTopologyButton:eq(1)').click({ force: true });
+            getTerraformNodeExpandButton().click({ force: true });
             cy.contains('foo1').should('not.exist');
             cy.contains('foo2').should('not.exist');
             cy.get('.connectorContainer').should('have.length', 1);
@@ -115,6 +118,8 @@ describe('Topology', () => {
     describe('provides support for component nodes', () => {
         const appDeploymentId = 'app';
         const componentDeploymentId = 'component';
+        const getGoToDeploymentPageButton = () => getNodeTopologyButton(0);
+        const getComponentNodeExpandButton = () => getNodeTopologyButton(1);
 
         before(() => {
             const blueprintFile = 'blueprints/component_app.zip';
@@ -143,7 +148,7 @@ describe('Topology', () => {
         });
 
         it('allows to open component deployment page', () => {
-            cy.get('.nodeTopologyButton').eq(0).as('goToDeploymentPageIcon').click();
+            getGoToDeploymentPageButton().click({ force: true });
 
             cy.verifyLocation(
                 `/console/page/test_page_deployment/${componentDeploymentId}`,
@@ -153,7 +158,7 @@ describe('Topology', () => {
         });
 
         it('allows to expand component node', () => {
-            cy.get('.nodeTopologyButton').eq(1).as('expandCollapseComponentIcon').click();
+            getComponentNodeExpandButton().click({ force: true });
             cy.contains(`host(${componentDeploymentId}`).should('be.visible');
         });
     });
