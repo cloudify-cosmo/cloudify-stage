@@ -1,0 +1,11 @@
+{
+    "references": [
+        { "path": "app" },
+        { "path": "backend" },
+        { "path": "backend/test" },
+        { "path": "test/jest" },
+        { "path": "test/cypress" },
+        { "path": "widgets" }
+    ],
+    "files": []
+}
