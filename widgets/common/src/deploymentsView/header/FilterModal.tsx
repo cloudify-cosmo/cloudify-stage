@@ -19,7 +19,7 @@ const FilterModal: FunctionComponent<FilterModalProps> = ({
 }) => {
     const { i18n } = Stage;
     const { ApproveButton, CancelButton, Icon, Modal, UnsafelyTypedForm, UnsafelyTypedFormField } = Stage.Basic;
-    // @ts-ignore Property 'DynamicDropdown' does not exist on type 'typeof Common'
+    // @ts-expect-error DynamicDropdown is not converted to TS yet
     const { DynamicDropdown } = Stage.Common;
     const { useResettableState } = Stage.Hooks;
 
@@ -49,7 +49,7 @@ const FilterModal: FunctionComponent<FilterModalProps> = ({
     }
 
     return (
-        <Modal open={open} onClose={onCancel}>
+        <Modal open={open} onClose={onCancel} size="large">
             <Modal.Header>
                 <Icon name="filter" /> {i18n.t(`${i18nPrefix}.header.filter.modal.header`)}
             </Modal.Header>

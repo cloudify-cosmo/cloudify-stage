@@ -1,10 +1,14 @@
+import { without } from 'lodash';
 import { CyHttpMessages } from 'cypress/types/net-stubbing';
 import {
+    AttributesFilterRuleOperators,
     FilterRule,
+    FilterRuleAttribute,
     FilterRuleOperator,
     FilterRuleOperators,
     FilterRuleRowType,
-    FilterRuleType
+    FilterRuleType,
+    LabelsFilterRuleOperators
 } from '../../../../widgets/common/src/filters/types';
 
 describe('Filters widget', () => {
@@ -372,7 +376,8 @@ describe('Filters widget', () => {
         const deploymentId = `${testPrefix}_deployment`;
 
         before(() => {
-            cy.deleteDeployments(testPrefix)
+            cy.deleteDeploymentsFilters(filterName)
+                .deleteDeployments(testPrefix)
                 .deleteBlueprints(testPrefix)
                 .uploadBlueprint('blueprints/empty.zip', blueprintId)
                 .deployBlueprint(blueprintId, deploymentId)
@@ -483,9 +488,11 @@ describe('Filters widget', () => {
         }
 
         function isLabelValueOperator(operator: FilterRuleOperator) {
-            return ([FilterRuleOperators.AnyOf, FilterRuleOperators.NotAnyOf] as FilterRuleOperator[]).includes(
-                operator
-            );
+            return ([
+                FilterRuleOperators.AnyOf,
+                FilterRuleOperators.NotAnyOf,
+                FilterRuleOperators.IsNot
+            ] as FilterRuleOperator[]).includes(operator);
         }
         function isFreeTextValueOperator(operator: FilterRuleOperator) {
             return ([
@@ -580,7 +587,7 @@ describe('Filters widget', () => {
 
         const ruleRowTests: RuleRowTest[] = [
             {
-                name: 'of type "label" with operators "any_of" and "not_any_of"',
+                name: 'of type "label" with operators "any_of", "not_any_of" and "is_not"',
                 testFilterName: `${filterName}_label_1`,
                 testFilterRules: [
                     {
@@ -598,6 +605,14 @@ describe('Filters widget', () => {
                         operator: FilterRuleOperators.NotAnyOf,
                         newKey: true,
                         newValues: ['silver']
+                    },
+
+                    {
+                        type: FilterRuleType.Label,
+                        key: 'infra',
+                        values: ['aws', 'gcp'],
+                        operator: FilterRuleOperators.IsNot,
+                        newKey: false
                     }
                 ]
             },
@@ -707,6 +722,29 @@ describe('Filters widget', () => {
                 populateFilterRuleRows(testFilterName, testFilterRules);
                 saveAndVerifyFilter(testFilterName, testFilterRules);
             });
+        });
+    });
+
+    it('should use only filter parameters supported by the API', () => {
+        cy.cfyRequest('/searches/deployments.help.json').then(response => {
+            const {
+                operations: [operations]
+            } = response.body;
+
+            function verifyValuesAreSupported(
+                valuesSupportedByUi: Record<string, any>,
+                valuesAvailableInAPI: string[]
+            ) {
+                expect(Object.values(valuesSupportedByUi)).to.include.all.members(valuesAvailableInAPI);
+            }
+
+            verifyValuesAreSupported(FilterRuleAttribute, without(operations.allowed_filter_rules_attrs, 'schedules'));
+            verifyValuesAreSupported(
+                AttributesFilterRuleOperators,
+                without(operations.filter_rules_attributes_operators, 'is_not_empty')
+            );
+            verifyValuesAreSupported(LabelsFilterRuleOperators, operations.filter_rules_labels_operators);
+            verifyValuesAreSupported(FilterRuleType, operations.filter_rules_types);
         });
     });
 });

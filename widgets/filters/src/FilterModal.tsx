@@ -57,7 +57,7 @@ const FilterModal: FunctionComponent<FilterModalProps> = ({
     const markRulesFormErrors = !isEmpty(errors);
 
     return (
-        <Modal open onClose={onCancel}>
+        <Modal open onClose={onCancel} size="large">
             <Modal.Header>
                 <Icon name="filter" /> {i18n.t(i18nHeaderKey, { filterId: initialFilter?.id })}
             </Modal.Header>

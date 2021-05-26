@@ -48,9 +48,8 @@ describe('Deployments View widget', () => {
 
     before(() => {
         cy.activate()
-            .deleteDeployments(specPrefix, true)
             .deleteSites(exampleSiteName)
-            .deleteBlueprints(blueprintName, true)
+            .deleteBlueprint(blueprintName, true)
             .uploadBlueprint(blueprintUrl, blueprintName)
             .deployBlueprint(blueprintName, deploymentName, { webserver_port: 9123 })
             .createSite({ name: exampleSiteName, location: '53.77509462534224, 20.473709106445316' })
@@ -108,6 +107,10 @@ describe('Deployments View widget', () => {
         openRunWorkflowModal: () => {
             cy.contains('Bulk Actions').click();
             cy.contains('Run Workflow').click();
+        },
+        openDeployOnModal: () => {
+            cy.contains('Bulk Actions').click();
+            cy.contains('Deploy On').click();
         }
     };
 
@@ -502,6 +505,26 @@ describe('Deployments View widget', () => {
             });
         });
 
+        it('should keep the map open when drilling down and going back up', () => {
+            useEnvironmentsWidget();
+
+            getDeploymentsMapToggleButton().click();
+            getDeploymentsViewMap().should('exist');
+
+            cy.log('Drill down to the environments of app-env');
+            getDeploymentsViewTable().contains('app-env').click();
+            getDeploymentsViewDetailsPane().within(() => {
+                getSubenvironmentsButton().click();
+            });
+            getBreadcrumbs().contains('app-env [Environments]');
+            getDeploymentsViewMap().should('exist');
+
+            cy.log('Go back to the parent environment');
+            getBreadcrumbs().contains('Test Page').click();
+            getDeploymentsViewTable().contains('app-env').click();
+            getDeploymentsViewMap().should('exist');
+        });
+
         it('should allow deleting a deployment without redirecting to the parent page', () => {
             const tempDeploymentId = `${specPrefix}_temp_deployment_to_remove`;
             const parentDeploymentId = getDeploymentFullName('app-env');
@@ -524,6 +547,25 @@ describe('Deployments View widget', () => {
 
             getDeploymentsViewTable().within(() => cy.contains(tempDeploymentId).should('not.exist'));
             getBreadcrumbs().contains(parentDeploymentId);
+        });
+
+        it('should refresh the drill-down buttons on an interval', () => {
+            useDeploymentsViewWidget({ configurationOverrides: { customPollingTime: 1 } });
+
+            cy.getSearchInput().type(deploymentName);
+
+            getDeploymentsViewDetailsPane().within(() => {
+                getSubservicesButton().contains('0');
+
+                cy.interceptSp('GET', `${deploymentName}?all_sub_deployments=false`, req =>
+                    req.reply(res => {
+                        res.body.sub_services_count = 50;
+                    })
+                ).as('deploymentDetails');
+                cy.wait('@deploymentDetails');
+
+                getSubservicesButton().contains('50');
+            });
         });
     });
 
@@ -590,6 +632,17 @@ describe('Deployments View widget', () => {
             getDeploymentsMapTooltip().within(callback);
             getMarker().trigger('mouseout', { force: ignoreMarkerNotInView });
         };
+        function selectDeploymentInTableAndVerifyMapSelection(name: string) {
+            const getSelectedMarker = () => cy.get('path.test__map-selected-marker');
+
+            getDeploymentsViewTable().contains(name).click();
+            getDeploymentsViewMap().within(() => {
+                // NOTE: need to `force` events, since the selection circle is covered by a marker image
+                // and Cypress would not interact with the circle underneath
+                withinMarkerTooltip(getSelectedMarker, () => cy.contains(name), { ignoreMarkerNotInView: true });
+            });
+        }
+        const getDeploymentMarkerIcons = () => cy.get('.leaflet-marker-icon');
 
         it('should be toggled upon clicking the button', () => {
             useDeploymentsViewWidget();
@@ -602,7 +655,7 @@ describe('Deployments View widget', () => {
                 .should('have.attr', 'title', 'Close map');
             cy.getSearchInput().type(siteNames.london);
             getDeploymentsViewMap().within(() => {
-                cy.get('.leaflet-marker-icon').should('have.length', 1);
+                getDeploymentMarkerIcons().should('have.length', 1);
                 withinMarkerTooltip(
                     () => getMarkerByImageSuffix(MarkerImageSuffix.Red),
                     () => cy.contains(getSiteDeploymentName(siteNames.london))
@@ -627,7 +680,7 @@ describe('Deployments View widget', () => {
             });
 
             getDeploymentsViewMap().within(() => {
-                cy.get('.leaflet-marker-icon').should('be.visible').and('have.length', 3);
+                getDeploymentMarkerIcons().should('be.visible').and('have.length', 3);
 
                 const getTooltipSubenvironments = () => cy.get('i.icon.object.group').parent();
                 const getTooltipSubservices = () => cy.get('i.icon.cube').parent();
@@ -683,18 +736,7 @@ describe('Deployments View widget', () => {
                 configurationOverrides: { mapOpenByDefault: true }
             });
 
-            const getSelectedMarker = () => cy.get('path.test__map-selected-marker');
-
             cy.getSearchInput().type(mapDeploymentsPrefix);
-
-            function selectDeploymentInTableAndVerifyMapSelection(name: string) {
-                getDeploymentsViewTable().contains(name).click();
-                getDeploymentsViewMap().within(() => {
-                    // NOTE: need to `force` events, since the selection circle is covered by a marker image
-                    // and Cypress would not interact with the circle underneath
-                    withinMarkerTooltip(getSelectedMarker, () => cy.contains(name), { ignoreMarkerNotInView: true });
-                });
-            }
 
             selectDeploymentInTableAndVerifyMapSelection(getSiteDeploymentName(siteNames.london));
 
@@ -732,46 +774,125 @@ describe('Deployments View widget', () => {
                         });
                 });
         });
+
+        it('should cluster markers and always show the selected deployment marker outside the cluster', () => {
+            useDeploymentsViewWidget({
+                configurationOverrides: { mapOpenByDefault: true }
+            });
+
+            const zoomOut = () => cy.get('[aria-label="Zoom out"]').click();
+            cy.getSearchInput().type(mapDeploymentsPrefix);
+
+            selectDeploymentInTableAndVerifyMapSelection(getSiteDeploymentName(siteNames.london));
+            cy.log('Check if there is a cluster');
+            getDeploymentsViewMap().within(() => {
+                zoomOut();
+                getDeploymentMarkerIcons().should('have.length', 2);
+                cy.contains('.leaflet-marker-icon', 2).click();
+                cy.log('Check that the cluster is zoomed-in into');
+                getDeploymentMarkerIcons().should('have.length', 3);
+                zoomOut();
+                getDeploymentMarkerIcons().should('have.length', 2);
+            });
+
+            selectDeploymentInTableAndVerifyMapSelection(getSiteDeploymentName(siteNames.warsaw));
+            cy.log('Check that the selected deployment is not clustered');
+            getDeploymentsViewMap().within(() => {
+                getDeploymentMarkerIcons().should('have.length', 3);
+            });
+        });
     });
 
     describe('bulk actions', () => {
-        const siteFilterName = `in-${exampleSiteName}`;
-        const secondDeploymentWithExampleSiteName = `${specPrefix}deployment_2`;
+        const siteName = 'Krakow';
+        const siteFilterName = `in-${siteName}`;
+        const deploymentIds = Array.from({ length: 2 }).map((_, i) => `${specPrefix}_${siteName}_deployment_${i + 1}`);
 
         before(() => {
-            cy.deleteDeploymentsFilter(siteFilterName, { ignoreFailure: true })
-                .deployBlueprint(blueprintName, secondDeploymentWithExampleSiteName, { webserver_port: 9124 })
-                .setSite(secondDeploymentWithExampleSiteName, exampleSiteName)
+            cy.deleteSite(siteName, { ignoreFailure: true })
+                .createSite({ name: siteName })
+                .deleteDeploymentsFilter(siteFilterName, { ignoreFailure: true })
                 .createDeploymentsFilter(siteFilterName, [
                     {
                         type: FilterRuleType.Attribute,
                         key: 'site_name',
                         operator: FilterRuleOperators.AnyOf,
-                        values: [exampleSiteName]
+                        values: [siteName]
                     }
                 ]);
+            deploymentIds.forEach(deploymentId =>
+                cy
+                    .deployBlueprint(blueprintName, deploymentId, { webserver_port: 9124 })
+                    .setSite(deploymentId, siteName)
+            );
+        });
+
+        beforeEach(() => {
+            cy.interceptSp('PUT', '/deployment-groups/BATCH_ACTION_').as('createDeploymentGroup');
+            cy.interceptSp('POST', '/execution-groups').as('startExecutionGroup');
         });
 
         it('should allow to run workflow on filtered deployments', () => {
             cy.interceptSp('POST', '/searches/workflows').as('searchWorkflows');
-            cy.interceptSp('PUT', '/deployment-groups/BATCH_ACTION_').as('createDeploymentGroup');
-            cy.interceptSp('POST', '/execution-groups').as('startExecutionGroup');
 
-            useDeploymentsViewWidget();
-            widgetHeader.setFilter(siteFilterName);
+            useDeploymentsViewWidget({ configurationOverrides: { filterId: siteFilterName } });
             widgetHeader.openRunWorkflowModal();
 
             cy.get('.modal').within(() => {
                 cy.wait('@searchWorkflows');
 
-                cy.get('.selection.dropdown').click().find('input').type('restart{enter}');
+                cy.setDropdownValue('Workflow', 'restart');
                 cy.contains('button', 'Run').click();
 
                 cy.wait('@createDeploymentGroup')
                     .its('response.body.deployment_ids')
-                    .should('include.members', [deploymentName, secondDeploymentWithExampleSiteName]);
+                    .should('include.members', deploymentIds);
                 cy.wait('@startExecutionGroup').its('response.body.workflow_id').should('be.equal', 'restart');
             });
+
+            cy.contains('.modal', 'Group execution started').within(() => {
+                cy.contains('Go to Executions page');
+                cy.contains('Close').click();
+            });
+        });
+
+        it('should allow to create child deployments on filtered deployments', () => {
+            cy.interceptSp('POST', '/searches/deployments').as('searchDeployments');
+
+            useDeploymentsViewWidget({ configurationOverrides: { filterId: siteFilterName } });
+            widgetHeader.openDeployOnModal();
+
+            const labelKey = 'label_key';
+            const labelValue = 'label_value';
+            cy.get('.modal').within(() => {
+                cy.setDropdownValue('Blueprint', blueprintName);
+
+                cy.contains('.field', 'Labels').find('.selection').click();
+                cy.get('div[name=labelKey] > input').type(labelKey);
+                cy.get('div[name=labelValue] > input').type(labelValue);
+                cy.get('[aria-label=Add]').click();
+                cy.get('a.label').should('be.visible');
+
+                cy.contains('Deploy & Install').click();
+            });
+
+            cy.contains('.modal button', 'Execute').click();
+
+            cy.wait('@searchDeployments');
+            cy.wait('@createDeploymentGroup').then(({ request }) => {
+                expect(request.body.blueprint_id).to.eq(blueprintName);
+                expect(request.body.labels).to.deep.equal([{ [labelKey]: labelValue }]);
+                expect(request.body.new_deployments).to.deep.equal(
+                    deploymentIds.map(deploymentId => ({
+                        id: '{uuid}',
+                        display_name: '{blueprint_id}-{uuid}',
+                        labels: [{ 'csys-obj-parent': deploymentId }],
+                        runtime_only_evaluation: false,
+                        skip_plugins_validation: false
+                    }))
+                );
+            });
+            cy.wait('@startExecutionGroup').its('response.body.workflow_id').should('be.equal', 'install');
 
             cy.contains('.modal', 'Group execution started').within(() => {
                 cy.contains('Go to Executions page');

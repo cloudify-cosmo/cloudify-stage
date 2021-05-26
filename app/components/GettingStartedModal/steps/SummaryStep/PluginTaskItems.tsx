@@ -1,39 +1,47 @@
 import React from 'react';
-import i18n from 'i18next';
 
 import type { ReactNode } from 'react';
 
+import StageUtils from '../../../../utils/stageUtils';
 import PluginTaskItem from './PluginTaskItem';
-import { SuccessIcon, ErrorIcon } from '../../common/icons';
+import createTaskDescriptionGetter from './createTaskDescriptionGetter';
+import { ErrorDescription, SuccessDescription } from './descriptions';
 
 import type { PluginInstallationTask } from '../../installation/tasks';
+import type { TaskStatus } from '../../installation/process';
 
-export const InstalledPluginDescription = () => (
-    <>
-        <span>{i18n.t('gettingStartedModal.summary.pluginExistsMessageSuffix')}</span>
-        <SuccessIcon />
-    </>
-);
+const t = StageUtils.getT('gettingStartedModal.summary.plugin');
 
-export const RejectedPluginDescription = () => (
-    <>
-        <span>{i18n.t('gettingStartedModal.summary.pluginNotFoundMessageSuffix')}</span>
-        <ErrorIcon />
-    </>
-);
+export const PluginExistsDescription = () => <SuccessDescription message={t('alreadyInstalledMessageSuffix')} />;
+export const RejectedPluginDescription = () => <ErrorDescription message={t('notFoundMessageSuffix')} />;
 
 type Props = {
     tasks?: PluginInstallationTask[];
+    statuses?: Record<string, TaskStatus>;
     description: string | ReactNode;
 };
 
-const PluginTaskItems = ({ tasks, description }: Props) => (
-    <>
-        {tasks?.map(task => {
-            const taskName = task.version ? `${task.name} ${task.version}` : task.name;
-            return <PluginTaskItem key={taskName} icon={task.icon} name={taskName} description={description} />;
-        })}
-    </>
-);
+const PluginTaskItems = ({ tasks, statuses, description }: Props) => {
+    const getPluginTaskDescription = createTaskDescriptionGetter(
+        t('installationProgressMessageSuffix'),
+        t('installationDoneMessageSuffix'),
+        t('installationErrorMessageSuffix')
+    );
+    return (
+        <>
+            {tasks?.map(task => {
+                const taskName = task.version ? `${task.name} ${task.version}` : task.name;
+                return (
+                    <PluginTaskItem
+                        key={taskName}
+                        icon={task.icon}
+                        name={taskName}
+                        description={getPluginTaskDescription(task.name, statuses, description)}
+                    />
+                );
+            })}
+        </>
+    );
+};
 
 export default PluginTaskItems;

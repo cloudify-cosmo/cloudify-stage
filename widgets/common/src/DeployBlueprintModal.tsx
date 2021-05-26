@@ -23,18 +23,18 @@ const DeployBlueprintModal: FunctionComponent<DeployBlueprintModalProps> = ({ to
             .catch((err: { message: string }) => Promise.reject(InputsUtils.getErrorObject(err.message)));
     }
 
-    function waitForDeploymentIsCreated(deploymentId: string) {
+    function waitForDeploymentIsCreated(deploymentId: string, { deploymentName }: BlueprintDeployParams) {
         const deploymentActions = new DeploymentActions(toolbox);
 
         return deploymentActions
             .waitUntilCreated(deploymentId)
             .then(() => deploymentId)
-            .catch(error => Promise.reject(t('errors.deploymentCreationFailed', { deploymentId, error })));
+            .catch(error => Promise.reject(t('errors.deploymentCreationFailed', { deploymentName, error })));
     }
 
     function installDeployment(
         deploymentId: string,
-        _deploymentParameters: BlueprintDeployParams,
+        { deploymentName }: BlueprintDeployParams,
         installWorkflowParameters: Record<string, any>,
         installWorkflowOptions: WorkflowOptions
     ) {
@@ -46,26 +46,26 @@ const DeployBlueprintModal: FunctionComponent<DeployBlueprintModalProps> = ({ to
             .catch(error =>
                 Promise.reject({
                     errors: t('errors.deploymentInstallationFailed', {
-                        deploymentId,
+                        deploymentName,
                         error: error.message
                     })
                 })
             );
     }
 
-    function openDeploymentPage(deploymentId: string) {
-        toolbox.drillDown(toolbox.getWidget(), 'deployment', { deploymentId }, deploymentId);
+    function openDeploymentPage(deploymentId: string, deploymentName: string) {
+        toolbox.drillDown(toolbox.getWidget(), 'deployment', { deploymentId }, deploymentName);
     }
 
-    function finalizeDeployAndInstall(deploymentId: string) {
-        finalizeDeploy(deploymentId);
+    function finalizeDeployAndInstall(deploymentId: string, params: BlueprintDeployParams) {
+        finalizeDeploy(deploymentId, params);
         toolbox.getEventBus().trigger('executions:refresh');
     }
 
-    function finalizeDeploy(deploymentId: string) {
+    function finalizeDeploy(deploymentId: string, { deploymentName }: BlueprintDeployParams) {
         toolbox.getEventBus().trigger('deployments:refresh');
         onHide();
-        openDeploymentPage(deploymentId);
+        openDeploymentPage(deploymentId, deploymentName);
     }
 
     return (

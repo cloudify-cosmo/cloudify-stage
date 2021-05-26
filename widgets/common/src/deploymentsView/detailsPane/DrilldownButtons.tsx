@@ -3,26 +3,45 @@ import { QueryObserverLoadingResult, QueryObserverSuccessResult, useQuery } from
 import styled from 'styled-components';
 
 import { FilterRuleOperators, FilterRuleType } from '../../filters/types';
-import { filterRulesContextKey, i18nDrillDownPrefix, subenvironmentsIcon, subservicesIcon } from '../common';
+import {
+    filterRulesContextKey,
+    i18nDrillDownPrefix,
+    mapOpenContextKey,
+    subenvironmentsIcon,
+    subservicesIcon
+} from '../common';
 import type { Deployment } from '../types';
 
 export interface DrilldownButtonsProps {
-    deploymentId: string;
+    deployment: Deployment;
     drillDown: (templateName: string, drilldownContext: Record<string, any>, drilldownPageName: string) => void;
     toolbox: Stage.Types.Toolbox;
+    refetchInterval: number;
+    mapOpen: boolean;
 }
 
 const ButtonsContainer = styled.div`
-    margin: 0 1em;
+    margin-right: 1rem;
+    margin-bottom: 1rem;
+    position: relative;
 `;
 
 const i18nDrillDownButtonsPrefix = `${i18nDrillDownPrefix}.buttons`;
 const getDeploymentUrl = (id: string) => `/deployments/${id}?all_sub_deployments=false`;
 
-const DrilldownButtons: FunctionComponent<DrilldownButtonsProps> = ({ drillDown, deploymentId, toolbox }) => {
+const DrilldownButtons: FunctionComponent<DrilldownButtonsProps> = ({
+    drillDown,
+    deployment,
+    toolbox,
+    refetchInterval,
+    mapOpen
+}) => {
+    const { id, display_name: displayName } = deployment;
+
     const deploymentDetailsResult = useQuery(
-        getDeploymentUrl(deploymentId),
-        ({ queryKey: url }): Promise<Deployment> => toolbox.getManager().doGet(url)
+        getDeploymentUrl(id),
+        ({ queryKey: url }): Promise<Deployment> => toolbox.getManager().doGet(url),
+        { refetchInterval }
     );
 
     if (deploymentDetailsResult.isIdle || deploymentDetailsResult.isError) {
@@ -37,20 +56,26 @@ const DrilldownButtons: FunctionComponent<DrilldownButtonsProps> = ({ drillDown,
     }
 
     const subdeploymentResults = getSubdeploymentResults(deploymentDetailsResult);
+    const { LoadingOverlay } = Stage.Basic;
 
     return (
         <ButtonsContainer>
+            {/* NOTE: Show a spinner only when refetching. During the initial fetch there are spinners inside the buttons. */}
+            {deploymentDetailsResult.isFetching && !deploymentDetailsResult.isLoading && <LoadingOverlay />}
+
             <DrilldownButton
                 type="environments"
                 drillDown={drillDown}
-                deploymentName={deploymentId}
+                deploymentName={displayName}
                 result={subdeploymentResults.subenvironments}
+                mapOpen={mapOpen}
             />
             <DrilldownButton
                 type="services"
                 drillDown={drillDown}
-                deploymentName={deploymentId}
+                deploymentName={displayName}
                 result={subdeploymentResults.subservices}
+                mapOpen={mapOpen}
             />
         </ButtonsContainer>
     );
@@ -80,18 +105,25 @@ interface DrilldownButtonProps {
     drillDown: DrilldownButtonsProps['drillDown'];
     deploymentName: string;
     result: SubdeploymentsResult;
+    mapOpen: boolean;
 }
 
 const subdeploymentsDrilldownTemplateName = 'drilldownDeployments';
 
-const DrilldownButton: FunctionComponent<DrilldownButtonProps> = ({ type, drillDown, deploymentName, result }) => {
+const DrilldownButton: FunctionComponent<DrilldownButtonProps> = ({
+    type,
+    drillDown,
+    deploymentName,
+    result,
+    mapOpen
+}) => {
     const { i18n } = Stage;
     const icon = type === 'services' ? subservicesIcon : subenvironmentsIcon;
 
     const drilldownToSubdeployments = () => {
         drillDown(
             subdeploymentsDrilldownTemplateName,
-            { [filterRulesContextKey]: [deploymentTypeRule[type]] },
+            { [filterRulesContextKey]: [deploymentTypeRule[type]], [mapOpenContextKey]: mapOpen },
             `${deploymentName} [${i18n.t(`${i18nDrillDownPrefix}.breadcrumbs.${type}`)}]`
         );
     };
@@ -125,8 +157,7 @@ const deploymentTypeRule: Record<DrilldownButtonProps['type'], Stage.Common.Filt
     services: {
         type: FilterRuleType.Label,
         key: 'csys-obj-type',
-        // TODO(RD-2145): use FilterRuleOperators enum after adding the `is_not` member in it
-        operator: 'is_not' as any,
+        operator: FilterRuleOperators.IsNot,
         values: ['environment']
     }
 };

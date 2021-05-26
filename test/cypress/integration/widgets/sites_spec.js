@@ -103,11 +103,7 @@ describe('Sites Management', () => {
     };
 
     before(() => {
-        cy.activate('valid_spire_license')
-            .deleteAllUsersAndTenants()
-            .usePageMock('sites')
-            .mockLogin()
-            .waitUntilLoaded();
+        cy.activate().deleteAllUsersAndTenants().usePageMock('sites').mockLogin().waitUntilLoaded();
     });
 
     beforeEach(() => {

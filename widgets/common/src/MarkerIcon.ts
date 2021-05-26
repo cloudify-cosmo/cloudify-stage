@@ -4,7 +4,7 @@ type MarkerIconColor = 'blue' | 'green' | 'grey' | 'red' | 'yellow';
 function createMarkerIcon(color: MarkerIconColor) {
     const widgetId = 'common';
 
-    return new L.Icon({
+    return new window.L.Icon({
         iconUrl: Stage.Utils.Url.widgetResourceUrl(widgetId, `/images/marker-icon-${color}.png`, false),
         shadowUrl: Stage.Utils.Url.widgetResourceUrl(widgetId, '/images/marker-shadow.png', false),
         iconAnchor: [12, 41],
