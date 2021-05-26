@@ -14,7 +14,7 @@
         "sourceMap": false,
         "types": ["cypress"],
         "rootDir": "../..",
-        "outDir": "dist",
+        "outDir": "../../tsc-dist",
         "composite": true
     },
     "include": ["**/*", "**/*.json"],

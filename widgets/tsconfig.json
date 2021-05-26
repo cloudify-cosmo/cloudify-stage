@@ -3,8 +3,9 @@
     "compilerOptions": {
         "types": ["react", "react-dom", "moment", "lodash"],
         "plugins": [{ "name": "typescript-styled-plugin" }],
-        "outDir": "dist",
-        "composite": true
+        "outDir": "../tsc-dist",
+        "composite": true,
+        "rootDir": ".."
     },
     "files": ["../app/typings/stage-api.d.ts"],
     "include": ["**/*", "**/*.json"],

@@ -3,7 +3,8 @@
     "compilerOptions": {
         "types": ["jest"],
         "baseUrl": "..",
-        "outDir": "../dist/backend/test",
+        "rootDir": "../..",
+        "outDir": "../../tsc-dist",
         "composite": true
     },
     "references": [{ "path": "../" }]

@@ -6,7 +6,8 @@
             "*": ["node_modules/*", "app/*", "widgets/*"]
         },
         "types": ["jest"],
-        "outDir": "dist",
+        "outDir": "../../tsc-dist",
+        "rootDir": "../..",
         "composite": true
     },
     "references": [{ "path": "../../app" }, { "path": "../../widgets" }],

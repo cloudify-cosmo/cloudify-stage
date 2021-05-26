@@ -5,6 +5,6 @@
     "compilerOptions": {
         "rootDir": "..",
         "composite": true,
-        "outDir": "dist"
+        "outDir": "../tsc-dist"
     }
 }

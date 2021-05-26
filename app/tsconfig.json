@@ -4,7 +4,7 @@
         "types": [],
         "plugins": [{ "name": "typescript-styled-plugin" }],
         "composite": true,
-        "outDir": "dist",
+        "outDir": "../tsc-dist",
         "rootDir": ".."
     },
     "include": ["**/*", "**/*.json"],
