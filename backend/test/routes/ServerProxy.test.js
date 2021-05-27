@@ -69,4 +69,20 @@ describe('/sp endpoint', () => {
                 });
             });
     });
+
+    it('returns an error when the socket times out after a successful connection', () => {
+        nock(mockApiUrl)
+            .put(blueprintsUrl)
+            .delayConnection(mockTimeout + 1)
+            .reply(200);
+
+        return request(app)
+            .put(proxyBlueprintsUrl)
+            .then(response => {
+                expect(response.statusCode).toBe(500);
+                expect(response.body).toEqual({
+                    message: expect.stringContaining('Connected to the Manager but timed out')
+                });
+            });
+    });
 });
