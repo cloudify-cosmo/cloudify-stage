@@ -74,14 +74,18 @@ class AccordionWorkflowsMenu extends React.Component {
         return (
             <Accordion as={Menu} vertical style={{ boxShadow: 'none' }}>
                 {_.map(workflowsGroups, group => (
-                    <Menu.Item key={group.name}>
+                    <Menu.Item key={group.name} style={{ padding: 0 }}>
                         <Accordion.Title
                             active={activeGroup === group.name}
                             index={group.name}
                             content={<StyledTitle bold={group.name === defaultGroupName} name={group.name} />}
                             onClick={this.onGroupClick}
+                            style={{ padding: '13px 16px' }}
                         />
-                        <Accordion.Content active={activeGroup === group.name}>
+                        <Accordion.Content
+                            active={activeGroup === group.name}
+                            style={{ paddingTop: 0, paddingLeft: 16 }}
+                        >
                             <Menu.Menu>
                                 <WorkflowsMenuItems workflows={group.workflows} onClick={onClick} />
                             </Menu.Menu>
