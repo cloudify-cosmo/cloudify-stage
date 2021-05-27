@@ -46,7 +46,9 @@ class GenericDeployModal extends React.Component {
         const { blueprintId, open } = this.props;
         if (!prevProps.open && open) {
             // eslint-disable-next-line react/no-did-update-set-state
-            this.setState(GenericDeployModal.initialState, () => this.selectBlueprint(blueprintId));
+            this.setState({ ...GenericDeployModal.initialState, deploymentId: Stage.Utils.uuid() }, () =>
+                this.selectBlueprint(blueprintId)
+            );
         }
     }
 
@@ -142,6 +144,7 @@ class GenericDeployModal extends React.Component {
         const {
             blueprint,
             deploymentName,
+            deploymentId,
             runtimeOnlyEvaluation,
             labels,
             siteName,
@@ -152,7 +155,8 @@ class GenericDeployModal extends React.Component {
 
         return {
             blueprintId: blueprint.id,
-            deploymentId: deploymentName,
+            deploymentId,
+            deploymentName,
             inputs: InputsUtils.getInputsMap(blueprint.plan.inputs, deploymentInputs),
             visibility,
             labels,
@@ -212,16 +216,21 @@ class GenericDeployModal extends React.Component {
     validateInputs() {
         return new Promise((resolve, reject) => {
             const { InputsUtils } = Stage.Common;
-            const { blueprint, deploymentName, deploymentInputs: stateDeploymentInputs } = this.state;
+            const { blueprint, deploymentId, deploymentName, deploymentInputs: stateDeploymentInputs } = this.state;
             const { showDeploymentNameInput } = this.props;
             const errors = {};
 
-            if (_.isEmpty(blueprint.id)) {
-                errors.blueprintName = t('errors.noBlueprintName');
+            if (showDeploymentNameInput) {
+                if (_.isEmpty(deploymentName)) {
+                    errors.deploymentName = t('errors.noDeploymentName');
+                }
+                if (_.isEmpty(deploymentId)) {
+                    errors.deploymentId = t('errors.noDeploymentId');
+                }
             }
 
-            if (showDeploymentNameInput && _.isEmpty(deploymentName)) {
-                errors.deploymentName = t('errors.noDeploymentName');
+            if (_.isEmpty(blueprint.id)) {
+                errors.blueprintName = t('errors.noBlueprintName');
             }
 
             const inputsWithoutValue = InputsUtils.getInputsWithoutValues(blueprint.plan.inputs, stateDeploymentInputs);
@@ -268,6 +277,7 @@ class GenericDeployModal extends React.Component {
         const {
             blueprint,
             deploymentInputs,
+            deploymentId,
             deploymentName,
             errors,
             fileLoading,
@@ -296,18 +306,32 @@ class GenericDeployModal extends React.Component {
                     <Form errors={errors} scrollToError onErrorsDismiss={() => this.setState({ errors: {} })}>
                         {loading && <LoadingOverlay message={loadingMessage} />}
                         {showDeploymentNameInput && (
-                            <Form.Field
-                                error={errors.deploymentName}
-                                label={t('inputs.deploymentName.label')}
-                                required
-                                help={t('inputs.deploymentName.help')}
-                            >
-                                <Form.Input
-                                    name="deploymentName"
-                                    value={deploymentName}
-                                    onChange={this.handleInputChange}
-                                />
-                            </Form.Field>
+                            <>
+                                <Form.Field
+                                    error={errors.deploymentName}
+                                    label={t('inputs.deploymentName.label')}
+                                    required
+                                    help={t('inputs.deploymentName.help')}
+                                >
+                                    <Form.Input
+                                        name="deploymentName"
+                                        value={deploymentName}
+                                        onChange={this.handleInputChange}
+                                    />
+                                </Form.Field>
+                                <Form.Field
+                                    error={errors.deploymentId}
+                                    label={t('inputs.deploymentId.label')}
+                                    required
+                                    help={t('inputs.deploymentId.help')}
+                                >
+                                    <Form.Input
+                                        name="deploymentId"
+                                        value={deploymentId}
+                                        onChange={this.handleInputChange}
+                                    />
+                                </Form.Field>
+                            </>
                         )}
 
                         {this.isBlueprintSelectable() && (

@@ -1,5 +1,5 @@
 {
-  "rawContentBasePath": "https://raw.githubusercontent.com/cloudify-cosmo/docs.getcloudify.org/master",
+  "rawContentBasePath": "https://raw.githubusercontent.com/cloudify-cosmo/docs.getcloudify.org/6.0.0-build",
   "files": [
     {"widget": "agents", "link": "/content/working_with/console/widgets/agents.md"},
     {"widget": "blueprintActionButtons", "link": "/content/working_with/console/widgets/blueprintActionButtons.md"},
@@ -16,6 +16,8 @@
     {"widget": "deploymentInfo", "link": "/content/working_with/console/widgets/deploymentInfo.md"},
     {"widget": "deploymentNum", "link": "/content/working_with/console/widgets/deploymentNum.md"},
     {"widget": "deployments", "link": "/content/working_with/console/widgets/deployments.md"},
+    {"widget": "deploymentsView", "link": "/content/working_with/console/widgets/deploymentsView.md"},
+    {"widget": "deploymentsViewDrilledDown", "link": "/content/working_with/console/widgets/deploymentsViewDrilledDown.md"},
     {"widget": "deploymentWizardButtons", "link": "/content/working_with/console/widgets/deploymentWizardButtons.md"},
     {"widget": "events", "link": "/content/working_with/console/widgets/events.md"},
     {"widget": "eventsFilter", "link": "/content/working_with/console/widgets/eventsFilter.md"},

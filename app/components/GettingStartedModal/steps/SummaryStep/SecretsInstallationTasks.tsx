@@ -1,18 +1,28 @@
-import i18n from 'i18next';
 import React from 'react';
 
+import StageUtils from '../../../../utils/stageUtils';
+import createTaskDescriptionGetter from './createTaskDescriptionGetter';
 import { Divider, Label, List } from '../../../basic';
 
 import type { createSecretsInstallationTasks } from '../../installation/tasks';
+import type { TaskStatus } from '../../installation/process';
+
+const t = StageUtils.getT('gettingStartedModal.summary.secret');
 
 type Props = {
     tasks?: ReturnType<typeof createSecretsInstallationTasks>;
+    statuses?: Record<string, TaskStatus>;
 };
 
-const SecretsInstallationTasks = ({ tasks }: Props) => {
+const SecretsInstallationTasks = ({ tasks, statuses }: Props) => {
     if (tasks == null || (_.isEmpty(tasks.createdSecrets) && _.isEmpty(tasks.updatedSecrets))) {
         return null;
     }
+    const getSecretTaskDescription = createTaskDescriptionGetter(
+        t('settingProgressMessageSuffix'),
+        t('settingDoneMessageSuffix'),
+        t('settingErrorMessageSuffix')
+    );
     return (
         <>
             <Divider hidden style={{ margin: '0.5rem 0' }} />
@@ -20,7 +30,7 @@ const SecretsInstallationTasks = ({ tasks }: Props) => {
                 return (
                     <List.Item key={createdSecret.name}>
                         <Label horizontal>{createdSecret.name}</Label>{' '}
-                        {i18n.t('gettingStartedModal.summary.secretCreateMessageSuffix')}
+                        {getSecretTaskDescription(createdSecret.name, statuses, t('creationScheduledMessageSuffix'))}
                     </List.Item>
                 );
             })}
@@ -28,7 +38,7 @@ const SecretsInstallationTasks = ({ tasks }: Props) => {
                 return (
                     <List.Item key={updatedSecret.name}>
                         <Label horizontal>{updatedSecret.name}</Label>{' '}
-                        {i18n.t('gettingStartedModal.summary.secretUpdateMessageSuffix')}
+                        {getSecretTaskDescription(updatedSecret.name, statuses, t('updateScheduledMessageSuffix'))}
                     </List.Item>
                 );
             })}

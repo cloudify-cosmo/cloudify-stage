@@ -1,10 +1,10 @@
-import { Dictionary, keyBy } from 'lodash';
+import { Dictionary, keyBy, partition } from 'lodash';
 import { FunctionComponent, useEffect, useMemo, useRef } from 'react';
 import type { Map } from 'react-leaflet';
 
 import { Deployment } from '../types';
 import { DeploymentSitePair } from './common';
-import DeploymentSiteMarker from './marker';
+import { DeploymentSiteMarker, DeploymentMarkerClusterGroup } from './marker';
 import { selectDeployment } from '../common';
 
 interface DeploymentsMapProps {
@@ -31,7 +31,13 @@ const DeploymentsMap: FunctionComponent<DeploymentsMapProps> = ({
         deployments
     ]);
 
-    const mapRef = useRef<Map | null>(null);
+    // NOTE: selected deployment site pairs should not be clustered
+    const [selectedDeploymentSitePairs, notSelectedDeploymentSitePairs] = useMemo(
+        () => partition(deploymentSitePairs, ({ deployment }) => deployment.id === selectedDeployment?.id),
+        [deploymentSitePairs, selectedDeployment?.id]
+    );
+
+    const mapRef = useRef<Map>(null);
 
     useEffect(() => Stage.Common.Map.invalidateSizeAfterDimensionsChange(mapRef), [
         widgetDimensions.height,
@@ -50,6 +56,19 @@ const DeploymentsMap: FunctionComponent<DeploymentsMapProps> = ({
     const { Map: MapComponent } = Stage.Basic.Leaflet;
     const { DefaultTileLayer } = Stage.Common.Map;
 
+    function renderDeploymentSiteMarker({ deployment, site }: DeploymentSitePair) {
+        return (
+            <DeploymentSiteMarker
+                deployment={deployment}
+                site={site}
+                key={`${deployment.id}\n${site.name}`}
+                selected={deployment.id === selectedDeployment?.id}
+                onClick={() => selectDeployment(toolbox, deployment.id)}
+                environmentTypeVisible={environmentTypeVisible}
+            />
+        );
+    }
+
     return (
         <MapComponent
             bounds={bounds}
@@ -59,16 +78,11 @@ const DeploymentsMap: FunctionComponent<DeploymentsMapProps> = ({
             style={{ height: '100%' }}
         >
             <DefaultTileLayer />
-            {deploymentSitePairs.map(({ deployment, site }) => (
-                <DeploymentSiteMarker
-                    deployment={deployment}
-                    site={site}
-                    key={`${deployment.id}\n${site.name}`}
-                    selected={deployment.id === selectedDeployment?.id}
-                    onClick={() => selectDeployment(toolbox, deployment.id)}
-                    environmentTypeVisible={environmentTypeVisible}
-                />
-            ))}
+            <DeploymentMarkerClusterGroup deploymentSitePairs={deploymentSitePairs}>
+                {notSelectedDeploymentSitePairs.map(renderDeploymentSiteMarker)}
+            </DeploymentMarkerClusterGroup>
+
+            {selectedDeploymentSitePairs.map(renderDeploymentSiteMarker)}
         </MapComponent>
     );
 };

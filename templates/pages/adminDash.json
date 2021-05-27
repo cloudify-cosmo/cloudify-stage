@@ -12,7 +12,7 @@
           "x": 0,
           "y": 0,
           "configuration":{
-            "page": "local_blueprints"
+            "page": "blueprints"
           }
         },
         {
@@ -23,7 +23,7 @@
           "x": 2,
           "y": 0,
           "configuration":{
-            "page": "deployments"
+            "page": "services"
           }
         },
         {
@@ -34,7 +34,7 @@
           "x": 4,
           "y": 0,
           "configuration":{
-            "page": "system_resources"
+            "page": "resources"
           }
         },
         {

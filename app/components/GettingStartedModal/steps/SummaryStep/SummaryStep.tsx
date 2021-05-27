@@ -1,6 +1,7 @@
 import i18n from 'i18next';
 import React, { memo, useEffect } from 'react';
 
+import StageUtils from '../../../../utils/stageUtils';
 import { useResettableState } from '../../../../utils/hooks';
 import { Divider, Header, List, Message, Progress } from '../../../basic';
 import useCurrentCallback from '../../common/useCurrentCallback';
@@ -11,12 +12,14 @@ import {
 } from '../../installation/tasks';
 import { useInternal, useManager } from '../../common/managerHooks';
 import { UnsafelyTypedForm } from '../../unsafelyTypedForm';
-import { createResourcesInstaller } from '../../installation/process';
+import { createResourcesInstaller, TaskDetails, TaskStatus, TaskType } from '../../installation/process';
 import PluginsInstallationTasks from './PluginsInstallationTasks';
 import SecretsInstallationTasks from './SecretsInstallationTasks';
 import BlueprintsInstallationTasks from './BlueprintsInstallationTasks';
 
 import type { GettingStartedData, GettingStartedSchema } from '../../model';
+
+const tMessages = StageUtils.getT('gettingStartedModal.messages');
 
 type Props = {
     installationMode?: boolean;
@@ -44,12 +47,16 @@ const SummaryStep = ({
     const secretsInstallationTasks = useSecretsInstallationTasks(selectedTechnologies, typedSecrets);
     const blueprintsInstallationTasks = useBlueprintsInstallationTasks(selectedTechnologies);
     const [installationErrors, setInstallationErrors, resetInstallationErrors] = useResettableState<string[]>([]);
+    const [installationStatuses, setInstallationStatuses, resetInstallationStatuses] = useResettableState(
+        {} as Record<TaskType, Record<string, TaskStatus>>
+    );
     const [installationProgress, setInstallationProgress, resetInstallationProgress] = useResettableState<
         number | undefined
     >(undefined);
 
     useEffect(() => {
         resetInstallationErrors();
+        resetInstallationStatuses();
         resetInstallationProgress();
         if (
             installationMode &&
@@ -58,11 +65,24 @@ const SummaryStep = ({
             blueprintsInstallationTasks.tasks
         ) {
             let installationFinished = false;
+            let calculatedInstallationStatuses = {} as Record<TaskType, Record<string, TaskStatus>>;
             const resourcesInstaller = createResourcesInstaller(
                 manager,
                 internal,
                 () => handleInstallationStarted(),
-                (progress: number) => setInstallationProgress(progress),
+                (calculatedInstallationProgress: number, currentTask?: TaskDetails) => {
+                    if (currentTask) {
+                        calculatedInstallationStatuses = {
+                            ...calculatedInstallationStatuses,
+                            [currentTask.type]: {
+                                ...calculatedInstallationStatuses[currentTask.type],
+                                [currentTask.name]: currentTask.status
+                            }
+                        };
+                        setInstallationStatuses(calculatedInstallationStatuses);
+                    }
+                    setInstallationProgress(calculatedInstallationProgress);
+                },
                 (error: string) => setInstallationErrors(status => [...status, error]),
                 () => {
                     installationFinished = true;
@@ -119,17 +139,24 @@ const SummaryStep = ({
                 <>
                     <Header as="h4">{i18n.t('gettingStartedModal.summary.taskListTitle')}</Header>
                     <List ordered relaxed style={{ margin: 0, flex: 1, overflow: 'auto' }}>
-                        <PluginsInstallationTasks tasks={pluginsInstallationTasks.tasks} />
-                        <SecretsInstallationTasks tasks={secretsInstallationTasks.tasks} />
-                        <BlueprintsInstallationTasks tasks={blueprintsInstallationTasks.tasks} />
+                        <PluginsInstallationTasks
+                            tasks={pluginsInstallationTasks.tasks}
+                            statuses={installationStatuses.plugin}
+                        />
+                        <SecretsInstallationTasks
+                            tasks={secretsInstallationTasks.tasks}
+                            statuses={installationStatuses.secret}
+                        />
+                        <BlueprintsInstallationTasks
+                            tasks={blueprintsInstallationTasks.tasks}
+                            statuses={installationStatuses.blueprint}
+                        />
                     </List>
                     {installationProgress !== undefined && (
                         <>
                             <Divider hidden />
                             <Progress progress size="large" percent={installationProgress} indicating>
-                                {installationProgress < 100
-                                    ? i18n.t('gettingStartedModal.installation.progressMessage')
-                                    : i18n.t('gettingStartedModal.installation.doneMessage')}
+                                {installationProgress < 100 ? tMessages('progressMessage') : tMessages('doneMessage')}
                             </Progress>
                         </>
                     )}

@@ -2,7 +2,13 @@ import React, { FunctionComponent, useMemo, useState } from 'react';
 import { find } from 'lodash';
 import { useQuery } from 'react-query';
 
-import { getParentPageContext, i18nMessagesPrefix, isTopLevelPage, parentDeploymentLabelKey } from './common';
+import {
+    getParentPageContext,
+    i18nMessagesPrefix,
+    isTopLevelPage,
+    mapOpenContextKey,
+    parentDeploymentLabelKey
+} from './common';
 import type { SharedDeploymentsViewWidgetConfiguration } from './configuration';
 import DetailsPane from './detailsPane';
 import { DeploymentsTable } from './table';
@@ -39,7 +45,13 @@ export const DeploymentsView: FunctionComponent<DeploymentsViewProps> = ({
 }) => {
     const manager = toolbox.getManager();
     const searchActions = new SearchActions(toolbox);
-    const [gridParams, setGridParams] = useState<Stage.Types.ManagerGridParams>();
+    const [gridParams, setGridParams] = useState<Stage.Types.ManagerGridParams>(() =>
+        Stage.Utils.mapGridParamsToManagerGridParams({
+            sortColumn: widget.configuration.sortColumn,
+            sortAscending: widget.configuration.sortAscending,
+            pageSize: widget.configuration.pageSize
+        })
+    );
     const [userFilterId, setUserFilterId] = useState<string>();
 
     const filterRulesResult = (() => {
@@ -90,7 +102,6 @@ export const DeploymentsView: FunctionComponent<DeploymentsViewProps> = ({
     Stage.Hooks.useEventListener(toolbox, 'deployments:refresh', deploymentsResult.refetch);
 
     const widgetDimensions = Stage.Common.Map.useWidgetDimensions(widget);
-    const [mapOpen, toggleMap] = Stage.Hooks.useToggle(widget.configuration.mapOpenByDefault);
 
     const { Loading, ErrorMessage } = Stage.Basic;
     const { i18n } = Stage;
@@ -130,18 +141,20 @@ export const DeploymentsView: FunctionComponent<DeploymentsViewProps> = ({
         );
     }
 
-    const context = toolbox.getContext();
+    const toolboxContext = toolbox.getContext();
     const deployments = deploymentsResult.data.items;
     const selectedDeployment = find(deployments, {
         // NOTE: type assertion since lodash has problems receiving string[] in the object
-        // eslint-disable-next-line react/destructuring-assignment
-        id: context.getValue('deploymentId') as string | undefined
+        id: toolboxContext.getValue('deploymentId') as string | undefined
     });
 
     if (!selectedDeployment && deployments.length > 0) {
         // NOTE: always select the first visible item
-        context.setValue('deploymentId', deployments[0].id);
+        toolboxContext.setValue('deploymentId', deployments[0].id);
     }
+
+    const mapOpen = !!(toolboxContext.getValue(mapOpenContextKey) as boolean | undefined);
+    const toggleMap = () => toolboxContext.setValue(mapOpenContextKey, !mapOpen);
 
     return (
         <DeploymentsViewContainer>
@@ -172,14 +185,15 @@ export const DeploymentsView: FunctionComponent<DeploymentsViewProps> = ({
                     setGridParams={setGridParams}
                     toolbox={toolbox}
                     loadingIndicatorVisible={filterRulesResult.isFetching || deploymentsResult.isFetching}
-                    pageSize={widget.configuration.pageSize}
+                    // eslint-disable-next-line no-underscore-dangle
+                    pageSize={gridParams._size ?? widget.configuration.pageSize}
                     totalSize={deploymentsResult.data.metadata.pagination.total}
                     deployments={deploymentsResult.data.items}
                     fieldsToShow={widget.configuration.fieldsToShow}
                 />
             </DeploymentsTableContainer>
             <DeploymentDetailsContainer>
-                <DetailsPane deployment={selectedDeployment} widget={widget} toolbox={toolbox} />
+                <DetailsPane deployment={selectedDeployment} widget={widget} toolbox={toolbox} mapOpen={mapOpen} />
             </DeploymentDetailsContainer>
         </DeploymentsViewContainer>
     );

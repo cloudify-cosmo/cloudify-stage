@@ -280,12 +280,13 @@ module.exports = (() => {
     }
 
     function isWidgetUsed(widgetId) {
-        return db.UserApp.findAll({ attributes: ['appData', 'managerIp', 'username'] }).then(userApp => {
+        return db.UserApp.findAll({ attributes: ['appData', 'username'] }).then(userApp => {
             const result = [];
             _.forEach(userApp, row => {
                 const filter = _.filter(row.appData.pages, { widgets: [{ definition: widgetId }] });
                 if (!_.isEmpty(filter)) {
-                    result.push({ username: row.username, managerIp: row.managerIp });
+                    // TODO(RD-1459) Refactor results to be just list of usernames
+                    result.push({ username: row.username, managerIp: '' });
                 }
             });
 

@@ -12,7 +12,7 @@ describe('Tenants menu', () => {
                 pages: [
                     { id: 'adminDash', name: 'Dashboard' },
                     { id: 'blueprint', name: 'Blueprint' },
-                    { id: 'blueprints', name: 'Local Blueprints' }
+                    { id: 'blueprints', name: 'Blueprints' }
                 ]
             },
             {
@@ -20,8 +20,8 @@ describe('Tenants menu', () => {
                 role: 'manager',
                 pages: [
                     { id: 'adminDash', name: 'Dashboard' },
-                    { id: 'blueprints-community', name: 'Local Blueprints' },
-                    { id: 'catalog', name: 'Cloudify Catalog' }
+                    { id: 'blueprints-community', name: 'Blueprints' },
+                    { id: 'marketplace', name: 'Marketplace' }
                 ]
             }
         ]

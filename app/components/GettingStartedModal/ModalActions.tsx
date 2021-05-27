@@ -1,8 +1,10 @@
 import React from 'react';
-import i18n from 'i18next';
 
+import StageUtils from '../../utils/stageUtils';
 import { Button, Modal } from '../basic';
 import { StepName } from './model';
+
+const t = StageUtils.getT('gettingStartedModal.buttons');
 
 type Props = {
     stepName: StepName;
@@ -18,7 +20,7 @@ const ModalActions = ({ stepName, installationProcessing, onBackClick, onNextCli
         <Modal.Actions style={{ minHeight: 60 }}>
             <Button
                 icon="cancel"
-                content={i18n.t('gettingStartedModal.buttons.closeModal')}
+                content={t('closeModal')}
                 floated="left"
                 disabled={installationProcessing}
                 labelPosition="left"
@@ -27,20 +29,11 @@ const ModalActions = ({ stepName, installationProcessing, onBackClick, onNextCli
             {!statusStepActive && (
                 <Button.Group floated="right">
                     {stepName !== StepName.Technologies && (
-                        <Button
-                            icon="left arrow"
-                            content={i18n.t('gettingStartedModal.buttons.stepBack')}
-                            labelPosition="left"
-                            onClick={onBackClick}
-                        />
+                        <Button icon="left arrow" content={t('stepBack')} labelPosition="left" onClick={onBackClick} />
                     )}
                     <Button
                         icon="right arrow"
-                        content={
-                            stepName === StepName.Summary
-                                ? i18n.t('gettingStartedModal.buttons.stepFinish')
-                                : i18n.t('gettingStartedModal.buttons.stepNext')
-                        }
+                        content={stepName === StepName.Summary ? t('stepFinish') : t('stepNext')}
                         labelPosition="right"
                         onClick={onNextClick}
                     />

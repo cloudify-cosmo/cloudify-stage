@@ -1,8 +1,10 @@
 import React from 'react';
-import i18n from 'i18next';
 
+import StageUtils from '../../utils/stageUtils';
 import { Modal } from '../basic';
 import { GettingStartedSchemaItem, StepName } from './model';
+
+const t = StageUtils.getT('gettingStartedModal.titles');
 
 type Props = {
     stepName: StepName;
@@ -14,18 +16,18 @@ const ModalHeader = ({ stepName, secretsStepsSchemas, secretsStepIndex }: Props)
     let modalTitle = '';
     switch (stepName) {
         case StepName.Technologies:
-            modalTitle = i18n.t('gettingStartedModal.titles.technologiesStep');
+            modalTitle = t('technologiesStep');
             break;
         case StepName.Secrets: {
             const schemaItem = secretsStepsSchemas[secretsStepIndex];
-            modalTitle = schemaItem ? `${schemaItem.label} ${i18n.t('gettingStartedModal.titles.secretsStep')}` : '';
+            modalTitle = schemaItem ? `${schemaItem.label} ${t('secretsStep')}` : '';
             break;
         }
         case StepName.Summary:
-            modalTitle = i18n.t('gettingStartedModal.titles.summaryStep');
+            modalTitle = t('summaryStep');
             break;
         case StepName.Status:
-            modalTitle = i18n.t('gettingStartedModal.titles.statusStep');
+            modalTitle = t('statusStep');
             break;
         default:
             modalTitle = '';
