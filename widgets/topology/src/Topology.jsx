@@ -162,7 +162,7 @@ export default class Topology extends React.Component {
             onLayoutSave: layout =>
                 toolbox
                     .getInternal()
-                    .doPut(`/bud/layout/${blueprintId}`, null, layout)
+                    .doPut(`/bud/layout/${blueprintId}`, { data: layout })
                     .then(() => {
                         this.setState({ saveConfirmationOpen: true });
                         setTimeout(() => this.setState({ saveConfirmationOpen: false }), saveConfirmationTimeout);

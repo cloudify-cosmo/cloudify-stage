@@ -15,7 +15,7 @@ export default class Tours {
         const tenant = _.get(manager, 'tenants.selected', Consts.DEFAULT_ALL);
 
         const internal = new Internal(manager);
-        return internal.doGet('/tours', { tenant }).then(tours => {
+        return internal.doGet('/tours', { params: { tenant } }).then(tours => {
             return tours;
         });
     }

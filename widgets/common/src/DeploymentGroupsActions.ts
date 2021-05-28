@@ -27,7 +27,7 @@ export default class DeploymentGroupsActions {
     constructor(private toolbox: Stage.Types.Toolbox) {}
 
     doCreate(id: string, data: CreateDeploymentGroupData | CreateNewDeploymentsData) {
-        return this.toolbox.getManager().doPut(`/deployment-groups/${id}`, null, data);
+        return this.toolbox.getManager().doPut(`/deployment-groups/${id}`, { data });
     }
 }
 

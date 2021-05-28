@@ -61,17 +61,16 @@ function BlueprintStepActions({
                     });
                 }
                 if (!_.isNil(stepData.blueprintFile)) {
-                    return toolbox
-                        .getInternal()
-                        .doUpload(
-                            'source/list/resources',
-                            { yamlFile: stepData.blueprintYamlFile },
-                            { archive: stepData.blueprintFile }
-                        );
+                    return toolbox.getInternal().doUpload('source/list/resources', {
+                        params: { yamlFile: stepData.blueprintYamlFile },
+                        files: { archive: stepData.blueprintFile }
+                    });
                 }
                 return toolbox.getInternal().doPut('source/list/resources', {
-                    yamlFile: stepData.blueprintYamlFile,
-                    url: stepData.blueprintUrl
+                    params: {
+                        yamlFile: stepData.blueprintYamlFile,
+                        url: stepData.blueprintUrl
+                    }
                 });
             })
             .then(resources => onNext(stepId, { blueprint: { ...resources, ...fetchedStepData } }))

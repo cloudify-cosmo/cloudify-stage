@@ -14,12 +14,12 @@ export default class Actions {
     }
 
     doCreate(groupName, ldapGroup, role) {
-        const params =
+        const data =
             _.isUndefined(ldapGroup) || _.isEmpty(ldapGroup)
                 ? { group_name: groupName, role }
                 : { group_name: groupName, ldap_group_dn: ldapGroup, role };
 
-        return this.toolbox.getManager().doPost('/user-groups', null, params);
+        return this.toolbox.getManager().doPost('/user-groups', { data });
     }
 
     doDelete(groupName) {
@@ -27,7 +27,7 @@ export default class Actions {
     }
 
     doSetRole(groupName, role) {
-        return this.toolbox.getManager().doPost(`/user-groups/${groupName}`, null, { role });
+        return this.toolbox.getManager().doPost(`/user-groups/${groupName}`, { data: { role } });
     }
 
     doGetUsers() {
@@ -39,29 +39,29 @@ export default class Actions {
     }
 
     doAddUserToGroup(username, groupName) {
-        return this.toolbox.getManager().doPut('/user-groups/users', null, { username, group_name: groupName });
+        return this.toolbox.getManager().doPut('/user-groups/users', { data: { username, group_name: groupName } });
     }
 
     doRemoveUserFromGroup(username, groupName) {
-        return this.toolbox.getManager().doDelete('/user-groups/users', null, { username, group_name: groupName });
+        return this.toolbox.getManager().doDelete('/user-groups/users', { data: { username, group_name: groupName } });
     }
 
     doAddTenantToGroup(tenantName, groupName, role) {
         return this.toolbox
             .getManager()
-            .doPut('/tenants/user-groups', null, { tenant_name: tenantName, group_name: groupName, role });
+            .doPut('/tenants/user-groups', { data: { tenant_name: tenantName, group_name: groupName, role } });
     }
 
     doRemoveTenantFromGroup(tenantName, groupName) {
         return this.toolbox
             .getManager()
-            .doDelete('/tenants/user-groups', null, { tenant_name: tenantName, group_name: groupName });
+            .doDelete('/tenants/user-groups', { data: { tenant_name: tenantName, group_name: groupName } });
     }
 
     doUpdateTenant(tenantName, groupName, role) {
         return this.toolbox
             .getManager()
-            .doPatch('/tenants/user-groups', null, { tenant_name: tenantName, group_name: groupName, role });
+            .doPatch('/tenants/user-groups', { tenant_name: tenantName, group_name: groupName, role });
     }
 
     doHandleUsers(groupName, usersToAdd, usersToDelete) {

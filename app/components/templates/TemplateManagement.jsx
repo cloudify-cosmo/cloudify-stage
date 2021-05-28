@@ -104,7 +104,7 @@ export default function TemplateManagement() {
     function onCreateTemplate(templateName, templateRoles, templateTenants, templatePages) {
         startLoading();
 
-        const template = {
+        const data = {
             id: templateName.trim(),
             data: {
                 roles: templateRoles,
@@ -114,8 +114,8 @@ export default function TemplateManagement() {
         };
 
         return internal
-            .doPost('/templates', {}, template)
-            .then(() => dispatch(addTemplate(template.id, template.pages)))
+            .doPost('/templates', { data })
+            .then(() => dispatch(addTemplate(data.id, data.pages)))
             .catch(handleError);
     }
 
@@ -128,15 +128,15 @@ export default function TemplateManagement() {
             .catch(handleError);
     }
 
-    function updateTemplate(template) {
+    function updateTemplate(data) {
         startLoading();
 
         return internal
-            .doPut('/templates', {}, template)
+            .doPut('/templates', { data })
             .then(() => {
-                dispatch(editTemplate(template.id, template.pages));
-                if (template.oldId && template.oldId !== template.id) {
-                    dispatch(removeTemplate(template.oldId));
+                dispatch(editTemplate(data.id, data.pages));
+                if (data.oldId && data.oldId !== data.id) {
+                    dispatch(removeTemplate(data.oldId));
                 }
             })
             .catch(handleError);
@@ -204,15 +204,15 @@ export default function TemplateManagement() {
         startLoading();
 
         const pageId = createPageId(name, pageDefs);
-        const page = {
+        const data = {
             id: pageId,
             name,
             layout: []
         };
 
         return internal
-            .doPost('/templates/pages', {}, page)
-            .then(() => dispatch(addPage(page)))
+            .doPost('/templates/pages', { data })
+            .then(() => dispatch(addPage(data)))
             .then(() => dispatch(push(`/page_edit/${pageId}`)))
             .catch(handleError);
     }

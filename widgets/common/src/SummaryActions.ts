@@ -6,8 +6,10 @@ export default class SummaryActions {
 
     private doGet(resourceName: ResourceName, targetField: string, params?: Params) {
         return this.toolbox.getManager().doGet(`/summary/${resourceName}`, {
-            _target_field: targetField,
-            ...params
+            params: {
+                _target_field: targetField,
+                ...params
+            }
         });
     }
 

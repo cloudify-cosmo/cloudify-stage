@@ -13,11 +13,11 @@ export default class DeploymentActions {
     }
 
     doGet(deployment: { id: string }, params: any) {
-        return this.toolbox.getManager().doGet(`/deployments/${deployment.id}`, params);
+        return this.toolbox.getManager().doGet(`/deployments/${deployment.id}`, { params });
     }
 
     doGetDeployments(params: any) {
-        return this.toolbox.getManager().doGet('/deployments?_include=id', params);
+        return this.toolbox.getManager().doGet('/deployments?_include=id', { params });
     }
 
     doDelete(deployment: { id: string }) {
@@ -25,14 +25,16 @@ export default class DeploymentActions {
     }
 
     doForceDelete(deployment: { id: string }) {
-        return this.toolbox.getManager().doDelete(`/deployments/${deployment.id}`, { force: 'true' });
+        return this.toolbox.getManager().doDelete(`/deployments/${deployment.id}`, { params: { force: 'true' } });
     }
 
     // eslint-disable-next-line camelcase
     doCancel(execution: { id: string; deployment_id: string }, action: string) {
-        return this.toolbox.getManager().doPost(`/executions/${execution.id}`, null, {
-            deployment_id: execution.deployment_id,
-            action
+        return this.toolbox.getManager().doPost(`/executions/${execution.id}`, {
+            data: {
+                deployment_id: execution.deployment_id,
+                action
+            }
         });
     }
 
@@ -47,14 +49,16 @@ export default class DeploymentActions {
             scheduledTime: undefined
         }
     ) {
-        return this.toolbox.getManager().doPost('/executions', null, {
-            deployment_id: deploymentId,
-            workflow_id: workflowId,
-            dry_run: dryRun,
-            force,
-            queue,
-            scheduled_time: scheduledTime,
-            parameters: workflowParameters
+        return this.toolbox.getManager().doPost('/executions', {
+            data: {
+                deployment_id: deploymentId,
+                workflow_id: workflowId,
+                dry_run: dryRun,
+                force,
+                queue,
+                scheduled_time: scheduledTime,
+                parameters: workflowParameters
+            }
         });
     }
 
@@ -90,17 +94,17 @@ export default class DeploymentActions {
             data.inputs = deploymentInputs;
         }
 
-        return this.toolbox.getManager().doPut(`/deployment-updates/${deploymentName}/update/initiate`, null, data);
+        return this.toolbox.getManager().doPut(`/deployment-updates/${deploymentName}/update/initiate`, { data });
     }
 
     doSetVisibility(deploymentId: string, visibility: any) {
-        return this.toolbox.getManager().doPatch(`/deployments/${deploymentId}/set-visibility`, null, { visibility });
+        return this.toolbox.getManager().doPatch(`/deployments/${deploymentId}/set-visibility`, { visibility });
     }
 
     doSetSite(deploymentId: string, siteName: string, detachSite: any) {
         const data = detachSite ? { detach_site: detachSite } : { site_name: siteName };
 
-        return this.toolbox.getManager().doPost(`/deployments/${deploymentId}/set-site`, null, data);
+        return this.toolbox.getManager().doPost(`/deployments/${deploymentId}/set-site`, { data });
     }
 
     doGetSiteName(deploymentId: string) {
@@ -112,9 +116,11 @@ export default class DeploymentActions {
 
     private doGetSites(include: string, params: Record<string, any> = {}) {
         return this.toolbox.getManager().doGet('/sites', {
-            _include: include,
-            _get_all_results: true,
-            ...params
+            params: {
+                _include: include,
+                _get_all_results: true,
+                ...params
+            }
         });
     }
 
@@ -128,7 +134,7 @@ export default class DeploymentActions {
 
     doSetLabels(deploymentId: string, deploymentLabels: Stage.Common.Labels.Label[]) {
         const labels = DeploymentActions.toManagerLabels(deploymentLabels);
-        return this.toolbox.getManager().doPatch(`/deployments/${deploymentId}`, null, { labels });
+        return this.toolbox.getManager().doPatch(`/deployments/${deploymentId}`, { labels });
     }
 
     doGetLabel(key: string, value: string) {

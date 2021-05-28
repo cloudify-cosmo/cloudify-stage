@@ -51,8 +51,8 @@ export default class BlueprintActions {
         );
     }
 
-    doGetBlueprints(params = null) {
-        return this.toolbox.getManager().doGet('/blueprints?_include=id', params);
+    doGetBlueprints(params: Record<string, any>) {
+        return this.toolbox.getManager().doGet('/blueprints?_include=id', { params });
     }
 
     doGetFullBlueprintData(blueprintId: string) {
@@ -62,7 +62,7 @@ export default class BlueprintActions {
     doDelete(blueprintId: string, force = false) {
         return this.toolbox
             .getManager()
-            .doDelete(`/blueprints/${blueprintId}`, { force })
+            .doDelete(`/blueprints/${blueprintId}`, { params: { force } })
             .then(() => this.doDeleteImage(blueprintId));
     }
 
@@ -94,7 +94,7 @@ export default class BlueprintActions {
 
         return this.toolbox
             .getManager()
-            .doPut(`/deployments/${deploymentId}`, null, data)
+            .doPut(`/deployments/${deploymentId}`, { data })
             .catch(err =>
                 Promise.reject(
                     err.code === 'deployment_plugin_not_found'
@@ -131,9 +131,9 @@ export default class BlueprintActions {
             const compressFile = _.endsWith(file.name, '.yaml') || _.endsWith(file.name, '.yml');
             promise = this.toolbox
                 .getManager()
-                .doUpload(`/blueprints/${blueprintName}`, params, file, undefined, false, compressFile);
+                .doUpload(`/blueprints/${blueprintName}`, { params, files: file, parseResponse: false, compressFile });
         } else {
-            promise = this.toolbox.getManager().doPut(`/blueprints/${blueprintName}`, params);
+            promise = this.toolbox.getManager().doPut(`/blueprints/${blueprintName}`, { params });
         }
 
         return promise
@@ -171,26 +171,30 @@ export default class BlueprintActions {
     }
 
     doSetVisibility(blueprintId: string, visibility: string) {
-        return this.toolbox.getManager().doPatch(`/blueprints/${blueprintId}/set-visibility`, null, { visibility });
+        return this.toolbox.getManager().doPatch(`/blueprints/${blueprintId}/set-visibility`, { visibility });
     }
 
     doListYamlFiles(blueprintUrl: string, file = null, includeFilename = false) {
         if (file) {
-            return this.toolbox.getInternal().doUpload('/source/list/yaml', { includeFilename }, { archive: file });
+            return this.toolbox
+                .getInternal()
+                .doUpload('/source/list/yaml', { params: { includeFilename }, files: { archive: file } });
         }
-        return this.toolbox.getInternal().doPut('/source/list/yaml', { url: blueprintUrl, includeFilename });
+        return this.toolbox
+            .getInternal()
+            .doPut('/source/list/yaml', { params: { url: blueprintUrl, includeFilename } });
     }
 
-    doUploadImage(blueprintId: string, imageUrl: string, image: any) {
-        if (_.isEmpty(imageUrl) && !image) {
+    doUploadImage(blueprintId: string, imageUrl: string, files: any) {
+        if (_.isEmpty(imageUrl) && !files) {
             return Promise.resolve();
         }
 
         const params = { imageUrl };
-        if (image) {
-            return this.toolbox.getInternal().doUpload(`/ba/image/${blueprintId}`, params, image, 'post');
+        if (files) {
+            return this.toolbox.getInternal().doUpload(`/ba/image/${blueprintId}`, { params, files, method: 'post' });
         }
-        return this.toolbox.getInternal().doPost(`/ba/image/${blueprintId}`, params);
+        return this.toolbox.getInternal().doPost(`/ba/image/${blueprintId}`, { params });
     }
 
     doDeleteImage(blueprintId: string) {

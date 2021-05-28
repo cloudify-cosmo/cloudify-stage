@@ -179,7 +179,9 @@ export function getActiveExecutions(manager) {
         ];
         return managerAccessor
             .doGet('/executions?_include=id,workflow_id,status,status_display,blueprint_id,deployment_id', {
-                status: maintenanceModeActivationBlockingStatuses
+                params: {
+                    status: maintenanceModeActivationBlockingStatuses
+                }
             })
             .then(data => {
                 dispatch(setActiveExecutions(data));
@@ -199,7 +201,7 @@ export function doCancelExecution(manager, execution, action) {
     const managerAccessor = new Manager(manager);
     return dispatch =>
         managerAccessor
-            .doPost(`/executions/${execution.id}`, null, { deployment_id: execution.deployment_id, action })
+            .doPost(`/executions/${execution.id}`, { data: { deployment_id: execution.deployment_id, action } })
             .then(() => {
                 dispatch(cancelExecution(execution, action));
             });

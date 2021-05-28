@@ -23,7 +23,9 @@ const useModalOpenState = () => {
         try {
             if (disabled) {
                 // TODO(RD-1874): use common api for backend requests
-                await manager.doPost(`/users/${manager.getCurrentUsername()}`, null, { show_getting_started: false });
+                await manager.doPost(`/users/${manager.getCurrentUsername()}`, {
+                    data: { show_getting_started: false }
+                });
                 EventBus.trigger('users:refresh');
             }
             setModalOpen(false);

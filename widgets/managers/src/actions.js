@@ -7,7 +7,7 @@ export default class Actions {
         onStart(managerId);
         return this.toolbox
             .getWidgetBackend()
-            .doGet('get_cluster_status', { deploymentId: managerId })
+            .doGet('get_cluster_status', { params: { deploymentId: managerId } })
             .then(result => {
                 onEnd();
                 return onSuccess(managerId, result);

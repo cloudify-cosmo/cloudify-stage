@@ -20,40 +20,61 @@ Text form of class hierarchy diagram to be used at: https://yuml.me/diagram/nofu
 
 */
 
-function getContentType(type) {
+interface RequestOptions {
+    params?: Record<string, any>;
+    data?: any;
+    parseResponse?: boolean;
+    fileName?: string;
+    withCredentials?: boolean;
+}
+
+function getContentType(type?: string) {
     return { 'content-type': type || 'application/json' };
 }
 
 export default class External {
-    constructor(data) {
-        this.data = data;
+    constructor(protected managerData: any) {}
+
+    doGet(url: string, requestOptions?: RequestOptions) {
+        return this.ajaxCall(url, 'get', requestOptions);
     }
 
-    doGet(url, params, parseResponse, headers) {
-        return this.ajaxCall(url, 'get', params, null, parseResponse, headers);
+    doPost(url: string, requestOptions?: RequestOptions) {
+        return this.ajaxCall(url, 'post', requestOptions);
     }
 
-    doPost(url, params, data, parseResponse, headers, withCredentials) {
-        return this.ajaxCall(url, 'post', params, data, parseResponse, headers, null, withCredentials);
+    doDelete(url: string, requestOptions?: RequestOptions) {
+        return this.ajaxCall(url, 'delete', requestOptions);
     }
 
-    doDelete(url, params, data, parseResponse, headers) {
-        return this.ajaxCall(url, 'delete', params, data, parseResponse, headers);
+    doPut(url: string, requestOptions: RequestOptions) {
+        return this.ajaxCall(url, 'put', requestOptions);
     }
 
-    doPut(url, params, data, parseResponse, headers) {
-        return this.ajaxCall(url, 'put', params, data, parseResponse, headers);
+    doPatch(url: string, data: Record<string, any>) {
+        return this.ajaxCall(url, 'PATCH', { data });
     }
 
-    doPatch(url, params, data, parseResponse, headers) {
-        return this.ajaxCall(url, 'PATCH', params, data, parseResponse, headers);
+    doDownload(url: string, fileName: string) {
+        return this.ajaxCall(url, 'get', { fileName });
     }
 
-    doDownload(url, fileName) {
-        return this.ajaxCall(url, 'get', null, null, null, null, fileName);
-    }
-
-    doUpload(url, params, files, method, parseResponse = true, compressFile = false) {
+    doUpload(
+        url: string,
+        {
+            params = {},
+            files,
+            method,
+            parseResponse = true,
+            compressFile
+        }: {
+            params?: Record<string, any>;
+            files?: File | Record<string, any>;
+            method?: string;
+            parseResponse?: boolean;
+            compressFile?: boolean;
+        }
+    ) {
         const actualUrl = this.buildActualUrl(url, params);
 
         log.debug(`Uploading file for url: ${url}`);
@@ -62,9 +83,8 @@ export default class External {
             // Call upload method
             const xhr = new XMLHttpRequest();
             (xhr.upload || xhr).addEventListener('progress', e => {
-                const done = e.position || e.loaded;
-                const total = e.totalSize || e.total;
-                log.debug(`xhr progress: ${Math.round((done / total) * 100)}%`);
+                const { loaded, total } = e;
+                log.debug(`xhr progress: ${Math.round((loaded / total) * 100)}%`);
             });
             xhr.addEventListener('error', e => {
                 log.error('xhr upload error', e, xhr.responseText);
@@ -74,7 +94,7 @@ export default class External {
                     if (response.message) {
                         reject({ message: StageUtils.resolveMessage(response.message) });
                     } else {
-                        reject({ message: e.message });
+                        reject({ message: undefined });
                     }
                 } catch (err) {
                     log.error('Cannot parse upload error', err, xhr.responseText);
@@ -109,8 +129,6 @@ export default class External {
                 xhr.setRequestHeader(key, value);
             });
 
-            let formData = new FormData();
-
             if (files) {
                 if (files instanceof File) {
                     // Single file
@@ -119,8 +137,9 @@ export default class External {
                         const zip = new JSZip();
 
                         reader.onload = event => {
-                            const fileContent = event.target.result;
-                            zip.folder(files.name).file(files.name, fileContent);
+                            const { name } = files;
+                            const fileContent = event.target?.result as string | ArrayBuffer;
+                            zip.folder(name)?.file(name, fileContent);
                             zip.generateAsync({
                                 type: 'blob',
                                 compression: 'DEFLATE',
@@ -129,8 +148,7 @@ export default class External {
                                 }
                             }).then(
                                 function success(blob) {
-                                    formData = new File([blob], `${files.name}.zip`);
-                                    xhr.send(formData);
+                                    xhr.send(new File([blob], `${name}.zip`));
                                 },
                                 function error(err) {
                                     const errorMessage = `Cannot compress file. Error: ${err}`;
@@ -141,35 +159,39 @@ export default class External {
                         };
 
                         reader.onerror = event => {
-                            const errorMessage = `Cannot read file. Error code: ${event.target.error.code}`;
+                            const errorMessage = `Cannot read file. Error code: ${event.target?.error?.code}`;
                             log.error(errorMessage);
                             reject({ message: errorMessage });
                         };
 
                         reader.readAsText(files);
                     } else {
-                        formData = files;
-                        xhr.send(formData);
+                        xhr.send(files);
                     }
                 } else {
+                    const formData = new FormData();
                     _.forEach(files, (value, key) => {
                         formData.append(key, value);
                     });
                     xhr.send(formData);
                 }
             } else {
-                xhr.send(formData);
+                xhr.send(new FormData());
             }
         });
     }
 
-    ajaxCall(url, method, params, data, parseResponse = true, userHeaders = {}, fileName = null, withCredentials) {
+    ajaxCall(
+        url: string,
+        method: string,
+        { params, data, parseResponse = true, fileName, withCredentials }: RequestOptions = {}
+    ) {
         const actualUrl = this.buildActualUrl(url, params);
         log.debug(`${method} data. URL: ${url}`);
 
-        const headers = Object.assign(this.buildHeaders(), getContentType(), userHeaders);
+        const headers = Object.assign(this.buildHeaders(), getContentType());
 
-        const options = {
+        const options: RequestInit = {
             method,
             headers
         };
@@ -202,7 +224,7 @@ export default class External {
             .then(this.checkStatus.bind(this))
             .then(response => {
                 if (parseResponse) {
-                    const contentType = _.toLower(response.headers.get('content-type'));
+                    const contentType = _.toLower(response.headers.get('content-type') ?? undefined);
                     return response.status !== 204 && contentType.indexOf('application/json') >= 0
                         ? response.json()
                         : response.text();
@@ -212,16 +234,16 @@ export default class External {
     }
 
     // eslint-disable-next-line class-methods-use-this
-    isUnauthorized() {
+    isUnauthorized(_response: Response) {
         return false;
     }
 
     // eslint-disable-next-line class-methods-use-this
-    isLicenseError() {
+    isLicenseError(_response: Response, _body: any) {
         return false;
     }
 
-    checkStatus(response) {
+    checkStatus(response: Response) {
         if (response.ok) {
             return response;
         }
@@ -257,21 +279,18 @@ export default class External {
     }
 
     // eslint-disable-next-line class-methods-use-this
-    buildActualUrl(url, data) {
+    buildActualUrl(url: string, data?: Record<string, any>) {
+        // TODO: RD-258
+        // @ts-ignore Cannot find $
         const queryString = data ? (url.indexOf('?') > 0 ? '&' : '?') + $.param(data, true) : '';
         return `${url}${queryString}`;
     }
 
-    buildHeaders() {
-        if (!this.data) {
+    buildHeaders(): Record<string, string> {
+        if (!this.managerData) {
             return {};
         }
 
-        const headers = {};
-        if (this.data.basicAuth) {
-            headers.Authorization = `Basic ${this.data.basicAuth}`;
-        }
-
-        return headers;
+        return { Authorization: `Basic ${this.managerData.basicAuth}` };
     }
 }

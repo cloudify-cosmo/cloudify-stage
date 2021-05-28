@@ -16,22 +16,26 @@ export default class {
     }
 
     doAddUser(tenantName, username, role) {
-        return this.toolbox.getManager().doPut('/tenants/users', null, {
-            username,
-            tenant_name: tenantName,
-            role
+        return this.toolbox.getManager().doPut('/tenants/users', {
+            data: {
+                username,
+                tenant_name: tenantName,
+                role
+            }
         });
     }
 
     doRemoveUser(tenantName, username) {
-        return this.toolbox.getManager().doDelete('/tenants/users', null, {
-            username,
-            tenant_name: tenantName
+        return this.toolbox.getManager().doDelete('/tenants/users', {
+            data: {
+                username,
+                tenant_name: tenantName
+            }
         });
     }
 
     doUpdateUser(tenantName, username, role) {
-        return this.toolbox.getManager().doPatch('/tenants/users', null, {
+        return this.toolbox.getManager().doPatch('/tenants/users', {
             username,
             tenant_name: tenantName,
             role
@@ -47,22 +51,26 @@ export default class {
     }
 
     doAddUserGroup(tenantName, userGroup, role) {
-        return this.toolbox.getManager().doPut('/tenants/user-groups', null, {
-            group_name: userGroup,
-            tenant_name: tenantName,
-            role
+        return this.toolbox.getManager().doPut('/tenants/user-groups', {
+            data: {
+                group_name: userGroup,
+                tenant_name: tenantName,
+                role
+            }
         });
     }
 
     doRemoveUserGroup(tenantName, userGroup) {
-        return this.toolbox.getManager().doDelete('/tenants/user-groups', null, {
-            group_name: userGroup,
-            tenant_name: tenantName
+        return this.toolbox.getManager().doDelete('/tenants/user-groups', {
+            data: {
+                group_name: userGroup,
+                tenant_name: tenantName
+            }
         });
     }
 
     doUpdateUserGroup(tenantName, userGroup, role) {
-        return this.toolbox.getManager().doPatch('/tenants/user-groups', null, {
+        return this.toolbox.getManager().doPatch('/tenants/user-groups', {
             group_name: userGroup,
             tenant_name: tenantName,
             role

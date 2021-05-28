@@ -73,20 +73,22 @@ Stage.defineWidget({
         if (deploymentId) {
             deployment = await manager
                 .doGet(`/deployments/${deploymentId}`, {
-                    _include: _.join(
-                        _.compact([
-                            'id',
-                            'display_name',
-                            'description',
-                            'visibility',
-                            configuration.showBlueprint && 'blueprint_id',
-                            configuration.showSite && 'site_name',
-                            configuration.showCreated && 'created_at',
-                            configuration.showUpdated && 'updated_at',
-                            configuration.showCreator && 'created_by'
-                        ]),
-                        ','
-                    )
+                    params: {
+                        _include: _.join(
+                            _.compact([
+                                'id',
+                                'display_name',
+                                'description',
+                                'visibility',
+                                configuration.showBlueprint && 'blueprint_id',
+                                configuration.showSite && 'site_name',
+                                configuration.showCreated && 'created_at',
+                                configuration.showUpdated && 'updated_at',
+                                configuration.showCreator && 'created_by'
+                            ]),
+                            ','
+                        )
+                    }
                 })
                 .then(deploymentItem => {
                     const { formatTimestamp } = Stage.Utils.Time;
