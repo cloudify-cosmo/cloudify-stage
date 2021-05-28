@@ -6,7 +6,7 @@
   "supportFile": "test/cypress/support/index.ts",
   "pluginsFile": "test/cypress/plugins/index.ts",
 
-  "defaultCommandTimeout": 30000,
+  "defaultCommandTimeout": 10000,
   "video": true,
   "reporter": "junit",
   "reporterOptions": {
