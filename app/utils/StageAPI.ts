@@ -102,15 +102,15 @@ interface CommonWidgetDefinition<Params, Data, Configuration> {
     id: string;
     name: string;
     categories: Stage.Types.ObjectKeys<typeof GenericConfigType['CATEGORY']>[];
-    color: SemanticCOLORS;
+    color?: SemanticCOLORS;
     description?: string;
     /** @see https://docs.cloudify.co/developer/writing_widgets/widget-definition/#fetchurl */
     fetchUrl?: string | Record<string, string>;
     /** @see https://docs.cloudify.co/developer/writing_widgets/widget-definition/#fetchparams-widget-toolbox */
     fetchParams?: (widget: StageWidget<Configuration>, toolbox: StageToolbox) => Params;
     hasReadme: boolean;
-    hasStyle: boolean;
-    hasTemplate: boolean;
+    hasStyle?: boolean;
+    hasTemplate?: boolean;
     helpUrl?: string;
     /** @see https://docs.cloudify.co/developer/writing_widgets/widget-definition/#initialconfiguration */
     initialConfiguration: StageWidgetConfigurationDefinition[];
@@ -119,7 +119,7 @@ interface CommonWidgetDefinition<Params, Data, Configuration> {
     permission: Stage.Types.ObjectKeys<typeof GenericConfigType['CUSTOM_WIDGET_PERMISSIONS']> | string;
     showBorder: boolean;
     showHeader: boolean;
-    supportedEditions: string[];
+    supportedEditions?: string[];
 
     readme?: string;
     template?: string;

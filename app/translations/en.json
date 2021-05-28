@@ -249,7 +249,8 @@
             "header": {
                 "activate": "Are you sure you want to enter maintenance mode?",
                 "deactivate": "Are you sure you want to exit maintenance mode?"
-            }
+            },
+            "activeExecutionsDelay": "There are active executions. If you confirm, maintenance mode will be activated when all executions are done."
         },
         "deactivate": "Deactivate Maintenance Mode",
         "header": "Maintenance mode",
@@ -848,6 +849,9 @@
                     "message": "The drilled-down widget should not be used on a top-level page, only in drill-down pages. Most of the time you do not need to add it manually, as it is present on the drill-down Environments/Services page automatically. You may be looking for a regular Deployments View widget."
                 }
             }
+        },
+        "maintenanceModeButton": {
+            "activating": "Maintenance Mode is being activated"
         },
         "userManagement": {
             "columns": {
