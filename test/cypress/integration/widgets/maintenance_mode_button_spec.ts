@@ -59,7 +59,7 @@ describe('Maintenance mode button widget', () => {
                 ],
                 metadata: {
                     pagination: {
-                        total: 13,
+                        total: 1,
                         size: 1000,
                         offset: 0
                     },
