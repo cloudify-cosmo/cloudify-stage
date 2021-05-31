@@ -233,11 +233,13 @@ export default class External {
             });
     }
 
+    // Unused parameter due to override
     // eslint-disable-next-line class-methods-use-this
     isUnauthorized(_response: Response) {
         return false;
     }
 
+    // Unused parameter due to override
     // eslint-disable-next-line class-methods-use-this
     isLicenseError(_response: Response, _body: any) {
         return false;
