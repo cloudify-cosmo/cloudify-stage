@@ -35,7 +35,7 @@ function getContentType(type?: string) {
 export default class External {
     constructor(protected managerData: any) {}
 
-    doGet(url: string, requestOptions?: RequestOptions) {
+    doGet(url: string, requestOptions?: Omit<RequestOptions, 'data' | 'fileName'>) {
         return this.ajaxCall(url, 'get', requestOptions);
     }
 
