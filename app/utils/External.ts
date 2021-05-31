@@ -241,7 +241,7 @@ export default class External {
 
     // Unused parameter due to override
     // eslint-disable-next-line class-methods-use-this
-    isLicenseError(_response: Response, _body: any) {
+    isLicenseError(_response: Response, _body: unknown) {
         return false;
     }
 
