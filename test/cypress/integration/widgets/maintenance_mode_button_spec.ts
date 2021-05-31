@@ -4,16 +4,16 @@ describe('Maintenance mode button widget', () => {
     before(() => cy.activate('valid_trial_license'));
     beforeEach(() => cy.usePageMock('maintenanceModeButton', { pollingTime: 2 }).mockLogin());
 
-    const getActivateMaintenanceModeButton = () => cy.contains('Activate Maintenance Mode');
-    const getDeactivateMaintenanceModeButton = () => cy.contains('Deactivate Maintenance Mode');
+    const getActivateButton = () => cy.contains('Activate Maintenance Mode');
+    const getDeactivateButton = () => cy.contains('Deactivate Maintenance Mode');
 
     it('should enter maintenance mode on click', () => {
         waitUntilEmpty(
             'executions?status=scheduled&status=queued&status=pending&status=started&status=cancelling&status=force_cancelling&status=kill_cancelling'
         );
-        getActivateMaintenanceModeButton().click();
+        getActivateButton().click();
         cy.contains('Yes').click();
-        getDeactivateMaintenanceModeButton().click();
+        getDeactivateButton().click();
         cy.contains('Yes').click();
 
         cy.location('pathname').should('be.equal', '/console/');
@@ -67,7 +67,7 @@ describe('Maintenance mode button widget', () => {
                 }
             }
         });
-        getActivateMaintenanceModeButton().click();
+        getActivateButton().click();
         cy.contains('There are active executions');
     });
 
@@ -82,7 +82,7 @@ describe('Maintenance mode button widget', () => {
             }
         });
 
-        getDeactivateMaintenanceModeButton()
+        getDeactivateButton()
             .should('be.disabled')
             .parent()
             .should('have.attr', 'title', 'Maintenance Mode is being activated');
