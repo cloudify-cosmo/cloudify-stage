@@ -8,7 +8,7 @@ import log from 'loglevel';
 import { saveAs } from 'file-saver';
 import marked from 'marked';
 import { v4 } from 'uuid';
-import i18n from 'i18next';
+import i18n, { TFunction } from 'i18next';
 import { GenericField } from '../components/basic';
 import type { ManagerData } from '../reducers/managerReducer';
 
@@ -186,8 +186,12 @@ export default class StageUtils {
         return _.includes(widgetSupportedEditions, licenseEdition);
     }
 
+    static composeT(parentT: TFunction, keyNextPart: string): TFunction {
+        return (keySuffix: string, ...params: any[]) => parentT(`${keyNextPart}.${keySuffix}`, ...params);
+    }
+
     static getT(keyPrefix: string) {
-        return (keySuffix: string, params?: Record<string, any>) => i18n.t(`${keyPrefix}.${keySuffix}`, params);
+        return StageUtils.composeT(i18n.t.bind(i18n), keyPrefix);
     }
 
     static isEmptyWidgetData = isEmptyWidgetData;
