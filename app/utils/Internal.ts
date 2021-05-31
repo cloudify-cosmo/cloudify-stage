@@ -9,10 +9,6 @@ import Consts from './consts';
 import StageUtils from './stageUtils';
 
 export default class Internal extends External {
-    constructor(managerData: any) {
-        super(managerData);
-    }
-
     buildHeaders() {
         if (!this.managerData) {
             return {};
