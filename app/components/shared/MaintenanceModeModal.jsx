@@ -6,7 +6,6 @@ import log from 'loglevel';
 import PropTypes from 'prop-types';
 import React, { useEffect, useRef } from 'react';
 import { connect } from 'react-redux';
-import i18n from 'i18next';
 import {
     ApproveButton,
     CancelButton,
@@ -16,7 +15,6 @@ import {
     Icon,
     Menu,
     Message,
-    MessageContainer,
     Modal,
     PopupMenu
 } from '../basic';
@@ -30,8 +28,8 @@ import ExecutionStatus from './ExecutionStatus';
 
 const POLLING_INTERVAL = 2000;
 
-const tConfirmModal = (suffix, options) => i18n.t(`maintenanceMode.confirmModal.${suffix}`, options);
-const tExecutions = (suffix, options) => tConfirmModal(`executions.${suffix}`, options);
+const tConfirmModal = StageUtils.getT('maintenanceMode.confirmModal');
+const tExecutions = StageUtils.composeT(tConfirmModal, 'executions');
 
 function MaintenanceModeModal({
     activeExecutions,
