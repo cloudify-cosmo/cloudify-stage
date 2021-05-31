@@ -280,8 +280,6 @@ export default class External {
 
     // eslint-disable-next-line class-methods-use-this
     buildActualUrl(url: string, data?: Record<string, any>) {
-        // TODO: RD-258
-        // @ts-ignore Cannot find $
         const queryString = data ? (url.indexOf('?') > 0 ? '&' : '?') + $.param(data, true) : '';
         return `${url}${queryString}`;
     }

@@ -1,7 +1,7 @@
 {
     "extends": "../node_modules/cloudify-ui-common/configs/tsconfig.base.json",
     "compilerOptions": {
-        "types": [],
+        "types": ["jquery"],
         "plugins": [{ "name": "typescript-styled-plugin" }]
     }
 }
