@@ -217,7 +217,7 @@ module.exports = (env, argv) => {
                             }
                         },
                         typescript: {
-                            configFile: './tsconfig.json',
+                            configFile: './tsconfig.ui.json',
                             build: true,
                             mode: 'write-references'
                         }
