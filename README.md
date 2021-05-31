@@ -55,6 +55,27 @@ Changes in the source code shall be loaded to the development version of the app
 - for changes in [app](./app) and [widgets](./widgets) directory you need to reload page to see your updates,
 - for changes in [backend](./backend) directory you don't need to reload page as backend server will automatically be restarted.
 
+## TypeScript support in IDEs
+
+The project is written in TypeScript and is using
+[project references](https://www.typescriptlang.org/docs/handbook/project-references.html) to speed up type-checking
+of multiple subprojects.
+
+Compilation results are stored in the `tsc-dist` directory. Keep in mind those are only used by the TypeScript compiler
+and are not used in the UI application. Keeping those files serves as a cache to speed up subsequent compilations.
+
+When developing, make sure your IDE TypeScript plugin supports project references and is using the main `tsconfig.json`
+file as the configuration file. If your IDE uses project-specific `tsconfig.json` files
+(e.g. [`app/tsconfig.json`](./app/tsconfig.json) for files in the `app` directory), your IDE will be doing unnecessary
+work compiling subprojects multiple times.
+
+IDEs known to work with project references:
+1. VSCode
+1. neovim LSP
+
+   It requires a project-specific config or some other way to point to the main `tsconfig.json`.
+   See <https://github.com/neovim/nvim-lspconfig/issues/940#issuecomment-848902408>
+
 ## Package
 
 You can create application package and deploy it on a remote Cloudify Manager server.
