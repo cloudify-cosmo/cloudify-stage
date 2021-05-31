@@ -55,7 +55,7 @@ function PasswordModal({ onHide, open, manager, username }) {
         setLoading();
 
         return manager
-            .doPost(`/users/${username}`, null, { password })
+            .doPost(`/users/${username}`, { data: { password } })
             .then(() => {
                 clearErrors();
                 onHide();
