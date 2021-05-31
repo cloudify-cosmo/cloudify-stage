@@ -158,9 +158,9 @@ function MaintenanceModeModal({
         <Modal open={show} onClose={() => onHide()}>
             <Modal.Header>
                 <Icon name="doctor" />
-                {manager.maintenance === Consts.MAINTENANCE_DEACTIVATED
-                    ? tConfirmModal('header.activate', 'Are you sure you want to enter maintenance mode?')
-                    : tConfirmModal('header.deactivate', 'Are you sure you want to exit maintenance mode?')}
+                {tConfirmModal(
+                    manager.maintenance === Consts.MAINTENANCE_DEACTIVATED ? 'header.activate' : 'header.deactivate'
+                )}
             </Modal.Header>
 
             {errors || !_.isEmpty(activeExecutions.items) ? (
