@@ -181,7 +181,7 @@ export default class External {
         });
     }
 
-    ajaxCall(
+    private ajaxCall(
         url: string,
         method: string,
         { params, data, parseResponse = true, fileName, withCredentials }: RequestOptions = {}
@@ -235,17 +235,17 @@ export default class External {
 
     // Unused parameter due to override
     // eslint-disable-next-line class-methods-use-this
-    isUnauthorized(_response: Response) {
+    protected isUnauthorized(_response: Response) {
         return false;
     }
 
     // Unused parameter due to override
     // eslint-disable-next-line class-methods-use-this
-    isLicenseError(_response: Response, _body: unknown) {
+    protected isLicenseError(_response: Response, _body: unknown) {
         return false;
     }
 
-    checkStatus(response: Response) {
+    private checkStatus(response: Response) {
         if (response.ok) {
             return response;
         }
