@@ -3,7 +3,7 @@ export default class ExecutionGroupsActions {
 
     doStart(groupId: string, workflowId: string, defaultParameters?: Record<string, any>) {
         return this.toolbox.getManager().doPost('/execution-groups', {
-            data: {
+            body: {
                 workflow_id: workflowId,
                 deployment_group_id: groupId,
                 default_parameters: defaultParameters

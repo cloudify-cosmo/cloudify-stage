@@ -104,7 +104,7 @@ export default function TemplateManagement() {
     function onCreateTemplate(templateName, templateRoles, templateTenants, templatePages) {
         startLoading();
 
-        const data = {
+        const body = {
             id: templateName.trim(),
             data: {
                 roles: templateRoles,
@@ -114,8 +114,8 @@ export default function TemplateManagement() {
         };
 
         return internal
-            .doPost('/templates', { data })
-            .then(() => dispatch(addTemplate(data.id, data.pages)))
+            .doPost('/templates', { body })
+            .then(() => dispatch(addTemplate(body.id, body.pages)))
             .catch(handleError);
     }
 
@@ -128,15 +128,15 @@ export default function TemplateManagement() {
             .catch(handleError);
     }
 
-    function updateTemplate(data) {
+    function updateTemplate(body) {
         startLoading();
 
         return internal
-            .doPut('/templates', { data })
+            .doPut('/templates', { body })
             .then(() => {
-                dispatch(editTemplate(data.id, data.pages));
-                if (data.oldId && data.oldId !== data.id) {
-                    dispatch(removeTemplate(data.oldId));
+                dispatch(editTemplate(body.id, body.pages));
+                if (body.oldId && body.oldId !== body.id) {
+                    dispatch(removeTemplate(body.oldId));
                 }
             })
             .catch(handleError);
@@ -204,15 +204,15 @@ export default function TemplateManagement() {
         startLoading();
 
         const pageId = createPageId(name, pageDefs);
-        const data = {
+        const body = {
             id: pageId,
             name,
             layout: []
         };
 
         return internal
-            .doPost('/templates/pages', { data })
-            .then(() => dispatch(addPage(data)))
+            .doPost('/templates/pages', { body })
+            .then(() => dispatch(addPage(body)))
             .then(() => dispatch(push(`/page_edit/${pageId}`)))
             .catch(handleError);
     }

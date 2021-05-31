@@ -31,7 +31,7 @@ export default class DeploymentActions {
     // eslint-disable-next-line camelcase
     doCancel(execution: { id: string; deployment_id: string }, action: string) {
         return this.toolbox.getManager().doPost(`/executions/${execution.id}`, {
-            data: {
+            body: {
                 deployment_id: execution.deployment_id,
                 action
             }
@@ -50,7 +50,7 @@ export default class DeploymentActions {
         }
     ) {
         return this.toolbox.getManager().doPost('/executions', {
-            data: {
+            body: {
                 deployment_id: deploymentId,
                 workflow_id: workflowId,
                 dry_run: dryRun,
@@ -75,26 +75,26 @@ export default class DeploymentActions {
         forceUpdate: boolean,
         preview: boolean
     ) {
-        const data: Record<string, any> = {};
+        const body: Record<string, any> = {};
 
         if (!_.isEmpty(blueprintName)) {
-            data.blueprint_id = blueprintName;
+            body.blueprint_id = blueprintName;
         }
 
-        data.skip_install = !shouldRunInstallWorkflow;
-        data.skip_uninstall = !shouldRunUninstallWorkflow;
-        data.install_first = installWorkflowFirst;
-        data.ignore_failure = ignoreFailure;
-        data.skip_reinstall = !shouldRunReinstall;
-        data.reinstall_list = reinstallList;
-        data.force = forceUpdate;
-        data.preview = preview;
+        body.skip_install = !shouldRunInstallWorkflow;
+        body.skip_uninstall = !shouldRunUninstallWorkflow;
+        body.install_first = installWorkflowFirst;
+        body.ignore_failure = ignoreFailure;
+        body.skip_reinstall = !shouldRunReinstall;
+        body.reinstall_list = reinstallList;
+        body.force = forceUpdate;
+        body.preview = preview;
 
         if (!_.isEmpty(deploymentInputs)) {
-            data.inputs = deploymentInputs;
+            body.inputs = deploymentInputs;
         }
 
-        return this.toolbox.getManager().doPut(`/deployment-updates/${deploymentName}/update/initiate`, { data });
+        return this.toolbox.getManager().doPut(`/deployment-updates/${deploymentName}/update/initiate`, { body });
     }
 
     doSetVisibility(deploymentId: string, visibility: any) {
@@ -102,9 +102,9 @@ export default class DeploymentActions {
     }
 
     doSetSite(deploymentId: string, siteName: string, detachSite: any) {
-        const data = detachSite ? { detach_site: detachSite } : { site_name: siteName };
+        const body = detachSite ? { detach_site: detachSite } : { site_name: siteName };
 
-        return this.toolbox.getManager().doPost(`/deployments/${deploymentId}/set-site`, { data });
+        return this.toolbox.getManager().doPost(`/deployments/${deploymentId}/set-site`, { body });
     }
 
     doGetSiteName(deploymentId: string) {

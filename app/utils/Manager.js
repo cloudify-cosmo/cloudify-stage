@@ -87,8 +87,8 @@ export default class Manager extends Internal {
         });
     }
 
-    doPostFull(url, params, data) {
-        return this.doFetchFull(currentParams => this.doPost(url, { params: currentParams, data }), params);
+    doPostFull(url, params, body) {
+        return this.doFetchFull(currentParams => this.doPost(url, { params: currentParams, body }), params);
     }
 
     doGetFull(url, params) {

@@ -78,7 +78,7 @@ export default class BlueprintActions {
         runtimeOnlyEvaluation = false
     }: BlueprintDeployParams) {
         const { DeploymentActions } = Stage.Common;
-        const data: Record<string, any> = {
+        const body: Record<string, any> = {
             blueprint_id: blueprintId,
             display_name: deploymentName,
             inputs,
@@ -89,12 +89,12 @@ export default class BlueprintActions {
         };
 
         if (siteName) {
-            data.site_name = siteName;
+            body.site_name = siteName;
         }
 
         return this.toolbox
             .getManager()
-            .doPut(`/deployments/${deploymentId}`, { data })
+            .doPut(`/deployments/${deploymentId}`, { body })
             .catch(err =>
                 Promise.reject(
                     err.code === 'deployment_plugin_not_found'

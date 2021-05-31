@@ -13,7 +13,7 @@ export default class {
 
     doRestore(snapshot, shouldForceRestore, ignorePluginFailure) {
         return this.toolbox.getManager().doPost(`/snapshots/${snapshot.id}/restore`, {
-            data: {
+            body: {
                 force: shouldForceRestore,
                 tenant_name: '',
                 ignore_plugin_failure: ignorePluginFailure
@@ -41,7 +41,7 @@ export default class {
 
     doCreate(snapshotId, includeCredentials, excludeLogs, excludeEvents, queue) {
         return this.toolbox.getManager().doPut(`/snapshots/${encodeURIComponent(snapshotId)}`, {
-            data: {
+            body: {
                 include_credentials: includeCredentials,
                 include_logs: !excludeLogs,
                 include_events: !excludeEvents,

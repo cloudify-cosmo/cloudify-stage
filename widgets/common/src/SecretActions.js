@@ -18,7 +18,7 @@ class SecretActions {
     doCreate(key, value, visibility, hidden) {
         return this.toolbox
             .getManager()
-            .doPut(`/secrets/${key}`, { data: { value, visibility, is_hidden_value: hidden } });
+            .doPut(`/secrets/${key}`, { body: { value, visibility, is_hidden_value: hidden } });
     }
 
     doUpdate(key, value) {

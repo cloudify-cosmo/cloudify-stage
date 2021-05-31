@@ -16,7 +16,7 @@ class ExecutionActions {
     // eslint-disable-next-line camelcase
     doAct(execution: { id: string; deployment_id: string }, action: any) {
         return this.toolbox.getManager().doPost(`/executions/${execution.id}`, {
-            data: {
+            body: {
                 deployment_id: execution.deployment_id,
                 action
             }

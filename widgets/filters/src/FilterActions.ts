@@ -19,7 +19,7 @@ export default class FilterActions {
     doCreate(filterId: string, filterRules: FilterRule[]) {
         return this.toolbox
             .getManager()
-            .doPut(`/filters/deployments/${filterId}`, { data: { filter_rules: filterRules } });
+            .doPut(`/filters/deployments/${filterId}`, { body: { filter_rules: filterRules } });
     }
 
     doUpdate(filterId: string, filterRules: FilterRule[]) {

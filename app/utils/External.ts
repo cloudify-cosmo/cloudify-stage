@@ -22,7 +22,7 @@ Text form of class hierarchy diagram to be used at: https://yuml.me/diagram/nofu
 
 interface RequestOptions {
     params?: Record<string, any>;
-    data?: any;
+    body?: any;
     parseResponse?: boolean;
     withCredentials?: boolean;
 }
@@ -34,7 +34,7 @@ function getContentType(type?: string) {
 export default class External {
     constructor(protected managerData: any) {}
 
-    doGet(url: string, requestOptions?: Omit<RequestOptions, 'data' | 'fileName'>) {
+    doGet(url: string, requestOptions?: Omit<RequestOptions, 'body' | 'fileName'>) {
         return this.ajaxCall(url, 'get', requestOptions);
     }
 
@@ -50,8 +50,8 @@ export default class External {
         return this.ajaxCall(url, 'put', requestOptions);
     }
 
-    doPatch(url: string, data: Record<string, any>) {
-        return this.ajaxCall(url, 'PATCH', { data });
+    doPatch(url: string, body: Record<string, any>) {
+        return this.ajaxCall(url, 'PATCH', { body });
     }
 
     doDownload(url: string, fileName: string) {
@@ -183,7 +183,7 @@ export default class External {
     private ajaxCall(
         url: string,
         method: string,
-        { params, data, parseResponse = true, fileName, withCredentials }: RequestOptions & { fileName?: string } = {}
+        { params, body, parseResponse = true, fileName, withCredentials }: RequestOptions & { fileName?: string } = {}
     ) {
         const actualUrl = this.buildActualUrl(url, params);
         log.debug(`${method} data. URL: ${url}`);
@@ -195,16 +195,16 @@ export default class External {
             headers
         };
 
-        if (data) {
+        if (body) {
             try {
-                if (_.isString(data)) {
-                    options.body = data;
+                if (_.isString(body)) {
+                    options.body = body;
                     _.merge(options.headers, getContentType('text/plain'));
                 } else {
-                    options.body = JSON.stringify(data);
+                    options.body = JSON.stringify(body);
                 }
             } catch (e) {
-                log.error(`Error stringifying data. URL: ${actualUrl} data `, data);
+                log.error(`Error stringifying data. URL: ${actualUrl} data `, body);
             }
         }
 

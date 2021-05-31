@@ -17,7 +17,7 @@ export default class {
 
     doAddUser(tenantName, username, role) {
         return this.toolbox.getManager().doPut('/tenants/users', {
-            data: {
+            body: {
                 username,
                 tenant_name: tenantName,
                 role
@@ -27,7 +27,7 @@ export default class {
 
     doRemoveUser(tenantName, username) {
         return this.toolbox.getManager().doDelete('/tenants/users', {
-            data: {
+            body: {
                 username,
                 tenant_name: tenantName
             }
@@ -52,7 +52,7 @@ export default class {
 
     doAddUserGroup(tenantName, userGroup, role) {
         return this.toolbox.getManager().doPut('/tenants/user-groups', {
-            data: {
+            body: {
                 group_name: userGroup,
                 tenant_name: tenantName,
                 role
@@ -62,7 +62,7 @@ export default class {
 
     doRemoveUserGroup(tenantName, userGroup) {
         return this.toolbox.getManager().doDelete('/tenants/user-groups', {
-            data: {
+            body: {
                 group_name: userGroup,
                 tenant_name: tenantName
             }

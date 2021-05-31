@@ -12,11 +12,11 @@ export default class SiteActions {
     }
 
     doCreate(name, visibility, location) {
-        return this.toolbox.getManager().doPut(`/sites/${name}`, { data: { location, visibility } });
+        return this.toolbox.getManager().doPut(`/sites/${name}`, { body: { location, visibility } });
     }
 
     doUpdate(name, visibility, location = null, newName = null) {
-        const data = _.omitBy({ location, visibility, new_name: newName }, _.isNil);
-        return this.toolbox.getManager().doPost(`/sites/${name}`, { data });
+        const body = _.omitBy({ location, visibility, new_name: newName }, _.isNil);
+        return this.toolbox.getManager().doPost(`/sites/${name}`, { body });
     }
 }

@@ -9,7 +9,7 @@ export default class SearchActions {
     private doList(resourceName: ResourceName, filterRules: FilterRule[], params?: Params) {
         return this.toolbox
             .getManager()
-            .doPost(`/searches/${resourceName}`, { params, data: { filter_rules: filterRules } });
+            .doPost(`/searches/${resourceName}`, { params, body: { filter_rules: filterRules } });
     }
 
     private doListAll(resourceName: ResourceName, filterRules: FilterRule[], params?: Params) {

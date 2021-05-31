@@ -201,7 +201,7 @@ export function doCancelExecution(manager, execution, action) {
     const managerAccessor = new Manager(manager);
     return dispatch =>
         managerAccessor
-            .doPost(`/executions/${execution.id}`, { data: { deployment_id: execution.deployment_id, action } })
+            .doPost(`/executions/${execution.id}`, { body: { deployment_id: execution.deployment_id, action } })
             .then(() => {
                 dispatch(cancelExecution(execution, action));
             });

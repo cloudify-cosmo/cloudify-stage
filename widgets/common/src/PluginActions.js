@@ -8,7 +8,7 @@ class PluginActions {
     }
 
     doDelete(plugin, force = true) {
-        return this.toolbox.getManager().doDelete(`/plugins/${plugin.id}`, { data: { force } });
+        return this.toolbox.getManager().doDelete(`/plugins/${plugin.id}`, { body: { force } });
     }
 
     doUpload(visibility, title, resources) {
