@@ -24,7 +24,6 @@ interface RequestOptions {
     params?: Record<string, any>;
     data?: any;
     parseResponse?: boolean;
-    fileName?: string;
     withCredentials?: boolean;
 }
 
@@ -184,7 +183,7 @@ export default class External {
     private ajaxCall(
         url: string,
         method: string,
-        { params, data, parseResponse = true, fileName, withCredentials }: RequestOptions = {}
+        { params, data, parseResponse = true, fileName, withCredentials }: RequestOptions & { fileName?: string } = {}
     ) {
         const actualUrl = this.buildActualUrl(url, params);
         log.debug(`${method} data. URL: ${url}`);
