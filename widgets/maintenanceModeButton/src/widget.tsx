@@ -1,6 +1,6 @@
 import MaintenanceModeButton, { getMaintenanceModeState } from './MaintenanceModeButton';
 
-const widgetDefinition: Stage.Types.WidgetDefinition = {
+const widgetDefinition: Stage.Types.InitialWidgetDefinition<unknown, any, { pollingTime: number }> = {
     id: 'maintenanceModeButton',
     name: 'Maintenance Mode button',
     description: 'Adds button to activate Maintenance Mode',
