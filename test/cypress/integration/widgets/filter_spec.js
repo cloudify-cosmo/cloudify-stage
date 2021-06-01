@@ -81,15 +81,15 @@ describe('Filter', () => {
         });
 
         it('blueprint upload and removal', () => {
-            cy.get('.blueprintsWidget').within(() => {
-                cy.getSearchInput().scrollIntoView().clear().type(blueprintName);
-                cy.get(`.${blueprintName}`).parent().find('.trash').click();
-            });
+            cy.get('.blueprintsWidget')
+                .as('blueprintsWidget')
+                .within(() => {
+                    cy.getSearchInput().scrollIntoView().clear().type(blueprintName);
+                    cy.get(`.${blueprintName}`).parent().find('.trash').click();
+                });
             cy.contains('Yes').click();
 
-            cy.get('.blueprintFilterField > .label').should('not.exist');
-            cy.get('.blueprintFilterField input').type(blueprintName, { force: true });
-            cy.contains('.blueprintFilterField', 'No results found.');
+            cy.get('@blueprintsWidget').contains('There are no Blueprints available.');
         });
     });
 });
