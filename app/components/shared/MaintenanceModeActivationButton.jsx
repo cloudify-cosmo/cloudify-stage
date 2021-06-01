@@ -7,7 +7,7 @@ import React from 'react';
 import i18n from 'i18next';
 import { Button } from '../basic';
 
-export default function MaintenanceModeActivationButton({ activate, onClick }) {
+export default function MaintenanceModeActivationButton({ activate, onClick, disabled }) {
     const content = activate
         ? i18n.t('maintenanceMode.activate', 'Activate Maintenance Mode')
         : i18n.t('maintenanceMode.deactivate', 'Deactivate Maintenance Mode');
@@ -20,11 +20,17 @@ export default function MaintenanceModeActivationButton({ activate, onClick }) {
             className="widgetButton"
             labelPosition="left"
             onClick={onClick}
+            disabled={disabled}
         />
     );
 }
 
 MaintenanceModeActivationButton.propTypes = {
     activate: PropTypes.bool.isRequired,
-    onClick: PropTypes.func.isRequired
+    onClick: PropTypes.func.isRequired,
+    disabled: PropTypes.bool
+};
+
+MaintenanceModeActivationButton.defaultProps = {
+    disabled: false
 };
