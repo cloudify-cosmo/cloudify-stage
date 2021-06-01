@@ -6,7 +6,6 @@ import log from 'loglevel';
 import PropTypes from 'prop-types';
 import React, { useEffect, useRef } from 'react';
 import { connect } from 'react-redux';
-import i18n from 'i18next';
 import {
     ApproveButton,
     CancelButton,
@@ -15,6 +14,7 @@ import {
     ErrorMessage,
     Icon,
     Menu,
+    Message,
     Modal,
     PopupMenu
 } from '../basic';
@@ -27,6 +27,9 @@ import StageUtils from '../../utils/stageUtils';
 import ExecutionStatus from './ExecutionStatus';
 
 const POLLING_INTERVAL = 2000;
+
+const tConfirmModal = StageUtils.getT('maintenanceMode.confirmModal');
+const tExecutions = StageUtils.composeT(tConfirmModal, 'executions');
 
 function MaintenanceModeModal({
     activeExecutions,
@@ -155,15 +158,9 @@ function MaintenanceModeModal({
         <Modal open={show} onClose={() => onHide()}>
             <Modal.Header>
                 <Icon name="doctor" />
-                {manager.maintenance === Consts.MAINTENANCE_DEACTIVATED
-                    ? i18n.t(
-                          'maintenanceMode.confirmModal.header.activate',
-                          'Are you sure you want to enter maintenance mode?'
-                      )
-                    : i18n.t(
-                          'maintenanceMode.confirmModal.header.deactivate',
-                          'Are you sure you want to exit maintenance mode?'
-                      )}
+                {tConfirmModal(
+                    manager.maintenance === Consts.MAINTENANCE_DEACTIVATED ? 'header.activate' : 'header.deactivate'
+                )}
             </Modal.Header>
 
             {errors || !_.isEmpty(activeExecutions.items) ? (
@@ -171,91 +168,72 @@ function MaintenanceModeModal({
                     <ErrorMessage error={errors} />
 
                     {!_.isEmpty(activeExecutions.items) && (
-                        <DataTable>
-                            <DataTable.Column
-                                label={i18n.t('maintenanceMode.confirmModal.executions.blueprint', 'Blueprint')}
-                                width="15%"
-                            />
-                            <DataTable.Column
-                                label={i18n.t('maintenanceMode.confirmModal.executions.deployment', 'Deployment')}
-                                width="15%"
-                            />
-                            <DataTable.Column
-                                label={i18n.t('maintenanceMode.confirmModal.executions.workflow', 'Workflow')}
-                                width="15%"
-                            />
-                            <DataTable.Column
-                                label={i18n.t('maintenanceMode.confirmModal.executions.id', 'Id')}
-                                width="20%"
-                            />
-                            <DataTable.Column
-                                label={i18n.t('maintenanceMode.confirmModal.executions.system', 'System')}
-                                width="5%"
-                            />
-                            <DataTable.Column
-                                label={i18n.t('maintenanceMode.confirmModal.executions.status', 'Status')}
-                                width="15%"
-                            />
-                            <DataTable.Column
-                                label={i18n.t('maintenanceMode.confirmModal.executions.action', 'Action')}
-                            />
+                        <>
+                            <Message content={tConfirmModal('activeExecutionsDelay')} info />
 
-                            {activeExecutions.items.map(item => {
-                                return (
-                                    <DataTable.Row key={item.id}>
-                                        <DataTable.Data>{item.blueprint_id}</DataTable.Data>
-                                        <DataTable.Data>{item.deployment_id}</DataTable.Data>
-                                        <DataTable.Data>{item.workflow_id}</DataTable.Data>
-                                        <DataTable.Data>{item.id}</DataTable.Data>
-                                        <DataTable.Data>
-                                            <Checkmark value={item.is_system_workflow} />
-                                        </DataTable.Data>
-                                        <DataTable.Data>
-                                            <ExecutionStatus execution={item} />
-                                        </DataTable.Data>
-                                        <DataTable.Data className="center aligned">
-                                            <PopupMenu className="menuAction">
-                                                <Menu pointing vertical>
-                                                    <Menu.Item
-                                                        content={i18n.t(
-                                                            'maintenanceMode.confirmModal.executions.cancel',
-                                                            'Cancel'
-                                                        )}
-                                                        icon="cancel"
-                                                        name={ExecutionUtils.CANCEL_ACTION}
-                                                        onClick={() =>
-                                                            cancelExecution(item, ExecutionUtils.CANCEL_ACTION)
-                                                        }
-                                                    />
-                                                    <Menu.Item
-                                                        content={i18n.t(
-                                                            'maintenanceMode.confirmModal.executions.forceCancel',
-                                                            'Force Cancel'
-                                                        )}
-                                                        icon={<Icon name="cancel" color="red" />}
-                                                        name={ExecutionUtils.FORCE_CANCEL_ACTION}
-                                                        onClick={() =>
-                                                            cancelExecution(item, ExecutionUtils.FORCE_CANCEL_ACTION)
-                                                        }
-                                                    />
-                                                    <Menu.Item
-                                                        content={i18n.t(
-                                                            'maintenanceMode.confirmModal.executions.killCancel',
-                                                            'Kill Cancel'
-                                                        )}
-                                                        icon={<Icon name="stop" color="red" />}
-                                                        name={ExecutionUtils.KILL_CANCEL_EXECUTION}
-                                                        onClick={() =>
-                                                            cancelExecution(item, ExecutionUtils.KILL_CANCEL_EXECUTION)
-                                                        }
-                                                    />
-                                                </Menu>
-                                            </PopupMenu>
-                                        </DataTable.Data>
-                                    </DataTable.Row>
-                                );
-                            })}
-                        </DataTable>
+                            <DataTable>
+                                <DataTable.Column label={tExecutions('blueprint', 'Blueprint')} width="15%" />
+                                <DataTable.Column label={tExecutions('deployment', 'Deployment')} width="15%" />
+                                <DataTable.Column label={tExecutions('workflow', 'Workflow')} width="15%" />
+                                <DataTable.Column label={tExecutions('id', 'Id')} width="20%" />
+                                <DataTable.Column label={tExecutions('system', 'System')} width="5%" />
+                                <DataTable.Column label={tExecutions('status', 'Status')} width="15%" />
+                                <DataTable.Column label={tExecutions('action', 'Action')} />
+
+                                {activeExecutions.items.map(item => {
+                                    return (
+                                        <DataTable.Row key={item.id}>
+                                            <DataTable.Data>{item.blueprint_id}</DataTable.Data>
+                                            <DataTable.Data>{item.deployment_id}</DataTable.Data>
+                                            <DataTable.Data>{item.workflow_id}</DataTable.Data>
+                                            <DataTable.Data>{item.id}</DataTable.Data>
+                                            <DataTable.Data>
+                                                <Checkmark value={item.is_system_workflow} />
+                                            </DataTable.Data>
+                                            <DataTable.Data>
+                                                <ExecutionStatus execution={item} />
+                                            </DataTable.Data>
+                                            <DataTable.Data className="center aligned">
+                                                <PopupMenu className="menuAction">
+                                                    <Menu pointing vertical>
+                                                        <Menu.Item
+                                                            content={tExecutions('cancel', 'Cancel')}
+                                                            icon="cancel"
+                                                            name={ExecutionUtils.CANCEL_ACTION}
+                                                            onClick={() =>
+                                                                cancelExecution(item, ExecutionUtils.CANCEL_ACTION)
+                                                            }
+                                                        />
+                                                        <Menu.Item
+                                                            content={tExecutions('forceCancel', 'Force Cancel')}
+                                                            icon={<Icon name="cancel" color="red" />}
+                                                            name={ExecutionUtils.FORCE_CANCEL_ACTION}
+                                                            onClick={() =>
+                                                                cancelExecution(
+                                                                    item,
+                                                                    ExecutionUtils.FORCE_CANCEL_ACTION
+                                                                )
+                                                            }
+                                                        />
+                                                        <Menu.Item
+                                                            content={tExecutions('killCancel', 'Kill Cancel')}
+                                                            icon={<Icon name="stop" color="red" />}
+                                                            name={ExecutionUtils.KILL_CANCEL_EXECUTION}
+                                                            onClick={() =>
+                                                                cancelExecution(
+                                                                    item,
+                                                                    ExecutionUtils.KILL_CANCEL_EXECUTION
+                                                                )
+                                                            }
+                                                        />
+                                                    </Menu>
+                                                </PopupMenu>
+                                            </DataTable.Data>
+                                        </DataTable.Row>
+                                    );
+                                })}
+                            </DataTable>
+                        </>
                     )}
                 </Modal.Content>
             ) : (
@@ -263,14 +241,10 @@ function MaintenanceModeModal({
             )}
 
             <Modal.Actions>
-                <CancelButton
-                    onClick={onDeny}
-                    content={i18n.t('maintenanceMode.confirmModal.no', 'No')}
-                    disabled={loading}
-                />
+                <CancelButton onClick={onDeny} content={tConfirmModal('no', 'No')} disabled={loading} />
                 <ApproveButton
                     onClick={onApprove}
-                    content={i18n.t('maintenanceMode.confirmModal.yes', 'Yes')}
+                    content={tConfirmModal('yes', 'Yes')}
                     icon="doctor"
                     color="green"
                     disabled={loading}
