@@ -93,7 +93,9 @@ export default class External {
                     if (response.message) {
                         reject({ message: StageUtils.resolveMessage(response.message) });
                     } else {
-                        reject({ message: undefined });
+                        // NOTE: legacy solution carried from JS
+                        // @ts-ignore property message does not exist
+                        reject({ message: e.message });
                     }
                 } catch (err) {
                     log.error('Cannot parse upload error', err, xhr.responseText);
