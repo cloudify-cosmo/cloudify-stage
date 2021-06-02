@@ -19,7 +19,8 @@ module.exports = (() => {
         return call(consts.ALLOWED_METHODS_OBJECT.get, url, requestOptions);
     }
 
-    function doGetFull(url, requestOptions, fullData = { items: [] }, size = 0) {
+    function doGetFull(url, requestOptions = {}, fullData = { items: [] }, size = 0) {
+        requestOptions.params = requestOptions.params || {};
         requestOptions.params._size = 1000;
         requestOptions.params._offset = size;
 
