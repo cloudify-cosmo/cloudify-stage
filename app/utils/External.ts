@@ -23,6 +23,7 @@ Text form of class hierarchy diagram to be used at: https://yuml.me/diagram/nofu
 interface RequestOptions {
     params?: Record<string, any>;
     body?: any;
+    headers?: Record<string, any>;
     parseResponse?: boolean;
     withCredentials?: boolean;
 }
@@ -180,16 +181,21 @@ export default class External {
     private ajaxCall(
         url: string,
         method: string,
-        { params, body, parseResponse = true, fileName, withCredentials }: RequestOptions & { fileName?: string } = {}
+        {
+            params,
+            body,
+            headers = {},
+            parseResponse = true,
+            fileName,
+            withCredentials
+        }: RequestOptions & { fileName?: string } = {}
     ) {
         const actualUrl = this.buildActualUrl(url, params);
         log.debug(`${method} data. URL: ${url}`);
 
-        const headers = Object.assign(this.buildHeaders(), getContentType());
-
         const options: RequestInit = {
             method,
-            headers
+            headers: Object.assign(this.buildHeaders(), getContentType(), headers)
         };
 
         if (body) {
