@@ -1,5 +1,3 @@
-export {};
-
 const PropertiesPropType = PropTypes.objectOf(
     PropTypes.shape({
         description: PropTypes.string,
@@ -161,6 +159,7 @@ class DataTypesButton extends React.Component {
         );
     }
 }
+export default DataTypesButton;
 
 DataTypesButton.propTypes = {
     types: PropTypes.objectOf(
