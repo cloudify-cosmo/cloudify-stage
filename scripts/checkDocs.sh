@@ -8,10 +8,7 @@ else
   CURL_OPTIONS=
 fi
 
-DOCS_BRANCH="master"
-if [[ $STAGE_BRANCH =~ [0-9].[0-9]{1,2}-build ]]; then
-  DOCS_BRANCH=STAGE_BRANCH
-fi
+DOCS_BRANCH="5.1-build"
 
 COMPONENTS_REPOSITORY="cloudify-ui-components"
 STAGE_REPOSITORY="cloudify-stage"

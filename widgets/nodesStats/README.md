@@ -1,5 +1,5 @@
 # Nodes Statistics
-Displays the number of node instances, according to their status.
+Displays the number of node instances, according to their status. 
 
 ![node-statistics]( /images/ui/widgets/node-statistics.png )
 
