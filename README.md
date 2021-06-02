@@ -71,6 +71,7 @@ work compiling subprojects multiple times.
 
 IDEs known to work with project references:
 1. VSCode
+1. WebStorm
 1. neovim LSP
 
    It requires a project-specific config or some other way to point to the main `tsconfig.json`.
