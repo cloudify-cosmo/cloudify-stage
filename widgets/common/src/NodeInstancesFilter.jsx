@@ -36,7 +36,7 @@ export default function NodeInstancesFilter({
         const fetchUrl = '/node-instances';
         toolbox
             .getManager()
-            .doGet(fetchUrl, params)
+            .doGet(fetchUrl, { params })
             .then(data => {
                 const parsedData = _.chain(data.items || {})
                     .map(item => ({ text: item.id, value: item.id, key: item.id }))

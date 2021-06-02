@@ -7,23 +7,23 @@ import Consts from './consts';
 
 export default class Manager extends Internal {
     getCurrentUsername() {
-        return _.get(this, 'data.username', null);
+        return this.managerData?.username ?? null;
     }
 
     getCurrentUserRole() {
-        return _.get(this, 'data.auth.role', null);
+        return this.managerData?.auth?.role ?? null;
     }
 
     getDistributionName() {
-        return _.get(this, 'data.version.distribution', null);
+        return this.managerData?.version?.distribution ?? null;
     }
 
     getDistributionRelease() {
-        return _.get(this, 'data.version.distro_release', null);
+        return this.managerData?.version?.distro_release ?? null;
     }
 
     isCommunityEdition() {
-        return _.get(this.data, 'version.edition') === Consts.EDITION.COMMUNITY;
+        return this.managerData?.version?.edition === Consts.EDITION.COMMUNITY;
     }
 
     getManagerUrl(url, data) {
@@ -31,11 +31,11 @@ export default class Manager extends Internal {
     }
 
     getSelectedTenant() {
-        return _.get(this, 'data.tenants.selected', null);
+        return this.managerData?.tenants?.selected ?? null;
     }
 
     getSystemRoles() {
-        const roles = _.get(this, 'data.roles', null);
+        const roles = this.managerData?.roles ?? null;
         return _.filter(roles, role => role.type === 'system_role');
     }
 
@@ -87,11 +87,11 @@ export default class Manager extends Internal {
         });
     }
 
-    doPostFull(url, params, requestBody) {
-        return this.doFetchFull(currentParams => this.doPost(url, currentParams, requestBody), params);
+    doPostFull(url, params, body) {
+        return this.doFetchFull(currentParams => this.doPost(url, { params: currentParams, body }), params);
     }
 
     doGetFull(url, params) {
-        return this.doFetchFull(currentParams => this.doGet(url, currentParams), params);
+        return this.doFetchFull(currentParams => this.doGet(url, { params: currentParams }), params);
     }
 }

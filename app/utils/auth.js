@@ -14,22 +14,22 @@ import encodeTextToBase64 from './encodeTextToBase64';
 export default class Auth {
     static login(username, password) {
         const external = new External({ basicAuth: encodeTextToBase64(`${username}:${password}`) });
-        return external.doPost(StageUtils.Url.url('/auth/login'), null, null, true, null, true);
+        return external.doPost(StageUtils.Url.url('/auth/login'), { withCredentials: true });
     }
 
     static getManagerData(managerData) {
         const internal = new Internal(managerData);
-        return internal.doGet('/auth/manager', null, true);
+        return internal.doGet('/auth/manager');
     }
 
     static getUserData(managerData) {
         const internal = new Internal(managerData);
-        return internal.doGet('/auth/user', null, true);
+        return internal.doGet('/auth/user');
     }
 
     static logout(managerData) {
         const internal = new Internal(managerData);
-        return internal.doPost('/auth/logout', null, null, true, null, true);
+        return internal.doPost('/auth/logout', { withCredentials: true });
     }
 
     static isLoggedIn() {

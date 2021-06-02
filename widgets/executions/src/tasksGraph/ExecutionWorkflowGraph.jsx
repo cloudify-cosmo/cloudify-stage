@@ -50,11 +50,11 @@ export default function ExecutionWorkflowGraph({ containerHeight, selectedExecut
     }
 
     function getTasksGraphPromise() {
-        const tasksGraphParams = {
+        const params = {
             execution_id: selectedExecution.id,
             name: selectedExecution.workflow_id
         };
-        return toolbox.getWidgetBackend().doGet('get_tasks_graph', { ...tasksGraphParams });
+        return toolbox.getWidgetBackend().doGet('get_tasks_graph', { params });
     }
 
     function startPolling() {

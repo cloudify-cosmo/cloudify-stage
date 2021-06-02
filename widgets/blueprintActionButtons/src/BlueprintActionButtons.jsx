@@ -108,7 +108,7 @@ export default class BlueprintActionButtons extends React.Component {
                             toolbox.loading(true);
                             this.setState({ loading: true });
                             manager
-                                .doGet('/blueprints?_include=main_file_name', { id: blueprintId })
+                                .doGet('/blueprints?_include=main_file_name', { params: { id: blueprintId } })
                                 .then(data =>
                                     new Stage.Common.BlueprintActions(toolbox).doEditInComposer(
                                         blueprintId,
