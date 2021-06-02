@@ -13,6 +13,7 @@ const logger = require('../handler/LoggerHandler').getLogger('ServerProxy');
 
 function errorHandler(url, res, err) {
     const isTimeout = err.code === 'ETIMEDOUT';
+    const isSocketTimeout = err.code === 'ESOCKETTIMEDOUT';
     const isConnTimeout = err.connect;
 
     const urlMsg = `Requested URL: ${url}.`;
@@ -21,6 +22,9 @@ function errorHandler(url, res, err) {
         exMsg = 'Manager is not available';
     } else if (isTimeout) {
         exMsg = 'Request timed out';
+    } else if (isSocketTimeout) {
+        // See https://community.particle.io/t/what-does-esockettimedout-mean/29100/7
+        exMsg = 'Connected to the Manager but timed out when receiving data.';
     } else {
         exMsg = `An unexpected error has occurred: ${err.message}`;
     }
