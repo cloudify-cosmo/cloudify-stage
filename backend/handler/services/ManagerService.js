@@ -6,24 +6,24 @@ const ManagerHandler = require('../ManagerHandler');
 const consts = require('../../consts');
 
 module.exports = (() => {
-    function call(method, url, params, data, headers = {}) {
+    function call(method, url, { params, body = null, headers = {} } = {}) {
         let fullUrl = url;
         if (!_.isEmpty(params)) {
             const queryString = (url.indexOf('?') > 0 ? '&' : '?') + param(params, true);
             fullUrl = `${url}${queryString}`;
         }
-        return ManagerHandler.jsonRequest(method, fullUrl, headers, data);
+        return ManagerHandler.jsonRequest(method, fullUrl, headers, body);
     }
 
-    function doGet(url, params, headers) {
-        return call(consts.ALLOWED_METHODS_OBJECT.get, url, params, null, headers);
+    function doGet(url, requestOptions) {
+        return call(consts.ALLOWED_METHODS_OBJECT.get, url, requestOptions);
     }
 
-    function doGetFull(url, params, headers, fullData = { items: [] }, size = 0) {
-        params._size = 1000;
-        params._offset = size;
+    function doGetFull(url, requestOptions, fullData = { items: [] }, size = 0) {
+        requestOptions.params._size = 1000;
+        requestOptions.params._offset = size;
 
-        const promise = this.doGet(url, params, headers);
+        const promise = this.doGet(url, requestOptions);
 
         return promise.then(data => {
             const cumulativeSize = size + data.items.length;
@@ -32,26 +32,26 @@ module.exports = (() => {
             fullData.items = _.concat(fullData.items, data.items);
 
             if (totalSize > cumulativeSize) {
-                return this.doGetFull(url, params, headers, fullData, cumulativeSize);
+                return this.doGetFull(url, requestOptions, fullData, cumulativeSize);
             }
             return fullData;
         });
     }
 
-    function doPost(url, params, data, headers) {
-        return call(consts.ALLOWED_METHODS_OBJECT.post, url, params, data, headers);
+    function doPost(url, requestOptions) {
+        return call(consts.ALLOWED_METHODS_OBJECT.post, url, requestOptions);
     }
 
-    function doDelete(url, params, data, headers) {
-        return call(consts.ALLOWED_METHODS_OBJECT.delete, url, params, data, headers);
+    function doDelete(url, requestOptions) {
+        return call(consts.ALLOWED_METHODS_OBJECT.delete, url, requestOptions);
     }
 
-    function doPut(url, params, data, headers) {
-        return call(consts.ALLOWED_METHODS_OBJECT.put, url, params, data, headers);
+    function doPut(url, requestOptions) {
+        return call(consts.ALLOWED_METHODS_OBJECT.put, url, requestOptions);
     }
 
-    function doPatch(url, params, data, headers) {
-        return call(consts.ALLOWED_METHODS_OBJECT.patch, url, params, data, headers);
+    function doPatch(url, requestOptions) {
+        return call(consts.ALLOWED_METHODS_OBJECT.patch, url, requestOptions);
     }
 
     return {
