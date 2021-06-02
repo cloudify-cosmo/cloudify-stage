@@ -1,14 +1,11 @@
 {
-    "extends": "../../node_modules/cloudify-ui-common/configs/tsconfig.composite.json",
+    "extends": "../../tsconfig.base.json",
     "compilerOptions": {
         "baseUrl": "../../",
         "paths": {
             "*": ["node_modules/*", "app/*", "widgets/*"]
         },
-        "types": ["jest"],
-        "outDir": "../../tsc-dist",
-        "rootDir": "../..",
-        "composite": true
+        "types": ["jest"]
     },
     "references": [{ "path": "../../app" }, { "path": "../../widgets" }],
     "include": ["**/*", "**/*.json"]

@@ -1,5 +1,5 @@
 {
-    "extends": "../../node_modules/cloudify-ui-common/configs/tsconfig.composite.json",
+    "extends": "../../tsconfig.base.json",
     "compilerOptions": {
         // Some files do not import/export anything, so cannot use isolatedModules
         "isolatedModules": false,
@@ -12,10 +12,7 @@
 
         // Cypress forces using inlineSourceMap
         "sourceMap": false,
-        "types": ["cypress"],
-        "rootDir": "../..",
-        "outDir": "../../tsc-dist",
-        "composite": true
+        "types": ["cypress"]
     },
     "include": ["**/*", "**/*.json"],
     "files": ["../../app/typings/stage-api.d.ts", "../../babel.config.js"],
