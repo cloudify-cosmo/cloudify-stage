@@ -81,10 +81,6 @@ export default class External {
         return new Promise((resolve, reject) => {
             // Call upload method
             const xhr = new XMLHttpRequest();
-            (xhr.upload || xhr).addEventListener('progress', e => {
-                const { loaded, total } = e;
-                log.debug(`xhr progress: ${Math.round((loaded / total) * 100)}%`);
-            });
             xhr.addEventListener('error', e => {
                 log.error('xhr upload error', e, xhr.responseText);
 
@@ -93,8 +89,7 @@ export default class External {
                     if (response.message) {
                         reject({ message: StageUtils.resolveMessage(response.message) });
                     } else {
-                        // NOTE: legacy solution carried from JS
-                        // @ts-ignore property message does not exist
+                        // @ts-expect-error legacy solution carried from JS
                         reject({ message: e.message });
                     }
                 } catch (err) {
