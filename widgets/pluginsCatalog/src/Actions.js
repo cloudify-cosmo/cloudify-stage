@@ -27,7 +27,7 @@ export default class Actions {
     doGetPluginsList() {
         return this.toolbox
             .getInternal()
-            .doGet('/external/content', { url: this.jsonPath }, false)
+            .doGet('/external/content', { params: { url: this.jsonPath }, parseResponse: false })
             .then(response => response.json());
     }
 
@@ -48,6 +48,6 @@ export default class Actions {
             title
         };
 
-        return this.toolbox.getInternal().doUpload('/plugins/upload', params, null, 'post');
+        return this.toolbox.getInternal().doUpload('/plugins/upload', { params, method: 'post' });
     }
 }

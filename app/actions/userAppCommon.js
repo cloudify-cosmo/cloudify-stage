@@ -4,9 +4,9 @@ import Internal from '../utils/Internal';
 
 export function saveUserAppData() {
     return (dispatch, getState) => {
-        const data = { appData: _.pick(getState(), 'pages'), version: Consts.APP_VERSION };
+        const body = { appData: _.pick(getState(), 'pages'), version: Consts.APP_VERSION };
 
         const internal = new Internal(getState().manager);
-        return internal.doPost('/ua', null, data);
+        return internal.doPost('/ua', { body });
     };
 }

@@ -52,7 +52,7 @@ Stage.defineWidget({
             .getManager()
             .doGet(
                 '/blueprints?_include=id,updated_at,created_at,description,created_by,visibility,main_file_name,state,error',
-                params
+                { params }
             )
             .then(data => {
                 result.blueprints = data;

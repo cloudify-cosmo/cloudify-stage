@@ -23,16 +23,18 @@ Stage.defineWidget({
             .getManager()
             .doGet(
                 '/plugins?_include=id,package_name,package_version,supported_platform,distribution,distribution_release,uploaded_at,created_by,visibility,title',
-                toolbox.getContext().getValue('onlyMyResources')
-                    ? { ...params, created_by: toolbox.getManager().getCurrentUsername() }
-                    : params
+                {
+                    params: toolbox.getContext().getValue('onlyMyResources')
+                        ? { ...params, created_by: toolbox.getManager().getCurrentUsername() }
+                        : params
+                }
             )
             .then(data =>
                 Promise.all(
                     _.map(data.items, item =>
                         toolbox
                             .getInternal()
-                            .doGet(`/plugins/icons/${item.id}`, null, false)
+                            .doGet(`/plugins/icons/${item.id}`, { parseResponse: false })
                             .then(response => response.blob())
                             .then(
                                 blob =>

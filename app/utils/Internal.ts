@@ -10,32 +10,29 @@ import StageUtils from './stageUtils';
 
 export default class Internal extends External {
     buildHeaders() {
-        if (!this.data) {
+        if (!this.managerData) {
             return {};
         }
 
-        const headers = { tenant: _.get(this.data, 'tenants.selected', Consts.DEFAULT_TENANT) };
-
-        // read token from cookies
-        const token = Cookies.get(Consts.TOKEN_COOKIE_NAME);
-        if (token) {
-            headers['Authentication-Token'] = token;
-        }
+        const headers = {
+            tenant: _.get(this.managerData, 'tenants.selected', Consts.DEFAULT_TENANT),
+            'Authentication-Token': Cookies.get(Consts.TOKEN_COOKIE_NAME) || undefined
+        };
 
         return headers;
     }
 
-    buildActualUrl(path, data) {
+    buildActualUrl(path: string, data: Record<string, any>) {
         return super.buildActualUrl(StageUtils.Url.url(path), data);
     }
 
     // eslint-disable-next-line class-methods-use-this
-    isUnauthorized(response) {
+    isUnauthorized(response: Response) {
         return response.status === 401;
     }
 
     // eslint-disable-next-line class-methods-use-this
-    isLicenseError(response, body) {
+    isLicenseError(response: Response, body: any) {
         return (
             response.status === 400 &&
             (body.error_code === Consts.NO_LICENSE_ERROR_CODE || body.error_code === Consts.EXPIRED_LICENSE_ERROR_CODE)

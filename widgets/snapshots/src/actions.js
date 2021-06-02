@@ -12,21 +12,23 @@ export default class {
     }
 
     doRestore(snapshot, shouldForceRestore, ignorePluginFailure) {
-        return this.toolbox.getManager().doPost(`/snapshots/${snapshot.id}/restore`, null, {
-            force: shouldForceRestore,
-            tenant_name: '',
-            ignore_plugin_failure: ignorePluginFailure
+        return this.toolbox.getManager().doPost(`/snapshots/${snapshot.id}/restore`, {
+            body: {
+                force: shouldForceRestore,
+                tenant_name: '',
+                ignore_plugin_failure: ignorePluginFailure
+            }
         });
     }
 
-    doUpload(snapshotUrl, snapshotId, file) {
-        if (file) {
-            return this.toolbox.getManager().doUpload(`/snapshots/${snapshotId}/archive`, {}, file, 'put');
+    doUpload(snapshotUrl, snapshotId, files) {
+        if (files) {
+            return this.toolbox.getManager().doUpload(`/snapshots/${snapshotId}/archive`, { files });
         }
 
         return this.toolbox
             .getManager()
-            .doPut(`/snapshots/${snapshotId}/archive`, { snapshot_archive_url: snapshotUrl });
+            .doPut(`/snapshots/${snapshotId}/archive`, { params: { snapshot_archive_url: snapshotUrl } });
     }
 
     doDownload(snapshot) {
@@ -38,11 +40,13 @@ export default class {
     }
 
     doCreate(snapshotId, includeCredentials, excludeLogs, excludeEvents, queue) {
-        return this.toolbox.getManager().doPut(`/snapshots/${encodeURIComponent(snapshotId)}`, null, {
-            include_credentials: includeCredentials,
-            include_logs: !excludeLogs,
-            include_events: !excludeEvents,
-            queue
+        return this.toolbox.getManager().doPut(`/snapshots/${encodeURIComponent(snapshotId)}`, {
+            body: {
+                include_credentials: includeCredentials,
+                include_logs: !excludeLogs,
+                include_events: !excludeEvents,
+                queue
+            }
         });
     }
 }

@@ -36,19 +36,19 @@ export function persistPage(page) {
             return _.pick(widget, 'name', 'width', 'height', 'x', 'y', 'configuration', 'definition');
         }
 
-        const pageData = _(page).pick('id', 'oldId', 'name', 'layout').cloneDeep();
-        forEachWidget(pageData, prepareWidgetData);
+        const body = _(page).pick('id', 'oldId', 'name', 'layout').cloneDeep();
+        forEachWidget(body, prepareWidgetData);
 
         const internal = new Internal(getState().manager);
         return internal
-            .doPut('/templates/pages', {}, pageData)
+            .doPut('/templates/pages', { body })
             .then(() => {
                 dispatch(removePage(page.id));
                 if (page.oldId && page.oldId !== page.id) {
                     dispatch(removePage(page.oldId));
                 }
             })
-            .then(() => dispatch(addPage(_.omit(pageData, 'oldId'))));
+            .then(() => dispatch(addPage(_.omit(body, 'oldId'))));
     };
 }
 

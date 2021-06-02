@@ -299,7 +299,7 @@ export function createPagesFromTemplate(): ThunkAction<void, ReduxState, never, 
         const tenant = _.get(manager, 'tenants.selected', Consts.DEFAULT_ALL);
 
         const internal = new Internal(manager);
-        return internal.doGet('/templates/select', { tenant }).then(templateId => {
+        return internal.doGet('/templates/select', { params: { tenant } }).then(templateId => {
             log.debug('Selected template id', templateId);
 
             const storeTemplates = getState().templates;

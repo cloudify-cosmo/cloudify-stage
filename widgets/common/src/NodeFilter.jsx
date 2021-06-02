@@ -129,7 +129,7 @@ export default class NodeFilter extends React.Component {
 
         toolbox
             .getManager()
-            .doGet(fetchUrl, params)
+            .doGet(fetchUrl, { params })
             .then(data => {
                 let ids = _.chain(data.items || [])
                     .map(item => item.id)

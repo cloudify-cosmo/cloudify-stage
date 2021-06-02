@@ -73,9 +73,11 @@ Stage.defineWidget({
 
     fetchData(widget, toolbox, params) {
         const deploymentDataPromise = toolbox.getManager().doGet('/deployments', {
-            _include:
-                'id,display_name,blueprint_id,visibility,created_at,created_by,updated_at,inputs,workflows,site_name',
-            ...params
+            params: {
+                _include:
+                    'id,display_name,blueprint_id,visibility,created_at,created_by,updated_at,inputs,workflows,site_name',
+                ...params
+            }
         });
         const deploymentIdsPromise = deploymentDataPromise.then(data => _.map(data.items, item => item.id));
 
@@ -88,10 +90,12 @@ Stage.defineWidget({
 
         const executionsDataPromise = deploymentIdsPromise.then(ids =>
             toolbox.getManager().doGet('/executions', {
-                _include:
-                    'id,deployment_id,workflow_id,status,status_display,created_at,scheduled_for,ended_at,parameters,error,total_operations,finished_operations',
-                _sort: '-ended_at',
-                deployment_id: ids
+                params: {
+                    _include:
+                        'id,deployment_id,workflow_id,status,status_display,created_at,scheduled_for,ended_at,parameters,error,total_operations,finished_operations',
+                    _sort: '-ended_at',
+                    deployment_id: ids
+                }
             })
         );
 

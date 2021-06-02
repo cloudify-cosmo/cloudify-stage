@@ -49,7 +49,7 @@ export function resetPagesForTenant(tenant) {
             return dispatch(resetPages());
         }
         const internal = new Internal(getState().manager);
-        return internal.doGet('ua/clear-pages', { tenant });
+        return internal.doGet('ua/clear-pages', { params: { tenant } });
     };
 }
 

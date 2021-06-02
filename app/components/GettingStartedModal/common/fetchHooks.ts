@@ -15,7 +15,7 @@ export const useFetch = <T extends unknown>(fetcher: Manager | Internal, url: st
     useEffect(() => {
         let mounted = true;
         fetcher
-            .doGet(url, params)
+            .doGet(url, { params })
             .then(response => {
                 if (mounted) {
                     setState({

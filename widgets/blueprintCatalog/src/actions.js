@@ -22,7 +22,7 @@ export default class Actions {
             // JSON URL
             return this.toolbox
                 .getInternal()
-                .doGet('/external/content', { url: this.jsonPath }, false)
+                .doGet('/external/content', { params: { url: this.jsonPath }, parseResponse: false })
                 .then(response => response.json())
                 .then(data =>
                     Promise.resolve({
@@ -35,7 +35,10 @@ export default class Actions {
         // GitHub API
         return this.toolbox
             .getInternal()
-            .doGet(`/github/search/repositories?q=user:${this.username} ${this.filter}`, params, false)
+            .doGet(`/github/search/repositories?q=user:${this.username} ${this.filter}`, {
+                params,
+                parseResponse: false
+            })
             .then(response => Promise.resolve(response.json()))
             .then(data => Promise.resolve({ ...data, source: Consts.GITHUB_DATA_SOURCE }));
     }
