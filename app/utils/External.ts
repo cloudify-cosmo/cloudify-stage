@@ -1,7 +1,5 @@
-/**
- * Created by pposel on 09/02/2017.
- */
-
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-nocheck Not converted to TS yet
 import _ from 'lodash';
 import log from 'loglevel';
 import 'isomorphic-fetch';
@@ -283,14 +281,14 @@ export default class External {
     }
 
     // eslint-disable-next-line class-methods-use-this
-    buildActualUrl(url: string, data?: Record<string, any>) {
+    protected buildActualUrl(url: string, data?: Record<string, any>) {
         // TODO: RD-258
         // @ts-ignore Cannot find $
         const queryString = data ? (url.indexOf('?') > 0 ? '&' : '?') + $.param(data, true) : '';
         return `${url}${queryString}`;
     }
 
-    buildHeaders(): Record<string, string> {
+    protected buildHeaders(): Record<string, string> {
         if (!this.managerData) {
             return {};
         }

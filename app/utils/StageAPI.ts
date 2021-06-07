@@ -213,9 +213,9 @@ declare global {
         /** Common widget utilities */
         namespace Common {}
         // @ts-ignore Common contents are defined in widgets
-        const defineCommon: <Name extends keyof typeof Common>(
+        const defineCommon: <Name extends keyof typeof Stage.Common>(
             // @ts-ignore Common contents are defined in widgets
-            definition: CommonOrPropTypeDefinition<typeof Common, Name>
+            definition: CommonOrPropTypeDefinition<typeof Stage.Common, Name>
         ) => void;
 
         // NOTE: Additional PropTypes are defined in widgets

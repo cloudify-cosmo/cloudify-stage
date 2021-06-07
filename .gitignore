@@ -6,7 +6,8 @@
 .nyc_output
 coverage-*
 conf/me.json
-dist
+/dist
+/tsc-dist
 userData
 node_modules
 test/cypress/screenshots

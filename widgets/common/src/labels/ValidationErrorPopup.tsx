@@ -2,7 +2,7 @@ import type { FunctionComponent } from 'react';
 import LabelErrorPopup from './LabelErrorPopup';
 import type { LabelInputType } from './types';
 
-interface ValidationErrorPopupProps {
+export interface ValidationErrorPopupProps {
     type: LabelInputType;
 }
 

@@ -1,7 +1,3 @@
-/**
- * Created by jakubniezgoda on 15/04/2019.
- */
-
 const PropertiesPropType = PropTypes.objectOf(
     PropTypes.shape({
         description: PropTypes.string,
@@ -163,6 +159,7 @@ class DataTypesButton extends React.Component {
         );
     }
 }
+export default DataTypesButton;
 
 DataTypesButton.propTypes = {
     types: PropTypes.objectOf(

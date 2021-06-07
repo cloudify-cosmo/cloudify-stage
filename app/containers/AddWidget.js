@@ -41,6 +41,4 @@ const mapDispatchToProps = dispatch => {
     };
 };
 
-const AddWidget = connect(mapStateToProps, mapDispatchToProps)(AddWidgetModal);
-
-export default AddWidget;
+export default connect(mapStateToProps, mapDispatchToProps)(AddWidgetModal);
