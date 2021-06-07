@@ -20,6 +20,8 @@ const goToNextStep = () => cy.contains('button', 'Next').click();
 const goToFinishStep = () => cy.contains('button', 'Finish').click();
 const closeModal = () => cy.contains('button', 'Close').click();
 
+const waitOptionsForPluginsUpload = { responseTimeout: 5 * 60 * 1000 };
+
 function verifyInstallationSucceeded(blueprints: string[]) {
     cy.contains('.progress .progress', '100%', { timeout: blueprints.length * 2 * 60 * 1000 });
     cy.contains('.progress .label', 'Installation done!');
@@ -151,7 +153,7 @@ describe('Getting started modal', () => {
             goToFinishStep();
 
             cy.wait(toAliasReferences(awsSecrets));
-            cy.wait(toAliasReferences(awsPlugins), { responseTimeout: awsPlugins.length * 2 * 60 * 1000 });
+            cy.wait(toAliasReferences(awsPlugins), waitOptionsForPluginsUpload);
             cy.wait(toAliasReferences(awsBlueprints));
 
             verifyInstallationSucceeded(awsBlueprints);
@@ -242,7 +244,7 @@ describe('Getting started modal', () => {
 
             goToFinishStep();
 
-            cy.wait(toAliasReferences(plugins));
+            cy.wait(toAliasReferences(plugins), waitOptionsForPluginsUpload);
             cy.wait(toAliasReferences(awsSecrets));
             cy.wait(toAliasReferences(gcpSecrets));
             cy.wait(toAliasReferences(blueprints));
