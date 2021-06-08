@@ -1,3 +1,4 @@
+// @ts-nocheck File not migrated fully to TS
 /**
  * Created by kinneretzin on 26/09/2016.
  */

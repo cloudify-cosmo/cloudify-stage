@@ -1,3 +1,4 @@
+// @ts-nocheck File not migrated fully to TS
 import log from 'loglevel';
 import * as types from './types';
 import { setAppError, setAppLoading } from './appState';

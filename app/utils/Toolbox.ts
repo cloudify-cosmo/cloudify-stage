@@ -1,3 +1,4 @@
+// @ts-nocheck File not migrated fully to TS
 /* eslint-disable class-methods-use-this */
 /**
  * Created by kinneretzin on 14/11/2016.

@@ -1,3 +1,4 @@
+// @ts-nocheck File not migrated fully to TS
 /**
  * @param {(string | null | undefined | boolean)[]} classNames
  */

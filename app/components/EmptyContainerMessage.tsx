@@ -1,3 +1,4 @@
+// @ts-nocheck File not migrated fully to TS
 import i18n from 'i18next';
 import React from 'react';
 import PropTypes from 'prop-types';

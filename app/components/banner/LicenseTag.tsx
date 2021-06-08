@@ -1,3 +1,4 @@
+// @ts-nocheck File not migrated fully to TS
 import _ from 'lodash';
 import PropTypes from 'prop-types';
 import React from 'react';

@@ -1,3 +1,4 @@
+// @ts-nocheck File not migrated fully to TS
 import React, { useEffect, useState } from 'react';
 import i18n from 'i18next';
 import PropTypes from 'prop-types';

@@ -1,3 +1,4 @@
+// @ts-nocheck File not migrated fully to TS
 import _ from 'lodash';
 import * as types from './types';
 import { drillDownWarning } from './templateManagement';

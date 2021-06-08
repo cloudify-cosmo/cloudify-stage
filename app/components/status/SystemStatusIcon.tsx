@@ -1,3 +1,4 @@
+// @ts-nocheck File not migrated fully to TS
 import React from 'react';
 import PropTypes from 'prop-types';
 

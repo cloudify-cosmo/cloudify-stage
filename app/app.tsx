@@ -1,3 +1,4 @@
+// @ts-nocheck File not migrated fully to TS
 import 'jquery-ui/ui/core';
 import 'jquery-ui/ui/widget';
 import 'jquery-ui/ui/widgets/mouse';

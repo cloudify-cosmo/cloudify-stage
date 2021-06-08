@@ -1,3 +1,4 @@
+// @ts-nocheck File not migrated fully to TS
 import React, { useState } from 'react';
 import _ from 'lodash';
 import i18n from 'i18next';

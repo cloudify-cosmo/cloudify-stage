@@ -1,3 +1,4 @@
+// @ts-nocheck File not migrated fully to TS
 import _ from 'lodash';
 import { connect } from 'react-redux';
 import SystemStatusHeader from '../../components/status/SystemStatusHeader';

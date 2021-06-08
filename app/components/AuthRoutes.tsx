@@ -1,3 +1,4 @@
+// @ts-nocheck File not migrated fully to TS
 import _ from 'lodash';
 import Cookies from 'js-cookie';
 import i18n from 'i18next';

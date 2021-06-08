@@ -1,3 +1,4 @@
+// @ts-nocheck File not migrated fully to TS
 import * as types from '../actions/types';
 
 const clusterStatus = (state = {}, action) => {

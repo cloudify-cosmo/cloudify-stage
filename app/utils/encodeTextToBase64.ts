@@ -1,3 +1,4 @@
+// @ts-nocheck File not migrated fully to TS
 const codeExpression = /%([0-9A-F]{2})/g;
 
 const getChar = (part, hex) => String.fromCharCode(parseInt(hex, 16));
