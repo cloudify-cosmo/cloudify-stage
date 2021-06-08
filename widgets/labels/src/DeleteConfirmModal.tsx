@@ -1,3 +1,4 @@
+// @ts-nocheck File not migrated fully to TS
 import _ from 'lodash';
 
 export default function DeleteConfirmModal({ deploymentId, labels, labelToDelete, onHide, toolbox }) {

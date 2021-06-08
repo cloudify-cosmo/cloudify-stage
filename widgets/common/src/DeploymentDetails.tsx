@@ -1,3 +1,4 @@
+// @ts-nocheck File not migrated fully to TS
 function DeploymentParameter({ name, value, as, headerStyle, subHeaderStyle }) {
     const { Header } = Stage.Basic;
 

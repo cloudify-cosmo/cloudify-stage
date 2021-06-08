@@ -1,3 +1,4 @@
+// @ts-nocheck File not migrated fully to TS
 /**
  * NodeInstancesFilter - a component showing dropdown with nodes instances of specified deployment.
  * Data is dynamically fetched from manager.

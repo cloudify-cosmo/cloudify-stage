@@ -1,3 +1,4 @@
+// @ts-nocheck File not migrated fully to TS
 import { format as d3format } from 'd3-format';
 
 Stage.defineWidget({

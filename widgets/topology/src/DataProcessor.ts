@@ -1,3 +1,4 @@
+// @ts-nocheck File not migrated fully to TS
 import { Consts, DataProcessingService, NodeDataUtils } from 'cloudify-blueprint-topology';
 import { consts } from 'cloudify-ui-common';
 import {

@@ -1,3 +1,4 @@
+// @ts-nocheck File not migrated fully to TS
 import GenericDeployModal from './GenericDeployModal';
 
 function UpdateDeploymentModal({ open, deploymentId, onHide, toolbox }) {

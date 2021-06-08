@@ -1,3 +1,4 @@
+// @ts-nocheck File not migrated fully to TS
 export default {
     GITHUB_DATA_SOURCE: 'github',
     JSON_DATA_SOURCE: 'json',

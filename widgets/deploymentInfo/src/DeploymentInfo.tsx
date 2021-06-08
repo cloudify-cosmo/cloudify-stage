@@ -1,3 +1,4 @@
+// @ts-nocheck File not migrated fully to TS
 export default function DeploymentInfo({ data, toolbox }) {
     const { deployment, instancesCount, instancesStates } = data;
     const [visibilityError, setVisibilityError] = React.useState('');

@@ -1,3 +1,4 @@
+// @ts-nocheck File not migrated fully to TS
 import SiteLocationMap from './SiteLocationMap';
 
 export default function SiteLocationInput({ value, onChange, toolbox }) {

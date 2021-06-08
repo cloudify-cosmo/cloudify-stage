@@ -1,3 +1,4 @@
+// @ts-nocheck File not migrated fully to TS
 export default function BlueprintState({ blueprint }) {
     const { Icon, Popup } = Stage.Basic;
     return (

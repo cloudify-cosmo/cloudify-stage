@@ -1,3 +1,4 @@
+// @ts-nocheck File not migrated fully to TS
 export default function PluginIcon({ src }) {
     const { Image, Icon } = Stage.Basic;
     return src ? <Image src={src} width="25" /> : <Icon name="plug" size="large" />;

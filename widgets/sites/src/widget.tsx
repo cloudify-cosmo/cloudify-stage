@@ -1,3 +1,4 @@
+// @ts-nocheck File not migrated fully to TS
 import SitesTable from './SitesTable';
 
 Stage.defineWidget({

@@ -1,3 +1,4 @@
+// @ts-nocheck File not migrated fully to TS
 function SetSiteModal({ deploymentId, onHide, open, toolbox }) {
     const {
         Basic: { Modal, Icon, Form, ApproveButton, CancelButton },

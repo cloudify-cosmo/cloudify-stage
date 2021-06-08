@@ -1,3 +1,4 @@
+// @ts-nocheck File not migrated fully to TS
 import { Topology as BlueprintTopology } from 'cloudify-blueprint-topology';
 import { createExpandedTopology } from './DataProcessor';
 import ScrollerGlassHandler from './ScrollerGlassHandler';

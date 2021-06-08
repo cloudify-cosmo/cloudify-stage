@@ -1,3 +1,4 @@
+// @ts-nocheck File not migrated fully to TS
 import DeploymentInfo from './DeploymentInfo';
 
 Stage.defineWidget({

@@ -1,3 +1,4 @@
+// @ts-nocheck File not migrated fully to TS
 const pointPropType = PropTypes.shape({
     x: PropTypes.number,
     y: PropTypes.number

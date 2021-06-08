@@ -1,3 +1,4 @@
+// @ts-nocheck File not migrated fully to TS
 function GroupState({ state, className, description, onClick, value }) {
     const { Segment, Icon, Popup } = Stage.Basic;
     const disabled = value === 0;

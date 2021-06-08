@@ -1,3 +1,4 @@
+// @ts-nocheck File not migrated fully to TS
 const { BlueprintActions } = Stage.Common;
 const i18nPrefix = 'widgets.common.blueprintUpload';
 

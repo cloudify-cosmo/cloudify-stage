@@ -1,3 +1,4 @@
+// @ts-nocheck File not migrated fully to TS
 function StateDescription({ states, value }) {
     const state = _.join(states, ', ');
     const areManyStates = _.size(_.words(state)) > 1;

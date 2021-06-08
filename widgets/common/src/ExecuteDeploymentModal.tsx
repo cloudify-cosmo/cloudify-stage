@@ -1,3 +1,4 @@
+// @ts-nocheck File not migrated fully to TS
 function isWorkflowName(workflow) {
     return typeof workflow === 'string';
 }

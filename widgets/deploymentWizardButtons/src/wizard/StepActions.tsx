@@ -1,3 +1,4 @@
+// @ts-nocheck File not migrated fully to TS
 /**
  * StepActions component is interface for components implementing step actions for {@link WizardModal}
  */

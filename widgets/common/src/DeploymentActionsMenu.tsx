@@ -1,3 +1,4 @@
+// @ts-nocheck File not migrated fully to TS
 export const actions = Object.freeze({
     delete: 'delete',
     forceDelete: 'forceDelete',

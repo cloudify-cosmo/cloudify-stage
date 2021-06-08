@@ -1,3 +1,4 @@
+// @ts-nocheck File not migrated fully to TS
 export default function PluginsCatalogModal({ actions, onSuccess, onHide, open, plugin, toolbox }) {
     const { useBoolean, useOpenProp, useInput } = Stage.Hooks;
     const { useState } = React;

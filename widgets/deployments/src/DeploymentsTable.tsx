@@ -1,3 +1,4 @@
+// @ts-nocheck File not migrated fully to TS
 import ActionsMenus from './ActionsMenus';
 import DeploymentUpdatedIcon from './DeploymentUpdatedIcon';
 import DeploymentsViewPropTypes from './props/DeploymentsViewPropTypes';

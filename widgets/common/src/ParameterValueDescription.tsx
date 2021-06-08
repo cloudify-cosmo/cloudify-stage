@@ -1,3 +1,4 @@
+// @ts-nocheck File not migrated fully to TS
 /**
  * ParameterValueDescription is a popup description for ParameterValue component.
  */

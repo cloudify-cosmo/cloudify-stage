@@ -1,3 +1,4 @@
+// @ts-nocheck File not migrated fully to TS
 import CreateModal from './CreateModal';
 import SiteActions from './SiteActions';
 import SiteLocationMap from './SiteLocationMap';

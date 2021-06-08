@@ -1,3 +1,4 @@
+// @ts-nocheck File not migrated fully to TS
 const PropertiesPropType = PropTypes.objectOf(
     PropTypes.shape({
         description: PropTypes.string,

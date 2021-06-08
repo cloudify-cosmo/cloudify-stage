@@ -1,3 +1,4 @@
+// @ts-nocheck File not migrated fully to TS
 /**
  * NodeFilter  - a component showing dropdowns for filtering blueprints, deployments, nodes and nodes instances.
  * Data (list of blueprints, deployments, nodes and node instances) is dynamically fetched from manager.

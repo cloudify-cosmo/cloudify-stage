@@ -1,3 +1,4 @@
+// @ts-nocheck File not migrated fully to TS
 import { types } from 'cloudify-ui-common';
 
 /**

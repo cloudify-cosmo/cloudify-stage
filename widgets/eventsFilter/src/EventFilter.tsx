@@ -1,3 +1,4 @@
+// @ts-nocheck File not migrated fully to TS
 const contextValueKey = 'eventFilter';
 const refreshEvent = 'eventsFilter:refresh';
 

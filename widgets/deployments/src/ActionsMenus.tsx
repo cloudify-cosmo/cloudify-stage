@@ -1,3 +1,4 @@
+// @ts-nocheck File not migrated fully to TS
 export default function ActionsMenus({ deploymentId, onDeploymentAction, onWorkflowAction, toolbox, workflows }) {
     const { DeploymentActionsMenu, WorkflowsMenu } = Stage.Common;
 

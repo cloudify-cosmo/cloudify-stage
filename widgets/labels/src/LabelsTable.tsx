@@ -1,3 +1,4 @@
+// @ts-nocheck File not migrated fully to TS
 import _ from 'lodash';
 import { useState, useEffect } from 'react';
 import LabelValueInput from './LabelValueInput';

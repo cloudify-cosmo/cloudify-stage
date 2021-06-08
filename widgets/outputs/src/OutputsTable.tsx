@@ -1,3 +1,4 @@
+// @ts-nocheck File not migrated fully to TS
 export default class OutputsTable extends React.Component {
     constructor(props, context) {
         super(props, context);

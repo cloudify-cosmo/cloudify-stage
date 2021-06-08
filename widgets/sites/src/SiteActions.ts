@@ -1,3 +1,4 @@
+// @ts-nocheck File not migrated fully to TS
 export default class SiteActions {
     constructor(toolbox) {
         this.toolbox = toolbox;

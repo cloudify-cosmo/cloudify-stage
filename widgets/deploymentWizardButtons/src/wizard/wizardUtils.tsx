@@ -1,3 +1,4 @@
+// @ts-nocheck File not migrated fully to TS
 import StepActions from './StepActions';
 import StepContentPropTypes from '../steps/StepContentPropTypes';
 

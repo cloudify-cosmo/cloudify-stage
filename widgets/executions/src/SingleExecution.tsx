@@ -1,3 +1,4 @@
+// @ts-nocheck File not migrated fully to TS
 import React, { useEffect, useRef, useState } from 'react';
 import ExecutionWorkflowGraph from './tasksGraph/ExecutionWorkflowGraph';
 

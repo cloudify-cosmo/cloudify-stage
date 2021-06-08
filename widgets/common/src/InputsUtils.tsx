@@ -1,3 +1,4 @@
+// @ts-nocheck File not migrated fully to TS
 const HelpProperty = ({ show, name, value }) => {
     const { Header } = Stage.Basic;
     return (

@@ -1,3 +1,4 @@
+// @ts-nocheck File not migrated fully to TS
 import Consts from './Consts';
 
 const { i18n } = Stage;

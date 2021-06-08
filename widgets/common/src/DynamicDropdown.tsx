@@ -1,3 +1,4 @@
+// @ts-nocheck File not migrated fully to TS
 // NOTE: Disabling react/require-default-props as default values are provided in component's definition
 /* eslint-disable react/require-default-props */
 import { useCallback, useReducer } from 'react';

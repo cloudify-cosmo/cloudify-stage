@@ -1,3 +1,4 @@
+// @ts-nocheck File not migrated fully to TS
 export default function TerraformDetailsModal({ terraformDetails, onClose }) {
     const { Modal, DataTable, HighlightText, CancelButton } = Stage.Basic;
 

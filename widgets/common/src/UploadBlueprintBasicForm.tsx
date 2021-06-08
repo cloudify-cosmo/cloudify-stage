@@ -1,3 +1,4 @@
+// @ts-nocheck File not migrated fully to TS
 const { InProgressBlueprintStates, CompletedBlueprintStates } = Stage.Common.BlueprintActions;
 
 const { i18n } = Stage;
