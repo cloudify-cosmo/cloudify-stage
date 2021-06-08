@@ -167,7 +167,7 @@ module.exports = (env, argv) => {
                     react: `${__dirname}/node_modules/react`
                 }
             },
-            entry: ['./app/main.js'],
+            entry: ['./app/main.ts'],
             output: {
                 path: outputPath,
                 filename: 'static/js/[name].bundle.js',
