@@ -1,5 +1,4 @@
 import { escapeRegExp, find } from 'lodash';
-import pluginsCatalog from '../fixtures/plugins/catalog.json';
 
 const awsSecrets = ['aws_access_key_id', 'aws_secret_access_key'];
 const awsPlugins = ['cloudify-utilities-plugin', 'cloudify-kubernetes-plugin', 'cloudify-aws-plugin'];
@@ -131,7 +130,6 @@ describe('Getting started modal', () => {
     });
 
     it('should install selected technology', () => {
-        mockPluginsCatalog(pluginsCatalog);
         cy.deletePlugins().deleteSecrets('aws_').deleteBlueprints('AWS-', true);
 
         cy.get('.modal').within(() => {
@@ -202,7 +200,6 @@ describe('Getting started modal', () => {
     });
 
     it('should group common plugins and secrets', () => {
-        mockPluginsCatalog(pluginsCatalog);
         cy.deletePlugins()
             .deleteSecrets('aws_')
             .deleteSecrets('gcp_')
