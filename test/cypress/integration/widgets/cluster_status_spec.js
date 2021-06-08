@@ -30,9 +30,21 @@ describe('Cluster Status widget', () => {
             manager: 2,
             broker: 3
         };
+        const nodeName = 'cloudify';
+        const privateIp = '10.110.0.39';
+        const version = '5.2.0';
 
         const checkService = (service, nodeStatus, nodeServices) => {
-            const nodeStatusIcon = `tbody tr:nth-child(${rowNumberAIO[service]}) > td:nth-child(3) > i.icon`;
+            const nodeRow = `tbody tr:nth-child(${rowNumberAIO[service]})`;
+            const nodeNameCell = `${nodeRow} > td:nth-child(2)`;
+            const nodeStatusIcon = `${nodeRow} > td:nth-child(3) > i.icon`;
+            const privateIpCell = `${nodeRow} > td:nth-child(4)`;
+            const versionCell = `${nodeRow} > td:nth-child(6)`;
+
+            cy.log(`Checking ${service} node name, private IP and version.`);
+            cy.get(nodeNameCell).should('have.text', nodeName);
+            cy.get(privateIpCell).should('have.text', privateIp);
+            cy.get(versionCell).should('have.text', version);
 
             cy.log(`Checking ${service} node status. Expected: ${nodeStatus}`);
             cy.get(nodeStatusIcon).should('have.class', className[nodeStatus]);
