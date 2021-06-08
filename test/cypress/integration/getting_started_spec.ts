@@ -20,7 +20,7 @@ const goToNextStep = () => cy.contains('button', 'Next').click();
 const goToFinishStep = () => cy.contains('button', 'Finish').click();
 const closeModal = () => cy.contains('button', 'Close').click();
 
-const waitOptionsForPluginsUpload = { responseTimeout: 5 * 60 * 1000 };
+const waitOptionsForPluginsUpload: Parameters<typeof cy.wait>[1] = { responseTimeout: 5 * 60 * 1000 };
 
 function verifyInstallationSucceeded(blueprints: string[]) {
     cy.contains('.progress .progress', '100%', { timeout: blueprints.length * 2 * 60 * 1000 });
