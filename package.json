@@ -27,7 +27,7 @@
     "devServer": "cross-env NODE_ENV=development node devServer.js",
     "docCheck": "scripts/checkDocs.sh",
     "docWidgets": "node scripts/updateReadmes.js",
-    "e2e": "cypress run -C test/cypress/cypress.json",
+    "e2e": "cypress run -C node_modules/cloudify-ui-common/cypress/cypress.json",
     "e2e:open": "cypress open -C node_modules/cloudify-ui-common/cypress/cypress.json",
     "e2e:ci": "npm run beforebuild && cross-env TEST=1 run-system-tests ${TEST_SPEC}",
     "lint": "eslint --cache --ignore-path .gitignore --ext js,jsx,ts,tsx .",
