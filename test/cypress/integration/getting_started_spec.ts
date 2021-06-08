@@ -81,6 +81,7 @@ function interceptSecretsCreation(secrets: string[]) {
 
 function interceptPluginsUpload(plugins: string[]) {
     plugins.forEach(plugin => {
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         const catalogEntry = find(pluginsCatalog, { name: plugin })!;
         cy.intercept({
             method: 'POST',

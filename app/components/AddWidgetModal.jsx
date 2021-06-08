@@ -465,4 +465,7 @@ AddWidgetModal.defaultProps = {
     addButtonTitle: null
 };
 
-export default React.memo(AddWidgetModal, _.isEqual);
+// NOTE: AddWidgetModal is not exported directly from this file and cannot be used as a type in the emitted declarations
+/** @type {import('react').ComponentType<import('prop-types').InferProps<typeof AddWidgetModal['propTypes']>>} */
+const MemoizedAddWidgetModal = React.memo(AddWidgetModal, _.isEqual);
+export default MemoizedAddWidgetModal;
