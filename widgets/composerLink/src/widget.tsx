@@ -1,3 +1,5 @@
+export {};
+
 Stage.defineWidget({
     id: 'composerLink',
     name: 'Composer link',

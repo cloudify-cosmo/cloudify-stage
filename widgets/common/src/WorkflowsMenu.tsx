@@ -1,7 +1,5 @@
 // @ts-nocheck File not migrated fully to TS
-/**
- * Created by jakubniezgoda on 31/01/2019.
- */
+export {};
 
 const WorkflowsPropType = Stage.PropTypes.Workflows;
 

@@ -1,7 +1,5 @@
 // @ts-nocheck File not migrated fully to TS
-/**
- * Created by jakubniezgoda on 07/11/2018.
- */
+export {};
 
 function DeleteConfirm({ className, force, onCancel, onConfirm, onForceChange, open, resourceName }) {
     const { Confirm, Form, Segment } = Stage.Basic;

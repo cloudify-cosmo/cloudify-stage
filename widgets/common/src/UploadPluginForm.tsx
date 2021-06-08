@@ -1,7 +1,5 @@
 // @ts-nocheck File not migrated fully to TS
-/**
- * Created by jakub.niezgoda on 17/08/2018.
- */
+export {};
 
 const placeholders = {
     wagon: "Provide the plugin's wagon file URL or click browse to select a file",

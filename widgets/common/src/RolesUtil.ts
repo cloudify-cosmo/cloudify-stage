@@ -1,7 +1,5 @@
 // @ts-nocheck File not migrated fully to TS
-/**
- * Created by edenp on 25/10/2017.
- */
+export {};
 
 class RolesUtil {
     static getTenantRoles(roles) {

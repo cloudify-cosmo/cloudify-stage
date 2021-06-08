@@ -1,4 +1,6 @@
 // @ts-nocheck File not migrated fully to TS
+export {};
+
 Stage.defineWidget({
     id: 'highAvailability',
     name: 'Cluster Status',

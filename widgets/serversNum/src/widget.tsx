@@ -1,7 +1,4 @@
-// @ts-nocheck File not migrated fully to TS
-/**
- * Created by pawelposel on 04/11/2016.
- */
+export {};
 
 Stage.defineWidget({
     id: 'serversNum',
@@ -19,7 +16,7 @@ Stage.defineWidget({
     initialConfiguration: [Stage.GenericConfig.POLLING_TIME_CONFIG(30)],
     fetchUrl: '[manager]/node-instances?state=started&_include=id&_sort=deployment_id&_size=1',
 
-    render(widget, data) {
+    render(_widget, data) {
         const { Loading } = Stage.Basic;
 
         if (_.isEmpty(data)) {

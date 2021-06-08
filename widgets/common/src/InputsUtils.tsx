@@ -1,4 +1,6 @@
 // @ts-nocheck File not migrated fully to TS
+export {};
+
 const HelpProperty = ({ show, name, value }) => {
     const { Header } = Stage.Basic;
     return (

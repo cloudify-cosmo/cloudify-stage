@@ -1,9 +1,6 @@
-// @ts-nocheck File not migrated fully to TS
-/**
- * Created by jakubniezgoda on 22/05/2018.
- */
+export {};
 
-Stage.defineWidget({
+Stage.defineWidget<unknown, unknown, { page?: unknown }>({
     id: 'blueprintNum',
     name: 'Number of blueprints',
     description: 'Number of blueprints',

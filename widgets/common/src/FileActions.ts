@@ -1,7 +1,5 @@
 // @ts-nocheck File not migrated fully to TS
-/**
- * Created by jakubniezgoda on 08/12/2017.
- */
+export {};
 
 class FileActions {
     constructor(toolbox) {

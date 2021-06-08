@@ -1,7 +1,5 @@
 // @ts-nocheck File not migrated fully to TS
-/**
- * Created by jakubniezgoda on 05/07/2018.
- */
+export {};
 
 function YamlFileButton({ dataType, fileLoading, onChange }) {
     const { Form } = Stage.Basic;

@@ -1,7 +1,5 @@
 // @ts-nocheck File not migrated fully to TS
-/**
- * Created by jakubniezgoda on 16/10/2018.
- */
+export {};
 
 class InputsHeader extends React.Component {
     shouldComponentUpdate(nextProps) {

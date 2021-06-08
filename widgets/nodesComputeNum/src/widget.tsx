@@ -1,9 +1,7 @@
-// @ts-nocheck File not migrated fully to TS
-/**
- * Created by jakub.niezgoda on 11/12/2018.
- */
+export {};
 
-Stage.defineWidget({
+// eslint-disable-next-line camelcase
+Stage.defineWidget<unknown, { items: { host_id: unknown }[] }, unknown>({
     id: 'nodesComputeNum',
     name: 'Number of compute nodes',
     description: 'Number of compute nodes',
@@ -18,10 +16,10 @@ Stage.defineWidget({
     initialConfiguration: [Stage.GenericConfig.POLLING_TIME_CONFIG(30)],
     fetchUrl: '[manager]/summary/node_instances?_target_field=host_id&state=started',
 
-    render(widget, data) {
+    render(_widget, data) {
         const { Loading } = Stage.Basic;
 
-        if (_.isEmpty(data)) {
+        if (Stage.Utils.isEmptyWidgetData(data)) {
             return <Loading />;
         }
 

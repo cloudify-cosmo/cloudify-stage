@@ -1,7 +1,5 @@
 // @ts-nocheck File not migrated fully to TS
-/**
- * Created by jakubniezgoda on 10/05/2018.
- */
+export {};
 
 class DeploymentUpdatesActions {
     constructor(toolbox) {

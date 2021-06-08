@@ -1,7 +1,5 @@
 // @ts-nocheck File not migrated fully to TS
-/**
- * Created by jakub.niezgoda on 21/09/2018.
- */
+export {};
 
 const groupNames = {
     uninitialized: 'uninitialized',

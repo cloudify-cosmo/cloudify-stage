@@ -1,4 +1,6 @@
 // @ts-nocheck File not migrated fully to TS
+export {};
+
 const { i18n } = Stage;
 
 function RevertToDefaultIcon({ value, defaultValue, onClick, onMouseDown, popupContent, style }) {

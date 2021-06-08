@@ -1,7 +1,5 @@
 // @ts-nocheck File not migrated fully to TS
-/**
- * Created by jakubniezgoda on 21/03/2018.
- */
+export {};
 
 const textFonts = [
     { name: 'Sans Serif', value: 'sans-serif' }, // used as default

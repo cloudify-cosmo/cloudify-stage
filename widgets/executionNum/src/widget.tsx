@@ -1,7 +1,4 @@
-// @ts-nocheck File not migrated fully to TS
-/**
- * Created by jakubniezgoda on 23/05/2018.
- */
+export {};
 
 Stage.defineWidget({
     id: 'executionNum',
@@ -21,7 +18,7 @@ Stage.defineWidget({
         '[manager]/executions?_include=id&_size=1&' +
         '&status=pending&status=started&status=cancelling&status=force_cancelling&status=kill_cancelling',
 
-    render(widget, data) {
+    render(_widget, data) {
         const { Loading } = Stage.Basic;
 
         if (_.isEmpty(data)) {
