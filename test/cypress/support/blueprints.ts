@@ -10,7 +10,12 @@ declare global {
 }
 
 const commands = {
-    uploadBlueprint: (pathOrUrl: string, id: string, yamlFile = 'blueprint.yaml', visibility = 'tenant') => {
+    uploadBlueprint: (
+        pathOrUrl: string,
+        id: string,
+        yamlFile = 'blueprint.yaml',
+        visibility = 'tenant'
+    ): Cypress.Chainable<unknown> => {
         if (pathOrUrl.startsWith('http')) {
             return cy.cfyRequest(
                 `/blueprints/${id}?blueprint_archive_url=${pathOrUrl}&visibility=${visibility}&application_file_name=${yamlFile}`,

@@ -39,7 +39,7 @@ export const installPlugin = async (internal: Internal, plugin: PluginInstallati
         wagonUrl: plugin.wagonUrl
     };
     try {
-        await internal.doUpload('/plugins/upload', params, null, 'post');
+        await internal.doUpload('/plugins/upload', { params, method: 'post' });
         return true;
     } catch (e) {
         log.error(e);
@@ -49,13 +49,13 @@ export const installPlugin = async (internal: Internal, plugin: PluginInstallati
 
 // TODO(RD-1874): use common api for backend requests
 export const createSecret = async (manager: Manager, secret: SecretInstallationTask) => {
-    const data = {
+    const body = {
         value: secret.value,
         visibility: 'tenant',
         is_hidden_value: true
     };
     try {
-        await manager.doPut(`/secrets/${encodeURIComponent(secret.name)}`, null, data);
+        await manager.doPut(`/secrets/${encodeURIComponent(secret.name)}`, { body });
         return true;
     } catch (e) {
         log.error(e);
@@ -69,7 +69,7 @@ export const updateSecret = async (manager: Manager, secret: SecretInstallationT
         value: secret.value
     };
     try {
-        await manager.doPatch(`/secrets/${encodeURIComponent(secret.name)}`, null, data);
+        await manager.doPatch(`/secrets/${encodeURIComponent(secret.name)}`, data);
         return true;
     } catch (e) {
         log.error(e);
@@ -81,17 +81,16 @@ export const updateSecret = async (manager: Manager, secret: SecretInstallationT
 export const uploadBlueprint = async (manager: Manager, blueprint: BlueprintInstallationTask) => {
     const waitingTimeoutSecs = 5 * 60;
     const stepSleepSecs = 5;
-    const requestData = {
+    const params = {
         visibility: 'tenant',
         async_upload: true,
         application_file_name: blueprint.blueprintYamlFile,
         blueprint_archive_url: blueprint.blueprintZipUrl
     };
     try {
-        const uploadResponse = await manager.doPut(
-            `/blueprints/${encodeURIComponent(blueprint.blueprintName)}`,
-            requestData
-        );
+        const uploadResponse = await manager.doPut(`/blueprints/${encodeURIComponent(blueprint.blueprintName)}`, {
+            params
+        });
         if (uploadResponse.error) {
             return t('blueprintUploadError', {
                 blueprintName: blueprint.blueprintName,

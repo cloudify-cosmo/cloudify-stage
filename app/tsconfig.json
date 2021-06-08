@@ -1,7 +1,9 @@
 {
-    "extends": "../node_modules/cloudify-ui-common/configs/tsconfig.base.json",
+    "extends": "../tsconfig.base.json",
     "compilerOptions": {
         "types": [],
         "plugins": [{ "name": "typescript-styled-plugin" }]
-    }
+    },
+    "include": ["**/*", "**/*.json"],
+    "files": ["../package.json"]
 }

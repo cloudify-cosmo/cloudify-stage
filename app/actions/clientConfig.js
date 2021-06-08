@@ -20,10 +20,10 @@ export function getClientConfig() {
     };
 }
 
-export function saveClientConfig(config) {
+export function saveClientConfig(body) {
     return (dispatch, getState) => {
         const internal = new Internal(getState().manager);
-        return internal.doPost('/clientConfig', null, config).then(response => {
+        return internal.doPost('/clientConfig', { body }).then(response => {
             dispatch(setClientConfig(response.config));
         });
     };

@@ -217,7 +217,7 @@ export default class LicensePage extends Component {
         this.setState({ isLoading: true });
 
         return manager
-            .doPut('/license', null, license)
+            .doPut('/license', { body: license })
             .then(data => {
                 this.setState({ isLoading: false, error: null, isEditLicenseActive: false });
                 onLicenseChange(data);

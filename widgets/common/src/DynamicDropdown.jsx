@@ -128,10 +128,12 @@ export default function DynamicDropdown({
             toolbox
                 .getManager()
                 .doGet(fetchUrl, {
-                    _search: searchQuery,
-                    _sort: valueProp,
-                    _size: pageSize,
-                    _offset: nextPage * pageSize
+                    params: {
+                        _search: searchQuery,
+                        _sort: valueProp,
+                        _size: pageSize,
+                        _offset: nextPage * pageSize
+                    }
                 })
                 .then(data => {
                     const isMoreDataAvailable = data.metadata.pagination.total > (nextPage + 1) * pageSize;

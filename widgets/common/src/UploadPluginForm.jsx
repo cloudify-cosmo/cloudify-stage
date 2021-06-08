@@ -81,7 +81,7 @@ class UploadPluginForm extends React.Component {
                         this.setState({ loading: true });
                         toolbox
                             .getInternal()
-                            .doUpload('/plugins/title', null, { yaml_file: pluginYamlFile })
+                            .doUpload('/plugins/title', { files: { yaml_file: pluginYamlFile } })
                             .then(onTitleChange)
                             .finally(() => this.setState({ loading: false }));
                     }
@@ -92,7 +92,7 @@ class UploadPluginForm extends React.Component {
                         this.setState({ loading: true });
                         toolbox
                             .getInternal()
-                            .doPut('/plugins/title', { yamlUrl: pluginYamlUrl })
+                            .doPut('/plugins/title', { params: { yamlUrl: pluginYamlUrl } })
                             .then(onTitleChange)
                             .finally(() => this.setState({ loading: false }));
                     }

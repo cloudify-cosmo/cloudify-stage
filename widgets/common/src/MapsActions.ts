@@ -10,7 +10,7 @@ class MapsActions {
         const noCache = new Date().getTime();
         return this.toolbox
             .getInternal()
-            .doGet(testUrl, { noCache })
+            .doGet(testUrl, { params: { noCache } })
             .then(() => true)
             .catch(() => false);
     }

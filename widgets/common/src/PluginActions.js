@@ -8,7 +8,7 @@ class PluginActions {
     }
 
     doDelete(plugin, force = true) {
-        return this.toolbox.getManager().doDelete(`/plugins/${plugin.id}`, null, { force });
+        return this.toolbox.getManager().doDelete(`/plugins/${plugin.id}`, { body: { force } });
     }
 
     doUpload(visibility, title, resources) {
@@ -24,7 +24,9 @@ class PluginActions {
             }
         });
 
-        return this.toolbox.getInternal().doUpload('/plugins/upload', params, !_.isEmpty(files) ? files : null, 'post');
+        return this.toolbox
+            .getInternal()
+            .doUpload('/plugins/upload', { params, files: !_.isEmpty(files) ? files : null, method: 'post' });
     }
 
     doDownload(plugin) {
@@ -35,7 +37,7 @@ class PluginActions {
     }
 
     doSetVisibility(pluginId, visibility) {
-        return this.toolbox.getManager().doPatch(`/plugins/${pluginId}/set-visibility`, null, { visibility });
+        return this.toolbox.getManager().doPatch(`/plugins/${pluginId}/set-visibility`, { visibility });
     }
 }
 

@@ -46,7 +46,7 @@ function getFilterRule(filterRuleRow: FilterRuleRow): FilterRule {
     return filterRuleRow.rule;
 }
 
-interface RulesFormProps {
+export interface RulesFormProps {
     initialFilters: FilterRule[];
     onChange: (filterRules: FilterRule[], hasErrors: boolean) => void;
     markErrors: boolean;

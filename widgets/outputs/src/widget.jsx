@@ -49,7 +49,9 @@ Stage.defineWidget({
                 ? toolbox.getManager().doGet(`/deployments/${deploymentId}/capabilities`)
                 : Promise.resolve({});
             const deploymentPromise = toolbox.getManager().doGet(`/deployments/${deploymentId}`, {
-                _include: widget.configuration.showCapabilities ? 'outputs,capabilities' : 'outputs'
+                params: {
+                    _include: widget.configuration.showCapabilities ? 'outputs,capabilities' : 'outputs'
+                }
             });
 
             return Promise.all([deploymentOutputsPromise, deploymentCapabilitiesPromise, deploymentPromise]).then(

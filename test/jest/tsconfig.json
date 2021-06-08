@@ -1,5 +1,5 @@
 {
-    "extends": "../../node_modules/cloudify-ui-common/configs/tsconfig.base.json",
+    "extends": "../../tsconfig.base.json",
     "compilerOptions": {
         "baseUrl": "../../",
         "paths": {
@@ -7,6 +7,6 @@
         },
         "types": ["jest"]
     },
-    // Some Stage.Common types used in tests are defined in widgets/common
-    "include": ["**/*", "../../app/**/*", "../../widgets/common/**/*"]
+    "references": [{ "path": "../../app" }, { "path": "../../widgets" }],
+    "include": ["**/*", "**/*.json"]
 }

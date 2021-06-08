@@ -122,7 +122,7 @@ const commands = {
             ...options
         }),
     cfyFileRequest: (filePath: string, isBinaryFile: boolean, url: string, method = 'PUT', headers: any = null) => {
-        const filePromise = isBinaryFile
+        const filePromise: Cypress.Chainable<string | Blob> = isBinaryFile
             ? cy.fixture(filePath, 'binary').then(binary => Cypress.Blob.binaryStringToBlob(binary))
             : cy.fixture(filePath);
 

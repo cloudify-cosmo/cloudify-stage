@@ -38,7 +38,7 @@ export function getTenants() {
         dispatch(requestTenants());
         const managerAccessor = new Manager(getState().manager);
         return managerAccessor
-            .doGet('/tenants', { _include: 'name', _get_all_results: true })
+            .doGet('/tenants', { params: { _include: 'name', _get_all_results: true } })
             .then(tenants => {
                 dispatch(recieveTenants(tenants));
                 return tenants;

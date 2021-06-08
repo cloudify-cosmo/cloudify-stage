@@ -67,7 +67,9 @@ Stage.defineWidget({
                 toolbox
                     .getInternal()
                     .doGet('/external/content', {
-                        url
+                        params: {
+                            url
+                        }
                     })
                     .catch(_.noop)
             )

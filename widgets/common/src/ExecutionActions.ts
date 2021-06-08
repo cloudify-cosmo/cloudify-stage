@@ -6,18 +6,20 @@ class ExecutionActions {
     doGetExecutions(deploymentId: string) {
         return this.toolbox
             .getManager()
-            .doGet('/executions?_include=id,status,ended_at', { deployment_id: deploymentId });
+            .doGet('/executions?_include=id,status,ended_at', { params: { deployment_id: deploymentId } });
     }
 
     doGetStatus(executionId: string) {
-        return this.toolbox.getManager().doGet('/executions?_include=id,status', { id: executionId });
+        return this.toolbox.getManager().doGet('/executions?_include=id,status', { params: { id: executionId } });
     }
 
     // eslint-disable-next-line camelcase
     doAct(execution: { id: string; deployment_id: string }, action: any) {
-        return this.toolbox.getManager().doPost(`/executions/${execution.id}`, null, {
-            deployment_id: execution.deployment_id,
-            action
+        return this.toolbox.getManager().doPost(`/executions/${execution.id}`, {
+            body: {
+                deployment_id: execution.deployment_id,
+                action
+            }
         });
     }
 }

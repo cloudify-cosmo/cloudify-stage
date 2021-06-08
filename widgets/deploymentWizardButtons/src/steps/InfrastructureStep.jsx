@@ -34,8 +34,10 @@ function InfrastructureStepActions({
             })
             .then(stepData =>
                 toolbox.getInternal().doPut('source/list/resources', {
-                    yamlFile: stepData.blueprintYamlFile,
-                    url: stepData.blueprintUrl
+                    params: {
+                        yamlFile: stepData.blueprintYamlFile,
+                        url: stepData.blueprintUrl
+                    }
                 })
             )
             .then(resources => onNext(stepId, { blueprint: { ...resources, ...fetchedStepData } }))

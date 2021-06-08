@@ -159,10 +159,10 @@ export default class Topology extends React.Component {
             onTerraformDetailsClick: node => this.setState({ terraformDetails: node.templateData.terraformResources }),
             onTerraformExpandClick: this.getExpandHandler('expandedTerraformNodes'),
             onTerraformCollapseClick: this.getCollapseHandler('expandedTerraformNodes'),
-            onLayoutSave: layout =>
+            onLayoutSave: body =>
                 toolbox
                     .getInternal()
-                    .doPut(`/bud/layout/${blueprintId}`, null, layout)
+                    .doPut(`/bud/layout/${blueprintId}`, { body })
                     .then(() => {
                         this.setState({ saveConfirmationOpen: true });
                         setTimeout(() => this.setState({ saveConfirmationOpen: false }), saveConfirmationTimeout);

@@ -8,11 +8,13 @@ class FileActions {
     }
 
     doGetTextFileContent(file) {
-        return this.toolbox.getInternal().doUpload('/file/text', null, { file }, 'post', false);
+        return this.toolbox
+            .getInternal()
+            .doUpload('/file/text', { files: { file }, method: 'post', parseResponse: false });
     }
 
     doGetYamlFileContent(file) {
-        return this.toolbox.getInternal().doUpload('/file/yaml', null, { file }, 'post');
+        return this.toolbox.getInternal().doUpload('/file/yaml', { files: { file }, method: 'post' });
     }
 }
 

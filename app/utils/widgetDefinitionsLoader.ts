@@ -187,10 +187,14 @@ export default class WidgetDefinitionsLoader {
 
         if (widgetUrl) {
             log.debug('Install widget from url', widgetUrl);
-            return internal.doPut('/widgets/install', { url: widgetUrl });
+            return internal.doPut('/widgets/install', {
+                params: {
+                    url: widgetUrl
+                }
+            });
         }
         log.debug('Install widget from file');
-        return internal.doUpload('/widgets/install', {}, { widget: widgetFile });
+        return internal.doUpload('/widgets/install', { files: { widget: widgetFile } });
     }
 
     private static updateWidget(widgetId: any, widgetFile: any, widgetUrl: any, manager: any) {
@@ -198,10 +202,10 @@ export default class WidgetDefinitionsLoader {
 
         if (widgetUrl) {
             log.debug(`Update widget ${widgetId} from url`, widgetUrl);
-            return internal.doPut('/widgets/update', { url: widgetUrl, id: widgetId });
+            return internal.doPut('/widgets/update', { params: { url: widgetUrl, id: widgetId } });
         }
         log.debug(`Update widget ${widgetId} from file`);
-        return internal.doUpload('/widgets/update', { id: widgetId }, { widget: widgetFile });
+        return internal.doUpload('/widgets/update', { params: { id: widgetId }, files: { widget: widgetFile } });
     }
 
     private static validateWidget(widgetId: any, manager: any) {
