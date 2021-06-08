@@ -1,14 +1,14 @@
 // @ts-nocheck File not migrated fully to TS
-/**
- * Created by kinneretzin on 11/09/2016.
- */
 import log from 'loglevel';
 import StageUtils from './stageUtils';
 
 export default class ScriptLoader {
-    constructor(scriptPath) {
+    protected path: string;
+
+    private loaded = false;
+
+    constructor(scriptPath: string) {
         this.path = StageUtils.Url.url(scriptPath);
-        this.loaded = false;
     }
 
     load(id, rejectOnError) {

@@ -1,9 +1,6 @@
 // @ts-nocheck File not migrated fully to TS
-/**
- * Created by kinneretzin on 08/09/2016.
- */
-
 import { connect } from 'react-redux';
+import type { ComponentProps, ComponentType } from 'react';
 import { checkIfWidgetIsUsed, installWidget, uninstallWidget, updateWidgetDefinition } from '../actions/widgets';
 import AddWidgetModal from '../components/AddWidgetModal';
 import stageUtils from '../utils/stageUtils';
@@ -42,4 +39,12 @@ const mapDispatchToProps = dispatch => {
     };
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(AddWidgetModal);
+// NOTE: TypeScript did not like that `AddWidgetModal` is wrapped and exported in this file
+// without explicit typing. The type annotation should be removed once the modal is fully
+// transformed to TypeScript.
+export default connect(mapStateToProps, mapDispatchToProps)(AddWidgetModal) as ComponentType<
+    Omit<
+        ComponentProps<typeof AddWidgetModal>,
+        keyof ReturnType<typeof mapStateToProps> | keyof ReturnType<typeof mapDispatchToProps>
+    >
+>;
