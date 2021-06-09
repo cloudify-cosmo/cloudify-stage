@@ -1,6 +1,7 @@
+import { minutesToMs } from '../../support/resource_commons';
+
 describe('User flow', () => {
     const resourceName = 'user_flow_test';
-    const minutesToMs = minutes => minutes * 60 * 1000;
 
     before(() =>
         cy

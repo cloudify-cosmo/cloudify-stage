@@ -4,7 +4,6 @@ function appendQueryParam(url, param, value) {
     return `${url}${url.indexOf('?') > 0 ? '&' : '?'}${param}=${value}`;
 }
 
-// eslint-disable-next-line import/prefer-default-export
 export function waitUntilEmpty(resource, search, numberOfRetriesLeft = 60, waitingInterval = 1000) {
     if (numberOfRetriesLeft <= 0) {
         throw new Error(`Number of retries exceeded for resource=${resource}, search=${search}.`);
@@ -20,4 +19,8 @@ export function waitUntilEmpty(resource, search, numberOfRetriesLeft = 60, waiti
         cy.wait(waitingInterval);
         waitUntilEmpty(resource, search, numberOfRetriesLeft - 1, waitingInterval);
     });
+}
+
+export function minutesToMs(minutes) {
+    return minutes * 60 * 1000;
 }

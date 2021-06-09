@@ -1,3 +1,5 @@
+import { minutesToMs } from '../../support/resource_commons';
+
 describe('Deployment Wizard Buttons widget', () => {
     before(() => cy.activate('valid_trial_license').usePageMock('deploymentWizardButtons').mockLogin());
 
@@ -76,7 +78,7 @@ describe('Deployment Wizard Buttons widget', () => {
 
         cy.log('Verifying install step');
         cy.contains('Installation in progress...');
-        cy.contains('Installation started!', { timeout: 2 * 60 * 1000 });
+        cy.contains('Installation started!', { timeout: minutesToMs(2) });
 
         cy.log('Waiting for modal to auto close');
         cy.get('div.wizardModal').should('not.exist');
