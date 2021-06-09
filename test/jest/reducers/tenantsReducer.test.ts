@@ -12,7 +12,7 @@ import TenantReducer from 'reducers/tenantsReducer';
 import { getTenants, selectTenant } from 'actions/tenants';
 import * as types from 'actions/types';
 
-const fetchMock = require('fetch-mock');
+import fetchMock from 'fetch-mock';
 
 const mockStore = configureMockStore([thunk]);
 
