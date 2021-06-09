@@ -1,3 +1,4 @@
+// @ts-nocheck File not migrated fully to TS
 import { className, styles } from '../../support/cluster_status_commons';
 
 describe('Cluster Status widget', () => {

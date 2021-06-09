@@ -1,3 +1,4 @@
+// @ts-nocheck File not migrated fully to TS
 import { styles } from '../../support/cluster_status_commons';
 
 describe('Spire Manager widget', () => {

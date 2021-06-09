@@ -1,3 +1,4 @@
+// @ts-nocheck File not migrated fully to TS
 import _ from 'lodash';
 import { waitUntilEmpty } from '../../support/resource_commons';
 

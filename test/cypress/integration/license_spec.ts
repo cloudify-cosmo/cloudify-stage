@@ -1,3 +1,4 @@
+// @ts-nocheck File not migrated fully to TS
 describe('License Management', () => {
     const validTrialLicense = { name: 'valid trial', file: 'valid_trial_license.yaml', header: 'License is valid' };
     const expiredTrialLicense = {

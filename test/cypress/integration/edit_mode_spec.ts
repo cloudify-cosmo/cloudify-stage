@@ -1,3 +1,4 @@
+// @ts-nocheck File not migrated fully to TS
 describe('Edit mode', () => {
     before(() => cy.activate('valid_trial_license').removeCustomWidgets().usePageMock('blueprints').mockLogin());
 

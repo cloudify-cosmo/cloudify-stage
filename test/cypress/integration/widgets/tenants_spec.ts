@@ -1,3 +1,4 @@
+// @ts-nocheck File not migrated fully to TS
 describe('Tenants management widget', () => {
     const tenant = 'tenants_management_test_tenant';
     const group = 'tenants_management_test_group';

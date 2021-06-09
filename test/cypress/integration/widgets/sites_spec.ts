@@ -1,3 +1,4 @@
+// @ts-nocheck File not migrated fully to TS
 describe('Sites Management', () => {
     const siteWithLocation = { name: 'Tel-Aviv', location: '32.079991, 34.767291' };
     const siteWithNoLocation = { name: 'London' };

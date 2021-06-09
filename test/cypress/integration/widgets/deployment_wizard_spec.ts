@@ -1,3 +1,4 @@
+// @ts-nocheck File not migrated fully to TS
 describe('Deployment Wizard Buttons widget', () => {
     before(() => cy.activate('valid_trial_license').usePageMock('deploymentWizardButtons').mockLogin());
 

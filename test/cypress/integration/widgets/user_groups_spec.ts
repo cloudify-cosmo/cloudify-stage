@@ -1,3 +1,4 @@
+// @ts-nocheck File not migrated fully to TS
 describe('User group management widget', () => {
     const groupName = 'user_groups_test';
 

@@ -1,3 +1,4 @@
+// @ts-nocheck File not migrated fully to TS
 describe('Snapshots list widget', () => {
     const createdSnapshotName = 'snapshots_test_created';
     const uploadedSnapshotName = 'snapshots_test_uploaded';

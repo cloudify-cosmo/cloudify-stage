@@ -1,3 +1,4 @@
+// @ts-nocheck File not migrated fully to TS
 describe('Page management', () => {
     before(() => {
         cy.activate().removeUserPages();

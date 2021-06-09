@@ -1,3 +1,4 @@
+// @ts-nocheck File not migrated fully to TS
 describe('Template Management', () => {
     const testTenants = ['T1', 'T2', 'T3'];
     const password = 'cypress';

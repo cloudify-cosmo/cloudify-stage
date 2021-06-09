@@ -1,3 +1,4 @@
+// @ts-nocheck File not migrated fully to TS
 describe('User flow', () => {
     const resourceName = 'user_flow_test';
 

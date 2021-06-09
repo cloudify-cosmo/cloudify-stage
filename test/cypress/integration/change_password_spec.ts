@@ -1,3 +1,4 @@
+// @ts-nocheck File not migrated fully to TS
 describe('Change Password modal', () => {
     before(cy.activate);
 

@@ -1,3 +1,4 @@
+// @ts-nocheck File not migrated fully to TS
 import { exampleBlueprintUrl } from '../../support/resource_urls';
 
 describe('Deployments widget', () => {

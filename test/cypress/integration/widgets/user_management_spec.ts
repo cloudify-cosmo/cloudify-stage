@@ -1,3 +1,4 @@
+// @ts-nocheck File not migrated fully to TS
 describe('User management widget', () => {
     const username = 'user_management_test_user';
     const group = 'user_management_test_group';
