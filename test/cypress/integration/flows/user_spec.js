@@ -1,5 +1,6 @@
 describe('User flow', () => {
     const resourceName = 'user_flow_test';
+    const minutesToMs = minutes => minutes * 60 * 1000;
 
     before(() =>
         cy
@@ -29,7 +30,7 @@ describe('User flow', () => {
         cy.get('.modal').within(() => {
             cy.get('button.ok').click();
         });
-        cy.get('.modal', { timeout: 2 * 60 * 1000 }).should('not.exist');
+        cy.get('.modal', { timeout: minutesToMs(2) }).should('not.exist');
 
         cy.visitPage('Resources').openTab('Secrets');
         createSecret('some_key_1');
@@ -40,20 +41,25 @@ describe('User flow', () => {
 
         cy.visitPage('Blueprints');
         cy.contains('Upload').click();
-        cy.get('input[name=blueprintUrl]')
-            .type(
-                'https://github.com/cloudify-community/blueprint-examples/releases/download/5.0.5-74/utilities-examples-cloudify_secrets.zip'
-            )
-            .blur();
-        cy.get('input[name=blueprintName]').clear().type(resourceName);
-        cy.get('.button.ok').click();
+        cy.get('.modal').within(() => {
+            cy.get('input[name=blueprintUrl]')
+                .type(
+                    'https://github.com/cloudify-community/blueprint-examples/releases/download/5.0.5-74/utilities-examples-cloudify_secrets.zip'
+                )
+                .blur();
+            cy.get('input[name=blueprintName]').clear().type(resourceName);
+            cy.get('.button.ok').click();
+        });
+        cy.get('.modal', { timeout: minutesToMs(1) }).should('not.exist');
 
         cy.getSearchInput().clear().type(resourceName);
         cy.get('.blueprintsTable > tbody > tr').should('have.length', 1);
         cy.get('.rocket').click();
         cy.get('input[name=deploymentName]').type(resourceName);
         cy.get('button.green').click();
-        cy.get('button.ok').click();
+
+        cy.get('.modal').find('button.ok').click();
+        cy.get('.modal', { timeout: minutesToMs(1) }).should('not.exist');
 
         cy.contains('.executionsWidget', 'install completed');
         cy.contains('.eventsTable', "'install' workflow execution succeeded");
