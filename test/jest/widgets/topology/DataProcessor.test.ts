@@ -1,3 +1,4 @@
+// @ts-nocheck File not migrated fully to TS
 import { createBlueprintData, createHierarchy } from 'topology/src/DataProcessor';
 import nodecellarExampleData from './data/ExampleData.json';
 import nodecellarInstancesData from './data/InstancesDataDone.json';

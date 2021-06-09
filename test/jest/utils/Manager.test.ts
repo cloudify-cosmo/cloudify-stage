@@ -1,3 +1,4 @@
+// @ts-nocheck File not migrated fully to TS
 import configureMockStore from 'redux-mock-store';
 import Manager from 'utils/Manager';
 

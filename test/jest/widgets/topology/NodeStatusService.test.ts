@@ -1,3 +1,4 @@
+// @ts-nocheck File not migrated fully to TS
 import _ from 'lodash';
 import { consts } from 'cloudify-ui-common';
 import { getColorByStatus, getContentByStatus, getNodeState } from 'topology/src/NodeStatusService';
