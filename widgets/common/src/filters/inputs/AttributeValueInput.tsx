@@ -1,3 +1,4 @@
+// @ts-nocheck File not migrated fully to TS
 import type { FunctionComponent } from 'react';
 
 import DynamicDropdown from '../../DynamicDropdown';
