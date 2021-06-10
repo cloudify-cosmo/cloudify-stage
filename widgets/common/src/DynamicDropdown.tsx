@@ -96,11 +96,13 @@ export default function DynamicDropdown({
      */
     function getImplicitOptions(newOptions: { [valueProp: string]: string }[]) {
         const implicitOptions = [];
-        _.castArray(value).forEach(singleValue => {
-            if (!_.find(newOptions, { [valueProp]: singleValue })) {
-                implicitOptions.push({ [valueProp]: singleValue, implicit: true });
-            }
-        });
+        if (!_.isEmpty(value)) {
+            _.castArray(value).forEach(singleValue => {
+                if (!_.find(newOptions, { [valueProp]: singleValue })) {
+                    implicitOptions.push({ [valueProp]: singleValue, implicit: true });
+                }
+            });
+        }
         return implicitOptions;
     }
 
