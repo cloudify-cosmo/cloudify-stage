@@ -89,6 +89,22 @@ export default function DynamicDropdown({
     const [searchQuery, setSearchQuery] = useState('');
     const [isLoading, setLoading] = useState(false);
 
+    /**
+     * Compares `value` prop with `newOptions` argument and returns a list of values
+     * to be passed to `Dropdown` component to show all selected values properly.
+     *
+     * @param newOptions list of options used for comparison
+     */
+    function getImplicitOptions(newOptions: Record<string, string>[]) {
+        const implicitOptions = [];
+        _.castArray(value).forEach(singleValue => {
+            if (!_.find(newOptions, { [valueProp]: singleValue })) {
+                implicitOptions.push({ [valueProp]: singleValue, implicit: true });
+            }
+        });
+        return implicitOptions;
+    }
+
     function loadMore() {
         setLoading(true);
 
@@ -140,9 +156,10 @@ export default function DynamicDropdown({
                         dispatchEndFetchAction();
                     }
 
+                    const newOptions = itemsFormatter(data.items);
                     setOptions(latestOptions => [
-                        ...(nextPage === 0 ? [] : latestOptions),
-                        ...itemsFormatter(data.items)
+                        ...(nextPage === 0 ? getImplicitOptions(newOptions) : latestOptions),
+                        ...newOptions
                     ]);
                 })
                 .catch(onFetchFailed)
@@ -162,12 +179,7 @@ export default function DynamicDropdown({
         if (_.isEmpty(value)) {
             setOptions(latestOptions => _.reject(latestOptions, 'implicit'));
         } else {
-            const optionsToAdd = [];
-            _.castArray(value).forEach(singleValue => {
-                if (!_.find(options, { [valueProp]: singleValue })) {
-                    optionsToAdd.push({ [valueProp]: singleValue, implicit: true });
-                }
-            });
+            const optionsToAdd = getImplicitOptions(options);
             if (optionsToAdd.length > 0) {
                 setOptions(latestOptions => [...optionsToAdd, ...latestOptions]);
             }
