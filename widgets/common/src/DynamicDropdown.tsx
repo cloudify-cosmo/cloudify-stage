@@ -11,11 +11,10 @@ let instanceCount = 0;
 /**
  * Creates two `useUpdateEffect` hooks to call `fetchTrigger` function with debouncing.
  *
- * @param {function(): void} fetchTrigger function to be called to trigger data fetching,
- * accepts single boolean argument
- * @param {React.DependencyList} fetchDeps list of dependencies for delayed `fetchTrigger` call
+ * @param fetchTrigger function to be called to trigger data fetching
+ * @param fetchDeps list of dependencies for delayed `fetchTrigger` call
  */
-function useFetchTrigger(fetchTrigger, fetchDeps) {
+function useFetchTrigger(fetchTrigger: () => void, fetchDeps: React.DependencyList) {
     const { useUpdateEffect } = Stage.Hooks;
     const delayMs = 500;
     const delayedFetchTrigger = useCallback(debounce(fetchTrigger, delayMs), []);
