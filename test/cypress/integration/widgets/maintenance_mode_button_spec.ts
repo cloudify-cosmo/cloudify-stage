@@ -1,3 +1,4 @@
+// @ts-nocheck File not migrated fully to TS
 import { waitUntilEmpty } from '../../support/resource_commons';
 
 describe('Maintenance mode button widget', () => {
