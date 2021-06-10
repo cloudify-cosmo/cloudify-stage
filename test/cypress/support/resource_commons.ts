@@ -22,6 +22,6 @@ export function waitUntilEmpty(resource, search, numberOfRetriesLeft = 60, waiti
     });
 }
 
-export function minutesToMs(minutes) {
+export function minutesToMs(minutes: number) {
     return minutes * 60 * 1000;
 }
