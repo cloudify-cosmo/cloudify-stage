@@ -89,12 +89,12 @@ export default function DynamicDropdown({
     const [isLoading, setLoading] = useState(false);
 
     /**
-     * Compares `value` prop with `newOptions` argument and returns a list of values
-     * to be passed to `Dropdown` component to show all selected values properly.
+     * Returns list of implicit dropdown options calculated by comparing
+     * elements from `value` prop and elements from `newOptions` argument.
      *
      * @param newOptions list of options used for comparison
      */
-    function getImplicitOptions(newOptions: Record<string, string>[]) {
+    function getImplicitOptions(newOptions: { [valueProp: string]: string }[]) {
         const implicitOptions = [];
         _.castArray(value).forEach(singleValue => {
             if (!_.find(newOptions, { [valueProp]: singleValue })) {
