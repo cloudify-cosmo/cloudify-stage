@@ -15,6 +15,7 @@ import performCommonSetup from 'cloudify-ui-common/cypress/plugins';
 
 const setupPluginsAndConfig: Cypress.PluginConfig = (on, config) => {
     config.baseUrl = 'http://localhost:4000';
+
     return performCommonSetup(on, config);
 };
 

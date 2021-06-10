@@ -1,5 +1,6 @@
 import { escapeRegExp, find } from 'lodash';
 import pluginsCatalog from '../fixtures/plugins/catalog.json';
+import { minutesToMs } from '../support/resource_commons';
 
 const awsSecrets = ['aws_access_key_id', 'aws_secret_access_key'];
 const awsPlugins = ['cloudify-utilities-plugin', 'cloudify-kubernetes-plugin', 'cloudify-aws-plugin'];
@@ -20,10 +21,10 @@ const goToNextStep = () => cy.contains('button', 'Next').click();
 const goToFinishStep = () => cy.contains('button', 'Finish').click();
 const closeModal = () => cy.contains('button', 'Close').click();
 
-const waitOptionsForPluginsUpload: Parameters<typeof cy.wait>[1] = { responseTimeout: 5 * 60 * 1000 };
+const waitOptionsForPluginsUpload: Parameters<typeof cy.wait>[1] = { responseTimeout: minutesToMs(5) };
 
 function verifyInstallationSucceeded(blueprints: string[]) {
-    cy.contains('.progress .progress', '100%', { timeout: blueprints.length * 2 * 60 * 1000 });
+    cy.contains('.progress .progress', '100%', { timeout: blueprints.length * minutesToMs(2) });
     cy.contains('.progress .label', 'Installation done!');
     cy.get('.ui.red.message').should('not.exist');
 }
