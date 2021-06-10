@@ -4,14 +4,34 @@
  */
 
 import _ from 'lodash';
+import 'jquery-ui/ui/widget';
+import 'jquery-ui/ui/widgets/mouse';
 import 'jquery-ui/ui/widgets/sortable';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import i18n from 'i18next';
 import AddPageButton from '../containers/AddPageButton';
 import { Confirm, Icon, Menu } from './basic';
+import Consts from '../utils/consts';
 
-export default class PagesList extends Component {
+export interface Page {
+    id: string;
+    name: string;
+    isDrillDown: boolean;
+    tabs: any[];
+    widgets: any[];
+}
+
+export interface PagesListProps {
+    onPageSelected: (page: Page) => void;
+    onPageRemoved: (page: Page) => void;
+    onPageReorder: (index: number, newIndex: number) => void;
+    pages: Page[];
+    selected?: string;
+    isEditMode: boolean;
+}
+
+export default class PagesList extends Component<PagesListProps> {
     constructor(props) {
         super(props);
 
@@ -65,12 +85,14 @@ export default class PagesList extends Component {
                     {_.filter(pages, p => !p.isDrillDown).map(
                         page => (
                             <Menu.Item
-                                as="div"
+                                as="a"
                                 link
                                 key={page.id}
+                                href={`${Consts.CONTEXT_PATH}/page/${page.id}`}
                                 active={selected === page.id}
                                 className={`pageMenuItem ${page.id}PageMenuItem`}
                                 onClick={event => {
+                                    event.preventDefault();
                                     event.stopPropagation();
                                     onPageSelected(page);
                                 }}
