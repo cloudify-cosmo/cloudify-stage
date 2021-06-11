@@ -49,8 +49,9 @@ describe('Filter', () => {
                 .deleteBlueprints(blueprintName)
                 .uploadBlueprint('blueprints/empty.zip', blueprintName)
                 .refreshTemplate()
-                .setBlueprintContext(blueprintName)
         );
+
+        beforeEach(() => cy.setBlueprintContext(blueprintName));
 
         it('deployment creation and removal', () => {
             cy.get('.blueprintsWidget').within(() => {
@@ -78,7 +79,7 @@ describe('Filter', () => {
 
             cy.get('.deploymentFilterField > .text.default');
             cy.get('.deploymentFilterField input').type(deploymentName, { force: true });
-            cy.contains('.deploymentFilterField', 'No results found.');
+            cy.contains('.deploymentFilterField .message', 'No results found.');
         });
 
         it('blueprint upload and removal', () => {
@@ -90,7 +91,7 @@ describe('Filter', () => {
 
             cy.get('.blueprintFilterField > .label').should('not.exist');
             cy.get('.blueprintFilterField input').type(blueprintName, { force: true });
-            cy.contains('.blueprintFilterField', 'No results found.');
+            cy.contains('.blueprintFilterField .message', 'No results found.');
         });
     });
 });
