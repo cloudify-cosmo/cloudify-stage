@@ -1,12 +1,15 @@
 import React from 'react';
 import { mount } from 'enzyme';
 
+// necessary by jquery-ui/ui/widgets/sortable
+import 'jquery-ui/ui/widget';
+import 'jquery-ui/ui/widgets/mouse';
+
 import PagesList, { Page } from 'components/PagesList';
 import Consts from 'utils/consts';
+import { noop } from 'lodash';
 
 describe('(Component) PagesList', () => {
-    // @ts-ignore To make typescript happy
-    const noop = (..._: any[]) => {};
     const defaultProps = {
         onPageSelected: noop,
         onPageRemoved: noop,
@@ -20,7 +23,7 @@ describe('(Component) PagesList', () => {
         { id: 'mustafar', name: 'Mustafar', isDrillDown: false, tabs: [], widgets: [] }
     ];
 
-    it('should renders component', () => {
+    it('should render component', () => {
         const wrapper = mount(
             <PagesList
                 onPageReorder={defaultProps.onPageReorder}
@@ -34,7 +37,7 @@ describe('(Component) PagesList', () => {
         expect(wrapper).toHaveLength(1);
     });
 
-    it('should renders menu item as link', () => {
+    it('should render menu item as link', () => {
         const wrapper = mount(
             <PagesList
                 onPageReorder={defaultProps.onPageReorder}
