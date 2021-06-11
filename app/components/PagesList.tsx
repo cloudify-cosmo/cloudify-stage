@@ -1,8 +1,8 @@
-// @ts-nocheck File not migrated fully to TS
 import _ from 'lodash';
+
 import 'jquery-ui/ui/widgets/sortable';
 import PropTypes from 'prop-types';
-import React, { Component } from 'react';
+import React, { Component, RefObject } from 'react';
 import i18n from 'i18next';
 import AddPageButton from '../containers/AddPageButton';
 import { Confirm, Icon, Menu } from './basic';
@@ -25,26 +25,59 @@ export interface PagesListProps {
     isEditMode: boolean;
 }
 
-export default class PagesList extends Component<PagesListProps> {
-    constructor(props) {
+export interface PagesListState {
+    pageToRemove?: Page | null;
+}
+export default class PagesList extends Component<PagesListProps, PagesListState> {
+    // eslint-disable-next-line react/static-property-placement
+    propTypes = {
+        onPageSelected: PropTypes.func.isRequired,
+        onPageRemoved: PropTypes.func.isRequired,
+        onPageReorder: PropTypes.func.isRequired,
+        pages: PropTypes.arrayOf(
+            PropTypes.shape({
+                id: PropTypes.string,
+                name: PropTypes.string,
+                isDrillDown: PropTypes.bool,
+                tabs: PropTypes.arrayOf(PropTypes.shape({})),
+                widgets: PropTypes.arrayOf(PropTypes.shape({}))
+            })
+        ).isRequired,
+        selected: PropTypes.string,
+        isEditMode: PropTypes.bool.isRequired
+    };
+
+    // NOTE: TypeScript need static defaultProps to mark those props as non-optional in `this.props`
+    // eslint-disable-next-line react/static-property-placement
+    defaultProps = {
+        selected: ''
+    };
+
+    pagesRef: RefObject<HTMLDivElement>;
+
+    constructor(props: PagesListProps) {
         super(props);
 
-        this.pagesRef = React.createRef();
+        this.pagesRef = React.createRef<HTMLDivElement>();
         this.state = {};
     }
 
     componentDidMount() {
         const { onPageReorder } = this.props;
+        let pageIndex: number;
+
+        // @ts-ignore until the application uses jQuery
         $(this.pagesRef.current).sortable({
             placeholder: 'ui-sortable-placeholder',
             helper: 'clone',
             forcePlaceholderSize: true,
+            // @ts-ignore until the application uses jQuery
             start: (event, ui) => {
-                this.pageIndex = ui.item.index();
+                pageIndex = ui.item.index();
             },
-            update: (event, ui) => onPageReorder(this.pageIndex, ui.item.index())
+            // @ts-ignore until the application uses jQuery
+            update: (event, ui) => onPageReorder(pageIndex, ui.item.index())
         });
-
         this.enableReorderInEditMode();
     }
 
@@ -55,10 +88,14 @@ export default class PagesList extends Component<PagesListProps> {
     enableReorderInEditMode() {
         const { isEditMode } = this.props;
         if (isEditMode) {
+            // @ts-ignore until the application uses jQuery
             if ($(this.pagesRef.current).sortable('option', 'disabled')) {
+                // @ts-ignore until the application uses jQuery
                 $(this.pagesRef.current).sortable('enable');
             }
+            // @ts-ignore until the application uses jQuery
         } else if (!$(this.pagesRef.current).sortable('option', 'disabled')) {
+            // @ts-ignore until the application uses jQuery
             $(this.pagesRef.current).sortable('disable');
         }
     }
@@ -97,7 +134,7 @@ export default class PagesList extends Component<PagesListProps> {
                                         name="remove"
                                         size="small"
                                         className="pageRemoveButton"
-                                        onClick={event => {
+                                        onClick={(event: MouseEvent) => {
                                             event.stopPropagation();
                                             if (_.isEmpty(page.tabs) && _.isEmpty(page.widgets)) onPageRemoved(page);
                                             else this.setState({ pageToRemove: page });
@@ -113,6 +150,7 @@ export default class PagesList extends Component<PagesListProps> {
                 </div>
                 {isEditMode && (
                     <div style={{ textAlign: 'center', marginTop: 10 }}>
+                        {/* @ts-ignore until the AddPageButton not fully migrated to ts */}
                         <AddPageButton />
                     </div>
                 )}
@@ -120,8 +158,10 @@ export default class PagesList extends Component<PagesListProps> {
                     open={!!pageToRemove}
                     onCancel={() => this.setState({ pageToRemove: null })}
                     onConfirm={() => {
-                        onPageRemoved(pageToRemove);
-                        this.setState({ pageToRemove: null });
+                        if (pageToRemove) {
+                            onPageRemoved(pageToRemove);
+                            this.setState({ pageToRemove: null });
+                        }
                     }}
                     header={i18n.t(
                         'editMode.pageRemovalModal.header',
@@ -137,24 +177,3 @@ export default class PagesList extends Component<PagesListProps> {
         );
     }
 }
-
-PagesList.propTypes = {
-    onPageSelected: PropTypes.func.isRequired,
-    onPageRemoved: PropTypes.func.isRequired,
-    onPageReorder: PropTypes.func.isRequired,
-    pages: PropTypes.arrayOf(
-        PropTypes.shape({
-            id: PropTypes.string,
-            name: PropTypes.string,
-            isDrillDown: PropTypes.bool,
-            tabs: PropTypes.arrayOf(PropTypes.shape({})),
-            widgets: PropTypes.arrayOf(PropTypes.shape({}))
-        })
-    ).isRequired,
-    selected: PropTypes.string,
-    isEditMode: PropTypes.bool.isRequired
-};
-
-PagesList.defaultProps = {
-    selected: ''
-};
