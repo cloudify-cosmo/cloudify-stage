@@ -13,7 +13,7 @@ echo "Found $JS_FILES_COUNT JS/JSX files"
 TS_FILES=`find $DIRECTORIES_TO_CHECK -type f \( -name '*.ts' -o -name '*.tsx' \) ! -path '*node_modules*'`
 TS_FILES_COUNT=`echo "$TS_FILES" | wc -l`
 echo "Found $TS_FILES_COUNT TS/TSX files"
-TS_NOCHECK_COUNT=`grep '@ts-nocheck' $TS_FILES | wc -l`
+TS_NOCHECK_COUNT=`grep '@ts-nocheck' $TS_FILES | wc -l || true`
 echo "$TS_NOCHECK_COUNT out of these TS/TSX files have a '@ts-nocheck' header"
 
 TOTAL_FILES_COUNT=$(($JS_FILES_COUNT+$TS_FILES_COUNT))
