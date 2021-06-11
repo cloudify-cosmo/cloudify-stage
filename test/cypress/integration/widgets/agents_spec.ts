@@ -1,4 +1,5 @@
-describe('Agents widget', () => {
+// TODO(RD-2589): fix the flakiness and enable the tests
+describe.skip('Agents widget', () => {
     const blueprintName = 'agents_test_blueprint';
     const deploymentName = 'agents_test_deployment';
 
