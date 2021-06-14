@@ -1,4 +1,5 @@
 import { addCommands, GetCypressChainableFromCommands } from 'cloudify-ui-common/cypress/support';
+import { minutesToMs } from './resource_commons';
 
 declare global {
     namespace Cypress {
@@ -8,7 +9,7 @@ declare global {
     }
 }
 
-const uploadPluginTimeout = 2 * 60 * 1000;
+const uploadPluginTimeout = minutesToMs(2);
 
 const commands = {
     installPlugin: (wagonUrl: string, yamlUrl: string) =>

@@ -1,5 +1,5 @@
 {
-    "extends": "../../node_modules/cloudify-ui-common/configs/tsconfig.base.json",
+    "extends": "../../tsconfig.base.json",
     "compilerOptions": {
         // Some files do not import/export anything, so cannot use isolatedModules
         "isolatedModules": false,
@@ -14,7 +14,8 @@
         "sourceMap": false,
         "types": ["cypress"]
     },
+    "include": ["**/*", "**/*.json"],
+    "files": ["../../app/typings/stage-api.d.ts", "../../babel.config.js"],
     // Some Stage.Common types used in tests are defined in widgets/common
-    "include": ["**/*", "../../widgets/common/**/*"],
-    "files": ["../../app/typings/stage-api.d.ts"]
+    "references": [{ "path": "../../app" }, { "path": "../../widgets" }]
 }

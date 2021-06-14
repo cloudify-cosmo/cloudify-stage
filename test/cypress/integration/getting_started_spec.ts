@@ -1,5 +1,6 @@
 import { escapeRegExp, find } from 'lodash';
 import pluginsCatalog from '../fixtures/plugins/catalog.json';
+import { minutesToMs } from '../support/resource_commons';
 
 const awsSecrets = ['aws_access_key_id', 'aws_secret_access_key'];
 const awsPlugins = ['cloudify-utilities-plugin', 'cloudify-kubernetes-plugin', 'cloudify-aws-plugin'];
@@ -20,8 +21,10 @@ const goToNextStep = () => cy.contains('button', 'Next').click();
 const goToFinishStep = () => cy.contains('button', 'Finish').click();
 const closeModal = () => cy.contains('button', 'Close').click();
 
+const waitOptionsForPluginsUpload: Parameters<typeof cy.wait>[1] = { responseTimeout: minutesToMs(5) };
+
 function verifyInstallationSucceeded(blueprints: string[]) {
-    cy.contains('.progress .progress', '100%', { timeout: blueprints.length * 2 * 60 * 1000 });
+    cy.contains('.progress .progress', '100%', { timeout: blueprints.length * minutesToMs(2) });
     cy.contains('.progress .label', 'Installation done!');
     cy.get('.ui.red.message').should('not.exist');
 }
@@ -79,6 +82,7 @@ function interceptSecretsCreation(secrets: string[]) {
 
 function interceptPluginsUpload(plugins: string[]) {
     plugins.forEach(plugin => {
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         const catalogEntry = find(pluginsCatalog, { name: plugin })!;
         cy.intercept({
             method: 'POST',
@@ -151,7 +155,7 @@ describe('Getting started modal', () => {
             goToFinishStep();
 
             cy.wait(toAliasReferences(awsSecrets));
-            cy.wait(toAliasReferences(awsPlugins), { responseTimeout: awsPlugins.length * 2 * 60 * 1000 });
+            cy.wait(toAliasReferences(awsPlugins), waitOptionsForPluginsUpload);
             cy.wait(toAliasReferences(awsBlueprints));
 
             verifyInstallationSucceeded(awsBlueprints);
@@ -242,7 +246,7 @@ describe('Getting started modal', () => {
 
             goToFinishStep();
 
-            cy.wait(toAliasReferences(plugins));
+            cy.wait(toAliasReferences(plugins), waitOptionsForPluginsUpload);
             cy.wait(toAliasReferences(awsSecrets));
             cy.wait(toAliasReferences(gcpSecrets));
             cy.wait(toAliasReferences(blueprints));

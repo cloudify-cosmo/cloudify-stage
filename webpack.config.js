@@ -167,7 +167,7 @@ module.exports = (env, argv) => {
                     react: `${__dirname}/node_modules/react`
                 }
             },
-            entry: ['./app/main.js'],
+            entry: ['./app/main.ts'],
             output: {
                 path: outputPath,
                 filename: 'static/js/[name].bundle.js',
@@ -211,15 +211,15 @@ module.exports = (env, argv) => {
                     }),
                     new ForkTsCheckerWebpackPlugin({
                         eslint: {
-                            files: './app/**/*.{ts,tsx,js,tsx}'
+                            files: './{app,widgets}/**/*.{ts,tsx,js,tsx}',
+                            options: {
+                                ignorePattern: 'widgets/**/backend.js'
+                            }
                         },
                         typescript: {
-                            configFile: './app/tsconfig.json',
-                            configOverwrite: {
-                                compilerOptions: {
-                                    checkJs: false
-                                }
-                            }
+                            configFile: './tsconfig.ui.json',
+                            build: true,
+                            mode: 'write-references'
                         }
                     }),
                     environmentPlugin,
@@ -257,22 +257,6 @@ module.exports = (env, argv) => {
                                 to: '[path]../backend.js'
                             }
                         ]
-                    }),
-                    new ForkTsCheckerWebpackPlugin({
-                        eslint: {
-                            files: `./widgets/**/*.${globExtensions}`,
-                            options: {
-                                ignorePattern: 'widgets/**/backend.js'
-                            }
-                        },
-                        typescript: {
-                            configFile: './widgets/tsconfig.json',
-                            configOverwrite: {
-                                compilerOptions: {
-                                    checkJs: false
-                                }
-                            }
-                        }
                     }),
                     environmentPlugin,
                     isProduction && getProductionPlugins(env && env.analyse === 'widgets')

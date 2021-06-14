@@ -37,7 +37,7 @@ function useReservedKeys(toolbox: Stage.Types.Toolbox) {
     return { reservedKeys, fetchingReservedKeys };
 }
 
-interface LabelsInputProps {
+export interface LabelsInputProps {
     hideInitialLabels?: boolean;
     initialLabels?: Label[];
     onChange: (labels: Label[]) => void;

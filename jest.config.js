@@ -3,17 +3,7 @@ const { defaults } = require('jest-config');
 
 /** @type {import('@jest/types').Config.GlobalConfig} */
 module.exports = {
-    collectCoverageFrom: [
-        '*/**/*.{js,ts}',
-        '**/*.{jsx,tsx}',
-        '!userData/**',
-        '!scripts/**',
-        '!backend/**',
-        '!test/**',
-        '!widgets/**/backend.{js,ts}',
-        '!coverage-*/**',
-        '!dist/**'
-    ],
+    collectCoverageFrom: ['{app,widgets}/**/*.{js,jsx,ts,tsx}', '!widgets/**/backend.{js,ts}'],
     coverageDirectory: 'coverage-jest',
     coverageReporters: ['json', 'lcov'],
     moduleNameMapper: {
@@ -29,5 +19,5 @@ module.exports = {
      */
     moduleFileExtensions: defaults.moduleFileExtensions,
     transformIgnorePatterns: ['node_modules/(?!cloudify-ui-components|react-syntax-highlighter)'],
-    setupFiles: ['<rootDir>/test/jest/setup.js']
+    setupFiles: ['<rootDir>/test/jest/setup.ts']
 };
