@@ -15,7 +15,7 @@
         "types": ["cypress"]
     },
     "include": ["**/*", "**/*.json"],
-    "files": ["../../app/typings/stage-api.d.ts", "../../babel.config.js"],
+    "files": ["../../app/typings/stage-api.d.ts"],
     // Some Stage.Common types used in tests are defined in widgets/common
     "references": [{ "path": "../../app" }, { "path": "../../widgets" }]
 }

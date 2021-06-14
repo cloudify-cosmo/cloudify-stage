@@ -4,6 +4,7 @@
         "declarationMap": false,
         "composite": true,
         "outDir": "./tsc-dist",
-        "rootDir": "."
+        "rootDir": ".",
+        "allowJs": false
     }
 }
