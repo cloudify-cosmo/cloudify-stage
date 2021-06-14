@@ -1,5 +1,6 @@
 // @ts-nocheck File not migrated fully to TS
 import { types } from 'cloudify-ui-common';
+import highlighterStyles from 'react-syntax-highlighter/dist/esm/styles/hljs/idea';
 
 /**
  * ParameterValue is a component which shows parameters (e.g. deployment/blueprint inputs, outputs, runtime properties, ...)
@@ -26,40 +27,21 @@ export default class ParameterValue extends React.Component {
             case 'array':
             case 'object':
                 return <HighlightText language="json">{stringValue}</HighlightText>;
-            case 'boolean':
-                return (
-                    <code style={commonStyle} className="hljs-keyword">
-                        {stringValue}
-                    </code>
-                );
             case 'number':
-                return (
-                    <code style={commonStyle} className="hljs-number">
-                        {stringValue}
-                    </code>
-                );
+                return <code style={{ ...commonStyle, ...highlighterStyles['hljs-number'] }}>{stringValue}</code>;
+            case 'boolean':
             case 'null':
-                return (
-                    <code style={commonStyle} className="hljs-keyword">
-                        {stringValue}
-                    </code>
-                );
+                return <code style={{ ...commonStyle, ...highlighterStyles['hljs-keyword'] }}>{stringValue}</code>;
             case 'string':
                 return Url.isUrl(stringValue) ? (
                     <a rel="noopener noreferrer" target="_blank" href={stringValue}>
                         {stringValue}
                     </a>
                 ) : (
-                    <code style={commonStyle} className="hljs-string">
-                        {stringValue}
-                    </code>
+                    <code style={{ ...commonStyle, ...highlighterStyles['hljs-string'] }}>{stringValue}</code>
                 );
             default:
-                return (
-                    <code style={commonStyle} className="hljs-literal">
-                        {stringValue}
-                    </code>
-                );
+                return <code style={{ ...commonStyle, ...highlighterStyles['hljs-literal'] }}>{stringValue}</code>;
         }
     }
 

@@ -79,6 +79,7 @@
     "react-sortable-hoc": "^1.11.0",
     "react-splitter-layout": "^3.0.0",
     "react-svg-pan-zoom": "^3.8.0",
+    "react-syntax-highlighter": "^15.4.3",
     "react-visibility-sensor": "^5.1.1",
     "recharts": "^1.4.1",
     "redux": "^4.0.4",
