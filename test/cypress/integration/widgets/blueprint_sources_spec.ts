@@ -21,11 +21,11 @@ describe('Blueprint Sources widget', () => {
         it('blueprint is selected', () => {
             cy.setBlueprintContext(blueprintName);
 
-            cy.get('.message').should('not.exist');
-
             cy.get('.blueprintSourcesWidget .widgetItem')
                 .scrollIntoView()
                 .within(() => {
+                    cy.get('.message').should('not.exist');
+
                     cy.get('.layout-pane:nth-child(1)').as('leftPane');
                     cy.get('.layout-pane:nth-child(3)').as('rightPane');
 
@@ -62,8 +62,10 @@ describe('Blueprint Sources widget', () => {
             cy.clearBlueprintContext();
             cy.setDeploymentContext(deploymentName);
 
-            cy.get('.blueprintSourcesWidget').contains(blueprintName).should('be.visible');
-            cy.get('.message').should('not.exist');
+            cy.get('.blueprintSourcesWidget').within(() => {
+                cy.contains(blueprintName).should('be.visible');
+                cy.get('.message').should('not.exist');
+            });
         });
     });
 });
