@@ -14,7 +14,12 @@ export default class ParameterValue extends React.Component {
         const { HighlightText } = Stage.Basic;
         const { Url } = Stage.Utils;
 
-        const commonStyle = { padding: '0.5em', whiteSpace: 'pre-wrap', wordBreak: 'break-word' };
+        const commonStyle = {
+            display: 'inline-block',
+            padding: '0.5em',
+            whiteSpace: 'pre-wrap',
+            wordBreak: 'break-word'
+        };
         const { value: typedValue } = this.props;
 
         switch (types.toType(typedValue)) {
