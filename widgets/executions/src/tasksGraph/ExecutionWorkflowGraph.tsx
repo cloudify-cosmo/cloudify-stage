@@ -41,8 +41,11 @@ export default function ExecutionWorkflowGraph({ containerHeight, selectedExecut
 
     const timer = useRef(null);
     const cancelablePromise = useRef(null);
-    const wrapper = useRef();
     const modal = useRef();
+
+    const wrapper = useRef();
+    const [wrapperWidth, setWrapperWidth] = useState();
+    const wrapperResizeObserver = useRef(new ResizeObserver(() => setWrapperWidth(wrapper.current?.offsetWidth)));
 
     function stopPolling() {
         clearTimeout(timer.current);
@@ -95,6 +98,15 @@ export default function ExecutionWorkflowGraph({ containerHeight, selectedExecut
         startPolling();
         return stopPolling;
     }, [selectedExecution.id]);
+
+    useEffect(() => {
+        const wrapperRef = wrapper.current;
+        if (wrapperRef) {
+            wrapperResizeObserver.current.observe(wrapperRef);
+            return () => wrapperResizeObserver.current.unobserve(wrapperRef);
+        }
+        return undefined;
+    }, [wrapper.current]);
 
     function scrollTo(x, y, zoom = 1, autoFocusOnly = true, frame = 1) {
         const currentPosition = isMaximized ? modalPosition : position;
@@ -234,7 +246,7 @@ export default function ExecutionWorkflowGraph({ containerHeight, selectedExecut
 
             {graphData && (
                 <div ref={wrapper} style={{ position: 'relative' }}>
-                    {renderGraph(Math.max(0, getContainerWidth() - 1), containerHeight, position, setPosition)}
+                    {renderGraph(Math.max(0, getContainerWidth()), containerHeight, position, setPosition)}
                     <Modal open={isMaximized} onClose={minimize} size="fullscreen">
                         <div ref={modal}>
                             {renderGraph(

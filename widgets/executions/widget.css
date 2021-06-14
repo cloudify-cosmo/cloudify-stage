@@ -11,6 +11,10 @@
     left: unset !important;
 }
 
+.executionsTable {
+    table-layout: fixed;
+}
+
 .executions-graph-toolbar {
     position: absolute;
     top: 1px;

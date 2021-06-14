@@ -181,7 +181,7 @@ export default class ExecutionsTable extends React.Component {
                     className="executionsTable"
                     noDataMessage={NO_DATA_MESSAGE}
                 >
-                    <DataTable.Column label="" width="1%" />
+                    <DataTable.Column label="" width="43px" />
                     <DataTable.Column
                         label="Blueprint"
                         name="blueprint_id"
@@ -197,7 +197,7 @@ export default class ExecutionsTable extends React.Component {
                     <DataTable.Column
                         label="Workflow"
                         name="workflow_id"
-                        width="15%"
+                        width="20%"
                         show={fieldsToShow.indexOf('Workflow') >= 0}
                     />
                     <DataTable.Column label="Id" name="id" width="10%" show={fieldsToShow.indexOf('Id') >= 0} />
@@ -222,17 +222,17 @@ export default class ExecutionsTable extends React.Component {
                     <DataTable.Column
                         label="Creator"
                         name="created_by"
-                        width="5%"
+                        width="7%"
                         show={fieldsToShow.indexOf('Creator') >= 0}
                     />
                     <DataTable.Column
                         label="Attributes"
-                        width="5%"
+                        width="7%"
                         show={fieldsToShow.indexOf('System') >= 0 || fieldsToShow.indexOf('Attributes') >= 0}
                     />
                     <DataTable.Column label="Status" width="15%" show={fieldsToShow.indexOf('Status') >= 0} />
                     <DataTable.Column
-                        width="5%"
+                        width="40px"
                         show={fieldsToShow.indexOf('Params') >= 0 || fieldsToShow.indexOf('Actions') >= 0}
                     />
 
