@@ -21,15 +21,15 @@ class SecretActions {
     }
 
     doUpdate(key, value) {
-        return this.toolbox.getManager().doPatch(`/secrets/${key}`, { value });
+        return this.toolbox.getManager().doPatch(`/secrets/${key}`, { body: { value } });
     }
 
     doSetIsHiddenValue(key, hidden) {
-        return this.toolbox.getManager().doPatch(`/secrets/${key}`, { is_hidden_value: hidden });
+        return this.toolbox.getManager().doPatch(`/secrets/${key}`, { body: { is_hidden_value: hidden } });
     }
 
     doSetVisibility(key, visibility) {
-        return this.toolbox.getManager().doPatch(`/secrets/${key}/set-visibility`, { visibility });
+        return this.toolbox.getManager().doPatch(`/secrets/${key}/set-visibility`, { body: { visibility } });
     }
 }
 
