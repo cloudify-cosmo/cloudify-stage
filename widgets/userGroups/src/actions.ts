@@ -62,7 +62,7 @@ export default class Actions {
     doUpdateTenant(tenantName, groupName, role) {
         return this.toolbox
             .getManager()
-            .doPatch('/tenants/user-groups', { tenant_name: tenantName, group_name: groupName, role });
+            .doPatch('/tenants/user-groups', { body: { tenant_name: tenantName, group_name: groupName, role } });
     }
 
     doHandleUsers(groupName, usersToAdd, usersToDelete) {

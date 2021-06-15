@@ -98,7 +98,9 @@ export default class DeploymentActions {
     }
 
     doSetVisibility(deploymentId: string, visibility: any) {
-        return this.toolbox.getManager().doPatch(`/deployments/${deploymentId}/set-visibility`, { visibility });
+        return this.toolbox
+            .getManager()
+            .doPatch(`/deployments/${deploymentId}/set-visibility`, { body: { visibility } });
     }
 
     doSetSite(deploymentId: string, siteName: string, detachSite: any) {
@@ -134,7 +136,7 @@ export default class DeploymentActions {
 
     doSetLabels(deploymentId: string, deploymentLabels: Stage.Common.Labels.Label[]) {
         const labels = DeploymentActions.toManagerLabels(deploymentLabels);
-        return this.toolbox.getManager().doPatch(`/deployments/${deploymentId}`, { labels });
+        return this.toolbox.getManager().doPatch(`/deployments/${deploymentId}`, { body: { labels } });
     }
 
     doGetLabel(key: string, value: string) {

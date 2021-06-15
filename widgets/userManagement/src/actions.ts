@@ -36,7 +36,7 @@ export default class Actions {
             this.toolbox.getManager().doDelete('/tenants/users', { body: { username, tenant_name: tenantName } })
         );
         const updateActions = _.map(tenantsToUpdate, (role, tenantName) =>
-            this.toolbox.getManager().doPatch('/tenants/users', { username, tenant_name: tenantName, role })
+            this.toolbox.getManager().doPatch('/tenants/users', { body: { username, tenant_name: tenantName, role } })
         );
 
         return Promise.all(_.concat(addActions, deleteActions, updateActions));
