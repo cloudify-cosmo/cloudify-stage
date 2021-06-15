@@ -49,8 +49,8 @@ export default class External {
         return this.ajaxCall(url, 'put', requestOptions);
     }
 
-    doPatch(url: string, body: Record<string, any>) {
-        return this.ajaxCall(url, 'PATCH', { body });
+    doPatch(url: string, requestOptions: RequestOptions) {
+        return this.ajaxCall(url, 'PATCH', requestOptions);
     }
 
     doDownload(url: string, fileName: string) {
