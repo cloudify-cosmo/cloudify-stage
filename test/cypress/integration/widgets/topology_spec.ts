@@ -1,12 +1,18 @@
 // @ts-nocheck File not migrated fully to TS
 import _ from 'lodash';
-import { waitUntilEmpty } from '../../support/resource_commons';
+import { waitUntilEmpty, waitUntilNotEmpty } from '../../support/resource_commons';
 
 describe('Topology', () => {
     const resourcePrefix = 'topology_test_';
     const getNodeTopologyButton = index => cy.get(`.nodeTopologyButton:eq(${index})`);
-    const waitForDeploymentToBeInstalled = deploymentId =>
-        waitUntilEmpty(`deployments?id=${deploymentId}&deployment_status=in_progress`);
+
+    const waitForDeploymentToBeInstalled = deploymentId => {
+        cy.log(`Waiting for deployment ${deploymentId} to be installed.`);
+        const startedInstallWorkflowsOnDeployment = `executions?_include=id,workflow_id,status&deployment_id=${deploymentId}&workflow_id=install&status=started`;
+
+        waitUntilNotEmpty(startedInstallWorkflowsOnDeployment);
+        waitUntilEmpty(startedInstallWorkflowsOnDeployment);
+    };
 
     before(() => {
         cy.activate('valid_trial_license').usePageMock('topology', { pollingTime: 5 });
@@ -118,6 +124,15 @@ describe('Topology', () => {
         const componentDeploymentId = 'component';
         const getGoToDeploymentPageButton = () => getNodeTopologyButton(0);
         const getComponentNodeExpandButton = () => getNodeTopologyButton(1);
+        const waitForTopologyWidgetToBeReadyAfterFetch = () => {
+            cy.log('Waiting for topology data to be fetched');
+            cy.get('.widgetLoader.active').should('be.visible');
+            cy.get('.widgetLoader.active').should('not.exist');
+
+            cy.log('Waiting until animation in topology canvas is finished');
+            // eslint-disable-next-line cypress/no-unnecessary-waiting
+            cy.wait(1000);
+        };
 
         before(() => {
             const blueprintFile = 'blueprints/component_app.zip';
@@ -134,19 +149,18 @@ describe('Topology', () => {
                 .uploadBlueprint(blueprintFile, appBlueprintId, appBlueprintYamlFile)
                 .deployBlueprint(appBlueprintId, appDeploymentId)
                 .executeWorkflow(appDeploymentId, 'install');
+            waitForDeploymentToBeInstalled(appDeploymentId);
         });
 
         beforeEach(() => {
             cy.visitPage('Test Page');
             cy.setDeploymentContext(appDeploymentId);
-            waitForDeploymentToBeInstalled(appDeploymentId);
-            cy.waitUntilPageLoaded();
+            waitForTopologyWidgetToBeReadyAfterFetch();
             cy.get('.scrollGlass').click();
         });
 
-        // TODO(RD-2600): fix the test and enable it
-        it.skip('allows to open component deployment page', () => {
-            getGoToDeploymentPageButton().click({ force: true });
+        it('allows to open component deployment page', () => {
+            getGoToDeploymentPageButton().click();
 
             cy.verifyLocation(
                 `/console/page/test_page_deployment/${componentDeploymentId}`,
@@ -156,7 +170,7 @@ describe('Topology', () => {
         });
 
         it('allows to expand component node', () => {
-            getComponentNodeExpandButton().click({ force: true });
+            getComponentNodeExpandButton().click();
 
             cy.contains(`host(${componentDeploymentId}`).should('be.visible');
         });
