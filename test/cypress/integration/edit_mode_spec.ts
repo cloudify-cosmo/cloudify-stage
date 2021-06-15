@@ -124,6 +124,19 @@ describe('Edit mode', () => {
         cy.contains('Page_0').should('not.exist');
     });
 
+    it('should allow to reorder pages', () => {
+        cy.log('Verify empty page was added');
+        cy.get('.pageMenuItem:last()').should('have.class', 'active').should('have.text', 'Page_0');
+        cy.contains('.pageTitle', 'Page_0');
+        cy.contains('This page is empty');
+        cy.contains("don't be shy, give it a meaning!");
+        cy.contains('Add Tabs');
+
+        cy.log('Remove added page');
+        cy.get('.pageMenuItem:last() .remove').click({ force: true });
+        cy.contains('Page_0').should('not.exist');
+    });
+
     describe('should open widget install modal and', () => {
         beforeEach(() => {
             cy.intercept('PUT', '/console/widgets/install*').as('installWidget');
