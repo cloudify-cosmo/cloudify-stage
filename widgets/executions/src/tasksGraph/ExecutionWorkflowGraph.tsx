@@ -6,6 +6,7 @@ import { ReactSVGPanZoom } from 'react-svg-pan-zoom';
 import GraphEdges from './GraphEdges';
 import GraphNodes from './GraphNodes';
 import states from './States';
+import useWidthObserver from './useWidthObserver';
 
 const INACTIVE_EXECUTION_POLLING_INTERVAL = 5000;
 const ACTIVE_EXECUTION_POLLING_INTERVAL = 2500;
@@ -43,9 +44,7 @@ export default function ExecutionWorkflowGraph({ containerHeight, selectedExecut
     const cancelablePromise = useRef(null);
     const modal = useRef();
 
-    const wrapper = useRef();
-    const [wrapperWidth, setWrapperWidth] = useState();
-    const wrapperResizeObserver = useRef(new ResizeObserver(() => setWrapperWidth(wrapper.current?.offsetWidth)));
+    const [wrapperRef, getWrapperWidth] = useWidthObserver();
 
     function stopPolling() {
         clearTimeout(timer.current);
@@ -99,15 +98,6 @@ export default function ExecutionWorkflowGraph({ containerHeight, selectedExecut
         return stopPolling;
     }, [selectedExecution.id]);
 
-    useEffect(() => {
-        const wrapperRef = wrapper.current;
-        if (wrapperRef) {
-            wrapperResizeObserver.current.observe(wrapperRef);
-            return () => wrapperResizeObserver.current.unobserve(wrapperRef);
-        }
-        return undefined;
-    }, [wrapper.current]);
-
     function scrollTo(x, y, zoom = 1, autoFocusOnly = true, frame = 1) {
         const currentPosition = isMaximized ? modalPosition : position;
         const positionToFocusOn = {
@@ -122,17 +112,13 @@ export default function ExecutionWorkflowGraph({ containerHeight, selectedExecut
             setTimeout(() => scrollTo(x, y, zoom, autoFocusOnly, frame + 1), AUTO_FOCUS_ANIMATION_FRAME_DURATION);
     }
 
-    function getContainerWidth() {
-        return _.get(wrapper.current, 'offsetWidth', 0);
-    }
-
     function getModalWidth() {
         return _.get(modal.current, 'offsetWidth', 0);
     }
 
     function fitToView() {
         const { width: graphWidth, height: graphHeight } = graphData;
-        const width = isMaximized ? getModalWidth() : Math.max(0, getContainerWidth() - 1);
+        const width = isMaximized ? getModalWidth() : Math.max(0, getWrapperWidth() - 1);
         const height = isMaximized ? Math.max(MIN_MODAL_GRAPH_HEIGHT, graphHeight + 2 * GRAPH_MARGIN) : containerHeight;
         const zoom = Math.min((width - 2 * GRAPH_MARGIN) / graphWidth, (height - 2 * GRAPH_MARGIN) / graphHeight);
 
@@ -245,8 +231,8 @@ export default function ExecutionWorkflowGraph({ containerHeight, selectedExecut
             {error && <Message error={error !== NO_TASKS_GRAPH_MESSAGE}>{error}</Message>}
 
             {graphData && (
-                <div ref={wrapper} style={{ position: 'relative' }}>
-                    {renderGraph(Math.max(0, getContainerWidth()), containerHeight, position, setPosition)}
+                <div ref={wrapperRef} style={{ position: 'relative' }}>
+                    {renderGraph(getWrapperWidth(), containerHeight, position, setPosition)}
                     <Modal open={isMaximized} onClose={minimize} size="fullscreen">
                         <div ref={modal}>
                             {renderGraph(
