@@ -403,16 +403,16 @@ module.exports = r => {
             return tasksGraph;
         };
         const runGraphCreation = () => {
-            const tasksGraphParams = { ...req.query };
+            const params = { ...req.query };
             const headers = _.pick(req.headers, 'authentication-token', 'tenant');
 
             const operationsList = [];
-            helper.Manager.doGet(tasksGraphsFetchUrl, tasksGraphParams, headers)
+            helper.Manager.doGet(tasksGraphsFetchUrl, { params, headers })
                 .then(data => {
                     const { items } = data;
 
                     if (_.isEmpty(items)) {
-                        const message = `No tasks graph for execution id=${tasksGraphParams.execution_id}.`;
+                        const message = `No tasks graph for execution id=${params.execution_id}.`;
                         logger.info(message);
                         res.status(404).send({ message });
                         return;
@@ -420,7 +420,7 @@ module.exports = r => {
 
                     const operationsPromises = _.map(items, graph =>
                         // eslint-disable-next-line camelcase
-                        helper.Manager.doGet(operationsFetchUrl, { graph_id: graph.id }, headers)
+                        helper.Manager.doGet(operationsFetchUrl, { params: { graph_id: graph.id }, headers })
                     );
 
                     Promise.all(operationsPromises)
