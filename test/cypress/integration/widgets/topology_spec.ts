@@ -144,7 +144,8 @@ describe('Topology', () => {
             cy.get('.scrollGlass').click();
         });
 
-        it('allows to open component deployment page', () => {
+        // TODO(RD-2600): fix the test and enable it
+        it.skip('allows to open component deployment page', () => {
             getGoToDeploymentPageButton().click({ force: true });
 
             cy.verifyLocation(
