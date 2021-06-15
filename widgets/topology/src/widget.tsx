@@ -145,7 +145,14 @@ Stage.defineWidget({
                 layout
             },
             icons
-        } = _.isEmpty(data) ? { rawBlueprintData: { data: { id: '' }, layout: {} } } : data;
+        } = _.isEmpty(data)
+            ? {
+                  blueprintDeploymentData: {},
+                  componentDeploymentsData: {},
+                  rawBlueprintData: { data: { id: '' }, layout: {} },
+                  icons: {}
+              }
+            : data;
 
         const deploymentId = toolbox.getContext().getValue('deploymentId');
         const blueprintId = deploymentId ? id : toolbox.getContext().getValue('blueprintId');

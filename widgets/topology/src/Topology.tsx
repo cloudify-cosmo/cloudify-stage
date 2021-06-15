@@ -205,7 +205,9 @@ export default class Topology extends React.Component {
         const expandDeployments = deploymentsToExpand => {
             [...deploymentsToExpand].forEach(deploymentId => {
                 const expandedNodeData = findExpandedNode(topology, deploymentId);
-                if (!expandedNodeData) {
+                const componentDeploymentsData = data.componentDeploymentsData[deploymentId];
+
+                if (!expandedNodeData || !componentDeploymentsData) {
                     return;
                 }
 
