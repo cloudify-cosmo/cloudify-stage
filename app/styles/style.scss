@@ -53,6 +53,9 @@ a:hover {
       .item:before {
         background-color: $grey-normal;
       }
+      .item.link:hover {
+        text-decoration: none !important; // override semantic ui styles
+      }
     }
   }
 
@@ -238,7 +241,7 @@ a:hover {
     right : var(--widget-buttons-whitespace);
     display: none;
     z-index: 5;
-    
+
     a {
       color: inherit !important;
     }
