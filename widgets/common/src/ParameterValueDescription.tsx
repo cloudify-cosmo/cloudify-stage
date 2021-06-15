@@ -11,7 +11,7 @@ export default function ParameterValueDescription() {
             flowing
             header="Value style"
             content={
-                <List bulleted>
+                <List>
                     <List.Item>
                         String:
                         <ParameterValue value="centos_core" showCopyButton={false} />,
