@@ -37,9 +37,11 @@ export default class {
 
     doUpdateUser(tenantName, username, role) {
         return this.toolbox.getManager().doPatch('/tenants/users', {
-            username,
-            tenant_name: tenantName,
-            role
+            body: {
+                username,
+                tenant_name: tenantName,
+                role
+            }
         });
     }
 
@@ -72,9 +74,11 @@ export default class {
 
     doUpdateUserGroup(tenantName, userGroup, role) {
         return this.toolbox.getManager().doPatch('/tenants/user-groups', {
-            group_name: userGroup,
-            tenant_name: tenantName,
-            role
+            body: {
+                group_name: userGroup,
+                tenant_name: tenantName,
+                role
+            }
         });
     }
 
