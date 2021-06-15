@@ -135,6 +135,7 @@ export default class PagesList extends Component<PagesListProps, PagesListState>
                                         size="small"
                                         className="pageRemoveButton"
                                         onClick={(event: MouseEvent) => {
+                                            event.preventDefault();
                                             event.stopPropagation();
                                             if (_.isEmpty(page.tabs) && _.isEmpty(page.widgets)) onPageRemoved(page);
                                             else this.setState({ pageToRemove: page });
