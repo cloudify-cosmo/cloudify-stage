@@ -36,7 +36,7 @@ class PluginActions {
     }
 
     doSetVisibility(pluginId, visibility) {
-        return this.toolbox.getManager().doPatch(`/plugins/${pluginId}/set-visibility`, { visibility });
+        return this.toolbox.getManager().doPatch(`/plugins/${pluginId}/set-visibility`, { body: { visibility } });
     }
 }
 

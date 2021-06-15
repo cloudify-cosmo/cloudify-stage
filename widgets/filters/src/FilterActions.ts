@@ -23,6 +23,8 @@ export default class FilterActions {
     }
 
     doUpdate(filterId: string, filterRules: FilterRule[]) {
-        return this.toolbox.getManager().doPatch(`/filters/deployments/${filterId}`, { filter_rules: filterRules });
+        return this.toolbox
+            .getManager()
+            .doPatch(`/filters/deployments/${filterId}`, { body: { filter_rules: filterRules } });
     }
 }
