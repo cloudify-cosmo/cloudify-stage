@@ -3,6 +3,7 @@
  * Created by kinneretzin on 07/09/2016.
  */
 
+import { castArray } from 'lodash';
 import Topology from './Topology';
 import DataFetcher from './DataFetcher';
 import { createBaseTopology } from './DataProcessor';
@@ -40,8 +41,9 @@ Stage.defineWidget({
     ],
 
     fetchParams(widget, toolbox) {
-        const deploymentId = toolbox.getContext().getValue('deploymentId');
-        const blueprintId = toolbox.getContext().getValue('blueprintId');
+        // TODO(RD-2130): Use common utility function to get only the first ID
+        const deploymentId = castArray(toolbox.getContext().getValue('deploymentId'))[0];
+        const blueprintId = castArray(toolbox.getContext().getValue('blueprintId'))[0];
 
         return {
             blueprintId,
@@ -154,8 +156,10 @@ Stage.defineWidget({
               }
             : data;
 
-        const deploymentId = toolbox.getContext().getValue('deploymentId');
-        const blueprintId = deploymentId ? id : toolbox.getContext().getValue('blueprintId');
+        // TODO(RD-2130): Use common utility function to get only the first ID
+        const deploymentId = castArray(toolbox.getContext().getValue('deploymentId'))[0];
+        const blueprintId = deploymentId ? id : castArray(toolbox.getContext().getValue('blueprintId'))[0];
+
         const formattedData = {
             blueprintDeploymentData,
             componentDeploymentsData,
