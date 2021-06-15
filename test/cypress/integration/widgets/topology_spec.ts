@@ -1,8 +1,9 @@
 // @ts-nocheck File not migrated fully to TS
 import _ from 'lodash';
-import { waitUntilEmpty, waitUntilNotEmpty } from '../../support/resource_commons';
+import { minutesToMs, waitUntilEmpty, waitUntilNotEmpty } from '../../support/resource_commons';
 
 describe('Topology', () => {
+    const pollingTime = 5;
     const resourcePrefix = 'topology_test_';
     const getNodeTopologyButton = index => cy.get(`.nodeTopologyButton:eq(${index})`);
 
@@ -15,7 +16,7 @@ describe('Topology', () => {
     };
 
     before(() => {
-        cy.activate('valid_trial_license').usePageMock('topology', { pollingTime: 5 });
+        cy.activate('valid_trial_license').usePageMock('topology', { pollingTime });
     });
 
     describe('presents data for selected', () => {
@@ -125,13 +126,18 @@ describe('Topology', () => {
         const getGoToDeploymentPageButton = () => getNodeTopologyButton(0);
         const getComponentNodeExpandButton = () => getNodeTopologyButton(1);
         const waitForTopologyWidgetToBeReadyAfterFetch = () => {
+            cy.intercept(`/console/bud/layout/${appDeploymentId}`).as('fetchLayout');
+
             cy.log('Waiting for topology data to be fetched');
-            cy.get('.widgetLoader.active').should('be.visible');
-            cy.get('.widgetLoader.active').should('not.exist');
+            cy.wait('@fetchLayout', { requestTimeout: minutesToMs(pollingTime + 1) });
+            cy.waitUntilPageLoaded();
 
             cy.log('Waiting until animation in topology canvas is finished');
             // eslint-disable-next-line cypress/no-unnecessary-waiting
-            cy.wait(1000);
+            cy.wait(2000);
+
+            cy.log('Unlocking topology canvas to be interactive');
+            cy.get('.scrollGlass').click();
         };
 
         before(() => {
@@ -156,7 +162,6 @@ describe('Topology', () => {
             cy.visitPage('Test Page');
             cy.setDeploymentContext(appDeploymentId);
             waitForTopologyWidgetToBeReadyAfterFetch();
-            cy.get('.scrollGlass').click();
         });
 
         it('allows to open component deployment page', () => {
