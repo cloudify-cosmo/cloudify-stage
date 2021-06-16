@@ -79,8 +79,8 @@ describe('Deployments View widget', () => {
 
     const getDeploymentsViewWidget = () =>
         cy.get('.widget').filter('.deploymentsViewWidget, .deploymentsViewDrilledDownWidget').find('.widgetItem');
-    const getDeploymentsViewTable = () => getDeploymentsViewWidget().get('.gridTable');
-    const getDeploymentsViewDetailsPane = () => getDeploymentsViewWidget().get('.detailsPane');
+    const getDeploymentsViewTable = () => getDeploymentsViewWidget().find('.gridTable');
+    const getDeploymentsViewDetailsPane = () => getDeploymentsViewWidget().find('.detailsPane');
     const getDeploymentsViewMap = () => getDeploymentsViewWidget().find('.leaflet-container');
     const getDeploymentsMapToggleButton = () => getDeploymentsViewWidget().contains('button', 'Map');
 
