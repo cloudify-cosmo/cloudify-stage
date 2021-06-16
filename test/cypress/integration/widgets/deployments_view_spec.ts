@@ -617,6 +617,31 @@ describe('Deployments View widget', () => {
         cy.contains('Unexpected widget usage');
     });
 
+    it('should search both by the ID and the display name of deployments', () => {
+        useDeploymentsViewWidget();
+
+        const interceptSearchDeploymentsRequest = (searchPhrase: string) =>
+            // eslint-disable-next-line security/detect-non-literal-regexp
+            cy.interceptSp('POST', new RegExp(`^\\/searches\\/deployments\\?.*_search_name=${searchPhrase}`));
+
+        const showEmptyTable = () => {
+            cy.getSearchInput().type('some gibberish to make the table display no results');
+            getDeploymentsViewTable().contains('No Results Found');
+        };
+
+        showEmptyTable();
+        interceptSearchDeploymentsRequest(deploymentId).as('searchForDeploymentId');
+        cy.getSearchInput().clear().type(deploymentId);
+        cy.wait('@searchForDeploymentId');
+        getDeploymentsViewTable().contains('tbody tr', deploymentName);
+
+        showEmptyTable();
+        interceptSearchDeploymentsRequest(deploymentName).as('searchForDeploymentName');
+        cy.getSearchInput().clear().type(deploymentName);
+        cy.wait('@searchForDeploymentName');
+        getDeploymentsViewTable().contains('tbody tr', deploymentName);
+    });
+
     describe('map', () => {
         const siteNames = {
             olsztyn: exampleSiteName,
