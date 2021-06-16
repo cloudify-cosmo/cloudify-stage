@@ -23,21 +23,9 @@ export interface DetailsPaneProps {
 
 const DetailsPane: FunctionComponent<DetailsPaneProps> = ({ deployment, widget, toolbox, mapOpen }) => {
     if (!deployment) {
-        const { Message } = Stage.Basic;
-
-        return (
-            // NOTE: 48px to align with the table
-            <div style={{ margin: '48px 10px 0' }}>
-                <Message warning>
-                    <Message.Header>Unknown deployment selected</Message.Header>
-                    <p>
-                        The selected deployment is either not in the table, or you are using a Resource Filter with
-                        multiple selection.
-                    </p>
-                    <p>Please select a deployment shown in the table on the left.</p>
-                </Message>
-            </div>
-        );
+        // NOTE: there is no known selected deployment and there are no other deployments in the table
+        // Thus, the table should show "No results found" and the details pane should be empty.
+        return null;
     }
 
     const drillDown: DrilldownButtonsProps['drillDown'] = (templateName, drilldownContext, drilldownPageName) =>

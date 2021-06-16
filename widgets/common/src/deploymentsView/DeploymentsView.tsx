@@ -1,5 +1,4 @@
 import React, { FunctionComponent, useMemo, useState } from 'react';
-import { find } from 'lodash';
 import { useQuery } from 'react-query';
 
 import {
@@ -23,6 +22,7 @@ import {
 import DeploymentsViewHeader from './header';
 import DeploymentsMapContainer from './map';
 import SearchActions from '../SearchActions';
+import getSelectedDeployment from './getSelectedDeployment';
 
 export interface DeploymentsViewProps {
     widget: Stage.Types.Widget<SharedDeploymentsViewWidgetConfiguration>;
@@ -143,15 +143,16 @@ export const DeploymentsView: FunctionComponent<DeploymentsViewProps> = ({
 
     const toolboxContext = toolbox.getContext();
     const deployments = deploymentsResult.data.items;
-    const selectedDeployment = find(deployments, {
-        // NOTE: type assertion since lodash has problems receiving string[] in the object
-        id: toolboxContext.getValue('deploymentId') as string | undefined
-    });
+    const { selectedDeployment, fallbackDeployment } = getSelectedDeployment(
+        toolboxContext.getValue('deploymentId'),
+        deployments
+    );
 
-    if (!selectedDeployment && deployments.length > 0) {
-        // NOTE: always select the first visible item
-        toolboxContext.setValue('deploymentId', deployments[0].id);
+    if (!selectedDeployment && fallbackDeployment) {
+        toolboxContext.setValue('deploymentId', fallbackDeployment.id);
     }
+    // NOTE: use the fallback deployment if it is possible to avoid showing `undefined` as the selected deployment
+    const selectedOrFallbackDeployment = selectedDeployment ?? fallbackDeployment;
 
     const mapOpen = !!(toolboxContext.getValue(mapOpenContextKey) as boolean | undefined);
     const toggleMap = () => toolboxContext.setValue(mapOpenContextKey, !mapOpen);
@@ -172,7 +173,7 @@ export const DeploymentsView: FunctionComponent<DeploymentsViewProps> = ({
                 <DeploymentsMapLayoutContainer height={widget.configuration.mapHeight}>
                     <DeploymentsMapContainer
                         deployments={deploymentsResult.data.items}
-                        selectedDeployment={selectedDeployment}
+                        selectedDeployment={selectedOrFallbackDeployment}
                         toolbox={toolbox}
                         widgetDimensions={widgetDimensions}
                         environmentTypeVisible={widget.configuration.fieldsToShow.includes('environmentType')}
@@ -190,10 +191,16 @@ export const DeploymentsView: FunctionComponent<DeploymentsViewProps> = ({
                     totalSize={deploymentsResult.data.metadata.pagination.total}
                     deployments={deploymentsResult.data.items}
                     fieldsToShow={widget.configuration.fieldsToShow}
+                    selectedDeployment={selectedOrFallbackDeployment}
                 />
             </DeploymentsTableContainer>
             <DeploymentDetailsContainer>
-                <DetailsPane deployment={selectedDeployment} widget={widget} toolbox={toolbox} mapOpen={mapOpen} />
+                <DetailsPane
+                    deployment={selectedOrFallbackDeployment}
+                    widget={widget}
+                    toolbox={toolbox}
+                    mapOpen={mapOpen}
+                />
             </DeploymentDetailsContainer>
         </DeploymentsViewContainer>
     );
