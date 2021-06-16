@@ -1,38 +1,28 @@
-import _ from 'lodash';
-
-import 'jquery-ui/ui/widgets/sortable';
 import PropTypes from 'prop-types';
-import React, { useState, useCallback } from 'react';
-import i18n from 'i18next';
+import React, { useCallback } from 'react';
 
 import { DndContext, closestCenter, PointerSensor, useSensor, useSensors } from '@dnd-kit/core';
 import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable';
 import type { DragEndEvent } from '@dnd-kit/core';
 
 import AddPageButton from '../containers/AddPageButton';
-import { Confirm, Icon } from './basic';
+import { Icon } from './basic';
 import Consts from '../utils/consts';
 import SortableMenuItem from './SortableMenuItem';
 
-export interface Page {
-    id: string;
-    name: string;
-    isDrillDown: boolean;
-    tabs: any[];
-    widgets: any[];
-}
+import type { PageDefinition } from '../actions/page';
 
 export interface PagesListProps {
-    onPageSelected: (page: Page) => void;
-    onPageRemoved: (page: Page) => void;
+    onPageSelected: (page: PageDefinition) => void;
+    onPageRemoved: (page: PageDefinition) => void;
     onPageReorder: (index: number, newIndex: number) => void;
-    pages: Page[];
+    pages: PageDefinition[];
     selected?: string;
     isEditMode: boolean;
 }
 
 export interface PagesListState {
-    pageToRemove?: Page | null;
+    pageToRemove?: PageDefinition | null;
 }
 
 export default function PagesList({
@@ -43,8 +33,7 @@ export default function PagesList({
     pages,
     selected = ''
 }: PagesListProps) {
-    const [pageToRemove, setPageToRemove] = useState<Page | null>(null);
-    const pageIds = _.filter(pages, p => !p.isDrillDown).map(({ id }) => id);
+    const pageIds = pages.filter(p => !p.isDrillDown).map(({ id }) => id);
     const sensors = useSensors(useSensor(PointerSensor));
 
     let pageCount = 0;
@@ -75,39 +64,40 @@ export default function PagesList({
             >
                 <SortableContext items={isEditMode ? pageIds : []} strategy={verticalListSortingStrategy}>
                     <div className="pages">
-                        {_.filter(pages, p => !p.isDrillDown).map(page => (
-                            <SortableMenuItem
-                                id={page.id}
-                                as="a"
-                                link
-                                key={page.id}
-                                href={`${Consts.CONTEXT_PATH}/page/${page.id}`}
-                                active={selected === page.id}
-                                className={`pageMenuItem ${page.id}PageMenuItem`}
-                                onClick={event => {
-                                    event.stopPropagation();
-                                    event.preventDefault();
-                                    onPageSelected(page);
-                                }}
-                            >
-                                {page.name}
-                                {isEditMode && pageCount > 1 ? (
-                                    <Icon
-                                        name="remove"
-                                        size="small"
-                                        className="pageRemoveButton"
-                                        onClick={(event: MouseEvent) => {
-                                            event.preventDefault();
-                                            event.stopPropagation();
-                                            if (_.isEmpty(page.tabs) && _.isEmpty(page.widgets)) onPageRemoved(page);
-                                            else setPageToRemove(page);
-                                        }}
-                                    />
-                                ) : (
-                                    ''
-                                )}
-                            </SortableMenuItem>
-                        ))}
+                        {pages
+                            .filter(p => !p.isDrillDown)
+                            .map(page => (
+                                <SortableMenuItem
+                                    id={page.id}
+                                    as="a"
+                                    link
+                                    key={page.id}
+                                    href={`${Consts.CONTEXT_PATH}/page/${page.id}`}
+                                    active={selected === page.id}
+                                    className={`pageMenuItem ${page.id}PageMenuItem`}
+                                    onClick={event => {
+                                        event.stopPropagation();
+                                        event.preventDefault();
+                                        onPageSelected(page);
+                                    }}
+                                >
+                                    {page.name}
+                                    {isEditMode && pageCount > 1 ? (
+                                        <Icon
+                                            name="remove"
+                                            size="small"
+                                            className="pageRemoveButton"
+                                            onClick={(event: MouseEvent) => {
+                                                event.preventDefault();
+                                                event.stopPropagation();
+                                                onPageRemoved(page);
+                                            }}
+                                        />
+                                    ) : (
+                                        ''
+                                    )}
+                                </SortableMenuItem>
+                            ))}
                     </div>
                 </SortableContext>
             </DndContext>
@@ -117,25 +107,6 @@ export default function PagesList({
                     <AddPageButton />
                 </div>
             )}
-            <Confirm
-                open={!!pageToRemove}
-                onCancel={() => setPageToRemove(null)}
-                onConfirm={() => {
-                    if (pageToRemove) {
-                        onPageRemoved(pageToRemove);
-                        setPageToRemove(null);
-                    }
-                }}
-                header={i18n.t(
-                    'editMode.pageRemovalModal.header',
-                    `Are you sure you want to remove page {{pageName}}?`,
-                    { pageName: _.get(pageToRemove, 'name') }
-                )}
-                content={i18n.t(
-                    'editMode.pageRemovalModal.message',
-                    'All widgets and tabs present in this page will be removed as well'
-                )}
-            />
         </>
     );
 }
