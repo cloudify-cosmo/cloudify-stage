@@ -74,39 +74,41 @@ export default function PagesList({
                 onDragEnd={isEditMode ? handleDragEnd : undefined}
             >
                 <SortableContext items={isEditMode ? pageIds : []} strategy={verticalListSortingStrategy}>
-                    {_.filter(pages, p => !p.isDrillDown).map(page => (
-                        <SortableMenuItem
-                            id={page.id}
-                            as="a"
-                            link
-                            key={page.id}
-                            href={`${Consts.CONTEXT_PATH}/page/${page.id}`}
-                            active={selected === page.id}
-                            className={`pageMenuItem ${page.id}PageMenuItem`}
-                            onClick={event => {
-                                event.stopPropagation();
-                                event.preventDefault();
-                                onPageSelected(page);
-                            }}
-                        >
-                            {page.name}
-                            {isEditMode && pageCount > 1 ? (
-                                <Icon
-                                    name="remove"
-                                    size="small"
-                                    className="pageRemoveButton"
-                                    onClick={(event: MouseEvent) => {
-                                        event.preventDefault();
-                                        event.stopPropagation();
-                                        if (_.isEmpty(page.tabs) && _.isEmpty(page.widgets)) onPageRemoved(page);
-                                        else setPageToRemove(page);
-                                    }}
-                                />
-                            ) : (
-                                ''
-                            )}
-                        </SortableMenuItem>
-                    ))}
+                    <div className="pages">
+                        {_.filter(pages, p => !p.isDrillDown).map(page => (
+                            <SortableMenuItem
+                                id={page.id}
+                                as="a"
+                                link
+                                key={page.id}
+                                href={`${Consts.CONTEXT_PATH}/page/${page.id}`}
+                                active={selected === page.id}
+                                className={`pageMenuItem ${page.id}PageMenuItem`}
+                                onClick={event => {
+                                    event.stopPropagation();
+                                    event.preventDefault();
+                                    onPageSelected(page);
+                                }}
+                            >
+                                {page.name}
+                                {isEditMode && pageCount > 1 ? (
+                                    <Icon
+                                        name="remove"
+                                        size="small"
+                                        className="pageRemoveButton"
+                                        onClick={(event: MouseEvent) => {
+                                            event.preventDefault();
+                                            event.stopPropagation();
+                                            if (_.isEmpty(page.tabs) && _.isEmpty(page.widgets)) onPageRemoved(page);
+                                            else setPageToRemove(page);
+                                        }}
+                                    />
+                                ) : (
+                                    ''
+                                )}
+                            </SortableMenuItem>
+                        ))}
+                    </div>
                 </SortableContext>
             </DndContext>
             {isEditMode && (
