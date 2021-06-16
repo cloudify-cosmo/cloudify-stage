@@ -17,7 +17,7 @@ describe('Deployments View widget', () => {
     const blueprintUrl = exampleBlueprintUrl;
     const widgetConfiguration: import('../../../../widgets/deploymentsView/src/widget').DeploymentsViewWidgetConfiguration = {
         filterByParentDeployment: false,
-        fieldsToShow: ['status', 'name', 'blueprintName', 'location', 'subenvironmentsCount', 'subservicesCount'],
+        fieldsToShow: ['status', 'id', 'name', 'blueprintName', 'location', 'subenvironmentsCount', 'subservicesCount'],
         pageSize: 100,
         customPollingTime: 10,
         sortColumn: 'created_at',
@@ -43,9 +43,9 @@ describe('Deployments View widget', () => {
     /** Column numbers as they appear in the table */
     const columnNumbers = {
         status: 1,
-        environmentType: 4,
-        subenvironments: 6,
-        subservices: 7
+        environmentType: 5,
+        subenvironments: 7,
+        subservices: 8
     };
 
     before(() => {
