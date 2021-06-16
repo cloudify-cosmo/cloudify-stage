@@ -41,5 +41,9 @@ export function waitUntilEmpty(resource: string, options?: WaitUntilOptions) {
 }
 
 export function minutesToMs(minutes: number) {
-    return minutes * 60 * 1000;
+    return secondsToMs(minutes * 60);
+}
+
+export function secondsToMs(seconds: number) {
+    return seconds * 1000;
 }

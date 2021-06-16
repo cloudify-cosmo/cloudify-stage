@@ -1,6 +1,6 @@
 // @ts-nocheck File not migrated fully to TS
 import _ from 'lodash';
-import { minutesToMs, waitUntilEmpty, waitUntilNotEmpty } from '../../support/resource_commons';
+import { secondsToMs, waitUntilEmpty, waitUntilNotEmpty } from '../../support/resource_commons';
 
 describe('Topology', () => {
     const pollingTime = 5; // seconds
@@ -131,7 +131,7 @@ describe('Topology', () => {
             cy.intercept(`/console/bud/layout/${appDeploymentId}`).as('fetchLayout');
 
             cy.log('Waiting for topology data to be fetched');
-            cy.wait('@fetchLayout', { requestTimeout: minutesToMs(pollingTime + 1) });
+            cy.wait('@fetchLayout', { requestTimeout: secondsToMs(2 * pollingTime) });
             cy.waitUntilPageLoaded();
 
             cy.log('Waiting until animation in topology canvas is finished');
