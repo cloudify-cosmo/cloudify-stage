@@ -3,16 +3,18 @@ import _ from 'lodash';
 import { minutesToMs, waitUntilEmpty, waitUntilNotEmpty } from '../../support/resource_commons';
 
 describe('Topology', () => {
-    const pollingTime = 5;
+    const pollingTime = 5; // seconds
     const resourcePrefix = 'topology_test_';
-    const getNodeTopologyButton = index => cy.get(`.nodeTopologyButton:eq(${index})`);
+    const getNodeTopologyButton = (index: number) => cy.get(`.nodeTopologyButton:eq(${index})`);
 
-    const waitForDeploymentToBeInstalled = deploymentId => {
+    const waitForDeploymentToBeInstalled = (deploymentId: string) => {
         cy.log(`Waiting for deployment ${deploymentId} to be installed.`);
-        const startedInstallWorkflowsOnDeployment = `executions?_include=id,workflow_id,status&deployment_id=${deploymentId}&workflow_id=install&status=started`;
+        const startedInstallWorkflowsOnDeploymentUrl = `executions?_include=id,workflow_id,status&deployment_id=${deploymentId}&workflow_id=install&status=started`;
 
-        waitUntilNotEmpty(startedInstallWorkflowsOnDeployment);
-        waitUntilEmpty(startedInstallWorkflowsOnDeployment);
+        // NOTE: First, wait for execution to start as it can happen not to start immediately.
+        // Then, wait for install workflow to change the status not to be `started`.
+        waitUntilNotEmpty(startedInstallWorkflowsOnDeploymentUrl);
+        waitUntilEmpty(startedInstallWorkflowsOnDeploymentUrl);
     };
 
     before(() => {
