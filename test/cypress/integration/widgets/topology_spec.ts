@@ -3,7 +3,7 @@ import _ from 'lodash';
 import { secondsToMs, waitUntilEmpty, waitUntilNotEmpty } from '../../support/resource_commons';
 
 describe('Topology', () => {
-    const pollingTime = 5; // seconds
+    const pollingTimeSeconds = 5;
     const resourcePrefix = 'topology_test_';
     const getNodeTopologyButton = (index: number) => cy.get(`.nodeTopologyButton:eq(${index})`);
 
@@ -18,7 +18,7 @@ describe('Topology', () => {
     };
 
     before(() => {
-        cy.activate('valid_trial_license').usePageMock('topology', { pollingTime });
+        cy.activate('valid_trial_license').usePageMock('topology', { pollingTime: pollingTimeSeconds });
     });
 
     describe('presents data for selected', () => {
@@ -131,7 +131,7 @@ describe('Topology', () => {
             cy.intercept(`/console/bud/layout/${appDeploymentId}`).as('fetchLayout');
 
             cy.log('Waiting for topology data to be fetched');
-            cy.wait('@fetchLayout', { requestTimeout: secondsToMs(2 * pollingTime) });
+            cy.wait('@fetchLayout', { requestTimeout: secondsToMs(2 * pollingTimeSeconds) });
             cy.waitUntilPageLoaded();
 
             cy.log('Waiting until animation in topology canvas is finished');
