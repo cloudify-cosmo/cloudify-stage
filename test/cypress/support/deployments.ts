@@ -60,7 +60,7 @@ const commands = {
     deleteDeployments: (search: string, force = false) => {
         cy.cfyRequest(`/deployments?_search=${search}`, 'GET')
             .then(response => response.body.items.forEach(({ id }: { id: string }) => cy.deleteDeployment(id, force)))
-            .then(() => waitUntilEmpty('deployments', search));
+            .then(() => waitUntilEmpty('deployments', { search }));
     },
     searchInDeploymentsWidget: (deploymentId: string) => {
         cy.get('.deploymentsWidget').within(() => {

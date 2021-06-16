@@ -4,14 +4,15 @@ function appendQueryParam(url: string, param: string, value: string) {
     return `${url}${url.indexOf('?') > 0 ? '&' : '?'}${param}=${value}`;
 }
 
+type WaitUntilOptions = {
+    search?: string;
+    numberOfRetriesLeft?: number;
+    waitingInterval?: number;
+};
 function waitUntil(
     resource: string,
     predicate: (response: Cypress.Response) => boolean,
-    { search, numberOfRetriesLeft, waitingInterval } = {
-        search: '',
-        numberOfRetriesLeft: 60,
-        waitingInterval: 1000
-    }
+    { search = '', numberOfRetriesLeft = 60, waitingInterval = 1000 }: WaitUntilOptions = {}
 ) {
     if (numberOfRetriesLeft <= 0) {
         throw new Error(`Number of retries exceeded for resource=${resource}, search=${search}.`);
@@ -27,16 +28,16 @@ function waitUntil(
         }
         // eslint-disable-next-line cypress/no-unnecessary-waiting
         cy.wait(waitingInterval);
-        waitUntilEmpty(resource, search, numberOfRetriesLeft - 1, waitingInterval);
+        waitUntil(resource, predicate, { search, numberOfRetriesLeft: numberOfRetriesLeft - 1, waitingInterval });
     });
 }
 
-export function waitUntilNotEmpty(resource: string, search: string, numberOfRetriesLeft = 60, waitingInterval = 1000) {
-    waitUntil(resource, response => !_.isEmpty(response.body.items), { search, numberOfRetriesLeft, waitingInterval });
+export function waitUntilNotEmpty(resource: string, options?: WaitUntilOptions) {
+    waitUntil(resource, response => !_.isEmpty(response.body.items), options);
 }
 
-export function waitUntilEmpty(resource: string, search: string, numberOfRetriesLeft = 60, waitingInterval = 1000) {
-    waitUntil(resource, response => _.isEmpty(response.body.items), { search, numberOfRetriesLeft, waitingInterval });
+export function waitUntilEmpty(resource: string, options?: WaitUntilOptions) {
+    waitUntil(resource, response => _.isEmpty(response.body.items), options);
 }
 
 export function minutesToMs(minutes: number) {
