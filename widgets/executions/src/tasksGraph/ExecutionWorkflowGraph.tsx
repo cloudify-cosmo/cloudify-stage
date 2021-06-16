@@ -118,7 +118,7 @@ export default function ExecutionWorkflowGraph({ containerHeight, selectedExecut
 
     function fitToView() {
         const { width: graphWidth, height: graphHeight } = graphData;
-        const width = isMaximized ? getModalWidth() : Math.max(0, getWrapperWidth() - 1);
+        const width = isMaximized ? getModalWidth() : getWrapperWidth();
         const height = isMaximized ? Math.max(MIN_MODAL_GRAPH_HEIGHT, graphHeight + 2 * GRAPH_MARGIN) : containerHeight;
         const zoom = Math.min((width - 2 * GRAPH_MARGIN) / graphWidth, (height - 2 * GRAPH_MARGIN) / graphHeight);
 
