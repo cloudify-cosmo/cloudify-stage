@@ -65,11 +65,11 @@ export const createSecret = async (manager: Manager, secret: SecretInstallationT
 
 // TODO(RD-1874): use common api for backend requests
 export const updateSecret = async (manager: Manager, secret: SecretInstallationTask) => {
-    const data = {
+    const body = {
         value: secret.value
     };
     try {
-        await manager.doPatch(`/secrets/${encodeURIComponent(secret.name)}`, data);
+        await manager.doPatch(`/secrets/${encodeURIComponent(secret.name)}`, { body });
         return true;
     } catch (e) {
         log.error(e);

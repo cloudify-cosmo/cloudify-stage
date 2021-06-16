@@ -171,7 +171,7 @@ export default class BlueprintActions {
     }
 
     doSetVisibility(blueprintId: string, visibility: string) {
-        return this.toolbox.getManager().doPatch(`/blueprints/${blueprintId}/set-visibility`, { visibility });
+        return this.toolbox.getManager().doPatch(`/blueprints/${blueprintId}/set-visibility`, { body: { visibility } });
     }
 
     doListYamlFiles(blueprintUrl: string, file = null, includeFilename = false) {
