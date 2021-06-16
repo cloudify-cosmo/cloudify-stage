@@ -149,7 +149,7 @@ Stage.defineWidget({
             icons
         } = _.isEmpty(data)
             ? {
-                  blueprintDeploymentData: {},
+                  processedBlueprintData: {},
                   componentDeploymentsData: {},
                   rawBlueprintData: { data: { id: '' }, layout: {} },
                   icons: {}
