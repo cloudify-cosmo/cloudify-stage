@@ -1,6 +1,6 @@
-import PropTypes from 'prop-types';
 import React, { useCallback } from 'react';
 
+import type { FunctionComponent } from 'react';
 import { DndContext, closestCenter, PointerSensor, useSensor, useSensors } from '@dnd-kit/core';
 import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable';
 import type { DragEndEvent } from '@dnd-kit/core';
@@ -25,23 +25,24 @@ export interface PagesListState {
     pageToRemove?: PageDefinition | null;
 }
 
-export default function PagesList({
+export const PagesList: FunctionComponent<PagesListProps> = ({
     isEditMode,
     onPageRemoved,
     onPageReorder,
     onPageSelected,
     pages,
     selected = ''
-}: PagesListProps) {
+}) => {
     const pageIds = pages.filter(p => !p.isDrillDown).map(({ id }) => id);
     const sensors = useSensors(useSensor(PointerSensor));
 
-    let pageCount = 0;
-    pages.forEach(page => {
+    const pageCount = pages.reduce((result, page) => {
         if (!page.isDrillDown) {
-            pageCount += 1;
+            return result + 1;
         }
-    });
+        return result;
+    }, 0);
+
     const handleDragEnd = useCallback(
         (event: DragEndEvent) => {
             const { active, over } = event;
@@ -109,21 +110,6 @@ export default function PagesList({
             )}
         </>
     );
-}
-
-PagesList.propTypes = {
-    onPageSelected: PropTypes.func.isRequired,
-    onPageRemoved: PropTypes.func.isRequired,
-    onPageReorder: PropTypes.func.isRequired,
-    pages: PropTypes.arrayOf(
-        PropTypes.shape({
-            id: PropTypes.string,
-            name: PropTypes.string,
-            isDrillDown: PropTypes.bool,
-            tabs: PropTypes.arrayOf(PropTypes.shape({})),
-            widgets: PropTypes.arrayOf(PropTypes.shape({}))
-        })
-    ).isRequired,
-    selected: PropTypes.string,
-    isEditMode: PropTypes.bool.isRequired
 };
+
+export default PagesList;
