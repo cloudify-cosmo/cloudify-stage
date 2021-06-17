@@ -16,7 +16,7 @@ export default function SortableMenuItem({ id, ...rest }: MenuItemProps) {
 
     return (
         // eslint-disable-next-line react/jsx-props-no-spreading
-        <div ref={setNodeRef} {...attributes} {...listeners}>
+        <div ref={setNodeRef} className="itemContainer" {...attributes} {...listeners}>
             {/* eslint-disable-next-line react/jsx-props-no-spreading */}
             <Menu.Item {...rest} style={style} />
         </div>
