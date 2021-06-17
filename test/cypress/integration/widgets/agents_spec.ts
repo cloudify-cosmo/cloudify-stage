@@ -83,7 +83,7 @@ describe('Agents widget', () => {
         function verifyExecution(
             executionPayload: Record<string, any>,
             expectedWorkflowId: string,
-            expectedInstallMethod: 'Remote' | 'Plugin' | 'Init Script' | 'Provided',
+            expectedInstallMethod: InstallMethods,
             expectedAdditionalParameters: Record<string, any> = {}
         ) {
             expect(executionPayload).to.deep.equal({
