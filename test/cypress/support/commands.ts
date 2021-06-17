@@ -334,10 +334,12 @@ const commands = {
     },
 
     setDropdownValue: (fieldName: string, value: string) => {
-        cy.contains('.field', fieldName).within(() => {
-            cy.get('input').type(value);
-            cy.get(`div[option-value="${value}"]`).click();
-        });
+        cy.contains('.field', fieldName)
+            .click()
+            .within(() => {
+                cy.get('input').type(value);
+                cy.get(`div[option-value="${value}"]`).click();
+            });
     },
 
     openTab: (tabName: string) => {

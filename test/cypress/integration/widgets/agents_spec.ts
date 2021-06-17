@@ -58,20 +58,14 @@ describe('Agents widget', () => {
             cy.contains(deploymentName);
         });
 
-        function selectResourceFromDropdown(dropdownName: string, value: string) {
-            cy.get(`div[name=${dropdownName}]`).click();
-            cy.get(`div[name=${dropdownName}] input`).type(value);
-            cy.get(`div[name=${dropdownName}] .item`).click();
-        }
-
         function fillNodesFilter() {
             cy.wait('@fetchDeployments');
             cy.wait('@fetchNodes');
             cy.wait('@fetchNodeInstances');
 
-            selectResourceFromDropdown('deploymentId', deploymentName);
-            selectResourceFromDropdown('nodeId', nodeName);
-            selectResourceFromDropdown('nodeInstanceId', nodeInstanceName);
+            cy.setDropdownValue('Deployment', deploymentName);
+            cy.setDropdownValue('Node', nodeName);
+            cy.setDropdownValue('Node Instance', nodeInstanceName);
         }
 
         type InstallMethods = 'Remote' | 'Plugin' | 'Init Script' | 'Provided';
