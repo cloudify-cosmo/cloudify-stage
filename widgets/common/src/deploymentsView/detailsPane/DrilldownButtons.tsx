@@ -10,7 +10,8 @@ import {
     subenvironmentsIcon,
     subservicesIcon
 } from '../common';
-import type { Deployment } from '../types';
+import { SubdeploymentStatusIcon } from '../StatusIcon';
+import type { Deployment, DeploymentStatus } from '../types';
 
 export interface DrilldownButtonsProps {
     deployment: Deployment;
@@ -92,13 +93,22 @@ const getSubdeploymentResults = (
         };
     }
 
+    const {
+        /* eslint-disable camelcase */
+        sub_environments_count,
+        sub_environments_status,
+        sub_services_count,
+        sub_services_status
+        /* eslint-enable camelcase */
+    } = deploymentDetailsResult.data;
+
     return {
-        subservices: { loading: false, count: deploymentDetailsResult.data.sub_services_count },
-        subenvironments: { loading: false, count: deploymentDetailsResult.data.sub_environments_count }
+        subservices: { loading: false, count: sub_services_count, status: sub_services_status },
+        subenvironments: { loading: false, count: sub_environments_count, status: sub_environments_status }
     };
 };
 
-type SubdeploymentsResult = { loading: true } | { loading: false; count: number };
+type SubdeploymentsResult = { loading: true } | { loading: false; count: number; status: DeploymentStatus | null };
 
 interface DrilldownButtonProps {
     type: 'environments' | 'services';
@@ -141,8 +151,12 @@ const DrilldownButton: FunctionComponent<DrilldownButtonProps> = ({
         >
             <Icon name={icon} />
             {i18n.t(`${i18nDrillDownButtonsPrefix}.${type}.label`)}
-            {!result.loading && <> ({result.count})</>}
-            {/* TODO(RD-2005): add icons depending on children state */}
+            {!result.loading && (
+                <>
+                    {' '}
+                    ({result.count}) <SubdeploymentStatusIcon status={result.status} />
+                </>
+            )}
         </Button>
     );
 };

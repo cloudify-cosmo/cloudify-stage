@@ -451,9 +451,17 @@ describe('Deployments View widget', () => {
             });
 
             getDeploymentsViewDetailsPane().within(() => {
-                getSubservicesButton().contains('1');
+                getSubservicesButton().within(() => {
+                    cy.contains('1');
+                    cy.get('i[aria-label="Requires attention"]').should('exist');
+                });
                 cy.log('Drill down to subenvironments of app-env');
-                getSubenvironmentsButton().contains('1').click();
+                getSubenvironmentsButton()
+                    .within(() => {
+                        cy.contains('1');
+                        cy.get('i[aria-label="Requires attention"]').should('exist');
+                    })
+                    .click();
             });
 
             getBreadcrumbs().contains('app-env [Environments]');
@@ -484,9 +492,24 @@ describe('Deployments View widget', () => {
                 cy.contains('db-env').should('not.exist');
             });
 
+            const expectOnlySubdeploymentTypeIcon = () => {
+                // NOTE: expect only the deployment type icon. There should not be any deployment state icon
+                cy.get('i').should('have.length', 1);
+            };
+
             getDeploymentsViewDetailsPane().within(() => {
-                getSubenvironmentsButton().contains('0').should('be.disabled');
-                getSubservicesButton().contains('0').should('be.disabled');
+                getSubenvironmentsButton()
+                    .should('be.disabled')
+                    .within(() => {
+                        cy.contains('0');
+                        expectOnlySubdeploymentTypeIcon();
+                    });
+                getSubservicesButton()
+                    .should('be.disabled')
+                    .within(() => {
+                        cy.contains('0');
+                        expectOnlySubdeploymentTypeIcon();
+                    });
             });
 
             cy.log('Go back to the parent environment');
