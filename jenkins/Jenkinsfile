@@ -121,24 +121,6 @@ pipeline {
             }
           }
         }
-        stage('Docs'){
-          steps {
-            container('node'){
-              sh 'rm -rf ${WORKSPACE}/test && rm -rf ${WORKSPACE}/backend'
-              sh "mkdir -p ${WORKSPACE}/docs && cp -rf ${WORKSPACE}/${STAGE_DIR}/. ${WORKSPACE}/docs"
-              dir("docs") {
-                echo 'Generate widgets documentation'
-                sh 'npm run docWidgets'
-
-                echo 'Check if widgets documentation is up to date'
-                sh 'git diff --exit-code ./widgets'
-
-                echo 'Check if cloudify-ui-components version is the same as in official documentation'
-                sh 'npm run docCheck'
-              }
-            }
-          }
-        }
         stage('Build RPM'){
           steps {
             container('rpmbuild'){
@@ -178,6 +160,41 @@ pipeline {
               sh("mkdir -p ${WORKSPACE}/rpm && cp -rf /root/rpmbuild/RPMS/x86_64/. ${WORKSPACE}/rpm")
               dir("${WORKSPACE}/rpm") {
                 archiveArtifacts artifacts: '*.rpm', onlyIfSuccessful: true
+              }
+            }
+          }
+        }
+      }
+    }
+    stage('Run Tests') {
+      parallel {
+        stage('Size') {
+          steps {
+            container('node'){
+              sh 'rm -rf ${workspace}/test && rm -rf ${workspace}/backend'
+              sh "mkdir -p ${workspace}/size && cp -rf ${workspace}/${stage_dir}/. ${workspace}/size"
+              dir("size") {
+                echo 'Check bundle size'
+                sh 'npm run size'
+              }
+              sh "rm -rf ${workspace}/size"
+            }
+          }
+        }
+        stage('Docs'){
+          steps {
+            container('node'){
+              sh 'rm -rf ${workspace}/test && rm -rf ${workspace}/backend'
+              sh "mkdir -p ${workspace}/docs && cp -rf ${workspace}/${stage_dir}/. ${workspace}/docs"
+              dir("docs") {
+                echo 'Generate widgets documentation'
+                sh 'npm run docWidgets'
+
+                echo 'Check if widgets documentation is up to date'
+                sh 'git diff --exit-code ./widgets'
+
+                echo 'Check if cloudify-ui-components version is the same as in official documentation'
+                sh 'npm run docCheck'
               }
             }
           }
