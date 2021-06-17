@@ -9,7 +9,7 @@ declare global {
     }
 }
 
-const plannedOrStartedExecutionsOnDeployment = (deploymentId: string) =>
+const getPlannedOrStartedExecutionsUrl = (deploymentId: string) =>
     `/executions?deployment_id=${deploymentId}&status=scheduled&status=queued&status=pending&status=started`;
 
 const commands = {
@@ -31,16 +31,16 @@ const commands = {
     },
 
     killExecutions: (deploymentId: string) => {
-        cy.cfyRequest(plannedOrStartedExecutionsOnDeployment(deploymentId), 'GET')
+        cy.cfyRequest(getPlannedOrStartedExecutionsUrl(deploymentId), 'GET')
             .then(response => response.body.items.forEach(({ id }: { id: string }) => cy.killExecution(id)))
             .then(() => cy.waitUntilNoExecutionIsActive(deploymentId));
     },
 
     waitUntilNoExecutionIsActive: (deploymentId: string) => {
-        const activeExecutionsOnDeployment = `${plannedOrStartedExecutionsOnDeployment(
+        const activeExecutionsUrl = `${getPlannedOrStartedExecutionsUrl(
             deploymentId
         )}&status=cancelling&status=force_cancelling&status=kill_cancelling`;
-        waitUntilEmpty(activeExecutionsOnDeployment);
+        waitUntilEmpty(activeExecutionsUrl);
     }
 };
 
