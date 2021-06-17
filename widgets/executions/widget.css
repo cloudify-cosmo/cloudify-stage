@@ -13,6 +13,7 @@
 
 .executionsTable {
     table-layout: fixed;
+    /* Prevents headers overlapping */
     min-width: 860px;
 }
 
