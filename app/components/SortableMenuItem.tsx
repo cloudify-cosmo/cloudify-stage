@@ -5,8 +5,7 @@ import { CSS } from '@dnd-kit/utilities';
 
 import { Menu } from './basic';
 
-export default function SortableMenuItem(props: MenuItemProps) {
-    const { id, ...rest } = props;
+export default function SortableMenuItem({ id, ...rest }: MenuItemProps) {
     const { setNodeRef, attributes, listeners, transform, transition } = useSortable({
         id
     });
