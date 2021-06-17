@@ -3,10 +3,6 @@ import { mount, shallow } from 'enzyme';
 
 import sinon from 'sinon';
 
-// necessary by jquery-ui/ui/widgets/sortable
-import 'jquery-ui/ui/widget';
-import 'jquery-ui/ui/widgets/mouse';
-
 import PagesList, { Page } from 'components/PagesList';
 import Consts from 'utils/consts';
 import { noop } from 'lodash';
