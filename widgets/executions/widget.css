@@ -11,6 +11,12 @@
     left: unset !important;
 }
 
+.executionsTable {
+    table-layout: fixed;
+    /* Prevents headers overlapping */
+    min-width: 860px;
+}
+
 .executions-graph-toolbar {
     position: absolute;
     top: 1px;
