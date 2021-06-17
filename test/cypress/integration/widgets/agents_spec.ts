@@ -63,14 +63,14 @@ describe('Agents widget', () => {
             cy.wait('@fetchNodes');
             cy.wait('@fetchNodeInstances');
 
-            cy.setDropdownValue('Deployment', deploymentName);
-            cy.setDropdownValue('Node', nodeName);
-            cy.setDropdownValue('Node Instance', nodeInstanceName);
+            cy.setSearchableDropdownValue('Deployment', deploymentName);
+            cy.setSearchableDropdownValue('Node', nodeName);
+            cy.setSearchableDropdownValue('Node Instance', nodeInstanceName);
         }
 
         type InstallMethod = 'Remote' | 'Plugin' | 'Init Script' | 'Provided';
         function selectInstallMethod(installMethods: InstallMethod[]) {
-            cy.selectDropdownValue('Install Methods filter', installMethods);
+            cy.setDropdownValues('Install Methods filter', installMethods);
         }
 
         function verifyExecution(

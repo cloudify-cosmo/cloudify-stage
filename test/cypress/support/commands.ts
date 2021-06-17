@@ -333,7 +333,7 @@ const commands = {
             .then(commandResult => commandResult.stdout);
     },
 
-    setDropdownValue: (fieldName: string, value: string) => {
+    setSearchableDropdownValue: (fieldName: string, value: string) => {
         cy.contains('.field', fieldName)
             .click()
             .within(() => {
@@ -342,7 +342,7 @@ const commands = {
             });
     },
 
-    selectDropdownValue: (fieldName: string, values: string[]) => {
+    setDropdownValues: (fieldName: string, values: string[]) => {
         cy.contains('.field', fieldName)
             .click()
             .within(() => values.forEach(value => cy.contains('div[role=option]', value).click()))
