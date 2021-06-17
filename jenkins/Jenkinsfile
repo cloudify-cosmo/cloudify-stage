@@ -64,38 +64,6 @@ pipeline {
             }
           }
         }
-        stage('Prepare RPM'){
-          steps {
-            container('rpmbuild'){
-              echo 'Create RPM directory and copy all data from build stage to, for rpmbuild to run'
-              sh """
-                cd && mkdir rpmbuild && cd rpmbuild
-                mkdir -p BUILD && cp -rf ${WORKSPACE}/${STAGE_DIR}/. BUILD && cd BUILD
-                curl -fO "${CFY_MANAGER_URL}/${BRANCH}/packaging/version_info" || curl -fO "${CFY_MANAGER_URL}/master/packaging/version_info"
-              """
-
-              echo 'Install NodeJS & RPM development tools'
-              sh "yum install -y ${CFY_NODE_RPM} rpmdevtools rpmlint"
-
-              echo 'Lint RPM spec file & Install build dependencies for RPM spec file'
-              sh '''
-                cd ~/rpmbuild/BUILD
-                rpmlint --info packaging/cloudify-stage.spec
-                for i in {1..10}; do yum-builddep -y packaging/cloudify-stage.spec && break || sleep 5; done
-              '''
-
-              echo 'Download sources for RPM spec file'
-              sh '''
-                cd ~/rpmbuild/BUILD && source ./version_info
-                spectool \
-                  -d "CLOUDIFY_VERSION $CLOUDIFY_VERSION" \
-                  -d "CLOUDIFY_PACKAGE_RELEASE $CLOUDIFY_PACKAGE_RELEASE" \
-                  -P packaging/cloudify-stage.spec \
-                  -S -g
-                '''
-            }
-          }
-        }
       }
     }
     stage('Run Builds & Build RPM') {
@@ -120,7 +88,7 @@ pipeline {
         stage('Test lint & check-types'){
           steps{
             container('node'){
-              dir("test"){
+              dir("${WORKSPACE}/test"){
                 echo 'Run static code analysis and code style check'
                 sh 'npm run lint'
 
@@ -133,7 +101,7 @@ pipeline {
         stage('Test frontend'){
           steps{
             container('node'){
-              dir("test"){
+              dir("${WORKSPACE}/test"){
                 echo 'Run frontend tests'
                 sh 'npm run test:frontend'
               }
@@ -143,7 +111,7 @@ pipeline {
         stage('Test backend'){
           steps{
             container('node'){
-              dir("test"){
+              dir("${WORKSPACE}/test"){
                 echo 'Run backend tests'
                 sh 'sudo rm -rf /var/lib/apt/lists/* && sudo apt update && sudo apt install postgresql-client'
                 sh 'echo \'{"app":{"ssl":{"ca":null},"logLevelConf":"","logLevel":"debug"}}\' > conf/me.json'
@@ -173,8 +141,32 @@ pipeline {
         stage('Build RPM'){
           steps {
             container('rpmbuild'){
-              echo 'Build RPM'
+              echo 'Create RPM directory and copy all data from build stage to, for rpmbuild to run'
+              sh """
+                cd && mkdir rpmbuild && cd rpmbuild
+                mkdir -p BUILD && cp -rf ${WORKSPACE}/${STAGE_DIR}/. BUILD && cd BUILD
+                curl -fO "${CFY_MANAGER_URL}/${BRANCH}/packaging/version_info" || curl -fO "${CFY_MANAGER_URL}/master/packaging/version_info"
+              """
+
+              echo 'Install NodeJS & RPM development tools'
+              sh "yum install -y ${CFY_NODE_RPM} rpmdevtools rpmlint"
+
+              echo 'Lint RPM spec file & Install build dependencies for RPM spec file'
               sh '''
+                cd ~/rpmbuild/BUILD
+                rpmlint --info packaging/cloudify-stage.spec
+                for i in {1..10}; do yum-builddep -y packaging/cloudify-stage.spec && break || sleep 5; done
+              '''
+
+              echo 'Download sources for RPM spec file & Build RPM'
+              sh '''
+                cd ~/rpmbuild/BUILD && source ./version_info
+                spectool \
+                  -d "CLOUDIFY_VERSION $CLOUDIFY_VERSION" \
+                  -d "CLOUDIFY_PACKAGE_RELEASE $CLOUDIFY_PACKAGE_RELEASE" \
+                  -P packaging/cloudify-stage.spec \
+                  -S -g
+
                 rpmbuild \
                   -D "CLOUDIFY_VERSION $CLOUDIFY_VERSION" \
                   -D "CLOUDIFY_PACKAGE_RELEASE $CLOUDIFY_PACKAGE_RELEASE" \
