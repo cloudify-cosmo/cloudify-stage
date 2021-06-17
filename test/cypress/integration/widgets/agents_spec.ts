@@ -46,7 +46,9 @@ describe('Agents widget', () => {
                 ]
             }).as('fetchAgents');
 
-            cy.interceptSp('POST', '/executions').as('postExecution');
+            cy.interceptSp('POST', '/executions', { body: { id: '0060e00c-ffbf-4d9b-bc4e-c490760bdf01' } }).as(
+                'postExecution'
+            );
 
             interceptResourceFetching('deployments', deploymentName);
             interceptResourceFetching('nodes', nodeName);
@@ -54,7 +56,6 @@ describe('Agents widget', () => {
 
             cy.wait('@fetchAgents', { requestTimeout: secondsToMs(pollingTimeSeconds + 1) });
             cy.contains(deploymentName);
-            cy.killExecutions(deploymentName);
         });
 
         function selectResourceFromDropdown(dropdownName: string, value: string) {
