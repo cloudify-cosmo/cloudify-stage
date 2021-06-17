@@ -149,6 +149,9 @@ export const DeploymentsView: FunctionComponent<DeploymentsViewProps> = ({
     );
 
     if (!selectedDeployment && fallbackDeployment) {
+        log.warn(
+            'The selected deployment is not visible in the Deployments View table. It will be overridden to the first one in the table'
+        );
         toolboxContext.setValue('deploymentId', fallbackDeployment.id);
     }
     // NOTE: use the fallback deployment if it is possible to avoid showing `undefined` as the selected deployment

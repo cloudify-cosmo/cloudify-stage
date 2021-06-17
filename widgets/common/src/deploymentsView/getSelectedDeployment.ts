@@ -33,12 +33,6 @@ const getSelectedDeployment = (
         id: deploymentIdInContext as string | undefined
     });
 
-    if (!selectedDeployment) {
-        log.warn(
-            'The selected deployment is not visible in the Deployments View table. It will be overridden to the first one in the table'
-        );
-    }
-
     return {
         selectedDeployment,
         fallbackDeployment
