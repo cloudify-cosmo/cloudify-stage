@@ -68,17 +68,15 @@ describe('Agents widget', () => {
             cy.setDropdownValue('Node Instance', nodeInstanceName);
         }
 
-        type InstallMethods = 'Remote' | 'Plugin' | 'Init Script' | 'Provided';
-        function selectInstallMethod(installMethod: InstallMethods) {
-            cy.get('div[name="installMethods"]').click();
-            cy.contains(installMethod).click();
-            cy.get('div[name="installMethods"]').click();
+        type InstallMethod = 'Remote' | 'Plugin' | 'Init Script' | 'Provided';
+        function selectInstallMethod(installMethods: InstallMethod[]) {
+            cy.selectDropdownValue('Install Methods filter', installMethods);
         }
 
         function verifyExecution(
             executionPayload: Record<string, any>,
             expectedWorkflowId: string,
-            expectedInstallMethod: InstallMethods,
+            expectedInstallMethods: InstallMethod[],
             expectedAdditionalParameters: Record<string, any> = {}
         ) {
             expect(executionPayload).to.deep.equal({
@@ -90,37 +88,39 @@ describe('Agents widget', () => {
                 parameters: {
                     node_ids: [nodeName],
                     node_instance_ids: [nodeInstanceName],
-                    install_methods: [snakeCase(expectedInstallMethod)],
+                    install_methods: expectedInstallMethods.map(installMethod => snakeCase(installMethod)),
                     ...expectedAdditionalParameters
                 }
             });
         }
 
         it('validate agent', () => {
+            const installMethods: InstallMethod[] = ['Init Script', 'Provided'];
             cy.contains('Validate').click();
             cy.get('.modal').within(() => {
                 fillNodesFilter();
-                selectInstallMethod('Plugin');
+                selectInstallMethod(installMethods);
                 cy.contains('button', 'Validate').click();
             });
 
             cy.wait('@postExecution').then(({ request }) => {
-                verifyExecution(request.body, 'validate_agents', 'Plugin');
+                verifyExecution(request.body, 'validate_agents', installMethods);
             });
             cy.contains('Execution started').should('be.visible');
             cy.contains('Close').click();
         });
 
         it('install new agent', () => {
+            const installMethods: InstallMethod[] = ['Remote', 'Plugin'];
             cy.contains('Install').click();
             cy.get('.modal').within(() => {
                 fillNodesFilter();
-                selectInstallMethod('Remote');
+                selectInstallMethod(installMethods);
                 cy.contains('button', 'Install').click();
             });
 
             cy.wait('@postExecution').then(({ request }) => {
-                verifyExecution(request.body, 'install_new_agents', 'Remote', { stop_old_agent: false });
+                verifyExecution(request.body, 'install_new_agents', installMethods, { stop_old_agent: false });
             });
 
             cy.contains('Execution started').should('be.visible');

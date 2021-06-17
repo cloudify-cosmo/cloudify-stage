@@ -342,6 +342,13 @@ const commands = {
             });
     },
 
+    selectDropdownValue: (fieldName: string, values: string[]) => {
+        cy.contains('.field', fieldName)
+            .click()
+            .within(() => values.forEach(value => cy.contains('div[role=option]', value).click()))
+            .click();
+    },
+
     openTab: (tabName: string) => {
         cy.get('.tabular.menu').contains(tabName).click();
     },
