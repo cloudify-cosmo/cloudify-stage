@@ -54,13 +54,14 @@ pipeline {
                   sh """
                     jq '.maps.accessToken = "${env.MAPS_ACCESS_TOKEN}"' app.json > app.json.tmp && mv app.json.tmp app.json
                   """
-                  sh "mkdir -p ${WORKSPACE}/test && cp -rf ${WORKSPACE}/${STAGE_DIR}/. ${WORKSPACE}/test"
                 }
                 dir("${STAGE_DIR}") {
                   echo "Install dependencies"
                   sh 'npm run beforebuild'
                 }
               }
+              echo 'prepare test folder'
+              sh "mkdir -p ${WORKSPACE}/test && cp -rf ${WORKSPACE}/${STAGE_DIR}/. ${WORKSPACE}/test"
             }
           }
         }
