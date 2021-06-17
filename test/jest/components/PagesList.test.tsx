@@ -3,12 +3,13 @@ import { mount, shallow } from 'enzyme';
 
 import sinon from 'sinon';
 
-import PagesList, { Page } from 'components/PagesList';
+import PagesList from 'components/PagesList';
 import Consts from 'utils/consts';
 import { noop } from 'lodash';
 
 import { Icon } from 'components/basic';
 import AddPageButton from 'containers/AddPageButton';
+import type { PageDefinition } from 'actions/page';
 
 describe('(Component) PagesList', () => {
     const defaultProps = {
@@ -19,9 +20,9 @@ describe('(Component) PagesList', () => {
         selected: undefined,
         isEditMode: false
     };
-    const samplePages: Page[] = [
-        { id: 'abafar', name: 'Abafar', isDrillDown: false, tabs: [], widgets: [] },
-        { id: 'mustafar', name: 'Mustafar', isDrillDown: false, tabs: [], widgets: [] }
+    const samplePages: PageDefinition[] = [
+        { id: 'abafar', name: 'Abafar', description: 'Abafar Planet', isDrillDown: false, layout: [] },
+        { id: 'mustafar', name: 'Mustafar', description: 'Mustafar Planet', isDrillDown: false, layout: [] }
     ];
 
     it('should render component', () => {
