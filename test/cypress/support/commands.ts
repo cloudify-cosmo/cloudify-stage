@@ -53,6 +53,9 @@ declare global {
              * @see {@link https://www.npmjs.com/package/cypress-get-table}
              */
             getTable: () => Cypress.Chainable<Record<string, any>[]>;
+
+            /** Similar to `cy.contains(num)`, but makes sure the number is not a substring of some other number */
+            containsNumber: (num: number) => Cypress.Chainable;
         }
     }
 }
@@ -350,6 +353,12 @@ const commands = {
 };
 
 addCommands(commands);
+
+// See https://docs.cypress.io/api/cypress-api/custom-commands#Dual-Commands
+Cypress.Commands.add('containsNumber', { prevSubject: 'optional' }, (subject: unknown | undefined, num: number) =>
+    // eslint-disable-next-line security/detect-non-literal-regexp
+    (subject ? cy.wrap(subject) : cy).contains(new RegExp(`\\b${num}\\b`))
+);
 
 function toIdObj(id: string) {
     return { id };
