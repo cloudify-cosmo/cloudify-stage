@@ -333,11 +333,20 @@ const commands = {
             .then(commandResult => commandResult.stdout);
     },
 
-    setDropdownValue: (fieldName: string, value: string) => {
-        cy.contains('.field', fieldName).within(() => {
-            cy.get('input').type(value);
-            cy.get(`div[option-value="${value}"]`).click();
-        });
+    setSearchableDropdownValue: (fieldName: string, value: string) => {
+        cy.contains('.field', fieldName)
+            .click()
+            .within(() => {
+                cy.get('input').type(value);
+                cy.get(`div[option-value="${value}"]`).click();
+            });
+    },
+
+    setDropdownValues: (fieldName: string, values: string[]) => {
+        cy.contains('.field', fieldName)
+            .click()
+            .within(() => values.forEach(value => cy.contains('div[role=option]', value).click()))
+            .click();
     },
 
     openTab: (tabName: string) => {

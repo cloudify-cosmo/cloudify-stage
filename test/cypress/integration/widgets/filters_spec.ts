@@ -439,7 +439,7 @@ describe('Filters widget', () => {
                             cy.get('input').type(`${value}`);
                             if (withAutocomplete) cy.wait(`@valueSearch_${value}`);
 
-                            if (isNew) cy.contains('[role="option"]', 'Add ').click();
+                            if (isNew) cy.contains('[role="option"]', `Add ${value}`).click();
                             else cy.get(`div[option-value="${value}"]`).click();
 
                             cy.get(`.label[value="${value}"]`).should('exist');
@@ -455,7 +455,7 @@ describe('Filters widget', () => {
                     cy.get('input').type(key);
                     cy.wait(`@keySearch_${key}`);
 
-                    if (isNew) cy.contains('[role="option"]', 'New key ').click();
+                    if (isNew) cy.contains('[role="option"]', `New key ${key}`).click();
                     else cy.get(`div[option-value="${key}"]`).click();
 
                     cy.get(`input.search`).should('not.have.value');
@@ -478,7 +478,7 @@ describe('Filters widget', () => {
                             cy.get('input').type(value);
                             cy.wait(`@valueSearch_${value}`);
 
-                            if (isNew) cy.contains('[role="option"]', 'New value ').click();
+                            if (isNew) cy.contains('[role="option"]', `New value ${value}`).click();
                             else cy.get(`div[option-value="${value}"]`).click();
 
                             cy.get(`.label[value="${value}"]`).should('exist');
