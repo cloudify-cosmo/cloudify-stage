@@ -202,6 +202,12 @@ describe('Deployments View widget', () => {
         });
     });
 
+    it('should select the first visible deployment by default', () => {
+        useDeploymentsViewWidget();
+
+        getDeploymentsViewTable().find('tbody tr:first-of-type.active').should('exist');
+    });
+
     describe('with filters', () => {
         const deploymentNameThatMatchesFilter = `${specPrefix}precious_deployment`;
         const filterId = 'only-precious';
@@ -270,6 +276,18 @@ describe('Deployments View widget', () => {
 
             cy.contains(deploymentName);
             cy.contains(deploymentNameThatMatchesFilter);
+        });
+
+        // NOTE: this test does not really belong to the filters functionality, but it needs at least two deployments to work
+        it('should allow selecting a deployment through the Resource Filter widget', () => {
+            useDeploymentsViewWidget();
+
+            const getSelectedDeployment = () => getDeploymentsViewTable().find('tbody tr.active');
+
+            cy.setDeploymentContext(deploymentName);
+            getSelectedDeployment().contains(deploymentName);
+            cy.setDeploymentContext(deploymentNameThatMatchesFilter);
+            getSelectedDeployment().contains(deploymentNameThatMatchesFilter);
         });
     });
 
