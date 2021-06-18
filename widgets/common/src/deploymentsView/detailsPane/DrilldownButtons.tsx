@@ -154,8 +154,8 @@ const DrilldownButton: FunctionComponent<DrilldownButtonProps> = ({
             {!result.loading && (
                 <>
                     {' '}
-                    ({result.count}){' '}
-                    <SubdeploymentStatusIcon status={result.status} style={{ marginRight: 0, marginLeft: 0 }} />
+                    ({result.count})
+                    <SubdeploymentStatusIcon status={result.status} style={{ marginRight: 0, marginLeft: '0.2em' }} />
                 </>
             )}
         </Button>
