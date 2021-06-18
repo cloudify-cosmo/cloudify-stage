@@ -493,8 +493,7 @@ describe('Deployments View widget', () => {
             });
 
             const expectOnlySubdeploymentTypeIcon = () => {
-                // NOTE: expect only the deployment type icon. There should not be any deployment state icon
-                cy.get('i').should('have.length', 1);
+                cy.get('i').should('have.length', 1).not('.object.group.icon, .cube.icon').should('have.length', 0);
             };
 
             getDeploymentsViewDetailsPane().within(() => {
