@@ -9,9 +9,7 @@ describe('Maintenance mode button widget', () => {
     const getDeactivateButton = () => cy.contains('Deactivate Maintenance Mode');
 
     it('should enter maintenance mode on click', () => {
-        waitUntilEmpty(
-            'executions?status=scheduled&status=queued&status=pending&status=started&status=cancelling&status=force_cancelling&status=kill_cancelling'
-        );
+        cy.waitUntilNoExecutionIsActive();
         getActivateButton().click();
         cy.contains('Yes').click();
         getDeactivateButton().click();

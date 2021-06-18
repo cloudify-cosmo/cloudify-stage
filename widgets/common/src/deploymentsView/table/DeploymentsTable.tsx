@@ -29,6 +29,7 @@ interface DeploymentsTableProps {
     pageSize: number;
     totalSize: number;
     fieldsToShow: DeploymentsViewColumnId[];
+    selectedDeployment: Deployment | undefined;
 }
 
 const DeploymentsTable: FunctionComponent<DeploymentsTableProps> = ({
@@ -38,7 +39,8 @@ const DeploymentsTable: FunctionComponent<DeploymentsTableProps> = ({
     deployments,
     fieldsToShow,
     pageSize,
-    totalSize
+    totalSize,
+    selectedDeployment
 }) => {
     const { DataTable } = Stage.Basic;
 
@@ -71,7 +73,7 @@ const DeploymentsTable: FunctionComponent<DeploymentsTableProps> = ({
                     );
                 })}
 
-                {deployments.flatMap(renderDeploymentRow(toolbox, fieldsToShow))}
+                {deployments.flatMap(renderDeploymentRow(toolbox, fieldsToShow, selectedDeployment))}
             </DataTable>
         </TableContainer>
     );

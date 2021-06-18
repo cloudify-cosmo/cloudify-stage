@@ -4,18 +4,19 @@ import { deploymentsViewColumnDefinitions, DeploymentsViewColumnId } from './col
 import { Deployment, LatestExecutionStatus } from '../types';
 import { selectDeployment } from '../common';
 
-const renderDeploymentRow = (toolbox: Stage.Types.Toolbox, fieldsToShow: DeploymentsViewColumnId[]) => (
-    deployment: Deployment
-) => {
+const renderDeploymentRow = (
+    toolbox: Stage.Types.Toolbox,
+    fieldsToShow: DeploymentsViewColumnId[],
+    selectedDeployment: Deployment | undefined
+) => (deployment: Deployment) => {
     const { DataTable } = Stage.Basic;
-    const selectedDeploymentId = toolbox.getContext().getValue('deploymentId');
     const progressUnderline = getDeploymentProgressUnderline(deployment);
 
     return [
         <DataTable.Row
             key={deployment.id}
             className={progressUnderline ? undefined : 'deployment-progressless-row'}
-            selected={deployment.id === selectedDeploymentId}
+            selected={deployment.id === selectedDeployment?.id}
             onClick={() => selectDeployment(toolbox, deployment.id)}
         >
             {Object.entries(deploymentsViewColumnDefinitions).map(([columnId, columnDefinition]) => (

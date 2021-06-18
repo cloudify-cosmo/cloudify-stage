@@ -53,7 +53,7 @@ export default function ValidateAgentsModal({
             setInputValues(getInitialInputValues());
             setAllowedDeployments(getAgentsAttributeList('deployment'));
             setAllowedNodes(getAgentsAttributeList('node'));
-            setAllowedNodeInstances(getAgentsAttributeList('id'));
+            setAllowedNodeInstances(getAgentsAttributeList('host_id'));
         }
     }, [open]);
 
