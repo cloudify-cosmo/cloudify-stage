@@ -469,9 +469,17 @@ describe('Deployments View widget', () => {
             });
 
             getDeploymentsViewDetailsPane().within(() => {
-                getSubservicesButton().contains('1');
+                getSubservicesButton().within(() => {
+                    cy.containsNumber(1);
+                    cy.get('i[aria-label="Requires attention"]').should('exist');
+                });
                 cy.log('Drill down to subenvironments of app-env');
-                getSubenvironmentsButton().contains('1').click();
+                getSubenvironmentsButton()
+                    .within(() => {
+                        cy.containsNumber(1);
+                        cy.get('i[aria-label="Requires attention"]').should('exist');
+                    })
+                    .click();
             });
 
             getBreadcrumbs().contains('app-env [Environments]');
@@ -488,9 +496,9 @@ describe('Deployments View widget', () => {
             verifySubdeploymentsOfAppEnv();
 
             getDeploymentsViewDetailsPane().within(() => {
-                getSubenvironmentsButton().contains('0').should('be.disabled');
+                getSubenvironmentsButton().containsNumber(0).should('be.disabled');
                 cy.log('Drill down to subservices of db-env');
-                getSubservicesButton().contains('2').click();
+                getSubservicesButton().containsNumber(2).click();
             });
 
             getBreadcrumbs().contains('db-env [Services]');
@@ -502,9 +510,23 @@ describe('Deployments View widget', () => {
                 cy.contains('db-env').should('not.exist');
             });
 
+            const expectOnlySubdeploymentTypeIcon = () => {
+                cy.get('i').should('have.length', 1).not('.object.group.icon, .cube.icon').should('have.length', 0);
+            };
+
             getDeploymentsViewDetailsPane().within(() => {
-                getSubenvironmentsButton().contains('0').should('be.disabled');
-                getSubservicesButton().contains('0').should('be.disabled');
+                getSubenvironmentsButton()
+                    .should('be.disabled')
+                    .within(() => {
+                        cy.containsNumber(0);
+                        expectOnlySubdeploymentTypeIcon();
+                    });
+                getSubservicesButton()
+                    .should('be.disabled')
+                    .within(() => {
+                        cy.containsNumber(0);
+                        expectOnlySubdeploymentTypeIcon();
+                    });
             });
 
             cy.log('Go back to the parent environment');
@@ -515,10 +537,10 @@ describe('Deployments View widget', () => {
             getBreadcrumbs().contains('Test Page').click();
             getDeploymentsViewDetailsPane().within(() => {
                 cy.log('Drill down to subservices of app-env');
-                getSubservicesButton().contains('1').click();
+                getSubservicesButton().containsNumber(1).click();
             });
             getDeploymentsViewTable().within(() => {
-                cy.log('Subservices of app-end should be visible (web-app)');
+                cy.log('Subservices of app-env should be visible (web-app)');
                 cy.contains('web-app');
                 cy.contains('db-env').should('not.exist');
             });
@@ -574,7 +596,7 @@ describe('Deployments View widget', () => {
             cy.getSearchInput().type(deploymentName);
 
             getDeploymentsViewDetailsPane().within(() => {
-                getSubservicesButton().contains('0');
+                getSubservicesButton().containsNumber(0);
 
                 cy.interceptSp('GET', `${deploymentName}?all_sub_deployments=false`, req =>
                     req.reply(res => {
@@ -583,7 +605,7 @@ describe('Deployments View widget', () => {
                 ).as('deploymentDetails');
                 cy.wait('@deploymentDetails');
 
-                getSubservicesButton().contains('50');
+                getSubservicesButton().containsNumber(50);
             });
         });
     });
@@ -710,9 +732,9 @@ describe('Deployments View widget', () => {
                         cy.contains('Cloudify-Hello-World');
                         cy.contains(siteNames.london);
                         cy.contains('In progress').parent().find('i.orange.spinner');
-                        getTooltipSubenvironments().contains('5');
+                        getTooltipSubenvironments().containsNumber(5);
                         getTooltipSubservices().within(() => {
-                            cy.contains('80');
+                            cy.containsNumber(80);
                             cy.get('[aria-label="In progress"]');
                         });
                     }
@@ -726,11 +748,11 @@ describe('Deployments View widget', () => {
                         cy.contains(siteNames.olsztyn);
                         cy.contains('Requires attention').parent().find('i.red.exclamation');
                         getTooltipSubenvironments().within(() => {
-                            cy.contains('1');
+                            cy.containsNumber(1);
                             cy.get('[aria-label="In progress"]');
                         });
                         getTooltipSubservices().within(() => {
-                            cy.contains('3');
+                            cy.containsNumber(3);
                             cy.get('[aria-label="Requires attention"]');
                         });
                     }
@@ -743,8 +765,8 @@ describe('Deployments View widget', () => {
                         cy.contains('Cloudify-Hello-World');
                         cy.contains(siteNames.warsaw);
                         cy.contains('Good');
-                        getTooltipSubenvironments().contains('10');
-                        getTooltipSubservices().contains('8');
+                        getTooltipSubenvironments().containsNumber(10);
+                        getTooltipSubservices().containsNumber(8);
                     }
                 );
             });

@@ -1,4 +1,4 @@
-import type { FunctionComponent } from 'react';
+import type { CSSProperties, FunctionComponent } from 'react';
 import type { IconProps } from 'semantic-ui-react';
 
 import { i18nPrefix } from './common';
@@ -16,7 +16,10 @@ const statusIconPropsMapping = createIconDescriptions({
 });
 type StatusIconName = keyof typeof statusIconPropsMapping;
 
-const BaseDeploymentStatusIcon: FunctionComponent<{ iconName?: StatusIconName }> = ({ iconName }) => {
+const BaseDeploymentStatusIcon: FunctionComponent<{ iconName?: StatusIconName; iconStyle?: CSSProperties }> = ({
+    iconName,
+    iconStyle
+}) => {
     if (!iconName) {
         return null;
     }
@@ -27,7 +30,7 @@ const BaseDeploymentStatusIcon: FunctionComponent<{ iconName?: StatusIconName }>
 
     return (
         // eslint-disable-next-line react/jsx-props-no-spreading
-        <Popup trigger={<Icon aria-label={label} {...iconProps} />} position="top center">
+        <Popup trigger={<Icon aria-label={label} {...iconProps} style={iconStyle} />} position="top center">
             {label}
         </Popup>
     );
@@ -42,6 +45,12 @@ export const DeploymentStatusIcon: FunctionComponent<{ status: DeploymentStatus 
     <BaseDeploymentStatusIcon iconName={deploymentStatusIconNameMapping[status]} />
 );
 
-export const SubdeploymentStatusIcon: FunctionComponent<{ status: DeploymentStatus | null }> = ({ status }) => (
-    <BaseDeploymentStatusIcon iconName={deploymentStatusIconNameMapping[status ?? DeploymentStatus.Good]} />
+export const SubdeploymentStatusIcon: FunctionComponent<{ status: DeploymentStatus | null; style?: CSSProperties }> = ({
+    status,
+    style
+}) => (
+    <BaseDeploymentStatusIcon
+        iconName={deploymentStatusIconNameMapping[status ?? DeploymentStatus.Good]}
+        iconStyle={style}
+    />
 );
