@@ -43,12 +43,13 @@ export default class NodeFilter extends React.Component {
     }
 
     handleInputChange(state, event, field, onStateChange) {
-        const { blueprintId, deploymentId, nodeId, nodeInstanceId } = this.state;
         const { name, onChange } = this.props;
         this.setState({ ...state, [field.name]: field.value }, () => {
             if (_.isFunction(onStateChange)) {
                 onStateChange();
             }
+
+            const { blueprintId, deploymentId, nodeId, nodeInstanceId } = this.state;
             onChange(event, {
                 name,
                 value: {
