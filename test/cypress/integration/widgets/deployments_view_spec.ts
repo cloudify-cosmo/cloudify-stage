@@ -97,7 +97,8 @@ describe('Deployments View widget', () => {
             cy.contains('button', 'Filter').click();
 
             cy.get('.modal').within(() => {
-                cy.get('input').type(`${filterId}{enter}`);
+                cy.setSearchableDropdownValue('Filter ID', filterId);
+                cy.get('.loader').should('not.exist');
                 cy.contains('OK').click();
             });
 

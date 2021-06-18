@@ -10,7 +10,7 @@ interface DeploymentsViewHeaderProps {
     filterRules: FilterRule[];
     mapOpen: boolean;
     toggleMap: () => void;
-    onFilterChange: (filterId: string | undefined) => void;
+    onFilterChange: (filterRules?: FilterRule[]) => void;
     toolbox: Stage.Types.Toolbox;
 }
 
@@ -28,15 +28,17 @@ const DeploymentsViewHeader: FunctionComponent<DeploymentsViewHeaderProps> = ({
     const [filterModalOpen, openFilterModal, closeFilterModal] = useBoolean();
     const [deployOnModalOpen, openDeployOnModal, closeDeployOnModal] = useBoolean();
     const [runWorkflowModalOpen, openRunWorkflowModal, closeRunWorkflowModal] = useBoolean();
-    const [filterId, setFilterId] = useState<string>();
+    const [userFilterRules, setUserFilterRules] = useState<FilterRule[]>();
+    const [userFilterId, setUserFilterId] = useState<string>();
 
     const { Button, Dropdown } = Stage.Basic;
     // @ts-ignore Properties does not exist on type 'typeof Dropdown'
     const { Menu, Item } = Dropdown;
 
-    function handleFilterChange(newFilterId: string | undefined) {
-        setFilterId(newFilterId);
-        onFilterChange(newFilterId);
+    function handleFilterChange(newFilterRules?: FilterRule[], newFilterId?: string) {
+        setUserFilterRules(newFilterRules);
+        setUserFilterId(newFilterId);
+        onFilterChange(newFilterRules);
         closeFilterModal();
     }
 
@@ -50,20 +52,16 @@ const DeploymentsViewHeader: FunctionComponent<DeploymentsViewHeaderProps> = ({
                 title={mapT(mapOpen ? 'closeMap' : 'openMap')}
                 content={mapT('label')}
             />
-            {filterId ? (
+            {userFilterRules ? (
                 <Button.Group color="blue">
                     <Button
                         icon="filter"
                         labelPosition="left"
-                        content={filterId}
+                        content={userFilterId ?? headerT('filter.unsavedFilter')}
                         onClick={openFilterModal}
                         style={{ whiteSpace: 'nowrap', maxWidth: 200, textOverflow: 'ellipsis', overflow: 'hidden' }}
                     />
-                    <Button
-                        icon="delete"
-                        onClick={() => handleFilterChange(undefined)}
-                        title={headerT('filter.clearButton')}
-                    />
+                    <Button icon="delete" onClick={() => handleFilterChange()} title={headerT('filter.clearButton')} />
                 </Button.Group>
             ) : (
                 <Button
@@ -82,7 +80,7 @@ const DeploymentsViewHeader: FunctionComponent<DeploymentsViewHeaderProps> = ({
             </Dropdown>
 
             <FilterModal
-                filterId={filterId}
+                filterRules={userFilterRules}
                 open={filterModalOpen}
                 onCancel={closeFilterModal}
                 onSubmit={handleFilterChange}
