@@ -75,7 +75,7 @@ pipeline {
               dir("${STAGE_DIR}") {
                 echo "Build application"
                 sh 'npm run build'
-                sh 'rm -rf ${WORKSPACE}/test && rm -rf ${WORKSPACE}/backend'
+                sh 'rm -rf ${WORKSPACE}/backend'
                 sh "mkdir -p ${WORKSPACE}/size && cp -rf ${WORKSPACE}/${STAGE_DIR}/. ${WORKSPACE}/size"
               }
               dir("size") {
