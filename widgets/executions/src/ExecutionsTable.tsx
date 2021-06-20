@@ -181,58 +181,58 @@ export default class ExecutionsTable extends React.Component {
                     className="executionsTable"
                     noDataMessage={NO_DATA_MESSAGE}
                 >
-                    <DataTable.Column label="" width="1%" />
+                    <DataTable.Column label="" width="43px" />
                     <DataTable.Column
                         label="Blueprint"
                         name="blueprint_id"
-                        width="15%"
+                        width="150%"
                         show={fieldsToShow.indexOf('Blueprint') >= 0 && !data.blueprintId && !data.deploymentId}
                     />
                     <DataTable.Column
                         label="Deployment"
                         name="deployment_id"
-                        width="15%"
+                        width="150%"
                         show={fieldsToShow.indexOf('Deployment') >= 0 && !data.deploymentId}
                     />
                     <DataTable.Column
                         label="Workflow"
                         name="workflow_id"
-                        width="15%"
+                        width="200%"
                         show={fieldsToShow.indexOf('Workflow') >= 0}
                     />
                     <DataTable.Column label="Id" name="id" width="10%" show={fieldsToShow.indexOf('Id') >= 0} />
                     <DataTable.Column
                         label="Created"
                         name="created_at"
-                        width="10%"
+                        width="110%"
                         show={fieldsToShow.indexOf('Created') >= 0}
                     />
                     <DataTable.Column
                         label="Scheduled"
                         name="scheduled_for"
-                        width="10%"
+                        width="100%"
                         show={fieldsToShow.indexOf('Scheduled') >= 0}
                     />
                     <DataTable.Column
                         label="Ended"
                         name="ended_at"
-                        width="10%"
+                        width="100%"
                         show={fieldsToShow.indexOf('Ended') >= 0}
                     />
                     <DataTable.Column
                         label="Creator"
                         name="created_by"
-                        width="5%"
+                        width="100%"
                         show={fieldsToShow.indexOf('Creator') >= 0}
                     />
                     <DataTable.Column
                         label="Attributes"
-                        width="5%"
+                        width="100%"
                         show={fieldsToShow.indexOf('System') >= 0 || fieldsToShow.indexOf('Attributes') >= 0}
                     />
-                    <DataTable.Column label="Status" width="15%" show={fieldsToShow.indexOf('Status') >= 0} />
+                    <DataTable.Column label="Status" width="150%" show={fieldsToShow.indexOf('Status') >= 0} />
                     <DataTable.Column
-                        width="5%"
+                        width="40px"
                         show={fieldsToShow.indexOf('Params') >= 0 || fieldsToShow.indexOf('Actions') >= 0}
                     />
 
@@ -251,14 +251,22 @@ export default class ExecutionsTable extends React.Component {
                                     <DataTable.Data>
                                         <IdPopup id={item.id} selected={hoveredExecution === item.id} />
                                     </DataTable.Data>
-                                    <DataTable.Data>{item.blueprint_id}</DataTable.Data>
-                                    <DataTable.Data>{item.deployment_id}</DataTable.Data>
-                                    <DataTable.Data>{item.workflow_id}</DataTable.Data>
+                                    <DataTable.Data style={{ wordBreak: 'break-word' }}>
+                                        {item.blueprint_id}
+                                    </DataTable.Data>
+                                    <DataTable.Data style={{ wordBreak: 'break-word' }}>
+                                        {item.deployment_id}
+                                    </DataTable.Data>
+                                    <DataTable.Data style={{ wordBreak: 'break-word' }}>
+                                        {item.workflow_id}
+                                    </DataTable.Data>
                                     <DataTable.Data>{item.id}</DataTable.Data>
                                     <DataTable.Data>{item.created_at}</DataTable.Data>
                                     <DataTable.Data>{item.scheduled_for}</DataTable.Data>
                                     <DataTable.Data>{item.ended_at}</DataTable.Data>
-                                    <DataTable.Data>{item.created_by}</DataTable.Data>
+                                    <DataTable.Data style={{ wordBreak: 'break-word' }}>
+                                        {item.created_by}
+                                    </DataTable.Data>
                                     <DataTable.Data className="center aligned">
                                         <SystemWorkflowIcon execution={item} />
                                         <DryRunIcon execution={item} />

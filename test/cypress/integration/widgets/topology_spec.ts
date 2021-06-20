@@ -1,15 +1,24 @@
 // @ts-nocheck File not migrated fully to TS
 import _ from 'lodash';
-import { waitUntilEmpty } from '../../support/resource_commons';
+import { secondsToMs, waitUntilEmpty, waitUntilNotEmpty } from '../../support/resource_commons';
 
 describe('Topology', () => {
+    const pollingTimeSeconds = 5;
     const resourcePrefix = 'topology_test_';
-    const getNodeTopologyButton = index => cy.get(`.nodeTopologyButton:eq(${index})`);
-    const waitForDeploymentToBeInstalled = deploymentId =>
-        waitUntilEmpty(`deployments?id=${deploymentId}&deployment_status=in_progress`);
+    const getNodeTopologyButton = (index: number) => cy.get(`.nodeTopologyButton:eq(${index})`);
+
+    const waitForDeploymentToBeInstalled = (deploymentId: string) => {
+        cy.log(`Waiting for deployment ${deploymentId} to be installed.`);
+        const startedInstallWorkflowsOnDeploymentUrl = `executions?_include=id,workflow_id,status&deployment_id=${deploymentId}&workflow_id=install&status=started`;
+
+        // NOTE: First, wait for execution to start as it can happen not to start immediately.
+        // Then, wait for install workflow to change the status not to be `started`.
+        waitUntilNotEmpty(startedInstallWorkflowsOnDeploymentUrl);
+        waitUntilEmpty(startedInstallWorkflowsOnDeploymentUrl);
+    };
 
     before(() => {
-        cy.activate('valid_trial_license').usePageMock('topology', { pollingTime: 5 });
+        cy.activate('valid_trial_license').usePageMock('topology', { pollingTime: pollingTimeSeconds });
     });
 
     describe('presents data for selected', () => {
@@ -118,6 +127,20 @@ describe('Topology', () => {
         const componentDeploymentId = 'component';
         const getGoToDeploymentPageButton = () => getNodeTopologyButton(0);
         const getComponentNodeExpandButton = () => getNodeTopologyButton(1);
+        const waitForTopologyWidgetToBeReadyAfterFetch = () => {
+            cy.intercept(`/console/bud/layout/${appDeploymentId}`).as('fetchLayout');
+
+            cy.log('Waiting for topology data to be fetched');
+            cy.wait('@fetchLayout', { requestTimeout: secondsToMs(2 * pollingTimeSeconds) });
+            cy.waitUntilPageLoaded();
+
+            cy.log('Waiting until animation in topology canvas is finished');
+            // eslint-disable-next-line cypress/no-unnecessary-waiting
+            cy.wait(2000);
+
+            cy.log('Unlocking topology canvas to be interactive');
+            cy.get('.scrollGlass').click();
+        };
 
         before(() => {
             const blueprintFile = 'blueprints/component_app.zip';
@@ -134,18 +157,17 @@ describe('Topology', () => {
                 .uploadBlueprint(blueprintFile, appBlueprintId, appBlueprintYamlFile)
                 .deployBlueprint(appBlueprintId, appDeploymentId)
                 .executeWorkflow(appDeploymentId, 'install');
+            waitForDeploymentToBeInstalled(appDeploymentId);
         });
 
         beforeEach(() => {
             cy.visitPage('Test Page');
             cy.setDeploymentContext(appDeploymentId);
-            waitForDeploymentToBeInstalled(appDeploymentId);
-            cy.waitUntilPageLoaded();
-            cy.get('.scrollGlass').click();
+            waitForTopologyWidgetToBeReadyAfterFetch();
         });
 
         it('allows to open component deployment page', () => {
-            getGoToDeploymentPageButton().click({ force: true });
+            getGoToDeploymentPageButton().click();
 
             cy.verifyLocation(
                 `/console/page/test_page_deployment/${componentDeploymentId}`,
@@ -155,7 +177,7 @@ describe('Topology', () => {
         });
 
         it('allows to expand component node', () => {
-            getComponentNodeExpandButton().click({ force: true });
+            getComponentNodeExpandButton().click();
 
             cy.contains(`host(${componentDeploymentId}`).should('be.visible');
         });

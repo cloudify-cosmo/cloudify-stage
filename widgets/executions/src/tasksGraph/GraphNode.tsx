@@ -87,7 +87,8 @@ const GraphNode = ({ graphNode, toolbox }) => {
                 >
                     <Icon
                         name="file alternate outline"
-                        style={{ fontSize: '1.3em', cursor: 'pointer' }}
+                        // NOTE: `display: inline` to fix a rendering bug in webkit
+                        style={{ fontSize: '1.3em', cursor: 'pointer', display: 'inline' }}
                         title="Show related entries in Deployment Events/Logs widget"
                         onClick={() => {
                             const context = toolbox.getContext();

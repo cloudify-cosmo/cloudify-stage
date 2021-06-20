@@ -53,6 +53,9 @@ declare global {
              * @see {@link https://www.npmjs.com/package/cypress-get-table}
              */
             getTable: () => Cypress.Chainable<Record<string, any>[]>;
+
+            /** Similar to `cy.contains(num)`, but makes sure the number is not a substring of some other number */
+            containsNumber: (num: number) => Cypress.Chainable;
         }
     }
 }
@@ -333,11 +336,20 @@ const commands = {
             .then(commandResult => commandResult.stdout);
     },
 
-    setDropdownValue: (fieldName: string, value: string) => {
-        cy.contains('.field', fieldName).within(() => {
-            cy.get('input').type(value);
-            cy.get(`div[option-value="${value}"]`).click();
-        });
+    setSearchableDropdownValue: (fieldName: string, value: string) => {
+        cy.contains('.field', fieldName)
+            .click()
+            .within(() => {
+                cy.get('input').type(value);
+                cy.get(`div[option-value="${value}"]`).click();
+            });
+    },
+
+    setDropdownValues: (fieldName: string, values: string[]) => {
+        cy.contains('.field', fieldName)
+            .click()
+            .within(() => values.forEach(value => cy.contains('div[role=option]', value).click()))
+            .click();
     },
 
     openTab: (tabName: string) => {
@@ -350,6 +362,12 @@ const commands = {
 };
 
 addCommands(commands);
+
+// See https://docs.cypress.io/api/cypress-api/custom-commands#Dual-Commands
+Cypress.Commands.add('containsNumber', { prevSubject: 'optional' }, (subject: unknown | undefined, num: number) =>
+    // eslint-disable-next-line security/detect-non-literal-regexp
+    (subject ? cy.wrap(subject) : cy).contains(new RegExp(`\\b${num}\\b`))
+);
 
 function toIdObj(id: string) {
     return { id };

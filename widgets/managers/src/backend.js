@@ -7,26 +7,18 @@ module.exports = r => {
             query: { deploymentId },
             headers
         } = req;
-        const extractedHeaders = {
-            tenant: headers.tenant,
-            'Authentication-Token': headers['authentication-token']
-        };
 
         const getClusterStatus = (ip, username, password, tenant, certificate) => {
             const endpointUrl = `http://${ip}/api/v3.1/cluster-status`;
-            const endpointHeaders = {
-                tenant,
-                Authorization: `Basic ${Buffer.from(`${username}:${password}`).toString('base64')}`
-            };
             logger.debug(`Calling: GET ${endpointUrl}`);
 
-            return helper.Request.doGet(
-                `http://${ip}/api/v3.1/cluster-status`,
-                null,
-                true,
-                endpointHeaders,
+            return helper.Request.doGet(`http://${ip}/api/v3.1/cluster-status`, {
+                headers: {
+                    tenant,
+                    Authorization: `Basic ${Buffer.from(`${username}:${password}`).toString('base64')}`
+                },
                 certificate
-            );
+            });
         };
 
         const extractCredentials = (capabilitiesPromise, usernameSecretPromise, passwordSecretPromise) => {
@@ -46,23 +38,26 @@ module.exports = r => {
             };
         };
 
+        const managerRequestOptions = {
+            headers: {
+                tenant: headers.tenant,
+                'Authentication-Token': headers['authentication-token']
+            }
+        };
         const capabilitiesPromise = helper.Manager.doGet(
             `/deployments/${deploymentId}/capabilities`,
-            null,
-            extractedHeaders
+            managerRequestOptions
         ).catch(error => {
             logger.error(error);
             return Promise.reject(new Error('Cannot fetch IP address and certificate of the endpoint'));
         });
         const passwordSecretPromise = helper.Manager.doGet(
             '/secrets/manager_admin_password',
-            null,
-            extractedHeaders
+            managerRequestOptions
         ).catch(() => 'admin');
         const usernameSecretPromise = helper.Manager.doGet(
             '/secrets/manager_admin_username',
-            null,
-            extractedHeaders
+            managerRequestOptions
         ).catch(() => 'admin');
 
         Promise.all([capabilitiesPromise, usernameSecretPromise, passwordSecretPromise])
@@ -79,37 +74,37 @@ module.exports = r => {
         // const logger = helper.Logger('get_spire_deployments');
 
         const { headers } = req;
-        const extractedHeaders = {
-            tenant: headers.tenant,
-            'Authentication-Token': headers['authentication-token']
+        const commonManagerRequestOptions = {
+            headers: {
+                tenant: headers.tenant,
+                'Authentication-Token': headers['authentication-token']
+            }
         };
         let spireDeployments = [];
 
-        return helper.Manager.doGetFull(
-            '/deployments',
-            {
+        return helper.Manager.doGetFull('/deployments', {
+            params: {
                 _include: 'id,workflows,capabilities,description',
                 description:
                     'This blueprint creates several VMs, installs a Manager on each of them, ' +
                     'creates a Spire Management Cluster between all the managers and uploads ' +
                     'several auxiliary resources to the cluster.\n'
             },
-            extractedHeaders
-        )
+            ...commonManagerRequestOptions
+        })
             .then(data => {
                 spireDeployments = data.items;
                 const capabilitiesPromises = _.map(spireDeployments, deployment =>
-                    helper.Manager.doGet(`/deployments/${deployment.id}/capabilities`, null, extractedHeaders)
+                    helper.Manager.doGet(`/deployments/${deployment.id}/capabilities`, commonManagerRequestOptions)
                 );
 
-                const executionsPromise = helper.Manager.doGet(
-                    '/executions',
-                    {
+                const executionsPromise = helper.Manager.doGet('/executions', {
+                    params: {
                         _sort: '-ended_at',
                         deployment_id: _.map(spireDeployments, deployment => deployment.id)
                     },
-                    extractedHeaders
-                );
+                    ...commonManagerRequestOptions
+                });
 
                 return Promise.all([executionsPromise, ...capabilitiesPromises]);
             })
