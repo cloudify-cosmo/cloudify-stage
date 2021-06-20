@@ -28,11 +28,11 @@ spec:
     resources:
       requests:
         cpu: 1.5
-        memory: 5Gi
+        memory: 8Gi
         ephemeral-storage: "15Gi"
       limits:
         cpu: 2
-        memory: 5Gi
+        memory: 8Gi
         ephemeral-storage: "15Gi"
     command:
     - cat
