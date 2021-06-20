@@ -12,13 +12,28 @@ spec:
     image: circleci/node:12.22.1-browsers
     resources:
       requests:
-        cpu: 3
+        cpu: 1.5
         memory: 8Gi
         ephemeral-storage: "15Gi"
       limits:
-        cpu: 3
+        cpu: 2
         memory: 8Gi
         ephemeral-storage: "15Gi"
+    command:
+    - cat
+    tty: true
+    securityContext:
+      runAsUser: 0
+      privileged: true
+  - name: rpmbuild
+    image: rpmbuild/centos7
+    resources:
+      requests:
+        cpu: 1
+        memory: 3Gi
+      limits:
+        cpu: 1.5
+        memory: 3Gi
     command:
     - cat
     tty: true
