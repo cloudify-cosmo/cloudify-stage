@@ -1,6 +1,6 @@
 import type { FunctionComponent } from 'react';
 import { useEffect, useState } from 'react';
-import { i18nPrefix } from '../common';
+import { i18nMessagesPrefix, i18nPrefix } from '../common';
 import RulesForm from '../../filters/RulesForm';
 import { FilterRule } from '../../filters/types';
 import useFilterQuery from '../useFilterQuery';
@@ -14,6 +14,7 @@ interface FilterModalProps {
 }
 
 const tModal = Stage.Utils.getT(`${i18nPrefix}.header.filter.modal`);
+const tMessage = Stage.Utils.getT(i18nMessagesPrefix);
 
 const FilterModal: FunctionComponent<FilterModalProps> = ({
     filterRules: filterRulesProp,
@@ -98,6 +99,10 @@ const FilterModal: FunctionComponent<FilterModalProps> = ({
         setFilterRules(filterRulesResult.data);
         setInitialFilterRules(filterRulesResult.data ?? []);
     }, [JSON.stringify(filterRulesResult.data)]);
+
+    useEffect(() => {
+        if (filterRulesResult.isError) setErrors({ error: tMessage('errorLoadingFilterRules') });
+    }, [filterRulesResult.isError]);
 
     return (
         <Modal open={open} onClose={onCancel} size="large">
