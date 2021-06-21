@@ -241,7 +241,7 @@ describe('Deployments View widget', () => {
             cy.contains(/with ID .* was not found/);
         });
 
-        it('should take the selected existing filter into account when displaying deployments', () => {
+        it.only('should take the selected existing filter into account when displaying deployments', () => {
             useDeploymentsViewWidget();
 
             cy.contains(deploymentNameThatMatchesFilter);
@@ -252,7 +252,7 @@ describe('Deployments View widget', () => {
 
             cy.get('.modal').within(() => {
                 cy.setSearchableDropdownValue('Filter ID', filterId);
-                cy.get('.loader').should('not.exist');
+                cy.contains('Label').should('be.visible');
                 cy.contains('OK').click();
             });
 
