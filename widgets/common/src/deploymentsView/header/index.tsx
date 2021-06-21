@@ -35,7 +35,7 @@ const DeploymentsViewHeader: FunctionComponent<DeploymentsViewHeaderProps> = ({
     // @ts-ignore Properties does not exist on type 'typeof Dropdown'
     const { Menu, Item } = Dropdown;
 
-    function handleFilterChange(newFilterRules?: FilterRule[], newFilterId?: string) {
+    function handleFilterChange(newFilterRules: FilterRule[] | undefined, newFilterId: string | undefined) {
         setUserFilterRules(newFilterRules);
         setUserFilterId(newFilterId);
         onFilterChange(newFilterRules);
@@ -61,7 +61,11 @@ const DeploymentsViewHeader: FunctionComponent<DeploymentsViewHeaderProps> = ({
                         onClick={openFilterModal}
                         style={{ whiteSpace: 'nowrap', maxWidth: 200, textOverflow: 'ellipsis', overflow: 'hidden' }}
                     />
-                    <Button icon="delete" onClick={() => handleFilterChange()} title={headerT('filter.clearButton')} />
+                    <Button
+                        icon="delete"
+                        onClick={() => handleFilterChange(undefined, undefined)}
+                        title={headerT('filter.clearButton')}
+                    />
                 </Button.Group>
             ) : (
                 <Button
