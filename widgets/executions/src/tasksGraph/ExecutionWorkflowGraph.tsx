@@ -6,6 +6,7 @@ import { ReactSVGPanZoom } from 'react-svg-pan-zoom';
 import GraphEdges from './GraphEdges';
 import GraphNodes from './GraphNodes';
 import states from './States';
+import useWidthObserver from './useWidthObserver';
 
 const INACTIVE_EXECUTION_POLLING_INTERVAL = 5000;
 const ACTIVE_EXECUTION_POLLING_INTERVAL = 2500;
@@ -41,8 +42,9 @@ export default function ExecutionWorkflowGraph({ containerHeight, selectedExecut
 
     const timer = useRef(null);
     const cancelablePromise = useRef(null);
-    const wrapper = useRef();
     const modal = useRef();
+
+    const [wrapperRef, getWrapperWidth] = useWidthObserver();
 
     function stopPolling() {
         clearTimeout(timer.current);
@@ -110,17 +112,13 @@ export default function ExecutionWorkflowGraph({ containerHeight, selectedExecut
             setTimeout(() => scrollTo(x, y, zoom, autoFocusOnly, frame + 1), AUTO_FOCUS_ANIMATION_FRAME_DURATION);
     }
 
-    function getContainerWidth() {
-        return _.get(wrapper.current, 'offsetWidth', 0);
-    }
-
     function getModalWidth() {
         return _.get(modal.current, 'offsetWidth', 0);
     }
 
     function fitToView() {
         const { width: graphWidth, height: graphHeight } = graphData;
-        const width = isMaximized ? getModalWidth() : Math.max(0, getContainerWidth() - 1);
+        const width = isMaximized ? getModalWidth() : getWrapperWidth();
         const height = isMaximized ? Math.max(MIN_MODAL_GRAPH_HEIGHT, graphHeight + 2 * GRAPH_MARGIN) : containerHeight;
         const zoom = Math.min((width - 2 * GRAPH_MARGIN) / graphWidth, (height - 2 * GRAPH_MARGIN) / graphHeight);
 
@@ -233,8 +231,8 @@ export default function ExecutionWorkflowGraph({ containerHeight, selectedExecut
             {error && <Message error={error !== NO_TASKS_GRAPH_MESSAGE}>{error}</Message>}
 
             {graphData && (
-                <div ref={wrapper} style={{ position: 'relative' }}>
-                    {renderGraph(Math.max(0, getContainerWidth() - 1), containerHeight, position, setPosition)}
+                <div ref={wrapperRef} style={{ position: 'relative' }}>
+                    {renderGraph(getWrapperWidth(), containerHeight, position, setPosition)}
                     <Modal open={isMaximized} onClose={minimize} size="fullscreen">
                         <div ref={modal}>
                             {renderGraph(

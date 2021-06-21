@@ -38,7 +38,7 @@ const commands = {
     deleteBlueprints: (search: string, force = false) => {
         cy.cfyRequest(`/blueprints?_search=${search}`, 'GET')
             .then(response => response.body.items.forEach(({ id }: { id: string }) => cy.deleteBlueprint(id, force)))
-            .then(() => waitUntilEmpty('blueprints', search));
+            .then(() => waitUntilEmpty('blueprints', { search }));
     }
 };
 

@@ -52,7 +52,7 @@ describe('Create Deployment Button widget', () => {
         cy.get('.modal').within(() => {
             const blueprintName = `${resourcePrefix}${type}_type`;
             cy.log(`Selecting blueprint: ${blueprintName}.`);
-            cy.setDropdownValue('Blueprint', blueprintName);
+            cy.setSearchableDropdownValue('Blueprint', blueprintName);
 
             cy.log('Waiting for blueprint to load and modal to be operational.');
             cy.contains('Deployment inputs').should('be.visible');
@@ -70,7 +70,7 @@ describe('Create Deployment Button widget', () => {
 
     const fillDeployBlueprintModal = (deploymentId, deploymentName, blueprintId) => {
         cy.get('div.deployBlueprintModal').within(() => {
-            cy.setDropdownValue('Blueprint', blueprintId);
+            cy.setSearchableDropdownValue('Blueprint', blueprintId);
             cy.get('input[name="deploymentName"]').click().type(deploymentName);
             cy.get('input[name="deploymentId"]').clear().type(deploymentId);
         });

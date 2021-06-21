@@ -56,7 +56,7 @@ export default function InstallAgentsModal({
             setInputValues(getInitialInputValues());
             setAllowedDeployments(getAgentsAttributeList('deployment'));
             setAllowedNodes(getAgentsAttributeList('node'));
-            setAllowedNodeInstances(getAgentsAttributeList('id'));
+            setAllowedNodeInstances(getAgentsAttributeList('host_id'));
         }
     }, [open]);
 

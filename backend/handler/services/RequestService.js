@@ -8,7 +8,7 @@ const RequestHandler = require('../RequestHandler');
 const consts = require('../../consts');
 
 module.exports = (() => {
-    function call(method, url, params, data, parseResponse = true, headers = {}, certificate = null) {
+    function call(method, url, { params, body, parseResponse = true, headers, certificate } = {}) {
         return new Promise((resolve, reject) => {
             const options = { headers: {} };
             let fullUrl = url;
@@ -24,10 +24,10 @@ module.exports = (() => {
                     ca: certificate
                 };
             }
-            if (data) {
-                options.json = data;
+            if (body) {
+                options.json = body;
                 try {
-                    const strData = JSON.stringify(data);
+                    const strData = JSON.stringify(body);
                     options.headers['content-length'] = Buffer.byteLength(strData);
                 } catch (error) {
                     throw new Error(`Invalid (non-json) payload data. Error: ${error}`);
@@ -40,9 +40,9 @@ module.exports = (() => {
                 options,
                 res => {
                     const isSuccess = res.statusCode >= 200 && res.statusCode < 300;
-                    let body = '';
+                    let responseBody = '';
                     res.on('data', chunk => {
-                        body += chunk;
+                        responseBody += chunk;
                     });
                     res.on('end', () => {
                         if (isSuccess) {
@@ -50,15 +50,15 @@ module.exports = (() => {
                                 const contentType = _.toLower(res.headers['content-type']);
                                 if (contentType.indexOf('application/json') >= 0) {
                                     try {
-                                        body = JSON.parse(body);
+                                        responseBody = JSON.parse(responseBody);
                                     } catch (error) {
-                                        reject(`Invalid JSON response. Cannot parse. Data received: ${body}`);
+                                        reject(`Invalid JSON response. Cannot parse. Data received: ${responseBody}`);
                                     }
                                 }
                             }
-                            resolve(body);
+                            resolve(responseBody);
                         } else {
-                            reject(`Status: ${res.statusCode} ${res.statusMessage}. Data received: ${body}`);
+                            reject(`Status: ${res.statusCode} ${res.statusMessage}. Data received: ${responseBody}`);
                         }
                     });
                 },
@@ -69,24 +69,24 @@ module.exports = (() => {
         });
     }
 
-    function doGet(url, params, parseResponse, headers, certificate) {
-        return call(consts.ALLOWED_METHODS_OBJECT.get, url, params, null, parseResponse, headers, certificate);
+    function doGet(url, requestOptions) {
+        return call(consts.ALLOWED_METHODS_OBJECT.get, url, requestOptions);
     }
 
-    function doPost(url, params, data, parseResponse, headers, certificate) {
-        return call(consts.ALLOWED_METHODS_OBJECT.post, url, params, data, parseResponse, headers, certificate);
+    function doPost(url, requestOptions) {
+        return call(consts.ALLOWED_METHODS_OBJECT.post, url, requestOptions);
     }
 
-    function doDelete(url, params, data, parseResponse, headers, certificate) {
-        return call(consts.ALLOWED_METHODS_OBJECT.delete, url, params, data, parseResponse, headers, certificate);
+    function doDelete(url, requestOptions) {
+        return call(consts.ALLOWED_METHODS_OBJECT.delete, url, requestOptions);
     }
 
-    function doPut(url, params, data, parseResponse, headers, certificate) {
-        return call(consts.ALLOWED_METHODS_OBJECT.put, url, params, data, parseResponse, headers, certificate);
+    function doPut(url, requestOptions) {
+        return call(consts.ALLOWED_METHODS_OBJECT.put, url, requestOptions);
     }
 
-    function doPatch(url, params, data, parseResponse, headers, certificate) {
-        return call(consts.ALLOWED_METHODS_OBJECT.patch, url, params, data, parseResponse, headers, certificate);
+    function doPatch(url, requestOptions) {
+        return call(consts.ALLOWED_METHODS_OBJECT.patch, url, requestOptions);
     }
 
     return {
