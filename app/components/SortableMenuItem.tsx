@@ -9,7 +9,7 @@ export default function SortableMenuItem({ id, ...rest }: MenuItemProps) {
     const { setNodeRef, attributes, listeners, transform, transition } = useSortable({
         id
     });
-    const style = {
+    const style: CSSProperties{
         transform: CSS.Transform.toString(transform),
         transition
     };
