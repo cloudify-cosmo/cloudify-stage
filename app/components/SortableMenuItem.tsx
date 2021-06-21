@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { CSSProperties } from 'react';
 import type { MenuItemProps } from 'semantic-ui-react';
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
@@ -9,9 +9,9 @@ export default function SortableMenuItem({ id, ...rest }: MenuItemProps) {
     const { setNodeRef, attributes, listeners, transform, transition } = useSortable({
         id
     });
-    const style: CSSProperties{
+    const style: CSSProperties = {
         transform: CSS.Transform.toString(transform),
-        transition
+        transition: transition !== null ? transition : undefined
     };
 
     return (

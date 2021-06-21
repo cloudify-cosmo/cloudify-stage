@@ -1,13 +1,14 @@
 import React, { useCallback } from 'react';
-
 import type { FunctionComponent } from 'react';
+
 import { DndContext, closestCenter, PointerSensor, useSensor, useSensors } from '@dnd-kit/core';
-import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable';
 import type { DragEndEvent } from '@dnd-kit/core';
+import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable';
 
 import AddPageButton from '../containers/AddPageButton';
 import { Icon } from './basic';
 import Consts from '../utils/consts';
+
 import SortableMenuItem from './SortableMenuItem';
 
 import type { PageDefinition } from '../actions/page';
@@ -25,7 +26,7 @@ export interface PagesListState {
     pageToRemove?: PageDefinition | null;
 }
 
-export const PagesList: FunctionComponent<PagesListProps> = ({
+const PagesList: FunctionComponent<PagesListProps> = ({
     isEditMode,
     onPageRemoved,
     onPageReorder,
@@ -35,13 +36,7 @@ export const PagesList: FunctionComponent<PagesListProps> = ({
 }) => {
     const pageIds = pages.filter(p => !p.isDrillDown).map(({ id }) => id);
     const sensors = useSensors(useSensor(PointerSensor));
-
-    const pageCount = pages.reduce((result, page) => {
-        if (!page.isDrillDown) {
-            return result + 1;
-        }
-        return result;
-    }, 0);
+    const pageCount = pageIds.length;
 
     const handleDragEnd = useCallback(
         (event: DragEndEvent) => {
