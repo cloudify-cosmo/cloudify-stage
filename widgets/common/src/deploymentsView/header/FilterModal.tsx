@@ -29,7 +29,7 @@ const FilterModal: FunctionComponent<FilterModalProps> = ({
     const { useBoolean } = Stage.Hooks;
 
     const { errors, setErrors, clearErrors } = Stage.Hooks.useErrors();
-    const [submitedFilterId, setSubmitedFilterId] = useState<string>();
+    const [submittedFilterId, setSubmittedFilterId] = useState<string>();
     const [filterId, setFilterId] = useState<string>();
     const [initialFilterRules, setInitialFilterRules] = useState<FilterRule[]>([]);
     const [filterRules, setFilterRules] = useState<FilterRule[]>();
@@ -42,7 +42,7 @@ const FilterModal: FunctionComponent<FilterModalProps> = ({
     useEffect(() => {
         if (!filterRulesProp) {
             setFilterId(undefined);
-            setSubmitedFilterId(undefined);
+            setSubmittedFilterId(undefined);
             setInitialFilterRules([]);
             setFilterRules(undefined);
         }
@@ -64,7 +64,7 @@ const FilterModal: FunctionComponent<FilterModalProps> = ({
         }
 
         setInitialFilterRules(filterRules);
-        setSubmitedFilterId(filterId);
+        setSubmittedFilterId(filterId);
         setSubmitedFilterEdited(filterEdited);
         clearErrors();
 
@@ -73,7 +73,7 @@ const FilterModal: FunctionComponent<FilterModalProps> = ({
 
     function handleCancel() {
         onCancel();
-        setFilterId(submitedFilterId);
+        setFilterId(submittedFilterId);
         setFilterRules(filterRulesProp);
         setRuleErrorsPresent(false);
         if (!submitedFilterEdited) unsetFilterEdited();
