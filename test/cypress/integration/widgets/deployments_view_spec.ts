@@ -196,7 +196,7 @@ describe('Deployments View widget', () => {
         getDeploymentsViewTable().find('tbody tr:first-of-type.active').should('exist');
     });
 
-    describe.only('with filters', () => {
+    describe('with filters', () => {
         const deploymentNameThatMatchesFilter = `${specPrefix}precious_deployment`;
         const filterId = 'only-precious';
         const filterRules: Stage.Common.Filters.Rule[] = [
