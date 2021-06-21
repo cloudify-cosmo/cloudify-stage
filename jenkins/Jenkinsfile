@@ -150,21 +150,21 @@ pipeline {
         stage('Size') {
           steps {
             container('node'){
-              sh 'rm -rf ${workspace}/test && rm -rf ${workspace}/backend'
-              sh "mkdir -p ${workspace}/size && cp -rf ${workspace}/${stage_dir}/. ${workspace}/size"
+              sh 'rm -rf ${WORKSPACE}/test && rm -rf ${WORKSPACE}/backend'
+              sh "mkdir -p ${WORKSPACE}/size && cp -rf ${WORKSPACE}/${stage_dir}/. ${WORKSPACE}/size"
               dir("size") {
                 echo 'Check bundle size'
                 sh 'npm run size'
               }
-              sh "rm -rf ${workspace}/size"
+              sh "rm -rf ${WORKSPACE}/size"
             }
           }
         }
         stage('Docs'){
           steps {
             container('node'){
-              sh 'rm -rf ${workspace}/test && rm -rf ${workspace}/backend'
-              sh "mkdir -p ${workspace}/docs && cp -rf ${workspace}/${stage_dir}/. ${workspace}/docs"
+              sh 'rm -rf ${WORKSPACE}/test && rm -rf ${WORKSPACE}/backend'
+              sh "mkdir -p ${WORKSPACE}/docs && cp -rf ${WORKSPACE}/${stage_dir}/. ${WORKSPACE}/docs"
               dir("docs") {
                 echo 'Generate widgets documentation'
                 sh 'npm run docWidgets'
