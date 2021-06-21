@@ -26,6 +26,7 @@ pipeline {
     stage_dir = "cloudify-stage"
     cfy_manager_url = 'https://raw.githubusercontent.com/cloudify-cosmo/cloudify-manager'
     cfy_node_rpm = 'http://repository.cloudifysource.org/cloudify/components/nodejs-12.22.1-1nodesource.x86_64.rpm'
+    MAIN_BRANCH = "master"
   }
 
   stages {
@@ -161,7 +162,7 @@ pipeline {
     }
     stage('Audit'){
       when {
-        branch "master"
+        branch "${MAIN_BRANCH}"
       }
       steps {
         catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE'){
@@ -176,13 +177,13 @@ pipeline {
     }
     stage('Run Stage-UI System-tests') {
       when {
-        branch "master"
+        branch "${MAIN_BRANCH}"
       }
       steps {
         echo 'Trigger Stage-UI System-tests'
         build(job: 'Stage-UI-System-Test', parameters: [
-          string(name: 'BRANCH', value: 'master'),
-          string(name: 'STAGE_BRANCH', value: 'master')
+          string(name: 'BRANCH', value: '${MAIN_BRANCH}'),
+          string(name: 'STAGE_BRANCH', value: '${MAIN_BRANCH}')
         ])
       }
     }
