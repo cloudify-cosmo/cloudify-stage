@@ -58,6 +58,8 @@ pipeline {
                 dir("${STAGE_DIR}") {
                   echo "Install dependencies"
                   sh 'npm run beforebuild'
+                  echo "Build application"
+                  sh 'npm run build'
                 }
               }
               echo 'prepare test folder'
@@ -65,63 +67,12 @@ pipeline {
             }
           }
         }
-      }
-    }
-    stage('Run Builds & Build RPM') {
-      parallel {
-        stage('Build') {
-          steps {
-            container('node'){
-              dir("${STAGE_DIR}") {
-                echo "Build application"
-                sh 'npm run build'
-                sh 'rm -rf ${WORKSPACE}/backend'
-                sh "mkdir -p ${WORKSPACE}/size && cp -rf ${WORKSPACE}/${STAGE_DIR}/. ${WORKSPACE}/size"
-              }
-              dir("size") {
-                echo 'Check bundle size'
-                sh 'npm run size'
-              }
-              sh "rm -rf ${WORKSPACE}/size"
-            }
-          }
-        }
-        stage('Test lint & check-types'){
-          steps{
-            container('node'){
-              dir("${WORKSPACE}/test"){
-                echo 'Run static code analysis and code style check'
-                sh 'npm run lint'
-
-                echo 'Check TypeScript types'
-                sh 'npm run check-types'
-              }
-            }
-          }
-        }
-        stage('Test frontend'){
-          steps{
-            container('node'){
-              dir("${WORKSPACE}/test"){
-                echo 'Run frontend tests'
-                sh 'npm run test:frontend'
-              }
-            }
-          }
-        }
-        stage('Test backend'){
-          steps{
-            container('node'){
-              dir("${WORKSPACE}/test"){
-                echo 'Run backend tests'
-                sh 'sudo rm -rf /var/lib/apt/lists/* && sudo apt update && sudo apt install postgresql-client'
-                sh 'echo \'{"app":{"ssl":{"ca":null},"logLevelConf":"","logLevel":"debug"}}\' > conf/me.json'
-                sh 'npm run test:backend'
-              }
-            }
-          }
-        }
         stage('Build RPM'){
+          agent{
+            kubernetes{
+              yamlFile 'jenkins/rpm-pod.yaml'
+            }
+          }
           steps {
             container('rpmbuild'){
               echo 'Create RPM directory and copy all data from build stage to, for rpmbuild to run'
@@ -160,6 +111,45 @@ pipeline {
               sh("mkdir -p ${WORKSPACE}/rpm && cp -rf /root/rpmbuild/RPMS/x86_64/. ${WORKSPACE}/rpm")
               dir("${WORKSPACE}/rpm") {
                 archiveArtifacts artifacts: '*.rpm', onlyIfSuccessful: true
+              }
+            }
+          }
+        }
+      }
+    }
+    stage('Run Builds & Build RPM') {
+      parallel {
+        stage('Test lint & check-types'){
+          steps{
+            container('node'){
+              dir("${WORKSPACE}/test"){
+                echo 'Run static code analysis and code style check'
+                sh 'npm run lint'
+
+                echo 'Check TypeScript types'
+                sh 'npm run check-types'
+              }
+            }
+          }
+        }
+        stage('Test frontend'){
+          steps{
+            container('node'){
+              dir("${WORKSPACE}/test"){
+                echo 'Run frontend tests'
+                sh 'npm run test:frontend'
+              }
+            }
+          }
+        }
+        stage('Test backend'){
+          steps{
+            container('node'){
+              dir("${WORKSPACE}/test"){
+                echo 'Run backend tests'
+                sh 'sudo rm -rf /var/lib/apt/lists/* && sudo apt update && sudo apt install postgresql-client'
+                sh 'echo \'{"app":{"ssl":{"ca":null},"logLevelConf":"","logLevel":"debug"}}\' > conf/me.json'
+                sh 'npm run test:backend'
               }
             }
           }
