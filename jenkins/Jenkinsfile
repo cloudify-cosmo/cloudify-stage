@@ -46,7 +46,7 @@ pipeline {
             }
           }
         }
-        stage('Prepare'){
+        stage('Prepare & run lint&check-types tests'){
           steps {
             container('node'){
               dir("${STAGE_DIR}/conf") {
@@ -64,6 +64,13 @@ pipeline {
               }
               echo 'prepare test folder'
               sh "mkdir -p ${WORKSPACE}/test && cp -rf ${WORKSPACE}/${STAGE_DIR}/. ${WORKSPACE}/test"
+              dir("${WORKSPACE}/test"){
+                echo 'Run static code analysis and code style check'
+                sh 'npm run lint'
+
+                echo 'Check TypeScript types'
+                sh 'npm run check-types'
+              }
             }
           }
         }
@@ -114,19 +121,6 @@ pipeline {
     }
     stage('Run Builds & Build RPM') {
       parallel {
-        stage('Test lint & check-types'){
-          steps{
-            container('node'){
-              dir("${WORKSPACE}/test"){
-                echo 'Run static code analysis and code style check'
-                sh 'npm run lint'
-
-                echo 'Check TypeScript types'
-                sh 'npm run check-types'
-              }
-            }
-          }
-        }
         stage('Test frontend'){
           steps{
             container('node'){
