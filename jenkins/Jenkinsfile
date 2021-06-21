@@ -26,7 +26,7 @@ pipeline {
     stage_dir = "cloudify-stage"
     cfy_manager_url = 'https://raw.githubusercontent.com/cloudify-cosmo/cloudify-manager'
     cfy_node_rpm = 'http://repository.cloudifysource.org/cloudify/components/nodejs-12.22.1-1nodesource.x86_64.rpm'
-    MAIN_BRANCH = "master"
+    MAIN_BRANCH = "6.1.0-build"
   }
 
   stages {
