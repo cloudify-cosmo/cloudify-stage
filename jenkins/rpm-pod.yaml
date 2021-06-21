@@ -12,10 +12,10 @@ spec:
     image: rpmbuild/centos7
     resources:
       requests:
-        cpu: 1.6
+        cpu: 1.5
         memory: 3Gi
       limits:
-        cpu: 1.6
+        cpu: 1.5
         memory: 3Gi
     command:
     - cat
