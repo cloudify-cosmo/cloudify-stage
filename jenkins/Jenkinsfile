@@ -182,8 +182,8 @@ pipeline {
       steps {
         echo 'Trigger Stage-UI System-tests'
         build(job: 'Stage-UI-System-Test', parameters: [
-          string(name: 'BRANCH', value: '${MAIN_BRANCH}'),
-          string(name: 'STAGE_BRANCH', value: '${MAIN_BRANCH}')
+          string(name: 'BRANCH', value: "${MAIN_BRANCH}"),
+          string(name: 'STAGE_BRANCH', value: "${MAIN_BRANCH}")
         ])
       }
     }
