@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, useMemo } from 'react';
 import type { FunctionComponent } from 'react';
 
 import { DndContext, closestCenter, PointerSensor, useSensor, useSensors } from '@dnd-kit/core';
@@ -35,7 +35,7 @@ const PagesList: FunctionComponent<PagesListProps> = ({
     pages,
     selected = ''
 }) => {
-    const pageIds = pages.filter(p => !p.isDrillDown).map(({ id }) => id);
+    const pageIds = useMemo(() => pages.filter(p => !p.isDrillDown).map(({ id }) => id), [pages]);
     const sensors = useSensors(useSensor(PointerSensor));
     const pageCount = pageIds.length;
 
