@@ -28,7 +28,7 @@ const DeploymentsViewHeader: FunctionComponent<DeploymentsViewHeaderProps> = ({
     const [filterModalOpen, openFilterModal, closeFilterModal] = useBoolean();
     const [deployOnModalOpen, openDeployOnModal, closeDeployOnModal] = useBoolean();
     const [runWorkflowModalOpen, openRunWorkflowModal, closeRunWorkflowModal] = useBoolean();
-    const [userFilterRules, setUserFilterRules] = useState<FilterRule[]>();
+    const [userFilterSelected, setUserFilterSelected] = useState<boolean>(false);
     const [userFilterId, setUserFilterId] = useState<string>();
 
     const { Button, Dropdown } = Stage.Basic;
@@ -36,7 +36,7 @@ const DeploymentsViewHeader: FunctionComponent<DeploymentsViewHeaderProps> = ({
     const { Menu, Item } = Dropdown;
 
     function handleFilterChange(newFilterRules: FilterRule[] | undefined, newFilterId: string | undefined) {
-        setUserFilterRules(newFilterRules);
+        setUserFilterSelected(!!newFilterRules);
         setUserFilterId(newFilterId);
         onFilterChange(newFilterRules);
         closeFilterModal();
@@ -52,7 +52,7 @@ const DeploymentsViewHeader: FunctionComponent<DeploymentsViewHeaderProps> = ({
                 title={mapT(mapOpen ? 'closeMap' : 'openMap')}
                 content={mapT('label')}
             />
-            {userFilterRules ? (
+            {userFilterSelected ? (
                 <Button.Group color="blue">
                     <Button
                         icon="filter"
@@ -85,7 +85,7 @@ const DeploymentsViewHeader: FunctionComponent<DeploymentsViewHeaderProps> = ({
             </Dropdown>
 
             <FilterModal
-                filterRules={userFilterRules}
+                userFilterSelected={userFilterSelected}
                 open={filterModalOpen}
                 onCancel={closeFilterModal}
                 onSubmit={handleFilterChange}
