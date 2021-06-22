@@ -208,6 +208,13 @@ describe('Deployments View widget', () => {
             }
         ];
 
+        function verifyFilterRulesForm() {
+            cy.contains('Label').should('be.visible');
+            cy.contains('is one of').should('be.visible');
+            cy.contains('precious');
+            cy.contains('yes');
+        }
+
         before(() => {
             cy.deleteDeploymentsFilter(filterId, { ignoreFailure: true })
                 .createDeploymentsFilter(filterId, filterRules)
@@ -251,7 +258,7 @@ describe('Deployments View widget', () => {
 
             cy.get('.modal').within(() => {
                 cy.setSearchableDropdownValue('Filter ID', filterId);
-                cy.contains('Label').should('be.visible');
+                verifyFilterRulesForm();
                 cy.interceptSp('POST', '/searches/deployments').as('deploymentsSearchRequest');
                 cy.contains('OK').click();
             });
@@ -286,10 +293,7 @@ describe('Deployments View widget', () => {
 
             cy.get('.modal').within(() => {
                 cy.setSearchableDropdownValue('Filter ID', filterId);
-                cy.contains('Label').should('be.visible');
-                cy.contains('is one of').should('be.visible');
-                cy.contains('precious');
-                cy.contains('yes');
+                verifyFilterRulesForm();
 
                 cy.contains('Add new rule').click();
                 cy.contains('.selection', 'Type in values')
