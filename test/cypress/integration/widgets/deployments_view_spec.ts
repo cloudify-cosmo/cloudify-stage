@@ -241,7 +241,7 @@ describe('Deployments View widget', () => {
             cy.contains(/with ID .* was not found/);
         });
 
-        it.only('should take the selected existing filter into account when displaying deployments', () => {
+        it('should take the selected existing filter into account when displaying deployments', () => {
             useDeploymentsViewWidget();
 
             cy.contains(deploymentNameThatMatchesFilter);
