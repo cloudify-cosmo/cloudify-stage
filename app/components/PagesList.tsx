@@ -4,6 +4,7 @@ import type { FunctionComponent } from 'react';
 import { DndContext, closestCenter, PointerSensor, useSensor, useSensors } from '@dnd-kit/core';
 import type { DragEndEvent } from '@dnd-kit/core';
 import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable';
+import { restrictToVerticalAxis } from '@dnd-kit/modifiers';
 
 import AddPageButton from '../containers/AddPageButton';
 import { Icon } from './basic';
@@ -57,6 +58,7 @@ const PagesList: FunctionComponent<PagesListProps> = ({
                 sensors={sensors}
                 collisionDetection={closestCenter}
                 onDragEnd={isEditMode ? handleDragEnd : undefined}
+                modifiers={[restrictToVerticalAxis]}
             >
                 <SortableContext items={isEditMode ? pageIds : []} strategy={verticalListSortingStrategy}>
                     <div className="pages">
