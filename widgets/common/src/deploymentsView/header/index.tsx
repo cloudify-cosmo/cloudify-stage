@@ -73,9 +73,10 @@ const DeploymentsViewHeader: FunctionComponent<DeploymentsViewHeaderProps> = ({
                     labelPosition="left"
                     content={headerT('filter.button')}
                     onClick={openFilterModal}
+                    style={{ marginRight: 0 }}
                 />
             )}
-            <Dropdown button text={headerT('bulkActions.button')}>
+            <Dropdown button text={headerT('bulkActions.button')} style={{ marginLeft: '0.25em' }}>
                 {/* Display the menu above all leaflet components, see https://leafletjs.com/reference-1.7.1.html#map-pane */}
                 <Menu style={{ zIndex: 1000 }}>
                     <Item text={headerT('bulkActions.deployOn.title')} onClick={openDeployOnModal} />
