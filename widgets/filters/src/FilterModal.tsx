@@ -26,7 +26,7 @@ const FilterModal: FunctionComponent<FilterModalProps> = ({
 }) => {
     const initialFilterRules = useMemo(
         () => (initialFilter ? [...initialFilter.attrs_filter_rules, ...initialFilter.labels_filter_rules] : []),
-        []
+        [initialFilter]
     );
 
     const { useInput, useErrors } = Stage.Hooks;
