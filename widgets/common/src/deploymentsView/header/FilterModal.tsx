@@ -36,9 +36,9 @@ const FilterModal: FunctionComponent<FilterModalProps> = ({
     const [filterRules, setFilterRules] = useState<FilterRule[]>();
     const [rulesErrorsPresent, setRuleErrorsPresent] = useState<boolean>();
 
-    // Controlls filter 'dirty' state
-    const [filterEdited, setFilterEdited, unsetFilterEdited] = useBoolean();
-    const [submitedFilterEdited, setSubmitedFilterEdited] = useState<boolean>();
+    const [filterDirty, setFilterDirty, unsetFilterDirty] = useBoolean();
+    // Saves `filterDirty` value when the modal is submitted, allows for reverting the value when the modal is cancelled
+    const [submittedFilterDirty, setSubmittedFilterDirty] = useState<boolean>();
 
     useEffect(() => {
         if (!filterRulesProp) {
@@ -66,10 +66,10 @@ const FilterModal: FunctionComponent<FilterModalProps> = ({
 
         setInitialFilterRules(filterRules);
         setSubmittedFilterId(filterId);
-        setSubmitedFilterEdited(filterEdited);
+        setSubmittedFilterDirty(filterDirty);
         clearErrors();
 
-        onSubmit(filterRules, filterEdited ? undefined : filterId);
+        onSubmit(filterRules, filterDirty ? undefined : filterId);
     }
 
     function handleCancel() {
@@ -77,7 +77,7 @@ const FilterModal: FunctionComponent<FilterModalProps> = ({
         setFilterId(submittedFilterId);
         setFilterRules(filterRulesProp);
         setRuleErrorsPresent(false);
-        if (!submitedFilterEdited) unsetFilterEdited();
+        if (!submittedFilterDirty) unsetFilterDirty();
         clearErrors();
     }
 
@@ -85,13 +85,13 @@ const FilterModal: FunctionComponent<FilterModalProps> = ({
 
     function handleFilterIdChange(value: string) {
         setFilterId(value);
-        unsetFilterEdited();
+        unsetFilterDirty();
         clearErrors();
     }
 
     function handleFilterRulesChange(newFilterRules: FilterRule[], ruleErrors: boolean) {
         setFilterRules(newFilterRules);
-        setFilterEdited();
+        setFilterDirty();
         setRuleErrorsPresent(ruleErrors);
     }
 
