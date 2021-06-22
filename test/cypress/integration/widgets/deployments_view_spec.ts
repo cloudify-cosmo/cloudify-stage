@@ -246,13 +246,13 @@ describe('Deployments View widget', () => {
 
             cy.contains(deploymentNameThatMatchesFilter);
             cy.contains(deploymentName);
-            cy.interceptSp('POST', '/searches/deployments').as('deploymentsSearchRequest');
 
             cy.contains('button', 'Filter').click();
 
             cy.get('.modal').within(() => {
                 cy.setSearchableDropdownValue('Filter ID', filterId);
                 cy.contains('Label').should('be.visible');
+                cy.interceptSp('POST', '/searches/deployments').as('deploymentsSearchRequest');
                 cy.contains('OK').click();
             });
 
@@ -281,7 +281,6 @@ describe('Deployments View widget', () => {
 
             cy.contains(deploymentNameThatMatchesFilter);
             cy.contains(deploymentName);
-            cy.interceptSp('POST', '/searches/deployments').as('deploymentsSearchRequest');
 
             cy.contains('button', 'Filter').click();
 
@@ -297,6 +296,7 @@ describe('Deployments View widget', () => {
                     .find('input')
                     .type(`${blueprintName}{enter}`, { force: true });
 
+                cy.interceptSp('POST', '/searches/deployments').as('deploymentsSearchRequest');
                 cy.contains('OK').click();
             });
 
@@ -331,8 +331,6 @@ describe('Deployments View widget', () => {
         it('should take the on-the-fly defined filter into account when displaying deployments', () => {
             useDeploymentsViewWidget();
 
-            cy.interceptSp('POST', '/searches/deployments').as('deploymentsSearchRequest');
-
             cy.contains('button', 'Filter').click();
 
             cy.get('.modal').within(() => {
@@ -340,6 +338,7 @@ describe('Deployments View widget', () => {
                     .find('input')
                     .type(`${blueprintName}{enter}`, { force: true });
 
+                cy.interceptSp('POST', '/searches/deployments').as('deploymentsSearchRequest');
                 cy.contains('OK').click();
             });
 
