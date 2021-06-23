@@ -67,12 +67,13 @@ describe('Deployments View widget', () => {
         routeHandler,
         configurationOverrides = {}
     }: { routeHandler?: RouteHandler; configurationOverrides?: Partial<typeof widgetConfiguration> } = {}) => {
-        cy.interceptSp('POST', /^\/searches\/deployments/, routeHandler).as('deployments');
         cy.usePageMock(
             [widgetId],
             { ...widgetConfiguration, ...configurationOverrides },
             { additionalWidgetIdsToLoad, widgetsWidth: 12, additionalPageTemplates: ['drilldownDeployments'] }
-        ).mockLogin();
+        ).mockLogin(undefined, undefined, undefined, () => {
+            cy.interceptSp('POST', /^\/searches\/deployments/, routeHandler).as('deployments');
+        });
         cy.wait('@deployments');
     };
 
