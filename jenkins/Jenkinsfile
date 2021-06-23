@@ -47,7 +47,7 @@ pipeline {
             }
           }
         }
-        stage('Prepare & run lint&check-types tests'){
+        stage('Prepare & Run first test group'){
           steps {
             container('node'){
               dir("${STAGE_DIR}/conf") {
@@ -120,7 +120,7 @@ pipeline {
         }
       }
     }
-    stage('Run Tests') {
+    stage('Run second tests group') {
       parallel {
         stage('Test frontend'){
           steps{
