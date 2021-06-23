@@ -178,7 +178,7 @@ const FilterModal: FunctionComponent<FilterModalProps> = ({
 
             <Modal.Actions>
                 <Button
-                    content="Save"
+                    content={tModal('save')}
                     style={{ float: 'left' }}
                     disabled={!filterId.value || !filterDirty.value || filterRulesResult.data?.is_system_filter}
                     onClick={handleSave}
