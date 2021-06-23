@@ -22,27 +22,24 @@ function useRevertableState<T>(initialValue: T) {
     const [value, setValue, resetValue] = useResettableState<T>(initialValue);
     const [savedValue, setSavedValue, resetSavedValue] = useResettableState<T>(initialValue);
 
-    function saveValue() {
-        setSavedValue(value);
-    }
-
-    function revertValue() {
-        setValue(savedValue);
-    }
-
-    function resetValues() {
-        resetValue();
-        resetSavedValue();
-    }
-
-    const result: [T, typeof setValue, typeof saveValue, typeof revertValue, typeof resetValues] = [
+    return {
         value,
-        setValue,
-        saveValue,
-        revertValue,
-        resetValues
-    ];
-    return result;
+        set: setValue,
+        save: () => setSavedValue(value),
+        revert: () => setValue(savedValue),
+        reset: () => {
+            resetValue();
+            resetSavedValue();
+        }
+    };
+}
+
+function useRevertableStates(...revertableStates: Omit<ReturnType<typeof useRevertableState>, 'set'>[]) {
+    return {
+        save: () => revertableStates.forEach(s => s.save()),
+        revert: () => revertableStates.forEach(s => s.revert()),
+        reset: () => revertableStates.forEach(s => s.reset())
+    };
 }
 
 const FilterModal: FunctionComponent<FilterModalProps> = ({
@@ -61,31 +58,22 @@ const FilterModal: FunctionComponent<FilterModalProps> = ({
     const [rulesErrorsPresent, setRuleErrorsPresent] = useState<boolean>();
 
     // The values are 'saved' on modal submit and 'reverted' on modal cancel
-    const [filterId, setFilterId, saveFilterId, revertFilterId, resetFilterId] = useRevertableState<string | undefined>(
-        undefined
-    );
-    const [filterRules, setFilterRules, saveFilterRules, revertFilterRules, resetFilterRules] = useRevertableState<
-        FilterRule[]
-    >([]);
-    const [filterDirty, setFilterDirty, saveFilterDirty, revertFilterDirty, resetFilterDirty] = useRevertableState<
-        boolean
-    >(false);
+    const filterId = useRevertableState<string | undefined>(undefined);
+    const filterRules = useRevertableState<FilterRule[]>([]);
+    const filterDirty = useRevertableState<boolean>(false);
+    const modalState = useRevertableStates(filterId, filterRules, filterDirty);
 
-    const filterRulesResult = useFilterQuery(toolbox, filterId);
+    const filterRulesResult = useFilterQuery(toolbox, filterId.value);
 
     // Used to initialize RulesForm
     const [initialFilterRules, setInitialFilterRules] = useState<FilterRule[]>([]);
 
     useEffect(() => {
-        if (!userFilterSelected) {
-            resetFilterId();
-            resetFilterRules();
-            resetFilterDirty();
-        }
+        if (!userFilterSelected) modalState.reset();
     }, [userFilterSelected]);
 
     function handleSubmit() {
-        if (!filterRules?.length) {
+        if (!filterRules.value?.length) {
             setErrors({
                 error: tModal(filterId ? 'noFilterRulesError' : 'noFilterError')
             });
@@ -99,38 +87,34 @@ const FilterModal: FunctionComponent<FilterModalProps> = ({
             return;
         }
 
-        saveFilterRules();
-        saveFilterId();
-        saveFilterDirty();
-        setInitialFilterRules(filterRules);
+        modalState.save();
+        setInitialFilterRules(filterRules.value);
         clearErrors();
 
-        onSubmit(filterRules, filterDirty ? undefined : filterId);
+        onSubmit(filterRules.value, filterDirty.value ? undefined : filterId.value);
     }
 
     function handleCancel() {
         onCancel();
-        revertFilterId();
-        revertFilterRules();
-        revertFilterDirty();
+        modalState.revert();
         setRuleErrorsPresent(false);
         clearErrors();
     }
 
     function handleFilterIdChange(value: string) {
-        setFilterId(value);
-        setFilterDirty(false);
+        filterId.set(value);
+        filterDirty.set(false);
         clearErrors();
     }
 
     function handleFilterRulesChange(newFilterRules: FilterRule[], ruleErrors: boolean) {
-        setFilterRules(newFilterRules);
-        setFilterDirty(true);
+        filterRules.set(newFilterRules);
+        filterDirty.set(true);
         setRuleErrorsPresent(ruleErrors);
     }
 
     useEffect(() => {
-        setFilterRules(filterRulesResult.data ?? []);
+        filterRules.set(filterRulesResult.data ?? []);
         setInitialFilterRules(filterRulesResult.data ?? []);
     }, [JSON.stringify(filterRulesResult.data)]);
 
@@ -152,7 +136,7 @@ const FilterModal: FunctionComponent<FilterModalProps> = ({
                             onChange={handleFilterIdChange}
                             fetchUrl="/filters/deployments?_include=id"
                             prefetch
-                            value={filterId}
+                            value={filterId.value}
                         />
                     </UnsafelyTypedFormField>
                     <UnsafelyTypedFormField label={tModal('filterRules')}>
@@ -161,7 +145,7 @@ const FilterModal: FunctionComponent<FilterModalProps> = ({
                             <RulesForm
                                 initialFilters={initialFilterRules}
                                 onChange={handleFilterRulesChange}
-                                markErrors={!!filterRules?.length}
+                                markErrors={!!filterRules.value?.length}
                                 toolbox={toolbox}
                             />
                         )}
