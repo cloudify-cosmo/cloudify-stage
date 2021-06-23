@@ -22,18 +22,10 @@ pipeline {
 
   environment {
     BRANCH = "${env.BRANCH_NAME}"
-<<<<<<< HEAD
     WORKSPACE = "${env.WORKSPACE}"
     STAGE_DIR = "cloudify-stage"
     CFY_MANAGER_URL = 'https://raw.githubusercontent.com/cloudify-cosmo/cloudify-manager'
     CFY_NODE_RPM = 'http://repository.cloudifysource.org/cloudify/components/nodejs-12.22.1-1nodesource.x86_64.rpm'
-=======
-    workspace = "${env.WORKSPACE}"
-    stage_dir = "cloudify-stage"
-    cfy_manager_url = 'https://raw.githubusercontent.com/cloudify-cosmo/cloudify-manager'
-    cfy_node_rpm = 'http://repository.cloudifysource.org/cloudify/components/nodejs-12.22.1-1nodesource.x86_64.rpm'
-    MAIN_BRANCH = "6.1.0-build"
->>>>>>> fcb43c78919b9ec07eaefef5b41bcd37114187f9
   }
 
   stages {
@@ -88,13 +80,8 @@ pipeline {
               echo 'Create RPM directory and copy all data from build stage to, for rpmbuild to run'
               sh """
                 cd && mkdir rpmbuild && cd rpmbuild
-<<<<<<< HEAD
                 mkdir -p BUILD && cp -rf ${WORKSPACE}/${STAGE_DIR}/. BUILD && cd BUILD
                 curl -fO "${CFY_MANAGER_URL}/${BRANCH}/packaging/version_info" || curl -fO "${CFY_MANAGER_URL}/master/packaging/version_info"
-=======
-                mkdir -p BUILD && cp -rf ${workspace}/${stage_dir}/. BUILD && cd BUILD
-                curl -fO "${cfy_manager_url}/${BRANCH}/packaging/version_info" || curl -fO "${cfy_manager_url}/${MAIN_BRANCH}/packaging/version_info" || curl -fO "${cfy_manager_url}/master/packaging/version_info"
->>>>>>> fcb43c78919b9ec07eaefef5b41bcd37114187f9
               """
 
               echo 'Install NodeJS & RPM development tools'
@@ -132,7 +119,7 @@ pipeline {
         }
       }
     }
-    stage('Run Builds & Build RPM') {
+    stage('Run Tests') {
       parallel {
         stage('Test frontend'){
           steps{
@@ -158,13 +145,13 @@ pipeline {
         }
       }
     }
-    stage('Run Tests') {
+    stage('Run Docs & Size') {
       parallel {
         stage('Size') {
           steps {
             container('node'){
-              sh 'rm -rf ${WORKSPACE}/test && rm -rf ${WORKSPACE}/backend'
-              sh "mkdir -p ${WORKSPACE}/size && cp -rf ${WORKSPACE}/${stage_dir}/. ${WORKSPACE}/size"
+              //sh "rm -rf ${WORKSPACE}/test && rm -rf ${WORKSPACE}/backend"
+              sh "mkdir -p ${WORKSPACE}/size && cp -rf ${WORKSPACE}/${STAGE_DIR}/. ${WORKSPACE}/size"
               dir("size") {
                 echo 'Check bundle size'
                 sh 'npm run size'
@@ -176,8 +163,8 @@ pipeline {
         stage('Docs'){
           steps {
             container('node'){
-              sh 'rm -rf ${WORKSPACE}/test && rm -rf ${WORKSPACE}/backend'
-              sh "mkdir -p ${WORKSPACE}/docs && cp -rf ${WORKSPACE}/${stage_dir}/. ${WORKSPACE}/docs"
+              //sh "rm -rf ${WORKSPACE}/test && rm -rf ${WORKSPACE}/backend"
+              sh "mkdir -p ${WORKSPACE}/docs && cp -rf ${WORKSPACE}/${STAGE_DIR}/. ${WORKSPACE}/docs"
               dir("docs") {
                 echo 'Generate widgets documentation'
                 sh 'npm run docWidgets'
@@ -191,7 +178,6 @@ pipeline {
             }
           }
         }
-<<<<<<< HEAD
         stage('Run Stage-UI System-tests') {
           when {
             branch "master"
@@ -202,39 +188,9 @@ pipeline {
               string(name: 'BRANCH', value: 'master'),
               string(name: 'STAGE_BRANCH', value: 'master')
             ])
-=======
-      }
-    }
-    stage('Audit'){
-      when {
-        branch "${MAIN_BRANCH}"
-      }
-      steps {
-        catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE'){
-          container('node'){
-            dir("${stage_dir}") {
-              echo 'Run npm production dependencies security audit'
-              sh 'npm run audit'
-            }
->>>>>>> fcb43c78919b9ec07eaefef5b41bcd37114187f9
           }
         }
       }
     }
-<<<<<<< HEAD
-=======
-    stage('Run Stage-UI System-tests') {
-      when {
-        branch "${MAIN_BRANCH}"
-      }
-      steps {
-        echo 'Trigger Stage-UI System-tests'
-        build(job: 'Stage-UI-System-Test', parameters: [
-          string(name: 'BRANCH', value: "${MAIN_BRANCH}"),
-          string(name: 'STAGE_BRANCH', value: "${MAIN_BRANCH}")
-        ])
-      }
-    }
->>>>>>> fcb43c78919b9ec07eaefef5b41bcd37114187f9
   }
 }
