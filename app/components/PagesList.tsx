@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import React, { useCallback, useMemo } from 'react';
 import type { FunctionComponent } from 'react';
 
@@ -107,6 +108,26 @@ const PagesList: FunctionComponent<PagesListProps> = ({
             )}
         </>
     );
+};
+
+PagesList.propTypes = {
+    onPageSelected: PropTypes.func.isRequired,
+    onPageRemoved: PropTypes.func.isRequired,
+    onPageReorder: PropTypes.func.isRequired,
+    // @ts-ignore need to define better shape of page definition
+    pages: PropTypes.arrayOf(
+        PropTypes.shape({
+            id: PropTypes.string,
+            name: PropTypes.string,
+            description: PropTypes.string,
+            isDrillDown: PropTypes.bool,
+            layout: PropTypes.arrayOf(PropTypes.shape({})),
+            children: PropTypes.arrayOf(PropTypes.string),
+            parent: PropTypes.string
+        })
+    ).isRequired,
+    selected: PropTypes.string,
+    isEditMode: PropTypes.bool.isRequired
 };
 
 export default PagesList;
