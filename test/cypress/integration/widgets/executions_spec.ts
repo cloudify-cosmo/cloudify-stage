@@ -18,6 +18,24 @@ describe('Executions', () => {
     });
 
     describe('in table mode', () => {
+        describe('change visible columns', () => {
+            before(() =>
+                cy.editWidgetConfiguration('executions', () => {
+                    cy.get('div[name="fieldsToShow"]').click();
+                    cy.get('div[option-value="Deployment"]').click();
+                    cy.get('div.header').click();
+                })
+            );
+
+            it('shows deployment display name', () => {
+                cy.log('Check if display name is provided');
+                cy.get('table.executionsTable tr:first-of-type td:nth-of-type(2)').should(
+                    'have.text',
+                    'executions_test'
+                );
+            });
+        });
+
         it('shows execution graph', () => {
             cy.get('.executionsWidget').contains('tr', 'failed').contains('install').click();
 
