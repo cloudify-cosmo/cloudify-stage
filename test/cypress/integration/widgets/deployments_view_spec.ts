@@ -71,9 +71,8 @@ describe('Deployments View widget', () => {
             [widgetId],
             { ...widgetConfiguration, ...configurationOverrides },
             { additionalWidgetIdsToLoad, widgetsWidth: 12, additionalPageTemplates: ['drilldownDeployments'] }
-        ).mockLogin(undefined, undefined, undefined, () => {
-            cy.interceptSp('POST', /^\/searches\/deployments/, routeHandler).as('deployments');
-        });
+        ).mockLoginWithoutWaiting();
+        cy.interceptSp('POST', /^\/searches\/deployments/, routeHandler).as('deployments');
         cy.wait('@deployments');
     };
 
