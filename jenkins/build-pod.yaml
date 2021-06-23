@@ -2,13 +2,6 @@ apiVersion: v1
 kind: Pod
 spec:
   containers:
-<<<<<<< HEAD
-  - name: rpmbuild
-    image: rpmbuild/centos7
-    resources:
-      requests:
-        cpu: 1.5
-=======
   - name: jnlp
     image: jenkins/inbound-agent:4.3-4
     resources:
@@ -26,23 +19,12 @@ spec:
         cpu: 3
         memory: 8Gi
         ephemeral-storage: "15Gi"
->>>>>>> 1aef98e9... RD-1766 redesign ci workflow stage (#1445)
     command:
     - cat
     tty: true
     securityContext:
       runAsUser: 0
       privileged: true
-<<<<<<< HEAD
-  - name: node
-    image: circleci/node:12.16-browsers
-    resources:
-      requests:
-        cpu: 1.5
-        ephemeral-storage: "12Gi"
-      limits:
-        ephemeral-storage: "15Gi"
-=======
   - name: rpmbuild
     image: rpmbuild/centos7
     resources:
@@ -52,7 +34,6 @@ spec:
       limits:
         cpu: 1.5
         memory: 3Gi
->>>>>>> 1aef98e9... RD-1766 redesign ci workflow stage (#1445)
     command:
     - cat
     tty: true
