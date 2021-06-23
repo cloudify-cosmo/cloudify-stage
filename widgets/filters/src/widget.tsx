@@ -1,7 +1,7 @@
 import { ComponentProps } from 'react';
-import FilterActions from './FilterActions';
 import FiltersTable from './FiltersTable';
-import type { Filter, FilterWidgetConfiguration } from './types';
+import type { FilterWidgetConfiguration } from './types';
+import type { Filter } from '../../common/src/filters/types';
 
 Stage.defineWidget<Filter, Stage.Types.PaginatedResponse<Filter>, FilterWidgetConfiguration>({
     id: 'filters',
@@ -27,7 +27,7 @@ Stage.defineWidget<Filter, Stage.Types.PaginatedResponse<Filter>, FilterWidgetCo
         if (toolbox.getContext().getValue('onlyMyResources')) {
             params.created_by = toolbox.getManager().getCurrentUsername();
         }
-        return new FilterActions(toolbox).doList(params);
+        return new Stage.Common.Filters.Actions(toolbox).doList(params);
     },
 
     render(widget, data, _error, toolbox) {

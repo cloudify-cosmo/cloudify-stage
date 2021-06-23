@@ -4,6 +4,7 @@ import { i18nMessagesPrefix, i18nPrefix } from '../common';
 import RulesForm from '../../filters/RulesForm';
 import { FilterRule } from '../../filters/types';
 import useFilterQuery from '../useFilterQuery';
+import FilterActions from '../../filters/FilterActions';
 
 interface FilterModalProps {
     userFilterSelected: boolean;
@@ -50,12 +51,15 @@ const FilterModal: FunctionComponent<FilterModalProps> = ({
     toolbox
 }) => {
     const { i18n } = Stage;
-    const { ApproveButton, CancelButton, Icon, Modal, UnsafelyTypedForm, UnsafelyTypedFormField } = Stage.Basic;
+    const { ApproveButton, Button, CancelButton, Icon, Modal, UnsafelyTypedForm, UnsafelyTypedFormField } = Stage.Basic;
     // @ts-expect-error DynamicDropdown is not converted to TS yet
     const { DynamicDropdown } = Stage.Common;
+    const { useBoolean, useErrors } = Stage.Hooks;
 
-    const { errors, setErrors, clearErrors } = Stage.Hooks.useErrors();
+    const { errors, setErrors, clearErrors, setMessageAsError } = useErrors();
     const [rulesErrorsPresent, setRuleErrorsPresent] = useState<boolean>();
+
+    const [filterSaving, setFilterSaving, unsetFilterSaving] = useBoolean();
 
     // The values are 'saved' on modal submit and 'reverted' on modal cancel
     const filterId = useRevertableState<string | undefined>(undefined);
@@ -110,7 +114,25 @@ const FilterModal: FunctionComponent<FilterModalProps> = ({
     function handleFilterRulesChange(newFilterRules: FilterRule[], ruleErrors: boolean) {
         filterRules.set(newFilterRules);
         filterDirty.set(true);
+        clearErrors();
         setRuleErrorsPresent(ruleErrors);
+    }
+
+    function handleSave() {
+        if (rulesErrorsPresent) {
+            setErrors({
+                error: tModal('filterRulesInvalidError')
+            });
+            return;
+        }
+
+        setFilterSaving();
+        new FilterActions(toolbox)
+            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+            .doUpdate(filterId.value!, filterRules.value)
+            .then(() => filterDirty.set(false))
+            .catch(setMessageAsError)
+            .finally(unsetFilterSaving);
     }
 
     useEffect(() => {
@@ -140,7 +162,7 @@ const FilterModal: FunctionComponent<FilterModalProps> = ({
                         />
                     </UnsafelyTypedFormField>
                     <UnsafelyTypedFormField label={tModal('filterRules')}>
-                        {filterRulesResult.isFetching && <Stage.Basic.LoadingOverlay />}
+                        {filterRulesResult.isFetching || (filterSaving && <Stage.Basic.LoadingOverlay />)}
                         {filterRulesResult.isSuccess && (
                             <RulesForm
                                 initialFilters={initialFilterRules}
@@ -154,6 +176,12 @@ const FilterModal: FunctionComponent<FilterModalProps> = ({
             </Modal.Content>
 
             <Modal.Actions>
+                <Button
+                    content="Save"
+                    style={{ float: 'left' }}
+                    disabled={!filterId.value || !filterDirty.value}
+                    onClick={handleSave}
+                />
                 <CancelButton onClick={handleCancel} />
                 <ApproveButton
                     onClick={handleSubmit}
