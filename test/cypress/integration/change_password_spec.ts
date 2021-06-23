@@ -80,9 +80,9 @@ describe('Change Password modal', () => {
     });
 
     it('should not be available when LDAP is enabled', () => {
-        cy.usePageMock().mockLogin(undefined, undefined, undefined, () => {
-            cy.interceptSp('GET', `/ldap`, 'enabled').as('ldap');
-        });
+        cy.interceptSp('GET', `/ldap`, 'enabled').as('ldap');
+
+        cy.usePageMock().mockLogin();
 
         cy.get('.usersMenu').click();
         cy.get('#changePasswordMenuItem').should('have.class', 'disabled');
