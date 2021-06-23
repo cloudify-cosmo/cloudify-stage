@@ -183,8 +183,13 @@ const commands = {
             cy.waitUntilLoaded().then(() => cy.saveLocalStorage());
         }
     },
+    /**
+     * @param setupIntercepts Allows setting up network intercepts at a moment that ensures that the page from
+     * the previous test is already unloaded. Prevents race conditions (e.g. the intercept catching a polling request
+     * from the previous test)
+     */
     // TODO(RD-2314): object instead of multiple optional parameters
-    mockLogin: (username = 'admin', password = 'admin', disableGettingStarted = true) => {
+    mockLogin: (username = 'admin', password = 'admin', disableGettingStarted = true, setupIntercepts?: () => void) => {
         cy.stageRequest('/console/auth/login', 'POST', undefined, {
             Authorization: `Basic ${btoa(`${username}:${password}`)}`
         }).then(response => {
@@ -198,7 +203,10 @@ const commands = {
             );
             if (disableGettingStarted) mockGettingStarted(false);
         });
-        cy.visit('/console').waitUntilLoaded();
+        cy.visit('/console');
+        // eslint-disable-next-line chai-friendly/no-unused-expressions
+        setupIntercepts?.();
+        cy.waitUntilLoaded();
     },
     visitPage: (name: string, id: string | null = null) => {
         cy.log(`Switching to '${name}' page`);
