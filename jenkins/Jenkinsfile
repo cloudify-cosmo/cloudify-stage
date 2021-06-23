@@ -26,14 +26,15 @@ pipeline {
     STAGE_DIR = "cloudify-stage"
     CFY_MANAGER_URL = 'https://raw.githubusercontent.com/cloudify-cosmo/cloudify-manager'
     CFY_NODE_RPM = 'http://repository.cloudifysource.org/cloudify/components/nodejs-12.22.1-1nodesource.x86_64.rpm'
+    MAIN_BRANCH = "6.1.0-build"
   }
 
   stages {
-    stage('Prepare & Audit master'){
+    stage('Prepare & Audit main branch'){
       parallel{
         stage('Audit'){
           when {
-            branch "master"
+            branch "${MAIN_BRANCH}"
           }
           steps {
             catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE'){
@@ -81,7 +82,7 @@ pipeline {
               sh """
                 cd && mkdir rpmbuild && cd rpmbuild
                 mkdir -p BUILD && cp -rf ${WORKSPACE}/${STAGE_DIR}/. BUILD && cd BUILD
-                curl -fO "${CFY_MANAGER_URL}/${BRANCH}/packaging/version_info" || curl -fO "${CFY_MANAGER_URL}/master/packaging/version_info"
+                curl -fO "${CFY_MANAGER_URL}/${BRANCH}/packaging/version_info" || curl -fO "${CFY_MANAGER_URL}/${MAIN_BRANCH}/packaging/version_info"
               """
 
               echo 'Install NodeJS & RPM development tools'
@@ -143,14 +144,9 @@ pipeline {
             }
           }
         }
-      }
-    }
-    stage('Run Docs & Size') {
-      parallel {
         stage('Size') {
           steps {
             container('node'){
-              //sh "rm -rf ${WORKSPACE}/test && rm -rf ${WORKSPACE}/backend"
               sh "mkdir -p ${WORKSPACE}/size && cp -rf ${WORKSPACE}/${STAGE_DIR}/. ${WORKSPACE}/size"
               dir("size") {
                 echo 'Check bundle size'
@@ -163,7 +159,6 @@ pipeline {
         stage('Docs'){
           steps {
             container('node'){
-              //sh "rm -rf ${WORKSPACE}/test && rm -rf ${WORKSPACE}/backend"
               sh "mkdir -p ${WORKSPACE}/docs && cp -rf ${WORKSPACE}/${STAGE_DIR}/. ${WORKSPACE}/docs"
               dir("docs") {
                 echo 'Generate widgets documentation'
@@ -180,13 +175,13 @@ pipeline {
         }
         stage('Run Stage-UI System-tests') {
           when {
-            branch "master"
+            branch "${MAIN_BRANCH}"
           }
           steps {
             echo 'Trigger Stage-UI System-tests'
             build(job: 'Stage-UI-System-Test', parameters: [
-              string(name: 'BRANCH', value: 'master'),
-              string(name: 'STAGE_BRANCH', value: 'master')
+              string(name: 'BRANCH', value: "${MAIN_BRANCH}"),
+              string(name: 'STAGE_BRANCH', value: "${MAIN_BRANCH}")
             ])
           }
         }
