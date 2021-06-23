@@ -10,7 +10,7 @@ interface DeploymentsViewHeaderProps {
     filterRules: FilterRule[];
     mapOpen: boolean;
     toggleMap: () => void;
-    onFilterChange: (filterId: string | undefined) => void;
+    onFilterChange: (filterRules?: FilterRule[]) => void;
     toolbox: Stage.Types.Toolbox;
 }
 
@@ -28,15 +28,17 @@ const DeploymentsViewHeader: FunctionComponent<DeploymentsViewHeaderProps> = ({
     const [filterModalOpen, openFilterModal, closeFilterModal] = useBoolean();
     const [deployOnModalOpen, openDeployOnModal, closeDeployOnModal] = useBoolean();
     const [runWorkflowModalOpen, openRunWorkflowModal, closeRunWorkflowModal] = useBoolean();
-    const [filterId, setFilterId] = useState<string>();
+    const [userFilterSelected, setUserFilterSelected] = useState<boolean>(false);
+    const [userFilterId, setUserFilterId] = useState<string>();
 
     const { Button, Dropdown } = Stage.Basic;
     // @ts-ignore Properties does not exist on type 'typeof Dropdown'
     const { Menu, Item } = Dropdown;
 
-    function handleFilterChange(newFilterId: string | undefined) {
-        setFilterId(newFilterId);
-        onFilterChange(newFilterId);
+    function handleFilterChange(newFilterRules: FilterRule[] | undefined, newFilterId: string | undefined) {
+        setUserFilterSelected(!!newFilterRules);
+        setUserFilterId(newFilterId);
+        onFilterChange(newFilterRules);
         closeFilterModal();
     }
 
@@ -50,18 +52,18 @@ const DeploymentsViewHeader: FunctionComponent<DeploymentsViewHeaderProps> = ({
                 title={mapT(mapOpen ? 'closeMap' : 'openMap')}
                 content={mapT('label')}
             />
-            {filterId ? (
+            {userFilterSelected ? (
                 <Button.Group color="blue">
                     <Button
                         icon="filter"
                         labelPosition="left"
-                        content={filterId}
+                        content={userFilterId ?? headerT('filter.unsavedFilter')}
                         onClick={openFilterModal}
                         style={{ whiteSpace: 'nowrap', maxWidth: 200, textOverflow: 'ellipsis', overflow: 'hidden' }}
                     />
                     <Button
                         icon="delete"
-                        onClick={() => handleFilterChange(undefined)}
+                        onClick={() => handleFilterChange(undefined, undefined)}
                         title={headerT('filter.clearButton')}
                     />
                 </Button.Group>
@@ -71,9 +73,10 @@ const DeploymentsViewHeader: FunctionComponent<DeploymentsViewHeaderProps> = ({
                     labelPosition="left"
                     content={headerT('filter.button')}
                     onClick={openFilterModal}
+                    style={{ marginRight: 0 }}
                 />
             )}
-            <Dropdown button text={headerT('bulkActions.button')}>
+            <Dropdown button text={headerT('bulkActions.button')} style={{ marginLeft: '0.25em' }}>
                 {/* Display the menu above all leaflet components, see https://leafletjs.com/reference-1.7.1.html#map-pane */}
                 <Menu style={{ zIndex: 1000 }}>
                     <Item text={headerT('bulkActions.deployOn.title')} onClick={openDeployOnModal} />
@@ -82,7 +85,7 @@ const DeploymentsViewHeader: FunctionComponent<DeploymentsViewHeaderProps> = ({
             </Dropdown>
 
             <FilterModal
-                filterId={filterId}
+                userFilterSelected={userFilterSelected}
                 open={filterModalOpen}
                 onCancel={closeFilterModal}
                 onSubmit={handleFilterChange}
