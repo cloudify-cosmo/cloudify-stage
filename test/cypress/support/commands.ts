@@ -189,7 +189,12 @@ const commands = {
      * from the previous test)
      */
     // TODO(RD-2314): object instead of multiple optional parameters
-    mockLogin: (username = 'admin', password = 'admin', disableGettingStarted = true, setupIntercepts?: () => void) => {
+    mockLogin: (
+        username = 'admin',
+        password = 'admin',
+        disableGettingStarted = true,
+        setupIntercepts: () => void = _.noop
+    ) => {
         cy.stageRequest('/console/auth/login', 'POST', undefined, {
             Authorization: `Basic ${btoa(`${username}:${password}`)}`
         }).then(response => {
@@ -204,8 +209,7 @@ const commands = {
             if (disableGettingStarted) mockGettingStarted(false);
         });
         cy.visit('/console');
-        // eslint-disable-next-line chai-friendly/no-unused-expressions
-        setupIntercepts?.();
+        setupIntercepts();
         cy.waitUntilLoaded();
     },
     visitPage: (name: string, id: string | null = null) => {
