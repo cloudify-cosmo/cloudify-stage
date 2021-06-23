@@ -162,7 +162,7 @@ const FilterModal: FunctionComponent<FilterModalProps> = ({
                         />
                     </UnsafelyTypedFormField>
                     <UnsafelyTypedFormField label={tModal('filterRules')}>
-                        {filterRulesResult.isFetching || (filterSaving && <Stage.Basic.LoadingOverlay />)}
+                        {(filterRulesResult.isFetching || filterSaving) && <Stage.Basic.LoadingOverlay />}
                         {filterRulesResult.isSuccess && (
                             <RulesForm
                                 initialFilters={initialFilterRules}
