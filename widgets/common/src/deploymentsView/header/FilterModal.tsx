@@ -136,8 +136,9 @@ const FilterModal: FunctionComponent<FilterModalProps> = ({
     }
 
     useEffect(() => {
-        filterRules.set(filterRulesResult.data ?? []);
-        setInitialFilterRules(filterRulesResult.data ?? []);
+        const newFilterRules = filterRulesResult.data?.value ?? [];
+        filterRules.set(newFilterRules);
+        setInitialFilterRules(newFilterRules);
     }, [JSON.stringify(filterRulesResult.data)]);
 
     useEffect(() => {
@@ -179,7 +180,7 @@ const FilterModal: FunctionComponent<FilterModalProps> = ({
                 <Button
                     content="Save"
                     style={{ float: 'left' }}
-                    disabled={!filterId.value || !filterDirty.value}
+                    disabled={!filterId.value || !filterDirty.value || filterRulesResult.data?.is_system_filter}
                     onClick={handleSave}
                 />
                 <CancelButton onClick={handleCancel} />

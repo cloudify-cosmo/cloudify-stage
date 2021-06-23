@@ -263,6 +263,21 @@ describe('Deployments View widget', () => {
             });
         });
 
+        it('should prevent modified system filter from being saved', () => {
+            useDeploymentsViewWidget();
+
+            cy.contains('button', 'Filter').click();
+            cy.get('.modal').within(() => {
+                cy.contains('button', 'Save').should('be.disabled');
+
+                cy.setSearchableDropdownValue('Filter ID', 'csys-environment-filter');
+                cy.contains('button', 'Save').should('be.disabled');
+
+                cy.contains('Add new rule').click();
+                cy.contains('button', 'Save').should('be.disabled');
+            });
+        });
+
         it('should take the configured filter into account when displaying deployments', () => {
             const getFilterIdInput = () =>
                 cy.contains('Name of the saved filter to apply').parent().get('input[type="text"]');

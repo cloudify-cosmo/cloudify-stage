@@ -11,6 +11,7 @@ export interface Filter {
     attrs_filter_rules: FilterRule[];
     // eslint-disable-next-line camelcase
     is_system_filter: boolean;
+    value: FilterRule[];
 }
 
 export interface FilterUsage {
