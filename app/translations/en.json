@@ -708,10 +708,15 @@
                 "filter": {
                     "button": "Filter",
                     "clearButton": "Clear selected filter",
+                    "unsavedFilter": "Unsaved filter",
                     "modal": {
                         "header": "Select a filter",
                         "submit": "OK",
-                        "noFilterError": "Please select a filter"
+                        "noFilterError": "Please select a filter or specify filter rules",
+                        "noFilterRulesError": "Please specify filter rules",
+                        "filterRulesInvalidError": "Please provide all the values in filter rules section",
+                        "filterId": "Filter ID",
+                        "filterRules": "Filter rules"
                     }
                 },
                 "bulkActions": {
