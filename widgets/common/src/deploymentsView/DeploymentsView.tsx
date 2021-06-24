@@ -11,7 +11,7 @@ import {
 import type { SharedDeploymentsViewWidgetConfiguration } from './configuration';
 import DetailsPane from './detailsPane';
 import { DeploymentsTable } from './table';
-import { FilterRuleOperators, FilterRuleType } from '../filters/types';
+import { FilterRule, FilterRuleOperators, FilterRuleType } from '../filters/types';
 import {
     DeploymentDetailsContainer,
     DeploymentsMapLayoutContainer,
@@ -23,6 +23,7 @@ import DeploymentsViewHeader from './header';
 import DeploymentsMapContainer from './map';
 import SearchActions from '../SearchActions';
 import getSelectedDeployment from './getSelectedDeployment';
+import useFilterQuery from './useFilterQuery';
 
 export interface DeploymentsViewProps {
     widget: Stage.Types.Widget<SharedDeploymentsViewWidgetConfiguration>;
@@ -43,7 +44,6 @@ export const DeploymentsView: FunctionComponent<DeploymentsViewProps> = ({
     additionalFilterRules = [],
     defaultFilterId
 }) => {
-    const manager = toolbox.getManager();
     const searchActions = new SearchActions(toolbox);
     const [gridParams, setGridParams] = useState<Stage.Types.ManagerGridParams>(() =>
         Stage.Utils.mapGridParamsToManagerGridParams({
@@ -52,32 +52,11 @@ export const DeploymentsView: FunctionComponent<DeploymentsViewProps> = ({
             pageSize: widget.configuration.pageSize
         })
     );
-    const [userFilterId, setUserFilterId] = useState<string>();
+    const [userFilterRules, setUserFilterRules] = useState<FilterRule[] | undefined>(undefined);
 
-    const filterRulesResult = (() => {
-        const filterId = userFilterId ?? defaultFilterId;
-        const filterRulesUrl = `/filters/deployments/${filterId}`;
-        const result = useQuery<Stage.Common.Filters.Rule[]>(
-            filterRulesUrl,
-            ({ queryKey: url }) => (filterId ? manager.doGet(url).then(filtersResponse => filtersResponse.value) : []),
-            { refetchOnWindowFocus: false, keepPreviousData: true }
-        );
+    const defaultFilterRulesResult = useFilterQuery(toolbox, userFilterRules ? undefined : defaultFilterId);
 
-        if (result.isIdle) {
-            /**
-             * NOTE: handling the `isIdle` state is necessary for TypeScript's type-narrowing to exclude `undefined` from
-             * the possible values of `result.data`.
-             *
-             * Such a case should not happen naturally, unless an `enabled` option is added to `useQuery`. If it is added,
-             * it should be here.
-             */
-            throw new Error('Idle state for fetching filter rules is not implemented.');
-        }
-
-        return result;
-    })();
-
-    const filterRules = filterRulesResult.data ?? [];
+    const filterRules = userFilterRules ?? defaultFilterRulesResult.data ?? [];
     const filteringByParentDeploymentResult = useFilteringByParentDeployment({ filterByParentDeployment });
     const finalFilterRules = useMemo(() => {
         if (!filteringByParentDeploymentResult.parentDeploymentRule) {
@@ -106,14 +85,14 @@ export const DeploymentsView: FunctionComponent<DeploymentsViewProps> = ({
     const { Loading, ErrorMessage } = Stage.Basic;
     const { i18n } = Stage;
 
-    if (filterRulesResult.isLoading) {
+    if (defaultFilterRulesResult.isLoading) {
         return <Loading message={i18n.t(`${i18nMessagesPrefix}.loadingFilterRules`)} />;
     }
-    if (filterRulesResult.isError) {
+    if (defaultFilterRulesResult.isError) {
         return (
             <ErrorMessage
                 header={i18n.t(`${i18nMessagesPrefix}.errorLoadingFilterRules`)}
-                error={filterRulesResult.error as { message: string }}
+                error={defaultFilterRulesResult.error as { message: string }}
             />
         );
     }
@@ -167,7 +146,7 @@ export const DeploymentsView: FunctionComponent<DeploymentsViewProps> = ({
                     mapOpen={mapOpen}
                     toggleMap={toggleMap}
                     toolbox={toolbox}
-                    onFilterChange={setUserFilterId}
+                    onFilterChange={setUserFilterRules}
                     filterRules={finalFilterRules}
                 />
             </DeploymentsViewHeaderContainer>
@@ -188,7 +167,7 @@ export const DeploymentsView: FunctionComponent<DeploymentsViewProps> = ({
                 <DeploymentsTable
                     setGridParams={setGridParams}
                     toolbox={toolbox}
-                    loadingIndicatorVisible={filterRulesResult.isFetching || deploymentsResult.isFetching}
+                    loadingIndicatorVisible={defaultFilterRulesResult.isFetching || deploymentsResult.isFetching}
                     // eslint-disable-next-line no-underscore-dangle
                     pageSize={gridParams._size ?? widget.configuration.pageSize}
                     totalSize={deploymentsResult.data.metadata.pagination.total}

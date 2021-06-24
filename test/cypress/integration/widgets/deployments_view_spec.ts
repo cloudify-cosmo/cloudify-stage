@@ -4,7 +4,7 @@ import { without } from 'lodash';
 import type { SystemLabel } from '../../support/deployments';
 
 import { exampleBlueprintUrl } from '../../support/resource_urls';
-import { FilterRuleOperators, FilterRuleType } from '../../../../widgets/common/src/filters/types';
+import { FilterRuleAttribute, FilterRuleOperators, FilterRuleType } from '../../../../widgets/common/src/filters/types';
 import type {} from '../../../../widgets/common/src/deploymentsView';
 
 describe('Deployments View widget', () => {
@@ -93,18 +93,6 @@ describe('Deployments View widget', () => {
     };
 
     const widgetHeader = {
-        setFilter: (filterId: string) => {
-            cy.contains('button', 'Filter').click();
-
-            cy.get('.modal').within(() => {
-                cy.get('input').type(`${filterId}{enter}`);
-                cy.contains('OK').click();
-            });
-
-            cy.get('.modal').should('not.exist');
-            cy.contains('button', 'Filter').should('not.exist');
-            cy.contains('button', filterId);
-        },
         openRunWorkflowModal: () => {
             cy.contains('Bulk Actions').click();
             cy.contains('Run Workflow').click();
@@ -220,6 +208,13 @@ describe('Deployments View widget', () => {
             }
         ];
 
+        function verifyFilterRulesForm() {
+            cy.contains('Label').should('be.visible');
+            cy.contains('is one of').should('be.visible');
+            cy.contains('precious');
+            cy.contains('yes');
+        }
+
         before(() => {
             cy.deleteDeploymentsFilter(filterId, { ignoreFailure: true })
                 .createDeploymentsFilter(filterId, filterRules)
@@ -253,14 +248,24 @@ describe('Deployments View widget', () => {
             cy.contains(/with ID .* was not found/);
         });
 
-        it('should take the selected filter into account when displaying deployments', () => {
+        it('should take the selected existing filter into account when displaying deployments', () => {
             useDeploymentsViewWidget();
 
             cy.contains(deploymentNameThatMatchesFilter);
             cy.contains(deploymentName);
-            cy.interceptSp('POST', '/searches/deployments').as('deploymentsSearchRequest');
 
-            widgetHeader.setFilter(filterId);
+            cy.contains('button', 'Filter').click();
+
+            cy.get('.modal').within(() => {
+                cy.setSearchableDropdownValue('Filter ID', filterId);
+                verifyFilterRulesForm();
+                cy.interceptSp('POST', '/searches/deployments').as('deploymentsSearchRequest');
+                cy.contains('OK').click();
+            });
+
+            cy.get('.modal').should('not.exist');
+            cy.contains('button', 'Filter').should('not.exist');
+            cy.contains('button', filterId);
 
             cy.wait('@deploymentsSearchRequest').then(({ request }) => {
                 const requestRules = request.body.filter_rules;
@@ -276,6 +281,90 @@ describe('Deployments View widget', () => {
 
             cy.contains(deploymentName);
             cy.contains(deploymentNameThatMatchesFilter);
+        });
+
+        it('should take the modified existing filter into account when displaying deployments', () => {
+            useDeploymentsViewWidget();
+
+            cy.contains(deploymentNameThatMatchesFilter);
+            cy.contains(deploymentName);
+
+            cy.contains('button', 'Filter').click();
+
+            cy.get('.modal').within(() => {
+                cy.setSearchableDropdownValue('Filter ID', filterId);
+                verifyFilterRulesForm();
+
+                cy.contains('Add new rule').click();
+                cy.contains('.selection', 'Type in values')
+                    .find('input')
+                    .type(`${blueprintName}{enter}`, { force: true });
+
+                cy.interceptSp('POST', '/searches/deployments').as('deploymentsSearchRequest');
+                cy.contains('OK').click();
+            });
+
+            cy.get('.modal').should('not.exist');
+            cy.contains('button', 'Filter').should('not.exist');
+            cy.contains('button', 'Unsaved filter');
+
+            cy.wait('@deploymentsSearchRequest').then(({ request }) => {
+                const requestRules = request.body.filter_rules;
+                expect(requestRules).to.deep.equal([
+                    ...filterRules,
+                    {
+                        type: FilterRuleType.Attribute,
+                        key: FilterRuleAttribute.Blueprint,
+                        values: [blueprintName],
+                        operator: FilterRuleOperators.Contains
+                    }
+                ]);
+            });
+
+            cy.contains(deploymentName).should('not.exist');
+            cy.contains(deploymentNameThatMatchesFilter);
+
+            cy.get('[title="Clear selected filter"]').click().should('not.exist');
+            cy.contains('button', 'Filter');
+            cy.contains('button', 'Unsaved filter').should('not.exist');
+
+            cy.contains(deploymentName);
+            cy.contains(deploymentNameThatMatchesFilter);
+        });
+
+        it('should take the on-the-fly defined filter into account when displaying deployments', () => {
+            useDeploymentsViewWidget();
+
+            cy.contains('button', 'Filter').click();
+
+            cy.get('.modal').within(() => {
+                cy.contains('.selection', 'Type in values')
+                    .find('input')
+                    .type(`${blueprintName}{enter}`, { force: true });
+
+                cy.interceptSp('POST', '/searches/deployments').as('deploymentsSearchRequest');
+                cy.contains('OK').click();
+            });
+
+            cy.get('.modal').should('not.exist');
+            cy.contains('button', 'Filter').should('not.exist');
+            cy.contains('button', 'Unsaved filter');
+
+            cy.wait('@deploymentsSearchRequest').then(({ request }) => {
+                const requestRules = request.body.filter_rules;
+                expect(requestRules).to.deep.equal([
+                    {
+                        type: FilterRuleType.Attribute,
+                        key: FilterRuleAttribute.Blueprint,
+                        values: [blueprintName],
+                        operator: FilterRuleOperators.Contains
+                    }
+                ]);
+            });
+
+            cy.get('[title="Clear selected filter"]').click().should('not.exist');
+            cy.contains('button', 'Filter');
+            cy.contains('button', 'Unsaved filter').should('not.exist');
         });
 
         // NOTE: this test does not really belong to the filters functionality, but it needs at least two deployments to work
