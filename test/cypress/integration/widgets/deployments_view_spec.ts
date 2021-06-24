@@ -6,17 +6,19 @@ import type { SystemLabel } from '../../support/deployments';
 import { exampleBlueprintUrl } from '../../support/resource_urls';
 import { FilterRuleAttribute, FilterRuleOperators, FilterRuleType } from '../../../../widgets/common/src/filters/types';
 import type {} from '../../../../widgets/common/src/deploymentsView';
+import { secondsToMs } from '../../support/resource_commons';
 
 describe('Deployments View widget', () => {
     const widgetId = 'deploymentsView';
     const specPrefix = 'deployments_view_test_';
     const blueprintName = `${specPrefix}blueprint`;
-    const deploymentName = `${specPrefix}deployment`;
+    const deploymentId = `${specPrefix}deployment_id`;
+    const deploymentName = `${specPrefix}deployment_name`;
     const exampleSiteName = 'Olsztyn';
     const blueprintUrl = exampleBlueprintUrl;
     const widgetConfiguration: import('../../../../widgets/deploymentsView/src/widget').DeploymentsViewWidgetConfiguration = {
         filterByParentDeployment: false,
-        fieldsToShow: ['status', 'name', 'blueprintName', 'location', 'subenvironmentsCount', 'subservicesCount'],
+        fieldsToShow: ['status', 'id', 'name', 'blueprintName', 'location', 'subenvironmentsCount', 'subservicesCount'],
         pageSize: 100,
         customPollingTime: 10,
         sortColumn: 'created_at',
@@ -42,9 +44,9 @@ describe('Deployments View widget', () => {
     /** Column numbers as they appear in the table */
     const columnNumbers = {
         status: 1,
-        environmentType: 4,
-        subenvironments: 6,
-        subservices: 7
+        environmentType: 5,
+        subenvironments: 7,
+        subservices: 8
     };
 
     before(() => {
@@ -52,10 +54,10 @@ describe('Deployments View widget', () => {
             .deleteSites(exampleSiteName)
             .deleteBlueprint(blueprintName, true)
             .uploadBlueprint(blueprintUrl, blueprintName)
-            .deployBlueprint(blueprintName, deploymentName, { webserver_port: 9123 })
+            .deployBlueprint(blueprintName, deploymentId, { webserver_port: 9123 }, { display_name: deploymentName })
             .createSite({ name: exampleSiteName, location: '53.77509462534224, 20.473709106445316' })
-            .setSite(deploymentName, exampleSiteName)
-            .setLabels(deploymentName, [{ 'rendered-inside': 'details-panel' }]);
+            .setSite(deploymentId, exampleSiteName)
+            .setLabels(deploymentId, [{ 'rendered-inside': 'details-panel' }]);
     });
 
     beforeEach(() => {
@@ -73,13 +75,13 @@ describe('Deployments View widget', () => {
             { additionalWidgetIdsToLoad, widgetsWidth: 12, additionalPageTemplates: ['drilldownDeployments'] }
         ).mockLoginWithoutWaiting();
         cy.interceptSp('POST', /^\/searches\/deployments/, routeHandler).as('deployments');
-        cy.wait('@deployments');
+        cy.wait('@deployments', { requestTimeout: secondsToMs(15) });
     };
 
     const getDeploymentsViewWidget = () =>
         cy.get('.widget').filter('.deploymentsViewWidget, .deploymentsViewDrilledDownWidget').find('.widgetItem');
-    const getDeploymentsViewTable = () => getDeploymentsViewWidget().get('.gridTable');
-    const getDeploymentsViewDetailsPane = () => getDeploymentsViewWidget().get('.detailsPane');
+    const getDeploymentsViewTable = () => getDeploymentsViewWidget().find('.gridTable');
+    const getDeploymentsViewDetailsPane = () => getDeploymentsViewWidget().find('.detailsPane');
     const getDeploymentsViewMap = () => getDeploymentsViewWidget().find('.leaflet-container');
     const getDeploymentsMapToggleButton = () => getDeploymentsViewWidget().contains('button', 'Map');
 
@@ -373,7 +375,7 @@ describe('Deployments View widget', () => {
 
             const getSelectedDeployment = () => getDeploymentsViewTable().find('tbody tr.active');
 
-            cy.setDeploymentContext(deploymentName);
+            cy.setDeploymentContext(deploymentId);
             getSelectedDeployment().contains(deploymentName);
             cy.setDeploymentContext(deploymentNameThatMatchesFilter);
             getSelectedDeployment().contains(deploymentNameThatMatchesFilter);
@@ -682,12 +684,12 @@ describe('Deployments View widget', () => {
         it('should refresh the drill-down buttons on an interval', () => {
             useDeploymentsViewWidget({ configurationOverrides: { customPollingTime: 1 } });
 
-            cy.getSearchInput().type(deploymentName);
+            cy.getSearchInput().type(deploymentId);
 
             getDeploymentsViewDetailsPane().within(() => {
                 getSubservicesButton().containsNumber(0);
 
-                cy.interceptSp('GET', `${deploymentName}?all_sub_deployments=false`, req =>
+                cy.interceptSp('GET', `${deploymentId}?all_sub_deployments=false`, req =>
                     req.reply(res => {
                         res.body.sub_services_count = 50;
                     })
@@ -705,6 +707,31 @@ describe('Deployments View widget', () => {
         cy.contains('Unexpected widget usage');
     });
 
+    it('should search both by the ID and the display name of deployments', () => {
+        useDeploymentsViewWidget();
+
+        const interceptSearchDeploymentsRequest = (searchPhrase: string) =>
+            // eslint-disable-next-line security/detect-non-literal-regexp
+            cy.interceptSp('POST', new RegExp(`^\\/searches\\/deployments\\?.*_search_name=${searchPhrase}`));
+
+        const showEmptyTable = () => {
+            cy.getSearchInput().type('some gibberish to make the table display no results');
+            getDeploymentsViewTable().contains('No Results Found');
+        };
+
+        showEmptyTable();
+        interceptSearchDeploymentsRequest(deploymentId).as('searchForDeploymentId');
+        cy.getSearchInput().clear().type(deploymentId);
+        cy.wait('@searchForDeploymentId');
+        getDeploymentsViewTable().contains('tbody tr', deploymentName);
+
+        showEmptyTable();
+        interceptSearchDeploymentsRequest(deploymentName).as('searchForDeploymentName');
+        cy.getSearchInput().clear().type(deploymentName);
+        cy.wait('@searchForDeploymentName');
+        getDeploymentsViewTable().contains('tbody tr', deploymentName);
+    });
+
     describe('map', () => {
         const siteNames = {
             olsztyn: exampleSiteName,
@@ -713,7 +740,8 @@ describe('Deployments View widget', () => {
             warsaw: 'Warsaw'
         } as const;
         const mapDeploymentsPrefix = `${deploymentName}_map`;
-        const getSiteDeploymentName = (siteName: Stage.Types.ObjectKeys<typeof siteNames>) =>
+        /** Uses the same ID and display name for the deployment */
+        const getSiteDeploymentId = (siteName: Stage.Types.ObjectKeys<typeof siteNames>) =>
             `${mapDeploymentsPrefix}_${siteName}`;
 
         before(() => {
@@ -740,7 +768,7 @@ describe('Deployments View widget', () => {
             ]);
 
             [siteNames.olsztyn, siteNames.london, siteNames.warsaw].forEach(siteName => {
-                const currentDeploymentId = getSiteDeploymentName(siteName);
+                const currentDeploymentId = getSiteDeploymentId(siteName);
                 cy.deployBlueprint(blueprintName, currentDeploymentId).setSite(currentDeploymentId, siteName);
             });
         });
@@ -788,7 +816,7 @@ describe('Deployments View widget', () => {
                 getDeploymentMarkerIcons().should('have.length', 1);
                 withinMarkerTooltip(
                     () => getMarkerByImageSuffix(MarkerImageSuffix.Red),
-                    () => cy.contains(getSiteDeploymentName(siteNames.london))
+                    () => cy.contains(getSiteDeploymentId(siteNames.london))
                 );
             });
 
@@ -868,7 +896,7 @@ describe('Deployments View widget', () => {
 
             cy.getSearchInput().type(mapDeploymentsPrefix);
 
-            selectDeploymentInTableAndVerifyMapSelection(getSiteDeploymentName(siteNames.london));
+            selectDeploymentInTableAndVerifyMapSelection(getSiteDeploymentId(siteNames.london));
 
             /**
              * NOTE: there is no information in the DOM about which deployment a given marker is for.
@@ -913,7 +941,7 @@ describe('Deployments View widget', () => {
             const zoomOut = () => cy.get('[aria-label="Zoom out"]').click();
             cy.getSearchInput().type(mapDeploymentsPrefix);
 
-            selectDeploymentInTableAndVerifyMapSelection(getSiteDeploymentName(siteNames.london));
+            selectDeploymentInTableAndVerifyMapSelection(getSiteDeploymentId(siteNames.london));
             cy.log('Check if there is a cluster');
             getDeploymentsViewMap().within(() => {
                 zoomOut();
@@ -925,7 +953,7 @@ describe('Deployments View widget', () => {
                 getDeploymentMarkerIcons().should('have.length', 2);
             });
 
-            selectDeploymentInTableAndVerifyMapSelection(getSiteDeploymentName(siteNames.warsaw));
+            selectDeploymentInTableAndVerifyMapSelection(getSiteDeploymentId(siteNames.warsaw));
             cy.log('Check that the selected deployment is not clustered');
             getDeploymentsViewMap().within(() => {
                 getDeploymentMarkerIcons().should('have.length', 3);
@@ -950,10 +978,8 @@ describe('Deployments View widget', () => {
                         values: [siteName]
                     }
                 ]);
-            deploymentIds.forEach(deploymentId =>
-                cy
-                    .deployBlueprint(blueprintName, deploymentId, { webserver_port: 9124 })
-                    .setSite(deploymentId, siteName)
+            deploymentIds.forEach(id =>
+                cy.deployBlueprint(blueprintName, id, { webserver_port: 9124 }).setSite(id, siteName)
             );
         });
 
@@ -1013,10 +1039,10 @@ describe('Deployments View widget', () => {
                 expect(request.body.blueprint_id).to.eq(blueprintName);
                 expect(request.body.labels).to.deep.equal([{ [labelKey]: labelValue }]);
                 expect(request.body.new_deployments).to.deep.equal(
-                    deploymentIds.map(deploymentId => ({
+                    deploymentIds.map(id => ({
                         id: '{uuid}',
                         display_name: '{blueprint_id}-{uuid}',
-                        labels: [{ 'csys-obj-parent': deploymentId }],
+                        labels: [{ 'csys-obj-parent': id }],
                         runtime_only_evaluation: false,
                         skip_plugins_validation: false
                     }))
