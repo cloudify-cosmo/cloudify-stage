@@ -375,7 +375,7 @@ describe('Deployments View widget', () => {
 
             const getSelectedDeployment = () => getDeploymentsViewTable().find('tbody tr.active');
 
-            cy.setDeploymentContext(deploymentName);
+            cy.setDeploymentContext(deploymentId);
             getSelectedDeployment().contains(deploymentName);
             cy.setDeploymentContext(deploymentNameThatMatchesFilter);
             getSelectedDeployment().contains(deploymentNameThatMatchesFilter);
