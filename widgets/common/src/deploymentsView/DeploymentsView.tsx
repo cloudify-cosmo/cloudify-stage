@@ -1,5 +1,6 @@
 import React, { FunctionComponent, useMemo, useState } from 'react';
 import { useQuery } from 'react-query';
+import SplitPane from 'react-split-pane';
 
 import {
     getParentPageContext,
@@ -15,6 +16,7 @@ import { FilterRule, FilterRuleOperators, FilterRuleType } from '../filters/type
 import {
     DeploymentDetailsContainer,
     DeploymentsMapLayoutContainer,
+    DeploymentsMasterDetailViewContainer,
     DeploymentsTableContainer,
     DeploymentsViewContainer,
     DeploymentsViewHeaderContainer
@@ -163,27 +165,33 @@ export const DeploymentsView: FunctionComponent<DeploymentsViewProps> = ({
                 </DeploymentsMapLayoutContainer>
             )}
 
-            <DeploymentsTableContainer>
-                <DeploymentsTable
-                    setGridParams={setGridParams}
-                    toolbox={toolbox}
-                    loadingIndicatorVisible={defaultFilterRulesResult.isFetching || deploymentsResult.isFetching}
-                    // eslint-disable-next-line no-underscore-dangle
-                    pageSize={gridParams._size ?? widget.configuration.pageSize}
-                    totalSize={deploymentsResult.data.metadata.pagination.total}
-                    deployments={deploymentsResult.data.items}
-                    fieldsToShow={widget.configuration.fieldsToShow}
-                    selectedDeployment={selectedOrFallbackDeployment}
-                />
-            </DeploymentsTableContainer>
-            <DeploymentDetailsContainer>
-                <DetailsPane
-                    deployment={selectedOrFallbackDeployment}
-                    widget={widget}
-                    toolbox={toolbox}
-                    mapOpen={mapOpen}
-                />
-            </DeploymentDetailsContainer>
+            <DeploymentsMasterDetailViewContainer>
+                <SplitPane defaultSize="50%" split="vertical" resizerClassName="master-details-view-resizer">
+                    <DeploymentsTableContainer>
+                        <DeploymentsTable
+                            setGridParams={setGridParams}
+                            toolbox={toolbox}
+                            loadingIndicatorVisible={
+                                defaultFilterRulesResult.isFetching || deploymentsResult.isFetching
+                            }
+                            // eslint-disable-next-line no-underscore-dangle
+                            pageSize={gridParams._size ?? widget.configuration.pageSize}
+                            totalSize={deploymentsResult.data.metadata.pagination.total}
+                            deployments={deploymentsResult.data.items}
+                            fieldsToShow={widget.configuration.fieldsToShow}
+                            selectedDeployment={selectedOrFallbackDeployment}
+                        />
+                    </DeploymentsTableContainer>
+                    <DeploymentDetailsContainer>
+                        <DetailsPane
+                            deployment={selectedOrFallbackDeployment}
+                            widget={widget}
+                            toolbox={toolbox}
+                            mapOpen={mapOpen}
+                        />
+                    </DeploymentDetailsContainer>
+                </SplitPane>
+            </DeploymentsMasterDetailViewContainer>
         </DeploymentsViewContainer>
     );
 };
