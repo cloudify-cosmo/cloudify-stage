@@ -190,9 +190,15 @@ export default class ExecutionsTable extends React.Component {
                     />
                     <DataTable.Column
                         label="Deployment"
+                        name="deployment"
+                        width="150%"
+                        show={fieldsToShow.indexOf('Deployment') >= 0 && !data.deployment_display_name}
+                    />
+                    <DataTable.Column
+                        label="Deployment ID"
                         name="deployment_id"
                         width="150%"
-                        show={fieldsToShow.indexOf('Deployment') >= 0 && !data.deploymentId}
+                        show={fieldsToShow.indexOf('Deployment ID') >= 0 && !data.deploymentId}
                     />
                     <DataTable.Column
                         label="Workflow"
@@ -253,6 +259,9 @@ export default class ExecutionsTable extends React.Component {
                                     </DataTable.Data>
                                     <DataTable.Data style={{ wordBreak: 'break-word' }}>
                                         {item.blueprint_id}
+                                    </DataTable.Data>
+                                    <DataTable.Data style={{ wordBreak: 'break-word' }}>
+                                        {item.deployment_display_name}
                                     </DataTable.Data>
                                     <DataTable.Data style={{ wordBreak: 'break-word' }}>
                                         {item.deployment_id}
