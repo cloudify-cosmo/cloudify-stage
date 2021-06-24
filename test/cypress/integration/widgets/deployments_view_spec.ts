@@ -192,6 +192,25 @@ describe('Deployments View widget', () => {
         });
     });
 
+    it('should allow resizing the master-details view', () => {
+        useDeploymentsViewWidget();
+
+        getDeploymentsViewTable().then(table => {
+            const initialWidth = table.width() ?? 0;
+            const resizeByPx = 200;
+
+            getDeploymentsViewWidget()
+                .find('.master-details-view-resizer')
+                // NOTE: the absolute value of `clientX` does not matter. Only the difference matters
+                .trigger('mousedown', { clientX: resizeByPx })
+                .trigger('mousemove', { clientX: 0 })
+                .trigger('mouseup')
+                .then(() => {
+                    expect(initialWidth - resizeByPx).to.equal(table.width());
+                });
+        });
+    });
+
     it('should select the first visible deployment by default', () => {
         useDeploymentsViewWidget();
 
