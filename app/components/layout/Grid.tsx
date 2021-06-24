@@ -1,18 +1,19 @@
-// @ts-nocheck File not migrated fully to TS
-/**
- * Created by kinneretzin on 13/12/2016.
- */
-
 import _ from 'lodash';
 import PropTypes from 'prop-types';
-import React from 'react';
-import { Responsive, WidthProvider } from 'react-grid-layout';
+import React, { CSSProperties, PropsWithChildren, ReactNode } from 'react';
+import { ReactGridLayoutProps, Responsive, WidthProvider } from 'react-grid-layout';
 import GridItem from './GridItem';
 
 const ReactGridLayout = WidthProvider(Responsive);
 
-export default function Grid({ children, isEditMode, onGridDataChange, style }) {
-    function saveChangedItems(layout) {
+interface GridProps {
+    isEditMode: boolean;
+    onGridDataChange: (key: string, item: { height: number; width: number; x: number; y: number }) => void;
+    style?: CSSProperties;
+}
+
+export default function Grid({ children, isEditMode, onGridDataChange, style }: PropsWithChildren<GridProps>) {
+    const saveChangedItems: ReactGridLayoutProps['onLayoutChange'] = layout => {
         if (isEditMode) {
             _.each(layout, item => {
                 onGridDataChange(item.i, {
@@ -23,11 +24,11 @@ export default function Grid({ children, isEditMode, onGridDataChange, style }) 
                 });
             });
         }
-    }
+    };
 
-    function processGridItem(el) {
-        if (el.type && el.type !== GridItem) {
-            return [];
+    function processGridItem(el: ReactNode) {
+        if (!React.isValidElement(el) || el.type !== GridItem) {
+            return null;
         }
         return React.createElement(
             'div',
@@ -57,7 +58,7 @@ export default function Grid({ children, isEditMode, onGridDataChange, style }) 
             useCSSTransforms={false}
             style={style}
         >
-            {_.map(children, processGridItem)}
+            {React.Children.map(children, processGridItem)}
         </ReactGridLayout>
     );
 }
