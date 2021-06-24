@@ -75,7 +75,7 @@ describe('Deployments View widget', () => {
             { additionalWidgetIdsToLoad, widgetsWidth: 12, additionalPageTemplates: ['drilldownDeployments'] }
         ).mockLoginWithoutWaiting();
         cy.interceptSp('POST', /^\/searches\/deployments/, routeHandler).as('deployments');
-        cy.wait('@deployments', { requestTimeout: secondsToMs(10) });
+        cy.wait('@deployments', { requestTimeout: secondsToMs(15) });
     };
 
     const getDeploymentsViewWidget = () =>
