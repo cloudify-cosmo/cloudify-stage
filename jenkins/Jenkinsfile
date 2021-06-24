@@ -68,9 +68,6 @@ pipeline {
               dir("${WORKSPACE}/test"){
                 echo 'Run static code analysis and code style check'
                 sh 'npm run lint'
-
-                echo 'Check TypeScript types'
-                sh 'npm run check-types'
               }
             }
           }
