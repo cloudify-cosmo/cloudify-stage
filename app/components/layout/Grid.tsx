@@ -1,10 +1,11 @@
 import _ from 'lodash';
 import PropTypes from 'prop-types';
 import React, { CSSProperties, PropsWithChildren, ReactNode } from 'react';
-import { ReactGridLayoutProps, Responsive, WidthProvider } from 'react-grid-layout';
+import { ReactGridLayoutProps, Responsive } from 'react-grid-layout';
+import { SizeMe } from 'react-sizeme';
 import GridItem from './GridItem';
 
-const ReactGridLayout = WidthProvider(Responsive);
+const ReactGridLayout = Responsive;
 
 interface GridProps {
     isEditMode: boolean;
@@ -47,19 +48,31 @@ export default function Grid({ children, isEditMode, onGridDataChange, style }: 
     }
 
     return (
-        <ReactGridLayout
-            className={['layout', isEditMode && 'isEditMode'].join(' ')}
-            breakpoints={{ lg: 1000, md: 800, sm: 640, xs: 320, xxs: 0 }}
-            cols={{ lg: 12, md: 10, sm: 8, xs: 6, xxs: 2 }}
-            rowHeight={10}
-            onLayoutChange={saveChangedItems}
-            isDraggable={isEditMode}
-            isResizable={isEditMode}
-            useCSSTransforms={false}
-            style={style}
-        >
-            {React.Children.map(children, processGridItem)}
-        </ReactGridLayout>
+        /**
+         * NOTE: Use `SizeMe` instead of `react-grid-layout`'s `WidthProvider`
+         * to resize the layout when its width changes due to other components
+         * changing their size. This happens when there is a resizeable
+         * component nearby that causes the layout to shrink/expand according
+         * to user actions.
+         */
+        <SizeMe>
+            {({ size: { width } }) => (
+                <ReactGridLayout
+                    className={['layout', isEditMode && 'isEditMode'].join(' ')}
+                    breakpoints={{ lg: 1000, md: 800, sm: 640, xs: 320, xxs: 0 }}
+                    cols={{ lg: 12, md: 10, sm: 8, xs: 6, xxs: 2 }}
+                    rowHeight={10}
+                    onLayoutChange={saveChangedItems}
+                    isDraggable={isEditMode}
+                    isResizable={isEditMode}
+                    useCSSTransforms={false}
+                    style={style}
+                    width={width ?? undefined}
+                >
+                    {React.Children.map(children, processGridItem)}
+                </ReactGridLayout>
+            )}
+        </SizeMe>
     );
 }
 
