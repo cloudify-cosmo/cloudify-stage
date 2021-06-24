@@ -1,15 +1,10 @@
 import { useQuery } from 'react-query';
+import { Filter } from '../filters/types';
 
 export default function useFilterQuery(toolbox: Stage.Types.Toolbox, filterId?: string) {
-    const result = useQuery<Stage.Common.Filters.Rule[]>(
+    const result = useQuery<Filter | undefined>(
         `/filters/deployments/${filterId}`,
-        ({ queryKey: url }) =>
-            filterId
-                ? toolbox
-                      .getManager()
-                      .doGet(url)
-                      .then(filtersResponse => filtersResponse.value)
-                : [],
+        ({ queryKey: url }) => (filterId ? toolbox.getManager().doGet(url) : undefined),
         { refetchOnWindowFocus: false, keepPreviousData: true }
     );
 

@@ -1,5 +1,4 @@
-import type { Filter, FilterUsage } from './types';
-import type { FilterRule } from '../../common/src/filters/types';
+import type { Filter, FilterUsage, FilterRule } from './types';
 
 export default class FilterActions {
     constructor(private toolbox: Stage.Types.Toolbox) {}
