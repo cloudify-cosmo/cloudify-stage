@@ -32,11 +32,17 @@ export type Label = SystemLabel & {
 
 const commands = {
     getDeployment: (deploymentId: string) => cy.cfyRequest(`/deployments/${deploymentId}`, 'GET'),
-    deployBlueprint: (blueprintId: string, deploymentId: string, inputs = {}) => {
+    deployBlueprint: (
+        blueprintId: string,
+        deploymentId: string,
+        inputs = {},
+        deploymentProperties: Record<string, any> = {}
+    ) => {
         cy.cfyRequest(`/deployments/${deploymentId}`, 'PUT', null, {
             blueprint_id: blueprintId,
             inputs,
-            visibility: 'tenant'
+            visibility: 'tenant',
+            ...deploymentProperties
         });
     },
     setSite: (deploymentId: string, siteName: string) => {
