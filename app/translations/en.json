@@ -713,9 +713,13 @@
                         "header": "Select a filter",
                         "submit": "Apply",
                         "save": "Save",
+                        "saveAs": "Save as...",
+                        "saveNew": "Save new filter",
+                        "filterIdPlaceholder": "Enter new filter ID...",
                         "noFilterError": "Please select a filter or specify filter rules",
                         "noFilterRulesError": "Please specify filter rules",
                         "filterRulesInvalidError": "Please provide all the values in filter rules section",
+                        "filterIdMissingError": "Please specify new filter ID",
                         "filterId": "Filter ID",
                         "filterRules": "Filter rules"
                     }

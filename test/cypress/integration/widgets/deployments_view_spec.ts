@@ -265,6 +265,41 @@ describe('Deployments View widget', () => {
             });
         });
 
+        it('should allow to save new filter', () => {
+            const newFilterId = `${filterId}-new`;
+            cy.deleteDeploymentsFilter(newFilterId, { ignoreFailure: true });
+
+            useDeploymentsViewWidget();
+
+            cy.interceptSp('PUT', `/filters/deployments/${newFilterId}`).as('filterCreate');
+
+            cy.contains('button', 'Filter').click();
+            cy.get('.modal').within(() => {
+                cy.contains('.selection', 'Type in values')
+                    .find('input')
+                    .type(`${blueprintName}{enter}`, { force: true });
+
+                cy.contains('.buttons', 'Save').find('.ui.dropdown').click();
+                cy.contains('Save as').click();
+                cy.get('input[placeholder="Enter new filter ID..."]').type(newFilterId);
+                cy.contains('Save new filter').click();
+
+                cy.contains('Save new filter').should('not.exist');
+                cy.contains('.field', 'Filter ID').contains(newFilterId);
+            });
+
+            cy.wait('@filterCreate').then(({ request }) => {
+                const requestRules = request.body.filter_rules;
+                expect(requestRules).to.have.length(1);
+                expect(requestRules[0]).to.deep.equal({
+                    type: FilterRuleType.Attribute,
+                    key: FilterRuleAttribute.Blueprint,
+                    values: [blueprintName],
+                    operator: FilterRuleOperators.Contains
+                });
+            });
+        });
+
         it('should prevent modified system filter from being saved', () => {
             useDeploymentsViewWidget();
 

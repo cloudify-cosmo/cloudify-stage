@@ -56,19 +56,23 @@ const FilterModal: FunctionComponent<FilterModalProps> = ({
         Button,
         CancelButton,
         Dimmer,
+        Dropdown,
         Icon,
+        Input,
         Modal,
         UnsafelyTypedForm,
         UnsafelyTypedFormField
     } = Stage.Basic;
     // @ts-expect-error DynamicDropdown is not converted to TS yet
     const { DynamicDropdown } = Stage.Common;
-    const { useBoolean, useErrors } = Stage.Hooks;
+    const { useBoolean, useErrors, useInput } = Stage.Hooks;
 
     const { errors, setErrors, clearErrors, setMessageAsError } = useErrors();
     const [rulesErrorsPresent, setRuleErrorsPresent] = useState<boolean>();
 
     const [filterSaving, setFilterSaving, unsetFilterSaving] = useBoolean();
+    const [saveAsActive, activateSaveAs, deactivateSaveAs] = useBoolean();
+    const [newFilterId, setNewFilterId, clearNewFilterId] = useInput('');
 
     // The values are 'saved' on modal submit and 'reverted' on modal cancel
     const filterId = useRevertableState<string | undefined>(undefined);
@@ -144,6 +148,48 @@ const FilterModal: FunctionComponent<FilterModalProps> = ({
             .finally(unsetFilterSaving);
     }
 
+    function handleSaveAsCancel() {
+        deactivateSaveAs();
+        clearNewFilterId();
+        clearErrors();
+    }
+
+    function handleSaveAsSubmit() {
+        if (!filterRules.value?.length) {
+            setErrors({
+                error: tModal('noFilterRulesError')
+            });
+            return;
+        }
+
+        if (rulesErrorsPresent) {
+            setErrors({
+                error: tModal('filterRulesInvalidError')
+            });
+            return;
+        }
+
+        if (!newFilterId) {
+            setErrors({
+                error: tModal('filterIdMissingError')
+            });
+            return;
+        }
+
+        setFilterSaving();
+        new FilterActions(toolbox)
+            .doCreate(newFilterId, filterRules.value)
+            .then(() => {
+                filterDirty.set(false);
+                filterId.set(newFilterId);
+                clearNewFilterId();
+                clearErrors();
+                deactivateSaveAs();
+            })
+            .catch(setMessageAsError)
+            .finally(unsetFilterSaving);
+    }
+
     useEffect(() => {
         const newFilterRules = filterRulesResult.data?.value ?? [];
         filterRules.set(newFilterRules);
@@ -189,12 +235,32 @@ const FilterModal: FunctionComponent<FilterModalProps> = ({
 
             <Modal.Actions style={{ position: 'relative' }}>
                 <Dimmer active={interactionsDisabled} inverted />
-                <Button
-                    content={tModal('save')}
-                    style={{ float: 'left' }}
-                    disabled={!filterId.value || !filterDirty.value || filterRulesResult.data?.is_system_filter}
-                    onClick={handleSave}
-                />
+                {saveAsActive ? (
+                    <div style={{ float: 'left' }}>
+                        <Input
+                            placeholder={tModal('filterIdPlaceholder')}
+                            style={{ marginRight: '0.25em' }}
+                            value={newFilterId}
+                            onChange={setNewFilterId}
+                        />
+                        <Button icon="cancel" onClick={handleSaveAsCancel} />
+                        <Button content={tModal('saveNew')} onClick={handleSaveAsSubmit} />
+                    </div>
+                ) : (
+                    <Button.Group style={{ float: 'left', position: 'relative' }}>
+                        <Button
+                            content={tModal('save')}
+                            disabled={!filterId.value || !filterDirty.value || filterRulesResult.data?.is_system_filter}
+                            onClick={handleSave}
+                        />
+                        <Dropdown
+                            className="button icon"
+                            options={[{ text: tModal('saveAs'), onClick: activateSaveAs, key: '' }]}
+                            trigger={<></>}
+                            style={{ position: 'unset' }}
+                        />
+                    </Button.Group>
+                )}
                 <CancelButton onClick={handleCancel} />
                 <ApproveButton
                     onClick={handleSubmit}
