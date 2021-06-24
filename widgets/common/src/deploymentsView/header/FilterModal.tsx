@@ -145,6 +145,8 @@ const FilterModal: FunctionComponent<FilterModalProps> = ({
         if (filterRulesResult.isError) setErrors({ error: tMessage('errorLoadingFilterRules') });
     }, [filterRulesResult.isError]);
 
+    const disableInteractions = filterRulesResult.isFetching || filterSaving;
+
     return (
         <Modal open={open} onClose={onCancel} size="large">
             <Modal.Header>
@@ -163,7 +165,7 @@ const FilterModal: FunctionComponent<FilterModalProps> = ({
                         />
                     </UnsafelyTypedFormField>
                     <UnsafelyTypedFormField label={tModal('filterRules')}>
-                        {(filterRulesResult.isFetching || filterSaving) && <Stage.Basic.LoadingOverlay />}
+                        {disableInteractions && <Stage.Basic.LoadingOverlay />}
                         {filterRulesResult.isSuccess && (
                             <RulesForm
                                 initialFilters={initialFilterRules}
@@ -183,8 +185,9 @@ const FilterModal: FunctionComponent<FilterModalProps> = ({
                     disabled={!filterId.value || !filterDirty.value || filterRulesResult.data?.is_system_filter}
                     onClick={handleSave}
                 />
-                <CancelButton onClick={handleCancel} />
+                <CancelButton onClick={handleCancel} disabled={disableInteractions} />
                 <ApproveButton
+                    disabled={disableInteractions}
                     onClick={handleSubmit}
                     color="green"
                     content={i18n.t(`${i18nPrefix}.header.filter.modal.submit`)}
