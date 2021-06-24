@@ -6,6 +6,7 @@ import type { SystemLabel } from '../../support/deployments';
 import { exampleBlueprintUrl } from '../../support/resource_urls';
 import { FilterRuleAttribute, FilterRuleOperators, FilterRuleType } from '../../../../widgets/common/src/filters/types';
 import type {} from '../../../../widgets/common/src/deploymentsView';
+import { secondsToMs } from '../../support/resource_commons';
 
 describe('Deployments View widget', () => {
     const widgetId = 'deploymentsView';
@@ -74,7 +75,7 @@ describe('Deployments View widget', () => {
             { additionalWidgetIdsToLoad, widgetsWidth: 12, additionalPageTemplates: ['drilldownDeployments'] }
         ).mockLoginWithoutWaiting();
         cy.interceptSp('POST', /^\/searches\/deployments/, routeHandler).as('deployments');
-        cy.wait('@deployments');
+        cy.wait('@deployments', { requestTimeout: secondsToMs(10) });
     };
 
     const getDeploymentsViewWidget = () =>
