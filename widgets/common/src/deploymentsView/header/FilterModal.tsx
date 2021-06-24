@@ -51,7 +51,16 @@ const FilterModal: FunctionComponent<FilterModalProps> = ({
     toolbox
 }) => {
     const { i18n } = Stage;
-    const { ApproveButton, Button, CancelButton, Icon, Modal, UnsafelyTypedForm, UnsafelyTypedFormField } = Stage.Basic;
+    const {
+        ApproveButton,
+        Button,
+        CancelButton,
+        Dimmer,
+        Icon,
+        Modal,
+        UnsafelyTypedForm,
+        UnsafelyTypedFormField
+    } = Stage.Basic;
     // @ts-expect-error DynamicDropdown is not converted to TS yet
     const { DynamicDropdown } = Stage.Common;
     const { useBoolean, useErrors } = Stage.Hooks;
@@ -145,7 +154,7 @@ const FilterModal: FunctionComponent<FilterModalProps> = ({
         if (filterRulesResult.isError) setErrors({ error: tMessage('errorLoadingFilterRules') });
     }, [filterRulesResult.isError]);
 
-    const disableInteractions = filterRulesResult.isFetching || filterSaving;
+    const interactionsDisabled = filterRulesResult.isFetching || filterSaving;
 
     return (
         <Modal open={open} onClose={onCancel} size="large">
@@ -165,7 +174,7 @@ const FilterModal: FunctionComponent<FilterModalProps> = ({
                         />
                     </UnsafelyTypedFormField>
                     <UnsafelyTypedFormField label={tModal('filterRules')}>
-                        {disableInteractions && <Stage.Basic.LoadingOverlay />}
+                        {interactionsDisabled && <Stage.Basic.LoadingOverlay />}
                         {filterRulesResult.isSuccess && (
                             <RulesForm
                                 initialFilters={initialFilterRules}
@@ -178,16 +187,16 @@ const FilterModal: FunctionComponent<FilterModalProps> = ({
                 </UnsafelyTypedForm>
             </Modal.Content>
 
-            <Modal.Actions>
+            <Modal.Actions style={{ position: 'relative' }}>
+                <Dimmer active={interactionsDisabled} inverted />
                 <Button
                     content={tModal('save')}
                     style={{ float: 'left' }}
                     disabled={!filterId.value || !filterDirty.value || filterRulesResult.data?.is_system_filter}
                     onClick={handleSave}
                 />
-                <CancelButton onClick={handleCancel} disabled={disableInteractions} />
+                <CancelButton onClick={handleCancel} />
                 <ApproveButton
-                    disabled={disableInteractions}
                     onClick={handleSubmit}
                     color="green"
                     content={i18n.t(`${i18nPrefix}.header.filter.modal.submit`)}
