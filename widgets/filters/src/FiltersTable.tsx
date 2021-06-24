@@ -1,12 +1,11 @@
 import { isEmpty } from 'lodash';
 
 import type { FunctionComponent } from 'react';
-import type { Filter, FilterWidget, FilterUsage } from './types';
-import FilterActions from './FilterActions';
+import type { FilterWidget } from './types';
 import FilterAddModal from './FilterAddModal';
 import FilterCloneModal from './FilterCloneModal';
 import FilterEditModal from './FilterEditModal';
-import type { FilterRule } from '../../common/src/filters/types';
+import type { Filter, FilterUsage, FilterRule } from '../../common/src/filters/types';
 
 interface FiltersTableData {
     filters: Filter[];
@@ -32,6 +31,7 @@ const FiltersTable: FunctionComponent<FiltersTableProps> = ({ data, toolbox, wid
     const { Alert, Button, Checkbox, Confirm, DataTable, Icon, List } = Stage.Basic;
     const { Time } = Stage.Utils;
     const { useResettableState, useRefreshEvent, useBoolean } = Stage.Hooks;
+    const { Actions: FilterActions } = Stage.Common.Filters;
 
     const [filterIdToDelete, setFilterIdToDelete, clearFilterIdToDelete] = useResettableState('');
     const [filterUsage, setFilterUsage, clearFilterUsage] = useResettableState<FilterUsage[]>([]);
