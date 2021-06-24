@@ -22,37 +22,52 @@ pipeline {
 
   environment {
     BRANCH = "${env.BRANCH_NAME}"
-    workspace = "${env.WORKSPACE}"
-    stage_dir = "cloudify-stage"
-    cfy_manager_url = 'https://raw.githubusercontent.com/cloudify-cosmo/cloudify-manager'
-    cfy_node_rpm = 'http://repository.cloudifysource.org/cloudify/components/nodejs-12.16.1-1nodesource.x86_64.rpm'
+    WORKSPACE = "${env.WORKSPACE}"
+    STAGE_DIR = "cloudify-stage"
+    CFY_MANAGER_URL = 'https://raw.githubusercontent.com/cloudify-cosmo/cloudify-manager'
+    CFY_NODE_RPM = 'http://repository.cloudifysource.org/cloudify/components/nodejs-12.22.1-1nodesource.x86_64.rpm'
+    MAIN_BRANCH = "5.2.3-build"
   }
 
   stages {
-    stage('Prepare'){
-      steps {
-        container('node'){
-          dir("${stage_dir}/conf") {
-            withVault([configuration: configuration, vaultSecrets: secrets]) {
-              sh """
-                jq '.maps.accessToken = "${env.MAPS_ACCESS_TOKEN}"' app.json > app.json.tmp && mv app.json.tmp app.json
-              """
+    stage('Prepare & Audit main branch'){
+      parallel{
+        stage('Audit'){
+          when {
+            branch "${MAIN_BRANCH}"
+          }
+          steps {
+            catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE'){
+              container('node'){
+                dir("${STAGE_DIR}") {
+                  echo 'Run npm production dependencies security audit'
+                  sh 'npm run audit'
+                }
+              }
             }
           }
         }
-      }
-    }
-    stage('Run Builds') {
-      parallel {
-        stage('Build') {
+        stage('Prepare & Run first test group'){
           steps {
             container('node'){
-              dir("${stage_dir}") {
-                echo "Install dependencies"
-                sh 'npm run beforebuild'
-
-                echo "Build application"
-                sh 'npm run build'
+              dir("${STAGE_DIR}/conf") {
+                withVault([configuration: configuration, vaultSecrets: secrets]) {
+                  sh """
+                    jq '.maps.accessToken = "${env.MAPS_ACCESS_TOKEN}"' app.json > app.json.tmp && mv app.json.tmp app.json
+                  """
+                }
+                dir("${STAGE_DIR}") {
+                  echo "Install dependencies"
+                  sh 'npm run beforebuild'
+                  echo "Build application"
+                  sh 'npm run build'
+                }
+              }
+              echo 'prepare test folder'
+              sh "mkdir -p ${WORKSPACE}/test && cp -rf ${WORKSPACE}/${STAGE_DIR}/. ${WORKSPACE}/test"
+              dir("${WORKSPACE}/test"){
+                echo 'Run static code analysis and code style check'
+                sh 'npm run lint'
               }
             }
           }
@@ -63,12 +78,12 @@ pipeline {
               echo 'Create RPM directory and copy all data from build stage to, for rpmbuild to run'
               sh """
                 cd && mkdir rpmbuild && cd rpmbuild
-                mkdir -p BUILD && cp -rf ${workspace}/${stage_dir}/. BUILD && cd BUILD
-                curl -fO "${cfy_manager_url}/${BRANCH}/packaging/version_info" || curl -fO "${cfy_manager_url}/master/packaging/version_info"
+                mkdir -p BUILD && cp -rf ${WORKSPACE}/${STAGE_DIR}/. BUILD && cd BUILD
+                curl -fO "${CFY_MANAGER_URL}/${BRANCH}/packaging/version_info" || curl -fO "${CFY_MANAGER_URL}/${MAIN_BRANCH}/packaging/version_info"
               """
 
               echo 'Install NodeJS & RPM development tools'
-              sh "yum install -y ${cfy_node_rpm} rpmdevtools rpmlint"
+              sh "yum install -y ${CFY_NODE_RPM} rpmdevtools rpmlint"
 
               echo 'Lint RPM spec file & Install build dependencies for RPM spec file'
               sh '''
@@ -93,8 +108,8 @@ pipeline {
               '''
 
               echo 'Save Artifacts'
-              sh("mkdir -p ${workspace}/rpm && cp -rf /root/rpmbuild/RPMS/x86_64/. ${workspace}/rpm")
-              dir("${workspace}/rpm") {
+              sh("mkdir -p ${WORKSPACE}/rpm && cp -rf /root/rpmbuild/RPMS/x86_64/. ${WORKSPACE}/rpm")
+              dir("${WORKSPACE}/rpm") {
                 archiveArtifacts artifacts: '*.rpm', onlyIfSuccessful: true
               }
             }
@@ -102,89 +117,71 @@ pipeline {
         }
       }
     }
-    stage('Test'){
-      steps {
-        container('node'){
-          sh "mkdir -p ${workspace}/test && cp -rf ${workspace}/${stage_dir}/. ${workspace}/test"
-          dir("test") {
-            echo 'Run static code analysis and code style check'
-            sh 'npm run lint'
-
-            echo 'Run frontend tests'
-            sh 'npm run test:frontend'
-
-            echo 'Run backend tests'
-            sh 'sudo rm -rf /var/lib/apt/lists/* && sudo apt update && sudo apt install postgresql-client'
-            sh 'echo \'{"app":{"ssl":{"ca":null},"logLevelConf":"","logLevel":"debug"}}\' > conf/me.json'
-            sh 'npm run test:backend'
+    stage('Run second tests group') {
+      parallel {
+        stage('Test frontend'){
+          steps{
+            container('node'){
+              dir("${WORKSPACE}/test"){
+                echo 'Run frontend tests'
+                sh 'npm run test:frontend'
+              }
+            }
           }
         }
-      }
-    }
-    stage('Run Tests') {
-      parallel {
+        stage('Test backend'){
+          steps{
+            container('node'){
+              dir("${WORKSPACE}/test"){
+                echo 'Run backend tests'
+                sh 'sudo rm -rf /var/lib/apt/lists/* && sudo apt update && sudo apt install postgresql-client'
+                sh 'echo \'{"app":{"ssl":{"ca":null},"logLevelConf":"","logLevel":"debug"}}\' > conf/me.json'
+                sh 'npm run test:backend'
+              }
+            }
+          }
+        }
         stage('Size') {
           steps {
             container('node'){
-              sh 'rm -rf ${workspace}/test && rm -rf ${workspace}/backend'
-              sh "mkdir -p ${workspace}/size && cp -rf ${workspace}/${stage_dir}/. ${workspace}/size"
+              sh "mkdir -p ${WORKSPACE}/size && cp -rf ${WORKSPACE}/${STAGE_DIR}/. ${WORKSPACE}/size"
               dir("size") {
                 echo 'Check bundle size'
                 sh 'npm run size'
               }
-              sh "rm -rf ${workspace}/size"
+              sh "rm -rf ${WORKSPACE}/size"
             }
           }
         }
         stage('Docs'){
           steps {
-            catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE'){
-              container('node'){
-                sh 'rm -rf ${workspace}/test && rm -rf ${workspace}/backend'
-                sh "mkdir -p ${workspace}/docs && cp -rf ${workspace}/${stage_dir}/. ${workspace}/docs"
-                dir("docs") {
-                  echo 'Generate widgets documentation'
-                  sh 'npm run docWidgets'
+            container('node'){
+              sh "mkdir -p ${WORKSPACE}/docs && cp -rf ${WORKSPACE}/${STAGE_DIR}/. ${WORKSPACE}/docs"
+              dir("docs") {
+                echo 'Generate widgets documentation'
+                sh 'npm run docWidgets'
 
-                  echo 'Check if widgets documentation is up to date'
-                  sh 'git diff --exit-code ./widgets'
+                echo 'Check if widgets documentation is up to date'
+                sh 'git diff --exit-code ./widgets'
 
-                  echo 'Check if cloudify-ui-components version is the same as in official documentation'
-                  sh 'npm run docCheck'
-                }
+                echo 'Check if cloudify-ui-components version is the same as in official documentation'
+                sh 'npm run docCheck'
               }
             }
           }
         }
-      }
-    }
-    stage('Audit'){
-      when {
-        branch "master"
-      }
-      steps {
-        catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE'){
-          container('node'){
-            dir("${stage_dir}") {
-              echo 'Run npm production dependencies security audit'
-              sh 'npm run audit'
-            }
+        stage('Run Stage-UI System-tests') {
+          when {
+            branch "${MAIN_BRANCH}"
+          }
+          steps {
+            echo 'Trigger Stage-UI System-tests'
+            build(job: 'Stage-UI-System-Test', parameters: [
+              string(name: 'BRANCH', value: "${MAIN_BRANCH}"),
+              string(name: 'STAGE_BRANCH', value: "${MAIN_BRANCH}")
+            ])
           }
         }
-      }
-    }
-    stage('Run Stage-UI System-tests') {
-      when {
-        branch "master"
-      }
-      steps {
-        echo 'Trigger Stage-UI System-tests'
-        build(job: 'Stage-UI-System-Test', parameters: [
-          string(name: 'BRANCH', value: 'master'),
-          string(name: 'STAGE_BRANCH', value: 'master'),
-          booleanParam(name: 'CENTOS_MANAGER', value: false),
-          booleanParam(name: 'UPDATE_STAGE_ON_MANAGER', value: false)
-        ])
       }
     }
   }
