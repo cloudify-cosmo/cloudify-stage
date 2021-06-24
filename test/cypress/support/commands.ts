@@ -184,7 +184,19 @@ const commands = {
         }
     },
     // TODO(RD-2314): object instead of multiple optional parameters
-    mockLogin: (username = 'admin', password = 'admin', disableGettingStarted = true) => {
+    mockLogin: (username?: string, password?: string, disableGettingStarted?: boolean) => {
+        cy.mockLoginWithoutWaiting({ username, password, disableGettingStarted });
+        cy.waitUntilLoaded();
+    },
+    mockLoginWithoutWaiting: ({
+        username = 'admin',
+        password = 'admin',
+        disableGettingStarted = true
+    }: {
+        username?: string;
+        password?: string;
+        disableGettingStarted?: boolean;
+    } = {}) => {
         cy.stageRequest('/console/auth/login', 'POST', undefined, {
             Authorization: `Basic ${btoa(`${username}:${password}`)}`
         }).then(response => {
@@ -198,7 +210,7 @@ const commands = {
             );
             if (disableGettingStarted) mockGettingStarted(false);
         });
-        cy.visit('/console').waitUntilLoaded();
+        cy.visit('/console');
     },
     visitPage: (name: string, id: string | null = null) => {
         cy.log(`Switching to '${name}' page`);
