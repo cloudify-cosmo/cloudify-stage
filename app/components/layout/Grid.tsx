@@ -56,7 +56,7 @@ export default function Grid({ children, isEditMode, onGridDataChange, style }: 
          * to user actions.
          */
         <SizeMe>
-            {({ size: { width } }) => (
+            {({ size: { width = 0 } }) => (
                 <ReactGridLayout
                     className={['layout', isEditMode && 'isEditMode'].join(' ')}
                     breakpoints={{ lg: 1000, md: 800, sm: 640, xs: 320, xxs: 0 }}
