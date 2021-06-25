@@ -6,7 +6,6 @@ import { ReactSVGPanZoom } from 'react-svg-pan-zoom';
 import GraphEdges from './GraphEdges';
 import GraphNodes from './GraphNodes';
 import states from './States';
-import useWidthObserver from './useWidthObserver';
 
 const INACTIVE_EXECUTION_POLLING_INTERVAL = 5000;
 const ACTIVE_EXECUTION_POLLING_INTERVAL = 2500;
@@ -31,7 +30,7 @@ const INITIAL_POSITION = {
 
 export default function ExecutionWorkflowGraph({ containerHeight, selectedExecution, showStatus, toolbox }) {
     const { useState, useRef, useEffect, useCallback } = React;
-    const { useBoolean, useResettableState } = Stage.Hooks;
+    const { useBoolean, useResettableState, useWidthObserver } = Stage.Hooks;
 
     const [graphData, setGraphData, clearGraphData] = useResettableState(null);
     const [error, setError, clearError] = useResettableState('');

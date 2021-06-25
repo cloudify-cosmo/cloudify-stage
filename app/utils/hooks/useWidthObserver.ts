@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 
 export default function useWidthObserver() {
-    const observedElementRef = useRef<HTMLElement>();
+    const observedElementRef = useRef<HTMLDivElement>(null);
     // Used to force component rerender - the actual state variable is not used
     const [_wrapperWidth, setWrapperWidth] = useState<number>();
     const wrapperResizeObserver = useMemo(
@@ -22,5 +22,5 @@ export default function useWidthObserver() {
         return observedElementRef.current?.offsetWidth ?? 0;
     }
 
-    return [observedElementRef, getElementWidth];
+    return [observedElementRef, getElementWidth] as const;
 }
