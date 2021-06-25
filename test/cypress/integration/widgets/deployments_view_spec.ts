@@ -282,9 +282,7 @@ describe('Deployments View widget', () => {
                 cy.contains('.buttons', 'Save').find('.ui.dropdown').click();
                 cy.contains('Save as').click();
                 cy.get('input[placeholder="Enter new filter ID..."]').type(newFilterId);
-                cy.contains('Save new filter').click();
-
-                cy.contains('Save new filter').should('not.exist');
+                cy.contains('Save new filter').click().should('not.exist');
                 cy.contains('.field', 'Filter ID').contains(newFilterId);
             });
 
