@@ -3,6 +3,7 @@
  * Created by pposel on 22/08/2017.
  */
 import _ from 'lodash';
+import 'jquery-ui/ui/widgets/sortable';
 import PropTypes from 'prop-types';
 import i18n from 'i18next';
 import React, { Component } from 'react';
