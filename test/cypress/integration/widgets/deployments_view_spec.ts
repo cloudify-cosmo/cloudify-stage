@@ -243,6 +243,62 @@ describe('Deployments View widget', () => {
                 .setLabels(deploymentNameThatMatchesFilter, [{ precious: 'yes' }]);
         });
 
+        it('should allow to save modified filter', () => {
+            const editableFilterId = `${filterId}-editable`;
+            cy.deleteDeploymentsFilter(editableFilterId, { ignoreFailure: true }).createDeploymentsFilter(
+                editableFilterId,
+                filterRules
+            );
+
+            useDeploymentsViewWidget();
+
+            cy.interceptSp('PATCH', `/filters/deployments/${editableFilterId}`).as('filterUpdate');
+
+            cy.contains('button', 'Filter').click();
+            cy.get('.modal').within(() => {
+                cy.contains('button', 'Save').should('be.disabled');
+
+                cy.setSearchableDropdownValue('Filter ID', editableFilterId);
+                verifyFilterRulesForm();
+                cy.contains('button', 'Save').should('be.disabled');
+
+                cy.contains('Add new rule').click();
+                cy.contains('.selection', 'Type in values')
+                    .find('input')
+                    .type(`${blueprintName}{enter}`, { force: true });
+
+                cy.contains('Save').click();
+                cy.contains('button', 'Save').should('be.disabled');
+            });
+
+            cy.wait('@filterUpdate').then(({ request }) => {
+                const requestRules = request.body.filter_rules;
+                expect(requestRules).to.have.length(2);
+                expect(requestRules[0]).to.deep.equal(filterRules[0]);
+                expect(requestRules[1]).to.deep.equal({
+                    type: FilterRuleType.Attribute,
+                    key: FilterRuleAttribute.Blueprint,
+                    values: [blueprintName],
+                    operator: FilterRuleOperators.Contains
+                });
+            });
+        });
+
+        it('should prevent modified system filter from being saved', () => {
+            useDeploymentsViewWidget();
+
+            cy.contains('button', 'Filter').click();
+            cy.get('.modal').within(() => {
+                cy.contains('button', 'Save').should('be.disabled');
+
+                cy.setSearchableDropdownValue('Filter ID', 'csys-environment-filter');
+                cy.contains('button', 'Save').should('be.disabled');
+
+                cy.contains('Add new rule').click();
+                cy.contains('button', 'Save').should('be.disabled');
+            });
+        });
+
         it('should take the configured filter into account when displaying deployments', () => {
             const getFilterIdInput = () =>
                 cy.contains('Name of the saved filter to apply').parent().get('input[type="text"]');
@@ -281,7 +337,7 @@ describe('Deployments View widget', () => {
                 cy.setSearchableDropdownValue('Filter ID', filterId);
                 verifyFilterRulesForm();
                 cy.interceptSp('POST', '/searches/deployments').as('deploymentsSearchRequest');
-                cy.contains('OK').click();
+                cy.contains('Apply').click();
             });
 
             cy.get('.modal').should('not.exist');
@@ -322,7 +378,7 @@ describe('Deployments View widget', () => {
                     .type(`${blueprintName}{enter}`, { force: true });
 
                 cy.interceptSp('POST', '/searches/deployments').as('deploymentsSearchRequest');
-                cy.contains('OK').click();
+                cy.contains('Apply').click();
             });
 
             cy.get('.modal').should('not.exist');
@@ -364,7 +420,7 @@ describe('Deployments View widget', () => {
                     .type(`${blueprintName}{enter}`, { force: true });
 
                 cy.interceptSp('POST', '/searches/deployments').as('deploymentsSearchRequest');
-                cy.contains('OK').click();
+                cy.contains('Apply').click();
             });
 
             cy.get('.modal').should('not.exist');

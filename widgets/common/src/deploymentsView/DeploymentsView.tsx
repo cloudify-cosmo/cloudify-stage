@@ -58,7 +58,7 @@ export const DeploymentsView: FunctionComponent<DeploymentsViewProps> = ({
 
     const defaultFilterRulesResult = useFilterQuery(toolbox, userFilterRules ? undefined : defaultFilterId);
 
-    const filterRules = userFilterRules ?? defaultFilterRulesResult.data ?? [];
+    const filterRules = userFilterRules ?? defaultFilterRulesResult.data?.value ?? [];
     const filteringByParentDeploymentResult = useFilteringByParentDeployment({ filterByParentDeployment });
     const finalFilterRules = useMemo(() => {
         if (!filteringByParentDeploymentResult.parentDeploymentRule) {

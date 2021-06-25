@@ -711,7 +711,8 @@
                     "unsavedFilter": "Unsaved filter",
                     "modal": {
                         "header": "Select a filter",
-                        "submit": "OK",
+                        "submit": "Apply",
+                        "save": "Save",
                         "noFilterError": "Please select a filter or specify filter rules",
                         "noFilterRulesError": "Please specify filter rules",
                         "filterRulesInvalidError": "Please provide all the values in filter rules section",

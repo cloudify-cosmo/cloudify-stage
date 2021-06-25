@@ -1,7 +1,9 @@
 import RulesForm from './RulesForm';
+import FilterActions from './FilterActions';
 import { FilterRule } from './types';
 
 const Filters = {
+    Actions: FilterActions,
     RulesForm
 };
 
