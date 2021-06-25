@@ -45,6 +45,9 @@ global.log = log;
 global.Stage = { defineCommon: noop };
 global.PropTypes = PropTypes;
 global.React = React;
+global.ResizeObserver = function ResizeObserver() {
+    return { observe: jest.fn(), unobserve: jest.fn() };
+};
 
 i18nInit();
 
