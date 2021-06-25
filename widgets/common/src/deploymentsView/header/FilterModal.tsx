@@ -71,7 +71,7 @@ const FilterModal: FunctionComponent<FilterModalProps> = ({
     const [rulesErrorsPresent, setRuleErrorsPresent] = useState<boolean>();
 
     const [filterSaving, setFilterSaving, unsetFilterSaving] = useBoolean();
-    const [saveAsActive, activateSaveAs, deactivateSaveAs] = useBoolean();
+    const [saveAsModeActive, activateSaveAsMode, deactivateSaveAsMode] = useBoolean();
     const [newFilterId, setNewFilterId, clearNewFilterId] = useInput('');
 
     // The values are 'saved' on modal submit and 'reverted' on modal cancel
@@ -149,7 +149,7 @@ const FilterModal: FunctionComponent<FilterModalProps> = ({
     }
 
     function handleSaveAsCancel() {
-        deactivateSaveAs();
+        deactivateSaveAsMode();
         clearNewFilterId();
         clearErrors();
     }
@@ -184,7 +184,7 @@ const FilterModal: FunctionComponent<FilterModalProps> = ({
                 filterId.set(newFilterId);
                 clearNewFilterId();
                 clearErrors();
-                deactivateSaveAs();
+                deactivateSaveAsMode();
             })
             .catch(setMessageAsError)
             .finally(unsetFilterSaving);
@@ -235,7 +235,7 @@ const FilterModal: FunctionComponent<FilterModalProps> = ({
 
             <Modal.Actions style={{ position: 'relative' }}>
                 <Dimmer active={interactionsDisabled} inverted />
-                {saveAsActive ? (
+                {saveAsModeActive ? (
                     <div style={{ float: 'left' }}>
                         <Input
                             placeholder={tModal('filterIdPlaceholder')}
@@ -255,7 +255,7 @@ const FilterModal: FunctionComponent<FilterModalProps> = ({
                         />
                         <Dropdown
                             className="button icon"
-                            options={[{ text: tModal('saveAs'), onClick: activateSaveAs, key: '' }]}
+                            options={[{ text: tModal('saveAs'), onClick: activateSaveAsMode, key: '' }]}
                             trigger={<></>}
                             style={{ position: 'unset' }}
                         />
