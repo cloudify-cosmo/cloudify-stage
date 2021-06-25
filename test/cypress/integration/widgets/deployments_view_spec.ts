@@ -281,7 +281,7 @@ describe('Deployments View widget', () => {
 
             cy.contains('button', 'Filter').click();
             cy.get('.modal').within(() => {
-                cy.contains('.selection', 'Type in values')
+                cy.contains('.fields', 'Blueprint').contains('.selection', 'Type in values')
                     .find('input')
                     .type(`${blueprintName}{enter}`, { force: true });
 
