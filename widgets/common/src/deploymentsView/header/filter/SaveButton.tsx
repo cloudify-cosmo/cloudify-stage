@@ -1,11 +1,11 @@
 import { FunctionComponent, useEffect } from 'react';
-import { tModal } from './FilterModal';
+import { tModal } from './common';
 
 interface SaveButtonProps {
     saveDisabled: boolean;
     onSave: () => void;
     onSaveAsCancel: () => void;
-    onSaveAsSubmit: (newFilterId: string) => Promise<unknown>;
+    onSaveAsSubmit: (newFilterId: string) => Promise<void>;
 }
 
 const SaveButton: FunctionComponent<SaveButtonProps> = ({ saveDisabled, onSave, onSaveAsCancel, onSaveAsSubmit }) => {

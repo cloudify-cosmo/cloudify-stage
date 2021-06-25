@@ -1,11 +1,12 @@
 import type { FunctionComponent } from 'react';
 import { useEffect, useState } from 'react';
-import { i18nMessagesPrefix, i18nPrefix } from '../common';
-import RulesForm from '../../filters/RulesForm';
-import { FilterRule } from '../../filters/types';
-import useFilterQuery from '../useFilterQuery';
-import FilterActions from '../../filters/FilterActions';
-import SaveButton from './FilterModalSaveButton';
+import { i18nMessagesPrefix, i18nPrefix } from '../../common';
+import RulesForm from '../../../filters/RulesForm';
+import { FilterRule } from '../../../filters/types';
+import useFilterQuery from '../../useFilterQuery';
+import FilterActions from '../../../filters/FilterActions';
+import SaveButton from './SaveButton';
+import { tModal } from './common';
 
 interface FilterModalProps {
     userFilterSelected: boolean;
@@ -14,8 +15,6 @@ interface FilterModalProps {
     onCancel: () => void;
     toolbox: Stage.Types.Toolbox;
 }
-
-export const tModal = Stage.Utils.getT(`${i18nPrefix}.header.filter.modal`);
 
 const tMessage = Stage.Utils.getT(i18nMessagesPrefix);
 
