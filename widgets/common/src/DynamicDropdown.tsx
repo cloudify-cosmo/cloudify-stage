@@ -207,15 +207,7 @@ export default function DynamicDropdown({
             return multiple ? [] : '';
         }
 
-        let valueArray = _.castArray(value);
-
-        if (!fetchState.hasMore) {
-            const filteredValueArray = _(filteredOptions).map(valueProp).intersection(valueArray).value();
-            if (filteredValueArray.length !== valueArray.length) {
-                onChange(filteredValueArray);
-                valueArray = filteredValueArray;
-            }
-        }
+        const valueArray = _.castArray(value);
 
         return multiple ? valueArray : valueArray[0];
     }
