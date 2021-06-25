@@ -1,12 +1,8 @@
 import React from 'react';
 import { mount, shallow } from 'enzyme';
-import SizeMe from 'react-sizeme';
 
 import Grid from 'components/layout/Grid';
 import GridItem from 'components/layout/GridItem';
-
-// See https://github.com/ctrlplusb/react-sizeme/issues/150#issuecomment-482247078
-SizeMe.noPlaceholders = true;
 
 describe('(Component) Grid', () => {
     function testGridRender(isEditMode: boolean) {
