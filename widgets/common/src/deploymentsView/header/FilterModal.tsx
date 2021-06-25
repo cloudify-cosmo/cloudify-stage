@@ -1,52 +1,160 @@
 import type { FunctionComponent } from 'react';
-import { useEffect } from 'react';
-import { i18nPrefix } from '../common';
+import { useEffect, useState } from 'react';
+import { i18nMessagesPrefix, i18nPrefix } from '../common';
+import RulesForm from '../../filters/RulesForm';
+import { FilterRule } from '../../filters/types';
+import useFilterQuery from '../useFilterQuery';
+import FilterActions from '../../filters/FilterActions';
 
 interface FilterModalProps {
-    filterId: string | undefined;
+    userFilterSelected: boolean;
     open: boolean;
-    onSubmit: (filterId: string) => void;
+    onSubmit: (filterRules: FilterRule[], filterId?: string) => void;
     onCancel: () => void;
     toolbox: Stage.Types.Toolbox;
 }
 
+const tModal = Stage.Utils.getT(`${i18nPrefix}.header.filter.modal`);
+const tMessage = Stage.Utils.getT(i18nMessagesPrefix);
+
+function useRevertableState<T>(initialValue: T) {
+    const { useResettableState } = Stage.Hooks;
+
+    const [value, setValue, resetValue] = useResettableState<T>(initialValue);
+    const [savedValue, setSavedValue, resetSavedValue] = useResettableState<T>(initialValue);
+
+    return {
+        value,
+        set: setValue,
+        save: () => setSavedValue(value),
+        revert: () => setValue(savedValue),
+        reset: () => {
+            resetValue();
+            resetSavedValue();
+        }
+    };
+}
+
+function useRevertableStates(...revertableStates: Omit<ReturnType<typeof useRevertableState>, 'set'>[]) {
+    return {
+        save: () => revertableStates.forEach(s => s.save()),
+        revert: () => revertableStates.forEach(s => s.revert()),
+        reset: () => revertableStates.forEach(s => s.reset())
+    };
+}
+
 const FilterModal: FunctionComponent<FilterModalProps> = ({
-    filterId: filterIdProp,
+    userFilterSelected,
     open,
     onCancel,
     onSubmit,
     toolbox
 }) => {
     const { i18n } = Stage;
-    const { ApproveButton, CancelButton, Icon, Modal, UnsafelyTypedForm, UnsafelyTypedFormField } = Stage.Basic;
+    const {
+        ApproveButton,
+        Button,
+        CancelButton,
+        Dimmer,
+        Icon,
+        Modal,
+        UnsafelyTypedForm,
+        UnsafelyTypedFormField
+    } = Stage.Basic;
     // @ts-expect-error DynamicDropdown is not converted to TS yet
     const { DynamicDropdown } = Stage.Common;
-    const { useResettableState } = Stage.Hooks;
+    const { useBoolean, useErrors } = Stage.Hooks;
 
-    const { errors, setErrors, clearErrors } = Stage.Hooks.useErrors();
-    const [filterId, setFilterId, resetFilterId] = useResettableState<string | undefined>(filterIdProp);
+    const { errors, setErrors, clearErrors, setMessageAsError } = useErrors();
+    const [rulesErrorsPresent, setRuleErrorsPresent] = useState<boolean>();
 
-    useEffect(resetFilterId, [filterIdProp]);
+    const [filterSaving, setFilterSaving, unsetFilterSaving] = useBoolean();
+
+    // The values are 'saved' on modal submit and 'reverted' on modal cancel
+    const filterId = useRevertableState<string | undefined>(undefined);
+    const filterRules = useRevertableState<FilterRule[]>([]);
+    const filterDirty = useRevertableState<boolean>(false);
+    const modalState = useRevertableStates(filterId, filterRules, filterDirty);
+
+    const filterRulesResult = useFilterQuery(toolbox, filterId.value);
+
+    // Used to initialize RulesForm
+    const [initialFilterRules, setInitialFilterRules] = useState<FilterRule[]>([]);
+
+    useEffect(() => {
+        if (!userFilterSelected) modalState.reset();
+    }, [userFilterSelected]);
 
     function handleSubmit() {
-        if (!filterId) {
-            setErrors({ error: i18n.t(`${i18nPrefix}.header.filter.modal.noFilterError`) });
+        if (!filterRules.value?.length) {
+            setErrors({
+                error: tModal(filterId ? 'noFilterRulesError' : 'noFilterError')
+            });
             return;
         }
 
-        onSubmit(filterId);
+        if (rulesErrorsPresent) {
+            setErrors({
+                error: tModal('filterRulesInvalidError')
+            });
+            return;
+        }
+
+        modalState.save();
+        setInitialFilterRules(filterRules.value);
+        clearErrors();
+
+        onSubmit(filterRules.value, filterDirty.value ? undefined : filterId.value);
     }
 
     function handleCancel() {
         onCancel();
-        resetFilterId();
+        modalState.revert();
+        setRuleErrorsPresent(false);
         clearErrors();
     }
 
-    function handleChange(value: string) {
-        setFilterId(value);
+    function handleFilterIdChange(value: string) {
+        filterId.set(value);
+        filterDirty.set(false);
         clearErrors();
     }
+
+    function handleFilterRulesChange(newFilterRules: FilterRule[], ruleErrors: boolean) {
+        filterRules.set(newFilterRules);
+        filterDirty.set(true);
+        clearErrors();
+        setRuleErrorsPresent(ruleErrors);
+    }
+
+    function handleSave() {
+        if (rulesErrorsPresent) {
+            setErrors({
+                error: tModal('filterRulesInvalidError')
+            });
+            return;
+        }
+
+        setFilterSaving();
+        new FilterActions(toolbox)
+            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+            .doUpdate(filterId.value!, filterRules.value)
+            .then(() => filterDirty.set(false))
+            .catch(setMessageAsError)
+            .finally(unsetFilterSaving);
+    }
+
+    useEffect(() => {
+        const newFilterRules = filterRulesResult.data?.value ?? [];
+        filterRules.set(newFilterRules);
+        setInitialFilterRules(newFilterRules);
+    }, [JSON.stringify(filterRulesResult.data)]);
+
+    useEffect(() => {
+        if (filterRulesResult.isError) setErrors({ error: tMessage('errorLoadingFilterRules') });
+    }, [filterRulesResult.isError]);
+
+    const interactionsDisabled = filterRulesResult.isFetching || filterSaving;
 
     return (
         <Modal open={open} onClose={onCancel} size="large">
@@ -56,19 +164,37 @@ const FilterModal: FunctionComponent<FilterModalProps> = ({
 
             <Modal.Content>
                 <UnsafelyTypedForm errors={errors} onErrorsDismiss={clearErrors}>
-                    <UnsafelyTypedFormField>
+                    <UnsafelyTypedFormField label={tModal('filterId')}>
                         <DynamicDropdown
                             toolbox={toolbox}
-                            onChange={handleChange}
+                            onChange={handleFilterIdChange}
                             fetchUrl="/filters/deployments?_include=id"
                             prefetch
-                            value={filterId}
+                            value={filterId.value}
                         />
+                    </UnsafelyTypedFormField>
+                    <UnsafelyTypedFormField label={tModal('filterRules')}>
+                        {interactionsDisabled && <Stage.Basic.LoadingOverlay />}
+                        {filterRulesResult.isSuccess && (
+                            <RulesForm
+                                initialFilters={initialFilterRules}
+                                onChange={handleFilterRulesChange}
+                                markErrors={!!filterRules.value?.length}
+                                toolbox={toolbox}
+                            />
+                        )}
                     </UnsafelyTypedFormField>
                 </UnsafelyTypedForm>
             </Modal.Content>
 
-            <Modal.Actions>
+            <Modal.Actions style={{ position: 'relative' }}>
+                <Dimmer active={interactionsDisabled} inverted />
+                <Button
+                    content={tModal('save')}
+                    style={{ float: 'left' }}
+                    disabled={!filterId.value || !filterDirty.value || filterRulesResult.data?.is_system_filter}
+                    onClick={handleSave}
+                />
                 <CancelButton onClick={handleCancel} />
                 <ApproveButton
                     onClick={handleSubmit}

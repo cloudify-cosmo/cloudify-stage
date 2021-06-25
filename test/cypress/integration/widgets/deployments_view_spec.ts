@@ -4,19 +4,21 @@ import { without } from 'lodash';
 import type { SystemLabel } from '../../support/deployments';
 
 import { exampleBlueprintUrl } from '../../support/resource_urls';
-import { FilterRuleOperators, FilterRuleType } from '../../../../widgets/common/src/filters/types';
+import { FilterRuleAttribute, FilterRuleOperators, FilterRuleType } from '../../../../widgets/common/src/filters/types';
 import type {} from '../../../../widgets/common/src/deploymentsView';
+import { secondsToMs } from '../../support/resource_commons';
 
 describe('Deployments View widget', () => {
     const widgetId = 'deploymentsView';
     const specPrefix = 'deployments_view_test_';
     const blueprintName = `${specPrefix}blueprint`;
-    const deploymentName = `${specPrefix}deployment`;
+    const deploymentId = `${specPrefix}deployment_id`;
+    const deploymentName = `${specPrefix}deployment_name`;
     const exampleSiteName = 'Olsztyn';
     const blueprintUrl = exampleBlueprintUrl;
     const widgetConfiguration: import('../../../../widgets/deploymentsView/src/widget').DeploymentsViewWidgetConfiguration = {
         filterByParentDeployment: false,
-        fieldsToShow: ['status', 'name', 'blueprintName', 'location', 'subenvironmentsCount', 'subservicesCount'],
+        fieldsToShow: ['status', 'id', 'name', 'blueprintName', 'location', 'subenvironmentsCount', 'subservicesCount'],
         pageSize: 100,
         customPollingTime: 10,
         sortColumn: 'created_at',
@@ -42,9 +44,9 @@ describe('Deployments View widget', () => {
     /** Column numbers as they appear in the table */
     const columnNumbers = {
         status: 1,
-        environmentType: 4,
-        subenvironments: 6,
-        subservices: 7
+        environmentType: 5,
+        subenvironments: 7,
+        subservices: 8
     };
 
     before(() => {
@@ -52,10 +54,10 @@ describe('Deployments View widget', () => {
             .deleteSites(exampleSiteName)
             .deleteBlueprint(blueprintName, true)
             .uploadBlueprint(blueprintUrl, blueprintName)
-            .deployBlueprint(blueprintName, deploymentName, { webserver_port: 9123 })
+            .deployBlueprint(blueprintName, deploymentId, { webserver_port: 9123 }, { display_name: deploymentName })
             .createSite({ name: exampleSiteName, location: '53.77509462534224, 20.473709106445316' })
-            .setSite(deploymentName, exampleSiteName)
-            .setLabels(deploymentName, [{ 'rendered-inside': 'details-panel' }]);
+            .setSite(deploymentId, exampleSiteName)
+            .setLabels(deploymentId, [{ 'rendered-inside': 'details-panel' }]);
     });
 
     beforeEach(() => {
@@ -73,13 +75,13 @@ describe('Deployments View widget', () => {
             { additionalWidgetIdsToLoad, widgetsWidth: 12, additionalPageTemplates: ['drilldownDeployments'] }
         ).mockLoginWithoutWaiting();
         cy.interceptSp('POST', /^\/searches\/deployments/, routeHandler).as('deployments');
-        cy.wait('@deployments');
+        cy.wait('@deployments', { requestTimeout: secondsToMs(15) });
     };
 
     const getDeploymentsViewWidget = () =>
         cy.get('.widget').filter('.deploymentsViewWidget, .deploymentsViewDrilledDownWidget').find('.widgetItem');
-    const getDeploymentsViewTable = () => getDeploymentsViewWidget().get('.gridTable');
-    const getDeploymentsViewDetailsPane = () => getDeploymentsViewWidget().get('.detailsPane');
+    const getDeploymentsViewTable = () => getDeploymentsViewWidget().find('.gridTable');
+    const getDeploymentsViewDetailsPane = () => getDeploymentsViewWidget().find('.detailsPane');
     const getDeploymentsViewMap = () => getDeploymentsViewWidget().find('.leaflet-container');
     const getDeploymentsMapToggleButton = () => getDeploymentsViewWidget().contains('button', 'Map');
 
@@ -93,18 +95,6 @@ describe('Deployments View widget', () => {
     };
 
     const widgetHeader = {
-        setFilter: (filterId: string) => {
-            cy.contains('button', 'Filter').click();
-
-            cy.get('.modal').within(() => {
-                cy.get('input').type(`${filterId}{enter}`);
-                cy.contains('OK').click();
-            });
-
-            cy.get('.modal').should('not.exist');
-            cy.contains('button', 'Filter').should('not.exist');
-            cy.contains('button', filterId);
-        },
         openRunWorkflowModal: () => {
             cy.contains('Bulk Actions').click();
             cy.contains('Run Workflow').click();
@@ -220,11 +210,74 @@ describe('Deployments View widget', () => {
             }
         ];
 
+        function verifyFilterRulesForm() {
+            cy.contains('Label').should('be.visible');
+            cy.contains('is one of').should('be.visible');
+            cy.contains('precious');
+            cy.contains('yes');
+        }
+
         before(() => {
             cy.deleteDeploymentsFilter(filterId, { ignoreFailure: true })
                 .createDeploymentsFilter(filterId, filterRules)
                 .deployBlueprint(blueprintName, deploymentNameThatMatchesFilter, { webserver_port: 9124 })
                 .setLabels(deploymentNameThatMatchesFilter, [{ precious: 'yes' }]);
+        });
+
+        it('should allow to save modified filter', () => {
+            const editableFilterId = `${filterId}-editable`;
+            cy.deleteDeploymentsFilter(editableFilterId, { ignoreFailure: true }).createDeploymentsFilter(
+                editableFilterId,
+                filterRules
+            );
+
+            useDeploymentsViewWidget();
+
+            cy.interceptSp('PATCH', `/filters/deployments/${editableFilterId}`).as('filterUpdate');
+
+            cy.contains('button', 'Filter').click();
+            cy.get('.modal').within(() => {
+                cy.contains('button', 'Save').should('be.disabled');
+
+                cy.setSearchableDropdownValue('Filter ID', editableFilterId);
+                verifyFilterRulesForm();
+                cy.contains('button', 'Save').should('be.disabled');
+
+                cy.contains('Add new rule').click();
+                cy.contains('.selection', 'Type in values')
+                    .find('input')
+                    .type(`${blueprintName}{enter}`, { force: true });
+
+                cy.contains('Save').click();
+                cy.contains('button', 'Save').should('be.disabled');
+            });
+
+            cy.wait('@filterUpdate').then(({ request }) => {
+                const requestRules = request.body.filter_rules;
+                expect(requestRules).to.have.length(2);
+                expect(requestRules[0]).to.deep.equal(filterRules[0]);
+                expect(requestRules[1]).to.deep.equal({
+                    type: FilterRuleType.Attribute,
+                    key: FilterRuleAttribute.Blueprint,
+                    values: [blueprintName],
+                    operator: FilterRuleOperators.Contains
+                });
+            });
+        });
+
+        it('should prevent modified system filter from being saved', () => {
+            useDeploymentsViewWidget();
+
+            cy.contains('button', 'Filter').click();
+            cy.get('.modal').within(() => {
+                cy.contains('button', 'Save').should('be.disabled');
+
+                cy.setSearchableDropdownValue('Filter ID', 'csys-environment-filter');
+                cy.contains('button', 'Save').should('be.disabled');
+
+                cy.contains('Add new rule').click();
+                cy.contains('button', 'Save').should('be.disabled');
+            });
         });
 
         it('should take the configured filter into account when displaying deployments', () => {
@@ -253,14 +306,24 @@ describe('Deployments View widget', () => {
             cy.contains(/with ID .* was not found/);
         });
 
-        it('should take the selected filter into account when displaying deployments', () => {
+        it('should take the selected existing filter into account when displaying deployments', () => {
             useDeploymentsViewWidget();
 
             cy.contains(deploymentNameThatMatchesFilter);
             cy.contains(deploymentName);
-            cy.interceptSp('POST', '/searches/deployments').as('deploymentsSearchRequest');
 
-            widgetHeader.setFilter(filterId);
+            cy.contains('button', 'Filter').click();
+
+            cy.get('.modal').within(() => {
+                cy.setSearchableDropdownValue('Filter ID', filterId);
+                verifyFilterRulesForm();
+                cy.interceptSp('POST', '/searches/deployments').as('deploymentsSearchRequest');
+                cy.contains('Apply').click();
+            });
+
+            cy.get('.modal').should('not.exist');
+            cy.contains('button', 'Filter').should('not.exist');
+            cy.contains('button', filterId);
 
             cy.wait('@deploymentsSearchRequest').then(({ request }) => {
                 const requestRules = request.body.filter_rules;
@@ -278,13 +341,97 @@ describe('Deployments View widget', () => {
             cy.contains(deploymentNameThatMatchesFilter);
         });
 
+        it('should take the modified existing filter into account when displaying deployments', () => {
+            useDeploymentsViewWidget();
+
+            cy.contains(deploymentNameThatMatchesFilter);
+            cy.contains(deploymentName);
+
+            cy.contains('button', 'Filter').click();
+
+            cy.get('.modal').within(() => {
+                cy.setSearchableDropdownValue('Filter ID', filterId);
+                verifyFilterRulesForm();
+
+                cy.contains('Add new rule').click();
+                cy.contains('.selection', 'Type in values')
+                    .find('input')
+                    .type(`${blueprintName}{enter}`, { force: true });
+
+                cy.interceptSp('POST', '/searches/deployments').as('deploymentsSearchRequest');
+                cy.contains('Apply').click();
+            });
+
+            cy.get('.modal').should('not.exist');
+            cy.contains('button', 'Filter').should('not.exist');
+            cy.contains('button', 'Unsaved filter');
+
+            cy.wait('@deploymentsSearchRequest').then(({ request }) => {
+                const requestRules = request.body.filter_rules;
+                expect(requestRules).to.deep.equal([
+                    ...filterRules,
+                    {
+                        type: FilterRuleType.Attribute,
+                        key: FilterRuleAttribute.Blueprint,
+                        values: [blueprintName],
+                        operator: FilterRuleOperators.Contains
+                    }
+                ]);
+            });
+
+            cy.contains(deploymentName).should('not.exist');
+            cy.contains(deploymentNameThatMatchesFilter);
+
+            cy.get('[title="Clear selected filter"]').click().should('not.exist');
+            cy.contains('button', 'Filter');
+            cy.contains('button', 'Unsaved filter').should('not.exist');
+
+            cy.contains(deploymentName);
+            cy.contains(deploymentNameThatMatchesFilter);
+        });
+
+        it('should take the on-the-fly defined filter into account when displaying deployments', () => {
+            useDeploymentsViewWidget();
+
+            cy.contains('button', 'Filter').click();
+
+            cy.get('.modal').within(() => {
+                cy.contains('.selection', 'Type in values')
+                    .find('input')
+                    .type(`${blueprintName}{enter}`, { force: true });
+
+                cy.interceptSp('POST', '/searches/deployments').as('deploymentsSearchRequest');
+                cy.contains('Apply').click();
+            });
+
+            cy.get('.modal').should('not.exist');
+            cy.contains('button', 'Filter').should('not.exist');
+            cy.contains('button', 'Unsaved filter');
+
+            cy.wait('@deploymentsSearchRequest').then(({ request }) => {
+                const requestRules = request.body.filter_rules;
+                expect(requestRules).to.deep.equal([
+                    {
+                        type: FilterRuleType.Attribute,
+                        key: FilterRuleAttribute.Blueprint,
+                        values: [blueprintName],
+                        operator: FilterRuleOperators.Contains
+                    }
+                ]);
+            });
+
+            cy.get('[title="Clear selected filter"]').click().should('not.exist');
+            cy.contains('button', 'Filter');
+            cy.contains('button', 'Unsaved filter').should('not.exist');
+        });
+
         // NOTE: this test does not really belong to the filters functionality, but it needs at least two deployments to work
         it('should allow selecting a deployment through the Resource Filter widget', () => {
             useDeploymentsViewWidget();
 
             const getSelectedDeployment = () => getDeploymentsViewTable().find('tbody tr.active');
 
-            cy.setDeploymentContext(deploymentName);
+            cy.setDeploymentContext(deploymentId);
             getSelectedDeployment().contains(deploymentName);
             cy.setDeploymentContext(deploymentNameThatMatchesFilter);
             getSelectedDeployment().contains(deploymentNameThatMatchesFilter);
@@ -593,12 +740,12 @@ describe('Deployments View widget', () => {
         it('should refresh the drill-down buttons on an interval', () => {
             useDeploymentsViewWidget({ configurationOverrides: { customPollingTime: 1 } });
 
-            cy.getSearchInput().type(deploymentName);
+            cy.getSearchInput().type(deploymentId);
 
             getDeploymentsViewDetailsPane().within(() => {
                 getSubservicesButton().containsNumber(0);
 
-                cy.interceptSp('GET', `${deploymentName}?all_sub_deployments=false`, req =>
+                cy.interceptSp('GET', `${deploymentId}?all_sub_deployments=false`, req =>
                     req.reply(res => {
                         res.body.sub_services_count = 50;
                     })
@@ -616,6 +763,31 @@ describe('Deployments View widget', () => {
         cy.contains('Unexpected widget usage');
     });
 
+    it('should search both by the ID and the display name of deployments', () => {
+        useDeploymentsViewWidget();
+
+        const interceptSearchDeploymentsRequest = (searchPhrase: string) =>
+            // eslint-disable-next-line security/detect-non-literal-regexp
+            cy.interceptSp('POST', new RegExp(`^\\/searches\\/deployments\\?.*_search_name=${searchPhrase}`));
+
+        const showEmptyTable = () => {
+            cy.getSearchInput().type('some gibberish to make the table display no results');
+            getDeploymentsViewTable().contains('No Results Found');
+        };
+
+        showEmptyTable();
+        interceptSearchDeploymentsRequest(deploymentId).as('searchForDeploymentId');
+        cy.getSearchInput().clear().type(deploymentId);
+        cy.wait('@searchForDeploymentId');
+        getDeploymentsViewTable().contains('tbody tr', deploymentName);
+
+        showEmptyTable();
+        interceptSearchDeploymentsRequest(deploymentName).as('searchForDeploymentName');
+        cy.getSearchInput().clear().type(deploymentName);
+        cy.wait('@searchForDeploymentName');
+        getDeploymentsViewTable().contains('tbody tr', deploymentName);
+    });
+
     describe('map', () => {
         const siteNames = {
             olsztyn: exampleSiteName,
@@ -624,7 +796,8 @@ describe('Deployments View widget', () => {
             warsaw: 'Warsaw'
         } as const;
         const mapDeploymentsPrefix = `${deploymentName}_map`;
-        const getSiteDeploymentName = (siteName: Stage.Types.ObjectKeys<typeof siteNames>) =>
+        /** Uses the same ID and display name for the deployment */
+        const getSiteDeploymentId = (siteName: Stage.Types.ObjectKeys<typeof siteNames>) =>
             `${mapDeploymentsPrefix}_${siteName}`;
 
         before(() => {
@@ -651,7 +824,7 @@ describe('Deployments View widget', () => {
             ]);
 
             [siteNames.olsztyn, siteNames.london, siteNames.warsaw].forEach(siteName => {
-                const currentDeploymentId = getSiteDeploymentName(siteName);
+                const currentDeploymentId = getSiteDeploymentId(siteName);
                 cy.deployBlueprint(blueprintName, currentDeploymentId).setSite(currentDeploymentId, siteName);
             });
         });
@@ -699,7 +872,7 @@ describe('Deployments View widget', () => {
                 getDeploymentMarkerIcons().should('have.length', 1);
                 withinMarkerTooltip(
                     () => getMarkerByImageSuffix(MarkerImageSuffix.Red),
-                    () => cy.contains(getSiteDeploymentName(siteNames.london))
+                    () => cy.contains(getSiteDeploymentId(siteNames.london))
                 );
             });
 
@@ -779,7 +952,7 @@ describe('Deployments View widget', () => {
 
             cy.getSearchInput().type(mapDeploymentsPrefix);
 
-            selectDeploymentInTableAndVerifyMapSelection(getSiteDeploymentName(siteNames.london));
+            selectDeploymentInTableAndVerifyMapSelection(getSiteDeploymentId(siteNames.london));
 
             /**
              * NOTE: there is no information in the DOM about which deployment a given marker is for.
@@ -824,7 +997,7 @@ describe('Deployments View widget', () => {
             const zoomOut = () => cy.get('[aria-label="Zoom out"]').click();
             cy.getSearchInput().type(mapDeploymentsPrefix);
 
-            selectDeploymentInTableAndVerifyMapSelection(getSiteDeploymentName(siteNames.london));
+            selectDeploymentInTableAndVerifyMapSelection(getSiteDeploymentId(siteNames.london));
             cy.log('Check if there is a cluster');
             getDeploymentsViewMap().within(() => {
                 zoomOut();
@@ -836,7 +1009,7 @@ describe('Deployments View widget', () => {
                 getDeploymentMarkerIcons().should('have.length', 2);
             });
 
-            selectDeploymentInTableAndVerifyMapSelection(getSiteDeploymentName(siteNames.warsaw));
+            selectDeploymentInTableAndVerifyMapSelection(getSiteDeploymentId(siteNames.warsaw));
             cy.log('Check that the selected deployment is not clustered');
             getDeploymentsViewMap().within(() => {
                 getDeploymentMarkerIcons().should('have.length', 3);
@@ -861,10 +1034,8 @@ describe('Deployments View widget', () => {
                         values: [siteName]
                     }
                 ]);
-            deploymentIds.forEach(deploymentId =>
-                cy
-                    .deployBlueprint(blueprintName, deploymentId, { webserver_port: 9124 })
-                    .setSite(deploymentId, siteName)
+            deploymentIds.forEach(id =>
+                cy.deployBlueprint(blueprintName, id, { webserver_port: 9124 }).setSite(id, siteName)
             );
         });
 
@@ -924,10 +1095,10 @@ describe('Deployments View widget', () => {
                 expect(request.body.blueprint_id).to.eq(blueprintName);
                 expect(request.body.labels).to.deep.equal([{ [labelKey]: labelValue }]);
                 expect(request.body.new_deployments).to.deep.equal(
-                    deploymentIds.map(deploymentId => ({
+                    deploymentIds.map(id => ({
                         id: '{uuid}',
                         display_name: '{blueprint_id}-{uuid}',
-                        labels: [{ 'csys-obj-parent': deploymentId }],
+                        labels: [{ 'csys-obj-parent': id }],
                         runtime_only_evaluation: false,
                         skip_plugins_validation: false
                     }))

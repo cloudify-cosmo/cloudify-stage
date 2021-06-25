@@ -56,23 +56,33 @@ export interface RulesFormProps {
 const RulesForm: FunctionComponent<RulesFormProps> = ({ initialFilters, onChange, markErrors, toolbox }) => {
     const [rows, setRows] = useState(() => getFilterRuleRows(initialFilters));
 
+    function handleChange(newRows: FilterRuleRow[]) {
+        onChange(newRows.map(getFilterRule), newRows.filter(row => row.hasError).length > 0);
+    }
+
     function addRule() {
-        setRows(latestRows => [...latestRows, getNewRow()]);
+        const newRows = [...rows, getNewRow()];
+        setRows(newRows);
+        handleChange(newRows);
     }
 
     function removeRule(id: string) {
-        setRows(latestRows => latestRows.filter(row => row.id !== id));
+        const newRows = rows.filter(row => row.id !== id);
+        setRows(newRows);
+        handleChange(newRows);
     }
 
     function updateRule(id: string, newRule: FilterRule) {
-        setRows(latestRows =>
-            latestRows.map(row => (row.id === id ? { id: row.id, rule: newRule, hasError: hasError(newRule) } : row))
+        const newRows = rows.map(row =>
+            row.id === id ? { id: row.id, rule: newRule, hasError: hasError(newRule) } : row
         );
+        setRows(newRows);
+        handleChange(newRows);
     }
 
     useEffect(() => {
-        onChange(rows.map(getFilterRule), rows.filter(row => row.hasError).length > 0);
-    }, [rows]);
+        setRows(getFilterRuleRows(initialFilters));
+    }, [initialFilters]);
 
     return (
         <>

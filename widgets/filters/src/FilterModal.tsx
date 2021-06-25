@@ -1,7 +1,6 @@
-import { FunctionComponent, useState } from 'react';
+import { FunctionComponent, useMemo, useState } from 'react';
 import { isEmpty } from 'lodash';
-import { Filter } from './types';
-import type { FilterRule } from '../../common/src/filters/types';
+import type { Filter, FilterRule } from '../../common/src/filters/types';
 
 export interface FilterModalProps {
     initialFilter?: Filter;
@@ -24,13 +23,16 @@ const FilterModal: FunctionComponent<FilterModalProps> = ({
     onSubmit,
     toolbox
 }) => {
+    const initialFilterRules = useMemo(
+        () => (initialFilter ? [...initialFilter.attrs_filter_rules, ...initialFilter.labels_filter_rules] : []),
+        [initialFilter]
+    );
+
     const { useInput, useErrors } = Stage.Hooks;
     const [filterId, setFilterId] = useInput((initialFilter?.id ?? '') + initialFilterIdSuffix);
-    const [filterRules, setFilterRules] = useInput(
-        initialFilter ? [...initialFilter.attrs_filter_rules, ...initialFilter.labels_filter_rules] : []
-    );
+    const [filterRules, setFilterRules] = useInput(initialFilterRules);
     const { errors, setErrors, clearErrors, setMessageAsError } = useErrors();
-    const [filterRulesInvalid, setFilterRulesInvalid] = useState(false);
+    const [filterRulesInvalid, setFilterRulesInvalid] = useState(!initialFilter);
     const { i18n } = Stage;
 
     function handleSubmit() {
@@ -71,7 +73,7 @@ const FilterModal: FunctionComponent<FilterModalProps> = ({
                     )}
                     <UnsafelyTypedFormField label={i18n.t('widgets.filters.modal.rules')}>
                         <RulesForm
-                            initialFilters={filterRules}
+                            initialFilters={initialFilterRules}
                             toolbox={toolbox}
                             onChange={(newFilterRules, hasErrors) => {
                                 setFilterRules(newFilterRules);
