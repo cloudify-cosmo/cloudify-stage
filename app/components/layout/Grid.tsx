@@ -31,7 +31,7 @@ export default function Grid({ children, isEditMode, onGridDataChange, style }: 
 
     function processGridItem(el: ReactNode) {
         if (!React.isValidElement(el) || el.type !== GridItem) {
-            return null;
+            return [];
         }
         return React.createElement(
             'div',
