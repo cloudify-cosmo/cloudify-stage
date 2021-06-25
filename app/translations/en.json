@@ -719,7 +719,7 @@
                         "noFilterError": "Please select a filter or specify filter rules",
                         "noFilterRulesError": "Please specify filter rules",
                         "filterRulesInvalidError": "Please provide all the values in filter rules section",
-                        "filterIdMissingError": "Please specify new filter ID",
+                        "filterIdMissingError": "Please specify a new filter ID",
                         "filterId": "Filter ID",
                         "filterRules": "Filter rules"
                     }
