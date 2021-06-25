@@ -715,6 +715,7 @@
                         "save": "Save",
                         "saveAs": "Save as...",
                         "saveNew": "Save new filter",
+                        "cancel": "Cancel",
                         "filterIdPlaceholder": "Enter new filter ID...",
                         "noFilterError": "Please select a filter or specify filter rules",
                         "noFilterRulesError": "Please specify filter rules",

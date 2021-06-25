@@ -243,7 +243,7 @@ const FilterModal: FunctionComponent<FilterModalProps> = ({
                             value={newFilterId}
                             onChange={setNewFilterId}
                         />
-                        <Button icon="cancel" onClick={handleSaveAsCancel} />
+                        <Button icon="cancel" onClick={handleSaveAsCancel} title={tModal('cancel')} />
                         <Button content={tModal('saveNew')} onClick={handleSaveAsSubmit} />
                     </div>
                 ) : (
