@@ -69,7 +69,8 @@ export default function Grid({ children, isEditMode, onGridDataChange, style }: 
                     style={style}
                     width={width ?? undefined}
                 >
-                    {React.Children.map(children, processGridItem)}
+                    {/* NOTE: `map` handles non-array items fine */}
+                    {_.map(children as ReactNode[], processGridItem)}
                 </ReactGridLayout>
             )}
         </SizeMe>
