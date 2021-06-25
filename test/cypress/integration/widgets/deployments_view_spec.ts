@@ -287,6 +287,9 @@ describe('Deployments View widget', () => {
 
                 cy.contains('.buttons', 'Save').find('.ui.dropdown').click();
                 cy.contains('Save as').click();
+                cy.get('[title=Cancel]').click();
+                cy.contains('.buttons', 'Save').find('.ui.dropdown').click();
+                cy.contains('Save as').click();
                 cy.get('input[placeholder="Enter new filter ID..."]').type(newFilterId);
                 cy.contains('Save new filter').click().should('not.exist');
 
