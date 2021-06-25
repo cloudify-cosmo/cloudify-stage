@@ -56,12 +56,12 @@ const PagesList: FunctionComponent<PagesListProps> = ({
     return (
         <>
             <DndContext
-                sensors={sensors}
+                sensors={isEditMode ? sensors : []}
                 collisionDetection={closestCenter}
                 onDragEnd={isEditMode ? handleDragEnd : undefined}
                 modifiers={[restrictToVerticalAxis]}
             >
-                <SortableContext items={isEditMode ? pageIds : []} strategy={verticalListSortingStrategy}>
+                <SortableContext items={pageIds} strategy={verticalListSortingStrategy}>
                     <div className="pages">
                         {pages
                             .filter(p => !p.isDrillDown)
