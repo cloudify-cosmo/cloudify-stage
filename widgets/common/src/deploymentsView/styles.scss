@@ -1,3 +1,5 @@
+@import '~cloudify-ui-common/styles/colors';
+
 $deploymentStatusColors: (
     // NOTE: use Semantic UI colors
     // See https://semantic-ui.com/usage/theming.html
@@ -60,6 +62,23 @@ $deploymentProgressBarColors: (
     @each $status, $color in $deploymentProgressBarColors {
         .deployment-progress-bar.#{$status} {
             background-color: var(--deployment-progress-bar-color-#{$status});
+        }
+    }
+
+    .master-details-view-resizer {
+        $initialWidth: 0.25rem;
+        $horizontalMargin: 1rem;
+        $widthOnHover: 0.5rem;
+
+        cursor: col-resize;
+        width: $initialWidth;
+        margin: 0 $horizontalMargin;
+        background-color: $grey-normal;
+
+        &:hover {
+            width: $widthOnHover;
+            background-color: $grey-dark;
+            margin: 0 ($horizontalMargin - ($widthOnHover - $initialWidth) / 2);
         }
     }
 }
