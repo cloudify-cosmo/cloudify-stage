@@ -1,15 +1,11 @@
-// @ts-nocheck File not migrated fully to TS
-/**
- * Created by kinneretzin on 15/12/2016.
- */
-
-import { shallow } from 'enzyme';
+import React from 'react';
+import { mount, shallow } from 'enzyme';
 
 import Grid from 'components/layout/Grid';
 import GridItem from 'components/layout/GridItem';
 
 describe('(Component) Grid', () => {
-    function testGridRender(isEditMode) {
+    function testGridRender(isEditMode: boolean) {
         const wrapper = shallow(
             <Grid isEditMode={isEditMode} onGridDataChange={() => {}}>
                 {[]}
@@ -30,11 +26,11 @@ describe('(Component) Grid', () => {
     });
 
     it('Renders GridItems child nodes', () => {
-        function renderGridItem(id) {
-            return <GridItem id={id}>{[]}</GridItem>;
+        function renderGridItem(id: string) {
+            return <GridItem id={id}>Grid Item {id}</GridItem>;
         }
 
-        const wrapper = shallow(
+        const wrapper = mount(
             <Grid isEditMode={false} onGridDataChange={() => {}}>
                 {renderGridItem('1a')}
                 {renderGridItem('1b')}
@@ -45,6 +41,6 @@ describe('(Component) Grid', () => {
         );
 
         expect(wrapper.find(GridItem)).toHaveLength(3);
-        expect(wrapper.children()).toHaveLength(3);
+        expect(wrapper.findWhere(node => node.text().includes('Some other item'))).toHaveLength(0);
     });
 });

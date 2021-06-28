@@ -1,12 +1,8 @@
 // @ts-nocheck File not migrated fully to TS
-/**
- * Created by barucoh on 23/1/2019.
- */
 import { ReactSVGPanZoom } from 'react-svg-pan-zoom';
 import GraphEdges from './GraphEdges';
 import GraphNodes from './GraphNodes';
 import states from './States';
-import useWidthObserver from './useWidthObserver';
 
 const INACTIVE_EXECUTION_POLLING_INTERVAL = 5000;
 const ACTIVE_EXECUTION_POLLING_INTERVAL = 2500;
@@ -31,7 +27,7 @@ const INITIAL_POSITION = {
 
 export default function ExecutionWorkflowGraph({ containerHeight, selectedExecution, showStatus, toolbox }) {
     const { useState, useRef, useEffect, useCallback } = React;
-    const { useBoolean, useResettableState } = Stage.Hooks;
+    const { useBoolean, useResettableState, useWidthObserver } = Stage.Hooks;
 
     const [graphData, setGraphData, clearGraphData] = useResettableState(null);
     const [error, setError, clearError] = useResettableState('');
@@ -40,14 +36,16 @@ export default function ExecutionWorkflowGraph({ containerHeight, selectedExecut
     const [modalPosition, setModalPosition] = useState(INITIAL_POSITION);
     const [autoFocus, setAutoFocus] = useState();
 
-    const timer = useRef(null);
-    const cancelablePromise = useRef(null);
+    const timer = useRef<ReturnType<typeof setTimeout> | null>(null);
+    const cancelablePromise = useRef<ReturnType<typeof Stage.Utils['makeCancelable']> | null>(null);
     const modal = useRef();
 
     const [wrapperRef, getWrapperWidth] = useWidthObserver();
 
     function stopPolling() {
-        clearTimeout(timer.current);
+        if (timer.current) {
+            clearTimeout(timer.current);
+        }
         timer.current = null;
         if (cancelablePromise.current) cancelablePromise.current.cancel();
     }
@@ -98,7 +96,7 @@ export default function ExecutionWorkflowGraph({ containerHeight, selectedExecut
         return stopPolling;
     }, [selectedExecution.id]);
 
-    function scrollTo(x, y, zoom = 1, autoFocusOnly = true, frame = 1) {
+    function scrollTo(x: number, y: number, zoom = 1, autoFocusOnly = true, frame = 1) {
         const currentPosition = isMaximized ? modalPosition : position;
         const positionToFocusOn = {
             // See https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/transform#Matrix
