@@ -3,7 +3,6 @@ import log from 'loglevel';
 import * as types from './types';
 import { setAppError, setAppLoading } from './appState';
 import { loadTemplates } from './templates';
-import { loadTours } from './tours';
 import { loadWidgetDefinitions } from './widgets';
 
 import { getClientConfig } from './clientConfig';
@@ -17,7 +16,6 @@ export function intialPageLoad() {
 
         return Promise.all([
             dispatch(loadTemplates()),
-            dispatch(loadTours()),
             dispatch(loadWidgetDefinitions()),
             dispatch(getClientConfig()),
             dispatch(getClusterStatus()),
