@@ -1,4 +1,4 @@
-import { ComponentProps } from 'react';
+import type { ComponentProps } from 'react';
 
 interface BlueprintActionButtonsProps {
     blueprintId?: string;
@@ -17,12 +17,6 @@ export default class BlueprintActionButtons extends React.Component<
     BlueprintActionButtonsProps,
     BlueprintActionButtonsState
 > {
-    // eslint-disable-next-line react/static-property-placement
-    static propTypes = {
-        blueprintId: PropTypes.string,
-        toolbox: Stage.PropTypes.Toolbox.isRequired
-    };
-
     static DEPLOY_ACTION = 'deploy';
 
     static DELETE_ACTION = 'delete';
