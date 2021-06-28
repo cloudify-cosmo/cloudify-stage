@@ -5,6 +5,8 @@ import log from 'loglevel';
 import 'isomorphic-fetch';
 import { saveAs } from 'file-saver';
 import JSZip from 'jszip';
+import { stringify as queryQtringify } from 'query-string';
+
 import StageUtils from './stageUtils';
 import Interceptor from './Interceptor';
 import { LICENSE_ERR, UNAUTHORIZED_ERR } from './ErrorCodes';
@@ -282,9 +284,7 @@ export default class External {
 
     // eslint-disable-next-line class-methods-use-this
     protected buildActualUrl(url: string, data?: Record<string, any>) {
-        // TODO: RD-258
-        // @ts-ignore Cannot find $
-        const queryString = data ? (url.indexOf('?') > 0 ? '&' : '?') + $.param(data, true) : '';
+        const queryString = data ? (url.indexOf('?') > 0 ? '&' : '?') + queryQtringify(data) : '';
         return `${url}${queryString}`;
     }
 
