@@ -1,19 +1,31 @@
+import type { BlueprintActionButtonsConfiguration } from '../../../../widgets/blueprintActionButtons/src/widget';
+
 describe('Blueprint Action Buttons widget', () => {
     const blueprintName = 'blueprints_actions_test';
 
     before(() =>
         cy
-            .usePageMock('blueprintActionButtons')
             .activate('valid_trial_license')
-            .mockLogin()
             .deleteBlueprints(blueprintName, true)
             .uploadBlueprint('blueprints/empty.zip', blueprintName)
     );
 
-    it('should open Composer with imported blueprint on "Edit a copy in Composer" button click', () => {
-        cy.setBlueprintContext(blueprintName);
+    const useBlueprintActionButtonsWidget = (widgetConfig: Partial<BlueprintActionButtonsConfiguration> = {}) => {
+        cy.usePageMock('blueprintActionButtons', widgetConfig).mockLogin().setBlueprintContext(blueprintName);
+    };
 
-        cy.contains('Edit a copy in Composer').click();
+    const getEditACopyInComposerButton = () => cy.contains('Edit a copy in Composer');
+
+    it('should not show the "Edit a copy in Composer" button by default', () => {
+        useBlueprintActionButtonsWidget();
+
+        getEditACopyInComposerButton().should('not.exist');
+    });
+
+    it('should open Composer with imported blueprint on "Edit a copy in Composer" button click', () => {
+        useBlueprintActionButtonsWidget({ showEditACopyInComposerButton: true });
+
+        getEditACopyInComposerButton().click();
 
         cy.window()
             .its('open')
@@ -21,6 +33,7 @@ describe('Blueprint Action Buttons widget', () => {
     });
 
     it('should open deployment modal', () => {
+        useBlueprintActionButtonsWidget();
         cy.get('button#createDeploymentButton').click();
 
         cy.get('div.deployBlueprintModal').should('be.visible');
