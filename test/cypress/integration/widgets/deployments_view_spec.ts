@@ -284,6 +284,57 @@ describe('Deployments View widget', () => {
             });
         });
 
+        it('should allow to save new filter and apply it', () => {
+            const newFilterId = `${filterId}-new`;
+            cy.deleteDeploymentsFilter(newFilterId, { ignoreFailure: true });
+            const newFilterRule = {
+                type: FilterRuleType.Attribute,
+                key: FilterRuleAttribute.Blueprint,
+                values: [blueprintName],
+                operator: FilterRuleOperators.Contains
+            };
+
+            useDeploymentsViewWidget();
+
+            cy.interceptSp('PUT', `/filters/deployments/${newFilterId}`).as('filterCreate');
+
+            cy.contains('button', 'Filter').click();
+            cy.get('.modal').within(() => {
+                cy.contains('.fields', 'Blueprint')
+                    .contains('.selection', 'Type in values')
+                    .find('input')
+                    .type(`${blueprintName}{enter}`, { force: true });
+
+                cy.contains('.buttons', 'Save').find('.ui.dropdown').click();
+                cy.contains('Save as').click();
+                cy.get('[title=Cancel]').click();
+                cy.contains('.buttons', 'Save').find('.ui.dropdown').click();
+                cy.contains('Save as').click();
+                cy.get('input[placeholder="Enter new filter ID..."]').type(newFilterId);
+                cy.contains('Save new filter').click().should('not.exist');
+
+                cy.wait('@filterCreate').then(({ request }) => {
+                    const requestRules = request.body.filter_rules;
+                    expect(requestRules).to.have.length(1);
+                    expect(requestRules[0]).to.deep.equal(newFilterRule);
+                });
+
+                cy.contains('.field', 'Filter ID').contains(newFilterId);
+
+                cy.interceptSp('POST', '/searches/deployments').as('deploymentsSearchRequest');
+                cy.contains('Apply').click();
+            });
+
+            cy.get('.modal').should('not.exist');
+            cy.contains('button', 'Filter').should('not.exist');
+            cy.contains('button', newFilterId);
+
+            cy.wait('@deploymentsSearchRequest').then(({ request }) => {
+                const requestRules = request.body.filter_rules;
+                expect(requestRules).to.deep.equal([newFilterRule]);
+            });
+        });
+
         it('should prevent modified system filter from being saved', () => {
             useDeploymentsViewWidget();
 

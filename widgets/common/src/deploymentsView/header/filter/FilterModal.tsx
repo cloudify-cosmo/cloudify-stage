@@ -1,10 +1,12 @@
 import type { FunctionComponent } from 'react';
 import { useEffect, useState } from 'react';
-import { i18nMessagesPrefix, i18nPrefix } from '../common';
-import RulesForm from '../../filters/RulesForm';
-import { FilterRule } from '../../filters/types';
-import useFilterQuery from '../useFilterQuery';
-import FilterActions from '../../filters/FilterActions';
+import { i18nMessagesPrefix, i18nPrefix } from '../../common';
+import RulesForm from '../../../filters/RulesForm';
+import { FilterRule } from '../../../filters/types';
+import useFilterQuery from '../../useFilterQuery';
+import FilterActions from '../../../filters/FilterActions';
+import SaveButton from './SaveButton';
+import { tModal } from './common';
 
 interface FilterModalProps {
     userFilterSelected: boolean;
@@ -14,7 +16,6 @@ interface FilterModalProps {
     toolbox: Stage.Types.Toolbox;
 }
 
-const tModal = Stage.Utils.getT(`${i18nPrefix}.header.filter.modal`);
 const tMessage = Stage.Utils.getT(i18nMessagesPrefix);
 
 function useRevertableState<T>(initialValue: T) {
@@ -51,16 +52,7 @@ const FilterModal: FunctionComponent<FilterModalProps> = ({
     toolbox
 }) => {
     const { i18n } = Stage;
-    const {
-        ApproveButton,
-        Button,
-        CancelButton,
-        Dimmer,
-        Icon,
-        Modal,
-        UnsafelyTypedForm,
-        UnsafelyTypedFormField
-    } = Stage.Basic;
+    const { ApproveButton, CancelButton, Dimmer, Icon, Modal, UnsafelyTypedForm, UnsafelyTypedFormField } = Stage.Basic;
     // @ts-expect-error DynamicDropdown is not converted to TS yet
     const { DynamicDropdown } = Stage.Common;
     const { useBoolean, useErrors } = Stage.Hooks;
@@ -144,6 +136,40 @@ const FilterModal: FunctionComponent<FilterModalProps> = ({
             .finally(unsetFilterSaving);
     }
 
+    function handleSaveAsSubmit(newFilterId: string) {
+        if (!filterRules.value?.length) {
+            setErrors({
+                error: tModal('noFilterRulesError')
+            });
+            return Promise.reject();
+        }
+
+        if (rulesErrorsPresent) {
+            setErrors({
+                error: tModal('filterRulesInvalidError')
+            });
+            return Promise.reject();
+        }
+
+        if (!newFilterId) {
+            setErrors({
+                error: tModal('filterIdMissingError')
+            });
+            return Promise.reject();
+        }
+
+        setFilterSaving();
+        return new FilterActions(toolbox)
+            .doCreate(newFilterId, filterRules.value)
+            .then(() => {
+                filterDirty.set(false);
+                filterId.set(newFilterId);
+                clearErrors();
+            })
+            .catch(setMessageAsError)
+            .finally(unsetFilterSaving);
+    }
+
     useEffect(() => {
         const newFilterRules = filterRulesResult.data?.value ?? [];
         filterRules.set(newFilterRules);
@@ -189,11 +215,11 @@ const FilterModal: FunctionComponent<FilterModalProps> = ({
 
             <Modal.Actions style={{ position: 'relative' }}>
                 <Dimmer active={interactionsDisabled} inverted />
-                <Button
-                    content={tModal('save')}
-                    style={{ float: 'left' }}
-                    disabled={!filterId.value || !filterDirty.value || filterRulesResult.data?.is_system_filter}
-                    onClick={handleSave}
+                <SaveButton
+                    onSave={handleSave}
+                    onSaveAsCancel={clearErrors}
+                    onSaveAsSubmit={handleSaveAsSubmit}
+                    saveDisabled={!filterId.value || !filterDirty.value || !!filterRulesResult.data?.is_system_filter}
                 />
                 <CancelButton onClick={handleCancel} />
                 <ApproveButton

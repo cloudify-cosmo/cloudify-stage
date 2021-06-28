@@ -1,7 +1,7 @@
 import type { FunctionComponent } from 'react';
 import { useState } from 'react';
 import { i18nPrefix } from '../common';
-import FilterModal from './FilterModal';
+import FilterModal from './filter/FilterModal';
 import RunWorkflowModal from './RunWorkflowModal';
 import DeployOnModal from './DeployOnModal';
 import { FilterRule } from '../../filters/types';
