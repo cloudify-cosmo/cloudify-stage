@@ -4,11 +4,10 @@ export const DeploymentsViewContainer = styled.div`
     height: 100%;
     display: grid;
     grid-template-areas:
-        'header header'
-        'map map'
-        'table details';
+        'header'
+        'map'
+        'table-with-details';
     grid-template-rows: min-content min-content minmax(250px, 1fr);
-    grid-template-columns: 1fr 1fr;
 `;
 
 export const DeploymentsViewHeaderContainer = styled.div`
@@ -24,10 +23,13 @@ export const DeploymentsMapLayoutContainer = styled.div<{ height: number }>`
     margin-bottom: 1em;
 `;
 
+export const DeploymentsMasterDetailViewContainer = styled.div`
+    grid-area: 'table-with-details';
+`;
+
 export const DeploymentsTableContainer = styled.div`
     height: 100%;
     overflow: auto;
-    grid-area: table;
 
     .gridTable {
         height: 100%;
@@ -45,5 +47,4 @@ export const DeploymentsTableContainer = styled.div`
 export const DeploymentDetailsContainer = styled.div`
     height: 100%;
     overflow: auto;
-    grid-area: details;
 `;
