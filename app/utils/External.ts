@@ -5,7 +5,7 @@ import log from 'loglevel';
 import 'isomorphic-fetch';
 import { saveAs } from 'file-saver';
 import JSZip from 'jszip';
-import { stringify as queryStringify } from 'query-string';
+import { stringify as stringifyQueryString } from 'query-string';
 
 import StageUtils from './stageUtils';
 import Interceptor from './Interceptor';
@@ -284,7 +284,7 @@ export default class External {
 
     // eslint-disable-next-line class-methods-use-this
     protected buildActualUrl(url: string, data?: Record<string, any>) {
-        const queryString = data ? (url.indexOf('?') > 0 ? '&' : '?') + queryStringify(data) : '';
+        const queryString = data ? (url.indexOf('?') > 0 ? '&' : '?') + stringifyQueryString(data) : '';
         return `${url}${queryString}`;
     }
 
