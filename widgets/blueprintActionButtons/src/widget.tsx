@@ -1,8 +1,3 @@
-// @ts-nocheck File not migrated fully to TS
-/**
- * Created by jakubniezgoda on 28/02/2017.
- */
-
 import BlueprintActionButtons from './BlueprintActionButtons';
 
 Stage.defineWidget({
@@ -19,7 +14,7 @@ Stage.defineWidget({
     permission: Stage.GenericConfig.WIDGET_PERMISSION('blueprintActionButtons'),
     categories: [Stage.GenericConfig.CATEGORY.BLUEPRINTS, Stage.GenericConfig.CATEGORY.BUTTONS_AND_FILTERS],
 
-    render(widget, data, error, toolbox) {
+    render(_widget, _data, _error, toolbox) {
         const blueprintId = toolbox.getContext().getValue('blueprintId');
 
         return <BlueprintActionButtons blueprintId={blueprintId} toolbox={toolbox} />;
