@@ -1,7 +1,7 @@
 import BlueprintActionButtons from './BlueprintActionButtons';
 
 export interface BlueprintActionButtonsConfiguration {
-    showEditACopyInComposerButton: boolean;
+    showEditCopyInComposerButton: boolean;
 }
 
 Stage.defineWidget<unknown, unknown, BlueprintActionButtonsConfiguration>({
@@ -14,9 +14,9 @@ Stage.defineWidget<unknown, unknown, BlueprintActionButtonsConfiguration>({
     showBorder: false,
     initialConfiguration: [
         {
-            id: 'showEditACopyInComposerButton',
+            id: 'showEditCopyInComposerButton',
             type: Stage.Basic.GenericField.BOOLEAN_TYPE,
-            name: Stage.i18n.t('widgets.blueprintActionButtons.configuration.showEditACopyInComposerButton'),
+            name: Stage.i18n.t('widgets.blueprintActionButtons.configuration.showEditCopyInComposerButton'),
             default: false
         }
     ],
@@ -32,7 +32,7 @@ Stage.defineWidget<unknown, unknown, BlueprintActionButtonsConfiguration>({
             <BlueprintActionButtons
                 blueprintId={blueprintId}
                 toolbox={toolbox}
-                showEditACopyInComposerButton={widget.configuration.showEditACopyInComposerButton}
+                showEditCopyInComposerButton={widget.configuration.showEditCopyInComposerButton}
             />
         );
     }

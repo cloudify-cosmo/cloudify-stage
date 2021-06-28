@@ -23,7 +23,7 @@ describe('Blueprint Action Buttons widget', () => {
     });
 
     it('should open Composer with imported blueprint on "Edit a copy in Composer" button click', () => {
-        useBlueprintActionButtonsWidget({ showEditACopyInComposerButton: true });
+        useBlueprintActionButtonsWidget({ showEditCopyInComposerButton: true });
 
         getEditACopyInComposerButton().click();
 

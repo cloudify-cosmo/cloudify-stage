@@ -658,7 +658,7 @@
         },
         "blueprintActionButtons": {
             "configuration": {
-                "showEditACopyInComposerButton": "Show the 'Edit a copy in Composer' button"
+                "showEditCopyInComposerButton": "Show the 'Edit a copy in Composer' button"
             }
         },
         "executions": {
