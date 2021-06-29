@@ -2,17 +2,18 @@ import { LabelInputType } from '../../../../widgets/common/src/labels/types';
 
 describe('Deployment Action Buttons widget', () => {
     const blueprintName = 'deployment_action_buttons_test';
-    const deploymentName = 'deployment_action_buttons_test';
+    const deploymentId = 'deployment_action_buttons_test';
+    const deploymentName = `${deploymentId}_name`;
 
     before(() =>
         cy
             .usePageMock('deploymentActionButtons')
             .activate()
             .mockLogin()
-            .deleteDeployments(deploymentName, true)
+            .deleteDeployments(deploymentId, true)
             .deleteBlueprints(blueprintName, true)
             .uploadBlueprint('blueprints/simple.zip', blueprintName)
-            .deployBlueprint(blueprintName, deploymentName, { server_ip: '127.0.0.1' })
+            .deployBlueprint(blueprintName, deploymentId, { server_ip: '127.0.0.1' }, { display_name: deploymentName })
     );
 
     it('when deploymentId is not set in the context it should be disabled', () => {
@@ -21,7 +22,7 @@ describe('Deployment Action Buttons widget', () => {
     });
 
     describe('when deploymentId is set in the context', () => {
-        beforeEach(() => cy.clearDeploymentContext().setDeploymentContext(deploymentName));
+        beforeEach(() => cy.clearDeploymentContext().setDeploymentContext(deploymentId));
 
         it('should allow to execute a workflow', () => {
             cy.interceptSp('POST', `/executions`).as('executeWorkflow');
@@ -30,6 +31,7 @@ describe('Deployment Action Buttons widget', () => {
             cy.get('button.executeWorkflowButton').click();
             cy.get('.popupMenu > .menu').contains('Start').click();
             cy.get('.executeWorkflowModal').should('be.visible');
+            cy.contains(`Execute workflow start on ${deploymentName} (${deploymentId})`);
             cy.get('.executeWorkflowModal button.ok').click();
 
             cy.wait('@executeWorkflow');
@@ -39,7 +41,7 @@ describe('Deployment Action Buttons widget', () => {
         it('should allow to start an action on the deployment', () => {
             const siteName = 'deployment_action_buttons_test';
             cy.deleteSites(siteName).createSite({ name: siteName });
-            cy.interceptSp('POST', `/deployments/${deploymentName}/set-site`).as('setSite');
+            cy.interceptSp('POST', `/deployments/${deploymentId}/set-site`).as('setSite');
 
             cy.contains('button', 'Deployment actions').should('not.have.attr', 'disabled');
             cy.contains('button', 'Deployment actions').click();
@@ -94,9 +96,9 @@ describe('Deployment Action Buttons widget', () => {
         }
 
         before(() => {
-            cy.setLabels(deploymentName, [{ existing_key: 'existing_value' }]);
-            cy.setDeploymentContext(deploymentName);
-            cy.interceptSp('GET', `/deployments/${deploymentName}?_include=labels`).as('fetchLabels');
+            cy.setLabels(deploymentId, [{ existing_key: 'existing_value' }]);
+            cy.setDeploymentContext(deploymentId);
+            cy.interceptSp('GET', `/deployments/${deploymentId}?_include=labels`).as('fetchLabels');
             cy.contains('button', 'Deployment actions').click();
             cy.get('.popupMenu > .menu').contains('Manage Labels').click();
             cy.get('.modal').within(() => {
