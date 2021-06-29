@@ -159,12 +159,7 @@ export default function ExecuteDeploymentModal({
             return true;
         }
 
-        let aaa = deployments;
-        if (_.isEmpty(deployments)) {
-            aaa = _.compact([deploymentId]);
-        }
-
-        if (_.isEmpty(aaa)) {
+        if (_.isEmpty(deploymentsList)) {
             setErrors(t('errors.missingDeployment'));
             return false;
         }
@@ -172,7 +167,7 @@ export default function ExecuteDeploymentModal({
         setLoading();
         const actions = new DeploymentActions(toolbox);
 
-        const executePromises = _.map(aaa, id => {
+        const executePromises = _.map(deploymentsList, id => {
             return actions
                 .doExecute(id, name, workflowParameters, {
                     force,
