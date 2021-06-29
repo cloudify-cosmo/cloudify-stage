@@ -1,11 +1,5 @@
-// @ts-nocheck File not migrated fully to TS
-/**
- * Created by kinneretzin on 08/01/2017.
- */
-
-import BlueprintsViewPropTypes from './props/BlueprintsViewPropTypes';
-import BlueprintsViewDefaultProps from './props/BlueprintsViewDefaultProps';
 import BlueprintState from './BlueprintState';
+import type { BlueprintsViewProps } from './types';
 
 export default function BlueprintsTable({
     data,
@@ -17,7 +11,7 @@ export default function BlueprintsTable({
     onSetVisibility,
     toolbox,
     widget
-}) {
+}: BlueprintsViewProps) {
     const { DataTable, Icon, Image, ResourceVisibility } = Stage.Basic;
     const { BlueprintActions } = Stage.Common;
     const tableName = 'blueprintsTable';
@@ -83,7 +77,7 @@ export default function BlueprintsTable({
                                                 name="external share"
                                                 bordered
                                                 title="Edit a copy in Composer"
-                                                onClick={event => {
+                                                onClick={(event: Event) => {
                                                     event.stopPropagation();
                                                     new Stage.Common.BlueprintActions(toolbox).doEditInComposer(
                                                         item.id,
@@ -97,7 +91,7 @@ export default function BlueprintsTable({
                                             link
                                             bordered
                                             title="Create deployment"
-                                            onClick={event => {
+                                            onClick={(event: Event) => {
                                                 event.stopPropagation();
                                                 onCreateDeployment(item);
                                             }}
@@ -109,7 +103,7 @@ export default function BlueprintsTable({
                                     link
                                     bordered
                                     title="Delete blueprint"
-                                    onClick={event => {
+                                    onClick={(event: Event) => {
                                         event.stopPropagation();
                                         onDeleteBlueprint(item);
                                     }}
@@ -122,7 +116,3 @@ export default function BlueprintsTable({
         </DataTable>
     );
 }
-
-BlueprintsTable.propTypes = BlueprintsViewPropTypes;
-
-BlueprintsTable.defaultProps = BlueprintsViewDefaultProps;

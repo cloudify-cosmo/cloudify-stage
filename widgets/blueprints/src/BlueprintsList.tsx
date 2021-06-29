@@ -1,15 +1,27 @@
-// @ts-nocheck File not migrated fully to TS
-/**
- * Created by kinneretzin on 02/10/2016.
- */
+import type { ComponentProps } from 'react';
 
 import BlueprintsCatalog from './BlueprintsCatalog';
 import BlueprintsTable from './BlueprintsTable';
-import DataPropType from './props/DataPropType';
+import type { BlueprintDataResponse, BlueprintsViewProps, BlueprintsWidgetConfiguration } from './types';
 
-export default class BlueprintList extends React.Component {
-    constructor(props, context) {
-        super(props, context);
+interface BlueprintListProps {
+    toolbox: Stage.Types.Toolbox;
+    widget: Stage.Types.Widget<BlueprintsWidgetConfiguration>;
+    data: BlueprintDataResponse;
+}
+
+interface BlueprintListState {
+    showDeploymentModal: boolean;
+    showUploadModal: boolean;
+    blueprintId: string;
+    confirmDelete: boolean;
+    error: any;
+    force: boolean;
+}
+
+export default class BlueprintList extends React.Component<BlueprintListProps, BlueprintListState> {
+    constructor(props: BlueprintListProps) {
+        super(props);
 
         this.state = {
             showDeploymentModal: false,
@@ -26,7 +38,7 @@ export default class BlueprintList extends React.Component {
         toolbox.getEventBus().on('blueprints:refresh', this.refreshData, this);
     }
 
-    shouldComponentUpdate(nextProps, nextState) {
+    shouldComponentUpdate(nextProps: BlueprintListProps, nextState: BlueprintListState) {
         const { data, widget } = this.props;
         return (
             !_.isEqual(widget, nextProps.widget) ||
@@ -40,7 +52,7 @@ export default class BlueprintList extends React.Component {
         toolbox.getEventBus().off('blueprints:refresh', this.refreshData);
     }
 
-    selectBlueprint = item => {
+    selectBlueprint: BlueprintsViewProps['onSelectBlueprint'] = item => {
         const { toolbox, widget } = this.props;
         const { BlueprintActions } = Stage.Common;
 
@@ -54,11 +66,11 @@ export default class BlueprintList extends React.Component {
         }
     };
 
-    createDeployment = item => {
+    createDeployment: BlueprintsViewProps['onCreateDeployment'] = item => {
         this.setState({ error: null, blueprintId: item.id, showDeploymentModal: true });
     };
 
-    deleteBlueprintConfirm = item => {
+    deleteBlueprintConfirm: BlueprintsViewProps['onDeleteBlueprint'] = item => {
         this.setState({ confirmDelete: true, blueprintId: item.id, force: false });
     };
 
@@ -84,7 +96,7 @@ export default class BlueprintList extends React.Component {
             });
     };
 
-    setBlueprintVisibility = (blueprintId, visibility) => {
+    setBlueprintVisibility: BlueprintsViewProps['onSetVisibility'] = (blueprintId, visibility) => {
         const { toolbox } = this.props;
         const actions = new Stage.Common.BlueprintActions(toolbox);
         toolbox.loading(true);
@@ -112,11 +124,12 @@ export default class BlueprintList extends React.Component {
         this.setState({ showUploadModal: false });
     };
 
-    handleForceChange = (event, field) => {
+    handleForceChange: ComponentProps<typeof Stage.Common.DeleteConfirm>['onForceChange'] = (_event, field) => {
+        // @ts-expect-error Form.fieldNameValue is not converted to TS yet
         this.setState(Stage.Basic.Form.fieldNameValue(field));
     };
 
-    fetchGridData = fetchParams => {
+    fetchGridData: BlueprintsViewProps['fetchData'] = fetchParams => {
         const { toolbox } = this.props;
         return toolbox.refresh(fetchParams);
     };
@@ -131,6 +144,7 @@ export default class BlueprintList extends React.Component {
         const { data, toolbox, widget } = this.props;
         const NO_DATA_MESSAGE = 'There are no Blueprints available. Click "Upload" to add Blueprints.';
         const { Button, ErrorMessage } = Stage.Basic;
+        // @ts-expect-error UploadBlueprintModal is not converted to TS yet
         const { DeleteConfirm, DeployBlueprintModal, UploadBlueprintModal } = Stage.Common;
 
         const shouldShowTable = widget.configuration.displayStyle === 'table';
@@ -182,9 +196,3 @@ export default class BlueprintList extends React.Component {
         );
     }
 }
-
-BlueprintList.propTypes = {
-    data: DataPropType.isRequired,
-    toolbox: Stage.PropTypes.Toolbox.isRequired,
-    widget: Stage.PropTypes.Widget.isRequired
-};
