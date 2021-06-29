@@ -30,6 +30,7 @@ function renderActionField(name, checked, onChange) {
 
 export default function ExecuteDeploymentModal({
     deploymentId,
+    deploymentName,
     deployments,
     hideOptions,
     onExecute,
@@ -111,6 +112,11 @@ export default function ExecuteDeploymentModal({
         clearErrors();
     }, [dryRun, force, schedule, scheduledTime]);
 
+    let deploymentsList = deployments;
+    if (_.isEmpty(deployments)) {
+        deploymentsList = _.compact([deploymentId]);
+    }
+
     function submitExecute() {
         const { InputsUtils, DeploymentActions } = Stage.Common;
         const validationErrors = {};
@@ -153,12 +159,12 @@ export default function ExecuteDeploymentModal({
             return true;
         }
 
-        let deploymentsList = deployments;
+        let aaa = deployments;
         if (_.isEmpty(deployments)) {
-            deploymentsList = _.compact([deploymentId]);
+            aaa = _.compact([deploymentId]);
         }
 
-        if (_.isEmpty(deploymentsList)) {
+        if (_.isEmpty(aaa)) {
             setErrors(t('errors.missingDeployment'));
             return false;
         }
@@ -166,7 +172,7 @@ export default function ExecuteDeploymentModal({
         setLoading();
         const actions = new DeploymentActions(toolbox);
 
-        const executePromises = _.map(deploymentsList, id => {
+        const executePromises = _.map(aaa, id => {
             return actions
                 .doExecute(id, name, workflowParameters, {
                     force,
@@ -226,9 +232,11 @@ export default function ExecuteDeploymentModal({
     const { InputsHeader, InputsUtils, YamlFileButton } = Stage.Common;
 
     let headerKey = 'header.';
-    if (!_.isEmpty(deployments)) {
-        if (_.size(deployments) > 1) {
+    if (!_.isEmpty(deploymentsList)) {
+        if (_.size(deploymentsList) > 1) {
             headerKey += 'multipleDeployments';
+        } else if (deploymentName) {
+            headerKey += 'singleNamedDeployemnt';
         } else {
             headerKey += 'singleDeployemnt';
         }
@@ -239,7 +247,8 @@ export default function ExecuteDeploymentModal({
     return (
         <Modal open={open} onClose={onHide} className="executeWorkflowModal">
             <Modal.Header>
-                <Icon name="cogs" /> {t(headerKey, { workflowName, deploymentName: _.head(deployments) })}
+                <Icon name="cogs" />{' '}
+                {t(headerKey, { workflowName, deploymentName, deploymentId: _.head(deploymentsList) })}
             </Modal.Header>
 
             <Modal.Content>
