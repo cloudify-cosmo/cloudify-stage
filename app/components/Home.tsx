@@ -10,7 +10,6 @@ import i18n from 'i18next';
 
 import SideBar from '../containers/SideBar';
 import Page from './Page';
-import ToursButton from '../containers/ToursButton';
 import GettingStartedModal from './GettingStartedModal';
 
 export default class Home extends Component {
@@ -84,8 +83,6 @@ export default class Home extends Component {
 
         return (
             <div className="main">
-                <ToursButton />
-
                 <SideBar pageId={pageId} />
                 <GettingStartedModal />
 
