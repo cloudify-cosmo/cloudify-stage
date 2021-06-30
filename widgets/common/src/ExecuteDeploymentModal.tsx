@@ -328,6 +328,7 @@ ExecuteDeploymentModal.propTypes = {
         }
         return null;
     },
+    deploymentName: PropTypes.string,
     deployments: PropTypes.arrayOf(PropTypes.string),
     workflow: PropTypes.oneOfType([
         PropTypes.shape({ name: PropTypes.string, parameters: PropTypes.shape({}) }),
