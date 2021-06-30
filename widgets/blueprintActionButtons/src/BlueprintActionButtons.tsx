@@ -3,6 +3,7 @@ import type { ComponentProps } from 'react';
 interface BlueprintActionButtonsProps {
     blueprintId?: string;
     toolbox: Stage.Types.Toolbox;
+    showEditCopyInComposerButton: boolean;
 }
 
 interface BlueprintActionButtonsState {
@@ -85,7 +86,7 @@ export default class BlueprintActionButtons extends React.Component<
     }
 
     render() {
-        const { blueprintId, toolbox } = this.props;
+        const { blueprintId, toolbox, showEditCopyInComposerButton } = this.props;
         const { error, force, loading } = this.state;
         const { ErrorMessage, Button } = Stage.Basic;
         const { DeleteConfirm, DeployBlueprintModal } = Stage.Common;
@@ -115,7 +116,7 @@ export default class BlueprintActionButtons extends React.Component<
                     id="deleteBlueprintButton"
                 />
 
-                {!manager.isCommunityEdition() && (
+                {!manager.isCommunityEdition() && showEditCopyInComposerButton && (
                     <Button
                         className="labeled icon"
                         color="teal"
