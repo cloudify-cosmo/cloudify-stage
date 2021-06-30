@@ -1,9 +1,4 @@
 // @ts-nocheck File not migrated fully to TS
-import 'jquery-ui/ui/core';
-import 'jquery-ui/ui/widget';
-import 'jquery-ui/ui/widgets/mouse';
-import 'jquery-ui/ui/widgets/draggable';
-import 'jquery-ui/ui/widgets/droppable';
 
 import './styles/style.scss';
 import 'cloudify-ui-common/styles/font-cloudify.css';
@@ -49,8 +44,6 @@ import Interceptor from './utils/Interceptor';
 import Routes from './containers/Routes';
 import translation from './translations/en.json';
 import LoaderUtils from './utils/LoaderUtils';
-
-window.$ = $;
 
 const browserHistory = createBrowserHistory({
     basename: Consts.CONTEXT_PATH
