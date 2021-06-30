@@ -42,7 +42,6 @@ const options = {
         [`${contextPath}/sp`]: proxyOptions,
         [`${contextPath}/style`]: proxyOptions,
         [`${contextPath}/templates`]: proxyOptions,
-        [`${contextPath}/tours`]: proxyOptions,
         [`${contextPath}/ua`]: proxyOptions,
         [`${contextPath}/userData`]: proxyOptions,
         [`${contextPath}/wb`]: proxyOptions,

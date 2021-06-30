@@ -10,7 +10,6 @@ import { setAppLoading } from './appState';
 import { setEditMode } from './config';
 import { clearContext } from './context';
 import { reloadUserAppData } from './userApp';
-import { loadTours } from './tours';
 
 function requestTenants() {
     return {
@@ -66,6 +65,5 @@ export function changeTenant(tenantName) {
         dispatch(clearContext());
         dispatch(selectTenant(tenantName));
         dispatch(reloadUserAppData());
-        dispatch(loadTours());
     };
 }
