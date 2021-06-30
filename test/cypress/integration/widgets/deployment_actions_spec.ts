@@ -30,10 +30,12 @@ describe('Deployment Action Buttons widget', () => {
             cy.get('button.executeWorkflowButton').should('not.have.attr', 'disabled');
             cy.get('button.executeWorkflowButton').click();
             cy.get('.popupMenu > .menu').contains('Start').click();
-            cy.get('.executeWorkflowModal').should('be.visible');
-            cy.contains(`Execute workflow start on ${deploymentName} (${deploymentId})`);
-            cy.get('.executeWorkflowModal button.ok').click();
-
+            cy.get('.executeWorkflowModal')
+                .should('be.visible')
+                .within(() => {
+                    cy.contains(`Execute workflow start on ${deploymentName} (${deploymentId})`);
+                    cy.get('button.ok').click();
+                });
             cy.wait('@executeWorkflow');
             cy.get('.executeWorkflowModal').should('not.exist');
         });
