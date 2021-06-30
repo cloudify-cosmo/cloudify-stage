@@ -657,6 +657,11 @@
                 }
             }
         },
+        "blueprintActionButtons": {
+            "configuration": {
+                "showEditCopyInComposerButton": "Show the 'Edit a copy in Composer' button"
+            }
+        },
         "executions": {
             "noExecutionFound": "There are no executions that could be shown."
         },
