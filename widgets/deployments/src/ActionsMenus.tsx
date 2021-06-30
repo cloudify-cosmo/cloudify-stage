@@ -1,12 +1,12 @@
 // @ts-nocheck File not migrated fully to TS
-export default function ActionsMenus({ deploymentId, onDeploymentAction, onWorkflowAction, toolbox, workflows }) {
+export default function ActionsMenus({ deployment, onDeploymentAction, onWorkflowAction, toolbox, workflows }) {
     const { DeploymentActionsMenu, WorkflowsMenu } = Stage.Common;
 
     return (
         <>
-            <WorkflowsMenu workflows={workflows} onClick={workflow => onWorkflowAction(deploymentId, workflow.name)} />
+            <WorkflowsMenu workflows={workflows} onClick={workflow => onWorkflowAction(deployment, workflow.name)} />
             <DeploymentActionsMenu
-                onActionClick={actionName => onDeploymentAction(deploymentId, actionName)}
+                onActionClick={actionName => onDeploymentAction(deployment, actionName)}
                 toolbox={toolbox}
             />
         </>
@@ -14,7 +14,7 @@ export default function ActionsMenus({ deploymentId, onDeploymentAction, onWorkf
 }
 
 ActionsMenus.propTypes = {
-    deploymentId: PropTypes.string.isRequired,
+    deployment: PropTypes.shape(),
     onDeploymentAction: PropTypes.func.isRequired,
     onWorkflowAction: PropTypes.func.isRequired,
     workflows: Stage.PropTypes.Workflows.isRequired,

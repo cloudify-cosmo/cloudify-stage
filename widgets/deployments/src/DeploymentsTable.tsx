@@ -81,7 +81,7 @@ export default function DeploymentsTable({
                         <DataTable.Data>{item.created_by}</DataTable.Data>
                         <DataTable.Data style={{ display: 'inline-flex' }}>
                             <ActionsMenus
-                                deploymentId={item.id}
+                                deployment={item}
                                 onDeploymentAction={onDeploymentAction}
                                 onWorkflowAction={onWorkflowAction}
                                 workflows={item.workflows}
