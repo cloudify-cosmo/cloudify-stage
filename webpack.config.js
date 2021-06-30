@@ -192,10 +192,6 @@ module.exports = (env, argv) => {
                             {
                                 from: 'templates',
                                 to: 'appData/templates'
-                            },
-                            {
-                                from: 'tours',
-                                to: 'appData/tours'
                             }
                         ]
                     }),
