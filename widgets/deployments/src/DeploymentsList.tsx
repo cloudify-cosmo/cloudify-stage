@@ -132,6 +132,7 @@ export default class DeploymentsList extends React.Component {
                     <DeploymentActionsModals
                         activeAction={activeAction}
                         deploymentId={deployment.id}
+                        deploymentName={deployment.display_name}
                         onHide={this.hideActionModal}
                         toolbox={toolbox}
                         redirectToParentPageAfterDelete={false}
