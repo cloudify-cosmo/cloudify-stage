@@ -364,23 +364,6 @@
             }
         }
     },
-    "tours": {
-        "buttonTitle": "Take a tour",
-        "next": "Next",
-        "nextPage": "Next (change page)",
-        "noPage": {
-            "message": "Cannot find <strong>{{page}}</strong> page. Tours are intended to work only on default templates. Reset templates to finish this tour.",
-            "title": "No page"
-        },
-        "noSelector": {
-            "message": "Cannot find element for the next tour step on the screen.",
-            "title": "No element"
-        },
-        "noTarget": {
-            "message": "Cannot find target element. Tours are intended to work only on default templates. Reset templates to finish this tour.",
-            "title": "No target element for next step"
-        }
-    },
     "unexpectedError": "Unexpected Error Occurred",
     "users": {
         "changePassword": "Change Password",

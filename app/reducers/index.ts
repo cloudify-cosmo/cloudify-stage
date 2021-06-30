@@ -9,7 +9,6 @@ import type { History } from 'history';
 
 import pages from './pageReducer';
 import widgetDefinitions from './widgetDefinitionsReducer';
-import tours from './toursReducer';
 import templates from './templatesReducer';
 import templateManagement from './templateManagementReducer';
 import context from './contextReducer';
@@ -26,7 +25,6 @@ const rootReducer = (history: History) =>
         manager,
         pages,
         widgetDefinitions,
-        tours,
         templates,
         templateManagement,
         context,

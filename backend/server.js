@@ -5,7 +5,6 @@
 const app = require('./app');
 const Consts = require('./consts');
 const DBConnection = require('./db/Connection');
-const ToursHandler = require('./handler/ToursHandler');
 const WidgetHandler = require('./handler/WidgetHandler');
 const TemplateHandler = require('./handler/TemplateHandler');
 const LoggerHandler = require('./handler/LoggerHandler');
@@ -19,10 +18,10 @@ ServerSettings.init();
 module.exports = DBConnection.init()
     .then(() => {
         logger.info('DB connection initialized successfully.');
-        return Promise.all([ToursHandler.init(), WidgetHandler.init(), TemplateHandler.init()]);
+        return Promise.all([WidgetHandler.init(), TemplateHandler.init()]);
     })
     .then(() => {
-        logger.info('Tours, widgets and templates data initialized successfully.');
+        logger.info('Widgets and templates data initialized successfully.');
         return new Promise((resolve, reject) => {
             const server = app.listen(Consts.SERVER_PORT, Consts.SERVER_HOST);
             server.on('error', reject);
