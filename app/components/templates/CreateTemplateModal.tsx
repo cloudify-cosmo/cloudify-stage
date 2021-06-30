@@ -1,12 +1,15 @@
 // @ts-nocheck File not migrated fully to TS
-/**
- * Created by pposel on 22/08/2017.
- */
 import _ from 'lodash';
-import 'jquery-ui/ui/widgets/sortable';
 import PropTypes from 'prop-types';
 import i18n from 'i18next';
-import React, { Component } from 'react';
+import React, { Component, CSSProperties, FunctionComponent } from 'react';
+
+import { DndContext, closestCenter, PointerSensor } from '@dnd-kit/core';
+
+import { SortableContext, verticalListSortingStrategy, useSortable } from '@dnd-kit/sortable';
+import { CSS } from '@dnd-kit/utilities';
+import type { DragEndEvent, SensorDescriptor } from '@dnd-kit/core';
+
 import Consts from '../../utils/consts';
 
 import {
@@ -19,8 +22,47 @@ import {
     List,
     Message,
     Modal,
+    Ref,
     Segment
 } from '../basic/index';
+
+interface SortablePageItemProps {
+    name: string;
+    onRemove: () => void;
+}
+const SortablePageItem: FunctionComponent<SortablePageItemProps> = ({ name, onRemove }) => {
+    const { attributes, listeners, setNodeRef, transform, transition } = useSortable({ id: name });
+
+    const style: CSSProperties = {
+        transform: CSS.Transform.toString(transform),
+        transition: transition !== null ? transition : undefined
+    };
+
+    return (
+        <Ref innerRef={setNodeRef}>
+            {/* eslint-disable-next-line react/jsx-props-no-spreading */}
+            <List.Item style={style} {...attributes}>
+                {name}
+                <span className="right floated actionIcons">
+                    <Icon
+                        link
+                        name="minus"
+                        onClick={onRemove}
+                        title={i18n.t('templates.createTemplateModal.removePage', 'Remove page')}
+                    />
+                    <Icon
+                        // eslint-disable-next-line react/jsx-props-no-spreading
+                        {...listeners}
+                        link
+                        name="move"
+                        className="handle"
+                        title={i18n.t('templates.createTemplateModal.reorderPage', 'Reorder page')}
+                    />
+                </span>
+            </List.Item>
+        </Ref>
+    );
+};
 
 export default class CreateTemplateModal extends Component {
     static initialState = (open, props) => {
@@ -43,21 +85,6 @@ export default class CreateTemplateModal extends Component {
         super(props, context);
 
         this.state = CreateTemplateModal.initialState(false, props);
-    }
-
-    componentDidUpdate() {
-        if (!$('#reorderList').hasClass('ui-sortable')) {
-            $('#reorderList').sortable({
-                placeholder: 'ui-sortable-placeholder',
-                helper: 'clone',
-                handle: '.handle',
-                forcePlaceholderSize: true,
-                start: (event, ui) => {
-                    this.pageIndex = ui.item.index();
-                },
-                update: (event, ui) => this.reorderPage(this.pageIndex, ui.item.index())
-            });
-        }
     }
 
     openModal = () => {
@@ -121,23 +148,27 @@ export default class CreateTemplateModal extends Component {
         this.setState(Form.fieldNameValue(field));
     };
 
-    reorderPage(oldIndex, newIndex) {
-        const { pages } = this.state;
+    handleDragEnd = (event: DragEndEvent) => {
+        const { active, over } = event;
+        if (active && over && active.id !== over.id) {
+            const { pages } = this.state;
+            const oldIndex = pages.indexOf(active.id);
+            const newIndex = pages.indexOf(over.id);
+            const newPages = [...pages];
+            const removed = newPages.splice(oldIndex, 1)[0];
 
-        const removed = pages.splice(oldIndex, 1)[0];
-        pages.splice(newIndex, 0, removed);
+            newPages.splice(newIndex, 0, removed);
 
-        this.setState({ pages });
-    }
+            this.setState({ pages: newPages });
+        }
+    };
 
     addPage(item) {
         const { availablePages: stateAvailablePages, pages: statePages } = this.state;
         const availablePages = _.without(stateAvailablePages, item);
         const pages = [...statePages, item];
 
-        this.setState({ pages, availablePages }, () => {
-            $('#reorderList').sortable('refresh');
-        });
+        this.setState({ pages, availablePages });
     }
 
     removePage(item) {
@@ -145,9 +176,7 @@ export default class CreateTemplateModal extends Component {
         const availablePages = [...stateAvailablePages, item];
         const pages = _.without(statePages, item);
 
-        this.setState({ pages, availablePages }, () => {
-            $('#reorderList').sortable('refresh');
-        });
+        this.setState({ pages, availablePages });
     }
 
     render() {
@@ -176,6 +205,12 @@ export default class CreateTemplateModal extends Component {
                 className="createTemplateButton"
             />
         );
+        const sensors: SensorDescriptor<any>[] = [
+            {
+                sensor: PointerSensor,
+                options: {}
+            }
+        ];
 
         return (
             <Modal
@@ -271,34 +306,23 @@ export default class CreateTemplateModal extends Component {
                                 {i18n.t('templates.createTemplateModal.selectedPages', 'Selected pages')}
                                 <Divider />
                                 <List divided relaxed verticalAlign="middle" className="light" id="reorderList">
-                                    {pages.map(item => {
-                                        return (
-                                            <List.Item key={item}>
-                                                {item}
-
-                                                <span className="right floated actionIcons">
-                                                    <Icon
-                                                        link
-                                                        name="minus"
-                                                        onClick={() => this.removePage(item)}
-                                                        title={i18n.t(
-                                                            'templates.createTemplateModal.removePage',
-                                                            'Remove page'
-                                                        )}
+                                    <DndContext
+                                        sensors={sensors}
+                                        collisionDetection={closestCenter}
+                                        onDragEnd={this.handleDragEnd}
+                                    >
+                                        <SortableContext items={pages} strategy={verticalListSortingStrategy}>
+                                            {pages.map(item => {
+                                                return (
+                                                    <SortablePageItem
+                                                        name={item}
+                                                        key={item}
+                                                        onRemove={() => this.removePage(item)}
                                                     />
-                                                    <Icon
-                                                        link
-                                                        name="move"
-                                                        className="handle"
-                                                        title={i18n.t(
-                                                            'templates.createTemplateModal.reorderPage',
-                                                            'Reorder page'
-                                                        )}
-                                                    />
-                                                </span>
-                                            </List.Item>
-                                        );
-                                    })}
+                                                );
+                                            })}
+                                        </SortableContext>
+                                    </DndContext>
 
                                     {_.isEmpty(pages) && (
                                         <Message
