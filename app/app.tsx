@@ -15,9 +15,6 @@ import 'semantic-ui-css-offline/semantic.min.css';
 import 'react-grid-layout/css/styles.css';
 import 'react-resizable/css/styles.css';
 
-// Import hopscotch
-import 'hopscotch/dist/css/hopscotch.css';
-
 // Import leaflet
 import 'leaflet/dist/leaflet.css';
 import 'react-leaflet-markercluster/dist/styles.min.css';
