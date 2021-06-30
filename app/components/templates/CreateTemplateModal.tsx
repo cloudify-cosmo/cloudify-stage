@@ -9,6 +9,7 @@ import { DndContext, closestCenter, PointerSensor } from '@dnd-kit/core';
 import { SortableContext, verticalListSortingStrategy, useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import type { DragEndEvent, SensorDescriptor } from '@dnd-kit/core';
+import { restrictToParentElement } from '@dnd-kit/modifiers';
 
 import Consts from '../../utils/consts';
 
@@ -310,6 +311,7 @@ export default class CreateTemplateModal extends Component {
                                         sensors={sensors}
                                         collisionDetection={closestCenter}
                                         onDragEnd={this.handleDragEnd}
+                                        modifiers={[restrictToParentElement]}
                                     >
                                         <SortableContext items={pages} strategy={verticalListSortingStrategy}>
                                             {pages.map(item => {
