@@ -432,7 +432,8 @@
                 "executeModal": {
                     "header": {
                         "noDeployment": "Execute workflow {{workflowName}}",
-                        "singleDeployemnt": "Execute workflow {{workflowName}} on {{deploymentName}}",
+                        "singleDeployemnt": "Execute workflow {{workflowName}} on {{deploymentId}}",
+                        "singleNamedDeployemnt": "Execute workflow {{workflowName}} on {{deploymentName}} ({{deploymentId}})",
                         "multipleDeployments": "Execute workflow {{workflowName}} on multiple deployments"
                     },
                     "errors": {
@@ -654,6 +655,11 @@
                         "placeholder": "Provide the image file URL or click browse to select a file"
                     }
                 }
+            }
+        },
+        "blueprintActionButtons": {
+            "configuration": {
+                "showEditCopyInComposerButton": "Show the 'Edit a copy in Composer' button"
             }
         },
         "executions": {
