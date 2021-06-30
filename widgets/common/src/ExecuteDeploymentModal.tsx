@@ -112,10 +112,7 @@ export default function ExecuteDeploymentModal({
         clearErrors();
     }, [dryRun, force, schedule, scheduledTime]);
 
-    let deploymentsList = deployments;
-    if (_.isEmpty(deployments)) {
-        deploymentsList = _.compact([deploymentId]);
-    }
+    const deploymentsList: string[] = _.isEmpty(deployments) ? _.compact([deploymentId]) : deployments;
 
     function submitExecute() {
         const { InputsUtils, DeploymentActions } = Stage.Common;
