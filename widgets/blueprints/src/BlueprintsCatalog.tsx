@@ -1,10 +1,7 @@
-// @ts-nocheck File not migrated fully to TS
-/**
- * Created by kinneretzin on 08/01/2017.
- */
-import BlueprintsViewPropTypes from './props/BlueprintsViewPropTypes';
-import BlueprintsViewDefaultProps from './props/BlueprintsViewDefaultProps';
+import type { ReactElement } from 'react';
+
 import BlueprintState from './BlueprintState';
+import type { BlueprintsViewProps } from './types';
 
 export default function BlueprintsCatalog({
     data,
@@ -16,7 +13,7 @@ export default function BlueprintsCatalog({
     onSetVisibility,
     widget,
     toolbox
-}) {
+}: BlueprintsViewProps) {
     const { DataSegment, Grid, Image, Button, Label, ResourceVisibility, Header } = Stage.Basic;
     const { BlueprintActions } = Stage.Common;
     const manager = toolbox.getManager();
@@ -165,7 +162,7 @@ export default function BlueprintsCatalog({
     });
 
     const blueprintsRows = [];
-    let row = [];
+    let row: ReactElement[] = [];
     _.each(blueprintsItems, (blueprintItem, index) => {
         row.push(blueprintItem);
         if ((index + 1) % 3 === 0) {
@@ -200,7 +197,3 @@ export default function BlueprintsCatalog({
         </div>
     );
 }
-
-BlueprintsCatalog.propTypes = BlueprintsViewPropTypes;
-
-BlueprintsCatalog.defaultProps = BlueprintsViewDefaultProps;
