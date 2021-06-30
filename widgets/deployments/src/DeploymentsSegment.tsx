@@ -57,7 +57,7 @@ export default function DeploymentsSegment({
                         customActions={
                             <div className="menuAction">
                                 <ActionsMenus
-                                    deploymentId={item.id}
+                                    deployment={item}
                                     onDeploymentAction={onDeploymentAction}
                                     onWorkflowAction={onWorkflowAction}
                                     workflows={item.workflows}

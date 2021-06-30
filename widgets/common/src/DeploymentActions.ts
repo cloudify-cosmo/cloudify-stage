@@ -158,7 +158,7 @@ export default class DeploymentActions {
     }
 
     doGetWorkflows(deploymentId: string) {
-        return this.toolbox.getManager().doGet(`/deployments/${deploymentId}?_include=id,workflows`);
+        return this.toolbox.getManager().doGet(`/deployments/${deploymentId}?_include=id,display_name,workflows`);
     }
 
     async waitUntilCreated(deploymentId: string) {
