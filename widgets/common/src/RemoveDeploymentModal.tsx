@@ -3,6 +3,7 @@ import type { FunctionComponent } from 'react';
 interface RemoveDeploymentModalProps {
     open: boolean;
     deploymentId: string;
+    deploymentName: string;
     force: boolean;
     onHide: () => void;
     toolbox: Stage.Types.Toolbox;
@@ -12,6 +13,7 @@ interface RemoveDeploymentModalProps {
 const RemoveDeploymentModal: FunctionComponent<RemoveDeploymentModalProps> = ({
     open,
     deploymentId,
+    deploymentName,
     force,
     onHide,
     toolbox,
@@ -29,7 +31,10 @@ const RemoveDeploymentModal: FunctionComponent<RemoveDeploymentModalProps> = ({
     useOpenProp(open, clearErrors);
 
     const content = i18n
-        .t(`widgets.common.deployments.removeModal.${force ? 'forceDelete' : 'delete'}Description`, { deploymentId })
+        .t(`widgets.common.deployments.removeModal.${force ? 'forceDelete' : 'delete'}Description`, {
+            deploymentId,
+            deploymentName
+        })
         .split('\n')
         // eslint-disable-next-line react/no-array-index-key
         .map((line, index) => <p key={index}>{line}</p>);

@@ -50,6 +50,7 @@ describe('Deployment Action Buttons widget', () => {
 
             cy.get('.popupMenu > .menu').contains('Set Site').click();
             cy.get('.modal').within(() => {
+                cy.contains(`Set the site of deployment ${deploymentName} (${deploymentId})`);
                 cy.get('div[name="siteName"]').click();
                 cy.get(`div[option-value="${siteName}"]`).click();
                 cy.get('button.ok').click();
@@ -104,6 +105,7 @@ describe('Deployment Action Buttons widget', () => {
             cy.contains('button', 'Deployment actions').click();
             cy.get('.popupMenu > .menu').contains('Manage Labels').click();
             cy.get('.modal').within(() => {
+                cy.contains(`Manage labels for deployment ${deploymentName} (${deploymentId})`);
                 cy.wait('@fetchLabels');
                 cy.get('form.loading').should('not.exist');
                 toggleLabelsInput();
