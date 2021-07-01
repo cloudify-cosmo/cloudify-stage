@@ -125,7 +125,7 @@ describe('Deployments widget', () => {
             cy.interceptSp('POST', `/executions`).as('executeDeploymentWorkflow');
         });
 
-        const startAndVerifyWorkflowExecution = workflow => {
+        const startAndVerifyWorkflowExecution = (workflow: string) => {
             cy.get('.executeWorkflowModal').within(() => {
                 cy.contains(`Execute workflow ${workflow} on ${deploymentName} (${deploymentId})`);
                 cy.get('button.ok').click();
