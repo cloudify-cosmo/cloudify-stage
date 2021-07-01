@@ -6,6 +6,7 @@ export interface BlueprintsWidgetConfiguration {
     clickToDrillDown: boolean;
     displayStyle: 'table' | 'catalog';
     hideFailedBlueprints: boolean;
+    showEditCopyInComposerButton: boolean;
 }
 
 interface Blueprint {
