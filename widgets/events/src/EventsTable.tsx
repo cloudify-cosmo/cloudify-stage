@@ -140,12 +140,23 @@ export default class EventsTable extends React.Component {
                     />
                     <DataTable.Column
                         label="Deployment"
+                        name="deployment_display_name"
+                        show={
+                            _.size(data.deploymentName) !== 1 &&
+                            _.size(data.deploymentId) !== 1 &&
+                            _.size(data.nodeInstanceId) !== 1 &&
+                            _.size(data.executionId) !== 1 &&
+                            fieldsToShow.indexOf('Deployment') >= 0
+                        }
+                    />
+                    <DataTable.Column
+                        label="Deployment Id"
                         name="deployment_id"
                         show={
                             _.size(data.deploymentId) !== 1 &&
                             _.size(data.nodeInstanceId) !== 1 &&
                             _.size(data.executionId) !== 1 &&
-                            fieldsToShow.indexOf('Deployment') >= 0
+                            fieldsToShow.indexOf('Deployment Id') >= 0
                         }
                     />
                     <DataTable.Column
@@ -225,6 +236,7 @@ export default class EventsTable extends React.Component {
                                 <DataTable.Data className="alignCenter noWrap">{item.timestamp}</DataTable.Data>
                                 <DataTable.Data>{eventName}</DataTable.Data>
                                 <DataTable.Data>{item.blueprint_id}</DataTable.Data>
+                                <DataTable.Data>{item.deployment_display_name}</DataTable.Data>
                                 <DataTable.Data>{item.deployment_id}</DataTable.Data>
                                 <DataTable.Data>{item.node_name}</DataTable.Data>
                                 <DataTable.Data>{item.node_instance_id}</DataTable.Data>
@@ -280,11 +292,13 @@ EventsTable.propTypes = {
     data: PropTypes.shape({
         blueprintId: PropTypes.arrayOf(PropTypes.string),
         deploymentId: PropTypes.arrayOf(PropTypes.string),
+        deploymentName: PropTypes.arrayOf(PropTypes.string),
         executionId: PropTypes.arrayOf(PropTypes.string),
         items: PropTypes.arrayOf(
             PropTypes.shape({
                 blueprint_id: PropTypes.string,
                 deployment_id: PropTypes.string,
+                deployment_display_name: PropTypes.string,
                 error_causes: ErrorCausesPropType,
                 event_type: PropTypes.string,
                 id: PropTypes.number,
