@@ -432,7 +432,8 @@
                 "executeModal": {
                     "header": {
                         "noDeployment": "Execute workflow {{workflowName}}",
-                        "singleDeployemnt": "Execute workflow {{workflowName}} on {{deploymentName}}",
+                        "singleDeployemnt": "Execute workflow {{workflowName}} on {{deploymentId}}",
+                        "singleNamedDeployemnt": "Execute workflow {{workflowName}} on {{deploymentName}} ({{deploymentId}})",
                         "multipleDeployments": "Execute workflow {{workflowName}} on multiple deployments"
                     },
                     "errors": {
@@ -466,11 +467,11 @@
                     }
                 },
                 "removeModal": {
-                    "deleteDescription": "Are you sure you want to remove deployment '{{ deploymentId }}'?",
-                    "forceDeleteDescription": "Force delete will ignore any existing live nodes, or existing deployments which depend on this deployment.\nIt's recommended to first run uninstall to stop the live nodes, and make sure there are no running installations which depend on this deployment - and then run delete.\nAre you sure you want to ignore the live nodes and delete the deployment '{{ deploymentId }}'?"
+                    "deleteDescription": "Are you sure you want to remove deployment {{deploymentName}} ({{ deploymentId }})?",
+                    "forceDeleteDescription": "Force delete will ignore any existing live nodes, or existing deployments which depend on this deployment.\nIt's recommended to first run uninstall to stop the live nodes, and make sure there are no running installations which depend on this deployment - and then run delete.\nAre you sure you want to ignore the live nodes and delete the deployment {{deploymentName}} ({{ deploymentId }})?"
                 },
                 "setSiteModal": {
-                    "header": "Set the site of deployment '{{ deploymentId }}'",
+                    "header": "Set the site of deployment {{deploymentName}} ({{ deploymentId }})",
                     "siteNameLabel": "Site name",
                     "detachSiteLabel": "Detach from the current site",
                     "updateButton": "Update"
@@ -555,7 +556,7 @@
                 },
                 "fetchingLabelsError": "Cannot fetch labels for deployment '{{deploymentId}}'",
                 "labelDuplicationError": "Cannot add the same label twice",
-                "modalHeader": "Manage labels for deployment '{{deploymentId}}'",
+                "modalHeader": "Manage labels for deployment {{deploymentName}} ({{deploymentId}})",
                 "modalApplyButton": "Apply"
             },
             "filters": {
@@ -654,6 +655,16 @@
                         "placeholder": "Provide the image file URL or click browse to select a file"
                     }
                 }
+            }
+        },
+        "blueprintActionButtons": {
+            "configuration": {
+                "showEditCopyInComposerButton": "Show the \"Edit a copy in Composer\" button"
+            }
+        },
+        "blueprints": {
+            "configuration": {
+                "showEditCopyInComposerButton": "Show the \"Edit a copy in Composer\" button"
             }
         },
         "executions": {

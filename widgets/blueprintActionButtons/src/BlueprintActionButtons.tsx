@@ -1,15 +1,29 @@
-// @ts-nocheck File not migrated fully to TS
-/**
- * Created by jakubniezgoda on 28/02/2017.
- */
+import type { ComponentProps } from 'react';
 
-export default class BlueprintActionButtons extends React.Component {
+interface BlueprintActionButtonsProps {
+    blueprintId?: string;
+    toolbox: Stage.Types.Toolbox;
+    showEditCopyInComposerButton: boolean;
+}
+
+interface BlueprintActionButtonsState {
+    showModal: boolean;
+    modalType: string;
+    loading: boolean;
+    error: any;
+    force: boolean;
+}
+
+export default class BlueprintActionButtons extends React.Component<
+    BlueprintActionButtonsProps,
+    BlueprintActionButtonsState
+> {
     static DEPLOY_ACTION = 'deploy';
 
     static DELETE_ACTION = 'delete';
 
-    constructor(props, context) {
-        super(props, context);
+    constructor(props: BlueprintActionButtonsProps) {
+        super(props);
 
         this.state = {
             showModal: false,
@@ -20,7 +34,7 @@ export default class BlueprintActionButtons extends React.Component {
         };
     }
 
-    shouldComponentUpdate(nextProps, nextState) {
+    shouldComponentUpdate(nextProps: BlueprintActionButtonsProps, nextState: BlueprintActionButtonsState) {
         return !_.isEqual(this.state, nextState) || !_.isMatch(this.props, _.omit(nextProps, 'toolbox'));
     }
 
@@ -28,7 +42,8 @@ export default class BlueprintActionButtons extends React.Component {
         this.setState({ showModal: false });
     };
 
-    handleForceChange = (event, field) => {
+    handleForceChange: ComponentProps<typeof Stage.Common.DeleteConfirm>['onForceChange'] = (_event, field) => {
+        // @ts-expect-error Form.fieldNameValue is not converted to TS yet
         this.setState(Stage.Basic.Form.fieldNameValue(field));
     };
 
@@ -40,7 +55,9 @@ export default class BlueprintActionButtons extends React.Component {
         const actions = new Stage.Common.BlueprintActions(toolbox);
 
         actions
-            .doDelete(blueprintId, force)
+            // NOTE: If it was undefined, the button would be disabled
+            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+            .doDelete(blueprintId!, force)
             .then(() => {
                 toolbox.getEventBus().trigger('blueprints:refresh');
                 this.setState({ loading: false, error: null });
@@ -59,17 +76,17 @@ export default class BlueprintActionButtons extends React.Component {
         return false;
     };
 
-    showModal(type) {
+    showModal(type: string) {
         this.setState({ modalType: type, showModal: true, force: false });
     }
 
-    isShowModal(type) {
+    isShowModal(type: string) {
         const { modalType, showModal } = this.state;
         return modalType === type && showModal;
     }
 
     render() {
-        const { blueprintId, toolbox } = this.props;
+        const { blueprintId, toolbox, showEditCopyInComposerButton } = this.props;
         const { error, force, loading } = this.state;
         const { ErrorMessage, Button } = Stage.Basic;
         const { DeleteConfirm, DeployBlueprintModal } = Stage.Common;
@@ -99,7 +116,7 @@ export default class BlueprintActionButtons extends React.Component {
                     id="deleteBlueprintButton"
                 />
 
-                {!manager.isCommunityEdition() && (
+                {!manager.isCommunityEdition() && showEditCopyInComposerButton && (
                     <Button
                         className="labeled icon"
                         color="teal"
@@ -112,7 +129,9 @@ export default class BlueprintActionButtons extends React.Component {
                                 .doGet('/blueprints?_include=main_file_name', { params: { id: blueprintId } })
                                 .then(data =>
                                     new Stage.Common.BlueprintActions(toolbox).doEditInComposer(
-                                        blueprintId,
+                                        // NOTE: If it was undefined, the button would be disabled
+                                        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+                                        blueprintId!,
                                         data.items[0].main_file_name
                                     )
                                 )
@@ -145,12 +164,3 @@ export default class BlueprintActionButtons extends React.Component {
         );
     }
 }
-
-BlueprintActionButtons.propTypes = {
-    blueprintId: PropTypes.string,
-    toolbox: Stage.PropTypes.Toolbox.isRequired
-};
-
-BlueprintActionButtons.defaultProps = {
-    blueprintId: undefined
-};

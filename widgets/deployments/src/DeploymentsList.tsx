@@ -8,7 +8,7 @@ export default class DeploymentsList extends React.Component {
 
         this.state = {
             activeAction: null,
-            deploymentId: null,
+            deployment: null,
             error: null,
             executeModalOpen: false,
             workflowName: null
@@ -63,16 +63,16 @@ export default class DeploymentsList extends React.Component {
         this.setError(error);
     };
 
-    openExecuteModal = (deploymentId, workflowName) => {
-        this.setState({ deploymentId, executeModalOpen: true, workflowName });
+    openExecuteModal = (deployment, workflowName) => {
+        this.setState({ deployment, executeModalOpen: true, workflowName });
     };
 
     hideExecuteModal = () => {
         this.setState({ executeModalOpen: false, workflowName: null });
     };
 
-    openActionModal = (deploymentId, actionName) => {
-        this.setState({ deploymentId, activeAction: actionName });
+    openActionModal = (deployment, actionName) => {
+        this.setState({ deployment, activeAction: actionName });
     };
 
     hideActionModal = () => {
@@ -90,7 +90,7 @@ export default class DeploymentsList extends React.Component {
     }
 
     render() {
-        const { activeAction, deploymentId, error, executeModalOpen, workflowName } = this.state;
+        const { activeAction, deployment, error, executeModalOpen, workflowName } = this.state;
         const { data, toolbox, widget } = this.props;
         const NO_DATA_MESSAGE = 'There are no Deployments available. Click "Create deployment" to add deployments.';
         const { ErrorMessage } = Stage.Basic;
@@ -118,19 +118,21 @@ export default class DeploymentsList extends React.Component {
                     showExecutionStatusLabel={showExecutionStatusLabel}
                     toolbox={toolbox}
                 />
-                {deploymentId && workflowName && (
+                {deployment && workflowName && (
                     <ExecuteDeploymentModal
-                        deploymentId={deploymentId}
+                        deploymentId={deployment.id}
+                        deploymentName={deployment.display_name}
                         onHide={this.hideExecuteModal}
                         open={executeModalOpen}
                         toolbox={toolbox}
                         workflow={workflowName}
                     />
                 )}
-                {activeAction && deploymentId && (
+                {activeAction && deployment && (
                     <DeploymentActionsModals
                         activeAction={activeAction}
-                        deploymentId={deploymentId}
+                        deploymentId={deployment.id}
+                        deploymentName={deployment.display_name}
                         onHide={this.hideActionModal}
                         toolbox={toolbox}
                         redirectToParentPageAfterDelete={false}

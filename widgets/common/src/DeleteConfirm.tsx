@@ -1,7 +1,25 @@
-// @ts-nocheck File not migrated fully to TS
-export {};
+import type { FunctionComponent } from 'react';
+import { StrictCheckboxProps, StrictConfirmProps } from 'semantic-ui-react';
 
-function DeleteConfirm({ className, force, onCancel, onConfirm, onForceChange, open, resourceName }) {
+interface DeleteConfirmProps {
+    className?: string;
+    force?: boolean;
+    onForceChange?: StrictCheckboxProps['onChange'];
+    open: boolean;
+    onCancel?: StrictConfirmProps['onCancel'];
+    onConfirm?: StrictConfirmProps['onConfirm'];
+    resourceName: string;
+}
+
+const DeleteConfirm: FunctionComponent<DeleteConfirmProps> = ({
+    className,
+    force = false,
+    onCancel,
+    onConfirm,
+    onForceChange,
+    open,
+    resourceName
+}) => {
     const { Confirm, Form, Segment } = Stage.Basic;
 
     return (
@@ -11,7 +29,14 @@ function DeleteConfirm({ className, force, onCancel, onConfirm, onForceChange, o
             content={
                 <Segment basic>
                     <Form.Field>
-                        <Form.Checkbox name="force" toggle label="Force" checked={force} onChange={onForceChange} />
+                        <Form.Checkbox
+                            name="force"
+                            toggle
+                            label="Force"
+                            checked={force}
+                            onChange={onForceChange}
+                            help=""
+                        />
                     </Form.Field>
                 </Segment>
             }
@@ -20,7 +45,7 @@ function DeleteConfirm({ className, force, onCancel, onConfirm, onForceChange, o
             onCancel={onCancel}
         />
     );
-}
+};
 
 DeleteConfirm.propTypes = {
     resourceName: PropTypes.string.isRequired,
@@ -32,11 +57,12 @@ DeleteConfirm.propTypes = {
     onForceChange: PropTypes.func
 };
 
-DeleteConfirm.defaultProps = {
-    className: '',
-    force: false,
-    onForceChange: _.noop
-};
+declare global {
+    namespace Stage.Common {
+        // eslint-disable-next-line import/prefer-default-export
+        export { DeleteConfirm };
+    }
+}
 
 Stage.defineCommon({
     name: 'DeleteConfirm',

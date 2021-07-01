@@ -1,7 +1,7 @@
 // @ts-nocheck File not migrated fully to TS
 export {};
 
-function SetSiteModal({ deploymentId, onHide, open, toolbox }) {
+function SetSiteModal({ deploymentId, deploymentName, onHide, open, toolbox }) {
     const {
         Basic: { Modal, Icon, Form, ApproveButton, CancelButton },
         Common: { DeploymentActions },
@@ -61,7 +61,7 @@ function SetSiteModal({ deploymentId, onHide, open, toolbox }) {
         <Modal open={open} onClose={onHide}>
             <Modal.Header>
                 <Icon name="edit" />
-                {i18n.t(`widgets.common.deployments.setSiteModal.header`, { deploymentId })}
+                {i18n.t(`widgets.common.deployments.setSiteModal.header`, { deploymentId, deploymentName })}
             </Modal.Header>
 
             <Modal.Content>
@@ -107,6 +107,7 @@ function SetSiteModal({ deploymentId, onHide, open, toolbox }) {
 
 SetSiteModal.propTypes = {
     deploymentId: PropTypes.string.isRequired,
+    deploymentName: PropTypes.string.isRequired,
     toolbox: Stage.PropTypes.Toolbox.isRequired,
     open: PropTypes.bool.isRequired,
     onHide: PropTypes.func.isRequired

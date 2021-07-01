@@ -1,7 +1,8 @@
 import type { FunctionComponent } from 'react';
 
 interface DeploymentActionButtonsProps {
-    deployment: { id: string; workflows: unknown[] };
+    // eslint-disable-next-line camelcase
+    deployment: { id: string; display_name: string; workflows: unknown[] };
     toolbox: Stage.Types.Toolbox;
     redirectToParentPageAfterDelete: boolean;
 }
@@ -21,7 +22,7 @@ const DeploymentActionButtons: FunctionComponent<DeploymentActionButtonsProps> =
     const [activeAction, setActiveAction, resetActiveAction] = useResettableState<string | null>(null);
     const [workflow, setWorkflow, resetWorkflow] = useResettableState(null);
 
-    const { id, workflows } = deployment;
+    const { id, display_name: displayName, workflows } = deployment;
 
     return (
         <div>
@@ -59,6 +60,7 @@ const DeploymentActionButtons: FunctionComponent<DeploymentActionButtonsProps> =
                 <ExecuteDeploymentModal
                     open
                     deploymentId={id}
+                    deploymentName={displayName}
                     workflow={workflow}
                     onHide={resetWorkflow}
                     toolbox={toolbox}
@@ -69,6 +71,7 @@ const DeploymentActionButtons: FunctionComponent<DeploymentActionButtonsProps> =
                 <DeploymentActionsModals
                     activeAction={activeAction}
                     deploymentId={id}
+                    deploymentName={displayName}
                     onHide={resetActiveAction}
                     toolbox={toolbox}
                     redirectToParentPageAfterDelete={redirectToParentPageAfterDelete}

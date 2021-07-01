@@ -1,5 +1,10 @@
-// @ts-nocheck File not migrated fully to TS
-export default function BlueprintState({ blueprint }) {
+import type { ExtendedBlueprint } from './types';
+
+interface BlueprintStateProps {
+    blueprint: ExtendedBlueprint;
+}
+
+export default function BlueprintState({ blueprint }: BlueprintStateProps) {
     const { Icon, Popup } = Stage.Basic;
     return (
         <>
@@ -15,10 +20,3 @@ export default function BlueprintState({ blueprint }) {
         </>
     );
 }
-
-BlueprintState.propTypes = {
-    blueprint: PropTypes.shape({
-        state: PropTypes.string,
-        error: PropTypes.string
-    }).isRequired
-};

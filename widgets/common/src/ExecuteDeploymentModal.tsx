@@ -30,6 +30,7 @@ function renderActionField(name, checked, onChange) {
 
 export default function ExecuteDeploymentModal({
     deploymentId,
+    deploymentName,
     deployments,
     hideOptions,
     onExecute,
@@ -111,6 +112,8 @@ export default function ExecuteDeploymentModal({
         clearErrors();
     }, [dryRun, force, schedule, scheduledTime]);
 
+    const deploymentsList: string[] = _.isEmpty(deployments) ? _.compact([deploymentId]) : deployments;
+
     function submitExecute() {
         const { InputsUtils, DeploymentActions } = Stage.Common;
         const validationErrors = {};
@@ -151,11 +154,6 @@ export default function ExecuteDeploymentModal({
             });
             onHide();
             return true;
-        }
-
-        let deploymentsList = deployments;
-        if (_.isEmpty(deployments)) {
-            deploymentsList = _.compact([deploymentId]);
         }
 
         if (_.isEmpty(deploymentsList)) {
@@ -226,9 +224,11 @@ export default function ExecuteDeploymentModal({
     const { InputsHeader, InputsUtils, YamlFileButton } = Stage.Common;
 
     let headerKey = 'header.';
-    if (!_.isEmpty(deployments)) {
-        if (_.size(deployments) > 1) {
+    if (!_.isEmpty(deploymentsList)) {
+        if (_.size(deploymentsList) > 1) {
             headerKey += 'multipleDeployments';
+        } else if (deploymentName) {
+            headerKey += 'singleNamedDeployemnt';
         } else {
             headerKey += 'singleDeployemnt';
         }
@@ -239,7 +239,8 @@ export default function ExecuteDeploymentModal({
     return (
         <Modal open={open} onClose={onHide} className="executeWorkflowModal">
             <Modal.Header>
-                <Icon name="cogs" /> {t(headerKey, { workflowName, deploymentName: _.head(deployments) })}
+                <Icon name="cogs" />{' '}
+                {t(headerKey, { workflowName, deploymentName, deploymentId: _.head(deploymentsList) })}
             </Modal.Header>
 
             <Modal.Content>
@@ -327,6 +328,7 @@ ExecuteDeploymentModal.propTypes = {
         }
         return null;
     },
+    deploymentName: PropTypes.string,
     deployments: PropTypes.arrayOf(PropTypes.string),
     workflow: PropTypes.oneOfType([
         PropTypes.shape({ name: PropTypes.string, parameters: PropTypes.shape({}) }),

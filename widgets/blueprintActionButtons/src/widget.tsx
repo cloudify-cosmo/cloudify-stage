@@ -1,11 +1,10 @@
-// @ts-nocheck File not migrated fully to TS
-/**
- * Created by jakubniezgoda on 28/02/2017.
- */
-
 import BlueprintActionButtons from './BlueprintActionButtons';
 
-Stage.defineWidget({
+export interface BlueprintActionButtonsConfiguration {
+    showEditCopyInComposerButton: boolean;
+}
+
+Stage.defineWidget<unknown, unknown, BlueprintActionButtonsConfiguration>({
     id: 'blueprintActionButtons',
     name: 'Blueprint action buttons',
     description: 'Provides set of action buttons for blueprint',
@@ -13,15 +12,28 @@ Stage.defineWidget({
     initialHeight: 5,
     showHeader: false,
     showBorder: false,
-    initialConfiguration: [],
+    initialConfiguration: [
+        {
+            id: 'showEditCopyInComposerButton',
+            type: Stage.Basic.GenericField.BOOLEAN_TYPE,
+            name: Stage.i18n.t('widgets.blueprintActionButtons.configuration.showEditCopyInComposerButton'),
+            default: false
+        }
+    ],
     isReact: true,
     hasReadme: true,
     permission: Stage.GenericConfig.WIDGET_PERMISSION('blueprintActionButtons'),
     categories: [Stage.GenericConfig.CATEGORY.BLUEPRINTS, Stage.GenericConfig.CATEGORY.BUTTONS_AND_FILTERS],
 
-    render(widget, data, error, toolbox) {
+    render(widget, _data, _error, toolbox) {
         const blueprintId = toolbox.getContext().getValue('blueprintId');
 
-        return <BlueprintActionButtons blueprintId={blueprintId} toolbox={toolbox} />;
+        return (
+            <BlueprintActionButtons
+                blueprintId={blueprintId}
+                toolbox={toolbox}
+                showEditCopyInComposerButton={widget.configuration.showEditCopyInComposerButton}
+            />
+        );
     }
 });

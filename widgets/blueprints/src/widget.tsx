@@ -1,11 +1,8 @@
 // @ts-nocheck File not migrated fully to TS
-/**
- * Created by kinneretzin on 07/09/2016.
- */
-
 import BlueprintsList from './BlueprintsList';
+import type { BlueprintsWidgetConfiguration } from './types';
 
-Stage.defineWidget({
+Stage.defineWidget<unknown, unknown, BlueprintsWidgetConfiguration>({
     id: 'blueprints',
     name: 'Blueprints',
     description: 'Shows blueprint list',
@@ -44,6 +41,12 @@ Stage.defineWidget({
             name: 'Hide failed blueprints',
             default: false,
             type: Stage.Basic.GenericField.BOOLEAN_TYPE
+        },
+        {
+            id: 'showEditCopyInComposerButton',
+            type: Stage.Basic.GenericField.BOOLEAN_TYPE,
+            name: Stage.i18n.t('widgets.blueprints.configuration.showEditCopyInComposerButton'),
+            default: false
         }
     ],
 
