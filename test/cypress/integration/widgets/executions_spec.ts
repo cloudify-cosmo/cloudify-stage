@@ -9,7 +9,10 @@ describe('Executions', () => {
             .deleteSites()
             .uploadBlueprint('blueprints/simple.zip', blueprintName, 'blueprint.yaml', 'global')
             .deployBlueprint(blueprintName, blueprintName, { server_ip: 'localhost' })
-            .usePageMock('executions', { fieldsToShow: ['Status', 'Workflow'], pollingTime: 5 })
+            .usePageMock('executions', {
+                fieldsToShow: ['Deployment', 'Deployment ID', 'Status', 'Workflow'],
+                pollingTime: 5
+            })
             .mockLogin()
             .executeWorkflow(blueprintName, 'install');
 
@@ -18,6 +21,16 @@ describe('Executions', () => {
     });
 
     describe('in table mode', () => {
+        it('allows showing the deployment display name', () => {
+            cy.log('Check if display name is provided');
+            cy.get('table')
+                .getTable()
+                .should(tableData => {
+                    expect(tableData).to.have.length(2);
+                    expect(tableData[0].Deployment).to.eq('executions_test');
+                });
+        });
+
         it('shows execution graph', () => {
             cy.get('.executionsWidget').contains('tr', 'failed').contains('install').click();
 
