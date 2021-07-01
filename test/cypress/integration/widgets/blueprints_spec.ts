@@ -42,8 +42,7 @@ describe('Blueprints widget', () => {
 
         it('should not show the "Edit a copy in Composer" button if it is turned off in the configuration', () => {
             cy.editWidgetConfiguration('blueprints', () => {
-                cy.contains('Show the "Edit a copy in Composer" button')
-                    .parent('.field')
+                cy.contains('.field', 'Show the "Edit a copy in Composer" button')
                     .find('input')
                     // NOTE: force, as the checkbox from Semantic UI is
                     // class=hidden which prevents Cypress from clicking it
