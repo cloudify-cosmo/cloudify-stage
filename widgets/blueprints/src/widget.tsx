@@ -41,6 +41,12 @@ Stage.defineWidget<unknown, unknown, BlueprintsWidgetConfiguration>({
             name: 'Hide failed blueprints',
             default: false,
             type: Stage.Basic.GenericField.BOOLEAN_TYPE
+        },
+        {
+            id: 'showEditCopyInComposerButton',
+            type: Stage.Basic.GenericField.BOOLEAN_TYPE,
+            name: Stage.i18n.t('widgets.blueprints.configuration.showEditCopyInComposerButton'),
+            default: false
         }
     ],
 
