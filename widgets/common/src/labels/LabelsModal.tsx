@@ -4,6 +4,7 @@ import type { Label } from './types';
 
 export interface LabelsModalProps {
     deploymentId: string;
+    deploymentName: string;
     hideInitialLabels?: boolean;
     i18nHeaderKey: string;
     i18nApplyKey: string;
@@ -14,6 +15,7 @@ export interface LabelsModalProps {
 
 const LabelsModal: FunctionComponent<LabelsModalProps> = ({
     deploymentId,
+    deploymentName,
     hideInitialLabels = false,
     i18nHeaderKey,
     i18nApplyKey,
@@ -79,7 +81,7 @@ const LabelsModal: FunctionComponent<LabelsModalProps> = ({
     return (
         <Modal open={open} onClose={onHide}>
             <Modal.Header>
-                <Icon name="tags" /> {i18n.t(i18nHeaderKey, { deploymentId })}
+                <Icon name="tags" /> {i18n.t(i18nHeaderKey, { deploymentId, deploymentName })}
             </Modal.Header>
 
             <Modal.Content>

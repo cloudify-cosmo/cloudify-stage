@@ -5,6 +5,7 @@ import { actions } from './DeploymentActionsMenu';
 interface DeploymentActionsModalsProps {
     activeAction: string;
     deploymentId: string;
+    deploymentName: string;
     onHide: () => void;
     toolbox: Stage.Types.Toolbox;
     redirectToParentPageAfterDelete: boolean;
@@ -13,6 +14,7 @@ interface DeploymentActionsModalsProps {
 const DeploymentActionsModals: FunctionComponent<DeploymentActionsModalsProps> = ({
     activeAction,
     deploymentId,
+    deploymentName,
     onHide,
     toolbox,
     redirectToParentPageAfterDelete
@@ -31,7 +33,7 @@ const DeploymentActionsModals: FunctionComponent<DeploymentActionsModalsProps> =
         // NOTE: `as any` since the commons are not migrated to TS yet
     } = Stage;
 
-    const commonProps = { deploymentId, open: true, onHide, toolbox };
+    const commonProps = { deploymentId, deploymentName, open: true, onHide, toolbox };
 
     switch (activeAction) {
         case actions.manageLabels:

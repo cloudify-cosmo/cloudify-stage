@@ -1,7 +1,7 @@
 // @ts-nocheck File not migrated fully to TS
 import GenericDeployModal from './GenericDeployModal';
 
-function UpdateDeploymentModal({ open, deploymentId, onHide, toolbox }) {
+function UpdateDeploymentModal({ open, deploymentId, deploymentName, onHide, toolbox }) {
     const { useEffect } = React;
     const { useInputs, useOpenProp, useBoolean, useErrors, useResettableState } = Stage.Hooks;
     const { DeploymentActions, InputsUtils } = Stage.Common;
@@ -220,7 +220,7 @@ function UpdateDeploymentModal({ open, deploymentId, onHide, toolbox }) {
     return (
         <Modal open={open} onClose={onHide} className="updateDeploymentModal">
             <Modal.Header>
-                <Icon name="edit" /> Update deployment {deploymentId}
+                <Icon name="edit" /> Update deployment {deploymentName} ({deploymentId})
             </Modal.Header>
 
             <Modal.Content>
@@ -381,6 +381,7 @@ UpdateDeploymentModal.propTypes = {
     toolbox: Stage.PropTypes.Toolbox.isRequired,
     open: PropTypes.bool.isRequired,
     deploymentId: PropTypes.string.isRequired,
+    deploymentName: PropTypes.string.isRequired,
     onHide: PropTypes.func.isRequired
 };
 
