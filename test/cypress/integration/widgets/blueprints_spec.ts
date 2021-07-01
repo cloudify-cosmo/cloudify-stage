@@ -1,7 +1,14 @@
+import type { BlueprintsWidgetConfiguration } from '../../../../widgets/blueprints/src/types';
+
 describe('Blueprints widget', () => {
     const blueprintNamePrefix = 'blueprints_test';
     const emptyBlueprintName = `${blueprintNamePrefix}_empty`;
-    const blueprintsWidgetConfiguration = { displayStyle: 'table', clickToDrillDown: true, pollingTime: 5 };
+    const blueprintsWidgetConfiguration: Partial<BlueprintsWidgetConfiguration> = {
+        displayStyle: 'table',
+        clickToDrillDown: true,
+        pollingTime: 5,
+        showEditCopyInComposerButton: true
+    };
 
     before(() =>
         cy
@@ -23,13 +30,26 @@ describe('Blueprints widget', () => {
     describe('for specific blueprint', () => {
         before(() => cy.uploadBlueprint('blueprints/simple.zip', emptyBlueprintName).refreshPage());
 
+        const editCopyInComposerButtonSelector = '[title="Edit a copy in Composer"]';
+
         it('should open Composer with the blueprint imported on "Edit a copy in Composer" icon click', () => {
-            // Click the action icon
-            getBlueprintRow(emptyBlueprintName).find('.external.share').click();
+            getBlueprintRow(emptyBlueprintName).find(editCopyInComposerButtonSelector).click();
 
             cy.window()
                 .its('open')
                 .should('be.calledWith', `/composer/import/default_tenant/${emptyBlueprintName}/blueprint.yaml`);
+        });
+
+        it('should not show the "Edit a copy in Composer" button if it is turned off in the configuration', () => {
+            cy.editWidgetConfiguration('blueprints', () => {
+                cy.contains('.field', 'Show the "Edit a copy in Composer" button')
+                    .find('input')
+                    // NOTE: force, as the checkbox from Semantic UI is
+                    // class=hidden which prevents Cypress from clicking it
+                    .click({ force: true });
+            });
+
+            getBlueprintRow(emptyBlueprintName).find(editCopyInComposerButtonSelector).should('not.exist');
         });
 
         it('should allow to deploy the blueprint', () => {
