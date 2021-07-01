@@ -90,9 +90,15 @@ export default class NodesTable extends React.Component {
                     />
                     <DataTable.Column
                         label="Deployment"
-                        name="deployment_id"
+                        name="deployment_display_name"
                         width="10%"
                         show={fieldsToShow.indexOf('Deployment') >= 0 && !data.deploymentSelected}
+                    />
+                    <DataTable.Column
+                        label="Deployment ID"
+                        name="deployment_id"
+                        width="10%"
+                        show={fieldsToShow.indexOf('Deployment ID') >= 0 && !data.deploymentSelected}
                     />
                     <DataTable.Column
                         label="Contained in"
@@ -169,6 +175,7 @@ export default class NodesTable extends React.Component {
                                         </div>
                                     </DataTable.Data>
                                     <DataTable.Data>{node.blueprint_id}</DataTable.Data>
+                                    <DataTable.Data>{node.deployment_display_name}</DataTable.Data>
                                     <DataTable.Data>{node.deployment_id}</DataTable.Data>
                                     <DataTable.Data>{node.containedIn}</DataTable.Data>
                                     <DataTable.Data>{node.connectedTo}</DataTable.Data>
