@@ -30,6 +30,7 @@ Stage.defineWidget({
             items: [
                 'Blueprint',
                 'Deployment',
+                'Deployment ID',
                 'Workflow',
                 'Id',
                 'Created',
@@ -90,6 +91,7 @@ Stage.defineWidget({
 
         const selectedExecution = toolbox.getContext().getValue('executionId');
         const params = this.fetchParams(widget, toolbox);
+
         const formattedData = {
             items: _.map(data.items, item => ({
                 ...item,

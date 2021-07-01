@@ -72,20 +72,21 @@ export default function BlueprintsTable({
                             <>
                                 {BlueprintActions.isUploaded(item) && (
                                     <>
-                                        {!toolbox.getManager().isCommunityEdition() && (
-                                            <Icon
-                                                name="external share"
-                                                bordered
-                                                title="Edit a copy in Composer"
-                                                onClick={(event: Event) => {
-                                                    event.stopPropagation();
-                                                    new Stage.Common.BlueprintActions(toolbox).doEditInComposer(
-                                                        item.id,
-                                                        item.main_file_name
-                                                    );
-                                                }}
-                                            />
-                                        )}
+                                        {!toolbox.getManager().isCommunityEdition() &&
+                                            widget.configuration.showEditCopyInComposerButton && (
+                                                <Icon
+                                                    name="external share"
+                                                    bordered
+                                                    title="Edit a copy in Composer"
+                                                    onClick={(event: Event) => {
+                                                        event.stopPropagation();
+                                                        new Stage.Common.BlueprintActions(toolbox).doEditInComposer(
+                                                            item.id,
+                                                            item.main_file_name
+                                                        );
+                                                    }}
+                                                />
+                                            )}
                                         <Icon
                                             name="rocket"
                                             link
