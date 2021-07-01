@@ -71,6 +71,7 @@ const DeploymentActionButtons: FunctionComponent<DeploymentActionButtonsProps> =
                 <DeploymentActionsModals
                     activeAction={activeAction}
                     deploymentId={id}
+                    deploymentName={displayName}
                     onHide={resetActiveAction}
                     toolbox={toolbox}
                     redirectToParentPageAfterDelete={redirectToParentPageAfterDelete}
