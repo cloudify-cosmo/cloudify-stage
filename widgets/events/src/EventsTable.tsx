@@ -74,6 +74,11 @@ export default class EventsTable extends React.Component {
         return toolbox.refresh(fetchParams);
     };
 
+    // eslint-disable-next-line @typescript-eslint/ban-types
+    isOneElementLike = (collection: object | string | null | undefined): boolean => {
+        return _.size(collection) === 1;
+    };
+
     hideErrorCausesModal = () => {
         this.setState({ errorCauses: [], showErrorCausesModal: false });
     };
@@ -131,10 +136,10 @@ export default class EventsTable extends React.Component {
                         label="Blueprint"
                         name="blueprint_id"
                         show={
-                            _.size(data.blueprintId) !== 1 &&
-                            _.size(data.deploymentId) !== 1 &&
-                            _.size(data.nodeInstanceId) !== 1 &&
-                            _.size(data.executionId) !== 1 &&
+                            !isOneElementLike(data.blueprintId) &&
+                            !isOneElementLike(data.deploymentId) &&
+                            !isOneElementLike(data.nodeInstanceId) &&
+                            !isOneElementLike(data.executionId) &&
                             fieldsToShow.indexOf('Blueprint') >= 0
                         }
                     />
@@ -142,36 +147,36 @@ export default class EventsTable extends React.Component {
                         label="Deployment"
                         name="deployment_display_name"
                         show={
-                            _.size(data.deploymentName) !== 1 &&
-                            _.size(data.nodeInstanceId) !== 1 &&
-                            _.size(data.executionId) !== 1 &&
-                            fieldsToShow.indexOf('Deployment') >= 0
+                            !isOneElementLike(data.deploymentId) &&
+                            !isOneElementLike(data.nodeInstanceId) &&
+                            !isOneElementLike(data.executionId) &&
+                            fieldsToShow.indexOf('Deployment Id') >= 0
                         }
                     />
                     <DataTable.Column
                         label="Deployment Id"
                         name="deployment_id"
                         show={
-                            _.size(data.deploymentId) !== 1 &&
-                            _.size(data.nodeInstanceId) !== 1 &&
-                            _.size(data.executionId) !== 1 &&
+                            !isOneElementLike(data.deploymentId) &&
+                            !isOneElementLike(data.nodeInstanceId) &&
+                            !isOneElementLike(data.executionId) &&
                             fieldsToShow.indexOf('Deployment Id') >= 0
                         }
                     />
                     <DataTable.Column
                         label="Node Id"
                         name="node_name"
-                        show={_.size(data.nodeInstanceId) !== 1 && fieldsToShow.indexOf('Node Id') >= 0}
+                        show={!isOneElementLike(data.nodeInstanceId) && fieldsToShow.indexOf('Node Id') >= 0}
                     />
                     <DataTable.Column
                         label="Node Instance Id"
                         name="node_instance_id"
-                        show={_.size(data.nodeInstanceId) !== 1 && fieldsToShow.indexOf('Node Instance Id') >= 0}
+                        show={!isOneElementLike(data.nodeInstanceId) && fieldsToShow.indexOf('Node Instance Id') >= 0}
                     />
                     <DataTable.Column
                         label="Workflow"
                         name="workflow_id"
-                        show={_.size(data.executionId) !== 1 && fieldsToShow.indexOf('Workflow') >= 0}
+                        show={!isOneElementLike(data.executionId) && fieldsToShow.indexOf('Workflow') >= 0}
                     />
                     <DataTable.Column
                         label="Operation"
@@ -291,7 +296,6 @@ EventsTable.propTypes = {
     data: PropTypes.shape({
         blueprintId: PropTypes.arrayOf(PropTypes.string),
         deploymentId: PropTypes.arrayOf(PropTypes.string),
-        deploymentName: PropTypes.arrayOf(PropTypes.string),
         executionId: PropTypes.arrayOf(PropTypes.string),
         items: PropTypes.arrayOf(
             PropTypes.shape({
