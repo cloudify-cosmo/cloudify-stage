@@ -125,8 +125,11 @@ describe('Deployments widget', () => {
             cy.interceptSp('POST', `/executions`).as('executeDeploymentWorkflow');
         });
 
-        const startAndVerifyWorkflowExecution = () => {
-            cy.get('.executeWorkflowModal button.ok').click();
+        const startAndVerifyWorkflowExecution = (workflow: string) => {
+            cy.get('.executeWorkflowModal').within(() => {
+                cy.contains(`Execute workflow ${workflow} on ${deploymentName} (${deploymentId})`);
+                cy.get('button.ok').click();
+            });
             cy.wait('@executeDeploymentWorkflow');
             verifyWorkflowIsStarted();
             waitUntilWorkflowIsFinished();
@@ -134,13 +137,12 @@ describe('Deployments widget', () => {
 
         it('install workflow from deployment actions menu', () => {
             executeDeploymentAction(deploymentId, 'Install');
-            startAndVerifyWorkflowExecution();
+            startAndVerifyWorkflowExecution('install');
         });
 
         it('a workflow from workflows menu', () => {
             executeDeploymentWorkflow(deploymentId, 'Restart');
-            cy.contains(`Execute workflow restart on ${deploymentName} (${deploymentId})`);
-            startAndVerifyWorkflowExecution();
+            startAndVerifyWorkflowExecution('restart');
         });
     });
 
@@ -150,6 +152,7 @@ describe('Deployments widget', () => {
         executeDeploymentAction(deploymentId, 'Set Site');
 
         cy.get('.modal').within(() => {
+            cy.contains(`Set the site of deployment ${deploymentName} (${deploymentId})`);
             cy.get('div[name="siteName"]').click();
             cy.get(`div[option-value="${siteName}"]`).click();
             cy.get('button.ok').click();
@@ -168,6 +171,7 @@ describe('Deployments widget', () => {
         executeDeploymentAction(deploymentId, 'Update');
 
         cy.get('.updateDeploymentModal').within(() => {
+            cy.contains(`Update deployment ${deploymentName} (${deploymentId})`);
             cy.get('div[name=blueprintName]').click();
             cy.wait('@uploadedBlueprints');
             cy.get('textarea[name="webserver_port"]').clear({ force: true }).type('9321');
@@ -206,6 +210,7 @@ describe('Deployments widget', () => {
         };
         executeDeploymentAction(deploymentId, 'Manage Labels');
         cy.get('.modal').within(() => {
+            cy.contains(`Manage labels for deployment ${deploymentName} (${deploymentId})`);
             cy.wait('@fetchLabels');
             cy.get('form.loading').should('not.exist');
 
@@ -235,15 +240,19 @@ describe('Deployments widget', () => {
     });
 
     it('should allow to remove deployment', () => {
-        const testDeploymentName = `${deploymentId}_remove`;
-        cy.deployBlueprint(blueprintName, testDeploymentName);
-        cy.interceptSp('DELETE', `/deployments/${testDeploymentName}?force=true`).as('deleteDeployment');
+        const testDeploymentId = `${deploymentId}_remove_id`;
+        const testDeploymentName = `${deploymentId}_remove_name`;
+        cy.deployBlueprint(blueprintName, testDeploymentId, {}, { display_name: testDeploymentName });
+        cy.interceptSp('DELETE', `/deployments/${testDeploymentId}?force=true`).as('deleteDeployment');
 
-        executeDeploymentAction(testDeploymentName, 'Force Delete');
+        executeDeploymentAction(testDeploymentId, 'Force Delete');
 
+        cy.contains(
+            `Are you sure you want to ignore the live nodes and delete the deployment ${testDeploymentName} (${testDeploymentId})?`
+        );
         cy.get('.modal button.primary').click();
 
         cy.wait('@deleteDeployment');
-        cy.contains('div.row', testDeploymentName).should('not.exist');
+        cy.contains('div.row', testDeploymentId).should('not.exist');
     });
 });
