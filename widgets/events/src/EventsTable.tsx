@@ -143,7 +143,6 @@ export default class EventsTable extends React.Component {
                         name="deployment_display_name"
                         show={
                             _.size(data.deploymentName) !== 1 &&
-                            _.size(data.deploymentId) !== 1 &&
                             _.size(data.nodeInstanceId) !== 1 &&
                             _.size(data.executionId) !== 1 &&
                             fieldsToShow.indexOf('Deployment') >= 0

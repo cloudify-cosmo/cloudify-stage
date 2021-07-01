@@ -69,11 +69,6 @@ Stage.defineWidget({
             params.blueprint_id = _.castArray(blueprintId);
         }
 
-        const deploymentName = toolbox.getContext().getValue('deploymentName');
-        if (!_.isEmpty(deploymentName)) {
-            params.deployment_display_name = _.castArray(deploymentName);
-        }
-
         const deploymentId = toolbox.getContext().getValue('deploymentId');
         if (!_.isEmpty(deploymentId)) {
             params.deployment_id = _.castArray(deploymentId);
@@ -143,7 +138,6 @@ Stage.defineWidget({
 
         const blueprintId = CONTEXT_PARAMS.blueprint_id;
         const deploymentId = CONTEXT_PARAMS.deployment_id;
-        const deploymentName = CONTEXT_PARAMS.deployment_display_name;
         const nodeId = CONTEXT_PARAMS.node_id;
         const nodeInstanceId = CONTEXT_PARAMS.node_instance_id;
         const executionId = CONTEXT_PARAMS.execution_id;
@@ -166,7 +160,6 @@ Stage.defineWidget({
             total: _.get(data, 'metadata.pagination.total', 0),
             blueprintId,
             deploymentId,
-            deploymentName,
             nodeId,
             nodeInstanceId,
             executionId,

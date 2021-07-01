@@ -1,4 +1,4 @@
-r# Events and Logs
+# Events and Logs
 Displays the logs and events of all the executions in the current tenant, according to the user’s permissions.
 
 You can configure the fields that are displayed and can choose to indicate in colors success and failure messages.
