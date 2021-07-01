@@ -45,11 +45,11 @@ import Routes from './containers/Routes';
 import translation from './translations/en.json';
 import LoaderUtils from './utils/LoaderUtils';
 
+window.$ = $;
+
 const browserHistory = createBrowserHistory({
     basename: Consts.CONTEXT_PATH
 });
-
-window.$ = $;
 
 const queryClient = new ReactQuery.QueryClient({
     defaultOptions: {
