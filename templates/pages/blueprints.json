@@ -1,22 +1,18 @@
 {
-  "name": "Blueprints",
-  "layout": [{
-    "type": "widgets",
-    "content": [
-      {
-        "name": "Blueprints",
-        "definition": "blueprints",
-        "width": 12,
-        "height": 24,
-        "x": 0,
-        "y": 0
-      },
-      {
-        "name": "Composer link",
-        "definition": "composerLink",
-        "x": 0,
-        "y": 25
-      }
+    "name": "Blueprints",
+    "layout": [
+        {
+            "type": "widgets",
+            "content": [
+                {
+                    "name": "Blueprints",
+                    "definition": "blueprints",
+                    "width": 12,
+                    "height": 24,
+                    "x": 0,
+                    "y": 0
+                }
+            ]
+        }
     ]
-  }]
 }
