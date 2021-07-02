@@ -2,6 +2,8 @@
 /* eslint no-underscore-dangle: ["error", { "allow": ["_size", "_offset"] }] */
 
 import _ from 'lodash';
+import { stringify as stringifyQueryString } from 'query-string';
+
 import Internal from './Internal';
 import StageUtils from './stageUtils';
 import Consts from './consts';
@@ -57,10 +59,10 @@ export default class Manager extends Internal {
             } else {
                 queryString += '?';
             }
-            queryString += $.param(params, true);
+            queryString += stringifyQueryString(params);
             return urlWithoutWildcard + queryString;
         }
-        const queryString = data ? (url.indexOf('?') > 0 ? '&' : '?') + $.param(data, true) : '';
+        const queryString = data ? (url.indexOf('?') > 0 ? '&' : '?') + stringifyQueryString(data) : '';
         const urlInServer = encodeURIComponent(url + queryString);
 
         return StageUtils.Url.url(`/sp?su=${urlInServer}`);
