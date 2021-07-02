@@ -1,6 +1,4 @@
 // @ts-nocheck File not migrated fully to TS
-import { DropdownItemProps } from 'semantic-ui-react/dist/commonjs/modules/Dropdown/DropdownItem';
-
 /**
  * NodeFilter  - a component showing dropdowns for filtering blueprints, deployments, nodes and nodes instances.
  * Data (list of blueprints, deployments, nodes and node instances) is dynamically fetched from manager.
@@ -140,10 +138,10 @@ export default class NodeFilter extends React.Component {
                 let additionalOptions = [];
 
                 if (this.isFilteringSetFor(optionsField)) {
-                    additionalOptions = _.intersection(additionalOptions, this.getAllowedOptionsFor(optionsField));
+                    additionalOptions = this.getAllowedOptionsFor(optionsField);
                 }
 
-                const options: DropdownItemProps[] = Object.entries(
+                const options: Stage.Basic.Dropdown.Item.DropdownItemProps[] = Object.entries(
                     (data.items || []).reduce((result: Record<string, string>, item) => {
                         result[item.id] = item.display_name || item.id;
 
