@@ -7,7 +7,7 @@ import _ from 'lodash';
 import log from 'loglevel';
 import PropTypes from 'prop-types';
 import i18n from 'i18next';
-import React, { Component } from 'react';
+import React, { Component, createRef } from 'react';
 import { getToolbox } from '../utils/Toolbox';
 import WidgetParamsHandler from '../utils/WidgetParamsHandler';
 import { ErrorMessage } from './basic';
@@ -20,6 +20,7 @@ export default class WidgetDynamicContent extends Component {
         this.state = {
             loading: false
         };
+        this.attachedEvents = createRef<Record<string, any>>({});
         this.loadingTimeout = null;
         this.pollingTimeout = null;
         this.fetchDataPromise = null;
@@ -220,6 +221,7 @@ export default class WidgetDynamicContent extends Component {
 
     attachEvents(container) {
         const { data, widget } = this.props;
+
         if (widget.definition && widget.definition.events) {
             try {
                 _.each(
@@ -229,12 +231,32 @@ export default class WidgetDynamicContent extends Component {
                             log.warn('Cannot attach event, missing data. Event data is ', event);
                             return;
                         }
-                        $(container).find(event.selector).off(event.event);
-                        $(container)
-                            .find(event.selector)
-                            .on(event.event, e => {
-                                event.fn(e, widget, this.getToolbox());
-                            });
+
+                        if (!container) {
+                            log.warn('Cannot attach event, missing container element. Event data is ', event);
+                            return;
+                        }
+
+                        if (this.attachedEvents.current === null) {
+                            this.attachedEvents.current = {};
+                        }
+
+                        if (this.attachedEvents.current[`${event.selector}_${event}`]) {
+                            container
+                                .querySelector(event.selector)
+                                .removeEventListener(
+                                    event.event,
+                                    this.attachedEvents.current[`${event.selector}_${event}`]
+                                );
+                        }
+
+                        this.attachedEvents.current[`${event.selector}_${event}`] = e => {
+                            event.fn(e, widget, this.getToolbox());
+                        };
+
+                        container
+                            .querySelector(event.selector)
+                            .addEventListener(event.event, this.attachedEvents.current[`${event.selector}_${event}`]);
                     },
                     this
                 );
