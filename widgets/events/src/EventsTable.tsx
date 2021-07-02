@@ -136,10 +136,10 @@ export default class EventsTable extends React.Component {
                         label="Blueprint"
                         name="blueprint_id"
                         show={
-                            !isOneElementLike(data.blueprintId) &&
-                            !isOneElementLike(data.deploymentId) &&
-                            !isOneElementLike(data.nodeInstanceId) &&
-                            !isOneElementLike(data.executionId) &&
+                            !this.sOneElementLike(data.blueprintId) &&
+                            !this.sOneElementLike(data.deploymentId) &&
+                            !this.sOneElementLike(data.nodeInstanceId) &&
+                            !this.sOneElementLike(data.executionId) &&
                             fieldsToShow.indexOf('Blueprint') >= 0
                         }
                     />
@@ -147,9 +147,9 @@ export default class EventsTable extends React.Component {
                         label="Deployment"
                         name="deployment_display_name"
                         show={
-                            !isOneElementLike(data.deploymentId) &&
-                            !isOneElementLike(data.nodeInstanceId) &&
-                            !isOneElementLike(data.executionId) &&
+                            !this.sOneElementLike(data.deploymentId) &&
+                            !this.sOneElementLike(data.nodeInstanceId) &&
+                            !this.sOneElementLike(data.executionId) &&
                             fieldsToShow.indexOf('Deployment Id') >= 0
                         }
                     />
@@ -157,26 +157,28 @@ export default class EventsTable extends React.Component {
                         label="Deployment Id"
                         name="deployment_id"
                         show={
-                            !isOneElementLike(data.deploymentId) &&
-                            !isOneElementLike(data.nodeInstanceId) &&
-                            !isOneElementLike(data.executionId) &&
+                            !this.sOneElementLike(data.deploymentId) &&
+                            !this.sOneElementLike(data.nodeInstanceId) &&
+                            !this.sOneElementLike(data.executionId) &&
                             fieldsToShow.indexOf('Deployment Id') >= 0
                         }
                     />
                     <DataTable.Column
                         label="Node Id"
                         name="node_name"
-                        show={!isOneElementLike(data.nodeInstanceId) && fieldsToShow.indexOf('Node Id') >= 0}
+                        show={!this.sOneElementLike(data.nodeInstanceId) && fieldsToShow.indexOf('Node Id') >= 0}
                     />
                     <DataTable.Column
                         label="Node Instance Id"
                         name="node_instance_id"
-                        show={!isOneElementLike(data.nodeInstanceId) && fieldsToShow.indexOf('Node Instance Id') >= 0}
+                        show={
+                            !this.sOneElementLike(data.nodeInstanceId) && fieldsToShow.indexOf('Node Instance Id') >= 0
+                        }
                     />
                     <DataTable.Column
                         label="Workflow"
                         name="workflow_id"
-                        show={!isOneElementLike(data.executionId) && fieldsToShow.indexOf('Workflow') >= 0}
+                        show={!this.sOneElementLike(data.executionId) && fieldsToShow.indexOf('Workflow') >= 0}
                     />
                     <DataTable.Column
                         label="Operation"
