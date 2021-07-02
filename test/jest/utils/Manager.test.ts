@@ -102,19 +102,19 @@ describe('(Utils) Manager', () => {
                     id: 'nodecellar',
                     _include: ['id', 'created_at']
                 })
-            ).toEqual('?id=nodecellar&_include=id&_include=created_at&su=%252Fblueprints');
+            ).toEqual('?_include=id&_include=created_at&id=nodecellar&su=%252Fblueprints');
             expect(
                 manager.getManagerUrl('[manager]/blueprints?', {
                     id: 'nodecellar',
                     _include: ['id', 'created_at']
                 })
-            ).toEqual('?id=nodecellar&_include=id&_include=created_at&su=%252Fblueprints%253F');
+            ).toEqual('?_include=id&_include=created_at&id=nodecellar&su=%252Fblueprints%253F');
             expect(
                 manager.getManagerUrl('[manager]/blueprints?created_by=admin', {
                     id: 'nodecellar',
                     _include: ['id', 'created_at']
                 })
-            ).toEqual('?id=nodecellar&_include=id&_include=created_at&su=%252Fblueprints%253Fcreated_by%253Dadmin');
+            ).toEqual('?_include=id&_include=created_at&id=nodecellar&su=%252Fblueprints%253Fcreated_by%253Dadmin');
         });
 
         it('with [manager] token without data', () => {
@@ -127,20 +127,20 @@ describe('(Utils) Manager', () => {
                     id: 'nodecellar',
                     _include: ['id', 'created_at']
                 })
-            ).toEqual('/console/sp?su=%2Fblueprints%3Fid%3Dnodecellar%26_include%3Did%26_include%3Dcreated_at');
+            ).toEqual('/console/sp?su=%2Fblueprints%3F_include%3Did%26_include%3Dcreated_at%26id%3Dnodecellar');
             expect(
                 manager.getManagerUrl('/blueprints?', {
                     id: 'nodecellar',
                     _include: ['id', 'created_at']
                 })
-            ).toEqual('/console/sp?su=%2Fblueprints%3F%26id%3Dnodecellar%26_include%3Did%26_include%3Dcreated_at');
+            ).toEqual('/console/sp?su=%2Fblueprints%3F%26_include%3Did%26_include%3Dcreated_at%26id%3Dnodecellar');
             expect(
                 manager.getManagerUrl('/blueprints?created_by=admin', {
                     id: 'nodecellar',
                     _include: ['id', 'created_at']
                 })
             ).toEqual(
-                '/console/sp?su=%2Fblueprints%3Fcreated_by%3Dadmin%26id%3Dnodecellar%26_include%3Did%26_include%3Dcreated_at'
+                '/console/sp?su=%2Fblueprints%3Fcreated_by%3Dadmin%26_include%3Did%26_include%3Dcreated_at%26id%3Dnodecellar'
             );
         });
 
