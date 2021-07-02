@@ -4,6 +4,7 @@ import { secondsToMs } from '../../support/resource_commons';
 describe('Agents widget', () => {
     const pollingTimeSeconds = 5;
     const deploymentName = 'agents_test_deployment';
+    const deploymentDisplayName = 'Agents Test Deployment';
     const nodeName = 'host';
     const nodeInstanceName = 'host_qz2p8t';
 
@@ -50,7 +51,14 @@ describe('Agents widget', () => {
                 'postExecution'
             );
 
-            interceptResourceFetching('deployments', deploymentName);
+            cy.interceptSp('GET', `/deployments?_include=id%2Cdisplay_name`, {
+                metadata: {
+                    pagination: { total: 1, size: 1000, offset: 0 },
+                    filtered: null
+                },
+                items: [{ id: deploymentName, display_name: deploymentDisplayName }]
+            }).as('fetchDeployments');
+
             interceptResourceFetching('nodes', nodeName);
             interceptResourceFetching('node-instances', nodeInstanceName);
 
@@ -99,6 +107,7 @@ describe('Agents widget', () => {
             cy.contains('Validate').click();
             cy.get('.modal').within(() => {
                 fillNodesFilter();
+                cy.contains(`${deploymentDisplayName} (${deploymentName})`).should('be.visible');
                 selectInstallMethod(installMethods);
                 cy.contains('button', 'Validate').click();
             });
