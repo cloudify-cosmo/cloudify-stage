@@ -135,25 +135,27 @@ export default class NodeFilter extends React.Component {
             .getManager()
             .doGet(fetchUrl, { params })
             .then(data => {
-                let additionalOptions = [];
+                let allowedOptions = [];
 
                 if (this.isFilteringSetFor(optionsField)) {
-                    additionalOptions = this.getAllowedOptionsFor(optionsField);
+                    allowedOptions = this.getAllowedOptionsFor(optionsField);
                 }
 
                 const options: Stage.Basic.Dropdown.Item.DropdownItemProps[] = Object.entries(
                     (data.items || []).reduce((result: Record<string, string>, item) => {
+                        if (allowedOptions.length !== 0 && !allowedOptions.includes(item)) {
+                            return result;
+                        }
+
                         result[item.id] = item.display_name || item.id;
 
                         return result;
                     }, {})
-                )
-                    .map(([id, displayName]) => ({
-                        value: id,
-                        text: id === displayName ? displayName : `${displayName} (${id})`,
-                        key: id
-                    }))
-                    .concat(additionalOptions.map(item => ({ value: item, text: item, key: item })));
+                ).map(([id, displayName]) => ({
+                    value: id,
+                    text: id === displayName ? displayName : `${displayName} (${id})`,
+                    key: id
+                }));
 
                 if (!this.isMultipleSetFor(optionsField)) {
                     options.unshift({ text: '', value: '', key: '' });
