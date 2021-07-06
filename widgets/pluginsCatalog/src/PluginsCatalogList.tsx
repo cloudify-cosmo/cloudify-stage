@@ -85,6 +85,7 @@ export default class PluginsCatalogList extends React.Component<PluginsCatalogLi
                     <DataTable.Column label="Name" width="20%" />
                     <DataTable.Column label="Description" width="60%" />
                     <DataTable.Column label="Version" width="10%" />
+                    <DataTable.Column label="Uploaded version" width="10%" />
                     <DataTable.Column width="5%" />
 
                     {plugins.map(item => {
@@ -96,6 +97,7 @@ export default class PluginsCatalogList extends React.Component<PluginsCatalogLi
                                 <DataTable.Data>{item.title}</DataTable.Data>
                                 <DataTable.Data>{item.description}</DataTable.Data>
                                 <DataTable.Data>{item.version}</DataTable.Data>
+                                <DataTable.Data>{item.uploadedVersion ?? '-'}</DataTable.Data>
                                 <DataTable.Data className="center aligned">
                                     <Button
                                         icon="upload"
