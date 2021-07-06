@@ -1,5 +1,10 @@
-// @ts-nocheck File not migrated fully to TS
-export default function PluginIcon({ src }) {
+export {};
+
+interface PluginIconProps {
+    src?: string;
+}
+
+export default function PluginIcon({ src }: PluginIconProps) {
     const { Image, Icon } = Stage.Basic;
     return src ? <Image src={src} width="25" /> : <Icon name="plug" size="large" />;
 }
@@ -11,6 +16,12 @@ PluginIcon.propTypes = {
 PluginIcon.defaultProps = {
     src: null
 };
+
+declare global {
+    namespace Stage.Common {
+        export { PluginIcon };
+    }
+}
 
 Stage.defineCommon({
     name: 'PluginIcon',

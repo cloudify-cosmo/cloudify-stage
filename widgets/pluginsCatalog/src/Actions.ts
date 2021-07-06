@@ -1,30 +1,6 @@
-// @ts-nocheck File not migrated fully to TS
-/**
- * Created by Tamer on 30/07/2017.
- */
-
-/**
- * @class Actions
- */
 export default class Actions {
-    /**
-     * Creates an instance of Actions.
-     *
-     * @param {object} o
-     * @memberof Actions
-     * @access public
-     */
-    constructor(o) {
-        this.toolbox = o.toolbox;
-        this.jsonPath = o.jsonPath;
-    }
+    constructor(private readonly toolbox: Stage.Types.Toolbox, private readonly jsonPath: string) {}
 
-    /**
-     * get plugins list
-     *
-     * @returns Promise(json)
-     * @access public
-     */
     doGetPluginsList() {
         return this.toolbox
             .getInternal()
@@ -32,15 +8,10 @@ export default class Actions {
             .then(response => response.json());
     }
 
-    /**
-     * upload plugins to api
-     *
-     * @param wagonUrl
-     * @param yamlUrl
-     * @param visibility
-     * @access public
-     */
-    doUpload({ url: wagonUrl, yamlUrl, icon: iconUrl, title }, visibility) {
+    doUpload(
+        { url: wagonUrl, yamlUrl, icon: iconUrl, title }: { url: string; yamlUrl: string; icon: string; title: string },
+        visibility: string
+    ) {
         const params = {
             visibility,
             wagonUrl,

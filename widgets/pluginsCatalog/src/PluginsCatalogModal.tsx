@@ -1,10 +1,27 @@
-// @ts-nocheck File not migrated fully to TS
-export default function PluginsCatalogModal({ actions, onSuccess, onHide, open, plugin, toolbox }) {
+import Actions from './Actions';
+
+export interface PluginsCatalogModalProps {
+    actions: Actions;
+    onSuccess: (message: string) => void;
+    onHide: () => void;
+    open: boolean;
+    plugin: { title: string; url: string; yamlUrl: string; icon: string };
+    toolbox: Stage.Types.Toolbox;
+}
+
+export default function PluginsCatalogModal({
+    actions,
+    onSuccess,
+    onHide,
+    open,
+    plugin,
+    toolbox
+}: PluginsCatalogModalProps) {
     const { useBoolean, useOpenProp, useInput } = Stage.Hooks;
     const { useState } = React;
 
     const [isLoading, setLoading, unsetLoading] = useBoolean();
-    const [error, setError] = useState();
+    const [error, setError] = useState<string | null>(null);
     const [visibility, setVisibility, clearVisibility] = useInput(Stage.Common.Consts.defaultVisibility);
     useOpenProp(open, () => {
         unsetLoading();
@@ -61,18 +78,3 @@ export default function PluginsCatalogModal({ actions, onSuccess, onHide, open, 
         </div>
     );
 }
-
-PluginsCatalogModal.propTypes = {
-    actions: PropTypes.shape({
-        doUpload: PropTypes.func
-    }).isRequired,
-    onHide: PropTypes.func.isRequired,
-    onSuccess: PropTypes.func.isRequired,
-    open: PropTypes.bool.isRequired,
-    plugin: PropTypes.shape({ title: PropTypes.string }),
-    toolbox: Stage.PropTypes.Toolbox.isRequired
-};
-
-PluginsCatalogModal.defaultProps = {
-    plugin: null
-};
