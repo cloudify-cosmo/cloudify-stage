@@ -72,5 +72,18 @@ describe('Plugins Catalog widget', () => {
                 .should('exist')
                 .and('not.be.disabled');
         });
+
+        it('should refresh the uploaded version when the plugin is removed', () => {
+            cy.contains('.pluginsTable tbody tr', pluginToUpload).find('i[title="Delete"]').click();
+            cy.get('.modal').contains('button', 'Yes').click().should('not.exist');
+
+            const uploadedVersionColumnNumber = 5;
+            // NOTE: manually query for the specific column to use Cypress' retries.
+            // Using `getTable` did not retry
+            cy.contains('.pluginsCatalogWidget tr', pluginToUpload).contains(
+                `td:nth-of-type(${uploadedVersionColumnNumber})`,
+                '-'
+            );
+        });
     });
 });

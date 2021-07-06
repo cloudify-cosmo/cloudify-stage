@@ -41,6 +41,11 @@ export default class PluginsCatalogList extends React.Component<PluginsCatalogLi
         };
     }
 
+    componentDidMount() {
+        const { toolbox } = this.props;
+        toolbox.getEventBus().on('plugins:refresh', this.refreshData, this);
+    }
+
     shouldComponentUpdate(nextProps: PluginsCatalogListProps, nextState: PluginsCatalogListState) {
         const { items, widget } = this.props;
         return (
@@ -50,20 +55,30 @@ export default class PluginsCatalogList extends React.Component<PluginsCatalogLi
         );
     }
 
-    onSuccess: PluginsCatalogModalProps['onSuccess'] = msg => {
+    componentWillUnmount() {
+        const { toolbox } = this.props;
+        toolbox.getEventBus().off('plugins:refresh', this.refreshData);
+    }
+
+    private onSuccess: PluginsCatalogModalProps['onSuccess'] = msg => {
         this.setState({ success: msg });
     };
 
-    onUpload(plugin: PluginsCatalogModalProps['plugin']) {
+    private onUpload(plugin: PluginsCatalogModalProps['plugin']) {
         this.setState({ plugin });
         this.showModal();
     }
 
-    hideModal = () => {
+    private hideModal = () => {
         this.setState({ showModal: false });
     };
 
-    showModal() {
+    private refreshData = () => {
+        const { toolbox } = this.props;
+        toolbox.refresh();
+    };
+
+    private showModal() {
         this.setState({ showModal: true });
     }
 
