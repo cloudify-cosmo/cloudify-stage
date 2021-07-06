@@ -75,7 +75,12 @@ describe('Plugins Catalog widget', () => {
 
         it('should refresh the uploaded version when the plugin is removed', () => {
             cy.contains('.pluginsTable tbody tr', pluginToUpload).find('i[title="Delete"]').click();
-            cy.get('.modal').contains('button', 'Yes').click().should('not.exist');
+            cy.get('.modal').within(() => {
+                // NOTE: force removal, as there is some dependency between test suites that prevents regular removal
+                cy.contains('.checkbox', 'Force').find('input[type="checkbox"]').click({ force: true });
+                cy.contains('button', 'Yes').click();
+            });
+            cy.get('.modal').should('not.exist');
 
             const uploadedVersionColumnNumber = 5;
             // NOTE: manually query for the specific column to use Cypress' retries.
