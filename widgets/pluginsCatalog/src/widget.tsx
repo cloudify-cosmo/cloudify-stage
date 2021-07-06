@@ -1,12 +1,10 @@
-// @ts-nocheck File not migrated fully to TS
-/**
- * Created by Tamer on 30/07/2017.
- */
-
 import Actions from './Actions';
 import PluginsCatalogList from './PluginsCatalogList';
+import type { PluginDescription, PluginsCatalogWidgetConfiguration } from './types';
 
-Stage.defineWidget({
+type PluginsCatalogResponse = PluginDescription[];
+
+Stage.defineWidget<unknown, PluginsCatalogResponse | Error, PluginsCatalogWidgetConfiguration>({
     id: 'pluginsCatalog',
     name: 'Plugins Catalog',
     description: 'Shows plugins catalog',
@@ -33,41 +31,24 @@ Stage.defineWidget({
         }
     ],
 
-    /**
-     * fetch data from source
-     *
-     * @param {any} widget
-     * @param {any} toolbox
-     * @param {any} params
-     * @returns
-     */
     fetchData(widget, toolbox) {
-        const actions = new Actions({
-            toolbox,
-            ...widget.configuration
-        });
+        const actions = new Actions(toolbox, widget.configuration.jsonPath);
 
         return actions.doGetPluginsList().catch(e => (e instanceof Error ? e : Error(e)));
     },
 
-    /**
-     * render widget
-     *
-     * @param {any} widget
-     * @param {any} data
-     * @param {any} error
-     * @param {any} toolbox
-     * @returns
-     */
-    render(widget, data, error, toolbox) {
-        const { Basic, Common } = Stage;
+    render(widget, data, _error, toolbox) {
+        const {
+            Basic: { Loading },
+            Common: { NoDataMessage }
+        } = Stage;
 
         if (data instanceof Error) {
-            return <Common.NoDataMessage error={data} repositoryName="plugins" />;
+            return <NoDataMessage error={data} repositoryName="plugins" />;
         }
 
-        if (_.isEmpty(data)) {
-            return <Basic.Loading />;
+        if (Stage.Utils.isEmptyWidgetData(data)) {
+            return <Loading />;
         }
 
         let formattedData = data;
