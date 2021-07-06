@@ -6,29 +6,89 @@ describe('Plugins Catalog widget', () => {
         sortByName: true
     };
 
-    before(() => cy.activate());
-    beforeEach(() => cy.deletePlugins().usePageMock(['pluginsCatalog', 'plugins'], widgetConfiguration).mockLogin());
+    before(() => cy.activate().deletePlugins());
 
-    it('should allow uploading the latest version of a plugin', () => {
+    describe('after uploading the "Utilities" plugin', () => {
         const pluginToUpload = 'Utilities';
-        cy.uploadPluginFromCatalog(pluginToUpload);
+        before(() =>
+            cy
+                .usePageMock(['pluginsCatalog', 'plugins'], widgetConfiguration)
+                .mockLogin()
+                .uploadPluginFromCatalog(pluginToUpload)
+        );
 
-        cy.get('.pluginsCatalogWidget table')
-            .getTable()
-            .then(pluginsCatalogTable => {
-                const pluginCatalogRow = pluginsCatalogTable.find(row => row.Name === pluginToUpload);
-                expect(pluginCatalogRow).not.to.be.undefined;
-                // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-                const latestPluginVersion: string = pluginCatalogRow!.Version;
+        it('should allow uploading the latest version of a plugin', () => {
+            cy.get('.pluginsCatalogWidget table')
+                .getTable()
+                .then(pluginsCatalogTableRows => {
+                    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+                    const pluginCatalogRow = pluginsCatalogTableRows.find(row => row.Name === pluginToUpload)!;
+                    expect(pluginCatalogRow).not.to.be.undefined;
+                    const latestPluginVersion: string = pluginCatalogRow.Version;
 
-                cy.log('Verify if plugin is visible in the Plugins widget');
-                cy.get('.pluginsWidget table')
-                    .getTable()
-                    .then(pluginsTable => {
-                        const uploadedPluginRow = pluginsTable.find(row => row.Plugin === pluginToUpload);
-                        expect(uploadedPluginRow).not.to.be.undefined;
-                        expect(uploadedPluginRow?.['Package version']).to.equal(latestPluginVersion);
-                    });
+                    cy.log('Verify if plugin is visible in the Plugins widget');
+                    cy.get('.pluginsWidget table')
+                        .getTable()
+                        .then(pluginsTable => {
+                            const uploadedPluginRow = pluginsTable.find(row => row.Plugin === pluginToUpload);
+                            expect(uploadedPluginRow).not.to.be.undefined;
+                            expect(uploadedPluginRow?.['Package version']).to.equal(latestPluginVersion);
+                        });
+
+                    expect(pluginCatalogRow['Uploaded version']).to.equal(latestPluginVersion);
+                });
+
+            cy.contains('.pluginsCatalogWidget tbody tr', pluginToUpload)
+                .find('button[title="Latest version is already uploaded"]')
+                .should('exist')
+                .and('be.disabled');
+        });
+
+        it('should allow uploading the plugin when the uploaded version is different than the latest one', () => {
+            const mockPluginVersion = '0.1.0';
+
+            cy.interceptSp('GET', '/plugins?_include=package_name,package_version&package_name=', {
+                metadata: { pagination: { total: 1, size: 1000, offset: 0 }, filtered: null },
+                items: [
+                    {
+                        package_name: 'cloudify-utilities-plugin',
+                        package_version: mockPluginVersion
+                    }
+                ]
+            }).refreshPage();
+
+            cy.get('.pluginsCatalogWidget table')
+                .getTable()
+                .then(pluginsCatalogTableRows => {
+                    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+                    const pluginCatalogRow = pluginsCatalogTableRows.find(row => row.Name === pluginToUpload)!;
+                    expect(pluginCatalogRow).not.to.be.undefined;
+                    expect(pluginCatalogRow['Uploaded version']).to.equal(mockPluginVersion);
+                    expect(pluginCatalogRow.Version).not.to.equal(pluginCatalogRow['Uploaded version']);
+                });
+
+            cy.contains('.pluginsCatalogWidget tbody tr', pluginToUpload)
+                .find('button[title="Upload plugin"]')
+                .should('exist')
+                .and('not.be.disabled');
+        });
+
+        it('should refresh the uploaded version when the plugin is removed', () => {
+            cy.contains('.pluginsTable tbody tr', pluginToUpload).find('i[title="Delete"]').click();
+            cy.get('.modal').within(() => {
+                // NOTE: force removal, as there is some dependency between test suites that prevents regular removal
+                cy.contains('.checkbox', 'Force').find('input[type="checkbox"]').click({ force: true });
+                cy.contains('button', 'Yes').click();
             });
+            cy.get('.modal').should('not.exist');
+
+            const uploadedVersionColumnNumber = 5;
+            // NOTE: manually query for the specific column to use Cypress' retries.
+            // Using `getTable` did not retry
+            cy.contains('.pluginsCatalogWidget tr', pluginToUpload).contains(
+                `td:nth-of-type(${uploadedVersionColumnNumber})`,
+                '-'
+            );
+        });
     });
 });

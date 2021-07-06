@@ -1,8 +1,8 @@
 import Actions from './Actions';
 import PluginsCatalogList from './PluginsCatalogList';
-import type { PluginDescription, PluginsCatalogWidgetConfiguration } from './types';
+import type { PluginDescriptionWithVersion, PluginsCatalogWidgetConfiguration } from './types';
 
-type PluginsCatalogResponse = PluginDescription[];
+type PluginsCatalogResponse = PluginDescriptionWithVersion[];
 
 Stage.defineWidget<unknown, PluginsCatalogResponse | Error, PluginsCatalogWidgetConfiguration>({
     id: 'pluginsCatalog',
@@ -53,7 +53,7 @@ Stage.defineWidget<unknown, PluginsCatalogResponse | Error, PluginsCatalogWidget
 
         let formattedData = data;
         if (_.get(widget.configuration, 'sortByName', false)) {
-            formattedData = _.sortBy(data, 'title');
+            formattedData = _.sortBy(data, item => item.pluginDescription.title);
         }
 
         return <PluginsCatalogList widget={widget} items={formattedData} toolbox={toolbox} />;
