@@ -1,22 +1,31 @@
-// @ts-nocheck File not migrated fully to TS
-/**
- * Created by Tamer on 30/07/2017.
- */
-import PluginsCatalogModal from './PluginsCatalogModal';
+import PluginsCatalogModal, { PluginsCatalogModalProps } from './PluginsCatalogModal';
 import Actions from './Actions';
+import type { PluginDescription, PluginsCatalogWidgetConfiguration } from './types';
 
-export default class PluginsCatalogList extends React.Component {
-    constructor(props, context) {
-        super(props, context);
+interface PluginsCatalogListProps {
+    items: PluginDescription[];
+    widget: Stage.Types.Widget<PluginsCatalogWidgetConfiguration>;
+    toolbox: Stage.Types.Toolbox;
+}
+
+interface PluginsCatalogListState {
+    showModal: boolean;
+    plugin: PluginsCatalogModalProps['plugin'] | null;
+    /** Potentially holds a message after a successful upload */
+    success: string | null;
+}
+
+export default class PluginsCatalogList extends React.Component<PluginsCatalogListProps, PluginsCatalogListState> {
+    constructor(props: PluginsCatalogListProps) {
+        super(props);
         this.state = {
             showModal: false,
             plugin: null,
-            success: null,
-            selected: null
+            success: null
         };
     }
 
-    shouldComponentUpdate(nextProps, nextState) {
+    shouldComponentUpdate(nextProps: PluginsCatalogListProps, nextState: PluginsCatalogListState) {
         const { items, widget } = this.props;
         return (
             !_.isEqual(items, nextProps.items) ||
@@ -25,11 +34,11 @@ export default class PluginsCatalogList extends React.Component {
         );
     }
 
-    onSuccess = msg => {
+    onSuccess: PluginsCatalogModalProps['onSuccess'] = msg => {
         this.setState({ success: msg });
     };
 
-    onUpload(plugin) {
+    onUpload(plugin: PluginsCatalogModalProps['plugin']) {
         this.setState({ plugin });
         this.showModal();
     }
@@ -43,7 +52,7 @@ export default class PluginsCatalogList extends React.Component {
     }
 
     render() {
-        const { plugin, selected, showModal, success } = this.state;
+        const { plugin, showModal, success } = this.state;
         const { items: itemsProp, toolbox, widget } = this.props;
         const NO_DATA_MESSAGE = "There are no Plugins available in catalog. Check widget's configuration.";
         const { DataTable, Message, Button } = Stage.Basic;
@@ -53,11 +62,15 @@ export default class PluginsCatalogList extends React.Component {
             .getManager()
             .getDistributionName()
             .toLowerCase()} ${toolbox.getManager().getDistributionRelease().toLowerCase()}`;
-        let items = _.map(itemsProp, item => {
-            const wagon = _.find(item.wagons, w => w.name.toLowerCase() === distro || w.name.toLowerCase() === 'any');
-            return wagon ? { ...item, isSelected: item.title === selected, wagon } : undefined;
-        });
-        items = _.compact(items);
+        const items = _.compact(
+            _.map(itemsProp, item => {
+                const wagon = _.find(
+                    item.wagons,
+                    w => w.name.toLowerCase() === distro || w.name.toLowerCase() === 'any'
+                );
+                return wagon ? { ...item, wagon } : undefined;
+            })
+        );
 
         return (
             <div>
@@ -89,8 +102,9 @@ export default class PluginsCatalogList extends React.Component {
                                         onClick={event => {
                                             event.preventDefault();
                                             this.onUpload({
-                                                ...item.wagon,
-                                                ..._.pick(item, 'title', 'icon'),
+                                                url: item.wagon.url,
+                                                title: item.title,
+                                                icon: item.icon,
                                                 yamlUrl: item.link
                                             });
                                         }}
@@ -103,32 +117,15 @@ export default class PluginsCatalogList extends React.Component {
 
                 <PluginsCatalogModal
                     open={showModal}
-                    plugin={plugin}
+                    // SAFETY: `plugin` will always be non-null when `showModal` is true
+                    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+                    plugin={plugin!}
                     onSuccess={this.onSuccess}
                     onHide={this.hideModal}
                     toolbox={toolbox}
-                    actions={
-                        new Actions({
-                            toolbox,
-                            ...widget.configuration
-                        })
-                    }
+                    actions={new Actions(toolbox, widget.configuration.jsonPath)}
                 />
             </div>
         );
     }
 }
-
-PluginsCatalogList.propTypes = {
-    items: PropTypes.arrayOf(
-        PropTypes.shape({
-            description: PropTypes.string,
-            icon: PropTypes.string,
-            link: PropTypes.string,
-            title: PropTypes.string,
-            version: PropTypes.string
-        })
-    ).isRequired,
-    toolbox: Stage.PropTypes.Toolbox.isRequired,
-    widget: Stage.PropTypes.Widget.isRequired
-};
