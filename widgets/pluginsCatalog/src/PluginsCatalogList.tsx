@@ -1,9 +1,9 @@
 import PluginsCatalogModal, { PluginsCatalogModalProps } from './PluginsCatalogModal';
 import Actions from './Actions';
-import type { PluginDescription, PluginsCatalogWidgetConfiguration } from './types';
+import type { PluginDescriptionWithVersion, PluginsCatalogWidgetConfiguration } from './types';
 
 interface PluginsCatalogListProps {
-    items: PluginDescription[];
+    items: PluginDescriptionWithVersion[];
     widget: Stage.Types.Widget<PluginsCatalogWidgetConfiguration>;
     toolbox: Stage.Types.Toolbox;
 }
@@ -62,13 +62,13 @@ export default class PluginsCatalogList extends React.Component<PluginsCatalogLi
             .getManager()
             .getDistributionName()
             .toLowerCase()} ${toolbox.getManager().getDistributionRelease().toLowerCase()}`;
-        const items = _.compact(
+        const plugins = _.compact(
             _.map(itemsProp, item => {
                 const wagon = _.find(
-                    item.wagons,
+                    item.pluginDescription.wagons,
                     w => w.name.toLowerCase() === distro || w.name.toLowerCase() === 'any'
                 );
-                return wagon ? { ...item, wagon } : undefined;
+                return wagon ? { ...item.pluginDescription, wagon, uploadedVersion: item.uploadedVersion } : undefined;
             })
         );
 
@@ -80,14 +80,14 @@ export default class PluginsCatalogList extends React.Component<PluginsCatalogLi
                     </Message>
                 )}
 
-                <DataTable noDataAvailable={items.length === 0} selectable noDataMessage={NO_DATA_MESSAGE}>
+                <DataTable noDataAvailable={plugins.length === 0} selectable noDataMessage={NO_DATA_MESSAGE}>
                     <DataTable.Column width="2%" />
                     <DataTable.Column label="Name" width="20%" />
                     <DataTable.Column label="Description" width="60%" />
                     <DataTable.Column label="Version" width="10%" />
                     <DataTable.Column width="5%" />
 
-                    {items.map(item => {
+                    {plugins.map(item => {
                         return (
                             <DataTable.Row key={item.title}>
                                 <DataTable.Data>
