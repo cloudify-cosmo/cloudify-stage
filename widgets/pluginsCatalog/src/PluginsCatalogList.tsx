@@ -1,9 +1,12 @@
+import type { ComponentProps, ComponentType } from 'react';
+import styled from 'styled-components';
+
 import PluginsCatalogModal, { PluginsCatalogModalProps } from './PluginsCatalogModal';
 import Actions from './Actions';
-import type { PluginDescription, PluginsCatalogWidgetConfiguration } from './types';
+import type { PluginDescriptionWithVersion, PluginsCatalogWidgetConfiguration } from './types';
 
 interface PluginsCatalogListProps {
-    items: PluginDescription[];
+    items: PluginDescriptionWithVersion[];
     widget: Stage.Types.Widget<PluginsCatalogWidgetConfiguration>;
     toolbox: Stage.Types.Toolbox;
 }
@@ -15,6 +18,19 @@ interface PluginsCatalogListState {
     success: string | null;
 }
 
+const UploadPluginButton: ComponentType<ComponentProps<typeof Stage.Basic.Button>> = styled(Stage.Basic.Button)`
+    // NOTE: increase specificity to override semantic-ui's style
+    &&& {
+        ${props =>
+            props.disabled &&
+            // NOTE: enables showing the title on a disabled button
+            // Uses `!important` to override semantic-ui's `!important`
+            // Count not be applied via inline `style` prop due to
+            // https://github.com/facebook/react/issues/1881
+            'pointer-events: auto !important;'}
+    }
+`;
+
 export default class PluginsCatalogList extends React.Component<PluginsCatalogListProps, PluginsCatalogListState> {
     constructor(props: PluginsCatalogListProps) {
         super(props);
@@ -23,6 +39,11 @@ export default class PluginsCatalogList extends React.Component<PluginsCatalogLi
             plugin: null,
             success: null
         };
+    }
+
+    componentDidMount() {
+        const { toolbox } = this.props;
+        toolbox.getEventBus().on('plugins:refresh', this.refreshData, this);
     }
 
     shouldComponentUpdate(nextProps: PluginsCatalogListProps, nextState: PluginsCatalogListState) {
@@ -34,20 +55,30 @@ export default class PluginsCatalogList extends React.Component<PluginsCatalogLi
         );
     }
 
-    onSuccess: PluginsCatalogModalProps['onSuccess'] = msg => {
+    componentWillUnmount() {
+        const { toolbox } = this.props;
+        toolbox.getEventBus().off('plugins:refresh', this.refreshData);
+    }
+
+    private onSuccess: PluginsCatalogModalProps['onSuccess'] = msg => {
         this.setState({ success: msg });
     };
 
-    onUpload(plugin: PluginsCatalogModalProps['plugin']) {
+    private onUpload(plugin: PluginsCatalogModalProps['plugin']) {
         this.setState({ plugin });
         this.showModal();
     }
 
-    hideModal = () => {
+    private hideModal = () => {
         this.setState({ showModal: false });
     };
 
-    showModal() {
+    private refreshData = () => {
+        const { toolbox } = this.props;
+        toolbox.refresh();
+    };
+
+    private showModal() {
         this.setState({ showModal: true });
     }
 
@@ -55,20 +86,20 @@ export default class PluginsCatalogList extends React.Component<PluginsCatalogLi
         const { plugin, showModal, success } = this.state;
         const { items: itemsProp, toolbox, widget } = this.props;
         const NO_DATA_MESSAGE = "There are no Plugins available in catalog. Check widget's configuration.";
-        const { DataTable, Message, Button } = Stage.Basic;
+        const { DataTable, Message } = Stage.Basic;
         const { PluginIcon } = Stage.Common;
 
         const distro = `${toolbox
             .getManager()
             .getDistributionName()
             .toLowerCase()} ${toolbox.getManager().getDistributionRelease().toLowerCase()}`;
-        const items = _.compact(
+        const plugins = _.compact(
             _.map(itemsProp, item => {
                 const wagon = _.find(
-                    item.wagons,
+                    item.pluginDescription.wagons,
                     w => w.name.toLowerCase() === distro || w.name.toLowerCase() === 'any'
                 );
-                return wagon ? { ...item, wagon } : undefined;
+                return wagon ? { ...item.pluginDescription, wagon, uploadedVersion: item.uploadedVersion } : undefined;
             })
         );
 
@@ -80,14 +111,15 @@ export default class PluginsCatalogList extends React.Component<PluginsCatalogLi
                     </Message>
                 )}
 
-                <DataTable noDataAvailable={items.length === 0} selectable noDataMessage={NO_DATA_MESSAGE}>
+                <DataTable noDataAvailable={plugins.length === 0} selectable noDataMessage={NO_DATA_MESSAGE}>
                     <DataTable.Column width="2%" />
                     <DataTable.Column label="Name" width="20%" />
                     <DataTable.Column label="Description" width="60%" />
                     <DataTable.Column label="Version" width="10%" />
+                    <DataTable.Column label="Uploaded version" width="10%" />
                     <DataTable.Column width="5%" />
 
-                    {items.map(item => {
+                    {plugins.map(item => {
                         return (
                             <DataTable.Row key={item.title}>
                                 <DataTable.Data>
@@ -96,8 +128,9 @@ export default class PluginsCatalogList extends React.Component<PluginsCatalogLi
                                 <DataTable.Data>{item.title}</DataTable.Data>
                                 <DataTable.Data>{item.description}</DataTable.Data>
                                 <DataTable.Data>{item.version}</DataTable.Data>
+                                <DataTable.Data>{item.uploadedVersion ?? '-'}</DataTable.Data>
                                 <DataTable.Data className="center aligned">
-                                    <Button
+                                    <UploadPluginButton
                                         icon="upload"
                                         onClick={event => {
                                             event.preventDefault();
@@ -108,6 +141,10 @@ export default class PluginsCatalogList extends React.Component<PluginsCatalogLi
                                                 yamlUrl: item.link
                                             });
                                         }}
+                                        // eslint-disable-next-line react/jsx-props-no-spreading
+                                        {...(item.version === item.uploadedVersion
+                                            ? { disabled: true, title: 'Latest version is already uploaded' }
+                                            : { disabled: false, title: 'Upload plugin' })}
                                     />
                                 </DataTable.Data>
                             </DataTable.Row>

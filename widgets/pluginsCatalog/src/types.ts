@@ -15,6 +15,11 @@ export interface PluginDescription {
     wagons: PluginWagon[];
 }
 
+export interface PluginDescriptionWithVersion {
+    pluginDescription: PluginDescription;
+    uploadedVersion: string | undefined;
+}
+
 export interface PluginsCatalogWidgetConfiguration {
     jsonPath: string;
     sortByName: boolean;
