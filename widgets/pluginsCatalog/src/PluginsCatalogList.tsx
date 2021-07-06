@@ -1,3 +1,6 @@
+import type { ComponentProps, ComponentType } from 'react';
+import styled from 'styled-components';
+
 import PluginsCatalogModal, { PluginsCatalogModalProps } from './PluginsCatalogModal';
 import Actions from './Actions';
 import type { PluginDescriptionWithVersion, PluginsCatalogWidgetConfiguration } from './types';
@@ -14,6 +17,19 @@ interface PluginsCatalogListState {
     /** Potentially holds a message after a successful upload */
     success: string | null;
 }
+
+const UploadPluginButton: ComponentType<ComponentProps<typeof Stage.Basic.Button>> = styled(Stage.Basic.Button)`
+    // NOTE: increase specificity to override semantic-ui's style
+    &&& {
+        ${props =>
+            props.disabled &&
+            // NOTE: enables showing the title on a disabled button
+            // Uses `!important` to override semantic-ui's `!important`
+            // Count not be applied via inline `style` prop due to
+            // https://github.com/facebook/react/issues/1881
+            'pointer-events: auto !important;'}
+    }
+`;
 
 export default class PluginsCatalogList extends React.Component<PluginsCatalogListProps, PluginsCatalogListState> {
     constructor(props: PluginsCatalogListProps) {
@@ -55,7 +71,7 @@ export default class PluginsCatalogList extends React.Component<PluginsCatalogLi
         const { plugin, showModal, success } = this.state;
         const { items: itemsProp, toolbox, widget } = this.props;
         const NO_DATA_MESSAGE = "There are no Plugins available in catalog. Check widget's configuration.";
-        const { DataTable, Message, Button } = Stage.Basic;
+        const { DataTable, Message } = Stage.Basic;
         const { PluginIcon } = Stage.Common;
 
         const distro = `${toolbox
@@ -99,7 +115,7 @@ export default class PluginsCatalogList extends React.Component<PluginsCatalogLi
                                 <DataTable.Data>{item.version}</DataTable.Data>
                                 <DataTable.Data>{item.uploadedVersion ?? '-'}</DataTable.Data>
                                 <DataTable.Data className="center aligned">
-                                    <Button
+                                    <UploadPluginButton
                                         icon="upload"
                                         onClick={event => {
                                             event.preventDefault();
@@ -110,6 +126,10 @@ export default class PluginsCatalogList extends React.Component<PluginsCatalogLi
                                                 yamlUrl: item.link
                                             });
                                         }}
+                                        // eslint-disable-next-line react/jsx-props-no-spreading
+                                        {...(item.version === item.uploadedVersion
+                                            ? { disabled: true, title: 'Latest version is already uploaded' }
+                                            : { disabled: false, title: 'Upload plugin' })}
                                     />
                                 </DataTable.Data>
                             </DataTable.Row>
