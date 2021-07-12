@@ -1,19 +1,15 @@
-// @ts-nocheck File not migrated fully to TS
-/**
- * Created by jakub.niezgoda on 21/09/2018.
- */
-
 import PropTypes from 'prop-types';
 import { Component } from 'react';
 import { withRouter } from 'react-router-dom';
 
-// Ref.: https://reacttraining.com/react-router/web/guides/scroll-restoration
+import { RouteComponentProps } from 'react-router';
 
-class ScrollToTop extends Component {
-    componentDidUpdate(prevProps) {
+class ScrollToTop extends Component<RouteComponentProps> {
+    componentDidUpdate(prevProps: RouteComponentProps) {
         const { location } = this.props;
+
         if (location !== prevProps.location) {
-            $('div.main').scrollTop(0);
+            window.scrollTo(0, 0);
         }
     }
 
@@ -23,9 +19,9 @@ class ScrollToTop extends Component {
     }
 }
 
-ScrollToTop.propTypes = {
+(ScrollToTop as any).propTypes = {
     location: PropTypes.shape({}).isRequired,
     children: PropTypes.node.isRequired
 };
 
-export default withRouter(ScrollToTop);
+export default withRouter<any, typeof ScrollToTop>(ScrollToTop);
