@@ -50,7 +50,7 @@ import Routes from './containers/Routes';
 import translation from './translations/en.json';
 import LoaderUtils from './utils/LoaderUtils';
 
-window.$ = $;
+window.$ = $; // Needed by topology widget.
 
 const browserHistory = createBrowserHistory({
     basename: Consts.CONTEXT_PATH
