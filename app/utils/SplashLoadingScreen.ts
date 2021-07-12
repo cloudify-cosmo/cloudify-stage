@@ -1,24 +1,30 @@
-// @ts-nocheck File not migrated fully to TS
-/**
- * Created by jakubniezgoda on 06/13/2017.
- */
-
-const SPLASH_DIV = $('div.splashPage');
+const SPLASH_DIV: HTMLElement | null = document.querySelector('div.splashPage');
 const ACTIVE_CLASS = 'active';
-const FADE_OUT_SPEED = 'slow';
+const FADE_OUT_SPEED = 300;
 
 export default class SplashLoadingScreen {
+    static fadeOut(element: HTMLElement) {
+        element.style.setProperty('transition', `all ${FADE_OUT_SPEED}ms linear`);
+        element.style.setProperty('opacity', '0');
+        setTimeout(() => {
+            element.style.removeProperty('transition');
+            element.style.removeProperty('opacity');
+            element.style.setProperty('display', 'none');
+        }, FADE_OUT_SPEED);
+    }
+
     static turnOn() {
-        if (!SPLASH_DIV.hasClass(ACTIVE_CLASS)) {
-            SPLASH_DIV.show();
-            SPLASH_DIV.addClass(ACTIVE_CLASS);
+        if (SPLASH_DIV && !SPLASH_DIV.classList.contains(ACTIVE_CLASS)) {
+            SPLASH_DIV.style.removeProperty('display');
+
+            SPLASH_DIV.classList.add(ACTIVE_CLASS);
         }
     }
 
     static turnOff() {
-        if (SPLASH_DIV.hasClass(ACTIVE_CLASS)) {
-            SPLASH_DIV.fadeOut(FADE_OUT_SPEED);
-            SPLASH_DIV.removeClass(ACTIVE_CLASS);
+        if (SPLASH_DIV && SPLASH_DIV.classList.contains(ACTIVE_CLASS)) {
+            SplashLoadingScreen.fadeOut(SPLASH_DIV);
+            SPLASH_DIV.classList.remove(ACTIVE_CLASS);
         }
     }
 }
