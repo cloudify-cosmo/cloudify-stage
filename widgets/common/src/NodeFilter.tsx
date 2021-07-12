@@ -1,8 +1,18 @@
 // @ts-nocheck File not migrated fully to TS
+import { ComponentProps } from 'react';
+
 /**
  * NodeFilter  - a component showing dropdowns for filtering blueprints, deployments, nodes and nodes instances.
  * Data (list of blueprints, deployments, nodes and node instances) is dynamically fetched from manager.
  */
+
+// Move this to better correct place after with migration of External.ts file
+interface ResponseItem {
+    id: string;
+    // eslint-disable-next-line camelcase
+    display_name: string;
+}
+
 export default class NodeFilter extends React.Component {
     static EMPTY_VALUE = {
         blueprintId: '',
@@ -122,6 +132,22 @@ export default class NodeFilter extends React.Component {
         this.handleInputChange({}, event, field);
     };
 
+    optionsReducer(result: Record<string, string>, item: Partial<ResponseItem>): Record<string, string> {
+        let allowedOptions: string[] = [];
+
+        if (this.isFilteringSetFor(optionsField)) {
+            allowedOptions = this.getAllowedOptionsFor(optionsField);
+        }
+
+        if (allowedOptions.length !== 0 && !allowedOptions.includes(item)) {
+            return result;
+        }
+
+        result[item.id] = item.display_name || item.id;
+
+        return result;
+    }
+
     fetchData(fetchUrl, params, optionsField) {
         const { toolbox } = this.props;
         const { errors: stateErrors } = this.state;
@@ -135,27 +161,15 @@ export default class NodeFilter extends React.Component {
             .getManager()
             .doGet(fetchUrl, { params })
             .then(data => {
-                let allowedOptions = [];
-
-                if (this.isFilteringSetFor(optionsField)) {
-                    allowedOptions = this.getAllowedOptionsFor(optionsField);
-                }
-
-                const options: Stage.Basic.Dropdown.Item.DropdownItemProps[] = Object.entries(
-                    (data.items || []).reduce((result: Record<string, string>, item) => {
-                        if (allowedOptions.length !== 0 && !allowedOptions.includes(item)) {
-                            return result;
-                        }
-
-                        result[item.id] = item.display_name || item.id;
-
-                        return result;
-                    }, {})
-                ).map(([id, displayName]) => ({
-                    value: id,
-                    text: id === displayName ? displayName : `${displayName} (${id})`,
-                    key: id
-                }));
+                const options = Object.entries((data.items || []).reduce(this.optionsReducer, {})).map(
+                    ([id, displayName]): NonNullable<
+                        ComponentProps<typeof Stage.Basic.Dropdown>['options']
+                    >[number] => ({
+                        value: id,
+                        text: id === displayName ? displayName : `${displayName} (${id})`,
+                        key: id
+                    })
+                );
 
                 if (!this.isMultipleSetFor(optionsField)) {
                     options.unshift({ text: '', value: '', key: '' });
