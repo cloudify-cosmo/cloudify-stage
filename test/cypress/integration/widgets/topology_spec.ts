@@ -1,4 +1,3 @@
-// @ts-nocheck File not migrated fully to TS
 import _ from 'lodash';
 import { secondsToMs, waitUntilEmpty, waitUntilNotEmpty } from '../../support/resource_commons';
 
@@ -68,10 +67,27 @@ describe('Topology', () => {
             cy.get('.modal td:eq(2)').should('have.text', 'provider["registry.terraform.io/hashicorp/null"]');
             cy.get('.modal tr:eq(1) td:eq(1)').should('have.text', 'foo1');
             cy.get('.modal tr:eq(2) td:eq(1)').should('have.text', 'foo2');
+            interface Instance {
+                // eslint-disable-next-line camelcase
+                attributes: { id: string; triggers: { cluster_instance_ids: string } };
+                // eslint-disable-next-line camelcase
+                schema_version: number;
+                dependencies: string[];
+                // eslint-disable-next-line camelcase
+                index_key: number;
+            }
+            interface RowData {
+                provider: string;
+                type: string;
+                mode: string;
+                name: string;
+                instances: Instance[];
+            }
+
             cy.get('.modal tr:eq(1) td:eq(3)')
                 .invoke('text')
                 .then(rawData => {
-                    const parsedData = JSON.parse(rawData);
+                    const parsedData: RowData = JSON.parse(rawData);
                     expect(_.omit(parsedData, 'instances')).to.deep.equal({
                         provider: 'provider["registry.terraform.io/hashicorp/null"]',
                         type: 'null_resource',
@@ -93,7 +109,7 @@ describe('Topology', () => {
             cy.get('.modal tr:eq(2) td:eq(3)')
                 .invoke('text')
                 .then(rawData => {
-                    const parsedData = JSON.parse(rawData);
+                    const parsedData: RowData = JSON.parse(rawData);
                     expect(_.omit(parsedData, 'instances')).to.deep.equal({
                         provider: 'provider["registry.terraform.io/hashicorp/null"]',
                         type: 'null_resource',
@@ -171,7 +187,7 @@ describe('Topology', () => {
 
             cy.verifyLocation(
                 `/console/page/test_page_deployment/${componentDeploymentId}`,
-                { deploymentId: componentDeploymentId },
+                [{ deploymentId: componentDeploymentId }],
                 componentDeploymentId
             );
         });
