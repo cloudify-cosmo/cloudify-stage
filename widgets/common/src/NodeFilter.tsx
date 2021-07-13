@@ -133,13 +133,9 @@ export default class NodeFilter extends React.Component {
     };
 
     optionsReducer(result: Record<string, string>, item: Partial<ResponseItem>): Record<string, string> {
-        let allowedOptions: string[] = [];
+        const allowedOptions = this.getAllowedOptionsFor(optionsField);
 
-        if (this.isFilteringSetFor(optionsField)) {
-            allowedOptions = this.getAllowedOptionsFor(optionsField);
-        }
-
-        if (allowedOptions.length !== 0 && !allowedOptions.includes(item.id)) {
+        if (this.isFilteringSetFor(optionsField) && !allowedOptions.includes(item.id)) {
             return result;
         }
 
