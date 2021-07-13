@@ -1,5 +1,6 @@
 @import '~cloudify-ui-common/styles/colors';
 
+$sidebarAlwaysVisibleBreakpoint: 992px;
 
 a:hover {
   text-decoration: underline !important;
@@ -22,7 +23,7 @@ a:hover {
 }
 
 .show-on-small-screen {
-  @media (min-width: 992px) {
+  @media (min-width: $sidebarAlwaysVisibleBreakpoint) {
     display: none !important;
   }
 }
@@ -42,7 +43,7 @@ a:hover {
       height: calc(100% - 55px) !important;
       transition: all 500ms cubic-bezier(.55, 0, .1, 1);
       left: -200px;
-      @media (min-width: 992px) {
+      @media (min-width: $sidebarAlwaysVisibleBreakpoint) {
         left: 0;
       }
       &.open{
@@ -62,7 +63,7 @@ a:hover {
   }
 
   .page {
-    @media (min-width: 992px) {
+    @media (min-width: $sidebarAlwaysVisibleBreakpoint) {
       margin-left: 13rem;
     }
     $input-padding: 4.85px 9px !important;
@@ -124,7 +125,7 @@ a:hover {
   z-index:1;
   transition: all 500ms cubic-bezier(.55, 0, .1, 1);
   left: -200px;
-  @media (min-width: 992px) {
+  @media (min-width: $sidebarAlwaysVisibleBreakpoint) {
     left: 0;
   }
   &.open{
@@ -664,7 +665,7 @@ a.underline {
   max-width: 500px !important;
   margin: 0 calc(50% - 250px) !important;
   display: block;
-  @media (min-width: 992px) {
+  @media (min-width: $sidebarAlwaysVisibleBreakpoint) {
     left: 6.5rem !important;
   }
 
