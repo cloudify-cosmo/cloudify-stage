@@ -265,8 +265,8 @@ export default class Topology extends React.Component {
                     .flatMap('dependencies')
                     .compact()
                     .uniq()
-                    .forEach(dependency => {
-                        const [, dependencyName] = dependency.split('.');
+                    .forEach((dependency: string) => {
+                        const [dependencyName] = dependency.split('.').slice(-1);
                         const side1 = _.find(terraformDeploymentNodes, _.pick(resource, 'name'));
                         const side2 = _.find(terraformDeploymentNodes, { name: dependencyName });
                         const connector = {
