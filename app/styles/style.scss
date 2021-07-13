@@ -1,6 +1,7 @@
 @import '~cloudify-ui-common/styles/colors';
 
 $sidebarAlwaysVisibleBreakpoint: 992px;
+$sidebarWidth: 13rem; // NOTE: defined in Semantic UI
 
 a:hover {
   text-decoration: underline !important;
@@ -64,7 +65,7 @@ a:hover {
 
   .page {
     @media (min-width: $sidebarAlwaysVisibleBreakpoint) {
-      margin-left: 13rem;
+      margin-left: $sidebarWidth;
     }
     $input-padding: 4.85px 9px !important;
     $input-left: -10px;
@@ -121,7 +122,7 @@ a:hover {
 .ui.segment.addPageContainer {
   position:fixed;
   bottom: 0;
-  width: 13rem;
+  width: $sidebarWidth;
   z-index:1;
   transition: all 500ms cubic-bezier(.55, 0, .1, 1);
   left: -200px;
@@ -666,7 +667,7 @@ a.underline {
   margin: 0 calc(50% - 250px) !important;
   display: block;
   @media (min-width: $sidebarAlwaysVisibleBreakpoint) {
-    left: 6.5rem !important;
+    left: ($sidebarWidth / 2) !important;
   }
 
   .content {
