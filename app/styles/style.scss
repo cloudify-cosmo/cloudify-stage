@@ -160,7 +160,10 @@ a:hover {
     position: fixed !important;
     top: 8rem !important;
     bottom: $maximizedWidgetGap !important;
-    left: ($sidebarWidth + $maximizedWidgetGap) !important;
+    left: $maximizedWidgetGap !important;
+    @media (min-width: $sidebarAlwaysVisibleBreakpoint) {
+      left: ($sidebarWidth + $maximizedWidgetGap) !important;
+    }
     right: $maximizedWidgetGap !important;
     outline: 0;
 
