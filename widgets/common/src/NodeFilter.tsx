@@ -139,7 +139,7 @@ export default class NodeFilter extends React.Component {
             allowedOptions = this.getAllowedOptionsFor(optionsField);
         }
 
-        if (allowedOptions.length !== 0 && !allowedOptions.includes(item)) {
+        if (allowedOptions.length !== 0 && !allowedOptions.includes(item.id)) {
             return result;
         }
 
