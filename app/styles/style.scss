@@ -1,7 +1,7 @@
 @import '~cloudify-ui-common/styles/colors';
 
-body {
-}
+$sidebarAlwaysVisibleBreakpoint: 992px;
+$sidebarWidth: 13rem; // NOTE: defined in Semantic UI
 
 a:hover {
   text-decoration: underline !important;
@@ -24,7 +24,7 @@ a:hover {
 }
 
 .show-on-small-screen {
-  @media (min-width: 992px) {
+  @media (min-width: $sidebarAlwaysVisibleBreakpoint) {
     display: none !important;
   }
 }
@@ -44,7 +44,7 @@ a:hover {
       height: calc(100% - 55px) !important;
       transition: all 500ms cubic-bezier(.55, 0, .1, 1);
       left: -200px;
-      @media (min-width: 992px) {
+      @media (min-width: $sidebarAlwaysVisibleBreakpoint) {
         left: 0;
       }
       &.open{
@@ -64,8 +64,8 @@ a:hover {
   }
 
   .page {
-    @media (min-width: 992px) {
-      margin-left: 13rem;
+    @media (min-width: $sidebarAlwaysVisibleBreakpoint) {
+      margin-left: $sidebarWidth;
     }
     $input-padding: 4.85px 9px !important;
     $input-left: -10px;
@@ -122,11 +122,11 @@ a:hover {
 .ui.segment.addPageContainer {
   position:fixed;
   bottom: 0;
-  width: 13rem;
+  width: $sidebarWidth;
   z-index:1;
   transition: all 500ms cubic-bezier(.55, 0, .1, 1);
   left: -200px;
-  @media (min-width: 992px) {
+  @media (min-width: $sidebarAlwaysVisibleBreakpoint) {
     left: 0;
   }
   &.open{
@@ -151,24 +151,26 @@ a:hover {
   display: none;
 
   &.maximize {
+    $maximizedWidgetGap: 1rem;
+
     display: block;
     width: auto !important;
     height: auto !important;
     transform: translate(0px, 0px) !important;
     position: fixed !important;
     top: 8rem !important;
-    bottom: 1rem !important;
-    left: 14rem !important;
-    right: 1rem !important;
+    bottom: $maximizedWidgetGap !important;
+    left: $maximizedWidgetGap !important;
+    @media (min-width: $sidebarAlwaysVisibleBreakpoint) {
+      left: ($sidebarWidth + $maximizedWidgetGap) !important;
+    }
+    right: $maximizedWidgetGap !important;
     outline: 0;
 
     .widget{
       display: block;
     }
   }
-}
-
-.pageMenuItem {
 }
 
 .pageRemoveButton {
@@ -669,8 +671,8 @@ a.underline {
   max-width: 500px !important;
   margin: 0 calc(50% - 250px) !important;
   display: block;
-  @media (min-width: 992px) {
-    left: 6.5rem !important;
+  @media (min-width: $sidebarAlwaysVisibleBreakpoint) {
+    left: ($sidebarWidth / 2) !important;
   }
 
   .content {
