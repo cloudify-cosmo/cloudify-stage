@@ -58,7 +58,6 @@ const DeploymentActionButtons: FunctionComponent<DeploymentActionButtonsProps> =
             />
 
             <DeploymentActionsMenu
-                deploymentId={deploymentId}
                 onActionClick={setActiveAction}
                 toolbox={toolbox}
                 trigger={
