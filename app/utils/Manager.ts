@@ -4,6 +4,7 @@
 import _ from 'lodash';
 import { stringify as stringifyQueryString } from 'query-string';
 
+import getQueryParamSorter from './getQueryParamSorter';
 import Internal from './Internal';
 import StageUtils from './stageUtils';
 import Consts from './consts';
@@ -59,10 +60,12 @@ export default class Manager extends Internal {
             } else {
                 queryString += '?';
             }
-            queryString += stringifyQueryString(params);
+            queryString += stringifyQueryString(params, { sort: getQueryParamSorter(params) });
             return urlWithoutWildcard + queryString;
         }
-        const queryString = data ? (url.indexOf('?') > 0 ? '&' : '?') + stringifyQueryString(data) : '';
+        const queryString = data
+            ? (url.indexOf('?') > 0 ? '&' : '?') + stringifyQueryString(data, { sort: getQueryParamSorter(data) })
+            : '';
         const urlInServer = encodeURIComponent(url + queryString);
 
         return StageUtils.Url.url(`/sp?su=${urlInServer}`);
