@@ -132,18 +132,6 @@ export default class NodeFilter extends React.Component {
         this.handleInputChange({}, event, field);
     };
 
-    optionsReducer(result: Record<string, string>, item: Partial<ResponseItem>): Record<string, string> {
-        const allowedOptions = this.getAllowedOptionsFor(optionsField);
-
-        if (this.isFilteringSetFor(optionsField) && !allowedOptions.includes(item.id)) {
-            return result;
-        }
-
-        result[item.id] = item.display_name || item.id;
-
-        return result;
-    }
-
     fetchData(fetchUrl, params, optionsField) {
         const { toolbox } = this.props;
         const { errors: stateErrors } = this.state;
@@ -157,15 +145,28 @@ export default class NodeFilter extends React.Component {
             .getManager()
             .doGet(fetchUrl, { params })
             .then(data => {
-                const options = Object.entries((data.items || []).reduce(this.optionsReducer, {})).map(
-                    ([id, displayName]): NonNullable<
-                        ComponentProps<typeof Stage.Basic.Dropdown>['options']
-                    >[number] => ({
-                        value: id,
-                        text: id === displayName ? displayName : `${displayName} (${id})`,
-                        key: id
-                    })
-                );
+                const options = Object.entries(
+                    (data.items || []).reduce((result: Record<string, string>, item: Partial<ResponseItem>): Record<
+                        string,
+                        string
+                    > => {
+                        const allowedOptions = this.getAllowedOptionsFor(optionsField);
+
+                        if (this.isFilteringSetFor(optionsField) && !allowedOptions.includes(item.id)) {
+                            return result;
+                        }
+
+                        result[item.id] = item.display_name || item.id;
+
+                        return result;
+                    }, {})
+                ).map(([id, displayName]): NonNullable<
+                    ComponentProps<typeof Stage.Basic.Dropdown>['options']
+                >[number] => ({
+                    value: id,
+                    text: id === displayName ? displayName : `${displayName} (${id})`,
+                    key: id
+                }));
 
                 if (!this.isMultipleSetFor(optionsField)) {
                     options.unshift({ text: '', value: '', key: '' });
