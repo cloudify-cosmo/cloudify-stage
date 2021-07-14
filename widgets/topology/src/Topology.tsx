@@ -24,10 +24,6 @@ function isNodesChanged(topologyNodes, newNodes) {
     return false;
 }
 
-function findExpandedNode(currentTopology: TopologyProps['data']['blueprintDeploymentData'], deploymentId: string) {
-    return _.find(currentTopology.nodes, node => node.templateData.deploymentId === deploymentId);
-}
-
 interface TopologyProps {
     toolbox: Stage.Types.Toolbox;
     blueprintId: string;
@@ -38,6 +34,10 @@ interface TopologyProps {
         layout: unknown;
     };
     deploymentId: string;
+}
+
+function findExpandedNode(currentTopology: TopologyProps['data']['blueprintDeploymentData'], deploymentId: string) {
+    return _.find(currentTopology.nodes, node => node.templateData.deploymentId === deploymentId);
 }
 
 interface TopologyState {
