@@ -1,8 +1,18 @@
 // @ts-nocheck File not migrated fully to TS
+import { ComponentProps } from 'react';
+
 /**
  * NodeFilter  - a component showing dropdowns for filtering blueprints, deployments, nodes and nodes instances.
  * Data (list of blueprints, deployments, nodes and node instances) is dynamically fetched from manager.
  */
+
+// Move this to better correct place after with migration of External.ts file
+interface ResponseItem {
+    id: string;
+    // eslint-disable-next-line camelcase
+    display_name: string;
+}
+
 export default class NodeFilter extends React.Component {
     static EMPTY_VALUE = {
         blueprintId: '',
@@ -12,6 +22,8 @@ export default class NodeFilter extends React.Component {
     };
 
     static BASIC_PARAMS = { _include: 'id' };
+
+    static DEPLOYMENT_PARAMS = { _include: 'id,display_name' };
 
     static initialState = props => ({
         blueprints: [],
@@ -133,15 +145,29 @@ export default class NodeFilter extends React.Component {
             .getManager()
             .doGet(fetchUrl, { params })
             .then(data => {
-                let ids = _.chain(data.items || [])
-                    .map(item => item.id)
-                    .uniqWith(_.isEqual)
-                    .value();
-                if (this.isFilteringSetFor(optionsField)) {
-                    ids = _.intersection(ids, this.getAllowedOptionsFor(optionsField));
-                }
+                const options = Object.entries(
+                    (data.items || []).reduce((result: Record<string, string>, item: Partial<ResponseItem>): Record<
+                        string,
+                        string
+                    > => {
+                        const allowedOptions = this.getAllowedOptionsFor(optionsField);
 
-                const options = _.map(ids, id => ({ text: id, value: id, key: id }));
+                        if (this.isFilteringSetFor(optionsField) && !allowedOptions.includes(item.id)) {
+                            return result;
+                        }
+
+                        result[item.id] = item.display_name || item.id;
+
+                        return result;
+                    }, {})
+                ).map(([id, displayName]): NonNullable<
+                    ComponentProps<typeof Stage.Basic.Dropdown>['options']
+                >[number] => ({
+                    value: id,
+                    text: id === displayName ? displayName : `${displayName} (${id})`,
+                    key: id
+                }));
+
                 if (!this.isMultipleSetFor(optionsField)) {
                     options.unshift({ text: '', value: '', key: '' });
                 }
@@ -161,7 +187,7 @@ export default class NodeFilter extends React.Component {
 
     fetchDeployments() {
         const { blueprintId } = this.state;
-        const params = { ...NodeFilter.BASIC_PARAMS };
+        const params = { ...NodeFilter.DEPLOYMENT_PARAMS };
         if (!_.isEmpty(blueprintId)) {
             params.blueprint_id = blueprintId;
         }

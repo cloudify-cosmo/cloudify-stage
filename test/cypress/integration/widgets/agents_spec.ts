@@ -3,7 +3,8 @@ import { secondsToMs } from '../../support/resource_commons';
 
 describe('Agents widget', () => {
     const pollingTimeSeconds = 5;
-    const deploymentName = 'agents_test_deployment';
+    const deploymentId = 'agents_test_deployment';
+    const deploymentDisplayName = 'Agents Test Deployment';
     const nodeName = 'host';
     const nodeInstanceName = 'host_qz2p8t';
 
@@ -40,7 +41,7 @@ describe('Agents widget', () => {
                         system: 'centos core',
                         version: '6.1.0-.dev1',
                         node: nodeName,
-                        deployment: deploymentName,
+                        deployment: deploymentId,
                         tenant_name: 'default_tenant'
                     }
                 ]
@@ -50,12 +51,19 @@ describe('Agents widget', () => {
                 'postExecution'
             );
 
-            interceptResourceFetching('deployments', deploymentName);
+            cy.interceptSp('GET', `/deployments?_include=id%2Cdisplay_name`, {
+                metadata: {
+                    pagination: { total: 1, size: 1000, offset: 0 },
+                    filtered: null
+                },
+                items: [{ id: deploymentId, display_name: deploymentDisplayName }]
+            }).as('fetchDeployments');
+
             interceptResourceFetching('nodes', nodeName);
             interceptResourceFetching('node-instances', nodeInstanceName);
 
             cy.wait('@fetchAgents', { requestTimeout: secondsToMs(pollingTimeSeconds + 1) });
-            cy.contains(deploymentName);
+            cy.contains(deploymentId);
         });
 
         function fillNodesFilter() {
@@ -63,7 +71,7 @@ describe('Agents widget', () => {
             cy.wait('@fetchNodes');
             cy.wait('@fetchNodeInstances');
 
-            cy.setSearchableDropdownValue('Deployment', deploymentName);
+            cy.setSearchableDropdownValue('Deployment', deploymentId);
             cy.setSearchableDropdownValue('Node', nodeName);
             cy.setSearchableDropdownValue('Node Instance', nodeInstanceName);
         }
@@ -80,7 +88,7 @@ describe('Agents widget', () => {
             expectedAdditionalParameters: Record<string, any> = {}
         ) {
             expect(executionPayload).to.deep.equal({
-                deployment_id: deploymentName,
+                deployment_id: deploymentId,
                 workflow_id: expectedWorkflowId,
                 dry_run: false,
                 force: false,
@@ -99,6 +107,7 @@ describe('Agents widget', () => {
             cy.contains('Validate').click();
             cy.get('.modal').within(() => {
                 fillNodesFilter();
+                cy.contains(`${deploymentDisplayName} (${deploymentId})`).should('be.visible');
                 selectInstallMethod(installMethods);
                 cy.contains('button', 'Validate').click();
             });
