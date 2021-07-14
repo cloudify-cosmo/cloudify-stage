@@ -1,20 +1,30 @@
-import type { FunctionComponent } from 'react';
+import { FunctionComponent, useEffect } from 'react';
+
+type FetchedDeploymentState =
+    // eslint-disable-next-line camelcase
+    | { status: 'success'; data: { display_name: string; workflows: unknown[] } }
+    | { status: 'loading' }
+    | { status: 'error'; error: Error };
+
+const isDeploymentFetched = (state: FetchedDeploymentState): state is FetchedDeploymentState & { status: 'success' } =>
+    state.status === 'success';
 
 interface DeploymentActionButtonsProps {
-    // eslint-disable-next-line camelcase
-    deployment: { id: string; display_name: string; workflows: unknown[] };
+    deploymentId?: string | null;
+    fetchedDeploymentState: FetchedDeploymentState;
     toolbox: Stage.Types.Toolbox;
     redirectToParentPageAfterDelete: boolean;
 }
 
 const DeploymentActionButtons: FunctionComponent<DeploymentActionButtonsProps> = ({
-    deployment,
+    deploymentId,
+    fetchedDeploymentState,
     toolbox,
     redirectToParentPageAfterDelete
 }) => {
     const {
         Basic: { Button },
-        // @ts-expect-error Those commons are not migrated to TS yet
+        // @ts-expect-error Some commons are not migrated to TS yet
         Common: { DeploymentActionsMenu, DeploymentActionsModals, ExecuteDeploymentModal, WorkflowsMenu },
         Hooks: { useResettableState }
     } = Stage;
@@ -22,19 +32,25 @@ const DeploymentActionButtons: FunctionComponent<DeploymentActionButtonsProps> =
     const [activeAction, setActiveAction, resetActiveAction] = useResettableState<string | null>(null);
     const [workflow, setWorkflow, resetWorkflow] = useResettableState(null);
 
-    const { id, display_name: displayName, workflows } = deployment;
+    useEffect(() => {
+        if (fetchedDeploymentState.status === 'error') {
+            log.error('Error when fetching deployment data', fetchedDeploymentState.error);
+        }
+    }, [fetchedDeploymentState]);
+
+    const buttonsDisabled = !deploymentId || ['error', 'loading'].includes(fetchedDeploymentState.status);
 
     return (
         <div>
             <WorkflowsMenu
-                workflows={workflows}
+                workflows={isDeploymentFetched(fetchedDeploymentState) ? fetchedDeploymentState.data.workflows : []}
                 dropdownDirection="right"
                 trigger={
                     <Button
                         className="executeWorkflowButton labeled icon"
                         color="teal"
                         icon="cogs"
-                        disabled={!id}
+                        disabled={buttonsDisabled}
                         content="Execute workflow"
                     />
                 }
@@ -42,7 +58,7 @@ const DeploymentActionButtons: FunctionComponent<DeploymentActionButtonsProps> =
             />
 
             <DeploymentActionsMenu
-                deploymentId={id}
+                deploymentId={deploymentId}
                 onActionClick={setActiveAction}
                 toolbox={toolbox}
                 trigger={
@@ -50,28 +66,28 @@ const DeploymentActionButtons: FunctionComponent<DeploymentActionButtonsProps> =
                         className="deploymentActionsButton labeled icon"
                         color="teal"
                         icon="content"
-                        disabled={!id}
+                        disabled={buttonsDisabled}
                         content="Deployment actions"
                     />
                 }
             />
 
-            {id && workflow && (
+            {isDeploymentFetched(fetchedDeploymentState) && deploymentId && workflow && (
                 <ExecuteDeploymentModal
                     open
-                    deploymentId={id}
-                    deploymentName={displayName}
+                    deploymentId={deploymentId}
+                    deploymentName={fetchedDeploymentState.data.display_name}
                     workflow={workflow}
                     onHide={resetWorkflow}
                     toolbox={toolbox}
                 />
             )}
 
-            {id && activeAction && (
+            {isDeploymentFetched(fetchedDeploymentState) && deploymentId && activeAction && (
                 <DeploymentActionsModals
                     activeAction={activeAction}
-                    deploymentId={id}
-                    deploymentName={displayName}
+                    deploymentId={deploymentId}
+                    deploymentName={fetchedDeploymentState.data.display_name}
                     onHide={resetActiveAction}
                     toolbox={toolbox}
                     redirectToParentPageAfterDelete={redirectToParentPageAfterDelete}
