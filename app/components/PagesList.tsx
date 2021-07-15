@@ -30,7 +30,7 @@ export interface PagesListState {
 }
 export default class PagesList extends Component<PagesListProps, PagesListState> {
     // eslint-disable-next-line react/static-property-placement
-    propTypes = {
+    static propTypes = {
         onPageSelected: PropTypes.func.isRequired,
         onPageRemoved: PropTypes.func.isRequired,
         onPageReorder: PropTypes.func.isRequired,
@@ -49,7 +49,7 @@ export default class PagesList extends Component<PagesListProps, PagesListState>
 
     // NOTE: TypeScript need static defaultProps to mark those props as non-optional in `this.props`
     // eslint-disable-next-line react/static-property-placement
-    defaultProps = {
+    static defaultProps = {
         selected: ''
     };
 
