@@ -29,6 +29,7 @@ import { setEditMode } from '../actions/config';
 import type { ReduxState } from '../reducers';
 import type { WidgetDefinition } from '../utils/StageAPI';
 import type { DrilldownContext } from '../reducers/drilldownContextReducer';
+import StageUtils from '../utils/stageUtils';
 
 export interface PageOwnProps {
     pageId: string;
@@ -62,15 +63,15 @@ class Page extends Component<PageProps, never> {
             page,
             pagesList
         } = this.props;
-        const maximizeWidget =
+        const hasMaximizedWidget =
             _(page.layout).flatMap('content').find({ maximized: true }) ||
             _(page.layout).flatMap('content').flatMap('widgets').find({ maximized: true });
 
-        document.body.style.overflow = maximizeWidget ? 'hidden' : 'inherit';
+        document.body.style.overflow = hasMaximizedWidget ? 'hidden' : 'inherit';
         window.scroll(0, 0);
 
         return (
-            <div className={`fullHeight ${maximizeWidget ? 'maximizeWidget' : ''}`}>
+            <div className={StageUtils.combineClassNames('fullHeight', hasMaximizedWidget && 'maximizeWidget')}>
                 <Breadcrumbs
                     pagesList={pagesList}
                     onPageNameChange={onPageNameChange}
