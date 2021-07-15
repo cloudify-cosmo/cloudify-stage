@@ -1,5 +1,7 @@
 // @ts-nocheck File not migrated fully to TS
+// @ts-expect-error Blueprint topology does not emit type declarations yet
 import { Topology as BlueprintTopology } from 'cloudify-blueprint-topology';
+import type { RefObject } from 'react';
 import { createExpandedTopology } from './DataProcessor';
 import ScrollerGlassHandler from './ScrollerGlassHandler';
 import TerraformDetailsModal from './TerraformDetailsModal';
@@ -22,13 +24,44 @@ function isNodesChanged(topologyNodes, newNodes) {
     return false;
 }
 
-function findExpandedNode(currentTopology, deploymentId) {
+interface TopologyProps {
+    toolbox: Stage.Types.Toolbox;
+    blueprintId: string;
+    configuration: unknown;
+    data: {
+        blueprintDeploymentData: unknown;
+        icons: Record<string, string>;
+        layout: unknown;
+    };
+    deploymentId: string;
+}
+
+function findExpandedNode(currentTopology: TopologyProps['data']['blueprintDeploymentData'], deploymentId: string) {
     return _.find(currentTopology.nodes, node => node.templateData.deploymentId === deploymentId);
 }
 
-export default class Topology extends React.Component {
-    constructor(props, context) {
-        super(props, context);
+interface TopologyState {
+    expandedDeployments: string[];
+    // eslint-disable-next-line camelcase
+    expandedTerraformNodes: { deployment_id: string; id: string }[];
+    saveConfirmationOpen: boolean;
+}
+
+export default class Topology extends React.Component<TopologyProps, TopologyState> {
+    private readonly glassRef: RefObject<unknown>;
+
+    private readonly topologyParentContainerRef: RefObject<unknown>;
+
+    private topologyData: unknown;
+
+    private topology: BlueprintTopology | null;
+
+    private processedTopologyData: unknown;
+
+    private readonly scrollerGlassHandler: ScrollerGlassHandler;
+
+    constructor(props: TopologyProps) {
+        super(props);
 
         this.glassRef = React.createRef();
         this.topologyParentContainerRef = React.createRef();
@@ -49,7 +82,7 @@ export default class Topology extends React.Component {
         this.startTopology();
     }
 
-    shouldComponentUpdate(nextProps, nextState) {
+    shouldComponentUpdate(nextProps: TopologyProps, nextState: TopologyState) {
         const { blueprintId, configuration, data, deploymentId } = this.props;
         return (
             !_.isEqual(blueprintId, nextProps.blueprintId) ||
@@ -60,7 +93,7 @@ export default class Topology extends React.Component {
         );
     }
 
-    componentDidUpdate(prevProps, prevState) {
+    componentDidUpdate(prevProps: TopologyProps, prevState: TopologyState) {
         const { blueprintId, configuration, data } = this.props;
         const { expandedDeployments, expandedTerraformNodes } = this.state;
 
@@ -102,8 +135,8 @@ export default class Topology extends React.Component {
         toolbox.getEventBus().off('deployments:refresh', toolbox.refresh);
     }
 
-    getExpandHandler(stateProp) {
-        return entityId => {
+    getExpandHandler(stateProp: keyof Pick<TopologyState, 'expandedDeployments' | 'expandedTerraformNodes'>) {
+        return (entityId: string) => {
             const { [stateProp]: currentExpanded } = this.state;
 
             if (_.find(currentExpanded, entityId)) {
@@ -115,8 +148,8 @@ export default class Topology extends React.Component {
         };
     }
 
-    getCollapseHandler(stateProp) {
-        return entityToCollapse => {
+    getCollapseHandler(stateProp: keyof Pick<TopologyState, 'expandedDeployments' | 'expandedTerraformNodes'>) {
+        return (entityToCollapse: unknown) => {
             const { [stateProp]: currentExpanded } = this.state;
             this.setState({ [stateProp]: _.reject(currentExpanded, entity => _.isEqual(entity, entityToCollapse)) });
         };
@@ -150,16 +183,21 @@ export default class Topology extends React.Component {
             enableDragEdit: false,
             enableDragToSelect: true,
             enableContextMenu: false,
+            // @ts-expect-error Blueprint topology does not emit type declarations yet
             onNodeSelected: node => this.setSelectedNode(node),
+            // @ts-expect-error Blueprint topology does not emit type declarations yet
             onDataProcessed: processedData => {
                 this.processedTopologyData = processedData;
             },
+            // @ts-expect-error Blueprint topology does not emit type declarations yet
             onDeploymentNodeClick: deploymentId => this.goToDeploymentPage(deploymentId),
             onExpandClick: this.getExpandHandler('expandedDeployments'),
             onCollapseClick: this.getCollapseHandler('expandedDeployments'),
+            // @ts-expect-error Blueprint topology does not emit type declarations yet
             onTerraformDetailsClick: node => this.setState({ terraformDetails: node.templateData.terraformResources }),
             onTerraformExpandClick: this.getExpandHandler('expandedTerraformNodes'),
             onTerraformCollapseClick: this.getCollapseHandler('expandedTerraformNodes'),
+            // @ts-expect-error Blueprint topology does not emit type declarations yet
             onLayoutSave: body =>
                 toolbox
                     .getInternal()
@@ -265,8 +303,8 @@ export default class Topology extends React.Component {
                     .flatMap('dependencies')
                     .compact()
                     .uniq()
-                    .forEach(dependency => {
-                        const [, dependencyName] = dependency.split('.');
+                    .forEach((dependency: string) => {
+                        const [dependencyName] = dependency.split('.').slice(-1);
                         const side1 = _.find(terraformDeploymentNodes, _.pick(resource, 'name'));
                         const side2 = _.find(terraformDeploymentNodes, { name: dependencyName });
                         const connector = {
