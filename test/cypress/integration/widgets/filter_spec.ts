@@ -18,8 +18,8 @@ describe('Filter', () => {
         cy.get('#dynamicDropdown1 > .label').should('have.length', 1);
 
         cy.get('#dynamicDropdown2').click();
-        cy.get('#dynamicDropdown2 .menu > *:eq(0)').should('have.text', 'app2.2');
-        cy.get('#dynamicDropdown2 .menu > *:eq(1)').should('have.text', 'uuu');
+        cy.get('#dynamicDropdown2 .menu > *:eq(0)').should('have.text', 'App 2.2 (app2.2)');
+        cy.get('#dynamicDropdown2 .menu > *:eq(1)').should('have.text', 'Eadu (uuu)');
         cy.get('#dynamicDropdown2 .menu > *').should('have.length', 2);
         cy.contains('uuu').click();
         cy.get('#dynamicDropdown2 > .label').should('have.length', 1);
