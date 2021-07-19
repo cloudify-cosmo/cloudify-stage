@@ -192,22 +192,41 @@ describe('Deployments View widget', () => {
         });
     });
 
-    it('should allow resizing the master-details view', () => {
+    it('should allow bounded resizing of the master-details view', () => {
         useDeploymentsViewWidget();
 
-        getDeploymentsViewTable().then(table => {
-            const initialWidth = table.width() ?? 0;
-            const resizeByPx = 200;
-
+        const resizePanes = (pxToResizeBy: number) =>
             getDeploymentsViewWidget()
                 .find('.master-details-view-resizer')
                 // NOTE: the absolute value of `clientX` does not matter. Only the difference matters
-                .trigger('mousedown', { clientX: resizeByPx })
-                .trigger('mousemove', { clientX: 0 })
-                .trigger('mouseup')
-                .then(() => {
-                    expect(initialWidth - resizeByPx).to.equal(table.width());
+                .trigger('mousedown', { clientX: 0 })
+                .trigger('mousemove', { clientX: pxToResizeBy })
+                .trigger('mouseup');
+
+        getDeploymentsViewTable().then(table => {
+            {
+                const initialWidth = table.width() ?? 0;
+                const resizeByPx = 200;
+                cy.log(`Increase the width by a small amount (${resizeByPx})`);
+                resizePanes(resizeByPx).then(() => {
+                    expect(initialWidth + resizeByPx).to.equal(table.width());
                 });
+            }
+
+            {
+                cy.log('Try to maximize the left pane');
+                const pxDefinitelyLargerThanScreenWidth = 1e5;
+                resizePanes(pxDefinitelyLargerThanScreenWidth);
+                getDeploymentsViewDetailsPane().should('be.visible');
+            }
+
+            {
+                cy.log('Try to maximize the right pane');
+                const pxDefinitelyLargerThanScreenWidth = -1e5;
+                resizePanes(pxDefinitelyLargerThanScreenWidth);
+                getDeploymentsViewTable().should('be.visible');
+                expect(table.width()).to.be.greaterThan(0);
+            }
         });
     });
 
