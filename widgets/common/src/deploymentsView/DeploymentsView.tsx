@@ -39,7 +39,7 @@ export interface DeploymentsViewProps {
     additionalFilterRules?: Stage.Common.Filters.Rule[];
 }
 
-const MIN_PANE_WIDTH = 100;
+const minPaneWidth = 100;
 
 export const DeploymentsView: FunctionComponent<DeploymentsViewProps> = ({
     toolbox,
@@ -169,8 +169,8 @@ export const DeploymentsView: FunctionComponent<DeploymentsViewProps> = ({
 
             <DeploymentsMasterDetailViewContainer>
                 <SplitPane
-                    minSize={MIN_PANE_WIDTH}
-                    maxSize={-MIN_PANE_WIDTH}
+                    minSize={minPaneWidth}
+                    maxSize={-minPaneWidth}
                     defaultSize="50%"
                     split="vertical"
                     resizerClassName="master-details-view-resizer"
