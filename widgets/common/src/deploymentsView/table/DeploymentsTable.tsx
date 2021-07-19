@@ -5,6 +5,7 @@ import { deploymentsViewColumnDefinitions, DeploymentsViewColumnId, deploymentsV
 import { i18nPrefix } from '../common';
 import renderDeploymentRow from './renderDeploymentRow';
 import type { Deployment } from '../types';
+import noDataImage from './no-data-image.png';
 
 const TableContainer = styled.div`
     position: relative;
@@ -20,6 +21,12 @@ const TableLoadingIndicator = styled(Stage.Basic.Loader)`
         transform: translate(-50%, 0);
     }
 `;
+const NoDataMessageTextWrapper = styled.p`
+    // NOTE: increases specificity to override Semantic UI's style
+    && {
+        margin-top: 1rem;
+    }
+`;
 
 interface DeploymentsTableProps {
     setGridParams: (params: Stage.Types.ManagerGridParams) => void;
@@ -31,6 +38,8 @@ interface DeploymentsTableProps {
     fieldsToShow: DeploymentsViewColumnId[];
     selectedDeployment: Deployment | undefined;
 }
+
+const tMessage = Stage.Utils.getT(`${i18nPrefix}.messages`);
 
 const DeploymentsTable: FunctionComponent<DeploymentsTableProps> = ({
     setGridParams,
@@ -54,8 +63,12 @@ const DeploymentsTable: FunctionComponent<DeploymentsTableProps> = ({
                 pageSize={pageSize}
                 selectable
                 sizeMultiplier={20}
-                // TODO(RD-1787): adjust `noDataMessage` to show the image
-                noDataMessage={Stage.i18n.t(`${i18nPrefix}.messages.noData`)}
+                noDataMessage={
+                    <>
+                        <NoDataMessageTextWrapper>{tMessage('noData')}</NoDataMessageTextWrapper>
+                        <img src={noDataImage} alt={tMessage('noDataImageAlt')} />
+                    </>
+                }
                 totalSize={totalSize}
                 searchable
             >
