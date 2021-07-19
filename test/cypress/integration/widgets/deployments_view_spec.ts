@@ -213,20 +213,15 @@ describe('Deployments View widget', () => {
                 });
             }
 
-            {
-                cy.log('Try to maximize the left pane');
-                const pxDefinitelyLargerThanScreenWidth = 1e5;
-                resizePanes(pxDefinitelyLargerThanScreenWidth);
-                getDeploymentsViewDetailsPane().should('be.visible');
-            }
+            cy.log('Try to maximize the left pane');
+            const pxDefinitelyLargerThanScreenWidth = 1e5;
+            resizePanes(pxDefinitelyLargerThanScreenWidth);
+            getDeploymentsViewDetailsPane().should('be.visible');
 
-            {
-                cy.log('Try to maximize the right pane');
-                const pxDefinitelyLargerThanScreenWidth = -1e5;
-                resizePanes(pxDefinitelyLargerThanScreenWidth);
-                getDeploymentsViewTable().should('be.visible');
-                expect(table.width()).to.be.greaterThan(0);
-            }
+            cy.log('Try to maximize the right pane');
+            resizePanes(-pxDefinitelyLargerThanScreenWidth);
+            getDeploymentsViewTable().should('be.visible');
+            expect(table.width()).to.be.greaterThan(0);
         });
     });
 
