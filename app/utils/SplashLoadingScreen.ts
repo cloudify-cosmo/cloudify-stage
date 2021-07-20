@@ -1,24 +1,39 @@
-// @ts-nocheck File not migrated fully to TS
-/**
- * Created by jakubniezgoda on 06/13/2017.
- */
-
-const SPLASH_DIV = $('div.splashPage');
-const ACTIVE_CLASS = 'active';
-const FADE_OUT_SPEED = 'slow';
+const splashDiv = document.querySelector<HTMLElement>('div.splashPage');
+const activeClass = 'active';
+const fadeOutSpeed = 300;
 
 export default class SplashLoadingScreen {
+    private static fadeOut() {
+        if (!splashDiv) {
+            throw new Error('Splash page element not found');
+        }
+        splashDiv.style.setProperty('opacity', '0');
+        setTimeout(() => {
+            splashDiv.style.removeProperty('opacity');
+            splashDiv.style.setProperty('display', 'none');
+        }, fadeOutSpeed);
+    }
+
     static turnOn() {
-        if (!SPLASH_DIV.hasClass(ACTIVE_CLASS)) {
-            SPLASH_DIV.show();
-            SPLASH_DIV.addClass(ACTIVE_CLASS);
+        if (!splashDiv) {
+            throw new Error('Splash page element not found');
+        }
+
+        if (!splashDiv.classList.contains(activeClass)) {
+            splashDiv.style.removeProperty('display');
+
+            splashDiv.classList.add(activeClass);
         }
     }
 
     static turnOff() {
-        if (SPLASH_DIV.hasClass(ACTIVE_CLASS)) {
-            SPLASH_DIV.fadeOut(FADE_OUT_SPEED);
-            SPLASH_DIV.removeClass(ACTIVE_CLASS);
+        if (!splashDiv) {
+            throw new Error('Splash page element not found');
+        }
+
+        if (splashDiv.classList.contains(activeClass)) {
+            SplashLoadingScreen.fadeOut();
+            splashDiv.classList.remove(activeClass);
         }
     }
 }
