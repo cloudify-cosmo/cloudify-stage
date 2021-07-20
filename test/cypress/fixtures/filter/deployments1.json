@@ -2,18 +2,22 @@
     "items": [
         {
             "id": "test",
+            "display_name": "Corellia",
             "blueprint_id": "Bp_with_component"
         },
         {
             "id": "test2",
+            "display_name": "Coruscant",
             "blueprint_id": "app"
         },
         {
             "id": "test3",
+            "display_name": "Dantooine",
             "blueprint_id": "component"
         },
         {
             "id": "uuu",
+            "display_name": "Eadu",
             "blueprint_id": "app2.2-clickme"
         }
     ],
