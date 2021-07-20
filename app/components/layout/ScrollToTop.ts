@@ -9,7 +9,11 @@ class ScrollToTop extends Component<RouteComponentProps> {
         const { location } = this.props;
 
         if (location !== prevProps.location) {
-            window.scrollTo(0, 0);
+            const mainContainer = document.querySelector<HTMLElement>('div.main');
+
+            if (mainContainer) {
+                mainContainer.scrollTo(0, 0);
+            }
         }
     }
 
