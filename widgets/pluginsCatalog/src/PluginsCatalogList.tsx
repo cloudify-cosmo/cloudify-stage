@@ -1,22 +1,52 @@
-// @ts-nocheck File not migrated fully to TS
-/**
- * Created by Tamer on 30/07/2017.
- */
-import PluginsCatalogModal from './PluginsCatalogModal';
-import Actions from './Actions';
+import type { ComponentProps, ComponentType } from 'react';
+import styled from 'styled-components';
 
-export default class PluginsCatalogList extends React.Component {
-    constructor(props, context) {
-        super(props, context);
+import PluginsCatalogModal, { PluginsCatalogModalProps } from './PluginsCatalogModal';
+import Actions from './Actions';
+import type { PluginDescriptionWithVersion, PluginsCatalogWidgetConfiguration } from './types';
+
+interface PluginsCatalogListProps {
+    items: PluginDescriptionWithVersion[];
+    widget: Stage.Types.Widget<PluginsCatalogWidgetConfiguration>;
+    toolbox: Stage.Types.Toolbox;
+}
+
+interface PluginsCatalogListState {
+    showModal: boolean;
+    plugin: PluginsCatalogModalProps['plugin'] | null;
+    /** Potentially holds a message after a successful upload */
+    success: string | null;
+}
+
+const UploadPluginButton: ComponentType<ComponentProps<typeof Stage.Basic.Button>> = styled(Stage.Basic.Button)`
+    // NOTE: increase specificity to override semantic-ui's style
+    &&& {
+        ${props =>
+            props.disabled &&
+            // NOTE: enables showing the title on a disabled button
+            // Uses `!important` to override semantic-ui's `!important`
+            // Count not be applied via inline `style` prop due to
+            // https://github.com/facebook/react/issues/1881
+            'pointer-events: auto !important;'}
+    }
+`;
+
+export default class PluginsCatalogList extends React.Component<PluginsCatalogListProps, PluginsCatalogListState> {
+    constructor(props: PluginsCatalogListProps) {
+        super(props);
         this.state = {
             showModal: false,
             plugin: null,
-            success: null,
-            selected: null
+            success: null
         };
     }
 
-    shouldComponentUpdate(nextProps, nextState) {
+    componentDidMount() {
+        const { toolbox } = this.props;
+        toolbox.getEventBus().on('plugins:refresh', this.refreshData, this);
+    }
+
+    shouldComponentUpdate(nextProps: PluginsCatalogListProps, nextState: PluginsCatalogListState) {
         const { items, widget } = this.props;
         return (
             !_.isEqual(items, nextProps.items) ||
@@ -25,39 +55,53 @@ export default class PluginsCatalogList extends React.Component {
         );
     }
 
-    onSuccess = msg => {
+    componentWillUnmount() {
+        const { toolbox } = this.props;
+        toolbox.getEventBus().off('plugins:refresh', this.refreshData);
+    }
+
+    private onSuccess: PluginsCatalogModalProps['onSuccess'] = msg => {
         this.setState({ success: msg });
     };
 
-    onUpload(plugin) {
+    private onUpload(plugin: PluginsCatalogModalProps['plugin']) {
         this.setState({ plugin });
         this.showModal();
     }
 
-    hideModal = () => {
+    private hideModal = () => {
         this.setState({ showModal: false });
     };
 
-    showModal() {
+    private refreshData = () => {
+        const { toolbox } = this.props;
+        toolbox.refresh();
+    };
+
+    private showModal() {
         this.setState({ showModal: true });
     }
 
     render() {
-        const { plugin, selected, showModal, success } = this.state;
+        const { plugin, showModal, success } = this.state;
         const { items: itemsProp, toolbox, widget } = this.props;
         const NO_DATA_MESSAGE = "There are no Plugins available in catalog. Check widget's configuration.";
-        const { DataTable, Message, Button } = Stage.Basic;
+        const { DataTable, Message } = Stage.Basic;
         const { PluginIcon } = Stage.Common;
 
         const distro = `${toolbox
             .getManager()
             .getDistributionName()
             .toLowerCase()} ${toolbox.getManager().getDistributionRelease().toLowerCase()}`;
-        let items = _.map(itemsProp, item => {
-            const wagon = _.find(item.wagons, w => w.name.toLowerCase() === distro || w.name.toLowerCase() === 'any');
-            return wagon ? { ...item, isSelected: item.title === selected, wagon } : undefined;
-        });
-        items = _.compact(items);
+        const plugins = _.compact(
+            _.map(itemsProp, item => {
+                const wagon = _.find(
+                    item.pluginDescription.wagons,
+                    w => w.name.toLowerCase() === distro || w.name.toLowerCase() === 'any'
+                );
+                return wagon ? { ...item.pluginDescription, wagon, uploadedVersion: item.uploadedVersion } : undefined;
+            })
+        );
 
         return (
             <div>
@@ -67,14 +111,15 @@ export default class PluginsCatalogList extends React.Component {
                     </Message>
                 )}
 
-                <DataTable noDataAvailable={items.length === 0} selectable noDataMessage={NO_DATA_MESSAGE}>
+                <DataTable noDataAvailable={plugins.length === 0} selectable noDataMessage={NO_DATA_MESSAGE}>
                     <DataTable.Column width="2%" />
                     <DataTable.Column label="Name" width="20%" />
                     <DataTable.Column label="Description" width="60%" />
                     <DataTable.Column label="Version" width="10%" />
+                    <DataTable.Column label="Uploaded version" width="10%" />
                     <DataTable.Column width="5%" />
 
-                    {items.map(item => {
+                    {plugins.map(item => {
                         return (
                             <DataTable.Row key={item.title}>
                                 <DataTable.Data>
@@ -83,17 +128,23 @@ export default class PluginsCatalogList extends React.Component {
                                 <DataTable.Data>{item.title}</DataTable.Data>
                                 <DataTable.Data>{item.description}</DataTable.Data>
                                 <DataTable.Data>{item.version}</DataTable.Data>
+                                <DataTable.Data>{item.uploadedVersion ?? '-'}</DataTable.Data>
                                 <DataTable.Data className="center aligned">
-                                    <Button
+                                    <UploadPluginButton
                                         icon="upload"
                                         onClick={event => {
                                             event.preventDefault();
                                             this.onUpload({
-                                                ...item.wagon,
-                                                ..._.pick(item, 'title', 'icon'),
+                                                url: item.wagon.url,
+                                                title: item.title,
+                                                icon: item.icon,
                                                 yamlUrl: item.link
                                             });
                                         }}
+                                        // eslint-disable-next-line react/jsx-props-no-spreading
+                                        {...(item.version === item.uploadedVersion
+                                            ? { disabled: true, title: 'Latest version is already uploaded' }
+                                            : { disabled: false, title: 'Upload plugin' })}
                                     />
                                 </DataTable.Data>
                             </DataTable.Row>
@@ -103,32 +154,15 @@ export default class PluginsCatalogList extends React.Component {
 
                 <PluginsCatalogModal
                     open={showModal}
-                    plugin={plugin}
+                    // SAFETY: `plugin` will always be non-null when `showModal` is true
+                    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+                    plugin={plugin!}
                     onSuccess={this.onSuccess}
                     onHide={this.hideModal}
                     toolbox={toolbox}
-                    actions={
-                        new Actions({
-                            toolbox,
-                            ...widget.configuration
-                        })
-                    }
+                    actions={new Actions(toolbox, widget.configuration.jsonPath)}
                 />
             </div>
         );
     }
 }
-
-PluginsCatalogList.propTypes = {
-    items: PropTypes.arrayOf(
-        PropTypes.shape({
-            description: PropTypes.string,
-            icon: PropTypes.string,
-            link: PropTypes.string,
-            title: PropTypes.string,
-            version: PropTypes.string
-        })
-    ).isRequired,
-    toolbox: Stage.PropTypes.Toolbox.isRequired,
-    widget: Stage.PropTypes.Widget.isRequired
-};
