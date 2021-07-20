@@ -30,7 +30,7 @@ spec:
       runAsUser: 0
       privileged: true
     volumeMounts:
-      - mountPath: "/"
+      - mountPath: "/mnt/data"
         name: pipelines-efs-volume
   - name: rpmbuild
     image: rpmbuild/centos7
