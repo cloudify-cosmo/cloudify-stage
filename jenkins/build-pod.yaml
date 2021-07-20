@@ -47,6 +47,9 @@ spec:
     securityContext:
       runAsUser: 0
       privileged: true
+    volumeMounts:
+      - mountPath: "/mnt/data"
+        name: pipelines-efs-volume
   - name: postgres
     image: postgres:latest
     ports:
