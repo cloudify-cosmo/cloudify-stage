@@ -7,7 +7,7 @@ import _ from 'lodash';
 import log from 'loglevel';
 import PropTypes from 'prop-types';
 import i18n from 'i18next';
-import React, { Component, createRef } from 'react';
+import React, { Component } from 'react';
 import { getToolbox } from '../utils/Toolbox';
 import WidgetParamsHandler from '../utils/WidgetParamsHandler';
 import { ErrorMessage } from './basic';
@@ -20,7 +20,6 @@ export default class WidgetDynamicContent extends Component {
         this.state = {
             loading: false
         };
-        this.attachedEvents = createRef<Record<string, any>>({});
         this.loadingTimeout = null;
         this.pollingTimeout = null;
         this.fetchDataPromise = null;
@@ -219,57 +218,6 @@ export default class WidgetDynamicContent extends Component {
         return Promise.resolve();
     }
 
-    attachEvents(container) {
-        const { data, widget } = this.props;
-
-        if (widget.definition && widget.definition.events) {
-            try {
-                _.each(
-                    widget.definition.events,
-                    event => {
-                        if (!event || !event.selector || !event.event || !event.fn) {
-                            log.warn('Cannot attach event, missing data. Event data is ', event);
-                            return;
-                        }
-
-                        if (!container) {
-                            log.warn('Cannot attach event, missing container element. Event data is ', event);
-                            return;
-                        }
-
-                        if (this.attachedEvents.current === null) {
-                            this.attachedEvents.current = {};
-                        }
-
-                        if (this.attachedEvents.current[`${event.selector}_${event}`]) {
-                            container
-                                .querySelector(event.selector)
-                                .removeEventListener(
-                                    event.event,
-                                    this.attachedEvents.current[`${event.selector}_${event}`]
-                                );
-                        }
-
-                        this.attachedEvents.current[`${event.selector}_${event}`] = e => {
-                            event.fn(e, widget, this.getToolbox());
-                        };
-
-                        container
-                            .querySelector(event.selector)
-                            .addEventListener(event.event, this.attachedEvents.current[`${event.selector}_${event}`]);
-                    },
-                    this
-                );
-            } catch (e) {
-                log.error('Error attaching events to widget', e);
-            }
-        }
-
-        if (widget.definition.postRender) {
-            widget.definition.postRender($(container), widget, data.data, this.getToolbox());
-        }
-    }
-
     renderReact() {
         const { data, widget } = this.props;
         if (data.error) {
@@ -347,7 +295,6 @@ export default class WidgetDynamicContent extends Component {
                         className={baseWidgetContentClassName}
                         /* eslint-disable-next-line react/no-danger */
                         dangerouslySetInnerHTML={this.renderWidget()}
-                        ref={container => this.attachEvents(container)}
                     />
                 )}
             </div>
