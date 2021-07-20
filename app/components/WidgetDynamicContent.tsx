@@ -218,36 +218,6 @@ export default class WidgetDynamicContent extends Component {
         return Promise.resolve();
     }
 
-    attachEvents(container) {
-        const { data, widget } = this.props;
-        if (widget.definition && widget.definition.events) {
-            try {
-                _.each(
-                    widget.definition.events,
-                    event => {
-                        if (!event || !event.selector || !event.event || !event.fn) {
-                            log.warn('Cannot attach event, missing data. Event data is ', event);
-                            return;
-                        }
-                        $(container).find(event.selector).off(event.event);
-                        $(container)
-                            .find(event.selector)
-                            .on(event.event, e => {
-                                event.fn(e, widget, this.getToolbox());
-                            });
-                    },
-                    this
-                );
-            } catch (e) {
-                log.error('Error attaching events to widget', e);
-            }
-        }
-
-        if (widget.definition.postRender) {
-            widget.definition.postRender($(container), widget, data.data, this.getToolbox());
-        }
-    }
-
     renderReact() {
         const { data, widget } = this.props;
         if (data.error) {
@@ -325,7 +295,6 @@ export default class WidgetDynamicContent extends Component {
                         className={baseWidgetContentClassName}
                         /* eslint-disable-next-line react/no-danger */
                         dangerouslySetInnerHTML={this.renderWidget()}
-                        ref={container => this.attachEvents(container)}
                     />
                 )}
             </div>
