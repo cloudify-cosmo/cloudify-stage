@@ -9,7 +9,10 @@ describe('Filter', () => {
 
     it('fills dropdowns with correct data', () => {
         cy.interceptSp('GET', /blueprints.*state=uploaded/, { fixture: 'filter/blueprints.json' });
-        cy.interceptSp('GET', /deployments.*offset=0/, { fixture: 'filter/deployments0.json' });
+        cy.interceptSp('GET', /deployments.*offset=0&_search=ead&_search_name=ead/, {
+            fixture: 'filter/deployments0.json'
+        }).as('fetchFilteredDeployments');
+        cy.interceptSp('GET', /deployments.*offset=0/, { fixture: 'filter/deployments0.json' }).as('fetchDeployments');
         cy.interceptSp('GET', /deployments.*offset=20/, { fixture: 'filter/deployments1.json' });
         cy.interceptSp('GET', '/executions', { fixture: 'filter/executions.json' });
 
@@ -21,6 +24,14 @@ describe('Filter', () => {
         cy.get('#dynamicDropdown2 .menu > *:eq(0)').should('have.text', 'App 2.2 (app2.2)');
         cy.get('#dynamicDropdown2 .menu > *:eq(1)').should('have.text', 'Eadu (uuu)');
         cy.get('#dynamicDropdown2 .menu > *').should('have.length', 2);
+
+        cy.get('#dynamicDropdown2 input').type('ead');
+        cy.wait('@fetchFilteredDeployments');
+        cy.get('#dynamicDropdown2 .menu > *').should('have.length', 1);
+        cy.get('#dynamicDropdown2 input').clear();
+        cy.wait('@fetchDeployments');
+        cy.get('#dynamicDropdown2 .menu > *').should('have.length', 2);
+
         cy.contains('uuu').click();
         cy.get('#dynamicDropdown2 > .label').should('have.length', 1);
 
