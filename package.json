@@ -58,7 +58,6 @@
     "i18next": "^19.8.3",
     "isomorphic-fetch": "^3.0.0",
     "jquery": "^3.5.0",
-    "jquery-ui": "^1.12.1",
     "js-cookie": "^2.1.4",
     "jszip": "^3.6.0",
     "leaflet": "^1.7.1",
