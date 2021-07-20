@@ -5,6 +5,8 @@ def secrets = [
 
 def configuration = [vaultUrl: "${env.VAULT_URL}",  vaultCredentialId: 'vault-app-role', engineVersion: 2]
 
+@Library('pipeline-shared-library@RD-166-use-caching') _
+
 pipeline {
   agent {
     kubernetes {
@@ -57,9 +59,10 @@ pipeline {
                   """
                 }
                 dir("${STAGE_DIR}") {
-                  sh 'sleep 9000'
+                  restoreCache('~/.npm', 'package-lock.json', 'stage-mb')
                   echo "Install dependencies"
                   sh 'npm run beforebuild'
+                  saveCache('~/.npm', 'package-lock.json', 'stage-mb')
                   echo "Build application"
                   sh 'npm run build'
                 }
@@ -76,49 +79,49 @@ pipeline {
             }
           }
         }
-        stage('Build RPM'){
-          steps {
-            container('rpmbuild'){
-              echo 'Create RPM directory and copy all data from build stage to, for rpmbuild to run'
-              sh """
-                cd && mkdir rpmbuild && cd rpmbuild
-                mkdir -p BUILD && cp -rf ${WORKSPACE}/${STAGE_DIR}/. BUILD && cd BUILD
-                curl -fO "${CFY_MANAGER_URL}/${BRANCH}/packaging/version_info" || curl -fO "${CFY_MANAGER_URL}/${MAIN_BRANCH}/packaging/version_info"
-              """
+        // stage('Build RPM'){
+        //   steps {
+        //     container('rpmbuild'){
+        //       echo 'Create RPM directory and copy all data from build stage to, for rpmbuild to run'
+        //       sh """
+        //         cd && mkdir rpmbuild && cd rpmbuild
+        //         mkdir -p BUILD && cp -rf ${WORKSPACE}/${STAGE_DIR}/. BUILD && cd BUILD
+        //         curl -fO "${CFY_MANAGER_URL}/${BRANCH}/packaging/version_info" || curl -fO "${CFY_MANAGER_URL}/${MAIN_BRANCH}/packaging/version_info"
+        //       """
 
-              echo 'Install NodeJS & RPM development tools'
-              sh "yum install -y ${CFY_NODE_RPM} rpmdevtools rpmlint"
+        //       echo 'Install NodeJS & RPM development tools'
+        //       sh "yum install -y ${CFY_NODE_RPM} rpmdevtools rpmlint"
 
-              echo 'Lint RPM spec file & Install build dependencies for RPM spec file'
-              sh '''
-                cd ~/rpmbuild/BUILD
-                rpmlint --info packaging/cloudify-stage.spec
-                for i in {1..10}; do yum-builddep -y packaging/cloudify-stage.spec && break || sleep 5; done
-              '''
+        //       echo 'Lint RPM spec file & Install build dependencies for RPM spec file'
+        //       sh '''
+        //         cd ~/rpmbuild/BUILD
+        //         rpmlint --info packaging/cloudify-stage.spec
+        //         for i in {1..10}; do yum-builddep -y packaging/cloudify-stage.spec && break || sleep 5; done
+        //       '''
 
-              echo 'Download sources for RPM spec file & Build RPM'
-              sh '''
-                cd ~/rpmbuild/BUILD && source ./version_info
-                spectool \
-                  -d "CLOUDIFY_VERSION $CLOUDIFY_VERSION" \
-                  -d "CLOUDIFY_PACKAGE_RELEASE $CLOUDIFY_PACKAGE_RELEASE" \
-                  -P packaging/cloudify-stage.spec \
-                  -S -g
+        //       echo 'Download sources for RPM spec file & Build RPM'
+        //       sh '''
+        //         cd ~/rpmbuild/BUILD && source ./version_info
+        //         spectool \
+        //           -d "CLOUDIFY_VERSION $CLOUDIFY_VERSION" \
+        //           -d "CLOUDIFY_PACKAGE_RELEASE $CLOUDIFY_PACKAGE_RELEASE" \
+        //           -P packaging/cloudify-stage.spec \
+        //           -S -g
 
-                rpmbuild \
-                  -D "CLOUDIFY_VERSION $CLOUDIFY_VERSION" \
-                  -D "CLOUDIFY_PACKAGE_RELEASE $CLOUDIFY_PACKAGE_RELEASE" \
-                  -bb packaging/cloudify-stage.spec
-              '''
+        //         rpmbuild \
+        //           -D "CLOUDIFY_VERSION $CLOUDIFY_VERSION" \
+        //           -D "CLOUDIFY_PACKAGE_RELEASE $CLOUDIFY_PACKAGE_RELEASE" \
+        //           -bb packaging/cloudify-stage.spec
+        //       '''
 
-              echo 'Save Artifacts'
-              sh("mkdir -p ${WORKSPACE}/rpm && cp -rf /root/rpmbuild/RPMS/x86_64/. ${WORKSPACE}/rpm")
-              dir("${WORKSPACE}/rpm") {
-                archiveArtifacts artifacts: '*.rpm', onlyIfSuccessful: true
-              }
-            }
-          }
-        }
+        //       echo 'Save Artifacts'
+        //       sh("mkdir -p ${WORKSPACE}/rpm && cp -rf /root/rpmbuild/RPMS/x86_64/. ${WORKSPACE}/rpm")
+        //       dir("${WORKSPACE}/rpm") {
+        //         archiveArtifacts artifacts: '*.rpm', onlyIfSuccessful: true
+        //       }
+        //     }
+        //   }
+        // }
       }
     }
     stage('Run second tests group') {
