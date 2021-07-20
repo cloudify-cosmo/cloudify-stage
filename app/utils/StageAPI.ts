@@ -139,7 +139,11 @@ export type { StageWidgetData as WidgetData };
 export function isEmptyWidgetData(data: unknown): data is Record<string, never> | undefined {
     return (
         data === undefined ||
-        (typeof data === 'object' && data !== null && !Array.isArray(data) && Object.keys(data).length === 0)
+        (typeof data === 'object' &&
+            data !== null &&
+            !Array.isArray(data) &&
+            Object.keys(data).length === 0 &&
+            !(data instanceof Error))
     );
 }
 
