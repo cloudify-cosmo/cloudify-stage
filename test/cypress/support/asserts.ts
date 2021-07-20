@@ -10,7 +10,7 @@ declare global {
 }
 
 const commands = {
-    verifyLocation: (pathname: string, context: Record<string, any>[], pageName: string) => {
+    verifyLocation: (pathname: string, context: Record<string, any>, pageName: string) => {
         cy.location('pathname').should('be.equal', pathname);
 
         cy.location('search').then(queryString => {

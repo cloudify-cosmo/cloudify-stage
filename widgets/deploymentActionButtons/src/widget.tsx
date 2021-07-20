@@ -5,7 +5,8 @@ import DeploymentActionButtons from './DeploymentActionButtons';
 interface WidgetParams {
     id: string | null | undefined;
 }
-type WidgetData = ComponentProps<typeof DeploymentActionButtons>['deployment'];
+type UnwrapPromise<T extends Promise<any>> = T extends Promise<infer U> ? U : never;
+type WidgetData = UnwrapPromise<ReturnType<Stage.Common.DeploymentActions['doGetWorkflows']>> | Error;
 interface WidgetConfiguration {
     preventRedirectToParentPageAfterDelete?: boolean;
 }
@@ -35,7 +36,7 @@ Stage.defineWidget<WidgetParams, WidgetData, WidgetConfiguration>({
 
     fetchData(_widget, toolbox, { id }) {
         if (!id) {
-            return Promise.resolve({ id: '', workflows: [] });
+            return Promise.resolve(new Error('No deployment selected, cannot determine deployment ID'));
         }
 
         const { DeploymentActions } = Stage.Common;
@@ -45,27 +46,34 @@ Stage.defineWidget<WidgetParams, WidgetData, WidgetConfiguration>({
     },
 
     fetchParams(_widget, toolbox): WidgetParams {
-        const deploymentId = toolbox.getContext().getValue('deploymentId');
-        // Deployment Actions Buttons widget does not support multiple actions, thus picking only one deploymentId
-        const firstDeploymentId = castArray(deploymentId)[0] as WidgetParams['id'];
-
-        return { id: firstDeploymentId };
+        return { id: getDeploymentIdFromContext(toolbox) };
     },
 
     render(widget, data, _error, toolbox) {
-        const { Loading } = Stage.Basic;
-
-        // TODO(RD-1827): move the loading indicator to the individual buttons, so they are always shown
-        if (Stage.Utils.isEmptyWidgetData(data)) {
-            return <Loading />;
-        }
+        const fetchedDeploymentState: ComponentProps<
+            typeof DeploymentActionButtons
+            // eslint-disable-next-line no-nested-ternary
+        >['fetchedDeploymentState'] = Stage.Utils.isEmptyWidgetData(data)
+            ? { status: 'loading' }
+            : data instanceof Error
+            ? { status: 'error', error: data }
+            : { status: 'success', data };
 
         return (
             <DeploymentActionButtons
-                deployment={data}
+                deploymentId={getDeploymentIdFromContext(toolbox)}
+                fetchedDeploymentState={fetchedDeploymentState}
                 toolbox={toolbox}
                 redirectToParentPageAfterDelete={!widget.configuration.preventRedirectToParentPageAfterDelete}
             />
         );
     }
 });
+
+const getDeploymentIdFromContext = (toolbox: Stage.Types.Toolbox) => {
+    const deploymentId = toolbox.getContext().getValue('deploymentId');
+    // Deployment Actions Buttons widget does not support multiple actions, thus picking only one deploymentId
+    const firstDeploymentId = castArray(deploymentId)[0] as WidgetParams['id'];
+
+    return firstDeploymentId;
+};
