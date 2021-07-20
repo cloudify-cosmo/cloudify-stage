@@ -4,7 +4,7 @@ spec:
   volumes:
     - name: pipelines-efs-volume
       persistentVolumeClaim:
-        claimName: piplines-efs
+        claimName: pipelines-efs
   containers:
   - name: jnlp
     image: jenkins/inbound-agent:4.3-4
