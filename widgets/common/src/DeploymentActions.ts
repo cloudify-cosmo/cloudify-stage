@@ -157,7 +157,8 @@ export default class DeploymentActions {
             .then(({ items }) => items);
     }
 
-    doGetWorkflows(deploymentId: string) {
+    // eslint-disable-next-line camelcase
+    doGetWorkflows(deploymentId: string): Promise<{ id: string; display_name: string; workflows: unknown[] }> {
         return this.toolbox.getManager().doGet(`/deployments/${deploymentId}?_include=id,display_name,workflows`);
     }
 

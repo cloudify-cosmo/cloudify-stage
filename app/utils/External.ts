@@ -284,7 +284,9 @@ export default class External {
 
     // eslint-disable-next-line class-methods-use-this
     protected buildActualUrl(url: string, data?: Record<string, any>) {
-        const queryString = data ? (url.indexOf('?') > 0 ? '&' : '?') + stringifyQueryString(data) : '';
+        const queryString = data
+            ? (url.indexOf('?') > 0 ? '&' : '?') + stringifyQueryString(data, { sort: false })
+            : '';
         return `${url}${queryString}`;
     }
 

@@ -1,7 +1,13 @@
 import combineClassNames from 'utils/shared/combineClassNames';
 
 describe('(Utils) combineClassNames', () => {
-    const cases = [
+    interface TestCase {
+        description: string;
+        classNames: Parameters<typeof combineClassNames>;
+        expectedResult: string;
+    }
+
+    const cases: TestCase[] = [
         {
             description: 'a single string',
             classNames: ['a'],
@@ -21,12 +27,17 @@ describe('(Utils) combineClassNames', () => {
             description: 'all falsy values',
             classNames: [false, 0, ''],
             expectedResult: ''
+        },
+        {
+            description: 'nested arrays',
+            classNames: [['a', 'b'], 'c', ['d'], false && 'e', false],
+            expectedResult: 'a b c d'
         }
     ];
 
     cases.forEach(c => {
         it(`should work for ${c.description}`, () => {
-            const result = combineClassNames(c.classNames);
+            const result = combineClassNames(...c.classNames);
             expect(result).toEqual(c.expectedResult);
         });
     });

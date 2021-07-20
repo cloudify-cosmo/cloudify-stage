@@ -4,7 +4,6 @@
         "types": ["react", "react-dom", "moment", "lodash"],
         "plugins": [{ "name": "typescript-styled-plugin" }]
     },
-    "files": ["../app/typings/stage-api.d.ts"],
-    "include": ["**/*", "**/*.json"],
+    "include": ["**/*", "**/*.json", "../app/typings"],
     "references": [{ "path": "../app" }]
 }

@@ -34,6 +34,7 @@ Stage.defineWidget({
                 'Type',
                 'Blueprint',
                 'Deployment',
+                'Deployment Id',
                 'Workflow',
                 'Operation',
                 'Node Id',

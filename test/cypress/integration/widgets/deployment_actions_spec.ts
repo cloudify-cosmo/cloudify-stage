@@ -16,7 +16,7 @@ describe('Deployment Action Buttons widget', () => {
             .deployBlueprint(blueprintName, deploymentId, { server_ip: '127.0.0.1' }, { display_name: deploymentName })
     );
 
-    it('when deploymentId is not set in the context it should be disabled', () => {
+    it('should be disabled when deploymentId is not set in the context', () => {
         cy.contains('button', 'Execute workflow').should('have.attr', 'disabled');
         cy.contains('button', 'Deployment actions').should('have.attr', 'disabled');
     });

@@ -74,6 +74,10 @@ export default class EventsTable extends React.Component {
         return toolbox.refresh(fetchParams);
     };
 
+    isOneElementLike = (collection: unknown): boolean => {
+        return _.size(collection) === 1;
+    };
+
     hideErrorCausesModal = () => {
         this.setState({ errorCauses: [], showErrorCausesModal: false });
     };
@@ -119,56 +123,62 @@ export default class EventsTable extends React.Component {
                     className="eventsTable"
                     noDataMessage={NO_DATA_MESSAGE}
                 >
-                    <DataTable.Column label="" width="40px" show={fieldsToShow.indexOf('Icon') >= 0} />
+                    <DataTable.Column label="" width="40px" show={fieldsToShow.includes('Icon')} />
                     <DataTable.Column
                         label="Timestamp"
                         name="timestamp"
                         width="10%"
-                        show={fieldsToShow.indexOf('Timestamp') >= 0}
+                        show={fieldsToShow.includes('Timestamp')}
                     />
-                    <DataTable.Column label="Type" name="event_type" show={fieldsToShow.indexOf('Type') >= 0} />
+                    <DataTable.Column label="Type" name="event_type" show={fieldsToShow.includes('Type')} />
                     <DataTable.Column
                         label="Blueprint"
                         name="blueprint_id"
                         show={
-                            _.size(data.blueprintId) !== 1 &&
-                            _.size(data.deploymentId) !== 1 &&
-                            _.size(data.nodeInstanceId) !== 1 &&
-                            _.size(data.executionId) !== 1 &&
-                            fieldsToShow.indexOf('Blueprint') >= 0
+                            !this.isOneElementLike(data.blueprintId) &&
+                            !this.isOneElementLike(data.deploymentId) &&
+                            !this.isOneElementLike(data.nodeInstanceId) &&
+                            !this.isOneElementLike(data.executionId) &&
+                            fieldsToShow.includes('Blueprint')
                         }
                     />
                     <DataTable.Column
                         label="Deployment"
+                        name="deployment_display_name"
+                        show={
+                            !this.isOneElementLike(data.deploymentId) &&
+                            !this.isOneElementLike(data.nodeInstanceId) &&
+                            !this.isOneElementLike(data.executionId) &&
+                            fieldsToShow.includes('Deployment')
+                        }
+                    />
+                    <DataTable.Column
+                        label="Deployment Id"
                         name="deployment_id"
                         show={
-                            _.size(data.deploymentId) !== 1 &&
-                            _.size(data.nodeInstanceId) !== 1 &&
-                            _.size(data.executionId) !== 1 &&
-                            fieldsToShow.indexOf('Deployment') >= 0
+                            !this.isOneElementLike(data.deploymentId) &&
+                            !this.isOneElementLike(data.nodeInstanceId) &&
+                            !this.isOneElementLike(data.executionId) &&
+                            fieldsToShow.includes('Deployment Id')
                         }
                     />
                     <DataTable.Column
                         label="Node Id"
                         name="node_name"
-                        show={_.size(data.nodeInstanceId) !== 1 && fieldsToShow.indexOf('Node Id') >= 0}
+                        show={!this.isOneElementLike(data.nodeInstanceId) && fieldsToShow.includes('Node Id')}
                     />
                     <DataTable.Column
                         label="Node Instance Id"
                         name="node_instance_id"
-                        show={_.size(data.nodeInstanceId) !== 1 && fieldsToShow.indexOf('Node Instance Id') >= 0}
+                        show={!this.isOneElementLike(data.nodeInstanceId) && fieldsToShow.includes('Node Instance Id')}
                     />
                     <DataTable.Column
                         label="Workflow"
                         name="workflow_id"
-                        show={_.size(data.executionId) !== 1 && fieldsToShow.indexOf('Workflow') >= 0}
+                        show={!this.isOneElementLike(data.executionId) && fieldsToShow.includes('Workflow')}
                     />
-                    <DataTable.Column
-                        label="Operation"
-                        name="operation"
-                        show={fieldsToShow.indexOf('Operation') >= 0}
-                    />
-                    <DataTable.Column label="Message" show={fieldsToShow.indexOf('Message') >= 0} />
+                    <DataTable.Column label="Operation" name="operation" show={fieldsToShow.includes('Operation')} />
+                    <DataTable.Column label="Message" show={fieldsToShow.includes('Message')} />
                     {data.items.map(item => {
                         const isEventType = item.type === EventUtils.eventType;
                         const showErrorCausesIcon = !_.isEmpty(item.error_causes);
@@ -225,6 +235,7 @@ export default class EventsTable extends React.Component {
                                 <DataTable.Data className="alignCenter noWrap">{item.timestamp}</DataTable.Data>
                                 <DataTable.Data>{eventName}</DataTable.Data>
                                 <DataTable.Data>{item.blueprint_id}</DataTable.Data>
+                                <DataTable.Data>{item.deployment_display_name}</DataTable.Data>
                                 <DataTable.Data>{item.deployment_id}</DataTable.Data>
                                 <DataTable.Data>{item.node_name}</DataTable.Data>
                                 <DataTable.Data>{item.node_instance_id}</DataTable.Data>
@@ -285,6 +296,7 @@ EventsTable.propTypes = {
             PropTypes.shape({
                 blueprint_id: PropTypes.string,
                 deployment_id: PropTypes.string,
+                deployment_display_name: PropTypes.string,
                 error_causes: ErrorCausesPropType,
                 event_type: PropTypes.string,
                 id: PropTypes.number,

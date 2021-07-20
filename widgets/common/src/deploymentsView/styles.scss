@@ -72,11 +72,14 @@ $deploymentProgressBarColors: (
 
         cursor: col-resize;
         width: $initialWidth;
+        // NOTE: min-width fixes the bar disappearing when there is little room for it
+        min-width: $initialWidth;
         margin: 0 $horizontalMargin;
         background-color: $grey-normal;
 
         &:hover {
             width: $widthOnHover;
+            min-width: $widthOnHover;
             background-color: $grey-dark;
             margin: 0 ($horizontalMargin - ($widthOnHover - $initialWidth) / 2);
         }

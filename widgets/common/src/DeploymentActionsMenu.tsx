@@ -1,4 +1,5 @@
-// @ts-nocheck File not migrated fully to TS
+import type { ReactNode, ComponentProps } from 'react';
+
 export const actions = Object.freeze({
     delete: 'delete',
     forceDelete: 'forceDelete',
@@ -9,7 +10,7 @@ export const actions = Object.freeze({
     update: 'update'
 });
 
-const translate = (key, params) => Stage.i18n.t(`widgets.common.deployments.actionsMenu.${key}`, params);
+const translate = Stage.Utils.getT('widgets.common.deployments.actionsMenu');
 const menuItems = [
     { name: actions.install, icon: 'play', permission: 'execution_start' },
     { name: actions.update, icon: 'edit', permission: 'deployment_update_create' },
@@ -20,7 +21,13 @@ const menuItems = [
     { name: actions.forceDelete, icon: 'trash', permission: 'deployment_delete' }
 ];
 
-export default function DeploymentActionsMenu({ onActionClick, toolbox, trigger }) {
+interface DeploymentActionsMenuProps {
+    onActionClick: (actionName: string) => void;
+    toolbox: Stage.Types.Toolbox;
+    trigger: ReactNode;
+}
+
+export default function DeploymentActionsMenu({ onActionClick, toolbox, trigger }: DeploymentActionsMenuProps) {
     const {
         Basic: { Menu, Popup, PopupMenu },
         Utils: { isUserAuthorized },
@@ -38,13 +45,16 @@ export default function DeploymentActionsMenu({ onActionClick, toolbox, trigger 
         ? { bordered: true, help: i18n.t('widgets.common.deployments.actionsMenu.tooltip'), offset: [0, 5] }
         : {};
 
-    function onItemClick(event, { name }) {
-        onActionClick(name);
-    }
+    const onItemClick: ComponentProps<typeof Menu>['onItemClick'] = (_event, { name }) => {
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        onActionClick(name!);
+    };
 
     return (
         // eslint-disable-next-line react/jsx-props-no-spreading
         <PopupMenu className="deploymentActionsMenu" {...popupMenuProps}>
+            {/* TODO(RD-2760): remove the warning after Popup.Trigger can accept `children` */}
+            {/* @ts-expect-error Popup.Trigger does not accept `children` prop */}
             {trigger && <Popup.Trigger>{trigger}</Popup.Trigger>}
             <Menu pointing vertical onItemClick={onItemClick} items={items} />
         </PopupMenu>
@@ -60,6 +70,12 @@ DeploymentActionsMenu.propTypes = {
 DeploymentActionsMenu.defaultProps = {
     trigger: null
 };
+
+declare global {
+    namespace Stage.Common {
+        export { DeploymentActionsMenu };
+    }
+}
 
 Stage.defineCommon({
     name: 'DeploymentActionsMenu',
