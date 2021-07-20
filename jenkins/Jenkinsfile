@@ -59,10 +59,10 @@ pipeline {
                   """
                 }
                 dir("${STAGE_DIR}") {
-                  restoreCache('~/.npm', 'package-lock.json', 'stage-mb')
+                  restoreCache('~/.npm', "${WORKSPACE}/${STAGE_DIR}/package-lock.json", 'stage-mb')
                   echo "Install dependencies"
                   sh 'npm run beforebuild'
-                  saveCache('~/.npm', 'package-lock.json', 'stage-mb')
+                  saveCache('~/.npm', "${WORKSPACE}/${STAGE_DIR}/package-lock.json", 'stage-mb')
                   echo "Build application"
                   sh 'npm run build'
                 }
