@@ -57,6 +57,7 @@ pipeline {
                   """
                 }
                 dir("${STAGE_DIR}") {
+                  sh 'sleep 9000'
                   echo "Install dependencies"
                   sh 'npm run beforebuild'
                   echo "Build application"
