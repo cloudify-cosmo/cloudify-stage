@@ -10,7 +10,6 @@ import { stringify as stringifyQueryString } from 'query-string';
 import StageUtils from './stageUtils';
 import Interceptor from './Interceptor';
 import { LICENSE_ERR, UNAUTHORIZED_ERR } from './ErrorCodes';
-import getQueryParamSorter from './getQueryParamSorter';
 
 /*
 Text form of class hierarchy diagram to be used at: https://yuml.me/diagram/nofunky/class/draw
@@ -286,7 +285,7 @@ export default class External {
     // eslint-disable-next-line class-methods-use-this
     protected buildActualUrl(url: string, data?: Record<string, any>) {
         const queryString = data
-            ? (url.indexOf('?') > 0 ? '&' : '?') + stringifyQueryString(data, { sort: getQueryParamSorter(data) })
+            ? (url.indexOf('?') > 0 ? '&' : '?') + stringifyQueryString(data, { sort: false })
             : '';
         return `${url}${queryString}`;
     }

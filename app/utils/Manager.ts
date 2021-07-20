@@ -4,7 +4,6 @@
 import _ from 'lodash';
 import { stringify as stringifyQueryString } from 'query-string';
 
-import getQueryParamSorter from './getQueryParamSorter';
 import Internal from './Internal';
 import StageUtils from './stageUtils';
 import Consts from './consts';
@@ -60,11 +59,11 @@ export default class Manager extends Internal {
             } else {
                 queryString += '?';
             }
-            queryString += stringifyQueryString(params, { sort: getQueryParamSorter(params) });
+            queryString += stringifyQueryString(params, { sort: false });
             return urlWithoutWildcard + queryString;
         }
         const queryString = data
-            ? (url.indexOf('?') > 0 ? '&' : '?') + stringifyQueryString(data, { sort: getQueryParamSorter(data) })
+            ? (url.indexOf('?') > 0 ? '&' : '?') + stringifyQueryString(data, { sort: false })
             : '';
         const urlInServer = encodeURIComponent(url + queryString);
 
