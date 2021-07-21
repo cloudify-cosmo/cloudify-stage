@@ -1,3 +1,4 @@
+import { stringify } from 'query-string';
 import { addCommands, GetCypressChainableFromCommands } from 'cloudify-ui-common/cypress/support';
 import { waitUntilEmpty } from './resource_commons';
 
@@ -8,9 +9,6 @@ declare global {
         export interface Chainable extends GetCypressChainableFromCommands<typeof commands> {}
     }
 }
-
-const getPlannedOrStartedExecutionsUrl = (deploymentId: string) =>
-    `/executions?deployment_id=${deploymentId}&status=scheduled&status=queued&status=pending&status=started`;
 
 const commands = {
     getExecutions: (filter = '') => {
@@ -30,17 +28,18 @@ const commands = {
         cy.cfyRequest(`/executions/${executionId}`, 'POST', null, { action: 'kill' });
     },
 
-    killExecutions: (deploymentId: string) => {
-        cy.cfyRequest(getPlannedOrStartedExecutionsUrl(deploymentId), 'GET')
-            .then(response => response.body.items.forEach(({ id }: { id: string }) => cy.killExecution(id)))
-            .then(() => cy.waitUntilNoExecutionIsActive(deploymentId));
-    },
+    killRunningExecutions: () => {
+        const activeExecutionsUrl = `/executions?${stringify({
+            status: ['scheduled', 'queued', 'pending', 'started', 'cancelling', 'force_cancelling']
+        })}`;
 
-    waitUntilNoExecutionIsActive: (deploymentId: string) => {
-        const activeExecutionsUrl = `${getPlannedOrStartedExecutionsUrl(
-            deploymentId
-        )}&status=cancelling&status=force_cancelling&status=kill_cancelling`;
-        waitUntilEmpty(activeExecutionsUrl);
+        const activeAndKillCancellingExecutionsUrl = `${activeExecutionsUrl}&${stringify({
+            status: ['kill_cancelling']
+        })}`;
+
+        cy.cfyRequest(activeExecutionsUrl, 'GET')
+            .then(response => response.body.items.forEach(({ id }: { id: string }) => cy.killExecution(id)))
+            .then(() => waitUntilEmpty(activeAndKillCancellingExecutionsUrl));
     }
 };
 

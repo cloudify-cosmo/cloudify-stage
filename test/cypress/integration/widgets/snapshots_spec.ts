@@ -10,6 +10,7 @@ describe('Snapshots list widget', () => {
             .deletePlugins()
             .deleteSnapshot(createdSnapshotName)
             .deleteSnapshot(uploadedSnapshotName)
+            .killRunningExecutions()
             .mockLogin()
     );
 
