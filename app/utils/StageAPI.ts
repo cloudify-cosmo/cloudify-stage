@@ -80,20 +80,25 @@ type StageWidgetDefinition<Params = any, Data = any, Configuration = Record<stri
     (ReactWidgetDefinitionPart<Data, Configuration> | HTMLWidgetDefinitionPart<Data, Configuration>);
 export type { StageWidgetDefinition as WidgetDefinition };
 
+interface StageCustomConfigurationComponentProps<T> {
+    name: string;
+    value: T;
+    onChange: (event: unknown, field: { name: string; value: T }) => void;
+}
+export type { StageCustomConfigurationComponentProps as CustomConfigurationComponentProps };
+
+// TODO(RD-2792): use a discriminated union for different types of configuration
 interface StageWidgetConfigurationDefinition {
     id: string;
     name?: string;
     description?: string;
-    // TODO(RD-1296): add individual interfaces for different types. Use TypeScript discriminated unions
     type: string;
     default?: any;
     placeHolder?: string;
     hidden?: boolean;
-    component?: ComponentType<any>;
+    component?: ComponentType<StageCustomConfigurationComponentProps<any>>;
     /** Used for lists */
     items?: (string | { name: string; value: string })[];
-
-    // TODO(RD-1296): add concrete types for each possible key and remove the line below
     [key: string]: any;
 }
 export type { StageWidgetConfigurationDefinition as WidgetConfigurationDefinition };
@@ -266,6 +271,7 @@ declare global {
                 Configuration = Record<string, unknown>
             > = StageWidgetDefinition<Params, Data, Configuration>;
             type WidgetConfigurationDefinition = StageWidgetConfigurationDefinition;
+            type CustomConfigurationComponentProps<T> = StageCustomConfigurationComponentProps<T>;
             type WidgetData<D> = StageWidgetData<D>;
             type InitialWidgetDefinition<Params, Data, Configuration> = StageInitialWidgetDefinition<
                 Params,
