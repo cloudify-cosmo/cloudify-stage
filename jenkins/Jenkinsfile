@@ -61,6 +61,7 @@ pipeline {
                 dir("${STAGE_DIR}") {
                   restoreCache('~/.npm', "${WORKSPACE}/${STAGE_DIR}/package-lock.json", 'stage-mb', 'npm_dir')
                   restoreCache("${WORKSPACE}/${STAGE_DIR}/node_modules", "${WORKSPACE}/${STAGE_DIR}/package-lock.json", 'stage-mb', 'node_modules')
+                  sh 'sleep 600'
                   echo "Install dependencies"
                   sh 'npm run beforebuild'
                   saveCache('~/.npm', "${WORKSPACE}/${STAGE_DIR}/package-lock.json", 'stage-mb', 'npm_dir')
