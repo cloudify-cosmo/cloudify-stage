@@ -58,7 +58,7 @@ export default function DynamicDropdown({
     className = '',
     disabled = false,
     fetchAll = false,
-    searchParam = ['_search'],
+    searchParams = ['_search'],
     filter = {},
     innerRef = null,
     itemsFormatter = _.identity,
@@ -139,8 +139,8 @@ export default function DynamicDropdown({
             toolbox
                 .getManager()
                 .doGet(fetchUrl, {
-                    params: searchParam.reduce(
-                        (result: Record<string, any>, param) => {
+                    params: searchParams.reduce(
+                        (result: Record<string, string>, param) => {
                             result[param] = searchQuery;
 
                             return result;

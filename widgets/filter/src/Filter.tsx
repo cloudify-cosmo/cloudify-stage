@@ -146,6 +146,7 @@ export default class Filter extends React.Component {
             fetchAll,
             fetchIncludeExtra,
             fetchManagerEndpoint,
+            searchParams,
             entityName,
             textFormatter,
             valueProp,
@@ -175,7 +176,7 @@ export default class Filter extends React.Component {
                                     .concat(fetchIncludeExtra || [])
                                     .join()
                             )}
-                            searchParam={['_search', '_search_name']}
+                            searchParams={searchParams}
                             onChange={this[`select${joinedEntityName}`]}
                             toolbox={toolbox}
                             value={value}
@@ -211,8 +212,10 @@ export default class Filter extends React.Component {
                                 entityName: 'Deployment',
                                 filter: blueprintFilter,
                                 pageSize: 20,
-                                textFormatter: item => `${item.display_name} (${item.id})`,
+                                textFormatter: item =>
+                                    item.display_name === item.id ? item.id : `${item.display_name} (${item.id})`,
                                 fetchIncludeExtra: 'display_name',
+                                searchParams: ['_search', '_search_name'],
                                 flushOnRefreshEvent: true
                             }),
                             createDropdown({
