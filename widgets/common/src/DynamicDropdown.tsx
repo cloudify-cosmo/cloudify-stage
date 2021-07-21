@@ -294,6 +294,12 @@ DynamicDropdown.propTypes = {
     itemsFormatter: PropTypes.func
 };
 
+declare global {
+    namespace Stage.Common {
+        export { DynamicDropdown };
+    }
+}
+
 Stage.defineCommon({
     name: 'DynamicDropdown',
     common: DynamicDropdown
