@@ -7,7 +7,7 @@ import _ from 'lodash';
 import log from 'loglevel';
 import PropTypes from 'prop-types';
 import i18n from 'i18next';
-import React, { Component } from 'react';
+import React, { Component, createRef } from 'react';
 import { getToolbox } from '../utils/Toolbox';
 import WidgetParamsHandler from '../utils/WidgetParamsHandler';
 import { ErrorMessage } from './basic';
@@ -17,6 +17,9 @@ import combineClassNames from '../utils/shared/combineClassNames';
 export default class WidgetDynamicContent extends Component {
     constructor(props) {
         super(props);
+
+        this.containerRef = createRef<HTMLElement>();
+
         this.state = {
             loading: false
         };
@@ -77,6 +80,10 @@ export default class WidgetDynamicContent extends Component {
 
         if (requiresFetch) {
             this.fetchData();
+        }
+
+        if (widget.definition.postRender && this.containerRef) {
+            widget.definition.postRender(this.containerRef, widget, data.data, this.getToolbox());
         }
     }
 
@@ -295,6 +302,7 @@ export default class WidgetDynamicContent extends Component {
                         className={baseWidgetContentClassName}
                         /* eslint-disable-next-line react/no-danger */
                         dangerouslySetInnerHTML={this.renderWidget()}
+                        ref={this.containerRef}
                     />
                 )}
             </div>
