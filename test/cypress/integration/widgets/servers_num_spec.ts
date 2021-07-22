@@ -4,6 +4,7 @@ describe('Number of nodes widget', () => {
             .activate('valid_trial_license')
             .usePageMock('serversNum', { pollingTime: 1 })
             .mockLogin()
+            .killRunningExecutions()
             .deleteDeployments('', true)
     );
 
