@@ -53,7 +53,6 @@ const FilterModal: FunctionComponent<FilterModalProps> = ({
 }) => {
     const { i18n } = Stage;
     const { ApproveButton, CancelButton, Dimmer, Icon, Modal, UnsafelyTypedForm, UnsafelyTypedFormField } = Stage.Basic;
-    // @ts-expect-error DynamicDropdown is not converted to TS yet
     const { DynamicDropdown } = Stage.Common;
     const { useBoolean, useErrors } = Stage.Hooks;
 
@@ -106,8 +105,10 @@ const FilterModal: FunctionComponent<FilterModalProps> = ({
         clearErrors();
     }
 
-    function handleFilterIdChange(value: string) {
-        filterId.set(value);
+    function handleFilterIdChange(value: string | string[] | null) {
+        // NOTE: CommonDropdown does not know whether `multiple` is set,
+        // so need to manually assert it's a single string
+        filterId.set((value as string | null) ?? undefined);
         filterDirty.set(false);
         clearErrors();
     }
@@ -196,7 +197,7 @@ const FilterModal: FunctionComponent<FilterModalProps> = ({
                             onChange={handleFilterIdChange}
                             fetchUrl="/filters/deployments?_include=id"
                             prefetch
-                            value={filterId.value}
+                            value={filterId.value ?? null}
                         />
                     </UnsafelyTypedFormField>
                     <UnsafelyTypedFormField label={tModal('filterRules')}>

@@ -74,7 +74,8 @@ const TopLevelDeploymentsView: FunctionComponent<TopLevelDeploymentsViewProps> =
             toolbox={toolbox}
             widget={widget}
             filterByParentDeployment={filterByParentDeployment}
-            defaultFilterId={filterId}
+            // NOTE: converts null to undefined
+            defaultFilterId={filterId ?? undefined}
         />
     );
 };
