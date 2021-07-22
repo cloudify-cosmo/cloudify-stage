@@ -59,10 +59,12 @@ export default class Manager extends Internal {
             } else {
                 queryString += '?';
             }
-            queryString += stringifyQueryString(params);
+            queryString += stringifyQueryString(params, { sort: false });
             return urlWithoutWildcard + queryString;
         }
-        const queryString = data ? (url.indexOf('?') > 0 ? '&' : '?') + stringifyQueryString(data) : '';
+        const queryString = data
+            ? (url.indexOf('?') > 0 ? '&' : '?') + stringifyQueryString(data, { sort: false })
+            : '';
         const urlInServer = encodeURIComponent(url + queryString);
 
         return StageUtils.Url.url(`/sp?su=${urlInServer}`);
