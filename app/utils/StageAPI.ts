@@ -20,8 +20,8 @@ import './types';
 type StagePropTypes = typeof StagePropTypes;
 type StageHooks = typeof StageHooks;
 
-/** @see https://docs.cloudify.co/developer/writing_widgets/widget-apis/#toolbox-object */
-interface StageToolbox {
+/** Toolbox without widget-related methods. Can be created before widgets are rendered */
+interface StageWidgetlessToolbox {
     drillDown(
         widget: StageWidget<unknown>,
         defaultTemplate: string,
@@ -35,15 +35,19 @@ interface StageToolbox {
     getManager(): Manager;
     getManagerState(): any;
     getNewManager(ip: unknown): any;
-    getWidget(): StageWidget;
-    getWidgetBackend(): any;
     goToHomePage(): void;
     goToPage(pageName: string, context: any): void;
     goToParentPage(): void;
+}
+
+/** @see https://docs.cloudify.co/developer/writing_widgets/widget-apis/#toolbox-object */
+interface StageToolbox extends StageWidgetlessToolbox {
+    getWidget(): StageWidget;
+    getWidgetBackend(): any;
     loading(isLoading: boolean): void;
     refresh(params?: any): void;
 }
-export type { StageToolbox as Toolbox };
+export type { StageToolbox as Toolbox, StageWidgetlessToolbox as WidgetlessToolbox };
 
 interface StageWidget<Configuration = Record<string, unknown>> {
     id: string;
@@ -84,6 +88,7 @@ interface StageCustomConfigurationComponentProps<T> {
     name: string;
     value: T;
     onChange: (event: unknown, field: { name: string; value: T }) => void;
+    widgetlessToolbox: StageWidgetlessToolbox;
 }
 export type { StageCustomConfigurationComponentProps as CustomConfigurationComponentProps };
 
@@ -263,6 +268,7 @@ declare global {
          */
         namespace Types {
             type Toolbox = StageToolbox;
+            type WidgetlessToolbox = StageWidgetlessToolbox;
             // TODO(RD-1645): rename Widget to ResolvedWidget
             type Widget<Configuration = Record<string, unknown>> = StageWidget<Configuration>;
             type WidgetDefinition<
