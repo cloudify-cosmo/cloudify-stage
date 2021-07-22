@@ -82,8 +82,8 @@ export default class WidgetDynamicContent extends Component {
             this.fetchData();
         }
 
-        if (widget.definition.postRender && this.containerRef) {
-            widget.definition.postRender(this.containerRef, widget, data.data, this.getToolbox());
+        if (widget.definition.postRender && this.containerRef.current) {
+            widget.definition.postRender(this.containerRef.current, widget, data.data, this.getToolbox());
         }
     }
 
