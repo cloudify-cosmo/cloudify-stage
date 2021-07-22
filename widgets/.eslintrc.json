@@ -34,6 +34,12 @@
                     }
                 ]
             }
+        },
+        {
+            "files": ["./*/src/widget.{jsx,tsx}"],
+            "rules": {
+                "react/destructuring-assignment": "off"
+            }
         }
     ]
 }
