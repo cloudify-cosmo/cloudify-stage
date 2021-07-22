@@ -76,6 +76,15 @@ pipeline {
           }
         }
         stage('Build RPM'){
+          when {
+            branch "${MAIN_BRANCH}"
+          }
+          agent {
+            kubernetes {
+              defaultContainer 'jnlp'
+              yamlFile 'jenkins/rpm-pod.yaml'
+            }
+          }
           steps {
             container('rpmbuild'){
               echo 'Create RPM directory and copy all data from build stage to, for rpmbuild to run'
