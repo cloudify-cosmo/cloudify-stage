@@ -217,10 +217,14 @@ function UpdateDeploymentModal({ open, deploymentId, deploymentName, onHide, too
           }
         : {};
 
+    const modalTitle = `Update deployment ${
+        deploymentId === deploymentName ? deploymentId : `${deploymentName} (${deploymentId})`
+    }`;
+
     return (
         <Modal open={open} onClose={onHide} className="updateDeploymentModal">
             <Modal.Header>
-                <Icon name="edit" /> Update deployment {deploymentName} ({deploymentId})
+                <Icon name="edit" /> {modalTitle}
             </Modal.Header>
 
             <Modal.Content>

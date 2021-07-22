@@ -32,7 +32,7 @@ const RemoveDeploymentModal: FunctionComponent<RemoveDeploymentModalProps> = ({
 
     const content = i18n
         .t(`widgets.common.deployments.removeModal.${force ? 'forceDelete' : 'delete'}Description`, {
-            deploymentId,
+            deploymentId: deploymentId === deploymentName ? undefined : `(${deploymentId})`,
             deploymentName
         })
         .split('\n')

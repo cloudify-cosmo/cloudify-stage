@@ -81,7 +81,11 @@ const LabelsModal: FunctionComponent<LabelsModalProps> = ({
     return (
         <Modal open={open} onClose={onHide}>
             <Modal.Header>
-                <Icon name="tags" /> {i18n.t(i18nHeaderKey, { deploymentId, deploymentName })}
+                <Icon name="tags" />{' '}
+                {i18n.t(i18nHeaderKey, {
+                    deploymentId: deploymentId === deploymentName ? undefined : `(${deploymentId})`,
+                    deploymentName
+                })}
             </Modal.Header>
 
             <Modal.Content>

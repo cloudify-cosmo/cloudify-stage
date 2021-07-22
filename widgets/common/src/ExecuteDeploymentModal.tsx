@@ -240,7 +240,12 @@ export default function ExecuteDeploymentModal({
         <Modal open={open} onClose={onHide} className="executeWorkflowModal">
             <Modal.Header>
                 <Icon name="cogs" />{' '}
-                {t(headerKey, { workflowName, deploymentName, deploymentId: _.head(deploymentsList) })}
+                {t(headerKey, {
+                    workflowName,
+                    deploymentName,
+                    deploymentId:
+                        _.head(deploymentsList) === deploymentName ? undefined : `(${_.head(deploymentsList)})`
+                })}
             </Modal.Header>
 
             <Modal.Content>
