@@ -31,9 +31,7 @@ Stage.defineWidget<unknown, unknown, FibonacciSequenceWidgetConfiguration>({
     ],
     render: widget => {
         const { WidgetsList } = Stage.Shared.Widgets;
-        const {
-            configuration: { targetSequenceLength, sequence = initialSequence }
-        } = widget;
+        const { targetSequenceLength, sequence = initialSequence } = widget.configuration;
 
         return (
             <div>

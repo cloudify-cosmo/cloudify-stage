@@ -43,7 +43,7 @@ Stage.defineWidget<unknown, WidgetData, DeploymentNumWidgetConfiguration>({
     ],
     fetchUrl: '[manager]/deployments?_include=id&_size=1',
 
-    render({ configuration: { page } }, data) {
+    render(widget, data) {
         const { Loading } = Stage.Basic;
 
         if (isEmpty(data)) {
@@ -54,7 +54,7 @@ Stage.defineWidget<unknown, WidgetData, DeploymentNumWidgetConfiguration>({
         const { Link } = Stage.Shared;
 
         const num = data?.metadata?.pagination?.total ?? 0;
-        const to = page ? `/page/${page}` : '/';
+        const to = widget.configuration.page ? `/page/${widget.configuration.page}` : '/';
 
         return (
             <Link to={to}>

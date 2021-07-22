@@ -150,22 +150,18 @@ Stage.defineWidget({
                     image_url: item.image_url,
                     readme_url:
                         data.source === Consts.GITHUB_DATA_SOURCE
-                            ? `/github/content/${username}/${item.name}/master/README.md`
+                            ? `/github/content/${widget.configuration.username}/${item.name}/master/README.md`
                             : `/external/content?url=${encodeURIComponent(item.readme_url)}`,
                     zip_url:
                         data.source === Consts.GITHUB_DATA_SOURCE
-                            ? `https://github.com/${username}/${item.name}/archive/master.zip`
+                            ? `https://github.com/${widget.configuration.username}/${item.name}/archive/master.zip`
                             : item.zip_url,
                     isSelected: selectedCatalogId === item.id
                 };
             })
         };
 
-        const {
-            configuration: { username, password }
-        } = widget;
-        const actions = new Actions(toolbox, username, password);
-
+        const actions = new Actions(toolbox, widget.configuration.username, widget.configuration.password);
         return <RepositoryList widget={widget} data={formattedData} toolbox={toolbox} actions={actions} />;
     }
 });

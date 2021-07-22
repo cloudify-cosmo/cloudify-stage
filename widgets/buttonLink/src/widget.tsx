@@ -37,8 +37,10 @@ Stage.defineWidget<unknown, unknown, ButtonLinkWidgetConfiguration>({
     hasReadme: true,
     permission: Stage.GenericConfig.WIDGET_PERMISSION('buttonLink'),
 
-    render({ configuration: { color, fullHeight, label, url } }) {
+    render(widget) {
         const { Button } = Stage.Basic;
+        const { color, fullHeight, label, url } = widget.configuration;
+
         const style: CSSProperties = { color: 'white' };
 
         if (fullHeight) {

@@ -109,13 +109,11 @@ Stage.defineWidget({
             InstallStep
         ];
         const {
-            configuration: {
-                showHelloWorldWizardButton = configurationDefaults.showHelloWorldWizardButton,
-                showDeploymentWizardButton = configurationDefaults.showDeploymentWizardButton,
-                helloWorldWizardButtonLabel = configurationDefaults.helloWorldWizardButtonLabel,
-                deploymentWizardButtonLabel = configurationDefaults.deploymentWizardButtonLabel
-            }
-        } = widget;
+            showHelloWorldWizardButton = configurationDefaults.showHelloWorldWizardButton,
+            showDeploymentWizardButton = configurationDefaults.showDeploymentWizardButton,
+            helloWorldWizardButtonLabel = configurationDefaults.helloWorldWizardButtonLabel,
+            deploymentWizardButtonLabel = configurationDefaults.deploymentWizardButtonLabel
+        } = widget.configuration;
 
         return (
             <>

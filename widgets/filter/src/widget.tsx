@@ -67,7 +67,7 @@ Stage.defineWidget({
         }
     ],
 
-    render({ configuration }, data, error, toolbox) {
-        return <Filter configuration={configuration} toolbox={toolbox} />;
+    render(widget, data, error, toolbox) {
+        return <Filter configuration={widget.configuration} toolbox={toolbox} />;
     }
 });

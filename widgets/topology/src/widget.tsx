@@ -138,7 +138,7 @@ Stage.defineWidget({
             });
     },
 
-    render({ configuration }, data, error, toolbox) {
+    render(widget, data, error, toolbox) {
         const {
             processedBlueprintData: blueprintDeploymentData,
             componentDeploymentsData,
@@ -171,7 +171,7 @@ Stage.defineWidget({
             <Topology
                 blueprintId={blueprintId}
                 deploymentId={deploymentId}
-                configuration={configuration}
+                configuration={widget.configuration}
                 data={formattedData}
                 toolbox={toolbox}
             />

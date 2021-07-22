@@ -49,7 +49,7 @@ Stage.defineWidget<WidgetParams, WidgetData, WidgetConfiguration>({
         return { id: getDeploymentIdFromContext(toolbox) };
     },
 
-    render({ configuration: { preventRedirectToParentPageAfterDelete } }, data, _error, toolbox) {
+    render(widget, data, _error, toolbox) {
         const fetchedDeploymentState: ComponentProps<
             typeof DeploymentActionButtons
             // eslint-disable-next-line no-nested-ternary
@@ -64,7 +64,7 @@ Stage.defineWidget<WidgetParams, WidgetData, WidgetConfiguration>({
                 deploymentId={getDeploymentIdFromContext(toolbox)}
                 fetchedDeploymentState={fetchedDeploymentState}
                 toolbox={toolbox}
-                redirectToParentPageAfterDelete={!preventRedirectToParentPageAfterDelete}
+                redirectToParentPageAfterDelete={!widget.configuration.preventRedirectToParentPageAfterDelete}
             />
         );
     }

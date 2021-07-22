@@ -39,16 +39,16 @@ const partialDeploymentsViewColumnDefinitions: Record<
 > = {
     status: {
         width: '20px',
-        render({ deployment_status: deploymentStatus }) {
-            return <DeploymentStatusIcon status={deploymentStatus} />;
+        render(deployment) {
+            return <DeploymentStatusIcon status={deployment.deployment_status} />;
         },
         // NOTE: do not show the column label
         label: ''
     },
     id: {
         width: '20px',
-        render({ id }) {
-            return <Stage.Shared.IdPopup id={id} />;
+        render(deployment) {
+            return <Stage.Shared.IdPopup id={deployment.id} />;
         }
     },
     name: {

@@ -112,9 +112,6 @@ Stage.defineWidget<SitesMapWidgetParams, SitesMapWidgetData, SitesMapWidgetConfi
 
     render(widget, data, _error, toolbox) {
         const { Loading } = Stage.Basic;
-        const {
-            configuration: { showAllLabels }
-        } = widget;
 
         if (Stage.Utils.isEmptyWidgetData(data)) {
             return <Loading />;
@@ -124,7 +121,7 @@ Stage.defineWidget<SitesMapWidgetParams, SitesMapWidgetData, SitesMapWidgetConfi
             <SitesMap
                 data={data.sitesData}
                 dimensions={Stage.Common.Map.getWidgetDimensions(widget)}
-                showAllLabels={showAllLabels}
+                showAllLabels={widget.configuration.showAllLabels}
                 sitesAreDefined={data.sitesAreDefined}
                 toolbox={toolbox}
             />

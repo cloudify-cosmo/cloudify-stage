@@ -74,19 +74,19 @@ Stage.defineWidget({
         }
     ],
 
-    render({ configuration }) {
-        const header = configuration.header ? configuration.header : '';
-        const content = configuration.content ? Stage.Utils.parseMarkdown(configuration.content) : '';
+    render(widget) {
+        const header = widget.configuration.header ? widget.configuration.header : '';
+        const content = widget.configuration.content ? Stage.Utils.parseMarkdown(widget.configuration.content) : '';
 
         const headerStyle = {
-            fontFamily: configuration.headerTextFont,
-            color: configuration.headerTextColor,
-            fontSize: configuration.headerTextSize
+            fontFamily: widget.configuration.headerTextFont,
+            color: widget.configuration.headerTextColor,
+            fontSize: widget.configuration.headerTextSize
         };
         const contentStyle = {
-            fontFamily: configuration.contentTextFont,
-            color: configuration.contentTextColor,
-            fontSize: configuration.contentTextSize
+            fontFamily: widget.configuration.contentTextFont,
+            color: widget.configuration.contentTextColor,
+            fontSize: widget.configuration.contentTextSize
         };
 
         return (
