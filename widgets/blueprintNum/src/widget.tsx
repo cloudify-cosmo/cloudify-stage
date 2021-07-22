@@ -26,7 +26,7 @@ Stage.defineWidget<unknown, unknown, { page?: unknown }>({
     ],
     fetchUrl: '[manager]/blueprints?_include=id&_size=1',
 
-    render(widget, data) {
+    render({ configuration: { page } }, data) {
         const { Loading } = Stage.Basic;
 
         if (_.isEmpty(data)) {
@@ -37,7 +37,7 @@ Stage.defineWidget<unknown, unknown, { page?: unknown }>({
         const { Link } = Stage.Shared;
 
         const num = _.get(data, 'metadata.pagination.total', 0);
-        const to = widget.configuration.page ? `/page/${widget.configuration.page}` : '/';
+        const to = page ? `/page/${page}` : '/';
 
         return (
             <Link to={to}>

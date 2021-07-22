@@ -51,8 +51,9 @@ Stage.defineWidget<unknown, PluginsCatalogResponse | Error, PluginsCatalogWidget
             return <Loading />;
         }
 
+        const { configuration } = widget;
         let formattedData = data;
-        if (_.get(widget.configuration, 'sortByName', false)) {
+        if (_.get(configuration, 'sortByName', false)) {
             formattedData = _.sortBy(data, item => item.pluginDescription.title);
         }
 

@@ -72,9 +72,8 @@ Stage.defineWidget({
         };
     },
 
-    render(widget, data, error, toolbox) {
+    render({ configuration: { singleExecutionView } }, data, error, toolbox) {
         const { Loading } = Stage.Basic;
-        const { singleExecutionView } = widget.configuration;
 
         if (_.isEmpty(data)) {
             return <Loading />;

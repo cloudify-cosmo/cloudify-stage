@@ -27,12 +27,15 @@ Stage.defineWidget<unknown, unknown, BlueprintActionButtonsConfiguration>({
 
     render(widget, _data, _error, toolbox) {
         const blueprintId = toolbox.getContext().getValue('blueprintId');
+        const {
+            configuration: { showEditCopyInComposerButton }
+        } = widget;
 
         return (
             <BlueprintActionButtons
                 blueprintId={blueprintId}
                 toolbox={toolbox}
-                showEditCopyInComposerButton={widget.configuration.showEditCopyInComposerButton}
+                showEditCopyInComposerButton={showEditCopyInComposerButton}
             />
         );
     }
