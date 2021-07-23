@@ -357,6 +357,8 @@ const commands = {
             });
     },
 
+    clearSearchableDropdown: (fieldName: string) => cy.contains('.field', fieldName).find('.dropdown.icon').click(),
+
     setDropdownValues: (fieldName: string, values: string[]) => {
         cy.contains('.field', fieldName)
             .click()
