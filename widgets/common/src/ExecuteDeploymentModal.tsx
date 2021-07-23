@@ -242,9 +242,7 @@ export default function ExecuteDeploymentModal({
                 <Icon name="cogs" />{' '}
                 {t(headerKey, {
                     workflowName,
-                    deploymentName,
-                    deploymentId:
-                        _.head(deploymentsList) === deploymentName ? undefined : `(${_.head(deploymentsList)})`
+                    name: Stage.Utils.formatDisplayName({ id: _.head(deploymentsList), displayName: deploymentName })
                 })}
             </Modal.Header>
 
