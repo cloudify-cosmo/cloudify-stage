@@ -10,22 +10,28 @@ describe('Filter', () => {
     it('fills dropdowns with correct data', () => {
         const getDropdownItems = (id?: string) => (id ? cy.get(`${id} .menu > *`) : cy.get('.menu > *'));
 
-        cy.interceptSp('GET', /blueprints.*state=uploaded/, { fixture: 'filter/blueprints.json' });
+        cy.interceptSp('GET', /blueprints.*state=uploaded/, { fixture: 'filter/blueprints.json' }).as(
+            'fetchBlueprints'
+        );
         cy.interceptSp('GET', /deployments.*offset=0&_search=ead&_search_name=ead/, {
             fixture: 'filter/deployments0.json'
         }).as('fetchFilteredDeployments');
         cy.interceptSp('GET', /deployments.*offset=0((?!_search=ead).)((?!_search_name=ead).)/, {
             fixture: 'filter/deployments0.json'
         }).as('fetchDeployments');
-        cy.interceptSp('GET', /deployments.*offset=20/, { fixture: 'filter/deployments1.json' });
-        cy.interceptSp('GET', '/executions', { fixture: 'filter/executions.json' });
+        cy.interceptSp('GET', /deployments.*offset=20/, { fixture: 'filter/deployments1.json' }).as(
+            'fetchDeploymentsOffset'
+        );
+        cy.interceptSp('GET', '/executions', { fixture: 'filter/executions.json' }).as('fetchExecutions');
 
         cy.get('#dynamicDropdown1').click();
+        cy.wait('@fetchBlueprints');
         cy.contains('app2.2-clickme').click();
         cy.get('#dynamicDropdown1 > .label').should('have.length', 1);
 
         cy.get('#dynamicDropdown2').within(() => {
             cy.root().click();
+            cy.wait('@fetchDeployments');
             cy.get('.menu > *:eq(0)').should('have.text', 'App 2.2 (app2.2)');
             cy.get('.menu > *:eq(1)').should('have.text', 'Eadu (uuu)');
             getDropdownItems().should('have.length', 2);
@@ -43,6 +49,7 @@ describe('Filter', () => {
         });
 
         cy.get('#dynamicDropdown3').click();
+        cy.wait('@fetchExecutions');
         getDropdownItems('#dynamicDropdown3').should('have.text', 'uuustatus').should('have.length', 1).click();
         cy.get('#dynamicDropdown3 > .label').should('have.length', 1);
 
@@ -51,6 +58,9 @@ describe('Filter', () => {
 
         cy.get('#dynamicDropdown2 > .label').should('have.length', 0);
         cy.get('#dynamicDropdown2').click();
+
+        // cy.wait('@fetchDeployments');
+        cy.wait('@fetchDeploymentsOffset');
         getDropdownItems('#dynamicDropdown2').should('have.length', 24);
 
         cy.get('#dynamicDropdown3 > .label').should('have.length', 1);
