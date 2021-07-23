@@ -451,15 +451,17 @@ describe('Filters widget', () => {
         function selectRuleLabelKey(key: string, isNew = false) {
             withinLastRuleRow(() => {
                 cy.interceptSp('GET', `/labels/deployments?_search=${key}`).as(`keySearch_${key}`);
-                cy.get('div[name="labelKey"]').within(() => {
-                    cy.get('input').type(key);
-                    cy.wait(`@keySearch_${key}`);
+                cy.get('div[name="labelKey"]')
+                    .click()
+                    .within(() => {
+                        cy.get('input').type(key);
+                        cy.wait(`@keySearch_${key}`);
 
-                    if (isNew) cy.contains('[role="option"]', `New key ${key}`).click();
-                    else cy.get(`div[option-value="${key}"]`).click();
+                        if (isNew) cy.contains('[role="option"]', `New key ${key}`).click();
+                        else cy.get(`div[option-value="${key}"]`).click();
 
-                    cy.get(`input.search`).should('not.have.value');
-                });
+                        cy.get(`input.search`).should('not.have.value');
+                    });
             });
         }
 
