@@ -397,6 +397,14 @@ describe('Deployments View widget', () => {
             });
         });
 
+        it('should return an error when the filter ID saved in the configuration is invalid', () => {
+            // NOTE: verifies a case when the filter was removed and the Deployments View is still
+            // using the removed filter's ID in the configuration.
+            useDeploymentsViewWidget({ configurationOverrides: { filterId: 'some-removed-filter-id' } });
+
+            cy.contains(/with ID .* was not found/);
+        });
+
         it('should take the selected existing filter into account when displaying deployments', () => {
             useDeploymentsViewWidget();
 
