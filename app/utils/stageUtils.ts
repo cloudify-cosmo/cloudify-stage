@@ -72,7 +72,7 @@ export default class StageUtils {
      */
     static formatDisplayName(data: Partial<{ id: string; displayName: string }>): string {
         if (data.id === undefined) {
-            throw new Error('id is undefined!');
+            return '';
         }
 
         if (data.id === data.displayName) {

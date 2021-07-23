@@ -10,6 +10,11 @@ describe('(Utils) StageUtils', () => {
 
         const scenarios: Scenario[] = [
             {
+                description: 'empty object',
+                data: {},
+                expectedResult: ''
+            },
+            {
                 description: 'only id',
                 data: {
                     id: 'dc1c04a3-1e7f-49a9-82fd-64f388197594'
