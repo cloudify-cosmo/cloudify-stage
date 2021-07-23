@@ -213,7 +213,7 @@ export default class Filter extends React.Component {
                                 filter: blueprintFilter,
                                 pageSize: 20,
                                 textFormatter: item =>
-                                    item.display_name === item.id ? item.id : `${item.display_name} (${item.id})`,
+                                    Stage.Utils.formatDisplayName({ id: item.id, displayName: item.display_name }),
                                 fetchIncludeExtra: 'display_name',
                                 searchParams: ['_search', '_search_name'],
                                 flushOnRefreshEvent: true
