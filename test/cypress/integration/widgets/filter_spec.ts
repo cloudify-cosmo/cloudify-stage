@@ -8,12 +8,7 @@ describe('Filter', () => {
     });
 
     it('fills dropdowns with correct data', () => {
-        const getDropdownItems = (id?: string) => {
-            if (id) {
-                return cy.get(`${id} .menu > *`);
-            }
-            return cy.get('.menu > *');
-        };
+        const getDropdownItems = (id?: string) => (id ? cy.get(`${id} .menu > *`) : cy.get('.menu > *'));
 
         cy.interceptSp('GET', /blueprints.*state=uploaded/, { fixture: 'filter/blueprints.json' });
         cy.interceptSp('GET', /deployments.*offset=0&_search=ead&_search_name=ead/, {
