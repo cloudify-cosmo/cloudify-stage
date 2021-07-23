@@ -365,18 +365,21 @@ describe('Deployments View widget', () => {
         });
 
         it('should take the configured filter into account when displaying deployments', () => {
-            const getFilterIdInput = () =>
-                cy.contains('Name of the saved filter to apply').parent().get('input[type="text"]');
+            useDeploymentsViewWidget();
 
-            useDeploymentsViewWidget({ configurationOverrides: { filterId } });
+            const filterFieldLabel = 'Name of the saved filter to apply';
 
             cy.log('Show only precious deployments');
+            cy.editWidgetConfiguration(widgetId, () => {
+                cy.setSearchableDropdownValue(filterFieldLabel, filterId);
+            });
+
             cy.contains(deploymentNameThatMatchesFilter);
             cy.contains(deploymentName).should('not.exist');
 
             cy.log('Show all deployments');
             cy.editWidgetConfiguration(widgetId, () => {
-                getFilterIdInput().clear();
+                cy.clearSearchableDropdown(filterFieldLabel);
             });
 
             cy.contains(deploymentNameThatMatchesFilter);
@@ -384,10 +387,14 @@ describe('Deployments View widget', () => {
 
             cy.log('Invalid filter id');
             cy.editWidgetConfiguration(widgetId, () => {
-                getFilterIdInput().type('some-very-gibberish-filter-id');
+                cy.contains('.field', filterFieldLabel)
+                    .click()
+                    .within(() => {
+                        cy.get('input').type('some-very-gibberish-filter-id');
+                        // NOTE: there should not be such a filter
+                        cy.contains('No results found');
+                    });
             });
-
-            cy.contains(/with ID .* was not found/);
         });
 
         it('should take the selected existing filter into account when displaying deployments', () => {
