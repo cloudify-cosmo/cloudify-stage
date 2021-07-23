@@ -1,4 +1,4 @@
-import _, { noop } from 'lodash';
+import { filter, find, map, noop } from 'lodash';
 import PropTypes from 'prop-types';
 import React, { FunctionComponent, useState } from 'react';
 import { useSelector } from 'react-redux';
@@ -38,7 +38,7 @@ const PageFilter: FunctionComponent<PageFilterProps> = ({
     function getPageName(allPages: PageDefinition[], id: PageDefinition['id']): string {
         // NOTE: assumes the page is always found
         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        const page = _.find(allPages, { id })!;
+        const page = find(allPages, { id })!;
         if (page.isDrillDown) {
             // NOTE: assumes the drilldown page always have a parent set
             // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
@@ -53,8 +53,8 @@ const PageFilter: FunctionComponent<PageFilterProps> = ({
         onChange(event, { name, value: fieldValue });
     };
 
-    const filteredPages = allowDrillDownPages ? pages : _.filter(pages, page => !page.isDrillDown);
-    const pagesOptions = _.map(filteredPages, page => ({
+    const filteredPages = allowDrillDownPages ? pages : filter(pages, page => !page.isDrillDown);
+    const pagesOptions = map(filteredPages, page => ({
         text: getPageName(filteredPages, page.id),
         value: page.id,
         key: page.id
