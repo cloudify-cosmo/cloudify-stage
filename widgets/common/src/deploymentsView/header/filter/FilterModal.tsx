@@ -106,7 +106,7 @@ const FilterModal: FunctionComponent<FilterModalProps> = ({
     }
 
     function handleFilterIdChange(value: string | string[] | null) {
-        // NOTE: CommonDropdown does not know whether `multiple` is set,
+        // NOTE: DynamicDropdown does not know whether `multiple` is set,
         // so need to manually assert it's a single string
         filterId.set((value as string | null) ?? undefined);
         filterDirty.set(false);
