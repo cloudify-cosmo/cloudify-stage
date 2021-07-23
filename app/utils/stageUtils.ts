@@ -64,14 +64,10 @@ export default class StageUtils {
      */
     static formatLocalTimestamp = TimeUtils.formatLocalTimestamp.bind(TimeUtils);
 
-    /**
-     * Formatting resource id and display name.
-     *
-     * @param data
-     * @returns string
-     */
     static formatDisplayName(data: Partial<{ id: string; displayName: string }>): string {
         if (data.id === undefined) {
+            log.error('id is undefined');
+
             return '';
         }
 

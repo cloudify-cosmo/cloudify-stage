@@ -220,11 +220,11 @@ function UpdateDeploymentModal({ open, deploymentId, deploymentName, onHide, too
     return (
         <Modal open={open} onClose={onHide} className="updateDeploymentModal">
             <Modal.Header>
-                <Icon name="edit" />{' '}
-                {`Update deployment ${Stage.Utils.formatDisplayName({
+                <Icon name="edit" /> Update deployment{' '}
+                {Stage.Utils.formatDisplayName({
                     id: deploymentId,
                     displayName: deploymentName
-                })}`}
+                })}
             </Modal.Header>
 
             <Modal.Content>

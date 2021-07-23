@@ -242,7 +242,10 @@ export default function ExecuteDeploymentModal({
                 <Icon name="cogs" />{' '}
                 {t(headerKey, {
                     workflowName,
-                    name: Stage.Utils.formatDisplayName({ id: _.head(deploymentsList), displayName: deploymentName })
+                    deploymentName: Stage.Utils.formatDisplayName({
+                        id: _.head(deploymentsList),
+                        displayName: deploymentName
+                    })
                 })}
             </Modal.Header>
 
