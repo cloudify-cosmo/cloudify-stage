@@ -157,7 +157,7 @@ export default function DynamicDropdown({
             toolbox
                 .getManager()
                 .doGetFull(fetchUrl, undefined)
-                .then((data: { items: unknown[] }) => {
+                .then((data: Stage.Types.PaginatedResponse<unknown>) => {
                     dispatchEndFetchAction();
                     setOptions(itemsFormatter(data.items));
                 })
