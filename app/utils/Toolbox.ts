@@ -26,8 +26,6 @@ class Toolbox implements Stage.Types.Toolbox {
 
     private internal!: Internal;
 
-    // NOTE: this is not React component's `context`
-    // eslint-disable-next-line react/static-property-placement
     private context!: Context;
 
     constructor(store: Store<ReduxState>) {
