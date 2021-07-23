@@ -41,6 +41,7 @@ export default class WidgetDynamicContent extends Component {
 
         this.paramsHandler = new WidgetParamsHandler(widget, this.getToolbox());
         this.fetchData();
+        this.postRender();
     }
 
     shouldComponentUpdate(nextProps, nextState) {
@@ -83,10 +84,7 @@ export default class WidgetDynamicContent extends Component {
         if (requiresFetch) {
             this.fetchData();
         }
-
-        if (widget.definition.postRender && this.containerRef.current) {
-            widget.definition.postRender(this.containerRef.current, widget, data.data, this.getToolbox());
-        }
+        this.postRender();
     }
 
     componentWillUnmount() {
@@ -100,6 +98,14 @@ export default class WidgetDynamicContent extends Component {
     getToolbox() {
         const { widget } = this.props;
         return getToolbox(this.fetchData.bind(this), this.loadingIndicator.bind(this), widget);
+    }
+
+    postRender() {
+        const { data, widget } = this.props;
+
+        if (widget.definition.postRender && this.containerRef.current) {
+            widget.definition.postRender(this.containerRef.current, widget, data.data, this.getToolbox());
+        }
     }
 
     beforeFetch() {
