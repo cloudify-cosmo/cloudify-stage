@@ -1,12 +1,5 @@
 // @ts-nocheck File not migrated fully to TS
 describe('Filter', () => {
-    const getDropdownItems = (id?: string) => {
-        if (id) {
-            return cy.get(`${id} .menu > *`);
-        }
-        return cy.get('.menu > *');
-    };
-
     before(() => {
         cy.activate('valid_trial_license')
             .deleteAllUsersAndTenants()
@@ -15,6 +8,13 @@ describe('Filter', () => {
     });
 
     it('fills dropdowns with correct data', () => {
+        const getDropdownItems = (id?: string) => {
+            if (id) {
+                return cy.get(`${id} .menu > *`);
+            }
+            return cy.get('.menu > *');
+        };
+
         cy.interceptSp('GET', /blueprints.*state=uploaded/, { fixture: 'filter/blueprints.json' });
         cy.interceptSp('GET', /deployments.*offset=0&_search=ead&_search_name=ead/, {
             fixture: 'filter/deployments0.json'
