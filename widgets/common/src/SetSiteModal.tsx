@@ -61,7 +61,9 @@ function SetSiteModal({ deploymentId, deploymentName, onHide, open, toolbox }) {
         <Modal open={open} onClose={onHide}>
             <Modal.Header>
                 <Icon name="edit" />
-                {i18n.t(`widgets.common.deployments.setSiteModal.header`, { deploymentId, deploymentName })}
+                {i18n.t(`widgets.common.deployments.setSiteModal.header`, {
+                    deploymentName: Stage.Utils.formatDisplayName({ id: deploymentId, displayName: deploymentName })
+                })}
             </Modal.Header>
 
             <Modal.Content>

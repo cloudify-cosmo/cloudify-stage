@@ -240,7 +240,13 @@ export default function ExecuteDeploymentModal({
         <Modal open={open} onClose={onHide} className="executeWorkflowModal">
             <Modal.Header>
                 <Icon name="cogs" />{' '}
-                {t(headerKey, { workflowName, deploymentName, deploymentId: _.head(deploymentsList) })}
+                {t(headerKey, {
+                    workflowName,
+                    deploymentName: Stage.Utils.formatDisplayName({
+                        id: _.head(deploymentsList),
+                        displayName: deploymentName
+                    })
+                })}
             </Modal.Header>
 
             <Modal.Content>
