@@ -59,7 +59,6 @@ describe('Filter', () => {
         cy.get('#dynamicDropdown2 > .label').should('have.length', 0);
         cy.get('#dynamicDropdown2').click();
 
-        // cy.wait('@fetchDeployments');
         cy.wait('@fetchDeploymentsOffset');
         getDropdownItems('#dynamicDropdown2').should('have.length', 24);
 
