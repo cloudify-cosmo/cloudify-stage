@@ -16,11 +16,11 @@ spec:
     image: circleci/node:12.22.1-browsers
     resources:
       requests:
-        cpu: 1.5
+        cpu: 2.5
         memory: 8Gi
         ephemeral-storage: "15Gi"
       limits:
-        cpu: 3
+        cpu: 3.5
         memory: 8Gi
         ephemeral-storage: "15Gi"
     command:
@@ -36,11 +36,11 @@ spec:
     image: rpmbuild/centos7
     resources:
       requests:
-        cpu: 1
-        memory: 3Gi
+        cpu: 0.4
+        memory: 5Gi
       limits:
-        cpu: 1.5
-        memory: 3Gi
+        cpu: 2
+        memory: 5Gi
     command:
     - cat
     tty: true

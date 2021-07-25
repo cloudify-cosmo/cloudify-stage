@@ -74,14 +74,14 @@ pipeline {
               dir("${WORKSPACE}/test"){
                 echo 'Run static code analysis and code style check'
                 sh 'npm run lint'
-
-                echo 'Check TypeScript types'
-                sh 'npm run check-types'
               }
             }
           }
         }
         stage('Build RPM'){
+          when {
+            branch "${MAIN_BRANCH}"
+          }
           steps {
             container('rpmbuild'){
               echo 'Create RPM directory and copy all data from build stage to, for rpmbuild to run'
@@ -153,13 +153,15 @@ pipeline {
             }
           }
         }
-        stage('Size') {
+        stage('Size & check-types') {
           steps {
             container('node'){
               sh "mkdir -p ${WORKSPACE}/size && cp -rf ${WORKSPACE}/${STAGE_DIR}/. ${WORKSPACE}/size"
               dir("size") {
                 echo 'Check bundle size'
                 sh 'npm run size'
+                echo 'Check TypeScript types'
+                sh 'npm run check-types'
               }
               sh "rm -rf ${WORKSPACE}/size"
             }
