@@ -60,11 +60,11 @@ pipeline {
                 }
                 dir("${STAGE_DIR}") {
                   restoreCache('~/.npm', "${WORKSPACE}/${STAGE_DIR}/package-lock.json", 'stage-mb', 'npm_dir')
-                  restoreCache("${WORKSPACE}/${STAGE_DIR}/node_modules", "${WORKSPACE}/${STAGE_DIR}/package-lock.json", 'stage-mb', 'node_modules')
+                  //restoreCache("${WORKSPACE}/${STAGE_DIR}/node_modules", "${WORKSPACE}/${STAGE_DIR}/package-lock.json", 'stage-mb', 'node_modules')
                   echo "Install dependencies"
                   sh 'npm run beforebuild'
                   saveCache('~/.npm', "${WORKSPACE}/${STAGE_DIR}/package-lock.json", 'stage-mb', 'npm_dir')
-                  saveCache("${WORKSPACE}/${STAGE_DIR}/node_modules", "${WORKSPACE}/${STAGE_DIR}/package-lock.json", 'stage-mb', 'node_modules')
+                  //saveCache("${WORKSPACE}/${STAGE_DIR}/node_modules", "${WORKSPACE}/${STAGE_DIR}/package-lock.json", 'stage-mb', 'node_modules')
                   echo "Build application"
                   sh 'npm run build'
                 }
@@ -92,7 +92,7 @@ pipeline {
               """
               echo 'Check for cache'
                 restoreCache('~/.npm', "${WORKSPACE}/${STAGE_DIR}/package-lock.json", 'stage-mb', 'npm_dir')
-                restoreCache("/root/rpmbuild/BUILD/node_modules", "${WORKSPACE}/${STAGE_DIR}/package-lock.json", 'stage-mb', 'node_modules')
+                //restoreCache("/root/rpmbuild/BUILD/node_modules", "${WORKSPACE}/${STAGE_DIR}/package-lock.json", 'stage-mb', 'node_modules')
 
               echo 'Install NodeJS & RPM development tools'
               sh "yum install -y ${CFY_NODE_RPM} rpmdevtools rpmlint"
