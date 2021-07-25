@@ -5,7 +5,7 @@ def secrets = [
 
 def configuration = [vaultUrl: "${env.VAULT_URL}",  vaultCredentialId: 'vault-app-role', engineVersion: 2]
 
-@Library('pipeline-shared-library@RD-166-add-cache-methods') _
+@Library('pipeline-shared-library') _
 
 pipeline {
   agent {
@@ -88,7 +88,7 @@ pipeline {
                 mkdir -p BUILD && cp -rf ${WORKSPACE}/${STAGE_DIR}/. BUILD && cd BUILD
                 curl -fO "${CFY_MANAGER_URL}/${BRANCH}/packaging/version_info" || curl -fO "${CFY_MANAGER_URL}/${MAIN_BRANCH}/packaging/version_info"
               """
-              
+
               echo 'Check for cache'
               restoreCache('~/.npm', "${WORKSPACE}/${STAGE_DIR}/package-lock.json", 'stage-mb', 'npm_dir')
 
