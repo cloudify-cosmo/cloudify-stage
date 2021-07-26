@@ -40,7 +40,7 @@ const RunWorkflowModal: FunctionComponent<RunWorkflowModalProps> = ({ filterRule
         LoadingOverlay,
         Message,
         Modal,
-        UnsafelyTypedForm,
+        Form,
         UnsafelyTypedFormField
     } = Stage.Basic;
     // @ts-expect-error DynamicDropdown is not converted to TS yet
@@ -104,7 +104,7 @@ const RunWorkflowModal: FunctionComponent<RunWorkflowModalProps> = ({ filterRule
             </Modal.Header>
 
             <Modal.Content>
-                <UnsafelyTypedForm errors={errors} onErrorsDismiss={clearErrors}>
+                <Form errors={errors} onErrorsDismiss={clearErrors}>
                     {loadingMessage && <LoadingOverlay message={loadingMessage} />}
                     <UnsafelyTypedFormField
                         label={modalT('inputs.workflowId.label')}
@@ -119,7 +119,7 @@ const RunWorkflowModal: FunctionComponent<RunWorkflowModalProps> = ({ filterRule
                         />
                     </UnsafelyTypedFormField>
                     <Message>{modalT('messages.limitations')}</Message>
-                </UnsafelyTypedForm>
+                </Form>
             </Modal.Content>
 
             <Modal.Actions>
