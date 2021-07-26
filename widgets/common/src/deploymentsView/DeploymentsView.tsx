@@ -39,7 +39,10 @@ export interface DeploymentsViewProps {
     additionalFilterRules?: Stage.Common.Filters.Rule[];
 }
 
-const minPaneWidth = 100;
+// NOTE: added to the actual min pane width by `react-split-pane` for an unknown reason
+const reactSplitPaneOffset = 30;
+// NOTE: keeps the UI looking nice at all times
+const minPaneWidth = 440 + reactSplitPaneOffset;
 
 export const DeploymentsView: FunctionComponent<DeploymentsViewProps> = ({
     toolbox,
