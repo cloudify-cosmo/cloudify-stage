@@ -125,7 +125,7 @@ describe('Deployment Action Buttons widget', () => {
         });
 
         it('adds new label by dropdown selection', () => {
-            cy.interceptSp('GET', '/labels/deployments?_search=exist').as('fetchFilteredKeys');
+            cy.interceptSp('GET', /\/labels\/deployments\?(.*)_search=exist/).as('fetchFilteredKeys');
             cy.interceptSp('GET', '/labels/deployments/existing_key').as('fetchValues');
             cy.interceptSp('GET', '/labels/deployments/existing_key?_search=sample_value').as('checkIfLabelExists');
 
