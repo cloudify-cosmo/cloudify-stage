@@ -175,7 +175,7 @@ interface HTMLWidgetDefinitionPart<Data, Configuration> {
 
     /** @see https://docs.cloudify.co/developer/writing_widgets/widget-definition/#postrender-container-widget-data-toolbox */
     postRender?: (
-        container: any,
+        container: HTMLElement,
         widget: StageWidget<Configuration>,
         data: StageWidgetData<Data>,
         toolbox: StageToolbox

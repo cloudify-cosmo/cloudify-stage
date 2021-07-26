@@ -88,6 +88,7 @@ export default function DynamicDropdown({
     className = '',
     disabled = false,
     fetchAll = false,
+    searchParams = ['_search'],
     filter = {},
     innerRef = null,
     itemsFormatter = _.identity,
@@ -169,12 +170,18 @@ export default function DynamicDropdown({
             toolbox
                 .getManager()
                 .doGet(fetchUrl, {
-                    params: {
-                        _search: searchQuery,
-                        _sort: valueProp,
-                        _size: pageSize,
-                        _offset: nextPage * pageSize
-                    }
+                    params: searchParams.reduce(
+                        (result: Record<string, string>, param) => {
+                            result[param] = searchQuery;
+
+                            return result;
+                        },
+                        {
+                            _sort: valueProp,
+                            _size: pageSize,
+                            _offset: nextPage * pageSize
+                        }
+                    )
                 })
                 .then(data => {
                     const isMoreDataAvailable = data.metadata.pagination.total > (nextPage + 1) * pageSize;
@@ -312,6 +319,7 @@ DynamicDropdown.propTypes = {
     placeholder: PropTypes.string,
     fetchUrl: PropTypes.string.isRequired,
     fetchAll: PropTypes.bool,
+    searchParam: PropTypes.arrayOf(PropTypes.string),
     value: PropTypes.oneOfType([PropTypes.string, PropTypes.array]),
     onChange: PropTypes.func.isRequired,
     onSearchChange: PropTypes.func,
