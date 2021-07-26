@@ -14,7 +14,7 @@ type DeployBlueprintModalProps = Pick<
 
 const DeployBlueprintModal: FunctionComponent<DeployBlueprintModalProps> = ({ toolbox, onHide, ...rest }) => {
     function deployBlueprint(_: undefined, params: BlueprintDeployParams) {
-        // @ts-ignore Properties do not exist on type 'typeof Common'
+        // @ts-expect-error Properties do not exist on type 'typeof Common'
         const { InputsUtils } = Stage.Common;
 
         const blueprintActions = new BlueprintActions(toolbox);

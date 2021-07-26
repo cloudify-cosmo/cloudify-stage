@@ -32,7 +32,7 @@ const DeploymentsViewHeader: FunctionComponent<DeploymentsViewHeaderProps> = ({
     const [userFilterId, setUserFilterId] = useState<string>();
 
     const { Button, Dropdown } = Stage.Basic;
-    // @ts-ignore Properties does not exist on type 'typeof Dropdown'
+    // @ts-expect-error Properties does not exist on type 'typeof Dropdown'
     const { Menu, Item } = Dropdown;
 
     function handleFilterChange(newFilterRules: FilterRule[] | undefined, newFilterId: string | undefined) {
