@@ -32,8 +32,7 @@ const RemoveDeploymentModal: FunctionComponent<RemoveDeploymentModalProps> = ({
 
     const content = i18n
         .t(`widgets.common.deployments.removeModal.${force ? 'forceDelete' : 'delete'}Description`, {
-            deploymentId,
-            deploymentName
+            deploymentName: Stage.Utils.formatDisplayName({ id: deploymentId, displayName: deploymentName })
         })
         .split('\n')
         // eslint-disable-next-line react/no-array-index-key

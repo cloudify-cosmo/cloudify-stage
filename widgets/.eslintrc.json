@@ -34,6 +34,14 @@
                     }
                 ]
             }
+        },
+        // NOTE: Turning off react/destructuring-assignment rule for some files as it
+        // reports false positives (ref.: https://github.com/yannickcr/eslint-plugin-react/issues/3022)
+        {
+            "files": ["./*/src/widget.{jsx,tsx}"],
+            "rules": {
+                "react/destructuring-assignment": "off"
+            }
         }
     ]
 }

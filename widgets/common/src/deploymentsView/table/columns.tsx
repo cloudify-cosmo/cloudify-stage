@@ -40,6 +40,8 @@ const partialDeploymentsViewColumnDefinitions: Record<
     status: {
         width: '20px',
         render(deployment) {
+            // NOTE: Rule reports false positives (ref.: https://github.com/yannickcr/eslint-plugin-react/issues/3022)
+            // eslint-disable-next-line react/destructuring-assignment
             return <DeploymentStatusIcon status={deployment.deployment_status} />;
         },
         // NOTE: do not show the column label
@@ -48,6 +50,8 @@ const partialDeploymentsViewColumnDefinitions: Record<
     id: {
         width: '20px',
         render(deployment) {
+            // NOTE: Rule reports false positives (ref.: https://github.com/yannickcr/eslint-plugin-react/issues/3022)
+            // eslint-disable-next-line react/destructuring-assignment
             return <Stage.Shared.IdPopup id={deployment.id} />;
         }
     },

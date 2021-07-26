@@ -31,6 +31,8 @@ Stage.defineWidget<unknown, unknown, FibonacciSequenceWidgetConfiguration>({
     ],
     render: widget => {
         const { WidgetsList } = Stage.Shared.Widgets;
+        // NOTE: Rule reports false positives (ref.: https://github.com/yannickcr/eslint-plugin-react/issues/3022)
+        // eslint-disable-next-line react/destructuring-assignment
         const { targetSequenceLength, sequence = initialSequence } = widget.configuration;
 
         return (
