@@ -1,3 +1,5 @@
+import log from 'loglevel';
+
 const splashDiv = document.querySelector<HTMLElement>('div.splashPage');
 const activeClass = 'active';
 const fadeOutSpeed = 300;
@@ -5,8 +7,10 @@ const fadeOutSpeed = 300;
 export default class SplashLoadingScreen {
     private static fadeOut() {
         if (!splashDiv) {
-            throw new Error('Splash page element not found');
+            log.error('Splash page element not found');
+            return;
         }
+
         splashDiv.style.setProperty('opacity', '0');
         setTimeout(() => {
             splashDiv.style.removeProperty('opacity');
@@ -16,7 +20,8 @@ export default class SplashLoadingScreen {
 
     static turnOn() {
         if (!splashDiv) {
-            throw new Error('Splash page element not found');
+            log.error('Splash page element not found');
+            return;
         }
 
         if (!splashDiv.classList.contains(activeClass)) {
@@ -28,7 +33,8 @@ export default class SplashLoadingScreen {
 
     static turnOff() {
         if (!splashDiv) {
-            throw new Error('Splash page element not found');
+            log.error('Splash page element not found');
+            return;
         }
 
         if (splashDiv.classList.contains(activeClass)) {
