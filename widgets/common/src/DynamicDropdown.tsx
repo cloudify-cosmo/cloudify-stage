@@ -66,6 +66,7 @@ interface DynamicDropdownProps extends Omit<DropdownProps, 'onChange'> {
     placeholder?: string;
     fetchUrl: string;
     fetchAll?: boolean;
+    searchParams?: string[];
     value: DropdownValue;
     onChange: (value: DropdownValue) => void;
     onSearchChange?: (event: React.SyntheticEvent<HTMLElement, Event>, data: DropdownOnSearchChangeData) => void;
@@ -170,8 +171,8 @@ export default function DynamicDropdown({
             toolbox
                 .getManager()
                 .doGet(fetchUrl, {
-                    params: searchParams.reduce(
-                        (result: Record<string, string>, param) => {
+                    params: searchParams.reduce<Record<string, unknown>>(
+                        (result, param) => {
                             result[param] = searchQuery;
 
                             return result;
