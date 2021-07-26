@@ -10,5 +10,14 @@
     },
     "env": {
         "jquery": true
-    }
+    },
+    "overrides": [
+        {
+            "files": ["*.ts"],
+            "rules": {
+                // NOTE: results in false-positives in regular classes for `context` properties
+                "react/static-property-placement": "off"
+            }
+        }
+    ]
 }
