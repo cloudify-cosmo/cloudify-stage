@@ -171,7 +171,7 @@ export const DeploymentsView: FunctionComponent<DeploymentsViewProps> = ({
                 <SplitPane
                     minSize={minPaneWidth}
                     maxSize={-minPaneWidth}
-                    defaultSize="50%"
+                    defaultSize="40%"
                     split="vertical"
                     resizerClassName="master-details-view-resizer"
                 >
