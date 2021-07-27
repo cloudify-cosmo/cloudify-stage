@@ -1,8 +1,9 @@
 import { FunctionComponent, useEffect } from 'react';
+import FilterIdDropdown from './FilterIdDropdown';
 
 export interface DeploymentsViewWidgetConfiguration
     extends Stage.Common.DeploymentsView.Configuration.SharedDeploymentsViewWidgetConfiguration {
-    filterId?: string;
+    filterId?: string | null;
     filterByParentDeployment: boolean;
     mapOpenByDefault?: boolean;
 }
@@ -30,9 +31,9 @@ Stage.defineWidget<never, never, DeploymentsViewWidgetConfiguration>({
         },
         {
             id: 'filterId',
-            // TODO(RD-1851): add autocomplete instead of plain text input
-            type: Stage.Basic.GenericField.STRING_TYPE,
-            name: Stage.i18n.t(`${i18nPrefix}.configuration.filterId.name`)
+            type: Stage.Basic.GenericField.CUSTOM_TYPE,
+            name: Stage.i18n.t(`${i18nPrefix}.configuration.filterId.name`),
+            component: FilterIdDropdown
         },
         {
             id: 'filterByParentDeployment',
