@@ -410,9 +410,9 @@ describe('Filters widget', () => {
         type RuleValueObject = { value: string; isNew: boolean };
         function searchAndSetDropdownValue(
             { value, isNew }: RuleValueObject,
-            searchEndpoint: string | RegExp,
             additionLabel: string,
-            isMultiple: boolean
+            isMultiple: boolean,
+            searchEndpoint?: string | RegExp
         ) {
             if (searchEndpoint) cy.interceptSp('GET', searchEndpoint).as(`search_${value}`);
             cy.get('input.search').type(value);
@@ -451,11 +451,11 @@ describe('Filters widget', () => {
                     values.forEach(ruleValue => {
                         searchAndSetDropdownValue(
                             ruleValue,
+                            'Add',
+                            true,
                             withAutocomplete
                                 ? RegExp(`${searchEndpoint[ruleRowType]}.*_search=${ruleValue.value}`)
-                                : '',
-                            'Add',
-                            true
+                                : undefined
                         );
                     })
                 );
@@ -467,9 +467,9 @@ describe('Filters widget', () => {
                 openDropdown('labelKey').within(() => {
                     searchAndSetDropdownValue(
                         { value: key, isNew },
-                        RegExp(`/labels/deployments?.*_search=${key}`),
                         'New key',
-                        false
+                        false,
+                        RegExp(`/labels/deployments?.*_search=${key}`)
                     );
                 });
             });
@@ -483,9 +483,9 @@ describe('Filters widget', () => {
                     values.forEach(ruleValue => {
                         searchAndSetDropdownValue(
                             ruleValue,
-                            RegExp(`/labels/deployments/.*_search=${ruleValue.value}`),
                             'New value',
-                            true
+                            true,
+                            RegExp(`/labels/deployments/.*_search=${ruleValue.value}`)
                         );
                     });
                 });
