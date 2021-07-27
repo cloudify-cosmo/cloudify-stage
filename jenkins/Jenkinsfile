@@ -5,7 +5,7 @@ def secrets = [
 
 def configuration = [vaultUrl: "${env.VAULT_URL}",  vaultCredentialId: 'vault-app-role', engineVersion: 2]
 
-@Library('pipeline-shared-library') _
+@Library('pipeline-shared-library@RD-166-add-cache-methods') _
 
 pipeline {
   agent {
@@ -59,10 +59,10 @@ pipeline {
                   """
                 }
                 dir("${STAGE_DIR}") {
-                  restoreCache('~/.npm', "${WORKSPACE}/${STAGE_DIR}/package-lock.json", 'stage-mb', 'npm_dir')
+                  restoreArchiveFolder('~/.npm', "${WORKSPACE}/${STAGE_DIR}/package-lock.json ${WORKSPACE}/${STAGE_DIR}/backend/package-lock.json", 'stage-mb', 'npm_dir', '/mnt/data')
                   echo "Install dependencies"
                   sh 'npm run beforebuild'
-                  saveCache('~/.npm', "${WORKSPACE}/${STAGE_DIR}/package-lock.json", 'stage-mb', 'npm_dir')
+                  archiveFolder('~/.npm', "${WORKSPACE}/${STAGE_DIR}/package-lock.json ${WORKSPACE}/${STAGE_DIR}/backend/package-lock.json", 'stage-mb', 'npm_dir', '/mnt/data')
                   echo "Build application"
                   sh 'npm run build'
                 }
@@ -90,7 +90,7 @@ pipeline {
               """
 
               echo 'Check for cache'
-              restoreCache('~/.npm', "${WORKSPACE}/${STAGE_DIR}/package-lock.json", 'stage-mb', 'npm_dir')
+              restoreArchiveFolder('~/.npm', "${WORKSPACE}/${STAGE_DIR}/package-lock.json ${WORKSPACE}/${STAGE_DIR}/backend/package-lock.json", 'stage-mb', 'npm_dir', '/mnt/data')
 
               echo 'Install NodeJS & RPM development tools'
               sh "yum install -y ${CFY_NODE_RPM} rpmdevtools rpmlint"
