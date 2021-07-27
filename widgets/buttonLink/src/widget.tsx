@@ -1,8 +1,4 @@
-/**
- * Created by pawelposel on 13/02/2017.
- */
-
-import type { CSSProperties } from 'react';
+import type { ComponentType, CSSProperties } from 'react';
 
 interface ButtonLinkWidgetConfiguration {
     color: string;
@@ -30,7 +26,9 @@ Stage.defineWidget<unknown, unknown, ButtonLinkWidgetConfiguration>({
             name: 'Color',
             default: '#21ba45',
             type: Stage.Basic.GenericField.CUSTOM_TYPE,
-            component: Stage.Basic.Form.ColorPicker
+            component: Stage.Basic.Form.ColorPicker as ComponentType<
+                Stage.Types.CustomConfigurationComponentProps<string>
+            >
         }
     ],
     isReact: true,

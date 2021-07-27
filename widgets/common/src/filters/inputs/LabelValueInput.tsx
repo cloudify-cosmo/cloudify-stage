@@ -26,7 +26,7 @@ const LabelValueInput: FunctionComponent<LabelValueInputProps> = ({
     labelKey,
     labelValue
 }) => {
-    const keyDropdownRef = useRef<HTMLElement>();
+    const keyDropdownRef = useRef<HTMLElement>(null);
 
     return (
         <>

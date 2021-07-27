@@ -1,4 +1,4 @@
-import type { ComponentProps, FunctionComponent, MutableRefObject } from 'react';
+import type { ComponentProps, FunctionComponent, RefObject } from 'react';
 import { Dropdown } from 'semantic-ui-react';
 import ValidationErrorPopup from './ValidationErrorPopup';
 import type { LabelInputType } from './types';
@@ -8,7 +8,7 @@ type CommonDropdownOnChange = ((value: string) => void) | ((value: string[]) => 
 
 export interface KeyAndValueDropdownProps {
     allowAdditions?: ComponentProps<typeof Dropdown>['allowAdditions'];
-    innerRef?: MutableRefObject<HTMLElement | undefined>;
+    innerRef?: RefObject<HTMLElement>;
     onChange: CommonDropdownOnChange;
     toolbox: Stage.Types.Toolbox;
 }
@@ -30,16 +30,13 @@ const CommonDropdown: FunctionComponent<CommonDropdownProps> = ({ allowAdditions
 export default CommonDropdown;
 
 const CommonDropdownWithAdditions: FunctionComponent<CommonDropdownProps> = ({
-    innerRef = null,
+    innerRef,
     onChange,
     value = null,
     type,
     ...rest
 }) => {
-    const {
-        // @ts-expect-error DynamicDropdown is not converted to TS yet
-        Common: { DynamicDropdown }
-    } = Stage;
+    const { DynamicDropdown } = Stage.Common;
 
     return (
         <DynamicDropdown
@@ -47,7 +44,8 @@ const CommonDropdownWithAdditions: FunctionComponent<CommonDropdownProps> = ({
             clearable
             innerRef={innerRef}
             itemsFormatter={(items: string[]) => _.map(items, item => ({ id: item }))}
-            onChange={onChange}
+            // NOTE: no knowledge whether this handles multiple elements or not, so need to assert `as any`
+            onChange={v => onChange(v as any)}
             selectOnNavigation
             value={value}
             /* eslint-disable-next-line react/jsx-props-no-spreading */
@@ -57,7 +55,7 @@ const CommonDropdownWithAdditions: FunctionComponent<CommonDropdownProps> = ({
 };
 
 const CommonDropdownWithoutAdditions: FunctionComponent<CommonDropdownProps> = ({
-    innerRef = null,
+    innerRef,
     onChange,
     type,
     value = null,
@@ -65,7 +63,6 @@ const CommonDropdownWithoutAdditions: FunctionComponent<CommonDropdownProps> = (
 }) => {
     const { useEffect } = React;
     const {
-        // @ts-expect-error DynamicDropdown is not converted to TS yet
         Common: { DynamicDropdown },
         Hooks: { useLabelInput }
     } = Stage;
@@ -91,8 +88,12 @@ const CommonDropdownWithoutAdditions: FunctionComponent<CommonDropdownProps> = (
                 itemsFormatter={(items: string[]) => _.map(items, item => ({ id: item }))}
                 onBlur={unsetInvalidCharacterTyped}
                 onChange={(newValue: any) => submitChange(null, { value: newValue })}
-                onSearchChange={submitChange}
+                onSearchChange={(event, data) =>
+                    // NOTE: assumes the items are only strings
+                    submitChange(event, { value: data.value as string, searchQuery: data.searchQuery })
+                }
                 searchQuery={inputValue}
+                value={value}
                 /* eslint-disable-next-line react/jsx-props-no-spreading */
                 {...rest}
             />

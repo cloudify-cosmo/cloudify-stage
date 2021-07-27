@@ -1,10 +1,8 @@
-// @ts-nocheck File not migrated fully to TS
-// NOTE: Disabling react/require-default-props as default values are provided in component's definition
-/* eslint-disable react/require-default-props */
 import { useCallback, useReducer } from 'react';
 import { debounce, isFunction } from 'lodash';
 import VisibilitySensor from 'react-visibility-sensor';
 import './DynamicDropdown.css';
+import type { DropdownItemProps, DropdownOnSearchChangeData, DropdownProps } from 'semantic-ui-react';
 
 let instanceCount = 0;
 
@@ -29,9 +27,15 @@ const fetchActionType = {
     PREPARE_FOR_NEXT_PAGE_FETCH: 'prepareForNextPageFetch',
     TRIGGER_FETCH: 'triggerFetch',
     END_FETCH: 'endFetch'
-};
+} as const;
 const defaultFetchState = { hasMore: true, currentPage: -1, shouldLoadMore: false };
-function fetchReducer(state, action) {
+type FetchReducerAction =
+    | { type: typeof fetchActionType['PREPARE_FOR_FIRST_PAGE_FETCH'] }
+    | { type: typeof fetchActionType['PREPARE_FOR_NEXT_PAGE_FETCH']; currentPage: number; hasMore: boolean }
+    | { type: typeof fetchActionType['TRIGGER_FETCH'] }
+    | { type: typeof fetchActionType['END_FETCH'] };
+
+function fetchReducer(state: typeof defaultFetchState, action: FetchReducerAction) {
     switch (action.type) {
         case fetchActionType.PREPARE_FOR_FIRST_PAGE_FETCH:
             return { ...defaultFetchState };
@@ -46,8 +50,35 @@ function fetchReducer(state, action) {
         case fetchActionType.END_FETCH:
             return { ...defaultFetchState, hasMore: false };
         default:
-            throw new Error(`Unknown action type: ${action.type}.`);
+            throw new Error(`Unknown action type: ${(action as any).type}.`);
     }
+}
+
+/** May also contain an `implicit` property, but it's hard to model in TypeScript */
+type Option = { [valueProp: string]: string };
+
+type DropdownValue = string | string[] | null;
+interface DynamicDropdownProps extends Omit<DropdownProps, 'onChange'> {
+    allowAdditions?: boolean;
+    innerRef?: React.Ref<HTMLElement>;
+    disabled?: boolean;
+    multiple?: boolean;
+    placeholder?: string;
+    fetchUrl: string;
+    fetchAll?: boolean;
+    searchParams?: string[];
+    value: DropdownValue;
+    onChange: (value: DropdownValue) => void;
+    onSearchChange?: (event: React.SyntheticEvent<HTMLElement, Event>, data: DropdownOnSearchChangeData) => void;
+    toolbox: Stage.Types.WidgetlessToolbox;
+    filter?: Record<string, string>;
+    valueProp?: string;
+    textFormatter?: (item: any) => string;
+    pageSize?: number;
+    name?: string;
+    prefetch?: boolean;
+    refreshEvent?: string;
+    itemsFormatter?: (items: any[]) => Option[];
 }
 
 export default function DynamicDropdown({
@@ -63,25 +94,25 @@ export default function DynamicDropdown({
     innerRef = null,
     itemsFormatter = _.identity,
     multiple = false,
-    name = null,
+    name,
     onSearchChange = undefined,
     pageSize = 10,
-    placeholder = null,
+    placeholder,
     prefetch = false,
-    refreshEvent = null,
-    textFormatter = null,
-    value = null,
+    refreshEvent,
+    textFormatter,
+    value,
     valueProp = 'id',
     ...rest
-}) {
+}: DynamicDropdownProps) {
     const { useState, useEffect } = React;
-    const { useBoolean, useEventListener } = Stage.Hooks;
+    const { useEventListener } = Stage.Hooks;
 
     const [id] = useState(() => {
         instanceCount += 1;
         return `dynamicDropdown${instanceCount}`;
     });
-    const [options, setOptions] = useState([]);
+    const [options, setOptions] = useState<Option[]>([]);
     const [fetchState, dispatchFetchAction] = useReducer(fetchReducer, {
         ...defaultFetchState,
         shouldLoadMore: prefetch
@@ -95,12 +126,13 @@ export default function DynamicDropdown({
      *
      * @param newOptions list of options used for comparison
      */
-    function getImplicitOptions(newOptions: { [valueProp: string]: string }[]) {
-        const implicitOptions = [];
+    function getImplicitOptions(newOptions: Option[]) {
+        const implicitOptions: Option[] = [];
         if (!_.isEmpty(value)) {
             _.castArray(value).forEach(singleValue => {
                 if (!_.find(newOptions, { [valueProp]: singleValue })) {
-                    implicitOptions.push({ [valueProp]: singleValue, implicit: true });
+                    // NOTE: no elegant way was found to have `implicit` prop in TS
+                    implicitOptions.push({ [valueProp]: singleValue, implicit: true as any });
                 }
             });
         }
@@ -114,7 +146,7 @@ export default function DynamicDropdown({
             dispatchFetchAction({ type: fetchActionType.END_FETCH });
         }
 
-        function onFetchFailed(error) {
+        function onFetchFailed(error: unknown) {
             dispatchEndFetchAction();
             log.error(error);
         }
@@ -126,8 +158,8 @@ export default function DynamicDropdown({
         if (fetchAll) {
             toolbox
                 .getManager()
-                .doGetFull(fetchUrl)
-                .then(data => {
+                .doGetFull(fetchUrl, undefined)
+                .then((data: Stage.Types.PaginatedResponse<unknown>) => {
                     dispatchEndFetchAction();
                     setOptions(itemsFormatter(data.items));
                 })
@@ -139,8 +171,8 @@ export default function DynamicDropdown({
             toolbox
                 .getManager()
                 .doGet(fetchUrl, {
-                    params: searchParams.reduce(
-                        (result: Record<string, string>, param) => {
+                    params: searchParams.reduce<Record<string, unknown>>(
+                        (result, param) => {
                             result[param] = searchQuery;
 
                             return result;
@@ -209,7 +241,7 @@ export default function DynamicDropdown({
         .uniqBy(valueProp)
         .value();
 
-    function getDropdownValue() {
+    function getDropdownValue(): DropdownProps['value'] {
         if (!value) {
             return multiple ? [] : '';
         }
@@ -235,21 +267,23 @@ export default function DynamicDropdown({
                 id={id}
                 name={name}
                 allowAdditions={allowAdditions}
-                onAddItem={(event, data) =>
-                    setOptions(latestOptions => [{ [valueProp]: data.value }, ...latestOptions])
+                onAddItem={(_event, data) =>
+                    setOptions(latestOptions => [{ [valueProp]: data.value as string }, ...latestOptions])
                 }
-                onChange={(event, data) => onChange(!_.isEmpty(data.value) ? data.value : null)}
+                onChange={(_event, data) => onChange(!_.isEmpty(data.value) ? (data.value as string | string[]) : null)}
                 onSearchChange={(event, data) => {
                     setSearchQuery(data.searchQuery);
                     if (isFunction(onSearchChange)) onSearchChange(event, data);
                 }}
                 multiple={multiple}
                 loading={isLoading}
-                options={(() => {
-                    const preparedOptions = filteredOptions.map(item => ({
-                        text: (textFormatter || (i => i[valueProp]))(item),
-                        value: item[valueProp]
-                    }));
+                options={((): DropdownItemProps[] => {
+                    const preparedOptions = filteredOptions.map(
+                        (item): DropdownItemProps => ({
+                            text: (textFormatter ?? ((i: Record<string, string>) => i[valueProp]))(item),
+                            value: item[valueProp]
+                        })
+                    );
                     if (fetchState.hasMore) {
                         preparedOptions.push({
                             disabled: true,
@@ -301,6 +335,12 @@ DynamicDropdown.propTypes = {
     refreshEvent: PropTypes.string,
     itemsFormatter: PropTypes.func
 };
+
+declare global {
+    namespace Stage.Common {
+        export { DynamicDropdown };
+    }
+}
 
 Stage.defineCommon({
     name: 'DynamicDropdown',
