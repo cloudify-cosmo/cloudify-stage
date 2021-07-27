@@ -5,41 +5,51 @@ const activeClass = 'active';
 const fadeOutSpeed = 300;
 
 export default class SplashLoadingScreen {
-    private static fadeOut() {
-        if (!splashDiv) {
-            log.error('Splash page element not found');
-            return;
+    private static assertSplashExists(div?: any): asserts div {
+        if (!div) {
+            throw new Error('Splash page element not found');
         }
+    }
 
-        splashDiv.style.setProperty('opacity', '0');
-        setTimeout(() => {
-            splashDiv.style.removeProperty('opacity');
-            splashDiv.style.setProperty('display', 'none');
-        }, fadeOutSpeed);
+    private static fadeOut() {
+        try {
+            // TODO: remove this try catches RD-2841.
+            SplashLoadingScreen.assertSplashExists(splashDiv);
+
+            splashDiv.style.setProperty('opacity', '0');
+            setTimeout(() => {
+                splashDiv.style.removeProperty('opacity');
+                splashDiv.style.setProperty('display', 'none');
+            }, fadeOutSpeed);
+        } catch (e) {
+            log.error(e);
+        }
     }
 
     static turnOn() {
-        if (!splashDiv) {
-            log.error('Splash page element not found');
-            return;
-        }
+        try {
+            SplashLoadingScreen.assertSplashExists(splashDiv);
 
-        if (!splashDiv.classList.contains(activeClass)) {
-            splashDiv.style.removeProperty('display');
+            if (!splashDiv.classList.contains(activeClass)) {
+                splashDiv.style.removeProperty('display');
 
-            splashDiv.classList.add(activeClass);
+                splashDiv.classList.add(activeClass);
+            }
+        } catch (e) {
+            log.error(e);
         }
     }
 
     static turnOff() {
-        if (!splashDiv) {
-            log.error('Splash page element not found');
-            return;
-        }
+        try {
+            SplashLoadingScreen.assertSplashExists(splashDiv);
 
-        if (splashDiv.classList.contains(activeClass)) {
-            SplashLoadingScreen.fadeOut();
-            splashDiv.classList.remove(activeClass);
+            if (splashDiv.classList.contains(activeClass)) {
+                SplashLoadingScreen.fadeOut();
+                splashDiv.classList.remove(activeClass);
+            }
+        } catch (e) {
+            log.error(e);
         }
     }
 }
