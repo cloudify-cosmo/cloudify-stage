@@ -51,8 +51,8 @@ describe('Filters widget', () => {
         cy.contains('Add new rule').click();
     }
 
-    type FilterRuleDropdownNames = 'ruleRowType' | 'ruleOperator' | 'ruleValue' | 'labelKey' | 'labelValue';
-    function openDropdown(divName: FilterRuleDropdownNames) {
+    type FilterRuleDropdownName = 'ruleRowType' | 'ruleOperator' | 'ruleValue' | 'labelKey' | 'labelValue';
+    function openDropdown(divName: FilterRuleDropdownName) {
         return cy.get(`div[name="${divName}"]`).click();
     }
 
@@ -403,7 +403,7 @@ describe('Filters widget', () => {
         beforeEach(openAddFilterModal);
         afterEach(closeFilterModal);
 
-        function openDropdownAndSetValue(divName: FilterRuleDropdownNames, optionValue: string) {
+        function openDropdownAndSetValue(divName: FilterRuleDropdownName, optionValue: string) {
             openDropdown(divName).find(`div[option-value="${optionValue}"]`).click();
         }
 
