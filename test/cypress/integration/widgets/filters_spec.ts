@@ -51,8 +51,13 @@ describe('Filters widget', () => {
         cy.contains('Add new rule').click();
     }
 
+    type FilterRuleDropdownName = 'ruleRowType' | 'ruleOperator' | 'ruleValue' | 'labelKey' | 'labelValue';
+    function openDropdown(divName: FilterRuleDropdownName) {
+        return cy.get(`div[name="${divName}"]`).click();
+    }
+
     function typeAttributeRuleValue(value: string) {
-        cy.get('[name=ruleValue]').click().find('input').type(`${value}{enter}`).blur();
+        openDropdown('ruleValue').find('input').type(`${value}{enter}`).blur();
     }
 
     function getFilterIdInput() {
@@ -168,13 +173,12 @@ describe('Filters widget', () => {
                 withinLastRuleRow(() => typeAttributeRuleValue(blueprintId));
                 addNewRule();
                 withinLastRuleRow(() => {
-                    cy.get('[name=ruleRowType]').click();
-                    cy.contains('Label').click();
-                    cy.get('[name=ruleOperator]').click();
-                    cy.contains('key is not').click();
-                    cy.get('[name=labelKey]').click();
-                    cy.get('[name=labelKey] input').type(labelKey);
-                    cy.get(`[option-value=${labelKey}]`).click();
+                    openDropdown('ruleRowType').contains('Label').click();
+                    openDropdown('ruleOperator').contains('key is not').click();
+                    openDropdown('labelKey').within(() => {
+                        cy.get('input').type(labelKey);
+                        cy.get(`[option-value=${labelKey}]`).click();
+                    });
                 });
 
                 cy.interceptSp('PUT', `/filters/deployments/${newFilterName}`).as('createRequest');
@@ -400,21 +404,36 @@ describe('Filters widget', () => {
         beforeEach(openAddFilterModal);
         afterEach(closeFilterModal);
 
-        function selectRuleRowType(ruleRowType: FilterRuleRowType) {
-            withinLastRuleRow(() => {
-                cy.get('div[name="ruleRowType"]').click();
-                cy.get(`div[option-value="${ruleRowType}"]`).click();
-            });
-        }
-
-        function selectRuleOperator(operator: FilterRuleOperator) {
-            withinLastRuleRow(() => {
-                cy.get('div[name="ruleOperator"]').click();
-                cy.get(`div[option-value="${operator}"]`).click();
-            });
+        function openDropdownAndSetValue(divName: FilterRuleDropdownName, optionValue: string) {
+            openDropdown(divName).find(`div[option-value="${optionValue}"]`).click();
         }
 
         type RuleValueObject = { value: string; isNew: boolean };
+        function searchAndSetDropdownValue(
+            { value, isNew }: RuleValueObject,
+            additionLabel: string,
+            isMultiple: boolean,
+            searchEndpoint?: string | RegExp
+        ) {
+            if (searchEndpoint) cy.interceptSp('GET', searchEndpoint).as(`search_${value}`);
+            cy.get('input.search').type(value);
+            if (searchEndpoint) cy.wait(`@search_${value}`);
+
+            if (isNew) cy.contains('[role="option"]', `${additionLabel} ${value}`).click();
+            else cy.get(`div[option-value="${value}"]`).click();
+
+            if (isMultiple) cy.get(`.label[value="${value}"]`).should('exist');
+            cy.get('input.search').should('not.have.value');
+        }
+
+        function selectRuleRowType(ruleRowType: FilterRuleRowType) {
+            withinLastRuleRow(() => openDropdownAndSetValue('ruleRowType', ruleRowType));
+        }
+
+        function selectRuleOperator(operator: FilterRuleOperator) {
+            withinLastRuleRow(() => openDropdownAndSetValue('ruleOperator', operator));
+        }
+
         function selectRuleAttributeValues(
             ruleRowType: FilterRuleRowType,
             values: RuleValueObject[],
@@ -428,38 +447,31 @@ describe('Filters widget', () => {
                     created_by: 'users',
                     label: '' // NOTE: Only endpoints for attribute rules are necessary
                 };
-                cy.get('div[name="ruleValue"]')
-                    .click()
-                    .within(() => {
-                        values.forEach(({ value, isNew }) => {
-                            if (withAutocomplete) {
-                                const searchEndpointRegExp = RegExp(`${searchEndpoint[ruleRowType]}.*_search=${value}`);
-                                cy.interceptSp('GET', searchEndpointRegExp).as(`valueSearch_${value}`);
-                            }
 
-                            cy.get('input').type(`${value}`);
-                            if (withAutocomplete) cy.wait(`@valueSearch_${value}`);
-
-                            if (isNew) cy.contains('[role="option"]', `Add ${value}`).click();
-                            else cy.get(`div[option-value="${value}"]`).click();
-
-                            cy.get(`.label[value="${value}"]`).should('exist');
-                        });
-                    });
+                openDropdown('ruleValue').within(() =>
+                    values.forEach(ruleValue => {
+                        searchAndSetDropdownValue(
+                            ruleValue,
+                            'Add',
+                            true,
+                            withAutocomplete
+                                ? RegExp(`${searchEndpoint[ruleRowType]}.*_search=${ruleValue.value}`)
+                                : undefined
+                        );
+                    })
+                );
             });
         }
 
         function selectRuleLabelKey(key: string, isNew = false) {
             withinLastRuleRow(() => {
-                cy.interceptSp('GET', `/labels/deployments?_search=${key}`).as(`keySearch_${key}`);
-                cy.get('div[name="labelKey"]').within(() => {
-                    cy.get('input').type(key);
-                    cy.wait(`@keySearch_${key}`);
-
-                    if (isNew) cy.contains('[role="option"]', `New key ${key}`).click();
-                    else cy.get(`div[option-value="${key}"]`).click();
-
-                    cy.get(`input.search`).should('not.have.value');
+                openDropdown('labelKey').within(() => {
+                    searchAndSetDropdownValue(
+                        { value: key, isNew },
+                        'New key',
+                        false,
+                        RegExp(`/labels/deployments?.*_search=${key}`)
+                    );
                 });
             });
         }
@@ -468,23 +480,16 @@ describe('Filters widget', () => {
             if (values.length === 0) return;
 
             withinLastRuleRow(() => {
-                cy.get('div[name="labelValue"]')
-                    .click()
-                    .within(() => {
-                        values.forEach(({ value, isNew }) => {
-                            cy.interceptSp('GET', RegExp(`/labels/deployments/.*?_search=${value}`)).as(
-                                `valueSearch_${value}`
-                            );
-
-                            cy.get('input').type(value);
-                            cy.wait(`@valueSearch_${value}`);
-
-                            if (isNew) cy.contains('[role="option"]', `New value ${value}`).click();
-                            else cy.get(`div[option-value="${value}"]`).click();
-
-                            cy.get(`.label[value="${value}"]`).should('exist');
-                        });
+                openDropdown('labelValue').within(() => {
+                    values.forEach(ruleValue => {
+                        searchAndSetDropdownValue(
+                            ruleValue,
+                            'New value',
+                            true,
+                            RegExp(`/labels/deployments/.*_search=${ruleValue.value}`)
+                        );
                     });
+                });
             });
         }
 
