@@ -1,9 +1,4 @@
-/**
- * Created by pawelposel on 03/11/2016.
- */
-
 import { isEmpty } from 'lodash';
-import React from 'react';
 
 interface WidgetData {
     metadata?: {

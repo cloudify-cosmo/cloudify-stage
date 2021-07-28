@@ -1,4 +1,4 @@
-import React, { FunctionComponent, useMemo, useState } from 'react';
+import { FunctionComponent, useMemo, useState } from 'react';
 import { useQuery } from 'react-query';
 import SplitPane from 'react-split-pane';
 
