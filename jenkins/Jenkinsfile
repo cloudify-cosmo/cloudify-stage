@@ -5,7 +5,7 @@ def secrets = [
 
 def configuration = [vaultUrl: "${env.VAULT_URL}",  vaultCredentialId: 'vault-app-role', engineVersion: 2]
 
-@Library('pipeline-shared-library@RD-166-add-cache-methods') _
+@Library('pipeline-shared-library') _
 
 pipeline {
   agent {
