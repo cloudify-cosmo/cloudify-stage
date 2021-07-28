@@ -12,7 +12,7 @@ import { SubdeploymentStatusIcon } from '../../StatusIcon';
 import { tDrillDownButtons } from './common';
 import type { SubdeploymentsResult } from './subdeployments-result';
 
-export interface DrilldownButtonProps {
+export interface SubdeploymentDrilldownButtonProps {
     type: 'environments' | 'services';
     drillDown: (templateName: string, drilldownContext: Record<string, any>, drilldownPageName: string) => void;
     deploymentName: string;
@@ -22,7 +22,7 @@ export interface DrilldownButtonProps {
 
 const subdeploymentsDrilldownTemplateName = 'drilldownDeployments';
 
-const DrilldownButton: FunctionComponent<DrilldownButtonProps> = ({
+const SubdeploymentDrilldownButton: FunctionComponent<SubdeploymentDrilldownButtonProps> = ({
     type,
     drillDown,
     deploymentName,
@@ -62,9 +62,9 @@ const DrilldownButton: FunctionComponent<DrilldownButtonProps> = ({
         </Button>
     );
 };
-export default DrilldownButton;
+export default SubdeploymentDrilldownButton;
 
-const deploymentTypeRule: Record<DrilldownButtonProps['type'], Stage.Common.Filters.Rule> = {
+const deploymentTypeRule: Record<SubdeploymentDrilldownButtonProps['type'], Stage.Common.Filters.Rule> = {
     environments: {
         type: FilterRuleType.Label,
         key: 'csys-obj-type',
