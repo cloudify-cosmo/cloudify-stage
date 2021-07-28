@@ -19,7 +19,11 @@ export interface DrilldownButtonsProps {
 const ButtonsContainer = styled.div`
     margin-right: 1rem;
     margin-bottom: 1rem;
+`;
+
+const SubdeploymentButtonsContainer = styled.div`
     position: relative;
+    display: inline;
 `;
 
 const getDeploymentUrl = (id: string) => `/deployments/${id}?all_sub_deployments=false`;
@@ -49,25 +53,27 @@ const DrilldownButtons: FunctionComponent<DrilldownButtonsProps> = ({
 
     return (
         <ButtonsContainer>
-            {/* NOTE: Show a spinner only when refetching. During the initial fetch there are spinners inside the buttons. */}
-            {deploymentDetailsResult.isFetching && !deploymentDetailsResult.isLoading && <LoadingOverlay />}
-
             <DetailsDrilldownButton deployment={deployment} drillDown={drillDown} />
 
-            <SubdeploymentDrilldownButton
-                type="environments"
-                drillDown={drillDown}
-                deploymentName={displayName}
-                result={subdeploymentResults.subenvironments}
-                mapOpen={mapOpen}
-            />
-            <SubdeploymentDrilldownButton
-                type="services"
-                drillDown={drillDown}
-                deploymentName={displayName}
-                result={subdeploymentResults.subservices}
-                mapOpen={mapOpen}
-            />
+            <SubdeploymentButtonsContainer>
+                {/* NOTE: Show a spinner only when refetching. During the initial fetch there are spinners inside the buttons. */}
+                {deploymentDetailsResult.isFetching && !deploymentDetailsResult.isLoading && <LoadingOverlay />}
+
+                <SubdeploymentDrilldownButton
+                    type="environments"
+                    drillDown={drillDown}
+                    deploymentName={displayName}
+                    result={subdeploymentResults.subenvironments}
+                    mapOpen={mapOpen}
+                />
+                <SubdeploymentDrilldownButton
+                    type="services"
+                    drillDown={drillDown}
+                    deploymentName={displayName}
+                    result={subdeploymentResults.subservices}
+                    mapOpen={mapOpen}
+                />
+            </SubdeploymentButtonsContainer>
         </ButtonsContainer>
     );
 };
