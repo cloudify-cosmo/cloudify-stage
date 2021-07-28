@@ -5,7 +5,6 @@
 
 import { JSDOM } from 'jsdom';
 import _ from 'lodash';
-import $ from 'jquery';
 import d3 from 'd3';
 import log from 'loglevel';
 import moment from 'moment';
@@ -33,10 +32,6 @@ Object.keys(document.defaultView).forEach(property => {
     }
 });
 
-global.$ = $;
-global.jQuery = $;
-global.window.$ = $;
-global.window.jQuery = $;
 global._ = _;
 global.d3 = d3;
 global.moment = moment;
