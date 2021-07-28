@@ -6,8 +6,6 @@ import { createExpandedTopology } from './DataProcessor';
 import ScrollerGlassHandler from './ScrollerGlassHandler';
 import TerraformDetailsModal from './TerraformDetailsModal';
 
-window.$ = $;
-
 const saveConfirmationTimeout = 2500;
 
 function isNodesChanged(topologyNodes, newNodes) {
