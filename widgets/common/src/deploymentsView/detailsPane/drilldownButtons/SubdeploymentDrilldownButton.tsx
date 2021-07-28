@@ -10,6 +10,7 @@ import {
 } from '../../common';
 import { SubdeploymentStatusIcon } from '../../StatusIcon';
 import { tDrillDownButtons } from './common';
+import DrilldownButton from './DrilldownButton';
 import type { SubdeploymentsResult } from './subdeployments-result';
 
 export interface SubdeploymentDrilldownButtonProps {
@@ -39,12 +40,10 @@ const SubdeploymentDrilldownButton: FunctionComponent<SubdeploymentDrilldownButt
         );
     };
 
-    const { Button, Icon } = Stage.Basic;
+    const { Icon } = Stage.Basic;
 
     return (
-        <Button
-            basic
-            color="blue"
+        <DrilldownButton
             onClick={drilldownToSubdeployments}
             disabled={result.loading || result.count === 0}
             loading={result.loading}
@@ -59,7 +58,7 @@ const SubdeploymentDrilldownButton: FunctionComponent<SubdeploymentDrilldownButt
                     <SubdeploymentStatusIcon status={result.status} style={{ marginRight: 0, marginLeft: '0.2em' }} />
                 </>
             )}
-        </Button>
+        </DrilldownButton>
     );
 };
 export default SubdeploymentDrilldownButton;
