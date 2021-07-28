@@ -365,18 +365,21 @@ describe('Deployments View widget', () => {
         });
 
         it('should take the configured filter into account when displaying deployments', () => {
-            const getFilterIdInput = () =>
-                cy.contains('Name of the saved filter to apply').parent().get('input[type="text"]');
+            useDeploymentsViewWidget();
 
-            useDeploymentsViewWidget({ configurationOverrides: { filterId } });
+            const filterFieldLabel = 'Name of the saved filter to apply';
 
             cy.log('Show only precious deployments');
+            cy.editWidgetConfiguration(widgetId, () => {
+                cy.setSearchableDropdownValue(filterFieldLabel, filterId);
+            });
+
             cy.contains(deploymentNameThatMatchesFilter);
             cy.contains(deploymentName).should('not.exist');
 
             cy.log('Show all deployments');
             cy.editWidgetConfiguration(widgetId, () => {
-                getFilterIdInput().clear();
+                cy.clearSearchableDropdown(filterFieldLabel);
             });
 
             cy.contains(deploymentNameThatMatchesFilter);
@@ -384,8 +387,20 @@ describe('Deployments View widget', () => {
 
             cy.log('Invalid filter id');
             cy.editWidgetConfiguration(widgetId, () => {
-                getFilterIdInput().type('some-very-gibberish-filter-id');
+                cy.contains('.field', filterFieldLabel)
+                    .click()
+                    .within(() => {
+                        cy.get('input').type('some-very-gibberish-filter-id');
+                        // NOTE: there should not be such a filter
+                        cy.contains('No results found');
+                    });
             });
+        });
+
+        it('should return an error when the filter ID saved in the configuration is invalid', () => {
+            // NOTE: verifies a case when the filter was removed and the Deployments View is still
+            // using the removed filter's ID in the configuration.
+            useDeploymentsViewWidget({ configurationOverrides: { filterId: 'some-removed-filter-id' } });
 
             cy.contains(/with ID .* was not found/);
         });

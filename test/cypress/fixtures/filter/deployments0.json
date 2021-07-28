@@ -2,82 +2,102 @@
     "items": [
         {
             "id": "app2.2",
+            "display_name": "App 2.2",
             "blueprint_id": "app2.2-clickme"
         },
         {
             "id": "app2.3",
+            "display_name": "App 2.3",
             "blueprint_id": "app2.3"
         },
         {
             "id": "app2.4",
+            "display_name": "App 2.4",
             "blueprint_id": "app2.4"
         },
         {
             "id": "app2.5",
+            "display_name": "App 2.5",
             "blueprint_id": "app2.5"
         },
         {
             "id": "app2.6",
+            "display_name": "App 2.6",
             "blueprint_id": "app2.6"
         },
         {
             "id": "app2.7",
+            "display_name": "App 2.7",
             "blueprint_id": "app2.7"
         },
         {
             "id": "bp6.1",
+            "display_name": "Bp 6.1",
             "blueprint_id": "Bp6"
         },
         {
             "id": "com",
+            "display_name": "Com",
             "blueprint_id": "suffix_demo"
         },
         {
             "id": "com1",
+            "display_name": "Com1",
             "blueprint_id": "suffix_demo"
         },
         {
             "id": "com2",
+            "display_name": "Com2",
             "blueprint_id": "suffix_demo"
         },
         {
             "id": "com3",
+            "display_name": "Com3",
             "blueprint_id": "suffix_demo"
         },
         {
             "id": "com4",
+            "display_name": "Com4",
             "blueprint_id": "suffix_demo2"
         },
         {
             "id": "com5",
+            "display_name": "Com5",
             "blueprint_id": "suffix_demo2"
         },
         {
             "id": "com6",
+            "display_name": "Com6",
             "blueprint_id": "suffix_demo2"
         },
         {
             "id": "component",
+            "display_name": "Component",
             "blueprint_id": "New_Blueprint_2"
         },
         {
             "id": "component_depl",
+            "display_name": "Component Depl",
             "blueprint_id": "app2"
         },
         {
             "id": "f",
+            "display_name": "F",
             "blueprint_id": "aws-example-network"
         },
         {
             "id": "gjh",
+            "display_name": "GJH",
             "blueprint_id": "New_Blueprint_4"
         },
         {
             "id": "hello-world_2",
+            "display_name": "hello new 2nd world",
             "blueprint_id": "hello-world_1"
         },
         {
             "id": "hjhj",
+            "display_name": "hjhj",
             "blueprint_id": "New_Blueprint_5"
         }
     ],

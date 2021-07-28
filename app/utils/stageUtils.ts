@@ -64,6 +64,24 @@ export default class StageUtils {
      */
     static formatLocalTimestamp = TimeUtils.formatLocalTimestamp.bind(TimeUtils);
 
+    static formatDisplayName(data: Partial<{ id: string; displayName: string }>): string {
+        if (data.id === undefined) {
+            log.error('id is undefined');
+
+            return '';
+        }
+
+        if (data.id === data.displayName) {
+            return data.id;
+        }
+
+        if (data.displayName) {
+            return `${data.displayName} (${data.id})`;
+        }
+
+        return data.id;
+    }
+
     /**
      * Replace all occurrences of <Tag attr1="value1" attr1="value2" ...> to "tag value1 value2 ..."
      *

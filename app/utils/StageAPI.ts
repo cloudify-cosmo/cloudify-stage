@@ -20,8 +20,8 @@ import './types';
 type StagePropTypes = typeof StagePropTypes;
 type StageHooks = typeof StageHooks;
 
-/** @see https://docs.cloudify.co/developer/writing_widgets/widget-apis/#toolbox-object */
-interface StageToolbox {
+/** Toolbox without widget-related methods. Can be created before widgets are rendered */
+interface StageWidgetlessToolbox {
     drillDown(
         widget: StageWidget<unknown>,
         defaultTemplate: string,
@@ -35,15 +35,19 @@ interface StageToolbox {
     getManager(): Manager;
     getManagerState(): any;
     getNewManager(ip: unknown): any;
-    getWidget(): StageWidget;
-    getWidgetBackend(): any;
     goToHomePage(): void;
     goToPage(pageName: string, context: any): void;
     goToParentPage(): void;
+}
+
+/** @see https://docs.cloudify.co/developer/writing_widgets/widget-apis/#toolbox-object */
+interface StageToolbox extends StageWidgetlessToolbox {
+    getWidget(): StageWidget;
+    getWidgetBackend(): any;
     loading(isLoading: boolean): void;
     refresh(params?: any): void;
 }
-export type { StageToolbox as Toolbox };
+export type { StageToolbox as Toolbox, StageWidgetlessToolbox as WidgetlessToolbox };
 
 interface StageWidget<Configuration = Record<string, unknown>> {
     id: string;
@@ -80,20 +84,26 @@ type StageWidgetDefinition<Params = any, Data = any, Configuration = Record<stri
     (ReactWidgetDefinitionPart<Data, Configuration> | HTMLWidgetDefinitionPart<Data, Configuration>);
 export type { StageWidgetDefinition as WidgetDefinition };
 
+interface StageCustomConfigurationComponentProps<T> {
+    name: string;
+    value: T;
+    onChange: (event: unknown, field: { name: string; value: T }) => void;
+    widgetlessToolbox: StageWidgetlessToolbox;
+}
+export type { StageCustomConfigurationComponentProps as CustomConfigurationComponentProps };
+
+// TODO(RD-2792): use a discriminated union for different types of configuration
 interface StageWidgetConfigurationDefinition {
     id: string;
     name?: string;
     description?: string;
-    // TODO(RD-1296): add individual interfaces for different types. Use TypeScript discriminated unions
     type: string;
     default?: any;
     placeHolder?: string;
     hidden?: boolean;
-    component?: ComponentType<any>;
+    component?: ComponentType<StageCustomConfigurationComponentProps<any>>;
     /** Used for lists */
     items?: (string | { name: string; value: string })[];
-
-    // TODO(RD-1296): add concrete types for each possible key and remove the line below
     [key: string]: any;
 }
 export type { StageWidgetConfigurationDefinition as WidgetConfigurationDefinition };
@@ -165,7 +175,7 @@ interface HTMLWidgetDefinitionPart<Data, Configuration> {
 
     /** @see https://docs.cloudify.co/developer/writing_widgets/widget-definition/#postrender-container-widget-data-toolbox */
     postRender?: (
-        container: any,
+        container: HTMLElement,
         widget: StageWidget<Configuration>,
         data: StageWidgetData<Data>,
         toolbox: StageToolbox
@@ -258,6 +268,7 @@ declare global {
          */
         namespace Types {
             type Toolbox = StageToolbox;
+            type WidgetlessToolbox = StageWidgetlessToolbox;
             // TODO(RD-1645): rename Widget to ResolvedWidget
             type Widget<Configuration = Record<string, unknown>> = StageWidget<Configuration>;
             type WidgetDefinition<
@@ -266,6 +277,7 @@ declare global {
                 Configuration = Record<string, unknown>
             > = StageWidgetDefinition<Params, Data, Configuration>;
             type WidgetConfigurationDefinition = StageWidgetConfigurationDefinition;
+            type CustomConfigurationComponentProps<T> = StageCustomConfigurationComponentProps<T>;
             type WidgetData<D> = StageWidgetData<D>;
             type InitialWidgetDefinition<Params, Data, Configuration> = StageInitialWidgetDefinition<
                 Params,

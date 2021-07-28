@@ -6,6 +6,7 @@ import i18n from 'i18next';
 import _ from 'lodash';
 import PropTypes from 'prop-types';
 import React, { useEffect, useState } from 'react';
+import { getToolbox } from '../utils/Toolbox';
 
 import { ApproveButton, CancelButton, Form, GenericField, Message, Modal } from './basic';
 
@@ -75,6 +76,7 @@ export default function EditWidgetModal({ configDef, configuration, show, onHide
                                 label={config.name}
                                 value={fields[config.id]}
                                 onChange={handleInputChange}
+                                widgetlessToolbox={getToolbox(undefined, undefined, undefined)}
                             />
                         ))}
 
