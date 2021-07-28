@@ -2,8 +2,8 @@ import type { FunctionComponent } from 'react';
 import { useQuery } from 'react-query';
 import styled from 'styled-components';
 
-import { i18nDrillDownPrefix } from '../../common';
 import type { Deployment } from '../../types';
+import { tDrillDownButtons } from './common';
 import DrilldownButton, { DrilldownButtonProps } from './DrilldownButton';
 import { getSubdeploymentResults } from './subdeployments-result';
 
@@ -21,7 +21,6 @@ const ButtonsContainer = styled.div`
     position: relative;
 `;
 
-const i18nDrillDownButtonsPrefix = `${i18nDrillDownPrefix}.buttons`;
 const getDeploymentUrl = (id: string) => `/deployments/${id}?all_sub_deployments=false`;
 
 const DrilldownButtons: FunctionComponent<DrilldownButtonsProps> = ({
@@ -41,13 +40,7 @@ const DrilldownButtons: FunctionComponent<DrilldownButtonsProps> = ({
 
     if (deploymentDetailsResult.isIdle || deploymentDetailsResult.isError) {
         const { ErrorMessage } = Stage.Basic;
-        return (
-            <ErrorMessage
-                error={Stage.i18n.t(`${i18nDrillDownButtonsPrefix}.detailsFetchingError`)}
-                header=""
-                onDismiss={null}
-            />
-        );
+        return <ErrorMessage error={tDrillDownButtons('detailsFetchingError')} header="" onDismiss={null} />;
     }
 
     const subdeploymentResults = getSubdeploymentResults(deploymentDetailsResult);

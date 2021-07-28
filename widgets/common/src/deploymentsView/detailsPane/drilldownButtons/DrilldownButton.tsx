@@ -9,6 +9,7 @@ import {
     subservicesIcon
 } from '../../common';
 import { SubdeploymentStatusIcon } from '../../StatusIcon';
+import { tDrillDownButtons } from './common';
 import type { SubdeploymentsResult } from './subdeployments-result';
 
 export interface DrilldownButtonProps {
@@ -20,8 +21,6 @@ export interface DrilldownButtonProps {
 }
 
 const subdeploymentsDrilldownTemplateName = 'drilldownDeployments';
-// TODO(RD-2790): use a single `tDrillDownButtons
-const i18nDrillDownButtonsPrefix = `${i18nDrillDownPrefix}.buttons`;
 
 const DrilldownButton: FunctionComponent<DrilldownButtonProps> = ({
     type,
@@ -30,14 +29,13 @@ const DrilldownButton: FunctionComponent<DrilldownButtonProps> = ({
     result,
     mapOpen
 }) => {
-    const { i18n } = Stage;
     const icon = type === 'services' ? subservicesIcon : subenvironmentsIcon;
 
     const drilldownToSubdeployments = () => {
         drillDown(
             subdeploymentsDrilldownTemplateName,
             { [filterRulesContextKey]: [deploymentTypeRule[type]], [mapOpenContextKey]: mapOpen },
-            `${deploymentName} [${i18n.t(`${i18nDrillDownPrefix}.breadcrumbs.${type}`)}]`
+            `${deploymentName} [${Stage.i18n.t(`${i18nDrillDownPrefix}.breadcrumbs.${type}`)}]`
         );
     };
 
@@ -50,10 +48,10 @@ const DrilldownButton: FunctionComponent<DrilldownButtonProps> = ({
             onClick={drilldownToSubdeployments}
             disabled={result.loading || result.count === 0}
             loading={result.loading}
-            title={i18n.t(`${i18nDrillDownButtonsPrefix}.${type}.title`)}
+            title={tDrillDownButtons(`${type}.title`)}
         >
             <Icon name={icon} />
-            {i18n.t(`${i18nDrillDownButtonsPrefix}.${type}.label`)}
+            {tDrillDownButtons(`${type}.label`)}
             {!result.loading && (
                 <>
                     {' '}
