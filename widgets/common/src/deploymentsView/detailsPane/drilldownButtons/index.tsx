@@ -4,6 +4,7 @@ import styled from 'styled-components';
 
 import type { Deployment } from '../../types';
 import { tDrillDownButtons } from './common';
+import DetailsDrilldownButton from './DetailsDrilldownButton';
 import SubdeploymentDrilldownButton, { SubdeploymentDrilldownButtonProps } from './SubdeploymentDrilldownButton';
 import { getSubdeploymentResults } from './subdeployments-result';
 
@@ -50,6 +51,8 @@ const DrilldownButtons: FunctionComponent<DrilldownButtonsProps> = ({
         <ButtonsContainer>
             {/* NOTE: Show a spinner only when refetching. During the initial fetch there are spinners inside the buttons. */}
             {deploymentDetailsResult.isFetching && !deploymentDetailsResult.isLoading && <LoadingOverlay />}
+
+            <DetailsDrilldownButton deployment={deployment} drillDown={drillDown} />
 
             <SubdeploymentDrilldownButton
                 type="environments"
