@@ -46,7 +46,7 @@ const reactSplitPaneOffset = 30;
 const minPaneWidth = 440 + reactSplitPaneOffset;
 
 // NOTE: should contain all the properties in `Deployment`
-const deploymentPropertiesToInclude: (keyof Deployment)[] = [
+const deploymentPropertiesToInclude = (<T extends (keyof Deployment)[]>(keys: T) => keys)([
     'id',
     'display_name',
     'site_name',
@@ -60,7 +60,13 @@ const deploymentPropertiesToInclude: (keyof Deployment)[] = [
     'sub_services_status',
     'sub_environments_count',
     'sub_environments_status'
-];
+]);
+
+type MustBeTrue<T extends true> = T;
+// @ts-expect-error Only for type-checking
+type AllPropertiesIncluded = MustBeTrue<
+    keyof Deployment extends typeof deploymentPropertiesToInclude[number] ? true : false
+>;
 
 export const DeploymentsView: FunctionComponent<DeploymentsViewProps> = ({
     toolbox,
