@@ -23,7 +23,9 @@ const ButtonsContainer = styled.div`
 
 const SubdeploymentButtonsContainer = styled.div`
     position: relative;
-    display: inline;
+    // NOTE: make sure the 2 buttons appear as a single block. This way the LoadingOverlay will be a rectangle
+    // and not wrap over 2 lines.
+    display: inline-block;
 `;
 
 const getDeploymentUrl = (id: string) => `/deployments/${id}?all_sub_deployments=false`;
