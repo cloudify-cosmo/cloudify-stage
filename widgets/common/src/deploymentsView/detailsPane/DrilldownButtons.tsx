@@ -13,8 +13,21 @@ import {
 import { SubdeploymentStatusIcon } from '../StatusIcon';
 import type { Deployment, DeploymentStatus } from '../types';
 
+// NOTE: use a constrained identity function to make sure the array members match the properties
+// of the `DrilldownButtonDeployment` type
+const drilldownButtonDeploymentKeys = (<T extends (keyof Deployment)[]>(keys: T) => keys)([
+    'id',
+    'display_name',
+    'sub_environments_count',
+    'sub_environments_status',
+    'sub_services_count',
+    'sub_services_status'
+]);
+
+type DrilldownButtonDeployment = Pick<Deployment, typeof drilldownButtonDeploymentKeys[number]>;
+
 export interface DrilldownButtonsProps {
-    deployment: Deployment;
+    deployment: DrilldownButtonDeployment;
     drillDown: (templateName: string, drilldownContext: Record<string, any>, drilldownPageName: string) => void;
     toolbox: Stage.Types.Toolbox;
     refetchInterval: number;
@@ -41,7 +54,8 @@ const DrilldownButtons: FunctionComponent<DrilldownButtonsProps> = ({
 
     const deploymentDetailsResult = useQuery(
         getDeploymentUrl(id),
-        ({ queryKey: url }): Promise<Deployment> => toolbox.getManager().doGet(url),
+        ({ queryKey: url }): Promise<DrilldownButtonDeployment> =>
+            toolbox.getManager().doGet(url, { params: { _include: drilldownButtonDeploymentKeys } }),
         { refetchInterval }
     );
 
@@ -84,7 +98,9 @@ const DrilldownButtons: FunctionComponent<DrilldownButtonsProps> = ({
 export default DrilldownButtons;
 
 const getSubdeploymentResults = (
-    deploymentDetailsResult: QueryObserverLoadingResult<Deployment> | QueryObserverSuccessResult<Deployment>
+    deploymentDetailsResult:
+        | QueryObserverLoadingResult<DrilldownButtonDeployment>
+        | QueryObserverSuccessResult<DrilldownButtonDeployment>
 ): { subservices: SubdeploymentsResult; subenvironments: SubdeploymentsResult } => {
     if (deploymentDetailsResult.isLoading) {
         return {
