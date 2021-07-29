@@ -2,9 +2,7 @@
     "extends": "../tsconfig.base.json",
     "compilerOptions": {
         "types": ["react", "react-dom", "moment", "lodash"],
-        "plugins": [{ "name": "typescript-styled-plugin" }],
-        // NOTE: does not require having `import React from 'react'` for component completion to work
-        "jsx": "react-jsxdev"
+        "plugins": [{ "name": "typescript-styled-plugin" }]
     },
     "include": ["**/*", "**/*.json", "../app/typings"],
     "references": [{ "path": "../app" }]
