@@ -28,7 +28,10 @@ pipeline {
     STAGE_DIR = "cloudify-stage"
     CFY_MANAGER_URL = 'https://raw.githubusercontent.com/cloudify-cosmo/cloudify-manager'
     CFY_NODE_RPM = 'http://repository.cloudifysource.org/cloudify/components/nodejs-12.22.1-1nodesource.x86_64.rpm'
-    MAIN_BRANCH = "6.1.0-build"
+  }
+
+  parameters {
+    
   }
 
   stages {
@@ -36,7 +39,7 @@ pipeline {
       parallel{
         stage('Audit'){
           when {
-            branch "${MAIN_BRANCH}"
+            branch pattern: ".+-build|master", comparator: "REGEXP"
           }
           steps {
             catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE'){
@@ -78,7 +81,7 @@ pipeline {
         }
         stage('Build RPM'){
           when {
-            branch "${MAIN_BRANCH}"
+            branch pattern: ".+-build|master", comparator: "REGEXP"
           }
           steps {
             container('rpmbuild'){
@@ -86,7 +89,7 @@ pipeline {
               sh """
                 cd && mkdir rpmbuild && cd rpmbuild
                 mkdir -p BUILD && cp -rf ${WORKSPACE}/${STAGE_DIR}/. BUILD && cd BUILD
-                curl -fO "${CFY_MANAGER_URL}/${BRANCH}/packaging/version_info" || curl -fO "${CFY_MANAGER_URL}/${MAIN_BRANCH}/packaging/version_info"
+                curl -fO "${CFY_MANAGER_URL}/${BRANCH}/packaging/version_info"
               """
 
               echo 'Check for cache'
@@ -184,13 +187,13 @@ pipeline {
         }
         stage('Run Stage-UI System-tests') {
           when {
-            branch "${MAIN_BRANCH}"
+            branch pattern: ".+-build|master", comparator: "REGEXP"
           }
           steps {
             echo 'Trigger Stage-UI System-tests'
             build(job: 'Stage-UI-System-Test', parameters: [
-              string(name: 'BRANCH', value: "${MAIN_BRANCH}"),
-              string(name: 'STAGE_BRANCH', value: "${MAIN_BRANCH}")
+              string(name: 'BRANCH', value: "${BRANCH}"),
+              string(name: 'STAGE_BRANCH', value: "${BRANCH}")
             ])
           }
         }
