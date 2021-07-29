@@ -151,6 +151,20 @@ describe('Deployments View widget', () => {
 
             verifyMapHeight(newHeight);
         });
+
+        it('should allow changing the default page size', () => {
+            useDeploymentsViewWidget({
+                configurationOverrides: {
+                    pageSize: 2
+                },
+                routeHandler: {
+                    fixture: 'deployments/various-statuses.json'
+                }
+            });
+
+            cy.contains('.form', 'Page size').contains('2').should('be.visible');
+            cy.contains('1 to 2 of 3 entries');
+        });
     });
 
     it('should display the deployments and content in the details pane', () => {
