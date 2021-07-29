@@ -691,6 +691,9 @@
                 "mapHeight": {
                     "name": "Map height",
                     "description": "The height of the map in pixels"
+                },
+                "pageSize": {
+                    "name": "Number of items to show at once in the table"
                 }
             },
             "header": {

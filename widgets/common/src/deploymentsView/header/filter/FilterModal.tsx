@@ -52,7 +52,7 @@ const FilterModal: FunctionComponent<FilterModalProps> = ({
     toolbox
 }) => {
     const { i18n } = Stage;
-    const { ApproveButton, CancelButton, Dimmer, Icon, Modal, UnsafelyTypedForm, UnsafelyTypedFormField } = Stage.Basic;
+    const { ApproveButton, CancelButton, Dimmer, Icon, Modal, Form, UnsafelyTypedFormField } = Stage.Basic;
     const { DynamicDropdown } = Stage.Common;
     const { useBoolean, useErrors } = Stage.Hooks;
 
@@ -190,7 +190,7 @@ const FilterModal: FunctionComponent<FilterModalProps> = ({
             </Modal.Header>
 
             <Modal.Content>
-                <UnsafelyTypedForm errors={errors} onErrorsDismiss={clearErrors}>
+                <Form errors={errors} onErrorsDismiss={clearErrors}>
                     <UnsafelyTypedFormField label={tModal('filterId')}>
                         <DynamicDropdown
                             toolbox={toolbox}
@@ -211,7 +211,7 @@ const FilterModal: FunctionComponent<FilterModalProps> = ({
                             />
                         )}
                     </UnsafelyTypedFormField>
-                </UnsafelyTypedForm>
+                </Form>
             </Modal.Content>
 
             <Modal.Actions style={{ position: 'relative' }}>
