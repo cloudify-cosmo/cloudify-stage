@@ -3,19 +3,10 @@
  * Created by kinneretzin on 07/09/2016.
  */
 
-import $ from 'jquery';
-import 'jquery-ui/ui/core';
-import 'jquery-ui/ui/widget';
-import 'jquery-ui/ui/widgets/mouse';
-import 'jquery-ui/ui/widgets/draggable';
-import 'jquery-ui/ui/widgets/droppable';
-
 import { castArray } from 'lodash';
 import Topology from './Topology';
 import DataFetcher from './DataFetcher';
 import { createBaseTopology } from './DataProcessor';
-
-window.$ = $;
 
 Stage.defineWidget({
     id: 'topology',
