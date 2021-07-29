@@ -26,6 +26,7 @@ import DeploymentsMapContainer from './map';
 import SearchActions from '../SearchActions';
 import getSelectedDeployment from './getSelectedDeployment';
 import useFilterQuery from './useFilterQuery';
+import type { Deployment } from './types';
 
 export interface DeploymentsViewProps {
     widget: Stage.Types.Widget<SharedDeploymentsViewWidgetConfiguration>;
@@ -43,6 +44,23 @@ export interface DeploymentsViewProps {
 const reactSplitPaneOffset = 30;
 // NOTE: keeps the UI looking nice at all times
 const minPaneWidth = 440 + reactSplitPaneOffset;
+
+// NOTE: should contain all the properties in `Deployment`
+const deploymentPropertiesToInclude: (keyof Deployment)[] = [
+    'id',
+    'display_name',
+    'site_name',
+    'blueprint_id',
+    'latest_execution_status',
+    'deployment_status',
+    'environment_type',
+    'latest_execution_total_operations',
+    'latest_execution_finished_operations',
+    'sub_services_count',
+    'sub_services_status',
+    'sub_environments_count',
+    'sub_environments_status'
+];
 
 export const DeploymentsView: FunctionComponent<DeploymentsViewProps> = ({
     toolbox,
@@ -77,7 +95,10 @@ export const DeploymentsView: FunctionComponent<DeploymentsViewProps> = ({
     const deploymentsResult = useQuery(
         [deploymentsUrl, gridParams, finalFilterRules],
         (): Promise<Stage.Common.DeploymentsView.Types.DeploymentsResponse> =>
-            searchActions.doListDeployments(finalFilterRules, gridParams),
+            searchActions.doListDeployments(finalFilterRules, {
+                ...gridParams,
+                _include: deploymentPropertiesToInclude.join(',')
+            }),
         {
             enabled: filteringByParentDeploymentResult.filterable,
             refetchInterval: widget.configuration.customPollingTime * 1000,
