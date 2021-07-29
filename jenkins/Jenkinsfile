@@ -30,10 +30,6 @@ pipeline {
     CFY_NODE_RPM = 'http://repository.cloudifysource.org/cloudify/components/nodejs-12.22.1-1nodesource.x86_64.rpm'
   }
 
-  parameters {
-    
-  }
-
   stages {
     stage('Prepare & Audit main branch'){
       parallel{
