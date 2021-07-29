@@ -53,8 +53,6 @@ export default function DeploymentActionsMenu({ onActionClick, toolbox, trigger 
     return (
         // eslint-disable-next-line react/jsx-props-no-spreading
         <PopupMenu className="deploymentActionsMenu" {...popupMenuProps}>
-            {/* TODO(RD-2760): remove the warning after Popup.Trigger can accept `children` */}
-            {/* @ts-expect-error Popup.Trigger does not accept `children` prop */}
             {trigger && <Popup.Trigger>{trigger}</Popup.Trigger>}
             <Menu pointing vertical onItemClick={onItemClick} items={items} />
         </PopupMenu>
