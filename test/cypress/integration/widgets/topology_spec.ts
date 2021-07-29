@@ -1,5 +1,16 @@
-import { omit, size } from 'lodash';
+import { pick, size } from 'lodash';
 import { secondsToMs, waitUntilEmpty, waitUntilNotEmpty } from '../../support/resource_commons';
+
+/**
+ * Performs a deep equality check assuming the `assertedValue` can
+ * contain extra properties not present in `expectedValue`
+ */
+// NOTE: TS does not allow using `Record<string, object>` for the `assertedValue`
+// eslint-disable-next-line @typescript-eslint/ban-types
+const expectToContainSubset = (assertedValue: object, expectedValue: Record<string, unknown>) => {
+    const partialValueToCompare = pick(assertedValue, Object.keys(expectedValue));
+    expect(partialValueToCompare).to.deep.equal(expectedValue);
+};
 
 describe('Topology', () => {
     const pollingTimeSeconds = 5;
@@ -88,7 +99,7 @@ describe('Topology', () => {
                 .invoke('text')
                 .then(rawData => {
                     const parsedData: RowData = JSON.parse(rawData);
-                    expect(omit(parsedData, 'instances')).to.deep.equal({
+                    expectToContainSubset(parsedData, {
                         provider: 'provider["registry.terraform.io/hashicorp/null"]',
                         type: 'null_resource',
                         mode: 'managed',
@@ -96,7 +107,7 @@ describe('Topology', () => {
                     });
                     expect(parsedData.instances.length).to.equal(2);
                     parsedData.instances.forEach((instance, i) => {
-                        expect(omit(instance, 'attributes')).to.deep.equal({
+                        expectToContainSubset(instance, {
                             schema_version: 0,
                             dependencies: ['null_resource.foo2'],
                             index_key: i
@@ -110,14 +121,14 @@ describe('Topology', () => {
                 .invoke('text')
                 .then(rawData => {
                     const parsedData: RowData = JSON.parse(rawData);
-                    expect(omit(parsedData, 'instances')).to.deep.equal({
+                    expectToContainSubset(parsedData, {
                         provider: 'provider["registry.terraform.io/hashicorp/null"]',
                         type: 'null_resource',
                         mode: 'managed',
                         name: 'foo2'
                     });
                     expect(parsedData.instances.length).to.equal(1);
-                    expect(omit(parsedData.instances[0], 'attributes')).to.deep.equal({
+                    expectToContainSubset(parsedData.instances[0], {
                         schema_version: 0
                     });
                     expect(size(parsedData.instances[0].attributes)).to.equal(2);
