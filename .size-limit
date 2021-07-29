@@ -7,13 +7,13 @@
     },
     {
         "name": "Vendor JS bundle",
-        "limit": "4.22 MB",
+        "limit": "4.12 MB",
         "gzip": false,
         "path": "dist/static/js/vendor.bundle.js"
     },
     {
         "name": "Widgets",
-        "limit": "3.00 MB",
+        "limit": "3.11 MB",
         "gzip": false,
         "running": false,
         "path": ["dist/appData/widgets", "!dist/appData/widgets/**/*.gz"]

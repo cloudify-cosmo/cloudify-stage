@@ -68,7 +68,7 @@ const LabelsInput: FunctionComponent<LabelsInputProps> = ({
     const [open, toggleOpen] = useToggle();
     const [newLabelKey, setNewLabelKey, resetNewLabelKey] = useResettableState('');
     const [newLabelValue, setNewLabelValue, resetNewLabelValue] = useResettableState('');
-    const keyDropdownRef = useRef<HTMLElement>();
+    const keyDropdownRef = useRef<HTMLElement>(null);
 
     const newLabelIsProvided = !!newLabelKey && !!newLabelValue;
     const newLabelIsAlreadyPresent = (() => {
