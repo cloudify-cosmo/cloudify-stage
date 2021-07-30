@@ -828,6 +828,10 @@
                 },
                 "buttons": {
                     "detailsFetchingError": "Could not fetch deployment details",
+                    "details": {
+                        "label": "Details",
+                        "title": "Drill down to deployment details"
+                    },
                     "environments": {
                         "label": "Subenvironments",
                         "title": "Drill down to subenvironments"
