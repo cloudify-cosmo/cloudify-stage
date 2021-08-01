@@ -1,5 +1,5 @@
 def getMainBranch(String branch){
-  if (branch =~ /.+-build|master/)
+  if (branch =~ /.+-build/)
     return branch
   else 
     return 'master'
