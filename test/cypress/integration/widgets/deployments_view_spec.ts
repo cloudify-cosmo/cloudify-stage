@@ -151,6 +151,20 @@ describe('Deployments View widget', () => {
 
             verifyMapHeight(newHeight);
         });
+
+        it('should allow changing the default page size', () => {
+            useDeploymentsViewWidget({
+                configurationOverrides: {
+                    pageSize: 2
+                },
+                routeHandler: {
+                    fixture: 'deployments/various-statuses.json'
+                }
+            });
+
+            cy.contains('.form', 'Page size').contains('2').should('be.visible');
+            cy.contains('1 to 2 of 3 entries');
+        });
     });
 
     it('should display the deployments and content in the details pane', () => {
@@ -790,6 +804,21 @@ describe('Deployments View widget', () => {
                 cy.contains('web-app');
                 cy.contains('db-env').should('not.exist');
             });
+        });
+
+        it('should allow drilling down to deployment details', () => {
+            useEnvironmentsWidget();
+
+            getDeploymentsViewTable().contains('app-env').click();
+            getDeploymentsViewDetailsPane().contains('button', 'Details').click();
+
+            cy.get('.widget.deploymentsViewWidget').should('not.exist');
+            getBreadcrumbs().contains('app-env');
+            // NOTE: an example text that is visible on the full page
+            cy.contains('Execute workflow');
+
+            getBreadcrumbs().contains('Test Page').click();
+            getDeploymentsViewWidget().should('be.visible');
         });
 
         it('should keep the map open when drilling down and going back up', () => {

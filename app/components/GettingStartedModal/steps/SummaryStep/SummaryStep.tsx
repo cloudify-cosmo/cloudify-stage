@@ -3,7 +3,7 @@ import React, { memo, useEffect } from 'react';
 
 import StageUtils from '../../../../utils/stageUtils';
 import { useResettableState } from '../../../../utils/hooks';
-import { Divider, Header, List, Message, Progress } from '../../../basic';
+import { Divider, Form, Header, List, Message, Progress } from '../../../basic';
 import useCurrentCallback from '../../common/useCurrentCallback';
 import {
     usePluginsInstallationTasks,
@@ -11,7 +11,6 @@ import {
     useBlueprintsInstallationTasks
 } from '../../installation/tasks';
 import { useInternal, useManager } from '../../common/managerHooks';
-import { UnsafelyTypedForm } from '../../unsafelyTypedForm';
 import { createResourcesInstaller, TaskDetails, TaskStatus, TaskType } from '../../installation/process';
 import PluginsInstallationTasks from './PluginsInstallationTasks';
 import SecretsInstallationTasks from './SecretsInstallationTasks';
@@ -115,10 +114,7 @@ const SummaryStep = ({
         installationErrors.length > 0;
 
     return (
-        <UnsafelyTypedForm
-            style={{ minHeight: 150, flex: 1, display: 'flex', flexDirection: 'column' }}
-            loading={tasksLoading}
-        >
+        <Form style={{ minHeight: 150, flex: 1, display: 'flex', flexDirection: 'column' }} loading={tasksLoading}>
             {errorDetected && (
                 <Message color="red">
                     <List relaxed>
@@ -162,7 +158,7 @@ const SummaryStep = ({
                     )}
                 </>
             )}
-        </UnsafelyTypedForm>
+        </Form>
     );
 };
 
