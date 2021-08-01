@@ -691,6 +691,9 @@
                 "mapHeight": {
                     "name": "Map height",
                     "description": "The height of the map in pixels"
+                },
+                "pageSize": {
+                    "name": "Number of items to show at once in the table"
                 }
             },
             "header": {
@@ -825,6 +828,10 @@
                 },
                 "buttons": {
                     "detailsFetchingError": "Could not fetch deployment details",
+                    "details": {
+                        "label": "Details",
+                        "title": "Drill down to deployment details"
+                    },
                     "environments": {
                         "label": "Subenvironments",
                         "title": "Drill down to subenvironments"

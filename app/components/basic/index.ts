@@ -107,7 +107,6 @@ const ErrorMessageWithCorrectReturnType = (ErrorMessage as unknown) as Component
 >;
 
 // TODO(RD-1837): Once `Form` component has proper TS definitions, these wrappers should be removed
-const UnsafelyTypedForm = (Form as unknown) as FunctionComponent<{ [x: string]: any }>;
 const UnsafelyTypedFormField = (Form.Field as unknown) as FunctionComponent<{ [x: string]: any }>;
 const UnsafelyTypedFormGroup = (Form.Group as unknown) as FunctionComponent<{ [x: string]: any }>;
 
@@ -171,7 +170,6 @@ export {
     Step,
     Tab,
     Table,
-    UnsafelyTypedForm,
     UnsafelyTypedFormField,
     UnsafelyTypedFormGroup,
     VisibilityIcon,

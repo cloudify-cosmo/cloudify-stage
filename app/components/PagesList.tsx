@@ -102,7 +102,7 @@ const PagesList: FunctionComponent<PagesListProps> = ({
             </DndContext>
             {isEditMode && (
                 <div style={{ textAlign: 'center', marginTop: 10 }}>
-                    {/* @ts-ignore until the AddPageButton not fully migrated to ts */}
+                    {/* @ts-expect-error until the AddPageButton not fully migrated to ts */}
                     <AddPageButton />
                 </div>
             )}
@@ -114,7 +114,7 @@ PagesList.propTypes = {
     onPageSelected: PropTypes.func.isRequired,
     onPageRemoved: PropTypes.func.isRequired,
     onPageReorder: PropTypes.func.isRequired,
-    // @ts-ignore need to define better shape of page definition
+    // @ts-expect-error need to define better shape of page definition
     pages: PropTypes.arrayOf(
         PropTypes.shape({
             id: PropTypes.string,
