@@ -12,13 +12,18 @@ const subdeploymentInfoDeploymentKeys = (<T extends (keyof Deployment)[]>(keys: 
 
 type SubdeploymentInfo = Pick<Deployment, typeof subdeploymentInfoDeploymentKeys[number]>;
 
-const getDeploymentUrl = (id: string) => `/deployments/${id}?all_sub_deployments=false`;
+const getDeploymentUrl = (id: string) => `/deployments/${id}`;
 
 export const useSubdeploymentInfo = (deploymentId: string, toolbox: Stage.Types.Toolbox, refetchInterval: number) =>
     useQuery(
         getDeploymentUrl(deploymentId),
         ({ queryKey: url }): Promise<SubdeploymentInfo> =>
-            toolbox.getManager().doGet(url, { params: { _include: subdeploymentInfoDeploymentKeys } }),
+            toolbox.getManager().doGet(url, {
+                params: {
+                    all_sub_deployments: false,
+                    _include: _.join(subdeploymentInfoDeploymentKeys)
+                }
+            }),
         { refetchInterval }
     );
 
