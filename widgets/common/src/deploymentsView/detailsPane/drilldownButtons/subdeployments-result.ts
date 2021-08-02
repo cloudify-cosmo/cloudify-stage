@@ -4,6 +4,7 @@ import type { Deployment, DeploymentStatus } from '../../types';
 // NOTE: use a constrained identity function to make sure the array members match the properties
 // of the `DrilldownButtonDeployment` type
 const subdeploymentInfoDeploymentKeys = (<T extends (keyof Deployment)[]>(keys: T) => keys)([
+    'id',
     'sub_environments_count',
     'sub_environments_status',
     'sub_services_count',
