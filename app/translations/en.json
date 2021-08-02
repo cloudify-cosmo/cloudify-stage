@@ -655,6 +655,11 @@
                         "placeholder": "Provide the image file URL or click browse to select a file"
                     }
                 }
+            },
+            "blueprintMarketPlace": {
+                "modal": {
+                    "header": "Blueprint marketplace"
+                }
             }
         },
         "blueprintActionButtons": {

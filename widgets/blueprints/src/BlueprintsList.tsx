@@ -145,7 +145,7 @@ export default class BlueprintList extends React.Component<BlueprintListProps, B
         const NO_DATA_MESSAGE = 'There are no Blueprints available. Click "Upload" to add Blueprints.';
         const { Button, ErrorMessage } = Stage.Basic;
         // @ts-expect-error UploadBlueprintModal is not converted to TS yet
-        const { DeleteConfirm, DeployBlueprintModal, UploadBlueprintModal } = Stage.Common;
+        const { DeleteConfirm, DeployBlueprintModal, UploadBlueprintModal, BlueprintMarketplaceModal } = Stage.Common;
 
         const shouldShowTable = widget.configuration.displayStyle === 'table';
 
@@ -190,8 +190,26 @@ export default class BlueprintList extends React.Component<BlueprintListProps, B
                     onHide={this.hideDeploymentModal}
                     toolbox={toolbox}
                 />
+                <BlueprintMarketplaceModal
+                    open={showUploadModal}
+                    onHide={this.hideUploadModal}
+                    tabs={[
+                        {
+                            name: 'VM Blueprint Examples',
+                            url: 'https://repository.cloudifysource.org/cloudify/blueprints/5.1/vm-examples.json'
+                        },
+                        {
+                            name: 'Kubernetes Blueprint Examples',
+                            url: 'https://repository.cloudifysource.org/cloudify/blueprints/5.1/k8s-examples.json'
+                        },
+                        {
+                            name: 'Orchestrator Blueprint Examples',
+                            url: 'https://repository.cloudifysource.org/cloudify/blueprints/5.1/orc-examples.json'
+                        }
+                    ]}
+                />
 
-                <UploadBlueprintModal open={showUploadModal} onHide={this.hideUploadModal} toolbox={toolbox} />
+                <UploadBlueprintModal open={false} onHide={this.hideUploadModal} toolbox={toolbox} />
             </div>
         );
     }
