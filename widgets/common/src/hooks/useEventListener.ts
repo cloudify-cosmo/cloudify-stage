@@ -1,6 +1,10 @@
 import { useEffect } from 'react';
 
-function useEventListener(toolbox: Stage.Types.Toolbox, event: string, handler: (...args: any[]) => void) {
+function useEventListener(
+    toolbox: Stage.Types.WidgetlessToolbox,
+    event: string | undefined,
+    handler: (...args: any[]) => void
+) {
     useEffect(() => {
         if (event) {
             toolbox.getEventBus().on(event, handler);

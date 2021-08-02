@@ -11,7 +11,7 @@ export interface SharedDeploymentsViewWidgetConfiguration {
     sortAscending: boolean;
 }
 
-const configurationT = (suffix: string) => Stage.i18n.t(`${i18nPrefix}.configuration.${suffix}`);
+const tConfiguration = (suffix: string) => Stage.i18n.t(`${i18nPrefix}.configuration.${suffix}`);
 
 const defaultMapHeight = 300;
 
@@ -24,14 +24,14 @@ export const sharedConfiguration: Stage.Types.WidgetConfigurationDefinition[] = 
     {
         id: 'mapHeight',
         type: Stage.Basic.GenericField.NUMBER_TYPE,
-        name: configurationT('mapHeight.name'),
-        description: configurationT('mapHeight.description'),
+        name: tConfiguration('mapHeight.name'),
+        description: tConfiguration('mapHeight.description'),
         default: defaultMapHeight
     },
     {
         id: 'fieldsToShow',
-        name: configurationT('fieldsToShow.name'),
-        placeHolder: configurationT('fieldsToShow.placeholder'),
+        name: tConfiguration('fieldsToShow.name'),
+        placeHolder: tConfiguration('fieldsToShow.placeholder'),
         items: deploymentsViewColumnIds.map(columnId => ({
             name: deploymentsViewColumnDefinitions[columnId].name,
             value: columnId
@@ -39,7 +39,12 @@ export const sharedConfiguration: Stage.Types.WidgetConfigurationDefinition[] = 
         default: deploymentsViewColumnIds.filter(columnId => columnId !== 'environmentType'),
         type: Stage.Basic.GenericField.MULTI_SELECT_LIST_TYPE
     },
-    Stage.GenericConfig.PAGE_SIZE_CONFIG(50),
+    {
+        ...Stage.GenericConfig.PAGE_SIZE_CONFIG(50),
+        hidden: false,
+        name: tConfiguration('pageSize.name'),
+        min: 1
+    },
     Stage.GenericConfig.SORT_COLUMN_CONFIG('created_at'),
     Stage.GenericConfig.SORT_ASCENDING_CONFIG(false)
 ];

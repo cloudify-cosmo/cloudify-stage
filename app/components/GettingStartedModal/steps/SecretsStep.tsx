@@ -2,7 +2,7 @@ import React, { memo, useEffect } from 'react';
 
 import { Form } from '../../basic';
 import { useInputs } from '../../../utils/hooks';
-import { UnsafelyTypedForm, UnsafelyTypedFormField } from '../unsafelyTypedForm';
+import { UnsafelyTypedFormField } from '../unsafelyTypedForm';
 
 import type { GettingStartedSecretsData, GettingStartedSchemaItem } from '../model';
 
@@ -15,8 +15,9 @@ type Props = {
 const SecretsStep = ({ selectedTechnology, typedSecrets, onChange }: Props) => {
     const [secretInputs, setSecretInputs, resetSecretInputs] = useInputs(typedSecrets ?? {});
     useEffect(() => resetSecretInputs(), [typedSecrets]);
+
     return (
-        <UnsafelyTypedForm>
+        <Form>
             {selectedTechnology.secrets.map(({ name, label, type }) => {
                 const handleBlur = () => {
                     onChange?.(secretInputs);
@@ -34,7 +35,7 @@ const SecretsStep = ({ selectedTechnology, typedSecrets, onChange }: Props) => {
                     </UnsafelyTypedFormField>
                 );
             })}
-        </UnsafelyTypedForm>
+        </Form>
     );
 };
 

@@ -1,7 +1,7 @@
 import React, { memo, useEffect } from 'react';
 
 import { useResettableState } from '../../../../utils/hooks';
-import { UnsafelyTypedForm } from '../../unsafelyTypedForm';
+import { Form } from '../../../basic';
 import TechnologyButton from './TechnologyButton';
 
 import type { GettingStartedSchema, GettingStartedTechnologiesData } from '../../model';
@@ -19,8 +19,9 @@ const TechnologiesStep = ({ schema, selectedTechnologies, onChange }: Props) => 
         resetLocalSelectedTechnologies
     ] = useResettableState(selectedTechnologies ?? {});
     useEffect(() => resetLocalSelectedTechnologies(), [selectedTechnologies]);
+
     return (
-        <UnsafelyTypedForm>
+        <Form>
             {schema.map(({ name, logo, label }) => {
                 const handleChange = (value: boolean) => {
                     const newLocalSelectedTechnologies = { ...localSelectedTechnologies, [name]: value };
@@ -37,7 +38,7 @@ const TechnologiesStep = ({ schema, selectedTechnologies, onChange }: Props) => 
                     />
                 );
             })}
-        </UnsafelyTypedForm>
+        </Form>
     );
 };
 

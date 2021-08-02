@@ -9,7 +9,7 @@ describe('Maintenance mode button widget', () => {
     const getDeactivateButton = () => cy.contains('Deactivate Maintenance Mode');
 
     it('should enter maintenance mode on click', () => {
-        cy.waitUntilNoExecutionIsActive();
+        cy.killRunningExecutions();
         getActivateButton().click();
         cy.contains('Yes').click();
         getDeactivateButton().click();
