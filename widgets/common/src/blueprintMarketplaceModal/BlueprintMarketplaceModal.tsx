@@ -59,19 +59,7 @@ const BlueprintMarketplaceModal: FunctionComponent<BlueprintMarketplaceModalProp
                     <Icon name="upload" /> {i18n.t(`${i18nPrefix}.modal.header`)}
                 </Modal.Header>
                 <Modal.Content>
-                    <PageContent
-                        page={getPageLayout(tabs) as any}
-                        isEditMode={false}
-                        // NOTE: No need to handle the events below since edit mode is always off
-                        onWidgetRemoved={noop}
-                        onTabAdded={noop}
-                        onTabRemoved={noop}
-                        onTabUpdated={noop}
-                        onTabMoved={noop}
-                        onWidgetAdded={noop}
-                        onLayoutSectionAdded={noop}
-                        onLayoutSectionRemoved={noop}
-                    />
+                    <PageContent page={getPageLayout(tabs) as any} />
                 </Modal.Content>
                 <Modal.Actions>
                     <CancelButton onClick={onHide} disabled={false} />
