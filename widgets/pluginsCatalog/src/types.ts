@@ -24,3 +24,10 @@ export interface PluginsCatalogWidgetConfiguration {
     jsonPath: string;
     sortByName: boolean;
 }
+
+export interface PluginUploadData {
+    title: string;
+    url: string;
+    yamlUrl: string;
+    icon: string;
+}

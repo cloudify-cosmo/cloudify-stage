@@ -1,4 +1,4 @@
-import type { PluginDescription, PluginDescriptionWithVersion } from './types';
+import type { PluginDescription, PluginDescriptionWithVersion, PluginUploadData } from './types';
 
 interface UploadedPlugin {
     // NOTE: property names match from the backend ones
@@ -45,12 +45,9 @@ export default class Actions {
             .then(response => response.json());
     }
 
-    doUpload(
-        { url: wagonUrl, yamlUrl, icon: iconUrl, title }: { url: string; yamlUrl: string; icon: string; title: string },
-        visibility: string
-    ) {
+    doUpload({ url: wagonUrl, yamlUrl, icon: iconUrl, title }: PluginUploadData) {
         const params = {
-            visibility,
+            visibility: 'tenant',
             wagonUrl,
             yamlUrl,
             iconUrl,

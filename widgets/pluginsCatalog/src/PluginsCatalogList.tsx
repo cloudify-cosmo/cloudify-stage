@@ -1,9 +1,9 @@
 import type { ComponentProps, ComponentType } from 'react';
 import styled from 'styled-components';
 
-import PluginsCatalogModal, { PluginsCatalogModalProps } from './PluginsCatalogModal';
 import Actions from './Actions';
-import type { PluginDescriptionWithVersion, PluginsCatalogWidgetConfiguration } from './types';
+import type { PluginDescriptionWithVersion, PluginsCatalogWidgetConfiguration, PluginUploadData } from './types';
+import { PluginDescription, PluginWagon } from './types';
 
 interface PluginsCatalogListProps {
     items: PluginDescriptionWithVersion[];
@@ -13,9 +13,15 @@ interface PluginsCatalogListProps {
 
 interface PluginsCatalogListState {
     showModal: boolean;
-    plugin: PluginsCatalogModalProps['plugin'] | null;
-    /** Potentially holds a message after a successful upload */
-    success: string | null;
+    uploadingPlugins: PluginUploadData[];
+    /** Potentially hold messages */
+    successMessages: string[] | null;
+    errorMessages: string[] | null;
+}
+
+export interface PluginsCatalogItem extends Omit<PluginDescription, 'wagons'> {
+    uploadedVersion: string | undefined;
+    wagon: PluginWagon;
 }
 
 const UploadPluginButton: ComponentType<ComponentProps<typeof Stage.Basic.Button>> = styled(Stage.Basic.Button)`
@@ -36,8 +42,9 @@ export default class PluginsCatalogList extends React.Component<PluginsCatalogLi
         super(props);
         this.state = {
             showModal: false,
-            plugin: null,
-            success: null
+            uploadingPlugins: [],
+            successMessages: null,
+            errorMessages: null
         };
     }
 
@@ -60,33 +67,67 @@ export default class PluginsCatalogList extends React.Component<PluginsCatalogLi
         toolbox.getEventBus().off('plugins:refresh', this.refreshData);
     }
 
-    private onSuccess: PluginsCatalogModalProps['onSuccess'] = msg => {
-        this.setState({ success: msg });
-    };
+    private onUpload(plugin: PluginUploadData) {
+        const { toolbox, widget } = this.props;
 
-    private onUpload(plugin: PluginsCatalogModalProps['plugin']) {
-        this.setState({ plugin });
-        this.showModal();
+        this.setState(prevState => ({ uploadingPlugins: [...prevState.uploadingPlugins, plugin] }));
+
+        new Actions(toolbox, widget.configuration.jsonPath)
+            .doUpload(plugin)
+            .then(() => {
+                toolbox.getEventBus().trigger('plugins:refresh');
+                this.setState(prevState => ({
+                    successMessages: [...(prevState.successMessages ?? []), `${plugin.title} successfully uploaded`]
+                }));
+            })
+            .catch(err =>
+                this.setState(prevState => ({ errorMessages: [...(prevState.errorMessages ?? []), err.message] }))
+            )
+            .finally(() =>
+                this.setState(prevState => ({ uploadingPlugins: _.without(prevState.uploadingPlugins, plugin) }))
+            );
     }
 
-    private hideModal = () => {
-        this.setState({ showModal: false });
-    };
+    private getActionColumnContent(item: PluginsCatalogItem) {
+        const { uploadingPlugins } = this.state;
+        const pluginUploadData = {
+            url: item.wagon.url,
+            title: item.title,
+            icon: item.icon,
+            yamlUrl: item.link
+        };
+
+        const uploadInProgress = _.find(uploadingPlugins, pluginUploadData);
+
+        return (
+            <div style={{ position: 'relative' }}>
+                {uploadInProgress && <Stage.Basic.Loader active />}
+                <UploadPluginButton
+                    style={{ visibility: uploadInProgress && 'hidden' }}
+                    icon="upload"
+                    onClick={event => {
+                        event.preventDefault();
+                        this.onUpload(pluginUploadData);
+                    }}
+                    // eslint-disable-next-line react/jsx-props-no-spreading
+                    {...(item.version === item.uploadedVersion
+                        ? { disabled: true, title: 'Latest version is already uploaded' }
+                        : { disabled: false, title: 'Upload plugin' })}
+                />
+            </div>
+        );
+    }
 
     private refreshData = () => {
         const { toolbox } = this.props;
         toolbox.refresh();
     };
 
-    private showModal() {
-        this.setState({ showModal: true });
-    }
-
     render() {
-        const { plugin, showModal, success } = this.state;
-        const { items: itemsProp, toolbox, widget } = this.props;
+        const { successMessages, errorMessages } = this.state;
+        const { items: itemsProp, toolbox } = this.props;
         const NO_DATA_MESSAGE = "There are no Plugins available in catalog. Check widget's configuration.";
-        const { DataTable, Message } = Stage.Basic;
+        const { DataTable, Message, ErrorMessage } = Stage.Basic;
         const { PluginIcon } = Stage.Common;
 
         const distro = `${toolbox
@@ -105,10 +146,20 @@ export default class PluginsCatalogList extends React.Component<PluginsCatalogLi
 
         return (
             <div>
-                {success && (
-                    <Message color="green" onDismiss={() => this.setState({ success: null })}>
-                        {success}
+                {_.map(successMessages, message => (
+                    <Message
+                        color="green"
+                        onDismiss={() =>
+                            this.setState(prevState => ({
+                                successMessages: _.without(prevState.successMessages, message)
+                            }))
+                        }
+                    >
+                        {message}
                     </Message>
+                ))}
+                {!_.isEmpty(errorMessages) && (
+                    <ErrorMessage error={errorMessages} onDismiss={() => this.setState({ errorMessages: null })} />
                 )}
 
                 <DataTable noDataAvailable={plugins.length === 0} selectable noDataMessage={NO_DATA_MESSAGE}>
@@ -130,38 +181,12 @@ export default class PluginsCatalogList extends React.Component<PluginsCatalogLi
                                 <DataTable.Data>{item.version}</DataTable.Data>
                                 <DataTable.Data>{item.uploadedVersion ?? '-'}</DataTable.Data>
                                 <DataTable.Data className="center aligned">
-                                    <UploadPluginButton
-                                        icon="upload"
-                                        onClick={event => {
-                                            event.preventDefault();
-                                            this.onUpload({
-                                                url: item.wagon.url,
-                                                title: item.title,
-                                                icon: item.icon,
-                                                yamlUrl: item.link
-                                            });
-                                        }}
-                                        // eslint-disable-next-line react/jsx-props-no-spreading
-                                        {...(item.version === item.uploadedVersion
-                                            ? { disabled: true, title: 'Latest version is already uploaded' }
-                                            : { disabled: false, title: 'Upload plugin' })}
-                                    />
+                                    {this.getActionColumnContent(item)}
                                 </DataTable.Data>
                             </DataTable.Row>
                         );
                     })}
                 </DataTable>
-
-                <PluginsCatalogModal
-                    open={showModal}
-                    // SAFETY: `plugin` will always be non-null when `showModal` is true
-                    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-                    plugin={plugin!}
-                    onSuccess={this.onSuccess}
-                    onHide={this.hideModal}
-                    toolbox={toolbox}
-                    actions={new Actions(toolbox, widget.configuration.jsonPath)}
-                />
             </div>
         );
     }
