@@ -655,6 +655,11 @@
                         "placeholder": "Provide the image file URL or click browse to select a file"
                     }
                 }
+            },
+            "blueprintUploadActionsMenu": {
+              "uploadFromMarketplace": "Upload from Marketplace",
+              "uploadFromPackage": "Upload a blueprint package",
+              "generateInComposer":  "Generate in the Composer"
             }
         },
         "blueprintActionButtons": {
