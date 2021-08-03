@@ -148,6 +148,7 @@ export default class PluginsCatalogList extends React.Component<PluginsCatalogLi
             <div>
                 {_.map(successMessages, message => (
                     <Message
+                        key={message}
                         color="green"
                         onDismiss={() =>
                             this.setState(prevState => ({
