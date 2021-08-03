@@ -2,8 +2,6 @@ import type { FunctionComponent } from 'react';
 
 import { noop } from 'lodash';
 
-const i18nPrefix = 'widgets.common.blueprintMarketPlace';
-
 interface Tab {
     name: string;
     url: string;
@@ -15,12 +13,12 @@ interface BlueprintMarketplaceModalProps {
     onHide: () => void;
 }
 
-const getPageLayout = (value: Tab[]) => ({
+const getPageLayout = (tabs: Tab[]) => ({
     name: 'details-pane-widgets',
     layout: [
         {
             type: 'tabs',
-            content: value.map((tab, index) => ({
+            content: tabs.map((tab, index) => ({
                 name: tab.name,
                 widgets: [
                     {
@@ -47,16 +45,17 @@ const getPageLayout = (value: Tab[]) => ({
 });
 
 const BlueprintMarketplaceModal: FunctionComponent<BlueprintMarketplaceModalProps> = ({ open, onHide, tabs }) => {
-    const { i18n } = Stage;
+    const { getT } = Stage.Utils;
+    const t = getT('widgets.common.blueprintMarketPlace');
 
     const { CancelButton, Icon, Modal } = Stage.Basic;
     const { PageContent } = Stage.Shared.Widgets;
 
     return (
         <div>
-            <Modal open={open} onClose={onHide} className="uploadBlueprintModal">
+            <Modal open={open} onClose={onHide}>
                 <Modal.Header>
-                    <Icon name="upload" /> {i18n.t(`${i18nPrefix}.modal.header`)}
+                    <Icon name="upload" /> {t(`modal.header`)}
                 </Modal.Header>
                 <Modal.Content>
                     <PageContent page={getPageLayout(tabs) as any} />
