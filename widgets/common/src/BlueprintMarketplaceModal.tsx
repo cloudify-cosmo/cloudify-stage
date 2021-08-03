@@ -1,7 +1,5 @@
 import type { FunctionComponent } from 'react';
 
-import { noop } from 'lodash';
-
 interface Tab {
     name: string;
     url: string;
@@ -74,3 +72,15 @@ BlueprintMarketplaceModal.propTypes = {
 };
 
 export default BlueprintMarketplaceModal;
+
+declare global {
+    namespace Stage.Common {
+        // eslint-disable-next-line import/prefer-default-export
+        export { BlueprintMarketplaceModal };
+    }
+}
+
+Stage.defineCommon({
+    name: 'BlueprintMarketplaceModal',
+    common: React.memo(BlueprintMarketplaceModal, _.isEqual)
+});
