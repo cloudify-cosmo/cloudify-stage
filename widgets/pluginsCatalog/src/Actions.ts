@@ -47,7 +47,7 @@ export default class Actions {
 
     doUpload({ url: wagonUrl, yamlUrl, icon: iconUrl, title }: PluginUploadData) {
         const params = {
-            visibility: 'tenant',
+            visibility: Stage.Common.Consts.defaultVisibility,
             wagonUrl,
             yamlUrl,
             iconUrl,
