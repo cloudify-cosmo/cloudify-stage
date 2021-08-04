@@ -102,24 +102,29 @@ export default class PluginsCatalogList extends React.Component<PluginsCatalogLi
             yamlUrl: item.link
         };
 
-        const uploadInProgress = _.find(uploadingPlugins, pluginUploadData);
+        const pluginUploading = !!_.find(uploadingPlugins, pluginUploadData);
+        const recentVersionUploaded = item.version === item.uploadedVersion;
+
+        let titleKey;
+        if (pluginUploading) {
+            titleKey = 'uploading';
+        } else if (recentVersionUploaded) {
+            titleKey = 'disabled';
+        } else {
+            titleKey = 'enabled';
+        }
 
         return (
-            <div style={{ position: 'relative' }}>
-                {uploadInProgress && <Stage.Basic.Loader active />}
-                <UploadPluginButton
-                    style={{ visibility: uploadInProgress && 'hidden' }}
-                    icon="upload"
-                    onClick={event => {
-                        event.preventDefault();
-                        this.onUpload(pluginUploadData);
-                    }}
-                    // eslint-disable-next-line react/jsx-props-no-spreading
-                    {...(item.version === item.uploadedVersion
-                        ? { disabled: true, title: t('uploadButton.disabled') }
-                        : { disabled: false, title: t('uploadButton.enabled') })}
-                />
-            </div>
+            <UploadPluginButton
+                loading={pluginUploading}
+                icon="upload"
+                onClick={event => {
+                    event.preventDefault();
+                    this.onUpload(pluginUploadData);
+                }}
+                title={t(`uploadButton.${titleKey}`)}
+                disabled={recentVersionUploaded || pluginUploading}
+            />
         );
     }
 
@@ -170,10 +175,10 @@ export default class PluginsCatalogList extends React.Component<PluginsCatalogLi
 
                 <DataTable noDataAvailable={plugins.length === 0} selectable noDataMessage={NO_DATA_MESSAGE}>
                     <DataTable.Column width="2%" />
-                    <DataTable.Column label={t('name')} width="20%" />
-                    <DataTable.Column label={t('description')} width="60%" />
-                    <DataTable.Column label={t('version')} width="10%" />
-                    <DataTable.Column label={t('uploadedVersion')} width="10%" />
+                    <DataTable.Column label={t('columns.name')} width="20%" />
+                    <DataTable.Column label={t('columns.description')} width="60%" />
+                    <DataTable.Column label={t('columns.version')} width="10%" />
+                    <DataTable.Column label={t('columns.uploadedVersion')} width="10%" />
                     <DataTable.Column width="5%" />
 
                     {plugins.map(item => {

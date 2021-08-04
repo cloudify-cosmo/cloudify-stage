@@ -869,7 +869,8 @@
         "pluginsCatalog": {
             "uploadButton": {
                 "enabled": "Upload plugin",
-                "disabled": "Latest version is already uploaded"
+                "disabled": "Latest version is already uploaded",
+                "uploading": "Plugin upload in progress"
             },
             "noData": "There are no Plugins available in catalog. Check widget's configuration.",
             "columns": {
