@@ -1,5 +1,6 @@
 import type { ComponentProps, ComponentType } from 'react';
 import styled from 'styled-components';
+import { compact, isEmpty, isEqual, find, map, without } from 'lodash';
 
 import Actions from './Actions';
 import type { PluginDescriptionWithVersion, PluginsCatalogWidgetConfiguration, PluginUploadData } from './types';
@@ -58,9 +59,7 @@ export default class PluginsCatalogList extends React.Component<PluginsCatalogLi
     shouldComponentUpdate(nextProps: PluginsCatalogListProps, nextState: PluginsCatalogListState) {
         const { items, widget } = this.props;
         return (
-            !_.isEqual(items, nextProps.items) ||
-            !_.isEqual(widget, nextProps.widget) ||
-            !_.isEqual(this.state, nextState)
+            !isEqual(items, nextProps.items) || !isEqual(widget, nextProps.widget) || !isEqual(this.state, nextState)
         );
     }
 
@@ -89,7 +88,7 @@ export default class PluginsCatalogList extends React.Component<PluginsCatalogLi
                 this.setState(prevState => ({ errorMessages: [...(prevState.errorMessages ?? []), err.message] }))
             )
             .finally(() =>
-                this.setState(prevState => ({ uploadingPlugins: _.without(prevState.uploadingPlugins, plugin) }))
+                this.setState(prevState => ({ uploadingPlugins: without(prevState.uploadingPlugins, plugin) }))
             );
     }
 
@@ -102,7 +101,7 @@ export default class PluginsCatalogList extends React.Component<PluginsCatalogLi
             yamlUrl: item.link
         };
 
-        const pluginUploading = !!_.find(uploadingPlugins, pluginUploadData);
+        const pluginUploading = !!find(uploadingPlugins, pluginUploadData);
         const recentVersionUploaded = item.version === item.uploadedVersion;
 
         let titleKey;
@@ -144,9 +143,9 @@ export default class PluginsCatalogList extends React.Component<PluginsCatalogLi
             .getManager()
             .getDistributionName()
             .toLowerCase()} ${toolbox.getManager().getDistributionRelease().toLowerCase()}`;
-        const plugins = _.compact(
-            _.map(itemsProp, item => {
-                const wagon = _.find(
+        const plugins = compact(
+            map(itemsProp, item => {
+                const wagon = find(
                     item.pluginDescription.wagons,
                     w => w.name.toLowerCase() === distro || w.name.toLowerCase() === 'any'
                 );
@@ -156,20 +155,20 @@ export default class PluginsCatalogList extends React.Component<PluginsCatalogLi
 
         return (
             <div>
-                {_.map(successMessages, message => (
+                {map(successMessages, message => (
                     <Message
                         key={message}
                         success
                         onDismiss={() =>
                             this.setState(prevState => ({
-                                successMessages: _.without(prevState.successMessages, message)
+                                successMessages: without(prevState.successMessages, message)
                             }))
                         }
                     >
                         {message}
                     </Message>
                 ))}
-                {!_.isEmpty(errorMessages) && (
+                {!isEmpty(errorMessages) && (
                     <ErrorMessage error={errorMessages} onDismiss={() => this.setState({ errorMessages: null })} />
                 )}
 
