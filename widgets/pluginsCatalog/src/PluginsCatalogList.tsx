@@ -24,6 +24,8 @@ export interface PluginsCatalogItem extends Omit<PluginDescription, 'wagons'> {
     wagon: PluginWagon;
 }
 
+const t = Stage.Utils.getT('widgets.pluginsCatalog');
+
 const UploadPluginButton: ComponentType<ComponentProps<typeof Stage.Basic.Button>> = styled(Stage.Basic.Button)`
     // NOTE: increase specificity to override semantic-ui's style
     &&& {
@@ -77,7 +79,10 @@ export default class PluginsCatalogList extends React.Component<PluginsCatalogLi
             .then(() => {
                 toolbox.getEventBus().trigger('plugins:refresh');
                 this.setState(prevState => ({
-                    successMessages: [...(prevState.successMessages ?? []), `${plugin.title} successfully uploaded`]
+                    successMessages: [
+                        ...(prevState.successMessages ?? []),
+                        t('successMessage', { pluginTitle: plugin.title })
+                    ]
                 }));
             })
             .catch(err =>
@@ -111,8 +116,8 @@ export default class PluginsCatalogList extends React.Component<PluginsCatalogLi
                     }}
                     // eslint-disable-next-line react/jsx-props-no-spreading
                     {...(item.version === item.uploadedVersion
-                        ? { disabled: true, title: 'Latest version is already uploaded' }
-                        : { disabled: false, title: 'Upload plugin' })}
+                        ? { disabled: true, title: t('uploadButton.disabled') }
+                        : { disabled: false, title: t('uploadButton.enabled') })}
                 />
             </div>
         );
@@ -126,7 +131,7 @@ export default class PluginsCatalogList extends React.Component<PluginsCatalogLi
     render() {
         const { successMessages, errorMessages } = this.state;
         const { items: itemsProp, toolbox } = this.props;
-        const NO_DATA_MESSAGE = "There are no Plugins available in catalog. Check widget's configuration.";
+        const NO_DATA_MESSAGE = t('noData');
         const { DataTable, Message, ErrorMessage } = Stage.Basic;
         const { PluginIcon } = Stage.Common;
 
@@ -165,10 +170,10 @@ export default class PluginsCatalogList extends React.Component<PluginsCatalogLi
 
                 <DataTable noDataAvailable={plugins.length === 0} selectable noDataMessage={NO_DATA_MESSAGE}>
                     <DataTable.Column width="2%" />
-                    <DataTable.Column label="Name" width="20%" />
-                    <DataTable.Column label="Description" width="60%" />
-                    <DataTable.Column label="Version" width="10%" />
-                    <DataTable.Column label="Uploaded version" width="10%" />
+                    <DataTable.Column label={t('name')} width="20%" />
+                    <DataTable.Column label={t('description')} width="60%" />
+                    <DataTable.Column label={t('version')} width="10%" />
+                    <DataTable.Column label={t('uploadedVersion')} width="10%" />
                     <DataTable.Column width="5%" />
 
                     {plugins.map(item => {
