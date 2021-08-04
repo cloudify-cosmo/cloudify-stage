@@ -16,7 +16,7 @@ interface PluginsCatalogListState {
     showModal: boolean;
     uploadingPlugins: PluginUploadData[];
     /** Potentially hold messages */
-    successMessages: string[] | null;
+    successMessages: string[];
     errorMessages: string[] | null;
 }
 
@@ -46,7 +46,7 @@ export default class PluginsCatalogList extends React.Component<PluginsCatalogLi
         this.state = {
             showModal: false,
             uploadingPlugins: [],
-            successMessages: null,
+            successMessages: [],
             errorMessages: null
         };
     }
@@ -78,10 +78,7 @@ export default class PluginsCatalogList extends React.Component<PluginsCatalogLi
             .then(() => {
                 toolbox.getEventBus().trigger('plugins:refresh');
                 this.setState(prevState => ({
-                    successMessages: [
-                        ...(prevState.successMessages ?? []),
-                        t('successMessage', { pluginTitle: plugin.title })
-                    ]
+                    successMessages: [...prevState.successMessages, t('successMessage', { pluginTitle: plugin.title })]
                 }));
             })
             .catch(err =>
@@ -155,7 +152,7 @@ export default class PluginsCatalogList extends React.Component<PluginsCatalogLi
 
         return (
             <div>
-                {map(successMessages, message => (
+                {successMessages.map(message => (
                     <Message
                         key={message}
                         success
