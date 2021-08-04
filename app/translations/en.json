@@ -656,7 +656,7 @@
                     }
                 }
             },
-            "blueprintMarketPlace": {
+            "blueprintMarketplace": {
                 "modal": {
                     "header": "Blueprint marketplace"
                 }
