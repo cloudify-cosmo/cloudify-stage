@@ -304,7 +304,10 @@ describe('Blueprints widget', () => {
     });
 
     describe('should open upload modal and', () => {
-        beforeEach(() => cy.contains('Upload').click());
+        beforeEach(() => {
+            cy.contains('Upload').click();
+            cy.contains('Upload a blueprint package').click();
+        });
 
         it('should handle invalid blueprint url upload failure gracefully', () => {
             cy.get('input[name=blueprintUrl]').type('http://wp.pl').blur();
