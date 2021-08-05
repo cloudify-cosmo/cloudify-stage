@@ -658,7 +658,8 @@
             },
             "blueprintMarketplace": {
                 "modal": {
-                    "header": "Blueprint marketplace"
+                    "header": "Blueprint marketplace",
+                    "cancelButton": "Cancel"
                 }
             }
         },

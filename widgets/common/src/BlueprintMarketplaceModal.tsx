@@ -15,11 +15,11 @@ const getPageLayout = (tabs: Tab[]) => ({
     layout: [
         {
             type: 'tabs',
-            content: tabs.map(tab => ({
+            content: tabs.map((tab, index) => ({
                 name: tab.name,
                 widgets: [
                     {
-                        id: tab.name.replace(' ', '-'),
+                        id: `blueprint-catalog-${index}`,
                         name: 'Blueprints Catalog',
                         x: 0,
                         y: 0,
@@ -55,15 +55,10 @@ const BlueprintMarketplaceModal: FunctionComponent<BlueprintMarketplaceModalProp
                 <PageContent page={getPageLayout(tabs) as any} />
             </Modal.Content>
             <Modal.Actions>
-                <CancelButton onClick={onHide} disabled={false} content="Close" />
+                <CancelButton onClick={onHide} content={t(`modal.cancelButton`)} />
             </Modal.Actions>
         </Modal>
     );
-};
-
-BlueprintMarketplaceModal.propTypes = {
-    open: PropTypes.bool.isRequired,
-    onHide: PropTypes.func.isRequired
 };
 
 export default BlueprintMarketplaceModal;
