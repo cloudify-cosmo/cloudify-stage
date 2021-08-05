@@ -26,11 +26,7 @@ const commands = {
         cy.get('.pluginsCatalogWidget').within(() => {
             cy.contains('tr', pluginName).find('button').click();
         });
-        cy.get('.modal').within(() => {
-            cy.get('button.ok').click();
-        });
         cy.wait('@pluginUpload', { responseTimeout: uploadPluginTimeout });
-        cy.get('.modal').should('not.exist');
         cy.get('.pluginsCatalogWidget .message').should('have.text', `${pluginName} successfully uploaded`);
         cy.visitPage('Test Page');
     },
