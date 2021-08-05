@@ -1,5 +1,4 @@
 import type { FunctionComponent } from 'react';
-import uuid from 'uuid';
 
 interface Tab {
     name: string;
@@ -20,7 +19,7 @@ const getPageLayout = (tabs: Tab[]) => ({
                 name: tab.name,
                 widgets: [
                     {
-                        id: uuid.v4(),
+                        id: tab.name.replace(' ', '-'),
                         name: 'Blueprints Catalog',
                         x: 0,
                         y: 0,
