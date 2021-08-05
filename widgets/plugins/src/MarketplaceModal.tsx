@@ -40,7 +40,7 @@ export default function MarketplaceModal({ open, onHide }: { open: boolean; onHi
                 />
             </Modal.Content>
             <Modal.Actions>
-                <CancelButton onClick={onHide} disabled={false} content={t(`upload.close`)} />
+                <CancelButton onClick={onHide} content={t(`upload.close`)} />
             </Modal.Actions>
         </Modal>
     );
