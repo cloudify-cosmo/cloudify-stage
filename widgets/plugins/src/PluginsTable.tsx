@@ -1,10 +1,6 @@
 // @ts-nocheck File not migrated fully to TS
 import MarketplaceModal from './MarketplaceModal';
 
-/**
- * Created by kinneretzin on 02/10/2016.
- */
-
 const t = Stage.Utils.getT('widgets.plugins');
 
 export default class PluginsTable extends React.Component {
