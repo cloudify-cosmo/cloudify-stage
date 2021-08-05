@@ -665,7 +665,7 @@
             "blueprintMarketplace": {
                 "modal": {
                     "header": "Blueprint marketplace",
-                    "cancelButton": "Cancel"
+                    "cancelButton": "Close"
                 }
             }
         },
