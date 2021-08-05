@@ -140,12 +140,11 @@ export default class BlueprintList extends React.Component<BlueprintListProps, B
     }
 
     render() {
-        const { blueprintId, confirmDelete, error, force, showDeploymentModal, showUploadModal } = this.state;
+        const { blueprintId, confirmDelete, error, force, showDeploymentModal } = this.state;
         const { data, toolbox, widget } = this.props;
         const NO_DATA_MESSAGE = 'There are no Blueprints available. Click "Upload" to add Blueprints.';
-        const { Button, ErrorMessage } = Stage.Basic;
-        // @ts-expect-error UploadBlueprintModal is not converted to TS yet
-        const { DeleteConfirm, DeployBlueprintModal, UploadBlueprintModal } = Stage.Common;
+        const { ErrorMessage } = Stage.Basic;
+        const { DeleteConfirm, DeployBlueprintModal, BlueprintUploadActionsMenu } = Stage.Common;
 
         const shouldShowTable = widget.configuration.displayStyle === 'table';
 
@@ -155,14 +154,9 @@ export default class BlueprintList extends React.Component<BlueprintListProps, B
             <div>
                 <ErrorMessage error={error} onDismiss={() => this.setState({ error: null })} autoHide />
 
-                <Button
-                    content="Upload"
-                    icon="upload"
-                    labelPosition="left"
-                    className="uploadBlueprintButton"
-                    onClick={this.showUploadModal}
-                />
-
+                <div className="uploadBlueprintButton">
+                    <BlueprintUploadActionsMenu direction="left" toolbox={toolbox} />
+                </div>
                 <BlueprintsView
                     widget={widget}
                     data={data}
@@ -190,8 +184,6 @@ export default class BlueprintList extends React.Component<BlueprintListProps, B
                     onHide={this.hideDeploymentModal}
                     toolbox={toolbox}
                 />
-
-                <UploadBlueprintModal open={showUploadModal} onHide={this.hideUploadModal} toolbox={toolbox} />
             </div>
         );
     }
