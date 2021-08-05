@@ -21,8 +21,6 @@ const getPageLayout = (tabs: Tab[]) => ({
                     {
                         id: `blueprint-catalog-${index}`,
                         name: 'Blueprints Catalog',
-                        x: 0,
-                        y: 0,
                         height: 24,
                         maximized: true,
                         definition: 'blueprintCatalog',
