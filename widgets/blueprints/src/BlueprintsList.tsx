@@ -143,8 +143,8 @@ export default class BlueprintList extends React.Component<BlueprintListProps, B
         const { blueprintId, confirmDelete, error, force, showDeploymentModal } = this.state;
         const { data, toolbox, widget } = this.props;
         const NO_DATA_MESSAGE = 'There are no Blueprints available. Click "Upload" to add Blueprints.';
-        const { Button, ErrorMessage } = Stage.Basic;
-        const { DeleteConfirm, DeployBlueprintModal, UploadActionsMenu } = Stage.Common;
+        const { ErrorMessage } = Stage.Basic;
+        const { DeleteConfirm, DeployBlueprintModal, BlueprintUploadActionsMenu } = Stage.Common;
 
         const shouldShowTable = widget.configuration.displayStyle === 'table';
 
@@ -154,10 +154,9 @@ export default class BlueprintList extends React.Component<BlueprintListProps, B
             <div>
                 <ErrorMessage error={error} onDismiss={() => this.setState({ error: null })} autoHide />
 
-                <UploadActionsMenu toolbox={toolbox}>
-                    <Button content="Upload" icon="upload" labelPosition="left" className="uploadBlueprintButton" />
-                </UploadActionsMenu>
-
+                <div className="uploadBlueprintButton">
+                    <BlueprintUploadActionsMenu direction="left" toolbox={toolbox} />
+                </div>
                 <BlueprintsView
                     widget={widget}
                     data={data}

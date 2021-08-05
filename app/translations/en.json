@@ -654,12 +654,13 @@
                         "help": "(Optional) The blueprint icon file is shown with the blueprint in the local blueprint widget.",
                         "placeholder": "Provide the image file URL or click browse to select a file"
                     }
+                },
+                "actionsMenu": {
+                    "uploadButton": "Upload",
+                    "uploadFromMarketplace": "Upload from Marketplace",
+                    "uploadFromPackage": "Upload a blueprint package",
+                    "generateInComposer":  "Generate in the Composer"
                 }
-            },
-            "blueprintUploadActionsMenu": {
-              "uploadFromMarketplace": "Upload from Marketplace",
-              "uploadFromPackage": "Upload a blueprint package",
-              "generateInComposer":  "Generate in the Composer"
             }
         },
         "blueprintActionButtons": {
