@@ -3,17 +3,54 @@ import MarketplaceModal from './MarketplaceModal';
 
 const t = Stage.Utils.getT('widgets.plugins');
 
-export default class PluginsTable extends React.Component {
-    constructor(props, context) {
+interface PluginItem {
+    /* eslint-disable camelcase */
+    created_by: string;
+    distribution: string;
+    distribution_release: string;
+    icon: string;
+    id: string;
+    isSelected: boolean;
+    title: string;
+    package_name: string;
+    package_version: string;
+    supported_platform: string;
+    uploaded_at: string;
+    visibility: string;
+    /* eslint-enable camelcase */
+}
+
+interface PluginsTableProps {
+    data: {
+        items: PluginItem[];
+        total: number;
+    };
+    toolbox: Stage.Types.Toolbox;
+    widget: Stage.Types.Widget;
+}
+
+interface PluginsTableState {
+    error: string | null;
+    force: boolean;
+    confirmDelete: boolean;
+    item: PluginItem | null;
+    showPackageUploadModal: boolean;
+    showMarketplaceUploadModal: boolean;
+    hoveredPlugin: string | null;
+}
+
+export default class PluginsTable extends React.Component<PluginsTableProps, PluginsTableState> {
+    constructor(props: PluginsTableProps, context: any) {
         super(props, context);
 
         this.state = {
             error: null,
             force: false,
             confirmDelete: false,
+            item: null,
             showPackageUploadModal: false,
             showMarketplaceUploadModal: false,
-            hoveredPlugin: false
+            hoveredPlugin: null
         };
     }
 
@@ -22,7 +59,7 @@ export default class PluginsTable extends React.Component {
         toolbox.getEventBus().on('plugins:refresh', this.refreshData, this);
     }
 
-    shouldComponentUpdate(nextProps, nextState) {
+    shouldComponentUpdate(nextProps: PluginsTableProps, nextState: PluginsTableState) {
         const { data, widget } = this.props;
         return (
             !_.isEqual(widget, nextProps.widget) ||
@@ -36,11 +73,11 @@ export default class PluginsTable extends React.Component {
         toolbox.getEventBus().off('plugins:refresh', this.refreshData);
     }
 
-    handleForceChange = (event, field) => {
+    handleForceChange = (_event, field) => {
         this.setState(Stage.Basic.Form.fieldNameValue(field));
     };
 
-    setPluginVisibility = (pluginId, visibility) => {
+    setPluginVisibility = (pluginId: string, visibility: string) => {
         const { toolbox } = this.props;
         const actions = new Stage.Common.PluginActions(toolbox);
         toolbox.loading(true);
@@ -56,21 +93,21 @@ export default class PluginsTable extends React.Component {
             });
     };
 
-    setHoveredPlugin = idToCheck => {
+    setHoveredPlugin = (idToCheck: string) => {
         const { hoveredPlugin } = this.state;
         if (hoveredPlugin !== idToCheck) {
             this.setState({ hoveredPlugin: idToCheck });
         }
     };
 
-    unsetHoveredPlugin = idToCheck => {
+    unsetHoveredPlugin = (idToCheck: string) => {
         const { hoveredPlugin } = this.state;
         if (hoveredPlugin === idToCheck) {
             this.setState({ hoveredPlugin: null });
         }
     };
 
-    selectPlugin = item => {
+    selectPlugin = (item: PluginItem) => {
         const { toolbox } = this.props;
         const oldSelectedPluginId = toolbox.getContext().getValue('pluginId');
         if (item.id === oldSelectedPluginId) {
@@ -80,7 +117,7 @@ export default class PluginsTable extends React.Component {
         }
     };
 
-    deletePluginConfirm = (item, event) => {
+    deletePluginConfirm = (item: PluginItem, event: Event) => {
         event.stopPropagation();
 
         this.setState({
@@ -90,7 +127,7 @@ export default class PluginsTable extends React.Component {
         });
     };
 
-    downloadPlugin = (item, event) => {
+    downloadPlugin = (item: PluginItem, event: Event) => {
         event.stopPropagation();
         const { toolbox } = this.props;
         const actions = new Stage.Common.PluginActions(toolbox);
@@ -162,7 +199,7 @@ export default class PluginsTable extends React.Component {
         } = this.state;
         const { data, toolbox, widget } = this.props;
         const NO_DATA_MESSAGE = 'There are no Plugins available. Click "Upload" to add Plugins.';
-        const { Button, DataTable, Dropdown, ErrorMessage, Icon, ResourceVisibility } = Stage.Basic;
+        const { DataTable, Dropdown, ErrorMessage, Icon, ResourceVisibility } = Stage.Basic;
         const { IdPopup, VerticallyAlignedCell } = Stage.Shared;
         const { DeleteConfirm, UploadPluginModal, PluginIcon } = Stage.Common;
         const { Item, Menu } = Dropdown;
@@ -201,9 +238,7 @@ export default class PluginsTable extends React.Component {
                                 selected={item.isSelected}
                                 onClick={() => this.selectPlugin(item)}
                                 onMouseOver={() => this.setHoveredPlugin(item.id)}
-                                onFocus={() => this.setHoveredPlugin(item.id)}
                                 onMouseOut={() => this.unsetHoveredPlugin(item.id)}
-                                onBlur={() => this.unsetHoveredPlugin(item.id)}
                             >
                                 <DataTable.Data>
                                     <IdPopup selected={item.id === hoveredPlugin} id={item.id} />
@@ -237,14 +272,14 @@ export default class PluginsTable extends React.Component {
                                         link
                                         bordered
                                         title="Download"
-                                        onClick={event => this.downloadPlugin(item, event)}
+                                        onClick={(event: Event) => this.downloadPlugin(item, event)}
                                     />
                                     <Icon
                                         name="trash"
                                         link
                                         bordered
                                         title="Delete"
-                                        onClick={event => this.deletePluginConfirm(item, event)}
+                                        onClick={(event: Event) => this.deletePluginConfirm(item, event)}
                                     />
                                 </DataTable.Data>
                             </DataTable.Row>
@@ -285,27 +320,3 @@ export default class PluginsTable extends React.Component {
         );
     }
 }
-
-PluginsTable.propTypes = {
-    data: PropTypes.shape({
-        items: PropTypes.arrayOf(
-            PropTypes.shape({
-                created_by: PropTypes.string,
-                distribution: PropTypes.string,
-                distribution_release: PropTypes.string,
-                icon: PropTypes.string,
-                id: PropTypes.string,
-                isSelected: PropTypes.bool,
-                title: PropTypes.string,
-                package_name: PropTypes.string,
-                package_version: PropTypes.string,
-                supported_platform: PropTypes.string,
-                uploaded_at: PropTypes.string,
-                visibility: PropTypes.string
-            })
-        ),
-        total: PropTypes.number
-    }).isRequired,
-    toolbox: Stage.PropTypes.Toolbox.isRequired,
-    widget: Stage.PropTypes.Widget.isRequired
-};
