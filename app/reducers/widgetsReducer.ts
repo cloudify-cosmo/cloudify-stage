@@ -14,6 +14,7 @@ const widget = (state = {}, action) => {
         case types.UPDATE_WIDGET:
             return { ...state, ...action.params };
         case types.MINIMIZE_WIDGETS:
+        case types.MINIMIZE_TAB_WIDGETS:
             return { ...state, maximized: false };
         case types.ADD_DRILLDOWN_PAGE:
             newState = { ...state, drillDownPages: { ...state.drillDownPages } };
@@ -54,6 +55,7 @@ const widgets = (state = [], action) => {
                 return w;
             });
         case types.MINIMIZE_WIDGETS:
+        case types.MINIMIZE_TAB_WIDGETS:
             return state.map(w => widget(w, action));
         case types.REMOVE_WIDGET:
             return _.reject(state, { id: action.widgetId });
