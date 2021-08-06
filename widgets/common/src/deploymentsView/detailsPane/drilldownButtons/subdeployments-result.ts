@@ -1,14 +1,43 @@
-import type { QueryObserverLoadingResult, QueryObserverSuccessResult } from 'react-query';
+import { QueryObserverLoadingResult, QueryObserverSuccessResult, useQuery } from 'react-query';
 import type { Deployment, DeploymentStatus } from '../../types';
+
+// NOTE: use a constrained identity function to make sure the array members match the properties
+// of the `DrilldownButtonDeployment` type
+const subdeploymentInfoDeploymentKeys = (<T extends (keyof Deployment)[]>(keys: T) => keys)([
+    'id',
+    'sub_environments_count',
+    'sub_environments_status',
+    'sub_services_count',
+    'sub_services_status'
+]);
+
+type SubdeploymentInfo = Pick<Deployment, typeof subdeploymentInfoDeploymentKeys[number]>;
+
+const getDeploymentUrl = (id: string) => `/deployments/${id}`;
+
+export const useSubdeploymentInfo = (deploymentId: string, toolbox: Stage.Types.Toolbox, refetchInterval: number) =>
+    useQuery(
+        getDeploymentUrl(deploymentId),
+        ({ queryKey: url }): Promise<SubdeploymentInfo> =>
+            toolbox.getManager().doGet(url, {
+                params: {
+                    all_sub_deployments: false,
+                    _include: _.join(subdeploymentInfoDeploymentKeys)
+                }
+            }),
+        { refetchInterval }
+    );
 
 export type SubdeploymentsResult =
     | { loading: true }
     | { loading: false; count: number; status: DeploymentStatus | null };
 
 export const getSubdeploymentResults = (
-    deploymentDetailsResult: QueryObserverLoadingResult<Deployment> | QueryObserverSuccessResult<Deployment>
+    subdeploymentInfoResult:
+        | QueryObserverLoadingResult<SubdeploymentInfo>
+        | QueryObserverSuccessResult<SubdeploymentInfo>
 ): { subservices: SubdeploymentsResult; subenvironments: SubdeploymentsResult } => {
-    if (deploymentDetailsResult.isLoading) {
+    if (subdeploymentInfoResult.isLoading) {
         return {
             subservices: { loading: true },
             subenvironments: { loading: true }
@@ -22,7 +51,7 @@ export const getSubdeploymentResults = (
         sub_services_count,
         sub_services_status
         /* eslint-enable camelcase */
-    } = deploymentDetailsResult.data;
+    } = subdeploymentInfoResult.data;
 
     return {
         subservices: { loading: false, count: sub_services_count, status: sub_services_status },

@@ -1,15 +1,14 @@
 import type { FunctionComponent } from 'react';
-import { useQuery } from 'react-query';
 import styled from 'styled-components';
 
 import type { Deployment } from '../../types';
 import { tDrillDownButtons } from './common';
 import DetailsDrilldownButton from './DetailsDrilldownButton';
 import SubdeploymentDrilldownButton, { SubdeploymentDrilldownButtonProps } from './SubdeploymentDrilldownButton';
-import { getSubdeploymentResults } from './subdeployments-result';
+import { getSubdeploymentResults, useSubdeploymentInfo } from './subdeployments-result';
 
 export interface DrilldownButtonsProps {
-    deployment: Deployment;
+    deployment: Pick<Deployment, 'id' | 'display_name'>;
     drillDown: SubdeploymentDrilldownButtonProps['drillDown'];
     toolbox: Stage.Types.Toolbox;
     refetchInterval: number;
@@ -28,8 +27,6 @@ const SubdeploymentButtonsContainer = styled.div`
     display: inline-block;
 `;
 
-const getDeploymentUrl = (id: string) => `/deployments/${id}?all_sub_deployments=false`;
-
 const DrilldownButtons: FunctionComponent<DrilldownButtonsProps> = ({
     drillDown,
     deployment,
@@ -39,18 +36,14 @@ const DrilldownButtons: FunctionComponent<DrilldownButtonsProps> = ({
 }) => {
     const { id, display_name: displayName } = deployment;
 
-    const deploymentDetailsResult = useQuery(
-        getDeploymentUrl(id),
-        ({ queryKey: url }): Promise<Deployment> => toolbox.getManager().doGet(url),
-        { refetchInterval }
-    );
+    const subdeploymentInfoResult = useSubdeploymentInfo(id, toolbox, refetchInterval);
 
-    if (deploymentDetailsResult.isIdle || deploymentDetailsResult.isError) {
+    if (subdeploymentInfoResult.isIdle || subdeploymentInfoResult.isError) {
         const { ErrorMessage } = Stage.Basic;
         return <ErrorMessage error={tDrillDownButtons('detailsFetchingError')} header="" onDismiss={null} />;
     }
 
-    const subdeploymentResults = getSubdeploymentResults(deploymentDetailsResult);
+    const subdeploymentResults = getSubdeploymentResults(subdeploymentInfoResult);
     const { LoadingOverlay } = Stage.Basic;
 
     return (
@@ -59,7 +52,7 @@ const DrilldownButtons: FunctionComponent<DrilldownButtonsProps> = ({
 
             <SubdeploymentButtonsContainer>
                 {/* NOTE: Show a spinner only when refetching. During the initial fetch there are spinners inside the buttons. */}
-                {deploymentDetailsResult.isFetching && !deploymentDetailsResult.isLoading && <LoadingOverlay />}
+                {subdeploymentInfoResult.isFetching && !subdeploymentInfoResult.isLoading && <LoadingOverlay />}
 
                 <SubdeploymentDrilldownButton
                     type="environments"
