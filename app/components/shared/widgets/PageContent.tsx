@@ -17,16 +17,16 @@ import EmptyContainerMessage from '../../EmptyContainerMessage';
 
 export default function PageContent({
     onWidgetUpdated,
-    onWidgetRemoved,
-    onWidgetAdded,
-    onTabAdded,
-    onTabRemoved,
-    onTabUpdated,
-    onTabMoved,
-    onLayoutSectionAdded,
-    onLayoutSectionRemoved,
+    onWidgetRemoved = _.noop,
+    onWidgetAdded = _.noop,
+    onTabAdded = _.noop,
+    onTabRemoved = _.noop,
+    onTabUpdated = _.noop,
+    onTabMoved = _.noop,
+    onLayoutSectionAdded = _.noop,
+    onLayoutSectionRemoved = _.noop,
     page,
-    isEditMode
+    isEditMode = false
 }) {
     const filterWidgets = useWidgetsFilter();
     const [layoutSectionToRemove, setLayoutSectionToRemove, resetLayoutSectionToRemove] = useResettableState();
@@ -166,19 +166,19 @@ export default function PageContent({
 
 PageContent.propTypes = {
     onWidgetUpdated: PropTypes.func,
-    onWidgetRemoved: PropTypes.func.isRequired,
-    onWidgetAdded: PropTypes.func.isRequired,
-    onTabAdded: PropTypes.func.isRequired,
-    onTabRemoved: PropTypes.func.isRequired,
-    onTabUpdated: PropTypes.func.isRequired,
-    onTabMoved: PropTypes.func.isRequired,
-    onLayoutSectionAdded: PropTypes.func.isRequired,
-    onLayoutSectionRemoved: PropTypes.func.isRequired,
+    onWidgetRemoved: PropTypes.func,
+    onWidgetAdded: PropTypes.func,
+    onTabAdded: PropTypes.func,
+    onTabRemoved: PropTypes.func,
+    onTabUpdated: PropTypes.func,
+    onTabMoved: PropTypes.func,
+    onLayoutSectionAdded: PropTypes.func,
+    onLayoutSectionRemoved: PropTypes.func,
     page: PropTypes.shape({
         id: PropTypes.string,
         layout: LayoutPropType
     }).isRequired,
-    isEditMode: PropTypes.bool.isRequired
+    isEditMode: PropTypes.bool
 };
 
 PageContent.defaultProps = {

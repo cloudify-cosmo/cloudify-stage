@@ -661,6 +661,12 @@
                     "uploadFromPackage": "Upload a blueprint package",
                     "generateInComposer":  "Generate in the Composer"
                 }
+            },
+            "blueprintMarketplace": {
+                "modal": {
+                    "header": "Blueprint marketplace",
+                    "cancelButton": "Close"
+                }
             }
         },
         "blueprintActionButtons": {

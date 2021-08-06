@@ -12,7 +12,6 @@ interface BlueprintListProps {
 
 interface BlueprintListState {
     showDeploymentModal: boolean;
-    showUploadModal: boolean;
     blueprintId: string;
     confirmDelete: boolean;
     error: any;
@@ -25,7 +24,6 @@ export default class BlueprintList extends React.Component<BlueprintListProps, B
 
         this.state = {
             showDeploymentModal: false,
-            showUploadModal: false,
             blueprintId: '',
             confirmDelete: false,
             error: null,
@@ -114,14 +112,6 @@ export default class BlueprintList extends React.Component<BlueprintListProps, B
 
     hideDeploymentModal = () => {
         this.setState({ showDeploymentModal: false });
-    };
-
-    showUploadModal = () => {
-        this.setState({ showUploadModal: true });
-    };
-
-    hideUploadModal = () => {
-        this.setState({ showUploadModal: false });
     };
 
     handleForceChange: ComponentProps<typeof Stage.Common.DeleteConfirm>['onForceChange'] = (_event, field) => {
