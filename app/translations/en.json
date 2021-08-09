@@ -881,6 +881,15 @@
             },
             "successMessage": "{{pluginTitle}} successfully uploaded"
         },
+        "plugins": {
+            "upload": {
+                "button": "Upload",
+                "marketplace": "Upload from Marketplace",
+                "package": "Upload a package",
+                "close": "Close",
+                "catalog": "Plugins Catalog"
+            }
+        },
         "userManagement": {
             "columns": {
                 "username": "Username",

@@ -1,25 +1,57 @@
 // @ts-nocheck File not migrated fully to TS
-/**
- * Created by kinneretzin on 02/10/2016.
- */
+import MarketplaceModal from './MarketplaceModal';
 
-export default class PluginsTable extends React.Component {
-    constructor(props, context) {
+const t = Stage.Utils.getT('widgets.plugins');
+
+interface PluginItem {
+    /* eslint-disable camelcase */
+    created_by: string;
+    distribution: string;
+    distribution_release: string;
+    icon: string;
+    id: string;
+    isSelected: boolean;
+    title: string;
+    package_name: string;
+    package_version: string;
+    supported_platform: string;
+    uploaded_at: string;
+    visibility: string;
+    /* eslint-enable camelcase */
+}
+
+interface PluginsTableProps {
+    data: {
+        items: PluginItem[];
+        total: number;
+    };
+    toolbox: Stage.Types.Toolbox;
+    widget: Stage.Types.Widget;
+}
+
+interface PluginsTableState {
+    error: string | null;
+    force: boolean;
+    confirmDelete: boolean;
+    item: PluginItem | null;
+    showPackageUploadModal: boolean;
+    showMarketplaceUploadModal: boolean;
+    hoveredPlugin: string | null;
+}
+
+export default class PluginsTable extends React.Component<PluginsTableProps, PluginsTableState> {
+    constructor(props: PluginsTableProps, context: any) {
         super(props, context);
 
         this.state = {
             error: null,
             force: false,
             confirmDelete: false,
-            showUploadModal: false,
-            hoveredPlugin: false
+            item: null,
+            showPackageUploadModal: false,
+            showMarketplaceUploadModal: false,
+            hoveredPlugin: null
         };
-
-        this.deletePlugin = this.deletePlugin.bind(this);
-        this.fetchGridData = this.fetchGridData.bind(this);
-        this.hideUploadModal = this.hideUploadModal.bind(this);
-        this.handleForceChange = this.handleForceChange.bind(this);
-        this.showUploadModal = this.showUploadModal.bind(this);
     }
 
     componentDidMount() {
@@ -27,7 +59,7 @@ export default class PluginsTable extends React.Component {
         toolbox.getEventBus().on('plugins:refresh', this.refreshData, this);
     }
 
-    shouldComponentUpdate(nextProps, nextState) {
+    shouldComponentUpdate(nextProps: PluginsTableProps, nextState: PluginsTableState) {
         const { data, widget } = this.props;
         return (
             !_.isEqual(widget, nextProps.widget) ||
@@ -41,11 +73,11 @@ export default class PluginsTable extends React.Component {
         toolbox.getEventBus().off('plugins:refresh', this.refreshData);
     }
 
-    handleForceChange(event, field) {
+    handleForceChange = (_event, field) => {
         this.setState(Stage.Basic.Form.fieldNameValue(field));
-    }
+    };
 
-    setPluginVisibility(pluginId, visibility) {
+    setPluginVisibility = (pluginId: string, visibility: string) => {
         const { toolbox } = this.props;
         const actions = new Stage.Common.PluginActions(toolbox);
         toolbox.loading(true);
@@ -59,23 +91,23 @@ export default class PluginsTable extends React.Component {
                 toolbox.loading(false);
                 this.setState({ error: err.message });
             });
-    }
+    };
 
-    setHoveredPlugin(idToCheck) {
+    setHoveredPlugin = (idToCheck: string) => {
         const { hoveredPlugin } = this.state;
         if (hoveredPlugin !== idToCheck) {
             this.setState({ hoveredPlugin: idToCheck });
         }
-    }
+    };
 
-    unsetHoveredPlugin(idToCheck) {
+    unsetHoveredPlugin = (idToCheck: string) => {
         const { hoveredPlugin } = this.state;
         if (hoveredPlugin === idToCheck) {
             this.setState({ hoveredPlugin: null });
         }
-    }
+    };
 
-    selectPlugin(item) {
+    selectPlugin = (item: PluginItem) => {
         const { toolbox } = this.props;
         const oldSelectedPluginId = toolbox.getContext().getValue('pluginId');
         if (item.id === oldSelectedPluginId) {
@@ -83,9 +115,9 @@ export default class PluginsTable extends React.Component {
         } else {
             toolbox.getContext().setValue('pluginId', item.id);
         }
-    }
+    };
 
-    deletePluginConfirm(item, event) {
+    deletePluginConfirm = (item: PluginItem, event: Event) => {
         event.stopPropagation();
 
         this.setState({
@@ -93,9 +125,9 @@ export default class PluginsTable extends React.Component {
             item,
             force: false
         });
-    }
+    };
 
-    downloadPlugin(item, event) {
+    downloadPlugin = (item: PluginItem, event: Event) => {
         event.stopPropagation();
         const { toolbox } = this.props;
         const actions = new Stage.Common.PluginActions(toolbox);
@@ -107,9 +139,9 @@ export default class PluginsTable extends React.Component {
             .catch(err => {
                 this.setState({ error: err.message });
             });
-    }
+    };
 
-    deletePlugin() {
+    deletePlugin = () => {
         const { force, item } = this.state;
         const { toolbox } = this.props;
         if (!item) {
@@ -127,33 +159,50 @@ export default class PluginsTable extends React.Component {
             .catch(err => {
                 this.setState({ confirmDelete: false, error: err.message });
             });
-    }
+    };
 
-    showUploadModal() {
-        this.setState({ showUploadModal: true });
-    }
+    showPackageUploadModal = () => {
+        this.setState({ showPackageUploadModal: true });
+    };
 
-    hideUploadModal() {
-        this.setState({ showUploadModal: false });
-    }
+    hidePackageUploadModal = () => {
+        this.setState({ showPackageUploadModal: false });
+    };
 
-    refreshData() {
+    showMarketplaceUploadModal = () => {
+        this.setState({ showMarketplaceUploadModal: true });
+    };
+
+    hideMarketplaceUploadModal = () => {
+        this.setState({ showMarketplaceUploadModal: false });
+    };
+
+    refreshData = () => {
         const { toolbox } = this.props;
         toolbox.refresh();
-    }
+    };
 
-    fetchGridData(fetchParams) {
+    fetchGridData = fetchParams => {
         const { toolbox } = this.props;
         return toolbox.refresh(fetchParams);
-    }
+    };
 
     render() {
-        const { confirmDelete, error, force, hoveredPlugin, item: selectedPlugin, showUploadModal } = this.state;
+        const {
+            confirmDelete,
+            error,
+            force,
+            hoveredPlugin,
+            item: selectedPlugin,
+            showPackageUploadModal,
+            showMarketplaceUploadModal
+        } = this.state;
         const { data, toolbox, widget } = this.props;
         const NO_DATA_MESSAGE = 'There are no Plugins available. Click "Upload" to add Plugins.';
-        const { Button, DataTable, ErrorMessage, Icon, ResourceVisibility } = Stage.Basic;
+        const { DataTable, Dropdown, ErrorMessage, Icon, ResourceVisibility } = Stage.Basic;
         const { IdPopup, VerticallyAlignedCell } = Stage.Shared;
         const { DeleteConfirm, UploadPluginModal, PluginIcon } = Stage.Common;
+        const { Item, Menu } = Dropdown;
 
         return (
             <div>
@@ -189,9 +238,7 @@ export default class PluginsTable extends React.Component {
                                 selected={item.isSelected}
                                 onClick={() => this.selectPlugin(item)}
                                 onMouseOver={() => this.setHoveredPlugin(item.id)}
-                                onFocus={() => this.setHoveredPlugin(item.id)}
                                 onMouseOut={() => this.unsetHoveredPlugin(item.id)}
-                                onBlur={() => this.unsetHoveredPlugin(item.id)}
                             >
                                 <DataTable.Data>
                                     <IdPopup selected={item.id === hoveredPlugin} id={item.id} />
@@ -225,14 +272,14 @@ export default class PluginsTable extends React.Component {
                                         link
                                         bordered
                                         title="Download"
-                                        onClick={event => this.downloadPlugin(item, event)}
+                                        onClick={(event: Event) => this.downloadPlugin(item, event)}
                                     />
                                     <Icon
                                         name="trash"
                                         link
                                         bordered
                                         title="Delete"
-                                        onClick={event => this.deletePluginConfirm(item, event)}
+                                        onClick={(event: Event) => this.deletePluginConfirm(item, event)}
                                     />
                                 </DataTable.Data>
                             </DataTable.Row>
@@ -240,11 +287,22 @@ export default class PluginsTable extends React.Component {
                     })}
 
                     <DataTable.Action>
-                        <Button content="Upload" icon="upload" labelPosition="left" onClick={this.showUploadModal} />
+                        <Dropdown icon="upload" button className="icon" labeled text={t('upload.button')}>
+                            <Menu direction="left">
+                                <Item text={t('upload.marketplace')} onClick={this.showMarketplaceUploadModal} />
+                                <Item text={t('upload.package')} onClick={this.showPackageUploadModal} />
+                            </Menu>
+                        </Dropdown>
                     </DataTable.Action>
                 </DataTable>
 
-                <UploadPluginModal open={showUploadModal} toolbox={toolbox} onHide={this.hideUploadModal} />
+                <UploadPluginModal
+                    open={showPackageUploadModal}
+                    toolbox={toolbox}
+                    onHide={this.hidePackageUploadModal}
+                />
+
+                <MarketplaceModal open={showMarketplaceUploadModal} onHide={this.hideMarketplaceUploadModal} />
 
                 <DeleteConfirm
                     resourceName={`plugin ${_.get(selectedPlugin, 'package_name', '')} v${_.get(
@@ -262,27 +320,3 @@ export default class PluginsTable extends React.Component {
         );
     }
 }
-
-PluginsTable.propTypes = {
-    data: PropTypes.shape({
-        items: PropTypes.arrayOf(
-            PropTypes.shape({
-                created_by: PropTypes.string,
-                distribution: PropTypes.string,
-                distribution_release: PropTypes.string,
-                icon: PropTypes.string,
-                id: PropTypes.string,
-                isSelected: PropTypes.bool,
-                title: PropTypes.string,
-                package_name: PropTypes.string,
-                package_version: PropTypes.string,
-                supported_platform: PropTypes.string,
-                uploaded_at: PropTypes.string,
-                visibility: PropTypes.string
-            })
-        ),
-        total: PropTypes.number
-    }).isRequired,
-    toolbox: Stage.PropTypes.Toolbox.isRequired,
-    widget: Stage.PropTypes.Widget.isRequired
-};
