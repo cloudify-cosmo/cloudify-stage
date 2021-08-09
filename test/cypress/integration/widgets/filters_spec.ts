@@ -419,6 +419,7 @@ describe('Filters widget', () => {
             if (searchEndpoint) cy.wait(`@search_${value}`);
 
             // Workaround for RD-2664
+            // eslint-disable-next-line cypress/no-unnecessary-waiting
             cy.wait(1000);
 
             if (isNew) cy.contains('[role="option"]', `${additionLabel} ${value}`).click();
