@@ -24,6 +24,13 @@ describe('Page', () => {
         cy.mockLogin();
     });
 
+    function verifyAllWidgetsVisible() {
+        cy.contains('.widgetName', 'Blueprints').should('be.visible');
+        cy.contains('.widgetName', 'Cluster Status').should('be.visible');
+        cy.contains('.widgetName', 'Catalog').should('be.visible');
+        cy.get('.blueprintNumWidget').should('be.visible');
+    }
+
     it('should allow to switch tabs and maximize widgets', () => {
         cy.contains('.widgetName', 'Cluster Status');
         cy.contains('.widgetName', 'Blueprints');
@@ -48,15 +55,26 @@ describe('Page', () => {
         cy.contains('.widgetName', 'Catalog').should('not.be.visible');
         cy.get('.blueprintNumWidget').should('not.be.visible');
 
-        cy.log('Verify maximize state is saved');
-        cy.reload();
-        cy.contains('.widgetName', 'Blueprints').should('be.visible');
+        cy.log('Verify maximize state is not saved for widgets in tabs');
+        cy.refreshTemplate();
+        verifyAllWidgetsVisible();
+
+        cy.log('Verify widget maximize button works for top level widgets');
+        cy.get('.blueprintCatalogWidget .expand').click({ force: true });
+
         cy.contains('.widgetName', 'Cluster Status').should('not.be.visible');
-        cy.contains('.widgetName', 'Catalog').should('not.be.visible');
+        cy.contains('.widgetName', 'Blueprints').should('not.be.visible');
+        cy.get('.blueprintNumWidget').should('not.be.visible');
+
+        cy.log('Verify maximize state is saved for top level widgets');
+        cy.refreshTemplate();
+        cy.contains('.widgetName', 'Catalog').should('be.visible');
+        cy.contains('.widgetName', 'Blueprints').should('not.be.visible');
+        cy.contains('.widgetName', 'Cluster Status').should('not.be.visible');
         cy.get('.blueprintNumWidget').should('not.be.visible');
 
         cy.log('Verify widget collapse button works');
-        cy.get('.blueprintsWidget .compress').click({ force: true });
-        cy.contains('.widgetName', 'Catalog').should('be.visible');
+        cy.get('.blueprintCatalogWidget .compress').click({ force: true });
+        verifyAllWidgetsVisible();
     });
 });
