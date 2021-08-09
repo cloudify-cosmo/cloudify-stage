@@ -5,6 +5,7 @@ type Params = Record<string, any>;
 type ListDeploymentsParams = Stage.Types.ManagerGridParams & {
     // eslint-disable-next-line camelcase
     _search_name?: string;
+    _include?: string;
 };
 
 export default class SearchActions {
