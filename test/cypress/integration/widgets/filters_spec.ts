@@ -374,8 +374,7 @@ describe('Filters widget', () => {
         });
     });
 
-    // TODO(RD-2664): fix the double-fetch in DynamicDropdown and enable the tests
-    describe.skip('should allow to define a filter rule', () => {
+    describe('should allow to define a filter rule', () => {
         const testPrefix = 'filters_test_form';
         const blueprintId = `${testPrefix}_blueprint`;
         const deploymentId = `${testPrefix}_deployment`;
@@ -418,6 +417,9 @@ describe('Filters widget', () => {
             if (searchEndpoint) cy.interceptSp('GET', searchEndpoint).as(`search_${value}`);
             cy.get('input.search').type(value);
             if (searchEndpoint) cy.wait(`@search_${value}`);
+
+            // Workaround for RD-2664
+            cy.wait(1000);
 
             if (isNew) cy.contains('[role="option"]', `${additionLabel} ${value}`).click();
             else cy.get(`div[option-value="${value}"]`).click();
