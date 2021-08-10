@@ -47,6 +47,12 @@ export function removeWidget(pageId, widgetId) {
     };
 }
 
+export function minimizeTabWidgets() {
+    return {
+        type: types.MINIMIZE_TAB_WIDGETS
+    };
+}
+
 export function minimizeWidgets() {
     return {
         type: types.MINIMIZE_WIDGETS

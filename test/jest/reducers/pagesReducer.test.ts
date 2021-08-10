@@ -69,6 +69,7 @@ describe('(Reducer) Pages', () => {
                 },
                 { type: types.SET_DRILLDOWN_CONTEXT, drilldownContext: [{ context: undefined }] },
                 { type: types.WIDGET_DATA_CLEAR },
+                { type: types.MINIMIZE_TAB_WIDGETS },
                 { type: 'router action' }
             ];
 
@@ -178,6 +179,7 @@ describe('(Reducer) Pages', () => {
             const expectedActions = [
                 { type: types.WIDGET_DATA_CLEAR },
                 { type: types.SET_DRILLDOWN_CONTEXT, drilldownContext: [{ context: undefined }] },
+                { type: types.MINIMIZE_TAB_WIDGETS },
                 { type: 'router action' }
             ];
 
@@ -262,7 +264,7 @@ describe('(Reducer) Pages', () => {
             );
 
             const storeActions = store.getActions();
-            const routeAction = storeActions[2];
+            const routeAction = storeActions[3];
 
             expect(routeAction.payload.args).toHaveLength(1);
             const query = parse(routeAction.payload.args[0].search);
