@@ -145,7 +145,7 @@ export default class BlueprintList extends React.Component<BlueprintListProps, B
                 <ErrorMessage error={error} onDismiss={() => this.setState({ error: null })} autoHide />
 
                 <div className="uploadBlueprintButton">
-                    <BlueprintUploadActionsMenu direction="left" toolbox={toolbox} />
+                    <BlueprintUploadActionsMenu direction="left" toolbox={toolbox} widget={widget} />
                 </div>
                 <BlueprintsView
                     widget={widget}

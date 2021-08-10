@@ -75,6 +75,7 @@ export default function EditWidgetModal({ configDef, configuration, show, onHide
                                 name={config.id}
                                 label={config.name}
                                 value={fields[config.id]}
+                                columns={config.columns}
                                 onChange={handleInputChange}
                                 widgetlessToolbox={getToolbox(undefined, undefined, undefined)}
                             />

@@ -1,4 +1,5 @@
 import { ComponentProps, FunctionComponent } from 'react';
+import { BlueprintsWidgetConfiguration } from '../../blueprints/src/types';
 
 const t = Stage.Utils.getT('widgets.common.blueprintUpload.actionsMenu');
 const menuItems: ComponentProps<typeof Stage.Basic.Menu.Item>[] = [
@@ -11,10 +12,15 @@ type ActionName = typeof menuItems[number]['name'];
 
 interface BlueprintUploadActionsMenuProps {
     direction?: 'left' | 'right';
+    widget: Stage.Types.Widget<BlueprintsWidgetConfiguration>;
     toolbox: Stage.Types.Toolbox;
 }
 
-const BlueprintUploadActionsMenu: FunctionComponent<BlueprintUploadActionsMenuProps> = ({ direction, toolbox }) => {
+const BlueprintUploadActionsMenu: FunctionComponent<BlueprintUploadActionsMenuProps> = ({
+    direction,
+    toolbox,
+    widget
+}) => {
     const {
         Basic: { Dropdown }
     } = Stage;
@@ -41,23 +47,7 @@ const BlueprintUploadActionsMenu: FunctionComponent<BlueprintUploadActionsMenuPr
                         <BlueprintMarketplaceModal
                             open
                             onHide={hideModal}
-                            tabs={[
-                                {
-                                    name: 'VM Blueprint Examples',
-                                    url:
-                                        'https://repository.cloudifysource.org/cloudify/blueprints/5.1/vm-examples.json'
-                                },
-                                {
-                                    name: 'Kubernetes Blueprint Examples',
-                                    url:
-                                        'https://repository.cloudifysource.org/cloudify/blueprints/5.1/k8s-examples.json'
-                                },
-                                {
-                                    name: 'Orchestrator Blueprint Examples',
-                                    url:
-                                        'https://repository.cloudifysource.org/cloudify/blueprints/5.1/orc-examples.json'
-                                }
-                            ]}
+                            tabs={widget.configuration.marketplaceTabs}
                         />
                     );
                 case 'uploadFromPackage':
