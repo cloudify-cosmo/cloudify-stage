@@ -66,7 +66,7 @@ const DynamicTable: FunctionComponent<KeyValueEditorProps> = ({ name, value = []
                                     />
                                 </Table.Cell>
                             ))}
-                        <Table.Cell textAlign="center">
+                        <Table.Cell textAlign="right" width={1}>
                             <Button
                                 basic
                                 icon="trash"
