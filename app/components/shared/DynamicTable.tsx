@@ -1,5 +1,4 @@
 import React, { ComponentProps, FunctionComponent } from 'react';
-import { getToolbox } from '../../utils/Toolbox';
 
 interface KeyValueEditorProps
     extends Pick<
@@ -63,7 +62,6 @@ const DynamicTable: FunctionComponent<KeyValueEditorProps> = ({ name, value = []
                                         name={column.id}
                                         value={val[column.id]}
                                         onChange={handleEditRow(column.id, index)}
-                                        widgetlessToolbox={getToolbox(undefined, undefined, undefined)}
                                     />
                                 </Table.Cell>
                             ))}
