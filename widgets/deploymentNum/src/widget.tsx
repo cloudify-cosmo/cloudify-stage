@@ -72,7 +72,7 @@ Stage.defineWidget<unknown, WidgetData, DeploymentNumWidgetConfiguration>({
             name: 'Page to open on click',
             description: 'Page to open when user clicks on widget content',
             type: Stage.Basic.GenericField.CUSTOM_TYPE,
-            default: 'deployments',
+            default: 'services',
             component: Stage.Shared.PageFilter
         }
     ],
