@@ -1,9 +1,6 @@
-/**
- * Created by pawelposel on 03/11/2016.
- */
-
 import { isEmpty } from 'lodash';
 import React from 'react';
+import { SemanticICONS } from 'semantic-ui-react';
 
 interface WidgetData {
     metadata?: {
@@ -14,6 +11,9 @@ interface WidgetData {
 }
 
 interface DeploymentNumWidgetConfiguration {
+    icon: string;
+    imageSrc: string;
+    label: string;
     page: string;
 }
 
@@ -32,6 +32,32 @@ Stage.defineWidget<unknown, WidgetData, DeploymentNumWidgetConfiguration>({
 
     initialConfiguration: [
         Stage.GenericConfig.POLLING_TIME_CONFIG(10),
+        {
+            id: 'label',
+            name: 'Label',
+            description: 'Label displayed under deployments count',
+            default: 'Deployments',
+            type: Stage.Basic.GenericField.STRING_TYPE
+        },
+        {
+            id: 'icon',
+            name: 'Icon',
+            description: (
+                <>
+                    Name of the icon displayed on the left side of the deployments count. Available icons list can be
+                    found at: <a href="https://react.semantic-ui.com/elements/icon">Icon - Semantic UI React</a>
+                </>
+            ),
+            default: 'cube',
+            type: Stage.Basic.GenericField.STRING_TYPE
+        },
+        {
+            id: 'imageSrc',
+            name: 'Image URL',
+            description: 'URL of the image displayed on the left side of the deployments count',
+            default: '',
+            type: Stage.Basic.GenericField.STRING_TYPE
+        },
         {
             id: 'page',
             name: 'Page to open on click',
@@ -53,12 +79,13 @@ Stage.defineWidget<unknown, WidgetData, DeploymentNumWidgetConfiguration>({
         const { KeyIndicator } = Stage.Basic;
         const { Link } = Stage.Shared;
 
+        const { icon, imageSrc, label, page } = widget.configuration;
         const num = data?.metadata?.pagination?.total ?? 0;
         const to = widget.configuration.page ? `/page/${widget.configuration.page}` : '/';
 
         return (
             <Link to={to}>
-                <KeyIndicator title="Deployments" icon="cube" number={num} />
+                <KeyIndicator title={label} icon={icon as SemanticICONS} imageSrc={imageSrc} number={num} />
             </Link>
         );
     }
