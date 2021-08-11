@@ -5,6 +5,7 @@ const { i18n } = Stage;
 const i18nPrefix = 'widgets.common.filters.form';
 export const getTranslation = (key: string) => i18n.t(`${i18nPrefix}.${key}`);
 export const getPlaceholderTranslation = (key: string) => getTranslation(`inputsPlaceholders.${key}`);
+export const filterIdQueryParameterName = 'filterId';
 
 const multipleValuesOperators: FilterRuleOperator[] = [
     FilterRuleOperators.AnyOf,

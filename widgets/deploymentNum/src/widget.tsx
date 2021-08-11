@@ -15,6 +15,7 @@ interface DeploymentNumWidgetConfiguration {
     imageSrc: string;
     label: string;
     page: string;
+    filterId: string;
 }
 
 Stage.defineWidget<unknown, WidgetData, DeploymentNumWidgetConfiguration>({
@@ -59,6 +60,14 @@ Stage.defineWidget<unknown, WidgetData, DeploymentNumWidgetConfiguration>({
             type: Stage.Basic.GenericField.STRING_TYPE
         },
         {
+            id: 'filterId',
+            name: 'Filter ID',
+            description: 'Name of the saved filter to apply on deployments',
+            type: Stage.Basic.GenericField.CUSTOM_TYPE,
+            default: '',
+            component: Stage.Common.Filters.FilterIdDropdown
+        },
+        {
             id: 'page',
             name: 'Page to open on click',
             description: 'Page to open when user clicks on widget content',
@@ -67,7 +76,18 @@ Stage.defineWidget<unknown, WidgetData, DeploymentNumWidgetConfiguration>({
             component: Stage.Shared.PageFilter
         }
     ],
-    fetchUrl: '[manager]/deployments?_include=id&_size=1',
+
+    fetchData(widget, toolbox) {
+        const { filterId } = widget.configuration;
+        const params = {
+            _filter_id: filterId,
+            _include: 'id',
+            _size: 1
+        };
+
+        const deploymentActions = new Stage.Common.DeploymentActions(toolbox);
+        return deploymentActions.doGetDeployments(params);
+    },
 
     render(widget, data) {
         const { Loading } = Stage.Basic;
@@ -78,10 +98,15 @@ Stage.defineWidget<unknown, WidgetData, DeploymentNumWidgetConfiguration>({
 
         const { KeyIndicator } = Stage.Basic;
         const { Link } = Stage.Shared;
+        const { filterIdQueryParameterName } = Stage.Common.Filters;
 
-        const { icon, imageSrc, label, page } = widget.configuration;
+        const { icon, imageSrc, label, filterId, page } = widget.configuration;
         const num = data?.metadata?.pagination?.total ?? 0;
-        const to = widget.configuration.page ? `/page/${widget.configuration.page}` : '/';
+        const to = (() => {
+            let path = page ? `/page/${page}` : '/';
+            if (filterId) path += `?${filterIdQueryParameterName}=${filterId}`;
+            return path;
+        })();
 
         return (
             <Link to={to}>
