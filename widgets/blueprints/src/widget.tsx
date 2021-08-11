@@ -60,7 +60,7 @@ Stage.defineWidget<unknown, unknown, BlueprintsWidgetConfiguration>({
                 },
                 {
                     id: 'url',
-                    label: 'URL',
+                    label: 'URL to marketplace',
                     default: '',
                     type: Stage.Basic.GenericField.STRING_TYPE
                 }

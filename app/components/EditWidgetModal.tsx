@@ -110,6 +110,8 @@ EditWidgetModal.propTypes = {
             name: PropTypes.string,
             hidden: PropTypes.bool,
             // eslint-disable-next-line react/forbid-prop-types
+            columns: PropTypes.array,
+            // eslint-disable-next-line react/forbid-prop-types
             value: PropTypes.any
         })
     ).isRequired,
