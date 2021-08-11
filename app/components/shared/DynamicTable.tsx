@@ -9,7 +9,8 @@ interface KeyValueEditorProps
 }
 
 const DynamicTable: FunctionComponent<KeyValueEditorProps> = ({ name, value = [], onChange, columns = [] }) => {
-    const { GenericField, Input, Button, Icon, Table } = Stage.Basic;
+    const { GenericField, Input, Button, Table } = Stage.Basic;
+    const t = Stage.Utils.getT('shared.dynamicTable');
 
     const handleEditRow = (key: string, index: number): ComponentProps<typeof Input>['onChange'] => (event, data) => {
         onChange(event, {
@@ -66,19 +67,21 @@ const DynamicTable: FunctionComponent<KeyValueEditorProps> = ({ name, value = []
                                 </Table.Cell>
                             ))}
                         <Table.Cell textAlign="center">
-                            <Button icon onClick={handleRemoveRow(index)}>
-                                <Icon name="minus" />
-                            </Button>
+                            <Button
+                                basic
+                                icon="trash"
+                                aria-label={t('removeButton')}
+                                title={t('removeButton')}
+                                onClick={handleRemoveRow(index)}
+                            />
                         </Table.Cell>
                     </Table.Row>
                 ))}
             </Table.Body>
             <Table.Footer>
                 <Table.Row>
-                    <Table.HeaderCell colSpan={columns.length + 1} textAlign="center">
-                        <Button icon onClick={handleAddRow}>
-                            <Icon name="plus" />
-                        </Button>
+                    <Table.HeaderCell colSpan={columns.length + 1}>
+                        <Button icon="add" content={t('addButton')} onClick={handleAddRow} />
                     </Table.HeaderCell>
                 </Table.Row>
             </Table.Footer>
