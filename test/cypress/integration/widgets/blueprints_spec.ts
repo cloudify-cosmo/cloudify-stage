@@ -15,7 +15,9 @@ describe('Blueprints widget', () => {
             .activate('valid_trial_license')
             .deleteDeployments(blueprintNamePrefix, true)
             .deleteBlueprints(blueprintNamePrefix, true)
-            .usePageMock('blueprints', blueprintsWidgetConfiguration)
+            .usePageMock('blueprints', blueprintsWidgetConfiguration, {
+                additionalWidgetIdsToLoad: ['blueprintCatalog']
+            })
             .mockLogin()
     );
 
@@ -378,6 +380,19 @@ describe('Blueprints widget', () => {
                 cy.contains('.header', 'Blueprint upload failed');
                 cy.contains('li', error);
             });
+        });
+    });
+
+    describe('should open upload from marketplace modal and', () => {
+        beforeEach(() => {
+            cy.contains('Upload').click();
+            cy.contains('Upload from Marketplace').click();
+        });
+
+        it('should open marketplace modal', () => {
+            cy.contains('.header', 'Blueprint marketplace');
+            cy.get('.tabular > a.item').should('have.length', 3);
+            cy.get('.blueprintCatalogWidget').should('exist');
         });
     });
 });
