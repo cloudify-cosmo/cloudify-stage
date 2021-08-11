@@ -17,7 +17,7 @@ export default class DeploymentActions {
     }
 
     doGetDeployments(params: any) {
-        return this.toolbox.getManager().doGet('/deployments?_include=id', { params });
+        return this.toolbox.getManager().doGet('/deployments', { params });
     }
 
     doDelete(deployment: { id: string }) {
