@@ -41,7 +41,7 @@ export default function DeploymentActionsMenu({ onActionClick, toolbox, trigger 
         content: translate(item.name),
         disabled: !isUserAuthorized(item.permission, managerState)
     }));
-    const popupMenuProps = !trigger
+    const popupMenuProps: { bordered?: boolean; help?: string; offset?: [number, number] } = !trigger
         ? { bordered: true, help: i18n.t('widgets.common.deployments.actionsMenu.tooltip'), offset: [0, 5] }
         : {};
 
