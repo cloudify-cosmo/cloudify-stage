@@ -3,25 +3,26 @@ import type { BlueprintsWidgetConfiguration } from '../../../../widgets/blueprin
 describe('Blueprints widget', () => {
     const blueprintNamePrefix = 'blueprints_test';
     const emptyBlueprintName = `${blueprintNamePrefix}_empty`;
+    const marketplaceTabs = [
+        {
+            name: 'VM Blueprint Examples',
+            url: 'https://repository.cloudifysource.org/cloudify/blueprints/5.1/vm-examples.json'
+        },
+        {
+            name: 'Kubernetes Blueprint Examples',
+            url: 'https://repository.cloudifysource.org/cloudify/blueprints/5.1/k8s-examples.json'
+        },
+        {
+            name: 'Orchestrator Blueprint Examples',
+            url: 'https://repository.cloudifysource.org/cloudify/blueprints/5.1/orc-examples.json'
+        }
+    ];
     const blueprintsWidgetConfiguration: Partial<BlueprintsWidgetConfiguration> = {
         displayStyle: 'table',
         clickToDrillDown: true,
         pollingTime: 5,
         showEditCopyInComposerButton: true,
-        marketplaceTabs: [
-            {
-                name: 'VM Blueprint Examples',
-                url: 'https://repository.cloudifysource.org/cloudify/blueprints/5.1/vm-examples.json'
-            },
-            {
-                name: 'Kubernetes Blueprint Examples',
-                url: 'https://repository.cloudifysource.org/cloudify/blueprints/5.1/k8s-examples.json'
-            },
-            {
-                name: 'Orchestrator Blueprint Examples',
-                url: 'https://repository.cloudifysource.org/cloudify/blueprints/5.1/orc-examples.json'
-            }
-        ]
+        marketplaceTabs
     };
 
     before(() =>
@@ -403,10 +404,10 @@ describe('Blueprints widget', () => {
             cy.contains('Upload from Marketplace').click();
         });
 
-        it('and have blueprint catalog widget', () => {
+        it('have blueprint catalog widget', () => {
             cy.get('.modal').within(() => {
                 cy.contains('.header', 'Blueprint marketplace');
-                cy.get('.tabular > a.item').should('have.length', 3); // 3 - default number of tabs
+                cy.get('.tabular > a.item').should('have.length', marketplaceTabs.length);
                 cy.get('.blueprintCatalogWidget').should('be.visible');
             });
         });
@@ -418,21 +419,22 @@ describe('Blueprints widget', () => {
 
             cy.editWidgetConfiguration('blueprints', () => {
                 cy.contains('Add').click();
-                cy.get('input[name="name"]').eq(3).type(testTabMarketplaceName);
-                cy.get('input[name="url"]').eq(3).type('https://localhost');
+                cy.get('input[name="name"]').eq(marketplaceTabs.length).type(testTabMarketplaceName);
+                cy.get('input[name="url"]').eq(marketplaceTabs.length).type('https://localhost');
             });
             cy.contains('Upload').click();
             cy.contains('Upload from Marketplace').click();
-            cy.get('.modal').within(() => {
-                cy.contains(testTabMarketplaceName).should('be.visible');
-            });
+            cy.contains('.modal', testTabMarketplaceName).should('be.visible');
         });
 
         it('should allow to rename marketplace tab', () => {
             const testTabMarketplaceName = 'Favorite blueprints';
 
             cy.editWidgetConfiguration('blueprints', () => {
-                cy.get('input[name="name"]').eq(2).clear().type(testTabMarketplaceName);
+                cy.get('input[name="name"]')
+                    .eq(marketplaceTabs.length - 1)
+                    .clear()
+                    .type(testTabMarketplaceName);
             });
             cy.contains('Upload').click();
             cy.contains('Upload from Marketplace').click();
@@ -443,13 +445,13 @@ describe('Blueprints widget', () => {
 
         it('should allow to remove marketplace tab', () => {
             cy.editWidgetConfiguration('blueprints', () => {
-                cy.get('button[title="Remove"]').eq(1).click();
+                cy.get('button[title="Remove"]')
+                    .eq(marketplaceTabs.length - 1)
+                    .click();
             });
             cy.contains('Upload').click();
             cy.contains('Upload from Marketplace').click();
-            cy.get('.modal').within(() => {
-                cy.get('.tabular > a.item').should('have.length', 2);
-            });
+            cy.get('.modal .tabular > a.item').should('have.length', marketplaceTabs.length - 1);
         });
     });
 });
