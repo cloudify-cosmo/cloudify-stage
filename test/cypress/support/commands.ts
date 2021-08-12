@@ -230,7 +230,12 @@ const commands = {
         }: { widgetsWidth?: number; additionalWidgetIdsToLoad?: string[]; additionalPageTemplates?: string[] } = {}
     ) => {
         const widgetIdsArray = _.castArray(widgetIds);
-        const widgetIdsToLoad = [...widgetIdsArray, 'filter', 'pluginsCatalog', ...additionalWidgetIdsToLoad];
+        const widgetIdsToLoad = _.compact([
+            ...widgetIdsArray,
+            'filter',
+            'pluginsCatalog',
+            ...additionalWidgetIdsToLoad
+        ]);
         cy.intercept('GET', '/console/widgets/list', widgetIdsToLoad.map(toIdObj));
         // required for drill-down testing
         cy.intercept(
