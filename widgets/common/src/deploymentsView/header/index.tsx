@@ -42,18 +42,22 @@ const DeploymentsViewHeader: FunctionComponent<DeploymentsViewHeaderProps> = ({
     const filterIdFromUrl = useFilterIdFromUrl();
     const dispatch = ReactRedux.useDispatch();
 
+    function removeFilterIdFromUrl() {
+        const search = (function getLocationSearchWithoutFilterId() {
+            const newLocationSearch = new URLSearchParams(locationSearch);
+            newLocationSearch.delete(filterIdQueryParameterName);
+            return newLocationSearch.toString();
+        })();
+        dispatch(ReactRouter.replace({ search }));
+    }
+
     function handleFilterChange(newFilterRules: FilterRule[] | undefined, newFilterId: string | undefined) {
         setUserFilterSelected(!!newFilterRules);
         setUserFilterId(newFilterId);
         onFilterChange(newFilterRules);
         closeFilterModal();
         if (filterIdFromUrl && filterIdFromUrl !== newFilterId) {
-            const search = (function getLocationSearchWithoutFilterId() {
-                const newLocationSearch = new URLSearchParams(locationSearch);
-                newLocationSearch.delete(filterIdQueryParameterName);
-                return newLocationSearch.toString();
-            })();
-            dispatch(ReactRouter.replace({ search }));
+            removeFilterIdFromUrl();
         }
     }
 
