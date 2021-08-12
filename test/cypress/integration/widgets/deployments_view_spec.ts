@@ -549,6 +549,10 @@ describe('Deployments View widget', () => {
             cy.setDeploymentContext(deploymentNameThatMatchesFilter);
             getSelectedDeployment().contains(deploymentNameThatMatchesFilter);
         });
+
+        it('should take into account filterId query parameter from the URL when displaying deployments', () => {
+            // TODO: Add test
+        });
     });
 
     it('should display various deployment information', () => {
