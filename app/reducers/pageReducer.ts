@@ -65,6 +65,13 @@ const tabs: Reducer<TabContent[], TabsAction> = (state = [], action) => {
 
 const page = (state: PageDefinition, action: AnyAction) => {
     switch (action.type) {
+        case types.MINIMIZE_TAB_WIDGETS: {
+            const newState = _.cloneDeep(state);
+            forAllWidgets(newState, (widgetsList, layoutSectionIdx, tabIdx) =>
+                tabIdx !== null ? widgets(widgetsList, action) : widgetsList
+            );
+            return newState;
+        }
         case types.MINIMIZE_WIDGETS:
         case types.REMOVE_WIDGET:
         case types.UPDATE_WIDGET: {
@@ -139,6 +146,7 @@ const pages: Reducer<PageDefinition[]> = (state = [], action) => {
         case types.CREATE_DRILLDOWN_PAGE:
             return [...state, createPage(action as any)];
         case types.MINIMIZE_WIDGETS:
+        case types.MINIMIZE_TAB_WIDGETS:
             return state.map(p => page(p, action));
         case types.REMOVE_PAGE: {
             const removeIndex = _.findIndex(state, { id: action.pageId });

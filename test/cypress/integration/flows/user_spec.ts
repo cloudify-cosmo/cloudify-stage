@@ -26,13 +26,10 @@ describe('User flow', () => {
 
     it('installs deployment from scratch', () => {
         cy.visitPage('Marketplace');
-        cy.get('.pluginsCatalogWidget').within(() => {
-            cy.contains('tr', 'Utilities').find('button').click();
+        cy.contains('.pluginsCatalogWidget tr', 'Utilities').within(() => {
+            cy.get('button').click();
+            cy.get('button', { timeout: minutesToMs(2) }).should('to.be.disabled');
         });
-        cy.get('.modal').within(() => {
-            cy.get('button.ok').click();
-        });
-        cy.get('.modal', { timeout: minutesToMs(2) }).should('not.exist');
 
         cy.visitPage('Resources').openTab('Secrets');
         createSecret('some_key_1');

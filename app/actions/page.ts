@@ -9,7 +9,7 @@ import type { LocationDescriptorObject } from 'history';
 import * as types from './types';
 import { clearContext } from './context';
 import { popDrilldownContext } from './drilldownContext';
-import { addWidget } from './widgets';
+import { addWidget, minimizeTabWidgets } from './widgets';
 import { clearWidgetsData } from './WidgetData';
 import Internal from '../utils/Internal';
 import Consts from '../utils/consts';
@@ -192,6 +192,8 @@ export function selectPage(
 
         // Clear the widgets data since there is no point in saving data for widgets that are not in view
         dispatch(clearWidgetsData());
+
+        dispatch(minimizeTabWidgets());
 
         // Update context and location depending on page is drilldown
         if (!isDrilldown) {

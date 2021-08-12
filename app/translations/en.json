@@ -896,6 +896,30 @@
         "maintenanceModeButton": {
             "activating": "Maintenance Mode is being activated"
         },
+        "pluginsCatalog": {
+            "uploadButton": {
+                "enabled": "Upload plugin",
+                "disabled": "Latest version is already uploaded",
+                "uploading": "Plugin upload in progress"
+            },
+            "noData": "There are no Plugins available in catalog. Check widget's configuration.",
+            "columns": {
+                "name": "Name",
+                "description": "Description",
+                "version": "Version",
+                "uploadedVersion": "Uploaded version"
+            },
+            "successMessage": "{{pluginTitle}} successfully uploaded"
+        },
+        "plugins": {
+            "upload": {
+                "button": "Upload",
+                "marketplace": "Upload from Marketplace",
+                "package": "Upload a package",
+                "close": "Close",
+                "catalog": "Plugins Catalog"
+            }
+        },
         "userManagement": {
             "columns": {
                 "username": "Username",
