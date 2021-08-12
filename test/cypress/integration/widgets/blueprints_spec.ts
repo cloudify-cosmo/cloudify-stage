@@ -7,7 +7,21 @@ describe('Blueprints widget', () => {
         displayStyle: 'table',
         clickToDrillDown: true,
         pollingTime: 5,
-        showEditCopyInComposerButton: true
+        showEditCopyInComposerButton: true,
+        marketplaceTabs: [
+            {
+                name: 'VM Blueprint Examples',
+                url: 'https://repository.cloudifysource.org/cloudify/blueprints/5.1/vm-examples.json'
+            },
+            {
+                name: 'Kubernetes Blueprint Examples',
+                url: 'https://repository.cloudifysource.org/cloudify/blueprints/5.1/k8s-examples.json'
+            },
+            {
+                name: 'Orchestrator Blueprint Examples',
+                url: 'https://repository.cloudifysource.org/cloudify/blueprints/5.1/orc-examples.json'
+            }
+        ]
     };
 
     before(() =>
@@ -389,10 +403,53 @@ describe('Blueprints widget', () => {
             cy.contains('Upload from Marketplace').click();
         });
 
-        it('should open marketplace modal', () => {
-            cy.contains('.header', 'Blueprint marketplace');
-            cy.get('.tabular > a.item').should('have.length', 3);
-            cy.get('.blueprintCatalogWidget').should('exist');
+        it('and have blueprint catalog widget', () => {
+            cy.get('.modal').within(() => {
+                cy.contains('.header', 'Blueprint marketplace');
+                cy.get('.tabular > a.item').should('have.length', 3);
+                cy.get('.blueprintCatalogWidget').should('be.visible');
+            });
+        });
+    });
+
+    describe('configuration', () => {
+        it('should allow to add new marketplace tab', () => {
+            const testTabMarketplaceName = 'Blueprints from Dagobah';
+
+            cy.editWidgetConfiguration('blueprints', () => {
+                cy.contains('Add').click();
+                cy.get('input[name="name"]').eq(3).type(testTabMarketplaceName);
+                cy.get('input[name="url"]').eq(3).type('https://localhost');
+            });
+            cy.contains('Upload').click();
+            cy.contains('Upload from Marketplace').click();
+            cy.get('.modal').within(() => {
+                cy.contains(testTabMarketplaceName).should('be.visible');
+            });
+        });
+
+        it('should allow to rename marketplace tab', () => {
+            const testTabMarketplaceName = 'Favorite blueprints';
+
+            cy.editWidgetConfiguration('blueprints', () => {
+                cy.get('input[name="name"]').eq(2).clear().type(testTabMarketplaceName);
+            });
+            cy.contains('Upload').click();
+            cy.contains('Upload from Marketplace').click();
+            cy.get('.modal').within(() => {
+                cy.contains(testTabMarketplaceName).should('be.visible');
+            });
+        });
+
+        it('should allow to remove marketplace tab', () => {
+            cy.editWidgetConfiguration('blueprints', () => {
+                cy.get('button[title="Remove"]').eq(1).click();
+            });
+            cy.contains('Upload').click();
+            cy.contains('Upload from Marketplace').click();
+            cy.get('.modal').within(() => {
+                cy.get('.tabular > a.item').should('have.length', 2);
+            });
         });
     });
 });
