@@ -47,6 +47,40 @@ Stage.defineWidget<unknown, unknown, BlueprintsWidgetConfiguration>({
             type: Stage.Basic.GenericField.BOOLEAN_TYPE,
             name: Stage.i18n.t('widgets.blueprints.configuration.showEditCopyInComposerButton'),
             default: false
+        },
+        {
+            id: 'marketplaceTabs',
+            name: 'Marketplace tabs',
+            columns: [
+                {
+                    id: 'name',
+                    label: 'Tab name',
+                    default: '',
+                    type: Stage.Basic.GenericField.STRING_TYPE
+                },
+                {
+                    id: 'url',
+                    label: 'URL to marketplace',
+                    default: '',
+                    type: Stage.Basic.GenericField.STRING_TYPE
+                }
+            ],
+            default: [
+                {
+                    name: 'VM Blueprint Examples',
+                    url: 'https://repository.cloudifysource.org/cloudify/blueprints/5.1/vm-examples.json'
+                },
+                {
+                    name: 'Kubernetes Blueprint Examples',
+                    url: 'https://repository.cloudifysource.org/cloudify/blueprints/5.1/k8s-examples.json'
+                },
+                {
+                    name: 'Orchestrator Blueprint Examples',
+                    url: 'https://repository.cloudifysource.org/cloudify/blueprints/5.1/orc-examples.json'
+                }
+            ],
+            type: Stage.Basic.GenericField.CUSTOM_TYPE,
+            component: Stage.Shared.DynamicTable
         }
     ],
 
