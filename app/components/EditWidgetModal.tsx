@@ -75,6 +75,7 @@ export default function EditWidgetModal({ configDef, configuration, show, onHide
                                 name={config.id}
                                 label={config.name}
                                 value={fields[config.id]}
+                                columns={config.columns}
                                 onChange={handleInputChange}
                                 widgetlessToolbox={getToolbox(undefined, undefined, undefined)}
                             />
@@ -108,6 +109,8 @@ EditWidgetModal.propTypes = {
             id: PropTypes.string,
             name: PropTypes.string,
             hidden: PropTypes.bool,
+            // eslint-disable-next-line react/forbid-prop-types
+            columns: PropTypes.array,
             // eslint-disable-next-line react/forbid-prop-types
             value: PropTypes.any
         })

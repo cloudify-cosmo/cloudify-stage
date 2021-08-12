@@ -284,6 +284,10 @@
         "idPopup": {
             "copyButton": "Copy ID",
             "label": "ID"
+        },
+        "dynamicTable": {
+            "addButton": "Add",
+            "removeButton": "Remove"
         }
     },
     "templates": {
