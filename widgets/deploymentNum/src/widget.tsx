@@ -18,10 +18,12 @@ interface DeploymentNumWidgetConfiguration {
     filterId: string;
 }
 
+const t = Stage.Utils.getT('widgets.deploymentNum');
+
 Stage.defineWidget<unknown, WidgetData, DeploymentNumWidgetConfiguration>({
     id: 'deploymentNum',
-    name: 'Number of deployments',
-    description: 'Number of deployments',
+    name: t('name'),
+    description: t('description'),
     initialWidth: 2,
     initialHeight: 8,
     color: 'green',
@@ -35,18 +37,20 @@ Stage.defineWidget<unknown, WidgetData, DeploymentNumWidgetConfiguration>({
         Stage.GenericConfig.POLLING_TIME_CONFIG(10),
         {
             id: 'label',
-            name: 'Label',
-            description: 'Label displayed under deployments count',
+            name: t('configuration.label.name'),
+            description: t('configuration.label.description'),
             default: 'Deployments',
             type: Stage.Basic.GenericField.STRING_TYPE
         },
         {
             id: 'icon',
-            name: 'Icon',
+            name: t('configuration.icon.name'),
             description: (
                 <>
-                    Name of the icon displayed on the left side of the deployments count. Available icons list can be
-                    found at: <a href="https://react.semantic-ui.com/elements/icon">Icon - Semantic UI React</a>
+                    {t('configuration.icon.description.text')}{' '}
+                    <a href={t('configuration.icon.description.linkUrl')}>
+                        {t('configuration.icon.description.linkTitle')}
+                    </a>
                 </>
             ),
             default: 'cube',
@@ -54,23 +58,23 @@ Stage.defineWidget<unknown, WidgetData, DeploymentNumWidgetConfiguration>({
         },
         {
             id: 'imageSrc',
-            name: 'Image URL',
-            description: 'URL of the image displayed on the left side of the deployments count',
+            name: t('configuration.imageSrc.name'),
+            description: t('configuration.imageSrc.description'),
             default: '',
             type: Stage.Basic.GenericField.STRING_TYPE
         },
         {
             id: 'filterId',
-            name: 'Filter ID',
-            description: 'Name of the saved filter to apply on deployments',
+            name: t('configuration.filterId.name'),
+            description: t('configuration.filterId.description'),
             type: Stage.Basic.GenericField.CUSTOM_TYPE,
             default: '',
             component: Stage.Common.Filters.FilterIdDropdown
         },
         {
             id: 'page',
-            name: 'Page to open on click',
-            description: 'Page to open when user clicks on widget content',
+            name: t('configuration.page.name'),
+            description: t('configuration.page.description'),
             type: Stage.Basic.GenericField.CUSTOM_TYPE,
             default: 'services',
             component: Stage.Shared.PageFilter
