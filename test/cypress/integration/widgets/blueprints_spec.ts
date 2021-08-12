@@ -406,7 +406,7 @@ describe('Blueprints widget', () => {
         it('and have blueprint catalog widget', () => {
             cy.get('.modal').within(() => {
                 cy.contains('.header', 'Blueprint marketplace');
-                cy.get('.tabular > a.item').should('have.length', 3);
+                cy.get('.tabular > a.item').should('have.length', 3); // 3 - default number of tabs
                 cy.get('.blueprintCatalogWidget').should('be.visible');
             });
         });
