@@ -675,28 +675,28 @@
             "description": "Displays number of filtered deployments along with icon and label",
             "configuration": {
                 "label": {
-                  "name": "Label",
-                  "description": "Label displayed under deployments count"
+                    "name": "Label",
+                    "description": "Label displayed under deployments count"
                 },
                 "icon": {
-                  "name": "Icon",
-                  "description": {
-                      "text": "Name of the icon displayed on the left side of the deployments count. Available icons list can be found at:",
-                      "linkUrl": "https://react.semantic-ui.com/elements/icon",
-                      "linkTitle": "Icon - Semantic UI React"
+                    "name": "Icon",
+                    "description": {
+                        "text": "Name of the icon displayed on the left side of the deployments count. Available icons list can be found at:",
+                        "linkUrl": "https://react.semantic-ui.com/elements/icon",
+                        "linkTitle": "Icon - Semantic UI React"
                   }
                 },
                 "imageSrc": {
-                  "name": "Image URL",
-                  "description": "URL of the image displayed on the left side of the deployments count"
+                    "name": "Image URL",
+                    "description": "URL of the image displayed on the left side of the deployments count"
                 },
                 "filterId": {
-                  "name": "Filter ID",
-                  "description": "Name of the saved filter to apply on deployments"
+                    "name": "Filter ID",
+                    "description": "Name of the saved filter to apply on deployments"
                 },
                 "page": {
-                  "name": "Page to open on click",
-                  "description": "Page to open when user clicks on the widget content"
+                    "name": "Page to open on click",
+                    "description": "Page to open when user clicks on the widget content"
                 }
             }
         },
