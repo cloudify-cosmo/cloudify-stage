@@ -148,7 +148,7 @@ export default class BlueprintList extends React.Component<BlueprintListProps, B
                     <BlueprintUploadActionsMenu
                         direction="left"
                         toolbox={toolbox}
-                        config={widget.configuration.marketplaceTabs}
+                        marketplaceTabs={widget.configuration.marketplaceTabs}
                     />
                 </div>
                 <BlueprintsView

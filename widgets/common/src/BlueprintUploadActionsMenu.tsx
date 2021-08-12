@@ -12,14 +12,14 @@ type ActionName = typeof menuItems[number]['name'];
 
 interface BlueprintUploadActionsMenuProps {
     direction?: 'left' | 'right';
-    config: Stage.Types.Widget<BlueprintsWidgetConfiguration>['configuration']['marketplaceTabs'];
+    marketplaceTabs: Stage.Types.Widget<BlueprintsWidgetConfiguration>['configuration']['marketplaceTabs'];
     toolbox: Stage.Types.Toolbox;
 }
 
 const BlueprintUploadActionsMenu: FunctionComponent<BlueprintUploadActionsMenuProps> = ({
     direction,
     toolbox,
-    config
+    marketplaceTabs
 }) => {
     const {
         Basic: { Dropdown }
@@ -43,7 +43,7 @@ const BlueprintUploadActionsMenu: FunctionComponent<BlueprintUploadActionsMenuPr
 
             switch (name) {
                 case 'uploadFromMarketplace':
-                    return <BlueprintMarketplaceModal open onHide={hideModal} tabs={config} />;
+                    return <BlueprintMarketplaceModal open onHide={hideModal} tabs={marketplaceTabs} />;
                 case 'uploadFromPackage':
                     return <UploadBlueprintModal open onHide={hideModal} toolbox={toolbox} />;
                 case 'generateInComposer':
