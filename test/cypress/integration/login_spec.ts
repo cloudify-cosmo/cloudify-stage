@@ -29,7 +29,7 @@ describe('Login', () => {
                 res.send(res.body);
             });
         }).as('fetchUserApps');
-        cy.intercept('GET', '/console/templates/select').as('fetchTemplateId');
+        cy.intercept('GET', '/console/templates/select?tenant=default_tenant').as('fetchTemplateId');
         cy.intercept('POST', '/console/ua').as('updateUserApps');
 
         cy.activate().login('admin', 'admin', false);
