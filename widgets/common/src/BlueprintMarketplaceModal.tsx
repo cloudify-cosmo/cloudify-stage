@@ -20,7 +20,7 @@ const getPageLayout = (tabs: Tab[]) => ({
                 widgets: [
                     {
                         id: `blueprint-catalog-${index}`,
-                        name: 'Blueprints Catalog',
+                        name: Stage.i18n.t('widgets.common.blueprintMarketplace.modal.blueprintCatalogName'),
                         height: 24,
                         maximized: true,
                         definition: 'blueprintCatalog',

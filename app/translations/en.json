@@ -669,6 +669,7 @@
             "blueprintMarketplace": {
                 "modal": {
                     "header": "Blueprint marketplace",
+                    "blueprintCatalogName": "Blueprints Catalog",
                     "cancelButton": "Close"
                 }
             }
@@ -680,7 +681,37 @@
         },
         "blueprints": {
             "configuration": {
-                "showEditCopyInComposerButton": "Show the \"Edit a copy in Composer\" button"
+                "clickToDrillDown": "Enable click to drill down",
+                "displayStyle": {
+                    "label": "Display style",
+                    "items": {
+                        "table": "Table",
+                        "catalog": "Catalog"
+                    }
+                },
+                "hideFailedBlueprints": "Hide failed blueprints",
+                "showEditCopyInComposerButton": "Show the \"Edit a copy in Composer\" button",
+                "marketplaceTabs": {
+                    "name": "Marketplace tabs",
+                    "columns": {
+                        "tabNameLabel": "Tab name",
+                        "urlNameLabel": "URL to marketplace",
+                        "defaultValues": [
+                            {
+                                "name": "VM Blueprint Examples",
+                                "url": "https://repository.cloudifysource.org/cloudify/blueprints/5.1/vm-examples.json"
+                            },
+                            {
+                                "name": "Kubernetes Blueprint Examples",
+                                "url": "https://repository.cloudifysource.org/cloudify/blueprints/5.1/k8s-examples.json"
+                            },
+                            {
+                                "name": "Orchestrator Blueprint Examples",
+                                "url": "https://repository.cloudifysource.org/cloudify/blueprints/5.1/orc-examples.json"
+                            }
+                        ]
+                    }
+                }
             }
         },
         "executions": {
