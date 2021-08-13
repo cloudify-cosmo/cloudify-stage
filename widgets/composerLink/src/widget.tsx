@@ -23,7 +23,7 @@ Stage.defineWidget({
                 className="widgetButton"
                 icon="external"
                 onClick={() => {
-                    window.open('/composer', '_blank');
+                    Stage.Utils.openComposer();
                 }}
                 content="Blueprint Composer"
             />

@@ -47,7 +47,7 @@ const BlueprintUploadActionsMenu: FunctionComponent<BlueprintUploadActionsMenuPr
                 case 'uploadFromPackage':
                     return <UploadBlueprintModal open onHide={hideModal} toolbox={toolbox} />;
                 case 'generateInComposer':
-                    window.open(`/composer/`, '_blank');
+                    Stage.Utils.openComposer();
                     hideModal();
                     return null;
                 default:
