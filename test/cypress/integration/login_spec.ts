@@ -21,7 +21,7 @@ describe('Login', () => {
 
     it('succeeds and resets user pages when application version is different than the one stored in the DB', () => {
         const currentAppDataVersion = getCurrentAppVersion();
-        const fetchUserAppsTimeout = 15000;
+        const fetchUserAppsTimeout = 20000;
 
         cy.intercept('GET', '/console/ua', req => {
             req.reply(res => {
