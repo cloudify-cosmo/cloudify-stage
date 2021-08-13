@@ -1,9 +1,13 @@
 import RulesForm from './RulesForm';
 import FilterActions from './FilterActions';
+import FilterIdDropdown from './FilterIdDropdown';
 import { FilterRule } from './types';
+import { filterIdQueryParameterName } from './common';
 
 const Filters = {
     Actions: FilterActions,
+    FilterIdDropdown,
+    filterIdQueryParameterName,
     RulesForm
 };
 

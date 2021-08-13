@@ -96,7 +96,7 @@ export type { StageCustomConfigurationComponentProps as CustomConfigurationCompo
 interface StageWidgetConfigurationDefinition {
     id: string;
     name?: string;
-    description?: string;
+    description?: ReactNode;
     type: string;
     default?: any;
     placeHolder?: string;

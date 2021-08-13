@@ -7,6 +7,7 @@ import useFilterQuery from '../../useFilterQuery';
 import FilterActions from '../../../filters/FilterActions';
 import SaveButton from './SaveButton';
 import { tModal } from './common';
+import { useFilterIdFromUrl } from '../common';
 
 interface FilterModalProps {
     userFilterSelected: boolean;
@@ -61,8 +62,10 @@ const FilterModal: FunctionComponent<FilterModalProps> = ({
 
     const [filterSaving, setFilterSaving, unsetFilterSaving] = useBoolean();
 
+    const filterIdFromUrl = useFilterIdFromUrl();
+
     // The values are 'saved' on modal submit and 'reverted' on modal cancel
-    const filterId = useRevertableState<string | undefined>(undefined);
+    const filterId = useRevertableState<string | undefined>(filterIdFromUrl || undefined);
     const filterRules = useRevertableState<FilterRule[]>([]);
     const filterDirty = useRevertableState<boolean>(false);
     const modalState = useRevertableStates(filterId, filterRules, filterDirty);
@@ -176,6 +179,13 @@ const FilterModal: FunctionComponent<FilterModalProps> = ({
         filterRules.set(newFilterRules);
         setInitialFilterRules(newFilterRules);
     }, [JSON.stringify(filterRulesResult.data)]);
+
+    // Update filterRules and filterId when filterId is set in the URL
+    useEffect(() => {
+        if (filterIdFromUrl && !open && filterIdFromUrl === filterId.value) {
+            onSubmit(filterRules.value, filterId.value);
+        }
+    }, [filterRules.value]);
 
     useEffect(() => {
         if (filterRulesResult.isError) setErrors({ error: tMessage('errorLoadingFilterRules') });
