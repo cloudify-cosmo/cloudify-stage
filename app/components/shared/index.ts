@@ -5,6 +5,7 @@ import ClusterServicesOverview from './cluster/ClusterServicesOverview';
 import Graph from './graphs/Graph';
 import PieGraph from './graphs/PieGraph';
 import IdPopup from './IdPopup';
+import DynamicTable from './DynamicTable';
 import Link from './Link';
 import MaintenanceModeActivationButton from './MaintenanceModeActivationButton';
 import MaintenanceModeModal from './MaintenanceModeModal';
@@ -18,6 +19,7 @@ export {
     ClusterServicesList,
     ClusterServicesOverview,
     ClusterStatusIcon,
+    DynamicTable,
     ExecutionStatus,
     Graph,
     IdPopup,
