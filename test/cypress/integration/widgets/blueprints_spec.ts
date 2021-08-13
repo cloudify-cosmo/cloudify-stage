@@ -109,8 +109,8 @@ describe('Blueprints widget', () => {
 
     describe('should render blueprint items', () => {
         beforeEach(() => {
+            cy.interceptSp('GET', '/blueprints', { fixture: 'blueprints/blueprints' });
             cy.interceptSp('GET', /blueprints.*&state=uploaded/).as('filteredBlueprints');
-            cy.interceptSp('GET', `/blueprints`, { fixture: 'blueprints/blueprints' });
             cy.refreshPage();
         });
 
