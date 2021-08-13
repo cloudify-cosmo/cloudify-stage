@@ -49,9 +49,7 @@ const BlueprintMarketplaceModal: FunctionComponent<BlueprintMarketplaceModalProp
             <Modal.Header>
                 <Icon name="upload" /> {t(`modal.header`)}
             </Modal.Header>
-            <Modal.Content>
-                <PageContent page={getPageLayout(tabs) as any} />
-            </Modal.Content>
+            <Modal.Content>{tabs.length !== 0 && <PageContent page={getPageLayout(tabs) as any} />}</Modal.Content>
             <Modal.Actions>
                 <CancelButton onClick={onHide} content={t(`modal.cancelButton`)} />
             </Modal.Actions>
