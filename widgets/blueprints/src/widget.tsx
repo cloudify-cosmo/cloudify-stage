@@ -20,16 +20,16 @@ Stage.defineWidget<unknown, unknown, BlueprintsWidgetConfiguration>({
         Stage.GenericConfig.PAGE_SIZE_CONFIG(5),
         {
             id: 'clickToDrillDown',
-            name: 'Enable click to drill down',
+            name: Stage.i18n.t('widgets.blueprints.configuration.clickToDrillDown'),
             default: true,
             type: Stage.Basic.GenericField.BOOLEAN_TYPE
         },
         {
             id: 'displayStyle',
-            name: 'Display style',
+            name: Stage.i18n.t('widgets.blueprints.configuration.displayStyle.label'),
             items: [
-                { name: 'Table', value: 'table' },
-                { name: 'Catalog', value: 'catalog' }
+                { name: Stage.i18n.t('widgets.blueprints.configuration.displayStyle.items.table'), value: 'table' },
+                { name: Stage.i18n.t('widgets.blueprints.configuration.displayStyle.items.catalog'), value: 'catalog' }
             ],
             default: 'table',
             type: Stage.Basic.GenericField.LIST_TYPE
@@ -38,7 +38,7 @@ Stage.defineWidget<unknown, unknown, BlueprintsWidgetConfiguration>({
         Stage.GenericConfig.SORT_ASCENDING_CONFIG(false),
         {
             id: 'hideFailedBlueprints',
-            name: 'Hide failed blueprints',
+            name: Stage.i18n.t('widgets.blueprints.configuration.hideFailedBlueprints'),
             default: false,
             type: Stage.Basic.GenericField.BOOLEAN_TYPE
         },
@@ -47,6 +47,40 @@ Stage.defineWidget<unknown, unknown, BlueprintsWidgetConfiguration>({
             type: Stage.Basic.GenericField.BOOLEAN_TYPE,
             name: Stage.i18n.t('widgets.blueprints.configuration.showEditCopyInComposerButton'),
             default: false
+        },
+        {
+            id: 'marketplaceTabs',
+            name: Stage.i18n.t('widgets.blueprints.configuration.marketplaceTabs.name'),
+            columns: [
+                {
+                    id: 'name',
+                    label: Stage.i18n.t('widgets.blueprints.configuration.marketplaceTabs.columns.tabNameLabel'),
+                    default: '',
+                    type: Stage.Basic.GenericField.STRING_TYPE
+                },
+                {
+                    id: 'url',
+                    label: Stage.i18n.t('widgets.blueprints.configuration.marketplaceTabs.columns.urlNameLabel'),
+                    default: '',
+                    type: Stage.Basic.GenericField.STRING_TYPE
+                }
+            ],
+            default: [
+                {
+                    name: Stage.i18n.t('widgets.blueprints.configuration.marketplaceTabs.columns.defaultValues.0.name'),
+                    url: Stage.i18n.t('widgets.blueprints.configuration.marketplaceTabs.columns.defaultValues.0.url')
+                },
+                {
+                    name: Stage.i18n.t('widgets.blueprints.configuration.marketplaceTabs.columns.defaultValues.1.name'),
+                    url: Stage.i18n.t('widgets.blueprints.configuration.marketplaceTabs.columns.defaultValues.1.url')
+                },
+                {
+                    name: Stage.i18n.t('widgets.blueprints.configuration.marketplaceTabs.columns.defaultValues.2.name'),
+                    url: Stage.i18n.t('widgets.blueprints.configuration.marketplaceTabs.columns.defaultValues.2.url')
+                }
+            ],
+            type: Stage.Basic.GenericField.CUSTOM_TYPE,
+            component: Stage.Shared.DynamicTable
         }
     ],
 

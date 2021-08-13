@@ -12,7 +12,6 @@ interface BlueprintListProps {
 
 interface BlueprintListState {
     showDeploymentModal: boolean;
-    showUploadModal: boolean;
     blueprintId: string;
     confirmDelete: boolean;
     error: any;
@@ -25,7 +24,6 @@ export default class BlueprintList extends React.Component<BlueprintListProps, B
 
         this.state = {
             showDeploymentModal: false,
-            showUploadModal: false,
             blueprintId: '',
             confirmDelete: false,
             error: null,
@@ -116,14 +114,6 @@ export default class BlueprintList extends React.Component<BlueprintListProps, B
         this.setState({ showDeploymentModal: false });
     };
 
-    showUploadModal = () => {
-        this.setState({ showUploadModal: true });
-    };
-
-    hideUploadModal = () => {
-        this.setState({ showUploadModal: false });
-    };
-
     handleForceChange: ComponentProps<typeof Stage.Common.DeleteConfirm>['onForceChange'] = (_event, field) => {
         // @ts-expect-error Form.fieldNameValue is not converted to TS yet
         this.setState(Stage.Basic.Form.fieldNameValue(field));
@@ -140,12 +130,11 @@ export default class BlueprintList extends React.Component<BlueprintListProps, B
     }
 
     render() {
-        const { blueprintId, confirmDelete, error, force, showDeploymentModal, showUploadModal } = this.state;
+        const { blueprintId, confirmDelete, error, force, showDeploymentModal } = this.state;
         const { data, toolbox, widget } = this.props;
         const NO_DATA_MESSAGE = 'There are no Blueprints available. Click "Upload" to add Blueprints.';
-        const { Button, ErrorMessage } = Stage.Basic;
-        // @ts-expect-error UploadBlueprintModal is not converted to TS yet
-        const { DeleteConfirm, DeployBlueprintModal, UploadBlueprintModal } = Stage.Common;
+        const { ErrorMessage } = Stage.Basic;
+        const { DeleteConfirm, DeployBlueprintModal, BlueprintUploadActionsMenu } = Stage.Common;
 
         const shouldShowTable = widget.configuration.displayStyle === 'table';
 
@@ -155,14 +144,13 @@ export default class BlueprintList extends React.Component<BlueprintListProps, B
             <div>
                 <ErrorMessage error={error} onDismiss={() => this.setState({ error: null })} autoHide />
 
-                <Button
-                    content="Upload"
-                    icon="upload"
-                    labelPosition="left"
-                    className="uploadBlueprintButton"
-                    onClick={this.showUploadModal}
-                />
-
+                <div className="uploadBlueprintButton">
+                    <BlueprintUploadActionsMenu
+                        direction="left"
+                        toolbox={toolbox}
+                        marketplaceTabs={widget.configuration.marketplaceTabs}
+                    />
+                </div>
                 <BlueprintsView
                     widget={widget}
                     data={data}
@@ -190,8 +178,6 @@ export default class BlueprintList extends React.Component<BlueprintListProps, B
                     onHide={this.hideDeploymentModal}
                     toolbox={toolbox}
                 />
-
-                <UploadBlueprintModal open={showUploadModal} onHide={this.hideUploadModal} toolbox={toolbox} />
             </div>
         );
     }
