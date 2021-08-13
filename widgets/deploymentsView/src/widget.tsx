@@ -1,5 +1,4 @@
 import { FunctionComponent, useEffect } from 'react';
-import FilterIdDropdown from './FilterIdDropdown';
 
 export interface DeploymentsViewWidgetConfiguration
     extends Stage.Common.DeploymentsView.Configuration.SharedDeploymentsViewWidgetConfiguration {
@@ -33,7 +32,7 @@ Stage.defineWidget<never, never, DeploymentsViewWidgetConfiguration>({
             id: 'filterId',
             type: Stage.Basic.GenericField.CUSTOM_TYPE,
             name: Stage.i18n.t(`${i18nPrefix}.configuration.filterId.name`),
-            component: FilterIdDropdown
+            component: Stage.Common.Filters.FilterIdDropdown
         },
         {
             id: 'filterByParentDeployment',

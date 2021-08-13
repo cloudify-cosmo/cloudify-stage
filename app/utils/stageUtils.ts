@@ -236,4 +236,8 @@ export default class StageUtils {
             return newValue;
         };
     };
+
+    static openComposer() {
+        window.open(`/composer/`, '_blank');
+    }
 }

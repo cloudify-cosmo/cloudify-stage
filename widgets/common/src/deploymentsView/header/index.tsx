@@ -5,6 +5,8 @@ import FilterModal from './filter/FilterModal';
 import RunWorkflowModal from './RunWorkflowModal';
 import DeployOnModal from './DeployOnModal';
 import { FilterRule } from '../../filters/types';
+import { filterIdQueryParameterName } from '../../filters/common';
+import { useFilterIdFromUrl } from './common';
 
 interface DeploymentsViewHeaderProps {
     filterRules: FilterRule[];
@@ -34,11 +36,29 @@ const DeploymentsViewHeader: FunctionComponent<DeploymentsViewHeaderProps> = ({
     const { Button, Dropdown } = Stage.Basic;
     const { Menu, Item } = Dropdown;
 
+    const locationSearch = ReactRedux.useSelector(
+        (state: Stage.Types.ReduxState): string => state.router.location.search
+    );
+    const filterIdFromUrl = useFilterIdFromUrl();
+    const dispatch = ReactRedux.useDispatch();
+
+    function removeFilterIdFromUrl() {
+        const search = (function getLocationSearchWithoutFilterId() {
+            const newLocationSearch = new URLSearchParams(locationSearch);
+            newLocationSearch.delete(filterIdQueryParameterName);
+            return newLocationSearch.toString();
+        })();
+        dispatch(ReactRouter.replace({ search }));
+    }
+
     function handleFilterChange(newFilterRules: FilterRule[] | undefined, newFilterId: string | undefined) {
         setUserFilterSelected(!!newFilterRules);
         setUserFilterId(newFilterId);
         onFilterChange(newFilterRules);
         closeFilterModal();
+        if (filterIdFromUrl && filterIdFromUrl !== newFilterId) {
+            removeFilterIdFromUrl();
+        }
     }
 
     return (
