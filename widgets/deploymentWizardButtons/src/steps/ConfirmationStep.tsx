@@ -47,7 +47,7 @@ function ConfirmationStepActions({
 }) {
     async function isUsed(deploymentId) {
         const deploymentActions = new Stage.Common.DeploymentActions(toolbox);
-        const deploymentPromise = () => deploymentActions.doGetDeployments({ _search: deploymentId });
+        const deploymentPromise = () => deploymentActions.doGetDeployments({ _include: 'id', _search: deploymentId });
 
         return !_.isEqual(deploymentId, await chooseId(deploymentId, deploymentPromise, 'deployment'));
     }
