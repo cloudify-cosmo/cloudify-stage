@@ -50,7 +50,7 @@ const refreshEvent = 'plugins:refresh';
 const PluginsCatalogList: FunctionComponent<PluginsCatalogListProps> = ({ toolbox, widget, items: itemsProp }) => {
     const [successMessages, setSuccessMessages] = useState<string[]>([]);
     const [errorMessages, setErrorMessages] = useState<string[] | null>(null);
-    // Temporal state to hold uploaded plugin urls unit plugins list is refreshed
+    // Temporal state to hold uploaded plugin urls until plugins list is refreshed
     const [uploadedPlugins, setUploadedPlugins] = useState<Record<string, boolean>>({});
 
     const { useRefreshEvent, useEventListener } = Stage.Hooks;
