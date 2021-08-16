@@ -73,10 +73,6 @@ class Toolbox implements Stage.Types.Toolbox {
         this.store.dispatch((selectPageByName(pageName, context) as unknown) as AnyAction);
     };
 
-    getStore() {
-        return this.store;
-    }
-
     getEventBus() {
         return EventBus;
     }

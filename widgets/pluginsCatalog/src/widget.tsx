@@ -1,4 +1,3 @@
-import { Provider } from 'react-redux';
 import Actions from './Actions';
 import PluginsCatalogList from './PluginsCatalogList';
 import type { PluginDescriptionWithVersion, PluginsCatalogWidgetConfiguration } from './types';
@@ -57,10 +56,6 @@ Stage.defineWidget<unknown, PluginsCatalogResponse | Error, PluginsCatalogWidget
             formattedData = _.sortBy(data, item => item.pluginDescription.title);
         }
 
-        return (
-            <Provider store={toolbox.getStore()}>
-                <PluginsCatalogList widget={widget} items={formattedData} toolbox={toolbox} />
-            </Provider>
-        );
+        return <PluginsCatalogList widget={widget} items={formattedData} toolbox={toolbox} />;
     }
 });

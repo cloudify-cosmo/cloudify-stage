@@ -3,7 +3,6 @@ import { useState } from 'react';
 import styled from 'styled-components';
 import { compact, find, isEmpty, map, without } from 'lodash';
 
-import { useDispatch, useSelector } from 'react-redux';
 import Actions from './Actions';
 import type { PluginDescriptionWithVersion, PluginsCatalogWidgetConfiguration, PluginUploadData } from './types';
 import { PluginDescription, PluginWagon } from './types';
@@ -63,8 +62,8 @@ const PluginsCatalogList: FunctionComponent<PluginsCatalogListProps> = ({ toolbo
         setErrorMessages(prevState => [...(prevState ?? []), message])
     );
 
-    const dispatch = useDispatch();
-    const uploadingPlugins = useSelector((state: Stage.Types.ReduxState) => state.plugins?.uploading ?? {});
+    const dispatch = ReactRedux.useDispatch();
+    const uploadingPlugins = ReactRedux.useSelector((state: Stage.Types.ReduxState) => state.plugins?.uploading ?? {});
     const { PluginActions } = Stage.Shared;
 
     function doUpload(plugin: PluginUploadData) {
