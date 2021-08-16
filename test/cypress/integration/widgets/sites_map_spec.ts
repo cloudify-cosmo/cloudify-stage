@@ -10,12 +10,13 @@ describe('Sites Map', () => {
     });
 
     it('is not displayed when there is no connection to map tiles provider', () => {
-        cy.intercept('GET', 'maps/0/0/0/', {
+        cy.intercept('GET', '/console/maps/0/0/0/*', {
             statusCode: 500,
             body: {}
         }).as('mapsRoute');
 
         refreshDashboardPage();
+        cy.wait('@mapsRoute');
         cy.get('div.sites-map div.leaflet-layer > div.leaflet-tile-container').should('not.exist');
         cy.get('.sitesMapWidget .ui.message').should('contain.text', 'widget content cannot be displayed');
     });
