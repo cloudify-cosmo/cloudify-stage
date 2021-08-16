@@ -112,9 +112,11 @@ describe('Plugins Catalog widget', () => {
         cy.intercept('POST', new RegExp(`console/plugins/upload.*title=AWS`)).as('awsPluginUpload');
         cy.contains('Upload all plugins').click().should('be.disabled');
         cy.get('.pluginsCatalogWidget tr button').should('be.disabled');
+
         // eslint-disable-next-line security/detect-non-literal-regexp
         cy.intercept('POST', new RegExp(`console/plugins/upload.*title=Ansible`)).as('ansiblePluginUpload');
         cy.wait('@awsPluginUpload', { responseTimeout: uploadPluginTimeout });
+
         cy.contains('AWS successfully uploaded');
         cy.contains('.pluginsCatalogWidget tr', 'AWS').find('button.loading').should('not.exist');
         cy.get('.pluginsCatalogWidget table')
@@ -126,6 +128,7 @@ describe('Plugins Catalog widget', () => {
                 const latestPluginVersion: string = pluginCatalogRow.Version;
                 expect(pluginCatalogRow['Uploaded version']).to.equal(latestPluginVersion);
             });
+
         cy.wait('@ansiblePluginUpload', { responseTimeout: uploadPluginTimeout });
     });
 });
