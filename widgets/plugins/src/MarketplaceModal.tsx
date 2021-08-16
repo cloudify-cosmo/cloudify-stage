@@ -25,19 +25,7 @@ export default function MarketplaceModal({ open, onHide }: { open: boolean; onHi
                 <Icon name="upload" /> {t(`upload.marketplace`)}
             </Modal.Header>
             <Modal.Content>
-                <PageContent
-                    page={{ layout: [modalContentLayout] }}
-                    onWidgetUpdated={_.noop}
-                    onWidgetRemoved={_.noop}
-                    onWidgetAdded={_.noop}
-                    onTabAdded={_.noop}
-                    onTabRemoved={_.noop}
-                    onTabUpdated={_.noop}
-                    onTabMoved={_.noop}
-                    onLayoutSectionAdded={_.noop}
-                    onLayoutSectionRemoved={_.noop}
-                    isEditMode={false}
-                />
+                <PageContent page={{ layout: [modalContentLayout] }} />
             </Modal.Content>
             <Modal.Actions>
                 <CancelButton onClick={onHide} content={t(`upload.close`)} />

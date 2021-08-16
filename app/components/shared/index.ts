@@ -5,6 +5,7 @@ import ClusterServicesOverview from './cluster/ClusterServicesOverview';
 import Graph from './graphs/Graph';
 import PieGraph from './graphs/PieGraph';
 import IdPopup from './IdPopup';
+import DynamicTable from './DynamicTable';
 import Link from './Link';
 import MaintenanceModeActivationButton from './MaintenanceModeActivationButton';
 import MaintenanceModeModal from './MaintenanceModeModal';
@@ -12,11 +13,13 @@ import PageFilter from './PageFilter';
 import PasswordModal from './PasswordModal';
 import VerticallyAlignedCell from './VerticallyAlignedCell';
 import * as Widgets from './widgets';
+import * as PluginActions from '../../actions/plugins';
 
 export {
     ClusterServicesList,
     ClusterServicesOverview,
     ClusterStatusIcon,
+    DynamicTable,
     ExecutionStatus,
     Graph,
     IdPopup,
@@ -26,6 +29,7 @@ export {
     PageFilter,
     PasswordModal,
     PieGraph,
+    PluginActions,
     VerticallyAlignedCell,
     Widgets
 };
