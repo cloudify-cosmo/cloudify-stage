@@ -113,6 +113,7 @@ describe('Plugins Catalog widget', () => {
         cy.contains('Upload all plugins').click().should('be.disabled');
         cy.get('.pluginsCatalogWidget tr button').should('be.disabled');
 
+        // intercept for the second plugin is installed later to check upload timing
         // eslint-disable-next-line security/detect-non-literal-regexp
         cy.intercept('POST', new RegExp(`console/plugins/upload.*title=Ansible`)).as('ansiblePluginUpload');
         cy.wait('@awsPluginUpload', { responseTimeout: uploadPluginTimeout });
