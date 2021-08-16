@@ -1,7 +1,7 @@
 def getMainBranch(String branch){
   if (branch =~ /.+-build/)
     return branch
-  else 
+  else
     return 'master'
 }
 
@@ -42,9 +42,6 @@ pipeline {
     stage('Prepare & Audit main branch'){
       parallel{
         stage('Audit'){
-          when {
-            branch pattern: ".+-build|master", comparator: "REGEXP"
-          }
           steps {
             catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE'){
               container('node'){

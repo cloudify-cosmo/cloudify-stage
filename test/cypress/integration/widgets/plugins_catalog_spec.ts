@@ -106,4 +106,30 @@ describe('Plugins Catalog widget', () => {
             '-'
         );
     });
+
+    it('should upload all plugins', () => {
+        // eslint-disable-next-line security/detect-non-literal-regexp
+        cy.intercept('POST', new RegExp(`console/plugins/upload.*title=AWS`)).as('awsPluginUpload');
+        cy.contains('Upload all plugins').click().should('be.disabled');
+        cy.get('.pluginsCatalogWidget tr button').should('be.disabled');
+
+        // intercept for the second plugin is installed later to check upload timing
+        // eslint-disable-next-line security/detect-non-literal-regexp
+        cy.intercept('POST', new RegExp(`console/plugins/upload.*title=Ansible`)).as('ansiblePluginUpload');
+        cy.wait('@awsPluginUpload', { responseTimeout: uploadPluginTimeout });
+
+        cy.contains('AWS successfully uploaded');
+        cy.contains('.pluginsCatalogWidget tr', 'AWS').find('button.loading').should('not.exist');
+        cy.get('.pluginsCatalogWidget table')
+            .getTable()
+            .then(pluginsCatalogTableRows => {
+                // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+                const pluginCatalogRow = pluginsCatalogTableRows.find(row => row.Name === 'AWS')!;
+                expect(pluginCatalogRow).not.to.be.undefined;
+                const latestPluginVersion: string = pluginCatalogRow.Version;
+                expect(pluginCatalogRow['Uploaded version']).to.equal(latestPluginVersion);
+            });
+
+        cy.wait('@ansiblePluginUpload', { responseTimeout: uploadPluginTimeout });
+    });
 });

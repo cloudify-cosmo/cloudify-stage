@@ -40,6 +40,7 @@ describe('User flow', () => {
 
         cy.visitPage('Blueprints');
         cy.contains('Upload').click();
+        cy.contains('Upload a blueprint package').click();
         cy.get('.modal').within(() => {
             cy.get('input[name=blueprintUrl]')
                 .type(
