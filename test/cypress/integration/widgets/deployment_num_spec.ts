@@ -2,49 +2,106 @@ describe('Number of Deployments widget', () => {
     const widgetId = 'deploymentNum';
     const resourcePrefix = `${widgetId}_test_`;
     const testBlueprintId = `${resourcePrefix}bp`;
-    const serviceDeploymentId1 = `${resourcePrefix}_service_1`;
-    const serviceDeploymentId2 = `${resourcePrefix}_service_2`;
-    const environmentDeploymentId = `${resourcePrefix}_environment`;
+    const serviceDeploymentId1 = `${resourcePrefix}service_1`;
+    const serviceDeploymentId2 = `${resourcePrefix}service_2`;
+    const environmentDeploymentId = `${resourcePrefix}environment`;
+    const testDeploymentIds = [serviceDeploymentId1, serviceDeploymentId2, environmentDeploymentId];
 
     before(() => {
-        cy.activate()
-            .usePageMock(widgetId)
-            .killRunningExecutions()
-            .deleteDeployments('', true)
-            .deleteBlueprints(resourcePrefix, true)
-            .uploadBlueprint('blueprints/simple.zip', testBlueprintId)
-            .deployBlueprint(testBlueprintId, serviceDeploymentId1)
-            .deployBlueprint(testBlueprintId, serviceDeploymentId2)
-            .deployBlueprint(testBlueprintId, environmentDeploymentId)
-            .setLabels(environmentDeploymentId, [{ 'csys-obj-type': 'environment' }])
-            .mockLogin();
+        cy.activate();
+        cy.interceptSp('GET', /\/deployments*/).as('fetchDeployments');
     });
 
-    beforeEach(() => {});
+    beforeEach(() => cy.usePageMock(widgetId).mockLogin());
 
-    /*
-        TODO: Add tests
+    describe('should display correct number of deployments', () => {
+        before(() => {
+            cy.killRunningExecutions()
+                .deleteDeployments('', true)
+                .deleteBlueprints(resourcePrefix, true)
+                .uploadBlueprint('blueprints/empty.zip', testBlueprintId);
+            testDeploymentIds.forEach(deploymentId => cy.deployBlueprint(testBlueprintId, deploymentId));
+            cy.setLabels(environmentDeploymentId, [{ 'csys-obj-type': 'environment' }]);
+        });
 
-        should display correct number of deployments
-          without filtering
-          with filtering
+        function setFilterId(filterId: string) {
+            cy.editWidgetConfiguration(widgetId, () => cy.setSearchableDropdownValue('Filter ID', filterId));
+        }
 
-        should provide configuration of
-          label
-          icon
-          image
-          filter ID
+        function deploymentCountShouldBeEqualTo(expectedDeploymentsCount: number) {
+            return cy.get('.statistic .value').should('have.text', ` ${expectedDeploymentsCount}`);
+        }
 
+        it('when filter is not set', () => {
+            setFilterId('');
+            deploymentCountShouldBeEqualTo(testDeploymentIds.length);
+        });
+
+        it('when filter is set', () => {
+            setFilterId('csys-environment-filter');
+            deploymentCountShouldBeEqualTo(1);
+        });
+    });
+
+    describe('should redirect to selected page on click', () => {
+        const pageName = 'Deployments';
+        const pageId = 'page_0';
+
+        beforeEach(() => cy.addPage(pageName).visitPage('Test Page'));
+
+        function setWidgetConfiguration(pageToOpenOnClick: string, filterId: string) {
             cy.editWidgetConfiguration(widgetId, () => {
-
+                cy.setDropdownValues('Page to open on click', [pageToOpenOnClick]);
+                cy.setSearchableDropdownValue('Filter ID', filterId);
             });
+        }
 
-        should open selected page on click when filtering is
-          on
-          off
+        function clickOnWidget() {
+            cy.get('.statistic').click();
+        }
 
-        (optional) should open default page on click when filtering is
-          on
-          off
-     */
+        function verifyUrl(expectedPageId: string, expectedSearch: string) {
+            cy.location('pathname').should('be.equal', `/console/page/${expectedPageId}`);
+            cy.location('search').should('be.equal', expectedSearch);
+        }
+
+        it('when filter is not set', () => {
+            setWidgetConfiguration(pageName, '');
+            clickOnWidget();
+            verifyUrl(pageId, '');
+        });
+
+        it('when filter is set', () => {
+            const filterId = 'csys-environment-filter';
+            setWidgetConfiguration(pageName, filterId);
+            clickOnWidget();
+            verifyUrl(pageId, `?filterId=${filterId}`);
+        });
+    });
+
+    describe('should allow configuring', () => {
+        function setConfigurationField(fieldName: string, value: string) {
+            cy.editWidgetConfiguration(widgetId, () => {
+                cy.contains('.field', fieldName).find('input').clear().type(value);
+            });
+        }
+
+        it('label', () => {
+            const label = 'Kubernetes Clusters';
+            setConfigurationField('Label', label);
+            cy.get('.statistic .label').should('have.text', label);
+        });
+
+        it('image using icon', () => {
+            const icon = 'box';
+            setConfigurationField('Icon', icon);
+            cy.get('.statistic .value i').should('have.class', icon);
+        });
+
+        it('image using URL', () => {
+            const imageUrl = 'http://test.url';
+            setConfigurationField('Image URL', imageUrl);
+            cy.get('.statistic .value img').should('have.attr', 'src', imageUrl);
+        });
+    });
 });
