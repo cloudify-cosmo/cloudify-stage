@@ -36,7 +36,7 @@ describe('Plugins widget', () => {
         });
 
         it('and manage the installed plugin', () => {
-            cy.intercept('/console/plugins/icons/').as('pluginIcon');
+            cy.intercept('/console/plugins/icons/*').as('pluginIcon');
 
             cy.get('.ok').click();
             cy.get('.modal').should('not.exist');
