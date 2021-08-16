@@ -21,7 +21,7 @@ describe('Login', () => {
 
     it('succeeds and resets user pages when application version is different than the one stored in the DB', () => {
         const currentAppDataVersion = getCurrentAppVersion();
-        const fetchUserAppsTimeout = 15000;
+        const fetchUserAppsTimeout = 20000;
 
         cy.intercept('GET', '/console/ua', req => {
             req.reply(res => {
@@ -29,7 +29,7 @@ describe('Login', () => {
                 res.send(res.body);
             });
         }).as('fetchUserApps');
-        cy.intercept('GET', '/console/templates/select').as('fetchTemplateId');
+        cy.intercept('GET', '/console/templates/select?tenant=default_tenant').as('fetchTemplateId');
         cy.intercept('POST', '/console/ua').as('updateUserApps');
 
         cy.activate().login('admin', 'admin', false);

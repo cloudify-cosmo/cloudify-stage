@@ -11,7 +11,7 @@ type WaitUntilOptions = {
 };
 function waitUntil(
     resource: string,
-    predicate: (response: Cypress.Response) => boolean,
+    predicate: (response: Cypress.Response<any>) => boolean,
     { search = '', numberOfRetriesLeft = 60, waitingInterval = 1000 }: WaitUntilOptions = {}
 ) {
     if (numberOfRetriesLeft <= 0) {

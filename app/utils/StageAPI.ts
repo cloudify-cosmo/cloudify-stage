@@ -2,7 +2,6 @@ import type { ComponentType, ReactElement, ReactNode } from 'react';
 // NOTE: the file contains only types and is undetectable for ESLint
 // eslint-disable-next-line import/no-unresolved
 import type { SemanticCOLORS } from 'semantic-ui-react/dist/commonjs/generic';
-
 import type * as BasicComponents from '../components/basic';
 import type * as SharedComponents from '../components/shared';
 import type * as StagePropTypes from './props';

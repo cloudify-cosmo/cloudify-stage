@@ -13,12 +13,12 @@ describe('Filter', () => {
         cy.interceptSp('GET', /blueprints.*state=uploaded/, { fixture: 'filter/blueprints.json' }).as(
             'fetchBlueprints'
         );
-        cy.interceptSp('GET', /deployments.*offset=0&_search=ead&_search_name=ead/, {
-            fixture: 'filter/deployments0.json'
-        }).as('fetchFilteredDeployments');
         cy.interceptSp('GET', /deployments.*offset=0((?!_search=ead).)((?!_search_name=ead).)/, {
             fixture: 'filter/deployments0.json'
         }).as('fetchDeployments');
+        cy.interceptSp('GET', /deployments.*offset=0&_search=ead&_search_name=ead/, {
+            fixture: 'filter/deployments0.json'
+        }).as('fetchFilteredDeployments');
         cy.interceptSp('GET', /deployments.*offset=20/, { fixture: 'filter/deployments1.json' }).as(
             'fetchDeploymentsOffset'
         );

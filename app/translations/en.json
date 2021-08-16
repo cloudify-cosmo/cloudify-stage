@@ -949,6 +949,7 @@
                 "disabled": "Latest version is already uploaded",
                 "uploading": "Plugin upload in progress"
             },
+            "uploadAllButton": "Upload all plugins",
             "noData": "There are no Plugins available in catalog. Check widget's configuration.",
             "columns": {
                 "name": "Name",
