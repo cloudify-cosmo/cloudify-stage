@@ -550,8 +550,13 @@ describe('Deployments View widget', () => {
             getSelectedDeployment().contains(deploymentNameThatMatchesFilter);
         });
 
-        it('should take into account filterId query parameter from the URL when displaying deployments', () => {
-            // TODO: Add test
+        it('should set filter when filterId query parameter is present', () => {
+            useDeploymentsViewWidget();
+
+            cy.location('pathname').then(pathname => cy.visit(`${pathname}?filterId=csys-environment-filter`));
+
+            cy.contains('button', 'csys-environment').should('be.visible');
+            cy.get('button[title="Clear selected filter"]').should('be.visible');
         });
     });
 
