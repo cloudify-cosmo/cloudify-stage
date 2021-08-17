@@ -675,7 +675,7 @@ describe('Deployments View widget', () => {
         });
     });
 
-    describe.only('drill-down functionality', () => {
+    describe('drill-down functionality', () => {
         // Graph of deployments used in the tests
         // Generated using https://textik.com/
         //
