@@ -11,6 +11,7 @@
     {"widget": "blueprintUploadButton", "link": "/content/working_with/console/widgets/blueprintUploadButton.md"},
     {"widget": "buttonLink", "link": "/content/working_with/console/widgets/buttonLink.md"},
     {"widget": "composerLink", "link": "/content/working_with/console/widgets/composerLink.md"},
+    {"widget": "cloudNum", "link": "/content/working_with/console/widgets/cloudNum.md"},
     {"widget": "deploymentActionButtons", "link": "/content/working_with/console/widgets/deploymentActionButtons.md"},
     {"widget": "deploymentButton", "link": "/content/working_with/console/widgets/deploymentButton.md"},
     {"widget": "deploymentInfo", "link": "/content/working_with/console/widgets/deploymentInfo.md"},
