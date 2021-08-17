@@ -7,6 +7,7 @@ import { exampleBlueprintUrl } from '../../support/resource_urls';
 import { FilterRuleAttribute, FilterRuleOperators, FilterRuleType } from '../../../../widgets/common/src/filters/types';
 import type {} from '../../../../widgets/common/src/deploymentsView';
 import { secondsToMs } from '../../support/resource_commons';
+import { testPageName } from '../../support/commands';
 
 describe('Deployments View widget', () => {
     const widgetId = 'deploymentsView';
@@ -549,6 +550,15 @@ describe('Deployments View widget', () => {
             cy.setDeploymentContext(deploymentNameThatMatchesFilter);
             getSelectedDeployment().contains(deploymentNameThatMatchesFilter);
         });
+
+        it('should set filter when filterId query parameter is present', () => {
+            useDeploymentsViewWidget();
+
+            cy.location('pathname').then(pathname => cy.visit(`${pathname}?filterId=csys-environment-filter`));
+
+            cy.contains('button', 'csys-environment').should('be.visible');
+            cy.get('button[title="Clear selected filter"]').should('be.visible');
+        });
     });
 
     it('should display various deployment information', () => {
@@ -794,7 +804,7 @@ describe('Deployments View widget', () => {
             verifySubdeploymentsOfAppEnv();
 
             cy.log('Go back to top-level page');
-            getBreadcrumbs().contains('Test Page').click();
+            getBreadcrumbs().contains(testPageName).click();
             getDeploymentsViewDetailsPane().within(() => {
                 cy.log('Drill down to subservices of app-env');
                 getSubservicesButton().containsNumber(1).click();
@@ -817,7 +827,7 @@ describe('Deployments View widget', () => {
             // NOTE: an example text that is visible on the full page
             cy.contains('Execute workflow');
 
-            getBreadcrumbs().contains('Test Page').click();
+            getBreadcrumbs().contains(testPageName).click();
             getDeploymentsViewWidget().should('be.visible');
         });
 
@@ -836,7 +846,7 @@ describe('Deployments View widget', () => {
             getDeploymentsViewMap().should('exist');
 
             cy.log('Go back to the parent environment');
-            getBreadcrumbs().contains('Test Page').click();
+            getBreadcrumbs().contains(testPageName).click();
             getDeploymentsViewTable().contains('app-env').click();
             getDeploymentsViewMap().should('exist');
         });
