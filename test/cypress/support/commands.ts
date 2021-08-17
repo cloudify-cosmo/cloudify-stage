@@ -111,7 +111,7 @@ const commands = {
     ) =>
         cy.request({
             method,
-            url: `/console/sp/${url}`,
+            url: `/console/sp${url}`,
             headers: {
                 'Content-Type': 'application/json',
                 ...getCommonHeaders(),
@@ -130,7 +130,7 @@ const commands = {
                 window =>
                     new Promise((resolve, reject) => {
                         const xhr = new window.XMLHttpRequest();
-                        xhr.open(method, `/console/sp/${url}`);
+                        xhr.open(method, `/console/sp${url}`);
                         xhr.onload = resolve;
                         xhr.onerror = reject;
                         Object.entries({ ...getCommonHeaders(), ...headers }).forEach(([name, value]) =>
