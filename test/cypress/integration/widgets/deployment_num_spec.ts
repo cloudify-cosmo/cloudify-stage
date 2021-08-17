@@ -23,7 +23,7 @@ describe('Number of Deployments widget', () => {
             cy.setLabels(environmentDeploymentId, [{ 'csys-obj-type': 'environment' }]);
         });
 
-        beforeEach(() => cy.interceptSp('GET', /\/deployments*/).as('fetchDeployments'));
+        beforeEach(() => cy.interceptSp('GET', { pathname: '/deployments' }).as('fetchDeployments'));
 
         function setFilterId(filterId: string) {
             cy.editWidgetConfiguration(widgetId, () => cy.setSearchableDropdownValue('Filter ID', filterId));
