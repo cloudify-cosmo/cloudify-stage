@@ -8,9 +8,7 @@ describe('Number of Deployments widget', () => {
     const testDeploymentIds = [serviceDeploymentId1, serviceDeploymentId2, environmentDeploymentId];
 
     before(() => {
-        cy.activate();
-        cy.interceptSp('GET', /\/deployments*/).as('fetchDeployments');
-        cy.usePageMock(widgetId).mockLogin();
+        cy.activate().usePageMock(widgetId, { pollingTime: 3 }).mockLogin();
     });
 
     beforeEach(() => cy.visitTestPage());
@@ -25,22 +23,28 @@ describe('Number of Deployments widget', () => {
             cy.setLabels(environmentDeploymentId, [{ 'csys-obj-type': 'environment' }]);
         });
 
+        beforeEach(() => cy.interceptSp('GET', /\/deployments*/).as('fetchDeployments'));
+
         function setFilterId(filterId: string) {
             cy.editWidgetConfiguration(widgetId, () => cy.setSearchableDropdownValue('Filter ID', filterId));
         }
 
-        function deploymentCountShouldBeEqualTo(expectedDeploymentsCount: number) {
-            return cy.get('.statistic .value').should('have.text', ` ${expectedDeploymentsCount}`);
+        function deploymentsCountShouldBeEqualTo(expectedDeploymentsCount: number) {
+            cy.get('.statistic .value').should($div =>
+                expect(Number.parseInt($div.text(), 10)).to.eq(expectedDeploymentsCount)
+            );
         }
 
         it('when filter is not set', () => {
             setFilterId('');
-            deploymentCountShouldBeEqualTo(testDeploymentIds.length);
+            cy.wait('@fetchDeployments');
+            deploymentsCountShouldBeEqualTo(testDeploymentIds.length);
         });
 
         it('when filter is set', () => {
             setFilterId('csys-environment-filter');
-            deploymentCountShouldBeEqualTo(1);
+            cy.wait('@fetchDeployments');
+            deploymentsCountShouldBeEqualTo(1);
         });
     });
 
