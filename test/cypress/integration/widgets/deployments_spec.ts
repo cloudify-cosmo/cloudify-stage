@@ -95,7 +95,9 @@ describe('Deployments widget', () => {
         });
 
         it('blueprintIdFilter option', () => {
-            cy.interceptSp('GET', RegExp(`/deployments.*blueprint_id=${blueprintName}`)).as('getFilteredDeployments');
+            cy.interceptSp('GET', { pathname: '/deployments', query: { blueprint_id: blueprintName } }).as(
+                'getFilteredDeployments'
+            );
 
             cy.refreshPage();
 
@@ -167,7 +169,7 @@ describe('Deployments widget', () => {
     it('should allow to update deployment', () => {
         cy.interceptSp('PUT', `/deployment-updates/${deploymentId}/update/initiate`).as('updateDeployment');
 
-        cy.interceptSp('GET', RegExp(`/blueprints.*&state=uploaded`)).as('uploadedBlueprints');
+        cy.interceptSp('GET', { pathname: '/blueprints', query: { state: 'uploaded' } }).as('uploadedBlueprints');
         executeDeploymentAction(deploymentId, 'Update');
 
         cy.get('.updateDeploymentModal').within(() => {
@@ -201,7 +203,7 @@ describe('Deployments widget', () => {
 
         cy.setLabels(deploymentId, [{ a: 'b' }]);
         cy.interceptSp('PATCH', `/deployments/${deploymentId}`).as('updateLabels');
-        cy.interceptSp('GET', `/deployments/${deploymentId}?_include=labels`).as('fetchLabels');
+        cy.interceptSp('GET', { path: `/deployments/${deploymentId}?_include=labels` }).as('fetchLabels');
         cy.interceptSp('GET', `/labels/deployments`).as('checkLabelPresence');
 
         const typeInput = (name, value) => {
@@ -243,7 +245,7 @@ describe('Deployments widget', () => {
         const testDeploymentId = `${deploymentId}_remove_id`;
         const testDeploymentName = `${deploymentId}_remove_name`;
         cy.deployBlueprint(blueprintName, testDeploymentId, {}, { display_name: testDeploymentName });
-        cy.interceptSp('DELETE', `/deployments/${testDeploymentId}?force=true`).as('deleteDeployment');
+        cy.interceptSp('DELETE', { path: `/deployments/${testDeploymentId}?force=true` }).as('deleteDeployment');
 
         executeDeploymentAction(testDeploymentId, 'Force Delete');
 

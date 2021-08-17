@@ -5,7 +5,11 @@ describe('Events/logs widget', () => {
                 fieldsToShow: ['Message', 'Workflow', 'Deployment', 'Deployment Id'],
                 pageSize: 15
             })
-            .interceptSp('GET', '/events?_size=15&_offset=0', { fixture: 'events/events.json' })
+            .interceptSp(
+                'GET',
+                { path: '/events', query: { _size: '15', _offset: '0' } },
+                { fixture: 'events/events.json' }
+            )
             .mockLogin();
     });
     it('should show deployment ID and display name', () => {

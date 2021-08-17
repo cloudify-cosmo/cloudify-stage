@@ -74,7 +74,7 @@ describe('Deployments View widget', () => {
             { ...widgetConfiguration, ...configurationOverrides },
             { additionalWidgetIdsToLoad, widgetsWidth: 12, additionalPageTemplates: ['drilldownDeployments'] }
         ).mockLoginWithoutWaiting();
-        cy.interceptSp('POST', /^\/searches\/deployments/, routeHandler).as('deployments');
+        cy.interceptSp('POST', '/searches/deployments', routeHandler).as('deployments');
         cy.wait('@deployments', { requestTimeout: secondsToMs(15) });
     };
 
@@ -192,7 +192,7 @@ describe('Deployments View widget', () => {
 
             cy.contains('button', 'Execute workflow').click();
             // NOTE: actual workflow execution is not necessary
-            cy.interceptSp('POST', /^\/executions/, {
+            cy.interceptSp('POST', '/executions', {
                 statusCode: 201,
                 body: {}
             }).as('restartDeployment');
@@ -873,7 +873,7 @@ describe('Deployments View widget', () => {
             getDeploymentsViewDetailsPane().within(() => {
                 getSubservicesButton().containsNumber(0);
 
-                cy.interceptSp('GET', `${deploymentId}?all_sub_deployments=false`, req =>
+                cy.interceptSp('GET', { path: `${deploymentId}?all_sub_deployments=false` }, req =>
                     req.reply(res => {
                         res.body.sub_services_count = 50;
                     })
@@ -896,7 +896,7 @@ describe('Deployments View widget', () => {
 
         const interceptSearchDeploymentsRequest = (searchPhrase: string) =>
             // eslint-disable-next-line security/detect-non-literal-regexp
-            cy.interceptSp('POST', new RegExp(`^\\/searches\\/deployments\\?.*_search_name=${searchPhrase}`));
+            cy.interceptSp('POST', { pathname: '/searches/deployments', query: { _search_name: searchPhrase } });
 
         const showEmptyTable = () => {
             cy.getSearchInput().type('some gibberish to make the table display no results');
