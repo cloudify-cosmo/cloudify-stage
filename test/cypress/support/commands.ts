@@ -39,7 +39,7 @@ const getCommonHeaders = () => ({
 });
 
 const mockGettingStarted = (modalEnabled: boolean) =>
-    cy.interceptSp('GET', `/users/`, {
+    cy.interceptSp('GET', `/users/*`, {
         body: { show_getting_started: modalEnabled }
     });
 
