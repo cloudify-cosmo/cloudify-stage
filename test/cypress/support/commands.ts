@@ -43,6 +43,8 @@ const mockGettingStarted = (modalEnabled: boolean) =>
         body: { show_getting_started: modalEnabled }
     });
 
+export const testPageName = 'Test Page';
+
 declare global {
     namespace Cypress {
         // NOTE: necessary for extending the Cypress API
@@ -220,6 +222,9 @@ const commands = {
         }
         cy.waitUntilPageLoaded();
     },
+    visitTestPage: () => {
+        cy.visitPage(testPageName);
+    },
     usePageMock: (
         widgetIds?: string | string[],
         widgetConfiguration: any = {},
@@ -249,7 +254,7 @@ const commands = {
             appData: {
                 pages: [
                     {
-                        name: 'Test Page',
+                        name: testPageName,
                         id: 'test_page',
                         layout: widgetIds
                             ? [

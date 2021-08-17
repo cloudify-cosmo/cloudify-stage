@@ -7,6 +7,7 @@ import { exampleBlueprintUrl } from '../../support/resource_urls';
 import { FilterRuleAttribute, FilterRuleOperators, FilterRuleType } from '../../../../widgets/common/src/filters/types';
 import type {} from '../../../../widgets/common/src/deploymentsView';
 import { secondsToMs } from '../../support/resource_commons';
+import { testPageName } from '../../support/commands';
 
 describe('Deployments View widget', () => {
     const widgetId = 'deploymentsView';
@@ -674,7 +675,7 @@ describe('Deployments View widget', () => {
         });
     });
 
-    describe('drill-down functionality', () => {
+    describe.only('drill-down functionality', () => {
         // Graph of deployments used in the tests
         // Generated using https://textik.com/
         //
@@ -803,7 +804,7 @@ describe('Deployments View widget', () => {
             verifySubdeploymentsOfAppEnv();
 
             cy.log('Go back to top-level page');
-            getBreadcrumbs().contains('Test Page').click();
+            getBreadcrumbs().contains(testPageName).click();
             getDeploymentsViewDetailsPane().within(() => {
                 cy.log('Drill down to subservices of app-env');
                 getSubservicesButton().containsNumber(1).click();
@@ -826,7 +827,7 @@ describe('Deployments View widget', () => {
             // NOTE: an example text that is visible on the full page
             cy.contains('Execute workflow');
 
-            getBreadcrumbs().contains('Test Page').click();
+            getBreadcrumbs().contains(testPageName).click();
             getDeploymentsViewWidget().should('be.visible');
         });
 
@@ -845,7 +846,7 @@ describe('Deployments View widget', () => {
             getDeploymentsViewMap().should('exist');
 
             cy.log('Go back to the parent environment');
-            getBreadcrumbs().contains('Test Page').click();
+            getBreadcrumbs().contains(testPageName).click();
             getDeploymentsViewTable().contains('app-env').click();
             getDeploymentsViewMap().should('exist');
         });

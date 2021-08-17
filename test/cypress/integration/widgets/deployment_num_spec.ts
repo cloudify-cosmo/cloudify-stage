@@ -13,7 +13,7 @@ describe('Number of Deployments widget', () => {
         cy.usePageMock(widgetId).mockLogin();
     });
 
-    beforeEach(() => cy.visitPage('Test Page'));
+    beforeEach(() => cy.visitTestPage());
 
     describe('should display correct number of deployments', () => {
         before(() => {
