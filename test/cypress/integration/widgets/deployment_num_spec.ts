@@ -100,7 +100,7 @@ describe('Number of Deployments widget', () => {
         });
 
         it('image using URL', () => {
-            const imageUrl = 'http://test.url';
+            const imageUrl = 'https://upload.wikimedia.org/wikipedia/commons/thumb/3/35/Tux.svg/1200px-Tux.svg.png';
             setConfigurationField('Image URL', imageUrl);
             cy.get('.statistic .value img').should('have.attr', 'src', imageUrl);
         });
