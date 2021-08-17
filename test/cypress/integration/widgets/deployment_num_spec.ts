@@ -10,9 +10,10 @@ describe('Number of Deployments widget', () => {
     before(() => {
         cy.activate();
         cy.interceptSp('GET', /\/deployments*/).as('fetchDeployments');
+        cy.usePageMock(widgetId).mockLogin();
     });
 
-    beforeEach(() => cy.usePageMock(widgetId).mockLogin());
+    beforeEach(() => cy.visitPage('Test Page'));
 
     describe('should display correct number of deployments', () => {
         before(() => {
@@ -47,12 +48,12 @@ describe('Number of Deployments widget', () => {
         const pageName = 'Deployments';
         const pageId = 'page_0';
 
-        beforeEach(() => cy.addPage(pageName).visitPage('Test Page'));
+        before(() => cy.addPage(pageName));
 
-        function setWidgetConfiguration(pageToOpenOnClick: string, filterId: string) {
+        function setWidgetConfiguration(filterId: string, pageToOpenOnClick: string) {
             cy.editWidgetConfiguration(widgetId, () => {
-                cy.setDropdownValues('Page to open on click', [pageToOpenOnClick]);
                 cy.setSearchableDropdownValue('Filter ID', filterId);
+                cy.setDropdownValues('Page to open on click', [pageToOpenOnClick]);
             });
         }
 
@@ -66,14 +67,14 @@ describe('Number of Deployments widget', () => {
         }
 
         it('when filter is not set', () => {
-            setWidgetConfiguration(pageName, '');
+            setWidgetConfiguration('', pageName);
             clickOnWidget();
             verifyUrl(pageId, '');
         });
 
         it('when filter is set', () => {
             const filterId = 'csys-environment-filter';
-            setWidgetConfiguration(pageName, filterId);
+            setWidgetConfiguration(filterId, pageName);
             clickOnWidget();
             verifyUrl(pageId, `?filterId=${filterId}`);
         });
