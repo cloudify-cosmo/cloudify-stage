@@ -968,6 +968,31 @@
                 "catalog": "Plugins Catalog"
             }
         },
+        "serviceButton": {
+            "name": "Service button",
+            "description": "Displays button allowing to creating new service",
+            "configuration": {
+                "color": {
+                    "name": "Color",
+                    "description": "Color of the button",
+                    "default": ""
+                },
+                "label": {
+                    "name": "Label",
+                    "description": "Label displayed in the button content",
+                    "default": "Create a service"
+                },
+                "icon": {
+                    "name": "Icon",
+                    "description": {
+                       "text": "Name of the icon displayed in the button. Available icons list can be found at:",
+                       "linkUrl": "https://react.semantic-ui.com/elements/icon",
+                       "linkTitle": "Icon - Semantic UI React"
+                    },
+                    "default": "add"
+                }
+            }
+        },
         "userManagement": {
             "columns": {
                 "username": "Username",
