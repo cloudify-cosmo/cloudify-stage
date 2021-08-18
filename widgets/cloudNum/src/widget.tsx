@@ -16,7 +16,7 @@ Stage.defineWidget({
     permission: Stage.GenericConfig.WIDGET_PERMISSION(widgetId),
     categories: [Stage.GenericConfig.CATEGORY.CHARTS_AND_STATISTICS],
 
-    render(_widget, _data) {
+    render() {
         const { KeyIndicator } = Stage.Basic;
 
         return <KeyIndicator icon="cloud" />;
