@@ -76,7 +76,7 @@ describe('Deployments View widget', () => {
             { additionalWidgetIdsToLoad, widgetsWidth: 12, additionalPageTemplates: ['drilldownDeployments'] }
         ).mockLoginWithoutWaiting();
         cy.interceptSp('POST', '/searches/deployments', routeHandler).as('deployments');
-        cy.wait('@deployments', { requestTimeout: secondsToMs(15) });
+        cy.wait('@deployments', { requestTimeout: secondsToMs(20) });
     };
 
     const getDeploymentsViewWidget = () =>
@@ -883,10 +883,13 @@ describe('Deployments View widget', () => {
             getDeploymentsViewDetailsPane().within(() => {
                 getSubservicesButton().containsNumber(0);
 
-                cy.interceptSp('GET', { path: `${deploymentId}?all_sub_deployments=false` }, req =>
-                    req.reply(res => {
-                        res.body.sub_services_count = 50;
-                    })
+                cy.interceptSp(
+                    'GET',
+                    { pathname: `/deployments/${deploymentId}`, query: { all_sub_deployments: 'false' } },
+                    req =>
+                        req.reply(res => {
+                            res.body.sub_services_count = 50;
+                        })
                 ).as('deploymentDetails');
                 cy.wait('@deploymentDetails');
 
@@ -1178,7 +1181,7 @@ describe('Deployments View widget', () => {
         });
 
         beforeEach(() => {
-            cy.interceptSp('PUT', '/deployment-groups/BATCH_ACTION_').as('createDeploymentGroup');
+            cy.interceptSp('PUT', '/deployment-groups/BATCH_ACTION_*').as('createDeploymentGroup');
             cy.interceptSp('POST', '/execution-groups').as('startExecutionGroup');
         });
 

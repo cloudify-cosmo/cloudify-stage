@@ -17,21 +17,21 @@ describe('Filter', () => {
         ).as('fetchBlueprints');
         cy.interceptSp(
             'GET',
-            { pathname: '/deployments', query: { offset: '0' } },
+            { pathname: '/deployments', query: { _offset: '0' } },
             {
                 fixture: 'filter/deployments0.json'
             }
         ).as('fetchDeployments');
         cy.interceptSp(
             'GET',
-            { pathname: '/deployments', query: { offset: '0', _search: 'ead', _search_name: 'ead' } },
+            { pathname: '/deployments', query: { _offset: '0', _search: 'ead', _search_name: 'ead' } },
             {
                 fixture: 'filter/deployments0.json'
             }
         ).as('fetchFilteredDeployments');
         cy.interceptSp(
             'GET',
-            { pathname: '/deployments', query: { offset: '20' } },
+            { pathname: '/deployments', query: { _offset: '20' } },
             { fixture: 'filter/deployments1.json' }
         ).as('fetchDeploymentsOffset');
         cy.interceptSp('GET', '/executions', { fixture: 'filter/executions.json' }).as('fetchExecutions');

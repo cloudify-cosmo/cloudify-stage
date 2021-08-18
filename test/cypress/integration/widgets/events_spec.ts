@@ -7,7 +7,7 @@ describe('Events/logs widget', () => {
             })
             .interceptSp(
                 'GET',
-                { path: '/events', query: { _size: '15', _offset: '0' } },
+                { pathname: '/events', query: { _size: '15', _offset: '0' } },
                 { fixture: 'events/events.json' }
             )
             .mockLogin();
