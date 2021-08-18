@@ -39,11 +39,11 @@ const BlueprintUploadActionsMenu: FunctionComponent<BlueprintUploadActionsMenuPr
     const getModal = React.useCallback(
         (name: ActionName) => {
             // @ts-expect-error UploadBlueprintModal is not converted to TS yet
-            const { UploadBlueprintModal, BlueprintMarketplaceModal } = Stage.Common;
+            const { UploadBlueprintModal, BlueprintMarketplace } = Stage.Common;
 
             switch (name) {
                 case 'uploadFromMarketplace':
-                    return <BlueprintMarketplaceModal open onHide={hideModal} tabs={marketplaceTabs} />;
+                    return <BlueprintMarketplace.Modal open onHide={hideModal} tabs={marketplaceTabs} />;
                 case 'uploadFromPackage':
                     return <UploadBlueprintModal open onHide={hideModal} toolbox={toolbox} />;
                 case 'generateInComposer':
