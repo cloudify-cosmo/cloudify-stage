@@ -25,7 +25,7 @@ Cloudify Stage provides Graphical User Interface for managing and analyzing Clou
 
 %prep
 
-npm run beforebuild
+npm run beforebuild:no-tests
 
 
 %build
