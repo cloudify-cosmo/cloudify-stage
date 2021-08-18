@@ -201,19 +201,20 @@ module.exports = (env, argv) => {
                     new webpack.ProvidePlugin({
                         d3: 'd3'
                     }),
-                    new ForkTsCheckerWebpackPlugin({
-                        eslint: {
-                            files: './{app,widgets}/**/*.{ts,tsx,js,tsx}',
-                            options: {
-                                ignorePattern: 'widgets/**/backend.js'
+                    !isProduction &&
+                        new ForkTsCheckerWebpackPlugin({
+                            eslint: {
+                                files: './{app,widgets}/**/*.{ts,tsx,js,tsx}',
+                                options: {
+                                    ignorePattern: 'widgets/**/backend.js'
+                                }
+                            },
+                            typescript: {
+                                configFile: './tsconfig.ui.json',
+                                build: true,
+                                mode: 'write-references'
                             }
-                        },
-                        typescript: {
-                            configFile: './tsconfig.ui.json',
-                            build: true,
-                            mode: 'write-references'
-                        }
-                    }),
+                        }),
                     environmentPlugin,
                     isProduction && getProductionPlugins(env && env.analyse === 'main')
                 ])

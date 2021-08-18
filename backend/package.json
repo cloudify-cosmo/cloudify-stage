@@ -53,6 +53,7 @@
     "passport-cookie": "^1.0.6",
     "passport-saml": "^2.1.0",
     "passport-unique-token": "^0.1.4",
+    "patch-package": "^6.4.7",
     "pg": "^7.18.2",
     "pg-hstore": "^2.3.3",
     "request": "^2.83.0",
@@ -67,7 +68,6 @@
     "jest": "^26.4.2",
     "nock": "^13.0.11",
     "nodemon": "^2.0.2",
-    "patch-package": "^6.2.2",
     "sequelize-cli": "^5.5.1"
   },
   "engines": {
