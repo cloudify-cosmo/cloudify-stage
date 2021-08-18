@@ -1,17 +1,15 @@
 import type { FunctionComponent } from 'react';
-
-interface Tab {
-    name: string;
-    url: string;
-}
+import { MarketplaceTab } from './types';
 
 interface BlueprintMarketplaceModalProps {
     open: boolean;
-    tabs: Tab[];
+    tabs: MarketplaceTab[];
     onHide: () => void;
 }
 
-const getPageLayout = (tabs: Tab[]) => ({
+const t = Stage.Utils.getT('widgets.common.blueprintMarketplace');
+
+const getPageLayout = (tabs: MarketplaceTab[]) => ({
     layout: [
         {
             type: 'tabs',
@@ -20,7 +18,7 @@ const getPageLayout = (tabs: Tab[]) => ({
                 widgets: [
                     {
                         id: `blueprint-catalog-${index}`,
-                        name: Stage.i18n.t('widgets.common.blueprintMarketplace.modal.blueprintCatalogName'),
+                        name: t('modal.blueprintCatalogName'),
                         height: 24,
                         maximized: true,
                         definition: 'blueprintCatalog',
@@ -38,18 +36,18 @@ const getPageLayout = (tabs: Tab[]) => ({
 });
 
 const BlueprintMarketplaceModal: FunctionComponent<BlueprintMarketplaceModalProps> = ({ open, onHide, tabs }) => {
-    const { getT } = Stage.Utils;
-    const t = getT('widgets.common.blueprintMarketplace');
-
     const { CancelButton, Icon, Modal } = Stage.Basic;
     const { PageContent } = Stage.Shared.Widgets;
+    const onlyTabsWithUrl = tabs.filter(tab => Boolean(tab.url));
 
     return (
         <Modal open={open} onClose={onHide}>
             <Modal.Header>
                 <Icon name="upload" /> {t(`modal.header`)}
             </Modal.Header>
-            <Modal.Content>{tabs.length !== 0 && <PageContent page={getPageLayout(tabs) as any} />}</Modal.Content>
+            <Modal.Content>
+                {onlyTabsWithUrl.length !== 0 && <PageContent page={getPageLayout(onlyTabsWithUrl) as any} />}
+            </Modal.Content>
             <Modal.Actions>
                 <CancelButton onClick={onHide} content={t(`modal.cancelButton`)} />
             </Modal.Actions>
@@ -58,15 +56,3 @@ const BlueprintMarketplaceModal: FunctionComponent<BlueprintMarketplaceModalProp
 };
 
 export default BlueprintMarketplaceModal;
-
-declare global {
-    namespace Stage.Common {
-        // eslint-disable-next-line import/prefer-default-export
-        export { BlueprintMarketplaceModal };
-    }
-}
-
-Stage.defineCommon({
-    name: 'BlueprintMarketplaceModal',
-    common: React.memo(BlueprintMarketplaceModal, _.isEqual)
-});

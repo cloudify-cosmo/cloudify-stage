@@ -7,7 +7,7 @@ export interface BlueprintsWidgetConfiguration {
     displayStyle: 'table' | 'catalog';
     hideFailedBlueprints: boolean;
     showEditCopyInComposerButton: boolean;
-    marketplaceTabs: { name: string; url: string }[];
+    marketplaceTabs: Stage.Common.BlueprintMarketplace.Tab[];
 }
 
 interface Blueprint {
