@@ -263,6 +263,7 @@ const commands = {
                                       content: [
                                           {
                                               id: 'filter',
+                                              name: 'Resource Filter',
                                               definition: 'filter',
                                               configuration: {
                                                   filterByBlueprints: true,
@@ -270,20 +271,23 @@ const commands = {
                                                   filterByExecutionsStatus: true,
                                                   allowMultipleSelection: true
                                               },
+                                              drillDownPages: {},
                                               height: 2,
                                               width: widgetsWidth,
                                               x: 0,
-                                              y: 0
+                                              y: 0,
+                                              maximized: false
                                           },
                                           ..._.map(widgetIdsArray, (widgetId, index) => ({
                                               id: widgetId,
                                               definition: widgetId,
                                               configuration: widgetConfiguration,
-                                              height: 20,
                                               drillDownPages: {},
+                                              height: 20,
                                               width: widgetsWidth,
                                               x: 0,
-                                              y: 2 + (index + 1) * 20
+                                              y: 2 + (index + 1) * 20,
+                                              maximized: false
                                           }))
                                       ]
                                   }
@@ -300,12 +304,18 @@ const commands = {
                                 content: [
                                     {
                                         id: 'pluginsCatalog',
+                                        name: 'Plugins Catalog',
                                         definition: 'pluginsCatalog',
                                         configuration: {
                                             jsonPath:
                                                 'http://repository.cloudifysource.org/cloudify/wagons/plugins.json'
                                         },
-                                        height: 20
+                                        drillDownPages: {},
+                                        height: 20,
+                                        width: widgetsWidth,
+                                        x: 0,
+                                        y: 0,
+                                        maximized: false
                                     }
                                 ]
                             }
