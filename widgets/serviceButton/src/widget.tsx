@@ -22,7 +22,14 @@ Stage.defineWidget<unknown, undefined, ServiceButtonWidgetConfiguration>({
         {
             id: 'color',
             name: t('configuration.color.name'),
-            description: t('configuration.color.description'),
+            description: (
+                <>
+                    {t('configuration.color.description.text')}{' '}
+                    <a href={t('configuration.color.description.linkUrl')}>
+                        {t('configuration.color.description.linkTitle')}
+                    </a>
+                </>
+            ),
             default: t('configuration.color.default'),
             type: Stage.Basic.GenericField.STRING_TYPE
         },
