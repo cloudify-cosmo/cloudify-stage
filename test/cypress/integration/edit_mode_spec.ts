@@ -29,11 +29,12 @@ describe('Edit mode', () => {
     });
 
     it('should allow to add widget', () => {
+        const widget1Id = 'pluginsCatalog';
         cy.get('.addWidgetBtn').click();
-        cy.get('*[data-id=pluginsCatalog]').click();
+        cy.get(`*[data-id=${widget1Id}]`).click();
         cy.contains('Add selected widgets').click();
-        cy.wait('@uaPost').its('request.body').should('have.nested.property', 'appData.pages[0].layout[0].content[2]');
         cy.wait('@uaPost').then(({ request }) => {
+            expect(request.body).to.have.nested.property('appData.pages[0].layout[0].content[2].definition', widget1Id);
             expect(request.body).to.have.nested.property('appData.pages[0].layout[0].content[2].height');
             expect(request.body).to.have.nested.property('appData.pages[0].layout[0].content[2].x');
             expect(request.body).to.have.nested.property('appData.pages[0].layout[0].content[2].y');
@@ -43,14 +44,12 @@ describe('Edit mode', () => {
         cy.wait('@uaPost');
         cy.get('.react-grid-layout').should('have.length', 2);
 
-        const widgetId = 'blueprints';
+        const widget2Id = 'blueprints';
         cy.get('.addWidgetBtn:last()').click();
-        cy.get(`*[data-id=${widgetId}]`).click();
+        cy.get(`*[data-id=${widget2Id}]`).click();
         cy.contains('Add selected widgets').click();
-        cy.wait('@uaPost')
-            .its('request.body')
-            .should('have.nested.property', 'appData.pages[0].layout[1].content[0].definition', widgetId);
         cy.wait('@uaPost').then(({ request }) => {
+            expect(request.body).to.have.nested.property('appData.pages[0].layout[1].content[0].definition', widget2Id);
             expect(request.body).to.have.nested.property('appData.pages[0].layout[1].content[0].height');
             expect(request.body).to.have.nested.property('appData.pages[0].layout[1].content[0].x');
             expect(request.body).to.have.nested.property('appData.pages[0].layout[1].content[0].y');
