@@ -5,7 +5,7 @@ interface KeyValueEditorProps
         Stage.Types.CustomConfigurationComponentProps<Partial<Record<string, any>>[]>,
         'name' | 'onChange' | 'value'
     > {
-    columns: Stage.Types.WidgetConfigurationDefinition[];
+    columns?: Stage.Types.WidgetConfigurationDefinition[];
 }
 
 const DynamicTable: FunctionComponent<KeyValueEditorProps> = ({ name, value = [], onChange, columns = [] }) => {
