@@ -1,12 +1,9 @@
 // @ts-nocheck File not migrated fully to TS
-/**
- * Created by kinneretzin on 09/02/2017.
- */
-
-import _ from 'lodash';
+import { debounce, get, isEqual } from 'lodash';
 import log from 'loglevel';
 import { saveUserAppData } from '../actions/userAppCommon';
 
+const autoSaverWaitInterval = 1000;
 let singleton = null;
 
 export default class UserAppDataAutoSaver {
@@ -17,25 +14,27 @@ export default class UserAppDataAutoSaver {
         this.initFromStore();
 
         // Subscribe to store change
-        this.unsubscribe = store.subscribe(() => {
-            if (this.isActive && this.hasDataChanged() && this.validData()) {
-                this.initFromStore();
+        this.unsubscribe = store.subscribe(
+            debounce(() => {
+                if (this.isActive && this.hasDataChanged() && this.validData()) {
+                    this.initFromStore();
 
-                this.store.dispatch(saveUserAppData());
-            }
-        });
+                    this.store.dispatch(saveUserAppData());
+                }
+            }, autoSaverWaitInterval)
+        );
     }
 
     initFromStore() {
         const state = this.store.getState();
         this.pages = state.pages;
-        this.username = _.get(state, 'manager.username');
-        this.role = _.get(state, 'manager.auth.role');
+        this.username = get(state, 'manager.username');
+        this.role = get(state, 'manager.auth.role');
     }
 
     validData() {
         const state = this.store.getState();
-        return _.get(state, 'manager.username') && _.get(state, 'manager.auth.role');
+        return get(state, 'manager.username') && get(state, 'manager.auth.role');
     }
 
     hasDataChanged() {
@@ -43,7 +42,7 @@ export default class UserAppDataAutoSaver {
         return (
             this.username !== state.manager.username ||
             this.role !== state.manager.auth.role ||
-            !_.isEqual(this.pages, state.pages)
+            !isEqual(this.pages, state.pages)
         );
     }
 
