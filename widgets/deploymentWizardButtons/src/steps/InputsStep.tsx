@@ -211,13 +211,10 @@ class InputsStepContent extends React.Component {
                                                 </Table.Cell>
                                                 <Table.Cell>
                                                     {InputsUtils.getInputField(
-                                                        inputName,
+                                                        inputs[inputName],
                                                         stepData[inputName],
-                                                        inputs[inputName].default,
                                                         this.handleInputChange.bind(this),
-                                                        errors[inputName],
-                                                        inputs[inputName].type,
-                                                        inputs[inputName].constraints
+                                                        errors[inputName]
                                                     )}
                                                 </Table.Cell>
                                             </Table.Row>

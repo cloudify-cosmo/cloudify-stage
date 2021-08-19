@@ -205,7 +205,8 @@ class InputsUtils {
         );
     }
 
-    static getFormInputField(name, value, defaultValue, description, onChange, error, type, constraints, dataType) {
+    static getFormInputField(input, value, onChange, error, dataType) {
+        const { name, display_label: displayLabel, default: defaultValue, description, type, constraints } = input;
         const { Form } = Stage.Basic;
         const help = InputsUtils.getHelp(description, type, constraints, defaultValue, dataType);
         const required = _.isUndefined(defaultValue);
@@ -214,26 +215,31 @@ class InputsUtils {
             case 'boolean':
                 return (
                     <Form.Field key={name} help={help} required={required}>
-                        {InputsUtils.getInputField(name, value, defaultValue, onChange, error, type, constraints)}
+                        {InputsUtils.getInputField(input, value, onChange, error)}
                     </Form.Field>
                 );
             case 'integer':
                 return (
-                    <Form.Field key={name} error={error} help={help} required={required} label={name}>
-                        {InputsUtils.getInputField(name, value, defaultValue, onChange, error, type, constraints)}
+                    <Form.Field key={name} error={error} help={help} required={required} label={displayLabel ?? name}>
+                        {InputsUtils.getInputField(input, value, onChange, error)}
                     </Form.Field>
                 );
             case 'string':
             default:
                 return (
-                    <Form.Field key={name} error={error} help={help} required={required} label={name}>
-                        {InputsUtils.getInputField(name, value, defaultValue, onChange, error, type, constraints)}
+                    <Form.Field key={name} error={error} help={help} required={required} label={displayLabel ?? name}>
+                        {InputsUtils.getInputField(input, value, onChange, error)}
                     </Form.Field>
                 );
         }
     }
 
-    static getInputField(name, value, defaultValue, onChange, error, type, constraints) {
+    static getInputField(
+        { name, display_label: displayLabel, default: defaultValue, description, type, constraints },
+        value,
+        onChange,
+        error
+    ) {
         const { Form } = Stage.Basic;
         let min;
         let max;
@@ -290,7 +296,7 @@ class InputsUtils {
                         <Form.Checkbox
                             name={name}
                             toggle
-                            label={name}
+                            label={displayLabel ?? name}
                             checked={checked}
                             indeterminate={!isBooleanValue}
                             onChange={onChange}
@@ -371,17 +377,7 @@ class InputsUtils {
             const value = _.isUndefined(inputsState[input.name])
                 ? InputsUtils.getInputFieldInitialValue(input.default, input.type, dataType)
                 : inputsState[input.name];
-            return InputsUtils.getFormInputField(
-                input.name,
-                value,
-                input.default,
-                input.description,
-                onChange,
-                errorsState[input.name],
-                input.type,
-                input.constraints,
-                dataType
-            );
+            return InputsUtils.getFormInputField(input, value, onChange, errorsState[input.name], dataType);
         });
     }
 
