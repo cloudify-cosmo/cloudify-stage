@@ -11,8 +11,8 @@
 import 'cypress-file-upload';
 import 'cypress-localstorage-commands';
 import 'cypress-get-table';
-import _ from 'lodash';
-import type { RouteHandler, StringMatcher } from 'cypress/types/net-stubbing';
+import _, { isString } from 'lodash';
+import type { GlobPattern, RouteHandler, RouteMatcherOptions } from 'cypress/types/net-stubbing';
 import { addCommands, GetCypressChainableFromCommands } from 'cloudify-ui-common/cypress/support';
 
 import './asserts';
@@ -39,7 +39,7 @@ const getCommonHeaders = () => ({
 });
 
 const mockGettingStarted = (modalEnabled: boolean) =>
-    cy.interceptSp('GET', `/users/`, {
+    cy.interceptSp('GET', `/users/*`, {
         body: { show_getting_started: modalEnabled }
     });
 
@@ -84,10 +84,7 @@ const commands = {
         cy.fixture(`license/${license}.yaml`).then(yaml =>
             cy.request({
                 method: 'PUT',
-                url: '/console/sp',
-                qs: {
-                    su: '/license'
-                },
+                url: '/console/sp/license',
                 headers: {
                     Authorization: `Basic ${btoa('admin:admin')}`,
                     'Content-Type': 'text/plain'
@@ -114,10 +111,7 @@ const commands = {
     ) =>
         cy.request({
             method,
-            url: '/console/sp',
-            qs: {
-                su: url
-            },
+            url: `/console/sp${url}`,
             headers: {
                 'Content-Type': 'application/json',
                 ...getCommonHeaders(),
@@ -136,7 +130,7 @@ const commands = {
                 window =>
                     new Promise((resolve, reject) => {
                         const xhr = new window.XMLHttpRequest();
-                        xhr.open(method, `/console/sp?su=${encodeURIComponent(url)}`);
+                        xhr.open(method, `/console/sp${url}`);
                         xhr.onload = resolve;
                         xhr.onerror = reject;
                         Object.entries({ ...getCommonHeaders(), ...headers }).forEach(([name, value]) =>
@@ -340,15 +334,21 @@ const commands = {
     setDeploymentContext: (value: string) => setContext('deployment', value),
     clearDeploymentContext: () => clearContext('deployment'),
 
-    interceptSp: (method: StringMatcher, su: string | RegExp, routeHandler?: RouteHandler) =>
-        cy.intercept(
-            {
-                method,
-                pathname: '/console/sp',
-                query: { su: su instanceof RegExp ? su : RegExp(`.*${_.escapeRegExp(su)}.*`) }
-            },
-            routeHandler
-        ),
+    interceptSp: (method: string, spRouteMatcher: GlobPattern | RouteMatcherOptions, routeHandler?: RouteHandler) => {
+        const routeMatcher: RouteMatcherOptions = { method };
+        if (isString(spRouteMatcher)) {
+            // eslint-disable-next-line scanjs-rules/assign_to_pathname
+            routeMatcher.pathname = `/console/sp${spRouteMatcher}`;
+        } else {
+            Object.assign(routeMatcher, spRouteMatcher);
+            if (routeMatcher.pathname)
+                // eslint-disable-next-line scanjs-rules/assign_to_pathname
+                routeMatcher.pathname = `/console/sp${routeMatcher.pathname}`;
+            if (routeMatcher.path) routeMatcher.path = `/console/sp${routeMatcher.path}`;
+        }
+
+        return cy.intercept(routeMatcher, routeHandler);
+    },
     getByTestId: (id: string) => cy.get(`[data-testid=${id}]`),
     getSearchInput: () => cy.get('input[placeholder="Search..."]'),
 

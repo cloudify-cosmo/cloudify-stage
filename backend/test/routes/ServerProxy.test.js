@@ -16,7 +16,7 @@ const { updateOptions } = require('handler/ManagerHandler');
 
 describe('/sp endpoint', () => {
     const blueprintsUrl = '/blueprints';
-    const proxyBlueprintsUrl = `/console/sp?su=${blueprintsUrl}`;
+    const proxyBlueprintsUrl = `/console/sp${blueprintsUrl}`;
 
     // NOTE: prevents memory leaks
     // See https://github.com/nock/nock/issues/2057#issuecomment-702401375
