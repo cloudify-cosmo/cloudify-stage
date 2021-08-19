@@ -20,13 +20,17 @@ describe('Agents widget', () => {
     describe('should allow to', () => {
         beforeEach(() => {
             function interceptResourceFetching(resourceName: string, resourceId: string) {
-                cy.interceptSp('GET', `/${resourceName}?_include=id`, {
-                    metadata: {
-                        pagination: { total: 1, size: 1000, offset: 0 },
-                        filtered: null
-                    },
-                    items: [{ id: resourceId }]
-                }).as(`fetch${upperFirst(camelCase(resourceName))}`);
+                cy.interceptSp(
+                    'GET',
+                    { pathname: `/${resourceName}`, query: { _include: 'id' } },
+                    {
+                        metadata: {
+                            pagination: { total: 1, size: 1000, offset: 0 },
+                            filtered: null
+                        },
+                        items: [{ id: resourceId }]
+                    }
+                ).as(`fetch${upperFirst(camelCase(resourceName))}`);
             }
 
             cy.interceptSp('GET', '/agents', {
@@ -143,17 +147,21 @@ describe('Agents widget', () => {
             version: `1.0.${i + 1}`,
             install_method: `remote-${i + 1}`
         }));
-        cy.interceptSp('GET', RegExp(`^/agents\\b.*\\b_search=test\\b`), {
-            metadata: {
-                pagination: {
-                    total: 1000,
-                    size: items.length,
-                    offset: 0
+        cy.interceptSp(
+            'GET',
+            { pathname: '/agents', query: { _search: 'test' } },
+            {
+                metadata: {
+                    pagination: {
+                        total: 1000,
+                        size: items.length,
+                        offset: 0
+                    },
+                    filtered: null
                 },
-                filtered: null
-            },
-            items
-        }).as('search');
+                items
+            }
+        ).as('search');
         cy.getSearchInput().type('test');
         cy.wait('@search');
         cy.get('table.agentsTable tbody tr').should('have.length', items.length);

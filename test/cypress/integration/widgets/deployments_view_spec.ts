@@ -75,8 +75,8 @@ describe('Deployments View widget', () => {
             { ...widgetConfiguration, ...configurationOverrides },
             { additionalWidgetIdsToLoad, widgetsWidth: 12, additionalPageTemplates: ['drilldownDeployments'] }
         ).mockLoginWithoutWaiting();
-        cy.interceptSp('POST', /^\/searches\/deployments/, routeHandler).as('deployments');
-        cy.wait('@deployments', { requestTimeout: secondsToMs(15) });
+        cy.interceptSp('POST', '/searches/deployments', routeHandler).as('deployments');
+        cy.wait('@deployments', { requestTimeout: secondsToMs(20) });
     };
 
     const getDeploymentsViewWidget = () =>
@@ -193,7 +193,7 @@ describe('Deployments View widget', () => {
 
             cy.contains('button', 'Execute workflow').click();
             // NOTE: actual workflow execution is not necessary
-            cy.interceptSp('POST', /^\/executions/, {
+            cy.interceptSp('POST', '/executions', {
                 statusCode: 201,
                 body: {}
             }).as('restartDeployment');
@@ -883,10 +883,13 @@ describe('Deployments View widget', () => {
             getDeploymentsViewDetailsPane().within(() => {
                 getSubservicesButton().containsNumber(0);
 
-                cy.interceptSp('GET', `${deploymentId}?all_sub_deployments=false`, req =>
-                    req.reply(res => {
-                        res.body.sub_services_count = 50;
-                    })
+                cy.interceptSp(
+                    'GET',
+                    { pathname: `/deployments/${deploymentId}`, query: { all_sub_deployments: 'false' } },
+                    req =>
+                        req.reply(res => {
+                            res.body.sub_services_count = 50;
+                        })
                 ).as('deploymentDetails');
                 cy.wait('@deploymentDetails');
 
@@ -906,7 +909,7 @@ describe('Deployments View widget', () => {
 
         const interceptSearchDeploymentsRequest = (searchPhrase: string) =>
             // eslint-disable-next-line security/detect-non-literal-regexp
-            cy.interceptSp('POST', new RegExp(`^\\/searches\\/deployments\\?.*_search_name=${searchPhrase}`));
+            cy.interceptSp('POST', { pathname: '/searches/deployments', query: { _search_name: searchPhrase } });
 
         const showEmptyTable = () => {
             cy.getSearchInput().type('some gibberish to make the table display no results');
@@ -1178,7 +1181,7 @@ describe('Deployments View widget', () => {
         });
 
         beforeEach(() => {
-            cy.interceptSp('PUT', '/deployment-groups/BATCH_ACTION_').as('createDeploymentGroup');
+            cy.interceptSp('PUT', '/deployment-groups/BATCH_ACTION_*').as('createDeploymentGroup');
             cy.interceptSp('POST', '/execution-groups').as('startExecutionGroup');
         });
 

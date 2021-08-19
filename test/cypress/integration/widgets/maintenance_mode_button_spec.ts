@@ -71,7 +71,7 @@ describe('Maintenance mode button widget', () => {
     });
 
     it('should disable the button when maintenance mode is being activated', () => {
-        cy.interceptSp('GET', 'maintenance', {
+        cy.interceptSp('GET', '/maintenance', {
             body: {
                 status: 'deactivated',
                 activated_at: '',
