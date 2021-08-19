@@ -222,6 +222,23 @@ module.exports = r => {
             });
             return allSubgraphs;
         };
+        const shouldHideTask = workflowTask => {
+            const typesToHide = [
+                'SendNodeEventTask',
+                'SetNodeInstanceStateTask',
+                'GetNodeInstanceStateTask',
+                'SendNodeEventTask',
+                'SendWorkflowEventTask',
+                'UpdateExecutionStatusTask',
+                // keep those two for compat with pre-6.2 executions
+                'LocalWorkflowTask',
+                'NOPLocalWorkflowTask',
+            ];
+            return (
+                workflowTask.labels[0].retry > 0 ||
+                _.includes(typesToHide, workflowTask.labels[0].type)
+            );
+        };
         const safeDeleteIrrelevantGraphVertices = allSubgraphs => {
             // Remove LocalWorkflow, NOPWorkflowTasks and retrying-tasks from the graph
             // while keeping it connected
@@ -232,11 +249,7 @@ module.exports = r => {
                     // eslint-disable-next-line consistent-return
                     subGraph.children = _.map(subGraph.children, workflowTask => {
                         // For each subgraph, go through all the tasks
-                        if (
-                            workflowTask.labels[0].type === localWorkflowTask ||
-                            workflowTask.labels[0].type === nopLocalWorkflowTask ||
-                            workflowTask.labels[0].retry > 0
-                        ) {
+                        if (shouldHideTask(workflowTask)) {
                             // Remove all LocalWorkflowTasks and NOPWorkflowTasks from the subgraph
                             // Connect its 'target' edges to it's parents' 'target' edges
                             // Remove the node when done
