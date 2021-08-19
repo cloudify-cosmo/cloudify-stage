@@ -21,7 +21,7 @@ describe('Create Deployment Button widget', () => {
 
     beforeEach(() => {
         cy.refreshPage();
-        cy.interceptSp('GET', RegExp(`/blueprints.*&state=uploaded`)).as('uploadedBlueprints');
+        cy.interceptSp('GET', { pathname: '/blueprints', query: { state: 'uploaded' } }).as('uploadedBlueprints');
         cy.get('div.deploymentButtonWidget button').click();
     });
 

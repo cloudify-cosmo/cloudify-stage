@@ -1,5 +1,5 @@
 import { without } from 'lodash';
-import { CyHttpMessages } from 'cypress/types/net-stubbing';
+import { CyHttpMessages, RouteMatcherOptions } from 'cypress/types/net-stubbing';
 import {
     AttributesFilterRuleOperators,
     FilterRule,
@@ -279,7 +279,7 @@ describe('Filters widget', () => {
     });
 
     it('should support "Only my resources" setting', () => {
-        cy.interceptSp('GET', new RegExp('/filters/deployments\\?.*created_by=admin.*')).as('getRequest');
+        cy.interceptSp('GET', { pathname: '/filters/deployments', query: { created_by: 'admin' } }).as('getRequest');
 
         cy.contains('Show only my resources').click();
 
@@ -407,12 +407,12 @@ describe('Filters widget', () => {
             openDropdown(divName).find(`div[option-value="${optionValue}"]`).click();
         }
 
-        type RuleValueObject = { value: string; isNew: boolean };
+        type RuleValueObject = { value: string; key?: string; isNew: boolean };
         function searchAndSetDropdownValue(
             { value, isNew }: RuleValueObject,
             additionLabel: string,
             isMultiple: boolean,
-            searchEndpoint?: string | RegExp
+            searchEndpoint?: RouteMatcherOptions
         ) {
             if (searchEndpoint) cy.interceptSp('GET', searchEndpoint).as(`search_${value}`);
             cy.get('input.search').type(value);
@@ -458,7 +458,7 @@ describe('Filters widget', () => {
                             'Add',
                             true,
                             withAutocomplete
-                                ? RegExp(`${searchEndpoint[ruleRowType]}.*_search=${ruleValue.value}`)
+                                ? { pathname: `/${searchEndpoint[ruleRowType]}`, query: { _search: ruleValue.value } }
                                 : undefined
                         );
                     })
@@ -469,12 +469,10 @@ describe('Filters widget', () => {
         function selectRuleLabelKey(key: string, isNew = false) {
             withinLastRuleRow(() => {
                 openDropdown('labelKey').within(() => {
-                    searchAndSetDropdownValue(
-                        { value: key, isNew },
-                        'New key',
-                        false,
-                        RegExp(`/labels/deployments?.*_search=${key}`)
-                    );
+                    searchAndSetDropdownValue({ value: key, isNew }, 'New key', false, {
+                        pathname: `/labels/deployments`,
+                        query: { _search: key }
+                    });
                 });
             });
         }
@@ -485,12 +483,10 @@ describe('Filters widget', () => {
             withinLastRuleRow(() => {
                 openDropdown('labelValue').within(() => {
                     values.forEach(ruleValue => {
-                        searchAndSetDropdownValue(
-                            ruleValue,
-                            'New value',
-                            true,
-                            RegExp(`/labels/deployments/.*_search=${ruleValue.value}`)
-                        );
+                        searchAndSetDropdownValue(ruleValue, 'New value', true, {
+                            pathname: `/labels/deployments/${ruleValue.key}`,
+                            query: { _search: ruleValue.value }
+                        });
                     });
                 });
             });
@@ -519,6 +515,7 @@ describe('Filters widget', () => {
             selectRuleOperator(rule.operator);
             const valuesObjectList = rule.values.map(value => ({
                 value,
+                key: rule.key,
                 isNew: rule.newValues?.includes(value) || false
             }));
             if (ruleRowType === FilterRuleRowType.Label) {

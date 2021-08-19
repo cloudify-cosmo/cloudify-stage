@@ -61,15 +61,19 @@ describe('Plugins Catalog widget', () => {
         const pluginToUpload = 'Utilities';
         const mockPluginVersion = '0.1.0';
 
-        cy.interceptSp('GET', '/plugins?_include=package_name,package_version&package_name=', {
-            metadata: { pagination: { total: 1, size: 1000, offset: 0 }, filtered: null },
-            items: [
-                {
-                    package_name: 'cloudify-utilities-plugin',
-                    package_version: mockPluginVersion
-                }
-            ]
-        }).refreshPage();
+        cy.interceptSp(
+            'GET',
+            { pathname: '/plugins', query: { _include: 'package_name,package_version', package_name: '*' } },
+            {
+                metadata: { pagination: { total: 1, size: 1000, offset: 0 }, filtered: null },
+                items: [
+                    {
+                        package_name: 'cloudify-utilities-plugin',
+                        package_version: mockPluginVersion
+                    }
+                ]
+            }
+        ).refreshPage();
 
         cy.get('.pluginsCatalogWidget table')
             .getTable()

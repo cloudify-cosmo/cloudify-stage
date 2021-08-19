@@ -1,7 +1,7 @@
 // @ts-nocheck File not migrated fully to TS
 describe('Sites Map', () => {
     const refreshDashboardPage = () => {
-        cy.visitPage('Test Page');
+        cy.visitTestPage();
     };
 
     const testSite = { name: 'Tel-Aviv', location: '32.079991, 34.767291' };

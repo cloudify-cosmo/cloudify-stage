@@ -7,14 +7,16 @@ describe('Cluster Status', () => {
     });
 
     beforeEach(() => {
-        cy.interceptSp('GET', '/cluster-status?summary=true', { fixture: 'cluster_status/summary-degraded.json' }).as(
-            'clusterStatusSummary'
-        );
+        cy.interceptSp(
+            'GET',
+            { path: '/cluster-status?summary=true' },
+            { fixture: 'cluster_status/summary-degraded.json' }
+        ).as('clusterStatusSummary');
     });
 
     function interceptFullStatus(responseFixtures) {
         const responses = responseFixtures.map(fixture => ({ fixture }));
-        cy.interceptSp('GET', '/cluster-status?summary=false', req => req.reply(responses.shift())).as(
+        cy.interceptSp('GET', { path: '/cluster-status?summary=false' }, req => req.reply(responses.shift())).as(
             'clusterStatusFull'
         );
     }

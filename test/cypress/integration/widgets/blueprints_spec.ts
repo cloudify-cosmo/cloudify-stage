@@ -81,8 +81,15 @@ describe('Blueprints widget', () => {
             cy.get('input[name=deploymentId]').clear().type(deploymentId);
             cy.contains('Show Data Types').click();
             cy.contains('.modal button', 'Close').click();
+
             const serverIp = '127.0.0.1';
-            cy.get('textarea').type(serverIp);
+            cy.contains('h4', 'Deployment inputs')
+                .next()
+                .within(() => {
+                    cy.contains('label', 'Server IP');
+                    cy.get('textarea').type(serverIp);
+                });
+
             cy.contains('div', 'Labels').find('.selection').click();
             cy.get('div[name=labelKey] > input').type('sample_key');
             cy.get('div[name=labelValue] > input').type('sample_value');
@@ -127,7 +134,12 @@ describe('Blueprints widget', () => {
     describe('should render blueprint items', () => {
         beforeEach(() => {
             cy.interceptSp('GET', '/blueprints', { fixture: 'blueprints/blueprints' });
-            cy.interceptSp('GET', /blueprints.*&state=uploaded/).as('filteredBlueprints');
+            cy.interceptSp('GET', {
+                pathname: '/blueprints',
+                query: {
+                    state: 'uploaded'
+                }
+            }).as('filteredBlueprints');
             cy.refreshPage();
         });
 

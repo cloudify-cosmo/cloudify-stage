@@ -69,7 +69,7 @@ describe('Deployment Action Buttons widget', () => {
             cy.get('div[name=labelValue] > input').clear().type(value);
         }
         function addLabel(key: string, value: string) {
-            cy.interceptSp('GET', `/labels/deployments/${key}?_search=${value}`).as('fetchLabel');
+            cy.interceptSp('GET', { path: `/labels/deployments/${key}?_search=${value}` }).as('fetchLabel');
 
             typeLabelKey(key);
             typeLabelValue(value);
@@ -101,7 +101,7 @@ describe('Deployment Action Buttons widget', () => {
         before(() => {
             cy.setLabels(deploymentId, [{ existing_key: 'existing_value' }]);
             cy.setDeploymentContext(deploymentId);
-            cy.interceptSp('GET', `/deployments/${deploymentId}?_include=labels`).as('fetchLabels');
+            cy.interceptSp('GET', { path: `/deployments/${deploymentId}?_include=labels` }).as('fetchLabels');
             cy.contains('button', 'Deployment actions').click();
             cy.get('.popupMenu > .menu').contains('Manage Labels').click();
             cy.get('.modal').within(() => {
@@ -125,9 +125,13 @@ describe('Deployment Action Buttons widget', () => {
         });
 
         it('adds new label by dropdown selection', () => {
-            cy.interceptSp('GET', /\/labels\/deployments\?(.*)_search=exist/).as('fetchFilteredKeys');
+            cy.interceptSp('GET', { pathname: '/labels/deployments', query: { _search: 'exist' } }).as(
+                'fetchFilteredKeys'
+            );
             cy.interceptSp('GET', '/labels/deployments/existing_key').as('fetchValues');
-            cy.interceptSp('GET', '/labels/deployments/existing_key?_search=sample_value').as('checkIfLabelExists');
+            cy.interceptSp('GET', { path: '/labels/deployments/existing_key?_search=sample_value' }).as(
+                'checkIfLabelExists'
+            );
 
             cy.get('.modal').within(() => {
                 cy.get('div[name=labelKey]').click();

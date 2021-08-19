@@ -36,7 +36,7 @@ function errorHandler(url, res, err) {
 }
 
 function buildManagerUrl(req, res, next) {
-    const serverUrl = req.query.su;
+    const serverUrl = req.originalUrl.substring(req.baseUrl.length);
     if (serverUrl) {
         req.su = ManagerHandler.getApiUrl() + serverUrl;
         logger.debug(`Proxying ${req.method} request to server with url: ${req.su}`);
@@ -50,7 +50,11 @@ async function proxyRequest(req, res) {
     const options = {};
 
     // if is a maintenance status fetch then update RBAC cache if empty
-    if (!!req.query.su.match(/^\/maintenance$/) && req.method === 'GET' && !AuthHandler.isRbacInCache()) {
+    if (
+        req.su === `${ManagerHandler.getApiUrl()}/maintenance` &&
+        req.method === 'GET' &&
+        !AuthHandler.isRbacInCache()
+    ) {
         await AuthHandler.getAndCacheConfig(req.headers['authentication-token']);
     }
 
@@ -64,8 +68,8 @@ async function proxyRequest(req, res) {
 }
 
 /**
- * End point to get a request from the server. Assuming it has a url parameter 'su' - is the manager path
+ * End point to get a request from the manager. The matched path section is used as manager URL.
  */
-router.all('/', buildManagerUrl, proxyRequest);
+router.all('/*', buildManagerUrl, proxyRequest);
 
 module.exports = router;
