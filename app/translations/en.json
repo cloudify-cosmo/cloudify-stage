@@ -970,7 +970,7 @@
         },
         "serviceButton": {
             "name": "Service button",
-            "description": "Displays button allowing to creating new service",
+            "description": "Displays button allowing to create a new service",
             "configuration": {
                 "color": {
                     "name": "Color",
@@ -983,7 +983,7 @@
                 },
                 "label": {
                     "name": "Label",
-                    "description": "Label displayed in the button content",
+                    "description": "Label displayed on the button",
                     "default": "Create a service"
                 },
                 "icon": {
