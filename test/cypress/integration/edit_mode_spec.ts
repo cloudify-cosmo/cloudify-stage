@@ -6,7 +6,7 @@ describe('Edit mode', () => {
         cy.usePageMock('blueprints');
         cy.refreshTemplate();
         cy.enterEditMode();
-        cy.intercept('POST', '/console/ua').as('uaPost');
+        cy.intercept('POST', '/console/ua').as('updateUserApps');
     });
 
     it('should allow to edit widget settings', () => {
@@ -15,42 +15,41 @@ describe('Edit mode', () => {
         cy.get('.pollingTime input').type(0);
 
         cy.contains('Save').click();
-        cy.wait('@uaPost')
+        cy.wait('@updateUserApps')
             .its('request.body')
             .should('have.nested.property', 'appData.pages[0].layout[0].content[1].configuration.pollingTime', 100);
     });
 
     it('should allow to remove widget', () => {
         cy.get('.blueprintsWidget .remove').click({ force: true });
-        cy.wait('@uaPost')
+        cy.wait('@updateUserApps')
             .its('request.body')
             .should('not.have.nested.property', 'appData.pages[0].layout[0].content[1]');
         cy.get('.blueprintsWidget').should('not.exist');
     });
 
     it('should allow to add widget', () => {
+        const widget1Id = 'pluginsCatalog';
         cy.get('.addWidgetBtn').click();
-        cy.get('*[data-id=pluginsCatalog]').click();
+        cy.get(`*[data-id=${widget1Id}]`).click();
         cy.contains('Add selected widgets').click();
-        cy.wait('@uaPost').its('request.body').should('have.nested.property', 'appData.pages[0].layout[0].content[2]');
-        cy.wait('@uaPost').then(({ request }) => {
+        cy.wait('@updateUserApps').then(({ request }) => {
+            expect(request.body).to.have.nested.property('appData.pages[0].layout[0].content[2].definition', widget1Id);
             expect(request.body).to.have.nested.property('appData.pages[0].layout[0].content[2].height');
             expect(request.body).to.have.nested.property('appData.pages[0].layout[0].content[2].x');
             expect(request.body).to.have.nested.property('appData.pages[0].layout[0].content[2].y');
         });
 
         cy.contains('Add Widgets Container').click();
-        cy.wait('@uaPost');
+        cy.wait('@updateUserApps');
         cy.get('.react-grid-layout').should('have.length', 2);
 
-        const widgetId = 'blueprints';
+        const widget2Id = 'blueprints';
         cy.get('.addWidgetBtn:last()').click();
-        cy.get(`*[data-id=${widgetId}]`).click();
+        cy.get(`*[data-id=${widget2Id}]`).click();
         cy.contains('Add selected widgets').click();
-        cy.wait('@uaPost')
-            .its('request.body')
-            .should('have.nested.property', 'appData.pages[0].layout[1].content[0].definition', widgetId);
-        cy.wait('@uaPost').then(({ request }) => {
+        cy.wait('@updateUserApps').then(({ request }) => {
+            expect(request.body).to.have.nested.property('appData.pages[0].layout[1].content[0].definition', widget2Id);
             expect(request.body).to.have.nested.property('appData.pages[0].layout[1].content[0].height');
             expect(request.body).to.have.nested.property('appData.pages[0].layout[1].content[0].x');
             expect(request.body).to.have.nested.property('appData.pages[0].layout[1].content[0].y');
@@ -78,14 +77,14 @@ describe('Edit mode', () => {
 
     it('should allow to rename tab and set default tab', () => {
         cy.contains('Add Tabs').click();
-        cy.wait('@uaPost');
+        cy.wait('@updateUserApps');
 
         cy.get('.editModeButton .edit:eq(0)').click();
         cy.get('.modal input[type=text]').type(2);
         cy.get('.modal .toggle').click();
 
         cy.contains('Save').click();
-        cy.wait('@uaPost')
+        cy.wait('@updateUserApps')
             .its('request.body')
             .should('have.nested.property', 'appData.pages[0].layout[1].content[0].name', 'New Tab2');
 
@@ -99,7 +98,7 @@ describe('Edit mode', () => {
         cy.get('.modal .toggle').click();
 
         cy.contains('Save').click();
-        cy.wait('@uaPost').then(({ request }) => {
+        cy.wait('@updateUserApps').then(({ request }) => {
             expect(request.body).to.have.nested.property('appData.pages[0].layout[1].content[0].isDefault', false);
             expect(request.body).to.have.nested.property('appData.pages[0].layout[1].content[1].isDefault', true);
         });
