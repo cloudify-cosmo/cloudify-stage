@@ -75,9 +75,6 @@ module.exports = r => {
 
         const tasksGraphsFetchUrl = '/tasks_graphs';
         const operationsFetchUrl = '/operations';
-
-        const localWorkflowTask = 'LocalWorkflowTask';
-        const nopLocalWorkflowTask = 'NOPLocalWorkflowTask';
         const subgraphTask = 'SubgraphTask';
 
         // ELK Tasks graph skeleton
