@@ -1,5 +1,4 @@
 import React, { ComponentProps, FunctionComponent } from 'react';
-import { lowerCase } from 'lodash';
 import type { SemanticCOLORS } from 'semantic-ui-react';
 
 type SemanticColorDropdownProps = Pick<
@@ -8,7 +7,7 @@ type SemanticColorDropdownProps = Pick<
 >;
 
 const { Dropdown } = Stage.Basic;
-const semanticColors: (SemanticCOLORS | '')[] = [
+const semanticColors: SemanticCOLORS[] = [
     'red',
     'orange',
     'yellow',
@@ -21,15 +20,13 @@ const semanticColors: (SemanticCOLORS | '')[] = [
     'pink',
     'brown',
     'grey',
-    'black',
-    ''
+    'black'
 ];
-const notDefinedColorKey = 'not-defined';
 const semanticColorsOptions: ComponentProps<typeof Dropdown>['options'] = semanticColors.map(color => ({
-    key: color || notDefinedColorKey,
-    text: color || lowerCase(notDefinedColorKey),
+    key: color,
+    text: color,
     value: color,
-    icon: color ? { name: 'circle', color } : undefined
+    icon: { name: 'circle', color }
 }));
 
 const SemanticColorDropdown: FunctionComponent<SemanticColorDropdownProps> = ({ name, value, onChange }) => {

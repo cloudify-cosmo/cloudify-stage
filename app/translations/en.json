@@ -978,8 +978,7 @@
                 },
                 "color": {
                     "name": "Color",
-                    "description": "Color of the button",
-                    "default": ""
+                    "description": "Color of the button"
                 },
                 "label": {
                     "name": "Label",
