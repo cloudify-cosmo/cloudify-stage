@@ -84,7 +84,8 @@ describe('Blueprints widget', () => {
 
             const serverIp = '127.0.0.1';
             cy.contains('h4', 'Deployment inputs')
-                .next()
+                .nextUntil('h4')
+                .should('have.length', 1)
                 .within(() => {
                     cy.contains('label', 'Server IP');
                     cy.get('textarea').type(serverIp);
