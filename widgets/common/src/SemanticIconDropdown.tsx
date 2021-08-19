@@ -1279,7 +1279,8 @@ const SemanticIconDropdown: FunctionComponent<SemanticIconDropdownProps> = ({ na
     );
 };
 
-export default SemanticIconDropdown;
+const memoizedSemanticIconDropdown = React.memo(SemanticIconDropdown, _.isEqual);
+export default memoizedSemanticIconDropdown;
 
 declare global {
     namespace Stage.Common {
@@ -1289,5 +1290,5 @@ declare global {
 
 Stage.defineCommon({
     name: 'SemanticIconDropdown',
-    common: SemanticIconDropdown
+    common: memoizedSemanticIconDropdown
 });

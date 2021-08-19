@@ -42,7 +42,8 @@ const SemanticColorDropdown: FunctionComponent<SemanticColorDropdownProps> = ({ 
     );
 };
 
-export default SemanticColorDropdown;
+const memoizedSemanticColorDropdown = React.memo(SemanticColorDropdown, _.isEqual);
+export default memoizedSemanticColorDropdown;
 
 declare global {
     namespace Stage.Common {
@@ -52,5 +53,5 @@ declare global {
 
 Stage.defineCommon({
     name: 'SemanticColorDropdown',
-    common: SemanticColorDropdown
+    common: memoizedSemanticColorDropdown
 });
