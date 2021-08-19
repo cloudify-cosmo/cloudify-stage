@@ -37,16 +37,10 @@ Stage.defineWidget<unknown, undefined, ServiceButtonWidgetConfiguration>({
         {
             id: 'icon',
             name: t('configuration.icon.name'),
-            description: (
-                <>
-                    {t('configuration.icon.description.text')}{' '}
-                    <a href={t('configuration.icon.description.linkUrl')}>
-                        {t('configuration.icon.description.linkTitle')}
-                    </a>
-                </>
-            ),
+            description: t('configuration.icon.description'),
             default: t('configuration.icon.default'),
-            type: Stage.Basic.GenericField.STRING_TYPE
+            component: Stage.Common.SemanticIconDropdown,
+            type: Stage.Basic.GenericField.CUSTOM_TYPE
         },
         {
             id: 'basic',

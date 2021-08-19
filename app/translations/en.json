@@ -727,11 +727,7 @@
                 },
                 "icon": {
                     "name": "Icon",
-                    "description": {
-                        "text": "Name of the icon displayed on the left side of the deployments count. Available icons list can be found at:",
-                        "linkUrl": "https://react.semantic-ui.com/elements/icon",
-                        "linkTitle": "Icon - Semantic UI React"
-                  }
+                    "description": "Icon displayed on the left side of the deployments count"
                 },
                 "imageSrc": {
                     "name": "Image URL",
@@ -987,11 +983,7 @@
                 },
                 "icon": {
                     "name": "Icon",
-                    "description": {
-                       "text": "Name of the icon displayed in the button. Available icons list can be found at:",
-                       "linkUrl": "https://react.semantic-ui.com/elements/icon",
-                       "linkTitle": "Icon - Semantic UI React"
-                    },
+                    "description": "Icon displayed on the button",
                     "default": "add"
                 }
             }

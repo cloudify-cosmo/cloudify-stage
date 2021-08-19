@@ -18,7 +18,14 @@ const ServiceButton: FunctionComponent<ServiceButtonProps> = ({ basic, color, ic
 
     return (
         <div>
-            <Button basic={basic} color={color} icon={icon} content={label} labelPosition="left" onClick={setOpen} />
+            <Button
+                basic={basic}
+                color={color || undefined}
+                icon={icon || undefined}
+                content={label}
+                labelPosition={icon ? 'left' : undefined}
+                onClick={setOpen}
+            />
 
             {open && <Modal open onHide={unsetOpen} tabs={marketplaceTabs} />}
         </div>
