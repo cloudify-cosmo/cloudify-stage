@@ -229,7 +229,7 @@ module.exports = r => {
                 'UpdateExecutionStatusTask',
                 // keep those two for compat with pre-6.2 executions
                 'LocalWorkflowTask',
-                'NOPLocalWorkflowTask',
+                'NOPLocalWorkflowTask'
             ];
             return workflowTask.labels[0].retry > 0 || _.includes(typesToHide, workflowTask.labels[0].type);
         };
