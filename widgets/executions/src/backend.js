@@ -237,7 +237,7 @@ module.exports = r => {
             );
         };
         const safeDeleteIrrelevantGraphVertices = allSubgraphs => {
-            // Remove LocalWorkflow, NOPWorkflowTasks and retrying-tasks from the graph
+            // Remove send-event, set-state, and retrying-tasks from the graph
             // while keeping it connected
             const existingEdges = new Set(); // Used to remove duplicate edges
             _.map(allSubgraphs, subGraph => {
@@ -247,8 +247,8 @@ module.exports = r => {
                     subGraph.children = _.map(subGraph.children, workflowTask => {
                         // For each subgraph, go through all the tasks
                         if (shouldHideTask(workflowTask)) {
-                            // Remove all LocalWorkflowTasks and NOPWorkflowTasks from the subgraph
-                            // Connect its 'target' edges to it's parents' 'target' edges
+                            // For each hidden task, connect the 'target'
+                            // edges to it's parents' 'target' edges
                             // Remove the node when done
                             const sourceNodes = [];
                             const targetNodes = [];
