@@ -974,11 +974,7 @@
             "configuration": {
                 "color": {
                     "name": "Color",
-                    "description": {
-                        "text": "Color of the button. Available colors are listed at:",
-                        "linkUrl": "https://react.semantic-ui.com/layouts/theming",
-                        "linkTitle": "Theming - Semantic UI React"
-                    },
+                    "description": "Color of the button",
                     "default": ""
                 },
                 "label": {
