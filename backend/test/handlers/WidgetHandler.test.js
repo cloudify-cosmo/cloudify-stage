@@ -48,6 +48,7 @@ describe('WidgetHandler', () => {
             { id: 'pluginsNum', isCustom: false },
             { id: 'secrets', isCustom: false },
             { id: 'serversNum', isCustom: false },
+            { id: 'serviceButton', isCustom: false },
             { id: 'sites', isCustom: false },
             { id: 'sitesMap', isCustom: false },
             { id: 'snapshots', isCustom: false },
