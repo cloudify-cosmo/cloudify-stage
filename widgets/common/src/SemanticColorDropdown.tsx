@@ -1,4 +1,4 @@
-import React, { ComponentProps, FunctionComponent } from 'react';
+import React, { ComponentProps, FunctionComponent, useMemo } from 'react';
 import type { SemanticCOLORS } from 'semantic-ui-react';
 
 type SemanticColorDropdownProps = Pick<
@@ -30,6 +30,10 @@ const semanticColorsOptions: ComponentProps<typeof Dropdown>['options'] = semant
 }));
 
 const SemanticColorDropdown: FunctionComponent<SemanticColorDropdownProps> = ({ name, value, onChange }) => {
+    const { Icon } = Stage.Basic;
+    const { useBoolean } = Stage.Hooks;
+    const [isOpen, setOpen, unsetOpen] = useBoolean();
+
     const handleChange: ComponentProps<typeof Dropdown>['onChange'] = (event, data) => {
         onChange(event, {
             name,
@@ -37,8 +41,29 @@ const SemanticColorDropdown: FunctionComponent<SemanticColorDropdownProps> = ({ 
         });
     };
 
+    const trigger = useMemo(
+        () =>
+            !isOpen &&
+            value && (
+                <>
+                    <Icon name="circle" color={value as SemanticCOLORS} /> {value}
+                </>
+            ),
+        [isOpen, value]
+    );
+
     return (
-        <Dropdown name={name} onChange={handleChange} options={semanticColorsOptions} search selection value={value} />
+        <Dropdown
+            name={name}
+            onChange={handleChange}
+            onClose={unsetOpen}
+            onOpen={setOpen}
+            options={semanticColorsOptions}
+            search
+            selection
+            trigger={trigger}
+            value={value}
+        />
     );
 };
 

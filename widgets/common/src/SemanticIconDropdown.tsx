@@ -1,4 +1,4 @@
-import React, { ComponentProps, FunctionComponent } from 'react';
+import React, { ComponentProps, FunctionComponent, useMemo } from 'react';
 import type { SemanticICONS } from 'semantic-ui-react';
 
 type SemanticIconDropdownProps = Pick<
@@ -1267,6 +1267,10 @@ const semanticIconsOptions: ComponentProps<typeof Dropdown>['options'] = semanti
 }));
 
 const SemanticIconDropdown: FunctionComponent<SemanticIconDropdownProps> = ({ name, value, onChange }) => {
+    const { Icon } = Stage.Basic;
+    const { useBoolean } = Stage.Hooks;
+    const [isOpen, setOpen, unsetOpen] = useBoolean();
+
     const handleChange: ComponentProps<typeof Dropdown>['onChange'] = (event, data) => {
         onChange(event, {
             name,
@@ -1274,8 +1278,30 @@ const SemanticIconDropdown: FunctionComponent<SemanticIconDropdownProps> = ({ na
         });
     };
 
+    const trigger = useMemo(
+        () =>
+            !isOpen &&
+            value && (
+                <>
+                    <Icon name={value as SemanticICONS} /> {value}
+                </>
+            ),
+        [isOpen, value]
+    );
+
     return (
-        <Dropdown name={name} onChange={handleChange} options={semanticIconsOptions} search selection value={value} />
+        <Dropdown
+            lazyLoad
+            name={name}
+            onChange={handleChange}
+            onClose={unsetOpen}
+            onOpen={setOpen}
+            options={semanticIconsOptions}
+            search
+            selection
+            trigger={trigger}
+            value={value}
+        />
     );
 };
 
