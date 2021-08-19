@@ -357,7 +357,8 @@ describe('(Reducer) Pages', () => {
                                 x: 1,
                                 y: 1,
                                 configuration: {},
-                                drillDownPages: {}
+                                drillDownPages: {},
+                                maximized: false
                             }
                         ]
                     }

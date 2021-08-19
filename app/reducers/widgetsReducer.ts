@@ -44,7 +44,8 @@ const widgets = (state = [], action) => {
                         ...StageUtils.buildConfig(action.widgetDefinition),
                         ...action.widget.configuration
                     },
-                    drillDownPages: {}
+                    drillDownPages: {},
+                    maximized: false
                 }
             ];
         case types.UPDATE_WIDGET:
