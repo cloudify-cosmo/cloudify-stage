@@ -972,6 +972,10 @@
             "name": "Service button",
             "description": "Displays button allowing to create a new service",
             "configuration": {
+                "basic": {
+                    "name": "Basic button",
+                    "description": "A basic button is less pronounced"
+                },
                 "color": {
                     "name": "Color",
                     "description": "Color of the button",

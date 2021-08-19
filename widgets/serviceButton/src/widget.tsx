@@ -48,12 +48,21 @@ Stage.defineWidget<unknown, undefined, ServiceButtonWidgetConfiguration>({
             default: t('configuration.icon.default'),
             type: Stage.Basic.GenericField.STRING_TYPE
         },
+        {
+            id: 'basic',
+            name: t('configuration.basic.name'),
+            description: t('configuration.basic.description'),
+            default: true,
+            type: Stage.Basic.GenericField.BOOLEAN_TYPE
+        },
         Stage.Common.BlueprintMarketplace.tabsConfig
     ],
 
     render(widget) {
-        const { color, icon, label, marketplaceTabs } = widget.configuration;
+        const { color, icon, basic, label, marketplaceTabs } = widget.configuration;
 
-        return <ServiceButton color={color} icon={icon} label={label} marketplaceTabs={marketplaceTabs} />;
+        return (
+            <ServiceButton basic={basic} color={color} icon={icon} label={label} marketplaceTabs={marketplaceTabs} />
+        );
     }
 });
