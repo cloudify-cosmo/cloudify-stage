@@ -32,6 +32,8 @@ describe('Page', () => {
     }
 
     it('should allow to switch tabs and maximize widgets', () => {
+        cy.intercept('POST', '/console/ua').as('updateUserApps');
+
         cy.contains('.widgetName', 'Cluster Status');
         cy.contains('.widgetName', 'Blueprints');
 
@@ -50,6 +52,7 @@ describe('Page', () => {
 
         cy.log('Verify widget maximize button works for widgets inside tabs');
         cy.get('.blueprintsWidget .expand').click({ force: true });
+        cy.wait('@updateUserApps');
 
         cy.contains('.widgetName', 'Cluster Status').should('not.be.visible');
         cy.contains('.widgetName', 'Catalog').should('not.be.visible');
@@ -61,6 +64,7 @@ describe('Page', () => {
 
         cy.log('Verify widget maximize button works for top level widgets');
         cy.get('.blueprintCatalogWidget .expand').click({ force: true });
+        cy.wait('@updateUserApps');
 
         cy.contains('.widgetName', 'Cluster Status').should('not.be.visible');
         cy.contains('.widgetName', 'Blueprints').should('not.be.visible');
@@ -75,6 +79,8 @@ describe('Page', () => {
 
         cy.log('Verify widget collapse button works');
         cy.get('.blueprintCatalogWidget .compress').click({ force: true });
+        cy.wait('@updateUserApps');
+
         verifyAllWidgetsVisible();
     });
 });
