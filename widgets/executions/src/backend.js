@@ -231,10 +231,7 @@ module.exports = r => {
                 'LocalWorkflowTask',
                 'NOPLocalWorkflowTask',
             ];
-            return (
-                workflowTask.labels[0].retry > 0 ||
-                _.includes(typesToHide, workflowTask.labels[0].type)
-            );
+            return workflowTask.labels[0].retry > 0 || _.includes(typesToHide, workflowTask.labels[0].type);
         };
         const safeDeleteIrrelevantGraphVertices = allSubgraphs => {
             // Remove send-event, set-state, and retrying-tasks from the graph
