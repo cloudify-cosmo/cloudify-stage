@@ -966,7 +966,22 @@
                 "package": "Upload a package",
                 "close": "Close",
                 "catalog": "Plugins Catalog"
-            }
+            },
+            "columns": {
+                "plugin": "Plugin",
+                "packageName": "Package name",
+                "packageVersion": "Package version",
+                "supportedPlatform": "Supported platform",
+                "distribution": "Distribution",
+                "distributeRelease": "Distribute release",
+                "uploadedAt": "Uploaded at",
+                "creator": "Creator"
+            },
+            "noData": "There are no Plugins available. Click \"Upload\" to add Plugins.",
+            "deleteError": "Something went wrong, no plugin was selected for delete",
+            "download": "Download",
+            "delete": "Delete",
+            "deleteLabel": "plugin {{name}} v{{version}}"
         },
         "userManagement": {
             "columns": {
