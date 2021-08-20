@@ -7,9 +7,7 @@ describe('Number of Deployments widget', () => {
     const environmentDeploymentId = `${resourcePrefix}environment`;
     const testDeploymentIds = [serviceDeploymentId1, serviceDeploymentId2, environmentDeploymentId];
 
-    before(() => {
-        cy.activate().usePageMock(widgetId, { pollingTime: 3 }).mockLogin();
-    });
+    before(() => cy.activate().useWidgetWithDefaultConfiguration(widgetId, { pollingTime: 3 }));
 
     beforeEach(() => cy.visitTestPage());
 
@@ -26,7 +24,7 @@ describe('Number of Deployments widget', () => {
         beforeEach(() => cy.interceptSp('GET', { pathname: '/deployments' }).as('fetchDeployments'));
 
         function setFilterId(filterId: string) {
-            cy.editWidgetConfiguration(widgetId, () => cy.setSearchableDropdownValue('Filter ID', filterId));
+            cy.setSearchableDropdownConfigurationField(widgetId, 'Filter ID', filterId);
         }
 
         function deploymentsCountShouldBeEqualTo(expectedDeploymentsCount: number) {
@@ -85,32 +83,21 @@ describe('Number of Deployments widget', () => {
     });
 
     describe('should allow configuring', () => {
-        function setStringConfigurationField(fieldName: string, value: string) {
-            cy.editWidgetConfiguration(widgetId, () => {
-                cy.contains('.field', fieldName).find('input').clear().type(value);
-            });
-        }
-        function setIconConfigurationField(icon: string) {
-            cy.editWidgetConfiguration(widgetId, () => {
-                cy.setSearchableDropdownValue('Icon', icon);
-            });
-        }
-
         it('label', () => {
             const label = 'Kubernetes Clusters';
-            setStringConfigurationField('Label', label);
+            cy.setStringConfigurationField(widgetId, 'Label', label);
             cy.get('.statistic .label').should('have.text', label);
         });
 
         it('image using icon', () => {
             const icon = 'box';
-            setIconConfigurationField(icon);
+            cy.setSearchableDropdownConfigurationField(widgetId, 'Icon', icon);
             cy.get('.statistic .value i').should('have.class', icon);
         });
 
         it('image using URL', () => {
             const imageUrl = 'https://upload.wikimedia.org/wikipedia/commons/thumb/3/35/Tux.svg/1200px-Tux.svg.png';
-            setStringConfigurationField('Image URL', imageUrl);
+            cy.setStringConfigurationField(widgetId, 'Image URL', imageUrl);
             cy.get('.statistic .value img').should('have.attr', 'src', imageUrl);
         });
     });
