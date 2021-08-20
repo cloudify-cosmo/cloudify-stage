@@ -322,7 +322,9 @@ const commands = {
         cy
             .usePageMock(widgetId, widgetConfigurationOverrides)
             .mockLogin()
-            .editWidgetConfiguration(widgetId, () => {}),
+            // In order to load default configuration for widget
+            // open widget edit configuration modal and save without making any changes
+            .editWidgetConfiguration(widgetId, noop),
     refreshPage: (disableGettingStarted = true) => {
         mockGettingStarted(!disableGettingStarted);
         cy.get('.pageMenuItem.active').click({ force: true });
