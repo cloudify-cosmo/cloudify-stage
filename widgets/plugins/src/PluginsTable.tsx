@@ -128,7 +128,7 @@ const PluginsTable: FunctionComponent<PluginsTableProps> = ({ data, toolbox, wid
                 <DataTable.Column label={t('columns.packageVersion')} name="package_version" width="10%" />
                 <DataTable.Column label={t('columns.supportedPlatform')} name="supported_platform" width="10%" />
                 <DataTable.Column label={t('columns.distribution')} name="distribution" width="10%" />
-                <DataTable.Column label={t('columns.distributeRelease')} name="distribution_release" width="10%" />
+                <DataTable.Column label={t('columns.distributionRelease')} name="distribution_release" width="10%" />
                 <DataTable.Column label={t('columns.uploadedAt')} name="uploaded_at" width="15%" />
                 <DataTable.Column label={t('columns.creator')} name="created_by" width="15%" />
                 <DataTable.Column width="10%" />

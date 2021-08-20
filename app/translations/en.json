@@ -973,7 +973,7 @@
                 "packageVersion": "Package version",
                 "supportedPlatform": "Supported platform",
                 "distribution": "Distribution",
-                "distributeRelease": "Distribute release",
+                "distributionRelease": "Distribution release",
                 "uploadedAt": "Uploaded at",
                 "creator": "Creator"
             },
