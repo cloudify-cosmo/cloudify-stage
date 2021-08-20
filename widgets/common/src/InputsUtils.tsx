@@ -367,18 +367,18 @@ class InputsUtils {
     }
 
     static getInputFields(inputs, onChange, inputsState, errorsState, dataTypes) {
-        const enhancedInputs = _.sortBy(
-            _.map(inputs, (input, name) => ({ name, ...input })),
-            [input => !_.isUndefined(input.default), 'name']
-        );
-
-        return _.map(enhancedInputs, input => {
-            const dataType = !_.isEmpty(dataTypes) && !!input.type ? dataTypes[input.type] : undefined;
-            const value = _.isUndefined(inputsState[input.name])
-                ? InputsUtils.getInputFieldInitialValue(input.default, input.type, dataType)
-                : inputsState[input.name];
-            return InputsUtils.getFormInputField(input, value, onChange, errorsState[input.name], dataType);
-        });
+        return _(inputs)
+            .map((input, name) => ({ name, ...input }))
+            .reject('hidden')
+            .sortBy([input => !_.isUndefined(input.default), 'name'])
+            .map(input => {
+                const dataType = !_.isEmpty(dataTypes) && !!input.type ? dataTypes[input.type] : undefined;
+                const value = _.isUndefined(inputsState[input.name])
+                    ? InputsUtils.getInputFieldInitialValue(input.default, input.type, dataType)
+                    : inputsState[input.name];
+                return InputsUtils.getFormInputField(input, value, onChange, errorsState[input.name], dataType);
+            })
+            .value();
     }
 
     /* Inputs for field values (string values) */
@@ -458,6 +458,8 @@ class InputsUtils {
         const deploymentInputs = {};
 
         _.forEach(inputs, (inputObj, inputName) => {
+            if (inputObj.hidden) return;
+
             const stringInputValue = Json.getStringValue(inputsValues[inputName]);
             let typedInputValue = Json.getTypedValue(inputsValues[inputName]);
 
@@ -483,9 +485,11 @@ class InputsUtils {
         const inputsWithoutValues = {};
 
         _.forEach(inputs, (inputObj, inputName) => {
+            if (inputObj.default !== undefined || inputObj.hidden) return;
+
             const stringInputValue = Json.getStringValue(inputsValues[inputName]);
 
-            if (_.isEmpty(stringInputValue) && _.isUndefined(inputObj.default)) {
+            if (_.isEmpty(stringInputValue)) {
                 inputsWithoutValues[inputName] = true;
             }
         });
