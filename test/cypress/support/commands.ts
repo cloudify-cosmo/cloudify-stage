@@ -319,6 +319,11 @@ const commands = {
             }
         });
     },
+    useWidgetWithDefaultConfiguration: (widgetId: string, widgetConfigurationOverrides: any = {}) =>
+        cy
+            .usePageMock(widgetId, widgetConfigurationOverrides)
+            .mockLogin()
+            .editWidgetConfiguration(widgetId, () => {}),
     refreshPage: (disableGettingStarted = true) => {
         mockGettingStarted(!disableGettingStarted);
         cy.get('.pageMenuItem.active').click({ force: true });
