@@ -322,8 +322,9 @@ const commands = {
         cy
             .usePageMock(widgetId, widgetConfigurationOverrides)
             .mockLogin()
-            // In order to load default configuration for widget
-            // open widget edit configuration modal and save without making any changes
+            // TODO(RD-1820): Currently we don't supply widget's default configuration when rendering.
+            // In order to load default configuration for widget widget edit configuration modal should be opened
+            // and configuration saved without making any changes
             .editWidgetConfiguration(widgetId, noop),
     refreshPage: (disableGettingStarted = true) => {
         mockGettingStarted(!disableGettingStarted);
