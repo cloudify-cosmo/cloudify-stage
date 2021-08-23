@@ -714,8 +714,9 @@
                 }
             }
         },
-        "executions": {
-            "noExecutionFound": "There are no executions that could be shown."
+        "cloudNum": {
+            "name": "Number of clouds",
+            "description": "Displays number of cloud environments fully configured"
         },
         "deploymentNum": {
             "name": "Number of deployments",
@@ -936,6 +937,9 @@
                 }
             }
         },
+        "executions": {
+            "noExecutionFound": "There are no executions that could be shown."
+        },
         "maintenanceModeButton": {
             "activating": "Maintenance Mode is being activated"
         },
@@ -962,7 +966,22 @@
                 "package": "Upload a package",
                 "close": "Close",
                 "catalog": "Plugins Catalog"
-            }
+            },
+            "columns": {
+                "plugin": "Plugin",
+                "packageName": "Package name",
+                "packageVersion": "Package version",
+                "supportedPlatform": "Supported platform",
+                "distribution": "Distribution",
+                "distributionRelease": "Distribution release",
+                "uploadedAt": "Uploaded at",
+                "creator": "Creator"
+            },
+            "noData": "There are no Plugins available. Click \"Upload\" to add Plugins.",
+            "deleteError": "Something went wrong, no plugin was selected for delete",
+            "download": "Download",
+            "delete": "Delete",
+            "deleteLabel": "plugin {{name}} v{{version}}"
         },
         "serviceButton": {
             "name": "Service button",

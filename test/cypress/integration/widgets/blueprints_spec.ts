@@ -83,12 +83,7 @@ describe('Blueprints widget', () => {
             cy.contains('.modal button', 'Close').click();
 
             const serverIp = '127.0.0.1';
-            cy.contains('h4', 'Deployment inputs')
-                .next()
-                .within(() => {
-                    cy.contains('label', 'Server IP');
-                    cy.get('textarea').type(serverIp);
-                });
+            cy.get('textarea').type(serverIp);
 
             cy.contains('div', 'Labels').find('.selection').click();
             cy.get('div[name=labelKey] > input').type('sample_key');
