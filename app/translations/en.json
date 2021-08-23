@@ -714,6 +714,36 @@
                 }
             }
         },
+        "buttonLink": {
+            "name": "Button link",
+            "description": "Opens provided URL",
+            "configuration": {
+                "color": {
+                    "name": "Color",
+                    "description": "Color of the button",
+                    "default": "green"
+                },
+                "label": {
+                    "name": "Label",
+                    "description": "Label displayed on the button",
+                    "default": "Button Link"
+                },
+                "icon": {
+                    "name": "Icon",
+                    "description": "Icon displayed on the button",
+                    "default": "external"
+                },
+                "url": {
+                    "name": "URL address",
+                    "description": "URL address to open on button click",
+                    "default": ""
+                },
+                "fullHeight": {
+                    "name": "Full height",
+                    "description": "Should button use all height reserved for the widget"
+                }
+        }
+        },
         "cloudNum": {
             "name": "Number of clouds",
             "description": "Displays number of cloud environments fully configured"
