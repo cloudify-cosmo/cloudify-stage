@@ -43,7 +43,7 @@ pipeline {
       parallel{
         stage('Audit'){
           steps {
-            catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE'){
+            catchError(buildResult: 'UNSTABLE', stageResult: 'FAILURE'){
               container('node'){
                 dir("${STAGE_DIR}") {
                   echo 'Run npm production dependencies security audit'
