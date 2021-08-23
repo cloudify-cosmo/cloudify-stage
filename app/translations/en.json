@@ -714,8 +714,9 @@
                 }
             }
         },
-        "executions": {
-            "noExecutionFound": "There are no executions that could be shown."
+        "cloudNum": {
+            "name": "Number of clouds",
+            "description": "Displays number of cloud environments fully configured"
         },
         "deploymentNum": {
             "name": "Number of deployments",
@@ -939,6 +940,9 @@
                     "message": "The drilled-down widget should not be used on a top-level page, only in drill-down pages. Most of the time you do not need to add it manually, as it is present on the drill-down Environments/Services page automatically. You may be looking for a regular Deployments View widget."
                 }
             }
+        },
+        "executions": {
+            "noExecutionFound": "There are no executions that could be shown."
         },
         "maintenanceModeButton": {
             "activating": "Maintenance Mode is being activated"
