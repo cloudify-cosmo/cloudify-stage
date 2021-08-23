@@ -735,7 +735,7 @@
                 },
                 "url": {
                     "name": "URL address",
-                    "description": "URL address to open on button click",
+                    "description": "Page URL address to open on button click. If URL starts with 'http', then page will be opened in a new window/tab. In other case it will be opened in the same window.",
                     "default": ""
                 },
                 "fullHeight": {

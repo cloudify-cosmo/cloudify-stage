@@ -1,5 +1,5 @@
 import type { SemanticCOLORS, SemanticICONS } from 'semantic-ui-react';
-import type { CSSProperties } from 'react';
+import LinkButton from './LinkButton';
 
 interface ButtonLinkWidgetConfiguration {
     color: SemanticCOLORS;
@@ -66,25 +66,8 @@ Stage.defineWidget<unknown, unknown, ButtonLinkWidgetConfiguration>({
     permission: Stage.GenericConfig.WIDGET_PERMISSION(widgetId),
 
     render(widget) {
-        const { Button } = Stage.Basic;
         const { color, fullHeight, icon, label, url } = widget.configuration;
 
-        const style: CSSProperties = {};
-        if (fullHeight) {
-            style.height = 'calc(100% + 14px)';
-        }
-
-        return (
-            <Button
-                disabled={!url}
-                color={color}
-                content={label}
-                icon={icon}
-                fluid
-                labelPosition={icon ? 'left' : undefined}
-                onClick={() => window.open(url, '_blank')}
-                style={style}
-            />
-        );
+        return <LinkButton color={color} label={label} icon={icon} fullHeight={fullHeight} url={url} />;
     }
 });
