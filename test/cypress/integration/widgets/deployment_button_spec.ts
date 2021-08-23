@@ -1,17 +1,14 @@
 // @ts-nocheck File not migrated fully to TS
-import { exampleBlueprintUrl } from '../../support/resource_urls';
-
 describe('Create Deployment Button widget', () => {
     const resourcePrefix = 'deploy_test_';
     const testBlueprintId = `${resourcePrefix}bp`;
-    const testBlueprintUrl = exampleBlueprintUrl;
 
     before(() => {
         cy.activate('valid_trial_license').usePageMock('deploymentButton').mockLogin();
 
         cy.deleteDeployments(resourcePrefix, true)
             .deleteBlueprints(resourcePrefix, true)
-            .uploadBlueprint(testBlueprintUrl, testBlueprintId);
+            .uploadBlueprint('blueprints/simple.zip', testBlueprintId);
 
         const types = ['boolean', 'dict', 'float', 'integer', 'list', 'regex', 'string'];
         types.forEach(type =>
@@ -73,6 +70,16 @@ describe('Create Deployment Button widget', () => {
             cy.setSearchableDropdownValue('Blueprint', blueprintId);
             cy.get('input[name="deploymentName"]').click().type(deploymentName);
             cy.get('input[name="deploymentId"]').clear().type(deploymentId);
+
+            cy.contains('h4', 'Deployment inputs')
+                .nextUntil('h4:contains(Deployment metadata)')
+                // check hidden input is not rendered
+                .should('have.length', 1)
+                .should('have.class', 'field')
+                .within(() => {
+                    cy.contains('label', 'Server IP');
+                    cy.get('textarea').type('127.0.0.1');
+                });
         });
     };
 

@@ -75,9 +75,6 @@ module.exports = r => {
 
         const tasksGraphsFetchUrl = '/tasks_graphs';
         const operationsFetchUrl = '/operations';
-
-        const localWorkflowTask = 'LocalWorkflowTask';
-        const nopLocalWorkflowTask = 'NOPLocalWorkflowTask';
         const subgraphTask = 'SubgraphTask';
 
         // ELK Tasks graph skeleton
@@ -222,8 +219,22 @@ module.exports = r => {
             });
             return allSubgraphs;
         };
+        const shouldHideTask = workflowTask => {
+            const typesToHide = [
+                'SendNodeEventTask',
+                'SetNodeInstanceStateTask',
+                'GetNodeInstanceStateTask',
+                'SendNodeEventTask',
+                'SendWorkflowEventTask',
+                'UpdateExecutionStatusTask',
+                // keep those two for compat with pre-6.2 executions
+                'LocalWorkflowTask',
+                'NOPLocalWorkflowTask'
+            ];
+            return workflowTask.labels[0].retry > 0 || _.includes(typesToHide, workflowTask.labels[0].type);
+        };
         const safeDeleteIrrelevantGraphVertices = allSubgraphs => {
-            // Remove LocalWorkflow, NOPWorkflowTasks and retrying-tasks from the graph
+            // Remove send-event, set-state, and retrying-tasks from the graph
             // while keeping it connected
             const existingEdges = new Set(); // Used to remove duplicate edges
             _.map(allSubgraphs, subGraph => {
@@ -232,13 +243,9 @@ module.exports = r => {
                     // eslint-disable-next-line consistent-return
                     subGraph.children = _.map(subGraph.children, workflowTask => {
                         // For each subgraph, go through all the tasks
-                        if (
-                            workflowTask.labels[0].type === localWorkflowTask ||
-                            workflowTask.labels[0].type === nopLocalWorkflowTask ||
-                            workflowTask.labels[0].retry > 0
-                        ) {
-                            // Remove all LocalWorkflowTasks and NOPWorkflowTasks from the subgraph
-                            // Connect its 'target' edges to it's parents' 'target' edges
+                        if (shouldHideTask(workflowTask)) {
+                            // For each hidden task, connect the 'target'
+                            // edges to it's parents' 'target' edges
                             // Remove the node when done
                             const sourceNodes = [];
                             const targetNodes = [];
