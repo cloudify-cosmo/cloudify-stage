@@ -1,6 +1,9 @@
+import { useCallback } from 'react';
+
 function useRefreshEvent(toolbox: Stage.Types.Toolbox, event: string) {
     const { useEventListener } = Stage.Hooks;
-    useEventListener(toolbox, event, toolbox.refresh);
+    const refresh = useCallback(toolbox.refresh, []);
+    useEventListener(toolbox, event, refresh);
 }
 
 declare global {
