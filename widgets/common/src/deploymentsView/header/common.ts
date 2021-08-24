@@ -5,8 +5,5 @@ export function getGroupIdForBatchAction() {
 }
 
 export function useFilterIdFromUrl() {
-    return ReactRedux.useSelector((state: Stage.Types.ReduxState): string | null => {
-        const searchParams = new URLSearchParams(state.router.location.search);
-        return searchParams.get(filterIdQueryParameterName);
-    });
+    return Stage.Hooks.useSearchParam(filterIdQueryParameterName);
 }
