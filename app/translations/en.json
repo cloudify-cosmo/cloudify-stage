@@ -729,7 +729,7 @@
                 },
                 "fullHeight": {
                     "name": "Full height",
-                    "description": "Should button use all height reserved for the widget"
+                    "description": "Should the button use full height reserved for the widget"
                 },
                 "icon": {
                     "name": "Icon",
