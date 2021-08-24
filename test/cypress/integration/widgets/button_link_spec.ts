@@ -1,12 +1,69 @@
 describe('Button link widget', () => {
-    const url = 'http://wp.pl';
-    const label = 'Button link label';
+    const widgetId = 'buttonLink';
+    before(() => cy.useWidgetWithDefaultConfiguration(widgetId));
 
-    before(() => cy.activate('valid_trial_license').usePageMock('buttonLink', { label, url }).mockLogin());
+    describe('should open configured link on click', () => {
+        function clickButtonLink() {
+            const label = 'Button Link';
+            return cy.contains(label).click();
+        }
 
-    it('should open configured link on click', () => {
-        cy.contains(label).click();
+        it('in new tab when link starts with "http" string', () => {
+            const url = 'http://wp.pl';
+            cy.editWidgetConfiguration(widgetId, () =>
+                cy.contains('.field', 'URL address').find('input').clear().type(url)
+            );
 
-        cy.window().its('open').should('be.calledWith', url);
+            clickButtonLink();
+
+            cy.window().its('open').should('be.calledWith', url);
+        });
+
+        it('in the same tab when link does not start with "http" string', () => {
+            const url = '?test=true';
+            cy.editWidgetConfiguration(widgetId, () =>
+                cy.contains('.field', 'URL address').find('input').clear().type(url)
+            );
+
+            clickButtonLink();
+
+            cy.location().its('search').should('be.equal', url);
+        });
+    });
+
+    describe('should allow configuring button', () => {
+        it('color', () => {
+            const color = 'violet';
+            cy.setSearchableDropdownConfigurationField(widgetId, 'Color', color);
+            cy.get('button').should('have.class', color);
+        });
+
+        it('label', () => {
+            const label = 'Setup cloud account';
+            cy.setStringConfigurationField(widgetId, 'Label', label);
+            cy.get('button').should('have.text', label);
+        });
+
+        it('icon', () => {
+            const icon = 'wizard';
+            cy.setSearchableDropdownConfigurationField(widgetId, 'Icon', icon);
+            cy.get('button i').should('have.class', icon);
+        });
+
+        it('basicness', () => {
+            const basicButtonToggleName = 'Basic button';
+            cy.setBooleanConfigurationField(widgetId, basicButtonToggleName, false);
+            cy.get('button').should('not.have.class', 'basic');
+            cy.setBooleanConfigurationField(widgetId, basicButtonToggleName, true);
+            cy.get('button').should('have.class', 'basic');
+        });
+
+        it('full height', () => {
+            const fullHeightToggleName = 'Full height';
+            cy.setBooleanConfigurationField(widgetId, fullHeightToggleName, false);
+            cy.get('button').should('not.have.attr', 'style');
+            cy.setBooleanConfigurationField(widgetId, fullHeightToggleName, true);
+            cy.get('button').should('have.attr', 'style').and('include', 'height: 100%');
+        });
     });
 });
