@@ -1,8 +1,9 @@
 import type { SemanticCOLORS, SemanticICONS } from 'semantic-ui-react';
 import type { CSSProperties } from 'react';
-import { FunctionComponent, useCallback } from 'react';
+import { FunctionComponent, useCallback, useMemo } from 'react';
 
-export interface LinkButtonProps {
+export interface ButtonLinkProps {
+    basic: boolean;
     color: SemanticCOLORS;
     icon: SemanticICONS;
     label: string;
@@ -10,7 +11,7 @@ export interface LinkButtonProps {
     fullHeight: boolean;
 }
 
-const LinkButton: FunctionComponent<LinkButtonProps> = ({ color, icon, label, url, fullHeight }) => {
+const ButtonLink: FunctionComponent<ButtonLinkProps> = ({ basic, color, icon, label, url, fullHeight }) => {
     const { Button } = Stage.Basic;
 
     const dispatch = ReactRedux.useDispatch();
@@ -18,13 +19,16 @@ const LinkButton: FunctionComponent<LinkButtonProps> = ({ color, icon, label, ur
         if (url.startsWith('http')) window.open(url, '_blank');
         else dispatch(ReactRouter.push(url));
     }, [url]);
-    const style: CSSProperties | undefined = fullHeight ? { height: 'calc(100% + 14px)' } : undefined;
+    const style: CSSProperties | undefined = useMemo(() => (fullHeight ? { height: 'calc(100% + 14px)' } : undefined), [
+        fullHeight
+    ]);
 
     return (
         <Button
-            disabled={!url}
+            basic={basic}
             color={color}
             content={label}
+            disabled={!url}
             icon={icon}
             fluid
             labelPosition={icon ? 'left' : undefined}
@@ -34,4 +38,4 @@ const LinkButton: FunctionComponent<LinkButtonProps> = ({ color, icon, label, ur
     );
 };
 
-export default LinkButton;
+export default ButtonLink;

@@ -718,29 +718,33 @@
             "name": "Button link",
             "description": "Opens provided URL",
             "configuration": {
+                "basic": {
+                    "name": "Basic button",
+                    "description": "A basic button is less pronounced"
+                },
                 "color": {
                     "name": "Color",
                     "description": "Color of the button",
                     "default": "green"
                 },
-                "label": {
-                    "name": "Label",
-                    "description": "Label displayed on the button",
-                    "default": "Button Link"
+                "fullHeight": {
+                    "name": "Full height",
+                    "description": "Should button use all height reserved for the widget"
                 },
                 "icon": {
                     "name": "Icon",
                     "description": "Icon displayed on the button",
                     "default": "external"
                 },
+                "label": {
+                    "name": "Label",
+                    "description": "Label displayed on the button",
+                    "default": "Button Link"
+                },
                 "url": {
                     "name": "URL address",
                     "description": "Page URL address to open on button click. If URL starts with 'http', then page will be opened in a new window/tab. In other case it will be opened in the same window.",
                     "default": ""
-                },
-                "fullHeight": {
-                    "name": "Full height",
-                    "description": "Should button use all height reserved for the widget"
                 }
         }
         },

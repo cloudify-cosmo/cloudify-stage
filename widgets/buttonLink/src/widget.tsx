@@ -1,13 +1,6 @@
-import type { SemanticCOLORS, SemanticICONS } from 'semantic-ui-react';
-import LinkButton from './LinkButton';
+import ButtonLink, { ButtonLinkProps } from './ButtonLink';
 
-interface ButtonLinkWidgetConfiguration {
-    color: SemanticCOLORS;
-    icon: SemanticICONS;
-    label: string;
-    url: string;
-    fullHeight: boolean;
-}
+type ButtonLinkWidgetConfiguration = ButtonLinkProps;
 
 const widgetId = 'buttonLink';
 const t = Stage.Utils.getT(`widgets.${widgetId}`);
@@ -47,6 +40,13 @@ Stage.defineWidget<unknown, unknown, ButtonLinkWidgetConfiguration>({
             type: Stage.Basic.GenericField.CUSTOM_TYPE
         },
         {
+            id: 'basic',
+            name: t('configuration.basic.name'),
+            description: t('configuration.basic.description'),
+            default: false,
+            type: Stage.Basic.GenericField.BOOLEAN_TYPE
+        },
+        {
             id: 'url',
             name: t('configuration.url.name'),
             description: t('configuration.url.description'),
@@ -66,8 +66,8 @@ Stage.defineWidget<unknown, unknown, ButtonLinkWidgetConfiguration>({
     permission: Stage.GenericConfig.WIDGET_PERMISSION(widgetId),
 
     render(widget) {
-        const { color, fullHeight, icon, label, url } = widget.configuration;
+        const { basic, color, fullHeight, icon, label, url } = widget.configuration;
 
-        return <LinkButton color={color} label={label} icon={icon} fullHeight={fullHeight} url={url} />;
+        return <ButtonLink basic={basic} color={color} label={label} icon={icon} fullHeight={fullHeight} url={url} />;
     }
 });
