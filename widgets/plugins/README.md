@@ -13,7 +13,7 @@ The widget displays the following information:
 * **Plugin Package version**
 * **Supported platform**
 * **Distribution the plugin is supported on**
-* **Distribute release**
+* **Distribution release**
 * **Uploaded at**
 * **Creator**
 
@@ -22,17 +22,23 @@ Upon hovering over ID label a pop up with the plugin’s ID will open, allowing 
 ![Plugins list]( /images/ui/widgets/plugins-list.png )
 
 
-### Uploading a Plugin
+### Uploading a Plugin package
 
 1. Click **Upload** above the Plugins table.
-2. Either enter the URL of the wagon or select the wagon file from your file repository.
-3. Either enter the URL of the plugin yaml file or select the plugin yaml file from your file repository.
-4. Provide a title for the plugin (should be automatically filled with package name upon providing YAML file).
-5. Optionally provide icon file for the plugin.
-6. Click **Upload**.
+2. Click **Upload a package**
+3. Either enter the URL of the wagon or select the wagon file from your file repository.
+4. Either enter the URL of the plugin yaml file or select the plugin yaml file from your file repository.
+5. Provide a title for the plugin (should be automatically filled with package name upon providing YAML file).
+6. Optionally provide icon file for the plugin.
+7. Click **Upload**.
 
 ![Upload Plugin modal]( /images/ui/widgets/plugins_upload-plugin.png )
 
+### Uploading a Plugin from the Marketplace
+
+1. Click **Upload** above the Plugins table.
+2. Click **Upload from Marketplace**
+3. Upload selected plugins using the displayed [Plugins Catalog widget](/working_with/console/widgets/pluginsCatalog)
 
 ### Downloading a Plugin
 
