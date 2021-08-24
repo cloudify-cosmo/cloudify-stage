@@ -49,6 +49,8 @@ export default function Grid({ children, isEditMode, onGridDataChange, style }: 
         );
     }
 
+    const width = getWidth();
+
     return (
         /**
          * NOTE: Use `useWidthObserver` instead of `react-grid-layout`'s `WidthProvider`
@@ -59,21 +61,23 @@ export default function Grid({ children, isEditMode, onGridDataChange, style }: 
          * `WidthProvider` only detects browser resize events.
          */
         <div ref={wrapperRef}>
-            <ReactGridLayout
-                className={['layout', isEditMode && 'isEditMode'].join(' ')}
-                breakpoints={{ lg: 1000, md: 800, sm: 640, xs: 320, xxs: 0 }}
-                cols={{ lg: 12, md: 10, sm: 8, xs: 6, xxs: 2 }}
-                rowHeight={10}
-                onLayoutChange={saveChangedItems}
-                isDraggable={isEditMode}
-                isResizable={isEditMode}
-                useCSSTransforms={false}
-                style={style}
-                width={getWidth()}
-            >
-                {/* NOTE: `map` handles non-array items fine */}
-                {_.map(children as ReactNode[], processGridItem)}
-            </ReactGridLayout>
+            {width && (
+                <ReactGridLayout
+                    className={['layout', isEditMode && 'isEditMode'].join(' ')}
+                    breakpoints={{ lg: 1000, md: 800, sm: 640, xs: 320, xxs: 0 }}
+                    cols={{ lg: 12, md: 10, sm: 8, xs: 6, xxs: 2 }}
+                    rowHeight={10}
+                    onLayoutChange={saveChangedItems}
+                    isDraggable={isEditMode}
+                    isResizable={isEditMode}
+                    useCSSTransforms={false}
+                    style={style}
+                    width={width}
+                >
+                    {/* NOTE: `map` handles non-array items fine */}
+                    {_.map(children as ReactNode[], processGridItem)}
+                </ReactGridLayout>
+            )}
         </div>
     );
 }

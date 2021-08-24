@@ -25,7 +25,7 @@ import { pick } from 'lodash';
 
 import * as ReactRedux from 'react-redux';
 import { createBrowserHistory } from 'history';
-import { ConnectedRouter, replace } from 'connected-react-router';
+import { ConnectedRouter, push, replace } from 'connected-react-router';
 import { Switch } from 'react-router-dom';
 
 import i18n from 'i18next';
@@ -76,7 +76,7 @@ export default class app {
         window.connectToStore = ReactRedux.connect;
         window.moment = moment;
         window.ReactRedux = pick(ReactRedux, ['useSelector', 'useDispatch']);
-        window.ReactRouter = { replace };
+        window.ReactRouter = { push, replace };
         window.ReactQuery = ReactQuery;
 
         log.setLevel(log.levels.WARN);
