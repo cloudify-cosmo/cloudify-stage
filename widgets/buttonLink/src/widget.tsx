@@ -14,8 +14,14 @@ Stage.defineWidget<unknown, unknown, ButtonLinkWidgetConfiguration>({
     showHeader: false,
     showBorder: false,
     categories: [Stage.GenericConfig.CATEGORY.BUTTONS_AND_FILTERS],
-
     initialConfiguration: [
+        {
+            id: 'url',
+            name: t('configuration.url.name'),
+            description: t('configuration.url.description'),
+            default: t('configuration.url.default'),
+            type: Stage.Basic.GenericField.STRING_TYPE
+        },
         {
             id: 'label',
             name: t('configuration.label.name'),
@@ -47,13 +53,6 @@ Stage.defineWidget<unknown, unknown, ButtonLinkWidgetConfiguration>({
             type: Stage.Basic.GenericField.BOOLEAN_TYPE
         },
         {
-            id: 'url',
-            name: t('configuration.url.name'),
-            description: t('configuration.url.description'),
-            default: t('configuration.url.default'),
-            type: Stage.Basic.GenericField.STRING_TYPE
-        },
-        {
             id: 'fullHeight',
             name: t('configuration.fullHeight.name'),
             description: t('configuration.fullHeight.description'),
@@ -61,7 +60,6 @@ Stage.defineWidget<unknown, unknown, ButtonLinkWidgetConfiguration>({
             type: Stage.Basic.GenericField.BOOLEAN_TYPE
         }
     ],
-    isReact: true,
     hasReadme: true,
     permission: Stage.GenericConfig.WIDGET_PERMISSION(widgetId),
 
