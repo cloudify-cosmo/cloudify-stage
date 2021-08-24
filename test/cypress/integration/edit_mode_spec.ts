@@ -108,15 +108,27 @@ describe('Edit mode', () => {
         cy.get('.modal .toggle:not(.checked)');
     });
 
-    it('should allow to add and remove pages', () => {
+    it('should allow to add, remove and switch pages', () => {
         cy.contains('Add Page').click();
 
         cy.log('Verify empty page was added');
-        cy.get('.pageMenuItem:last()').should('have.class', 'active').should('have.text', 'Page_0');
-        cy.contains('.pageTitle', 'Page_0');
-        cy.contains('This page is empty');
-        cy.contains("don't be shy, give it a meaning!");
-        cy.contains('Add Tabs');
+        cy.get('.pageMenuItem:last()').should('have.class', 'active').and('have.text', 'Page_0');
+        cy.get('.page').within(() => {
+            cy.contains('.pageTitle', 'Page_0');
+            cy.contains('This page is empty');
+            cy.contains("don't be shy, give it a meaning!");
+            cy.contains('Add Tabs');
+        });
+
+        cy.log('Verify page switching works');
+        cy.visitTestPage();
+        cy.contains('.pageMenuItem.active', 'Test Page');
+        cy.get('.page').within(() => {
+            cy.contains('.pageTitle', 'Test Page');
+            cy.get('.react-grid-item').should('have.length', 2);
+            cy.get('.react-grid-item.filterWidget').should('be.visible');
+            cy.get('.react-grid-item.blueprintsWidget').should('be.visible');
+        });
 
         cy.log('Remove added page');
         cy.get('.pageMenuItem:last() .remove').click({ force: true });
