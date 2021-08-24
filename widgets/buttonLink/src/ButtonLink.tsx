@@ -19,9 +19,7 @@ const ButtonLink: FunctionComponent<ButtonLinkProps> = ({ basic, color, icon, la
         if (url.startsWith('http')) window.open(url, '_blank');
         else dispatch(ReactRouter.push(url));
     }, [url]);
-    const style: CSSProperties | undefined = useMemo(() => (fullHeight ? { height: 'calc(100% + 14px)' } : undefined), [
-        fullHeight
-    ]);
+    const style: CSSProperties | undefined = useMemo(() => (fullHeight ? { height: '100%' } : undefined), [fullHeight]);
 
     return (
         <Button
