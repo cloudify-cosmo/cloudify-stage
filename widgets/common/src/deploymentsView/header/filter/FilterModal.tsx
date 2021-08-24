@@ -62,7 +62,7 @@ const FilterModal: FunctionComponent<FilterModalProps> = ({
 
     const [filterSaving, setFilterSaving, unsetFilterSaving] = useBoolean();
 
-    const filterIdFromUrl = useFilterIdFromUrl();
+    const [filterIdFromUrl] = useFilterIdFromUrl();
 
     // The values are 'saved' on modal submit and 'reverted' on modal cancel
     const filterId = useRevertableState<string | undefined>(filterIdFromUrl || undefined);
