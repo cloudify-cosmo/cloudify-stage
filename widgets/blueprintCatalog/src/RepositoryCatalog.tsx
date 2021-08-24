@@ -9,6 +9,7 @@ import RepositoryViewDefaultProps from './props/RepositoryViewDefaultProps';
 export default function RepositoryCatalog({
     data,
     fetchData,
+    uploadingInProgress = [],
     noDataMessage,
     onReadme,
     onSelect,
@@ -69,6 +70,8 @@ export default function RepositoryCatalog({
                             }}
                         />
                         <Button
+                            loading={uploadingInProgress.includes(item.name)}
+                            disabled={data.uploadedBlueprints.includes(item.name)}
                             icon="upload"
                             content="Upload"
                             className="uploadButton labeled icon"

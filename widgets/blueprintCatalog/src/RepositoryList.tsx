@@ -3,18 +3,24 @@
  * Created by pposel on 06/02/2017.
  */
 
+import isEmpty from 'lodash/isEmpty';
+
 import Consts from './consts';
 import RepositoryCatalog from './RepositoryCatalog';
 import RepositoryTable from './RepositoryTable';
-import UploadModal from './UploadModal';
 import DataPropType from './props/DataPropType';
 import ActionsPropType from './props/ActionsPropType';
+
+const t = Stage.Utils.getT('widgets.blueprintCatalog');
 
 export default class RepositoryList extends React.Component {
     constructor(props, context) {
         super(props, context);
 
         this.state = {
+            uploadingBlueprints: [],
+            successMessages: [],
+            errorMessage: null,
             showModal: false,
             showReadmeModal: false,
             readmeContent: '',
@@ -58,32 +64,31 @@ export default class RepositoryList extends React.Component {
         return toolbox.refresh(fetchParams);
     };
 
-    showModal = (repositoryName, zipUrl, imageUrl, defaultYamlFile = '') => {
-        const { actions, toolbox } = this.props;
-        toolbox.loading(true);
+    handleUpload = (repositoryName, zipUrl, imageUrl, defaultYamlFile = 'blueprint.yaml') => {
+        const { toolbox, widget } = this.props;
+        const { BlueprintActions } = Stage.Common;
+        const { uploadingBlueprints } = this.state;
+        this.setState({ uploadingBlueprints: [...uploadingBlueprints, repositoryName] });
 
-        actions
-            .doListYamlFiles(zipUrl)
-            .then(yamlFiles => {
-                this.setState({
-                    error: null,
-                    repositoryName,
-                    defaultYamlFile,
-                    yamlFiles,
-                    zipUrl,
-                    imageUrl,
-                    showModal: true
-                });
-                toolbox.loading(false);
+        new BlueprintActions(toolbox)
+            .doUpload(
+                repositoryName,
+                defaultYamlFile,
+                zipUrl,
+                null,
+                Stage.Utils.Url.url(imageUrl),
+                null,
+                Stage.Common.Consts.defaultVisibility
+            )
+            .then(() => {
+                toolbox.drillDown(widget, 'blueprint', { blueprintId: repositoryName }, repositoryName);
             })
             .catch(err => {
-                this.setState({ error: err.message });
-                toolbox.loading(false);
+                this.setState(prevState => ({
+                    errorMessages: [...(prevState.errorMessages ?? []), err.message],
+                    uploadingBlueprints: prevState.uploadingBlueprints.filter(item => item !== repositoryName)
+                }));
             });
-    };
-
-    hideModal = () => {
-        this.setState({ showModal: false });
     };
 
     showReadmeModal = (repositoryName, readmeUrl) => {
@@ -111,15 +116,12 @@ export default class RepositoryList extends React.Component {
     render() {
         const {
             error,
-            imageUrl,
             readmeContent,
             readmeLoading,
-            repositoryName,
-            showModal,
             showReadmeModal,
-            defaultYamlFile,
-            yamlFiles,
-            zipUrl
+            uploadingBlueprints,
+            successMessages,
+            errorMessages
         } = this.state;
         const { actions, data, toolbox, widget } = this.props;
         const NO_DATA_MESSAGE = "There are no Blueprints available in catalog. Check widget's configuration.";
@@ -142,29 +144,36 @@ export default class RepositoryList extends React.Component {
 
         return (
             <div>
+                {successMessages.map(message => (
+                    <Message
+                        key={message}
+                        success
+                        onDismiss={() =>
+                            this.setState(prevState => ({
+                                successMessages: without(prevState.successMessages, message)
+                            }))
+                        }
+                    >
+                        {message}
+                    </Message>
+                ))}
+                {!isEmpty(errorMessages) && (
+                    <ErrorMessage error={errorMessages} onDismiss={() => this.setState({ errorMessages: null })} />
+                )}
+
                 <ErrorMessage error={error} onDismiss={() => this.setState({ error: null })} autoHide />
 
                 {showNotAuthenticatedWarning && notAuthenticatedWarning}
                 <RepositoryView
                     widget={widget}
                     data={data}
+                    uploadingInProgress={uploadingBlueprints}
                     fetchData={this.fetchData}
                     onSelect={this.selectItem}
-                    onUpload={this.showModal}
+                    onUpload={this.handleUpload}
                     onReadme={this.showReadmeModal}
                     readmeLoading={readmeLoading}
                     noDataMessage={NO_DATA_MESSAGE}
-                />
-
-                <UploadModal
-                    open={showModal}
-                    repositoryName={repositoryName}
-                    yamlFiles={yamlFiles}
-                    defaultYamlFile={defaultYamlFile}
-                    zipUrl={zipUrl}
-                    imageUrl={imageUrl}
-                    onHide={this.hideModal}
-                    toolbox={toolbox}
                 />
 
                 <ReadmeModal

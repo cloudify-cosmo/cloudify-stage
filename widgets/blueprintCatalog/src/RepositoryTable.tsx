@@ -9,6 +9,7 @@ import RepositoryViewDefaultProps from './props/RepositoryViewDefaultProps';
 export default function RepositoryTable({
     data,
     fetchData,
+    uploadingInProgress = [],
     noDataMessage,
     onReadme,
     onSelect,
@@ -69,7 +70,8 @@ export default function RepositoryTable({
                                 }}
                             />
                             <Icon
-                                name="upload"
+                                name={uploadingInProgress.includes(item.name) ? 'spinner' : 'upload'}
+                                disabled={data.uploadedBlueprints.includes(item.name)}
                                 link
                                 title="Upload blueprint"
                                 bordered
