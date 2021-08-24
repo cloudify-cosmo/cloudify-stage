@@ -11,7 +11,7 @@
 import 'cypress-file-upload';
 import 'cypress-localstorage-commands';
 import 'cypress-get-table';
-import _, { isString } from 'lodash';
+import _, { isString, noop } from 'lodash';
 import type { GlobPattern, RouteHandler, RouteMatcherOptions } from 'cypress/types/net-stubbing';
 import { addCommands, GetCypressChainableFromCommands } from 'cloudify-ui-common/cypress/support';
 
@@ -75,11 +75,12 @@ const commands = {
         cy.log('Wait for widgets loaders to disappear');
         cy.get('div.loader:visible', { timeout: 10000 }).should('not.exist');
     },
-    waitUntilLoaded: () => {
-        cy.log('Wait for splash screen loader to disappear');
-        cy.get('#loader', { timeout: 20000 }).should('be.not.visible');
-        cy.waitUntilPageLoaded();
-    },
+    waitUntilLoaded: () =>
+        cy
+            .log('Wait for splash screen loader to disappear')
+            .get('#loader', { timeout: 20000 })
+            .should('be.not.visible')
+            .waitUntilPageLoaded(),
     uploadLicense: (license: License) =>
         cy.fixture(`license/${license}.yaml`).then(yaml =>
             cy.request({
@@ -180,10 +181,8 @@ const commands = {
         }
     },
     // TODO(RD-2314): object instead of multiple optional parameters
-    mockLogin: (username?: string, password?: string, disableGettingStarted?: boolean) => {
-        cy.mockLoginWithoutWaiting({ username, password, disableGettingStarted });
-        cy.waitUntilLoaded();
-    },
+    mockLogin: (username?: string, password?: string, disableGettingStarted?: boolean) =>
+        cy.mockLoginWithoutWaiting({ username, password, disableGettingStarted }).waitUntilLoaded(),
     mockLoginWithoutWaiting: ({
         username = 'admin',
         password = 'admin',
@@ -206,7 +205,7 @@ const commands = {
             );
             if (disableGettingStarted) mockGettingStarted(false);
         });
-        cy.visit('/console');
+        return cy.visit('/console');
     },
     visitPage: (name: string, id: string | null = null) => {
         cy.log(`Switching to '${name}' page`);
@@ -319,6 +318,14 @@ const commands = {
             }
         });
     },
+    useWidgetWithDefaultConfiguration: (widgetId: string, widgetConfigurationOverrides: any = {}) =>
+        cy
+            .usePageMock(widgetId, widgetConfigurationOverrides)
+            .mockLogin()
+            // TODO(RD-1820): Currently we don't supply widget's default configuration when rendering.
+            // In order to load default configuration for widget widget edit configuration modal should be opened
+            // and configuration saved without making any changes
+            .editWidgetConfiguration(widgetId, noop),
     refreshPage: (disableGettingStarted = true) => {
         mockGettingStarted(!disableGettingStarted);
         cy.get('.pageMenuItem.active').click({ force: true });
