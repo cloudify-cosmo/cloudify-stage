@@ -46,7 +46,25 @@ const commands = {
         });
 
         cy.exitEditMode();
-    }
+    },
+    setBooleanConfigurationField: (widgetId: string, fieldName: string, isSet: boolean) =>
+        cy.editWidgetConfiguration(widgetId, () => {
+            cy.contains('.field', fieldName)
+                .find('div.checkbox')
+                .as('toggle')
+                .then($div => {
+                    if ((isSet && !$div.hasClass('checked')) || (!isSet && $div.hasClass('checked')))
+                        cy.get('@toggle').click();
+                });
+        }),
+    setStringConfigurationField: (widgetId: string, fieldName: string, value: string) =>
+        cy.editWidgetConfiguration(widgetId, () => {
+            cy.contains('.field', fieldName).find('input').clear().type(value);
+        }),
+    setSearchableDropdownConfigurationField: (widgetId: string, fieldName: string, value: string) =>
+        cy.editWidgetConfiguration(widgetId, () => {
+            cy.setSearchableDropdownValue(fieldName, value);
+        })
 };
 
 addCommands(commands);
