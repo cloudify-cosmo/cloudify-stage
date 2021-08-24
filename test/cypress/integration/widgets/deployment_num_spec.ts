@@ -85,27 +85,32 @@ describe('Number of Deployments widget', () => {
     });
 
     describe('should allow configuring', () => {
-        function setConfigurationField(fieldName: string, value: string) {
+        function setStringConfigurationField(fieldName: string, value: string) {
             cy.editWidgetConfiguration(widgetId, () => {
                 cy.contains('.field', fieldName).find('input').clear().type(value);
+            });
+        }
+        function setIconConfigurationField(icon: string) {
+            cy.editWidgetConfiguration(widgetId, () => {
+                cy.setSearchableDropdownValue('Icon', icon);
             });
         }
 
         it('label', () => {
             const label = 'Kubernetes Clusters';
-            setConfigurationField('Label', label);
+            setStringConfigurationField('Label', label);
             cy.get('.statistic .label').should('have.text', label);
         });
 
         it('image using icon', () => {
             const icon = 'box';
-            setConfigurationField('Icon', icon);
+            setIconConfigurationField(icon);
             cy.get('.statistic .value i').should('have.class', icon);
         });
 
         it('image using URL', () => {
             const imageUrl = 'https://upload.wikimedia.org/wikipedia/commons/thumb/3/35/Tux.svg/1200px-Tux.svg.png';
-            setConfigurationField('Image URL', imageUrl);
+            setStringConfigurationField('Image URL', imageUrl);
             cy.get('.statistic .value img').should('have.attr', 'src', imageUrl);
         });
     });

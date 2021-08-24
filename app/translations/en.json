@@ -714,8 +714,9 @@
                 }
             }
         },
-        "executions": {
-            "noExecutionFound": "There are no executions that could be shown."
+        "cloudNum": {
+            "name": "Number of clouds",
+            "description": "Displays number of cloud environments fully configured"
         },
         "deploymentNum": {
             "name": "Number of deployments",
@@ -727,11 +728,7 @@
                 },
                 "icon": {
                     "name": "Icon",
-                    "description": {
-                        "text": "Name of the icon displayed on the left side of the deployments count. Available icons list can be found at:",
-                        "linkUrl": "https://react.semantic-ui.com/elements/icon",
-                        "linkTitle": "Icon - Semantic UI React"
-                  }
+                    "description": "Icon displayed on the left side of the deployments count"
                 },
                 "imageSrc": {
                     "name": "Image URL",
@@ -940,6 +937,9 @@
                 }
             }
         },
+        "executions": {
+            "noExecutionFound": "There are no executions that could be shown."
+        },
         "maintenanceModeButton": {
             "activating": "Maintenance Mode is being activated"
         },
@@ -982,6 +982,30 @@
             "download": "Download",
             "delete": "Delete",
             "deleteLabel": "plugin {{name}} v{{version}}"
+        },
+        "serviceButton": {
+            "name": "Service button",
+            "description": "Displays button allowing to create a new service",
+            "configuration": {
+                "basic": {
+                    "name": "Basic button",
+                    "description": "A basic button is less pronounced"
+                },
+                "color": {
+                    "name": "Color",
+                    "description": "Color of the button"
+                },
+                "label": {
+                    "name": "Label",
+                    "description": "Label displayed on the button",
+                    "default": "Create a service"
+                },
+                "icon": {
+                    "name": "Icon",
+                    "description": "Icon displayed on the button",
+                    "default": "add"
+                }
+            }
         },
         "userManagement": {
             "columns": {

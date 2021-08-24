@@ -11,7 +11,7 @@ interface WidgetData {
 }
 
 interface DeploymentNumWidgetConfiguration {
-    icon: string;
+    icon: SemanticICONS;
     imageSrc: string;
     label: string;
     page: string;
@@ -45,16 +45,10 @@ Stage.defineWidget<unknown, WidgetData, DeploymentNumWidgetConfiguration>({
         {
             id: 'icon',
             name: t('configuration.icon.name'),
-            description: (
-                <>
-                    {t('configuration.icon.description.text')}{' '}
-                    <a href={t('configuration.icon.description.linkUrl')}>
-                        {t('configuration.icon.description.linkTitle')}
-                    </a>
-                </>
-            ),
+            description: t('configuration.icon.description'),
             default: 'cube',
-            type: Stage.Basic.GenericField.STRING_TYPE
+            component: Stage.Common.SemanticIconDropdown,
+            type: Stage.Basic.GenericField.CUSTOM_TYPE
         },
         {
             id: 'imageSrc',
@@ -114,7 +108,7 @@ Stage.defineWidget<unknown, WidgetData, DeploymentNumWidgetConfiguration>({
 
         return (
             <Link to={to}>
-                <KeyIndicator title={label} icon={icon as SemanticICONS} imageSrc={imageSrc} number={num} />
+                <KeyIndicator title={label} icon={icon} imageSrc={imageSrc} number={num} />
             </Link>
         );
     }
