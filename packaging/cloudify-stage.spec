@@ -25,6 +25,7 @@ Cloudify Stage provides Graphical User Interface for managing and analyzing Clou
 
 %prep
 
+export LIBSASS_EXT="no"
 npm run beforebuild:no-tests
 
 
