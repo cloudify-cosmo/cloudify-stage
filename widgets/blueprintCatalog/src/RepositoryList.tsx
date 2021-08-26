@@ -3,7 +3,7 @@
  * Created by pposel on 06/02/2017.
  */
 
-import isEmpty from 'lodash/isEmpty';
+import { isEmpty } from 'lodash';
 
 import Consts from './consts';
 import RepositoryCatalog from './RepositoryCatalog';

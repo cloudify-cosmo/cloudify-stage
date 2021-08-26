@@ -32,6 +32,6 @@ describe('Blueprints catalog widget', () => {
         cy.interceptSp('GET', `/blueprints/${blueprintName}`, { state: 'uploaded' });
 
         cy.contains('.segment', blueprintName).contains('Upload').click();
-        cy.contains('.ui.success.message', `${blueprintName} successfully uploaded`);
+        cy.contains('.ui.label.section.active.pageTitle', blueprintName);
     });
 });
