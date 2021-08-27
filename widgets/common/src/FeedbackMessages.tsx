@@ -2,14 +2,14 @@ import { isEmpty, noop } from 'lodash';
 
 import type { FunctionComponent } from 'react';
 
-interface FeedbackProps {
+interface FeedbackMessagesProps {
     successMessages?: string[];
     onDismissSuccess?: (message: string) => void;
     errorMessages?: string[] | null;
     onDismissErrors?: () => void;
 }
 
-const Feedback: FunctionComponent<FeedbackProps> = ({
+const FeedbackMessages: FunctionComponent<FeedbackMessagesProps> = ({
     successMessages = [],
     onDismissSuccess = noop,
     errorMessages = null,
@@ -29,14 +29,14 @@ const Feedback: FunctionComponent<FeedbackProps> = ({
     );
 };
 
-export default Feedback;
+export default FeedbackMessages;
 declare global {
     namespace Stage.Common {
-        export { Feedback };
+        export { FeedbackMessages };
     }
 }
 
 Stage.defineCommon({
-    name: 'Feedback',
-    common: Feedback
+    name: 'FeedbackMessages',
+    common: FeedbackMessages
 });

@@ -10,7 +10,7 @@ export interface BlueprintCatalogWidgetConfiguration {
     sortAscending: boolean;
 }
 
-export interface BlueprintDescription {
+export interface Blueprint {
     id: string;
     name: string;
     description: string;
@@ -33,7 +33,7 @@ export interface BlueprintDescription {
 }
 
 export interface BlueprintCatalogPayload {
-    items: BlueprintDescription[];
+    items: Blueprint[];
     total: number;
     source: string;
     uploadedBlueprints: string[];
@@ -46,7 +46,7 @@ export interface RepositoryViewProps {
     uploadingInProgress?: string[];
     noDataMessage: string;
     onReadme: (name: string, url: string) => void;
-    onSelect: (item: BlueprintDescription) => void;
+    onSelect: (item: Blueprint) => void;
     onUpload: (name: string, zipUrl: string, imageUrl: string, mainBlueprint: string) => void;
     readmeLoading: string | null;
     widget: Stage.Types.Widget<BlueprintCatalogWidgetConfiguration>;

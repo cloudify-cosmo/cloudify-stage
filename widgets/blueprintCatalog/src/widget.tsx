@@ -2,7 +2,7 @@ import RepositoryList from './RepositoryList';
 import Actions from './actions';
 import Consts from './consts';
 
-import type { BlueprintCatalogPayload, BlueprintCatalogWidgetConfiguration, BlueprintDescription } from './types';
+import type { BlueprintCatalogPayload, BlueprintCatalogWidgetConfiguration, Blueprint } from './types';
 
 Stage.defineWidget<
     Record<string, string | number>,
@@ -87,14 +87,14 @@ Stage.defineWidget<
         );
         return Promise.all([actions.doGetRepos(params), toolbox.getManager().doGet('/blueprints?_include=id', {})])
             .then(([data, blueprintsRes]) => {
-                const uploadedBlueprints = blueprintsRes.items.map(({ id }: Partial<BlueprintDescription>) => id);
+                const uploadedBlueprints = blueprintsRes.items.map(({ id }: Partial<Blueprint>) => id);
                 const defaultImagePath = Stage.Utils.Url.widgetResourceUrl(
                     'blueprintCatalog',
                     Consts.DEFAULT_IMAGE,
                     false,
                     false
                 );
-                let repos: BlueprintDescription[] = data.items;
+                let repos: Blueprint[] = data.items;
                 const { source } = data.source;
                 const total = data.total_count;
                 if (data.source === Consts.GITHUB_DATA_SOURCE) {

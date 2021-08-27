@@ -4,7 +4,7 @@ import Consts from './consts';
 import RepositoryCatalog from './RepositoryCatalog';
 import RepositoryTable from './RepositoryTable';
 
-import type { BlueprintCatalogPayload, BlueprintCatalogWidgetConfiguration, BlueprintDescription } from './types';
+import type { BlueprintCatalogPayload, BlueprintCatalogWidgetConfiguration, Blueprint } from './types';
 import type Actions from './actions';
 
 import { RepositoryViewProps } from './types';
@@ -67,7 +67,7 @@ export default class RepositoryList extends React.Component<RepositoryListProps,
         toolbox.getEventBus().off('blueprintCatalog:refresh', this.refreshData);
     }
 
-    selectItem = (item: BlueprintDescription) => {
+    selectItem = (item: Blueprint) => {
         const { toolbox } = this.props;
         const selectedCatalogId = toolbox.getContext().getValue('blueprintCatalogId');
         toolbox.getContext().setValue('blueprintCatalogId', item.id === selectedCatalogId ? null : item.id);
@@ -144,7 +144,7 @@ export default class RepositoryList extends React.Component<RepositoryListProps,
         const { data, widget } = this.props;
         const NO_DATA_MESSAGE = "There are no Blueprints available in catalog. Check widget's configuration.";
         const { Message, Icon, ReadmeModal } = Stage.Basic;
-        const { Feedback } = Stage.Common;
+        const { FeedbackMessages } = Stage.Common;
 
         const notAuthenticatedWarning = (
             <Message>
@@ -163,7 +163,7 @@ export default class RepositoryList extends React.Component<RepositoryListProps,
 
         return (
             <div>
-                <Feedback
+                <FeedbackMessages
                     successMessages={successMessages}
                     onDismissSuccess={message =>
                         this.setState(prevState => ({

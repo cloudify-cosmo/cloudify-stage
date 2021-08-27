@@ -130,7 +130,7 @@ const PluginsCatalogList: FunctionComponent<PluginsCatalogListProps> = ({ toolbo
 
     const NO_DATA_MESSAGE = t('noData');
     const { Button, DataTable } = Stage.Basic;
-    const { PluginIcon, Feedback } = Stage.Common;
+    const { PluginIcon, FeedbackMessages } = Stage.Common;
 
     const distro = `${toolbox
         .getManager()
@@ -148,7 +148,7 @@ const PluginsCatalogList: FunctionComponent<PluginsCatalogListProps> = ({ toolbo
 
     return (
         <div>
-            <Feedback
+            <FeedbackMessages
                 successMessages={successMessages}
                 onDismissSuccess={message => setSuccessMessages(without(successMessages, message))}
                 errorMessages={errorMessages}
