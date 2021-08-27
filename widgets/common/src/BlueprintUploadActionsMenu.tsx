@@ -8,18 +8,27 @@ const menuItems: ComponentProps<typeof Stage.Basic.Menu.Item>[] = [
     { name: 'generateInComposer', key: 'generateInComposer', content: t('generateInComposer') }
 ];
 
+const getMenuItems = (includeComposerButton: boolean) => {
+    if (includeComposerButton) {
+        return menuItems;
+    }
+    return menuItems.filter(item => item.name !== 'generateInComposer');
+};
+
 type ActionName = typeof menuItems[number]['name'];
 
 interface BlueprintUploadActionsMenuProps {
     direction?: 'left' | 'right';
     marketplaceTabs?: MarketplaceTab[];
     toolbox: Stage.Types.Toolbox;
+    showGenerateInComposerButton?: boolean;
 }
 
 const BlueprintUploadActionsMenu: FunctionComponent<BlueprintUploadActionsMenuProps> = ({
     direction,
     toolbox,
-    marketplaceTabs = []
+    marketplaceTabs = [],
+    showGenerateInComposerButton = false
 }) => {
     const {
         Basic: { Dropdown }
@@ -62,7 +71,7 @@ const BlueprintUploadActionsMenu: FunctionComponent<BlueprintUploadActionsMenuPr
             <Dropdown button text={t('uploadButton')} direction={direction}>
                 {/* Display the menu above all leaflet components, see https://leafletjs.com/reference-1.7.1.html#map-pane */}
                 <Menu>
-                    {menuItems.map(item => (
+                    {getMenuItems(showGenerateInComposerButton).map(item => (
                         <Item text={item.content} key={item.key} onClick={() => handleMenuClick(item.name)} />
                     ))}
                 </Menu>
