@@ -1,7 +1,7 @@
 import type { ComponentProps, ComponentType, FunctionComponent } from 'react';
 import { useState } from 'react';
 import styled from 'styled-components';
-import { compact, find, isEmpty, map, without } from 'lodash';
+import { compact, find, map, without } from 'lodash';
 
 import Actions from './Actions';
 import type { PluginDescriptionWithVersion, PluginsCatalogWidgetConfiguration, PluginUploadData } from './types';
@@ -129,8 +129,8 @@ const PluginsCatalogList: FunctionComponent<PluginsCatalogListProps> = ({ toolbo
     }
 
     const NO_DATA_MESSAGE = t('noData');
-    const { Button, DataTable, Message, ErrorMessage } = Stage.Basic;
-    const { PluginIcon } = Stage.Common;
+    const { Button, DataTable } = Stage.Basic;
+    const { PluginIcon, Feedback } = Stage.Common;
 
     const distro = `${toolbox
         .getManager()
@@ -148,12 +148,12 @@ const PluginsCatalogList: FunctionComponent<PluginsCatalogListProps> = ({ toolbo
 
     return (
         <div>
-            {successMessages.map(message => (
-                <Message key={message} success onDismiss={() => setSuccessMessages(without(successMessages, message))}>
-                    {message}
-                </Message>
-            ))}
-            {!isEmpty(errorMessages) && <ErrorMessage error={errorMessages} onDismiss={() => setErrorMessages(null)} />}
+            <Feedback
+                successMessages={successMessages}
+                onDismissSuccess={message => setSuccessMessages(without(successMessages, message))}
+                errorMessages={errorMessages}
+                onDismissErrors={() => setErrorMessages(null)}
+            />
 
             <DataTable noDataAvailable={plugins.length === 0} selectable noDataMessage={NO_DATA_MESSAGE}>
                 <DataTable.Column width="2%" />

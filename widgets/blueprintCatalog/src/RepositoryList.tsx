@@ -1,4 +1,4 @@
-import { isEmpty, without } from 'lodash';
+import { without } from 'lodash';
 
 import Consts from './consts';
 import RepositoryCatalog from './RepositoryCatalog';
@@ -143,7 +143,8 @@ export default class RepositoryList extends React.Component<RepositoryListProps,
         } = this.state;
         const { data, widget } = this.props;
         const NO_DATA_MESSAGE = "There are no Blueprints available in catalog. Check widget's configuration.";
-        const { ErrorMessage, Message, Icon, ReadmeModal } = Stage.Basic;
+        const { Message, Icon, ReadmeModal } = Stage.Basic;
+        const { Feedback } = Stage.Common;
 
         const notAuthenticatedWarning = (
             <Message>
@@ -162,23 +163,16 @@ export default class RepositoryList extends React.Component<RepositoryListProps,
 
         return (
             <div>
-                {successMessages.map(message => (
-                    <Message
-                        key={message}
-                        success
-                        onDismiss={() =>
-                            this.setState(prevState => ({
-                                successMessages: without(prevState.successMessages, message)
-                            }))
-                        }
-                    >
-                        {message}
-                    </Message>
-                ))}
-                {!isEmpty(errorMessages) && (
-                    <ErrorMessage error={errorMessages} onDismiss={() => this.setState({ errorMessages: null })} />
-                )}
-
+                <Feedback
+                    successMessages={successMessages}
+                    onDismissSuccess={message =>
+                        this.setState(prevState => ({
+                            successMessages: without(prevState.successMessages, message)
+                        }))
+                    }
+                    errorMessages={errorMessages}
+                    onDismissErrors={() => this.setState({ errorMessages: null })}
+                />
                 {showNotAuthenticatedWarning && notAuthenticatedWarning}
                 <RepositoryView
                     widget={widget}
