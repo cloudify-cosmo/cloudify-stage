@@ -1,27 +1,42 @@
-// @ts-nocheck File not migrated fully to TS
-/**
- * Created by pposel on 06/02/2017.
- */
-
-import { isEmpty } from 'lodash';
+import { isEmpty, without } from 'lodash';
 
 import Consts from './consts';
 import RepositoryCatalog from './RepositoryCatalog';
 import RepositoryTable from './RepositoryTable';
-import DataPropType from './props/DataPropType';
-import ActionsPropType from './props/ActionsPropType';
 
-const t = Stage.Utils.getT('widgets.blueprintCatalog');
+import type { BlueprintCatalogPayload, BlueprintCatalogWidgetConfiguration, BlueprintDescription } from './types';
+import type Actions from './actions';
 
-export default class RepositoryList extends React.Component {
-    constructor(props, context) {
-        super(props, context);
+import { RepositoryViewProps } from './types';
+
+interface RepositoryListProps {
+    data: BlueprintCatalogPayload;
+    widget: Stage.Types.Widget<BlueprintCatalogWidgetConfiguration>;
+    toolbox: Stage.Types.Toolbox;
+    actions: Actions;
+}
+interface RepositoryListState {
+    uploadingBlueprints: string[];
+    successMessages: string[];
+    errorMessages: string[] | null;
+    showReadmeModal: boolean;
+    readmeContent: string;
+    readmeLoading: string | null;
+    repositoryName: string;
+    yamlFiles: string[];
+    defaultYamlFile: string;
+    zipUrl: string;
+    imageUrl: string;
+}
+
+export default class RepositoryList extends React.Component<RepositoryListProps, RepositoryListState> {
+    constructor(props: RepositoryListProps) {
+        super(props);
 
         this.state = {
             uploadingBlueprints: [],
             successMessages: [],
-            errorMessage: null,
-            showModal: false,
+            errorMessages: null,
             showReadmeModal: false,
             readmeContent: '',
             readmeLoading: null,
@@ -29,8 +44,7 @@ export default class RepositoryList extends React.Component {
             yamlFiles: [],
             defaultYamlFile: '',
             zipUrl: '',
-            imageUrl: '',
-            error: null
+            imageUrl: ''
         };
     }
 
@@ -39,7 +53,7 @@ export default class RepositoryList extends React.Component {
         toolbox.getEventBus().on('blueprintCatalog:refresh', this.refreshData, this);
     }
 
-    shouldComponentUpdate(nextProps, nextState) {
+    shouldComponentUpdate(nextProps: RepositoryListProps, nextState: RepositoryListState) {
         const { data, widget } = this.props;
         return (
             !_.isEqual(widget, nextProps.widget) ||
@@ -53,18 +67,23 @@ export default class RepositoryList extends React.Component {
         toolbox.getEventBus().off('blueprintCatalog:refresh', this.refreshData);
     }
 
-    selectItem = item => {
+    selectItem = (item: BlueprintDescription) => {
         const { toolbox } = this.props;
         const selectedCatalogId = toolbox.getContext().getValue('blueprintCatalogId');
         toolbox.getContext().setValue('blueprintCatalogId', item.id === selectedCatalogId ? null : item.id);
     };
 
-    fetchData = fetchParams => {
+    fetchData: RepositoryViewProps['fetchData'] = fetchParams => {
         const { toolbox } = this.props;
         return toolbox.refresh(fetchParams);
     };
 
-    handleUpload = (repositoryName, zipUrl, imageUrl, defaultYamlFile = 'blueprint.yaml') => {
+    handleUpload: RepositoryViewProps['onUpload'] = (
+        repositoryName,
+        zipUrl,
+        imageUrl,
+        defaultYamlFile = 'blueprint.yaml'
+    ) => {
         const { toolbox, widget } = this.props;
         const { BlueprintActions } = Stage.Common;
         const { uploadingBlueprints } = this.state;
@@ -91,7 +110,7 @@ export default class RepositoryList extends React.Component {
             });
     };
 
-    showReadmeModal = (repositoryName, readmeUrl) => {
+    showReadmeModal: RepositoryViewProps['onReadme'] = (repositoryName, readmeUrl) => {
         const { actions } = this.props;
 
         this.setState({ readmeLoading: repositoryName });
@@ -115,15 +134,14 @@ export default class RepositoryList extends React.Component {
 
     render() {
         const {
-            error,
+            errorMessages,
             readmeContent,
             readmeLoading,
             showReadmeModal,
             uploadingBlueprints,
-            successMessages,
-            errorMessages
+            successMessages
         } = this.state;
-        const { actions, data, toolbox, widget } = this.props;
+        const { data, widget } = this.props;
         const NO_DATA_MESSAGE = "There are no Blueprints available in catalog. Check widget's configuration.";
         const { ErrorMessage, Message, Icon, ReadmeModal } = Stage.Basic;
 
@@ -161,8 +179,6 @@ export default class RepositoryList extends React.Component {
                     <ErrorMessage error={errorMessages} onDismiss={() => this.setState({ errorMessages: null })} />
                 )}
 
-                <ErrorMessage error={error} onDismiss={() => this.setState({ error: null })} autoHide />
-
                 {showNotAuthenticatedWarning && notAuthenticatedWarning}
                 <RepositoryView
                     widget={widget}
@@ -176,21 +192,8 @@ export default class RepositoryList extends React.Component {
                     noDataMessage={NO_DATA_MESSAGE}
                 />
 
-                <ReadmeModal
-                    open={showReadmeModal}
-                    content={readmeContent}
-                    onHide={this.hideReadmeModal}
-                    toolbox={toolbox}
-                    actions={actions}
-                />
+                <ReadmeModal open={showReadmeModal} content={readmeContent} onHide={this.hideReadmeModal} />
             </div>
         );
     }
 }
-
-RepositoryList.propTypes = {
-    actions: ActionsPropType.isRequired,
-    data: DataPropType.isRequired,
-    toolbox: Stage.PropTypes.Toolbox.isRequired,
-    widget: Stage.PropTypes.Widget.isRequired
-};

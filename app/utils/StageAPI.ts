@@ -115,6 +115,8 @@ interface CommonWidgetDefinition<Params, Data, Configuration> {
     description?: string;
     /** @see https://docs.cloudify.co/developer/writing_widgets/widget-definition/#fetchurl */
     fetchUrl?: string | Record<string, string>;
+    // eslint-disable-next-line camelcase
+    mapGridParams?: (params: Stage.Types.GridParams) => { page?: number; per_page?: number };
     /** @see https://docs.cloudify.co/developer/writing_widgets/widget-definition/#fetchparams-widget-toolbox */
     fetchParams?: (widget: StageWidget<Configuration>, toolbox: StageToolbox) => Params;
     hasReadme: boolean;

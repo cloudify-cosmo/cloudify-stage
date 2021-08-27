@@ -1,13 +1,15 @@
-// @ts-nocheck File not migrated fully to TS
-/**
- * Created by pposel on 06/02/2017.
- */
-
 import RepositoryList from './RepositoryList';
 import Actions from './actions';
 import Consts from './consts';
 
-Stage.defineWidget({
+import type { BlueprintCatalogPayload, BlueprintCatalogWidgetConfiguration, BlueprintDescription } from './types';
+
+Stage.defineWidget<
+    Record<string, string | number>,
+    BlueprintCatalogPayload | Error,
+    BlueprintCatalogWidgetConfiguration
+>({
+    hasTemplate: false,
     id: 'blueprintCatalog',
     name: 'Blueprints Catalog',
     description: 'Shows blueprints catalog',
@@ -85,15 +87,15 @@ Stage.defineWidget({
         );
         return Promise.all([actions.doGetRepos(params), toolbox.getManager().doGet('/blueprints?_include=id', {})])
             .then(([data, blueprintsRes]) => {
-                const uploadedBlueprints = blueprintsRes.items.map(({ id }) => id);
+                const uploadedBlueprints = blueprintsRes.items.map(({ id }: Partial<BlueprintDescription>) => id);
                 const defaultImagePath = Stage.Utils.Url.widgetResourceUrl(
                     'blueprintCatalog',
                     Consts.DEFAULT_IMAGE,
                     false,
                     false
                 );
-                let repos = data.items;
-                const { source } = data;
+                let repos: BlueprintDescription[] = data.items;
+                const { source } = data.source;
                 const total = data.total_count;
                 if (data.source === Consts.GITHUB_DATA_SOURCE) {
                     const isAuthenticated = data.isAuth;
@@ -105,7 +107,7 @@ Stage.defineWidget({
                     );
 
                     return Promise.all(fetches).then(items =>
-                        Promise.resolve({ items, total, source, isAuthenticated })
+                        Promise.resolve({ items, total, source, isAuthenticated, uploadedBlueprints })
                     );
                 }
                 repos = _.map(repos, repo =>
@@ -123,7 +125,7 @@ Stage.defineWidget({
             .catch(e => (e instanceof Error ? e : Error(e)));
     },
 
-    render(widget, data, error, toolbox) {
+    render(widget, data, _error, toolbox) {
         const { Common, Basic } = Stage;
 
         if (data instanceof Error) {
@@ -137,7 +139,7 @@ Stage.defineWidget({
         const selectedCatalogId = toolbox.getContext().getValue('blueprintCatalogId');
         const formattedData = {
             ...data,
-            items: _.map(data.items, item => {
+            items: data?.items.map(item => {
                 return {
                     ...item,
                     id: item.id,
@@ -160,7 +162,14 @@ Stage.defineWidget({
             })
         };
 
-        const actions = new Actions(toolbox, widget.configuration.username, widget.configuration.password);
-        return <RepositoryList widget={widget} data={formattedData} toolbox={toolbox} actions={actions} />;
+        const actions = new Actions(toolbox, widget.configuration.username, widget.configuration.password, undefined);
+        return (
+            <RepositoryList
+                widget={widget}
+                data={formattedData as BlueprintCatalogPayload}
+                toolbox={toolbox}
+                actions={actions}
+            />
+        );
     }
 });
