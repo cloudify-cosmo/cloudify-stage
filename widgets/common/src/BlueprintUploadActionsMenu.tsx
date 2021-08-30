@@ -4,15 +4,17 @@ import type { MarketplaceTab } from './blueprintMarketplace/types';
 const t = Stage.Utils.getT('widgets.common.blueprintUpload.actionsMenu');
 const menuItems: ComponentProps<typeof Stage.Basic.Menu.Item>[] = [
     { name: 'uploadFromMarketplace', key: 'uploadFromMarketplace', content: t('uploadFromMarketplace') },
-    { name: 'uploadFromPackage', key: 'uploadFromPackage', content: t('uploadFromPackage') },
-    { name: 'generateInComposer', key: 'generateInComposer', content: t('generateInComposer') }
+    { name: 'uploadFromPackage', key: 'uploadFromPackage', content: t('uploadFromPackage') }
 ];
 
 const getMenuItems = (includeComposerButton: boolean) => {
     if (includeComposerButton) {
-        return menuItems;
+        return [
+            ...menuItems,
+            { name: 'generateInComposer', key: 'generateInComposer', content: t('generateInComposer') }
+        ];
     }
-    return menuItems.filter(item => item.name !== 'generateInComposer');
+    return menuItems;
 };
 
 type ActionName = typeof menuItems[number]['name'];

@@ -690,7 +690,7 @@
                     }
                 },
                 "hideFailedBlueprints": "Hide failed blueprints",
-                "showComposerOptions": "Show the Composer options",
+                "showComposerOptions": "Show Composer options",
                 "marketplaceTabs": {
                     "name": "Marketplace tabs",
                     "columns": {
