@@ -21,7 +21,7 @@ describe('Blueprints widget', () => {
         displayStyle: 'table',
         clickToDrillDown: true,
         pollingTime: 5,
-        showEditCopyInComposerButton: true,
+        showComposerOptions: true,
         marketplaceTabs
     };
 
