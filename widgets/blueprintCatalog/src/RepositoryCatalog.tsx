@@ -1,21 +1,20 @@
-// @ts-nocheck File not migrated fully to TS
-/**
- * Created by pposel on 06/02/2017.
- */
-import Consts from './consts';
-import RepositoryViewPropTypes from './props/RepositoryViewPropTypes';
-import RepositoryViewDefaultProps from './props/RepositoryViewDefaultProps';
+import { noop } from 'lodash';
+import type { FunctionComponent } from 'react';
 
-export default function RepositoryCatalog({
+import Consts from './consts';
+import type { RepositoryViewProps } from './types';
+
+const RepositoryCatalog: FunctionComponent<RepositoryViewProps> = ({
+    fetchData = noop,
+    onSelect = noop,
+    onUpload = noop,
+    readmeLoading = null,
+    uploadingInProgress = [],
     data,
-    fetchData,
     noDataMessage,
     onReadme,
-    onSelect,
-    onUpload,
-    readmeLoading,
     widget
-}) {
+}) => {
     const { DataSegment, Grid, Image, Button, Header } = Stage.Basic;
 
     const catalogItems = data.items.map(item => {
@@ -69,6 +68,8 @@ export default function RepositoryCatalog({
                             }}
                         />
                         <Button
+                            loading={uploadingInProgress.includes(item.name)}
+                            disabled={data.uploadedBlueprints.includes(item.name)}
                             icon="upload"
                             content="Upload"
                             className="uploadButton labeled icon"
@@ -84,7 +85,7 @@ export default function RepositoryCatalog({
     });
 
     const catalogRows = [];
-    let row = [];
+    let row: typeof catalogItems = [];
     _.each(catalogItems, (catalogItem, index) => {
         row.push(catalogItem);
         if ((index + 1) % 3 === 0) {
@@ -121,7 +122,6 @@ export default function RepositoryCatalog({
             </DataSegment>
         </div>
     );
-}
+};
 
-RepositoryCatalog.propTypes = RepositoryViewPropTypes;
-RepositoryCatalog.defaultProps = RepositoryViewDefaultProps;
+export default RepositoryCatalog;
