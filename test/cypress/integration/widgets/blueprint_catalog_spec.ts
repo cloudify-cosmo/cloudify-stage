@@ -24,9 +24,6 @@ describe('Blueprints catalog widget', () => {
         cy.contains('.segment', blueprintName).contains('Upload').click();
 
         cy.contains('.header', 'Error Occured');
-        cy.contains(
-            "Invalid blueprint - Plugin cloudify-aws-plugin (query: {'package_name': 'cloudify-aws-plugin'}) not found"
-        );
         cy.contains('li', error);
     });
 
