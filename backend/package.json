@@ -22,7 +22,7 @@
     "postinstall": "patch-package",
     "start": "ts-node server.ts ${STAGE_BACKEND_ARGS}",
     "test": "jest",
-    "wait-on-server": "wait-on tcp:localhost:8088 --timeout 5000 && echo 'Stage backend is up!'"
+    "wait-on-server": "wait-on tcp:localhost:8088 --timeout 10000 && echo 'Stage backend is up!'"
   },
   "nodemonConfig": {
     "delay": 2000
