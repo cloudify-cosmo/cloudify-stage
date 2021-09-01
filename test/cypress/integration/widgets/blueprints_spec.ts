@@ -424,7 +424,7 @@ describe('Blueprints widget', () => {
             cy.reload();
         });
 
-        it('after click menu item', () => {
+        it('on "Generate in the Composer" menu item click', () => {
             cy.contains('Upload').click();
             cy.contains('Generate in the Composer').click();
 
@@ -437,13 +437,7 @@ describe('Blueprints widget', () => {
             cy.contains('Upload').click();
             cy.contains('Generate in the Composer').should('be.visible');
 
-            cy.editWidgetConfiguration('blueprints', () => {
-                cy.contains('.field', 'Show Composer options')
-                    .find('input')
-                    // NOTE: force, as the checkbox from Semantic UI is
-                    // class=hidden which prevents Cypress from clicking it
-                    .click({ force: true });
-            });
+            cy.setBooleanConfigurationField('blueprints', 'Show Composer options', true);
 
             cy.contains('Upload').click();
             cy.contains('Generate in the Composer').should('not.exist');
