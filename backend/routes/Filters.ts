@@ -1,23 +1,15 @@
-// @ts-nocheck File not migrated fully to TS
-
 import express from 'express';
 import passport from 'passport';
-
-import { callService } from '../handler/BackendHandler';
-
-import { getLogger } from '../handler/LoggerHandler';
-
-const logger = getLogger('WidgetBackend');
+import { getFilterUsage } from '../handler/FilterHandler';
 
 const router = express.Router();
 
 router.use(passport.authenticate('token', { session: false }));
 
-router.use('/:service', (req, res, next) => {
-    logger.debug(
-        `${req.method} request on service '${req.params.service}' called with parameters: ${JSON.stringify(req.query)}`
-    );
-    return callService(req.params.service, req.method, req, res, next).catch(next);
+router.get('/usage/:filterId', (req, res, next) => {
+    getFilterUsage(req.params.filterId)
+        .then(result => res.send(result))
+        .catch(next);
 });
 
 export default router;
