@@ -6,13 +6,12 @@ const webpack = require('webpack');
 const WebpackDevServer = require('webpack-dev-server');
 
 const webpackConfig = require('./webpack.config')({}, { mode: 'development' });
-const Consts = require('./backend/consts');
 const startWidgetBackendWatcher = require('./scripts/widgetBackendWatcher');
 
 const host = 'localhost';
 const devServerPort = 4000;
 const stageBackendPort = 8088;
-const contextPath = Consts.CONTEXT_PATH;
+const contextPath = '/console';
 
 const proxyOptions = {
     target: `http://${host}:${stageBackendPort}`,
