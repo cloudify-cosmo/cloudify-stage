@@ -5,77 +5,107 @@
       "type": "widgets",
       "content": [
         {
-          "name": "Number of blueprints",
+          "name": "Number of clouds",
           "width": 2,
           "height": 8,
-          "definition": "blueprintNum",
+          "definition": "cloudNum",
           "x": 0,
-          "y": 0,
-          "configuration":{
-            "page": "blueprints"
-          }
+          "y": 0
         },
         {
-          "name": "Number of deployments",
+          "name": "Number of services",
           "width": 2,
           "height": 8,
           "definition": "deploymentNum",
           "x": 2,
           "y": 0,
           "configuration":{
-            "page": "services"
+            "label": "Services",
+            "page": "services",
+            "filterId": "csys-service-filter"
           }
         },
         {
-          "name": "Number of plugins",
+          "name": "Number of k8s clusters",
           "width": 2,
           "height": 8,
-          "definition": "pluginsNum",
+          "definition": "deploymentNum",
           "x": 4,
           "y": 0,
           "configuration":{
-            "page": "resources"
+            "icon": "",
+            "imageSrc": "/console/static/images/k8s_logo.png",
+            "label": "Kubernetes clusters",
+            "page": "services",
+            "filterId": ""
           }
         },
         {
-          "name": "Number of compute nodes",
-          "width": 2,
-          "height": 8,
-          "definition": "nodesComputeNum",
-          "x": 6,
-          "y": 0
-        },
-        {
-          "name": "Number of running executions",
-          "width": 2,
-          "height": 8,
-          "definition": "executionNum",
-          "x": 8,
-          "y": 0
-        },
-        {
-          "name": "Blueprint Upload Button",
+          "name": "Setup cloud account",
           "width": 2,
           "height": 3,
-          "definition": "blueprintUploadButton",
+          "definition": "buttonLink",
           "x": 0,
-          "y": 8
+          "y": 8,
+          "configuration": {
+            "basic": true,
+            "color": "blue",
+            "icon": "wizard",
+            "label": "Setup cloud account",
+            "url": "?gettingStarted=true",
+            "fullHeight": false
+          }
         },
         {
-          "name": "Deployment Button",
+          "name": "Create a service button",
           "width": 2,
           "height": 3,
-          "definition": "deploymentButton",
+          "definition": "serviceButton",
           "x": 2,
-          "y": 8
+          "y": 8,
+          "configuration": {
+            "basic": true,
+            "color": "blue",
+            "icon": "add",
+            "label": "Create a service",
+            "marketplaceTabs": [{
+              "name": "Services",
+              "url": "TODO"
+            }]
+          }
         },
         {
-          "name": "Plugin Upload Button",
+          "name": "Create k8s services button",
           "width": 2,
           "height": 3,
-          "definition": "pluginUploadButton",
+          "definition": "serviceButton",
           "x": 4,
-          "y": 8
+          "y": 8,
+          "configuration": {
+            "basic": true,
+            "color": "blue",
+            "icon": "add",
+            "label": "Create Kubernetes cluser",
+            "marketplaceTabs": [{
+              "name": "Clusters",
+              "url": "TODO"
+            }]
+          }
+        },
+        {
+          "name": "Getting Started Walkthrough",
+          "width": 2,
+          "height": 10,
+          "definition": "buttonLink",
+          "x": 10,
+          "y": 0,
+          "configuration": {
+            "basic": true,
+            "color": "blue",
+            "label": "Getting Started Walkthrough",
+            "url": "https://docs.cloudify.co/latest/trial_getting_started/examples/",
+            "fullHeight": true
+          }
         },
         {
           "name": "Filter",
@@ -114,19 +144,6 @@
           "definition": "executionsStatus",
           "x": 8,
           "y": 38
-        },
-        {
-          "name": "Button link",
-          "width": 2,
-          "height": 8,
-          "configuration": {
-            "label": "Getting Started Walkthrough",
-            "url": "https://docs.cloudify.co/latest/trial_getting_started/examples/",
-            "fullHeight": true
-          },
-          "definition": "buttonLink",
-          "x": 10,
-          "y": 0
         }
       ]
     }
