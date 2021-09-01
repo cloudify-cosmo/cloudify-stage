@@ -30,6 +30,7 @@ let me = null;
 
 export function loadMeJson() {
     try {
+        // eslint-disable-next-line import/no-unresolved
         me = require('../conf/me.json');
     } catch (err) {
         if (err.code !== 'MODULE_NOT_FOUND') {
