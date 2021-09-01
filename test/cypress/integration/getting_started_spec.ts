@@ -131,6 +131,16 @@ describe('Getting started modal', () => {
         cy.wait('@disableRequest').its('request.body.show_getting_started').should('be.false');
     });
 
+    it('should open when gettingStarted query parameter is present', () => {
+        cy.mockLogin();
+
+        cy.get('.modal').should('not.exist');
+        cy.location('pathname').then(pathname => cy.visit(`${pathname}?gettingStarted=true`));
+
+        cy.get('.modal').should('be.visible');
+        cy.contains('.header', 'Getting Started');
+    });
+
     it('should install selected technology', () => {
         mockPluginsCatalog(pluginsCatalog);
         cy.deletePlugins().deleteSecrets('aws_').deleteBlueprints('AWS-', true);

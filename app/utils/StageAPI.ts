@@ -115,6 +115,7 @@ interface CommonWidgetDefinition<Params, Data, Configuration> {
     description?: string;
     /** @see https://docs.cloudify.co/developer/writing_widgets/widget-definition/#fetchurl */
     fetchUrl?: string | Record<string, string>;
+    mapGridParams?: (params: Stage.Types.GridParams) => Record<string, any>;
     /** @see https://docs.cloudify.co/developer/writing_widgets/widget-definition/#fetchparams-widget-toolbox */
     fetchParams?: (widget: StageWidget<Configuration>, toolbox: StageToolbox) => Params;
     hasReadme: boolean;
