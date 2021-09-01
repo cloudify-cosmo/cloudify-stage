@@ -18,16 +18,20 @@ const useModalOpenState = () => {
     const manager = useManager();
     const { response } = useFetch<UserResponse>(manager, `/users/${manager.getCurrentUsername()}`);
     const [modalOpen, setModalOpen] = useState(false);
-    const [gettingStartedParameter, setGettingStartedParameter, deleteGettingStartedParameter] = useSearchParam(
-        gettingStartedParameterName
-    );
+    const [gettingStartedParameter, , deleteGettingStartedParameter] = useSearchParam(gettingStartedParameterName);
 
     useEffect(() => {
-        if (response?.show_getting_started || gettingStartedParameter === gettingStartedParameterValue) {
+        if (response?.show_getting_started) {
             setModalOpen(true);
-            if (!gettingStartedParameter) setGettingStartedParameter(gettingStartedParameterValue);
         }
-    }, [response, gettingStartedParameter]);
+    }, [response]);
+
+    useEffect(() => {
+        if (gettingStartedParameter === gettingStartedParameterValue) {
+            setModalOpen(true);
+        }
+    }, [gettingStartedParameter]);
+
     const closeModal = async (disabled: boolean) => {
         try {
             if (disabled) {
