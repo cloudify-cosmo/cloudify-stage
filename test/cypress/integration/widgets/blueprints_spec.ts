@@ -65,7 +65,6 @@ describe('Blueprints widget', () => {
                     // class=hidden which prevents Cypress from clicking it
                     .click({ force: true });
             });
-
             getBlueprintRow(emptyBlueprintName).find(editCopyInComposerButtonSelector).should('not.exist');
         });
 
@@ -420,7 +419,36 @@ describe('Blueprints widget', () => {
         });
     });
 
+    describe('should open Composer', () => {
+        before(() => {
+            cy.reload();
+        });
+
+        it('after click menu item', () => {
+            cy.contains('Upload').click();
+            cy.contains('Generate in the Composer').click();
+
+            cy.window().its('open').should('be.calledWith', '/composer/');
+        });
+    });
+
     describe('configuration', () => {
+        it('should allow to hide composer menu item', () => {
+            cy.contains('Upload').click();
+            cy.contains('Generate in the Composer').should('be.visible');
+
+            cy.editWidgetConfiguration('blueprints', () => {
+                cy.contains('.field', 'Show Composer options')
+                    .find('input')
+                    // NOTE: force, as the checkbox from Semantic UI is
+                    // class=hidden which prevents Cypress from clicking it
+                    .click({ force: true });
+            });
+
+            cy.contains('Upload').click();
+            cy.contains('Generate in the Composer').should('not.exist');
+        });
+
         it('should allow to add new marketplace tab', () => {
             const testTabMarketplaceName = 'Blueprints from Dagobah';
 
