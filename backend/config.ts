@@ -45,12 +45,11 @@ export function getConfig(mode) {
     const config = {
         app: _.merge(app, root, logging, { db: { options: dbOptions } }, userConfig),
         manager,
-        mode
+        mode,
+        managerUrl: `${manager.protocol}://${manager.ip}:${manager.port}`
     };
 
     _.merge(config, me);
-
-    config.managerUrl = `${manager.protocol}://${manager.ip}:${manager.port}`;
 
     return config;
 }
