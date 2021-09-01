@@ -1,21 +1,20 @@
-// @ts-nocheck File not migrated fully to TS
-/**
- * Created by pposel on 08/02/2017.
- */
-import Consts from './consts';
-import RepositoryViewPropTypes from './props/RepositoryViewPropTypes';
-import RepositoryViewDefaultProps from './props/RepositoryViewDefaultProps';
+import { noop } from 'lodash';
+import type { FunctionComponent } from 'react';
 
-export default function RepositoryTable({
+import Consts from './consts';
+import type { RepositoryViewProps } from './types';
+
+const RepositoryTable: FunctionComponent<RepositoryViewProps> = ({
+    fetchData = noop,
+    onSelect = noop,
+    onUpload = noop,
+    readmeLoading = null,
+    uploadingInProgress = [],
     data,
-    fetchData,
     noDataMessage,
     onReadme,
-    onSelect,
-    onUpload,
-    readmeLoading,
     widget
-}) {
+}) => {
     const { DataTable, Image, Icon } = Stage.Basic;
 
     // Show pagination only in case when data is provided from GitHub
@@ -63,17 +62,18 @@ export default function RepositoryTable({
                                 title="Blueprint Readme"
                                 loading={isLoading}
                                 bordered={!isLoading}
-                                onClick={event => {
+                                onClick={(event: Event) => {
                                     event.stopPropagation();
                                     onReadme(item.name, item.readme_url);
                                 }}
                             />
                             <Icon
-                                name="upload"
+                                name={uploadingInProgress.includes(item.name) ? 'spinner' : 'upload'}
+                                disabled={data.uploadedBlueprints.includes(item.name)}
                                 link
                                 title="Upload blueprint"
                                 bordered
-                                onClick={event => {
+                                onClick={(event: Event) => {
                                     event.stopPropagation();
                                     onUpload(item.name, item.zip_url, item.image_url, item.main_blueprint);
                                 }}
@@ -84,7 +84,6 @@ export default function RepositoryTable({
             })}
         </DataTable>
     );
-}
+};
 
-RepositoryTable.propTypes = RepositoryViewPropTypes;
-RepositoryTable.defaultProps = RepositoryViewDefaultProps;
+export default RepositoryTable;
