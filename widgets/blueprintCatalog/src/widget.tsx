@@ -59,8 +59,16 @@ Stage.defineWidget<
                 { name: 'Table', value: 'table' },
                 { name: 'Catalog', value: 'catalog' }
             ],
-            default: 'table',
+            default: 'catalog',
             type: Stage.Basic.GenericField.LIST_TYPE
+        },
+        {
+            id: 'fieldsToShow',
+            name: 'List of fields to show in the table',
+            placeHolder: 'Select fields from the list',
+            items: ['Name', 'Description', 'Created', 'Updated'],
+            default: 'Name,Description,Created,Updated',
+            type: Stage.Basic.GenericField.MULTI_SELECT_LIST_TYPE
         },
         {
             id: 'sortByName',

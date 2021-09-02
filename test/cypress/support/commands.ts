@@ -394,14 +394,21 @@ const commands = {
         }
     },
 
-    clearSearchableDropdown: (fieldName: string) =>
-        cy.contains('.field', fieldName).find('.dropdown.clear.icon').click(),
+    clearSearchableDropdown: (fieldName: string) => cy.contains('.field', fieldName).find('.clear.icon').click(),
 
     setDropdownValues: (fieldName: string, values: string[]) => {
         cy.contains('.field', fieldName)
             .click()
             .within(() => values.forEach(value => cy.contains('div[role=option]', value).click()))
             .click();
+    },
+
+    clearDropdown: (fieldName: string) => {
+        cy.contains('.field', fieldName).within(() => {
+            if (Cypress.$(`.field:contains('${fieldName}') .delete.icon`).length > 0) {
+                cy.get('.delete.icon').click({ multiple: true });
+            }
+        });
     },
 
     openTab: (tabName: string) => {

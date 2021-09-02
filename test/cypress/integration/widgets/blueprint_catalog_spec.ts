@@ -5,7 +5,9 @@ describe('Blueprints catalog widget', () => {
         cy
             .activate('valid_trial_license')
             .usePageMock('blueprintCatalog', {
-                jsonPath: 'https://repository.cloudifysource.org/cloudify/blueprints/5.1/vm-examples.json'
+                jsonPath: 'https://repository.cloudifysource.org/cloudify/blueprints/5.1/vm-examples.json',
+                displayStyle: 'catalog',
+                fieldsToShow: ['Name', 'Description', 'Created', 'Updated']
             })
             .mockLogin()
             .deleteBlueprints(blueprintName, true)
@@ -33,5 +35,21 @@ describe('Blueprints catalog widget', () => {
 
         cy.contains('.segment', blueprintName).contains('Upload').click();
         cy.contains('.ui.label.section.active.pageTitle', blueprintName);
+    });
+
+    it('should allow to change display style', () => {
+        cy.setDropdownConfigurationField('blueprintCatalog', 'Display style', ['Table']);
+        cy.get('table').should('be.visible');
+    });
+
+    it('should allow to customize fields to show', () => {
+        cy.setDropdownConfigurationField('blueprintCatalog', 'List of fields to show in the table', [
+            'Name',
+            'Created'
+        ]);
+        cy.contains('Name').should('be.visible');
+        cy.contains('Created').should('be.visible');
+        cy.contains('Updated').should('not.exist');
+        cy.contains('Description').should('not.exist');
     });
 });

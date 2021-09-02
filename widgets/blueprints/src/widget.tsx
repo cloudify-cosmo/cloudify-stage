@@ -48,7 +48,31 @@ Stage.defineWidget<unknown, unknown, BlueprintsWidgetConfiguration>({
             name: Stage.i18n.t('widgets.blueprints.configuration.showComposerOptions'),
             default: false
         },
-        Stage.Common.BlueprintMarketplace.tabsConfig
+        Stage.Common.BlueprintMarketplace.tabsConfig,
+        {
+            id: 'marketplaceDisplayStyle',
+            name: Stage.i18n.t('widgets.blueprints.configuration.marketplaceDisplayStyle.label'),
+            items: [
+                {
+                    name: Stage.i18n.t('widgets.blueprints.configuration.marketplaceDisplayStyle.items.table'),
+                    value: 'table'
+                },
+                {
+                    name: Stage.i18n.t('widgets.blueprints.configuration.marketplaceDisplayStyle.items.catalog'),
+                    value: 'catalog'
+                }
+            ],
+            default: 'table',
+            type: Stage.Basic.GenericField.LIST_TYPE
+        },
+        {
+            id: 'marketplaceColumnsToShow',
+            name: Stage.i18n.t('widgets.blueprints.configuration.marketplaceColumnsToShow.label'),
+            placeHolder: Stage.i18n.t('widgets.blueprints.configuration.marketplaceColumnsToShow.placeHolder'),
+            items: ['Name', 'Description', 'Created', 'Updated'],
+            default: 'Name,Description',
+            type: Stage.Basic.GenericField.MULTI_SELECT_LIST_TYPE
+        }
     ],
 
     fetchData(widget, toolbox, params) {

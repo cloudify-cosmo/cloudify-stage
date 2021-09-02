@@ -711,6 +711,17 @@
                             }
                         ]
                     }
+                },
+                "marketplaceDisplayStyle": {
+                    "label": "Marketplace display style",
+                    "items": {
+                        "table": "Table",
+                        "catalog": "Catalog"
+                    }
+                },
+                "marketplaceColumnsToShow": {
+                      "label": "List of fields to show in the marketplace table",
+                    "placeHolder": "Select fields from the list"
                 }
             }
         },
