@@ -73,7 +73,7 @@ export default function BlueprintsTable({
                                 {BlueprintActions.isUploaded(item) && (
                                     <>
                                         {!toolbox.getManager().isCommunityEdition() &&
-                                            widget.configuration.showEditCopyInComposerButton && (
+                                            widget.configuration.showComposerOptions && (
                                                 <Icon
                                                     name="external share"
                                                     bordered

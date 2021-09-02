@@ -690,7 +690,7 @@
                     }
                 },
                 "hideFailedBlueprints": "Hide failed blueprints",
-                "showEditCopyInComposerButton": "Show the \"Edit a copy in Composer\" button",
+                "showComposerOptions": "Show Composer options",
                 "marketplaceTabs": {
                     "name": "Marketplace tabs",
                     "columns": {

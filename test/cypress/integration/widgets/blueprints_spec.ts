@@ -21,7 +21,7 @@ describe('Blueprints widget', () => {
         displayStyle: 'table',
         clickToDrillDown: true,
         pollingTime: 5,
-        showEditCopyInComposerButton: true,
+        showComposerOptions: true,
         marketplaceTabs
     };
 
@@ -59,13 +59,12 @@ describe('Blueprints widget', () => {
 
         it('should not show the "Edit a copy in Composer" button if it is turned off in the configuration', () => {
             cy.editWidgetConfiguration('blueprints', () => {
-                cy.contains('.field', 'Show the "Edit a copy in Composer" button')
+                cy.contains('.field', 'Show Composer options')
                     .find('input')
                     // NOTE: force, as the checkbox from Semantic UI is
                     // class=hidden which prevents Cypress from clicking it
                     .click({ force: true });
             });
-
             getBlueprintRow(emptyBlueprintName).find(editCopyInComposerButtonSelector).should('not.exist');
         });
 
@@ -420,7 +419,30 @@ describe('Blueprints widget', () => {
         });
     });
 
+    describe('should open Composer', () => {
+        before(() => {
+            cy.reload();
+        });
+
+        it('on "Generate in the Composer" menu item click', () => {
+            cy.contains('Upload').click();
+            cy.contains('Generate in the Composer').click();
+
+            cy.window().its('open').should('be.calledWith', '/composer/');
+        });
+    });
+
     describe('configuration', () => {
+        it('should allow to hide composer menu item', () => {
+            cy.contains('Upload').click();
+            cy.contains('Generate in the Composer').should('be.visible');
+
+            cy.setBooleanConfigurationField('blueprints', 'Show Composer options', true);
+
+            cy.contains('Upload').click();
+            cy.contains('Generate in the Composer').should('not.exist');
+        });
+
         it('should allow to add new marketplace tab', () => {
             const testTabMarketplaceName = 'Blueprints from Dagobah';
 
