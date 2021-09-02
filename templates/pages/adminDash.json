@@ -37,7 +37,7 @@
             "imageSrc": "/console/static/images/k8s_logo.png",
             "label": "Kubernetes clusters",
             "page": "services",
-            "filterId": ""
+            "filterId": "csys-k8s-filter"
           }
         },
         {
@@ -88,7 +88,7 @@
             "label": "Create Kubernetes cluser",
             "marketplaceTabs": [{
               "name": "Clusters",
-              "url": "TODO"
+              "url": "https://repository.cloudifysource.org/cloudify/blueprints/5.1/k8s-examples.json"
             }]
           }
         },
