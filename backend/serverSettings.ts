@@ -30,7 +30,7 @@ export function init() {
             displayUsage();
         }
 
-        if (val.toLowerCase() === '-serverMode') {
+        if (val.toLowerCase() === '-mode') {
             if (process.argv.length > index + 1) {
                 const mode = process.argv[index + 1].toLowerCase();
                 if (_.includes(modes, mode)) {
