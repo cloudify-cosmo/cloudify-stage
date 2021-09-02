@@ -10,8 +10,7 @@ import { parse } from 'query-string';
 import i18n from 'i18next';
 import { Button, Input, Message, Form, FullScreenSegment, Logo } from './basic';
 import SplashLoadingScreen from '../utils/SplashLoadingScreen';
-
-import 'cloudify-ui-common/styles/font-JosefinSans-Bold.css';
+import LogoLabel from './LogoLabel';
 
 export default class LoginPage extends Component {
     constructor(props, context) {
@@ -81,17 +80,7 @@ export default class LoginPage extends Component {
                     />
                     {isHeaderTextPresent && (
                         <div style={{ textAlign: 'center', marginBottom: 30 }}>
-                            {loginPageHeader && (
-                                <h2
-                                    style={{
-                                        color: loginPageHeaderColor,
-                                        fontSize: '2em',
-                                        fontFamily: 'JosefinSans-Bold, sans-serif'
-                                    }}
-                                >
-                                    {loginPageHeader}
-                                </h2>
-                            )}
+                            {loginPageHeader && <LogoLabel color={loginPageHeaderColor} content={loginPageHeader} />}
                             {loginPageText && (
                                 <p
                                     style={{

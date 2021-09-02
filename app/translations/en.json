@@ -73,6 +73,8 @@
                 "uploadingErrorMessageSuffix": "blueprint upload error"
             }
         },
+        "welcomeText": "Welcome to Cloudify: your open source,\nmulti-cloud orchestration platform.\n\nWe’ll start by setting up your cloud environment in\nthe following easy steps. Ready? Let’s go.\n\nNote: this process can take up to 5 minutes, and you\nwill need your API access keys.",
+        "welcomeLogoLabel": "CLOUDIFY",
         "messages": {
             "pluginInstallError": "{{pluginName}} plugin installation error.",
             "secretUpdateError": "{{secretName}} secret update operation error.",

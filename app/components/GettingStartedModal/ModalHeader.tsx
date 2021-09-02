@@ -12,27 +12,26 @@ type Props = {
     secretsStepIndex: number;
 };
 
+const headerContentKeys = {
+    [StepName.Technologies]: 'technologiesStep',
+    [StepName.Summary]: 'summaryStep',
+    [StepName.Status]: 'statusStep'
+};
+
 const ModalHeader = ({ stepName, secretsStepsSchemas, secretsStepIndex }: Props) => {
-    let modalTitle = '';
-    switch (stepName) {
-        case StepName.Technologies:
-            modalTitle = t('technologiesStep');
-            break;
-        case StepName.Secrets: {
-            const schemaItem = secretsStepsSchemas[secretsStepIndex];
-            modalTitle = schemaItem ? `${schemaItem.label} ${t('secretsStep')}` : '';
-            break;
-        }
-        case StepName.Summary:
-            modalTitle = t('summaryStep');
-            break;
-        case StepName.Status:
-            modalTitle = t('statusStep');
-            break;
-        default:
-            modalTitle = '';
-            break;
+    if (stepName === StepName.Welcome) {
+        return null;
     }
+
+    let modalTitle;
+
+    if (stepName === StepName.Secrets) {
+        const schemaItem = secretsStepsSchemas[secretsStepIndex];
+        modalTitle = schemaItem ? `${schemaItem.label} ${t('secretsStep')}` : '';
+    } else {
+        modalTitle = t(headerContentKeys[stepName]);
+    }
+
     return <Modal.Header>{modalTitle}</Modal.Header>;
 };
 
