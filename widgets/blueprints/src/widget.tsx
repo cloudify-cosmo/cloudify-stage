@@ -43,9 +43,9 @@ Stage.defineWidget<unknown, unknown, BlueprintsWidgetConfiguration>({
             type: Stage.Basic.GenericField.BOOLEAN_TYPE
         },
         {
-            id: 'showEditCopyInComposerButton',
+            id: 'showComposerOptions',
             type: Stage.Basic.GenericField.BOOLEAN_TYPE,
-            name: Stage.i18n.t('widgets.blueprints.configuration.showEditCopyInComposerButton'),
+            name: Stage.i18n.t('widgets.blueprints.configuration.showComposerOptions'),
             default: false
         },
         Stage.Common.BlueprintMarketplace.tabsConfig
