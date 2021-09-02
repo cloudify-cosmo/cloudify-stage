@@ -437,7 +437,7 @@ describe('Blueprints widget', () => {
             cy.contains('Upload').click();
             cy.contains('Generate in the Composer').should('be.visible');
 
-            cy.setBooleanConfigurationField('blueprints', 'Show Composer options', true);
+            cy.setBooleanConfigurationField('blueprints', 'Show Composer options', false);
 
             cy.contains('Upload').click();
             cy.contains('Generate in the Composer').should('not.exist');
