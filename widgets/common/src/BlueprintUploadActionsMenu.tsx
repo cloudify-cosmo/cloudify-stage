@@ -2,24 +2,38 @@ import { ComponentProps, FunctionComponent } from 'react';
 import type { MarketplaceTab } from './blueprintMarketplace/types';
 
 const t = Stage.Utils.getT('widgets.common.blueprintUpload.actionsMenu');
-const menuItems: ComponentProps<typeof Stage.Basic.Menu.Item>[] = [
+const baseMenuItems: ComponentProps<typeof Stage.Basic.Menu.Item>[] = [
     { name: 'uploadFromMarketplace', key: 'uploadFromMarketplace', content: t('uploadFromMarketplace') },
-    { name: 'uploadFromPackage', key: 'uploadFromPackage', content: t('uploadFromPackage') },
-    { name: 'generateInComposer', key: 'generateInComposer', content: t('generateInComposer') }
+    { name: 'uploadFromPackage', key: 'uploadFromPackage', content: t('uploadFromPackage') }
 ];
+const generateInComposerMenuItem = {
+    name: 'generateInComposer',
+    key: 'generateInComposer',
+    content: t('generateInComposer')
+};
 
-type ActionName = typeof menuItems[number]['name'];
+const getMenuItems = (includeComposerButton: boolean) => {
+    if (includeComposerButton) {
+        return [...baseMenuItems, generateInComposerMenuItem];
+    }
+
+    return baseMenuItems;
+};
+
+type ActionName = typeof baseMenuItems[number]['name'] | typeof generateInComposerMenuItem['name'];
 
 interface BlueprintUploadActionsMenuProps {
     direction?: 'left' | 'right';
     marketplaceTabs?: MarketplaceTab[];
     toolbox: Stage.Types.Toolbox;
+    showGenerateInComposerButton?: boolean;
 }
 
 const BlueprintUploadActionsMenu: FunctionComponent<BlueprintUploadActionsMenuProps> = ({
     direction,
     toolbox,
-    marketplaceTabs = []
+    marketplaceTabs = [],
+    showGenerateInComposerButton = false
 }) => {
     const {
         Basic: { Dropdown }
@@ -62,7 +76,7 @@ const BlueprintUploadActionsMenu: FunctionComponent<BlueprintUploadActionsMenuPr
             <Dropdown button text={t('uploadButton')} direction={direction}>
                 {/* Display the menu above all leaflet components, see https://leafletjs.com/reference-1.7.1.html#map-pane */}
                 <Menu>
-                    {menuItems.map(item => (
+                    {getMenuItems(showGenerateInComposerButton).map(item => (
                         <Item text={item.content} key={item.key} onClick={() => handleMenuClick(item.name)} />
                     ))}
                 </Menu>
