@@ -67,11 +67,7 @@
             "basic": true,
             "color": "blue",
             "icon": "add",
-            "label": "Create a service",
-            "marketplaceTabs": [{
-              "name": "Services",
-              "url": "TODO"
-            }]
+            "label": "Create a service"
           }
         },
         {
