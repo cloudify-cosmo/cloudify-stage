@@ -1,8 +1,8 @@
 import React, { useContext } from 'react';
 import { ThemeContext } from 'styled-components';
-import { Logo } from '../../basic';
 import StageUtils from '../../../utils/stageUtils';
-import LogoLabel from '../../LogoLabel';
+import LogoLabel from '../../banner/LogoLabel';
+import LargeLogo from '../../banner/LargeLogo';
 
 const t = StageUtils.getT('gettingStartedModal');
 
@@ -11,15 +11,7 @@ const WelcomeStep = () => {
 
     return (
         <div style={{ backgroundColor: theme.mainColor, textAlign: 'center', margin: -19, padding: '9em' }}>
-            <Logo
-                style={{
-                    textAlign: 'center',
-                    margin: '0 auto',
-                    display: 'block',
-                    width: 100,
-                    height: 100
-                }}
-            />
+            <LargeLogo />
             <LogoLabel color={theme.headerTextColor} content={t('welcomeLogoLabel')} />
             <pre
                 style={{
