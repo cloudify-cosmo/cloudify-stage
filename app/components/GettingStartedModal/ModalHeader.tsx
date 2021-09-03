@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 
 import StageUtils from '../../utils/stageUtils';
 import { Modal } from '../basic';
@@ -19,18 +19,20 @@ const headerContentKeys = {
 };
 
 const ModalHeader = ({ stepName, secretsStepsSchemas, secretsStepIndex }: Props) => {
-    if (stepName === StepName.Welcome) {
-        return null;
-    }
+    const modalTitle = useMemo(() => {
+        if (stepName === StepName.Welcome) {
+            return null;
+        }
 
-    let modalTitle;
+        if (stepName === StepName.Secrets) {
+            const schemaItem = secretsStepsSchemas[secretsStepIndex];
+            return schemaItem ? `${schemaItem.label} ${t('secretsStep')}` : '';
+        }
 
-    if (stepName === StepName.Secrets) {
-        const schemaItem = secretsStepsSchemas[secretsStepIndex];
-        modalTitle = schemaItem ? `${schemaItem.label} ${t('secretsStep')}` : '';
-    } else {
-        modalTitle = t(headerContentKeys[stepName]);
-    }
+        return t(headerContentKeys[stepName]);
+    }, [stepName]);
+
+    if (!modalTitle) return null;
 
     return <Modal.Header>{modalTitle}</Modal.Header>;
 };
