@@ -10,8 +10,8 @@ import { parse } from 'query-string';
 import i18n from 'i18next';
 import { Button, Input, Message, Form, FullScreenSegment, Logo } from './basic';
 import SplashLoadingScreen from '../utils/SplashLoadingScreen';
-
-import 'cloudify-ui-common/styles/font-JosefinSans-Bold.css';
+import LogoLabel from './banner/LogoLabel';
+import LargeLogo from './banner/LargeLogo';
 
 export default class LoginPage extends Component {
     constructor(props, context) {
@@ -70,28 +70,10 @@ export default class LoginPage extends Component {
         return (
             <FullScreenSegment>
                 <div className={`loginContainer ${isHeaderTextPresent ? 'loginContainerExtended' : ''}`}>
-                    <Logo
-                        style={{
-                            textAlign: 'center',
-                            margin: '0 auto',
-                            display: 'block',
-                            width: 100,
-                            height: 100
-                        }}
-                    />
+                    <LargeLogo />
                     {isHeaderTextPresent && (
                         <div style={{ textAlign: 'center', marginBottom: 30 }}>
-                            {loginPageHeader && (
-                                <h2
-                                    style={{
-                                        color: loginPageHeaderColor,
-                                        fontSize: '2em',
-                                        fontFamily: 'JosefinSans-Bold, sans-serif'
-                                    }}
-                                >
-                                    {loginPageHeader}
-                                </h2>
-                            )}
+                            {loginPageHeader && <LogoLabel color={loginPageHeaderColor} content={loginPageHeader} />}
                             {loginPageText && (
                                 <p
                                     style={{

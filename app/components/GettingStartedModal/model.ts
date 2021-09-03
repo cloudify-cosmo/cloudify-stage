@@ -11,6 +11,7 @@ export type PaginationResponse = {
 export type RegExpString = string;
 
 export enum StepName {
+    Welcome,
     Technologies,
     Secrets,
     Summary,
