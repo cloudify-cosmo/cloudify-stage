@@ -81,7 +81,7 @@
             "basic": true,
             "color": "blue",
             "icon": "add",
-            "label": "Create Kubernetes cluser",
+            "label": "Create Kubernetes cluster",
             "marketplaceTabs": [{
               "name": "Clusters",
               "url": "https://repository.cloudifysource.org/cloudify/blueprints/6.2/k8s-examples.json"
