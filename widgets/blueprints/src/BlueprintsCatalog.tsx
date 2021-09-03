@@ -139,7 +139,7 @@ export default function BlueprintsCatalog({
                                     }}
                                 />
 
-                                {!manager.isCommunityEdition() && widget.configuration.showEditCopyInComposerButton && (
+                                {!manager.isCommunityEdition() && widget.configuration.showComposerOptions && (
                                     <Button
                                         icon="external share"
                                         content="Edit a copy in Composer"
