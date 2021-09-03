@@ -663,7 +663,7 @@
                     "uploadButton": "Upload",
                     "uploadFromMarketplace": "Upload from Marketplace",
                     "uploadFromPackage": "Upload a blueprint package",
-                    "generateInComposer":  "Generate in the Composer"
+                    "generateInComposer": "Generate in the Composer"
                 }
             },
             "blueprintMarketplace": {
@@ -720,7 +720,7 @@
                     }
                 },
                 "marketplaceColumnsToShow": {
-                      "label": "List of fields to show in the marketplace table",
+                    "label": "List of fields to show in the marketplace table",
                     "placeHolder": "Select fields from the list"
                 }
             }
@@ -757,7 +757,7 @@
                     "description": "Page URL address to open on button click. If URL starts with 'http', then page will be opened in a new window/tab. In other case it will be opened in the same window.",
                     "default": ""
                 }
-        }
+            }
         },
         "cloudNum": {
             "name": "Number of clouds",
