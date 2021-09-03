@@ -16,7 +16,7 @@ import { getResourcePath } from './utils';
 import getCookieStrategy from './auth/CookieStrategy';
 import getTokenStrategy from './auth/TokenStrategy';
 import getSamlStrategy from './auth/SamlStrategy';
-import samlSetup from './samlSetup';
+import validateSamlConfig from './samlSetup';
 import Auth from './routes/Auth';
 
 import Applications from './routes/Applications';
@@ -69,7 +69,7 @@ app.use(contextPath, (req, res, next) => {
 
 const samlConfig = getConfig().app.saml;
 if (samlConfig.enabled) {
-    samlSetup.validate(samlConfig);
+    validateSamlConfig(samlConfig);
     passport.use(getSamlStrategy());
 }
 

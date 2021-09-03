@@ -41,7 +41,7 @@ export function loadMeJson() {
 
 loadMeJson();
 
-export function getConfig(mode) {
+export function getConfig(mode?) {
     const config = {
         app: _.merge(app, root, logging, { db: { options: dbOptions } }, userConfig),
         manager,
