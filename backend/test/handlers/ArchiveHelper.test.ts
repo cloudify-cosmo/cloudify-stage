@@ -9,7 +9,7 @@ jest.mock('handler/RequestHandler', () => ({
 }));
 
 describe('ArchiveHelper', () => {
-    it('fetches extenral data with correct headers', () => {
+    it('fetches external data with correct headers', () => {
         expect.assertions(1);
         const url = 'http://wp';
         return saveDataFromUrl(url).catch(() =>

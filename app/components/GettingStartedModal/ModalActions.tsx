@@ -18,17 +18,19 @@ const ModalActions = ({ stepName, installationProcessing, onBackClick, onNextCli
     const statusStepActive = stepName === StepName.Status;
     return (
         <Modal.Actions style={{ minHeight: 60 }}>
-            <Button
-                icon="cancel"
-                content={t('closeModal')}
-                floated="left"
-                disabled={installationProcessing}
-                labelPosition="left"
-                onClick={onModalClose}
-            />
+            {stepName !== StepName.Welcome && (
+                <Button
+                    icon="cancel"
+                    content={t('closeModal')}
+                    floated="left"
+                    disabled={installationProcessing}
+                    labelPosition="left"
+                    onClick={onModalClose}
+                />
+            )}
             {!statusStepActive && (
                 <Button.Group floated="right">
-                    {stepName !== StepName.Technologies && (
+                    {stepName && (
                         <Button icon="left arrow" content={t('stepBack')} labelPosition="left" onClick={onBackClick} />
                     )}
                     <Button
