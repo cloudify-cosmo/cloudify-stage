@@ -15,7 +15,7 @@
     "db-migrate-down-to": "ts-node -T migration downTo",
     "db-migrate-reset": "ts-node -T migration reset",
     "db-migrate-status": "ts-node -T migration status",
-    "startWithNodemon": "cross-env NODE_ENV=development NODE_TLS_REJECT_UNAUTHORIZED='0' nodemon -x 'ts-node -T' -e js,ts,json --watch . --watch ../conf",
+    "startWithNodemon": "cross-env NODE_ENV=development NODE_TLS_REJECT_UNAUTHORIZED='0' nodemon -x 'node -r ts-node/register' -e js,ts,json --watch . --watch ../conf",
     "devDebug": "npm run startWithNodemon -- --inspect server.ts",
     "devStart": "npm run startWithNodemon -- server.ts",
     "devTrace": "npm run startWithNodemon -- --trace-warnings server.ts",
