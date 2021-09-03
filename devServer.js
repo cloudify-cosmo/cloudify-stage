@@ -1,17 +1,16 @@
-/**
- * Created by kinneretzin on 29/08/2016.
- */
+import webpack from 'webpack';
+import WebpackDevServer from 'webpack-dev-server';
 
-const webpack = require('webpack');
-const WebpackDevServer = require('webpack-dev-server');
+import getWebpackConfig from './webpack.config';
+import startWidgetBackendWatcher from './scripts/widgetBackendWatcher';
 
-const webpackConfig = require('./webpack.config')({}, { mode: 'development' });
-const startWidgetBackendWatcher = require('./scripts/widgetBackendWatcher');
+import { CONTEXT_PATH } from './backend/consts';
+
+const webpackConfig = getWebpackConfig({}, { mode: 'development' });
 
 const host = 'localhost';
 const devServerPort = 4000;
 const stageBackendPort = 8088;
-const contextPath = '/console';
 
 const proxyOptions = {
     target: `http://${host}:${stageBackendPort}`,
@@ -19,32 +18,32 @@ const proxyOptions = {
 };
 
 const options = {
-    publicPath: contextPath,
+    publicPath: CONTEXT_PATH,
     host,
     inline: false,
     historyApiFallback: {
-        index: `${contextPath}/static/index.html`
+        index: `${CONTEXT_PATH}/static/index.html`
     },
     proxy: {
-        [`${contextPath}/auth`]: proxyOptions,
-        [`${contextPath}/ba`]: proxyOptions,
-        [`${contextPath}/bud`]: proxyOptions,
-        [`${contextPath}/clientConfig`]: proxyOptions,
-        [`${contextPath}/config`]: proxyOptions,
-        [`${contextPath}/external`]: proxyOptions,
-        [`${contextPath}/file`]: proxyOptions,
-        [`${contextPath}/filters`]: proxyOptions,
-        [`${contextPath}/github`]: proxyOptions,
-        [`${contextPath}/maps`]: proxyOptions,
-        [`${contextPath}/plugins`]: proxyOptions,
-        [`${contextPath}/source`]: proxyOptions,
-        [`${contextPath}/sp`]: proxyOptions,
-        [`${contextPath}/style`]: proxyOptions,
-        [`${contextPath}/templates`]: proxyOptions,
-        [`${contextPath}/ua`]: proxyOptions,
-        [`${contextPath}/userData`]: proxyOptions,
-        [`${contextPath}/wb`]: proxyOptions,
-        [`${contextPath}/widgets`]: proxyOptions
+        [`${CONTEXT_PATH}/auth`]: proxyOptions,
+        [`${CONTEXT_PATH}/ba`]: proxyOptions,
+        [`${CONTEXT_PATH}/bud`]: proxyOptions,
+        [`${CONTEXT_PATH}/clientConfig`]: proxyOptions,
+        [`${CONTEXT_PATH}/config`]: proxyOptions,
+        [`${CONTEXT_PATH}/external`]: proxyOptions,
+        [`${CONTEXT_PATH}/file`]: proxyOptions,
+        [`${CONTEXT_PATH}/filters`]: proxyOptions,
+        [`${CONTEXT_PATH}/github`]: proxyOptions,
+        [`${CONTEXT_PATH}/maps`]: proxyOptions,
+        [`${CONTEXT_PATH}/plugins`]: proxyOptions,
+        [`${CONTEXT_PATH}/source`]: proxyOptions,
+        [`${CONTEXT_PATH}/sp`]: proxyOptions,
+        [`${CONTEXT_PATH}/style`]: proxyOptions,
+        [`${CONTEXT_PATH}/templates`]: proxyOptions,
+        [`${CONTEXT_PATH}/ua`]: proxyOptions,
+        [`${CONTEXT_PATH}/userData`]: proxyOptions,
+        [`${CONTEXT_PATH}/wb`]: proxyOptions,
+        [`${CONTEXT_PATH}/widgets`]: proxyOptions
     },
     watchOptions: {
         ignored: ['**/userData/**']
