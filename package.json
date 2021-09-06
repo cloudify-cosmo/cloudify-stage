@@ -25,7 +25,7 @@
     "build:coverage": "cross-env COVERAGE_CHECK=1 npm run build",
     "ci:frontend": "npm ci --prefer-offline",
     "ci:backend": "npm ci --prefix backend --prefer-offline",
-    "check-types": "tsc --build",
+    "check-types": "tsc --build && cd backend && npm run check-types",
     "coverageCheck": "cp coverage-jest/coverage-final.json .nyc_output && nyc report --reporter lcov --report-dir coverage-overall && nyc check-coverage",
     "devServer": "cross-env NODE_ENV=development ts-node devServer.ts",
     "docCheck": "scripts/checkDocs.sh",

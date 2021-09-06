@@ -8,6 +8,7 @@
   "main": "server.ts",
   "scripts": {
     "audit": "npm audit --production",
+    "check-types": "tsc && tsc -b test",
     "db-migrate": "ts-node -T migration up",
     "db-migrate-clear": "ts-node -T migration clear",
     "db-migrate-create": "sequelize migration:create --config ../conf/app.json",
