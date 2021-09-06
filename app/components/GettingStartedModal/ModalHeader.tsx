@@ -30,7 +30,7 @@ const ModalHeader = ({ stepName, secretsStepsSchemas, secretsStepIndex }: Props)
         }
 
         return t(headerContentKeys[stepName]);
-    }, [stepName]);
+    }, [stepName, secretsStepIndex]);
 
     if (!modalTitle) return null;
 
