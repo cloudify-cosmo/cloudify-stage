@@ -31,7 +31,7 @@ const GettingStartedModal = () => {
     const modalOpenState = useModalOpenState();
 
     const manager = useSelector((state: ReduxState) => state.manager);
-    const [stepName, setStepName] = useState(StepName.Technologies);
+    const [stepName, setStepName] = useState(StepName.Welcome);
     const [stepErrors, setStepErrors, resetStepErrors] = useResettableState<string[]>([]);
     const [technologiesStepData, setTechnologiesStepData] = useState<GettingStartedTechnologiesData>({});
     const [secretsStepIndex, setSecretsStepIndex] = useState(0);
@@ -110,14 +110,20 @@ const GettingStartedModal = () => {
     };
 
     const handleBackClick = () => {
+        function goToPreviousStep() {
+            setStepName(stepName - 1);
+        }
+
         switch (stepName) {
+            case StepName.Technologies:
             case StepName.Status:
-                setStepName(StepName.Summary);
+                goToPreviousStep();
+                setStepName(StepName.Welcome);
                 break;
 
             case StepName.Summary:
                 if (secretsStepsSchemas.length > 0) {
-                    setStepName(StepName.Secrets);
+                    goToPreviousStep();
                     setSecretsStepIndex(secretsStepsSchemas.length - 1);
                 } else {
                     setStepName(StepName.Technologies);
@@ -129,7 +135,7 @@ const GettingStartedModal = () => {
                 if (secretsStepIndex > 0) {
                     setSecretsStepIndex(secretsStepIndex - 1);
                 } else {
-                    setStepName(StepName.Technologies);
+                    goToPreviousStep();
                 }
                 break;
 
@@ -139,11 +145,15 @@ const GettingStartedModal = () => {
         }
     };
     const handleNextClick = () => {
+        function goToNextStep() {
+            setStepName(stepName + 1);
+        }
+
         switch (stepName) {
             case StepName.Technologies:
                 if (checkTechnologiesStepDataErrors()) {
                     if (secretsStepsSchemas.length > 0) {
-                        setStepName(StepName.Secrets);
+                        goToNextStep();
                         setSecretsStepIndex(0);
                     } else {
                         setStepName(StepName.Summary);
@@ -156,13 +166,14 @@ const GettingStartedModal = () => {
                     if (secretsStepIndex < secretsStepsSchemas.length - 1) {
                         setSecretsStepIndex(secretsStepIndex + 1);
                     } else {
-                        setStepName(StepName.Summary);
+                        goToNextStep();
                     }
                 }
                 break;
 
+            case StepName.Welcome:
             case StepName.Summary:
-                setStepName(StepName.Status);
+                goToNextStep();
                 break;
 
             default:
@@ -193,16 +204,18 @@ const GettingStartedModal = () => {
                 onInstallationFinished={handleInstallationFinishedOrCanceled}
                 onInstallationCanceled={handleInstallationFinishedOrCanceled}
             />
-            <Modal.Content style={{ minHeight: 60, overflow: 'hidden' }}>
-                <Form.Field>
-                    <Form.Checkbox
-                        label={i18n.t('gettingStartedModal.disableModalLabel')}
-                        help=""
-                        checked={modalDisabledChecked}
-                        onChange={setModalDisabledChange}
-                    />
-                </Form.Field>
-            </Modal.Content>
+            {stepName !== StepName.Welcome && (
+                <Modal.Content style={{ minHeight: 60, overflow: 'hidden' }}>
+                    <Form.Field>
+                        <Form.Checkbox
+                            label={i18n.t('gettingStartedModal.disableModalLabel')}
+                            help=""
+                            checked={modalDisabledChecked}
+                            onChange={setModalDisabledChange}
+                        />
+                    </Form.Field>
+                </Modal.Content>
+            )}
             <ModalActions
                 stepName={stepName}
                 installationProcessing={installationProcessing}
