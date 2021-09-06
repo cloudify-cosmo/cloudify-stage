@@ -4,13 +4,16 @@ import Consts from './consts';
 
 import type { BlueprintCatalogPayload, BlueprintCatalogWidgetConfiguration, Blueprint } from './types';
 
+const widgetId = 'blueprintCatalog';
+const t = Stage.Utils.getT(`widgets.${widgetId}`);
+
 Stage.defineWidget<
     Record<string, string | number>,
     BlueprintCatalogPayload | Error,
     BlueprintCatalogWidgetConfiguration
 >({
     hasTemplate: false,
-    id: 'blueprintCatalog',
+    id: widgetId,
     name: 'Blueprints Catalog',
     description: 'Shows blueprints catalog',
     initialWidth: 8,
@@ -26,54 +29,57 @@ Stage.defineWidget<
         Stage.GenericConfig.PAGE_SIZE_CONFIG(),
         {
             id: 'jsonPath',
-            name: 'Blueprints Examples URL',
-            placeHolder: 'Type URL to blueprint examples JSON file',
-            description: 'If set, then GitHub options are not used for fetching data.',
+            name: t('configuration.jsonPath.label'),
+            placeHolder: t('configuration.jsonPath.placeHolder'),
+            description: t('configuration.jsonPath.description'),
             default: Stage.i18n.t('widgets.common.urls.blueprintsCatalog'),
             type: Stage.Basic.GenericField.STRING_TYPE
         },
         {
             id: 'username',
-            name: 'GitHub User',
-            placeHolder: "Type GitHub's user or organization name",
-            description:
-                'GitHub user or organization account name which is the owner of the repositories to fetch. ' +
-                'Used only if Blueprints Examples URL is not set.',
+            name: t('configuration.username.label'),
+            placeHolder: t('configuration.username.placeHolder'),
+            description: t('configuration.username.description'),
             default: 'cloudify-examples',
             type: Stage.Basic.GenericField.STRING_TYPE
         },
         {
             id: 'filter',
-            name: 'GitHub Filter',
-            placeHolder: 'Type filter for GitHub repositories',
-            description:
-                "Optional filter for GitHub repositories. See GitHub's web page 'Searching repositories' for more details. " +
-                'Used only if Blueprints Examples URL is not set.',
+            name: t('configuration.filter.label'),
+            placeHolder: t('configuration.filter.placeHolder'),
+            description: t('configuration.filter.description'),
             default: 'blueprint in:name NOT local',
             type: Stage.Basic.GenericField.STRING_TYPE
         },
         {
             id: 'displayStyle',
-            name: 'Display style',
+            name: t('configuration.displayStyle.label'),
             items: [
-                { name: 'Table', value: 'table' },
-                { name: 'Catalog', value: 'catalog' }
+                { name: t('configuration.displayStyle.option.table'), value: 'table' },
+                { name: t('configuration.displayStyle.option.catalog'), value: 'catalog' }
             ],
-            default: 'catalog',
+            default: 'table',
             type: Stage.Basic.GenericField.LIST_TYPE
         },
         {
             id: 'fieldsToShow',
-            name: 'List of fields to show in the table',
-            placeHolder: 'Select fields from the list',
-            items: ['Name', 'Description', 'Created', 'Updated'],
-            default: 'Name,Description,Created,Updated',
+            name: t('configuration.fieldsToShow.label'),
+            placeHolder: t('configuration.fieldsToShow.placeHolder'),
+            items: [
+                t('configuration.fieldsToShow.items.name'),
+                t('configuration.fieldsToShow.items.description'),
+                t('configuration.fieldsToShow.items.created'),
+                t('configuration.fieldsToShow.items.updated')
+            ],
+            default: `${t('configuration.fieldsToShow.items.name')}, ${t(
+                'configuration.fieldsToShow.items.description'
+            )}, ${t('configuration.fieldsToShow.items.created')}, ${t('configuration.fieldsToShow.items.updated')}`,
             type: Stage.Basic.GenericField.MULTI_SELECT_LIST_TYPE
         },
         {
             id: 'sortByName',
-            name: 'Sort by name',
-            description: 'If set to true, then blueprints will be sorted by name.',
+            name: t('configuration.sortByName.label'),
+            description: t('configuration.sortByName.description'),
             default: false,
             type: Stage.Basic.GenericField.BOOLEAN_TYPE
         }

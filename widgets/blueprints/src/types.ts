@@ -8,7 +8,7 @@ export interface BlueprintsWidgetConfiguration {
     hideFailedBlueprints: boolean;
     showComposerOptions: boolean;
     marketplaceTabs: Stage.Common.BlueprintMarketplace.Tab[];
-    marketplaceDisplayStyle: 'table' | 'catalog';
+    marketplaceDisplayStyle: Stage.Common.BlueprintMarketplace.DisplayStyle;
     marketplaceColumnsToShow: string[];
 }
 

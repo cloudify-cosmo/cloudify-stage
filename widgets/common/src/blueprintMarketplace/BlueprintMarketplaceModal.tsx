@@ -4,7 +4,7 @@ import { MarketplaceTab } from './types';
 interface BlueprintMarketplaceModalProps {
     open: boolean;
     tabs?: MarketplaceTab[];
-    displayStyle?: 'catalog' | 'table';
+    displayStyle?: Stage.Common.BlueprintMarketplace.DisplayStyle;
     columns?: string[];
     onHide: () => void;
 }

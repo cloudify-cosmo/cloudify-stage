@@ -66,10 +66,10 @@ const commands = {
             cy.setSearchableDropdownValue(fieldName, value);
         }),
 
-    setDropdownConfigurationField: (widgetId: string, fieldName: string, value: string[]) =>
+    setDropdownConfigurationField: (widgetId: string, fieldName: string, values: string[]) =>
         cy.editWidgetConfiguration(widgetId, () => {
-            cy.clearDropdown(fieldName);
-            cy.setDropdownValues(fieldName, value);
+            cy.clearMultipleDropdown(fieldName);
+            cy.setDropdownValues(fieldName, values);
         })
 };
 

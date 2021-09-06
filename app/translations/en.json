@@ -725,6 +725,46 @@
                 }
             }
         },
+        "blueprintCatalog": {
+            "configuration": {
+                "jsonPath": {
+                    "label": "Blueprints Examples URL",
+                    "placeHolder": "Type URL to blueprint examples JSON file",
+                    "description": "If set, then GitHub options are not used for fetching data."
+                },
+                "username": {
+                    "label": "GitHub User",
+                    "placeHolder": "Type GitHub's user or organization name",
+                    "description": "GitHub user or organization account name which is the owner of the repositories to fetch. Used only if Blueprints Examples URL is not set."
+                },
+                "filter": {
+                    "label": "GitHub Filter",
+                    "placeHolder": "Type filter for GitHub repositories",
+                    "description": "Optional filter for GitHub repositories. See GitHub's web page 'Searching repositories' for more details. Used only if Blueprints Examples URL is not set."
+                },
+                "displayStyle": {
+                    "label": "Display style",
+                    "option": {
+                        "table": "Table",
+                        "catalog": "Catalog"
+                    }
+                },
+                "fieldsToShow": {
+                    "label": "List of fields to show in the table",
+                    "placeHolder": "Select fields from the list",
+                    "items": {
+                        "name": "Name",
+                        "description": "Description",
+                        "created": "Created",
+                        "updated": "Updated"
+                    }
+                },
+                "sortByName": {
+                    "label": "Sort by name",
+                    "description": "If set to true, then blueprints will be sorted by name."
+                }
+            }
+        },
         "buttonLink": {
             "name": "Button link",
             "description": "Opens provided URL",
