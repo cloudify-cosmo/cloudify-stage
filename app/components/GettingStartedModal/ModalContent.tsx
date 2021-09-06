@@ -52,10 +52,10 @@ const ModalContent = ({
     const secretsStepData = secretsStepsData[secretsStepSchema?.name];
     const statusStepActive = stepName === StepName.Status;
     return (
-        <Modal.Content style={{ minHeight: 220, display: 'flex', flexDirection: 'column' }}>
+        <Modal.Content style={{ minHeight: 220, flexDirection: 'column' }}>
             {!_.isEmpty(stepErrors) && (
                 <>
-                    <ErrorMessage error={stepErrors} onDismiss={onStepErrorsDismiss} />
+                    <ErrorMessage header={null} error={stepErrors} onDismiss={onStepErrorsDismiss} />
                     <Divider hidden />
                 </>
             )}
