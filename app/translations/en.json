@@ -28,7 +28,7 @@
     "gettingStartedModal": {
         "disableModalLabel": "Don't show next time",
         "titles": {
-            "technologiesStep": "First, please select your environment(s)",
+            "environmentsStep": "First, please select your environment(s)",
             "secretsStep": "Secrets",
             "summaryStep": "Summary",
             "statusStep": "Status"
@@ -45,7 +45,7 @@
             "blueprintsMetadataLoadingError": "Blueprints information loading error"
         },
         "validation": {
-            "someTechnologyRequiredError": "At least one environment needs to be selected.",
+            "environmentRequiredError": "At least one environment needs to be selected.",
             "allSecretsRequiredError": "All secret values need to be specified."
         },
         "summary": {

@@ -10,7 +10,7 @@ type Props = {
     onChange?: (value: boolean) => void;
 };
 
-const TechnologyButton = memo(({ logo, label, value, onChange }: Props) => {
+const EnvironmentButton = memo(({ logo, label, value, onChange }: Props) => {
     const [localValue, setLocalValue, resetLocalValue] = useResettableState(value);
     useEffect(() => resetLocalValue(), [value]);
 
@@ -30,4 +30,4 @@ const TechnologyButton = memo(({ logo, label, value, onChange }: Props) => {
     );
 });
 
-export default TechnologyButton;
+export default EnvironmentButton;

@@ -22,7 +22,7 @@ const tMessages = StageUtils.getT('gettingStartedModal.messages');
 
 type Props = {
     installationMode?: boolean;
-    selectedTechnologies: GettingStartedSchema;
+    selectedEnvironments: GettingStartedSchema;
     typedSecrets: GettingStartedData;
     onInstallationStarted?: () => void;
     onInstallationFinished?: () => void;
@@ -31,7 +31,7 @@ type Props = {
 
 const SummaryStep = ({
     installationMode = false,
-    selectedTechnologies,
+    selectedEnvironments,
     typedSecrets,
     onInstallationStarted,
     onInstallationFinished,
@@ -42,9 +42,9 @@ const SummaryStep = ({
     const handleInstallationStarted = useCurrentCallback(onInstallationStarted);
     const handleInstallationFinished = useCurrentCallback(onInstallationFinished);
     const handleInstallationCanceled = useCurrentCallback(onInstallationCanceled);
-    const pluginsInstallationTasks = usePluginsInstallationTasks(selectedTechnologies);
-    const secretsInstallationTasks = useSecretsInstallationTasks(selectedTechnologies, typedSecrets);
-    const blueprintsInstallationTasks = useBlueprintsInstallationTasks(selectedTechnologies);
+    const pluginsInstallationTasks = usePluginsInstallationTasks(selectedEnvironments);
+    const secretsInstallationTasks = useSecretsInstallationTasks(selectedEnvironments, typedSecrets);
+    const blueprintsInstallationTasks = useBlueprintsInstallationTasks(selectedEnvironments);
     const [installationErrors, setInstallationErrors, resetInstallationErrors] = useResettableState<string[]>([]);
     const [installationStatuses, setInstallationStatuses, resetInstallationStatuses] = useResettableState(
         {} as Record<TaskType, Record<string, TaskStatus>>
