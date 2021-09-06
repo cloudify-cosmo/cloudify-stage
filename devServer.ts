@@ -4,22 +4,20 @@ import WebpackDevServer from 'webpack-dev-server';
 import getWebpackConfig from './webpack.config';
 import startWidgetBackendWatcher from './scripts/widgetBackendWatcher';
 
-import { CONTEXT_PATH } from './backend/consts';
+import { CONTEXT_PATH, SERVER_HOST, SERVER_PORT } from './backend/consts';
 
 const webpackConfig = getWebpackConfig({}, { mode: 'development' });
 
-const host = 'localhost';
 const devServerPort = 4000;
-const stageBackendPort = 8088;
 
 const proxyOptions = {
-    target: `http://${host}:${stageBackendPort}`,
+    target: `http://${SERVER_HOST}:${SERVER_PORT}`,
     secure: false
 };
 
 const options = {
     publicPath: CONTEXT_PATH,
-    host,
+    host: SERVER_HOST,
     inline: false,
     historyApiFallback: {
         index: `${CONTEXT_PATH}/static/index.html`
@@ -54,11 +52,11 @@ WebpackDevServer.addDevServerEntrypoints(webpackConfig[0], options);
 const compiler = webpack(webpackConfig);
 const server = new WebpackDevServer(compiler, options);
 
-server.listen(devServerPort, host, err => {
+server.listen(devServerPort, SERVER_HOST, err => {
     if (err) {
         console.log(err);
     } else {
-        console.log(`Listening at http://${host}:${devServerPort}/`);
+        console.log(`Listening at http://${SERVER_HOST}:${devServerPort}/`);
     }
 });
 
