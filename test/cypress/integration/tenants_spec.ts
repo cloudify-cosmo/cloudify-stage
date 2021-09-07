@@ -21,8 +21,7 @@ describe('Tenants menu', () => {
                 role: 'manager',
                 pages: [
                     { id: 'adminDash', name: 'Dashboard' },
-                    { id: 'blueprints-community', name: 'Blueprints' },
-                    { id: 'marketplace', name: 'Marketplace' }
+                    { id: 'blueprints-community', name: 'Blueprints' }
                 ]
             }
         ]
