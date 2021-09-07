@@ -25,7 +25,7 @@ const waitOptionsForPluginsUpload: Parameters<typeof cy.wait>[1] = { responseTim
 
 function verifyInstallationSucceeded(blueprints: string[]) {
     cy.contains('.progress .progress', '100%', { timeout: blueprints.length * minutesToMs(2) });
-    cy.contains('.progress .label', 'Installation complete! (you can now close this window)');
+    cy.contains('.progress .label', 'Installation completed! (you can now close this window)');
     cy.get('.ui.red.message').should('not.exist');
 }
 
