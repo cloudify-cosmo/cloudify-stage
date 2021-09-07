@@ -1,10 +1,12 @@
 {
+    "compilerOptions": {
+        "noEmit": true,
+        "esModuleInterop": true
+    },
+    "include": ["*.ts"],
     "references": [
         { "path": "./tsconfig.ui.json" },
-        { "path": "backend" },
-        { "path": "backend/test" },
         { "path": "test/jest" },
         { "path": "test/cypress" }
-    ],
-    "files": []
+    ]
 }

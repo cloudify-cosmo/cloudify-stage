@@ -1,5 +1,5 @@
-const UserApp = require('../db/UserAppModel');
-const config = require('../config').get();
+const UserApp = require('../db/models/UserAppModel');
+const config = require('../config').getConfig();
 
 module.exports = {
     up: (queryInterface, Sequelize) => {

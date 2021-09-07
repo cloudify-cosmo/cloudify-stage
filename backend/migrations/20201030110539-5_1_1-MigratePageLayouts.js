@@ -8,7 +8,7 @@ const Utils = require('../utils');
 const userTemplatesFolder = Utils.getResourcePath('templates', true);
 const userPagesFolder = path.resolve(userTemplatesFolder, 'pages');
 
-const UserApp = require('../db/UserAppModel');
+const UserApp = require('../db/models/UserAppModel');
 
 function migrate(queryInterface, Sequelize, pageProcessor) {
     UserApp(queryInterface.sequelize, Sequelize)
