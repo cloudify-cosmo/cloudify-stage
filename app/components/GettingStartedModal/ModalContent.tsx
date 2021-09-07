@@ -5,6 +5,7 @@ import gettingStartedSchema from './schema.json';
 import TechnologiesStep from './steps/TechnologiesStep';
 import SecretsStep from './steps/SecretsStep';
 import SummaryStep from './steps/SummaryStep';
+import WelcomeStep from './steps/WelcomeStep';
 import { GettingStartedSchemaItem, StepName } from './model';
 
 import type {
@@ -58,6 +59,7 @@ const ModalContent = ({
                     <Divider hidden />
                 </>
             )}
+            {stepName === StepName.Welcome && <WelcomeStep />}
             {stepName === StepName.Technologies && (
                 <TechnologiesStep
                     schema={castedGettingStartedSchema}

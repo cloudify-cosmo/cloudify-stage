@@ -435,12 +435,16 @@ describe('Blueprints widget', () => {
     describe('configuration', () => {
         it('should allow to hide composer menu item', () => {
             cy.contains('Upload').click();
+            cy.contains('Upload from Marketplace').should('be.visible');
+            cy.contains('Upload a blueprint package').should('be.visible');
             cy.contains('Generate in the Composer').should('be.visible');
 
             cy.setBooleanConfigurationField('blueprints', 'Show Composer options', false);
 
             cy.contains('Upload').click();
             cy.contains('Generate in the Composer').should('not.exist');
+            cy.contains('Upload from Marketplace').should('be.visible');
+            cy.contains('Upload a blueprint package').should('be.visible');
         });
 
         it('should allow to add new marketplace tab', () => {
