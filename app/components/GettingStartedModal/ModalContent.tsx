@@ -2,7 +2,7 @@ import React from 'react';
 
 import { Divider, ErrorMessage, Modal } from '../basic';
 import gettingStartedSchema from './schema.json';
-import TechnologiesStep from './steps/TechnologiesStep';
+import EnvironmentsStep from './steps/EnvironmentsStep';
 import SecretsStep from './steps/SecretsStep';
 import SummaryStep from './steps/SummaryStep';
 import WelcomeStep from './steps/WelcomeStep';
@@ -12,7 +12,7 @@ import type {
     GettingStartedData,
     GettingStartedSchema,
     GettingStartedSecretsData,
-    GettingStartedTechnologiesData
+    GettingStartedEnvironmentsData
 } from './model';
 
 const castedGettingStartedSchema = gettingStartedSchema as GettingStartedSchema;
@@ -20,13 +20,13 @@ const castedGettingStartedSchema = gettingStartedSchema as GettingStartedSchema;
 type Props = {
     stepErrors?: string[];
     stepName: StepName;
-    technologiesStepData?: GettingStartedTechnologiesData;
+    environmentsStepData?: GettingStartedEnvironmentsData;
     secretsStepsSchemas: GettingStartedSchemaItem[];
     secretsStepsData: GettingStartedData;
     secretsStepIndex: number;
     summaryStepSchemas: GettingStartedSchemaItem[];
     onStepErrorsDismiss: () => void;
-    onTechnologiesStepChange: (technologies: GettingStartedTechnologiesData) => void;
+    onEnvironmentsStepChange: (environments: GettingStartedEnvironmentsData) => void;
     onSecretsStepChange: (secrets: GettingStartedSecretsData) => void;
     onInstallationStarted: () => void;
     onInstallationFinished: () => void;
@@ -36,13 +36,13 @@ type Props = {
 const ModalContent = ({
     stepErrors,
     stepName,
-    technologiesStepData,
+    environmentsStepData,
     secretsStepsSchemas,
     secretsStepsData,
     secretsStepIndex,
     summaryStepSchemas,
     onStepErrorsDismiss,
-    onTechnologiesStepChange,
+    onEnvironmentsStepChange,
     onSecretsStepChange,
     onInstallationStarted,
     onInstallationFinished,
@@ -52,24 +52,24 @@ const ModalContent = ({
     const secretsStepData = secretsStepsData[secretsStepSchema?.name];
     const statusStepActive = stepName === StepName.Status;
     return (
-        <Modal.Content style={{ minHeight: 220, display: 'flex', flexDirection: 'column' }}>
+        <Modal.Content style={{ minHeight: 220, flexDirection: 'column' }}>
             {!_.isEmpty(stepErrors) && (
                 <>
-                    <ErrorMessage error={stepErrors} onDismiss={onStepErrorsDismiss} />
+                    <ErrorMessage header={null} error={stepErrors} onDismiss={onStepErrorsDismiss} />
                     <Divider hidden />
                 </>
             )}
             {stepName === StepName.Welcome && <WelcomeStep />}
-            {stepName === StepName.Technologies && (
-                <TechnologiesStep
+            {stepName === StepName.Environments && (
+                <EnvironmentsStep
                     schema={castedGettingStartedSchema}
-                    selectedTechnologies={technologiesStepData}
-                    onChange={onTechnologiesStepChange}
+                    selectedEnvironments={environmentsStepData}
+                    onChange={onEnvironmentsStepChange}
                 />
             )}
             {stepName === StepName.Secrets && secretsStepSchema && (
                 <SecretsStep
-                    selectedTechnology={secretsStepSchema}
+                    selectedEnvironment={secretsStepSchema}
                     typedSecrets={secretsStepData}
                     onChange={onSecretsStepChange}
                 />
@@ -77,7 +77,7 @@ const ModalContent = ({
             {(stepName === StepName.Summary || statusStepActive) && (
                 <SummaryStep
                     installationMode={statusStepActive}
-                    selectedTechnologies={summaryStepSchemas}
+                    selectedEnvironments={summaryStepSchemas}
                     typedSecrets={secretsStepsData}
                     onInstallationStarted={onInstallationStarted}
                     onInstallationFinished={onInstallationFinished}

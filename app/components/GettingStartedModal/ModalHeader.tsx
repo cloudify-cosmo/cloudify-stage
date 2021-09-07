@@ -13,7 +13,7 @@ type Props = {
 };
 
 const headerContentKeys = {
-    [StepName.Technologies]: 'technologiesStep',
+    [StepName.Environments]: 'environmentsStep',
     [StepName.Summary]: 'summaryStep',
     [StepName.Status]: 'statusStep'
 };
