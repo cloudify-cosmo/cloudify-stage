@@ -7,6 +7,13 @@ import type { BlueprintCatalogPayload, BlueprintCatalogWidgetConfiguration, Blue
 const widgetId = 'blueprintCatalog';
 const t = Stage.Utils.getT(`widgets.${widgetId}`);
 
+const fieldsToShowItems = [
+    t('configuration.fieldsToShow.items.name'),
+    t('configuration.fieldsToShow.items.description'),
+    t('configuration.fieldsToShow.items.created'),
+    t('configuration.fieldsToShow.items.updated')
+];
+
 Stage.defineWidget<
     Record<string, string | number>,
     BlueprintCatalogPayload | Error,
@@ -30,7 +37,7 @@ Stage.defineWidget<
         {
             id: 'jsonPath',
             name: t('configuration.jsonPath.label'),
-            placeHolder: t('configuration.jsonPath.placeHolder'),
+            placeholder: t('configuration.jsonPath.placeholder'),
             description: t('configuration.jsonPath.description'),
             default: Stage.i18n.t('widgets.common.urls.blueprintsCatalog'),
             type: Stage.Basic.GenericField.STRING_TYPE
@@ -38,7 +45,7 @@ Stage.defineWidget<
         {
             id: 'username',
             name: t('configuration.username.label'),
-            placeHolder: t('configuration.username.placeHolder'),
+            placeholder: t('configuration.username.placeholder'),
             description: t('configuration.username.description'),
             default: 'cloudify-examples',
             type: Stage.Basic.GenericField.STRING_TYPE
@@ -46,7 +53,7 @@ Stage.defineWidget<
         {
             id: 'filter',
             name: t('configuration.filter.label'),
-            placeHolder: t('configuration.filter.placeHolder'),
+            placeholder: t('configuration.filter.placeholder'),
             description: t('configuration.filter.description'),
             default: 'blueprint in:name NOT local',
             type: Stage.Basic.GenericField.STRING_TYPE
@@ -64,16 +71,9 @@ Stage.defineWidget<
         {
             id: 'fieldsToShow',
             name: t('configuration.fieldsToShow.label'),
-            placeHolder: t('configuration.fieldsToShow.placeHolder'),
-            items: [
-                t('configuration.fieldsToShow.items.name'),
-                t('configuration.fieldsToShow.items.description'),
-                t('configuration.fieldsToShow.items.created'),
-                t('configuration.fieldsToShow.items.updated')
-            ],
-            default: `${t('configuration.fieldsToShow.items.name')}, ${t(
-                'configuration.fieldsToShow.items.description'
-            )}, ${t('configuration.fieldsToShow.items.created')}, ${t('configuration.fieldsToShow.items.updated')}`,
+            placeholder: t('configuration.fieldsToShow.placeholder'),
+            items: fieldsToShowItems,
+            default: fieldsToShowItems.join(),
             type: Stage.Basic.GenericField.MULTI_SELECT_LIST_TYPE
         },
         {

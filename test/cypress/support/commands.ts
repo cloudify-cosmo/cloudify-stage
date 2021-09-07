@@ -375,18 +375,18 @@ const commands = {
             .then(commandResult => commandResult.stdout);
     },
 
-    setSearchableDropdownValue: (fieldName: string, value: string) => {
-        const getDropdownField = () => cy.contains('.field', fieldName);
+    getField: (fieldName: string) => cy.contains('.field', fieldName),
 
+    setSearchableDropdownValue: (fieldName: string, value: string) => {
         if (value) {
-            getDropdownField()
+            cy.getField(fieldName)
                 .click()
                 .within(() => {
                     cy.get('input').type(value);
                     cy.get(`div[option-value="${value}"]`).click();
                 });
         } else {
-            getDropdownField()
+            cy.getField(fieldName)
                 .find('i.dropdown')
                 .then($icon => {
                     if ($icon.hasClass('clear')) cy.clearSearchableDropdown(fieldName);
@@ -394,23 +394,19 @@ const commands = {
         }
     },
 
-    clearSearchableDropdown: (fieldName: string) =>
-        cy.contains('.field', fieldName).find('.dropdown.clear.icon').click(),
+    clearSearchableDropdown: (fieldName: string) => cy.getField(fieldName).find('.dropdown.clear.icon').click(),
 
     setDropdownValues: (fieldName: string, values: string[]) => {
-        cy.contains('.field', fieldName)
+        cy.getField(fieldName)
             .click()
             .within(() => values.forEach(value => cy.contains('div[role=option]', value).click()))
             .click();
     },
 
-    clearMultipleDropdown: (fieldName: string) => {
-        cy.contains('.field', fieldName).within(() => {
-            if (Cypress.$(`.field:contains('${fieldName}') .delete.icon`).length > 0) {
-                cy.get('.delete.icon').click({ multiple: true });
-            }
-        });
-    },
+    clearMultipleDropdown: (fieldName: string) =>
+        cy.getField(fieldName).within(() => {
+            cy.get('.delete.icon').click({ multiple: true });
+        }),
 
     openTab: (tabName: string) => {
         cy.get('.tabular.menu').contains(tabName).click();

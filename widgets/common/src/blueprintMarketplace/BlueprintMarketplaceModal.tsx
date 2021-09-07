@@ -1,17 +1,17 @@
 import type { FunctionComponent } from 'react';
-import { MarketplaceTab } from './types';
+import type { MarketplaceDisplayStyle, MarketplaceTab } from './types';
 
 interface BlueprintMarketplaceModalProps {
     open: boolean;
     tabs?: MarketplaceTab[];
-    displayStyle?: Stage.Common.BlueprintMarketplace.DisplayStyle;
+    displayStyle?: MarketplaceDisplayStyle;
     columns?: string[];
     onHide: () => void;
 }
 
 const t = Stage.Utils.getT('widgets.common.blueprintMarketplace');
 
-const getPageLayout = (tabs: MarketplaceTab[], displayStyle: string, columns: string[]) => ({
+const getPageLayout = (tabs: MarketplaceTab[], displayStyle: MarketplaceDisplayStyle, columns: string[]) => ({
     layout: [
         {
             type: 'tabs',

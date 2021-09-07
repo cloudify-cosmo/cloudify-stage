@@ -64,12 +64,6 @@ const commands = {
     setSearchableDropdownConfigurationField: (widgetId: string, fieldName: string, value: string) =>
         cy.editWidgetConfiguration(widgetId, () => {
             cy.setSearchableDropdownValue(fieldName, value);
-        }),
-
-    setDropdownConfigurationField: (widgetId: string, fieldName: string, values: string[]) =>
-        cy.editWidgetConfiguration(widgetId, () => {
-            cy.clearMultipleDropdown(fieldName);
-            cy.setDropdownValues(fieldName, values);
         })
 };
 

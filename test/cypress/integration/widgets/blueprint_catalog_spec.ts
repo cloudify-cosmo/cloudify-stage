@@ -38,18 +38,23 @@ describe('Blueprints catalog widget', () => {
     });
 
     it('should allow to change display style', () => {
-        cy.setDropdownConfigurationField('blueprintCatalog', 'Display style', ['Table']);
-        cy.get('.blueprintCatalog table').should('be.visible');
+        cy.editWidgetConfiguration('blueprintCatalog', () => {
+            cy.setDropdownValues('Display style', ['Table']);
+        });
+
+        cy.get('.blueprintCatalogWidget table').should('be.visible');
     });
 
     it('should allow to customize fields to show', () => {
-        cy.setDropdownConfigurationField('blueprintCatalog', 'List of fields to show in the table', [
-            'Name',
-            'Created'
-        ]);
-        cy.contains('.blueprintCatalog', 'Name').should('be.visible');
-        cy.contains('.blueprintCatalog', 'Created').should('be.visible');
-        cy.contains('.blueprintCatalog', 'Updated').should('not.exist');
-        cy.contains('.blueprintCatalog', 'Description').should('not.exist');
+        cy.editWidgetConfiguration('blueprintCatalog', () => {
+            cy.clearMultipleDropdown('List of fields to show in the table');
+            cy.setDropdownValues('List of fields to show in the table', ['Name', 'Created']);
+        });
+        cy.get('.blueprintCatalogWidget').within(() => {
+            cy.contains('Name').should('be.visible');
+            cy.contains('Created').should('be.visible');
+            cy.contains('Updated').should('not.exist');
+            cy.contains('Description').should('not.exist');
+        });
     });
 });

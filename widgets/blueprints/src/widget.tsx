@@ -70,7 +70,7 @@ Stage.defineWidget<unknown, unknown, BlueprintsWidgetConfiguration>({
         {
             id: 'marketplaceColumnsToShow',
             name: t('configuration.marketplaceColumnsToShow.label'),
-            placeHolder: t('configuration.marketplaceColumnsToShow.placeHolder'),
+            placeholder: t('configuration.marketplaceColumnsToShow.placeholder'),
             items: [
                 Stage.i18n.t('widgets.blueprintCatalog.configuration.fieldsToShow.items.name'),
                 Stage.i18n.t('widgets.blueprintCatalog.configuration.fieldsToShow.items.description'),
