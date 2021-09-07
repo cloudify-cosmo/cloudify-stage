@@ -1,12 +1,12 @@
 import StageUtils from '../../utils/stageUtils';
 
-import type { GettingStartedSchemaSecret, GettingStartedSecretsData, GettingStartedTechnologiesData } from './model';
+import type { GettingStartedSchemaSecret, GettingStartedSecretsData, GettingStartedEnvironmentsData } from './model';
 
 const t = StageUtils.getT('gettingStartedModal.validation');
 
-export const validateTechnologyFields = (data: GettingStartedTechnologiesData) => {
+export const validateEnvironmentsFields = (data: GettingStartedEnvironmentsData) => {
     if (!_.some(data)) {
-        return t('someTechnologyRequiredError');
+        return t('environmentRequiredError');
     }
     return null;
 };

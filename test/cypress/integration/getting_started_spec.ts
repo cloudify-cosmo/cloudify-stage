@@ -142,7 +142,7 @@ describe('Getting started modal', () => {
         cy.contains('Welcome to Cloudify');
     });
 
-    it('should install selected technology', () => {
+    it('should install selected environment', () => {
         mockPluginsCatalog(pluginsCatalog);
         cy.deletePlugins().deleteSecrets('aws_').deleteBlueprints('AWS-', true);
 
@@ -326,7 +326,7 @@ describe('Getting started modal', () => {
             setSecretValues(awsSecrets);
             goToBackStep();
 
-            cy.contains('.header', 'Getting Started');
+            cy.contains('.header', 'First, please select your environment(s)');
             cy.contains('button', 'GCP').click();
             cy.contains('button.active', 'AWS');
             cy.contains('button.active', 'GCP');
