@@ -1,0 +1,64 @@
+import { readdirSync } from 'fs-extra';
+import { getRBAC } from 'handler/AuthHandler';
+import { getMode } from 'serverSettings';
+
+import { selectTemplate } from 'handler/TemplateHandler';
+
+jest.mock('fs');
+(<jest.Mock>readdirSync).mockReturnValue([]);
+
+const rbac = {
+    roles: [
+        {
+            type: 'system_role',
+            name: 'sys_admin'
+        },
+        {
+            type: 'tenant_role',
+            name: 'manager'
+        },
+        {
+            type: 'tenant_role',
+            name: 'user'
+        },
+        {
+            type: 'tenant_role',
+            name: 'operations'
+        },
+        {
+            type: 'tenant_role',
+            name: 'viewer'
+        },
+        {
+            type: 'system_role',
+            name: 'default'
+        }
+    ],
+    permissions: {}
+};
+
+jest.mock('handler/AuthHandler');
+(<jest.Mock>getRBAC).mockResolvedValue(rbac);
+
+jest.mock('serverSettings');
+
+describe('TemplateHandler', () => {
+    describe('allows to select built-in template', () => {
+        it('in Premium version', async () => {
+            (<jest.Mock>getMode).mockReturnValue('main');
+
+            await expect(selectTemplate('default', { sys_admin: ['G1'] }, {}, 'default_tenant', '')).resolves.toEqual(
+                'main-sys_admin'
+            );
+
+            await expect(selectTemplate('sys_admin', {}, {}, '', '')).resolves.toEqual('main-sys_admin');
+
+            await expect(selectTemplate('default', {}, {}, 'default_tenant', '')).resolves.toEqual('main-default');
+        });
+
+        it('in Community version', async () => {
+            (<jest.Mock>getMode).mockReturnValue('community');
+            await expect(selectTemplate('default', {}, {}, 'default_tenant', '')).resolves.toEqual('community');
+        });
+    });
+});

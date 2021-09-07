@@ -11,7 +11,7 @@ const ImageminPlugin = require('imagemin-webpack-plugin').default;
 const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
 const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
 
-const Consts = require('./backend/consts');
+const CONTEXT_PATH = '/console';
 
 module.exports = (env, argv) => {
     const isProduction = argv.mode === 'production';
@@ -169,7 +169,7 @@ module.exports = (env, argv) => {
             output: {
                 path: outputPath,
                 filename: 'static/js/[name].bundle.js',
-                publicPath: Consts.CONTEXT_PATH
+                publicPath: CONTEXT_PATH
             },
             module,
             plugins: _.flatten(
@@ -242,7 +242,7 @@ module.exports = (env, argv) => {
             output: {
                 path: path.join(outputPath, 'appData'),
                 filename: 'widgets/[name]',
-                publicPath: Consts.CONTEXT_PATH
+                publicPath: CONTEXT_PATH
             },
             module,
             plugins: _.flatten(
@@ -276,7 +276,7 @@ module.exports = (env, argv) => {
             output: {
                 path: path.join(outputPath, 'appData/widgets'),
                 filename: 'common/common.js',
-                publicPath: Consts.CONTEXT_PATH
+                publicPath: CONTEXT_PATH
             },
             module,
             plugins: [
