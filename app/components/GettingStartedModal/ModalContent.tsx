@@ -72,6 +72,7 @@ const ModalContent = ({
                     selectedEnvironment={secretsStepSchema}
                     typedSecrets={secretsStepData}
                     onChange={onSecretsStepChange}
+                    markEmptyInputs={!_.isEmpty(stepErrors)}
                 />
             )}
             {(stepName === StepName.Summary || statusStepActive) && (

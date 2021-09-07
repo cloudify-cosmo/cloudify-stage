@@ -25,7 +25,7 @@ const waitOptionsForPluginsUpload: Parameters<typeof cy.wait>[1] = { responseTim
 
 function verifyInstallationSucceeded(blueprints: string[]) {
     cy.contains('.progress .progress', '100%', { timeout: blueprints.length * minutesToMs(2) });
-    cy.contains('.progress .label', 'Installation done!');
+    cy.contains('.progress .label', 'Installation complete! (you can now close this window)');
     cy.get('.ui.red.message').should('not.exist');
 }
 
@@ -155,7 +155,10 @@ describe('Getting started modal', () => {
             setSecretValues(awsSecrets);
             goToNextStep();
 
-            cy.contains('.header', 'Summary');
+            cy.contains(
+                '.header',
+                'Finally, please review your selected task list below and click ‘Finish’ to begin installation...'
+            );
             awsPlugins.forEach(verifyPluginInstallationSummaryItem);
             awsSecrets.forEach(verifySecretCreationSummaryItem);
             awsBlueprints.forEach(verifyBlueprintUploadSummaryItem);
@@ -199,7 +202,10 @@ describe('Getting started modal', () => {
             setSecretValues(awsSecrets);
             goToNextStep();
 
-            cy.contains('.header', 'Summary');
+            cy.contains(
+                '.header',
+                'Finally, please review your selected task list below and click ‘Finish’ to begin installation...'
+            );
             awsPlugins.forEach(verifyPluginPresenceSummaryItem);
             awsSecrets.forEach(verifySecretUpdateSummaryItem);
             awsBlueprints.forEach(verifyBlueprintPresenceSummaryItem);
@@ -239,7 +245,7 @@ describe('Getting started modal', () => {
             cy.contains('button', 'Terraform on AWS').click();
             goToNextStep();
 
-            cy.contains('.header', 'AWS + Terraform on AWS Secrets');
+            cy.contains('.header', 'AWS');
             setSecretValues(awsSecrets);
             goToNextStep();
 
@@ -247,7 +253,10 @@ describe('Getting started modal', () => {
             setSecretValues(gcpSecrets);
             goToNextStep();
 
-            cy.contains('.header', 'Summary');
+            cy.contains(
+                '.header',
+                'Finally, please review your selected task list below and click ‘Finish’ to begin installation...'
+            );
             plugins.forEach(verifyPluginInstallationSummaryItem);
             awsSecrets.forEach(verifySecretCreationSummaryItem);
             gcpSecrets.forEach(verifySecretCreationSummaryItem);
@@ -293,7 +302,10 @@ describe('Getting started modal', () => {
             verifySecretsRequired(gcpSecrets);
             goToNextStep();
 
-            cy.contains('.header', 'Summary');
+            cy.contains(
+                '.header',
+                'Finally, please review your selected task list below and click ‘Finish’ to begin installation...'
+            );
         });
     });
 
@@ -310,7 +322,10 @@ describe('Getting started modal', () => {
             setSecretValues(awsSecrets);
             goToNextStep();
 
-            cy.contains('.header', 'Summary');
+            cy.contains(
+                '.header',
+                'Finally, please review your selected task list below and click ‘Finish’ to begin installation...'
+            );
             awsPlugins.forEach(verifyPluginNotAvailableSummaryItem);
         });
     });

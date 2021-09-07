@@ -30,9 +30,10 @@
         "titles": {
             "environmentsStep": "First, please select your environment(s)",
             "secretsStep": "Secrets",
-            "summaryStep": "Summary",
+            "summaryStep": "Finally, please review your selected task list below and click ‘Finish’ to begin installation...",
             "statusStep": "Status"
         },
+        "secretsSubtitle": "Now, please fill in the fields below (and click ‘Next’)",
         "buttons": {
             "closeModal": "Close",
             "stepBack": "Back",
@@ -82,7 +83,7 @@
             "blueprintUploadError": "{{blueprintName}} blueprint upload error:\n{{uploadError}}",
             "timeoutExceededError": "Timeout exceeded.",
             "progressMessage": "Installation in progress...",
-            "doneMessage": "Installation done!"
+            "doneMessage": "Installation complete! (you can now close this window)"
         }
     },
     "editMode": {
