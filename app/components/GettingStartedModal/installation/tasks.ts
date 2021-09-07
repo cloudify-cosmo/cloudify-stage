@@ -53,10 +53,10 @@ export const mapDefinedSecrets = (definedSecrets: GettingStartedSecretsData[]) =
     }, {} as Record<string, Omit<GettingStartedSecretsData, 'name'>>);
 };
 
-export const filterSchemaData = (selectedTechnologies: GettingStartedSchema, typedSecrets: GettingStartedData) => {
+export const filterSchemaData = (selectedEnvironments: GettingStartedSchema, typedSecrets: GettingStartedData) => {
     const filteredSecrets = {} as GettingStartedData;
-    selectedTechnologies.forEach(selectedTechnology => {
-        filteredSecrets[selectedTechnology.name] = typedSecrets[selectedTechnology.name];
+    selectedEnvironments.forEach(selectedEnvironment => {
+        filteredSecrets[selectedEnvironment.name] = typedSecrets[selectedEnvironment.name];
     });
     return filteredSecrets;
 };
@@ -128,7 +128,7 @@ export type PluginInstallationTask = {
 export const createPluginInstallationTasks = (
     currentDistribution: string,
     currentPlugins: PluginsHook,
-    selectedTechnologies: GettingStartedSchema
+    selectedEnvironments: GettingStartedSchema
 ) => {
     const acceptedPlugins = new Set();
     const rejectedPlugins: PluginInstallationTask[] = [];
@@ -137,8 +137,8 @@ export const createPluginInstallationTasks = (
     if (currentPlugins.response) {
         const catalogPlugins = currentPlugins.response?.available ?? [];
         const managerPlugins = currentPlugins.response?.installed ?? [];
-        selectedTechnologies.forEach(selectedTechnology => {
-            selectedTechnology.plugins.forEach(pluginDetails => {
+        selectedEnvironments.forEach(selectedEnvironment => {
+            selectedEnvironment.plugins.forEach(pluginDetails => {
                 const expectedPluginName = pluginDetails.name;
                 const expectedPluginVersion = pluginDetails.version;
                 const expectedPluginKey = `${expectedPluginName} ${expectedPluginVersion}`;
@@ -188,7 +188,7 @@ export type SecretInstallationTask = {
 
 export const createSecretsInstallationTasks = (
     currentSecrets: SecretsHook,
-    selectedTechnologies: GettingStartedSchema,
+    selectedEnvironments: GettingStartedSchema,
     typedSecrets: GettingStartedData
 ) => {
     const usedSecrets = new Set();
@@ -196,13 +196,13 @@ export const createSecretsInstallationTasks = (
     const createdSecrets: SecretInstallationTask[] = [];
     if (currentSecrets.response) {
         const mappedSecrets = mapDefinedSecrets(currentSecrets.response ?? []);
-        selectedTechnologies.forEach(selectedTechnology => {
-            selectedTechnology.secrets.forEach(secretsItem => {
+        selectedEnvironments.forEach(selectedEnvironment => {
+            selectedEnvironment.secrets.forEach(secretsItem => {
                 if (usedSecrets.has(secretsItem.name)) {
                     return;
                 }
                 usedSecrets.add(secretsItem.name);
-                const pluginSecrets = typedSecrets[selectedTechnology.name];
+                const pluginSecrets = typedSecrets[selectedEnvironment.name];
                 if (pluginSecrets == null) {
                     return;
                 }
@@ -234,15 +234,15 @@ export type BlueprintInstallationTask = {
 
 export const createBlueprintsInstallationTasks = (
     currentBlueprints: BlueprintsHook,
-    selectedTechnologies: GettingStartedSchema
+    selectedEnvironments: GettingStartedSchema
 ) => {
     const usedBlueprints = new Set();
     const uploadedBlueprints: BlueprintInstallationTask[] = [];
     const scheduledBlueprints: BlueprintInstallationTask[] = [];
     if (currentBlueprints.response) {
         const mappedBlueprints = mapCurrentBlueprints(currentBlueprints.response);
-        selectedTechnologies.forEach(selectedTechnology => {
-            selectedTechnology.blueprints.forEach(blueprintItem => {
+        selectedEnvironments.forEach(selectedEnvironment => {
+            selectedEnvironment.blueprints.forEach(blueprintItem => {
                 if (usedBlueprints.has(blueprintItem.id)) {
                     return;
                 }
@@ -263,7 +263,7 @@ export const createBlueprintsInstallationTasks = (
     return { uploadedBlueprints, scheduledBlueprints };
 };
 
-export const usePluginsInstallationTasks = (selectedTechnologies: GettingStartedSchema) => {
+export const usePluginsInstallationTasks = (selectedEnvironments: GettingStartedSchema) => {
     const currentDistribution = useCurrentDistribution();
     const currentPlugins = useFetchPlugins();
     return useMemo(() => {
@@ -275,18 +275,18 @@ export const usePluginsInstallationTasks = (selectedTechnologies: GettingStarted
         }
         return {
             loading: false as const,
-            tasks: createPluginInstallationTasks(currentDistribution, currentPlugins, selectedTechnologies)
+            tasks: createPluginInstallationTasks(currentDistribution, currentPlugins, selectedEnvironments)
         };
-    }, [currentDistribution, currentPlugins, selectedTechnologies]);
+    }, [currentDistribution, currentPlugins, selectedEnvironments]);
 };
 
 export const useSecretsInstallationTasks = (
-    selectedTechnologies: GettingStartedSchema,
+    selectedEnvironments: GettingStartedSchema,
     typedSecrets: GettingStartedData
 ) => {
     const currentSecrets = useFetchSecrets();
-    const filteredTypedSecrets = useMemo(() => filterSchemaData(selectedTechnologies, typedSecrets), [
-        selectedTechnologies,
+    const filteredTypedSecrets = useMemo(() => filterSchemaData(selectedEnvironments, typedSecrets), [
+        selectedEnvironments,
         typedSecrets
     ]);
     return useMemo(() => {
@@ -298,12 +298,12 @@ export const useSecretsInstallationTasks = (
         }
         return {
             loading: false,
-            tasks: createSecretsInstallationTasks(currentSecrets, selectedTechnologies, filteredTypedSecrets)
+            tasks: createSecretsInstallationTasks(currentSecrets, selectedEnvironments, filteredTypedSecrets)
         };
-    }, [currentSecrets, selectedTechnologies, filteredTypedSecrets]);
+    }, [currentSecrets, selectedEnvironments, filteredTypedSecrets]);
 };
 
-export const useBlueprintsInstallationTasks = (selectedTechnologies: GettingStartedSchema) => {
+export const useBlueprintsInstallationTasks = (selectedEnvironments: GettingStartedSchema) => {
     const currentBlueprints = useFetchBlueprints();
     return useMemo(() => {
         if (currentBlueprints.loading) {
@@ -314,8 +314,8 @@ export const useBlueprintsInstallationTasks = (selectedTechnologies: GettingStar
         }
         return {
             loading: false,
-            tasks: createBlueprintsInstallationTasks(currentBlueprints, selectedTechnologies),
+            tasks: createBlueprintsInstallationTasks(currentBlueprints, selectedEnvironments),
             error: undefined
         };
-    }, [currentBlueprints, selectedTechnologies]);
+    }, [currentBlueprints, selectedEnvironments]);
 };
