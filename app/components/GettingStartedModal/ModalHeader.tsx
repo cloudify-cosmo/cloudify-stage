@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 
 import StageUtils from '../../utils/stageUtils';
 import { Modal } from '../basic';
@@ -12,27 +12,28 @@ type Props = {
     secretsStepIndex: number;
 };
 
+const headerContentKeys = {
+    [StepName.Environments]: 'environmentsStep',
+    [StepName.Summary]: 'summaryStep',
+    [StepName.Status]: 'statusStep'
+};
+
 const ModalHeader = ({ stepName, secretsStepsSchemas, secretsStepIndex }: Props) => {
-    let modalTitle = '';
-    switch (stepName) {
-        case StepName.Technologies:
-            modalTitle = t('technologiesStep');
-            break;
-        case StepName.Secrets: {
-            const schemaItem = secretsStepsSchemas[secretsStepIndex];
-            modalTitle = schemaItem ? `${schemaItem.label} ${t('secretsStep')}` : '';
-            break;
+    const modalTitle = useMemo(() => {
+        if (stepName === StepName.Welcome) {
+            return null;
         }
-        case StepName.Summary:
-            modalTitle = t('summaryStep');
-            break;
-        case StepName.Status:
-            modalTitle = t('statusStep');
-            break;
-        default:
-            modalTitle = '';
-            break;
-    }
+
+        if (stepName === StepName.Secrets) {
+            const schemaItem = secretsStepsSchemas[secretsStepIndex];
+            return schemaItem ? `${schemaItem.label} ${t('secretsStep')}` : '';
+        }
+
+        return t(headerContentKeys[stepName]);
+    }, [stepName, secretsStepIndex]);
+
+    if (!modalTitle) return null;
+
     return <Modal.Header>{modalTitle}</Modal.Header>;
 };
 

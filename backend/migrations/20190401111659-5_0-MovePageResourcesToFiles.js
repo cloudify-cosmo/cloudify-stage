@@ -4,7 +4,7 @@ const moment = require('moment');
 const path = require('path');
 
 const ResourceTypes = require('../db/types/ResourceTypes');
-const ResourcesModel = require('../db/ResourcesModel');
+const ResourcesModel = require('../db/models/ResourcesModel');
 const Utils = require('../utils');
 
 const userTemplatesFolder = Utils.getResourcePath('templates', true);

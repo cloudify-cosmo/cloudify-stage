@@ -28,7 +28,7 @@
     "gettingStartedModal": {
         "disableModalLabel": "Don't show next time",
         "titles": {
-            "technologiesStep": "Getting Started",
+            "environmentsStep": "First, please select your environment(s)",
             "secretsStep": "Secrets",
             "summaryStep": "Summary",
             "statusStep": "Status"
@@ -45,7 +45,7 @@
             "blueprintsMetadataLoadingError": "Blueprints information loading error"
         },
         "validation": {
-            "someTechnologyRequiredError": "At least one technology needs to be selected.",
+            "environmentRequiredError": "At least one environment needs to be selected.",
             "allSecretsRequiredError": "All secret values need to be specified."
         },
         "summary": {
@@ -73,6 +73,8 @@
                 "uploadingErrorMessageSuffix": "blueprint upload error"
             }
         },
+        "welcomeText": "Welcome to Cloudify: your open source,\nmulti-cloud orchestration platform.\n\nWe’ll start by setting up your cloud environment\nin the following easy steps. Ready? Let’s go.\n\nNote: this process can take up to 5 minutes,\nand you will need your API access keys.",
+        "welcomeLogoLabel": "CLOUDIFY",
         "messages": {
             "pluginInstallError": "{{pluginName}} plugin installation error.",
             "secretUpdateError": "{{secretName}} secret update operation error.",

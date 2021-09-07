@@ -11,7 +11,8 @@ export type PaginationResponse = {
 export type RegExpString = string;
 
 export enum StepName {
-    Technologies,
+    Welcome,
+    Environments,
     Secrets,
     Summary,
     Status
@@ -46,6 +47,6 @@ export type GettingStartedSchemaItem = {
 
 export type GettingStartedSchema = GettingStartedSchemaItem[];
 
-export type GettingStartedTechnologiesData = Record<string, boolean | undefined>;
+export type GettingStartedEnvironmentsData = Record<string, boolean | undefined>;
 export type GettingStartedSecretsData = Record<string, string | undefined>;
 export type GettingStartedData = Record<string, GettingStartedSecretsData | undefined>;

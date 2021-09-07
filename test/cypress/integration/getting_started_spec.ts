@@ -124,6 +124,7 @@ describe('Getting started modal', () => {
         cy.interceptSp('POST', `/users/admin`).as('disableRequest');
 
         cy.get('.modal').within(() => {
+            goToNextStep();
             cy.contains('label', "Don't show next time").click();
             closeModal();
         });
@@ -138,14 +139,15 @@ describe('Getting started modal', () => {
         cy.location('pathname').then(pathname => cy.visit(`${pathname}?gettingStarted=true`));
 
         cy.get('.modal').should('be.visible');
-        cy.contains('.header', 'Getting Started');
+        cy.contains('Welcome to Cloudify');
     });
 
-    it('should install selected technology', () => {
+    it('should install selected environment', () => {
         mockPluginsCatalog(pluginsCatalog);
         cy.deletePlugins().deleteSecrets('aws_').deleteBlueprints('AWS-', true);
 
         cy.get('.modal').within(() => {
+            goToNextStep();
             cy.contains('button', 'AWS').click();
             goToNextStep();
 
@@ -189,6 +191,7 @@ describe('Getting started modal', () => {
         });
 
         cy.get('.modal').within(() => {
+            goToNextStep();
             cy.contains('button', 'AWS').click();
             goToNextStep();
 
@@ -230,6 +233,7 @@ describe('Getting started modal', () => {
         ];
 
         cy.get('.modal').within(() => {
+            goToNextStep();
             cy.contains('button', 'AWS').click();
             cy.contains('button', 'GCP').click();
             cy.contains('button', 'Terraform on AWS').click();
@@ -276,6 +280,7 @@ describe('Getting started modal', () => {
         }
 
         cy.get('.modal').within(() => {
+            goToNextStep();
             cy.contains('button', 'AWS').click();
             cy.contains('button', 'GCP').click();
             goToNextStep();
@@ -297,6 +302,7 @@ describe('Getting started modal', () => {
         cy.deletePlugins();
 
         cy.get('.modal').within(() => {
+            goToNextStep();
             cy.contains('button', 'AWS').click();
             goToNextStep();
 
@@ -311,6 +317,7 @@ describe('Getting started modal', () => {
 
     it('should keep button and field states when navigating beetwen steps', () => {
         cy.get('.modal').within(() => {
+            goToNextStep();
             cy.contains('button', 'AWS').click();
             cy.contains('button.active', 'AWS');
             goToNextStep();
@@ -319,7 +326,7 @@ describe('Getting started modal', () => {
             setSecretValues(awsSecrets);
             goToBackStep();
 
-            cy.contains('.header', 'Getting Started');
+            cy.contains('.header', 'First, please select your environment(s)');
             cy.contains('button', 'GCP').click();
             cy.contains('button.active', 'AWS');
             cy.contains('button.active', 'GCP');

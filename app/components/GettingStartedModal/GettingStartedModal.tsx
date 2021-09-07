@@ -10,8 +10,8 @@ import useResettableState from '../../utils/hooks/useResettableState';
 import { Form, Modal } from '../basic';
 import gettingStartedSchema from './schema.json';
 import useModalOpenState from './useModalOpenState';
-import { validateSecretFields, validateTechnologyFields } from './formValidation';
-import createTechnologiesGroups from './createTechnologiesGroups';
+import { validateSecretFields, validateEnvironmentsFields } from './formValidation';
+import createEnvironmentsGroups from './createEnvironmentsGroups';
 import { GettingStartedSchemaItem, StepName } from './model';
 import ModalHeader from './ModalHeader';
 import ModalContent from './ModalContent';
@@ -22,7 +22,7 @@ import type {
     GettingStartedData,
     GettingStartedSchema,
     GettingStartedSecretsData,
-    GettingStartedTechnologiesData
+    GettingStartedEnvironmentsData
 } from './model';
 
 const castedGettingStartedSchema = gettingStartedSchema as GettingStartedSchema;
@@ -31,9 +31,9 @@ const GettingStartedModal = () => {
     const modalOpenState = useModalOpenState();
 
     const manager = useSelector((state: ReduxState) => state.manager);
-    const [stepName, setStepName] = useState(StepName.Technologies);
+    const [stepName, setStepName] = useState(StepName.Welcome);
     const [stepErrors, setStepErrors, resetStepErrors] = useResettableState<string[]>([]);
-    const [technologiesStepData, setTechnologiesStepData] = useState<GettingStartedTechnologiesData>({});
+    const [environmentsStepData, setEnvironmentsStepData] = useState<GettingStartedEnvironmentsData>({});
     const [secretsStepIndex, setSecretsStepIndex] = useState(0);
     const [secretsStepsData, setSecretsStepsData] = useState<GettingStartedData>({});
 
@@ -41,10 +41,10 @@ const GettingStartedModal = () => {
     const [modalDisabledChecked, setModalDisabledChange] = useInput(false);
 
     const commonStepsSchemas = useMemo(
-        () => castedGettingStartedSchema.filter(item => technologiesStepData[item.name]),
-        [technologiesStepData]
+        () => castedGettingStartedSchema.filter(item => environmentsStepData[item.name]),
+        [environmentsStepData]
     );
-    const secretsStepsSchemas = useMemo(() => createTechnologiesGroups(commonStepsSchemas), [technologiesStepData]);
+    const secretsStepsSchemas = useMemo(() => createEnvironmentsGroups(commonStepsSchemas), [environmentsStepData]);
     const summaryStepSchemas = useMemo(() => {
         return commonStepsSchemas.reduce(
             (result, item) => {
@@ -64,10 +64,10 @@ const GettingStartedModal = () => {
     const secretsStepSchema = secretsStepsSchemas[secretsStepIndex] as GettingStartedSchemaItem | undefined;
     const secretsStepData = secretsStepSchema ? secretsStepsData[secretsStepSchema.name] : undefined;
 
-    const checkTechnologiesStepDataErrors = () => {
-        const usedTechnologiesError = validateTechnologyFields(technologiesStepData);
-        if (usedTechnologiesError) {
-            setStepErrors([usedTechnologiesError]);
+    const checkEnvironmentsStepDataErrors = () => {
+        const usedEnvironmentsError = validateEnvironmentsFields(environmentsStepData);
+        if (usedEnvironmentsError) {
+            setStepErrors([usedEnvironmentsError]);
             return false;
         }
         resetStepErrors();
@@ -89,8 +89,8 @@ const GettingStartedModal = () => {
     const handleStepErrorsDismiss = () => {
         resetStepErrors();
     };
-    const handleTechnologiesStepChange = (selectedTechnologies: GettingStartedTechnologiesData) => {
-        setTechnologiesStepData(selectedTechnologies);
+    const handleEnvironmentsStepChange = (selectedEnvironments: GettingStartedEnvironmentsData) => {
+        setEnvironmentsStepData(selectedEnvironments);
     };
     const handleSecretsStepChange = (typedSecrets: GettingStartedSecretsData) => {
         if (secretsStepSchema) {
@@ -110,17 +110,23 @@ const GettingStartedModal = () => {
     };
 
     const handleBackClick = () => {
+        function goToPreviousStep() {
+            setStepName(stepName - 1);
+        }
+
         switch (stepName) {
+            case StepName.Environments:
             case StepName.Status:
-                setStepName(StepName.Summary);
+                goToPreviousStep();
+                setStepName(StepName.Welcome);
                 break;
 
             case StepName.Summary:
                 if (secretsStepsSchemas.length > 0) {
-                    setStepName(StepName.Secrets);
+                    goToPreviousStep();
                     setSecretsStepIndex(secretsStepsSchemas.length - 1);
                 } else {
-                    setStepName(StepName.Technologies);
+                    setStepName(StepName.Environments);
                 }
                 break;
 
@@ -129,7 +135,7 @@ const GettingStartedModal = () => {
                 if (secretsStepIndex > 0) {
                     setSecretsStepIndex(secretsStepIndex - 1);
                 } else {
-                    setStepName(StepName.Technologies);
+                    goToPreviousStep();
                 }
                 break;
 
@@ -139,11 +145,15 @@ const GettingStartedModal = () => {
         }
     };
     const handleNextClick = () => {
+        function goToNextStep() {
+            setStepName(stepName + 1);
+        }
+
         switch (stepName) {
-            case StepName.Technologies:
-                if (checkTechnologiesStepDataErrors()) {
+            case StepName.Environments:
+                if (checkEnvironmentsStepDataErrors()) {
                     if (secretsStepsSchemas.length > 0) {
-                        setStepName(StepName.Secrets);
+                        goToNextStep();
                         setSecretsStepIndex(0);
                     } else {
                         setStepName(StepName.Summary);
@@ -156,13 +166,14 @@ const GettingStartedModal = () => {
                     if (secretsStepIndex < secretsStepsSchemas.length - 1) {
                         setSecretsStepIndex(secretsStepIndex + 1);
                     } else {
-                        setStepName(StepName.Summary);
+                        goToNextStep();
                     }
                 }
                 break;
 
+            case StepName.Welcome:
             case StepName.Summary:
-                setStepName(StepName.Status);
+                goToNextStep();
                 break;
 
             default:
@@ -181,28 +192,30 @@ const GettingStartedModal = () => {
             <ModalContent
                 stepErrors={stepErrors}
                 stepName={stepName}
-                technologiesStepData={technologiesStepData}
+                environmentsStepData={environmentsStepData}
                 secretsStepsSchemas={secretsStepsSchemas}
                 secretsStepsData={secretsStepsData}
                 secretsStepIndex={secretsStepIndex}
                 summaryStepSchemas={summaryStepSchemas}
                 onStepErrorsDismiss={handleStepErrorsDismiss}
-                onTechnologiesStepChange={handleTechnologiesStepChange}
+                onEnvironmentsStepChange={handleEnvironmentsStepChange}
                 onSecretsStepChange={handleSecretsStepChange}
                 onInstallationStarted={handleInstallationStarted}
                 onInstallationFinished={handleInstallationFinishedOrCanceled}
                 onInstallationCanceled={handleInstallationFinishedOrCanceled}
             />
-            <Modal.Content style={{ minHeight: 60, overflow: 'hidden' }}>
-                <Form.Field>
-                    <Form.Checkbox
-                        label={i18n.t('gettingStartedModal.disableModalLabel')}
-                        help=""
-                        checked={modalDisabledChecked}
-                        onChange={setModalDisabledChange}
-                    />
-                </Form.Field>
-            </Modal.Content>
+            {stepName !== StepName.Welcome && (
+                <Modal.Content style={{ minHeight: 60, overflow: 'hidden' }}>
+                    <Form.Field>
+                        <Form.Checkbox
+                            label={i18n.t('gettingStartedModal.disableModalLabel')}
+                            help=""
+                            checked={modalDisabledChecked}
+                            onChange={setModalDisabledChange}
+                        />
+                    </Form.Field>
+                </Modal.Content>
+            )}
             <ModalActions
                 stepName={stepName}
                 installationProcessing={installationProcessing}
