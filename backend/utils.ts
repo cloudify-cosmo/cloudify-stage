@@ -4,7 +4,7 @@ import * as Consts from './consts';
 
 export const isDevelopmentOrTest = process.env.NODE_ENV === 'development' || process.env.NODE_ENV === 'test';
 
-export function getResourcePath(path, isUserData) {
+export function getResourcePath(path: string, isUserData: boolean) {
     if (isDevelopmentOrTest) {
         // TODO(RD-1402): use a temporary directory during tests
         return pathlib.resolve(`..${isUserData ? Consts.USER_DATA_PATH : ''}/${path}`);
