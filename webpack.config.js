@@ -181,6 +181,10 @@ module.exports = (env, argv) => {
                                 to: 'static/images'
                             },
                             {
+                                from: 'app/images/*',
+                                to: 'static/images/[name].[ext]'
+                            },
+                            {
                                 from: 'widgets',
                                 to: 'appData/widgets',
                                 globOptions: {
