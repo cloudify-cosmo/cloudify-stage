@@ -4,7 +4,8 @@ import StageUtils from '../../utils/stageUtils';
 import { Modal } from '../basic';
 import { GettingStartedSchemaItem, StepName } from './model';
 
-const t = StageUtils.getT('gettingStartedModal.titles');
+const tModal = StageUtils.getT('gettingStartedModal');
+const tTitle = StageUtils.composeT(tModal, 'titles');
 
 type Props = {
     stepName: StepName;
@@ -26,15 +27,20 @@ const ModalHeader = ({ stepName, secretsStepsSchemas, secretsStepIndex }: Props)
 
         if (stepName === StepName.Secrets) {
             const schemaItem = secretsStepsSchemas[secretsStepIndex];
-            return schemaItem ? `${schemaItem.label} ${t('secretsStep')}` : '';
+            return schemaItem ? `${schemaItem.label} ${tTitle('secretsStep')}` : '';
         }
 
-        return t(headerContentKeys[stepName]);
+        return tTitle(headerContentKeys[stepName]);
     }, [stepName, secretsStepIndex]);
 
     if (!modalTitle) return null;
 
-    return <Modal.Header>{modalTitle}</Modal.Header>;
+    return (
+        <Modal.Header>
+            {modalTitle}
+            {stepName === StepName.Secrets && <div style={{ fontSize: '0.8em' }}>{tModal('secretsSubtitle')}</div>}
+        </Modal.Header>
+    );
 };
 
 export default ModalHeader;
