@@ -3,9 +3,9 @@ describe('Blueprints catalog widget', () => {
 
     before(() =>
         cy
-            .activate('valid_trial_license')
+            .activate()
             .usePageMock('blueprintCatalog', {
-                jsonPath: 'https://repository.cloudifysource.org/cloudify/blueprints/5.1/vm-examples.json'
+                jsonPath: 'https://repository.cloudifysource.org/cloudify/blueprints/6.2/vm-examples.json'
             })
             .mockLogin()
             .deleteBlueprints(blueprintName, true)

@@ -21,8 +21,9 @@ const ServiceButton: FunctionComponent<ServiceButtonProps> = ({ basic, color, ic
             <Button
                 basic={basic}
                 color={color || undefined}
-                icon={icon || undefined}
                 content={label}
+                icon={icon || undefined}
+                fluid
                 labelPosition={icon ? 'left' : undefined}
                 onClick={setOpen}
             />
