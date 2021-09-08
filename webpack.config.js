@@ -10,6 +10,7 @@ const CompressionPlugin = require('compression-webpack-plugin');
 const ImageminPlugin = require('imagemin-webpack-plugin').default;
 const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
 const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
+const userConfig = require('./conf/userConfig.json');
 
 const CONTEXT_PATH = '/console';
 
@@ -30,6 +31,7 @@ module.exports = (env, argv) => {
         'react-query': 'ReactQuery',
         'styled-components': 'Stage.styled'
     };
+    const backendWidgetExternals = userConfig.widgets.allowedModules || [];
 
     const module = {
         rules: _.compact([
@@ -219,6 +221,50 @@ module.exports = (env, argv) => {
                     isProduction && getProductionPlugins(env && env.analyse === 'main')
                 ])
             )
+        },
+        {
+            mode,
+            context,
+            devtool,
+            resolve: {
+                extensions: resolveExtensions
+            },
+            entry: glob.sync(`./widgets/*/src/backend.${globExtensions}`).reduce((acc, item) => {
+                const name = item
+                    .replace('./widgets/', '')
+                    .replace('/src/backend', '/backend')
+                    .replace(/(ts)|(js)/, 'js');
+                acc[name] = item;
+                return acc;
+            }, {}),
+            output: {
+                path: path.join(outputPath, 'appData'),
+                filename: 'widgets/[name]',
+                publicPath: CONTEXT_PATH
+            },
+            module: {
+                rules: [
+                    {
+                        test: /\.ts$/,
+                        exclude: /node_modules/,
+                        use: [
+                            {
+                                loader: 'babel-loader',
+                                options: {
+                                    presets: [
+                                        ['@babel/preset-env', { targets: { node: 'current' } }],
+                                        '@babel/preset-typescript'
+                                    ]
+                                }
+                            }
+                        ]
+                    }
+                ]
+            },
+            plugins: _.flatten(
+                _.compact([environmentPlugin, isProduction && getProductionPlugins(env && env.analyse === 'widgets')])
+            ),
+            externals: backendWidgetExternals
         },
         {
             mode,
