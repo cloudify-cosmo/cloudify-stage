@@ -19,7 +19,7 @@ describe('Login', () => {
         cy.location('pathname').should('be.equal', redirectUrl);
     });
 
-    it.only('succeeds and resets user pages when application version is different than the one stored in the DB', () => {
+    it('succeeds and resets user pages when application version is different than the one stored in the DB', () => {
         const currentAppDataVersion = getCurrentAppVersion();
         const fetchUserAppsTimeout = 20000;
 
