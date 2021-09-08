@@ -28,11 +28,12 @@
     "gettingStartedModal": {
         "disableModalLabel": "Don't show next time",
         "titles": {
-            "technologiesStep": "Getting Started",
+            "environmentsStep": "First, please select your environment(s)",
             "secretsStep": "Secrets",
-            "summaryStep": "Summary",
+            "summaryStep": "Finally, please review your selected task list below and click ‘Finish’ to begin installation...",
             "statusStep": "Status"
         },
+        "secretsSubtitle": "Now, please fill in the fields below (and click ‘Next’)",
         "buttons": {
             "closeModal": "Close",
             "stepBack": "Back",
@@ -45,7 +46,7 @@
             "blueprintsMetadataLoadingError": "Blueprints information loading error"
         },
         "validation": {
-            "someTechnologyRequiredError": "At least one technology needs to be selected.",
+            "environmentRequiredError": "At least one environment needs to be selected.",
             "allSecretsRequiredError": "All secret values need to be specified."
         },
         "summary": {
@@ -73,6 +74,8 @@
                 "uploadingErrorMessageSuffix": "blueprint upload error"
             }
         },
+        "welcomeText": "Welcome to Cloudify: your open source,\nmulti-cloud orchestration platform.\n\nWe’ll start by setting up your cloud environment\nin the following easy steps. Ready? Let’s go.\n\nNote: this process can take up to 5 minutes,\nand you will need your API access keys.",
+        "welcomeLogoLabel": "CLOUDIFY",
         "messages": {
             "pluginInstallError": "{{pluginName}} plugin installation error.",
             "secretUpdateError": "{{secretName}} secret update operation error.",
@@ -80,7 +83,7 @@
             "blueprintUploadError": "{{blueprintName}} blueprint upload error:\n{{uploadError}}",
             "timeoutExceededError": "Timeout exceeded.",
             "progressMessage": "Installation in progress...",
-            "doneMessage": "Installation done!"
+            "doneMessage": "Installation completed! (you can now close this window)"
         }
     },
     "editMode": {

@@ -7,18 +7,19 @@ import { UnsafelyTypedFormField } from '../unsafelyTypedForm';
 import type { GettingStartedSecretsData, GettingStartedSchemaItem } from '../model';
 
 type Props = {
-    selectedTechnology: GettingStartedSchemaItem;
+    selectedEnvironment: GettingStartedSchemaItem;
     typedSecrets?: GettingStartedSecretsData;
     onChange?: (typedSecrets: GettingStartedSecretsData) => void;
+    markEmptyInputs: boolean;
 };
 
-const SecretsStep = ({ selectedTechnology, typedSecrets, onChange }: Props) => {
+const SecretsStep = ({ selectedEnvironment, typedSecrets, onChange, markEmptyInputs }: Props) => {
     const [secretInputs, setSecretInputs, resetSecretInputs] = useInputs(typedSecrets ?? {});
     useEffect(() => resetSecretInputs(), [typedSecrets]);
 
     return (
         <Form>
-            {selectedTechnology.secrets.map(({ name, label, type }) => {
+            {selectedEnvironment.secrets.map(({ name, label, type }) => {
                 const handleBlur = () => {
                     onChange?.(secretInputs);
                 };
@@ -31,6 +32,8 @@ const SecretsStep = ({ selectedTechnology, typedSecrets, onChange }: Props) => {
                             value={secretInputs[name] ?? ''}
                             onChange={setSecretInputs}
                             onBlur={handleBlur}
+                            required
+                            error={markEmptyInputs && !secretInputs[name]}
                         />
                     </UnsafelyTypedFormField>
                 );
