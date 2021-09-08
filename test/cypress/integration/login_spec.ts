@@ -19,7 +19,7 @@ describe('Login', () => {
         cy.location('pathname').should('be.equal', redirectUrl);
     });
 
-    it('succeeds and resets user pages when application version is different than the one stored in the DB', () => {
+    it.only('succeeds and resets user pages when application version is different than the one stored in the DB', () => {
         const currentAppDataVersion = getCurrentAppVersion();
         const fetchUserAppsTimeout = 20000;
 
@@ -35,12 +35,8 @@ describe('Login', () => {
         cy.activate().login('admin', 'admin', false);
 
         cy.wait('@fetchUserApps', { timeout: fetchUserAppsTimeout });
-        cy.wait('@fetchTemplateId').then(({ response }) => {
-            expect(response.body).to.equal('main-sys_admin');
-        });
-        cy.wait('@updateUserApps').then(({ response }) => {
-            expect(response.body.appDataVersion).to.equal(currentAppDataVersion);
-        });
+        cy.wait('@fetchTemplateId').its('response.body').should('equal', 'main-sys_admin');
+        cy.wait('@updateUserApps').its('response.body.appDataVersion').should('equal', currentAppDataVersion);
     });
 
     it('succeeds when provided credentials are valid and license is not active', () => {
