@@ -45,7 +45,7 @@ const mapSecretsByEnvironmentName = (groupedSecrets: SecretGroup[]) => {
             (groupedEnvironments[environmentName] = {
                 name: environmentName,
                 logo: '',
-                label: _.uniq(environmentLabels).join(' + '),
+                label: environments[0].label,
                 plugins: _.uniqBy(environmentPlugins, plugin => `${plugin.name} ${plugin.version}`),
                 secrets: [],
                 blueprints: environmentBlueprints

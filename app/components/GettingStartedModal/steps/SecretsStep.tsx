@@ -10,9 +10,10 @@ type Props = {
     selectedEnvironment: GettingStartedSchemaItem;
     typedSecrets?: GettingStartedSecretsData;
     onChange?: (typedSecrets: GettingStartedSecretsData) => void;
+    markEmptyInputs: boolean;
 };
 
-const SecretsStep = ({ selectedEnvironment, typedSecrets, onChange }: Props) => {
+const SecretsStep = ({ selectedEnvironment, typedSecrets, onChange, markEmptyInputs }: Props) => {
     const [secretInputs, setSecretInputs, resetSecretInputs] = useInputs(typedSecrets ?? {});
     useEffect(() => resetSecretInputs(), [typedSecrets]);
 
@@ -31,6 +32,8 @@ const SecretsStep = ({ selectedEnvironment, typedSecrets, onChange }: Props) => 
                             value={secretInputs[name] ?? ''}
                             onChange={setSecretInputs}
                             onBlur={handleBlur}
+                            required
+                            error={markEmptyInputs && !secretInputs[name]}
                         />
                     </UnsafelyTypedFormField>
                 );
