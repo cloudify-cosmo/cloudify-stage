@@ -1,3 +1,5 @@
+// @ts-nocheck File not migrated fully to TS
+
 module.exports = r => {
     r.register('get_cluster_status', 'GET', (req, res, next, helper) => {
         const _ = require('lodash');

@@ -1,6 +1,4 @@
-/**
- * Created by barucoh on 11/2/2019.
- */
+// @ts-nocheck File not migrated fully to TS
 
 module.exports = r => {
     r.register('get_tasks_graph', 'GET', (req, res, next, helper) => {
