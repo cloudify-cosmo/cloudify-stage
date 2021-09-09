@@ -148,10 +148,14 @@ export default class BlueprintList extends React.Component<BlueprintListProps, B
                     <BlueprintUploadActionsMenu
                         direction="left"
                         toolbox={toolbox}
-                        marketplaceTabs={widget.configuration.marketplaceTabs}
                         showGenerateInComposerButton={
                             !toolbox.getManager().isCommunityEdition() && widget.configuration.showComposerOptions
                         }
+                        marketplaceConfig={{
+                            tabs: widget.configuration.marketplaceTabs,
+                            displayStyle: widget.configuration.marketplaceDisplayStyle,
+                            columns: widget.configuration.marketplaceColumnsToShow
+                        }}
                     />
                 </div>
                 <BlueprintsView

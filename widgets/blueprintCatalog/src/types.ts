@@ -8,6 +8,7 @@ export interface BlueprintCatalogWidgetConfiguration {
     pageSize: number;
     sortColumn: string;
     sortAscending: boolean;
+    fieldsToShow: string[];
 }
 
 export interface Blueprint {
