@@ -23,9 +23,12 @@ describe('User flow', () => {
             cy.get('button.green').click();
         });
     }
-
     it('installs deployment from scratch', () => {
-        cy.visitPage('Marketplace');
+        cy.visitPage('Resources').openTab('Plugins');
+
+        cy.contains('Upload').click();
+        cy.contains('Upload from Marketplace').click();
+
         cy.contains('.pluginsCatalogWidget tr', 'Utilities').within(() => {
             cy.get('button').click();
             cy.get('button', { timeout: minutesToMs(2) }).should('to.be.disabled');
