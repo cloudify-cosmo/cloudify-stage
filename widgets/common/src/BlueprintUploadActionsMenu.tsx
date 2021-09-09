@@ -22,17 +22,23 @@ const getMenuItems = (includeComposerButton: boolean) => {
 
 type ActionName = typeof baseMenuItems[number]['name'] | typeof generateInComposerMenuItem['name'];
 
+interface MarketplaceModalConfig {
+    tabs?: MarketplaceTab[];
+    displayStyle: 'table' | 'catalog';
+    columns: string[];
+}
+
 interface BlueprintUploadActionsMenuProps {
     direction?: 'left' | 'right';
-    marketplaceTabs?: MarketplaceTab[];
     toolbox: Stage.Types.Toolbox;
+    marketplaceConfig: MarketplaceModalConfig;
     showGenerateInComposerButton?: boolean;
 }
 
 const BlueprintUploadActionsMenu: FunctionComponent<BlueprintUploadActionsMenuProps> = ({
     direction,
     toolbox,
-    marketplaceTabs = [],
+    marketplaceConfig,
     showGenerateInComposerButton = false
 }) => {
     const {
@@ -57,7 +63,15 @@ const BlueprintUploadActionsMenu: FunctionComponent<BlueprintUploadActionsMenuPr
 
             switch (name) {
                 case 'uploadFromMarketplace':
-                    return <BlueprintMarketplace.Modal open onHide={hideModal} tabs={marketplaceTabs} />;
+                    return (
+                        <BlueprintMarketplace.Modal
+                            open
+                            onHide={hideModal}
+                            tabs={marketplaceConfig.tabs}
+                            displayStyle={marketplaceConfig.displayStyle}
+                            columns={marketplaceConfig.columns}
+                        />
+                    );
                 case 'uploadFromPackage':
                     return <UploadBlueprintModal open onHide={hideModal} toolbox={toolbox} />;
                 case 'generateInComposer':
