@@ -404,9 +404,7 @@ const commands = {
     },
 
     clearMultipleDropdown: (fieldName: string) =>
-        cy.getField(fieldName).within(() => {
-            cy.get('.delete.icon').click({ multiple: true });
-        }),
+        cy.getField(fieldName).find('.delete.icon').click({ multiple: true });
 
     openTab: (tabName: string) => {
         cy.get('.tabular.menu').contains(tabName).click();
