@@ -4,6 +4,8 @@ import type { FunctionComponent } from 'react';
 import Consts from './consts';
 import type { RepositoryViewProps } from './types';
 
+const t = Stage.Utils.getT('widgets.blueprintCatalog');
+
 const RepositoryTable: FunctionComponent<RepositoryViewProps> = ({
     fetchData = noop,
     onSelect = noop,
@@ -20,6 +22,7 @@ const RepositoryTable: FunctionComponent<RepositoryViewProps> = ({
     // Show pagination only in case when data is provided from GitHub
     const pageSize = data.source === Consts.GITHUB_DATA_SOURCE ? widget.configuration.pageSize : data.total;
     const totalSize = data.source === Consts.GITHUB_DATA_SOURCE ? data.total : -1;
+    const { fieldsToShow } = widget.configuration;
 
     return (
         <DataTable
@@ -31,10 +34,26 @@ const RepositoryTable: FunctionComponent<RepositoryViewProps> = ({
             selectable
             noDataMessage={noDataMessage}
         >
-            <DataTable.Column label="Name" width="25%" />
-            <DataTable.Column label="Description" width="40%" />
-            <DataTable.Column label="Created" width="12%" />
-            <DataTable.Column label="Updated" width="12%" />
+            <DataTable.Column
+                label={t('configuration.fieldsToShow.items.name')}
+                width="25%"
+                show={fieldsToShow.includes(t('configuration.fieldsToShow.items.name'))}
+            />
+            <DataTable.Column
+                label={t('configuration.fieldsToShow.items.description')}
+                width="40%"
+                show={fieldsToShow.includes(t('configuration.fieldsToShow.items.description'))}
+            />
+            <DataTable.Column
+                label={t('configuration.fieldsToShow.items.created')}
+                width="12%"
+                show={fieldsToShow.includes(t('configuration.fieldsToShow.items.created'))}
+            />
+            <DataTable.Column
+                label={t('configuration.fieldsToShow.items.updated')}
+                width="12%"
+                show={fieldsToShow.includes(t('configuration.fieldsToShow.items.updated'))}
+            />
             <DataTable.Column width="11%" />
 
             {data.items.map(item => {
