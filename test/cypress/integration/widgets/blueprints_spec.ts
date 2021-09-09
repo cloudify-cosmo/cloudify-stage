@@ -6,15 +6,15 @@ describe('Blueprints widget', () => {
     const marketplaceTabs = [
         {
             name: 'VM Blueprint Examples',
-            url: 'https://repository.cloudifysource.org/cloudify/blueprints/5.1/vm-examples.json'
+            url: 'https://repository.cloudifysource.org/cloudify/blueprints/6.2/vm-examples.json'
         },
         {
             name: 'Kubernetes Blueprint Examples',
-            url: 'https://repository.cloudifysource.org/cloudify/blueprints/5.1/k8s-examples.json'
+            url: 'https://repository.cloudifysource.org/cloudify/blueprints/6.2/k8s-examples.json'
         },
         {
             name: 'Orchestrator Blueprint Examples',
-            url: 'https://repository.cloudifysource.org/cloudify/blueprints/5.1/orc-examples.json'
+            url: 'https://repository.cloudifysource.org/cloudify/blueprints/6.2/orc-examples.json'
         }
     ];
     const blueprintsWidgetConfiguration: Partial<BlueprintsWidgetConfiguration> = {

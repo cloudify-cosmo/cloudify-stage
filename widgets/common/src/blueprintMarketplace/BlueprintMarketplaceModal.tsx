@@ -12,31 +12,37 @@ interface BlueprintMarketplaceModalProps {
 const t = Stage.Utils.getT('widgets.common.blueprintMarketplace');
 
 const getPageLayout = (tabs: MarketplaceTab[], displayStyle: MarketplaceDisplayStyle, columns: string[]) => ({
-    layout: [
+    const getWidgets = (tab: MarketplaceTab, index: number) => [
         {
-            type: 'tabs',
-            content: tabs.map((tab, index) => ({
-                name: tab.name,
-                widgets: [
-                    {
-                        id: `blueprint-catalog-${index}`,
-                        name: t('modal.blueprintCatalogName'),
-                        height: 24,
-                        maximized: true,
-                        definition: 'blueprintCatalog',
-                        configuration: {
-                            jsonPath: tab.url,
-                            displayStyle,
-                            fieldsToShow: columns
-                        },
-                        drillDownPages: {}
-                    }
-                ],
-                isDefault: true
-            }))
+            id: `blueprint-catalog-${index}`,
+            name: t('modal.blueprintCatalogName'),
+            height: 24,
+            maximized: true,
+            definition: 'blueprintCatalog',
+            configuration: {
+                jsonPath: tab.url,
+                displayStyle,
+                fieldsToShow: columns
+            },
+            drillDownPages: {}
         }
-    ]
-});
+    ];
+
+    const getTabs = () =>
+        tabs.map((tab, index) => ({
+            name: tab.name,
+            widgets: getWidgets(tab, index),
+            isDefault: index === 0
+        }));
+
+    return {
+        layout: [
+            tabs.length > 1
+                ? { type: 'tabs', content: getTabs() }
+                : { type: 'widgets', content: getWidgets(tabs[0], 0) }
+        ]
+    };
+};
 
 const BlueprintMarketplaceModal: FunctionComponent<BlueprintMarketplaceModalProps> = ({
     open,

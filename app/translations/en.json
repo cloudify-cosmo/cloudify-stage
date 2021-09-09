@@ -30,9 +30,10 @@
         "titles": {
             "environmentsStep": "First, please select your environment(s)",
             "secretsStep": "Secrets",
-            "summaryStep": "Summary",
+            "summaryStep": "Finally, please review your selected task list below and click ‘Finish’ to begin installation...",
             "statusStep": "Status"
         },
+        "secretsSubtitle": "Now, please fill in the fields below (and click ‘Next’)",
         "buttons": {
             "closeModal": "Close",
             "stepBack": "Back",
@@ -82,7 +83,7 @@
             "blueprintUploadError": "{{blueprintName}} blueprint upload error:\n{{uploadError}}",
             "timeoutExceededError": "Timeout exceeded.",
             "progressMessage": "Installation in progress...",
-            "doneMessage": "Installation done!"
+            "doneMessage": "Installation completed! (you can now close this window)"
         }
     },
     "editMode": {
@@ -610,7 +611,7 @@
             },
             "revertToDefault": "Revert to default value",
             "urls": {
-                "blueprintsCatalog": "http://repository.cloudifysource.org/cloudify/blueprints/5.1/examples.json",
+                "blueprintsCatalog": "http://repository.cloudifysource.org/cloudify/blueprints/6.2/examples.json",
                 "helloWorldBlueprint": "https://github.com/cloudify-cosmo/cloudify-hello-world-example/archive/master.zip",
                 "linkParameterExample": "https://cloudify.co"
             },
@@ -701,15 +702,15 @@
                         "defaultValues": [
                             {
                                 "name": "VM Blueprint Examples",
-                                "url": "https://repository.cloudifysource.org/cloudify/blueprints/5.1/vm-examples.json"
+                                "url": "https://repository.cloudifysource.org/cloudify/blueprints/6.2/vm-examples.json"
                             },
                             {
                                 "name": "Kubernetes Blueprint Examples",
-                                "url": "https://repository.cloudifysource.org/cloudify/blueprints/5.1/k8s-examples.json"
+                                "url": "https://repository.cloudifysource.org/cloudify/blueprints/6.2/k8s-examples.json"
                             },
                             {
                                 "name": "Orchestrator Blueprint Examples",
-                                "url": "https://repository.cloudifysource.org/cloudify/blueprints/5.1/orc-examples.json"
+                                "url": "https://repository.cloudifysource.org/cloudify/blueprints/6.2/orc-examples.json"
                             }
                         ]
                     }
