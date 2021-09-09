@@ -675,6 +675,9 @@
                     "blueprintCatalogName": "Blueprints Catalog",
                     "cancelButton": "Close"
                 }
+            },
+            "executions": {
+                "noErrorDetails": "No error details available"
             }
         },
         "blueprintActionButtons": {
