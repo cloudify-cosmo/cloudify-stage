@@ -11,7 +11,7 @@ interface BlueprintMarketplaceModalProps {
 
 const t = Stage.Utils.getT('widgets.common.blueprintMarketplace');
 
-const getPageLayout = (tabs: MarketplaceTab[], displayStyle: MarketplaceDisplayStyle, columns: string[]) => ({
+const getPageLayout = (tabs: MarketplaceTab[], displayStyle: MarketplaceDisplayStyle, columns: string[]) => {
     const getWidgets = (tab: MarketplaceTab, index: number) => [
         {
             id: `blueprint-catalog-${index}`,
