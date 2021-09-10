@@ -1,6 +1,6 @@
 import Modal from './BlueprintMarketplaceModal';
 import tabsConfig from './blueprintMarketplaceTabsConfig';
-import { MarketplaceTab } from './types';
+import { MarketplaceDisplayStyle, MarketplaceTab } from './types';
 
 const BlueprintMarketplace = {
     Modal,
@@ -12,6 +12,7 @@ declare global {
         // eslint-disable-next-line @typescript-eslint/no-namespace
         namespace BlueprintMarketplace {
             export type Tab = MarketplaceTab;
+            export type DisplayStyle = MarketplaceDisplayStyle;
             export { Modal, tabsConfig };
         }
     }

@@ -666,7 +666,7 @@
                     "uploadButton": "Upload",
                     "uploadFromMarketplace": "Upload from Marketplace",
                     "uploadFromPackage": "Upload a blueprint package",
-                    "generateInComposer":  "Generate in the Composer"
+                    "generateInComposer": "Generate in the Composer"
                 }
             },
             "blueprintMarketplace": {
@@ -717,6 +717,57 @@
                             }
                         ]
                     }
+                },
+                "marketplaceDisplayStyle": {
+                    "label": "Marketplace display style",
+                    "items": {
+                        "table": "Table",
+                        "catalog": "Catalog"
+                    }
+                },
+                "marketplaceColumnsToShow": {
+                    "label": "List of fields to show in the marketplace table",
+                    "placeholder": "Select fields from the list"
+                }
+            }
+        },
+        "blueprintCatalog": {
+            "configuration": {
+                "jsonPath": {
+                    "label": "Blueprints Examples URL",
+                    "placeholder": "Type URL to blueprint examples JSON file",
+                    "description": "If set, then GitHub options are not used for fetching data."
+                },
+                "username": {
+                    "label": "GitHub User",
+                    "placeholder": "Type GitHub's user or organization name",
+                    "description": "GitHub user or organization account name which is the owner of the repositories to fetch. Used only if Blueprints Examples URL is not set."
+                },
+                "filter": {
+                    "label": "GitHub Filter",
+                    "placeholder": "Type filter for GitHub repositories",
+                    "description": "Optional filter for GitHub repositories. See GitHub's web page 'Searching repositories' for more details. Used only if Blueprints Examples URL is not set."
+                },
+                "displayStyle": {
+                    "label": "Display style",
+                    "option": {
+                        "table": "Table",
+                        "catalog": "Catalog"
+                    }
+                },
+                "fieldsToShow": {
+                    "label": "List of fields to show in the table",
+                    "placeholder": "Select fields from the list",
+                    "items": {
+                        "name": "Name",
+                        "description": "Description",
+                        "created": "Created",
+                        "updated": "Updated"
+                    }
+                },
+                "sortByName": {
+                    "label": "Sort by name",
+                    "description": "If set to true, then blueprints will be sorted by name."
                 }
             }
         },
@@ -752,7 +803,7 @@
                     "description": "Page URL address to open on button click. If URL starts with 'http', then page will be opened in a new window/tab. In other case it will be opened in the same window.",
                     "default": ""
                 }
-        }
+            }
         },
         "cloudNum": {
             "name": "Number of clouds",
