@@ -258,7 +258,9 @@ export default class EventsTable extends React.Component {
                                                 </span>
                                             </Popup.Trigger>
                                             <Popup.Content>
-                                                <HighlightText>{Json.stringify(item.message, true)}</HighlightText>
+                                                <HighlightText wrapLongLines customStyle={{ overflowX: 'hidden' }}>
+                                                    {Json.stringify(item.message, true)}
+                                                </HighlightText>
                                                 <CopyToClipboardButton
                                                     content="Copy Message"
                                                     text={item.message}
