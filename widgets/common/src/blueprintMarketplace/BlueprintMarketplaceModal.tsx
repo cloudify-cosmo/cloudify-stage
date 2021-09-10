@@ -1,15 +1,17 @@
 import type { FunctionComponent } from 'react';
-import { MarketplaceTab } from './types';
+import type { MarketplaceDisplayStyle, MarketplaceTab } from './types';
 
 interface BlueprintMarketplaceModalProps {
     open: boolean;
-    tabs: MarketplaceTab[];
+    tabs?: MarketplaceTab[];
+    displayStyle?: MarketplaceDisplayStyle;
+    columns?: string[];
     onHide: () => void;
 }
 
 const t = Stage.Utils.getT('widgets.common.blueprintMarketplace');
 
-const getPageLayout = (tabs: MarketplaceTab[]) => {
+const getPageLayout = (tabs: MarketplaceTab[], displayStyle: MarketplaceDisplayStyle, columns: string[]) => {
     const getWidgets = (tab: MarketplaceTab, index: number) => [
         {
             id: `blueprint-catalog-${index}`,
@@ -19,7 +21,8 @@ const getPageLayout = (tabs: MarketplaceTab[]) => {
             definition: 'blueprintCatalog',
             configuration: {
                 jsonPath: tab.url,
-                displayStyle: 'catalog'
+                displayStyle,
+                fieldsToShow: columns
             },
             drillDownPages: {}
         }
@@ -41,7 +44,13 @@ const getPageLayout = (tabs: MarketplaceTab[]) => {
     };
 };
 
-const BlueprintMarketplaceModal: FunctionComponent<BlueprintMarketplaceModalProps> = ({ open, onHide, tabs }) => {
+const BlueprintMarketplaceModal: FunctionComponent<BlueprintMarketplaceModalProps> = ({
+    open,
+    onHide,
+    tabs = [],
+    displayStyle = 'catalog',
+    columns = []
+}) => {
     const { CancelButton, Icon, Modal } = Stage.Basic;
     const { PageContent } = Stage.Shared.Widgets;
     const onlyTabsWithUrl = tabs.filter(tab => Boolean(tab.url));
@@ -52,7 +61,9 @@ const BlueprintMarketplaceModal: FunctionComponent<BlueprintMarketplaceModalProp
                 <Icon name="upload" /> {t(`modal.header`)}
             </Modal.Header>
             <Modal.Content>
-                {onlyTabsWithUrl.length !== 0 && <PageContent page={getPageLayout(onlyTabsWithUrl) as any} />}
+                {onlyTabsWithUrl.length !== 0 && (
+                    <PageContent page={getPageLayout(onlyTabsWithUrl, displayStyle, columns) as any} />
+                )}
             </Modal.Content>
             <Modal.Actions>
                 <CancelButton onClick={onHide} content={t(`modal.cancelButton`)} />

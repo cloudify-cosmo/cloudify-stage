@@ -2,6 +2,8 @@
 import BlueprintsList from './BlueprintsList';
 import type { BlueprintsWidgetConfiguration } from './types';
 
+const t = Stage.Utils.getT('widgets.blueprints');
+
 Stage.defineWidget<unknown, unknown, BlueprintsWidgetConfiguration>({
     id: 'blueprints',
     name: 'Blueprints',
@@ -20,16 +22,16 @@ Stage.defineWidget<unknown, unknown, BlueprintsWidgetConfiguration>({
         Stage.GenericConfig.PAGE_SIZE_CONFIG(5),
         {
             id: 'clickToDrillDown',
-            name: Stage.i18n.t('widgets.blueprints.configuration.clickToDrillDown'),
+            name: t('configuration.clickToDrillDown'),
             default: true,
             type: Stage.Basic.GenericField.BOOLEAN_TYPE
         },
         {
             id: 'displayStyle',
-            name: Stage.i18n.t('widgets.blueprints.configuration.displayStyle.label'),
+            name: t('configuration.displayStyle.label'),
             items: [
-                { name: Stage.i18n.t('widgets.blueprints.configuration.displayStyle.items.table'), value: 'table' },
-                { name: Stage.i18n.t('widgets.blueprints.configuration.displayStyle.items.catalog'), value: 'catalog' }
+                { name: t('configuration.displayStyle.items.table'), value: 'table' },
+                { name: t('configuration.displayStyle.items.catalog'), value: 'catalog' }
             ],
             default: 'table',
             type: Stage.Basic.GenericField.LIST_TYPE
@@ -38,17 +40,49 @@ Stage.defineWidget<unknown, unknown, BlueprintsWidgetConfiguration>({
         Stage.GenericConfig.SORT_ASCENDING_CONFIG(false),
         {
             id: 'hideFailedBlueprints',
-            name: Stage.i18n.t('widgets.blueprints.configuration.hideFailedBlueprints'),
+            name: t('configuration.hideFailedBlueprints'),
             default: false,
             type: Stage.Basic.GenericField.BOOLEAN_TYPE
         },
         {
             id: 'showComposerOptions',
             type: Stage.Basic.GenericField.BOOLEAN_TYPE,
-            name: Stage.i18n.t('widgets.blueprints.configuration.showComposerOptions'),
+            name: t('configuration.showComposerOptions'),
             default: false
         },
-        Stage.Common.BlueprintMarketplace.tabsConfig
+        Stage.Common.BlueprintMarketplace.tabsConfig,
+        {
+            id: 'marketplaceDisplayStyle',
+            name: t('configuration.marketplaceDisplayStyle.label'),
+            items: [
+                {
+                    name: t('configuration.marketplaceDisplayStyle.items.table'),
+                    value: 'table'
+                },
+                {
+                    name: t('configuration.marketplaceDisplayStyle.items.catalog'),
+                    value: 'catalog'
+                }
+            ],
+            default: 'table',
+            type: Stage.Basic.GenericField.LIST_TYPE
+        },
+        {
+            id: 'marketplaceColumnsToShow',
+            name: t('configuration.marketplaceColumnsToShow.label'),
+            placeholder: t('configuration.marketplaceColumnsToShow.placeholder'),
+            items: [
+                Stage.i18n.t('widgets.blueprintCatalog.configuration.fieldsToShow.items.name'),
+                Stage.i18n.t('widgets.blueprintCatalog.configuration.fieldsToShow.items.description'),
+                Stage.i18n.t('widgets.blueprintCatalog.configuration.fieldsToShow.items.created'),
+                Stage.i18n.t('widgets.blueprintCatalog.configuration.fieldsToShow.items.updated')
+            ],
+            default: `${Stage.i18n.t('widgets.blueprintCatalog.configuration.fieldsToShow.items.name')}, ${Stage.i18n.t(
+                'widgets.blueprintCatalog.configuration.fieldsToShow.items.description'
+            )}`,
+
+            type: Stage.Basic.GenericField.MULTI_SELECT_LIST_TYPE
+        }
     ],
 
     fetchData(widget, toolbox, params) {
