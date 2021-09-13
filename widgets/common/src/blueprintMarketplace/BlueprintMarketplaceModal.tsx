@@ -10,6 +10,7 @@ interface BlueprintMarketplaceModalProps {
 }
 
 const t = Stage.Utils.getT('widgets.common.blueprintMarketplace');
+const tColumns = Stage.Utils.getT('widgets.blueprintCatalog.configuration.fieldsToShow.items');
 
 const getPageLayout = (tabs: MarketplaceTab[], displayStyle: MarketplaceDisplayStyle, columns: string[]) => {
     const getWidgets = (tab: MarketplaceTab, index: number) => [
@@ -48,8 +49,8 @@ const BlueprintMarketplaceModal: FunctionComponent<BlueprintMarketplaceModalProp
     open,
     onHide,
     tabs = [],
-    displayStyle = 'catalog',
-    columns = []
+    displayStyle = 'table',
+    columns = [tColumns('name'), tColumns('description')]
 }) => {
     const { CancelButton, Icon, Modal } = Stage.Basic;
     const { PageContent } = Stage.Shared.Widgets;
