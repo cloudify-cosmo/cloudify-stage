@@ -77,6 +77,7 @@ const DeployBlueprintModal: FunctionComponent<DeployBlueprintModalProps> = ({ to
             onHide={onHide}
             i18nHeaderKey="widgets.common.deployments.deployModal.header"
             showDeploymentNameInput
+            showDeploymentIdInput
             showDeployButton
             showInstallOptions
             showSitesInput

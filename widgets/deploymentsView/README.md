@@ -255,8 +255,8 @@ The _Deploy On_ bulk action will show a modal that guides the user through
 deploying additional services on the environments that are matched by the
 current filter.
 
-After selecting the base blueprint for the new deployments and providing any
-additional labels, there will be a new child deployment created for each
+After selecting the base blueprint for the new deployments, providing 
+a name suffix and additional labels, there will be a new child deployment created for each
 deployment matched by the current filter.
 Each generated deployment will be labeled with the Environment ID of the
 environment on which it is deployed as a parent label, and the capabilities of
