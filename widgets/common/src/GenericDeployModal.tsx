@@ -218,16 +218,14 @@ class GenericDeployModal extends React.Component {
         return new Promise((resolve, reject) => {
             const { InputsUtils } = Stage.Common;
             const { blueprint, deploymentId, deploymentName, deploymentInputs: stateDeploymentInputs } = this.state;
-            const { showDeploymentNameInput } = this.props;
+            const { showDeploymentNameInput, showDeploymentIdInput } = this.props;
             const errors = {};
 
-            if (showDeploymentNameInput) {
-                if (_.isEmpty(deploymentName)) {
-                    errors.deploymentName = t('errors.noDeploymentName');
-                }
-                if (_.isEmpty(deploymentId)) {
-                    errors.deploymentId = t('errors.noDeploymentId');
-                }
+            if (showDeploymentNameInput && _.isEmpty(deploymentName)) {
+                errors.deploymentName = t('errors.noDeploymentName');
+            }
+            if (showDeploymentIdInput && _.isEmpty(deploymentId)) {
+                errors.deploymentId = t('errors.noDeploymentId');
             }
 
             if (_.isEmpty(blueprint.id)) {
@@ -271,9 +269,12 @@ class GenericDeployModal extends React.Component {
             toolbox,
             i18nHeaderKey,
             showInstallOptions,
+            showDeploymentIdInput,
             showDeploymentNameInput,
             showDeployButton,
-            showSitesInput
+            showSitesInput,
+            deploymentNameLabel,
+            deploymentNameHelp
         } = this.props;
         const {
             blueprint,
@@ -306,34 +307,6 @@ class GenericDeployModal extends React.Component {
                 <Modal.Content>
                     <Form errors={errors} scrollToError onErrorsDismiss={() => this.setState({ errors: {} })}>
                         {loading && <LoadingOverlay message={loadingMessage} />}
-                        {showDeploymentNameInput && (
-                            <>
-                                <Form.Field
-                                    error={errors.deploymentName}
-                                    label={t('inputs.deploymentName.label')}
-                                    required
-                                    help={t('inputs.deploymentName.help')}
-                                >
-                                    <Form.Input
-                                        name="deploymentName"
-                                        value={deploymentName}
-                                        onChange={this.handleInputChange}
-                                    />
-                                </Form.Field>
-                                <Form.Field
-                                    error={errors.deploymentId}
-                                    label={t('inputs.deploymentId.label')}
-                                    required
-                                    help={t('inputs.deploymentId.help')}
-                                >
-                                    <Form.Input
-                                        name="deploymentId"
-                                        value={deploymentId}
-                                        onChange={this.handleInputChange}
-                                    />
-                                </Form.Field>
-                            </>
-                        )}
 
                         {this.isBlueprintSelectable() && (
                             <Form.Field
@@ -349,6 +322,35 @@ class GenericDeployModal extends React.Component {
                                     onChange={this.selectBlueprint}
                                     toolbox={toolbox}
                                     prefetch
+                                />
+                            </Form.Field>
+                        )}
+
+                        {showDeploymentNameInput && (
+                            <Form.Field
+                                error={errors.deploymentName}
+                                label={deploymentNameLabel}
+                                required
+                                help={deploymentNameHelp}
+                            >
+                                <Form.Input
+                                    name="deploymentName"
+                                    value={deploymentName}
+                                    onChange={this.handleInputChange}
+                                />
+                            </Form.Field>
+                        )}
+                        {showDeploymentIdInput && (
+                            <Form.Field
+                                error={errors.deploymentId}
+                                label={t('inputs.deploymentId.label')}
+                                required
+                                help={t('inputs.deploymentId.help')}
+                            >
+                                <Form.Input
+                                    name="deploymentId"
+                                    value={deploymentId}
+                                    onChange={this.handleInputChange}
                                 />
                             </Form.Field>
                         )}
@@ -512,6 +514,11 @@ GenericDeployModal.propTypes = {
     showDeploymentNameInput: PropTypes.bool,
 
     /**
+     * Whether to show deployment ID input
+     */
+    showDeploymentIdInput: PropTypes.bool,
+
+    /**
      * Whether to show 'Deploy' button, if not set only 'Deploy & Install' button is shown
      */
     showDeployButton: PropTypes.bool,
@@ -545,19 +552,32 @@ GenericDeployModal.propTypes = {
     /**
      * Message to be displayed during inputs validation, before steps defined by `deployAndInstallSteps` are executed
      */
-    deployAndInstallValidationMessage: PropTypes.string
+    deployAndInstallValidationMessage: PropTypes.string,
+
+    /**
+     * Deployment Name input label
+     */
+    deploymentNameLabel: PropTypes.string,
+
+    /**
+     * Deployment Name input help description
+     */
+    deploymentNameHelp: PropTypes.string
 };
 
 GenericDeployModal.defaultProps = {
     blueprintId: '',
     onHide: _.noop,
     showDeploymentNameInput: false,
+    showDeploymentIdInput: false,
     showDeployButton: false,
     showInstallOptions: false,
     showSitesInput: false,
     deploySteps: null,
     deployValidationMessage: null,
-    deployAndInstallValidationMessage: null
+    deployAndInstallValidationMessage: null,
+    deploymentNameLabel: t('inputs.deploymentName.label'),
+    deploymentNameHelp: t('inputs.deploymentName.help')
 };
 
 export default GenericDeployModal;
