@@ -1,5 +1,7 @@
 // @ts-nocheck File not migrated fully to TS
-import { saveDataFromUrl } from 'handler/ArchiveHelper';
+import fs from 'fs';
+import path from 'path';
+import { decompressArchive, saveDataFromUrl } from 'handler/ArchiveHelper';
 import { request } from 'handler/RequestHandler';
 
 jest.mock('handler/ManagerHandler');
@@ -21,5 +23,19 @@ describe('ArchiveHelper', () => {
                 expect.anything()
             )
         );
+    });
+
+    it('extracts specified archive to target directory', () => {
+        const srcArchiveName = 'bangchak-poc';
+        const srcArchivePath = path.resolve(path.join(__dirname, `fixtures/${srcArchiveName}.zip`));
+        const destTargetDir = '/tmp';
+        const destArchivePath = path.resolve(path.join(destTargetDir, srcArchiveName));
+
+        if (fs.existsSync(destArchivePath)) fs.rmdirSync(destArchivePath, { recursive: true });
+
+        return decompressArchive(srcArchivePath, destTargetDir).then(() => {
+            expect(fs.existsSync(destArchivePath)).toBeTruthy();
+            expect(fs.existsSync(path.join(destArchivePath, '.git'))).toBeTruthy();
+        });
     });
 });
