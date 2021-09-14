@@ -57,7 +57,10 @@ const RepositoryTable: FunctionComponent<RepositoryViewProps> = ({
             <DataTable.Column width="11%" />
 
             {data.items.map(item => {
-                const isLoading = readmeLoading === item.name;
+                const isReadmeLoading = readmeLoading === item.name;
+                const isBlueprintUploading = uploadingInProgress.includes(item.name);
+                const isBlueprintUploaded = data.uploadedBlueprints.includes(item.name);
+
                 return (
                     <DataTable.Row
                         key={item.id}
@@ -76,22 +79,23 @@ const RepositoryTable: FunctionComponent<RepositoryViewProps> = ({
                         <DataTable.Data>{item.updated_at}</DataTable.Data>
                         <DataTable.Data className="center aligned rowActions">
                             <Icon
-                                name={isLoading ? 'spinner' : 'info'}
-                                link={!isLoading}
-                                title="Blueprint Readme"
-                                loading={isLoading}
-                                bordered={!isLoading}
+                                name={isReadmeLoading ? 'spinner' : 'info'}
+                                link={!isReadmeLoading}
+                                title={t('actions.openDocumentation')}
+                                loading={isReadmeLoading}
+                                bordered={!isReadmeLoading}
                                 onClick={(event: Event) => {
                                     event.stopPropagation();
                                     onReadme(item.name, item.readme_url);
                                 }}
                             />
                             <Icon
-                                name={uploadingInProgress.includes(item.name) ? 'spinner' : 'upload'}
-                                disabled={data.uploadedBlueprints.includes(item.name)}
-                                link
-                                title="Upload blueprint"
-                                bordered
+                                name={isBlueprintUploading ? 'spinner' : 'upload'}
+                                disabled={isBlueprintUploaded}
+                                link={!isBlueprintUploading && !isBlueprintUploaded}
+                                title={t('actions.uploadBlueprint')}
+                                loading={isBlueprintUploading}
+                                bordered={!isBlueprintUploading}
                                 onClick={(event: Event) => {
                                     event.stopPropagation();
                                     onUpload(item.name, item.zip_url, item.image_url, item.main_blueprint);
