@@ -729,6 +729,10 @@
             }
         },
         "blueprintCatalog": {
+            "actions": {
+                "openDocumentation": "Open documentation",
+                "uploadBlueprint": "Upload blueprint"
+            },
             "configuration": {
                 "jsonPath": {
                     "label": "Blueprints Examples URL",
