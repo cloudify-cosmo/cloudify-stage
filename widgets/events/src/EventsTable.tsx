@@ -3,8 +3,8 @@
  * Created by kinneretzin on 20/10/2016.
  */
 
-import ErrorCausesIcon from './ErrorCausesIcon';
-import ErrorCausesModal from './ErrorCausesModal';
+import DetailsIcon from './DetailsIcon';
+import DetailsModal from './DetailsModal';
 import ErrorCausesPropType from './props/ErrorCausesPropType';
 
 export default class EventsTable extends React.Component {
@@ -15,8 +15,7 @@ export default class EventsTable extends React.Component {
 
         this.state = {
             error: null,
-            errorCauses: [],
-            showErrorCausesModal: false
+            showDetailsModal: false
         };
     }
 
@@ -78,8 +77,8 @@ export default class EventsTable extends React.Component {
         return _.size(collection) === 1;
     };
 
-    hideErrorCausesModal = () => {
-        this.setState({ errorCauses: [], showErrorCausesModal: false });
+    hideDetailsModal = () => {
+        this.setState({ errorCauses: [], showDetailsModal: false });
     };
 
     refreshData() {
@@ -93,12 +92,12 @@ export default class EventsTable extends React.Component {
         toolbox.getContext().setValue('eventId', eventId === selectedEventId ? null : eventId);
     }
 
-    showErrorCausesModal(errorCauses) {
-        this.setState({ errorCauses, showErrorCausesModal: true });
+    showDetailsModal(event) {
+        this.setState({ event, showDetailsModal: true });
     }
 
     render() {
-        const { error, errorCauses, showErrorCausesModal } = this.state;
+        const { error, event, showDetailsModal } = this.state;
         const { data, widget } = this.props;
         const NO_DATA_MESSAGE = "There are no Events/Logs available. Probably there's no deployment created, yet.";
         const { CopyToClipboardButton, DataTable, ErrorMessage, HighlightText, Icon, Popup } = Stage.Basic;
@@ -181,7 +180,8 @@ export default class EventsTable extends React.Component {
                     <DataTable.Column label="Message" show={fieldsToShow.includes('Message')} />
                     {data.items.map(item => {
                         const isEventType = item.type === EventUtils.eventType;
-                        const showErrorCausesIcon = !_.isEmpty(item.error_causes);
+                        const messageText = Json.stringify(item.message, false);
+                        const showDetailsIcon = !_.isEmpty(item.error_causes) || messageText.length > maxMessageLength;
 
                         const eventOptions = isEventType
                             ? EventUtils.getEventTypeOptions(item.event_type)
@@ -245,43 +245,25 @@ export default class EventsTable extends React.Component {
                                 </DataTable.Data>
                                 <DataTable.Data>
                                     {item.message && (
-                                        <Popup position="top left" hoverable wide="very">
-                                            <Popup.Trigger>
-                                                <span>
-                                                    {this.getHighlightedText(
-                                                        _.truncate(
-                                                            Json.stringify(item.message, false),
-                                                            truncateOptions
-                                                        ),
-                                                        'messageText'
-                                                    )}
-                                                </span>
-                                            </Popup.Trigger>
-                                            <Popup.Content>
-                                                <HighlightText>{Json.stringify(item.message, true)}</HighlightText>
-                                                <CopyToClipboardButton
-                                                    content="Copy Message"
-                                                    text={item.message}
-                                                    className="rightFloated"
-                                                />
-                                            </Popup.Content>
-                                        </Popup>
+                                        <span>
+                                            {this.getHighlightedText(
+                                                _.truncate(messageText, truncateOptions),
+                                                'messageText'
+                                            )}
+                                        </span>
                                     )}
-                                    {showErrorCausesIcon && <EmptySpace />}
-                                    <ErrorCausesIcon
-                                        show={showErrorCausesIcon}
-                                        onClick={() => this.showErrorCausesModal(item.error_causes)}
-                                    />
+                                    {showDetailsIcon && (
+                                        <>
+                                            <EmptySpace />
+                                            <DetailsIcon onClick={() => this.showDetailsModal(item)} />
+                                        </>
+                                    )}
                                 </DataTable.Data>
                             </DataTable.Row>
                         );
                     })}
                 </DataTable>
-                <ErrorCausesModal
-                    errorCauses={errorCauses}
-                    open={showErrorCausesModal}
-                    onClose={this.hideErrorCausesModal}
-                />
+                {showDetailsModal && <DetailsModal event={event} onClose={this.hideDetailsModal} />}
             </div>
         );
     }

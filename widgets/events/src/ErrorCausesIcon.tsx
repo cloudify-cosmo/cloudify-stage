@@ -1,36 +1,32 @@
-// @ts-nocheck File not migrated fully to TS
-/**
- * Created by jakub.niezgoda on 29/10/2018.
- */
+import { FunctionComponent } from 'react';
 
-export default function ErrorCausesModal({ onClick, show }) {
+const t = Stage.Utils.getT('widgets.events');
+
+interface DetailsIconProps {
+    onClick: () => void;
+}
+
+const DetailsIcon: FunctionComponent<DetailsIconProps> = ({ onClick }) => {
     const { Icon, Popup } = Stage.Basic;
 
-    return show ? (
+    return (
         <Popup on="hover">
             <Popup.Trigger>
                 <Icon.Group
                     size="big"
-                    onClick={e => {
+                    onClick={(e: Event) => {
                         e.stopPropagation();
                         onClick();
                     }}
+                    color="black"
                 >
-                    <Icon name="file text" color="red" />
-                    <Icon corner name="zoom" color="black" />
+                    <Icon name="file text" />
+                    <Icon corner name="zoom" />
                 </Icon.Group>
             </Popup.Trigger>
-            <Popup.Content>Show Error Causes</Popup.Content>
+            <Popup.Content>{t('detailsIcon')}</Popup.Content>
         </Popup>
-    ) : null;
-}
-
-ErrorCausesModal.propTypes = {
-    onClick: PropTypes.func,
-    show: PropTypes.bool
+    );
 };
 
-ErrorCausesModal.defaultProps = {
-    onClick: _.noop,
-    show: false
-};
+export default DetailsIcon;

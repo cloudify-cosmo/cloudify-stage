@@ -1,10 +1,14 @@
-// @ts-nocheck File not migrated fully to TS
-/**
- * Created by jakub.niezgoda on 29/10/2018.
- */
-import ErrorCausesPropType from './props/ErrorCausesPropType';
+import { FunctionComponent } from 'react';
 
-export default function ErrorCausesModal({ errorCauses, onClose, open }) {
+interface DetailsModalProps {
+    // eslint-disable-next-line camelcase
+    event: { error_causes: { message: string; traceback: string; type: string }[]; message: any };
+    onClose: () => void;
+}
+
+const t = Stage.Utils.getT('widgets.events.detailsModal');
+
+const DetailsModal: FunctionComponent<DetailsModalProps> = ({ event, onClose }) => {
     const { Json } = Stage.Utils;
     const {
         CancelButton,
@@ -16,55 +20,61 @@ export default function ErrorCausesModal({ errorCauses, onClose, open }) {
         Modal,
         Segment
     } = Stage.Basic;
-    const numberOfErrorCauses = _.size(errorCauses);
+    const numberOfErrorCauses = _.size(event.error_causes);
 
-    return numberOfErrorCauses > 0 ? (
-        <Modal open={open} onClose={onClose}>
-            <Modal.Header>Error Causes</Modal.Header>
+    return (
+        <Modal open onClose={onClose}>
+            <Modal.Header>{t('header')}</Modal.Header>
             <Modal.Content scrolling>
-                {_.map(errorCauses, ({ message, traceback, type }, index) => (
+                {event.message && (
+                    <Segment basic>
+                        <Header size="medium">{t('message')}</Header>
+                        <Divider />
+                        <HighlightText wrapLongLines customStyle={{ overflowX: 'hidden' }} language="json">
+                            {Json.stringify(event.message, true)}
+                        </HighlightText>
+                        <CopyToClipboardButton
+                            content={t('copyMessage')}
+                            text={event.message}
+                            className="rightFloated"
+                        />
+                    </Segment>
+                )}
+                {_.map(event.error_causes, ({ message, traceback, type }, index) => (
                     <Segment key={`errorCause_${index}`} basic>
-                        {numberOfErrorCauses > 1 && (
-                            <>
-                                <Header size="medium">Error Cause #{index + 1}</Header>
-                                <Divider />
-                            </>
-                        )}
-                        <Header size="small">Type</Header>
+                        <Header size="medium">
+                            {t(numberOfErrorCauses > 1 ? 'errorCause' : 'singleErrorCause', { causeNo: index + 1 })}
+                        </Header>
+                        <Divider />
+                        <Header size="small">{t('type')}</Header>
                         <Message info>{type}</Message>
-                        <Header size="small">Message</Header>
+                        <Header size="small">{t('message')}</Header>
                         <Message error>{message}</Message>
                         {traceback && (
                             <>
-                                <Header size="small">Traceback</Header>
-                                <HighlightText language="python">{traceback}</HighlightText>
+                                <Header size="small">{t('traceback')}</Header>
+                                <HighlightText wrapLongLines customStyle={{ overflowX: 'hidden' }} language="python">
+                                    {traceback}
+                                </HighlightText>
                             </>
                         )}
                     </Segment>
                 ))}
             </Modal.Content>
             <Modal.Actions>
-                <CopyToClipboardButton content="Copy Error Causes" text={Json.stringify(errorCauses, true)} />
+                {!!numberOfErrorCauses && (
+                    <CopyToClipboardButton content={t('copyCauses')} text={Json.stringify(event.error_causes, true)} />
+                )}
                 <CancelButton
                     onClick={e => {
                         e.stopPropagation();
                         onClose();
                     }}
-                    content="Close"
+                    content={t('close')}
                 />
             </Modal.Actions>
         </Modal>
-    ) : null;
-}
-
-ErrorCausesModal.propTypes = {
-    open: PropTypes.bool,
-    onClose: PropTypes.func,
-    errorCauses: ErrorCausesPropType
+    );
 };
 
-ErrorCausesModal.defaultProps = {
-    open: false,
-    onClose: _.noop,
-    errorCauses: []
-};
+export default DetailsModal;
