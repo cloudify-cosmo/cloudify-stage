@@ -732,6 +732,10 @@
             }
         },
         "blueprintCatalog": {
+            "actions": {
+                "openDocumentation": "Open documentation",
+                "uploadBlueprint": "Upload blueprint"
+            },
             "configuration": {
                 "jsonPath": {
                     "label": "Blueprints Examples URL",
@@ -893,6 +897,12 @@
                         "title": "Deploy On",
                         "modal": {
                             "header": "Deploy on",
+                            "inputs": {
+                                "name": {
+                                    "label": "Name suffix",
+                                    "help": "Specify a text which will be appended to each deployment name"
+                                }
+                            },
                             "steps": {
                                 "validatingData": "1/4: Validating data...",
                                 "fetchingEnvironments": "2/4: Fetching environments list...",

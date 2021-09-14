@@ -39,7 +39,7 @@ const DeployOnModal: FunctionComponent<DeployOnModalProps> = ({ filterRules, too
                 visibility: deploymentParameters.visibility,
                 new_deployments: environments.map(environmentId => ({
                     id: '{uuid}',
-                    display_name: '{blueprint_id}-{uuid}',
+                    display_name: `{blueprint_id}-${deploymentParameters.deploymentName}`,
                     labels: [{ [parentDeploymentLabelKey]: environmentId }],
                     runtime_only_evaluation: deploymentParameters.runtimeOnlyEvaluation,
                     skip_plugins_validation: deploymentParameters.skipPluginsValidation
@@ -85,6 +85,9 @@ const DeployOnModal: FunctionComponent<DeployOnModalProps> = ({ filterRules, too
                 },
                 { executeStep: setExecutionStarted }
             ]}
+            showDeploymentNameInput
+            deploymentNameLabel={t('bulkActions.deployOn.modal.inputs.name.label')}
+            deploymentNameHelp={t('bulkActions.deployOn.modal.inputs.name.help')}
         />
     );
 };

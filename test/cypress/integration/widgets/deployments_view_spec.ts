@@ -1217,8 +1217,11 @@ describe('Deployments View widget', () => {
 
             const labelKey = 'label_key';
             const labelValue = 'label_value';
+            const name = 'service';
             cy.get('.modal').within(() => {
                 cy.setSearchableDropdownValue('Blueprint', blueprintName);
+
+                cy.contains('.field', 'Name suffix').find('input').type(`${name}`);
 
                 cy.contains('.field', 'Labels').find('.selection').click();
                 cy.get('div[name=labelKey] > input').type(labelKey);
@@ -1238,7 +1241,7 @@ describe('Deployments View widget', () => {
                 expect(request.body.new_deployments).to.deep.equal(
                     deploymentIds.map(id => ({
                         id: '{uuid}',
-                        display_name: '{blueprint_id}-{uuid}',
+                        display_name: `{blueprint_id}-${name}`,
                         labels: [{ 'csys-obj-parent': id }],
                         runtime_only_evaluation: false,
                         skip_plugins_validation: false
