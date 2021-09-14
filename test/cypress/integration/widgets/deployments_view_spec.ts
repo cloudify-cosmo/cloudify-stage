@@ -1221,7 +1221,7 @@ describe('Deployments View widget', () => {
             cy.get('.modal').within(() => {
                 cy.setSearchableDropdownValue('Blueprint', blueprintName);
 
-                cy.contains('.field', 'Name').find('input').type(`${name}`);
+                cy.contains('.field', 'Name suffix').find('input').type(`${name}`);
 
                 cy.contains('.field', 'Labels').find('.selection').click();
                 cy.get('div[name=labelKey] > input').type(labelKey);

@@ -895,7 +895,7 @@
                             "header": "Deploy on",
                             "inputs": {
                                 "name": {
-                                    "label": "Name",
+                                    "label": "Name suffix",
                                     "help": "Specify a text which will be appended to each deployment name"
                                 }
                             },
