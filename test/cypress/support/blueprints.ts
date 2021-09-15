@@ -29,17 +29,21 @@ const commands = {
             `/blueprints/${id}?visibility=${visibility}&application_file_name=${yamlFile}`
         );
     },
-    deleteBlueprint: (blueprintId: string, force = false) => {
-        cy.cfyRequest(`/deployments?blueprint_id=${blueprintId}`, 'GET')
+    deleteBlueprint: (blueprintId: string, force = false) =>
+        cy
+            .cfyRequest(`/deployments?blueprint_id=${blueprintId}`, 'GET')
             .then(response => response.body.items.forEach(({ id }: { id: string }) => cy.deleteDeployment(id, force)))
-            .then(() => waitUntilEmpty(`deployments?blueprint_id=${blueprintId}`));
-        cy.cfyRequest(`/blueprints/${blueprintId}?force=${force}`, 'DELETE', null, null, { failOnStatusCode: false });
-    },
-    deleteBlueprints: (search: string, force = false) => {
-        cy.cfyRequest(`/blueprints?_search=${search}`, 'GET')
+            .then(() => waitUntilEmpty(`deployments?blueprint_id=${blueprintId}`))
+            .then(() =>
+                cy.cfyRequest(`/blueprints/${blueprintId}?force=${force}`, 'DELETE', null, null, {
+                    failOnStatusCode: false
+                })
+            ),
+    deleteBlueprints: (search: string, force = false) =>
+        cy
+            .cfyRequest(`/blueprints?_search=${search}`, 'GET')
             .then(response => response.body.items.forEach(({ id }: { id: string }) => cy.deleteBlueprint(id, force)))
-            .then(() => waitUntilEmpty('blueprints', { search }));
-    }
+            .then(() => waitUntilEmpty('blueprints', { search }))
 };
 
 addCommands(commands);

@@ -59,8 +59,9 @@ Cypress.Commands.add('removeUserGroupFromTenant', (groupName, tenant) => {
 
 Cypress.Commands.add('deleteUser', username => {
     if (!_.includes(builtInUsernames, username)) {
-        cy.cfyRequest(`/users/${username}`, 'DELETE', null, null, { failOnStatusCode: false });
+        return cy.cfyRequest(`/users/${username}`, 'DELETE', null, null, { failOnStatusCode: false });
     }
+    return cy;
 });
 
 Cypress.Commands.add('deleteAllUsersAndTenants', () =>
