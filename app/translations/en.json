@@ -1038,6 +1038,20 @@
                 }
             }
         },
+        "events": {
+            "detailsIcon": "Show details",
+            "detailsModal": {
+                "header": "Details",
+                "message": "Message",
+                "copyMessage": "Copy message",
+                "errorCause": "Error Cause #{{causeNo}}",
+                "singleErrorCause": "Error Cause",
+                "type": "Type",
+                "traceback": "Traceback",
+                "copyCauses": "Copy Error Causes",
+                "close": "Close"
+            }
+        },
         "executions": {
             "noExecutionFound": "There are no executions that could be shown."
         },
