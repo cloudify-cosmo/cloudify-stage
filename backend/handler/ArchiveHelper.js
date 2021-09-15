@@ -146,7 +146,10 @@ module.exports = (() => {
 
         fs.mkdirsSync(targetDir);
 
-        return decompress(archivePath, targetDir);
+        return decompress(archivePath, targetDir, {
+            // NOTE: Workaround for https://github.com/kevva/decompress/issues/46
+            filter: file => !file.path.endsWith('/')
+        });
     }
 
     function removeOldExtracts(tempDir) {
