@@ -78,7 +78,7 @@ export default class EventsTable extends React.Component {
     };
 
     hideDetailsModal = () => {
-        this.setState({ errorCauses: [], showDetailsModal: false });
+        this.setState({ showDetailsModal: false });
     };
 
     refreshData() {
