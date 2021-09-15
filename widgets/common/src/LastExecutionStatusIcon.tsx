@@ -3,6 +3,8 @@
  * Created by jakub.niezgoda on 27/09/2018.
  */
 
+const t = Stage.Utils.getT('widgets.common.executions');
+
 export default class LastExecutionStatusIcon extends React.Component {
     constructor(props, context) {
         super(props, context);
@@ -213,7 +215,7 @@ export default class LastExecutionStatusIcon extends React.Component {
                             {execution.deployment_id}&apos; deployment
                         </Modal.Header>
                         <Modal.Content>
-                            <HighlightText>{execution.error}</HighlightText>
+                            <HighlightText>{execution.error || t('noErrorDetails')}</HighlightText>
                         </Modal.Content>
                         <Modal.Actions>
                             <CopyToClipboardButton content="Copy Error" text={execution.error} />
