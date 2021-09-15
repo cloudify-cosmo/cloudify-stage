@@ -10,16 +10,7 @@ const t = Stage.Utils.getT('widgets.events.detailsModal');
 
 const DetailsModal: FunctionComponent<DetailsModalProps> = ({ event, onClose }) => {
     const { Json } = Stage.Utils;
-    const {
-        CancelButton,
-        CopyToClipboardButton,
-        Divider,
-        Header,
-        HighlightText,
-        Message,
-        Modal,
-        Segment
-    } = Stage.Basic;
+    const { CancelButton, CopyToClipboardButton, Divider, Header, Message, Modal, Segment } = Stage.Basic;
     const numberOfErrorCauses = _.size(event.error_causes);
 
     return (
@@ -30,9 +21,7 @@ const DetailsModal: FunctionComponent<DetailsModalProps> = ({ event, onClose }) 
                     <Segment basic>
                         <Header size="medium">{t('message')}</Header>
                         <Divider />
-                        <HighlightText wrapLongLines customStyle={{ overflowX: 'hidden' }} language="json">
-                            {Json.stringify(event.message, true)}
-                        </HighlightText>
+                        <pre style={{ whiteSpace: 'pre-wrap' }}>{Json.stringify(event.message, true)}</pre>
                         <CopyToClipboardButton
                             content={t('copyMessage')}
                             text={event.message}
@@ -53,9 +42,7 @@ const DetailsModal: FunctionComponent<DetailsModalProps> = ({ event, onClose }) 
                         {traceback && (
                             <>
                                 <Header size="small">{t('traceback')}</Header>
-                                <HighlightText wrapLongLines customStyle={{ overflowX: 'hidden' }} language="python">
-                                    {traceback}
-                                </HighlightText>
+                                <pre style={{ whiteSpace: 'pre-wrap' }}>{traceback}</pre>
                             </>
                         )}
                     </Segment>
