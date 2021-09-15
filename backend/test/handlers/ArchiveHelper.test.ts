@@ -25,10 +25,9 @@ describe('ArchiveHelper', () => {
     });
 
     it('extracts specified archive to target directory', () => {
-        const srcArchiveName = 'bangchak-poc';
-        const srcArchivePath = path.resolve(path.join(__dirname, `fixtures/${srcArchiveName}.zip`));
+        const srcArchivePath = path.resolve(path.join(__dirname, 'fixtures/ArchiveHelper.test.zip'));
         const destTargetDir = '/tmp';
-        const destArchivePath = path.resolve(path.join(destTargetDir, srcArchiveName));
+        const destArchivePath = path.resolve(path.join(destTargetDir, 'bangchak-poc'));
 
         if (fs.existsSync(destArchivePath)) fs.rmdirSync(destArchivePath, { recursive: true });
 
