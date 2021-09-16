@@ -26,6 +26,7 @@
         "systemStatus": "System Status"
     },
     "gettingStartedModal": {
+        "cancelConfirm": "Are you sure you want to cancel the setup process?",
         "disableModalLabel": "Don't show next time",
         "titles": {
             "environmentsStep": "First, please select your environment(s)",
