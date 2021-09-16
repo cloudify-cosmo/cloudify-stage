@@ -5,7 +5,7 @@ import { useSelector } from 'react-redux';
 
 import stageUtils from '../../utils/stageUtils';
 import EventBus from '../../utils/EventBus';
-import useInput from '../../utils/hooks/useInput';
+import { useInput, useOpenProp } from '../../utils/hooks';
 import useResettableState from '../../utils/hooks/useResettableState';
 import { Form, Modal } from '../basic';
 import gettingStartedSchema from './schema.json';
@@ -33,11 +33,13 @@ const GettingStartedModal = () => {
     const manager = useSelector((state: ReduxState) => state.manager);
     const [stepName, setStepName] = useState(StepName.Welcome);
     const [stepErrors, setStepErrors, resetStepErrors] = useResettableState<string[]>([]);
-    const [environmentsStepData, setEnvironmentsStepData] = useState<GettingStartedEnvironmentsData>({});
-    const [secretsStepIndex, setSecretsStepIndex] = useState(0);
-    const [secretsStepsData, setSecretsStepsData] = useState<GettingStartedData>({});
+    const [environmentsStepData, setEnvironmentsStepData, resetEnvironmentsStepData] = useResettableState<
+        GettingStartedEnvironmentsData
+    >({});
+    const [secretsStepIndex, setSecretsStepIndex, resetSecretsStepIndex] = useResettableState(0);
+    const [secretsStepsData, setSecretsStepsData, resetSecretsStepsData] = useResettableState<GettingStartedData>({});
 
-    const [installationProcessing, setInstallationProcessing] = useState(false);
+    const [installationProcessing, setInstallationProcessing, resetInstallationProcessing] = useResettableState(false);
     const [modalDisabledChecked, setModalDisabledChange] = useInput(false);
 
     const commonStepsSchemas = useMemo(
@@ -56,6 +58,15 @@ const GettingStartedModal = () => {
             [...secretsStepsSchemas]
         );
     }, [commonStepsSchemas, secretsStepsSchemas]);
+
+    useOpenProp(modalOpenState.modalOpen, () => {
+        setStepName(StepName.Welcome);
+        resetStepErrors();
+        resetEnvironmentsStepData();
+        resetSecretsStepIndex();
+        resetSecretsStepsData();
+        resetInstallationProcessing();
+    });
 
     if (!stageUtils.isUserAuthorized('getting_started', manager)) {
         return null;
