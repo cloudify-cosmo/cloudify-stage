@@ -26,6 +26,7 @@
         "systemStatus": "System Status"
     },
     "gettingStartedModal": {
+        "cancelConfirm": "Are you sure you want to cancel the setup process?",
         "disableModalLabel": "Don't show next time",
         "titles": {
             "environmentsStep": "First, please select your environment(s)",
@@ -1048,6 +1049,20 @@
                     "header": "Unexpected widget usage",
                     "message": "The drilled-down widget should not be used on a top-level page, only in drill-down pages. Most of the time you do not need to add it manually, as it is present on the drill-down Environments/Services page automatically. You may be looking for a regular Deployments View widget."
                 }
+            }
+        },
+        "events": {
+            "detailsIcon": "Show details",
+            "detailsModal": {
+                "header": "Details",
+                "message": "Message",
+                "copyMessage": "Copy message",
+                "errorCause": "Error Cause #{{causeNo}}",
+                "singleErrorCause": "Error Cause",
+                "type": "Type",
+                "traceback": "Traceback",
+                "copyCauses": "Copy Error Causes",
+                "close": "Close"
             }
         },
         "executions": {
