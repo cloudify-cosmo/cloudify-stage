@@ -132,6 +132,8 @@ const GettingStartedModal = () => {
             setStepName(stepName - 1);
         }
 
+        resetStepErrors();
+
         switch (stepName) {
             case StepName.Environments:
             case StepName.Status:
@@ -149,7 +151,6 @@ const GettingStartedModal = () => {
                 break;
 
             case StepName.Secrets:
-                resetStepErrors();
                 if (secretsStepIndex > 0) {
                     setSecretsStepIndex(secretsStepIndex - 1);
                 } else {
