@@ -99,9 +99,14 @@ Stage.defineWidget<
             widget.configuration.filter,
             widget.configuration.jsonPath
         );
-        return Promise.all([actions.doGetRepos(params), toolbox.getManager().doGet('/blueprints?_include=id', {})])
+        return Promise.all([
+            actions.doGetRepos(params),
+            toolbox.getManager().doGet('/blueprints?_include=id,state', {})
+        ])
             .then(([data, blueprintsRes]) => {
-                const uploadedBlueprints = blueprintsRes.items.map(({ id }: Partial<Blueprint>) => id);
+                const uploadedBlueprints = blueprintsRes.items
+                    .filter(({ state }: Partial<Blueprint>) => state !== 'invalid')
+                    .map(({ id }: Partial<Blueprint>) => id);
                 const defaultImagePath = Stage.Utils.Url.widgetResourceUrl(
                     'blueprintCatalog',
                     Consts.DEFAULT_IMAGE,
