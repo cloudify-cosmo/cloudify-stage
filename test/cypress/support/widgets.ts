@@ -11,15 +11,14 @@ declare global {
 const commands = {
     getWidgets: () => cy.stageRequest('/console/widgets/list'),
 
-    removeCustomWidgets: () => {
+    removeCustomWidgets: () =>
         cy.getWidgets().then(response => {
             response.body.forEach((widget: Stage.Types.WidgetDefinition) => {
                 if (widget.isCustom) {
                     cy.stageRequest(`/console/widgets/${widget.id}`, 'DELETE');
                 }
             });
-        });
-    },
+        }),
 
     interceptWidgetScript: (widgetId: string, scriptSource: string) =>
         cy.intercept(`/console/appData/widgets/${widgetId}/widget.js`, {

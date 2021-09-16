@@ -25,23 +25,19 @@ const commands = {
             data.visibility = site.visibility;
         }
 
-        cy.cfyRequest(`/sites/${site.name}`, 'PUT', null, data);
+        return cy.cfyRequest(`/sites/${site.name}`, 'PUT', null, data);
     },
 
-    createSites: (sites: Site[]) => {
-        sites.forEach(cy.createSite);
-    },
+    createSites: (sites: Site[]) => sites.forEach(cy.createSite),
 
-    deleteSite: (siteName: string, { ignoreFailure = false }: { ignoreFailure?: boolean } = {}) => {
-        cy.cfyRequest(`/sites/${siteName}`, 'DELETE', null, null, { failOnStatusCode: !ignoreFailure });
-    },
+    deleteSite: (siteName: string, { ignoreFailure = false }: { ignoreFailure?: boolean } = {}) =>
+        cy.cfyRequest(`/sites/${siteName}`, 'DELETE', null, null, { failOnStatusCode: !ignoreFailure }),
 
-    deleteSites: (search = '') => {
+    deleteSites: (search = '') =>
         cy.cfyRequest(`/sites?_search=${search}`, 'GET').then(response => {
             const sites = response.body.items;
             sites.forEach((site: any) => cy.deleteSite(site.name));
-        });
-    }
+        })
 };
 
 addCommands(commands);

@@ -73,7 +73,7 @@ type License =
 const commands = {
     waitUntilPageLoaded: () => {
         cy.log('Wait for widgets loaders to disappear');
-        cy.get('div.loader:visible', { timeout: 10000 }).should('not.exist');
+        return cy.get('div.loader:visible', { timeout: 10000 }).should('not.exist');
     },
     waitUntilLoaded: () =>
         cy
@@ -142,7 +142,7 @@ const commands = {
             )
         );
     },
-    stageRequest: (url: string, method = 'GET', options?: Partial<Cypress.RequestOptions>, headers?: any) => {
+    stageRequest: (url: string, method = 'GET', options?: Partial<Cypress.RequestOptions>, headers?: any) =>
         cy.request({
             method,
             url,
@@ -152,8 +152,7 @@ const commands = {
                 ...headers
             },
             ...options
-        });
-    },
+        }),
     // TODO(RD-2314): object instead of multiple optional parameters
     login: (username = 'admin', password = 'admin', expectSuccessfulLogin = true, disableGettingStarted = true) => {
         mockGettingStarted(!disableGettingStarted);
@@ -179,6 +178,7 @@ const commands = {
 
             cy.waitUntilLoaded().then(() => cy.saveLocalStorage());
         }
+        return cy;
     },
     // TODO(RD-2314): object instead of multiple optional parameters
     mockLogin: (username?: string, password?: string, disableGettingStarted?: boolean) =>
@@ -213,11 +213,9 @@ const commands = {
         if (id) {
             cy.location('pathname').should('be.equal', `/console/page/${id}`);
         }
-        cy.waitUntilPageLoaded();
+        return cy.waitUntilPageLoaded();
     },
-    visitTestPage: () => {
-        cy.visitPage(testPageName);
-    },
+    visitTestPage: () => cy.visitPage(testPageName),
     usePageMock: (
         widgetIds?: string | string[],
         widgetConfiguration: any = {},
@@ -242,7 +240,7 @@ const commands = {
             widgetIds ? ['blueprint', 'deployment', ...additionalPageTemplates].map(toIdObj) : []
         );
         cy.intercept('GET', '/console/templates', []);
-        cy.intercept('GET', '/console/ua', {
+        return cy.intercept('GET', '/console/ua', {
             appDataVersion: getCurrentAppVersion(),
             appData: {
                 pages: [
@@ -328,12 +326,12 @@ const commands = {
             .editWidgetConfiguration(widgetId, noop),
     refreshPage: (disableGettingStarted = true) => {
         mockGettingStarted(!disableGettingStarted);
-        cy.get('.pageMenuItem.active').click({ force: true });
+        return cy.get('.pageMenuItem.active').click({ force: true });
     },
     refreshTemplate: (disableGettingStarted = true) => {
         mockGettingStarted(!disableGettingStarted);
         cy.get('.tenantsMenu').click({ force: true });
-        cy.contains('.text', 'default_tenant').click({ force: true });
+        return cy.contains('.text', 'default_tenant').click({ force: true });
     },
     setBlueprintContext: (value: string) => setContext('blueprint', value),
     clearBlueprintContext: () => clearContext('blueprint'),
@@ -379,36 +377,33 @@ const commands = {
 
     setSearchableDropdownValue: (fieldName: string, value: string) => {
         if (value) {
-            cy.getField(fieldName)
+            return cy
+                .getField(fieldName)
                 .click()
                 .within(() => {
                     cy.get('input').type(value);
                     cy.get(`div[option-value="${value}"]`).click();
                 });
-        } else {
-            cy.getField(fieldName)
-                .find('i.dropdown')
-                .then($icon => {
-                    if ($icon.hasClass('clear')) cy.clearSearchableDropdown(fieldName);
-                });
         }
+        return cy
+            .getField(fieldName)
+            .find('i.dropdown')
+            .then($icon => {
+                if ($icon.hasClass('clear')) cy.clearSearchableDropdown(fieldName);
+            });
     },
 
     clearSearchableDropdown: (fieldName: string) => cy.getField(fieldName).find('.dropdown.clear.icon').click(),
 
-    setDropdownValues: (fieldName: string, values: string[]) => {
-        cy.getField(fieldName)
+    setDropdownValues: (fieldName: string, values: string[]) =>
+        cy
+            .getField(fieldName)
             .click()
             .within(() => values.forEach(value => cy.contains('div[role=option]', value).click()))
-            .click();
-    },
-
+            .click(),
     clearMultipleDropdown: (fieldName: string) => cy.getField(fieldName).find('.delete.icon').click({ multiple: true }),
 
-    openTab: (tabName: string) => {
-        cy.get('.tabular.menu').contains(tabName).click();
-    },
-
+    openTab: (tabName: string) => cy.get('.tabular.menu').contains(tabName).click(),
     mockEnabledGettingStarted: () => mockGettingStarted(true),
 
     mockDisabledGettingStarted: () => mockGettingStarted(false)

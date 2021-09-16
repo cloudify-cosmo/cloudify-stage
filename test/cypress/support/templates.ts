@@ -35,7 +35,7 @@ const commands = {
 
     getBuiltInTemplate: (name: BuiltInTemplateName) => cy.stageRequest(`/console/appData/templates/${name}.json`),
 
-    removeUserPages: () => {
+    removeUserPages: () =>
         cy.getPages().then(response => {
             const pages = response.body;
             pages.forEach((page: Page) => {
@@ -43,10 +43,9 @@ const commands = {
                     cy.stageRequest(`/console/templates/pages/${page.id}`, 'DELETE');
                 }
             });
-        });
-    },
+        }),
 
-    removeUserTemplates: () => {
+    removeUserTemplates: () =>
         cy.getTemplates().then(response => {
             const templates = response.body;
             templates.forEach((template: Template) => {
@@ -54,8 +53,7 @@ const commands = {
                     cy.stageRequest(`/console/templates/${template.id}`, 'DELETE');
                 }
             });
-        });
-    }
+        })
 };
 
 addCommands(commands);
