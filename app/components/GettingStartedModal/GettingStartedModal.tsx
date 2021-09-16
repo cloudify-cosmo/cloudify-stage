@@ -1,29 +1,29 @@
-import React, { memo, useState, useMemo } from 'react';
+import React, { memo, useMemo, useState } from 'react';
 import i18n from 'i18next';
 import log from 'loglevel';
 import { useSelector } from 'react-redux';
 
 import stageUtils from '../../utils/stageUtils';
 import EventBus from '../../utils/EventBus';
-import { useInput, useOpenProp } from '../../utils/hooks';
+import { useInput, useOpenProp, useBoolean } from '../../utils/hooks';
 import useResettableState from '../../utils/hooks/useResettableState';
-import { Form, Modal } from '../basic';
+import { Confirm, Form, Modal } from '../basic';
 import gettingStartedSchema from './schema.json';
 import useModalOpenState from './useModalOpenState';
-import { validateSecretFields, validateEnvironmentsFields } from './formValidation';
+import { validateEnvironmentsFields, validateSecretFields } from './formValidation';
 import createEnvironmentsGroups from './createEnvironmentsGroups';
+import type {
+    GettingStartedData,
+    GettingStartedEnvironmentsData,
+    GettingStartedSchema,
+    GettingStartedSecretsData
+} from './model';
 import { GettingStartedSchemaItem, StepName } from './model';
 import ModalHeader from './ModalHeader';
 import ModalContent from './ModalContent';
 import ModalActions from './ModalActions';
 
 import type { ReduxState } from '../../reducers';
-import type {
-    GettingStartedData,
-    GettingStartedSchema,
-    GettingStartedSecretsData,
-    GettingStartedEnvironmentsData
-} from './model';
 
 const castedGettingStartedSchema = gettingStartedSchema as GettingStartedSchema;
 
@@ -41,6 +41,7 @@ const GettingStartedModal = () => {
 
     const [installationProcessing, setInstallationProcessing, resetInstallationProcessing] = useResettableState(false);
     const [modalDisabledChecked, setModalDisabledChange] = useInput(false);
+    const [cancelConfirmOpen, openCancelConfirm, closeCancelConfirm] = useBoolean();
 
     const commonStepsSchemas = useMemo(
         () => castedGettingStartedSchema.filter(item => environmentsStepData[item.name]),
@@ -116,14 +117,22 @@ const GettingStartedModal = () => {
         EventBus.trigger('secrets:refresh');
         setInstallationProcessing(false);
     };
-    const handleModalClose = async () => {
-        await modalOpenState.closeModal(modalDisabledChecked);
+    const handleModalClose = () => {
+        if (stepName !== StepName.Status) openCancelConfirm();
+        else closeModal();
+    };
+
+    const closeModal = () => {
+        modalOpenState.closeModal(modalDisabledChecked);
+        closeCancelConfirm();
     };
 
     const handleBackClick = () => {
         function goToPreviousStep() {
             setStepName(stepName - 1);
         }
+
+        resetStepErrors();
 
         switch (stepName) {
             case StepName.Environments:
@@ -142,7 +151,6 @@ const GettingStartedModal = () => {
                 break;
 
             case StepName.Secrets:
-                resetStepErrors();
                 if (secretsStepIndex > 0) {
                     setSecretsStepIndex(secretsStepIndex - 1);
                 } else {
@@ -233,6 +241,12 @@ const GettingStartedModal = () => {
                 onBackClick={handleBackClick}
                 onNextClick={handleNextClick}
                 onModalClose={handleModalClose}
+            />
+            <Confirm
+                open={cancelConfirmOpen}
+                content={i18n.t('gettingStartedModal.cancelConfirm')}
+                onConfirm={closeModal}
+                onCancel={closeCancelConfirm}
             />
         </Modal>
     );

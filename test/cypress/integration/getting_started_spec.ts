@@ -142,6 +142,8 @@ describe('Getting started modal', () => {
             closeModal();
         });
 
+        cy.contains('button', 'Yes').click();
+
         cy.wait('@disableRequest').its('request.body.show_getting_started').should('be.false');
     });
 

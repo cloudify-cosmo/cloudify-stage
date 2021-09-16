@@ -26,6 +26,7 @@
         "systemStatus": "System Status"
     },
     "gettingStartedModal": {
+        "cancelConfirm": "Are you sure you want to cancel the setup process?",
         "disableModalLabel": "Don't show next time",
         "titles": {
             "environmentsStep": "First, please select your environment(s)",
@@ -704,16 +705,28 @@
                         "urlNameLabel": "URL to marketplace",
                         "defaultValues": [
                             {
-                                "name": "VM Blueprint Examples",
-                                "url": "https://repository.cloudifysource.org/cloudify/blueprints/6.2/vm-examples.json"
+                                "name": "AWS",
+                                "url": "https://repository.cloudifysource.org/cloudify/blueprints/6.2/aws_services.json"
                             },
                             {
-                                "name": "Kubernetes Blueprint Examples",
-                                "url": "https://repository.cloudifysource.org/cloudify/blueprints/6.2/k8s-examples.json"
+                                "name": "Azure",
+                                "url": "https://repository.cloudifysource.org/cloudify/blueprints/6.2/azure_services.json"
                             },
                             {
-                                "name": "Orchestrator Blueprint Examples",
-                                "url": "https://repository.cloudifysource.org/cloudify/blueprints/6.2/orc-examples.json"
+                                "name": "GCP",
+                                "url": "https://repository.cloudifysource.org/cloudify/blueprints/6.2/gcp_services.json"
+                            },
+                            {
+                                "name": "Terraform",
+                                "url": "https://repository.cloudifysource.org/cloudify/blueprints/6.2/terraform_services.json"
+                            },
+                            {
+                                "name": "Helm",
+                                "url": "https://repository.cloudifysource.org/cloudify/blueprints/6.2/helm_services.json"
+                            },
+                            {
+                                "name": "Other",
+                                "url": "https://repository.cloudifysource.org/cloudify/blueprints/6.2/other_services.json"
                             }
                         ]
                     }

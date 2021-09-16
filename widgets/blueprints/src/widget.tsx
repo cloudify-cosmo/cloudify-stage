@@ -1,8 +1,10 @@
 // @ts-nocheck File not migrated fully to TS
+import { join } from 'lodash';
 import BlueprintsList from './BlueprintsList';
 import type { BlueprintsWidgetConfiguration } from './types';
 
 const t = Stage.Utils.getT('widgets.blueprints');
+const tCatalogConfiguration = Stage.Utils.getT('widgets.blueprintCatalog.configuration');
 
 Stage.defineWidget<unknown, unknown, BlueprintsWidgetConfiguration>({
     id: 'blueprints',
@@ -72,14 +74,15 @@ Stage.defineWidget<unknown, unknown, BlueprintsWidgetConfiguration>({
             name: t('configuration.marketplaceColumnsToShow.label'),
             placeholder: t('configuration.marketplaceColumnsToShow.placeholder'),
             items: [
-                Stage.i18n.t('widgets.blueprintCatalog.configuration.fieldsToShow.items.name'),
-                Stage.i18n.t('widgets.blueprintCatalog.configuration.fieldsToShow.items.description'),
-                Stage.i18n.t('widgets.blueprintCatalog.configuration.fieldsToShow.items.created'),
-                Stage.i18n.t('widgets.blueprintCatalog.configuration.fieldsToShow.items.updated')
+                tCatalogConfiguration('fieldsToShow.items.name'),
+                tCatalogConfiguration('fieldsToShow.items.description'),
+                tCatalogConfiguration('fieldsToShow.items.created'),
+                tCatalogConfiguration('fieldsToShow.items.updated')
             ],
-            default: `${Stage.i18n.t('widgets.blueprintCatalog.configuration.fieldsToShow.items.name')}, ${Stage.i18n.t(
-                'widgets.blueprintCatalog.configuration.fieldsToShow.items.description'
-            )}`,
+            default: join([
+                tCatalogConfiguration('fieldsToShow.items.name'),
+                tCatalogConfiguration('fieldsToShow.items.description')
+            ]),
 
             type: Stage.Basic.GenericField.MULTI_SELECT_LIST_TYPE
         }
