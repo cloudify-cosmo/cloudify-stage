@@ -5,7 +5,7 @@ import { useSelector } from 'react-redux';
 
 import stageUtils from '../../utils/stageUtils';
 import EventBus from '../../utils/EventBus';
-import { useInput, useOpenProp } from '../../utils/hooks';
+import { useInput, useOpenProp, useBoolean } from '../../utils/hooks';
 import useResettableState from '../../utils/hooks/useResettableState';
 import { Confirm, Form, Modal } from '../basic';
 import gettingStartedSchema from './schema.json';
@@ -24,7 +24,6 @@ import ModalContent from './ModalContent';
 import ModalActions from './ModalActions';
 
 import type { ReduxState } from '../../reducers';
-import { useBoolean } from '../../utils/hooks';
 
 const castedGettingStartedSchema = gettingStartedSchema as GettingStartedSchema;
 
