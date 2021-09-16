@@ -14,10 +14,11 @@ const builtInUsernames = ['admin', 'db_status_reporter', 'broker_status_reporter
 const commands = {
     addTenant: (tenant: string) => cy.cfyRequest(`/tenants/${tenant}`, 'POST'),
 
-    deleteTenant: (tenant: string) => {
+    deleteTenant: (tenant: string): Cypress.Chainable => {
         if (tenant !== 'default_tenant') {
             cy.cfyRequest(`/tenants/${tenant}`, 'DELETE', null, null, { failOnStatusCode: false });
         }
+        return cy;
     },
 
     addUser: (username: string, password: string, isAdmin: boolean) =>
@@ -34,7 +35,7 @@ const commands = {
             role
         }),
 
-    removeUserFromTenant: (username: string, tenant: string) => {
+    removeUserFromTenant: (username: string, tenant: string): Cypress.Chainable => {
         if (tenant !== 'default_tenant' || !_.includes(builtInUsernames, username)) {
             return cy.cfyRequest(
                 '/tenants/users',
@@ -50,7 +51,7 @@ const commands = {
         return cy;
     },
 
-    removeUserGroupFromTenant: (groupName: string, tenant: string) => {
+    removeUserGroupFromTenant: (groupName: string, tenant: string): Cypress.Chainable => {
         if (tenant !== 'default_tenant') {
             return cy.cfyRequest(
                 '/tenants/user-groups',
@@ -66,7 +67,7 @@ const commands = {
         return cy;
     },
 
-    deleteUser: (username: string) => {
+    deleteUser: (username: string): Cypress.Chainable => {
         if (!_.includes(builtInUsernames, username)) {
             return cy.cfyRequest(`/users/${username}`, 'DELETE', null, null, { failOnStatusCode: false });
         }
