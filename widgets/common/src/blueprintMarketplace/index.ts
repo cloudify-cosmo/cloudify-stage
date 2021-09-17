@@ -9,7 +9,6 @@ const BlueprintMarketplace = {
 
 declare global {
     namespace Stage.Common {
-        // eslint-disable-next-line @typescript-eslint/no-namespace
         namespace BlueprintMarketplace {
             export type Tab = MarketplaceTab;
             export type DisplayStyle = MarketplaceDisplayStyle;
