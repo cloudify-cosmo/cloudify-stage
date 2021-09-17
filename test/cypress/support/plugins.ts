@@ -28,15 +28,16 @@ const commands = {
         });
         cy.wait('@pluginUpload', { responseTimeout: uploadPluginTimeout });
         cy.get('.pluginsCatalogWidget .message').should('have.text', `${pluginName} successfully uploaded`);
-        cy.visitPage('Test Page');
+        return cy.visitPage('Test Page');
     },
-    deletePlugins: () => {
-        cy.cfyRequest('/plugins').then(response =>
-            response.body.items.forEach(({ id }: { id: string }) =>
-                cy.cfyRequest(`/plugins/${id}`, 'DELETE', null, { force: true })
+    deletePlugins: () =>
+        cy
+            .cfyRequest('/plugins')
+            .then(response =>
+                response.body.items.forEach(({ id }: { id: string }) =>
+                    cy.cfyRequest(`/plugins/${id}`, 'DELETE', null, { force: true })
+                )
             )
-        );
-    }
 };
 
 addCommands(commands);

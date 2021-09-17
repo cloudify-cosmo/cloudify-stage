@@ -19,11 +19,11 @@ const commands = {
             failOnStatusCode: !ignoreFailure
         }),
 
-    deleteDeploymentsFilters: (search: string) => {
-        cy.cfyRequest(`/filters/deployments?_search=${search}`, 'GET')
+    deleteDeploymentsFilters: (search: string) =>
+        cy
+            .cfyRequest(`/filters/deployments?_search=${search}`, 'GET')
             .then(response => response.body.items.forEach(({ id }: { id: string }) => cy.deleteDeploymentsFilter(id)))
-            .then(() => waitUntilEmpty('filters/deployments', { search }));
-    }
+            .then(() => waitUntilEmpty('filters/deployments', { search }))
 };
 
 addCommands(commands);

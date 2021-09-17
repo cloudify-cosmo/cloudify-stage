@@ -11,22 +11,18 @@ declare global {
 }
 
 const commands = {
-    getExecutions: (filter = '') => {
-        cy.cfyRequest(`/executions${filter ? `?${filter}` : ''}`, 'GET');
-    },
+    getExecutions: (filter = '') => cy.cfyRequest(`/executions${filter ? `?${filter}` : ''}`, 'GET'),
 
-    executeWorkflow: (deploymentId: string, workflowId: string, parameters = {}, force = false) => {
+    executeWorkflow: (deploymentId: string, workflowId: string, parameters = {}, force = false) =>
         cy.cfyRequest('/executions', 'POST', null, {
             deployment_id: deploymentId,
             workflow_id: workflowId,
             parameters,
             force
-        });
-    },
+        }),
 
-    killExecution: (executionId: string) => {
-        cy.cfyRequest(`/executions/${executionId}`, 'POST', null, { action: 'kill' });
-    },
+    killExecution: (executionId: string) =>
+        cy.cfyRequest(`/executions/${executionId}`, 'POST', null, { action: 'kill' }),
 
     killRunningExecutions: () => {
         const activeExecutionsUrl = `/executions?${stringify({
@@ -37,7 +33,8 @@ const commands = {
             status: ['kill_cancelling']
         })}`;
 
-        cy.cfyRequest(activeExecutionsUrl, 'GET')
+        return cy
+            .cfyRequest(activeExecutionsUrl, 'GET')
             .then(response => response.body.items.forEach(({ id }: { id: string }) => cy.killExecution(id)))
             .then(() => waitUntilEmpty(activeAndKillCancellingExecutionsUrl));
     }
