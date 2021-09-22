@@ -10,7 +10,7 @@ jest.mock('db/Connection');
 describe('/applications endpoint', () => {
     it('allows to get all data about applications', () => {
         mockDb({
-            Application: {
+            Applications: {
                 findAll: () =>
                     Promise.resolve([
                         { id: 1, name: 'A' },

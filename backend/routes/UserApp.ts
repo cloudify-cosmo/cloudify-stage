@@ -15,7 +15,7 @@ router.use(bodyParser.json());
  * End point to get a request from the server. Assuming it has a url parameter 'su' - server url
  */
 router.get('/', (req, res, next) => {
-    db.UserApp.findOne({
+    db.UserApps.findOne({
         where: {
             username: req.user.username,
             mode: getMode(),
@@ -29,7 +29,7 @@ router.get('/', (req, res, next) => {
 });
 
 router.post('/', (req, res, next) => {
-    db.UserApp.findOrCreate({
+    db.UserApps.findOrCreate({
         where: {
             username: req.user.username,
             mode: getMode(),
@@ -37,7 +37,7 @@ router.post('/', (req, res, next) => {
         },
         defaults: { appData: {}, appDataVersion: req.body.version }
     })
-        .spread(userApp =>
+        .then(([userApp]) =>
             userApp
                 .update(
                     { appData: req.body.appData, appDataVersion: req.body.version },
@@ -49,7 +49,7 @@ router.post('/', (req, res, next) => {
 });
 
 router.get('/clear-pages', (req, res, next) => {
-    db.UserApp.findOne({
+    db.UserApps.findOne({
         where: {
             username: req.user.username,
             mode: getMode(),

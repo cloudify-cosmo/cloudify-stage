@@ -3,7 +3,7 @@
  */
 
 module.exports = (sequelize, DataTypes) =>
-    sequelize.define('Application', {
+    sequelize.define('Applications', {
         id: {
             type: DataTypes.INTEGER,
             primaryKey: true,

@@ -16,22 +16,22 @@ router.use(bodyParser.json());
  * End point to get a request from the server. Assuming it has a url parameter 'su' - server url
  */
 router.get('/', (req, res, next) => {
-    db.ClientConfig.findOrCreate({
+    db.ClientConfigs.findOrCreate({
         where: { managerIp: getConfig().manager.ip },
         defaults: { config: { canUserEdit: true } }
     })
-        .then(clientConfig => {
-            res.send(clientConfig[0]);
+        .then(([clientConfig]) => {
+            res.send(clientConfig);
         })
         .catch(next);
 });
 
 router.post('/', (req, res, next) => {
-    db.ClientConfig.findOrCreate({
+    db.ClientConfigs.findOrCreate({
         where: { managerIp: getConfig().manager.ip },
         defaults: { config: { canUserEdit: true } }
     })
-        .spread(clientConfig => {
+        .then(([clientConfig]) => {
             clientConfig.update({ config: req.body }, { fields: ['config'] }).then(c => {
                 res.send(c);
             });
