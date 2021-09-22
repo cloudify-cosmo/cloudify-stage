@@ -599,7 +599,7 @@
                 }
             },
             "readmes": {
-                "linksBasePath": "https://docs.cloudify.co/6.0.0",
+                "linksBasePath": "https://docs.cloudify.co/staging/dev",
                 "params": {
                     "cfy_composer_link": "/developer/composer/",
                     "cfy_composer_name": "Cloudify Composer",
