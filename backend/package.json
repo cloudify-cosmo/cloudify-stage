@@ -75,7 +75,7 @@
     "jest": "^26.4.2",
     "nock": "^13.0.11",
     "nodemon": "^2.0.2",
-    "sequelize-cli": "^5.5.1"
+    "sequelize-cli": "^6.2.0"
   },
   "engines": {
     "node": "12.x"
