@@ -15,6 +15,7 @@ const CONTEXT_PATH = '/console';
 
 module.exports = (env, argv) => {
     const isProduction = argv.mode === 'production';
+    const isDevelopment = argv.mode === 'development';
     const mode = isProduction ? 'production' : 'development';
     const context = path.join(__dirname);
     const devtool = isProduction ? undefined : 'eval-source-map';
@@ -205,7 +206,7 @@ module.exports = (env, argv) => {
                     new webpack.ProvidePlugin({
                         d3: 'd3'
                     }),
-                    !isProduction &&
+                    isDevelopment &&
                         new ForkTsCheckerWebpackPlugin({
                             eslint: {
                                 files: './{app,widgets}/**/*.{ts,tsx,js,tsx}',

@@ -12,9 +12,13 @@
 
         // Cypress forces using inlineSourceMap
         "sourceMap": false,
-        "types": ["cypress"]
+        "types": ["cypress"],
+        "baseUrl": ".",
+        "paths": {
+            "*": ["../../*"]
+        }
     },
-    "include": ["**/*", "**/*.json"],
+    "include": ["**/*", "**/*.json", "../../conf/*.json"],
     "files": ["../../app/typings/stage-api.d.ts"],
     // Some Stage.Common types used in tests are defined in widgets/common
     "references": [{ "path": "../../app" }, { "path": "../../widgets" }]
