@@ -135,7 +135,7 @@ pipeline {
       parallel {
         stage('Test frontend'){
           steps{
-            container('cypress'){
+            container('node'){
               dir("${WORKSPACE}/test"){
                 echo 'Run frontend tests'
                 sh 'npm run test:frontend:unit'
