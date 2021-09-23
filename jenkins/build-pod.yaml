@@ -16,12 +16,12 @@ spec:
     image: circleci/node:12.22.1-browsers
     resources:
       requests:
-        cpu: 2.5
-        memory: 8Gi
+        cpu: 1
+        memory: 4Gi
         ephemeral-storage: "15Gi"
       limits:
-        cpu: 3.5
-        memory: 8Gi
+        cpu: 1.5
+        memory: 4Gi
         ephemeral-storage: "15Gi"
     command:
     - cat
@@ -68,12 +68,12 @@ spec:
   - name: cypress
     image: cypress/base:12.19.0
     requests:
-      cpu: 2.5
-      memory: 8Gi
+      cpu: 1.5
+      memory: 4Gi
       ephemeral-storage: "15Gi"
     limits:
-      cpu: 3.5
-      memory: 8Gi
+      cpu: 2.0
+      memory: 4Gi
       ephemeral-storage: "15Gi"
   imagePullSecrets:
     - name: dockerhub
