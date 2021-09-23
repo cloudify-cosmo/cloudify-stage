@@ -67,6 +67,14 @@ spec:
         memory: 256Mi
   - name: cypress
     image: cypress/base:12.19.0
+    requests:
+      cpu: 2.5
+      memory: 8Gi
+      ephemeral-storage: "15Gi"
+    limits:
+      cpu: 3.5
+      memory: 8Gi
+      ephemeral-storage: "15Gi"
   imagePullSecrets:
     - name: dockerhub
   nodeSelector:
