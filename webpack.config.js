@@ -223,7 +223,8 @@ module.exports = (env, argv) => {
                     environmentPlugin,
                     isProduction && getProductionPlugins(env && env.analyse === 'main')
                 ])
-            )
+            ),
+            watch: isDevelopment
         },
         {
             mode,
