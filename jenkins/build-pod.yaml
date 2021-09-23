@@ -66,7 +66,7 @@ spec:
         cpu: 0.2
         memory: 256Mi
   - name: cypress
-    image: cypress/base:12.19.0
+    image: cypress/base:10
     resources:
       requests:
         cpu: 1.5
