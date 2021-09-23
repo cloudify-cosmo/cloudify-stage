@@ -12,7 +12,7 @@
 // the project's config changing)
 
 import performCommonSetup from 'cloudify-ui-common/cypress/plugins';
-import { startDevServer } from '@cypress/webpack-dev-server/';
+import { startDevServer } from '@cypress/webpack-dev-server';
 // @ts-ignore Webpack config not in TS
 import getWebpackConfig from '../../../webpack.config';
 
