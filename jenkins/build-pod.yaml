@@ -66,7 +66,7 @@ spec:
         cpu: 0.2
         memory: 256Mi
   - name: cypress
-    image: cypress/base:12
+    image: cypress/base:12.19.0
   imagePullSecrets:
     - name: dockerhub
   nodeSelector:
