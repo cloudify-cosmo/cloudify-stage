@@ -56,6 +56,12 @@ pipeline {
         stage('Prepare & Run first test group'){
           steps {
             container('node'){
+              echo "Installaing dependencies.."
+              sh '''
+                sudo rm -rf /var/lib/apt/lists/*
+                sudo apt update
+                sudo apt install postgresql-client libgtk2.0-0 libgtk-3-0 libgbm-dev libnotify-dev libgconf-2-4 libnss3 libxss1 libasound2 libxtst6 xauth xvfb
+              '''
               dir("${STAGE_DIR}/conf") {
                 withVault([configuration: configuration, vaultSecrets: secrets]) {
                   sh """
@@ -137,11 +143,6 @@ pipeline {
           steps{
             container('node'){
               dir("${WORKSPACE}/test"){
-                echo "Installaing Cypress dependencies.."
-                sh '''
-                  apt-get update -y
-                  apt-get install -y libgtk2.0-0 libgtk-3-0 libgbm-dev libnotify-dev libgconf-2-4 libnss3 libxss1 libasound2 libxtst6 xauth xvfb
-                '''
                 echo 'Run frontend tests'
                 sh 'npm run test:frontend:unit'
               }
@@ -153,7 +154,6 @@ pipeline {
             container('node'){
               dir("${WORKSPACE}/test"){
                 echo 'Run backend tests'
-                sh 'sudo rm -rf /var/lib/apt/lists/* && sudo apt update && sudo apt install postgresql-client'
                 sh 'echo \'{"app":{"ssl":{"ca":null},"logLevelConf":"","logLevel":"debug"}}\' > conf/me.json'
                 sh 'npm run test:backend'
               }
