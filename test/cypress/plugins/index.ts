@@ -13,7 +13,6 @@
 
 import performCommonSetup from 'cloudify-ui-common/cypress/plugins';
 import { startDevServer } from '@cypress/webpack-dev-server';
-import { merge } from 'lodash';
 // @ts-ignore Webpack config not in TS
 import getWebpackConfig from '../../../webpack.config';
 
@@ -27,7 +26,7 @@ const setupPluginsAndConfig: Cypress.PluginConfig = (on, config) => {
     if (config.testingType === 'component') {
         on('dev-server:start', options =>
             startDevServer({
-                options: merge(options, { config: { watchForFileChanges: false } }),
+                options,
                 webpackConfig: getWebpackConfig({}, { mode: 'test' })[0]
             })
         );

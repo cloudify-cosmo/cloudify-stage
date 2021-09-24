@@ -42,7 +42,7 @@
     "test:frontend": "npm run test:frontend:unit && npm run test:frontend:components",
     "test:frontend:unit": "jest test/jest",
     "test:frontend:components": "cypress run-ct -C node_modules/cloudify-ui-common/cypress/cypress.json -c nodeVersion=system",
-    "test:frontend:coverage": "npm run test:frontend -- --coverage",
+    "test:frontend:coverage": "npm run test:frontend:unit -- --coverage && npm run test:frontend:components",
     "test:backend": "cd backend && npm test",
     "upload": "scripts/uploadPackage.sh",
     "zip": "scripts/createPackage.sh"
