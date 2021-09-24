@@ -18,7 +18,8 @@
           "height": 28,
           "definition": "deploymentsView",
           "configuration": {
-            "filterId": "csys-service-filter"
+            "filterId": "csys-service-filter",
+            "fieldsToShow": ["status", "id", "name", "blueprintName", "location"]
           },
           "x": 0,
           "y": 3
