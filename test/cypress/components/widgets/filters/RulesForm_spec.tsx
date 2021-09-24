@@ -1,7 +1,8 @@
-import '../../initAppContext';
-import 'widgets/common/src/props/Toolbox';
 import React from 'react';
 import { mount } from '@cypress/react';
+
+import '../../initAppContext';
+import 'widgets/common/src/props/Toolbox';
 import RulesForm from 'widgets/common/src/filters/RulesForm';
 
 describe('RulesForm', () => {

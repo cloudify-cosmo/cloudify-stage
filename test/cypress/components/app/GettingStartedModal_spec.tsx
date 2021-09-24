@@ -1,10 +1,11 @@
-import '../initAppContext';
 import React from 'react';
 import { mount } from '@cypress/react';
 import { Provider } from 'react-redux';
 import { createStore } from 'redux';
 import { createBrowserHistory } from 'history';
 import { ThemeProvider } from 'styled-components';
+
+import '../initAppContext';
 import GettingStartedModal from 'app/components/GettingStartedModal';
 import StageUtils from 'app/utils/stageUtils';
 import userConfig from 'conf/userConfig.json';
