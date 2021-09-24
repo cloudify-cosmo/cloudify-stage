@@ -102,7 +102,8 @@ Stage.defineWidget<
             widget.configuration.jsonPath
         );
         return Promise.all([actions.doGetRepos(params), blueprintActions.doGetUploadedBlueprints()])
-            .then(([data, uploadedBlueprints]) => {
+            .then(([data, uploadedBlueprintsResp]) => {
+                const uploadedBlueprints = uploadedBlueprintsResp.items.map(({ id }: { id: string }) => id);
                 const defaultImagePath = Stage.Utils.Url.widgetResourceUrl(
                     'blueprintCatalog',
                     Consts.DEFAULT_IMAGE,

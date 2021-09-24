@@ -1,5 +1,4 @@
 // eslint-disable-next-line max-classes-per-file
-
 class BlueprintUploadError extends Error {
     constructor(message: string, public state: string) {
         super(message);
@@ -57,12 +56,9 @@ export default class BlueprintActions {
     }
 
     doGetUploadedBlueprints(params?: Record<string, any>) {
-        return this.toolbox
-            .getManager()
-            .doGet('/blueprints?_include=id,state', { params })
-            .then(response =>
-                response.items.filter((blueprint: { state: string }) => BlueprintActions.isUploaded(blueprint))
-            );
+        return this.toolbox.getManager().doGet('/blueprints?_include=id,state', {
+            params: { state: BlueprintActions.CompletedBlueprintStates.Uploaded, ...params }
+        });
     }
 
     doGetFullBlueprintData(blueprintId: string) {
