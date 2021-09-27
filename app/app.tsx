@@ -56,17 +56,21 @@ const queryClient = new ReactQuery.QueryClient({
     }
 });
 
+export function i18nInit() {
+    i18n.init({
+        resources: {
+            en: {
+                translation
+            }
+        },
+        lng: 'en',
+        fallbackLng: 'en'
+    });
+}
+
 export default class app {
     static load() {
-        i18n.init({
-            resources: {
-                en: {
-                    translation
-                }
-            },
-            lng: 'en',
-            fallbackLng: 'en'
-        });
+        i18nInit();
 
         window.React = React;
         window.ReactDOM = ReactDOM;

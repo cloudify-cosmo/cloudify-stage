@@ -12,9 +12,25 @@
 // the project's config changing)
 
 import performCommonSetup from 'cloudify-ui-common/cypress/plugins';
+import { startDevServer } from '@cypress/webpack-dev-server';
+// @ts-ignore Webpack config not in TS
+import getWebpackConfig from '../../../webpack.config';
 
 const setupPluginsAndConfig: Cypress.PluginConfig = (on, config) => {
     config.baseUrl = 'http://localhost:4000';
+
+    // TODO: RD-3233 To be moved to common configuration
+    config.componentFolder = 'test/cypress/components';
+    config.testFiles = '**/*_spec.{ts,tsx}';
+
+    if (config.testingType === 'component') {
+        on('dev-server:start', options =>
+            startDevServer({
+                options,
+                webpackConfig: getWebpackConfig({}, { mode: 'test' })[0]
+            })
+        );
+    }
 
     return performCommonSetup(on, config);
 };

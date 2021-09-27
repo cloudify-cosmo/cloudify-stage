@@ -1,4 +1,5 @@
-# Test
+# Tests
+
 ## Unit tests
 
 There are multiple tests divided by category:
@@ -18,12 +19,13 @@ Run `npm run test:frontend:coverage` to run all frontend unit tests and generate
 
 ## System tests
 
-All system tests are written using [Cypress](https://www.cypress.io/) front end testing tool. They are stored in [test/cypress](./test/cypress) directory.
+All system tests are written using [Cypress](https://www.cypress.io/) front end testing tool.
+They are stored in [test/cypress/integration](./test/cypress/integration) directory.
 Cypress is configured to gather test coverage, but it will only work if application build is instrumented prior running the tests.
 To create application build instrumented for coverate run `npm run build:coverage`.  
  
 ### Running tests using test runner
-Run `npm run e2e:open`.
+Run `npm run cy:open`.
 
 It opens the Cypress Test Runner in the interactive mode. You can pass additional parameters to the script following [cypress open command documentation](https://docs.cypress.io/guides/guides/command-line.html#cypress-open).
 
@@ -34,6 +36,17 @@ That command runs Cypress tests to completion.
 By default, will run all tests headlessly in the [Electron](https://electronjs.org/) browser. You can pass additional parameters to the script following [cypress run command documentation](https://docs.cypress.io/guides/guides/command-line.html#cypress-run).
 
 Once tests complete coverage report will be available in `coverage-cypress` directory.
+
+## React component tests
+
+Similarly to system tests, React component tests are implemented with Cypress framework. They are located in [test/cypress/components](./test/cypress/components).
+Component tests share custom commands and fixtures with system tests.
+
+### Running component tests using test runner
+To open Cypress Test Runner run `npm run cy:open-ct`.
+
+### Running component tests in console only
+Run `npm run test:frontend:components`.
 
 ## Coverage check
 

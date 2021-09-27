@@ -138,7 +138,7 @@ pipeline {
             container('node'){
               dir("${WORKSPACE}/test"){
                 echo 'Run frontend tests'
-                sh 'npm run test:frontend'
+                sh 'npm run test:frontend:unit'
               }
             }
           }
