@@ -24,6 +24,8 @@ const setupPluginsAndConfig: Cypress.PluginConfig = (on, config) => {
     config.testFiles = '**/*_spec.{ts,tsx}';
 
     if (config.testingType === 'component') {
+        config.viewportWidth = 1600;
+        config.viewportHeight = 900;
         on('dev-server:start', options =>
             startDevServer({
                 options,

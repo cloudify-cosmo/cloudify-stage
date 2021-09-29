@@ -3,7 +3,8 @@
         ["module-resolver", {
             "alias": {
                 "app": "./app",
-                "conf": "./conf"
+                "conf": "./conf",
+                "widgets": "./widgets"
             }
         }]
     ]
