@@ -50,12 +50,22 @@ export function isTabsSection(layoutSection: LayoutSection): layoutSection is Ta
 export interface PageDefinition {
     id: string;
     name: string;
+    type: 'page';
     description: string;
     layout: LayoutSection[];
     isDrillDown: boolean;
     parent?: string;
     children?: string[];
 }
+
+export interface PageGroup {
+    id: string;
+    name: string;
+    type: 'pageGroup';
+    pages: PageDefinition[];
+}
+
+export type PageMenuItem = PageDefinition | PageGroup;
 
 export function addTab(pageId: string, layoutSection: number) {
     return {
@@ -97,6 +107,22 @@ export function createPage(page: Partial<PageDefinition>, newPageId: string) {
     };
 }
 
+function createPageGroup(pageGroup: any, id: string) {
+    return {
+        type: types.ADD_PAGE_GROUP,
+        pageGroup,
+        id
+    };
+}
+
+function addPageToGroup(pageGroupId: string, pageId: string) {
+    return {
+        type: types.ADD_PAGE_TO_GROUP,
+        pageGroupId,
+        pageId
+    };
+}
+
 export function createDrilldownPage(page: PageDefinition, newPageId: string) {
     return {
         type: types.CREATE_DRILLDOWN_PAGE,
@@ -105,8 +131,13 @@ export function createDrilldownPage(page: PageDefinition, newPageId: string) {
     };
 }
 
-export function createPagesMap(pages: PageDefinition[]) {
-    return _.keyBy(pages, 'id');
+export function createPagesMap(pageMenuItems: PageMenuItem[]) {
+    return _(pageMenuItems)
+        .filter({ type: 'page' })
+        .concat(_.flatMap(pageMenuItems, 'pages'))
+        .compact()
+        .keyBy('id')
+        .value() as Record<string, PageDefinition>;
 }
 
 export function forAllWidgets(
@@ -147,7 +178,7 @@ export function getWidgetDefinitionById(
     return _.find(definitions, { id: definitionId });
 }
 
-function createPageId(name: string, pages: PageDefinition[]) {
+function createPageId(name: string, pages: PageMenuItem[]) {
     // Add suffix to make URL unique if same page name already exists
     let newPageId = _.snakeCase(name);
     let suffix = 1;
@@ -313,16 +344,37 @@ export function createPagesFromTemplate(): ThunkAction<void, ReduxState, never, 
                 return Promise.reject(NO_PAGES_FOR_TENANT_ERR);
             }
 
-            _.each(pages, id => {
-                const page = storeTemplates.pagesDef[id];
-                if (!page) {
-                    log.error(`Cannot find page template: ${id}. Skipping... `);
-                    return;
+            _.each(pages, pageMenuItem => {
+                function createPageAndLayout(pageId: string) {
+                    const page = storeTemplates.pagesDef[pageId];
+                    if (!page) {
+                        log.error(`Cannot find page template: ${pageId}. Skipping... `);
+                        return null;
+                    }
+
+                    const pageInstanceId = createPageId(page.name, getState().pages);
+                    dispatch(createPage(page, pageInstanceId));
+                    dispatch(addLayoutToPage(page, pageInstanceId));
+
+                    return pageInstanceId;
                 }
 
-                const pageId = createPageId(page.name, getState().pages);
-                dispatch(createPage(page, pageId));
-                dispatch(addLayoutToPage(page, pageId));
+                if (pageMenuItem.type === 'page') {
+                    createPageAndLayout(pageMenuItem.id);
+                } else {
+                    const pageGroup = storeTemplates.pageGroupsDef[pageMenuItem.id as string];
+                    if (!pageGroup) {
+                        log.error(`Cannot find page group: ${pageMenuItem.id}. Skipping... `);
+                        return;
+                    }
+
+                    dispatch(createPageGroup(pageGroup, pageMenuItem.id));
+
+                    _.each(pageGroup.pages, pageId => {
+                        const pageInstanceId = createPageAndLayout(pageId);
+                        if (pageInstanceId) dispatch(addPageToGroup(pageMenuItem.id, pageInstanceId));
+                    });
+                }
             });
 
             return Promise.resolve();
@@ -353,11 +405,12 @@ export function selectParentPage(): ThunkAction<void, ReduxState, never, AnyActi
         // @ts-expect-error Missing type definitions for app reducer
         const pageId = state.app.currentPageId || state.pages[0].id;
 
-        const page = _.find(state.pages, { id: pageId });
+        const pagesMap = createPagesMap(state.pages);
+        const page = pagesMap[pageId];
         if (page && page.parent) {
             // NOTE: assume page is always found
             // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-            const parentPage: PageDefinition = _.find(state.pages, { id: page.parent })!;
+            const parentPage = pagesMap[page.parent];
             dispatch(popDrilldownContext());
             dispatch(selectPage(parentPage.id, parentPage.isDrillDown));
         }

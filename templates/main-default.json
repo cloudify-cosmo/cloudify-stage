@@ -3,11 +3,11 @@
   "tenants": ["*"],
 
   "pages": [
-    "adminDash",
-    "blueprints",
-    "services",
-    "environments",
-    "executions",
-    "resources"
+    {"id": "adminDash", "type": "page"},
+    {"id": "blueprints", "type": "page"},
+    {"id": "services", "type": "page"},
+    {"id": "environments", "type": "page"},
+    {"id": "executions", "type": "page"},
+    {"id": "resources", "type": "page"}
   ]
 }

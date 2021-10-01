@@ -121,8 +121,12 @@ interface PageDefinitionWithContext extends PageDefinition {
     context: any;
 }
 
-const buildPagesList = (pages: PageDefinition[], drilldownContextArray: DrilldownContext[], selectedPageId: string) => {
-    const pagesMap = createPagesMap(pages);
+const buildPagesList = (
+    pagesMap: Record<string, PageDefinition>,
+    startingPage: PageDefinition,
+    drilldownContextArray: DrilldownContext[],
+    selectedPageId: string
+) => {
     const pagesList: PageDefinitionWithContext[] = [];
     let index = drilldownContextArray.length - 1;
     /**
@@ -133,7 +137,7 @@ const buildPagesList = (pages: PageDefinition[], drilldownContextArray: Drilldow
     // TODO(RD-1982): build the pages list in the same order as drilldownContextArray
 
     const updatePagesListWith = (page: PageDefinition) => {
-        const basePage = !page ? pages[0] : page;
+        const basePage = !page ? startingPage : page;
         const pageDrilldownContext = index >= 0 ? drilldownContextArray[index] : null;
         index -= 1;
 
@@ -162,12 +166,16 @@ const mapStateToProps = (state: ReduxState, ownProps: PageOwnProps) => {
     const pageId = page ? page.id : homePageId;
 
     // NOTE: assume page will always be found
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    const pageData: PageDefinition = _.cloneDeep(_.find(pages, { id: pageId })!);
+    const pageData: PageDefinition = _.cloneDeep(pagesMap[pageId]);
 
     pageData.name = ownProps.pageName || pageData.name;
 
-    const pagesList = buildPagesList(pages, state.drilldownContext, pageId);
+    const pagesList = buildPagesList(
+        pagesMap,
+        _.find(pages, { type: 'page' }) as PageDefinition,
+        state.drilldownContext,
+        pageId
+    );
     return {
         page: pageData,
         pagesList,
