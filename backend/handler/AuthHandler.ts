@@ -58,7 +58,7 @@ export function isRbacInCache() {
     return !_.isEmpty(authorizationCache);
 }
 
-export async function getRBAC(token) {
+export async function getRBAC(token): Promise<{ roles: any }> {
     if (!isRbacInCache()) {
         logger.debug('No RBAC data in cache.');
         await getAndCacheConfig(token);

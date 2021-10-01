@@ -2,8 +2,8 @@
 import app from './app';
 import { SERVER_HOST, SERVER_PORT } from './consts';
 import DBConnection from './db/Connection';
-import * as WidgetHandler from './handler/WidgetHandler';
-import * as TemplateHandler from './handler/TemplateHandler';
+import { init as initWidgetHandler } from './handler/WidgetHandler';
+import { init as initTemplateHandler } from './handler/templates';
 import { getLogger } from './handler/LoggerHandler';
 import { isDevelopmentOrTest } from './utils';
 
@@ -16,7 +16,7 @@ init();
 export default DBConnection.init()
     .then(() => {
         logger.info('DB connection initialized successfully.');
-        return Promise.all([WidgetHandler.init(), TemplateHandler.init()]);
+        return Promise.all([initWidgetHandler(), initTemplateHandler()]);
     })
     .then(() => {
         logger.info('Widgets and templates data initialized successfully.');
