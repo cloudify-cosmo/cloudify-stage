@@ -8,6 +8,7 @@ import { getResourcePath } from '../../utils';
 import { getRBAC } from '../AuthHandler';
 
 import { getLogger } from '../LoggerHandler';
+import { TenantsRoles } from '../../types';
 
 const logger = getLogger('TemplateHandler');
 
@@ -97,7 +98,7 @@ function getHighestRole(userRoles: string[], allRoles: { name: string }[]) {
 async function getRole(
     userSystemRole: string,
     groupSystemRoles: Record<string, any>,
-    tenantsRoles: Record<string, any>,
+    tenantsRoles: TenantsRoles,
     tenant: string,
     token: string
 ) {
@@ -226,7 +227,7 @@ export function updateTemplate(username: string, templateUpdate: TemplateUpdate)
 export async function selectTemplate(
     userSystemRole: string,
     groupSystemRoles: Record<string, any>,
-    tenantsRoles: Record<string, any>,
+    tenantsRoles: TenantsRoles,
     tenant: string,
     token: string
 ) {
