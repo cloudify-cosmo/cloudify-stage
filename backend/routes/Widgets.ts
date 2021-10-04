@@ -3,7 +3,7 @@
 import express from 'express';
 import bodyParser from 'body-parser';
 import passport from 'passport';
-import * as WidgetHandler from '../handler/WidgetHandler';
+import * as WidgetHandler from '../handler/WidgetsHandler';
 import { getRBAC, isAuthorized } from '../handler/AuthHandler';
 
 const router = express.Router();

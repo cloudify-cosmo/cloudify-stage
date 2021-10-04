@@ -3,7 +3,7 @@ import { userTemplatesFolder } from './TemplatesHandler';
 import { userPagesFolder } from './PagesHandler';
 import { getLogger } from '../LoggerHandler';
 
-const logger = getLogger('TemplateHandler');
+const logger = getLogger('TemplatesHandler');
 
 // eslint-disable-next-line import/prefer-default-export
 export function init() {
