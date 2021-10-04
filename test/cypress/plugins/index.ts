@@ -12,11 +12,13 @@
 // the project's config changing)
 
 import performCommonSetup from 'cloudify-ui-common/cypress/plugins';
+// @ts-ignore Webpack config not in TS
+import getWebpackConfig from '../../../webpack.config';
 
 const setupPluginsAndConfig: Cypress.PluginConfig = (on, config) => {
     config.baseUrl = 'http://localhost:4000';
 
-    return performCommonSetup(on, config);
+    return performCommonSetup(on, config, getWebpackConfig({}, { mode: 'test' })[0]);
 };
 
 export default setupPluginsAndConfig;
