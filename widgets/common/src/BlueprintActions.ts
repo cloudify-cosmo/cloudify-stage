@@ -56,8 +56,12 @@ export default class BlueprintActions {
     }
 
     doGetUploadedBlueprints(params?: Record<string, any>) {
-        return this.toolbox.getManager().doGet('/blueprints?_include=id,state', {
-            params: { state: BlueprintActions.CompletedBlueprintStates.Uploaded, ...params }
+        return this.toolbox.getManager().doGet('/blueprints', {
+            params: {
+                _include: 'id,state',
+                state: BlueprintActions.CompletedBlueprintStates.Uploaded,
+                ...params
+            }
         });
     }
 
