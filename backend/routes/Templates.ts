@@ -10,19 +10,19 @@ const router = express.Router();
 router.use(passport.authenticate('token', { session: false }));
 router.use(bodyParser.json());
 
-router.get('/', (req, res, next) => {
+router.get('/', (_req, res, next) => {
     TemplateHandler.listTemplates()
         .then(templates => res.send(templates))
         .catch(next);
 });
 
-router.get('/pages', (req, res, next) => {
+router.get('/pages', (_req, res, next) => {
     PageHandler.listPages()
         .then(pages => res.send(pages))
         .catch(next);
 });
 
-router.get('/page-groups', (req, res, next) => {
+router.get('/page-groups', (_req, res, next) => {
     try {
         res.send(PageGroupsHandler.listPageGroups());
     } catch (err) {
