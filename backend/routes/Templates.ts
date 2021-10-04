@@ -1,8 +1,8 @@
 import express from 'express';
 import bodyParser from 'body-parser';
 import passport from 'passport';
-import * as TemplateHandler from '../handler/templates/TemplatesHandler';
-import * as PageHandler from '../handler/templates/PagesHandler';
+import * as TemplatesHandler from '../handler/templates/TemplatesHandler';
+import * as PagesHandler from '../handler/templates/PagesHandler';
 import * as PageGroupsHandler from '../handler/templates/PageGroupsHandler';
 
 const router = express.Router();
@@ -11,13 +11,13 @@ router.use(passport.authenticate('token', { session: false }));
 router.use(bodyParser.json());
 
 router.get('/', (_req, res, next) => {
-    TemplateHandler.listTemplates()
+    TemplatesHandler.listTemplates()
         .then(templates => res.send(templates))
         .catch(next);
 });
 
 router.get('/pages', (_req, res, next) => {
-    PageHandler.listPages()
+    PagesHandler.listPages()
         .then(pages => res.send(pages))
         .catch(next);
 });
@@ -31,43 +31,43 @@ router.get('/page-groups', (_req, res, next) => {
 });
 
 router.post('/', (req, res, next) => {
-    TemplateHandler.createTemplate(req.user!.username, req.body)
+    TemplatesHandler.createTemplate(req.user!.username, req.body)
         .then(() => res.send({ status: 'ok' }))
         .catch(next);
 });
 
 router.put('/', (req, res, next) => {
-    TemplateHandler.updateTemplate(req.user!.username, req.body)
+    TemplatesHandler.updateTemplate(req.user!.username, req.body)
         .then(() => res.send({ status: 'ok' }))
         .catch(next);
 });
 
 router.delete('/:templateId', (req, res, next) => {
-    TemplateHandler.deleteTemplate(req.params.templateId)
+    TemplatesHandler.deleteTemplate(req.params.templateId)
         .then(() => res.send({ status: 'ok' }))
         .catch(next);
 });
 
 router.post('/pages', (req, res, next) => {
-    PageHandler.createPage(req.user!.username, req.body)
+    PagesHandler.createPage(req.user!.username, req.body)
         .then(() => res.send({ status: 'ok' }))
         .catch(next);
 });
 
 router.put('/pages', (req, res, next) => {
-    PageHandler.updatePage(req.user!.username, req.body)
+    PagesHandler.updatePage(req.user!.username, req.body)
         .then(() => res.send({ status: 'ok' }))
         .catch(next);
 });
 
 router.delete('/pages/:pageId', (req, res, next) => {
-    PageHandler.deletePage(req.params.pageId)
+    PagesHandler.deletePage(req.params.pageId)
         .then(() => res.send({ status: 'ok' }))
         .catch(next);
 });
 
 router.get('/select', (req, res, next) => {
-    TemplateHandler.selectTemplate(
+    TemplatesHandler.selectTemplate(
         req.user!.role,
         req.user!.group_system_roles,
         req.user!.tenants,
