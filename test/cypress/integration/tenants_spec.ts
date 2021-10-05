@@ -48,7 +48,7 @@ describe('Tenants menu', () => {
                 body: {
                     id,
                     data: { roles: [tenant.role], tenants: [tenant.name] },
-                    pages: _.map(tenant.pages, 'id')
+                    pages: _.map(tenant.pages, page => ({ id: page.id, type: 'page' }))
                 }
             });
         }

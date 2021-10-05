@@ -22,7 +22,7 @@ describe('Template Management', () => {
 
         cy.get('@templateRow').click();
         cy.get('.horizontal > :nth-child(1)').within(() =>
-            pages.forEach((page, index) => cy.get(`.divided > :nth-child(${index + 1})`).should('have.text', page))
+            pages.forEach((page, index) => cy.get(`.divided > :nth-child(${index + 1})`).should('have.text', page.id))
         );
         cy.get('.horizontal > :nth-child(3)').within(() =>
             tenants.forEach((tenant, index) =>
