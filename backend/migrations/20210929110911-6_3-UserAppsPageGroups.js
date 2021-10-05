@@ -9,15 +9,17 @@ module.exports = {
     up: (queryInterface, Sequelize, logger) => {
         UserApp(queryInterface.sequelize, Sequelize)
             .findAll()
-            .then(results =>
-                Sequelize.Promise.each(results, userAppRow => {
+            .then(async results => {
+                for (let i = 0; i < results.length; i += 1) {
+                    const userAppRow = results[i];
                     each(userAppRow.appData.pages, page => {
                         page.type = 'page';
                     });
                     userAppRow.appData = { ...userAppRow.appData };
-                    return userAppRow.save();
-                })
-            );
+                    // eslint-disable-next-line no-await-in-loop
+                    await userAppRow.save();
+                }
+            });
 
         if (fs.existsSync(userTemplatesFolder))
             each(fs.readdirSync(userTemplatesFolder), templateFile => {
