@@ -11,7 +11,7 @@ router.use(passport.authenticate('token', { session: false }));
 router.use(bodyParser.json());
 
 router.get('/', (req, res, next) => {
-    db.Application.findAll()
+    db.Applications.findAll()
         .then(applications => {
             res.send(applications);
         })
@@ -19,7 +19,7 @@ router.get('/', (req, res, next) => {
 });
 
 router.get('/:id', (req, res, next) => {
-    db.Application.findOne({ where: { id: req.params.id } })
+    db.Applications.findOne({ where: { id: req.params.id } })
         .then(application => {
             res.send(application);
         })
@@ -32,8 +32,8 @@ router.post('/', (req, res, next) => {
     const { isPrivate } = req.body;
     const { extras } = req.body;
 
-    db.Application.findOrCreate({ where: { name } })
-        .spread(application => {
+    db.Applications.findOrCreate({ where: { name } })
+        .then(([application]) => {
             application.update({ name, status, isPrivate, extras }).then(response => {
                 res.send(response);
             });
@@ -47,8 +47,8 @@ router.post('/:id', (req, res, next) => {
     const { isPrivate } = req.body;
     const { extras } = req.body;
 
-    db.Application.findOrCreate({ where: { id: req.params.id } })
-        .spread(application => {
+    db.Applications.findOrCreate({ where: { id: req.params.id } })
+        .then(([application]) => {
             application.update({ name, status, isPrivate, extras }).then(response => {
                 res.send(response);
             });
@@ -57,7 +57,7 @@ router.post('/:id', (req, res, next) => {
 });
 
 router.delete('/:id', (req, res, next) => {
-    db.Application.destroy({ where: { id: req.params.id } })
+    db.Applications.destroy({ where: { id: req.params.id } })
         .then(response => {
             res.send(response);
         })

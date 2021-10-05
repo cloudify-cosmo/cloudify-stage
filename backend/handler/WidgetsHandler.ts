@@ -279,7 +279,7 @@ export function listWidgets() {
 }
 
 export function isWidgetUsed(widgetId) {
-    return db.UserApp.findAll({ attributes: ['appData', 'username'] }).then(userApp => {
+    return db.UserApps.findAll({ attributes: ['appData', 'username'] }).then(userApp => {
         const result = [];
         _.forEach(userApp, row => {
             const filter = _.filter(row.appData.pages, { widgets: [{ definition: widgetId }] });

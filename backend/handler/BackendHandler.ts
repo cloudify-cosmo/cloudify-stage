@@ -45,7 +45,7 @@ const BackendRegistrator = (widgetId, resolve, reject) => ({
 
         logger.info(`--- registering service ${getServiceString(widgetId, method, serviceName)}`);
 
-        return db.WidgetBackend.findOrCreate({
+        return db.WidgetBackends.findOrCreate({
             where: {
                 widgetId,
                 serviceName,
@@ -55,7 +55,7 @@ const BackendRegistrator = (widgetId, resolve, reject) => ({
                 script: ''
             }
         })
-            .spread(widgetBackend => {
+            .then(([widgetBackend]) => {
                 logger.debug(`--- updating entry for service: ${getServiceString(widgetId, method, serviceName)}`);
                 return widgetBackend.update(
                     { script: new VMScript(`module.exports = ${service.toString()}`) },
@@ -174,7 +174,7 @@ export function callService(serviceName, method, req, res, next) {
     method = _.toUpper(method);
     serviceName = _.toUpper(serviceName);
 
-    return db.WidgetBackend.findOne({ where: { widgetId, serviceName, method } })
+    return db.WidgetBackends.findOne({ where: { widgetId, serviceName, method } })
         .catch(() => {
             return Promise.reject(
                 `There is no service ${serviceName} for method ${method} for widget ${widgetId} registered`
@@ -197,7 +197,7 @@ export function callService(serviceName, method, req, res, next) {
 /* eslint-enable no-param-reassign */
 
 export function removeWidgetBackend(widgetId) {
-    return db.WidgetBackend.destroy({ where: { widgetId } }).then(() =>
+    return db.WidgetBackends.destroy({ where: { widgetId } }).then(() =>
         logger.debug(`Deleted widget backend for ${widgetId}.`)
     );
 }

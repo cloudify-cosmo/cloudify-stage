@@ -9,7 +9,7 @@ jest.mock('handler/ManagerHandler');
 describe('/clientConfig endpoint', () => {
     it('allows to get client config', () => {
         mockDb({
-            ClientConfig: {
+            ClientConfigs: {
                 findOrCreate: () =>
                     Promise.resolve([
                         {

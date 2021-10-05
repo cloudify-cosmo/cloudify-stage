@@ -3,9 +3,9 @@
  */
 const ServerSettings = require('../../serverSettings');
 
-module.exports = (sequelize, DataTypes) => {
-    const UserApp = sequelize.define(
-        'UserApp',
+module.exports = (sequelize, DataTypes) =>
+    sequelize.define(
+        'UserApps',
         {
             username: { type: DataTypes.STRING, allowNull: false },
             appDataVersion: { type: DataTypes.INTEGER, allowNull: false },
@@ -27,6 +27,3 @@ module.exports = (sequelize, DataTypes) => {
             ]
         }
     );
-
-    return UserApp;
-};
