@@ -2,7 +2,7 @@ const { each, map } = require('lodash');
 const fs = require('fs-extra');
 const path = require('path');
 
-const UserApp = require('../db/models/UserAppModel');
+const UserApp = require('../db/models/UserAppsModel');
 const { userTemplatesFolder } = require('../handler/templates/TemplatesHandler');
 
 module.exports = {
