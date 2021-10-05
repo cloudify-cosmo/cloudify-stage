@@ -39,7 +39,7 @@ router.get('/image/:blueprint', (req, res, next) => {
 
 router.post('/image/:blueprint', passport.authenticate('token', { session: false }), (req, res, next) => {
     db.BlueprintAdditions.findOrCreate({ where: { blueprintId: req.params.blueprint } })
-        .spread(blueprintAdditions => {
+        .then(([blueprintAdditions]) => {
             blueprintAdditions
                 .update(
                     { image: _.isEmpty(req.body) ? null : req.body, imageUrl: req.query.imageUrl },

@@ -8,18 +8,22 @@ const Utils = require('../utils');
 const userTemplatesFolder = Utils.getResourcePath('templates', true);
 const userPagesFolder = path.resolve(userTemplatesFolder, 'pages');
 
-const UserApp = require('../db/models/UserAppModel');
+const UserApps = require('../db/models/UserAppsModel');
 
 function migrate(queryInterface, Sequelize, pageProcessor) {
-    UserApp(queryInterface.sequelize, Sequelize)
+    UserApps(queryInterface.sequelize, Sequelize)
         .findAll()
-        .then(results =>
-            Sequelize.Promise.each(results, userAppRow => {
+        .then(async results => {
+            for (let i = 0; i < results.length; i += 1) {
+                const userAppRow = results[i];
                 _.each(userAppRow.appData.pages, pageProcessor);
                 userAppRow.appData = { ...userAppRow.appData };
-                return userAppRow.save();
-            })
-        );
+                // NOTE: It's intentional to await before processing next row
+                //       to not open too many connections (see RD-1150)
+                // eslint-disable-next-line no-await-in-loop
+                await userAppRow.save();
+            }
+        });
     if (fs.existsSync(userPagesFolder))
         _.each(fs.readdirSync(userPagesFolder), pageFile => {
             const pageFilePath = path.resolve(userPagesFolder, pageFile);

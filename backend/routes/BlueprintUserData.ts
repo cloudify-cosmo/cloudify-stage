@@ -40,7 +40,7 @@ router.put('/layout/:blueprint', (req, res) => {
     db.BlueprintUserData.findOrCreate({
         where: { blueprintId: req.params.blueprint, username: req.user.username },
         defaults: { layout: {} }
-    }).spread(blueprintData => blueprintData.update({ layout: req.body }).then(() => res.sendStatus(200)));
+    }).then(([blueprintData]) => blueprintData.update({ layout: req.body }).then(() => res.sendStatus(200)));
 });
 
 export default router;
