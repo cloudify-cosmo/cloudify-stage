@@ -24,7 +24,7 @@ describe('/filters endpoint', () => {
     }
 
     mockDb({
-        UserApp: {
+        UserApps: {
             findAll: () =>
                 Promise.resolve([
                     {

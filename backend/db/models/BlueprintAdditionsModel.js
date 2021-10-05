@@ -2,8 +2,8 @@
  * Created by pposel on 09/03/2017.
  */
 
-module.exports = (sequelize, DataTypes) => {
-    const BlueprintAdditions = sequelize.define(
+module.exports = (sequelize, DataTypes) =>
+    sequelize.define(
         'BlueprintAdditions',
         {
             blueprintId: { type: DataTypes.STRING, allowNull: false },
@@ -19,6 +19,3 @@ module.exports = (sequelize, DataTypes) => {
             ]
         }
     );
-
-    return BlueprintAdditions;
-};

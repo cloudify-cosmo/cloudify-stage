@@ -9,7 +9,7 @@ jest.mock('handler/ManagerHandler');
 describe('/ua endpoint', () => {
     it('allows to get user layout', () => {
         mockDb({
-            UserApp: {
+            UserApps: {
                 findOne: () =>
                     Promise.resolve({
                         username: 'test',

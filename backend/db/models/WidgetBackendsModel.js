@@ -4,7 +4,7 @@
 
 module.exports = (sequelize, DataTypes) =>
     sequelize.define(
-        'WidgetBackend',
+        'WidgetBackends',
 
         {
             widgetId: { type: DataTypes.STRING, allowNull: false },
