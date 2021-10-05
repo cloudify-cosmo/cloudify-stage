@@ -1,28 +1,38 @@
-// @ts-nocheck File not migrated fully to TS
-
 import fs from 'fs-extra';
 import pathlib from 'path';
-import mkdirp from 'mkdirp';
 import _ from 'lodash';
 import moment from 'moment';
 
-import { getMode, MODE_MAIN } from '../serverSettings';
-import { getResourcePath } from '../utils';
-import { getRBAC } from './AuthHandler';
+import { getMode, MODE_MAIN } from '../../serverSettings';
+import { getResourcePath } from '../../utils';
+import { getRBAC } from '../AuthHandler';
 
-import { getLogger } from './LoggerHandler';
+import { getLogger } from '../LoggerHandler';
+import { TenantsRoles } from '../../types';
 
 const logger = getLogger('TemplateHandler');
 
-const builtInTemplatesFolder = getResourcePath('templates', false);
-const userTemplatesFolder = getResourcePath('templates', true);
-const builtInPagesFolder = pathlib.resolve(builtInTemplatesFolder, 'pages');
-const userPagesFolder = pathlib.resolve(userTemplatesFolder, 'pages');
+export const builtInTemplatesFolder = getResourcePath('templates', false);
+export const userTemplatesFolder = getResourcePath('templates', true);
 
 const allTenants = '*';
 
-function getTemplates(folder, isCustom, filter) {
-    const compareTemplates = (templateA, templateB) => {
+interface Template {
+    id: string;
+    name: string;
+    data: { roles: any; tenants: any };
+    pages?: any;
+    updatedBy: string;
+    updatedAt: string;
+    custom: boolean;
+}
+
+interface TemplateUpdate extends Pick<Template, 'id' | 'data' | 'pages'> {
+    oldId: string;
+}
+
+function getTemplates(folder: string, isCustom: boolean, filter: (fileName: string) => boolean) {
+    const compareTemplates = (templateA: Template, templateB: Template) => {
         const conflictingTemplates =
             !_.isEmpty(_.intersection(templateA.data.roles, templateB.data.roles)) &&
             !_.isEmpty(_.intersection(templateA.data.tenants, templateB.data.tenants));
@@ -41,15 +51,15 @@ function getTemplates(folder, isCustom, filter) {
             const templateFilePath = pathlib.resolve(folder, templateFile);
 
             try {
-                const pageFileContent = fs.readJsonSync(templateFilePath);
+                const templateFileContent = fs.readJsonSync(templateFilePath);
                 const id = pathlib.basename(templateFile, '.json');
 
-                const name = _.get(pageFileContent, 'name', id);
-                const updatedBy = _.get(pageFileContent, 'updatedBy', isCustom ? '' : 'Manager');
-                const updatedAt = _.get(pageFileContent, 'updatedAt', '');
+                const name = _.get(templateFileContent, 'name', id) as string;
+                const updatedBy = _.get(templateFileContent, 'updatedBy', isCustom ? '' : 'Manager') as string;
+                const updatedAt = _.get(templateFileContent, 'updatedAt', '') as string;
                 const data = {
-                    roles: _.get(pageFileContent, 'roles', []),
-                    tenants: _.get(pageFileContent, 'tenants', [])
+                    roles: _.get(templateFileContent, 'roles', []),
+                    tenants: _.get(templateFileContent, 'tenants', [])
                 };
 
                 return { id, name, custom: isCustom, data, updatedBy, updatedAt };
@@ -59,6 +69,7 @@ function getTemplates(folder, isCustom, filter) {
                 return null;
             }
         })
+        .compact()
         .uniqWith(compareTemplates)
         .value();
 }
@@ -76,39 +87,7 @@ export function listTemplates() {
     return Promise.resolve(_.concat(getBuiltInTemplates(), getUserTemplates()));
 }
 
-function getPages(folder, isCustom) {
-    return _.chain(fs.readdirSync(pathlib.resolve(folder)))
-        .map(pageFile => {
-            const pageFilePath = pathlib.resolve(folder, pageFile);
-
-            try {
-                const pageFileContent = fs.readJsonSync(pageFilePath);
-                const id = pathlib.basename(pageFile, '.json');
-
-                const name = _.get(pageFileContent, 'name', id);
-                const updatedBy = _.get(pageFileContent, 'updatedBy', isCustom ? '' : 'Manager');
-                const updatedAt = _.get(pageFileContent, 'updatedAt', '');
-
-                return { id, name, custom: isCustom, updatedBy, updatedAt };
-            } catch (error) {
-                logger.error(`Error when trying to parse ${pageFilePath} file to JSON.`, error);
-
-                return null;
-            }
-        })
-        .reject(_.isNull)
-        .value();
-}
-
-function getUserPages() {
-    return getPages(userPagesFolder, true);
-}
-
-function getBuiltInPages() {
-    return getPages(builtInPagesFolder, false);
-}
-
-function getHighestRole(userRoles, allRoles) {
+function getHighestRole(userRoles: string[], allRoles: { name: string }[]) {
     return _.get(
         _.find(allRoles, role => _.includes(userRoles, role.name)),
         'name',
@@ -116,7 +95,13 @@ function getHighestRole(userRoles, allRoles) {
     );
 }
 
-async function getRole(userSystemRole, groupSystemRoles, tenantsRoles, tenant, token) {
+async function getRole(
+    userSystemRole: string,
+    groupSystemRoles: Record<string, any>,
+    tenantsRoles: TenantsRoles,
+    tenant: string,
+    token: string
+) {
     const rbac = await getRBAC(token);
     const { roles } = rbac;
     const userRoles = _.compact(
@@ -134,7 +119,7 @@ async function getRole(userSystemRole, groupSystemRoles, tenantsRoles, tenant, t
     return role;
 }
 
-async function getSystemRole(userSystemRole, groupSystemRoles, token) {
+async function getSystemRole(userSystemRole: string, groupSystemRoles: Record<string, any>, token: string) {
     const rbac = await getRBAC(token);
     const { roles } = rbac;
     const systemRoles = [userSystemRole, ..._.keys(groupSystemRoles)];
@@ -150,14 +135,10 @@ async function getSystemRole(userSystemRole, groupSystemRoles, token) {
     return systemRole;
 }
 
-export function listPages() {
-    return Promise.resolve(_.concat(getBuiltInPages(), getUserPages()));
-}
-
-function checkTemplateExistence(data, excludeTemplateId) {
+function checkTemplateExistence(data: Template['data'], excludeTemplateId?: string) {
     const { roles } = data;
     const { tenants } = data;
-    const getTenantString = tenant => (tenant === allTenants ? 'all tenants' : `tenant=${tenant}`);
+    const getTenantString = (tenant: string) => (tenant === allTenants ? 'all tenants' : `tenant=${tenant}`);
 
     const userTemplates = _.filter(getUserTemplates(), template => template.id !== excludeTemplateId);
 
@@ -181,7 +162,7 @@ function checkTemplateExistence(data, excludeTemplateId) {
     return Promise.resolve();
 }
 
-export function createTemplate(username, template) {
+export function createTemplate(username: string, template: Template) {
     const path = pathlib.resolve(userTemplatesFolder, `${template.id}.json`);
     if (fs.existsSync(path)) {
         return Promise.reject(`Template name "${template.id}" already exists`);
@@ -198,10 +179,10 @@ export function createTemplate(username, template) {
     return checkTemplateExistence(template.data).then(() => fs.writeJson(path, content, { spaces: '  ' }));
 }
 
-export function deleteTemplate(templateId) {
+export function deleteTemplate(templateId: string) {
     const path = pathlib.resolve(userTemplatesFolder, `${templateId}.json`);
 
-    return new Promise((resolve, reject) => {
+    return new Promise<void>((resolve, reject) => {
         fs.remove(path, err => {
             if (err) {
                 reject(err);
@@ -212,26 +193,26 @@ export function deleteTemplate(templateId) {
     });
 }
 
-export function updateTemplate(username, template) {
-    const path = pathlib.resolve(userTemplatesFolder, `${template.id}.json`);
+export function updateTemplate(username: string, templateUpdate: TemplateUpdate) {
+    const path = pathlib.resolve(userTemplatesFolder, `${templateUpdate.id}.json`);
 
     const content = {
         updatedBy: username,
         updatedAt: moment().format(),
-        roles: template.data.roles,
-        tenants: template.data.tenants,
-        pages: template.pages
+        roles: templateUpdate.data.roles,
+        tenants: templateUpdate.data.tenants,
+        pages: templateUpdate.pages
     };
 
-    return checkTemplateExistence(template.data, template.oldId)
+    return checkTemplateExistence(templateUpdate.data, templateUpdate.oldId)
         .then(
             () =>
-                new Promise((resolve, reject) => {
-                    if (template.oldId && template.id !== template.oldId) {
+                new Promise<void>((resolve, reject) => {
+                    if (templateUpdate.oldId && templateUpdate.id !== templateUpdate.oldId) {
                         if (fs.existsSync(path)) {
-                            reject(`Template name "${template.id}" already exists`);
+                            reject(`Template name "${templateUpdate.id}" already exists`);
                         } else {
-                            deleteTemplate(template.oldId)
+                            deleteTemplate(templateUpdate.oldId)
                                 .then(() => resolve())
                                 .catch(error => reject(error));
                         }
@@ -243,60 +224,13 @@ export function updateTemplate(username, template) {
         .then(() => fs.writeJson(path, content, { spaces: '  ' }));
 }
 
-export function createPage(username, page) {
-    const path = pathlib.resolve(userPagesFolder, `${page.id}.json`);
-    if (fs.existsSync(path)) {
-        return Promise.reject(`Page id "${page.id}" already exists`);
-    }
-
-    const content = {
-        ..._.pick(page, 'name', 'layout'),
-        updatedBy: username,
-        updatedAt: moment().format()
-    };
-
-    return fs.writeJson(path, content, { spaces: '  ' });
-}
-
-export function deletePage(pageId) {
-    const path = pathlib.resolve(userPagesFolder, `${pageId}.json`);
-
-    return new Promise((resolve, reject) => {
-        fs.remove(path, err => {
-            if (err) {
-                reject(err);
-            } else {
-                resolve();
-            }
-        });
-    });
-}
-
-export function updatePage(username, page) {
-    const path = pathlib.resolve(userPagesFolder, `${page.id}.json`);
-
-    const content = {
-        ..._.omit(page, 'id'),
-        updatedBy: username,
-        updatedAt: moment().format()
-    };
-
-    return new Promise((resolve, reject) => {
-        if (page.oldId && page.id !== page.oldId) {
-            if (fs.existsSync(path)) {
-                reject(`Page name "${page.id}" already exists`);
-            } else {
-                deletePage(page.oldId)
-                    .then(() => resolve())
-                    .catch(error => reject(error));
-            }
-        } else {
-            resolve();
-        }
-    }).then(() => fs.writeJson(path, content, { spaces: '  ' }));
-}
-
-export async function selectTemplate(userSystemRole, groupSystemRoles, tenantsRoles, tenant, token) {
+export async function selectTemplate(
+    userSystemRole: string,
+    groupSystemRoles: Record<string, any>,
+    tenantsRoles: TenantsRoles,
+    tenant: string,
+    token: string
+) {
     const role = await getRole(userSystemRole, groupSystemRoles, tenantsRoles, tenant, token);
     const systemRole = await getSystemRole(userSystemRole, groupSystemRoles, token);
     const mode = getMode();
@@ -336,19 +270,4 @@ export async function selectTemplate(userSystemRole, groupSystemRoles, tenantsRo
     }
 
     return templateId;
-}
-
-export function init() {
-    return new Promise((resolve, reject) => {
-        try {
-            logger.info('Setting up user templates directory:', userTemplatesFolder);
-            mkdirp.sync(userTemplatesFolder);
-            logger.info('Setting up user pages directory:', userPagesFolder);
-            mkdirp.sync(userPagesFolder);
-            return resolve();
-        } catch (e) {
-            logger.error('Could not set up directories for templates and pages, error was:', e);
-            return reject(`Could not set up directories for templates and pages, error was: ${e}`);
-        }
-    });
 }

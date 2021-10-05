@@ -3,5 +3,9 @@
     "compilerOptions": {
         "noEmit": true
     },
-    "exclude": ["**/__mocks__/*", "test"]
+    "exclude": ["**/__mocks__/*", "test"],
+
+    "ts-node": {
+        "files": true
+    }
 }

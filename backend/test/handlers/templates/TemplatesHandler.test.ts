@@ -2,7 +2,7 @@ import { readdirSync } from 'fs-extra';
 import { getRBAC } from 'handler/AuthHandler';
 import { getMode } from 'serverSettings';
 
-import { selectTemplate } from 'handler/TemplateHandler';
+import { selectTemplate } from 'handler/templates/TemplatesHandler';
 
 jest.mock('fs');
 (<jest.Mock>readdirSync).mockReturnValue([]);
@@ -42,7 +42,7 @@ jest.mock('handler/AuthHandler');
 
 jest.mock('serverSettings');
 
-describe('TemplateHandler', () => {
+describe('TemplatesHandler', () => {
     describe('allows to select built-in template', () => {
         it('in Premium version', async () => {
             (<jest.Mock>getMode).mockReturnValue('main');
