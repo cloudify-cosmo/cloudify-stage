@@ -21,8 +21,15 @@ describe('(Component) PagesList', () => {
         isEditMode: false
     };
     const samplePages: PageDefinition[] = [
-        { id: 'abafar', name: 'Abafar', description: 'Abafar Planet', isDrillDown: false, layout: [] },
-        { id: 'mustafar', name: 'Mustafar', description: 'Mustafar Planet', isDrillDown: false, layout: [] }
+        { id: 'abafar', type: 'page', name: 'Abafar', description: 'Abafar Planet', isDrillDown: false, layout: [] },
+        {
+            id: 'mustafar',
+            type: 'page',
+            name: 'Mustafar',
+            description: 'Mustafar Planet',
+            isDrillDown: false,
+            layout: []
+        }
     ];
 
     it('should render component', () => {
