@@ -1,4 +1,6 @@
 // @ts-nocheck File not migrated fully to TS
+import { map } from 'lodash';
+
 describe('Template Management', () => {
     const testTenants = ['T1', 'T2', 'T3'];
     const password = 'cypress';
@@ -14,7 +16,7 @@ describe('Template Management', () => {
     };
     const users = [defaultUser];
 
-    const verifyTemplateRow = (id, pages, roles, tenants) => {
+    const verifyTemplateRow = (id: string, pageIds: string[], roles: string[], tenants: string[]) => {
         cy.contains('tr', id).as('templateRow');
         cy.get('@templateRow').within(() => {
             roles.forEach(role => cy.get(`td:nth-of-type(2)`).should('contain.text', role));
@@ -22,7 +24,9 @@ describe('Template Management', () => {
 
         cy.get('@templateRow').click();
         cy.get('.horizontal > :nth-child(1)').within(() =>
-            pages.forEach((page, index) => cy.get(`.divided > :nth-child(${index + 1})`).should('have.text', page.id))
+            pageIds.forEach((pageId, index) =>
+                cy.get(`.divided > :nth-child(${index + 1})`).should('have.text', pageId)
+            )
         );
         cy.get('.horizontal > :nth-child(3)').within(() =>
             tenants.forEach((tenant, index) =>
@@ -32,13 +36,13 @@ describe('Template Management', () => {
 
         cy.get('@templateRow').click();
     };
-    const verifyPageRow = (index, id, name) => {
+    const verifyPageRow = (index, id: string, name: string) => {
         const pageRow = `.red.segment > .gridTable > :nth-child(2) > .very > tbody > :nth-child(${index})`;
         cy.get(`${pageRow} > :nth-child(1)`).should('have.text', id);
         cy.get(`${pageRow} > :nth-child(2)`).should('have.text', name);
     };
 
-    const getTemplateRow = templateId =>
+    const getTemplateRow = (templateId: string) =>
         cy
             .get('.blue.segment')
             .should('be.visible', true)
@@ -77,7 +81,7 @@ describe('Template Management', () => {
                     const builtInTemplate = templateData.body;
                     verifyTemplateRow(
                         template.id,
-                        builtInTemplate.pages,
+                        map(builtInTemplate.pages, 'id'),
                         builtInTemplate.roles,
                         builtInTemplate.tenants
                     );
