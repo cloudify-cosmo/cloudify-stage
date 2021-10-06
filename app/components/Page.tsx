@@ -165,7 +165,6 @@ const mapStateToProps = (state: ReduxState, ownProps: PageOwnProps) => {
     const homePageId = pages[0].id;
     const pageId = page ? page.id : homePageId;
 
-    // NOTE: assume page will always be found
     const pageData: PageDefinition = _.cloneDeep(pagesMap[pageId]);
 
     pageData.name = ownProps.pageName || pageData.name;
