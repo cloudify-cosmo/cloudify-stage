@@ -12,6 +12,7 @@ describe('Page', () => {
                             {
                                 id: 'another_page',
                                 name: 'Another Page',
+                                type: 'page',
                                 description: '',
                                 widgets: []
                             }

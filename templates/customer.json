@@ -3,7 +3,7 @@
   "tenants": ["*"],
 
   "pages": [
-    "adminDash",
-    "deploy"
+    {"id": "adminDash", "type": "page"},
+    {"id": "deploy", "type": "page"}
   ]
 }

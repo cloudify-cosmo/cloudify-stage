@@ -1,6 +1,7 @@
 {
     "id": "admin_dashboard",
     "name": "Admin Dashboard",
+    "type": "page",
     "description": "",
     "layout": [
         {

@@ -1,4 +1,3 @@
-// @ts-nocheck File not migrated fully to TS
 // eslint-disable-next-line security/detect-child-process
 import { execSync } from 'child_process';
 import { mkdirSync, renameSync, rmdirSync } from 'fs-extra';
@@ -6,7 +5,7 @@ import { mkdirSync, renameSync, rmdirSync } from 'fs-extra';
 import { getConfig } from 'config';
 import { getResourcePath } from '../utils';
 
-const latestMigration = '20210519093609-6_0-UserAppsManagerIpColumnRemoval.js';
+const latestMigration = '20210929110911-6_3-UserAppsPageGroups.js';
 const userTemplatesFolder = getResourcePath('templates', true);
 const userTemplatesBackupFolder = `${userTemplatesFolder}-backup`;
 
@@ -40,7 +39,7 @@ describe('Migration script', () => {
         execMigration(`downTo ${latestMigration}`);
     });
 
-    function testMigrationUp(snapshotVersion, initialMigration) {
+    function testMigrationUp(snapshotVersion: string, initialMigration: string) {
         // eslint-disable-next-line jest/expect-expect
         it(`migrates from ${snapshotVersion} snapshot`, () => {
             try {

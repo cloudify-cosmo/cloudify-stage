@@ -2,23 +2,45 @@ import React, { CSSProperties } from 'react';
 import type { MenuItemProps } from 'semantic-ui-react';
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
+import styled from 'styled-components';
+import colors from 'cloudify-ui-common/styles/_colors.scss';
 
 import { Menu } from './basic';
 
-export default function SortableMenuItem({ id, ...rest }: MenuItemProps) {
+const ItemContainer = styled.div`
+    position: relative;
+    &:before {
+        background-color: ${colors.greyNormal};
+        position: absolute;
+        content: '';
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 1px;
+    }
+
+    .item:before {
+        background-color: ${colors.greyNormal};
+    }
+    .item.link:hover {
+        text-decoration: none !important; // override semantic ui styles
+    }
+`;
+
+export default function SortableMenuItem({ id, style, ...rest }: MenuItemProps) {
     const { setNodeRef, attributes, listeners, transform, transition } = useSortable({
         id
     });
-    const style: CSSProperties = {
+    const builtInStyle: CSSProperties = {
         transform: CSS.Transform.toString(transform),
         transition: transition !== null ? transition : undefined
     };
 
     return (
         // eslint-disable-next-line react/jsx-props-no-spreading
-        <div ref={setNodeRef} className="itemContainer" {...attributes} {...listeners}>
+        <ItemContainer ref={setNodeRef} {...attributes} {...listeners}>
             {/* eslint-disable-next-line react/jsx-props-no-spreading */}
-            <Menu.Item {...rest} style={style} />
-        </div>
+            <Menu.Item {...rest} style={Object.assign(builtInStyle, style)} />
+        </ItemContainer>
     );
 }

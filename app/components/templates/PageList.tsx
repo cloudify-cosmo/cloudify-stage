@@ -15,7 +15,7 @@ export default function PageList({ custom, onDelete, pages, style }) {
             <Icon name="block layout" /> Pages
             <Divider />
             <List divided relaxed verticalAlign="middle" className="light">
-                {pages.map(item => {
+                {pages.map(({ id: item }) => {
                     return (
                         <List.Item key={item}>
                             {item}
