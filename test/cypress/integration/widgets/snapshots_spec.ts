@@ -1,4 +1,3 @@
-// @ts-nocheck File not migrated fully to TS
 import { waitUntilNotEmpty } from 'test/cypress/support/resource_commons';
 
 describe('Snapshots list widget', () => {
