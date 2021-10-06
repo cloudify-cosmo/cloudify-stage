@@ -1,7 +1,6 @@
 import type { FunctionComponent } from 'react';
 import React, { ReactNode, useCallback, useMemo, useState } from 'react';
-import _ from 'lodash';
-
+import { chain, includes, without } from 'lodash';
 import type { DragEndEvent } from '@dnd-kit/core';
 import { closestCenter, DndContext, PointerSensor, useSensor, useSensors } from '@dnd-kit/core';
 import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable';
@@ -55,8 +54,8 @@ const PagesList: FunctionComponent<PagesListProps> = ({
     );
 
     function onPageGroupClick(clickedPageGroupId: string) {
-        if (_.includes(expandedGroupIds, clickedPageGroupId))
-            setExpandedGroupIds(_.without(expandedGroupIds, clickedPageGroupId));
+        if (includes(expandedGroupIds, clickedPageGroupId))
+            setExpandedGroupIds(without(expandedGroupIds, clickedPageGroupId));
         else setExpandedGroupIds([...expandedGroupIds, clickedPageGroupId]);
     }
 
@@ -96,13 +95,13 @@ const PagesList: FunctionComponent<PagesListProps> = ({
                 {pageMenuItem.type === 'pageGroup' && (
                     <Icon
                         name="dropdown"
-                        rotated={_.includes(expandedGroupIds, pageMenuItem.id) ? undefined : 'counterclockwise'}
+                        rotated={includes(expandedGroupIds, pageMenuItem.id) ? undefined : 'counterclockwise'}
                     />
                 )}
             </SortableMenuItem>
         );
 
-        if (pageMenuItem.type === 'page' || !_.includes(expandedGroupIds, pageMenuItem.id)) return [renderedMenuItem];
+        if (pageMenuItem.type === 'page' || !includes(expandedGroupIds, pageMenuItem.id)) return [renderedMenuItem];
         return [renderedMenuItem, ...pageMenuItem.pages.map(childItem => renderPageMenuItem(childItem, true))];
     }
 
@@ -116,7 +115,7 @@ const PagesList: FunctionComponent<PagesListProps> = ({
             >
                 <SortableContext items={pageIds} strategy={verticalListSortingStrategy}>
                     <div className="pages">
-                        {_(pages)
+                        {chain(pages)
                             .filter(drillDownPagesFilter)
                             .map(pageMenuItem => renderPageMenuItem(pageMenuItem, false))
                             .flatten()
