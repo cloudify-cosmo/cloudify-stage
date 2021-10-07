@@ -1,8 +1,6 @@
 // @ts-nocheck File not migrated fully to TS
 
-import path from 'path';
-
-import { DbInitializer } from 'cloudify-ui-common/backend';
+import { getDbModule } from 'cloudify-ui-common/backend';
 import { getConfig } from '../config';
 import loggerFactory from '../handler/LoggerHandler';
 
@@ -14,7 +12,7 @@ import ResourcesModel from './models/ResourcesModel';
 import UserAppsModel from './models/UserAppsModel';
 import WidgetBackendsModel from './models/WidgetBackendsModel';
 
-const dbInitializer = new DbInitializer(getConfig().app.db, loggerFactory, [
+const dbModule = getDbModule(getConfig().app.db, loggerFactory, [
     ApplicationsModel,
     BlueprintAdditionsModel,
     BlueprintUserDataModel,
@@ -24,6 +22,6 @@ const dbInitializer = new DbInitializer(getConfig().app.db, loggerFactory, [
     WidgetBackendsModel
 ]);
 
-export const { db } = dbInitializer;
+export const { db } = dbModule;
 
-export default dbInitializer;
+export default dbModule;
