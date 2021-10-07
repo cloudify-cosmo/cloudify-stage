@@ -14,6 +14,7 @@ import { clearContext, setValue } from '../actions/context';
 import { setDrilldownContext } from '../actions/drilldownContext';
 
 import Consts from '../utils/consts';
+import { createPagesMap } from '../actions/page';
 
 const mapStateToProps = (state, ownProps) => {
     const { pages } = state;
@@ -26,7 +27,7 @@ const mapStateToProps = (state, ownProps) => {
 
     return {
         emptyPages: _.isEmpty(pages),
-        selectedPage: _.find(pages, { id: selectedPageId }),
+        selectedPage: createPagesMap(pages)[selectedPageId],
         pageId: selectedPageId,
         pageName: selectedPageName,
         contextParams: context,

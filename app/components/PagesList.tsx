@@ -1,9 +1,8 @@
-import PropTypes from 'prop-types';
-import React, { useCallback, useMemo } from 'react';
 import type { FunctionComponent } from 'react';
-
-import { DndContext, closestCenter, PointerSensor, useSensor, useSensors } from '@dnd-kit/core';
+import React, { ReactNode, useCallback, useMemo, useState } from 'react';
+import { chain, includes, without } from 'lodash';
 import type { DragEndEvent } from '@dnd-kit/core';
+import { closestCenter, DndContext, PointerSensor, useSensor, useSensors } from '@dnd-kit/core';
 import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable';
 import { restrictToVerticalAxis } from '@dnd-kit/modifiers';
 
@@ -13,19 +12,19 @@ import Consts from '../utils/consts';
 
 import SortableMenuItem from './SortableMenuItem';
 
-import type { PageDefinition } from '../actions/page';
+import type { PageDefinition, PageMenuItem } from '../actions/page';
 
 export interface PagesListProps {
     onPageSelected: (page: PageDefinition) => void;
     onPageRemoved: (page: PageDefinition) => void;
     onPageReorder: (index: number, newIndex: number) => void;
-    pages: PageDefinition[];
+    pages: PageMenuItem[];
     selected?: string;
     isEditMode: boolean;
 }
 
-export interface PagesListState {
-    pageToRemove?: PageDefinition | null;
+function drillDownPagesFilter(pageMenuItem: PageMenuItem) {
+    return pageMenuItem.type === 'pageGroup' || !pageMenuItem.isDrillDown;
 }
 
 const PagesList: FunctionComponent<PagesListProps> = ({
@@ -36,7 +35,8 @@ const PagesList: FunctionComponent<PagesListProps> = ({
     pages,
     selected = ''
 }) => {
-    const pageIds = useMemo(() => pages.filter(p => !p.isDrillDown).map(({ id }) => id), [pages]);
+    const [expandedGroupIds, setExpandedGroupIds] = useState<string[]>([]);
+    const pageIds = useMemo(() => pages.filter(drillDownPagesFilter).map(({ id }) => id), [pages]);
     const sensors = useSensors(useSensor(PointerSensor));
     const pageCount = pageIds.length;
 
@@ -53,6 +53,58 @@ const PagesList: FunctionComponent<PagesListProps> = ({
         [pageIds]
     );
 
+    function onPageGroupClick(clickedPageGroupId: string) {
+        if (includes(expandedGroupIds, clickedPageGroupId))
+            setExpandedGroupIds(without(expandedGroupIds, clickedPageGroupId));
+        else setExpandedGroupIds([...expandedGroupIds, clickedPageGroupId]);
+    }
+
+    function renderPageMenuItem(pageMenuItem: PageMenuItem, subItem = false): ReactNode[] {
+        const renderedMenuItem = (
+            <SortableMenuItem
+                id={pageMenuItem.id}
+                as="a"
+                link
+                key={pageMenuItem.id}
+                href={`${Consts.CONTEXT_PATH}/page/${pageMenuItem.id}`}
+                active={selected === pageMenuItem.id}
+                className={`pageMenuItem ${pageMenuItem.id}PageMenuItem`}
+                onClick={event => {
+                    event.stopPropagation();
+                    event.preventDefault();
+                    if (pageMenuItem.type === 'page') onPageSelected(pageMenuItem);
+                    else onPageGroupClick(pageMenuItem.id);
+                }}
+                style={subItem ? { paddingLeft: 25 } : undefined}
+            >
+                {pageMenuItem.name}
+                {isEditMode && pageMenuItem.type === 'page' && pageCount > 1 ? (
+                    <Icon
+                        name="remove"
+                        size="small"
+                        className="pageRemoveButton"
+                        onClick={(event: MouseEvent) => {
+                            event.preventDefault();
+                            event.stopPropagation();
+                            onPageRemoved(pageMenuItem);
+                        }}
+                    />
+                ) : (
+                    ''
+                )}
+                {pageMenuItem.type === 'pageGroup' && (
+                    <Icon
+                        name="dropdown"
+                        rotated={includes(expandedGroupIds, pageMenuItem.id) ? undefined : 'counterclockwise'}
+                    />
+                )}
+            </SortableMenuItem>
+        );
+
+        if (pageMenuItem.type === 'page' || !includes(expandedGroupIds, pageMenuItem.id)) return [renderedMenuItem];
+        return [renderedMenuItem, ...pageMenuItem.pages.map(childItem => renderPageMenuItem(childItem, true))];
+    }
+
     return (
         <>
             <DndContext
@@ -63,40 +115,11 @@ const PagesList: FunctionComponent<PagesListProps> = ({
             >
                 <SortableContext items={pageIds} strategy={verticalListSortingStrategy}>
                     <div className="pages">
-                        {pages
-                            .filter(p => !p.isDrillDown)
-                            .map(page => (
-                                <SortableMenuItem
-                                    id={page.id}
-                                    as="a"
-                                    link
-                                    key={page.id}
-                                    href={`${Consts.CONTEXT_PATH}/page/${page.id}`}
-                                    active={selected === page.id}
-                                    className={`pageMenuItem ${page.id}PageMenuItem`}
-                                    onClick={event => {
-                                        event.stopPropagation();
-                                        event.preventDefault();
-                                        onPageSelected(page);
-                                    }}
-                                >
-                                    {page.name}
-                                    {isEditMode && pageCount > 1 ? (
-                                        <Icon
-                                            name="remove"
-                                            size="small"
-                                            className="pageRemoveButton"
-                                            onClick={(event: MouseEvent) => {
-                                                event.preventDefault();
-                                                event.stopPropagation();
-                                                onPageRemoved(page);
-                                            }}
-                                        />
-                                    ) : (
-                                        ''
-                                    )}
-                                </SortableMenuItem>
-                            ))}
+                        {chain(pages)
+                            .filter(drillDownPagesFilter)
+                            .map(pageMenuItem => renderPageMenuItem(pageMenuItem, false))
+                            .flatten()
+                            .value()}
                     </div>
                 </SortableContext>
             </DndContext>
@@ -108,26 +131,6 @@ const PagesList: FunctionComponent<PagesListProps> = ({
             )}
         </>
     );
-};
-
-PagesList.propTypes = {
-    onPageSelected: PropTypes.func.isRequired,
-    onPageRemoved: PropTypes.func.isRequired,
-    onPageReorder: PropTypes.func.isRequired,
-    // @ts-expect-error need to define better shape of page definition
-    pages: PropTypes.arrayOf(
-        PropTypes.shape({
-            id: PropTypes.string,
-            name: PropTypes.string,
-            description: PropTypes.string,
-            isDrillDown: PropTypes.bool,
-            layout: PropTypes.arrayOf(PropTypes.shape({})),
-            children: PropTypes.arrayOf(PropTypes.string),
-            parent: PropTypes.string
-        })
-    ).isRequired,
-    selected: PropTypes.string,
-    isEditMode: PropTypes.bool.isRequired
 };
 
 export default PagesList;

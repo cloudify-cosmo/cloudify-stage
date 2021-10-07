@@ -8,9 +8,10 @@ export type TemplatePageDefinition = Pick<PageDefinition, 'name' | 'layout'>;
 export interface TemplatesState {
     templatesDef: Record<string, any>;
     pagesDef: Record<string, TemplatePageDefinition>;
+    pageGroupsDef: Record<string, { name?: string; pages?: string[] }>;
 }
 
-const templates: Reducer<TemplatesState> = (state = { templatesDef: {}, pagesDef: {} }, action) => {
+const templates: Reducer<TemplatesState> = (state = { templatesDef: {}, pagesDef: {}, pageGroupsDef: {} }, action) => {
     switch (action.type) {
         case types.STORE_TEMPLATES:
             return { ...action.templates };

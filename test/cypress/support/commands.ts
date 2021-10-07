@@ -247,6 +247,7 @@ const commands = {
                     {
                         name: testPageName,
                         id: 'test_page',
+                        type: 'page',
                         layout: widgetIds
                             ? [
                                   {
@@ -289,6 +290,7 @@ const commands = {
                     {
                         name: 'Plugins Catalog',
                         id: 'plugin_catalog',
+                        type: 'page',
                         layout: [
                             {
                                 type: 'widgets',

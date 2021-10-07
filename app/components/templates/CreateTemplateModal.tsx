@@ -77,7 +77,7 @@ export default class CreateTemplateModal extends Component {
             tenants: props.tenants,
             roles: props.roles,
             availablePages,
-            pages: props.pages,
+            pages: _.map(props.pages, 'id'),
             errors: {}
         };
     };
@@ -124,7 +124,12 @@ export default class CreateTemplateModal extends Component {
         // Disable the form
         this.setState({ loading: true });
 
-        onCreateTemplate(_.trim(templateName), roles, tenants, pages)
+        onCreateTemplate(
+            _.trim(templateName),
+            roles,
+            tenants,
+            pages.map(id => ({ id, type: 'page' }))
+        )
             .then(() => {
                 this.setState({ errors: {}, loading: false, open: false });
             })

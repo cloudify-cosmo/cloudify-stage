@@ -8,12 +8,15 @@ import * as types from '../actions/types';
 import widgets from './widgetsReducer';
 import {
     addTab,
+    createPagesMap,
     forAllWidgets,
     forEachWidget,
     isWidgetsSection,
     LayoutSection,
     moveTab,
     PageDefinition,
+    PageGroup,
+    PageMenuItem,
     removeTab,
     TabContent,
     updateTab
@@ -67,7 +70,7 @@ const page = (state: PageDefinition, action: AnyAction) => {
     switch (action.type) {
         case types.MINIMIZE_TAB_WIDGETS: {
             const newState = _.cloneDeep(state);
-            forAllWidgets(newState, (widgetsList, layoutSectionIdx, tabIdx) =>
+            forAllWidgets(newState, (widgetsList, _layoutSectionIdx, tabIdx) =>
                 tabIdx !== null ? widgets(widgetsList, action) : widgetsList
             );
             return newState;
@@ -140,14 +143,26 @@ const page = (state: PageDefinition, action: AnyAction) => {
     }
 };
 
-const pages: Reducer<PageDefinition[]> = (state = [], action) => {
+const pages: Reducer<PageMenuItem[]> = (state = [], action) => {
     switch (action.type) {
         case types.ADD_PAGE:
         case types.CREATE_DRILLDOWN_PAGE:
             return [...state, createPage(action as any)];
+        case types.ADD_PAGE_GROUP:
+            return [...state, createPageGroup(action)];
+        case types.ADD_PAGE_TO_GROUP: {
+            const pageToAdd = _.find(state, { id: action.pageId });
+            const newState = _.without(state, pageToAdd);
+            _.find(newState, { id: action.pageGroupId }).pages.push(pageToAdd);
+            return newState;
+        }
         case types.MINIMIZE_WIDGETS:
-        case types.MINIMIZE_TAB_WIDGETS:
-            return state.map(p => page(p, action));
+        case types.MINIMIZE_TAB_WIDGETS: {
+            const newState = _.cloneDeep(state);
+            const pagesMap = createPagesMap(newState);
+            _.each(pagesMap, pageItem => Object.assign(pageItem, page(pageItem, action)));
+            return newState;
+        }
         case types.REMOVE_PAGE: {
             const removeIndex = _.findIndex(state, { id: action.pageId });
             return [...state.slice(0, removeIndex), ...state.slice(removeIndex + 1)];
@@ -162,13 +177,12 @@ const pages: Reducer<PageDefinition[]> = (state = [], action) => {
         case types.ADD_TAB:
         case types.REMOVE_TAB:
         case types.UPDATE_TAB:
-        case types.MOVE_TAB:
-            return state.map(p => {
-                if (p.id === action.pageId) {
-                    return page(p, action);
-                }
-                return p;
-            });
+        case types.MOVE_TAB: {
+            const newState = _.cloneDeep(state);
+            const pageItem = createPagesMap(newState)[action.pageId];
+            Object.assign(pageItem, page(pageItem, action));
+            return newState;
+        }
         case types.ADD_DRILLDOWN_PAGE: {
             // Add drilldown page to children list of this page, and drilldown page parent id
             let parentPageId = null;
@@ -232,6 +246,7 @@ function createPage(action: { type: string; page: PageDefinition; newPageId: str
     return {
         id: action.newPageId,
         name: action.page.name,
+        type: 'page',
         description: '',
         layout: _.map(
             action.page.layout,
@@ -245,4 +260,8 @@ function createPage(action: { type: string; page: PageDefinition; newPageId: str
         ),
         isDrillDown: action.type === types.CREATE_DRILLDOWN_PAGE
     };
+}
+
+function createPageGroup({ id, pageGroup }: { id: string; pageGroup: PageGroup }) {
+    return { id, name: pageGroup.name, type: 'pageGroup', pages: [] };
 }

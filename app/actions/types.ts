@@ -8,6 +8,8 @@ export const UPDATE_TAB = 'UPDATE_TAB';
 export const MOVE_TAB = 'MOVE_TAB';
 
 export const ADD_PAGE = 'ADD_PAGE';
+export const ADD_PAGE_GROUP = 'ADD_PAGE_GROUP';
+export const ADD_PAGE_TO_GROUP = 'ADD_PAGE_TO_GROUP';
 export const SET_PAGES = 'SET_PAGES';
 export const CREATE_DRILLDOWN_PAGE = 'CREATE_DRILLDOWN_PAGE';
 export const ADD_WIDGET = 'ADD_WIDGET';
