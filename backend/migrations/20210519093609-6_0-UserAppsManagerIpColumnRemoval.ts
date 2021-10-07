@@ -1,11 +1,12 @@
-// @ts-nocheck File not migrated fully to TS
+import sequelize, { QueryInterface, QueryInterfaceIndexOptions } from 'sequelize';
+
 const managerIpColumnName = 'managerIp';
 const indexWithoutManagerIp = ['username', 'mode', 'tenant'];
 const indexWithManagerIp = indexWithoutManagerIp.concat(managerIpColumnName);
-const indexOptions = { indicesType: 'UNIQUE' };
+const indexOptions: QueryInterfaceIndexOptions = { type: 'UNIQUE' };
 
-module.exports = {
-    async up(queryInterface) {
+export const { up, down } = {
+    async up(queryInterface: QueryInterface) {
         const transaction = await queryInterface.sequelize.transaction();
         try {
             await queryInterface.removeColumn('UserApps', managerIpColumnName);
@@ -20,7 +21,7 @@ module.exports = {
             throw error;
         }
     },
-    async down(queryInterface, Sequelize) {
+    async down(queryInterface: QueryInterface, Sequelize: typeof sequelize) {
         const transaction = await queryInterface.sequelize.transaction();
         try {
             await queryInterface.addColumn('UserApps', managerIpColumnName, {

@@ -1,9 +1,11 @@
-// @ts-nocheck File not migrated fully to TS
-const UserApps = require('../db/models/UserAppsModel');
-const config = require('../config').getConfig();
+import sequelize, { QueryInterface } from 'sequelize';
+import UserApps from '../db/models/UserAppsModel';
+import { getConfig } from '../config';
 
-module.exports = {
-    up: (queryInterface, Sequelize) => {
+const config = getConfig();
+
+export const { up, down } = {
+    up: (queryInterface: QueryInterface, Sequelize: typeof sequelize) => {
         UserApps(queryInterface.sequelize, Sequelize).update(
             { managerIp: config.manager.ip },
             { where: { managerIp: '127.0.0.1' } }

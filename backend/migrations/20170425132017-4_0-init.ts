@@ -1,5 +1,6 @@
-// @ts-nocheck File not migrated fully to TS
-function createClientConfigs(queryInterface, Sequelize) {
+import sequelize, { QueryInterface } from 'sequelize';
+
+function createClientConfigs(queryInterface: QueryInterface, Sequelize: typeof sequelize) {
     return queryInterface
         .createTable('ClientConfigs', {
             id: {
@@ -27,12 +28,12 @@ function createClientConfigs(queryInterface, Sequelize) {
         })
         .then(() =>
             queryInterface.addIndex('ClientConfigs', ['managerIp'], {
-                indicesType: 'UNIQUE'
+                type: 'UNIQUE'
             })
         );
 }
 
-function createUserAppModel(queryInterface, Sequelize) {
+function createUserAppModel(queryInterface: QueryInterface, Sequelize: typeof sequelize) {
     return queryInterface
         .createTable('UserApps', {
             id: {
@@ -60,12 +61,12 @@ function createUserAppModel(queryInterface, Sequelize) {
         })
         .then(() =>
             queryInterface.addIndex('UserApps', ['managerIp', 'username', 'role', 'mode'], {
-                indicesType: 'UNIQUE'
+                type: 'UNIQUE'
             })
         );
 }
 
-function createBlueprintAdditionsModel(queryInterface, Sequelize) {
+function createBlueprintAdditionsModel(queryInterface: QueryInterface, Sequelize: typeof sequelize) {
     return queryInterface
         .createTable('BlueprintAdditions', {
             id: {
@@ -90,12 +91,12 @@ function createBlueprintAdditionsModel(queryInterface, Sequelize) {
         })
         .then(() =>
             queryInterface.addIndex('BlueprintAdditions', ['blueprintId'], {
-                indicesType: 'UNIQUE'
+                type: 'UNIQUE'
             })
         );
 }
 
-function createApplicationModel(queryInterface, Sequelize) {
+function createApplicationModel(queryInterface: QueryInterface, Sequelize: typeof sequelize) {
     return queryInterface
         .createTable('Applications', {
             id: {
@@ -124,19 +125,19 @@ function createApplicationModel(queryInterface, Sequelize) {
         })
         .then(() =>
             queryInterface.addIndex('Applications', ['id'], {
-                indicesType: 'UNIQUE'
+                type: 'UNIQUE'
             })
         );
 }
 
-module.exports = {
-    up(queryInterface, Sequelize) {
+export const { up, down } = {
+    up(queryInterface: QueryInterface, Sequelize: typeof sequelize) {
         return createClientConfigs(queryInterface, Sequelize)
             .then(() => createUserAppModel(queryInterface, Sequelize))
             .then(() => createBlueprintAdditionsModel(queryInterface, Sequelize))
             .then(() => createApplicationModel(queryInterface, Sequelize));
     },
-    down(queryInterface) {
+    down(queryInterface: QueryInterface) {
         return queryInterface
             .dropTable('ClientConfigs')
             .then(() => queryInterface.dropTable('UserApps'))

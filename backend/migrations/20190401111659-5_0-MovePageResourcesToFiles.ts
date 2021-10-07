@@ -1,18 +1,20 @@
-// @ts-nocheck File not migrated fully to TS
-const _ = require('lodash');
-const fs = require('fs-extra');
-const moment = require('moment');
-const path = require('path');
+import sequelize, { QueryInterface } from 'sequelize';
+import type { Logger } from 'cloudify-ui-common/backend/logger';
 
-const ResourceTypes = require('../db/types/ResourceTypes');
-const ResourcesModel = require('../db/models/ResourcesModel');
-const Utils = require('../utils');
+import _ from 'lodash';
+import fs from 'fs-extra';
+import moment from 'moment';
+import path from 'path';
 
-const userTemplatesFolder = Utils.getResourcePath('templates', true);
+import ResourceTypes from '../db/types/ResourceTypes';
+import ResourcesModel from '../db/models/ResourcesModel';
+import { getResourcePath } from '../utils';
+
+const userTemplatesFolder = getResourcePath('templates', true);
 const userPagesFolder = path.resolve(userTemplatesFolder, 'pages');
 
-module.exports = {
-    up: (queryInterface, Sequelize, logger) => {
+export const { up, down } = {
+    up: (queryInterface: QueryInterface, Sequelize: typeof sequelize, logger: Logger) => {
         return ResourcesModel(queryInterface.sequelize, Sequelize)
             .findAll({
                 where: { type: ResourceTypes.PAGE },

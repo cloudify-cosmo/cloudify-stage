@@ -1,5 +1,6 @@
-// @ts-nocheck File not migrated fully to TS
-function createResourcesModel(queryInterface, Sequelize) {
+import sequelize, { QueryInterface } from 'sequelize';
+
+function createResourcesModel(queryInterface: QueryInterface, Sequelize: typeof sequelize) {
     return queryInterface
         .createTable('Resources', {
             id: {
@@ -24,17 +25,17 @@ function createResourcesModel(queryInterface, Sequelize) {
         })
         .then(() =>
             queryInterface.addIndex('Resources', ['resourceId', 'type'], {
-                indicesType: 'UNIQUE'
+                type: 'UNIQUE'
             })
         );
 }
 
-module.exports = {
-    up(queryInterface, Sequelize) {
+export const { up, down } = {
+    up(queryInterface: QueryInterface, Sequelize: typeof sequelize) {
         return createResourcesModel(queryInterface, Sequelize);
     },
 
-    down(queryInterface) {
+    down(queryInterface: QueryInterface) {
         return queryInterface.dropTable('Resources');
     }
 };

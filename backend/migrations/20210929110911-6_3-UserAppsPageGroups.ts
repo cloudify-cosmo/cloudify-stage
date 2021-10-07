@@ -1,13 +1,14 @@
-// @ts-nocheck File not migrated fully to TS
-const { each, map } = require('lodash');
-const fs = require('fs-extra');
-const path = require('path');
+import sequelize, { QueryInterface, QueryInterfaceIndexOptions } from 'sequelize';
+import { Logger } from 'cloudify-ui-common/backend/logger';
+import { each, map } from 'lodash';
 
-const UserApp = require('../db/models/UserAppsModel');
-const { userTemplatesFolder } = require('../handler/templates/TemplatesHandler');
+import fs from 'fs-extra';
+import path from 'path';
+import UserApp from '../db/models/UserAppsModel';
+import { userTemplatesFolder } from '../handler/templates/TemplatesHandler';
 
-module.exports = {
-    up: (queryInterface, Sequelize, logger) => {
+export const { up, down } = {
+    up: (queryInterface: QueryInterface, Sequelize: typeof sequelize, logger: Logger) => {
         UserApp(queryInterface.sequelize, Sequelize)
             .findAll()
             .then(async results => {
@@ -41,7 +42,7 @@ module.exports = {
             });
     },
 
-    down: (queryInterface, Sequelize, logger) => {
+    down: (queryInterface: QueryInterface, Sequelize: typeof sequelize, logger: Logger) => {
         if (fs.existsSync(userTemplatesFolder))
             each(fs.readdirSync(userTemplatesFolder), templateFile => {
                 const templateFilePath = path.resolve(userTemplatesFolder, templateFile);

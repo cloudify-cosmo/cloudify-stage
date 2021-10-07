@@ -1,6 +1,7 @@
-// @ts-nocheck File not migrated fully to TS
-module.exports = {
-    up: (queryInterface, Sequelize) => {
+import sequelize, { QueryInterface } from 'sequelize';
+
+export const { up, down } = {
+    up: (queryInterface: QueryInterface, Sequelize: typeof sequelize) => {
         return queryInterface
             .createTable('BlueprintUserData', {
                 id: {
@@ -32,14 +33,14 @@ module.exports = {
             })
             .then(() =>
                 queryInterface.addIndex('BlueprintUserData', ['blueprintId', 'username'], {
-                    indicesType: 'UNIQUE'
+                    type: 'UNIQUE'
                 })
             );
     },
-    down: queryInterface => {
+    down: (queryInterface: QueryInterface) => {
         return queryInterface.dropTable('BlueprintUserData').then(() =>
             queryInterface.removeIndex('BlueprintUserData', ['blueprintId', 'username'], {
-                indicesType: 'UNIQUE'
+                type: 'UNIQUE'
             })
         );
     }

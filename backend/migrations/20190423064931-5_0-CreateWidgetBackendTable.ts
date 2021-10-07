@@ -1,6 +1,8 @@
-// @ts-nocheck File not migrated fully to TS
-module.exports = {
-    up: (queryInterface, Sequelize) => {
+import { Logger } from 'cloudify-ui-common/backend/logger';
+import sequelize, { QueryInterface } from 'sequelize';
+
+export const { up, down } = {
+    up: (queryInterface: QueryInterface, Sequelize: typeof sequelize) => {
         return queryInterface
             .createTable('WidgetBackends', {
                 id: { type: Sequelize.INTEGER, allowNull: false, autoIncrement: true, primaryKey: true },
@@ -15,17 +17,17 @@ module.exports = {
             })
             .then(() =>
                 queryInterface.addIndex('WidgetBackends', ['widgetId', 'serviceName', 'method'], {
-                    indicesType: 'UNIQUE'
+                    type: 'UNIQUE'
                 })
             );
     },
 
-    down: (queryInterface, Sequelize, logger) => {
+    down: (queryInterface: QueryInterface, Sequelize: typeof sequelize, logger: Logger) => {
         return queryInterface
             .dropTable('WidgetBackends', { cascade: true, logging: logger.info, benchmark: true })
             .then(() =>
                 queryInterface.removeIndex('WidgetBackends', ['widgetId', 'serviceName', 'method'], {
-                    indicesType: 'UNIQUE'
+                    type: 'UNIQUE'
                 })
             );
     }

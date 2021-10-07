@@ -1,17 +1,15 @@
-// @ts-nocheck File not migrated fully to TS
-const fs = require('fs-extra');
-const path = require('path');
-const _ = require('lodash');
+import fs from 'fs-extra';
+import path from 'path';
+import _ from 'lodash';
+import sequelize, { QueryInterface } from 'sequelize';
+import { LAYOUT } from '../consts';
+import { getResourcePath } from '../utils';
+import UserApps from '../db/models/UserAppsModel';
 
-const { LAYOUT } = require('../consts');
-const Utils = require('../utils');
-
-const userTemplatesFolder = Utils.getResourcePath('templates', true);
+const userTemplatesFolder = getResourcePath('templates', true);
 const userPagesFolder = path.resolve(userTemplatesFolder, 'pages');
 
-const UserApps = require('../db/models/UserAppsModel');
-
-function migrate(queryInterface, Sequelize, pageProcessor) {
+function migrate(queryInterface: QueryInterface, Sequelize: typeof sequelize, pageProcessor) {
     UserApps(queryInterface.sequelize, Sequelize)
         .findAll()
         .then(async results => {
@@ -34,8 +32,8 @@ function migrate(queryInterface, Sequelize, pageProcessor) {
         });
 }
 
-module.exports = {
-    up: (queryInterface, Sequelize) =>
+export const { up, down } = {
+    up: (queryInterface: QueryInterface, Sequelize: typeof sequelize) =>
         migrate(queryInterface, Sequelize, pageData => {
             function migrateLayoutSection(layoutSection) {
                 if (pageData[layoutSection]) {
@@ -51,7 +49,7 @@ module.exports = {
             migrateLayoutSection(LAYOUT.WIDGETS);
             migrateLayoutSection(LAYOUT.TABS);
         }),
-    down: (queryInterface, Sequelize) =>
+    down: (queryInterface: QueryInterface, Sequelize: typeof sequelize) =>
         migrate(queryInterface, Sequelize, pageData => {
             if (!_.isEmpty(pageData.layout)) {
                 let layoutSection = pageData.layout[0];

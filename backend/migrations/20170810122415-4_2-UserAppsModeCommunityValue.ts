@@ -1,6 +1,7 @@
-// @ts-nocheck File not migrated fully to TS
-module.exports = {
-    up(queryInterface) {
+import { QueryInterface } from 'sequelize';
+
+export const { up, down } = {
+    up(queryInterface: QueryInterface) {
         // NOTE: Cannot use db-agnostic queryInterface.changeColumn method, because of error.
         // It is known issue: https://github.com/sequelize/sequelize/issues/2554
         // Used solution from: https://stackoverflow.com/questions/25048702/how-do-you-add-enum-labels-using-sequelize

@@ -1,14 +1,15 @@
-// @ts-nocheck File not migrated fully to TS
-const ResourceTypes = require('../db/types/ResourceTypes');
+import { Logger } from 'cloudify-ui-common/backend/logger';
+import sequelize, { QueryInterface } from 'sequelize';
+import ResourceTypes from '../db/types/ResourceTypes';
 
-module.exports = {
-    up: (queryInterface, Sequelize, logger) => {
+export const { up, down } = {
+    up: (queryInterface: QueryInterface, Sequelize: typeof sequelize, logger: Logger) => {
         return queryInterface
             .dropTable('Resources', { cascade: true, logging: logger.info, benchmark: true })
-            .then(() => queryInterface.removeIndex('Resources', ['resourceId', 'type'], { indicesType: 'UNIQUE' }));
+            .then(() => queryInterface.removeIndex('Resources', ['resourceId', 'type'], { type: 'UNIQUE' }));
     },
 
-    down: (queryInterface, Sequelize) => {
+    down: (queryInterface: QueryInterface, Sequelize: typeof sequelize) => {
         return queryInterface
             .createTable('Resources', {
                 id: { type: Sequelize.INTEGER, allowNull: false, autoIncrement: true, primaryKey: true },
@@ -21,6 +22,6 @@ module.exports = {
                 createdAt: { type: Sequelize.DATE, allowNull: false },
                 updatedAt: { type: Sequelize.DATE, allowNull: false }
             })
-            .then(() => queryInterface.addIndex('Resources', ['resourceId', 'type'], { indicesType: 'UNIQUE' }));
+            .then(() => queryInterface.addIndex('Resources', ['resourceId', 'type'], { type: 'UNIQUE' }));
     }
 };
