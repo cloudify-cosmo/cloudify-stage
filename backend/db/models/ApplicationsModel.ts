@@ -1,19 +1,17 @@
-/**
- * Created by Alex on 21/03/2017.
- */
+import { Sequelize, DataTypes } from 'sequelize';
 
-module.exports = (sequelize, DataTypes) =>
+export default (sequelize: Sequelize, dataTypes: typeof DataTypes) =>
     sequelize.define('Applications', {
         id: {
-            type: DataTypes.INTEGER,
+            type: dataTypes.INTEGER,
             primaryKey: true,
             autoIncrement: true
         },
         name: {
-            type: DataTypes.STRING,
+            type: dataTypes.STRING,
             allowNull: false
         },
-        status: { type: DataTypes.INTEGER },
-        isPrivate: { type: DataTypes.BOOLEAN },
-        extras: { type: DataTypes.JSON }
+        status: { type: dataTypes.INTEGER },
+        isPrivate: { type: dataTypes.BOOLEAN },
+        extras: { type: dataTypes.JSON }
     });

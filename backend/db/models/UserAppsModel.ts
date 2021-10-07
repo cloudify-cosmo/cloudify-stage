@@ -1,22 +1,20 @@
-/**
- * Created by kinneretzin on 13/02/2017.
- */
-const ServerSettings = require('../../serverSettings');
+import { Sequelize, DataTypes } from 'sequelize';
+import { MODE_COMMUNITY, MODE_CUSTOMER, MODE_MAIN } from '../../serverSettings';
 
-module.exports = (sequelize, DataTypes) =>
+export default (sequelize: Sequelize, dataTypes: typeof DataTypes) =>
     sequelize.define(
         'UserApps',
         {
-            username: { type: DataTypes.STRING, allowNull: false },
-            appDataVersion: { type: DataTypes.INTEGER, allowNull: false },
+            username: { type: dataTypes.STRING, allowNull: false },
+            appDataVersion: { type: dataTypes.INTEGER, allowNull: false },
             mode: {
-                type: DataTypes.ENUM,
-                values: [ServerSettings.MODE_CUSTOMER, ServerSettings.MODE_MAIN, ServerSettings.MODE_COMMUNITY],
+                type: dataTypes.ENUM,
+                values: [MODE_CUSTOMER, MODE_MAIN, MODE_COMMUNITY],
                 allowNull: false,
-                defaultValue: ServerSettings.MODE_MAIN
+                defaultValue: MODE_MAIN
             },
-            tenant: { type: DataTypes.STRING, allowNull: false, defaultValue: 'default_tenant' },
-            appData: { type: DataTypes.JSON, allowNull: false }
+            tenant: { type: dataTypes.STRING, allowNull: false, defaultValue: 'default_tenant' },
+            appData: { type: dataTypes.JSON, allowNull: false }
         },
         {
             indexes: [

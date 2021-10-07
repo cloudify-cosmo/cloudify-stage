@@ -1,13 +1,11 @@
-/**
- * Created by kinneretzin on 08/03/2017.
- */
+import { Sequelize, DataTypes } from 'sequelize';
 
-module.exports = (sequelize, DataTypes) =>
+export default (sequelize: Sequelize, dataTypes: typeof DataTypes) =>
     sequelize.define(
         'ClientConfigs',
         {
-            managerIp: { type: DataTypes.STRING, allowNull: false },
-            config: { type: DataTypes.JSON, allowNull: false }
+            managerIp: { type: dataTypes.STRING, allowNull: false },
+            config: { type: dataTypes.JSON, allowNull: false }
         },
         {
             indexes: [

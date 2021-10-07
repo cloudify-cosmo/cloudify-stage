@@ -1,16 +1,13 @@
-/**
- * Created by jakub.niezgoda on 23/04/2019.
- */
+import { Sequelize, DataTypes } from 'sequelize';
 
-module.exports = (sequelize, DataTypes) =>
+export default (sequelize: Sequelize, dataTypes: typeof DataTypes) =>
     sequelize.define(
         'WidgetBackends',
-
         {
-            widgetId: { type: DataTypes.STRING, allowNull: false },
-            serviceName: { type: DataTypes.STRING, allowNull: false },
-            method: { type: DataTypes.STRING, allowNull: false },
-            script: { type: DataTypes.JSONB, allowNull: true }
+            widgetId: { type: dataTypes.STRING, allowNull: false },
+            serviceName: { type: dataTypes.STRING, allowNull: false },
+            method: { type: dataTypes.STRING, allowNull: false },
+            script: { type: dataTypes.JSONB, allowNull: true }
         },
         { indexes: [{ unique: true, fields: ['widgetId', 'serviceName', 'method'] }] }
     );

@@ -1,8 +1,4 @@
-/**
- * Created by pposel on 10/08/2016.
- */
-
-module.exports = {
+export default {
     WIDGET: 'widget',
     TEMPLATE: 'template',
     PAGE: 'page',

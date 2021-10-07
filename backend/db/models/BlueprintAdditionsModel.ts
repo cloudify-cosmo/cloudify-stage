@@ -1,14 +1,12 @@
-/**
- * Created by pposel on 09/03/2017.
- */
+import { Sequelize, DataTypes } from 'sequelize';
 
-module.exports = (sequelize, DataTypes) =>
+export default (sequelize: Sequelize, dataTypes: typeof DataTypes) =>
     sequelize.define(
         'BlueprintAdditions',
         {
-            blueprintId: { type: DataTypes.STRING, allowNull: false },
-            image: { type: DataTypes.BLOB, allowNull: true },
-            imageUrl: { type: DataTypes.STRING, allowNull: true }
+            blueprintId: { type: dataTypes.STRING, allowNull: false },
+            image: { type: dataTypes.BLOB, allowNull: true },
+            imageUrl: { type: dataTypes.STRING, allowNull: true }
         },
         {
             indexes: [
