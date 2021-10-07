@@ -1,3 +1,4 @@
+// @ts-nocheck File not migrated fully to TS
 const managerIpColumnName = 'managerIp';
 const indexWithoutManagerIp = ['username', 'mode', 'tenant'];
 const indexWithManagerIp = indexWithoutManagerIp.concat(managerIpColumnName);

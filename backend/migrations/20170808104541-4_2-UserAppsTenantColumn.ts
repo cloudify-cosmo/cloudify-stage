@@ -1,3 +1,4 @@
+// @ts-nocheck File not migrated fully to TS
 const TENANT_COLUMN_NAME = 'tenant';
 const INDEX_WITHOUT_TENANT = ['managerIp', 'username', 'role', 'mode'];
 const INDEX_WITH_TENANT = INDEX_WITHOUT_TENANT.concat(TENANT_COLUMN_NAME);

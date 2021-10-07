@@ -1,3 +1,4 @@
+// @ts-nocheck File not migrated fully to TS
 const { each, map } = require('lodash');
 const fs = require('fs-extra');
 const path = require('path');

@@ -1,3 +1,4 @@
+// @ts-nocheck File not migrated fully to TS
 module.exports = {
     up: (queryInterface, Sequelize) => {
         return queryInterface

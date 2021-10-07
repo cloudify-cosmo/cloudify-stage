@@ -1,3 +1,4 @@
+// @ts-nocheck File not migrated fully to TS
 const UserApps = require('../db/models/UserAppsModel');
 const config = require('../config').getConfig();
 

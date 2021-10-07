@@ -1,3 +1,4 @@
+// @ts-nocheck File not migrated fully to TS
 module.exports = {
     up(queryInterface) {
         // NOTE: Cannot use db-agnostic queryInterface.changeColumn method, because of error.

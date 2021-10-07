@@ -1,3 +1,4 @@
+// @ts-nocheck File not migrated fully to TS
 const _ = require('lodash');
 const fs = require('fs-extra');
 const moment = require('moment');

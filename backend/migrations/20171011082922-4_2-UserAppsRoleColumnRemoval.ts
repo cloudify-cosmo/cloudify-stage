@@ -1,3 +1,4 @@
+// @ts-nocheck File not migrated fully to TS
 const ROLE_COLUMN_NAME = 'role';
 const INDEX_WITHOUT_ROLE = ['managerIp', 'username', 'mode', 'tenant'];
 const INDEX_WITH_ROLE = INDEX_WITHOUT_ROLE.concat(ROLE_COLUMN_NAME);

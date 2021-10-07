@@ -1,3 +1,4 @@
+// @ts-nocheck File not migrated fully to TS
 function createClientConfigs(queryInterface, Sequelize) {
     return queryInterface
         .createTable('ClientConfigs', {
