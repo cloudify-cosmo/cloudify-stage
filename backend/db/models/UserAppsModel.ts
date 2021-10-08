@@ -1,8 +1,22 @@
-import { Sequelize, DataTypes } from 'sequelize';
-import { MODE_COMMUNITY, MODE_CUSTOMER, MODE_MAIN } from '../../serverSettings';
+import { DataTypes, Model, ModelDefined, Optional, Sequelize } from 'sequelize';
+import { MODE_COMMUNITY, MODE_CUSTOMER, MODE_MAIN, Mode } from '../../serverSettings';
+
+interface UserAppsAttributes {
+    username: string;
+    appDataVersion: number;
+    mode: Mode;
+    tenant: string;
+    appData: { pages: any[] };
+}
+type UserAppsAttributesCreationAttributes = UserAppsAttributes;
+interface UserAppsInstance extends Model<UserAppsAttributes, UserAppsAttributesCreationAttributes>, UserAppsAttributes {
+    readonly id: number;
+    readonly createdAt: Date;
+    readonly updatedAt: Date;
+}
 
 export default (sequelize: Sequelize, dataTypes: typeof DataTypes) =>
-    sequelize.define(
+    sequelize.define<UserAppsInstance>(
         'UserApps',
         {
             username: { type: dataTypes.STRING, allowNull: false },
