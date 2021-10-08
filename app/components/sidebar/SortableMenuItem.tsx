@@ -5,7 +5,7 @@ import { CSS } from '@dnd-kit/utilities';
 import styled from 'styled-components';
 import colors from 'cloudify-ui-common/styles/_colors.scss';
 
-import { Menu } from './basic';
+import { Menu } from '../basic';
 
 const ItemContainer = styled.div`
     position: relative;

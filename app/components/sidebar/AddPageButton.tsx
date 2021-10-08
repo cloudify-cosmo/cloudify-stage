@@ -7,8 +7,8 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
 import i18n from 'i18next';
-import { addPage } from '../actions/page';
-import EditModeButton from '../components/EditModeButton';
+import { addPage } from '../../actions/page';
+import EditModeButton from '../EditModeButton';
 
 let nameIndex = 0;
 

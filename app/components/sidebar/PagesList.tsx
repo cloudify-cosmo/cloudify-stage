@@ -1,3 +1,4 @@
+// @ts-nocheck File not migrated fully to TS
 import type { FunctionComponent } from 'react';
 import React, { ReactNode, useCallback, useMemo, useState } from 'react';
 import { chain, find, includes, map, without } from 'lodash';
@@ -5,22 +6,28 @@ import type { DragEndEvent, DragOverEvent, DragStartEvent } from '@dnd-kit/core'
 import { closestCenter, DndContext, PointerSensor, useSensor, useSensors } from '@dnd-kit/core';
 import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable';
 import { restrictToVerticalAxis } from '@dnd-kit/modifiers';
-import { useDispatch } from 'react-redux';
-import AddPageButton from '../containers/AddPageButton';
-import { Icon } from './basic';
-import Consts from '../utils/consts';
+import { connect, useDispatch } from 'react-redux';
+import AddPageButton from './AddPageButton';
+import { Icon } from '../basic';
+import Consts from '../../utils/consts';
 
 import SortableMenuItem from './SortableMenuItem';
 
-import type { PageDefinition, PageMenuItem } from '../actions/page';
-import { InsertPosition, reorderPageMenu } from '../actions/page';
-import AddPageGroupButton from './sidebar/AddPageGroupButton';
-import { useBoolean } from '../utils/hooks';
+import type { PageDefinition, PageMenuItem } from '../../actions/page';
+import {
+    createPagesMap,
+    InsertPosition,
+    removePageWithChildren,
+    removeSinglePageMenuItem,
+    reorderPageMenu,
+    selectPage
+} from '../../actions/page';
+import AddPageGroupButton from './AddPageGroupButton';
+import { useBoolean } from '../../utils/hooks';
 
 export interface PagesListProps {
     onPageSelected: (page: PageDefinition) => void;
     onItemRemoved: (page: PageMenuItem) => void;
-    onPageReorder: (index: number, newIndex: number) => void;
     pages: PageMenuItem[];
     selected?: string;
     isEditMode: boolean;
@@ -231,4 +238,76 @@ const PagesList: FunctionComponent<PagesListProps> = ({
     return pagesContainer;
 };
 
-export default PagesList;
+const findSelectedRootPageId = (pagesMap, selectedPageId) => {
+    const getParentPageId = page => {
+        if (!page.parent) {
+            return page.id;
+        }
+        return getParentPageId(pagesMap[page.parent]);
+    };
+
+    return getParentPageId(pagesMap[selectedPageId]);
+};
+
+const mapStateToProps = (state, ownProps) => {
+    const { pages } = state;
+    const pagesMap = createPagesMap(pages);
+    const page = pagesMap[ownProps.pageId];
+    const homePageId = pages[0].id;
+    const pageId = page ? page.id : homePageId;
+    const selected = pages && pages.length > 0 ? findSelectedRootPageId(pagesMap, pageId) : null;
+
+    return {
+        pages,
+        selected
+    };
+};
+
+function mergeProps(stateProps, dispatchProps, ownProps) {
+    return {
+        ...ownProps,
+        ...dispatchProps,
+        ...stateProps,
+        onItemRemoved: pageListItem => {
+            dispatchProps.onItemRemoved(pageListItem, stateProps.pages);
+        }
+    };
+}
+
+const mapDispatchToProps = (dispatch, ownProps) => {
+    return {
+        onPageSelected: page => {
+            dispatch(selectPage(page.id, page.isDrillDown));
+        },
+        onItemRemoved: (pageListItem, pages) => {
+            const pagesMap = createPagesMap(pages);
+            const selectedRootPageId = findSelectedRootPageId(pagesMap, ownProps.pageId);
+
+            if (pageListItem.type === 'page') {
+                // Check if user removes current page
+                if (selectedRootPageId === pageListItem.id) {
+                    // Check if current page is home page
+                    if (selectedRootPageId === ownProps.homePageId) {
+                        dispatch(selectPage(pages[1].id, false));
+                    } else {
+                        dispatch(selectPage(ownProps.homePageId, false));
+                    }
+                }
+
+                dispatch(removePageWithChildren(pageListItem));
+            } else {
+                // Check if current page is in group being removed
+                if (includes(pageListItem.pages, selectedRootPageId)) {
+                    // Select first page that is not in the group
+                    dispatch(selectPage(find(pagesMap, page => !includes(pageListItem.pages, page)).id));
+                }
+
+                dispatch(removeSinglePageMenuItem(pageListItem));
+            }
+        }
+    };
+};
+
+const ConnectedPagesList = connect(mapStateToProps, mapDispatchToProps, mergeProps)(PagesList);
+
+export default ConnectedPagesList;

@@ -3,7 +3,7 @@ import { mount } from '@cypress/react';
 import { noop } from 'lodash';
 
 import '../initAppContext';
-import PagesList from 'app/components/PagesList';
+import PagesList from 'app/components/sidebar/PagesList';
 
 describe('PagesList', () => {
     it('handles page groups', () => {

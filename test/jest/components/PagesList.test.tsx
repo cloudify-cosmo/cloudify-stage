@@ -3,12 +3,12 @@ import { mount, shallow } from 'enzyme';
 
 import sinon from 'sinon';
 
-import PagesList from 'components/PagesList';
+import PagesList from 'components/sidebar/PagesList';
 import Consts from 'utils/consts';
 import { noop } from 'lodash';
 
 import { Icon } from 'components/basic';
-import AddPageButton from 'containers/AddPageButton';
+import AddPageButton from 'components/sidebar/AddPageButton';
 import type { PageDefinition } from 'actions/page';
 
 describe('(Component) PagesList', () => {

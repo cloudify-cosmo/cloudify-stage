@@ -4,7 +4,7 @@
  */
 
 import { connect } from 'react-redux';
-import SideBar from '../components/SideBar';
+import SideBar from '../components/sidebar/SideBar';
 
 const mapStateToProps = (state, ownProps) => {
     const homePageId = state.pages[0].id;

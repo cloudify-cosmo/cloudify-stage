@@ -7,8 +7,8 @@ import PropTypes from 'prop-types';
 import React, { useContext } from 'react';
 
 import styled, { ThemeContext } from 'styled-components';
-import Pages from '../containers/Pages';
-import { Sidebar } from './basic';
+import PagesList from './PagesList';
+import { Sidebar } from '../basic';
 
 const ThemedSidebar = styled(Sidebar)`
     background-color: ${props => props.theme.sidebarColor} !important;
@@ -29,7 +29,7 @@ export default function SideBar({ homePageId, isEditMode, isOpen, pageId }) {
     return (
         <div className="sidebarContainer">
             <ThemedSidebar theme={theme} visible className={`vertical menu small basic ${className}`}>
-                <Pages pageId={pageId} isEditMode={isEditMode} homePageId={homePageId} />
+                <PagesList pageId={pageId} isEditMode={isEditMode} homePageId={homePageId} />
             </ThemedSidebar>
         </div>
     );
