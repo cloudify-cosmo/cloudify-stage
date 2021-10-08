@@ -26,7 +26,7 @@ export const { up, down } = {
         try {
             await queryInterface.addColumn('UserApps', managerIpColumnName, {
                 type: Sequelize.STRING,
-                notNull: false
+                allowNull: false
             });
             await queryInterface.removeIndex('UserApps', indexWithoutManagerIp, indexOptions);
             await queryInterface.addIndex('UserApps', indexWithManagerIp, indexOptions);

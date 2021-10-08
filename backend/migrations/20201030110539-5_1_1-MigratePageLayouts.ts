@@ -6,10 +6,20 @@ import { LAYOUT } from '../consts';
 import { getResourcePath } from '../utils';
 import UserApps from '../db/models/UserAppsModel';
 
+type LayoutSectionType = typeof LAYOUT.TABS | typeof LAYOUT.WIDGETS;
+type LayoutSection = { type: LayoutSectionType; content: any };
+type NewPageData = { layout: LayoutSection[] };
+type OldPageData = Record<LayoutSectionType, any>;
+type PageData = OldPageData & NewPageData;
+
 const userTemplatesFolder = getResourcePath('templates', true);
 const userPagesFolder = path.resolve(userTemplatesFolder, 'pages');
 
-function migrate(queryInterface: QueryInterface, Sequelize: typeof sequelize, pageProcessor) {
+function migrate(
+    queryInterface: QueryInterface,
+    Sequelize: typeof sequelize,
+    pageProcessor: (pageData: PageData) => void
+) {
     UserApps(queryInterface.sequelize, Sequelize)
         .findAll()
         .then(async results => {
@@ -34,13 +44,13 @@ function migrate(queryInterface: QueryInterface, Sequelize: typeof sequelize, pa
 
 export const { up, down } = {
     up: (queryInterface: QueryInterface, Sequelize: typeof sequelize) =>
-        migrate(queryInterface, Sequelize, pageData => {
-            function migrateLayoutSection(layoutSection) {
-                if (pageData[layoutSection]) {
-                    if (!_.isEmpty(pageData[layoutSection])) {
-                        pageData.layout.push({ type: layoutSection, content: pageData[layoutSection] });
+        migrate(queryInterface, Sequelize, (pageData: PageData) => {
+            function migrateLayoutSection(type: LayoutSectionType) {
+                if (pageData[type]) {
+                    if (!_.isEmpty(pageData[type])) {
+                        pageData.layout.push({ type, content: pageData[type] });
                     }
-                    delete pageData[layoutSection];
+                    delete pageData[type];
                 }
             }
 
@@ -49,18 +59,20 @@ export const { up, down } = {
             migrateLayoutSection(LAYOUT.WIDGETS);
             migrateLayoutSection(LAYOUT.TABS);
         }),
-    down: (queryInterface: QueryInterface, Sequelize: typeof sequelize) =>
-        migrate(queryInterface, Sequelize, pageData => {
-            if (!_.isEmpty(pageData.layout)) {
+    down: (queryInterface: QueryInterface, Sequelize: typeof sequelize) => {
+        migrate(queryInterface, Sequelize, (pageData: PageData) => {
+            if (pageData.layout && pageData.layout.length > 0) {
                 let layoutSection = pageData.layout[0];
                 pageData[layoutSection.type] = layoutSection.content;
 
                 if (layoutSection.type === LAYOUT.WIDGETS) {
-                    layoutSection = _.nth(pageData.layout, 1) || {};
+                    layoutSection = _.nth(pageData.layout, 1) || { type: LAYOUT.WIDGETS, content: [] };
                     if (layoutSection.type === LAYOUT.TABS) pageData[layoutSection.type] = layoutSection.content;
                 }
             }
 
+            // @ts-ignore Intentionally removing layout to convert pageData into OldPageData type
             delete pageData.layout;
-        })
+        });
+    }
 };

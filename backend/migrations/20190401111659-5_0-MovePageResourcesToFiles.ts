@@ -18,16 +18,16 @@ export const { up, down } = {
         return ResourcesModel(queryInterface.sequelize, Sequelize)
             .findAll({
                 where: { type: ResourceTypes.PAGE },
-                attributes: [['resourceId', 'id'], 'createdAt', 'updatedAt', 'creator'],
+                attributes: ['resourceId', 'createdAt', 'updatedAt', 'creator'],
                 raw: true
             })
             .then(results => {
                 logger.info(`Found ${results.length} page rows to migrate.`);
                 _.forEach(results, pageRow => {
-                    const pageFilePath = path.resolve(userPagesFolder, `${pageRow.id}.json`);
+                    const pageFilePath = path.resolve(userPagesFolder, `${pageRow.resourceId}.json`);
 
                     logger.info(`Updating ${pageFilePath}`);
-                    let pageFileContent = {};
+                    let pageFileContent: { name?: string; updatedBy?: string; updatedAt?: string; widgets?: any } = {};
                     try {
                         pageFileContent = fs.readJsonSync(pageFilePath);
                         logger.info('File exists. Updating it...');
@@ -36,7 +36,7 @@ export const { up, down } = {
                     } catch (error) {
                         logger.info('File does not exist. Creating new one...');
                         pageFileContent = {
-                            name: pageRow.id,
+                            name: pageRow.resourceId,
                             updatedBy: pageRow.creator,
                             updatedAt: moment(pageRow.updatedAt).format(),
                             widgets: []

@@ -16,13 +16,13 @@ export const { up, down } = {
         return ResourcesModel(queryInterface.sequelize, Sequelize)
             .findAll({
                 where: { type: ResourceTypes.TEMPLATE },
-                attributes: [['resourceId', 'id'], 'createdAt', 'updatedAt', 'creator', 'data'],
+                attributes: ['resourceId', 'createdAt', 'updatedAt', 'creator', 'data'],
                 raw: true
             })
             .then(results => {
                 logger.info(`Found ${results.length} template rows to migrate.`);
                 _.forEach(results, templateRow => {
-                    const templateFilePath = path.resolve(userTemplatesFolder, `${templateRow.id}.json`);
+                    const templateFilePath = path.resolve(userTemplatesFolder, `${templateRow.resourceId}.json`);
                     const { data } = templateRow;
                     const { roles } = data;
                     const { tenants } = data;
@@ -56,7 +56,7 @@ export const { up, down } = {
                     }
 
                     templateFileContent = {
-                        name: templateRow.id,
+                        name: templateRow.resourceId,
                         updatedBy: templateRow.creator,
                         updatedAt: moment(templateRow.updatedAt).format(),
                         roles,

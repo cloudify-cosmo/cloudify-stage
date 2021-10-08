@@ -5,6 +5,7 @@ import _ from 'lodash';
 export const MODE_MAIN = 'main';
 export const MODE_CUSTOMER = 'customer';
 export const MODE_COMMUNITY = 'community';
+export type Mode = typeof MODE_MAIN | typeof MODE_CUSTOMER | typeof MODE_COMMUNITY;
 
 let serverMode: string;
 

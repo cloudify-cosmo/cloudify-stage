@@ -24,6 +24,6 @@ export const SERVER_HOST = 'localhost';
 export const SERVER_PORT = 8088;
 
 export const LAYOUT = {
-    TABS: 'tabs',
-    WIDGETS: 'widgets'
+    TABS: 'tabs' as const,
+    WIDGETS: 'widgets' as const
 };

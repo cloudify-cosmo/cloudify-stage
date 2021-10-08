@@ -23,7 +23,7 @@ export const { up, down } = {
             .addColumn('UserApps', ROLE_COLUMN_NAME, {
                 type: Sequelize.ENUM,
                 values: ['admin', 'user'],
-                notNull: false,
+                allowNull: false,
                 defaultValue: 'user'
             })
             .then(() => queryInterface.removeIndex('UserApps', INDEX_WITHOUT_ROLE, INDEX_OPTIONS))
