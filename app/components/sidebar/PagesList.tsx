@@ -302,7 +302,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
                     dispatch(selectPage(find(pagesMap, page => !includes(pageListItem.pages, page)).id));
                 }
 
-                dispatch(removeSinglePageMenuItem(pageListItem));
+                dispatch(removeSinglePageMenuItem(pageListItem.id));
             }
         }
     };
