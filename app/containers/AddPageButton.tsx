@@ -29,6 +29,7 @@ const AddPageButton = ({ onClick }) => {
             onClick={onClick}
             content={i18n.t('editMode.addPage', 'Add Page')}
             className="addPageBtn"
+            style={{ width: 146 }}
         />
     );
 };

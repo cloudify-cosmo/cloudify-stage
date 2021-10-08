@@ -25,6 +25,14 @@ const ItemContainer = styled.div`
     .item.link:hover {
         text-decoration: none !important; // override semantic ui styles
     }
+
+    .icon.edit {
+        display: none;
+    }
+
+    :hover .icon.edit {
+        display: inline;
+    }
 `;
 
 export default function SortableMenuItem({ id, style, ...rest }: MenuItemProps) {

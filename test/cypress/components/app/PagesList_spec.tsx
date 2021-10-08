@@ -10,7 +10,7 @@ describe('PagesList', () => {
         mount(
             <PagesList
                 onPageSelected={noop}
-                onPageRemoved={noop}
+                onItemRemoved={noop}
                 onPageReorder={noop}
                 isEditMode={false}
                 pages={[

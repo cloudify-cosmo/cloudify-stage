@@ -5,8 +5,15 @@
 
 import { connect } from 'react-redux';
 
+import { find } from 'lodash';
 import PagesList from '../components/PagesList';
-import { selectPage, removePage, reorderPage, createPagesMap } from '../actions/page';
+import {
+    selectPage,
+    removePageWithChildren,
+    reorderPage,
+    createPagesMap,
+    removeSinglePageMenuItem
+} from '../actions/page';
 
 const findSelectedRootPageId = (pagesMap, selectedPageId) => {
     const getParentPageId = page => {
@@ -38,8 +45,8 @@ function mergeProps(stateProps, dispatchProps, ownProps) {
         ...ownProps,
         ...dispatchProps,
         ...stateProps,
-        onPageRemoved: page => {
-            dispatchProps.onPageRemoved(page, stateProps.pages);
+        onItemRemoved: pageListItem => {
+            dispatchProps.onItemRemoved(pageListItem, stateProps.pages);
         }
     };
 }
@@ -49,21 +56,31 @@ const mapDispatchToProps = (dispatch, ownProps) => {
         onPageSelected: page => {
             dispatch(selectPage(page.id, page.isDrillDown));
         },
-        onPageRemoved: (page, pages) => {
+        onItemRemoved: (pageListItem, pages) => {
             const pagesMap = createPagesMap(pages);
             const selectedRootPageId = findSelectedRootPageId(pagesMap, ownProps.pageId);
 
-            // Check if user removes current page
-            if (selectedRootPageId === page.id) {
-                // Check if current page is home page
-                if (selectedRootPageId === ownProps.homePageId) {
-                    dispatch(selectPage(pages[1].id, false));
-                } else {
-                    dispatch(selectPage(ownProps.homePageId, false));
+            if (pageListItem.type === 'page') {
+                // Check if user removes current page
+                if (selectedRootPageId === pageListItem.id) {
+                    // Check if current page is home page
+                    if (selectedRootPageId === ownProps.homePageId) {
+                        dispatch(selectPage(pages[1].id, false));
+                    } else {
+                        dispatch(selectPage(ownProps.homePageId, false));
+                    }
                 }
-            }
 
-            dispatch(removePage(page));
+                dispatch(removePageWithChildren(pageListItem));
+            } else {
+                // Check if current page is in group being removed
+                if (includes(pageListItem.pages, selectedRootPageId)) {
+                    // Select first page that is not in the group
+                    dispatch(selectPage(find(pagesMap, page => !includes(pageListItem.pages, selectedRootPageId)).id));
+                }
+
+                dispatch(removeSinglePageMenuItem(pageListItem));
+            }
         },
         onPageReorder: (pageIndex, newPageIndex) => {
             dispatch(reorderPage(pageIndex, newPageIndex));

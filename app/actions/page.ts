@@ -40,6 +40,12 @@ export interface TabsSection {
 
 export type LayoutSection = WidgetsSection | TabsSection;
 
+export enum InsertPosition {
+    Before,
+    After,
+    Into
+}
+
 export function isWidgetsSection(layoutSection: LayoutSection): layoutSection is WidgetsSection {
     return layoutSection.type === 'widgets';
 }
@@ -178,7 +184,7 @@ export function getWidgetDefinitionById(
     return _.find(definitions, { id: definitionId });
 }
 
-function createPageId(name: string, pages: PageMenuItem[]) {
+function createId(name: string, pages: PageMenuItem[]) {
     // Add suffix to make URL unique if same page name already exists
     let newPageId = _.snakeCase(name);
     let suffix = 1;
@@ -272,35 +278,46 @@ export function selectPageByName(
     };
 }
 
+export function addPageGroup(name: string): ThunkAction<void, ReduxState, never, AnyAction> {
+    return (dispatch, getState) => {
+        const newPageGroupId = createId(
+            name,
+            getState().pages.filter(item => item.type === 'pageGroup')
+        );
+
+        dispatch(createPageGroup({ name }, newPageGroupId));
+    };
+}
+
 export function addPage(name: string): ThunkAction<void, ReduxState, never, AnyAction> {
     return (dispatch, getState) => {
-        const newPageId = createPageId(name, getState().pages);
+        const newPageId = createId(name, Object.values(createPagesMap(getState().pages)));
 
         dispatch(createPage({ name }, newPageId));
         dispatch(selectPage(newPageId, false));
     };
 }
 
-function removeSinglePage(pageId: string) {
+export function removeSinglePageMenuItem(pageMenuItemId: string) {
     return {
-        type: types.REMOVE_PAGE,
-        pageId
+        type: types.REMOVE_PAGE_MENU_ITEM,
+        pageMenuItemId
     };
 }
 
-export function removePage(page: PageDefinition): ThunkAction<void, ReduxState, never, AnyAction> {
+export function removePageWithChildren(page: PageDefinition): ThunkAction<void, ReduxState, never, AnyAction> {
     return (dispatch, getState) => {
         const pagesMap = createPagesMap(getState().pages);
-        const removePageWithChildren = (p: PageDefinition) => {
+        const removePage = (p: PageDefinition) => {
             if (p.children && !_.isEmpty(p.children)) {
                 p.children.forEach(childPageId => {
-                    removePageWithChildren(pagesMap[childPageId]);
+                    removePage(pagesMap[childPageId]);
                 });
             }
-            dispatch(removeSinglePage(p.id));
+            dispatch(removeSinglePageMenuItem(p.id));
         };
 
-        removePageWithChildren(page);
+        removePage(page);
     };
 }
 
@@ -352,7 +369,7 @@ export function createPagesFromTemplate(): ThunkAction<void, ReduxState, never, 
                         return null;
                     }
 
-                    const pageInstanceId = createPageId(page.name, getState().pages);
+                    const pageInstanceId = createId(page.name, getState().pages);
                     dispatch(createPage(page, pageInstanceId));
                     dispatch(addLayoutToPage(page, pageInstanceId));
 
@@ -382,11 +399,12 @@ export function createPagesFromTemplate(): ThunkAction<void, ReduxState, never, 
     };
 }
 
-export function reorderPage(pageIndex: number, newPageIndex: number) {
+export function reorderPageMenu(sourceId: string, targetId: string, position: InsertPosition) {
     return {
-        type: types.REORDER_PAGE,
-        pageIndex,
-        newPageIndex
+        type: types.REORDER_PAGE_MENU,
+        sourceId,
+        targetId,
+        position
     };
 }
 

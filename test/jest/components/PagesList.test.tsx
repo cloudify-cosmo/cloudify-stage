@@ -36,7 +36,7 @@ describe('(Component) PagesList', () => {
         const wrapper = mount(
             <PagesList
                 onPageReorder={defaultProps.onPageReorder}
-                onPageRemoved={defaultProps.onPageRemoved}
+                onItemRemoved={defaultProps.onPageRemoved}
                 onPageSelected={defaultProps.onPageSelected}
                 isEditMode={defaultProps.isEditMode}
                 pages={defaultProps.pages}
@@ -50,7 +50,7 @@ describe('(Component) PagesList', () => {
         const wrapper = mount(
             <PagesList
                 onPageReorder={defaultProps.onPageReorder}
-                onPageRemoved={defaultProps.onPageRemoved}
+                onItemRemoved={defaultProps.onPageRemoved}
                 onPageSelected={defaultProps.onPageSelected}
                 isEditMode={defaultProps.isEditMode}
                 pages={samplePages}
@@ -69,7 +69,7 @@ describe('(Component) PagesList', () => {
         const wrapper = mount(
             <PagesList
                 onPageReorder={defaultProps.onPageReorder}
-                onPageRemoved={defaultProps.onPageRemoved}
+                onItemRemoved={defaultProps.onPageRemoved}
                 onPageSelected={handlePageSelectedSpy}
                 isEditMode={defaultProps.isEditMode}
                 pages={samplePages}
@@ -90,7 +90,7 @@ describe('(Component) PagesList', () => {
         const wrapper = shallow(
             <PagesList
                 onPageReorder={defaultProps.onPageReorder}
-                onPageRemoved={defaultProps.onPageRemoved}
+                onItemRemoved={defaultProps.onPageRemoved}
                 onPageSelected={defaultProps.onPageSelected}
                 isEditMode
                 pages={samplePages}
