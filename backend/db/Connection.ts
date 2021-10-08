@@ -1,5 +1,3 @@
-// @ts-nocheck File not migrated fully to TS
-
 import { getDbModule } from 'cloudify-ui-common/backend';
 import { getConfig } from '../config';
 import loggerFactory from '../handler/LoggerHandler';
