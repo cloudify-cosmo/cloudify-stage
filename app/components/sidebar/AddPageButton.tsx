@@ -21,6 +21,8 @@ const mapDispatchToProps = dispatch => {
     };
 };
 
+export const buttonWidth = 146;
+
 const AddPageButton = ({ onClick }) => {
     return (
         <EditModeButton
@@ -29,7 +31,7 @@ const AddPageButton = ({ onClick }) => {
             onClick={onClick}
             content={i18n.t('editMode.addPage', 'Add Page')}
             className="addPageBtn"
-            style={{ width: 146 }}
+            style={{ width: buttonWidth }}
         />
     );
 };

@@ -6,6 +6,7 @@ import i18n from 'i18next';
 import { useDispatch } from 'react-redux';
 import EditModeButton from '../EditModeButton';
 import { addPageGroup } from '../../actions/page';
+import { buttonWidth } from './AddPageButton';
 
 let nameIndex = 0;
 
@@ -15,7 +16,7 @@ const StyledEditModeButton = styled(EditModeButton)`
         margin-top: 10px;
         padding-right: 5px !important;
         padding-left: 40px !important;
-        width: 146px;
+        width: ${buttonWidth}px;
     }
 `;
 
