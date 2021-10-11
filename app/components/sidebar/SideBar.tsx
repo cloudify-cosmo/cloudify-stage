@@ -1,14 +1,10 @@
-// @ts-nocheck File not migrated fully to TS
-/**
- * Created by kinneretzin on 29/08/2016.
- */
-
-import PropTypes from 'prop-types';
-import React, { useContext } from 'react';
+import React, { FunctionComponent, useContext } from 'react';
 
 import styled, { ThemeContext } from 'styled-components';
+import { useSelector } from 'react-redux';
 import PagesList from './PagesList';
 import { Sidebar } from '../basic';
+import { ReduxState } from '../../reducers';
 
 const ThemedSidebar = styled(Sidebar)`
     background-color: ${props => props.theme.sidebarColor} !important;
@@ -22,22 +18,24 @@ const ThemedSidebar = styled(Sidebar)`
     }
 `;
 
-export default function SideBar({ homePageId, isEditMode, isOpen, pageId }) {
-    const className = isOpen ? 'open' : '';
+interface SideBarProps {
+    pageId: string;
+}
+
+const SideBar: FunctionComponent<SideBarProps> = ({ pageId }) => {
     const theme = useContext(ThemeContext) || {};
+    const homePageId = useSelector((state: ReduxState) => state.pages[0].id);
+    const isEditMode = useSelector((state: ReduxState) => state.config.isEditMode || false);
+    const isOpen = useSelector((state: ReduxState) => state.app.sidebarIsOpen || false);
+    const className = isOpen ? 'open' : '';
 
     return (
         <div className="sidebarContainer">
             <ThemedSidebar theme={theme} visible className={`vertical menu small basic ${className}`}>
-                <PagesList pageId={pageId} isEditMode={isEditMode} homePageId={homePageId} />
+                <PagesList pageId={pageId || homePageId} isEditMode={isEditMode} homePageId={homePageId} />
             </ThemedSidebar>
         </div>
     );
-}
-
-SideBar.propTypes = {
-    homePageId: PropTypes.string.isRequired,
-    pageId: PropTypes.string.isRequired,
-    isEditMode: PropTypes.bool.isRequired,
-    isOpen: PropTypes.bool.isRequired
 };
+
+export default SideBar;
