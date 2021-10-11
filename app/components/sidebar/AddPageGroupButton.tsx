@@ -10,6 +10,7 @@ import { addPageGroup } from '../../actions/page';
 let nameIndex = 0;
 
 const StyledEditModeButton = styled(EditModeButton)`
+    // Bump specificity to override built-in Semantic UI style
     &&&&&& {
         margin-top: 10px;
         padding-right: 5px !important;
