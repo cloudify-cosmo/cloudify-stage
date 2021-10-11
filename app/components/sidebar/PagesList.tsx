@@ -95,15 +95,15 @@ const PagesList: FunctionComponent<PagesListProps> = ({
     }
 
     const handleDragOver = useCallback(
-        (event: DragOverEvent) => {
-            const activeItem = getPageMenuItem(event.active.id);
-            if (activeItem.type === 'pageGroup' && event.over && event.over.id !== event.active.id) {
-                const overItem = getPageMenuItem(event.over.id);
+        ({ active, over, delta }: DragOverEvent) => {
+            const activeItem = getPageMenuItem(active.id);
+            if (activeItem.type === 'pageGroup' && over && over.id !== active.id) {
+                const overItem = getPageMenuItem(over.id);
 
                 const overExpandedGroupHeader =
                     overItem.type === 'pageGroup' && includes(expandedGroupIds, overItem.id);
 
-                if (overExpandedGroupHeader && event.delta.y > 0) {
+                if (overExpandedGroupHeader && delta.y > 0) {
                     setDragForbidden();
                     return;
                 }
