@@ -52,16 +52,17 @@ export default class BlueprintActions {
     }
 
     doGetBlueprints(params: Record<string, any>) {
-        return this.toolbox.getManager().doGet('/blueprints?_include=id', { params });
+        const { _include, ...restParams } = params;
+        const include = ['id', _include].filter(val => !!val).join(',');
+
+        return this.toolbox.getManager().doGet('/blueprints', { params: { _include: include, ...restParams } });
     }
 
     doGetUploadedBlueprints(params?: Record<string, any>) {
-        return this.toolbox.getManager().doGet('/blueprints', {
-            params: {
-                _include: 'id,state',
-                state: BlueprintActions.CompletedBlueprintStates.Uploaded,
-                ...params
-            }
+        return this.doGetBlueprints({
+            _include: 'state',
+            state: BlueprintActions.CompletedBlueprintStates.Uploaded,
+            ...params
         });
     }
 
