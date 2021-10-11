@@ -5,66 +5,9 @@ import PagesList from 'app/components/sidebar/PagesList';
 import Consts from 'app/utils/consts';
 import { mountWithProvider } from '../utils';
 
-const pages = [
-    {
-        type: 'page',
-        id: 'topLevelPage',
-        name: 'Top Level Page',
-        description: '',
-        isDrillDown: false,
-        layout: []
-    },
-    {
-        type: 'pageGroup',
-        id: 'g1',
-        name: 'Group 1',
-        pages: [
-            {
-                type: 'page',
-                id: 'subPage1',
-                name: 'Subpage 1',
-                description: '',
-                isDrillDown: false,
-                layout: []
-            },
-            {
-                type: 'page',
-                id: 'subPage2',
-                name: 'Subpage 2',
-                description: '',
-                isDrillDown: false,
-                layout: []
-            }
-        ]
-    },
-    {
-        type: 'pageGroup',
-        id: 'g2',
-        name: 'Group 2',
-        pages: [
-            {
-                type: 'page',
-                id: 'subPage3',
-                name: 'Subpage 3',
-                description: '',
-                isDrillDown: false,
-                layout: []
-            },
-            {
-                type: 'page',
-                id: 'subPage4',
-                name: 'Subpage 4',
-                description: '',
-                isDrillDown: false,
-                layout: []
-            }
-        ]
-    }
-];
-
 describe('PagesList', () => {
     it('handles default mode', () => {
-        mountWithProvider(<PagesList isEditMode={false} pages={pages} />, { pages });
+        cy.fixture('pages/pages_with_groups').then(pages => mountWithProvider(<PagesList pages={pages} />, { pages }));
 
         cy.contains('Top Level Page')
             .should('be.visible')
@@ -96,10 +39,12 @@ describe('PagesList', () => {
     });
 
     it('handles edit mode', () => {
-        mountWithProvider(<PagesList isEditMode pages={pages} />, { pages });
+        cy.fixture('pages/pages_with_groups').then(pages => {
+            mountWithProvider(<PagesList isEditMode={true} pages={pages} />, { pages });
 
-        cy.contains('Add Page').should('be.visible');
-        cy.get('.icon.edit').should('have.length', pages.length);
-        cy.get('.icon.remove').should('have.length', pages.length);
+            cy.contains('Add Page').should('be.visible');
+            cy.get('.icon.edit').should('have.length', pages.length);
+            cy.get('.icon.remove').should('have.length', pages.length);
+        });
     });
 });
