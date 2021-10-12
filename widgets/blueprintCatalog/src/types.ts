@@ -31,6 +31,7 @@ export interface Blueprint {
     // eslint-disable-next-line camelcase
     main_blueprint: string;
     isSelected: boolean;
+    state: string;
 }
 
 export interface BlueprintCatalogPayload {
