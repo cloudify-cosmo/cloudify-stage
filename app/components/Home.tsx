@@ -8,7 +8,7 @@ import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import i18n from 'i18next';
 
-import SideBar from '../containers/SideBar';
+import SideBar from './sidebar/SideBar';
 import Page from './Page';
 import GettingStartedModal from './GettingStartedModal';
 

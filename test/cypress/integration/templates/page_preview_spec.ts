@@ -1,7 +1,7 @@
 describe('Page preview', () => {
     before(() => {
         cy.activate('valid_trial_license');
-        cy.intercept('/console/appData/templates/pages/adminDash.json', { fixture: 'page/page_with_tabs' });
+        cy.intercept('/console/appData/templates/pages/adminDash.json', { fixture: 'pages/page_with_tabs' });
         cy.mockLogin();
     });
 
