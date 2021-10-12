@@ -141,7 +141,7 @@ export default class BlueprintActionButtons extends React.Component<
                                     this.setState({ loading: false });
                                 });
                         }}
-                        content="Edit a copy in XXXXXXX"
+                        content="Edit a copy in Composer"
                     />
                 )}
 
