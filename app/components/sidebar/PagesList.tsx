@@ -7,13 +7,16 @@ import { closestCenter, DndContext, PointerSensor, useSensor, useSensors } from 
 import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable';
 import { restrictToVerticalAxis } from '@dnd-kit/modifiers';
 import { connect, useDispatch } from 'react-redux';
-import AddPageButton from './AddPageButton';
-import { Icon } from '../basic';
-import Consts from '../../utils/consts';
 
+import { Icon } from '../basic';
+import AddPageButton from './AddPageButton';
+import AddPageGroupButton from './AddPageGroupButton';
 import SortableMenuItem from './SortableMenuItem';
 
 import type { PageDefinition, PageMenuItem } from '../../actions/page';
+import Consts from '../../utils/consts';
+import { useBoolean } from '../../utils/hooks';
+
 import {
     createPagesMap,
     InsertPosition,
@@ -22,8 +25,6 @@ import {
     reorderPageMenu,
     selectPage
 } from '../../actions/page';
-import AddPageGroupButton from './AddPageGroupButton';
-import { useBoolean } from '../../utils/hooks';
 
 export interface PagesListProps {
     onPageSelected: (page: PageDefinition) => void;
