@@ -3,7 +3,7 @@ import { getCurrentAppVersion } from '../support/app_commons';
 describe('Page', () => {
     before(() => {
         cy.activate('valid_trial_license');
-        cy.fixture('page/page_with_tabs').then(testPage =>
+        cy.fixture('pages/page_with_tabs').then(testPage =>
             cy.stageRequest('/console/ua', 'POST', {
                 body: {
                     appData: {

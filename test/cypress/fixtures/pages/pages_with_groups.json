@@ -1,0 +1,56 @@
+[
+  {
+    "type": "page",
+    "id": "topLevelPage",
+    "name": "Top Level Page",
+    "description": "",
+    "isDrillDown": false,
+    "layout": []
+  },
+  {
+    "type": "pageGroup",
+    "id": "g1",
+    "name": "Group 1",
+    "pages": [
+      {
+        "type": "page",
+        "id": "subPage1",
+        "name": "Subpage 1",
+        "description": "",
+        "isDrillDown": false,
+        "layout": []
+      },
+      {
+        "type": "page",
+        "id": "subPage2",
+        "name": "Subpage 2",
+        "description": "",
+        "isDrillDown": false,
+        "layout": []
+      }
+    ]
+  },
+  {
+    "type": "pageGroup",
+    "id": "g2",
+    "name": "Group 2",
+    "pages": [
+      {
+        "type": "page",
+        "id": "subPage3",
+        "name": "Subpage 3",
+        "description": "",
+        "isDrillDown": false,
+        "layout": []
+      },
+      {
+        "type": "page",
+        "id": "subPage4",
+        "name": "Subpage 4",
+        "description": "",
+        "isDrillDown": false,
+        "layout": []
+      }
+    ]
+  }
+]
