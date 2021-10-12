@@ -13,7 +13,7 @@ import pageReducer from 'reducers/pageReducer';
 import drilldownContextReducer from 'reducers/drilldownContextReducer';
 
 import { drillDownToPage } from 'actions/drilldownPage';
-import { changePageName, changePageDescription, removePage } from 'actions/page';
+import { changePageName, changePageDescription, removePageWithChildren } from 'actions/page';
 
 import * as types from 'actions/types';
 
@@ -539,7 +539,7 @@ describe('(Reducer) Pages', () => {
         it('Single page should not exist when page without children is being removed', () => {
             const store = createStore(combineReducers({ pages: pageReducer }), initialState, applyMiddleware(thunk));
 
-            store.dispatch(removePage(dashboardPage));
+            store.dispatch(removePageWithChildren(dashboardPage));
 
             const { pages } = store.getState();
             expect(pages).toEqual([
@@ -554,7 +554,7 @@ describe('(Reducer) Pages', () => {
         it('All pages in page hierarchy should not exist when page with children is being removed', () => {
             const store = createStore(combineReducers({ pages: pageReducer }), initialState, applyMiddleware(thunk));
 
-            store.dispatch(removePage(localBlueprintsPage));
+            store.dispatch(removePageWithChildren(localBlueprintsPage));
 
             const { pages } = store.getState();
             expect(pages).toEqual([dashboardPage, deploymentsPage, deploymentDrillDownPage]);
