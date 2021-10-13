@@ -13,7 +13,7 @@ import pageReducer from 'reducers/pageReducer';
 import drilldownContextReducer from 'reducers/drilldownContextReducer';
 
 import { drillDownToPage } from 'actions/drilldownPage';
-import { changePageName, changePageDescription, removePageWithChildren } from 'actions/page';
+import { changePageMenuItemName, changePageDescription, removePageWithChildren } from 'actions/page';
 
 import * as types from 'actions/types';
 
@@ -578,7 +578,7 @@ describe('(Reducer) Pages', () => {
         it('Changing page name should affect only name property and not id', () => {
             const store = createStore(combineReducers({ pages: pageReducer }), initialState, applyMiddleware(thunk));
 
-            store.dispatch(changePageName(dashboardPage, 'Control Panel'));
+            store.dispatch(changePageMenuItemName(dashboardPage, 'Control Panel'));
 
             const { pages } = store.getState();
             expect(pages[0]).toEqual({ ...dashboardPage, name: 'Control Panel' });

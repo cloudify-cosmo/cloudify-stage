@@ -14,7 +14,7 @@ import { clearContext, setValue } from '../actions/context';
 import { setDrilldownContext } from '../actions/drilldownContext';
 
 import Consts from '../utils/consts';
-import { createPagesMap } from '../actions/page';
+import { createPagesMap } from '../actions/pageMenu';
 
 const mapStateToProps = (state, ownProps) => {
     const { pages } = state;

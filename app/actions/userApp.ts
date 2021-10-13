@@ -2,7 +2,7 @@
 import _ from 'lodash';
 import { push } from 'connected-react-router';
 import * as types from './types';
-import { createPagesFromTemplate } from './page';
+import { createPagesFromTemplate } from './pageMenu';
 import { setAppLoading, setAppError } from './appState';
 import { saveUserAppData } from './userAppCommon';
 import Internal from '../utils/Internal';

@@ -13,7 +13,7 @@ import { Breadcrumb, Button, Divider, ErrorMessage, Segment } from '../basic';
 import Pages from './Pages';
 import Templates from './Templates';
 import { createPageId, setActive } from '../../actions/templateManagement';
-import { selectHomePage } from '../../actions/page';
+import { selectHomePage } from '../../actions/pageMenu';
 import Internal from '../../utils/Internal';
 import { useBoolean, useErrors } from '../../utils/hooks';
 import { addPage, addTemplate, editTemplate, removePage, removeTemplate } from '../../actions/templates';

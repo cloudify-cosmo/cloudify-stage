@@ -7,7 +7,9 @@ import { mountWithProvider } from '../utils';
 
 describe('PagesList', () => {
     it('handles default mode', () => {
-        cy.fixture('pages/pages_with_groups').then(pages => mountWithProvider(<PagesList pages={pages} />, { pages }));
+        cy.fixture('pages/pages_with_groups').then(pages =>
+            mountWithProvider(<PagesList pageId={pages[0].id} />, { pages })
+        );
 
         cy.contains('Top Level Page')
             .should('be.visible')
@@ -40,7 +42,7 @@ describe('PagesList', () => {
 
     it('handles edit mode', () => {
         cy.fixture('pages/pages_with_groups').then(pages => {
-            mountWithProvider(<PagesList isEditMode={true} pages={pages} />, { pages });
+            mountWithProvider(<PagesList isEditMode pageId={pages[0].id} />, { pages });
 
             cy.contains('Add Page').should('be.visible');
             cy.get('.icon.edit').should('have.length', pages.length);

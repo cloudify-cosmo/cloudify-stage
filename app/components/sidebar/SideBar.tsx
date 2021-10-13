@@ -32,7 +32,7 @@ const SideBar: FunctionComponent<SideBarProps> = ({ pageId }) => {
     return (
         <div className="sidebarContainer">
             <ThemedSidebar theme={theme} visible className={`vertical menu small basic ${className}`}>
-                <PagesList pageId={pageId || homePageId} isEditMode={isEditMode} homePageId={homePageId} />
+                <PagesList pageId={pageId || homePageId} isEditMode={isEditMode} />
             </ThemedSidebar>
         </div>
     );

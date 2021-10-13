@@ -5,7 +5,7 @@ import i18n from 'i18next';
 
 import { useDispatch } from 'react-redux';
 import EditModeButton from '../EditModeButton';
-import { addPageGroup } from '../../actions/page';
+import { addPageGroup } from '../../actions/pageMenu';
 import { buttonWidth } from './AddPageButton';
 
 let nameIndex = 0;
