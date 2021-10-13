@@ -44,7 +44,7 @@ function consumeEvent(event: React.MouseEvent) {
 
 const RemoveIcon = styled(Icon)`
     position: relative;
-    top: 2px;
+    top: 3px;
     right: 3px;
     visibility: hidden;
     float: right;
@@ -185,6 +185,13 @@ const PagesList: FunctionComponent<PagesListProps> = ({ isEditMode, pageId }) =>
 
     function renderPageMenuItem(pageMenuItem: PageMenuItem, subItem = false): ReactNode[] {
         const itemNameInEdit = nameEditedMenuItemId === pageMenuItem.id;
+
+        function calculateLeftPadding() {
+            if (subItem && !itemNameInEdit) return 25;
+            if (itemNameInEdit) return 0;
+            return undefined;
+        }
+
         const renderedMenuItem = (
             <SortableMenuItem
                 id={pageMenuItem.id}
@@ -201,8 +208,9 @@ const PagesList: FunctionComponent<PagesListProps> = ({ isEditMode, pageId }) =>
                 }}
                 style={{
                     height: 37,
-                    padding: itemNameInEdit ? 3 : undefined,
-                    paddingLeft: subItem && !itemNameInEdit ? 25 : undefined,
+                    paddingTop: itemNameInEdit ? 3 : undefined,
+                    paddingLeft: calculateLeftPadding(),
+                    paddingBottom: 3,
                     paddingRight: 0,
                     cursor: dragging ? 'inherit' : undefined
                 }}
@@ -247,7 +255,7 @@ const PagesList: FunctionComponent<PagesListProps> = ({ isEditMode, pageId }) =>
                     <Icon
                         name="dropdown"
                         rotated={includes(expandedGroupIds, pageMenuItem.id) ? undefined : 'counterclockwise'}
-                        style={{ float: 'right' }}
+                        style={{ position: 'absolute', right: 12, margin: 0 }}
                     />
                 )}
             </SortableMenuItem>
