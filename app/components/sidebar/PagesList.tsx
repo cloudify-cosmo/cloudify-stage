@@ -55,6 +55,8 @@ const RemoveIcon = styled(Icon)`
 `;
 
 const EditIcon = styled(Icon)`
+    position: relative;
+    top: -3px;
     margin-left: 1em !important;
     display: none !important;
 
@@ -226,7 +228,13 @@ const PagesList: FunctionComponent<PagesListProps> = ({ isEditMode, pageId }) =>
                         padding: 0,
                         margin: 0,
                         fontSize: 'inherit',
-                        fontWeight: 'inherit'
+                        fontWeight: 'inherit',
+                        ...(!itemNameInEdit && {
+                            height: 13,
+                            maxWidth: 113,
+                            overflow: 'hidden',
+                            textOverflow: 'ellipsis'
+                        })
                     }}
                 />
                 {isEditMode && !nameEditedMenuItemId && (
