@@ -47,6 +47,18 @@ describe('PagesList', () => {
             cy.contains('Add Page').should('be.visible');
             cy.get('.icon.edit').should('have.length', pages.length);
             cy.get('.icon.remove').should('have.length', pages.length);
+
+            cy.contains('Add Page Group').click();
+            cy.contains('.item', 'Page_Group_0').find('.edit').click({ force: true });
+            cy.get('input').type('2{enter}');
+            cy.contains('.item', 'Page_Group_02').find('.remove').click({ force: true });
+            cy.contains('Page_Group_02').should('not.exist');
+
+            cy.contains('Group 1').click();
+            cy.contains('.item', 'Subpage 1').find('.edit').click({ force: true });
+            cy.get('input').type('2{enter}');
+            cy.contains('.item', 'Subpage 12').find('.remove').click({ force: true });
+            cy.contains('Subpage 12').should('not.exist');
         });
     });
 });
