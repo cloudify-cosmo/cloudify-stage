@@ -13,16 +13,14 @@ import {
     addLayoutSectionToPage,
     addTab,
     changePageDescription,
-    changePageName,
-    createPagesMap,
     LayoutSection,
     moveTab,
     PageDefinition,
     removeLayoutSectionFromPage,
     removeTab,
-    selectPage,
     updateTab
 } from '../actions/page';
+import { changePageMenuItemName, createPagesMap, selectPage } from '../actions/pageMenu';
 import { addWidget, removeWidget, updateWidget } from '../actions/widgets';
 import { setDrilldownContext } from '../actions/drilldownContext';
 import { setEditMode } from '../actions/config';
@@ -185,7 +183,7 @@ const mapStateToProps = (state: ReduxState, ownProps: PageOwnProps) => {
 const mapDispatchToProps = (dispatch: ThunkDispatch<ReduxState, never, AnyAction>, ownProps: PageOwnProps) => {
     return {
         onPageNameChange: (page: PageDefinition, newName: string) => {
-            dispatch(changePageName(page, newName));
+            dispatch(changePageMenuItemName(page.id, newName));
         },
         onPageDescriptionChange: (pageId: string, newDescription: string) => {
             dispatch(changePageDescription(pageId, newDescription));

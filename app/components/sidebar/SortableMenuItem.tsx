@@ -7,7 +7,7 @@ import colors from 'cloudify-ui-common/styles/_colors.scss';
 
 import { Menu } from '../basic';
 
-const ItemContainer = styled.div`
+export const ItemContainer = styled.div`
     position: relative;
     &:before {
         background-color: ${colors.greyNormal};
@@ -24,14 +24,6 @@ const ItemContainer = styled.div`
     }
     .item.link:hover {
         text-decoration: none !important; // override semantic ui styles
-    }
-
-    .icon.edit {
-        display: none;
-    }
-
-    :hover .icon.edit {
-        display: inline;
     }
 `;
 
