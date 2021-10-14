@@ -1,5 +1,5 @@
 // @ts-nocheck File not migrated fully to TS
-import _ from 'lodash';
+import _, { cloneDeep, find, findIndex, includes, pull, remove } from 'lodash';
 import { arrayMove } from 'react-sortable-hoc';
 import i18n from 'i18next';
 import type { AnyAction, Reducer } from 'redux';
@@ -11,6 +11,7 @@ import {
     createPagesMap,
     forAllWidgets,
     forEachWidget,
+    InsertPosition,
     isWidgetsSection,
     LayoutSection,
     moveTab,
@@ -144,6 +145,14 @@ const page = (state: PageDefinition, action: AnyAction) => {
 };
 
 const pages: Reducer<PageMenuItem[]> = (state = [], action) => {
+    const findContainer = (pageMenuItems: PageMenuItem[], pageMenuItemId: string) => {
+        return find(pageMenuItems, { id: pageMenuItemId })
+            ? pageMenuItems
+            : _(pageMenuItems)
+                  .map('pages')
+                  .find(pagesList => find(pagesList, { id: pageMenuItemId }));
+    };
+
     switch (action.type) {
         case types.ADD_PAGE:
         case types.CREATE_DRILLDOWN_PAGE:
@@ -163,9 +172,12 @@ const pages: Reducer<PageMenuItem[]> = (state = [], action) => {
             _.each(pagesMap, pageItem => Object.assign(pageItem, page(pageItem, action)));
             return newState;
         }
-        case types.REMOVE_PAGE: {
-            const removeIndex = _.findIndex(state, { id: action.pageId });
-            return [...state.slice(0, removeIndex), ...state.slice(removeIndex + 1)];
+        case types.REMOVE_PAGE_MENU_ITEM: {
+            const id = action.pageMenuItemId;
+            const newPageMenuItems = cloneDeep(state);
+            const itemContainer = findContainer(newPageMenuItems, id);
+            remove(itemContainer, { id });
+            return newPageMenuItems;
         }
         case types.UPDATE_WIDGET:
         case types.REMOVE_WIDGET:
@@ -200,33 +212,26 @@ const pages: Reducer<PageMenuItem[]> = (state = [], action) => {
                 return page(p, updatedAction);
             });
         }
-        case types.REORDER_PAGE: {
-            let { pageIndex } = action;
-            let { newPageIndex } = action;
-            let realPageIndex = 0;
-            let realNewPageIndex = 0;
+        case types.REORDER_PAGE_MENU: {
+            const { sourceId, targetId, position } = action;
+            const newPageMenuItems = cloneDeep(state);
 
-            const newState = state.slice(0);
+            const sourceItemContainer = findContainer(newPageMenuItems, sourceId);
+            const sourceItem = find(sourceItemContainer, { id: sourceId });
 
-            _.each(newState, p => {
-                if (!p.isDrillDown) {
-                    pageIndex -= 1;
-                    newPageIndex -= 1;
-                }
+            if (position !== InsertPosition.Into) {
+                const targetItemContainer = findContainer(newPageMenuItems, targetId);
 
-                if (pageIndex >= 0) {
-                    realPageIndex += 1;
-                }
+                let targetIndex = findIndex(targetItemContainer, { id: targetId });
+                if (position === InsertPosition.After) targetIndex += 1;
+                targetItemContainer.splice(targetIndex, 0, { ...sourceItem });
+            } else {
+                find(newPageMenuItems, { id: targetId }).pages.splice(0, 0, sourceItem);
+            }
 
-                if (newPageIndex >= 0) {
-                    realNewPageIndex += 1;
-                }
-            });
+            pull(sourceItemContainer, sourceItem);
 
-            const removed = newState.splice(realPageIndex, 1)[0];
-            newState.splice(realNewPageIndex, 0, removed);
-
-            return newState;
+            return newPageMenuItems;
         }
         case types.SET_PAGES:
             // Replace all the pages data (when reading user pages from db)

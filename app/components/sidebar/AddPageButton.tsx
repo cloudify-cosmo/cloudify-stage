@@ -7,8 +7,8 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
 import i18n from 'i18next';
-import { addPage } from '../actions/page';
-import EditModeButton from '../components/EditModeButton';
+import { addPage } from '../../actions/page';
+import EditModeButton from '../EditModeButton';
 
 let nameIndex = 0;
 
@@ -21,6 +21,8 @@ const mapDispatchToProps = dispatch => {
     };
 };
 
+export const buttonWidth = 146;
+
 const AddPageButton = ({ onClick }) => {
     return (
         <EditModeButton
@@ -29,6 +31,7 @@ const AddPageButton = ({ onClick }) => {
             onClick={onClick}
             content={i18n.t('editMode.addPage', 'Add Page')}
             className="addPageBtn"
+            style={{ width: buttonWidth }}
         />
     );
 };

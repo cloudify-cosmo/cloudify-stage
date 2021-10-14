@@ -89,6 +89,7 @@
     },
     "editMode": {
         "addPage": "Add Page",
+        "addPageGroup": "Add Page Group",
         "addTabsContainer": "Add Tabs Container",
         "addWidget": {
             "addButton": "Add Widget",
@@ -134,6 +135,7 @@
             "message": "All widgets present in this container will be removed"
         },
         "defaultPageName": "Page_{{index}}",
+        "defaultPageGroupName": "Page_Group_{{index}}",
         "editWidget": {
             "noConfiguration": "No configuration available for this widget"
         },

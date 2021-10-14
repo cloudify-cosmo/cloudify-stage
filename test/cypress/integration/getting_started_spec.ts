@@ -1,7 +1,8 @@
 import { escapeRegExp, find } from 'lodash';
-import pluginsCatalog from '../fixtures/plugins/catalog.json';
+import { PluginDescription } from 'widgets/pluginsCatalog/src/types';
 import { minutesToMs } from '../support/resource_commons';
 
+const pluginsCatalogUrl = 'http://repository.cloudifysource.org/cloudify/wagons/plugins.json';
 const awsSecrets = ['aws_access_key_id', 'aws_secret_access_key'];
 const awsPlugins = ['cloudify-utilities-plugin', 'cloudify-kubernetes-plugin', 'cloudify-aws-plugin'];
 const awsBlueprints = ['AWS-Basics-VM-Setup', 'AWS-VM-Setup-using-CloudFormation', 'Kubernetes-AWS-EKS'];
@@ -81,20 +82,23 @@ function interceptSecretsCreation(secrets: string[]) {
 }
 
 function interceptPluginsUpload(plugins: string[]) {
-    plugins.forEach(plugin => {
-        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        const catalogEntry = find(pluginsCatalog, { name: plugin })!;
-        cy.intercept({
-            method: 'POST',
-            pathname: '/console/plugins/upload',
-            query: {
-                title: catalogEntry.title,
-                visibility: 'tenant',
-                iconUrl: catalogEntry.icon,
-                yamlUrl: catalogEntry.link,
-                wagonUrl: RegExp(catalogEntry.wagons.map(wagon => escapeRegExp(wagon.url)).join('|'))
-            }
-        }).as(toAlias(plugin));
+    cy.request<PluginDescription[]>(pluginsCatalogUrl).then(response => {
+        const pluginsCatalog = response.body;
+        plugins.forEach(plugin => {
+            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+            const catalogEntry = find(pluginsCatalog, { name: plugin })!;
+            cy.intercept({
+                method: 'POST',
+                pathname: '/console/plugins/upload',
+                query: {
+                    title: catalogEntry.title,
+                    visibility: 'tenant',
+                    iconUrl: catalogEntry.icon,
+                    yamlUrl: catalogEntry.link,
+                    wagonUrl: RegExp(catalogEntry.wagons.map(wagon => escapeRegExp(wagon.url)).join('|'))
+                }
+            }).as(toAlias(plugin));
+        });
     });
 }
 
@@ -108,7 +112,7 @@ function mockPluginsCatalog(catalogData: any[]) {
             method: 'GET',
             pathname: '/console/external/content',
             query: {
-                url: 'http://repository.cloudifysource.org/cloudify/wagons/plugins.json'
+                url: pluginsCatalogUrl
             }
         },
         { body: catalogData }
@@ -158,7 +162,6 @@ describe('Getting started modal', () => {
     });
 
     it('should install selected environment', () => {
-        mockPluginsCatalog(pluginsCatalog);
         cy.deletePlugins().deleteSecrets('aws_').deleteBlueprints('AWS-', true);
 
         cy.get('.modal').within(() => {
@@ -231,7 +234,6 @@ describe('Getting started modal', () => {
     });
 
     it('should group common plugins and secrets', () => {
-        mockPluginsCatalog(pluginsCatalog);
         cy.deletePlugins()
             .deleteSecrets('aws_')
             .deleteSecrets('gcp_')
