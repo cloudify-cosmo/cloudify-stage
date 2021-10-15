@@ -2,7 +2,8 @@
 import _ from 'lodash';
 import * as types from './types';
 import { drillDownWarning } from './templateManagement';
-import { createDrilldownPage, selectPage, addLayoutToPage } from './page';
+import { addLayoutToPage } from './page';
+import { createDrilldownPage, selectPage } from './pageMenu';
 import { setDrilldownContext } from './drilldownContext';
 
 export function addWidgetDrilldownPage(widgetId, drillDownName, drillDownPageId) {

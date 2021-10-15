@@ -91,6 +91,7 @@ export default class BlueprintActionButtons extends React.Component<
         const { ErrorMessage, Button } = Stage.Basic;
         const { DeleteConfirm, DeployBlueprintModal } = Stage.Common;
         const manager = toolbox.getManager();
+        const blueprintActions = new Stage.Common.BlueprintActions(toolbox);
 
         return (
             <div>
@@ -125,8 +126,8 @@ export default class BlueprintActionButtons extends React.Component<
                         onClick={() => {
                             toolbox.loading(true);
                             this.setState({ loading: true });
-                            manager
-                                .doGet('/blueprints?_include=main_file_name', { params: { id: blueprintId } })
+                            blueprintActions
+                                .doGetBlueprints({ _include: 'main_file_name', id: blueprintId })
                                 .then(data =>
                                     new Stage.Common.BlueprintActions(toolbox).doEditInComposer(
                                         // NOTE: If it was undefined, the button would be disabled

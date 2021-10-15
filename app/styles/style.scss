@@ -167,20 +167,6 @@ a:hover {
   }
 }
 
-.pageRemoveButton {
-    position: absolute;
-    right : 5px;
-    display:none;
-    visibility: hidden;
-    top: 40%;
-}
-
-.pageMenuItem:hover .pageRemoveButton {
-  display:block;
-  visibility: visible;
-  text-decoration: none;
-}
-
 .pages {
 
   .ui-sortable-helper {

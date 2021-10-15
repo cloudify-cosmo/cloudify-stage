@@ -88,14 +88,15 @@ Stage.defineWidget<unknown, unknown, BlueprintsWidgetConfiguration>({
         }
     ],
 
-    fetchData(widget, toolbox, params) {
+    fetchData(widget, toolbox, params: Record<string, any>) {
         const result = {};
-        return toolbox
-            .getManager()
-            .doGet(
-                '/blueprints?_include=id,updated_at,created_at,description,created_by,visibility,main_file_name,state,error',
-                { params }
-            )
+        const blueprintActions = new Stage.Common.BlueprintActions(toolbox);
+
+        return blueprintActions
+            .doGetBlueprints({
+                _include: 'id,updated_at,created_at,description,created_by,visibility,main_file_name,state,error',
+                ...params
+            })
             .then(data => {
                 result.blueprints = data;
 

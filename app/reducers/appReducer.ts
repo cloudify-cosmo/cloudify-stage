@@ -5,7 +5,7 @@
 
 import * as types from '../actions/types';
 
-const app = (state = { loading: true, error: null }, action) => {
+const app = (state = { loading: true, error: null, sidebarIsOpen: false }, action) => {
     switch (action.type) {
         case types.SET_APP_LOADING:
             return { ...state, loading: action.isLoading };
