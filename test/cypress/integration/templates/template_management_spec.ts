@@ -16,7 +16,7 @@ describe('Template Management', () => {
     };
     const users = [defaultUser];
 
-    const verifyTemplateRow = (id: string, pageIds: string[], roles: string[], tenants: string[]) => {
+    const verifyTemplateRow = (id: string, pageMenuItems: string[], roles: string[], tenants: string[]) => {
         cy.contains('tr', id).as('templateRow');
         cy.get('@templateRow').within(() => {
             roles.forEach(role => cy.get(`td:nth-of-type(2)`).should('contain.text', role));
@@ -24,8 +24,8 @@ describe('Template Management', () => {
 
         cy.get('@templateRow').click();
         cy.get('.horizontal > :nth-child(1)').within(() =>
-            pageIds.forEach((pageId, index) =>
-                cy.get(`.divided > :nth-child(${index + 1})`).should('have.text', pageId)
+            pageMenuItems.forEach((pageMenuItemId, index) =>
+                cy.get(`.divided > :nth-child(${index + 1})`).should('have.text', pageMenuItemId)
             )
         );
         cy.get('.horizontal > :nth-child(3)').within(() =>
@@ -109,7 +109,7 @@ describe('Template Management', () => {
     });
 
     it('allows admin users to create and modify templates', () => {
-        const clickOnHeader = () => cy.get('.modal > .header').click();
+        const clickOnHeader = () => cy.get('.header').click();
         cy.removeUserTemplates().mockLogin();
 
         cy.get('.usersMenu').click();
@@ -125,11 +125,12 @@ describe('Template Management', () => {
         cy.get('[option-value="user"]').click();
         cy.get('[option-value="viewer"]').click();
 
-        cy.log('Add pages');
+        cy.log('Add page menu items');
         cy.get('.horizontal > :nth-child(1)').within(() => {
             cy.contains('deployment').within(() => cy.get('.add').click());
             cy.contains('plugins').within(() => cy.get('.add').click());
             cy.contains('logs').within(() => cy.get('.add').click());
+            cy.contains('empty').within(() => cy.get('.add').click());
         });
 
         cy.log('Create template');
@@ -137,40 +138,40 @@ describe('Template Management', () => {
         cy.get('.modal').should('not.exist');
 
         cy.log('Verify template');
-        verifyTemplateRow('Template 1', ['deployment', 'plugins', 'logs'], ['user', 'viewer'], ['all']);
+        verifyTemplateRow('Template 1', ['deployment', 'plugins', 'logs', 'empty'], ['user', 'viewer'], ['all']);
 
         cy.log('Edit template');
         getTemplateRow('Template 1').within(() => cy.get('.edit').click());
 
-        cy.log('Change template name');
-        cy.get('.field > .ui > input').clear().type('Another Template');
+        cy.get('.modal').within(() => {
+            cy.log('Change template name');
+            cy.get('.field > .ui > input').clear().type('Another Template');
 
-        cy.log('Add roles');
-        cy.get('.form > :nth-child(2) > .multiple .clear').click();
-        cy.get('.form > :nth-child(2) > .ui').click();
-        cy.get('[option-value="manager"]').click();
-        cy.get('[option-value="operations"]').click();
-        clickOnHeader();
+            cy.log('Add roles');
+            cy.get('.form > :nth-child(2) > .multiple .clear').click();
+            cy.get('.form > :nth-child(2) > .ui').click();
+            cy.get('[option-value="manager"]').click();
+            cy.get('[option-value="operations"]').click();
+            clickOnHeader();
 
-        cy.log('Select tenants');
-        cy.get('.form > :nth-child(3) > .multiple .clear').click();
-        cy.get('.form > :nth-child(3) > .ui').click();
-        cy.get('[option-value="T1"]').click();
-        cy.get('[option-value="T2"]').click();
-        clickOnHeader();
+            cy.log('Select tenants');
+            cy.get('.form > :nth-child(3) > .multiple .clear').click();
+            cy.get('.form > :nth-child(3) > .ui').click();
+            cy.get('[option-value="T1"]').click();
+            cy.get('[option-value="T2"]').click();
+            clickOnHeader();
 
-        cy.log('Add pages');
-        cy.get('.horizontal > :nth-child(1)').within(() => {
-            cy.contains('tmm').within(() => cy.get('.add').click());
+            cy.log('Add pages');
+            cy.contains('tmm').find('.add').click();
+
+            cy.log('Remove page menu items');
+            cy.contains('logs').find('.minus').click();
+            cy.contains('empty').find('.minus').click();
+
+            cy.log('Save template');
+            cy.get('.actions > .ok').click();
         });
 
-        cy.log('Remove pages');
-        cy.get('.horizontal > :nth-child(2)').within(() => {
-            cy.contains('logs').within(() => cy.get('.minus').click());
-        });
-
-        cy.log('Save template');
-        cy.get('.actions > .ok').click();
         cy.get('.modal').should('not.exist');
 
         cy.log('Verify template changes');
