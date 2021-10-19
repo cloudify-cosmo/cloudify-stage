@@ -307,22 +307,24 @@
         },
         "createTemplateModal": {
             "addPage": "Add page",
+            "addPageGroup": "Add page group",
             "availablePages": "Available pages",
-            "button": "Create template",
+            "availablePageGroups": "Available page groups",
             "create": "Create",
             "createHeader": "Create template",
             "errors": {
-                "page": "Please select page",
+                "pageMenuItem": "Please select at least on page menu item",
                 "role": "Please select role",
                 "templateName": "Please provide correct template name",
                 "tenant": "Please select tenant"
             },
             "noPagesAvailable": "No pages available",
-            "noPagesSelected": "No pages selected",
+            "noPageGroupsAvailable": "No page groups available",
+            "noPageMenuItemsSelected": "No page menu items selected",
             "removePage": "Remove page",
             "reorderPage": "Reorder page",
             "roles": "Roles",
-            "selectedPages": "Selected pages",
+            "selectedItems": "Selected page menu items",
             "templateName": "Template name",
             "tenants": "Tenants",
             "update": "Update",
@@ -351,9 +353,11 @@
         },
         "templateManagement": {
             "header": "Templates",
-            "pageList": {
-                "noPages": "No pages available",
-                "removeConfirm": "Are you sure to remove this page from template?"
+            "addTemplateButton": "Create template",
+            "pageMenuItemsList": {
+                "header": "Page menu items",
+                "noItems": "No page menu items available",
+                "removeConfirm": "Are you sure to remove this page menu item from the template?"
             },
             "pageNotUsed": "Page not used by any template",
             "removeConfirm": "Are you sure to remove this template?",

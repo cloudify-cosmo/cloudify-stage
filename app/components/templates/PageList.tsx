@@ -1,18 +1,21 @@
-// @ts-nocheck File not migrated fully to TS
-/**
- * Created by pposel on 11/08/2017.
- */
-
 import _ from 'lodash';
-import PropTypes from 'prop-types';
-import React from 'react';
-import i18n from 'i18next';
-import { Segment, Icon, Divider, List, Message, PopupConfirm } from '../basic';
+import React, { CSSProperties, FunctionComponent } from 'react';
+import { Divider, Icon, List, Message, PopupConfirm, Segment } from '../basic';
+import StageUtils from '../../utils/stageUtils';
 
-export default function PageList({ custom, onDelete, pages, style }) {
+const t = StageUtils.getT('templates.templateManagement.pageMenuItemsList');
+
+interface PageMenuItemsListProps {
+    custom: boolean;
+    onDelete: (itemId: string) => void;
+    pages: { id: string }[];
+    style: CSSProperties;
+}
+
+const PageMenuItemsList: FunctionComponent<PageMenuItemsListProps> = ({ custom, onDelete, pages, style }) => {
     return (
         <Segment style={style}>
-            <Icon name="block layout" /> Pages
+            <Icon name="block layout" /> {t('header')}
             <Divider />
             <List divided relaxed verticalAlign="middle" className="light">
                 {pages.map(({ id: item }) => {
@@ -27,37 +30,24 @@ export default function PageList({ custom, onDelete, pages, style }) {
                                             link
                                             name="remove"
                                             className="right floated"
-                                            onClick={e => e.stopPropagation()}
+                                            onClick={(e: Event) => e.stopPropagation()}
                                         />
                                     }
-                                    content={i18n.t(
-                                        'templates.templateManagement.pageList.removeConfirm',
-                                        'Are you sure to remove this page from template?'
-                                    )}
+                                    content={t('removeConfirm')}
                                     onConfirm={() => onDelete(item)}
+                                    onCancel={undefined}
+                                    onCanConfirm={undefined}
+                                    defaultOpen={undefined}
                                 />
                             )}
                         </List.Item>
                     );
                 })}
 
-                {_.isEmpty(pages) && (
-                    <Message content={i18n.t('templates.templateManagement.pageList.noPages', 'No pages available')} />
-                )}
+                {_.isEmpty(pages) && <Message content={t('noItems')} />}
             </List>
         </Segment>
     );
-}
-
-PageList.propTypes = {
-    pages: PropTypes.arrayOf(PropTypes.string).isRequired,
-    onDelete: PropTypes.func,
-    custom: PropTypes.bool,
-    style: PropTypes.shape({})
 };
 
-PageList.defaultProps = {
-    onDelete: _.noop,
-    custom: false,
-    style: {}
-};
+export default PageMenuItemsList;

@@ -30,7 +30,6 @@ export default function TemplateManagement() {
     const pageDefs = useSelector(state => state.templates.pagesDef);
     const templateDefs = useSelector(state => state.templates.templatesDef);
     const tenants = useSelector(state => state.manager.tenants);
-    const roles = useSelector(state => state.manager.roles);
 
     function handleError(err) {
         log.error(err);
@@ -248,10 +247,6 @@ export default function TemplateManagement() {
                 <Templates
                     templates={templates}
                     pages={pages}
-                    roles={_.map(roles, role => ({
-                        text: role.description ? `${role.name} - ${role.description}` : role.name,
-                        value: role.name
-                    }))}
                     tenants={tenants}
                     onSelectTemplate={onSelectTemplate}
                     onRemoveTemplatePage={onRemoveTemplatePage}

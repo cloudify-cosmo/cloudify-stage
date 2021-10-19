@@ -1,21 +1,20 @@
-// @ts-nocheck File not migrated fully to TS
 import _ from 'lodash';
-import PropTypes from 'prop-types';
-import i18n from 'i18next';
-import React, { Component, CSSProperties, FunctionComponent } from 'react';
+import React, { CSSProperties, FunctionComponent } from 'react';
 
-import { DndContext, closestCenter, PointerSensor } from '@dnd-kit/core';
-
-import { SortableContext, verticalListSortingStrategy, useSortable } from '@dnd-kit/sortable';
-import { CSS } from '@dnd-kit/utilities';
 import type { DragEndEvent, SensorDescriptor } from '@dnd-kit/core';
+import { closestCenter, DndContext, PointerSensor } from '@dnd-kit/core';
+
+import { SortableContext, useSortable, verticalListSortingStrategy } from '@dnd-kit/sortable';
+import { CSS } from '@dnd-kit/utilities';
 import { restrictToParentElement } from '@dnd-kit/modifiers';
 
+import { DropdownProps, ModalProps } from 'semantic-ui-react';
+import { useSelector } from 'react-redux';
 import Consts from '../../utils/consts';
+import StageUtils from '../../utils/stageUtils';
 
 import {
     ApproveButton,
-    Button,
     CancelButton,
     Divider,
     Form,
@@ -24,15 +23,33 @@ import {
     Message,
     Modal,
     Ref,
-    Segment
+    Segment,
+    UnsafelyTypedFormField
 } from '../basic/index';
+import { useBoolean, useErrors, useInput, useOpen, useResettableState } from '../../utils/hooks';
+import { ReduxState } from '../../reducers';
+
+const t = StageUtils.getT('templates.createTemplateModal');
+
+interface PageMenuItem {
+    id: string;
+    type: 'page' | 'pageGroup';
+}
+
+function toId(item: PageMenuItem) {
+    return `${item.type}\n${item.id}`;
+}
 
 interface SortablePageItemProps {
-    name: string;
+    item: PageMenuItem;
     onRemove: () => void;
 }
-const SortablePageItem: FunctionComponent<SortablePageItemProps> = ({ name, onRemove }) => {
-    const { attributes, listeners, setNodeRef, transform, transition } = useSortable({ id: name });
+
+const SortablePageItem: FunctionComponent<SortablePageItemProps> = ({ item, onRemove }) => {
+    const { attributes, listeners, setNodeRef, transform, transition } = useSortable({
+        id: toId(item),
+        data: { item }
+    });
 
     const style: CSSProperties = {
         transform: CSS.Transform.toString(transform),
@@ -43,21 +60,16 @@ const SortablePageItem: FunctionComponent<SortablePageItemProps> = ({ name, onRe
         <Ref innerRef={setNodeRef}>
             {/* eslint-disable-next-line react/jsx-props-no-spreading */}
             <List.Item style={style} {...attributes}>
-                {name}
+                {item.id}
                 <span className="right floated actionIcons">
-                    <Icon
-                        link
-                        name="minus"
-                        onClick={onRemove}
-                        title={i18n.t('templates.createTemplateModal.removePage', 'Remove page')}
-                    />
+                    <Icon link name="minus" onClick={onRemove} title={t('removePage')} />
                     <Icon
                         // eslint-disable-next-line react/jsx-props-no-spreading
                         {...listeners}
                         link
                         name="move"
                         className="handle"
-                        title={i18n.t('templates.createTemplateModal.reorderPage', 'Reorder page')}
+                        title={t('reorderPage')}
                     />
                 </span>
             </List.Item>
@@ -65,325 +77,301 @@ const SortablePageItem: FunctionComponent<SortablePageItemProps> = ({ name, onRe
     );
 };
 
-export default class CreateTemplateModal extends Component {
-    static initialState = (open, props) => {
-        let availablePages = _.map(props.availablePages, page => page.id);
-        availablePages = _.difference(availablePages, props.pages);
+interface CreateTemplateModalProps {
+    initialTemplateName: string;
+    initialTenants: string[];
+    initialRoles: string[];
+    initialPageMenuItems: PageMenuItem[];
+    trigger: ModalProps['trigger'];
+    onCreateTemplate: (
+        templateName: string,
+        roles: string[],
+        tenants: string[],
+        selectedPageMenuItems: PageMenuItem[]
+    ) => Promise<void>;
+}
 
-        return {
-            open,
-            loading: false,
-            templateName: props.templateName,
-            tenants: props.tenants,
-            roles: props.roles,
-            availablePages,
-            pages: _.map(props.pages, 'id'),
-            errors: {}
-        };
-    };
+const CreateTemplateModal: FunctionComponent<CreateTemplateModalProps> = ({
+    initialTemplateName = '',
+    initialTenants = [Consts.DEFAULT_ALL],
+    initialRoles = [],
+    initialPageMenuItems = [],
+    trigger,
+    onCreateTemplate
+}) => {
+    const allAvailablePages = useSelector((state: ReduxState) => Object.keys(state.templates.pagesDef));
+    const allAvailablePageGroups = useSelector((state: ReduxState) => Object.keys(state.templates.pageGroupsDef));
+    const allAvailableTenants = useSelector((state: ReduxState) => _.map(state.manager.tenants.items, 'name'));
+    const allAvailableRoles = useSelector((state: ReduxState) => state.manager.roles);
+    const [loading, setLoading, unsetLoading] = useBoolean();
+    const [tenants, setTenants, resetTenants] = useInput(initialTenants);
+    const [roles, setRoles, resetRoles] = useInput(initialRoles);
+    const [templateName, setTemplateName, resetTemplateName] = useInput(initialTemplateName);
+    const { errors, setErrors, clearErrors, setMessageAsError } = useErrors();
+    const [selectedPageMenuItems, setSelectedPageMenuItems, resetSelectedPageMenuItems] = useResettableState(
+        initialPageMenuItems
+    );
+    const [open, doOpen, doClose] = useOpen(() => {
+        resetTenants();
+        resetRoles();
+        resetTemplateName();
+        resetSelectedPageMenuItems();
+    });
 
-    constructor(props, context) {
-        super(props, context);
-
-        this.state = CreateTemplateModal.initialState(false, props);
-    }
-
-    openModal = () => {
-        this.setState(CreateTemplateModal.initialState(true, this.props));
-    };
-
-    submitCreate = () => {
-        const { onCreateTemplate } = this.props;
-        const { pages, roles, templateName, tenants } = this.state;
-        const errors = {};
+    function submitCreate() {
+        const submitErrors: {
+            templateName?: string;
+            roles?: string;
+            tenants?: string;
+            selectedPageMenuItems?: string;
+        } = {};
 
         if (_.isEmpty(_.trim(templateName))) {
-            errors.templateName = i18n.t(
-                'templates.createTemplateModal.errors.templateName',
-                'Please provide correct template name'
-            );
+            submitErrors.templateName = t('errors.templateName');
         }
 
         if (_.isEmpty(roles)) {
-            errors.roles = i18n.t('templates.createTemplateModal.errors.role', 'Please select role');
+            submitErrors.roles = t('errors.role');
         }
 
         if (_.isEmpty(tenants)) {
-            errors.tenants = i18n.t('templates.createTemplateModal.errors.tenant', 'Please select tenant');
+            submitErrors.tenants = t('errors.tenant');
         }
 
-        if (_.isEmpty(pages)) {
-            errors.pages = i18n.t('templates.createTemplateModal.errors.page', 'Please select page');
+        if (_.isEmpty(selectedPageMenuItems)) {
+            submitErrors.selectedPageMenuItems = t('errors.pageMenuItem');
         }
 
-        if (!_.isEmpty(errors)) {
-            this.setState({ errors });
+        if (!_.isEmpty(submitErrors)) {
+            setErrors(submitErrors);
             return;
         }
 
         // Disable the form
-        this.setState({ loading: true });
+        setLoading();
 
-        onCreateTemplate(
-            _.trim(templateName),
-            roles,
-            tenants,
-            pages.map(id => ({ id, type: 'page' }))
-        )
+        onCreateTemplate(_.trim(templateName), roles, tenants, selectedPageMenuItems)
             .then(() => {
-                this.setState({ errors: {}, loading: false, open: false });
+                clearErrors();
+                doClose();
             })
-            .catch(err => {
-                this.setState({ errors: { error: err.message }, loading: false });
-            });
-    };
+            .catch(setMessageAsError)
+            .finally(unsetLoading);
+    }
 
-    handleInputChange = (proxy, field) => {
-        if (field.name === 'tenants') {
-            const { tenants } = this.state;
-            const wasSelectedAll = _.indexOf(tenants, Consts.DEFAULT_ALL) >= 0;
-            const willSelectAll = _.indexOf(field.value, Consts.DEFAULT_ALL) >= 0;
+    function handleTenantsChange(_event: React.SyntheticEvent<HTMLElement>, field: DropdownProps) {
+        const newlySelectedTenants = field.value as string[];
+        const wasSelectedAll = _.indexOf(tenants, Consts.DEFAULT_ALL) >= 0;
+        const willSelectAll = _.indexOf(newlySelectedTenants, Consts.DEFAULT_ALL) >= 0;
 
-            if (wasSelectedAll) {
-                _.pull(field.value, Consts.DEFAULT_ALL);
-            } else if (willSelectAll) {
-                field.value = [Consts.DEFAULT_ALL];
-            }
+        let valueToSet;
+        if (wasSelectedAll) {
+            valueToSet = _.without(newlySelectedTenants, Consts.DEFAULT_ALL);
+        } else if (willSelectAll) {
+            valueToSet = [Consts.DEFAULT_ALL];
+        } else {
+            valueToSet = newlySelectedTenants;
         }
 
-        this.setState(Form.fieldNameValue(field));
-    };
+        setTenants(valueToSet);
+    }
 
-    handleDragEnd = (event: DragEndEvent) => {
+    function handleDragEnd(event: DragEndEvent) {
         const { active, over } = event;
         if (active && over && active.id !== over.id) {
-            const { pages } = this.state;
-            const oldIndex = pages.indexOf(active.id);
-            const newIndex = pages.indexOf(over.id);
-            const newPages = [...pages];
-            const removed = newPages.splice(oldIndex, 1)[0];
+            const oldIndex = selectedPageMenuItems.indexOf(active.data.current?.item);
+            const newIndex = selectedPageMenuItems.indexOf(over.data.current?.item);
 
-            newPages.splice(newIndex, 0, removed);
+            const newSelectedPageMenuItems = [...selectedPageMenuItems];
+            const removed = newSelectedPageMenuItems.splice(oldIndex, 1)[0];
+            newSelectedPageMenuItems.splice(newIndex, 0, removed);
 
-            this.setState({ pages: newPages });
+            setSelectedPageMenuItems(newSelectedPageMenuItems);
         }
-    };
-
-    addPage(item) {
-        const { availablePages: stateAvailablePages, pages: statePages } = this.state;
-        const availablePages = _.without(stateAvailablePages, item);
-        const pages = [...statePages, item];
-
-        this.setState({ pages, availablePages });
     }
 
-    removePage(item) {
-        const { availablePages: stateAvailablePages, pages: statePages } = this.state;
-        const availablePages = [...stateAvailablePages, item];
-        const pages = _.without(statePages, item);
-
-        this.setState({ pages, availablePages });
+    function addPage(pageId: string) {
+        setSelectedPageMenuItems([...selectedPageMenuItems, { id: pageId, type: 'page' }]);
     }
 
-    render() {
-        const { availablePages, errors, loading, open, pages, roles, tenants, templateName } = this.state;
-        const {
-            availableRoles: availableRolesProp,
-            availableTenants: availableTenantsProp,
-            templateName: templateNameProp
-        } = this.props;
-        const tenantOptions = _.map(availableTenantsProp.items, item => {
-            return { text: item.name, value: item.name };
-        });
-        tenantOptions.push({ text: 'All tenants', value: Consts.DEFAULT_ALL });
+    function addPageGroup(pageGroupId: string) {
+        setSelectedPageMenuItems([...selectedPageMenuItems, { id: pageGroupId, type: 'pageGroup' }]);
+    }
 
-        const rolesOptions = availableRolesProp;
+    function removePageMenuItem(item: PageMenuItem) {
+        setSelectedPageMenuItems(_.reject(selectedPageMenuItems, item));
+    }
 
-        const editMode = !_.isEmpty(templateNameProp);
+    const tenantOptions = _.map(allAvailableTenants, item => {
+        return { text: item, value: item };
+    });
+    tenantOptions.push({ text: 'All tenants', value: Consts.DEFAULT_ALL });
 
-        const trigger = editMode ? (
-            <Icon name="edit" link className="updateTemplateIcon" onClick={e => e.stopPropagation()} />
-        ) : (
-            <Button
-                content={i18n.t('templates.createTemplateModal.button', 'Create template')}
-                icon="list layout"
-                labelPosition="left"
-                className="createTemplateButton"
-            />
-        );
-        const sensors: SensorDescriptor<any>[] = [
-            {
-                sensor: PointerSensor,
-                options: {}
-            }
-        ];
+    const editMode = !_.isEmpty(initialTemplateName);
 
-        return (
-            <Modal
-                trigger={trigger}
-                open={open}
-                onOpen={this.openModal}
-                onClose={() => this.setState({ open: false })}
-                className="createTemplateModal"
-            >
-                <Modal.Header>
-                    <Icon name="list layout" />{' '}
-                    {editMode ? (
-                        <span>
-                            {i18n.t('templates.createTemplateModal.updateHeader', 'Update template {{templateName}}', {
-                                templateName: templateNameProp
-                            })}
-                        </span>
-                    ) : (
-                        <span>{i18n.t('templates.createTemplateModal.createHeader', 'Create template')}</span>
-                    )}
-                </Modal.Header>
+    const sensors: SensorDescriptor<any>[] = [
+        {
+            sensor: PointerSensor,
+            options: {}
+        }
+    ];
 
-                <Modal.Content>
-                    <Form loading={loading} errors={errors} onErrorsDismiss={() => this.setState({ errors: {} })}>
-                        <Form.Field error={errors.templateName}>
-                            <Form.Input
-                                name="templateName"
-                                placeholder={i18n.t('templates.createTemplateModal.templateName', 'Template name')}
-                                value={templateName}
-                                onChange={this.handleInputChange}
-                            />
-                        </Form.Field>
+    const availablePages = _(allAvailablePages)
+        .difference(_(selectedPageMenuItems).filter({ type: 'page' }).map('id').value())
+        .value();
+    const availablePageGroups = _(allAvailablePageGroups)
+        .difference(_(selectedPageMenuItems).filter({ type: 'pageGroup' }).map('id').value())
+        .value();
 
-                        <Form.Field error={errors.roles}>
-                            <Form.Dropdown
-                                placeholder={i18n.t('templates.createTemplateModal.roles', 'Roles')}
-                                multiple
-                                selection
-                                options={rolesOptions}
-                                name="roles"
-                                value={roles}
-                                onChange={this.handleInputChange}
-                            />
-                        </Form.Field>
+    return (
+        <Modal trigger={trigger} open={open} onOpen={doOpen} onClose={doClose} className="createTemplateModal">
+            <Modal.Header>
+                <Icon name="list layout" />{' '}
+                {editMode ? (
+                    <span>
+                        {t('updateHeader', {
+                            templateName: initialTemplateName
+                        })}
+                    </span>
+                ) : (
+                    <span>{t('createHeader')}</span>
+                )}
+            </Modal.Header>
 
-                        <Form.Field error={errors.tenants}>
-                            <Form.Dropdown
-                                placeholder={i18n.t('templates.createTemplateModal.tenants', 'Tenants')}
-                                multiple
-                                selection
-                                options={tenantOptions}
-                                name="tenants"
-                                value={tenants}
-                                onChange={this.handleInputChange}
-                            />
-                        </Form.Field>
+            <Modal.Content>
+                <Form loading={loading} errors={errors} onErrorsDismiss={clearErrors}>
+                    <UnsafelyTypedFormField error={errors.templateName}>
+                        <Form.Input
+                            name="templateName"
+                            placeholder={t('templateName')}
+                            value={templateName}
+                            onChange={setTemplateName}
+                        />
+                    </UnsafelyTypedFormField>
 
-                        <Segment.Group horizontal>
-                            <Segment style={{ width: '50%' }}>
-                                <Icon name="plus" />
-                                {i18n.t('templates.createTemplateModal.availablePages', 'Available pages')}
-                                <Divider />
-                                <List divided relaxed verticalAlign="middle" className="light">
-                                    {availablePages.map(item => {
-                                        return (
-                                            <List.Item key={item}>
-                                                {item}
+                    <UnsafelyTypedFormField error={errors.roles}>
+                        <Form.Dropdown
+                            placeholder={t('roles')}
+                            multiple
+                            selection
+                            options={allAvailableRoles.map(role => ({
+                                text: role.description ? `${role.name} - ${role.description}` : role.name,
+                                value: role.name
+                            }))}
+                            name="roles"
+                            value={roles}
+                            onChange={setRoles}
+                        />
+                    </UnsafelyTypedFormField>
 
-                                                <Icon
-                                                    link
-                                                    name="add"
-                                                    className="right floated"
-                                                    onClick={() => this.addPage(item)}
-                                                    title={i18n.t('templates.createTemplateModal.addPage', 'Add page')}
-                                                />
-                                            </List.Item>
-                                        );
-                                    })}
+                    <UnsafelyTypedFormField error={errors.tenants}>
+                        <Form.Dropdown
+                            placeholder={t('tenants')}
+                            multiple
+                            selection
+                            options={tenantOptions}
+                            name="tenants"
+                            value={tenants}
+                            onChange={handleTenantsChange}
+                        />
+                    </UnsafelyTypedFormField>
 
-                                    {_.isEmpty(availablePages) && (
-                                        <Message
-                                            content={i18n.t(
-                                                'templates.createTemplateModal.noPagesAvailable',
-                                                'No pages available'
-                                            )}
-                                        />
-                                    )}
-                                </List>
-                            </Segment>
+                    <Segment.Group horizontal>
+                        <Segment style={{ width: '50%' }}>
+                            <Icon name="plus" />
+                            {t('availablePages')}
+                            <Divider />
+                            <List divided relaxed verticalAlign="middle" className="light">
+                                {availablePages.map(item => {
+                                    return (
+                                        <List.Item key={item}>
+                                            {item}
 
-                            <Segment style={{ width: '50%' }}>
-                                <Icon name="block layout" />
-                                {i18n.t('templates.createTemplateModal.selectedPages', 'Selected pages')}
-                                <Divider />
-                                <List divided relaxed verticalAlign="middle" className="light" id="reorderList">
-                                    <DndContext
-                                        sensors={sensors}
-                                        collisionDetection={closestCenter}
-                                        onDragEnd={this.handleDragEnd}
-                                        modifiers={[restrictToParentElement]}
+                                            <Icon
+                                                link
+                                                name="add"
+                                                className="right floated"
+                                                onClick={() => addPage(item)}
+                                                title={t('addPage')}
+                                            />
+                                        </List.Item>
+                                    );
+                                })}
+
+                                {_.isEmpty(availablePages) && (
+                                    <Message content={t('noPagesAvailable', 'No pages available')} />
+                                )}
+                            </List>
+                            <Icon name="plus" />
+                            {t('availablePageGroups')}
+                            <Divider />
+                            <List divided relaxed verticalAlign="middle" className="light">
+                                {availablePageGroups.map(item => {
+                                    return (
+                                        <List.Item key={item}>
+                                            {item}
+
+                                            <Icon
+                                                link
+                                                name="add"
+                                                className="right floated"
+                                                onClick={() => addPageGroup(item)}
+                                                title={t('addPageGroup')}
+                                            />
+                                        </List.Item>
+                                    );
+                                })}
+
+                                {_.isEmpty(availablePageGroups) && <Message content={t('noPageGroupsAvailable')} />}
+                            </List>
+                        </Segment>
+
+                        <Segment style={{ width: '50%' }}>
+                            <Icon name="block layout" />
+                            {t('selectedItems')}
+                            <Divider />
+                            <List divided relaxed verticalAlign="middle" className="light" id="reorderList">
+                                <DndContext
+                                    sensors={sensors}
+                                    collisionDetection={closestCenter}
+                                    onDragEnd={handleDragEnd}
+                                    modifiers={[restrictToParentElement]}
+                                >
+                                    <SortableContext
+                                        items={selectedPageMenuItems.map(toId)}
+                                        strategy={verticalListSortingStrategy}
                                     >
-                                        <SortableContext items={pages} strategy={verticalListSortingStrategy}>
-                                            {pages.map(item => {
-                                                return (
-                                                    <SortablePageItem
-                                                        name={item}
-                                                        key={item}
-                                                        onRemove={() => this.removePage(item)}
-                                                    />
-                                                );
-                                            })}
-                                        </SortableContext>
-                                    </DndContext>
+                                        {selectedPageMenuItems.map(item => {
+                                            return (
+                                                <SortablePageItem
+                                                    item={item}
+                                                    key={toId(item)}
+                                                    onRemove={() => removePageMenuItem(item)}
+                                                />
+                                            );
+                                        })}
+                                    </SortableContext>
+                                </DndContext>
 
-                                    {_.isEmpty(pages) && (
-                                        <Message
-                                            content={i18n.t(
-                                                'templates.createTemplateModal.noPagesSelected',
-                                                'No pages selected'
-                                            )}
-                                        />
-                                    )}
-                                </List>
-                            </Segment>
-                        </Segment.Group>
-                    </Form>
-                </Modal.Content>
+                                {_.isEmpty(selectedPageMenuItems) && <Message content={t('noPageMenuItemsSelected')} />}
+                            </List>
+                        </Segment>
+                    </Segment.Group>
+                </Form>
+            </Modal.Content>
 
-                <Modal.Actions>
-                    <CancelButton onClick={() => this.setState({ open: false })} disabled={loading} />
-                    <ApproveButton
-                        onClick={this.submitCreate}
-                        disabled={loading}
-                        content={
-                            editMode
-                                ? i18n.t('templates.createTemplateModal.update', 'Update')
-                                : i18n.t('templates.createTemplateModal.create', 'Create')
-                        }
-                        icon={editMode ? 'edit' : 'checkmark'}
-                        color="green"
-                    />
-                </Modal.Actions>
-            </Modal>
-        );
-    }
-}
-
-CreateTemplateModal.propTypes = {
-    availableTenants: PropTypes.shape({}).isRequired,
-    // eslint-disable-next-line react/no-unused-prop-types
-    availablePages: PropTypes.arrayOf(PropTypes.shape({})),
-    availableRoles: PropTypes.arrayOf(PropTypes.shape({})),
-    templateName: PropTypes.string,
-    // eslint-disable-next-line react/no-unused-prop-types
-    pages: PropTypes.arrayOf(PropTypes.string),
-    // eslint-disable-next-line react/no-unused-prop-types
-    roles: PropTypes.arrayOf(PropTypes.string),
-    // eslint-disable-next-line react/no-unused-prop-types
-    tenants: PropTypes.arrayOf(PropTypes.string),
-    onCreateTemplate: PropTypes.func.isRequired
+            <Modal.Actions>
+                <CancelButton onClick={doClose} disabled={loading} />
+                <ApproveButton
+                    onClick={submitCreate}
+                    disabled={loading}
+                    content={editMode ? t('update') : t('create')}
+                    icon={editMode ? 'edit' : 'checkmark'}
+                    color="green"
+                />
+            </Modal.Actions>
+        </Modal>
+    );
 };
 
-CreateTemplateModal.defaultProps = {
-    templateName: '',
-    pages: [],
-    roles: [],
-    tenants: [Consts.DEFAULT_ALL],
-    availablePages: [],
-    availableRoles: []
-};
+export default CreateTemplateModal;
