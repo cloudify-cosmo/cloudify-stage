@@ -12,10 +12,22 @@ import type { AnyAction } from 'redux';
 import { Alert, Breadcrumb, Button, Divider, EditableLabel, ErrorMessage, Menu, Segment, Sidebar } from '../../basic';
 import EditModeBubble from '../../EditModeBubble';
 import { PageContent } from '../../shared/widgets';
-import { createPageId, drillDownWarning, savePage, setActive, setPageEditMode } from '../../../actions/templateManagement';
+import {
+    createPageId,
+    drillDownWarning,
+    savePage,
+    setActive,
+    setPageEditMode
+} from '../../../actions/templateManagement';
 import StageUtils from '../../../utils/stageUtils';
 import { useErrors } from '../../../utils/hooks';
-import { forEachWidget, getWidgetDefinitionById, LayoutSection, SimpleWidgetObj, TabContent } from '../../../actions/page';
+import {
+    forEachWidget,
+    getWidgetDefinitionById,
+    LayoutSection,
+    SimpleWidgetObj,
+    TabContent
+} from '../../../actions/page';
 import type { ReduxState } from '../../../reducers';
 import type { WidgetDefinition } from '../../../utils/StageAPI';
 import type { TemplatePageDefinition } from '../../../reducers/templatesReducer';
