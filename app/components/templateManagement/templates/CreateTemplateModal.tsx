@@ -28,13 +28,9 @@ import {
 } from '../../basic';
 import { useBoolean, useErrors, useInput, useOpen, useResettableState } from '../../../utils/hooks';
 import { ReduxState } from '../../../reducers';
+import { PageMenuItem } from './types';
 
 const t = StageUtils.getT('templates.createTemplateModal');
-
-interface PageMenuItem {
-    id: string;
-    type: 'page' | 'pageGroup';
-}
 
 function toId(item: PageMenuItem) {
     return `${item.type}\n${item.id}`;

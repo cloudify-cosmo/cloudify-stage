@@ -2,13 +2,14 @@ import _ from 'lodash';
 import React, { CSSProperties, FunctionComponent } from 'react';
 import { Divider, Icon, List, Message, PopupConfirm, Segment } from '../../basic';
 import StageUtils from '../../../utils/stageUtils';
+import { PageMenuItem } from './types';
 
 const t = StageUtils.getT('templates.templateManagement.pageMenuItemsList');
 
 interface PageMenuItemsListProps {
     custom: boolean;
-    onDelete: (itemId: string) => void;
-    pages: { id: string }[];
+    onDelete: (item: PageMenuItem) => void;
+    pages: PageMenuItem[];
     style: CSSProperties;
 }
 
@@ -18,10 +19,11 @@ const PageMenuItemsList: FunctionComponent<PageMenuItemsListProps> = ({ custom, 
             <Icon name="block layout" /> {t('header')}
             <Divider />
             <List divided relaxed verticalAlign="middle" className="light">
-                {pages.map(({ id: item }) => {
+                {pages.map(item => {
+                    const { id } = item;
                     return (
-                        <List.Item key={item}>
-                            {item}
+                        <List.Item key={id}>
+                            {id}
 
                             {custom && _.size(pages) > 1 && (
                                 <PopupConfirm

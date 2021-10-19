@@ -160,8 +160,8 @@ export default function TemplateManagement() {
         return updateTemplate({ ...template, oldId: template.id });
     }
 
-    function onRemoveTemplatePage(template, page) {
-        template.pages = _.without(template.pages, page);
+    function onRemoveTemplatePageMenuItem(template, pageMenuItem) {
+        template.pages = _.reject(template.pages, pageMenuItem);
 
         return onUpdateTemplate(template);
     }
@@ -249,7 +249,7 @@ export default function TemplateManagement() {
                     pages={pages}
                     tenants={tenants}
                     onSelectTemplate={onSelectTemplate}
-                    onRemoveTemplatePage={onRemoveTemplatePage}
+                    onRemoveTemplatePage={onRemoveTemplatePageMenuItem}
                     onRemoveTemplateRole={onRemoveTemplateRole}
                     onRemoveTemplateTenant={onRemoveTemplateTenant}
                     onCreateTemplate={onCreateTemplate}
