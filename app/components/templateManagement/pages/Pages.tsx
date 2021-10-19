@@ -9,8 +9,8 @@ import React from 'react';
 import i18n from 'i18next';
 import CreatePageModal from './CreatePageModal';
 import TemplateList from './TemplateList';
-import { Segment, Header, DataTable, Icon, PopupConfirm, Label } from '../basic';
-import StageUtils from '../../utils/stageUtils';
+import { Segment, Header, DataTable, Icon, PopupConfirm, Label } from '../../basic';
+import StageUtils from '../../../utils/stageUtils';
 
 export default function Pages({
     onCanDeletePage,

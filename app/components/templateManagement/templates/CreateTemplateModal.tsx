@@ -10,8 +10,8 @@ import { restrictToParentElement } from '@dnd-kit/modifiers';
 
 import { DropdownProps, ModalProps } from 'semantic-ui-react';
 import { useSelector } from 'react-redux';
-import Consts from '../../utils/consts';
-import StageUtils from '../../utils/stageUtils';
+import Consts from '../../../utils/consts';
+import StageUtils from '../../../utils/stageUtils';
 
 import {
     ApproveButton,
@@ -25,9 +25,9 @@ import {
     Ref,
     Segment,
     UnsafelyTypedFormField
-} from '../basic/index';
-import { useBoolean, useErrors, useInput, useOpen, useResettableState } from '../../utils/hooks';
-import { ReduxState } from '../../reducers';
+} from '../../basic';
+import { useBoolean, useErrors, useInput, useOpen, useResettableState } from '../../../utils/hooks';
+import { ReduxState } from '../../../reducers';
 
 const t = StageUtils.getT('templates.createTemplateModal');
 

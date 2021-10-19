@@ -6,13 +6,13 @@
 import _ from 'lodash';
 import PropTypes from 'prop-types';
 import React from 'react';
-import PageMenuItemsList from './PageList';
+import PageMenuItemsList from './PageMenuItemsList';
 import RoleList from './RoleList';
 import TenantList from './TenantList';
 import CreateTemplateModal from './CreateTemplateModal';
-import Const from '../../utils/consts';
-import { Button, DataTable, Header, Icon, Label, PopupConfirm, Segment } from '../basic';
-import StageUtils from '../../utils/stageUtils';
+import Const from '../../../utils/consts';
+import { Button, DataTable, Header, Icon, Label, PopupConfirm, Segment } from '../../basic';
+import StageUtils from '../../../utils/stageUtils';
 
 const t = StageUtils.getT('templates.templateManagement');
 

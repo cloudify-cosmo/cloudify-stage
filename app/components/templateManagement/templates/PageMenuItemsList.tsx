@@ -1,7 +1,7 @@
 import _ from 'lodash';
 import React, { CSSProperties, FunctionComponent } from 'react';
-import { Divider, Icon, List, Message, PopupConfirm, Segment } from '../basic';
-import StageUtils from '../../utils/stageUtils';
+import { Divider, Icon, List, Message, PopupConfirm, Segment } from '../../basic';
+import StageUtils from '../../../utils/stageUtils';
 
 const t = StageUtils.getT('templates.templateManagement.pageMenuItemsList');
 
