@@ -60,7 +60,7 @@ If you restore a snapshot to a {{< param cfy_manager_name >}} instance that alre
    * To restore a snapshot from a tenant-less (legacy) environment, toggle the relevant button.
    * To overwrite all content in the existing {{< param cfy_manager_name >}}, toggle the relevant button.
 6. Click **Restore**.
-7. The snapshot is restored and its details appear in the Snapshots table.
+7. The snapshot is restored and it no longer appears in the snapshots list.
 
 #### Downloading a Snapshot
 
