@@ -10,7 +10,7 @@ export interface KeyAndValueDropdownProps {
     allowAdditions?: ComponentProps<typeof Dropdown>['allowAdditions'];
     innerRef?: RefObject<HTMLElement>;
     onChange: CommonDropdownOnChange;
-    toolbox: Stage.Types.Toolbox;
+    toolbox: Stage.Types.Toolbox | Stage.Types.WidgetlessToolbox;
 }
 
 interface CommonDropdownProps

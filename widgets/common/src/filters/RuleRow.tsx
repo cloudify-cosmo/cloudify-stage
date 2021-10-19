@@ -13,14 +13,23 @@ interface RuleRowProps {
     removable: boolean;
     error: boolean;
     rule: FilterRule;
-    toolbox: Stage.Types.Toolbox;
+    collectionName: string;
+    toolbox: Stage.Types.Toolbox | Stage.Types.WidgetlessToolbox;
 }
 
 const defaultOperator = FilterRuleOperators.AnyOf;
 const defaultValues: string[] = [];
 const defaultOperatorAndValues = { operator: defaultOperator, values: defaultValues };
 
-const RuleRow: FunctionComponent<RuleRowProps> = ({ onChange, onRemove, removable, error, rule, toolbox }) => {
+const RuleRow: FunctionComponent<RuleRowProps> = ({
+    collectionName,
+    onChange,
+    onRemove,
+    removable,
+    error,
+    rule,
+    toolbox
+}) => {
     const { UnsafelyTypedFormField: FormField, UnsafelyTypedFormGroup: FormGroup } = Stage.Basic;
     const { key, operator, type } = rule;
     const ruleType = type === FilterRuleType.Label ? FilterRuleRowType.Label : (key as FilterRuleRowType);
@@ -57,6 +66,7 @@ const RuleRow: FunctionComponent<RuleRowProps> = ({ onChange, onRemove, removabl
                 <RuleValueInput
                     onKeyChange={onKeyChange}
                     onValuesChange={onValuesChange}
+                    collectionName={collectionName}
                     ruleType={ruleType}
                     rule={rule}
                     toolbox={toolbox}

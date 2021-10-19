@@ -94,6 +94,7 @@ const LabelsModal: FunctionComponent<LabelsModalProps> = ({
                         help={i18n.t('widgets.common.labels.input.help')}
                     >
                         <LabelsInput
+                            collectionName="deployments"
                             hideInitialLabels={hideInitialLabels}
                             initialLabels={initialLabels}
                             onChange={onChange}

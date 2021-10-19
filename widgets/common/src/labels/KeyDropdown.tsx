@@ -2,12 +2,14 @@ import { FunctionComponent } from 'react';
 import CommonDropdown, { KeyAndValueDropdownProps } from './CommonDropdown';
 
 interface KeyDropdownProps extends KeyAndValueDropdownProps {
+    collectionName: string;
     onChange: (value: string) => void;
     value: string;
 }
 
 const KeyDropdown: FunctionComponent<KeyDropdownProps> = ({
     allowAdditions = false,
+    collectionName,
     innerRef,
     onChange,
     toolbox,
@@ -19,7 +21,7 @@ const KeyDropdown: FunctionComponent<KeyDropdownProps> = ({
         <CommonDropdown
             type="key"
             innerRef={innerRef}
-            fetchUrl="/labels/deployments"
+            fetchUrl={`/labels/${collectionName}`}
             noResultsMessage={value && !allowAdditions ? i18n.t('widgets.common.labels.newKey') : undefined}
             placeholder={i18n.t('widgets.common.labels.keyPlaceholder')}
             name="labelKey"

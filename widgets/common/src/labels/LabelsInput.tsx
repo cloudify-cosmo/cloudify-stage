@@ -38,6 +38,7 @@ function useReservedKeys(toolbox: Stage.Types.Toolbox) {
 }
 
 export interface LabelsInputProps {
+    collectionName: string;
     hideInitialLabels?: boolean;
     initialLabels?: Label[];
     onChange: (labels: Label[]) => void;
@@ -45,6 +46,7 @@ export interface LabelsInputProps {
 }
 
 const LabelsInput: FunctionComponent<LabelsInputProps> = ({
+    collectionName,
     hideInitialLabels = false,
     initialLabels = [],
     onChange,
@@ -168,6 +170,7 @@ const LabelsInput: FunctionComponent<LabelsInputProps> = ({
                                 <InvalidKeyErrorPopup keyPrefix={internalKeyPrefix} reservedKeys={reservedKeys} />
                             )}
                             <KeyDropdown
+                                collectionName={collectionName}
                                 innerRef={keyDropdownRef}
                                 onChange={setNewLabelKey}
                                 toolbox={toolbox}
