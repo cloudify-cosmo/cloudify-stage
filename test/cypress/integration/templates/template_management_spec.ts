@@ -117,24 +117,31 @@ describe('Template Management', () => {
 
         cy.get('.createTemplateButton').click();
 
-        cy.log('Specify template name');
-        cy.get('.field > .ui > input').type('Template 1');
+        cy.get('.modal').within(() => {
+            cy.log('Specify template name');
+            cy.get('.field > .ui > input').type('Template 1');
 
-        cy.log('Select roles');
-        cy.get('.form > :nth-child(2) > .ui').click();
-        cy.get('[option-value="user"]').click();
-        cy.get('[option-value="viewer"]').click();
+            cy.log('Select roles');
+            cy.get('.form > :nth-child(2) > .ui').click();
+            cy.get('[option-value="user"]').click();
+            cy.get('[option-value="viewer"]').click();
+            clickOnHeader();
 
-        cy.log('Add page menu items');
-        cy.get('.horizontal > :nth-child(1)').within(() => {
-            cy.contains('deployment').within(() => cy.get('.add').click());
-            cy.contains('plugins').within(() => cy.get('.add').click());
-            cy.contains('logs').within(() => cy.get('.add').click());
-            cy.contains('empty').within(() => cy.get('.add').click());
+            cy.log('Add page menu items');
+            cy.contains('Available pages')
+                .click()
+                .parent()
+                .within(() => {
+                    cy.contains('deployment').find('.add').click();
+                    cy.contains('plugins').find('.add').click();
+                    cy.contains('logs').find('.add').click();
+                });
+            cy.contains('Available page groups').click().parent().contains('empty').find('.add').click();
+
+            cy.log('Create template');
+            cy.get('.actions > .ok').click();
         });
 
-        cy.log('Create template');
-        cy.get('.actions > .ok').click();
         cy.get('.modal').should('not.exist');
 
         cy.log('Verify template');
@@ -162,11 +169,13 @@ describe('Template Management', () => {
             clickOnHeader();
 
             cy.log('Add pages');
-            cy.contains('tmm').find('.add').click();
+            cy.contains('Available pages').click().parent().contains('tmm').find('.add').click();
 
             cy.log('Remove page menu items');
-            cy.contains('logs').find('.minus').click();
-            cy.contains('empty').find('.minus').click();
+            cy.contains('Selected page menu items').within(() => {
+                cy.contains('logs').find('.minus').click();
+                cy.contains('empty').find('.minus').click();
+            });
 
             cy.log('Save template');
             cy.get('.actions > .ok').click();

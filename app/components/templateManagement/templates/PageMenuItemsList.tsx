@@ -16,7 +16,7 @@ interface PageMenuItemsListProps {
 const PageMenuItemsList: FunctionComponent<PageMenuItemsListProps> = ({ custom, onDelete, pages, style }) => {
     return (
         <Segment style={style}>
-            <Icon name="block layout" /> {t('header')}
+            <Icon name="bars" /> {t('header')}
             <Divider />
             <List divided relaxed verticalAlign="middle" className="light">
                 {pages.map(item => {

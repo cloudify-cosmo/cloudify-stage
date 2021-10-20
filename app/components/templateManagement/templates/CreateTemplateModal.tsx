@@ -8,12 +8,13 @@ import { SortableContext, useSortable, verticalListSortingStrategy } from '@dnd-
 import { CSS } from '@dnd-kit/utilities';
 import { restrictToParentElement } from '@dnd-kit/modifiers';
 
-import { DropdownProps, ModalProps } from 'semantic-ui-react';
+import { AccordionTitleProps, DropdownProps, ModalProps } from 'semantic-ui-react';
 import { useSelector } from 'react-redux';
 import Consts from '../../../utils/consts';
 import StageUtils from '../../../utils/stageUtils';
 
 import {
+    Accordion,
     ApproveButton,
     CancelButton,
     Divider,
@@ -40,6 +41,8 @@ interface SortablePageItemProps {
     item: PageMenuItem;
     onRemove: () => void;
 }
+
+type AccordionSection = 'pages' | 'pageGroups';
 
 const SortablePageItem: FunctionComponent<SortablePageItemProps> = ({ item, onRemove }) => {
     const { attributes, listeners, setNodeRef, transform, transition } = useSortable({
@@ -107,11 +110,15 @@ const CreateTemplateModal: FunctionComponent<CreateTemplateModalProps> = ({
     const [selectedPageMenuItems, setSelectedPageMenuItems, resetSelectedPageMenuItems] = useResettableState(
         initialPageMenuItems
     );
+    const [expandedAccordions, setExpandedAccordions, resetExpandedAccordions] = useResettableState<
+        Record<AccordionSection, boolean>
+    >({ pages: false, pageGroups: false });
     const [open, doOpen, doClose] = useOpen(() => {
         resetTenants();
         resetRoles();
         resetTemplateName();
         resetSelectedPageMenuItems();
+        resetExpandedAccordions();
     });
 
     function submitCreate() {
@@ -198,6 +205,11 @@ const CreateTemplateModal: FunctionComponent<CreateTemplateModalProps> = ({
         setSelectedPageMenuItems(_.reject(selectedPageMenuItems, item));
     }
 
+    function handleAccordionClick(_event: React.MouseEvent, { index }: AccordionTitleProps) {
+        const accordionName = index as AccordionSection;
+        setExpandedAccordions({ ...expandedAccordions, [accordionName]: !expandedAccordions[accordionName] });
+    }
+
     const tenantOptions = _.map(allAvailableTenants, item => {
         return { text: item, value: item };
     });
@@ -274,56 +286,76 @@ const CreateTemplateModal: FunctionComponent<CreateTemplateModalProps> = ({
 
                     <Segment.Group horizontal>
                         <Segment style={{ width: '50%' }}>
-                            <Icon name="plus" />
-                            {t('availablePages')}
-                            <Divider />
-                            <List divided relaxed verticalAlign="middle" className="light">
-                                {availablePages.map(item => {
-                                    return (
-                                        <List.Item key={item}>
-                                            {item}
+                            <Accordion>
+                                <Accordion.Title
+                                    onClick={handleAccordionClick}
+                                    index="pages"
+                                    active={expandedAccordions.pages}
+                                >
+                                    <Icon name="file outline" /> {t('availablePages')}
+                                    <Icon name="dropdown" style={{ float: 'right' }} />
+                                    <Divider />
+                                </Accordion.Title>
+                                <Accordion.Content active={expandedAccordions.pages}>
+                                    <List divided relaxed verticalAlign="middle" className="light">
+                                        {availablePages.map(item => {
+                                            return (
+                                                <List.Item key={item}>
+                                                    {item}
 
-                                            <Icon
-                                                link
-                                                name="add"
-                                                className="right floated"
-                                                onClick={() => addPage(item)}
-                                                title={t('addPage')}
-                                            />
-                                        </List.Item>
-                                    );
-                                })}
+                                                    <Icon
+                                                        link
+                                                        name="add"
+                                                        className="right floated"
+                                                        onClick={() => addPage(item)}
+                                                        title={t('addPage')}
+                                                    />
+                                                </List.Item>
+                                            );
+                                        })}
 
-                                {_.isEmpty(availablePages) && (
-                                    <Message content={t('noPagesAvailable', 'No pages available')} />
-                                )}
-                            </List>
-                            <Icon name="plus" />
-                            {t('availablePageGroups')}
-                            <Divider />
-                            <List divided relaxed verticalAlign="middle" className="light">
-                                {availablePageGroups.map(item => {
-                                    return (
-                                        <List.Item key={item}>
-                                            {item}
+                                        {_.isEmpty(availablePages) && (
+                                            <Message content={t('noPagesAvailable', 'No pages available')} />
+                                        )}
+                                    </List>
+                                </Accordion.Content>
+                                <Accordion.Title
+                                    onClick={handleAccordionClick}
+                                    index="pageGroups"
+                                    active={expandedAccordions.pageGroups}
+                                >
+                                    <Icon name="folder open outline" /> {t('availablePageGroups')}
+                                    <Icon name="dropdown" style={{ float: 'right' }} />
+                                    <Divider />
+                                </Accordion.Title>
+                                <Accordion.Content active={expandedAccordions.pageGroups}>
+                                    <List divided relaxed verticalAlign="middle" className="light">
+                                        {availablePageGroups.map(item => {
+                                            return (
+                                                <List.Item key={item}>
+                                                    {item}
 
-                                            <Icon
-                                                link
-                                                name="add"
-                                                className="right floated"
-                                                onClick={() => addPageGroup(item)}
-                                                title={t('addPageGroup')}
-                                            />
-                                        </List.Item>
-                                    );
-                                })}
+                                                    <Icon
+                                                        link
+                                                        name="add"
+                                                        className="right floated"
+                                                        onClick={() => addPageGroup(item)}
+                                                        title={t('addPageGroup')}
+                                                    />
+                                                </List.Item>
+                                            );
+                                        })}
 
-                                {_.isEmpty(availablePageGroups) && <Message content={t('noPageGroupsAvailable')} />}
-                            </List>
+                                        {_.isEmpty(availablePageGroups) && (
+                                            <Message content={t('noPageGroupsAvailable')} />
+                                        )}
+                                    </List>
+                                </Accordion.Content>
+                            </Accordion>
                         </Segment>
 
                         <Segment style={{ width: '50%' }}>
-                            <Icon name="block layout" />
+                            <Icon name="bars" />
                             {t('selectedItems')}
                             <Divider />
                             <List divided relaxed verticalAlign="middle" className="light" id="reorderList">

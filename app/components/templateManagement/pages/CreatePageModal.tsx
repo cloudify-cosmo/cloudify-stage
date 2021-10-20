@@ -51,7 +51,7 @@ export default function CreatePageModal({ onCreatePage, pageName: initialPageNam
     }
 
     const trigger = (
-        <Button content="Create page" icon="block layout" labelPosition="left" className="createPageButton" />
+        <Button content="Create page" icon="file outline" labelPosition="left" className="createPageButton" />
     );
 
     return (
