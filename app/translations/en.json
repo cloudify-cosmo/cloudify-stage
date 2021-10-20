@@ -306,6 +306,7 @@
             "pageNameError": "Please provide correct page name"
         },
         "createTemplateModal": {
+            "allTenants": "All tenants",
             "addPage": "Add page",
             "addPageGroup": "Add page group",
             "availablePages": "Available pages",

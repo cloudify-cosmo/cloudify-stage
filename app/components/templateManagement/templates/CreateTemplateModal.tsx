@@ -201,7 +201,7 @@ const CreateTemplateModal: FunctionComponent<CreateTemplateModalProps> = ({
     const tenantOptions = _.map(allAvailableTenants, item => {
         return { text: item, value: item };
     });
-    tenantOptions.push({ text: 'All tenants', value: Consts.DEFAULT_ALL });
+    tenantOptions.push({ text: t('allTenants'), value: Consts.DEFAULT_ALL });
 
     const editMode = !_.isEmpty(initialTemplateName);
 
