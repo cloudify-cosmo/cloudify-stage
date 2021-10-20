@@ -54,7 +54,7 @@
     "@dnd-kit/utilities": "^2.0.0",
     "better-console": "^0.2.4",
     "blueimp-md5": "^2.7.0",
-    "cloudify-blueprint-topology": "^2.5.1",
+    "cloudify-blueprint-topology": "^2.5.3",
     "cloudify-ui-common": "^4.1.0",
     "cloudify-ui-components": "^2.9.0",
     "connected-react-router": "^6.5.2",
