@@ -313,7 +313,7 @@
             "create": "Create",
             "createHeader": "Create template",
             "errors": {
-                "pageMenuItem": "Please select at least on page menu item",
+                "pageMenuItem": "Please select at least one page menu item",
                 "role": "Please select role",
                 "templateName": "Please provide correct template name",
                 "tenant": "Please select tenant"
