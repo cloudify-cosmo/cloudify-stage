@@ -6,8 +6,8 @@ import _ from 'lodash';
 import PropTypes from 'prop-types';
 import React, { useState } from 'react';
 import i18n from 'i18next';
-import { useBoolean, useErrors, useResettableState } from '../../utils/hooks';
-import { ApproveButton, Button, CancelButton, Form, Icon, Modal } from '../basic/index';
+import { useBoolean, useErrors, useResettableState } from '../../../utils/hooks';
+import { ApproveButton, Button, CancelButton, Form, Icon, Modal } from '../../basic';
 
 export default function CreatePageModal({ onCreatePage, pageName: initialPageName }) {
     const [pageName, setPageName] = useState(initialPageName);
@@ -51,7 +51,7 @@ export default function CreatePageModal({ onCreatePage, pageName: initialPageNam
     }
 
     const trigger = (
-        <Button content="Create page" icon="block layout" labelPosition="left" className="createPageButton" />
+        <Button content="Create page" icon="file outline" labelPosition="left" className="createPageButton" />
     );
 
     return (
