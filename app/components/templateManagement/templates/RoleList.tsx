@@ -7,21 +7,20 @@ import _ from 'lodash';
 import PropTypes from 'prop-types';
 import React from 'react';
 import i18n from 'i18next';
-import Const from '../../utils/consts';
-import { Segment, Icon, Divider, List, Message, PopupConfirm } from '../basic';
+import { Segment, Icon, Divider, List, Message, PopupConfirm } from '../../basic';
 
-export default function TenantList({ custom, onDelete, style, tenants }) {
+export default function RoleList({ custom, onDelete, roles, style }) {
     return (
         <Segment style={style}>
-            <Icon name="male" /> Tenants
+            <Icon name="student" /> Roles
             <Divider />
             <List divided relaxed verticalAlign="middle" className="light">
-                {tenants.map(item => {
+                {roles.map(item => {
                     return (
                         <List.Item key={item}>
-                            {item === Const.DEFAULT_ALL ? 'all' : item}
+                            {item}
 
-                            {custom && _.size(tenants) > 1 && (
+                            {custom && _.size(roles) > 1 && (
                                 <PopupConfirm
                                     trigger={
                                         <Icon
@@ -32,8 +31,8 @@ export default function TenantList({ custom, onDelete, style, tenants }) {
                                         />
                                     }
                                     content={i18n.t(
-                                        'templates.templateManagement.tenantsList.removeConfirm',
-                                        'Are you sure to remove this tenant from template?'
+                                        'templates.templateManagement.roleList.removeConfirm',
+                                        'Are you sure to remove this role from template?'
                                     )}
                                     onConfirm={() => onDelete(item)}
                                 />
@@ -41,26 +40,24 @@ export default function TenantList({ custom, onDelete, style, tenants }) {
                         </List.Item>
                     );
                 })}
-                {_.isEmpty(tenants) && (
-                    <Message
-                        content={i18n.t('templates.templateManagement.tenantsList.noTenants', 'No tenants available')}
-                    />
+                {_.isEmpty(roles) && (
+                    <Message content={i18n.t('templates.templateManagement.roleList.noRoles', 'No roles available')} />
                 )}
             </List>
         </Segment>
     );
 }
 
-TenantList.propTypes = {
+RoleList.propTypes = {
     custom: PropTypes.bool,
     onDelete: PropTypes.func,
-    style: PropTypes.shape({}),
-    tenants: PropTypes.arrayOf(PropTypes.string)
+    roles: PropTypes.arrayOf(PropTypes.string),
+    style: PropTypes.shape({})
 };
 
-TenantList.defaultProps = {
+RoleList.defaultProps = {
     custom: false,
     onDelete: _.noop,
-    style: {},
-    tenants: []
+    roles: [],
+    style: {}
 };

@@ -7,7 +7,7 @@ import _ from 'lodash';
 import PropTypes from 'prop-types';
 import React from 'react';
 import i18n from 'i18next';
-import { Segment, Icon, Divider, List, Message } from '../basic';
+import { Segment, Icon, Divider, List, Message } from '../../basic';
 
 export default function TemplateList({ style, templates }) {
     return (

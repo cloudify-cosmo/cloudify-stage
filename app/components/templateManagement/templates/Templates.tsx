@@ -6,14 +6,15 @@
 import _ from 'lodash';
 import PropTypes from 'prop-types';
 import React from 'react';
-import i18n from 'i18next';
-import PageList from './PageList';
+import PageMenuItemsList from './PageMenuItemsList';
 import RoleList from './RoleList';
 import TenantList from './TenantList';
 import CreateTemplateModal from './CreateTemplateModal';
-import Const from '../../utils/consts';
-import { Segment, Icon, Header, DataTable, PopupConfirm, Label } from '../basic';
-import StageUtils from '../../utils/stageUtils';
+import Const from '../../../utils/consts';
+import { Button, DataTable, Header, Icon, Label, PopupConfirm, Segment } from '../../basic';
+import StageUtils from '../../../utils/stageUtils';
+
+const t = StageUtils.getT('templates.templateManagement');
 
 export default function Templates({
     onCreateTemplate,
@@ -23,32 +24,21 @@ export default function Templates({
     onRemoveTemplateRole,
     onRemoveTemplateTenant,
     onSelectTemplate,
-    pages,
-    roles,
     templates,
     tenants
 }) {
     return (
         <Segment color="blue">
             <Header dividing as="h5">
-                {i18n.t('templates.templateManagement.header', 'Templates')}
+                {t('header')}
             </Header>
 
             <DataTable>
-                <DataTable.Column
-                    label={i18n.t('templates.templateManagement.table.templateId', 'Template id')}
-                    width="25%"
-                />
-                <DataTable.Column label={i18n.t('templates.templateManagement.table.roles', 'Roles')} width="25%" />
-                <DataTable.Column label={i18n.t('templates.templateManagement.table.tenants', 'Tenants')} width="10%" />
-                <DataTable.Column
-                    label={i18n.t('templates.templateManagement.table.updatedAt', 'Updated at')}
-                    width="15%"
-                />
-                <DataTable.Column
-                    label={i18n.t('templates.templateManagement.table.updatedBy', 'Updated by')}
-                    width="15%"
-                />
+                <DataTable.Column label={t('table.templateId')} width="25%" />
+                <DataTable.Column label={t('table.roles')} width="25%" />
+                <DataTable.Column label={t('table.tenants')} width="10%" />
+                <DataTable.Column label={t('table.updatedAt')} width="15%" />
+                <DataTable.Column label={t('table.updatedBy')} width="15%" />
                 <DataTable.Column width="10%" />
 
                 {templates.map(item => {
@@ -90,21 +80,23 @@ export default function Templates({
                                         <div>
                                             <PopupConfirm
                                                 trigger={<Icon name="remove" link onClick={e => e.stopPropagation()} />}
-                                                content={i18n.t(
-                                                    'templates.templateManagement.removeConfirm',
-                                                    'Are you sure to remove this template?'
-                                                )}
+                                                content={t('removeConfirm')}
                                                 onConfirm={() => onDeleteTemplate(item)}
                                             />
                                             <CreateTemplateModal
-                                                availableTenants={tenants}
-                                                availablePages={pages}
-                                                availableRoles={roles}
-                                                templateName={item.id}
-                                                pages={item.pages}
-                                                roles={data.roles}
-                                                tenants={data.tenants}
+                                                initialTemplateName={item.id}
+                                                initialPageMenuItems={item.pages}
+                                                initialRoles={data.roles}
+                                                initialTenants={data.tenants}
                                                 onCreateTemplate={(...args) => onModifyTemplate(item, ...args)}
+                                                trigger={
+                                                    <Icon
+                                                        name="edit"
+                                                        link
+                                                        className="updateTemplateIcon"
+                                                        onClick={e => e.stopPropagation()}
+                                                    />
+                                                }
                                             />
                                         </div>
                                     )}
@@ -113,7 +105,7 @@ export default function Templates({
 
                             <DataTable.DataExpandable key={item.id}>
                                 <Segment.Group horizontal>
-                                    <PageList
+                                    <PageMenuItemsList
                                         pages={item.pages}
                                         custom={item.custom}
                                         onDelete={page => onRemoveTemplatePage(item, page)}
@@ -139,10 +131,15 @@ export default function Templates({
 
                 <DataTable.Action>
                     <CreateTemplateModal
-                        availableTenants={tenants}
-                        availablePages={pages}
-                        availableRoles={roles}
                         onCreateTemplate={onCreateTemplate}
+                        trigger={
+                            <Button
+                                content={t('addTemplateButton')}
+                                icon="list layout"
+                                labelPosition="left"
+                                className="createTemplateButton"
+                            />
+                        }
                     />
                 </DataTable.Action>
             </DataTable>
@@ -158,8 +155,6 @@ Templates.propTypes = {
     onRemoveTemplateRole: PropTypes.func,
     onRemoveTemplateTenant: PropTypes.func,
     onSelectTemplate: PropTypes.func,
-    pages: PropTypes.arrayOf(PropTypes.shape({})),
-    roles: PropTypes.arrayOf(PropTypes.shape({})),
     templates: PropTypes.arrayOf(
         PropTypes.shape({
             custom: PropTypes.bool,
@@ -185,7 +180,5 @@ Templates.defaultProps = {
     onRemoveTemplateTenant: _.noop,
     onSelectTemplate: _.noop,
     templates: [],
-    pages: [],
-    roles: [],
     tenants: { items: [] }
 };

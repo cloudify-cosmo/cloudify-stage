@@ -10,8 +10,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import { push } from 'connected-react-router';
 import Const from '../../utils/consts';
 import { Breadcrumb, Button, Divider, ErrorMessage, Segment } from '../basic';
-import Pages from './Pages';
-import Templates from './Templates';
+import Pages from './pages/Pages';
+import Templates from './templates/Templates';
 import { createPageId, setActive } from '../../actions/templateManagement';
 import { selectHomePage } from '../../actions/pageMenu';
 import Internal from '../../utils/Internal';
@@ -30,7 +30,6 @@ export default function TemplateManagement() {
     const pageDefs = useSelector(state => state.templates.pagesDef);
     const templateDefs = useSelector(state => state.templates.templatesDef);
     const tenants = useSelector(state => state.manager.tenants);
-    const roles = useSelector(state => state.manager.roles);
 
     function handleError(err) {
         log.error(err);
@@ -161,8 +160,8 @@ export default function TemplateManagement() {
         return updateTemplate({ ...template, oldId: template.id });
     }
 
-    function onRemoveTemplatePage(template, page) {
-        template.pages = _.without(template.pages, page);
+    function onRemoveTemplatePageMenuItem(template, pageMenuItem) {
+        template.pages = _.reject(template.pages, pageMenuItem);
 
         return onUpdateTemplate(template);
     }
@@ -248,13 +247,9 @@ export default function TemplateManagement() {
                 <Templates
                     templates={templates}
                     pages={pages}
-                    roles={_.map(roles, role => ({
-                        text: role.description ? `${role.name} - ${role.description}` : role.name,
-                        value: role.name
-                    }))}
                     tenants={tenants}
                     onSelectTemplate={onSelectTemplate}
-                    onRemoveTemplatePage={onRemoveTemplatePage}
+                    onRemoveTemplatePage={onRemoveTemplatePageMenuItem}
                     onRemoveTemplateRole={onRemoveTemplateRole}
                     onRemoveTemplateTenant={onRemoveTemplateTenant}
                     onCreateTemplate={onCreateTemplate}
