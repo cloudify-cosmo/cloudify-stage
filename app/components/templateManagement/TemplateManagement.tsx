@@ -17,6 +17,8 @@ import { selectHomePage } from '../../actions/pageMenu';
 import Internal from '../../utils/Internal';
 import { useBoolean, useErrors } from '../../utils/hooks';
 import { addPage, addTemplate, editTemplate, removePage, removeTemplate } from '../../actions/templates';
+import PageGroups from './pageGroups/PageGroups';
+import { ReduxState } from '../../reducers';
 
 export default function TemplateManagement() {
     const dispatch = useDispatch();
@@ -24,11 +26,13 @@ export default function TemplateManagement() {
     const [isLoading, setLoading, unsetLoading] = useBoolean(true);
     const [templates, setTemplates] = useState();
     const [pages, setPages] = useState();
+    const [pageGroups, setPageGroups] = useState();
     const { errors, setMessageAsError, clearErrors } = useErrors();
 
     const internal = useSelector(state => new Internal(state.manager));
     const pageDefs = useSelector(state => state.templates.pagesDef);
     const templateDefs = useSelector(state => state.templates.templatesDef);
+    const pageGroupDefs = useSelector((state: ReduxState) => state.templates.pageGroupsDef);
     const tenants = useSelector(state => state.manager.tenants);
 
     function handleError(err) {
@@ -38,13 +42,18 @@ export default function TemplateManagement() {
     }
 
     function fetchData() {
-        return Promise.all([internal.doGet('/templates'), internal.doGet('/templates/pages')])
+        return Promise.all([
+            internal.doGet('/templates'),
+            internal.doGet('/templates/pages'),
+            internal.doGet('/templates/page-groups')
+        ])
             .then(data => {
                 const selectedTemplate = _.find(templates, { selected: true });
                 const selectedPage = _.find(pages, { selected: true });
 
                 const templateList = data[0];
                 const pageList = data[1];
+                const pageGroupList = data[2];
 
                 const preparedTemplates = _.map(templateList, template => {
                     return { ...template, pages: templateDefs[template.id].pages };
@@ -58,17 +67,35 @@ export default function TemplateManagement() {
                         ...page,
                         name: (pageDefs[page.id] || {}).name,
                         templates: _.map(
-                            _.filter(preparedTemplates, template => _.indexOf(template.pages, page.id) >= 0),
+                            _.filter(preparedTemplates, template =>
+                                _.find(template.pages, { id: page.id, type: 'page' })
+                            ),
                             'id'
-                        )
+                        ),
+                        pageGroups: _(pageGroupDefs)
+                            .pickBy(pageGroup => _.includes(pageGroup.pages, page.id))
+                            .keys()
+                            .value()
                     };
                 });
                 if (selectedPage) {
                     (_.find(preparedPages, { id: selectedPage.id }) || {}).selected = true;
                 }
 
+                const preparedPageGroups = pageGroupList.map(pageGroup => ({
+                    ...pageGroup,
+                    ...pageGroupDefs[pageGroup.id],
+                    templates: _.map(
+                        _.filter(preparedTemplates, template =>
+                            _.find(template.pages, { id: pageGroup.id, type: 'pageGroup' })
+                        ),
+                        'id'
+                    )
+                }));
+
                 setTemplates(preparedTemplates);
                 setPages(preparedPages);
+                setPageGroups(preparedPageGroups);
                 clearErrors();
                 unsetLoading();
             })
@@ -266,6 +293,8 @@ export default function TemplateManagement() {
                     onPreviewPage={onPreviewPage}
                     onCanDeletePage={canDeletePage}
                 />
+
+                <PageGroups pageGroups={pageGroups} />
             </Segment>
         </div>
     );
