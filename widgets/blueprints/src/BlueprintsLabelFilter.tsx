@@ -21,10 +21,11 @@ const BlueprintsLabelFilter: FunctionComponent<BlueprintsLabelFilterProps> = ({
     return (
         <RulesForm
             initialFilters={value}
+            hideType
             onChange={handleChange}
             markErrors={false}
             toolbox={widgetlessToolbox}
-            collectionName="blueprints"
+            resourceType="blueprints"
             defaultType={FilterRuleType.Label}
         />
     );

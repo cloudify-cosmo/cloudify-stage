@@ -12,7 +12,6 @@ const LabelDropdownsDivider: FunctionComponent = () => {
 };
 
 export interface LabelValueInputProps extends Omit<CommonAttributeValueInputProps, 'onChange' | 'value'> {
-    collectionName: string;
     labelKey: string;
     labelValue: string[];
     onKeyChange: (key: string) => void;
@@ -20,7 +19,6 @@ export interface LabelValueInputProps extends Omit<CommonAttributeValueInputProp
 }
 
 const LabelValueInput: FunctionComponent<LabelValueInputProps> = ({
-    collectionName,
     onKeyChange,
     onValueChange,
     operator,
@@ -33,7 +31,6 @@ const LabelValueInput: FunctionComponent<LabelValueInputProps> = ({
     return (
         <>
             <LabelKeyDropdown
-                collectionName={collectionName}
                 innerRef={keyDropdownRef}
                 onChange={onKeyChange}
                 toolbox={toolbox}

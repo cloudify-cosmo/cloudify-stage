@@ -214,7 +214,7 @@ const FilterModal: FunctionComponent<FilterModalProps> = ({
                         {interactionsDisabled && <Stage.Basic.LoadingOverlay />}
                         {filterRulesResult.isSuccess && (
                             <RulesForm
-                                collectionName="deployments"
+                                resourceType="deployments"
                                 initialFilters={initialFilterRules}
                                 onChange={handleFilterRulesChange}
                                 markErrors={!!filterRules.value?.length}

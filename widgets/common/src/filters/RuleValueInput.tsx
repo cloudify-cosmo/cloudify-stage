@@ -6,7 +6,6 @@ import { FilterRuleRowType } from './types';
 import { BlueprintValueInput, SiteNameValueInput, CreatorValueInput, LabelValueInput } from './inputs';
 
 interface RuleValueInputProps {
-    collectionName: string;
     onKeyChange: (key: string) => void;
     onValuesChange: (values: string[]) => void;
     ruleType: FilterRuleRowType;
@@ -16,7 +15,6 @@ interface RuleValueInputProps {
 }
 
 const RuleValueInput: FunctionComponent<RuleValueInputProps> = ({
-    collectionName,
     onKeyChange,
     onValuesChange,
     ruleType,
@@ -36,7 +34,6 @@ const RuleValueInput: FunctionComponent<RuleValueInputProps> = ({
         case FilterRuleRowType.Label:
             return (
                 <LabelValueInput
-                    collectionName={collectionName}
                     {...commonProps}
                     onKeyChange={onKeyChange}
                     onValueChange={onValuesChange}

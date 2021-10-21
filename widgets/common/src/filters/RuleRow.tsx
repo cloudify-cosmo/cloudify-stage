@@ -8,12 +8,12 @@ import type { FilterRule, FilterRuleOperator } from './types';
 import { FilterRuleType, FilterRuleRowType, FilterRuleOperators } from './types';
 
 interface RuleRowProps {
+    hideType?: boolean;
     onRemove: ComponentProps<typeof RuleRemoveButton>['onClick'];
     onChange: (rule: FilterRule) => void;
     removable: boolean;
     error: boolean;
     rule: FilterRule;
-    collectionName: string;
     toolbox: Stage.Types.Toolbox | Stage.Types.WidgetlessToolbox;
 }
 
@@ -22,7 +22,7 @@ const defaultValues: string[] = [];
 const defaultOperatorAndValues = { operator: defaultOperator, values: defaultValues };
 
 const RuleRow: FunctionComponent<RuleRowProps> = ({
-    collectionName,
+    hideType = false,
     onChange,
     onRemove,
     removable,
@@ -56,9 +56,11 @@ const RuleRow: FunctionComponent<RuleRowProps> = ({
 
     return (
         <FormGroup widths="equal">
-            <FormField width={4}>
-                <RuleRowTypeDropdown onChange={onRuleTypeChange} value={ruleType} />
-            </FormField>
+            {hideType === false && (
+                <FormField width={4}>
+                    <RuleRowTypeDropdown onChange={onRuleTypeChange} value={ruleType} />
+                </FormField>
+            )}
             <FormField width={4}>
                 <RuleOperatorDropdown onChange={onOperatorChange} value={operator} ruleType={ruleType} />
             </FormField>
@@ -66,7 +68,6 @@ const RuleRow: FunctionComponent<RuleRowProps> = ({
                 <RuleValueInput
                     onKeyChange={onKeyChange}
                     onValuesChange={onValuesChange}
-                    collectionName={collectionName}
                     ruleType={ruleType}
                     rule={rule}
                     toolbox={toolbox}

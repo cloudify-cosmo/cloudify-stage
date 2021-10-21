@@ -72,6 +72,8 @@ export enum FilterRuleRowType {
     Label = 'label'
 }
 
+export type FilterResourceType = 'deployments' | 'blueprints';
+
 export const FilterRuleOperators = { ...CommonRuleOperator, ...LabelsOnlyRuleOperator, ...AttributesOnlyRuleOperator };
 export const LabelsFilterRuleOperators = { ...CommonRuleOperator, ...LabelsOnlyRuleOperator };
 export const AttributesFilterRuleOperators = { ...CommonRuleOperator, ...AttributesOnlyRuleOperator };

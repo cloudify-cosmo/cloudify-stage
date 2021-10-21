@@ -1,27 +1,27 @@
-import { FunctionComponent } from 'react';
+import { FunctionComponent, useContext } from 'react';
 import CommonDropdown, { KeyAndValueDropdownProps } from './CommonDropdown';
+import ResourceTypeContext from '../filters/resourceTypeContext';
 
 interface KeyDropdownProps extends KeyAndValueDropdownProps {
-    collectionName: string;
     onChange: (value: string) => void;
     value: string;
 }
 
 const KeyDropdown: FunctionComponent<KeyDropdownProps> = ({
     allowAdditions = false,
-    collectionName,
     innerRef,
     onChange,
     toolbox,
     value
 }) => {
     const { i18n } = Stage;
+    const resourceType = useContext(ResourceTypeContext);
 
     return (
         <CommonDropdown
             type="key"
             innerRef={innerRef}
-            fetchUrl={`/labels/${collectionName}`}
+            fetchUrl={`/labels/${resourceType}`}
             noResultsMessage={value && !allowAdditions ? i18n.t('widgets.common.labels.newKey') : undefined}
             placeholder={i18n.t('widgets.common.labels.keyPlaceholder')}
             name="labelKey"
