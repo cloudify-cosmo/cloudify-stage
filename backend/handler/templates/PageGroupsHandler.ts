@@ -1,6 +1,6 @@
 import pathlib from 'path';
 import _ from 'lodash';
-import { readdirSync } from 'fs-extra';
+import fs, { readdirSync } from 'fs-extra';
 
 import { builtInTemplatesFolder } from './TemplatesHandler';
 import { getLogger } from '../LoggerHandler';
@@ -16,9 +16,14 @@ export function listPageGroups() {
             const pageGroupFilePath = pathlib.resolve(builtInPageGroupsDir, pageGroupFile);
 
             try {
+                const pageGroupFileContent = fs.readJsonSync(pageGroupFilePath);
+
                 return {
                     id: pathlib.basename(pageGroupFile, '.json'),
-                    custom: false
+                    name: pageGroupFileContent.name,
+                    custom: false,
+                    updatedBy: 'Manager',
+                    updatedAt: ''
                 };
             } catch (error) {
                 logger.error(`Error while trying to parse ${pageGroupFilePath} file`, error);
