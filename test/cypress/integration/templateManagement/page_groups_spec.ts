@@ -34,7 +34,7 @@ describe('Page groups segment', () => {
                         expect(firstRow['Group name']).to.equal('Mock group');
                         expect(firstRow.Pages).to.equal('page1, page2');
                         expect(firstRow.Templates).to.equal('0');
-                        expect(firstRow['Updated at']).to.equal('21-10-2021 12:39');
+                        expect(firstRow['Updated at']).to.match(/21-10-2021 \d{2}:39/);
                         expect(firstRow['Updated by']).to.equal('Manager');
                     });
                 cy.contains('tr', 'Mock group').contains('.label:not(.blue)', 0);
