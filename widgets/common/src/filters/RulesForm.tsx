@@ -53,7 +53,7 @@ export interface RulesFormProps {
     initialFilters: FilterRule[];
     onChange: (filterRules: FilterRule[], hasErrors: boolean) => void;
     markErrors: boolean;
-    toolbox: Stage.Types.Toolbox | Stage.Types.WidgetlessToolbox;
+    toolbox: Stage.Types.WidgetlessToolbox;
     resourceType: FilterResourceType;
     minLength?: number;
 }

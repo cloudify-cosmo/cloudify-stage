@@ -11,7 +11,7 @@ interface RuleValueInputProps {
     ruleType: FilterRuleRowType;
     rule: FilterRule;
 
-    toolbox: Stage.Types.Toolbox | Stage.Types.WidgetlessToolbox;
+    toolbox: Stage.Types.WidgetlessToolbox;
 }
 
 const RuleValueInput: FunctionComponent<RuleValueInputProps> = ({

@@ -14,7 +14,7 @@ interface RuleRowProps {
     removable: boolean;
     error: boolean;
     rule: FilterRule;
-    toolbox: Stage.Types.Toolbox | Stage.Types.WidgetlessToolbox;
+    toolbox: Stage.Types.WidgetlessToolbox;
 }
 
 const defaultOperator = FilterRuleOperators.AnyOf;
