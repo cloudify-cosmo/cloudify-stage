@@ -34,7 +34,6 @@ const PageGroups: FunctionComponent<PageGroupsProps> = ({ pageGroups = [] }) => 
             <DataTable>
                 <DataTable.Column label={tPageGroupManagement('table.groupId')} width="25%" />
                 <DataTable.Column label={tPageGroupManagement('table.groupName')} width="25%" />
-                <DataTable.Column label={tPageGroupManagement('table.pages')} width="10%" />
                 <DataTable.Column label={tPageGroupManagement('table.templates')} width="10%" />
                 <DataTable.Column label={tPageGroupManagement('table.updatedAt')} width="15%" />
                 <DataTable.Column label={tPageGroupManagement('table.updatedBy')} width="15%" />
@@ -55,7 +54,6 @@ const PageGroups: FunctionComponent<PageGroupsProps> = ({ pageGroups = [] }) => 
                                 </Header>
                             </DataTable.Data>
                             <DataTable.Data>{item.name}</DataTable.Data>
-                            <DataTable.Data>{_.join(item.pages, ', ')}</DataTable.Data>
                             <DataTable.Data>
                                 <ItemsCount items={item.templates} />
                             </DataTable.Data>

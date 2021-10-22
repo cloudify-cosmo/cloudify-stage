@@ -32,7 +32,6 @@ describe('Page groups segment', () => {
                         const firstRow = tableData[0];
                         expect(firstRow['Group id']).to.equal('mockGroup');
                         expect(firstRow['Group name']).to.equal('Mock group');
-                        expect(firstRow.Pages).to.equal('page1, page2');
                         expect(firstRow.Templates).to.equal('0');
                         expect(firstRow['Updated at']).to.match(/21-10-2021 \d{2}:39/);
                         expect(firstRow['Updated by']).to.equal('Manager');
