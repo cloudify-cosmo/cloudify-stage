@@ -29,11 +29,11 @@ export default function TemplateManagement() {
     const [pageGroups, setPageGroups] = useState();
     const { errors, setMessageAsError, clearErrors } = useErrors();
 
-    const internal = useSelector(state => new Internal(state.manager));
-    const pageDefs = useSelector(state => state.templates.pagesDef);
-    const templateDefs = useSelector(state => state.templates.templatesDef);
+    const internal = useSelector((state: ReduxState) => new Internal(state.manager));
+    const pageDefs = useSelector((state: ReduxState) => state.templates.pagesDef);
+    const templateDefs = useSelector((state: ReduxState) => state.templates.templatesDef);
     const pageGroupDefs = useSelector((state: ReduxState) => state.templates.pageGroupsDef);
-    const tenants = useSelector(state => state.manager.tenants);
+    const tenants = useSelector((state: ReduxState) => state.manager.tenants);
 
     function handleError(err) {
         log.error(err);
@@ -51,9 +51,7 @@ export default function TemplateManagement() {
                 const selectedTemplate = _.find(templates, { selected: true });
                 const selectedPage = _.find(pages, { selected: true });
 
-                const templateList = data[0];
-                const pageList = data[1];
-                const pageGroupList = data[2];
+                const [templateList, pageList, pageGroupList] = data;
 
                 const preparedTemplates = _.map(templateList, template => {
                     return { ...template, pages: templateDefs[template.id].pages };
