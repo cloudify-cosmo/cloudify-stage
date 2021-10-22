@@ -8,7 +8,10 @@ declare global {
     }
 }
 
-type BuiltInTemplateName = 'main-default' | 'main-sys_admin';
+const builtInTemplates = ['main-default', 'main-sys_admin'] as const;
+
+type BuiltInTemplate = typeof builtInTemplates[number];
+
 type Page = {
     custom: boolean;
     id: string;
@@ -33,7 +36,9 @@ const commands = {
 
     getTemplates: () => cy.stageRequest('/console/templates'),
 
-    getBuiltInTemplate: (name: BuiltInTemplateName) => cy.stageRequest(`/console/appData/templates/${name}.json`),
+    getBuiltInTemplateIds: () => cy.wrap(builtInTemplates),
+
+    getBuiltInTemplate: (name: BuiltInTemplate) => cy.stageRequest(`/console/appData/templates/${name}.json`),
 
     removeUserPages: () =>
         cy.getPages().then(response => {
