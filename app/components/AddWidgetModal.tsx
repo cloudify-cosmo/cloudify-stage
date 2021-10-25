@@ -6,6 +6,7 @@
 import _ from 'lodash';
 import PropTypes from 'prop-types';
 import i18n from 'i18next';
+import styled from 'styled-components';
 
 import React, { useEffect, useState } from 'react';
 import { useBoolean, useResettableState } from '../utils/hooks';
@@ -278,11 +279,60 @@ function AddWidgetModal({
     const imageSrc = widget =>
         StageUtils.Url.url(LoaderUtils.getResourceUrl(`widgets/${widget.id}/widget.png`, widget.isCustom));
 
+    const AddWidgetModalWrapper = styled.div`
+        display: inline-block;
+    `;
+
+    const StyledAddWidgetModal = styled(Modal)`
+        max-height: 600px;
+    `;
+
+    const WidgetList = styled(Item.Group)`
+        height: 435px;
+        overflow: auto;
+        padding-top: 5px;
+
+        .selectWidgetButton {
+            margin-right: 10px !important;
+        }
+    `;
+
+    const AddWidgetCheckBox = styled(Checkbox)`
+        margin-left: 10px;
+        margin-right: 20px;
+        margin-top: auto;
+        margin-bottom: auto;
+        height: 20px;
+    `;
+
+    const StyledItem = styled(Item)`
+        padding: 30px 10px;
+        cursor: pointer;
+        align-items: center;
+        &:hover {
+            background-color: $grey-light;
+            border-radius: 5px;
+        }
+        .image {
+            & > img {
+                object-fit: contain;
+                height: 80px !important;
+                border-radius: 5px;
+                background: $white;
+                border: 1px dotted $grey-light;
+                transition: all 500ms ease-in-out;
+                &:hover {
+                    transform: scale(1.3);
+                    box-shadow: 0 8px 20px -6px rgba(0, 0, 0, 0.75);
+                }
+            }
+        }
+    `;
+
     return (
-        <div style={{ display: 'inline-block' }}>
-            <Modal
+        <AddWidgetModalWrapper>
+            <StyledAddWidgetModal
                 trigger={addWidgetBtn}
-                className="addWidgetModal"
                 open={open}
                 closeIcon
                 onOpen={openModal}
@@ -307,18 +357,17 @@ function AddWidgetModal({
                         <Grid.Row>
                             <Grid.Column width={4}>{menuContent}</Grid.Column>
                             <Grid.Column width={12}>
-                                <Item.Group divided className="widgetsList">
+                                <WidgetList>
                                     {filteredWidgetDefinitions.map(
                                         widget => (
-                                            <Item
+                                            <StyledItem
                                                 key={widget.id}
                                                 data-id={widget.id}
                                                 onClick={() => {
                                                     toggleWidgetInstall(widget.id);
                                                 }}
                                             >
-                                                <Checkbox
-                                                    className="addWidgetCheckbox"
+                                                <AddWidgetCheckBox
                                                     readOnly
                                                     title={i18n.t('editMode.addWidget.checkbox', 'Add widget to page')}
                                                     checked={widgetsToAdd.includes(widget.id)}
@@ -368,7 +417,7 @@ function AddWidgetModal({
                                                         )}
                                                     </Item.Extra>
                                                 </Item.Content>
-                                            </Item>
+                                            </StyledItem>
                                         ),
                                         this
                                     )}
@@ -379,7 +428,7 @@ function AddWidgetModal({
                                             content={i18n.t('editMode.addWidget.noWidgets', 'No widgets available')}
                                         />
                                     )}
-                                </Item.Group>
+                                </WidgetList>
 
                                 <Button.Group widths="2">
                                     <Button
@@ -420,7 +469,7 @@ function AddWidgetModal({
                         </Grid.Row>
                     </Grid>
                 </Segment>
-            </Modal>
+            </StyledAddWidgetModal>
 
             <Confirm
                 open={showConfirm}
@@ -440,7 +489,7 @@ function AddWidgetModal({
                     <Image centered src={imageSrc(thumbnailWidget)} />
                 </div>
             </Modal>
-        </div>
+        </AddWidgetModalWrapper>
     );
 }
 
