@@ -3,6 +3,7 @@ import { join } from 'lodash';
 import BlueprintsList from './BlueprintsList';
 import type { BlueprintsWidgetConfiguration } from './types';
 import BlueprintsLabelFilter from './BlueprintsLabelFilter';
+import SearchActions from '../../common/src/SearchActions';
 
 const t = Stage.Utils.getT('widgets.blueprints');
 const tCatalogConfiguration = Stage.Utils.getT('widgets.blueprintCatalog.configuration');
@@ -55,7 +56,7 @@ Stage.defineWidget<unknown, unknown, BlueprintsWidgetConfiguration>({
         },
         {
             id: 'filterRules',
-            name: Stage.i18n.t('widgets.blueprints.configuration.labelFilterRule'),
+            name: Stage.i18n.t('widgets.blueprints.configuration.labelFilterRules'),
             default: [],
             type: Stage.Basic.GenericField.CUSTOM_TYPE,
             component: BlueprintsLabelFilter
@@ -99,26 +100,21 @@ Stage.defineWidget<unknown, unknown, BlueprintsWidgetConfiguration>({
     fetchData(widget, toolbox, params) {
         const result = {};
         const filterRules = [...widget.configuration.filterRules];
+        const searchActions = new SearchActions(toolbox);
 
         if (widget.configuration.hideFailedBlueprints) {
             filterRules.push({
                 key: 'state',
                 values: [Stage.Common.BlueprintActions.CompletedBlueprintStates.Uploaded],
-                operator: CommonRuleOperator.AnyOf,
-                type: FilterRuleType.Attribute
+                operator: Stage.Common.Filters.FilterRuleOperators.AnyOf,
+                type: Stage.Common.Filters.FilterRuleType.Attribute
             });
         }
 
-        return toolbox
-            .getManager()
-            .doPost('/searches/blueprints', {
-                params: {
-                    _include: 'id,updated_at,created_at,description,created_by,visibility,main_file_name,state,error',
-                    ...params
-                },
-                body: {
-                    filter_rules: filterRules
-                }
+        return searchActions
+            .doListBlueprints(filterRules, {
+                _include: 'id,updated_at,created_at,description,created_by,visibility,main_file_name,state,error',
+                ...params
             })
             .then(data => {
                 result.blueprints = data;

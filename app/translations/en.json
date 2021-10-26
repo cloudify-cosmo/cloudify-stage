@@ -749,7 +749,7 @@
                     "label": "List of fields to show in the marketplace table",
                     "placeholder": "Select fields from the list"
                 },
-                "labelFilterRule": "Label filter rule"
+                "labelFilterRules": "Label filter rules"
             }
         },
         "blueprintCatalog": {

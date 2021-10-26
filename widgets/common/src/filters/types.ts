@@ -34,18 +34,18 @@ export enum FilterRuleAttribute {
 }
 type LabelKey = string;
 
-enum CommonRuleOperator {
+export enum CommonRuleOperator {
     AnyOf = 'any_of',
     NotAnyOf = 'not_any_of'
 }
 
-enum LabelsOnlyRuleOperator {
+export enum LabelsOnlyRuleOperator {
     IsNot = 'is_not',
     IsNull = 'is_null',
     IsNotNull = 'is_not_null'
 }
 
-enum AttributesOnlyRuleOperator {
+export enum AttributesOnlyRuleOperator {
     Contains = 'contains',
     NotContains = 'not_contains',
     StartsWith = 'starts_with',
