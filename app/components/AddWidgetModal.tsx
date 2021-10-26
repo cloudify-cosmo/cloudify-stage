@@ -328,6 +328,9 @@ function AddWidgetModal({
                 }
             }
         }
+        .header {
+            margin: 0 !important;
+        }
     `;
 
     return (
