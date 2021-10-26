@@ -279,24 +279,6 @@ function AddWidgetModal({
     const imageSrc = widget =>
         StageUtils.Url.url(LoaderUtils.getResourceUrl(`widgets/${widget.id}/widget.png`, widget.isCustom));
 
-    const AddWidgetModalWrapper = styled.div`
-        display: inline-block;
-    `;
-
-    const StyledAddWidgetModal = styled(Modal)`
-        max-height: 600px;
-        padding: 14px;
-    `;
-
-    const WidgetList = styled(Item.Group)`
-        height: 435px;
-        overflow: auto;
-        padding-top: 5px;
-
-        .selectWidgetButton {
-            margin-right: 10px !important;
-        }
-    `;
 
     const AddWidgetCheckBox = styled(Checkbox)`
         margin-left: 10px;
@@ -334,14 +316,15 @@ function AddWidgetModal({
     `;
 
     return (
-        <AddWidgetModalWrapper>
-            <StyledAddWidgetModal
+        <div style={{ display: 'inline-block' }}>
+            <Modal
                 trigger={addWidgetBtn}
                 open={open}
                 closeIcon
                 onOpen={openModal}
                 onClose={closeModal}
                 size="large"
+                className="addWidgetModal"
             >
                 <ErrorMessage error={error} />
 
@@ -360,7 +343,7 @@ function AddWidgetModal({
                     <Grid.Row>
                         <Grid.Column width={4}>{menuContent}</Grid.Column>
                         <Grid.Column width={12}>
-                            <WidgetList>
+                            <Item.Group divided className="widgetsList">
                                 {filteredWidgetDefinitions.map(
                                     widget => (
                                         <StyledItem
@@ -431,7 +414,7 @@ function AddWidgetModal({
                                         content={i18n.t('editMode.addWidget.noWidgets', 'No widgets available')}
                                     />
                                 )}
-                            </WidgetList>
+                            </Item.Group>
 
                             <Button.Group widths="2">
                                 <Button
@@ -468,7 +451,7 @@ function AddWidgetModal({
                         </Grid.Column>
                     </Grid.Row>
                 </Grid>
-            </StyledAddWidgetModal>
+            </Modal>
 
             <Confirm
                 open={showConfirm}
@@ -488,7 +471,7 @@ function AddWidgetModal({
                     <Image centered src={imageSrc(thumbnailWidget)} />
                 </div>
             </Modal>
-        </AddWidgetModalWrapper>
+        </div>
     );
 }
 
