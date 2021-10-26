@@ -361,6 +361,9 @@
         },
         "pageGroupManagement": {
             "notUsed": "Page group not used by any template",
+            "removeConfirm": "Are you sure to remove this page group?",
+            "removePageConfirm": "Are you sure to remove this page from the page group?",
+            "createPageGroup": "Create page group",
             "table": {
                 "groupId": "Group id",
                 "groupName": "Group name",
@@ -368,6 +371,22 @@
                 "templates": "Templates",
                 "updatedAt": "Updated at",
                 "updatedBy": "Updated by"
+            },
+            "modal": {
+                "addPage": "Add page",
+                "availablePages": "Available pages",
+                "createHeader": "Create page group",
+                "groupName": "Group name",
+                "noPagesAvailable": "No pages available",
+                "noPagesSelected": "No pages selected",
+                "selectedPages": "Selected pages",
+                "submitCreate": "Create",
+                "submitUpdate": "Update",
+                "updateHeader": "Update page group {{pageGroupName}}",
+                "errors": {
+                    "selectedPages": "Please select at least one page",
+                    "groupName": "Please provide group name"
+                }
             }
         },
         "templateManagement": {

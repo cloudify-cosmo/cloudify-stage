@@ -8,7 +8,7 @@ export type TemplatePageDefinition = Pick<PageDefinition, 'name' | 'layout'>;
 export interface TemplatesState {
     templatesDef: Record<string, any>;
     pagesDef: Record<string, TemplatePageDefinition>;
-    pageGroupsDef: Record<string, { name?: string; pages?: string[] }>;
+    pageGroupsDef: Record<string, { name: string; pages?: string[] }>;
 }
 
 const templates: Reducer<TemplatesState> = (state = { templatesDef: {}, pagesDef: {}, pageGroupsDef: {} }, action) => {
@@ -33,6 +33,21 @@ const templates: Reducer<TemplatesState> = (state = { templatesDef: {}, pagesDef
             };
         case types.REMOVE_TEMPLATE_PAGE:
             return { ...state, pagesDef: _.omit(state.pagesDef, [action.pageId]) };
+        case types.REMOVE_TEMPLATE_PAGE_GROUP:
+            return { ...state, pageGroupsDef: _.omit(state.pageGroupsDef, [action.pageGroupdId]) };
+        case types.CREATE_TEMPLATE_PAGE_GROUP:
+            return {
+                ...state,
+                pageGroupsDef: { ...state.pageGroupsDef, [action.pageGroupId]: _.pick(action, 'name', 'pages') }
+            };
+        case types.UPDATE_TEMPLATE_PAGE_GROUP:
+            return {
+                ...state,
+                pageGroupsDef: {
+                    ..._.omit(state.pageGroupsDef, action.pageGroupId),
+                    [action.newId]: _.pick(action, 'name', 'pages')
+                }
+            };
         default:
             return state;
     }

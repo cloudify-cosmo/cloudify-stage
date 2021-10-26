@@ -159,14 +159,20 @@ export function selectPageByName(
     };
 }
 
+export function createGroupId(groupName: string, pages: PageMenuItem[]) {
+    return createId(
+        groupName,
+        pages.filter(item => item.type === 'pageGroup')
+    );
+}
+
 export function addPageGroup(name: string): ThunkAction<void, ReduxState, never, AnyAction> {
     return (dispatch, getState) => {
-        const newPageGroupId = createId(
-            name,
-            getState().pages.filter(item => item.type === 'pageGroup')
-        );
+        const newPageGroupId = createGroupId(name, getState().pages);
 
         dispatch(createPageGroup({ name }, newPageGroupId));
+
+        return newPageGroupId;
     };
 }
 
