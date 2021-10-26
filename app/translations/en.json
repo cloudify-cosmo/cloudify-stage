@@ -299,6 +299,11 @@
     "templates": {
         "breadcrumb": "Template management",
         "close": "Close",
+        "templates": "Templates",
+        "pageGroups": "Page groups",
+        "pages": "Pages",
+        "usedByTemplates": "Used in templates",
+        "usedByPageGroups": "Used in page groups",
         "createPageModal": {
             "create": "Create",
             "header": "Create page",
@@ -338,29 +343,40 @@
             "drillDownWarning": "Drill down action is not available in the template management",
             "editHeader": "Page management",
             "exit": "Exit",
-            "header": "Pages",
             "invalidWidgets": "Page template contains invalid widgets definitions: {{widgetsList}}",
             "pageNamePlaceholder": "You must fill a page name",
             "previewHeader": "Page preview",
             "removeConfirm": "Are you sure to remove this page?",
             "save": "Save",
+            "notUsedByTemplate": "Page not used by any template",
+            "notUsedByGroup": "Page not used by any page group",
             "table": {
                 "pageID": "Page id",
                 "pageName": "Page name",
+                "templates": "Templates",
+                "pageGroups": "Page groups",
+                "updatedAt": "Updated at",
+                "updatedBy": "Updated by"
+            }
+        },
+        "pageGroupManagement": {
+            "notUsed": "Page group not used by any template",
+            "table": {
+                "groupId": "Group id",
+                "groupName": "Group name",
+                "pages": "Pages",
                 "templates": "Templates",
                 "updatedAt": "Updated at",
                 "updatedBy": "Updated by"
             }
         },
         "templateManagement": {
-            "header": "Templates",
             "addTemplateButton": "Create template",
             "pageMenuItemsList": {
                 "header": "Page menu items",
                 "noItems": "No page menu items available",
                 "removeConfirm": "Are you sure to remove this page menu item from the template?"
             },
-            "pageNotUsed": "Page not used by any template",
             "removeConfirm": "Are you sure to remove this template?",
             "roleList": {
                 "noRoles": "No roles available",

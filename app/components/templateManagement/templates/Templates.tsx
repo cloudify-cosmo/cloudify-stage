@@ -14,7 +14,8 @@ import Const from '../../../utils/consts';
 import { Button, DataTable, Header, Icon, Label, PopupConfirm, Segment } from '../../basic';
 import StageUtils from '../../../utils/stageUtils';
 
-const t = StageUtils.getT('templates.templateManagement');
+const tTemplates = StageUtils.getT('templates');
+const tTemplateManagement = StageUtils.composeT(tTemplates, 'templateManagement');
 
 export default function Templates({
     onCreateTemplate,
@@ -30,15 +31,15 @@ export default function Templates({
     return (
         <Segment color="blue">
             <Header dividing as="h5">
-                {t('header')}
+                {tTemplates('templates')}
             </Header>
 
             <DataTable>
-                <DataTable.Column label={t('table.templateId')} width="25%" />
-                <DataTable.Column label={t('table.roles')} width="25%" />
-                <DataTable.Column label={t('table.tenants')} width="10%" />
-                <DataTable.Column label={t('table.updatedAt')} width="15%" />
-                <DataTable.Column label={t('table.updatedBy')} width="15%" />
+                <DataTable.Column label={tTemplateManagement('table.templateId')} width="25%" />
+                <DataTable.Column label={tTemplateManagement('table.roles')} width="25%" />
+                <DataTable.Column label={tTemplateManagement('table.tenants')} width="10%" />
+                <DataTable.Column label={tTemplateManagement('table.updatedAt')} width="15%" />
+                <DataTable.Column label={tTemplateManagement('table.updatedBy')} width="15%" />
                 <DataTable.Column width="10%" />
 
                 {templates.map(item => {
@@ -80,7 +81,7 @@ export default function Templates({
                                         <div>
                                             <PopupConfirm
                                                 trigger={<Icon name="remove" link onClick={e => e.stopPropagation()} />}
-                                                content={t('removeConfirm')}
+                                                content={tTemplateManagement('removeConfirm')}
                                                 onConfirm={() => onDeleteTemplate(item)}
                                             />
                                             <CreateTemplateModal
@@ -134,7 +135,7 @@ export default function Templates({
                         onCreateTemplate={onCreateTemplate}
                         trigger={
                             <Button
-                                content={t('addTemplateButton')}
+                                content={tTemplateManagement('addTemplateButton')}
                                 icon="list layout"
                                 labelPosition="left"
                                 className="createTemplateButton"

@@ -8,9 +8,14 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import i18n from 'i18next';
 import CreatePageModal from './CreatePageModal';
-import TemplateList from './TemplateList';
-import { Segment, Header, DataTable, Icon, PopupConfirm, Label } from '../../basic';
+import TemplateList from '../common/TemplateList';
+import { DataTable, Header, Icon, Label, PopupConfirm, Segment } from '../../basic';
 import StageUtils from '../../../utils/stageUtils';
+import ReadOnlyList from '../common/ReadOnlyList';
+import ItemsCount from '../common/ItemsCount';
+
+const tTemplates = StageUtils.getT('templates');
+const tPageManagement = StageUtils.composeT(tTemplates, 'pageManagement');
 
 export default function Pages({
     onCanDeletePage,
@@ -24,21 +29,16 @@ export default function Pages({
     return (
         <Segment color="red">
             <Header dividing as="h5">
-                {i18n.t('templates.pageManagement.header', 'Pages')}
+                {tTemplates('pages')}
             </Header>
 
             <DataTable>
-                <DataTable.Column label={i18n.t('templates.pageManagement.table.pageID', 'Page id')} width="25%" />
-                <DataTable.Column label={i18n.t('templates.pageManagement.table.pageName', 'Page name')} width="25%" />
-                <DataTable.Column label={i18n.t('templates.pageManagement.table.templates', 'Templates')} width="10%" />
-                <DataTable.Column
-                    label={i18n.t('templates.pageManagement.table.updatedAt', 'Updated at')}
-                    width="15%"
-                />
-                <DataTable.Column
-                    label={i18n.t('templates.pageManagement.table.updatedBy', 'Updated by')}
-                    width="15%"
-                />
+                <DataTable.Column label={tPageManagement('table.pageID')} width="25%" />
+                <DataTable.Column label={tPageManagement('table.pageName')} width="25%" />
+                <DataTable.Column label={tPageManagement('table.templates')} width="10%" />
+                <DataTable.Column label={tPageManagement('table.pageGroups')} width="10%" />
+                <DataTable.Column label={tPageManagement('table.updatedAt')} width="15%" />
+                <DataTable.Column label={tPageManagement('table.updatedBy')} width="15%" />
                 <DataTable.Column width="10%" />
 
                 {pages.map(item => {
@@ -52,9 +52,10 @@ export default function Pages({
                                 </DataTable.Data>
                                 <DataTable.Data>{item.name}</DataTable.Data>
                                 <DataTable.Data>
-                                    <Label color="blue" horizontal>
-                                        {_.size(item.templates)}
-                                    </Label>
+                                    <ItemsCount items={item.templates} />
+                                </DataTable.Data>
+                                <DataTable.Data>
+                                    <ItemsCount items={item.pageGroups} />
                                 </DataTable.Data>
                                 <DataTable.Data>
                                     {item.updatedAt && StageUtils.Time.formatLocalTimestamp(item.updatedAt)}
@@ -99,7 +100,20 @@ export default function Pages({
                             </DataTable.Row>
 
                             <DataTable.DataExpandable key={item.id}>
-                                <TemplateList templates={item.templates} />
+                                <Segment.Group horizontal>
+                                    <TemplateList
+                                        width="50%"
+                                        templates={item.templates}
+                                        noDataMessageKey="pageManagement.notUsedByTemplate"
+                                    />
+                                    <ReadOnlyList
+                                        width="50%"
+                                        icon="folder open outline"
+                                        items={item.pageGroups}
+                                        noDataMessageKey="pageManagement.notUsedByGroup"
+                                        titleKey="usedByPageGroups"
+                                    />
+                                </Segment.Group>
                             </DataTable.DataExpandable>
                         </DataTable.RowExpandable>
                     );
