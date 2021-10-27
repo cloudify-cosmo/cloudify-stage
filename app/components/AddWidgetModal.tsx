@@ -9,6 +9,7 @@ import i18n from 'i18next';
 import styled from 'styled-components';
 
 import React, { useEffect, useState } from 'react';
+import colors from 'cloudify-ui-common/styles/_colors.scss';
 import { useBoolean, useResettableState } from '../utils/hooks';
 import GenericConfig from '../utils/GenericConfig';
 import LoaderUtils from '../utils/LoaderUtils';
@@ -32,6 +33,60 @@ import {
 } from './basic/index';
 import InstallWidgetModal from './InstallWidgetModal';
 import EditModeButton from './EditModeButton';
+
+const AddWidgetModalWrapper = styled.div`
+    display: inline-block;
+`;
+
+const StyledAddWidgetModal = styled(Modal)`
+    max-height: 600px;
+    padding: 14px;
+`;
+
+const WidgetList = styled(Item.Group)`
+    height: 435px;
+    overflow: auto;
+    padding-top: 5px;
+
+    .selectWidgetButton {
+        margin-right: 10px !important;
+    }
+`;
+
+const AddWidgetCheckBox = styled(Checkbox)`
+    margin-left: 10px;
+    margin-right: 20px;
+    margin-top: auto;
+    margin-bottom: auto;
+    height: 20px;
+`;
+
+const StyledItem = styled(Item)`
+    padding: 30px 10px;
+    cursor: pointer;
+    align-items: center;
+    &:hover {
+        background-color: ${colors.greyLight};
+        border-radius: 5px;
+    }
+    .image {
+        & > img {
+            object-fit: contain;
+            height: 80px !important;
+            border-radius: 5px;
+            background: $white;
+            border: 1px dotted ${colors.greyLight};
+            transition: all 500ms ease-in-out;
+            &:hover {
+                transform: scale(1.3);
+                box-shadow: 0 8px 20px -6px rgba(0, 0, 0, 0.75);
+            }
+        }
+    }
+    .header {
+        margin: 0 !important;
+    }
+`;
 
 let nameIndex = 0;
 
@@ -279,44 +334,8 @@ function AddWidgetModal({
     const imageSrc = widget =>
         StageUtils.Url.url(LoaderUtils.getResourceUrl(`widgets/${widget.id}/widget.png`, widget.isCustom));
 
-
-    const AddWidgetCheckBox = styled(Checkbox)`
-        margin-left: 10px;
-        margin-right: 20px;
-        margin-top: auto;
-        margin-bottom: auto;
-        height: 20px;
-    `;
-
-    const StyledItem = styled(Item)`
-        padding: 30px 10px;
-        cursor: pointer;
-        align-items: center;
-        &:hover {
-            background-color: $grey-light;
-            border-radius: 5px;
-        }
-        .image {
-            & > img {
-                object-fit: contain;
-                height: 80px !important;
-                border-radius: 5px;
-                background: $white;
-                border: 1px dotted $grey-light;
-                transition: all 500ms ease-in-out;
-                &:hover {
-                    transform: scale(1.3);
-                    box-shadow: 0 8px 20px -6px rgba(0, 0, 0, 0.75);
-                }
-            }
-        }
-        .header {
-            margin: 0 !important;
-        }
-    `;
-
     return (
-        <div style={{ display: 'inline-block' }}>
+        <AddWidgetModalWrapper>
             <Modal
                 trigger={addWidgetBtn}
                 open={open}
@@ -343,7 +362,7 @@ function AddWidgetModal({
                     <Grid.Row>
                         <Grid.Column width={4}>{menuContent}</Grid.Column>
                         <Grid.Column width={12}>
-                            <Item.Group divided className="widgetsList">
+                            <WidgetList divided>
                                 {filteredWidgetDefinitions.map(
                                     widget => (
                                         <StyledItem
@@ -414,7 +433,7 @@ function AddWidgetModal({
                                         content={i18n.t('editMode.addWidget.noWidgets', 'No widgets available')}
                                     />
                                 )}
-                            </Item.Group>
+                            </WidgetList>
 
                             <Button.Group widths="2">
                                 <Button
@@ -471,7 +490,7 @@ function AddWidgetModal({
                     <Image centered src={imageSrc(thumbnailWidget)} />
                 </div>
             </Modal>
-        </div>
+        </AddWidgetModalWrapper>
     );
 }
 
