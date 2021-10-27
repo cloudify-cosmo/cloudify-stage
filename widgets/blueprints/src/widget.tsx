@@ -3,7 +3,6 @@ import { join } from 'lodash';
 import BlueprintsList from './BlueprintsList';
 import type { BlueprintsWidgetConfiguration } from './types';
 import BlueprintsLabelFilter from './BlueprintsLabelFilter';
-import SearchActions from '../../common/src/SearchActions';
 
 const t = Stage.Utils.getT('widgets.blueprints');
 const tCatalogConfiguration = Stage.Utils.getT('widgets.blueprintCatalog.configuration');
@@ -99,7 +98,8 @@ Stage.defineWidget<unknown, unknown, BlueprintsWidgetConfiguration>({
 
     fetchData(widget, toolbox, params) {
         const result = {};
-        const filterRules = [...widget.configuration.filterRules];
+        const filterRules = [...(widget.configuration.filterRules || [])];
+        const { SearchActions } = Stage.Common;
         const searchActions = new SearchActions(toolbox);
 
         if (widget.configuration.hideFailedBlueprints) {

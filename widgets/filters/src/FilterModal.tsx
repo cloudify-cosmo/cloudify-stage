@@ -81,6 +81,7 @@ const FilterModal: FunctionComponent<FilterModalProps> = ({
                                 setFilterRulesInvalid(hasErrors);
                             }}
                             markErrors={markRulesFormErrors}
+                            minLength={1}
                         />
                     </UnsafelyTypedFormField>
                 </Form>
