@@ -5,6 +5,12 @@ import * as PageGroupsHandler from 'handler/templates/PageGroupsHandler';
 import { userTemplatesFolder } from 'handler/templates/TemplatesHandler';
 
 jest.mock('fs-extra');
+jest.mock('moment', () => {
+    const momentMock = () => ({ format: () => 'timestamp' });
+    momentMock.version = '2.6.0';
+    momentMock.fn = {};
+    return momentMock;
+});
 
 describe('PageGroupsHandler', () => {
     it('should list page groups', () => {
@@ -27,13 +33,11 @@ describe('PageGroupsHandler', () => {
     });
 
     it('should create page group', () => {
-        Date.now = jest.fn(() => 1487076708000);
-
         PageGroupsHandler.createPageGroup('admin', { id: 'pg' });
 
         expect(writeJson).toHaveBeenCalledWith(
             pathlib.resolve(userTemplatesFolder, 'page-groups', 'pg.json'),
-            { updatedAt: '2017-02-14T13:51:48+01:00', updatedBy: 'admin' },
+            { updatedAt: 'timestamp', updatedBy: 'admin' },
             { spaces: '  ' }
         );
     });
