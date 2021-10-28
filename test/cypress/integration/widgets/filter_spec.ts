@@ -10,9 +10,11 @@ describe('Filter', () => {
     it('fills dropdowns with correct data', () => {
         const getDropdownItems = (id?: string) => (id ? cy.get(`${id} .menu > *`) : cy.get('.menu > *'));
 
-        cy.interceptSp('POST', { pathname: '/searches/blueprints' }, { fixture: 'filter/blueprints.json' }).as(
-            'fetchBlueprints'
-        );
+        cy.interceptSp(
+            'GET',
+            { pathname: '/blueprints', query: { state: 'uploaded' } },
+            { fixture: 'filter/blueprints.json' }
+        ).as('fetchBlueprints');
         cy.interceptSp(
             'GET',
             { pathname: '/deployments', query: { _offset: '0' } },
