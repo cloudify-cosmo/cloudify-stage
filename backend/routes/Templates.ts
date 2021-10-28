@@ -30,6 +30,24 @@ router.get('/page-groups', (_req, res, next) => {
     }
 });
 
+router.post('/page-groups', (req, res, next) => {
+    PageGroupsHandler.createPageGroup(req.user!.username, req.body)
+        .then(() => res.send({ status: 'ok' }))
+        .catch(next);
+});
+
+router.delete('/page-groups/:groupId', (req, res, next) => {
+    PageGroupsHandler.deletePageGroup(req.params.groupId)
+        .then(() => res.send({ status: 'ok' }))
+        .catch(next);
+});
+
+router.put('/page-groups/:groupId', (req, res, next) => {
+    PageGroupsHandler.updatePageGroup(req.user!.username, req.params.groupId, req.body)
+        .then(() => res.send({ status: 'ok' }))
+        .catch(next);
+});
+
 router.post('/', (req, res, next) => {
     TemplatesHandler.createTemplate(req.user!.username, req.body)
         .then(() => res.send({ status: 'ok' }))

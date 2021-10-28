@@ -10,7 +10,8 @@ interface RuleValueInputProps {
     onValuesChange: (values: string[]) => void;
     ruleType: FilterRuleRowType;
     rule: FilterRule;
-    toolbox: Stage.Types.Toolbox;
+
+    toolbox: Stage.Types.WidgetlessToolbox;
 }
 
 const RuleValueInput: FunctionComponent<RuleValueInputProps> = ({

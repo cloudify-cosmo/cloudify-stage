@@ -1,6 +1,7 @@
 import { FunctionComponent } from 'react';
 import LabelsInput from './LabelsInput';
 import type { Label } from './types';
+import ResourceTypeContext from '../filters/resourceTypeContext';
 
 export interface LabelsModalProps {
     deploymentId: string;
@@ -93,12 +94,14 @@ const LabelsModal: FunctionComponent<LabelsModalProps> = ({
                         label={i18n.t('widgets.common.labels.input.label')}
                         help={i18n.t('widgets.common.labels.input.help')}
                     >
-                        <LabelsInput
-                            hideInitialLabels={hideInitialLabels}
-                            initialLabels={initialLabels}
-                            onChange={onChange}
-                            toolbox={toolbox}
-                        />
+                        <ResourceTypeContext.Provider value="deployments">
+                            <LabelsInput
+                                hideInitialLabels={hideInitialLabels}
+                                initialLabels={initialLabels}
+                                onChange={onChange}
+                                toolbox={toolbox}
+                            />
+                        </ResourceTypeContext.Provider>
                     </UnsafelyTypedFormField>
                 </Form>
             </Modal.Content>

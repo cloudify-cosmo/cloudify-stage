@@ -57,7 +57,7 @@ export default function CreatePageModal({ onCreatePage, pageName: initialPageNam
     return (
         <Modal trigger={trigger} open={open} onOpen={openModal} onClose={unsetOpen} className="createPageModal">
             <Modal.Header>
-                <Icon name="block layout" />
+                <Icon name="file outline" />
                 {i18n.t('templates.createPageModal.header', 'Create page')}
             </Modal.Header>
 

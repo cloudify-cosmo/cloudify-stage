@@ -12,13 +12,8 @@ import type { AnyAction } from 'redux';
 import { Alert, Breadcrumb, Button, Divider, EditableLabel, ErrorMessage, Menu, Segment, Sidebar } from '../../basic';
 import EditModeBubble from '../../EditModeBubble';
 import { PageContent } from '../../shared/widgets';
-import {
-    createPageId,
-    drillDownWarning,
-    savePage,
-    setActive,
-    setPageEditMode
-} from '../../../actions/templateManagement';
+import { setTemplateManagementActive } from '../../../actions/templateManagement';
+import { savePage, setDrillDownWarningActive, setPageEditMode } from '../../../actions/templateManagement/pages';
 import StageUtils from '../../../utils/stageUtils';
 import { useErrors } from '../../../utils/hooks';
 import {
@@ -31,6 +26,7 @@ import {
 import type { ReduxState } from '../../../reducers';
 import type { WidgetDefinition } from '../../../utils/StageAPI';
 import type { TemplatePageDefinition } from '../../../reducers/templatesReducer';
+import useCreatePageId from './useCreatePageId';
 
 export interface PageManagementProps {
     pageId: string;
@@ -39,12 +35,13 @@ export interface PageManagementProps {
 
 export default function PageManagement({ pageId, isEditMode = false }: PageManagementProps) {
     const dispatch = useDispatch<ThunkDispatch<ReduxState, never, AnyAction>>();
+    const createPageId = useCreatePageId();
 
     useEffect(() => {
-        dispatch(setActive(true));
+        dispatch(setTemplateManagementActive(true));
         // NOTE: use void to return `undefined` from the cleanup handler (fix a type error)
         // eslint-disable-next-line no-void
-        return () => void dispatch(setActive(false));
+        return () => void dispatch(setTemplateManagementActive(false));
     }, []);
 
     useEffect(() => {
@@ -59,12 +56,11 @@ export default function PageManagement({ pageId, isEditMode = false }: PageManag
     const widgetDefinitions = useSelector((state: ReduxState) => state.widgetDefinitions);
 
     /** NOTE: page may not match `TemplatePageDefinition` exactly: it may have an `id` property */
-    const [page, setPage] = useState<TemplatePageDefinition>();
+    const [page, setPage] = useState<TemplatePageDefinition & { id: string; oldId?: string }>();
     const { errors, setMessageAsError, clearErrors, setErrors } = useErrors();
 
     useEffect(() => {
-        const managedPage = _.cloneDeep(pageDefs[pageId]) || {};
-        (managedPage as any).id = pageId;
+        const managedPage = { ..._.cloneDeep(pageDefs[pageId]), id: pageId } || {};
 
         const invalidWidgetNames: string[] = [];
 
@@ -156,12 +152,12 @@ export default function PageManagement({ pageId, isEditMode = false }: PageManag
         const overridablePage: any = page;
         if (!overridablePage.oldId) {
             overridablePage.oldId = overridablePage.id;
-            overridablePage.id = createPageId(pageName, pageDefs);
+            overridablePage.id = createPageId(pageName);
         }
         updatePage();
     };
     const onCloseDrillDownWarning = () => {
-        dispatch(drillDownWarning(false));
+        dispatch(setDrillDownWarningActive(false));
     };
     const onTabAdded = (layoutSection: number) => {
         (page.layout[layoutSection].content as TabContent[]).push({

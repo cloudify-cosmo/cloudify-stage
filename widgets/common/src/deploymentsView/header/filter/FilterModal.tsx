@@ -214,10 +214,12 @@ const FilterModal: FunctionComponent<FilterModalProps> = ({
                         {interactionsDisabled && <Stage.Basic.LoadingOverlay />}
                         {filterRulesResult.isSuccess && (
                             <RulesForm
+                                resourceType="deployments"
                                 initialFilters={initialFilterRules}
                                 onChange={handleFilterRulesChange}
                                 markErrors={!!filterRules.value?.length}
                                 toolbox={toolbox}
+                                minLength={1}
                             />
                         )}
                     </UnsafelyTypedFormField>
