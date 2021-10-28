@@ -24,6 +24,7 @@ describe('Blueprints widget', () => {
         showComposerOptions: true,
         marketplaceTabs,
         marketplaceDisplayStyle: 'catalog',
+        filterRules: [],
         marketplaceColumnsToShow: ['Name', 'Description']
     };
 
@@ -129,9 +130,9 @@ describe('Blueprints widget', () => {
 
     describe('should render blueprint items', () => {
         beforeEach(() => {
-            cy.interceptSp('GET', '/blueprints', { fixture: 'blueprints/blueprints' });
-            cy.interceptSp('GET', {
-                pathname: '/blueprints',
+            cy.interceptSp('POST', '/searches/blueprints', { fixture: 'blueprints/blueprints' });
+            cy.interceptSp('POST', {
+                pathname: '/searches/blueprints',
                 query: {
                     state: 'uploaded'
                 }
@@ -453,7 +454,7 @@ describe('Blueprints widget', () => {
             const testTabMarketplaceName = 'Blueprints from Dagobah';
 
             cy.editWidgetConfiguration('blueprints', () => {
-                cy.contains('Add').click();
+                cy.get('.marketplaceTabs').contains('Add').click();
                 cy.get('input[name="name"]').eq(marketplaceTabs.length).type(testTabMarketplaceName);
                 cy.get('input[name="url"]').eq(marketplaceTabs.length).type('https://localhost');
             });
