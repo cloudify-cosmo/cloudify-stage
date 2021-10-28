@@ -6,7 +6,7 @@ import 'widgets/common/src/props/Toolbox';
 import RulesForm from 'widgets/common/src/filters/RulesForm';
 
 describe('RulesForm', () => {
-    it('renders', () => {
+    it('renders without any fields', () => {
         mount(
             <RulesForm
                 resourceType="deployments"
@@ -14,6 +14,7 @@ describe('RulesForm', () => {
                 onChange={() => {}}
                 markErrors={false}
                 toolbox={{} as Stage.Types.Toolbox}
+                minLength={1}
             />
         );
 
