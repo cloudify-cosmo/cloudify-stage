@@ -73,6 +73,7 @@ const FilterModal: FunctionComponent<FilterModalProps> = ({
                     )}
                     <UnsafelyTypedFormField label={i18n.t('widgets.filters.modal.rules')}>
                         <RulesForm
+                            resourceType="deployments"
                             initialFilters={initialFilterRules}
                             toolbox={toolbox}
                             onChange={(newFilterRules, hasErrors) => {
@@ -80,6 +81,7 @@ const FilterModal: FunctionComponent<FilterModalProps> = ({
                                 setFilterRulesInvalid(hasErrors);
                             }}
                             markErrors={markRulesFormErrors}
+                            minLength={1}
                         />
                     </UnsafelyTypedFormField>
                 </Form>

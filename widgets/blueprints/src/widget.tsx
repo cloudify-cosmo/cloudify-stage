@@ -2,6 +2,7 @@
 import { join } from 'lodash';
 import BlueprintsList from './BlueprintsList';
 import type { BlueprintsWidgetConfiguration } from './types';
+import BlueprintsLabelFilter from './BlueprintsLabelFilter';
 
 const t = Stage.Utils.getT('widgets.blueprints');
 const tCatalogConfiguration = Stage.Utils.getT('widgets.blueprintCatalog.configuration');
@@ -52,6 +53,13 @@ Stage.defineWidget<unknown, unknown, BlueprintsWidgetConfiguration>({
             name: t('configuration.showComposerOptions'),
             default: false
         },
+        {
+            id: 'filterRules',
+            name: Stage.i18n.t('widgets.blueprints.configuration.labelFilterRules'),
+            default: [],
+            type: Stage.Basic.GenericField.CUSTOM_TYPE,
+            component: BlueprintsLabelFilter
+        },
         Stage.Common.BlueprintMarketplace.tabsConfig,
         {
             id: 'marketplaceDisplayStyle',
@@ -88,12 +96,23 @@ Stage.defineWidget<unknown, unknown, BlueprintsWidgetConfiguration>({
         }
     ],
 
-    fetchData(widget, toolbox, params: Record<string, any>) {
+    fetchData(widget, toolbox, params) {
         const result = {};
-        const blueprintActions = new Stage.Common.BlueprintActions(toolbox);
+        const filterRules = [...(widget.configuration.filterRules || [])];
+        const { SearchActions } = Stage.Common;
+        const searchActions = new SearchActions(toolbox);
 
-        return blueprintActions
-            .doGetBlueprints({
+        if (widget.configuration.hideFailedBlueprints) {
+            filterRules.push({
+                key: 'state',
+                values: [Stage.Common.BlueprintActions.CompletedBlueprintStates.Uploaded],
+                operator: Stage.Common.Filters.FilterRuleOperators.AnyOf,
+                type: Stage.Common.Filters.FilterRuleType.Attribute
+            });
+        }
+
+        return searchActions
+            .doListBlueprints(filterRules, {
                 _include: 'id,updated_at,created_at,description,created_by,visibility,main_file_name,state,error',
                 ...params
             })

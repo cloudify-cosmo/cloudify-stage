@@ -8,19 +8,28 @@ import type { FilterRule, FilterRuleOperator } from './types';
 import { FilterRuleType, FilterRuleRowType, FilterRuleOperators } from './types';
 
 interface RuleRowProps {
+    hideType?: boolean;
     onRemove: ComponentProps<typeof RuleRemoveButton>['onClick'];
     onChange: (rule: FilterRule) => void;
     removable: boolean;
     error: boolean;
     rule: FilterRule;
-    toolbox: Stage.Types.Toolbox;
+    toolbox: Stage.Types.WidgetlessToolbox;
 }
 
 const defaultOperator = FilterRuleOperators.AnyOf;
 const defaultValues: string[] = [];
 const defaultOperatorAndValues = { operator: defaultOperator, values: defaultValues };
 
-const RuleRow: FunctionComponent<RuleRowProps> = ({ onChange, onRemove, removable, error, rule, toolbox }) => {
+const RuleRow: FunctionComponent<RuleRowProps> = ({
+    hideType = false,
+    onChange,
+    onRemove,
+    removable,
+    error,
+    rule,
+    toolbox
+}) => {
     const { UnsafelyTypedFormField: FormField, UnsafelyTypedFormGroup: FormGroup } = Stage.Basic;
     const { key, operator, type } = rule;
     const ruleType = type === FilterRuleType.Label ? FilterRuleRowType.Label : (key as FilterRuleRowType);
@@ -47,9 +56,11 @@ const RuleRow: FunctionComponent<RuleRowProps> = ({ onChange, onRemove, removabl
 
     return (
         <FormGroup widths="equal">
-            <FormField width={4}>
-                <RuleRowTypeDropdown onChange={onRuleTypeChange} value={ruleType} />
-            </FormField>
+            {hideType === false && (
+                <FormField width={4}>
+                    <RuleRowTypeDropdown onChange={onRuleTypeChange} value={ruleType} />
+                </FormField>
+            )}
             <FormField width={4}>
                 <RuleOperatorDropdown onChange={onOperatorChange} value={operator} ruleType={ruleType} />
             </FormField>

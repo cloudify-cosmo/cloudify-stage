@@ -783,7 +783,8 @@
                 "marketplaceColumnsToShow": {
                     "label": "List of fields to show in the marketplace table",
                     "placeholder": "Select fields from the list"
-                }
+                },
+                "labelFilterRules": "Label filter rules"
             }
         },
         "blueprintCatalog": {
