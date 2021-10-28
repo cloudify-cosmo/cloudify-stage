@@ -1,0 +1,16 @@
+{
+  "name": "Filters",
+  "layout": [
+    {
+      "type": "widgets",
+      "content": [
+        {
+          "name": "Filters",
+          "width": 12,
+          "height": 24,
+          "definition": "filters"
+        }
+      ]
+    }
+  ]
+}

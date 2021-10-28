@@ -24,7 +24,7 @@ describe('User flow', () => {
         });
     }
     it('installs deployment from scratch', () => {
-        cy.visitPage('Resources').openTab('Plugins');
+        cy.visitPage('Resources').visitPage('Plugins');
 
         cy.contains('Upload').click();
         cy.contains('Upload from Marketplace').click();
@@ -34,7 +34,7 @@ describe('User flow', () => {
             cy.get('button', { timeout: minutesToMs(2) }).should('to.be.disabled');
         });
 
-        cy.visitPage('Resources').openTab('Secrets');
+        cy.visitPage('Secrets');
         createSecret('some_key_1');
         createSecret('some_key_4');
         createSecret('some_key_7');
