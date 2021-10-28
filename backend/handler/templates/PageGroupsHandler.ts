@@ -9,7 +9,7 @@ import { getLogger } from '../LoggerHandler';
 const logger = getLogger('PageGroupsHandler');
 
 const builtInPageGroupsDir = pathlib.resolve(builtInTemplatesFolder, 'page-groups');
-const userPageGroupsFolder = pathlib.resolve(userTemplatesFolder, 'page-groups');
+export const userPageGroupsFolder = pathlib.resolve(userTemplatesFolder, 'page-groups');
 
 function getPageGroups(path: string, custom: boolean) {
     return _(readdirSync(pathlib.resolve(path)))
