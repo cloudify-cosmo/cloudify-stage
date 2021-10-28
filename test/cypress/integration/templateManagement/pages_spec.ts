@@ -1,6 +1,6 @@
 describe('Pages segment', () => {
     before(() => {
-        cy.activate().removeUserPages().removeUserTemplates().mockLogin();
+        cy.activate().removeUserPageGroups().removeUserPages().removeUserTemplates().mockLogin();
         cy.get('.usersMenu').click();
         cy.get('.usersMenu').contains('Template Management').click();
     });

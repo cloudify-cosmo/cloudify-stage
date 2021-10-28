@@ -1,12 +1,5 @@
 import _ from 'lodash';
-import React, { CSSProperties, FunctionComponent } from 'react';
-
-import type { DragEndEvent, SensorDescriptor } from '@dnd-kit/core';
-import { closestCenter, DndContext, PointerSensor } from '@dnd-kit/core';
-
-import { SortableContext, useSortable, verticalListSortingStrategy } from '@dnd-kit/sortable';
-import { CSS } from '@dnd-kit/utilities';
-import { restrictToParentElement } from '@dnd-kit/modifiers';
+import React, { FunctionComponent } from 'react';
 
 import { AccordionTitleProps, DropdownProps, ModalProps } from 'semantic-ui-react';
 import { useSelector } from 'react-redux';
@@ -20,16 +13,15 @@ import {
     Divider,
     Form,
     Icon,
-    List,
-    Message,
     Modal,
-    Ref,
     Segment,
     UnsafelyTypedFormField
 } from '../../basic';
 import { useBoolean, useErrors, useInput, useOpen, useResettableState } from '../../../utils/hooks';
 import { ReduxState } from '../../../reducers';
 import { PageMenuItem } from './types';
+import SelectionList from '../common/SelectionList';
+import SortableList from '../common/SortableList';
 
 const t = StageUtils.getT('templates.createTemplateModal');
 
@@ -37,44 +29,7 @@ function toId(item: PageMenuItem) {
     return `${item.type}\n${item.id}`;
 }
 
-interface SortablePageItemProps {
-    item: PageMenuItem;
-    onRemove: () => void;
-}
-
 type AccordionSection = 'pages' | 'pageGroups';
-
-const SortablePageItem: FunctionComponent<SortablePageItemProps> = ({ item, onRemove }) => {
-    const { attributes, listeners, setNodeRef, transform, transition } = useSortable({
-        id: toId(item),
-        data: { item }
-    });
-
-    const style: CSSProperties = {
-        transform: CSS.Transform.toString(transform),
-        transition: transition !== null ? transition : undefined
-    };
-
-    return (
-        <Ref innerRef={setNodeRef}>
-            {/* eslint-disable-next-line react/jsx-props-no-spreading */}
-            <List.Item style={style} {...attributes}>
-                {item.id}
-                <span className="right floated actionIcons">
-                    <Icon link name="minus" onClick={onRemove} title={t('removePage')} />
-                    <Icon
-                        // eslint-disable-next-line react/jsx-props-no-spreading
-                        {...listeners}
-                        link
-                        name="move"
-                        className="handle"
-                        title={t('reorderPage')}
-                    />
-                </span>
-            </List.Item>
-        </Ref>
-    );
-};
 
 interface CreateTemplateModalProps {
     initialTemplateName: string;
@@ -179,30 +134,12 @@ const CreateTemplateModal: FunctionComponent<CreateTemplateModalProps> = ({
         setTenants(valueToSet);
     }
 
-    function handleDragEnd(event: DragEndEvent) {
-        const { active, over } = event;
-        if (active && over && active.id !== over.id) {
-            const oldIndex = selectedPageMenuItems.indexOf(active.data.current?.item);
-            const newIndex = selectedPageMenuItems.indexOf(over.data.current?.item);
-
-            const newSelectedPageMenuItems = [...selectedPageMenuItems];
-            const removed = newSelectedPageMenuItems.splice(oldIndex, 1)[0];
-            newSelectedPageMenuItems.splice(newIndex, 0, removed);
-
-            setSelectedPageMenuItems(newSelectedPageMenuItems);
-        }
-    }
-
     function addPage(pageId: string) {
         setSelectedPageMenuItems([...selectedPageMenuItems, { id: pageId, type: 'page' }]);
     }
 
     function addPageGroup(pageGroupId: string) {
         setSelectedPageMenuItems([...selectedPageMenuItems, { id: pageGroupId, type: 'pageGroup' }]);
-    }
-
-    function removePageMenuItem(item: PageMenuItem) {
-        setSelectedPageMenuItems(_.reject(selectedPageMenuItems, item));
     }
 
     function handleAccordionClick(_event: React.MouseEvent, { index }: AccordionTitleProps) {
@@ -216,13 +153,6 @@ const CreateTemplateModal: FunctionComponent<CreateTemplateModalProps> = ({
     tenantOptions.push({ text: t('allTenants'), value: Consts.DEFAULT_ALL });
 
     const editMode = !_.isEmpty(initialTemplateName);
-
-    const sensors: SensorDescriptor<any>[] = [
-        {
-            sensor: PointerSensor,
-            options: {}
-        }
-    ];
 
     const availablePages = _(allAvailablePages)
         .difference(_(selectedPageMenuItems).filter({ type: 'page' }).map('id').value())
@@ -297,27 +227,12 @@ const CreateTemplateModal: FunctionComponent<CreateTemplateModalProps> = ({
                                     <Divider />
                                 </Accordion.Title>
                                 <Accordion.Content active={expandedAccordions.pages}>
-                                    <List divided relaxed verticalAlign="middle" className="light">
-                                        {availablePages.map(item => {
-                                            return (
-                                                <List.Item key={item}>
-                                                    {item}
-
-                                                    <Icon
-                                                        link
-                                                        name="add"
-                                                        className="right floated"
-                                                        onClick={() => addPage(item)}
-                                                        title={t('addPage')}
-                                                    />
-                                                </List.Item>
-                                            );
-                                        })}
-
-                                        {_.isEmpty(availablePages) && (
-                                            <Message content={t('noPagesAvailable', 'No pages available')} />
-                                        )}
-                                    </List>
+                                    <SelectionList
+                                        items={availablePages}
+                                        onItemSelected={addPage}
+                                        noDataMessageI18nKey="createTemplateModal.noPagesAvailable"
+                                        addIconTitleI18nKey="createTemplateModal.addPage"
+                                    />
                                 </Accordion.Content>
                                 <Accordion.Title
                                     onClick={handleAccordionClick}
@@ -329,61 +244,23 @@ const CreateTemplateModal: FunctionComponent<CreateTemplateModalProps> = ({
                                     <Divider />
                                 </Accordion.Title>
                                 <Accordion.Content active={expandedAccordions.pageGroups}>
-                                    <List divided relaxed verticalAlign="middle" className="light">
-                                        {availablePageGroups.map(item => {
-                                            return (
-                                                <List.Item key={item}>
-                                                    {item}
-
-                                                    <Icon
-                                                        link
-                                                        name="add"
-                                                        className="right floated"
-                                                        onClick={() => addPageGroup(item)}
-                                                        title={t('addPageGroup')}
-                                                    />
-                                                </List.Item>
-                                            );
-                                        })}
-
-                                        {_.isEmpty(availablePageGroups) && (
-                                            <Message content={t('noPageGroupsAvailable')} />
-                                        )}
-                                    </List>
+                                    <SelectionList
+                                        items={availablePageGroups}
+                                        onItemSelected={addPageGroup}
+                                        noDataMessageI18nKey="createTemplateModal.noPageGroupsAvailable"
+                                        addIconTitleI18nKey="createTemplateModal.addPageGroup"
+                                    />
                                 </Accordion.Content>
                             </Accordion>
                         </Segment>
 
-                        <Segment style={{ width: '50%' }}>
-                            <Icon name="bars" />
-                            {t('selectedItems')}
-                            <Divider />
-                            <List divided relaxed verticalAlign="middle" className="light" id="reorderList">
-                                <DndContext
-                                    sensors={sensors}
-                                    collisionDetection={closestCenter}
-                                    onDragEnd={handleDragEnd}
-                                    modifiers={[restrictToParentElement]}
-                                >
-                                    <SortableContext
-                                        items={selectedPageMenuItems.map(toId)}
-                                        strategy={verticalListSortingStrategy}
-                                    >
-                                        {selectedPageMenuItems.map(item => {
-                                            return (
-                                                <SortablePageItem
-                                                    item={item}
-                                                    key={toId(item)}
-                                                    onRemove={() => removePageMenuItem(item)}
-                                                />
-                                            );
-                                        })}
-                                    </SortableContext>
-                                </DndContext>
-
-                                {_.isEmpty(selectedPageMenuItems) && <Message content={t('noPageMenuItemsSelected')} />}
-                            </List>
-                        </Segment>
+                        <SortableList
+                            icon="bars"
+                            items={selectedPageMenuItems.map(item => ({ item, name: item.id, id: toId(item) }))}
+                            titleI18nKey="createTemplateModal.selectedItems"
+                            noDataMessageI18nKey="createTemplateModal.noPageMenuItemsSelected"
+                            onUpdate={setSelectedPageMenuItems}
+                        />
                     </Segment.Group>
                 </Form>
             </Modal.Content>

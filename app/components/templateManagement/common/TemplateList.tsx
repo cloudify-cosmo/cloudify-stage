@@ -1,18 +1,18 @@
 import React, { FunctionComponent } from 'react';
-import ReadOnlyList, { ReadOnlyListProps } from './ReadOnlyList';
+import ItemsList, { ItemsListProps } from './ItemsList';
 
 interface TemplateListProps {
     templates: string[];
     noDataMessageKey: string;
-    width?: ReadOnlyListProps['width'];
+    width?: ItemsListProps['width'];
 }
 
 const TemplateList: FunctionComponent<TemplateListProps> = ({ noDataMessageKey, templates = [], width }) => (
-    <ReadOnlyList
+    <ItemsList
         icon="list layout"
         items={templates}
-        noDataMessageKey={noDataMessageKey}
-        titleKey="usedByTemplates"
+        noDataMessageI18nKey={noDataMessageKey}
+        titleI18nKey="usedByTemplates"
         width={width}
     />
 );

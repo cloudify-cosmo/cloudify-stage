@@ -12,16 +12,19 @@ import Const from '../../utils/consts';
 import { Breadcrumb, Button, Divider, ErrorMessage, Segment } from '../basic';
 import Pages from './pages/Pages';
 import Templates from './templates/Templates';
-import { createPageId, setActive } from '../../actions/templateManagement';
+import { setTemplateManagementActive } from '../../actions/templateManagement';
 import { selectHomePage } from '../../actions/pageMenu';
 import Internal from '../../utils/Internal';
 import { useBoolean, useErrors } from '../../utils/hooks';
-import { addPage, addTemplate, editTemplate, removePage, removeTemplate } from '../../actions/templates';
+import { addTemplate, editTemplate, removeTemplate } from '../../actions/templateManagement/templates';
+import { addPage, removePage } from '../../actions/templateManagement/pages';
 import PageGroups from './pageGroups/PageGroups';
 import { ReduxState } from '../../reducers';
+import useCreatePageId from './pages/useCreatePageId';
 
 export default function TemplateManagement() {
     const dispatch = useDispatch();
+    const createPageId = useCreatePageId();
 
     const [isLoading, setLoading, unsetLoading] = useBoolean(true);
     const [templates, setTemplates] = useState();
@@ -42,6 +45,7 @@ export default function TemplateManagement() {
     }
 
     function fetchData() {
+        startLoading();
         return Promise.all([
             internal.doGet('/templates'),
             internal.doGet('/templates/pages'),
@@ -97,17 +101,18 @@ export default function TemplateManagement() {
                 clearErrors();
                 unsetLoading();
             })
-            .catch(handleError);
+            .catch(handleError)
+            .finally(unsetLoading);
     }
 
     useEffect(() => {
-        dispatch(setActive(true));
-        return () => dispatch(setActive(false));
+        dispatch(setTemplateManagementActive(true));
+        return () => dispatch(setTemplateManagementActive(false));
     }, []);
 
     useEffect(() => {
         fetchData();
-    }, [templateDefs, pageDefs]);
+    }, [templateDefs, pageDefs, pageGroupDefs]);
 
     function setSelected(collection, id) {
         return _.map(collection, item => ({ ...item, selected: !item.selected && item.id === id }));
@@ -228,7 +233,7 @@ export default function TemplateManagement() {
     function onPageCreate(name) {
         startLoading();
 
-        const pageId = createPageId(name, pageDefs);
+        const pageId = createPageId(name);
         const body = {
             id: pageId,
             name,

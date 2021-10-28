@@ -1,17 +1,17 @@
 // @ts-nocheck File not migrated fully to TS
-/**
- * Created by pposel on 11/09/2017.
- */
-
-import _ from 'lodash';
 import { push } from 'connected-react-router';
-import * as types from './types';
-import { addPage, removePage } from './templates';
-import Internal from '../utils/Internal';
-import { forEachWidget } from './page';
+import _ from 'lodash';
+import { ThunkAction } from 'redux-thunk';
+import { AnyAction } from 'redux';
+import * as types from '../types';
+import { forEachWidget, SimpleWidgetObj } from '../page';
+import Internal from '../../utils/Internal';
+import { ReduxState } from '../../reducers';
 
-export function createPageId(name, pages) {
-    const ids = _.keysIn(pages);
+type Page = ReduxState['templates']['pagesDef'][string] & { id: string; oldId?: string };
+
+export function createPageId(name: string, pageDefs: ReduxState['templates']['pagesDef']) {
+    const ids = _.keysIn(pageDefs);
 
     // Add suffix to make URL unique if same page name already exists
     let newPageId = _.snakeCase(name.trim());
@@ -31,9 +31,20 @@ export function createPageId(name, pages) {
     return newPageId;
 }
 
-export function persistPage(page) {
+export function addPage(page: Page) {
+    return {
+        type: types.ADD_TEMPLATE_PAGE,
+        page
+    };
+}
+
+export function savePage(page: Page): ThunkAction<Promise<any>, ReduxState, never, AnyAction> {
+    return dispatch => dispatch(persistPage(page)).then(() => dispatch(push('/template_management')));
+}
+
+export function persistPage(page: Page): ThunkAction<Promise<any>, ReduxState, never, AnyAction> {
     return (dispatch, getState) => {
-        function prepareWidgetData(widget) {
+        function prepareWidgetData(widget: SimpleWidgetObj) {
             return _.pick(widget, 'name', 'width', 'height', 'x', 'y', 'configuration', 'definition');
         }
 
@@ -53,21 +64,20 @@ export function persistPage(page) {
     };
 }
 
-export function savePage(page) {
-    return dispatch => dispatch(persistPage(page)).then(() => dispatch(push('/template_management')));
+export function removePage(pageId: string) {
+    return {
+        type: types.REMOVE_TEMPLATE_PAGE,
+        pageId
+    };
 }
 
-export function drillDownWarning(show) {
+export function setDrillDownWarningActive(show: boolean) {
     return {
         type: types.PAGE_MANAGEMENT_DRILLDOWN_WARN,
         show
     };
 }
 
-export function setActive(isActive) {
-    return { type: types.TEMPLATE_MANAGEMENT_ACTIVE, isActive };
-}
-
-export function setPageEditMode(isPageEditMode) {
+export function setPageEditMode(isPageEditMode: boolean) {
     return { type: types.PAGE_MANAGEMENT_SET_EDIT_MODE, isPageEditMode };
 }

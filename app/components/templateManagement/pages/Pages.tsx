@@ -11,7 +11,7 @@ import CreatePageModal from './CreatePageModal';
 import TemplateList from '../common/TemplateList';
 import { DataTable, Header, Icon, Label, PopupConfirm, Segment } from '../../basic';
 import StageUtils from '../../../utils/stageUtils';
-import ReadOnlyList from '../common/ReadOnlyList';
+import ItemsList from '../common/ItemsList';
 import ItemsCount from '../common/ItemsCount';
 
 const tTemplates = StageUtils.getT('templates');
@@ -35,8 +35,8 @@ export default function Pages({
             <DataTable>
                 <DataTable.Column label={tPageManagement('table.pageID')} width="25%" />
                 <DataTable.Column label={tPageManagement('table.pageName')} width="25%" />
-                <DataTable.Column label={tPageManagement('table.templates')} width="10%" />
-                <DataTable.Column label={tPageManagement('table.pageGroups')} width="10%" />
+                <DataTable.Column label={tPageManagement('table.templates')} width="1%" />
+                <DataTable.Column label={tPageManagement('table.pageGroups')} width="1%" />
                 <DataTable.Column label={tPageManagement('table.updatedAt')} width="15%" />
                 <DataTable.Column label={tPageManagement('table.updatedBy')} width="15%" />
                 <DataTable.Column width="10%" />
@@ -106,12 +106,12 @@ export default function Pages({
                                         templates={item.templates}
                                         noDataMessageKey="pageManagement.notUsedByTemplate"
                                     />
-                                    <ReadOnlyList
+                                    <ItemsList
                                         width="50%"
                                         icon="folder open outline"
                                         items={item.pageGroups}
-                                        noDataMessageKey="pageManagement.notUsedByGroup"
-                                        titleKey="usedByPageGroups"
+                                        noDataMessageI18nKey="pageManagement.notUsedByGroup"
+                                        titleI18nKey="usedByPageGroups"
                                     />
                                 </Segment.Group>
                             </DataTable.DataExpandable>
