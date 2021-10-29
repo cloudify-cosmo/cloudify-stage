@@ -1,12 +1,12 @@
-// @ts-nocheck File not migrated fully to TS
 describe('Sites Map', () => {
-    const refreshDashboardPage = () => {
-        cy.visitTestPage();
-    };
-
     const testSite = { name: 'Tel-Aviv', location: '32.079991, 34.767291' };
+
+    function refreshPage() {
+        cy.visitPage('Dashboard');
+    }
+
     before(() => {
-        cy.activate().usePageMock('sitesMap').mockLogin().deleteSites().createSite(testSite).waitUntilLoaded();
+        cy.activate().deleteSites().login();
     });
 
     it('is not displayed when there is no connection to map tiles provider', () => {
@@ -15,46 +15,57 @@ describe('Sites Map', () => {
             body: {}
         }).as('mapsRoute');
 
-        refreshDashboardPage();
+        refreshPage();
         cy.wait('@mapsRoute');
         cy.get('div.sites-map div.leaflet-layer > div.leaflet-tile-container').should('not.exist');
         cy.get('.sitesMapWidget .ui.message').should('contain.text', 'widget content cannot be displayed');
     });
 
-    it('is displayed when connection to map tiles provider is available', () => {
-        refreshDashboardPage();
-        cy.get('div.sites-map div.leaflet-layer > div.leaflet-tile-container').should('have.descendants', 'img');
-    });
+    it('is displayed when there are no sites defined', () => {
+        refreshPage();
 
-    it('shows markers for each site', () => {
-        refreshDashboardPage();
-        cy.log('Verify first site is present on the map');
-        cy.get('.leaflet-marker-icon').should('have.length', 1).click();
-        cy.get('.leaflet-popup .leaflet-popup-content')
-            .should('be.visible')
-            .find('h5.header')
-            .should('have.text', testSite.name);
-
-        cy.log('Add second site');
-        const secondSite = { name: 'Bergen', location: '60.389433, 5.332489', visibility: 'private' };
-        cy.createSite(secondSite);
-        // NOTE: In the CI for some reason refreshDashboardPage does not work here
-        cy.reload();
-
-        cy.log('Verify second site is present on the map');
-        cy.get('.leaflet-marker-icon').should('have.length', 2);
-    });
-
-    it('opens a page showing list of deployments per selected site', () => {
-        // NOTE: Do not mock login to load all currently available pages and test drill-down to site
-        cy.login();
-        cy.get('.leaflet-marker-icon:nth-of-type(1)').click();
-        cy.get('.leaflet-popup .leaflet-popup-content').find('.deploymentState').first().click();
-
-        cy.verifyLocation(
-            `/console/page/console_deployments/Site:%20${testSite.name}`,
-            { siteName: testSite.name },
-            `Site: ${testSite.name}`
+        cy.contains(
+            'This widget shares site location and status info. There is no data to display because no sites are defined. Sites can be added in the Sites page.'
         );
+        cy.contains('Sites page').click();
+        cy.contains('.pageTitle', 'Sites');
+    });
+
+    describe('is displayed when sites are available and', () => {
+        before(() => {
+            cy.createSite(testSite);
+            refreshPage();
+        });
+
+        it('shows markers for each site', () => {
+            cy.get('div.sites-map div.leaflet-layer > div.leaflet-tile-container').should('have.descendants', 'img');
+
+            cy.log('Verify first site is present on the map');
+            cy.get('.leaflet-marker-icon').should('have.length', 1).click();
+            cy.get('.leaflet-popup .leaflet-popup-content')
+                .should('be.visible')
+                .find('h5.header')
+                .should('have.text', testSite.name);
+
+            cy.log('Add second site');
+            const secondSite = { name: 'Bergen', location: '60.389433, 5.332489', visibility: 'private' };
+            cy.createSite(secondSite);
+            // NOTE: In the CI for some reason refreshDashboardPage does not work here
+            cy.reload().waitUntilLoaded();
+
+            cy.log('Verify second site is present on the map');
+            cy.get('.leaflet-marker-icon').should('have.length', 2);
+        });
+
+        it('opens a page showing list of deployments per selected site', () => {
+            cy.get('.leaflet-marker-icon:nth-of-type(1)').click();
+            cy.get('.leaflet-popup .leaflet-popup-content').find('.deploymentState').first().click();
+
+            cy.verifyLocation(
+                `/console/page/dashboard_deployments/Site:%20${testSite.name}`,
+                { siteName: testSite.name },
+                `Site: ${testSite.name}`
+            );
+        });
     });
 });
