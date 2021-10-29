@@ -2,7 +2,7 @@ describe('Sites Map', () => {
     const testSite = { name: 'Tel-Aviv', location: '32.079991, 34.767291' };
 
     function refreshPage() {
-        cy.visitPage('Dashboard');
+        cy.clickPageMenuItem('Dashboard');
     }
 
     before(() => {
