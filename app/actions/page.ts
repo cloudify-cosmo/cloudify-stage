@@ -2,6 +2,7 @@ import _ from 'lodash';
 import type { ThunkAction } from 'redux-thunk';
 import type { AnyAction } from 'redux';
 
+import type { SemanticICONS } from 'semantic-ui-react';
 import * as types from './types';
 import { addWidget } from './widgets';
 import type { Widget, WidgetDefinition } from '../utils/StageAPI';
@@ -40,6 +41,7 @@ export interface PageDefinition {
     id: string;
     name: string;
     type: 'page';
+    icon?: SemanticICONS;
     description: string;
     layout: LayoutSection[];
     isDrillDown: boolean;
