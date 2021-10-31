@@ -110,7 +110,7 @@ describe('Templates segment', () => {
                     cy.contains('plugins').find('.add').click();
                     cy.contains('logs').find('.add').click();
                 });
-            cy.contains('Available page groups').click().parent().contains('empty').find('.add').click();
+            cy.contains('Available page groups').click().parent().contains('deployments').find('.add').click();
 
             cy.log('Create template');
             cy.get('.actions > .ok').click();
@@ -119,7 +119,7 @@ describe('Templates segment', () => {
         cy.get('.modal').should('not.exist');
 
         cy.log('Verify template');
-        verifyTemplateRow('Template 1', ['deployment', 'plugins', 'logs', 'empty'], ['user', 'viewer'], ['all']);
+        verifyTemplateRow('Template 1', ['deployment', 'plugins', 'logs', 'deployments'], ['user', 'viewer'], ['all']);
 
         cy.log('Edit template');
         getTemplateRow('Template 1').within(() => cy.get('.edit').click());
@@ -148,7 +148,7 @@ describe('Templates segment', () => {
             cy.log('Remove page menu items');
             cy.contains('Selected page menu items').within(() => {
                 cy.contains('logs').find('.minus').click();
-                cy.contains('empty').find('.minus').click();
+                cy.contains('deployments').find('.minus').click();
             });
 
             cy.log('Save template');

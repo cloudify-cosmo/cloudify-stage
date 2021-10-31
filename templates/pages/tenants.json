@@ -1,0 +1,16 @@
+{
+  "name": "Tenants",
+  "layout": [
+    {
+      "type": "widgets",
+      "content": [
+        {
+          "name": "Tenants management",
+          "width": 12,
+          "height": 24,
+          "definition": "tenants"
+        }
+      ]
+    }
+  ]
+}
