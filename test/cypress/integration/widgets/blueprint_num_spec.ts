@@ -3,6 +3,8 @@ describe('Number of Blueprints widget', () => {
 
     before(() => cy.activate().useWidgetWithDefaultConfiguration(widgetId, { pollingTime: 3 }));
 
+    beforeEach(() => cy.visitTestPage());
+
     it('displays the correct number of resources', () => {
         cy.stageRequest('/console/sp/blueprints', 'GET').then(data => {
             const num = _.get(data.body, 'metadata.pagination.total', 0);
@@ -10,11 +12,29 @@ describe('Number of Blueprints widget', () => {
         });
     });
 
-    it('opens default page on click', () => {
-        // TODO
-    });
+    describe('opens chosen page after configuration change on click', () => {
+        const pageName = 'Environments';
+        const pageId = 'page_0';
+        before(() => cy.addPage(pageName));
 
-    it('opens chosen page after configuration change on click', () => {
-        // TODO
+        function setWidgetConfiguration(pageToOpenOnClick: string) {
+            cy.editWidgetConfiguration(widgetId, () => {
+                cy.setDropdownValues('Page to open on click', [pageToOpenOnClick]);
+            });
+        }
+
+        function clickOnWidget() {
+            cy.get('.statistic').click();
+        }
+
+        function verifyUrl(expectedPageId: string) {
+            cy.location('pathname').should('be.equal', `/console/page/${expectedPageId}`);
+        }
+
+        it('opens chosen page after configuration change on click', () => {
+            setWidgetConfiguration(pageName);
+            clickOnWidget();
+            verifyUrl(pageId);
+        });
     });
 });
