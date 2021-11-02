@@ -1,5 +1,6 @@
 {
   "name": "Groups",
+  "icon": "group",
   "layout": [
     {
       "type": "widgets",

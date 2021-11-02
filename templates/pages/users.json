@@ -1,5 +1,6 @@
 {
   "name": "Users",
+  "icon": "user",
   "layout": [
     {
       "type": "widgets",
