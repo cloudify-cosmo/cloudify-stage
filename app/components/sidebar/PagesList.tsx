@@ -1,4 +1,4 @@
-import type { FunctionComponent } from 'react';
+import type { CSSProperties, FunctionComponent } from 'react';
 import React, { ReactNode, useCallback, useMemo, useState } from 'react';
 import { chain, find, includes, map, without } from 'lodash';
 import type { DragEndEvent, DragOverEvent, DragStartEvent } from '@dnd-kit/core';
@@ -8,6 +8,7 @@ import { restrictToVerticalAxis } from '@dnd-kit/modifiers';
 import { useDispatch, useSelector } from 'react-redux';
 import styled from 'styled-components';
 
+import { SemanticICONS } from 'semantic-ui-react';
 import { EditableLabel, Icon } from '../basic';
 import AddPageButton from './AddPageButton';
 import AddPageGroupButton from './AddPageGroupButton';
@@ -16,6 +17,7 @@ import SortableMenuItem, { ItemContainer } from './SortableMenuItem';
 import type { PageDefinition } from '../../actions/page';
 import type { PageMenuItem } from '../../actions/pageMenu';
 import {
+    changePageMenuItemIcon,
     changePageMenuItemName,
     createPagesMap,
     findSelectedRootPageId,
@@ -27,6 +29,7 @@ import {
 import Consts from '../../utils/consts';
 import { useBoolean, useResettableState } from '../../utils/hooks';
 import { ReduxState } from '../../reducers';
+import IconSelection from './IconSelection';
 
 export interface PagesListProps {
     isEditMode?: boolean;
@@ -185,6 +188,10 @@ const PagesList: FunctionComponent<PagesListProps> = ({ isEditMode, pageId }) =>
         stopNameEdit();
     }
 
+    function onIconChange(pageMenuItemId: string, icon?: SemanticICONS) {
+        dispatch(changePageMenuItemIcon(pageMenuItemId, icon || undefined));
+    }
+
     function renderPageMenuItem(pageMenuItem: PageMenuItem, subItem = false): ReactNode[] {
         const itemNameInEdit = nameEditedMenuItemId === pageMenuItem.id;
 
@@ -193,6 +200,14 @@ const PagesList: FunctionComponent<PagesListProps> = ({ isEditMode, pageId }) =>
             if (itemNameInEdit) return 0;
             return undefined;
         }
+
+        const iconStyle: CSSProperties = {
+            marginLeft: -10,
+            marginRight: 4,
+            position: 'relative',
+            top: -3,
+            float: 'none'
+        };
 
         const renderedMenuItem = (
             <SortableMenuItem
@@ -217,12 +232,21 @@ const PagesList: FunctionComponent<PagesListProps> = ({ isEditMode, pageId }) =>
                     cursor: dragging ? 'inherit' : undefined
                 }}
             >
-                {pageMenuItem.icon && (
-                    <Icon
-                        name={pageMenuItem.icon}
-                        style={{ marginLeft: -10, marginRight: 4, position: 'relative', top: -3, float: 'none' }}
-                    />
-                )}
+                {isEditMode
+                    ? !itemNameInEdit && (
+                          <IconSelection
+                              style={iconStyle}
+                              value={pageMenuItem.icon}
+                              onChange={icon => onIconChange(pageMenuItem.id, icon)}
+                          />
+                      )
+                    : pageMenuItem.icon && (
+                          <Icon
+                              name={pageMenuItem.icon}
+                              style={iconStyle}
+                              onClick={isEditMode ? () => {} : undefined}
+                          />
+                      )}
                 <EditableLabel
                     value={pageMenuItem.name}
                     editing={itemNameInEdit}
