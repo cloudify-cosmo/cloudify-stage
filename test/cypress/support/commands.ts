@@ -397,7 +397,13 @@ const commands = {
 
     clearSearchableDropdown: (fieldName: string) => cy.getField(fieldName).find('.dropdown.clear.icon').click(),
 
-    setDropdownValues: (fieldName: string, values: string[]) =>
+    setSingleDropdownValue: (fieldName: string, value: string) =>
+        cy
+            .getField(fieldName)
+            .click()
+            .within(() => cy.contains('div[role=option]', value).click()),
+
+    setMoltipleDropdownValues: (fieldName: string, values: string[]) =>
         cy
             .getField(fieldName)
             .click()

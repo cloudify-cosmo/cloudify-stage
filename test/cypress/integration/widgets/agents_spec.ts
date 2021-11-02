@@ -74,7 +74,7 @@ describe('Agents widget', () => {
 
         type InstallMethod = 'Remote' | 'Plugin' | 'Init Script' | 'Provided';
         function selectInstallMethod(installMethods: InstallMethod[]) {
-            cy.setDropdownValues('Install Methods filter', installMethods);
+            cy.setMoltipleDropdownValues('Install Methods filter', installMethods);
         }
 
         function verifyExecution(

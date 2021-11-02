@@ -19,7 +19,7 @@ describe('Number of Blueprints widget', () => {
 
         function setWidgetConfiguration(pageToOpenOnClick: string) {
             cy.editWidgetConfiguration(widgetId, () => {
-                cy.setDropdownValues('Page to open on click', [pageToOpenOnClick]);
+                cy.setSingleDropdownValue('Page to open on click', pageToOpenOnClick);
             });
         }
 
