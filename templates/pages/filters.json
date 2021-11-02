@@ -1,5 +1,6 @@
 {
   "name": "Filters",
+  "icon": "filter",
   "layout": [
     {
       "type": "widgets",

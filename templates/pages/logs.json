@@ -1,5 +1,6 @@
 {
   "name": "System Logs",
+  "icon": "file alternate outline",
   "layout": [
     {
       "type": "widgets",

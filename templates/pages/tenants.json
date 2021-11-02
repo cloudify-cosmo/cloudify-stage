@@ -1,5 +1,6 @@
 {
   "name": "Tenants",
+  "icon": "user circle",
   "layout": [
     {
       "type": "widgets",

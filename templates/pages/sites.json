@@ -1,5 +1,6 @@
 {
   "name": "Sites",
+  "icon": "sitemap",
   "layout": [{
     "type": "widgets",
     "content": [
