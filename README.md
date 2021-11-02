@@ -11,7 +11,7 @@ The Cloudify Console provides User Interface for managing and analyzing [Cloudif
 
 The following requirements should be met prior starting the application:
 
-- [Node.js](https://nodejs.org) (version 12.x, at least 12.22.1) installed
+- [Node.js](https://nodejs.org) (version 14.x, at least 14.18.1) installed
     - With [NVM](https://github.com/nvm-sh/nvm) installed just execute `nvm use` to set Node.js version compatible with this project
 - [PostgreSQL](https://www.postgresql.org/) (version >= 9.5.x) installed and configured:
     - Make a database named `stage` 
@@ -21,7 +21,7 @@ The following requirements should be met prior starting the application:
         docker pull postgres
         docker run --name postgres-cfy -e POSTGRES_PASSWORD=cloudify -e POSTGRES_USER=cloudify -e POSTGRES_DB=stage -p 5432:5432 -d postgres
         ```
-- [Cloudify Manager](https://cloudify.co/download) (version >= 5.x) accessible from your local machine
+- [Cloudify Manager](https://cloudify.co/download) (version >= 6.x) accessible from your local machine
 
 ## Setup
 
