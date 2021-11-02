@@ -48,6 +48,12 @@ const WidgetList = styled(Item.Group)`
     overflow: auto;
     padding-top: 5px;
 
+    @media screen and (max-width: 1281px) {
+        & {
+            margin: 0 !important;
+        }
+    }
+
     .selectWidgetButton {
         margin-right: 10px !important;
     }
@@ -336,7 +342,7 @@ function AddWidgetModal({
 
     return (
         <AddWidgetModalWrapper>
-            <Modal
+            <StyledAddWidgetModal
                 trigger={addWidgetBtn}
                 open={open}
                 closeIcon
@@ -470,7 +476,7 @@ function AddWidgetModal({
                         </Grid.Column>
                     </Grid.Row>
                 </Grid>
-            </Modal>
+            </StyledAddWidgetModal>
 
             <Confirm
                 open={showConfirm}
