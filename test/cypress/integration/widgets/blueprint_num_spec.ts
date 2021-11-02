@@ -1,5 +1,7 @@
 describe('Number of Blueprints widget', () => {
     const widgetId = 'blueprintNum';
+    const defaultPageName = 'Blueprints';
+    const defaultPageId = 'blueprints';
 
     before(() => cy.activate().useWidgetWithDefaultConfiguration(widgetId, { pollingTime: 3 }));
 
@@ -12,10 +14,13 @@ describe('Number of Blueprints widget', () => {
         });
     });
 
-    describe('opens chosen page after configuration change on click', () => {
+    describe('opens the correct page on click', () => {
         const pageName = 'Environments';
-        const pageId = 'page_0';
-        before(() => cy.addPage(pageName));
+        const pageId = 'page_1';
+        before(() => {
+            cy.addPage(defaultPageName);
+            cy.addPage(pageName);
+        });
 
         function setWidgetConfiguration(pageToOpenOnClick: string) {
             cy.editWidgetConfiguration(widgetId, () => {
@@ -30,6 +35,11 @@ describe('Number of Blueprints widget', () => {
         function verifyUrl(expectedPageId: string) {
             cy.location('pathname').should('be.equal', `/console/page/${expectedPageId}`);
         }
+
+        it('opens page according to the default configuration', () => {
+            clickOnWidget();
+            verifyUrl(defaultPageId);
+        });
 
         it('opens chosen page after configuration change on click', () => {
             setWidgetConfiguration(pageName);
