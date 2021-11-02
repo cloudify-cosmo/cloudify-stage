@@ -9,11 +9,12 @@ import { ErrorMessage, Message, Table } from '../../basic';
 import ClusterService from './ClusterService';
 import { clusterServiceBgColor, clusterServiceEnum, clusterServiceStatusEnum, clusterServiceStatuses } from './consts';
 import './ClusterServicesOverview.css';
+import { createPagesMap } from '../../../actions/pageMenu';
 
 export default function ClusterServicesOverview({ services, clickable, isFetching, fetchingError, header }) {
-    const adminPageId = 'admin_operations';
-    const adminPageUrl = `/page/${adminPageId}`;
-    const isAdminPagePresent = !!useSelector(state => _.find(state.pages, { id: adminPageId }));
+    const systemHealthPageId = 'system_health';
+    const systemHealthPageUrl = `/page/${systemHealthPageId}`;
+    const isSystemHealthPagePresent = !!useSelector(state => createPagesMap(state.pages)[systemHealthPageId]);
 
     return (
         <Table celled basic="very" collapsing className="servicesData">
@@ -35,8 +36,8 @@ export default function ClusterServicesOverview({ services, clickable, isFetchin
                                         style={{ backgroundColor: clusterServiceBgColor(service.status) }}
                                     >
                                         <Table.Cell>
-                                            {clickable && isAdminPagePresent ? (
-                                                <Link to={adminPageUrl}>
+                                            {clickable && isSystemHealthPagePresent ? (
+                                                <Link to={systemHealthPageUrl}>
                                                     <ClusterService
                                                         isExternal={service.is_external}
                                                         name={serviceName}

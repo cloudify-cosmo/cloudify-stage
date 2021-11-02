@@ -1,0 +1,4 @@
+{
+  "name": "System Setup",
+  "pages": ["users", "groups", "tenants", "health", "logs", "snapshots"]
+}
