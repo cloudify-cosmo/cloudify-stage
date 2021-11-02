@@ -1,0 +1,4 @@
+{
+  "name": "Resources",
+  "pages": ["secrets", "plugins", "sites", "agents", "filters"]
+}

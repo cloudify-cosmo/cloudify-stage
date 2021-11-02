@@ -207,7 +207,7 @@ const commands = {
         });
         return cy.visit('/console');
     },
-    visitPage: (name: string, id: string | null = null) => {
+    clickPageMenuItem: (name: string, id: string | null = null) => {
         cy.log(`Switching to '${name}' page`);
         cy.get('.sidebar.menu .pages').within(() => cy.contains(name).click({ force: true }));
         if (id) {
@@ -215,7 +215,7 @@ const commands = {
         }
         return cy.waitUntilPageLoaded();
     },
-    visitTestPage: () => cy.visitPage(testPageName),
+    visitTestPage: () => cy.clickPageMenuItem(testPageName),
     usePageMock: (
         widgetIds?: string | string[],
         widgetConfiguration: any = {},
