@@ -1,4 +1,5 @@
 {
   "name": "System Setup",
+  "icon": "setting",
   "pages": ["users", "groups", "tenants", "health", "logs", "snapshots"]
 }
