@@ -261,6 +261,7 @@ function createPage(action: { type: string; page: PageDefinition; newPageId: str
         id: action.newPageId,
         name: action.page.name,
         type: 'page',
+        icon: action.page.icon,
         description: '',
         layout: _.map(
             action.page.layout,
@@ -277,5 +278,5 @@ function createPage(action: { type: string; page: PageDefinition; newPageId: str
 }
 
 function createPageGroup({ id, pageGroup }: { id: string; pageGroup: PageGroup }) {
-    return { id, name: pageGroup.name, type: 'pageGroup', pages: [] };
+    return { id, name: pageGroup.name, icon: pageGroup.icon, type: 'pageGroup', pages: [] };
 }
