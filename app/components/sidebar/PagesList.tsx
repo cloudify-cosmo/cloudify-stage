@@ -217,6 +217,12 @@ const PagesList: FunctionComponent<PagesListProps> = ({ isEditMode, pageId }) =>
                     cursor: dragging ? 'inherit' : undefined
                 }}
             >
+                {pageMenuItem.icon && (
+                    <Icon
+                        name={pageMenuItem.icon}
+                        style={{ marginLeft: -10, marginRight: 4, position: 'relative', top: -3, float: 'none' }}
+                    />
+                )}
                 <EditableLabel
                     value={pageMenuItem.name}
                     editing={itemNameInEdit}

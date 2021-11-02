@@ -5,6 +5,7 @@ import { LocationDescriptorObject } from 'history';
 import { stringify } from 'query-string';
 import { push } from 'connected-react-router';
 import log from 'loglevel';
+import type { SemanticICONS } from 'semantic-ui-react';
 import { addLayoutToPage, PageDefinition } from './page';
 import * as types from './types';
 import { ReduxState } from '../reducers';
@@ -27,6 +28,7 @@ export interface PageGroup {
     id: string;
     name: string;
     type: 'pageGroup';
+    icon?: SemanticICONS;
     pages: PageDefinition[];
 }
 
