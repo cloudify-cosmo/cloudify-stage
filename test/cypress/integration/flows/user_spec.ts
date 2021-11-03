@@ -57,7 +57,7 @@ describe('User flow', () => {
 
         cy.getSearchInput().clear().type(resourceName);
         cy.get('.blueprintsTable > tbody > tr').should('have.length', 1);
-        cy.get('.rocket').click();
+        cy.get('.blueprintsTable .rocket').click();
         cy.get('input[name=deploymentName]').type(resourceName);
         cy.get('button.green').click();
 
