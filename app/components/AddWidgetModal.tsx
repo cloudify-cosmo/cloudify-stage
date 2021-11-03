@@ -39,14 +39,14 @@ const AddWidgetModalWrapper = styled.div`
 `;
 
 const StyledAddWidgetModal = styled(Modal)`
-    max-height: 600px;
+    max-height: 600px !important;
     padding: 14px;
 `;
 
 const WidgetListWrapper = styled.div`
-    height: 300px;
+    height: 400px;
     overflow-y: auto;
-    margin-bottom: 35px;
+    margin-bottom: 20px;
 `;
 
 const WidgetList = styled(Item.Group)`
