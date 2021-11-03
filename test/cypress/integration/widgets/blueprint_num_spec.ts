@@ -17,7 +17,7 @@ describe('Number of Blueprints widget', () => {
 
     describe('Tests without mockLogin', () => {
         before(() => cy.activate().login().addWidget(widgetId));
-        
+
         it('Opens the default page on click', () => {
             clickOnWidget();
             verifyUrl('blueprints');
@@ -27,14 +27,14 @@ describe('Number of Blueprints widget', () => {
     describe('Tests with mockLogin', () => {
         const pageName = 'Environments';
         const pageId = 'page_0';
-    
+
         before(() => {
             cy.activate().useWidgetWithDefaultConfiguration(widgetId, { pollingTime: 3 });
             cy.addPage(pageName);
         });
-    
+
         beforeEach(() => cy.visitTestPage());
-    
+
         it('displays the correct number of resources', () => {
             cy.stageRequest('/console/sp/blueprints', 'GET').then(data => {
                 const num = _.get(data.body, 'metadata.pagination.total', 0);
