@@ -240,12 +240,7 @@ const PagesList: FunctionComponent<PagesListProps> = ({ isEditMode, pageId }) =>
                               onChange={icon => onIconChange(pageMenuItem.id, icon)}
                           />
                       )
-                    : pageMenuItem.icon && (
-                          <Icon
-                              name={pageMenuItem.icon}
-                              style={iconStyle}
-                          />
-                      )}
+                    : pageMenuItem.icon && <Icon name={pageMenuItem.icon} style={iconStyle} />}
                 <EditableLabel
                     value={pageMenuItem.name}
                     editing={itemNameInEdit}
