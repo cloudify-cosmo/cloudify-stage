@@ -1,0 +1,12 @@
+diff --git a/node_modules/pg/lib/connection.js b/node_modules/pg/lib/connection.js
+index ebb2f09..1a6a48f 100644
+--- a/node_modules/pg/lib/connection.js
++++ b/node_modules/pg/lib/connection.js
+@@ -77,6 +77,7 @@ class Connection extends EventEmitter {
+       var tls = require('tls')
+       const options = {
+         socket: self.stream,
++        host
+       }
+ 
+       if (self.ssl !== true) {
