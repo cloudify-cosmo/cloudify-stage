@@ -101,6 +101,14 @@ export function changePageMenuItemName(pageMenuItemId: string, newName: string) 
     };
 }
 
+export function changePageMenuItemIcon(pageMenuItemId: string, icon?: SemanticICONS) {
+    return {
+        type: types.CHANGE_PAGE_MENU_ITEM_ICON,
+        pageMenuItemId,
+        icon
+    };
+}
+
 export function selectPage(
     pageId: string,
     isDrilldown?: boolean,

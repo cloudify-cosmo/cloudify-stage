@@ -1,12 +1,9 @@
 import React, { ComponentProps, FunctionComponent, useMemo } from 'react';
-import type { SemanticICONS } from 'semantic-ui-react';
+import type { DropdownProps, SemanticICONS } from 'semantic-ui-react';
+import { Dropdown, Icon } from '../basic';
+import { useBoolean } from '../../utils/hooks';
+import { CustomConfigurationComponentProps } from '../../utils/StageAPI';
 
-type SemanticIconDropdownProps = Pick<
-    Stage.Types.CustomConfigurationComponentProps<string>,
-    'name' | 'onChange' | 'value'
->;
-
-const { Dropdown } = Stage.Basic;
 const semanticIcons: (SemanticICONS | '')[] = [
     'american sign language interpreting',
     'assistive listening systems',
@@ -1266,13 +1263,21 @@ const semanticIconsOptions: ComponentProps<typeof Dropdown>['options'] = semanti
     icon
 }));
 
-const SemanticIconDropdown: FunctionComponent<SemanticIconDropdownProps> = ({ name, value, onChange }) => {
-    const { Icon } = Stage.Basic;
-    const { useBoolean } = Stage.Hooks;
+interface SemanticIconDropdownProps extends Omit<DropdownProps, 'onChange'> {
+    name?: string;
+    onChange: CustomConfigurationComponentProps<string>['onChange'];
+}
+
+const SemanticIconDropdown: FunctionComponent<SemanticIconDropdownProps> = ({
+    name = '',
+    value,
+    onChange,
+    ...rest
+}) => {
     const [isOpen, setOpen, unsetOpen] = useBoolean();
 
     const handleChange: ComponentProps<typeof Dropdown>['onChange'] = (event, data) => {
-        onChange(event, {
+        onChange?.(event, {
             name,
             value: data.value as string
         });
@@ -1301,20 +1306,11 @@ const SemanticIconDropdown: FunctionComponent<SemanticIconDropdownProps> = ({ na
             selection
             trigger={trigger}
             value={value}
+            /* eslint-disable-next-line react/jsx-props-no-spreading */
+            {...rest}
         />
     );
 };
 
 const memoizedSemanticIconDropdown = React.memo(SemanticIconDropdown, _.isEqual);
 export default memoizedSemanticIconDropdown;
-
-declare global {
-    namespace Stage.Common {
-        export { SemanticIconDropdown };
-    }
-}
-
-Stage.defineCommon({
-    name: 'SemanticIconDropdown',
-    common: memoizedSemanticIconDropdown
-});
