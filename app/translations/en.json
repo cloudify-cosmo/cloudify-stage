@@ -353,6 +353,7 @@
             "table": {
                 "pageID": "Page id",
                 "pageName": "Page name",
+                "icon": "Icon",
                 "templates": "Templates",
                 "pageGroups": "Page groups",
                 "updatedAt": "Updated at",
@@ -367,6 +368,7 @@
             "table": {
                 "groupId": "Group id",
                 "groupName": "Group name",
+                "icon": "Icon",
                 "pages": "Pages",
                 "templates": "Templates",
                 "updatedAt": "Updated at",

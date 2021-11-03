@@ -29,7 +29,7 @@ import {
 import Consts from '../../utils/consts';
 import { useBoolean, useResettableState } from '../../utils/hooks';
 import { ReduxState } from '../../reducers';
-import IconSelection from './IconSelection';
+import IconSelection from '../IconSelection';
 
 export interface PagesListProps {
     isEditMode?: boolean;

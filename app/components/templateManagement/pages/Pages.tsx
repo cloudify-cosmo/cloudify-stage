@@ -35,6 +35,7 @@ export default function Pages({
             <DataTable>
                 <DataTable.Column label={tPageManagement('table.pageID')} width="25%" />
                 <DataTable.Column label={tPageManagement('table.pageName')} width="25%" />
+                <DataTable.Column label={tPageManagement('table.icon')} width="1%" />
                 <DataTable.Column label={tPageManagement('table.templates')} width="1%" />
                 <DataTable.Column label={tPageManagement('table.pageGroups')} width="1%" />
                 <DataTable.Column label={tPageManagement('table.updatedAt')} width="15%" />
@@ -51,6 +52,9 @@ export default function Pages({
                                     </Header>
                                 </DataTable.Data>
                                 <DataTable.Data>{item.name}</DataTable.Data>
+                                <DataTable.Data>
+                                    <Icon name={item.icon} />
+                                </DataTable.Data>
                                 <DataTable.Data>
                                     <ItemsCount items={item.templates} />
                                 </DataTable.Data>

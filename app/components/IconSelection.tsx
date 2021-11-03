@@ -1,11 +1,11 @@
 import React, { CSSProperties, FunctionComponent } from 'react';
 import { SemanticICONS } from 'semantic-ui-react';
-import { ApproveButton, CancelButton, Divider, Icon, Popup } from '../basic';
-import { SemanticIconDropdown } from '../shared';
-import { useInput, useOpen } from '../../utils/hooks';
+import { ApproveButton, CancelButton, Divider, Icon, Popup } from './basic';
+import { SemanticIconDropdown } from './shared';
+import { useInput, useOpen } from '../utils/hooks';
 
 interface IconSelectionProps {
-    style: CSSProperties;
+    style?: CSSProperties;
     value?: SemanticICONS;
     onChange: (value?: SemanticICONS) => void;
 }
@@ -16,7 +16,7 @@ const IconSelection: FunctionComponent<IconSelectionProps> = ({ value, style, on
 
     function handleSubmit() {
         close();
-        onChange(currentValue);
+        onChange(currentValue || undefined);
     }
 
     return (
