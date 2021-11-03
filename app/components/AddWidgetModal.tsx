@@ -80,7 +80,7 @@ const StyledItem = styled(Item)`
             object-fit: contain;
             height: 80px !important;
             border-radius: 5px;
-            background: $white;
+            background: ${colors.white};
             border: 1px dotted ${colors.greyLight};
             transition: all 500ms ease-in-out;
             &:hover {
@@ -349,7 +349,6 @@ function AddWidgetModal({
                 onOpen={openModal}
                 onClose={closeModal}
                 size="large"
-                className="addWidgetModal"
             >
                 <ErrorMessage error={error} />
 
