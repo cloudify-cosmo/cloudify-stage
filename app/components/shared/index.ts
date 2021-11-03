@@ -11,6 +11,7 @@ import MaintenanceModeActivationButton from './MaintenanceModeActivationButton';
 import MaintenanceModeModal from './MaintenanceModeModal';
 import PageFilter from './PageFilter';
 import PasswordModal from './PasswordModal';
+import SemanticIconDropdown from './SemanticIconDropdown';
 import VerticallyAlignedCell from './VerticallyAlignedCell';
 import * as Widgets from './widgets';
 import * as PluginActions from '../../actions/plugins';
@@ -30,6 +31,7 @@ export {
     PasswordModal,
     PieGraph,
     PluginActions,
+    SemanticIconDropdown,
     VerticallyAlignedCell,
     Widgets
 };
