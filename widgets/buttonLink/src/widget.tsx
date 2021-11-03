@@ -42,7 +42,7 @@ Stage.defineWidget<unknown, unknown, ButtonLinkWidgetConfiguration>({
             name: t('configuration.icon.name'),
             description: t('configuration.icon.description'),
             default: t('configuration.icon.default'),
-            component: Stage.Common.SemanticIconDropdown,
+            component: Stage.Shared.SemanticIconDropdown,
             type: Stage.Basic.GenericField.CUSTOM_TYPE
         },
         {

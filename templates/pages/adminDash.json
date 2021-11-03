@@ -1,5 +1,6 @@
 {
   "name": "Dashboard",
+  "icon": "dashboard",
   "layout": [
     {
       "type": "widgets",

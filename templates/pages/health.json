@@ -1,5 +1,6 @@
 {
   "name": "System Health",
+  "icon": "heartbeat",
   "layout": [
     {
       "type": "widgets",

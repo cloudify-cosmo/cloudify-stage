@@ -124,6 +124,8 @@ const pageMenuItemReducer = (state: PageDefinition, action: AnyAction) => {
             return { ...state, description: action.description };
         case types.RENAME_PAGE_MENU_ITEM:
             return { ...state, name: action.name };
+        case types.CHANGE_PAGE_MENU_ITEM_ICON:
+            return { ...state, icon: action.icon };
         case types.ADD_TAB:
         case types.REMOVE_TAB:
         case types.UPDATE_TAB:
@@ -183,10 +185,11 @@ const pageMenuItemsReducer: Reducer<PageMenuItem[]> = (state = [], action) => {
             remove(itemContainer, { id });
             return newPageMenuItems;
         }
+        case types.CHANGE_PAGE_MENU_ITEM_ICON:
         case types.RENAME_PAGE_MENU_ITEM: {
             const newPageMenuItems = cloneDeep(state);
-            const itemToRename = findItem(newPageMenuItems, action.pageMenuItemId);
-            Object.assign(itemToRename, pageMenuItemReducer(itemToRename, action));
+            const itemToUpdate = findItem(newPageMenuItems, action.pageMenuItemId);
+            Object.assign(itemToUpdate, pageMenuItemReducer(itemToUpdate, action));
             return newPageMenuItems;
         }
         case types.UPDATE_WIDGET:

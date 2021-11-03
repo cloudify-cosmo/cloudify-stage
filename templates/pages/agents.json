@@ -1,5 +1,6 @@
 {
   "name": "Agents",
+  "icon": "user secret",
   "layout": [
     {
       "type": "widgets",

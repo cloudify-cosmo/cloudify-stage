@@ -1,5 +1,6 @@
 {
   "name": "Snapshots",
+  "icon": "photo",
   "layout": [
     {
       "type": "widgets",
