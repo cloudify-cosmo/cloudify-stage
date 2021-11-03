@@ -28,7 +28,12 @@ const IconSelection: FunctionComponent<IconSelectionProps> = ({ value, style, on
                 (value || enabled) && (
                     <Icon
                         name={value ?? 'expand'}
-                        style={style}
+                        style={{
+                            marginLeft: -10,
+                            marginRight: 4,
+                            float: 'none',
+                            ...style
+                        }}
                         onClick={(e: Event) => {
                             if (enabled) {
                                 e.stopPropagation();

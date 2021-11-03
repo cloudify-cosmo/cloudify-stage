@@ -217,16 +217,7 @@ export default function PageManagement({ pageId, isEditMode = false }: PageManag
                 <Sidebar visible as={Menu} vertical size="small">
                     <div className="pages">
                         <Menu.Item link className="pageMenuItem">
-                            <IconSelection
-                                style={{
-                                    marginLeft: -10,
-                                    marginRight: 4,
-                                    float: 'none'
-                                }}
-                                value={page.icon}
-                                onChange={onPageIconChange}
-                                enabled={isEditMode}
-                            />
+                            <IconSelection value={page.icon} onChange={onPageIconChange} enabled={isEditMode} />
                             {page.name}
                         </Menu.Item>
                         <Menu.Item link className="pageMenuItem" />

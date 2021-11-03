@@ -1,4 +1,4 @@
-import type { CSSProperties, FunctionComponent } from 'react';
+import type { FunctionComponent } from 'react';
 import React, { ReactNode, useCallback, useMemo, useState } from 'react';
 import { chain, find, includes, map, without } from 'lodash';
 import type { DragEndEvent, DragOverEvent, DragStartEvent } from '@dnd-kit/core';
@@ -201,14 +201,6 @@ const PagesList: FunctionComponent<PagesListProps> = ({ isEditMode, pageId }) =>
             return undefined;
         }
 
-        const iconStyle: CSSProperties = {
-            marginLeft: -10,
-            marginRight: 4,
-            position: 'relative',
-            top: -3,
-            float: 'none'
-        };
-
         const renderedMenuItem = (
             <SortableMenuItem
                 id={pageMenuItem.id}
@@ -232,15 +224,17 @@ const PagesList: FunctionComponent<PagesListProps> = ({ isEditMode, pageId }) =>
                     cursor: dragging ? 'inherit' : undefined
                 }}
             >
-                {isEditMode
-                    ? !itemNameInEdit && (
-                          <IconSelection
-                              style={iconStyle}
-                              value={pageMenuItem.icon}
-                              onChange={icon => onIconChange(pageMenuItem.id, icon)}
-                          />
-                      )
-                    : pageMenuItem.icon && <Icon name={pageMenuItem.icon} style={iconStyle} />}
+                {!itemNameInEdit && (
+                    <IconSelection
+                        style={{
+                            position: 'relative',
+                            top: -3
+                        }}
+                        value={pageMenuItem.icon}
+                        onChange={icon => onIconChange(pageMenuItem.id, icon)}
+                        enabled={isEditMode}
+                    />
+                )}
                 <EditableLabel
                     value={pageMenuItem.name}
                     editing={itemNameInEdit}
