@@ -403,7 +403,7 @@ const commands = {
             .click()
             .within(() => cy.contains('div[role=option]', value).click()),
 
-    setMoltipleDropdownValues: (fieldName: string, values: string[]) =>
+    setMultipleDropdownValues: (fieldName: string, values: string[]) =>
         cy
             .getField(fieldName)
             .click()

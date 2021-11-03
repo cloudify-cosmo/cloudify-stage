@@ -55,7 +55,7 @@ describe('Number of Deployments widget', () => {
         function setWidgetConfiguration(filterId: string, pageToOpenOnClick: string) {
             cy.editWidgetConfiguration(widgetId, () => {
                 cy.setSearchableDropdownValue('Filter ID', filterId);
-                cy.setMoltipleDropdownValues('Page to open on click', [pageToOpenOnClick]);
+                cy.setMultipleDropdownValues('Page to open on click', [pageToOpenOnClick]);
             });
         }
 
