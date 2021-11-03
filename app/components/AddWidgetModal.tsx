@@ -43,16 +43,15 @@ const StyledAddWidgetModal = styled(Modal)`
     padding: 14px;
 `;
 
+const WidgetListWrapper = styled.div`
+    height: 300px;
+    overflow-y: auto;
+    margin-bottom: 35px;
+`;
+
 const WidgetList = styled(Item.Group)`
     height: 435px;
-    overflow: auto;
     padding-top: 5px;
-
-    @media screen and (max-width: 1281px) {
-        & {
-            margin: 0 !important;
-        }
-    }
 
     .selectWidgetButton {
         margin-right: 10px !important;
@@ -68,7 +67,7 @@ const AddWidgetCheckBox = styled(Checkbox)`
 `;
 
 const StyledItem = styled(Item)`
-    padding: 30px 10px;
+    padding: 40px 10px;
     cursor: pointer;
     align-items: center;
     &:hover {
@@ -367,79 +366,80 @@ function AddWidgetModal({
                     <Grid.Row>
                         <Grid.Column width={4}>{menuContent}</Grid.Column>
                         <Grid.Column width={12}>
-                            <WidgetList divided>
-                                {filteredWidgetDefinitions.map(
-                                    widget => (
-                                        <StyledItem
-                                            key={widget.id}
-                                            data-id={widget.id}
-                                            onClick={() => {
-                                                toggleWidgetInstall(widget.id);
-                                            }}
-                                        >
-                                            <AddWidgetCheckBox
-                                                readOnly
-                                                title={i18n.t('editMode.addWidget.checkbox', 'Add widget to page')}
-                                                checked={widgetsToAdd.includes(widget.id)}
-                                            />
-                                            <Item.Image
-                                                as="div"
-                                                size="small"
-                                                bordered
-                                                src={imageSrc(widget)}
-                                                onClick={event => openThumbnailModal(event, widget)}
-                                            />
-                                            <Item.Content>
-                                                <Item.Header as="div">{widget.name}</Item.Header>
-                                                <Item.Meta>{widget.description}</Item.Meta>
-                                                <Item.Description />
-                                                <Item.Extra>
-                                                    {widget.isCustom && canInstallWidgets && (
-                                                        // eslint-disable-next-line jsx-a11y/click-events-have-key-events,jsx-a11y/no-static-element-interactions
-                                                        <div onClick={e => e.stopPropagation()}>
-                                                            <InstallWidgetModal
-                                                                onWidgetInstalled={_.wrap(widget, updateWidget)}
-                                                                trigger={updateWidgetBtn}
-                                                                buttonLabel={i18n.t(
-                                                                    'editMode.addWidget.updateModal.button',
-                                                                    'Update Widget'
-                                                                )}
-                                                                className="updateWidgetModal"
-                                                                header={i18n.t(
-                                                                    'editMode.addWidget.updateModal.header',
-                                                                    'Update widget definition'
-                                                                )}
-                                                            />
+                            <WidgetListWrapper>
+                                <WidgetList divided>
+                                    {filteredWidgetDefinitions.map(
+                                        widget => (
+                                            <StyledItem
+                                                key={widget.id}
+                                                data-id={widget.id}
+                                                onClick={() => {
+                                                    toggleWidgetInstall(widget.id);
+                                                }}
+                                            >
+                                                <AddWidgetCheckBox
+                                                    readOnly
+                                                    title={i18n.t('editMode.addWidget.checkbox', 'Add widget to page')}
+                                                    checked={widgetsToAdd.includes(widget.id)}
+                                                />
+                                                <Item.Image
+                                                    as="div"
+                                                    size="small"
+                                                    bordered
+                                                    src={imageSrc(widget)}
+                                                    onClick={event => openThumbnailModal(event, widget)}
+                                                />
+                                                <Item.Content>
+                                                    <Item.Header as="div">{widget.name}</Item.Header>
+                                                    <Item.Meta>{widget.description}</Item.Meta>
+                                                    <Item.Description />
+                                                    <Item.Extra>
+                                                        {widget.isCustom && canInstallWidgets && (
+                                                            // eslint-disable-next-line jsx-a11y/click-events-have-key-events,jsx-a11y/no-static-element-interactions
+                                                            <div onClick={e => e.stopPropagation()}>
+                                                                <InstallWidgetModal
+                                                                    onWidgetInstalled={_.wrap(widget, updateWidget)}
+                                                                    trigger={updateWidgetBtn}
+                                                                    buttonLabel={i18n.t(
+                                                                        'editMode.addWidget.updateModal.button',
+                                                                        'Update Widget'
+                                                                    )}
+                                                                    className="updateWidgetModal"
+                                                                    header={i18n.t(
+                                                                        'editMode.addWidget.updateModal.header',
+                                                                        'Update widget definition'
+                                                                    )}
+                                                                />
 
-                                                            <Button
-                                                                floated="left"
-                                                                size="small"
-                                                                compact
-                                                                basic
-                                                                content={i18n.t(
-                                                                    'editMode.removeWidget.button',
-                                                                    'Remove'
-                                                                )}
-                                                                onClick={e => confirmRemove(e, widget)}
-                                                                className="removeWidgetButton"
-                                                            />
-                                                        </div>
-                                                    )}
-                                                </Item.Extra>
-                                            </Item.Content>
-                                        </StyledItem>
-                                    ),
-                                    this
-                                )}
+                                                                <Button
+                                                                    floated="left"
+                                                                    size="small"
+                                                                    compact
+                                                                    basic
+                                                                    content={i18n.t(
+                                                                        'editMode.removeWidget.button',
+                                                                        'Remove'
+                                                                    )}
+                                                                    onClick={e => confirmRemove(e, widget)}
+                                                                    className="removeWidgetButton"
+                                                                />
+                                                            </div>
+                                                        )}
+                                                    </Item.Extra>
+                                                </Item.Content>
+                                            </StyledItem>
+                                        ),
+                                        this
+                                    )}
 
-                                {_.isEmpty(filteredWidgetDefinitions) && (
-                                    <Item
-                                        className="alignCenter"
-                                        content={i18n.t('editMode.addWidget.noWidgets', 'No widgets available')}
-                                    />
-                                )}
-                            </WidgetList>
-
+                                    {_.isEmpty(filteredWidgetDefinitions) && (
+                                        <Item
+                                            className="alignCenter"
+                                            content={i18n.t('editMode.addWidget.noWidgets', 'No widgets available')}
+                                        />
+                                    )}
+                                </WidgetList>
+                            </WidgetListWrapper>
                             <Button.Group widths="2">
                                 <Button
                                     animated="vertical"
