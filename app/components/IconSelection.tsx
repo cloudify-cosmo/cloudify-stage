@@ -8,9 +8,10 @@ interface IconSelectionProps {
     style?: CSSProperties;
     value?: SemanticICONS;
     onChange: (value?: SemanticICONS) => void;
+    enabled?: boolean;
 }
 
-const IconSelection: FunctionComponent<IconSelectionProps> = ({ value, style, onChange }) => {
+const IconSelection: FunctionComponent<IconSelectionProps> = ({ value, style, onChange, enabled = true }) => {
     const [currentValue, setCurrentValue, resetCurrentValue] = useInput(value);
     const [opened, open, close] = useOpen(resetCurrentValue);
 
@@ -24,14 +25,18 @@ const IconSelection: FunctionComponent<IconSelectionProps> = ({ value, style, on
             open={opened}
             onClick={(e: Event) => e.stopPropagation()}
             trigger={
-                <Icon
-                    name={value ?? 'expand'}
-                    style={style}
-                    onClick={(e: Event) => {
-                        e.stopPropagation();
-                        open();
-                    }}
-                />
+                (value || enabled) && (
+                    <Icon
+                        name={value ?? 'expand'}
+                        style={style}
+                        onClick={(e: Event) => {
+                            if (enabled) {
+                                e.stopPropagation();
+                                open();
+                            }
+                        }}
+                    />
+                )
             }
         >
             <div style={{ width: '23em', textAlign: 'right' }}>

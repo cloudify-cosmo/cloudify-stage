@@ -225,6 +225,7 @@ export default function PageManagement({ pageId, isEditMode = false }: PageManag
                                 }}
                                 value={page.icon}
                                 onChange={onPageIconChange}
+                                enabled={isEditMode}
                             />
                             {page.name}
                         </Menu.Item>
