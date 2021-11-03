@@ -244,7 +244,6 @@ const PagesList: FunctionComponent<PagesListProps> = ({ isEditMode, pageId }) =>
                           <Icon
                               name={pageMenuItem.icon}
                               style={iconStyle}
-                              onClick={isEditMode ? () => {} : undefined}
                           />
                       )}
                 <EditableLabel
