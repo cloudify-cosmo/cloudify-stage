@@ -379,6 +379,7 @@
                 "availablePages": "Available pages",
                 "createHeader": "Create page group",
                 "groupName": "Group name",
+                "icon": "Group icon",
                 "noPagesAvailable": "No pages available",
                 "noPagesSelected": "No pages selected",
                 "selectedPages": "Selected pages",

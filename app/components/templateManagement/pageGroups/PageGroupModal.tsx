@@ -100,9 +100,8 @@ const PageGroupModal: React.FunctionComponent<PageGroupModalProps> = ({
 
             <Modal.Content>
                 <Form errors={errors}>
-                    <UnsafelyTypedFormField error={errors.groupName}>
+                    <UnsafelyTypedFormField error={errors.groupName} label={t('groupName')}>
                         <Form.Input
-                            placeholder={t('groupName')}
                             value={groupName}
                             onChange={(...args) => {
                                 clearErrors();
@@ -110,7 +109,7 @@ const PageGroupModal: React.FunctionComponent<PageGroupModalProps> = ({
                             }}
                         />
                     </UnsafelyTypedFormField>
-                    <UnsafelyTypedFormField>
+                    <UnsafelyTypedFormField label={t('icon')}>
                         <SemanticIconDropdown value={icon} onChange={setIcon} />
                     </UnsafelyTypedFormField>
                     <Segment.Group horizontal>
