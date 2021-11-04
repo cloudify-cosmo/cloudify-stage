@@ -38,6 +38,7 @@ describe('Page groups segment', () => {
         cy.intercept('GET', '/console/appData/templates/page-groups/mockGroup1.json', {
             id: 'mockGroup1',
             name: 'Mock group 1',
+            icon: 'rocket',
             pages: ['page1', 'page2']
         });
         cy.intercept('GET', '/console/userData/templates/page-groups/mockGroup2.json', {
@@ -74,6 +75,8 @@ describe('Page groups segment', () => {
 
                 cy.contains('tr', 'Mock group 1').contains('.label:not(.blue)', 0);
                 cy.contains('tr', 'Mock group 2').contains('.label:not(.blue)', 0);
+
+                cy.contains('tr', 'Mock group 1').find('.rocket').scrollIntoView().should('be.visible');
 
                 cy.contains('tr', 'Mock group 1').find('.edit, .remove').should('not.exist');
                 cy.contains('tr', 'Mock group 2').find('.edit').scrollIntoView().should('be.visible');
@@ -140,7 +143,8 @@ describe('Page groups segment', () => {
 
         cy.contains('.header', 'Page groups').parent().contains('tr', 'Test group').find('.edit').click();
         cy.get('.modal').within(() => {
-            cy.get('input').type(' renamed');
+            cy.getField('Group name').find('input').type(' renamed');
+            cy.get('.dropdown input').type('rocket{enter}');
             cy.contains('logs').find('.add').click();
             cy.contains('adminDash').find('.minus').click();
             cy.contains('button', 'Update').click();
@@ -149,7 +153,7 @@ describe('Page groups segment', () => {
         cy.contains('.header', 'Page groups')
             .parent()
             .within(() => {
-                cy.contains('test_group_renamed');
+                cy.contains('tr', 'test_group_renamed').find('.rocket').should('be.visible');
                 cy.contains('Test group renamed').click();
                 cy.contains('.segment', 'Pages').within(() => {
                     cy.contains('logs');
@@ -165,7 +169,8 @@ describe('Page groups segment', () => {
 
         cy.contains('Create page group').click();
         cy.get('.modal').within(() => {
-            cy.get('input').type('New group');
+            cy.getField('Group name').find('input').type('New group');
+            cy.get('.dropdown input').type('rocket{enter}');
             cy.contains('adminDash').find('.add').click();
             cy.contains('button', 'Create').click();
         });
@@ -173,7 +178,7 @@ describe('Page groups segment', () => {
         cy.contains('.header', 'Page groups')
             .parent()
             .within(() => {
-                cy.contains('New group').click();
+                cy.contains('tr', 'New group').find('.rocket').should('be.visible').click();
                 cy.contains('.segment', 'Pages').contains('adminDash');
             });
     });
