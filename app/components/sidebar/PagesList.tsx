@@ -68,7 +68,7 @@ const EditIcon = styled(Icon)`
     }
 `;
 
-const PagesList: FunctionComponent<PagesListProps> = ({ isEditMode, pageId }) => {
+const PagesList: FunctionComponent<PagesListProps> = ({ isEditMode = false, pageId }) => {
     const [expandedGroupIds, setExpandedGroupIds] = useState<string[]>([]);
     const [dragForbidden, setDragForbidden, unsetDragForbidden] = useBoolean();
     const [dragging, setDragging, unsetDragging] = useBoolean();
