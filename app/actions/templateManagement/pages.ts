@@ -48,7 +48,7 @@ export function persistPage(page: Page): ThunkAction<Promise<any>, ReduxState, n
             return _.pick(widget, 'name', 'width', 'height', 'x', 'y', 'configuration', 'definition');
         }
 
-        const body = _(page).pick('id', 'oldId', 'name', 'layout').cloneDeep();
+        const body = _(page).pick('id', 'oldId', 'name', 'icon', 'layout').cloneDeep();
         forEachWidget(body, prepareWidgetData);
 
         const internal = new Internal(getState().manager);

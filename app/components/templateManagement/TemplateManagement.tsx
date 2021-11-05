@@ -67,7 +67,7 @@ export default function TemplateManagement() {
                 const preparedPages = _.map(pageList, page => {
                     return {
                         ...page,
-                        name: (pageDefs[page.id] || {}).name,
+                        ..._.pick(pageDefs[page.id], 'name', 'icon'),
                         templates: _.map(
                             _.filter(preparedTemplates, template =>
                                 _.find(template.pages, { id: page.id, type: 'page' })
