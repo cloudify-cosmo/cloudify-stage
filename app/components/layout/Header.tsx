@@ -9,7 +9,6 @@ import React, { Component } from 'react';
 import { HeaderBar, MenusBar } from 'cloudify-ui-components';
 
 import i18n from 'i18next';
-import Tenants from '../../containers/Tenants';
 import Manager from '../../containers/Manager';
 import Users from '../../containers/Users';
 import Help from '../../containers/Help';
@@ -70,7 +69,7 @@ export default class Header extends Component {
                             <Manager />
                         </div>
                     )}
-                    {this.isModeMain() && <Tenants manager={manager} />}
+                    {/* {this.isModeMain() && <Tenants manager={manager} />} */}
                     <Help onAbout={() => this.setState({ showAboutModal: true })} />
 
                     <Users
