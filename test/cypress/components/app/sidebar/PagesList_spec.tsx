@@ -1,9 +1,9 @@
 import React from 'react';
 
-import '../initAppContext';
+import '../../initAppContext';
 import PagesList from 'app/components/sidebar/PagesList';
 import Consts from 'app/utils/consts';
-import { mountWithProvider } from '../utils';
+import { mountWithProvider } from '../../utils';
 
 describe('PagesList', () => {
     it('handles default mode', () => {
