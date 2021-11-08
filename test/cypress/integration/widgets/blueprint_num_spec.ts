@@ -15,16 +15,13 @@ describe('Number of Blueprints widget', () => {
         });
     }
 
-    describe('Tests without mockLogin', () => {
-        before(() => cy.activate().login().addWidget(widgetId));
-
-        it('Opens the default page on click', () => {
-            clickOnWidget();
-            verifyUrl('blueprints');
-        });
+    it('Opens the default page on click', () => {
+        cy.activate().login().addWidget(widgetId);
+        clickOnWidget();
+        verifyUrl('blueprints');
     });
 
-    describe('Tests with mockLogin', () => {
+    describe('', () => {
         const pageName = 'Environments';
         const pageId = 'page_0';
 
