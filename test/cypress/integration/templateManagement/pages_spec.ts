@@ -21,9 +21,12 @@ describe('Pages segment', () => {
                         expect(firstRow['Updated at']).to.equal('');
                         expect(firstRow['Updated by']).to.equal('Manager');
                     });
-                cy.contains('tr', 'Dashboard').contains('.label.blue', 2);
-                cy.contains('tr', 'Dashboard').contains('.label:not(.blue)', 0);
-                cy.contains('Dashboard').click();
+                cy.contains('tr', 'Dashboard').within(dashboardPageRow => {
+                    cy.contains('.label.blue', 2).should('be.visible');
+                    cy.contains('.label:not(.blue)', 0).should('be.visible');
+                    cy.get('.dashboard').should('be.visible');
+                    cy.wrap(dashboardPageRow).click();
+                });
                 cy.contains('Used in templates').contains('main-default');
                 cy.contains('Used in templates').contains('main-sys_admin');
                 cy.contains('Used in page groups').contains('Page not used by any page group');

@@ -1,6 +1,7 @@
 import React, { FunctionComponent } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import _ from 'lodash';
+import type { SemanticICONS } from 'semantic-ui-react';
 import { Button, DataTable, Header, Icon, PopupConfirm, Segment } from '../../basic';
 import StageUtils from '../../../utils/stageUtils';
 import { useResettableState } from '../../../utils/hooks';
@@ -18,6 +19,7 @@ const tPageGroupManagement = StageUtils.composeT(tTemplates, 'pageGroupManagemen
 interface PageGroup {
     id: string;
     name: string;
+    icon: SemanticICONS;
     templates: string[];
     updatedAt: string;
     updatedBy: string;
@@ -59,32 +61,34 @@ const PageGroups: FunctionComponent<PageGroupsProps> = ({ pageGroups = [] }) => 
         return id;
     }
 
-    function handleCreatePageGroup(name: string, pageIds: string[]) {
+    function handleCreatePageGroup(name: string, pageIds: string[], icon?: SemanticICONS) {
         const id = createGroupId(name);
 
         const body = {
             id,
             name,
-            pages: pageIds
+            pages: pageIds,
+            icon
         };
 
         return internal
             .doPost('/templates/page-groups', { body })
-            .then(() => dispatch(createPageGroup(id, name, pageIds)));
+            .then(() => dispatch(createPageGroup(id, name, pageIds, icon)));
     }
 
-    function handleUpdatePageGroup(id: string, name: string, pageIds: string[]) {
+    function handleUpdatePageGroup(id: string, name: string, pageIds: string[], icon?: SemanticICONS) {
         const newId = createGroupId(name);
 
         const body = {
             id: newId,
             name,
-            pages: pageIds
+            pages: pageIds,
+            icon
         };
 
         return internal
             .doPut(`/templates/page-groups/${id}`, { body })
-            .then(() => dispatch(updatePageGroup(id, newId, name, pageIds)));
+            .then(() => dispatch(updatePageGroup(id, newId, name, pageIds, icon)));
     }
 
     return (
@@ -96,6 +100,7 @@ const PageGroups: FunctionComponent<PageGroupsProps> = ({ pageGroups = [] }) => 
             <DataTable>
                 <DataTable.Column label={tPageGroupManagement('table.groupId')} width="25%" />
                 <DataTable.Column label={tPageGroupManagement('table.groupName')} width="25%" />
+                <DataTable.Column label={tPageGroupManagement('table.icon')} width="5%" />
                 <DataTable.Column label={tPageGroupManagement('table.templates')} width="10%" />
                 <DataTable.Column label={tPageGroupManagement('table.updatedAt')} width="15%" />
                 <DataTable.Column label={tPageGroupManagement('table.updatedBy')} width="15%" />
@@ -117,6 +122,9 @@ const PageGroups: FunctionComponent<PageGroupsProps> = ({ pageGroups = [] }) => 
                                 </Header>
                             </DataTable.Data>
                             <DataTable.Data>{item.name}</DataTable.Data>
+                            <DataTable.Data>
+                                <Icon name={item.icon} />
+                            </DataTable.Data>
                             <DataTable.Data>
                                 <ItemsCount items={item.templates} />
                             </DataTable.Data>
@@ -140,7 +148,10 @@ const PageGroups: FunctionComponent<PageGroupsProps> = ({ pageGroups = [] }) => 
                                         <PageGroupModal
                                             initialGroupName={item.name}
                                             initialPages={item.pages}
-                                            onSubmit={(name, pages) => handleUpdatePageGroup(item.id, name, pages)}
+                                            initialIcon={item.icon}
+                                            onSubmit={(name, pages, icon) =>
+                                                handleUpdatePageGroup(item.id, name, pages, icon)
+                                            }
                                             trigger={
                                                 <Icon name="edit" link onClick={(e: Event) => e.stopPropagation()} />
                                             }

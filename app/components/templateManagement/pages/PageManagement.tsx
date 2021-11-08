@@ -9,6 +9,7 @@ import { arrayMove } from 'react-sortable-hoc';
 import type { ThunkDispatch } from 'redux-thunk';
 import type { AnyAction } from 'redux';
 
+import { SemanticICONS } from 'semantic-ui-react';
 import { Alert, Breadcrumb, Button, Divider, EditableLabel, ErrorMessage, Menu, Segment, Sidebar } from '../../basic';
 import EditModeBubble from '../../EditModeBubble';
 import { PageContent } from '../../shared/widgets';
@@ -27,6 +28,7 @@ import type { ReduxState } from '../../../reducers';
 import type { WidgetDefinition } from '../../../utils/StageAPI';
 import type { TemplatePageDefinition } from '../../../reducers/templatesReducer';
 import useCreatePageId from './useCreatePageId';
+import IconSelection from '../../IconSelection';
 
 export interface PageManagementProps {
     pageId: string;
@@ -156,6 +158,10 @@ export default function PageManagement({ pageId, isEditMode = false }: PageManag
         }
         updatePage();
     };
+    const onPageIconChange = (icon?: SemanticICONS) => {
+        page.icon = icon;
+        updatePage();
+    };
     const onCloseDrillDownWarning = () => {
         dispatch(setDrillDownWarningActive(false));
     };
@@ -211,6 +217,7 @@ export default function PageManagement({ pageId, isEditMode = false }: PageManag
                 <Sidebar visible as={Menu} vertical size="small">
                     <div className="pages">
                         <Menu.Item link className="pageMenuItem">
+                            <IconSelection value={page.icon} onChange={onPageIconChange} enabled={isEditMode} />
                             {page.name}
                         </Menu.Item>
                         <Menu.Item link className="pageMenuItem" />
