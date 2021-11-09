@@ -2,7 +2,7 @@ describe('Number of Blueprints widget', () => {
     const widgetId = 'blueprintNum';
 
     function clickOnWidget() {
-        cy.get('.statistic').click();
+        cy.get('.blueprintNumWidget .statistic').click();
     }
 
     function verifyUrl(expectedPageId: string) {
