@@ -69,7 +69,6 @@ export default class Header extends Component {
                             <Manager />
                         </div>
                     )}
-                    {/* {this.isModeMain() && <Tenants manager={manager} />} */}
                     <Help onAbout={() => this.setState({ showAboutModal: true })} />
 
                     <Users
