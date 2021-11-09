@@ -54,17 +54,6 @@ const TenantSelection: FunctionComponent = () => {
     return (
         <Dropdown trigger={tenantMenuTrigger} onClose={clearSearch} pointing="left" icon={null} fluid>
             <Dropdown.Menu>
-                <Input
-                    icon="search"
-                    iconPosition="left"
-                    className="search"
-                    value={search}
-                    onClick={(e: Event) => e.stopPropagation()}
-                    onChange={(e, { value }) => {
-                        e.stopPropagation();
-                        setSearch(value);
-                    }}
-                />
                 <Dropdown.Menu scrolling>
                     {filteredTenants.map(tenant => (
                         <Dropdown.Item
@@ -76,6 +65,17 @@ const TenantSelection: FunctionComponent = () => {
                         />
                     ))}
                 </Dropdown.Menu>
+                <Input
+                    icon="search"
+                    iconPosition="left"
+                    className="search"
+                    value={search}
+                    onClick={(e: Event) => e.stopPropagation()}
+                    onChange={(e, { value }) => {
+                        e.stopPropagation();
+                        setSearch(value);
+                    }}
+                />
             </Dropdown.Menu>
         </Dropdown>
     );
