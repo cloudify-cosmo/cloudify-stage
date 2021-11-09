@@ -440,7 +440,8 @@
             "title": "Reset application screens"
         },
         "templateManagement": "Template Management",
-        "noTenants": "No Tenants"
+        "noTenants": "No Tenants",
+        "tenantsHeader": "Tenant selection"
     },
     "widget": {
         "config": {
