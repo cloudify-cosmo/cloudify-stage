@@ -178,18 +178,12 @@ const CreateTemplateModal: FunctionComponent<CreateTemplateModalProps> = ({
 
             <Modal.Content>
                 <Form loading={loading} errors={errors} onErrorsDismiss={clearErrors}>
-                    <UnsafelyTypedFormField error={errors.templateName}>
-                        <Form.Input
-                            name="templateName"
-                            placeholder={t('templateName')}
-                            value={templateName}
-                            onChange={setTemplateName}
-                        />
+                    <UnsafelyTypedFormField error={errors.templateName} label={t('templateName')}>
+                        <Form.Input name="templateName" value={templateName} onChange={setTemplateName} />
                     </UnsafelyTypedFormField>
 
-                    <UnsafelyTypedFormField error={errors.roles}>
+                    <UnsafelyTypedFormField error={errors.roles} label={t('roles')}>
                         <Form.Dropdown
-                            placeholder={t('roles')}
                             multiple
                             selection
                             options={allAvailableRoles.map(role => ({
@@ -202,9 +196,8 @@ const CreateTemplateModal: FunctionComponent<CreateTemplateModalProps> = ({
                         />
                     </UnsafelyTypedFormField>
 
-                    <UnsafelyTypedFormField error={errors.tenants}>
+                    <UnsafelyTypedFormField error={errors.tenants} label={t('tenants')}>
                         <Form.Dropdown
-                            placeholder={t('tenants')}
                             multiple
                             selection
                             options={tenantOptions}

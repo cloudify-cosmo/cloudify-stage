@@ -3,7 +3,7 @@ import type { Reducer } from 'redux';
 import type { PageDefinition } from '../actions/page';
 import * as types from '../actions/types';
 
-export type TemplatePageDefinition = Pick<PageDefinition, 'name' | 'layout'>;
+export type TemplatePageDefinition = Pick<PageDefinition, 'name' | 'icon' | 'layout'>;
 
 export interface TemplatesState {
     templatesDef: Record<string, any>;
@@ -38,14 +38,14 @@ const templates: Reducer<TemplatesState> = (state = { templatesDef: {}, pagesDef
         case types.CREATE_TEMPLATE_PAGE_GROUP:
             return {
                 ...state,
-                pageGroupsDef: { ...state.pageGroupsDef, [action.pageGroupId]: _.pick(action, 'name', 'pages') }
+                pageGroupsDef: { ...state.pageGroupsDef, [action.pageGroupId]: _.pick(action, 'name', 'pages', 'icon') }
             };
         case types.UPDATE_TEMPLATE_PAGE_GROUP:
             return {
                 ...state,
                 pageGroupsDef: {
                     ..._.omit(state.pageGroupsDef, action.pageGroupId),
-                    [action.newId]: _.pick(action, 'name', 'pages')
+                    [action.newId]: _.pick(action, 'name', 'pages', 'icon')
                 }
             };
         default:

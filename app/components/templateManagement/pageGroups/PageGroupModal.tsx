@@ -1,6 +1,6 @@
 import _, { includes, isEmpty } from 'lodash';
 import React from 'react';
-import { ModalProps } from 'semantic-ui-react';
+import { ModalProps, SemanticICONS } from 'semantic-ui-react';
 import { useSelector } from 'react-redux';
 import { useBoolean, useErrors, useInput, useOpen, useResettableState } from '../../../utils/hooks';
 import {
@@ -18,20 +18,23 @@ import { ReduxState } from '../../../reducers';
 import StageUtils from '../../../utils/stageUtils';
 import SelectionList from '../common/SelectionList';
 import SortableList from '../common/SortableList';
+import { SemanticIconDropdown } from '../../shared';
 
 const t = StageUtils.getT('templates.pageGroupManagement.modal');
 
 interface PageGroupModalProps {
     initialGroupName?: string;
     initialPages?: string[];
+    initialIcon?: SemanticICONS;
     trigger: ModalProps['trigger'];
-    onSubmit: (groupName: string, pageIds: string[]) => Promise<any>;
+    onSubmit: (groupName: string, pageIds: string[], icon?: SemanticICONS) => Promise<any>;
 }
 
 const PageGroupModal: React.FunctionComponent<PageGroupModalProps> = ({
     trigger,
     initialGroupName = '',
     initialPages = [],
+    initialIcon,
     onSubmit
 }) => {
     const allAvailablePages = useSelector((state: ReduxState) => Object.keys(state.templates.pagesDef));
@@ -40,9 +43,11 @@ const PageGroupModal: React.FunctionComponent<PageGroupModalProps> = ({
     const { errors, setErrors, setMessageAsError, clearErrors } = useErrors();
     const [loading, setLoading, unsetLoading] = useBoolean();
     const [groupName, setGroupName, resetGroupName] = useInput(initialGroupName);
+    const [icon, setIcon, resetIcon] = useInput(initialIcon);
     const [open, doOpen, doClose] = useOpen(() => {
         resetGroupName();
         resetSelectedPages();
+        resetIcon();
         clearErrors();
     });
 
@@ -68,7 +73,7 @@ const PageGroupModal: React.FunctionComponent<PageGroupModalProps> = ({
         }
 
         setLoading();
-        onSubmit(groupName, selectedPages).then(doClose).catch(setMessageAsError).finally(unsetLoading);
+        onSubmit(groupName, selectedPages, icon).then(doClose).catch(setMessageAsError).finally(unsetLoading);
     }
 
     function handlePageAdd(pageId: string) {
@@ -95,15 +100,17 @@ const PageGroupModal: React.FunctionComponent<PageGroupModalProps> = ({
 
             <Modal.Content>
                 <Form errors={errors}>
-                    <UnsafelyTypedFormField error={errors.groupName}>
+                    <UnsafelyTypedFormField error={errors.groupName} label={t('groupName')}>
                         <Form.Input
-                            placeholder={t('groupName')}
                             value={groupName}
                             onChange={(...args) => {
                                 clearErrors();
                                 setGroupName(...args);
                             }}
                         />
+                    </UnsafelyTypedFormField>
+                    <UnsafelyTypedFormField label={t('icon')}>
+                        <SemanticIconDropdown value={icon} onChange={setIcon} />
                     </UnsafelyTypedFormField>
                     <Segment.Group horizontal>
                         <Segment style={{ width: '50%' }}>

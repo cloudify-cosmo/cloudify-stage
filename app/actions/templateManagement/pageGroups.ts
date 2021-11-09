@@ -1,3 +1,4 @@
+import { SemanticICONS } from 'semantic-ui-react';
 import * as types from '../types';
 
 export function deletePageGroup(pageGroupId: string) {
@@ -7,21 +8,29 @@ export function deletePageGroup(pageGroupId: string) {
     };
 }
 
-export function createPageGroup(pageGroupId: string, name: string, pages: string[]) {
+export function createPageGroup(pageGroupId: string, name: string, pages: string[], icon?: SemanticICONS) {
     return {
         type: types.CREATE_TEMPLATE_PAGE_GROUP,
         pageGroupId,
         name,
-        pages
+        pages,
+        icon
     };
 }
 
-export function updatePageGroup(pageGroupId: string, newId: string, name: string, pages: string[]) {
+export function updatePageGroup(
+    pageGroupId: string,
+    newId: string,
+    name: string,
+    pages: string[],
+    icon?: SemanticICONS
+) {
     return {
         type: types.UPDATE_TEMPLATE_PAGE_GROUP,
         pageGroupId,
         newId,
         name,
-        pages
+        pages,
+        icon
     };
 }
