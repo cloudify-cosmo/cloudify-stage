@@ -20,7 +20,7 @@ describe('TenantSelection', () => {
         cy.get('div.dropdown .menu .item').should('not.exist');
     });
 
-    it('renders tenants list no selected', () => {
+    it('renders tenants list with no tenant selected', () => {
         mountWithProvider(<TenantSelection />, {
             manager: { tenants: { items: [{ name: 'aaa' }, { name: 'bbb' }, { name: 'ccc' }] } }
         });
@@ -32,7 +32,7 @@ describe('TenantSelection', () => {
         cy.contains('div.dropdown .menu .item.selected', 'aaa');
     });
 
-    it('renders tenants list has selected', () => {
+    it('renders tenants list with selected tenant', () => {
         mountWithProvider(<TenantSelection />, {
             manager: { tenants: { selected: 'bbb', items: [{ name: 'aaa' }, { name: 'bbb' }, { name: 'ccc' }] } }
         });
@@ -44,7 +44,7 @@ describe('TenantSelection', () => {
         cy.contains('div.dropdown .menu .item.selected', 'bbb');
     });
 
-    it('renders tenants list has selected that isnt in the list', () => {
+    it('renders tenants list when selected tenant is not on the list', () => {
         mountWithProvider(<TenantSelection />, {
             manager: { tenants: { selected: 'abc', items: [{ name: 'aaa' }, { name: 'bbb' }, { name: 'ccc' }] } }
         });
