@@ -80,7 +80,7 @@ describe('Page management', () => {
         cy.get('.pageTitle input').type('.1');
 
         cy.log('Changing page icon');
-        cy.get('.rocket').click();
+        cy.get('.pages .rocket').click();
         cy.get('.popup').within(() => {
             cy.get('.dropdown.clear.icon').click();
             cy.contains('Save').click();
