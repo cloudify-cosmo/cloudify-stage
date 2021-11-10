@@ -7,7 +7,7 @@ import { useInput, useOpen } from '../utils/hooks';
 interface IconSelectionProps {
     style?: CSSProperties;
     value?: SemanticICONS;
-    onChange: (value?: SemanticICONS) => void;
+    onChange?: (value?: SemanticICONS) => void;
     enabled?: boolean;
 }
 
@@ -17,7 +17,7 @@ const IconSelection: FunctionComponent<IconSelectionProps> = ({ value, style, on
 
     function handleSubmit() {
         close();
-        onChange(currentValue || undefined);
+        onChange!(currentValue || undefined);
     }
 
     return (

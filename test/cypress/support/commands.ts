@@ -332,7 +332,6 @@ const commands = {
     },
     refreshTemplate: (disableGettingStarted = true) => {
         mockGettingStarted(!disableGettingStarted);
-        cy.get('.tenantsMenu').click({ force: true });
         return cy.contains('.text', 'default_tenant').click({ force: true });
     },
     setBlueprintContext: (value: string) => setContext('blueprint', value),
