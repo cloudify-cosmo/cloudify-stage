@@ -5,9 +5,14 @@ import { useSelector } from 'react-redux';
 import PagesList from './PagesList';
 import { Sidebar } from '../basic';
 import { ReduxState } from '../../reducers';
+import SystemMenu from './SystemMenu';
 
 const ThemedSidebar = styled(Sidebar)`
-    background-color: ${props => props.theme.sidebarColor} !important;
+    &&& {
+        background-color: ${props => props.theme.sidebarColor} !important;
+        display: flex;
+        overflow-y: visible !important;
+    }
     .item {
         color: ${props => props.theme.sidebarTextColor} !important;
     }
@@ -31,8 +36,9 @@ const SideBar: FunctionComponent<SideBarProps> = ({ pageId }) => {
 
     return (
         <div className="sidebarContainer">
-            <ThemedSidebar theme={theme} visible className={`vertical menu small basic ${className}`}>
+            <ThemedSidebar theme={theme} visible className={`vertical menu small ${className}`}>
                 <PagesList pageId={pageId || homePageId} isEditMode={isEditMode} />
+                {!isEditMode && <SystemMenu />}
             </ThemedSidebar>
         </div>
     );
