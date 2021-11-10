@@ -12,7 +12,7 @@ import { SemanticICONS } from 'semantic-ui-react';
 import { EditableLabel, Icon } from '../basic';
 import AddPageButton from './AddPageButton';
 import AddPageGroupButton from './AddPageGroupButton';
-import SortableMenuItem, { ItemContainer } from './SortableMenuItem';
+import SortableMenuItem from './SortableMenuItem';
 
 import type { PageDefinition } from '../../actions/page';
 import type { PageMenuItem } from '../../actions/pageMenu';
@@ -30,6 +30,7 @@ import Consts from '../../utils/consts';
 import { useBoolean, useResettableState } from '../../utils/hooks';
 import { ReduxState } from '../../reducers';
 import IconSelection from '../IconSelection';
+import { MenuItemWrapper } from './SideBarItem';
 
 export interface PagesListProps {
     isEditMode?: boolean;
@@ -52,7 +53,7 @@ const RemoveIcon = styled(Icon)`
     visibility: hidden;
     float: right;
 
-    ${ItemContainer}:hover & {
+    ${MenuItemWrapper}:hover & {
         visibility: visible;
     }
 `;
@@ -63,7 +64,7 @@ const EditIcon = styled(Icon)`
     margin-left: 1em !important;
     display: none !important;
 
-    ${ItemContainer}:hover & {
+    ${MenuItemWrapper}:hover & {
         display: inline !important;
     }
 `;
@@ -216,7 +217,6 @@ const PagesList: FunctionComponent<PagesListProps> = ({ isEditMode = false, page
                     else onPageGroupClick(pageMenuItem.id);
                 }}
                 style={{
-                    height: 37,
                     paddingTop: itemNameInEdit ? 3 : undefined,
                     paddingLeft: calculateLeftPadding(),
                     paddingBottom: 3,
@@ -295,8 +295,15 @@ const PagesList: FunctionComponent<PagesListProps> = ({ isEditMode = false, page
     if (dragForbidden) cursor = 'not-allowed';
     else if (dragging) cursor = 'grabbing';
 
+    const wrapperStyle = {
+        flexGrow: 1,
+        flexShrink: 1,
+        minHeight: 0,
+        overflow: 'auto'
+    };
+
     const pagesContainer = (
-        <div className="pages" style={{ cursor }}>
+        <div className="pages" style={{ cursor, ...wrapperStyle }}>
             {chain(pages)
                 .filter(drillDownPagesFilter)
                 .map(pageMenuItem => renderPageMenuItem(pageMenuItem, false))
@@ -307,7 +314,7 @@ const PagesList: FunctionComponent<PagesListProps> = ({ isEditMode = false, page
 
     if (isEditMode) {
         return (
-            <>
+            <div style={wrapperStyle}>
                 <DndContext
                     sensors={sensors}
                     collisionDetection={closestCenter}
@@ -324,7 +331,7 @@ const PagesList: FunctionComponent<PagesListProps> = ({ isEditMode = false, page
                     <AddPageButton />
                     <AddPageGroupButton />
                 </div>
-            </>
+            </div>
         );
     }
 

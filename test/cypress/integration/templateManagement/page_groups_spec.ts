@@ -164,7 +164,7 @@ describe('Page groups segment', () => {
 
     it('creates new page group', () => {
         cy.removeUserPageGroups();
-        cy.refreshTemplate();
+        cy.mockLogin();
         goToTemplateManagement();
 
         cy.contains('Create page group').click();

@@ -1,10 +1,10 @@
 // @ts-nocheck File not migrated fully to TS
 describe('Edit mode', () => {
-    before(() => cy.activate('valid_trial_license').removeCustomWidgets().usePageMock('blueprints').mockLogin());
+    before(() => cy.activate('valid_trial_license').removeCustomWidgets());
 
     beforeEach(() => {
         cy.usePageMock('blueprints');
-        cy.refreshTemplate();
+        cy.mockLogin();
         cy.enterEditMode();
         cy.intercept('POST', '/console/ua').as('updateUserApps');
     });

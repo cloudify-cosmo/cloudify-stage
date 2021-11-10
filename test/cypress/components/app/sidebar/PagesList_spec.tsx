@@ -1,15 +1,15 @@
 import React from 'react';
 
-import '../initAppContext';
+import '../../initAppContext';
 import PagesList from 'app/components/sidebar/PagesList';
 import Consts from 'app/utils/consts';
-import { mountWithProvider } from '../utils';
+import { mountWithProvider } from '../../utils';
 
 describe('PagesList', () => {
     it('handles default mode', () => {
-        cy.fixture('pages/pages_with_groups').then(pages =>
-            mountWithProvider(<PagesList pageId={pages[0].id} />, { pages })
-        );
+        cy.fixture('pages/pages_with_groups').then(pages => {
+            mountWithProvider(<PagesList pageId={pages[0].id} />, { pages });
+        });
 
         cy.contains('Top Level Page')
             .should('be.visible')
@@ -73,7 +73,7 @@ describe('PagesList', () => {
             cy.contains('Add Page Group').click();
             cy.contains('.item', 'Page_Group_0').find('.edit').click({ force: true });
             cy.get('input').type('2{enter}');
-            cy.contains('.item', 'Page_Group_0').find('.expand').click();
+            cy.contains('.item', 'Page_Group_0').find('.expand').click({ force: true });
             cy.get('.popup').within(() => {
                 cy.get('input').type('blind{enter}');
                 cy.contains('Save').click();
