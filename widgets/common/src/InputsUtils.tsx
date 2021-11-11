@@ -383,7 +383,7 @@ class InputsUtils {
             .sortBy([input => !_.isUndefined(input.default), 'name'])
             .map(input => {
                 const dataType = !_.isEmpty(dataTypes) && !!input.type ? dataTypes[input.type] : undefined;
-                const value =  InputsUtils.evaluateValue(input, inputsState, dataType);
+                const value = InputsUtils.evaluateValue(input, inputsState, dataType);
                 return InputsUtils.getFormInputField(input, value, onChange, errorsState[input.name], dataType);
             })
             .value();
