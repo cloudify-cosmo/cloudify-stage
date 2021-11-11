@@ -366,6 +366,16 @@ class InputsUtils {
         }
     }
 
+    static evaluateValue(input, inputsState, dataType) {
+        if (input.type === 'integer' && Number.isNaN(inputsState[input.name])) {
+            return '';
+        }
+        if (_.isUndefined(inputsState[input.name])) {
+            return InputsUtils.getInputFieldInitialValue(input.default, input.type, dataType);
+        }
+        return inputsState[input.name];
+    }
+
     static getInputFields(inputs, onChange, inputsState, errorsState, dataTypes) {
         return _(inputs)
             .map((input, name) => ({ name, ...input }))
@@ -373,9 +383,7 @@ class InputsUtils {
             .sortBy([input => !_.isUndefined(input.default), 'name'])
             .map(input => {
                 const dataType = !_.isEmpty(dataTypes) && !!input.type ? dataTypes[input.type] : undefined;
-                const value = _.isUndefined(inputsState[input.name])
-                    ? InputsUtils.getInputFieldInitialValue(input.default, input.type, dataType)
-                    : inputsState[input.name];
+                const value =  InputsUtils.evaluateValue(input, inputsState, dataType);
                 return InputsUtils.getFormInputField(input, value, onChange, errorsState[input.name], dataType);
             })
             .value();
