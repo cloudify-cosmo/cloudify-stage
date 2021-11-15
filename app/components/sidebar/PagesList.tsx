@@ -313,7 +313,7 @@ const PagesList: FunctionComponent<PagesListProps> = ({ isEditMode = false, page
         minHeight: 0,
         overflowY: 'auto',
         overflowX: 'hidden'
-    };
+    } as const;
 
     const pagesContainer = (
         <div className="pages" style={{ cursor, ...wrapperStyle }}>
