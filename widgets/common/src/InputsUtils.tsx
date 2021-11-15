@@ -366,8 +366,8 @@ class InputsUtils {
         }
     }
 
-    static evaluateValue(input, inputsState, dataType) {
-        if (input.type === 'integer' && Number.isNaN(inputsState[input.name])) {
+    static normalizeValue(input, inputsState, dataType) {
+        if ((input.type === 'integer' || input.type === 'float') && Number.isNaN(inputsState[input.name])) {
             return '';
         }
         if (_.isUndefined(inputsState[input.name])) {
