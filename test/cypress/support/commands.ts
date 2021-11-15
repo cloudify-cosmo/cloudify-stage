@@ -330,7 +330,7 @@ const commands = {
         mockGettingStarted(!disableGettingStarted);
         cy.get('.pageMenuItem.active').click({ force: true });
         // Collapse the sidebar
-        return cy.get('body').click();
+        return cy.get('.headerBar').click();
     },
     refreshTemplate: (disableGettingStarted = true) => {
         mockGettingStarted(!disableGettingStarted);
