@@ -15,7 +15,6 @@ import Help from '../../containers/Help';
 import AboutModal from '../../containers/AboutModal';
 import Banner from '../banner/Banner';
 import ResetPagesModal from '../ResetPagesModal';
-import { Icon } from '../basic';
 import Consts from '../../utils/consts';
 
 export default class Header extends Component {
@@ -49,18 +48,11 @@ export default class Header extends Component {
     }
 
     render() {
-        const { manager, onResetPages, onSidebarOpen } = this.props;
+        const { manager, onResetPages } = this.props;
         const { showAboutModal, showResetPagesConfirm } = this.state;
 
         return (
             <HeaderBar>
-                <Icon
-                    link
-                    name="content"
-                    className="sidebar-button show-on-small-screen"
-                    size="large"
-                    onClick={onSidebarOpen}
-                />
                 <Banner />
 
                 <MenusBar>
@@ -99,6 +91,5 @@ Header.propTypes = {
         tenants: PropTypes.shape({ items: PropTypes.arrayOf(PropTypes.shape({ name: PropTypes.string.isRequired })) })
     }).isRequired,
     mode: PropTypes.string.isRequired,
-    onResetPages: PropTypes.func.isRequired,
-    onSidebarOpen: PropTypes.func.isRequired
+    onResetPages: PropTypes.func.isRequired
 };

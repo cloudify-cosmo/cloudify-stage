@@ -1,5 +1,5 @@
 import type { FunctionComponent } from 'react';
-import React, { ReactNode, useCallback, useMemo, useState } from 'react';
+import React, { ReactNode, useCallback, useEffect, useMemo } from 'react';
 import { chain, find, includes, map, without } from 'lodash';
 import type { DragEndEvent, DragOverEvent, DragStartEvent } from '@dnd-kit/core';
 import { closestCenter, DndContext, PointerSensor, useSensor, useSensors } from '@dnd-kit/core';
@@ -35,6 +35,7 @@ import { MenuItemWrapper } from './SideBarItem';
 export interface PagesListProps {
     isEditMode?: boolean;
     pageId: string;
+    expanded: boolean;
 }
 
 function drillDownPagesFilter(pageMenuItem: PageMenuItem) {
@@ -69,8 +70,8 @@ const EditIcon = styled(Icon)`
     }
 `;
 
-const PagesList: FunctionComponent<PagesListProps> = ({ isEditMode = false, pageId }) => {
-    const [expandedGroupIds, setExpandedGroupIds] = useState<string[]>([]);
+const PagesList: FunctionComponent<PagesListProps> = ({ isEditMode = false, pageId, expanded }) => {
+    const [expandedGroupIds, setExpandedGroupIds, collapseAllGroups] = useResettableState<string[]>([]);
     const [dragForbidden, setDragForbidden, unsetDragForbidden] = useBoolean();
     const [dragging, setDragging, unsetDragging] = useBoolean();
     const [nameEditedMenuItemId, setNameEditedMenuItemId, stopNameEdit] = useResettableState<string | null>(null);
@@ -100,6 +101,12 @@ const PagesList: FunctionComponent<PagesListProps> = ({ isEditMode = false, page
     const dispatch = useDispatch();
     const sensors = useSensors(useSensor(PointerSensor, { activationConstraint: { distance: 1 } }));
     const pageCount = pageIds.length;
+
+    useEffect(() => {
+        if (!expanded) {
+            collapseAllGroups();
+        }
+    }, [expanded]);
 
     const handleDragEnd = useCallback(
         (event: DragEndEvent) => {
@@ -228,61 +235,66 @@ const PagesList: FunctionComponent<PagesListProps> = ({ isEditMode = false, page
                     <IconSelection
                         style={{
                             position: 'relative',
-                            top: -3
+                            top: -1,
+                            verticalAlign: 'top'
                         }}
                         value={pageMenuItem.icon}
                         onChange={icon => onIconChange(pageMenuItem.id, icon)}
                         enabled={isEditMode}
                     />
                 )}
-                <EditableLabel
-                    value={pageMenuItem.name}
-                    editing={itemNameInEdit}
-                    onCancel={stopNameEdit}
-                    onChange={newName => onNameChange(pageMenuItem.id, newName)}
-                    style={{
-                        color: 'inherit',
-                        float: 'none',
-                        padding: 0,
-                        margin: 0,
-                        fontSize: 'inherit',
-                        fontWeight: 'inherit',
-                        ...(!itemNameInEdit && {
-                            height: 13,
-                            maxWidth: 113,
-                            overflow: 'hidden',
-                            textOverflow: 'ellipsis'
-                        })
-                    }}
-                />
-                {isEditMode && !nameEditedMenuItemId && (
+                {expanded && (
                     <>
-                        <EditIcon
-                            name="edit"
-                            size="small"
-                            onClick={(event: React.MouseEvent) => {
-                                consumeEvent(event);
-                                setNameEditedMenuItemId(pageMenuItem.id);
+                        <EditableLabel
+                            value={pageMenuItem.name}
+                            editing={itemNameInEdit}
+                            onCancel={stopNameEdit}
+                            onChange={newName => onNameChange(pageMenuItem.id, newName)}
+                            style={{
+                                color: 'inherit',
+                                float: 'none',
+                                padding: 0,
+                                margin: 0,
+                                fontSize: 'inherit',
+                                fontWeight: 'inherit',
+                                ...(!itemNameInEdit && {
+                                    height: 13,
+                                    maxWidth: 113,
+                                    overflow: 'hidden',
+                                    textOverflow: 'ellipsis'
+                                })
                             }}
                         />
-                        {pageCount > 1 && (
-                            <RemoveIcon
-                                name="remove"
-                                size="small"
-                                onClick={(event: React.MouseEvent) => {
-                                    consumeEvent(event);
-                                    onItemRemoved(pageMenuItem);
-                                }}
+                        {isEditMode && !nameEditedMenuItemId && (
+                            <>
+                                <EditIcon
+                                    name="edit"
+                                    size="small"
+                                    onClick={(event: React.MouseEvent) => {
+                                        consumeEvent(event);
+                                        setNameEditedMenuItemId(pageMenuItem.id);
+                                    }}
+                                />
+                                {pageCount > 1 && (
+                                    <RemoveIcon
+                                        name="remove"
+                                        size="small"
+                                        onClick={(event: React.MouseEvent) => {
+                                            consumeEvent(event);
+                                            onItemRemoved(pageMenuItem);
+                                        }}
+                                    />
+                                )}
+                            </>
+                        )}
+                        {pageMenuItem.type === 'pageGroup' && !itemNameInEdit && (
+                            <Icon
+                                name="dropdown"
+                                rotated={includes(expandedGroupIds, pageMenuItem.id) ? undefined : 'counterclockwise'}
+                                style={{ position: 'absolute', right: 12, margin: 0 }}
                             />
                         )}
                     </>
-                )}
-                {pageMenuItem.type === 'pageGroup' && !itemNameInEdit && (
-                    <Icon
-                        name="dropdown"
-                        rotated={includes(expandedGroupIds, pageMenuItem.id) ? undefined : 'counterclockwise'}
-                        style={{ position: 'absolute', right: 12, margin: 0 }}
-                    />
                 )}
             </SortableMenuItem>
         );
@@ -299,7 +311,8 @@ const PagesList: FunctionComponent<PagesListProps> = ({ isEditMode = false, page
         flexGrow: 1,
         flexShrink: 1,
         minHeight: 0,
-        overflow: 'auto'
+        overflowY: 'auto',
+        overflowX: 'hidden'
     };
 
     const pagesContainer = (

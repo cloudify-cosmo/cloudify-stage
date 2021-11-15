@@ -225,7 +225,8 @@ export default function PageManagement({ pageId, isEditMode = false }: PageManag
                 </Sidebar>
             </div>
 
-            <div className="page">
+            {/* Set the margin to default sidebar width (defined by Semantic UI) */}
+            <div className="page" style={{ marginLeft: '13rem' }}>
                 <Segment basic className={`fullHeight ${isWidgetMaximized ? 'maximizeWidget' : ''}`}>
                     <div>
                         <Breadcrumb className="breadcrumbLineHeight">

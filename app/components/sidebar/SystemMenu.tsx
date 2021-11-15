@@ -2,10 +2,14 @@ import type { FunctionComponent } from 'react';
 import React from 'react';
 import TenantSelection from './TenantSelection';
 
-const SystemMenu: FunctionComponent = () => {
+interface SystemMenuProps {
+    expanded: boolean;
+}
+
+const SystemMenu: FunctionComponent<SystemMenuProps> = ({ expanded }) => {
     return (
         <>
-            <TenantSelection />
+            <TenantSelection expanded={expanded} />
         </>
     );
 };

@@ -6,12 +6,14 @@ import PagesList from './PagesList';
 import { Sidebar } from '../basic';
 import { ReduxState } from '../../reducers';
 import SystemMenu from './SystemMenu';
+import { useBoolean } from '../../utils/hooks';
 
 const ThemedSidebar = styled(Sidebar)`
     &&& {
         background-color: ${props => props.theme.sidebarColor} !important;
         display: flex;
         overflow-y: visible !important;
+        ${props => (!props.expanded && `width: ${props.width} !important;`) || ''}
     }
     .item {
         color: ${props => props.theme.sidebarTextColor} !important;
@@ -25,20 +27,29 @@ const ThemedSidebar = styled(Sidebar)`
 
 interface SideBarProps {
     pageId: string;
+    width: number;
 }
 
-const SideBar: FunctionComponent<SideBarProps> = ({ pageId }) => {
+const SideBar: FunctionComponent<SideBarProps> = ({ pageId, width }) => {
     const theme = useContext(ThemeContext) || {};
     const homePageId = useSelector((state: ReduxState) => state.pages[0].id);
     const isEditMode = useSelector((state: ReduxState) => state.config.isEditMode || false);
-    const isOpen = useSelector((state: ReduxState) => state.app.sidebarIsOpen || false);
-    const className = isOpen ? 'open' : '';
+
+    const [expanded, expand, collapse] = useBoolean();
 
     return (
         <div className="sidebarContainer">
-            <ThemedSidebar theme={theme} visible className={`vertical menu small ${className}`}>
-                <PagesList pageId={pageId || homePageId} isEditMode={isEditMode} />
-                {!isEditMode && <SystemMenu />}
+            <ThemedSidebar
+                theme={theme}
+                visible
+                className="vertical menu small open"
+                expanded={expanded || isEditMode}
+                onMouseEnter={expand}
+                onMouseLeave={collapse}
+                width={width}
+            >
+                <PagesList pageId={pageId || homePageId} isEditMode={isEditMode} expanded={expanded || isEditMode} />
+                {!isEditMode && <SystemMenu expanded={expanded || isEditMode} />}
             </ThemedSidebar>
         </div>
     );

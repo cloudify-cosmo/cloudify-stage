@@ -14,7 +14,11 @@ import StageUtils from '../../utils/stageUtils';
 
 const t = StageUtils.getT('users');
 
-const TenantSelection: FunctionComponent = () => {
+interface TenantSelectionProps {
+    expanded: boolean;
+}
+
+const TenantSelection: FunctionComponent<TenantSelectionProps> = ({ expanded }) => {
     const [search, setSearch, clearSearch] = useResettableState('');
     const manager = useSelector((state: ReduxState) => state.manager || {});
     const dispatch = useDispatch();
@@ -47,13 +51,13 @@ const TenantSelection: FunctionComponent = () => {
     const tenantMenuTrigger = (
         <SideBarItem>
             <IconSelection enabled={false} value="user circle" />
-            {selectedTenant || t('noTenants')}
+            {expanded && (selectedTenant || t('noTenants'))}
         </SideBarItem>
     );
 
     return (
         <Dropdown trigger={tenantMenuTrigger} onClose={clearSearch} pointing="left" icon={null} fluid>
-            <Dropdown.Menu>
+            <Dropdown.Menu style={{ margin: 0 }}>
                 <Dropdown.Header>{t('tenantsHeader')}</Dropdown.Header>
                 <Dropdown.Menu scrolling>
                     {filteredTenants.map(tenant => (

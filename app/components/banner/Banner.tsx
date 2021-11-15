@@ -46,7 +46,7 @@ Banner.defaultProps = {
 };
 
 const StyledBanner = styled(Banner)`
-    @media (max-width: 800px) {
+    @media (max-width: 600px) {
         ${props => (props.hideOnSmallScreen ? 'display: none !important' : '')};
     }
 `;
