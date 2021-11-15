@@ -11,8 +11,7 @@ import i18n from 'i18next';
 import { parse } from 'query-string';
 import { push } from 'connected-react-router';
 import { connect } from 'react-redux';
-import styleConsts from '../styles/style.scss';
-import SideBar from './sidebar/SideBar';
+import SideBar, { collapsedSidebarWidth, expandedSidebarWidth } from './sidebar/SideBar';
 import Page from './Page';
 import GettingStartedModal from './GettingStartedModal';
 import { createPagesMap } from '../actions/pageMenu';
@@ -21,8 +20,6 @@ import { clearContext, setValue } from '../actions/context';
 import { setDrilldownContext } from '../actions/drilldownContext';
 import { setAppError } from '../actions/appState';
 import { storeCurrentPageId } from '../actions/app';
-
-const { sidebarWidth } = styleConsts;
 
 class Home extends Component {
     // TODO: Context handling should not be here. Currently necessary to use deprecated methods.
@@ -95,11 +92,10 @@ class Home extends Component {
 
         return (
             <div className="main">
-                <SideBar pageId={pageId} width={sidebarWidth} />
+                <SideBar pageId={pageId} />
                 <GettingStartedModal />
 
-                {/* NOTE: 13rem is the default expanded sidebar width as defined by Semantic UI */}
-                <div className="page" style={{ marginLeft: isEditMode ? '13rem' : sidebarWidth }}>
+                <div className="page" style={{ marginLeft: isEditMode ? expandedSidebarWidth : collapsedSidebarWidth }}>
                     <div className="ui basic segment">
                         <Page pageId={pageId} pageName={pageName} />
                     </div>

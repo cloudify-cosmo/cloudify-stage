@@ -1,7 +1,5 @@
 @import '~cloudify-ui-common/styles/colors';
 
-$sidebarWidth: 1.9rem;
-
 a:hover {
   text-decoration: underline !important;
   cursor: pointer;
@@ -125,7 +123,7 @@ a:hover {
     position: fixed !important;
     top: 8rem !important;
     bottom: $maximizedWidgetGap !important;
-    left: ($sidebarWidth + $maximizedWidgetGap) !important;
+    left: $maximizedWidgetGap !important;
     right: $maximizedWidgetGap !important;
     outline: 0;
 
@@ -610,8 +608,4 @@ a.underline {
 
 .widgetButton {
   width: 100%;
-}
-
-:export {
-  sidebarWidth: $sidebarWidth;
 }

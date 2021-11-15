@@ -8,12 +8,15 @@ import { ReduxState } from '../../reducers';
 import SystemMenu from './SystemMenu';
 import { useBoolean } from '../../utils/hooks';
 
+export const collapsedSidebarWidth = '1.9rem';
+export const expandedSidebarWidth = '13rem';
+
 const ThemedSidebar = styled(Sidebar)`
     &&& {
         background-color: ${props => props.theme.sidebarColor} !important;
         display: flex;
         overflow-y: visible !important;
-        ${props => (!props.expanded && `width: ${props.width} !important;`) || ''}
+        ${props => (!props.expanded && `width: ${collapsedSidebarWidth} !important;`) || ''}
     }
     .item {
         color: ${props => props.theme.sidebarTextColor} !important;
@@ -27,10 +30,9 @@ const ThemedSidebar = styled(Sidebar)`
 
 interface SideBarProps {
     pageId: string;
-    width: number;
 }
 
-const SideBar: FunctionComponent<SideBarProps> = ({ pageId, width }) => {
+const SideBar: FunctionComponent<SideBarProps> = ({ pageId }) => {
     const theme = useContext(ThemeContext) || {};
     const homePageId = useSelector((state: ReduxState) => state.pages[0].id);
     const isEditMode = useSelector((state: ReduxState) => state.config.isEditMode || false);
@@ -46,7 +48,7 @@ const SideBar: FunctionComponent<SideBarProps> = ({ pageId, width }) => {
                 expanded={expanded || isEditMode}
                 onMouseEnter={expand}
                 onMouseLeave={collapse}
-                width={width}
+                width={collapsedSidebarWidth}
             >
                 <PagesList pageId={pageId || homePageId} isEditMode={isEditMode} expanded={expanded || isEditMode} />
                 {!isEditMode && <SystemMenu />}
