@@ -328,7 +328,9 @@ const commands = {
             .editWidgetConfiguration(widgetId, noop),
     refreshPage: (disableGettingStarted = true) => {
         mockGettingStarted(!disableGettingStarted);
-        return cy.get('.pageMenuItem.active').click({ force: true });
+        cy.get('.pageMenuItem.active').click({ force: true });
+        // Collapse the sidebar
+        return cy.get('body').click();
     },
     refreshTemplate: (disableGettingStarted = true) => {
         mockGettingStarted(!disableGettingStarted);
