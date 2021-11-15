@@ -1,5 +1,6 @@
 {
   "name": "Services",
+  "icon": "wrench",
   "layout": [
     {
       "type": "widgets",

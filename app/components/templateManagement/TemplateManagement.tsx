@@ -12,24 +12,31 @@ import Const from '../../utils/consts';
 import { Breadcrumb, Button, Divider, ErrorMessage, Segment } from '../basic';
 import Pages from './pages/Pages';
 import Templates from './templates/Templates';
-import { createPageId, setActive } from '../../actions/templateManagement';
+import { setTemplateManagementActive } from '../../actions/templateManagement';
 import { selectHomePage } from '../../actions/pageMenu';
 import Internal from '../../utils/Internal';
 import { useBoolean, useErrors } from '../../utils/hooks';
-import { addPage, addTemplate, editTemplate, removePage, removeTemplate } from '../../actions/templates';
+import { addTemplate, editTemplate, removeTemplate } from '../../actions/templateManagement/templates';
+import { addPage, removePage } from '../../actions/templateManagement/pages';
+import PageGroups from './pageGroups/PageGroups';
+import { ReduxState } from '../../reducers';
+import useCreatePageId from './pages/useCreatePageId';
 
 export default function TemplateManagement() {
     const dispatch = useDispatch();
+    const createPageId = useCreatePageId();
 
     const [isLoading, setLoading, unsetLoading] = useBoolean(true);
     const [templates, setTemplates] = useState();
     const [pages, setPages] = useState();
+    const [pageGroups, setPageGroups] = useState();
     const { errors, setMessageAsError, clearErrors } = useErrors();
 
-    const internal = useSelector(state => new Internal(state.manager));
-    const pageDefs = useSelector(state => state.templates.pagesDef);
-    const templateDefs = useSelector(state => state.templates.templatesDef);
-    const tenants = useSelector(state => state.manager.tenants);
+    const internal = useSelector((state: ReduxState) => new Internal(state.manager));
+    const pageDefs = useSelector((state: ReduxState) => state.templates.pagesDef);
+    const templateDefs = useSelector((state: ReduxState) => state.templates.templatesDef);
+    const pageGroupDefs = useSelector((state: ReduxState) => state.templates.pageGroupsDef);
+    const tenants = useSelector((state: ReduxState) => state.manager.tenants);
 
     function handleError(err) {
         log.error(err);
@@ -38,13 +45,17 @@ export default function TemplateManagement() {
     }
 
     function fetchData() {
-        return Promise.all([internal.doGet('/templates'), internal.doGet('/templates/pages')])
+        startLoading();
+        return Promise.all([
+            internal.doGet('/templates'),
+            internal.doGet('/templates/pages'),
+            internal.doGet('/templates/page-groups')
+        ])
             .then(data => {
                 const selectedTemplate = _.find(templates, { selected: true });
                 const selectedPage = _.find(pages, { selected: true });
 
-                const templateList = data[0];
-                const pageList = data[1];
+                const [templateList, pageList, pageGroupList] = data;
 
                 const preparedTemplates = _.map(templateList, template => {
                     return { ...template, pages: templateDefs[template.id].pages };
@@ -56,33 +67,52 @@ export default function TemplateManagement() {
                 const preparedPages = _.map(pageList, page => {
                     return {
                         ...page,
-                        name: (pageDefs[page.id] || {}).name,
+                        ..._.pick(pageDefs[page.id], 'name', 'icon'),
                         templates: _.map(
-                            _.filter(preparedTemplates, template => _.indexOf(template.pages, page.id) >= 0),
+                            _.filter(preparedTemplates, template =>
+                                _.find(template.pages, { id: page.id, type: 'page' })
+                            ),
                             'id'
-                        )
+                        ),
+                        pageGroups: _(pageGroupDefs)
+                            .pickBy(pageGroup => _.includes(pageGroup.pages, page.id))
+                            .keys()
+                            .value()
                     };
                 });
                 if (selectedPage) {
                     (_.find(preparedPages, { id: selectedPage.id }) || {}).selected = true;
                 }
 
+                const preparedPageGroups = pageGroupList.map(pageGroup => ({
+                    ...pageGroup,
+                    ...pageGroupDefs[pageGroup.id],
+                    templates: _.map(
+                        _.filter(preparedTemplates, template =>
+                            _.find(template.pages, { id: pageGroup.id, type: 'pageGroup' })
+                        ),
+                        'id'
+                    )
+                }));
+
                 setTemplates(preparedTemplates);
                 setPages(preparedPages);
+                setPageGroups(preparedPageGroups);
                 clearErrors();
                 unsetLoading();
             })
-            .catch(handleError);
+            .catch(handleError)
+            .finally(unsetLoading);
     }
 
     useEffect(() => {
-        dispatch(setActive(true));
-        return () => dispatch(setActive(false));
+        dispatch(setTemplateManagementActive(true));
+        return () => dispatch(setTemplateManagementActive(false));
     }, []);
 
     useEffect(() => {
         fetchData();
-    }, [templateDefs, pageDefs]);
+    }, [templateDefs, pageDefs, pageGroupDefs]);
 
     function setSelected(collection, id) {
         return _.map(collection, item => ({ ...item, selected: !item.selected && item.id === id }));
@@ -203,7 +233,7 @@ export default function TemplateManagement() {
     function onPageCreate(name) {
         startLoading();
 
-        const pageId = createPageId(name, pageDefs);
+        const pageId = createPageId(name);
         const body = {
             id: pageId,
             name,
@@ -266,6 +296,8 @@ export default function TemplateManagement() {
                     onPreviewPage={onPreviewPage}
                     onCanDeletePage={canDeletePage}
                 />
+
+                <PageGroups pageGroups={pageGroups} />
             </Segment>
         </div>
     );

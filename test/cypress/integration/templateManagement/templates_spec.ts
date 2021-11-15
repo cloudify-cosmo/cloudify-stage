@@ -1,7 +1,6 @@
-// @ts-nocheck File not migrated fully to TS
 import { map } from 'lodash';
 
-describe('Template Management', () => {
+describe('Templates segment', () => {
     const testTenants = ['T1', 'T2', 'T3'];
     const password = 'cypress';
     const defaultUser = {
@@ -36,11 +35,6 @@ describe('Template Management', () => {
 
         cy.get('@templateRow').click();
     };
-    const verifyPageRow = (index, id: string, name: string) => {
-        const pageRow = `.red.segment > .gridTable > :nth-child(2) > .very > tbody > :nth-child(${index})`;
-        cy.get(`${pageRow} > :nth-child(1)`).should('have.text', id);
-        cy.get(`${pageRow} > :nth-child(2)`).should('have.text', name);
-    };
 
     const getTemplateRow = (templateId: string) =>
         cy
@@ -63,7 +57,7 @@ describe('Template Management', () => {
         });
     });
 
-    it('is available for admin users', () => {
+    it('lists built-in templates', () => {
         cy.mockLogin();
 
         cy.get('.loader').should('be.not.visible');
@@ -73,42 +67,22 @@ describe('Template Management', () => {
 
         cy.location('pathname').should('be.equal', '/console/template_management');
 
-        cy.getTemplates().then(templatesData => {
-            const builtInTemplates = templatesData.body.filter(template => !template.custom);
-
-            builtInTemplates.forEach(template => {
-                cy.getBuiltInTemplate(template.id).then(templateData => {
+        cy.getBuiltInTemplateIds().then(builtInTemplateIds =>
+            builtInTemplateIds.forEach(templateId => {
+                cy.getBuiltInTemplate(templateId).then(templateData => {
                     const builtInTemplate = templateData.body;
                     verifyTemplateRow(
-                        template.id,
+                        templateId,
                         map(builtInTemplate.pages, 'id'),
                         builtInTemplate.roles,
                         builtInTemplate.tenants
                     );
                 });
-            });
-        });
-
-        cy.getPages().then(pagesData => {
-            const builtInPages = pagesData.body.filter(page => !page.custom);
-
-            builtInPages.forEach((builtInPage, index) => {
-                verifyPageRow(index + 1, builtInPage.id, builtInPage.name);
-            });
-        });
+            })
+        );
     });
 
-    it('is not available for non-admin users', () => {
-        cy.mockLogin(defaultUser.username, defaultUser.password);
-
-        cy.get('.usersMenu').click();
-        cy.get('.usersMenu').should('not.contain', 'Template Management');
-
-        cy.visit('/console/template_management');
-        cy.get('div > h2').should('have.text', '404 Page Not Found');
-    });
-
-    it('allows admin users to create and modify templates', () => {
+    it('allows users to create and modify templates', () => {
         const clickOnHeader = () => cy.get('.header').click();
         cy.removeUserTemplates().mockLogin();
 
@@ -136,7 +110,7 @@ describe('Template Management', () => {
                     cy.contains('plugins').find('.add').click();
                     cy.contains('logs').find('.add').click();
                 });
-            cy.contains('Available page groups').click().parent().contains('empty').find('.add').click();
+            cy.contains('Available page groups').click().parent().contains('deployments').find('.add').click();
 
             cy.log('Create template');
             cy.get('.actions > .ok').click();
@@ -145,7 +119,7 @@ describe('Template Management', () => {
         cy.get('.modal').should('not.exist');
 
         cy.log('Verify template');
-        verifyTemplateRow('Template 1', ['deployment', 'plugins', 'logs', 'empty'], ['user', 'viewer'], ['all']);
+        verifyTemplateRow('Template 1', ['deployment', 'plugins', 'logs', 'deployments'], ['user', 'viewer'], ['all']);
 
         cy.log('Edit template');
         getTemplateRow('Template 1').within(() => cy.get('.edit').click());
@@ -174,7 +148,7 @@ describe('Template Management', () => {
             cy.log('Remove page menu items');
             cy.contains('Selected page menu items').within(() => {
                 cy.contains('logs').find('.minus').click();
-                cy.contains('empty').find('.minus').click();
+                cy.contains('deployments').find('.minus').click();
             });
 
             cy.log('Save template');
@@ -199,7 +173,8 @@ describe('Template Management', () => {
 
         cy.log('Verify template was removed');
         cy.getTemplates().then(
-            data => expect(data.body.filter(template => template.id === 'Another Template')).to.be.empty
+            data =>
+                expect(data.body.filter((template: { id: string }) => template.id === 'Another Template')).to.be.empty
         );
     });
 });

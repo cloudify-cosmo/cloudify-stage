@@ -207,7 +207,7 @@ const commands = {
         });
         return cy.visit('/console');
     },
-    visitPage: (name: string, id: string | null = null) => {
+    clickPageMenuItem: (name: string, id: string | null = null) => {
         cy.log(`Switching to '${name}' page`);
         cy.get('.sidebar.menu .pages').within(() => cy.contains(name).click({ force: true }));
         if (id) {
@@ -215,7 +215,7 @@ const commands = {
         }
         return cy.waitUntilPageLoaded();
     },
-    visitTestPage: () => cy.visitPage(testPageName),
+    visitTestPage: () => cy.clickPageMenuItem(testPageName),
     usePageMock: (
         widgetIds?: string | string[],
         widgetConfiguration: any = {},
@@ -332,7 +332,6 @@ const commands = {
     },
     refreshTemplate: (disableGettingStarted = true) => {
         mockGettingStarted(!disableGettingStarted);
-        cy.get('.tenantsMenu').click({ force: true });
         return cy.contains('.text', 'default_tenant').click({ force: true });
     },
     setBlueprintContext: (value: string) => setContext('blueprint', value),
@@ -397,7 +396,13 @@ const commands = {
 
     clearSearchableDropdown: (fieldName: string) => cy.getField(fieldName).find('.dropdown.clear.icon').click(),
 
-    setDropdownValues: (fieldName: string, values: string[]) =>
+    setSingleDropdownValue: (fieldName: string, value: string) =>
+        cy
+            .getField(fieldName)
+            .click()
+            .within(() => cy.contains('div[role=option]', value).click()),
+
+    setMultipleDropdownValues: (fieldName: string, values: string[]) =>
         cy
             .getField(fieldName)
             .click()

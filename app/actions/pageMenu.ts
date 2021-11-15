@@ -5,6 +5,7 @@ import { LocationDescriptorObject } from 'history';
 import { stringify } from 'query-string';
 import { push } from 'connected-react-router';
 import log from 'loglevel';
+import type { SemanticICONS } from 'semantic-ui-react';
 import { addLayoutToPage, PageDefinition } from './page';
 import * as types from './types';
 import { ReduxState } from '../reducers';
@@ -27,6 +28,7 @@ export interface PageGroup {
     id: string;
     name: string;
     type: 'pageGroup';
+    icon?: SemanticICONS;
     pages: PageDefinition[];
 }
 
@@ -99,6 +101,14 @@ export function changePageMenuItemName(pageMenuItemId: string, newName: string) 
     };
 }
 
+export function changePageMenuItemIcon(pageMenuItemId: string, icon?: SemanticICONS) {
+    return {
+        type: types.CHANGE_PAGE_MENU_ITEM_ICON,
+        pageMenuItemId,
+        icon
+    };
+}
+
 export function selectPage(
     pageId: string,
     isDrilldown?: boolean,
@@ -159,14 +169,20 @@ export function selectPageByName(
     };
 }
 
+export function createGroupId(groupName: string, pages: PageMenuItem[]) {
+    return createId(
+        groupName,
+        pages.filter(item => item.type === 'pageGroup')
+    );
+}
+
 export function addPageGroup(name: string): ThunkAction<void, ReduxState, never, AnyAction> {
     return (dispatch, getState) => {
-        const newPageGroupId = createId(
-            name,
-            getState().pages.filter(item => item.type === 'pageGroup')
-        );
+        const newPageGroupId = createGroupId(name, getState().pages);
 
         dispatch(createPageGroup({ name }, newPageGroupId));
+
+        return newPageGroupId;
     };
 }
 

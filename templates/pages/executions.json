@@ -1,5 +1,6 @@
 {
   "name": "Executions",
+  "icon": "settings",
   "layout": [{
     "type": "widgets",
     "content": [

@@ -19,6 +19,14 @@ describe('Page management', () => {
         cy.log('Creating page');
         cy.get('.actions > .ok').click();
 
+        cy.log('Setting icon');
+        cy.get('.expand').click();
+        cy.get('.popup').within(() => {
+            cy.get('input').type('rocket{enter}');
+            cy.contains('Save').click();
+        });
+        cy.get('.rocket').should('be.visible');
+
         cy.log('Adding widgets');
         cy.contains('Add Widgets').click();
         cy.contains('Add Widget').click();
@@ -48,7 +56,15 @@ describe('Page management', () => {
         cy.contains('Save').click();
 
         cy.log('Veryfiying page row');
-        cy.get('tr:contains(page_1) td:nth-child(2)').should('have.text', 'Page 1');
+        cy.get('.loading').should('not.exist');
+        cy.contains('.segment', 'Pages')
+            .find('table')
+            .getTable(tableContent => {
+                const addedPageRow = tableContent[tableContent.length - 1];
+                expect(addedPageRow['Page id']).to.equal('page_1');
+                expect(addedPageRow['Page name']).to.equal('Page 1');
+            });
+        cy.contains('tr', 'page_1').find('.rocket').scrollIntoView().should('be.visible');
 
         cy.log('Verifying page content');
         cy.get('.updatePageIcon.edit').click();
@@ -62,6 +78,14 @@ describe('Page management', () => {
         cy.log('Changing page name');
         cy.get('.pageTitle').click();
         cy.get('.pageTitle input').type('.1');
+
+        cy.log('Changing page icon');
+        cy.get('.pages .rocket').click();
+        cy.get('.popup').within(() => {
+            cy.get('.dropdown.clear.icon').click();
+            cy.contains('Save').click();
+        });
+        cy.get('.expand').should('be.visible');
 
         cy.log('Adding more widgets');
         cy.contains('Add Widget').click();

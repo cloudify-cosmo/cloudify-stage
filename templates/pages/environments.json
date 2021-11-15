@@ -1,5 +1,6 @@
 {
   "name": "Environments",
+  "icon": "bullseye",
   "layout": [
     {
       "type": "widgets",

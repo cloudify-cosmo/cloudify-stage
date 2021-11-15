@@ -57,19 +57,14 @@ export default function CreatePageModal({ onCreatePage, pageName: initialPageNam
     return (
         <Modal trigger={trigger} open={open} onOpen={openModal} onClose={unsetOpen} className="createPageModal">
             <Modal.Header>
-                <Icon name="block layout" />
+                <Icon name="file outline" />
                 {i18n.t('templates.createPageModal.header', 'Create page')}
             </Modal.Header>
 
             <Modal.Content>
                 <Form loading={loading} errors={errors} onErrorsDismiss={clearErrors}>
-                    <Form.Field error={errors.pageName}>
-                        <Form.Input
-                            name="pageName"
-                            placeholder={i18n.t('templates.createPageModal.pageName', 'Page name')}
-                            value={pageName}
-                            onChange={handleInputChange}
-                        />
+                    <Form.Field error={errors.pageName} label={i18n.t('templates.createPageModal.pageName')}>
+                        <Form.Input name="pageName" value={pageName} onChange={handleInputChange} />
                     </Form.Field>
                 </Form>
             </Modal.Content>

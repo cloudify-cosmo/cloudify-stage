@@ -8,14 +8,16 @@ import { restrictToVerticalAxis } from '@dnd-kit/modifiers';
 import { useDispatch, useSelector } from 'react-redux';
 import styled from 'styled-components';
 
+import { SemanticICONS } from 'semantic-ui-react';
 import { EditableLabel, Icon } from '../basic';
 import AddPageButton from './AddPageButton';
 import AddPageGroupButton from './AddPageGroupButton';
-import SortableMenuItem, { ItemContainer } from './SortableMenuItem';
+import SortableMenuItem from './SortableMenuItem';
 
 import type { PageDefinition } from '../../actions/page';
 import type { PageMenuItem } from '../../actions/pageMenu';
 import {
+    changePageMenuItemIcon,
     changePageMenuItemName,
     createPagesMap,
     findSelectedRootPageId,
@@ -27,6 +29,8 @@ import {
 import Consts from '../../utils/consts';
 import { useBoolean, useResettableState } from '../../utils/hooks';
 import { ReduxState } from '../../reducers';
+import IconSelection from '../IconSelection';
+import { MenuItemWrapper } from './SideBarItem';
 
 export interface PagesListProps {
     isEditMode?: boolean;
@@ -49,7 +53,7 @@ const RemoveIcon = styled(Icon)`
     visibility: hidden;
     float: right;
 
-    ${ItemContainer}:hover & {
+    ${MenuItemWrapper}:hover & {
         visibility: visible;
     }
 `;
@@ -60,12 +64,12 @@ const EditIcon = styled(Icon)`
     margin-left: 1em !important;
     display: none !important;
 
-    ${ItemContainer}:hover & {
+    ${MenuItemWrapper}:hover & {
         display: inline !important;
     }
 `;
 
-const PagesList: FunctionComponent<PagesListProps> = ({ isEditMode, pageId }) => {
+const PagesList: FunctionComponent<PagesListProps> = ({ isEditMode = false, pageId }) => {
     const [expandedGroupIds, setExpandedGroupIds] = useState<string[]>([]);
     const [dragForbidden, setDragForbidden, unsetDragForbidden] = useBoolean();
     const [dragging, setDragging, unsetDragging] = useBoolean();
@@ -185,6 +189,10 @@ const PagesList: FunctionComponent<PagesListProps> = ({ isEditMode, pageId }) =>
         stopNameEdit();
     }
 
+    function onIconChange(pageMenuItemId: string, icon?: SemanticICONS) {
+        dispatch(changePageMenuItemIcon(pageMenuItemId, icon || undefined));
+    }
+
     function renderPageMenuItem(pageMenuItem: PageMenuItem, subItem = false): ReactNode[] {
         const itemNameInEdit = nameEditedMenuItemId === pageMenuItem.id;
 
@@ -209,7 +217,6 @@ const PagesList: FunctionComponent<PagesListProps> = ({ isEditMode, pageId }) =>
                     else onPageGroupClick(pageMenuItem.id);
                 }}
                 style={{
-                    height: 37,
                     paddingTop: itemNameInEdit ? 3 : undefined,
                     paddingLeft: calculateLeftPadding(),
                     paddingBottom: 3,
@@ -217,6 +224,17 @@ const PagesList: FunctionComponent<PagesListProps> = ({ isEditMode, pageId }) =>
                     cursor: dragging ? 'inherit' : undefined
                 }}
             >
+                {!itemNameInEdit && (
+                    <IconSelection
+                        style={{
+                            position: 'relative',
+                            top: -3
+                        }}
+                        value={pageMenuItem.icon}
+                        onChange={icon => onIconChange(pageMenuItem.id, icon)}
+                        enabled={isEditMode}
+                    />
+                )}
                 <EditableLabel
                     value={pageMenuItem.name}
                     editing={itemNameInEdit}
@@ -277,8 +295,15 @@ const PagesList: FunctionComponent<PagesListProps> = ({ isEditMode, pageId }) =>
     if (dragForbidden) cursor = 'not-allowed';
     else if (dragging) cursor = 'grabbing';
 
+    const wrapperStyle = {
+        flexGrow: 1,
+        flexShrink: 1,
+        minHeight: 0,
+        overflow: 'auto'
+    };
+
     const pagesContainer = (
-        <div className="pages" style={{ cursor }}>
+        <div className="pages" style={{ cursor, ...wrapperStyle }}>
             {chain(pages)
                 .filter(drillDownPagesFilter)
                 .map(pageMenuItem => renderPageMenuItem(pageMenuItem, false))
@@ -289,7 +314,7 @@ const PagesList: FunctionComponent<PagesListProps> = ({ isEditMode, pageId }) =>
 
     if (isEditMode) {
         return (
-            <>
+            <div style={wrapperStyle}>
                 <DndContext
                     sensors={sensors}
                     collisionDetection={closestCenter}
@@ -306,7 +331,7 @@ const PagesList: FunctionComponent<PagesListProps> = ({ isEditMode, pageId }) =>
                     <AddPageButton />
                     <AddPageGroupButton />
                 </div>
-            </>
+            </div>
         );
     }
 

@@ -13,8 +13,8 @@ URL:            https://github.com/cloudify-cosmo/cloudify-stage
 Vendor:         Cloudify Platform Ltd.
 Packager:       Cloudify Platform Ltd.
 
-BuildRequires:  nodejs >= 12.22.1, rsync
-Requires:       nodejs >= 12.22.1, cloudify-rest-service, nginx, shadow-utils
+BuildRequires:  nodejs >= 14.18.1, rsync
+Requires:       nodejs >= 14.18.1, cloudify-rest-service, nginx, shadow-utils
 AutoReqProv:    no
 
 
