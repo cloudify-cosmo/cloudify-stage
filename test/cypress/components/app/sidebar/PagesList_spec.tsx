@@ -8,7 +8,7 @@ import { mountWithProvider } from '../../utils';
 describe('PagesList', () => {
     it('handles default mode', () => {
         cy.fixture('pages/pages_with_groups').then(pages => {
-            mountWithProvider(<PagesList pageId={pages[0].id} />, { pages });
+            mountWithProvider(<PagesList pageId={pages[0].id} expanded={true} />, { pages });
         });
 
         cy.contains('Top Level Page')
@@ -61,7 +61,7 @@ describe('PagesList', () => {
         cy.fixture('pages/pages_with_groups').then(pages => {
             mountWithProvider(
                 <div style={{ marginLeft: 30 }}>
-                    <PagesList isEditMode pageId={pages[0].id} />
+                    <PagesList isEditMode pageId={pages[0].id} expanded={true} />
                 </div>,
                 { pages }
             );
