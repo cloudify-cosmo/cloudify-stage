@@ -1,4 +1,3 @@
-// @ts-nocheck File not migrated fully to TS
 describe('Admin flow', () => {
     const tenantName = `admin_flow_test_tenant`;
     const groupName = `admin_flow_test_group`;
@@ -15,13 +14,13 @@ describe('Admin flow', () => {
         cy.get('.modal').should('not.exist');
 
         cy.log('Creating group');
-        cy.clickPageMenuItem('Groups');
+        cy.clickPageMenuItem('System Setup').clickPageMenuItem('Groups');
         cy.contains('.userGroupsWidget button', 'Add').click();
         cy.get('input[name=groupName]').type(groupName);
         cy.contains('.modal button', 'Add').click();
 
         cy.log('Creating user');
-        cy.clickPageMenuItem('Users');
+        cy.clickPageMenuItem('System Setup').clickPageMenuItem('Users');
         cy.contains('.userManagementWidget button', 'Add').click();
         cy.get('.modal').within(() => {
             cy.get('input[name=username]').type(userName);
@@ -44,12 +43,12 @@ describe('Admin flow', () => {
         cy.get('.modal').should('not.exist');
 
         cy.log('Verifying change is visible across widgets');
-        cy.clickPageMenuItem('Tenants');
+        cy.clickPageMenuItem('System Setup').clickPageMenuItem('Tenants');
         cy.get('.tenantsWidget').within(() => {
             cy.contains(tenantName).click();
             cy.contains(userName);
         });
-        cy.clickPageMenuItem('Groups');
+        cy.clickPageMenuItem('System Setup').clickPageMenuItem('Groups');
         cy.get('.userGroupsWidget').within(() => {
             cy.contains(groupName).click();
             cy.contains(userName);

@@ -1,4 +1,3 @@
-// @ts-nocheck File not migrated fully to TS
 import { minutesToMs } from '../../support/resource_commons';
 
 describe('User flow', () => {
@@ -15,7 +14,7 @@ describe('User flow', () => {
             .deleteSecrets('openstack_config__lab1_tenantA')
     );
 
-    function createSecret(secretName) {
+    function createSecret(secretName: string) {
         cy.contains('Create').click();
         cy.get('.modal').within(() => {
             cy.get('input[name=secretKey]').type(secretName);
@@ -34,7 +33,7 @@ describe('User flow', () => {
             cy.get('button', { timeout: minutesToMs(2) }).should('to.be.disabled');
         });
 
-        cy.clickPageMenuItem('Secrets');
+        cy.clickPageMenuItem('Resources').clickPageMenuItem('Secrets');
         createSecret('some_key_1');
         createSecret('some_key_4');
         createSecret('some_key_7');
