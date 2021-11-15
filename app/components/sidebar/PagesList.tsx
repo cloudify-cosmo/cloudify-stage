@@ -243,58 +243,54 @@ const PagesList: FunctionComponent<PagesListProps> = ({ isEditMode = false, page
                         enabled={isEditMode}
                     />
                 )}
-                {expanded && (
+                <EditableLabel
+                    value={pageMenuItem.name}
+                    editing={itemNameInEdit}
+                    onCancel={stopNameEdit}
+                    onChange={newName => onNameChange(pageMenuItem.id, newName)}
+                    style={{
+                        color: 'inherit',
+                        float: 'none',
+                        padding: 0,
+                        margin: 0,
+                        fontSize: 'inherit',
+                        fontWeight: 'inherit',
+                        ...(!itemNameInEdit && {
+                            height: 13,
+                            maxWidth: 113,
+                            overflow: 'hidden',
+                            textOverflow: 'ellipsis'
+                        })
+                    }}
+                />
+                {isEditMode && !nameEditedMenuItemId && (
                     <>
-                        <EditableLabel
-                            value={pageMenuItem.name}
-                            editing={itemNameInEdit}
-                            onCancel={stopNameEdit}
-                            onChange={newName => onNameChange(pageMenuItem.id, newName)}
-                            style={{
-                                color: 'inherit',
-                                float: 'none',
-                                padding: 0,
-                                margin: 0,
-                                fontSize: 'inherit',
-                                fontWeight: 'inherit',
-                                ...(!itemNameInEdit && {
-                                    height: 13,
-                                    maxWidth: 113,
-                                    overflow: 'hidden',
-                                    textOverflow: 'ellipsis'
-                                })
+                        <EditIcon
+                            name="edit"
+                            size="small"
+                            onClick={(event: React.MouseEvent) => {
+                                consumeEvent(event);
+                                setNameEditedMenuItemId(pageMenuItem.id);
                             }}
                         />
-                        {isEditMode && !nameEditedMenuItemId && (
-                            <>
-                                <EditIcon
-                                    name="edit"
-                                    size="small"
-                                    onClick={(event: React.MouseEvent) => {
-                                        consumeEvent(event);
-                                        setNameEditedMenuItemId(pageMenuItem.id);
-                                    }}
-                                />
-                                {pageCount > 1 && (
-                                    <RemoveIcon
-                                        name="remove"
-                                        size="small"
-                                        onClick={(event: React.MouseEvent) => {
-                                            consumeEvent(event);
-                                            onItemRemoved(pageMenuItem);
-                                        }}
-                                    />
-                                )}
-                            </>
-                        )}
-                        {pageMenuItem.type === 'pageGroup' && !itemNameInEdit && (
-                            <Icon
-                                name="dropdown"
-                                rotated={includes(expandedGroupIds, pageMenuItem.id) ? undefined : 'counterclockwise'}
-                                style={{ position: 'absolute', right: 12, margin: 0 }}
+                        {pageCount > 1 && (
+                            <RemoveIcon
+                                name="remove"
+                                size="small"
+                                onClick={(event: React.MouseEvent) => {
+                                    consumeEvent(event);
+                                    onItemRemoved(pageMenuItem);
+                                }}
                             />
                         )}
                     </>
+                )}
+                {expanded && pageMenuItem.type === 'pageGroup' && !itemNameInEdit && (
+                    <Icon
+                        name="dropdown"
+                        rotated={includes(expandedGroupIds, pageMenuItem.id) ? undefined : 'counterclockwise'}
+                        style={{ position: 'absolute', right: 12, margin: 0 }}
+                    />
                 )}
             </SortableMenuItem>
         );

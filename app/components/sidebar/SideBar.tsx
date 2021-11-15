@@ -49,7 +49,7 @@ const SideBar: FunctionComponent<SideBarProps> = ({ pageId, width }) => {
                 width={width}
             >
                 <PagesList pageId={pageId || homePageId} isEditMode={isEditMode} expanded={expanded || isEditMode} />
-                {!isEditMode && <SystemMenu expanded={expanded || isEditMode} />}
+                {!isEditMode && <SystemMenu />}
             </ThemedSidebar>
         </div>
     );
