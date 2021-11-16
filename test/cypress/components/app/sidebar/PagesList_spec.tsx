@@ -19,7 +19,7 @@ describe('PagesList', () => {
         cy.contains('Group 1').should('be.visible').find('.group');
         cy.contains('Subpage 1').should('not.exist');
         cy.contains('Subpage 2').should('not.exist');
-        cy.contains('Group 2').should('be.visible').find('i').should('have.length', 1);
+        cy.contains('Group 2').should('be.visible').find('i').should('have.length', 2);
         cy.contains('Subpage 3').should('not.exist');
         cy.contains('Subpage 4').should('not.exist');
 
@@ -28,26 +28,22 @@ describe('PagesList', () => {
         cy.contains('Subpage 2')
             .should('be.visible')
             .and('have.attr', 'href', `/console/page/subPage2`)
-            .find('i')
-            .should('not.exist');
+            .find('.expand');
 
         cy.contains('Group 2').click();
         cy.contains('Subpage 1').should('be.visible').and('have.attr', 'href', `/console/page/subPage1`).find('.user');
         cy.contains('Subpage 2')
             .should('be.visible')
             .and('have.attr', 'href', `/console/page/subPage2`)
-            .find('i')
-            .should('not.exist');
+            .find('.expand');
         cy.contains('Subpage 3')
             .should('be.visible')
             .and('have.attr', 'href', `/console/page/subPage3`)
-            .find('i')
-            .should('not.exist');
+            .find('.expand');
         cy.contains('Subpage 4')
             .should('be.visible')
             .and('have.attr', 'href', `/console/page/subPage4`)
-            .find('i')
-            .should('not.exist');
+            .find('.expand');
 
         cy.contains('Group 1').click();
         cy.contains('Subpage 1').should('not.exist');
