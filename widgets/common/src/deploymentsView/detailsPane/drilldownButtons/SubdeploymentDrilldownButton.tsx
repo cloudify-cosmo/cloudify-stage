@@ -1,4 +1,4 @@
-import { FunctionComponent } from 'react';
+import { FunctionComponent, useMemo } from 'react';
 import { FilterRuleOperators, FilterRuleType } from '../../../filters/types';
 import {
     filterRulesContextKey,
@@ -8,9 +8,9 @@ import {
     subservicesIcon
 } from '../../common';
 import { SubdeploymentStatusIcon } from '../../StatusIcon';
-import { tDrillDownButtons } from './common';
+import { tDrillDownButtons, shouldDisplaySubdeploymentButton } from './common';
 import DrilldownButton from './DrilldownButton';
-import type { SubdeploymentsResult } from './subdeployments-result';
+import type { LoadedSubdeploymentsResult, SubdeploymentsResult } from './subdeployments-result';
 
 export interface SubdeploymentDrilldownButtonProps {
     type: 'environments' | 'services';
@@ -32,7 +32,7 @@ const SubdeploymentDrilldownButton: FunctionComponent<SubdeploymentDrilldownButt
     mapOpen
 }) => {
     const icon = type === 'services' ? subservicesIcon : subenvironmentsIcon;
-    const isVisible = result.loading === false && result.count > 0;
+    const shouldBeDisplayed = useMemo(() => shouldDisplaySubdeploymentButton(result), [result]);
 
     const drilldownToSubdeployments = () => {
         drillDown(
@@ -44,11 +44,14 @@ const SubdeploymentDrilldownButton: FunctionComponent<SubdeploymentDrilldownButt
 
     return (
         <>
-            {isVisible && (
+            {shouldBeDisplayed && (
                 <DrilldownButton onClick={drilldownToSubdeployments} title={tDrillDownButtons(`${type}.title`)}>
                     <Icon name={icon} />
-                    {tDrillDownButtons(`${type}.label`)} ({result.count})
-                    <SubdeploymentStatusIcon status={result.status} style={{ marginRight: 0, marginLeft: '0.2em' }} />
+                    {tDrillDownButtons(`${type}.label`)} ({(result as LoadedSubdeploymentsResult).count})
+                    <SubdeploymentStatusIcon
+                        status={(result as LoadedSubdeploymentsResult).status}
+                        style={{ marginRight: 0, marginLeft: '0.2em' }}
+                    />
                 </DrilldownButton>
             )}
         </>

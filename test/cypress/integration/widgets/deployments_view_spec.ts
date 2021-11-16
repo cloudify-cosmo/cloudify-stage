@@ -726,7 +726,7 @@ describe('Deployments View widget', () => {
         const getSubservicesButton = () => cy.contains('button', 'Services');
         const getBreadcrumbs = () => cy.get('.breadcrumb');
 
-        it('should support the drill-down workflow', () => {
+        it.only('should support the drill-down workflow', () => {
             useEnvironmentsWidget();
 
             getDeploymentsViewTable().within(() => {

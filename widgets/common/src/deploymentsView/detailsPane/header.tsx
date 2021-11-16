@@ -2,7 +2,18 @@ import { noop } from 'lodash';
 import { ComponentProps, FunctionComponent, ReactNode, useMemo, useRef } from 'react';
 
 import './header.scss';
+import styled from 'styled-components';
 import { Deployment } from '../types';
+
+const HeaderPaneWrapper = styled.div`
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    flex-wrap: wrap;
+
+    // NOTE: adds a gap between the tabs headers when the items in the header wrap
+    margin-bottom: 10px;
+`;
 
 export interface DetailsPaneHeaderProps {
     deployment: Deployment;
@@ -32,7 +43,7 @@ const DetailsPaneHeader: FunctionComponent<DetailsPaneHeaderProps> = ({ deployme
     );
 
     return (
-        <div className="detailsPaneHeader">
+        <HeaderPaneWrapper>
             <div style={{ marginRight: '1rem', marginBottom: '1rem' }}>
                 <Header>{displayName}</Header>
             </div>
@@ -44,7 +55,7 @@ const DetailsPaneHeader: FunctionComponent<DetailsPaneHeaderProps> = ({ deployme
                 onWidgetUpdated={noop}
                 standalone
             />
-        </div>
+        </HeaderPaneWrapper>
     );
 };
 export default DetailsPaneHeader;
