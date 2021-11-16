@@ -1,4 +1,4 @@
-import { FunctionComponent, useMemo } from 'react';
+import { FunctionComponent } from 'react';
 import styled from 'styled-components';
 
 import type { Deployment } from '../../types';
@@ -46,12 +46,10 @@ const DrilldownButtons: FunctionComponent<DrilldownButtonsProps> = ({
     }
 
     const subdeploymentResults = getSubdeploymentResults(subdeploymentInfoResult);
-    const shouldCenterButtons = useMemo(
-        () =>
-            shouldDisplaySubdeploymentButton(subdeploymentResults.subenvironments) ||
-            shouldDisplaySubdeploymentButton(subdeploymentResults.subservices),
-        [subdeploymentInfoResult]
-    );
+
+    const shouldCenterButtons =
+        shouldDisplaySubdeploymentButton(subdeploymentResults.subenvironments) ||
+        shouldDisplaySubdeploymentButton(subdeploymentResults.subservices);
 
     return (
         <ButtonsContainer className={shouldCenterButtons ? 'centeredButtons' : ''}>

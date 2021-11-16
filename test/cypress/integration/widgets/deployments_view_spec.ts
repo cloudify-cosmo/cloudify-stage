@@ -726,7 +726,7 @@ describe('Deployments View widget', () => {
         const getSubservicesButton = () => cy.contains('button', 'Services');
         const getBreadcrumbs = () => cy.get('.breadcrumb');
 
-        it.only('should support the drill-down workflow', () => {
+        it('should support the drill-down workflow', () => {
             useEnvironmentsWidget();
 
             getDeploymentsViewTable().within(() => {
@@ -766,7 +766,7 @@ describe('Deployments View widget', () => {
             verifySubdeploymentsOfAppEnv();
 
             getDeploymentsViewDetailsPane().within(() => {
-                getSubenvironmentsButton().containsNumber(0).should('be.disabled');
+                getSubenvironmentsButton().should('not.exist');
                 cy.log('Drill down to subservices of db-env');
                 getSubservicesButton().containsNumber(2).click();
             });
@@ -780,23 +780,9 @@ describe('Deployments View widget', () => {
                 cy.contains('db-env').should('not.exist');
             });
 
-            const expectOnlySubdeploymentTypeIcon = () => {
-                cy.get('i').should('have.length', 1).not('.object.group.icon, .cube.icon').should('have.length', 0);
-            };
-
             getDeploymentsViewDetailsPane().within(() => {
-                getSubenvironmentsButton()
-                    .should('be.disabled')
-                    .within(() => {
-                        cy.containsNumber(0);
-                        expectOnlySubdeploymentTypeIcon();
-                    });
-                getSubservicesButton()
-                    .should('be.disabled')
-                    .within(() => {
-                        cy.containsNumber(0);
-                        expectOnlySubdeploymentTypeIcon();
-                    });
+                getSubenvironmentsButton().should('not.exist');
+                getSubservicesButton().should('not.exist');
             });
 
             cy.log('Go back to the parent environment');
@@ -881,7 +867,7 @@ describe('Deployments View widget', () => {
             cy.getSearchInput().type(deploymentId);
 
             getDeploymentsViewDetailsPane().within(() => {
-                getSubservicesButton().containsNumber(0);
+                getSubservicesButton().should('not.exist');
 
                 cy.interceptSp(
                     'GET',
@@ -1024,7 +1010,7 @@ describe('Deployments View widget', () => {
             getDeploymentsViewMap().should('not.exist');
         });
 
-        it('should render markers for various deployment states', () => {
+        it.only('should render markers for various deployment states', () => {
             useDeploymentsViewWidget({
                 routeHandler: {
                     fixture: 'deployments/various-statuses.json'
