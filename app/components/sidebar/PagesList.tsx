@@ -285,7 +285,7 @@ const PagesList: FunctionComponent<PagesListProps> = ({ isEditMode = false, page
                         )}
                     </>
                 )}
-                {expanded && pageMenuItem.type === 'pageGroup' && !itemNameInEdit && (
+                {pageMenuItem.type === 'pageGroup' && !itemNameInEdit && (
                     <Icon
                         name="dropdown"
                         rotated={includes(expandedGroupIds, pageMenuItem.id) ? undefined : 'counterclockwise'}

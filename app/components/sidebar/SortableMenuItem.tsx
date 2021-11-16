@@ -3,6 +3,7 @@ import type { MenuItemProps } from 'semantic-ui-react';
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import SideBarItem from './SideBarItem';
+import { expandedSidebarWidth } from './SideBar';
 
 export default function SortableMenuItem({ id, style, ...rest }: MenuItemProps) {
     const { setNodeRef, attributes, listeners, transform, transition } = useSortable({
@@ -15,7 +16,7 @@ export default function SortableMenuItem({ id, style, ...rest }: MenuItemProps) 
 
     return (
         // eslint-disable-next-line react/jsx-props-no-spreading
-        <div ref={setNodeRef} {...attributes} {...listeners}>
+        <div ref={setNodeRef} {...attributes} {...listeners} style={{ width: expandedSidebarWidth }}>
             {/* eslint-disable-next-line react/jsx-props-no-spreading */}
             <SideBarItem {...rest} style={Object.assign(builtInStyle, style)} />
         </div>
