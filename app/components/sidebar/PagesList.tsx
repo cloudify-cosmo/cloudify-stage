@@ -1,5 +1,5 @@
 import type { FunctionComponent } from 'react';
-import React, { ReactNode, useCallback, useEffect, useMemo } from 'react';
+import React, { ReactNode, useCallback, useMemo } from 'react';
 import { chain, find, includes, map, without } from 'lodash';
 import type { DragEndEvent, DragOverEvent, DragStartEvent } from '@dnd-kit/core';
 import { closestCenter, DndContext, PointerSensor, useSensor, useSensors } from '@dnd-kit/core';
@@ -71,7 +71,7 @@ const EditIcon = styled(Icon)`
 `;
 
 const PagesList: FunctionComponent<PagesListProps> = ({ isEditMode = false, pageId, expanded }) => {
-    const [expandedGroupIds, setExpandedGroupIds, collapseAllGroups] = useResettableState<string[]>([]);
+    const [expandedGroupIds, setExpandedGroupIds] = useResettableState<string[]>([]);
     const [dragForbidden, setDragForbidden, unsetDragForbidden] = useBoolean();
     const [dragging, setDragging, unsetDragging] = useBoolean();
     const [nameEditedMenuItemId, setNameEditedMenuItemId, stopNameEdit] = useResettableState<string | null>(null);
@@ -101,12 +101,6 @@ const PagesList: FunctionComponent<PagesListProps> = ({ isEditMode = false, page
     const dispatch = useDispatch();
     const sensors = useSensors(useSensor(PointerSensor, { activationConstraint: { distance: 1 } }));
     const pageCount = pageIds.length;
-
-    useEffect(() => {
-        if (!expanded) {
-            collapseAllGroups();
-        }
-    }, [expanded]);
 
     const handleDragEnd = useCallback(
         (event: DragEndEvent) => {
@@ -296,7 +290,7 @@ const PagesList: FunctionComponent<PagesListProps> = ({ isEditMode = false, page
         );
 
         if (pageMenuItem.type === 'page' || !includes(expandedGroupIds, pageMenuItem.id)) return [renderedMenuItem];
-        return [renderedMenuItem, ...pageMenuItem.pages.map(childItem => renderPageMenuItem(childItem, true))];
+        return [renderedMenuItem, ...pageMenuItem.pages.map(childItem => renderPageMenuItem(childItem, expanded))];
     }
 
     let cursor;
