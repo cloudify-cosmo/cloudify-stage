@@ -1,4 +1,3 @@
-// @ts-nocheck File not migrated fully to TS
 describe('Admin flow', () => {
     const tenantName = `admin_flow_test_tenant`;
     const groupName = `admin_flow_test_group`;

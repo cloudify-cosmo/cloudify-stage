@@ -43,6 +43,8 @@ const mockGettingStarted = (modalEnabled: boolean) =>
         body: { show_getting_started: modalEnabled }
     });
 
+const collapseSidebar = () => cy.get('.breadcrumb').click();
+
 export const testPageName = 'Test Page';
 
 declare global {
@@ -209,13 +211,16 @@ const commands = {
     },
     clickPageMenuItem: (name: string, id: string | null = null) => {
         cy.log(`Switching to '${name}' page`);
-        cy.get('.sidebar.menu .pages').within(() => cy.contains(name).click({ force: true }));
+        cy.get('.sidebar.menu .pages').contains(name).click({ force: true });
         if (id) {
             cy.location('pathname').should('be.equal', `/console/page/${id}`);
         }
         return cy.waitUntilPageLoaded();
     },
-    visitTestPage: () => cy.clickPageMenuItem(testPageName),
+    visitTestPage: () => {
+        cy.clickPageMenuItem(testPageName);
+        return collapseSidebar();
+    },
     usePageMock: (
         widgetIds?: string | string[],
         widgetConfiguration: any = {},
@@ -328,7 +333,8 @@ const commands = {
             .editWidgetConfiguration(widgetId, noop),
     refreshPage: (disableGettingStarted = true) => {
         mockGettingStarted(!disableGettingStarted);
-        return cy.get('.pageMenuItem.active').click({ force: true });
+        cy.get('.pageMenuItem.active').click({ force: true });
+        return collapseSidebar();
     },
     refreshTemplate: (disableGettingStarted = true) => {
         mockGettingStarted(!disableGettingStarted);

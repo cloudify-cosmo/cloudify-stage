@@ -53,7 +53,7 @@ const TenantSelection: FunctionComponent = () => {
 
     return (
         <Dropdown trigger={tenantMenuTrigger} onClose={clearSearch} pointing="left" icon={null} fluid>
-            <Dropdown.Menu>
+            <Dropdown.Menu style={{ margin: 0 }}>
                 <Dropdown.Header>{t('tenantsHeader')}</Dropdown.Header>
                 <Dropdown.Menu scrolling>
                     {filteredTenants.map(tenant => (

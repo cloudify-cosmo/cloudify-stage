@@ -6,6 +6,8 @@ import { Menu } from '../basic';
 export const MenuItemWrapper = styled.div`
     position: relative;
     height: 37px;
+    white-space: nowrap;
+    overflow: hidden;
     &:before {
         background-color: ${colors.greyNormal};
         position: absolute;

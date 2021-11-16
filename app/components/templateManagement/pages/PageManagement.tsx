@@ -29,6 +29,7 @@ import type { WidgetDefinition } from '../../../utils/StageAPI';
 import type { TemplatePageDefinition } from '../../../reducers/templatesReducer';
 import useCreatePageId from './useCreatePageId';
 import IconSelection from '../../IconSelection';
+import { expandedSidebarWidth } from '../../sidebar/SideBar';
 
 export interface PageManagementProps {
     pageId: string;
@@ -225,7 +226,7 @@ export default function PageManagement({ pageId, isEditMode = false }: PageManag
                 </Sidebar>
             </div>
 
-            <div className="page">
+            <div className="page" style={{ marginLeft: expandedSidebarWidth }}>
                 <Segment basic className={`fullHeight ${isWidgetMaximized ? 'maximizeWidget' : ''}`}>
                     <div>
                         <Breadcrumb className="breadcrumbLineHeight">
