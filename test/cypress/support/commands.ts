@@ -210,14 +210,16 @@ const commands = {
     clickPageMenuItem: (name: string, id: string | null = null) => {
         cy.log(`Switching to '${name}' page`);
         cy.get('.sidebar.menu .pages').contains(name).click({ force: true });
-        // Collapse the sidebar
-        cy.get('.breadcrumb').click();
         if (id) {
             cy.location('pathname').should('be.equal', `/console/page/${id}`);
         }
         return cy.waitUntilPageLoaded();
     },
-    visitTestPage: () => cy.clickPageMenuItem(testPageName),
+    visitTestPage: () => {
+        cy.clickPageMenuItem(testPageName);
+        // Collapse the sidebar
+        cy.get('.breadcrumb').click();
+    },
     usePageMock: (
         widgetIds?: string | string[],
         widgetConfiguration: any = {},
