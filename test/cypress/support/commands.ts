@@ -43,6 +43,8 @@ const mockGettingStarted = (modalEnabled: boolean) =>
         body: { show_getting_started: modalEnabled }
     });
 
+const collapseSidebar = () => cy.get('.breadcrumb').click();
+
 export const testPageName = 'Test Page';
 
 declare global {
@@ -217,8 +219,7 @@ const commands = {
     },
     visitTestPage: () => {
         cy.clickPageMenuItem(testPageName);
-        // Collapse the sidebar
-        cy.get('.breadcrumb').click();
+        return collapseSidebar();
     },
     usePageMock: (
         widgetIds?: string | string[],
@@ -333,8 +334,7 @@ const commands = {
     refreshPage: (disableGettingStarted = true) => {
         mockGettingStarted(!disableGettingStarted);
         cy.get('.pageMenuItem.active').click({ force: true });
-        // Collapse the sidebar
-        return cy.get('.breadcrumb').click();
+        return collapseSidebar();
     },
     refreshTemplate: (disableGettingStarted = true) => {
         mockGettingStarted(!disableGettingStarted);
