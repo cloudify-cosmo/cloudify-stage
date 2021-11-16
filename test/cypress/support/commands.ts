@@ -209,7 +209,9 @@ const commands = {
     },
     clickPageMenuItem: (name: string, id: string | null = null) => {
         cy.log(`Switching to '${name}' page`);
-        cy.get('.sidebar.menu .pages').within(() => cy.contains(name).click({ force: true }));
+        cy.get('.sidebar.menu .pages').contains(name).click({ force: true });
+        // Collapse the sidebar
+        cy.get('.breadcrumb').click();
         if (id) {
             cy.location('pathname').should('be.equal', `/console/page/${id}`);
         }
@@ -330,7 +332,7 @@ const commands = {
         mockGettingStarted(!disableGettingStarted);
         cy.get('.pageMenuItem.active').click({ force: true });
         // Collapse the sidebar
-        return cy.get('.headerBar').click();
+        return cy.get('.breadcrumb').click();
     },
     refreshTemplate: (disableGettingStarted = true) => {
         mockGettingStarted(!disableGettingStarted);
