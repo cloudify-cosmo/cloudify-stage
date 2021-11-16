@@ -10,13 +10,17 @@ import { ThemeContext } from 'styled-components';
 import { HeaderBar } from 'cloudify-ui-components';
 import i18n from 'i18next';
 
+import { push } from 'connected-react-router';
+import { connect } from 'react-redux';
 import { Button, CancelButton, Divider, Header, Modal } from './basic';
 import Banner from './banner/Banner';
 import CurrentLicense from './license/CurrentLicense';
 import CurrentVersion from './license/CurrentVersion';
 import EulaLink from './license/EulaLink';
+import stageUtils from '../utils/stageUtils';
+import Consts from '../utils/consts';
 
-export default function AboutModal({ canLicenseManagement, license, onHide, onLicenseManagement, open, version }) {
+function AboutModal({ canLicenseManagement, license, onHide, onLicenseManagement, open, version }) {
     const theme = useContext(ThemeContext);
     return (
         <Modal open={open} onClose={onHide}>
@@ -53,16 +57,29 @@ export default function AboutModal({ canLicenseManagement, license, onHide, onLi
     );
 }
 
-AboutModal.propTypes = {
-    canLicenseManagement: PropTypes.bool.isRequired,
-    open: PropTypes.bool.isRequired,
-    onHide: PropTypes.func.isRequired,
-    version: PropTypes.shape({}).isRequired,
-    license: PropTypes.shape({}),
-    onLicenseManagement: PropTypes.func
+const mapStateToProps = state => {
+    const manager = _.get(state, 'manager', {});
+
+    return {
+        canLicenseManagement:
+            _.get(manager, 'license.isRequired', false) &&
+            stageUtils.isUserAuthorized(Consts.permissions.LICENSE_UPLOAD, manager),
+        version: _.get(manager, 'version', {}),
+        license: _.get(manager, 'license.data', {})
+    };
 };
 
-AboutModal.defaultProps = {
-    license: {},
-    onLicenseManagement: _.noop
+const mapDispatchToProps = dispatch => {
+    return {
+        onLicenseManagement: () => dispatch(push(Consts.LICENSE_PAGE_PATH))
+    };
 };
+
+const ConnectedModal = connect(mapStateToProps, mapDispatchToProps)(AboutModal);
+
+ConnectedModal.propTypes = {
+    open: PropTypes.bool.isRequired,
+    onHide: PropTypes.func.isRequired
+};
+
+export default ConnectedModal;
