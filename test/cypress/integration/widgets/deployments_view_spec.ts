@@ -1010,7 +1010,7 @@ describe('Deployments View widget', () => {
             getDeploymentsViewMap().should('not.exist');
         });
 
-        it.only('should render markers for various deployment states', () => {
+        it('should render markers for various deployment states', () => {
             useDeploymentsViewWidget({
                 routeHandler: {
                     fixture: 'deployments/various-statuses.json'
