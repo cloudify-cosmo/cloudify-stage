@@ -62,7 +62,9 @@ module.exports = (env, argv) => {
 
                         options: {
                             modules: true,
-                            localIdentName: '[name]---[local]---[hash:base64:5]'
+                            // sassOptions: {
+                                localIdentName: '[name]---[local]---[hash:base64:5]'
+                            // }
                         }
                     }
                 ]
