@@ -5,6 +5,6 @@ const i18nDrillDownButtonsPrefix = `${i18nDrillDownPrefix}.buttons`;
 
 export const tDrillDownButtons = Stage.Utils.getT(i18nDrillDownButtonsPrefix);
 
-export const shouldDisplaySubdeploymentButton = (buttonsData: SubdeploymentsResult) => {
-    return !buttonsData.loading && buttonsData.count > 0;
+export const shouldDisplaySubdeploymentButton = (result: SubdeploymentsResult) => {
+    return !result.loading && result.count > 0;
 };
