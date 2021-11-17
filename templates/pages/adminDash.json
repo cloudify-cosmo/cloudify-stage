@@ -118,14 +118,6 @@
                     }
                 },
                 {
-                    "name": "Sites Map",
-                    "width": 12,
-                    "height": 24,
-                    "definition": "sitesMap",
-                    "x": 0,
-                    "y": 14
-                },
-                {
                     "name": "Executions",
                     "width": 8,
                     "height": 24,
