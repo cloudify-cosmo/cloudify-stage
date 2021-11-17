@@ -4,7 +4,7 @@ import { HeaderBar } from 'cloudify-ui-components';
 import i18n from 'i18next';
 
 import { push } from 'connected-react-router';
-import { connect, useDispatch, useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { Button, CancelButton, Divider, Header, Modal } from './basic';
 import Banner from './banner/Banner';
 import CurrentLicense from './license/CurrentLicense';
@@ -25,7 +25,8 @@ const AboutModal: FunctionComponent<AboutModalProps> = ({ onHide, open }) => {
 
     const canLicenseManagement = useSelector(
         (state: ReduxState) =>
-            state.manager.license.isRequired && stageUtils.isUserAuthorized(Consts.permissions.LICENSE_UPLOAD, manager)
+            state.manager.license.isRequired &&
+            stageUtils.isUserAuthorized(Consts.permissions.LICENSE_UPLOAD, state.manager)
     );
     const version = useSelector((state: ReduxState) => state.manager.version);
     const license = useSelector((state: ReduxState) => state.manager.license.data);
@@ -33,7 +34,7 @@ const AboutModal: FunctionComponent<AboutModalProps> = ({ onHide, open }) => {
     return (
         <Modal open={open} onClose={onHide}>
             <Modal.Header style={{ padding: 0, backgroundColor: theme.mainColor }}>
-                <HeaderBar>
+                <HeaderBar className={undefined}>
                     <Banner hideOnSmallScreen={false} />
                 </HeaderBar>
             </Modal.Header>
@@ -65,4 +66,4 @@ const AboutModal: FunctionComponent<AboutModalProps> = ({ onHide, open }) => {
     );
 };
 
-export default ConnectedModal;
+export default AboutModal;
