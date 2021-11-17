@@ -13,7 +13,7 @@ import { useBoolean } from '../../utils/hooks';
 const t = StageUtils.getT('users');
 const tHelp = StageUtils.getT('help');
 
-const Help: FunctionComponent = () => {
+const HelpMenu: FunctionComponent = () => {
     const [aboutModalVisible, showAboutModal, closeAboutModal] = useBoolean();
 
     const currentVersion = useSelector((state: ReduxState) => state.manager.version.version);
@@ -53,4 +53,4 @@ const Help: FunctionComponent = () => {
     );
 };
 
-export default Help;
+export default HelpMenu;

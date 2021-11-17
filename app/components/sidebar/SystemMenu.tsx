@@ -1,12 +1,12 @@
 import type { FunctionComponent } from 'react';
 import React from 'react';
 import TenantSelection from './TenantSelection';
-import Help from './Help';
+import HelpMenu from './HelpMenu';
 
 const SystemMenu: FunctionComponent = () => {
     return (
         <>
-            <Help />
+            <HelpMenu />
             <TenantSelection />
         </>
     );

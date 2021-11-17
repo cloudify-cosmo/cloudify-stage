@@ -1,7 +1,7 @@
 import React from 'react';
 
 import '../../initAppContext';
-import Help from 'app/components/sidebar/Help';
+import HelpMenu from 'app/components/sidebar/HelpMenu';
 import { ThemeContext } from 'styled-components';
 import StageUtils from 'app/utils/stageUtils';
 import { mountWithProvider } from '../../utils';
@@ -10,7 +10,7 @@ describe('Help', () => {
     it('opens "About" modal', () => {
         mountWithProvider(
             <ThemeContext.Provider value="">
-                <Help />
+                <HelpMenu />
             </ThemeContext.Provider>
         );
 
@@ -24,7 +24,7 @@ describe('Help', () => {
 
         mountWithProvider(
             <ThemeContext.Provider value="">
-                <Help />
+                <HelpMenu />
             </ThemeContext.Provider>,
             { manager: { version: { version: '5.0.5' } } }
         );
@@ -40,7 +40,7 @@ describe('Help', () => {
 
         mountWithProvider(
             <ThemeContext.Provider value="">
-                <Help />
+                <HelpMenu />
             </ThemeContext.Provider>,
             { manager: { version: { version: '6.3-dev' } } }
         );
@@ -55,7 +55,7 @@ describe('Help', () => {
 
         mountWithProvider(
             <ThemeContext.Provider value="">
-                <Help />
+                <HelpMenu />
             </ThemeContext.Provider>
         );
 
