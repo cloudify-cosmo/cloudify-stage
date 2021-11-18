@@ -7,19 +7,19 @@
             "content": [
                 {
                     "name": "Number of clouds",
-                    "width": 2,
+                    "width": 3,
                     "height": 8,
                     "definition": "cloudNum",
                     "x": 0,
-                    "y": 0
+                    "y": 3
                 },
                 {
                     "name": "Number of services",
-                    "width": 2,
+                    "width": 3,
                     "height": 8,
                     "definition": "deploymentNum",
-                    "x": 2,
-                    "y": 0,
+                    "x": 3,
+                    "y": 3,
                     "configuration": {
                         "label": "Services",
                         "page": "services",
@@ -28,11 +28,11 @@
                 },
                 {
                     "name": "Number of k8s clusters",
-                    "width": 2,
+                    "width": 3,
                     "height": 8,
                     "definition": "deploymentNum",
-                    "x": 4,
-                    "y": 0,
+                    "x": 6,
+                    "y": 3,
                     "configuration": {
                         "icon": "",
                         "imageSrc": "/console/static/images/k8s_logo.png",
@@ -43,13 +43,13 @@
                 },
                 {
                     "name": "Setup cloud account",
-                    "width": 2,
+                    "width": 3,
                     "height": 3,
                     "definition": "buttonLink",
                     "x": 0,
-                    "y": 8,
+                    "y": 0,
                     "configuration": {
-                        "basic": true,
+                        "basic": false,
                         "color": "blue",
                         "icon": "wizard",
                         "label": "Setup cloud account",
@@ -59,13 +59,13 @@
                 },
                 {
                     "name": "Create a service button",
-                    "width": 2,
+                    "width": 3,
                     "height": 3,
                     "definition": "serviceButton",
-                    "x": 2,
-                    "y": 8,
+                    "x": 3,
+                    "y": 0,
                     "configuration": {
-                        "basic": true,
+                        "basic": false,
                         "color": "blue",
                         "icon": "add",
                         "label": "Create a service"
@@ -73,13 +73,13 @@
                 },
                 {
                     "name": "Create k8s services button",
-                    "width": 2,
+                    "width": 3,
                     "height": 3,
                     "definition": "serviceButton",
-                    "x": 4,
-                    "y": 8,
+                    "x": 6,
+                    "y": 0,
                     "configuration": {
-                        "basic": true,
+                        "basic": false,
                         "color": "blue",
                         "icon": "add",
                         "label": "Create Kubernetes cluster",
@@ -93,10 +93,10 @@
                 },
                 {
                     "name": "Check out our guide to get started",
-                    "width": 2,
-                    "height": 10,
+                    "width": 3,
+                    "height": 11,
                     "definition": "buttonLink",
-                    "x": 10,
+                    "x": 9,
                     "y": 0,
                     "configuration": {
                         "basic": true,
