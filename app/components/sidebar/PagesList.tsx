@@ -1,4 +1,4 @@
-import type { FunctionComponent } from 'react';
+import type { CSSProperties, FunctionComponent } from 'react';
 import React, { ReactNode, useCallback, useMemo } from 'react';
 import { chain, find, includes, map, without } from 'lodash';
 import type { DragEndEvent, DragOverEvent, DragStartEvent } from '@dnd-kit/core';
@@ -29,8 +29,8 @@ import {
 import Consts from '../../utils/consts';
 import { useBoolean, useResettableState } from '../../utils/hooks';
 import { ReduxState } from '../../reducers';
-import IconSelection from '../IconSelection';
-import { MenuItemWrapper } from './SideBarItem';
+import IconSelection from './IconSelection';
+import { SideBarItemWrapper } from './SideBarItem';
 
 export interface PagesListProps {
     isEditMode?: boolean;
@@ -54,7 +54,7 @@ const RemoveIcon = styled(Icon)`
     visibility: hidden;
     float: right;
 
-    ${MenuItemWrapper}:hover & {
+    ${SideBarItemWrapper}:hover & {
         visibility: visible;
     }
 `;
@@ -65,7 +65,7 @@ const EditIcon = styled(Icon)`
     margin-left: 1em !important;
     display: none !important;
 
-    ${MenuItemWrapper}:hover & {
+    ${SideBarItemWrapper}:hover & {
         display: inline !important;
     }
 `;
@@ -197,11 +197,14 @@ const PagesList: FunctionComponent<PagesListProps> = ({ isEditMode = false, page
     function renderPageMenuItem(pageMenuItem: PageMenuItem, subItem = false): ReactNode[] {
         const itemNameInEdit = nameEditedMenuItemId === pageMenuItem.id;
 
-        function calculateLeftPadding() {
-            if (subItem && !itemNameInEdit) return 25;
-            if (itemNameInEdit) return 0;
-            return undefined;
-        }
+        const style: CSSProperties = {
+            paddingTop: itemNameInEdit ? 3 : undefined,
+            paddingBottom: 3,
+            paddingRight: 0,
+            cursor: dragging ? 'inherit' : undefined
+        };
+
+        if (itemNameInEdit) style.paddingLeft = 0;
 
         const renderedMenuItem = (
             <SortableMenuItem
@@ -217,13 +220,8 @@ const PagesList: FunctionComponent<PagesListProps> = ({ isEditMode = false, page
                     if (pageMenuItem.type === 'page') onPageSelected(pageMenuItem);
                     else onPageGroupClick(pageMenuItem.id);
                 }}
-                style={{
-                    paddingTop: itemNameInEdit ? 3 : undefined,
-                    paddingLeft: calculateLeftPadding(),
-                    paddingBottom: 3,
-                    paddingRight: 0,
-                    cursor: dragging ? 'inherit' : undefined
-                }}
+                subItem={subItem}
+                style={style}
             >
                 {!itemNameInEdit && (
                     <IconSelection

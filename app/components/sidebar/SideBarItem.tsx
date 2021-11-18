@@ -1,9 +1,11 @@
-import React, { CSSProperties, FunctionComponent } from 'react';
+import React, { FunctionComponent } from 'react';
 import styled from 'styled-components';
 import colors from 'cloudify-ui-common/styles/_colors.scss';
+import { MenuItemProps } from 'semantic-ui-react';
 import { Menu } from '../basic';
+import { expandedSidebarWidth } from './SideBar';
 
-export const MenuItemWrapper = styled.div`
+export const SideBarItemWrapper = styled.div`
     position: relative;
     height: 37px;
     white-space: nowrap;
@@ -21,21 +23,23 @@ export const MenuItemWrapper = styled.div`
     .item:before {
         background-color: ${colors.greyNormal};
     }
-    .item.link:hover {
+    .item:hover {
         text-decoration: none !important; // override semantic ui styles
     }
 `;
 
-interface SideBarItemProps {
-    style?: CSSProperties;
+interface SideBarItemProps extends MenuItemProps {
+    subItem?: boolean;
 }
 
-const SideBarItem: FunctionComponent<SideBarItemProps> = ({ style, ...rest }) => {
+const SideBarItem: FunctionComponent<SideBarItemProps> = ({ style, subItem, ...rest }) => {
+    const menuItemStyle = { height: '100%', width: expandedSidebarWidth, paddingLeft: subItem && 25, ...style };
+
     return (
-        <MenuItemWrapper>
+        <SideBarItemWrapper>
             {/* eslint-disable-next-line react/jsx-props-no-spreading */}
-            <Menu.Item style={{ height: '100%', ...style }} {...rest} />
-        </MenuItemWrapper>
+            <Menu.Item style={menuItemStyle} {...rest} />
+        </SideBarItemWrapper>
     );
 };
 

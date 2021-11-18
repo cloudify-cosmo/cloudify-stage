@@ -20,6 +20,7 @@ const ThemedSidebar = styled(Sidebar)`
     }
     .item {
         color: ${props => props.theme.sidebarTextColor} !important;
+        padding-left: ${props => !props.expanded && '15px !important'};
     }
     .item.active,
     .item:hover {

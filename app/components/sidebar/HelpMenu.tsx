@@ -2,51 +2,54 @@ import _ from 'lodash';
 import React, { FunctionComponent } from 'react';
 
 import { useSelector } from 'react-redux';
-import { Dropdown } from '../basic';
+import { Icon } from '../basic';
 import type { ReduxState } from '../../reducers';
-import IconSelection from '../IconSelection';
 import SideBarItem from './SideBarItem';
 import StageUtils from '../../utils/stageUtils';
 import AboutModal from '../AboutModal';
-import { useBoolean } from '../../utils/hooks';
+import { useBoolean, useToggle } from '../../utils/hooks';
+import SideBarItemIcon from './SideBarItemIcon';
 
 const t = StageUtils.getT('users');
 const tHelp = StageUtils.getT('help');
 
 const HelpMenu: FunctionComponent = () => {
     const [aboutModalVisible, showAboutModal, closeAboutModal] = useBoolean();
+    const [expanded, toggleExpand] = useToggle();
 
     const currentVersion = useSelector((state: ReduxState) => state.manager.version.version);
     const version = _.includes(currentVersion, 'dev') ? 'latest' : currentVersion;
-
-    const menuTrigger = (
-        <SideBarItem>
-            <IconSelection enabled={false} value="help circle" />
-            {t('help')}
-        </SideBarItem>
-    );
 
     const { redirectToPage } = StageUtils.Url;
 
     return (
         <>
-            <Dropdown trigger={menuTrigger} pointing="left" icon={null} fluid>
-                <Dropdown.Menu style={{ margin: 0 }}>
-                    <Dropdown.Item
-                        icon="book"
-                        text={tHelp('documentation')}
-                        onClick={() => redirectToPage(tHelp('documentationLink', { version }))}
-                    />
-                    <Dropdown.Item
-                        icon="comments"
-                        text={tHelp('contact')}
-                        onClick={() => redirectToPage(tHelp('contactLink'))}
-                    />
-                    <Dropdown.Divider />
+            <SideBarItem onClick={toggleExpand}>
+                <SideBarItemIcon name="help circle" />
+                {t('help')}
+                <Icon
+                    name="dropdown"
+                    rotated={expanded ? undefined : 'counterclockwise'}
+                    style={{ position: 'absolute', right: 12, margin: 0 }}
+                />
+            </SideBarItem>
 
-                    <Dropdown.Item icon="info circle" text={tHelp('about')} onClick={showAboutModal} />
-                </Dropdown.Menu>
-            </Dropdown>
+            {expanded && (
+                <>
+                    <SideBarItem subItem onClick={() => redirectToPage(tHelp('documentationLink', { version }))}>
+                        <SideBarItemIcon name="book" />
+                        {tHelp('documentation')}
+                    </SideBarItem>
+                    <SideBarItem subItem onClick={() => redirectToPage(tHelp('contactLink'))}>
+                        <SideBarItemIcon name="comments" />
+                        {tHelp('contact')}
+                    </SideBarItem>
+                    <SideBarItem subItem onClick={showAboutModal}>
+                        <SideBarItemIcon name="info circle" />
+                        {tHelp('about')}
+                    </SideBarItem>
+                </>
+            )}
 
             <AboutModal open={aboutModalVisible} onHide={closeAboutModal} />
         </>
