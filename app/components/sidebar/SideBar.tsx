@@ -52,7 +52,7 @@ const SideBar: FunctionComponent<SideBarProps> = ({ pageId }) => {
                 width={collapsedSidebarWidth}
             >
                 <PagesList pageId={pageId || homePageId} isEditMode={isEditMode} expanded={expanded || isEditMode} />
-                {!isEditMode && <SystemMenu />}
+                {!isEditMode && <SystemMenu onAboutModalOpen={collapse} />}
             </ThemedSidebar>
         </div>
     );

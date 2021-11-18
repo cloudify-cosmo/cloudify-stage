@@ -13,7 +13,11 @@ import SideBarItemIcon from './SideBarItemIcon';
 const t = StageUtils.getT('users');
 const tHelp = StageUtils.getT('help');
 
-const HelpMenu: FunctionComponent = () => {
+interface HelpMenuProps {
+    onAboutModalOpen: () => void;
+}
+
+const HelpMenu: FunctionComponent<HelpMenuProps> = ({ onAboutModalOpen }) => {
     const [aboutModalVisible, showAboutModal, closeAboutModal] = useBoolean();
     const [expanded, toggleExpand] = useToggle();
 
@@ -21,6 +25,11 @@ const HelpMenu: FunctionComponent = () => {
     const version = _.includes(currentVersion, 'dev') ? 'latest' : currentVersion;
 
     const { redirectToPage } = StageUtils.Url;
+
+    function handleModalOpen() {
+        onAboutModalOpen();
+        showAboutModal();
+    }
 
     return (
         <>
@@ -44,7 +53,7 @@ const HelpMenu: FunctionComponent = () => {
                         <SideBarItemIcon name="comments" />
                         {tHelp('contact')}
                     </SideBarItem>
-                    <SideBarItem subItem onClick={showAboutModal}>
+                    <SideBarItem subItem onClick={handleModalOpen}>
                         <SideBarItemIcon name="info circle" />
                         {tHelp('about')}
                     </SideBarItem>
