@@ -1,11 +1,12 @@
 import { noop } from 'lodash';
-import { ComponentProps, FunctionComponent, ReactNode, useMemo, useRef } from 'react';
+import type { FunctionComponent, ReactNode, ComponentProps } from 'react';
+import { useMemo, useRef } from 'react';
 
 import './header.scss';
 import styled from 'styled-components';
 import { Deployment } from '../types';
 
-const HeaderPaneWrapper = styled.div`
+const HeaderWrapper = styled.div`
     display: flex;
     align-items: baseline;
     justify-content: space-between;
@@ -43,7 +44,7 @@ const DetailsPaneHeader: FunctionComponent<DetailsPaneHeaderProps> = ({ deployme
     );
 
     return (
-        <HeaderPaneWrapper>
+        <HeaderWrapper>
             <div style={{ marginRight: '1rem', marginBottom: '1rem' }}>
                 <Header>{displayName}</Header>
             </div>
@@ -55,7 +56,7 @@ const DetailsPaneHeader: FunctionComponent<DetailsPaneHeaderProps> = ({ deployme
                 onWidgetUpdated={noop}
                 standalone
             />
-        </HeaderPaneWrapper>
+        </HeaderWrapper>
     );
 };
 export default DetailsPaneHeader;
