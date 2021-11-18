@@ -9,12 +9,8 @@ declare global {
 }
 
 const commands = {
-    enterEditMode: () => {
-        cy.get('.usersMenu').click().contains('Edit Mode').click();
-    },
-    exitEditMode: () => {
-        cy.get('.editModeSidebar').contains('Exit').click();
-    },
+    enterEditMode: () => cy.get('.usersMenu').click().contains('Edit Mode').click(),
+    exitEditMode: () => cy.get('.editModeSidebar').contains('Exit').click(),
     addWidget: (widgetId: string) => {
         cy.enterEditMode();
 
@@ -22,7 +18,7 @@ const commands = {
         cy.get(`*[data-id=${widgetId}]`).click();
         cy.contains('Add selected widgets').click();
 
-        cy.exitEditMode();
+        return cy.exitEditMode();
     },
     addPage: (pageName: string) => {
         cy.enterEditMode();
@@ -34,7 +30,7 @@ const commands = {
         });
         cy.contains('Add Widgets').click();
 
-        cy.exitEditMode();
+        return cy.exitEditMode();
     },
     editWidgetConfiguration: (widgetId: string, fnWithinEditWidgetModal: () => void, save = true) => {
         cy.enterEditMode();
@@ -45,8 +41,26 @@ const commands = {
             cy.get(`button${save ? '.ok' : '.cancel'}`).click();
         });
 
-        cy.exitEditMode();
-    }
+        return cy.exitEditMode();
+    },
+    setBooleanConfigurationField: (widgetId: string, fieldName: string, isSet: boolean) =>
+        cy.editWidgetConfiguration(widgetId, () => {
+            cy.contains('.field', fieldName)
+                .find('div.checkbox')
+                .as('toggle')
+                .then($div => {
+                    if ((isSet && !$div.hasClass('checked')) || (!isSet && $div.hasClass('checked')))
+                        cy.get('@toggle').click();
+                });
+        }),
+    setStringConfigurationField: (widgetId: string, fieldName: string, value: string) =>
+        cy.editWidgetConfiguration(widgetId, () => {
+            cy.contains('.field', fieldName).find('input').clear().type(value);
+        }),
+    setSearchableDropdownConfigurationField: (widgetId: string, fieldName: string, value: string) =>
+        cy.editWidgetConfiguration(widgetId, () => {
+            cy.setSearchableDropdownValue(fieldName, value);
+        })
 };
 
 addCommands(commands);

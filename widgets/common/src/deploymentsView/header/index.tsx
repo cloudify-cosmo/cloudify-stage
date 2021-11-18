@@ -5,6 +5,7 @@ import FilterModal from './filter/FilterModal';
 import RunWorkflowModal from './RunWorkflowModal';
 import DeployOnModal from './DeployOnModal';
 import { FilterRule } from '../../filters/types';
+import { useFilterIdFromUrl } from './common';
 
 interface DeploymentsViewHeaderProps {
     filterRules: FilterRule[];
@@ -34,11 +35,16 @@ const DeploymentsViewHeader: FunctionComponent<DeploymentsViewHeaderProps> = ({
     const { Button, Dropdown } = Stage.Basic;
     const { Menu, Item } = Dropdown;
 
+    const [filterIdFromUrl, , deleteFilterIdInUrl] = useFilterIdFromUrl();
+
     function handleFilterChange(newFilterRules: FilterRule[] | undefined, newFilterId: string | undefined) {
         setUserFilterSelected(!!newFilterRules);
         setUserFilterId(newFilterId);
         onFilterChange(newFilterRules);
         closeFilterModal();
+        if (filterIdFromUrl && filterIdFromUrl !== newFilterId) {
+            deleteFilterIdInUrl();
+        }
     }
 
     return (

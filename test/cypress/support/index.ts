@@ -24,6 +24,15 @@ Cypress.on('window:before:load', window => {
     cy.stub(window, 'open');
 });
 
+// Workaround for "ResizeObserver loop limit exceeded" error
+// https://github.com/cypress-io/cypress/issues/8418
+const resizeObserverLoopErrRe = /^[^(ResizeObserver loop limit exceeded)]/;
+// @ts-ignore As Cypress.on returns "false | void" inconsistent return is fine
+// eslint-disable-next-line consistent-return
+Cypress.on('uncaught:exception', error => {
+    if (resizeObserverLoopErrRe.test(error.message)) return false;
+});
+
 Cypress.Cookies.defaults({
     preserve: 'XSRF-TOKEN'
 });

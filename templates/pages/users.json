@@ -1,0 +1,17 @@
+{
+  "name": "Users",
+  "icon": "user",
+  "layout": [
+    {
+      "type": "widgets",
+      "content": [
+        {
+          "name": "User management",
+          "width": 12,
+          "height": 24,
+          "definition": "userManagement"
+        }
+      ]
+    }
+  ]
+}

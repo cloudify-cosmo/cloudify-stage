@@ -1,4 +1,3 @@
-// @ts-nocheck File not migrated fully to TS
 import { minutesToMs } from '../../support/resource_commons';
 
 describe('User flow', () => {
@@ -15,7 +14,7 @@ describe('User flow', () => {
             .deleteSecrets('openstack_config__lab1_tenantA')
     );
 
-    function createSecret(secretName) {
+    function createSecret(secretName: string) {
         cy.contains('Create').click();
         cy.get('.modal').within(() => {
             cy.get('input[name=secretKey]').type(secretName);
@@ -23,23 +22,27 @@ describe('User flow', () => {
             cy.get('button.green').click();
         });
     }
-
     it('installs deployment from scratch', () => {
-        cy.visitPage('Marketplace');
+        cy.clickPageMenuItem('Resources').clickPageMenuItem('Plugins');
+
+        cy.contains('Upload').click();
+        cy.contains('Upload from Marketplace').click();
+
         cy.contains('.pluginsCatalogWidget tr', 'Utilities').within(() => {
             cy.get('button').click();
             cy.get('button', { timeout: minutesToMs(2) }).should('to.be.disabled');
         });
 
-        cy.visitPage('Resources').openTab('Secrets');
+        cy.clickPageMenuItem('Secrets');
         createSecret('some_key_1');
         createSecret('some_key_4');
         createSecret('some_key_7');
         createSecret('some_key_10');
         createSecret('openstack_config__lab1_tenantA');
 
-        cy.visitPage('Blueprints');
+        cy.clickPageMenuItem('Blueprints');
         cy.contains('Upload').click();
+        cy.contains('Upload a blueprint package').click();
         cy.get('.modal').within(() => {
             cy.get('input[name=blueprintUrl]')
                 .type(
@@ -53,7 +56,7 @@ describe('User flow', () => {
 
         cy.getSearchInput().clear().type(resourceName);
         cy.get('.blueprintsTable > tbody > tr').should('have.length', 1);
-        cy.get('.rocket').click();
+        cy.get('[title="Create deployment"]').click();
         cy.get('input[name=deploymentName]').type(resourceName);
         cy.get('button.green').click();
 

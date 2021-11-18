@@ -25,7 +25,7 @@ import { pick } from 'lodash';
 
 import * as ReactRedux from 'react-redux';
 import { createBrowserHistory } from 'history';
-import { ConnectedRouter } from 'connected-react-router';
+import { ConnectedRouter, push, replace } from 'connected-react-router';
 import { Switch } from 'react-router-dom';
 
 import i18n from 'i18next';
@@ -56,35 +56,40 @@ const queryClient = new ReactQuery.QueryClient({
     }
 });
 
+export function initAppContext() {
+    i18n.init({
+        resources: {
+            en: {
+                translation
+            }
+        },
+        lng: 'en',
+        fallbackLng: 'en'
+    });
+
+    window.React = React;
+    window.ReactDOM = ReactDOM;
+    window.PropTypes = PropTypes;
+    window.L = Leaflet;
+    window.log = log;
+    window.connectToStore = ReactRedux.connect;
+    window.moment = moment;
+    window.ReactRedux = pick(ReactRedux, ['useSelector', 'useDispatch']);
+    window.ReactRouter = { push, replace };
+    window.ReactQuery = ReactQuery;
+
+    log.setLevel(log.levels.WARN);
+
+    window.onerror = (message, source, lineno, colno, error) => {
+        EventBus.trigger('window:error', message, source, lineno, colno, error);
+    };
+
+    widgetDefinitionLoader.init();
+}
+
 export default class app {
     static load() {
-        i18n.init({
-            resources: {
-                en: {
-                    translation
-                }
-            },
-            lng: 'en',
-            fallbackLng: 'en'
-        });
-
-        window.React = React;
-        window.ReactDOM = ReactDOM;
-        window.PropTypes = PropTypes;
-        window.L = Leaflet;
-        window.log = log;
-        window.connectToStore = ReactRedux.connect;
-        window.moment = moment;
-        window.ReactRedux = pick(ReactRedux, 'useSelector');
-        window.ReactQuery = ReactQuery;
-
-        log.setLevel(log.levels.WARN);
-
-        window.onerror = (message, source, lineno, colno, error) => {
-            EventBus.trigger('window:error', message, source, lineno, colno, error);
-        };
-
-        widgetDefinitionLoader.init();
+        initAppContext();
 
         return Promise.all([
             ConfigLoader.load().then(result => {

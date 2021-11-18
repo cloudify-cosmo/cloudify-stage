@@ -3,11 +3,29 @@ import type { BlueprintsWidgetConfiguration } from '../../../../widgets/blueprin
 describe('Blueprints widget', () => {
     const blueprintNamePrefix = 'blueprints_test';
     const emptyBlueprintName = `${blueprintNamePrefix}_empty`;
+    const marketplaceTabs = [
+        {
+            name: 'VM Blueprint Examples',
+            url: 'https://repository.cloudifysource.org/cloudify/blueprints/6.2/vm-examples.json'
+        },
+        {
+            name: 'Kubernetes Blueprint Examples',
+            url: 'https://repository.cloudifysource.org/cloudify/blueprints/6.2/k8s-examples.json'
+        },
+        {
+            name: 'Orchestrator Blueprint Examples',
+            url: 'https://repository.cloudifysource.org/cloudify/blueprints/6.2/orc-examples.json'
+        }
+    ];
     const blueprintsWidgetConfiguration: Partial<BlueprintsWidgetConfiguration> = {
         displayStyle: 'table',
         clickToDrillDown: true,
         pollingTime: 5,
-        showEditCopyInComposerButton: true
+        showComposerOptions: true,
+        marketplaceTabs,
+        marketplaceDisplayStyle: 'catalog',
+        filterRules: [],
+        marketplaceColumnsToShow: ['Name', 'Description']
     };
 
     before(() =>
@@ -15,7 +33,9 @@ describe('Blueprints widget', () => {
             .activate('valid_trial_license')
             .deleteDeployments(blueprintNamePrefix, true)
             .deleteBlueprints(blueprintNamePrefix, true)
-            .usePageMock('blueprints', blueprintsWidgetConfiguration)
+            .usePageMock('blueprints', blueprintsWidgetConfiguration, {
+                additionalWidgetIdsToLoad: ['blueprintCatalog']
+            })
             .mockLogin()
     );
 
@@ -42,13 +62,12 @@ describe('Blueprints widget', () => {
 
         it('should not show the "Edit a copy in Composer" button if it is turned off in the configuration', () => {
             cy.editWidgetConfiguration('blueprints', () => {
-                cy.contains('.field', 'Show the "Edit a copy in Composer" button')
+                cy.contains('.field', 'Show Composer options')
                     .find('input')
                     // NOTE: force, as the checkbox from Semantic UI is
                     // class=hidden which prevents Cypress from clicking it
                     .click({ force: true });
             });
-
             getBlueprintRow(emptyBlueprintName).find(editCopyInComposerButtonSelector).should('not.exist');
         });
 
@@ -64,8 +83,10 @@ describe('Blueprints widget', () => {
             cy.get('input[name=deploymentId]').clear().type(deploymentId);
             cy.contains('Show Data Types').click();
             cy.contains('.modal button', 'Close').click();
+
             const serverIp = '127.0.0.1';
             cy.get('textarea').type(serverIp);
+
             cy.contains('div', 'Labels').find('.selection').click();
             cy.get('div[name=labelKey] > input').type('sample_key');
             cy.get('div[name=labelValue] > input').type('sample_value');
@@ -109,8 +130,13 @@ describe('Blueprints widget', () => {
 
     describe('should render blueprint items', () => {
         beforeEach(() => {
-            cy.interceptSp('GET', /blueprints.*&state=uploaded/).as('filteredBlueprints');
-            cy.interceptSp('GET', `/blueprints`, { fixture: 'blueprints/blueprints' });
+            cy.interceptSp('POST', '/searches/blueprints', { fixture: 'blueprints/blueprints' });
+            cy.interceptSp('POST', {
+                pathname: '/searches/blueprints',
+                query: {
+                    state: 'uploaded'
+                }
+            }).as('filteredBlueprints');
             cy.refreshPage();
         });
 
@@ -304,7 +330,10 @@ describe('Blueprints widget', () => {
     });
 
     describe('should open upload modal and', () => {
-        beforeEach(() => cy.contains('Upload').click());
+        beforeEach(() => {
+            cy.contains('Upload').click();
+            cy.contains('Upload a blueprint package').click();
+        });
 
         it('should handle invalid blueprint url upload failure gracefully', () => {
             cy.get('input[name=blueprintUrl]').type('http://wp.pl').blur();
@@ -375,6 +404,90 @@ describe('Blueprints widget', () => {
                 cy.contains('.header', 'Blueprint upload failed');
                 cy.contains('li', error);
             });
+        });
+    });
+
+    describe('should open upload from marketplace modal and', () => {
+        beforeEach(() => {
+            cy.contains('Upload').click();
+            cy.contains('Upload from Marketplace').click();
+        });
+
+        it('have blueprint catalog widget', () => {
+            cy.get('.modal').within(() => {
+                cy.contains('.header', 'Blueprint marketplace');
+                cy.get('.tabular > a.item').should('have.length', marketplaceTabs.length);
+                cy.get('.blueprintCatalogWidget').should('be.visible');
+            });
+        });
+    });
+
+    describe('should open Composer', () => {
+        before(() => {
+            cy.reload();
+        });
+
+        it('on "Generate in the Composer" menu item click', () => {
+            cy.contains('Upload').click();
+            cy.contains('Generate in the Composer').click();
+
+            cy.window().its('open').should('be.calledWith', '/composer/');
+        });
+    });
+
+    describe('configuration', () => {
+        it('should allow to hide composer menu item', () => {
+            cy.contains('Upload').click();
+            cy.contains('Upload from Marketplace').should('be.visible');
+            cy.contains('Upload a blueprint package').should('be.visible');
+            cy.contains('Generate in the Composer').should('be.visible');
+
+            cy.setBooleanConfigurationField('blueprints', 'Show Composer options', false);
+
+            cy.contains('Upload').click();
+            cy.contains('Generate in the Composer').should('not.exist');
+            cy.contains('Upload from Marketplace').should('be.visible');
+            cy.contains('Upload a blueprint package').should('be.visible');
+        });
+
+        it('should allow to add new marketplace tab', () => {
+            const testTabMarketplaceName = 'Blueprints from Dagobah';
+
+            cy.editWidgetConfiguration('blueprints', () => {
+                cy.get('.marketplaceTabs').contains('Add').click();
+                cy.get('input[name="name"]').eq(marketplaceTabs.length).type(testTabMarketplaceName);
+                cy.get('input[name="url"]').eq(marketplaceTabs.length).type('https://localhost');
+            });
+            cy.contains('Upload').click();
+            cy.contains('Upload from Marketplace').click();
+            cy.contains('.modal', testTabMarketplaceName).should('be.visible');
+        });
+
+        it('should allow to rename marketplace tab', () => {
+            const testTabMarketplaceName = 'Favorite blueprints';
+
+            cy.editWidgetConfiguration('blueprints', () => {
+                cy.get('input[name="name"]')
+                    .eq(marketplaceTabs.length - 1)
+                    .clear()
+                    .type(testTabMarketplaceName);
+            });
+            cy.contains('Upload').click();
+            cy.contains('Upload from Marketplace').click();
+            cy.get('.modal').within(() => {
+                cy.contains(testTabMarketplaceName).should('be.visible');
+            });
+        });
+
+        it('should allow to remove marketplace tab', () => {
+            cy.editWidgetConfiguration('blueprints', () => {
+                cy.get('button[title="Remove"]')
+                    .eq(marketplaceTabs.length - 1)
+                    .click();
+            });
+            cy.contains('Upload').click();
+            cy.contains('Upload from Marketplace').click();
+            cy.get('.modal .tabular > a.item').should('have.length', marketplaceTabs.length - 1);
         });
     });
 });

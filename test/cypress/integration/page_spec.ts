@@ -3,7 +3,7 @@ import { getCurrentAppVersion } from '../support/app_commons';
 describe('Page', () => {
     before(() => {
         cy.activate('valid_trial_license');
-        cy.fixture('page/page_with_tabs').then(testPage =>
+        cy.fixture('pages/page_with_tabs').then(testPage =>
             cy.stageRequest('/console/ua', 'POST', {
                 body: {
                     appData: {
@@ -12,6 +12,7 @@ describe('Page', () => {
                             {
                                 id: 'another_page',
                                 name: 'Another Page',
+                                type: 'page',
                                 description: '',
                                 widgets: []
                             }
@@ -24,7 +25,16 @@ describe('Page', () => {
         cy.mockLogin();
     });
 
+    function verifyAllWidgetsVisible() {
+        cy.contains('.widgetName', 'Blueprints').should('be.visible');
+        cy.contains('.widgetName', 'Cluster Status').should('be.visible');
+        cy.contains('.widgetName', 'Catalog').should('be.visible');
+        cy.get('.blueprintNumWidget').should('be.visible');
+    }
+
     it('should allow to switch tabs and maximize widgets', () => {
+        cy.intercept('POST', '/console/ua').as('updateUserApps');
+
         cy.contains('.widgetName', 'Cluster Status');
         cy.contains('.widgetName', 'Blueprints');
 
@@ -36,27 +46,42 @@ describe('Page', () => {
         cy.get('.deploymentNumWidget');
 
         cy.log('Verify page switching reverts active tab to default');
-        cy.contains('Another Page').click();
-        cy.contains('Admin Dashboard').click();
+        cy.clickPageMenuItem('Another Page');
+        cy.clickPageMenuItem('Admin Dashboard');
         cy.contains('.active', 'Tab1');
         cy.contains('.item:not(.active)', 'Tab2');
 
         cy.log('Verify widget maximize button works for widgets inside tabs');
         cy.get('.blueprintsWidget .expand').click({ force: true });
+        cy.wait('@updateUserApps');
 
         cy.contains('.widgetName', 'Cluster Status').should('not.be.visible');
         cy.contains('.widgetName', 'Catalog').should('not.be.visible');
         cy.get('.blueprintNumWidget').should('not.be.visible');
 
-        cy.log('Verify maximize state is saved');
-        cy.reload();
-        cy.contains('.widgetName', 'Blueprints').should('be.visible');
+        cy.log('Verify maximize state is not saved for widgets in tabs');
+        cy.refreshTemplate();
+        verifyAllWidgetsVisible();
+
+        cy.log('Verify widget maximize button works for top level widgets');
+        cy.get('.blueprintCatalogWidget .expand').click({ force: true });
+        cy.wait('@updateUserApps');
+
         cy.contains('.widgetName', 'Cluster Status').should('not.be.visible');
-        cy.contains('.widgetName', 'Catalog').should('not.be.visible');
+        cy.contains('.widgetName', 'Blueprints').should('not.be.visible');
+        cy.get('.blueprintNumWidget').should('not.be.visible');
+
+        cy.log('Verify maximize state is saved for top level widgets');
+        cy.refreshTemplate();
+        cy.contains('.widgetName', 'Catalog').should('be.visible');
+        cy.contains('.widgetName', 'Blueprints').should('not.be.visible');
+        cy.contains('.widgetName', 'Cluster Status').should('not.be.visible');
         cy.get('.blueprintNumWidget').should('not.be.visible');
 
         cy.log('Verify widget collapse button works');
-        cy.get('.blueprintsWidget .compress').click({ force: true });
-        cy.contains('.widgetName', 'Catalog').should('be.visible');
+        cy.get('.blueprintCatalogWidget .compress').click({ force: true });
+        cy.wait('@updateUserApps');
+
+        verifyAllWidgetsVisible();
     });
 });

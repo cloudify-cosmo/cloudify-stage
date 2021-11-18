@@ -13,7 +13,8 @@ import pageReducer from 'reducers/pageReducer';
 import drilldownContextReducer from 'reducers/drilldownContextReducer';
 
 import { drillDownToPage } from 'actions/drilldownPage';
-import { changePageName, changePageDescription, removePage } from 'actions/page';
+import { changePageDescription } from 'actions/page';
+import { changePageMenuItemName, removePageWithChildren } from 'actions/pageMenu';
 
 import * as types from 'actions/types';
 
@@ -69,6 +70,7 @@ describe('(Reducer) Pages', () => {
                 },
                 { type: types.SET_DRILLDOWN_CONTEXT, drilldownContext: [{ context: undefined }] },
                 { type: types.WIDGET_DATA_CLEAR },
+                { type: types.MINIMIZE_TAB_WIDGETS },
                 { type: 'router action' }
             ];
 
@@ -178,6 +180,7 @@ describe('(Reducer) Pages', () => {
             const expectedActions = [
                 { type: types.WIDGET_DATA_CLEAR },
                 { type: types.SET_DRILLDOWN_CONTEXT, drilldownContext: [{ context: undefined }] },
+                { type: types.MINIMIZE_TAB_WIDGETS },
                 { type: 'router action' }
             ];
 
@@ -262,7 +265,7 @@ describe('(Reducer) Pages', () => {
             );
 
             const storeActions = store.getActions();
-            const routeAction = storeActions[2];
+            const routeAction = storeActions[3];
 
             expect(routeAction.payload.args).toHaveLength(1);
             const query = parse(routeAction.payload.args[0].search);
@@ -341,6 +344,7 @@ describe('(Reducer) Pages', () => {
         it('Drilldown page should have the right page definition data', () => {
             const expectedPage = {
                 name: 'tmp1',
+                type: 'page',
                 isDrillDown: true,
                 description: '',
                 layout: [
@@ -355,7 +359,8 @@ describe('(Reducer) Pages', () => {
                                 x: 1,
                                 y: 1,
                                 configuration: {},
-                                drillDownPages: {}
+                                drillDownPages: {},
+                                maximized: false
                             }
                         ]
                     }
@@ -474,12 +479,14 @@ describe('(Reducer) Pages', () => {
             pages: [
                 {
                     id: 'dashboard',
+                    type: 'page',
                     name: 'Dashboard',
                     description: '',
                     widgets: []
                 },
                 {
                     id: 'local_blueprints',
+                    type: 'page',
                     name: 'Local Blueprints',
                     description: '',
                     widgets: [],
@@ -487,6 +494,7 @@ describe('(Reducer) Pages', () => {
                 },
                 {
                     id: 'deployments',
+                    type: 'page',
                     name: 'Deployments',
                     description: '',
                     widgets: [],
@@ -495,6 +503,7 @@ describe('(Reducer) Pages', () => {
                 {
                     isDrillDown: true,
                     id: 'deployments_deployment',
+                    type: 'page',
                     name: 'Deployment',
                     description: '',
                     widgets: [],
@@ -503,6 +512,7 @@ describe('(Reducer) Pages', () => {
                 {
                     isDrillDown: true,
                     id: 'local_blueprints_blueprint',
+                    type: 'page',
                     name: 'Blueprint',
                     description: '',
                     widgets: [],
@@ -512,6 +522,7 @@ describe('(Reducer) Pages', () => {
                 {
                     isDrillDown: true,
                     id: 'local_blueprints_blueprint_hello_world_deployment',
+                    type: 'page',
                     name: 'Deployment',
                     description: '',
                     widgets: [],
@@ -529,7 +540,7 @@ describe('(Reducer) Pages', () => {
         it('Single page should not exist when page without children is being removed', () => {
             const store = createStore(combineReducers({ pages: pageReducer }), initialState, applyMiddleware(thunk));
 
-            store.dispatch(removePage(dashboardPage));
+            store.dispatch(removePageWithChildren(dashboardPage));
 
             const { pages } = store.getState();
             expect(pages).toEqual([
@@ -544,7 +555,7 @@ describe('(Reducer) Pages', () => {
         it('All pages in page hierarchy should not exist when page with children is being removed', () => {
             const store = createStore(combineReducers({ pages: pageReducer }), initialState, applyMiddleware(thunk));
 
-            store.dispatch(removePage(localBlueprintsPage));
+            store.dispatch(removePageWithChildren(localBlueprintsPage));
 
             const { pages } = store.getState();
             expect(pages).toEqual([dashboardPage, deploymentsPage, deploymentDrillDownPage]);
@@ -556,6 +567,7 @@ describe('(Reducer) Pages', () => {
             pages: [
                 {
                     id: 'dashboard',
+                    type: 'page',
                     name: 'Dashboard',
                     description: 'DevOps control panel',
                     widgets: []
@@ -567,15 +579,10 @@ describe('(Reducer) Pages', () => {
         it('Changing page name should affect only name property and not id', () => {
             const store = createStore(combineReducers({ pages: pageReducer }), initialState, applyMiddleware(thunk));
 
-            store.dispatch(changePageName(dashboardPage, 'Control Panel'));
+            store.dispatch(changePageMenuItemName(dashboardPage.id, 'Control Panel'));
 
             const { pages } = store.getState();
-            expect(pages[0]).toEqual({
-                id: 'dashboard',
-                name: 'Control Panel',
-                description: 'DevOps control panel',
-                widgets: []
-            });
+            expect(pages[0]).toEqual({ ...dashboardPage, name: 'Control Panel' });
         });
 
         it('Changing page description should affect only description property', () => {
@@ -584,12 +591,7 @@ describe('(Reducer) Pages', () => {
             store.dispatch(changePageDescription(dashboardPage.id, 'Widgets for controlling the world'));
 
             const { pages } = store.getState();
-            expect(pages[0]).toEqual({
-                id: 'dashboard',
-                name: 'Dashboard',
-                description: 'Widgets for controlling the world',
-                widgets: []
-            });
+            expect(pages[0]).toEqual({ ...dashboardPage, description: 'Widgets for controlling the world' });
         });
     });
 });

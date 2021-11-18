@@ -1,0 +1,17 @@
+{
+  "name": "Tenants",
+  "icon": "user circle",
+  "layout": [
+    {
+      "type": "widgets",
+      "content": [
+        {
+          "name": "Tenants management",
+          "width": 12,
+          "height": 24,
+          "definition": "tenants"
+        }
+      ]
+    }
+  ]
+}

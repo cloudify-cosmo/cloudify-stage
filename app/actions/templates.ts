@@ -4,7 +4,7 @@
  */
 
 import * as types from './types';
-import templatesLoader from '../utils/templatesLoader';
+import doLoadTemplates from '../utils/templatesLoader';
 
 export function storeTemplates(templates) {
     return {
@@ -14,43 +14,5 @@ export function storeTemplates(templates) {
 }
 
 export function loadTemplates() {
-    return (dispatch, getState) =>
-        templatesLoader.load(getState().manager).then(result => dispatch(storeTemplates(result)));
-}
-
-export function addTemplate(templateId, pages) {
-    return {
-        type: types.ADD_TEMPLATE,
-        templateId,
-        pages
-    };
-}
-
-export function editTemplate(templateId, pages) {
-    return {
-        type: types.EDIT_TEMPLATE,
-        templateId,
-        pages
-    };
-}
-
-export function removeTemplate(templateId) {
-    return {
-        type: types.REMOVE_TEMPLATE,
-        templateId
-    };
-}
-
-export function addPage(page) {
-    return {
-        type: types.ADD_TEMPLATE_PAGE,
-        page
-    };
-}
-
-export function removePage(pageId) {
-    return {
-        type: types.REMOVE_TEMPLATE_PAGE,
-        pageId
-    };
+    return (dispatch, getState) => doLoadTemplates(getState().manager).then(result => dispatch(storeTemplates(result)));
 }

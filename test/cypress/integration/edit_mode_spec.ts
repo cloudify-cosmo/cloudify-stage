@@ -1,12 +1,12 @@
 // @ts-nocheck File not migrated fully to TS
 describe('Edit mode', () => {
-    before(() => cy.activate('valid_trial_license').removeCustomWidgets().usePageMock('blueprints').mockLogin());
+    before(() => cy.activate('valid_trial_license').removeCustomWidgets());
 
     beforeEach(() => {
         cy.usePageMock('blueprints');
-        cy.refreshTemplate();
+        cy.mockLogin();
         cy.enterEditMode();
-        cy.intercept('POST', '/console/ua').as('uaPost');
+        cy.intercept('POST', '/console/ua').as('updateUserApps');
     });
 
     it('should allow to edit widget settings', () => {
@@ -15,42 +15,41 @@ describe('Edit mode', () => {
         cy.get('.pollingTime input').type(0);
 
         cy.contains('Save').click();
-        cy.wait('@uaPost')
+        cy.wait('@updateUserApps')
             .its('request.body')
             .should('have.nested.property', 'appData.pages[0].layout[0].content[1].configuration.pollingTime', 100);
     });
 
     it('should allow to remove widget', () => {
         cy.get('.blueprintsWidget .remove').click({ force: true });
-        cy.wait('@uaPost')
+        cy.wait('@updateUserApps')
             .its('request.body')
             .should('not.have.nested.property', 'appData.pages[0].layout[0].content[1]');
         cy.get('.blueprintsWidget').should('not.exist');
     });
 
     it('should allow to add widget', () => {
+        const widget1Id = 'pluginsCatalog';
         cy.get('.addWidgetBtn').click();
-        cy.get('*[data-id=pluginsCatalog]').click();
+        cy.get(`*[data-id=${widget1Id}]`).click();
         cy.contains('Add selected widgets').click();
-        cy.wait('@uaPost').its('request.body').should('have.nested.property', 'appData.pages[0].layout[0].content[2]');
-        cy.wait('@uaPost').then(({ request }) => {
+        cy.wait('@updateUserApps').then(({ request }) => {
+            expect(request.body).to.have.nested.property('appData.pages[0].layout[0].content[2].definition', widget1Id);
             expect(request.body).to.have.nested.property('appData.pages[0].layout[0].content[2].height');
             expect(request.body).to.have.nested.property('appData.pages[0].layout[0].content[2].x');
             expect(request.body).to.have.nested.property('appData.pages[0].layout[0].content[2].y');
         });
 
         cy.contains('Add Widgets Container').click();
-        cy.wait('@uaPost');
+        cy.wait('@updateUserApps');
         cy.get('.react-grid-layout').should('have.length', 2);
 
-        const widgetId = 'blueprints';
+        const widget2Id = 'blueprints';
         cy.get('.addWidgetBtn:last()').click();
-        cy.get(`*[data-id=${widgetId}]`).click();
+        cy.get(`*[data-id=${widget2Id}]`).click();
         cy.contains('Add selected widgets').click();
-        cy.wait('@uaPost')
-            .its('request.body')
-            .should('have.nested.property', 'appData.pages[0].layout[1].content[0].definition', widgetId);
-        cy.wait('@uaPost').then(({ request }) => {
+        cy.wait('@updateUserApps').then(({ request }) => {
+            expect(request.body).to.have.nested.property('appData.pages[0].layout[1].content[0].definition', widget2Id);
             expect(request.body).to.have.nested.property('appData.pages[0].layout[1].content[0].height');
             expect(request.body).to.have.nested.property('appData.pages[0].layout[1].content[0].x');
             expect(request.body).to.have.nested.property('appData.pages[0].layout[1].content[0].y');
@@ -78,14 +77,14 @@ describe('Edit mode', () => {
 
     it('should allow to rename tab and set default tab', () => {
         cy.contains('Add Tabs').click();
-        cy.wait('@uaPost');
+        cy.wait('@updateUserApps');
 
         cy.get('.editModeButton .edit:eq(0)').click();
         cy.get('.modal input[type=text]').type(2);
         cy.get('.modal .toggle').click();
 
         cy.contains('Save').click();
-        cy.wait('@uaPost')
+        cy.wait('@updateUserApps')
             .its('request.body')
             .should('have.nested.property', 'appData.pages[0].layout[1].content[0].name', 'New Tab2');
 
@@ -99,7 +98,7 @@ describe('Edit mode', () => {
         cy.get('.modal .toggle').click();
 
         cy.contains('Save').click();
-        cy.wait('@uaPost').then(({ request }) => {
+        cy.wait('@updateUserApps').then(({ request }) => {
             expect(request.body).to.have.nested.property('appData.pages[0].layout[1].content[0].isDefault', false);
             expect(request.body).to.have.nested.property('appData.pages[0].layout[1].content[1].isDefault', true);
         });
@@ -109,15 +108,27 @@ describe('Edit mode', () => {
         cy.get('.modal .toggle:not(.checked)');
     });
 
-    it('should allow to add and remove pages', () => {
+    it('should allow to add, remove and switch pages', () => {
         cy.contains('Add Page').click();
 
         cy.log('Verify empty page was added');
-        cy.get('.pageMenuItem:last()').should('have.class', 'active').should('have.text', 'Page_0');
-        cy.contains('.pageTitle', 'Page_0');
-        cy.contains('This page is empty');
-        cy.contains("don't be shy, give it a meaning!");
-        cy.contains('Add Tabs');
+        cy.get('.pageMenuItem:last()').should('have.class', 'active').and('have.text', 'Page_0');
+        cy.get('.page').within(() => {
+            cy.contains('.pageTitle', 'Page_0');
+            cy.contains('This page is empty');
+            cy.contains("don't be shy, give it a meaning!");
+            cy.contains('Add Tabs');
+        });
+
+        cy.log('Verify page switching works');
+        cy.visitTestPage();
+        cy.contains('.pageMenuItem.active', 'Test Page');
+        cy.get('.page').within(() => {
+            cy.contains('.pageTitle', 'Test Page');
+            cy.get('.react-grid-item').should('have.length', 2);
+            cy.get('.react-grid-item.filterWidget').should('be.visible');
+            cy.get('.react-grid-item.blueprintsWidget').should('be.visible');
+        });
 
         cy.log('Remove added page');
         cy.get('.pageMenuItem:last() .remove').click({ force: true });

@@ -11,8 +11,8 @@
 import 'cypress-file-upload';
 import 'cypress-localstorage-commands';
 import 'cypress-get-table';
-import _ from 'lodash';
-import type { RouteHandler, StringMatcher } from 'cypress/types/net-stubbing';
+import _, { isString, noop } from 'lodash';
+import type { GlobPattern, RouteHandler, RouteMatcherOptions } from 'cypress/types/net-stubbing';
 import { addCommands, GetCypressChainableFromCommands } from 'cloudify-ui-common/cypress/support';
 
 import './asserts';
@@ -39,9 +39,13 @@ const getCommonHeaders = () => ({
 });
 
 const mockGettingStarted = (modalEnabled: boolean) =>
-    cy.interceptSp('GET', `/users/`, {
+    cy.interceptSp('GET', `/users/*`, {
         body: { show_getting_started: modalEnabled }
     });
+
+const collapseSidebar = () => cy.get('.breadcrumb').click();
+
+export const testPageName = 'Test Page';
 
 declare global {
     namespace Cypress {
@@ -71,21 +75,19 @@ type License =
 const commands = {
     waitUntilPageLoaded: () => {
         cy.log('Wait for widgets loaders to disappear');
-        cy.get('div.loader:visible', { timeout: 10000 }).should('not.exist');
+        return cy.get('div.loader:visible', { timeout: 10000 }).should('not.exist');
     },
-    waitUntilLoaded: () => {
-        cy.log('Wait for splash screen loader to disappear');
-        cy.get('#loader', { timeout: 20000 }).should('be.not.visible');
-        cy.waitUntilPageLoaded();
-    },
+    waitUntilLoaded: () =>
+        cy
+            .log('Wait for splash screen loader to disappear')
+            .get('#loader', { timeout: 20000 })
+            .should('be.not.visible')
+            .waitUntilPageLoaded(),
     uploadLicense: (license: License) =>
         cy.fixture(`license/${license}.yaml`).then(yaml =>
             cy.request({
                 method: 'PUT',
-                url: '/console/sp',
-                qs: {
-                    su: '/license'
-                },
+                url: '/console/sp/license',
                 headers: {
                     Authorization: `Basic ${btoa('admin:admin')}`,
                     'Content-Type': 'text/plain'
@@ -112,10 +114,7 @@ const commands = {
     ) =>
         cy.request({
             method,
-            url: '/console/sp',
-            qs: {
-                su: url
-            },
+            url: `/console/sp${url}`,
             headers: {
                 'Content-Type': 'application/json',
                 ...getCommonHeaders(),
@@ -134,7 +133,7 @@ const commands = {
                 window =>
                     new Promise((resolve, reject) => {
                         const xhr = new window.XMLHttpRequest();
-                        xhr.open(method, `/console/sp?su=${encodeURIComponent(url)}`);
+                        xhr.open(method, `/console/sp${url}`);
                         xhr.onload = resolve;
                         xhr.onerror = reject;
                         Object.entries({ ...getCommonHeaders(), ...headers }).forEach(([name, value]) =>
@@ -145,7 +144,7 @@ const commands = {
             )
         );
     },
-    stageRequest: (url: string, method = 'GET', options?: Partial<Cypress.RequestOptions>, headers?: any) => {
+    stageRequest: (url: string, method = 'GET', options?: Partial<Cypress.RequestOptions>, headers?: any) =>
         cy.request({
             method,
             url,
@@ -155,8 +154,7 @@ const commands = {
                 ...headers
             },
             ...options
-        });
-    },
+        }),
     // TODO(RD-2314): object instead of multiple optional parameters
     login: (username = 'admin', password = 'admin', expectSuccessfulLogin = true, disableGettingStarted = true) => {
         mockGettingStarted(!disableGettingStarted);
@@ -182,12 +180,11 @@ const commands = {
 
             cy.waitUntilLoaded().then(() => cy.saveLocalStorage());
         }
+        return cy;
     },
     // TODO(RD-2314): object instead of multiple optional parameters
-    mockLogin: (username?: string, password?: string, disableGettingStarted?: boolean) => {
-        cy.mockLoginWithoutWaiting({ username, password, disableGettingStarted });
-        cy.waitUntilLoaded();
-    },
+    mockLogin: (username?: string, password?: string, disableGettingStarted?: boolean) =>
+        cy.mockLoginWithoutWaiting({ username, password, disableGettingStarted }).waitUntilLoaded(),
     mockLoginWithoutWaiting: ({
         username = 'admin',
         password = 'admin',
@@ -210,15 +207,19 @@ const commands = {
             );
             if (disableGettingStarted) mockGettingStarted(false);
         });
-        cy.visit('/console');
+        return cy.visit('/console');
     },
-    visitPage: (name: string, id: string | null = null) => {
+    clickPageMenuItem: (name: string, id: string | null = null) => {
         cy.log(`Switching to '${name}' page`);
-        cy.get('.sidebar.menu .pages').within(() => cy.contains(name).click({ force: true }));
+        cy.get('.sidebar.menu .pages').contains(name).click({ force: true });
         if (id) {
             cy.location('pathname').should('be.equal', `/console/page/${id}`);
         }
-        cy.waitUntilPageLoaded();
+        return cy.waitUntilPageLoaded();
+    },
+    visitTestPage: () => {
+        cy.clickPageMenuItem(testPageName);
+        return collapseSidebar();
     },
     usePageMock: (
         widgetIds?: string | string[],
@@ -230,7 +231,12 @@ const commands = {
         }: { widgetsWidth?: number; additionalWidgetIdsToLoad?: string[]; additionalPageTemplates?: string[] } = {}
     ) => {
         const widgetIdsArray = _.castArray(widgetIds);
-        const widgetIdsToLoad = [...widgetIdsArray, 'filter', 'pluginsCatalog', ...additionalWidgetIdsToLoad];
+        const widgetIdsToLoad = _.compact([
+            ...widgetIdsArray,
+            'filter',
+            'pluginsCatalog',
+            ...additionalWidgetIdsToLoad
+        ]);
         cy.intercept('GET', '/console/widgets/list', widgetIdsToLoad.map(toIdObj));
         // required for drill-down testing
         cy.intercept(
@@ -239,13 +245,14 @@ const commands = {
             widgetIds ? ['blueprint', 'deployment', ...additionalPageTemplates].map(toIdObj) : []
         );
         cy.intercept('GET', '/console/templates', []);
-        cy.intercept('GET', '/console/ua', {
+        return cy.intercept('GET', '/console/ua', {
             appDataVersion: getCurrentAppVersion(),
             appData: {
                 pages: [
                     {
-                        name: 'Test Page',
+                        name: testPageName,
                         id: 'test_page',
+                        type: 'page',
                         layout: widgetIds
                             ? [
                                   {
@@ -253,6 +260,7 @@ const commands = {
                                       content: [
                                           {
                                               id: 'filter',
+                                              name: 'Resource Filter',
                                               definition: 'filter',
                                               configuration: {
                                                   filterByBlueprints: true,
@@ -260,20 +268,23 @@ const commands = {
                                                   filterByExecutionsStatus: true,
                                                   allowMultipleSelection: true
                                               },
+                                              drillDownPages: {},
                                               height: 2,
                                               width: widgetsWidth,
                                               x: 0,
-                                              y: 0
+                                              y: 0,
+                                              maximized: false
                                           },
                                           ..._.map(widgetIdsArray, (widgetId, index) => ({
                                               id: widgetId,
                                               definition: widgetId,
                                               configuration: widgetConfiguration,
-                                              height: 20,
                                               drillDownPages: {},
+                                              height: 20,
                                               width: widgetsWidth,
                                               x: 0,
-                                              y: 2 + (index + 1) * 20
+                                              y: 2 + (index + 1) * 20,
+                                              maximized: false
                                           }))
                                       ]
                                   }
@@ -284,18 +295,25 @@ const commands = {
                     {
                         name: 'Plugins Catalog',
                         id: 'plugin_catalog',
+                        type: 'page',
                         layout: [
                             {
                                 type: 'widgets',
                                 content: [
                                     {
                                         id: 'pluginsCatalog',
+                                        name: 'Plugins Catalog',
                                         definition: 'pluginsCatalog',
                                         configuration: {
                                             jsonPath:
                                                 'http://repository.cloudifysource.org/cloudify/wagons/plugins.json'
                                         },
-                                        height: 20
+                                        drillDownPages: {},
+                                        height: 20,
+                                        width: widgetsWidth,
+                                        x: 0,
+                                        y: 0,
+                                        maximized: false
                                     }
                                 ]
                             }
@@ -305,14 +323,22 @@ const commands = {
             }
         });
     },
+    useWidgetWithDefaultConfiguration: (widgetId: string, widgetConfigurationOverrides: any = {}) =>
+        cy
+            .usePageMock(widgetId, widgetConfigurationOverrides)
+            .mockLogin()
+            // TODO(RD-1820): Currently we don't supply widget's default configuration when rendering.
+            // In order to load default configuration for widget widget edit configuration modal should be opened
+            // and configuration saved without making any changes
+            .editWidgetConfiguration(widgetId, noop),
     refreshPage: (disableGettingStarted = true) => {
         mockGettingStarted(!disableGettingStarted);
         cy.get('.pageMenuItem.active').click({ force: true });
+        return collapseSidebar();
     },
     refreshTemplate: (disableGettingStarted = true) => {
         mockGettingStarted(!disableGettingStarted);
-        cy.get('.tenantsMenu').click({ force: true });
-        cy.contains('.text', 'default_tenant').click({ force: true });
+        return cy.contains('.text', 'default_tenant').click({ force: true });
     },
     setBlueprintContext: (value: string) => setContext('blueprint', value),
     clearBlueprintContext: () => clearContext('blueprint'),
@@ -320,15 +346,21 @@ const commands = {
     setDeploymentContext: (value: string) => setContext('deployment', value),
     clearDeploymentContext: () => clearContext('deployment'),
 
-    interceptSp: (method: StringMatcher, su: string | RegExp, routeHandler?: RouteHandler) =>
-        cy.intercept(
-            {
-                method,
-                pathname: '/console/sp',
-                query: { su: su instanceof RegExp ? su : RegExp(`.*${_.escapeRegExp(su)}.*`) }
-            },
-            routeHandler
-        ),
+    interceptSp: (method: string, spRouteMatcher: GlobPattern | RouteMatcherOptions, routeHandler?: RouteHandler) => {
+        const routeMatcher: RouteMatcherOptions = { method };
+        if (isString(spRouteMatcher)) {
+            // eslint-disable-next-line scanjs-rules/assign_to_pathname
+            routeMatcher.pathname = `/console/sp${spRouteMatcher}`;
+        } else {
+            Object.assign(routeMatcher, spRouteMatcher);
+            if (routeMatcher.pathname)
+                // eslint-disable-next-line scanjs-rules/assign_to_pathname
+                routeMatcher.pathname = `/console/sp${routeMatcher.pathname}`;
+            if (routeMatcher.path) routeMatcher.path = `/console/sp${routeMatcher.path}`;
+        }
+
+        return cy.intercept(routeMatcher, routeHandler);
+    },
     getByTestId: (id: string) => cy.get(`[data-testid=${id}]`),
     getSearchInput: () => cy.get('input[placeholder="Search..."]'),
 
@@ -348,29 +380,43 @@ const commands = {
             .then(commandResult => commandResult.stdout);
     },
 
+    getField: (fieldName: string) => cy.contains('.field', fieldName),
+
     setSearchableDropdownValue: (fieldName: string, value: string) => {
-        cy.contains('.field', fieldName)
-            .click()
-            .within(() => {
-                cy.get('input').type(value);
-                cy.get(`div[option-value="${value}"]`).click();
+        if (value) {
+            return cy
+                .getField(fieldName)
+                .click()
+                .within(() => {
+                    cy.get('input').type(value);
+                    cy.get(`div[option-value="${value}"]`).click();
+                });
+        }
+        return cy
+            .getField(fieldName)
+            .find('i.dropdown')
+            .then($icon => {
+                if ($icon.hasClass('clear')) cy.clearSearchableDropdown(fieldName);
             });
     },
 
-    clearSearchableDropdown: (fieldName: string) =>
-        cy.contains('.field', fieldName).find('.dropdown.clear.icon').click(),
+    clearSearchableDropdown: (fieldName: string) => cy.getField(fieldName).find('.dropdown.clear.icon').click(),
 
-    setDropdownValues: (fieldName: string, values: string[]) => {
-        cy.contains('.field', fieldName)
+    setSingleDropdownValue: (fieldName: string, value: string) =>
+        cy
+            .getField(fieldName)
+            .click()
+            .within(() => cy.contains('div[role=option]', value).click()),
+
+    setMultipleDropdownValues: (fieldName: string, values: string[]) =>
+        cy
+            .getField(fieldName)
             .click()
             .within(() => values.forEach(value => cy.contains('div[role=option]', value).click()))
-            .click();
-    },
+            .click(),
+    clearMultipleDropdown: (fieldName: string) => cy.getField(fieldName).find('.delete.icon').click({ multiple: true }),
 
-    openTab: (tabName: string) => {
-        cy.get('.tabular.menu').contains(tabName).click();
-    },
-
+    openTab: (tabName: string) => cy.get('.tabular.menu').contains(tabName).click(),
     mockEnabledGettingStarted: () => mockGettingStarted(true),
 
     mockDisabledGettingStarted: () => mockGettingStarted(false)

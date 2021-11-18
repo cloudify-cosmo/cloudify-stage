@@ -21,7 +21,7 @@ describe('Login', () => {
 
     it('succeeds and resets user pages when application version is different than the one stored in the DB', () => {
         const currentAppDataVersion = getCurrentAppVersion();
-        const fetchUserAppsTimeout = 15000;
+        const fetchUserAppsTimeout = 20000;
 
         cy.intercept('GET', '/console/ua', req => {
             req.reply(res => {
@@ -29,18 +29,14 @@ describe('Login', () => {
                 res.send(res.body);
             });
         }).as('fetchUserApps');
-        cy.intercept('GET', '/console/templates/select').as('fetchTemplateId');
+        cy.intercept('GET', '/console/templates/select?tenant=default_tenant').as('fetchTemplateId');
         cy.intercept('POST', '/console/ua').as('updateUserApps');
 
         cy.activate().login('admin', 'admin', false);
 
         cy.wait('@fetchUserApps', { timeout: fetchUserAppsTimeout });
-        cy.wait('@fetchTemplateId').then(({ response }) => {
-            expect(response.body).to.equal('main-sys_admin');
-        });
-        cy.wait('@updateUserApps').then(({ response }) => {
-            expect(response.body.appDataVersion).to.equal(currentAppDataVersion);
-        });
+        cy.wait('@fetchTemplateId').its('response.body').should('equal', 'main-sys_admin');
+        cy.wait('@updateUserApps').its('response.body.appDataVersion').should('equal', currentAppDataVersion);
     });
 
     it('succeeds when provided credentials are valid and license is not active', () => {

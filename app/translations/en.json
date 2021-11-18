@@ -26,13 +26,15 @@
         "systemStatus": "System Status"
     },
     "gettingStartedModal": {
+        "cancelConfirm": "Are you sure you want to cancel the setup process?",
         "disableModalLabel": "Don't show next time",
         "titles": {
-            "technologiesStep": "Getting Started",
+            "environmentsStep": "First, please select your environment(s)",
             "secretsStep": "Secrets",
-            "summaryStep": "Summary",
+            "summaryStep": "Finally, please review your selected task list below and click ‘Finish’ to begin installation...",
             "statusStep": "Status"
         },
+        "secretsSubtitle": "Now, please fill in the fields below (and click ‘Next’)",
         "buttons": {
             "closeModal": "Close",
             "stepBack": "Back",
@@ -45,7 +47,7 @@
             "blueprintsMetadataLoadingError": "Blueprints information loading error"
         },
         "validation": {
-            "someTechnologyRequiredError": "At least one technology needs to be selected.",
+            "environmentRequiredError": "At least one environment needs to be selected.",
             "allSecretsRequiredError": "All secret values need to be specified."
         },
         "summary": {
@@ -73,6 +75,8 @@
                 "uploadingErrorMessageSuffix": "blueprint upload error"
             }
         },
+        "welcomeText": "Welcome to Cloudify: your open source,\nmulti-cloud orchestration platform.\n\nWe’ll start by setting up your cloud environment\nin the following easy steps. Ready? Let’s go.\n\nNote: this process can take up to 5 minutes,\nand you will need your API access keys.",
+        "welcomeLogoLabel": "CLOUDIFY",
         "messages": {
             "pluginInstallError": "{{pluginName}} plugin installation error.",
             "secretUpdateError": "{{secretName}} secret update operation error.",
@@ -80,11 +84,12 @@
             "blueprintUploadError": "{{blueprintName}} blueprint upload error:\n{{uploadError}}",
             "timeoutExceededError": "Timeout exceeded.",
             "progressMessage": "Installation in progress...",
-            "doneMessage": "Installation done!"
+            "doneMessage": "Installation completed! (you can now close this window)"
         }
     },
     "editMode": {
         "addPage": "Add Page",
+        "addPageGroup": "Add Page Group",
         "addTabsContainer": "Add Tabs Container",
         "addWidget": {
             "addButton": "Add Widget",
@@ -130,6 +135,7 @@
             "message": "All widgets present in this container will be removed"
         },
         "defaultPageName": "Page_{{index}}",
+        "defaultPageGroupName": "Page_Group_{{index}}",
         "editWidget": {
             "noConfiguration": "No configuration available for this widget"
         },
@@ -284,11 +290,20 @@
         "idPopup": {
             "copyButton": "Copy ID",
             "label": "ID"
+        },
+        "dynamicTable": {
+            "addButton": "Add",
+            "removeButton": "Remove"
         }
     },
     "templates": {
         "breadcrumb": "Template management",
         "close": "Close",
+        "templates": "Templates",
+        "pageGroups": "Page groups",
+        "pages": "Pages",
+        "usedByTemplates": "Used in templates",
+        "usedByPageGroups": "Used in page groups",
         "createPageModal": {
             "create": "Create",
             "header": "Create page",
@@ -296,23 +311,26 @@
             "pageNameError": "Please provide correct page name"
         },
         "createTemplateModal": {
+            "allTenants": "All tenants",
             "addPage": "Add page",
+            "addPageGroup": "Add page group",
             "availablePages": "Available pages",
-            "button": "Create template",
+            "availablePageGroups": "Available page groups",
             "create": "Create",
             "createHeader": "Create template",
             "errors": {
-                "page": "Please select page",
+                "pageMenuItem": "Please select at least one page menu item",
                 "role": "Please select role",
                 "templateName": "Please provide correct template name",
                 "tenant": "Please select tenant"
             },
             "noPagesAvailable": "No pages available",
-            "noPagesSelected": "No pages selected",
+            "noPageGroupsAvailable": "No page groups available",
+            "noPageMenuItemsSelected": "No page menu items selected",
             "removePage": "Remove page",
             "reorderPage": "Reorder page",
             "roles": "Roles",
-            "selectedPages": "Selected pages",
+            "selectedItems": "Selected page menu items",
             "templateName": "Template name",
             "tenants": "Tenants",
             "update": "Update",
@@ -325,27 +343,62 @@
             "drillDownWarning": "Drill down action is not available in the template management",
             "editHeader": "Page management",
             "exit": "Exit",
-            "header": "Pages",
             "invalidWidgets": "Page template contains invalid widgets definitions: {{widgetsList}}",
             "pageNamePlaceholder": "You must fill a page name",
             "previewHeader": "Page preview",
             "removeConfirm": "Are you sure to remove this page?",
             "save": "Save",
+            "notUsedByTemplate": "Page not used by any template",
+            "notUsedByGroup": "Page not used by any page group",
             "table": {
                 "pageID": "Page id",
                 "pageName": "Page name",
+                "icon": "Icon",
                 "templates": "Templates",
+                "pageGroups": "Page groups",
                 "updatedAt": "Updated at",
                 "updatedBy": "Updated by"
             }
         },
-        "templateManagement": {
-            "header": "Templates",
-            "pageList": {
-                "noPages": "No pages available",
-                "removeConfirm": "Are you sure to remove this page from template?"
+        "pageGroupManagement": {
+            "notUsed": "Page group not used by any template",
+            "removeConfirm": "Are you sure to remove this page group?",
+            "removePageConfirm": "Are you sure to remove this page from the page group?",
+            "createPageGroup": "Create page group",
+            "table": {
+                "groupId": "Group id",
+                "groupName": "Group name",
+                "icon": "Icon",
+                "pages": "Pages",
+                "templates": "Templates",
+                "updatedAt": "Updated at",
+                "updatedBy": "Updated by"
             },
-            "pageNotUsed": "Page not used by any template",
+            "modal": {
+                "addPage": "Add page",
+                "availablePages": "Available pages",
+                "createHeader": "Create page group",
+                "groupName": "Group name",
+                "icon": "Group icon",
+                "noPagesAvailable": "No pages available",
+                "noPagesSelected": "No pages selected",
+                "selectedPages": "Selected pages",
+                "submitCreate": "Create",
+                "submitUpdate": "Update",
+                "updateHeader": "Update page group {{pageGroupName}}",
+                "errors": {
+                    "selectedPages": "Please select at least one page",
+                    "groupName": "Please provide group name"
+                }
+            }
+        },
+        "templateManagement": {
+            "addTemplateButton": "Create template",
+            "pageMenuItemsList": {
+                "header": "Page menu items",
+                "noItems": "No page menu items available",
+                "removeConfirm": "Are you sure to remove this page menu item from the template?"
+            },
             "removeConfirm": "Are you sure to remove this template?",
             "roleList": {
                 "noRoles": "No roles available",
@@ -386,7 +439,9 @@
             "label": "Reset Templates",
             "title": "Reset application screens"
         },
-        "templateManagement": "Template Management"
+        "templateManagement": "Template Management",
+        "noTenants": "No Tenants",
+        "tenantsHeader": "Tenant selection"
     },
     "widget": {
         "config": {
@@ -591,7 +646,7 @@
                 }
             },
             "readmes": {
-                "linksBasePath": "https://docs.cloudify.co/6.0.0",
+                "linksBasePath": "https://docs.cloudify.co/staging/dev",
                 "params": {
                     "cfy_composer_link": "/developer/composer/",
                     "cfy_composer_name": "Cloudify Composer",
@@ -604,7 +659,7 @@
             },
             "revertToDefault": "Revert to default value",
             "urls": {
-                "blueprintsCatalog": "http://repository.cloudifysource.org/cloudify/blueprints/5.1/examples.json",
+                "blueprintsCatalog": "http://repository.cloudifysource.org/cloudify/blueprints/6.2/examples.json",
                 "helloWorldBlueprint": "https://github.com/cloudify-cosmo/cloudify-hello-world-example/archive/master.zip",
                 "linkParameterExample": "https://cloudify.co"
             },
@@ -654,7 +709,23 @@
                         "help": "(Optional) The blueprint icon file is shown with the blueprint in the local blueprint widget.",
                         "placeholder": "Provide the image file URL or click browse to select a file"
                     }
+                },
+                "actionsMenu": {
+                    "uploadButton": "Upload",
+                    "uploadFromMarketplace": "Upload from Marketplace",
+                    "uploadFromPackage": "Upload a blueprint package",
+                    "generateInComposer": "Generate in the Composer"
                 }
+            },
+            "blueprintMarketplace": {
+                "modal": {
+                    "header": "Blueprint marketplace",
+                    "blueprintCatalogName": "Blueprints Catalog",
+                    "cancelButton": "Close"
+                }
+            },
+            "executions": {
+                "noErrorDetails": "No error details available"
             }
         },
         "blueprintActionButtons": {
@@ -664,11 +735,170 @@
         },
         "blueprints": {
             "configuration": {
-                "showEditCopyInComposerButton": "Show the \"Edit a copy in Composer\" button"
+                "clickToDrillDown": "Enable click to drill down",
+                "displayStyle": {
+                    "label": "Display style",
+                    "items": {
+                        "table": "Table",
+                        "catalog": "Catalog"
+                    }
+                },
+                "hideFailedBlueprints": "Hide failed blueprints",
+                "showComposerOptions": "Show Composer options",
+                "marketplaceTabs": {
+                    "name": "Marketplace tabs",
+                    "columns": {
+                        "tabNameLabel": "Tab name",
+                        "urlNameLabel": "URL to marketplace",
+                        "defaultValues": [
+                            {
+                                "name": "AWS",
+                                "url": "https://repository.cloudifysource.org/cloudify/blueprints/6.2/aws_services.json"
+                            },
+                            {
+                                "name": "Azure",
+                                "url": "https://repository.cloudifysource.org/cloudify/blueprints/6.2/azure_services.json"
+                            },
+                            {
+                                "name": "GCP",
+                                "url": "https://repository.cloudifysource.org/cloudify/blueprints/6.2/gcp_services.json"
+                            },
+                            {
+                                "name": "Terraform",
+                                "url": "https://repository.cloudifysource.org/cloudify/blueprints/6.2/terraform_services.json"
+                            },
+                            {
+                                "name": "Helm",
+                                "url": "https://repository.cloudifysource.org/cloudify/blueprints/6.2/helm_services.json"
+                            },
+                            {
+                                "name": "Other",
+                                "url": "https://repository.cloudifysource.org/cloudify/blueprints/6.2/other_services.json"
+                            }
+                        ]
+                    }
+                },
+                "marketplaceDisplayStyle": {
+                    "label": "Marketplace display style",
+                    "items": {
+                        "table": "Table",
+                        "catalog": "Catalog"
+                    }
+                },
+                "marketplaceColumnsToShow": {
+                    "label": "List of fields to show in the marketplace table",
+                    "placeholder": "Select fields from the list"
+                },
+                "labelFilterRules": "Label filter rules"
             }
         },
-        "executions": {
-            "noExecutionFound": "There are no executions that could be shown."
+        "blueprintCatalog": {
+            "actions": {
+                "openDocumentation": "Open documentation",
+                "uploadBlueprint": "Upload blueprint"
+            },
+            "configuration": {
+                "jsonPath": {
+                    "label": "Blueprints Examples URL",
+                    "placeholder": "Type URL to blueprint examples JSON file",
+                    "description": "If set, then GitHub options are not used for fetching data."
+                },
+                "username": {
+                    "label": "GitHub User",
+                    "placeholder": "Type GitHub's user or organization name",
+                    "description": "GitHub user or organization account name which is the owner of the repositories to fetch. Used only if Blueprints Examples URL is not set."
+                },
+                "filter": {
+                    "label": "GitHub Filter",
+                    "placeholder": "Type filter for GitHub repositories",
+                    "description": "Optional filter for GitHub repositories. See GitHub's web page 'Searching repositories' for more details. Used only if Blueprints Examples URL is not set."
+                },
+                "displayStyle": {
+                    "label": "Display style",
+                    "option": {
+                        "table": "Table",
+                        "catalog": "Catalog"
+                    }
+                },
+                "fieldsToShow": {
+                    "label": "List of fields to show in the table",
+                    "placeholder": "Select fields from the list",
+                    "items": {
+                        "name": "Name",
+                        "description": "Description",
+                        "created": "Created",
+                        "updated": "Updated"
+                    }
+                },
+                "sortByName": {
+                    "label": "Sort by name",
+                    "description": "If set to true, then blueprints will be sorted by name."
+                }
+            }
+        },
+        "buttonLink": {
+            "name": "Button link",
+            "description": "Opens provided URL",
+            "configuration": {
+                "basic": {
+                    "name": "Basic button",
+                    "description": "A basic button is less pronounced"
+                },
+                "color": {
+                    "name": "Color",
+                    "description": "Color of the button",
+                    "default": "green"
+                },
+                "fullHeight": {
+                    "name": "Full height",
+                    "description": "Should the button use full height reserved for the widget"
+                },
+                "icon": {
+                    "name": "Icon",
+                    "description": "Icon displayed on the button",
+                    "default": "external"
+                },
+                "label": {
+                    "name": "Label",
+                    "description": "Label displayed on the button",
+                    "default": "Button Link"
+                },
+                "url": {
+                    "name": "URL address",
+                    "description": "Page URL address to open on button click. If URL starts with 'http', then page will be opened in a new window/tab. In other case it will be opened in the same window.",
+                    "default": ""
+                }
+            }
+        },
+        "cloudNum": {
+            "name": "Number of clouds",
+            "description": "Displays number of cloud environments fully configured"
+        },
+        "deploymentNum": {
+            "name": "Number of deployments",
+            "description": "Displays number of filtered deployments along with icon and label",
+            "configuration": {
+                "label": {
+                    "name": "Label",
+                    "description": "Label displayed under deployments count"
+                },
+                "icon": {
+                    "name": "Icon",
+                    "description": "Icon displayed on the left side of the deployments count"
+                },
+                "imageSrc": {
+                    "name": "Image URL",
+                    "description": "URL of the image displayed on the left side of the deployments count"
+                },
+                "filterId": {
+                    "name": "Filter ID",
+                    "description": "Name of the saved filter to apply on deployments"
+                },
+                "page": {
+                    "name": "Page to open on click",
+                    "description": "Page to open when user clicks on the widget content"
+                }
+            }
         },
         "deploymentsView": {
             "name": "Deployments view",
@@ -728,6 +958,12 @@
                         "title": "Deploy On",
                         "modal": {
                             "header": "Deploy on",
+                            "inputs": {
+                                "name": {
+                                    "label": "Name suffix",
+                                    "help": "Specify a text which will be appended to each deployment name"
+                                }
+                            },
                             "steps": {
                                 "validatingData": "1/4: Validating data...",
                                 "fetchingEnvironments": "2/4: Fetching environments list...",
@@ -863,6 +1099,23 @@
                 }
             }
         },
+        "events": {
+            "detailsIcon": "Show details",
+            "detailsModal": {
+                "header": "Details",
+                "message": "Message",
+                "copyMessage": "Copy message",
+                "errorCause": "Error Cause #{{causeNo}}",
+                "singleErrorCause": "Error Cause",
+                "type": "Type",
+                "traceback": "Traceback",
+                "copyCauses": "Copy Error Causes",
+                "close": "Close"
+            }
+        },
+        "executions": {
+            "noExecutionFound": "There are no executions that could be shown."
+        },
         "maintenanceModeButton": {
             "activating": "Maintenance Mode is being activated"
         },
@@ -872,6 +1125,7 @@
                 "disabled": "Latest version is already uploaded",
                 "uploading": "Plugin upload in progress"
             },
+            "uploadAllButton": "Upload all plugins",
             "noData": "There are no Plugins available in catalog. Check widget's configuration.",
             "columns": {
                 "name": "Name",
@@ -880,6 +1134,54 @@
                 "uploadedVersion": "Uploaded version"
             },
             "successMessage": "{{pluginTitle}} successfully uploaded"
+        },
+        "plugins": {
+            "upload": {
+                "button": "Upload",
+                "marketplace": "Upload from Marketplace",
+                "package": "Upload a package",
+                "close": "Close",
+                "catalog": "Plugins Catalog"
+            },
+            "columns": {
+                "plugin": "Plugin",
+                "packageName": "Package name",
+                "packageVersion": "Package version",
+                "supportedPlatform": "Supported platform",
+                "distribution": "Distribution",
+                "distributionRelease": "Distribution release",
+                "uploadedAt": "Uploaded at",
+                "creator": "Creator"
+            },
+            "noData": "There are no Plugins available. Click \"Upload\" to add Plugins.",
+            "deleteError": "Something went wrong, no plugin was selected for delete",
+            "download": "Download",
+            "delete": "Delete",
+            "deleteLabel": "plugin {{name}} v{{version}}"
+        },
+        "serviceButton": {
+            "name": "Service button",
+            "description": "Displays button allowing to create a new service",
+            "configuration": {
+                "basic": {
+                    "name": "Basic button",
+                    "description": "A basic button is less pronounced"
+                },
+                "color": {
+                    "name": "Color",
+                    "description": "Color of the button"
+                },
+                "label": {
+                    "name": "Label",
+                    "description": "Label displayed on the button",
+                    "default": "Create a service"
+                },
+                "icon": {
+                    "name": "Icon",
+                    "description": "Icon displayed on the button",
+                    "default": "add"
+                }
+            }
         },
         "userManagement": {
             "columns": {

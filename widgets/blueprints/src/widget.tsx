@@ -1,6 +1,11 @@
 // @ts-nocheck File not migrated fully to TS
+import { join } from 'lodash';
 import BlueprintsList from './BlueprintsList';
 import type { BlueprintsWidgetConfiguration } from './types';
+import BlueprintsLabelFilter from './BlueprintsLabelFilter';
+
+const t = Stage.Utils.getT('widgets.blueprints');
+const tCatalogConfiguration = Stage.Utils.getT('widgets.blueprintCatalog.configuration');
 
 Stage.defineWidget<unknown, unknown, BlueprintsWidgetConfiguration>({
     id: 'blueprints',
@@ -20,16 +25,16 @@ Stage.defineWidget<unknown, unknown, BlueprintsWidgetConfiguration>({
         Stage.GenericConfig.PAGE_SIZE_CONFIG(5),
         {
             id: 'clickToDrillDown',
-            name: 'Enable click to drill down',
+            name: t('configuration.clickToDrillDown'),
             default: true,
             type: Stage.Basic.GenericField.BOOLEAN_TYPE
         },
         {
             id: 'displayStyle',
-            name: 'Display style',
+            name: t('configuration.displayStyle.label'),
             items: [
-                { name: 'Table', value: 'table' },
-                { name: 'Catalog', value: 'catalog' }
+                { name: t('configuration.displayStyle.items.table'), value: 'table' },
+                { name: t('configuration.displayStyle.items.catalog'), value: 'catalog' }
             ],
             default: 'table',
             type: Stage.Basic.GenericField.LIST_TYPE
@@ -38,26 +43,79 @@ Stage.defineWidget<unknown, unknown, BlueprintsWidgetConfiguration>({
         Stage.GenericConfig.SORT_ASCENDING_CONFIG(false),
         {
             id: 'hideFailedBlueprints',
-            name: 'Hide failed blueprints',
+            name: t('configuration.hideFailedBlueprints'),
             default: false,
             type: Stage.Basic.GenericField.BOOLEAN_TYPE
         },
         {
-            id: 'showEditCopyInComposerButton',
+            id: 'showComposerOptions',
             type: Stage.Basic.GenericField.BOOLEAN_TYPE,
-            name: Stage.i18n.t('widgets.blueprints.configuration.showEditCopyInComposerButton'),
+            name: t('configuration.showComposerOptions'),
             default: false
+        },
+        {
+            id: 'filterRules',
+            name: Stage.i18n.t('widgets.blueprints.configuration.labelFilterRules'),
+            default: [],
+            type: Stage.Basic.GenericField.CUSTOM_TYPE,
+            component: BlueprintsLabelFilter
+        },
+        Stage.Common.BlueprintMarketplace.tabsConfig,
+        {
+            id: 'marketplaceDisplayStyle',
+            name: t('configuration.marketplaceDisplayStyle.label'),
+            items: [
+                {
+                    name: t('configuration.marketplaceDisplayStyle.items.table'),
+                    value: 'table'
+                },
+                {
+                    name: t('configuration.marketplaceDisplayStyle.items.catalog'),
+                    value: 'catalog'
+                }
+            ],
+            default: 'table',
+            type: Stage.Basic.GenericField.LIST_TYPE
+        },
+        {
+            id: 'marketplaceColumnsToShow',
+            name: t('configuration.marketplaceColumnsToShow.label'),
+            placeholder: t('configuration.marketplaceColumnsToShow.placeholder'),
+            items: [
+                tCatalogConfiguration('fieldsToShow.items.name'),
+                tCatalogConfiguration('fieldsToShow.items.description'),
+                tCatalogConfiguration('fieldsToShow.items.created'),
+                tCatalogConfiguration('fieldsToShow.items.updated')
+            ],
+            default: join([
+                tCatalogConfiguration('fieldsToShow.items.name'),
+                tCatalogConfiguration('fieldsToShow.items.description')
+            ]),
+
+            type: Stage.Basic.GenericField.MULTI_SELECT_LIST_TYPE
         }
     ],
 
     fetchData(widget, toolbox, params) {
         const result = {};
-        return toolbox
-            .getManager()
-            .doGet(
-                '/blueprints?_include=id,updated_at,created_at,description,created_by,visibility,main_file_name,state,error',
-                { params }
-            )
+        const filterRules = [...(widget.configuration.filterRules || [])];
+        const { SearchActions } = Stage.Common;
+        const searchActions = new SearchActions(toolbox);
+
+        if (widget.configuration.hideFailedBlueprints) {
+            filterRules.push({
+                key: 'state',
+                values: [Stage.Common.BlueprintActions.CompletedBlueprintStates.Uploaded],
+                operator: Stage.Common.Filters.FilterRuleOperators.AnyOf,
+                type: Stage.Common.Filters.FilterRuleType.Attribute
+            });
+        }
+
+        return searchActions
+            .doListBlueprints(filterRules, {
+                _include: 'id,updated_at,created_at,description,created_by,visibility,main_file_name,state,error',
+                ...params
+            })
             .then(data => {
                 result.blueprints = data;
 

@@ -7,6 +7,7 @@ import { exampleBlueprintUrl } from '../../support/resource_urls';
 import { FilterRuleAttribute, FilterRuleOperators, FilterRuleType } from '../../../../widgets/common/src/filters/types';
 import type {} from '../../../../widgets/common/src/deploymentsView';
 import { secondsToMs } from '../../support/resource_commons';
+import { testPageName } from '../../support/commands';
 
 describe('Deployments View widget', () => {
     const widgetId = 'deploymentsView';
@@ -74,8 +75,8 @@ describe('Deployments View widget', () => {
             { ...widgetConfiguration, ...configurationOverrides },
             { additionalWidgetIdsToLoad, widgetsWidth: 12, additionalPageTemplates: ['drilldownDeployments'] }
         ).mockLoginWithoutWaiting();
-        cy.interceptSp('POST', /^\/searches\/deployments/, routeHandler).as('deployments');
-        cy.wait('@deployments', { requestTimeout: secondsToMs(15) });
+        cy.interceptSp('POST', '/searches/deployments', routeHandler).as('deployments');
+        cy.wait('@deployments', { requestTimeout: secondsToMs(20) });
     };
 
     const getDeploymentsViewWidget = () =>
@@ -192,7 +193,7 @@ describe('Deployments View widget', () => {
 
             cy.contains('button', 'Execute workflow').click();
             // NOTE: actual workflow execution is not necessary
-            cy.interceptSp('POST', /^\/executions/, {
+            cy.interceptSp('POST', '/executions', {
                 statusCode: 201,
                 body: {}
             }).as('restartDeployment');
@@ -549,6 +550,15 @@ describe('Deployments View widget', () => {
             cy.setDeploymentContext(deploymentNameThatMatchesFilter);
             getSelectedDeployment().contains(deploymentNameThatMatchesFilter);
         });
+
+        it('should set filter when filterId query parameter is present', () => {
+            useDeploymentsViewWidget();
+
+            cy.location('pathname').then(pathname => cy.visit(`${pathname}?filterId=csys-environment-filter`));
+
+            cy.contains('button', 'csys-environment').should('be.visible');
+            cy.get('button[title="Clear selected filter"]').should('be.visible');
+        });
     });
 
     it('should display various deployment information', () => {
@@ -794,7 +804,7 @@ describe('Deployments View widget', () => {
             verifySubdeploymentsOfAppEnv();
 
             cy.log('Go back to top-level page');
-            getBreadcrumbs().contains('Test Page').click();
+            getBreadcrumbs().contains(testPageName).click();
             getDeploymentsViewDetailsPane().within(() => {
                 cy.log('Drill down to subservices of app-env');
                 getSubservicesButton().containsNumber(1).click();
@@ -817,7 +827,7 @@ describe('Deployments View widget', () => {
             // NOTE: an example text that is visible on the full page
             cy.contains('Execute workflow');
 
-            getBreadcrumbs().contains('Test Page').click();
+            getBreadcrumbs().contains(testPageName).click();
             getDeploymentsViewWidget().should('be.visible');
         });
 
@@ -836,7 +846,7 @@ describe('Deployments View widget', () => {
             getDeploymentsViewMap().should('exist');
 
             cy.log('Go back to the parent environment');
-            getBreadcrumbs().contains('Test Page').click();
+            getBreadcrumbs().contains(testPageName).click();
             getDeploymentsViewTable().contains('app-env').click();
             getDeploymentsViewMap().should('exist');
         });
@@ -873,10 +883,13 @@ describe('Deployments View widget', () => {
             getDeploymentsViewDetailsPane().within(() => {
                 getSubservicesButton().containsNumber(0);
 
-                cy.interceptSp('GET', `${deploymentId}?all_sub_deployments=false`, req =>
-                    req.reply(res => {
-                        res.body.sub_services_count = 50;
-                    })
+                cy.interceptSp(
+                    'GET',
+                    { pathname: `/deployments/${deploymentId}`, query: { all_sub_deployments: 'false' } },
+                    req =>
+                        req.reply(res => {
+                            res.body.sub_services_count = 50;
+                        })
                 ).as('deploymentDetails');
                 cy.wait('@deploymentDetails');
 
@@ -896,7 +909,7 @@ describe('Deployments View widget', () => {
 
         const interceptSearchDeploymentsRequest = (searchPhrase: string) =>
             // eslint-disable-next-line security/detect-non-literal-regexp
-            cy.interceptSp('POST', new RegExp(`^\\/searches\\/deployments\\?.*_search_name=${searchPhrase}`));
+            cy.interceptSp('POST', { pathname: '/searches/deployments', query: { _search_name: searchPhrase } });
 
         const showEmptyTable = () => {
             cy.getSearchInput().type('some gibberish to make the table display no results');
@@ -1168,7 +1181,7 @@ describe('Deployments View widget', () => {
         });
 
         beforeEach(() => {
-            cy.interceptSp('PUT', '/deployment-groups/BATCH_ACTION_').as('createDeploymentGroup');
+            cy.interceptSp('PUT', '/deployment-groups/BATCH_ACTION_*').as('createDeploymentGroup');
             cy.interceptSp('POST', '/execution-groups').as('startExecutionGroup');
         });
 
@@ -1204,8 +1217,11 @@ describe('Deployments View widget', () => {
 
             const labelKey = 'label_key';
             const labelValue = 'label_value';
+            const name = 'service';
             cy.get('.modal').within(() => {
                 cy.setSearchableDropdownValue('Blueprint', blueprintName);
+
+                cy.contains('.field', 'Name suffix').find('input').type(`${name}`);
 
                 cy.contains('.field', 'Labels').find('.selection').click();
                 cy.get('div[name=labelKey] > input').type(labelKey);
@@ -1225,7 +1241,7 @@ describe('Deployments View widget', () => {
                 expect(request.body.new_deployments).to.deep.equal(
                     deploymentIds.map(id => ({
                         id: '{uuid}',
-                        display_name: '{blueprint_id}-{uuid}',
+                        display_name: `{blueprint_id}-${name}`,
                         labels: [{ 'csys-obj-parent': id }],
                         runtime_only_evaluation: false,
                         skip_plugins_validation: false

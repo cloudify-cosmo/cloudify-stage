@@ -5,7 +5,7 @@ import 'proxy-polyfill';
 import type { AnyAction, Store, Unsubscribe } from 'redux';
 
 import { drillDownToPage } from '../actions/drilldownPage';
-import { selectPageByName, selectHomePage, selectParentPage } from '../actions/page';
+import { selectPageByName, selectHomePage, selectParentPage } from '../actions/pageMenu';
 
 import EventBus from './EventBus';
 import Context from './Context';

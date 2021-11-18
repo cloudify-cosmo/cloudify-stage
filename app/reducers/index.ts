@@ -7,7 +7,7 @@ import { combineReducers } from 'redux';
 import { connectRouter } from 'connected-react-router';
 import type { History } from 'history';
 
-import pages from './pageReducer';
+import pageMenuItemsReducer from './pageReducer';
 import widgetDefinitions from './widgetDefinitionsReducer';
 import templates from './templatesReducer';
 import templateManagement from './templateManagementReducer';
@@ -17,20 +17,22 @@ import config from './configReducer';
 import app from './appReducer';
 import widgetData from './widgetDataReducer';
 import drilldownContext from './drilldownContextReducer';
+import plugins from './plugins';
 
 const rootReducer = (history: History) =>
     combineReducers({
         router: connectRouter(history),
         app,
         manager,
-        pages,
+        pages: pageMenuItemsReducer,
         widgetDefinitions,
         templates,
         templateManagement,
         context,
         drilldownContext,
         config,
-        widgetData
+        widgetData,
+        plugins
     });
 
 export type ReduxState = ReturnType<ReturnType<typeof rootReducer>>;

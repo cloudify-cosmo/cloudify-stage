@@ -25,7 +25,6 @@ export interface Deployment {
     blueprint_id: string;
     latest_execution_status: LatestExecutionStatus;
     deployment_status: DeploymentStatus;
-    installation_status: InstallationStatus;
     environment_type: string;
     latest_execution_total_operations: number;
     latest_execution_finished_operations: number;

@@ -6,7 +6,7 @@ let changedFiles;
 try {
     // Collect coverage only for files changed after this check was first introduced
     changedFiles = execSync(
-        'git diff --name-only --relative 15dbf12734f1fc84ac92c6d8e2592ed96b8d3e9c -- "*.js" "**/*.js"'
+        'git diff --name-only --relative 1b7bf59d979519d3b465d3f336d5ea69ba7404d7 -- "*.ts" "**/*.js" "**/*.ts"'
     )
         .toString()
         .trim()
@@ -18,9 +18,9 @@ try {
 
 module.exports = {
     collectCoverage: true,
-    collectCoverageFrom: [...changedFiles, 'config.js', '!migrations/**', '!jest.config.js', '!migration.js'],
+    collectCoverageFrom: [...changedFiles, 'config.ts', '!migrations/**', '!jest.config.js', '!migration.ts'],
     coverageThreshold: {
-        '**/*.js': {
+        '**/*.{js,ts}': {
             branches: 1,
             functions: 1,
             lines: 1,
@@ -31,5 +31,6 @@ module.exports = {
         elkjs: '<rootDir>/node_modules/elkjs'
     },
     coverageReporters: ['text'],
-    moduleDirectories: ['node_modules', '..']
+    moduleDirectories: ['node_modules', '..'],
+    testEnvironment: 'node'
 };

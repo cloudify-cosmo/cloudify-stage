@@ -1,8 +1,7 @@
 import type { ComponentType, ReactElement, ReactNode } from 'react';
 // NOTE: the file contains only types and is undetectable for ESLint
 // eslint-disable-next-line import/no-unresolved
-import type { SemanticCOLORS } from 'semantic-ui-react/dist/commonjs/generic';
-
+import type { SemanticCOLORS } from 'semantic-ui-react';
 import type * as BasicComponents from '../components/basic';
 import type * as SharedComponents from '../components/shared';
 import type * as StagePropTypes from './props';
@@ -96,7 +95,7 @@ export type { StageCustomConfigurationComponentProps as CustomConfigurationCompo
 interface StageWidgetConfigurationDefinition {
     id: string;
     name?: string;
-    description?: string;
+    description?: ReactNode;
     type: string;
     default?: any;
     placeHolder?: string;
@@ -116,6 +115,7 @@ interface CommonWidgetDefinition<Params, Data, Configuration> {
     description?: string;
     /** @see https://docs.cloudify.co/developer/writing_widgets/widget-definition/#fetchurl */
     fetchUrl?: string | Record<string, string>;
+    mapGridParams?: (params: Stage.Types.GridParams) => Record<string, any>;
     /** @see https://docs.cloudify.co/developer/writing_widgets/widget-definition/#fetchparams-widget-toolbox */
     fetchParams?: (widget: StageWidget<Configuration>, toolbox: StageToolbox) => Params;
     hasReadme: boolean;

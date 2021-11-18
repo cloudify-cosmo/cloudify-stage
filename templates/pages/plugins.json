@@ -1,5 +1,6 @@
 {
   "name": "Plugins",
+  "icon": "plug",
   "layout": [{
     "type": "widgets",
     "content": [

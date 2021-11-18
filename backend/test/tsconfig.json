@@ -4,5 +4,5 @@
         "types": ["jest"],
         "baseUrl": ".."
     },
-    "references": [{ "path": "../" }]
+    "include": ["../**/*", "../../conf/*.json"]
 }

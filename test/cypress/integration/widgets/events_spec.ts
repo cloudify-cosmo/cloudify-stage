@@ -5,7 +5,11 @@ describe('Events/logs widget', () => {
                 fieldsToShow: ['Message', 'Workflow', 'Deployment', 'Deployment Id'],
                 pageSize: 15
             })
-            .interceptSp('GET', '/events?_size=15&_offset=0', { fixture: 'events/events.json' })
+            .interceptSp(
+                'GET',
+                { pathname: '/events', query: { _size: '15', _offset: '0' } },
+                { fixture: 'events/events.json' }
+            )
             .mockLogin();
     });
     it('should show deployment ID and display name', () => {
@@ -17,19 +21,31 @@ describe('Events/logs widget', () => {
             });
     });
 
-    it('should show error cause', () => {
+    it('should show error details', () => {
         cy.contains('tr', 'create_snapshot').find('.file').click();
-        cy.contains('Error type');
-        cy.contains('Error message');
-        cy.contains('Error traceback');
-        cy.contains('Close').click();
+        cy.get('.modal').within(() => {
+            cy.contains('.medium', 'Message')
+                .nextAll('pre')
+                .contains('Removing temp dir: /tmp/tmp0lc9t1hi-snapshot-data');
+            cy.contains('.segment', 'Error Cause').within(() => {
+                cy.contains('Type').next().contains('Error type');
+                cy.contains('Message').next().contains('Error message');
+                cy.contains('Traceback').next().contains('Error traceback');
+            });
+            cy.contains('Close').click();
+        });
         cy.get('.modal').should('not.exist');
 
         cy.contains('tr', 'restore_snapshot').find('.file').click();
-        cy.contains('Error type');
-        cy.contains('Error message');
-        cy.contains('Error traceback').should('not.exist');
-        cy.contains('Close').click();
+        cy.get('.modal').within(() => {
+            cy.contains('.medium', 'Message').nextAll('pre').contains('Another message');
+            cy.contains('.segment', 'Error Cause').within(() => {
+                cy.contains('Type').next().contains('Another error type');
+                cy.contains('Message').next().contains('Another error message');
+                cy.contains('Traceback').should('not.exist');
+            });
+            cy.contains('Close').click();
+        });
         cy.get('.modal').should('not.exist');
     });
 });

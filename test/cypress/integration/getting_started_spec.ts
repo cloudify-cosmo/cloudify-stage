@@ -1,7 +1,8 @@
 import { escapeRegExp, find } from 'lodash';
-import pluginsCatalog from '../fixtures/plugins/catalog.json';
+import { PluginDescription } from 'widgets/pluginsCatalog/src/types';
 import { minutesToMs } from '../support/resource_commons';
 
+const pluginsCatalogUrl = 'http://repository.cloudifysource.org/cloudify/wagons/plugins.json';
 const awsSecrets = ['aws_access_key_id', 'aws_secret_access_key'];
 const awsPlugins = ['cloudify-utilities-plugin', 'cloudify-kubernetes-plugin', 'cloudify-aws-plugin'];
 const awsBlueprints = ['AWS-Basics-VM-Setup', 'AWS-VM-Setup-using-CloudFormation', 'Kubernetes-AWS-EKS'];
@@ -25,7 +26,7 @@ const waitOptionsForPluginsUpload: Parameters<typeof cy.wait>[1] = { responseTim
 
 function verifyInstallationSucceeded(blueprints: string[]) {
     cy.contains('.progress .progress', '100%', { timeout: blueprints.length * minutesToMs(2) });
-    cy.contains('.progress .label', 'Installation done!');
+    cy.contains('.progress .label', 'Installation completed! (you can now close this window)');
     cy.get('.ui.red.message').should('not.exist');
 }
 
@@ -81,20 +82,23 @@ function interceptSecretsCreation(secrets: string[]) {
 }
 
 function interceptPluginsUpload(plugins: string[]) {
-    plugins.forEach(plugin => {
-        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        const catalogEntry = find(pluginsCatalog, { name: plugin })!;
-        cy.intercept({
-            method: 'POST',
-            pathname: '/console/plugins/upload',
-            query: {
-                title: catalogEntry.title,
-                visibility: 'tenant',
-                iconUrl: catalogEntry.icon,
-                yamlUrl: catalogEntry.link,
-                wagonUrl: RegExp(catalogEntry.wagons.map(wagon => escapeRegExp(wagon.url)).join('|'))
-            }
-        }).as(toAlias(plugin));
+    cy.request<PluginDescription[]>(pluginsCatalogUrl).then(response => {
+        const pluginsCatalog = response.body;
+        plugins.forEach(plugin => {
+            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+            const catalogEntry = find(pluginsCatalog, { name: plugin })!;
+            cy.intercept({
+                method: 'POST',
+                pathname: '/console/plugins/upload',
+                query: {
+                    title: catalogEntry.title,
+                    visibility: 'tenant',
+                    iconUrl: catalogEntry.icon,
+                    yamlUrl: catalogEntry.link,
+                    wagonUrl: RegExp(catalogEntry.wagons.map(wagon => escapeRegExp(wagon.url)).join('|'))
+                }
+            }).as(toAlias(plugin));
+        });
     });
 }
 
@@ -108,11 +112,24 @@ function mockPluginsCatalog(catalogData: any[]) {
             method: 'GET',
             pathname: '/console/external/content',
             query: {
-                url: 'http://repository.cloudifysource.org/cloudify/wagons/plugins.json'
+                url: pluginsCatalogUrl
             }
         },
         { body: catalogData }
     );
+}
+
+const StaticHeaders = {
+    Environments: 'First, please select your environment(s)',
+    Summary: 'Finally, please review your selected task list below and click ‘Finish’ to begin installation...'
+};
+
+function getExpectedSecretsHeader(environmentName: string) {
+    return `${environmentName} Secrets`;
+}
+
+function verifyHeader(headerContent: string) {
+    cy.contains('.header', headerContent).should('be.visible');
 }
 
 describe('Getting started modal', () => {
@@ -124,26 +141,39 @@ describe('Getting started modal', () => {
         cy.interceptSp('POST', `/users/admin`).as('disableRequest');
 
         cy.get('.modal').within(() => {
+            goToNextStep();
             cy.contains('label', "Don't show next time").click();
             closeModal();
         });
 
+        cy.contains('button', 'Yes').click();
+
         cy.wait('@disableRequest').its('request.body.show_getting_started').should('be.false');
     });
 
-    it('should install selected technology', () => {
-        mockPluginsCatalog(pluginsCatalog);
+    it('should open when gettingStarted query parameter is present', () => {
+        cy.mockLogin();
+
+        cy.get('.modal').should('not.exist');
+        cy.location('pathname').then(pathname => cy.visit(`${pathname}?gettingStarted=true`));
+
+        cy.get('.modal').should('be.visible');
+        cy.contains('Welcome to Cloudify');
+    });
+
+    it('should install selected environment', () => {
         cy.deletePlugins().deleteSecrets('aws_').deleteBlueprints('AWS-', true);
 
         cy.get('.modal').within(() => {
+            goToNextStep();
             cy.contains('button', 'AWS').click();
             goToNextStep();
 
-            cy.contains('.header', 'AWS Secrets');
+            verifyHeader(getExpectedSecretsHeader('AWS'));
             setSecretValues(awsSecrets);
             goToNextStep();
 
-            cy.contains('.header', 'Summary');
+            verifyHeader(StaticHeaders.Summary);
             awsPlugins.forEach(verifyPluginInstallationSummaryItem);
             awsSecrets.forEach(verifySecretCreationSummaryItem);
             awsBlueprints.forEach(verifyBlueprintUploadSummaryItem);
@@ -179,14 +209,15 @@ describe('Getting started modal', () => {
         });
 
         cy.get('.modal').within(() => {
+            goToNextStep();
             cy.contains('button', 'AWS').click();
             goToNextStep();
 
-            cy.contains('.header', 'AWS Secrets');
+            verifyHeader(getExpectedSecretsHeader('AWS'));
             setSecretValues(awsSecrets);
             goToNextStep();
 
-            cy.contains('.header', 'Summary');
+            verifyHeader(StaticHeaders.Summary);
             awsPlugins.forEach(verifyPluginPresenceSummaryItem);
             awsSecrets.forEach(verifySecretUpdateSummaryItem);
             awsBlueprints.forEach(verifyBlueprintPresenceSummaryItem);
@@ -203,7 +234,6 @@ describe('Getting started modal', () => {
     });
 
     it('should group common plugins and secrets', () => {
-        mockPluginsCatalog(pluginsCatalog);
         cy.deletePlugins()
             .deleteSecrets('aws_')
             .deleteSecrets('gcp_')
@@ -220,20 +250,21 @@ describe('Getting started modal', () => {
         ];
 
         cy.get('.modal').within(() => {
+            goToNextStep();
             cy.contains('button', 'AWS').click();
             cy.contains('button', 'GCP').click();
             cy.contains('button', 'Terraform on AWS').click();
             goToNextStep();
 
-            cy.contains('.header', 'AWS + Terraform on AWS Secrets');
+            verifyHeader(getExpectedSecretsHeader('AWS'));
             setSecretValues(awsSecrets);
             goToNextStep();
 
-            cy.contains('.header', 'GCP Secrets');
+            verifyHeader(getExpectedSecretsHeader('GCP'));
             setSecretValues(gcpSecrets);
             goToNextStep();
 
-            cy.contains('.header', 'Summary');
+            verifyHeader(StaticHeaders.Summary);
             plugins.forEach(verifyPluginInstallationSummaryItem);
             awsSecrets.forEach(verifySecretCreationSummaryItem);
             gcpSecrets.forEach(verifySecretCreationSummaryItem);
@@ -266,19 +297,20 @@ describe('Getting started modal', () => {
         }
 
         cy.get('.modal').within(() => {
+            goToNextStep();
             cy.contains('button', 'AWS').click();
             cy.contains('button', 'GCP').click();
             goToNextStep();
 
-            cy.contains('.header', 'AWS Secrets');
+            verifyHeader(getExpectedSecretsHeader('AWS'));
             verifySecretsRequired(awsSecrets);
             goToNextStep();
 
-            cy.contains('.header', 'GCP Secrets');
+            verifyHeader(getExpectedSecretsHeader('GCP'));
             verifySecretsRequired(gcpSecrets);
             goToNextStep();
 
-            cy.contains('.header', 'Summary');
+            verifyHeader(StaticHeaders.Summary);
         });
     });
 
@@ -287,47 +319,49 @@ describe('Getting started modal', () => {
         cy.deletePlugins();
 
         cy.get('.modal').within(() => {
+            goToNextStep();
             cy.contains('button', 'AWS').click();
             goToNextStep();
 
-            cy.contains('.header', 'AWS Secrets');
+            verifyHeader(getExpectedSecretsHeader('AWS'));
             setSecretValues(awsSecrets);
             goToNextStep();
 
-            cy.contains('.header', 'Summary');
+            verifyHeader(StaticHeaders.Summary);
             awsPlugins.forEach(verifyPluginNotAvailableSummaryItem);
         });
     });
 
     it('should keep button and field states when navigating beetwen steps', () => {
         cy.get('.modal').within(() => {
+            goToNextStep();
             cy.contains('button', 'AWS').click();
             cy.contains('button.active', 'AWS');
             goToNextStep();
 
-            cy.contains('.header', 'AWS Secrets');
+            verifyHeader(getExpectedSecretsHeader('AWS'));
             setSecretValues(awsSecrets);
             goToBackStep();
 
-            cy.contains('.header', 'Getting Started');
+            verifyHeader(StaticHeaders.Environments);
             cy.contains('button', 'GCP').click();
             cy.contains('button.active', 'AWS');
             cy.contains('button.active', 'GCP');
             goToNextStep();
 
-            cy.contains('.header', 'AWS Secrets');
+            verifyHeader(getExpectedSecretsHeader('AWS'));
             awsSecrets.forEach(secret => cy.get(`[name=${secret}]`).should('have.value', `${secret}_value`));
             goToNextStep();
 
-            cy.contains('.header', 'GCP Secrets');
+            verifyHeader(getExpectedSecretsHeader('GCP'));
             setSecretValues(gcpSecrets);
             goToBackStep();
 
-            cy.contains('.header', 'AWS Secrets');
+            verifyHeader(getExpectedSecretsHeader('AWS'));
             awsSecrets.forEach(secret => cy.get(`[name=${secret}]`).should('have.value', `${secret}_value`));
             goToNextStep();
 
-            cy.contains('.header', 'GCP Secrets');
+            verifyHeader(getExpectedSecretsHeader('GCP'));
             gcpSecrets.forEach(secret => cy.get(`[name=${secret}]`).should('have.value', `${secret}_value`));
         });
     });

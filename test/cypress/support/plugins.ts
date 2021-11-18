@@ -22,21 +22,22 @@ const commands = {
         cy.intercept('POST', new RegExp(`console/plugins/upload.*title=${pluginName}`)).as('pluginUpload');
 
         cy.log(`Upload ${pluginName} plugin`);
-        cy.visitPage('Plugins Catalog');
+        cy.clickPageMenuItem('Plugins Catalog');
         cy.get('.pluginsCatalogWidget').within(() => {
             cy.contains('tr', pluginName).find('button').click();
         });
         cy.wait('@pluginUpload', { responseTimeout: uploadPluginTimeout });
         cy.get('.pluginsCatalogWidget .message').should('have.text', `${pluginName} successfully uploaded`);
-        cy.visitPage('Test Page');
+        return cy.visitTestPage();
     },
-    deletePlugins: () => {
-        cy.cfyRequest('/plugins').then(response =>
-            response.body.items.forEach(({ id }: { id: string }) =>
-                cy.cfyRequest(`/plugins/${id}`, 'DELETE', null, { force: true })
+    deletePlugins: () =>
+        cy
+            .cfyRequest('/plugins')
+            .then(response =>
+                response.body.items.forEach(({ id }: { id: string }) =>
+                    cy.cfyRequest(`/plugins/${id}`, 'DELETE', null, { force: true })
+                )
             )
-        );
-    }
 };
 
 addCommands(commands);

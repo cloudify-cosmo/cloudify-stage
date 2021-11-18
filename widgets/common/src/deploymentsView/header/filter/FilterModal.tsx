@@ -7,6 +7,7 @@ import useFilterQuery from '../../useFilterQuery';
 import FilterActions from '../../../filters/FilterActions';
 import SaveButton from './SaveButton';
 import { tModal } from './common';
+import { useFilterIdFromUrl } from '../common';
 
 interface FilterModalProps {
     userFilterSelected: boolean;
@@ -61,8 +62,10 @@ const FilterModal: FunctionComponent<FilterModalProps> = ({
 
     const [filterSaving, setFilterSaving, unsetFilterSaving] = useBoolean();
 
+    const [filterIdFromUrl] = useFilterIdFromUrl();
+
     // The values are 'saved' on modal submit and 'reverted' on modal cancel
-    const filterId = useRevertableState<string | undefined>(undefined);
+    const filterId = useRevertableState<string | undefined>(filterIdFromUrl || undefined);
     const filterRules = useRevertableState<FilterRule[]>([]);
     const filterDirty = useRevertableState<boolean>(false);
     const modalState = useRevertableStates(filterId, filterRules, filterDirty);
@@ -177,6 +180,13 @@ const FilterModal: FunctionComponent<FilterModalProps> = ({
         setInitialFilterRules(newFilterRules);
     }, [JSON.stringify(filterRulesResult.data)]);
 
+    // Update filterRules and filterId when filterId is set in the URL
+    useEffect(() => {
+        if (filterIdFromUrl && !open && filterIdFromUrl === filterId.value) {
+            onSubmit(filterRules.value, filterId.value);
+        }
+    }, [filterRules.value]);
+
     useEffect(() => {
         if (filterRulesResult.isError) setErrors({ error: tMessage('errorLoadingFilterRules') });
     }, [filterRulesResult.isError]);
@@ -204,10 +214,12 @@ const FilterModal: FunctionComponent<FilterModalProps> = ({
                         {interactionsDisabled && <Stage.Basic.LoadingOverlay />}
                         {filterRulesResult.isSuccess && (
                             <RulesForm
+                                resourceType="deployments"
                                 initialFilters={initialFilterRules}
                                 onChange={handleFilterRulesChange}
                                 markErrors={!!filterRules.value?.length}
                                 toolbox={toolbox}
+                                minLength={1}
                             />
                         )}
                     </UnsafelyTypedFormField>

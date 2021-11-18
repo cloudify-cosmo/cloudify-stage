@@ -19,7 +19,6 @@ const Labels = {
 const LabelsAlias = Labels;
 declare global {
     namespace Stage.Common {
-        // eslint-disable-next-line @typescript-eslint/no-namespace
         namespace Labels {
             type Label = LabelType;
         }

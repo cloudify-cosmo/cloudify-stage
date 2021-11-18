@@ -11,7 +11,8 @@ declare global {
     export const _: typeof import('lodash');
     export const log: typeof import('loglevel');
     export const connectToStore: typeof import('react-redux').connect;
-    export const ReactRedux: Pick<typeof import('react-redux'), 'useSelector'>;
+    export const ReactRedux: Pick<typeof import('react-redux'), 'useSelector' | 'useDispatch'>;
+    export const ReactRouter: Pick<typeof import('connected-react-router'), 'replace' | 'push'>;
     export const ReactQuery: typeof import('react-query');
 
     interface Window {
@@ -23,6 +24,7 @@ declare global {
         log: typeof log;
         connectToStore: typeof connectToStore;
         ReactRedux: typeof ReactRedux;
+        ReactRouter: typeof ReactRouter;
         ReactQuery: typeof ReactQuery;
     }
 

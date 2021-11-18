@@ -1,26 +1,28 @@
-// @ts-nocheck File not migrated fully to TS
-/**
- * Created by pposel on 08/02/2017.
- */
-import Consts from './consts';
-import RepositoryViewPropTypes from './props/RepositoryViewPropTypes';
-import RepositoryViewDefaultProps from './props/RepositoryViewDefaultProps';
+import { noop } from 'lodash';
+import type { FunctionComponent } from 'react';
 
-export default function RepositoryTable({
+import Consts from './consts';
+import type { RepositoryViewProps } from './types';
+
+const t = Stage.Utils.getT('widgets.blueprintCatalog');
+
+const RepositoryTable: FunctionComponent<RepositoryViewProps> = ({
+    fetchData = noop,
+    onSelect = noop,
+    onUpload = noop,
+    readmeLoading = null,
+    uploadingInProgress = [],
     data,
-    fetchData,
     noDataMessage,
     onReadme,
-    onSelect,
-    onUpload,
-    readmeLoading,
     widget
-}) {
+}) => {
     const { DataTable, Image, Icon } = Stage.Basic;
 
     // Show pagination only in case when data is provided from GitHub
     const pageSize = data.source === Consts.GITHUB_DATA_SOURCE ? widget.configuration.pageSize : data.total;
     const totalSize = data.source === Consts.GITHUB_DATA_SOURCE ? data.total : -1;
+    const { fieldsToShow } = widget.configuration;
 
     return (
         <DataTable
@@ -32,14 +34,33 @@ export default function RepositoryTable({
             selectable
             noDataMessage={noDataMessage}
         >
-            <DataTable.Column label="Name" width="25%" />
-            <DataTable.Column label="Description" width="40%" />
-            <DataTable.Column label="Created" width="12%" />
-            <DataTable.Column label="Updated" width="12%" />
+            <DataTable.Column
+                label={t('configuration.fieldsToShow.items.name')}
+                width="25%"
+                show={fieldsToShow.includes(t('configuration.fieldsToShow.items.name'))}
+            />
+            <DataTable.Column
+                label={t('configuration.fieldsToShow.items.description')}
+                width="40%"
+                show={fieldsToShow.includes(t('configuration.fieldsToShow.items.description'))}
+            />
+            <DataTable.Column
+                label={t('configuration.fieldsToShow.items.created')}
+                width="12%"
+                show={fieldsToShow.includes(t('configuration.fieldsToShow.items.created'))}
+            />
+            <DataTable.Column
+                label={t('configuration.fieldsToShow.items.updated')}
+                width="12%"
+                show={fieldsToShow.includes(t('configuration.fieldsToShow.items.updated'))}
+            />
             <DataTable.Column width="11%" />
 
             {data.items.map(item => {
-                const isLoading = readmeLoading === item.name;
+                const isReadmeLoading = readmeLoading === item.name;
+                const isBlueprintUploading = uploadingInProgress.includes(item.name);
+                const isBlueprintUploaded = data.uploadedBlueprints.includes(item.name);
+
                 return (
                     <DataTable.Row
                         key={item.id}
@@ -58,22 +79,24 @@ export default function RepositoryTable({
                         <DataTable.Data>{item.updated_at}</DataTable.Data>
                         <DataTable.Data className="center aligned rowActions">
                             <Icon
-                                name={isLoading ? 'spinner' : 'info'}
-                                link={!isLoading}
-                                title="Blueprint Readme"
-                                loading={isLoading}
-                                bordered={!isLoading}
-                                onClick={event => {
+                                name={isReadmeLoading ? 'spinner' : 'info'}
+                                link={!isReadmeLoading}
+                                title={t('actions.openDocumentation')}
+                                loading={isReadmeLoading}
+                                bordered={!isReadmeLoading}
+                                onClick={(event: Event) => {
                                     event.stopPropagation();
                                     onReadme(item.name, item.readme_url);
                                 }}
                             />
                             <Icon
-                                name="upload"
-                                link
-                                title="Upload blueprint"
-                                bordered
-                                onClick={event => {
+                                name={isBlueprintUploading ? 'spinner' : 'upload'}
+                                disabled={isBlueprintUploaded}
+                                link={!isBlueprintUploading && !isBlueprintUploaded}
+                                title={t('actions.uploadBlueprint')}
+                                loading={isBlueprintUploading}
+                                bordered={!isBlueprintUploading}
+                                onClick={(event: Event) => {
                                     event.stopPropagation();
                                     onUpload(item.name, item.zip_url, item.image_url, item.main_blueprint);
                                 }}
@@ -84,7 +107,6 @@ export default function RepositoryTable({
             })}
         </DataTable>
     );
-}
+};
 
-RepositoryTable.propTypes = RepositoryViewPropTypes;
-RepositoryTable.defaultProps = RepositoryViewDefaultProps;
+export default RepositoryTable;

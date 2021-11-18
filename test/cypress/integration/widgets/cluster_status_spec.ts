@@ -78,9 +78,11 @@ describe('Cluster Status widget', () => {
             cy.get('.popup').should('not.exist');
         };
 
-        cy.interceptSp('GET', 'cluster-status?summary=false', { fixture: 'cluster_status/fail_with_services.json' }).as(
-            'clusterStatusFailWithServices'
-        );
+        cy.interceptSp(
+            'GET',
+            { path: '/cluster-status?summary=false' },
+            { fixture: 'cluster_status/fail_with_services.json' }
+        ).as('clusterStatusFailWithServices');
         cy.wait('@clusterStatusFailWithServices', clusterStatusFetchTimeout);
 
         checkService('database', 'OK', [
@@ -121,7 +123,7 @@ describe('Cluster Status widget', () => {
             'cluster_status/ok.json',
             'cluster_status/fail.json'
         ].map(fixture => ({ fixture }));
-        cy.interceptSp('GET', 'cluster-status?summary=false', req => req.reply(responses.shift())).as(
+        cy.interceptSp('GET', { path: '/cluster-status?summary=false' }, req => req.reply(responses.shift())).as(
             'clusterStatusFull'
         );
         cy.wait('@clusterStatusFull', clusterStatusFetchTimeout);

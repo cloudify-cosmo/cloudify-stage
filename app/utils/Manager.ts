@@ -44,30 +44,11 @@ export default class Manager extends Internal {
 
     // eslint-disable-next-line class-methods-use-this
     buildActualUrl(url, data) {
-        const index = url.indexOf('[manager]');
-        if (index >= 0) {
-            const managerUrl = url.substring(index + '[manager]'.length);
-            const urlInServer = encodeURIComponent(managerUrl);
-            const urlWithoutWildcard = url.substring(0, index);
-            const params = { ...data, su: urlInServer };
-
-            let queryString = '';
-            if (urlWithoutWildcard.indexOf('?') > 0) {
-                if (!_.endsWith(urlWithoutWildcard, '?')) {
-                    queryString += '&';
-                }
-            } else {
-                queryString += '?';
-            }
-            queryString += stringifyQueryString(params, { sort: false });
-            return urlWithoutWildcard + queryString;
-        }
         const queryString = data
             ? (url.indexOf('?') > 0 ? '&' : '?') + stringifyQueryString(data, { sort: false })
             : '';
-        const urlInServer = encodeURIComponent(url + queryString);
 
-        return StageUtils.Url.url(`/sp?su=${urlInServer}`);
+        return StageUtils.Url.url(`/sp${url}${queryString}`);
     }
 
     doFetchFull(fetcher, params = {}, fullData = { items: [] }, size = 0) {

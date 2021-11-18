@@ -9,11 +9,13 @@ declare global {
 }
 
 const commands = {
-    deleteSecrets: (search: string) => {
-        cy.cfyRequest(`/secrets?_search=${search}`, 'GET').then(response =>
-            response.body.items.forEach(({ key }: { key: string }) => cy.cfyRequest(`/secrets/${key}`, 'DELETE'))
-        );
-    },
+    deleteSecrets: (search: string) =>
+        cy
+            .cfyRequest(`/secrets?_search=${search}`, 'GET')
+            .then(response =>
+                response.body.items.forEach(({ key }: { key: string }) => cy.cfyRequest(`/secrets/${key}`, 'DELETE'))
+            ),
+
     createSecret: (key: string, value: string) =>
         cy.cfyRequest(`/secrets/${key}`, 'PUT', null, { value }, { failOnStatusCode: false })
 };

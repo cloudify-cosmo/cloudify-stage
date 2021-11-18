@@ -1,9 +1,10 @@
-import { filter, find, map, noop } from 'lodash';
+import { map, noop, pickBy } from 'lodash';
 import PropTypes from 'prop-types';
 import React, { FunctionComponent, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { DropdownProps } from 'semantic-ui-react';
 import type { PageDefinition } from '../../actions/page';
+import { createPagesMap } from '../../actions/pageMenu';
 import type { ReduxState } from '../../reducers';
 
 import { Form } from '../basic';
@@ -32,17 +33,20 @@ const PageFilter: FunctionComponent<PageFilterProps> = ({
     onChange = noop,
     value
 }) => {
-    const pages = useSelector((state: ReduxState) => state.pages);
+    const filteredPagesMap = useSelector((state: ReduxState) => {
+        const pagesMap = createPagesMap(state.pages);
+        return allowDrillDownPages ? pagesMap : pickBy(pagesMap, page => !page.isDrillDown);
+    });
     const [pageId, setPageId] = useState(value);
 
-    function getPageName(allPages: PageDefinition[], id: PageDefinition['id']): string {
+    function getPageName(id: PageDefinition['id']): string {
         // NOTE: assumes the page is always found
         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        const page = find(allPages, { id })!;
+        const page = filteredPagesMap[id];
         if (page.isDrillDown) {
             // NOTE: assumes the drilldown page always have a parent set
             // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-            return `${getPageName(allPages, page.parent!)} > ${page.name}`;
+            return `${getPageName(page.parent!)} > ${page.name}`;
         }
         return page.name;
     }
@@ -53,9 +57,8 @@ const PageFilter: FunctionComponent<PageFilterProps> = ({
         onChange(event, { name, value: fieldValue });
     };
 
-    const filteredPages = allowDrillDownPages ? pages : filter(pages, page => !page.isDrillDown);
-    const pagesOptions = map(filteredPages, page => ({
-        text: getPageName(filteredPages, page.id),
+    const pagesOptions = map(filteredPagesMap, page => ({
+        text: getPageName(page.id),
         value: page.id,
         key: page.id
     }));

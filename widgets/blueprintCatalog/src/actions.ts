@@ -44,7 +44,7 @@ export default class Actions {
             .then(data => Promise.resolve({ ...data, source: Consts.GITHUB_DATA_SOURCE }));
     }
 
-    doGetReadme(repo, readmeUrl) {
+    doGetReadme(repo, readmeUrl): Promise<string> {
         return this.toolbox.getInternal().doGet(readmeUrl);
     }
 
@@ -56,7 +56,7 @@ export default class Actions {
         return this.blueprintActions.doListYamlFiles(blueprintUrl);
     }
 
-    doFindImage(repo, defaultImage) {
+    doFindImage(repo, defaultImage): Promise<string> {
         return this.doGetRepoTree(repo).then(tree => {
             return _.findIndex(tree.tree, { path: Consts.BLUEPRINT_IMAGE_FILENAME }) < 0
                 ? Promise.resolve(defaultImage)

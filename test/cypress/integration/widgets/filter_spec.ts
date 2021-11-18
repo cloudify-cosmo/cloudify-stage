@@ -10,18 +10,30 @@ describe('Filter', () => {
     it('fills dropdowns with correct data', () => {
         const getDropdownItems = (id?: string) => (id ? cy.get(`${id} .menu > *`) : cy.get('.menu > *'));
 
-        cy.interceptSp('GET', /blueprints.*state=uploaded/, { fixture: 'filter/blueprints.json' }).as(
-            'fetchBlueprints'
-        );
-        cy.interceptSp('GET', /deployments.*offset=0&_search=ead&_search_name=ead/, {
-            fixture: 'filter/deployments0.json'
-        }).as('fetchFilteredDeployments');
-        cy.interceptSp('GET', /deployments.*offset=0((?!_search=ead).)((?!_search_name=ead).)/, {
-            fixture: 'filter/deployments0.json'
-        }).as('fetchDeployments');
-        cy.interceptSp('GET', /deployments.*offset=20/, { fixture: 'filter/deployments1.json' }).as(
-            'fetchDeploymentsOffset'
-        );
+        cy.interceptSp(
+            'GET',
+            { pathname: '/blueprints', query: { state: 'uploaded' } },
+            { fixture: 'filter/blueprints.json' }
+        ).as('fetchBlueprints');
+        cy.interceptSp(
+            'GET',
+            { pathname: '/deployments', query: { _offset: '0' } },
+            {
+                fixture: 'filter/deployments0.json'
+            }
+        ).as('fetchDeployments');
+        cy.interceptSp(
+            'GET',
+            { pathname: '/deployments', query: { _offset: '0', _search: 'ead', _search_name: 'ead' } },
+            {
+                fixture: 'filter/deployments0.json'
+            }
+        ).as('fetchFilteredDeployments');
+        cy.interceptSp(
+            'GET',
+            { pathname: '/deployments', query: { _offset: '20' } },
+            { fixture: 'filter/deployments1.json' }
+        ).as('fetchDeploymentsOffset');
         cy.interceptSp('GET', '/executions', { fixture: 'filter/executions.json' }).as('fetchExecutions');
 
         cy.get('#dynamicDropdown1').click();

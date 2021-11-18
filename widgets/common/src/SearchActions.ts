@@ -5,6 +5,13 @@ type Params = Record<string, any>;
 type ListDeploymentsParams = Stage.Types.ManagerGridParams & {
     // eslint-disable-next-line camelcase
     _search_name?: string;
+    _include?: string;
+};
+
+type ListBlueprintsParams = Stage.Types.ManagerGridParams & {
+    // eslint-disable-next-line camelcase
+    _search_name?: string;
+    _include?: string;
 };
 
 export default class SearchActions {
@@ -26,6 +33,10 @@ export default class SearchActions {
 
     doListAllDeployments(filterRules: FilterRule[], params?: ListDeploymentsParams) {
         return this.doListAll('deployments', filterRules, searchAlsoByDeploymentName(params));
+    }
+
+    doListBlueprints(filterRules: FilterRule[], params?: ListBlueprintsParams) {
+        return this.doList('blueprints', filterRules, params);
     }
 
     doListAllWorkflows(filterRules: FilterRule[], params?: Params) {

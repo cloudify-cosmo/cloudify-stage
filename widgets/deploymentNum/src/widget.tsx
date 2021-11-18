@@ -1,9 +1,6 @@
-/**
- * Created by pawelposel on 03/11/2016.
- */
-
 import { isEmpty } from 'lodash';
 import React from 'react';
+import { SemanticICONS } from 'semantic-ui-react';
 
 interface WidgetData {
     metadata?: {
@@ -14,16 +11,22 @@ interface WidgetData {
 }
 
 interface DeploymentNumWidgetConfiguration {
+    icon: SemanticICONS;
+    imageSrc: string;
+    label: string;
     page: string;
+    filterId: string;
 }
+
+const t = Stage.Utils.getT('widgets.deploymentNum');
 
 Stage.defineWidget<unknown, WidgetData, DeploymentNumWidgetConfiguration>({
     id: 'deploymentNum',
-    name: 'Number of deployments',
-    description: 'Number of deployments',
+    name: t('name'),
+    description: t('description'),
     initialWidth: 2,
     initialHeight: 8,
-    color: 'green',
+    color: 'blue',
     showHeader: false,
     isReact: true,
     hasReadme: true,
@@ -33,15 +36,56 @@ Stage.defineWidget<unknown, WidgetData, DeploymentNumWidgetConfiguration>({
     initialConfiguration: [
         Stage.GenericConfig.POLLING_TIME_CONFIG(10),
         {
-            id: 'page',
-            name: 'Page to open on click',
-            description: 'Page to open when user clicks on widget content',
+            id: 'label',
+            name: t('configuration.label.name'),
+            description: t('configuration.label.description'),
+            default: 'Deployments',
+            type: Stage.Basic.GenericField.STRING_TYPE
+        },
+        {
+            id: 'icon',
+            name: t('configuration.icon.name'),
+            description: t('configuration.icon.description'),
+            default: 'cube',
+            component: Stage.Shared.SemanticIconDropdown,
+            type: Stage.Basic.GenericField.CUSTOM_TYPE
+        },
+        {
+            id: 'imageSrc',
+            name: t('configuration.imageSrc.name'),
+            description: t('configuration.imageSrc.description'),
+            default: '',
+            type: Stage.Basic.GenericField.STRING_TYPE
+        },
+        {
+            id: 'filterId',
+            name: t('configuration.filterId.name'),
+            description: t('configuration.filterId.description'),
             type: Stage.Basic.GenericField.CUSTOM_TYPE,
-            default: 'deployments',
+            default: '',
+            component: Stage.Common.Filters.FilterIdDropdown
+        },
+        {
+            id: 'page',
+            name: t('configuration.page.name'),
+            description: t('configuration.page.description'),
+            type: Stage.Basic.GenericField.CUSTOM_TYPE,
+            default: 'services',
             component: Stage.Shared.PageFilter
         }
     ],
-    fetchUrl: '[manager]/deployments?_include=id&_size=1',
+
+    fetchData(widget, toolbox) {
+        const { filterId } = widget.configuration;
+        const params = {
+            _filter_id: filterId,
+            _include: 'id',
+            _size: 1
+        };
+
+        const deploymentActions = new Stage.Common.DeploymentActions(toolbox);
+        return deploymentActions.doGetDeployments(params);
+    },
 
     render(widget, data) {
         const { Loading } = Stage.Basic;
@@ -52,13 +96,19 @@ Stage.defineWidget<unknown, WidgetData, DeploymentNumWidgetConfiguration>({
 
         const { KeyIndicator } = Stage.Basic;
         const { Link } = Stage.Shared;
+        const { filterIdQueryParameterName } = Stage.Common.Filters;
 
+        const { icon, imageSrc, label, filterId, page } = widget.configuration;
         const num = data?.metadata?.pagination?.total ?? 0;
-        const to = widget.configuration.page ? `/page/${widget.configuration.page}` : '/';
+        const to = (() => {
+            let path = page ? `/page/${page}` : '/';
+            if (filterId) path += `?${filterIdQueryParameterName}=${filterId}`;
+            return path;
+        })();
 
         return (
             <Link to={to}>
-                <KeyIndicator title="Deployments" icon="cube" number={num} />
+                <KeyIndicator title={label} icon={icon} imageSrc={imageSrc} number={num} />
             </Link>
         );
     }

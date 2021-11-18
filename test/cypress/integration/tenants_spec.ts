@@ -21,8 +21,7 @@ describe('Tenants menu', () => {
                 role: 'manager',
                 pages: [
                     { id: 'adminDash', name: 'Dashboard' },
-                    { id: 'blueprints-community', name: 'Blueprints' },
-                    { id: 'marketplace', name: 'Marketplace' }
+                    { id: 'blueprints-community', name: 'Blueprints' }
                 ]
             }
         ]
@@ -49,7 +48,7 @@ describe('Tenants menu', () => {
                 body: {
                     id,
                     data: { roles: [tenant.role], tenants: [tenant.name] },
-                    pages: _.map(tenant.pages, 'id')
+                    pages: _.map(tenant.pages, page => ({ id: page.id, type: 'page' }))
                 }
             });
         }
@@ -61,7 +60,8 @@ describe('Tenants menu', () => {
         cy.mockLogin(user.username, user.password);
 
         function verifyTemplate(tenant) {
-            cy.get('.tenantsMenu').click().find('.menu').contains(tenant.name).click().waitUntilLoaded();
+            cy.contains('.dropdown', 'default_tenant').click();
+            cy.get('.menu').contains(tenant.name).click().waitUntilLoaded();
             tenant.pages.forEach(page => cy.get('.sidebar > .pages').contains(page.name));
         }
 
