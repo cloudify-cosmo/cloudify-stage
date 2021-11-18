@@ -4,13 +4,14 @@ import '../../initAppContext';
 import HelpMenu from 'app/components/sidebar/HelpMenu';
 import { ThemeContext } from 'styled-components';
 import StageUtils from 'app/utils/stageUtils';
+import { noop } from 'lodash';
 import { mountWithProvider } from '../../utils';
 
 describe('Help', () => {
     it('opens "About" modal', () => {
         mountWithProvider(
             <ThemeContext.Provider value="">
-                <HelpMenu />
+                <HelpMenu onAboutModalOpen={noop} />
             </ThemeContext.Provider>
         );
 
@@ -24,9 +25,9 @@ describe('Help', () => {
 
         mountWithProvider(
             <ThemeContext.Provider value="">
-                <HelpMenu />
+                <HelpMenu onAboutModalOpen={noop} />
             </ThemeContext.Provider>,
-            { manager: { version: { version: '5.0.5' } } }
+            { manager: { license: {}, version: { version: '5.0.5' } } }
         );
 
         cy.contains('Help').click();
@@ -40,9 +41,9 @@ describe('Help', () => {
 
         mountWithProvider(
             <ThemeContext.Provider value="">
-                <HelpMenu />
+                <HelpMenu onAboutModalOpen={noop} />
             </ThemeContext.Provider>,
-            { manager: { version: { version: '6.3-dev' } } }
+            { manager: { license: {}, version: { version: '6.3-dev' } } }
         );
 
         cy.contains('Help').click();
@@ -50,12 +51,13 @@ describe('Help', () => {
             .click()
             .then(() => expect(redirectToPage).to.be.calledWithExactly('https://docs.cloudify.co/latest'));
     });
+
     it('calls redirectToPage on "Contact Us" link click', () => {
         const redirectToPage = cy.stub(StageUtils.Url, 'redirectToPage');
 
         mountWithProvider(
             <ThemeContext.Provider value="">
-                <HelpMenu />
+                <HelpMenu onAboutModalOpen={noop} />
             </ThemeContext.Provider>
         );
 
