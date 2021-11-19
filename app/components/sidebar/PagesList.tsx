@@ -222,6 +222,8 @@ const PagesList: FunctionComponent<PagesListProps> = ({ isEditMode = false, page
                 }}
                 subItem={subItem}
                 style={style}
+                expandable={pageMenuItem.type === 'pageGroup' && !itemNameInEdit}
+                expanded={includes(expandedGroupIds, pageMenuItem.id)}
             >
                 {!itemNameInEdit && (
                     <IconSelection
@@ -276,13 +278,6 @@ const PagesList: FunctionComponent<PagesListProps> = ({ isEditMode = false, page
                             />
                         )}
                     </>
-                )}
-                {pageMenuItem.type === 'pageGroup' && !itemNameInEdit && (
-                    <Icon
-                        name="dropdown"
-                        rotated={includes(expandedGroupIds, pageMenuItem.id) ? undefined : 'counterclockwise'}
-                        style={{ position: 'absolute', right: 12, margin: 0 }}
-                    />
                 )}
             </SortableMenuItem>
         );
