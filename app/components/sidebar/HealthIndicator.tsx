@@ -16,7 +16,7 @@ const dotColors = {
     [clusterStatusEnum.Degraded]: 'yellow'
 } as const;
 
-const Help: FunctionComponent = () => {
+const HealthIndicator: FunctionComponent = () => {
     const dispatch = useDispatch();
     const systemStatus = useSelector((state: ReduxState) => state.manager.clusterStatus.status);
     const dotColor = dotColors[systemStatus];
@@ -40,4 +40,4 @@ const Help: FunctionComponent = () => {
     );
 };
 
-export default Help;
+export default HealthIndicator;

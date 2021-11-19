@@ -3,7 +3,7 @@ import React from 'react';
 import { useSelector } from 'react-redux';
 import TenantSelection from './TenantSelection';
 import HelpMenu from './HelpMenu';
-import Health from './Health';
+import HealthIndicator from './HealthIndicator';
 import { ReduxState } from '../../reducers';
 import Consts from '../../utils/consts';
 
@@ -18,7 +18,7 @@ const SystemMenu: FunctionComponent<SystemMenuProps> = ({ onAboutModalOpen }) =>
         <>
             <TenantSelection />
             <HelpMenu onAboutModalOpen={onAboutModalOpen} />
-            {mode !== Consts.MODE_CUSTOMER && <Health />}
+            {mode !== Consts.MODE_CUSTOMER && <HealthIndicator />}
         </>
     );
 };
