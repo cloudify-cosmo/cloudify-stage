@@ -35,35 +35,35 @@ describe('Button link widget', () => {
         it('color', () => {
             const color = 'violet';
             cy.setSearchableDropdownConfigurationField(widgetId, 'Color', color);
-            cy.get('button').should('have.class', color);
+            cy.get('.page button').should('have.class', color);
         });
 
         it('label', () => {
             const label = 'Setup cloud account';
             cy.setStringConfigurationField(widgetId, 'Label', label);
-            cy.get('button').should('have.text', label);
+            cy.get('.page button').should('have.text', label);
         });
 
         it('icon', () => {
             const icon = 'wizard';
             cy.setSearchableDropdownConfigurationField(widgetId, 'Icon', icon);
-            cy.get('button i').should('have.class', icon);
+            cy.get('.page button i').should('have.class', icon);
         });
 
         it('basicness', () => {
             const basicButtonToggleName = 'Basic button';
             cy.setBooleanConfigurationField(widgetId, basicButtonToggleName, false);
-            cy.get('button').should('not.have.class', 'basic');
+            cy.get('.page button').should('not.have.class', 'basic');
             cy.setBooleanConfigurationField(widgetId, basicButtonToggleName, true);
-            cy.get('button').should('have.class', 'basic');
+            cy.get('.page button').should('have.class', 'basic');
         });
 
         it('full height', () => {
             const fullHeightToggleName = 'Full height';
             cy.setBooleanConfigurationField(widgetId, fullHeightToggleName, false);
-            cy.get('button').should('not.have.attr', 'style');
+            cy.get('.page button').should('not.have.attr', 'style');
             cy.setBooleanConfigurationField(widgetId, fullHeightToggleName, true);
-            cy.get('button').should('have.attr', 'style').and('include', 'height: 100%');
+            cy.get('.page button').should('have.attr', 'style').and('include', 'height: 100%');
         });
     });
 });
