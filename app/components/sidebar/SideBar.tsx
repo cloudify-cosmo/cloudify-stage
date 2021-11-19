@@ -16,7 +16,7 @@ const ThemedSidebar = styled(Sidebar)`
         background-color: ${props => props.theme.sidebarColor} !important;
         display: flex;
         overflow-y: visible !important;
-        ${props => (!props.$expanded && `width: ${collapsedSidebarWidth} !important;`) || ''}
+        ${props => (!props.$expanded ? `width: ${collapsedSidebarWidth} !important;` : ''}
     }
     .item {
         color: ${props => props.theme.sidebarTextColor} !important;
