@@ -1,13 +1,14 @@
 import React, { CSSProperties, FunctionComponent } from 'react';
 import { SemanticICONS } from 'semantic-ui-react';
-import { ApproveButton, CancelButton, Divider, Icon, Popup } from './basic';
-import { SemanticIconDropdown } from './shared';
-import { useInput, useOpen } from '../utils/hooks';
+import { ApproveButton, CancelButton, Divider, Popup } from '../basic';
+import { SemanticIconDropdown } from '../shared';
+import { useInput, useOpen } from '../../utils/hooks';
+import SideBarItemIcon from './SideBarItemIcon';
 
 interface IconSelectionProps {
     style?: CSSProperties;
     value?: SemanticICONS;
-    onChange: (value?: SemanticICONS) => void;
+    onChange?: (value?: SemanticICONS) => void;
     enabled?: boolean;
 }
 
@@ -17,7 +18,7 @@ const IconSelection: FunctionComponent<IconSelectionProps> = ({ value, style, on
 
     function handleSubmit() {
         close();
-        onChange(currentValue || undefined);
+        onChange!(currentValue || undefined);
     }
 
     return (
@@ -25,23 +26,16 @@ const IconSelection: FunctionComponent<IconSelectionProps> = ({ value, style, on
             open={opened}
             onClick={(e: Event) => e.stopPropagation()}
             trigger={
-                (value || enabled) && (
-                    <Icon
-                        name={value ?? 'expand'}
-                        style={{
-                            marginLeft: -10,
-                            marginRight: 4,
-                            float: 'none',
-                            ...style
-                        }}
-                        onClick={(e: Event) => {
-                            if (enabled) {
-                                e.stopPropagation();
-                                open();
-                            }
-                        }}
-                    />
-                )
+                <SideBarItemIcon
+                    name={value}
+                    style={style}
+                    onClick={(e: Event) => {
+                        if (enabled) {
+                            e.stopPropagation();
+                            open();
+                        }
+                    }}
+                />
             }
         >
             <div style={{ width: '23em', textAlign: 'right' }}>

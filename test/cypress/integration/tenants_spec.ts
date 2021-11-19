@@ -60,7 +60,8 @@ describe('Tenants menu', () => {
         cy.mockLogin(user.username, user.password);
 
         function verifyTemplate(tenant) {
-            cy.get('.tenantsMenu').click().find('.menu').contains(tenant.name).click().waitUntilLoaded();
+            cy.contains('.dropdown', 'default_tenant').click();
+            cy.get('.menu').contains(tenant.name).click().waitUntilLoaded();
             tenant.pages.forEach(page => cy.get('.sidebar > .pages').contains(page.name));
         }
 

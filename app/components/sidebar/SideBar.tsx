@@ -5,11 +5,22 @@ import { useSelector } from 'react-redux';
 import PagesList from './PagesList';
 import { Sidebar } from '../basic';
 import { ReduxState } from '../../reducers';
+import SystemMenu from './SystemMenu';
+import { useBoolean } from '../../utils/hooks';
+
+export const collapsedSidebarWidth = '1.9rem';
+export const expandedSidebarWidth = '13rem';
 
 const ThemedSidebar = styled(Sidebar)`
-    background-color: ${props => props.theme.sidebarColor} !important;
+    &&& {
+        background-color: ${props => props.theme.sidebarColor} !important;
+        display: flex;
+        overflow-y: visible !important;
+        ${props => (!props.$expanded ? `width: ${collapsedSidebarWidth} !important;` : '')}
+    }
     .item {
         color: ${props => props.theme.sidebarTextColor} !important;
+        padding-left: ${props => !props.$expanded && '15px !important'};
     }
     .item.active,
     .item:hover {
@@ -26,13 +37,21 @@ const SideBar: FunctionComponent<SideBarProps> = ({ pageId }) => {
     const theme = useContext(ThemeContext) || {};
     const homePageId = useSelector((state: ReduxState) => state.pages[0].id);
     const isEditMode = useSelector((state: ReduxState) => state.config.isEditMode || false);
-    const isOpen = useSelector((state: ReduxState) => state.app.sidebarIsOpen || false);
-    const className = isOpen ? 'open' : '';
+
+    const [expanded, expand, collapse] = useBoolean();
 
     return (
         <div className="sidebarContainer">
-            <ThemedSidebar theme={theme} visible className={`vertical menu small basic ${className}`}>
-                <PagesList pageId={pageId || homePageId} isEditMode={isEditMode} />
+            <ThemedSidebar
+                theme={theme}
+                visible
+                className="vertical menu small open"
+                $expanded={expanded || isEditMode}
+                onMouseEnter={expand}
+                onMouseLeave={collapse}
+            >
+                <PagesList pageId={pageId || homePageId} isEditMode={isEditMode} expanded={expanded || isEditMode} />
+                {!isEditMode && <SystemMenu onAboutModalOpen={collapse} />}
             </ThemedSidebar>
         </div>
     );

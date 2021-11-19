@@ -9,14 +9,10 @@ import React, { Component } from 'react';
 import { HeaderBar, MenusBar } from 'cloudify-ui-components';
 
 import i18n from 'i18next';
-import Tenants from '../../containers/Tenants';
 import Manager from '../../containers/Manager';
 import Users from '../../containers/Users';
-import Help from '../../containers/Help';
-import AboutModal from '../../containers/AboutModal';
 import Banner from '../banner/Banner';
 import ResetPagesModal from '../ResetPagesModal';
-import { Icon } from '../basic';
 import Consts from '../../utils/consts';
 
 export default class Header extends Component {
@@ -25,8 +21,7 @@ export default class Header extends Component {
 
         this.state = {
             showConfigureModal: false,
-            showResetPagesConfirm: false,
-            showAboutModal: false
+            showResetPagesConfirm: false
         };
     }
 
@@ -50,18 +45,11 @@ export default class Header extends Component {
     }
 
     render() {
-        const { manager, onResetPages, onSidebarOpen } = this.props;
-        const { showAboutModal, showResetPagesConfirm } = this.state;
+        const { manager, onResetPages } = this.props;
+        const { showResetPagesConfirm } = this.state;
 
         return (
             <HeaderBar>
-                <Icon
-                    link
-                    name="content"
-                    className="sidebar-button show-on-small-screen"
-                    size="large"
-                    onClick={onSidebarOpen}
-                />
                 <Banner />
 
                 <MenusBar>
@@ -70,8 +58,6 @@ export default class Header extends Component {
                             <Manager />
                         </div>
                     )}
-                    {this.isModeMain() && <Tenants manager={manager} />}
-                    <Help onAbout={() => this.setState({ showAboutModal: true })} />
 
                     <Users
                         manager={manager}
@@ -89,8 +75,6 @@ export default class Header extends Component {
                     }}
                     onHide={() => this.setState({ showResetPagesConfirm: false })}
                 />
-
-                <AboutModal open={showAboutModal} onHide={() => this.setState({ showAboutModal: false })} />
             </HeaderBar>
         );
     }
@@ -101,6 +85,5 @@ Header.propTypes = {
         tenants: PropTypes.shape({ items: PropTypes.arrayOf(PropTypes.shape({ name: PropTypes.string.isRequired })) })
     }).isRequired,
     mode: PropTypes.string.isRequired,
-    onResetPages: PropTypes.func.isRequired,
-    onSidebarOpen: PropTypes.func.isRequired
+    onResetPages: PropTypes.func.isRequired
 };

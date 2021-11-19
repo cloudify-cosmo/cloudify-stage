@@ -45,18 +45,14 @@ Banner.defaultProps = {
     className: ''
 };
 
-const StyledBanner = styled(Banner)`
-    @media (max-width: 800px) {
+interface StyledBannerProps {
+    hideOnSmallScreen?: boolean;
+}
+
+const StyledBanner = styled(Banner)<StyledBannerProps>`
+    @media (max-width: 600px) {
         ${props => (props.hideOnSmallScreen ? 'display: none !important' : '')};
     }
 `;
-
-StyledBanner.propTypes = {
-    hideOnSmallScreen: PropTypes.bool
-};
-
-StyledBanner.defaultProps = {
-    hideOnSmallScreen: true
-};
 
 export default StyledBanner;
