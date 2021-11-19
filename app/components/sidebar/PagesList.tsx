@@ -1,5 +1,5 @@
-import type { FunctionComponent } from 'react';
-import React, { ReactNode, useCallback, useMemo, useState } from 'react';
+import type { CSSProperties, FunctionComponent, ReactNode } from 'react';
+import React, { useCallback, useMemo } from 'react';
 import { chain, find, includes, map, without } from 'lodash';
 import type { DragEndEvent, DragOverEvent, DragStartEvent } from '@dnd-kit/core';
 import { closestCenter, DndContext, PointerSensor, useSensor, useSensors } from '@dnd-kit/core';
@@ -12,7 +12,7 @@ import { SemanticICONS } from 'semantic-ui-react';
 import { EditableLabel, Icon } from '../basic';
 import AddPageButton from './AddPageButton';
 import AddPageGroupButton from './AddPageGroupButton';
-import SortableMenuItem, { ItemContainer } from './SortableMenuItem';
+import SortableMenuItem from './SortableMenuItem';
 
 import type { PageDefinition } from '../../actions/page';
 import type { PageMenuItem } from '../../actions/pageMenu';
@@ -29,11 +29,13 @@ import {
 import Consts from '../../utils/consts';
 import { useBoolean, useResettableState } from '../../utils/hooks';
 import { ReduxState } from '../../reducers';
-import IconSelection from '../IconSelection';
+import IconSelection from './IconSelection';
+import { SideBarItemWrapper } from './SideBarItem';
 
 export interface PagesListProps {
     isEditMode?: boolean;
     pageId: string;
+    expanded: boolean;
 }
 
 function drillDownPagesFilter(pageMenuItem: PageMenuItem) {
@@ -52,7 +54,7 @@ const RemoveIcon = styled(Icon)`
     visibility: hidden;
     float: right;
 
-    ${ItemContainer}:hover & {
+    ${SideBarItemWrapper}:hover & {
         visibility: visible;
     }
 `;
@@ -63,13 +65,13 @@ const EditIcon = styled(Icon)`
     margin-left: 1em !important;
     display: none !important;
 
-    ${ItemContainer}:hover & {
+    ${SideBarItemWrapper}:hover & {
         display: inline !important;
     }
 `;
 
-const PagesList: FunctionComponent<PagesListProps> = ({ isEditMode = false, pageId }) => {
-    const [expandedGroupIds, setExpandedGroupIds] = useState<string[]>([]);
+const PagesList: FunctionComponent<PagesListProps> = ({ isEditMode = false, pageId, expanded }) => {
+    const [expandedGroupIds, setExpandedGroupIds] = useResettableState<string[]>([]);
     const [dragForbidden, setDragForbidden, unsetDragForbidden] = useBoolean();
     const [dragging, setDragging, unsetDragging] = useBoolean();
     const [nameEditedMenuItemId, setNameEditedMenuItemId, stopNameEdit] = useResettableState<string | null>(null);
@@ -195,11 +197,14 @@ const PagesList: FunctionComponent<PagesListProps> = ({ isEditMode = false, page
     function renderPageMenuItem(pageMenuItem: PageMenuItem, subItem = false): ReactNode[] {
         const itemNameInEdit = nameEditedMenuItemId === pageMenuItem.id;
 
-        function calculateLeftPadding() {
-            if (subItem && !itemNameInEdit) return 25;
-            if (itemNameInEdit) return 0;
-            return undefined;
-        }
+        const style: CSSProperties = {
+            paddingTop: itemNameInEdit ? 3 : undefined,
+            paddingBottom: 3,
+            paddingRight: 0,
+            cursor: dragging ? 'inherit' : undefined
+        };
+
+        if (itemNameInEdit) style.paddingLeft = 0;
 
         const renderedMenuItem = (
             <SortableMenuItem
@@ -215,20 +220,15 @@ const PagesList: FunctionComponent<PagesListProps> = ({ isEditMode = false, page
                     if (pageMenuItem.type === 'page') onPageSelected(pageMenuItem);
                     else onPageGroupClick(pageMenuItem.id);
                 }}
-                style={{
-                    height: 37,
-                    paddingTop: itemNameInEdit ? 3 : undefined,
-                    paddingLeft: calculateLeftPadding(),
-                    paddingBottom: 3,
-                    paddingRight: 0,
-                    cursor: dragging ? 'inherit' : undefined
-                }}
+                subItem={subItem}
+                style={style}
             >
                 {!itemNameInEdit && (
                     <IconSelection
                         style={{
                             position: 'relative',
-                            top: -3
+                            top: -1,
+                            verticalAlign: 'top'
                         }}
                         value={pageMenuItem.icon}
                         onChange={icon => onIconChange(pageMenuItem.id, icon)}
@@ -288,15 +288,23 @@ const PagesList: FunctionComponent<PagesListProps> = ({ isEditMode = false, page
         );
 
         if (pageMenuItem.type === 'page' || !includes(expandedGroupIds, pageMenuItem.id)) return [renderedMenuItem];
-        return [renderedMenuItem, ...pageMenuItem.pages.map(childItem => renderPageMenuItem(childItem, true))];
+        return [renderedMenuItem, ...pageMenuItem.pages.map(childItem => renderPageMenuItem(childItem, expanded))];
     }
 
     let cursor;
     if (dragForbidden) cursor = 'not-allowed';
     else if (dragging) cursor = 'grabbing';
 
+    const wrapperStyle = {
+        flexGrow: 1,
+        flexShrink: 1,
+        minHeight: 0,
+        overflowY: 'auto',
+        overflowX: 'hidden'
+    } as const;
+
     const pagesContainer = (
-        <div className="pages" style={{ cursor }}>
+        <div className="pages" style={{ cursor, ...wrapperStyle }}>
             {chain(pages)
                 .filter(drillDownPagesFilter)
                 .map(pageMenuItem => renderPageMenuItem(pageMenuItem, false))
@@ -307,7 +315,7 @@ const PagesList: FunctionComponent<PagesListProps> = ({ isEditMode = false, page
 
     if (isEditMode) {
         return (
-            <>
+            <div style={wrapperStyle}>
                 <DndContext
                     sensors={sensors}
                     collisionDetection={closestCenter}
@@ -324,7 +332,7 @@ const PagesList: FunctionComponent<PagesListProps> = ({ isEditMode = false, page
                     <AddPageButton />
                     <AddPageGroupButton />
                 </div>
-            </>
+            </div>
         );
     }
 

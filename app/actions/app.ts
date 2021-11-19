@@ -40,9 +40,3 @@ export function storeCurrentPageId(pageId) {
         pageId
     };
 }
-
-export function toogleSidebar() {
-    return {
-        type: types.APP_SIDEBAR_TOOGLE
-    };
-}

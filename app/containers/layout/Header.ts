@@ -7,7 +7,6 @@ import _ from 'lodash';
 import { connect } from 'react-redux';
 import Header from '../../components/layout/Header';
 import { resetPagesForTenant } from '../../actions/userApp';
-import { toogleSidebar } from '../../actions/app';
 
 const mapStateToProps = state => {
     return {
@@ -22,9 +21,6 @@ const mapDispatchToProps = dispatch => {
             _.forEach(tenantList, tenant => {
                 dispatch(resetPagesForTenant(tenant));
             });
-        },
-        onSidebarOpen() {
-            dispatch(toogleSidebar());
         }
     };
 };
