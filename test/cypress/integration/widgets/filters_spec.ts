@@ -122,36 +122,38 @@ describe('Filters widget', () => {
         });
 
         it('list existing filters', () => {
-            cy.get('table')
-                .getTable()
-                .should(tableData => {
-                    expect(tableData).to.have.length(1);
-                    expect(tableData[0]['Filter name']).to.eq(filterName);
-                    expect(tableData[0].Creator).to.eq('admin');
-                    expect(tableData[0].Created).not.to.be.null;
-                });
-            cy.get('.filtersWidget .checkbox:not(.checked)');
+            cy.get('.filtersWidget').within(() => {
+                cy.get('table')
+                    .getTable()
+                    .should(tableData => {
+                        expect(tableData).to.have.length(1);
+                        expect(tableData[0]['Filter name']).to.eq(filterName);
+                        expect(tableData[0].Creator).to.eq('admin');
+                        expect(tableData[0].Created).not.to.be.null;
+                    });
+                cy.get('.checkbox:not(.checked)');
 
-            const systemFilterName = 'csys-environment-filter';
-            searchFilter(systemFilterName);
+                const systemFilterName = 'csys-environment-filter';
+                searchFilter(systemFilterName);
 
-            cy.get('table')
-                .getTable()
-                .should(tableData => {
-                    expect(tableData).to.have.length(1);
-                    expect(tableData[0]['Filter name']).to.eq(systemFilterName);
-                    expect(tableData[0].Creator).to.eq('admin');
-                    expect(tableData[0].Created).not.to.be.null;
-                });
+                cy.get('table')
+                    .getTable()
+                    .should(tableData => {
+                        expect(tableData).to.have.length(1);
+                        expect(tableData[0]['Filter name']).to.eq(systemFilterName);
+                        expect(tableData[0].Creator).to.eq('admin');
+                        expect(tableData[0].Created).not.to.be.null;
+                    });
 
-            cy.get('.filtersWidget .checkbox.checked');
+                cy.get('.checkbox.checked');
 
-            const disabledIconTitle = "System filter can't be edited or deleted";
-            cy.get('.edit').should('have.class', 'disabled');
-            cy.get('.edit').should('have.prop', 'title', disabledIconTitle);
-            cy.get('.trash').should('have.class', 'disabled');
-            cy.get('.trash').should('have.prop', 'title', disabledIconTitle);
-            cy.get('.clone').should('not.have.class', 'disabled');
+                const disabledIconTitle = "System filter can't be edited or deleted";
+                cy.get('.edit').should('have.class', 'disabled');
+                cy.get('.edit').should('have.prop', 'title', disabledIconTitle);
+                cy.get('.trash').should('have.class', 'disabled');
+                cy.get('.trash').should('have.prop', 'title', disabledIconTitle);
+                cy.get('.clone').should('not.have.class', 'disabled');
+            });
         });
 
         it('allow to add new filter', () => {
@@ -202,17 +204,21 @@ describe('Filters widget', () => {
             });
 
             cy.get('.modal').should('not.exist');
-            cy.contains(newFilterName);
 
-            cy.get('table')
-                .getTable()
-                .should(tableData => {
-                    expect(tableData).to.have.length(2);
-                    expect(tableData[1]['Filter name']).to.eq(newFilterName);
-                    expect(tableData[1].Creator).to.eq('admin');
-                    expect(tableData[1].Created).not.to.be.null;
-                });
-            cy.get('.filtersWidget .checkbox:not(.checked)').should('have.length', 2);
+            cy.get('.filtersWidget').within(() => {
+                cy.contains(newFilterName);
+
+                cy.get('table')
+                    .getTable()
+                    .should(tableData => {
+                        expect(tableData).to.have.length(2);
+                        expect(tableData[1]['Filter name']).to.eq(newFilterName);
+                        expect(tableData[1].Creator).to.eq('admin');
+                        expect(tableData[1].Created).not.to.be.null;
+                    });
+
+                cy.get('.checkbox:not(.checked)').should('have.length', 2);
+            });
         });
 
         it('allow to edit existing filter', () => {

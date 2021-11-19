@@ -23,7 +23,7 @@ describe('Executions', () => {
     describe('in table mode', () => {
         it('allows showing the deployment display name', () => {
             cy.log('Check if display name is provided');
-            cy.get('table')
+            cy.get('.executionsWidget table')
                 .getTable()
                 .should(tableData => {
                     expect(tableData).to.have.length(2);

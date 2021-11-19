@@ -13,7 +13,7 @@ describe('Events/logs widget', () => {
             .mockLogin();
     });
     it('should show deployment ID and display name', () => {
-        cy.get('table')
+        cy.get('.page table')
             .getTable()
             .should(tableData => {
                 expect(tableData[0].Deployment).to.eq('Mustafar Env Deployment');
