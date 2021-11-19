@@ -442,7 +442,8 @@
         "templateManagement": "Template Management",
         "noTenants": "No Tenants",
         "tenantsHeader": "Tenant selection",
-        "help": "Help"
+        "help": "Help",
+        "health": "Health"
     },
     "widget": {
         "config": {

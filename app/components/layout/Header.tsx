@@ -9,7 +9,6 @@ import React, { Component } from 'react';
 import { HeaderBar, MenusBar } from 'cloudify-ui-components';
 
 import i18n from 'i18next';
-import Manager from '../../containers/Manager';
 import Users from '../../containers/Users';
 import Banner from '../banner/Banner';
 import ResetPagesModal from '../ResetPagesModal';
@@ -53,12 +52,6 @@ export default class Header extends Component {
                 <Banner />
 
                 <MenusBar>
-                    {!this.isModeCustomer() && (
-                        <div className="item" style={{ margin: 0, padding: 0 }}>
-                            <Manager />
-                        </div>
-                    )}
-
                     <Users
                         manager={manager}
                         showAllOptions={!this.isModeCustomer()}
