@@ -8,7 +8,7 @@ import { Dropdown, Input, Loader } from '../basic';
 import { changeTenant, getTenants } from '../../actions/tenants';
 import { useResettableState } from '../../utils/hooks';
 import type { ReduxState } from '../../reducers';
-import IconSelection from '../IconSelection';
+import IconSelection from './IconSelection';
 import SideBarItem from './SideBarItem';
 import StageUtils from '../../utils/stageUtils';
 

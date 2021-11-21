@@ -16,10 +16,11 @@ const ThemedSidebar = styled(Sidebar)`
         background-color: ${props => props.theme.sidebarColor} !important;
         display: flex;
         overflow-y: visible !important;
-        ${props => (!props.expanded && `width: ${collapsedSidebarWidth} !important;`) || ''}
+        ${props => (!props.$expanded ? `width: ${collapsedSidebarWidth} !important;` : '')}
     }
     .item {
         color: ${props => props.theme.sidebarTextColor} !important;
+        padding-left: ${props => !props.$expanded && '15px !important'};
     }
     .item.active,
     .item:hover {
@@ -45,13 +46,12 @@ const SideBar: FunctionComponent<SideBarProps> = ({ pageId }) => {
                 theme={theme}
                 visible
                 className="vertical menu small open"
-                expanded={expanded || isEditMode}
+                $expanded={expanded || isEditMode}
                 onMouseEnter={expand}
                 onMouseLeave={collapse}
-                width={collapsedSidebarWidth}
             >
                 <PagesList pageId={pageId || homePageId} isEditMode={isEditMode} expanded={expanded || isEditMode} />
-                {!isEditMode && <SystemMenu />}
+                {!isEditMode && <SystemMenu onAboutModalOpen={collapse} />}
             </ThemedSidebar>
         </div>
     );

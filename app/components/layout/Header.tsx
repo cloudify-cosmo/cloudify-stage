@@ -11,8 +11,6 @@ import { HeaderBar, MenusBar } from 'cloudify-ui-components';
 import i18n from 'i18next';
 import Manager from '../../containers/Manager';
 import Users from '../../containers/Users';
-import Help from '../../containers/Help';
-import AboutModal from '../../containers/AboutModal';
 import Banner from '../banner/Banner';
 import ResetPagesModal from '../ResetPagesModal';
 import Consts from '../../utils/consts';
@@ -23,8 +21,7 @@ export default class Header extends Component {
 
         this.state = {
             showConfigureModal: false,
-            showResetPagesConfirm: false,
-            showAboutModal: false
+            showResetPagesConfirm: false
         };
     }
 
@@ -49,7 +46,7 @@ export default class Header extends Component {
 
     render() {
         const { manager, onResetPages } = this.props;
-        const { showAboutModal, showResetPagesConfirm } = this.state;
+        const { showResetPagesConfirm } = this.state;
 
         return (
             <HeaderBar>
@@ -61,7 +58,6 @@ export default class Header extends Component {
                             <Manager />
                         </div>
                     )}
-                    <Help onAbout={() => this.setState({ showAboutModal: true })} />
 
                     <Users
                         manager={manager}
@@ -79,8 +75,6 @@ export default class Header extends Component {
                     }}
                     onHide={() => this.setState({ showResetPagesConfirm: false })}
                 />
-
-                <AboutModal open={showAboutModal} onHide={() => this.setState({ showAboutModal: false })} />
             </HeaderBar>
         );
     }
