@@ -2,7 +2,7 @@ import type { FunctionComponent } from 'react';
 import styled from 'styled-components';
 
 import type { Deployment } from '../../types';
-import { tDrillDownButtons } from './common';
+import { tDrillDownButtons, shouldDisplaySubdeploymentButton } from './common';
 import DetailsDrilldownButton from './DetailsDrilldownButton';
 import SubdeploymentDrilldownButton, { SubdeploymentDrilldownButtonProps } from './SubdeploymentDrilldownButton';
 import { getSubdeploymentResults, useSubdeploymentInfo } from './subdeployments-result';
@@ -16,7 +16,7 @@ export interface DrilldownButtonsProps {
 }
 
 const ButtonsContainer = styled.div`
-    margin-right: 1rem;
+    margin-right: auto;
     margin-bottom: 1rem;
 `;
 
@@ -26,6 +26,8 @@ const SubdeploymentButtonsContainer = styled.div`
     // and not wrap over 2 lines.
     display: inline-block;
 `;
+
+const { LoadingOverlay } = Stage.Basic;
 
 const DrilldownButtons: FunctionComponent<DrilldownButtonsProps> = ({
     drillDown,
@@ -44,10 +46,13 @@ const DrilldownButtons: FunctionComponent<DrilldownButtonsProps> = ({
     }
 
     const subdeploymentResults = getSubdeploymentResults(subdeploymentInfoResult);
-    const { LoadingOverlay } = Stage.Basic;
+
+    const shouldCenterButtons =
+        shouldDisplaySubdeploymentButton(subdeploymentResults.subenvironments) ||
+        shouldDisplaySubdeploymentButton(subdeploymentResults.subservices);
 
     return (
-        <ButtonsContainer>
+        <ButtonsContainer className={shouldCenterButtons ? 'centeredButtons' : ''}>
             <DetailsDrilldownButton deployment={deployment} drillDown={drillDown} />
 
             <SubdeploymentButtonsContainer>
