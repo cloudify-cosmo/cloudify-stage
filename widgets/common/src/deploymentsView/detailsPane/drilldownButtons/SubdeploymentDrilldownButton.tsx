@@ -1,5 +1,5 @@
 import type { FunctionComponent } from 'react';
-
+import { useMemo } from 'react';
 import { FilterRuleOperators, FilterRuleType } from '../../../filters/types';
 import {
     filterRulesContextKey,
@@ -9,9 +9,9 @@ import {
     subservicesIcon
 } from '../../common';
 import { SubdeploymentStatusIcon } from '../../StatusIcon';
-import { tDrillDownButtons } from './common';
+import { tDrillDownButtons, shouldDisplaySubdeploymentButton } from './common';
 import DrilldownButton from './DrilldownButton';
-import type { SubdeploymentsResult } from './subdeployments-result';
+import type { LoadedSubdeploymentsResult, SubdeploymentsResult } from './subdeployments-result';
 
 export interface SubdeploymentDrilldownButtonProps {
     type: 'environments' | 'services';
@@ -23,6 +23,8 @@ export interface SubdeploymentDrilldownButtonProps {
 
 const subdeploymentsDrilldownTemplateName = 'drilldownDeployments';
 
+const { Icon } = Stage.Basic;
+
 const SubdeploymentDrilldownButton: FunctionComponent<SubdeploymentDrilldownButtonProps> = ({
     type,
     drillDown,
@@ -31,6 +33,7 @@ const SubdeploymentDrilldownButton: FunctionComponent<SubdeploymentDrilldownButt
     mapOpen
 }) => {
     const icon = type === 'services' ? subservicesIcon : subenvironmentsIcon;
+    const shouldBeDisplayed = useMemo(() => shouldDisplaySubdeploymentButton(result), [result]);
 
     const drilldownToSubdeployments = () => {
         drillDown(
@@ -40,25 +43,19 @@ const SubdeploymentDrilldownButton: FunctionComponent<SubdeploymentDrilldownButt
         );
     };
 
-    const { Icon } = Stage.Basic;
-
     return (
-        <DrilldownButton
-            onClick={drilldownToSubdeployments}
-            disabled={result.loading || result.count === 0}
-            loading={result.loading}
-            title={tDrillDownButtons(`${type}.title`)}
-        >
-            <Icon name={icon} />
-            {tDrillDownButtons(`${type}.label`)}
-            {!result.loading && (
-                <>
-                    {' '}
-                    ({result.count})
-                    <SubdeploymentStatusIcon status={result.status} style={{ marginRight: 0, marginLeft: '0.2em' }} />
-                </>
+        <>
+            {shouldBeDisplayed && (
+                <DrilldownButton onClick={drilldownToSubdeployments} title={tDrillDownButtons(`${type}.title`)}>
+                    <Icon name={icon} />
+                    {tDrillDownButtons(`${type}.label`)} ({(result as LoadedSubdeploymentsResult).count})
+                    <SubdeploymentStatusIcon
+                        status={(result as LoadedSubdeploymentsResult).status}
+                        style={{ marginRight: 0, marginLeft: '0.2em' }}
+                    />
+                </DrilldownButton>
             )}
-        </DrilldownButton>
+        </>
     );
 };
 export default SubdeploymentDrilldownButton;
