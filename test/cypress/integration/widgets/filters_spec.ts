@@ -12,8 +12,10 @@ import {
 } from '../../../../widgets/common/src/filters/types';
 
 describe('Filters widget', () => {
+    const widgetId = 'filters';
+
     before(() => {
-        cy.usePageMock(['filters', 'onlyMyResources']).activate().mockLogin();
+        cy.usePageMock([widgetId, 'onlyMyResources']).activate().mockLogin();
     });
 
     const filterName = 'filters_test_filter';
@@ -122,7 +124,7 @@ describe('Filters widget', () => {
         });
 
         it('list existing filters', () => {
-            cy.get('.filtersWidget').within(() => {
+            cy.getWidget(widgetId).within(() => {
                 cy.get('table')
                     .getTable()
                     .should(tableData => {
@@ -205,7 +207,7 @@ describe('Filters widget', () => {
 
             cy.get('.modal').should('not.exist');
 
-            cy.get('.filtersWidget').within(() => {
+            cy.getWidget(widgetId).within(() => {
                 cy.contains(newFilterName);
 
                 cy.get('table')
