@@ -77,8 +77,8 @@ describe('License Management', () => {
         });
 
         it('About modal', () => {
-            cy.get('.helpMenu').click();
-            cy.get('.helpMenu').contains('About').click();
+            cy.contains('Help').click({ force: true });
+            cy.contains('About').click();
 
             cy.get('.actions > button.yellow').should('have.text', 'License Management');
 

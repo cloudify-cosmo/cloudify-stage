@@ -8,7 +8,7 @@ import React, { Component } from 'react';
 import { Redirect, Route, Switch } from 'react-router-dom';
 import log from 'loglevel';
 
-import Home from '../../containers/Home';
+import Home from '../Home';
 import Header from '../../containers/layout/Header';
 import PageManagement from '../templateManagement/pages/PageManagement';
 import Consts from '../../utils/consts';
