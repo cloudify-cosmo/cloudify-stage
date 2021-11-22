@@ -65,7 +65,7 @@ describe('Cluster Status', () => {
 
             cy.log('Check system status popup content');
 
-            cy.get('table.servicesData').within(() => {
+            cy.contains('.dropdown', 'Health').within(() => {
                 cy.get('button.refreshButton').should('not.have.class', 'loading');
                 checkServicesStatus(expectedManagerStatus, expectedDbStatus, expectedBrokerStatus);
             });
