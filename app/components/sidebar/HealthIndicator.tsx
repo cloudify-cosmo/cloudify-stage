@@ -16,7 +16,7 @@ const dotColors = {
     [clusterStatusEnum.Degraded]: 'yellow'
 } as const;
 
-const dropdownMenuStyle = { padding: 5, height: 267 };
+const dropdownMenuStyle = { padding: 5 };
 
 const HealthIndicator: FunctionComponent = () => {
     const dispatch = useDispatch();
