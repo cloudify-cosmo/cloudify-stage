@@ -16,6 +16,8 @@ const dotColors = {
     [clusterStatusEnum.Degraded]: 'yellow'
 } as const;
 
+const dropdownMenuStyle = { padding: 5, height: 267 };
+
 const HealthIndicator: FunctionComponent = () => {
     const dispatch = useDispatch();
     const systemStatus = useSelector((state: ReduxState) => state.manager.clusterStatus.status);
@@ -31,7 +33,7 @@ const HealthIndicator: FunctionComponent = () => {
             }
             label={t('health')}
             onOpen={() => dispatch(getClusterStatus())}
-            style={{ padding: 5, height: 267 }}
+            style={dropdownMenuStyle}
         >
             <SystemServicesStatus />
         </SideBarDropdownItem>
