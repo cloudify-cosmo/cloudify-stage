@@ -34,7 +34,7 @@ const HelpMenu: FunctionComponent<HelpMenuProps> = ({ onAboutModalOpen }) => {
         <>
             <SideBarItem onClick={toggleExpand} expandable expanded={expanded}>
                 <SideBarItemIcon name="help circle" />
-                {t('help')}
+                <span style={{ verticalAlign: 'top' }}>{t('help')}</span>
             </SideBarItem>
 
             {expanded && (

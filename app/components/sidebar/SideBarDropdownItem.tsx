@@ -16,7 +16,7 @@ const SideBarDropdownItem: FunctionComponent<SideBarDropdownItemProps> = ({ icon
             trigger={
                 <SideBarItem>
                     {icon}
-                    {label}
+                    <span style={{ verticalAlign: 'top' }}>{label}</span>
                 </SideBarItem>
             }
             pointing="left"

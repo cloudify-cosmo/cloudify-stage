@@ -42,7 +42,13 @@ const SideBarItem: FunctionComponent<SideBarItemProps> = ({
     children,
     ...rest
 }) => {
-    const menuItemStyle = { height: '100%', width: expandedSidebarWidth, paddingLeft: subItem && 25, ...style };
+    const menuItemStyle = {
+        height: '100%',
+        width: expandedSidebarWidth,
+        paddingTop: 13,
+        paddingLeft: subItem && 25,
+        ...style
+    };
 
     return (
         <SideBarItemWrapper>

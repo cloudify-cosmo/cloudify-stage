@@ -57,7 +57,7 @@ describe('TenantSelection', () => {
     });
 
     it('changes active tenant on dropdown item click', () => {
-        const store = mountWithProvider(<TenantSelection />, {
+        const { store } = mountWithProvider(<TenantSelection />, {
             manager: { tenants: { selected: 'abc', items: [{ name: 'aaa' }, { name: 'bbb' }, { name: 'ccc' }] } }
         });
 

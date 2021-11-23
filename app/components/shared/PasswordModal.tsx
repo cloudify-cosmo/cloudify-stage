@@ -1,18 +1,26 @@
 // @ts-nocheck File not migrated fully to TS
 import _ from 'lodash';
-import PropTypes from 'prop-types';
 import React, { useEffect } from 'react';
-import { connect } from 'react-redux';
 import i18n from 'i18next';
+import { useSelector } from 'react-redux';
 import Manager from '../../utils/Manager';
 import { useBoolean, useErrors, useResettableState } from '../../utils/hooks';
-import { Modal, Icon, Form, ApproveButton, CancelButton } from '../basic';
+import { ApproveButton, CancelButton, Form, Icon, Modal } from '../basic';
+import type { ReduxState } from '../../reducers';
 
-function PasswordModal({ onHide, open, manager, username }) {
+interface PasswordModalProps {
+    onHide: () => void;
+    open: boolean;
+    username?: string;
+}
+
+const PasswordModal: React.FunctionComponent<PasswordModalProps> = ({ onHide, open, username }) => {
     const [loading, setLoading, unsetLoading] = useBoolean();
     const [password, setPassword, resetPassword] = useResettableState('');
     const [confirmPassword, setConfirmPassword, resetConfirmPassword] = useResettableState('');
     const { errors, setMessageAsError, clearErrors, setErrors } = useErrors();
+    const manager = useSelector((state: ReduxState) => new Manager(state.manager));
+    const loggedInUsername = useSelector((state: ReduxState) => state.manager.username);
 
     useEffect(() => {
         if (open) {
@@ -56,7 +64,7 @@ function PasswordModal({ onHide, open, manager, username }) {
         setLoading();
 
         return manager
-            .doPost(`/users/${username}`, { body: { password } })
+            .doPost(`/users/${username || loggedInUsername}`, { body: { password } })
             .then(() => {
                 clearErrors();
                 onHide();
@@ -79,7 +87,9 @@ function PasswordModal({ onHide, open, manager, username }) {
         <Modal open={open} onClose={() => onHide()} className="userPasswordModal">
             <Modal.Header>
                 <Icon name="lock" />
-                {i18n.t('users.changePasswordModal.header', 'Change password for {{username}}', { username })}
+                {i18n.t('users.changePasswordModal.header', 'Change password for {{username}}', {
+                    username: username || loggedInUsername
+                })}
             </Modal.Header>
 
             <Modal.Content>
@@ -124,20 +134,6 @@ function PasswordModal({ onHide, open, manager, username }) {
             </Modal.Actions>
         </Modal>
     );
-}
-
-PasswordModal.propTypes = {
-    open: PropTypes.bool.isRequired,
-    onHide: PropTypes.func.isRequired,
-    manager: PropTypes.shape({ doPost: PropTypes.func.isRequired }).isRequired,
-    username: PropTypes.string.isRequired
 };
 
-const mapStateToProps = (state, ownProps) => {
-    return {
-        manager: new Manager(state.manager),
-        username: ownProps.username || state.manager.username
-    };
-};
-
-export default connect(mapStateToProps)(PasswordModal);
+export default PasswordModal;
