@@ -16,7 +16,7 @@ import stageUtils from '../utils/stageUtils';
 const mapStateToProps = state => {
     const isTemplateManagementActive = state.templateManagement.isActive;
 
-    const canChangePassword = !state.manager.isLdap;
+    const canChangePassword = !state.manager.isLdapEnable;
 
     const canEditMode =
         !isTemplateManagementActive && stageUtils.isUserAuthorized(Consts.permissions.STAGE_EDIT_MODE, state.manager);

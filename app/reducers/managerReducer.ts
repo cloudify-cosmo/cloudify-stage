@@ -69,7 +69,7 @@ const manager: Reducer<ManagerData> = (state = emptyState, action) => {
         case types.SET_LDAP:
             return {
                 ...state,
-                isLdap: action.isLdap
+                isLdapEnable: action.isLdapEnable
             };
         case types.SET_USER_DATA:
             return {

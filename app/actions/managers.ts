@@ -99,10 +99,10 @@ export function getUserData() {
         });
 }
 
-function responseLdap(isLdap) {
+function responseLdap(isLdapEnable) {
     return {
         type: types.SET_LDAP,
-        isLdap
+        isLdapEnable
     };
 }
 
