@@ -1,9 +1,10 @@
-import React, { FunctionComponent } from 'react';
+import React, { FunctionComponent, ReactNode } from 'react';
 import styled from 'styled-components';
 import colors from 'cloudify-ui-common/styles/_colors.scss';
-import { MenuItemProps } from 'semantic-ui-react';
+import { MenuItemProps, SemanticICONS } from 'semantic-ui-react';
 import { Icon, Menu } from '../basic';
 import { expandedSidebarWidth } from './SideBar';
+import SideBarItemIcon from './SideBarItemIcon';
 
 export const SideBarItemWrapper = styled.div`
     position: relative;
@@ -28,10 +29,12 @@ export const SideBarItemWrapper = styled.div`
     }
 `;
 
-interface SideBarItemProps extends MenuItemProps {
+export interface SideBarItemProps extends MenuItemProps {
     subItem?: boolean;
     expandable?: boolean;
     expanded?: boolean;
+    icon?: ReactNode | SemanticICONS;
+    label?: string;
 }
 
 const SideBarItem: FunctionComponent<SideBarItemProps> = ({
@@ -39,6 +42,8 @@ const SideBarItem: FunctionComponent<SideBarItemProps> = ({
     subItem,
     expandable,
     expanded,
+    icon,
+    label,
     children,
     ...rest
 }) => {
@@ -54,6 +59,8 @@ const SideBarItem: FunctionComponent<SideBarItemProps> = ({
         <SideBarItemWrapper>
             {/* eslint-disable-next-line react/jsx-props-no-spreading */}
             <Menu.Item style={menuItemStyle} {...rest}>
+                {typeof icon === 'string' ? <SideBarItemIcon name={icon as SemanticICONS} /> : icon}
+                {label && <span style={{ verticalAlign: 'top' }}>{label}</span>}
                 {children}
                 {expandable && (
                     <Icon

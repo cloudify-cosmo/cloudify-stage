@@ -12,18 +12,7 @@ interface SideBarDropdownItemProps extends DropdownProps {
 
 const SideBarDropdownItem: FunctionComponent<SideBarDropdownItemProps> = ({ icon, label, style, onOpen, children }) => {
     return (
-        <Dropdown
-            trigger={
-                <SideBarItem>
-                    {icon}
-                    <span style={{ verticalAlign: 'top' }}>{label}</span>
-                </SideBarItem>
-            }
-            pointing="left"
-            icon={null}
-            fluid
-            onOpen={onOpen}
-        >
+        <Dropdown trigger={<SideBarItem icon={icon} label={label} />} pointing="left" icon={null} fluid onOpen={onOpen}>
             <Dropdown.Menu style={{ margin: 0, ...style }}>{children}</Dropdown.Menu>
         </Dropdown>
     );

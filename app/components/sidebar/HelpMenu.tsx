@@ -7,7 +7,6 @@ import SideBarItem from './SideBarItem';
 import StageUtils from '../../utils/stageUtils';
 import AboutModal from '../AboutModal';
 import { useBoolean, useToggle } from '../../utils/hooks';
-import SideBarItemIcon from './SideBarItemIcon';
 
 const t = StageUtils.getT('users');
 const tHelp = StageUtils.getT('help');
@@ -32,25 +31,23 @@ const HelpMenu: FunctionComponent<HelpMenuProps> = ({ onAboutModalOpen }) => {
 
     return (
         <>
-            <SideBarItem onClick={toggleExpand} expandable expanded={expanded}>
-                <SideBarItemIcon name="help circle" />
-                <span style={{ verticalAlign: 'top' }}>{t('help')}</span>
-            </SideBarItem>
+            <SideBarItem icon="help circle" label={t('help')} onClick={toggleExpand} expandable expanded={expanded} />
 
             {expanded && (
                 <>
-                    <SideBarItem subItem onClick={() => redirectToPage(tHelp('documentationLink', { version }))}>
-                        <SideBarItemIcon name="book" />
-                        {tHelp('documentation')}
-                    </SideBarItem>
-                    <SideBarItem subItem onClick={() => redirectToPage(tHelp('contactLink'))}>
-                        <SideBarItemIcon name="comments" />
-                        {tHelp('contact')}
-                    </SideBarItem>
-                    <SideBarItem subItem onClick={handleModalOpen}>
-                        <SideBarItemIcon name="info circle" />
-                        {tHelp('about')}
-                    </SideBarItem>
+                    <SideBarItem
+                        icon="book"
+                        label={tHelp('documentation')}
+                        subItem
+                        onClick={() => redirectToPage(tHelp('documentationLink', { version }))}
+                    />
+                    <SideBarItem
+                        icon="comments"
+                        label={tHelp('contact')}
+                        subItem
+                        onClick={() => redirectToPage(tHelp('contactLink'))}
+                    />
+                    <SideBarItem icon="info circle" label={tHelp('about')} subItem onClick={handleModalOpen} />
                 </>
             )}
 

@@ -10,7 +10,6 @@ import { useResettableState } from '../../utils/hooks';
 import type { ReduxState } from '../../reducers';
 import StageUtils from '../../utils/stageUtils';
 import SideBarDropdownItem from './SideBarDropdownItem';
-import SideBarItemIcon from './SideBarItemIcon';
 
 const t = StageUtils.getT('users');
 
@@ -45,11 +44,7 @@ const TenantSelection: FunctionComponent = () => {
     const selectedTenant = tenants.selected || _.get(tenants, 'items[0].name');
 
     return (
-        <SideBarDropdownItem
-            icon={<SideBarItemIcon name="user circle" />}
-            label={selectedTenant || t('noTenants')}
-            onClose={clearSearch}
-        >
+        <SideBarDropdownItem icon="user circle" label={selectedTenant || t('noTenants')} onClose={clearSearch}>
             <Dropdown.Header>{t('tenantsHeader')}</Dropdown.Header>
             <Dropdown.Menu scrolling>
                 {filteredTenants.map(tenant => (

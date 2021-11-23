@@ -7,7 +7,6 @@ import type { ReduxState } from '../../reducers';
 import SideBarItem from './SideBarItem';
 import StageUtils from '../../utils/stageUtils';
 import { useBoolean, useToggle } from '../../utils/hooks';
-import SideBarItemIcon from './SideBarItemIcon';
 import { Label } from '../basic';
 import { minimizeWidgets } from '../../actions/widgets';
 import { setEditMode } from '../../actions/config';
@@ -76,50 +75,52 @@ const UserMenu: FunctionComponent<UserMenuProps> = ({ onModalOpen }) => {
 
     return (
         <>
-            <SideBarItem onClick={toggleExpand} expandable expanded={expanded}>
-                <Label
-                    style={{ float: 'none', marginLeft: -10, marginTop: -5, marginRight: 9, width: '1.2em' }}
-                    circular
-                >
-                    {username.substr(0, 2)}
-                </Label>
-                {username}
-            </SideBarItem>
+            <SideBarItem
+                icon={
+                    <Label
+                        style={{ float: 'none', marginLeft: -10, marginTop: -5, marginRight: 9, width: '1.2em' }}
+                        circular
+                    >
+                        {username.substr(0, 2)}
+                    </Label>
+                }
+                label={username}
+                onClick={toggleExpand}
+                expandable
+                expanded={expanded}
+            />
 
             {expanded && (
                 <>
                     {canEnterEditMode && (
-                        <SideBarItem subItem onClick={handleEditModeClick}>
-                            <SideBarItemIcon name="edit" />
-                            {t('enterEditMode')}
-                        </SideBarItem>
+                        <SideBarItem icon="edit" label={t('enterEditMode')} subItem onClick={handleEditModeClick} />
                     )}
                     {canEnterTemplateManagement && (
-                        <SideBarItem subItem onClick={() => dispatch(push('/template_management'))}>
-                            <SideBarItemIcon name="list layout" />
-                            {t('templateManagement')}
-                        </SideBarItem>
+                        <SideBarItem
+                            icon="list layout"
+                            label={t('templateManagement')}
+                            subItem
+                            onClick={() => dispatch(push('/template_management'))}
+                        />
                     )}
-                    <SideBarItem subItem onClick={handleResetModalOpen}>
-                        <SideBarItemIcon name="undo" />
-                        {t('resetTemplates.label')}
-                    </SideBarItem>
+                    <SideBarItem icon="undo" label={t('resetTemplates.label')} subItem onClick={handleResetModalOpen} />
                     {canEnterLicenseManagement && (
-                        <SideBarItem subItem onClick={() => dispatch(push(Consts.LICENSE_PAGE_PATH))}>
-                            <SideBarItemIcon name="key" />
-                            {t('licenseManagement')}
-                        </SideBarItem>
+                        <SideBarItem
+                            icon="key"
+                            label={t('licenseManagement')}
+                            subItem
+                            onClick={() => dispatch(push(Consts.LICENSE_PAGE_PATH))}
+                        />
                     )}
                     {canChangePassword && (
-                        <SideBarItem subItem onClick={handlePasswordModalOpen}>
-                            <SideBarItemIcon name="lock" />
-                            {t('changePassword')}
-                        </SideBarItem>
+                        <SideBarItem
+                            icon="lock"
+                            label={t('changePassword')}
+                            subItem
+                            onClick={handlePasswordModalOpen}
+                        />
                     )}
-                    <SideBarItem subItem onClick={() => dispatch(logout())}>
-                        <SideBarItemIcon name="log out" />
-                        {t('logout')}
-                    </SideBarItem>
+                    <SideBarItem icon="log out" label={t('logout')} subItem onClick={() => dispatch(logout())} />
                 </>
             )}
 
