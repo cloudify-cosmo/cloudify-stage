@@ -1,10 +1,8 @@
 // @ts-nocheck File not migrated fully to TS
-/**
- * Created by jakubniezgoda on 03/02/2017.
- */
 
 import Actions from './actions';
 import GroupPropType from './props/GroupPropType';
+import { UnsafelyTypedFormField } from '../../../app/components/basic';
 
 export default function UsersModal({ onHide, group, groups, open, toolbox, users }) {
     const { useState } = React;
@@ -83,9 +81,8 @@ export default function UsersModal({ onHide, group, groups, open, toolbox, users
                     </Message>
                 )}
                 <Form loading={isLoading} errors={errors} onErrorsDismiss={clearErrors}>
-                    <Form.Field>
+                    <UnsafelyTypedFormField label="Users">
                         <Form.Dropdown
-                            placeholder="Users"
                             multiple
                             selection
                             options={options}
@@ -93,7 +90,7 @@ export default function UsersModal({ onHide, group, groups, open, toolbox, users
                             value={editedUsers}
                             onChange={handleInputChange}
                         />
-                    </Form.Field>
+                    </UnsafelyTypedFormField>
                 </Form>
             </Modal.Content>
 

@@ -1,10 +1,8 @@
 // @ts-nocheck File not migrated fully to TS
-/**
- * Created by jakubniezgoda on 03/02/2017.
- */
 
 import Actions from './actions';
 import GroupPropType from './props/GroupPropType';
+import { UnsafelyTypedFormField } from '../../../app/components/basic';
 
 const { RolesPicker } = Stage.Common;
 const { RolesUtil } = Stage.Common;
@@ -84,9 +82,8 @@ export default function TenantsModal({ group, open, tenants, toolbox, onHide }) 
 
             <Modal.Content>
                 <Form loading={isLoading} errors={errors} onErrorsDismiss={clearErrors}>
-                    <Form.Field>
+                    <UnsafelyTypedFormField label="Tenants">
                         <Form.Dropdown
-                            placeholder="Tenants"
                             multiple
                             selection
                             options={options}
@@ -94,7 +91,7 @@ export default function TenantsModal({ group, open, tenants, toolbox, onHide }) 
                             value={Object.keys(editedTenants)}
                             onChange={handleInputChange}
                         />
-                    </Form.Field>
+                    </UnsafelyTypedFormField>
                     <RolesPicker
                         onUpdate={onRoleChange}
                         resources={editedTenants}

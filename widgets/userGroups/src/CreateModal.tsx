@@ -3,6 +3,7 @@
  * Created by jakubniezgoda on 03/02/2017.
  */
 
+import { UnsafelyTypedFormField } from '../../../app/components/basic';
 import Actions from './actions';
 
 export default function CreateModal({ toolbox, isLdapEnabled }) {
@@ -52,19 +53,14 @@ export default function CreateModal({ toolbox, isLdapEnabled }) {
 
             <Modal.Content>
                 <Form loading={isLoading} errors={errors} onErrorsDismiss={clearErrors}>
-                    <Form.Field error={errors.groupName}>
-                        <Form.Input name="groupName" placeholder="Group name" value={groupName} onChange={setInput} />
-                    </Form.Field>
+                    <UnsafelyTypedFormField error={errors.groupName} label="Group name">
+                        <Form.Input name="groupName" value={groupName} onChange={setInput} />
+                    </UnsafelyTypedFormField>
 
                     {isLdapEnabled && (
-                        <Form.Field error={errors.ldapGroup}>
-                            <Form.Input
-                                name="ldapGroup"
-                                placeholder="LDAP group name"
-                                value={ldapGroup}
-                                onChange={setInput}
-                            />
-                        </Form.Field>
+                        <UnsafelyTypedFormField error={errors.ldapGroup} label="LDAP group name">
+                            <Form.Input name="ldapGroup" value={ldapGroup} onChange={setInput} />
+                        </UnsafelyTypedFormField>
                     )}
 
                     <Form.Field error={errors.isAdmin}>
