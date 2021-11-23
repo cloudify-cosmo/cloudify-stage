@@ -8,8 +8,8 @@ describe('Page management', () => {
     it('allows admin users to create and modify pages', () => {
         const pageName = 'Page 1';
 
-        cy.get('.usersMenu').click();
-        cy.get('.usersMenu').contains('Template Management').click();
+        cy.contains('admin').click({ force: true });
+        cy.contains('Template Management').click();
 
         cy.get('.createPageButton').click();
 

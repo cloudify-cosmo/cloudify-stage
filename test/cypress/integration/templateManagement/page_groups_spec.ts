@@ -4,8 +4,8 @@ describe('Page groups segment', () => {
     });
 
     function goToTemplateManagement() {
-        cy.get('.usersMenu').click();
-        cy.get('.usersMenu').contains('Template Management').click();
+        cy.contains('admin').click({ force: true });
+        cy.contains('Template Management').click();
     }
 
     function createPageGroup() {

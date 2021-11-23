@@ -1,4 +1,3 @@
-// @ts-nocheck File not migrated fully to TS
 describe('Change Password modal', () => {
     before(cy.activate);
 
@@ -15,7 +14,7 @@ describe('Change Password modal', () => {
         });
 
         const openChangePasswordModal = () => {
-            cy.get('.usersMenu').click().contains('Change Password').click();
+            cy.contains(username).click({ force: true }).contains('Change Password').click();
         };
 
         it('validate password and confirm password fields', () => {

@@ -9,7 +9,10 @@ declare global {
 }
 
 const commands = {
-    enterEditMode: () => cy.get('.usersMenu').click().contains('Edit Mode').click(),
+    enterEditMode: () => {
+        cy.contains('admin').click({ force: true });
+        return cy.contains('Edit Mode').click();
+    },
     exitEditMode: () => cy.get('.editModeSidebar').contains('Exit').click(),
     addWidget: (widgetId: string) => {
         cy.enterEditMode();
