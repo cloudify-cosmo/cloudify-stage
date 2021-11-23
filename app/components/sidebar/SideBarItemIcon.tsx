@@ -9,6 +9,7 @@ const SideBarItemIcon = styled(({ name, ...rest }: IconProps) => <Icon name={nam
         margin-left: -10px;
         margin-right: 4px;
         float: none;
+        width: 1.2em;
     }
 `;
 

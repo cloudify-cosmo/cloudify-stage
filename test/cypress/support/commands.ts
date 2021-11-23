@@ -419,7 +419,9 @@ const commands = {
     openTab: (tabName: string) => cy.get('.tabular.menu').contains(tabName).click(),
     mockEnabledGettingStarted: () => mockGettingStarted(true),
 
-    mockDisabledGettingStarted: () => mockGettingStarted(false)
+    mockDisabledGettingStarted: () => mockGettingStarted(false),
+
+    getWidget: (widgetId: string) => cy.get(`.${widgetId}Widget`)
 };
 
 addCommands(commands);
