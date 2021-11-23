@@ -11,10 +11,11 @@ describe('Change Password modal', () => {
                 .addUserToTenant(username, 'default_tenant', 'manager')
                 .usePageMock()
                 .mockLogin(username, password);
+            cy.contains(username).click({ force: true });
         });
 
         const openChangePasswordModal = () => {
-            cy.contains(username).click({ force: true }).contains('Change Password').click();
+            cy.contains('Change Password').click({ force: true });
         };
 
         it('validate password and confirm password fields', () => {
@@ -68,7 +69,7 @@ describe('Change Password modal', () => {
             cy.get('.userPasswordModal').should('not.exist');
 
             cy.log('Logout');
-            cy.get('.usersMenu').click().contains('Logout').click();
+            cy.contains('Logout').click({ force: true });
 
             cy.log('Login with new password');
             cy.usePageMock().mockLogin(username, 'new-pass');
@@ -83,7 +84,7 @@ describe('Change Password modal', () => {
 
         cy.usePageMock().mockLogin();
 
-        cy.get('.usersMenu').click();
-        cy.get('#changePasswordMenuItem').should('have.class', 'disabled');
+        cy.contains('admin').click({ force: true });
+        cy.contains('Change Password').should('not.exist');
     });
 });
