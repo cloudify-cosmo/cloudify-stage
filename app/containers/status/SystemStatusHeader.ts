@@ -13,7 +13,8 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
     return {
-        onStatusRefresh: () => {
+        onStatusRefresh: e => {
+            e.stopPropagation();
             dispatch(getClusterStatus());
         }
     };

@@ -2,7 +2,7 @@ import React, { FunctionComponent } from 'react';
 import styled from 'styled-components';
 import colors from 'cloudify-ui-common/styles/_colors.scss';
 import { MenuItemProps } from 'semantic-ui-react';
-import { Menu } from '../basic';
+import { Icon, Menu } from '../basic';
 import { expandedSidebarWidth } from './SideBar';
 
 export const SideBarItemWrapper = styled.div`
@@ -30,15 +30,33 @@ export const SideBarItemWrapper = styled.div`
 
 interface SideBarItemProps extends MenuItemProps {
     subItem?: boolean;
+    expandable?: boolean;
+    expanded?: boolean;
 }
 
-const SideBarItem: FunctionComponent<SideBarItemProps> = ({ style, subItem, ...rest }) => {
+const SideBarItem: FunctionComponent<SideBarItemProps> = ({
+    style,
+    subItem,
+    expandable,
+    expanded,
+    children,
+    ...rest
+}) => {
     const menuItemStyle = { height: '100%', width: expandedSidebarWidth, paddingLeft: subItem && 25, ...style };
 
     return (
         <SideBarItemWrapper>
             {/* eslint-disable-next-line react/jsx-props-no-spreading */}
-            <Menu.Item style={menuItemStyle} {...rest} />
+            <Menu.Item style={menuItemStyle} {...rest}>
+                {children}
+                {expandable && (
+                    <Icon
+                        name="dropdown"
+                        rotated={expanded ? undefined : 'counterclockwise'}
+                        style={{ position: 'absolute', right: 12, margin: 0 }}
+                    />
+                )}
+            </Menu.Item>
         </SideBarItemWrapper>
     );
 };
