@@ -1,7 +1,5 @@
 // @ts-nocheck File not migrated fully to TS
-/**
- * Created by jakubniezgoda on 03/02/2017.
- */
+import { connect, ConnectedProps } from 'react-redux';
 import Actions from './actions';
 import CreateModal from './CreateModal';
 import GroupDetails from './GroupDetails';
@@ -10,7 +8,7 @@ import TenantsModal from './TenantsModal';
 import UsersModal from './UsersModal';
 import GroupPropType from './props/GroupPropType';
 
-export default class UserGroupsTable extends React.Component {
+class UserGroupsTable extends React.Component {
     constructor(props, context) {
         super(props, context);
 
@@ -183,6 +181,7 @@ export default class UserGroupsTable extends React.Component {
         const { data, toolbox, widget } = this.props;
         const NO_DATA_MESSAGE = 'There are no User Groups available. Click "Add" to add User Groups.';
         const { Checkbox, Confirm, DataTable, ErrorMessage, Label, Loader } = Stage.Basic;
+        const isLdapEnabled = true;
 
         return (
             <div>
@@ -199,7 +198,7 @@ export default class UserGroupsTable extends React.Component {
                     noDataMessage={NO_DATA_MESSAGE}
                 >
                     <DataTable.Column label="Group" name="name" width="35%" />
-                    <DataTable.Column label="LDAP group" name="ldap_dn" width="20%" />
+                    {isLdapEnabled && <DataTable.Column label="LDAP group" name="ldap_dn" width="20%" />}
                     <DataTable.Column label="Admin" name="role" width="10%" />
                     <DataTable.Column label="# Users" width="10%" />
                     <DataTable.Column label="# Tenants" width="10%" />
@@ -213,7 +212,7 @@ export default class UserGroupsTable extends React.Component {
                                     onClick={() => this.selectUserGroup(item.name)}
                                 >
                                     <DataTable.Data>{item.name}</DataTable.Data>
-                                    <DataTable.Data>{item.ldap_dn}</DataTable.Data>
+                                    {isLdapEnabled && <DataTable.Data>{item.ldap_dn}</DataTable.Data>}
                                     <DataTable.Data className="center aligned">
                                         {settingGroupRoleLoading === item.name ? (
                                             <Loader active inline size="mini" />
@@ -257,7 +256,7 @@ export default class UserGroupsTable extends React.Component {
                         );
                     })}
                     <DataTable.Action>
-                        <CreateModal toolbox={toolbox} />
+                        <CreateModal toolbox={toolbox} isLdapEnabled={isLdapEnabled} />
                     </DataTable.Action>
                 </DataTable>
 
@@ -308,3 +307,5 @@ UserGroupsTable.propTypes = {
     toolbox: Stage.PropTypes.Toolbox.isRequired,
     widget: Stage.PropTypes.Widget.isRequired
 };
+
+export default UserGroupsTable;

@@ -5,7 +5,7 @@
 
 import Actions from './actions';
 
-export default function CreateModal({ toolbox }) {
+export default function CreateModal({ toolbox, isLdapEnabled }) {
     const { useBoolean, useErrors, useOpen, useInputs } = Stage.Hooks;
 
     const [isLoading, setLoading, unsetLoading] = useBoolean();
@@ -56,14 +56,16 @@ export default function CreateModal({ toolbox }) {
                         <Form.Input name="groupName" placeholder="Group name" value={groupName} onChange={setInput} />
                     </Form.Field>
 
-                    <Form.Field error={errors.ldapGroup}>
-                        <Form.Input
-                            name="ldapGroup"
-                            placeholder="LDAP group name"
-                            value={ldapGroup}
-                            onChange={setInput}
-                        />
-                    </Form.Field>
+                    {isLdapEnabled && (
+                        <Form.Field error={errors.ldapGroup}>
+                            <Form.Input
+                                name="ldapGroup"
+                                placeholder="LDAP group name"
+                                value={ldapGroup}
+                                onChange={setInput}
+                            />
+                        </Form.Field>
+                    )}
 
                     <Form.Field error={errors.isAdmin}>
                         <Form.Checkbox label="Admin" name="isAdmin" checked={isAdmin} onChange={setInput} />
@@ -86,5 +88,6 @@ export default function CreateModal({ toolbox }) {
 }
 
 CreateModal.propTypes = {
-    toolbox: Stage.PropTypes.Toolbox.isRequired
+    toolbox: Stage.PropTypes.Toolbox.isRequired,
+    isLdapEnabled: PropTypes.bool
 };
