@@ -2,7 +2,7 @@ import React from 'react';
 import type { FunctionComponent, ReactNode } from 'react';
 import styled from 'styled-components';
 import colors from 'cloudify-ui-common/styles/_colors.scss';
-import { MenuItemProps, SemanticICONS } from 'semantic-ui-react';
+import type { MenuItemProps, SemanticICONS } from 'semantic-ui-react';
 import { Icon, Menu } from '../basic';
 import { expandedSidebarWidth } from './SideBar';
 import SideBarItemIcon from './SideBarItemIcon';
