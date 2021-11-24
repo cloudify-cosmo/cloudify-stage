@@ -30,11 +30,11 @@ describe('Nodes list widget', () => {
 
     it('should display nodes list', () => {
         cy.setBlueprintContext(blueprintName);
-        cy.get('tbody tr').should('have.length', 2);
         cy.getWidget(widgetId)
             .find('table')
             .getTable()
             .should(tableData => {
+                expect(tableData).to.have.length(2);
                 expect(tableData[0].Deployment).to.eq(deployment1Name);
                 expect(tableData[0]['Deployment ID']).to.eq(deployment1Id);
                 expect(tableData[1].Deployment).to.eq(deployment2Name);
