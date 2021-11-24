@@ -1,13 +1,15 @@
 describe('Sites Map', () => {
     const testSite = { name: 'Tel-Aviv', location: '32.079991, 34.767291' };
-    const mapSiteName = 'mapSite';
+    const siteWithSitesMapWidget = {
+        name: 'siteWithSitesMapWidget'
+    };
 
     const navigateToMapSite = () => {
-        cy.clickPageMenuItem(mapSiteName);
+        cy.clickPageMenuItem(siteWithSitesMapWidget.name);
     };
 
     before(() => {
-        cy.activate().deleteSites().login().addPage(mapSiteName).addWidget('sitesMap');
+        cy.activate().deleteSites().login().addPage(siteWithSitesMapWidget.name).addWidget('sitesMap');
         navigateToMapSite();
     });
 
