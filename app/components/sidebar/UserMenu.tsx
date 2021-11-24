@@ -52,6 +52,7 @@ const UserMenu: FunctionComponent<UserMenuProps> = ({ onModalOpen }) => {
     );
 
     function handleEditModeClick() {
+        onModalOpen();
         dispatch(minimizeWidgets());
         dispatch(setEditMode(true));
     }

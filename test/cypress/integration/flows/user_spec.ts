@@ -23,7 +23,7 @@ describe('User flow', () => {
         });
     }
     it('installs deployment from scratch', () => {
-        cy.clickPageMenuItem('Resources').clickPageMenuItem('Plugins');
+        cy.clickSidebarItem('Resources').clickSidebarItem('Plugins');
 
         cy.contains('Upload').click();
         cy.contains('Upload from Marketplace').click();
@@ -33,14 +33,14 @@ describe('User flow', () => {
             cy.get('button', { timeout: minutesToMs(2) }).should('to.be.disabled');
         });
 
-        cy.clickPageMenuItem('Secrets');
+        cy.clickSidebarItem('Secrets');
         createSecret('some_key_1');
         createSecret('some_key_4');
         createSecret('some_key_7');
         createSecret('some_key_10');
         createSecret('openstack_config__lab1_tenantA');
 
-        cy.clickPageMenuItem('Blueprints');
+        cy.clickSidebarItem('Blueprints');
         cy.contains('Upload').click();
         cy.contains('Upload a blueprint package').click();
         cy.get('.modal').within(() => {

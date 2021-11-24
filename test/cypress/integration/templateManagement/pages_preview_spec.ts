@@ -8,8 +8,7 @@ describe('Page preview', () => {
     it('should allow to switch tabs and maximize widgets', () => {
         cy.get('.loader').should('be.not.visible');
 
-        cy.contains('admin').click({ force: true });
-        cy.contains('Template Management').click();
+        cy.goToTemplateManagement();
 
         cy.get('.segment:contains(Pages) .search:eq(0)').click();
 

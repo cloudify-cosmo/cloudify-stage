@@ -7,20 +7,20 @@ describe('Admin flow', () => {
 
     it('manages groups, tenants and users', () => {
         cy.log('Creating tenant');
-        cy.clickPageMenuItem('System Setup').clickPageMenuItem('Tenants');
+        cy.clickSidebarItem('System Setup').clickSidebarItem('Tenants');
         cy.contains('.tenantsWidget button', 'Add').click();
         cy.get('.modal input').type(tenantName);
         cy.contains('.modal button', 'Add').click();
         cy.get('.modal').should('not.exist');
 
         cy.log('Creating group');
-        cy.clickPageMenuItem('Groups');
+        cy.clickSidebarItem('Groups');
         cy.contains('.userGroupsWidget button', 'Add').click();
         cy.get('input[name=groupName]').type(groupName);
         cy.contains('.modal button', 'Add').click();
 
         cy.log('Creating user');
-        cy.clickPageMenuItem('Users');
+        cy.clickSidebarItem('Users');
         cy.contains('.userManagementWidget button', 'Add').click();
         cy.get('.modal').within(() => {
             cy.get('input[name=username]').type(userName);
@@ -43,12 +43,12 @@ describe('Admin flow', () => {
         cy.get('.modal').should('not.exist');
 
         cy.log('Verifying change is visible across widgets');
-        cy.clickPageMenuItem('Tenants');
+        cy.clickSidebarItem('Tenants');
         cy.get('.tenantsWidget').within(() => {
             cy.contains(tenantName).click();
             cy.contains(userName);
         });
-        cy.clickPageMenuItem('Groups');
+        cy.clickSidebarItem('Groups');
         cy.get('.userGroupsWidget').within(() => {
             cy.contains(groupName).click();
             cy.contains(userName);

@@ -62,8 +62,7 @@ describe('Templates segment', () => {
 
         cy.get('.loader').should('be.not.visible');
 
-        cy.contains('admin').click({ force: true });
-        cy.contains('Template Management').click();
+        cy.goToTemplateManagement();
 
         cy.location('pathname').should('be.equal', '/console/template_management');
 
@@ -86,8 +85,7 @@ describe('Templates segment', () => {
         const clickOnHeader = () => cy.get('.header').click();
         cy.removeUserTemplates().mockLogin();
 
-        cy.contains('admin').click({ force: true });
-        cy.contains('Template Management').click();
+        cy.goToTemplateManagement();
 
         cy.get('.createTemplateButton').click();
 
