@@ -1,4 +1,5 @@
-import React, { FunctionComponent, ReactNode } from 'react';
+import React from 'react';
+import type { FunctionComponent, ReactNode } from 'react';
 import styled from 'styled-components';
 import colors from 'cloudify-ui-common/styles/_colors.scss';
 import { MenuItemProps, SemanticICONS } from 'semantic-ui-react';
