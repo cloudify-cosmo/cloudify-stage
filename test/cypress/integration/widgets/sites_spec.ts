@@ -77,22 +77,28 @@ describe('Sites Management', () => {
         cy.getWidget(widgetId).within(() => {
             cy.get(`${siteRow} > td:nth-child(1)`).should('have.text', site.name);
             cy.get(`${siteRow} > td:nth-child(1) span > .${visibilityColor}`).should('be.visible', true);
+        });
 
-            if (site.location) {
-                const [latitude, longitude] = site.location.split(',');
+        if (site.location) {
+            const [latitude, longitude] = site.location.split(',');
+            cy.getWidget(widgetId).within(() => {
                 cy.get(`${siteRow} > td:nth-child(2)`).should(
                     'have.text',
                     `Latitude: ${latitude}, Longitude: ${longitude}`
                 );
                 cy.get(`${siteRow} > td:nth-child(2) i`).trigger('mouseover');
-                cy.get('.popup .leaflet-marker-icon').should('have.length', 1);
-                cy.get(`${siteRow} > td:nth-child(2) i`).trigger('mouseout');
-                cy.get('.popup').should('not.exist');
-            } else {
+            });
+            cy.get('.popup .leaflet-marker-icon').should('have.length', 1);
+            cy.getWidget(widgetId).find(`${siteRow} > td:nth-child(2) i`).trigger('mouseout');
+            cy.get('.popup').should('not.exist');
+        } else {
+            cy.getWidget(widgetId).within(() => {
                 cy.get(`${siteRow} > td:nth-child(2)`).should('have.text', '');
                 cy.get(`${siteRow} > td:nth-child(2) i`).should('not.exist');
-            }
+            });
+        }
 
+        cy.getWidget(widgetId).within(() => {
             cy.get(`${siteRow} > td:nth-child(5)`).should('have.text', 'default_tenant');
             cy.get(`${siteRow} > td:nth-child(6)`).should('have.text', '0');
         });
