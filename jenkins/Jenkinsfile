@@ -88,7 +88,7 @@ pipeline {
             container('rpmbuild'){
               echo 'Create RPM directory and copy all data from build stage to, for rpmbuild to run'
               sh """
-                cd && mkdir rpmbuild && cd rpmbuild
+                cd ~/rpmbuild
                 mkdir -p BUILD && cp -rf ${WORKSPACE}/${STAGE_DIR}/. BUILD && cd BUILD
                 curl -fO "${CFY_MANAGER_URL}/${BRANCH}/packaging/version_info"
               """
@@ -97,7 +97,7 @@ pipeline {
               restoreArchiveFolder('~/.npm', "${WORKSPACE}/${STAGE_DIR}/package-lock.json ${WORKSPACE}/${STAGE_DIR}/backend/package-lock.json", 'stage-mb', 'npm_dir', '/mnt/data')
 
               echo 'Install NodeJS & RPM development tools'
-              sh "yum install -y ${CFY_NODE_RPM} rpmdevtools rpmlint"
+              sh "yum install -y ${CFY_NODE_RPM} rpmlint"
 
               echo 'Lint RPM spec file & Install build dependencies for RPM spec file'
               sh '''

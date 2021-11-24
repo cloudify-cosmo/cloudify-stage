@@ -2,7 +2,6 @@ import _ from 'lodash';
 import React, { FunctionComponent } from 'react';
 
 import { useSelector } from 'react-redux';
-import { Icon } from '../basic';
 import type { ReduxState } from '../../reducers';
 import SideBarItem from './SideBarItem';
 import StageUtils from '../../utils/stageUtils';
@@ -33,14 +32,9 @@ const HelpMenu: FunctionComponent<HelpMenuProps> = ({ onAboutModalOpen }) => {
 
     return (
         <>
-            <SideBarItem onClick={toggleExpand}>
+            <SideBarItem onClick={toggleExpand} expandable expanded={expanded}>
                 <SideBarItemIcon name="help circle" />
                 {t('help')}
-                <Icon
-                    name="dropdown"
-                    rotated={expanded ? undefined : 'counterclockwise'}
-                    style={{ position: 'absolute', right: 12, margin: 0 }}
-                />
             </SideBarItem>
 
             {expanded && (
