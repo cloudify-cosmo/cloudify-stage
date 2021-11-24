@@ -7,7 +7,6 @@ import type { ReduxState } from '../../reducers';
 import SideBarItem from './SideBarItem';
 import StageUtils from '../../utils/stageUtils';
 import { useBoolean, useToggle } from '../../utils/hooks';
-import { Label } from '../basic';
 import { minimizeWidgets } from '../../actions/widgets';
 import { setEditMode } from '../../actions/config';
 import Consts from '../../utils/consts';
@@ -15,6 +14,7 @@ import ResetPagesModal from '../ResetPagesModal';
 import { resetPagesForTenant } from '../../actions/userApp';
 import PasswordModal from '../shared/PasswordModal';
 import { logout } from '../../actions/managers';
+import UserInitialsIcon from './UserInitialsIcon';
 
 const t = StageUtils.getT('users');
 
@@ -77,14 +77,7 @@ const UserMenu: FunctionComponent<UserMenuProps> = ({ onModalOpen }) => {
     return (
         <>
             <SideBarItem
-                icon={
-                    <Label
-                        style={{ float: 'none', marginLeft: -10, marginTop: -5, marginRight: 9, width: '1.2em' }}
-                        circular
-                    >
-                        {username.substr(0, 2)}
-                    </Label>
-                }
+                icon={<UserInitialsIcon />}
                 label={username}
                 onClick={toggleExpand}
                 expandable

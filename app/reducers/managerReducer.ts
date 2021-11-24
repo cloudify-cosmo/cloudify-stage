@@ -17,6 +17,7 @@ export interface ManagerData {
     isLoggingIn: boolean;
     lastUpdated: any;
     license: Record<string, any>;
+    maintenance: string;
     permissions: Record<string, any>;
     roles: any[];
     tenants: Record<string, any>;
@@ -36,6 +37,7 @@ export const emptyState: ManagerData = {
     isLoggingIn: false,
     lastUpdated: null,
     license: {},
+    maintenance: '',
     permissions: {},
     roles: [],
     tenants: {},
