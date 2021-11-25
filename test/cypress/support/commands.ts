@@ -211,7 +211,7 @@ const commands = {
     },
     clickSidebarItem: (name: string, expectedPageId: string | null = null) => {
         cy.log(`Clicking '${name}' sidebar item`);
-        cy.get('.sidebar.menu').should('be.visible').contains(name).click({ force: true });
+        cy.get('.sidebar.menu').should('be.visible').trigger('mouseover').contains(name).should('be.visible').click();
         if (expectedPageId) {
             cy.location('pathname').should('be.equal', `/console/page/${expectedPageId}`);
         }

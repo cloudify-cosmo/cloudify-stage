@@ -33,6 +33,8 @@ describe('User flow', () => {
             cy.get('button', { timeout: minutesToMs(2) }).should('to.be.disabled');
         });
 
+        cy.contains('Close').click();
+
         cy.clickSidebarItem('Secrets');
         createSecret('some_key_1');
         createSecret('some_key_4');
