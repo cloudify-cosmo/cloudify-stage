@@ -1,5 +1,6 @@
 import _ from 'lodash';
-import React, { FunctionComponent } from 'react';
+import React from 'react';
+import type { FunctionComponent } from 'react';
 
 import { useDispatch, useSelector } from 'react-redux';
 import { push } from 'connected-react-router';
