@@ -58,7 +58,7 @@ const commands = {
             });
         }),
 
-    goToTemplateManagement: () => cy.clickSidebarItem('admin').clickSidebarItem('Template Management')
+    goToTemplateManagement: () => cy.clickSystemMenuItem('admin').clickSystemMenuItem('Template Management')
 };
 
 addCommands(commands);

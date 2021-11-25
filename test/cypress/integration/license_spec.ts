@@ -69,13 +69,13 @@ describe('License Management', () => {
 
     describe('is accessible from', () => {
         it('users menu', () => {
-            cy.clickSidebarItem('admin').clickSidebarItem('License Management');
+            cy.clickSystemMenuItem('admin').clickSystemMenuItem('License Management');
 
             cy.location('pathname').should('be.equal', licenseManagementUrl);
         });
 
         it('About modal', () => {
-            cy.clickSidebarItem('Help').clickSidebarItem('About');
+            cy.clickSystemMenuItem('Help').clickSystemMenuItem('About');
 
             cy.get('.actions > button.yellow').should('have.text', 'License Management');
 

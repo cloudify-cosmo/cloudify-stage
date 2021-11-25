@@ -22,7 +22,7 @@ const commands = {
         cy.intercept('POST', new RegExp(`console/plugins/upload.*title=${pluginName}`)).as('pluginUpload');
 
         cy.log(`Upload ${pluginName} plugin`);
-        cy.clickSidebarItem('Plugins Catalog');
+        cy.clickPageMenuItem('Plugins Catalog');
         cy.get('.pluginsCatalogWidget').within(() => {
             cy.contains('tr', pluginName).find('button').click();
         });

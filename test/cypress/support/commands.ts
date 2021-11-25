@@ -209,21 +209,20 @@ const commands = {
         });
         return cy.visit('/console');
     },
-    clickSidebarItem: (name: string, expectedPageId: string | null = null) => {
-        cy.log(`Clicking '${name}' sidebar item`);
-        cy.get('.sidebar.menu')
-            .should('be.visible')
-            .trigger('mouseover')
-            .contains('a.item', name)
-            .should('be.visible')
-            .click();
+    clickPageMenuItem: (name: string, expectedPageId: string | null = null) => {
+        cy.log(`Clicking '${name}' page menu item`);
+        cy.get('.sidebar.menu .pages').contains(name).click({ force: true });
         if (expectedPageId) {
             cy.location('pathname').should('be.equal', `/console/page/${expectedPageId}`);
         }
         return cy.waitUntilPageLoaded();
     },
+    clickSystemMenuItem: (name: string) => {
+        cy.log(`Clicking '${name}' system menu item`);
+        cy.get('.sidebar.menu').contains('a.item', name).click({ force: true });
+    },
     visitTestPage: () => {
-        cy.clickSidebarItem(testPageName);
+        cy.clickPageMenuItem(testPageName);
         return collapseSidebar();
     },
     usePageMock: (
