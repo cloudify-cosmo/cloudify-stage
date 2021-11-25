@@ -211,10 +211,12 @@ const commands = {
     },
     clickSidebarItem: (name: string, expectedPageId: string | null = null) => {
         cy.log(`Clicking '${name}' sidebar item`);
-        cy.get('.sidebar.menu').should('be.visible');
-        cy.get('.sidebar.menu').trigger('mouseover');
-        cy.get('.sidebar.menu').contains('.item', name).should('be.visible');
-        cy.get('.sidebar.menu').contains('.item', name).click();
+        cy.get('.sidebar.menu')
+            .should('be.visible')
+            .trigger('mouseover')
+            .contains('a.item', name)
+            .should('be.visible')
+            .click();
         if (expectedPageId) {
             cy.location('pathname').should('be.equal', `/console/page/${expectedPageId}`);
         }
