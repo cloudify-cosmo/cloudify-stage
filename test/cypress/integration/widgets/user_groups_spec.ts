@@ -1,8 +1,19 @@
 // @ts-nocheck File not migrated fully to TS
 describe('User group management widget', () => {
     const groupName = 'user_groups_test';
+    const ldapGroupColumnName = 'LDAP group';
+    const userGroupsWidgetName = 'userGroups';
+    const setLdapAvailibility = (isEnabled: boolean) => {
+        const ldapResponse = isEnabled ? 'enabled' : 'disabled';
+        cy.intercept('GET', '/console/sp/ldap', ldapResponse);
+    };
+    const reloadPage = () => {
+        cy.usePageMock(userGroupsWidgetName).mockLogin();
+    };
 
-    before(() => cy.activate('valid_trial_license').usePageMock('userGroups').mockLogin().deleteUserGroup(groupName));
+    before(() => {
+        cy.activate('valid_trial_license').usePageMock(userGroupsWidgetName).mockLogin().deleteUserGroup(groupName);
+    });
 
     it('should allow to manage a group', () => {
         cy.log('Creating new group');
@@ -52,5 +63,17 @@ describe('User group management widget', () => {
         cy.contains('Delete').click();
         cy.contains('Yes').click();
         cy.contains('.userGroupsWidget tr', groupName).should('not.exist');
+    });
+
+    it('should display LDAP group when LDAP is enabled', () => {
+        setLdapAvailibility(true);
+        reloadPage();
+        cy.contains(ldapGroupColumnName);
+    });
+
+    it('should hide LDAP group when LDAP is disabled', () => {
+        setLdapAvailibility(false);
+        reloadPage();
+        cy.contains(ldapGroupColumnName).should('not.exist');
     });
 });
