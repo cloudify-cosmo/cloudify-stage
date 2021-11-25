@@ -33,6 +33,10 @@ class Toolbox implements Stage.Types.Toolbox {
         this.store = store;
         this.initFromStore();
 
+        // eslint-disable-next-line
+        // @ts-ignore
+        window.dispatch = this.store.dispatch;
+
         // Subscribe to store change
         this.unsubscribe = store.subscribe(() => {
             this.initFromStore();

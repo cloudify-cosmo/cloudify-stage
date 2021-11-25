@@ -178,10 +178,9 @@ class UserGroupsTable extends React.Component {
 
     render() {
         const { error, group, modalType, settingGroupRoleLoading, showModal, tenants, users } = this.state;
-        const { data, toolbox, widget } = this.props;
+        const { data, toolbox, widget, isLdapEnable } = this.props;
         const NO_DATA_MESSAGE = 'There are no User Groups available. Click "Add" to add User Groups.';
         const { Checkbox, Confirm, DataTable, ErrorMessage, Label, Loader } = Stage.Basic;
-        const isLdapEnabled = true;
 
         return (
             <div>
@@ -198,7 +197,7 @@ class UserGroupsTable extends React.Component {
                     noDataMessage={NO_DATA_MESSAGE}
                 >
                     <DataTable.Column label="Group" name="name" width="35%" />
-                    {isLdapEnabled && <DataTable.Column label="LDAP group" name="ldap_dn" width="20%" />}
+                    {isLdapEnable && <DataTable.Column label="LDAP group" name="ldap_dn" width="20%" />}
                     <DataTable.Column label="Admin" name="role" width="10%" />
                     <DataTable.Column label="# Users" width="10%" />
                     <DataTable.Column label="# Tenants" width="10%" />
@@ -212,7 +211,7 @@ class UserGroupsTable extends React.Component {
                                     onClick={() => this.selectUserGroup(item.name)}
                                 >
                                     <DataTable.Data>{item.name}</DataTable.Data>
-                                    {isLdapEnabled && <DataTable.Data>{item.ldap_dn}</DataTable.Data>}
+                                    {isLdapEnable && <DataTable.Data>{item.ldap_dn}</DataTable.Data>}
                                     <DataTable.Data className="center aligned">
                                         {settingGroupRoleLoading === item.name ? (
                                             <Loader active inline size="mini" />
@@ -256,7 +255,7 @@ class UserGroupsTable extends React.Component {
                         );
                     })}
                     <DataTable.Action>
-                        <CreateModal toolbox={toolbox} isLdapEnabled={isLdapEnabled} />
+                        <CreateModal toolbox={toolbox} isLdapEnable={isLdapEnable} />
                     </DataTable.Action>
                 </DataTable>
 
@@ -305,7 +304,13 @@ UserGroupsTable.propTypes = {
         total: PropTypes.number.isRequired
     }).isRequired,
     toolbox: Stage.PropTypes.Toolbox.isRequired,
-    widget: Stage.PropTypes.Widget.isRequired
+    widget: Stage.PropTypes.Widget.isRequired,
+    isLdapEnable: PropTypes.bool.isRequired
 };
 
-export default UserGroupsTable;
+export default connectToStore(
+    state => ({
+        isLdapEnable: _.get(state, 'manager.isLdapEnable', false)
+    }),
+    {}
+)(UserGroupsTable);
