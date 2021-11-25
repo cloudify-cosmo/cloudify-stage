@@ -53,7 +53,7 @@ describe('Sites Map', () => {
             const secondSite = { name: 'Bergen', location: '60.389433, 5.332489', visibility: 'private' };
             cy.createSite(secondSite);
 
-            cy.refreshTemplate();
+            cy.refreshPage();
 
             cy.log('Verify second site is present on the map');
             cy.get('.leaflet-marker-icon').should('have.length', 2);
