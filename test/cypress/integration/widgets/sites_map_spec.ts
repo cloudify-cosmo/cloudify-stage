@@ -1,16 +1,14 @@
 describe('Sites Map', () => {
     const testSite = { name: 'Tel-Aviv', location: '32.079991, 34.767291' };
-    const siteWithSitesMapWidget = {
-        name: 'siteWithSitesMapWidget'
-    };
+    const sitesMapWidgetPageName = 'Sites map widget page';
 
-    const navigateToMapSite = () => {
-        cy.clickPageMenuItem(siteWithSitesMapWidget.name);
+    const navigateToMapPage = () => {
+        cy.clickPageMenuItem(sitesMapWidgetPageName);
     };
 
     before(() => {
-        cy.activate().deleteSites().login().addPage(siteWithSitesMapWidget.name).addWidget('sitesMap');
-        navigateToMapSite();
+        cy.activate().deleteSites().login().addPage(sitesMapWidgetPageName).addWidget('sitesMap');
+        navigateToMapPage();
     });
 
     it('is not displayed when there is no connection to map tiles provider', () => {
@@ -38,7 +36,7 @@ describe('Sites Map', () => {
     describe('is displayed when sites are available and', () => {
         before(() => {
             cy.createSite(testSite);
-            navigateToMapSite();
+            navigateToMapPage();
         });
 
         it('shows markers for each site', () => {
