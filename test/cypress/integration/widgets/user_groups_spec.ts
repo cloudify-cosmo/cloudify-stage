@@ -65,13 +65,13 @@ describe('User group management widget', () => {
         cy.contains('.userGroupsWidget tr', groupName).should('not.exist');
     });
 
-    it('should display LDAP group when LDAP is enabled', () => {
+    it('should display LDAP group column when LDAP is enabled', () => {
         setLdapAvailibility(true);
         reloadPage();
         cy.contains(ldapGroupColumnName);
     });
 
-    it('should hide LDAP group when LDAP is disabled', () => {
+    it('should hide LDAP group column when LDAP is disabled', () => {
         setLdapAvailibility(false);
         reloadPage();
         cy.contains(ldapGroupColumnName).should('not.exist');
