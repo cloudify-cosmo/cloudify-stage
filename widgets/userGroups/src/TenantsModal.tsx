@@ -2,10 +2,9 @@
 
 import Actions from './actions';
 import GroupPropType from './props/GroupPropType';
-import { UnsafelyTypedFormField } from '../../../app/components/basic';
 
-const { RolesPicker } = Stage.Common;
-const { RolesUtil } = Stage.Common;
+const { RolesPicker, RolesUtil } = Stage.Common;
+const { UnsafelyTypedFormField } = Stage.Basic;
 
 export default function TenantsModal({ group, open, tenants, toolbox, onHide }) {
     const { useState } = React;

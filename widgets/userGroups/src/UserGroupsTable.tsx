@@ -1,5 +1,4 @@
 // @ts-nocheck File not migrated fully to TS
-import { connect, ConnectedProps } from 'react-redux';
 import Actions from './actions';
 import CreateModal from './CreateModal';
 import GroupDetails from './GroupDetails';

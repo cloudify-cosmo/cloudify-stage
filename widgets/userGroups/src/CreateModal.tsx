@@ -1,7 +1,8 @@
 // @ts-nocheck File not migrated fully to TS
 
-import { UnsafelyTypedFormField } from '../../../app/components/basic';
 import Actions from './actions';
+
+const { UnsafelyTypedFormField } = Stage.Basic;
 
 export default function CreateModal({ toolbox, isLdapEnable }) {
     const { useBoolean, useErrors, useOpen, useInputs } = Stage.Hooks;

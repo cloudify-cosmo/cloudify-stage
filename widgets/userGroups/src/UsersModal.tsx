@@ -2,7 +2,8 @@
 
 import Actions from './actions';
 import GroupPropType from './props/GroupPropType';
-import { UnsafelyTypedFormField } from '../../../app/components/basic';
+
+const { UnsafelyTypedFormField } = Stage.Basic;
 
 export default function UsersModal({ onHide, group, groups, open, toolbox, users }) {
     const { useState } = React;
