@@ -8,7 +8,7 @@ describe('User group management widget', () => {
         cy.intercept('GET', '/console/sp/ldap', ldapResponse);
     };
     const reloadPage = () => {
-        cy.usePageMock(userGroupsWidgetName).mockLogin();
+        cy.usePageMock(userGroupsWidgetName).reload();
     };
 
     before(() => {

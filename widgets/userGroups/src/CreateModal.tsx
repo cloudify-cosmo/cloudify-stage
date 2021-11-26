@@ -1,7 +1,4 @@
 // @ts-nocheck File not migrated fully to TS
-/**
- * Created by jakubniezgoda on 03/02/2017.
- */
 
 import { UnsafelyTypedFormField } from '../../../app/components/basic';
 import Actions from './actions';
