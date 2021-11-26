@@ -13,7 +13,7 @@ describe('SideBar', () => {
         cy.fixture('pages/pages_with_groups').then(pages => {
             mountWithProvider(
                 <ThemeContext.Provider value="">
-                    <SideBar />
+                    <SideBar pageId={''} />
                 </ThemeContext.Provider>,
                 {
                     pages,
