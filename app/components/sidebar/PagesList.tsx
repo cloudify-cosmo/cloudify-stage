@@ -1,5 +1,5 @@
 import type { CSSProperties, FunctionComponent, ReactNode } from 'react';
-import React, { useCallback, useMemo } from 'react';
+import React, { useCallback, useEffect, useMemo } from 'react';
 import { chain, find, includes, map } from 'lodash';
 import type { DragEndEvent, DragOverEvent, DragStartEvent } from '@dnd-kit/core';
 import { closestCenter, DndContext, PointerSensor, useSensor, useSensors } from '@dnd-kit/core';
@@ -15,7 +15,7 @@ import AddPageGroupButton from './AddPageGroupButton';
 import SortableMenuItem from './SortableMenuItem';
 
 import type { PageDefinition } from '../../actions/page';
-import type { PageMenuItem } from '../../actions/pageMenu';
+import type { PageGroup, PageMenuItem } from '../../actions/pageMenu';
 import {
     changePageMenuItemIcon,
     changePageMenuItemName,
@@ -98,6 +98,14 @@ const PagesList: FunctionComponent<PagesListProps> = ({ pageId, expandedGroupIds
         [pages, expandedGroupIds]
     );
     const pageIds = useMemo(() => pages.filter(drillDownPagesFilter).map(({ id }) => id), [pages]);
+
+    useEffect(() => {
+        const containingGroup = find(
+            pages,
+            pageMenuItem => pageMenuItem.type === 'pageGroup' && find(pageMenuItem.pages, { id: pageId })
+        ) as PageGroup;
+        if (containingGroup && !_.includes(expandedGroupIds, containingGroup.id)) onGroupExpand(containingGroup.id);
+    }, [pageId]);
 
     const dispatch = useDispatch();
     const sensors = useSensors(useSensor(PointerSensor, { activationConstraint: { distance: 1 } }));
