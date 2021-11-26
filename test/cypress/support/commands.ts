@@ -209,13 +209,17 @@ const commands = {
         });
         return cy.visit('/console');
     },
-    clickPageMenuItem: (name: string, id: string | null = null) => {
-        cy.log(`Switching to '${name}' page`);
+    clickPageMenuItem: (name: string, expectedPageId: string | null = null) => {
+        cy.log(`Clicking '${name}' page menu item`);
         cy.get('.sidebar.menu .pages').contains(name).click({ force: true });
-        if (id) {
-            cy.location('pathname').should('be.equal', `/console/page/${id}`);
+        if (expectedPageId) {
+            cy.location('pathname').should('be.equal', `/console/page/${expectedPageId}`);
         }
         return cy.waitUntilPageLoaded();
+    },
+    clickSystemMenuItem: (name: string) => {
+        cy.log(`Clicking '${name}' system menu item`);
+        cy.get('.sidebar.menu').contains('a.item', name).click({ force: true });
     },
     visitTestPage: () => {
         cy.clickPageMenuItem(testPageName);

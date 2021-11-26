@@ -28,7 +28,7 @@ const HealthIndicator: FunctionComponent = () => {
             icon={
                 <Icon.Group>
                     <SideBarItemIcon name="heartbeat" />
-                    {dotColor && <Icon corner="top right" name="circle" color={dotColor} />}
+                    {dotColor && <Icon corner="top right" name="circle" color={dotColor} style={{ marginRight: 8 }} />}
                 </Icon.Group>
             }
             label={t('health')}

@@ -23,8 +23,7 @@ describe('Template management', () => {
     it('is available for admin users', () => {
         cy.mockLogin();
 
-        cy.get('.usersMenu').click();
-        cy.get('.usersMenu').contains('Template Management').click();
+        cy.goToTemplateManagement();
 
         cy.location('pathname').should('be.equal', '/console/template_management');
 

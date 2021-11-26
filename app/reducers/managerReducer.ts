@@ -13,12 +13,15 @@ export interface ManagerData {
     };
     clusterStatus: Record<string, any>;
     err: any;
+    isLdap: boolean;
     isLoggingIn: boolean;
     lastUpdated: any;
     license: Record<string, any>;
+    maintenance: string;
     permissions: Record<string, any>;
     roles: any[];
     tenants: Record<string, any>;
+    username: string;
     version: Record<string, any>;
 }
 
@@ -30,12 +33,15 @@ export const emptyState: ManagerData = {
     },
     clusterStatus: {},
     err: null,
+    isLdap: false,
     isLoggingIn: false,
     lastUpdated: null,
     license: {},
+    maintenance: '',
     permissions: {},
     roles: [],
     tenants: {},
+    username: '',
     version: {}
 };
 

@@ -22,5 +22,5 @@ export function mountWithProvider(component: ReactNode, initialState?: Record<st
             <Provider store={store}>{component}</Provider>
         </Router>
     );
-    return store;
+    return { store, history };
 }
