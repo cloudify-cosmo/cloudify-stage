@@ -1,9 +1,7 @@
 import React from 'react';
 
 import '../../initAppContext';
-import PagesList from 'app/components/sidebar/PagesList';
 import Consts from 'app/utils/consts';
-import { noop } from 'lodash';
 import SideBar from 'app/components/sidebar/SideBar';
 import { ThemeContext } from 'styled-components';
 import { mountWithProvider } from '../../utils';
