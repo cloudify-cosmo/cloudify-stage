@@ -2,17 +2,17 @@
 describe('User group management widget', () => {
     const groupName = 'user_groups_test';
     const ldapGroupColumnName = 'LDAP group';
-    const userGroupsWidgetName = 'userGroups';
+    const widgetId = 'userGroups';
     const setLdapAvailibility = (isEnabled: boolean) => {
         const ldapResponse = isEnabled ? 'enabled' : 'disabled';
         cy.intercept('GET', '/console/sp/ldap', ldapResponse);
     };
     const reloadPage = () => {
-        cy.usePageMock(userGroupsWidgetName).reload();
+        cy.usePageMock(widgetId).reload();
     };
 
     before(() => {
-        cy.activate('valid_trial_license').usePageMock(userGroupsWidgetName).mockLogin().deleteUserGroup(groupName);
+        cy.activate('valid_trial_license').usePageMock(widgetId).mockLogin().deleteUserGroup(groupName);
     });
 
     it('should allow to manage a group', () => {
