@@ -3,7 +3,7 @@ describe('User group management widget', () => {
     const groupName = 'user_groups_test';
     const ldapGroupColumnName = 'LDAP group';
     const widgetId = 'userGroups';
-    const setLdapAvailibility = (isEnabled: boolean) => {
+    const setLdapAvailability = (isEnabled: boolean) => {
         const ldapResponse = isEnabled ? 'enabled' : 'disabled';
         cy.intercept('GET', '/console/sp/ldap', ldapResponse);
     };
@@ -66,13 +66,13 @@ describe('User group management widget', () => {
     });
 
     it('should display LDAP group column when LDAP is enabled', () => {
-        setLdapAvailibility(true);
+        setLdapAvailability(true);
         reloadPage();
         cy.contains(ldapGroupColumnName);
     });
 
     it('should hide LDAP group column when LDAP is disabled', () => {
-        setLdapAvailibility(false);
+        setLdapAvailability(false);
         reloadPage();
         cy.contains(ldapGroupColumnName).should('not.exist');
     });
