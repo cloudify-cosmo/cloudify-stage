@@ -11,7 +11,7 @@ describe('Help', () => {
     it('opens "About" modal', () => {
         mountWithProvider(
             <ThemeContext.Provider value="">
-                <HelpMenu onAboutModalOpen={noop} />
+                <HelpMenu onModalOpen={noop} />
             </ThemeContext.Provider>
         );
 
@@ -25,7 +25,7 @@ describe('Help', () => {
 
         mountWithProvider(
             <ThemeContext.Provider value="">
-                <HelpMenu onAboutModalOpen={noop} />
+                <HelpMenu onModalOpen={noop} />
             </ThemeContext.Provider>,
             { manager: { license: {}, version: { version: '5.0.5' } } }
         );
@@ -41,7 +41,7 @@ describe('Help', () => {
 
         mountWithProvider(
             <ThemeContext.Provider value="">
-                <HelpMenu onAboutModalOpen={noop} />
+                <HelpMenu onModalOpen={noop} />
             </ThemeContext.Provider>,
             { manager: { license: {}, version: { version: '6.3-dev' } } }
         );
@@ -57,7 +57,7 @@ describe('Help', () => {
 
         mountWithProvider(
             <ThemeContext.Provider value="">
-                <HelpMenu onAboutModalOpen={noop} />
+                <HelpMenu onModalOpen={noop} />
             </ThemeContext.Provider>
         );
 

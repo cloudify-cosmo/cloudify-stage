@@ -1,6 +1,6 @@
 import type { CSSProperties, FunctionComponent, ReactNode } from 'react';
 import React, { useCallback, useMemo } from 'react';
-import { chain, find, includes, map, without } from 'lodash';
+import { chain, find, includes, map } from 'lodash';
 import type { DragEndEvent, DragOverEvent, DragStartEvent } from '@dnd-kit/core';
 import { closestCenter, DndContext, PointerSensor, useSensor, useSensors } from '@dnd-kit/core';
 import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable';
@@ -33,9 +33,10 @@ import IconSelection from './IconSelection';
 import { SideBarItemWrapper } from './SideBarItem';
 
 export interface PagesListProps {
-    isEditMode?: boolean;
     pageId: string;
-    expanded: boolean;
+    expandedGroupIds: string[];
+    onGroupCollapse: (groupId: string) => void;
+    onGroupExpand: (groupId: string) => void;
 }
 
 function drillDownPagesFilter(pageMenuItem: PageMenuItem) {
@@ -70,12 +71,12 @@ const EditIcon = styled(Icon)`
     }
 `;
 
-const PagesList: FunctionComponent<PagesListProps> = ({ isEditMode = false, pageId, expanded }) => {
-    const [expandedGroupIds, setExpandedGroupIds] = useResettableState<string[]>([]);
+const PagesList: FunctionComponent<PagesListProps> = ({ pageId, expandedGroupIds, onGroupCollapse, onGroupExpand }) => {
     const [dragForbidden, setDragForbidden, unsetDragForbidden] = useBoolean();
     const [dragging, setDragging, unsetDragging] = useBoolean();
     const [nameEditedMenuItemId, setNameEditedMenuItemId, stopNameEdit] = useResettableState<string | null>(null);
 
+    const isEditMode = useSelector((state: ReduxState) => state.config.isEditMode || false);
     const pages = useSelector((state: ReduxState) => state.pages);
     const selected = useMemo(() => {
         const pagesMap = createPagesMap(pages);
@@ -165,16 +166,15 @@ const PagesList: FunctionComponent<PagesListProps> = ({ isEditMode = false, page
             setDragging();
             const activePageMenuItem = getPageMenuItem(event.active.id);
             if (activePageMenuItem.type === 'pageGroup' && includes(expandedGroupIds, activePageMenuItem.id)) {
-                setExpandedGroupIds(without(expandedGroupIds, activePageMenuItem.id));
+                onGroupCollapse(activePageMenuItem.id);
             }
         },
         [pages, expandedGroupIds]
     );
 
     function onPageGroupClick(clickedPageGroupId: string) {
-        if (includes(expandedGroupIds, clickedPageGroupId))
-            setExpandedGroupIds(without(expandedGroupIds, clickedPageGroupId));
-        else setExpandedGroupIds([...expandedGroupIds, clickedPageGroupId]);
+        if (includes(expandedGroupIds, clickedPageGroupId)) onGroupCollapse(clickedPageGroupId);
+        else onGroupExpand(clickedPageGroupId);
     }
 
     function onPageSelected(page: PageDefinition) {
@@ -283,7 +283,7 @@ const PagesList: FunctionComponent<PagesListProps> = ({ isEditMode = false, page
         );
 
         if (pageMenuItem.type === 'page' || !includes(expandedGroupIds, pageMenuItem.id)) return [renderedMenuItem];
-        return [renderedMenuItem, ...pageMenuItem.pages.map(childItem => renderPageMenuItem(childItem, expanded))];
+        return [renderedMenuItem, ...pageMenuItem.pages.map(childItem => renderPageMenuItem(childItem, true))];
     }
 
     let cursor;
