@@ -2,7 +2,9 @@
 import { className, styles } from '../../support/cluster_status_commons';
 
 describe('Cluster Status widget', () => {
-    before(() => cy.activate('valid_trial_license').usePageMock('highAvailability').mockLogin());
+    const widgetId = 'highAvailability';
+
+    before(() => cy.activate('valid_trial_license').usePageMock(widgetId).mockLogin());
 
     const clusterStatusFetchTimeout = { timeout: 12000 };
 
@@ -17,12 +19,14 @@ describe('Cluster Status widget', () => {
         const databaseCell = `tbody tr:nth-child(${rowNumber.database}) td:nth-child(1)`;
         const brokerCell = `tbody tr:nth-child(${rowNumber.broker}) td:nth-child(1)`;
 
-        cy.get(managerCell).should('have.text', ' Manager');
-        cy.get(managerCell).should('have.attr', 'style', styles[expectedManagerStatus]);
-        cy.get(databaseCell).should('have.text', ' Database');
-        cy.get(databaseCell).should('have.attr', 'style', styles[expectedDbStatus]);
-        cy.get(brokerCell).should('have.text', ' Message Broker');
-        cy.get(brokerCell).should('have.attr', 'style', styles[expectedBrokerStatus]);
+        cy.getWidget(widgetId).within(() => {
+            cy.get(managerCell).should('have.text', ' Manager');
+            cy.get(managerCell).should('have.attr', 'style', styles[expectedManagerStatus]);
+            cy.get(databaseCell).should('have.text', ' Database');
+            cy.get(databaseCell).should('have.attr', 'style', styles[expectedDbStatus]);
+            cy.get(brokerCell).should('have.text', ' Message Broker');
+            cy.get(brokerCell).should('have.attr', 'style', styles[expectedBrokerStatus]);
+        });
     };
 
     it('is providing node services status details in popup', () => {

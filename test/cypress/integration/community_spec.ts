@@ -18,17 +18,14 @@ describe('Community version', () => {
     });
 
     it('should have limited set of options in Users menu', () => {
-        cy.get('.usersMenu')
-            .click()
-            .within(() => {
-                cy.contains('Edit Mode').should('be.visible');
-                cy.contains('Reset Templates').should('be.visible');
-                cy.contains('Change Password').should('be.visible');
-                cy.contains('Logout').should('be.visible');
+        cy.contains('admin').click({ force: true });
+        cy.contains('Edit Mode').should('be.visible');
+        cy.contains('Reset Templates').should('be.visible');
+        cy.contains('Change Password').should('be.visible');
+        cy.contains('Logout').should('be.visible');
 
-                cy.contains('License Management').should('not.exist');
-                cy.contains('Template Management').should('not.exist');
-            });
+        cy.contains('License Management').should('not.exist');
+        cy.contains('Template Management').should('not.exist');
     });
 
     it('should have community license in About modal', () => {

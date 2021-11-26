@@ -1,19 +1,19 @@
-// @ts-nocheck File not migrated fully to TS
 import _ from 'lodash';
 
 describe('User Menu', () => {
     const nonAdminUsername = 'user-menu-test';
     const nonAdminPassword = 'user-menu-test';
 
-    const verifyOptionIsVisible = (selector, expectedName, expectedClasses) => {
-        cy.get(selector).within(() => {
-            _.words(expectedClasses, className => cy.get('i').should('have.class', className));
-            cy.get('span').should('have.text', expectedName);
+    const verifyOptionIsVisible = (expectedName: string, expectedClasses: string) => {
+        cy.contains('.item', expectedName).within(() => {
+            _(expectedClasses)
+                .words()
+                .forEach(className => cy.get('i').should('have.class', className));
         });
     };
 
-    const verifyOptionIsNotVisible = selector => {
-        cy.get(selector).should('not.exist');
+    const verifyOptionIsNotVisible = (optionName: string) => {
+        cy.contains(optionName).should('not.exist');
     };
 
     before(() => {
@@ -28,28 +28,24 @@ describe('User Menu', () => {
     it('should contain options for admin users', () => {
         cy.login();
 
-        cy.get('.usersMenu').click();
-        cy.get('.usersMenu .menu').within(() => {
-            verifyOptionIsVisible('#editModeMenuItem', 'Edit Mode', 'configure');
-            verifyOptionIsVisible('#templatesMenuItem', 'Template Management', 'layout list');
-            verifyOptionIsVisible('#resetMenuItem', 'Reset Templates', 'undo');
-            verifyOptionIsVisible('#licenseMenuItem', 'License Management', 'key');
-            verifyOptionIsVisible('#changePasswordMenuItem', 'Change Password', 'lock');
-            verifyOptionIsVisible('#logoutMenuItem', 'Logout', 'log out');
-        });
+        cy.contains('admin').click({ force: true });
+        verifyOptionIsVisible('Edit Mode', 'edit');
+        verifyOptionIsVisible('Template Management', 'layout list');
+        verifyOptionIsVisible('Reset Templates', 'undo');
+        verifyOptionIsVisible('License Management', 'key');
+        verifyOptionIsVisible('Change Password', 'lock');
+        verifyOptionIsVisible('Logout', 'log out');
     });
 
     it('should contain options for non-admin users', () => {
         cy.mockLogin(nonAdminUsername, nonAdminPassword);
 
-        cy.get('.usersMenu').click();
-        cy.get('.usersMenu .menu').within(() => {
-            verifyOptionIsNotVisible('#editModeMenuItem');
-            verifyOptionIsNotVisible('#templatesMenuItem');
-            verifyOptionIsVisible('#resetMenuItem', 'Reset Templates', 'undo');
-            verifyOptionIsNotVisible('#licenseMenuItem');
-            verifyOptionIsVisible('#changePasswordMenuItem', 'Change Password', 'lock');
-            verifyOptionIsVisible('#logoutMenuItem', 'Logout', 'log out');
-        });
+        cy.contains(nonAdminUsername).click({ force: true });
+        verifyOptionIsNotVisible('Edit Mode');
+        verifyOptionIsNotVisible('Template Management');
+        verifyOptionIsVisible('Reset Templates', 'undo');
+        verifyOptionIsNotVisible('License Management');
+        verifyOptionIsVisible('Change Password', 'lock');
+        verifyOptionIsVisible('Logout', 'log out');
     });
 });

@@ -7,9 +7,11 @@ import { Icon } from '../basic';
 const SideBarItemIcon = styled(({ name, ...rest }: IconProps) => <Icon name={name ?? 'expand'} {...rest} />)`
     &&&&&& {
         margin-left: -10px;
-        margin-right: 4px;
+        margin-right: 9px;
+        margin-top: -2px;
         float: none;
         width: 1.2em;
+        font-size: 19px;
     }
 `;
 

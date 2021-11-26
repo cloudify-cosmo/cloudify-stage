@@ -56,7 +56,9 @@ const commands = {
                     cy.stageRequest(`/console/templates/page-groups/${pageGroup.id}`, 'DELETE');
                 }
             });
-        })
+        }),
+
+    goToTemplateManagement: () => cy.clickSystemMenuItem('admin').clickSystemMenuItem('Template Management')
 };
 
 addCommands(commands);
