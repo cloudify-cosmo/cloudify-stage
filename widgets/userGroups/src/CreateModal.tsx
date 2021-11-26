@@ -4,7 +4,7 @@ import Actions from './actions';
 
 const { UnsafelyTypedFormField } = Stage.Basic;
 
-export default function CreateModal({ toolbox, isLdapEnable }) {
+export default function CreateModal({ toolbox, isLdapEnabled }) {
     const { useBoolean, useErrors, useOpen, useInputs } = Stage.Hooks;
 
     const [isLoading, setLoading, unsetLoading] = useBoolean();
@@ -55,7 +55,7 @@ export default function CreateModal({ toolbox, isLdapEnable }) {
                         <Form.Input name="groupName" value={groupName} onChange={setInput} />
                     </UnsafelyTypedFormField>
 
-                    {isLdapEnable && (
+                    {isLdapEnabled && (
                         <UnsafelyTypedFormField error={errors.ldapGroup} label="LDAP group name">
                             <Form.Input name="ldapGroup" value={ldapGroup} onChange={setInput} />
                         </UnsafelyTypedFormField>
@@ -83,5 +83,5 @@ export default function CreateModal({ toolbox, isLdapEnable }) {
 
 CreateModal.propTypes = {
     toolbox: Stage.PropTypes.Toolbox.isRequired,
-    isLdapEnable: PropTypes.bool
+    isLdapEnabled: PropTypes.bool
 };

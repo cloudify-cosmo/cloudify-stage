@@ -66,10 +66,10 @@ const manager: Reducer<ManagerData> = (state = emptyState, action) => {
                 err: action.error !== null && typeof action.error === 'object' ? action.error.message : action.error,
                 lastUpdated: action.receivedAt
             };
-        case types.SET_LDAP:
+        case types.SET_LDAP_ENABLED:
             return {
                 ...state,
-                isLdapEnable: action.isLdapEnable
+                isLdapEnabled: action.isLdapEnabled
             };
         case types.SET_USER_DATA:
             return {
