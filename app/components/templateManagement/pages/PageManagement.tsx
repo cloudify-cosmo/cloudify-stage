@@ -28,7 +28,7 @@ import type { ReduxState } from '../../../reducers';
 import type { WidgetDefinition } from '../../../utils/StageAPI';
 import type { TemplatePageDefinition } from '../../../reducers/templatesReducer';
 import useCreatePageId from './useCreatePageId';
-import IconSelection from '../../IconSelection';
+import IconSelection from '../../sidebar/IconSelection';
 import { expandedSidebarWidth } from '../../sidebar/SideBar';
 
 export interface PageManagementProps {
