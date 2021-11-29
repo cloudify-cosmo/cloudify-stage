@@ -84,7 +84,7 @@ export default function UsersModal({ onHide, group, groups, open, toolbox, users
                     </Message>
                 )}
                 <Form loading={isLoading} errors={errors} onErrorsDismiss={clearErrors}>
-                    <UnsafelyTypedFormField label={t('fields.user')}>
+                    <UnsafelyTypedFormField label={t('fields.users')}>
                         <Form.Dropdown
                             multiple
                             selection
