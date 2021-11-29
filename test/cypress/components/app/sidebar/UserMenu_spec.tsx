@@ -14,12 +14,10 @@ describe('UserMenu', () => {
     it('renders all options', () => {
         cy.stub(StageUtils, 'isUserAuthorized', () => true);
 
-        mountWithProvider(<UserMenu onModalOpen={noop} />, {
+        mountWithProvider(<UserMenu onModalOpen={noop} expanded onGroupClick={noop} />, {
             manager: { username, license: { isRequired: true }, tenants: { items: [] } },
             config: { mode: Consts.MODE_MAIN }
         });
-
-        cy.contains(username).click();
 
         cy.contains('Edit Mode').should('be.visible');
         cy.contains('Template Management').should('be.visible');
@@ -30,12 +28,10 @@ describe('UserMenu', () => {
     });
 
     it('renders limited set of options', () => {
-        mountWithProvider(<UserMenu onModalOpen={noop} />, {
+        mountWithProvider(<UserMenu onModalOpen={noop} expanded onGroupClick={noop} />, {
             manager: { username, tenants: { items: [] } },
             config: { mode: Consts.MODE_CUSTOMER }
         });
-
-        cy.contains(username).click();
 
         cy.contains('Edit Mode').should('not.exist');
         cy.contains('Template Management').should('not.exist');
@@ -48,12 +44,11 @@ describe('UserMenu', () => {
     it('handles edit mode', () => {
         cy.stub(StageUtils, 'isUserAuthorized', () => true);
 
-        const { store } = mountWithProvider(<UserMenu onModalOpen={noop} />, {
+        const { store } = mountWithProvider(<UserMenu onModalOpen={noop} expanded onGroupClick={noop} />, {
             manager: { username, license: {}, tenants: { items: [] } },
             config: { mode: Consts.MODE_MAIN }
         });
 
-        cy.contains(username).click();
         cy.contains('Edit Mode').click();
         cy.wrap(store).invoke('getState').its('config.isEditMode').should('be.true');
     });
@@ -61,26 +56,24 @@ describe('UserMenu', () => {
     it('handles template management', () => {
         cy.stub(StageUtils, 'isUserAuthorized', () => true);
 
-        const { history } = mountWithProvider(<UserMenu onModalOpen={noop} />, {
+        const { history } = mountWithProvider(<UserMenu onModalOpen={noop} expanded onGroupClick={noop} />, {
             manager: { username, license: {}, tenants: { items: [] } },
             config: { mode: Consts.MODE_MAIN }
         });
 
         const push = cy.stub(history, 'push');
 
-        cy.contains(username).click();
         cy.contains('Template Management')
             .click()
             .then(() => expect(push).to.be.calledWithExactly('/template_management'));
     });
 
     it('handles template reset', () => {
-        mountWithProvider(<UserMenu onModalOpen={noop} />, {
+        mountWithProvider(<UserMenu onModalOpen={noop} expanded onGroupClick={noop} />, {
             manager: { username, tenants: { items: [] } },
             config: { mode: Consts.MODE_CUSTOMER }
         });
 
-        cy.contains(username).click();
         cy.contains('Reset Templates').click();
         cy.get('.modal').should('be.visible');
     });
@@ -88,26 +81,24 @@ describe('UserMenu', () => {
     it('handles license management', () => {
         cy.stub(StageUtils, 'isUserAuthorized', () => true);
 
-        const { history } = mountWithProvider(<UserMenu onModalOpen={noop} />, {
+        const { history } = mountWithProvider(<UserMenu onModalOpen={noop} expanded onGroupClick={noop} />, {
             manager: { username, license: { isRequired: true }, tenants: { items: [] } },
             config: { mode: Consts.MODE_MAIN }
         });
 
         const push = cy.stub(history, 'push');
 
-        cy.contains(username).click();
         cy.contains('License Management')
             .click()
             .then(() => expect(push).to.be.calledWithExactly('/license'));
     });
 
     it('handles password change', () => {
-        mountWithProvider(<UserMenu onModalOpen={noop} />, {
+        mountWithProvider(<UserMenu onModalOpen={noop} expanded onGroupClick={noop} />, {
             manager: { username, tenants: { items: [] } },
             config: { mode: Consts.MODE_CUSTOMER }
         });
 
-        cy.contains(username).click();
         cy.contains('Change Password').click();
         cy.get('.modal').should('be.visible');
     });
@@ -115,12 +106,11 @@ describe('UserMenu', () => {
     it('handles logout', () => {
         const logout = cy.stub(Auth, 'logout');
 
-        mountWithProvider(<UserMenu onModalOpen={noop} />, {
+        mountWithProvider(<UserMenu onModalOpen={noop} expanded onGroupClick={noop} />, {
             manager: { username, tenants: { items: [] } },
             config: { mode: Consts.MODE_CUSTOMER }
         });
 
-        cy.contains(username).click();
         cy.contains('Logout')
             .click()
             .then(() => expect(logout).to.be.called);
