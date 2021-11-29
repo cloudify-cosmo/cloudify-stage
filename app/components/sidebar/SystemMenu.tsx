@@ -6,19 +6,21 @@ import HelpMenu from './HelpMenu';
 import HealthIndicator from './HealthIndicator';
 import { ReduxState } from '../../reducers';
 import Consts from '../../utils/consts';
+import UserMenu from './UserMenu';
 
 interface SystemMenuProps {
-    onAboutModalOpen: () => void;
+    onModalOpen: () => void;
 }
 
-const SystemMenu: FunctionComponent<SystemMenuProps> = ({ onAboutModalOpen }) => {
+const SystemMenu: FunctionComponent<SystemMenuProps> = ({ onModalOpen }) => {
     const mode = useSelector((state: ReduxState) => state.config.mode);
 
     return (
         <>
             <TenantSelection />
-            <HelpMenu onAboutModalOpen={onAboutModalOpen} />
+            <HelpMenu onAboutModalOpen={onModalOpen} />
             {mode !== Consts.MODE_CUSTOMER && <HealthIndicator />}
+            <UserMenu onModalOpen={onModalOpen} />
         </>
     );
 };

@@ -1,8 +1,7 @@
 describe('Pages segment', () => {
     before(() => {
         cy.activate().removeUserPageGroups().removeUserPages().removeUserTemplates().mockLogin();
-        cy.get('.usersMenu').click();
-        cy.get('.usersMenu').contains('Template Management').click();
+        cy.goToTemplateManagement();
     });
 
     it('lists available pages', () => {

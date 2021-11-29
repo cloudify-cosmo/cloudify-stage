@@ -58,9 +58,9 @@ describe('Cluster Status', () => {
 
             cy.log('Check system status icon');
             if (expectedStatusIndicatorColor) {
-                cy.contains('Health').find('.circle').should('have.class', expectedStatusIndicatorColor);
+                cy.contains('.item', 'Health').find('.circle').should('have.class', expectedStatusIndicatorColor);
             } else {
-                cy.contains('Health').find('.circle').should('not.exist');
+                cy.contains('.item', 'Health').find('.circle').should('not.exist');
             }
 
             cy.log('Check system status popup content');

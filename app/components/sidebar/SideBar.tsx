@@ -8,7 +8,7 @@ import { ReduxState } from '../../reducers';
 import SystemMenu from './SystemMenu';
 import { useBoolean } from '../../utils/hooks';
 
-export const collapsedSidebarWidth = '1.9rem';
+export const collapsedSidebarWidth = '2.5rem';
 export const expandedSidebarWidth = '13rem';
 
 const ThemedSidebar = styled(Sidebar)`
@@ -51,7 +51,7 @@ const SideBar: FunctionComponent<SideBarProps> = ({ pageId }) => {
                 onMouseLeave={collapse}
             >
                 <PagesList pageId={pageId || homePageId} isEditMode={isEditMode} expanded={expanded || isEditMode} />
-                {!isEditMode && <SystemMenu onAboutModalOpen={collapse} />}
+                {!isEditMode && <SystemMenu onModalOpen={collapse} />}
             </ThemedSidebar>
         </div>
     );

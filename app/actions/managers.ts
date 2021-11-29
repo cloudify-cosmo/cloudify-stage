@@ -121,7 +121,7 @@ function doLogout(err) {
     };
 }
 
-export function logout(err, path) {
+export function logout(err?, path?) {
     return (dispatch, getState) => {
         const localLogout = () => {
             dispatch(clearContext());
