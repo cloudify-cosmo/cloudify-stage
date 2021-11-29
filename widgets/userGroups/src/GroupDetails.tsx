@@ -3,7 +3,7 @@
 import Actions from './actions';
 import GroupPropType from './props/GroupPropType';
 
-const { i18n } = Stage;
+const t = Stage.Utils.getT('widgets.userGroups.details.group.segments');
 
 export default class UserDetails extends React.Component {
     constructor(props, context) {
@@ -83,7 +83,7 @@ export default class UserDetails extends React.Component {
             <Segment.Group horizontal>
                 <Segment>
                     <Icon name="users" />
-                    {i18n.t('widgets.userGroups.details.group.segments.users.header')}
+                    {t('users.header')}
                     <Divider />
                     <List divided relaxed verticalAlign="middle" className="light">
                         {data.users.map(item => {
@@ -103,14 +103,12 @@ export default class UserDetails extends React.Component {
                             );
                         })}
 
-                        {_.isEmpty(data.users) && (
-                            <Message content={i18n.t('widgets.userGroups.details.group.segments.users.empty')} />
-                        )}
+                        {_.isEmpty(data.users) && <Message content={t('users.empty')} />}
                     </List>
                 </Segment>
                 <Segment>
                     <Icon name="users" />
-                    {i18n.t('widgets.userGroups.details.group.segments.tenants.header')}
+                    {t('tenants.header')}
                     <Divider />
                     <List divided relaxed verticalAlign="middle" className="light">
                         {_.map(data.tenants, (role, item) => {
@@ -130,14 +128,12 @@ export default class UserDetails extends React.Component {
                             );
                         })}
 
-                        {_.isEmpty(data.tenants) && (
-                            <Message content={i18n.t('widgets.userGroups.details.group.segments.tenants.empty')} />
-                        )}
+                        {_.isEmpty(data.tenants) && <Message content={t('tenants.empty')} />}
                     </List>
                 </Segment>
 
                 <Confirm
-                    content={i18n.t('widgets.userGroups.details.group.segments.confirm.removeFromGroup', {
+                    content={t('confirm.removeFromGroup', {
                         groupName: data.name
                     })}
                     open={showModal}

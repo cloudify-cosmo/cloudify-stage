@@ -8,7 +8,7 @@ import UsersModal from './UsersModal';
 import GroupPropType from './props/GroupPropType';
 import MenuAction from './MenuAction';
 
-const { i18n } = Stage;
+const t = Stage.Utils.getT('widgets.userGroups');
 
 class UserGroupsTable extends React.Component {
     constructor(props, context) {
@@ -129,7 +129,7 @@ class UserGroupsTable extends React.Component {
         } else if (value === menuActions.setDefaultGroupRole) {
             this.setRole(group, false);
         } else {
-            const errorMessage = i18n.t('widgets.userGroups.exceptions.unknownAction', {
+            const errorMessage = t('exceptions.unknownAction', {
                 actionName: value
             });
             this.setState({ error: errorMessage });
@@ -197,19 +197,13 @@ class UserGroupsTable extends React.Component {
                     sortAscending={widget.configuration.sortAscending}
                     searchable
                     className="userGroupsTable"
-                    noDataMessage={i18n.t('widgets.userGroups.noGroups')}
+                    noDataMessage={t('noGroups')}
                 >
-                    <DataTable.Column label={i18n.t('widgets.userGroups.columns.groupName')} name="name" width="35%" />
-                    {isLdapEnabled && (
-                        <DataTable.Column
-                            label={i18n.t('widgets.userGroups.columns.ldapGroup')}
-                            name="ldap_dn"
-                            width="20%"
-                        />
-                    )}
-                    <DataTable.Column label={i18n.t('widgets.userGroups.columns.admin')} name="role" width="10%" />
-                    <DataTable.Column label={i18n.t('widgets.userGroups.columns.users')} width="10%" />
-                    <DataTable.Column label={i18n.t('widgets.userGroups.columns.tenants')} width="10%" />
+                    <DataTable.Column label={t('columns.groupName')} name="name" width="35%" />
+                    {isLdapEnabled && <DataTable.Column label={t('columns.ldapGroup')} name="ldap_dn" width="20%" />}
+                    <DataTable.Column label={t('columns.admin')} name="role" width="10%" />
+                    <DataTable.Column label={t('columns.users')} width="10%" />
+                    <DataTable.Column label={t('columns.tenants')} width="10%" />
                     <DataTable.Column label="" width="5%" />
                     {data.items.map(item => {
                         return (
@@ -286,14 +280,14 @@ class UserGroupsTable extends React.Component {
                 />
 
                 <Confirm
-                    content={i18n.t('widgets.userGroups.confirm.deleteGroup', { groupName: group.name })}
+                    content={t('confirm.deleteGroup', { groupName: group.name })}
                     open={modalType === menuActions.delete && showModal}
                     onConfirm={this.deleteUserGroup}
                     onCancel={this.hideModal}
                 />
 
                 <Confirm
-                    content={i18n.t('widgets.userGroups.confirm.defaultGroup', { groupName: group.name })}
+                    content={t('confirm.defaultGroup', { groupName: group.name })}
                     open={modalType === menuActions.setDefaultGroupRole && showModal}
                     onConfirm={() => this.setRole(group, false)}
                     onCancel={this.hideModal}

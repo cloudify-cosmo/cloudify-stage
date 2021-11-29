@@ -3,7 +3,8 @@
 import Actions from './actions';
 
 const { UnsafelyTypedFormField } = Stage.Basic;
-const { i18n } = Stage;
+const t = Stage.Utils.getT('widgets.userGroups.modals.create');
+
 export default function CreateModal({ toolbox, isLdapEnabled }) {
     const { useBoolean, useErrors, useOpen, useInputs } = Stage.Hooks;
 
@@ -20,7 +21,7 @@ export default function CreateModal({ toolbox, isLdapEnabled }) {
         const { groupName, isAdmin, ldapGroup } = inputs;
 
         if (_.isEmpty(groupName)) {
-            const validationMessage = i18n.t('widgets.userGroups.modals.create.validation.groupName');
+            const validationMessage = t('validation.groupName');
             setErrors({ groupName: validationMessage });
             return;
         }
@@ -42,42 +43,29 @@ export default function CreateModal({ toolbox, isLdapEnabled }) {
 
     const { groupName, isAdmin, ldapGroup } = inputs;
     const { Modal, Button, Icon, Form, ApproveButton, CancelButton } = Stage.Basic;
-    const addButton = (
-        <Button content={i18n.t('widgets.userGroups.modals.create.buttons.add')} icon="add user" labelPosition="left" />
-    );
+    const addButton = <Button content={t('buttons.add')} icon="add user" labelPosition="left" />;
 
     return (
         <Modal trigger={addButton} open={isOpen} onOpen={doOpen} onClose={doClose}>
             <Modal.Header>
                 <Icon name="add user" />
-                {i18n.t('widgets.userGroups.modals.create.header')}
+                {t('header')}
             </Modal.Header>
 
             <Modal.Content>
                 <Form loading={isLoading} errors={errors} onErrorsDismiss={clearErrors}>
-                    <UnsafelyTypedFormField
-                        error={errors.groupName}
-                        label={i18n.t('widgets.userGroups.modals.create.fields.groupName')}
-                    >
+                    <UnsafelyTypedFormField error={errors.groupName} label={t('fields.groupName')}>
                         <Form.Input name="groupName" value={groupName} onChange={setInput} />
                     </UnsafelyTypedFormField>
 
                     {isLdapEnabled && (
-                        <UnsafelyTypedFormField
-                            error={errors.ldapGroup}
-                            label={i18n.t('widgets.userGroups.modals.create.fields.ldapGroup')}
-                        >
+                        <UnsafelyTypedFormField error={errors.ldapGroup} label={t('fields.ldapGroup')}>
                             <Form.Input name="ldapGroup" value={ldapGroup} onChange={setInput} />
                         </UnsafelyTypedFormField>
                     )}
 
                     <Form.Field error={errors.isAdmin}>
-                        <Form.Checkbox
-                            label={i18n.t('widgets.userGroups.modals.create.fields.admin')}
-                            name="isAdmin"
-                            checked={isAdmin}
-                            onChange={setInput}
-                        />
+                        <Form.Checkbox label={t('fields.admin')} name="isAdmin" checked={isAdmin} onChange={setInput} />
                     </Form.Field>
                 </Form>
             </Modal.Content>
@@ -87,7 +75,7 @@ export default function CreateModal({ toolbox, isLdapEnabled }) {
                 <ApproveButton
                     onClick={submitCreate}
                     disabled={isLoading}
-                    content={i18n.t('widgets.userGroups.modals.create.buttons.add')}
+                    content={t('buttons.add')}
                     icon="add user"
                     color="green"
                 />

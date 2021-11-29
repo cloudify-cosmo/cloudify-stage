@@ -4,7 +4,7 @@ import Actions from './actions';
 import GroupPropType from './props/GroupPropType';
 
 const { UnsafelyTypedFormField } = Stage.Basic;
-const { i18n } = Stage;
+const t = Stage.Utils.getT('widgets.userGroups.modals.user');
 
 export default function UsersModal({ onHide, group, groups, open, toolbox, users }) {
     const { useState } = React;
@@ -71,7 +71,7 @@ export default function UsersModal({ onHide, group, groups, open, toolbox, users
         <Modal open={open} onClose={() => onHide()}>
             <Modal.Header>
                 <Icon name="user" />
-                {i18n.t('widgets.userGroups.modals.user.header', {
+                {t('header', {
                     groupName: group.name
                 })}
             </Modal.Header>
@@ -79,12 +79,12 @@ export default function UsersModal({ onHide, group, groups, open, toolbox, users
             <Modal.Content>
                 {waitingForConfirmation && (
                     <Message warning onDismiss={() => setWaitingForConfirmation(false)}>
-                        <Message.Header>{i18n.t('widgets.userGroups.modals.user.message.header')}</Message.Header>
-                        {i18n.t('widgets.userGroups.modals.user.message.content')}
+                        <Message.Header>{t('message.header')}</Message.Header>
+                        {t('message.content')}
                     </Message>
                 )}
                 <Form loading={isLoading} errors={errors} onErrorsDismiss={clearErrors}>
-                    <UnsafelyTypedFormField label={i18n.t('widgets.userGroups.modals.user.fields.user')}>
+                    <UnsafelyTypedFormField label={t('fields.user')}>
                         <Form.Dropdown
                             multiple
                             selection
@@ -101,18 +101,14 @@ export default function UsersModal({ onHide, group, groups, open, toolbox, users
                 <CancelButton
                     onClick={onCancel}
                     disabled={isLoading}
-                    content={
-                        waitingForConfirmation ? i18n.t('widgets.userGroups.modals.user.buttons.cancel') : undefined
-                    }
+                    content={waitingForConfirmation ? t('buttons.cancel') : undefined}
                 />
                 <ApproveButton
                     onClick={submitUsers}
                     disabled={isLoading}
                     icon="user"
                     color="green"
-                    content={
-                        waitingForConfirmation ? i18n.t('widgets.userGroups.modals.user.buttons.approve') : undefined
-                    }
+                    content={waitingForConfirmation ? t('buttons.approve') : undefined}
                 />
             </Modal.Actions>
         </Modal>

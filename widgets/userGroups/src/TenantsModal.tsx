@@ -3,9 +3,9 @@
 import Actions from './actions';
 import GroupPropType from './props/GroupPropType';
 
-const { i18n } = Stage;
 const { RolesPicker, RolesUtil } = Stage.Common;
 const { UnsafelyTypedFormField, Modal, Icon, Form, ApproveButton, CancelButton } = Stage.Basic;
+const t = Stage.Utils.getT('widgets.userGroups.modals.tenants');
 
 export default function TenantsModal({ group, open, tenants, toolbox, onHide }) {
     const { useState } = React;
@@ -76,14 +76,14 @@ export default function TenantsModal({ group, open, tenants, toolbox, onHide }) 
         <Modal open={open} onClose={() => onHide()}>
             <Modal.Header>
                 <Icon name="user" />
-                {i18n.t('widgets.userGroups.modals.tenants.header', {
+                {t('header', {
                     groupName: group.name
                 })}
             </Modal.Header>
 
             <Modal.Content>
                 <Form loading={isLoading} errors={errors} onErrorsDismiss={clearErrors}>
-                    <UnsafelyTypedFormField label={i18n.t('widgets.userGroups.modals.tenants.fields.tenants')}>
+                    <UnsafelyTypedFormField label={t('fields.tenants')}>
                         <Form.Dropdown
                             multiple
                             selection
