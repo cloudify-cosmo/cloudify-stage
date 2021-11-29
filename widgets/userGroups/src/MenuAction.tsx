@@ -1,6 +1,6 @@
 import type { FunctionComponent, MouseEvent } from 'react';
 import type { MenuItemProps } from 'semantic-ui-react';
-import { MENU_ACTIONS } from './consts';
+import { menuActions } from './consts';
 
 const { i18n } = Stage;
 const { PopupMenu, Menu } = Stage.Basic;
@@ -27,19 +27,19 @@ const MenuAction: FunctionComponent<MenuActionProps> = ({ item, onSelectAction }
                 <Menu.Item
                     icon="users"
                     content={i18n.t('widgets.userGroups.menu.editGroupUsers')}
-                    name={MENU_ACTIONS.EDIT_USERS_ACTION}
+                    name={menuActions.editUsers}
                     onClick={actionClick}
                 />
                 <Menu.Item
                     icon="user"
                     content={i18n.t('widgets.userGroups.menu.editGroupTenants')}
-                    name={MENU_ACTIONS.EDIT_TENANTS_ACTION}
+                    name={menuActions.editTenants}
                     onClick={actionClick}
                 />
                 <Menu.Item
                     icon="trash"
                     content={i18n.t('widgets.userGroups.menu.delete')}
-                    name={MENU_ACTIONS.DELETE_ACTION}
+                    name={menuActions.delete}
                     onClick={actionClick}
                 />
             </Menu>

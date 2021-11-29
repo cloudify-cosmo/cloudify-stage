@@ -1259,9 +1259,7 @@
                 "users": "# Users",
                 "tenants": "# Tenants"
             },
-            "empty": {
-                "table": "There are no User Groups available. Click \"Add\" to add User Groups."
-            },
+            "noGroups": "There are no User Groups available. Click \"Add\" to add User Groups.",
             "confirm": {
                 "deleteGroup": "Are you sure you want to remove group {{groupName}}?",
                 "defaultGroup": "You have administrator privileges from the {{groupName}} group. Are you sure you want to remove administrator privileges from this group? You will be logged out of the system so the changes take effect."
