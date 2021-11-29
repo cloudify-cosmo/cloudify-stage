@@ -1254,7 +1254,7 @@
         "userGroups": {
             "columns": {
                 "groupName": "Group",
-                "ldapGroup": "LDAP Group",
+                "ldapGroup": "LDAP group",
                 "admin": "Admin",
                 "users": "# Users",
                 "tenants": "# Tenants"
