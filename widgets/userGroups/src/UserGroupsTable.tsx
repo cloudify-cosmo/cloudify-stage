@@ -7,6 +7,8 @@ import TenantsModal from './TenantsModal';
 import UsersModal from './UsersModal';
 import GroupPropType from './props/GroupPropType';
 
+const { i18n } = Stage;
+
 class UserGroupsTable extends React.Component {
     constructor(props, context) {
         super(props, context);
@@ -127,7 +129,10 @@ class UserGroupsTable extends React.Component {
         } else if (value === MenuAction.SET_DEFAULT_GROUP_ROLE_ACTION) {
             this.setRole(group, false);
         } else {
-            this.setState({ error: `Internal error: Unknown action ('${value}') cannot be handled.` });
+            const errorMessage = i18n.t('widgets.userGroups.exceptions.unknownAction', {
+                actionName: value
+            });
+            this.setState({ error: errorMessage });
         }
     };
 
@@ -178,7 +183,6 @@ class UserGroupsTable extends React.Component {
     render() {
         const { error, group, modalType, settingGroupRoleLoading, showModal, tenants, users } = this.state;
         const { data, toolbox, widget, isLdapEnabled } = this.props;
-        const NO_DATA_MESSAGE = 'There are no User Groups available. Click "Add" to add User Groups.';
         const { Checkbox, Confirm, DataTable, ErrorMessage, Label, Loader } = Stage.Basic;
 
         return (
@@ -193,13 +197,19 @@ class UserGroupsTable extends React.Component {
                     sortAscending={widget.configuration.sortAscending}
                     searchable
                     className="userGroupsTable"
-                    noDataMessage={NO_DATA_MESSAGE}
+                    noDataMessage={i18n.t('widgets.userGroups.empty.table')}
                 >
-                    <DataTable.Column label="Group" name="name" width="35%" />
-                    {isLdapEnabled && <DataTable.Column label="LDAP group" name="ldap_dn" width="20%" />}
-                    <DataTable.Column label="Admin" name="role" width="10%" />
-                    <DataTable.Column label="# Users" width="10%" />
-                    <DataTable.Column label="# Tenants" width="10%" />
+                    <DataTable.Column label={i18n.t('widgets.userGroups.columns.groupName')} name="name" width="35%" />
+                    {isLdapEnabled && (
+                        <DataTable.Column
+                            label={i18n.t('widgets.userGroups.columns.ldapGroup')}
+                            name="ldap_dn"
+                            width="20%"
+                        />
+                    )}
+                    <DataTable.Column label={i18n.t('widgets.userGroups.columns.admin')} name="role" width="10%" />
+                    <DataTable.Column label={i18n.t('widgets.userGroups.columns.users')} width="10%" />
+                    <DataTable.Column label={i18n.t('widgets.userGroups.columns.tenants')} width="10%" />
                     <DataTable.Column label="" width="5%" />
                     {data.items.map(item => {
                         return (
@@ -276,18 +286,14 @@ class UserGroupsTable extends React.Component {
                 />
 
                 <Confirm
-                    content={`Are you sure you want to remove group ${group.name}?`}
+                    content={i18n.t('widgets.userGroups.confirm.deleteGroup', { groupName: group.name })}
                     open={modalType === MenuAction.DELETE_ACTION && showModal}
                     onConfirm={this.deleteUserGroup}
                     onCancel={this.hideModal}
                 />
 
                 <Confirm
-                    content={
-                        `You have administrator privileges from the '${group.name}' group. ` +
-                        'Are you sure you want to remove administrator privileges from this group? ' +
-                        'You will be logged out of the system so the changes take effect.'
-                    }
+                    content={i18n.t('widgets.userGroups.confirm.defaultGroup', { groupName: group.name })}
                     open={modalType === MenuAction.SET_DEFAULT_GROUP_ROLE_ACTION && showModal}
                     onConfirm={() => this.setRole(group, false)}
                     onCancel={this.hideModal}

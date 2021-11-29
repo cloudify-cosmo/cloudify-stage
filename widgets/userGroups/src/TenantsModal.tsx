@@ -3,8 +3,9 @@
 import Actions from './actions';
 import GroupPropType from './props/GroupPropType';
 
+const { i18n } = Stage;
 const { RolesPicker, RolesUtil } = Stage.Common;
-const { UnsafelyTypedFormField } = Stage.Basic;
+const { UnsafelyTypedFormField, Modal, Icon, Form, ApproveButton, CancelButton } = Stage.Basic;
 
 export default function TenantsModal({ group, open, tenants, toolbox, onHide }) {
     const { useState } = React;
@@ -67,8 +68,6 @@ export default function TenantsModal({ group, open, tenants, toolbox, onHide }) 
         setEditedTenants(newTenants);
     }
 
-    const { Modal, Icon, Form, ApproveButton, CancelButton } = Stage.Basic;
-
     const options = _.map(tenants.items, item => {
         return { text: item.name, value: item.name, key: item.name };
     });
@@ -76,12 +75,15 @@ export default function TenantsModal({ group, open, tenants, toolbox, onHide }) 
     return (
         <Modal open={open} onClose={() => onHide()}>
             <Modal.Header>
-                <Icon name="user" /> Edit tenants for {group.name}
+                <Icon name="user" />
+                {i18n.t('widgets.userGroups.modals.tenants.header', {
+                    groupName: group.name
+                })}
             </Modal.Header>
 
             <Modal.Content>
                 <Form loading={isLoading} errors={errors} onErrorsDismiss={clearErrors}>
-                    <UnsafelyTypedFormField label="Tenants">
+                    <UnsafelyTypedFormField label={i18n.t('widgets.userGroups.modals.tenants.fields.tenants')}>
                         <Form.Dropdown
                             multiple
                             selection
