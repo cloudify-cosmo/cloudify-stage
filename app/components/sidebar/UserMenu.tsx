@@ -1,13 +1,13 @@
 import _ from 'lodash';
-import React from 'react';
 import type { FunctionComponent } from 'react';
+import React from 'react';
 
 import { useDispatch, useSelector } from 'react-redux';
 import { push } from 'connected-react-router';
 import type { ReduxState } from '../../reducers';
 import SideBarItem from './SideBarItem';
 import StageUtils from '../../utils/stageUtils';
-import { useBoolean, useToggle } from '../../utils/hooks';
+import { useBoolean } from '../../utils/hooks';
 import { minimizeWidgets } from '../../actions/widgets';
 import { setEditMode } from '../../actions/config';
 import Consts from '../../utils/consts';
@@ -16,17 +16,13 @@ import { resetPagesForTenant } from '../../actions/userApp';
 import PasswordModal from '../shared/PasswordModal';
 import { logout } from '../../actions/managers';
 import UserInitialsIcon from './UserInitialsIcon';
+import type { SystemMenuGroupItemProps } from './SystemMenu';
 
 const t = StageUtils.getT('users');
 
-interface UserMenuProps {
-    onModalOpen: () => void;
-}
-
-const UserMenu: FunctionComponent<UserMenuProps> = ({ onModalOpen }) => {
+const UserMenu: FunctionComponent<SystemMenuGroupItemProps> = ({ expanded, onModalOpen, onGroupClick }) => {
     const [resetModalVisible, showResetModal, closeResetModal] = useBoolean();
     const [passwordModalVisible, showPasswordModal, closePasswordModal] = useBoolean();
-    const [expanded, toggleExpand] = useToggle();
     const dispatch = useDispatch();
 
     const username = useSelector((state: ReduxState) => state.manager.username);
@@ -80,7 +76,7 @@ const UserMenu: FunctionComponent<UserMenuProps> = ({ onModalOpen }) => {
             <SideBarItem
                 icon={<UserInitialsIcon />}
                 label={username}
-                onClick={toggleExpand}
+                onClick={onGroupClick}
                 expandable
                 expanded={expanded}
             />
