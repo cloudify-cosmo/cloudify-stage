@@ -6,18 +6,14 @@ import type { ReduxState } from '../../reducers';
 import SideBarItem from './SideBarItem';
 import StageUtils from '../../utils/stageUtils';
 import AboutModal from '../AboutModal';
-import { useBoolean, useToggle } from '../../utils/hooks';
+import { useBoolean } from '../../utils/hooks';
+import { SystemMenuGroupItemProps } from './SystemMenu';
 
 const t = StageUtils.getT('users');
 const tHelp = StageUtils.getT('help');
 
-interface HelpMenuProps {
-    onAboutModalOpen: () => void;
-}
-
-const HelpMenu: FunctionComponent<HelpMenuProps> = ({ onAboutModalOpen }) => {
+const HelpMenu: FunctionComponent<SystemMenuGroupItemProps> = ({ expanded, onModalOpen, onGroupClick }) => {
     const [aboutModalVisible, showAboutModal, closeAboutModal] = useBoolean();
-    const [expanded, toggleExpand] = useToggle();
 
     const currentVersion = useSelector((state: ReduxState) => state.manager.version.version);
     const version = _.includes(currentVersion, 'dev') ? 'latest' : currentVersion;
@@ -25,13 +21,13 @@ const HelpMenu: FunctionComponent<HelpMenuProps> = ({ onAboutModalOpen }) => {
     const { redirectToPage } = StageUtils.Url;
 
     function handleModalOpen() {
-        onAboutModalOpen();
+        onModalOpen();
         showAboutModal();
     }
 
     return (
         <>
-            <SideBarItem icon="help circle" label={t('help')} onClick={toggleExpand} expandable expanded={expanded} />
+            <SideBarItem icon="help circle" label={t('help')} onClick={onGroupClick} expandable expanded={expanded} />
 
             {expanded && (
                 <>
