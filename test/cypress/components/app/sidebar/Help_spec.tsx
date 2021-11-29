@@ -11,11 +11,10 @@ describe('Help', () => {
     it('opens "About" modal', () => {
         mountWithProvider(
             <ThemeContext.Provider value="">
-                <HelpMenu onAboutModalOpen={noop} />
+                <HelpMenu onModalOpen={noop} expanded onGroupClick={noop} />
             </ThemeContext.Provider>
         );
 
-        cy.contains('Help').click();
         cy.contains('About').click();
         cy.get('.modal').should('be.visible');
     });
@@ -25,12 +24,11 @@ describe('Help', () => {
 
         mountWithProvider(
             <ThemeContext.Provider value="">
-                <HelpMenu onAboutModalOpen={noop} />
+                <HelpMenu onModalOpen={noop} expanded onGroupClick={noop} />
             </ThemeContext.Provider>,
             { manager: { license: {}, version: { version: '5.0.5' } } }
         );
 
-        cy.contains('Help').click();
         cy.contains('Documentation')
             .click()
             .then(() => expect(redirectToPage).to.be.calledWithExactly('https://docs.cloudify.co/5.0.5'));
@@ -41,12 +39,11 @@ describe('Help', () => {
 
         mountWithProvider(
             <ThemeContext.Provider value="">
-                <HelpMenu onAboutModalOpen={noop} />
+                <HelpMenu onModalOpen={noop} expanded onGroupClick={noop} />
             </ThemeContext.Provider>,
             { manager: { license: {}, version: { version: '6.3-dev' } } }
         );
 
-        cy.contains('Help').click();
         cy.contains('Documentation')
             .click()
             .then(() => expect(redirectToPage).to.be.calledWithExactly('https://docs.cloudify.co/latest'));
@@ -57,11 +54,10 @@ describe('Help', () => {
 
         mountWithProvider(
             <ThemeContext.Provider value="">
-                <HelpMenu onAboutModalOpen={noop} />
+                <HelpMenu onModalOpen={noop} expanded onGroupClick={noop} />
             </ThemeContext.Provider>
         );
 
-        cy.contains('Help').click();
         cy.contains('Contact Us')
             .click()
             .then(() => expect(redirectToPage).to.be.calledWithExactly('https://cloudify.co/contact'));
