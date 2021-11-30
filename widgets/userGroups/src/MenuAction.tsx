@@ -1,6 +1,4 @@
-import type { FunctionComponent, MouseEvent } from 'react';
-import type { MenuItemProps } from 'semantic-ui-react';
-import { menuActions } from './consts';
+import type { FunctionComponent } from 'react';
 
 const { PopupMenu, Menu } = Stage.Basic;
 const t = Stage.Utils.getT('widgets.userGroups.menu');
@@ -13,30 +11,30 @@ interface Item {
 
 interface MenuActionProps {
     item: Item;
-    onSelectAction: (actionName: string, item: Item) => void;
+    onDelete: (item: Item) => void;
+    onEditTenants: (item: Item) => void;
+    onEditUsers: (item: Item) => void;
 }
 
-const MenuAction: FunctionComponent<MenuActionProps> = ({ item, onSelectAction }) => {
-    const actionClick = (_proxy: MouseEvent<HTMLAnchorElement>, { name }: MenuItemProps) => {
-        onSelectAction(name as string, item);
+const MenuAction: FunctionComponent<MenuActionProps> = ({ item, onEditUsers, onEditTenants, onDelete }) => {
+    const handleEditUsers = () => {
+        onEditUsers(item);
+    };
+
+    const handleEditTenants = () => {
+        onEditTenants(item);
+    };
+
+    const handleDelete = () => {
+        onDelete(item);
     };
 
     return (
         <PopupMenu>
             <Menu pointing vertical>
-                <Menu.Item
-                    icon="users"
-                    content={t('editGroupUsers')}
-                    name={menuActions.editUsers}
-                    onClick={actionClick}
-                />
-                <Menu.Item
-                    icon="user"
-                    content={t('editGroupTenants')}
-                    name={menuActions.editTenants}
-                    onClick={actionClick}
-                />
-                <Menu.Item icon="trash" content={t('delete')} name={menuActions.delete} onClick={actionClick} />
+                <Menu.Item icon="users" content={t('editGroupUsers')} onClick={handleEditUsers} />
+                <Menu.Item icon="user" content={t('editGroupTenants')} onClick={handleEditTenants} />
+                <Menu.Item icon="trash" content={t('delete')} onClick={handleDelete} />
             </Menu>
         </PopupMenu>
     );

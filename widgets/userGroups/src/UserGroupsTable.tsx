@@ -115,13 +115,9 @@ class UserGroupsTable extends React.Component {
         const { data, toolbox } = this.props;
         const actions = new Actions(toolbox);
 
-        if (value === menuActions.editTenants) {
-            this.getAvailableTenants(value, group);
-        } else if (value === menuActions.editUsers) {
-            this.getAvailableUsers(value, group);
-        } else if (
-            value === menuActions.delete ||
-            (value === menuActions.setDefaultGroupRole && actions.isLogoutToBePerformed(group, data.items, group.users))
+        if (
+            value === menuActions.setDefaultGroupRole &&
+            actions.isLogoutToBePerformed(group, data.items, group.users)
         ) {
             this.setState({ group, modalType: value, showModal: true });
         } else if (value === menuActions.setAdminGroupRole) {
@@ -134,6 +130,18 @@ class UserGroupsTable extends React.Component {
             });
             this.setState({ error: errorMessage });
         }
+    };
+
+    showEditTenantsModal = group => {
+        this.getAvailableTenants(menuActions.editTenants, group);
+    };
+
+    showEditUsersModal = group => {
+        this.getAvailableUsers(menuActions.editUsers, group);
+    };
+
+    showDeleteModal = group => {
+        this.setState({ group, modalType: menuActions.delete, showModal: true });
     };
 
     hideModal = newState => {
@@ -243,7 +251,12 @@ class UserGroupsTable extends React.Component {
                                         </Label>
                                     </DataTable.Data>
                                     <DataTable.Data className="center aligned">
-                                        <MenuAction item={item} onSelectAction={this.showModal} />
+                                        <MenuAction
+                                            item={item}
+                                            onEditTenants={this.showEditTenantsModal}
+                                            onEditUsers={this.showEditUsersModal}
+                                            onDelete={this.showDeleteModal}
+                                        />
                                     </DataTable.Data>
                                 </DataTable.Row>
                                 <DataTable.DataExpandable key={item.name}>
