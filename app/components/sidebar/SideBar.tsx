@@ -1,12 +1,13 @@
-import React, { FunctionComponent, useContext } from 'react';
+import React, { FunctionComponent, useContext, useState } from 'react';
 
 import styled, { ThemeContext } from 'styled-components';
 import { useSelector } from 'react-redux';
+import { without } from 'lodash';
 import PagesList from './PagesList';
 import { Sidebar } from '../basic';
 import { ReduxState } from '../../reducers';
-import SystemMenu from './SystemMenu';
-import { useBoolean } from '../../utils/hooks';
+import SystemMenu, { SystemMenuGroup } from './SystemMenu';
+import { useBoolean, useResettableState } from '../../utils/hooks';
 
 export const collapsedSidebarWidth = '2.5rem';
 export const expandedSidebarWidth = '13rem';
@@ -38,7 +39,27 @@ const SideBar: FunctionComponent<SideBarProps> = ({ pageId }) => {
     const homePageId = useSelector((state: ReduxState) => state.pages[0].id);
     const isEditMode = useSelector((state: ReduxState) => state.config.isEditMode || false);
 
+    const [expandedPageGroupIds, setExpandedPageGroupIds] = useState<string[]>([]);
+    const [expandedSystemMenuGroup, setExpandedSystemMenuGroup, collapseExpandedSystemMenuGroup] = useResettableState<
+        SystemMenuGroup | undefined
+    >(undefined);
+
     const [expanded, expand, collapse] = useBoolean();
+
+    function handlePageGroupExpand(pageGroupId: string) {
+        if (isEditMode) setExpandedPageGroupIds([...expandedPageGroupIds, pageGroupId]);
+        else setExpandedPageGroupIds([pageGroupId]);
+        collapseExpandedSystemMenuGroup();
+    }
+
+    function handlePageGroupCollapse(pageGroupId: string) {
+        setExpandedPageGroupIds(without(expandedPageGroupIds, pageGroupId));
+    }
+
+    function handleSystemMenuGroupClick(systemMenuGroup: SystemMenuGroup) {
+        setExpandedSystemMenuGroup(expandedSystemMenuGroup === systemMenuGroup ? undefined : systemMenuGroup);
+        setExpandedPageGroupIds([]);
+    }
 
     return (
         <div className="sidebarContainer">
@@ -50,8 +71,19 @@ const SideBar: FunctionComponent<SideBarProps> = ({ pageId }) => {
                 onMouseEnter={expand}
                 onMouseLeave={collapse}
             >
-                <PagesList pageId={pageId || homePageId} isEditMode={isEditMode} expanded={expanded || isEditMode} />
-                {!isEditMode && <SystemMenu onModalOpen={collapse} />}
+                <PagesList
+                    pageId={pageId || homePageId}
+                    expandedGroupIds={expandedPageGroupIds}
+                    onGroupCollapse={handlePageGroupCollapse}
+                    onGroupExpand={handlePageGroupExpand}
+                />
+                {!isEditMode && (
+                    <SystemMenu
+                        onModalOpen={collapse}
+                        expandedGroup={expandedSystemMenuGroup}
+                        onGroupClick={handleSystemMenuGroupClick}
+                    />
+                )}
             </ThemedSidebar>
         </div>
     );

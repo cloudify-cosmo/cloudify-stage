@@ -8,19 +8,48 @@ import { ReduxState } from '../../reducers';
 import Consts from '../../utils/consts';
 import UserMenu from './UserMenu';
 
-interface SystemMenuProps {
+export interface SystemMenuGroupItemProps {
     onModalOpen: () => void;
+    expanded: boolean;
+    onGroupClick: () => void;
 }
 
-const SystemMenu: FunctionComponent<SystemMenuProps> = ({ onModalOpen }) => {
+export enum SystemMenuGroup {
+    HelpMenuGroup,
+    UserMenuGroup
+}
+
+const groupComponents = {
+    [SystemMenuGroup.HelpMenuGroup]: HelpMenu,
+    [SystemMenuGroup.UserMenuGroup]: UserMenu
+};
+
+interface SystemMenuProps {
+    onModalOpen: () => void;
+    expandedGroup?: SystemMenuGroup;
+    onGroupClick: (group: SystemMenuGroup) => void;
+}
+
+const SystemMenu: FunctionComponent<SystemMenuProps> = ({ expandedGroup, onModalOpen, onGroupClick }) => {
     const mode = useSelector((state: ReduxState) => state.config.mode);
+
+    function renderGroupItem(group: SystemMenuGroup) {
+        const GroupComponent = groupComponents[group];
+        return (
+            <GroupComponent
+                expanded={expandedGroup === group}
+                onModalOpen={onModalOpen}
+                onGroupClick={() => onGroupClick(group)}
+            />
+        );
+    }
 
     return (
         <>
             <TenantSelection />
-            <HelpMenu onAboutModalOpen={onModalOpen} />
+            {renderGroupItem(SystemMenuGroup.HelpMenuGroup)}
             {mode !== Consts.MODE_CUSTOMER && <HealthIndicator />}
-            <UserMenu onModalOpen={onModalOpen} />
+            {renderGroupItem(SystemMenuGroup.UserMenuGroup)}
         </>
     );
 };
