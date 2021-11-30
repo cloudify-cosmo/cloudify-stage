@@ -2,17 +2,12 @@
 /* eslint no-underscore-dangle: ["error", { "allow": ["_size", "_offset"] }] */
 
 import _ from 'lodash';
-import param from 'jquery-param';
 import { jsonRequest } from '../ManagerHandler';
 import { ALLOWED_METHODS_OBJECT } from '../../consts';
+import { getUrlWithQueryString } from './common';
 
 export function call(method, url, { params, body = null, headers = {} } = {}) {
-    let fullUrl = url;
-    if (!_.isEmpty(params)) {
-        const queryString = (url.indexOf('?') > 0 ? '&' : '?') + param(params, true);
-        fullUrl = `${url}${queryString}`;
-    }
-    return jsonRequest(method, fullUrl, headers, body);
+    return jsonRequest(method, getUrlWithQueryString(url, params), headers, body);
 }
 
 export function doGet(url, requestOptions) {

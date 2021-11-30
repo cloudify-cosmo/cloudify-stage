@@ -1,17 +1,13 @@
 // @ts-nocheck File not migrated fully to TS
 import _ from 'lodash';
-import param from 'jquery-param';
+import { stringify } from 'query-string';
 import { request } from '../RequestHandler';
 import { ALLOWED_METHODS_OBJECT } from '../../consts';
+import { getUrlWithQueryString } from './common';
 
 export function call(method, url, { params, body, parseResponse = true, headers, certificate } = {}) {
     return new Promise((resolve, reject) => {
         const options = { headers: {} };
-        let fullUrl = url;
-        if (!_.isEmpty(params)) {
-            const queryString = (url.indexOf('?') > 0 ? '&' : '?') + param(params, true);
-            fullUrl = `${url}${queryString}`;
-        }
         if (headers) {
             options.headers = _.omit(headers, 'cert');
         }
@@ -32,7 +28,7 @@ export function call(method, url, { params, body, parseResponse = true, headers,
 
         request(
             method,
-            fullUrl,
+            getUrlWithQueryString(url, params),
             options,
             res => {
                 const isSuccess = res.statusCode >= 200 && res.statusCode < 300;
