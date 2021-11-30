@@ -47,8 +47,7 @@ const GettingStartedModal = () => {
         () => castedGettingStartedSchema.filter(item => environmentsStepData[item.name]),
         [environmentsStepData]
     );
-    // eslint-disable-next-line
-    console.log(environmentsStepData);
+
     const secretsStepsSchemas = useMemo(() => createEnvironmentsGroups(commonStepsSchemas), [environmentsStepData]);
     const summaryStepSchemas = useMemo(() => {
         return commonStepsSchemas.reduce(
@@ -243,6 +242,7 @@ const GettingStartedModal = () => {
                 onBackClick={handleBackClick}
                 onNextClick={handleNextClick}
                 onModalClose={handleModalClose}
+                environmentsStepData={environmentsStepData}
             />
             <Confirm
                 open={cancelConfirmOpen}
