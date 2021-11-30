@@ -1,10 +1,9 @@
 // @ts-nocheck File not migrated fully to TS
-/**
- * Created by jakubniezgoda on 03/02/2017.
- */
 
 import Actions from './actions';
 import GroupPropType from './props/GroupPropType';
+
+const t = Stage.Utils.getT('widgets.userGroups.details.group.segments');
 
 export default class UserDetails extends React.Component {
     constructor(props, context) {
@@ -83,7 +82,8 @@ export default class UserDetails extends React.Component {
         return (
             <Segment.Group horizontal>
                 <Segment>
-                    <Icon name="users" /> Users
+                    <Icon name="users" />
+                    {t('users.header')}
                     <Divider />
                     <List divided relaxed verticalAlign="middle" className="light">
                         {data.users.map(item => {
@@ -103,11 +103,12 @@ export default class UserDetails extends React.Component {
                             );
                         })}
 
-                        {_.isEmpty(data.users) && <Message content="No users available" />}
+                        {_.isEmpty(data.users) && <Message content={t('users.empty')} />}
                     </List>
                 </Segment>
                 <Segment>
-                    <Icon name="users" /> Tenants
+                    <Icon name="users" />
+                    {t('tenants.header')}
                     <Divider />
                     <List divided relaxed verticalAlign="middle" className="light">
                         {_.map(data.tenants, (role, item) => {
@@ -127,16 +128,14 @@ export default class UserDetails extends React.Component {
                             );
                         })}
 
-                        {_.isEmpty(data.tenants) && <Message content="No tenants available" />}
+                        {_.isEmpty(data.tenants) && <Message content={t('tenants.empty')} />}
                     </List>
                 </Segment>
 
                 <Confirm
-                    content={
-                        `You have administrator privileges from the '${data.name}' group.` +
-                        'Are you sure you want to remove yourself from this group? ' +
-                        'You will be logged out of the system so the changes take effect.'
-                    }
+                    content={t('confirm.removeFromGroup', {
+                        groupName: data.name
+                    })}
                     open={showModal}
                     onConfirm={() => this.removeUser(user)}
                     onCancel={this.hideModal}
