@@ -1250,6 +1250,81 @@
             "addHeader": "Add labels for deployment '{{deploymentId}}'",
             "revert": "Revert to initial value",
             "deleteConfirm": "Are you sure you want to remove label"
+        },
+        "userGroups": {
+            "columns": {
+                "groupName": "Group",
+                "ldapGroup": "LDAP group",
+                "admin": "Admin",
+                "users": "# Users",
+                "tenants": "# Tenants"
+            },
+            "noGroups": "There are no User Groups available. Click \"Add\" to add User Groups.",
+            "confirm": {
+                "deleteGroup": "Are you sure you want to remove group {{groupName}}?",
+                "defaultGroup": "You have administrator privileges from the {{groupName}} group. Are you sure you want to remove administrator privileges from this group? You will be logged out of the system so the changes take effect."
+            },
+            "modals": {
+                "user": {
+                    "header": "Edit users for {{groupName}}",
+                    "message": {
+                        "header": "",
+                        "content": "You are about to remove yourself from this. Your administrative privileges will be removed and you will be logged out of the system so the changes take . Are you sure you want to continue?"
+                    },
+                    "fields": {
+                        "users": "Users"
+                    },
+                    "buttons": {
+                        "cancel": "No",
+                        "approve": "Yes"
+                    }
+                },
+                "create": {
+                    "header": "Add user group",
+                    "fields": {
+                        "groupName": "Group name",
+                        "ldapGroup": "LDAP group name",
+                        "admin": "Admin"
+                    },
+                    "validation": {
+                        "groupName": "Please provide group name"
+                    },
+                    "buttons": {
+                        "add": "Add"
+                    }
+                },
+                "tenants": {
+                    "header": "Edit tenants for {{groupName}}",
+                    "fields": {
+                        "tenants": "Tenants"
+                    }
+                }
+            },
+            "details": {
+                "group": {
+                    "segments": {
+                        "users": {
+                            "header": "Users",
+                            "empty": "No users available"
+                        },
+                        "tenants": {
+                            "header": "Tenants",
+                            "empty": "No tenants available"
+                        },
+                        "confirm": {
+                            "removeFromGroup": "You have administrator privileges from the '{{groupName}}' group. Are you sure you want to remove yourself from this group? You will be logged out of the system so the changes take effect."
+                        }
+                    }
+                }
+            },
+            "menu": {
+                "editGroupUsers": "Edit group's users",
+                "editGroupTenants": "Edit group's tenants",
+                "delete": "Delete"
+            },
+            "exceptions": {
+                "unknownAction": "Internal error: Unknown action {{actionName}} cannot be handled."
+            }
         }
     }
 }
