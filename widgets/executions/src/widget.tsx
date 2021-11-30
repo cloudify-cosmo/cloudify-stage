@@ -3,6 +3,7 @@
  * Created by kinneretzin on 20/10/2016.
  */
 
+import { isEmpty } from 'lodash';
 import ExecutionsTable from './ExecutionsTable';
 import SingleExecution from './SingleExecution';
 
@@ -14,7 +15,6 @@ Stage.defineWidget({
     initialHeight: 24,
     hasStyle: true,
     color: 'teal',
-    fetchUrl: '[manager]/executions?[params]',
     isReact: true,
     hasReadme: true,
     permission: Stage.GenericConfig.WIDGET_PERMISSION('executions'),
@@ -60,6 +60,30 @@ Stage.defineWidget({
         }
     ],
 
+    fetchData(widget, toolbox, params) {
+        const { singleExecutionView } = widget.configuration;
+        const executionActions = new Stage.Common.ExecutionActions(toolbox);
+
+        if (singleExecutionView) {
+            const paramDeploymentId = params.deployment_id;
+
+            if (paramDeploymentId) {
+                return new Stage.Common.DeploymentActions(toolbox)
+                    .doGet({
+                        id: paramDeploymentId,
+                        _include: 'latest_execution'
+                    })
+                    .then(deployment => executionActions.doGet(deployment.latest_execution));
+            }
+
+            return Promise.reject(
+                'When "Show most recent execution only" widget configuration option is turned on, Deployment ID must be selected.'
+            );
+        }
+
+        return executionActions.doGetAll(params);
+    },
+
     fetchParams(widget, toolbox) {
         return {
             blueprint_id: toolbox.getContext().getValue('blueprintId'),
@@ -81,8 +105,8 @@ Stage.defineWidget({
         }
 
         if (singleExecutionView) {
-            const lastExecution = _.chain(data.items).sortBy('started_at').last().value();
-            if (!lastExecution) {
+            const lastExecution = data;
+            if (isEmpty(lastExecution)) {
                 const { ErrorMessage } = Stage.Basic;
                 return <ErrorMessage error={Stage.i18n.t('widgets.executions.noExecutionFound')} />;
             }
