@@ -1,5 +1,5 @@
 import { pick, size } from 'lodash';
-import { secondsToMs, waitUntilEmpty, waitUntilNotEmpty } from '../../support/resource_commons';
+import { secondsToMs } from '../../support/resource_commons';
 
 /**
  * Performs a deep equality check assuming the `assertedValue` can
