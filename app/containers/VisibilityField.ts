@@ -1,7 +1,4 @@
 // @ts-nocheck File not migrated fully to TS
-/**
- * Created by edenp on 17/12/2017.
- */
 
 import { connect } from 'react-redux';
 

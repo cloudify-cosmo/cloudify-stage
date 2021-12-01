@@ -1,7 +1,4 @@
 // @ts-nocheck File not migrated fully to TS
-/**
- * Created by kinneretzin on 06/12/2016.
- */
 
 import _ from 'lodash';
 import * as types from '../actions/types';

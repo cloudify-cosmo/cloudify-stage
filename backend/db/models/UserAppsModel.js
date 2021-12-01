@@ -1,6 +1,3 @@
-/**
- * Created by kinneretzin on 13/02/2017.
- */
 const ServerSettings = require('../../serverSettings');
 
 module.exports = (sequelize, DataTypes) =>

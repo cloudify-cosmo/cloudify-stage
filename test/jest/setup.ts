@@ -1,7 +1,4 @@
 // @ts-nocheck File not migrated fully to TS
-/**
- * Created by kinneretzin on 17/11/2016.
- */
 
 import { JSDOM } from 'jsdom';
 import _ from 'lodash';

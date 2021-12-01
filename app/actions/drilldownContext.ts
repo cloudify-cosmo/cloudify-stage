@@ -1,7 +1,4 @@
 // @ts-nocheck File not migrated fully to TS
-/**
- * Created by kinneretzin on 09/05/2017.
- */
 
 import * as types from './types';
 
