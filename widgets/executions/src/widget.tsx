@@ -7,10 +7,12 @@ import { isEmpty } from 'lodash';
 import ExecutionsTable from './ExecutionsTable';
 import SingleExecution from './SingleExecution';
 
+const t = Stage.Utils.getT('widgets.executions');
+
 Stage.defineWidget({
     id: 'executions',
-    name: 'Executions',
-    description: 'This widget shows the deployment executions',
+    name: t('name'),
+    description: t('description'),
     initialWidth: 8,
     initialHeight: 24,
     hasStyle: true,
@@ -25,8 +27,7 @@ Stage.defineWidget({
         Stage.GenericConfig.PAGE_SIZE_CONFIG(),
         {
             id: 'fieldsToShow',
-            name: 'List of fields to show in the table',
-            placeHolder: 'Select fields from the list',
+            name: t('configuration.fieldsToShow.name'),
             items: [
                 'Blueprint',
                 'Deployment',
@@ -46,7 +47,7 @@ Stage.defineWidget({
         },
         {
             id: 'showSystemExecutions',
-            name: 'Show system executions',
+            name: t('configuration.showSystemExecutions.name'),
             default: true,
             type: Stage.Basic.GenericField.BOOLEAN_TYPE
         },
@@ -54,7 +55,7 @@ Stage.defineWidget({
         Stage.GenericConfig.SORT_ASCENDING_CONFIG(false),
         {
             id: 'singleExecutionView',
-            name: 'Show most recent execution only',
+            name: t('configuration.singleExecutionView.name'),
             default: false,
             type: Stage.Basic.GenericField.BOOLEAN_TYPE
         }
@@ -76,9 +77,7 @@ Stage.defineWidget({
                     .then(deployment => executionActions.doGet(deployment.latest_execution));
             }
 
-            return Promise.reject(
-                'When "Show most recent execution only" widget configuration option is turned on, Deployment ID must be selected.'
-            );
+            return Promise.reject(t('invalidConfigurationError'));
         }
 
         return executionActions.doGetAll(params);
@@ -108,7 +107,7 @@ Stage.defineWidget({
             const lastExecution = data;
             if (isEmpty(lastExecution)) {
                 const { ErrorMessage } = Stage.Basic;
-                return <ErrorMessage error={Stage.i18n.t('widgets.executions.noExecutionFound')} />;
+                return <ErrorMessage error={t('noExecutionFound')} />;
             }
             return <SingleExecution execution={lastExecution} toolbox={toolbox} />;
         }
