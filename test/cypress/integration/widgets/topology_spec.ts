@@ -18,13 +18,7 @@ describe('Topology', () => {
     const getNodeTopologyButton = (index: number) => cy.get(`.nodeTopologyButton:eq(${index})`);
 
     const waitForDeploymentToBeInstalled = (deploymentId: string) => {
-        cy.log(`Waiting for deployment ${deploymentId} to be installed.`);
-        const startedInstallWorkflowsOnDeploymentUrl = `executions?_include=id,workflow_id,status&deployment_id=${deploymentId}&workflow_id=install&status=started`;
-
-        // NOTE: First, wait for execution to start as it can happen not to start immediately.
-        // Then, wait for install workflow to change the status not to be `started`.
-        waitUntilNotEmpty(startedInstallWorkflowsOnDeploymentUrl);
-        waitUntilEmpty(startedInstallWorkflowsOnDeploymentUrl);
+        cy.waitForExecutionToEnd(deploymentId, 'install');
     };
 
     before(() => {
