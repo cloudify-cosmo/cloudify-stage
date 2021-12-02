@@ -1,7 +1,5 @@
 import React, { FunctionComponent } from 'react';
 
-import 'cloudify-ui-common/styles/font-JosefinSans-Bold.css';
-
 interface LogoLabelProps {
     color: string;
     content: string;
