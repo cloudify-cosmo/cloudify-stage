@@ -20,10 +20,7 @@ describe('Deployments widget', () => {
     const executeDeploymentWorkflow = (id, workflow) => {
         selectDeploymentActionFromMenu(id, '.workflowsMenu', workflow);
     };
-    const verifyExecutionHasEnded = (workflow: string) => {
-        cy.waitForExecutionToEnd(deploymentId, workflow);
-        cy.contains('div.row', deploymentId).find('.spinner.loading.icon').should('not.exist');
-    };
+    const verifyExecutionHasEnded = (workflow: string) => cy.waitForExecutionToEnd(deploymentId, workflow);
 
     before(() => {
         cy.activate('valid_trial_license')

@@ -9,7 +9,7 @@ type WaitUntilOptions = {
     numberOfRetriesLeft?: number;
     waitingInterval?: number;
 };
-function waitUntil(
+export function waitUntil(
     resource: string,
     predicate: (response: Cypress.Response<any>) => boolean,
     { search = '', numberOfRetriesLeft = 60, waitingInterval = 1000 }: WaitUntilOptions = {}
