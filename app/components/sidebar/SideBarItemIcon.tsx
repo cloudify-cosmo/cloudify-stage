@@ -1,18 +1,26 @@
 import React from 'react';
 import { IconProps } from 'semantic-ui-react';
-import styled from 'styled-components';
 import { Icon } from '../basic';
 
-// eslint-disable-next-line react/jsx-props-no-spreading
-const SideBarItemIcon = styled(({ name, ...rest }: IconProps) => <Icon name={name ?? 'expand'} {...rest} />)`
-    &&&&&& {
-        margin-left: 0;
-        margin-right: 20px;
-        margin-top: -2px;
-        float: none;
-        width: 1.2em;
-        font-size: 19px;
-    }
-`;
+export const defaultStyle = {
+    marginLeft: 0,
+    marginRight: 20,
+    float: 'none',
+    width: '1.2em'
+};
+
+const SideBarItemIcon = ({ name, style, ...rest }: IconProps) => (
+    <Icon
+        name={name ?? 'expand'}
+        style={{
+            marginTop: -2,
+            fontSize: 19,
+            ...defaultStyle,
+            ...style
+        }}
+        // eslint-disable-next-line react/jsx-props-no-spreading
+        {...rest}
+    />
+);
 
 export default SideBarItemIcon;
