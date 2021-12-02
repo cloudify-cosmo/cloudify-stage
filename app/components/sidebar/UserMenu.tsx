@@ -43,7 +43,7 @@ const UserMenu: FunctionComponent<SystemMenuGroupItemProps> = ({ expanded, onMod
             isUserAuthorized(Consts.permissions.LICENSE_UPLOAD, state.manager) &&
             state.manager.license.isRequired
     );
-    const canChangePassword = useSelector((state: ReduxState) => !state.manager.isLdap);
+    const canChangePassword = useSelector((state: ReduxState) => !state.manager.isLdapEnabled);
     const tenantNames = useSelector((state: ReduxState) =>
         state.manager.tenants.items.map((tenant: { name: string }) => tenant.name)
     );
