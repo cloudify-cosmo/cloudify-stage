@@ -1,8 +1,5 @@
 // @ts-nocheck File not migrated fully to TS
 /* eslint-disable jest/expect-expect */
-/**
- * Created by jakubniezgoda on 20/03/2019.
- */
 
 import { mount } from 'enzyme';
 import fetchMock from 'fetch-mock';

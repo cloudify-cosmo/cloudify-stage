@@ -1,7 +1,4 @@
 // @ts-nocheck File not migrated fully to TS
-/**
- * Created by pawelposel on 03/11/2016.
- */
 import DeploymentButton from './DeploymentButton';
 
 Stage.defineWidget({

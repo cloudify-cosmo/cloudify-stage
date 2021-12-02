@@ -1,7 +1,4 @@
 // @ts-nocheck File not migrated fully to TS
-/**
- * Created by kinneretzin on 01/09/2016.
- */
 import PropTypes from 'prop-types';
 import React from 'react';
 import { Icon } from './basic/index';
