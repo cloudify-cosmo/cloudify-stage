@@ -3,7 +3,7 @@ import _ from 'lodash';
 import { request } from '../RequestHandler';
 import { ALLOWED_METHODS_OBJECT } from '../../consts';
 import { getUrlWithQueryString } from './common';
-import { AllowedRequestMethod, QueryStringParams } from '../../types';
+import type { AllowedRequestMethod, QueryStringParams } from '../../types';
 
 interface RequestOptions {
     body?: any;
