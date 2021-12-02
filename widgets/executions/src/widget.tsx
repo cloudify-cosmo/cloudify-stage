@@ -66,12 +66,12 @@ Stage.defineWidget({
         const executionActions = new Stage.Common.ExecutionActions(toolbox);
 
         if (singleExecutionView) {
-            const paramDeploymentId = params.deployment_id;
+            const deploymentIdFromParams = params.deployment_id;
 
-            if (paramDeploymentId) {
+            if (deploymentIdFromParams) {
                 return new Stage.Common.DeploymentActions(toolbox)
                     .doGet({
-                        id: paramDeploymentId,
+                        id: deploymentIdFromParams,
                         _include: 'latest_execution'
                     })
                     .then(deployment => executionActions.doGet(deployment.latest_execution));

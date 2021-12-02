@@ -40,13 +40,13 @@ const commands = {
     },
 
     waitForExecutionToEnd: (deploymentId: string, workflowId: string) => {
-        const startedInstallWorkflowsOnDeploymentUrl = `executions?_include=id,workflow_id,status&deployment_id=${deploymentId}&workflow_id=${workflowId}&status=started`;
+        const startedExecutionsOnDeploymentUrl = `executions?_include=id,workflow_id,status&deployment_id=${deploymentId}&workflow_id=${workflowId}&status=started`;
 
         cy.log(`Waiting for workflow ${workflowId} to be started on deployment ${deploymentId}.`);
-        waitUntilNotEmpty(startedInstallWorkflowsOnDeploymentUrl);
+        waitUntilNotEmpty(startedExecutionsOnDeploymentUrl);
 
         cy.log(`Waiting for workflow ${workflowId} to be ended on deployment ${deploymentId}.`);
-        return waitUntilEmpty(startedInstallWorkflowsOnDeploymentUrl);
+        return waitUntilEmpty(startedExecutionsOnDeploymentUrl);
     }
 };
 
