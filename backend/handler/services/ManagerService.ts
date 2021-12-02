@@ -25,7 +25,7 @@ export function doGet(url: string, requestOptions: RequestOptions) {
 
 export function doGetFull(
     url: string,
-    requestOptions: RequestOptions,
+    requestOptions: RequestOptions = {},
     fullData: ManagerResponse = { items: [] },
     size = 0
 ): Promise<ManagerResponse> {
