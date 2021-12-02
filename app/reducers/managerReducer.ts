@@ -13,7 +13,7 @@ export interface ManagerData {
     };
     clusterStatus: Record<string, any>;
     err: any;
-    isLdap: boolean;
+    isLdapEnabled: boolean;
     isLoggingIn: boolean;
     lastUpdated: any;
     license: Record<string, any>;
@@ -33,7 +33,7 @@ export const emptyState: ManagerData = {
     },
     clusterStatus: {},
     err: null,
-    isLdap: false,
+    isLdapEnabled: false,
     isLoggingIn: false,
     lastUpdated: null,
     license: {},

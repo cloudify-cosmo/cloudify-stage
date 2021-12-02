@@ -1,7 +1,4 @@
 // @ts-nocheck File not migrated fully to TS
-/**
- * Created by edenp on 8/17/17.
- */
 
 import React from 'react';
 

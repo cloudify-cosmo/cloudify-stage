@@ -1,7 +1,3 @@
-/**
- * Created by kinneretzin on 30/08/2016.
- */
-
 export const ADD_TAB = 'Add_TAB';
 export const REMOVE_TAB = 'REMOVE_TAB';
 export const UPDATE_TAB = 'UPDATE_TAB';

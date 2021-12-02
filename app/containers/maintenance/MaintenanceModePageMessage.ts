@@ -1,7 +1,4 @@
 // @ts-nocheck File not migrated fully to TS
-/**
- * Created by pposel on 16/02/2017.
- */
 import _ from 'lodash';
 import { connect } from 'react-redux';
 import { push } from 'connected-react-router';

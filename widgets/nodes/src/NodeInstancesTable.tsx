@@ -1,7 +1,4 @@
 // @ts-nocheck File not migrated fully to TS
-/**
- * Created by jakubniezgoda on 10/01/2017.
- */
 
 import InstanceModal from './NodeInstanceModal';
 import NodeInstancePropType from './props/NodeInstancePropType';

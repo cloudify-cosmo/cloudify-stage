@@ -1,7 +1,4 @@
 // @ts-nocheck File not migrated fully to TS
-/**
- * Created by jakub.niezgoda on 27/09/2018.
- */
 
 const t = Stage.Utils.getT('widgets.common.executions');
 

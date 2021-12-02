@@ -1,7 +1,4 @@
 // @ts-nocheck File not migrated fully to TS
-/**
- * Created by jakub.niezgoda on 25/10/2018.
- */
 
 export default class ConsoleIcon extends React.Component {
     handleClick = event => {

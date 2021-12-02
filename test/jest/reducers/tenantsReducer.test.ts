@@ -1,7 +1,4 @@
 // @ts-nocheck File not migrated fully to TS
-/**
- * Created by kinneretzin on 11/12/2016.
- */
 
 import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';

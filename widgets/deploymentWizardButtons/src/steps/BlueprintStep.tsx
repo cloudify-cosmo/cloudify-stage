@@ -1,7 +1,4 @@
 // @ts-nocheck File not migrated fully to TS
-/**
- * Created by jakub.niezgoda on 10/08/2018.
- */
 
 import { createWizardStep } from '../wizard/wizardUtils';
 import StepActions from '../wizard/StepActions';

@@ -1,7 +1,4 @@
 // @ts-nocheck File not migrated fully to TS
-/**
- * Created by pposel on 07/02/2017.
- */
 
 import EventFilter from './EventFilter';
 
