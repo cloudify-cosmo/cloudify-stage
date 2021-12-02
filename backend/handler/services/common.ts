@@ -1,8 +1,9 @@
 import { isEmpty } from 'lodash';
 import { stringify } from 'query-string';
+import type { QueryStringParams } from '../../types';
 
 // eslint-disable-next-line import/prefer-default-export
-export function getUrlWithQueryString(url: string, params: Record<string, any> = {}) {
+export function getUrlWithQueryString(url: string, params: QueryStringParams = {}) {
     let result = url;
 
     if (!isEmpty(params)) {
