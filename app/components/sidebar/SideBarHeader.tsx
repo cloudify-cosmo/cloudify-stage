@@ -1,4 +1,4 @@
-import React, { FunctionComponent } from 'react';
+import React, { FunctionComponent, useMemo } from 'react';
 import i18n from 'i18next';
 import { useSelector } from 'react-redux';
 import _ from 'lodash';
@@ -56,19 +56,24 @@ const SideBarHeader: FunctionComponent = () => {
     const isCommunity = useSelector(
         (state: ReduxState) => (state.manager.version.edition ?? Consts.EDITION.PREMIUM) === Consts.EDITION.COMMUNITY
     );
-    const isExpired = useSelector(
-        (state: ReduxState) => (state.manager.license.status ?? Consts.LICENSE.EMPTY) === Consts.LICENSE.EXPIRED
-    );
-    const isTrial = useSelector((state: ReduxState) => state.manager.license.data?.trial);
+    const license = useSelector((state: ReduxState) => state.manager.license);
 
-    let licenseLabelKey;
-    if (isCommunity) {
-        licenseLabelKey = 'community';
-    } else if (isExpired) {
-        licenseLabelKey = 'expired';
-    } else if (isTrial) {
-        licenseLabelKey = 'trial';
-    }
+    const licenseLabelKey = useMemo(() => {
+        const isExpired = license.status === Consts.LICENSE.EXPIRED;
+        const isTrial = license.data?.trial;
+
+        if (isCommunity) {
+            return 'community';
+        }
+        if (isExpired) {
+            return 'expired';
+        }
+        if (isTrial) {
+            return 'trial';
+        }
+
+        return null;
+    }, [license, isCommunity]);
 
     const productVersion = useSelector((state: ReduxState) => state.manager.version.version);
 
