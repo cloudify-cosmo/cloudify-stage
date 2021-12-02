@@ -59,15 +59,16 @@ const SideBarHeader: FunctionComponent = () => {
     const license = useSelector((state: ReduxState) => state.manager.license);
 
     const licenseLabelKey = useMemo(() => {
-        const isExpired = license.status === Consts.LICENSE.EXPIRED;
-        const isTrial = license.data?.trial;
-
         if (isCommunity) {
             return 'community';
         }
+
+        const isExpired = license.status === Consts.LICENSE.EXPIRED;
         if (isExpired) {
             return 'expired';
         }
+
+        const isTrial = license.data?.trial;
         if (isTrial) {
             return 'trial';
         }
