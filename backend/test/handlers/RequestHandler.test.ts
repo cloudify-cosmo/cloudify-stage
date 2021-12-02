@@ -4,7 +4,7 @@ import { request as requestHandler, getResponseJson } from 'handler/RequestHandl
 
 jest.mock('request', () => {
     const mockRequest: { pipe: () => typeof mockRequest; on: () => typeof mockRequest } = {
-        pipe: jest.fn(() => mockRequest),
+        pipe: jest.fn(),
         on: jest.fn(() => mockRequest)
     };
     return jest.fn(() => mockRequest);
