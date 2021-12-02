@@ -1,7 +1,4 @@
 // @ts-nocheck File not migrated fully to TS
-/**
- * Created by addihorowitz on 10/06/2016.
- */
 
 import PropTypes from 'prop-types';
 

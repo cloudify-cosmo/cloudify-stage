@@ -1,7 +1,4 @@
 // @ts-nocheck File not migrated fully to TS
-/**
- * Created by jakubniezgoda on 07/02/2017.
- */
 
 import { mount } from 'enzyme';
 import SystemStatusIcon from 'components/status/SystemStatusIcon';

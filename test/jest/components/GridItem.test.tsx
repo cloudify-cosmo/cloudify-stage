@@ -1,7 +1,4 @@
 // @ts-nocheck File not migrated fully to TS
-/**
- * Created by kinneretzin on 15/12/2016.
- */
 
 import { mount } from 'enzyme';
 import sinon from 'sinon';

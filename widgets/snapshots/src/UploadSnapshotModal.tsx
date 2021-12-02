@@ -1,7 +1,4 @@
 // @ts-nocheck File not migrated fully to TS
-/**
- * Created by kinneretzin on 05/10/2016.
- */
 
 import Actions from './actions';
 

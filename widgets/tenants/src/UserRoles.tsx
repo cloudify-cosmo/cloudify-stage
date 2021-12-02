@@ -1,7 +1,4 @@
 // @ts-nocheck File not migrated fully to TS
-/**
- * Created by edenp on 07/01/2018.
- */
 
 export default function UserRoles({ tenant, user }) {
     function groupGroupsByRole(groups) {

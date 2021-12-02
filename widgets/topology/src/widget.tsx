@@ -1,7 +1,4 @@
 // @ts-nocheck File not migrated fully to TS
-/**
- * Created by kinneretzin on 07/09/2016.
- */
 
 import { castArray } from 'lodash';
 import Topology from './Topology';

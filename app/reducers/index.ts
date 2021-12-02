@@ -1,7 +1,4 @@
 // @ts-nocheck File not migrated fully to TS
-/**
- * Created by kinneretzin on 30/08/2016.
- */
 
 import { combineReducers } from 'redux';
 import { connectRouter } from 'connected-react-router';
