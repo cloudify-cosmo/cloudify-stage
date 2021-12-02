@@ -1,7 +1,3 @@
-/**
- * Created by jakub.niezgoda on 23/04/2019.
- */
-
 module.exports = (sequelize, DataTypes) =>
     sequelize.define(
         'WidgetBackends',

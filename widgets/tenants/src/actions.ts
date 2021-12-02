@@ -1,7 +1,4 @@
 // @ts-nocheck File not migrated fully to TS
-/**
- * Created by jakubniezgoda on 31/01/2017.
- */
 
 export default class {
     constructor(toolbox) {

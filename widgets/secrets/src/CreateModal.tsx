@@ -1,7 +1,4 @@
 // @ts-nocheck File not migrated fully to TS
-/**
- * Created by jakubniezgoda on 24/03/2017.
- */
 
 export default function CreateModal({ toolbox }) {
     const { useBoolean, useErrors, useOpen, useInputs, useInput } = Stage.Hooks;

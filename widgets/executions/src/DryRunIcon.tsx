@@ -1,7 +1,4 @@
 // @ts-nocheck File not migrated fully to TS
-/**
- * Created by jakub.niezgoda on 18/10/2018.
- */
 
 export default function DryRunIcon({ execution }) {
     const { Icon, Popup } = Stage.Basic;

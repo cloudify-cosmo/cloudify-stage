@@ -1,7 +1,4 @@
 // @ts-nocheck File not migrated fully to TS
-/**
- * Created by pposel on 31/01/2016.
- */
 
 export default class Actions {
     constructor(toolbox) {

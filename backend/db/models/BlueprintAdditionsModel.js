@@ -1,7 +1,3 @@
-/**
- * Created by pposel on 09/03/2017.
- */
-
 module.exports = (sequelize, DataTypes) =>
     sequelize.define(
         'BlueprintAdditions',

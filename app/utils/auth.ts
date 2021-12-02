@@ -1,7 +1,4 @@
 // @ts-nocheck File not migrated fully to TS
-/**
- * Created by kinneretzin on 10/11/2016.
- */
 
 import _ from 'lodash';
 import Cookies from 'js-cookie';

@@ -1,7 +1,4 @@
 // @ts-nocheck File not migrated fully to TS
-/**
- * Created by jakub.niezgoda on 09/08/2018.
- */
 
 import Task from './Task';
 

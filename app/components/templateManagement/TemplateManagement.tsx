@@ -1,7 +1,4 @@
 // @ts-nocheck File not migrated fully to TS
-/**
- * Created by pposel on 11/08/2017.
- */
 import i18n from 'i18next';
 import _ from 'lodash';
 import log from 'loglevel';

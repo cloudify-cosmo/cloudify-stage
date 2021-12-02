@@ -1,7 +1,4 @@
 // @ts-nocheck File not migrated fully to TS
-/**
- * Created by barucoh on 23/1/2019.
- */
 import GraphNodePropType from './props/GraphNodePropType';
 import GraphNode from './GraphNode';
 import GraphEdges from './GraphEdges';
