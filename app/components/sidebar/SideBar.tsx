@@ -8,16 +8,17 @@ import { Sidebar } from '../basic';
 import { ReduxState } from '../../reducers';
 import SystemMenu, { SystemMenuGroup } from './SystemMenu';
 import { useBoolean, useResettableState } from '../../utils/hooks';
+import SideBarHeader from './SideBarHeader';
 
-export const collapsedSidebarWidth = '2.5rem';
-export const expandedSidebarWidth = '13rem';
+export const collapsedSidebarWidth = '4.3rem';
+export const expandedSidebarWidth = '15rem';
 
 const ThemedSidebar = styled(Sidebar)`
     &&& {
         background-color: ${props => props.theme.sidebarColor} !important;
         display: flex;
         overflow-y: visible !important;
-        ${props => (!props.$expanded ? `width: ${collapsedSidebarWidth} !important;` : '')}
+        width: ${props => (props.$expanded ? expandedSidebarWidth : collapsedSidebarWidth)} !important;
     }
     .item {
         color: ${props => props.theme.sidebarTextColor} !important;
@@ -71,6 +72,7 @@ const SideBar: FunctionComponent<SideBarProps> = ({ pageId }) => {
                 onMouseEnter={expand}
                 onMouseLeave={collapse}
             >
+                <SideBarHeader />
                 <PagesList
                     pageId={pageId || homePageId}
                     expandedGroupIds={expandedPageGroupIds}

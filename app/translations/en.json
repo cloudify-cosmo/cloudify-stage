@@ -296,6 +296,13 @@
             "removeButton": "Remove"
         }
     },
+    "sidebar": {
+        "licenseTag":{
+            "expired": "Expired",
+            "trial": "Trial",
+            "community": "Community"
+        }
+    },
     "templates": {
         "breadcrumb": "Template management",
         "close": "Close",

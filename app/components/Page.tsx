@@ -5,6 +5,7 @@ import { connect, ConnectedProps } from 'react-redux';
 import type { ThunkDispatch } from 'redux-thunk';
 import type { AnyAction } from 'redux';
 
+import styled from 'styled-components';
 import Breadcrumbs from './Breadcrumbs';
 import EditModeBubble from './EditModeBubble';
 import { Button, EditableLabel } from './basic';
@@ -28,6 +29,7 @@ import type { ReduxState } from '../reducers';
 import type { WidgetDefinition } from '../utils/StageAPI';
 import type { DrilldownContext } from '../reducers/drilldownContextReducer';
 import StageUtils from '../utils/stageUtils';
+import { collapsedSidebarWidth } from './sidebar/SideBar';
 
 export interface PageOwnProps {
     pageId: string;
@@ -35,6 +37,12 @@ export interface PageOwnProps {
 }
 
 type PageProps = PageOwnProps & PropsFromRedux;
+
+const StyledContainer = styled.div`
+    .widget.maximize {
+        margin-left: ${collapsedSidebarWidth};
+    }
+`;
 
 class Page extends Component<PageProps, never> {
     shouldComponentUpdate(nextProps: PageProps) {
@@ -69,7 +77,9 @@ class Page extends Component<PageProps, never> {
         window.scroll(0, 0);
 
         return (
-            <div className={StageUtils.combineClassNames('fullHeight', hasMaximizedWidget && 'maximizeWidget')}>
+            <StyledContainer
+                className={StageUtils.combineClassNames('fullHeight', hasMaximizedWidget && 'maximizeWidget')}
+            >
                 <Breadcrumbs
                     pagesList={pagesList}
                     onPageNameChange={onPageNameChange}
@@ -110,7 +120,7 @@ class Page extends Component<PageProps, never> {
                         />
                     </EditModeBubble>
                 )}
-            </div>
+            </StyledContainer>
         );
     }
 }

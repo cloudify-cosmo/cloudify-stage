@@ -6,8 +6,8 @@ import { Icon } from '../basic';
 // eslint-disable-next-line react/jsx-props-no-spreading
 const SideBarItemIcon = styled(({ name, ...rest }: IconProps) => <Icon name={name ?? 'expand'} {...rest} />)`
     &&&&&& {
-        margin-left: -10px;
-        margin-right: 9px;
+        margin-left: 0;
+        margin-right: 20px;
         margin-top: -2px;
         float: none;
         width: 1.2em;

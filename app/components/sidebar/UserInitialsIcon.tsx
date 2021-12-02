@@ -8,9 +8,9 @@ import { ReduxState } from '../../reducers';
 const StyledLabel = styled(Label)`
     &&&&& {
         float: none;
-        margin-left: -10px;
+        margin-left: 0;
         margin-top: -5px;
-        margin-right: 9px;
+        margin-right: 20px;
         width: 1.2em;
         padding-left: 4px !important;
     }

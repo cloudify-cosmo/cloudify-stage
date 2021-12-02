@@ -9,7 +9,6 @@ import { Redirect, Route, Switch } from 'react-router-dom';
 import log from 'loglevel';
 
 import Home from '../Home';
-import Header from '../../containers/layout/Header';
 import PageManagement from '../templateManagement/pages/PageManagement';
 import Consts from '../../utils/consts';
 import { NO_PAGES_FOR_TENANT_ERR, UNAUTHORIZED_ERR } from '../../utils/ErrorCodes';
@@ -74,7 +73,6 @@ export default class Layout extends Component {
 
         return (
             <ScrollToTop>
-                <Header />
                 <Switch>
                     {isUserAuthorizedForTemplateManagement && (
                         <Route exact path="/template_management" component={TemplateManagement} />
