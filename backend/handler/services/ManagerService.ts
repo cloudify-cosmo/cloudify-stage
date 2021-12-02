@@ -4,7 +4,7 @@ import _ from 'lodash';
 import { jsonRequest } from '../ManagerHandler';
 import { ALLOWED_METHODS_OBJECT } from '../../consts';
 import { getUrlWithQueryString } from './common';
-import { AllowedRequestMethod, QueryStringParams } from '../../types';
+import type { AllowedRequestMethod, QueryStringParams } from '../../types';
 
 type ManagerResponse = { items: any[] };
 interface RequestOptions {
